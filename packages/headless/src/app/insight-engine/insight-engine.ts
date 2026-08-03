@@ -11,6 +11,7 @@ import {
 } from '../../features/configuration/configuration-actions.js';
 import {setInsightConfiguration} from '../../features/insight-configuration/insight-configuration-actions.js';
 import {insightConfigurationReducer as insightConfiguration} from '../../features/insight-configuration/insight-configuration-slice.js';
+import {generatedAnswerInsightAnalyticsClient} from '../../features/generated-answer/generated-answer-insight-analytics-actions.js';
 import {fetchInterface} from '../../features/insight-interface/insight-interface-actions.js';
 import {insightInterfaceReducer as insightInterface} from '../../features/insight-interface/insight-interface-slice.js';
 import {executeSearch} from '../../features/insight-search/insight-search-actions.js';
@@ -118,6 +119,7 @@ export function buildInsightEngine(options: InsightEngineOptions): InsightEngine
     ...buildThunkExtraArguments(options.configuration, logger),
     apiClient: insightAPIClient,
     streamingClient: generatedAnswerClient,
+    generatedAnswerAnalyticsClient: generatedAnswerInsightAnalyticsClient,
   };
 
   const augmentedOptions: EngineOptions<InsightEngineReducers> = {

@@ -1,10 +1,15 @@
 /* oxlint-disable @typescript-eslint/no-explicit-any -- Just tests */
 import type {EventSourceMessage} from '../../../utils/fetch-event-source/parse.js';
+import type {GeneratedAnswerAnalyticsClient} from '../../../features/generated-answer/generated-answer-analytics-client.js';
 import type {GeneratedAnswerStream} from '../generated-answer-stream.js';
 import {buildAnswerEndpoint, updateCacheWithEvent} from '../stream-answer-api.js';
 
 describe('#streamAnswerApi', () => {
   describe('updateCacheWithEvent', () => {
+    const mockGeneratedAnswerAnalyticsClient = {
+      logGeneratedAnswerStreamEnd: vi.fn(),
+    } as unknown as GeneratedAnswerAnalyticsClient;
+
     const buildEvent = (data: Record<string, any>): EventSourceMessage => {
       return {
         id: '001',
@@ -57,7 +62,7 @@ describe('#streamAnswerApi', () => {
 
       const draft = buildDefaultDraft();
 
-      updateCacheWithEvent(event, draft, dispatch);
+      updateCacheWithEvent(event, draft, dispatch, mockGeneratedAnswerAnalyticsClient);
 
       expect(draft).toHaveProperty('error', {
         message: 'some error',
@@ -75,7 +80,7 @@ describe('#streamAnswerApi', () => {
       });
       const draft = buildDefaultDraft();
 
-      updateCacheWithEvent(event, draft, dispatch);
+      updateCacheWithEvent(event, draft, dispatch, mockGeneratedAnswerAnalyticsClient);
 
       expect(draft).toHaveProperty('contentFormat', 'text/markdown');
       expect(draft).toHaveProperty('isStreaming', true);
@@ -97,7 +102,7 @@ describe('#streamAnswerApi', () => {
           payloadType: 'genqa.messageType',
         });
         const draft = buildDefaultDraft();
-        updateCacheWithEvent(errorEvent, draft, dispatch);
+        updateCacheWithEvent(errorEvent, draft, dispatch, mockGeneratedAnswerAnalyticsClient);
         expect(draft.error).toEqual({message: 'transient error', code: 500});
 
         const messageEvent = buildSuccessEvent({
@@ -106,7 +111,7 @@ describe('#streamAnswerApi', () => {
             textDelta: 'a full valid answer',
           },
         });
-        updateCacheWithEvent(messageEvent, draft, dispatch);
+        updateCacheWithEvent(messageEvent, draft, dispatch, mockGeneratedAnswerAnalyticsClient);
 
         expect(draft.answer).toBe('a full valid answer');
         expect(draft.error).toBeUndefined();
@@ -122,7 +127,7 @@ describe('#streamAnswerApi', () => {
           payloadType: 'genqa.citationsType',
         });
         const draft = buildDefaultDraft();
-        updateCacheWithEvent(errorEvent, draft, dispatch);
+        updateCacheWithEvent(errorEvent, draft, dispatch, mockGeneratedAnswerAnalyticsClient);
         expect(draft.error).toEqual({message: 'transient error', code: 500});
 
         const citation = {
@@ -138,7 +143,7 @@ describe('#streamAnswerApi', () => {
             citations: [citation],
           },
         });
-        updateCacheWithEvent(citationsEvent, draft, dispatch);
+        updateCacheWithEvent(citationsEvent, draft, dispatch, mockGeneratedAnswerAnalyticsClient);
 
         expect(draft.citations).toEqual([citation]);
         expect(draft.error).toBeUndefined();
@@ -155,7 +160,7 @@ describe('#streamAnswerApi', () => {
       });
       const draft = buildDefaultDraft({answer: undefined});
 
-      updateCacheWithEvent(event, draft, dispatch);
+      updateCacheWithEvent(event, draft, dispatch, mockGeneratedAnswerAnalyticsClient);
 
       expect(draft).toHaveProperty('answer', 'some answer');
       expect(dispatch).toHaveBeenCalledWith({
@@ -176,7 +181,7 @@ describe('#streamAnswerApi', () => {
       });
       const draft = buildDefaultDraft({answer: undefined});
 
-      updateCacheWithEvent(event, draft, dispatch);
+      updateCacheWithEvent(event, draft, dispatch, mockGeneratedAnswerAnalyticsClient);
 
       expect(draft.answer).toBeUndefined();
       expect(dispatch).toHaveBeenCalledWith({
@@ -197,7 +202,7 @@ describe('#streamAnswerApi', () => {
       });
       const draft = buildDefaultDraft({answer: 'some answer '});
 
-      updateCacheWithEvent(event, draft, dispatch);
+      updateCacheWithEvent(event, draft, dispatch, mockGeneratedAnswerAnalyticsClient);
 
       expect(draft).toHaveProperty('answer', 'some answer with some more info');
       expect(dispatch).toHaveBeenCalledWith({
@@ -218,7 +223,9 @@ describe('#streamAnswerApi', () => {
       });
       const draft = buildDefaultDraft({answer: 'existing answer'});
 
-      expect(() => updateCacheWithEvent(event, draft, dispatch)).not.toThrow();
+      expect(() =>
+        updateCacheWithEvent(event, draft, dispatch, mockGeneratedAnswerAnalyticsClient)
+      ).not.toThrow();
       expect(draft).toHaveProperty('answer', 'existing answer');
       expect(dispatch).not.toHaveBeenCalled();
     });
@@ -240,7 +247,7 @@ describe('#streamAnswerApi', () => {
       });
       const draft = buildDefaultDraft();
 
-      updateCacheWithEvent(event, draft, dispatch);
+      updateCacheWithEvent(event, draft, dispatch, mockGeneratedAnswerAnalyticsClient);
 
       expect(draft).toHaveProperty('citations', [citation]);
       expect(dispatch).toHaveBeenCalledWith({
@@ -253,23 +260,38 @@ describe('#streamAnswerApi', () => {
 
     it('should handle end of stream message when answer is generated', () => {
       const dispatch = vi.fn();
+      const logGeneratedAnswerStreamEnd = vi.fn().mockReturnValue({
+        type: 'analytics/generatedAnswer/streamEnd',
+      });
+      const generatedAnswerAnalyticsClient = {
+        logGeneratedAnswerStreamEnd,
+      } as unknown as GeneratedAnswerAnalyticsClient;
       const event = buildSuccessEvent({
         payloadType: 'genqa.endOfStreamType',
         payload: {
           answerGenerated: true,
         },
       });
-      const draft = buildDefaultDraft({answer: 'some answer'});
+      const draft = buildDefaultDraft({answer: 'some answer', answerId: '1'});
 
-      updateCacheWithEvent(event, draft, dispatch);
+      updateCacheWithEvent(event, draft, dispatch, generatedAnswerAnalyticsClient);
 
       expect(draft).toHaveProperty('generated', true);
       expect(draft).toHaveProperty('isStreaming', false);
-      expect(dispatch).toHaveBeenCalled();
+      expect(logGeneratedAnswerStreamEnd).toHaveBeenCalledWith(true, '1', false);
+      expect(dispatch).toHaveBeenCalledWith({
+        type: 'analytics/generatedAnswer/streamEnd',
+      });
     });
 
     it('should handle end of stream message when answer is not generated', () => {
       const dispatch = vi.fn();
+      const logGeneratedAnswerStreamEnd = vi.fn().mockReturnValue({
+        type: 'analytics/generatedAnswer/streamEnd',
+      });
+      const generatedAnswerAnalyticsClient = {
+        logGeneratedAnswerStreamEnd,
+      } as unknown as GeneratedAnswerAnalyticsClient;
       const event = buildSuccessEvent({
         payloadType: 'genqa.endOfStreamType',
         payload: {
@@ -278,11 +300,14 @@ describe('#streamAnswerApi', () => {
       });
       const draft = buildDefaultDraft();
 
-      updateCacheWithEvent(event, draft, dispatch);
+      updateCacheWithEvent(event, draft, dispatch, generatedAnswerAnalyticsClient);
 
       expect(draft).toHaveProperty('generated', false);
       expect(draft).toHaveProperty('isStreaming', false);
-      expect(dispatch).toHaveBeenCalled();
+      expect(logGeneratedAnswerStreamEnd).toHaveBeenCalledWith(false, undefined, undefined);
+      expect(dispatch).toHaveBeenCalledWith({
+        type: 'analytics/generatedAnswer/streamEnd',
+      });
     });
   });
 
