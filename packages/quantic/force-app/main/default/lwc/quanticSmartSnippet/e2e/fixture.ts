@@ -43,8 +43,8 @@ export const testSearch =
     ) => {
       const smartSnippetObject = new SmartSnippetObject(page);
 
-      await page.goto(pageUrl);
       await search.mockSearchWithSmartSnippetResponse(data);
+      await page.goto(pageUrl);
 
       configuration.configure(options);
       await search.waitForSearchResponse();
@@ -77,8 +77,8 @@ export const testInsight =
     ) => {
       const smartSnippetObject = new SmartSnippetObject(page);
 
-      await page.goto(pageUrl);
       await search.mockSearchWithSmartSnippetResponse(data);
+      await page.goto(pageUrl);
 
       configuration.configure({...options, useCase: useCaseEnum.insight});
       await insightSetup.waitForInsightInterfaceInitialization();
