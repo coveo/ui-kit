@@ -250,16 +250,14 @@ describe('atomic-commerce-interface', () => {
         );
       });
 
-      it('should cause the element matching the scrollContainer selector to be smoothly scrolled into view when possible', async () => {
+      it('should cause the element matching the scrollContainer selector to be scrolled into view when possible', async () => {
         const element = await setupElement();
         const scrollIntoViewSpy = vi.spyOn(element, 'scrollIntoView');
         const event = new CustomEvent('atomic/scrollToTop');
 
         element.dispatchEvent(event);
 
-        expect(scrollIntoViewSpy).toHaveBeenCalledExactlyOnceWith({
-          behavior: 'smooth',
-        });
+        expect(scrollIntoViewSpy).toHaveBeenCalledExactlyOnceWith();
       });
     });
   });

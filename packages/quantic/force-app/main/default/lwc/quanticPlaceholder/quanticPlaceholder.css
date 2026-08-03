@@ -2,10 +2,6 @@
   flex-grow: 1;
 }
 
-.placeholder__card-container {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-}
 
 .placeholder__round {
   min-width: 13px;

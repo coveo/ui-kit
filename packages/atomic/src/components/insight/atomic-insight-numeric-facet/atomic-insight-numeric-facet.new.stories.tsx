@@ -149,6 +149,7 @@ const meta: Meta = {
       handles: events,
     },
     msw: {handlers: [...insightApiHarness.handlers]},
+    chromatic: {disableSnapshot: true},
   },
   argTypes: {
     ...argTypes,

@@ -4,9 +4,9 @@
 
 .session-start__icon-container {
   background-color: var(--slds-g-color-warning-base-50, orange);
-  border-radius: var(--slds-g-radius-border-circle, var(--lwc-borderRadiusCircle, 50%));
-  width: 24px;
-  height: 24px;
+  border-radius: var(--lwc-borderRadiusCircle, 50%);
+  width: var(--slds-g-sizing-7, 24px);
+  height: var(--slds-g-sizing-7, 24px);
 }
 
 .session__show-more-actions-button {

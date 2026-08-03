@@ -53,7 +53,7 @@ import {
 } from './searchPageEvents';
 import {NoopAnalytics} from '../client/noopAnalytics';
 import {formatOmniboxMetadata} from '../formatting/format-omnibox-metadata';
-import doNotTrack from '../donottrack';
+import {shouldDisableAnalyticsForPrivacy} from '../donottrack';
 
 export interface SearchPageClientProvider {
   getBaseMetadata: () => Record<string, any>;
@@ -90,7 +90,9 @@ export class CoveoSearchPageClient {
     private opts: Partial<SearchPageClientOptions>,
     private provider: SearchPageClientProvider
   ) {
-    const shouldDisableAnalytics = opts.enableAnalytics === false || doNotTrack();
+    const shouldDisableAnalytics =
+      opts.enableAnalytics === false ||
+      shouldDisableAnalyticsForPrivacy(opts.disableBrowserPrivacySignals);
     this.coveoAnalyticsClient = shouldDisableAnalytics
       ? new NoopAnalytics()
       : new CoveoAnalyticsClient(opts);

@@ -17,8 +17,8 @@
 }
 
 .generated-answer-thread__dot {
-  height: 8px;
-  width: 8px;
+  height: var(--slds-g-sizing-3, 8px);
+  width: var(--slds-g-sizing-3, 8px);
   border-radius: 50%;
   background-color: var(--slds-g-color-neutral-base-90, var(--lwc-colorBorder, #dddbda));
 }
@@ -36,7 +36,7 @@
   position: absolute;
   left: 0;
   width: 1px;
-  height: 8px;
+  height: var(--slds-g-sizing-3, 8px);
   background-color: var(--slds-g-color-neutral-base-90, var(--lwc-colorBorder, #dddbda));
 }
 

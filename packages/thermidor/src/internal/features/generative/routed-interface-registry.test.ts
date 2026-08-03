@@ -186,8 +186,7 @@ describe('mergeTurnsWithRegistry', () => {
       agentResponse: {
         messages: [{content: 'here', role: 'assistant'}],
         surfaces: [],
-        toolCalls: [],
-        reasoningContent: '',
+        reasoningSteps: [],
       },
     });
 

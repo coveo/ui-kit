@@ -60,6 +60,7 @@ type PreparableAnalyticsActionOptions<StateNeeded extends ConfigurationSection> 
   preprocessRequest: PreprocessRequest | undefined;
   logger: Logger;
   getState(): StateNeeded;
+  disableBrowserPrivacySignals?: boolean;
 };
 
 // The `& UnknownAction` intersection allows analytics actions (AsyncThunk action creators)
@@ -150,13 +151,15 @@ function makePreparableAnalyticsAction<
   };
 
   const rootAction = createAnalyticsAction(async (_, {getState, extra}) => {
-    const {analyticsClientMiddleware, preprocessRequest, logger} = extra;
+    const {analyticsClientMiddleware, preprocessRequest, logger, disableBrowserPrivacySignals} =
+      extra;
     return await (
       await buildEvent({
         getState,
         analyticsClientMiddleware,
         preprocessRequest,
         logger,
+        disableBrowserPrivacySignals,
       })
     ).log({state: getState(), extra});
   });
@@ -166,12 +169,14 @@ function makePreparableAnalyticsAction<
     analyticsClientMiddleware,
     preprocessRequest,
     logger,
+    disableBrowserPrivacySignals,
   }) => {
     const {description, log} = await buildEvent({
       getState,
       analyticsClientMiddleware,
       preprocessRequest,
       logger,
+      disableBrowserPrivacySignals,
     });
     return {
       description,
@@ -341,6 +346,7 @@ interface AnalyticsConfiguratorOptions<
   preprocessRequest?: PreprocessRequest;
   provider?: LegacyProvider;
   getState(): StateNeeded;
+  disableBrowserPrivacySignals?: boolean;
 }
 
 type InternalMakeAnalyticsActionOptions<
@@ -394,7 +400,13 @@ const internalMakeAnalyticsAction = <
   __legacy__provider ??= (getState) => new providerClass(getState);
   return makePreparableAnalyticsAction(
     prefix,
-    async ({getState, analyticsClientMiddleware, preprocessRequest, logger}) => {
+    async ({
+      getState,
+      analyticsClientMiddleware,
+      preprocessRequest,
+      logger,
+      disableBrowserPrivacySignals,
+    }) => {
       const loggers: ((state: LegacyStateNeeded & StateNeeded) => Promise<void>)[] = [];
       const analyticsAction: {
         log: (
@@ -414,6 +426,7 @@ const internalMakeAnalyticsAction = <
         logger,
         analyticsClientMiddleware,
         preprocessRequest,
+        disableBrowserPrivacySignals,
         provider: __legacy__provider!(getState),
       });
       const builder = await __legacy__getBuilder(client, getState());
