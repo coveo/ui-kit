@@ -1,3 +1,5 @@
+import {vi} from 'vitest';
+import type {Mock} from 'vitest';
 import {CaseAssistClient, CaseAssistClientProvider} from './caseAssistClient';
 import {
   CaseAssistActions,
@@ -12,10 +14,14 @@ const {fetchMock, fetchMockBeforeEach} = mockFetch();
 import doNotTrack from '../donottrack';
 import {Cookie} from '../cookieutils';
 import {PartialDocumentInformation} from '../searchPage/searchPageEvents';
-jest.mock('../donottrack', () => {
+vi.mock('../donottrack', () => {
+  const doNotTrack = vi.fn();
   return {
-    default: jest.fn(),
-    doNotTrack: jest.fn(),
+    __esModule: true,
+    default: doNotTrack,
+    doNotTrack,
+    shouldDisableAnalyticsForPrivacy: (disableBrowserPrivacySignals?: boolean) =>
+      disableBrowserPrivacySignals === true ? false : doNotTrack(),
   };
 });
 
@@ -206,7 +212,7 @@ describe('CaseAssistClient', () => {
   });
 
   it('should not send events when doNotTrack is enabled', async () => {
-    (doNotTrack as jest.Mock).mockImplementationOnce(() => true);
+    (doNotTrack as Mock).mockImplementationOnce(() => true);
 
     client = new CaseAssistClient({});
 

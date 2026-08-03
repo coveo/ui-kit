@@ -1,6 +1,11 @@
 .skeleton {
-  border-radius: 8px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  border-radius: var(--radius-md);
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-skeleton-highlight) 25%,
+    var(--color-bg-skeleton) 50%,
+    var(--color-bg-skeleton-highlight) 75%
+  );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
@@ -18,7 +23,7 @@
 .carouselContainer {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-3);
   overflow: hidden;
 }
 
@@ -29,7 +34,7 @@
 
 .carouselTrack {
   display: flex;
-  gap: 12px;
+  gap: var(--space-3);
   overflow: hidden;
 }
 
@@ -37,8 +42,8 @@
   flex: 0 0 160px;
   display: flex;
   flex-direction: column;
-  border: 1px solid #eee;
-  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   overflow: hidden;
 }
 
@@ -52,7 +57,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: 12px;
+  padding: var(--space-3);
 }
 
 .carouselName {
@@ -69,11 +74,11 @@
 .bundleContainer {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 24px;
-  border-radius: 12px;
-  border: 1px solid #eee;
-  background: #f8f9fa;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-secondary);
 }
 
 .bundleHeading {
@@ -83,15 +88,15 @@
 
 .bundleTabs {
   display: flex;
-  gap: 16px;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 8px;
+  gap: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-2);
 }
 
 .bundleTab {
   width: 90px;
   height: 16px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 
 .bundleDescription {
@@ -102,23 +107,23 @@
 .bundleItems {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .bundleRow {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 16px;
-  background: #fff;
-  border: 1px solid #eee;
-  border-radius: 8px;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
 }
 
 .bundleRowImage {
   width: 64px;
   height: 64px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   flex-shrink: 0;
 }
 
@@ -146,14 +151,14 @@
 
 .bundleFooter {
   height: 48px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
 }
 
 /* ComparisonTable skeleton */
 .tableContainer {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--space-4);
   overflow: hidden;
 }
 
@@ -165,17 +170,17 @@
 .tableGrid {
   display: flex;
   flex-direction: column;
-  border: 1px solid #eee;
-  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   overflow: hidden;
 }
 
 .tableRow {
   display: grid;
   grid-template-columns: 100px repeat(3, minmax(0, 1fr));
-  border-bottom: 1px solid #eee;
-  padding: 16px;
-  gap: 12px;
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-4);
+  gap: var(--space-3);
 }
 
 .tableRow:last-child {
@@ -191,13 +196,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .tableImage {
   width: 100px;
   height: 100px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 
 .tableName {
@@ -214,8 +219,8 @@
 /* NextActionsBar skeleton */
 .actionsContainer {
   display: flex;
-  gap: 8px;
-  padding: 8px 0;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
   overflow: hidden;
 }
 
@@ -229,17 +234,17 @@
 .summaryContainer {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 16px;
-  border-radius: 8px;
-  border: 1px solid #eee;
-  background: #f8f9fa;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-secondary);
 }
 
 .summaryHeader {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .summaryIcon {
@@ -267,8 +272,8 @@
 .genericContainer {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 16px;
-  border-radius: 12px;
-  border: 1px solid #eee;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
 }

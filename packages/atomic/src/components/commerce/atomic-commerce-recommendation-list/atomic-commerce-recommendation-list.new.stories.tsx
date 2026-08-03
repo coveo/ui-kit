@@ -1,8 +1,7 @@
 import {testCarouselA11y} from '@/storybook-utils/a11y/carousel.js';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
-import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
-import {richResponse as richRecommendationResponse} from '@coveo/platform-mock-api/commerce/recommendation-response';
+import {MockCommerceApi, recommendationResponses} from '@coveo/platform-mock-api/commerce';
 import {wrapInCommerceRecommendationInterface} from '@/storybook-utils/commerce/commerce-recommendation-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-recommendation-list/atomic-commerce-recommendation-list.js';
@@ -25,7 +24,7 @@ import '@/src/components/commerce/atomic-product-text/atomic-product-text.js';
 
 const commerceApiHarness = new MockCommerceApi();
 
-commerceApiHarness.recommendationEndpoint.mock(() => richRecommendationResponse);
+commerceApiHarness.recommendationEndpoint.mock(() => recommendationResponses.richResponse);
 
 const {decorator, play} = wrapInCommerceRecommendationInterface({});
 const {events, args, argTypes, template} = getStorybookHelpers(

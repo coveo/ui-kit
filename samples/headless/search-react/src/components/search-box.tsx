@@ -1,5 +1,6 @@
 import {
   buildInteractiveInstantResult,
+  type FieldSuggestions as FieldSuggestionsController,
   type InstantResults,
   type Result,
   type SearchBox as SearchBoxController,
@@ -7,16 +8,19 @@ import {
 } from '@coveo/headless';
 import {type KeyboardEvent, useState} from 'react';
 import {useController} from '../use-controller';
+import {FieldSuggestions} from './field-suggestions';
 
 interface SearchBoxProps {
   engine: SearchEngine;
   controller: SearchBoxController;
   instantResults: InstantResults;
+  fieldSuggestions: FieldSuggestionsController;
 }
 
-export function SearchBox({engine, controller, instantResults}: SearchBoxProps) {
+export function SearchBox({engine, controller, instantResults, fieldSuggestions}: SearchBoxProps) {
   const {value, suggestions} = useController(controller);
   const {results} = useController(instantResults);
+  const {values: fieldSuggestionValues} = useController(fieldSuggestions);
   const [focused, setFocused] = useState(false);
   const [active, setActive] = useState(-1);
 
@@ -24,6 +28,11 @@ export function SearchBox({engine, controller, instantResults}: SearchBoxProps) 
     setActive(-1);
     controller.updateText(text);
     instantResults.updateQuery(text);
+    if (text === '') {
+      fieldSuggestions.clear();
+    } else {
+      fieldSuggestions.updateText(text);
+    }
   };
 
   const selectSuggestion = (rawValue: string) => {
@@ -68,7 +77,10 @@ export function SearchBox({engine, controller, instantResults}: SearchBoxProps) 
     }
   };
 
-  const showDropdown = focused && value !== '' && (suggestions.length > 0 || results.length > 0);
+  const showDropdown =
+    focused &&
+    value !== '' &&
+    (suggestions.length > 0 || results.length > 0 || fieldSuggestionValues.length > 0);
 
   return (
     <div className="search-box">
@@ -106,6 +118,11 @@ export function SearchBox({engine, controller, instantResults}: SearchBoxProps) 
               </ul>
             </div>
           )}
+          <FieldSuggestions
+            controller={fieldSuggestions}
+            title="Authors"
+            onSelect={() => setFocused(false)}
+          />
           {results.length > 0 && (
             <div className="search-box__column">
               <p className="search-box__column-title">Instant results</p>

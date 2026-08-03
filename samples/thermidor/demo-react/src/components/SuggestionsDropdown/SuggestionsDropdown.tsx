@@ -9,7 +9,6 @@ interface SuggestionsDropdownProps {
   onSelect: (item: SuggestionItem, sectionId: string) => void;
   visible: boolean;
   activeIndex?: number;
-  inputValue?: string;
 }
 
 export function SuggestionsDropdown({

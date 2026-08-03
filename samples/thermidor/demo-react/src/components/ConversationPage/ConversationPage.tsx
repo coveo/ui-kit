@@ -1,7 +1,8 @@
 import type {Turn} from '@coveo/thermidor';
 import {useEffect, useRef} from 'react';
 import {useScrollAnchor} from '../../hooks/use-scroll-anchor.js';
-import {PromptInput} from '../PromptInput/PromptInput.js';
+import type {TargetedProduct} from '../../context/targeting.js';
+import {ProductTargeting} from '../ProductTargeting/ProductTargeting.js';
 import {ConversationThread} from './ConversationThread.js';
 import styles from './ConversationPage.module.css';
 
@@ -11,7 +12,8 @@ interface ConversationPageProps {
   turns: Turn[];
   onBackToSearch: () => void;
   canGoBackToSearch: boolean;
-  onResetToLanding: () => void;
+  products: TargetedProduct[];
+  onProductsChange: (products: TargetedProduct[]) => void;
 }
 
 export function ConversationPage({
@@ -20,7 +22,8 @@ export function ConversationPage({
   turns,
   onBackToSearch,
   canGoBackToSearch,
-  onResetToLanding,
+  products,
+  onProductsChange,
 }: ConversationPageProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const turnRefs = useRef<Map<string, HTMLDivElement>>(new Map());
@@ -64,7 +67,6 @@ export function ConversationPage({
   }, [turns, scrollToPrompt]);
 
   const handleAction = (text: string, _type: string) => {
-    void _type;
     if (text) {
       onSubmit(text);
     }
@@ -72,26 +74,53 @@ export function ConversationPage({
 
   return (
     <section className={styles.page}>
-      <nav className={styles.nav} aria-label="Conversation navigation">
-        {canGoBackToSearch && (
-          <button type="button" className={styles.backButton} onClick={onBackToSearch}>
-            &larr; Back to search results
-          </button>
-        )}
-        <button type="button" className={styles.resetButton} onClick={onResetToLanding}>
-          Reset
+      <div className={styles.promptAtBottom}>
+        <ProductTargeting
+          products={products}
+          onProductsChange={onProductsChange}
+          onSubmit={onSubmit}
+          isStreaming={isStreaming}
+          promptProps={{clearOnSubmit: true}}
+        >
+          <div
+            className={styles.scrollContainer}
+            ref={containerRef}
+            aria-busy={isStreaming}
+            role="log"
+            aria-label="Conversation history"
+          >
+            <div className={styles.scrollContent}>
+              <ConversationThread turns={turns} onAction={handleAction} turnRefs={turnRefs} />
+            </div>
+          </div>
+        </ProductTargeting>
+      </div>
+      {canGoBackToSearch && (
+        <button
+          type="button"
+          className={styles.floatingBackButton}
+          onClick={onBackToSearch}
+          title="Back to search results"
+          aria-label="Back to search results"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <line x1="8" y1="6" x2="21" y2="6" />
+            <line x1="8" y1="12" x2="21" y2="12" />
+            <line x1="8" y1="18" x2="21" y2="18" />
+            <line x1="3" y1="6" x2="3.01" y2="6" />
+            <line x1="3" y1="12" x2="3.01" y2="12" />
+            <line x1="3" y1="18" x2="3.01" y2="18" />
+          </svg>
         </button>
-      </nav>
-      <div className={styles.scrollContainer} ref={containerRef}>
-        <div className={styles.scrollContent}>
-          <ConversationThread turns={turns} onAction={handleAction} turnRefs={turnRefs} />
-        </div>
-      </div>
-      <div className={styles.promptContainer}>
-        <div className={styles.promptWrapper}>
-          <PromptInput onSubmit={onSubmit} disabled={isStreaming} clearOnSubmit />
-        </div>
-      </div>
+      )}
     </section>
   );
 }

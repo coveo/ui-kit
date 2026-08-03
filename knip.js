@@ -7,8 +7,6 @@ export default {
     '.kiro/**',
     '.agents/skills/**',
     'packages/quantic/**',
-    // Temporary until CAJS package activation supplies package metadata and entry points.
-    'packages/coveo-analytics/**',
     'samples/headless/rga-react/src/components/Quickstart.tsx',
     'samples/headless/rga-react/src/components/Citation.tsx',
     'samples/headless/rga-react/src/components/CitationsList.tsx',
@@ -58,6 +56,27 @@ export default {
     },
     'packages/relay': {
       entry: ['src/relay.ts', 'config/rollup.config.mjs'],
+    },
+    'packages/coveo-analytics': {
+      // The package publishes `src/**/*.ts` and supports deep imports, so every
+      // source module is part of its public surface, not just the bundle entries.
+      // `bundle/browser-fetch.ts` is reachable only through the Rollup alias that
+      // swaps out `cross-fetch` for browser builds.
+      entry: ['src/**/*.ts', 'bundle/browser-fetch.ts'],
+      // These modules intentionally expose two public bindings for the same
+      // value: a named export plus a `default`, or a short plugin alias such as
+      // `EC = ECPlugin`. Both spellings are part of the published API and are
+      // reachable through deep imports, so neither can be dropped. Scoped to the
+      // known files so new duplicate exports elsewhere in the package still fail.
+      ignoreIssues: {
+        'src/client/analytics.ts': ['duplicates'],
+        'src/coveoua/simpleanalytics.ts': ['duplicates'],
+        'src/donottrack.ts': ['duplicates'],
+        'src/history.ts': ['duplicates'],
+        'src/plugins/ec.ts': ['duplicates'],
+        'src/plugins/link.ts': ['duplicates'],
+        'src/plugins/svc.ts': ['duplicates'],
+      },
     },
     'packages/documentation': {
       entry: [

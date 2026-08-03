@@ -7,8 +7,6 @@
 }
 
 .pill {
-  display: inline-flex;
-  align-items: center;
   padding: var(--space-2) var(--space-4);
   font-family: var(--font-sans);
   font-size: var(--font-size-sm);
@@ -23,6 +21,10 @@
     border-color var(--transition-fast),
     color var(--transition-fast);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .pill:hover {

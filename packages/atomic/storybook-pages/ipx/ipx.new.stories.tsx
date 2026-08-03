@@ -1,8 +1,7 @@
 import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
-import {type baseResponse, richResponse} from '@coveo/platform-mock-api/search/search-response';
+import {MockSearchApi, searchResponses} from '@coveo/platform-mock-api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 import {isTestMode} from '@/storybook-utils/common/is-test-mode';
 import '@/src/components/search/atomic-did-you-mean/atomic-did-you-mean.js';
@@ -62,7 +61,9 @@ const meta: Meta = {
     chromatic: {disableSnapshot: false},
   },
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mock(() => richResponse as unknown as typeof baseResponse);
+    mockSearchApi.searchEndpoint.mock(
+      () => searchResponses.richResponse as unknown as typeof searchResponses.baseResponse
+    );
   },
   render: () => html`
     <style>

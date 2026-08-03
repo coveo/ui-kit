@@ -1,8 +1,7 @@
 import {getSampleInsightEngineConfiguration} from '@coveo/headless/insight';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
-import {MockInsightApi} from '@coveo/platform-mock-api/insight/mock';
-import {type baseResponse, richResponse} from '@coveo/platform-mock-api/insight/search-response';
+import {MockInsightApi, searchResponses} from '@coveo/platform-mock-api/insight';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 import {isTestMode} from '@/storybook-utils/common/is-test-mode';
 import '@/src/components/search/atomic-facet-manager/atomic-facet-manager.js';
@@ -73,7 +72,9 @@ const meta: Meta = {
     chromatic: {disableSnapshot: false},
   },
   beforeEach: async () => {
-    mockInsightApi.searchEndpoint.mock(() => richResponse as unknown as typeof baseResponse);
+    mockInsightApi.searchEndpoint.mock(
+      () => searchResponses.richResponse as unknown as typeof searchResponses.baseResponse
+    );
   },
   render: () => html`
     <style>

@@ -2,10 +2,40 @@
   margin-left: auto;
   max-width: 80%;
   padding: var(--space-3) var(--space-4);
-  background: var(--color-bg-user-prompt, #e3f2fd);
-  border-radius: var(--radius-lg);
+  background: var(--color-bg-user-prompt);
+  border-radius: var(--radius-lg) 0 var(--radius-lg) var(--radius-lg);
   font-size: var(--font-size-md);
   line-height: 1.5;
   color: var(--color-text-primary);
   word-break: break-word;
+}
+
+.promptText {
+  margin: 0;
+}
+
+.separator {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: var(--space-2) 0;
+}
+
+.contextSection {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.contextLabel {
+  display: block;
+  margin-bottom: var(--space-1);
+}
+
+.productList {
+  margin: 0;
+  padding-left: var(--space-4);
+  list-style-type: disc;
+}
+
+.productItem {
+  line-height: 1.4;
 }

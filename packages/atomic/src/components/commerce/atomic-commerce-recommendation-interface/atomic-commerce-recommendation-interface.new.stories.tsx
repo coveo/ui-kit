@@ -21,12 +21,11 @@ import '@/src/components/commerce/atomic-product-section-name/atomic-product-sec
 import '@/src/components/commerce/atomic-product-section-visual/atomic-product-section-visual.js';
 import '@/src/components/commerce/atomic-product-template/atomic-product-template.js';
 import '@/src/components/commerce/atomic-product-text/atomic-product-text.js';
-import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
-import {richResponse as richRecommendationResponse} from '@coveo/platform-mock-api/commerce/recommendation-response';
+import {MockCommerceApi, recommendationResponses} from '@coveo/platform-mock-api/commerce';
 
 const commerceApiHarness = new MockCommerceApi();
 
-commerceApiHarness.recommendationEndpoint.mock(() => richRecommendationResponse);
+commerceApiHarness.recommendationEndpoint.mock(() => recommendationResponses.richResponse);
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-commerce-recommendation-interface',

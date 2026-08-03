@@ -4,9 +4,11 @@ import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
 import {testCheckboxA11y} from '@/storybook-utils/a11y/checkbox.js';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
-import {searchFacetTransformer} from '@coveo/platform-mock-api/search/facet-transformer';
-import {buildSearchResponseWithResults} from '@coveo/platform-mock-api/search/search-response-mocks';
+import {
+  buildSearchResponseWithResults,
+  MockSearchApi,
+  searchFacetTransformer,
+} from '@coveo/platform-mock-api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
