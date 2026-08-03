@@ -12,9 +12,6 @@ const ALLOWED_DRIFT = new Set([
   // ESM-only (headless) vs CJS (coveo-analytics); aligning majors requires a
   // module-format migration, tracked separately from KIT-5960.
   'node-fetch',
-  // Actively being consolidated in a dedicated PR; excluded here to avoid
-  // conflicting changes.
-  'uuid',
 ]);
 
 function parseWorkspacePackages(yamlText) {
