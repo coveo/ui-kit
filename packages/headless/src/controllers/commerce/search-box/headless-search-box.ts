@@ -125,7 +125,12 @@ export function buildSearchBox(engine: CommerceEngine, props: SearchBoxProps = {
     },
 
     showSuggestions() {
-      dispatch(fetchQuerySuggestions({id, count: options.numberOfSuggestions}));
+      dispatch(
+        fetchQuerySuggestions({
+          id,
+          ...(options.numberOfSuggestions !== undefined && {count: options.numberOfSuggestions}),
+        })
+      );
     },
 
     selectSuggestion(value: string) {

@@ -177,7 +177,7 @@ describe('headless search box', () => {
 
     it('does not pass count when numberOfSuggestions is not specified', () => {
       searchBox.showSuggestions();
-      expect(fetchQuerySuggestions).toHaveBeenCalledWith({id, count: undefined});
+      expect(fetchQuerySuggestions).toHaveBeenCalledWith({id});
     });
   });
 
@@ -214,7 +214,7 @@ describe('headless search box', () => {
   describe('#showSuggestions', () => {
     it('dispatches #fetchQuerySuggestions', async () => {
       searchBox.showSuggestions();
-      expect(fetchQuerySuggestions).toHaveBeenCalledWith({id, count: undefined});
+      expect(fetchQuerySuggestions).toHaveBeenCalledWith({id});
     });
   });
 

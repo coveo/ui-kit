@@ -76,13 +76,13 @@ describe('#buildQuerySuggestRequest', () => {
     expect(request.count).toBe(3);
   });
 
-  it('does not include #count when not provided in options', () => {
+  it('sets #count to undefined when not provided in options', () => {
     request = buildQuerySuggestRequest(querySetId, state, navigatorContext);
 
     expect(request.count).toBeUndefined();
   });
 
-  it('does not include #count when options.count is undefined', () => {
+  it('sets #count to undefined when options.count is undefined', () => {
     request = buildQuerySuggestRequest(querySetId, state, navigatorContext, {count: undefined});
 
     expect(request.count).toBeUndefined();
