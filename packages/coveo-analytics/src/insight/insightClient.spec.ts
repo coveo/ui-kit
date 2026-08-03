@@ -33,9 +33,13 @@ const expectedBaseCaseMetadata = {
 };
 
 vi.mock('../donottrack', () => {
+  const doNotTrack = vi.fn();
   return {
-    default: vi.fn(),
-    doNotTrack: vi.fn(),
+    __esModule: true,
+    default: doNotTrack,
+    doNotTrack,
+    shouldDisableAnalyticsForPrivacy: (disableBrowserPrivacySignals?: boolean) =>
+      disableBrowserPrivacySignals === true ? false : doNotTrack(),
   };
 });
 
@@ -1763,6 +1767,23 @@ describe('InsightClient', () => {
     (doNotTrack as Mock).mockImplementationOnce(() => true);
 
     const c = new CoveoInsightClient({}, provider);
+    expect(c.coveoAnalyticsClient instanceof NoopAnalytics).toBe(true);
+  });
+
+  it('keeps a real analytics client under doNotTrack when disableBrowserPrivacySignals is true', () => {
+    (doNotTrack as Mock).mockImplementation(() => true);
+
+    const c = new CoveoInsightClient({disableBrowserPrivacySignals: true}, provider);
+    expect(c.coveoAnalyticsClient instanceof CoveoAnalyticsClient).toBe(true);
+
+    (doNotTrack as Mock).mockReset();
+  });
+
+  it('still disables analytics when enableAnalytics is false even if disableBrowserPrivacySignals is true', () => {
+    const c = new CoveoInsightClient(
+      {enableAnalytics: false, disableBrowserPrivacySignals: true},
+      provider
+    );
     expect(c.coveoAnalyticsClient instanceof NoopAnalytics).toBe(true);
   });
 

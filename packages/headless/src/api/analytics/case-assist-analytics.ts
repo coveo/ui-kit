@@ -39,6 +39,7 @@ interface ConfigureCaseAssistAnalyticsOptions {
   analyticsClientMiddleware?: AnalyticsClientSendEventHook;
   preprocessRequest?: PreprocessRequest;
   provider?: CaseAssistClientProvider;
+  disableBrowserPrivacySignals?: boolean;
 }
 
 export const configureCaseAssistAnalytics = ({
@@ -47,6 +48,7 @@ export const configureCaseAssistAnalytics = ({
   analyticsClientMiddleware = (_, p) => p,
   preprocessRequest,
   provider = new CaseAssistAnalyticsProvider(getState),
+  disableBrowserPrivacySignals,
 }: ConfigureCaseAssistAnalyticsOptions) => {
   const state = getState();
   const token = state.configuration.accessToken;
@@ -65,6 +67,7 @@ export const configureCaseAssistAnalytics = ({
       token,
       endpoint,
       runtimeEnvironment,
+      disableBrowserPrivacySignals,
       preprocessRequest: wrapPreprocessRequest(logger, preprocessRequest),
       beforeSendHooks: [
         wrapAnalyticsClientSendEventHook(logger, analyticsClientMiddleware),

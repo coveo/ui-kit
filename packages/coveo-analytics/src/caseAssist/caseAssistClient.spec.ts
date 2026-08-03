@@ -15,9 +15,13 @@ import doNotTrack from '../donottrack';
 import {Cookie} from '../cookieutils';
 import {PartialDocumentInformation} from '../searchPage/searchPageEvents';
 vi.mock('../donottrack', () => {
+  const doNotTrack = vi.fn();
   return {
-    default: vi.fn(),
-    doNotTrack: vi.fn(),
+    __esModule: true,
+    default: doNotTrack,
+    doNotTrack,
+    shouldDisableAnalyticsForPrivacy: (disableBrowserPrivacySignals?: boolean) =>
+      disableBrowserPrivacySignals === true ? false : doNotTrack(),
   };
 });
 
