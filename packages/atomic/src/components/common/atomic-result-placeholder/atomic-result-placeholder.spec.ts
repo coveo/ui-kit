@@ -128,4 +128,52 @@ describe('atomic-result-placeholder', () => {
       expect(resultRoot?.classList.contains(`image-${imageSize}`)).toBe(true);
     });
   });
+
+  describe('section layout classes', () => {
+    it('should apply the with-sections class to section elements', async () => {
+      const {visual, badges, title, excerpt, bottomMetadata} = await renderComponent();
+
+      for (const section of [visual, badges, title, excerpt, bottomMetadata]) {
+        expect(section?.classList.contains('with-sections')).toBe(true);
+      }
+    });
+
+    it.each<{display: ItemDisplayLayout}>([
+      {display: 'list'},
+      {display: 'grid'},
+      {display: 'table'},
+    ])(
+      'should apply the display class to section elements when display is $display',
+      async ({display}) => {
+        const {visual} = await renderComponent({display});
+        const expectedClass = display === 'list' ? 'display-list' : `display-${display}`;
+        expect(visual?.classList.contains(expectedClass)).toBe(true);
+      }
+    );
+
+    it.each<{density: ItemDisplayDensity}>([
+      {density: 'comfortable'},
+      {density: 'normal'},
+      {density: 'compact'},
+    ])(
+      'should apply the density class to section elements when density is $density',
+      async ({density}) => {
+        const {title} = await renderComponent({density});
+        expect(title?.classList.contains(`density-${density}`)).toBe(true);
+      }
+    );
+
+    it.each<{imageSize: ItemDisplayImageSize}>([
+      {imageSize: 'large'},
+      {imageSize: 'small'},
+      {imageSize: 'icon'},
+      {imageSize: 'none'},
+    ])(
+      'should apply the image class to section elements when imageSize is $imageSize',
+      async ({imageSize}) => {
+        const {visual} = await renderComponent({imageSize});
+        expect(visual?.classList.contains(`image-${imageSize}`)).toBe(true);
+      }
+    );
+  });
 });
