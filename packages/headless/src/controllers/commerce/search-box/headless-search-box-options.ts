@@ -6,8 +6,15 @@ import {
 
 export type SearchBoxOptions = Pick<
   CoreSearchBoxOptions,
-  'id' | 'highlightOptions' | 'numberOfSuggestions' | 'clearFilters'
+  'id' | 'highlightOptions' | 'clearFilters'
 > & {
+  /**
+   * The number of query suggestions to request from the Coveo ML model (for example, `3`).
+   *
+   * When not specified, the API determines the number of suggestions returned.
+   */
+  numberOfSuggestions?: number;
+
   /**
    * When set to true, fills the `results` field rather than the `products` field
    * in the response. It may also include Spotlight Content in the results.
