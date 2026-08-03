@@ -1,19 +1,15 @@
 import {BaseInterface} from '@/src/internal/utils/index.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
-import type {
-  FacadeResolverFactory,
-  Facades,
-  GenerativeInterface,
-} from '@/src/internal/utils/index.js';
+import type {FacadeResolver, Facades, GenerativeInterface} from '@/src/internal/utils/index.js';
 import {createNoopThunk} from '@/src/internal/utils/index.js';
 import {getOrCreateGenerativeSlice} from '@/src/internal/features/generative/index.js';
 
 const noopThunk = createNoopThunk('generative');
 
-const noopResolverFactory: FacadeResolverFactory = (_engine) => (_scope) => noopThunk;
+const noopResolver: FacadeResolver = (_iface) => noopThunk;
 
-const resolverFactories: Record<Facades['generative'], FacadeResolverFactory> = {
-  conversation: noopResolverFactory,
+const resolvers: Record<Facades['generative'], FacadeResolver> = {
+  conversation: noopResolver,
 };
 
 export class GenerativeInterfaceImpl
@@ -21,7 +17,7 @@ export class GenerativeInterfaceImpl
   implements GenerativeInterface
 {
   constructor(engine: FullEngine, stateId: string) {
-    super(engine, stateId, 'generative', resolverFactories);
+    super(engine, stateId, 'generative', resolvers);
     engine.adoptSlice(getOrCreateGenerativeSlice(this));
   }
 }
