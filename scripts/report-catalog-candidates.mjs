@@ -76,7 +76,7 @@ function readCatalog() {
   const workspaceYamlPath = resolve(workspacesRoot, 'pnpm-workspace.yaml');
   const content = readFileSync(workspaceYamlPath, 'utf-8');
   const parsed = parseYaml(content);
-  return parsed.catalog ?? {};
+  return parsed?.catalog ?? {};
 }
 
 /**
@@ -142,7 +142,8 @@ function classifyDivergence(occurrences) {
     return 'different-minors';
   }
 
-  return 'different-patches';
+  const patches = new Set(parsed.map((p) => p.patch));
+  return patches.size > 1 ? 'different-patches' : 'exact-same';
 }
 
 /**
