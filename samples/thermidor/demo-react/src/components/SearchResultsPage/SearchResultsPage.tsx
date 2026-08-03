@@ -1,6 +1,10 @@
 import {useState, useRef, useEffect, useCallback} from 'react';
 import type {RoutedInterface} from '@coveo/thermidor';
-import {buildProductListController, buildPaginationController} from '@coveo/thermidor';
+import {
+  buildProductListController,
+  buildPaginationController,
+  buildSortController,
+} from '@coveo/thermidor';
 import {SECTION_ACTIONS, type SuggestionItem} from '../SuggestionsDropdown/index.js';
 import {ProductTargeting} from '../ProductTargeting/ProductTargeting.js';
 import {useTargeting, type TargetedProduct} from '../../context/targeting.js';
@@ -9,7 +13,7 @@ import {useBuildController} from '../../hooks/use-build-controller.js';
 import {ProductGrid} from './ProductGrid/ProductGrid.js';
 import {Pagination} from './Pagination/Pagination.js';
 import {QuerySummaryPlaceholder} from './QuerySummaryPlaceholder/QuerySummaryPlaceholder.js';
-import {SortPlaceholder} from './SortPlaceholder/SortPlaceholder.js';
+import {Sort} from './Sort/Sort.js';
 import {SortFiltersModal} from './SortFiltersModal/SortFiltersModal.js';
 import {PageSizeSelector} from './PageSizeSelector/PageSizeSelector.js';
 import styles from './SearchResultsPage.module.css';
@@ -46,6 +50,9 @@ function SearchResultsPageInner({
   );
   const [paginationController, paginationState] = useBuildController(() =>
     buildPaginationController({interface: routedInterface.interface})
+  );
+  const [sortController] = useBuildController(() =>
+    buildSortController({interface: routedInterface.interface})
   );
 
   const {sections} = useSuggestions({
@@ -101,6 +108,7 @@ function SearchResultsPageInner({
           productListState={productListState}
           paginationController={paginationController}
           paginationState={paginationState}
+          sortController={sortController}
           showToast={showToast}
           sortFiltersOpen={sortFiltersOpen}
           setSortFiltersOpen={setSortFiltersOpen}
@@ -137,6 +145,7 @@ interface SearchResultsPageContentProps {
   productListState: ReturnType<typeof buildProductListController>['state'];
   paginationController: ReturnType<typeof buildPaginationController>;
   paginationState: ReturnType<typeof buildPaginationController>['state'];
+  sortController: ReturnType<typeof buildSortController>;
   showToast: () => void;
   sortFiltersOpen: boolean;
   setSortFiltersOpen: (open: boolean) => void;
@@ -150,6 +159,7 @@ function SearchResultsPageContent({
   productListState,
   paginationController,
   paginationState,
+  sortController,
   showToast,
   sortFiltersOpen,
   setSortFiltersOpen,
@@ -175,7 +185,7 @@ function SearchResultsPageContent({
             productCount={productListState.products?.length ?? 0}
           />
           <span className={`${styles.desktopOnly} ${isTargeting ? styles.muted : ''}`}>
-            <SortPlaceholder onToast={showToast} />
+            <Sort controller={sortController} />
           </span>
           <button
             type="button"
@@ -192,7 +202,11 @@ function SearchResultsPageContent({
         </div>
       </main>
 
-      <SortFiltersModal open={sortFiltersOpen} onClose={closeSortFilters} onToast={showToast} />
+      <SortFiltersModal
+        open={sortFiltersOpen}
+        onClose={closeSortFilters}
+        sortController={sortController}
+      />
 
       {toast && (
         <div className={styles.toast} role="status" aria-live="polite">

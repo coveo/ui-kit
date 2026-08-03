@@ -34,6 +34,12 @@ vi.mock('@/src/internal/features/configuration/index.js', () => ({
   }),
 }));
 
+vi.mock('@/src/internal/features/sort/index.js', () => ({
+  getOrCreateSortSelectors: () => ({
+    buildSearchSortCriteria: (state: any) => state.__sortCriteria ?? undefined,
+  }),
+}));
+
 const mockInterface: InterfaceHandle = {
   disposed: false,
   dispose: vi.fn(),
@@ -118,5 +124,44 @@ describe('createSearchEndpointRequestSelector', () => {
     expect(result1).not.toBe(result2);
     expect(result1.q).toBe('first');
     expect(result2.q).toBe('second');
+  });
+
+  it('includes sortCriteria when sort state is set', () => {
+    const selector = createSearchEndpointRequestSelector(mockInterface);
+
+    const state = {
+      __query: 'test',
+      __sortCriteria: '@price ascending',
+    };
+
+    const result = selector(state);
+
+    expect(result.sortCriteria).toBe('@price ascending');
+  });
+
+  it('omits sortCriteria when sort state is undefined', () => {
+    const selector = createSearchEndpointRequestSelector(mockInterface);
+
+    const state = {
+      __query: 'test',
+      __sortCriteria: undefined,
+    };
+
+    const result = selector(state);
+
+    expect(result).not.toHaveProperty('sortCriteria');
+  });
+
+  it('includes compound sortCriteria string', () => {
+    const selector = createSearchEndpointRequestSelector(mockInterface);
+
+    const state = {
+      __query: 'test',
+      __sortCriteria: '@price ascending,date descending',
+    };
+
+    const result = selector(state);
+
+    expect(result.sortCriteria).toBe('@price ascending,date descending');
   });
 });

@@ -21,7 +21,7 @@ vi.mock('@/src/internal/api/commerce-search/commerce-search-request-selector.js'
       query: '',
       page: 0,
       perPage: 10,
-      sort: [],
+      sort: undefined,
       facets: [],
     },
 }));
@@ -93,7 +93,7 @@ const defaultRequest = {
   query: 'shoes',
   page: 0,
   perPage: 20,
-  sort: [{sortCriteria: 'price ascending'}],
+  sort: {sortCriteria: 'fields' as const, fields: [{field: 'price', direction: 'asc' as const}]},
   facets: [{facetId: 'brand', selectedValues: ['Nike']}],
 };
 
@@ -165,7 +165,7 @@ describe('createConverseSearchEndpointThunk', () => {
         message: 'shoes',
         page: 0,
         perPage: 20,
-        sort: [{sortCriteria: 'price ascending'}],
+        sort: {sortCriteria: 'fields', fields: [{field: 'price', direction: 'asc'}]},
         facets: [{facetId: 'brand', selectedValues: ['Nike']}],
         clientId: 'client-abc',
         conversationSessionId: 'session-123',
@@ -199,9 +199,9 @@ describe('createConverseSearchEndpointThunk', () => {
     );
   });
 
-  it('omits sort when sort array is empty', async () => {
+  it('omits sort when sort is undefined', async () => {
     await executeThunk({
-      __request: {...defaultRequest, sort: []},
+      __request: {...defaultRequest, sort: undefined},
     });
 
     expect(mockCall).toHaveBeenCalledWith(
