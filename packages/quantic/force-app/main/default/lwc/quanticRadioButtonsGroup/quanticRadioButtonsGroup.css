@@ -38,13 +38,13 @@
 }
 
 .radio-button:first-child {
-  border-top-left-radius: var(--lwc-borderRadiusMedium, 0.25rem);
-  border-bottom-left-radius: var(--lwc-borderRadiusMedium, 0.25rem);
+  border-top-left-radius: var(--slds-g-radius-border-2, var(--lwc-borderRadiusMedium, 0.25rem));
+  border-bottom-left-radius: var(--slds-g-radius-border-2, var(--lwc-borderRadiusMedium, 0.25rem));
 }
 
 .radio-button:last-child {
-  border-top-right-radius: var(--lwc-borderRadiusMedium, 0.25rem);
-  border-bottom-right-radius: var(--lwc-borderRadiusMedium, 0.25rem);
+  border-top-right-radius: var(--slds-g-radius-border-2, var(--lwc-borderRadiusMedium, 0.25rem));
+  border-bottom-right-radius: var(--slds-g-radius-border-2, var(--lwc-borderRadiusMedium, 0.25rem));
 }
 
 .radio-button--selected:hover,
