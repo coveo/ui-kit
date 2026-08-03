@@ -5,6 +5,7 @@ import {getOrCreatePaginationSelectors} from '@/src/internal/features/pagination
 import {getOrCreateFacetsSelectors} from '@/src/internal/features/facets/index.js';
 import {getOrCreateSearchParametersSelectors} from '@/src/internal/features/search-parameters/index.js';
 import {getOrCreateConfigurationSelectors} from '@/src/internal/features/configuration/index.js';
+import {getOrCreateSortSelectors} from '@/src/internal/features/sort/index.js';
 
 export function createSearchEndpointRequestSelector(iface: InterfaceHandle) {
   const searchBox = getOrCreateSearchBoxSelectors(iface);
@@ -12,6 +13,7 @@ export function createSearchEndpointRequestSelector(iface: InterfaceHandle) {
   const facets = getOrCreateFacetsSelectors(iface);
   const searchParams = getOrCreateSearchParametersSelectors(iface);
   const configuration = getOrCreateConfigurationSelectors();
+  const sort = getOrCreateSortSelectors(iface);
 
   return createMemoizedStateSelector(
     searchBox.getQuery,
@@ -21,7 +23,8 @@ export function createSearchEndpointRequestSelector(iface: InterfaceHandle) {
     searchParams.getPipeline,
     searchParams.getConstantQuery,
     configuration.getLanguage,
-    (query, firstResult, pageSize, facets, pipeline, cq, language) => ({
+    sort.buildSearchSortCriteria,
+    (query, firstResult, pageSize, facets, pipeline, cq, language, sortCriteria) => ({
       q: query,
       firstResult,
       numberOfResults: pageSize,
@@ -29,6 +32,7 @@ export function createSearchEndpointRequestSelector(iface: InterfaceHandle) {
       pipeline,
       cq,
       locale: language || undefined,
+      ...(sortCriteria ? {sortCriteria} : {}),
     })
   );
 }
