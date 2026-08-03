@@ -307,21 +307,54 @@ headlessEngine.disableAnalytics();
 // Or, headlessEngine.enableAnalytics();
 ```
 
-## doNotTrack property
+## Browser privacy signals (Do Not Track and Global Privacy Control)
 
-[`doNotTrack`](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/doNotTrack) is a browser property which reflects the value of the [`DNT`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/DNT) HTTP header.
-It’s used to indicate whether the user is requesting sites and advertisers not to track them.
+Browsers can send privacy signals that indicate a user doesn’t want to be tracked:
+
+- [`doNotTrack`](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/doNotTrack) reflects the value of the [`DNT`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/DNT) HTTP header. This property is deprecated, but it’s still supported in many browsers.
+- `globalPrivacyControl` reflects the value of the `Sec-GPC` HTTP header. Global Privacy Control is legally recognized as a valid opt-out mechanism in some jurisdictions.
+
+How Headless v3 treats these signals depends on the analytics protocol:
+
+- **[Event Protocol](https://docs.coveo.com/en/o9je0592/) (`analyticsMode: 'next'`, the default in Headless v3):** these browser signals aren’t honored.
+- **Legacy Coveo UA (`analyticsMode: 'legacy'`):** by default, Headless honors these signals. When the browser presents a Do Not Track or Global Privacy Control signal, legacy analytics is automatically disabled and no search or click events are sent.
+
+### Override browser privacy signals for legacy analytics
+
+Some deployments enforce a browser privacy signal through a managed-browser policy that end users can’t change. In that situation, legacy analytics is disabled for every user, and no usage data is collected at all. To support these cases, legacy analytics provides the `disableBrowserPrivacySignals` option to explicitly opt out of this default behavior.
 
 > [!NOTE]
 >
-> This property is deprecated, but it’s still supported in many browsers.
-
-Headless v2 complies with the value of this property.
-It automatically disables analytics tracking whenever `DNT` is enabled.
+> This option is intentionally flagged as deprecated to signal that it’s transitional. Treat it as a bridge until you migrate to [Event Protocol](https://docs.coveo.com/en/o9je0592/); it will be removed when legacy analytics is removed.
 
 > [!IMPORTANT]
 >
-> Headless v3 will no longer support this property.
+> `disableBrowserPrivacySignals` is disabled by default. Enabling it is a deliberate choice that you make in your own application code, and it causes legacy analytics to be sent even when the end user’s browser requests not to be tracked through Do Not Track or Global Privacy Control.
+>
+> Coveo honors these signals by default and can’t determine whether overriding them is appropriate for your use case. If you enable this option, you’re responsible for ensuring that doing so complies with the privacy laws and obligations that apply to you. Global Privacy Control in particular is legally recognized as a valid opt-out mechanism in some jurisdictions (for example, under the California Consumer Privacy Act, as amended by the California Privacy Rights Act).
+
+When `disableBrowserPrivacySignals` is set to `true`:
+
+- It applies only when `analyticsMode` is set to `legacy`.
+- Legacy analytics events are sent even when a Do Not Track or Global Privacy Control signal is present.
+- It has no effect when `analyticsMode` is `next`, which doesn’t honor these signals.
+- It doesn’t override an explicit `enabled: false` or a call to [`disableAnalytics`](../../../interfaces/Search.SearchEngine.html#disableAnalytics); those always disable analytics.
+
+```typescript
+export const headlessEngine = buildSearchEngine({
+  configuration: {
+    organizationId: '<ORGANIZATION_ID>',
+    accessToken: '<ACCESS_TOKEN>',
+    analytics: {
+      analyticsMode: 'legacy',
+      // Sends legacy analytics even when the browser requests Do Not Track or
+      // Global Privacy Control. You’re responsible for ensuring this complies
+      // with the privacy obligations that apply to you.
+      disableBrowserPrivacySignals: true,
+    },
+  },
+});
+```
 
 > [!NOTE]
 >

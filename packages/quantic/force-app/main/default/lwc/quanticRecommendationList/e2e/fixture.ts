@@ -24,6 +24,7 @@ export const test = quanticBase.extend<QuanticRecommendationListE2EFixtures>({
     await use(new SearchObject(page, searchRequestRegex));
   },
   recommendationList: async ({page, options, configuration, search}, use) => {
+    await search.mockSearchWithBaseResponse();
     await page.goto(pageUrl);
     configuration.configure(options);
     await search.waitForSearchResponse();

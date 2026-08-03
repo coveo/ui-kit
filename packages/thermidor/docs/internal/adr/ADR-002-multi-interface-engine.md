@@ -11,13 +11,13 @@
 
 ## 2. Decision Statement
 
-Introduce per-type `build<UseCase>Interface` functions (e.g., `buildSearchInterface`, `buildCommerceSearchInterface`) that return strongly typed interface instances with built-in API facade code for their use case. The type is inferred from the function — no generic annotation needed. For multi-interface use cases, `composeInterfaces` merges configured interfaces into a composite, ensuring a uniform singular `interface` parameter across the entire API. The engine is fully opaque; interfaces are the exclusive public surface. Feature state is lazy-loaded on first use.
+Introduce per-type `build<UseCase>Interface` functions (e.g., `buildSearchInterface`, `buildCommerceSearchInterface`) that return strongly typed interface instances with built-in API facade code for their use case. The type is inferred from the function — no generic annotation needed. For multi-interface use cases, multiple interfaces share a single engine and controllers accept any interface satisfying their declared facade requirements (enforced via `Supports<F>`), enabling cross-interface patterns with a uniform singular `interface` parameter across the entire API. The engine is fully opaque; interfaces are the exclusive public surface. Feature state is lazy-loaded on first use.
 
 > **Naming note**: "Interface" is the working term. While it collides with the TypeScript keyword, it maps directly to the Coveo platform concept of a "search interface." Other candidates considered: Conduit, Hub, Channel, Scope, Outlet, Context. The name remains open for debate.
 
 ## 3. Requirements & Considerations Mapping
 
-- **Full use-case support** — Impact: Positive. All known interface types supported. Composition via `composeInterfaces` enables cross-interface controllers.
+- **Full use-case support** — Impact: Positive. All known interface types supported. `Supports<F>` type narrowing enables controllers to accept any interface providing the required facades.
 - **Public API independence** — Impact: None. All public surface is domain-level. Redux, feature slugs, and selectors are internal.
 - **First-class SSR** — Impact: None. Orthogonal. Guardrails (optional explicit IDs, serializable state) ensure no blockers.
 
@@ -27,9 +27,9 @@ Introduce per-type `build<UseCase>Interface` functions (e.g., `buildSearchInterf
 
 ## 4. Options Considered
 
-### Option A (Selected): Per-type `build*Interface` functions + `composeInterfaces`
+### Option A (Selected): Per-type `build*Interface` functions + `Supports<F>` type narrowing
 
-Per-type functions return fully-typed interfaces with built-in facade code. `composeInterfaces` handles multi-interface use cases. Uniform singular `interface` param everywhere.
+Per-type functions return fully-typed interfaces with built-in facade code. `Supports<F>` type narrowing handles multi-interface use cases by allowing controllers to accept any interface satisfying their facade requirements. Uniform singular `interface` param everywhere.
 
 **Simple case:**
 
@@ -44,33 +44,26 @@ const productList = buildProductListController({interface: commerce});
 const searchBox = buildSearchBoxController({interface: commerce});
 ```
 
-**Multi-interface composition:**
+**Multi-interface:**
 
 ```ts
 const search = buildSearchInterface({engine});
 const commerce = buildCommerceSearchInterface({engine});
 
-const hybrid = composeInterfaces({interfaces: [search, commerce]});
+// Controllers accept any interface satisfying Supports<F>
+const searchBox = buildSearchBoxController({interface: search});
+const productList = buildProductListController({interface: commerce});
+const searchBoxActions = loadSearchBoxActions({interface: search});
 
-const searchBox = buildSearchBoxController({interface: hybrid});
-const searchBoxActions = loadSearchBoxActions({interface: hybrid});
-
-// Inline composition also works:
-const searchBox2 = buildSearchBoxController({
-  interface: composeInterfaces({interfaces: [search, commerce]}),
-});
-
-// Type error: pagination doesn't accept composed interfaces
-// buildPaginationController({ interface: hybrid }); // TS error
+// Type error: pagination requires a commerce interface
+// buildPaginationController({ interface: search }); // TS error
 ```
 
 **Key details:**
 
 - Per-type functions give full type inference — no generics needed.
 - Each interface type bundles its facade code. Feature state lazy-loads on first use.
-- `composeInterfaces` ensures uniform singular `interface` across controllers and action loaders. No `interface` vs `interfaces` inconsistency.
-- The composed interface owns shared state for cross-interface features.
-- Only specific controllers accept composed interfaces (search box, analytics). Enforced at type level, widenable later without breaking changes.
+- Controllers accept any interface whose type satisfies their declared facade requirements (enforced via `Supports<F>`).
 - Two-tier request selectors: default (static) when feature inactive, operational (live) once registered.
 - Granular per-capability tree-shaking can be introduced later as an additive, non-breaking option on builders.
 
@@ -78,7 +71,7 @@ const searchBox2 = buildSearchBoxController({
 
 Controllers that need multi-interface accept `interfaces: [...]` directly. No composition step.
 
-- Rejected because: inconsistent `interface` vs `interfaces` parameter naming across the API; breaks the action loader pattern (which interface do you pass to `loadSearchBoxActions` when the search box spans two?); widening support to new controllers later requires adding `interfaces` and deprecating `interface` (breaking).
+- Rejected because: inconsistent `interface` vs `interfaces` parameter naming across the API; breaks the action loader pattern (which interface do you pass to `loadSearchBoxActions` when the search box spans two?); widening support to new controllers later requires adding `interfaces` and deprecating `interface` (breaking). The `Supports<F>` approach is more type-safe and extensible.
 
 ### Option C: Per-capability tree-shaking via explicit `capabilities` array
 
@@ -104,13 +97,13 @@ Doesn't solve the problem.
 
 ## 5. Decision Rationale
 
-Option A: per-type functions give full type inference and discoverability. `composeInterfaces` ensures a uniform singular `interface` parameter everywhere — solving the action loader ambiguity problem and providing future-proof extensibility. Facade code is bundled per interface type (acceptable trade-off); per-capability granularity deferred as additive future option. Option B creates API inconsistency. Option C adds complexity for marginal current benefit. Options D–G sacrifice type safety, boundaries, or access patterns.
+Option A: per-type functions give full type inference and discoverability. `Supports<F>` type narrowing ensures controllers accept any interface satisfying their facade requirements — solving multi-interface dispatch cleanly while maintaining type safety and providing future-proof extensibility. Facade code is bundled per interface type (acceptable trade-off); per-capability granularity deferred as additive future option. Option B creates API inconsistency. Option C adds complexity for marginal current benefit. Options D–G sacrifice type safety, boundaries, or access patterns.
 
 ## 6. Public API and Contract Impact
 
-- **Changes**: `build*Interface` functions (per type), `composeInterfaces`, per-feature action loaders, `interface` option (always singular) on controllers.
+- **Changes**: `build*Interface` functions (per type), per-feature action loaders, `interface` option (always singular) on controllers.
 - **Backward compatibility**: Breaking. All access requires an explicit interface.
-- **Stability**: New interface types are additive. Per-capability options are additive. Composed-interface acceptance widenable on controllers.
+- **Stability**: New interface types are additive. Per-capability options are additive. Controller facade requirements are widenable via `Supports<F>`.
 - **Non-leakage check**: Pass.
 
 ## 7. Operational and Runtime Impact
@@ -121,6 +114,6 @@ Option A: per-type functions give full type inference and discoverability. `comp
 
 ## 8. Migration and Rollout Plan
 
-- **Impact**: Breaking. Call `build*Interface`, pass to controllers. Multi-interface uses `composeInterfaces`.
+- **Impact**: Breaking. Call `build*Interface`, pass to controllers. Multi-interface pages use multiple interfaces on a shared engine, with controllers targeting each one independently.
 - **Strategy**: Big-bang with thermidor major.
 - **Communication**: Migration guide with before/after examples.

@@ -669,7 +669,7 @@ describe('Analytics', () => {
 
 describe('doNotTrack', () => {
   it('should do business as usual if doNotTrack returns false', () => {
-    vi.spyOn(doNotTrack, 'doNotTrack').mockImplementation(() => false);
+    vi.spyOn(doNotTrack, 'shouldDisableAnalyticsForPrivacy').mockImplementation(() => false);
 
     let client = new CoveoAnalyticsClient({});
 
@@ -678,7 +678,7 @@ describe('doNotTrack', () => {
   });
 
   it('should honor doNotTrack', () => {
-    vi.spyOn(doNotTrack, 'doNotTrack').mockImplementation(() => true);
+    vi.spyOn(doNotTrack, 'shouldDisableAnalyticsForPrivacy').mockImplementation(() => true);
 
     let client = new CoveoAnalyticsClient({});
 
@@ -687,7 +687,7 @@ describe('doNotTrack', () => {
   });
 
   it('should not clear existing cookies', async () => {
-    vi.spyOn(doNotTrack, 'doNotTrack').mockImplementation(() => true);
+    vi.spyOn(doNotTrack, 'shouldDisableAnalyticsForPrivacy').mockImplementation(() => true);
     Cookie.set('coveo_visitorId', aVisitorId);
     expect(Cookie.get('coveo_visitorId')).toBe(aVisitorId);
 
@@ -750,7 +750,7 @@ describe('clientId from link', () => {
     client = new CoveoAnalyticsClient({});
     // need to clear existing clientIds
     client.clear();
-    vi.spyOn(doNotTrack, 'doNotTrack').mockImplementation(() => false);
+    vi.spyOn(doNotTrack, 'shouldDisableAnalyticsForPrivacy').mockImplementation(() => false);
   });
 
   it('will extract a clientId from a query param if the referrer matches all and it is not expired', async () => {
@@ -837,7 +837,7 @@ describe('clientId from link', () => {
 
   it('will not extract a clientId from a query param if DNT is enabled', async () => {
     client.setAcceptedLinkReferrers(['*']);
-    vi.spyOn(doNotTrack, 'doNotTrack').mockImplementation(() => true);
+    vi.spyOn(doNotTrack, 'shouldDisableAnalyticsForPrivacy').mockImplementation(() => true);
     const linkString = new CoveoLinkParam(forcedUUID, Date.now());
     navigateTo('http://my.receivingdomain.com/?cvo_cid=' + linkString.toString());
     expect(await client.getCurrentVisitorId()).not.toBe(null);

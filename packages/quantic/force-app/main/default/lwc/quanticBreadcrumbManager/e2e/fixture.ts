@@ -1,12 +1,13 @@
 import {BreadcrumbManagerObject} from './pageObject';
-import {quanticBase} from '../../../../../../playwright/fixtures/baseFixture';
-import {SearchObject} from '../../../../../../playwright/page-object/searchObject';
+import {facetBase} from '../../../../../../playwright/fixtures/baseFacetFixture';
+import {BaseFacetObject} from '../../../../../../playwright/page-object/baseFacetObject';
 import {
   searchRequestRegex,
   insightSearchRequestRegex,
 } from '../../../../../../playwright/utils/requests';
 import {InsightSetupObject} from '../../../../../../playwright/page-object/insightSetupObject';
 import {useCaseEnum} from '../../../../../../playwright/utils/useCase';
+import {allIdle} from './data';
 
 const breadcrumbManagerUrl = 's/quantic-breadcrumb-manager';
 
@@ -17,7 +18,6 @@ interface BreadcrumbManagerOptions {
 
 type QuanticBreadcrumbManagerE2EFixtures = {
   breadcrumbManager: BreadcrumbManagerObject;
-  search: SearchObject;
   options: Partial<BreadcrumbManagerOptions>;
 };
 
@@ -32,43 +32,54 @@ type QuanticBreadcrumbManagerE2eInsightFixtures =
   };
 
 export const testSearch =
-  quanticBase.extend<QuanticBreadcrumbManagerE2ESearchFixtures>({
+  facetBase.extend<QuanticBreadcrumbManagerE2ESearchFixtures>({
     options: {},
     urlHash: '',
-    search: async ({page}, use) => {
-      await use(new SearchObject(page, searchRequestRegex));
+    facetResponses: {responses: [allIdle]},
+    baseFacet: async ({page}, use) => {
+      await use(new BaseFacetObject(page, searchRequestRegex));
     },
     breadcrumbManager: async (
-      {page, options, configuration, search, urlHash},
+      {page, options, configuration, baseFacet, urlHash, facetResponses},
       use
     ) => {
+      await baseFacet.mockSearchWithBaseResponse();
       await page.goto(
         urlHash ? `${breadcrumbManagerUrl}#${urlHash}` : breadcrumbManagerUrl
       );
+      await baseFacet.mockSearchWithFacetResponseSequence(
+        facetResponses?.responses
+      );
       configuration.configure(options);
-      await search.waitForSearchResponse();
+      await baseFacet.waitForSearchResponse();
       await use(new BreadcrumbManagerObject(page));
     },
   });
 
 export const testInsight =
-  quanticBase.extend<QuanticBreadcrumbManagerE2eInsightFixtures>({
+  facetBase.extend<QuanticBreadcrumbManagerE2eInsightFixtures>({
     options: {},
-    search: async ({page}, use) => {
-      await use(new SearchObject(page, insightSearchRequestRegex));
+    facetResponses: {responses: [allIdle]},
+    baseFacet: async ({page}, use) => {
+      await use(new BaseFacetObject(page, insightSearchRequestRegex));
     },
     insightSetup: async ({page}, use) => {
       await use(new InsightSetupObject(page));
     },
     breadcrumbManager: async (
-      {page, options, search, configuration, insightSetup},
+      {page, options, baseFacet, configuration, insightSetup, facetResponses},
       use
     ) => {
       await page.goto(breadcrumbManagerUrl);
+      await baseFacet.mockSearchWithFacetResponseSequence(
+        facetResponses?.responses
+      );
       configuration.configure({...options, useCase: useCaseEnum.insight});
       await insightSetup.waitForInsightInterfaceInitialization();
-      await search.performSearch();
-      await search.waitForSearchResponse();
+      await Promise.all([
+        baseFacet.waitForSearchResponse(),
+        baseFacet.performSearch(),
+      ]);
       await use(new BreadcrumbManagerObject(page));
     },
   });

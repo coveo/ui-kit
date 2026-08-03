@@ -22,6 +22,13 @@ export interface ThunkExtraArguments {
   analyticsClientMiddleware: AnalyticsClientSendEventHook;
   logger: Logger;
   validatePayload: typeof validatePayloadAndThrow;
+  /**
+   * Legacy-analytics-only, immutable engine policy. When `true`, browser privacy
+   * signals (Do Not Track and Global Privacy Control) are not honored. Sourced from
+   * the engine configuration at build time and intentionally kept out of Redux
+   * analytics state so it cannot be mutated at runtime.
+   */
+  disableBrowserPrivacySignals?: boolean;
 }
 
 export function buildThunkExtraArguments(
@@ -37,6 +44,7 @@ export function buildThunkExtraArguments(
     validatePayload,
     preprocessRequest,
     logger,
+    disableBrowserPrivacySignals: configuration.analytics?.disableBrowserPrivacySignals,
   };
 }
 

@@ -30,6 +30,22 @@ import {
 
 vi.mock('@coveo/relay');
 
+const mockSearchPageClientConstructor = vi.fn();
+
+vi.mock('coveo.analytics', async (importOriginal) => {
+  const mod = await importOriginal<typeof import('coveo.analytics')>();
+  class SpiedCoveoSearchPageClient extends mod.CoveoSearchPageClient {
+    constructor(...args: ConstructorParameters<typeof mod.CoveoSearchPageClient>) {
+      super(...args);
+      mockSearchPageClientConstructor(...args);
+    }
+  }
+  return {
+    ...mod,
+    CoveoSearchPageClient: SpiedCoveoSearchPageClient,
+  };
+});
+
 const mockGetHistory = vi.fn();
 
 vi.mock('./coveo.analytics/history-store.js', async () => {
@@ -49,8 +65,11 @@ describe('#configureLegacyAnalytics', () => {
   it('should be enabled by default', () => {
     const state = createMockState();
     expect(
-      configureLegacyAnalytics({getState: () => state, logger}).coveoAnalyticsClient instanceof
-        CoveoAnalyticsClient
+      configureLegacyAnalytics({
+        getState: () => state,
+        logger,
+        provider: new SearchAnalyticsProvider(() => state),
+      }).coveoAnalyticsClient instanceof CoveoAnalyticsClient
     ).toBe(true);
   });
 
@@ -59,8 +78,11 @@ describe('#configureLegacyAnalytics', () => {
     state.configuration.analytics.enabled = true;
 
     expect(
-      configureLegacyAnalytics({getState: () => state, logger}).coveoAnalyticsClient instanceof
-        CoveoAnalyticsClient
+      configureLegacyAnalytics({
+        getState: () => state,
+        logger,
+        provider: new SearchAnalyticsProvider(() => state),
+      }).coveoAnalyticsClient instanceof CoveoAnalyticsClient
     ).toBe(true);
   });
 
@@ -68,9 +90,47 @@ describe('#configureLegacyAnalytics', () => {
     const state = createMockState();
     state.configuration.analytics.enabled = false;
     expect(
-      configureLegacyAnalytics({getState: () => state, logger}).coveoAnalyticsClient instanceof
-        CoveoAnalyticsClient
+      configureLegacyAnalytics({
+        getState: () => state,
+        logger,
+        provider: new SearchAnalyticsProvider(() => state),
+      }).coveoAnalyticsClient instanceof CoveoAnalyticsClient
     ).toBe(false);
+  });
+
+  it('should forward disableBrowserPrivacySignals to the legacy search client when configured', () => {
+    const state = createMockState();
+    mockSearchPageClientConstructor.mockClear();
+
+    configureLegacyAnalytics({
+      getState: () => state,
+      logger,
+      provider: new SearchAnalyticsProvider(() => state),
+      disableBrowserPrivacySignals: true,
+    });
+
+    expect(mockSearchPageClientConstructor).toHaveBeenCalledTimes(1);
+    const [options] = mockSearchPageClientConstructor.mock.calls[0] as [
+      {disableBrowserPrivacySignals?: boolean},
+    ];
+    expect(options.disableBrowserPrivacySignals).toBe(true);
+  });
+
+  it('should leave disableBrowserPrivacySignals undefined on the legacy search client when not configured', () => {
+    const state = createMockState();
+    mockSearchPageClientConstructor.mockClear();
+
+    configureLegacyAnalytics({
+      getState: () => state,
+      logger,
+      provider: new SearchAnalyticsProvider(() => state),
+    });
+
+    expect(mockSearchPageClientConstructor).toHaveBeenCalledTimes(1);
+    const [options] = mockSearchPageClientConstructor.mock.calls[0] as [
+      {disableBrowserPrivacySignals?: boolean},
+    ];
+    expect(options.disableBrowserPrivacySignals).toBeUndefined();
   });
 
   it('should extract pageId from last page view in action history', () => {

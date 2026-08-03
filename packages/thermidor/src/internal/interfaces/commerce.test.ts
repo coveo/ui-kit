@@ -2,7 +2,7 @@ import {describe, it, expect, vi} from 'vitest';
 import {CommerceInterfaceImpl} from './commerce.js';
 import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
-import type {FacadeResolverFactory, Facades, EndpointThunk} from '@/src/internal/utils/index.js';
+import type {FacadeResolver, Facades, EndpointThunk} from '@/src/internal/utils/index.js';
 
 function createMockEngine(): FullEngine {
   return {
@@ -27,18 +27,18 @@ describe('CommerceInterfaceImpl', () => {
       const engine = createMockEngine();
       const instance = new CommerceInterfaceImpl(engine, 'test-id');
 
-      const thunks = getInterfaceInternals(instance).resolveFacades('search');
+      const thunk = getInterfaceInternals(instance).resolveFacade('search');
 
-      expect(thunks).toHaveLength(1);
+      expect(thunk).toBeDefined();
     });
 
     it('uses the default suggestions resolver', () => {
       const engine = createMockEngine();
       const instance = new CommerceInterfaceImpl(engine, 'test-id');
 
-      const thunks = getInterfaceInternals(instance).resolveFacades('suggestions');
+      const thunk = getInterfaceInternals(instance).resolveFacade('suggestions');
 
-      expect(thunks).toHaveLength(1);
+      expect(thunk).toBeDefined();
     });
   });
 
@@ -48,17 +48,16 @@ describe('CommerceInterfaceImpl', () => {
       const customSearchThunk = createMockThunk();
       const customSuggestionsThunk = createMockThunk();
 
-      const customResolvers: Record<Facades['commerce'], FacadeResolverFactory> = {
-        search: (_engine) => (_scope) => customSearchThunk,
-        suggestions: (_engine) => (_scope) => customSuggestionsThunk,
+      const customResolvers: Record<Facades['commerce'], FacadeResolver> = {
+        search: (_iface) => customSearchThunk,
+        suggestions: (_iface) => customSuggestionsThunk,
       };
 
       const instance = new CommerceInterfaceImpl(engine, 'test-id', customResolvers);
 
-      const thunks = getInterfaceInternals(instance).resolveFacades('search');
+      const thunk = getInterfaceInternals(instance).resolveFacade('search');
 
-      expect(thunks).toHaveLength(1);
-      expect(thunks[0]).toBe(customSearchThunk);
+      expect(thunk).toBe(customSearchThunk);
     });
 
     it('uses the custom suggestions resolver instead of the default', () => {
@@ -66,17 +65,16 @@ describe('CommerceInterfaceImpl', () => {
       const customSearchThunk = createMockThunk();
       const customSuggestionsThunk = createMockThunk();
 
-      const customResolvers: Record<Facades['commerce'], FacadeResolverFactory> = {
-        search: (_engine) => (_scope) => customSearchThunk,
-        suggestions: (_engine) => (_scope) => customSuggestionsThunk,
+      const customResolvers: Record<Facades['commerce'], FacadeResolver> = {
+        search: (_iface) => customSearchThunk,
+        suggestions: (_iface) => customSuggestionsThunk,
       };
 
       const instance = new CommerceInterfaceImpl(engine, 'test-id', customResolvers);
 
-      const thunks = getInterfaceInternals(instance).resolveFacades('suggestions');
+      const thunk = getInterfaceInternals(instance).resolveFacade('suggestions');
 
-      expect(thunks).toHaveLength(1);
-      expect(thunks[0]).toBe(customSuggestionsThunk);
+      expect(thunk).toBe(customSuggestionsThunk);
     });
   });
 
@@ -85,32 +83,26 @@ describe('CommerceInterfaceImpl', () => {
       const engine = createMockEngine();
       const customSearchThunk = createMockThunk();
 
-      const customResolvers: Partial<Record<Facades['commerce'], FacadeResolverFactory>> = {
-        search: (_engine) => (_scope) => customSearchThunk,
+      const customResolvers: Record<Facades['commerce'], FacadeResolver> = {
+        search: (_iface) => customSearchThunk,
+        suggestions: (_iface) => createMockThunk(),
       };
 
       const instance = new CommerceInterfaceImpl(engine, 'test-id', customResolvers);
 
-      const thunks = getInterfaceInternals(instance).resolveFacades('search');
+      const thunk = getInterfaceInternals(instance).resolveFacade('search');
 
-      expect(thunks).toHaveLength(1);
-      expect(thunks[0]).toBe(customSearchThunk);
+      expect(thunk).toBe(customSearchThunk);
     });
 
     it('falls back to the default resolver for the non-overridden facade', () => {
       const engine = createMockEngine();
-      const customSearchThunk = createMockThunk();
+      const instance = new CommerceInterfaceImpl(engine, 'test-id');
 
-      const customResolvers: Partial<Record<Facades['commerce'], FacadeResolverFactory>> = {
-        search: (_engine) => (_scope) => customSearchThunk,
-      };
+      const thunk = getInterfaceInternals(instance).resolveFacade('suggestions');
 
-      const instance = new CommerceInterfaceImpl(engine, 'test-id', customResolvers);
-
-      const thunks = getInterfaceInternals(instance).resolveFacades('suggestions');
-
-      expect(thunks).toHaveLength(1);
-      expect(thunks[0]).not.toBe(customSearchThunk);
+      expect(thunk).toBeDefined();
+      expect(thunk).not.toBe(createMockThunk());
     });
   });
 });

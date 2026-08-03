@@ -6,7 +6,7 @@ import {getOrCreateCartSlice} from '@/src/internal/features/cart/index.js';
 import {BaseController} from '@/src/internal/utils/index.js';
 import {createMemoizedStateSelector} from '@/src/internal/utils/index.js';
 import type {Supports} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import {getOrCreateCartActions} from '@/src/internal/features/cart/index.js';
 import {getOrCreateCartSelectors} from '@/src/internal/features/cart/index.js';
 import type {Controller} from '@/src/public/controllers/controller-types.js';
@@ -15,7 +15,7 @@ class CartControllerImpl extends BaseController<CartControllerState> {
   #actions: ReturnType<typeof getOrCreateCartActions>;
 
   constructor(options: CartControllerOptions) {
-    const {engine} = getHandleInternals(options.interface);
+    const {engine} = getInterfaceInternals(options.interface);
 
     engine.adoptSlice(getOrCreateCartSlice(options.interface));
 
