@@ -43,7 +43,8 @@ export const testSearch =
         )
       );
     },
-    resultQuickview: async ({page, options, configuration}, use) => {
+    resultQuickview: async ({page, options, configuration, search}, use) => {
+      await search.mockSearchWithBaseResponse();
       await page.goto(resultQuickviewUrl);
       await configuration.configure(options);
       await use(new ResultQuickviewObject(page));
@@ -69,11 +70,14 @@ export const testInsight =
       {page, options, search, configuration, insightSetup},
       use
     ) => {
+      await search.mockSearchWithBaseResponse();
       await page.goto(resultQuickviewUrl);
       await configuration.configure({...options, useCase: useCaseEnum.insight});
       await insightSetup.waitForInsightInterfaceInitialization();
-      await search.performSearch();
-      await search.waitForSearchResponse();
+      await Promise.all([
+        search.waitForSearchResponse(),
+        search.performSearch(),
+      ]);
       await use(new ResultQuickviewObject(page));
     },
   });

@@ -1,14 +1,15 @@
 import {useEffect, useRef} from 'react';
-import {SortPlaceholder} from '../SortPlaceholder/SortPlaceholder.js';
+import type {SortController} from '@coveo/thermidor';
+import {Sort} from '../Sort/Sort.js';
 import styles from './SortFiltersModal.module.css';
 
 interface SortFiltersModalProps {
   open: boolean;
   onClose: () => void;
-  onToast: () => void;
+  sortController: SortController<any>;
 }
 
-export function SortFiltersModal({open, onClose, onToast}: SortFiltersModalProps) {
+export function SortFiltersModal({open, onClose, sortController}: SortFiltersModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -51,7 +52,7 @@ export function SortFiltersModal({open, onClose, onToast}: SortFiltersModalProps
       <div className={styles.scrollContent}>
         <section className={styles.section}>
           <h3 className={styles.sectionTitle}>Sort</h3>
-          <SortPlaceholder onToast={onToast} />
+          <Sort controller={sortController} />
         </section>
         <section className={styles.section}>
           <h3 className={styles.sectionTitle}>Filters</h3>
