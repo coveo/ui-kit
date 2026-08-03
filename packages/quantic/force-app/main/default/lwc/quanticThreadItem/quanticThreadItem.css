@@ -6,7 +6,7 @@
   display: grid;
   grid-template-columns: 10px 1fr;
   grid-template-rows: auto 1fr;
-  column-gap: var(--lwc-spacingXSmall, 8px);
+  column-gap: var(--slds-g-spacing-2, var(--lwc-spacingXSmall, 8px));
 }
 
 .thread-item__timeline {
@@ -17,14 +17,14 @@
 .thread-item__dot-column {
   width: 10px;
   height: 1lh;
-  margin-block: var(--lwc-spacingXxSmall, 4px);
+  margin-block: var(--slds-g-spacing-1, var(--lwc-spacingXxSmall, 4px));
 }
 
 .thread-item__line {
   position: relative;
   flex: 1;
   width: 1px;
-  background-color: var(--slds-g-color-neutral-base-90, var(--lwc-colorBorder, #dddbda));
+  background-color: var(--lwc-colorBorder, #dddbda);
   transition: background-color 0.2s ease;
 }
 
@@ -34,8 +34,8 @@
   position: absolute;
   left: 0;
   width: 1px;
-  height: 8px;
-  background-color: var(--slds-g-color-neutral-base-90, var(--lwc-colorBorder, #dddbda));
+  height: var(--slds-g-sizing-3, 8px);
+  background-color: var(--lwc-colorBorder, #dddbda);
   transition: background-color 0.2s ease;
 }
 
@@ -63,10 +63,10 @@
 }
 
 .thread-item__dot {
-  height: 8px;
-  width: 8px;
+  height: var(--slds-g-sizing-3, 8px);
+  width: var(--slds-g-sizing-3, 8px);
   border-radius: 50%;
-  background-color: var(--slds-g-color-neutral-base-90, var(--lwc-colorBorder, #dddbda));
+  background-color: var(--lwc-colorBorder, #dddbda);
   transition: background-color 0.2s ease;
 }
 
@@ -79,7 +79,7 @@
 }
 
 .thread-item__dot--expanded {
-  background-color: var(--slds-g-color-on-surface-3, var(--lwc-colorTextDefault, #080707));
+  background-color: var(--lwc-colorTextDefault, #080707);
 }
 
 .thread-item__clamped-text {
@@ -95,5 +95,5 @@
 }
 
 .thread-item__title-button:hover {
-  background-color: var(--slds-g-color-surface-container-1, var(--lwc-colorBackgroundRowHover, #f3f2f2));
+  background-color: var(--lwc-colorBackgroundRowHover, #f3f2f2);
 }

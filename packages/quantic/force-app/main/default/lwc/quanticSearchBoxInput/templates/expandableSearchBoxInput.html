@@ -9,7 +9,7 @@
             <div class={searchBoxContainerClass} role="none">
               <template if:true={withoutSubmitButton}>
                 <div
-                  class="slds-grid slds-align_absolute-center searchbox__icon-container searchbox__icon-container-left"
+                  class="slds-grid slds-align_absolute-center searchbox__icon-container slds-m-left_x-small"
                 >
                   <lightning-icon
                     class="slds-icon slds-input__icon slds-input__icon_left searchbox__search-icon"
@@ -42,7 +42,7 @@
 
               <template if:false={isQueryEmpty}>
                 <div
-                  class="slds-grid slds-align_absolute-center searchbox__icon-container searchbox__icon-container-right"
+                  class="slds-grid slds-align_absolute-center searchbox__icon-container slds-m-right_x-small"
                 >
                   <lightning-button-icon
                     onclick={clearInput}
