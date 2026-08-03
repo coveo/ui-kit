@@ -143,16 +143,6 @@ jobs:
           | awk '/^@(coveo|samples)/ && !/#/ {print $1}' \
           | tr '\n' ' ')
           echo "projects=$AFFECTED" >> "$GITHUB_OUTPUT"
-      # TEMPORARY (remove before merge): validates that running the build before
-      # the affected dry-run does not dirty tracked files. A real build can emit
-      # tracked generated files (see the build-missing job), and with
-      # futureFlags.affectedUsingTaskInputs those would count as task inputs and
-      # could inflate the affected set. Empty output here confirms it does not.
-      - name: 'VALIDATION: working tree cleanliness after build'
-        run: |
-          echo "--- git status --porcelain (expected: empty) ---"
-          git status --porcelain
-          echo "--- end ---"
       - name: Log affected projects
         run: |
           echo "Affected projects: ${STEPS_SET_OUTPUTS_PROJECTS}"
