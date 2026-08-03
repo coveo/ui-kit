@@ -1,5 +1,5 @@
 import {Page} from '@playwright/test';
-import * as searchResponses from '@coveo/platform-mock-api/search/search-response';
+import {searchResponses} from '@coveo/platform-mock-api/search';
 import {SearchObject} from './searchObject';
 
 export type QuestionAnswerData = {

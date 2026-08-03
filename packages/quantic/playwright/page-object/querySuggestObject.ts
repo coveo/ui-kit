@@ -1,5 +1,5 @@
 import {Page, Request, Response} from '@playwright/test';
-import * as querySuggestResponses from '@coveo/platform-mock-api/search/querySuggest-response';
+import {querySuggestResponses} from '@coveo/platform-mock-api/search';
 
 export class QuerySuggestObject {
   constructor(
