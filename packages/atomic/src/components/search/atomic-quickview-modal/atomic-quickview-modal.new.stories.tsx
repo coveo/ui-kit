@@ -116,6 +116,9 @@ export const Closed: Story = {
 export const A11yDialog: Story = {
   tags: ['a11y', 'test', '!dev'],
   name: 'A11y Dialog',
+  parameters: {
+    chromatic: {disableSnapshot: true},
+  },
   play: async (context) => {
     await play(context);
     await testDialogA11y(context, {triggerLabel: 'Quick View'});
