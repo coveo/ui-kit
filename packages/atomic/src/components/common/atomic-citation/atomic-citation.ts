@@ -251,7 +251,7 @@ export class AtomicCitation extends LitElement {
             class: 'text-md font-bold',
           },
         })(html`${this.citation.title}`)}
-        <p class="text-on-background text-sm">${this.getTruncatedText()}</p>
+        <p class="text-on-background text-sm break-all">${this.getTruncatedText()}</p>
       </div>
     `;
   }
