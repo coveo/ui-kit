@@ -212,6 +212,18 @@ function resolveEsm(moduleName) {
   return resolve(dirname(packageJsonPath), packageJson.module || packageJson.main);
 }
 
+/**
+ * Absolute path for a package subpath. `packages: 'external'` does not externalize absolute
+ * paths, so aliasing to one keeps the module bundled. Required for the unbundled ESM modules of
+ * coveo.analytics: left as bare specifiers they would emit `require()` of an `.mjs` file, which
+ * throws `ERR_REQUIRE_ESM` on the older Node versions this package still supports.
+ *
+ * @param {string} subpath
+ */
+function resolveSubpath(subpath) {
+  return require.resolve(subpath);
+}
+
 function resolveBrowser(moduleName) {
   const packageJsonPath = require.resolve(`${moduleName}/package.json`);
   const packageJson = require(packageJsonPath);
@@ -245,6 +257,9 @@ async function buildBrowserConfig(options, outDir) {
     plugins: [
       alias({
         'coveo.analytics': resolveEsm('coveo.analytics'),
+        'coveo.analytics/dist/esm/history.mjs': resolveSubpath(
+          'coveo.analytics/dist/esm/history.mjs'
+        ),
         pino: resolveBrowser('pino'),
       }),
       ...(options.plugins || []),
@@ -282,6 +297,9 @@ async function buildNodeConfig(options, outDir) {
     plugins: [
       alias({
         'coveo.analytics': resolveEsm('coveo.analytics'),
+        'coveo.analytics/dist/esm/history.mjs': resolveSubpath(
+          'coveo.analytics/dist/esm/history.mjs'
+        ),
       }),
     ],
     ...options,
