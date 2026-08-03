@@ -22,7 +22,6 @@ const DEP_TYPES = ['dependencies', 'devDependencies', 'peerDependencies'];
  * @typedef DepOccurrence
  * @property {string} package - Relative path from workspace root (e.g., `packages/atomic`, `samples/headless/search`, `.`).
  * @property {string} version - Raw version string from the manifest.
- * @property {string} depType - One of `dependencies`, `devDependencies`, `peerDependencies`.
  */
 
 /**
@@ -99,7 +98,6 @@ function getAllWorkspacePackagePaths() {
     }
   }
 
-  // Include the root package.json
   results.push({label: '.', fullPath: workspacesRoot});
 
   return results;
@@ -130,7 +128,7 @@ function collectDependencies() {
         if (!depMap.has(name)) {
           depMap.set(name, []);
         }
-        depMap.get(name).push({package: label, version, depType});
+        depMap.get(name).push({package: label, version});
       }
     }
   }
@@ -172,44 +170,6 @@ function classifyDivergence(occurrences) {
 }
 
 /**
- * Converts a list of entries into the JSON-friendly array format,
- * split by catalog membership.
- *
- * @param {Array<{name: string, occurrences: DepOccurrence[]}>} entries
- * @param {Record<string, string>} catalog
- * @returns {{notInCatalog: Array<{name: string, versions: Record<string, Array<{package: string, depType: string}>>}>, inCatalog: Array<{name: string, versions: Record<string, Array<{package: string, depType: string}>>}>}}
- */
-function buildCategorySection(entries, catalog) {
-  const notInCatalog = entries.filter((e) => !(e.name in catalog));
-  const inCatalog = entries.filter((e) => e.name in catalog);
-
-  return {
-    notInCatalog: notInCatalog.map(buildEntryObject),
-    inCatalog: inCatalog.map(buildEntryObject),
-  };
-}
-
-/**
- * Converts a single entry into the JSON-friendly object format.
- *
- * @param {{name: string, occurrences: DepOccurrence[]}} entry
- * @returns {{name: string, versions: Record<string, Array<{package: string, depType: string}>>}}
- */
-function buildEntryObject({name, occurrences}) {
-  /** @type {Record<string, Array<{package: string, depType: string}>>} */
-  const versions = {};
-
-  for (const occ of occurrences) {
-    if (!versions[occ.version]) {
-      versions[occ.version] = [];
-    }
-    versions[occ.version].push({package: occ.package, depType: occ.depType});
-  }
-
-  return {name, versions};
-}
-
-/**
  * Main entry point. Collects dependencies, classifies divergence, and
  * outputs a structured JSON report to stdout.
  */
@@ -217,61 +177,57 @@ function main() {
   const catalog = readCatalog();
   const depMap = collectDependencies();
 
-  /** @type {Array<{name: string, occurrences: DepOccurrence[]}>} */
-  const differentMajors = [];
-  /** @type {Array<{name: string, occurrences: DepOccurrence[]}>} */
-  const differentMinors = [];
-  /** @type {Array<{name: string, occurrences: DepOccurrence[]}>} */
-  const differentPatches = [];
-  /** @type {Array<{name: string, occurrences: DepOccurrence[]}>} */
-  const exactSame = [];
+  const counts = {
+    'different-majors': 0,
+    'different-minors': 0,
+    'different-patches': 0,
+    'exact-same': 0,
+    'bypasses-catalog': 0,
+  };
+
+  /** @type {Record<string, object>} */
+  const entries = {};
 
   for (const [name, occurrences] of depMap) {
     if (occurrences.length < 2) continue;
 
-    const category = classifyDivergence(occurrences);
-    const entry = {name, occurrences};
+    const divergence = classifyDivergence(occurrences);
 
-    switch (category) {
-      case 'different-majors':
-        differentMajors.push(entry);
-        break;
-      case 'different-minors':
-        differentMinors.push(entry);
-        break;
-      case 'different-patches':
-        differentPatches.push(entry);
-        break;
-      case 'exact-same':
-        exactSame.push(entry);
-        break;
+    const issues = [divergence];
+    if (name in catalog) {
+      issues.push('bypasses-catalog');
+    }
+
+    const entry = {
+      _catalog: catalog[name] ?? null,
+      _issues: issues,
+    };
+
+    for (const occ of occurrences) {
+      entry[occ.package] = occ.version;
+    }
+
+    entries[name] = entry;
+
+    counts[divergence]++;
+    if (issues.includes('bypasses-catalog')) {
+      counts['bypasses-catalog']++;
     }
   }
 
-  const sortByName = (a, b) => a.name.localeCompare(b.name);
-  differentMajors.sort(sortByName);
-  differentMinors.sort(sortByName);
-  differentPatches.sort(sortByName);
-  exactSame.sort(sortByName);
-
-  const total =
-    differentMajors.length + differentMinors.length + differentPatches.length + exactSame.length;
+  const sortedKeys = Object.keys(entries).sort();
+  const total = Object.values(counts).reduce((sum, n) => sum + n, 0);
 
   const report = {
-    summary: {
+    _summary: {
       total,
-      differentMajors: differentMajors.length,
-      differentMinors: differentMinors.length,
-      differentPatches: differentPatches.length,
-      exactSame: exactSame.length,
-    },
-    categories: {
-      differentMajors: buildCategorySection(differentMajors, catalog),
-      differentMinors: buildCategorySection(differentMinors, catalog),
-      differentPatches: buildCategorySection(differentPatches, catalog),
-      exactSame: buildCategorySection(exactSame, catalog),
+      ...counts,
     },
   };
+
+  for (const key of sortedKeys) {
+    report[key] = entries[key];
+  }
 
   console.log(JSON.stringify(report, null, 2));
 }
