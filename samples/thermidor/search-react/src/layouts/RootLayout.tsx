@@ -4,7 +4,7 @@ import styles from './RootLayout.module.css';
 export function RootLayout() {
   return (
     <div className={styles.layout}>
-      <nav className={styles.nav}>
+      <nav className={styles.nav} aria-label="Main navigation">
         <NavLink
           to="/"
           end
@@ -19,7 +19,9 @@ export function RootLayout() {
           Search
         </NavLink>
       </nav>
-      <Outlet />
+      <main>
+        <Outlet />
+      </main>
     </div>
   );
 }
