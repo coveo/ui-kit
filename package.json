@@ -16,6 +16,7 @@
     "package-compatibility": "node ./scripts/ci/package-compatibility.mjs",
     "pr:report": "echo 'TODO KIT-5109: pr:report must be reactivated after pnpm has been merged in main'",
     "report:bundle-size:time-series": "node ./scripts/reports/bundle-size/time-series.mjs",
+    "report:catalog:candidates": "node ./scripts/report-catalog-candidates.mjs",
     "pre-commit": "lint-staged",
     "changeset": "changeset",
     "version-packages": "changeset version",
@@ -49,7 +50,8 @@
     "semver": "7.8.5",
     "turbo": "2.10.2",
     "typescript": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "yaml": "catalog:"
   },
   "engines": {
     "node": "^22.14.0 || ^24.11.0",
