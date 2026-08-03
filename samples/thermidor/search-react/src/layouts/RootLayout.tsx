@@ -8,17 +8,13 @@ export function RootLayout() {
         <NavLink
           to="/"
           end
-          className={({isActive}) =>
-            `${styles.tab} ${isActive ? styles.active : ''}`
-          }
+          className={({isActive}) => `${styles.tab} ${isActive ? styles.active : ''}`}
         >
           Home
         </NavLink>
         <NavLink
           to="/search"
-          className={({isActive}) =>
-            `${styles.tab} ${isActive ? styles.active : ''}`
-          }
+          className={({isActive}) => `${styles.tab} ${isActive ? styles.active : ''}`}
         >
           Search
         </NavLink>
