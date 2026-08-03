@@ -46,7 +46,7 @@ export function createSortSelectors(interfaceId: string) {
           .filter((c): c is CommerceSortCriterion & {by: 'field'} => c.by === 'field')
           .map((c) => ({
             field: c.field,
-            direction: (c.direction === 'ascending' ? 'asc' : 'desc') as 'asc' | 'desc',
+            direction: c.direction === 'ascending' ? 'asc' : 'desc',
             ...(c.displayName ? {displayName: c.displayName} : {}),
           }));
 
