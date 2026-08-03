@@ -4,6 +4,7 @@ export {getOrCreateGenerativeSelectors} from './generative-selectors.js';
 export {
   createHydrateSubInterface,
   getOrCreateHydrateFromSnapshotAction,
+  rehydrateRoutedInterfaces,
 } from './generative-hydration.js';
 export {
   getOrCreateRoutedInterfaceRegistry,

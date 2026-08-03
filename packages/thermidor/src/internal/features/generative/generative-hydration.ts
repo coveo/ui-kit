@@ -12,10 +12,16 @@ import {getOrCreateSearchBoxActions} from '@/src/internal/features/search-box/in
 import {getOrCreateSearchBoxSlice} from '@/src/internal/features/search-box/index.js';
 import {createConverseSearchFacadeResolver} from '@/src/internal/api/converse-search/index.js';
 import {createCommerceSuggestionsFacadeResolver} from '@/src/internal/api/commerce-query-suggest/index.js';
+import type {RoutedInterfaceRegistry} from './routed-interface-registry.js';
 
 const ACTIVITY_TYPE_TO_ROUTED_USE_CASE: Record<string, RoutedUseCase> = {
   commerce_search_api_response: 'commerceSearch',
   search_api_response: 'search',
+};
+
+const ROUTED_USE_CASE_TO_ACTIVITY_TYPE: Record<RoutedUseCase, string> = {
+  commerceSearch: 'commerce_search_api_response',
+  search: 'search_api_response',
 };
 
 type HydrateAction = ReturnType<typeof createHydrateAction>;
@@ -99,4 +105,41 @@ function extractEffectiveQuery(
   }
 
   return fallbackQuery;
+}
+
+export function rehydrateRoutedInterfaces(
+  turns: {
+    id: string;
+    routedInterface?: {
+      useCase: string;
+      snapshot: Record<string, unknown>;
+      query: string | undefined;
+    };
+  }[],
+  registry: RoutedInterfaceRegistry,
+  hydrateSubInterface: HydrateSubInterface
+): void {
+  for (const turn of turns) {
+    if (!turn.routedInterface) {
+      continue;
+    }
+    const activityType =
+      ROUTED_USE_CASE_TO_ACTIVITY_TYPE[turn.routedInterface.useCase as RoutedUseCase];
+    if (!activityType) {
+      continue;
+    }
+    const hydrationResult = hydrateSubInterface(
+      activityType,
+      turn.routedInterface.snapshot,
+      turn.routedInterface.query
+    );
+    if (hydrationResult) {
+      registry.register(turn.id, {
+        useCase: hydrationResult.useCase,
+        interface: hydrationResult.interface,
+        snapshot: hydrationResult.snapshot,
+        query: hydrationResult.query,
+      });
+    }
+  }
 }
