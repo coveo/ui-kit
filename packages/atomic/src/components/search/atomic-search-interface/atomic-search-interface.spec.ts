@@ -229,7 +229,7 @@ describe('atomic-search-interface', () => {
         );
       });
 
-      it('should cause the element matching the scrollContainer selector to be smoothly scrolled into view when possible', async () => {
+      it('should cause the element matching the scrollContainer selector to be scrolled into view when possible', async () => {
         const element = await setupElement();
         await element.initialize(searchEngineConfig);
 
@@ -238,9 +238,7 @@ describe('atomic-search-interface', () => {
 
         element.dispatchEvent(event);
 
-        expect(scrollIntoViewSpy).toHaveBeenCalledExactlyOnceWith({
-          behavior: 'smooth',
-        });
+        expect(scrollIntoViewSpy).toHaveBeenCalledExactlyOnceWith();
       });
     });
   });

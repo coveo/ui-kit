@@ -7,20 +7,18 @@ import {buildSearchInterface} from '@/src/public/interfaces/search.js';
 
 const mockConverseSearchThunk = vi.fn() as unknown as EndpointThunk;
 const mockConverseResolverFactory = vi.fn(
-  () => (_engine: unknown) => (_scope: unknown) => mockConverseSearchThunk
+  (_generativeInterface: unknown) => (_iface: unknown) => mockConverseSearchThunk
 );
 
 const mockSuggestionsThunk = vi.fn() as unknown as EndpointThunk;
-const mockSuggestionsFactory = vi.fn(
-  (_engine: unknown) => (_scope: unknown) => mockSuggestionsThunk
-);
 
 vi.mock('@/src/internal/api/converse-search/index.js', () => ({
-  createConverseSearchFacadeResolver: (...args: unknown[]) => mockConverseResolverFactory(...args),
+  createConverseSearchFacadeResolver: (generativeInterface: unknown) =>
+    mockConverseResolverFactory(generativeInterface),
 }));
 
 vi.mock('@/src/internal/api/commerce-query-suggest/index.js', () => ({
-  createCommerceSuggestionsFacadeResolver: (...args: unknown[]) => mockSuggestionsFactory(...args),
+  createCommerceSuggestionsFacadeResolver: (_iface: unknown) => mockSuggestionsThunk,
 }));
 
 function createTestEngine() {
@@ -60,9 +58,8 @@ describe('createHydrateSubInterface - resolver injection', () => {
       expect(result).not.toBeNull();
       expect(result!.useCase).toBe('commerceSearch');
 
-      const thunks = getInterfaceInternals(result!.interface).resolveFacades('search');
-      expect(thunks).toHaveLength(1);
-      expect(thunks[0]).toBe(mockConverseSearchThunk);
+      const thunk = getInterfaceInternals(result!.interface).resolveFacade('search');
+      expect(thunk).toBe(mockConverseSearchThunk);
     });
 
     it('keeps the default suggestions facade resolver', () => {
@@ -71,9 +68,8 @@ describe('createHydrateSubInterface - resolver injection', () => {
 
       const result = hydrate('commerce_search_api_response', content);
 
-      const thunks = getInterfaceInternals(result!.interface).resolveFacades('suggestions');
-      expect(thunks).toHaveLength(1);
-      expect(thunks[0]).toBe(mockSuggestionsThunk);
+      const thunk = getInterfaceInternals(result!.interface).resolveFacade('suggestions');
+      expect(thunk).toBe(mockSuggestionsThunk);
     });
 
     it('constructs the converse resolver with the generativeInterface handle', () => {
@@ -110,9 +106,8 @@ describe('createHydrateSubInterface - resolver injection', () => {
       expect(result).not.toBeNull();
       expect(result!.useCase).toBe('search');
 
-      const thunks = getInterfaceInternals(result!.interface).resolveFacades('search');
-      expect(thunks).toHaveLength(1);
-      expect(thunks[0]).not.toBe(mockConverseSearchThunk);
+      const thunk = getInterfaceInternals(result!.interface).resolveFacade('search');
+      expect(thunk).not.toBe(mockConverseSearchThunk);
       expect(mockConverseResolverFactory).not.toHaveBeenCalled();
     });
   });

@@ -109,7 +109,7 @@ const externalizeDependencies = (configType: 'DEVELOPMENT' | 'PRODUCTION' | unde
       }
 
       // For local Storybook development, we want to use local packages source to allow for easier debugging and HMR.
-      // We also want to use local packages for Chromatic builds to ensure TurboSnap can "resolves" changes in dependency of Atomic.
+      // We also want to use local packages for Chromatic builds so TurboSnap can resolve changes in Atomic dependencies.
       if (configType === 'DEVELOPMENT' || isChromatic) {
         return {
           id: packageMapping.local,

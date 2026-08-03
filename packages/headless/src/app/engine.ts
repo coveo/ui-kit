@@ -195,7 +195,7 @@ function getUpdateAnalyticsConfigurationPayload(
   logger: Logger
 ): UpdateAnalyticsConfigurationActionCreatorPayload | null {
   const {analytics} = configuration;
-  const {analyticsClientMiddleware: _, ...payload} = analytics ?? {};
+  const {analyticsClientMiddleware: _, disableBrowserPrivacySignals, ...payload} = analytics ?? {};
 
   const payloadWithURL = {
     ...payload,
@@ -206,12 +206,27 @@ function getUpdateAnalyticsConfigurationPayload(
   };
 
   // TODO KIT-2844
-  if (payloadWithURL.analyticsMode !== 'next' && doNotTrack()) {
+  const browserPrivacyGateApplies = payloadWithURL.analyticsMode !== 'next';
+  const privacySignalsOverridden =
+    payloadWithURL.analyticsMode === 'legacy' && disableBrowserPrivacySignals === true;
+
+  if (browserPrivacyGateApplies && doNotTrack() && !privacySignalsOverridden) {
     logger.info('Analytics disabled since doNotTrack is active.');
     return {
       ...payloadWithURL,
       enabled: false,
     };
+  }
+
+  if (
+    browserPrivacyGateApplies &&
+    doNotTrack() &&
+    privacySignalsOverridden &&
+    payloadWithURL.enabled !== false
+  ) {
+    logger.warn(
+      'Browser privacy signals (Do Not Track and Global Privacy Control) are present but are being ignored because analytics.disableBrowserPrivacySignals is set to true. Legacy analytics events will be sent, and your integration is responsible for privacy compliance.'
+    );
   }
 
   return payloadWithURL;

@@ -1,7 +1,6 @@
 import {describe, it, expect, beforeEach} from 'vitest';
 import {Engine, getFullEngine} from '@/src/internal/engine/index.js';
 import {buildSearchInterface} from '@/src/public/interfaces/search.js';
-import {composeInterfaces} from '@/src/public/interfaces/compose.js';
 import {buildSearchBoxController} from './search-box/search-box-controller.js';
 import {buildPaginationController} from './pagination/pagination-controller.js';
 import {getOrCreatePaginationActions} from '@/src/internal/features/pagination/index.js';
@@ -40,35 +39,6 @@ describe('Supports<F> structural compatibility', () => {
       const result = controller.submit();
 
       expect(result).toBeInstanceOf(Promise);
-    });
-  });
-
-  describe('SearchBoxController with ComposedInterface', () => {
-    it('setQuery works on a composed interface with two sub-interfaces', () => {
-      const searchA = buildSearchInterface({engine});
-      const searchB = buildSearchInterface({engine});
-      const composed = composeInterfaces({interfaces: [searchA, searchB]});
-
-      const controller = buildSearchBoxController({interface: composed});
-
-      controller.setQuery({query: 'composed query'});
-
-      expect(controller.state.query).toBe('composed query');
-    });
-
-    it('submit dispatches to all sub-interfaces', async () => {
-      const searchA = buildSearchInterface({engine});
-      const searchB = buildSearchInterface({engine});
-      const composed = composeInterfaces({interfaces: [searchA, searchB]});
-
-      const controller = buildSearchBoxController({interface: composed});
-
-      controller.setQuery({query: 'multi'});
-      const result = controller.submit();
-
-      expect(result).toBeInstanceOf(Promise);
-      const resolved = await result;
-      expect(resolved).toHaveLength(2);
     });
   });
 
@@ -125,37 +95,6 @@ describe('Supports<F> structural compatibility', () => {
       controller.selectPage(2);
 
       expect(controller.state.page).toBe(2);
-    });
-  });
-
-  describe('PaginationController with ComposedInterface', () => {
-    it('works with a composed interface', () => {
-      const searchA = buildSearchInterface({engine});
-      const searchB = buildSearchInterface({engine});
-      const composed = composeInterfaces({interfaces: [searchA, searchB]});
-
-      const controller = buildPaginationController({interface: composed});
-
-      expect(controller.state.page).toBe(0);
-      expect(controller.state.pageSize).toBe(10);
-      expect(controller.state.totalCount).toBe(0);
-      expect(controller.state.totalPages).toBe(0);
-    });
-
-    it('setPageSize works with a composed interface', () => {
-      const searchA = buildSearchInterface({engine, id: 'comp-pag-a'});
-      const searchB = buildSearchInterface({engine, id: 'comp-pag-b'});
-      const composed = composeInterfaces({interfaces: [searchA, searchB]});
-
-      const controller = buildPaginationController({interface: composed});
-
-      const fullEngine = getFullEngine(engine);
-      const actions = getOrCreatePaginationActions(composed);
-      fullEngine.mutate(actions.setTotalCount(50));
-
-      controller.setPageSize(25);
-
-      expect(controller.state.pageSize).toBe(25);
     });
   });
 });

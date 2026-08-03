@@ -62,6 +62,12 @@
       "source": "./src/converse/index.ts",
       "import": "./dist/converse/index.js",
       "default": "./dist/converse/index.js"
+    },
+    "./hostedpage": {
+      "types": "./dist/hostedpage/index.d.ts",
+      "source": "./src/hostedpage/index.ts",
+      "import": "./dist/hostedpage/index.js",
+      "default": "./dist/hostedpage/index.js"
     }
   },
   "scripts": {
