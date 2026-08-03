@@ -48,7 +48,7 @@
     "@coveo/bueno": "workspace:*",
     "@coveo/headless": "workspace:*",
     "coveo.analytics": "workspace:*",
-    "dompurify": "3.4.11",
+    "dompurify": "catalog:",
     "marked": "catalog:"
   },
   "engines": {

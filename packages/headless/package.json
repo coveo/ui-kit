@@ -102,7 +102,7 @@
     "@coveo/relay": "workspace:*",
     "@coveo/relay-event-types": "catalog:",
     "@reduxjs/toolkit": "2.12.0",
-    "abortcontroller-polyfill": "1.7.8",
+    "abortcontroller-polyfill": "catalog:",
     "coveo.analytics": "workspace:*",
     "dayjs": "catalog:",
     "exponential-backoff": "catalog:",
@@ -115,7 +115,7 @@
   },
   "devDependencies": {
     "@coveo/documentation": "workspace:*",
-    "live-server": "1.2.2",
+    "live-server": "catalog:",
     "node-fetch": "3.3.2",
     "typedoc": "catalog:",
     "vitest": "catalog:"

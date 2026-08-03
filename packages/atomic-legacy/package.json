@@ -26,6 +26,6 @@
     "@stencil/core": "catalog:"
   },
   "devDependencies": {
-    "i18next": "25.10.10"
+    "i18next": "catalog:"
   }
 }

@@ -78,7 +78,7 @@
     "@ag-ui/client": "catalog:",
     "@coveo/headless": "workspace:*",
     "msw": "catalog:",
-    "natural-orderby": "5.0.0",
+    "natural-orderby": "catalog:",
     "typescript": "catalog:"
   },
   "peerDependencies": {
