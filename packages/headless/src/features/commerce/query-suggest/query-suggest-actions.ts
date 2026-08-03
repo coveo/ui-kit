@@ -35,7 +35,7 @@ export const clearQuerySuggest = createAction(
 
 export type FetchQuerySuggestionsPayload = FetchQuerySuggestionsActionCreatorPayload & {
   /**
-   * The maximum number of query suggestions to request.
+   * The number of query suggestions to request.
    * When not provided, the API default is used.
    */
   count?: number;
