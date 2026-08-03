@@ -7,10 +7,7 @@ import type {ConfigurationSection} from '../../state/state-sections.js';
 import {deepEqualAnyOrder} from '../../utils/compare-utils.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {validateInitialState} from '../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../controller/headless-controller.js';
+import {buildController, type Controller} from '../controller/headless-controller.js';
 import {buildSearchParameterManager} from '../search-parameter-manager/headless-search-parameter-manager.js';
 
 export interface UrlManagerProps {
@@ -35,7 +32,6 @@ export const initialStateSchema = new Schema<Required<UrlManagerInitialState>>({
 /**
  * The `UrlManager` controller can parse an url fragment to extract search parameters which affect the search response.
  *
- * Example: [url-manager.ts](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/url-manager/url-manager.ts)
  *
  * @group Controllers
  * @category UrlManager
@@ -77,10 +73,7 @@ export interface UrlManagerState {
  * @group Controllers
  * @category UrlManager
  */
-export function buildUrlManager(
-  engine: SearchEngine,
-  props: UrlManagerProps
-): UrlManager {
+export function buildUrlManager(engine: SearchEngine, props: UrlManagerProps): UrlManager {
   let lastRequestId: string;
 
   function updateLastRequestId() {
@@ -95,12 +88,7 @@ export function buildUrlManager(
     throw loadReducerError;
   }
 
-  validateInitialState(
-    engine,
-    initialStateSchema,
-    props.initialState,
-    'buildUrlManager'
-  );
+  validateInitialState(engine, initialStateSchema, props.initialState, 'buildUrlManager');
 
   const controller = buildController(engine);
   let previousFragment = props.initialState.fragment;
@@ -118,10 +106,7 @@ export function buildUrlManager(
     subscribe(listener: () => void) {
       const strictListener = () => {
         const newFragment = this.state.fragment;
-        if (
-          !areFragmentsEquivalent(previousFragment, newFragment) &&
-          hasRequestIdChanged()
-        ) {
+        if (!areFragmentsEquivalent(previousFragment, newFragment) && hasRequestIdChanged()) {
           previousFragment = newFragment;
           listener();
         }
@@ -164,9 +149,7 @@ function deserializeFragment(fragment: string) {
 
 function loadUrlManagerReducers(
   engine: SearchEngine
-): engine is SearchEngine<
-  Partial<SearchParametersState> & ConfigurationSection
-> {
+): engine is SearchEngine<Partial<SearchParametersState> & ConfigurationSection> {
   engine.addReducers({configuration});
   return true;
 }

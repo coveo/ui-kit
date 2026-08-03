@@ -53,28 +53,19 @@ If you want to use the CDN instead of [using npm to install Headless](../usage/i
 **Headless Version 1**
 
 ```html
-<script
-  type="module"
-  src="https://static.cloud.coveo.com/headless/latest/headless.esm.js"
-></script>
+<script type="module" src="https://static.cloud.coveo.com/headless/latest/headless.esm.js"></script>
 ```
 
 or
 
 ```html
-<script
-  type="module"
-  src="https://static.cloud.coveo.com/headless/v1/headless.esm.js"
-></script>
+<script type="module" src="https://static.cloud.coveo.com/headless/v1/headless.esm.js"></script>
 ```
 
 **Headless Version 2**
 
 ```html
-<script
-  type="module"
-  src="https://static.cloud.coveo.com/headless/v2/headless.esm.js"
-></script>
+<script type="module" src="https://static.cloud.coveo.com/headless/v2/headless.esm.js"></script>
 ```
 
 ### [`FieldSuggestionsOptions`](../../interfaces/Search.FieldSuggestionsOptions.html)
@@ -480,9 +471,7 @@ export class ExecuteTrigger extends Component<{}, ExecuteTriggerState> {
   componentDidMount() {
     this.controller = buildExecuteTrigger(this.context.engine!);
     this.unsubscribe = this.controller.subscribe(() =>
-      this.controller.state.executions.forEach((execution) =>
-        this.executeFunction(execution)
-      )
+      this.controller.state.executions.forEach((execution) => this.executeFunction(execution))
     );
   }
 

@@ -2,8 +2,7 @@
 
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
-import {baseFoldedResponse} from '@coveo/platform-mock-api/search/search-response';
+import {MockSearchApi, searchResponses} from '@coveo/platform-mock-api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-field-condition/atomic-field-condition.js';
@@ -139,10 +138,9 @@ const SLOTS_DEFAULT = `
 const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-folded-result-list',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-folded-result-list', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-folded-result-list',
@@ -173,22 +171,22 @@ export const Default: Story = {
   },
   beforeEach: async () => {
     searchApiHarness.searchEndpoint.mockOnce(() => ({
-      ...baseFoldedResponse,
+      ...searchResponses.baseFoldedResponse,
       results: [
         {
-          ...baseFoldedResponse.results[0]!,
+          ...searchResponses.baseFoldedResponse.results[0]!,
           totalNumberOfChildResults: 5,
         },
-        baseFoldedResponse.results[1]!,
+        searchResponses.baseFoldedResponse.results[1]!,
       ],
     }));
     searchApiHarness.searchEndpoint.mockOnce(() => ({
-      ...baseFoldedResponse,
+      ...searchResponses.baseFoldedResponse,
       results: [
         {
-          ...baseFoldedResponse.results[0]!,
+          ...searchResponses.baseFoldedResponse.results[0]!,
           childResults: [
-            ...baseFoldedResponse.results[0]!.childResults,
+            ...searchResponses.baseFoldedResponse.results[0]!.childResults,
             {
               title: 'Birds',
               excerpt: 'Bird species',
@@ -203,7 +201,7 @@ export const Default: Story = {
           ],
           totalNumberOfChildResults: 3,
         },
-        baseFoldedResponse.results[1]!,
+        searchResponses.baseFoldedResponse.results[1]!,
       ],
     }));
   },
@@ -217,15 +215,15 @@ export const WithNoResultChildren: Story = {
   },
   beforeEach: async () => {
     searchApiHarness.searchEndpoint.mockOnce(() => ({
-      ...baseFoldedResponse,
+      ...searchResponses.baseFoldedResponse,
       results: [
         {
-          ...baseFoldedResponse.results[0],
+          ...searchResponses.baseFoldedResponse.results[0],
           parentResult: null,
           totalNumberOfChildResults: 0,
           childResults: [],
         },
-      ] as unknown as typeof baseFoldedResponse.results,
+      ] as unknown as typeof searchResponses.baseFoldedResponse.results,
     }));
   },
   play,
@@ -238,13 +236,13 @@ export const WithFewResultChildren: Story = {
   },
   beforeEach: async () => {
     searchApiHarness.searchEndpoint.mockOnce(() => ({
-      ...baseFoldedResponse,
+      ...searchResponses.baseFoldedResponse,
       results: [
         {
-          ...baseFoldedResponse.results[0]!,
+          ...searchResponses.baseFoldedResponse.results[0]!,
           totalNumberOfChildResults: 1,
         },
-        ...baseFoldedResponse.results.slice(1),
+        ...searchResponses.baseFoldedResponse.results.slice(1),
       ],
     }));
   },
@@ -258,10 +256,10 @@ export const WithMoreResultsAvailableAndNoChildren: Story = {
   },
   beforeEach: async () => {
     searchApiHarness.searchEndpoint.mockOnce(() => ({
-      ...baseFoldedResponse,
+      ...searchResponses.baseFoldedResponse,
       results: [
         {
-          ...baseFoldedResponse.results[0]!,
+          ...searchResponses.baseFoldedResponse.results[0]!,
           totalNumberOfChildResults: 10,
           childResults: [],
         },

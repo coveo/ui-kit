@@ -9,11 +9,7 @@ interface QueryErrorDescriptionProps {
   organizationId: string;
 }
 
-export const renderQueryErrorDescription = ({
-  props,
-}: {
-  props: QueryErrorDescriptionProps;
-}) => {
+export const renderQueryErrorDescription = ({props}: {props: QueryErrorDescriptionProps}) => {
   const {errorType, i18n, url, organizationId} = props;
 
   return html`

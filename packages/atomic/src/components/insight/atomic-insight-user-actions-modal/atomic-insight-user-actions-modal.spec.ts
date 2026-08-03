@@ -19,18 +19,16 @@ describe('atomic-insight-user-actions-modal', () => {
       excludedCustomActions: string[];
     }>;
   } = {}) => {
-    const {element} =
-      await renderInAtomicInsightInterface<AtomicInsightUserActionsModal>({
-        template: html`<atomic-insight-user-actions-modal
-          .openButton=${props.openButton}
-          ?is-open=${props.isOpen ?? false}
-          user-id=${props.userId ?? defaultUserId}
-          ticket-creation-date-time=${props.ticketCreationDateTime ??
-          defaultTicketCreationDateTime}
-          .excludedCustomActions=${props.excludedCustomActions ?? []}
-        ></atomic-insight-user-actions-modal>`,
-        selector: 'atomic-insight-user-actions-modal',
-      });
+    const {element} = await renderInAtomicInsightInterface<AtomicInsightUserActionsModal>({
+      template: html`<atomic-insight-user-actions-modal
+        .openButton=${props.openButton}
+        ?is-open=${props.isOpen ?? false}
+        user-id=${props.userId ?? defaultUserId}
+        ticket-creation-date-time=${props.ticketCreationDateTime ?? defaultTicketCreationDateTime}
+        .excludedCustomActions=${props.excludedCustomActions ?? []}
+      ></atomic-insight-user-actions-modal>`,
+      selector: 'atomic-insight-user-actions-modal',
+    });
 
     return {
       element,
@@ -38,9 +36,7 @@ describe('atomic-insight-user-actions-modal', () => {
         return element.shadowRoot?.querySelector('atomic-modal');
       },
       get timeline() {
-        return element.shadowRoot?.querySelector(
-          'atomic-insight-user-actions-timeline'
-        );
+        return element.shadowRoot?.querySelector('atomic-insight-user-actions-timeline');
       },
       parts: (el: AtomicInsightUserActionsModal) => ({
         title: el.shadowRoot?.querySelector('[part="title"]'),
@@ -81,9 +77,7 @@ describe('atomic-insight-user-actions-modal', () => {
       const {parts, element} = await renderModal();
       const title = parts(element).title;
       expect(title).toBeTruthy();
-      expect(title?.textContent?.trim()).toBe(
-        element.bindings.i18n.t('user-actions')
-      );
+      expect(title?.textContent?.trim()).toBe(element.bindings.i18n.t('user-actions'));
     });
 
     it('should render close button with close icon', async () => {

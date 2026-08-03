@@ -33,13 +33,8 @@ export function createCommerceSearchEndpointThunk(iface: InterfaceHandle) {
         context: {view: {url: navigatorContext?.location ?? ''}},
       };
 
-      const config = engine.read(
-        configSelectors.getEndpointClientConfiguration
-      );
-      const response = await createCommerceSearchEndpointClient().call(
-        fullRequest,
-        config
-      );
+      const config = engine.read(configSelectors.getEndpointClientConfiguration);
+      const response = await createCommerceSearchEndpointClient().call(fullRequest, config);
 
       if (!response.success) {
         throw new Error(response.error);

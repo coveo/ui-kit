@@ -16,10 +16,7 @@ import {
   type TransitiveSearchAction,
 } from '../../features/search/search-actions.js';
 import type {StateNeededByExecuteSearch} from '../../features/search/search-actions-thunk-processor.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../test/mock-engine-v2.js';
 import {buildMockPagination} from '../../test/mock-pagination.js';
 import {createMockState} from '../../test/mock-state.js';
 import {
@@ -42,10 +39,7 @@ describe('ResultsPerPage', () => {
       {
         rejectValue: SearchAPIErrorWithStatusCode;
         state: StateNeededByExecuteSearch;
-        extra: ClientThunkExtraArguments<
-          SearchAPIClient,
-          GeneratedAnswerAPIClient
-        >;
+        extra: ClientThunkExtraArguments<SearchAPIClient, GeneratedAnswerAPIClient>;
         dispatch?: ThunkDispatch<unknown, unknown, UnknownAction>;
         serializedErrorType?: unknown;
         pendingMeta?: unknown;
@@ -98,9 +92,7 @@ describe('ResultsPerPage', () => {
   it('when #numberOfResults is set to a string, it throws an error with a context message', () => {
     props.initialState!.numberOfResults = '1' as unknown as number;
 
-    expect(() => initResultsPerPage()).toThrow(
-      'Check the initialState of buildResultsPerPage'
-    );
+    expect(() => initResultsPerPage()).toThrow('Check the initialState of buildResultsPerPage');
   });
 
   it('calling #set updates the number of results to the passed value', () => {

@@ -1,9 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import type {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
-import {
-  fetchBadges,
-  registerProductEnrichmentOptions,
-} from './product-enrichment-actions.js';
+import {fetchBadges, registerProductEnrichmentOptions} from './product-enrichment-actions.js';
 import {
   getProductEnrichmentInitialState,
   type ProductEnrichmentState,
@@ -31,10 +28,7 @@ export const productEnrichmentReducer = createReducer(
   }
 );
 
-function handleError(
-  state: ProductEnrichmentState,
-  error?: CommerceAPIErrorStatusResponse
-) {
+function handleError(state: ProductEnrichmentState, error?: CommerceAPIErrorStatusResponse) {
   state.error = error || null;
   state.isLoading = false;
   state.products = [];

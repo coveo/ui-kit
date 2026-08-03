@@ -10,15 +10,11 @@ import {AtomicSearchLayout} from './atomic-search-layout';
 describe('AtomicSearchLayout', () => {
   const renderSearchLayout = async (mobileBreakpoint?: string) => {
     const {element} = await renderInAtomicSearchInterface<AtomicSearchLayout>({
-      template: html`<atomic-search-layout
-        mobile-breakpoint="${ifDefined(mobileBreakpoint)}"
-      >
+      template: html`<atomic-search-layout mobile-breakpoint="${ifDefined(mobileBreakpoint)}">
         <atomic-layout-section data-testid="facets" section="facets">
           facets...
         </atomic-layout-section>
-        <atomic-layout-section data-testid="main" section="main">
-          main...
-        </atomic-layout-section>
+        <atomic-layout-section data-testid="main" section="main"> main... </atomic-layout-section>
       </atomic-search-layout>`,
       selector: 'atomic-search-layout',
     });

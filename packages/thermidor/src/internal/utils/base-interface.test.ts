@@ -1,12 +1,7 @@
 import {describe, it, expect, vi} from 'vitest';
 import {BaseInterface, getInterfaceInternals} from './base-interface.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
-import type {
-  FacadeResolver,
-  Facades,
-  EndpointThunk,
-  InterfaceHandle,
-} from './interface-types.js';
+import type {FacadeResolver, Facades, EndpointThunk, InterfaceHandle} from './interface-types.js';
 
 function createMockEngine(): FullEngine {
   return {
@@ -47,8 +42,7 @@ function createTestSubject(options?: {
   const searchThunk = createMockThunk();
   const suggestionsThunk = createMockThunk();
 
-  const searchFactory: FacadeResolver =
-    options?.searchFactory ?? ((_iface) => searchThunk);
+  const searchFactory: FacadeResolver = options?.searchFactory ?? ((_iface) => searchThunk);
   const suggestionsFactory: FacadeResolver =
     options?.suggestionsFactory ?? ((_iface) => suggestionsThunk);
 
@@ -159,9 +153,9 @@ describe('BaseInterface', () => {
     it('throws when resolveFacade is called after dispose', () => {
       const {instance} = createTestSubject();
       instance.dispose();
-      expect(() =>
-        getInterfaceInternals(instance).resolveFacade('search')
-      ).toThrow('Cannot operate on a disposed interface.');
+      expect(() => getInterfaceInternals(instance).resolveFacade('search')).toThrow(
+        'Cannot operate on a disposed interface.'
+      );
     });
   });
 });

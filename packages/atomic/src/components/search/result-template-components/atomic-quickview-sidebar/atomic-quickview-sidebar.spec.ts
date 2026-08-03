@@ -59,12 +59,8 @@ describe('QuickviewSidebar (Lit)', () => {
   it('renders keywords and controls when expanded', async () => {
     await renderComponent({minimized: false});
 
-    const keywordsSection = container.querySelector(
-      `#${identifierKeywordsSection}`
-    );
-    const minimizeButton = container.querySelector(
-      '[part="sidebar-minimize-button"]'
-    );
+    const keywordsSection = container.querySelector(`#${identifierKeywordsSection}`);
+    const minimizeButton = container.querySelector('[part="sidebar-minimize-button"]');
     const highlightLabel = container.querySelector('label');
 
     expect(keywordsSection).toBeTruthy();
@@ -75,9 +71,7 @@ describe('QuickviewSidebar (Lit)', () => {
   it('hides keywords when minimized', async () => {
     await renderComponent({minimized: true});
 
-    const keywordsSection = container.querySelector(
-      `#${identifierKeywordsSection}`
-    );
+    const keywordsSection = container.querySelector(`#${identifierKeywordsSection}`);
     const highlightLabel = container.querySelector('label');
 
     expect(keywordsSection).toBeNull();

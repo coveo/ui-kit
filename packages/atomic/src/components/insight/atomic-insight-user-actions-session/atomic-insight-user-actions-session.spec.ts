@@ -63,36 +63,27 @@ describe('atomic-insight-user-actions-session', () => {
     startTimestamp?: number;
     userActions?: IUserAction[];
   } = {}) => {
-    const {element} =
-      await renderInAtomicInsightInterface<AtomicInsightUserActionsSession>({
-        template: html`
-          <atomic-insight-user-actions-session
-            .startTimestamp=${startTimestamp}
-            .userActions=${userActions}
-          ></atomic-insight-user-actions-session>
-        `,
-        selector: 'atomic-insight-user-actions-session',
-        bindings: defaultBindings,
-      });
+    const {element} = await renderInAtomicInsightInterface<AtomicInsightUserActionsSession>({
+      template: html`
+        <atomic-insight-user-actions-session
+          .startTimestamp=${startTimestamp}
+          .userActions=${userActions}
+        ></atomic-insight-user-actions-session>
+      `,
+      selector: 'atomic-insight-user-actions-session',
+      bindings: defaultBindings,
+    });
 
     return {
       element,
       showMoreButton: () =>
-        element.shadowRoot?.querySelector(
-          '[data-testid="show-more-actions-button"]'
-        ),
+        element.shadowRoot?.querySelector('[data-testid="show-more-actions-button"]'),
       moreActionsSection: () =>
-        element.shadowRoot?.querySelector(
-          '[data-testid="more-actions-section"]'
-        ),
+        element.shadowRoot?.querySelector('[data-testid="more-actions-section"]'),
       sessionStartIcon: () =>
-        element.shadowRoot?.querySelector(
-          '[part="session-start-icon__container"]'
-        ),
+        element.shadowRoot?.querySelector('[part="session-start-icon__container"]'),
       sessionStartDateContainer: () =>
-        element.shadowRoot?.querySelector(
-          '[data-testid="session-start-date-container"]'
-        ),
+        element.shadowRoot?.querySelector('[data-testid="session-start-date-container"]'),
       actions: () => element.shadowRoot?.querySelectorAll('ol li'),
     };
   };
@@ -225,10 +216,9 @@ describe('atomic-insight-user-actions-session', () => {
     });
 
     it('should reveal actions and hide button after clicking show more', async () => {
-      const {element, showMoreButton, moreActionsSection} =
-        await renderComponent({
-          userActions: mockUserActionsWithCaseCreation,
-        });
+      const {element, showMoreButton, moreActionsSection} = await renderComponent({
+        userActions: mockUserActionsWithCaseCreation,
+      });
 
       expect(moreActionsSection()).toBeNull();
       expect(showMoreButton()).toBeInTheDocument();

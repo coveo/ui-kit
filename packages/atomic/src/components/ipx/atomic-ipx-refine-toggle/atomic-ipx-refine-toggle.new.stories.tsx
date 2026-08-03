@@ -1,7 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-facet/atomic-facet.js';
@@ -12,10 +12,9 @@ import '@/src/components/common/atomic-layout-section/atomic-layout-section.js';
 const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-ipx-refine-toggle',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-ipx-refine-toggle', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-ipx-refine-toggle',
@@ -30,9 +29,7 @@ const meta: Meta = {
     </style>
     <atomic-ipx-modal is-open>
       <div slot="header" style="padding-bottom: 0.875rem;">
-        <atomic-layout-section section="search">
-          ${template(args)}
-        </atomic-layout-section>
+        <atomic-layout-section section="search"> ${template(args)} </atomic-layout-section>
       </div>
       <atomic-layout-section section="facets">
         <atomic-facet field="author" label="Author"></atomic-facet>

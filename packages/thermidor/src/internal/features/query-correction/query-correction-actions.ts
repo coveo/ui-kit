@@ -23,7 +23,5 @@ export function createQueryCorrectionActions(interfaceId: string) {
 
 export function getOrCreateQueryCorrectionActions(iface: InterfaceHandle) {
   const {stateId, cacheRegistry} = getInterfaceInternals(iface);
-  return cacheRegistry.getOrCreate(CACHE_KEY, () =>
-    createQueryCorrectionActions(stateId)
-  );
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => createQueryCorrectionActions(stateId));
 }

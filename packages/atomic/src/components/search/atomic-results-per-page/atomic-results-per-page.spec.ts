@@ -42,19 +42,17 @@ describe('atomic-results-per-page', () => {
       })
     );
 
-    const {element} = await renderInAtomicSearchInterface<AtomicResultsPerPage>(
-      {
-        template: html`<atomic-results-per-page
-          choices-displayed=${ifDefined(props.choicesDisplayed)}
-          initial-choice=${ifDefined(props.initialChoice)}
-        ></atomic-results-per-page>`,
-        selector: 'atomic-results-per-page',
-        bindings: (bindings) => {
-          bindings.engine = mockedEngine;
-          return bindings;
-        },
-      }
-    );
+    const {element} = await renderInAtomicSearchInterface<AtomicResultsPerPage>({
+      template: html`<atomic-results-per-page
+        choices-displayed=${ifDefined(props.choicesDisplayed)}
+        initial-choice=${ifDefined(props.initialChoice)}
+      ></atomic-results-per-page>`,
+      selector: 'atomic-results-per-page',
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        return bindings;
+      },
+    });
 
     return {
       element,
@@ -62,8 +60,7 @@ describe('atomic-results-per-page', () => {
         return element.shadowRoot?.querySelectorAll('input[type="radio"]');
       },
       parts: (element: AtomicResultsPerPage) => {
-        const qs = (part: string) =>
-          element?.shadowRoot?.querySelector(`[part="${part}"]`);
+        const qs = (part: string) => element?.shadowRoot?.querySelector(`[part="${part}"]`);
         return {
           buttons: qs('buttons'),
         };

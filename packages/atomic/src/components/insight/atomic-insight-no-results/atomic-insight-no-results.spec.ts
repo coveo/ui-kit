@@ -48,15 +48,14 @@ describe('atomic-insight-no-results', () => {
     vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
     vi.mocked(buildQuerySummary).mockReturnValue(mockedQuerySummary);
 
-    const {element} =
-      await renderInAtomicInsightInterface<AtomicInsightNoResults>({
-        template: html`<atomic-insight-no-results></atomic-insight-no-results>`,
-        selector: 'atomic-insight-no-results',
-        bindings: (bindings) => {
-          bindings.engine = mockedEngine;
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicInsightInterface<AtomicInsightNoResults>({
+      template: html`<atomic-insight-no-results></atomic-insight-no-results>`,
+      selector: 'atomic-insight-no-results',
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        return bindings;
+      },
+    });
 
     return {
       element,
@@ -157,9 +156,7 @@ describe('atomic-insight-no-results', () => {
       },
     });
 
-    expect(noResultsText).toHaveTextContent(
-      `We couldn't find anything for “${query}”`
-    );
+    expect(noResultsText).toHaveTextContent(`We couldn't find anything for “${query}”`);
   });
 
   it('should highlight the query in the "no results" text', async () => {

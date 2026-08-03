@@ -1,17 +1,16 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-search-layout/atomic-search-layout.js';
 
 const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-search-layout',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-search-layout', {
+  excludeCategories: ['methods'],
+});
 const meta: Meta = {
   component: 'atomic-search-layout',
   title: 'Search/Search Layout',

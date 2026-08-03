@@ -23,7 +23,7 @@ import '@/src/components/search/atomic-result-text/atomic-result-text';
 import styles from './atomic-result-link.tw.css';
 
 /**
- * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
+ * The `atomic-result-link` component automatically converts a search result title into a clickable link to the original item. When users click the link, the component logs a click analytics event.
  * @slot default - Lets you display alternative content inside the link
  * @slot attributes - Lets you pass [attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#attributes) down to the link element, overriding other attributes, to be used exclusively with an "a" tag such as `<a slot="attributes" target="_blank" download></a>`.
  */
@@ -57,8 +57,7 @@ export class AtomicResultLink
   private removeLinkEventHandlers?: () => void;
 
   private resultContext = createResultContextController(this);
-  private interactiveResultContext =
-    createInteractiveResultContextController(this);
+  private interactiveResultContext = createInteractiveResultContextController(this);
 
   @state() public bindings!: Bindings;
   @state() public error!: Error;
@@ -73,20 +72,14 @@ export class AtomicResultLink
       }
     }
 
-    if (
-      !this.interactiveResult &&
-      this.interactiveResultContext.interactiveItem
-    ) {
+    if (!this.interactiveResult && this.interactiveResultContext.interactiveItem) {
       this.interactiveResult = this.interactiveResultContext.interactiveItem;
     }
 
     this.dispatchEvent(
-      buildCustomEvent(
-        'atomic/resolveStopPropagation',
-        (stopPropagation: boolean) => {
-          this.stopPropagation = stopPropagation;
-        }
-      )
+      buildCustomEvent('atomic/resolveStopPropagation', (stopPropagation: boolean) => {
+        this.stopPropagation = stopPropagation;
+      })
     );
   }
 
@@ -112,11 +105,7 @@ export class AtomicResultLink
 
       const href = isUndefined(this.hrefTemplate)
         ? result.clickUri
-        : buildStringTemplateFromResult(
-            this.hrefTemplate,
-            result,
-            this.bindings
-          );
+        : buildStringTemplateFromResult(this.hrefTemplate, result, this.bindings);
 
       return renderLinkWithItemAnalytics({
         props: {
@@ -135,10 +124,7 @@ export class AtomicResultLink
         },
       })(html`
         ${this.renderDefaultSlotContent(
-          html`<atomic-result-text
-            field="title"
-            default="no-title"
-          ></atomic-result-text>`
+          html`<atomic-result-text field="title" default="no-title"></atomic-result-text>`
         )}
       `);
     })}`;

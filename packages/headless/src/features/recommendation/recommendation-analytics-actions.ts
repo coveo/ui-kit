@@ -34,8 +34,7 @@ export const logRecommendationOpen = (result: Result): ClickAction =>
         documentIdentifier(result)
       );
     },
-    __legacy__provider: (getState) =>
-      new RecommendationAnalyticsProvider(getState),
+    __legacy__provider: (getState) => new RecommendationAnalyticsProvider(getState),
 
     analyticsType: 'itemClick',
     analyticsPayloadBuilder: (state): ItemClick => {

@@ -12,9 +12,7 @@ test.describe('atomic-result-multi-value-text', () => {
       await expect(resultMultiValueText.values).not.toHaveCount(0);
     });
 
-    test('should render separators between values', async ({
-      resultMultiValueText,
-    }) => {
+    test('should render separators between values', async ({resultMultiValueText}) => {
       const valueCount = await resultMultiValueText.values.count();
       const separatorCount = await resultMultiValueText.separators.count();
 
@@ -32,15 +30,11 @@ test.describe('atomic-result-multi-value-text', () => {
       await resultMultiValueText.hydrated.waitFor();
     });
 
-    test('should limit number of displayed values', async ({
-      resultMultiValueText,
-    }) => {
+    test('should limit number of displayed values', async ({resultMultiValueText}) => {
       await expect(resultMultiValueText.values).toHaveCount(2);
     });
 
-    test('should display "more" label when truncated', async ({
-      resultMultiValueText,
-    }) => {
+    test('should display "more" label when truncated', async ({resultMultiValueText}) => {
       await expect(resultMultiValueText.moreLabel).toBeVisible();
       await expect(resultMultiValueText.moreLabel).toContainText('more');
     });

@@ -7,9 +7,7 @@ import {defineConfig, devices} from '@playwright/test';
 // require('dotenv').config();
 
 const DEFAULT_VITE_PORT = 3333;
-const vitePort = process.env.VITE_PORT
-  ? parseInt(process.env.VITE_PORT, 10)
-  : DEFAULT_VITE_PORT;
+const vitePort = process.env.VITE_PORT ? parseInt(process.env.VITE_PORT, 10) : DEFAULT_VITE_PORT;
 
 /**
  * See https://playwright.dev/docs/test-configuration.

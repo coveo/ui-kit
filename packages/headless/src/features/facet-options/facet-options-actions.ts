@@ -16,9 +16,7 @@ export type DisableFacetActionCreatorPayload = string;
 
 export const updateFacetOptions = createAction(
   'facetOptions/update',
-  (
-    payload: UpdateFacetOptionsActionCreatorPayload = {freezeFacetOrder: true}
-  ) =>
+  (payload: UpdateFacetOptionsActionCreatorPayload = {freezeFacetOrder: true}) =>
     validatePayload(payload, {
       freezeFacetOrder: new BooleanValue({required: false}),
     })
@@ -26,12 +24,10 @@ export const updateFacetOptions = createAction(
 
 export const enableFacet = createAction(
   'facetOptions/facet/enable',
-  (payload: EnableFacetActionCreatorPayload) =>
-    validatePayload(payload, facetIdDefinition)
+  (payload: EnableFacetActionCreatorPayload) => validatePayload(payload, facetIdDefinition)
 );
 
 export const disableFacet = createAction(
   'facetOptions/facet/disable',
-  (payload: EnableFacetActionCreatorPayload) =>
-    validatePayload(payload, facetIdDefinition)
+  (payload: EnableFacetActionCreatorPayload) => validatePayload(payload, facetIdDefinition)
 );

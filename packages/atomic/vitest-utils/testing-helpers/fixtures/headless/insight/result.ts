@@ -5,9 +5,7 @@ type DeepPartialInsightResult = Partial<Omit<InsightResult, 'raw'>> & {
   [key: string]: unknown;
 };
 
-export const buildFakeInsightResult = (
-  result?: DeepPartialInsightResult
-): InsightResult => {
+export const buildFakeInsightResult = (result?: DeepPartialInsightResult): InsightResult => {
   const {raw, ...restResult} = result ?? {};
   return {
     title: 'title',

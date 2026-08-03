@@ -18,8 +18,7 @@ export type {
   PaginationState,
 };
 
-export type PaginationDefinition =
-  SearchAndListingControllerDefinitionWithoutProps<Pagination>;
+export type PaginationDefinition = SearchAndListingControllerDefinitionWithoutProps<Pagination>;
 
 /**
  * Defines a `Pagination` controller instance.
@@ -28,9 +27,7 @@ export type PaginationDefinition =
  * @param props - The configurable `Pagination` properties.
  * @returns The `Pagination` controller definition.
  */
-export function definePagination(
-  props?: PaginationProps
-): PaginationDefinition {
+export function definePagination(props?: PaginationProps): PaginationDefinition {
   return {
     listing: true,
     search: true,

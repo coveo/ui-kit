@@ -10,9 +10,7 @@ interface LoadMoreSummaryProps {
   label?: 'showing-results-of-load-more' | 'showing-products-of-load-more';
 }
 
-export const renderLoadMoreSummary: FunctionalComponent<
-  LoadMoreSummaryProps
-> = ({props}) => {
+export const renderLoadMoreSummary: FunctionalComponent<LoadMoreSummaryProps> = ({props}) => {
   const {i18n, from, to, label} = props;
 
   const wrapHighlight = (content: string) => {
@@ -27,8 +25,6 @@ export const renderLoadMoreSummary: FunctionalComponent<
   });
 
   return html`
-    <div class="text-neutral-dark my-2 text-lg" part="showing-results">
-      ${unsafeHTML(content)}
-    </div>
+    <div class="text-neutral-dark my-2 text-lg" part="showing-results">${unsafeHTML(content)}</div>
   `;
 };

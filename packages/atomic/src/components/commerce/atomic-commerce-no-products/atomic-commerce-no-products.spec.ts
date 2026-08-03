@@ -56,16 +56,15 @@ describe('atomic-commerce-no-products', () => {
       })
     );
 
-    const {element} =
-      await renderInAtomicCommerceInterface<AtomicCommerceNoProducts>({
-        template: html`<atomic-commerce-no-products></atomic-commerce-no-products>`,
-        selector: 'atomic-commerce-no-products',
-        bindings: (bindings) => {
-          bindings.interfaceElement.type = interfaceType;
-          bindings.engine = mockedEngine;
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicCommerceInterface<AtomicCommerceNoProducts>({
+      template: html`<atomic-commerce-no-products></atomic-commerce-no-products>`,
+      selector: 'atomic-commerce-no-products',
+      bindings: (bindings) => {
+        bindings.interfaceElement.type = interfaceType;
+        bindings.engine = mockedEngine;
+        return bindings;
+      },
+    });
 
     return {
       element,
@@ -161,9 +160,7 @@ describe('atomic-commerce-no-products', () => {
       },
     });
 
-    expect(noProductsText).toHaveTextContent(
-      `We couldn't find any product for “${query}”`
-    );
+    expect(noProductsText).toHaveTextContent(`We couldn't find any product for “${query}”`);
   });
 
   it('should highlight the query in the "no products" text', async () => {

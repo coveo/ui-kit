@@ -42,9 +42,7 @@ const buildAxeRule = (
   })),
 });
 
-const buildAxeResults = (
-  overrides: Partial<AxeResultsLite> = {}
-): AxeResultsLite => ({
+const buildAxeResults = (overrides: Partial<AxeResultsLite> = {}): AxeResultsLite => ({
   testEngine: {name: 'axe-core', version: '4.10.0'},
   violations: [],
   passes: [],
@@ -91,18 +89,10 @@ describe('VitestA11yReporter — run-end gating', () => {
   beforeEach(async () => {
     tmpDir = await mkdtemp(path.join(tmpdir(), 'a11y-reporter-'));
     outputFile = path.join(tmpDir, 'a11y-report.json');
-    packageJsonPath = path.resolve(
-      __dirname,
-      '..',
-      '..',
-      'atomic',
-      'package.json'
-    );
+    packageJsonPath = path.resolve(__dirname, '..', '..', 'atomic', 'package.json');
     originalExitCode = process.exitCode;
     process.exitCode = 0;
-    stderrSpy = vi
-      .spyOn(process.stderr, 'write')
-      .mockImplementation(() => true);
+    stderrSpy = vi.spyOn(process.stderr, 'write').mockImplementation(() => true);
   });
 
   afterEach(async () => {
@@ -133,8 +123,7 @@ describe('VitestA11yReporter — run-end gating', () => {
     const written = JSON.parse(await readFile(outputFile, 'utf8'));
     expect(written.summary.totalComponents).toBe(1);
     const totalViolations = written.components.reduce(
-      (sum: number, c: {automated?: {violations?: number}}) =>
-        sum + (c.automated?.violations ?? 0),
+      (sum: number, c: {automated?: {violations?: number}}) => sum + (c.automated?.violations ?? 0),
       0
     );
     expect(totalViolations).toBe(0);
@@ -161,9 +150,7 @@ describe('VitestA11yReporter — run-end gating', () => {
 
     expect(process.exitCode).toBe(1);
     expect(stderrSpy).toHaveBeenCalled();
-    const summary = stderrSpy.mock.calls
-      .map(([chunk]) => String(chunk))
-      .join('');
+    const summary = stderrSpy.mock.calls.map(([chunk]) => String(chunk)).join('');
     expect(summary).toContain('Accessibility violations detected');
     expect(summary).toContain('image-alt');
     expect(summary).toContain('button-name');
@@ -171,8 +158,7 @@ describe('VitestA11yReporter — run-end gating', () => {
 
     const written = JSON.parse(await readFile(outputFile, 'utf8'));
     const totalViolations = written.components.reduce(
-      (sum: number, c: {automated?: {violations?: number}}) =>
-        sum + (c.automated?.violations ?? 0),
+      (sum: number, c: {automated?: {violations?: number}}) => sum + (c.automated?.violations ?? 0),
       0
     );
     expect(totalViolations).toBe(2);
@@ -218,8 +204,7 @@ describe('VitestA11yReporter — run-end gating', () => {
 
     const written = JSON.parse(await readFile(outputFile, 'utf8'));
     const totalViolations = written.components.reduce(
-      (sum: number, c: {automated?: {violations?: number}}) =>
-        sum + (c.automated?.violations ?? 0),
+      (sum: number, c: {automated?: {violations?: number}}) => sum + (c.automated?.violations ?? 0),
       0
     );
     expect(totalViolations).toBe(0);

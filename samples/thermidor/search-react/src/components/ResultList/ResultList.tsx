@@ -1,9 +1,14 @@
-import {resultListController} from '../../search-setup.js';
-import {useController} from '../../hooks/use-controller.js';
+import {buildResultListController} from '@coveo/thermidor';
+import {useSearchInterface} from '../../context/search-interface.js';
+import {useBuildController} from '../../hooks/use-build-controller.js';
 import styles from './ResultList.module.css';
 
 export function ResultList() {
-  const state = useController(resultListController);
+  const searchInterface = useSearchInterface();
+
+  const [, state] = useBuildController(() =>
+    buildResultListController({interface: searchInterface})
+  );
 
   if (state.results.length === 0) {
     return <p className={styles.empty}>No results to display.</p>;

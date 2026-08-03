@@ -2,6 +2,7 @@
   "name": "@coveo/documentation",
   "version": "1.0.0",
   "private": true,
+  "description": "Typedoc plugin enforcing Coveo's documentation styling and navigation conventions across the monorepo",
   "files": [
     "dist",
     "configs",

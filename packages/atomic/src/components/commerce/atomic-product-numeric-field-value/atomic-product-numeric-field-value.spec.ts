@@ -7,14 +7,13 @@ import {AtomicProductNumericFieldValue} from './atomic-product-numeric-field-val
 
 describe('atomic-product-numeric-field-value', () => {
   const renderProductNumericFieldValue = async (field = 'ec_rating') => {
-    const {element} =
-      await renderInAtomicProduct<AtomicProductNumericFieldValue>({
-        template: html`<atomic-product-numeric-field-value
-          field="${field}"
-        ></atomic-product-numeric-field-value>`,
-        selector: 'atomic-product-numeric-field-value',
-        product: buildFakeProduct(),
-      });
+    const {element} = await renderInAtomicProduct<AtomicProductNumericFieldValue>({
+      template: html`<atomic-product-numeric-field-value
+        field="${field}"
+      ></atomic-product-numeric-field-value>`,
+      selector: 'atomic-product-numeric-field-value',
+      product: buildFakeProduct(),
+    });
 
     return {
       element,
@@ -27,10 +26,7 @@ describe('atomic-product-numeric-field-value', () => {
       'addEventListener'
     );
     await renderProductNumericFieldValue();
-    expect(addEventListenerSpy).toHaveBeenCalledWith(
-      'atomic/numberFormat',
-      expect.any(Function)
-    );
+    expect(addEventListenerSpy).toHaveBeenCalledWith('atomic/numberFormat', expect.any(Function));
   });
 
   it('should remove the event listener for atomic/numberFormat on disconnect', async () => {
@@ -47,8 +43,7 @@ describe('atomic-product-numeric-field-value', () => {
   });
 
   it('should render nothing when the field value is null', async () => {
-    const {element} =
-      await renderProductNumericFieldValue('non_existent_field');
+    const {element} = await renderProductNumericFieldValue('non_existent_field');
     expect(element).toHaveTextContent('');
   });
 

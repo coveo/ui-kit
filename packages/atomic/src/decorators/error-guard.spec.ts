@@ -56,19 +56,14 @@ describe('@errorGuard decorator', () => {
     element.error = new Error('Test error');
     await element.updateComplete;
 
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      new Error('Test error'),
-      element
-    );
+    expect(consoleErrorSpy).toHaveBeenCalledWith(new Error('Test error'), element);
   });
 
   it('should render the error message when there is an error', async () => {
     element.error = new Error('Test error');
     await element.updateComplete;
 
-    const errorElement = element.shadowRoot?.querySelector(
-      'atomic-component-error'
-    );
+    const errorElement = element.shadowRoot?.querySelector('atomic-component-error');
     expect(errorElement).not.toBeNull();
   });
 

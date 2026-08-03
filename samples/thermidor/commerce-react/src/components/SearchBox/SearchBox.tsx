@@ -1,16 +1,22 @@
 import {useState, type FormEvent} from 'react';
-import {searchBoxController} from '../../commerce-setup.js';
-import {useController} from '../../hooks/use-controller.js';
+import {buildSearchBoxController} from '@coveo/thermidor';
+import {useCommerceInterface} from '../../context/commerce-interface.js';
+import {useBuildController} from '../../hooks/use-build-controller.js';
 import styles from './SearchBox.module.css';
 
 export function SearchBox() {
-  const state = useController(searchBoxController);
+  const commerceInterface = useCommerceInterface();
+
+  const [controller, state] = useBuildController(() =>
+    buildSearchBoxController({interface: commerceInterface})
+  );
+
   const [inputValue, setInputValue] = useState(state.query);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    searchBoxController.setQuery({query: inputValue});
-    searchBoxController.submit();
+    controller.setQuery({query: inputValue});
+    controller.submit();
   }
 
   return (
@@ -23,11 +29,7 @@ export function SearchBox() {
         placeholder="Search products..."
         aria-label="Search products"
       />
-      <button
-        type="submit"
-        className={styles.button}
-        disabled={state.isLoading}
-      >
+      <button type="submit" className={styles.button} disabled={state.isLoading}>
         {state.isLoading ? 'Searching...' : 'Search'}
       </button>
     </form>

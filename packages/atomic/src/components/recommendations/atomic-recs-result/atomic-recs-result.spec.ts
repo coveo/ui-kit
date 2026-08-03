@@ -49,9 +49,7 @@ describe('atomic-recs-result', () => {
     } = options;
 
     const content =
-      'content' in options
-        ? options.content
-        : renderTemplateContent(defaultTemplateContent);
+      'content' in options ? options.content : renderTemplateContent(defaultTemplateContent);
     const {element} = await renderInAtomicRecsInterface<AtomicRecsResult>({
       template: html`<atomic-recs-result
         .result=${result}
@@ -99,21 +97,18 @@ describe('atomic-recs-result', () => {
       prop: 'imageSize',
       invalidValue: 'invalid',
     },
-  ])(
-    'should set error when #$prop is invalid',
-    async ({prop, invalidValue}) => {
-      const element = await renderResult();
+  ])('should set error when #$prop is invalid', async ({prop, invalidValue}) => {
+    const element = await renderResult();
 
-      expect(element.error).toBeUndefined();
+    expect(element.error).toBeUndefined();
 
-      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
-      (element as any)[prop] = invalidValue;
-      await element.updateComplete;
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
+    (element as any)[prop] = invalidValue;
+    await element.updateComplete;
 
-      expect(element.error).toBeDefined();
-      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
-    }
-  );
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(new RegExp(prop, 'i'));
+  });
 
   it.each<{
     prop: 'density' | 'display' | 'imageSize';
@@ -271,10 +266,7 @@ describe('atomic-recs-result', () => {
     return new Promise<void>((resolve) => {
       const event = new CustomEvent('atomic/resolveResultDisplayConfig', {
         bubbles: true,
-        detail: (config: {
-          density: ItemDisplayDensity;
-          imageSize: ItemDisplayImageSize;
-        }) => {
+        detail: (config: {density: ItemDisplayDensity; imageSize: ItemDisplayImageSize}) => {
           expect(config.density).toBe('compact');
           expect(config.imageSize).toBe('large');
           resolve();
@@ -316,9 +308,7 @@ describe('atomic-recs-result', () => {
       const mockClick = vi.fn();
       const mockAnchor = {click: mockClick};
       const mockQuerySelector = vi.fn().mockReturnValue(mockAnchor);
-      vi.spyOn(element.shadowRoot!, 'querySelector').mockImplementation(
-        mockQuerySelector
-      );
+      vi.spyOn(element.shadowRoot!, 'querySelector').mockImplementation(mockQuerySelector);
 
       element.clickLinkContainer();
 
@@ -390,8 +380,7 @@ describe('atomic-recs-result', () => {
       const element = await renderResult({
         renderingFunction,
       });
-      const linkContainer =
-        element.shadowRoot!.querySelector('.link-container');
+      const linkContainer = element.shadowRoot!.querySelector('.link-container');
       expect(linkContainer?.textContent).toContain('Custom Link Content');
     });
 
@@ -405,8 +394,7 @@ describe('atomic-recs-result', () => {
 
     it('should add "with-sections" class when content has sections', async () => {
       const renderingFunctionWithSections: ItemRenderingFunction = vi.fn(
-        () =>
-          '<atomic-result-section-visual">Custom</atomic-result-section-visual>'
+        () => '<atomic-result-section-visual">Custom</atomic-result-section-visual>'
       );
       const element = await renderResult({
         renderingFunction: renderingFunctionWithSections,
@@ -480,20 +468,17 @@ describe('atomic-recs-result', () => {
 
         expect(() => element.render()).not.toThrow();
 
-        const componentRoot =
-          element.shadowRoot!.querySelector('.result-component');
+        const componentRoot = element.shadowRoot!.querySelector('.result-component');
         const resultRoot = element.shadowRoot!.querySelector('.result-root');
         expect(componentRoot).toBeTruthy();
         expect(resultRoot).toBeNull();
       });
 
       it('should handle custom rendering function mode', async () => {
-        const renderingFunction: ItemRenderingFunction = vi.fn(
-          (_result, resultRootRef) => {
-            resultRootRef.textContent = 'Custom content without layout';
-            return resultRootRef.outerHTML;
-          }
-        );
+        const renderingFunction: ItemRenderingFunction = vi.fn((_result, resultRootRef) => {
+          resultRootRef.textContent = 'Custom content without layout';
+          return resultRootRef.outerHTML;
+        });
 
         const element = await renderResult({
           content: undefined,
@@ -502,20 +487,16 @@ describe('atomic-recs-result', () => {
 
         expect(renderingFunction).toHaveBeenCalled();
         const resultRoot = element.shadowRoot!.querySelector('.result-root');
-        expect(resultRoot?.textContent).toContain(
-          'Custom content without layout'
-        );
+        expect(resultRoot?.textContent).toContain('Custom content without layout');
       });
     });
 
     describe('#updated', () => {
       it('should not throw error when layout is undefined in custom rendering mode', async () => {
-        const renderingFunction: ItemRenderingFunction = vi.fn(
-          (_result, resultRootRef) => {
-            resultRootRef.textContent = 'Updated content';
-            return '<div>Updated HTML</div>';
-          }
-        );
+        const renderingFunction: ItemRenderingFunction = vi.fn((_result, resultRootRef) => {
+          resultRootRef.textContent = 'Updated content';
+          return '<div>Updated HTML</div>';
+        });
 
         const element = await renderResult({
           content: undefined,

@@ -1,6 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
 import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
@@ -32,10 +32,9 @@ const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
 const {decorator: resultListDecorator} = wrapInResultList('list', false);
 const {decorator: resultTemplateDecorator} = wrapInResultTemplate();
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-result-printable-uri',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-result-printable-uri', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-result-printable-uri',
@@ -43,11 +42,7 @@ const meta: Meta = {
   id: 'atomic-result-printable-uri',
 
   render: (args) => template(args),
-  decorators: [
-    resultTemplateDecorator,
-    resultListDecorator,
-    searchInterfaceDecorator,
-  ],
+  decorators: [resultTemplateDecorator, resultListDecorator, searchInterfaceDecorator],
   parameters: {
     ...parameters,
     msw: {

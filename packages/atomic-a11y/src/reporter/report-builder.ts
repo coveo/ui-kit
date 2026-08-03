@@ -1,9 +1,5 @@
 import {compareByName, compareByNumericId} from '../shared/sorting.js';
-import type {
-  A11yComponentReport,
-  A11yCriterionReport,
-  A11yReport,
-} from '../shared/types.js';
+import type {A11yComponentReport, A11yCriterionReport, A11yReport} from '../shared/types.js';
 import {
   type ComponentAccumulator,
   formatDate,
@@ -30,8 +26,7 @@ export function buildA11yReport(
     'unknown';
 
   const storybookVersion =
-    packageMetadata.devDependencies?.storybook ??
-    packageMetadata.dependencies?.storybook;
+    packageMetadata.devDependencies?.storybook ?? packageMetadata.dependencies?.storybook;
 
   if (!storybookVersion) {
     throw new Error('storybook version not found in package metadata');
@@ -74,22 +69,14 @@ function buildComponents(
           passes: component.automated.passes,
           incomplete: component.automated.incomplete,
           inapplicable: component.automated.inapplicable,
-          criteriaCovered: [...component.automated.criteriaCovered].sort(
-            compareByNumericId
-          ),
-          criteriaViolated: [...component.automated.criteriaViolated].sort(
-            compareByNumericId
-          ),
-          criteriaPassed: [...component.automated.criteriaPassed].sort(
-            compareByNumericId
-          ),
+          criteriaCovered: [...component.automated.criteriaCovered].sort(compareByNumericId),
+          criteriaViolated: [...component.automated.criteriaViolated].sort(compareByNumericId),
+          criteriaPassed: [...component.automated.criteriaPassed].sort(compareByNumericId),
           incompleteDetails: component.automated.incompleteDetails,
         },
         interactive: component.interactive
           ? {
-              criteriaCovered: [...component.interactive.criteriaCovered].sort(
-                compareByNumericId
-              ),
+              criteriaCovered: [...component.interactive.criteriaCovered].sort(compareByNumericId),
               testCount: component.interactive.testCount,
               passedCount: component.interactive.passedCount,
             }
@@ -99,9 +86,7 @@ function buildComponents(
     .sort((first, second) => compareByName(first.name, second.name));
 }
 
-function buildCriteria(
-  componentResults: Map<string, ComponentAccumulator>
-): A11yCriterionReport[] {
+function buildCriteria(componentResults: Map<string, ComponentAccumulator>): A11yCriterionReport[] {
   const criteriaById = new Map<string, A11yCriterionReport>();
 
   for (const component of componentResults.values()) {
@@ -133,9 +118,7 @@ function buildCriteria(
     criterion.conformance = resolveAutomatedConformance(criterion);
   }
 
-  return criteria.sort((first, second) =>
-    compareByNumericId(first.id, second.id)
-  );
+  return criteria.sort((first, second) => compareByNumericId(first.id, second.id));
 }
 
 function resolveAutomatedConformance(

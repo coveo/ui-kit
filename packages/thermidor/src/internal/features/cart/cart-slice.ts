@@ -9,8 +9,7 @@ export const initialCartState: CartState = {
   items: [],
 };
 
-const cartKey = (item: CartItem) =>
-  `${item.productId},${item.name},${item.price}`;
+const cartKey = (item: CartItem) => `${item.productId},${item.name},${item.price}`;
 
 type CartSlice = ReturnType<typeof createCartSlice>;
 
@@ -29,9 +28,7 @@ export function createCartSlice(
         state.items = action.payload;
       });
       builder.addCase(actions.updateItemQuantity, (state, action) => {
-        const index = state.items.findIndex(
-          (item) => cartKey(item) === cartKey(action.payload)
-        );
+        const index = state.items.findIndex((item) => cartKey(item) === cartKey(action.payload));
 
         if (index === -1) {
           if (action.payload.quantity > 0) {

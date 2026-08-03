@@ -12,42 +12,34 @@ import {
   registerQuerySetQuery,
   updateQuerySetQuery,
 } from './query-set-actions.js';
-import {
-  getQuerySetInitialState,
-  type QuerySetState,
-} from './query-set-state.js';
+import {getQuerySetInitialState, type QuerySetState} from './query-set-state.js';
 
-export const querySetReducer = createReducer(
-  getQuerySetInitialState(),
-  (builder) => {
-    builder
-      .addCase(registerQuerySetQuery, (state, action) =>
-        registerQuery(state, action.payload)
-      )
-      .addCase(updateQuerySetQuery, (state, action) => {
-        const {id, query} = action.payload;
+export const querySetReducer = createReducer(getQuerySetInitialState(), (builder) => {
+  builder
+    .addCase(registerQuerySetQuery, (state, action) => registerQuery(state, action.payload))
+    .addCase(updateQuerySetQuery, (state, action) => {
+      const {id, query} = action.payload;
+      updateQuery(state, id, query);
+    })
+    .addCase(selectQuerySuggestion, (state, action) => {
+      const {id, expression} = action.payload;
+      updateQuery(state, id, expression);
+    })
+    .addCase(executeSearch.fulfilled, (state, action) => {
+      const {queryExecuted} = action.payload;
+      updateAllQuerySetQuery(state, queryExecuted);
+    })
+    .addCase(restoreSearchParameters, handleRestoreSearchParameters)
+    .addCase(change.fulfilled, (state, action) => {
+      if (!action.payload) {
+        return;
+      }
+
+      for (const [id, query] of Object.entries(action.payload.querySet)) {
         updateQuery(state, id, query);
-      })
-      .addCase(selectQuerySuggestion, (state, action) => {
-        const {id, expression} = action.payload;
-        updateQuery(state, id, expression);
-      })
-      .addCase(executeSearch.fulfilled, (state, action) => {
-        const {queryExecuted} = action.payload;
-        updateAllQuerySetQuery(state, queryExecuted);
-      })
-      .addCase(restoreSearchParameters, handleRestoreSearchParameters)
-      .addCase(change.fulfilled, (state, action) => {
-        if (!action.payload) {
-          return;
-        }
-
-        for (const [id, query] of Object.entries(action.payload.querySet)) {
-          updateQuery(state, id, query);
-        }
-      });
-  }
-);
+      }
+    });
+});
 
 function handleRestoreSearchParameters(
   state: QuerySetState,

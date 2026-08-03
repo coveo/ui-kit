@@ -27,10 +27,7 @@
       "@coveo/ui-kit-sample-headless-commerce-react",
       "@coveo/ui-kit-sample-headless-ssr-commerce-express"
     ],
-    [
-      "@coveo/headless-react",
-      "@coveo/ui-kit-sample-headless-ssr-commerce-nextjs"
-    ]
+    ["@coveo/headless-react", "@coveo/ui-kit-sample-headless-ssr-commerce-nextjs"]
   ],
   "linked": [],
   "access": "public",

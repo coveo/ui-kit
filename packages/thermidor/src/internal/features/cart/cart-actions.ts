@@ -6,15 +6,12 @@ import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 
 type CartActions = ReturnType<typeof createCartActions>;
 
-const CACHE_KEY: CacheKey<CartActions> =
-  createCacheKey<CartActions>('cart/actions');
+const CACHE_KEY: CacheKey<CartActions> = createCacheKey<CartActions>('cart/actions');
 
 export function createCartActions(interfaceId: string) {
   return {
     setItems: createAction<CartItem[]>(`${interfaceId}/cart/setItems`),
-    updateItemQuantity: createAction<CartItem>(
-      `${interfaceId}/cart/updateItemQuantity`
-    ),
+    updateItemQuantity: createAction<CartItem>(`${interfaceId}/cart/updateItemQuantity`),
   };
 }
 

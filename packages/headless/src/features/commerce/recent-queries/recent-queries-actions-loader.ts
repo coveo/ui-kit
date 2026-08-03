@@ -43,9 +43,7 @@ export interface RecentQueriesActionCreators {
  * @group Actions
  * @category RecentQueries
  */
-export function loadRecentQueriesActions(
-  engine: CommerceEngine
-): RecentQueriesActionCreators {
+export function loadRecentQueriesActions(engine: CommerceEngine): RecentQueriesActionCreators {
   engine.addReducers({recentQueries});
 
   return {

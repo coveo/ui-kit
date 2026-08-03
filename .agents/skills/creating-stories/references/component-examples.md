@@ -9,14 +9,13 @@ Full example showing all required parts:
 ```typescript
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
 const searchApiHarness = new MockSearchApi();
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} =
-  getStorybookHelpers('atomic-search-box');
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-search-box');
 
 const meta: Meta = {
   component: 'atomic-search-box',
@@ -112,11 +111,7 @@ const {decorator: resultTemplateDecorator} = wrapInResultTemplate(false);
 
 const meta: Meta = {
   // ... standard config
-  decorators: [
-    resultTemplateDecorator,
-    customResultListDecorator,
-    searchInterfaceDecorator,
-  ],
+  decorators: [resultTemplateDecorator, customResultListDecorator, searchInterfaceDecorator],
 };
 ```
 
@@ -125,7 +120,7 @@ const meta: Meta = {
 **Key difference:** Use `MockCommerceApi` and `wrapInCommerceInterface`.
 
 ```typescript
-import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
+import {MockCommerceApi} from '@coveo/platform-mock-api/commerce';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 
 const commerceApiHarness = new MockCommerceApi();
@@ -141,7 +136,7 @@ const meta: Meta = {
 **Key difference:** Use `MockInsightApi` and `wrapInInsightInterface`.
 
 ```typescript
-import {MockInsightApi} from '@coveo/platform-mock-api/insight/mock';
+import {MockInsightApi} from '@coveo/platform-mock-api/insight';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 
 const insightApiHarness = new MockInsightApi();
@@ -187,8 +182,7 @@ searchApiHarness.querySuggestEndpoint.mock(() => ({
 ```typescript
 import {html} from 'lit';
 
-const widthDecorator = (story) =>
-  html`<div style="min-width: 600px;">${story()}</div>`;
+const widthDecorator = (story) => html`<div style="min-width: 600px;">${story()}</div>`;
 
 const meta: Meta = {
   decorators: [widthDecorator, decorator],

@@ -3,18 +3,11 @@ import {logDocumentQuickview} from '../../features/result-preview/result-preview
 import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder.js';
 import {searchReducer} from '../../features/search/search-slice.js';
 import type {SearchAppState} from '../../state/search-app-state.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../test/mock-engine-v2.js';
 import {buildMockResult} from '../../test/mock-result.js';
 import {createMockState} from '../../test/mock-state.js';
 import {buildCoreQuickview} from '../core/quickview/headless-core-quickview.js';
-import {
-  buildQuickview,
-  type Quickview,
-  type QuickviewOptions,
-} from './headless-quickview.js';
+import {buildQuickview, type Quickview, type QuickviewOptions} from './headless-quickview.js';
 
 vi.mock('../core/quickview/headless-core-quickview');
 vi.mock('../../features/result-preview/result-preview-actions');
@@ -77,22 +70,16 @@ describe('Quickview', () => {
 
   it('#fetchResultContentCallback logs a document quickview', () => {
     const mockedLogDocumentQuickview = vi.mocked(logDocumentQuickview);
-    const coreQuickviewParamsFetchResultContentCallback =
-      mockedBuildCoreQuickview.mock.calls[0][4];
+    const coreQuickviewParamsFetchResultContentCallback = mockedBuildCoreQuickview.mock.calls[0][4];
 
     coreQuickviewParamsFetchResultContentCallback?.();
 
     expect(mockedLogDocumentQuickview).toHaveBeenCalledTimes(1);
-    expect(engine.dispatch).toHaveBeenCalledWith(
-      mockedLogDocumentQuickview.mock.results[0].value
-    );
+    expect(engine.dispatch).toHaveBeenCalledWith(mockedLogDocumentQuickview.mock.results[0].value);
   });
 
   it('#state.currentResult returns the correct value', () => {
-    state.search.results = [
-      buildMockResult(),
-      buildMockResult({uniqueId: 'theCurrentResult'}),
-    ];
+    state.search.results = [buildMockResult(), buildMockResult({uniqueId: 'theCurrentResult'})];
     engine = buildMockSearchEngine(state);
     mockedBuildCoreQuickview.mockReturnValueOnce({
       state: {

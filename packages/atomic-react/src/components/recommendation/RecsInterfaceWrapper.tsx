@@ -7,18 +7,13 @@ import {
 import React, {useEffect, useRef} from 'react';
 import {AtomicRecsInterface} from '../search/components.js';
 
-type AtomicRecsInterfaceProps = React.ComponentProps<
-  typeof AtomicRecsInterface
->;
+type AtomicRecsInterfaceProps = React.ComponentProps<typeof AtomicRecsInterface>;
 
 type GetRecommendations = AtomicRecsInterfaceProps['getRecommendations'];
 /**
  * The properties of the AtomicRecsInterface component
  */
-interface WrapperProps extends Omit<
-  AtomicRecsInterfaceProps,
-  'i18n' | 'pipeline' | 'searchHub'
-> {
+interface WrapperProps extends Omit<AtomicRecsInterfaceProps, 'i18n' | 'pipeline' | 'searchHub'> {
   /**
    * An optional callback function that can be used to control the execution of the first query.
    *
@@ -46,9 +41,7 @@ const DefaultProps: Required<Pick<WrapperProps, 'onReady' | 'localization'>> = {
  * @param props
  * @returns
  */
-export const RecsInterfaceWrapper = (
-  props: React.PropsWithChildren<WrapperProps>
-) => {
+export const RecsInterfaceWrapper = (props: React.PropsWithChildren<WrapperProps>) => {
   const mergedProps = {...DefaultProps, ...props};
   if (!mergedProps.engine) {
     mergedProps.engine = buildRecommendationEngine({
@@ -56,20 +49,16 @@ export const RecsInterfaceWrapper = (
     });
   }
   const {engine, localization, onReady, ...allOtherProps} = mergedProps;
-  const recsInterfaceRef =
-    useRef<React.ElementRef<typeof AtomicRecsInterface>>(null);
+  const recsInterfaceRef = useRef<React.ElementRef<typeof AtomicRecsInterface>>(null);
   let initialization: Promise<void> | null = null;
 
   useEffect(() => {
     const recsInterfaceAtomic = recsInterfaceRef.current!;
     if (!initialization) {
-      initialization =
-        recsInterfaceAtomic.initializeWithRecommendationEngine(engine);
+      initialization = recsInterfaceAtomic.initializeWithRecommendationEngine(engine);
       initialization.then(() => {
         localization(recsInterfaceAtomic.i18n);
-        onReady(
-          recsInterfaceAtomic.getRecommendations.bind(recsInterfaceAtomic)
-        );
+        onReady(recsInterfaceAtomic.getRecommendations.bind(recsInterfaceAtomic));
       });
     }
   }, [engine, initialization, localization, onReady]);

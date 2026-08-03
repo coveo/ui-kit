@@ -1,10 +1,5 @@
 /* oxlint-disable @typescript-eslint/no-invalid-void-type -- <> */
-import {
-  isNullOrUndefined,
-  RecordValue,
-  Schema,
-  StringValue,
-} from '@coveo/bueno';
+import {isNullOrUndefined, RecordValue, Schema, StringValue} from '@coveo/bueno';
 import type {createRelay} from '@coveo/relay';
 import type {ItemMetaData} from '@coveo/relay-event-types';
 import {
@@ -54,18 +49,13 @@ import type {Result} from '../../api/search/search/result.js';
 import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import type {RecommendationAppState} from '../../state/recommendation-app-state.js';
 import type {SearchAppState} from '../../state/search-app-state.js';
-import type {
-  ConfigurationSection,
-  PipelineSection,
-} from '../../state/state-sections.js';
+import type {ConfigurationSection, PipelineSection} from '../../state/state-sections.js';
 import {requiredNonEmptyString} from '../../utils/validate-payload.js';
 import type {ResultWithFolding} from '../folding/folding-slice.js';
 import {getAllIncludedResultsFrom} from '../folding/folding-utils.js';
 import {getPipelineInitialState} from '../pipeline/pipeline-state.js';
 
-type PreparableAnalyticsActionOptions<
-  StateNeeded extends ConfigurationSection,
-> = {
+type PreparableAnalyticsActionOptions<StateNeeded extends ConfigurationSection> = {
   analyticsClientMiddleware: AnalyticsClientSendEventHook;
   preprocessRequest: PreprocessRequest | undefined;
   logger: Logger;
@@ -77,10 +67,8 @@ type PreparableAnalyticsActionOptions<
 // In RTK 2.11.2, AsyncThunkActionCreator's signature changed from `() => ...` to
 // `(arg?: undefined, config?) => ...`, breaking compatibility with the ThunkAction overload.
 export type AnalyticsAsyncThunk<
-  StateNeeded extends ConfigurationSection =
-    StateNeededBySearchAnalyticsProvider,
-> = AsyncThunk<void, void, AsyncThunkAnalyticsOptions<StateNeeded>> &
-  UnknownAction;
+  StateNeeded extends ConfigurationSection = StateNeededBySearchAnalyticsProvider,
+> = AsyncThunk<void, void, AsyncThunkAnalyticsOptions<StateNeeded>> & UnknownAction;
 
 export function makeBasicNewSearchAnalyticsAction(
   actionCause: string,
@@ -94,35 +82,29 @@ export function makeBasicNewSearchAnalyticsAction(
 }
 
 type PreparedAnalyticsAction<
-  StateNeeded extends ConfigurationSection =
-    StateNeededBySearchAnalyticsProvider,
+  StateNeeded extends ConfigurationSection = StateNeededBySearchAnalyticsProvider,
 > = {
   description?: EventDescription;
   action: AnalyticsAsyncThunk<StateNeeded>;
 };
 
 type PrepareAnalyticsFunction<
-  StateNeeded extends ConfigurationSection =
-    StateNeededBySearchAnalyticsProvider,
+  StateNeeded extends ConfigurationSection = StateNeededBySearchAnalyticsProvider,
 > = (
   options: PreparableAnalyticsActionOptions<StateNeeded>
 ) => Promise<PreparedAnalyticsAction<StateNeeded>>;
 
 type PreparableAnalyticsAction<
-  StateNeeded extends ConfigurationSection =
-    StateNeededBySearchAnalyticsProvider,
+  StateNeeded extends ConfigurationSection = StateNeededBySearchAnalyticsProvider,
 > = AnalyticsAsyncThunk<StateNeeded> & {
   prepare: PrepareAnalyticsFunction<StateNeeded>;
 };
 
-export type LegacySearchAction =
-  PreparableAnalyticsAction<StateNeededBySearchAnalyticsProvider>;
+export type LegacySearchAction = PreparableAnalyticsAction<StateNeededBySearchAnalyticsProvider>;
 
-export type CustomAction =
-  PreparableAnalyticsAction<StateNeededBySearchAnalyticsProvider>;
+export type CustomAction = PreparableAnalyticsAction<StateNeededBySearchAnalyticsProvider>;
 
-export type ClickAction =
-  PreparableAnalyticsAction<StateNeededBySearchAnalyticsProvider>;
+export type ClickAction = PreparableAnalyticsAction<StateNeededBySearchAnalyticsProvider>;
 
 export type InstantResultsSearchAction =
   PreparableAnalyticsAction<StateNeededByInstantResultsAnalyticsProvider>;
@@ -130,15 +112,11 @@ export type InstantResultsSearchAction =
 export type InstantResultsClickAction =
   PreparableAnalyticsAction<StateNeededByInstantResultsAnalyticsProvider>;
 
-export type InsightAction =
-  PreparableAnalyticsAction<StateNeededByInsightAnalyticsProvider>;
+export type InsightAction = PreparableAnalyticsAction<StateNeededByInsightAnalyticsProvider>;
 
-export type CaseAssistAction =
-  PreparableAnalyticsAction<StateNeededByCaseAssistAnalytics>;
+export type CaseAssistAction = PreparableAnalyticsAction<StateNeededByCaseAssistAnalytics>;
 
-type AsyncThunkAnalyticsOptions<
-  T extends StateNeededBySearchAnalyticsProvider,
-> = {
+type AsyncThunkAnalyticsOptions<T extends StateNeededBySearchAnalyticsProvider> = {
   state: T;
   extra: ThunkExtraArguments;
 };
@@ -152,27 +130,18 @@ function makePreparableAnalyticsAction<
   StateNeeded extends ConfigurationSection,
 >(
   prefix: string,
-  buildEvent: (
-    options: PreparableAnalyticsActionOptions<StateNeeded>
-  ) => Promise<{
-    log: (
-      options: AsyncThunkAnalyticsOptions<StateNeeded>
-    ) => Promise<EventType>;
+  buildEvent: (options: PreparableAnalyticsActionOptions<StateNeeded>) => Promise<{
+    log: (options: AsyncThunkAnalyticsOptions<StateNeeded>) => Promise<EventType>;
     description?: EventDescription;
   }>
 ): PreparableAnalyticsAction<StateNeeded> {
   const createAnalyticsAction = (
-    body: AsyncThunkPayloadCreator<
-      EventType,
-      void,
-      AsyncThunkAnalyticsOptions<StateNeeded>
-    >
+    body: AsyncThunkPayloadCreator<EventType, void, AsyncThunkAnalyticsOptions<StateNeeded>>
   ) => {
-    const thunk = createAsyncThunk<
-      EventType,
-      void,
-      AsyncThunkAnalyticsOptions<StateNeeded>
-    >(prefix, body);
+    const thunk = createAsyncThunk<EventType, void, AsyncThunkAnalyticsOptions<StateNeeded>>(
+      prefix,
+      body
+    );
     return makeInstantlyCallable(
       Object.assign(thunk, {
         type: thunk.typePrefix,
@@ -206,11 +175,9 @@ function makePreparableAnalyticsAction<
     });
     return {
       description,
-      action: createAnalyticsAction(
-        async (_, {getState: getNewState, extra: newExtra}) => {
-          return await log({state: getNewState(), extra: newExtra});
-        }
-      ),
+      action: createAnalyticsAction(async (_, {getState: getNewState, extra: newExtra}) => {
+        return await log({state: getNewState(), extra: newExtra});
+      }),
     };
   };
 
@@ -236,23 +203,13 @@ type AnalyticsActionOptions<
     __legacy__getBuilder: LegacyGetBuilderType;
   };
 
-interface NextAnalyticsOptions<
-  StateNeeded extends InternalLegacyStateNeeded,
-  PayloadType,
-> {
+interface NextAnalyticsOptions<StateNeeded extends InternalLegacyStateNeeded, PayloadType> {
   analyticsType: string;
   analyticsPayloadBuilder: (state: StateNeeded) => PayloadType;
 }
-interface LegacyAnalyticsOptions<
-  StateNeeded extends InternalLegacyStateNeeded,
-  Client,
-  Provider,
-> {
+interface LegacyAnalyticsOptions<StateNeeded extends InternalLegacyStateNeeded, Client, Provider> {
   prefix: string;
-  __legacy__getBuilder: (
-    client: Client,
-    state: StateNeeded
-  ) => Promise<EventBuilder | null> | null;
+  __legacy__getBuilder: (client: Client, state: StateNeeded) => Promise<EventBuilder | null> | null;
   __legacy__provider?: (getState: () => StateNeeded) => Provider;
 }
 
@@ -274,11 +231,7 @@ const makeAnalyticsActionFactory = <
     LegacyStateNeededByProvider,
     Client,
     LegacyProvider
-  > = AnalyticsConfiguratorFromStateNeeded<
-    LegacyStateNeededByProvider,
-    Client,
-    LegacyProvider
-  >,
+  > = AnalyticsConfiguratorFromStateNeeded<LegacyStateNeededByProvider, Client, LegacyProvider>,
 >(
   configurator: Configurator,
   legacyGetBuilderConverter: (
@@ -291,8 +244,7 @@ const makeAnalyticsActionFactory = <
   providerClass: ProviderClass<LegacyStateNeededByProvider, LegacyProvider>
 ) => {
   function makeAnalyticsAction<
-    LegacyStateNeeded extends LegacyStateNeededByProvider =
-      LegacyStateNeededByProvider,
+    LegacyStateNeeded extends LegacyStateNeededByProvider = LegacyStateNeededByProvider,
     ComputedLegacyAnalyticsOptions extends LegacyAnalyticsOptions<
       LegacyStateNeeded,
       Client,
@@ -304,8 +256,7 @@ const makeAnalyticsActionFactory = <
     __legacy__provider?: ComputedLegacyAnalyticsOptions['__legacy__provider']
   ): PreparableAnalyticsAction<LegacyStateNeeded>;
   function makeAnalyticsAction<
-    LegacyStateNeeded extends LegacyStateNeededByProvider =
-      LegacyStateNeededByProvider,
+    LegacyStateNeeded extends LegacyStateNeededByProvider = LegacyStateNeededByProvider,
     StateNeeded extends StateNeededByProvider = StateNeededByProvider,
     PayloadType = {},
   >({
@@ -323,8 +274,7 @@ const makeAnalyticsActionFactory = <
     PayloadType
   >): PreparableAnalyticsAction<StateNeeded>;
   function makeAnalyticsAction<
-    LegacyStateNeeded extends LegacyStateNeededByProvider =
-      LegacyStateNeededByProvider,
+    LegacyStateNeeded extends LegacyStateNeededByProvider = LegacyStateNeededByProvider,
     ComputedLegacyAnalyticsOptions extends LegacyAnalyticsOptions<
       LegacyStateNeeded,
       Client,
@@ -354,9 +304,7 @@ const makeAnalyticsActionFactory = <
       params.length === 1
         ? {
             ...params[0],
-            __legacy__getBuilder: legacyGetBuilderConverter(
-              params[0].__legacy__getBuilder
-            ),
+            __legacy__getBuilder: legacyGetBuilderConverter(params[0].__legacy__getBuilder),
             analyticsConfigurator: configurator,
             providerClass: providerClass,
           }
@@ -383,9 +331,7 @@ type AnalyticsConfiguratorFromStateNeeded<
   StateNeeded extends InternalLegacyStateNeeded,
   ReturnType extends CommonClient,
   LegacyProvider,
-> = (
-  options: AnalyticsConfiguratorOptions<StateNeeded, LegacyProvider>
-) => ReturnType;
+> = (options: AnalyticsConfiguratorOptions<StateNeeded, LegacyProvider>) => ReturnType;
 interface AnalyticsConfiguratorOptions<
   StateNeeded extends InternalLegacyStateNeeded,
   LegacyProvider,
@@ -441,26 +387,15 @@ const internalMakeAnalyticsAction = <
   LegacyStateNeeded,
   StateNeeded,
   PayloadType,
-  AnalyticsConfiguratorFromStateNeeded<
-    LegacyStateNeeded,
-    Client,
-    LegacyProvider
-  >,
+  AnalyticsConfiguratorFromStateNeeded<LegacyStateNeeded, Client, LegacyProvider>,
   Client,
   LegacyProvider
 >): PreparableAnalyticsAction<LegacyStateNeeded & StateNeeded> => {
   __legacy__provider ??= (getState) => new providerClass(getState);
   return makePreparableAnalyticsAction(
     prefix,
-    async ({
-      getState,
-      analyticsClientMiddleware,
-      preprocessRequest,
-      logger,
-    }) => {
-      const loggers: ((
-        state: LegacyStateNeeded & StateNeeded
-      ) => Promise<void>)[] = [];
+    async ({getState, analyticsClientMiddleware, preprocessRequest, logger}) => {
+      const loggers: ((state: LegacyStateNeeded & StateNeeded) => Promise<void>)[] = [];
       const analyticsAction: {
         log: (
           options: AsyncThunkAnalyticsOptions<LegacyStateNeeded & StateNeeded>
@@ -496,11 +431,7 @@ const internalMakeAnalyticsAction = <
       });
       const {emit} = getRelayInstanceFromState(state);
       loggers.push(async (state: LegacyStateNeeded & StateNeeded) => {
-        if (
-          shouldSendNextEvent(state) &&
-          analyticsType &&
-          analyticsPayloadBuilder
-        ) {
+        if (shouldSendNextEvent(state) && analyticsType && analyticsPayloadBuilder) {
           const payload = analyticsPayloadBuilder(state);
           await logNextEvent(emit, analyticsType, payload);
         }
@@ -534,10 +465,7 @@ type LogFunction<Client, StateNeeded> = (
 
 const fromLogToLegacyBuilderFactory = (actionCause: string) => {
   const fromLogToLegacyBuilder = <Client extends CommonClient, StateNeeded>(
-    log: (
-      client: Client,
-      state: StateNeeded
-    ) => Promise<void | SearchEventResponse> | void | null
+    log: (client: Client, state: StateNeeded) => Promise<void | SearchEventResponse> | void | null
   ): ((client: Client, state: StateNeeded) => Promise<EventBuilder>) => {
     return (client, state) =>
       Promise.resolve({
@@ -559,8 +487,7 @@ export const makeAnalyticsAction = makeAnalyticsActionFactory<
   (options) =>
     configureLegacyAnalytics({
       ...options,
-      provider:
-        options.provider || new SearchAnalyticsProvider(options.getState),
+      provider: options.provider || new SearchAnalyticsProvider(options.getState),
     }),
   (original) => original,
   SearchAnalyticsProvider
@@ -597,8 +524,7 @@ export const partialDocumentInformation = (
   result: Result,
   state: Partial<SearchAppState>
 ): PartialDocumentInformation => {
-  const paginationBasedIndex = (index: number) =>
-    index + (state.pagination?.firstResult ?? 0);
+  const paginationBasedIndex = (index: number) => index + (state.pagination?.firstResult ?? 0);
 
   let resultIndex = -1;
 
@@ -614,11 +540,7 @@ export const partialDocumentInformation = (
     resultIndex = 0;
   }
 
-  return buildPartialDocumentInformation(
-    result,
-    paginationBasedIndex(resultIndex),
-    state
-  );
+  return buildPartialDocumentInformation(result, paginationBasedIndex(resultIndex), state);
 };
 
 export const partialRecommendationInformation = (
@@ -626,9 +548,8 @@ export const partialRecommendationInformation = (
   state: Partial<RecommendationAppState>
 ): PartialDocumentInformation => {
   const resultIndex =
-    state.recommendation?.recommendations.findIndex(
-      ({uniqueId}) => result.uniqueId === uniqueId
-    ) || 0;
+    state.recommendation?.recommendations.findIndex(({uniqueId}) => result.uniqueId === uniqueId) ||
+    0;
 
   return buildPartialDocumentInformation(result, resultIndex, state);
 };
@@ -668,9 +589,7 @@ function getCitationSourceName(citation: GeneratedAnswerCitation) {
   return source;
 }
 
-export const citationDocumentIdentifier = (
-  citation: GeneratedAnswerCitation
-) => {
+export const citationDocumentIdentifier = (citation: GeneratedAnswerCitation) => {
   return {
     contentIdKey: 'permanentid',
     contentIdValue: citation.permanentid || '',
@@ -683,15 +602,12 @@ function buildPartialDocumentInformation(
   state: Partial<PipelineSection>
 ): PartialDocumentInformation {
   const collection = result.raw.collection;
-  const collectionName =
-    typeof collection === 'string' ? collection : 'default';
+  const collectionName = typeof collection === 'string' ? collection : 'default';
 
   return {
     collectionName,
     documentAuthor: getDocumentAuthor(result),
-    ...(getDocumentCategory(result)
-      ? {documentCategory: getDocumentCategory(result)}
-      : {}),
+    ...(getDocumentCategory(result) ? {documentCategory: getDocumentCategory(result)} : {}),
     documentPosition: resultIndex + 1,
     documentTitle: result.title,
     documentUri: result.uri,
@@ -736,10 +652,7 @@ export const resultPartialDefinition = {
 };
 
 function partialRawPayload(raw: Raw): Partial<Raw> {
-  return Object.assign(
-    {},
-    ...Object.keys(rawPartialDefinition).map((key) => ({[key]: raw[key]}))
-  );
+  return Object.assign({}, ...Object.keys(rawPartialDefinition).map((key) => ({[key]: raw[key]})));
 }
 
 function partialResultPayload(result: Result): Partial<Result> {
@@ -772,10 +685,7 @@ function getSourceName(result: Result) {
 export const validateResultPayload = (result: Result) =>
   new Schema(resultPartialDefinition).validate(partialResultPayload(result));
 
-function findPositionInChildResults(
-  targetResult: Result,
-  parentResults: ResultWithFolding[]
-) {
+function findPositionInChildResults(targetResult: Result, parentResults: ResultWithFolding[]) {
   for (const [i, parent] of parentResults.entries()) {
     const children = getAllIncludedResultsFrom(parent);
     const childIndex = findPositionWithUniqueId(targetResult, children);

@@ -1,6 +1,13 @@
-const facetData = {
-  facetId: 'geographicalhierarchy',
-  field: 'geographicalhierarchy',
+const facetId = 'geographicalhierarchy';
+const field = 'geographicalhierarchy';
+const label = 'Country';
+
+/**
+ * Facet response before any value is selected.
+ */
+export const initialFacetData = {
+  facetId,
+  field,
   moreValuesAvailable: true,
   values: [
     {
@@ -20,8 +27,65 @@ const facetData = {
       isLeafValue: false,
     },
   ],
-  indexScore: 0.40500903971252294,
-  label: 'Object type',
+  indexScore: 1,
+  label,
 };
 
-export default facetData;
+const [northAmerica] = initialFacetData.values;
+
+/**
+ * Facet response after clicking "Show more".
+ */
+export const expandedFacetData = {
+  ...initialFacetData,
+  values: [
+    ...initialFacetData.values,
+    {
+      value: 'South America',
+      state: 'idle',
+      numberOfResults: 112,
+      children: [],
+      path: ['South America'],
+      isLeafValue: false,
+    },
+    {
+      value: 'Asia',
+      state: 'idle',
+      numberOfResults: 58,
+      children: [],
+      path: ['Asia'],
+      isLeafValue: false,
+    },
+  ],
+};
+
+/**
+ * Facet response after the first parent value is selected.
+ */
+export const selectedFacetData = {
+  ...initialFacetData,
+  values: [
+    {
+      ...northAmerica,
+      state: 'selected',
+      children: [
+        {
+          value: 'Canada',
+          state: 'idle',
+          numberOfResults: 45,
+          children: [],
+          path: ['North America', 'Canada'],
+          isLeafValue: true,
+        },
+        {
+          value: 'United States',
+          state: 'idle',
+          numberOfResults: 67,
+          children: [],
+          path: ['North America', 'United States'],
+          isLeafValue: true,
+        },
+      ],
+    },
+  ],
+};

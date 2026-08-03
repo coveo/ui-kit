@@ -34,16 +34,14 @@ describe('atomic-generated-answer', () => {
   let mockedGeneratedAnswer: GeneratedAnswer;
   let mockedSearchStatus: SearchStatus;
   let mockedTabManager: TabManager;
-  type FollowUpAnswersState =
-    GeneratedAnswerWithFollowUpsState['followUpAnswers'];
+  type FollowUpAnswersState = GeneratedAnswerWithFollowUpsState['followUpAnswers'];
   type FollowUpAnswerEntry = FollowUpAnswersState['followUpAnswers'][number];
   type RenderGeneratedAnswerOptions = {
     props?: Partial<AtomicGeneratedAnswer>;
     generatedAnswerState?: Partial<GeneratedAnswerState>;
     searchStatusState?: {hasError?: boolean};
     tabManagerState?: {activeTab?: string};
-    generatedAnswerOverrides?: Partial<GeneratedAnswer> &
-      Record<string, unknown>;
+    generatedAnswerOverrides?: Partial<GeneratedAnswer> & Record<string, unknown>;
   };
 
   const renderGeneratedAnswer = async ({
@@ -85,27 +83,24 @@ describe('atomic-generated-answer', () => {
       cancelPendingSelect: vi.fn(),
     } as ReturnType<typeof buildInteractiveCitation>);
 
-    const {element} =
-      await renderInAtomicSearchInterface<AtomicGeneratedAnswer>({
-        template: html`<atomic-generated-answer
-          .withToggle=${props.withToggle ?? false}
-          .collapsible=${props.collapsible ?? false}
-          .disableCitationAnchoring=${props.disableCitationAnchoring ?? false}
-          .answerConfigurationId=${props.answerConfigurationId}
-          fields-to-include-in-citations=${ifDefined(
-            props.fieldsToIncludeInCitations
-          )}
-          .maxCollapsedHeight=${props.maxCollapsedHeight ?? 16}
-          .tabsIncluded=${props.tabsIncluded ?? []}
-          .tabsExcluded=${props.tabsExcluded ?? []}
-          .agentId=${props.agentId}
-        ></atomic-generated-answer>`,
-        selector: 'atomic-generated-answer',
-        bindings: (bindings) => {
-          bindings.engine = mockedEngine;
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicSearchInterface<AtomicGeneratedAnswer>({
+      template: html`<atomic-generated-answer
+        .withToggle=${props.withToggle ?? false}
+        .collapsible=${props.collapsible ?? false}
+        .disableCitationAnchoring=${props.disableCitationAnchoring ?? false}
+        .answerConfigurationId=${props.answerConfigurationId}
+        fields-to-include-in-citations=${ifDefined(props.fieldsToIncludeInCitations)}
+        .maxCollapsedHeight=${props.maxCollapsedHeight ?? 16}
+        .tabsIncluded=${props.tabsIncluded ?? []}
+        .tabsExcluded=${props.tabsExcluded ?? []}
+        .agentId=${props.agentId}
+      ></atomic-generated-answer>`,
+      selector: 'atomic-generated-answer',
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        return bindings;
+      },
+    });
 
     return {
       element,
@@ -119,9 +114,7 @@ describe('atomic-generated-answer', () => {
         return element.shadowRoot?.querySelector('[part="toggle"]')!;
       },
       get generatedContainer() {
-        return element.shadowRoot?.querySelector(
-          '[part="generated-container"]'
-        );
+        return element.shadowRoot?.querySelector('[part="generated-container"]');
       },
       get generatedContent() {
         return element.shadowRoot?.querySelector('[part="generated-content"]')!;
@@ -132,9 +125,7 @@ describe('atomic-generated-answer', () => {
         );
       },
       get feedbackButtons() {
-        return element.shadowRoot?.querySelectorAll(
-          '[part="feedback-button"]'
-        )!;
+        return element.shadowRoot?.querySelectorAll('[part="feedback-button"]')!;
       },
       get copyButton() {
         return element.shadowRoot?.querySelector('[part="copy-button"]')!;
@@ -143,9 +134,7 @@ describe('atomic-generated-answer', () => {
         return element.shadowRoot?.querySelector('[part="citations-label"]')!;
       },
       get generatedAnswerFooter() {
-        return element.shadowRoot?.querySelector(
-          '[part="generated-answer-footer"]'
-        );
+        return element.shadowRoot?.querySelector('[part="generated-answer-footer"]');
       },
       get likeButton() {
         return element.shadowRoot?.querySelector(
@@ -161,9 +150,7 @@ describe('atomic-generated-answer', () => {
         return element.shadowRoot?.querySelector('[part="retry-container"]')!;
       },
       get retryButton() {
-        return element.shadowRoot?.querySelector(
-          '[part="retry-button"]'
-        ) as HTMLButtonElement;
+        return element.shadowRoot?.querySelector('[part="retry-button"]') as HTMLButtonElement;
       },
       get citationElements() {
         return element.shadowRoot?.querySelectorAll('atomic-citation')!;
@@ -177,20 +164,16 @@ describe('atomic-generated-answer', () => {
         ) as HTMLButtonElement;
       },
       get generatedAnswersThread() {
-        return element.shadowRoot?.querySelector(
-          'atomic-generated-answer-thread'
-        );
+        return element.shadowRoot?.querySelector('atomic-generated-answer-thread');
       },
       get followUpInputComponent() {
-        return element.shadowRoot?.querySelector(
-          'atomic-ask-follow-up-input'
-        ) as (HTMLElement & {shadowRoot: ShadowRoot | null}) | null;
+        return element.shadowRoot?.querySelector('atomic-ask-follow-up-input') as
+          | (HTMLElement & {shadowRoot: ShadowRoot | null})
+          | null;
       },
       get followUpInputContainer() {
         return (
-          this.followUpInputComponent?.shadowRoot?.querySelector(
-            '[part="input-container"]'
-          ) ?? null
+          this.followUpInputComponent?.shadowRoot?.querySelector('[part="input-container"]') ?? null
         );
       },
       get followUpInputField() {
@@ -210,9 +193,7 @@ describe('atomic-generated-answer', () => {
     };
   };
 
-  const buildFollowUpAnswerEntry = (
-    overrides: Partial<FollowUpAnswerEntry> = {}
-  ) =>
+  const buildFollowUpAnswerEntry = (overrides: Partial<FollowUpAnswerEntry> = {}) =>
     ({
       answer: 'Follow up answer',
       citations: [],
@@ -264,10 +245,7 @@ describe('atomic-generated-answer', () => {
 
     it('should call buildGeneratedAnswer with the engine', async () => {
       await renderGeneratedAnswer();
-      expect(buildGeneratedAnswer).toHaveBeenCalledWith(
-        mockedEngine,
-        expect.any(Object)
-      );
+      expect(buildGeneratedAnswer).toHaveBeenCalledWith(mockedEngine, expect.any(Object));
     });
 
     it('should call buildSearchStatus with the engine', async () => {
@@ -319,29 +297,26 @@ describe('atomic-generated-answer', () => {
       vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
       vi.mocked(buildTabManager).mockReturnValue(mockedTabManager);
 
-      const {element} =
-        await renderInAtomicSearchInterface<AtomicGeneratedAnswer>({
-          template: html`<atomic-generated-answer
-            .withToggle=${props.withToggle ?? false}
-            .collapsible=${props.collapsible ?? false}
-            .disableCitationAnchoring=${props.disableCitationAnchoring ?? false}
-            .answerConfigurationId=${props.answerConfigurationId}
-            .agentId=${props.agentId}
-            fields-to-include-in-citations=${ifDefined(
-              props.fieldsToIncludeInCitations
-            )}
-            .maxCollapsedHeight=${props.maxCollapsedHeight ?? 16}
-            .tabsIncluded=${props.tabsIncluded ?? []}
-            .tabsExcluded=${props.tabsExcluded ?? []}
-          >
-            <div slot="no-answer-message">Sorry, no answer available.</div>
-          </atomic-generated-answer>`,
-          selector: 'atomic-generated-answer',
-          bindings: (bindings) => {
-            bindings.engine = mockedEngine;
-            return bindings;
-          },
-        });
+      const {element} = await renderInAtomicSearchInterface<AtomicGeneratedAnswer>({
+        template: html`<atomic-generated-answer
+          .withToggle=${props.withToggle ?? false}
+          .collapsible=${props.collapsible ?? false}
+          .disableCitationAnchoring=${props.disableCitationAnchoring ?? false}
+          .answerConfigurationId=${props.answerConfigurationId}
+          .agentId=${props.agentId}
+          fields-to-include-in-citations=${ifDefined(props.fieldsToIncludeInCitations)}
+          .maxCollapsedHeight=${props.maxCollapsedHeight ?? 16}
+          .tabsIncluded=${props.tabsIncluded ?? []}
+          .tabsExcluded=${props.tabsExcluded ?? []}
+        >
+          <div slot="no-answer-message">Sorry, no answer available.</div>
+        </atomic-generated-answer>`,
+        selector: 'atomic-generated-answer',
+        bindings: (bindings) => {
+          bindings.engine = mockedEngine;
+          return bindings;
+        },
+      });
 
       return {
         element,
@@ -355,22 +330,16 @@ describe('atomic-generated-answer', () => {
           return element.shadowRoot?.querySelector('[part="toggle"]')!;
         },
         get generatedContent() {
-          return element.shadowRoot?.querySelector(
-            '[part="generated-content"]'
-          )!;
+          return element.shadowRoot?.querySelector('[part="generated-content"]')!;
         },
         get generatedContainer() {
-          return element.shadowRoot?.querySelector(
-            '[part="generated-container"]'
-          );
+          return element.shadowRoot?.querySelector('[part="generated-container"]');
         },
         get article() {
           return element.shadowRoot?.querySelector('article')!;
         },
         get customMessageSlot() {
-          return element.shadowRoot?.querySelector(
-            'slot[name="no-answer-message"]'
-          )!;
+          return element.shadowRoot?.querySelector('slot[name="no-answer-message"]')!;
         },
       };
     };
@@ -391,10 +360,9 @@ describe('atomic-generated-answer', () => {
     });
 
     it('should render the custom no-answer message slot when visible', async () => {
-      const {customMessageSlot, article} =
-        await renderGeneratedAnswerWithCustomMessage({
-          generatedAnswerState: {isVisible: true},
-        });
+      const {customMessageSlot, article} = await renderGeneratedAnswerWithCustomMessage({
+        generatedAnswerState: {isVisible: true},
+      });
       expect(article).toBeInTheDocument();
       expect(customMessageSlot).toBeInTheDocument();
     });
@@ -457,9 +425,7 @@ describe('atomic-generated-answer', () => {
       const {generatedContainer, customMessageSlot} =
         await renderGeneratedAnswerWithCustomMessage();
       expect(generatedContainer).toBeInTheDocument();
-      expect(generatedContainer).toContainElement(
-        customMessageSlot as HTMLElement
-      );
+      expect(generatedContainer).toContainElement(customMessageSlot as HTMLElement);
     });
   });
 
@@ -766,10 +732,7 @@ describe('atomic-generated-answer', () => {
     ) as HTMLElement | null;
     expect(generatedText).not.toBeNull();
 
-    vi.spyOn(
-      generatedText as HTMLElement,
-      'getBoundingClientRect'
-    ).mockReturnValue({
+    vi.spyOn(generatedText as HTMLElement, 'getBoundingClientRect').mockReturnValue({
       x: 0,
       y: 0,
       width: 0,
@@ -1108,8 +1071,7 @@ describe('atomic-generated-answer', () => {
       const {element} = result;
       expect(result.scrollableContainer).toBeNull();
 
-      const generatedAnswerWithFollowUps =
-        element.generatedAnswer as GeneratedAnswerWithFollowUps;
+      const generatedAnswerWithFollowUps = element.generatedAnswer as GeneratedAnswerWithFollowUps;
       generatedAnswerWithFollowUps.state.followUpAnswers.isEnabled = true;
       element.requestUpdate();
       await element.updateComplete;
@@ -1200,8 +1162,7 @@ describe('atomic-generated-answer', () => {
         generatedAnswerOverrides: {askFollowUp: vi.fn()},
       });
 
-      const exportparts =
-        generatedAnswersThread?.getAttribute('exportparts') ?? '';
+      const exportparts = generatedAnswersThread?.getAttribute('exportparts') ?? '';
 
       expect(exportparts).toContain('answer-link');
       expect(exportparts).toContain('generated-text');
@@ -1221,17 +1182,15 @@ describe('atomic-generated-answer', () => {
     });
 
     it('should render the follow up input when follow ups are enabled', async () => {
-      const {followUpInputComponent, followUpInputContainer} =
-        await renderGeneratedAnswer({
-          props: {agentId: 'agent-id'},
-          generatedAnswerState: createGeneratedAnswerWithFollowUpsState(),
-          generatedAnswerOverrides: {askFollowUp: vi.fn()},
-        });
+      const {followUpInputComponent, followUpInputContainer} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState(),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
 
       expect(followUpInputContainer).toBeInTheDocument();
 
-      const exportparts =
-        followUpInputComponent?.getAttribute('exportparts') ?? '';
+      const exportparts = followUpInputComponent?.getAttribute('exportparts') ?? '';
       expect(exportparts).toContain('input-container');
       expect(exportparts).toContain('input-field');
       expect(exportparts).toContain('submit-button');
@@ -1324,9 +1283,7 @@ describe('atomic-generated-answer', () => {
       const {followUpSubmitButton} = await renderGeneratedAnswer({
         props: {agentId: 'agent-id'},
         generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
-          followUpAnswers: [
-            buildFollowUpAnswerEntry({isLoading: false, isStreaming: false}),
-          ],
+          followUpAnswers: [buildFollowUpAnswerEntry({isLoading: false, isStreaming: false})],
         }),
         generatedAnswerOverrides: {askFollowUp: vi.fn()},
       });
@@ -1337,12 +1294,11 @@ describe('atomic-generated-answer', () => {
 
     it('should call askFollowUp when a follow up question is submitted', async () => {
       const askFollowUp = vi.fn().mockResolvedValue(undefined);
-      const {element, followUpInputField, followUpSubmitButton} =
-        await renderGeneratedAnswer({
-          props: {agentId: 'agent-id'},
-          generatedAnswerState: createGeneratedAnswerWithFollowUpsState(),
-          generatedAnswerOverrides: {askFollowUp},
-        });
+      const {element, followUpInputField, followUpSubmitButton} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState(),
+        generatedAnswerOverrides: {askFollowUp},
+      });
 
       await element.updateComplete;
       const input = followUpInputField as HTMLTextAreaElement;
@@ -1368,11 +1324,7 @@ describe('atomic-generated-answer', () => {
       expect(buildGeneratedAnswer).toHaveBeenCalledWith(
         mockedEngine,
         expect.objectContaining({
-          fieldsToIncludeInCitations: expect.arrayContaining([
-            'author',
-            'date',
-            'custom_field',
-          ]),
+          fieldsToIncludeInCitations: expect.arrayContaining(['author', 'date', 'custom_field']),
         })
       );
     });
@@ -1400,11 +1352,7 @@ describe('atomic-generated-answer', () => {
       expect(buildGeneratedAnswer).toHaveBeenCalledWith(
         mockedEngine,
         expect.objectContaining({
-          fieldsToIncludeInCitations: expect.arrayContaining([
-            'field1',
-            'field2',
-            'field3',
-          ]),
+          fieldsToIncludeInCitations: expect.arrayContaining(['field1', 'field2', 'field3']),
         })
       );
     });
@@ -1466,9 +1414,7 @@ describe('atomic-generated-answer', () => {
 
   // TODO V4: KIT-5197 - Remove this test
   it('should log validation warning when maxCollapsedHeight is updated to invalid value', async () => {
-    const consoleWarnSpy = vi
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
+    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
     const {element} = await renderGeneratedAnswer({
       props: {maxCollapsedHeight: 16}, // Valid value
@@ -1478,9 +1424,7 @@ describe('atomic-generated-answer', () => {
     await element.updateComplete;
 
     expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining(
-        'Prop validation failed for component atomic-generated-answer'
-      ),
+      expect.stringContaining('Prop validation failed for component atomic-generated-answer'),
       element
     );
     expect(consoleWarnSpy).toHaveBeenCalledWith(
@@ -1681,16 +1625,14 @@ describe('atomic-generated-answer', () => {
         generatedAnswerState: {isVisible: true, answer: 'Test answer'},
       });
 
-      const containerBefore =
-        element.shadowRoot?.querySelector('[part="container"]');
+      const containerBefore = element.shadowRoot?.querySelector('[part="container"]');
       expect(containerBefore).not.toBeInTheDocument();
 
       // Simulate tab change to allowed tab
       element.tabManagerState = {activeTab: 'AllowedTab'};
       await element.updateComplete;
 
-      const containerAfter =
-        element.shadowRoot?.querySelector('[part="container"]');
+      const containerAfter = element.shadowRoot?.querySelector('[part="container"]');
       expect(containerAfter).toBeInTheDocument();
     });
 
@@ -1791,16 +1733,14 @@ describe('atomic-generated-answer', () => {
         generatedAnswerState: {isVisible: true, answer: 'Test answer'},
       });
 
-      const containerBefore =
-        element.shadowRoot?.querySelector('[part="container"]');
+      const containerBefore = element.shadowRoot?.querySelector('[part="container"]');
       expect(containerBefore).not.toBeInTheDocument();
 
       // Simulate tab change to included tab
       element.tabManagerState = {activeTab: 'IncludedTab2'};
       await element.updateComplete;
 
-      const containerAfter =
-        element.shadowRoot?.querySelector('[part="container"]');
+      const containerAfter = element.shadowRoot?.querySelector('[part="container"]');
       expect(containerAfter).toBeInTheDocument();
     });
 

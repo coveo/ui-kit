@@ -25,8 +25,7 @@ function mapResult(result: Record<string, unknown>) {
 
 type ResultsSlice = ReturnType<typeof createResultsSlice>;
 
-const CACHE_KEY: CacheKey<ResultsSlice> =
-  createCacheKey<ResultsSlice>('resultList/slice');
+const CACHE_KEY: CacheKey<ResultsSlice> = createCacheKey<ResultsSlice>('resultList/slice');
 
 export function createResultsSlice(
   interfaceId: string,

@@ -99,9 +99,7 @@ describe('dom-utils', () => {
       parent.appendChild(child1);
       parent.appendChild(child2);
 
-      expect(parentNodeToString(parent)).toBe(
-        '<span>First</span><p>Second</p>'
-      );
+      expect(parentNodeToString(parent)).toBe('<span>First</span><p>Second</p>');
     });
 
     it('should handle children with attributes', () => {
@@ -238,9 +236,7 @@ describe('dom-utils', () => {
       parent.appendChild(child);
       container.appendChild(parent);
 
-      expect(closest(child, 'div.parent.active[data-role="container"]')).toBe(
-        parent
-      );
+      expect(closest(child, 'div.parent.active[data-role="container"]')).toBe(parent);
     });
 
     it('should traverse through shadow root boundaries', () => {
@@ -261,8 +257,7 @@ describe('dom-utils', () => {
       hostElement.className = 'host';
       container.appendChild(hostElement);
 
-      const shadowContent =
-        hostElement.shadowRoot!.querySelector('.shadow-content')!;
+      const shadowContent = hostElement.shadowRoot!.querySelector('.shadow-content')!;
 
       expect(closest(shadowContent, '.host')).toBe(hostElement);
     });

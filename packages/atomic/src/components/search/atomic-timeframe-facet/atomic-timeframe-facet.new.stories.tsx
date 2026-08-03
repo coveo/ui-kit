@@ -3,8 +3,7 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
-import {buildSearchResponseWithResults} from '@coveo/platform-mock-api/search/search-response-mocks';
+import {buildSearchResponseWithResults, MockSearchApi} from '@coveo/platform-mock-api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {
   facetDecorator,
@@ -85,12 +84,9 @@ const createDateFacetResponse = (
 
 const {decorator, play} = wrapInSearchInterface();
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-timeframe-facet',
-  {
-    excludeCategories: ['methods'],
-  }
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-timeframe-facet', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-timeframe-facet',
@@ -245,10 +241,9 @@ export const WithDependsOn: Story = {
     await play(context);
     const {canvas, step} = context;
     await step('Select YouTubeVideo in filetype facet', async () => {
-      const button = await canvas.findByShadowLabelText(
-        'Inclusion filter on YouTubeVideo',
-        {exact: false}
-      );
+      const button = await canvas.findByShadowLabelText('Inclusion filter on YouTubeVideo', {
+        exact: false,
+      });
       button.ariaChecked === 'false' ? button.click() : null;
     });
   },
@@ -305,20 +300,17 @@ export const A11yStatusMessage: Story = {
         ],
       })
     );
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(42)
-    );
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(42));
   },
-  decorators: [
-    (story) => html`<atomic-query-summary></atomic-query-summary>${story()}`,
-  ],
+  decorators: [(story) => html`<atomic-query-summary></atomic-query-summary>${story()}`],
   play: async (context) => {
     await play(context);
     await testStatusMessageA11y(context, {
       triggerAction: async () => {
-        const [link] = await within(
-          context.canvasElement
-        ).findAllByShadowLabelText('Inclusion filter on', {exact: false});
+        const [link] = await within(context.canvasElement).findAllByShadowLabelText(
+          'Inclusion filter on',
+          {exact: false}
+        );
         link.click();
       },
       expectedText: 'Results loaded. Results 1-10 of 42',

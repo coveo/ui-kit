@@ -38,10 +38,7 @@ describe('item-context', () => {
 
       fetchItemContext(mockElement, 'parent-element');
 
-      expect(buildCustomEvent).toHaveBeenCalledWith(
-        'atomic/resolveResult',
-        expect.any(Function)
-      );
+      expect(buildCustomEvent).toHaveBeenCalledWith('atomic/resolveResult', expect.any(Function));
     });
 
     it('should dispatch the custom event on the element', () => {
@@ -64,10 +61,7 @@ describe('item-context', () => {
         return mockEvent;
       });
 
-      const result = await fetchItemContext<typeof testItem>(
-        mockElement,
-        'parent-element'
-      );
+      const result = await fetchItemContext<typeof testItem>(mockElement, 'parent-element');
 
       expect(result).toEqual(testItem);
     });
@@ -84,20 +78,15 @@ describe('item-context', () => {
         'The "atomic-result" element must be the child of an "parent-element" element.'
       );
       expectedError.name = 'MissingParentError';
-      vi.mocked(MissingParentError).mockImplementation(
-        function (this: unknown) {
-          return expectedError;
-        }
+      vi.mocked(MissingParentError).mockImplementation(function (this: unknown) {
+        return expectedError;
+      });
+
+      await expect(fetchItemContext(elementWithUpperCase, 'parent-element')).rejects.toThrow(
+        expectedError
       );
 
-      await expect(
-        fetchItemContext(elementWithUpperCase, 'parent-element')
-      ).rejects.toThrow(expectedError);
-
-      expect(MissingParentError).toHaveBeenCalledWith(
-        'atomic-result',
-        'parent-element'
-      );
+      expect(MissingParentError).toHaveBeenCalledWith('atomic-result', 'parent-element');
     });
   });
 });

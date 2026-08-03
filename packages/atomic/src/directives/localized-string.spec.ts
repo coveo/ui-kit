@@ -60,9 +60,7 @@ describe('localizedString', () => {
 
     render(html`<div>${localizedString(props)}</div>`, container);
 
-    expect(container.textContent).toContain(
-      'Hello, World! You have 5 messages.'
-    );
+    expect(container.textContent).toContain('Hello, World! You have 5 messages.');
   });
 
   it('should render a localized string with HTML template parameters', async () => {
@@ -88,9 +86,7 @@ describe('localizedString', () => {
 
     render(html`<div>${localizedString(props)}</div>`, container);
 
-    expect(container.textContent).toContain(
-      'Hello, World! Here is a link: example'
-    );
+    expect(container.textContent).toContain('Hello, World! Here is a link: example');
     const link = container.querySelector('a');
     expect(link).toBeTruthy();
     expect(link?.getAttribute('href')).toBe('https://example.com');

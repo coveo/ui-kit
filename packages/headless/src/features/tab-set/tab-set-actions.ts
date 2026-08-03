@@ -32,9 +32,6 @@ export const registerTab = createAction(
   }
 );
 
-export const updateActiveTab = createAction(
-  'tab/updateActiveTab',
-  (id: string) => {
-    return validatePayload(id, requiredNonEmptyString);
-  }
-);
+export const updateActiveTab = createAction('tab/updateActiveTab', (id: string) => {
+  return validatePayload(id, requiredNonEmptyString);
+});

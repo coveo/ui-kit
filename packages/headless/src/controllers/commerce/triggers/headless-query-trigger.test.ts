@@ -5,10 +5,7 @@ import {queryReducer as query} from '../../../features/commerce/query/query-slic
 import {executeSearch} from '../../../features/commerce/search/search-actions.js';
 import {commerceTriggersReducer as triggers} from '../../../features/commerce/triggers/triggers-slice.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
-import {
-  buildMockCommerceEngine,
-  type MockedCommerceEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockCommerceEngine, type MockedCommerceEngine} from '../../../test/mock-engine-v2.js';
 import type {QueryTrigger} from '../../core/triggers/headless-core-query-trigger.js';
 import {buildQueryTrigger} from './headless-query-trigger.js';
 

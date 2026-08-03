@@ -1,11 +1,7 @@
 import {getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
-import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
-import {
-  type baseResponse,
-  richResponse,
-} from '@coveo/platform-mock-api/commerce/search-response';
+import {MockCommerceApi, searchResponses} from '@coveo/platform-mock-api/commerce';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 import {isTestMode} from '@/storybook-utils/common/is-test-mode';
 import '@/src/components/commerce/atomic-commerce-breadbox/atomic-commerce-breadbox.js';
@@ -46,9 +42,7 @@ const mockCommerceApi = new MockCommerceApi();
 
 async function initializeCommerceInterface(canvasElement: HTMLElement) {
   await customElements.whenDefined('atomic-commerce-interface');
-  const commerceInterface = canvasElement.querySelector(
-    'atomic-commerce-interface'
-  );
+  const commerceInterface = canvasElement.querySelector('atomic-commerce-interface');
   await commerceInterface!.initialize(getSampleCommerceEngineConfiguration());
 }
 
@@ -66,7 +60,7 @@ const meta: Meta = {
   },
   beforeEach: async () => {
     mockCommerceApi.searchEndpoint.mock(
-      () => richResponse as unknown as typeof baseResponse
+      () => searchResponses.richResponse as unknown as typeof searchResponses.baseResponse
     );
   },
   render: () => html`
@@ -85,15 +79,11 @@ const meta: Meta = {
               <atomic-product-template>
                 <template>
                   <atomic-product-section-name>
-                    <atomic-product-link
-                      class="font-bold"
-                    ></atomic-product-link>
+                    <atomic-product-link class="font-bold"></atomic-product-link>
                   </atomic-product-section-name>
                   <atomic-product-section-visual>
                     <atomic-product-field-condition if-defined="ec_thumbnails">
-                      <atomic-product-image
-                        field="ec_thumbnails"
-                      ></atomic-product-image>
+                      <atomic-product-image field="ec_thumbnails"></atomic-product-image>
                     </atomic-product-field-condition>
                   </atomic-product-section-visual>
                   <atomic-product-section-metadata>
@@ -103,17 +93,13 @@ const meta: Meta = {
                         class="text-neutral-dark block"
                       ></atomic-product-text>
                     </atomic-product-field-condition>
-                    <atomic-product-field-condition
-                      if-defined="cat_available_sizes"
-                    >
+                    <atomic-product-field-condition if-defined="cat_available_sizes">
                       <atomic-product-multi-value-text
                         field="cat_available_sizes"
                       ></atomic-product-multi-value-text>
                     </atomic-product-field-condition>
                     <atomic-product-field-condition if-defined="ec_rating">
-                      <atomic-product-rating
-                        field="ec_rating"
-                      ></atomic-product-rating>
+                      <atomic-product-rating field="ec_rating"></atomic-product-rating>
                     </atomic-product-field-condition>
                   </atomic-product-section-metadata>
                   <atomic-product-section-emphasized>
@@ -139,24 +125,16 @@ const meta: Meta = {
             <atomic-commerce-refine-toggle></atomic-commerce-refine-toggle>
           </atomic-layout-section>
           <atomic-layout-section section="products">
-            <atomic-commerce-product-list
-              display="grid"
-              density="compact"
-              image-size="small"
-            >
+            <atomic-commerce-product-list display="grid" density="compact" image-size="small">
               <atomic-product-template>
                 <template>
                   <atomic-product-section-name id="product-name-section">
                     <style></style>
-                    <atomic-product-link
-                      class="font-bold"
-                    ></atomic-product-link>
+                    <atomic-product-link class="font-bold"></atomic-product-link>
                   </atomic-product-section-name>
                   <atomic-product-section-visual>
                     <atomic-product-field-condition if-defined="ec_thumbnails">
-                      <atomic-product-image
-                        field="ec_thumbnails"
-                      ></atomic-product-image>
+                      <atomic-product-image field="ec_thumbnails"></atomic-product-image>
                     </atomic-product-field-condition>
                   </atomic-product-section-visual>
                   <atomic-product-section-metadata>
@@ -166,17 +144,13 @@ const meta: Meta = {
                         class="text-neutral-dark block"
                       ></atomic-product-text>
                     </atomic-product-field-condition>
-                    <atomic-product-field-condition
-                      if-defined="cat_available_sizes"
-                    >
+                    <atomic-product-field-condition if-defined="cat_available_sizes">
                       <atomic-product-multi-value-text
                         field="cat_available_sizes"
                       ></atomic-product-multi-value-text>
                     </atomic-product-field-condition>
                     <atomic-product-field-condition if-defined="ec_rating">
-                      <atomic-product-rating
-                        field="ec_rating"
-                      ></atomic-product-rating>
+                      <atomic-product-rating field="ec_rating"></atomic-product-rating>
                     </atomic-product-field-condition>
                     <atomic-product-field-condition if-defined="concepts">
                       <atomic-product-multi-value-text
@@ -208,9 +182,7 @@ const meta: Meta = {
   `,
   play: async (context) => {
     await initializeCommerceInterface(context.canvasElement);
-    const searchInterface = context.canvasElement.querySelector(
-      'atomic-commerce-interface'
-    );
+    const searchInterface = context.canvasElement.querySelector('atomic-commerce-interface');
     await searchInterface!.executeFirstRequest();
   },
 };

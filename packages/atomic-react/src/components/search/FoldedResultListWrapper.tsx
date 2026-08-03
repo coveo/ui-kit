@@ -33,7 +33,5 @@ export const FoldedResultListWrapper: React.FC<WrapperProps> = (props) => {
       return root.innerHTML;
     });
   }, [template]);
-  return (
-    <LitAtomicFoldedResultList ref={foldedResultListRef} {...otherProps} />
-  );
+  return <LitAtomicFoldedResultList ref={foldedResultListRef} {...otherProps} />;
 };

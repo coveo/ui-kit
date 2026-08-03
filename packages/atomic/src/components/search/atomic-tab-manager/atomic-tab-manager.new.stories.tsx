@@ -1,15 +1,10 @@
-import type {
-  Decorator,
-  Meta,
-  StoryObj as Story,
-} from '@storybook/web-components-vite';
+import type {Decorator, Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {testTabsA11y} from '@/storybook-utils/a11y/tabs.js';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
-import {buildSearchResponseWithResults} from '@coveo/platform-mock-api/search/search-response-mocks';
+import {buildSearchResponseWithResults, MockSearchApi} from '@coveo/platform-mock-api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-tab/atomic-tab.js';
@@ -20,15 +15,11 @@ const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-tab-manager',
-  {
-    excludeCategories: ['methods'],
-  }
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-tab-manager', {
+  excludeCategories: ['methods'],
+});
 
-const widthDecorator: Decorator = (story) =>
-  html`<div style="min-width: 350px;">${story()}</div> `;
+const widthDecorator: Decorator = (story) => html`<div style="min-width: 350px;">${story()}</div> `;
 
 const meta: Meta = {
   component: 'atomic-tab-manager',
@@ -88,12 +79,8 @@ export const A11yStatusMessage: Story = {
     `,
   ],
   beforeEach: async () => {
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(120)
-    );
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(42)
-    );
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(42));
   },
   play: async (context) => {
     await play(context);

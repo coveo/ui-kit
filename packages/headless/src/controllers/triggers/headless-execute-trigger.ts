@@ -5,17 +5,10 @@ import type {FunctionExecutionTrigger} from '../../features/triggers/triggers-st
 import type {TriggerSection} from '../../state/state-sections.js';
 import {arrayEqual} from '../../utils/compare-utils.js';
 import {loadReducerError} from '../../utils/errors.js';
-import {
-  buildController,
-  type Controller,
-} from '../controller/headless-controller.js';
+import {buildController, type Controller} from '../controller/headless-controller.js';
 
 /**
  * The `ExecuteTrigger` controller handles Execute triggers from the query response. An [Execute trigger](https://docs.coveo.com/en/3413#execute) query pipeline rule lets you define a custom JavaScript function to be executed in the frontend when a certain condition is met.
- *
- * Examples:
- * - [execute-trigger.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/triggers/execute-trigger.tsx)
- * - [execute-trigger.class.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/triggers/execute-trigger.class.tsx)
  *
  * @group Controllers
  * @category ExecuteTrigger
@@ -72,8 +65,7 @@ export function buildExecuteTrigger(engine: SearchEngine): ExecuteTrigger {
           this.state.executions,
           previousExecutions,
           (first, second) =>
-            first.functionName === second.functionName &&
-            arrayEqual(first.params, second.params)
+            first.functionName === second.functionName && arrayEqual(first.params, second.params)
         );
 
         previousExecutions = this.state.executions;
@@ -95,9 +87,7 @@ export function buildExecuteTrigger(engine: SearchEngine): ExecuteTrigger {
   };
 }
 
-function loadExecuteTriggerReducers(
-  engine: SearchEngine
-): engine is SearchEngine<TriggerSection> {
+function loadExecuteTriggerReducers(engine: SearchEngine): engine is SearchEngine<TriggerSection> {
   engine.addReducers({triggers});
   return true;
 }

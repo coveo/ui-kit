@@ -11,10 +11,7 @@ import {recommendationReducer as recommendation} from '../../features/recommenda
 import {loadReducerError} from '../../utils/errors.js';
 import {validateOptions} from '../../utils/validate-payload.js';
 import type {ErrorPayload} from '../controller/error-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../controller/headless-controller.js';
+import {buildController, type Controller} from '../controller/headless-controller.js';
 
 const optionsSchema = new Schema<RecommendationListOptions>({
   id: new StringValue<string>({
@@ -45,7 +42,6 @@ export interface RecommendationListProps {
 /**
  * The `RecommendationList` controller retrieves information about the current recommendations by the search API, if there are any.
  *
- * Example: [recommendation-list.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/recommendation-list/recommendation-list.fn.tsx)
  *
  * @group Controllers
  * @category RecommendationList
@@ -121,11 +117,7 @@ export function buildRecommendationList(
   }
 
   if (options.numberOfRecommendations) {
-    dispatch(
-      loadPaginationActions(engine).updateNumberOfResults(
-        options.numberOfRecommendations
-      )
-    );
+    dispatch(loadPaginationActions(engine).updateNumberOfResults(options.numberOfRecommendations));
   }
 
   return {

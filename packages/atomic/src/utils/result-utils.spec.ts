@@ -31,23 +31,15 @@ describe('buildStringTemplateFromResult', () => {
     ];
 
     templates.forEach((template) =>
-      expect(
-        buildStringTemplateFromResult(template.in, mockResult, bindings)
-      ).toBe(template.out)
+      expect(buildStringTemplateFromResult(template.in, mockResult, bindings)).toBe(template.out)
     );
   });
 
   it('should snip out objects that cannot be evaluated properly and log a warning', () => {
-    const warnSpy = vi
-      .spyOn(engine.logger, 'warn')
-      .mockImplementation(() => {});
-    expect(
-      buildStringTemplateFromResult(
-        '${title}/${raw.notafield}',
-        mockResult,
-        bindings
-      )
-    ).toBe('foo/');
+    const warnSpy = vi.spyOn(engine.logger, 'warn').mockImplementation(() => {});
+    expect(buildStringTemplateFromResult('${title}/${raw.notafield}', mockResult, bindings)).toBe(
+      'foo/'
+    );
     expect(warnSpy).toHaveBeenCalled();
   });
 });

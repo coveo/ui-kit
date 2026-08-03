@@ -41,9 +41,7 @@ export const buildQuickviewPreviewBar = (
 
 const buildPreviewBar = (documentWriter: Document) => {
   const previewBarId = 'CoveoPreviewBar';
-  const bar =
-    documentWriter.getElementById(previewBarId) ||
-    documentWriter.createElement('div');
+  const bar = documentWriter.getElementById(previewBarId) || documentWriter.createElement('div');
 
   bar.id = previewBarId;
   bar.innerHTML = '';

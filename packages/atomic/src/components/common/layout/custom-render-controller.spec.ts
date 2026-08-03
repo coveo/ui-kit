@@ -34,9 +34,7 @@ describe('CustomRenderController', () => {
     mockLinkContainer = document.createElement('div');
     mockItemData = buildFakeProduct();
 
-    mockRenderingFunction = vi
-      .fn()
-      .mockReturnValue('<div>Custom render output</div>');
+    mockRenderingFunction = vi.fn().mockReturnValue('<div>Custom render output</div>');
     mockOnRenderComplete = vi.fn();
 
     mockOptions = {
@@ -143,11 +141,7 @@ describe('CustomRenderController', () => {
 
       controller.hostUpdated();
 
-      expect(mockRenderingFunction).toHaveBeenCalledWith(
-        mockItemData,
-        mockRootElement,
-        undefined
-      );
+      expect(mockRenderingFunction).toHaveBeenCalledWith(mockItemData, mockRootElement, undefined);
       expect(mockOnRenderComplete).toHaveBeenCalled();
     });
 
@@ -164,10 +158,7 @@ describe('CustomRenderController', () => {
         controller.hostConnected();
         controller.hostUpdated();
 
-        expect(mockOnRenderComplete).toHaveBeenLastCalledWith(
-          mockRootElement,
-          output
-        );
+        expect(mockOnRenderComplete).toHaveBeenLastCalledWith(mockRootElement, output);
       });
     });
   });

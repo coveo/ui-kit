@@ -15,15 +15,10 @@ interface GeneratedAnswerAPIClientOptions {
 
 export interface AsyncThunkGeneratedAnswerOptions<
   T extends Partial<SearchAppState>,
-> extends AsyncThunkOptions<
-  T,
-  ClientThunkExtraArguments<GeneratedAnswerAPIClient>
-> {}
+> extends AsyncThunkOptions<T, ClientThunkExtraArguments<GeneratedAnswerAPIClient>> {}
 
 const buildStreamingUrl = (url: string, orgId: string, streamId: string) =>
-  new URLPath(
-    `${url}/rest/organizations/${orgId}/machinelearning/streaming/${streamId}`
-  ).href;
+  new URLPath(`${url}/rest/organizations/${orgId}/machinelearning/streaming/${streamId}`).href;
 
 const MAX_RETRIES = 3;
 const MAX_TIMEOUT = 5000;
@@ -68,10 +63,7 @@ export class GeneratedAnswerAPIClient {
     this.logger = options.logger;
   }
 
-  streamGeneratedAnswer(
-    params: GeneratedAnswerStreamRequest,
-    callbacks: StreamCallbacks
-  ) {
+  streamGeneratedAnswer(params: GeneratedAnswerStreamRequest, callbacks: StreamCallbacks) {
     const {url, organizationId, streamId, accessToken} = params;
     const {write, abort, close, resetAnswer} = callbacks;
     const timeoutStateManager = new TimeoutStateManager();
@@ -111,16 +103,11 @@ export class GeneratedAnswerAPIClient {
         openWhenHidden: true,
         signal: abortController?.signal,
         async onopen(response) {
-          if (
-            response.ok &&
-            response.headers.get('content-type') === EVENT_STREAM_CONTENT_TYPE
-          ) {
+          if (response.ok && response.headers.get('content-type') === EVENT_STREAM_CONTENT_TYPE) {
             return;
           }
           const isClientSideError =
-            response.status >= 400 &&
-            response.status < 500 &&
-            response.status !== 429;
+            response.status >= 400 && response.status < 500 && response.status !== 429;
           if (isClientSideError) {
             throw new FatalError({
               message: 'Error opening stream',

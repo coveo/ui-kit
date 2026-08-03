@@ -43,8 +43,7 @@ export const renderFeedbackAndCopyButtons: FunctionalComponent<
     onCopyToClipboard,
   } = props;
 
-  const {liked, disliked, answer, isStreaming, isLoading} =
-    generatedAnswerActionsState ?? {};
+  const {liked, disliked, answer, isStreaming, isLoading} = generatedAnswerActionsState ?? {};
 
   const shouldShowButtons = !!answer && !isStreaming && !isLoading;
   return html`${when(

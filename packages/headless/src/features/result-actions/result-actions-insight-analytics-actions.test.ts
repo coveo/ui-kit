@@ -141,15 +141,9 @@ describe('result actions insight analytics actions', () => {
         );
 
         expect(mockLogCopyToClipboard).toHaveBeenCalledTimes(1);
-        expect(mockLogCopyToClipboard.mock.calls[0][0]).toStrictEqual(
-          expectedDocumentInfo
-        );
-        expect(mockLogCopyToClipboard.mock.calls[0][1]).toStrictEqual(
-          expectedDocumentIdentifier
-        );
-        expect(mockLogCopyToClipboard.mock.calls[0][2]).toStrictEqual(
-          expectedMetadata
-        );
+        expect(mockLogCopyToClipboard.mock.calls[0][0]).toStrictEqual(expectedDocumentInfo);
+        expect(mockLogCopyToClipboard.mock.calls[0][1]).toStrictEqual(expectedDocumentIdentifier);
+        expect(mockLogCopyToClipboard.mock.calls[0][2]).toStrictEqual(expectedMetadata);
       });
     });
 
@@ -162,15 +156,9 @@ describe('result actions insight analytics actions', () => {
         );
 
         expect(mockLogCaseSendEmail).toHaveBeenCalledTimes(1);
-        expect(mockLogCaseSendEmail.mock.calls[0][0]).toStrictEqual(
-          expectedDocumentInfo
-        );
-        expect(mockLogCaseSendEmail.mock.calls[0][1]).toStrictEqual(
-          expectedDocumentIdentifier
-        );
-        expect(mockLogCaseSendEmail.mock.calls[0][2]).toStrictEqual(
-          expectedMetadata
-        );
+        expect(mockLogCaseSendEmail.mock.calls[0][0]).toStrictEqual(expectedDocumentInfo);
+        expect(mockLogCaseSendEmail.mock.calls[0][1]).toStrictEqual(expectedDocumentIdentifier);
+        expect(mockLogCaseSendEmail.mock.calls[0][2]).toStrictEqual(expectedMetadata);
       });
     });
 
@@ -183,15 +171,9 @@ describe('result actions insight analytics actions', () => {
         );
 
         expect(mockLogFeedItemTextPost).toHaveBeenCalledTimes(1);
-        expect(mockLogFeedItemTextPost.mock.calls[0][0]).toStrictEqual(
-          expectedDocumentInfo
-        );
-        expect(mockLogFeedItemTextPost.mock.calls[0][1]).toStrictEqual(
-          expectedDocumentIdentifier
-        );
-        expect(mockLogFeedItemTextPost.mock.calls[0][2]).toStrictEqual(
-          expectedMetadata
-        );
+        expect(mockLogFeedItemTextPost.mock.calls[0][0]).toStrictEqual(expectedDocumentInfo);
+        expect(mockLogFeedItemTextPost.mock.calls[0][1]).toStrictEqual(expectedDocumentIdentifier);
+        expect(mockLogFeedItemTextPost.mock.calls[0][2]).toStrictEqual(expectedMetadata);
       });
     });
   });

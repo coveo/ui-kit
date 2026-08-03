@@ -1,14 +1,7 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {CoreEngine, CoreEngineNext} from '../../../app/engine.js';
-import type {
-  ControllerStaticStateMap,
-  ControllersMap,
-  ControllersPropsMap,
-} from './controllers.js';
-import type {
-  EngineDefinitionControllersPropsOption,
-  EngineStaticState,
-} from './engine.js';
+import type {ControllerStaticStateMap, ControllersMap, ControllersPropsMap} from './controllers.js';
+import type {EngineDefinitionControllersPropsOption, EngineStaticState} from './engine.js';
 import type {FromBuildResult} from './from-build-result.js';
 import type {OptionsTuple} from './utilities.js';
 
@@ -28,8 +21,7 @@ export type FetchStaticState<
    */
   (
     ...params: OptionsTuple<
-      FetchStaticStateOptions &
-        EngineDefinitionControllersPropsOption<TControllersProps>
+      FetchStaticStateOptions & EngineDefinitionControllersPropsOption<TControllersProps>
     >
   ): Promise<EngineStaticState<TSearchAction, TControllersStaticState>>;
 

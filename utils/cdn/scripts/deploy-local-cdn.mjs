@@ -45,12 +45,7 @@ const packages = [
 ];
 
 const getVersion = async (packageName) => {
-  const packageJsonPath = path.resolve(
-    repoRoot,
-    'packages',
-    packageName,
-    'package.json'
-  );
+  const packageJsonPath = path.resolve(repoRoot, 'packages', packageName, 'package.json');
   const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
   return packageJson.version;
 };
@@ -88,9 +83,6 @@ const main = async () => {
 };
 
 main().catch((err) => {
-  console.error(
-    colors.red('An error occurred during local CDN deployment:'),
-    err.message
-  );
+  console.error(colors.red('An error occurred during local CDN deployment:'), err.message);
   process.exit(1);
 });

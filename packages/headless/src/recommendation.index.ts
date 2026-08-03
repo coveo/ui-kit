@@ -17,10 +17,7 @@ import * as HighlightUtils from './utils/highlight.js';
 
 export type {Relay} from '@coveo/relay';
 export type {Middleware, Unsubscribe} from '@reduxjs/toolkit';
-export {
-  getAnalyticsNextApiBaseUrl,
-  getOrganizationEndpoint,
-} from './api/platform-client.js';
+export {getAnalyticsNextApiBaseUrl, getOrganizationEndpoint} from './api/platform-client.js';
 export type {Raw} from './api/search/search/raw.js';
 // Miscellaneous
 export type {Result} from './api/search/search/result.js';
@@ -51,10 +48,7 @@ export type {
 } from './controllers/context/headless-context.js';
 export {buildContext} from './controllers/context/headless-context.js';
 // Controllers
-export type {
-  Controller,
-  Subscribable,
-} from './controllers/controller/headless-controller.js';
+export type {Controller, Subscribable} from './controllers/controller/headless-controller.js';
 export {buildController} from './controllers/controller/headless-controller.js';
 export type {
   DictionaryFieldContext,

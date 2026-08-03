@@ -215,9 +215,7 @@ export class AtomicInsightTimeframeFacet
       buildDependenciesManager: (facetId: string) =>
         buildFacetConditionsManager(this.bindings.engine, {
           facetId,
-          conditions: parseDependsOn<
-            FacetValueRequest | CategoryFacetValueRequest
-          >(this.dependsOn),
+          conditions: parseDependsOn<FacetValueRequest | CategoryFacetValueRequest>(this.dependsOn),
         }),
       deserializeRelativeDate,
       buildDateRange,
@@ -230,19 +228,13 @@ export class AtomicInsightTimeframeFacet
 
     this.searchStatus = buildSearchStatus(this.bindings.engine);
 
-    this.addEventListener(
-      'atomic-date-input-apply',
-      this.handleDateInputApply as EventListener
-    );
+    this.addEventListener('atomic-date-input-apply', this.handleDateInputApply as EventListener);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this.timeframeFacetCommon?.disconnectedCallback();
-    this.removeEventListener(
-      'atomic-date-input-apply',
-      this.handleDateInputApply as EventListener
-    );
+    this.removeEventListener('atomic-date-input-apply', this.handleDateInputApply as EventListener);
   }
 
   private initializeFacetForDatePicker(): DateFacet {
@@ -284,9 +276,7 @@ export class AtomicInsightTimeframeFacet
   private handleDateInputApply = () => {
     if (this.facetId) {
       this.bindings.engine.dispatch(
-        loadDateFacetSetActions(
-          this.bindings.engine
-        ).deselectAllDateFacetValues(this.facetId)
+        loadDateFacetSetActions(this.bindings.engine).deselectAllDateFacetValues(this.facetId)
       );
     }
   };

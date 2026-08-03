@@ -9,9 +9,7 @@ interface SlotMapping {
 
 export interface LightDOMWithSlots {
   slotContent: SlotMapping;
-  renderDefaultSlotContent(
-    defaultContent?: unknown
-  ): TemplateResult | unknown[];
+  renderDefaultSlotContent(defaultContent?: unknown): TemplateResult | unknown[];
 }
 
 /**
@@ -33,13 +31,8 @@ export interface LightDOMWithSlots {
  *
  * @implements {LightDOMWithSlots}
  */
-export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
-  superClass: T
-) => {
-  class SlotsForNoShadowDOMClass
-    extends superClass
-    implements LightDOMWithSlots
-  {
+export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(superClass: T) => {
+  class SlotsForNoShadowDOMClass extends superClass implements LightDOMWithSlots {
     /**
      * @internal
      */
@@ -47,8 +40,7 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
     /**
      * @internal
      */
-    private slotPlaceholders: {placeholder: Comment; nodes: AdoptedNode[]}[] =
-      [];
+    private slotPlaceholders: {placeholder: Comment; nodes: AdoptedNode[]}[] = [];
 
     createRenderRoot() {
       return this;
@@ -86,8 +78,7 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
       const children = Array.from(this.childNodes);
 
       for (const child of children) {
-        const slotName =
-          child instanceof Element ? child.getAttribute('slot') || '' : '';
+        const slotName = child instanceof Element ? child.getAttribute('slot') || '' : '';
 
         if (!this.slotContent[slotName]) {
           this.slotContent[slotName] = [];
@@ -107,10 +98,7 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
       return (
         !content ||
         content.every((child: AdoptedNode) => {
-          return (
-            child instanceof Comment ||
-            (child instanceof Text && this.isTextNodeEmpty(child))
-          );
+          return child instanceof Comment || (child instanceof Text && this.isTextNodeEmpty(child));
         })
       );
     }
@@ -122,9 +110,7 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
      * @param defaultContent - Optional content to render if the default slot is empty.
      * @returns A `TemplateResult` representing the slot placeholder if nodes exist, otherwise an array containing the default content or an empty array.
      */
-    public renderDefaultSlotContent(
-      defaultContent?: unknown
-    ): TemplateResult | unknown[] {
+    public renderDefaultSlotContent(defaultContent?: unknown): TemplateResult | unknown[] {
       if (!this.isSlotEmpty('')) {
         return this.createSlotPlaceholder(this.slotContent['']!);
       }

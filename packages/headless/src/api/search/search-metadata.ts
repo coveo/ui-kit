@@ -8,8 +8,4 @@ export type SearchApiMethod =
   | 'productRecommendations'
   | 'fieldDescriptions';
 
-export type SearchOrigin =
-  | 'mainSearch'
-  | 'facetValues'
-  | 'instantResults'
-  | 'foldingCollection';
+export type SearchOrigin = 'mainSearch' | 'facetValues' | 'instantResults' | 'foldingCollection';

@@ -71,10 +71,7 @@ export interface BuildCommerceProductListingInterfaceOptions {
 import {getSSRSnapshot, restoreSSRSnapshot} from '@coveo/thermidor';
 
 function getSSRSnapshot(options: {engine: Engine}): SSRSnapshot;
-function restoreSSRSnapshot(options: {
-  engine: Engine;
-  snapshot: SSRSnapshot;
-}): void;
+function restoreSSRSnapshot(options: {engine: Engine; snapshot: SSRSnapshot}): void;
 ```
 
 The engine class remains opaque — no public methods added.
@@ -184,17 +181,12 @@ This parses the JSON snapshot and distributes the engine-wide state into per-int
 ### `initialParameters` translation in interface builder
 
 ```ts
-export function buildSearchInterface(
-  options: BuildSearchInterfaceOptions
-): SearchInterface {
+export function buildSearchInterface(options: BuildSearchInterfaceOptions): SearchInterface {
   const fullEngine = getFullEngine(options.engine);
   const interfaceId = options.id ?? generateId();
 
   if (options.initialParameters) {
-    const translated = translateSearchInitialParameters(
-      interfaceId,
-      options.initialParameters
-    );
+    const translated = translateSearchInitialParameters(interfaceId, options.initialParameters);
     fullEngine.storeHydrationSnapshot(interfaceId, translated);
   }
 
@@ -294,11 +286,7 @@ For pages combining multiple interfaces, a single snapshot captures everything:
 
 ```ts
 // Server — product page with two recommendation carousels
-import {
-  Engine,
-  buildCommerceRecommendationInterface,
-  getSSRSnapshot,
-} from '@coveo/thermidor';
+import {Engine, buildCommerceRecommendationInterface, getSSRSnapshot} from '@coveo/thermidor';
 
 const engine = new Engine({
   configuration: {organizationId: '...', accessToken: '...'},
@@ -327,11 +315,7 @@ return {snapshot};
 
 ```ts
 // Client — one restore, every interface self-hydrates by ID
-import {
-  Engine,
-  buildCommerceRecommendationInterface,
-  restoreSSRSnapshot,
-} from '@coveo/thermidor';
+import {Engine, buildCommerceRecommendationInterface, restoreSSRSnapshot} from '@coveo/thermidor';
 
 const engine = new Engine({
   configuration: {organizationId: '...', accessToken: '...'},
@@ -528,10 +512,7 @@ function SearchBox({controller}: {controller: SearchBoxController}) {
         methods.submit();
       }}
     >
-      <input
-        value={state.query}
-        onChange={(e) => methods.setQuery({query: e.target.value})}
-      />
+      <input value={state.query} onChange={(e) => methods.setQuery({query: e.target.value})} />
     </form>
   );
 }

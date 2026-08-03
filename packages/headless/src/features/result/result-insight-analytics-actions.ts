@@ -16,9 +16,7 @@ export const logDocumentOpen = (result: Result) =>
     prefix: 'analytics/insight/result/open',
     __legacy__getBuilder: (client, state) => {
       validateResultPayload(result);
-      const metadata = getCaseContextAnalyticsMetadata(
-        state.insightCaseContext
-      );
+      const metadata = getCaseContextAnalyticsMetadata(state.insightCaseContext);
       return client.logDocumentOpen(
         partialDocumentInformation(result, state),
         documentIdentifier(result),

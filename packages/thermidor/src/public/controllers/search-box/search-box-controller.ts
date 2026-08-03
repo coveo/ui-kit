@@ -18,9 +18,7 @@ class SearchBoxControllerImpl extends BaseController<SearchBoxControllerState> {
     engine.adoptSlice(getOrCreateSearchBoxSlice(options.interface));
 
     const selectors = getOrCreateSearchBoxSelectors(options.interface);
-    const endpointSelectors = getOrCreateSearchEndpointSelectors(
-      options.interface
-    );
+    const endpointSelectors = getOrCreateSearchEndpointSelectors(options.interface);
 
     const controllerState = createMemoizedStateSelector(
       selectors.getQuery,

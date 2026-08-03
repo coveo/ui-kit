@@ -37,10 +37,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
   ) => {
     const checkboxId = `categoryFacetValue-${key}`;
     return (
-      <li
-        className={isChild ? 'FacetValue FacetValueChild' : 'FacetValue'}
-        key={key}
-      >
+      <li className={isChild ? 'FacetValue FacetValueChild' : 'FacetValue'} key={key}>
         <input
           checked={checked}
           className="FacetValueCheckbox"
@@ -59,9 +56,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
 
   const renderRootValues = () => (
     <ul className="FacetValues">
-      {state.values.map((root) =>
-        renderFacetValue(root, `${root.value}-root`, false)
-      )}
+      {state.values.map((root) => renderFacetValue(root, `${root.value}-root`, false))}
     </ul>
   );
 
@@ -88,9 +83,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
   return (
     <fieldset className="CategoryFacet">
       <legend className="FacetHeader">
-        <span className="FacetDisplayName">
-          {state.displayName ?? state.facetId}
-        </span>
+        <span className="FacetDisplayName">{state.displayName ?? state.facetId}</span>
         <button
           type="button"
           className="FacetClear"

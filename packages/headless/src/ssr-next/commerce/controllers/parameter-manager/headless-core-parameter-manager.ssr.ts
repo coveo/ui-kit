@@ -30,13 +30,10 @@ export type {
   ProductListingParameters,
 };
 
-export type ParameterManagerDefinition =
-  SearchAndListingControllerDefinitionWithProps<
-    ParameterManager<ProductListingParameters | CommerceSearchParameters>,
-    SSRParameterManagerProps<
-      ProductListingParameters | CommerceSearchParameters
-    >
-  >;
+export type ParameterManagerDefinition = SearchAndListingControllerDefinitionWithProps<
+  ParameterManager<ProductListingParameters | CommerceSearchParameters>,
+  SSRParameterManagerProps<ProductListingParameters | CommerceSearchParameters>
+>;
 
 /**
  * Defines a `ParameterManager` controller instance.

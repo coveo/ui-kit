@@ -6,10 +6,7 @@ import type {CommerceAppState} from '../../../state/commerce-app-state.js';
 import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search.js';
 import {buildMockCommerceFacetRequest} from '../../../test/mock-commerce-facet-request.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
-import {
-  buildMockCommerceEngine,
-  type MockedCommerceEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockCommerceEngine, type MockedCommerceEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockFacetSearch} from '../../../test/mock-facet-search.js';
 import {buildCategoryFieldSuggestions} from './headless-category-field-suggestions.js';
 import {
@@ -38,9 +35,7 @@ describe('fieldSuggestionsGenerator', () => {
 
   function setFacetState(config: FieldSuggestionsFacet[] = []) {
     for (const facet of config) {
-      const namespacedFacetId = getFacetIdWithCommerceFieldSuggestionNamespace(
-        facet.facetId
-      );
+      const namespacedFacetId = getFacetIdWithCommerceFieldSuggestionNamespace(facet.facetId);
       state.fieldSuggestionsOrder.push(facet);
       if (facet.type === 'regular') {
         state.facetSearchSet[namespacedFacetId] = buildMockFacetSearch();
@@ -51,8 +46,7 @@ describe('fieldSuggestionsGenerator', () => {
             type: facet.type,
           }),
         };
-        state.categoryFacetSearchSet[namespacedFacetId] =
-          buildMockCategoryFacetSearch();
+        state.categoryFacetSearchSet[namespacedFacetId] = buildMockCategoryFacetSearch();
       }
     }
   }
@@ -141,9 +135,7 @@ describe('fieldSuggestionsGenerator', () => {
   });
 
   it('#state exposes the field suggestions order', () => {
-    expect(fieldSuggestionsGenerator.state).toEqual(
-      state.fieldSuggestionsOrder
-    );
+    expect(fieldSuggestionsGenerator.state).toEqual(state.fieldSuggestionsOrder);
 
     state.fieldSuggestionsOrder.push({
       facetId: 'new_facet_id',
@@ -154,8 +146,6 @@ describe('fieldSuggestionsGenerator', () => {
 
     initCommerceFacetGenerator();
 
-    expect(fieldSuggestionsGenerator.state).toEqual(
-      state.fieldSuggestionsOrder
-    );
+    expect(fieldSuggestionsGenerator.state).toEqual(state.fieldSuggestionsOrder);
   });
 });

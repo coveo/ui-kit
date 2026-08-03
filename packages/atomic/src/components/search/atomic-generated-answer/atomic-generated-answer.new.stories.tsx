@@ -10,14 +10,14 @@ import {userEvent, waitFor} from 'storybook/test';
 import {testHoverContentA11y} from '@/storybook-utils/a11y/hover-content.js';
 import {testStatusMessageSequenceA11y} from '@/storybook-utils/a11y/status-message.js';
 import {testSwitchA11y} from '@/storybook-utils/a11y/switch.js';
-import {MockAgentApi} from '@coveo/platform-mock-api/agent/mock';
 import {
   followUpTurnLimitErrorResponse,
   followUpGenericErrorResponse,
   followUpNetworkErrorResponse,
-} from '@coveo/platform-mock-api/agent/generate-response';
-import {MockAnswerApi} from '@coveo/platform-mock-api/answer/mock';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
+  MockAgentApi,
+} from '@coveo/platform-mock-api/agent';
+import {MockAnswerApi} from '@coveo/platform-mock-api/answer';
+import {MockSearchApi} from '@coveo/platform-mock-api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-generated-answer/atomic-generated-answer.js';
@@ -36,10 +36,9 @@ searchApiHarness.searchEndpoint.mock((response) => ({
   },
 }));
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-generated-answer',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-generated-answer', {
+  excludeCategories: ['methods'],
+});
 
 const layoutDecorator: Decorator = (story) => html`
   <atomic-search-layout>
@@ -86,8 +85,7 @@ const {play: playWithLegacyAnalytics} = wrapInSearchInterface({
 const generatedAnswerQuery = 'how to resolve netflix connection with tivo';
 
 async function submitGeneratedAnswerQuery(storyContext: StoryContext) {
-  const searchBox =
-    await storyContext.canvas.findByShadowPlaceholderText('Search');
+  const searchBox = await storyContext.canvas.findByShadowPlaceholderText('Search');
   await userEvent.type(searchBox, `${generatedAnswerQuery}{enter}`);
 }
 
@@ -174,13 +172,9 @@ export const A11yHoverContent: Story = {
     let citationLink!: HTMLElement;
     await waitFor(
       () => {
-        const genAnswer = context.canvasElement.querySelector(
-          'atomic-generated-answer'
-        );
-        const citation =
-          genAnswer?.shadowRoot?.querySelector('atomic-citation');
-        const link =
-          citation?.shadowRoot?.querySelector<HTMLElement>('[part="citation"]');
+        const genAnswer = context.canvasElement.querySelector('atomic-generated-answer');
+        const citation = genAnswer?.shadowRoot?.querySelector('atomic-citation');
+        const link = citation?.shadowRoot?.querySelector<HTMLElement>('[part="citation"]');
         if (!link) throw new Error('Citation link not yet rendered');
         citationLink = link;
       },
@@ -190,11 +184,8 @@ export const A11yHoverContent: Story = {
     await testHoverContentA11y(context, {
       findTrigger: async () => citationLink,
       findContent: async (canvasElement) => {
-        const genAnswer = canvasElement.querySelector(
-          'atomic-generated-answer'
-        );
-        const citation =
-          genAnswer?.shadowRoot?.querySelector('atomic-citation');
+        const genAnswer = canvasElement.querySelector('atomic-generated-answer');
+        const citation = genAnswer?.shadowRoot?.querySelector('atomic-citation');
         const popover = citation?.shadowRoot?.querySelector<HTMLElement>(
           '[part="citation-popover"]'
         );
@@ -224,7 +215,7 @@ export const A11yStatusMessage: Story = {
       },
       expectedSequence: [
         'Generating answer',
-        /Generated answer: # Resolving Netflix Connection Issues with TiVo[\s\S]*Test Internet Connection/,
+        /Generated answer: Resolving Netflix Connection Issues with TiVo[\s\S]*Test Internet Connection/,
       ],
       timeout: 12000,
     });
@@ -252,9 +243,7 @@ export const FollowUpNetworkError: Story = {
     'answer-configuration-id': undefined,
   },
   play: async (storyContext) => {
-    agentApiHarness.followUpEndpoint.mockOnce(
-      () => followUpNetworkErrorResponse
-    );
+    agentApiHarness.followUpEndpoint.mockOnce(() => followUpNetworkErrorResponse);
     await playWithLegacyAnalytics(storyContext);
     await submitGeneratedAnswerQuery(storyContext);
   },
@@ -267,9 +256,7 @@ export const FollowUpTurnLimitError: Story = {
     'answer-configuration-id': undefined,
   },
   play: async (storyContext) => {
-    agentApiHarness.followUpEndpoint.mockOnce(
-      () => followUpTurnLimitErrorResponse
-    );
+    agentApiHarness.followUpEndpoint.mockOnce(() => followUpTurnLimitErrorResponse);
     await playWithLegacyAnalytics(storyContext);
     await submitGeneratedAnswerQuery(storyContext);
   },
@@ -282,9 +269,7 @@ export const FollowUpGenericError: Story = {
     'answer-configuration-id': undefined,
   },
   play: async (storyContext) => {
-    agentApiHarness.followUpEndpoint.mockOnce(
-      () => followUpGenericErrorResponse
-    );
+    agentApiHarness.followUpEndpoint.mockOnce(() => followUpGenericErrorResponse);
     await playWithLegacyAnalytics(storyContext);
     await submitGeneratedAnswerQuery(storyContext);
   },

@@ -13,27 +13,15 @@ test.describe('atomic-pager', () => {
   });
 
   test('should navigate through pages', async ({pager}) => {
-    await expect(pager.currentPageButton).toHaveAttribute(
-      'aria-label',
-      'Page 1'
-    );
+    await expect(pager.currentPageButton).toHaveAttribute('aria-label', 'Page 1');
 
     await pager.nextButton.click();
-    await expect(pager.currentPageButton).toHaveAttribute(
-      'aria-label',
-      'Page 2'
-    );
+    await expect(pager.currentPageButton).toHaveAttribute('aria-label', 'Page 2');
 
     await pager.pageButton(5).click();
-    await expect(pager.currentPageButton).toHaveAttribute(
-      'aria-label',
-      'Page 5'
-    );
+    await expect(pager.currentPageButton).toHaveAttribute('aria-label', 'Page 5');
 
     await pager.previousButton.click();
-    await expect(pager.currentPageButton).toHaveAttribute(
-      'aria-label',
-      'Page 4'
-    );
+    await expect(pager.currentPageButton).toHaveAttribute('aria-label', 'Page 4');
   });
 });

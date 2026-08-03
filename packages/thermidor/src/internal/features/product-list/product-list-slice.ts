@@ -28,23 +28,18 @@ function mapProduct(raw: Record<string, unknown>): Product {
     ec_item_group_id: raw.ec_item_group_id as string | undefined,
     ec_item_group_name:
       (raw.ec_item_group_name as string) ??
-      ((raw.additionalFields as Record<string, unknown>)?.ec_item_group_name as
-        | string
-        | undefined),
+      ((raw.additionalFields as Record<string, unknown>)?.ec_item_group_name as string | undefined),
     clickUri: raw.clickUri as string | undefined,
     additionalFields: (raw.additionalFields as Record<string, unknown>) ?? {},
     children: Array.isArray(raw.children)
-      ? raw.children.map((child: unknown) =>
-          mapProduct(child as Record<string, unknown>)
-        )
+      ? raw.children.map((child: unknown) => mapProduct(child as Record<string, unknown>))
       : undefined,
   };
 }
 
 type ProductListSlice = ReturnType<typeof createProductListSlice>;
 
-const CACHE_KEY: CacheKey<ProductListSlice> =
-  createCacheKey<ProductListSlice>('productList/slice');
+const CACHE_KEY: CacheKey<ProductListSlice> = createCacheKey<ProductListSlice>('productList/slice');
 
 export function createProductListSlice(
   interfaceId: string,
@@ -57,9 +52,7 @@ export function createProductListSlice(
     reducers: {},
     extraReducers: (builder) => {
       builder.addCase(actions.setProductsFromResponse, (state, action) => {
-        state.products = action.payload.map((p) =>
-          mapProduct(p as Record<string, unknown>)
-        );
+        state.products = action.payload.map((p) => mapProduct(p as Record<string, unknown>));
       });
       builder.addCase(hydrateAction, (state, action) => {
         const payload = action.payload as Record<string, unknown> | null;

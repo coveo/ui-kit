@@ -22,10 +22,7 @@ export function joinBreadcrumbValues(breadcrumb: Breadcrumb) {
     : breadcrumb.formattedValue;
 }
 
-export function getFirstBreadcrumbValue(
-  breadcrumb: Breadcrumb,
-  pathLimit: number
-) {
+export function getFirstBreadcrumbValue(breadcrumb: Breadcrumb, pathLimit: number) {
   return Array.isArray(breadcrumb.formattedValue)
     ? limitPath(breadcrumb.formattedValue, pathLimit)
     : breadcrumb.formattedValue;

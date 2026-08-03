@@ -15,10 +15,7 @@ import {
   updateInstantProductsQuery,
 } from './instant-products-actions.js';
 import {instantProductsReducer} from './instant-products-slice.js';
-import type {
-  InstantProductsCache,
-  InstantProductsState,
-} from './instant-products-state.js';
+import type {InstantProductsCache, InstantProductsState} from './instant-products-state.js';
 
 const id1 = 'search_box_1';
 const id2 = 'search_box_2';
@@ -49,22 +46,17 @@ describe('instant products slice', () => {
   describe('on #registerInstantProducts', () => {
     it('registers one search box instant products cache', () => {
       const expectedState = getSearchBoxInstantProductsState(id1);
-      expect(
-        instantProductsReducer({}, registerInstantProducts({id: id1}))
-      ).toEqual(expectedState);
+      expect(instantProductsReducer({}, registerInstantProducts({id: id1}))).toEqual(expectedState);
     });
     it('registers multiple search box instant products cache', () => {
       const expectedState = {
         ...getSearchBoxInstantProductsState(id1),
         ...getSearchBoxInstantProductsState(id2),
       };
-      const newState = instantProductsReducer(
-        {},
-        registerInstantProducts({id: id1})
+      const newState = instantProductsReducer({}, registerInstantProducts({id: id1}));
+      expect(instantProductsReducer(newState, registerInstantProducts({id: id2}))).toEqual(
+        expectedState
       );
-      expect(
-        instantProductsReducer(newState, registerInstantProducts({id: id2}))
-      ).toEqual(expectedState);
     });
     it('does not override an existing search box', () => {
       const searchBox1 = () =>
@@ -72,9 +64,9 @@ describe('instant products slice', () => {
           some_query: initialEmptyCache(),
         });
 
-      expect(
-        instantProductsReducer(searchBox1(), registerInstantProducts({id: id1}))
-      ).toEqual(searchBox1());
+      expect(instantProductsReducer(searchBox1(), registerInstantProducts({id: id1}))).toEqual(
+        searchBox1()
+      );
     });
   });
 
@@ -84,10 +76,7 @@ describe('instant products slice', () => {
       const initialState = getSearchBoxInstantProductsState(id1);
       const expectedState = getSearchBoxInstantProductsState(id1, query);
       expect(
-        instantProductsReducer(
-          initialState,
-          updateInstantProductsQuery({id: id1, query: query})
-        )
+        instantProductsReducer(initialState, updateInstantProductsQuery({id: id1, query: query}))
       ).toEqual(expectedState);
     });
 
@@ -97,10 +86,7 @@ describe('instant products slice', () => {
       const initialState = getSearchBoxInstantProductsState(id1, query);
 
       expect(
-        instantProductsReducer(
-          initialState,
-          updateInstantProductsQuery({id: id1, query: ''})
-        )
+        instantProductsReducer(initialState, updateInstantProductsQuery({id: id1, query: ''}))
       ).toEqual(initialState);
     });
   });
@@ -119,9 +105,7 @@ describe('instant products slice', () => {
           some_query: initialEmptyCache(),
         });
 
-        expect(instantProductsReducer(initialState, action)).toEqual(
-          expectedState
-        );
+        expect(instantProductsReducer(initialState, action)).toEqual(expectedState);
       });
 
       it('updates cache when one already exists', () => {
@@ -138,9 +122,7 @@ describe('instant products slice', () => {
           some_query: initialEmptyCache(),
         });
 
-        expect(instantProductsReducer(initialState, action)).toEqual(
-          expectedState
-        );
+        expect(instantProductsReducer(initialState, action)).toEqual(expectedState);
       });
 
       it('creates cache in correct search box', () => {
@@ -161,9 +143,7 @@ describe('instant products slice', () => {
           ...getSearchBoxInstantProductsState(id2, query),
         };
 
-        expect(instantProductsReducer(initialState, action)).toEqual(
-          expectedState
-        );
+        expect(instantProductsReducer(initialState, action)).toEqual(expectedState);
       });
 
       it('set isActive of all previous caches to false', () => {
@@ -185,9 +165,7 @@ describe('instant products slice', () => {
           }),
         };
 
-        expect(instantProductsReducer(initialState, action)).toEqual(
-          expectedState
-        );
+        expect(instantProductsReducer(initialState, action)).toEqual(expectedState);
       });
     });
 
@@ -238,9 +216,7 @@ describe('instant products slice', () => {
           duration: 0,
         });
 
-        expect(instantProductsReducer(initialState, action)).toEqual(
-          expectedState
-        );
+        expect(instantProductsReducer(initialState, action)).toEqual(expectedState);
       });
       it('sets correct isLoading, error and expiresAt properties', () => {
         const query = 'some_query';
@@ -279,9 +255,7 @@ describe('instant products slice', () => {
           totalCountFiltered: 123,
         });
 
-        expect(instantProductsReducer(initialState, action)).toEqual(
-          expectedState
-        );
+        expect(instantProductsReducer(initialState, action)).toEqual(expectedState);
       });
 
       it('sets the #position of each product to its 1-based position in the unpaginated list', () => {
@@ -335,9 +309,7 @@ describe('instant products slice', () => {
           totalCountFiltered: 22,
         });
 
-        expect(instantProductsReducer(initialState, action)).toEqual(
-          expectedState
-        );
+        expect(instantProductsReducer(initialState, action)).toEqual(expectedState);
       });
 
       it('assigns responseId from response to all products during preprocessing', () => {
@@ -369,12 +341,8 @@ describe('instant products slice', () => {
 
         const finalState = instantProductsReducer(initialState, action);
 
-        expect(finalState[id1].cache[query].products[0].responseId).toBe(
-          responseId
-        );
-        expect(finalState[id1].cache[query].products[1].responseId).toBe(
-          responseId
-        );
+        expect(finalState[id1].cache[query].products[0].responseId).toBe(responseId);
+        expect(finalState[id1].cache[query].products[1].responseId).toBe(responseId);
       });
     });
   });

@@ -55,10 +55,7 @@ export function buildProviderWithDefinition<
   }: PropsWithChildren<{
     staticState: EngineStaticState<
       UnknownAction,
-      InferControllerStaticStateMapFromDefinitionsWithSolutionType<
-        TControllers,
-        TSolutionType
-      >
+      InferControllerStaticStateMapFromDefinitionsWithSolutionType<TControllers, TSolutionType>
     >;
     /**
      * @deprecated will be removed in the next major release. The navigator context provider can now be set when fetching the static state
@@ -95,9 +92,7 @@ export function buildProviderWithDefinition<
           }
 
           case Kind.ParameterManager: {
-            const parameterManager = getController<
-              ParameterManager<Parameters>
-            >(controllers, key);
+            const parameterManager = getController<ParameterManager<Parameters>>(controllers, key);
             hydrateArguments[key] = {
               initialState: {
                 parameters: parameterManager.state.parameters,
@@ -106,10 +101,7 @@ export function buildProviderWithDefinition<
             break;
           }
           case Kind.Recommendations: {
-            const recommendations = getController<Recommendations>(
-              controllers,
-              key
-            );
+            const recommendations = getController<Recommendations>(controllers, key);
 
             hydrateArguments[key] = {
               productId: recommendations.state.productId,
@@ -117,10 +109,7 @@ export function buildProviderWithDefinition<
             break;
           }
           case Kind.ProductEnrichment: {
-            const productEnrichment = getController<ProductEnrichment>(
-              controllers,
-              key
-            );
+            const productEnrichment = getController<ProductEnrichment>(controllers, key);
             hydrateArguments[key] = {
               options: {
                 productId: productEnrichment.state.productId,
@@ -132,8 +121,7 @@ export function buildProviderWithDefinition<
         }
       }
 
-      const args: HydrateStaticStateOptions<UnknownAction> &
-        ControllerPropsMap = {
+      const args: HydrateStaticStateOptions<UnknownAction> & ControllerPropsMap = {
         searchActions,
       };
 

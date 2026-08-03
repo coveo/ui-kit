@@ -1,6 +1,6 @@
 .timeline__separator {
   height: 1px;
-  background-color: var(--lwc-brandDisabled, #c9c7c5);
+  background-color: var(--slds-g-color-disabled-1, var(--lwc-brandDisabled, #c9c7c5));
   border-radius: var(--lwc-borderRadiusMedium, 0.25rem);
 }
 

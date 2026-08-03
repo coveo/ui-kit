@@ -28,10 +28,7 @@ npm install @coveo/headless@{{packageVersion}}
 Once installed, you can import from the SSR sub-path in your project:
 
 ```typescript
-import {
-  defineSearchEngine,
-  getSampleSearchEngineConfiguration,
-} from '@coveo/headless/ssr';
+import {defineSearchEngine, getSampleSearchEngineConfiguration} from '@coveo/headless/ssr';
 ```
 
 ## Use via CDN
@@ -57,8 +54,7 @@ If you prefer not to use a package manager, you can load Headless SSR directly f
 <script src="https://static.cloud.coveo.com/headless/v{{packageVersion}}/ssr/headless.js"></script>
 <script>
   // All exports are available on the global CoveoHeadlessSSR object.
-  const {defineSearchEngine, getSampleSearchEngineConfiguration} =
-    CoveoHeadlessSSR;
+  const {defineSearchEngine, getSampleSearchEngineConfiguration} = CoveoHeadlessSSR;
 </script>
 ```
 

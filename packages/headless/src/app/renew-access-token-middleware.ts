@@ -1,16 +1,8 @@
-import type {
-  Dispatch,
-  Middleware,
-  MiddlewareAPI,
-  UnknownAction,
-} from '@reduxjs/toolkit';
+import type {Dispatch, Middleware, MiddlewareAPI, UnknownAction} from '@reduxjs/toolkit';
 import type {Logger} from 'pino';
 import {updateBasicConfiguration} from '../features/configuration/configuration-actions.js';
 import {setError} from '../features/error/error-actions.js';
-import type {
-  CommerceConfigurationSection,
-  ConfigurationSection,
-} from '../state/state-sections.js';
+import type {CommerceConfigurationSection, ConfigurationSection} from '../state/state-sections.js';
 import {UnauthorizedTokenError} from '../utils/errors.js';
 import {shouldRenewJWT as shouldRenewAccessToken} from '../utils/jwt-utils.js';
 import {debounce} from '../utils/utils.js';
@@ -63,9 +55,7 @@ export function createRenewAccessTokenMiddleware(
       return;
     }
 
-    logger.debug(
-      'Access token is expired or about to expire, attempting renewal.'
-    );
+    logger.debug('Access token is expired or about to expire, attempting renewal.');
 
     try {
       const newAccessToken = await handleTokenRenewal(store);
@@ -77,10 +67,7 @@ export function createRenewAccessTokenMiddleware(
         );
       }
     } catch (error) {
-      logger.warn(
-        error,
-        'Access token renewal failed. A retry will occur if necessary.'
-      );
+      logger.warn(error, 'Access token renewal failed. A retry will occur if necessary.');
     }
   };
 
@@ -157,9 +144,7 @@ export function createRenewAccessTokenMiddleware(
   };
 }
 
-function isExpiredTokenError(
-  action: unknown
-): action is {error: UnauthorizedTokenError} {
+function isExpiredTokenError(action: unknown): action is {error: UnauthorizedTokenError} {
   return (
     typeof action === 'object' &&
     action !== null &&
@@ -188,8 +173,6 @@ type EngineStateWithAccessToken =
   | (ConfigurationSection & Record<string, unknown>)
   | (CommerceConfigurationSection & Record<string, unknown>);
 
-function getAccessTokenFromState(
-  state: EngineStateWithAccessToken
-): string | undefined {
+function getAccessTokenFromState(state: EngineStateWithAccessToken): string | undefined {
   return state.configuration.accessToken;
 }

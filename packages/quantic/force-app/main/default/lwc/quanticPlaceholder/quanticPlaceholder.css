@@ -48,11 +48,11 @@
 }
 
 .grey {
-  background-color: #E9EAEC;
+  background-color: var(--slds-g-color-surface-container-1, #E9EAEC);
 }
 
 .light-grey {
-  background-color: #F5F5F6;
+  background-color: var(--slds-g-color-surface-2, #F5F5F6);
 }
 
 .placeholder__animation {

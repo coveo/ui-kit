@@ -1,6 +1,6 @@
-import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, input, output} from '@angular/core';
 
-const PAGE_SIZE_OPTIONS = [5, 10, 20, 50];
+const DEFAULT_PAGE_SIZE_OPTIONS = [5, 10, 20, 50];
 
 @Component({
   selector: 'app-pagination',
@@ -14,9 +14,7 @@ const PAGE_SIZE_OPTIONS = [5, 10, 20, 50];
       >
         &larr; Previous
       </button>
-      <span class="indicator">
-        Page {{ page() + 1 }} of {{ totalPages() }}
-      </span>
+      <span class="indicator"> Page {{ page() + 1 }} of {{ totalPages() }} </span>
       <button
         class="nav-button"
         (click)="next.emit()"
@@ -31,10 +29,8 @@ const PAGE_SIZE_OPTIONS = [5, 10, 20, 50];
         (change)="onPageSizeChange($event)"
         aria-label="Results per page"
       >
-        @for (size of pageSizeOptions; track size) {
-          <option [value]="size" [selected]="size === pageSize()">
-            {{ size }} per page
-          </option>
+        @for (size of pageSizeOptions(); track size) {
+          <option [value]="size" [selected]="size === pageSize()">{{ size }} per page</option>
         }
       </select>
     </div>
@@ -103,7 +99,10 @@ export class PaginationComponent {
   readonly next = output<void>();
   readonly pageSizeChange = output<number>();
 
-  protected readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
+  protected readonly pageSizeOptions = computed(() => {
+    const set = new Set([...DEFAULT_PAGE_SIZE_OPTIONS, this.pageSize()]);
+    return [...set].sort((a, b) => a - b);
+  });
 
   protected onPageSizeChange(event: Event): void {
     const value = Number((event.target as HTMLSelectElement).value);

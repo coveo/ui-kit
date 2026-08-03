@@ -35,8 +35,7 @@ export default function Summary(props: ISummaryProps) {
     const {firstProduct, lastProduct, totalNumberOfProducts} = state;
     return (
       <span>
-        Showing products {firstProduct} - {lastProduct} of{' '}
-        {totalNumberOfProducts}
+        Showing products {firstProduct} - {lastProduct} of {totalNumberOfProducts}
         {renderQuerySummary()}
       </span>
     );

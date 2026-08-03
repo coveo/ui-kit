@@ -1,14 +1,10 @@
 import {RecordValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {
-  requiredNonEmptyString,
-  validatePayload,
-} from '../../../../utils/validate-payload.js';
+import {requiredNonEmptyString, validatePayload} from '../../../../utils/validate-payload.js';
 import type {ToggleSelectFacetValueActionCreatorPayload} from '../../../facets/facet-set/facet-set-actions.js';
 import {facetValueDefinition} from '../../../facets/facet-set/facet-set-validate-payload.js';
 
-export type ToggleExcludeFacetValuePayload =
-  ToggleSelectFacetValueActionCreatorPayload;
+export type ToggleExcludeFacetValuePayload = ToggleSelectFacetValueActionCreatorPayload;
 
 export const toggleExcludeFacetValue = createAction(
   'commerce/facets/regularFacet/toggleExcludeValue',
@@ -19,8 +15,7 @@ export const toggleExcludeFacetValue = createAction(
     })
 );
 
-export type ToggleSelectFacetValuePayload =
-  ToggleSelectFacetValueActionCreatorPayload;
+export type ToggleSelectFacetValuePayload = ToggleSelectFacetValueActionCreatorPayload;
 
 export const toggleSelectFacetValue = createAction(
   'commerce/facets/regularFacet/toggleSelectValue',

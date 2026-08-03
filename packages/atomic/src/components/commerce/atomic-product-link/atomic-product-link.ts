@@ -54,8 +54,7 @@ export class AtomicProductLink
   @state() public interactiveProduct?: InteractiveProduct;
 
   public productController = createProductContextController(this);
-  public interactiveProductController =
-    createInteractiveProductContextController(this);
+  public interactiveProductController = createInteractiveProductContextController(this);
 
   @state() public bindings!: CommerceBindings;
   @state() public error!: Error;
@@ -74,21 +73,14 @@ export class AtomicProductLink
     if (!this.product && this.productController.item) {
       this.product = this.productController.item;
     }
-    if (
-      !this.interactiveProduct &&
-      this.interactiveProductController.interactiveItem
-    ) {
-      this.interactiveProduct =
-        this.interactiveProductController.interactiveItem;
+    if (!this.interactiveProduct && this.interactiveProductController.interactiveItem) {
+      this.interactiveProduct = this.interactiveProductController.interactiveItem;
     }
 
     this.dispatchEvent(
-      buildCustomEvent(
-        'atomic/resolveStopPropagation',
-        (stopPropagation: boolean) => {
-          this.stopPropagation = stopPropagation;
-        }
-      )
+      buildCustomEvent('atomic/resolveStopPropagation', (stopPropagation: boolean) => {
+        this.stopPropagation = stopPropagation;
+      })
     );
   }
 
@@ -114,11 +106,7 @@ export class AtomicProductLink
 
       const href = isUndefined(this.hrefTemplate)
         ? product.clickUri
-        : buildStringTemplateFromProduct(
-            this.hrefTemplate,
-            product,
-            this.bindings
-          );
+        : buildStringTemplateFromProduct(this.hrefTemplate, product, this.bindings);
 
       const {warningMessage} = interactiveProduct;
 
@@ -148,10 +136,7 @@ export class AtomicProductLink
         },
       })(html`
         ${this.renderDefaultSlotContent(
-          html`<atomic-product-text
-            field="ec_name"
-            default="no-title"
-          ></atomic-product-text>`
+          html`<atomic-product-text field="ec_name" default="no-title"></atomic-product-text>`
         )}
       `);
     })}`;

@@ -1,10 +1,4 @@
-import {
-  BooleanValue,
-  NumberValue,
-  RecordValue,
-  Schema,
-  StringValue,
-} from '@coveo/bueno';
+import {BooleanValue, NumberValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
 import type {SuggestionHighlightingOptions} from '../../../utils/highlight.js';
 import {requiredNonEmptyString} from '../../../utils/validate-payload.js';
 

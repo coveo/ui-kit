@@ -3,7 +3,7 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {expect, userEvent, waitFor} from 'storybook/test';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import AssetsList from 'virtual:assets-list';
@@ -65,21 +65,15 @@ export const Default: Story = {
     await play(context);
     const {canvas, step} = context;
     await step('Wait for the facet values to render', async () => {
-      await waitFor(
-        () => expect(canvas.getByShadowTitle('People')).toBeInTheDocument(),
-        {
-          timeout: 30e3,
-        }
-      );
+      await waitFor(() => expect(canvas.getByShadowTitle('People')).toBeInTheDocument(), {
+        timeout: 30e3,
+      });
     });
     await step('Select a facet value', async () => {
       const facet = canvas.getByShadowTitle('People');
       await userEvent.click(facet);
       await waitFor(
-        () =>
-          expect(
-            canvas.getByShadowTitle('Object type: People')
-          ).toBeInTheDocument(),
+        () => expect(canvas.getByShadowTitle('Object type: People')).toBeInTheDocument(),
         {timeout: 30e3}
       );
     });
@@ -135,8 +129,7 @@ export const AllIcons: Story = {
             ${AssetsList.assets.map((asset) => {
               const assetReference = `assets://${asset}`;
               const backgroundColor =
-                bgIcons[snakeToCamel(asset.replace('.svg', ''))] ||
-                'transparent';
+                bgIcons[snakeToCamel(asset.replace('.svg', ''))] || 'transparent';
               return html`<div class="asset-container">
                 <div>
                   <atomic-icon

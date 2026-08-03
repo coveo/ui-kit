@@ -111,16 +111,14 @@ export class AtomicProductChildren
 
     const buttonClasses = tw({
       'product-child': true,
-      'box-border rounded border border-primary':
-        child.permanentid === this.activeChildId,
+      'box-border rounded border border-primary': child.permanentid === this.activeChildId,
     });
 
     return html`
       <button
         class="${multiClassMap(buttonClasses)}"
         title=${childName}
-        @keypress=${(event: KeyboardEvent) =>
-          event.key === 'Enter' && this.onSelectChild(child)}
+        @keypress=${(event: KeyboardEvent) => event.key === 'Enter' && this.onSelectChild(child)}
         @mouseenter=${() => this.onSelectChild(child)}
         @touchstart=${(event: TouchEvent) => {
           event.stopPropagation();
@@ -142,9 +140,7 @@ export class AtomicProductChildren
   private renderLabel() {
     return html`
       <div class="text-neutral-dark my-2 font-semibold">
-        <atomic-commerce-text
-          .value=${this.bindings.i18n.t(this.label)}
-        ></atomic-commerce-text>
+        <atomic-commerce-text .value=${this.bindings.i18n.t(this.label)}></atomic-commerce-text>
       </div>
     `;
   }
@@ -160,10 +156,7 @@ export class AtomicProductChildren
    * @returns The total count of items, including the parent.
    */
   get count() {
-    const hiddenChildrenCount = Math.max(
-      0,
-      this.childProducts.length - AMOUNT_OF_VISIBLE_CHILDREN
-    );
+    const hiddenChildrenCount = Math.max(0, this.childProducts.length - AMOUNT_OF_VISIBLE_CHILDREN);
 
     return (
       this.productController.item?.totalNumberOfChildren! -
@@ -179,10 +172,7 @@ export class AtomicProductChildren
       return nothing;
     }
 
-    const visibleChildren = this.childProducts.slice(
-      0,
-      AMOUNT_OF_VISIBLE_CHILDREN
-    );
+    const visibleChildren = this.childProducts.slice(0, AMOUNT_OF_VISIBLE_CHILDREN);
 
     return html`
       ${this.label.trim() !== '' ? this.renderLabel() : nothing}

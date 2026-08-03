@@ -15,10 +15,7 @@ import {questionAnsweringReducer as questionAnswering} from '../../../features/q
 import {searchReducer as search} from '../../../features/search/search-slice.js';
 import {emptyQuestionAnswer} from '../../../features/search/search-state.js';
 import type {SearchAppState} from '../../../state/search-app-state.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockSearchResponse} from '../../../test/mock-search-response.js';
 import {buildMockSearchState} from '../../../test/mock-search-state.js';
 import {createMockState} from '../../../test/mock-state.js';
@@ -29,9 +26,7 @@ import {
 } from './headless-core-smart-snippet.js';
 
 vi.mock('../../../features/question-answering/question-answering-actions');
-vi.mock(
-  '../../../features/question-answering/question-answering-analytics-actions'
-);
+vi.mock('../../../features/question-answering/question-answering-analytics-actions');
 
 describe('SmartSnippet', () => {
   let state: SearchAppState;

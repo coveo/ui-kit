@@ -52,11 +52,7 @@ export interface NonceBindings {
 
 export type AnyBindings = CommonBindings<AnyEngineType, AnyStore, HTMLElement>;
 
-export type AnyEngineType =
-  | SearchEngine
-  | RecommendationEngine
-  | InsightEngine
-  | CommerceEngine;
+export type AnyEngineType = SearchEngine | RecommendationEngine | InsightEngine | CommerceEngine;
 
 type AnyStore =
   | CommerceStore

@@ -4,10 +4,7 @@
   "cache": {
     "useCache": true
   },
-  "ignorePaths": [
-    "CHANGELOG.md",
-    "packages/platform-mock-api/src/converse/templates/**"
-  ],
+  "ignorePaths": ["CHANGELOG.md", "packages/platform-mock-api/src/converse/templates/**"],
   "import": ["@cspell/dict-fr-fr/cspell-ext.json"],
   "words": [
     "adjustednumberoflikes",
@@ -17,6 +14,7 @@
     "angular",
     "Animalia",
     "anomalyco",
+    "anonymization",
     "ARROWUP",
     "Artemia",
     "Artemiidae",
@@ -56,6 +54,7 @@
     "debouncers",
     "dupl",
     "dynamicscrmitem",
+    "dxui",
     "Ecommerce",
     "electronicscoveodemocomo",
     "ellipsed",
@@ -342,6 +341,12 @@
     "ytvideoduration",
     "ytvideoid",
     "ytviewcount",
+    "coveoanalytics",
+    "donottrack",
+    "pageviewid",
+    "storeid",
+    "uuidv",
+    "uuidvalidate",
     "γίγγλυμος",
     "στόμα"
   ]

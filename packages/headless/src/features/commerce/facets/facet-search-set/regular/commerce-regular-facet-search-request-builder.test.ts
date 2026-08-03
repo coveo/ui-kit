@@ -29,21 +29,13 @@ describe('#buildFacetSearchRequest', () => {
       options: {...buildMockFacetSearchRequestOptions(), query, numberOfValues},
     });
 
-    buildFilterableCommerceAPIRequestMock = vi.spyOn(
-      Actions,
-      'buildFilterableCommerceAPIRequest'
-    );
+    buildFilterableCommerceAPIRequestMock = vi.spyOn(Actions, 'buildFilterableCommerceAPIRequest');
 
     navigatorContext = buildMockNavigatorContextProvider()();
   });
 
   it('returned object has a #facetId property whose value is the passed facet ID argument', () => {
-    const request = buildFacetSearchRequest(
-      facetId,
-      state,
-      false,
-      navigatorContext
-    );
+    const request = buildFacetSearchRequest(facetId, state, false, navigatorContext);
 
     expect(request.facetId).toBe(facetId);
   });
@@ -52,18 +44,11 @@ describe('#buildFacetSearchRequest', () => {
     let request: CommerceFacetSearchRequest;
 
     beforeEach(() => {
-      request = buildFacetSearchRequest(
-        facetId,
-        state,
-        false,
-        navigatorContext
-      );
+      request = buildFacetSearchRequest(facetId, state, false, navigatorContext);
     });
 
     it('returned object has a #facetQuery property whose value is the facet query from state between wildcard characters', () => {
-      expect(request.facetQuery).toBe(
-        `*${state.facetSearchSet[facetId].options.query}*`
-      );
+      expect(request.facetQuery).toBe(`*${state.facetSearchSet[facetId].options.query}*`);
     });
 
     it('returned request includes all properties returned by #buildFilterableCommerceAPIRequest', () => {

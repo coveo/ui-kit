@@ -13,7 +13,5 @@ export const defaultMockedActions = {
 defaultMockedActions satisfies ReturnType<typeof loadQuerySetActions>;
 
 export const buildFakeLoadQuerySetActions = (
-  returnValues: Partial<
-    ReturnType<typeof loadQuerySetActions>
-  > = defaultMockedActions
+  returnValues: Partial<ReturnType<typeof loadQuerySetActions>> = defaultMockedActions
 ) => ({...defaultMockedActions, ...returnValues});

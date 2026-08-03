@@ -6,76 +6,66 @@ import {registerNumericFacet} from '../facets/range-facets/numeric-facet-set/num
 import {change} from '../history/history-actions.js';
 import {executeSearch} from '../search/search-actions.js';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
-import {
-  disableFacet,
-  enableFacet,
-  updateFacetOptions,
-} from './facet-options-actions.js';
+import {disableFacet, enableFacet, updateFacetOptions} from './facet-options-actions.js';
 import {
   type FacetOptionsState,
   getFacetOptionsInitialState,
   getFacetOptionsSliceInitialState,
 } from './facet-options-state.js';
 
-export const facetOptionsReducer = createReducer(
-  getFacetOptionsInitialState(),
-  (builder) => {
-    builder
-      .addCase(updateFacetOptions, (state, action) => {
-        return {...state, ...action.payload};
-      })
-      .addCase(executeSearch.fulfilled, (state) => {
-        state.freezeFacetOrder = false;
-      })
-      .addCase(executeSearch.rejected, (state) => {
-        state.freezeFacetOrder = false;
-      })
-      .addCase(
-        change.fulfilled,
-        (state, action) => action.payload?.facetOptions ?? state
-      )
-      .addCase(registerCategoryFacet, (state, action) => {
-        const {facetId, tabs} = action.payload;
+export const facetOptionsReducer = createReducer(getFacetOptionsInitialState(), (builder) => {
+  builder
+    .addCase(updateFacetOptions, (state, action) => {
+      return {...state, ...action.payload};
+    })
+    .addCase(executeSearch.fulfilled, (state) => {
+      state.freezeFacetOrder = false;
+    })
+    .addCase(executeSearch.rejected, (state) => {
+      state.freezeFacetOrder = false;
+    })
+    .addCase(change.fulfilled, (state, action) => action.payload?.facetOptions ?? state)
+    .addCase(registerCategoryFacet, (state, action) => {
+      const {facetId, tabs} = action.payload;
 
-        handleRegisterFacetTabs(tabs, state, facetId);
-      })
-      .addCase(registerFacet, (state, action) => {
-        const {facetId, tabs} = action.payload;
+      handleRegisterFacetTabs(tabs, state, facetId);
+    })
+    .addCase(registerFacet, (state, action) => {
+      const {facetId, tabs} = action.payload;
 
-        handleRegisterFacetTabs(tabs, state, facetId);
-      })
-      .addCase(registerDateFacet, (state, action) => {
-        const {facetId, tabs} = action.payload;
+      handleRegisterFacetTabs(tabs, state, facetId);
+    })
+    .addCase(registerDateFacet, (state, action) => {
+      const {facetId, tabs} = action.payload;
 
-        handleRegisterFacetTabs(tabs, state, facetId);
-      })
-      .addCase(registerNumericFacet, (state, action) => {
-        const {facetId, tabs} = action.payload;
+      handleRegisterFacetTabs(tabs, state, facetId);
+    })
+    .addCase(registerNumericFacet, (state, action) => {
+      const {facetId, tabs} = action.payload;
 
-        handleRegisterFacetTabs(tabs, state, facetId);
-      })
-      .addCase(enableFacet, (state, action) => {
-        state.facets[action.payload].enabled = true;
-      })
-      .addCase(disableFacet, (state, action) => {
-        state.facets[action.payload].enabled = false;
-      })
-      .addCase(restoreSearchParameters, (state, action) => {
-        [
-          ...Object.keys(action.payload.f ?? {}),
-          ...Object.keys(action.payload.fExcluded ?? {}),
-          ...Object.keys(action.payload.cf ?? {}),
-          ...Object.keys(action.payload.nf ?? {}),
-          ...Object.keys(action.payload.df ?? {}),
-        ].forEach((facetId) => {
-          if (!(facetId in state)) {
-            state.facets[facetId] = getFacetOptionsSliceInitialState();
-          }
-          state.facets[facetId].enabled = true;
-        });
+      handleRegisterFacetTabs(tabs, state, facetId);
+    })
+    .addCase(enableFacet, (state, action) => {
+      state.facets[action.payload].enabled = true;
+    })
+    .addCase(disableFacet, (state, action) => {
+      state.facets[action.payload].enabled = false;
+    })
+    .addCase(restoreSearchParameters, (state, action) => {
+      [
+        ...Object.keys(action.payload.f ?? {}),
+        ...Object.keys(action.payload.fExcluded ?? {}),
+        ...Object.keys(action.payload.cf ?? {}),
+        ...Object.keys(action.payload.nf ?? {}),
+        ...Object.keys(action.payload.df ?? {}),
+      ].forEach((facetId) => {
+        if (!(facetId in state)) {
+          state.facets[facetId] = getFacetOptionsSliceInitialState();
+        }
+        state.facets[facetId].enabled = true;
       });
-  }
-);
+    });
+});
 
 function handleRegisterFacetTabs(
   tabs: {included?: string[]; excluded?: string[]} | undefined,

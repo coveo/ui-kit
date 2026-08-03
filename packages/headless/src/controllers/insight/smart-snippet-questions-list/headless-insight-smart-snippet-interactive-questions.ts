@@ -8,10 +8,7 @@ import {
 import {questionAnsweringReducer as questionAnswering} from '../../../features/question-answering/question-answering-slice.js';
 import {pushRecentResult} from '../../../features/recent-results/recent-results-actions.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import type {
-  QuestionAnsweringSection,
-  SearchSection,
-} from '../../../state/state-sections.js';
+import type {QuestionAnsweringSection, SearchSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildInteractiveResultCore,
@@ -73,9 +70,7 @@ export function buildInsightSmartSnippetInteractiveQuestions(
   };
 
   let lastSearchResponseId: string | null = null;
-  const resetInteractiveResultsIfSearchResponseChanged = (
-    currentSearchResponseId: string
-  ) => {
+  const resetInteractiveResultsIfSearchResponseChanged = (currentSearchResponseId: string) => {
     if (lastSearchResponseId !== currentSearchResponseId) {
       lastSearchResponseId = currentSearchResponseId;
       interactiveResultsPerRelatedQuestion = {};
@@ -83,10 +78,7 @@ export function buildInsightSmartSnippetInteractiveQuestions(
     }
   };
 
-  const buildRelatedQuestionInteractiveResult = (
-    source: Result,
-    questionAnswerId: string
-  ) =>
+  const buildRelatedQuestionInteractiveResult = (source: Result, questionAnswerId: string) =>
     buildInteractiveResultCore(
       engine,
       {options: {selectionDelay: props?.options?.selectionDelay}},
@@ -103,10 +95,7 @@ export function buildInsightSmartSnippetInteractiveQuestions(
       }
     );
 
-  let interactiveResultsPerRelatedQuestion: Record<
-    string,
-    InteractiveResultCore
-  > = {};
+  let interactiveResultsPerRelatedQuestion: Record<string, InteractiveResultCore> = {};
   const getInteractiveResult = (questionAnswerId: string) => {
     const {searchResponseId} = getState().search;
     resetInteractiveResultsIfSearchResponseChanged(searchResponseId);
@@ -120,8 +109,10 @@ export function buildInsightSmartSnippetInteractiveQuestions(
       return interactiveResultsPerRelatedQuestion[questionAnswerId];
     }
 
-    interactiveResultsPerRelatedQuestion[questionAnswerId] =
-      buildRelatedQuestionInteractiveResult(source, questionAnswerId);
+    interactiveResultsPerRelatedQuestion[questionAnswerId] = buildRelatedQuestionInteractiveResult(
+      source,
+      questionAnswerId
+    );
     return interactiveResultsPerRelatedQuestion[questionAnswerId];
   };
 

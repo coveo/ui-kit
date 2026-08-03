@@ -30,7 +30,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/setup-sfdx
       - uses: ./.github/actions/e2e-quantic-setup
@@ -50,7 +50,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: ./.github/actions/post-scratch-org-links-on-pr
   e2e-quantic-playwright-test:
     name: 'Run Playwright e2e tests on Quantic'
@@ -70,7 +70,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/playwright-quantic
         with:
@@ -89,7 +89,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: ./.github/actions/setup
       - name: Merge Playwright reports
         uses: ./.github/actions/merge-playwright-reports
@@ -108,11 +108,20 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/setup-sfdx
-      - run: |
-          pnpm exec ts-node scripts/build/delete-org.ts --scratch-org-def-path=./config/lws-disabled-scratch-def.json
-          pnpm exec ts-node scripts/build/delete-org.ts --scratch-org-def-path=./config/lws-enabled-scratch-def.json
+      - name: Delete Quantic scratch orgs
+        run: |
+          umask 077
+          printf '%s\n' "$SFDX_AUTH_JWT_KEY" > server.key
+          trap 'rm -f -- server.key' EXIT
+          pnpm exec ts-node scripts/build/delete-org.ts
         shell: bash
         working-directory: ./packages/quantic
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+          SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
+          SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+          SFDX_AUTH_JWT_KEY_FILE: server.key
+          SFDX_AUTH_JWT_USERNAME: rdaccess@coveo.com

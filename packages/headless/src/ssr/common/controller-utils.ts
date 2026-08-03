@@ -29,9 +29,7 @@ function buildControllerFromDefinition<
   props?: InferControllerPropsFromDefinition<TControllerDefinition>;
 }): InferControllerFromDefinition<TControllerDefinition> {
   return (
-    'build' in definition
-      ? definition.build(engine)
-      : definition.buildWithProps(engine, props)
+    'build' in definition ? definition.build(engine) : definition.buildWithProps(engine, props)
   ) as InferControllerFromDefinition<TControllerDefinition>;
 }
 
@@ -65,10 +63,7 @@ export function createStaticState<TSearchAction extends UnknownAction>({
 }: {
   searchAction: TSearchAction;
   controllers: ControllersMap;
-}): EngineStaticState<
-  TSearchAction,
-  InferControllerStaticStateMapFromControllers<ControllersMap>
-> {
+}): EngineStaticState<TSearchAction, InferControllerStaticStateMapFromControllers<ControllersMap>> {
   return {
     controllers: mapObject(controllers, (controller) => ({
       state: clone(controller.state),
@@ -77,16 +72,13 @@ export function createStaticState<TSearchAction extends UnknownAction>({
   };
 }
 
-export function composeFunction<
-  TParameters extends Array<unknown>,
-  TReturn,
-  TChildren extends {},
->(
+export function composeFunction<TParameters extends Array<unknown>, TReturn, TChildren extends {}>(
   parentFunction: (...params: TParameters) => TReturn,
   children: TChildren
 ): TChildren & ((...params: TParameters) => TReturn) {
-  const newFunction = ((...params: TParameters) =>
-    parentFunction(...params)) as ((...params: TParameters) => TReturn) &
+  const newFunction = ((...params: TParameters) => parentFunction(...params)) as ((
+    ...params: TParameters
+  ) => TReturn) &
     TChildren;
   for (const [key, value] of Object.entries(children)) {
     (newFunction as unknown as Record<typeof key, typeof value>)[key] = value;

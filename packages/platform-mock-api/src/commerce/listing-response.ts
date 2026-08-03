@@ -833,8 +833,7 @@ export const richResponse = {
       ec_product_id: 'SP03972_00001',
       ec_gender: null,
       ec_color: null,
-      ec_listing:
-        '/Accessories/Surf_Accessories/Surf_Wax;/Promotions/Surf_With_Us_This_Year',
+      ec_listing: '/Accessories/Surf_Accessories/Surf_Wax;/Promotions/Surf_With_Us_This_Year',
       clickUri: 'https://sports.barca.group/pdp/SP03972_00001',
       permanentid: 'SP03972_00001',
       children: [],
@@ -873,8 +872,7 @@ export const richResponse = {
       ec_product_id: 'SP03973_00001',
       ec_gender: null,
       ec_color: null,
-      ec_listing:
-        '/Accessories/Surf_Accessories/Surf_Wax;/Promotions/Surf_With_Us_This_Year',
+      ec_listing: '/Accessories/Surf_Accessories/Surf_Wax;/Promotions/Surf_With_Us_This_Year',
       clickUri: 'https://sports.barca.group/pdp/SP03973_00001',
       permanentid: 'SP03973_00001',
       children: [],
@@ -929,10 +927,8 @@ export const richResponse = {
       queryPinned: false,
       badgePlacements: [],
       ec_name: 'Locktron Padlock',
-      ec_description:
-        'A padlock is a type of lock used to secure objects using a padlock key.',
-      ec_shortdesc:
-        'A padlock is a type of lock used to secure objects using a padlock key.',
+      ec_description: 'A padlock is a type of lock used to secure objects using a padlock key.',
+      ec_shortdesc: 'A padlock is a type of lock used to secure objects using a padlock key.',
       ec_brand: 'Coronel',
       ec_category: [
         'Accessories',
@@ -953,8 +949,7 @@ export const richResponse = {
       ec_product_id: 'SP03940_00001',
       ec_gender: null,
       ec_color: null,
-      ec_listing:
-        '/Accessories/Surf_Accessories/Padlocks;/Promotions/Surf_With_Us_This_Year',
+      ec_listing: '/Accessories/Surf_Accessories/Padlocks;/Promotions/Surf_With_Us_This_Year',
       clickUri: 'https://sports.barca.group/pdp/SP03940_00001',
       permanentid: 'SP03940_00001',
       children: [],
@@ -993,8 +988,7 @@ export const richResponse = {
       ec_product_id: 'SP03963_00001',
       ec_gender: null,
       ec_color: null,
-      ec_listing:
-        '/Accessories/Surf_Accessories/Surf_Wax;/Promotions/Surf_With_Us_This_Year',
+      ec_listing: '/Accessories/Surf_Accessories/Surf_Wax;/Promotions/Surf_With_Us_This_Year',
       clickUri: 'https://sports.barca.group/pdp/SP03963_00001',
       permanentid: 'SP03963_00001',
       children: [],
@@ -1009,10 +1003,8 @@ export const richResponse = {
       queryPinned: false,
       badgePlacements: [],
       ec_name: 'Locktron Padlock',
-      ec_description:
-        'A padlock is a type of lock used to secure objects using a padlock key.',
-      ec_shortdesc:
-        'A padlock is a type of lock used to secure objects using a padlock key.',
+      ec_description: 'A padlock is a type of lock used to secure objects using a padlock key.',
+      ec_shortdesc: 'A padlock is a type of lock used to secure objects using a padlock key.',
       ec_brand: 'Lockit',
       ec_category: [
         'Accessories',
@@ -1033,8 +1025,7 @@ export const richResponse = {
       ec_product_id: 'SP03939_00002',
       ec_gender: null,
       ec_color: null,
-      ec_listing:
-        '/Accessories/Surf_Accessories/Padlocks;/Promotions/Surf_With_Us_This_Year',
+      ec_listing: '/Accessories/Surf_Accessories/Padlocks;/Promotions/Surf_With_Us_This_Year',
       clickUri: 'https://sports.barca.group/pdp/SP03939_00002',
       permanentid: 'SP03939_00002',
       children: [],
@@ -1089,10 +1080,8 @@ export const richResponse = {
       queryPinned: false,
       badgePlacements: [],
       ec_name: 'Locktron Padlock',
-      ec_description:
-        'A padlock is a type of lock used to secure objects using a padlock key.',
-      ec_shortdesc:
-        'A padlock is a type of lock used to secure objects using a padlock key.',
+      ec_description: 'A padlock is a type of lock used to secure objects using a padlock key.',
+      ec_shortdesc: 'A padlock is a type of lock used to secure objects using a padlock key.',
       ec_brand: 'Paddy',
       ec_category: [
         'Accessories',
@@ -1113,8 +1102,7 @@ export const richResponse = {
       ec_product_id: 'SP03939_00001',
       ec_gender: null,
       ec_color: null,
-      ec_listing:
-        '/Accessories/Surf_Accessories/Padlocks;/Promotions/Surf_With_Us_This_Year',
+      ec_listing: '/Accessories/Surf_Accessories/Padlocks;/Promotions/Surf_With_Us_This_Year',
       clickUri: 'https://sports.barca.group/pdp/SP03939_00001',
       permanentid: 'SP03939_00001',
       children: [],

@@ -1,7 +1,4 @@
-export const insertSiteHeaderBar = (
-  assetsPath: string,
-  activeEntry: string
-) => {
+export const insertSiteHeaderBar = (assetsPath: string, activeEntry: string) => {
   const isDefaultUserDarkTheme =
     window.matchMedia('(prefers-color-scheme: dark)').matches ||
     window.matchMedia('(prefers-color-scheme:dark)').matches;
@@ -10,8 +7,7 @@ export const insertSiteHeaderBar = (
     ? localStorage.getItem('dark-mode-toggle')
     : userDefaultTheme;
 
-  const externalLinkIcon =
-    theme === 'dark' ? 'external-action-4.svg' : 'external-action-6.svg';
+  const externalLinkIcon = theme === 'dark' ? 'external-action-4.svg' : 'external-action-6.svg';
 
   const devToolsEntries = [
     {title: 'Atomic', href: 'https://docs.coveo.com/en/atomic/latest/'},
@@ -62,18 +58,14 @@ export const insertSiteHeaderBar = (
   ] as const;
 
   function renderDropdownItems(
-    entries: ReadonlyArray<
-      {title: string; href: string; external?: boolean} | {divider: true}
-    >,
+    entries: ReadonlyArray<{title: string; href: string; external?: boolean} | {divider: true}>,
     activeTitle: string
   ): string {
     return entries
       .map((e) => {
         if ('divider' in e) return '<li><hr class="dropdown-divider"></li>';
         const active = e.title === activeTitle ? ' active' : '';
-        const target = e.external
-          ? ' target="_blank" rel="noopener noreferrer"'
-          : '';
+        const target = e.external ? ' target="_blank" rel="noopener noreferrer"' : '';
         const extIcon = e.external
           ? ` <img data-ot-ignore class="external-link-icon" src="${assetsPath}/icons/${externalLinkIcon}">`
           : '';
@@ -85,9 +77,7 @@ export const insertSiteHeaderBar = (
   function renderDropdown(
     id: string,
     label: string,
-    entries: ReadonlyArray<
-      {title: string; href: string; external?: boolean} | {divider: true}
-    >,
+    entries: ReadonlyArray<{title: string; href: string; external?: boolean} | {divider: true}>,
     isActive: boolean,
     activeTitle: string
   ): string {

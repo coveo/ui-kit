@@ -1,8 +1,6 @@
 export type CacheKey<T extends NonNullable<unknown>> = symbol & {__type: T};
 
-export function createCacheKey<T extends NonNullable<unknown>>(
-  description: string
-): CacheKey<T> {
+export function createCacheKey<T extends NonNullable<unknown>>(description: string): CacheKey<T> {
   return Symbol(description) as CacheKey<T>;
 }
 
@@ -23,11 +21,11 @@ export class InterfaceCacheRegistry {
   #disposed = false;
 
   static {
-    getInterfaceCacheRegistryInternals = <
-      typeof getInterfaceCacheRegistryInternals
-    >((registry) => ({
-      disposed: registry.#disposed,
-    }));
+    getInterfaceCacheRegistryInternals = <typeof getInterfaceCacheRegistryInternals>(
+      ((registry) => ({
+        disposed: registry.#disposed,
+      }))
+    );
   }
 
   set<T extends NonNullable<unknown>>(key: CacheKey<T>, value: T): void {
@@ -45,10 +43,7 @@ export class InterfaceCacheRegistry {
     return this.#entries.has(key);
   }
 
-  getOrCreate<T extends NonNullable<unknown>>(
-    key: CacheKey<T>,
-    factory: () => T
-  ): T {
+  getOrCreate<T extends NonNullable<unknown>>(key: CacheKey<T>, factory: () => T): T {
     this.#assertNotDisposed();
     const existing = this.#entries.get(key);
     if (existing !== undefined) {

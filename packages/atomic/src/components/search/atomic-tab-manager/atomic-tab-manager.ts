@@ -47,10 +47,7 @@ interface TabInfo {
 @customElement('atomic-tab-manager')
 @bindings()
 @withTailwindStyles
-export class AtomicTabManager
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicTabManager extends LitElement implements InitializableComponent<Bindings> {
   static styles: CSSResultGroup = styles;
 
   public bindings!: Bindings;
@@ -148,9 +145,7 @@ export class AtomicTabManager
 
   private handleTablistKeydown(event: KeyboardEvent) {
     const tabs = Array.from(
-      (event.currentTarget as HTMLElement).querySelectorAll<HTMLElement>(
-        '[role="tab"]'
-      )
+      (event.currentTarget as HTMLElement).querySelectorAll<HTMLElement>('[role="tab"]')
     );
     const currentIndex = tabs.indexOf(event.target as HTMLElement);
     if (currentIndex === -1) {

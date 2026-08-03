@@ -1,9 +1,5 @@
 import {NumberValue, Schema} from '@coveo/bueno';
-import {
-  buildFacetManager,
-  type FacetManager,
-  type FacetManagerState,
-} from '@coveo/headless';
+import {buildFacetManager, type FacetManager, type FacetManagerState} from '@coveo/headless';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {
@@ -100,13 +96,7 @@ export class AtomicFacetManager
       visibleFacets.length
     );
 
-    this.append(
-      ...[
-        ...visibleFacets,
-        ...invisibleFacets,
-        ...(generator ? [generator] : []),
-      ]
-    );
+    this.append(...[...visibleFacets, ...invisibleFacets, ...(generator ? [generator] : [])]);
   };
 
   private sortFacetsUsingManager(

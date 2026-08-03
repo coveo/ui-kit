@@ -20,9 +20,7 @@ export interface CommerceSearchEndpointRequest {
   context: {view: {url: string}};
 }
 
-export function createCommerceSearchEndpointRequestSelector(
-  iface: InterfaceHandle
-) {
+export function createCommerceSearchEndpointRequestSelector(iface: InterfaceHandle) {
   const configuration = getOrCreateConfigurationSelectors();
   const searchBox = getOrCreateSearchBoxSelectors(iface);
   const pagination = getOrCreatePaginationSelectors(iface);

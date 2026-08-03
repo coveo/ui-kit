@@ -48,8 +48,7 @@ export function buildQueryTrigger(
   const getState = () => engine[stateKey];
 
   const modification = () => getState().triggers.queryModification.newQuery;
-  const originalQuery = () =>
-    getState().triggers.queryModification.originalQuery;
+  const originalQuery = () => getState().triggers.queryModification.originalQuery;
 
   return {
     ...controller,

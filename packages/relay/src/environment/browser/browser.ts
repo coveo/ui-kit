@@ -40,9 +40,7 @@ export function buildBrowserEnvironment(): Environment {
 
       const fetchResponse = await fetchPromise;
       if (!fetchResponse?.ok) {
-        throw new Error(
-          `Error ${fetchResponse.status}: Failed to send the event(s).`
-        );
+        throw new Error(`Error ${fetchResponse.status}: Failed to send the event(s).`);
       } else {
         let response: EventServiceResponseModel;
         try {

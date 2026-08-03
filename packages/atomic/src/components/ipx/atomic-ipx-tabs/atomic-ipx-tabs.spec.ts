@@ -28,8 +28,7 @@ describe('atomic-ipx-tabs', () => {
     const {element} = await renderInAtomicSearchInterface<AtomicIpxTabs>({
       template: html`
         <atomic-ipx-tabs>
-          ${slottedContent ??
-          html`<div class="test-tab">Default Tab Content</div>`}
+          ${slottedContent ?? html`<div class="test-tab">Default Tab Content</div>`}
         </atomic-ipx-tabs>
       `,
       selector: 'atomic-ipx-tabs',

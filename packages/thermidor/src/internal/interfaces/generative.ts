@@ -1,10 +1,6 @@
 import {BaseInterface} from '@/src/internal/utils/index.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
-import type {
-  FacadeResolver,
-  Facades,
-  GenerativeInterface,
-} from '@/src/internal/utils/index.js';
+import type {FacadeResolver, Facades, GenerativeInterface} from '@/src/internal/utils/index.js';
 import {createNoopThunk} from '@/src/internal/utils/index.js';
 import {getOrCreateGenerativeSlice} from '@/src/internal/features/generative/index.js';
 

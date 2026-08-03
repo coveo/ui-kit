@@ -2,6 +2,7 @@
   "name": "@coveo/atomic-angular-builder",
   "version": "0.0.0",
   "private": true,
+  "description": "Angular workspace used to build and publish the @coveo/atomic-angular package",
   "scripts": {
     "ng": "ng",
     "dev": "ng serve",
@@ -20,7 +21,7 @@
     "@coveo/headless": "workspace:*",
     "@types/node": "catalog:",
     "ng-packagr": "20.3.2",
-    "tslib": "2.8.1",
+    "tslib": "catalog:",
     "typescript": "catalog:",
     "vite": "^8.0.0"
   },

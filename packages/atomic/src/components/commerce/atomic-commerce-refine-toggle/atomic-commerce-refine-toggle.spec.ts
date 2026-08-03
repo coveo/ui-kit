@@ -27,9 +27,7 @@ describe('atomic-commerce-refine-toggle', () => {
 
   interface renderRefineToggleOptions {
     interfaceType?: 'product-listing' | 'search';
-    summaryState?:
-      | Partial<SearchSummaryState>
-      | Partial<ProductListingSummaryState>;
+    summaryState?: Partial<SearchSummaryState> | Partial<ProductListingSummaryState>;
   }
   const renderRefineToggle = async ({
     interfaceType = 'product-listing',
@@ -61,16 +59,15 @@ describe('atomic-commerce-refine-toggle', () => {
         },
       })
     );
-    const {element} =
-      await renderInAtomicCommerceInterface<AtomicCommerceRefineToggle>({
-        template: html`<atomic-commerce-refine-toggle></atomic-commerce-refine-toggle>`,
-        selector: 'atomic-commerce-refine-toggle',
-        bindings: (bindings) => {
-          bindings.interfaceElement.type = interfaceType;
-          bindings.engine = mockedEngine;
-          return bindings;
-        },
-      });
+    const {element} = await renderInAtomicCommerceInterface<AtomicCommerceRefineToggle>({
+      template: html`<atomic-commerce-refine-toggle></atomic-commerce-refine-toggle>`,
+      selector: 'atomic-commerce-refine-toggle',
+      bindings: (bindings) => {
+        bindings.interfaceElement.type = interfaceType;
+        bindings.engine = mockedEngine;
+        return bindings;
+      },
+    });
 
     return {
       element,

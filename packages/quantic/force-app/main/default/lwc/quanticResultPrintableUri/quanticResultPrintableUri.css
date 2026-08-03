@@ -1,6 +1,6 @@
 .result-parenturi__container {
   font-size: .9em;
-  color: #C5CACF
+  color: var(--slds-g-color-on-surface-1, #C5CACF);
 }
 
 .result-parenturi__container:last-child {

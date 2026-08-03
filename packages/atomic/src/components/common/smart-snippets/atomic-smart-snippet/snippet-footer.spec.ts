@@ -12,10 +12,7 @@ describe('#renderSnippetFooter', () => {
     i18n = await createTestI18n();
   });
 
-  const renderComponent = async (
-    props: Partial<SnippetFooterProps> = {},
-    children = html``
-  ) => {
+  const renderComponent = async (props: Partial<SnippetFooterProps> = {}, children = html``) => {
     const element = await renderFunctionFixture(
       html`${renderSnippetFooter({
         props: {
@@ -40,9 +37,7 @@ describe('#renderSnippetFooter', () => {
 
   it('should render with aria-label', async () => {
     const footer = await renderComponent({});
-    expect(footer.getAttribute('aria-label')).toBe(
-      i18n.t('smart-snippet-source')
-    );
+    expect(footer.getAttribute('aria-label')).toBe(i18n.t('smart-snippet-source'));
   });
 
   it('should render children inside the footer', async () => {

@@ -29,9 +29,7 @@
 
       async function main() {
         await customElements.whenDefined('atomic-search-interface');
-        const searchInterface = document.querySelector(
-          'atomic-search-interface'
-        );
+        const searchInterface = document.querySelector('atomic-search-interface');
 
         // Initialization
         await searchInterface.initialize({
@@ -64,10 +62,7 @@
   </head>
 
   <body>
-    <atomic-search-interface
-      language-assets-path="./lang"
-      icon-assets-path="./assets"
-    >
+    <atomic-search-interface language-assets-path="./lang" icon-assets-path="./assets">
       <atomic-search-layout>
         <atomic-layout-section section="search">
           <atomic-search-box></atomic-search-box>
@@ -75,16 +70,8 @@
         <atomic-layout-section section="facets">
           <atomic-facet-manager>
             <atomic-facet field="author" label="Authors"></atomic-facet>
-            <atomic-facet
-              field="source"
-              label="Source"
-              display-values-as="link"
-            ></atomic-facet>
-            <atomic-facet
-              field="year"
-              label="Year"
-              display-values-as="box"
-            ></atomic-facet>
+            <atomic-facet field="source" label="Source" display-values-as="link"></atomic-facet>
+            <atomic-facet field="year" label="Year" display-values-as="box"></atomic-facet>
           </atomic-facet-manager>
         </atomic-layout-section>
         <atomic-layout-section section="main">

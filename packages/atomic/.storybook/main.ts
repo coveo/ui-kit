@@ -81,10 +81,8 @@ const virtualOpenApiModules = (): Plugin => {
   };
 };
 
-const externalizeDependencies = (
-  configType: 'DEVELOPMENT' | 'PRODUCTION' | undefined
-): Plugin => {
-  const packageMappings: Record<string, {cdn: string; local: string}> =
+const externalizeDependencies = (configType: 'DEVELOPMENT' | 'PRODUCTION' | undefined): Plugin => {
+  const packageMappings: Record<string, {cdn?: string; local: string}> =
     generateExternalPackageMappings();
   return {
     name: 'externalize-dependencies',
@@ -94,11 +92,7 @@ const externalizeDependencies = (
         return false;
       }
 
-      if (
-        /(.*)(\/|\\)+(bueno|headless)\/v\d+\.\d+\.\d+(-nightly)?(\/|\\).*/.test(
-          source
-        )
-      ) {
+      if (/(.*)(\/|\\)+(bueno|headless)\/v\d+\.\d+\.\d+(-nightly)?(\/|\\).*/.test(source)) {
         return false;
       }
 
@@ -109,16 +103,21 @@ const externalizeDependencies = (
         return null;
       }
 
-      // For all testing, we want to use the local versions of all packages to ensure everything is properly bundled together for testing
-      if (isVitest || isChromatic || isPlaywright) {
+      // For most testing, we want to use the local versions of all packages to ensure everything is properly bundled together for testing
+      if (isVitest || isPlaywright) {
         return null;
       }
 
       // For local Storybook development, we want to use local packages source to allow for easier debugging and HMR.
-      if (configType === 'DEVELOPMENT') {
+      // We also want to use local packages for Chromatic builds so TurboSnap can resolve changes in Atomic dependencies.
+      if (configType === 'DEVELOPMENT' || isChromatic) {
         return {
           id: packageMapping.local,
         };
+      }
+
+      if (!packageMapping.cdn) {
+        return null;
       }
 
       // For production Storybook builds, we want to use Domain-relative URL to use the CDN versions of the packages.
@@ -131,9 +130,7 @@ const externalizeDependencies = (
 };
 
 function getPackageVersion(): string {
-  return JSON.parse(
-    readFileSync(resolve(__dirname, '../package.json'), 'utf-8')
-  ).version;
+  return JSON.parse(readFileSync(resolve(__dirname, '../package.json'), 'utf-8')).version;
 }
 
 const config: StorybookConfig = {
@@ -184,9 +181,7 @@ const config: StorybookConfig = {
         alias: [
           {
             find: /^coveo\.analytics$/,
-            replacement: createRequire(import.meta.url).resolve(
-              'coveo.analytics/dist/browser.mjs'
-            ),
+            replacement: createRequire(import.meta.url).resolve('coveo.analytics/dist/browser.mjs'),
           },
         ],
       },
@@ -239,8 +234,7 @@ const forceInlineCssImports = (): Plugin => {
         return {
           code: code.replace(
             /import\s+([^'"]+)\s+from\s+['"]([^'"]+\.css)['"]/g,
-            (_, importName, cssPath) =>
-              `import ${importName} from '${cssPath}?inline'`
+            (_, importName, cssPath) => `import ${importName} from '${cssPath}?inline'`
           ),
           map: null,
         };
@@ -258,10 +252,7 @@ const svgTransform = (): Plugin => {
         return code.replace(
           /import\s+([a-zA-Z]+)\s+from\s+['"]([^'"]+\.svg)['"]/g,
           (_, importName, importPath) => {
-            const svgContent = readFileSync(
-              resolve(dirname(id), importPath),
-              'utf8'
-            )
+            const svgContent = readFileSync(resolve(dirname(id), importPath), 'utf8')
               .replace(/\r?\n/g, '')
               .replace(/'/g, "\\'");
             return `const ${importName} = '${svgContent}';`;
@@ -297,10 +288,7 @@ const processInlineCssImports = (): Plugin => {
       const cssPattern = /css\s*`([\s\S]*?)`/g;
       const matches = [...code.matchAll(cssPattern)];
       const tailwindMatches = matches.filter(
-        (m) =>
-          m[1].includes('@import') ||
-          m[1].includes('@reference') ||
-          m[1].includes('@apply')
+        (m) => m[1].includes('@import') || m[1].includes('@reference') || m[1].includes('@apply')
       );
       if (tailwindMatches.length === 0) return null;
 
@@ -369,15 +357,8 @@ function markComponentImportsAsSideEffectful(
         source?.startsWith(absolutePathToRoot) &&
         (id.startsWith('.') || id.startsWith(absolutePathToRoot))
       ) {
-        const filePathRelativeToRoot = relative(
-          absolutePathToRoot,
-          resolve(dirname(source), id)
-        );
-        if (
-          filePathRelativeToRoot.match(
-            /^src\/components\/\w*\/([\w-]*)\/\1(\.js)?$/
-          )
-        ) {
+        const filePathRelativeToRoot = relative(absolutePathToRoot, resolve(dirname(source), id));
+        if (filePathRelativeToRoot.match(/^src\/components\/\w*\/([\w-]*)\/\1(\.js)?$/)) {
           const resolution = await this.resolve(id, source, options);
 
           if (configType === 'PRODUCTION' && !isChromatic) {
@@ -394,11 +375,7 @@ function markComponentImportsAsSideEffectful(
       return null;
     },
     load(id) {
-      if (
-        configType === 'PRODUCTION' &&
-        !isChromatic &&
-        id.startsWith('\0virtual-empty:')
-      ) {
+      if (configType === 'PRODUCTION' && !isChromatic && id.startsWith('\0virtual-empty:')) {
         // Return empty exports for stubbed components
         return 'export default {};';
       }

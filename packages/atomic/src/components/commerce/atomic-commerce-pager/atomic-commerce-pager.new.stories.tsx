@@ -3,9 +3,11 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-pager/atomic-commerce-pager.js';
-import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
-import {commerceFacetTransformer} from '@coveo/platform-mock-api/commerce/facet-transformer';
-import {commercePaginationTransformer} from '@coveo/platform-mock-api/commerce/pagination-transformer';
+import {
+  commerceFacetTransformer,
+  commercePaginationTransformer,
+  MockCommerceApi,
+} from '@coveo/platform-mock-api/commerce';
 
 const commerceApiHarness = new MockCommerceApi();
 commerceApiHarness.searchEndpoint.addRequestTransformer(
@@ -18,10 +20,9 @@ commerceApiHarness.productListingEndpoint.addRequestTransformer(
 );
 
 const {decorator, play} = wrapInCommerceInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-commerce-pager',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-commerce-pager', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-commerce-pager',

@@ -16,9 +16,7 @@ test.describe('atomic-insight-generated-answer citation', () => {
       await generatedAnswer.citation.first().screenshot();
     });
 
-    test('should only append text fragment to HTML citations', async ({
-      generatedAnswer,
-    }) => {
+    test('should only append text fragment to HTML citations', async ({generatedAnswer}) => {
       const citationCount = await generatedAnswer.getCitationCount();
 
       for (let i = 0; i < citationCount; i++) {
@@ -58,9 +56,7 @@ test.describe('atomic-insight-generated-answer citation', () => {
       await generatedAnswer.waitForCitations();
     });
 
-    test('should show popover when hovering over citation', async ({
-      generatedAnswer,
-    }) => {
+    test('should show popover when hovering over citation', async ({generatedAnswer}) => {
       const popover = generatedAnswer.citationPopover.first();
       await expect(popover).toHaveClass(/hidden/);
       await expect(popover).not.toBeVisible();
@@ -101,9 +97,7 @@ test.describe('atomic-insight-generated-answer citation', () => {
       await expect(popover).toBeVisible();
     });
 
-    test('should hide popover after mouse leaves citation', async ({
-      generatedAnswer,
-    }) => {
+    test('should hide popover after mouse leaves citation', async ({generatedAnswer}) => {
       const citation = generatedAnswer.citation.first();
       const popover = generatedAnswer.citationPopover.first();
 

@@ -17,9 +17,7 @@ export interface InterfaceInternals {
   resolveFacade(facade: Facades[InterfaceType]): EndpointThunk;
 }
 
-export let getInterfaceInternals: (
-  iface: InterfaceHandle
-) => InterfaceInternals;
+export let getInterfaceInternals: (iface: InterfaceHandle) => InterfaceInternals;
 
 export abstract class BaseInterface<T extends InterfaceType> {
   declare readonly [SupportsBrand]: {[K in Facades[T]]: true};
@@ -48,9 +46,7 @@ export abstract class BaseInterface<T extends InterfaceType> {
           resolveFacade: (facade) => iface.#resolveFacade(facade),
         };
       }
-      throw new Error(
-        'Invalid interface handle: expected a BaseInterface instance.'
-      );
+      throw new Error('Invalid interface handle: expected a BaseInterface instance.');
     });
   }
 

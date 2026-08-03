@@ -56,16 +56,10 @@ describe('did you mean insight analytics actions', () => {
   });
 
   it('should log #logDidYouMeanClick with the right payload', async () => {
-    await logDidYouMeanClick()()(
-      engine.dispatch,
-      () => engine.state,
-      {} as ThunkExtraArguments
-    );
+    await logDidYouMeanClick()()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
     expect(mockLogDidYouMeanClick).toHaveBeenCalledTimes(1);
-    expect(mockLogDidYouMeanClick.mock.calls[0][0]).toStrictEqual(
-      expectedPayload
-    );
+    expect(mockLogDidYouMeanClick.mock.calls[0][0]).toStrictEqual(expectedPayload);
   });
 
   it('should log #logDidYouMeanAutomatic with the right payload', async () => {
@@ -76,8 +70,6 @@ describe('did you mean insight analytics actions', () => {
     );
 
     expect(mockLogDidYouMeanAutomatic).toHaveBeenCalledTimes(1);
-    expect(mockLogDidYouMeanAutomatic.mock.calls[0][0]).toStrictEqual(
-      expectedPayload
-    );
+    expect(mockLogDidYouMeanAutomatic.mock.calls[0][0]).toStrictEqual(expectedPayload);
   });
 });

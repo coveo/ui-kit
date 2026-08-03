@@ -18,10 +18,7 @@ export const renderModalDetails: FunctionalComponent<ModalDetailsProps> = ({
     currentAnswer === 'other',
     () =>
       html`<fieldset>
-        <legend
-          part="details-title"
-          class="text-on-background text-lg font-bold"
-        >
+        <legend part="details-title" class="text-on-background text-lg font-bold">
           ${i18n.t('details')}
         </legend>
         <textarea

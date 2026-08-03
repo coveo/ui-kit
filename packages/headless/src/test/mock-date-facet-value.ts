@@ -1,8 +1,6 @@
 import type {DateFacetValue} from '../features/facets/range-facets/date-facet-set/interfaces/response.js';
 
-export function buildMockDateFacetValue(
-  config: Partial<DateFacetValue> = {}
-): DateFacetValue {
+export function buildMockDateFacetValue(config: Partial<DateFacetValue> = {}): DateFacetValue {
   return {
     start: '0',
     end: '10',

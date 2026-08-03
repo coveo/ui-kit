@@ -45,9 +45,7 @@ describe('#renderFacetHeader', () => {
       headerRef: vi.fn(),
     };
     const mergedProps = {...defaultProps, ...props};
-    return renderFunctionFixture(
-      html`${renderFacetHeader({props: mergedProps})}`
-    );
+    return renderFunctionFixture(html`${renderFacetHeader({props: mergedProps})}`);
   };
 
   it('renders the clear button with the correct aria label attribute', async () => {
@@ -55,10 +53,7 @@ describe('#renderFacetHeader', () => {
     await expect.element(locators.clearButton).toBeInTheDocument();
     await expect
       .element(locators.clearButton)
-      .toHaveAttribute(
-        'aria-label',
-        'Clear 3 filters for the Test Facet facet'
-      );
+      .toHaveAttribute('aria-label', 'Clear 3 filters for the Test Facet facet');
   });
 
   it('renders the label button with the correct aria label attribute', async () => {
@@ -72,17 +67,13 @@ describe('#renderFacetHeader', () => {
   it('renders the label button with aria expanded set to true', async () => {
     await renderComponent();
     await expect.element(locators.collapseButton).toBeInTheDocument();
-    await expect
-      .element(locators.collapseButton)
-      .toHaveAttribute('aria-expanded', 'true');
+    await expect.element(locators.collapseButton).toHaveAttribute('aria-expanded', 'true');
   });
 
   it('renders the label button with aria expanded set to false', async () => {
     await renderComponent({isCollapsed: true});
     await expect.element(locators.expandButton).toBeInTheDocument();
-    await expect
-      .element(locators.expandButton)
-      .toHaveAttribute('aria-expanded', 'false');
+    await expect.element(locators.expandButton).toHaveAttribute('aria-expanded', 'false');
   });
 
   it('renders the expand icon when the facet is collapsed', async () => {
@@ -113,30 +104,22 @@ describe('#renderFacetHeader', () => {
 
   it('should have the correct part attribute on the label button', async () => {
     await renderComponent();
-    await expect
-      .element(locators.collapseButton)
-      .toHaveAttribute('part', 'label-button');
+    await expect.element(locators.collapseButton).toHaveAttribute('part', 'label-button');
   });
 
   it('should have the correct part attribute on the label button icon', async () => {
     await renderComponent();
-    await expect
-      .element(locators.collapseButtonIcon)
-      .toHaveAttribute('part', 'label-button-icon');
+    await expect.element(locators.collapseButtonIcon).toHaveAttribute('part', 'label-button-icon');
   });
 
   it('should have the correct part attribute on the clear button', async () => {
     await renderComponent();
-    await expect
-      .element(locators.clearButton)
-      .toHaveAttribute('part', 'clear-button');
+    await expect.element(locators.clearButton).toHaveAttribute('part', 'clear-button');
   });
 
   it('should have the correct part attribute on the clear button icon', async () => {
     await renderComponent();
-    await expect
-      .element(locators.clearButtonIcon)
-      .toHaveAttribute('part', 'clear-button-icon');
+    await expect.element(locators.clearButtonIcon).toHaveAttribute('part', 'clear-button-icon');
   });
 
   it('does not render the clear filters button when there are no active values', async () => {

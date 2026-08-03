@@ -10,18 +10,12 @@ Complete example showing all required parts:
 import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
-import {
-  richResponse,
-  type baseResponse,
-} from '@coveo/platform-mock-api/search/search-response';
+import {MockSearchApi, searchResponses} from '@coveo/platform-mock-api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 
 async function initializeSearchInterface(canvasElement: HTMLElement) {
   await customElements.whenDefined('atomic-search-interface');
-  const searchInterface = canvasElement.querySelector(
-    'atomic-search-interface'
-  );
+  const searchInterface = canvasElement.querySelector('atomic-search-interface');
   await searchInterface!.initialize(getSampleSearchEngineConfiguration());
 }
 
@@ -38,14 +32,11 @@ const meta: Meta = {
   },
   beforeEach: async () => {
     mockSearchApi.searchEndpoint.mock(
-      () => richResponse as unknown as typeof baseResponse
+      () => searchResponses.richResponse as unknown as typeof searchResponses.baseResponse
     );
   },
   render: () => html`
-    <atomic-search-interface
-      language-assets-path="./lang"
-      icon-assets-path="./assets"
-    >
+    <atomic-search-interface language-assets-path="./lang" icon-assets-path="./assets">
       <atomic-search-layout>
         <atomic-layout-section section="search">
           <atomic-search-box></atomic-search-box>
@@ -84,9 +75,7 @@ const meta: Meta = {
   `,
   play: async (context) => {
     await initializeSearchInterface(context.canvasElement);
-    const searchInterface = context.canvasElement.querySelector(
-      'atomic-search-interface'
-    );
+    const searchInterface = context.canvasElement.querySelector('atomic-search-interface');
     await searchInterface!.executeFirstSearch();
   },
 };
@@ -104,11 +93,7 @@ export const Default: Story = {
 
 ```typescript
 import {getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
-import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
-import {
-  richResponse,
-  type baseResponse,
-} from '@coveo/platform-mock-api/commerce/search-response';
+import {MockCommerceApi} from '@coveo/platform-mock-api/commerce';
 
 const mockCommerceApi = new MockCommerceApi();
 
@@ -129,9 +114,7 @@ const meta: Meta = {
               <atomic-product-template>
                 <template>
                   <atomic-product-link></atomic-product-link>
-                  <atomic-product-image
-                    field="ec_thumbnails"
-                  ></atomic-product-image>
+                  <atomic-product-image field="ec_thumbnails"></atomic-product-image>
                   <atomic-product-price></atomic-product-price>
                 </template>
               </atomic-product-template>
@@ -142,9 +125,7 @@ const meta: Meta = {
     </atomic-commerce-interface>
   `,
   play: async (context) => {
-    const commerceInterface = context.canvasElement.querySelector(
-      'atomic-commerce-interface'
-    );
+    const commerceInterface = context.canvasElement.querySelector('atomic-commerce-interface');
     await commerceInterface!.executeFirstRequest(); // Note: executeFirstRequest, not executeFirstSearch
   },
 };
@@ -158,7 +139,7 @@ const meta: Meta = {
 
 ```typescript
 import {getSampleInsightEngineConfiguration} from '@coveo/headless/insight';
-import {MockInsightApi} from '@coveo/platform-mock-api/insight/mock';
+import {MockInsightApi} from '@coveo/platform-mock-api/insight';
 
 const meta: Meta = {
   render: () => html`
@@ -185,7 +166,7 @@ const meta: Meta = {
 
 ```typescript
 import {getSampleRecommendationEngineConfiguration} from '@coveo/headless/recommendation';
-import {MockRecommendationApi} from '@coveo/platform-mock-api/recommendation/mock';
+import {MockRecommendationApi} from '@coveo/platform-mock-api/recommendation';
 
 const meta: Meta = {
   render: () => html`
@@ -200,9 +181,7 @@ const meta: Meta = {
     </atomic-recs-interface>
   `,
   play: async (context) => {
-    const recsInterface = context.canvasElement.querySelector(
-      'atomic-recs-interface'
-    );
+    const recsInterface = context.canvasElement.querySelector('atomic-recs-interface');
     await recsInterface!.getRecommendations();
   },
 };

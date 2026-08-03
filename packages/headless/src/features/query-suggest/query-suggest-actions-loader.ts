@@ -84,9 +84,7 @@ export interface QuerySuggestActionCreators {
  * @group Actions
  * @category QuerySuggest
  */
-export function loadQuerySuggestActions(
-  engine: CoreEngine
-): QuerySuggestActionCreators {
+export function loadQuerySuggestActions(engine: CoreEngine): QuerySuggestActionCreators {
   engine.addReducers({querySuggest, querySet});
 
   return {

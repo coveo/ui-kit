@@ -37,10 +37,7 @@ export function buildControllerDefinitions<
 
 export function createStaticState<
   TSearchAction extends UnknownAction,
-  TControllerDefinitions extends ControllerDefinitionsMap<
-    CoreEngine | CoreEngineNext,
-    Controller
-  >,
+  TControllerDefinitions extends ControllerDefinitionsMap<CoreEngine | CoreEngineNext, Controller>,
 >({
   searchActions,
   controllers,

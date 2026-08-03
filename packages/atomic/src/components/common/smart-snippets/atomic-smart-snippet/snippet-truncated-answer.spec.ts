@@ -7,9 +7,7 @@ import {
 } from './snippet-truncated-answer';
 
 describe('#renderSnippetTruncatedAnswer', () => {
-  const renderComponent = async (
-    props: Partial<SnippetTruncatedAnswerProps> = {}
-  ) => {
+  const renderComponent = async (props: Partial<SnippetTruncatedAnswerProps> = {}) => {
     const element = await renderFunctionFixture(
       html`${renderSnippetTruncatedAnswer({
         props: {

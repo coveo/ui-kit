@@ -75,12 +75,7 @@ function isHiddenByAncestor(element: HTMLElement): boolean {
  * Finds all live regions in the DOM (main + shadow DOMs).
  */
 function findLiveRegions(root: HTMLElement): HTMLElement[] {
-  const selectors = [
-    '[aria-live]',
-    '[role="status"]',
-    '[role="alert"]',
-    '[role="log"]',
-  ].join(', ');
+  const selectors = ['[aria-live]', '[role="status"]', '[role="alert"]', '[role="log"]'].join(', ');
 
   const elements: HTMLElement[] = [];
 
@@ -88,9 +83,7 @@ function findLiveRegions(root: HTMLElement): HTMLElement[] {
 
   for (const host of root.querySelectorAll('*')) {
     if (host.shadowRoot) {
-      elements.push(
-        ...Array.from(host.shadowRoot.querySelectorAll<HTMLElement>(selectors))
-      );
+      elements.push(...Array.from(host.shadowRoot.querySelectorAll<HTMLElement>(selectors)));
     }
   }
 
@@ -124,42 +117,34 @@ export async function testStatusMessageA11y(
   const timeout = options.timeout ?? 5000;
 
   try {
-    await step(
-      'Trigger action that should produce a status message',
-      async () => {
-        await options.triggerAction(canvasElement);
-      }
-    );
+    await step('Trigger action that should produce a status message', async () => {
+      await options.triggerAction(canvasElement);
+    });
 
-    await step(
-      'Status message appears in a live region after action',
-      async () => {
-        await waitFor(
-          () => {
-            const liveRegions = findLiveRegions(canvasElement);
+    await step('Status message appears in a live region after action', async () => {
+      await waitFor(
+        () => {
+          const liveRegions = findLiveRegions(canvasElement);
 
-            const populatedRegions = liveRegions.filter((region) => {
-              if (region.getAttribute('aria-hidden') === 'true') return false;
-              const text = region.textContent?.trim() ?? '';
-              return text.length > 0;
-            });
+          const populatedRegions = liveRegions.filter((region) => {
+            if (region.getAttribute('aria-hidden') === 'true') return false;
+            const text = region.textContent?.trim() ?? '';
+            return text.length > 0;
+          });
 
-            expect(populatedRegions.length).toBeGreaterThan(0);
+          expect(populatedRegions.length).toBeGreaterThan(0);
 
-            const regionTexts = populatedRegions.map(
-              (region) => region.textContent?.trim() ?? ''
-            );
-            const combined = regionTexts.join('\n');
-            if (typeof options.expectedText === 'string') {
-              expect(combined).toContain(options.expectedText);
-            } else {
-              expect(combined).toMatch(options.expectedText);
-            }
-          },
-          {timeout}
-        );
-      }
-    );
+          const regionTexts = populatedRegions.map((region) => region.textContent?.trim() ?? '');
+          const combined = regionTexts.join('\n');
+          if (typeof options.expectedText === 'string') {
+            expect(combined).toContain(options.expectedText);
+          } else {
+            expect(combined).toMatch(options.expectedText);
+          }
+        },
+        {timeout}
+      );
+    });
   } catch (error) {
     status = 'failed';
     throw error;
@@ -174,19 +159,14 @@ export async function testStatusMessageA11y(
 }
 
 function textMatches(text: string, expected: string | RegExp): boolean {
-  return typeof expected === 'string'
-    ? text.includes(expected)
-    : expected.test(text);
+  return typeof expected === 'string' ? text.includes(expected) : expected.test(text);
 }
 
 /**
  * Returns true when every expected announcement appears, in order, within the
  * observed announcements. Extra announcements in between are allowed.
  */
-function isOrderedSubsequence(
-  observed: string[],
-  expected: Array<string | RegExp>
-): boolean {
+function isOrderedSubsequence(observed: string[], expected: Array<string | RegExp>): boolean {
   let matched = 0;
   for (const text of observed) {
     if (matched < expected.length && textMatches(text, expected[matched])) {
@@ -196,18 +176,12 @@ function isOrderedSubsequence(
   return matched === expected.length;
 }
 
-function describeSequence(
-  expected: Array<string | RegExp>,
-  observed: string[]
-): string {
+function describeSequence(expected: Array<string | RegExp>, observed: string[]): string {
   const format = (items: Array<string | RegExp>) =>
     items.length === 0
       ? '  (none)'
       : items
-          .map(
-            (item, index) =>
-              `  ${index + 1}. ${typeof item === 'string' ? `"${item}"` : item}`
-          )
+          .map((item, index) => `  ${index + 1}. ${typeof item === 'string' ? `"${item}"` : item}`)
           .join('\n');
 
   return (

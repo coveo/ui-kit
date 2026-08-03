@@ -6,13 +6,9 @@ import type {AtomicAriaLive} from './atomic-aria-live';
 
 describe('atomic-aria-live', () => {
   const renderAriaLive = async () => {
-    const element = await renderFunctionFixture(
-      html`<atomic-aria-live></atomic-aria-live>`
-    );
+    const element = await renderFunctionFixture(html`<atomic-aria-live></atomic-aria-live>`);
 
-    const ariaLive = element.querySelector(
-      'atomic-aria-live'
-    ) as AtomicAriaLive;
+    const ariaLive = element.querySelector('atomic-aria-live') as AtomicAriaLive;
     return {
       element: ariaLive,
       locators: {
@@ -41,9 +37,7 @@ describe('atomic-aria-live', () => {
 
       element.updateMessage(region, message, assertive);
 
-      await expect
-        .poll(() => locators.regions[0])
-        .toHaveTextContent('Test message');
+      await expect.poll(() => locators.regions[0]).toHaveTextContent('Test message');
     });
 
     it('should update the message immediatly if the message is empty', async () => {
@@ -52,14 +46,35 @@ describe('atomic-aria-live', () => {
       const message = 'Test message';
       const assertive = true;
       element.updateMessage(region, message, assertive);
-      vi.waitFor(() =>
-        expect(locators.regions[0]).toHaveTextContent('Test message')
-      );
+      await expect.poll(() => locators.regions[0]).toHaveTextContent('Test message');
 
       const newMessage = '';
       element.updateMessage(region, newMessage, assertive);
 
       await expect.poll(() => locators.regions[0]).toHaveTextContent('');
+    });
+
+    it('should announce distinct messages for the same region in order', async () => {
+      const {element, locators} = await renderAriaLive();
+
+      element.updateMessage('query-summary', 'Results loaded', false);
+      element.updateMessage('generated-answer', 'Generating answer', false, true);
+      element.updateMessage('generated-answer', 'Answer could not be generated', false, true);
+
+      const generatedAnswerRegion = () =>
+        Array.from(locators.regions).find((region) => region.id.includes('generated-answer'));
+
+      await expect.poll(generatedAnswerRegion).toHaveTextContent('Generating answer');
+      await expect.poll(generatedAnswerRegion).toHaveTextContent('Answer could not be generated');
+    });
+
+    it('should replace queued messages for regions that do not preserve them', async () => {
+      const {element, locators} = await renderAriaLive();
+
+      element.updateMessage('query-suggestions', 'First suggestion', false);
+      element.updateMessage('query-suggestions', 'Second suggestion', false);
+
+      await expect.poll(() => locators.regions[0]).toHaveTextContent('Second suggestion');
     });
   });
 
@@ -73,10 +88,7 @@ describe('atomic-aria-live', () => {
       element.registerRegion(region, assertive);
 
       await expect.poll(() => locators.regions.length).toBe(1);
-      expect(locators.regions[0]).toHaveAttribute(
-        'id',
-        expect.stringContaining('test-region')
-      );
+      expect(locators.regions[0]).toHaveAttribute('id', expect.stringContaining('test-region'));
       expect(locators.regions[0]).toHaveAttribute('aria-live', 'assertive');
     });
 
@@ -87,9 +99,7 @@ describe('atomic-aria-live', () => {
 
       element.registerRegion(region, assertive);
 
-      await expect
-        .poll(() => locators.regions[0])
-        .toHaveAttribute('aria-live', 'assertive');
+      await expect.poll(() => locators.regions[0]).toHaveAttribute('aria-live', 'assertive');
     });
 
     it('should add a region as polite if "assertive" is false', async () => {
@@ -99,9 +109,7 @@ describe('atomic-aria-live', () => {
 
       element.registerRegion(region, assertive);
 
-      await expect
-        .poll(() => locators.regions[0])
-        .toHaveAttribute('aria-live', 'polite');
+      await expect.poll(() => locators.regions[0]).toHaveAttribute('aria-live', 'polite');
     });
   });
 });

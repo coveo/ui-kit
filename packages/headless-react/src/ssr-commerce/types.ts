@@ -26,10 +26,7 @@ export type ContextState<
   engine?: SSRCommerceEngine;
   controllers:
     | InferControllersMapFromDefinition<TControllers, TSolutionType>
-    | InferControllerStaticStateMapFromDefinitionsWithSolutionType<
-        TControllers,
-        TSolutionType
-      >;
+    | InferControllerStaticStateMapFromDefinitionsWithSolutionType<TControllers, TSolutionType>;
   solutionType: TSolutionType;
 };
 
@@ -41,9 +38,9 @@ export type ControllerHook<TController extends Controller> = () => {
 export type InferControllerHooksMapFromDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
 > = {
-  [K in keyof TControllers as `use${Capitalize<
-    K extends string ? K : never
-  >}`]: ControllerHook<InferControllerFromDefinition<TControllers[K]>>;
+  [K in keyof TControllers as `use${Capitalize<K extends string ? K : never>}`]: ControllerHook<
+    InferControllerFromDefinition<TControllers[K]>
+  >;
 };
 
 export type ReactEngineDefinition<
@@ -68,10 +65,7 @@ export type ReactEngineDefinition<
   HydratedStateProvider: FunctionComponent<
     PropsWithChildren<{
       engine: SSRCommerceEngine;
-      controllers: InferControllersMapFromDefinition<
-        TControllers,
-        TSolutionType
-      >;
+      controllers: InferControllersMapFromDefinition<TControllers, TSolutionType>;
     }>
   >;
   StateProvider: FunctionComponent<
@@ -79,10 +73,7 @@ export type ReactEngineDefinition<
       engine?: SSRCommerceEngine;
       controllers:
         | InferControllersMapFromDefinition<TControllers, TSolutionType>
-        | InferControllerStaticStateMapFromDefinitionsWithSolutionType<
-            TControllers,
-            TSolutionType
-          >;
+        | InferControllerStaticStateMapFromDefinitionsWithSolutionType<TControllers, TSolutionType>;
     }>
   >;
 };

@@ -18,10 +18,7 @@ import type {CollectionId} from '../folding/folding-state.js';
 import {fetchFromAPI} from '../insight-search/insight-search-actions.js';
 import {buildInsightLoadCollectionRequest} from '../insight-search/insight-search-request.js';
 
-export type {
-  LoadCollectionFulfilledReturn,
-  RegisterFoldingActionCreatorPayload,
-};
+export type {LoadCollectionFulfilledReturn, RegisterFoldingActionCreatorPayload};
 
 export const registerFolding = createAction(
   'folding/register',
@@ -40,15 +37,9 @@ export const loadCollection = createAsyncThunk<
   AsyncThunkInsightOptions<StateNeededByLoadCollection>
 >(
   'folding/loadCollection',
-  async (
-    collectionId: CollectionId,
-    {getState, rejectWithValue, extra: {apiClient}}
-  ) => {
+  async (collectionId: CollectionId, {getState, rejectWithValue, extra: {apiClient}}) => {
     const state = getState();
-    const actualRequest = await buildInsightLoadCollectionRequest(
-      state,
-      collectionId
-    );
+    const actualRequest = await buildInsightLoadCollectionRequest(state, collectionId);
 
     const fetched = await fetchFromAPI(apiClient, state, actualRequest, {
       origin: 'foldingCollection',
@@ -62,8 +53,7 @@ export const loadCollection = createAsyncThunk<
       collectionId,
       results: response.success.results,
       searchUid: response.success.searchUid,
-      rootResult: state.folding.collections[collectionId]!
-        .result as ResultWithFolding,
+      rootResult: state.folding.collections[collectionId]!.result as ResultWithFolding,
     };
   }
 );

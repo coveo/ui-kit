@@ -6,8 +6,7 @@ import type {CommerceSearchSort} from '@/src/internal/api/commerce-search/index.
 
 type SortActions = ReturnType<typeof createSortActions>;
 
-const CACHE_KEY: CacheKey<SortActions> =
-  createCacheKey<SortActions>('sort/actions');
+const CACHE_KEY: CacheKey<SortActions> = createCacheKey<SortActions>('sort/actions');
 
 export function createSortActions(interfaceId: string) {
   return {

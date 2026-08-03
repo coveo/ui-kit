@@ -1,9 +1,10 @@
-import type {
-  GenerativeState,
-  Turn,
-} from '@/src/internal/features/generative/index.js';
+import type {GenerativeState, StateTurn, Turn} from '@/src/internal/features/generative/index.js';
 import {GenerativeRuntime} from '@/src/internal/api/generative/index.js';
-import {createHydrateSubInterface} from '@/src/internal/features/generative/index.js';
+import {
+  createHydrateSubInterface,
+  getOrCreateRoutedInterfaceRegistry,
+  mergeTurnsWithRegistry,
+} from '@/src/internal/features/generative/index.js';
 import {BaseController} from '@/src/internal/utils/index.js';
 import {createMemoizedStateSelector} from '@/src/internal/utils/index.js';
 import {getInterfaceInternals} from '@/src/internal/utils/index.js';
@@ -11,47 +12,45 @@ import {getOrCreateGenerativeActions} from '@/src/internal/features/generative/i
 import {getOrCreateGenerativeSelectors} from '@/src/internal/features/generative/index.js';
 import type {GenerativeInterface} from '@/src/internal/utils/index.js';
 import type {Controller} from '@/src/internal/utils/index.js';
-import {
-  SerializedConverseState,
-  SerializedTurn,
-} from './converse-controller-serialization.js';
+import {SerializedConverseState, SerializedTurn} from './converse-controller-serialization.js';
 
 class ConverseControllerImpl extends BaseController<ConverseControllerState> {
   #runtime: GenerativeRuntime;
   #actions: ReturnType<typeof getOrCreateGenerativeActions>;
   #selectors: ReturnType<typeof getOrCreateGenerativeSelectors>;
+  #generativeInterface: GenerativeInterface;
 
   constructor(options: ConverseControllerOptions) {
-    const {engine: fullEngine, stateId} = getInterfaceInternals(
-      options.interface
-    );
+    const {engine: fullEngine, stateId} = getInterfaceInternals(options.interface);
 
     const actions = getOrCreateGenerativeActions(options.interface);
     const selectors = getOrCreateGenerativeSelectors(options.interface);
 
     if (options.conversationToRestore) {
-      const hydratedState = hydrateFromSerializedState(
-        options.conversationToRestore
-      );
+      const hydratedState = hydrateFromSerializedState(options.conversationToRestore);
       fullEngine.mutate(actions.hydrateState(hydratedState));
     }
+
+    const registry = getOrCreateRoutedInterfaceRegistry(options.interface);
 
     const controllerState = createMemoizedStateSelector(
       selectors.getTurns,
       selectors.getActiveTurnId,
-      (turns, activeTurnId): ConverseControllerState => ({
-        turns,
-        activeTurn: activeTurnId
-          ? turns.find((t) => t.id === activeTurnId)
-          : undefined,
-        isStreaming: turns.some((t) => t.status === 'streaming'),
-      })
+      (stateTurns, activeTurnId): ConverseControllerState => {
+        const turns = mergeTurnsWithRegistry(stateTurns, registry);
+        return {
+          turns,
+          activeTurn: activeTurnId ? turns.find((t) => t.id === activeTurnId) : undefined,
+          isStreaming: turns.some((t) => t.status === 'streaming'),
+        };
+      }
     );
 
     super(fullEngine, controllerState);
 
     this.#actions = actions;
     this.#selectors = selectors;
+    this.#generativeInterface = options.interface;
     this.#runtime = GenerativeRuntime.getInstance(fullEngine, stateId, {
       generativeInterface: options.interface,
       cartInterface: options.interface,
@@ -65,9 +64,16 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
         replaceTurnId: (oldId, newId) => {
           this.engine.mutate(this.#actions.replaceTurnId({oldId, newId}));
         },
-        setRoutedInterface: (turnId, routedInterface) => {
+        setRoutedInterface: (turnId, hydrationResult) => {
+          const registry = getOrCreateRoutedInterfaceRegistry(options.interface);
+          registry.register(turnId, {
+            useCase: hydrationResult.useCase,
+            interface: hydrationResult.interface,
+            snapshot: hydrationResult.snapshot,
+            query: hydrationResult.query,
+          });
           this.engine.mutate(
-            this.#actions.setRoutedInterface({turnId, routedInterface})
+            this.#actions.setRoutedInterface({turnId, useCase: hydrationResult.useCase})
           );
         },
         initAgentResponse: (turnId) => {
@@ -87,19 +93,13 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
           }
         },
         startToolCall: (turnId, toolCallId, toolName) => {
-          this.engine.mutate(
-            this.#actions.startToolCall({turnId, toolCallId, toolName})
-          );
+          this.engine.mutate(this.#actions.startToolCall({turnId, toolCallId, toolName}));
         },
         appendToolCallArgs: (turnId, toolCallId, delta) => {
-          this.engine.mutate(
-            this.#actions.appendToolCallArgs({turnId, toolCallId, delta})
-          );
+          this.engine.mutate(this.#actions.appendToolCallArgs({turnId, toolCallId, delta}));
         },
         completeToolCall: (turnId, toolCallId, result) => {
-          this.engine.mutate(
-            this.#actions.completeToolCall({turnId, toolCallId, result})
-          );
+          this.engine.mutate(this.#actions.completeToolCall({turnId, toolCallId, result}));
         },
         completeTurn: (turnId) => {
           this.engine.mutate(this.#actions.completeTurn({turnId}));
@@ -114,31 +114,33 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
           this.engine.mutate(this.#actions.startReasoning({turnId}));
         },
         appendReasoningDelta: (turnId, delta) => {
-          this.engine.mutate(
-            this.#actions.appendReasoningDelta({turnId, delta})
-          );
+          this.engine.mutate(this.#actions.appendReasoningDelta({turnId, delta}));
         },
         endReasoning: (turnId) => {
           this.engine.mutate(this.#actions.endReasoning({turnId}));
         },
         setConversationSession: (sessionId, token) => {
-          this.engine.mutate(
-            this.#actions.setConversationSession({sessionId, token})
-          );
+          this.engine.mutate(this.#actions.setConversationSession({sessionId, token}));
         },
       },
-      hydrateSubInterface: createHydrateSubInterface(fullEngine),
+      hydrateSubInterface: createHydrateSubInterface(fullEngine, options.interface),
     });
   }
 
   serialize(): SerializedConverseState {
     const {turns, activeTurn} = this.state;
+    const registry = getOrCreateRoutedInterfaceRegistry(this.#generativeInterface);
 
     const serializedTurns: SerializedTurn[] = turns.map((turn) => {
       const {routedInterface, ...rest} = turn;
       const serialized: SerializedTurn = {...rest};
       if (routedInterface) {
-        serialized.routedInterface = {useCase: routedInterface.useCase};
+        const entry = registry.get(turn.id);
+        serialized.routedInterface = {
+          useCase: routedInterface.useCase,
+          snapshot: entry?.snapshot ?? {},
+          query: entry?.query,
+        };
       }
       return serialized;
     });
@@ -148,9 +150,7 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
     return {
       name: firstPrompt,
       timestamp: Date.now(),
-      conversationSessionId: this.engine.read(
-        this.#selectors.getConversationSessionId
-      ),
+      conversationSessionId: this.engine.read(this.#selectors.getConversationSessionId),
       conversationToken: this.engine.read(this.#selectors.getConversationToken),
       turns: serializedTurns,
       activeTurnId: activeTurn?.id,
@@ -200,9 +200,8 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
   }
 }
 
-export const buildConverseController = (
-  options: ConverseControllerOptions
-): ConverseController => new ConverseControllerImpl(options);
+export const buildConverseController = (options: ConverseControllerOptions): ConverseController =>
+  new ConverseControllerImpl(options);
 
 export interface ConverseController extends Controller<ConverseControllerState> {
   serialize(): SerializedConverseState;
@@ -225,16 +224,21 @@ export interface ConverseControllerOptions {
   onSurfaceOperation?: (operations: unknown[]) => void;
 }
 
-function hydrateFromSerializedState(
-  serialized: SerializedConverseState
-): GenerativeState {
-  const turns: Turn[] = serialized.turns.map((serializedTurn) => {
-    const {routedInterface: _routedInterface, ...rest} = serializedTurn;
-    const turn: Turn = {...rest};
+function hydrateFromSerializedState(serialized: SerializedConverseState): GenerativeState {
+  const turns: StateTurn[] = serialized.turns.map((serializedTurn) => {
+    const {routedInterface, ...rest} = serializedTurn;
+    const turn: StateTurn = {...rest};
 
     if (turn.status === 'streaming') {
       turn.status = 'error';
       turn.error = 'Stream was interrupted';
+    }
+
+    if (
+      routedInterface &&
+      (routedInterface.useCase === 'commerceSearch' || routedInterface.useCase === 'search')
+    ) {
+      turn.routedInterface = {useCase: routedInterface.useCase};
     }
 
     return turn;

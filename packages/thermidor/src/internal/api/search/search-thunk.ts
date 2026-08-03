@@ -20,9 +20,7 @@ export function createSearchEndpointThunk(iface: InterfaceHandle) {
     async ({engine}) => {
       const request = engine.read(buildRequest);
       const trackingId = engine.read(configSelectors.getTrackingId);
-      const config = engine.read(
-        configSelectors.getEndpointClientConfiguration
-      );
+      const config = engine.read(configSelectors.getEndpointClientConfiguration);
 
       const analytics = buildAnalyticsParams(engine, {
         originContext: 'Search',
@@ -34,10 +32,7 @@ export function createSearchEndpointThunk(iface: InterfaceHandle) {
         ...(analytics && {analytics}),
       };
 
-      const response = await createSearchEndpointClient().call(
-        fullRequest,
-        config
-      );
+      const response = await createSearchEndpointClient().call(fullRequest, config);
 
       if (!response.success) {
         throw new Error(response.error);

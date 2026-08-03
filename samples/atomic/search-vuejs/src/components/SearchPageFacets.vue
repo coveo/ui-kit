@@ -19,11 +19,7 @@
       <atomic-timeframe unit="month"></atomic-timeframe>
       <atomic-timeframe unit="quarter"></atomic-timeframe>
       <atomic-timeframe unit="year"></atomic-timeframe>
-      <atomic-timeframe
-        unit="year"
-        amount="10"
-        period="next"
-      ></atomic-timeframe>
+      <atomic-timeframe unit="year" amount="10" period="next"></atomic-timeframe>
     </atomic-timeframe-facet>
     <atomic-rating-facet
       field="ec_rating"

@@ -50,9 +50,7 @@ describe('GeneratedAnswerController', () => {
     } as unknown as ReactiveControllerHost & HTMLElement;
   });
 
-  const createController = (
-    options: Partial<GeneratedAnswerControllerOptions> = {}
-  ) => {
+  const createController = (options: Partial<GeneratedAnswerControllerOptions> = {}) => {
     const defaultOptions: GeneratedAnswerControllerOptions = {
       withToggle: false,
       getGeneratedAnswer: () => mockGeneratedAnswer,
@@ -139,9 +137,19 @@ describe('GeneratedAnswerController', () => {
         }),
       });
 
-      expect(controller.getGeneratedAnswerStatus()).toBe(
-        'Answer could not be generated'
-      );
+      expect(controller.getGeneratedAnswerStatus()).toBe('Answer could not be generated');
+    });
+
+    it('should return the failure status when the completed request cannot produce an answer', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({
+          isVisible: true,
+          isStreaming: false,
+          cannotAnswer: true,
+        }),
+      });
+
+      expect(controller.getGeneratedAnswerStatus()).toBe('Answer could not be generated');
     });
 
     it('should return correct translated key with answer when it has answer', () => {
@@ -153,8 +161,20 @@ describe('GeneratedAnswerController', () => {
         }),
       });
 
+      expect(controller.getGeneratedAnswerStatus()).toBe('Generated answer: Test answer');
+    });
+
+    it('should strip markdown syntax from answer before announcing it', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({
+          isVisible: true,
+          isStreaming: false,
+          answer: '**Bold** and *italic* with `code`',
+        }),
+      });
+
       expect(controller.getGeneratedAnswerStatus()).toBe(
-        'Generated answer: Test answer'
+        'Generated answer: Bold and italic with code'
       );
     });
 
@@ -168,9 +188,7 @@ describe('GeneratedAnswerController', () => {
         }),
       });
 
-      expect(controller.getGeneratedAnswerStatus()).toBe(
-        'Generated answer: Test answer'
-      );
+      expect(controller.getGeneratedAnswerStatus()).toBe('Generated answer: Test answer');
     });
 
     it('should return empty string when the answer only contains whitespace', () => {
@@ -183,6 +201,141 @@ describe('GeneratedAnswerController', () => {
       });
 
       expect(controller.getGeneratedAnswerStatus()).toBe('');
+    });
+
+    it('should return the error message when a partial answer and error are present', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({
+          isVisible: true,
+          isStreaming: false,
+          answer: 'Partial answer',
+          error: {message: 'some error', code: 500},
+        }),
+      });
+
+      expect(controller.getGeneratedAnswerStatus()).toBe('Answer could not be generated');
+    });
+
+    describe('when status conditions overlap', () => {
+      it('should return the hidden status regardless of error/answer/generating combination', () => {
+        const combinations: Array<{
+          isStreaming?: boolean;
+          answer?: string;
+          error?: {message?: string; code?: number};
+        }> = [
+          {},
+          {isStreaming: true},
+          {answer: 'Test answer'},
+          {error: {message: 'some error', code: 500}},
+          {answer: 'Test answer', error: {message: 'some error', code: 500}},
+        ];
+
+        for (const combination of combinations) {
+          const controller = createController({
+            getGeneratedAnswerState: () => ({
+              isVisible: false,
+              ...combination,
+            }),
+          });
+
+          expect(controller.getGeneratedAnswerStatus()).toBe('Generated answer is hidden');
+        }
+      });
+
+      it('should return the generating status regardless of error/answer combination, as long as visible and streaming', () => {
+        const combinations: Array<{
+          answer?: string;
+          error?: {message?: string; code?: number};
+        }> = [
+          {},
+          {answer: 'Test answer'},
+          {error: {message: 'some error', code: 500}},
+          {answer: 'Test answer', error: {message: 'some error', code: 500}},
+        ];
+
+        for (const combination of combinations) {
+          const controller = createController({
+            getGeneratedAnswerState: () => ({
+              isVisible: true,
+              isStreaming: true,
+              ...combination,
+            }),
+          });
+
+          expect(controller.getGeneratedAnswerStatus()).toBe('Generating answer');
+        }
+      });
+    });
+  });
+
+  describe('#isStatusAssertive', () => {
+    it('should return true when there is an error and no answer', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({
+          isVisible: true,
+          isStreaming: false,
+          answer: '',
+          error: {message: 'some error', code: 500},
+        }),
+      });
+
+      expect(controller.isStatusAssertive()).toBe(true);
+    });
+
+    it('should return false when streaming (error may be stale)', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({
+          isVisible: true,
+          isStreaming: true,
+          error: {message: 'some error', code: 500},
+        }),
+      });
+
+      expect(controller.isStatusAssertive()).toBe(false);
+    });
+
+    it('should return true when a partial answer is present alongside error', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({
+          isVisible: true,
+          isStreaming: false,
+          answer: 'Test answer',
+          error: {message: 'some error', code: 500},
+        }),
+      });
+
+      expect(controller.isStatusAssertive()).toBe(true);
+    });
+
+    it('should return false when hidden', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({
+          isVisible: false,
+          error: {message: 'some error', code: 500},
+        }),
+      });
+
+      expect(controller.isStatusAssertive()).toBe(false);
+    });
+
+    it('should return false when no error', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({
+          isVisible: true,
+          isStreaming: false,
+          answer: 'Test answer',
+        }),
+      });
+
+      expect(controller.isStatusAssertive()).toBe(false);
+    });
+
+    it('should return false when state is undefined', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => undefined,
+      });
+
+      expect(controller.isStatusAssertive()).toBe(false);
     });
   });
 
@@ -289,11 +442,7 @@ describe('GeneratedAnswerController', () => {
       const onCopyError = vi.fn();
       const controller = createController();
 
-      await controller.copyToClipboard(
-        'Test answer',
-        onCopySuccess,
-        onCopyError
-      );
+      await controller.copyToClipboard('Test answer', onCopySuccess, onCopyError);
 
       expect(writeTextMock).toHaveBeenCalledWith('Test answer');
       expect(onCopySuccess).toHaveBeenCalled();
@@ -313,11 +462,7 @@ describe('GeneratedAnswerController', () => {
       const onCopyError = vi.fn();
       const controller = createController();
 
-      await controller.copyToClipboard(
-        'Test answer',
-        onCopySuccess,
-        onCopyError
-      );
+      await controller.copyToClipboard('Test answer', onCopySuccess, onCopyError);
 
       expect(onCopyError).toHaveBeenCalled();
       expect(mockBindings.engine.logger.error).toHaveBeenCalled();
@@ -382,9 +527,7 @@ describe('GeneratedAnswerController', () => {
     it('should return error message when copyError is true', () => {
       const controller = createController();
 
-      expect(controller.getCopyToClipboardTooltip(false, true)).toBe(
-        'Failed to copy the answer'
-      );
+      expect(controller.getCopyToClipboardTooltip(false, true)).toBe('Failed to copy the answer');
     });
 
     it('should return copied message when copied is true', () => {
@@ -396,9 +539,7 @@ describe('GeneratedAnswerController', () => {
     it('should return copy message when not copied and no error', () => {
       const controller = createController();
 
-      expect(controller.getCopyToClipboardTooltip(false, false)).toBe(
-        'Copy answer'
-      );
+      expect(controller.getCopyToClipboardTooltip(false, false)).toBe('Copy answer');
     });
   });
 
@@ -456,9 +597,8 @@ describe('GeneratedAnswerController', () => {
 
     controller.writeStoredData({isVisible: false});
 
-    expect(mockStorage.setJSON).toHaveBeenCalledWith(
-      StorageItems.GENERATED_ANSWER_DATA,
-      {isVisible: false}
-    );
+    expect(mockStorage.setJSON).toHaveBeenCalledWith(StorageItems.GENERATED_ANSWER_DATA, {
+      isVisible: false,
+    });
   });
 });

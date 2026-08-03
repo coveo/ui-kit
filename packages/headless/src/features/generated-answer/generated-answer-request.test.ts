@@ -172,9 +172,7 @@ describe('constructAnswerAPIQueryParams', () => {
       const mockHistoryStore: Pick<HistoryStore, 'getHistory'> = {
         getHistory: vi.fn(() => history),
       };
-      vi.spyOn(HistoryStore, 'getInstance').mockReturnValue(
-        mockHistoryStore as HistoryStore
-      );
+      vi.spyOn(HistoryStore, 'getInstance').mockReturnValue(mockHistoryStore as HistoryStore);
 
       const queryParams = constructAnswerAPIQueryParams(
         streamAnswerAPIStateMockWithAnalyticsEnabled,
@@ -192,10 +190,7 @@ describe('constructAnswerAPIQueryParams', () => {
       const context = navigatorContext();
       context.referrer = null;
 
-      const queryParams = constructAnswerAPIQueryParams(
-        streamAnswerAPIStateMock,
-        context
-      );
+      const queryParams = constructAnswerAPIQueryParams(streamAnswerAPIStateMock, context);
 
       expect(queryParams).toMatchObject({
         referrer: '',
@@ -289,12 +284,7 @@ describe('constructAnswerAPIQueryParams', () => {
         buildMockNavigatorContextProvider()()
       );
 
-      expect(queryParams.fieldsToInclude).toEqual([
-        'title',
-        'summary',
-        'uri',
-        'author',
-      ]);
+      expect(queryParams.fieldsToInclude).toEqual(['title', 'summary', 'uri', 'author']);
     });
 
     it('should not include fieldsToInclude when fields state is undefined', () => {
@@ -357,16 +347,12 @@ describe('constructAnswerAPIQueryParams', () => {
       );
 
       expect(queryParams.pipelineRuleParameters).toBeDefined();
+      expect(queryParams.pipelineRuleParameters?.mlGenerativeQuestionAnswering).toBeDefined();
       expect(
-        queryParams.pipelineRuleParameters?.mlGenerativeQuestionAnswering
+        queryParams.pipelineRuleParameters?.mlGenerativeQuestionAnswering?.responseFormat
       ).toBeDefined();
       expect(
-        queryParams.pipelineRuleParameters?.mlGenerativeQuestionAnswering
-          ?.responseFormat
-      ).toBeDefined();
-      expect(
-        queryParams.pipelineRuleParameters?.mlGenerativeQuestionAnswering
-          ?.citationsFieldToInclude
+        queryParams.pipelineRuleParameters?.mlGenerativeQuestionAnswering?.citationsFieldToInclude
       ).toBeDefined();
     });
 
@@ -427,9 +413,7 @@ describe('constructAnswerAPIQueryParams', () => {
       );
 
       expect(queryParams.queryCorrection?.enabled).toBe(true);
-      expect(queryParams.queryCorrection?.options?.automaticallyCorrect).toBe(
-        'whenNoResults'
-      );
+      expect(queryParams.queryCorrection?.options?.automaticallyCorrect).toBe('whenNoResults');
       expect(queryParams.enableDidYouMean).toBe(false);
     });
 
@@ -439,9 +423,7 @@ describe('constructAnswerAPIQueryParams', () => {
         buildMockNavigatorContextProvider()()
       );
 
-      expect(queryParams.queryCorrection?.options?.automaticallyCorrect).toBe(
-        'never'
-      );
+      expect(queryParams.queryCorrection?.options?.automaticallyCorrect).toBe('never');
     });
   });
 
@@ -598,10 +580,7 @@ describe('constructGenerateHeadAnswerParams', () => {
     const navigatorContext = buildMockNavigatorContextProvider()();
     navigatorContext.referrer = null;
 
-    const params = constructGenerateHeadAnswerParams(
-      buildState(),
-      navigatorContext
-    );
+    const params = constructGenerateHeadAnswerParams(buildState(), navigatorContext);
 
     expect(params.referrer).toBeNull();
   });
@@ -610,10 +589,7 @@ describe('constructGenerateHeadAnswerParams', () => {
     const navigatorContext = buildMockNavigatorContextProvider()();
     navigatorContext.referrer = 'https://www.example.com/from-page';
 
-    const params = constructGenerateHeadAnswerParams(
-      buildState(),
-      navigatorContext
-    );
+    const params = constructGenerateHeadAnswerParams(buildState(), navigatorContext);
 
     expect(params.referrer).toBe('https://www.example.com/from-page');
   });
@@ -694,10 +670,7 @@ describe('constructGenerateHeadAnswerParams', () => {
       }),
       buildMockNavigatorContextProvider()()
     );
-    expect(params.facets?.map((f) => f.facetId)).toEqual([
-      'alpha-facet',
-      'zebra-facet',
-    ]);
+    expect(params.facets?.map((f) => f.facetId)).toEqual(['alpha-facet', 'zebra-facet']);
   });
 
   it('does not include facets when facetSet is empty', () => {

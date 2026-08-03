@@ -10,9 +10,7 @@ interface BreadcrumbShowLessProps {
   i18n: i18n;
 }
 
-export const renderBreadcrumbShowLess: FunctionalComponent<
-  BreadcrumbShowLessProps
-> = ({props}) => {
+export const renderBreadcrumbShowLess: FunctionalComponent<BreadcrumbShowLessProps> = ({props}) => {
   if (props.isCollapsed) {
     return nothing;
   }

@@ -15,6 +15,4 @@ export type StateNeededForCategoryFacetSearch = ConfigurationSection &
   CategoryFacetSection;
 
 export type StateNeededForFacetSearch = ConfigurationSection &
-  Partial<
-    StateNeededForSpecificFacetSearch & StateNeededForCategoryFacetSearch
-  >;
+  Partial<StateNeededForSpecificFacetSearch & StateNeededForCategoryFacetSearch>;

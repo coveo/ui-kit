@@ -20,10 +20,7 @@ interface ResolvedStep {
   searchQuery?: string;
 }
 
-const stepLabelKeys: Record<
-  ResolvedStepType,
-  {active: string; completed: string}
-> = {
+const stepLabelKeys: Record<ResolvedStepType, {active: string; completed: string}> = {
   'thinking-before-search': {
     active: 'agent-generation-step-analyzing-question',
     completed: 'agent-generation-step-analyzing-question-completed',
@@ -94,9 +91,7 @@ export class AtomicAgentStreamOfThought extends LitElement {
     const isCollapsible = resolvedSteps.length > 1;
 
     if (isComplete && !this.expanded && isCollapsible) {
-      return html`
-        <div class="timeline">${this.renderCollapsedTimelineSummary()}</div>
-      `;
+      return html` <div class="timeline">${this.renderCollapsedTimelineSummary()}</div> `;
     }
 
     return html`
@@ -119,9 +114,7 @@ export class AtomicAgentStreamOfThought extends LitElement {
 
     return html`
       <div class="step">
-        ${step.status === 'active'
-          ? this.renderSpinner()
-          : this.renderCheckmark()}
+        ${step.status === 'active' ? this.renderSpinner() : this.renderCheckmark()}
         <span class="step-label">${label}</span>
       </div>
     `;
@@ -169,9 +162,7 @@ export class AtomicAgentStreamOfThought extends LitElement {
   }
 
   private renderSpinner() {
-    return html`<span class="step-icon"
-      ><span class="spinner" aria-hidden="true"></span
-    ></span>`;
+    return html`<span class="step-icon"><span class="spinner" aria-hidden="true"></span></span>`;
   }
 
   private renderCheckmark() {
@@ -229,15 +220,11 @@ export function resolveSteps(steps: GenerationStep[]): ResolvedStep[] {
   return steps.flatMap((step) => {
     if (step.name === 'searching') {
       searchWasPerformed = true;
-      const searchToolCalls = step.toolCalls?.filter(
-        (tc) => tc.type === 'search'
-      );
+      const searchToolCalls = step.toolCalls?.filter((tc) => tc.type === 'search');
       if (searchToolCalls?.length) {
         return searchToolCalls.map((tc) => {
           const searchQuery =
-            tc.toolCallArgs && 'q' in tc.toolCallArgs
-              ? tc.toolCallArgs.q
-              : undefined;
+            tc.toolCallArgs && 'q' in tc.toolCallArgs ? tc.toolCallArgs.q : undefined;
           if (searchQuery) {
             return {
               type: 'searching-with-query' as const,
@@ -252,9 +239,7 @@ export function resolveSteps(steps: GenerationStep[]): ResolvedStep[] {
     } else if (step.name === 'answering') {
       return {type: 'answering' as const, status: step.status};
     } else {
-      const type = searchWasPerformed
-        ? 'thinking-after-search'
-        : 'thinking-before-search';
+      const type = searchWasPerformed ? 'thinking-after-search' : 'thinking-before-search';
       return {type, status: step.status} as ResolvedStep;
     }
   });

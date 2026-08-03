@@ -2,7 +2,7 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -12,10 +12,9 @@ import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-load-more-results',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-load-more-results', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-load-more-results',

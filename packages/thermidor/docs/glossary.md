@@ -282,9 +282,7 @@ A Symbol-keyed discriminant on Interface objects. Values: `'search' | 'commerce'
 A generic utility type that accepts any `BaseInterface` whose `[TYPE]` corresponds to an interface type that declares facade `F`. Automatically derived from the `Facades` registry — no manual maintenance needed.
 
 ```typescript
-type Supports<F extends Facades[InterfaceType]> = BaseInterface<
-  InterfaceTypesWith<F>
->;
+type Supports<F extends Facades[InterfaceType]> = BaseInterface<InterfaceTypesWith<F>>;
 
 // Usage:
 interface SearchBoxControllerOptions {

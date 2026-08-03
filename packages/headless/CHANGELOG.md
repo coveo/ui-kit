@@ -1,3 +1,14 @@
+## 3.53.2
+
+### Patch Changes
+
+- [#8043](https://github.com/coveo/ui-kit/pull/8043) [`42f1e58`](https://github.com/coveo/ui-kit/commit/42f1e58bfbb5aeeee832d7da07b3bc77ededeff7) - fixed the issue with the no answer message not displaying after triggering the generated answer manually
+
+- [#8071](https://github.com/coveo/ui-kit/pull/8071) [`51e15d1`](https://github.com/coveo/ui-kit/commit/51e15d1435d7435a0701754d9e418d6d87d376c3) - Repair stale TypeDoc sample links.
+
+- Updated dependencies [[`484bacf`](https://github.com/coveo/ui-kit/commit/484bacf5ef1a89c3b712744c0489fecede73e03d)]:
+  - @coveo/relay@2.1.2
+
 ## 3.53.1
 
 ### Patch Changes
