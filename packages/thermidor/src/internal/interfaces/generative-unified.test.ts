@@ -25,13 +25,14 @@ describe('GenerativeUnifiedInterfaceImpl', () => {
     expect(engine.adoptSlice).toHaveBeenCalledOnce();
   });
 
-  it('resolveFacades("conversation") returns a thunk array of length 1', () => {
+  it('resolveFacade("conversation") returns a thunk', () => {
     const engine = createMockEngine();
     const instance = new GenerativeUnifiedInterfaceImpl(engine, 'test-id');
 
-    const thunks = getInterfaceInternals(instance).resolveFacades('conversation');
+    const thunk = getInterfaceInternals(instance).resolveFacade('conversation');
 
-    expect(thunks).toHaveLength(1);
+    expect(thunk).toBeDefined();
+    expect(typeof thunk).toBe('function');
   });
 
   describe('dispose', () => {
@@ -63,13 +64,13 @@ describe('GenerativeUnifiedInterfaceImpl', () => {
       expect(engine.removeInterface).toHaveBeenCalledOnce();
     });
 
-    it('throws when resolveFacades is called after dispose', () => {
+    it('throws when resolveFacade is called after dispose', () => {
       const engine = createMockEngine();
       const instance = new GenerativeUnifiedInterfaceImpl(engine, 'test-id');
 
       instance.dispose();
 
-      expect(() => getInterfaceInternals(instance).resolveFacades('conversation')).toThrow(
+      expect(() => getInterfaceInternals(instance).resolveFacade('conversation')).toThrow(
         'Cannot operate on a disposed interface.'
       );
     });

@@ -6,17 +6,13 @@ import {generateId} from '@/src/internal/utils/index.js';
 import type {RawSSEEvent} from '@/src/internal/api/protocol/stream-types.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
-import type {
-  GenerativeStatePort,
-  HydrateSubInterface,
-} from '@/src/internal/api/generative/index.js';
+import type {GenerativeStatePort} from '@/src/internal/api/generative/index.js';
 import {dispatchStreamEvent} from './unified-event-dispatcher.js';
 import {createConversationRequestBuilder} from './unified-conversation-request-builder.js';
 import {createSurfaceProcessor} from './unified-surface-processor.js';
 
 export interface UnifiedRuntimeConfig {
   statePort: GenerativeStatePort;
-  hydrateSubInterface: HydrateSubInterface;
   generativeInterface: InterfaceHandle;
   cartInterface: InterfaceHandle;
 }

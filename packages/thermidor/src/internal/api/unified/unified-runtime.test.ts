@@ -120,7 +120,6 @@ function createMockEngine(): FullEngine {
 function createMockConfig(overrides: Partial<UnifiedRuntimeConfig> = {}): UnifiedRuntimeConfig {
   return {
     statePort: createMockStatePort(),
-    hydrateSubInterface: vi.fn().mockReturnValue(null),
     generativeInterface: {disposed: false, dispose: vi.fn()} as InterfaceHandle,
     cartInterface: {disposed: false, dispose: vi.fn()} as InterfaceHandle,
     ...overrides,

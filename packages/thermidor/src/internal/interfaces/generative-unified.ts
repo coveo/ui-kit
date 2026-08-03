@@ -1,7 +1,7 @@
 import {BaseInterface} from '@/src/internal/utils/index.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {
-  FacadeResolverFactory,
+  FacadeResolver,
   Facades,
   GenerativeUnifiedInterface,
 } from '@/src/internal/utils/index.js';
@@ -10,10 +10,10 @@ import {getOrCreateGenerativeSlice} from '@/src/internal/features/generative/ind
 
 const noopThunk = createNoopThunk('generativeUnified');
 
-const noopResolverFactory: FacadeResolverFactory = (_engine) => (_scope) => noopThunk;
+const noopResolver: FacadeResolver = () => noopThunk;
 
-const resolverFactories: Record<Facades['generativeUnified'], FacadeResolverFactory> = {
-  conversation: noopResolverFactory,
+const resolvers: Record<Facades['generativeUnified'], FacadeResolver> = {
+  conversation: noopResolver,
 };
 
 export class GenerativeUnifiedInterfaceImpl
@@ -21,7 +21,7 @@ export class GenerativeUnifiedInterfaceImpl
   implements GenerativeUnifiedInterface
 {
   constructor(engine: FullEngine, stateId: string) {
-    super(engine, stateId, 'generativeUnified', resolverFactories);
+    super(engine, stateId, 'generativeUnified', resolvers);
     engine.adoptSlice(getOrCreateGenerativeSlice(this));
   }
 }
