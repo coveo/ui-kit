@@ -9,14 +9,9 @@
  *   node scripts/report-catalog-candidates.mjs
  */
 
-import {readFileSync} from 'node:fs';
+import {existsSync, readFileSync, globSync} from 'node:fs';
 import {resolve} from 'node:path';
-import {
-  getAllPackageDirs,
-  getPackageManifestFromPackagePath,
-  getPackagePathFromPackageDir,
-  workspacesRoot,
-} from './packages.mjs';
+import {getPackageManifestFromPackagePath, workspacesRoot} from './packages.mjs';
 
 import {parse as parseYaml} from 'yaml';
 
@@ -25,7 +20,7 @@ const DEP_TYPES = ['dependencies', 'devDependencies', 'peerDependencies'];
 
 /**
  * @typedef DepOccurrence
- * @property {string} packageDir - Relative path under `packages/`.
+ * @property {string} package - Relative path from workspace root (e.g., `packages/atomic`, `samples/headless/search`, `.`).
  * @property {string} version - Raw version string from the manifest.
  * @property {string} depType - One of `dependencies`, `devDependencies`, `peerDependencies`.
  */
@@ -80,6 +75,37 @@ function readCatalog() {
 }
 
 /**
+ * Resolves all workspace package directories from `pnpm-workspace.yaml`,
+ * including the root.
+ *
+ * @returns {Array<{label: string, fullPath: string}>}
+ */
+function getAllWorkspacePackagePaths() {
+  const workspaceYamlPath = resolve(workspacesRoot, 'pnpm-workspace.yaml');
+  const content = readFileSync(workspaceYamlPath, 'utf-8');
+  const parsed = parseYaml(content);
+  const patterns = parsed.packages ?? [];
+
+  /** @type {Array<{label: string, fullPath: string}>} */
+  const results = [];
+
+  for (const pattern of patterns) {
+    const matches = globSync(pattern, {cwd: workspacesRoot});
+    for (const match of matches) {
+      const fullPath = resolve(workspacesRoot, match);
+      if (existsSync(resolve(fullPath, 'package.json'))) {
+        results.push({label: match, fullPath});
+      }
+    }
+  }
+
+  // Include the root package.json
+  results.push({label: '.', fullPath: workspacesRoot});
+
+  return results;
+}
+
+/**
  * Collects all hardcoded dependency occurrences across the monorepo.
  *
  * @returns {Map<string, DepOccurrence[]>}
@@ -87,10 +113,9 @@ function readCatalog() {
 function collectDependencies() {
   /** @type {Map<string, DepOccurrence[]>} */
   const depMap = new Map();
-  const dirs = getAllPackageDirs();
+  const packages = getAllWorkspacePackagePaths();
 
-  for (const dir of dirs) {
-    const fullPath = getPackagePathFromPackageDir(dir);
+  for (const {label, fullPath} of packages) {
     const manifest = getPackageManifestFromPackagePath(fullPath);
 
     for (const depType of DEP_TYPES) {
@@ -105,7 +130,7 @@ function collectDependencies() {
         if (!depMap.has(name)) {
           depMap.set(name, []);
         }
-        depMap.get(name).push({packageDir: dir, version, depType});
+        depMap.get(name).push({package: label, version, depType});
       }
     }
   }
@@ -178,7 +203,7 @@ function buildEntryObject({name, occurrences}) {
     if (!versions[occ.version]) {
       versions[occ.version] = [];
     }
-    versions[occ.version].push({package: occ.packageDir, depType: occ.depType});
+    versions[occ.version].push({package: occ.package, depType: occ.depType});
   }
 
   return {name, versions};
