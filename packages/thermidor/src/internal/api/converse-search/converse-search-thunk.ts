@@ -1,9 +1,7 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import type {EndpointStateScope} from '@/src/internal/utils/index.js';
-import type {FullEngine} from '@/src/internal/engine/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import type {CoveoConversationEndpointRequest} from '@/src/internal/api/conversation/conversation-endpoint-types.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
 import {createCommerceSearchEndpointRequestSelector} from '@/src/internal/api/commerce-search/commerce-search-request-selector.js';
 import {createCommerceSearchEndpointResponseHandler} from '@/src/internal/api/commerce-search/commerce-search-response-handler.js';
 import {getOrCreateConfigurationSelectors} from '@/src/internal/features/configuration/index.js';
@@ -12,19 +10,18 @@ import {getOrCreateCartSelectors} from '@/src/internal/features/cart/index.js';
 import {createConversationEndpointClient} from '@/src/internal/api/conversation/index.js';
 import {getOrCreateCommerceSearchEndpointSlice} from '@/src/internal/api/commerce-search/commerce-search-thunk-slice.js';
 import {extractCommerceSearchResponseFromStream} from './converse-commerce-search-stream-extractor.js';
+import type {FullEngine} from '@/src/internal/engine/index.js';
 
 export function createConverseSearchEndpointThunk(
-  engine: FullEngine,
-  scope: EndpointStateScope,
+  iface: InterfaceHandle,
   generativeInterface: InterfaceHandle
 ) {
+  const {engine, stateId} = getInterfaceInternals(iface);
   const configSelectors = getOrCreateConfigurationSelectors();
-  const buildRequest = createCommerceSearchEndpointRequestSelector(scope);
+  const buildRequest = createCommerceSearchEndpointRequestSelector(iface);
   const generativeSelectors = getOrCreateGenerativeSelectors(generativeInterface);
   const cartSelectors = getOrCreateCartSelectors(generativeInterface);
-  const handleResponse = createCommerceSearchEndpointResponseHandler(scope.baseInterface);
-
-  const {stateId} = getHandleInternals(scope.scopeInterface);
+  const handleResponse = createCommerceSearchEndpointResponseHandler(iface);
 
   const thunk = createAsyncThunk<void, {engine: FullEngine}>(
     `${stateId}/converseSearchEndpoint/execute`,
@@ -73,7 +70,7 @@ export function createConverseSearchEndpointThunk(
     }
   );
 
-  engine.adoptSlice(getOrCreateCommerceSearchEndpointSlice(scope.scopeInterface, thunk));
+  engine.adoptSlice(getOrCreateCommerceSearchEndpointSlice(iface, thunk));
 
   return thunk;
 }

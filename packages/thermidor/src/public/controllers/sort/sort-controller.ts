@@ -2,7 +2,7 @@ import {BaseController} from '@/src/internal/utils/index.js';
 import type {Supports, EndpointThunk} from '@/src/internal/utils/index.js';
 import type {StateSelector} from '@/src/internal/engine/index.js';
 import {createMemoizedStateSelector} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import {deepEqual} from '@/src/internal/utils/index.js';
 import {getOrCreateSortActions} from '@/src/internal/features/sort/index.js';
 import {getOrCreateSortSelectors} from '@/src/internal/features/sort/index.js';
@@ -13,12 +13,12 @@ import type {Controller} from '@/src/public/controllers/controller-types.js';
 const SORT_COMPARE_OPTIONS = {excludeKeys: ['displayName']};
 
 class SortControllerImpl extends BaseController<SortControllerState<any>> {
-  #thunks: EndpointThunk[];
+  #thunk: EndpointThunk;
   #sortActions: ReturnType<typeof getOrCreateSortActions>;
   #controllerState: StateSelector<SortControllerState<any>>;
 
   constructor(options: SortControllerOptions<any>) {
-    const {engine, resolveFacades} = getHandleInternals(options.interface);
+    const {engine, resolveFacade} = getInterfaceInternals(options.interface);
 
     engine.adoptSlice(getOrCreateSortSlice(options.interface));
 
@@ -33,16 +33,14 @@ class SortControllerImpl extends BaseController<SortControllerState<any>> {
 
     super(engine, controllerState);
 
-    this.#thunks = resolveFacades('search');
+    this.#thunk = resolveFacade('search');
     this.#sortActions = sortActions;
     this.#controllerState = controllerState;
   }
 
   sortBy(criterion: any): void {
     this.engine.mutate(this.#sortActions.sortBy(criterion));
-    for (const thunk of this.#thunks) {
-      this.engine.mutate(thunk({engine: this.engine}));
-    }
+    this.engine.mutate(this.#thunk({engine: this.engine}));
   }
 
   isSortedBy(criterion: any): boolean {

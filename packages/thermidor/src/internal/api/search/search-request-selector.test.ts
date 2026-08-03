@@ -1,6 +1,6 @@
 import {describe, it, expect, vi, beforeEach} from 'vitest';
 import {createSearchEndpointRequestSelector} from './search-request-selector.js';
-import type {EndpointStateScope} from '@/src/internal/utils/index.js';
+import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 
 vi.mock('@/src/internal/features/search-box/index.js', () => ({
   getOrCreateSearchBoxSelectors: () => ({
@@ -40,9 +40,9 @@ vi.mock('@/src/internal/features/sort/index.js', () => ({
   }),
 }));
 
-const mockScope: EndpointStateScope = {
-  scopeInterface: {} as any,
-  baseInterface: {} as any,
+const mockInterface: InterfaceHandle = {
+  disposed: false,
+  dispose: vi.fn(),
 };
 
 describe('createSearchEndpointRequestSelector', () => {
@@ -51,7 +51,7 @@ describe('createSearchEndpointRequestSelector', () => {
   });
 
   it('builds request with all fields from state', () => {
-    const selector = createSearchEndpointRequestSelector(mockScope);
+    const selector = createSearchEndpointRequestSelector(mockInterface);
 
     const state = {
       __query: 'hello world',
@@ -77,7 +77,7 @@ describe('createSearchEndpointRequestSelector', () => {
   });
 
   it('sets locale to undefined when language is empty', () => {
-    const selector = createSearchEndpointRequestSelector(mockScope);
+    const selector = createSearchEndpointRequestSelector(mockInterface);
 
     const state = {
       __query: 'test',
@@ -90,7 +90,7 @@ describe('createSearchEndpointRequestSelector', () => {
   });
 
   it('uses default values when state slices are empty', () => {
-    const selector = createSearchEndpointRequestSelector(mockScope);
+    const selector = createSearchEndpointRequestSelector(mockInterface);
 
     const result = selector({});
 
@@ -106,7 +106,7 @@ describe('createSearchEndpointRequestSelector', () => {
   });
 
   it('returns memoized result when state has not changed', () => {
-    const selector = createSearchEndpointRequestSelector(mockScope);
+    const selector = createSearchEndpointRequestSelector(mockInterface);
     const state = {__query: 'same'};
 
     const result1 = selector(state);
@@ -116,7 +116,7 @@ describe('createSearchEndpointRequestSelector', () => {
   });
 
   it('returns new result when state changes', () => {
-    const selector = createSearchEndpointRequestSelector(mockScope);
+    const selector = createSearchEndpointRequestSelector(mockInterface);
 
     const result1 = selector({__query: 'first'});
     const result2 = selector({__query: 'second'});
@@ -127,7 +127,7 @@ describe('createSearchEndpointRequestSelector', () => {
   });
 
   it('includes sortCriteria when sort state is set', () => {
-    const selector = createSearchEndpointRequestSelector(mockScope);
+    const selector = createSearchEndpointRequestSelector(mockInterface);
 
     const state = {
       __query: 'test',
@@ -140,7 +140,7 @@ describe('createSearchEndpointRequestSelector', () => {
   });
 
   it('omits sortCriteria when sort state is undefined', () => {
-    const selector = createSearchEndpointRequestSelector(mockScope);
+    const selector = createSearchEndpointRequestSelector(mockInterface);
 
     const state = {
       __query: 'test',
@@ -153,7 +153,7 @@ describe('createSearchEndpointRequestSelector', () => {
   });
 
   it('includes compound sortCriteria string', () => {
-    const selector = createSearchEndpointRequestSelector(mockScope);
+    const selector = createSearchEndpointRequestSelector(mockInterface);
 
     const state = {
       __query: 'test',

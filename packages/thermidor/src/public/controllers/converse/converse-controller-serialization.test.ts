@@ -148,8 +148,7 @@ describe('deserializeToGenerativeState', () => {
     const agentResponse = {
       messages: [{content: 'Here are your results', role: 'assistant'}],
       surfaces: [],
-      toolCalls: [],
-      reasoningContent: 'thinking...',
+      reasoningSteps: [],
     };
 
     const serialized = createSerializedState({

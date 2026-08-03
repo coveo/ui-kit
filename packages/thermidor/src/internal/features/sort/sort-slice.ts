@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import type {SearchSortCriterion, CommerceSortCriterion} from './sort-types.js';
 import {getOrCreateSortActions} from './sort-actions.js';
@@ -68,7 +68,7 @@ export function createSortSlice(
 }
 
 export function getOrCreateSortSlice(iface: InterfaceHandle) {
-  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  const {stateId, cacheRegistry} = getInterfaceInternals(iface);
   return cacheRegistry.getOrCreate(CACHE_KEY, () => {
     const actions = getOrCreateSortActions(iface);
     const hydrateAction = getOrCreateHydrateFromSnapshotAction(iface);

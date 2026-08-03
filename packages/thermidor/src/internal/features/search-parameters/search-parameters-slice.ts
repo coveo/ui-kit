@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import {getOrCreateSearchParametersActions} from './search-parameters-actions.js';
 
@@ -39,7 +39,7 @@ export function createSearchParametersSlice(
 }
 
 export function getOrCreateSearchParametersSlice(iface: InterfaceHandle) {
-  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  const {stateId, cacheRegistry} = getInterfaceInternals(iface);
   return cacheRegistry.getOrCreate(CACHE_KEY, () => {
     const actions = getOrCreateSearchParametersActions(iface);
     return createSearchParametersSlice(stateId, actions);

@@ -1,5 +1,5 @@
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import type {
   RoutedInterface,
@@ -84,6 +84,6 @@ const CACHE_KEY: CacheKey<RoutedInterfaceRegistry> = createCacheKey<RoutedInterf
 export function getOrCreateRoutedInterfaceRegistry(
   iface: InterfaceHandle
 ): RoutedInterfaceRegistry {
-  const {cacheRegistry} = getHandleInternals(iface);
+  const {cacheRegistry} = getInterfaceInternals(iface);
   return cacheRegistry.getOrCreate(CACHE_KEY, () => new RoutedInterfaceRegistry());
 }

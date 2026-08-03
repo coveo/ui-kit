@@ -6,16 +6,9 @@ export interface InterfaceHandle {
   dispose(): void;
 }
 
-export interface EndpointStateScope {
-  baseInterface: InterfaceHandle;
-  scopeInterface: InterfaceHandle;
-}
-
 export type EndpointThunk = AsyncThunk<void, {engine: FullEngine}, {}>;
 
-export type FacadeResolver = (scope: EndpointStateScope) => EndpointThunk;
-
-export type FacadeResolverFactory = (engine: FullEngine) => FacadeResolver;
+export type FacadeResolver = (iface: InterfaceHandle) => EndpointThunk;
 
 export interface InterfaceRegistry {
   search: {interface: SearchInterface; facades: 'search' | 'suggestions'};
@@ -51,10 +44,4 @@ export interface CommerceInterface extends Supports<Facades['commerce']> {
   readonly [InterfaceTypeBrand]: 'commerce';
 }
 
-export interface GenerativeInterface extends Supports<Facades['generative']> {
-  readonly [InterfaceTypeBrand]: 'generative';
-}
-
-export interface ComposedInterface<T extends InterfaceType> extends Supports<Facades[T]> {
-  readonly [InterfaceTypeBrand]: T;
-}
+export interface GenerativeInterface extends Supports<Facades['generative']> {}

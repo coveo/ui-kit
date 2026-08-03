@@ -1,5 +1,5 @@
 import type {Supports} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import {getOrCreateSortActions, getOrCreateSortSlice} from '@/src/internal/features/sort/index.js';
 import type {SortCriterionFor} from '@/src/public/sort-types.js';
 
@@ -8,17 +8,14 @@ export interface LoadSortActionsOptions<T extends Supports<'search'>> {
 }
 
 export function loadSortActions<T extends Supports<'search'>>(options: LoadSortActionsOptions<T>) {
-  const {engine, resolveFacades} = getHandleInternals(options.interface);
-
+  const {engine, resolveFacade} = getInterfaceInternals(options.interface);
   engine.adoptSlice(getOrCreateSortSlice(options.interface));
-
-  const thunks = resolveFacades('search');
+  const thunk = resolveFacade('search');
   const sortActions = getOrCreateSortActions(options.interface);
-
   return {
     sortBy(criterion: SortCriterionFor<T> | SortCriterionFor<T>[]) {
       engine.mutate(sortActions.sortBy(criterion as any));
-      return Promise.all(thunks.map((thunk) => engine.mutate(thunk({engine}))));
+      return engine.mutate(thunk({engine}));
     },
   };
 }
