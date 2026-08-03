@@ -23,10 +23,10 @@ useCaseTestCases.forEach((useCase) => {
   test.describe(`quantic facet manager ${useCase.label}`, () => {
     test('should load facets in the same order as in the initial search response', async ({
       facetManager,
-      search,
+      baseFacet,
     }) => {
-      const searchResponsePromise = search.waitForSearchResponse();
-      await search.performSearch();
+      const searchResponsePromise = baseFacet.waitForSearchResponse();
+      await baseFacet.performSearch();
 
       const searchResponse = await searchResponsePromise;
       const {facets} = await searchResponse.json();
@@ -45,11 +45,11 @@ useCaseTestCases.forEach((useCase) => {
     test.describe('when the facets are reordered', () => {
       test('should load facets in the reordered order', async ({
         facetManager,
-        search,
+        baseFacet,
       }) => {
-        await search.mockSearchFacetOrder(exampleFacetsOrder);
-        const searchResponsePromise = search.waitForSearchResponse();
-        await search.performSearch();
+        await baseFacet.mockSearchFacetOrder(exampleFacetsOrder);
+        const searchResponsePromise = baseFacet.waitForSearchResponse();
+        await baseFacet.performSearch();
 
         const searchResponse = await searchResponsePromise;
         const {facets} = await searchResponse.json();

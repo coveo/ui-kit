@@ -39,7 +39,8 @@ export const testStandaloneSearchBox =
     querySuggest: async ({page}, use) => {
       await use(new QuerySuggestObject(page, querySuggestRegex));
     },
-    searchBox: async ({page, options, configuration, urlHash}, use) => {
+    searchBox: async ({page, options, configuration, urlHash, search}, use) => {
+      await search.mockSearchWithBaseResponse();
       await page.goto(
         urlHash
           ? `${standaloneSearchBoxUrl}#${urlHash}`
