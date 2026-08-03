@@ -1,5 +1,5 @@
 import {type NavigatorContext, SolutionType} from '@coveo/headless-react/ssr-commerce';
-import type {LoaderFunctionArgs} from 'react-router';
+import type {Route} from './+types/products.$productId.js';
 import {useLoaderData} from 'react-router';
 import invariant from 'tiny-invariant';
 import ContextDropdown from '@/app/components/context-dropdown';
@@ -19,16 +19,16 @@ import {
 } from '@/lib/commerce-engine.server';
 import {getNavigatorContext} from '@/lib/navigator-context';
 
-export const loader = async ({params, request}: LoaderFunctionArgs) => {
+export const loader = async ({params, request, url}: Route.LoaderArgs) => {
   const productId = params.productId;
 
   invariant(productId, 'Missing productId parameter');
 
-  const catalogItem = await externalCatalogAPI.getItem(request.url);
+  const catalogItem = await externalCatalogAPI.getItem(url.href);
 
   const {currency, language} = await externalContextService.getContextInformation();
 
-  const navigatorContext = await getNavigatorContext(request);
+  const navigatorContext = await getNavigatorContext(request, url);
 
   const standaloneEngineDefinition = await getEngineDefinition(
     navigatorContext,
@@ -37,7 +37,7 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
   );
 
   const baseFetchStaticStateConfiguration = await getBaseFetchStaticStateConfiguration(
-    new URL(request.url).pathname
+    url.pathname
   );
 
   const staticState = await standaloneEngineDefinition.fetchStaticState(

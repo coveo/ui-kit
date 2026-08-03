@@ -13,7 +13,7 @@
 
 .searchbox__container {
   overflow: visible;
-  border: var(--lwc-borderWidthThin, 1px) solid var(--slds-g-color-accent-container-1, var(--lwc-brandAccessible, #0176d3));
+  border: var(--slds-g-sizing-border-1, var(--lwc-borderWidthThin, 1px)) solid var(--slds-g-color-accent-container-1, var(--lwc-brandAccessible, #0176d3));
 }
 
 .z-index-high {
@@ -35,7 +35,7 @@ textarea.searchbox__input {
 
 .searchbox__submit-button {
   border: none;
-  border-radius: 0 var(--lwc-borderRadiusMedium, 0.25rem) var(--lwc-borderRadiusMedium, 0.25rem) 0;
+  border-radius: 0 var(--slds-g-radius-border-2, var(--lwc-borderRadiusMedium, 0.25rem)) var(--slds-g-radius-border-2, var(--lwc-borderRadiusMedium, 0.25rem)) 0;
 }
 
 .searchbox__container-wrapper {
@@ -47,5 +47,5 @@ textarea.searchbox__input {
   position: absolute;
   width: 100%;
   background-color: var(--slds-g-color-surface-1, var(--lwc-colorBackgroundAlt, rgb(255, 255, 255)));
-  border-radius: 0.25rem;
+  border-radius: var(--slds-g-radius-border-2, 0.25rem);
 }
