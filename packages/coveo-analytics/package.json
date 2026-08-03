@@ -12,6 +12,7 @@
   "files": [
     "modules/",
     "dist/**/*.d.ts",
+    "dist/**/*.d.mts",
     "dist/**/*.js",
     "dist/**/*.mjs",
     "dist/**/*.cjs",
