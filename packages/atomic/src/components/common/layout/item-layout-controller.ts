@@ -1,6 +1,7 @@
 import type {LitElement, ReactiveController, ReactiveControllerHost} from 'lit';
 import type {ItemRenderingFunction} from '@/src/components/common/item-list/item-list-common';
 import type {AnyItem} from '@/src/components/common/item-list/unfolded-item';
+import {isResultSectionNode} from './item-layout-sections';
 import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
@@ -25,9 +26,12 @@ export interface ItemLayoutOptions {
   layoutConfig: () => LayoutDisplayConfig;
   itemClasses: () => string;
   /**
-   * When true, the controller only computes classes without automatically
-   * applying them to child elements during hostUpdated.
-   * Useful for components that don't need class propagation to child elements.
+   * When true, layout classes are not propagated to the host's prefixed child
+   * elements (e.g. `atomic-insight-result-*`) during `hostUpdated`.
+   *
+   * Shared item-section elements (e.g. `atomic-result-section-*`) are always
+   * classed regardless of this flag, since the sanitized template system relies
+   * on those classes being present on the section element itself to lay it out.
    */
   classesOnly?: boolean;
 }
@@ -54,9 +58,7 @@ export class ItemLayoutController implements ReactiveController {
   }
 
   hostUpdated(): void {
-    if (!this.options.classesOnly) {
-      this.applyLayoutClasses();
-    }
+    this.applyLayoutClasses();
   }
 
   /**
@@ -145,7 +147,12 @@ export class ItemLayoutController implements ReactiveController {
     const elements = root.querySelectorAll('*');
     elements.forEach((element) => {
       const tagName = element.tagName.toLowerCase();
-      if (tagName.startsWith(`${this.options.elementPrefix}-`)) {
+      const isPrefixedChild =
+        !this.options.classesOnly && tagName.startsWith(`${this.options.elementPrefix}-`);
+      // Shared item-section elements always need the layout classes on
+      // themselves so they can lay themselves out under the sanitized template
+      // system, regardless of the host's element prefix or `classesOnly` flag.
+      if (isResultSectionNode(element) || isPrefixedChild) {
         element.classList.add(...classes);
       }
     });
