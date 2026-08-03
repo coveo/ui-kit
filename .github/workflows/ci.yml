@@ -327,6 +327,19 @@ jobs:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: ./.github/actions/setup
       - run: pnpm run package-compatibility
+  catalog-consistency:
+    name: 'Verify pnpm catalog consistency'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: ./.github/actions/setup
+      - run: pnpm run catalog-consistency
   typedoc:
     name: 'Build typedoc'
     needs: affected

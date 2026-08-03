@@ -43,7 +43,7 @@
   "devDependencies": {
     "@coveo/documentation": "workspace:*",
     "@testing-library/react": "catalog:",
-    "live-server": "1.2.2",
+    "live-server": "catalog:",
     "typedoc": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"

@@ -28,12 +28,12 @@
   },
   "devDependencies": {
     "@coveo/platform-mock-api": "workspace:*",
-    "@mswjs/http-middleware": "^0.10.3",
+    "@mswjs/http-middleware": "catalog:",
     "@playwright/test": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "express": "^5.0.0",
+    "express": "catalog:",
     "msw": "catalog:",
     "typescript": "catalog:"
   }

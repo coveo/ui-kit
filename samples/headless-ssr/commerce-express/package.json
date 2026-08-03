@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@coveo/headless": "workspace:*",
-    "express": "5.2.1"
+    "express": "catalog:"
   },
   "devDependencies": {
     "@coveo/platform-mock-api": "workspace:*",
