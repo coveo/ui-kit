@@ -992,10 +992,12 @@ describe('UnifiedRuntime', () => {
       await runtime.submit('Hello');
 
       expect(config.statePort.appendSurface).toHaveBeenCalledWith('generated-id-1', content);
-      expect(mockHydrateFromCreateSurface).toHaveBeenCalledWith(engine, {
-        surfaceId: 's1',
-        dataModel: {products: []},
-      });
+      expect(mockHydrateFromCreateSurface).toHaveBeenCalledWith(
+        engine,
+        {surfaceId: 's1', dataModel: {products: []}},
+        config.generativeInterface,
+        config.cartInterface
+      );
       expect(config.statePort.setRoutedInterface).toHaveBeenCalledWith('generated-id-1', {
         useCase: 'commerceSearch',
         interface: mockIface,

@@ -14,8 +14,10 @@ export type {Controller} from './controller-types.js';
 export {BaseInterface, getInterfaceInternals} from './base-interface.js';
 export type {InterfaceInternals} from './base-interface.js';
 export type {
+  ActionIntent,
   CommerceInterface,
   EndpointThunk,
+  EndpointThunkArg,
   FacadeResolver,
   Facades,
   GenerativeInterface,

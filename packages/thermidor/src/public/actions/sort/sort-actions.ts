@@ -1,6 +1,10 @@
 import type {Supports} from '@/src/internal/utils/index.js';
 import {getInterfaceInternals} from '@/src/internal/utils/index.js';
-import {getOrCreateSortActions, getOrCreateSortSlice} from '@/src/internal/features/sort/index.js';
+import {
+  getOrCreateSortActions,
+  getOrCreateSortSlice,
+  toSetSortContext,
+} from '@/src/internal/features/sort/index.js';
 import type {SortCriterionFor} from '@/src/public/sort-types.js';
 
 export interface LoadSortActionsOptions<T extends Supports<'search'>> {
@@ -15,7 +19,12 @@ export function loadSortActions<T extends Supports<'search'>>(options: LoadSortA
   return {
     sortBy(criterion: SortCriterionFor<T> | SortCriterionFor<T>[]) {
       engine.mutate(sortActions.sortBy(criterion as any));
-      return engine.mutate(thunk({engine}));
+      return engine.mutate(
+        thunk({
+          engine,
+          actionIntent: {name: 'set_sort', context: toSetSortContext(criterion as any)},
+        })
+      );
     },
   };
 }

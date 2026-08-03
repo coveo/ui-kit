@@ -4,6 +4,7 @@ import {
   toSearchApiCompoundSort,
   toCommerceApiSort,
   fromCommerceApiSort,
+  toSetSortContext,
 } from './sort-translate.js';
 import type {SearchSortCriterion, CommerceSortCriterion} from './sort-types.js';
 
@@ -184,5 +185,62 @@ describe('round-trip', () => {
       expect(roundTripped.direction).toBe('descending');
       expect(roundTripped.displayName).toBe('Price');
     }
+  });
+});
+
+describe('toSetSortContext', () => {
+  it('converts relevance criterion', () => {
+    expect(toSetSortContext({by: 'relevance'})).toEqual({sortCriteria: 'relevance'});
+  });
+
+  it('converts single field criterion', () => {
+    expect(toSetSortContext({by: 'field', field: 'price', direction: 'ascending'})).toEqual({
+      sortCriteria: 'fields',
+      fields: [{field: 'price', direction: 'asc'}],
+    });
+  });
+
+  it('converts field criterion descending', () => {
+    expect(toSetSortContext({by: 'field', field: 'price', direction: 'descending'})).toEqual({
+      sortCriteria: 'fields',
+      fields: [{field: 'price', direction: 'desc'}],
+    });
+  });
+
+  it('converts array with multiple field criteria', () => {
+    expect(
+      toSetSortContext([
+        {by: 'field', field: 'price', direction: 'ascending'},
+        {by: 'field', field: 'name', direction: 'descending'},
+      ])
+    ).toEqual({
+      sortCriteria: 'fields',
+      fields: [
+        {field: 'price', direction: 'asc'},
+        {field: 'name', direction: 'desc'},
+      ],
+    });
+  });
+
+  it('converts array with mixed criteria - picks field sorts', () => {
+    expect(
+      toSetSortContext([
+        {by: 'field', field: 'price', direction: 'ascending'},
+        {by: 'date', direction: 'descending'},
+      ])
+    ).toEqual({
+      sortCriteria: 'fields',
+      fields: [{field: 'price', direction: 'asc'}],
+    });
+  });
+
+  it('converts date criterion', () => {
+    expect(toSetSortContext({by: 'date', direction: 'ascending'})).toEqual({
+      sortCriteria: 'date',
+    });
+  });
+
+  it('converts qre criterion', () => {
+    expect(toSetSortContext({by: 'qre'})).toEqual({sortCriteria: 'qre'});
   });
 });

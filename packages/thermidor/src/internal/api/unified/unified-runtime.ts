@@ -1,34 +1,24 @@
 import {readEventStream} from '@/src/internal/api/protocol/stream.js';
 import {parseSSEEvent} from '@/src/internal/api/protocol/sse-parser.js';
 import {createUnifiedEndpointClient} from './unified-endpoint-client.js';
-import {createUnifiedEndpointRequestSelector} from './unified-request-selector.js';
 import {getOrCreateConfigurationSelectors} from '@/src/internal/features/configuration/index.js';
 import {generateId} from '@/src/internal/utils/index.js';
-import type {NormalizedStreamEvent, RawSSEEvent} from '@/src/internal/api/protocol/stream-types.js';
+import type {RawSSEEvent} from '@/src/internal/api/protocol/stream-types.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import type {
   GenerativeStatePort,
   HydrateSubInterface,
 } from '@/src/internal/api/generative/index.js';
-import type {AgUiPayloadRequest} from './unified-endpoint-types.js';
-import {
-  hydrateFromCreateSurface,
-  applyDataModelUpdate,
-  extractA2uiOperations,
-  type A2uiOperation,
-} from './unified-surface-hydration.js';
+import {dispatchStreamEvent} from './unified-event-dispatcher.js';
+import {createConversationRequestBuilder} from './unified-conversation-request-builder.js';
+import {createSurfaceProcessor} from './unified-surface-processor.js';
 
 export interface UnifiedRuntimeConfig {
   statePort: GenerativeStatePort;
   hydrateSubInterface: HydrateSubInterface;
   generativeInterface: InterfaceHandle;
   cartInterface: InterfaceHandle;
-}
-
-interface DispatchResult {
-  turnId: string;
-  isTerminal: boolean;
 }
 
 function isAbortError(error: unknown): boolean {
@@ -57,16 +47,22 @@ export class UnifiedRuntime {
   private agentResponseInitialized = new Set<string>();
   private currentPrompt: string | undefined;
   private activeAbortController: AbortController | null = null;
-  private buildRequest: ReturnType<typeof createUnifiedEndpointRequestSelector>;
-  private surfaceMap = new Map<string, InterfaceHandle>();
+  private buildConversationRequest: ReturnType<typeof createConversationRequestBuilder>;
+  private surfaceProcessor: ReturnType<typeof createSurfaceProcessor>;
 
   private constructor(engine: FullEngine, _interfaceId: string, config: UnifiedRuntimeConfig) {
     this.engine = engine;
     this.statePort = config.statePort;
-    this.buildRequest = createUnifiedEndpointRequestSelector(
+    this.buildConversationRequest = createConversationRequestBuilder(
       config.generativeInterface,
       config.cartInterface
     );
+    this.surfaceProcessor = createSurfaceProcessor({
+      engine,
+      statePort: config.statePort,
+      generativeInterface: config.generativeInterface,
+      cartInterface: config.cartInterface,
+    });
   }
 
   static getInstance(
@@ -124,46 +120,8 @@ export class UnifiedRuntime {
     this.activeAbortController = abortController;
 
     try {
-      const {cart, conversationSessionId, conversationToken, ...fromState} = this.engine.read(
-        this.buildRequest
-      );
-      const navigatorContext = this.engine.getNavigatorContextProvider()?.();
+      const request = this.buildConversationRequest(this.engine, this.currentPrompt ?? '');
       const clientConfig = this.engine.read(this.configSelectors.getEndpointClientConfiguration);
-
-      const prompt = this.currentPrompt ?? '';
-
-      const request: AgUiPayloadRequest = {
-        session: {
-          threadId: conversationSessionId || generateId(),
-          clientMessageId: generateId(),
-          continuationTokens: {},
-        },
-        messages: [{id: generateId(), role: 'user', content: prompt}],
-        requestContext: {},
-        forwardedProps: {},
-        agentInput: {
-          trackingId: fromState.trackingId,
-          language: fromState.language,
-          country: fromState.country,
-          currency: fromState.currency,
-          clientId: navigatorContext?.clientId ?? undefined,
-          message: prompt,
-          action: null,
-          conversationSessionId,
-          conversationToken,
-          context: {
-            view: {
-              url: navigatorContext?.location ?? null,
-              referrer: navigatorContext?.referrer ?? null,
-            },
-            user: {userAgent: navigatorContext?.userAgent ?? null},
-            cart: cart ?? [],
-            source: [],
-            custom: {},
-          },
-          pinnedProducts: [],
-        },
-      };
 
       const client = createUnifiedEndpointClient();
       const result = await client.call(request, clientConfig, {signal: abortController.signal});
@@ -195,12 +153,20 @@ export class UnifiedRuntime {
     let activeTurnId = turnId;
     let terminalEventReceived = false;
 
+    const deps = {
+      statePort: this.statePort,
+      ensureAgentResponse: (tid: string) => this.ensureAgentResponse(tid),
+      onA2uiSurface: (tid: string, content: Record<string, unknown>) => {
+        this.surfaceProcessor.processSnapshot(tid, content);
+      },
+    };
+
     await readEventStream({
       stream,
       signal,
       onEvent: (rawEvent: RawSSEEvent) => {
         const event = parseSSEEvent(rawEvent);
-        const result = this.dispatchEvent(activeTurnId, event);
+        const result = dispatchStreamEvent(activeTurnId, event, deps);
         activeTurnId = result.turnId;
         if (result.isTerminal) {
           terminalEventReceived = true;
@@ -221,171 +187,6 @@ export class UnifiedRuntime {
         }
       },
     });
-  }
-
-  private dispatchEvent(turnId: string, event: NormalizedStreamEvent): DispatchResult {
-    switch (event.type) {
-      case 'turn_started': {
-        if (event.conversationSessionId || event.conversationToken) {
-          this.statePort.setConversationSession(
-            event.conversationSessionId,
-            event.conversationToken
-          );
-        }
-        return {turnId, isTerminal: false};
-      }
-
-      case 'TEXT_MESSAGE_START': {
-        this.ensureAgentResponse(turnId);
-        this.statePort.startMessage(turnId, event.role ?? 'assistant');
-        return {turnId, isTerminal: false};
-      }
-
-      case 'TEXT_MESSAGE_CONTENT': {
-        this.ensureAgentResponse(turnId);
-        this.statePort.appendMessageDelta(turnId, event.delta);
-        return {turnId, isTerminal: false};
-      }
-
-      case 'TEXT_MESSAGE_END': {
-        return {turnId, isTerminal: false};
-      }
-
-      case 'REASONING_MESSAGE_START': {
-        this.ensureAgentResponse(turnId);
-        this.statePort.startReasoning(turnId);
-        return {turnId, isTerminal: false};
-      }
-
-      case 'REASONING_MESSAGE_CONTENT': {
-        this.ensureAgentResponse(turnId);
-        this.statePort.appendReasoningDelta(turnId, event.delta);
-        return {turnId, isTerminal: false};
-      }
-
-      case 'REASONING_MESSAGE_END': {
-        this.statePort.endReasoning(turnId);
-        return {turnId, isTerminal: false};
-      }
-
-      case 'TOOL_CALL_START': {
-        this.ensureAgentResponse(turnId);
-        this.statePort.startToolCall(turnId, event.toolCallId, event.toolCallName);
-        return {turnId, isTerminal: false};
-      }
-
-      case 'TOOL_CALL_ARGS': {
-        this.statePort.appendToolCallArgs(turnId, event.toolCallId, event.delta);
-        return {turnId, isTerminal: false};
-      }
-
-      case 'TOOL_CALL_END': {
-        return {turnId, isTerminal: false};
-      }
-
-      case 'TOOL_CALL_RESULT': {
-        this.statePort.completeToolCall(turnId, event.toolCallId, event.content);
-        return {turnId, isTerminal: false};
-      }
-
-      case 'ACTIVITY_SNAPSHOT': {
-        this.ensureAgentResponse(turnId);
-        const content = event.content as Record<string, unknown>;
-        this.statePort.appendSurface(turnId, content);
-
-        if (event.activityType === 'a2ui-surface') {
-          const operations = extractA2uiOperations(content);
-          if (operations.length > 0) {
-            this.processA2uiOperations(turnId, operations);
-          }
-        }
-
-        return {turnId, isTerminal: false};
-      }
-
-      case 'RUN_STARTED':
-      case 'RUN_FINISHED':
-      case 'STATE_SNAPSHOT':
-      case 'CUSTOM': {
-        return {turnId, isTerminal: false};
-      }
-
-      case 'turn_complete': {
-        if (event.conversationSessionId || event.conversationToken) {
-          this.statePort.setConversationSession(
-            event.conversationSessionId,
-            event.conversationToken
-          );
-        }
-        this.statePort.completeTurn(turnId);
-        return {turnId, isTerminal: true};
-      }
-
-      case 'RUN_ERROR': {
-        this.statePort.failTurn(turnId, event.message || 'An error occurred during the turn.');
-        return {turnId, isTerminal: true};
-      }
-
-      default:
-        return this.handleUnknownEvent(turnId, event);
-    }
-  }
-
-  private handleUnknownEvent(turnId: string, event: NormalizedStreamEvent): DispatchResult {
-    const rawEvent = event as unknown as Record<string, unknown>;
-    if (rawEvent.type === 'error') {
-      if (
-        (rawEvent as {conversationSessionId?: string}).conversationSessionId ||
-        (rawEvent as {conversationToken?: string}).conversationToken
-      ) {
-        this.statePort.setConversationSession(
-          (rawEvent as {conversationSessionId?: string}).conversationSessionId,
-          (rawEvent as {conversationToken?: string}).conversationToken
-        );
-      }
-      const errorObj = rawEvent.error;
-      const message =
-        typeof errorObj === 'object' && errorObj !== null && 'message' in errorObj
-          ? String((errorObj as {message: unknown}).message)
-          : 'A gateway error occurred.';
-      this.statePort.failTurn(turnId, message);
-      return {turnId, isTerminal: true};
-    }
-
-    return {turnId, isTerminal: false};
-  }
-
-  private processA2uiOperations(turnId: string, operations: A2uiOperation[]): void {
-    for (const op of operations) {
-      if ('createSurface' in op) {
-        const existingIface = this.surfaceMap.get(op.createSurface.surfaceId);
-        if (existingIface) {
-          existingIface.dispose();
-        }
-
-        const result = hydrateFromCreateSurface(this.engine, op.createSurface);
-        if (result) {
-          this.surfaceMap.set(result.surfaceId, result.interface);
-          this.statePort.setRoutedInterface(turnId, {
-            useCase: result.useCase,
-            interface: result.interface,
-            snapshot: result.snapshot,
-            query: result.query,
-            surfaceId: result.surfaceId,
-          });
-        }
-      } else if ('updateDataModel' in op) {
-        const iface = this.surfaceMap.get(op.updateDataModel.surfaceId);
-        if (iface) {
-          applyDataModelUpdate(
-            this.engine,
-            iface,
-            op.updateDataModel.path,
-            op.updateDataModel.value
-          );
-        }
-      }
-    }
   }
 
   private ensureAgentResponse(turnId: string): void {

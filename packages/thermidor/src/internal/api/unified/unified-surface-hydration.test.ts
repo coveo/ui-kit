@@ -1,6 +1,7 @@
-import {describe, it, expect} from 'vitest';
+import {describe, it, expect, vi} from 'vitest';
 import {Engine, getFullEngine} from '@/src/internal/engine/index.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
+import {createNoopThunk} from '@/src/internal/utils/index.js';
 import {
   hydrateFromCreateSurface,
   applyDataModelUpdate,
@@ -17,10 +18,19 @@ import {getOrCreateTriggersSlice} from '@/src/internal/features/triggers/index.j
 import {getOrCreateQueryCorrectionSlice} from '@/src/internal/features/query-correction/index.js';
 import {
   createSelectSlice,
-  getHandleInternals,
+  getInterfaceInternals,
   type InterfaceHandle,
 } from '@/src/internal/utils/index.js';
 import type {TriggersState} from '@/src/internal/features/triggers/triggers-slice.js';
+
+const mockSearchThunk = createNoopThunk('unified-test-search');
+
+vi.mock('./unified-search-facade.js', () => ({
+  createUnifiedSearchFacadeResolver: () => () => mockSearchThunk,
+}));
+
+const mockGenerativeInterface: InterfaceHandle = {disposed: false, dispose: vi.fn()};
+const mockCartInterface: InterfaceHandle = {disposed: false, dispose: vi.fn()};
 
 function createTestEngine(): FullEngine {
   const engine = new Engine();
@@ -51,10 +61,15 @@ describe('unified-surface-hydration', () => {
     it('returns null when dataModel is undefined', () => {
       const fullEngine = createTestEngine();
 
-      const result = hydrateFromCreateSurface(fullEngine, {
-        surfaceId: 'test',
-        dataModel: undefined,
-      });
+      const result = hydrateFromCreateSurface(
+        fullEngine,
+        {
+          surfaceId: 'test',
+          dataModel: undefined,
+        },
+        mockGenerativeInterface,
+        mockCartInterface
+      );
 
       expect(result).toBeNull();
     });
@@ -62,9 +77,14 @@ describe('unified-surface-hydration', () => {
     it('returns null when dataModel key is absent', () => {
       const fullEngine = createTestEngine();
 
-      const result = hydrateFromCreateSurface(fullEngine, {
-        surfaceId: 'test',
-      });
+      const result = hydrateFromCreateSurface(
+        fullEngine,
+        {
+          surfaceId: 'test',
+        },
+        mockGenerativeInterface,
+        mockCartInterface
+      );
 
       expect(result).toBeNull();
     });
@@ -72,10 +92,15 @@ describe('unified-surface-hydration', () => {
     it('returns non-null result with correct state for empty arrays', () => {
       const fullEngine = createTestEngine();
 
-      const result = hydrateFromCreateSurface(fullEngine, {
-        surfaceId: 'test',
-        dataModel: validDataModel,
-      });
+      const result = hydrateFromCreateSurface(
+        fullEngine,
+        {
+          surfaceId: 'test',
+          dataModel: validDataModel,
+        },
+        mockGenerativeInterface,
+        mockCartInterface
+      );
 
       expect(result).not.toBeNull();
       expect(result!.surfaceId).toBe('test');
@@ -96,7 +121,7 @@ describe('unified-surface-hydration', () => {
       expect(fullEngine.read(paginationSelectors.getTotalCount)).toBe(0);
       expect(fullEngine.read(paginationSelectors.getFirstResult)).toBe(0);
       expect(fullEngine.read(paginationSelectors.getPageSize)).toBe(10);
-      expect(fullEngine.read(sortSelectors.getAppliedSort)).toEqual({sortCriteria: 'relevance'});
+      expect(fullEngine.read(sortSelectors.getAppliedSort)).toEqual({by: 'relevance'});
       expect(fullEngine.read(sortSelectors.getAvailableSorts)).toEqual([]);
     });
   });
@@ -105,10 +130,15 @@ describe('unified-surface-hydration', () => {
     it('silently ignores unknown path (e.g., /responseId)', () => {
       const fullEngine = createTestEngine();
 
-      const result = hydrateFromCreateSurface(fullEngine, {
-        surfaceId: 'test',
-        dataModel: validDataModel,
-      });
+      const result = hydrateFromCreateSurface(
+        fullEngine,
+        {
+          surfaceId: 'test',
+          dataModel: validDataModel,
+        },
+        mockGenerativeInterface,
+        mockCartInterface
+      );
 
       const iface = result!.interface;
       adoptAllSlices(fullEngine, iface);
@@ -125,10 +155,15 @@ describe('unified-surface-hydration', () => {
     it('does not throw for unknown surfaceId (caller handles lookup)', () => {
       const fullEngine = createTestEngine();
 
-      const result = hydrateFromCreateSurface(fullEngine, {
-        surfaceId: 'test',
-        dataModel: validDataModel,
-      });
+      const result = hydrateFromCreateSurface(
+        fullEngine,
+        {
+          surfaceId: 'test',
+          dataModel: validDataModel,
+        },
+        mockGenerativeInterface,
+        mockCartInterface
+      );
 
       const iface = result!.interface;
 
@@ -140,10 +175,15 @@ describe('unified-surface-hydration', () => {
     it('runs full response handler when path is /', () => {
       const fullEngine = createTestEngine();
 
-      const result = hydrateFromCreateSurface(fullEngine, {
-        surfaceId: 'test',
-        dataModel: validDataModel,
-      });
+      const result = hydrateFromCreateSurface(
+        fullEngine,
+        {
+          surfaceId: 'test',
+          dataModel: validDataModel,
+        },
+        mockGenerativeInterface,
+        mockCartInterface
+      );
 
       const iface = result!.interface;
       adoptAllSlices(fullEngine, iface);
@@ -155,7 +195,7 @@ describe('unified-surface-hydration', () => {
         facets: [],
         pagination: {page: 1, perPage: 5, totalEntries: 50, totalPages: 10},
         sort: {
-          appliedSort: {sortCriteria: 'price asc'},
+          appliedSort: {sortCriteria: 'fields', fields: [{field: 'price', direction: 'asc'}]},
           availableSorts: [{sortCriteria: 'relevance'}],
         },
         triggers: [{type: 'notify', content: 'hello'}],
@@ -166,17 +206,20 @@ describe('unified-surface-hydration', () => {
       const productSelectors = getOrCreateProductListSelectors(iface);
       const paginationSelectors = getOrCreatePaginationSelectors(iface);
       const sortSelectors = getOrCreateSortSelectors(iface);
-      const {stateId} = getHandleInternals(iface);
+      const {stateId} = getInterfaceInternals(iface);
 
       expect(fullEngine.read(productSelectors.getProducts)).toHaveLength(1);
       expect(fullEngine.read(productSelectors.getProducts)[0].permanentid).toBe('p1');
       expect(fullEngine.read(paginationSelectors.getTotalCount)).toBe(50);
       expect(fullEngine.read(paginationSelectors.getFirstResult)).toBe(5);
       expect(fullEngine.read(paginationSelectors.getPageSize)).toBe(5);
-      expect(fullEngine.read(sortSelectors.getAppliedSort)).toEqual({sortCriteria: 'price asc'});
-      expect(fullEngine.read(sortSelectors.getAvailableSorts)).toEqual([
-        {sortCriteria: 'relevance'},
-      ]);
+      expect(fullEngine.read(sortSelectors.getAppliedSort)).toEqual({
+        by: 'field',
+        field: 'price',
+        direction: 'ascending',
+        displayName: undefined,
+      });
+      expect(fullEngine.read(sortSelectors.getAvailableSorts)).toEqual([{by: 'relevance'}]);
 
       const triggersSelector = createSelectSlice<TriggersState>(stateId, 'triggers', {
         triggers: [],
@@ -205,22 +248,27 @@ describe('unified-surface-hydration', () => {
     });
   });
 
-  describe('noop facade resolver', () => {
+  describe('search facade resolver', () => {
     it('search facade resolver produces a thunk that does nothing', () => {
       const fullEngine = createTestEngine();
 
-      const result = hydrateFromCreateSurface(fullEngine, {
-        surfaceId: 'test',
-        dataModel: validDataModel,
-      });
+      const result = hydrateFromCreateSurface(
+        fullEngine,
+        {
+          surfaceId: 'test',
+          dataModel: validDataModel,
+        },
+        mockGenerativeInterface,
+        mockCartInterface
+      );
 
       expect(result).not.toBeNull();
       const iface = result!.interface;
 
-      const {resolveFacades} = getHandleInternals(iface);
-      const thunks = resolveFacades('search');
+      const {resolveFacade} = getInterfaceInternals(iface);
+      const thunk = resolveFacade('search');
 
-      expect(thunks).toHaveLength(1);
+      expect(thunk).toBeDefined();
 
       adoptAllSlices(fullEngine, iface);
 
@@ -228,7 +276,7 @@ describe('unified-surface-hydration', () => {
       const productsBefore = fullEngine.read(productSelectors.getProducts);
 
       expect(() => {
-        fullEngine.mutate(thunks[0]({engine: fullEngine}));
+        fullEngine.mutate(thunk({engine: fullEngine}));
       }).not.toThrow();
 
       const productsAfter = fullEngine.read(productSelectors.getProducts);

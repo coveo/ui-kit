@@ -1,6 +1,6 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
-import type {FullEngine} from '@/src/internal/engine/index.js';
+import type {EndpointThunkArg} from '@/src/internal/utils/interface-types.js';
 import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import {createSearchEndpointRequestSelector} from './search-request-selector.js';
 import {createSearchEndpointResponseHandler} from './search-response-handler.js';
@@ -15,7 +15,7 @@ export function createSearchEndpointThunk(iface: InterfaceHandle) {
   const handleResponse = createSearchEndpointResponseHandler(iface);
   const configSelectors = getOrCreateConfigurationSelectors();
 
-  const thunk = createAsyncThunk<void, {engine: FullEngine}>(
+  const thunk = createAsyncThunk<void, EndpointThunkArg>(
     `${stateId}/searchEndpoint/execute`,
     async ({engine}) => {
       const request = engine.read(buildRequest);

@@ -53,3 +53,9 @@ export type {
   UpdateDataModelPayload,
   UnifiedHydrationResult,
 } from './unified-surface-hydration.js';
+export {createUnifiedSearchFacadeResolver} from './unified-search-facade.js';
+export {extractUpdateDataModelOperationsFromStream} from './unified-stream-extractor.js';
+export type {ExtractedUpdate} from './unified-stream-extractor.js';
+export {createUnifiedSearchRequestBuilder} from './unified-search-request-builder.js';
+export {createUnifiedSearchResponseHandler} from './unified-search-response-handler.js';
+export {createUnifiedSearchEndpointThunk} from './unified-search-thunk.js';

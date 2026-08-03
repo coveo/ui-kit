@@ -1,11 +1,8 @@
 import type {FullEngine} from '@/src/internal/engine/index.js';
-import type {
-  InterfaceHandle,
-  CommerceInterface,
-  FacadeResolverFactory,
-} from '@/src/internal/utils/index.js';
+import type {InterfaceHandle, CommerceInterface} from '@/src/internal/utils/index.js';
 import {createNoopThunk, generateId} from '@/src/internal/utils/index.js';
 import {CommerceInterfaceImpl} from '@/src/internal/interfaces/commerce.js';
+import {createUnifiedSearchFacadeResolver} from './unified-search-facade.js';
 import {
   createCommerceSearchEndpointResponseHandler,
   type CommerceSearchResponse,
@@ -51,18 +48,27 @@ export interface UnifiedHydrationResult {
   query: undefined;
 }
 
-const noopThunk = createNoopThunk('unified-surface-search');
-const noopSearchResolver: FacadeResolverFactory = (_engine) => (_scope) => noopThunk;
+const noopSuggestionsThunk = createNoopThunk('unified-surface-suggestions');
 
 export function hydrateFromCreateSurface(
   engine: FullEngine,
-  payload: CreateSurfacePayload
+  payload: CreateSurfacePayload,
+  generativeInterface: InterfaceHandle,
+  cartInterface: InterfaceHandle
 ): UnifiedHydrationResult | null {
   if (!payload.dataModel) {
     return null;
   }
 
-  const iface = new CommerceInterfaceImpl(engine, generateId(), {search: noopSearchResolver});
+  const searchResolver = createUnifiedSearchFacadeResolver(
+    generativeInterface,
+    cartInterface,
+    payload.surfaceId
+  );
+  const iface = new CommerceInterfaceImpl(engine, generateId(), {
+    search: searchResolver,
+    suggestions: (_iface) => noopSuggestionsThunk,
+  });
   const handleResponse = createCommerceSearchEndpointResponseHandler(iface);
   handleResponse(engine, payload.dataModel as unknown as CommerceSearchResponse);
 

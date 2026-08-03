@@ -1,12 +1,47 @@
 import type {AsyncThunk} from '@reduxjs/toolkit';
 import type {FullEngine} from '@/src/internal/engine/index.js';
+import type {
+  ExecuteSearchContext,
+  ToggleFacetContext,
+  ToggleExcludeFacetContext,
+  DeselectAllFacetsContext,
+  ToggleNumericFacetContext,
+  SetNumericFacetRangeContext,
+  SelectPageContext,
+  SetPageSizeContext,
+  SetSortContext,
+  FetchMoreContext,
+  RestoreStateContext,
+  OverrideCorrectionContext,
+  SelectProductsContext,
+} from '@/src/internal/api/unified/unified-endpoint-types.js';
+
+export type ActionIntent =
+  | {name: 'execute_search'; context: ExecuteSearchContext}
+  | {name: 'toggle_facet'; context: ToggleFacetContext}
+  | {name: 'toggle_exclude_facet'; context: ToggleExcludeFacetContext}
+  | {name: 'deselect_all_facets'; context: DeselectAllFacetsContext}
+  | {name: 'toggle_numeric_facet'; context: ToggleNumericFacetContext}
+  | {name: 'set_numeric_facet_range'; context: SetNumericFacetRangeContext}
+  | {name: 'select_page'; context: SelectPageContext}
+  | {name: 'set_page_size'; context: SetPageSizeContext}
+  | {name: 'set_sort'; context: SetSortContext}
+  | {name: 'fetch_more'; context: FetchMoreContext}
+  | {name: 'restore_state'; context: RestoreStateContext}
+  | {name: 'override_correction'; context: OverrideCorrectionContext}
+  | {name: 'select_products'; context: SelectProductsContext};
+
+export interface EndpointThunkArg {
+  engine: FullEngine;
+  actionIntent?: ActionIntent;
+}
 
 export interface InterfaceHandle {
   readonly disposed: boolean;
   dispose(): void;
 }
 
-export type EndpointThunk = AsyncThunk<void, {engine: FullEngine}, {}>;
+export type EndpointThunk = AsyncThunk<void, EndpointThunkArg, {}>;
 
 export type FacadeResolver = (iface: InterfaceHandle) => EndpointThunk;
 
