@@ -15,7 +15,7 @@ vi.mock('./commerce-search-request-selector.js', () => ({
       query: '',
       page: 0,
       perPage: 10,
-      sort: [],
+      sort: undefined,
     },
 }));
 
@@ -86,7 +86,7 @@ describe('createCommerceSearchEndpointThunk', () => {
         query: 'shoes',
         page: 0,
         perPage: 20,
-        sort: [],
+        sort: undefined,
       },
     });
 
@@ -130,7 +130,7 @@ describe('createCommerceSearchEndpointThunk', () => {
         query: 'shoes',
         page: 0,
         perPage: 10,
-        sort: [{sortCriteria: 'price ascending'}],
+        sort: {sortCriteria: 'fields', fields: [{field: 'price', direction: 'asc'}]},
       },
     });
 
@@ -145,13 +145,13 @@ describe('createCommerceSearchEndpointThunk', () => {
 
     expect(mockCall).toHaveBeenCalledWith(
       expect.objectContaining({
-        sort: [{sortCriteria: 'price ascending'}],
+        sort: {sortCriteria: 'fields', fields: [{field: 'price', direction: 'asc'}]},
       }),
       expect.any(Object)
     );
   });
 
-  it('omits sort when sort array is empty', async () => {
+  it('omits sort when sort is undefined', async () => {
     mockCall.mockResolvedValue({success: true, data: {}});
 
     const engine = createMockEngine({
@@ -163,7 +163,7 @@ describe('createCommerceSearchEndpointThunk', () => {
         query: 'shoes',
         page: 0,
         perPage: 10,
-        sort: [],
+        sort: undefined,
       },
     });
 
@@ -197,7 +197,7 @@ describe('createCommerceSearchEndpointThunk', () => {
         query: 'fail',
         page: 0,
         perPage: 10,
-        sort: [],
+        sort: undefined,
       },
     });
 
@@ -227,7 +227,7 @@ describe('createCommerceSearchEndpointThunk', () => {
             query: 'test',
             page: 0,
             perPage: 10,
-            sort: [],
+            sort: undefined,
           },
         }),
       mutate: vi.fn(),

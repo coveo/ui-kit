@@ -40,7 +40,7 @@ export function createConverseSearchEndpointThunk(
         message: request.query,
         page: request.page,
         perPage: request.perPage,
-        ...(request.sort.length > 0 ? {sort: request.sort} : {}),
+        ...(request.sort ? {sort: request.sort} : {}),
         ...(request.facets.length > 0 ? {facets: request.facets} : {}),
         clientId: navigatorContext?.clientId,
         context: {
