@@ -69,6 +69,7 @@ export function hydrateFromCreateSurface(
     search: searchResolver,
     suggestions: (_iface) => noopSuggestionsThunk,
   });
+  engine.storeHydrationSnapshot(payload.dataModel, iface);
   const handleResponse = createCommerceSearchEndpointResponseHandler(iface);
   handleResponse(engine, payload.dataModel as unknown as CommerceSearchResponse);
 
