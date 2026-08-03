@@ -42,3 +42,14 @@ export type {
 export {createUnifiedEndpointRequestSelector} from './unified-request-selector.js';
 export {UnifiedRuntime} from './unified-runtime.js';
 export type {UnifiedRuntimeConfig} from './unified-runtime.js';
+export {
+  hydrateFromCreateSurface,
+  applyDataModelUpdate,
+  extractA2uiOperations,
+} from './unified-surface-hydration.js';
+export type {
+  A2uiOperation,
+  CreateSurfacePayload,
+  UpdateDataModelPayload,
+  UnifiedHydrationResult,
+} from './unified-surface-hydration.js';

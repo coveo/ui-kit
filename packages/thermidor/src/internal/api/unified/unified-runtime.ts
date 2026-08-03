@@ -12,6 +12,12 @@ import type {
   HydrateSubInterface,
 } from '@/src/internal/api/generative/index.js';
 import type {AgUiPayloadRequest} from './unified-endpoint-types.js';
+import {
+  hydrateFromCreateSurface,
+  applyDataModelUpdate,
+  extractA2uiOperations,
+  type A2uiOperation,
+} from './unified-surface-hydration.js';
 
 export interface UnifiedRuntimeConfig {
   statePort: GenerativeStatePort;
@@ -52,6 +58,7 @@ export class UnifiedRuntime {
   private currentPrompt: string | undefined;
   private activeAbortController: AbortController | null = null;
   private buildRequest: ReturnType<typeof createUnifiedEndpointRequestSelector>;
+  private surfaceMap = new Map<string, InterfaceHandle>();
 
   private constructor(engine: FullEngine, _interfaceId: string, config: UnifiedRuntimeConfig) {
     this.engine = engine;
@@ -283,7 +290,16 @@ export class UnifiedRuntime {
 
       case 'ACTIVITY_SNAPSHOT': {
         this.ensureAgentResponse(turnId);
-        this.statePort.appendSurface(turnId, event.content as Record<string, unknown>);
+        const content = event.content as Record<string, unknown>;
+        this.statePort.appendSurface(turnId, content);
+
+        if (event.activityType === 'a2ui-surface') {
+          const operations = extractA2uiOperations(content);
+          if (operations.length > 0) {
+            this.processA2uiOperations(turnId, operations);
+          }
+        }
+
         return {turnId, isTerminal: false};
       }
 
@@ -337,6 +353,39 @@ export class UnifiedRuntime {
     }
 
     return {turnId, isTerminal: false};
+  }
+
+  private processA2uiOperations(turnId: string, operations: A2uiOperation[]): void {
+    for (const op of operations) {
+      if ('createSurface' in op) {
+        const existingIface = this.surfaceMap.get(op.createSurface.surfaceId);
+        if (existingIface) {
+          existingIface.dispose();
+        }
+
+        const result = hydrateFromCreateSurface(this.engine, op.createSurface);
+        if (result) {
+          this.surfaceMap.set(result.surfaceId, result.interface);
+          this.statePort.setRoutedInterface(turnId, {
+            useCase: result.useCase,
+            interface: result.interface,
+            snapshot: result.snapshot,
+            query: result.query,
+            surfaceId: result.surfaceId,
+          });
+        }
+      } else if ('updateDataModel' in op) {
+        const iface = this.surfaceMap.get(op.updateDataModel.surfaceId);
+        if (iface) {
+          applyDataModelUpdate(
+            this.engine,
+            iface,
+            op.updateDataModel.path,
+            op.updateDataModel.value
+          );
+        }
+      }
+    }
   }
 
   private ensureAgentResponse(turnId: string): void {

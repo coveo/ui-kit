@@ -41,6 +41,7 @@ export interface HydrationResult<K extends RoutedUseCase = RoutedUseCase> {
   interface: UseCaseInterfaceMap[K];
   snapshot: Record<string, unknown>;
   query: string | undefined;
+  surfaceId?: string;
 }
 
 export type HydrateSubInterface = (
