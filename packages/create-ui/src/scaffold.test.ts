@@ -118,3 +118,14 @@ describe('unavailableTemplateMessage', () => {
     );
   });
 });
+
+describe('unavailableTemplateMessage', () => {
+  it('includes the version when provided and omits it otherwise', () => {
+    expect(unavailableTemplateMessage('headless-search-react', '3.2.1')).toBe(
+      'Template "headless-search-react" version "3.2.1" is not available.'
+    );
+    expect(unavailableTemplateMessage('headless-search-react')).toBe(
+      'Template "headless-search-react" is not available.'
+    );
+  });
+});

@@ -43,7 +43,7 @@ import {
 import HistoryStore from '../history';
 import {isApiKey} from './token';
 import {isReactNative, ReactNativeRuntimeWarning} from '../react-native/react-native-utils';
-import {doNotTrack} from '../donottrack';
+import {shouldDisableAnalyticsForPrivacy} from '../donottrack';
 import {isObject, truncateUrl} from './utils';
 
 export const Version = 'v15';
@@ -63,6 +63,12 @@ export interface ClientOptions {
   beforeSendHooks: AnalyticsClientSendEventHook[];
   afterSendHooks: AnalyticsClientSendEventHook[];
   preprocessRequest?: PreprocessAnalyticsRequest;
+  /**
+   * When `true`, browser privacy signals (Do Not Track and Global Privacy Control)
+   * are not honored and analytics is sent regardless of them. Defaults to `false`,
+   * which preserves the privacy-friendly behavior of honoring these signals.
+   */
+  disableBrowserPrivacySignals?: boolean;
 }
 
 export type AnalyticsClientSendEventHook = <TResult>(
@@ -205,7 +211,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
       preprocessRequest: this.options.preprocessRequest,
     };
 
-    if (doNotTrack()) {
+    if (shouldDisableAnalyticsForPrivacy(this.options.disableBrowserPrivacySignals)) {
       this.runtime = new NoopRuntime();
     } else {
       this.runtime = this.options.runtimeEnvironment || this.initRuntime(clientsOptions);
@@ -286,7 +292,10 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     }
   }
 
-  async getParameters(eventType: EventType | string, ...payload: VariableArgumentsPayload) {
+  async getParameters(
+    eventType: EventType | string,
+    ...payload: VariableArgumentsPayload
+  ): Promise<VariableArgumentsPayload> {
     return await this.resolveParameters(eventType, ...payload);
   }
 
@@ -315,7 +324,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
   }
 
   private extractClientIdFromLink(urlString: string): string | null {
-    if (doNotTrack()) {
+    if (shouldDisableAnalyticsForPrivacy(this.options.disableBrowserPrivacySignals)) {
       return null;
     }
     try {
@@ -338,7 +347,10 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     return null;
   }
 
-  async resolveParameters(eventType: EventType | string, ...payload: VariableArgumentsPayload) {
+  async resolveParameters(
+    eventType: EventType | string,
+    ...payload: VariableArgumentsPayload
+  ): Promise<VariableArgumentsPayload> {
     const {
       variableLengthArgumentsNames = [],
       addVisitorIdParameter = false,

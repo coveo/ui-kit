@@ -1,13 +1,10 @@
-import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import {afterEach, describe, expect, it, vi} from 'vitest';
 import {hasKeyboard, isIOS, isMacOS} from './device-utils';
 
 describe('device-utils', () => {
-  beforeEach(() => {
-    // No setup needed - vi.restoreAllMocks() will handle cleanup
-  });
-
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.unstubAllGlobals();
   });
 
   describe('#isIOS', () => {

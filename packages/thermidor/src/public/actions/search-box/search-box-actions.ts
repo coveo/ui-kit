@@ -1,5 +1,5 @@
 import type {Supports} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import {getOrCreateSearchBoxActions} from '@/src/internal/features/search-box/index.js';
 import {getOrCreateSearchBoxSlice} from '@/src/internal/features/search-box/index.js';
 
@@ -13,11 +13,11 @@ export interface LoadSearchBoxActionsOptions {
  * @returns The search box actions: `setQuery` and `submit`.
  */
 export function loadSearchBoxActions(options: LoadSearchBoxActionsOptions) {
-  const {engine, resolveFacades} = getHandleInternals(options.interface);
+  const {engine, resolveFacade} = getInterfaceInternals(options.interface);
 
   engine.adoptSlice(getOrCreateSearchBoxSlice(options.interface));
 
-  const thunks = resolveFacades('search');
+  const thunk = resolveFacade('search');
 
   const actions = getOrCreateSearchBoxActions(options.interface);
 
@@ -25,8 +25,8 @@ export function loadSearchBoxActions(options: LoadSearchBoxActionsOptions) {
     setQuery(payload: {query: string}) {
       engine.mutate(actions.setQuery(payload.query));
     },
-    submit() {
-      return Promise.all(thunks.map((thunk) => engine.mutate(thunk({engine}))));
+    async submit() {
+      await engine.mutate(thunk({engine}));
     },
   };
 }

@@ -267,6 +267,27 @@ select:focus-visible {
   color: var(--accent-hover);
 }
 
+/* Field suggestions (a column of the search box dropdown) */
+.field-suggestion {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.field-suggestion span:first-of-type {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.field-suggestion__count {
+  flex: none;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
 /* Category facet drill-down */
 .facet__breadcrumb {
   list-style: none;

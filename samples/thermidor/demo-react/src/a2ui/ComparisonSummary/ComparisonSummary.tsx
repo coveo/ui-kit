@@ -1,6 +1,5 @@
 import {useMemo} from 'react';
-import {marked} from 'marked';
-import DOMPurify from 'dompurify';
+import {renderMarkdown} from '../../utils.js';
 import styles from './ComparisonSummary.module.css';
 import type {ParsedSurface} from '../types.js';
 
@@ -13,12 +12,7 @@ export function A2UIComparisonSummary({surface}: A2UIComparisonSummaryProps) {
 
   const html = useMemo(() => {
     if (!text) return '';
-    try {
-      const raw = marked.parse(text, {breaks: true, gfm: true}) as string;
-      return DOMPurify.sanitize(raw);
-    } catch {
-      return DOMPurify.sanitize(text);
-    }
+    return renderMarkdown(text);
   }, [text]);
 
   if (!text) {

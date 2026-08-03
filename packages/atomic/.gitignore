@@ -1,6 +1,7 @@
 dist/
 www/
-docs/
+docs/*
+!docs/adr/
 cdn/
 
 *~
@@ -48,4 +49,3 @@ storybook-static/
 
 /dev/bueno/
 /dev/headless/
-

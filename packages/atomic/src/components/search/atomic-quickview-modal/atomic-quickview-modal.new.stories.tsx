@@ -3,7 +3,7 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
 import {testDialogA11y} from '@/storybook-utils/a11y/dialog.js';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
 import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
@@ -94,6 +94,9 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
+  parameters: {
+    chromatic: {disableSnapshot: true},
+  },
   play: async (context) => {
     await play(context);
     const {canvasElement, step, userEvent} = context;

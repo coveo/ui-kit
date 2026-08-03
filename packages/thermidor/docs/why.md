@@ -197,7 +197,7 @@ The store starts empty. Slices (feature state units) are adopted on-demand when 
 
 Instead of coupling controllers to a single engine type, controllers accept an `interface` handle that carries a type discriminant (`'search' | 'commerce' | 'generative'`) and a set of facade resolvers. The facade system lets you:
 
-- Compose interfaces (e.g., a search+commerce hybrid that shares a query)
+- Share a single engine across multiple interfaces (e.g., search and commerce interfaces with shared query state)
 - Create sub-interfaces for agent turns
 - Route API calls to the correct endpoints without reconciliation code
 
@@ -216,7 +216,7 @@ For conversational UI, thermidor introduces (see [generative-interface.md](./gen
 | Concern                           | Headless Today                                           | Thermidor                                                                    |
 | --------------------------------- | -------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | **State stores**                  | One Redux store per use case (Search, Commerce, etc.)    | One store, multiple interfaces                                               |
-| **Unified search + commerce**     | Dual-engine manual sync, triple coding, URL hacks        | Single engine, shared state, composed interfaces                             |
+| **Unified search + commerce**     | Dual-engine manual sync, triple coding, URL hacks        | Single engine, shared state, multiple interfaces                             |
 | **Server-pushed / generative UI** | No concept of agent-streamed results                     | Generative Interface with SSE streaming, turn management, snapshot hydration |
 | **Redux exposure**                | Concepts (actions, middleware, thunks) leak to consumers | `read/subscribe/mutate` — Redux is hidden                                    |
 | **Feature registration**          | All slices registered upfront at engine creation         | Lazy slice adoption, tree-shakeable                                          |
