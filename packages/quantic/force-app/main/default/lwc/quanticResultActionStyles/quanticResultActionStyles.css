@@ -1,7 +1,7 @@
 .result-action_white-container {
   background-color: var(--slds-g-color-surface-1, white);
   display: inline-block;
-  border-radius: var(--slds-g-radius-border-1, 0.25rem);
+  border-radius: var(--slds-g-radius-border-2, 0.25rem);
 }
 
 .result-action_button {

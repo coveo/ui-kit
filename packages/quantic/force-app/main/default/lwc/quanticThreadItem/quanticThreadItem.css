@@ -91,7 +91,7 @@
 
 .thread-item__title-button {
   width: fit-content;
-  border-radius: var(--slds-g-radius-border-1, 4px);
+  border-radius: var(--slds-g-radius-border-2, 4px);
 }
 
 button.thread-item__title-button:hover {
