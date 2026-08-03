@@ -1,5 +1,5 @@
 import {type NavigatorContext, SolutionType} from '@coveo/headless-react/ssr-commerce';
-import type {LoaderFunctionArgs} from 'react-router';
+import type {Route} from './+types/products.$productId.js';
 import {useLoaderData} from 'react-router';
 import invariant from 'tiny-invariant';
 import ContextDropdown from '@/app/components/context-dropdown';
@@ -19,7 +19,7 @@ import {
 } from '@/lib/commerce-engine.server';
 import {getNavigatorContext} from '@/lib/navigator-context';
 
-export const loader = async ({params, request, url}: LoaderFunctionArgs) => {
+export const loader = async ({params, request, url}: Route.LoaderArgs) => {
   const productId = params.productId;
 
   invariant(productId, 'Missing productId parameter');

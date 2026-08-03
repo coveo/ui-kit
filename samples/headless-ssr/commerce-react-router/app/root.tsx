@@ -3,8 +3,9 @@ import {
   type NavigatorContext,
   SolutionType,
 } from '@coveo/headless-react/ssr-commerce';
-import type {MetaFunction, LoaderFunctionArgs} from 'react-router';
+import type {MetaFunction} from 'react-router';
 import {Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData} from 'react-router';
+import type {Route} from './+types/root.js';
 import externalCartService from '@/external-services/external-cart-service';
 import {getVisitorIdSetCookieHeader, shouldCapture} from '@/lib/client-id.server';
 import type {
@@ -36,7 +37,7 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export const loader = async ({request, url}: LoaderFunctionArgs) => {
+export const loader = async ({request, url}: Route.LoaderArgs) => {
   const navigatorContext = await getNavigatorContext(request, url);
 
   const isSearchPage = url.pathname === '/search';
