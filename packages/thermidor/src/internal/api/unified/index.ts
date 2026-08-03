@@ -40,3 +40,5 @@ export type {
   Transaction,
 } from './unified-endpoint-types.js';
 export {createUnifiedEndpointRequestSelector} from './unified-request-selector.js';
+export {UnifiedRuntime} from './unified-runtime.js';
+export type {UnifiedRuntimeConfig} from './unified-runtime.js';
