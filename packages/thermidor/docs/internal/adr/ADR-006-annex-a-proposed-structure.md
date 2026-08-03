@@ -39,7 +39,6 @@ src/
 │   │       └── search-parameters-actions.ts
 │   └── interfaces/
 │       ├── commerce.ts
-│       ├── compose.ts
 │       ├── generative.ts
 │       └── search.ts
 │

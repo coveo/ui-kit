@@ -20,10 +20,6 @@ a {
   min-width: 0;
 }
 
-.recent-query__icon {
-  margin-right: 0.5rem;
-}
-
 .empty-list-message {
   color: var(--slds-g-color-on-surface-1, var(--lwc-colorTextPlaceholder, var(--lwc-colorTextIconDefault, #747474)));
 }
