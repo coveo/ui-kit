@@ -5,7 +5,7 @@ import {configurationSlice} from '@/src/internal/features/configuration/index.js
 import {setConfiguration} from '@/src/internal/features/configuration/index.js';
 import type {NavigatorContextProvider} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import {getOrCreateHydrateFromSnapshotAction} from '@/src/internal/features/generative/index.js';
 import {
   Dispatchable,
@@ -16,26 +16,15 @@ import {
   Unsubscribe,
 } from './engine-types.js';
 
-export type EngineTrackedInterface = {
-  disposed: boolean;
-  dispose(): void;
-};
-
 export type FullEngine = Engine & {
   adoptSlice(slice: Slice): Promise<void>;
-  addInterface(iface: EngineTrackedInterface): void;
-  removeInterface(iface: EngineTrackedInterface): void;
+  addInterface(iface: InterfaceHandle): void;
+  removeInterface(iface: InterfaceHandle): void;
   getNavigatorContextProvider(): NavigatorContextProvider | undefined;
   mutate(mutation: Dispatchable): unknown;
   read<T>(selector: StateSelector<T>): T;
-  storeHydrationSnapshot(
-    content: Record<string, unknown>,
-    iface: InterfaceHandle
-  ): void;
-  subscribe<T>(
-    selector: StateSelector<T>,
-    callback: StateChangeCallback<T>
-  ): Unsubscribe;
+  storeHydrationSnapshot(content: Record<string, unknown>, iface: InterfaceHandle): void;
+  subscribe<T>(selector: StateSelector<T>, callback: StateChangeCallback<T>): Unsubscribe;
 };
 
 export let getFullEngine: (engine: Engine) => FullEngine;
@@ -61,7 +50,7 @@ export class Engine {
   #rootReducer = combineSlices({});
   #store = configureStore({reducer: this.#rootReducer});
   #adoptedSlices = new WeakSet<Slice>();
-  #interfaces = new Set<EngineTrackedInterface>();
+  #interfaces = new Set<InterfaceHandle>();
   #navigatorContextProvider: NavigatorContextProvider | undefined;
   #didWarnMissingNavigatorContextProvider = false;
   #hydrationSnapshots = new Map<string, HydrationSnapshot>();
@@ -76,22 +65,15 @@ export class Engine {
 
       const wrapper = {
         adoptSlice: (slice: Slice) => engine.#adoptSlice(slice),
-        getNavigatorContextProvider: () =>
-          engine.#getNavigatorContextProvider(),
+        getNavigatorContextProvider: () => engine.#getNavigatorContextProvider(),
         mutate: (mutation: Dispatchable) => engine.#mutate(mutation),
         read: <T>(selector: StateSelector<T>) => engine.#read(selector),
-        addInterface: (iface: EngineTrackedInterface) =>
-          engine.#addInterface(iface),
-        removeInterface: (iface: EngineTrackedInterface) =>
-          engine.#removeInterface(iface),
-        storeHydrationSnapshot: (
-          content: Record<string, unknown>,
-          iface: InterfaceHandle
-        ) => engine.#storeHydrationSnapshot(content, iface),
-        subscribe: <T>(
-          selector: StateSelector<T>,
-          callback: StateChangeCallback<T>
-        ) => engine.#subscribe(selector, callback),
+        addInterface: (iface: InterfaceHandle) => engine.#addInterface(iface),
+        removeInterface: (iface: InterfaceHandle) => engine.#removeInterface(iface),
+        storeHydrationSnapshot: (content: Record<string, unknown>, iface: InterfaceHandle) =>
+          engine.#storeHydrationSnapshot(content, iface),
+        subscribe: <T>(selector: StateSelector<T>, callback: StateChangeCallback<T>) =>
+          engine.#subscribe(selector, callback),
       } as FullEngine;
 
       fullEngineWrappers.set(engine, wrapper);
@@ -147,31 +129,25 @@ export class Engine {
     }
   }
 
-  #addInterface(iface: EngineTrackedInterface): void {
+  #addInterface(iface: InterfaceHandle): void {
     this.#assertNotDisposed();
     this.#interfaces.add(iface);
   }
 
-  #removeInterface(iface: EngineTrackedInterface): void {
+  #removeInterface(iface: InterfaceHandle): void {
     this.#interfaces.delete(iface);
   }
 
-  #storeHydrationSnapshot(
-    content: Record<string, unknown>,
-    iface: InterfaceHandle
-  ) {
+  #storeHydrationSnapshot(content: Record<string, unknown>, iface: InterfaceHandle) {
     this.#assertNotDisposed();
-    const {stateId} = getHandleInternals(iface);
+    const {stateId} = getInterfaceInternals(iface);
     this.#hydrationSnapshots.set(stateId, {content, iface});
   }
 
   #getNavigatorContextProvider(): NavigatorContextProvider | undefined {
     this.#assertNotDisposed();
 
-    if (
-      !this.#navigatorContextProvider &&
-      !this.#didWarnMissingNavigatorContextProvider
-    ) {
+    if (!this.#navigatorContextProvider && !this.#didWarnMissingNavigatorContextProvider) {
       this.#didWarnMissingNavigatorContextProvider = true;
       console.warn(
         '[WARNING] Missing navigator context provider. Provide `navigatorContextProvider` in Engine options before using conversational requests.'
@@ -193,10 +169,7 @@ export class Engine {
     return selector(this.#_getState());
   }
 
-  #subscribe<T>(
-    selector: StateSelector<T>,
-    callback: StateChangeCallback<T>
-  ): Unsubscribe {
+  #subscribe<T>(selector: StateSelector<T>, callback: StateChangeCallback<T>): Unsubscribe {
     this.#assertNotDisposed();
 
     // Track previous value to detect changes

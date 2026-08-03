@@ -1,9 +1,6 @@
 import {buildMockResult} from '../../test/mock-result.js';
 import {buildMockResultPreviewRequest} from '../../test/mock-result-preview-request-builder.js';
-import {
-  buildMockLegacySearch,
-  buildMockSearch,
-} from '../../test/mock-search.js';
+import {buildMockLegacySearch, buildMockSearch} from '../../test/mock-search.js';
 import {buildMockSearchResponse} from '../../test/mock-search-response.js';
 import {logInterfaceLoad} from '../analytics/analytics-actions.js';
 import {executeSearch} from '../insight-search/insight-search-actions.js';
@@ -17,10 +14,7 @@ import {
   updateContentURL,
 } from './result-preview-actions.js';
 import {resultPreviewReducer} from './result-preview-slice.js';
-import {
-  getResultPreviewInitialState,
-  type ResultPreviewState,
-} from './result-preview-state.js';
+import {getResultPreviewInitialState, type ResultPreviewState} from './result-preview-state.js';
 
 describe('ResultPreview', () => {
   let state: ResultPreviewState;
@@ -103,12 +97,7 @@ describe('ResultPreview', () => {
       });
       const action = fetchMoreResults.fulfilled(search, '');
       const finalState = resultPreviewReducer(state, action);
-      expect(finalState.resultsWithPreview).toEqual([
-        'first',
-        'fourth',
-        'fifth',
-        'eight',
-      ]);
+      expect(finalState.resultsWithPreview).toEqual(['first', 'fourth', 'fifth', 'eight']);
     });
   });
 

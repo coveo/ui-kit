@@ -1,12 +1,4 @@
-import {
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  type MockInstance,
-  vi,
-} from 'vitest';
+import {beforeAll, beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import type {NumberFormatter} from '@/src/components/common/formats/format-common';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
@@ -31,9 +23,7 @@ describe('formatter', () => {
   });
 
   beforeEach(() => {
-    _mockedConsoleError = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
+    _mockedConsoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
     mockLogger = {error: vi.fn()};
     mockFormatter = vi.fn().mockImplementation((value) => `formatted-${value}`);
 
@@ -74,11 +64,7 @@ describe('formatter', () => {
         manualRanges,
       });
 
-      expect(getFieldValueCaption).toHaveBeenCalledWith(
-        'price',
-        'Budget Range',
-        i18n
-      );
+      expect(getFieldValueCaption).toHaveBeenCalledWith('price', 'Budget Range', i18n);
       expect(result).toBe('Budget Range Caption');
     });
 
@@ -139,11 +125,7 @@ describe('formatter', () => {
         manualRanges,
       });
 
-      expect(getFieldValueCaption).toHaveBeenCalledWith(
-        'price',
-        'Medium Range',
-        i18n
-      );
+      expect(getFieldValueCaption).toHaveBeenCalledWith('price', 'Medium Range', i18n);
       expect(result).toBe('Medium Range Caption');
     });
   });

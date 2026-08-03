@@ -1,8 +1,4 @@
-import {
-  baseInsightRequest,
-  type InsightParam,
-  pickNonInsightParams,
-} from './insight-params.js';
+import {baseInsightRequest, type InsightParam, pickNonInsightParams} from './insight-params.js';
 
 describe('insight params', () => {
   const method = 'POST';

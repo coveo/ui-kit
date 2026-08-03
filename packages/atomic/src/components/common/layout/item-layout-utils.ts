@@ -1,7 +1,4 @@
-import {
-  containsSections,
-  type ItemSectionTagName,
-} from './item-layout-sections';
+import {containsSections, type ItemSectionTagName} from './item-layout-sections';
 
 export interface ItemLayoutConfig {
   children: HTMLCollection;
@@ -75,50 +72,31 @@ export function getItemDisplayClasses(
   density: ItemDisplayDensity,
   image: ItemDisplayImageSize
 ) {
-  const classes = [
-    getDisplayClass(display),
-    getDensityClass(density),
-    getImageClass(image),
-  ];
+  const classes = [getDisplayClass(display), getDensityClass(density), getImageClass(image)];
   return classes;
 }
 
-function getSection(
-  children: HTMLCollection,
-  section: ItemSectionTagName
-): Element | undefined {
-  return Array.from(children).find(
-    (element) => element.tagName.toLowerCase() === section
-  );
+function getSection(children: HTMLCollection, section: ItemSectionTagName): Element | undefined {
+  return Array.from(children).find((element) => element.tagName.toLowerCase() === section);
 }
 
-function getImageSizeFromSections(
-  children: HTMLCollection
-): ItemDisplayImageSize | undefined {
-  const imageSize = getSection(
-    children,
-    'atomic-result-section-visual'
-  )?.getAttribute('image-size');
+function getImageSizeFromSections(children: HTMLCollection): ItemDisplayImageSize | undefined {
+  const imageSize = getSection(children, 'atomic-result-section-visual')?.getAttribute(
+    'image-size'
+  );
   if (!imageSize) {
     return undefined;
   }
   return imageSize as ItemDisplayImageSize;
 }
 
-export function getItemLayoutClasses(
-  config: ItemLayoutConfig,
-  HTMLContent?: string
-): string[] {
+export function getItemLayoutClasses(config: ItemLayoutConfig, HTMLContent?: string): string[] {
   const classes = getItemDisplayClasses(
     config.display,
     config.density,
     getImageSizeFromSections(config.children) ?? config.imageSize
   );
-  if (
-    HTMLContent
-      ? containsSections(HTMLContent)
-      : containsSections(config.children)
-  ) {
+  if (HTMLContent ? containsSections(HTMLContent) : containsSections(config.children)) {
     classes.push('with-sections');
   }
   return classes;

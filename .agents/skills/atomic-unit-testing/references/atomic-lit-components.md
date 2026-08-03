@@ -20,8 +20,7 @@ vi.mock('@coveo/headless', {spy: true});
 
 ```typescript
 vi.mock('@coveo/headless', async () => {
-  const actual =
-    await vi.importActual<typeof import('@coveo/headless')>('@coveo/headless');
+  const actual = await vi.importActual<typeof import('@coveo/headless')>('@coveo/headless');
   return {
     ...actual,
     ResultTemplatesHelpers: {getResultProperty: vi.fn(() => 1024)},
@@ -44,27 +43,22 @@ describe('atomic-timeframe-facet', () => {
     );
   });
 
-  const setupElement = async (
-    props?: Partial<{field: string; label: string}>
-  ) => {
-    const {element} = await renderInAtomicSearchInterface<AtomicTimeframeFacet>(
-      {
-        template: html`<atomic-timeframe-facet
-          field=${props?.field ?? 'date'}
-          label=${props?.label ?? 'Date'}
-          .tabsIncluded=${props?.tabsIncluded || []}
-          ?is-collapsed=${props?.isCollapsed}
-        ></atomic-timeframe-facet>`,
-        selector: 'atomic-timeframe-facet',
-        bindings: (bindings) => ({
-          ...bindings,
-          store: {...bindings.store, registerFacet: vi.fn()},
-        }),
-      }
-    );
+  const setupElement = async (props?: Partial<{field: string; label: string}>) => {
+    const {element} = await renderInAtomicSearchInterface<AtomicTimeframeFacet>({
+      template: html`<atomic-timeframe-facet
+        field=${props?.field ?? 'date'}
+        label=${props?.label ?? 'Date'}
+        .tabsIncluded=${props?.tabsIncluded || []}
+        ?is-collapsed=${props?.isCollapsed}
+      ></atomic-timeframe-facet>`,
+      selector: 'atomic-timeframe-facet',
+      bindings: (bindings) => ({
+        ...bindings,
+        store: {...bindings.store, registerFacet: vi.fn()},
+      }),
+    });
 
-    const qs = (part: string) =>
-      element.shadowRoot?.querySelector(`[part~="${part}"]`);
+    const qs = (part: string) => element.shadowRoot?.querySelector(`[part~="${part}"]`);
 
     return {
       element,
@@ -93,18 +87,17 @@ const renderResultNumber = async ({
   slottedContent?: TemplateResult;
   result?: Partial<Result>;
 } = {}) => {
-  const {element, atomicResult} =
-    await renderInAtomicResult<AtomicResultNumber>({
-      template: html`<atomic-result-number field=${ifDefined(props.field)}
-        >${ifDefined(slottedContent)}</atomic-result-number
-      >`,
-      selector: 'atomic-result-number',
-      result: result as Result,
-      bindings: (bindings) => {
-        bindings.engine = mockedEngine;
-        return bindings;
-      },
-    });
+  const {element, atomicResult} = await renderInAtomicResult<AtomicResultNumber>({
+    template: html`<atomic-result-number field=${ifDefined(props.field)}
+      >${ifDefined(slottedContent)}</atomic-result-number
+    >`,
+    selector: 'atomic-result-number',
+    result: result as Result,
+    bindings: (bindings) => {
+      bindings.engine = mockedEngine;
+      return bindings;
+    },
+  });
   return {element, atomicResult};
 };
 ```
@@ -176,27 +169,19 @@ it.each<{
 }>([
   {prop: 'sortCriteria', validValue: 'ascending', invalidValue: 'invalid'},
   {prop: 'headingLevel', validValue: 2, invalidValue: 7},
-])(
-  'should warn when #$prop is invalid',
-  async ({prop, validValue, invalidValue}) => {
-    const {element} = await setupElement({[prop]: validValue});
-    (element as any)[prop] = invalidValue;
-    await element.updateComplete;
-    expect(mockedConsole.warn).toHaveBeenCalledWith(
-      expect.stringContaining(prop),
-      element
-    );
-  }
-);
+])('should warn when #$prop is invalid', async ({prop, validValue, invalidValue}) => {
+  const {element} = await setupElement({[prop]: validValue});
+  (element as any)[prop] = invalidValue;
+  await element.updateComplete;
+  expect(mockedConsole.warn).toHaveBeenCalledWith(expect.stringContaining(prop), element);
+});
 ```
 
 ### Conditional rendering
 
 ```typescript
 it('should render placeholder before first search', async () => {
-  vi.mocked(buildSearchStatus).mockReturnValue(
-    buildFakeSearchStatus({firstSearchExecuted: false})
-  );
+  vi.mocked(buildSearchStatus).mockReturnValue(buildFakeSearchStatus({firstSearchExecuted: false}));
   const {locators} = await setupElement();
   expect(locators.placeholder).not.toBeNull();
   expect(locators.facet).toBeNull();
@@ -267,16 +252,11 @@ Render with `selector: undefined`, query the interface for the orphan:
 
 ```typescript
 it('should error when not in a result template', async () => {
-  const {atomicInterface} =
-    await renderInAtomicSearchInterface<AtomicResultNumber>({
-      template: html`<atomic-result-number
-        field="size"
-      ></atomic-result-number>`,
-      selector: undefined,
-    });
-  const element = atomicInterface.querySelector<AtomicResultNumber>(
-    'atomic-result-number'
-  );
+  const {atomicInterface} = await renderInAtomicSearchInterface<AtomicResultNumber>({
+    template: html`<atomic-result-number field="size"></atomic-result-number>`,
+    selector: undefined,
+  });
+  const element = atomicInterface.querySelector<AtomicResultNumber>('atomic-result-number');
   expect(element!.error).toBeInstanceOf(Error);
 });
 ```
@@ -288,10 +268,7 @@ it('should remove event listeners on disconnect', async () => {
   const {element} = await setupElement();
   const spy = vi.spyOn(element, 'removeEventListener');
   element.remove();
-  expect(spy).toHaveBeenCalledWith(
-    'atomic-date-input-apply',
-    expect.any(Function)
-  );
+  expect(spy).toHaveBeenCalledWith('atomic-date-input-apply', expect.any(Function));
 });
 ```
 
@@ -308,9 +285,7 @@ describe('when props conflict', () => {
   });
   it('should warn', async () => {
     await setupElement({tabsIncluded: ['a'], tabsExcluded: ['b']});
-    expect(mockedConsole.warn).toHaveBeenCalledWith(
-      expect.stringContaining('tabs-included')
-    );
+    expect(mockedConsole.warn).toHaveBeenCalledWith(expect.stringContaining('tabs-included'));
   });
 });
 ```

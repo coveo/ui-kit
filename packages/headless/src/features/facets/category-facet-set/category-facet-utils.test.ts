@@ -21,12 +21,7 @@ describe('#findActiveValueAncestry', () => {
     const hierarchicalTestCases = [
       () => [notAncestorValue, buildAncestor([selectedValue])],
       () => [buildAncestor([notAncestorValue, selectedValue])],
-      () => [
-        buildAncestor([
-          notAncestorValue,
-          buildAncestor([selectedValue, notAncestorValue]),
-        ]),
-      ],
+      () => [buildAncestor([notAncestorValue, buildAncestor([selectedValue, notAncestorValue])])],
     ];
 
     it('should return an array containing only the selected Value if the selected value is at the root', () => {
@@ -36,9 +31,7 @@ describe('#findActiveValueAncestry', () => {
     it.each(hierarchicalTestCases)(
       'should return an array containing the selected value whole ancestry',
       (generateValues) => {
-        expect(findActiveValueAncestry(generateValues())).not.toContain(
-          notAncestorValue
-        );
+        expect(findActiveValueAncestry(generateValues())).not.toContain(notAncestorValue);
       }
     );
 

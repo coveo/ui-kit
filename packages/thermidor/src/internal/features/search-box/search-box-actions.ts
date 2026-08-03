@@ -1,12 +1,11 @@
 import {createAction} from '@reduxjs/toolkit';
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 
 type SearchBoxActions = ReturnType<typeof createSearchBoxActions>;
 
-const CACHE_KEY: CacheKey<SearchBoxActions> =
-  createCacheKey<SearchBoxActions>('searchBox/actions');
+const CACHE_KEY: CacheKey<SearchBoxActions> = createCacheKey<SearchBoxActions>('searchBox/actions');
 
 export function createSearchBoxActions(interfaceId: string) {
   return {
@@ -15,8 +14,6 @@ export function createSearchBoxActions(interfaceId: string) {
 }
 
 export function getOrCreateSearchBoxActions(iface: InterfaceHandle) {
-  const {stateId, cacheRegistry} = getHandleInternals(iface);
-  return cacheRegistry.getOrCreate(CACHE_KEY, () =>
-    createSearchBoxActions(stateId)
-  );
+  const {stateId, cacheRegistry} = getInterfaceInternals(iface);
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => createSearchBoxActions(stateId));
 }

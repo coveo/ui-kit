@@ -10,8 +10,7 @@ import type {SearchAndListingControllerDefinitionWithoutProps} from '../../types
 
 export type {Sort, SortProps, SortState};
 
-export type SortDefinition =
-  SearchAndListingControllerDefinitionWithoutProps<Sort>;
+export type SortDefinition = SearchAndListingControllerDefinitionWithoutProps<Sort>;
 
 /**
  * Defines a `Sort` controller instance.

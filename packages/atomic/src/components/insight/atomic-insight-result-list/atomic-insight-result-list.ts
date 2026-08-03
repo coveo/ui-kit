@@ -135,9 +135,7 @@ export class AtomicInsightResultList
    *
    * @param resultRenderingFunction
    */
-  public async setRenderFunction(
-    resultRenderingFunction: ItemRenderingFunction
-  ) {
+  public async setRenderFunction(resultRenderingFunction: ItemRenderingFunction) {
     this.itemRenderingFunction = resultRenderingFunction;
   }
 
@@ -160,9 +158,7 @@ export class AtomicInsightResultList
   public async willUpdate(changedProperties: Map<string, unknown>) {
     super.willUpdate(changedProperties);
     if (changedProperties.has('resultListState')) {
-      const oldState = changedProperties.get(
-        'resultListState'
-      ) as InsightResultListState;
+      const oldState = changedProperties.get('resultListState') as InsightResultListState;
       if (this.resultListState.firstSearchExecuted) {
         this.bindings.store.unsetLoadingFlag(this.loadingFlag);
       }
@@ -229,8 +225,7 @@ export class AtomicInsightResultList
                     density: this.density,
                     display: this.display,
                     imageSize: this.imageSize,
-                    numberOfPlaceholders:
-                      this.resultsPerPageState.numberOfResults || 10,
+                    numberOfPlaceholders: this.resultsPerPageState.numberOfResults || 10,
                   },
                 })
               )
@@ -244,9 +239,7 @@ export class AtomicInsightResultList
   private initResultTemplateProvider() {
     this.resultTemplateProvider = new ResultTemplateProvider({
       includeDefaultTemplate: true,
-      templateElements: Array.from(
-        this.querySelectorAll('atomic-insight-result-template')
-      ),
+      templateElements: Array.from(this.querySelectorAll('atomic-insight-result-template')),
       getResultTemplateRegistered: () => this.resultTemplateRegistered,
       getTemplateHasError: () => this.templateHasError,
       setResultTemplateRegistered: (value: boolean) => {

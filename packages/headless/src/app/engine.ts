@@ -45,17 +45,16 @@ import {stateKey} from './state-key.js';
 import {type CoreExtraArguments, configureStore, type Store} from './store.js';
 import type {ThunkExtraArguments} from './thunk-extra-arguments.js';
 
-export type CoreState<
-  Configuration extends CoreConfigurationState = CoreConfigurationState,
-> = {
+export type CoreState<Configuration extends CoreConfigurationState = CoreConfigurationState> = {
   configuration: Configuration;
   version: string;
 } & Partial<SearchParametersState>;
 
-type EngineDispatch<
+type EngineDispatch<State, ExtraArguments extends ThunkExtraArguments> = ThunkDispatch<
   State,
-  ExtraArguments extends ThunkExtraArguments,
-> = ThunkDispatch<State, ExtraArguments, UnknownAction> &
+  ExtraArguments,
+  UnknownAction
+> &
   Dispatch<UnknownAction>;
 
 export interface CoreEngine<
@@ -135,9 +134,9 @@ export type CoreEngineNext<
   readonly configuration: Configuration;
 };
 
-export interface EngineOptions<
-  Reducers extends ReducersMapObject,
-> extends ExternalEngineOptions<StateFromReducersMapObject<Reducers>> {
+export interface EngineOptions<Reducers extends ReducersMapObject> extends ExternalEngineOptions<
+  StateFromReducersMapObject<Reducers>
+> {
   /**
    * Map object of reducers.
    * A reducer is a pure function that takes the previous state and an action, and returns the next state.
@@ -196,7 +195,7 @@ function getUpdateAnalyticsConfigurationPayload(
   logger: Logger
 ): UpdateAnalyticsConfigurationActionCreatorPayload | null {
   const {analytics} = configuration;
-  const {analyticsClientMiddleware: _, ...payload} = analytics ?? {};
+  const {analyticsClientMiddleware: _, disableBrowserPrivacySignals, ...payload} = analytics ?? {};
 
   const payloadWithURL = {
     ...payload,
@@ -207,12 +206,27 @@ function getUpdateAnalyticsConfigurationPayload(
   };
 
   // TODO KIT-2844
-  if (payloadWithURL.analyticsMode !== 'next' && doNotTrack()) {
+  const browserPrivacyGateApplies = payloadWithURL.analyticsMode !== 'next';
+  const privacySignalsOverridden =
+    payloadWithURL.analyticsMode === 'legacy' && disableBrowserPrivacySignals === true;
+
+  if (browserPrivacyGateApplies && doNotTrack() && !privacySignalsOverridden) {
     logger.info('Analytics disabled since doNotTrack is active.');
     return {
       ...payloadWithURL,
       enabled: false,
     };
+  }
+
+  if (
+    browserPrivacyGateApplies &&
+    doNotTrack() &&
+    privacySignalsOverridden &&
+    payloadWithURL.enabled !== false
+  ) {
+    logger.warn(
+      'Browser privacy signals (Do Not Track and Global Privacy Control) are present but are being ignored because analytics.disableBrowserPrivacySignals is set to true. Legacy analytics events will be sent, and your integration is responsible for privacy compliance.'
+    );
   }
 
   return payloadWithURL;
@@ -234,11 +248,7 @@ export function buildEngine<
     configuration,
     version,
   };
-  const engine = buildCoreEngine(
-    {...options, reducers},
-    thunkExtraArguments,
-    configuration
-  );
+  const engine = buildCoreEngine({...options, reducers}, thunkExtraArguments, configuration);
   const {accessToken, environment, organizationId} = options.configuration;
 
   engine.dispatch(
@@ -268,11 +278,7 @@ export function buildCoreEngine<
   options: EngineOptions<Reducers>,
   thunkExtraArguments: ExtraArguments,
   configurationReducer: Reducer<Configuration>
-): CoreEngine<
-  StateFromReducersMapObject<Reducers>,
-  ExtraArguments,
-  Configuration
-> {
+): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments, Configuration> {
   const {reducers, navigatorContextProvider} = options;
   const reducerManager = createReducerManager(
     {...reducers, configurationReducer},
@@ -291,11 +297,7 @@ export function buildCoreEngine<
       return getNavigatorContext(this.relay, navigatorContextProvider);
     },
   };
-  const store = createStore(
-    options,
-    thunkExtraArgumentsWithRelay,
-    reducerManager
-  );
+  const store = createStore(options, thunkExtraArgumentsWithRelay, reducerManager);
 
   const engine = {
     addReducers(reducers: ReducersMapObject) {
@@ -338,10 +340,7 @@ export function buildCoreEngine<
   return engine;
 }
 
-function createStore<
-  Reducers extends ReducersMapObject,
-  ExtraArguments extends CoreExtraArguments,
->(
+function createStore<Reducers extends ReducersMapObject, ExtraArguments extends CoreExtraArguments>(
   options: EngineOptions<Reducers>,
   thunkExtraArguments: ExtraArguments,
   reducerManager: ReducerManager
@@ -369,10 +368,7 @@ function createMiddleware<Reducers extends ReducersMapObject>(
   getNavigatorContext: () => NavigatorContext
 ) {
   const {renewAccessToken} = options.configuration;
-  const renewTokenMiddleware = createRenewAccessTokenMiddleware(
-    logger,
-    renewAccessToken
-  );
+  const renewTokenMiddleware = createRenewAccessTokenMiddleware(logger, renewAccessToken);
   const generateAnswerListener = createGenerateAnswerListener({
     getNavigatorContext,
   });
@@ -382,11 +378,7 @@ function createMiddleware<Reducers extends ReducersMapObject>(
     renewTokenMiddleware,
     logActionErrorMiddleware(logger),
     analyticsMiddleware,
-  ].concat(
-    answerApi.middleware,
-    generateAnswerListener.middleware,
-    options.middlewares || []
-  );
+  ].concat(answerApi.middleware, generateAnswerListener.middleware, options.middlewares || []);
 }
 
 export const nextAnalyticsUsageWithServiceFeatureWarning =
@@ -395,9 +387,7 @@ export const nextAnalyticsUsageWithServiceFeatureWarning =
   'Please switch back to the "legacy" analytics mode to ensure proper functionality.\n' +
   'For more information, refer to the documentation: https://docs.coveo.com/en/o3r90189/build-a-search-ui/event-protocol';
 
-export function warnIfUsingNextAnalyticsModeForServiceFeature(
-  analyticsMode: 'next' | 'legacy'
-) {
+export function warnIfUsingNextAnalyticsModeForServiceFeature(analyticsMode: 'next' | 'legacy') {
   if (analyticsMode === 'next') {
     console.warn(nextAnalyticsUsageWithServiceFeatureWarning);
   }

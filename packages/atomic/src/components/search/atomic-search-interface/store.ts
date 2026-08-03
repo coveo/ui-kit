@@ -1,9 +1,4 @@
-import type {
-  DateFacetValue,
-  NumericFacetValue,
-  SearchEngine,
-  SortCriterion,
-} from '@coveo/headless';
+import type {DateFacetValue, NumericFacetValue, SearchEngine, SortCriterion} from '@coveo/headless';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint-utils';
 import type {
   FacetInfo,
@@ -94,8 +89,7 @@ export function createSearchStore(): SearchStore {
     },
 
     isMobile() {
-      return !window.matchMedia(makeDesktopQuery(store.state.mobileBreakpoint))
-        .matches;
+      return !window.matchMedia(makeDesktopQuery(store.state.mobileBreakpoint)).matches;
     },
 
     registerFacet<T extends FacetType, U extends string>(

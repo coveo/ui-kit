@@ -1,7 +1,6 @@
-export const getInsightConfigurationInitialState =
-  (): InsightConfigurationState => ({
-    insightId: '',
-  });
+export const getInsightConfigurationInitialState = (): InsightConfigurationState => ({
+  insightId: '',
+});
 
 export interface InsightConfigurationState {
   /**

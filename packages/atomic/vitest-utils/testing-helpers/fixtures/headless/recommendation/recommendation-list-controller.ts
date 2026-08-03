@@ -1,7 +1,4 @@
-import type {
-  RecommendationList,
-  RecommendationListState,
-} from '@coveo/headless/recommendation';
+import type {RecommendationList, RecommendationListState} from '@coveo/headless/recommendation';
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 

@@ -1,20 +1,10 @@
-import type {
-  BaseFacetRequest,
-  RangeAlgorithm,
-  SortCriteria,
-} from '../../../facet-api/request.js';
+import type {BaseFacetRequest, RangeAlgorithm, SortCriteria} from '../../../facet-api/request.js';
 
-export const rangeFacetSortCriteria: RangeFacetSortCriterion[] = [
-  'ascending',
-  'descending',
-];
+export const rangeFacetSortCriteria: RangeFacetSortCriterion[] = ['ascending', 'descending'];
 /**
  * Whether the range algorithm proposes ranges based on an even split of the interval or equiprobable intervals that each contain the same amount of results.
  */
-export const rangeFacetRangeAlgorithm: RangeFacetRangeAlgorithm[] = [
-  'even',
-  'equiprobable',
-];
+export const rangeFacetRangeAlgorithm: RangeFacetRangeAlgorithm[] = ['even', 'equiprobable'];
 
 export type RangeFacetSortCriterion = 'ascending' | 'descending';
 export type RangeFacetRangeAlgorithm = 'even' | 'equiprobable';

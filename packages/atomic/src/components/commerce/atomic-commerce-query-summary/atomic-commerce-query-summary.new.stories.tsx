@@ -3,7 +3,7 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-query-summary/atomic-commerce-query-summary.js';
-import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
+import {MockCommerceApi} from '@coveo/platform-mock-api/commerce';
 
 const commerceApiHarness = new MockCommerceApi();
 
@@ -11,10 +11,9 @@ const {decorator, play} = wrapInCommerceInterface({
   skipFirstRequest: false,
 });
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-commerce-query-summary',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-commerce-query-summary', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-commerce-query-summary',
@@ -25,7 +24,6 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     msw: {handlers: [...commerceApiHarness.handlers]},
-    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },

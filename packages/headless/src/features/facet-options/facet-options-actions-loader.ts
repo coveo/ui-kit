@@ -57,9 +57,7 @@ export interface FacetOptionsActionCreators {
  * @group Actions
  * @category FacetOptions
  */
-export function loadFacetOptionsActions(
-  engine: SearchEngine
-): FacetOptionsActionCreators {
+export function loadFacetOptionsActions(engine: SearchEngine): FacetOptionsActionCreators {
   engine.addReducers({facetOptions});
 
   return {

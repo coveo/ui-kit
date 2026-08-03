@@ -32,10 +32,7 @@ export interface StandaloneBuildConfig extends CommonBuildConfig {}
 /**
  * Commerce engine options for SSR scenarios where context is defined when fetching static state.
  */
-export type SSRCommerceEngineOptions = Omit<
-  CommerceEngineOptions,
-  'configuration'
-> & {
+export type SSRCommerceEngineOptions = Omit<CommerceEngineOptions, 'configuration'> & {
   configuration: Omit<CommerceEngineOptions['configuration'], 'context'>;
 };
 
@@ -70,34 +67,33 @@ export type SSRCommerceEngineOptions = Omit<
  *
  * In this example, only the `popularProducts` recommendation controller will be included in the SSR request.
  */
-export type RecommendationBuildConfig<
-  TControllers extends ControllerDefinitionsMap<Controller>,
-> = CommonBuildConfig & {
-  /**
-   * The unique identifier of the product to use for seeded recommendations.
-   */
-  productId?: string;
-  /**
-   * An array of recommendation controller names from your engine definition to include in the SSR request.
-   * Each name corresponds to a key used when defining recommendation controllers in your engine definition.
-   * If not specified, no recommendation requests will be executed.
-   */
-  recommendations: Array<
-    Extract<
-      keyof TControllers,
-      {
-        [K in keyof TControllers]: HasKey<
-          TControllers[K],
-          SolutionType.recommendation
-        > extends never
-          ? never
-          : IsRecommendationController<TControllers[K]> extends never
+export type RecommendationBuildConfig<TControllers extends ControllerDefinitionsMap<Controller>> =
+  CommonBuildConfig & {
+    /**
+     * The unique identifier of the product to use for seeded recommendations.
+     */
+    productId?: string;
+    /**
+     * An array of recommendation controller names from your engine definition to include in the SSR request.
+     * Each name corresponds to a key used when defining recommendation controllers in your engine definition.
+     * If not specified, no recommendation requests will be executed.
+     */
+    recommendations: Array<
+      Extract<
+        keyof TControllers,
+        {
+          [K in keyof TControllers]: HasKey<
+            TControllers[K],
+            SolutionType.recommendation
+          > extends never
             ? never
-            : K;
-      }[keyof TControllers]
-    >
-  >;
-};
+            : IsRecommendationController<TControllers[K]> extends never
+              ? never
+              : K;
+        }[keyof TControllers]
+      >
+    >;
+  };
 
 export interface ListingBuildConfig extends CommonBuildConfig {}
 

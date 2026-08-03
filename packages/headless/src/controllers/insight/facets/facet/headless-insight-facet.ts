@@ -133,10 +133,7 @@ export function buildFacet(engine: InsightEngine, props: FacetProps): Facet {
       coreController.toggleSelect(selection);
       dispatch(
         executeSearch({
-          legacy: getInsightAnalyticsActionForToggleFacetSelect(
-            getFacetId(),
-            selection
-          ),
+          legacy: getInsightAnalyticsActionForToggleFacetSelect(getFacetId(), selection),
           next: getAnalyticsActionForToggleFacetSelect(selection),
         })
       );

@@ -14,18 +14,14 @@ interface SortProps {
 export function Sort({controller, options}: SortProps) {
   useController(controller);
 
-  const selectedIndex = options.findIndex((option) =>
-    controller.isSortedBy(option.criterion)
-  );
+  const selectedIndex = options.findIndex((option) => controller.isSortedBy(option.criterion));
 
   return (
     <label className="sort">
       Sort by{' '}
       <select
         value={selectedIndex === -1 ? 0 : selectedIndex}
-        onChange={(e) =>
-          controller.sortBy(options[Number(e.target.value)].criterion)
-        }
+        onChange={(e) => controller.sortBy(options[Number(e.target.value)].criterion)}
       >
         {options.map((option, index) => (
           <option key={option.label} value={index}>

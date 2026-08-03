@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {FacetsState} from './facets-types.js';
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import {getOrCreateFacetsActions} from './facets-actions.js';
 import {getOrCreateHydrateFromSnapshotAction} from '@/src/internal/features/generative/index.js';
@@ -10,8 +10,7 @@ export const initialFacetsState: FacetsState = {};
 
 type FacetsSlice = ReturnType<typeof createFacetsSlice>;
 
-const CACHE_KEY: CacheKey<FacetsSlice> =
-  createCacheKey<FacetsSlice>('facets/slice');
+const CACHE_KEY: CacheKey<FacetsSlice> = createCacheKey<FacetsSlice>('facets/slice');
 
 export function createFacetsSlice(
   interfaceId: string,
@@ -93,7 +92,7 @@ export function createFacetsSlice(
 }
 
 export function getOrCreateFacetsSlice(iface: InterfaceHandle) {
-  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  const {stateId, cacheRegistry} = getInterfaceInternals(iface);
   return cacheRegistry.getOrCreate(CACHE_KEY, () => {
     const actions = getOrCreateFacetsActions(iface);
     const hydrateAction = getOrCreateHydrateFromSnapshotAction(iface);

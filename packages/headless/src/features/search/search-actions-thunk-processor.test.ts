@@ -101,13 +101,9 @@ describe('AsyncSearchThunkProcessor', () => {
         requestExecuted: buildMockSearchRequest(),
       };
 
-      const processed = (await processor.process(
-        fetched
-      )) as ExecuteSearchThunkReturn;
+      const processed = (await processor.process(fetched)) as ExecuteSearchThunkReturn;
 
-      expect(config.dispatch).toHaveBeenCalledWith(
-        updateQuery({q: 'honeywell'})
-      );
+      expect(config.dispatch).toHaveBeenCalledWith(updateQuery({q: 'honeywell'}));
       expect(processed.queryExecuted).toBe('honeywell');
       expect(processed.originalQuery).toBe('hone');
       expect(processed.automaticallyCorrected).toBe(true);
@@ -157,9 +153,7 @@ describe('AsyncSearchThunkProcessor', () => {
 
       await processor.process(fetched);
 
-      expect(config.dispatch).not.toHaveBeenCalledWith(
-        updateQuery({q: expect.any(String)})
-      );
+      expect(config.dispatch).not.toHaveBeenCalledWith(updateQuery({q: expect.any(String)}));
     });
   });
 });

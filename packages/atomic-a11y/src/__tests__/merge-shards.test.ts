@@ -1,15 +1,9 @@
 import {describe, expect, it} from 'vitest';
 import {mergeComponents, mergeCriteria} from '../reporter/merge-shards.js';
 import {createSummary} from '../reporter/summary.js';
-import type {
-  A11yComponentReport,
-  A11yCriterionReport,
-  A11yReport,
-} from '../shared/types.js';
+import type {A11yComponentReport, A11yCriterionReport, A11yReport} from '../shared/types.js';
 
-function createComponent(
-  overrides: Partial<A11yComponentReport> = {}
-): A11yComponentReport {
+function createComponent(overrides: Partial<A11yComponentReport> = {}): A11yComponentReport {
   return {
     name: 'atomic-search-box',
     storyCount: 1,
@@ -27,9 +21,7 @@ function createComponent(
   };
 }
 
-function createCriterion(
-  overrides: Partial<A11yCriterionReport> = {}
-): A11yCriterionReport {
+function createCriterion(overrides: Partial<A11yCriterionReport> = {}): A11yCriterionReport {
   return {
     id: '1.4.3',
     name: 'Contrast (Minimum)',
@@ -135,10 +127,7 @@ describe('mergeComponents()', () => {
 
   it('should keep distinct components separate', () => {
     const report = createReport(
-      [
-        createComponent({name: 'atomic-search-box'}),
-        createComponent({name: 'atomic-result-list'}),
-      ],
+      [createComponent({name: 'atomic-search-box'}), createComponent({name: 'atomic-result-list'})],
       []
     );
 
@@ -196,10 +185,7 @@ describe('mergeCriteria()', () => {
     const merged = mergeCriteria([firstReport, secondReport], mergedComponents);
 
     const criterion143 = merged.find((criterion) => criterion.id === '1.4.3');
-    expect(criterion143?.coveredComponents).toEqual([
-      'atomic-result-list',
-      'atomic-search-box',
-    ]);
+    expect(criterion143?.coveredComponents).toEqual(['atomic-result-list', 'atomic-search-box']);
     expect(criterion143?.conformance).toBe('supports');
   });
 

@@ -7,17 +7,14 @@ import type {
 } from '@/src/utils/functional-component-utils';
 import {type ButtonProps, renderButton} from '../button';
 
-interface PagerNavigationButtonProps extends Omit<
-  ButtonProps,
-  'style' | 'part' | 'class'
-> {
+interface PagerNavigationButtonProps extends Omit<ButtonProps, 'style' | 'part' | 'class'> {
   icon: string;
   i18n: i18n;
 }
 
-export const renderPagerPreviousButton: FunctionalComponent<
-  PagerNavigationButtonProps
-> = ({props}) => {
+export const renderPagerPreviousButton: FunctionalComponent<PagerNavigationButtonProps> = ({
+  props,
+}) => {
   return renderButton({
     props: {
       ...props,
@@ -35,9 +32,7 @@ export const renderPagerPreviousButton: FunctionalComponent<
   );
 };
 
-export const renderPagerNextButton: FunctionalComponent<
-  PagerNavigationButtonProps
-> = ({props}) => {
+export const renderPagerNextButton: FunctionalComponent<PagerNavigationButtonProps> = ({props}) => {
   return renderButton({
     props: {
       ...props,
@@ -63,9 +58,7 @@ interface PagerPageButtonProps {
   onChecked?(): void;
 }
 
-export const renderPagerPageButton: FunctionalComponent<
-  PagerPageButtonProps
-> = ({props}) => {
+export const renderPagerPageButton: FunctionalComponent<PagerPageButtonProps> = ({props}) => {
   return renderButton({
     props: {
       style: 'outline-neutral',
@@ -82,8 +75,7 @@ interface PagerPageButtonsProps {
   i18n: i18n;
 }
 
-export const renderPageButtons: FunctionalComponentWithChildren<
-  PagerPageButtonsProps
-> = () => (children) => {
-  return html`<div part="page-buttons" class="contents">${children}</div>`;
-};
+export const renderPageButtons: FunctionalComponentWithChildren<PagerPageButtonsProps> =
+  () => (children) => {
+    return html`<div part="page-buttons" class="contents">${children}</div>`;
+  };

@@ -10,9 +10,7 @@ export function createMockConfig(config?: Partial<RelayConfig>): RelayConfig {
   };
 }
 
-export function createMockConfigManager(
-  manager?: Partial<ConfigManager>
-): ConfigManager {
+export function createMockConfigManager(manager?: Partial<ConfigManager>): ConfigManager {
   return {
     get: () => createMockConfig(),
     update: () => vi.fn(),

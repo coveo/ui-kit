@@ -15,10 +15,7 @@ import {
   AtomicProductSectionVisual,
   AtomicProductText,
 } from '@coveo/atomic-react/commerce';
-import {
-  buildCommerceEngine,
-  getSampleCommerceEngineConfiguration,
-} from '@coveo/headless/commerce';
+import {buildCommerceEngine, getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
 import {useMemo} from 'react';
 
 export const CommerceRecommendationPage = () => {
@@ -73,10 +70,7 @@ function MyTemplate() {
         <AtomicProductImage field="ec_thumbnails"></AtomicProductImage>
       </AtomicProductSectionVisual>
       <AtomicProductSectionMetadata>
-        <AtomicProductText
-          field="ec_brand"
-          className="text-neutral-dark block"
-        ></AtomicProductText>
+        <AtomicProductText field="ec_brand" className="text-neutral-dark block"></AtomicProductText>
         <AtomicProductRating field="ec_rating"></AtomicProductRating>
       </AtomicProductSectionMetadata>
       <AtomicProductSectionEmphasized>

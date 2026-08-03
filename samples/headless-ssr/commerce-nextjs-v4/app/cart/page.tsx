@@ -3,16 +3,10 @@ import {headers} from 'next/headers';
 import * as externalCartAPI from '@/actions/external-cart-api';
 import Cart from '@/components/cart';
 import ContextDropdown from '@/components/context-dropdown';
-import {
-  RecommendationProvider,
-  StandaloneProvider,
-} from '@/components/providers/providers';
+import {RecommendationProvider, StandaloneProvider} from '@/components/providers/providers';
 import PopularBought from '@/components/recommendations/popular-bought';
 import StandaloneSearchBox from '@/components/standalone-search-box';
-import {
-  recommendationEngineDefinition,
-  standaloneEngineDefinition,
-} from '@/lib/commerce-engine';
+import {recommendationEngineDefinition, standaloneEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
 
@@ -47,14 +41,12 @@ export default async function Search() {
     },
   });
 
-  const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
-    {
-      cart: {items},
-      context,
-      navigatorContext: navigatorContext.marshal,
-      recommendations: ['popularBought', 'popularViewed'],
-    }
-  );
+  const recsStaticState = await recommendationEngineDefinition.fetchStaticState({
+    cart: {items},
+    context,
+    navigatorContext: navigatorContext.marshal,
+    recommendations: ['popularBought', 'popularViewed'],
+  });
   return (
     <StandaloneProvider staticState={staticState}>
       <div style={{display: 'flex', flexDirection: 'column'}}>

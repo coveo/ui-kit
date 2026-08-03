@@ -2,7 +2,7 @@ import {getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
-import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
+import {MockCommerceApi} from '@coveo/platform-mock-api/commerce';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-breadbox/atomic-commerce-breadbox.js';
 import '@/src/components/commerce/atomic-commerce-facets/atomic-commerce-facets.js';
@@ -21,16 +21,13 @@ const commerceApiHarness = new MockCommerceApi();
 
 async function initializeCommerceInterface(canvasElement: HTMLElement) {
   await customElements.whenDefined('atomic-commerce-interface');
-  const commerceInterface = canvasElement.querySelector(
-    'atomic-commerce-interface'
-  );
+  const commerceInterface = canvasElement.querySelector('atomic-commerce-interface');
   await commerceInterface!.initialize(getSampleCommerceEngineConfiguration());
 }
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-commerce-interface',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-commerce-interface', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-commerce-interface',
@@ -53,9 +50,7 @@ const meta: Meta = {
 
   play: async (context) => {
     await initializeCommerceInterface(context.canvasElement);
-    const searchInterface = context.canvasElement.querySelector(
-      'atomic-commerce-interface'
-    );
+    const searchInterface = context.canvasElement.querySelector('atomic-commerce-interface');
     await searchInterface!.executeFirstRequest();
   },
   argTypes: {

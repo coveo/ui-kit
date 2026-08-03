@@ -49,7 +49,7 @@ graph LR
 
 ## Layer 0 Internal: The Redux Slice
 
-**File**: [`src/core/internal/searchBox/slice.ts`](../src/core/internal/searchBox/slice.ts)
+**File**: [`src/internal/features/search-box/search-box-slice.ts`](../src/internal/features/search-box/search-box-slice.ts)
 
 ```typescript
 import {createSlice, type PayloadAction} from '@reduxjs/toolkit';
@@ -87,7 +87,7 @@ export const searchBoxSlice = createSlice({
 
 ## Layer 0 Interface: Types
 
-**File**: [`src/core/interface/search-box/types.ts`](../src/core/interface/search-box/types.ts)
+**File**: [`src/internal/features/search-box/search-box-types.ts`](../src/internal/features/search-box/search-box-types.ts)
 
 ```typescript
 /**
@@ -108,7 +108,7 @@ export interface SearchBoxState {
 
 ## Layer 0 Interface: Mutations
 
-**File**: [`src/core/interface/search-box/mutate.ts`](../src/core/interface/search-box/mutate.ts)
+**File**: [`src/internal/features/search-box/search-box-actions.ts`](../src/internal/features/search-box/search-box-actions.ts)
 
 ```typescript
 import {searchBoxSlice} from '../../internal/searchBox/slice.js';
@@ -139,7 +139,7 @@ You then pass this to `engine.mutate()` to actually apply the change.
 
 ## Layer 0 Interface: Selectors
 
-**File**: [`src/core/interface/search-box/selectors.ts`](../src/core/interface/search-box/selectors.ts)
+**File**: [`src/internal/features/search-box/search-box-selectors.ts`](../src/internal/features/search-box/search-box-selectors.ts)
 
 ```typescript
 import {searchBoxSlice} from '../../internal/searchBox/slice.js';
@@ -197,19 +197,11 @@ export async function executeSearchAPI(engine: Engine): Promise<void> {
 
     // 5. On success: write results back to state
     if (response.success) {
-      engine.mutate(
-        resultsMutations.setResults(
-          transformCoveoResults(response.data!.results)
-        )
-      );
-      engine.mutate(
-        paginationMutations.setTotalCount(response.data!.totalCount)
-      );
+      engine.mutate(resultsMutations.setResults(transformCoveoResults(response.data!.results)));
+      engine.mutate(paginationMutations.setTotalCount(response.data!.totalCount));
       engine.mutate(resultsMutations.setLoading(false));
     } else {
-      engine.mutate(
-        resultsMutations.setError(response.error || 'Search failed')
-      );
+      engine.mutate(resultsMutations.setError(response.error || 'Search failed'));
       engine.mutate(resultsMutations.setLoading(false));
     }
   } catch (error) {
@@ -309,9 +301,7 @@ import {Engine} from '../../core';
 import {searchBoxSlice} from '../../core/internal/searchBox/slice';
 import * as searchBoxMutators from '../../core/interface/search-box/mutate';
 
-type MutatorToAction<T> = T extends (...args: infer A) => any
-  ? (...args: A) => void
-  : never;
+type MutatorToAction<T> = T extends (...args: infer A) => any ? (...args: A) => void : never;
 type MutatorsToActions<T> = {[K in keyof T]: MutatorToAction<T[K]>};
 
 const loadedEngine = new WeakSet<Engine>();

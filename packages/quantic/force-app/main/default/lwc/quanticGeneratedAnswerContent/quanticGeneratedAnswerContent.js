@@ -7,6 +7,7 @@ import {
   transformMarkdownToHtml,
   loadMarkdownDependencies,
   LinkUtils,
+  getAbsoluteHeight,
 } from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 // @ts-ignore
@@ -171,7 +172,13 @@ export default class QuanticGeneratedAnswerContent extends LightningElement {
     else {
       answerContainer.textContent = this.answer;
     }
-    this.dispatchEvent(new CustomEvent('quantic__answercontentupdated'));
+    this.dispatchEvent(
+      new CustomEvent('quantic__answercontentupdated', {
+        bubbles: true,
+        composed: true,
+        detail: {height: getAbsoluteHeight(answerContainer)},
+      })
+    );
   }
 
   /**

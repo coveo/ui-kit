@@ -27,15 +27,10 @@ export const getCartInitialState = (): CartState => ({
 
 export const getProductsFromCartState = (state: CartState): CartItemParam[] =>
   getProductsFromCart(state.cartItems, state.cart);
-export const getProductsFromCartPurchasedState = (
-  state: CartState
-): CartItemParam[] =>
+export const getProductsFromCartPurchasedState = (state: CartState): CartItemParam[] =>
   getProductsFromCart(state.purchasedItems, state.purchased);
 
-function getProductsFromCart(
-  items: string[],
-  itemMap: Record<string, CartItemWithMetadata>
-) {
+function getProductsFromCart(items: string[], itemMap: Record<string, CartItemWithMetadata>) {
   const productsMap = items.reduce(
     (acc, key) => {
       const {productId, quantity} = itemMap[key];

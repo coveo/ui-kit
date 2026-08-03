@@ -20,10 +20,7 @@ import {
   getGeneratedAnswerInitialState,
 } from '../../../features/generated-answer/generated-answer-state.js';
 import {executeSearch} from '../../../features/search/search-actions.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
 import type {
   GeneratedAnswerProps,
@@ -35,24 +32,16 @@ import {
 } from './headless-searchapi-generated-answer.js';
 
 vi.mock('../../../features/generated-answer/generated-answer-actions');
-vi.mock(
-  '../../../features/generated-answer/generated-answer-analytics-actions'
-);
+vi.mock('../../../features/generated-answer/generated-answer-analytics-actions');
 vi.mock('../../../features/search/search-actions');
 
 describe('searchapi-generated-answer', () => {
   let engine: MockedSearchEngine;
 
   const createGeneratedAnswer = (props: GeneratedAnswerProps = {}) =>
-    buildSearchAPIGeneratedAnswer(
-      engine as any,
-      generatedAnswerAnalyticsClient,
-      props
-    );
+    buildSearchAPIGeneratedAnswer(engine as any, generatedAnswerAnalyticsClient, props);
 
-  function buildEngineWithGeneratedAnswer(
-    initialState: Partial<GeneratedAnswerState> = {}
-  ) {
+  function buildEngineWithGeneratedAnswer(initialState: Partial<GeneratedAnswerState> = {}) {
     const state = createMockState({
       generatedAnswer: {
         ...getGeneratedAnswerInitialState(),
@@ -135,9 +124,9 @@ describe('searchapi-generated-answer', () => {
     };
     generatedAnswer.sendFeedback(feedback);
 
-    expect(
-      generatedAnswerAnalyticsClient.logGeneratedAnswerFeedback
-    ).toHaveBeenCalledWith(feedback);
+    expect(generatedAnswerAnalyticsClient.logGeneratedAnswerFeedback).toHaveBeenCalledWith(
+      feedback
+    );
     expect(sendGeneratedAnswerFeedback).toHaveBeenCalledTimes(1);
   });
 
@@ -145,9 +134,10 @@ describe('searchapi-generated-answer', () => {
     const generatedAnswer = createGeneratedAnswer();
     const citationId = 'citationId';
     generatedAnswer.logCitationClick(citationId);
-    expect(
-      generatedAnswerAnalyticsClient.logOpenGeneratedAnswerSource
-    ).toHaveBeenCalledWith(citationId, undefined);
+    expect(generatedAnswerAnalyticsClient.logOpenGeneratedAnswerSource).toHaveBeenCalledWith(
+      citationId,
+      undefined
+    );
   });
 
   it('dispatches a log citation hover action', () => {
@@ -155,9 +145,11 @@ describe('searchapi-generated-answer', () => {
     const citationId = 'citationId';
     const citationHoverTimeMs = 1000;
     generatedAnswer.logCitationHover(citationId, citationHoverTimeMs);
-    expect(
-      generatedAnswerAnalyticsClient.logHoverCitation
-    ).toHaveBeenCalledWith(citationId, citationHoverTimeMs, undefined);
+    expect(generatedAnswerAnalyticsClient.logHoverCitation).toHaveBeenCalledWith(
+      citationId,
+      citationHoverTimeMs,
+      undefined
+    );
   });
 
   it('dispatches a show action if the component is not already visible', () => {
@@ -167,9 +159,7 @@ describe('searchapi-generated-answer', () => {
     });
     generatedAnswer.show();
     expect(setIsVisible).toHaveBeenCalledWith(true);
-    expect(
-      generatedAnswerAnalyticsClient.logGeneratedAnswerShowAnswers
-    ).toHaveBeenCalledTimes(1);
+    expect(generatedAnswerAnalyticsClient.logGeneratedAnswerShowAnswers).toHaveBeenCalledTimes(1);
   });
 
   it('does not dispatch a show action if the component is already visible', () => {
@@ -178,9 +168,7 @@ describe('searchapi-generated-answer', () => {
       initialState: {isVisible: true},
     });
     generatedAnswer.show();
-    expect(
-      generatedAnswerAnalyticsClient.logGeneratedAnswerShowAnswers
-    ).not.toHaveBeenCalled();
+    expect(generatedAnswerAnalyticsClient.logGeneratedAnswerShowAnswers).not.toHaveBeenCalled();
   });
 
   it('dispatches a hide action if the component is visible', () => {
@@ -189,9 +177,7 @@ describe('searchapi-generated-answer', () => {
       initialState: {isVisible: true},
     });
     generatedAnswer.hide();
-    expect(
-      generatedAnswerAnalyticsClient.logGeneratedAnswerHideAnswers
-    ).toHaveBeenCalledTimes(1);
+    expect(generatedAnswerAnalyticsClient.logGeneratedAnswerHideAnswers).toHaveBeenCalledTimes(1);
   });
 
   it('does not dispatch a hide action if the component is not visible', () => {
@@ -200,9 +186,7 @@ describe('searchapi-generated-answer', () => {
       initialState: {isVisible: false},
     });
     generatedAnswer.hide();
-    expect(
-      generatedAnswerAnalyticsClient.logGeneratedAnswerHideAnswers
-    ).not.toHaveBeenCalled();
+    expect(generatedAnswerAnalyticsClient.logGeneratedAnswerHideAnswers).not.toHaveBeenCalled();
   });
 
   it('dispatches an expand action if the component is not already expanded', () => {
@@ -211,9 +195,7 @@ describe('searchapi-generated-answer', () => {
       initialState: {expanded: false},
     });
     generatedAnswer.expand();
-    expect(
-      generatedAnswerAnalyticsClient.logGeneratedAnswerExpand
-    ).toHaveBeenCalledTimes(1);
+    expect(generatedAnswerAnalyticsClient.logGeneratedAnswerExpand).toHaveBeenCalledTimes(1);
   });
 
   it('does not dispatch an expand action if the component is already expanded', () => {
@@ -222,9 +204,7 @@ describe('searchapi-generated-answer', () => {
       initialState: {expanded: true},
     });
     generatedAnswer.expand();
-    expect(
-      generatedAnswerAnalyticsClient.logGeneratedAnswerExpand
-    ).not.toHaveBeenCalled();
+    expect(generatedAnswerAnalyticsClient.logGeneratedAnswerExpand).not.toHaveBeenCalled();
   });
 
   it('dispatches a collapse action if the component is expanded', () => {
@@ -233,9 +213,7 @@ describe('searchapi-generated-answer', () => {
       initialState: {expanded: true},
     });
     generatedAnswer.collapse();
-    expect(
-      generatedAnswerAnalyticsClient.logGeneratedAnswerCollapse
-    ).toHaveBeenCalledTimes(1);
+    expect(generatedAnswerAnalyticsClient.logGeneratedAnswerCollapse).toHaveBeenCalledTimes(1);
   });
 
   it('does not dispatch a collapse action if the component is not expanded', () => {
@@ -244,17 +222,13 @@ describe('searchapi-generated-answer', () => {
       initialState: {expanded: false},
     });
     generatedAnswer.collapse();
-    expect(
-      generatedAnswerAnalyticsClient.logGeneratedAnswerCollapse
-    ).not.toHaveBeenCalled();
+    expect(generatedAnswerAnalyticsClient.logGeneratedAnswerCollapse).not.toHaveBeenCalled();
   });
 
   it('dispatches a log copy to clipboard action', () => {
     const generatedAnswer = createGeneratedAnswer();
     generatedAnswer.logCopyToClipboard();
-    expect(
-      generatedAnswerAnalyticsClient.logCopyGeneratedAnswer
-    ).toHaveBeenCalledTimes(1);
+    expect(generatedAnswerAnalyticsClient.logCopyGeneratedAnswer).toHaveBeenCalledTimes(1);
   });
 
   it('dispatches the setIsVisible with true when the initial state is set to true', () => {
@@ -287,8 +261,7 @@ describe('searchapi-generated-answer', () => {
         },
       });
       state.search.requestId = 'some-request-id';
-      state.search.extendedResults.generativeQuestionAnsweringId =
-        'some-stream-id';
+      state.search.extendedResults.generativeQuestionAnsweringId = 'some-stream-id';
       engine = buildMockSearchEngine(state);
     });
 
@@ -330,8 +303,7 @@ describe('searchapi-generated-answer', () => {
             lastStreamId: '',
           },
         },
-        subscribeToSearchRequests:
-          subscribeStateManager.subscribeToSearchRequests,
+        subscribeToSearchRequests: subscribeStateManager.subscribeToSearchRequests,
       };
 
       subscribeStateManager.engines = subscribeStateManagerMock.engines;

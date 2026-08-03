@@ -101,10 +101,7 @@ describe('#mapSearchResponse', () => {
 
   it('should return the full response', () => {
     expect(
-      mapSearchResponse(
-        {success: buildMockSearchResponse()},
-        {dateFacetValueMap: {}}
-      )
+      mapSearchResponse({success: buildMockSearchResponse()}, {dateFacetValueMap: {}})
     ).toEqual({success: buildMockSearchResponse()});
   });
 
@@ -133,9 +130,7 @@ describe('#mapSearchResponse', () => {
         facets: [
           buildMockDateFacetResponse({
             facetId,
-            values: [
-              buildMockDateFacetValue({start: relativeStart, end: relativeEnd}),
-            ],
+            values: [buildMockDateFacetValue({start: relativeStart, end: relativeEnd})],
           }),
         ],
       }),

@@ -41,9 +41,7 @@ export function createLegacyArrayStringConverter(
         try {
           const parsed = JSON.parse(trimmedValue);
           if (Array.isArray(parsed)) {
-            return parsed.map((item) =>
-              typeof item === 'string' ? item : String(item)
-            );
+            return parsed.map((item) => (typeof item === 'string' ? item : String(item)));
           }
         } catch {
           // Fall through to comma-separated parsing

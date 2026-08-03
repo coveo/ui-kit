@@ -19,7 +19,7 @@
 .stateful-button--unselected:hover,
 .stateful-button--unselected:focus {
   color: var(--neutral-color);
-  background-color: white;
+  background-color: var(--slds-g-color-surface-1, white);
 }
 
 .stateful-button--selected {
@@ -32,7 +32,7 @@
 .stateful-button--selected:focus {
   border-color: var(--main-color);
   color: var(--main-color);
-  background-color: white;
+  background-color: var(--slds-g-color-surface-1, white);
 }
 
 .stateful-button__icon--selected {

@@ -27,10 +27,7 @@ interface RemarksContext extends ConformanceContext {
   conformance: OpenAcrConformance;
 }
 
-function worst(
-  a: OpenAcrConformance,
-  b: OpenAcrConformance
-): OpenAcrConformance {
+function worst(a: OpenAcrConformance, b: OpenAcrConformance): OpenAcrConformance {
   return CONFORMANCE_SEVERITY[a] >= CONFORMANCE_SEVERITY[b] ? a : b;
 }
 
@@ -39,9 +36,7 @@ function worst(
  * cover it. "Uncovered" is deliberately *no signal* (not Does Not Support) so
  * manual audits can fill the gaps axe cannot test.
  */
-function automatedSignal(
-  aggregate?: CriterionAggregate
-): OpenAcrConformance | null {
+function automatedSignal(aggregate?: CriterionAggregate): OpenAcrConformance | null {
   const covered = aggregate?.coveredComponents.size ?? 0;
   if (covered === 0) {
     return null;
@@ -57,9 +52,7 @@ function automatedSignal(
   return 'partially-supports';
 }
 
-function interactiveSignal(
-  aggregate?: InteractiveAggregate
-): OpenAcrConformance | null {
+function interactiveSignal(aggregate?: InteractiveAggregate): OpenAcrConformance | null {
   return (aggregate?.coveredComponents.size ?? 0) > 0 ? 'supports' : null;
 }
 
@@ -71,9 +64,7 @@ function interactiveSignal(
  * criterion), interactive, and manual. When no layer has evidence, the
  * criterion is Does Not Support, pending a manual audit.
  */
-export function resolveConformance(
-  context: ConformanceContext
-): OpenAcrConformance {
+export function resolveConformance(context: ConformanceContext): OpenAcrConformance {
   const {override, aggregate, interactiveAggregate, manualAggregates} = context;
 
   if (override) {
@@ -117,9 +108,7 @@ export function buildRemarks(context: RemarksContext): string {
 
   if (manualConformance) {
     const base = `manual audit found ${openAcrConformanceLabel[manualConformance]}`;
-    evidence.push(
-      manualRemarks.length > 0 ? `${base} (${manualRemarks.join('; ')})` : base
-    );
+    evidence.push(manualRemarks.length > 0 ? `${base} (${manualRemarks.join('; ')})` : base);
   }
 
   if (covered > 0) {
@@ -131,9 +120,7 @@ export function buildRemarks(context: RemarksContext): string {
   }
 
   if (interactiveCovered > 0) {
-    evidence.push(
-      `interactive keyboard testing passed across ${interactiveCovered} component(s)`
-    );
+    evidence.push(`interactive keyboard testing passed across ${interactiveCovered} component(s)`);
   }
 
   if (evidence.length === 0) {

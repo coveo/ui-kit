@@ -1,6 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
-import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
+import {MockCommerceApi} from '@coveo/platform-mock-api/commerce';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';
@@ -22,53 +22,45 @@ commerceApiHarness.productListingEndpoint.mock((response) => ({
   },
 }));
 
-const {
-  decorator: commerceInterfaceDecorator,
-  play: initializeCommerceInterface,
-} = wrapInCommerceInterface({
-  skipFirstRequest: false,
-  type: 'product-listing',
-  engineConfig: {
-    context: {
-      view: {
-        url: 'https://sports.barca.group/browse/promotions/ui-kit-testing-product-price',
+const {decorator: commerceInterfaceDecorator, play: initializeCommerceInterface} =
+  wrapInCommerceInterface({
+    skipFirstRequest: false,
+    type: 'product-listing',
+    engineConfig: {
+      context: {
+        view: {
+          url: 'https://sports.barca.group/browse/promotions/ui-kit-testing-product-price',
+        },
+        language: 'en',
+        country: 'US',
+        currency: 'USD',
       },
-      language: 'en',
-      country: 'US',
-      currency: 'USD',
     },
-  },
-  includeCodeRoot: false,
-});
+    includeCodeRoot: false,
+  });
 
-const {
-  decorator: commerceInterfaceDecoratorEUR,
-  play: initializeCommerceInterfaceEUR,
-} = wrapInCommerceInterface({
-  skipFirstRequest: false,
-  type: 'product-listing',
-  engineConfig: {
-    context: {
-      view: {
-        url: 'https://sports.barca.group/browse/promotions/ui-kit-testing-product-price',
+const {decorator: commerceInterfaceDecoratorEUR, play: initializeCommerceInterfaceEUR} =
+  wrapInCommerceInterface({
+    skipFirstRequest: false,
+    type: 'product-listing',
+    engineConfig: {
+      context: {
+        view: {
+          url: 'https://sports.barca.group/browse/promotions/ui-kit-testing-product-price',
+        },
+        language: 'fr',
+        country: 'FR',
+        currency: 'EUR',
       },
-      language: 'fr',
-      country: 'FR',
-      currency: 'EUR',
     },
-  },
-  includeCodeRoot: false,
-});
+    includeCodeRoot: false,
+  });
 
-const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
-  'list',
-  false
-);
+const {decorator: commerceProductListDecorator} = wrapInCommerceProductList('list', false);
 const {decorator: productTemplateDecorator} = wrapInProductTemplate();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-product-price',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-product-price', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-product-price',
@@ -78,7 +70,6 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     msw: {handlers: [...commerceApiHarness.handlers]},
-    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },
@@ -93,11 +84,7 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  decorators: [
-    productTemplateDecorator,
-    commerceProductListDecorator,
-    commerceInterfaceDecorator,
-  ],
+  decorators: [productTemplateDecorator, commerceProductListDecorator, commerceInterfaceDecorator],
   play: initializeCommerceInterface,
 };
 

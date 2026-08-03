@@ -93,10 +93,7 @@ describe('follow-up answers slice', () => {
     it('clears the conversationToken', () => {
       state.conversationToken = 'token-123';
 
-      const finalState = followUpAnswersReducer(
-        state,
-        clearFollowUpAnswersConversationToken()
-      );
+      const finalState = followUpAnswersReducer(state, clearFollowUpAnswersConversationToken());
 
       expect(finalState.conversationToken).toBe('');
     });
@@ -125,14 +122,9 @@ describe('follow-up answers slice', () => {
     });
 
     it('marks previous active follow-up as inactive', () => {
-      state.followUpAnswers = [
-        {...createInitialFollowUpAnswer('First?'), isActive: true},
-      ];
+      state.followUpAnswers = [{...createInitialFollowUpAnswer('First?'), isActive: true}];
 
-      const finalState = followUpAnswersReducer(
-        state,
-        createFollowUpAnswer({question: 'Second?'})
-      );
+      const finalState = followUpAnswersReducer(state, createFollowUpAnswer({question: 'Second?'}));
 
       expect(finalState.followUpAnswers[0].isActive).toBe(false);
       expect(finalState.followUpAnswers[1].isActive).toBe(true);
@@ -141,10 +133,7 @@ describe('follow-up answers slice', () => {
     it('appends to existing follow-up answers', () => {
       state.followUpAnswers = [createInitialFollowUpAnswer('First?')];
 
-      const finalState = followUpAnswersReducer(
-        state,
-        createFollowUpAnswer({question: 'Second?'})
-      );
+      const finalState = followUpAnswersReducer(state, createFollowUpAnswer({question: 'Second?'}));
 
       expect(finalState.followUpAnswers).toHaveLength(2);
       expect(finalState.followUpAnswers[1].question).toBe('Second?');
@@ -155,19 +144,13 @@ describe('follow-up answers slice', () => {
     it('sets answerId on the active follow-up', () => {
       state.followUpAnswers = [createInitialFollowUpAnswer('Question?')];
 
-      const finalState = followUpAnswersReducer(
-        state,
-        setActiveFollowUpAnswerId('answer-123')
-      );
+      const finalState = followUpAnswersReducer(state, setActiveFollowUpAnswerId('answer-123'));
 
       expect(finalState.followUpAnswers[0].answerId).toBe('answer-123');
     });
 
     it('does nothing when no follow-ups exist', () => {
-      const finalState = followUpAnswersReducer(
-        state,
-        setActiveFollowUpAnswerId('answer-123')
-      );
+      const finalState = followUpAnswersReducer(state, setActiveFollowUpAnswerId('answer-123'));
 
       expect(finalState).toEqual(state);
     });
@@ -180,10 +163,7 @@ describe('follow-up answers slice', () => {
         },
       ];
 
-      const finalState = followUpAnswersReducer(
-        state,
-        setActiveFollowUpAnswerId('new-id')
-      );
+      const finalState = followUpAnswersReducer(state, setActiveFollowUpAnswerId('new-id'));
 
       expect(finalState.followUpAnswers[0].answerId).toBe('existing-id');
     });
@@ -198,10 +178,7 @@ describe('follow-up answers slice', () => {
         {...createInitialFollowUpAnswer('Second?'), isActive: true},
       ];
 
-      const finalState = followUpAnswersReducer(
-        state,
-        setActiveFollowUpAnswerId('answer-123')
-      );
+      const finalState = followUpAnswersReducer(state, setActiveFollowUpAnswerId('answer-123'));
 
       expect(finalState.followUpAnswers[0].answerId).toBe('id-1');
       expect(finalState.followUpAnswers[1].answerId).toBe('answer-123');
@@ -222,9 +199,7 @@ describe('follow-up answers slice', () => {
         })
       );
 
-      expect(finalState.followUpAnswers[0].answerContentFormat).toBe(
-        'text/markdown'
-      );
+      expect(finalState.followUpAnswers[0].answerContentFormat).toBe('text/markdown');
     });
 
     it('does nothing when answerId does not match', () => {
@@ -466,10 +441,7 @@ describe('follow-up answers slice', () => {
       );
 
       expect(finalState.followUpAnswers[0].citations).toHaveLength(2);
-      expect(finalState.followUpAnswers[0].citations).toEqual([
-        ...existing,
-        ...newCitations,
-      ]);
+      expect(finalState.followUpAnswers[0].citations).toEqual([...existing, ...newCitations]);
     });
 
     it('filters out duplicate citations by URI', () => {
@@ -550,10 +522,7 @@ describe('follow-up answers slice', () => {
         },
       ];
 
-      const finalState = followUpAnswersReducer(
-        state,
-        followUpCompleted({answerId: 'answer-123'})
-      );
+      const finalState = followUpAnswersReducer(state, followUpCompleted({answerId: 'answer-123'}));
 
       expect(finalState.followUpAnswers[0].isLoading).toBe(false);
       expect(finalState.followUpAnswers[0].isStreaming).toBe(false);
@@ -592,10 +561,7 @@ describe('follow-up answers slice', () => {
     });
 
     it('does nothing when no follow-ups exist', () => {
-      const finalState = followUpAnswersReducer(
-        state,
-        followUpCompleted({answerId: 'answer-123'})
-      );
+      const finalState = followUpAnswersReducer(state, followUpCompleted({answerId: 'answer-123'}));
 
       expect(finalState).toEqual(state);
     });
@@ -729,9 +695,7 @@ describe('follow-up answers slice', () => {
     });
 
     it('does nothing when there is no active follow-up', () => {
-      state.followUpAnswers = [
-        {...createInitialFollowUpAnswer('Question?'), isActive: false},
-      ];
+      state.followUpAnswers = [{...createInitialFollowUpAnswer('Question?'), isActive: false}];
 
       const finalState = followUpAnswersReducer(
         state,
@@ -748,10 +712,7 @@ describe('follow-up answers slice', () => {
         {...createInitialFollowUpAnswer('Question?'), answerId: 'answer-123'},
       ];
 
-      const finalState = followUpAnswersReducer(
-        state,
-        likeFollowUp({answerId: 'answer-123'})
-      );
+      const finalState = followUpAnswersReducer(state, likeFollowUp({answerId: 'answer-123'}));
 
       expect(finalState.followUpAnswers[0].liked).toBe(true);
       expect(finalState.followUpAnswers[0].disliked).toBe(false);
@@ -766,10 +727,7 @@ describe('follow-up answers slice', () => {
         },
       ];
 
-      const finalState = followUpAnswersReducer(
-        state,
-        likeFollowUp({answerId: 'answer-123'})
-      );
+      const finalState = followUpAnswersReducer(state, likeFollowUp({answerId: 'answer-123'}));
 
       expect(finalState.followUpAnswers[0].liked).toBe(true);
       expect(finalState.followUpAnswers[0].disliked).toBe(false);
@@ -780,19 +738,13 @@ describe('follow-up answers slice', () => {
         {...createInitialFollowUpAnswer('Question?'), answerId: 'answer-123'},
       ];
 
-      const finalState = followUpAnswersReducer(
-        state,
-        likeFollowUp({answerId: 'different-id'})
-      );
+      const finalState = followUpAnswersReducer(state, likeFollowUp({answerId: 'different-id'}));
 
       expect(finalState.followUpAnswers[0].liked).toBe(false);
     });
 
     it('does nothing when no follow-ups exist', () => {
-      const finalState = followUpAnswersReducer(
-        state,
-        likeFollowUp({answerId: 'answer-123'})
-      );
+      const finalState = followUpAnswersReducer(state, likeFollowUp({answerId: 'answer-123'}));
 
       expect(finalState).toEqual(state);
     });
@@ -804,10 +756,7 @@ describe('follow-up answers slice', () => {
         {...createInitialFollowUpAnswer('Question?'), answerId: 'answer-123'},
       ];
 
-      const finalState = followUpAnswersReducer(
-        state,
-        dislikeFollowUp({answerId: 'answer-123'})
-      );
+      const finalState = followUpAnswersReducer(state, dislikeFollowUp({answerId: 'answer-123'}));
 
       expect(finalState.followUpAnswers[0].disliked).toBe(true);
       expect(finalState.followUpAnswers[0].liked).toBe(false);
@@ -822,10 +771,7 @@ describe('follow-up answers slice', () => {
         },
       ];
 
-      const finalState = followUpAnswersReducer(
-        state,
-        dislikeFollowUp({answerId: 'answer-123'})
-      );
+      const finalState = followUpAnswersReducer(state, dislikeFollowUp({answerId: 'answer-123'}));
 
       expect(finalState.followUpAnswers[0].disliked).toBe(true);
       expect(finalState.followUpAnswers[0].liked).toBe(false);
@@ -836,19 +782,13 @@ describe('follow-up answers slice', () => {
         {...createInitialFollowUpAnswer('Question?'), answerId: 'answer-123'},
       ];
 
-      const finalState = followUpAnswersReducer(
-        state,
-        dislikeFollowUp({answerId: 'different-id'})
-      );
+      const finalState = followUpAnswersReducer(state, dislikeFollowUp({answerId: 'different-id'}));
 
       expect(finalState.followUpAnswers[0].disliked).toBe(false);
     });
 
     it('does nothing when no follow-ups exist', () => {
-      const finalState = followUpAnswersReducer(
-        state,
-        dislikeFollowUp({answerId: 'answer-123'})
-      );
+      const finalState = followUpAnswersReducer(state, dislikeFollowUp({answerId: 'answer-123'}));
 
       expect(finalState).toEqual(state);
     });
@@ -1072,9 +1012,7 @@ describe('follow-up answers slice', () => {
         {
           ...createInitialFollowUpAnswer('Question?'),
           answerId: 'answer-123',
-          generationSteps: [
-            {name: 'searching', status: 'active', startedAt: 1},
-          ],
+          generationSteps: [{name: 'searching', status: 'active', startedAt: 1}],
         },
       ];
 
@@ -1088,9 +1026,7 @@ describe('follow-up answers slice', () => {
         })
       );
 
-      expect(
-        finalState.followUpAnswers[0].generationSteps[0].toolCalls
-      ).toEqual([
+      expect(finalState.followUpAnswers[0].generationSteps[0].toolCalls).toEqual([
         {
           toolCallName: 'search',
           toolCallId: 'tc-1',
@@ -1105,9 +1041,7 @@ describe('follow-up answers slice', () => {
         {
           ...createInitialFollowUpAnswer('Question?'),
           answerId: 'answer-123',
-          generationSteps: [
-            {name: 'searching', status: 'active', startedAt: 1},
-          ],
+          generationSteps: [{name: 'searching', status: 'active', startedAt: 1}],
         },
       ];
 
@@ -1121,9 +1055,7 @@ describe('follow-up answers slice', () => {
         })
       );
 
-      expect(
-        finalState.followUpAnswers[0].generationSteps[0].toolCalls
-      ).toBeUndefined();
+      expect(finalState.followUpAnswers[0].generationSteps[0].toolCalls).toBeUndefined();
     });
 
     it('should not modify state when no active step exists', () => {
@@ -1152,9 +1084,7 @@ describe('follow-up answers slice', () => {
         })
       );
 
-      expect(
-        finalState.followUpAnswers[0].generationSteps[0].toolCalls
-      ).toBeUndefined();
+      expect(finalState.followUpAnswers[0].generationSteps[0].toolCalls).toBeUndefined();
     });
   });
 
@@ -1192,10 +1122,9 @@ describe('follow-up answers slice', () => {
         })
       );
 
-      expect(
-        finalState.followUpAnswers[0].generationSteps[0].toolCalls![0]
-          .toolCallArgs
-      ).toEqual({q: 'test query'});
+      expect(finalState.followUpAnswers[0].generationSteps[0].toolCalls![0].toolCallArgs).toEqual({
+        q: 'test query',
+      });
     });
 
     it('should not modify state when answerId does not match', () => {
@@ -1232,8 +1161,7 @@ describe('follow-up answers slice', () => {
       );
 
       expect(
-        finalState.followUpAnswers[0].generationSteps[0].toolCalls![0]
-          .toolCallArgs
+        finalState.followUpAnswers[0].generationSteps[0].toolCalls![0].toolCallArgs
       ).toBeUndefined();
     });
 
@@ -1271,8 +1199,7 @@ describe('follow-up answers slice', () => {
       );
 
       expect(
-        finalState.followUpAnswers[0].generationSteps[0].toolCalls![0]
-          .toolCallArgs
+        finalState.followUpAnswers[0].generationSteps[0].toolCalls![0].toolCallArgs
       ).toBeUndefined();
     });
   });
@@ -1310,13 +1237,10 @@ describe('follow-up answers slice', () => {
         })
       );
 
-      expect(
-        finalState.followUpAnswers[0].generationSteps[0].toolCalls![0]
-          .finishedAt
-      ).toBe(200);
-      expect(
-        finalState.followUpAnswers[0].generationSteps[0].toolCalls![0].status
-      ).toBe('completed');
+      expect(finalState.followUpAnswers[0].generationSteps[0].toolCalls![0].finishedAt).toBe(200);
+      expect(finalState.followUpAnswers[0].generationSteps[0].toolCalls![0].status).toBe(
+        'completed'
+      );
     });
 
     it('should not modify state when answerId does not match', () => {
@@ -1352,8 +1276,7 @@ describe('follow-up answers slice', () => {
       );
 
       expect(
-        finalState.followUpAnswers[0].generationSteps[0].toolCalls![0]
-          .finishedAt
+        finalState.followUpAnswers[0].generationSteps[0].toolCalls![0].finishedAt
       ).toBeUndefined();
     });
 
@@ -1390,8 +1313,7 @@ describe('follow-up answers slice', () => {
       );
 
       expect(
-        finalState.followUpAnswers[0].generationSteps[0].toolCalls![0]
-          .finishedAt
+        finalState.followUpAnswers[0].generationSteps[0].toolCalls![0].finishedAt
       ).toBeUndefined();
     });
   });

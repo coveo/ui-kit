@@ -29,10 +29,7 @@ import {buildMockCategoryFacetResponse} from '../../../../test/mock-category-fac
 import {buildMockCategoryFacetSearch} from '../../../../test/mock-category-facet-search.js';
 import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice.js';
 import {buildMockCategoryFacetValue} from '../../../../test/mock-category-facet-value.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../../../test/mock-engine-v2.js';
+import {buildMockSearchEngine, type MockedSearchEngine} from '../../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../../test/mock-state.js';
 import * as FacetIdDeterminor from '../_common/facet-id-determinor.js';
 import {
@@ -44,18 +41,14 @@ import {
 
 vi.mock('../../../../features/facets/category-facet-set/category-facet-utils');
 
-vi.mock(
-  '../../../../features/facets/category-facet-set/category-facet-set-actions'
-);
+vi.mock('../../../../features/facets/category-facet-set/category-facet-set-actions');
 
 vi.mock('../../../../features/facet-options/facet-options-actions');
 
 const {
   findActiveValueAncestry: actualFindActiveValueAncestry,
   partitionIntoParentsAndValues: actualPartitionIntoParentsAndValues,
-} = await vi.importActual(
-  '../../../../features/facets/category-facet-set/category-facet-utils'
-);
+} = await vi.importActual('../../../../features/facets/category-facet-set/category-facet-utils');
 
 describe('category facet', () => {
   const facetId = '1';
@@ -64,9 +57,7 @@ describe('category facet', () => {
   let engine: MockedSearchEngine;
   let categoryFacet: CoreCategoryFacet;
   const findActiveValueAncestryMock = vi.mocked(findActiveValueAncestry);
-  const partitionIntoParentsAndValuesMock = vi.mocked(
-    partitionIntoParentsAndValues
-  );
+  const partitionIntoParentsAndValuesMock = vi.mocked(partitionIntoParentsAndValues);
 
   function initCategoryFacet() {
     engine = buildMockSearchEngine(state);
@@ -84,12 +75,8 @@ describe('category facet', () => {
       facetId,
       field: 'geography',
     };
-    findActiveValueAncestryMock.mockImplementation(
-      actualFindActiveValueAncestry
-    );
-    partitionIntoParentsAndValuesMock.mockImplementation(
-      actualPartitionIntoParentsAndValues
-    );
+    findActiveValueAncestryMock.mockImplementation(actualFindActiveValueAncestry);
+    partitionIntoParentsAndValuesMock.mockImplementation(actualPartitionIntoParentsAndValues);
     state = createMockState();
     setFacetRequest();
     initCategoryFacet();
@@ -110,10 +97,7 @@ describe('category facet', () => {
 
     initCategoryFacet();
 
-    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(
-      engine,
-      options
-    );
+    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(engine, options);
   });
 
   it('#state.facetId exposes the facet id', () => {
@@ -132,9 +116,7 @@ describe('category facet', () => {
 
   it('when an option is invalid, it throws', () => {
     options.numberOfValues = 0;
-    expect(() => initCategoryFacet()).toThrow(
-      'Check the options of buildCategoryFacet'
-    );
+    expect(() => initCategoryFacet()).toThrow('Check the options of buildCategoryFacet');
   });
 
   it('is subscribable', () => {
@@ -235,10 +217,7 @@ describe('category facet', () => {
     });
 
     it('#state.valuesAsTrees contains both root values (outer & neighboring)', () => {
-      expect(categoryFacet.state.valuesAsTrees).toEqual([
-        outerValue,
-        neighboringValue,
-      ]);
+      expect(categoryFacet.state.valuesAsTrees).toEqual([outerValue, neighboringValue]);
     });
 
     it('#state.isHierarchical should be true', () => {
@@ -262,9 +241,7 @@ describe('category facet', () => {
     });
 
     it('#state.selectedValueAncestry contains the selected leaf value', () => {
-      expect(categoryFacet.state.selectedValueAncestry).toEqual([
-        selectedValue,
-      ]);
+      expect(categoryFacet.state.selectedValueAncestry).toEqual([selectedValue]);
     });
 
     it('#state.activeValue.children an empty array', () => {

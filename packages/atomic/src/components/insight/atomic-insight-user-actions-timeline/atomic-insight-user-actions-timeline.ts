@@ -49,9 +49,7 @@ export class AtomicInsightUserActionsTimeline
 
     .separator {
       height: 1px;
-      background-color: var(
-        --atomic-insight-user-actions-timeline-separator-background
-      );
+      background-color: var(--atomic-insight-user-actions-timeline-separator-background);
     }
   `;
 

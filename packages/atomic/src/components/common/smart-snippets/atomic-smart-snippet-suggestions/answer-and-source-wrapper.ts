@@ -13,11 +13,7 @@ export const renderAnswerAndSourceWrapper: FunctionalComponentWithChildren<
 > =
   ({props}) =>
   (children) => {
-    return html`<div
-      part="answer-and-source"
-      class="pr-6 pb-6 pl-10"
-      id=${props.id}
-    >
+    return html`<div part="answer-and-source" class="pr-6 pb-6 pl-10" id=${props.id}>
       ${children}
     </div>`;
   };

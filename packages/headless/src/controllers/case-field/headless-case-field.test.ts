@@ -15,15 +15,8 @@ import {caseInputReducer as caseInput} from '../../features/case-input/case-inpu
 import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions.js';
 import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice.js';
 import {buildMockCaseAssistState} from '../../test/mock-case-assist-state.js';
-import {
-  buildMockCaseAssistEngine,
-  type MockedCaseAssistEngine,
-} from '../../test/mock-engine-v2.js';
-import {
-  buildCaseField,
-  type CaseField,
-  type CaseFieldOptions,
-} from './headless-case-field.js';
+import {buildMockCaseAssistEngine, type MockedCaseAssistEngine} from '../../test/mock-engine-v2.js';
+import {buildCaseField, type CaseField, type CaseFieldOptions} from './headless-case-field.js';
 
 vi.mock('../../features/document-suggestion/document-suggestion-actions');
 vi.mock('../../features/case-field/case-field-actions');
@@ -72,9 +65,7 @@ describe('Case Field', () => {
       fieldName: testFieldName,
       fieldValue: '',
     });
-    expect(engine.dispatch).toHaveBeenCalledWith(
-      mockedRegisterCaseField.mock.results[0].value
-    );
+    expect(engine.dispatch).toHaveBeenCalledWith(mockedRegisterCaseField.mock.results[0].value);
   });
 
   it('does not dispatch #registerCaseField on init if the field is already registered', () => {
@@ -120,9 +111,7 @@ describe('Case Field', () => {
 
       field.update('suggested value');
 
-      expect(mockedLogClassificationClick).toHaveBeenCalledWith(
-        'some-suggestion-id'
-      );
+      expect(mockedLogClassificationClick).toHaveBeenCalledWith('some-suggestion-id');
       expect(engine.dispatch).toHaveBeenCalledWith(
         mockedLogClassificationClick.mock.results[0].value
       );
@@ -145,9 +134,7 @@ describe('Case Field', () => {
         fieldName: testFieldName,
         fieldValue: testValue,
       });
-      expect(engine.dispatch).toHaveBeenCalledWith(
-        mockedUpdateCaseField.mock.results[0].value
-      );
+      expect(engine.dispatch).toHaveBeenCalledWith(mockedUpdateCaseField.mock.results[0].value);
     });
 
     it('dispatches a #logUpdateCaseField analytics action', () => {
@@ -156,9 +143,7 @@ describe('Case Field', () => {
       field.update(testValue);
 
       expect(mockedLogUpdateCaseField).toHaveBeenCalledWith(testFieldName);
-      expect(engine.dispatch).toHaveBeenCalledWith(
-        mockedLogUpdateCaseField.mock.results[0].value
-      );
+      expect(engine.dispatch).toHaveBeenCalledWith(mockedLogUpdateCaseField.mock.results[0].value);
     });
 
     it('does not dispatch a #logCaseFieldUpdate analytics action when the autoSelection parameter is set to true', () => {
@@ -170,9 +155,7 @@ describe('Case Field', () => {
     });
 
     it('dispatches a #fetchCaseClassifications action when required', () => {
-      const mockedFetchCaseClassifications = vi.mocked(
-        fetchCaseClassifications
-      );
+      const mockedFetchCaseClassifications = vi.mocked(fetchCaseClassifications);
 
       field.update(testValue, {
         caseClassifications: true,
@@ -185,9 +168,7 @@ describe('Case Field', () => {
     });
 
     it('dispatches a #fetchDocumentSuggestions action when required', () => {
-      const mockedFetchDocumentSuggestions = vi.mocked(
-        fetchDocumentSuggestions
-      );
+      const mockedFetchDocumentSuggestions = vi.mocked(fetchDocumentSuggestions);
 
       field.update(testValue, {
         documentSuggestions: true,
@@ -200,12 +181,8 @@ describe('Case Field', () => {
     });
 
     it('dispatches both #fetchCaseClassifications and #fetchDocumentSuggestions when required', () => {
-      const mockedFetchCaseClassifications = vi.mocked(
-        fetchCaseClassifications
-      );
-      const mockedFetchDocumentSuggestions = vi.mocked(
-        fetchDocumentSuggestions
-      );
+      const mockedFetchCaseClassifications = vi.mocked(fetchCaseClassifications);
+      const mockedFetchDocumentSuggestions = vi.mocked(fetchDocumentSuggestions);
 
       field.update(testValue, {
         caseClassifications: true,
@@ -223,12 +200,8 @@ describe('Case Field', () => {
     });
 
     it('does not dispatch #fetchCaseClassifications nor #fetchDocumentSuggestions when not required', () => {
-      const mockedFetchCaseClassifications = vi.mocked(
-        fetchCaseClassifications
-      );
-      const mockedFetchDocumentSuggestions = vi.mocked(
-        fetchDocumentSuggestions
-      );
+      const mockedFetchCaseClassifications = vi.mocked(fetchCaseClassifications);
+      const mockedFetchDocumentSuggestions = vi.mocked(fetchDocumentSuggestions);
 
       field.update(testValue);
 

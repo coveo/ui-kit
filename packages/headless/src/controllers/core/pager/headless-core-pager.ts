@@ -14,19 +14,10 @@ import {
   maxPageSelector,
 } from '../../../features/pagination/pagination-selectors.js';
 import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice.js';
-import type {
-  ConfigurationSection,
-  PaginationSection,
-} from '../../../state/state-sections.js';
+import type {ConfigurationSection, PaginationSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {
-  validateInitialState,
-  validateOptions,
-} from '../../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../../controller/headless-controller.js';
+import {validateInitialState, validateOptions} from '../../../utils/validate-payload.js';
+import {buildController, type Controller} from '../../controller/headless-controller.js';
 
 export interface PagerInitialState {
   /**
@@ -65,8 +56,6 @@ const initialStateSchema = new Schema({
 
 /**
  * The `Pager` controller allows to navigate through the different result pages.
- *
- * [pager.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/pager/pager.fn.tsx)
  *
  * @group Controllers
  * @category Pager
@@ -136,10 +125,7 @@ export interface PagerState {
   hasNextPage: boolean;
 }
 
-export function buildCorePager(
-  engine: CoreEngine,
-  props: PagerProps = {}
-): Pager {
+export function buildCorePager(engine: CoreEngine, props: PagerProps = {}): Pager {
   if (!loadPagerReducers(engine)) {
     throw loadReducerError;
   }

@@ -12,20 +12,13 @@ import {
   fetchFacetValues,
 } from '../../../../features/insight-search/insight-search-actions.js';
 import type {InsightAppState} from '../../../../state/insight-app-state.js';
-import {
-  buildMockInsightEngine,
-  type MockedInsightEngine,
-} from '../../../../test/mock-engine-v2.js';
+import {buildMockInsightEngine, type MockedInsightEngine} from '../../../../test/mock-engine-v2.js';
 import {buildMockFacetRequest} from '../../../../test/mock-facet-request.js';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search.js';
 import {buildMockFacetSlice} from '../../../../test/mock-facet-slice.js';
 import {buildMockFacetValue} from '../../../../test/mock-facet-value.js';
 import {buildMockInsightState} from '../../../../test/mock-insight-state.js';
-import {
-  buildFacet,
-  type Facet,
-  type FacetOptions,
-} from './headless-insight-facet.js';
+import {buildFacet, type Facet, type FacetOptions} from './headless-insight-facet.js';
 
 vi.mock('../../../../features/facets/facet-set/facet-set-actions');
 vi.mock('../../../../features/insight-search/insight-search-actions');
@@ -117,8 +110,7 @@ describe('InsightFacet', () => {
   });
 
   describe('#toggleSingleSelect when the value state is not "idle"', () => {
-    const facetValue = () =>
-      buildMockFacetValue({value: 'TED', state: 'selected'});
+    const facetValue = () => buildMockFacetValue({value: 'TED', state: 'selected'});
 
     testCommonToggleSingleSelect(facetValue);
 

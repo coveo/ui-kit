@@ -1,6 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
-import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
+import {MockCommerceApi} from '@coveo/platform-mock-api/commerce';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {
   getProductSectionArgs,
@@ -36,7 +36,6 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     msw: {handlers: [...commerceApiHarness.handlers]},
-    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },

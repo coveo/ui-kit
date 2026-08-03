@@ -20,9 +20,7 @@ export interface InstantResultsDefinition extends ControllerDefinitionWithoutPro
  * @param props - The configurable `InstantResults` properties.
  * @returns The `InstantResults` controller definition.
  * */
-export function defineInstantResults(
-  props: InstantResultProps
-): InstantResultsDefinition {
+export function defineInstantResults(props: InstantResultProps): InstantResultsDefinition {
   return {
     build: (engine) => buildInstantResults(engine, props),
   };

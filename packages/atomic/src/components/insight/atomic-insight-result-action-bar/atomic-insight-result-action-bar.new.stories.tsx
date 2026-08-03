@@ -1,6 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
-import {MockInsightApi} from '@coveo/platform-mock-api/insight/mock';
+import {MockInsightApi} from '@coveo/platform-mock-api/insight';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import '@/src/components/insight/atomic-insight-layout/atomic-insight-layout.js';
@@ -44,11 +44,7 @@ export const Default: Story = {
   render: () => html`
     <atomic-insight-layout>
       <atomic-layout-section section="results">
-        <atomic-insight-result-list
-          display="list"
-          density="normal"
-          image-size="icon"
-        >
+        <atomic-insight-result-list display="list" density="normal" image-size="icon">
           <atomic-insight-result-template>
             <template>
               <atomic-result-section-title>
@@ -78,11 +74,7 @@ export const WithCopyAction: Story = {
   render: () => html`
     <atomic-insight-layout>
       <atomic-layout-section section="results">
-        <atomic-insight-result-list
-          display="list"
-          density="normal"
-          image-size="icon"
-        >
+        <atomic-insight-result-list display="list" density="normal" image-size="icon">
           <atomic-insight-result-template>
             <template>
               <atomic-result-section-title>
@@ -112,11 +104,7 @@ export const WithAllActions: Story = {
   render: () => html`
     <atomic-insight-layout>
       <atomic-layout-section section="results">
-        <atomic-insight-result-list
-          display="list"
-          density="normal"
-          image-size="icon"
-        >
+        <atomic-insight-result-list display="list" density="normal" image-size="icon">
           <atomic-insight-result-template>
             <template>
               <atomic-result-section-title>

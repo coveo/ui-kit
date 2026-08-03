@@ -52,37 +52,32 @@ describe('atomic-result-badge', () => {
     } = {}
   ) => {
     const resultToUse = options.result ?? mockResult;
-    const {element, atomicInterface} =
-      await renderInAtomicResult<AtomicResultBadge>({
-        template: html`<atomic-result-badge
-          field=${ifDefined(options.field)}
-          label=${ifDefined(options.label)}
-          icon=${ifDefined(options.icon)}
-          >${options.slottedContent}</atomic-result-badge
-        >`,
-        selector: 'atomic-result-badge',
-        result: resultToUse,
-        bindings: (bindings) => {
-          bindings.i18n = i18n;
-          return bindings;
-        },
-      });
+    const {element, atomicInterface} = await renderInAtomicResult<AtomicResultBadge>({
+      template: html`<atomic-result-badge
+        field=${ifDefined(options.field)}
+        label=${ifDefined(options.label)}
+        icon=${ifDefined(options.icon)}
+        >${options.slottedContent}</atomic-result-badge
+      >`,
+      selector: 'atomic-result-badge',
+      result: resultToUse,
+      bindings: (bindings) => {
+        bindings.i18n = i18n;
+        return bindings;
+      },
+    });
 
     await atomicInterface.updateComplete;
     await element?.updateComplete;
 
     return {
       element,
-      badgeElement: () =>
-        element?.shadowRoot?.querySelector('[part="result-badge-element"]'),
-      iconPart: () =>
-        element?.shadowRoot?.querySelector('[part="result-badge-icon"]'),
-      labelPart: () =>
-        element?.shadowRoot?.querySelector('[part="result-badge-label"]'),
+      badgeElement: () => element?.shadowRoot?.querySelector('[part="result-badge-element"]'),
+      iconPart: () => element?.shadowRoot?.querySelector('[part="result-badge-icon"]'),
+      labelPart: () => element?.shadowRoot?.querySelector('[part="result-badge-label"]'),
       icon: () => element?.shadowRoot?.querySelector('atomic-icon'),
       text: () => element?.shadowRoot?.querySelector('atomic-text'),
-      resultText: () =>
-        element?.shadowRoot?.querySelector('atomic-result-text'),
+      resultText: () => element?.shadowRoot?.querySelector('atomic-result-text'),
       slot: () => element?.shadowRoot?.querySelector('slot'),
     };
   };

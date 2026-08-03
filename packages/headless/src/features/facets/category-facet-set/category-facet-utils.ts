@@ -10,9 +10,9 @@ type CategoryFacetValuePartition<T extends GenericCategoryFacetValue> = {
   values: T[];
 };
 
-export function partitionIntoParentsAndValues<
-  T extends GenericCategoryFacetValue,
->(nestedValues: T[] | undefined): CategoryFacetValuePartition<T> {
+export function partitionIntoParentsAndValues<T extends GenericCategoryFacetValue>(
+  nestedValues: T[] | undefined
+): CategoryFacetValuePartition<T> {
   if (!nestedValues) {
     return {parents: [], values: []};
   }
@@ -41,25 +41,17 @@ export function findActiveValueAncestry(
 export function findActiveValueAncestry(
   valuesAsTress: CommerceCategoryFacetValue[]
 ): CommerceCategoryFacetValue[];
-export function findActiveValueAncestry(
-  valuesAsTress: CategoryFacetValue[]
-): CategoryFacetValue[];
+export function findActiveValueAncestry(valuesAsTress: CategoryFacetValue[]): CategoryFacetValue[];
 export function findActiveValueAncestry(
   valuesAsTree: CategoryFacetValueCommon[]
 ): CategoryFacetValueCommon[] {
-  const {activeValue, ancestryMap} =
-    getActiveValueAndAncestryFromValueTree(valuesAsTree);
+  const {activeValue, ancestryMap} = getActiveValueAndAncestryFromValueTree(valuesAsTree);
   return activeValue ? getActiveValueAncestry(activeValue, ancestryMap) : [];
 }
 
-function getActiveValueAndAncestryFromValueTree(
-  valuesAsTrees: CategoryFacetValueCommon[]
-) {
+function getActiveValueAndAncestryFromValueTree(valuesAsTrees: CategoryFacetValueCommon[]) {
   const valueToVisit: CategoryFacetValueCommon[] = [...valuesAsTrees];
-  const ancestryMap = new Map<
-    CategoryFacetValueCommon,
-    CategoryFacetValueCommon
-  >();
+  const ancestryMap = new Map<CategoryFacetValueCommon, CategoryFacetValueCommon>();
   while (valueToVisit.length > 0) {
     const currentValue: CategoryFacetValueCommon = valueToVisit.shift()!;
     if (currentValue.state === 'selected') {

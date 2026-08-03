@@ -5,13 +5,12 @@ import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import {getOrCreateProductListActions} from '@/src/internal/features/product-list/index.js';
 import {getOrCreatePaginationActions} from '@/src/internal/features/pagination/index.js';
 import {getOrCreateFacetsActions} from '@/src/internal/features/facets/index.js';
-import {getOrCreateSortActions} from '@/src/internal/features/sort/index.js';
+import {getOrCreateSortActions, fromCommerceApiSort} from '@/src/internal/features/sort/index.js';
+import type {CommerceApiSortPayload} from '@/src/internal/features/sort/index.js';
 import {getOrCreateTriggersActions} from '@/src/internal/features/triggers/index.js';
 import {getOrCreateQueryCorrectionActions} from '@/src/internal/features/query-correction/index.js';
 
-export function createCommerceSearchEndpointResponseHandler(
-  iface: InterfaceHandle
-) {
+export function createCommerceSearchEndpointResponseHandler(iface: InterfaceHandle) {
   const productListActions = getOrCreateProductListActions(iface);
   const paginationActions = getOrCreatePaginationActions(iface);
   const facetActions = getOrCreateFacetsActions(iface);
@@ -20,30 +19,31 @@ export function createCommerceSearchEndpointResponseHandler(
   const queryCorrectionActions = getOrCreateQueryCorrectionActions(iface);
 
   return (engine: FullEngine, response: CommerceSearchResponse) => {
-    engine.mutate(
-      productListActions.setProductsFromResponse(response.products)
-    );
+    engine.mutate(productListActions.setProductsFromResponse(response.products));
 
+    engine.mutate(paginationActions.setTotalCount(response.pagination.totalEntries));
     engine.mutate(
-      paginationActions.setTotalCount(response.pagination.totalEntries)
-    );
-    engine.mutate(
-      paginationActions.setFirstResult(
-        response.pagination.page * response.pagination.perPage
-      )
+      paginationActions.setFirstResult(response.pagination.page * response.pagination.perPage)
     );
     engine.mutate(paginationActions.setPageSize(response.pagination.perPage));
 
     if (response.facets.length > 0) {
       engine.mutate(
-        facetActions.updateFromResponse(
-          response.facets as unknown as CoveoFacetResponse[]
-        )
+        facetActions.updateFromResponse(response.facets as unknown as CoveoFacetResponse[])
       );
     }
 
     if (response.sort) {
-      engine.mutate(sortActions.updateFromResponse(response.sort));
+      engine.mutate(
+        sortActions.updateFromResponse({
+          appliedSort: fromCommerceApiSort(
+            response.sort.appliedSort as unknown as CommerceApiSortPayload
+          ),
+          availableSorts: response.sort.availableSorts.map((s) =>
+            fromCommerceApiSort(s as unknown as CommerceApiSortPayload)
+          ),
+        })
+      );
     }
 
     if (response.triggers.length > 0) {
@@ -51,9 +51,7 @@ export function createCommerceSearchEndpointResponseHandler(
     }
 
     if (response.queryCorrection !== undefined) {
-      engine.mutate(
-        queryCorrectionActions.setQueryCorrection(response.queryCorrection)
-      );
+      engine.mutate(queryCorrectionActions.setQueryCorrection(response.queryCorrection));
     }
   };
 }

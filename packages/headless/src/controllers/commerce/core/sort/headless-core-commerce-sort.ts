@@ -16,19 +16,11 @@ import {applySort} from '../../../../features/commerce/sort/sort-actions.js';
 import {sortReducer as commerceSort} from '../../../../features/commerce/sort/sort-slice.js';
 import {loadReducerError} from '../../../../utils/errors.js';
 import {validateInitialState} from '../../../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../../controller/headless-controller.js';
 import type {FetchProductsActionCreator} from '../common.js';
 
 export type {SortByFields, SortByFieldsFields, SortByRelevance, SortCriterion};
-export {
-  buildFieldsSortCriterion,
-  buildRelevanceSortCriterion,
-  SortBy,
-  SortDirection,
-};
+export {buildFieldsSortCriterion, buildRelevanceSortCriterion, SortBy, SortDirection};
 
 export interface SortProps {
   /**
@@ -48,10 +40,7 @@ export interface SortInitialState {
   criterion?: SortCriterion;
 }
 
-function validateSortInitialState(
-  engine: CommerceEngine,
-  state: SortInitialState | undefined
-) {
+function validateSortInitialState(engine: CommerceEngine, state: SortInitialState | undefined) {
   if (!state) {
     return;
   }
@@ -125,10 +114,7 @@ export interface SortState {
  * @param props - The configurable `Sort` sub-controller properties.
  * @returns A `Sort` sub-controller instance.
  */
-export function buildCoreSort(
-  engine: CommerceEngine,
-  props: CoreSortProps
-): Sort {
+export function buildCoreSort(engine: CommerceEngine, props: CoreSortProps): Sort {
   if (!loadSortReducers(engine)) {
     throw loadReducerError;
   }
@@ -157,15 +143,12 @@ export function buildCoreSort(
     },
 
     isSortedBy(criterion: SortCriterion) {
-      return (
-        JSON.stringify(this.state.appliedSort) === JSON.stringify(criterion)
-      );
+      return JSON.stringify(this.state.appliedSort) === JSON.stringify(criterion);
     },
 
     isAvailable(criterion: SortCriterion) {
       return this.state.availableSorts.some(
-        (availableCriterion) =>
-          JSON.stringify(availableCriterion) === JSON.stringify(criterion)
+        (availableCriterion) => JSON.stringify(availableCriterion) === JSON.stringify(criterion)
       );
     },
   };

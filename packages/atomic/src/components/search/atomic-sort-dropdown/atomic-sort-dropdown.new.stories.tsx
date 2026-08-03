@@ -4,8 +4,7 @@ import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
-import {buildSearchResponseWithResults} from '@coveo/platform-mock-api/search/search-response-mocks';
+import {buildSearchResponseWithResults, MockSearchApi} from '@coveo/platform-mock-api/search';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-sort-dropdown/atomic-sort-dropdown.js';
 import '@/src/components/search/atomic-sort-expression/atomic-sort-expression.js';
@@ -14,10 +13,9 @@ import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-sort-dropdown',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-sort-dropdown', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-sort-dropdown',
@@ -27,7 +25,6 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
-    chromatic: {disableSnapshot: true},
     msw: {handlers: [...searchApiHarness.handlers]},
     actions: {
       handles: events,
@@ -90,12 +87,8 @@ export const A11yStatusMessage: Story = {
     `,
   ],
   beforeEach: async () => {
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(120)
-    );
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(84)
-    );
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(84));
   },
   play: async (context) => {
     await play(context);

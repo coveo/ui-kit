@@ -67,19 +67,17 @@ describe('Commerce Engine SSR', () => {
     it('should always return context and cart controllers as well as the ones provided', async () => {
       const engineDefinition = defineCommerceEngine(definitionOptions);
       const solutionType = definitionName as keyof typeof engineDefinition;
-      const staticState = await engineDefinition[solutionType].fetchStaticState(
-        {
-          navigatorContext: mockNavigatorContext,
-          searchParams: {q: 'test'},
-          recommendations: [],
-          context: {
-            view: {url: 'http://example.com'},
-            country: 'US',
-            currency: 'USD',
-            language: 'en',
-          },
-        }
-      );
+      const staticState = await engineDefinition[solutionType].fetchStaticState({
+        navigatorContext: mockNavigatorContext,
+        searchParams: {q: 'test'},
+        recommendations: [],
+        context: {
+          view: {url: 'http://example.com'},
+          country: 'US',
+          currency: 'USD',
+          language: 'en',
+        },
+      });
       expect(staticState.controllers).toHaveProperty('context');
       expect(staticState.controllers).toHaveProperty('cart');
       expect(staticState.controllers).toHaveProperty('controller1');

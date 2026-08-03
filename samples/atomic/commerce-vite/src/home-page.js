@@ -12,18 +12,14 @@ const engine = buildEngine('https://sports.barca.group');
 
 // Standalone search box: it only redirects, so it is not executed here.
 customElements.whenDefined('atomic-commerce-interface').then(() => {
-  document
-    .querySelector('atomic-commerce-interface')
-    ?.initializeWithEngine(engine);
+  document.querySelector('atomic-commerce-interface')?.initializeWithEngine(engine);
 });
 
 // Product recommendations.
-customElements
-  .whenDefined('atomic-commerce-recommendation-interface')
-  .then(() => {
-    for (const recommendationInterface of document.querySelectorAll(
-      'atomic-commerce-recommendation-interface'
-    )) {
-      recommendationInterface.initializeWithEngine(engine);
-    }
-  });
+customElements.whenDefined('atomic-commerce-recommendation-interface').then(() => {
+  for (const recommendationInterface of document.querySelectorAll(
+    'atomic-commerce-recommendation-interface'
+  )) {
+    recommendationInterface.initializeWithEngine(engine);
+  }
+});

@@ -43,9 +43,7 @@ describe('atomic-smart-snippet-answer', () => {
         return component.shadowRoot?.querySelector('style');
       },
       get links() {
-        return Array.from(
-          component.shadowRoot?.querySelectorAll('[part="answer"] a') || []
-        );
+        return Array.from(component.shadowRoot?.querySelectorAll('[part="answer"] a') || []);
       },
     };
   };
@@ -110,9 +108,7 @@ describe('atomic-smart-snippet-answer', () => {
       expect(bindAnalyticsToLink).toHaveBeenCalled();
     });
 
-    const bindCall = vi
-      .mocked(bindAnalyticsToLink)
-      .mock.calls.find((call) => call[0] === links[0]);
+    const bindCall = vi.mocked(bindAnalyticsToLink).mock.calls.find((call) => call[0] === links[0]);
     const {onSelect} = bindCall![1];
     onSelect();
 

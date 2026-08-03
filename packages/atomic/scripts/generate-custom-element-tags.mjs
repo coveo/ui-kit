@@ -7,10 +7,7 @@ import colors from '../../../utils/ci/colors.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const componentsDir = path.resolve(__dirname, '../src/components');
-const outputFile = path.resolve(
-  __dirname,
-  '../src/utils/custom-element-tags.ts'
-);
+const outputFile = path.resolve(__dirname, '../src/utils/custom-element-tags.ts');
 
 /**
  * Extracts custom element tag names from component files using TypeScript AST.
@@ -38,12 +35,7 @@ function extractCustomElementTags() {
         !entry.name.includes('.e2e.')
       ) {
         const content = readFileSync(fullPath, 'utf-8');
-        const sourceFile = ts.createSourceFile(
-          fullPath,
-          content,
-          ts.ScriptTarget.Latest,
-          true
-        );
+        const sourceFile = ts.createSourceFile(fullPath, content, ts.ScriptTarget.Latest, true);
 
         visitNode(sourceFile);
       }

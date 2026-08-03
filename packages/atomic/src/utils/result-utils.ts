@@ -37,16 +37,12 @@ export function bindLogDocumentOpenOnResult(
   const elements = resultElement.querySelectorAll(selector || 'a');
 
   elements.forEach((element) => {
-    Object.keys(eventsMap).forEach((key) =>
-      element.addEventListener(key, eventsMap[key])
-    );
+    Object.keys(eventsMap).forEach((key) => element.addEventListener(key, eventsMap[key]));
   });
 
   return () => {
     elements.forEach((element) => {
-      Object.keys(eventsMap).forEach((key) =>
-        element.removeEventListener(key, eventsMap[key])
-      );
+      Object.keys(eventsMap).forEach((key) => element.removeEventListener(key, eventsMap[key]));
     });
   };
 }

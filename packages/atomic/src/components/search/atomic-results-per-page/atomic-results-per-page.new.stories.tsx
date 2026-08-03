@@ -5,8 +5,7 @@ import {within} from 'shadow-dom-testing-library';
 import {testRadioGroupA11y} from '@/storybook-utils/a11y/radiogroup.js';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
-import {buildSearchResponseWithResults} from '@coveo/platform-mock-api/search/search-response-mocks';
+import {buildSearchResponseWithResults, MockSearchApi} from '@coveo/platform-mock-api/search';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-results-per-page/atomic-results-per-page.js';
 import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
@@ -14,10 +13,9 @@ import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-results-per-page',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-results-per-page', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-results-per-page',
@@ -28,7 +26,6 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
-    chromatic: {disableSnapshot: true},
     msw: {handlers: [...searchApiHarness.handlers]},
     actions: {
       handles: events,
@@ -57,12 +54,8 @@ export const A11yStatusMessage: Story = {
     `,
   ],
   beforeEach: async () => {
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(120)
-    );
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(120, 25)
-    );
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(120, 25));
   },
   play: async (context) => {
     await play(context);

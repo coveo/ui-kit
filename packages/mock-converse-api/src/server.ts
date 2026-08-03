@@ -1,5 +1,5 @@
 import {createServer as createHttpMiddlewareServer} from '@mswjs/http-middleware';
-import {baseResponse} from '@coveo/platform-mock-api/converse/generate-response';
+import {converseResponses} from '@coveo/platform-mock-api/converse';
 import {http, HttpResponse} from 'msw';
 
 export interface ServerOptions {
@@ -13,8 +13,7 @@ const CORS_HEADERS = {
 };
 
 const SHORT_CONVERSE_ROUTE = '/converse';
-const FULL_CONVERSE_ROUTE =
-  '/rest/organizations/:orgId/commerce/unstable/agentic/converse';
+const FULL_CONVERSE_ROUTE = '/rest/organizations/:orgId/commerce/unstable/agentic/converse';
 
 const withCors = <T extends Response>(response: T): T => {
   for (const [headerName, headerValue] of Object.entries(CORS_HEADERS)) {
@@ -30,8 +29,7 @@ const handleConversePost = async ({request}: {request: Request}) => {
   try {
     body = JSON.parse(rawBody);
   } catch (error) {
-    const details =
-      error instanceof Error ? error.message : 'Unknown parse error';
+    const details = error instanceof Error ? error.message : 'Unknown parse error';
     return withCors(
       HttpResponse.json(
         {
@@ -59,7 +57,7 @@ const handleConversePost = async ({request}: {request: Request}) => {
     );
   }
 
-  return withCors(baseResponse(body));
+  return withCors(converseResponses.baseResponse(body));
 };
 
 const preflightResponse = () => withCors(new HttpResponse(null, {status: 204}));

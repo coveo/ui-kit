@@ -37,129 +37,112 @@ import {
   updateNumberOfResults,
   updatePage,
 } from './pagination-actions.js';
-import {
-  maximumNumberOfResultsFromIndex,
-  minimumPage,
-} from './pagination-constants.js';
-import {
-  getPaginationInitialState,
-  type PaginationState,
-} from './pagination-state.js';
+import {maximumNumberOfResultsFromIndex, minimumPage} from './pagination-constants.js';
+import {getPaginationInitialState, type PaginationState} from './pagination-state.js';
 
-export const paginationReducer = createReducer(
-  getPaginationInitialState(),
-  (builder) => {
-    builder
-      .addCase(registerNumberOfResults, (state, action) => {
-        const page = determineCurrentPage(state);
-        const newNumberOfResults = action.payload;
+export const paginationReducer = createReducer(getPaginationInitialState(), (builder) => {
+  builder
+    .addCase(registerNumberOfResults, (state, action) => {
+      const page = determineCurrentPage(state);
+      const newNumberOfResults = action.payload;
 
-        state.defaultNumberOfResults = state.numberOfResults =
-          newNumberOfResults;
-        state.firstResult = calculateFirstResult(page, newNumberOfResults);
-      })
-      .addCase(updateNumberOfResults, (state, action) => {
-        state.numberOfResults = action.payload;
-        state.firstResult = 0;
-      })
-      .addCase(updateActiveTab, (state) => {
-        state.firstResult = 0;
-      })
-      .addCase(registerPage, (state, action) => {
-        const page = action.payload;
-        state.firstResult = calculateFirstResult(page, state.numberOfResults);
-      })
-      .addCase(updatePage, (state, action) => {
-        const page = action.payload;
-        state.firstResult = calculateFirstResult(page, state.numberOfResults);
-      })
-      .addCase(previousPage, (state) => {
-        const page = determineCurrentPage(state);
-        const previousPage = Math.max(page - 1, minimumPage);
-        state.firstResult = calculateFirstResult(
-          previousPage,
-          state.numberOfResults
-        );
-      })
-      .addCase(nextPage, (state) => {
-        const page = determineCurrentPage(state);
-        const maxPage = determineMaxPage(state);
-        const nextPage = Math.min(page + 1, maxPage);
+      state.defaultNumberOfResults = state.numberOfResults = newNumberOfResults;
+      state.firstResult = calculateFirstResult(page, newNumberOfResults);
+    })
+    .addCase(updateNumberOfResults, (state, action) => {
+      state.numberOfResults = action.payload;
+      state.firstResult = 0;
+    })
+    .addCase(updateActiveTab, (state) => {
+      state.firstResult = 0;
+    })
+    .addCase(registerPage, (state, action) => {
+      const page = action.payload;
+      state.firstResult = calculateFirstResult(page, state.numberOfResults);
+    })
+    .addCase(updatePage, (state, action) => {
+      const page = action.payload;
+      state.firstResult = calculateFirstResult(page, state.numberOfResults);
+    })
+    .addCase(previousPage, (state) => {
+      const page = determineCurrentPage(state);
+      const previousPage = Math.max(page - 1, minimumPage);
+      state.firstResult = calculateFirstResult(previousPage, state.numberOfResults);
+    })
+    .addCase(nextPage, (state) => {
+      const page = determineCurrentPage(state);
+      const maxPage = determineMaxPage(state);
+      const nextPage = Math.min(page + 1, maxPage);
 
-        state.firstResult = calculateFirstResult(
-          nextPage,
-          state.numberOfResults
-        );
-      })
-      .addCase(change.fulfilled, (state, action) => {
-        if (action.payload) {
-          state.numberOfResults = action.payload.pagination.numberOfResults;
-          state.firstResult = action.payload.pagination.firstResult;
-        }
-      })
-      .addCase(restoreSearchParameters, (state, action) => {
-        state.firstResult = action.payload.firstResult ?? state.firstResult;
-        state.numberOfResults =
-          action.payload.numberOfResults ?? state.defaultNumberOfResults;
-      })
-      .addCase(executeSearch.fulfilled, (state, action) => {
-        const {response} = action.payload;
-        state.totalCountFiltered = response.totalCountFiltered;
-      })
-      .addCase(fetchPage.fulfilled, (state, action) => {
-        const {response} = action.payload;
-        state.totalCountFiltered = response.totalCountFiltered;
-      })
-      .addCase(deselectAllFacetValues, (state) => {
-        handlePaginationReset(state);
-      })
-      .addCase(toggleExcludeDateFacetValue, (state) => {
-        handlePaginationReset(state);
-      })
-      .addCase(toggleExcludeFacetValue, (state) => {
-        handlePaginationReset(state);
-      })
-      .addCase(toggleExcludeNumericFacetValue, (state) => {
-        handlePaginationReset(state);
-      })
-      .addCase(excludeFacetSearchResult, (state) => {
-        handlePaginationReset(state);
-      })
-      .addCase(toggleSelectFacetValue, (state) => {
-        handlePaginationReset(state);
-      })
-      .addCase(deselectAllCategoryFacetValues, (state) => {
-        handlePaginationReset(state);
-      })
-      .addCase(toggleSelectCategoryFacetValue, (state) => {
-        handlePaginationReset(state);
-      })
-      .addCase(selectCategoryFacetSearchResult, (state) => {
-        handlePaginationReset(state);
-      })
-      .addCase(toggleSelectDateFacetValue, (state) => {
-        handlePaginationReset(state);
-      })
-      .addCase(toggleSelectNumericFacetValue, (state) => {
-        handlePaginationReset(state);
-      })
-      .addCase(deselectAllBreadcrumbs, (state) => {
-        handlePaginationReset(state);
-      })
-      .addCase(updateDateFacetValues, (state) => {
-        handlePaginationReset(state);
-      })
-      .addCase(updateNumericFacetValues, (state) => {
-        handlePaginationReset(state);
-      })
-      .addCase(selectFacetSearchResult, (state) => {
-        handlePaginationReset(state);
-      })
-      .addCase(toggleSelectAutomaticFacetValue, (state) => {
-        handlePaginationReset(state);
-      });
-  }
-);
+      state.firstResult = calculateFirstResult(nextPage, state.numberOfResults);
+    })
+    .addCase(change.fulfilled, (state, action) => {
+      if (action.payload) {
+        state.numberOfResults = action.payload.pagination.numberOfResults;
+        state.firstResult = action.payload.pagination.firstResult;
+      }
+    })
+    .addCase(restoreSearchParameters, (state, action) => {
+      state.firstResult = action.payload.firstResult ?? state.firstResult;
+      state.numberOfResults = action.payload.numberOfResults ?? state.defaultNumberOfResults;
+    })
+    .addCase(executeSearch.fulfilled, (state, action) => {
+      const {response} = action.payload;
+      state.totalCountFiltered = response.totalCountFiltered;
+    })
+    .addCase(fetchPage.fulfilled, (state, action) => {
+      const {response} = action.payload;
+      state.totalCountFiltered = response.totalCountFiltered;
+    })
+    .addCase(deselectAllFacetValues, (state) => {
+      handlePaginationReset(state);
+    })
+    .addCase(toggleExcludeDateFacetValue, (state) => {
+      handlePaginationReset(state);
+    })
+    .addCase(toggleExcludeFacetValue, (state) => {
+      handlePaginationReset(state);
+    })
+    .addCase(toggleExcludeNumericFacetValue, (state) => {
+      handlePaginationReset(state);
+    })
+    .addCase(excludeFacetSearchResult, (state) => {
+      handlePaginationReset(state);
+    })
+    .addCase(toggleSelectFacetValue, (state) => {
+      handlePaginationReset(state);
+    })
+    .addCase(deselectAllCategoryFacetValues, (state) => {
+      handlePaginationReset(state);
+    })
+    .addCase(toggleSelectCategoryFacetValue, (state) => {
+      handlePaginationReset(state);
+    })
+    .addCase(selectCategoryFacetSearchResult, (state) => {
+      handlePaginationReset(state);
+    })
+    .addCase(toggleSelectDateFacetValue, (state) => {
+      handlePaginationReset(state);
+    })
+    .addCase(toggleSelectNumericFacetValue, (state) => {
+      handlePaginationReset(state);
+    })
+    .addCase(deselectAllBreadcrumbs, (state) => {
+      handlePaginationReset(state);
+    })
+    .addCase(updateDateFacetValues, (state) => {
+      handlePaginationReset(state);
+    })
+    .addCase(updateNumericFacetValues, (state) => {
+      handlePaginationReset(state);
+    })
+    .addCase(selectFacetSearchResult, (state) => {
+      handlePaginationReset(state);
+    })
+    .addCase(toggleSelectAutomaticFacetValue, (state) => {
+      handlePaginationReset(state);
+    });
+});
 
 function handlePaginationReset(state: PaginationState) {
   state.firstResult = getPaginationInitialState().firstResult;
@@ -183,13 +166,7 @@ export function calculatePage(firstResult: number, numberOfResults: number) {
   return Math.round(firstResult / numberOfResults) + 1;
 }
 
-export function calculateMaxPage(
-  totalCountFiltered: number,
-  numberOfResults: number
-) {
-  const totalCount = Math.min(
-    totalCountFiltered,
-    maximumNumberOfResultsFromIndex
-  );
+export function calculateMaxPage(totalCountFiltered: number, numberOfResults: number) {
+  const totalCount = Math.min(totalCountFiltered, maximumNumberOfResultsFromIndex);
   return Math.ceil(totalCount / numberOfResults);
 }

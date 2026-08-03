@@ -19,9 +19,7 @@ interface BreadcrumbContentProps {
  * When migrating atomic-breadbox, we will first have to change what atomic-rating-facet sends as 'content' to an HtmlElement.
  * (By doing something similar to recent-queries.ts)
  */
-export const renderBreadcrumbContent: FunctionalComponent<
-  BreadcrumbContentProps
-> = ({props}) => {
+export const renderBreadcrumbContent: FunctionalComponent<BreadcrumbContentProps> = ({props}) => {
   const value = getFirstBreadcrumbValue(props.breadcrumb, props.pathLimit);
 
   const isExclusion = props.breadcrumb.state === 'excluded';
@@ -54,10 +52,6 @@ export const renderBreadcrumbContent: FunctionalComponent<
     <span part="breadcrumb-value" class=${multiClassMap(valueClass)}>
       ${props.breadcrumb.content ?? value}
     </span>
-    <atomic-icon
-      part="breadcrumb-clear"
-      class="mt-px ml-2 h-2.5 w-2.5"
-      icon=${CloseIcon}
-    >
+    <atomic-icon part="breadcrumb-clear" class="mt-px ml-2 h-2.5 w-2.5" icon=${CloseIcon}>
     </atomic-icon>`;
 };

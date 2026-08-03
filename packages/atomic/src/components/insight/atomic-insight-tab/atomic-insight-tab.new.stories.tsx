@@ -1,7 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import {testTabsA11y} from '@/storybook-utils/a11y/tabs.js';
-import {MockInsightApi} from '@coveo/platform-mock-api/insight/mock';
+import {MockInsightApi} from '@coveo/platform-mock-api/insight';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import '@/src/components/insight/atomic-insight-tab/atomic-insight-tab.js';
@@ -17,10 +17,7 @@ const meta: Meta = {
   id: 'atomic-insight-tab',
   render: () => html`<atomic-insight-tabs>
     <atomic-insight-tab label="All" expression="" active></atomic-insight-tab>
-    <atomic-insight-tab
-      label="Videos"
-      expression="@ytchanneltitle"
-    ></atomic-insight-tab>
+    <atomic-insight-tab label="Videos" expression="@ytchanneltitle"></atomic-insight-tab>
     <atomic-insight-tab
       label="Articles"
       expression='@documenttype==("WebPage")'
@@ -29,7 +26,6 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
-    chromatic: {disableSnapshot: true},
     actions: {},
     msw: {
       handlers: [...mockedInsightApi.handlers],

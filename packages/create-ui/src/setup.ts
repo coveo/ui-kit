@@ -15,10 +15,7 @@ export function toPackageName(projectName: string): string {
   );
 }
 
-export function stripMonorepoFields(
-  pkg: PackageJson,
-  projectName: string
-): PackageJson {
+export function stripMonorepoFields(pkg: PackageJson, projectName: string): PackageJson {
   const next: PackageJson = {...pkg, name: toPackageName(projectName)};
   delete next.private;
   // Published samples carry the monorepo's repository (for npm provenance); a
@@ -28,22 +25,13 @@ export function stripMonorepoFields(
   return next;
 }
 
-export async function rewritePackageJson(
-  dir: string,
-  projectName: string
-): Promise<void> {
+export async function rewritePackageJson(dir: string, projectName: string): Promise<void> {
   const pkgPath = join(dir, 'package.json');
   const pkg = JSON.parse(await readFile(pkgPath, 'utf8')) as PackageJson;
-  await writeFile(
-    pkgPath,
-    `${JSON.stringify(stripMonorepoFields(pkg, projectName), null, 2)}\n`
-  );
+  await writeFile(pkgPath, `${JSON.stringify(stripMonorepoFields(pkg, projectName), null, 2)}\n`);
 }
 
-export async function moveToTarget(
-  sourceDir: string,
-  targetDir: string
-): Promise<void> {
+export async function moveToTarget(sourceDir: string, targetDir: string): Promise<void> {
   if (sourceDir === targetDir) {
     return;
   }

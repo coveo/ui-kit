@@ -249,59 +249,43 @@ describe('advanced search parameters', () => {
   });
 
   it('allows a restore query on history change', () => {
-    const expectedQuery: AdvancedSearchQueriesState =
-      buildMockAdvancedSearchQueriesState({
-        cq: 'hello',
-        aq: 'something',
-        lq: 'hallo',
-        dq: 'someStuff',
-      });
+    const expectedQuery: AdvancedSearchQueriesState = buildMockAdvancedSearchQueriesState({
+      cq: 'hello',
+      aq: 'something',
+      lq: 'hallo',
+      dq: 'someStuff',
+    });
     const historyChange = {
       ...getHistoryInitialState(),
       advancedSearchQueries: expectedQuery,
     };
 
-    const nextState = advancedSearchQueriesReducer(
-      state,
-      change.fulfilled(historyChange, '')
-    );
+    const nextState = advancedSearchQueriesReducer(state, change.fulfilled(historyChange, ''));
     expect(nextState).toEqual(expectedQuery);
   });
 
   describe('#restoreSearchParameters', () => {
     it('when the object contains an #aq key, it sets the value in state', () => {
       state.aq = 'a';
-      const finalState = advancedSearchQueriesReducer(
-        state,
-        restoreSearchParameters({aq: ''})
-      );
+      const finalState = advancedSearchQueriesReducer(state, restoreSearchParameters({aq: ''}));
       expect(finalState.aq).toEqual('');
     });
 
     it('when the object does not contain a #aq key, it does not update the property in state', () => {
       state.aq = 'a';
-      const finalState = advancedSearchQueriesReducer(
-        state,
-        restoreSearchParameters({})
-      );
+      const finalState = advancedSearchQueriesReducer(state, restoreSearchParameters({}));
       expect(finalState.aq).toEqual(state.aq);
     });
 
     it('when the object contains an #cq key, it sets the value in state', () => {
       state.cq = 'a';
-      const finalState = advancedSearchQueriesReducer(
-        state,
-        restoreSearchParameters({cq: ''})
-      );
+      const finalState = advancedSearchQueriesReducer(state, restoreSearchParameters({cq: ''}));
       expect(finalState.cq).toEqual('');
     });
 
     it('when the object does not contain a #cq key, it does not update the property in state', () => {
       state.cq = 'a';
-      const finalState = advancedSearchQueriesReducer(
-        state,
-        restoreSearchParameters({})
-      );
+      const finalState = advancedSearchQueriesReducer(state, restoreSearchParameters({}));
       expect(finalState.cq).toEqual(state.cq);
     });
   });

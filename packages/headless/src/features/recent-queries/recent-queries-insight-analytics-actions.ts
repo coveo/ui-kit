@@ -9,9 +9,7 @@ export const logClearRecentQueries = (): InsightAction =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.clearRecentQueries)(
     'analytics/recentQueries/clear',
     (client, state) =>
-      client.logClearRecentQueries(
-        getCaseContextAnalyticsMetadata(state.insightCaseContext)
-      )
+      client.logClearRecentQueries(getCaseContextAnalyticsMetadata(state.insightCaseContext))
   );
 
 //TODO: KIT-2859
@@ -19,7 +17,5 @@ export const logRecentQueryClick = (): InsightAction =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.recentQueriesClick)(
     'analytics/recentQueries/click',
     (client, state) =>
-      client.logRecentQueryClick(
-        getCaseContextAnalyticsMetadata(state.insightCaseContext)
-      )
+      client.logRecentQueryClick(getCaseContextAnalyticsMetadata(state.insightCaseContext))
   );

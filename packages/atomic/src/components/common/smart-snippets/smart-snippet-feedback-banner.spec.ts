@@ -16,9 +16,7 @@ describe('#renderSmartSnippetFeedbackBanner', () => {
     i18n = await createTestI18n();
   });
 
-  const renderFeedbackBanner = async (
-    props: Partial<SmartSnippetFeedbackBannerProps> = {}
-  ) => {
+  const renderFeedbackBanner = async (props: Partial<SmartSnippetFeedbackBannerProps> = {}) => {
     const defaultProps: SmartSnippetFeedbackBannerProps = {
       i18n,
       id: 'test-id',
@@ -50,9 +48,7 @@ describe('#renderSmartSnippetFeedbackBanner', () => {
   it('should render the feedback inquiry text', async () => {
     const container = await renderFeedbackBanner({});
     const inquiry = container.querySelector('[part="feedback-inquiry"]');
-    expect(inquiry?.textContent?.trim()).toBe(
-      i18n.t('smart-snippet-feedback-inquiry')
-    );
+    expect(inquiry?.textContent?.trim()).toBe(i18n.t('smart-snippet-feedback-inquiry'));
   });
 
   it('should render the feedback inquiry with correct id', async () => {
@@ -64,9 +60,7 @@ describe('#renderSmartSnippetFeedbackBanner', () => {
   it('should render like and dislike buttons', async () => {
     const container = await renderFeedbackBanner({});
     const likeButton = container.querySelector('[part="feedback-like-button"]');
-    const dislikeButton = container.querySelector(
-      '[part="feedback-dislike-button"]'
-    );
+    const dislikeButton = container.querySelector('[part="feedback-dislike-button"]');
     expect(likeButton).toBeInTheDocument();
     expect(dislikeButton).toBeInTheDocument();
   });
@@ -80,9 +74,7 @@ describe('#renderSmartSnippetFeedbackBanner', () => {
 
   it('should render cross icon for dislike button', async () => {
     const container = await renderFeedbackBanner({});
-    const dislikeButton = container.querySelector(
-      '[part="feedback-dislike-button"]'
-    );
+    const dislikeButton = container.querySelector('[part="feedback-dislike-button"]');
     const icon = dislikeButton?.querySelector('atomic-icon');
     expect(icon).toBeInTheDocument();
   });
@@ -126,9 +118,7 @@ describe('#renderSmartSnippetFeedbackBanner', () => {
 
   it('should apply text-error class when disliked', async () => {
     const container = await renderFeedbackBanner({disliked: true});
-    const dislikeButton = container.querySelector(
-      '[part="feedback-dislike-button"]'
-    );
+    const dislikeButton = container.querySelector('[part="feedback-dislike-button"]');
     expect(dislikeButton).toHaveClass('text-error');
   });
 
@@ -145,9 +135,7 @@ describe('#renderSmartSnippetFeedbackBanner', () => {
     const container = await renderFeedbackBanner({liked: true});
     const thankYou = container.querySelector('[part="feedback-thank-you"]');
     expect(thankYou).toBeInTheDocument();
-    expect(thankYou?.textContent?.trim()).toBe(
-      i18n.t('smart-snippet-feedback-thanks')
-    );
+    expect(thankYou?.textContent?.trim()).toBe(i18n.t('smart-snippet-feedback-thanks'));
   });
 
   it('should show thank you message when disliked', async () => {
@@ -161,9 +149,7 @@ describe('#renderSmartSnippetFeedbackBanner', () => {
       disliked: true,
       feedbackSent: false,
     });
-    const explainWhyButton = page.getByText(
-      i18n.t('smart-snippet-feedback-explain-why')
-    );
+    const explainWhyButton = page.getByText(i18n.t('smart-snippet-feedback-explain-why'));
     await expect.element(explainWhyButton).toBeInTheDocument();
   });
 
@@ -173,9 +159,7 @@ describe('#renderSmartSnippetFeedbackBanner', () => {
       disliked: false,
       feedbackSent: false,
     });
-    const explainWhyButton = page.getByText(
-      i18n.t('smart-snippet-feedback-explain-why')
-    );
+    const explainWhyButton = page.getByText(i18n.t('smart-snippet-feedback-explain-why'));
     await expect.element(explainWhyButton).not.toBeInTheDocument();
   });
 
@@ -184,9 +168,7 @@ describe('#renderSmartSnippetFeedbackBanner', () => {
       disliked: true,
       feedbackSent: true,
     });
-    const explainWhyButton = page.getByText(
-      i18n.t('smart-snippet-feedback-explain-why')
-    );
+    const explainWhyButton = page.getByText(i18n.t('smart-snippet-feedback-explain-why'));
     await expect.element(explainWhyButton).not.toBeInTheDocument();
   });
 
@@ -207,16 +189,12 @@ describe('#renderSmartSnippetFeedbackBanner', () => {
   it('should render radiogroup with correct aria-labelledby', async () => {
     const container = await renderFeedbackBanner({id: 'test-id'});
     const radiogroup = container.querySelector('[role="radiogroup"]');
-    expect(radiogroup?.getAttribute('aria-labelledby')).toBe(
-      'feedback-inquiry-test-id'
-    );
+    expect(radiogroup?.getAttribute('aria-labelledby')).toBe('feedback-inquiry-test-id');
   });
 
   it('should render thank you wrapper when visible', async () => {
     const container = await renderFeedbackBanner({liked: true});
-    const wrapper = container.querySelector(
-      '[part="feedback-thank-you-wrapper"]'
-    );
+    const wrapper = container.querySelector('[part="feedback-thank-you-wrapper"]');
     expect(wrapper).toBeInTheDocument();
   });
 
@@ -240,9 +218,7 @@ describe('#renderSmartSnippetFeedbackBanner', () => {
 
   it('should apply correct classes to dislike button when not disliked', async () => {
     const container = await renderFeedbackBanner({disliked: false});
-    const dislikeButton = container.querySelector(
-      '[part="feedback-dislike-button"]'
-    );
+    const dislikeButton = container.querySelector('[part="feedback-dislike-button"]');
     expect(dislikeButton).toHaveClass('cursor-pointer');
     expect(dislikeButton).toHaveClass('hover:underline');
     expect(dislikeButton).not.toHaveClass('text-error');

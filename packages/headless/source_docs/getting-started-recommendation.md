@@ -52,10 +52,8 @@ If you prefer not to use a package manager, you can load Headless Recommendation
 <script src="https://static.cloud.coveo.com/headless/v{{packageVersion}}/recommendation/headless.js"></script>
 <script>
   // All exports are available on the global CoveoHeadlessRecommendation object.
-  const {
-    buildRecommendationEngine,
-    getSampleRecommendationEngineConfiguration,
-  } = CoveoHeadlessRecommendation;
+  const {buildRecommendationEngine, getSampleRecommendationEngineConfiguration} =
+    CoveoHeadlessRecommendation;
 </script>
 ```
 

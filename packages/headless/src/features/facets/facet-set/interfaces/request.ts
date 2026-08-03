@@ -45,9 +45,7 @@ export interface FacetRequest
     Type<'specific'>,
     AllowedValues,
     CustomSort,
-    SortCriteria<
-      FacetSortCriterion | SpecificSortCriteriaExplicitAlphanumeric
-    > {
+    SortCriteria<FacetSortCriterion | SpecificSortCriteriaExplicitAlphanumeric> {
   /** @defaultValue `automatic` */
   sortCriteria: FacetSortCriterion | SpecificSortCriteriaExplicitAlphanumeric;
 }

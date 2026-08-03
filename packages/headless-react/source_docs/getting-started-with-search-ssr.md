@@ -75,8 +75,7 @@ export const engineDefinition = defineSearchEngine({
   },
 });
 
-export const {useSearchBox, useResultList, useAuthorFacet} =
-  engineDefinition.controllers;
+export const {useSearchBox, useResultList, useAuthorFacet} = engineDefinition.controllers;
 ```
 
 For production use, replace the sample configuration with your own Coveo organization ID and access token:
@@ -151,8 +150,7 @@ import {useEffect, useState, PropsWithChildren} from 'react';
 import {engineDefinition} from '../lib/engine';
 import {InferStaticState, InferHydratedState} from '@coveo/headless-react/ssr';
 
-const {hydrateStaticState, StaticStateProvider, HydratedStateProvider} =
-  engineDefinition;
+const {hydrateStaticState, StaticStateProvider, HydratedStateProvider} = engineDefinition;
 
 type StaticState = InferStaticState<typeof engineDefinition>;
 type HydratedState = InferHydratedState<typeof engineDefinition>;
@@ -161,9 +159,7 @@ export function SearchProvider({
   staticState,
   children,
 }: PropsWithChildren<{staticState: StaticState}>) {
-  const [hydratedState, setHydratedState] = useState<HydratedState | null>(
-    null
-  );
+  const [hydratedState, setHydratedState] = useState<HydratedState | null>(null);
 
   useEffect(() => {
     hydrateStaticState({
@@ -174,17 +170,12 @@ export function SearchProvider({
 
   if (!hydratedState) {
     return (
-      <StaticStateProvider controllers={staticState.controllers}>
-        {children}
-      </StaticStateProvider>
+      <StaticStateProvider controllers={staticState.controllers}>{children}</StaticStateProvider>
     );
   }
 
   return (
-    <HydratedStateProvider
-      engine={hydratedState.engine}
-      controllers={hydratedState.controllers}
-    >
+    <HydratedStateProvider engine={hydratedState.engine} controllers={hydratedState.controllers}>
       {children}
     </HydratedStateProvider>
   );

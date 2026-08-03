@@ -6,10 +6,7 @@ import {buildResultPreviewRequest} from '../../features/result-preview/result-pr
 import type {CaseAssistAppState} from '../../state/case-assist-app-state.js';
 import {buildMockDocumentSuggestion} from '../../test/mock-case-assist-document-suggestion.js';
 import {buildMockCaseAssistState} from '../../test/mock-case-assist-state.js';
-import {
-  buildMockCaseAssistEngine,
-  type MockedCaseAssistEngine,
-} from '../../test/mock-engine-v2.js';
+import {buildMockCaseAssistEngine, type MockedCaseAssistEngine} from '../../test/mock-engine-v2.js';
 import {buildMockResult} from '../../test/mock-result.js';
 import {buildCoreQuickview} from '../core/quickview/headless-core-quickview.js';
 import {
@@ -122,9 +119,7 @@ describe('CaseAssistQuickview', () => {
 
     mockedBuildCoreQuickview.mock.calls[0][4]();
 
-    expect(mockedLogQuickviewDocumentSuggestionClick).toHaveBeenCalledWith(
-      options.result.uniqueId
-    );
+    expect(mockedLogQuickviewDocumentSuggestionClick).toHaveBeenCalledWith(options.result.uniqueId);
     expect(engine.dispatch).toHaveBeenCalledWith(
       mockedLogQuickviewDocumentSuggestionClick.mock.results[0].value
     );

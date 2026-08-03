@@ -1,14 +1,22 @@
+import {EngineProvider} from './context/engine.js';
+import {CommerceInterfaceProvider} from './context/commerce-interface.js';
 import {SearchBox} from './components/SearchBox/SearchBox.js';
+import {Sort} from './components/Sort/Sort.js';
 import {ProductList} from './components/ProductList/ProductList.js';
 import {Pagination} from './components/Pagination/Pagination.js';
 import styles from './App.module.css';
 
 export default function App() {
   return (
-    <main className={styles.root}>
-      <SearchBox />
-      <ProductList />
-      <Pagination />
-    </main>
+    <EngineProvider>
+      <CommerceInterfaceProvider>
+        <main className={styles.root}>
+          <SearchBox />
+          <Sort />
+          <ProductList />
+          <Pagination />
+        </main>
+      </CommerceInterfaceProvider>
+    </EngineProvider>
   );
 }

@@ -4,17 +4,16 @@ import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-inter
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import type {AtomicCommerceInterface} from '../atomic-commerce-interface/atomic-commerce-interface';
 import '@/src/components/commerce/atomic-commerce-text/atomic-commerce-text.js';
-import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
+import {MockCommerceApi} from '@coveo/platform-mock-api/commerce';
 
 const commerceApiHarness = new MockCommerceApi();
 
 const {decorator, play} = wrapInCommerceInterface({
   skipFirstRequest: true,
 });
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-commerce-text',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-commerce-text', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-commerce-text',
@@ -25,7 +24,6 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     msw: {handlers: [...commerceApiHarness.handlers]},
-    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },
@@ -50,10 +48,9 @@ export const Default: Story = {
 export const WithTranslations: Story = {
   name: 'With translations',
   play: async (context) => {
-    const commerceInterface =
-      context.canvasElement.querySelector<AtomicCommerceInterface>(
-        'atomic-commerce-interface'
-      )!;
+    const commerceInterface = context.canvasElement.querySelector<AtomicCommerceInterface>(
+      'atomic-commerce-interface'
+    )!;
 
     await context.step('Load translations', async () => {
       await customElements.whenDefined('atomic-commerce-interface');

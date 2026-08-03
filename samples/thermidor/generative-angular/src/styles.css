@@ -32,16 +32,8 @@ app-root {
   display: block;
   min-height: 100dvh;
   background:
-    radial-gradient(
-      circle at top left,
-      rgba(215, 239, 231, 0.95),
-      transparent 35%
-    ),
-    radial-gradient(
-      circle at bottom right,
-      rgba(239, 228, 210, 0.9),
-      transparent 40%
-    ),
+    radial-gradient(circle at top left, rgba(215, 239, 231, 0.95), transparent 35%),
+    radial-gradient(circle at bottom right, rgba(239, 228, 210, 0.9), transparent 40%),
     linear-gradient(180deg, #f9f6ef 0%, #f0eadf 100%);
   color: var(--ink);
 }

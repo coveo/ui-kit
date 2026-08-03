@@ -77,10 +77,7 @@ export default function Search(props: ISearchProps) {
     contextController.setView({url});
     const unsubscribe = bindUrlManager();
 
-    if (
-      !searchController.state.responseId &&
-      !searchController.state.isLoading
-    ) {
+    if (!searchController.state.responseId && !searchController.state.isLoading) {
       searchController.executeFirstSearch();
     } else if (!searchController.state.isLoading) {
       searchBoxController.submit();
@@ -96,9 +93,7 @@ export default function Search(props: ISearchProps) {
         instantProductsController={buildInstantProducts(engine, {
           options: {searchBoxId},
         })}
-        filterSuggestionsGeneratorController={buildFilterSuggestionsGenerator(
-          engine
-        )}
+        filterSuggestionsGeneratorController={buildFilterSuggestionsGenerator(engine)}
       />
       <h2 className="PageTitle">Search</h2>
       <DidYouMean controller={searchController.didYouMean()} />

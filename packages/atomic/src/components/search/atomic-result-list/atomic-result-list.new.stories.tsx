@@ -1,7 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
+import {MockSearchApi, type SearchResponse} from '@coveo/platform-mock-api/search';
 import {
   playExecuteFirstSearch,
   wrapInSearchInterface,
@@ -95,10 +95,9 @@ const {play: playNoFirstQuery} = wrapInSearchInterface({
   skipFirstSearch: true,
 });
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-result-list',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-result-list', {
+  excludeCategories: ['methods'],
+});
 
 const {play: playNoResults} = wrapInSearchInterface({
   skipFirstSearch: false,
@@ -120,12 +119,19 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
-    chromatic: {disableSnapshot: true},
     msw: {handlers: [...searchApiHarness.handlers]},
     layout: 'fullscreen',
     actions: {
       handles: events,
     },
+  },
+  beforeEach: async (context) => {
+    searchApiHarness.searchEndpoint.clear();
+    searchApiHarness.searchEndpoint.mock((response) => ({
+      ...response,
+      results: (response as SearchResponse).results.slice(0, 20),
+      numberOfResults: 20,
+    }));
   },
   args: {
     ...args,

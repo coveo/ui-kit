@@ -24,14 +24,9 @@ test.describe('atomic-commerce-search-box', () => {
       test('should update aria-live message', async ({searchBox}) => {
         await searchBox.searchSuggestions().first().waitFor({state: 'visible'});
         const count = await searchBox.searchSuggestions().count();
-        const regexMessage = new RegExp(
-          `${count} search suggestion(s are)? available.`
-        );
+        const regexMessage = new RegExp(`${count} search suggestion(s are)? available.`);
 
-        expect(
-          (await searchBox.ariaLive.filter({hasText: regexMessage}).count()) ===
-            1
-        ).toBe(true);
+        expect((await searchBox.ariaLive.filter({hasText: regexMessage}).count()) === 1).toBe(true);
       });
 
       test.describe('after clicking a suggestion', () => {
@@ -40,15 +35,12 @@ test.describe('atomic-commerce-search-box', () => {
         test.beforeEach(async ({searchBox}) => {
           await expect(searchBox.searchSuggestions().first()).toBeVisible();
 
-          suggestionText =
-            (await searchBox.searchSuggestions().last().textContent()) ?? '';
+          suggestionText = (await searchBox.searchSuggestions().last().textContent()) ?? '';
           await searchBox.searchSuggestions().last().click();
         });
 
         test('should update the searchbox input', async ({searchBox}) => {
-          await expect(searchBox.searchInput).toHaveValue(
-            suggestionText.trim()
-          );
+          await expect(searchBox.searchInput).toHaveValue(suggestionText.trim());
         });
 
         test('should collapse the suggested queries', async ({searchBox}) => {
@@ -62,15 +54,12 @@ test.describe('atomic-commerce-search-box', () => {
         test.beforeEach(async ({searchBox}) => {
           await expect(searchBox.searchSuggestions().first()).toBeVisible();
 
-          suggestionText =
-            (await searchBox.searchSuggestions().first().textContent()) ?? '';
+          suggestionText = (await searchBox.searchSuggestions().first().textContent()) ?? '';
           await searchBox.searchInput.press('ArrowDown');
         });
 
         test('should update the searchbox input', async ({searchBox}) => {
-          await expect(searchBox.searchInput).toHaveValue(
-            suggestionText.trim()
-          );
+          await expect(searchBox.searchInput).toHaveValue(suggestionText.trim());
         });
 
         test.describe('after pressing Enter', () => {
@@ -79,9 +68,7 @@ test.describe('atomic-commerce-search-box', () => {
           });
 
           test('should collapse the suggested queries', async ({searchBox}) => {
-            await expect(
-              searchBox.searchSuggestions().first()
-            ).not.toBeVisible();
+            await expect(searchBox.searchSuggestions().first()).not.toBeVisible();
           });
         });
       });
@@ -98,9 +85,7 @@ test.describe('atomic-commerce-search-box', () => {
       });
 
       test('should update aria-live message', async ({searchBox}) => {
-        await expect(searchBox.ariaLive).toHaveText(
-          'There are no search suggestions.'
-        );
+        await expect(searchBox.ariaLive).toHaveText('There are no search suggestions.');
       });
     });
 
@@ -119,24 +104,16 @@ test.describe('atomic-commerce-search-box', () => {
       test('should update aria-live message', async ({searchBox}) => {
         await searchBox.recentQueries().first().waitFor({state: 'visible'});
         const count = Math.min(
-          (await searchBox.recentQueries().count()) +
-            (await searchBox.searchSuggestions().count()),
+          (await searchBox.recentQueries().count()) + (await searchBox.searchSuggestions().count()),
           parseInt((await searchBox.numberOfQueries) ?? '', 10)
         ).toString();
 
-        const regexMessage = new RegExp(
-          `${count} search suggestion(s)? are available.`
-        );
+        const regexMessage = new RegExp(`${count} search suggestion(s)? are available.`);
 
-        expect(
-          (await searchBox.ariaLive.filter({hasText: regexMessage}).count()) ===
-            1
-        ).toBe(true);
+        expect((await searchBox.ariaLive.filter({hasText: regexMessage}).count()) === 1).toBe(true);
       });
 
-      test('should clear recent queries when clicking the clear button', async ({
-        searchBox,
-      }) => {
+      test('should clear recent queries when clicking the clear button', async ({searchBox}) => {
         await searchBox.clearRecentQueriesButton.click();
         await expect(searchBox.recentQueries().first()).not.toBeVisible();
       });
@@ -153,22 +130,16 @@ test.describe('atomic-commerce-search-box', () => {
           await searchBox.searchInput.fill('kayak');
         });
 
-        test('should display clear button when searchbox has text', async ({
-          searchBox,
-        }) => {
+        test('should display clear button when searchbox has text', async ({searchBox}) => {
           await expect(searchBox.clearButton).toBeVisible();
         });
 
-        test('should hide clear button when clearing input manually', async ({
-          searchBox,
-        }) => {
+        test('should hide clear button when clearing input manually', async ({searchBox}) => {
           await searchBox.searchInput.fill('');
           await expect(searchBox.clearButton).not.toBeVisible();
         });
 
-        test('should clear search-box when clicking the clear button', async ({
-          searchBox,
-        }) => {
+        test('should clear search-box when clicking the clear button', async ({searchBox}) => {
           await searchBox.clearButton.click();
           await expect(searchBox.searchInput).toHaveText('');
           await expect(searchBox.clearButton).not.toBeVisible();
@@ -177,10 +148,7 @@ test.describe('atomic-commerce-search-box', () => {
 
       test.describe('after clicking the submit button', () => {
         test.beforeEach(async ({searchBox}) => {
-          await searchBox
-            .searchSuggestions()
-            .first()
-            .waitFor({state: 'visible', timeout: 10e4});
+          await searchBox.searchSuggestions().first().waitFor({state: 'visible', timeout: 10e4});
           await searchBox.submitButton.click();
         });
 
@@ -214,9 +182,7 @@ test.describe('atomic-commerce-search-box', () => {
         await expect(searchBox.recentQueries().first()).toBeVisible();
       });
 
-      test('should clear recent queries when clicking the clear button', async ({
-        searchBox,
-      }) => {
+      test('should clear recent queries when clicking the clear button', async ({searchBox}) => {
         await searchBox.clearRecentQueriesButton.click();
         await expect(searchBox.recentQueries().first()).not.toBeVisible();
       });
@@ -236,20 +202,14 @@ test.describe('atomic-commerce-search-box', () => {
       });
 
       test('should display suggested queries', async ({searchBox}) => {
-        await expect(
-          searchBox.searchSuggestions({listSide: 'Left'}).first()
-        ).toBeVisible();
+        await expect(searchBox.searchSuggestions({listSide: 'Left'}).first()).toBeVisible();
       });
 
       test('should display instant results', async ({searchBox}) => {
-        await expect(
-          searchBox.instantProduct({listSide: 'Right'}).first()
-        ).toBeVisible();
+        await expect(searchBox.instantProduct({listSide: 'Right'}).first()).toBeVisible();
       });
 
-      test('should display in the search box what has been submitted', async ({
-        searchBox,
-      }) => {
+      test('should display in the search box what has been submitted', async ({searchBox}) => {
         await searchBox.searchInput.fill('surf');
         await searchBox.searchInput.press('Enter');
         await expect(searchBox.searchInput).toHaveValue('surf');
@@ -268,9 +228,7 @@ test.describe('atomic-commerce-search-box', () => {
     });
 
     test.describe('when hovering a instant result and pressing Enter', () => {
-      test('should execute the query in the search box', async ({
-        searchBox,
-      }) => {
+      test('should execute the query in the search box', async ({searchBox}) => {
         await searchBox.searchInput.click();
         await searchBox.searchInput.fill('a');
         await searchBox.instantProduct({listSide: 'Right'}).first().hover();

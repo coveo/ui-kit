@@ -66,8 +66,7 @@ export class AtomicCommerceDidYouMean
   }
 
   private get content() {
-    const {hasQueryCorrection, wasAutomaticallyCorrected} =
-      this.didYouMeanState;
+    const {hasQueryCorrection, wasAutomaticallyCorrected} = this.didYouMeanState;
     const hasTrigger = this.queryTriggerState.wasQueryModified;
 
     if (hasQueryCorrection && wasAutomaticallyCorrected) {
@@ -107,8 +106,7 @@ export class AtomicCommerceDidYouMean
   @errorGuard()
   render() {
     const hasCorrection =
-      this.didYouMeanState.hasQueryCorrection ||
-      this.queryTriggerState.wasQueryModified;
+      this.didYouMeanState.hasQueryCorrection || this.queryTriggerState.wasQueryModified;
 
     return html`${when(hasCorrection, () => this.content)}`;
   }

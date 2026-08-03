@@ -6,7 +6,5 @@ interface ModalHeaderProps {
   i18n: i18n;
 }
 
-export const renderModalHeader: FunctionalComponent<ModalHeaderProps> = ({
-  props: {i18n},
-}) =>
+export const renderModalHeader: FunctionalComponent<ModalHeaderProps> = ({props: {i18n}}) =>
   html`<h1 slot="header">${i18n.t('smart-snippet-feedback-explain-why')}</h1>`;

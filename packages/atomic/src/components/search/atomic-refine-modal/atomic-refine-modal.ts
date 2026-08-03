@@ -91,10 +91,7 @@ import '@/src/components/search/atomic-automatic-facet-generator/atomic-automati
 @customElement('atomic-refine-modal')
 @bindings()
 @withTailwindStyles
-export class AtomicRefineModal
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicRefineModal extends LitElement implements InitializableComponent<Bindings> {
   static styles: CSSResultGroup = [
     css`
       @reference '../../../utils/tailwind.global.tw.css';
@@ -200,9 +197,7 @@ export class AtomicRefineModal
     this.addFacetColumnStyling(divSlot);
 
     const facets = this.bindings.store.getFacetElements() as BaseFacetElement[];
-    const boundInterfaces = this.getBoundInterfaces().sort(
-      sortByDocumentPosition
-    );
+    const boundInterfaces = this.getBoundInterfaces().sort(sortByDocumentPosition);
     const facetsSection = [];
     const horizontalFacetsSection = [];
     for (const boundInterface of boundInterfaces) {
@@ -210,10 +205,7 @@ export class AtomicRefineModal
       if (facetSection) {
         facetsSection.push(facetSection);
       }
-      const horizontalFacetSection = findSection(
-        boundInterface,
-        'horizontal-facets'
-      );
+      const horizontalFacetSection = findSection(boundInterface, 'horizontal-facets');
       if (horizontalFacetSection) {
         horizontalFacetsSection.push(horizontalFacetSection);
       }
@@ -230,9 +222,7 @@ export class AtomicRefineModal
     const sortedFacets = [];
     for (let i = 0; i < boundInterfaces.length; i++) {
       sortedFacets.push(...(triagedFacets.get(facetsSection[i]) || []));
-      sortedFacets.push(
-        ...(triagedFacets.get(horizontalFacetsSection[i]) || [])
-      );
+      sortedFacets.push(...(triagedFacets.get(horizontalFacetsSection[i]) || []));
     }
     sortedFacets.push(...(triagedFacets.get(null) || []));
 
@@ -269,9 +259,7 @@ export class AtomicRefineModal
     if (!mainInterface) {
       throw new Error('Cannot find bound interface');
     }
-    const boundExternalInterfaces = Array.from(
-      document.querySelectorAll('atomic-external')
-    ).filter(
+    const boundExternalInterfaces = Array.from(document.querySelectorAll('atomic-external')).filter(
       (atomicExternal) => atomicExternal.boundInterface === mainInterface
     );
     return [...boundExternalInterfaces, mainInterface];
@@ -283,9 +271,7 @@ export class AtomicRefineModal
       facet.setAttribute(isRefineModalFacet, '');
       const clone = facet.cloneNode(true) as BaseFacetElement;
       clone.isCollapsed =
-        this.collapseFacetsAfter === -1
-          ? false
-          : i + 1 > this.collapseFacetsAfter;
+        this.collapseFacetsAfter === -1 ? false : i + 1 > this.collapseFacetsAfter;
       return clone;
     });
   }
@@ -294,9 +280,7 @@ export class AtomicRefineModal
     if (!this.bindings.engine.state.automaticFacetSet?.desiredCount) {
       return;
     }
-    const generator = document.createElement(
-      'atomic-automatic-facet-generator'
-    );
+    const generator = document.createElement('atomic-automatic-facet-generator');
 
     generator.setAttribute(
       'desired-count',
@@ -319,18 +303,11 @@ export class AtomicRefineModal
 
   private onSelectSortOption = (e: Event) => {
     const select = e.composedPath()[0] as HTMLSelectElement;
-    const option = this.options.find(
-      (option) => option.expression === select.value
-    );
+    const option = this.options.find((option) => option.expression === select.value);
     option && this.sort.sortBy(option.criteria);
   };
 
-  private renderSortOption({
-    expression,
-    criteria,
-    label,
-    tabs,
-  }: SortDropdownOption) {
+  private renderSortOption({expression, criteria, label, tabs}: SortDropdownOption) {
     if (
       !shouldDisplayOnCurrentTab(
         [...tabs.included],
@@ -362,8 +339,7 @@ export class AtomicRefineModal
 
   private renderFilters() {
     const hasFacetElements = this.bindings.store.getFacetElements().length > 0;
-    const hasAutomaticFacets =
-      this.bindings.engine.state.automaticFacetSet?.set !== undefined;
+    const hasAutomaticFacets = this.bindings.engine.state.automaticFacetSet?.set !== undefined;
 
     if (!hasFacetElements && !hasAutomaticFacets) {
       return nothing;

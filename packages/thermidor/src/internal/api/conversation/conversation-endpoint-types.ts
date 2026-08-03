@@ -1,3 +1,5 @@
+import type {CommerceApiSortPayload} from '@/src/internal/features/sort/index.js';
+
 export interface CoveoConversationCartItem {
   productId: string;
   name: string;
@@ -25,6 +27,10 @@ export interface CoveoConversationEndpointRequest {
   conversationSessionId?: string;
   conversationToken?: string;
   targetEngine: 'AGENT_CORE';
+  page?: number;
+  perPage?: number;
+  sort?: CommerceApiSortPayload;
+  facets?: Array<{facetId: string; selectedValues: string[]}>;
 }
 
 export interface CoveoConversationEndpointResponse {

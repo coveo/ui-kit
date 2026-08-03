@@ -18,20 +18,11 @@ import type {AnyItem} from './unfolded-item';
 export const resultComponentClass = 'result-component';
 
 export type ItemRenderingFunction<SpecificResult extends AnyItem = AnyItem> =
-  | ((
-      result: SpecificResult,
-      root: HTMLElement,
-      linkContainer?: HTMLElement
-    ) => string)
+  | ((result: SpecificResult, root: HTMLElement, linkContainer?: HTMLElement) => string)
   | undefined;
 
 export interface ItemListCommonProps {
-  store:
-    | CommerceStore
-    | CommerceRecommendationStore
-    | RecsStore
-    | InsightStore
-    | SearchStore;
+  store: CommerceStore | CommerceRecommendationStore | RecsStore | InsightStore | SearchStore;
   loadingFlag: string;
   host: HTMLElement;
   nextNewItemTarget: FocusTargetController;
@@ -81,8 +72,7 @@ export class ItemListCommon {
         getUpdateComplete?(): Promise<boolean>;
         updateComplete?: Promise<boolean>;
       };
-      const ready =
-        litElement.getUpdateComplete?.() ?? litElement.updateComplete;
+      const ready = litElement.getUpdateComplete?.() ?? litElement.updateComplete;
 
       ready?.then(() => this.setNewResultRef(element, resultIndex));
       return;
@@ -134,8 +124,7 @@ export class ItemListCommon {
         await defer();
         if (!this.props.getIsLoading() && this.firstResultEl) {
           const elementToFocus =
-            getFirstFocusableDescendant(this.firstResultEl) ??
-            this.firstResultEl;
+            getFirstFocusableDescendant(this.firstResultEl) ?? this.firstResultEl;
           this.props.nextNewItemTarget.setTarget(elementToFocus);
           this.props.nextNewItemTarget.focus();
           this.firstResultEl = undefined;

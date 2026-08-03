@@ -9,16 +9,12 @@ test.describe('AtomicSearchInterface', () => {
     });
 
     test.describe('when a language is provided', () => {
-      test('should set the language of the interface', async ({
-        searchInterface,
-      }) => {
+      test('should set the language of the interface', async ({searchInterface}) => {
         await searchInterface.load({
           story: 'with-a-result-list',
           args: {language: 'fr'},
         });
-        await expect(
-          searchInterface.searchBox().getByPlaceholder('Recherche')
-        ).toBeVisible();
+        await expect(searchInterface.searchBox().getByPlaceholder('Recherche')).toBeVisible();
       });
     });
 
@@ -29,9 +25,7 @@ test.describe('AtomicSearchInterface', () => {
 
           await facetValueLabel.click();
 
-          await page.waitForURL(
-            '**/iframe.html?id=atomic-search-interface--with-a-result-list*'
-          );
+          await page.waitForURL('**/iframe.html?id=atomic-search-interface--with-a-result-list*');
 
           const currentUrl = page.url();
 

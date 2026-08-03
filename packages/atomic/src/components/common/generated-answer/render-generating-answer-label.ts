@@ -12,9 +12,9 @@ export interface RenderGeneratingAnswerLabelProps {
 /**
  * Renders the "Generating answer..." label shown during streaming when collapsible.
  */
-export const renderGeneratingAnswerLabel: FunctionalComponent<
-  RenderGeneratingAnswerLabelProps
-> = ({props}) => {
+export const renderGeneratingAnswerLabel: FunctionalComponent<RenderGeneratingAnswerLabelProps> = ({
+  props,
+}) => {
   const {i18n, isStreaming, collapsible} = props;
 
   const canRender = collapsible && isStreaming;
@@ -22,10 +22,7 @@ export const renderGeneratingAnswerLabel: FunctionalComponent<
   return html`${when(
     canRender,
     () => html`
-      <div
-        part="is-generating"
-        class="text-primary hidden text-base font-light"
-      >
+      <div part="is-generating" class="text-primary hidden text-base font-light">
         ${i18n.t('generating-answer')}...
       </div>
     `

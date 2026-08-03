@@ -5,10 +5,7 @@ import {
   defineMockSearchParameterManager,
 } from '../../../test/mock-ssr-controller-definitions.js';
 import type {SearchControllerDefinitionsMap} from '../types/engine.js';
-import {
-  searchDefinitionSchema,
-  wireControllerParams,
-} from './controller-wiring.js';
+import {searchDefinitionSchema, wireControllerParams} from './controller-wiring.js';
 
 describe('controller-wiring', () => {
   let mockControllerDefinitions: SearchControllerDefinitionsMap;
@@ -74,10 +71,7 @@ describe('controller-wiring', () => {
         },
       };
 
-      const {parameterManager} = wireControllerParams(
-        mockControllerDefinitions,
-        params
-      );
+      const {parameterManager} = wireControllerParams(mockControllerDefinitions, params);
 
       expect(parameterManager).toEqual({
         initialState: {
@@ -116,10 +110,7 @@ describe('controller-wiring', () => {
         searchParams: {numberOfResults: 12, firstResult: 30},
       };
 
-      const {parameterManager} = wireControllerParams(
-        mockControllerDefinitions,
-        params
-      );
+      const {parameterManager} = wireControllerParams(mockControllerDefinitions, params);
 
       expect(parameterManager).toEqual({
         initialState: {
@@ -137,10 +128,7 @@ describe('controller-wiring', () => {
         searchParams: {},
       };
 
-      const {parameterManager} = wireControllerParams(
-        mockControllerDefinitions,
-        params
-      );
+      const {parameterManager} = wireControllerParams(mockControllerDefinitions, params);
 
       expect(parameterManager).toEqual({
         initialState: {
@@ -154,10 +142,7 @@ describe('controller-wiring', () => {
         navigatorContext: buildMockNavigatorContext(),
       };
 
-      const {parameterManager} = wireControllerParams(
-        mockControllerDefinitions,
-        params
-      );
+      const {parameterManager} = wireControllerParams(mockControllerDefinitions, params);
 
       expect(parameterManager).toEqual({
         initialState: {
@@ -181,10 +166,7 @@ describe('controller-wiring', () => {
         },
       };
 
-      const props = wireControllerParams(
-        definitionsWithoutParameterManager,
-        params
-      );
+      const props = wireControllerParams(definitionsWithoutParameterManager, params);
 
       expect(props.parameterManager).toBeUndefined();
       expect(props.customController).toEqual({
@@ -203,10 +185,7 @@ describe('controller-wiring', () => {
         },
       };
 
-      const {parameterManager} = wireControllerParams(
-        mockControllerDefinitions,
-        params
-      );
+      const {parameterManager} = wireControllerParams(mockControllerDefinitions, params);
 
       expect(parameterManager).toEqual({
         initialState: {

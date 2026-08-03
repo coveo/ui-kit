@@ -4,19 +4,17 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
 import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
+import {MockSearchApi, type SearchResponse} from '@coveo/platform-mock-api/search';
 import '@/src/components/search/atomic-result-rating/atomic-result-rating.js';
-import {SearchResponse} from '@coveo/platform-mock-api/search/search-response';
 
 const searchApiHarness = new MockSearchApi();
 
 const CircleIcon =
   '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor"/></svg>';
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-result-rating',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-result-rating', {
+  excludeCategories: ['methods'],
+});
 
 const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
   includeCodeRoot: false,
@@ -30,14 +28,9 @@ const meta: Meta = {
   title: 'Search/Result Rating',
   id: 'atomic-result-rating',
   render: (args) => template(args),
-  decorators: [
-    resultTemplateDecorator,
-    resultListDecorator,
-    searchInterfaceDecorator,
-  ],
+  decorators: [resultTemplateDecorator, resultListDecorator, searchInterfaceDecorator],
   parameters: {
     ...parameters,
-    chromatic: {disableSnapshot: true},
     msw: {
       handlers: [...searchApiHarness.handlers],
     },
@@ -51,15 +44,13 @@ const meta: Meta = {
     searchApiHarness.searchEndpoint.clear();
     searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
-      results: (response as SearchResponse).results
-        .slice(0, 1)
-        .map((r: any) => ({
-          ...r,
-          raw: {
-            ...r.raw,
-            snrating: 3.5,
-          },
-        })),
+      results: (response as SearchResponse).results.slice(0, 1).map((r: any) => ({
+        ...r,
+        raw: {
+          ...r.raw,
+          snrating: 3.5,
+        },
+      })),
       totalCount: 1,
       totalCountFiltered: 1,
     }));

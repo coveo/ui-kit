@@ -171,8 +171,9 @@ Each sub-interface gets its own `STATE_ID`, so slices from different turns never
   ┌─────────────┐ ┌──────────────┐   ┌─────────────┐
   │ routedIface │ │ agentResp    │   │ status:error│
   │ status:     │ │ messages[]   │   │ error: msg  │
-  │  complete   │ │ toolCalls[]  │   └─────────────┘
-  └─────────────┘ │ surfaces[]   │
+  │  complete   │ │ reasoning-   │   └─────────────┘
+  └─────────────┘ │  Steps[]    │
+                  │ surfaces[]   │
                   │ status:      │
                   │  complete    │
                   └──────────────┘
@@ -202,11 +203,7 @@ Each sub-interface gets its own `STATE_ID`, so slices from different turns never
 
 ```ts
 // generative-setup.ts
-import {
-  Engine,
-  buildGenerativeInterface,
-  buildConverseController,
-} from '@coveo/thermidor';
+import {Engine, buildGenerativeInterface, buildConverseController} from '@coveo/thermidor';
 
 const engine = new Engine({
   configuration: {organizationId: '...', accessToken: '...'},
@@ -236,11 +233,7 @@ export function ConversePage() {
   const [state, setState] = useState(converseController.state);
   const [prompt, setPrompt] = useState('');
 
-  useEffect(
-    () =>
-      converseController.subscribe(() => setState(converseController.state)),
-    []
-  );
+  useEffect(() => converseController.subscribe(() => setState(converseController.state)), []);
 
   const {activeTurn, isStreaming} = state;
 
@@ -265,11 +258,17 @@ export function ConversePage() {
             <p key={i}>{msg.content}</p>
           ))}
 
-          {activeTurn.agentResponse.toolCalls.map((tc) => (
-            <div key={tc.id}>
-              {tc.status === 'calling' ? '⏳' : '✓'} {tc.name}
-            </div>
-          ))}
+          {activeTurn.agentResponse.reasoningSteps.map((step, i) =>
+            step.type === 'tool-call' ? (
+              <div key={step.id}>
+                {step.status === 'calling' ? '⏳' : '✓'} {step.name}
+              </div>
+            ) : (
+              <div key={`reasoning-${i}`} className="reasoning">
+                {step.content}
+              </div>
+            )
+          )}
 
           {activeTurn.agentResponse.surfaces.map((surface, i) => (
             <pre key={i}>{JSON.stringify(surface, null, 2)}</pre>
@@ -294,10 +293,7 @@ export function ConversePage() {
 ```tsx
 // ProductList.tsx
 import {useState, useEffect, useRef} from 'react';
-import {
-  buildProductListController,
-  buildPaginationController,
-} from '@coveo/thermidor';
+import {buildProductListController, buildPaginationController} from '@coveo/thermidor';
 
 export function ProductList({interface: subInterface}) {
   const controller = buildProductListController({interface: subInterface});
@@ -309,9 +305,7 @@ export function ProductList({interface: subInterface}) {
 
   useEffect(() => {
     const unsub1 = controller.subscribe(() => setState(controller.state));
-    const unsub2 = paginationCtrl.subscribe(() =>
-      setPagination(paginationCtrl.state)
-    );
+    const unsub2 = paginationCtrl.subscribe(() => setPagination(paginationCtrl.state));
     return () => {
       unsub1();
       unsub2();
@@ -331,9 +325,7 @@ export function ProductList({interface: subInterface}) {
         <div>
           <button
             disabled={pagination.page === 0}
-            onClick={() =>
-              paginationRef.current.selectPage(pagination.page - 1)
-            }
+            onClick={() => paginationRef.current.selectPage(pagination.page - 1)}
           >
             Previous
           </button>
@@ -342,17 +334,13 @@ export function ProductList({interface: subInterface}) {
           </span>
           <button
             disabled={pagination.page >= pagination.totalPages - 1}
-            onClick={() =>
-              paginationRef.current.selectPage(pagination.page + 1)
-            }
+            onClick={() => paginationRef.current.selectPage(pagination.page + 1)}
           >
             Next
           </button>
           <select
             value={pagination.pageSize}
-            onChange={(e) =>
-              paginationRef.current.setPageSize(Number(e.target.value))
-            }
+            onChange={(e) => paginationRef.current.setPageSize(Number(e.target.value))}
           >
             <option value={10}>10 per page</option>
             <option value={20}>20 per page</option>
@@ -411,7 +399,7 @@ If you never import `buildProductListController` or `buildPaginationController`,
 | `ENGINE`        | Stores the FullEngine (internal API) on an interface           |
 | `SOURCE_ENGINE` | Stores the original public Engine (for sub-interface creation) |
 | `STATE_ID`      | Unique slice namespace per interface instance                  |
-| `KIND`          | Discriminator ('interface' vs 'composed')                      |
+| `KIND`          | Discriminator for interface type                               |
 
 ---
 

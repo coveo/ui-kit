@@ -100,9 +100,7 @@ describe('commerce standalone search box slice', () => {
 
     it('when the id does not exist, it does not throw', () => {
       const action = resetStandaloneSearchBox({id: 'invalid'});
-      expect(() =>
-        commerceStandaloneSearchBoxSetReducer(state, action)
-      ).not.toThrow();
+      expect(() => commerceStandaloneSearchBoxSetReducer(state, action)).not.toThrow();
     });
   });
 
@@ -116,9 +114,7 @@ describe('commerce standalone search box slice', () => {
 
     it('when the id does not exist, it does not throw', () => {
       const action = fetchRedirectUrl.pending('', {id: 'invalid'});
-      expect(() =>
-        commerceStandaloneSearchBoxSetReducer(state, action)
-      ).not.toThrow();
+      expect(() => commerceStandaloneSearchBoxSetReducer(state, action)).not.toThrow();
     });
   });
 
@@ -134,9 +130,7 @@ describe('commerce standalone search box slice', () => {
 
     it('when the id does not exist, it does not throw', () => {
       const action = fetchRedirectUrl.rejected(null, '', {id: 'invalid'});
-      expect(() =>
-        commerceStandaloneSearchBoxSetReducer(state, action)
-      ).not.toThrow();
+      expect(() => commerceStandaloneSearchBoxSetReducer(state, action)).not.toThrow();
     });
   });
 
@@ -174,9 +168,7 @@ describe('commerce standalone search box slice', () => {
 
     it('when the id does not exist, it does not throw', () => {
       const action = fetchRedirectUrl.fulfilled('', '', {id: 'invalid url'});
-      expect(() =>
-        commerceStandaloneSearchBoxSetReducer(state, action)
-      ).not.toThrow();
+      expect(() => commerceStandaloneSearchBoxSetReducer(state, action)).not.toThrow();
     });
   });
 });

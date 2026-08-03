@@ -39,8 +39,6 @@ describe('execution plan', () => {
     ];
     planResponse.preprocessingOutput.triggers = redirectTriggers;
 
-    expect(new ExecutionPlan(planResponse).redirectionUrl).toBe(
-      'thisisaurl.com'
-    );
+    expect(new ExecutionPlan(planResponse).redirectionUrl).toBe('thisisaurl.com');
   });
 });

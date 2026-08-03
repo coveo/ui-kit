@@ -1,7 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit-html';
-import {MockInsightApi} from '@coveo/platform-mock-api/insight/mock';
+import {MockInsightApi} from '@coveo/platform-mock-api/insight';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import '@/src/components/insight/atomic-insight-layout/atomic-insight-layout.js';
@@ -19,17 +19,12 @@ const meta: Meta = {
   title: 'Insight/Layout',
   id: 'atomic-insight-layout',
   render: () => html`<atomic-insight-layout>
-    <atomic-layout-section section="search">
-      search section</atomic-layout-section
-    >
-    <atomic-layout-section section="results">
-      results section</atomic-layout-section
-    >
+    <atomic-layout-section section="search"> search section</atomic-layout-section>
+    <atomic-layout-section section="results"> results section</atomic-layout-section>
   </atomic-insight-layout>`,
   decorators: [decorator],
   parameters: {
     ...parameters,
-    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },

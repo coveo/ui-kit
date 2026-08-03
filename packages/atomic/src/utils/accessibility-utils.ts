@@ -12,35 +12,37 @@ export class AriaLiveRegionController implements ReactiveController {
   private host: ReactiveControllerHost;
   private regionName: string;
   private assertive: boolean;
+  private preserveQueuedMessages: boolean;
 
   constructor(
     host: ReactiveControllerHost,
     regionName: string,
-    assertive = false
+    assertive = false,
+    preserveQueuedMessages = false
   ) {
     this.host = host;
     this.regionName = regionName;
     this.assertive = assertive;
+    this.preserveQueuedMessages = preserveQueuedMessages;
 
     this.host.addController(this);
   }
 
   private getAriaLiveElement() {
-    const event = buildCustomEvent<FindAriaLiveEventArgs>(
-      'atomic/accessibility/findAriaLive',
-      {}
-    );
+    const event = buildCustomEvent<FindAriaLiveEventArgs>('atomic/accessibility/findAriaLive', {});
     document.dispatchEvent(event);
     const {element} = event.detail;
     return element;
   }
 
   private dispatchMessage(message: string) {
-    this.getAriaLiveElement()?.updateMessage(
-      this.regionName,
-      message,
-      this.assertive
-    );
+    const ariaLiveElement = this.getAriaLiveElement();
+    if (this.preserveQueuedMessages) {
+      ariaLiveElement?.updateMessage(this.regionName, message, this.assertive, true);
+      return;
+    }
+
+    ariaLiveElement?.updateMessage(this.regionName, message, this.assertive);
   }
 
   set message(msg: string) {
@@ -99,9 +101,7 @@ export class FocusTargetController implements ReactiveController {
   }
 
   public focusAfterSearch() {
-    this.lastSearchId = this.bindings.store.getUniqueIDFromEngine(
-      this.bindings.engine
-    );
+    this.lastSearchId = this.bindings.store.getUniqueIDFromEngine(this.bindings.engine);
     this.doFocusAfterSearch = true;
     return new Promise((resolve) => {
       this.internalOnFocusCallback = resolve;
@@ -116,10 +116,7 @@ export class FocusTargetController implements ReactiveController {
   }
 
   public disableForCurrentSearch() {
-    if (
-      this.bindings.store.getUniqueIDFromEngine(this.bindings.engine) !==
-      this.lastSearchId
-    ) {
+    if (this.bindings.store.getUniqueIDFromEngine(this.bindings.engine) !== this.lastSearchId) {
       this.doFocusAfterSearch = false;
     }
   }
@@ -127,8 +124,7 @@ export class FocusTargetController implements ReactiveController {
   async hostUpdated() {
     if (
       this.doFocusAfterSearch &&
-      this.bindings.store.getUniqueIDFromEngine(this.bindings.engine) !==
-        this.lastSearchId
+      this.bindings.store.getUniqueIDFromEngine(this.bindings.engine) !== this.lastSearchId
     ) {
       this.doFocusAfterSearch = false;
       if (this.element) {
@@ -185,8 +181,6 @@ function* getFocusableDescendants(element: Element): Generator<HTMLElement> {
   }
 }
 
-export function getFirstFocusableDescendant(
-  element: Element
-): HTMLElement | null {
+export function getFirstFocusableDescendant(element: Element): HTMLElement | null {
   return getFocusableDescendants(element).next().value ?? null;
 }

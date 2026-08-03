@@ -10,9 +10,7 @@ test.describe('atomic-commerce-search-box-query-suggestions', () => {
     commerceSearchBoxQuerySuggestions,
   }) => {
     await commerceSearchBoxQuerySuggestions.suggestion.first().click();
-    await expect(
-      commerceSearchBoxQuerySuggestions.suggestion.first()
-    ).not.toBeVisible();
+    await expect(commerceSearchBoxQuerySuggestions.suggestion.first()).not.toBeVisible();
   });
 
   test.describe('when hovering a suggestion', () => {
@@ -35,9 +33,10 @@ test.describe('atomic-commerce-search-box-query-suggestions', () => {
     test('should not change the query in the search box', async ({
       commerceSearchBoxQuerySuggestions,
     }) => {
-      await expect(
-        commerceSearchBoxQuerySuggestions.replicatedValue
-      ).toHaveAttribute('data-replicated-value', '');
+      await expect(commerceSearchBoxQuerySuggestions.replicatedValue).toHaveAttribute(
+        'data-replicated-value',
+        ''
+      );
 
       await commerceSearchBoxQuerySuggestions.suggestion.first().hover();
 
@@ -54,9 +53,7 @@ test.describe('atomic-commerce-search-box-query-suggestions', () => {
         ''
       );
 
-      await expect(
-        commerceSearchBoxQuerySuggestions.suggestion.first()
-      ).toBeVisible();
+      await expect(commerceSearchBoxQuerySuggestions.suggestion.first()).toBeVisible();
       await commerceSearchBoxQuerySuggestions.searchBox.press('ArrowDown');
 
       await expect(commerceSearchBoxQuerySuggestions.searchBox).toHaveAttribute(
@@ -68,30 +65,22 @@ test.describe('atomic-commerce-search-box-query-suggestions', () => {
     test('should change the query in the search box', async ({
       commerceSearchBoxQuerySuggestions,
     }) => {
-      await expect(
-        commerceSearchBoxQuerySuggestions.suggestion.first()
-      ).toBeVisible();
+      await expect(commerceSearchBoxQuerySuggestions.suggestion.first()).toBeVisible();
 
       await commerceSearchBoxQuerySuggestions.searchBox.press('ArrowDown');
 
-      await expect(commerceSearchBoxQuerySuggestions.searchBox).not.toHaveValue(
-        ''
-      );
+      await expect(commerceSearchBoxQuerySuggestions.searchBox).not.toHaveValue('');
     });
 
     test('when pressing enter, it should hide the suggestions', async ({
       commerceSearchBoxQuerySuggestions,
     }) => {
-      await expect(
-        commerceSearchBoxQuerySuggestions.suggestion.first()
-      ).toBeVisible();
+      await expect(commerceSearchBoxQuerySuggestions.suggestion.first()).toBeVisible();
       await commerceSearchBoxQuerySuggestions.searchBox.press('ArrowDown');
 
       await commerceSearchBoxQuerySuggestions.searchBox.press('Enter');
 
-      await expect(
-        commerceSearchBoxQuerySuggestions.suggestion.first()
-      ).not.toBeVisible();
+      await expect(commerceSearchBoxQuerySuggestions.suggestion.first()).not.toBeVisible();
     });
   });
 });

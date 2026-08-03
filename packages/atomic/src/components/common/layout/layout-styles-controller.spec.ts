@@ -2,10 +2,7 @@ import {LitElement} from 'lit';
 import {customElement} from 'lit/decorators.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {randomID} from '@/src/utils/utils';
-import {
-  LayoutStylesController,
-  type LayoutStylesHost,
-} from './layout-styles-controller';
+import {LayoutStylesController, type LayoutStylesHost} from './layout-styles-controller';
 
 vi.mock('@/src/utils/utils', {spy: true});
 
@@ -38,9 +35,7 @@ describe('LayoutStylesController', () => {
   };
 
   beforeEach(() => {
-    vi.mocked(randomID).mockImplementation(
-      (prefix) => `${prefix}mock-id-12345`
-    );
+    vi.mocked(randomID).mockImplementation((prefix) => `${prefix}mock-id-12345`);
     mockElement = new TestLayoutElement();
     mockStylesBuilder = vi.fn().mockReturnValue('.test-styles { color: red; }');
 
@@ -54,11 +49,7 @@ describe('LayoutStylesController', () => {
 
   describe('#constructor', () => {
     beforeEach(() => {
-      controller = new LayoutStylesController(
-        mockElement,
-        mockStylesBuilder,
-        'test-component'
-      );
+      controller = new LayoutStylesController(mockElement, mockStylesBuilder, 'test-component');
     });
 
     it('should initialize with provided parameters', () => {
@@ -72,11 +63,7 @@ describe('LayoutStylesController', () => {
 
   describe('#hostConnected', () => {
     beforeEach(() => {
-      controller = new LayoutStylesController(
-        mockElement,
-        mockStylesBuilder,
-        'test-component'
-      );
+      controller = new LayoutStylesController(mockElement, mockStylesBuilder, 'test-component');
     });
 
     it('should assign random ID when host has no ID', () => {
@@ -111,11 +98,7 @@ describe('LayoutStylesController', () => {
 
     beforeEach(() => {
       mockStyleSheet = createMockStyleSheet();
-      controller = new LayoutStylesController(
-        mockElement,
-        mockStylesBuilder,
-        'test-component'
-      );
+      controller = new LayoutStylesController(mockElement, mockStylesBuilder, 'test-component');
     });
 
     it('should call styles builder with correct parameters', () => {
@@ -128,9 +111,7 @@ describe('LayoutStylesController', () => {
       controller.updateStyles();
 
       expect(globalThis.CSSStyleSheet).toHaveBeenCalled();
-      expect(mockStyleSheet.replaceSync).toHaveBeenCalledWith(
-        '.test-styles { color: red; }'
-      );
+      expect(mockStyleSheet.replaceSync).toHaveBeenCalledWith('.test-styles { color: red; }');
       expect(document.adoptedStyleSheets).toContain(mockStyleSheet);
     });
 
@@ -142,9 +123,7 @@ describe('LayoutStylesController', () => {
       controller.updateStyles();
 
       expect(globalThis.CSSStyleSheet).toHaveBeenCalledTimes(1);
-      expect(mockStyleSheet.replaceSync).toHaveBeenCalledWith(
-        '.updated-styles { color: blue; }'
-      );
+      expect(mockStyleSheet.replaceSync).toHaveBeenCalledWith('.updated-styles { color: blue; }');
     });
 
     it('should handle different mobile breakpoint values', () => {
@@ -180,10 +159,7 @@ describe('LayoutStylesController', () => {
 
         controller.updateStyles();
 
-        expect(mockShadowRoot.adoptedStyleSheets).toEqual([
-          existingSheet,
-          mockStyleSheet,
-        ]);
+        expect(mockShadowRoot.adoptedStyleSheets).toEqual([existingSheet, mockStyleSheet]);
       });
     });
 
@@ -202,10 +178,7 @@ describe('LayoutStylesController', () => {
       it('should not call styles builder', () => {
         controller.updateStyles();
 
-        expect(mockStylesBuilder).not.toHaveBeenCalledWith(
-          mockElement,
-          '900px'
-        );
+        expect(mockStylesBuilder).not.toHaveBeenCalledWith(mockElement, '900px');
       });
     });
   });

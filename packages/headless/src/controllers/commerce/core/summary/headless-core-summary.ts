@@ -4,10 +4,7 @@ import type {
   CommerceEngineState,
 } from '../../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../../app/state-key.js';
-import {
-  buildController,
-  type Controller,
-} from '../../../controller/headless-controller.js';
+import {buildController, type Controller} from '../../../controller/headless-controller.js';
 
 export interface SummaryState {
   /**
@@ -43,9 +40,7 @@ export interface SummaryState {
 /**
  * The `Summary` sub-controller manages a summary of the current search results.
  */
-export interface Summary<
-  State extends SummaryState = SummaryState,
-> extends Controller {
+export interface Summary<State extends SummaryState = SummaryState> extends Controller {
   /**
    * A scoped and simplified part of the headless state that is relevant to the `SearchSummary` sub-controller.
    */
@@ -56,9 +51,7 @@ export interface SummaryOptions<State extends SummaryState> {
   numberOfProductsSelector: (state: CommerceEngineState) => number;
   responseIdSelector: (state: CommerceEngineState) => string;
   isLoadingSelector: (state: CommerceEngineState) => boolean;
-  errorSelector: (
-    state: CommerceEngineState
-  ) => CommerceAPIErrorStatusResponse | null | undefined;
+  errorSelector: (state: CommerceEngineState) => CommerceAPIErrorStatusResponse | null | undefined;
   pageSelector: (state: CommerceEngineState) => number;
   perPageSelector: (state: CommerceEngineState) => number;
   totalEntriesSelector: (state: CommerceEngineState) => number;
@@ -101,15 +94,12 @@ export const buildCoreSummary = <State extends SummaryState = SummaryState>(
 
   const firstSearchExecuted = () => !!responseIdSelector(getState());
 
-  const hasProducts = () =>
-    firstSearchExecuted() && totalNumberOfProducts() > 0;
+  const hasProducts = () => firstSearchExecuted() && totalNumberOfProducts() > 0;
 
   const firstProduct = () => (hasProducts() ? page() * perPage() + 1 : 0);
 
   const lastProduct = () =>
-    hasProducts()
-      ? firstProduct() + (numberOfProductsSelector(getState()) - 1)
-      : 0;
+    hasProducts() ? firstProduct() + (numberOfProductsSelector(getState()) - 1) : 0;
 
   return {
     ...controller,

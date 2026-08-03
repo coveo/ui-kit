@@ -46,10 +46,7 @@ export const manualNumericFacetReducer = createReducer(
       })
 );
 
-const clearManualRange = (
-  state: ManualNumericFacetSetState,
-  facetId: string
-) => {
+const clearManualRange = (state: ManualNumericFacetSetState, facetId: string) => {
   if (state[facetId]) {
     state[facetId] = {manualRange: undefined};
   }

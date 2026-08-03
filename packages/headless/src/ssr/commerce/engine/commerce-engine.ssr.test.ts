@@ -11,9 +11,7 @@ describe('Commerce Engine SSR', () => {
   let definitionOptions: NonNullable<CommerceEngineDefinitionOptions>;
 
   let engineDefinition: ReturnType<
-    typeof defineCommerceEngine<
-      NonNullable<typeof definitionOptions.controllers>
-    >
+    typeof defineCommerceEngine<NonNullable<typeof definitionOptions.controllers>>
   >;
 
   let listingEngineDefinition: (typeof engineDefinition)['listingEngineDefinition'];
@@ -41,8 +39,7 @@ describe('Commerce Engine SSR', () => {
     engineDefinition = defineCommerceEngine(definitionOptions);
 
     listingEngineDefinition = engineDefinition.listingEngineDefinition;
-    recommendationEngineDefinition =
-      engineDefinition.recommendationEngineDefinition;
+    recommendationEngineDefinition = engineDefinition.recommendationEngineDefinition;
     searchEngineDefinition = engineDefinition.searchEngineDefinition;
     standaloneEngineDefinition = engineDefinition.standaloneEngineDefinition;
   });
@@ -67,9 +64,7 @@ describe('Commerce Engine SSR', () => {
     it('#setAccessToken should update the access token', () => {
       standaloneEngineDefinition.setAccessToken('new-access-token');
 
-      expect(standaloneEngineDefinition.getAccessToken()).toBe(
-        'new-access-token'
-      );
+      expect(standaloneEngineDefinition.getAccessToken()).toBe('new-access-token');
     });
   });
 
@@ -153,9 +148,7 @@ describe('Commerce Engine SSR', () => {
     it('#setAccessToken should update the access token', () => {
       recommendationEngineDefinition.setAccessToken('new-access-token');
 
-      expect(recommendationEngineDefinition.getAccessToken()).toBe(
-        'new-access-token'
-      );
+      expect(recommendationEngineDefinition.getAccessToken()).toBe('new-access-token');
     });
   });
 });

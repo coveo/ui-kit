@@ -27,9 +27,7 @@ import {
 } from './headless-core-commerce-facet.js';
 
 vi.mock('../../../../features/commerce/facets/core-facet/core-facet-actions');
-vi.mock(
-  '../../../../features/commerce/facets/regular-facet/regular-facet-actions'
-);
+vi.mock('../../../../features/commerce/facets/regular-facet/regular-facet-actions');
 
 describe('CoreCommerceFacet', () => {
   const facetId = 'facet_id';
@@ -163,8 +161,7 @@ describe('CoreCommerceFacet', () => {
 
   describe('#toggleSingleSelect', () => {
     describe('when toggled facet value state is "idle"', () => {
-      const facetValue = () =>
-        buildMockCommerceRegularFacetValue({state: 'idle'});
+      const facetValue = () => buildMockCommerceRegularFacetValue({state: 'idle'});
 
       it('dispatches #deselectAllValuesInCoreFacet with correct payload', () => {
         facet.toggleSingleSelect(facetValue());
@@ -204,8 +201,7 @@ describe('CoreCommerceFacet', () => {
   });
 
   describe('#toggleSingleExclude', () => {
-    const facetValue = () =>
-      buildMockCommerceRegularFacetValue({state: 'idle'});
+    const facetValue = () => buildMockCommerceRegularFacetValue({state: 'idle'});
     describe('when #toggleExcludeActionCreator is undefined', () => {
       beforeEach(() => {
         options = {
@@ -290,15 +286,12 @@ describe('CoreCommerceFacet', () => {
       {state: 'selected', expected: true},
       {state: 'excluded', expected: false},
       {state: 'idle', expected: false},
-    ])(
-      'when passed value state is "$state", returns $expected',
-      ({state, expected}) => {
-        const facetValue = buildMockCommerceRegularFacetValue({
-          state: state as FacetValueState,
-        });
-        expect(facet.isValueSelected(facetValue)).toBe(expected);
-      }
-    );
+    ])('when passed value state is "$state", returns $expected', ({state, expected}) => {
+      const facetValue = buildMockCommerceRegularFacetValue({
+        state: state as FacetValueState,
+      });
+      expect(facet.isValueSelected(facetValue)).toBe(expected);
+    });
   });
 
   describe('#isValueExcluded', () => {
@@ -306,15 +299,12 @@ describe('CoreCommerceFacet', () => {
       {state: 'selected', expected: false},
       {state: 'excluded', expected: true},
       {state: 'idle', expected: false},
-    ])(
-      'when passed value state is "$state", returns $expected',
-      ({state, expected}) => {
-        const facetValue = buildMockCommerceRegularFacetValue({
-          state: state as FacetValueState,
-        });
-        expect(facet.isValueExcluded(facetValue)).toBe(expected);
-      }
-    );
+    ])('when passed value state is "$state", returns $expected', ({state, expected}) => {
+      const facetValue = buildMockCommerceRegularFacetValue({
+        state: state as FacetValueState,
+      });
+      expect(facet.isValueExcluded(facetValue)).toBe(expected);
+    });
   });
 
   describe('#deselectAll', () => {

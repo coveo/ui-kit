@@ -1,12 +1,9 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {createMemoizedStateSelector} from '@/src/internal/utils/index.js';
 import {createSelectSlice} from '@/src/internal/utils/index.js';
-import type {
-  EndpointThunk,
-  InterfaceHandle,
-} from '@/src/internal/utils/index.js';
+import type {EndpointThunk, InterfaceHandle} from '@/src/internal/utils/index.js';
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 
 export interface SearchEndpointThunkState {
   status: 'idle' | 'pending';
@@ -20,13 +17,11 @@ export const initialSearchEndpointThunkState: SearchEndpointThunkState = {
 
 type SearchEndpointSlice = ReturnType<typeof createSearchEndpointSlice>;
 
-const SLICE_CACHE_KEY: CacheKey<SearchEndpointSlice> =
-  createCacheKey<SearchEndpointSlice>('api/search/endpointSlice');
+const SLICE_CACHE_KEY: CacheKey<SearchEndpointSlice> = createCacheKey<SearchEndpointSlice>(
+  'api/search/endpointSlice'
+);
 
-export function createSearchEndpointSlice(
-  interfaceId: string,
-  thunk: EndpointThunk
-) {
+export function createSearchEndpointSlice(interfaceId: string, thunk: EndpointThunk) {
   return createSlice({
     name: `${interfaceId}/searchEndpoint`,
     initialState: initialSearchEndpointThunkState,
@@ -48,11 +43,8 @@ export function createSearchEndpointSlice(
   });
 }
 
-export function getOrCreateSearchEndpointSlice(
-  iface: InterfaceHandle,
-  thunk: EndpointThunk
-) {
-  const {stateId, cacheRegistry} = getHandleInternals(iface);
+export function getOrCreateSearchEndpointSlice(iface: InterfaceHandle, thunk: EndpointThunk) {
+  const {stateId, cacheRegistry} = getInterfaceInternals(iface);
   return cacheRegistry.getOrCreate(SLICE_CACHE_KEY, () =>
     createSearchEndpointSlice(stateId, thunk)
   );
@@ -70,19 +62,13 @@ export function createSearchEndpointSelectors(interfaceId: string) {
     initialSearchEndpointThunkState
   );
   return {
-    getStatus: createMemoizedStateSelector(
-      sliceSelector,
-      (state) => state.status
-    ),
-    getError: createMemoizedStateSelector(
-      sliceSelector,
-      (state) => state.error
-    ),
+    getStatus: createMemoizedStateSelector(sliceSelector, (state) => state.status),
+    getError: createMemoizedStateSelector(sliceSelector, (state) => state.error),
   };
 }
 
 export function getOrCreateSearchEndpointSelectors(iface: InterfaceHandle) {
-  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  const {stateId, cacheRegistry} = getInterfaceInternals(iface);
   return cacheRegistry.getOrCreate(SELECTORS_CACHE_KEY, () =>
     createSearchEndpointSelectors(stateId)
   );

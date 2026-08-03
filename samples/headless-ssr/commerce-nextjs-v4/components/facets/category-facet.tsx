@@ -29,9 +29,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
     facetSearchInputRef.current!.focus();
   };
 
-  const onChangeFacetSearchInput = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ): void => {
+  const onChangeFacetSearchInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (e.target.value === '') {
       setShowFacetSearchResults(false);
       controller?.facetSearch.clear();
@@ -93,21 +91,14 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
         <button
           aria-label="Clear facet search query"
           className="FacetSearchClear"
-          disabled={
-            !controller ||
-            state.facetSearch.query === '' ||
-            state.facetSearch.isLoading
-          }
+          disabled={!controller || state.facetSearch.query === '' || state.facetSearch.isLoading}
           onClick={onClickClearFacetSearch}
           type="reset"
         >
           X
         </button>
         {state.facetSearch.isLoading && (
-          <span className="FacetSearchLoading">
-            {' '}
-            Facet search is loading...
-          </span>
+          <span className="FacetSearchLoading"> Facet search is loading...</span>
         )}
       </search>
     );
@@ -153,10 +144,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
                 </span>
               )}
             </label>
-            <span className="FacetSearchResultNumberOfProducts">
-              {' '}
-              ({value.count})
-            </span>
+            <span className="FacetSearchResultNumberOfProducts"> ({value.count})</span>
           </li>
         ))}
       </ul>
@@ -176,10 +164,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
         {ancestry.map((ancestryValue) => {
           const checkboxId = `ancestryFacetValueCheckbox-${ancestryValue.value}`;
           return (
-            <li
-              className="AncestryFacetValue"
-              key={`${ancestryValue.value}-ancestry`}
-            >
+            <li className="AncestryFacetValue" key={`${ancestryValue.value}-ancestry`}>
               <input
                 checked={controller?.isValueSelected(ancestryValue) ?? false}
                 className="FacetValueCheckbox"
@@ -214,10 +199,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
                   ></input>
                   <label className="FacetValueLabel" htmlFor={checkboxId}>
                     <span className="FacetValueName">{child.value}</span>
-                    <span className="FacetValueNumberOfProducts">
-                      {' '}
-                      ({child.numberOfResults})
-                    </span>
+                    <span className="FacetValueNumberOfProducts"> ({child.numberOfResults})</span>
                   </label>
                 </li>
               );
@@ -247,10 +229,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
               ></input>
               {/* oxlint-disable-next-line jsx-a11y/label-has-associated-control -- <> */}
               <label className="FacetValueName">{root.value}</label>
-              <span className="FacetValueNumberOfResults">
-                {' '}
-                ({root.numberOfResults})
-              </span>
+              <span className="FacetValueNumberOfResults"> ({root.numberOfResults})</span>
             </li>
           );
         })}
@@ -270,9 +249,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
         >
           X
         </button>
-        {state.isLoading && (
-          <span className="FacetLoading"> Facet is loading...</span>
-        )}
+        {state.isLoading && <span className="FacetLoading"> Facet is loading...</span>}
         {renderRootValues()}
         {renderActiveFacetValueTree()}
         <button
@@ -299,13 +276,9 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
 
   return (
     <fieldset className="CategoryFacet">
-      <legend className="FacetDisplayName">
-        {state.displayName ?? state.facetId}
-      </legend>
+      <legend className="FacetDisplayName">{state.displayName ?? state.facetId}</legend>
       {renderFacetSearchControls()}
-      {showFacetSearchResults
-        ? renderFacetSearchResults()
-        : renderFacetValues()}
+      {showFacetSearchResults ? renderFacetSearchResults() : renderFacetValues()}
     </fieldset>
   );
 }

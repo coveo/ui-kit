@@ -68,17 +68,10 @@ export const fetchBadges = createAsyncThunk<
   AsyncThunkCommerceOptions<StateNeededByFetchBadges>
 >(
   'commerce/productEnrichment/fetchBadges',
-  async (
-    payload,
-    {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
-  ) => {
+  async (payload, {getState, rejectWithValue, extra: {apiClient, navigatorContext}}) => {
     validatePayload(payload, productEnrichmentDefinition);
 
-    const request = buildProductEnrichmentBadgesRequest(
-      payload,
-      getState(),
-      navigatorContext
-    );
+    const request = buildProductEnrichmentBadgesRequest(payload, getState(), navigatorContext);
 
     const fetched = await apiClient.getBadges(request);
 

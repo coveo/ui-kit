@@ -1,8 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
-import type {SearchResponse} from '@coveo/platform-mock-api/search/search-response';
+import {MockSearchApi, type SearchResponse} from '@coveo/platform-mock-api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
 import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
@@ -11,10 +10,9 @@ import '@/src/components/search/atomic-format-unit/atomic-format-unit.js';
 import '@/src/components/search/atomic-numeric-facet/atomic-numeric-facet.js';
 import '@/src/components/search/atomic-result-number/atomic-result-number.js';
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-format-unit',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-format-unit', {
+  excludeCategories: ['methods'],
+});
 
 const searchApiHarness = new MockSearchApi();
 
@@ -51,9 +49,7 @@ export default meta;
 export const Facet: Story = {
   name: 'Within Numeric Facet',
   render: (args) => html`
-    <atomic-numeric-facet field="size" label="Size">
-      ${template(args)}
-    </atomic-numeric-facet>
+    <atomic-numeric-facet field="size" label="Size"> ${template(args)} </atomic-numeric-facet>
   `,
   beforeEach: () => {
     searchApiHarness.searchEndpoint.mockOnce((response) => ({
@@ -104,9 +100,7 @@ export const Facet: Story = {
 export const Result: Story = {
   name: 'Within Numeric Result',
   render: (args) => html`
-    <atomic-result-number field="size">
-      ${template(args)}
-    </atomic-result-number>
+    <atomic-result-number field="size"> ${template(args)} </atomic-result-number>
   `,
   decorators: [resultTemplateDecorator, resultListDecorator],
   beforeEach: () => {

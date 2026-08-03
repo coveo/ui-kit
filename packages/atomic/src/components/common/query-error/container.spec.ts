@@ -8,9 +8,7 @@ describe('container', () => {
     const renderComponent = async (
       children = html`<div class="test-children">Test Children</div>`
     ) => {
-      const element = await renderFunctionFixture(
-        html`${renderQueryErrorContainer()(children)}`
-      );
+      const element = await renderFunctionFixture(html`${renderQueryErrorContainer()(children)}`);
 
       return {
         children: element.querySelector('.test-children'),

@@ -26,10 +26,7 @@ import type {
 import {getOrganizationEndpoint} from '../platform-client.js';
 import type {PreprocessRequest} from '../preprocess-request.js';
 import {BaseAnalyticsProvider} from './base-analytics.js';
-import {
-  wrapAnalyticsClientSendEventHook,
-  wrapPreprocessRequest,
-} from './coveo-analytics-utils.js';
+import {wrapAnalyticsClientSendEventHook, wrapPreprocessRequest} from './coveo-analytics-utils.js';
 
 export type StateNeededByInsightAnalyticsProvider = ConfigurationSection &
   Partial<InsightAppState> &
@@ -56,9 +53,7 @@ export class InsightAnalyticsProvider
     );
   }
   public getPipeline(): string {
-    return (
-      this.state.pipeline || this.state.search?.response.pipeline || 'default'
-    );
+    return this.state.pipeline || this.state.search?.response.pipeline || 'default';
   }
   public getSearchEventRequestPayload(): Omit<
     SearchEventRequest,
@@ -79,8 +74,7 @@ export class InsightAnalyticsProvider
   public getBaseMetadata() {
     const state = this.getState();
     const baseObject = super.getBaseMetadata();
-    const generativeQuestionAnsweringId =
-      generativeQuestionAnsweringIdSelector(state);
+    const generativeQuestionAnsweringId = generativeQuestionAnsweringIdSelector(state);
 
     if (generativeQuestionAnsweringId) {
       baseObject.generativeQuestionAnsweringId = generativeQuestionAnsweringId;
@@ -115,8 +109,7 @@ export class InsightAnalyticsProvider
 
   private get numberOfResults() {
     return (
-      this.state.search?.response.results.length ||
-      getSearchInitialState().response.results.length
+      this.state.search?.response.results.length || getSearchInitialState().response.results.length
     );
   }
 }
@@ -127,6 +120,7 @@ interface ConfigureInsightAnalyticsOptions {
   preprocessRequest?: PreprocessRequest;
   provider?: InsightClientProvider;
   getState(): StateNeededByInsightAnalyticsProvider;
+  disableBrowserPrivacySignals?: boolean;
 }
 
 export const configureInsightAnalytics = ({
@@ -135,6 +129,7 @@ export const configureInsightAnalytics = ({
   analyticsClientMiddleware = (_, p) => p,
   preprocessRequest,
   provider = new InsightAnalyticsProvider(getState),
+  disableBrowserPrivacySignals,
 }: ConfigureInsightAnalyticsOptions) => {
   const state = getState();
   const token = state.configuration.accessToken;
@@ -154,6 +149,7 @@ export const configureInsightAnalytics = ({
       token,
       endpoint: apiBaseUrl,
       runtimeEnvironment,
+      disableBrowserPrivacySignals,
       preprocessRequest: wrapPreprocessRequest(logger, preprocessRequest),
       beforeSendHooks: [
         wrapAnalyticsClientSendEventHook(logger, analyticsClientMiddleware),

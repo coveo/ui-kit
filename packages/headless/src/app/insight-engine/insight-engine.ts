@@ -38,10 +38,7 @@ import {
   insightEngineConfigurationSchema,
 } from './insight-engine-configuration.js';
 
-export type {
-  InsightEngineConfiguration,
-  InsightEngineSearchConfigurationOptions,
-};
+export type {InsightEngineConfiguration, InsightEngineSearchConfigurationOptions};
 export {getSampleInsightEngineConfiguration};
 
 const insightEngineReducers = {
@@ -110,22 +107,14 @@ export interface InsightEngineOptions extends ExternalEngineOptions<InsightEngin
  *
  * @group Engine
  */
-export function buildInsightEngine(
-  options: InsightEngineOptions
-): InsightEngine {
+export function buildInsightEngine(options: InsightEngineOptions): InsightEngine {
   const logger = buildLogger(options.loggerOptions);
   validateConfiguration(options.configuration, logger);
 
-  const insightAPIClient = createInsightAPIClient(
-    options.configuration,
-    logger
-  );
+  const insightAPIClient = createInsightAPIClient(options.configuration, logger);
   const generatedAnswerClient = createGeneratedAnswerAPIClient(logger);
 
-  const thunkArguments: Omit<
-    InsightThunkExtraArguments,
-    keyof AdditionalCoreExtraArguments
-  > = {
+  const thunkArguments: Omit<InsightThunkExtraArguments, keyof AdditionalCoreExtraArguments> = {
     ...buildThunkExtraArguments(options.configuration, logger),
     apiClient: insightAPIClient,
     streamingClient: generatedAnswerClient,
@@ -137,9 +126,7 @@ export function buildInsightEngine(
   };
 
   const engine = buildEngine(augmentedOptions, thunkArguments);
-  warnIfUsingNextAnalyticsModeForServiceFeature(
-    engine.state.configuration.analytics.analyticsMode
-  );
+  warnIfUsingNextAnalyticsModeForServiceFeature(engine.state.configuration.analytics.analyticsMode);
 
   const {insightId} = options.configuration;
   const search = getUpdateSearchConfigurationPayload(options.configuration);
@@ -169,17 +156,12 @@ export function buildInsightEngine(
         return;
       }
 
-      engine.dispatch(
-        executeSearch({legacy: analyticsEvent, next: interfaceLoad()})
-      );
+      engine.dispatch(executeSearch({legacy: analyticsEvent, next: interfaceLoad()}));
     },
   };
 }
 
-function validateConfiguration(
-  configuration: InsightEngineConfiguration,
-  logger: Logger
-) {
+function validateConfiguration(configuration: InsightEngineConfiguration, logger: Logger) {
   try {
     insightEngineConfigurationSchema.validate(configuration);
   } catch (error) {
@@ -187,10 +169,7 @@ function validateConfiguration(
     throw error;
   }
 }
-function createInsightAPIClient(
-  configuration: InsightEngineConfiguration,
-  logger: Logger
-) {
+function createInsightAPIClient(configuration: InsightEngineConfiguration, logger: Logger) {
   return new InsightAPIClient({
     logger,
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,

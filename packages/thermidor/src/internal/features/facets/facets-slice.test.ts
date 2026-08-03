@@ -3,19 +3,9 @@
  */
 
 import {describe, it, expect} from 'vitest';
-import {
-  createFacetsSlice,
-  getOrCreateFacetsSlice,
-  initialFacetsState,
-} from './facets-slice.js';
-import {
-  createFacetsActions,
-  getOrCreateFacetsActions,
-} from './facets-actions.js';
-import {
-  createFacetsSelectors,
-  getOrCreateFacetsSelectors,
-} from './facets-selectors.js';
+import {createFacetsSlice, getOrCreateFacetsSlice, initialFacetsState} from './facets-slice.js';
+import {createFacetsActions, getOrCreateFacetsActions} from './facets-actions.js';
+import {createFacetsSelectors, getOrCreateFacetsSelectors} from './facets-selectors.js';
 import type {FacetsState} from './facets-types.js';
 import type {CoveoFacetResponse} from '@/src/internal/api/search/index.js';
 import {createTestEngine, createTestInterface} from '@/src/test/test-utils.js';
@@ -33,17 +23,13 @@ function iface(id: string) {
 describe('createFacetsActions', () => {
   it('should create actions scoped to the interfaceId', () => {
     const actions = createFacetsActions('search');
-    expect(actions.updateFromResponse.type).toBe(
-      'search/facets/updateFromResponse'
-    );
+    expect(actions.updateFromResponse.type).toBe('search/facets/updateFromResponse');
   });
 
   it('should create different actions for different interfaceIds', () => {
     const actionsA = createFacetsActions('interfaceA');
     const actionsB = createFacetsActions('interfaceB');
-    expect(actionsA.updateFromResponse.type).not.toBe(
-      actionsB.updateFromResponse.type
-    );
+    expect(actionsA.updateFromResponse.type).not.toBe(actionsB.updateFromResponse.type);
   });
 });
 
@@ -100,10 +86,7 @@ describe('createFacetsSlice', () => {
       },
     ];
 
-    const state = slice.reducer(
-      stateWithFacet,
-      actions.updateFromResponse(response)
-    );
+    const state = slice.reducer(stateWithFacet, actions.updateFromResponse(response));
 
     expect(state.category.values).toEqual([
       {id: 'Electronics', label: 'Electronics', count: 50},
@@ -126,10 +109,7 @@ describe('createFacetsSlice', () => {
       },
     };
 
-    const state = slice.reducer(
-      stateWithFacet,
-      actions.updateFromResponse(undefined)
-    );
+    const state = slice.reducer(stateWithFacet, actions.updateFromResponse(undefined));
 
     expect(state).toEqual(stateWithFacet);
   });
@@ -148,10 +128,7 @@ describe('createFacetsSlice', () => {
       },
     ];
 
-    const state = slice.reducer(
-      initialFacetsState,
-      actions.updateFromResponse(response)
-    );
+    const state = slice.reducer(initialFacetsState, actions.updateFromResponse(response));
 
     expect(state).toEqual(initialFacetsState);
   });

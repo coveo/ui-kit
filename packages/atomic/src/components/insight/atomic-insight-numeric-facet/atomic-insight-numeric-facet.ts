@@ -282,18 +282,11 @@ export class AtomicInsightNumericFacet
     if (this.filter?.state.range) {
       return 1;
     }
-    return (
-      this.facetForRange?.state.values.filter(({state}) => state === 'selected')
-        .length || 0
-    );
+    return this.facetForRange?.state.values.filter(({state}) => state === 'selected').length || 0;
   }
 
   private get shouldRenderValues() {
-    return (
-      !this.hasInputRange &&
-      this.numberOfValues > 0 &&
-      !!this.valuesToRender.length
-    );
+    return !this.hasInputRange && this.numberOfValues > 0 && !!this.valuesToRender.length;
   }
 
   private get hasInputRange() {
@@ -370,9 +363,7 @@ export class AtomicInsightNumericFacet
       return;
     }
 
-    this.manualRanges = Array.from(
-      this.querySelectorAll('atomic-numeric-range')
-    ).map((range) => {
+    this.manualRanges = Array.from(this.querySelectorAll('atomic-numeric-range')).map((range) => {
       const {start, end, endInclusive, label} = range as HTMLElement & {
         start: number;
         end: number;
@@ -399,9 +390,7 @@ export class AtomicInsightNumericFacet
       },
     });
 
-    this.dependenciesManager = this.initializeDependenciesManager(
-      this.facetForRange.state.facetId
-    );
+    this.dependenciesManager = this.initializeDependenciesManager(this.facetForRange.state.facetId);
 
     this.facetState = this.facetForRange.state;
     this.unsubscribeFacetForRange = this.facetForRange.subscribe(() => {
@@ -422,9 +411,7 @@ export class AtomicInsightNumericFacet
       },
     });
 
-    this.filterDependenciesManager = this.initializeDependenciesManager(
-      this.filter.state.facetId
-    );
+    this.filterDependenciesManager = this.initializeDependenciesManager(this.filter.state.facetId);
 
     this.filterState = this.filter.state;
     this.unsubscribeFilter = this.filter.subscribe(() => {
@@ -481,16 +468,10 @@ export class AtomicInsightNumericFacet
       this.formatter = (event as CustomEvent<NumberFormatter>).detail;
     };
 
-    this.addEventListener(
-      'atomic/numberFormat',
-      handleNumberFormat as EventListener
-    );
+    this.addEventListener('atomic/numberFormat', handleNumberFormat as EventListener);
 
     this.removeNumberFormatListener = () => {
-      this.removeEventListener(
-        'atomic/numberFormat',
-        handleNumberFormat as EventListener
-      );
+      this.removeEventListener('atomic/numberFormat', handleNumberFormat as EventListener);
     };
   }
 
@@ -498,9 +479,9 @@ export class AtomicInsightNumericFacet
     const handleNumberInputApply = () => {
       if (this.facetId) {
         this.bindings.engine.dispatch(
-          loadNumericFacetSetActions(
-            this.bindings.engine
-          ).deselectAllNumericFacetValues(this.facetId)
+          loadNumericFacetSetActions(this.bindings.engine).deselectAllNumericFacetValues(
+            this.facetId
+          )
         );
       }
     };
@@ -508,10 +489,7 @@ export class AtomicInsightNumericFacet
     this.addEventListener('atomic/numberInputApply', handleNumberInputApply);
 
     this.removeNumberInputApplyListener = () => {
-      this.removeEventListener(
-        'atomic/numberInputApply',
-        handleNumberInputApply
-      );
+      this.removeEventListener('atomic/numberInputApply', handleNumberInputApply);
     };
   }
 

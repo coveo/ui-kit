@@ -51,17 +51,10 @@ export const commerceCategoryFacetSearchSetReducer = createReducer(
       })
       .addCase(executeCommerceFieldSuggest.rejected, (state, action) => {
         const {facetId} = action.meta.arg;
-        handleFacetSearchRejected(
-          state,
-          getFacetIdWithCommerceFieldSuggestionNamespace(facetId)
-        );
+        handleFacetSearchRejected(state, getFacetIdWithCommerceFieldSuggestionNamespace(facetId));
       })
       .addCase(executeCommerceFacetSearch.fulfilled, (state, action) => {
-        handleCommerceFacetSearchFulfilled(
-          state,
-          action.payload,
-          action.meta.requestId
-        );
+        handleCommerceFacetSearchFulfilled(state, action.payload, action.meta.requestId);
       })
       .addCase(executeCommerceFieldSuggest.fulfilled, (state, action) => {
         handleCommerceFacetFieldSuggestionsFulfilled(

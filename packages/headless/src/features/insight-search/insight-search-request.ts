@@ -10,10 +10,7 @@ import {fromAnalyticsStateToAnalyticsParams} from '../configuration/legacy-analy
 import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request.js';
 import type {CollectionId} from '../folding/folding-state.js';
 import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants.js';
-import {
-  type MappedSearchRequest,
-  mapSearchRequest,
-} from '../search/search-mappings.js';
+import {type MappedSearchRequest, mapSearchRequest} from '../search/search-mappings.js';
 
 type StateNeededBySearchRequest = ConfigurationSection &
   InsightConfigurationSection &
@@ -36,10 +33,7 @@ export const buildInsightBaseRequest = async (
     locale: state.configuration.search.locale,
     insightId: state.insightConfiguration.insightId,
     ...(state.configuration.analytics.enabled &&
-      (await fromAnalyticsStateToAnalyticsParams(
-        state.configuration.analytics,
-        eventDescription
-      ))),
+      (await fromAnalyticsStateToAnalyticsParams(state.configuration.analytics, eventDescription))),
     q: state.query?.q,
     ...(facets.length && {facets}),
     caseContext: state.insightCaseContext?.caseContext,
@@ -51,8 +45,7 @@ export const buildInsightBaseRequest = async (
     ...(state.didYouMean && {
       queryCorrection: {
         enabled:
-          state.didYouMean.enableDidYouMean &&
-          state.didYouMean.queryCorrectionMode === 'next',
+          state.didYouMean.enableDidYouMean && state.didYouMean.queryCorrectionMode === 'next',
         options: {
           automaticallyCorrect: state.didYouMean.automaticallyCorrectQuery
             ? ('whenNoResults' as const)
@@ -60,8 +53,7 @@ export const buildInsightBaseRequest = async (
         },
       },
       enableDidYouMean:
-        state.didYouMean.enableDidYouMean &&
-        state.didYouMean.queryCorrectionMode === 'legacy',
+        state.didYouMean.enableDidYouMean && state.didYouMean.queryCorrectionMode === 'legacy',
     }),
     ...(state.sortCriteria && {
       sortCriteria: state.sortCriteria,
@@ -78,8 +70,7 @@ export const buildInsightBaseRequest = async (
       pipelineRuleParameters: {
         mlGenerativeQuestionAnswering: {
           responseFormat: state.generatedAnswer.responseFormat,
-          citationsFieldToInclude:
-            state.generatedAnswer.fieldsToIncludeInCitations,
+          citationsFieldToInclude: state.generatedAnswer.fieldsToIncludeInCitations,
         },
       },
     }),
@@ -137,15 +128,10 @@ export const buildInsightFetchMoreResultsRequest = async (
   state: StateNeededBySearchRequest,
   eventDescription?: EventDescription
 ): Promise<MappedSearchRequest<InsightQueryRequest>> => {
-  const mappedRequest = await buildInsightSearchRequest(
-    state,
-    eventDescription
-  );
+  const mappedRequest = await buildInsightSearchRequest(state, eventDescription);
   mappedRequest.request = {
     ...mappedRequest.request,
-    firstResult:
-      (state.pagination?.firstResult ?? 0) +
-      (state.pagination?.numberOfResults ?? 0),
+    firstResult: (state.pagination?.firstResult ?? 0) + (state.pagination?.numberOfResults ?? 0),
   };
   return mappedRequest;
 };
@@ -154,10 +140,7 @@ export const buildInsightFetchFacetValuesRequest = async (
   state: StateNeededBySearchRequest,
   eventDescription?: EventDescription
 ): Promise<MappedSearchRequest<InsightQueryRequest>> => {
-  const mappedRequest = await buildInsightSearchRequest(
-    state,
-    eventDescription
-  );
+  const mappedRequest = await buildInsightSearchRequest(state, eventDescription);
   mappedRequest.request = {
     ...mappedRequest.request,
     numberOfResults: 0,
@@ -175,9 +158,7 @@ function getAllFacets(state: StateNeededBySearchRequest) {
 }
 
 function buildConstantQuery(state: StateNeededBySearchRequest) {
-  const activeTab = Object.values(state.tabSet || {}).find(
-    (tab) => tab.isActive
-  );
+  const activeTab = Object.values(state.tabSet || {}).find((tab) => tab.isActive);
   const tabExpression = activeTab?.expression.trim() || '';
 
   return tabExpression;

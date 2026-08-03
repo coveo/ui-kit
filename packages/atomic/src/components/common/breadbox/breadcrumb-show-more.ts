@@ -14,9 +14,7 @@ interface BreadcrumbShowMoreProps {
   ariaLabel: string;
 }
 
-export const renderBreadcrumbShowMore: FunctionalComponent<
-  BreadcrumbShowMoreProps
-> = ({props}) => {
+export const renderBreadcrumbShowMore: FunctionalComponent<BreadcrumbShowMoreProps> = ({props}) => {
   if (!props.isCollapsed) {
     return nothing;
   }

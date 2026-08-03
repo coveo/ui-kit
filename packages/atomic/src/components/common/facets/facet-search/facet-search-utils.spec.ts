@@ -21,9 +21,7 @@ describe('#highlightSearchResult', () => {
   });
 
   it('should escape result & query', () => {
-    expect(
-      highlightSearchResult('<script>console.log("hmm")<script>', 'con')
-    ).toBe(
+    expect(highlightSearchResult('<script>console.log("hmm")<script>', 'con')).toBe(
       '&lt;script&gt;<span part="search-highlight" class="font-bold">con</span>sole.log(&quot;hmm&quot;)&lt;script&gt;'
     );
   });

@@ -2,10 +2,7 @@ import type {Mock} from 'vitest';
 import {stateKey} from '../../../app/state-key.js';
 import {commerceTriggersReducer as triggers} from '../../../features/commerce/triggers/triggers-slice.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
-import {
-  buildMockCommerceEngine,
-  type MockedCommerceEngine,
-} from '../../../test/mock-engine-v2.js';
+import {buildMockCommerceEngine, type MockedCommerceEngine} from '../../../test/mock-engine-v2.js';
 import type {NotifyTrigger} from '../../core/triggers/headless-core-notify-trigger.js';
 import {buildNotifyTrigger} from './headless-notify-trigger.js';
 

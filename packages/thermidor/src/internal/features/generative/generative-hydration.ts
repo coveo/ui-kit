@@ -1,19 +1,27 @@
 import {createAction} from '@reduxjs/toolkit';
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import {generateId} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
-import type {RoutedInterface, RoutedUseCase} from './generative-types.js';
-import type {HydrateSubInterface} from '@/src/internal/api/generative/index.js';
+import type {RoutedUseCase} from './generative-types.js';
+import type {HydrateSubInterface, HydrationResult} from '@/src/internal/api/generative/index.js';
 import {CommerceInterfaceImpl} from '@/src/internal/interfaces/index.js';
 import {SearchInterfaceImpl} from '@/src/internal/interfaces/index.js';
 import {getOrCreateSearchBoxActions} from '@/src/internal/features/search-box/index.js';
 import {getOrCreateSearchBoxSlice} from '@/src/internal/features/search-box/index.js';
+import {createConverseSearchFacadeResolver} from '@/src/internal/api/converse-search/index.js';
+import {createCommerceSuggestionsFacadeResolver} from '@/src/internal/api/commerce-query-suggest/index.js';
+import type {RoutedInterfaceRegistry} from './routed-interface-registry.js';
 
 const ACTIVITY_TYPE_TO_ROUTED_USE_CASE: Record<string, RoutedUseCase> = {
   commerce_search_api_response: 'commerceSearch',
   search_api_response: 'search',
+};
+
+const ROUTED_USE_CASE_TO_ACTIVITY_TYPE: Record<RoutedUseCase, string> = {
+  commerceSearch: 'commerce_search_api_response',
+  search: 'search_api_response',
 };
 
 type HydrateAction = ReturnType<typeof createHydrateAction>;
@@ -23,26 +31,19 @@ const CACHE_KEY: CacheKey<HydrateAction> = createCacheKey<HydrateAction>(
 );
 
 function createHydrateAction(interfaceId: string) {
-  return createAction<Record<string, unknown>>(
-    `${interfaceId}/hydrateFromSnapshot`
-  );
+  return createAction<Record<string, unknown>>(`${interfaceId}/hydrateFromSnapshot`);
 }
 
 export function getOrCreateHydrateFromSnapshotAction(iface: InterfaceHandle) {
-  const {stateId, cacheRegistry} = getHandleInternals(iface);
-  return cacheRegistry.getOrCreate(CACHE_KEY, () =>
-    createHydrateAction(stateId)
-  );
+  const {stateId, cacheRegistry} = getInterfaceInternals(iface);
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => createHydrateAction(stateId));
 }
 
 export function createHydrateSubInterface(
-  fullEngine: FullEngine
+  fullEngine: FullEngine,
+  generativeInterface: InterfaceHandle
 ): HydrateSubInterface {
-  return (
-    activityType: string,
-    content: unknown,
-    query?: string
-  ): RoutedInterface | null => {
+  return (activityType: string, content: unknown, query?: string): HydrationResult | null => {
     const routedUseCase = ACTIVITY_TYPE_TO_ROUTED_USE_CASE[activityType];
     if (!routedUseCase) {
       return null;
@@ -52,7 +53,10 @@ export function createHydrateSubInterface(
     const effectiveQuery = extractEffectiveQuery(contentRecord, query);
 
     if (routedUseCase === 'commerceSearch') {
-      const subInterface = new CommerceInterfaceImpl(fullEngine, generateId());
+      const subInterface = new CommerceInterfaceImpl(fullEngine, generateId(), {
+        search: createConverseSearchFacadeResolver(generativeInterface),
+        suggestions: createCommerceSuggestionsFacadeResolver,
+      });
       fullEngine.storeHydrationSnapshot(contentRecord, subInterface);
       const hydrateAction = getOrCreateHydrateFromSnapshotAction(subInterface);
       fullEngine.mutate(hydrateAction(contentRecord));
@@ -61,7 +65,12 @@ export function createHydrateSubInterface(
         const searchBoxActions = getOrCreateSearchBoxActions(subInterface);
         fullEngine.mutate(searchBoxActions.setQuery(effectiveQuery));
       }
-      return {useCase: 'commerceSearch' as const, interface: subInterface};
+      return {
+        useCase: 'commerceSearch' as const,
+        interface: subInterface,
+        snapshot: contentRecord,
+        query: effectiveQuery,
+      };
     }
 
     const subInterface = new SearchInterfaceImpl(fullEngine, generateId());
@@ -73,7 +82,12 @@ export function createHydrateSubInterface(
       const searchBoxActions = getOrCreateSearchBoxActions(subInterface);
       fullEngine.mutate(searchBoxActions.setQuery(effectiveQuery));
     }
-    return {useCase: 'search' as const, interface: subInterface};
+    return {
+      useCase: 'search' as const,
+      interface: subInterface,
+      snapshot: contentRecord,
+      query: effectiveQuery,
+    };
   };
 }
 
@@ -91,4 +105,41 @@ function extractEffectiveQuery(
   }
 
   return fallbackQuery;
+}
+
+export function rehydrateRoutedInterfaces(
+  turns: {
+    id: string;
+    routedInterface?: {
+      useCase: string;
+      snapshot: Record<string, unknown>;
+      query: string | undefined;
+    };
+  }[],
+  registry: RoutedInterfaceRegistry,
+  hydrateSubInterface: HydrateSubInterface
+): void {
+  for (const turn of turns) {
+    if (!turn.routedInterface) {
+      continue;
+    }
+    const activityType =
+      ROUTED_USE_CASE_TO_ACTIVITY_TYPE[turn.routedInterface.useCase as RoutedUseCase];
+    if (!activityType) {
+      continue;
+    }
+    const hydrationResult = hydrateSubInterface(
+      activityType,
+      turn.routedInterface.snapshot,
+      turn.routedInterface.query
+    );
+    if (hydrationResult) {
+      registry.register(turn.id, {
+        useCase: hydrationResult.useCase,
+        interface: hydrationResult.interface,
+        snapshot: hydrationResult.snapshot,
+        query: hydrationResult.query,
+      });
+    }
+  }
 }

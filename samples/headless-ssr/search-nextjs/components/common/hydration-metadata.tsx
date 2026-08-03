@@ -1,8 +1,5 @@
 import type {FunctionComponent} from 'react';
-import type {
-  SearchHydratedState,
-  SearchStaticState,
-} from '../../lib/generic/engine';
+import type {SearchHydratedState, SearchStaticState} from '../../lib/generic/engine';
 
 export interface HydrationMetadataProps {
   staticState: SearchStaticState;
@@ -15,21 +12,11 @@ export const HydrationMetadata: FunctionComponent<HydrationMetadataProps> = ({
 }) => (
   <>
     <div>
-      Hydrated:{' '}
-      <input
-        id="hydrated-indicator"
-        type="checkbox"
-        disabled
-        checked={!!hydratedState}
-      />
+      Hydrated: <input id="hydrated-indicator" type="checkbox" disabled checked={!!hydratedState} />
     </div>
     <span id="hydrated-msg">
       Rendered page with{' '}
-      {
-        (hydratedState ?? staticState).controllers.resultList.state.results
-          .length
-      }{' '}
-      results
+      {(hydratedState ?? staticState).controllers.resultList.state.results.length} results
     </span>
     <div>
       Rendered on{' '}

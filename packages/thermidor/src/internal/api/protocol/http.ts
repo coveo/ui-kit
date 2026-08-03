@@ -47,9 +47,7 @@ export interface HttpResponse<T> {
  *
  * Returns a typed response with success/error status instead of throwing exceptions.
  */
-export async function executeHttpRequest<T>(
-  options: HttpRequestOptions
-): Promise<HttpResponse<T>> {
+export async function executeHttpRequest<T>(options: HttpRequestOptions): Promise<HttpResponse<T>> {
   try {
     const headers: Record<string, string> = {...options.headers};
 

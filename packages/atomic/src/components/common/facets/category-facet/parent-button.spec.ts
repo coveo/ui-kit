@@ -8,9 +8,7 @@ import {
 } from './parent-button';
 
 vi.mock('@/src/utils/field-utils', () => ({
-  getFieldValueCaption: vi.fn(
-    (field: string, value: string) => `${field}: ${value}`
-  ),
+  getFieldValueCaption: vi.fn((field: string, value: string) => `${field}: ${value}`),
 }));
 
 describe('#renderCategoryFacetParentButton', () => {
@@ -20,9 +18,7 @@ describe('#renderCategoryFacetParentButton', () => {
     i18n = await createTestI18n();
   });
 
-  const renderComponent = async (
-    props: Partial<CategoryFacetParentButtonProps> = {}
-  ) => {
+  const renderComponent = async (props: Partial<CategoryFacetParentButtonProps> = {}) => {
     const defaultProps: CategoryFacetParentButtonProps = {
       i18n,
       field: 'category',
@@ -94,10 +90,7 @@ describe('#renderCategoryFacetParentButton', () => {
     });
 
     expect(textSpan).toHaveTextContent('brand: apple');
-    expect(button).toHaveAttribute(
-      'aria-label',
-      'Inclusion filter on brand: apple; 123 results'
-    );
+    expect(button).toHaveAttribute('aria-label', 'Inclusion filter on brand: apple; 123 results');
   });
 
   it('should format large numbers correctly in aria-label', async () => {

@@ -71,15 +71,14 @@ export class AtomicInsightQuerySummary
       total,
     } = this.querySummaryState;
 
-    const {ariaLiveMessage, highlights, i18nKey} =
-      getQuerySummaryI18nParameters({
-        first: firstResult,
-        i18n: this.bindings.i18n,
-        isLoading,
-        last: lastResult,
-        query,
-        total,
-      });
+    const {ariaLiveMessage, highlights, i18nKey} = getQuerySummaryI18nParameters({
+      first: firstResult,
+      i18n: this.bindings.i18n,
+      isLoading,
+      last: lastResult,
+      query,
+      total,
+    });
 
     this.ariaMessage.message = ariaLiveMessage;
 

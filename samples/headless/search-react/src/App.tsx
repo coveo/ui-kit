@@ -3,6 +3,7 @@ import {
   buildCategoryFacet,
   buildDateSortCriterion,
   buildFacet,
+  buildFieldSuggestions,
   buildInstantResults,
   buildPager,
   buildQuerySummary,
@@ -30,10 +31,7 @@ interface AppProps {
 }
 
 function App({engine: providedEngine}: AppProps) {
-  const engine = useMemo(
-    () => providedEngine ?? buildEngine(),
-    [providedEngine]
-  );
+  const engine = useMemo(() => providedEngine ?? buildEngine(), [providedEngine]);
 
   const controllers = useMemo(() => {
     return {
@@ -57,8 +55,15 @@ function App({engine: providedEngine}: AppProps) {
         articleType: buildFacet(engine, {options: {field: 'article_type'}}),
         robotSeries: buildFacet(engine, {options: {field: 'robot_series'}}),
         difficulty: buildFacet(engine, {options: {field: 'difficulty_level'}}),
-        author: buildFacet(engine, {options: {field: 'author'}}),
+        author: buildFacet(engine, {options: {facetId: 'author', field: 'author'}}),
       },
+      // Drives the "Authors" column of the search box dropdown. It shares its `facetId`
+      // with the author facet above, so selecting a suggestion selects the matching
+      // facet value. Both must declare the same facet options, because only the first
+      // controller built for a `facetId` applies them.
+      authorSuggestions: buildFieldSuggestions(engine, {
+        options: {facet: {facetId: 'author', field: 'author'}},
+      }),
     };
   }, [engine]);
 
@@ -92,6 +97,7 @@ function App({engine: providedEngine}: AppProps) {
           engine={engine}
           controller={controllers.searchBox}
           instantResults={controllers.instantResults}
+          fieldSuggestions={controllers.authorSuggestions}
         />
 
         <div className="results-toolbar">
@@ -103,22 +109,10 @@ function App({engine: providedEngine}: AppProps) {
 
         <div className="search-layout">
           <aside className="facets">
-            <CategoryFacet
-              controller={controllers.facets.category}
-              title="Category"
-            />
-            <Facet
-              controller={controllers.facets.articleType}
-              title="Article type"
-            />
-            <Facet
-              controller={controllers.facets.robotSeries}
-              title="Robot series"
-            />
-            <Facet
-              controller={controllers.facets.difficulty}
-              title="Difficulty"
-            />
+            <CategoryFacet controller={controllers.facets.category} title="Category" />
+            <Facet controller={controllers.facets.articleType} title="Article type" />
+            <Facet controller={controllers.facets.robotSeries} title="Robot series" />
+            <Facet controller={controllers.facets.difficulty} title="Difficulty" />
             <Facet controller={controllers.facets.author} title="Author" />
           </aside>
 

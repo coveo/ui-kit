@@ -38,10 +38,7 @@ test.describe('atomic-commerce-breadbox', () => {
       const baseUrl =
         './iframe.html?args=&id=atomic-commerce-breadbox--default&viewMode=story#sortCriteria=relevance';
 
-      test(`should show the breadcrumb for ${facetType} facet value`, async ({
-        page,
-        breadbox,
-      }) => {
+      test(`should show the breadcrumb for ${facetType} facet value`, async ({page, breadbox}) => {
         await page.goto(baseUrl + filter);
         await breadbox.hydrated.waitFor();
 
@@ -62,9 +59,7 @@ test.describe('atomic-commerce-breadbox', () => {
 
     const expectedBreadcrumbLabel = 'Price: $20.00 to $30.00';
 
-    const breadcrumbButton = breadbox.getBreadcrumbButtons(
-      expectedBreadcrumbLabel
-    );
+    const breadcrumbButton = breadbox.getBreadcrumbButtons(expectedBreadcrumbLabel);
 
     await expect(breadcrumbButton).toContainText(expectedBreadcrumbLabel);
   });
@@ -79,14 +74,10 @@ test.describe('atomic-commerce-breadbox', () => {
         .first()
         .textContent()) as string;
       await breadbox.getFacetValue('regular', firstValueText).click();
-      await breadbox
-        .getBreadcrumbButtons(firstValueText)
-        .waitFor({state: 'visible'});
+      await breadbox.getBreadcrumbButtons(firstValueText).waitFor({state: 'visible'});
     });
 
-    test('should disappear when clicking on the breadcrumb button', async ({
-      breadbox,
-    }) => {
+    test('should disappear when clicking on the breadcrumb button', async ({breadbox}) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
       await breadcrumbButton.click();
 
@@ -97,9 +88,7 @@ test.describe('atomic-commerce-breadbox', () => {
       await expect(breadbox.getClearAllButton()).toBeVisible();
     });
 
-    test('should disappear when clicking on the "Clear all" button', async ({
-      breadbox,
-    }) => {
+    test('should disappear when clicking on the "Clear all" button', async ({breadbox}) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
       const clearButton = breadbox.getClearAllButton();
       await clearButton.click();
@@ -124,18 +113,11 @@ test.describe('atomic-commerce-breadbox', () => {
         .locator('span')
         .first()
         .textContent()) as string;
-      await breadbox
-        .getFacetValue('category', firstValueText)
-        .locator('button')
-        .click();
-      await breadbox
-        .getBreadcrumbButtons(firstValueText)
-        .waitFor({state: 'visible'});
+      await breadbox.getFacetValue('category', firstValueText).locator('button').click();
+      await breadbox.getBreadcrumbButtons(firstValueText).waitFor({state: 'visible'});
     });
 
-    test('should disappear when clicking on the breadcrumb button', async ({
-      breadbox,
-    }) => {
+    test('should disappear when clicking on the breadcrumb button', async ({breadbox}) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
       await breadcrumbButton.click();
 
@@ -146,9 +128,7 @@ test.describe('atomic-commerce-breadbox', () => {
       await expect(breadbox.getClearAllButton()).toBeVisible();
     });
 
-    test('should disappear when clicking on the "Clear all" button', async ({
-      breadbox,
-    }) => {
+    test('should disappear when clicking on the "Clear all" button', async ({breadbox}) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
       const clearButton = breadbox.getClearAllButton();
       await clearButton.click();
@@ -161,9 +141,7 @@ test.describe('atomic-commerce-breadbox', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toContainText(
-        `Category: ${firstValueText}`
-      );
+      await expect(breadcrumbButton).toContainText(`Category: ${firstValueText}`);
     });
 
     test.describe('when a nested category facet value is selected', () => {
@@ -184,20 +162,11 @@ test.describe('atomic-commerce-breadbox', () => {
             .locator('span')
             .first()
             .textContent());
-        await breadbox
-          .getFacetValue('nestedCategory')
-          .first()
-          .locator('button')
-          .click();
-        await breadbox
-          .getBreadcrumbButtons()
-          .first()
-          .waitFor({state: 'visible'});
+        await breadbox.getFacetValue('nestedCategory').first().locator('button').click();
+        await breadbox.getBreadcrumbButtons().first().waitFor({state: 'visible'});
       });
 
-      test('should disappear when clicking on the breadcrumb button', async ({
-        breadbox,
-      }) => {
+      test('should disappear when clicking on the breadcrumb button', async ({breadbox}) => {
         const breadcrumbButton = breadbox.getBreadcrumbButtons().first();
         await breadcrumbButton.click();
 
@@ -208,9 +177,7 @@ test.describe('atomic-commerce-breadbox', () => {
         await expect(breadbox.getClearAllButton()).toBeVisible();
       });
 
-      test('should disappear when clicking on the "Clear all" button', async ({
-        breadbox,
-      }) => {
+      test('should disappear when clicking on the "Clear all" button', async ({breadbox}) => {
         const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
         const clearButton = breadbox.getClearAllButton();
         await clearButton.click();
@@ -223,9 +190,7 @@ test.describe('atomic-commerce-breadbox', () => {
       }) => {
         const breadcrumbButton = breadbox.getBreadcrumbButtons().first();
 
-        await expect(breadcrumbButton).toContainText(
-          `Category: ${breadcrumbText}`
-        );
+        await expect(breadcrumbButton).toContainText(`Category: ${breadcrumbText}`);
       });
     });
   });
@@ -239,14 +204,10 @@ test.describe('atomic-commerce-breadbox', () => {
         .locator('span')
         .first()
         .textContent()) as string;
-      await breadbox
-        .getBreadcrumbButtons(firstValueText)
-        .waitFor({state: 'visible'});
+      await breadbox.getBreadcrumbButtons(firstValueText).waitFor({state: 'visible'});
     });
 
-    test('should disappear when clicking on the breadcrumb button', async ({
-      breadbox,
-    }) => {
+    test('should disappear when clicking on the breadcrumb button', async ({breadbox}) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
       await breadcrumbButton.click();
 
@@ -257,9 +218,7 @@ test.describe('atomic-commerce-breadbox', () => {
       await expect(breadbox.getClearAllButton()).toBeVisible();
     });
 
-    test('should disappear when clicking on the "Clear all" button', async ({
-      breadbox,
-    }) => {
+    test('should disappear when clicking on the "Clear all" button', async ({breadbox}) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
       const clearButton = breadbox.getClearAllButton();
       await clearButton.click();
@@ -282,14 +241,10 @@ test.describe('atomic-commerce-breadbox', () => {
     test.beforeEach(async ({breadbox}) => {
       await breadbox.applyManualNumericalRange(20, 30);
       firstValueText = '$20.00 to $30.00';
-      await breadbox
-        .getBreadcrumbButtons(firstValueText)
-        .waitFor({state: 'visible'});
+      await breadbox.getBreadcrumbButtons(firstValueText).waitFor({state: 'visible'});
     });
 
-    test('should disappear when clicking on the breadcrumb button', async ({
-      breadbox,
-    }) => {
+    test('should disappear when clicking on the breadcrumb button', async ({breadbox}) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
       await breadcrumbButton.click();
 
@@ -300,9 +255,7 @@ test.describe('atomic-commerce-breadbox', () => {
       await expect(breadbox.getClearAllButton()).toBeVisible();
     });
 
-    test('should disappear when clicking on the "Clear all" button', async ({
-      breadbox,
-    }) => {
+    test('should disappear when clicking on the "Clear all" button', async ({breadbox}) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
       const clearButton = breadbox.getClearAllButton();
       await clearButton.click();
@@ -330,14 +283,10 @@ test.describe('atomic-commerce-breadbox', () => {
         .locator('span')
         .nth(1)
         .textContent()) as string;
-      await breadbox
-        .getBreadcrumbButtons(firstValueText)
-        .waitFor({state: 'visible'});
+      await breadbox.getBreadcrumbButtons(firstValueText).waitFor({state: 'visible'});
     });
 
-    test('should disappear when clicking on the breadcrumb button', async ({
-      breadbox,
-    }) => {
+    test('should disappear when clicking on the breadcrumb button', async ({breadbox}) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
       await breadcrumbButton.click();
 
@@ -348,9 +297,7 @@ test.describe('atomic-commerce-breadbox', () => {
       await expect(breadbox.getClearAllButton()).toBeVisible();
     });
 
-    test('should disappear when clicking on the "Clear all" button', async ({
-      breadbox,
-    }) => {
+    test('should disappear when clicking on the "Clear all" button', async ({breadbox}) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
       const clearButton = breadbox.getClearAllButton();
       await clearButton.click();
@@ -371,10 +318,7 @@ test.describe('atomic-commerce-breadbox', () => {
     test.beforeEach(async ({breadbox}) => {
       for (let i = 0; i < 6; i++) {
         await breadbox.getFacetValue('regular').nth(i).click();
-        await breadbox
-          .getBreadcrumbButtons()
-          .nth(i)
-          .waitFor({state: 'visible'});
+        await breadbox.getBreadcrumbButtons().nth(i).waitFor({state: 'visible'});
       }
     });
 
@@ -407,9 +351,7 @@ test.describe('atomic-commerce-breadbox', () => {
 
       await page.setViewportSize({width: 240, height: 480});
       await breadbox.getBreadcrumbButtons().first().waitFor({state: 'hidden'});
-      await expect(breadbox.getShowMorebutton()).toContainText(
-        'Show 6 more filters'
-      );
+      await expect(breadbox.getShowMorebutton()).toContainText('Show 6 more filters');
 
       await page.setViewportSize({width: 1920, height: 480});
       await breadbox.getBreadcrumbButtons().first().waitFor({state: 'visible'});
@@ -429,25 +371,18 @@ test.describe('atomic-commerce-breadbox', () => {
       });
 
       test('should hide the breadcrumb button', async ({breadbox}) => {
-        await expect(
-          breadbox.getBreadcrumbButtons(firstButtonText)
-        ).not.toBeVisible();
+        await expect(breadbox.getBreadcrumbButtons(firstButtonText)).not.toBeVisible();
       });
 
       test('should uncheck the facet value', async ({breadbox}) => {
-        const facetValueButton = breadbox.getFacetValue(
-          'regular',
-          firstButtonText
-        );
+        const facetValueButton = breadbox.getFacetValue('regular', firstButtonText);
         if (await facetValueButton.isVisible()) {
           await expect(facetValueButton).not.toBeChecked();
         }
       });
 
       test('should update the "Show More" button count', async ({breadbox}) => {
-        await expect(breadbox.getShowMorebutton()).toContainText(
-          'Show 5 more filters'
-        );
+        await expect(breadbox.getShowMorebutton()).toContainText('Show 5 more filters');
       });
     });
 
@@ -486,16 +421,11 @@ test.describe('atomic-commerce-breadbox', () => {
     for (let i = 0; i < 4; i++) {
       await breadbox.getFacetValue('regular').nth(i).click();
       if (i < 3) {
-        await breadbox
-          .getBreadcrumbButtons()
-          .nth(i)
-          .waitFor({state: 'visible'});
+        await breadbox.getBreadcrumbButtons().nth(i).waitFor({state: 'visible'});
       }
     }
 
     await expect(breadbox.getShowMorebutton()).toBeVisible();
-    await expect(breadbox.getShowMorebutton()).toContainText(
-      'Show 1 more filters'
-    );
+    await expect(breadbox.getShowMorebutton()).toContainText('Show 1 more filters');
   });
 });

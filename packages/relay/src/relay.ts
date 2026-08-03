@@ -2,10 +2,7 @@ import {emit} from './emit/emit.js';
 import {createRelayEvent, type RelayEvent} from './event/relay-event.js';
 import {version} from './version.js';
 import {createMeta, type Meta, type EventConfig} from './event/meta/meta.js';
-import {
-  createListenerManager,
-  type EventCallback,
-} from './listener/listener.js';
+import {createListenerManager, type EventCallback} from './listener/listener.js';
 import {createConfigManager, type RelayConfig} from './config/config.js';
 import type {Environment} from './environment/environment.js';
 import type {CustomEnvironment} from './environment/custom/custom.js';
@@ -98,14 +95,10 @@ export function createRelay(initialConfig: RelayConfig): Relay {
         listenerManager,
       });
     },
-    getMeta: (type: string) =>
-      createMeta(type, configManager.get(), environmentManager.get()),
-    on: (type: string, callback: EventCallback) =>
-      listenerManager.add({type, callback}),
-    off: (type: string, callback?: EventCallback) =>
-      listenerManager.remove(type, callback),
-    updateConfig: (config: Partial<RelayConfig>) =>
-      configManager.update(config),
+    getMeta: (type: string) => createMeta(type, configManager.get(), environmentManager.get()),
+    on: (type: string, callback: EventCallback) => listenerManager.add({type, callback}),
+    off: (type: string, callback?: EventCallback) => listenerManager.remove(type, callback),
+    updateConfig: (config: Partial<RelayConfig>) => configManager.update(config),
     version,
   };
 }

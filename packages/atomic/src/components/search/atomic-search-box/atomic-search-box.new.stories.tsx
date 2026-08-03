@@ -1,14 +1,10 @@
-import type {
-  Decorator,
-  Meta,
-  StoryObj as Story,
-} from '@storybook/web-components-vite';
+import type {Decorator, Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {userEvent} from 'storybook/test';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {testComboboxA11y} from '@/storybook-utils/a11y/combobox.js';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-search-box/atomic-search-box.js';
@@ -16,10 +12,9 @@ import '@/src/components/search/atomic-search-box-instant-results/atomic-search-
 import '@/src/components/search/atomic-search-box-query-suggestions/atomic-search-box-query-suggestions.js';
 import '@/src/components/search/atomic-search-box-recent-queries/atomic-search-box-recent-queries.js';
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-search-box',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-search-box', {
+  excludeCategories: ['methods'],
+});
 const {decorator, play} = wrapInSearchInterface({
   skipFirstSearch: true,
   includeCodeRoot: false,
@@ -73,8 +68,7 @@ export const RichSearchBox: Story = {
 export const StandaloneSearchBox: Story = {
   name: 'As a standalone search box',
   args: {
-    'redirection-url':
-      './iframe.html?id=atomic-search-interface--with-result-list',
+    'redirection-url': './iframe.html?id=atomic-search-interface--with-result-list',
   },
 };
 
@@ -85,8 +79,7 @@ export const A11yStatusMessage: Story = {
     await play(context);
     await testStatusMessageA11y(context, {
       triggerAction: async () => {
-        const searchBox =
-          await context.canvas.findByShadowPlaceholderText('Search');
+        const searchBox = await context.canvas.findByShadowPlaceholderText('Search');
         await userEvent.type(searchBox, 'test');
       },
       expectedText: '5 search suggestions are available for test.',

@@ -1,12 +1,5 @@
 import {NgComponentOutlet} from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Type,
-  computed,
-  input,
-  output,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Type, computed, input, output} from '@angular/core';
 import {RenderableCommerceSurface} from '../models';
 import {BundleDisplayComponent} from './bundle-display.component';
 import {ComparisonSummaryComponent} from './comparison-summary.component';
@@ -27,9 +20,7 @@ const SURFACE_COMPONENTS: Record<string, Type<unknown>> = {
   imports: [NgComponentOutlet],
   template: `
     @if (component()) {
-      <ng-container
-        *ngComponentOutlet="component(); inputs: componentInputs()"
-      />
+      <ng-container *ngComponentOutlet="component(); inputs: componentInputs()" />
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {CartItem, CartState} from './cart-types.js';
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import {getOrCreateCartActions} from './cart-actions.js';
 
@@ -9,8 +9,7 @@ export const initialCartState: CartState = {
   items: [],
 };
 
-const cartKey = (item: CartItem) =>
-  `${item.productId},${item.name},${item.price}`;
+const cartKey = (item: CartItem) => `${item.productId},${item.name},${item.price}`;
 
 type CartSlice = ReturnType<typeof createCartSlice>;
 
@@ -29,9 +28,7 @@ export function createCartSlice(
         state.items = action.payload;
       });
       builder.addCase(actions.updateItemQuantity, (state, action) => {
-        const index = state.items.findIndex(
-          (item) => cartKey(item) === cartKey(action.payload)
-        );
+        const index = state.items.findIndex((item) => cartKey(item) === cartKey(action.payload));
 
         if (index === -1) {
           if (action.payload.quantity > 0) {
@@ -52,7 +49,7 @@ export function createCartSlice(
 }
 
 export function getOrCreateCartSlice(iface: InterfaceHandle) {
-  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  const {stateId, cacheRegistry} = getInterfaceInternals(iface);
   return cacheRegistry.getOrCreate(CACHE_KEY, () => {
     const actions = getOrCreateCartActions(iface);
     return createCartSlice(stateId, actions);

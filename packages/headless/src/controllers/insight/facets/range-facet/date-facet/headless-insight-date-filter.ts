@@ -45,10 +45,7 @@ export type {
  * @group Controllers
  * @category DateFilter
  */
-export function buildDateFilter(
-  engine: InsightEngine,
-  props: DateFilterProps
-): DateFilter {
+export function buildDateFilter(engine: InsightEngine, props: DateFilterProps): DateFilter {
   if (!loadDateFilterReducer(engine)) {
     throw loadReducerError;
   }
@@ -94,9 +91,7 @@ export function buildDateFilter(
 
 function loadDateFilterReducer(
   engine: InsightEngine
-): engine is InsightEngine<
-  DateFacetSection & ConfigurationSection & SearchSection
-> {
+): engine is InsightEngine<DateFacetSection & ConfigurationSection & SearchSection> {
   engine.addReducers({dateFacetSet, configuration, search});
   return true;
 }

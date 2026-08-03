@@ -1,16 +1,12 @@
 import type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering.js';
-import type {
-  QuestionAnsweringSection,
-  SearchSection,
-} from '../../state/state-sections.js';
+import type {QuestionAnsweringSection, SearchSection} from '../../state/state-sections.js';
 import {resultFromFieldSelector} from '../search/search-selectors.js';
 
 export function answerSourceSelector(
   state: Partial<SearchSection & QuestionAnsweringSection>,
   documentIdentifier?: QuestionAnswerDocumentIdentifier
 ) {
-  const documentId =
-    documentIdentifier ?? state.search?.questionAnswer?.documentId;
+  const documentId = documentIdentifier ?? state.search?.questionAnswer?.documentId;
   return (
     documentId &&
     state.search &&
@@ -33,7 +29,6 @@ export function relatedQuestionSelector(
   if (index === -1) {
     return null;
   }
-  const searchQuestionState =
-    state.search?.questionAnswer?.relatedQuestions?.[index];
+  const searchQuestionState = state.search?.questionAnswer?.relatedQuestions?.[index];
   return searchQuestionState ?? null;
 }

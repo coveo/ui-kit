@@ -26,15 +26,7 @@ initialize({
 setCustomElementsManifest(customElements);
 
 setStorybookHelpersConfig({
-  categoryOrder: [
-    'attributes',
-    'cssParts',
-    'cssProps',
-    'cssStates',
-    'events',
-    'methods',
-    'slots',
-  ],
+  categoryOrder: ['attributes', 'cssParts', 'cssProps', 'cssStates', 'events', 'methods', 'slots'],
   hideArgRef: true,
 });
 
@@ -75,14 +67,7 @@ const preview: Preview = {
       options: {
         runOnly: {
           type: 'tag',
-          values: [
-            'wcag2a',
-            'wcag21a',
-            'wcag22a',
-            'wcag2aa',
-            'wcag21aa',
-            'wcag22aa',
-          ],
+          values: ['wcag2a', 'wcag21a', 'wcag22a', 'wcag2aa', 'wcag21aa', 'wcag22aa'],
         },
       },
     },
@@ -97,7 +82,6 @@ const preview: Preview = {
         textColor: '#282829',
       }),
     },
-    chromatic: {disableSnapshot: import.meta.env.CHROMATIC_ALL !== 'true'},
   },
   beforeEach({canvasElement, canvas}) {
     Object.assign(canvas, {...within(canvasElement)});

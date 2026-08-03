@@ -27,15 +27,11 @@ function main() {
   const args = process.argv.slice(2);
 
   if (args.length === 0) {
-    console.error(
-      'Usage: node copy-files.mjs <source> <target> [<source2> <target2> ...]'
-    );
+    console.error('Usage: node copy-files.mjs <source> <target> [<source2> <target2> ...]');
     console.error('');
     console.error('Examples:');
     console.error('  node copy-files.mjs ./src/assets ./dist/assets');
-    console.error(
-      '  node copy-files.mjs ./assets ./dist/assets ./lang ./dist/lang'
-    );
+    console.error('  node copy-files.mjs ./assets ./dist/assets ./lang ./dist/lang');
     process.exit(1);
   }
 

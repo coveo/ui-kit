@@ -67,17 +67,9 @@ export class Breadcrumbs extends LitElement {
 
     return html`
       ${crumbs.map(
-        (crumb) => html`
-          <button type="button" @click=${crumb.deselect}>
-            ${crumb.label} ✕
-          </button>
-        `
+        (crumb) => html` <button type="button" @click=${crumb.deselect}>${crumb.label} ✕</button> `
       )}
-      <button
-        type="button"
-        class="clear"
-        @click=${() => this.controller.deselectAll()}
-      >
+      <button type="button" class="clear" @click=${() => this.controller.deselectAll()}>
         Clear all
       </button>
     `;

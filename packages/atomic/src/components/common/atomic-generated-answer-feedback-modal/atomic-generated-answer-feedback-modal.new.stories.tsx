@@ -23,9 +23,7 @@ async function playAfterModalAnimation(context: Parameters<typeof play>[0]) {
 }
 
 async function waitForModalAnimationEnd(canvasElement: HTMLElement) {
-  const feedbackModal = canvasElement.querySelector(
-    'atomic-generated-answer-feedback-modal'
-  );
+  const feedbackModal = canvasElement.querySelector('atomic-generated-answer-feedback-modal');
 
   let container: Element | null | undefined = null;
   await waitFor(() => {
@@ -112,8 +110,7 @@ export const A11yStatusMessage: Story = {
         });
         await userEvent.click(submitButton);
       },
-      expectedText:
-        'Thank you! Your feedback will help us improve the answers generated.',
+      expectedText: 'Thank you! Your feedback will help us improve the answers generated.',
       timeout: 5000,
     });
   },

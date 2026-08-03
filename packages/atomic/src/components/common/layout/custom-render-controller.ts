@@ -21,10 +21,7 @@ export class CustomRenderController implements ReactiveController {
   private options: Required<CustomRenderOptions>;
   private hasExecutedRenderFunction = false;
 
-  constructor(
-    host: CustomRenderHost & LitElement,
-    options: CustomRenderOptions
-  ) {
+  constructor(host: CustomRenderHost & LitElement, options: CustomRenderOptions) {
     this.options = {
       linkContainerRef: () => undefined,
       onRenderComplete: () => {},
@@ -49,12 +46,7 @@ export class CustomRenderController implements ReactiveController {
     const renderingFunction = this.options.renderingFunction();
     const itemData = this.options.itemData();
     const rootElementRef = this.options.rootElementRef();
-    if (
-      !renderingFunction ||
-      !itemData ||
-      !rootElementRef ||
-      this.hasExecutedRenderFunction
-    ) {
+    if (!renderingFunction || !itemData || !rootElementRef || this.hasExecutedRenderFunction) {
       return;
     }
     const customRenderOutput = renderingFunction(

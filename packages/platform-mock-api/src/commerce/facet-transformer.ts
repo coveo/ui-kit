@@ -119,9 +119,7 @@ function applyFacetSelections(
   requestFacets: FacetRequest[]
 ): ResponseFacet[] {
   return responseFacets.map((resFacet) => {
-    const reqFacet = requestFacets.find(
-      (rf) => rf.facetId === resFacet.facetId
-    );
+    const reqFacet = requestFacets.find((rf) => rf.facetId === resFacet.facetId);
     if (!reqFacet) return resFacet;
 
     const updatedFacet = {...resFacet};
@@ -138,20 +136,11 @@ function applyFacetSelections(
         reqFacet.values || [],
         reqFacet.numberOfValues
       );
-    } else if (
-      reqFacet.type === 'numericalRange' ||
-      reqFacet.type === 'dateRange'
-    ) {
-      updatedFacet.values = applyRangeSelection(
-        resFacet,
-        reqFacet.values || []
-      );
+    } else if (reqFacet.type === 'numericalRange' || reqFacet.type === 'dateRange') {
+      updatedFacet.values = applyRangeSelection(resFacet, reqFacet.values || []);
     }
 
-    if (
-      reqFacet.numberOfValues &&
-      reqFacet.numberOfValues > resFacet.values.length
-    ) {
+    if (reqFacet.numberOfValues && reqFacet.numberOfValues > resFacet.values.length) {
       updatedFacet.numberOfValues = reqFacet.numberOfValues;
       updatedFacet.values = expandValues(updatedFacet, reqFacet.numberOfValues);
     }
@@ -204,9 +193,7 @@ function applyRangeSelection(
   for (const reqVal of reqValues) {
     if (reqVal.state === 'selected') {
       const matching = values.find(
-        (v) =>
-          String(v.start) === String(reqVal.start) &&
-          String(v.end) === String(reqVal.end)
+        (v) => String(v.start) === String(reqVal.start) && String(v.end) === String(reqVal.end)
       );
       if (matching) {
         matching.state = 'selected';
@@ -243,16 +230,10 @@ function applyHierarchicalSelection(
       const parentNode: SelectedNodeInfo = {
         node: {value: deepest.parentValue, state: 'selected', children: []},
         depth: deepest.depth - 1,
-        parentValue:
-          deepest.ancestorPath[deepest.ancestorPath.length - 2] ?? null,
+        parentValue: deepest.ancestorPath[deepest.ancestorPath.length - 2] ?? null,
         ancestorPath: deepest.ancestorPath.slice(0, -1),
       };
-      return buildHierarchicalTree(
-        reqValues,
-        parentNode,
-        knownSiblings,
-        resFacet
-      );
+      return buildHierarchicalTree(reqValues, parentNode, knownSiblings, resFacet);
     }
   }
 
@@ -285,10 +266,7 @@ function findAllSelectedNodes(
     }
     if (v.children && v.children.length > 0) {
       results.push(
-        ...findAllSelectedNodes(v.children, depth + 1, v.value || null, [
-          ...ancestorPath,
-          v.value!,
-        ])
+        ...findAllSelectedNodes(v.children, depth + 1, v.value || null, [...ancestorPath, v.value!])
       );
     }
   }
@@ -309,8 +287,7 @@ function buildHierarchicalTree(
       {
         state: 'selected',
         numberOfResults:
-          resFacet.values.find((v) => v.value === selectedValue)
-            ?.numberOfResults || 100,
+          resFacet.values.find((v) => v.value === selectedValue)?.numberOfResults || 100,
         value: selectedValue,
         path: [selectedValue],
         isLeafValue: false,
@@ -337,9 +314,7 @@ function buildHierarchicalTree(
       return [
         {
           state: 'selected',
-          numberOfResults:
-            resFacet.values.find((v) => v.value === value)?.numberOfResults ||
-            100,
+          numberOfResults: resFacet.values.find((v) => v.value === value)?.numberOfResults || 100,
           value,
           path: currentPath,
           isLeafValue: false,
@@ -373,10 +348,7 @@ function buildHierarchicalTree(
   return buildLevel(0);
 }
 
-function expandValues(
-  facet: ResponseFacet,
-  targetCount: number
-): ResponseFacetValue[] {
+function expandValues(facet: ResponseFacet, targetCount: number): ResponseFacetValue[] {
   const values = [...facet.values];
   if (facet.type === 'regular') {
     let i = 0;
@@ -411,10 +383,7 @@ export function commerceFacetTransformer<T extends CommerceResponse>(
   return cloned;
 }
 
-function buildCategoryFacetSearchResponse(
-  query: string,
-  numberOfValues: number
-) {
+function buildCategoryFacetSearchResponse(query: string, numberOfValues: number) {
   const allCategories = [
     ...EXTRA_CATEGORY_VALUES,
     {value: 'Sandals & Shoes', path: [] as string[], numberOfResults: 1992},
@@ -429,9 +398,7 @@ function buildCategoryFacetSearchResponse(
     },
   ];
 
-  const matching = allCategories.filter((c) =>
-    c.value.toLowerCase().includes(query)
-  );
+  const matching = allCategories.filter((c) => c.value.toLowerCase().includes(query));
 
   return {
     values: matching.slice(0, numberOfValues).map((c) => ({
@@ -482,10 +449,7 @@ export function createFacetSearchTransformer(
       return {values: [], moreValuesAvailable: false};
     }
 
-    const allValues = [
-      ...facet.values.map((v) => v.value!),
-      ...EXTRA_BRAND_VALUES,
-    ];
+    const allValues = [...facet.values.map((v) => v.value!), ...EXTRA_BRAND_VALUES];
 
     const matchingValues = allValues.filter(
       (v, i, arr) => v.toLowerCase().includes(query) && arr.indexOf(v) === i

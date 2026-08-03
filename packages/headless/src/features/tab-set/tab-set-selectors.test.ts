@@ -1,7 +1,4 @@
-import {
-  selectActiveTab,
-  selectActiveTabExpression,
-} from './tab-set-selectors.js';
+import {selectActiveTab, selectActiveTabExpression} from './tab-set-selectors.js';
 import type {TabSetState} from './tab-set-state.js';
 
 describe('Tabset Selectors test suite', () => {

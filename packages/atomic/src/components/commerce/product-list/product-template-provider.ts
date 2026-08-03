@@ -1,8 +1,4 @@
-import {
-  buildProductTemplatesManager,
-  type Product,
-  type Template,
-} from '@coveo/headless/commerce';
+import {buildProductTemplatesManager, type Product, type Template} from '@coveo/headless/commerce';
 import type {ItemTarget} from '@/src/components/common/layout/item-layout-utils';
 import {
   TemplateProvider,
@@ -18,11 +14,7 @@ export class ProductTemplateProvider extends TemplateProvider<Product> {
     super(props, () => buildProductTemplatesManager());
   }
 
-  protected makeDefaultTemplate(): Template<
-    Product,
-    DocumentFragment,
-    DocumentFragment
-  > {
+  protected makeDefaultTemplate(): Template<Product, DocumentFragment, DocumentFragment> {
     const content = document.createDocumentFragment();
     const markup = `
       <atomic-product-section-name>

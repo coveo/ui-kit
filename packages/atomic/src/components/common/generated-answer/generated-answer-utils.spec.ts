@@ -1,10 +1,7 @@
 import type {GeneratedAnswerCitation} from '@coveo/headless';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {
-  getCitationWithTitle,
-  hasClipboardSupport,
-} from './generated-answer-utils';
+import {getCitationWithTitle, hasClipboardSupport} from './generated-answer-utils';
 
 describe('generated-answer-utils', () => {
   describe('#getCitationWithTitle', () => {

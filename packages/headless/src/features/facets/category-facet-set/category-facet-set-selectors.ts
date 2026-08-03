@@ -1,7 +1,4 @@
-import type {
-  CategoryFacetSection,
-  SearchSection,
-} from '../../../state/state-sections.js';
+import type {CategoryFacetSection, SearchSection} from '../../../state/state-sections.js';
 import {baseFacetResponseSelector} from '../facet-set/facet-set-selectors.js';
 import type {AnyFacetResponse} from '../generic/interfaces/generic-facet-response.js';
 import {findActiveValueAncestry} from './category-facet-utils.js';
@@ -26,10 +23,7 @@ export const categoryFacetResponseSelector = (
   return undefined;
 };
 
-export const categoryFacetRequestSelector = (
-  state: CategoryFacetSection,
-  id: string
-) => {
+export const categoryFacetRequestSelector = (state: CategoryFacetSection, id: string) => {
   return state.categoryFacetSet[id]?.request;
 };
 

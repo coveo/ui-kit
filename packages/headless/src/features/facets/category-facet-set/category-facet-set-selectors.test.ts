@@ -53,10 +53,7 @@ describe('category facet selectors', () => {
     });
 
     it('#categoryFacetSelectedValuesSelector returns an empty array if the facet does not exist', () => {
-      const selectedResults = categoryFacetResponseSelectedValuesSelector(
-        state,
-        facetId
-      );
+      const selectedResults = categoryFacetResponseSelectedValuesSelector(state, facetId);
       expect(selectedResults).toEqual([]);
     });
 
@@ -71,10 +68,7 @@ describe('category facet selectors', () => {
           values: [mockValue],
         }),
       ];
-      const selectedResults = categoryFacetResponseSelectedValuesSelector(
-        state,
-        facetId
-      );
+      const selectedResults = categoryFacetResponseSelectedValuesSelector(state, facetId);
       expect(selectedResults).toEqual([mockValue]);
     });
 
@@ -93,10 +87,7 @@ describe('category facet selectors', () => {
           values: [mockValue, ignoredValue],
         }),
       ];
-      const selectedResults = categoryFacetResponseSelectedValuesSelector(
-        state,
-        facetId
-      );
+      const selectedResults = categoryFacetResponseSelectedValuesSelector(state, facetId);
       expect(selectedResults).toEqual([mockValue]);
     });
 
@@ -116,10 +107,7 @@ describe('category facet selectors', () => {
           values: [mockValue],
         }),
       ];
-      const selectedResults = categoryFacetResponseSelectedValuesSelector(
-        state,
-        facetId
-      );
+      const selectedResults = categoryFacetResponseSelectedValuesSelector(state, facetId);
       expect(selectedResults).toEqual([mockValue, nestedChild]);
     });
   });

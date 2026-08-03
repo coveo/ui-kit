@@ -1,7 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-sort-dropdown/atomic-sort-dropdown.js';
@@ -9,10 +9,9 @@ import '@/src/components/search/atomic-sort-expression/atomic-sort-expression.js
 
 const searchApiHarness = new MockSearchApi();
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-sort-expression',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-sort-expression', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-sort-expression',
@@ -21,9 +20,7 @@ const meta: Meta = {
 
   render: (args) => template(args),
   decorators: [
-    (story) => html`
-      <atomic-sort-dropdown> ${story()} </atomic-sort-dropdown>
-    `,
+    (story) => html` <atomic-sort-dropdown> ${story()} </atomic-sort-dropdown> `,
     decorator,
   ],
   parameters: {

@@ -1,7 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
-import {MockInsightApi} from '@coveo/platform-mock-api/insight/mock';
-import {MockMachineLearningApi} from '@coveo/platform-mock-api/machinelearning/mock';
+import {MockInsightApi} from '@coveo/platform-mock-api/insight';
+import {MockMachineLearningApi} from '@coveo/platform-mock-api/machinelearning';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import '@/src/components/insight/atomic-insight-user-actions-timeline/atomic-insight-user-actions-timeline.js';
@@ -30,10 +30,7 @@ const meta: Meta = {
       handles: events,
     },
     msw: {
-      handlers: [
-        ...insightApiHarness.handlers,
-        ...machineLearningApiHarness.handlers,
-      ],
+      handlers: [...insightApiHarness.handlers, ...machineLearningApiHarness.handlers],
     },
   },
   beforeEach: () => {

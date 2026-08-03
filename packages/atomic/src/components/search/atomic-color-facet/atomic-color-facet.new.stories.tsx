@@ -4,9 +4,11 @@ import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
 import {testCheckboxA11y} from '@/storybook-utils/a11y/checkbox.js';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
-import {searchFacetTransformer} from '@coveo/platform-mock-api/search/facet-transformer';
-import {buildSearchResponseWithResults} from '@coveo/platform-mock-api/search/search-response-mocks';
+import {
+  buildSearchResponseWithResults,
+  MockSearchApi,
+  searchFacetTransformer,
+} from '@coveo/platform-mock-api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -42,10 +44,7 @@ const mockDefaultFacetResponse = () => {
     if ('facets' in response) {
       return {
         ...response,
-        facets: [
-          ...(response.facets || []),
-          createFacetResponse(baseFacetValues),
-        ],
+        facets: [...(response.facets || []), createFacetResponse(baseFacetValues)],
       };
     }
     return response;
@@ -213,10 +212,7 @@ export const WithSelectedValue: Story = {
       if ('facets' in response) {
         return {
           ...response,
-          facets: [
-            ...(response.facets || []),
-            createFacetResponse(selectedValues),
-          ],
+          facets: [...(response.facets || []), createFacetResponse(selectedValues)],
         };
       }
       return response;
@@ -233,13 +229,9 @@ export const A11yCheckbox: Story = {
   },
   decorators: [facetDecorator, colorFacetStylesDecorator],
   beforeEach: () => {
-    searchApiHarness.searchEndpoint.addRequestTransformer(
-      searchFacetTransformer
-    );
+    searchApiHarness.searchEndpoint.addRequestTransformer(searchFacetTransformer);
     return () => {
-      searchApiHarness.searchEndpoint.removeRequestTransformer(
-        searchFacetTransformer
-      );
+      searchApiHarness.searchEndpoint.removeRequestTransformer(searchFacetTransformer);
     };
   },
   play: async (context) => {
@@ -267,25 +259,21 @@ export const A11yStatusMessage: Story = {
         'facets' in response
           ? {
               ...response,
-              facets: [
-                ...(response.facets || []),
-                createFacetResponse(baseFacetValues),
-              ],
+              facets: [...(response.facets || []), createFacetResponse(baseFacetValues)],
             }
           : response
       )
     );
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(42)
-    );
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(42));
   },
   play: async (context) => {
     await play(context);
     await testStatusMessageA11y(context, {
       triggerAction: async () => {
-        const [checkbox] = await within(
-          context.canvasElement
-        ).findAllByShadowLabelText('Inclusion filter on', {exact: false});
+        const [checkbox] = await within(context.canvasElement).findAllByShadowLabelText(
+          'Inclusion filter on',
+          {exact: false}
+        );
         checkbox.click();
       },
       expectedText: 'Results loaded. Results 1-10 of 42',

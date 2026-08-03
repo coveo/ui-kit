@@ -10,13 +10,13 @@ import {
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-facet/atomic-commerce-facet.js';
 import '@/src/components/commerce/atomic-commerce-facets/atomic-commerce-facets.js';
-import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
 import {
   commerceFacetTransformer,
+  commercePaginationTransformer,
   createFacetSearchTransformer,
-} from '@coveo/platform-mock-api/commerce/facet-transformer';
-import {commercePaginationTransformer} from '@coveo/platform-mock-api/commerce/pagination-transformer';
-import {richResponse as baseSearchResponse} from '@coveo/platform-mock-api/commerce/search-response';
+  MockCommerceApi,
+  searchResponses,
+} from '@coveo/platform-mock-api/commerce';
 
 const commerceApiHarness = new MockCommerceApi();
 commerceApiHarness.searchEndpoint.addRequestTransformer(
@@ -28,16 +28,15 @@ commerceApiHarness.productListingEndpoint.addRequestTransformer(
   commercePaginationTransformer
 );
 commerceApiHarness.facetSearchEndpoint.addRequestTransformer(
-  createFacetSearchTransformer(baseSearchResponse)
+  createFacetSearchTransformer(searchResponses.richResponse)
 );
 
 const {play, decorator} = wrapInCommerceInterface({
   includeCodeRoot: false,
 });
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-commerce-facet',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-commerce-facet', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-commerce-facet',
@@ -50,7 +49,6 @@ const meta: Meta = {
     msw: {
       handlers: [...commerceApiHarness.handlers],
     },
-    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },

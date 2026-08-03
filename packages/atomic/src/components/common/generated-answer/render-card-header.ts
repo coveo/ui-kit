@@ -19,18 +19,9 @@ export interface RenderCardHeaderProps {
 /**
  * Renders the card header for the generated answer.
  */
-export const renderCardHeader: FunctionalComponent<RenderCardHeaderProps> = ({
-  props,
-}) => {
-  const {
-    i18n,
-    isAnswerVisible,
-    toggleTooltip,
-    withToggle,
-    onToggle,
-    withDebug,
-    conversationId,
-  } = props;
+export const renderCardHeader: FunctionalComponent<RenderCardHeaderProps> = ({props}) => {
+  const {i18n, isAnswerVisible, toggleTooltip, withToggle, onToggle, withDebug, conversationId} =
+    props;
 
   return html` <div
     part="header"
@@ -47,8 +38,7 @@ export const renderCardHeader: FunctionalComponent<RenderCardHeaderProps> = ({
         props: {
           level: 0,
           part: 'header-label',
-          class:
-            'text-primary inline-block rounded-md px-2.5 py-2 font-medium mr-auto shrink-0',
+          class: 'text-primary inline-block rounded-md px-2.5 py-2 font-medium mr-auto shrink-0',
         },
       })(html`${i18n.t('generated-answer-title')}`)}
       ${withDebug && conversationId

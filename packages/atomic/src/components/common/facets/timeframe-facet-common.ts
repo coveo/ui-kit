@@ -89,25 +89,21 @@ export class TimeframeFacetCommon {
     // A second facet is initialized only to verify the results count. It is never used to display results to end user.
     // It serves as a way to determine if the input should be rendered or not, independent of the ranges configured in the component
     if (this.manualTimeframes.length > 0) {
-      this.facetForDateRange = this.props.initializeFacetForDateRange(
-        this.currentValues
-      );
+      this.facetForDateRange = this.props.initializeFacetForDateRange(this.currentValues);
     }
 
     if (this.props.withDatePicker) {
       this.facetForDatePicker = this.props.initializeFacetForDatePicker();
-      this.facetForDatePickerDependenciesManager =
-        this.props.buildDependenciesManager(
-          this.facetForDatePicker.state.facetId
-        );
+      this.facetForDatePickerDependenciesManager = this.props.buildDependenciesManager(
+        this.facetForDatePicker.state.facetId
+      );
       this.filter = this.props.initializeFilter();
     }
 
     if (this.facetForDateRange) {
-      this.facetForDateRangeDependenciesManager =
-        this.props.buildDependenciesManager(
-          this.facetForDateRange?.state.facetId
-        );
+      this.facetForDateRangeDependenciesManager = this.props.buildDependenciesManager(
+        this.facetForDateRange?.state.facetId
+      );
     }
 
     if (this.filter) {
@@ -132,11 +128,7 @@ export class TimeframeFacetCommon {
   }
 
   private get enabled() {
-    return (
-      this.facetForDateRange?.state.enabled ??
-      this.filter?.state.enabled ??
-      true
-    );
+    return this.facetForDateRange?.state.enabled ?? this.filter?.state.enabled ?? true;
   }
 
   private get valuesToRender() {
@@ -178,9 +170,7 @@ export class TimeframeFacetCommon {
     }
 
     return (
-      this.facetForDateRange?.state.values.filter(
-        ({state}) => state === 'selected'
-      ).length || 0
+      this.facetForDateRange?.state.values.filter(({state}) => state === 'selected').length || 0
     );
   }
 
@@ -266,18 +256,11 @@ export class TimeframeFacetCommon {
       );
 
       if (timeframe?.label) {
-        return getFieldValueCaption(
-          this.props.field,
-          timeframe.label,
-          this.props.bindings.i18n
-        );
+        return getFieldValueCaption(this.props.field, timeframe.label, this.props.bindings.i18n);
       }
-      return this.props.bindings.i18n.t(
-        `${relativeDate.period}-${relativeDate.unit}`,
-        {
-          count: relativeDate.amount,
-        }
-      );
+      return this.props.bindings.i18n.t(`${relativeDate.period}-${relativeDate.unit}`, {
+        count: relativeDate.amount,
+      });
     } catch (_error) {
       return this.props.bindings.i18n.t('to', {
         start: parseDate(facetValue.start).format('YYYY-MM-DD'),
@@ -287,14 +270,10 @@ export class TimeframeFacetCommon {
   }
 
   private renderValues(): TemplateResult | typeof nothing {
-    return this.renderValuesContainer(
-      this.valuesToRender.map((value) => this.renderValue(value))
-    );
+    return this.renderValuesContainer(this.valuesToRender.map((value) => this.renderValue(value)));
   }
 
-  private renderValue(
-    facetValue: DateFacetValue
-  ): TemplateResult | typeof nothing {
+  private renderValue(facetValue: DateFacetValue): TemplateResult | typeof nothing {
     const displayValue = this.formatFacetValue(facetValue);
     const isSelected = facetValue.state === 'selected';
     const isExcluded = facetValue.state === 'excluded';

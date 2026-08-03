@@ -25,12 +25,7 @@ export class CategoryFacet extends LitElement {
       return nothing;
     }
 
-    const {
-      valuesAsTrees,
-      selectedValueAncestry,
-      hasActiveValues,
-      canShowMoreValues,
-    } = state;
+    const {valuesAsTrees, selectedValueAncestry, hasActiveValues, canShowMoreValues} = state;
     const active = selectedValueAncestry[selectedValueAncestry.length - 1];
     const current = hasActiveValues ? (active?.children ?? []) : valuesAsTrees;
 
@@ -45,20 +40,12 @@ export class CategoryFacet extends LitElement {
         ? html`
             <ol class="breadcrumb">
               <li>
-                <button
-                  type="button"
-                  @click=${() => this.controller.deselectAll()}
-                >
-                  All
-                </button>
+                <button type="button" @click=${() => this.controller.deselectAll()}>All</button>
               </li>
               ${selectedValueAncestry.map(
                 (value) => html`
                   <li>
-                    <button
-                      type="button"
-                      @click=${() => this.controller.toggleSelect(value)}
-                    >
+                    <button type="button" @click=${() => this.controller.toggleSelect(value)}>
                       ${value.value}
                     </button>
                   </li>
@@ -85,11 +72,7 @@ export class CategoryFacet extends LitElement {
       </ul>
       ${canShowMoreValues
         ? html`
-            <button
-              type="button"
-              class="more"
-              @click=${() => this.controller.showMoreValues()}
-            >
+            <button type="button" class="more" @click=${() => this.controller.showMoreValues()}>
               Show more
             </button>
           `

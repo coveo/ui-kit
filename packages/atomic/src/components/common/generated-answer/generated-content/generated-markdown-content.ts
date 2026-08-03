@@ -10,25 +10,19 @@ export interface GeneratedMarkdownContentProps {
   isStreaming: boolean;
 }
 
-export const renderGeneratedMarkdownContent: FunctionalComponent<
-  GeneratedMarkdownContentProps
-> = ({props}) => {
-  const answerAsHtml = DOMPurify.sanitize(
-    transformMarkdownToHtml(props.answer ?? ''),
-    {
-      ADD_ATTR: ['part'],
-      CUSTOM_ELEMENT_HANDLING: {
-        tagNameCheck: /^atomic-generated-answer-inline-link$/,
-        attributeNameCheck: /^(href|title|exportparts)$/,
-      },
-    }
-  );
+export const renderGeneratedMarkdownContent: FunctionalComponent<GeneratedMarkdownContentProps> = ({
+  props,
+}) => {
+  const answerAsHtml = DOMPurify.sanitize(transformMarkdownToHtml(props.answer ?? ''), {
+    ADD_ATTR: ['part'],
+    CUSTOM_ELEMENT_HANDLING: {
+      tagNameCheck: /^atomic-generated-answer-inline-link$/,
+      attributeNameCheck: /^(href|title|exportparts)$/,
+    },
+  });
 
   return html`
-    <div
-      part="generated-text"
-      class="text-on-background mb-0 ${props.isStreaming ? 'cursor' : ''}"
-    >
+    <div part="generated-text" class="text-on-background mb-0 ${props.isStreaming ? 'cursor' : ''}">
       ${unsafeHTML(answerAsHtml)}
     </div>
   `;

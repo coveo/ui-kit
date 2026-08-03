@@ -1,0 +1,5 @@
+description: Coveo UI project scaffolding CLI
+file_patterns:
+  - packages/create-ui/**
+reviewers:
+  dxui: ~

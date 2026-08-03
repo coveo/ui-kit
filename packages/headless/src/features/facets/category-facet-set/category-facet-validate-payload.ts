@@ -1,14 +1,5 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  NumberValue,
-  StringValue,
-  Value,
-} from '@coveo/bueno';
-import {
-  requiredNonEmptyString,
-  validatePayloadAndThrow,
-} from '../../../utils/validate-payload.js';
+import {ArrayValue, BooleanValue, NumberValue, StringValue, Value} from '@coveo/bueno';
+import {requiredNonEmptyString, validatePayloadAndThrow} from '../../../utils/validate-payload.js';
 import type {FacetValueState} from '../facet-api/value.js';
 import type {CategoryFacetValue} from './interfaces/response.js';
 

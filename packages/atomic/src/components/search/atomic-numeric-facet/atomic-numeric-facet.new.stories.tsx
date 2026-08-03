@@ -4,9 +4,11 @@ import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
 import {testCheckboxA11y} from '@/storybook-utils/a11y/checkbox.js';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
-import {buildSearchResponseWithResults} from '@coveo/platform-mock-api/search/search-response-mocks';
-import {searchFacetTransformer} from '@coveo/platform-mock-api/search/facet-transformer';
+import {
+  buildSearchResponseWithResults,
+  MockSearchApi,
+  searchFacetTransformer,
+} from '@coveo/platform-mock-api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {
   facetDecorator,
@@ -119,10 +121,9 @@ searchApiHarness.searchEndpoint.mock((response) => ({
   ],
 }));
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-numeric-facet',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-numeric-facet', {
+  excludeCategories: ['methods'],
+});
 
 const {decorator, play} = wrapInSearchInterface();
 
@@ -134,6 +135,7 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
+    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },
@@ -200,10 +202,9 @@ export const WithDependsOn: Story = {
     await play(context);
     const {canvas, step} = context;
     await step('Select YouTubeVideo in filetype facet', async () => {
-      const button = await canvas.findByShadowLabelText(
-        'Inclusion filter on YouTubeVideo',
-        {exact: false}
-      );
+      const button = await canvas.findByShadowLabelText('Inclusion filter on YouTubeVideo', {
+        exact: false,
+      });
       button.ariaChecked === 'false' ? button.click() : null;
     });
   },
@@ -264,13 +265,9 @@ export const A11yCheckbox: Story = {
   },
   decorators: [facetDecorator],
   beforeEach: () => {
-    searchApiHarness.searchEndpoint.addRequestTransformer(
-      searchFacetTransformer
-    );
+    searchApiHarness.searchEndpoint.addRequestTransformer(searchFacetTransformer);
     return () => {
-      searchApiHarness.searchEndpoint.removeRequestTransformer(
-        searchFacetTransformer
-      );
+      searchApiHarness.searchEndpoint.removeRequestTransformer(searchFacetTransformer);
     };
   },
   play: async (context) => {
@@ -291,28 +288,21 @@ export const A11yStatusMessage: Story = {
     (story) => html`<atomic-query-summary></atomic-query-summary>${story()}`,
   ],
   beforeEach: () => {
-    searchApiHarness.searchEndpoint.addRequestTransformer(
-      searchFacetTransformer
-    );
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(120)
-    );
-    searchApiHarness.searchEndpoint.mockOnce(
-      buildSearchResponseWithResults(42)
-    );
+    searchApiHarness.searchEndpoint.addRequestTransformer(searchFacetTransformer);
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(42));
     return () => {
-      searchApiHarness.searchEndpoint.removeRequestTransformer(
-        searchFacetTransformer
-      );
+      searchApiHarness.searchEndpoint.removeRequestTransformer(searchFacetTransformer);
     };
   },
   play: async (context) => {
     await play(context);
     await testStatusMessageA11y(context, {
       triggerAction: async () => {
-        const [checkbox] = await within(
-          context.canvasElement
-        ).findAllByShadowLabelText('Inclusion filter on', {exact: false});
+        const [checkbox] = await within(context.canvasElement).findAllByShadowLabelText(
+          'Inclusion filter on',
+          {exact: false}
+        );
         checkbox.click();
       },
       expectedText: 'Results loaded. Results 1-10 of 42',

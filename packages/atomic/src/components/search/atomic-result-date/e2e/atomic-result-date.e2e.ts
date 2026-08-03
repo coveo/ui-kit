@@ -1,9 +1,7 @@
 import {expect, test} from './fixture';
 
 test.describe('atomic-result-date', () => {
-  test('should render the date field with default format', async ({
-    resultDate,
-  }) => {
+  test('should render the date field with default format', async ({resultDate}) => {
     await resultDate.load({args: {field: 'date'}});
     await resultDate.hydrated.first().waitFor();
 
@@ -13,9 +11,7 @@ test.describe('atomic-result-date', () => {
     expect(dateText).toMatch(/\d+/);
   });
 
-  test('should render the date field with custom format', async ({
-    resultDate,
-  }) => {
+  test('should render the date field with custom format', async ({resultDate}) => {
     await resultDate.load({args: {field: 'date', format: 'YYYY-MM-DD'}});
     await resultDate.hydrated.first().waitFor();
 

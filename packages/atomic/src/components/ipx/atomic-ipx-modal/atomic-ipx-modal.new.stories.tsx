@@ -1,7 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/ipx/atomic-ipx-modal/atomic-ipx-modal.js';
@@ -9,10 +9,9 @@ import '@/src/components/ipx/atomic-ipx-modal/atomic-ipx-modal.js';
 const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-ipx-modal',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-ipx-modal', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-ipx-modal',
@@ -34,7 +33,7 @@ const meta: Meta = {
   ],
   parameters: {
     ...commonParameters,
-    chromatic: {disableSnapshot: true},
+
     layout: 'centered',
     docs: {
       ...commonParameters.docs,

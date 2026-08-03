@@ -19,9 +19,7 @@ import type {RedirectionTrigger} from '../../core/triggers/headless-core-redirec
  * @group Buildable controllers
  * @category RedirectionTrigger
  * */
-export function buildRedirectionTrigger(
-  engine: CommerceEngine
-): RedirectionTrigger {
+export function buildRedirectionTrigger(engine: CommerceEngine): RedirectionTrigger {
   if (!loadRedirectionReducers(engine)) {
     throw loadReducerError;
   }
@@ -56,9 +54,7 @@ export function buildRedirectionTrigger(
   };
 }
 
-function loadRedirectionReducers(
-  engine: CommerceEngine
-): engine is CommerceEngine<TriggerSection> {
+function loadRedirectionReducers(engine: CommerceEngine): engine is CommerceEngine<TriggerSection> {
   engine.addReducers({triggers});
   return true;
 }

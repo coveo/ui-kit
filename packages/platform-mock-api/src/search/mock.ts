@@ -7,12 +7,7 @@ import {
 } from './facetSearch-response.js';
 import {baseResponse as baseHtmlResponse} from './html-response.js';
 import {baseResponse as baseQuerySuggestResponse} from './querySuggest-response.js';
-import {
-  baseFoldedResponse,
-  baseResponse as baseSearchResponse,
-  nestedFoldedResponse,
-  type SearchResponse,
-} from './search-response.js';
+import {baseResponse as baseSearchResponse, type SearchResponse} from './search-response.js';
 
 export class MockSearchApi implements MockApi {
   readonly searchEndpoint;
@@ -21,9 +16,11 @@ export class MockSearchApi implements MockApi {
   readonly htmlEndpoint;
 
   constructor(basePath: string = 'https://:orgId.org.coveo.com') {
-    this.searchEndpoint = new EndpointHarness<
-      SearchResponse | APIErrorWithStatusCode
-    >('POST', `${basePath}/rest/search/v2`, baseSearchResponse);
+    this.searchEndpoint = new EndpointHarness<SearchResponse | APIErrorWithStatusCode>(
+      'POST',
+      `${basePath}/rest/search/v2`,
+      baseSearchResponse
+    );
 
     this.querySuggestEndpoint = new EndpointHarness(
       'POST',
@@ -64,6 +61,3 @@ export class MockSearchApi implements MockApi {
     this.htmlEndpoint.clear();
   }
 }
-
-// TODO: Remove exports once the concept is fully internalized.
-export {baseFoldedResponse, nestedFoldedResponse};

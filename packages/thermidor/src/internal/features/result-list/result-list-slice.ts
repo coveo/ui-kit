@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {ResultListState} from './result-list-types.js';
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import {getOrCreateResultsActions} from './result-list-actions.js';
 import {getOrCreateHydrateFromSnapshotAction} from '@/src/internal/features/generative/index.js';
@@ -25,8 +25,7 @@ function mapResult(result: Record<string, unknown>) {
 
 type ResultsSlice = ReturnType<typeof createResultsSlice>;
 
-const CACHE_KEY: CacheKey<ResultsSlice> =
-  createCacheKey<ResultsSlice>('resultList/slice');
+const CACHE_KEY: CacheKey<ResultsSlice> = createCacheKey<ResultsSlice>('resultList/slice');
 
 export function createResultsSlice(
   interfaceId: string,
@@ -64,7 +63,7 @@ export function createResultsSlice(
 }
 
 export function getOrCreateResultsSlice(iface: InterfaceHandle) {
-  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  const {stateId, cacheRegistry} = getInterfaceInternals(iface);
   return cacheRegistry.getOrCreate(CACHE_KEY, () => {
     const actions = getOrCreateResultsActions(iface);
     const hydrateAction = getOrCreateHydrateFromSnapshotAction(iface);

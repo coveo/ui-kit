@@ -1,10 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import type {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
-import type {
-  BaseProduct,
-  ChildProduct,
-  Product,
-} from '../../../api/commerce/common/product.js';
+import type {BaseProduct, ChildProduct, Product} from '../../../api/commerce/common/product.js';
 import {ResultType} from '../../../api/commerce/common/result.js';
 import type {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response.js';
 import {setError} from '../../error/error-actions.js';
@@ -61,11 +57,7 @@ export const recommendationsReducer = createReducer(
         const paginationOffset = getPaginationOffset(action.payload);
 
         recommendations.products = response.products.map((product, index) =>
-          preprocessProduct(
-            product,
-            paginationOffset + index + 1,
-            response.responseId
-          )
+          preprocessProduct(product, paginationOffset + index + 1, response.responseId)
         );
       })
       .addCase(fetchMoreRecommendations.fulfilled, (state, action) => {
@@ -86,11 +78,7 @@ export const recommendationsReducer = createReducer(
 
         recommendations.products = recommendations.products.concat(
           response.products.map((product, index) =>
-            preprocessProduct(
-              product,
-              paginationOffset + index + 1,
-              response.responseId
-            )
+            preprocessProduct(product, paginationOffset + index + 1, response.responseId)
           )
         );
       })
@@ -144,9 +132,7 @@ export const recommendationsReducer = createReducer(
   }
 );
 
-function buildRecommendationsSlice(
-  config?: Partial<RecommendationsSlice>
-): RecommendationsSlice {
+function buildRecommendationsSlice(config?: Partial<RecommendationsSlice>): RecommendationsSlice {
   return {
     ...getRecommendationsSliceInitialState(),
     ...config,
@@ -194,18 +180,12 @@ function handlePending(state: RecommendationsState, slotId: string) {
   recommendations.isLoading = true;
 }
 
-function getPaginationOffset(
-  actionPayload: QueryRecommendationsCommerceAPIThunkReturn
-): number {
+function getPaginationOffset(actionPayload: QueryRecommendationsCommerceAPIThunkReturn): number {
   const pagination = actionPayload.response.pagination;
   return pagination.page * pagination.perPage;
 }
 
-function preprocessProduct(
-  product: BaseProduct,
-  position: number,
-  responseId?: string
-): Product {
+function preprocessProduct(product: BaseProduct, position: number, responseId?: string): Product {
   const isParentAlreadyInChildren = product.children.some(
     (child) => child.permanentid === product.permanentid
   );
@@ -213,11 +193,7 @@ function preprocessProduct(
     return {...product, position, responseId};
   }
 
-  const {
-    children,
-    totalNumberOfChildren: _totalNumberOfChildren,
-    ...restOfProduct
-  } = product;
+  const {children, totalNumberOfChildren: _totalNumberOfChildren, ...restOfProduct} = product;
 
   return {
     ...product,

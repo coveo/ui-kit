@@ -58,8 +58,7 @@ export const subscribeStateManager: SubscribeStateManager = {
   getIsStreamInProgress: (genQaEngineId: string) => {
     if (
       !subscribeStateManager.engines[genQaEngineId].abortController ||
-      subscribeStateManager.engines[genQaEngineId].abortController?.signal
-        .aborted
+      subscribeStateManager.engines[genQaEngineId].abortController?.signal.aborted
     ) {
       subscribeStateManager.engines[genQaEngineId].abortController = undefined;
       return false;
@@ -71,14 +70,11 @@ export const subscribeStateManager: SubscribeStateManager = {
     const strictListener = () => {
       const state = engine.state;
       const requestId = state.search.requestId;
-      const streamId =
-        state.search.extendedResults.generativeQuestionAnsweringId;
+      const streamId = state.search.extendedResults.generativeQuestionAnsweringId;
 
       const genQaEngineId = state.generatedAnswer.id;
 
-      if (
-        subscribeStateManager.engines[genQaEngineId].lastRequestId !== requestId
-      ) {
+      if (subscribeStateManager.engines[genQaEngineId].lastRequestId !== requestId) {
         subscribeStateManager.engines[genQaEngineId].lastRequestId = requestId;
         subscribeStateManager.engines[genQaEngineId].abortController?.abort();
         if (state.generatedAnswer.isEnabled === false) {
@@ -88,8 +84,7 @@ export const subscribeStateManager: SubscribeStateManager = {
         engine.dispatch(resetAnswer());
       }
 
-      const isStreamInProgress =
-        subscribeStateManager.getIsStreamInProgress(genQaEngineId);
+      const isStreamInProgress = subscribeStateManager.getIsStreamInProgress(genQaEngineId);
       if (
         !isStreamInProgress &&
         streamId &&
@@ -139,8 +134,7 @@ export function buildSearchAPIGeneratedAnswer(
     subscribeStateManager.engines[engine.state.generatedAnswer.id] = {
       abortController: undefined,
       lastRequestId: engine.state.search.requestId,
-      lastStreamId:
-        engine.state.search.extendedResults.generativeQuestionAnsweringId ?? '',
+      lastStreamId: engine.state.search.extendedResults.generativeQuestionAnsweringId ?? '',
     };
   }
 
@@ -159,9 +153,7 @@ export function buildSearchAPIGeneratedAnswer(
 
   subscribeStateManager.subscribeToSearchRequests(engine);
 
-  const isSearchEngine = (
-    engine: SearchEngine | InsightEngine
-  ): engine is SearchEngine =>
+  const isSearchEngine = (engine: SearchEngine | InsightEngine): engine is SearchEngine =>
     'executeFirstSearchAfterStandaloneSearchBoxRedirect' in engine;
   return {
     ...controller,

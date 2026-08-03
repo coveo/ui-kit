@@ -61,9 +61,7 @@ export class AtomicProductExcerpt
     super();
     this.resizeObserver = new ResizeObserver(() => {
       if (this.excerptRef.value) {
-        this.isTruncated =
-          this.excerptRef.value.scrollHeight >
-          this.excerptRef.value.clientHeight;
+        this.isTruncated = this.excerptRef.value.scrollHeight > this.excerptRef.value.clientHeight;
       }
     });
   }

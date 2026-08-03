@@ -1,6 +1,6 @@
 import {createAction} from '@reduxjs/toolkit';
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 
 export interface Trigger {
@@ -10,8 +10,7 @@ export interface Trigger {
 
 type TriggersActions = ReturnType<typeof createTriggersActions>;
 
-const CACHE_KEY: CacheKey<TriggersActions> =
-  createCacheKey<TriggersActions>('triggers/actions');
+const CACHE_KEY: CacheKey<TriggersActions> = createCacheKey<TriggersActions>('triggers/actions');
 
 export function createTriggersActions(interfaceId: string) {
   return {
@@ -20,8 +19,6 @@ export function createTriggersActions(interfaceId: string) {
 }
 
 export function getOrCreateTriggersActions(iface: InterfaceHandle) {
-  const {stateId, cacheRegistry} = getHandleInternals(iface);
-  return cacheRegistry.getOrCreate(CACHE_KEY, () =>
-    createTriggersActions(stateId)
-  );
+  const {stateId, cacheRegistry} = getInterfaceInternals(iface);
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => createTriggersActions(stateId));
 }

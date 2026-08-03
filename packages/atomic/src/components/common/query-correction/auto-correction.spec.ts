@@ -27,9 +27,7 @@ describe('#renderAutoCorrection', () => {
     return {
       noResultsParagraph: element.querySelector('p[part="no-results"]'),
       autoCorrectedParagraph: element.querySelector('p[part="auto-corrected"]'),
-      originalQueryHighlight: element.querySelector(
-        'p[part="no-results"] b[part="highlight"]'
-      ),
+      originalQueryHighlight: element.querySelector('p[part="no-results"] b[part="highlight"]'),
       correctedQueryHighlight: element.querySelector(
         'p[part="auto-corrected"] b[part="highlight"]'
       ),
@@ -46,9 +44,7 @@ describe('#renderAutoCorrection', () => {
     const {noResultsParagraph} = await renderComponent({
       originalQuery: 'my original query',
     });
-    expect(noResultsParagraph).toHaveTextContent(
-      "We couldn't find anything for my original query"
-    );
+    expect(noResultsParagraph).toHaveTextContent("We couldn't find anything for my original query");
   });
 
   it('should render the part "auto-corrected" on the second paragraph', async () => {

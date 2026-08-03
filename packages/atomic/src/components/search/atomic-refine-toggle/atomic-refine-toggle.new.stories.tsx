@@ -2,11 +2,11 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
 import {
-  searchFacetTransformer,
+  MockSearchApi,
   searchFacetSearchTransformer,
-} from '@coveo/platform-mock-api/search/facet-transformer';
+  searchFacetTransformer,
+} from '@coveo/platform-mock-api/search';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-external/atomic-external.js';
 import '@/src/components/search/atomic-facet/atomic-facet.js';
@@ -16,15 +16,12 @@ import '@/src/components/search/atomic-search-interface/atomic-search-interface.
 
 const searchApiHarness = new MockSearchApi();
 searchApiHarness.searchEndpoint.addRequestTransformer(searchFacetTransformer);
-searchApiHarness.facetSearchEndpoint.addRequestTransformer(
-  searchFacetSearchTransformer
-);
+searchApiHarness.facetSearchEndpoint.addRequestTransformer(searchFacetSearchTransformer);
 
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-refine-toggle',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-refine-toggle', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-refine-toggle',
@@ -33,7 +30,6 @@ const meta: Meta = {
   render: (args) => template(args),
   parameters: {
     ...parameters,
-    chromatic: {disableSnapshot: true},
     msw: {
       handlers: [...searchApiHarness.handlers],
     },
@@ -56,16 +52,8 @@ export const Default: Story = {
       <div style="display:none;">
         <atomic-facet field="author" label="Authors"></atomic-facet>
         <atomic-facet field="language" label="Language"></atomic-facet>
-        <atomic-facet
-          field="objecttype"
-          label="Type"
-          display-values-as="link"
-        ></atomic-facet>
-        <atomic-facet
-          field="year"
-          label="Year"
-          display-values-as="box"
-        ></atomic-facet>
+        <atomic-facet field="objecttype" label="Type" display-values-as="link"></atomic-facet>
+        <atomic-facet field="year" label="Year" display-values-as="box"></atomic-facet>
       </div>
     `,
     decorator,

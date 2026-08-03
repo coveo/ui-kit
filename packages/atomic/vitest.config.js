@@ -26,9 +26,7 @@ function svgTransform(code, id) {
         ? resolve(packageRoot, importPath.replace('@/', './'))
         : resolve(dirname(id), importPath);
 
-      const svgContent = readFileSync(resolvedPath, 'utf8')
-        .replace(/'/g, "\\'")
-        .replace(/\n/g, '');
+      const svgContent = readFileSync(resolvedPath, 'utf8').replace(/'/g, "\\'").replace(/\n/g, '');
       return `const ${importName} = '${svgContent}'`;
     }
   );
@@ -77,6 +75,22 @@ if (!isVitestVscodeExt) {
 }
 const atomicDefault = defineConfig({
   name: 'atomic-default',
+  optimizeDeps: {
+    include: [
+      '@coveo/headless',
+      '@coveo/headless/commerce',
+      '@coveo/headless/insight',
+      '@coveo/headless/recommendation',
+      '@coveo/bueno',
+      'lit',
+      'lit/decorators.js',
+      'lit/directives/if-defined.js',
+      'lit/directives/unsafe-html.js',
+      'lit/directives/when.js',
+      'lit/directives/ref.js',
+      'i18next',
+    ],
+  },
   server: {
     port: port,
   },
@@ -88,10 +102,7 @@ const atomicDefault = defineConfig({
       },
       {
         find: '../components/components/lazy-index.js',
-        replacement: path.resolve(
-          import.meta.dirname,
-          'src/components/lazy-index.js'
-        ),
+        replacement: path.resolve(import.meta.dirname, 'src/components/lazy-index.js'),
       },
     ],
   },
@@ -105,8 +116,7 @@ const atomicDefault = defineConfig({
           return {
             code: code.replace(
               /import\s+([^'"]+)\s+from\s+['"]([^'"]+\.css)['"]/g,
-              (_, importName, cssPath) =>
-                `import ${importName} from '${cssPath}?inline'`
+              (_, importName, cssPath) => `import ${importName} from '${cssPath}?inline'`
             ),
             map: null,
           };
@@ -170,17 +180,10 @@ export default mergeConfig(atomicDefault, {
     reporters: [
       'default',
       new VitestA11yReporter({
-        outputFile: path.resolve(
-          import.meta.dirname,
-          'reports/a11y-report.json'
-        ),
+        outputFile: path.resolve(import.meta.dirname, 'reports/a11y-report.json'),
         packageJsonPath: path.resolve(import.meta.dirname, 'package.json'),
       }),
     ],
-    projects: [
-      atomicDefault,
-      storybookPure,
-      ...(!isVitestVscodeExt ? [storybook] : []),
-    ],
+    projects: [atomicDefault, storybookPure, ...(!isVitestVscodeExt ? [storybook] : [])],
   },
 });

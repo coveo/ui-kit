@@ -23,16 +23,12 @@ describe('#renderShowButton', () => {
       ...overrides,
     };
 
-    const element = await renderFunctionFixture(
-      html`${renderShowButton({props: defaultProps})}`
-    );
+    const element = await renderFunctionFixture(html`${renderShowButton({props: defaultProps})}`);
 
     return {
       element,
       button: element.querySelector('button[part="answer-show-button"]'),
-      icon: element.querySelector(
-        'atomic-icon[part="answer-show-icon"]'
-      ) as HTMLElement,
+      icon: element.querySelector('atomic-icon[part="answer-show-icon"]') as HTMLElement,
     };
   };
 

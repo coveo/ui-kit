@@ -5,7 +5,7 @@ import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-inter
 import {wrapInCommerceSearchBox} from '@/storybook-utils/commerce/commerce-search-box-wrapper';
 import {parameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
 import '@/src/components/commerce/atomic-commerce-search-box-recent-queries/atomic-commerce-search-box-recent-queries.js';
-import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
+import {MockCommerceApi} from '@coveo/platform-mock-api/commerce';
 
 const commerceApiHarness = new MockCommerceApi();
 
@@ -26,7 +26,6 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     msw: {handlers: [...commerceApiHarness.handlers]},
-    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },
@@ -36,8 +35,7 @@ const meta: Meta = {
 
   play: async (context) => {
     await commerceInterfacePlay(context);
-    const searchBox =
-      await context.canvas.findAllByShadowPlaceholderText('Search');
+    const searchBox = await context.canvas.findAllByShadowPlaceholderText('Search');
     await userEvent.click(searchBox[0]);
   },
   beforeEach: () => {

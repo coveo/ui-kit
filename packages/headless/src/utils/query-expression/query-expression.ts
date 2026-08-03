@@ -1,27 +1,15 @@
 import type {Negatable} from './common/negatable.js';
 import type {Part} from './common/part.js';
-import {
-  buildDateField,
-  type DateFieldExpression,
-} from './date-field/date-field.js';
+import {buildDateField, type DateFieldExpression} from './date-field/date-field.js';
 import {
   buildDateRangeField,
   type DateRangeFieldExpression,
 } from './date-range-field/date-range-field.js';
-import {
-  buildExactMatch,
-  type ExactMatchExpression,
-} from './exact-match/exact-match.js';
-import {
-  buildFieldExists,
-  type FieldExistsExpression,
-} from './field-exists/field-exists.js';
+import {buildExactMatch, type ExactMatchExpression} from './exact-match/exact-match.js';
+import {buildFieldExists, type FieldExistsExpression} from './field-exists/field-exists.js';
 import {buildKeyword, type KeywordExpression} from './keyword/keyword.js';
 import {buildNear, type NearExpression, type OtherTerm} from './near/near.js';
-import {
-  buildNumericField,
-  type NumericFieldExpression,
-} from './numeric-field/numeric-field.js';
+import {buildNumericField, type NumericFieldExpression} from './numeric-field/numeric-field.js';
 import {
   buildNumericRangeField,
   type NumericRangeFieldExpression,
@@ -34,10 +22,7 @@ import {
   buildStringFacetField,
   type StringFacetFieldExpression,
 } from './string-facet-field/string-facet-field.js';
-import {
-  buildStringField,
-  type StringFieldExpression,
-} from './string-field/string-field.js';
+import {buildStringField, type StringFieldExpression} from './string-field/string-field.js';
 
 export type {
   DateFieldExpression,
@@ -132,9 +117,7 @@ export interface QueryExpression {
    * @param expression - A numeric field expression.
    * @returns The `QueryExpression` instance.
    */
-  addNumericRangeField(
-    expression: NumericRangeFieldExpression
-  ): QueryExpression;
+  addNumericRangeField(expression: NumericRangeFieldExpression): QueryExpression;
 
   /**
    * Adds an expression that uses an `operator` to compare a date `field` to a `value`.
@@ -257,9 +240,7 @@ export function buildQueryExpression(): QueryExpression {
 
     toQuerySyntax() {
       const symbol = getBooleanOperatorSymbol(booleanOperator);
-      const expression = parts
-        .map((part) => part.toQuerySyntax())
-        .join(`) ${symbol} (`);
+      const expression = parts.map((part) => part.toQuerySyntax()).join(`) ${symbol} (`);
 
       return parts.length <= 1 ? expression : `(${expression})`;
     },

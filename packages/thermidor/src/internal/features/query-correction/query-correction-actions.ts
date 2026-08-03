@@ -1,6 +1,6 @@
 import {createAction} from '@reduxjs/toolkit';
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 
 export interface QueryCorrection {
@@ -22,8 +22,6 @@ export function createQueryCorrectionActions(interfaceId: string) {
 }
 
 export function getOrCreateQueryCorrectionActions(iface: InterfaceHandle) {
-  const {stateId, cacheRegistry} = getHandleInternals(iface);
-  return cacheRegistry.getOrCreate(CACHE_KEY, () =>
-    createQueryCorrectionActions(stateId)
-  );
+  const {stateId, cacheRegistry} = getInterfaceInternals(iface);
+  return cacheRegistry.getOrCreate(CACHE_KEY, () => createQueryCorrectionActions(stateId));
 }

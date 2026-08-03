@@ -1,8 +1,5 @@
 import {Value} from '@coveo/bueno';
-import {
-  requiredNonEmptyString,
-  validatePayload,
-} from '../../../utils/validate-payload.js';
+import {requiredNonEmptyString, validatePayload} from '../../../utils/validate-payload.js';
 import {
   type InsightAction,
   makeInsightAnalyticsActionFactory,
@@ -25,10 +22,7 @@ export const logFacetShowMore = (facetId: string): InsightAction =>
     (client, state) => {
       validatePayload(facetId, facetIdDefinition);
       const metadata = {
-        ...buildFacetBaseMetadata(
-          facetId,
-          getStateNeededForFacetMetadata(state)
-        ),
+        ...buildFacetBaseMetadata(facetId, getStateNeededForFacetMetadata(state)),
         ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
       };
       return client.logFacetShowMore(metadata);
@@ -41,10 +35,7 @@ export const logFacetShowLess = (facetId: string): InsightAction =>
     (client, state) => {
       validatePayload(facetId, facetIdDefinition);
       const metadata = {
-        ...buildFacetBaseMetadata(
-          facetId,
-          getStateNeededForFacetMetadata(state)
-        ),
+        ...buildFacetBaseMetadata(facetId, getStateNeededForFacetMetadata(state)),
         ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
       };
 
@@ -119,9 +110,7 @@ interface LogFacetSelectActionCreatorPayload {
   facetValue: string;
 }
 
-export const logFacetSelect = (
-  payload: LogFacetSelectActionCreatorPayload
-): InsightAction =>
+export const logFacetSelect = (payload: LogFacetSelectActionCreatorPayload): InsightAction =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.facetSelect)(
     'analytics/facet/select',
     (client, state) => {
@@ -151,9 +140,7 @@ interface LogFacetDeselectActionCreatorPayload {
   facetValue: string;
 }
 
-export const logFacetDeselect = (
-  payload: LogFacetDeselectActionCreatorPayload
-): InsightAction =>
+export const logFacetDeselect = (payload: LogFacetDeselectActionCreatorPayload): InsightAction =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.facetDeselect)(
     'analytics/facet/deselect',
     (client, state) => {
@@ -182,10 +169,7 @@ export const logFacetBreadcrumb = (
         facetValue: requiredNonEmptyString,
       });
       const metadata = {
-        ...buildFacetSelectionChangeMetadata(
-          payload,
-          getStateNeededForFacetMetadata(state)
-        ),
+        ...buildFacetSelectionChangeMetadata(payload, getStateNeededForFacetMetadata(state)),
         ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
       };
 

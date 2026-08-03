@@ -115,13 +115,7 @@ export const validateInitialState = <T extends object>(
   functionName: string
 ) => {
   const message = `Check the initialState of ${functionName}`;
-  return validateObject(
-    engine,
-    schema,
-    obj,
-    message,
-    'Controller initialization error'
-  );
+  return validateObject(engine, schema, obj, message, 'Controller initialization error');
 };
 
 export const validateOptions = <T extends object>(
@@ -131,13 +125,7 @@ export const validateOptions = <T extends object>(
   functionName: string
 ) => {
   const message = `Check the options of ${functionName}`;
-  return validateObject(
-    engine,
-    schema,
-    obj,
-    message,
-    'Controller initialization error'
-  );
+  return validateObject(engine, schema, obj, message, 'Controller initialization error');
 };
 
 const validateObject = <T extends object>(

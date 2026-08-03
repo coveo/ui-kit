@@ -1,10 +1,7 @@
 /* oxlint-disable @typescript-eslint/no-explicit-any -- Just tests */
 import type {EventSourceMessage} from '../../../utils/fetch-event-source/parse.js';
 import type {GeneratedAnswerStream} from '../generated-answer-stream.js';
-import {
-  buildAnswerEndpoint,
-  updateCacheWithEvent,
-} from '../stream-answer-api.js';
+import {buildAnswerEndpoint, updateCacheWithEvent} from '../stream-answer-api.js';
 
 describe('#streamAnswerApi', () => {
   describe('updateCacheWithEvent', () => {
@@ -39,9 +36,7 @@ describe('#streamAnswerApi', () => {
       };
     };
 
-    const buildDefaultDraft = (
-      draft: Record<string, any> = {}
-    ): GeneratedAnswerStream =>
+    const buildDefaultDraft = (draft: Record<string, any> = {}): GeneratedAnswerStream =>
       Object.assign(
         {...draft},
         {
@@ -88,6 +83,65 @@ describe('#streamAnswerApi', () => {
       expect(dispatch).toHaveBeenCalledWith({
         type: 'generatedAnswer/setAnswerContentFormat',
         payload: 'text/markdown',
+      });
+    });
+
+    describe('when valid content follows a stream error', () => {
+      it('should clear draft.error once a genqa.messageType event adds real answer text', () => {
+        const dispatch = vi.fn();
+        const errorEvent: EventSourceMessage = buildEvent({
+          finishReason: 'ERROR',
+          errorMessage: 'transient error',
+          code: 500,
+          payload: '',
+          payloadType: 'genqa.messageType',
+        });
+        const draft = buildDefaultDraft();
+        updateCacheWithEvent(errorEvent, draft, dispatch);
+        expect(draft.error).toEqual({message: 'transient error', code: 500});
+
+        const messageEvent = buildSuccessEvent({
+          payloadType: 'genqa.messageType',
+          payload: {
+            textDelta: 'a full valid answer',
+          },
+        });
+        updateCacheWithEvent(messageEvent, draft, dispatch);
+
+        expect(draft.answer).toBe('a full valid answer');
+        expect(draft.error).toBeUndefined();
+      });
+
+      it('should clear draft.error once a genqa.citationsType event adds real citations', () => {
+        const dispatch = vi.fn();
+        const errorEvent: EventSourceMessage = buildEvent({
+          finishReason: 'ERROR',
+          errorMessage: 'transient error',
+          code: 500,
+          payload: '',
+          payloadType: 'genqa.citationsType',
+        });
+        const draft = buildDefaultDraft();
+        updateCacheWithEvent(errorEvent, draft, dispatch);
+        expect(draft.error).toEqual({message: 'transient error', code: 500});
+
+        const citation = {
+          id: '1',
+          permanentid: '1',
+          source: 'source',
+          title: 'some title',
+          uri: 'some uri',
+        };
+        const citationsEvent = buildSuccessEvent({
+          payloadType: 'genqa.citationsType',
+          payload: {
+            citations: [citation],
+          },
+        });
+        updateCacheWithEvent(citationsEvent, draft, dispatch);
+
+        expect(draft.citations).toEqual([citation]);
+        expect(draft.error).toBeUndefined();
       });
     });
 
@@ -243,17 +297,13 @@ describe('#streamAnswerApi', () => {
         'Missing required parameters for answer endpoint'
       );
 
-      expect(() =>
-        buildAnswerEndpoint(baseUrl, organizationId, undefined as any)
-      ).toThrow('Missing required parameters for answer endpoint');
+      expect(() => buildAnswerEndpoint(baseUrl, organizationId, undefined as any)).toThrow(
+        'Missing required parameters for answer endpoint'
+      );
     });
 
     it('should build the proper endpoint when insightId is not provided', () => {
-      const result = buildAnswerEndpoint(
-        baseUrl,
-        organizationId,
-        answerConfigurationId
-      );
+      const result = buildAnswerEndpoint(baseUrl, organizationId, answerConfigurationId);
 
       expect(result).toBe(
         `${baseUrl}/rest/organizations/${organizationId}/answer/v1/configs/${answerConfigurationId}/generate`
@@ -261,12 +311,7 @@ describe('#streamAnswerApi', () => {
     });
 
     it('should build the proper endpoint when insightId is provided', () => {
-      const result = buildAnswerEndpoint(
-        baseUrl,
-        organizationId,
-        answerConfigurationId,
-        insightId
-      );
+      const result = buildAnswerEndpoint(baseUrl, organizationId, answerConfigurationId, insightId);
 
       expect(result).toBe(
         `${baseUrl}/rest/organizations/${organizationId}/insight/v1/configs/${insightId}/answer/${answerConfigurationId}/generate`

@@ -1,7 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import type {AtomicSearchInterface} from '../atomic-search-interface/atomic-search-interface';
 import '@/src/components/search/atomic-text/atomic-text.js';
@@ -23,7 +23,6 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
-    chromatic: {disableSnapshot: true},
     msw: {handlers: [...searchApiHarness.handlers]},
     actions: {
       handles: events,
@@ -47,9 +46,7 @@ export const WithTranslations: Story = {
   name: 'With translations',
   play: async (context) => {
     const searchInterface =
-      context.canvasElement.querySelector<AtomicSearchInterface>(
-        'atomic-search-interface'
-      )!;
+      context.canvasElement.querySelector<AtomicSearchInterface>('atomic-search-interface')!;
 
     await context.step('Load translations', async () => {
       await customElements.whenDefined('atomic-search-interface');

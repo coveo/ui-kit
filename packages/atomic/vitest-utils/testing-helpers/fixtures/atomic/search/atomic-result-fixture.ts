@@ -33,10 +33,7 @@ export class FixtureAtomicResult extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     this.addEventListener('atomic/resolveResult', this.handleResolveResult);
-    this.addEventListener(
-      'atomic/resolveInteractiveResult',
-      this.handleResolveInteractiveResult
-    );
+    this.addEventListener('atomic/resolveInteractiveResult', this.handleResolveInteractiveResult);
   }
 
   disconnectedCallback() {
@@ -49,9 +46,7 @@ export class FixtureAtomicResult extends LitElement {
   }
 
   private handleResolveResult = (event: Event) => {
-    const customEvent = event as CustomEvent<
-      (result: Record<string, unknown>) => void
-    >;
+    const customEvent = event as CustomEvent<(result: Record<string, unknown>) => void>;
     customEvent.preventDefault();
     customEvent.stopPropagation();
     if (this.result && typeof customEvent.detail === 'function') {
@@ -60,15 +55,11 @@ export class FixtureAtomicResult extends LitElement {
   };
 
   private handleResolveInteractiveResult = (event: Event) => {
-    const customEvent = event as CustomEvent<
-      (interactiveResult: Record<string, unknown>) => void
-    >;
+    const customEvent = event as CustomEvent<(interactiveResult: Record<string, unknown>) => void>;
     customEvent.preventDefault();
     customEvent.stopPropagation();
     if (this.interactiveResult && typeof customEvent.detail === 'function') {
-      customEvent.detail(
-        this.interactiveResult as unknown as Record<string, unknown>
-      );
+      customEvent.detail(this.interactiveResult as unknown as Record<string, unknown>);
     }
   };
 
@@ -109,9 +100,7 @@ export function renderInAtomicResult<T extends LitElement>({
 }: {
   template: TemplateResult;
   selector?: string;
-  bindings?:
-    | Partial<Bindings>
-    | ((bindings: MinimalBindings) => MinimalBindings);
+  bindings?: Partial<Bindings> | ((bindings: MinimalBindings) => MinimalBindings);
   result?: Result;
   interactiveResult?: InteractiveResult;
 }): Promise<{
@@ -129,9 +118,7 @@ export async function renderInAtomicResult<T extends LitElement>({
 }: {
   template: TemplateResult;
   selector?: string | never;
-  bindings?:
-    | Partial<Bindings>
-    | ((bindings: MinimalBindings) => MinimalBindings);
+  bindings?: Partial<Bindings> | ((bindings: MinimalBindings) => MinimalBindings);
   result?: Result;
   interactiveResult?: InteractiveResult;
 }): Promise<{
@@ -140,10 +127,7 @@ export async function renderInAtomicResult<T extends LitElement>({
   atomicInterface: FixtureAtomicSearchInterface;
 }> {
   const atomicResult = await fixture<FixtureAtomicResult>(
-    html`<atomic-result
-      .result=${result}
-      .interactiveResult=${interactiveResult}
-    ></atomic-result>`
+    html`<atomic-result .result=${result} .interactiveResult=${interactiveResult}></atomic-result>`
   );
 
   atomicResult.setRenderTemplate(template);

@@ -85,10 +85,7 @@ import '@/src/components/common/atomic-numeric-range/atomic-numeric-range';
 @customElement('atomic-numeric-facet')
 @bindings()
 @withTailwindStyles
-export class AtomicNumericFacet
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class AtomicNumericFacet extends LitElement implements InitializableComponent<Bindings> {
   private static readonly propsSchema = new Schema({
     displayValuesAs: new StringValue({constrainTo: ['checkbox', 'link']}),
     withInput: new StringValue({constrainTo: ['integer', 'decimal']}),
@@ -324,18 +321,11 @@ export class AtomicNumericFacet
     if (this.filter?.state.range) {
       return 1;
     }
-    return (
-      this.facetForRange?.state.values.filter(({state}) => state === 'selected')
-        .length || 0
-    );
+    return this.facetForRange?.state.values.filter(({state}) => state === 'selected').length || 0;
   }
 
   private get shouldRenderValues() {
-    return (
-      !this.hasInputRange &&
-      this.numberOfValues > 0 &&
-      !!this.valuesToRender.length
-    );
+    return !this.hasInputRange && this.numberOfValues > 0 && !!this.valuesToRender.length;
   }
 
   private get hasInputRange() {
@@ -428,9 +418,7 @@ export class AtomicNumericFacet
       return;
     }
 
-    this.manualRanges = Array.from(
-      this.querySelectorAll('atomic-numeric-range')
-    ).map((range) => {
+    this.manualRanges = Array.from(this.querySelectorAll('atomic-numeric-range')).map((range) => {
       const {start, end, endInclusive, label} = range as HTMLElement & {
         start: number;
         end: number;
@@ -465,9 +453,7 @@ export class AtomicNumericFacet
     this.unsubscribeFacetForRange = this.facetForRange.subscribe(() => {
       this.facetState = this.facetForRange!.state;
     });
-    this.conditionManagers.push(
-      this.initializeDependenciesManager(this.facetState.facetId)
-    );
+    this.conditionManagers.push(this.initializeDependenciesManager(this.facetState.facetId));
 
     return this.facetForRange;
   }
@@ -489,9 +475,7 @@ export class AtomicNumericFacet
 
     this.filterState = this.filter.state;
 
-    this.conditionManagers.push(
-      this.initializeDependenciesManager(this.filterState.facetId)
-    );
+    this.conditionManagers.push(this.initializeDependenciesManager(this.filterState.facetId));
 
     this.unsubscribeFilter = this.filter.subscribe(() => {
       this.filterState = this.filter!.state;
@@ -547,16 +531,10 @@ export class AtomicNumericFacet
       this.formatter = (event as CustomEvent<NumberFormatter>).detail;
     };
 
-    this.addEventListener(
-      'atomic/numberFormat',
-      handleNumberFormat as EventListener
-    );
+    this.addEventListener('atomic/numberFormat', handleNumberFormat as EventListener);
 
     this.removeNumberFormatListener = () => {
-      this.removeEventListener(
-        'atomic/numberFormat',
-        handleNumberFormat as EventListener
-      );
+      this.removeEventListener('atomic/numberFormat', handleNumberFormat as EventListener);
     };
   }
 
@@ -564,9 +542,9 @@ export class AtomicNumericFacet
     const handleNumberInputApply = () => {
       if (this.facetId) {
         this.bindings.engine.dispatch(
-          loadNumericFacetSetActions(
-            this.bindings.engine
-          ).deselectAllNumericFacetValues(this.facetId)
+          loadNumericFacetSetActions(this.bindings.engine).deselectAllNumericFacetValues(
+            this.facetId
+          )
         );
       }
     };
@@ -574,10 +552,7 @@ export class AtomicNumericFacet
     this.addEventListener('atomic/numberInputApply', handleNumberInputApply);
 
     this.removeNumberInputApplyListener = () => {
-      this.removeEventListener(
-        'atomic/numberInputApply',
-        handleNumberInputApply
-      );
+      this.removeEventListener('atomic/numberInputApply', handleNumberInputApply);
     };
   }
 

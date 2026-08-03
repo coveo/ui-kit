@@ -1,10 +1,6 @@
 import '@/src/components/common/atomic-icon/atomic-icon';
 import {NumberValue, Schema} from '@coveo/bueno';
-import {
-  buildNotifyTrigger,
-  type NotifyTrigger,
-  type NotifyTriggerState,
-} from '@coveo/headless';
+import {buildNotifyTrigger, type NotifyTrigger, type NotifyTriggerState} from '@coveo/headless';
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {map} from 'lit/directives/map.js';
@@ -96,9 +92,7 @@ export class AtomicNotifications
       return this.notifications[0];
     }
     return this.notifications
-      .map((text, i) =>
-        this.bindings.i18n.t('notification-n', {n: i + 1, text})
-      )
+      .map((text, i) => this.bindings.i18n.t('notification-n', {n: i + 1, text}))
       .join('\n');
   }
 
@@ -113,9 +107,7 @@ export class AtomicNotifications
           part="icon"
           class="text-neutral-dark mr-6 h-7 w-7"
         ></atomic-icon>
-        <span part="text" class="text-on-background text-base leading-5">
-          ${text}
-        </span>
+        <span part="text" class="text-on-background text-base leading-5"> ${text} </span>
       </div>
     `;
   }

@@ -6,16 +6,10 @@ interface FacetSearchProps {
   controller?: FacetController;
 }
 
-export const FacetSearch: FunctionComponent<FacetSearchProps> = ({
-  staticState,
-  controller,
-}) => {
+export const FacetSearch: FunctionComponent<FacetSearchProps> = ({staticState, controller}) => {
   const [state, setState] = useState(staticState);
 
-  useEffect(
-    () => controller?.subscribe?.(() => setState({...controller.state})),
-    [controller]
-  );
+  useEffect(() => controller?.subscribe?.(() => setState({...controller.state})), [controller]);
 
   return (
     <>
@@ -35,9 +29,7 @@ export const FacetSearch: FunctionComponent<FacetSearchProps> = ({
               type="button"
               onClick={() => controller?.facetSearch.select(facetSearchValue)}
               disabled={state.values.some(
-                (value) =>
-                  value.state === 'selected' &&
-                  value.value === facetSearchValue.rawValue
+                (value) => value.state === 'selected' && value.value === facetSearchValue.rawValue
               )}
             >
               {facetSearchValue.displayValue} ({facetSearchValue.count} results)

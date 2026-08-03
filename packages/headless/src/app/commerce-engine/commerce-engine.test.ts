@@ -54,8 +54,7 @@ describe('buildCommerceEngine', () => {
     });
 
     it('passing a URL proxyBaseUrl does not throw', () => {
-      options.configuration.analytics.proxyBaseUrl =
-        'https://example.com/analytics';
+      options.configuration.analytics.proxyBaseUrl = 'https://example.com/analytics';
 
       expect(() => initEngine()).not.toThrow();
     });
@@ -95,9 +94,7 @@ describe('buildCommerceEngine', () => {
   });
 
   it('sets the #commerceContext to the #context specified in the configuration', () => {
-    expect(engine[stateKey].commerceContext).toEqual(
-      options.configuration.context
-    );
+    expect(engine[stateKey].commerceContext).toEqual(options.configuration.context);
   });
 
   it('when #cart is specified in the configuration, sets the #cart.cartItems accordingly', () => {
@@ -120,9 +117,7 @@ describe('buildCommerceEngine', () => {
     };
     initEngine();
 
-    expect(engine[stateKey].cart.cartItems).toEqual(
-      items.map((item) => createCartKey(item))
-    );
+    expect(engine[stateKey].cart.cartItems).toEqual(items.map((item) => createCartKey(item)));
 
     expect(engine[stateKey].cart.cart).toEqual({
       [createCartKey(items[0])]: items[0],
@@ -131,9 +126,7 @@ describe('buildCommerceEngine', () => {
   });
 
   it('should ensure that engine.relay is the same reference as thunk extra args relay', async () => {
-    const thunkRelay = await engine.dispatch(
-      (_dispatch, _getState, extra) => extra.relay
-    );
+    const thunkRelay = await engine.dispatch((_dispatch, _getState, extra) => extra.relay);
 
     expect(thunkRelay).toBe(engine.relay);
   });

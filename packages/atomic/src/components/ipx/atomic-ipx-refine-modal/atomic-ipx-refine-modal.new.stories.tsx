@@ -1,14 +1,10 @@
-import type {
-  Decorator,
-  Meta,
-  StoryObj as Story,
-} from '@storybook/web-components-vite';
+import type {Decorator, Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
 import {waitFor} from 'storybook/test';
 import {testDialogA11y} from '@/storybook-utils/a11y/dialog.js';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
+import {MockSearchApi} from '@coveo/platform-mock-api/search';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-facet/atomic-facet.js';
@@ -19,10 +15,9 @@ import '@/src/components/common/atomic-layout-section/atomic-layout-section.js';
 
 const searchApiHarness = new MockSearchApi();
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-ipx-refine-modal',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-ipx-refine-modal', {
+  excludeCategories: ['methods'],
+});
 const facetWidthDecorator: Decorator = (story) =>
   html`<div style="min-width: 470px; margin: auto;">${story()}</div> `;
 
@@ -53,15 +48,10 @@ const meta: Meta = {
   play: async (context) => {
     await play(context);
     const {canvasElement, step, userEvent} = context;
-    const refineToggleElement = within(
-      canvasElement.querySelector('atomic-ipx-refine-toggle')!
-    );
-    const refineToggleButton = await refineToggleElement.findByShadowRole(
-      'button',
-      {
-        name: 'Filters',
-      }
-    );
+    const refineToggleElement = within(canvasElement.querySelector('atomic-ipx-refine-toggle')!);
+    const refineToggleButton = await refineToggleElement.findByShadowRole('button', {
+      name: 'Filters',
+    });
     await waitFor(() => {
       if (refineToggleButton.hasAttribute('disabled')) {
         throw new Error('Button still disabled');

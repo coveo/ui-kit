@@ -28,10 +28,7 @@ import type {
   SearchSection,
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {
-  buildController,
-  type Subscribable,
-} from '../../controller/headless-controller.js';
+import {buildController, type Subscribable} from '../../controller/headless-controller.js';
 import {determineFacetId} from '../../core/facets/_common/facet-id-determinor.js';
 import {buildFacetSearch} from '../../core/facets/facet-search/specific/headless-facet-search.js';
 import type {FacetOptions} from '../../facets/facet/headless-facet-options.js';
@@ -87,7 +84,7 @@ export interface FieldSuggestionsState {
  *
  * This controller is a wrapper around the basic facet controller search functionality, and thus exposes similar options and properties.
  *
- * Example: [field-suggestions.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/field-suggestions/specific-field/field-suggestions.fn.tsx)
+ * Example: [field-suggestions.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/field-suggestions.tsx)
  *
  * @group Controllers
  * @category FieldSuggestions
@@ -177,11 +174,7 @@ export function buildFieldSuggestions(
   if (!loadFieldSuggestionsReducers(engine)) {
     throw loadReducerError;
   }
-  const {
-    facetSearch: facetSearchOptions,
-    allowedValues,
-    ...facetOptions
-  } = props.options.facet;
+  const {facetSearch: facetSearchOptions, allowedValues, ...facetOptions} = props.options.facet;
   const facetId = determineFacetId(engine, facetOptions);
   engine.dispatch(
     registerFacet({

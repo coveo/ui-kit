@@ -25,11 +25,7 @@ export const renderCategoryFacetAllCategoryButton: FunctionalComponent<
         onClick: onClick,
       },
     })(
-      html`<atomic-icon
-          aria-hidden="true"
-          icon=${LeftArrow}
-          part="back-arrow"
-        ></atomic-icon>
+      html`<atomic-icon aria-hidden="true" icon=${LeftArrow} part="back-arrow"></atomic-icon>
         <span class="truncate">${allCategories}</span>`
     )}
   `;

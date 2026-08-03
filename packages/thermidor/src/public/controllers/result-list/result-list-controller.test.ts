@@ -1,10 +1,6 @@
 import {describe, it, expect, beforeEach, vi} from 'vitest';
-import {
-  createTestEngine,
-  createMockSearchResults,
-} from '@/src/test/test-utils.js';
+import {createTestEngine, createMockSearchResults} from '@/src/test/test-utils.js';
 import {Engine, getFullEngine} from '@/src/internal/engine/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
 import {getOrCreateResultsActions} from '@/src/internal/features/result-list/index.js';
 import {buildResultListController} from './result-list-controller.js';
 import {buildSearchInterface} from '@/src/public/interfaces/search.js';
@@ -37,7 +33,6 @@ describe('buildResultListController', () => {
         interface: searchInterface,
       });
 
-      getHandleInternals(searchInterface);
       const actions = getOrCreateResultsActions(searchInterface);
       const fullEngine = getFullEngine(engine);
 
@@ -45,9 +40,7 @@ describe('buildResultListController', () => {
       fullEngine.mutate(actions.setResultsFromResponse(mockResults));
 
       expect(controller.state.results).toHaveLength(3);
-      expect(controller.state.results[0].uniqueId).toBe(
-        mockResults[0].uniqueId
-      );
+      expect(controller.state.results[0].uniqueId).toBe(mockResults[0].uniqueId);
       expect(controller.state.results[0].title).toBe(mockResults[0].title);
     });
   });
@@ -59,14 +52,11 @@ describe('buildResultListController', () => {
       });
       const callback = vi.fn();
 
-      getHandleInternals(searchInterface);
       const actions = getOrCreateResultsActions(searchInterface);
       const fullEngine = getFullEngine(engine);
 
       controller.subscribe(callback);
-      fullEngine.mutate(
-        actions.setResultsFromResponse(createMockSearchResults(1))
-      );
+      fullEngine.mutate(actions.setResultsFromResponse(createMockSearchResults(1)));
 
       expect(callback).toHaveBeenCalledTimes(1);
     });
@@ -77,17 +67,12 @@ describe('buildResultListController', () => {
       });
       const callback = vi.fn();
 
-      getHandleInternals(searchInterface);
       const actions = getOrCreateResultsActions(searchInterface);
       const fullEngine = getFullEngine(engine);
 
       controller.subscribe(callback);
-      fullEngine.mutate(
-        actions.setResultsFromResponse(createMockSearchResults(1))
-      );
-      fullEngine.mutate(
-        actions.setResultsFromResponse(createMockSearchResults(3))
-      );
+      fullEngine.mutate(actions.setResultsFromResponse(createMockSearchResults(1)));
+      fullEngine.mutate(actions.setResultsFromResponse(createMockSearchResults(3)));
       fullEngine.mutate(actions.setResultsFromResponse([]));
 
       expect(callback).toHaveBeenCalledTimes(3);
@@ -104,7 +89,6 @@ describe('buildResultListController', () => {
 
       const {getOrCreateSearchBoxActions} =
         await import('@/src/internal/features/search-box/index.js');
-      getHandleInternals(searchInterface);
       const searchBoxActions = getOrCreateSearchBoxActions(searchInterface);
       fullEngine.mutate(searchBoxActions.setQuery('unrelated change'));
 

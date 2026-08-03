@@ -5,10 +5,6 @@ declare module '*.css' {
   export default content;
 }
 
-interface ImportMetaEnv {
-  readonly CHROMATIC_ALL: string
-}
-
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }

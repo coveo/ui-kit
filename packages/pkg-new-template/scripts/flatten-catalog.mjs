@@ -27,8 +27,7 @@ function resolveCatalogEntries(deps) {
     });
     const parsed = JSON.parse(output)[0];
     const resolved =
-      parsed.dependencies?.[name]?.version ||
-      parsed.devDependencies?.[name]?.version;
+      parsed.dependencies?.[name]?.version || parsed.devDependencies?.[name]?.version;
     if (resolved) {
       deps[name] = `^${resolved}`;
       console.log(`Resolved ${name} "catalog:" → "^${resolved}"`);

@@ -1,6 +1,4 @@
-export type ChapterId =
-  | 'success_criteria_level_a'
-  | 'success_criteria_level_aa';
+export type ChapterId = 'success_criteria_level_a' | 'success_criteria_level_aa';
 
 export type OpenAcrConformance =
   | 'supports'
@@ -97,13 +95,12 @@ export interface OpenAcrReport {
   };
 }
 
-export const VALID_OVERRIDE_CONFORMANCE_VALUES: ReadonlySet<OpenAcrConformance> =
-  new Set([
-    'supports',
-    'partially-supports',
-    'does-not-support',
-    'not-applicable',
-  ]);
+export const VALID_OVERRIDE_CONFORMANCE_VALUES: ReadonlySet<OpenAcrConformance> = new Set([
+  'supports',
+  'partially-supports',
+  'does-not-support',
+  'not-applicable',
+]);
 
 export const manualStatusToConformance: Record<string, OpenAcrConformance> = {
   pass: 'supports',

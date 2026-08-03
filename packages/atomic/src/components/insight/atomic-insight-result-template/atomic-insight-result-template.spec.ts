@@ -19,9 +19,7 @@ describe('atomic-insight-result-template', () => {
     'conditions' | 'mustMatch' | 'mustNotMatch'
   >;
 
-  const setupElement = async (
-    options: Partial<AtomicInsightResultTemplateProps> = {}
-  ) => {
+  const setupElement = async (options: Partial<AtomicInsightResultTemplateProps> = {}) => {
     const defaultProps: AtomicInsightResultTemplateProps = {
       conditions: [],
       mustMatch: {},
@@ -77,11 +75,7 @@ describe('atomic-insight-result-template', () => {
       const mustNotMatch = {source: ['spam']};
       const element = await setupElement({mustMatch, mustNotMatch});
 
-      const expected = makeMatchConditions(
-        mustMatch,
-        mustNotMatch,
-        InsightResultTemplatesHelpers
-      );
+      const expected = makeMatchConditions(mustMatch, mustNotMatch, InsightResultTemplatesHelpers);
 
       const template = await element.getTemplate();
       expect(template).not.toBeNull();
@@ -91,8 +85,7 @@ describe('atomic-insight-result-template', () => {
 
   describe('#getTemplate', () => {
     it('should call getTemplate on the controller', async () => {
-      const titleConditions = (result: InsightResult) =>
-        result.title === 'Coveo';
+      const titleConditions = (result: InsightResult) => result.title === 'Coveo';
       const fakeTemplate = {
         conditions: [],
         content: document.createDocumentFragment(),
@@ -115,9 +108,7 @@ describe('atomic-insight-result-template', () => {
   });
 
   it('should render an atomic-component-error if error is thrown', async () => {
-    const mockedConsoleError = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
+    const mockedConsoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     const container = await fixture(html`
       <div>
@@ -133,9 +124,7 @@ describe('atomic-insight-result-template', () => {
 
     await element.updateComplete;
 
-    const errorComponent = element.shadowRoot?.querySelector(
-      'atomic-component-error'
-    );
+    const errorComponent = element.shadowRoot?.querySelector('atomic-component-error');
     expect(errorComponent).toBeDefined();
     mockedConsoleError.mockRestore();
   });

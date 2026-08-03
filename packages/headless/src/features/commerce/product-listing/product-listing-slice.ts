@@ -1,10 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import type {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
-import type {
-  BaseProduct,
-  ChildProduct,
-  Product,
-} from '../../../api/commerce/common/product.js';
+import type {BaseProduct, ChildProduct, Product} from '../../../api/commerce/common/product.js';
 import {
   type BaseResult,
   type BaseSpotlightContent,
@@ -21,10 +17,7 @@ import {
   promoteChildToParent,
   type QueryCommerceAPIThunkReturn,
 } from './product-listing-actions.js';
-import {
-  getProductListingInitialState,
-  type ProductListingState,
-} from './product-listing-state.js';
+import {getProductListingInitialState, type ProductListingState} from './product-listing-state.js';
 
 export const productListingReducer = createReducer(
   getProductListingInitialState(),
@@ -79,8 +72,7 @@ export const productListingReducer = createReducer(
         handlePending(state, action.meta.requestId);
       })
       .addCase(promoteChildToParent, (state, action) => {
-        const productsOrResults =
-          state.results.length > 0 ? state.results : state.products;
+        const productsOrResults = state.results.length > 0 ? state.results : state.products;
         let childToPromote: ChildProduct | undefined;
         const currentParentIndex = productsOrResults.findIndex((result) => {
           if (result.resultType === ResultType.SPOTLIGHT) {
@@ -124,18 +116,12 @@ export const productListingReducer = createReducer(
   }
 );
 
-function handleError(
-  state: ProductListingState,
-  error?: CommerceAPIErrorStatusResponse
-) {
+function handleError(state: ProductListingState, error?: CommerceAPIErrorStatusResponse) {
   state.error = error || null;
   state.isLoading = false;
 }
 
-function handleFulfilled(
-  state: ProductListingState,
-  response: ListingCommerceSuccessResponse
-) {
+function handleFulfilled(state: ProductListingState, response: ListingCommerceSuccessResponse) {
   state.error = null;
   state.facets = response.facets;
   state.responseId = response.responseId;
@@ -172,22 +158,14 @@ function mapPreprocessedResults(
   );
 }
 
-function preprocessResult(
-  result: BaseResult,
-  position: number,
-  responseId?: string
-): Result {
+function preprocessResult(result: BaseResult, position: number, responseId?: string): Result {
   if (result.resultType === ResultType.SPOTLIGHT) {
     return preprocessSpotlightContent(result, position, responseId);
   }
   return preprocessProduct(result, position, responseId);
 }
 
-function preprocessProduct(
-  product: BaseProduct,
-  position: number,
-  responseId?: string
-): Product {
+function preprocessProduct(product: BaseProduct, position: number, responseId?: string): Product {
   const isParentAlreadyInChildren = product.children.some(
     (child) => child.permanentid === product.permanentid
   );
@@ -195,11 +173,7 @@ function preprocessProduct(
     return {...product, position, responseId};
   }
 
-  const {
-    children,
-    totalNumberOfChildren: _totalNumberOfChildren,
-    ...restOfProduct
-  } = product;
+  const {children, totalNumberOfChildren: _totalNumberOfChildren, ...restOfProduct} = product;
 
   return {
     ...product,

@@ -63,12 +63,6 @@ export interface BuildCommerceProductListingInterfaceOptions {
   id?: string;
   initialParameters?: CommerceProductListingInterfaceInitialParameters;
 }
-
-export interface ComposeInterfacesOptions<T extends InterfaceType> {
-  interfaces: BaseInterface<T>[];
-  id?: string;
-  initialParameters?: {query?: string};
-}
 ```
 
 ## 3. Standalone Functions
@@ -77,10 +71,7 @@ export interface ComposeInterfacesOptions<T extends InterfaceType> {
 import {getSSRSnapshot, restoreSSRSnapshot} from '@coveo/thermidor';
 
 function getSSRSnapshot(options: {engine: Engine}): SSRSnapshot;
-function restoreSSRSnapshot(options: {
-  engine: Engine;
-  snapshot: SSRSnapshot;
-}): void;
+function restoreSSRSnapshot(options: {engine: Engine; snapshot: SSRSnapshot}): void;
 ```
 
 The engine class remains opaque — no public methods added.
@@ -134,7 +125,7 @@ The snapshot storage is optimistic (accepts all recognized params). The slice ad
 ### `getSSRSnapshot`
 
 ```ts
-import {getFullEngine} from '@/src/core/interface/engine/engine.js';
+import {getFullEngine} from '@/src/internal/engine/index.js';
 
 export function getSSRSnapshot({engine}: {engine: Engine}): SSRSnapshot {
   const fullEngine = getFullEngine(engine);
@@ -153,7 +144,7 @@ We pass the snapshot as plain JSON rather than base64 for two reasons: (1) `btoa
 ### `restoreSSRSnapshot`
 
 ```ts
-import {getFullEngine} from '@/src/core/interface/engine/engine.js';
+import {getFullEngine} from '@/src/internal/engine/index.js';
 
 export function restoreSSRSnapshot({
   engine,
@@ -190,17 +181,12 @@ This parses the JSON snapshot and distributes the engine-wide state into per-int
 ### `initialParameters` translation in interface builder
 
 ```ts
-export function buildSearchInterface(
-  options: BuildSearchInterfaceOptions
-): SearchInterface {
+export function buildSearchInterface(options: BuildSearchInterfaceOptions): SearchInterface {
   const fullEngine = getFullEngine(options.engine);
   const interfaceId = options.id ?? generateId();
 
   if (options.initialParameters) {
-    const translated = translateSearchInitialParameters(
-      interfaceId,
-      options.initialParameters
-    );
+    const translated = translateSearchInitialParameters(interfaceId, options.initialParameters);
     fullEngine.storeHydrationSnapshot(interfaceId, translated);
   }
 
@@ -300,11 +286,7 @@ For pages combining multiple interfaces, a single snapshot captures everything:
 
 ```ts
 // Server — product page with two recommendation carousels
-import {
-  Engine,
-  buildCommerceRecommendationInterface,
-  getSSRSnapshot,
-} from '@coveo/thermidor';
+import {Engine, buildCommerceRecommendationInterface, getSSRSnapshot} from '@coveo/thermidor';
 
 const engine = new Engine({
   configuration: {organizationId: '...', accessToken: '...'},
@@ -333,11 +315,7 @@ return {snapshot};
 
 ```ts
 // Client — one restore, every interface self-hydrates by ID
-import {
-  Engine,
-  buildCommerceRecommendationInterface,
-  restoreSSRSnapshot,
-} from '@coveo/thermidor';
+import {Engine, buildCommerceRecommendationInterface, restoreSSRSnapshot} from '@coveo/thermidor';
 
 const engine = new Engine({
   configuration: {organizationId: '...', accessToken: '...'},
@@ -363,7 +341,7 @@ The consumer passes a single snapshot object from server to client. Each interfa
 
 ### `executeInitialRequest()` on interfaces
 
-Each interface (search, commerce, composed) exposes an `executeInitialRequest()` method that triggers the appropriate backend call based on the interface type and its seeded parameters.
+Each interface (search, commerce, generative) exposes an `executeInitialRequest()` method that triggers the appropriate backend call based on the interface type and its seeded parameters.
 
 ```ts
 interface SearchInterface {
@@ -534,10 +512,7 @@ function SearchBox({controller}: {controller: SearchBoxController}) {
         methods.submit();
       }}
     >
-      <input
-        value={state.query}
-        onChange={(e) => methods.setQuery({query: e.target.value})}
-      />
+      <input value={state.query} onChange={(e) => methods.setQuery({query: e.target.value})} />
     </form>
   );
 }

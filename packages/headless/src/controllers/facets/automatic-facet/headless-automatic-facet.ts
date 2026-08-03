@@ -53,10 +53,7 @@ export function buildAutomaticFacet(
       dispatch(toggleSelectAutomaticFacetValue({field, selection}));
       dispatch(
         executeSearch({
-          legacy: getLegacyAnalyticsActionForToggleFacetSelect(
-            field,
-            selection
-          ),
+          legacy: getLegacyAnalyticsActionForToggleFacetSelect(field, selection),
           next: getAnalyticsActionForToggleFacetSelect(selection),
         })
       );

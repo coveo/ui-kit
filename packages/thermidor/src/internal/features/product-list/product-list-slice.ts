@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {Product, ProductListState} from './product-list-types.js';
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import {getOrCreateProductListActions} from './product-list-actions.js';
 import {getOrCreateHydrateFromSnapshotAction} from '@/src/internal/features/generative/index.js';
@@ -28,23 +28,18 @@ function mapProduct(raw: Record<string, unknown>): Product {
     ec_item_group_id: raw.ec_item_group_id as string | undefined,
     ec_item_group_name:
       (raw.ec_item_group_name as string) ??
-      ((raw.additionalFields as Record<string, unknown>)?.ec_item_group_name as
-        | string
-        | undefined),
+      ((raw.additionalFields as Record<string, unknown>)?.ec_item_group_name as string | undefined),
     clickUri: raw.clickUri as string | undefined,
     additionalFields: (raw.additionalFields as Record<string, unknown>) ?? {},
     children: Array.isArray(raw.children)
-      ? raw.children.map((child: unknown) =>
-          mapProduct(child as Record<string, unknown>)
-        )
+      ? raw.children.map((child: unknown) => mapProduct(child as Record<string, unknown>))
       : undefined,
   };
 }
 
 type ProductListSlice = ReturnType<typeof createProductListSlice>;
 
-const CACHE_KEY: CacheKey<ProductListSlice> =
-  createCacheKey<ProductListSlice>('productList/slice');
+const CACHE_KEY: CacheKey<ProductListSlice> = createCacheKey<ProductListSlice>('productList/slice');
 
 export function createProductListSlice(
   interfaceId: string,
@@ -57,9 +52,7 @@ export function createProductListSlice(
     reducers: {},
     extraReducers: (builder) => {
       builder.addCase(actions.setProductsFromResponse, (state, action) => {
-        state.products = action.payload.map((p) =>
-          mapProduct(p as Record<string, unknown>)
-        );
+        state.products = action.payload.map((p) => mapProduct(p as Record<string, unknown>));
       });
       builder.addCase(hydrateAction, (state, action) => {
         const payload = action.payload as Record<string, unknown> | null;
@@ -75,7 +68,7 @@ export function createProductListSlice(
 }
 
 export function getOrCreateProductListSlice(iface: InterfaceHandle) {
-  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  const {stateId, cacheRegistry} = getInterfaceInternals(iface);
   return cacheRegistry.getOrCreate(CACHE_KEY, () => {
     const actions = getOrCreateProductListActions(iface);
     const hydrateAction = getOrCreateHydrateFromSnapshotAction(iface);

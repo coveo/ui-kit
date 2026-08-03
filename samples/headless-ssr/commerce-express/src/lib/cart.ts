@@ -36,9 +36,7 @@ function isCartItem(value: unknown): value is CartItem {
  * `Cookie` request header or the client-side `document.cookie`. Returns an
  * empty cart when the cookie is absent or malformed.
  */
-export function parseCartItems(
-  cookieHeader: string | undefined | null
-): CartItem[] {
+export function parseCartItems(cookieHeader: string | undefined | null): CartItem[] {
   if (!cookieHeader) {
     return [];
   }
@@ -52,9 +50,7 @@ export function parseCartItems(
   }
 
   try {
-    const parsed = JSON.parse(
-      decodeURIComponent(entry.slice(CART_COOKIE.length + 1))
-    );
+    const parsed = JSON.parse(decodeURIComponent(entry.slice(CART_COOKIE.length + 1)));
     return Array.isArray(parsed) ? parsed.filter(isCartItem) : [];
   } catch {
     return [];

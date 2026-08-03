@@ -60,11 +60,7 @@ export interface GeneratedAnswerWithFollowUps extends GeneratedAnswer {
    * @param citationHoverTimeMs - The number of milliseconds spent hovering over the citation.
    * @param answerId - Optional ID of the answer for which the citation was hovered. Defaults to the first answer.
    */
-  logCitationHover(
-    citationId: string,
-    citationHoverTimeMs: number,
-    answerId?: string
-  ): void;
+  logCitationHover(citationId: string, citationHoverTimeMs: number, answerId?: string): void;
 
   /**
    * Logs a click on a cited source link for analytics.
@@ -120,11 +116,7 @@ export function buildGeneratedAnswerWithFollowUps(
   const accessToken = selectAccessToken(getState());
   const environment = selectEnvironment(getState());
 
-  const followUpAgent = createFollowUpAgent(
-    props.agentId,
-    organizationId,
-    environment
-  );
+  const followUpAgent = createFollowUpAgent(props.agentId, organizationId, environment);
   const followUpStrategy = createFollowUpStrategy(engine.dispatch);
   const answerRunner = createAnswerRunner();
 
@@ -139,22 +131,16 @@ export function buildGeneratedAnswerWithFollowUps(
         error: withGeneratedAnswerSseErrorHelpers(generatedAnswerState.error),
         followUpAnswers: {
           ...followUpAnswersState,
-          followUpAnswers: followUpAnswersState.followUpAnswers.map(
-            (followUpAnswer) => ({
-              ...followUpAnswer,
-              error: withGeneratedAnswerSseErrorHelpers(followUpAnswer.error),
-            })
-          ),
+          followUpAnswers: followUpAnswersState.followUpAnswers.map((followUpAnswer) => ({
+            ...followUpAnswer,
+            error: withGeneratedAnswerSseErrorHelpers(followUpAnswer.error),
+          })),
         },
       };
     },
 
     retry() {
-      answerRunner.run(
-        engine.state,
-        engine.dispatch,
-        () => engine.navigatorContext
-      );
+      answerRunner.run(engine.state, engine.dispatch, () => engine.navigatorContext);
     },
 
     like(answerId?: string) {
@@ -167,9 +153,7 @@ export function buildGeneratedAnswerWithFollowUps(
         (answer) => answer.answerId === answerId
       );
       if (!followUpAnswer) {
-        console.warn(
-          `No follow-up answer found with ID ${answerId}. Cannot like.`
-        );
+        console.warn(`No follow-up answer found with ID ${answerId}. Cannot like.`);
         return;
       }
       if (!followUpAnswer.liked) {
@@ -188,9 +172,7 @@ export function buildGeneratedAnswerWithFollowUps(
         (answer) => answer.answerId === answerId
       );
       if (!followUpAnswer) {
-        console.warn(
-          `No follow-up answer found with ID ${answerId}. Cannot dislike.`
-        );
+        console.warn(`No follow-up answer found with ID ${answerId}. Cannot dislike.`);
         return;
       }
       if (!followUpAnswer.disliked) {
@@ -212,36 +194,19 @@ export function buildGeneratedAnswerWithFollowUps(
     logCitationClick(citationId: string, answerId?: string) {
       const headAnswerId = generativeQuestionAnsweringIdSelector(engine.state);
       if (!answerId || answerId === headAnswerId) {
-        engine.dispatch(
-          analyticsClient.logOpenGeneratedAnswerSource(citationId, answerId)
-        );
+        engine.dispatch(analyticsClient.logOpenGeneratedAnswerSource(citationId, answerId));
       } else if (analyticsClient.logOpenGeneratedAnswerFollowUpSource) {
-        engine.dispatch(
-          analyticsClient.logOpenGeneratedAnswerFollowUpSource(
-            citationId,
-            answerId
-          )
-        );
+        engine.dispatch(analyticsClient.logOpenGeneratedAnswerFollowUpSource(citationId, answerId));
       }
     },
 
     // TODO: SFINT-6665
-    logCitationHover(
-      citationId: string,
-      citationHoverTimeMs: number,
-      answerId?: string
-    ) {
+    logCitationHover(citationId: string, citationHoverTimeMs: number, answerId?: string) {
       if (!answerId || this.state.answerId === answerId) {
         controller.logCitationHover(citationId, citationHoverTimeMs);
         return;
       }
-      engine.dispatch(
-        analyticsClient.logHoverCitation(
-          citationId,
-          citationHoverTimeMs,
-          answerId
-        )
-      );
+      engine.dispatch(analyticsClient.logHoverCitation(citationId, citationHoverTimeMs, answerId));
     },
 
     async askFollowUp(question: string) {
@@ -290,8 +255,7 @@ export function buildGeneratedAnswerWithFollowUps(
       } catch (error) {
         engine.dispatch(
           activeFollowUpStartFailed({
-            message:
-              'An error occurred while starting the follow-up answer generation.',
+            message: 'An error occurred while starting the follow-up answer generation.',
           })
         );
         console.error('Error running the follow-up agent:', error);

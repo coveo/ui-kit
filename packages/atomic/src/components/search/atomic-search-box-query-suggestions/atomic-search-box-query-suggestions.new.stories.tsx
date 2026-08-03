@@ -4,20 +4,18 @@ import {html} from 'lit';
 import {userEvent} from 'storybook/test';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
 import {
-  searchFacetTransformer,
+  MockSearchApi,
   searchFacetSearchTransformer,
-} from '@coveo/platform-mock-api/search/facet-transformer';
+  searchFacetTransformer,
+} from '@coveo/platform-mock-api/search';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-search-box/atomic-search-box.js';
 import '@/src/components/search/atomic-search-box-query-suggestions/atomic-search-box-query-suggestions.js';
 
 const searchApiHarness = new MockSearchApi();
 searchApiHarness.searchEndpoint.addRequestTransformer(searchFacetTransformer);
-searchApiHarness.facetSearchEndpoint.addRequestTransformer(
-  searchFacetSearchTransformer
-);
+searchApiHarness.facetSearchEndpoint.addRequestTransformer(searchFacetSearchTransformer);
 
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -30,13 +28,9 @@ const meta: Meta = {
   title: 'Search/Search Box Query Suggestions',
   id: 'atomic-search-box-query-suggestions',
   render: (args) => template(args),
-  decorators: [
-    (story) => html`<atomic-search-box> ${story()} </atomic-search-box>`,
-    decorator,
-  ],
+  decorators: [(story) => html`<atomic-search-box> ${story()} </atomic-search-box>`, decorator],
   parameters: {
     ...parameters,
-    chromatic: {disableSnapshot: true},
     msw: {handlers: [...searchApiHarness.handlers]},
     actions: {
       handles: events,
@@ -61,8 +55,7 @@ export const A11yStatusMessage: Story = {
     await play(context);
     await testStatusMessageA11y(context, {
       triggerAction: async () => {
-        const searchBox =
-          await context.canvas.findByShadowPlaceholderText('Search');
+        const searchBox = await context.canvas.findByShadowPlaceholderText('Search');
         await userEvent.click(searchBox);
       },
       expectedText: '5 search suggestions are available.',

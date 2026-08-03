@@ -1,13 +1,5 @@
-import {
-  BooleanValue,
-  RecordValue,
-  type SchemaDefinition,
-  StringValue,
-} from '@coveo/bueno';
-import type {
-  AnalyticsClientSendEventHook,
-  IRuntimeEnvironment,
-} from 'coveo.analytics';
+import {BooleanValue, RecordValue, type SchemaDefinition, StringValue} from '@coveo/bueno';
+import type {AnalyticsClientSendEventHook, IRuntimeEnvironment} from 'coveo.analytics';
 import type {PreprocessRequest} from '../api/preprocess-request.js';
 import type {PlatformEnvironment} from '../utils/url-utils.js';
 import {requiredNonEmptyString} from '../utils/validate-payload.js';
@@ -149,57 +141,93 @@ export interface AnalyticsConfiguration {
    * See [Headless proxy: Analytics](https://docs.coveo.com/en/headless/latest/usage/proxy#analytics).
    */
   proxyBaseUrl?: string;
+  /**
+   * Whether to stop honoring browser privacy signals — Do Not Track (DNT) and
+   * Global Privacy Control (GPC) — when deciding whether to send **legacy**
+   * analytics (`analyticsMode: 'legacy'`).
+   *
+   * By default (`false`), Coveo libraries honor these signals: when the browser
+   * presents DNT or GPC, legacy analytics is automatically disabled. Setting this
+   * option to `true` is a deliberate choice that you configure in your own
+   * application code; legacy analytics events are then sent even when the browser
+   * presents a DNT or GPC signal.
+   *
+   * Coveo honors these signals by default and cannot determine whether overriding
+   * them is appropriate for your use case. If you enable this option, you are
+   * responsible for ensuring that doing so complies with the privacy laws and
+   * obligations that apply to you. Note that GPC is legally recognized as a valid
+   * opt-out mechanism in some jurisdictions (for example, under the California
+   * Consumer Privacy Act (CCPA) as amended by the California Privacy Rights Act
+   * (CPRA)).
+   *
+   * This option:
+   * - applies only when `analyticsMode` is explicitly set to `'legacy'`;
+   * - has no effect with `analyticsMode: 'next'`, which does not honor these signals;
+   * - does not override an explicit `enabled: false` or a runtime
+   *   `disableAnalytics()` call, which always disable analytics.
+   *
+   * @deprecated Introduced as deprecated on purpose to signal that it is
+   * transitional. This option exists only to bridge legacy-analytics deployments
+   * where a browser privacy signal is enforced by policy, and it will be removed
+   * when legacy analytics is removed (see KIT-2844). Migrate to Event Protocol
+   * (`analyticsMode: 'next'`) rather than relying on this option long term.
+   *
+   * @defaultValue `false`
+   */
+  disableBrowserPrivacySignals?: boolean;
 }
 
 export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;
 
-export const engineConfigurationDefinitions: SchemaDefinition<EngineConfiguration> =
-  {
-    organizationId: requiredNonEmptyString,
-    accessToken: requiredNonEmptyString,
-    name: new StringValue({
+export const engineConfigurationDefinitions: SchemaDefinition<EngineConfiguration> = {
+  organizationId: requiredNonEmptyString,
+  accessToken: requiredNonEmptyString,
+  name: new StringValue({
+    required: false,
+    emptyAllowed: false,
+  }),
+  analytics: new RecordValue({
+    options: {
       required: false,
-      emptyAllowed: false,
-    }),
-    analytics: new RecordValue({
-      options: {
+    },
+    values: {
+      enabled: new BooleanValue({
         required: false,
-      },
-      values: {
-        enabled: new BooleanValue({
-          required: false,
-        }),
-        originContext: new StringValue({
-          required: false,
-        }),
-        originLevel2: new StringValue({
-          required: false,
-        }),
-        originLevel3: new StringValue({
-          required: false,
-        }),
-        analyticsMode: new StringValue<'legacy' | 'next'>({
-          constrainTo: ['legacy', 'next'],
-          required: false,
-          default: 'next',
-        }),
-        proxyBaseUrl: new StringValue({
-          required: false,
-          url: true,
-        }),
-        trackingId: new StringValue({
-          required: false,
-          emptyAllowed: false,
-          regex: /^[a-zA-Z0-9_\-.]{1,100}$/,
-        }),
-      },
-    }),
-    environment: new StringValue<PlatformEnvironment>({
-      required: false,
-      default: 'prod',
-      constrainTo: ['prod', 'hipaa', 'stg', 'dev'],
-    }),
-  };
+      }),
+      originContext: new StringValue({
+        required: false,
+      }),
+      originLevel2: new StringValue({
+        required: false,
+      }),
+      originLevel3: new StringValue({
+        required: false,
+      }),
+      analyticsMode: new StringValue<'legacy' | 'next'>({
+        constrainTo: ['legacy', 'next'],
+        required: false,
+        default: 'next',
+      }),
+      proxyBaseUrl: new StringValue({
+        required: false,
+        url: true,
+      }),
+      trackingId: new StringValue({
+        required: false,
+        emptyAllowed: false,
+        regex: /^[a-zA-Z0-9_\-.]{1,100}$/,
+      }),
+      disableBrowserPrivacySignals: new BooleanValue({
+        required: false,
+      }),
+    },
+  }),
+  environment: new StringValue<PlatformEnvironment>({
+    required: false,
+    default: 'prod',
+    constrainTo: ['prod', 'hipaa', 'stg', 'dev'],
+  }),
+};
 
 export function getSampleEngineConfiguration(): EngineConfiguration {
   return {

@@ -10,10 +10,7 @@ interface WrapperProps {
   density?: 'comfortable' | 'normal' | 'compact';
   imageSize?: 'icon' | 'small' | 'large' | 'none';
   template: (result: Result) => JSX.Element;
-  ariaLabelGenerator?: (
-    bindings: Bindings,
-    result: Result
-  ) => string | undefined;
+  ariaLabelGenerator?: (bindings: Bindings, result: Result) => string | undefined;
 }
 
 export const SearchBoxInstantResultsWrapper: React.FC<WrapperProps> = ({
@@ -25,13 +22,8 @@ export const SearchBoxInstantResultsWrapper: React.FC<WrapperProps> = ({
 }) => {
   const ref = useRef<
     HTMLElement & {
-      setRenderFunction?: (
-        fn: (result: Result, root: HTMLElement) => string
-      ) => void;
-      ariaLabelGenerator?: (
-        bindings: Bindings,
-        result: Result
-      ) => string | undefined;
+      setRenderFunction?: (fn: (result: Result, root: HTMLElement) => string) => void;
+      ariaLabelGenerator?: (bindings: Bindings, result: Result) => string | undefined;
     }
   >(null);
 

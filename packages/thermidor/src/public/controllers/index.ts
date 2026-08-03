@@ -28,6 +28,7 @@ export type {
 } from './converse/converse-controller.js';
 export type {
   SerializedConverseState,
+  SerializedRoutedInterface,
   SerializedTurn,
 } from './converse/converse-controller-serialization.js';
 export {buildProductListController} from './product-list/product-list-controller.js';
@@ -43,3 +44,9 @@ export type {
   PaginationControllerOptions,
   PaginationControllerState,
 } from './pagination/pagination-controller.js';
+export {buildSortController} from './sort/sort-controller.js';
+export type {
+  SortController,
+  SortControllerOptions,
+  SortControllerState,
+} from './sort/sort-controller.js';

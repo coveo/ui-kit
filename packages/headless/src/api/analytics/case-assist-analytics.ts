@@ -15,10 +15,7 @@ import type {
 import {getOrganizationEndpoint} from '../platform-client.js';
 import type {PreprocessRequest} from '../preprocess-request.js';
 import {BaseAnalyticsProvider} from './base-analytics.js';
-import {
-  wrapAnalyticsClientSendEventHook,
-  wrapPreprocessRequest,
-} from './coveo-analytics-utils.js';
+import {wrapAnalyticsClientSendEventHook, wrapPreprocessRequest} from './coveo-analytics-utils.js';
 
 export type StateNeededByCaseAssistAnalytics = ConfigurationSection &
   Partial<CaseAssistConfigurationSection> &
@@ -42,6 +39,7 @@ interface ConfigureCaseAssistAnalyticsOptions {
   analyticsClientMiddleware?: AnalyticsClientSendEventHook;
   preprocessRequest?: PreprocessRequest;
   provider?: CaseAssistClientProvider;
+  disableBrowserPrivacySignals?: boolean;
 }
 
 export const configureCaseAssistAnalytics = ({
@@ -50,6 +48,7 @@ export const configureCaseAssistAnalytics = ({
   analyticsClientMiddleware = (_, p) => p,
   preprocessRequest,
   provider = new CaseAssistAnalyticsProvider(getState),
+  disableBrowserPrivacySignals,
 }: ConfigureCaseAssistAnalyticsOptions) => {
   const state = getState();
   const token = state.configuration.accessToken;
@@ -68,6 +67,7 @@ export const configureCaseAssistAnalytics = ({
       token,
       endpoint,
       runtimeEnvironment,
+      disableBrowserPrivacySignals,
       preprocessRequest: wrapPreprocessRequest(logger, preprocessRequest),
       beforeSendHooks: [
         wrapAnalyticsClientSendEventHook(logger, analyticsClientMiddleware),

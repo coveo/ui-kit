@@ -34,10 +34,7 @@ import type {
 } from '../../../core/facets/facet/headless-core-facet.js';
 import type {DateRangeRequest} from '../../../core/facets/range-facet/date-facet/headless-core-date-facet.js';
 import type {NumericRangeRequest} from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet.js';
-import type {
-  FetchProductsActionCreator,
-  ToggleActionCreator,
-} from '../common.js';
+import type {FetchProductsActionCreator, ToggleActionCreator} from '../common.js';
 
 export type {
   BaseFacetValue,
@@ -76,9 +73,7 @@ export interface CoreCommerceFacetOptions {
     state: CommerceEngine[typeof stateKey],
     facetId: string
   ) => AnyFacetResponse | undefined;
-  isFacetLoadingResponseSelector: (
-    state: CommerceEngine[typeof stateKey]
-  ) => boolean;
+  isFacetLoadingResponseSelector: (state: CommerceEngine[typeof stateKey]) => boolean;
 }
 
 export type CommerceFacetOptions = Omit<
@@ -93,10 +88,7 @@ export type CommerceFacetOptions = Omit<
 export type CoreCommerceFacet<
   ValueRequest extends AnyFacetValueRequest,
   ValueResponse extends AnyFacetValueResponse,
-> = Pick<
-  HeadlessCoreFacet,
-  'deselectAll' | 'showLessValues' | 'showMoreValues' | 'subscribe'
-> & {
+> = Pick<HeadlessCoreFacet, 'deselectAll' | 'showLessValues' | 'showMoreValues' | 'subscribe'> & {
   /**
    * Toggles selection of the specified facet value.
    *
@@ -138,9 +130,10 @@ export type CoreCommerceFacet<
 /**
  * A scoped and simplified part of the headless state that is relevant to the `CoreCommerceFacet` controller.
  */
-export type CoreCommerceFacetState<
-  ValueResponse extends AnyFacetValueResponse,
-> = Omit<CoreFacetState, 'enabled' | 'sortCriterion' | 'values' | 'label'> & {
+export type CoreCommerceFacetState<ValueResponse extends AnyFacetValueResponse> = Omit<
+  CoreFacetState,
+  'enabled' | 'sortCriterion' | 'values' | 'label'
+> & {
   /**
    * The type of facet.
    */
@@ -176,10 +169,8 @@ export function buildCoreCommerceFacet<
 
   const getRequest = (): AnyFacetRequest | undefined =>
     facetRequestSelector(getEngineState(), facetId);
-  const getResponse = () =>
-    props.options.facetResponseSelector(getEngineState(), facetId);
-  const getIsLoading = () =>
-    props.options.isFacetLoadingResponseSelector(getEngineState());
+  const getResponse = () => props.options.facetResponseSelector(getEngineState(), facetId);
+  const getIsLoading = () => props.options.isFacetLoadingResponseSelector(getEngineState());
 
   const getNumberOfActiveValues = () => {
     return getRequest()?.values?.filter((v) => v.state !== 'idle').length ?? 0;
@@ -258,18 +249,13 @@ export function buildCoreCommerceFacet<
       const numberOfValues = numberInState + numberToNextMultipleOfConfigured;
 
       dispatch(updateCoreFacetNumberOfValues({facetId, numberOfValues}));
-      dispatch(
-        updateCoreFacetIsFieldExpanded({facetId, isFieldExpanded: true})
-      );
+      dispatch(updateCoreFacetIsFieldExpanded({facetId, isFieldExpanded: true}));
       dispatch(props.options.fetchProductsActionCreator());
     },
 
     showLessValues() {
       const initialNumberOfValues = getRequest()?.initialNumberOfValues ?? 1;
-      const newNumberOfValues = Math.max(
-        initialNumberOfValues,
-        getNumberOfActiveValues()
-      );
+      const newNumberOfValues = Math.max(initialNumberOfValues, getNumberOfActiveValues());
 
       dispatch(
         updateCoreFacetNumberOfValues({
@@ -277,19 +263,12 @@ export function buildCoreCommerceFacet<
           numberOfValues: newNumberOfValues,
         })
       );
-      dispatch(
-        updateCoreFacetIsFieldExpanded({facetId, isFieldExpanded: false})
-      );
+      dispatch(updateCoreFacetIsFieldExpanded({facetId, isFieldExpanded: false}));
       dispatch(props.options.fetchProductsActionCreator());
     },
 
     get state(): CoreCommerceFacetState<ValueResponse> {
-      return getCoreFacetState(
-        facetId,
-        getRequest(),
-        getResponse(),
-        getIsLoading()
-      );
+      return getCoreFacetState(facetId, getRequest(), getResponse(), getIsLoading());
     },
   };
 }

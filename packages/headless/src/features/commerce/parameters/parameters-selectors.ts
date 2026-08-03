@@ -3,10 +3,7 @@ import type {stateKey} from '../../../app/state-key.js';
 import type {FacetValueState} from '../../../ssr.index.js';
 import type {CommerceFacetSetSection} from '../../../state/state-sections.js';
 import {findActiveValueAncestry} from '../../facets/category-facet-set/category-facet-utils.js';
-import {
-  getFacets,
-  getSortCriteria,
-} from '../../parameter-manager/parameter-manager-selectors.js';
+import {getFacets, getSortCriteria} from '../../parameter-manager/parameter-manager-selectors.js';
 import type {FacetType} from '../facets/facet-set/interfaces/common.js';
 import type {
   AnyFacetRequest,
@@ -43,12 +40,7 @@ export function activeParametersSelector(
       (s) => s.appliedSort,
       getCommerceSortInitialState().appliedSort
     ),
-    ...getFacets(
-      state.commerceFacetSet,
-      facetIsOfType(state, 'regular'),
-      getSelectedValues,
-      'f'
-    ),
+    ...getFacets(state.commerceFacetSet, facetIsOfType(state, 'regular'), getSelectedValues, 'f'),
     ...getFacets(
       state.commerceFacetSet,
       facetIsOfType(state, 'regular'),
@@ -154,10 +146,7 @@ function getExcludedRangeValues(request: AnyFacetRequest) {
   );
 }
 
-function getManualNumericFacet(
-  state: FacetValueState,
-  section?: ManualNumericFacetSetState
-) {
+function getManualNumericFacet(state: FacetValueState, section?: ManualNumericFacetSetState) {
   if (!section || state === 'idle') {
     return {};
   }
@@ -176,9 +165,7 @@ function getManualNumericFacet(
     // oxlint-disable-next-line oxc/no-accumulating-spread -- <>
     .reduce((acc, obj) => ({...acc, ...obj}), {});
 
-  return state === 'selected'
-    ? {mnf: manualNumericFacets}
-    : {mnfExcluded: manualNumericFacets};
+  return state === 'selected' ? {mnf: manualNumericFacets} : {mnfExcluded: manualNumericFacets};
 }
 
 function getSelectedCategoryValues(request: AnyFacetRequest): string[] {
@@ -188,10 +175,7 @@ function getSelectedCategoryValues(request: AnyFacetRequest): string[] {
   ).map((v) => v.value);
 }
 
-function facetIsOfType(
-  state: Partial<CommerceFacetSetSection>,
-  type: FacetType
-) {
+function facetIsOfType(state: Partial<CommerceFacetSetSection>, type: FacetType) {
   return (facetId: string) => {
     return state.commerceFacetSet![facetId].request.type === type;
   };
