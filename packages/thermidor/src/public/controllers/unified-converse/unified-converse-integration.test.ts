@@ -200,7 +200,14 @@ describe('UnifiedConverseController integration', () => {
     vi.clearAllMocks();
 
     engine = new Engine({
-      configuration: {organizationId: 'test-org', accessToken: 'test-token'},
+      configuration: {
+        organizationId: 'test-org',
+        accessToken: 'test-token',
+        trackingId: 'test-tracking',
+        language: 'en',
+        country: 'US',
+        currency: 'USD',
+      },
     });
 
     generativeInterface = buildGenerativeUnifiedInterface({engine, id: 'test-unified'});
