@@ -164,6 +164,23 @@ describe('headless search box', () => {
     });
   });
 
+  describe('numberOfSuggestions option', () => {
+    it('dispatches #fetchQuerySuggestions with the provided count', () => {
+      vi.resetAllMocks();
+      searchBox = buildSearchBox(engine, {
+        options: {id, numberOfSuggestions: 3},
+      });
+
+      searchBox.showSuggestions();
+      expect(fetchQuerySuggestions).toHaveBeenCalledWith({id, count: 3});
+    });
+
+    it('does not pass count when numberOfSuggestions is not specified', () => {
+      searchBox.showSuggestions();
+      expect(fetchQuerySuggestions).toHaveBeenCalledWith({id, count: undefined});
+    });
+  });
+
   describe('#updateText', () => {
     it('updates the search box query in the querySet', () => {
       const text = 'query';
@@ -197,7 +214,7 @@ describe('headless search box', () => {
   describe('#showSuggestions', () => {
     it('dispatches #fetchQuerySuggestions', async () => {
       searchBox.showSuggestions();
-      expect(fetchQuerySuggestions).toHaveBeenCalledWith({id});
+      expect(fetchQuerySuggestions).toHaveBeenCalledWith({id, count: undefined});
     });
   });
 

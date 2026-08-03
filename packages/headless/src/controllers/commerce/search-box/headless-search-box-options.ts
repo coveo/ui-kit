@@ -1,4 +1,4 @@
-import {BooleanValue, Schema} from '@coveo/bueno';
+import {BooleanValue, NumberValue, Schema} from '@coveo/bueno';
 import {
   type SearchBoxOptions as CoreSearchBoxOptions,
   searchBoxOptionDefinitions as coreSearchBoxOptionDefinitions,
@@ -6,7 +6,7 @@ import {
 
 export type SearchBoxOptions = Pick<
   CoreSearchBoxOptions,
-  'id' | 'highlightOptions' | 'clearFilters'
+  'id' | 'highlightOptions' | 'numberOfSuggestions' | 'clearFilters'
 > & {
   /**
    * When set to true, fills the `results` field rather than the `products` field
@@ -23,11 +23,15 @@ export const defaultSearchBoxOptions: Required<DefaultSearchBoxOptions> = {
   enableResults: false,
 };
 
+export type ResolvedSearchBoxOptions = Required<Omit<SearchBoxOptions, 'numberOfSuggestions'>> &
+  Pick<SearchBoxOptions, 'numberOfSuggestions'>;
+
 const {id, highlightOptions, clearFilters} = coreSearchBoxOptionDefinitions;
 export const searchBoxOptionDefinitions = {
   id,
   highlightOptions,
   clearFilters,
+  numberOfSuggestions: new NumberValue({min: 1}),
   enableResults: new BooleanValue(),
 };
 

@@ -40,6 +40,7 @@ import {
 } from '../../core/search-box/headless-core-search-box.js';
 import {
   defaultSearchBoxOptions,
+  type ResolvedSearchBoxOptions,
   type SearchBoxOptions,
   searchBoxOptionsSchema,
 } from './headless-search-box-options.js';
@@ -87,7 +88,7 @@ export function buildSearchBox(engine: CommerceEngine, props: SearchBoxProps = {
   const getState = () => engine[stateKey];
 
   const id = props.options?.id || randomID('search_box');
-  const options: Required<SearchBoxOptions> = {
+  const options: ResolvedSearchBoxOptions = {
     id,
     highlightOptions: {...props.options?.highlightOptions},
     ...defaultSearchBoxOptions,
@@ -124,7 +125,7 @@ export function buildSearchBox(engine: CommerceEngine, props: SearchBoxProps = {
     },
 
     showSuggestions() {
-      dispatch(fetchQuerySuggestions({id}));
+      dispatch(fetchQuerySuggestions({id, count: options.numberOfSuggestions}));
     },
 
     selectSuggestion(value: string) {

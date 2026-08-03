@@ -33,7 +33,13 @@ export const clearQuerySuggest = createAction(
   (payload: ClearQuerySuggestPayload) => validatePayload(payload, {id: requiredNonEmptyString})
 );
 
-export type FetchQuerySuggestionsPayload = FetchQuerySuggestionsActionCreatorPayload;
+export type FetchQuerySuggestionsPayload = FetchQuerySuggestionsActionCreatorPayload & {
+  /**
+   * The maximum number of query suggestions to request.
+   * When not provided, the API default is used.
+   */
+  count?: number;
+};
 
 export type StateNeededByQuerySuggest = CommerceConfigurationSection &
   CommerceContextSection &
@@ -56,14 +62,17 @@ export const fetchQuerySuggestions = createAsyncThunk<
 >(
   'commerce/querySuggest/fetch',
   async (
-    payload: {id: string},
+    payload: FetchQuerySuggestionsPayload,
     {getState, rejectWithValue, extra: {apiClient, validatePayload, navigatorContext}}
   ) => {
     validatePayload(payload, {
       id: requiredNonEmptyString,
+      count: new NumberValue({min: 1}),
     });
     const state = getState();
-    const request = buildQuerySuggestRequest(payload.id, state, navigatorContext);
+    const request = buildQuerySuggestRequest(payload.id, state, navigatorContext, {
+      count: payload.count,
+    });
     const response = await apiClient.querySuggest(request);
 
     if (isErrorResponse(response)) {

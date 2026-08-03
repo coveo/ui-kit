@@ -10,6 +10,10 @@ import type {
 } from '../../commerce-api-params.js';
 import {baseRequest} from '../../common/request.js';
 
+export interface CountParam {
+  count?: number;
+}
+
 export type QuerySuggestRequest = BaseParam &
   TrackingIdParam &
   LanguageParam &
@@ -17,7 +21,8 @@ export type QuerySuggestRequest = BaseParam &
   CurrencyParam &
   ClientIdParam &
   ContextParam &
-  QueryParam;
+  QueryParam &
+  CountParam;
 
 export const getQuerySuggestRequestOptions = (req: QuerySuggestRequest) => {
   return {
@@ -27,7 +32,7 @@ export const getQuerySuggestRequestOptions = (req: QuerySuggestRequest) => {
 };
 
 const prepareRequestParams = (req: QuerySuggestRequest) => {
-  const {trackingId, query, clientId, context, language, country, currency} = req;
+  const {trackingId, query, clientId, context, language, country, currency, count} = req;
   return {
     trackingId,
     query,
@@ -36,5 +41,6 @@ const prepareRequestParams = (req: QuerySuggestRequest) => {
     language,
     country,
     currency,
+    count,
   };
 };
