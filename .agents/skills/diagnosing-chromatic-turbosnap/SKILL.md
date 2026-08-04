@@ -8,39 +8,46 @@ metadata:
   version: "1.0.0"
 ---
 
-# Diagnosing Chromatic Turbosnap
+# Diagnosing Chromatic TurboSnap
 
 Use the build's diagnostics and CI log as the source of truth. Do not change `untraced` or disable TurboSnap until the exact bailout reason and changed file are established.
 
-## 1. Classify the build
+## Start from a Chromatic build number
 
-Record the build number, branch, browser snapshot count, TurboSnap count, bailout reason, and the GitHub Actions run URL. The Chromatic build page may expose a `.chromatic/` diagnostic URL; use it when authorized. If access is unavailable, retrieve the corresponding Actions job log with `gh`.
+Run the build-number tracer from the repository root:
 
-Look for these messages:
+```sh
+node .agents/skills/diagnosing-chromatic-turbosnap/scripts/trace-chromatic-build.mjs 1498
+```
 
-- `Missing commit detected`
-- `Found <n> changed files`
-- `Changed Storybook Files`
-- `Found a Storybook config change in <path>`
-- `TurboSnap disabled due to file change`
+It emits JSON containing:
 
-The last two identify the immediate bailout. A missing commit explains why an old change can recur across otherwise unrelated builds.
+- Chromatic build URL and commit URL
+- Candidate GitHub Actions run and exact Chromatic job URLs
+- Filtered Chromatic CLI diagnostics from every candidate job
+- `UI Tests` status URLs and `Storybook Publish` URLs
+- Derived `/.chromatic/` diagnostic URLs
 
-## 2. Verify baseline ancestry
+Requirements: authenticated `gh` access to `coveo/ui-kit` and network access to the public Chromatic build page. The script does not mutate GitHub or Chromatic.
 
-If the log reports a missing commit, capture both the missing commit and the fallback build/commit. Chromatic uses the fallback as an ancestor, so it considers every Git change between that older commit and the current build.
+When the output has multiple candidates or no job whose log initialized the requested build, report that ambiguity. This occurs for skipped merge-queue builds and retries sharing a commit SHA.
 
-For example, a direct Storybook configuration change made after the fallback can cause every subsequent affected branch to bail—even when its own change is unrelated.
+## Interpret the trace
 
-Check whether the missing build came from a non-durable CI context:
+| Signal | Meaning | Next action |
+| --- | --- | --- |
+| `Missing commit detected` | TurboSnap fell back to an older build and expanded the Git range. | Record both missing and fallback build/commit. Inspect whether the fallback includes a global Storybook file. |
+| `Changed Storybook Files` | A `.storybook` file or imported dependency changed. | A full rebuild is expected; inspect the exact file. |
+| `chromatic --skip` / `Skipping build` | The workflow created passing Chromatic statuses without building Storybook. | Do not count the action as a visual capture. Preserve it on merge-group commits when statuses are required. |
+| `changedPackageFiles` | A package control file or unresolved dependency changed. | Check lockfile consistency and actual Storybook consumption. |
+| `changedExternalFiles` | An `externals` glob matched. | Validate the glob and retain it only for files that affect rendering. |
+| `missingStatsFile` | The Storybook dependency graph is unavailable. | Rebuild Storybook with `--stats-json`. |
 
-- GitHub `merge_group` commits are ephemeral.
-- `chromatic --skip` publishes the `UI Tests`, `UI Review`, and `Storybook Publish` statuses.
-- The durable `main` baseline is produced by `.github/workflows/cd.yml` after a real `push` to `main`.
+`UI Tests` and `UI Review` are required checks for `main`. Keep `chromatic --skip` on merge-group events so those statuses are present on the merge-queue SHA. Do not remove it solely to reduce TurboSnap costs.
 
-`UI Tests` and `UI Review` are required checks for `main`. Keep `chromatic --skip` on merge-group events so those statuses are present on the merge-queue SHA. Do not remove it solely to reduce TurboSnap costs; investigate the baseline-selection behavior separately.
+Never mark `.storybook/main.ts`, `.storybook/preview.ts`, or another global Storybook input as `untraced` merely because one edit seems non-functional. Chromatic cannot safely link a configuration change to individual stories.
 
-## 3. Trace a specific changed file
+## Trace a source file locally
 
 Build Atomic's Storybook with dependency statistics if `dist-storybook/preview-stats.json` is absent or stale:
 
@@ -57,34 +64,11 @@ pnpm exec chromatic trace \
   .storybook/main.ts
 ```
 
-Use `--mode expanded` to inspect intermediate imports, or trace several changed files together. Add `--untraced <path>` only as a local experiment to identify a dependency edge; do not commit that exclusion before assessing visual-regression risk.
+Use `--mode expanded` to inspect intermediate imports. Use `--untraced <path>` only as a local experiment to identify a dependency edge; do not commit it before assessing visual-regression risk.
 
-## 4. Interpret the bailout
+## References
 
-| Bailout reason | Meaning | Next action |
-| --- | --- | --- |
-| `changedStorybookFiles` | A `.storybook` file or one of its imports changed. | Inspect the exact path. A direct configuration change requires a full rebuild. If it appears only through an old fallback, repair baseline ancestry instead. |
-| `changedPackageFiles` | A package control file or unresolved dependency changed. | Check lockfile consistency and whether the package is genuinely consumed by Atomic Storybook. |
-| `changedExternalFiles` | An `externals` glob matched. | Validate the glob and retain it only for files that can affect rendered output. |
-| `invalidChangedFiles` or `noAncestorBuild` | Git history or baseline ancestry is unavailable. | Verify a full checkout and eliminate non-durable Chromatic builds. |
-| `missingStatsFile` | The Storybook dependency graph is unavailable. | Rebuild Storybook with `--stats-json` and confirm the stats file exists. |
-| `rebuild` | The commit and branch match an existing baseline. | Confirm whether the rerun was intentional before using `--force-rebuild`. |
-
-Never mark `.storybook/main.ts` or `.storybook/preview.ts` as `untraced` merely because the edit is non-functional. Chromatic cannot safely link a configuration change to individual stories. A real configuration edit should trigger one full rebuild.
-
-## 5. Recover and validate
-
-1. Allow the CD workflow to publish a build for a durable `main` commit.
-2. Rebase long-lived branches that were created before that durable baseline.
-3. On a new or rebased pull request, confirm the log does not show `Missing commit detected` and reports affected story files instead of a config bailout.
-4. Review the next usage export: ordinary changes should show TurboSnaps and far fewer captured Chrome snapshots.
-
-## Reporting checklist
-
-Before closing an investigation, report:
-
-- Build number, branch, and snapshot counts
-- Exact bailout reason and changed file
-- Baseline and fallback commit, if one was used
-- Whether the trigger was a real visual dependency or stale ancestry
-- The remediation and the CI/log evidence that verifies it
+- [Reproducible trace workflow](references/reproducing-build-traces.md)
+- [Build report: 1498–1525](references/builds-1498-1525.md)
+- [Build report: 1547–1572](references/builds-1547-1572.md)
+- [Overall findings](references/summary.md)
