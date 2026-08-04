@@ -69,6 +69,3 @@ Use `--mode expanded` to inspect intermediate imports. Use `--untraced <path>` o
 ## References
 
 - [Reproducible trace workflow](references/reproducing-build-traces.md)
-- [Build report: 1498–1525](references/builds-1498-1525.md)
-- [Build report: 1547–1572](references/builds-1547-1572.md)
-- [Overall findings](references/summary.md)
