@@ -1,15 +1,24 @@
 <template>
-  <c-example-layout
-    title={pageTitle}
-    description={pageDescription}
-    show-preview={isConfigured}
-  >
-    <div slot="configuration">
-      <c-configurator options={options} ontryitnow={handleTryItNow}>
-      </c-configurator>
-    </div>
+  <div class="slds-text-heading_large">{pageTitle}</div>
+  <div class="slds-text-longform slds-var-m-top_large">{pageDescription}</div>
 
-    <div slot="preview" class="insight-panel__container">
+  <div class="slds-grid slds-wrap slds-gutters_direct slds-m-top_large">
+    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12">
+      <c-quantic-card-container title="Configuration">
+        <div class="slds-card__body_inner">
+          <c-configurator options={options} ontryitnow={handleTryItNow}>
+          </c-configurator>
+        </div>
+      </c-quantic-card-container>
+
+      <div class="slds-m-vertical_large">
+        <a href="/examples">Return to examples</a>
+      </div>
+    </div>
+    <div class="slds-col slds-size_1-of-1 slds-large-size_8-of-12">
+      <template if:true={isConfigured}>
+        <c-quantic-card-container title="Preview">
+          <div class="slds-card__body_inner slds-p-top_small insight-panel__container">
       <c-quantic-demo-insight-interface
         engine-id={engineId}
         access-token={config.accessToken}
@@ -17,6 +26,7 @@
         insight-id={config.insightId}
         environment={config.environment}
         analytics-mode={config.analyticsMode}
+        search-hub={config.searchHub}
       >
         <c-quantic-aria-live></c-quantic-aria-live>
         <div
@@ -158,7 +168,7 @@
             </c-quantic-generated-answer>
           </div>
 
-          <div class="slds-var-p-bottom_medium insight-panel_body">
+          <div class="slds-var-p-horizontal_medium slds-var-p-bottom_medium insight-panel_body">
             <c-quantic-query-error engine-id={engineId}></c-quantic-query-error>
             <c-quantic-did-you-mean engine-id={engineId}></c-quantic-did-you-mean>
             <c-quantic-no-results
@@ -181,6 +191,9 @@
           </div>
         </div>
       </c-quantic-demo-insight-interface>
+          </div>
+        </c-quantic-card-container>
+      </template>
     </div>
-  </c-example-layout>
+  </div>
 </template>

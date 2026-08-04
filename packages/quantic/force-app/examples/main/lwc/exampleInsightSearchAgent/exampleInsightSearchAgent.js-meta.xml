@@ -16,9 +16,10 @@
             <property name="organizationId" type="String" default="searchuisamples" label="The Coveo organization ID"/>
             <property name="accessToken" type="String" default="xx564559b1-0045-48e1-953c-3addd1ee4457" label="The access token"/>
             <property name="insightId" type="String" default="142be676-703c-445f-b2d3-fcc7c0a3ded8" label="The Insight Panel configuration ID"/>
-            <property name="agentId" type="String" default="5fd0b5ea-d368-488e-bdeb-f6221ec0fb98" label="The search agent ID"/>
+            <property name="agentId" type="String" default="" label="The search agent ID"/>
+            <property name="searchHub" type="String" default="default" label="The search hub"/>
             <property name="analyticsMode" type="String" default="legacy" label="The analytics mode"/>
-            <property name="answerConfigurationId" type="String" default="" label="The answer configuration ID"/>
+            <property name="answerConfigurationId" type="String" default="10f49a04-76d3-46bf-b8dc-22b0c291c254" label="The answer configuration ID"/>
         </targetConfig>
         <targetConfig targets="lightning__AppPage, lightning__RecordPage, lightning__HomePage">
             <property name="engineId" type="String" default="example-insight-search-agent" label="Enter Coveo Headless engine ID"/>
@@ -26,9 +27,10 @@
             <property name="organizationId" type="String" default="searchuisamples" label="The Coveo organization ID"/>
             <property name="accessToken" type="String" default="xx564559b1-0045-48e1-953c-3addd1ee4457" label="The access token"/>
             <property name="insightId" type="String" default="142be676-703c-445f-b2d3-fcc7c0a3ded8" label="The Insight Panel configuration ID"/>
-            <property name="agentId" type="String" default="5fd0b5ea-d368-488e-bdeb-f6221ec0fb98" label="The search agent ID"/>
+            <property name="agentId" type="String" default="" label="The search agent ID"/>
+            <property name="searchHub" type="String" default="default" label="The search hub"/>
             <property name="analyticsMode" type="String" default="legacy" label="The analytics mode"/>
-            <property name="answerConfigurationId" type="String" default="" label="The answer configuration ID"/>
+            <property name="answerConfigurationId" type="String" default="10f49a04-76d3-46bf-b8dc-22b0c291c254" label="The answer configuration ID"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

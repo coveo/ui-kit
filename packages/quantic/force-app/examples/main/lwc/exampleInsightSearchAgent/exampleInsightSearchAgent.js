@@ -1,3 +1,8 @@
+import {
+  getHeadlessBundle,
+  registerComponentForInit,
+  initializeWithHeadless,
+} from 'c/quanticHeadlessLoader';
 import {LightningElement, api, track} from 'lwc';
 
 export default class ExampleInsightSearchAgent extends LightningElement {
@@ -15,11 +20,16 @@ export default class ExampleInsightSearchAgent extends LightningElement {
   /** @type {string} */
   @api insightId = '142be676-703c-445f-b2d3-fcc7c0a3ded8';
   /** @type {string} */
-  @api agentId = '5fd0b5ea-d368-488e-bdeb-f6221ec0fb98';
+  @api agentId = '';
+  /** @type {string} */
+  @api searchHub = 'default';
   /** @type {string} */
   @api analyticsMode = 'legacy';
   /** @type {string} */
-  @api answerConfigurationId = '';
+  @api answerConfigurationId = '10f49a04-76d3-46bf-b8dc-22b0c291c254';
+
+  /** @type {boolean} */
+  triggeredFirstSearch = false;
 
   pageTitle = 'Insight Search Agent Example';
   pageDescription =
@@ -50,8 +60,7 @@ export default class ExampleInsightSearchAgent extends LightningElement {
       {
         attribute: 'insightId',
         label: 'Insight ID',
-        description:
-          'The ID of the Insight Panel configuration to use.',
+        description: 'The ID of the Insight Panel configuration to use.',
         defaultValue: this.insightId,
       },
       {
@@ -60,6 +69,12 @@ export default class ExampleInsightSearchAgent extends LightningElement {
         description:
           'The unique identifier of the Coveo AI agent to use for generating answers.',
         defaultValue: this.agentId,
+      },
+      {
+        attribute: 'searchHub',
+        label: 'Search Hub',
+        description: 'The search hub to use for the insight interface.',
+        defaultValue: this.searchHub,
       },
       {
         attribute: 'analyticsMode',
@@ -81,4 +96,36 @@ export default class ExampleInsightSearchAgent extends LightningElement {
     this.config = evt.detail;
     this.isConfigured = true;
   }
+
+  connectedCallback() {
+    this.template.addEventListener(
+      'quantic__insightinterfaceinitialized',
+      this.handleInterfaceLoad
+    );
+    registerComponentForInit(this, this.engineId);
+  }
+
+  disconnectedCallback() {
+    this.template.removeEventListener(
+      'quantic__insightinterfaceinitialized',
+      this.handleInterfaceLoad
+    );
+  }
+
+  renderedCallback() {
+    initializeWithHeadless(this, this.engineId, this.initialize);
+  }
+
+  initialize = (engine) => {
+    this.engine = engine;
+    this.headless = getHeadlessBundle(this.engineId);
+  };
+
+  handleInterfaceLoad = (event) => {
+    event.stopPropagation();
+    if (!this.triggeredFirstSearch) {
+      this.triggeredFirstSearch = true;
+      this.engine.executeFirstSearch();
+    }
+  };
 }

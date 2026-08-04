@@ -44,6 +44,12 @@ export default class QuanticDemoInsightInterface extends QuanticInsightInterface
    * @type {string}
    */
   @api analyticsMode = 'legacy';
+  /**
+   * The search hub to use for the insight interface.
+   * @api
+   * @type {string}
+   */
+  @api searchHub = 'default';
 
   connectedCallback() {
     loadDependencies(this, HeadlessBundleNames.insight)
@@ -60,6 +66,7 @@ export default class QuanticDemoInsightInterface extends QuanticInsightInterface
               organizationEndpoints: endpoints,
               insightId: this.insightId,
               search: {
+                searchHub: this.searchHub,
                 locale: LOCALE,
               },
               analytics: {
