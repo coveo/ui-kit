@@ -35,10 +35,9 @@
     "clean": "node ../../utils/ci/rm-rf.mjs dist coverage"
   },
   "dependencies": {
-    "@types/uuid": "9.0.8",
     "cross-fetch": "3.2.0",
     "react-native-get-random-values": "1.11.0",
-    "uuid": "9.0.1"
+    "uuid": "catalog:"
   },
   "devDependencies": {
     "@rollup/plugin-alias": "5.1.1",

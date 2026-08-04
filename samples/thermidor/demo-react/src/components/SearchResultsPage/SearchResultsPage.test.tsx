@@ -11,8 +11,12 @@ function createMockController(state: Record<string, unknown> = {}) {
     },
     selectPage: vi.fn(),
     setPageSize: vi.fn(),
+    sortBy: vi.fn(),
+    isSortedBy: vi.fn(() => false),
   };
 }
+
+const mockSortController = createMockController({appliedSort: null, availableSorts: []});
 
 vi.mock('@coveo/thermidor', async (importOriginal) => {
   const actual = (await importOriginal()) as Record<string, unknown>;
@@ -26,6 +30,7 @@ vi.mock('@coveo/thermidor', async (importOriginal) => {
         totalCount: 0,
         totalPages: 0,
       }),
+    buildSortController: () => mockSortController,
   };
 });
 
@@ -79,14 +84,13 @@ describe('SearchResultsPage integration', () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it('toast is shared between SortPlaceholder and suggestion actions', () => {
+  it('calls sortBy when a sort option is selected', () => {
     renderPage();
 
-    const sortSelect = screen.getByLabelText('Sort by:');
-    fireEvent.click(sortSelect);
+    const sortSelects = screen.getAllByLabelText('Sort by:') as HTMLSelectElement[];
+    fireEvent.change(sortSelects[0], {target: {value: '1'}});
 
-    expect(screen.getByRole('status')).toBeDefined();
-    expect(screen.getByText('Not supported yet')).toBeDefined();
+    expect(mockSortController.sortBy).toHaveBeenCalledTimes(1);
   });
 });
 

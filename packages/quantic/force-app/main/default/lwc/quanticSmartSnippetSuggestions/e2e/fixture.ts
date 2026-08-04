@@ -43,8 +43,8 @@ export const testSearch =
         page
       );
 
-      await page.goto(pageUrl);
       await search.mockSearchWithSmartSnippetSuggestionsResponse(data);
+      await page.goto(pageUrl);
 
       configuration.configure(options);
       await search.waitForSearchResponse();
@@ -79,13 +79,15 @@ export const testInsight =
         page
       );
 
-      await page.goto(pageUrl);
       await search.mockSearchWithSmartSnippetSuggestionsResponse(data);
+      await page.goto(pageUrl);
 
       configuration.configure({...options, useCase: useCaseEnum.insight});
       await insightSetup.waitForInsightInterfaceInitialization();
-      await search.performSearch();
-      await search.waitForSearchResponse();
+      await Promise.all([
+        search.waitForSearchResponse(),
+        search.performSearch(),
+      ]);
       await use(smartSnippetSuggestionsObject);
     },
   });

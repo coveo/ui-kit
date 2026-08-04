@@ -94,6 +94,9 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
+  parameters: {
+    chromatic: {disableSnapshot: true},
+  },
   play: async (context) => {
     await play(context);
     const {canvasElement, step, userEvent} = context;

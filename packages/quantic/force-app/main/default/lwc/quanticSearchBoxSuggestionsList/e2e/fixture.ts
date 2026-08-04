@@ -59,6 +59,7 @@ export const testSearch =
       },
       use
     ) => {
+      await search.mockSearchWithBaseResponse();
       await page.goto(searchBoxSuggestionsListUrl);
       if (recentQueries.length > 0) {
         await querySuggest.setRecentQueries(recentQueries);
@@ -94,9 +95,11 @@ export const testInsight =
         querySuggest,
         analytics,
         recentQueries,
+        search,
       },
       use
     ) => {
+      await search.mockSearchWithBaseResponse();
       await page.goto(searchBoxSuggestionsListUrl);
       if (recentQueries.length > 0) {
         await querySuggest.setRecentQueries(recentQueries);
