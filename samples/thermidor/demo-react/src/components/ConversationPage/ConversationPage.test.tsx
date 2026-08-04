@@ -16,7 +16,8 @@ function renderPage(overrides: Partial<Parameters<typeof ConversationPage>[0]> =
     turns: [baseTurn],
     onBackToSearch: vi.fn(),
     canGoBackToSearch: false,
-    onResetToLanding: vi.fn(),
+    products: [],
+    onProductsChange: vi.fn(),
   };
 
   return render(<ConversationPage {...defaultProps} {...overrides} />);
@@ -24,13 +25,10 @@ function renderPage(overrides: Partial<Parameters<typeof ConversationPage>[0]> =
 
 describe('ConversationPage shell', () => {
   describe('PromptInput rendering', () => {
-    it('renders the PromptInput at the bottom of the page', () => {
+    it('renders the PromptInput', () => {
       renderPage();
       const prompt = screen.getByLabelText('Prompt');
       expect(prompt).toBeDefined();
-
-      const promptContainer = prompt.closest('[class*="promptContainer"]');
-      expect(promptContainer).not.toBeNull();
     });
   });
 
@@ -51,26 +49,6 @@ describe('ConversationPage shell', () => {
 
       fireEvent.click(screen.getByRole('button', {name: /Back to search results/}));
       expect(onBackToSearch).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe('Reset button', () => {
-    it('is always visible regardless of canGoBackToSearch', () => {
-      renderPage({canGoBackToSearch: false});
-      expect(screen.getByRole('button', {name: 'Reset'})).toBeDefined();
-    });
-
-    it('is visible when canGoBackToSearch is true', () => {
-      renderPage({canGoBackToSearch: true});
-      expect(screen.getByRole('button', {name: 'Reset'})).toBeDefined();
-    });
-
-    it('calls onResetToLanding when clicked', () => {
-      const onResetToLanding = vi.fn();
-      renderPage({onResetToLanding});
-
-      fireEvent.click(screen.getByRole('button', {name: 'Reset'}));
-      expect(onResetToLanding).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -98,6 +76,18 @@ describe('ConversationPage shell', () => {
       renderPage({isStreaming: false});
       const textarea = screen.getByLabelText('Prompt') as HTMLTextAreaElement;
       expect(textarea.disabled).toBe(false);
+    });
+  });
+
+  describe('ProductTargeting integration', () => {
+    it('renders the attach button from ProductTargeting', () => {
+      renderPage();
+      expect(screen.getByRole('button', {name: /Attach product context/})).toBeDefined();
+    });
+
+    it('shows hint text "Attach product context" by default', () => {
+      renderPage();
+      expect(screen.getByText('Attach product context')).toBeDefined();
     });
   });
 });

@@ -22,9 +22,9 @@ import {randomID} from '../../../utils/utils.js';
 import {
   buildCoreGeneratedAnswer,
   type GeneratedAnswer,
-  type GeneratedAnswerAnalyticsClient,
   type GeneratedAnswerProps,
 } from './headless-core-generated-answer.js';
+import type {GeneratedAnswerAnalyticsClient} from '../../../features/generated-answer/generated-answer-analytics-client.js';
 
 interface SearchAPIGeneratedAnswer extends GeneratedAnswer {}
 

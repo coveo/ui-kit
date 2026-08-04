@@ -82,7 +82,7 @@ const virtualOpenApiModules = (): Plugin => {
 };
 
 const externalizeDependencies = (configType: 'DEVELOPMENT' | 'PRODUCTION' | undefined): Plugin => {
-  const packageMappings: Record<string, {cdn: string; local: string}> =
+  const packageMappings: Record<string, {cdn?: string; local: string}> =
     generateExternalPackageMappings();
   return {
     name: 'externalize-dependencies',
@@ -103,16 +103,21 @@ const externalizeDependencies = (configType: 'DEVELOPMENT' | 'PRODUCTION' | unde
         return null;
       }
 
-      // For all testing, we want to use the local versions of all packages to ensure everything is properly bundled together for testing
-      if (isVitest || isChromatic || isPlaywright) {
+      // For most testing, we want to use the local versions of all packages to ensure everything is properly bundled together for testing
+      if (isVitest || isPlaywright) {
         return null;
       }
 
       // For local Storybook development, we want to use local packages source to allow for easier debugging and HMR.
-      if (configType === 'DEVELOPMENT') {
+      // We also want to use local packages for Chromatic builds so TurboSnap can resolve changes in Atomic dependencies.
+      if (configType === 'DEVELOPMENT' || isChromatic) {
         return {
           id: packageMapping.local,
         };
+      }
+
+      if (!packageMapping.cdn) {
+        return null;
       }
 
       // For production Storybook builds, we want to use Domain-relative URL to use the CDN versions of the packages.

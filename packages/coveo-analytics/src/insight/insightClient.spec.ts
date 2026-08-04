@@ -1,3 +1,5 @@
+import {vi} from 'vitest';
+import type {Mock} from 'vitest';
 import {lastCallBody, mockFetch} from '../../tests/fetchMock';
 import CoveoAnalyticsClient from '../client/analytics';
 import {NoopAnalytics} from '../client/noopAnalytics';
@@ -30,10 +32,14 @@ const expectedBaseCaseMetadata = {
   CaseSubject: 'test subject',
 };
 
-jest.mock('../donottrack', () => {
+vi.mock('../donottrack', () => {
+  const doNotTrack = vi.fn();
   return {
-    default: jest.fn(),
-    doNotTrack: jest.fn(),
+    __esModule: true,
+    default: doNotTrack,
+    doNotTrack,
+    shouldDisableAnalyticsForPrivacy: (disableBrowserPrivacySignals?: boolean) =>
+      disableBrowserPrivacySignals === true ? false : doNotTrack(),
   };
 });
 
@@ -1758,9 +1764,26 @@ describe('InsightClient', () => {
   });
 
   it('should disable analytics when doNotTrack is enabled', async () => {
-    (doNotTrack as jest.Mock).mockImplementationOnce(() => true);
+    (doNotTrack as Mock).mockImplementationOnce(() => true);
 
     const c = new CoveoInsightClient({}, provider);
+    expect(c.coveoAnalyticsClient instanceof NoopAnalytics).toBe(true);
+  });
+
+  it('keeps a real analytics client under doNotTrack when disableBrowserPrivacySignals is true', () => {
+    (doNotTrack as Mock).mockImplementation(() => true);
+
+    const c = new CoveoInsightClient({disableBrowserPrivacySignals: true}, provider);
+    expect(c.coveoAnalyticsClient instanceof CoveoAnalyticsClient).toBe(true);
+
+    (doNotTrack as Mock).mockReset();
+  });
+
+  it('still disables analytics when enableAnalytics is false even if disableBrowserPrivacySignals is true', () => {
+    const c = new CoveoInsightClient(
+      {enableAnalytics: false, disableBrowserPrivacySignals: true},
+      provider
+    );
     expect(c.coveoAnalyticsClient instanceof NoopAnalytics).toBe(true);
   });
 

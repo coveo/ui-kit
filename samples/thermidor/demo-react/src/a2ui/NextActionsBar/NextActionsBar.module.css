@@ -5,6 +5,12 @@
   padding: var(--space-3) 0;
 }
 
+@media (max-width: 639px) {
+  .container {
+    justify-content: center;
+  }
+}
+
 .actionButton {
   padding: var(--space-2) var(--space-4);
   font-family: var(--font-sans);

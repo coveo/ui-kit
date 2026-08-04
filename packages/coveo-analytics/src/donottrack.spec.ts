@@ -1,5 +1,21 @@
+import {vi} from 'vitest';
+
+// `vi.mock` is hoisted, so the detector's answers are held in mutable state that
+// each test rewrites. The Jest version instead called `jest.resetModules()` and
+// re-`require`d the module under test, which ESM does not allow.
+const detectorState = vi.hoisted(() => ({
+  hasNavigator: false,
+  hasWindow: false,
+}));
+
+vi.mock('./detector', () => ({
+  hasNavigator: () => detectorState.hasNavigator,
+  hasWindow: () => detectorState.hasWindow,
+}));
+
+import {doNotTrack, shouldDisableAnalyticsForPrivacy} from './donottrack';
+
 describe('doNotTrack', () => {
-  let doNotTrack: () => boolean;
   function initModule(
     hasNav: boolean,
     hasWin: boolean,
@@ -10,11 +26,8 @@ describe('doNotTrack', () => {
       windowDoNotTrack?: any;
     }
   ) {
-    jest.resetModules();
-    jest.mock('./detector', () => ({
-      hasNavigator: () => hasNav,
-      hasWindow: () => hasWin,
-    }));
+    detectorState.hasNavigator = hasNav;
+    detectorState.hasWindow = hasWin;
     if (hasNav) {
       Object.defineProperty(<any>navigator, 'globalPrivacyControl', {
         get() {
@@ -43,7 +56,6 @@ describe('doNotTrack', () => {
         configurable: true,
       });
     }
-    doNotTrack = require('./donottrack').doNotTrack;
   }
   describe('without a Navigator and without window', () => {
     it('should be false', () => {
@@ -140,5 +152,71 @@ describe('doNotTrack', () => {
       });
       expect(doNotTrack()).toBeTruthy();
     });
+  });
+});
+
+describe('shouldDisableAnalyticsForPrivacy', () => {
+  function initModule(signal: {navigatorGlobalPrivacyControl?: any; navigatorDoNotTrack?: any}) {
+    detectorState.hasNavigator = true;
+    detectorState.hasWindow = true;
+    Object.defineProperty(<any>navigator, 'globalPrivacyControl', {
+      get() {
+        return signal.navigatorGlobalPrivacyControl;
+      },
+      configurable: true,
+    });
+    Object.defineProperty(<any>navigator, 'doNotTrack', {
+      get() {
+        return signal.navigatorDoNotTrack;
+      },
+      configurable: true,
+    });
+    Object.defineProperty(<any>navigator, 'msDoNotTrack', {
+      get() {
+        return undefined;
+      },
+      configurable: true,
+    });
+    Object.defineProperty(<any>window, 'doNotTrack', {
+      get() {
+        return undefined;
+      },
+      configurable: true,
+    });
+  }
+
+  it('disables when DNT is active and the option is omitted', () => {
+    initModule({navigatorDoNotTrack: '1'});
+    expect(shouldDisableAnalyticsForPrivacy()).toBe(true);
+  });
+
+  it('disables when GPC is active and the option is omitted', () => {
+    initModule({navigatorGlobalPrivacyControl: true});
+    expect(shouldDisableAnalyticsForPrivacy()).toBe(true);
+  });
+
+  it('keeps analytics when DNT is active but the option is true', () => {
+    initModule({navigatorDoNotTrack: '1'});
+    expect(shouldDisableAnalyticsForPrivacy(true)).toBe(false);
+  });
+
+  it('keeps analytics when GPC is active but the option is true (umbrella overrides GPC)', () => {
+    initModule({navigatorGlobalPrivacyControl: true});
+    expect(shouldDisableAnalyticsForPrivacy(true)).toBe(false);
+  });
+
+  it('keeps analytics when both DNT and GPC are active but the option is true', () => {
+    initModule({navigatorDoNotTrack: '1', navigatorGlobalPrivacyControl: true});
+    expect(shouldDisableAnalyticsForPrivacy(true)).toBe(false);
+  });
+
+  it('does not disable when no signal is active and the option is omitted', () => {
+    initModule({});
+    expect(shouldDisableAnalyticsForPrivacy()).toBe(false);
+  });
+
+  it('treats a false option the same as omitting it', () => {
+    initModule({navigatorDoNotTrack: '1'});
+    expect(shouldDisableAnalyticsForPrivacy(false)).toBe(true);
   });
 });

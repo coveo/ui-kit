@@ -45,6 +45,8 @@ export interface Template {
   label: string;
   /** npm package the sample is published as. */
   packageName: string;
+  /** First published version that contains a scaffoldable sample. */
+  firstSupportedVersion: string;
 }
 
 const templates: Template[] = [
@@ -53,60 +55,70 @@ const templates: Template[] = [
     library: 'atomic',
     label: 'Search (Vite, @coveo/atomic)',
     packageName: '@coveo/ui-kit-sample-atomic-search-vite',
+    firstSupportedVersion: '3.60.1',
   },
   {
     name: 'atomic-commerce',
     library: 'atomic',
     label: 'Commerce (Vite, @coveo/atomic)',
     packageName: '@coveo/ui-kit-sample-atomic-commerce-vite',
+    firstSupportedVersion: '3.60.1',
   },
   {
     name: 'atomic-search-react',
     library: 'atomic',
     label: 'Search (React, @coveo/atomic-react)',
     packageName: '@coveo/ui-kit-sample-atomic-search-react',
+    firstSupportedVersion: '3.11.33',
   },
   {
     name: 'atomic-commerce-react',
     library: 'atomic',
     label: 'Commerce (React, @coveo/atomic-react)',
     packageName: '@coveo/ui-kit-sample-atomic-commerce-react',
+    firstSupportedVersion: '3.11.34',
   },
   {
     name: 'headless-search',
     library: 'headless',
     label: 'Search (Vite, @coveo/headless)',
     packageName: '@coveo/ui-kit-sample-headless-search-vite',
+    firstSupportedVersion: '3.53.1',
   },
   {
     name: 'headless-commerce',
     library: 'headless',
     label: 'Commerce (Vite, @coveo/headless/commerce)',
     packageName: '@coveo/ui-kit-sample-headless-commerce-vite',
+    firstSupportedVersion: '3.53.1',
   },
   {
     name: 'headless-search-react',
     library: 'headless',
     label: 'Search (React, @coveo/headless)',
     packageName: '@coveo/ui-kit-sample-headless-search-react',
+    firstSupportedVersion: '3.53.1',
   },
   {
     name: 'headless-commerce-react',
     library: 'headless',
     label: 'Commerce (React, @coveo/headless/commerce)',
     packageName: '@coveo/ui-kit-sample-headless-commerce-react',
+    firstSupportedVersion: '3.53.1',
   },
   {
     name: 'headless-ssr-commerce-nextjs',
     library: 'headless-ssr',
     label: 'Commerce SSR (Next.js App Router, @coveo/headless-react)',
     packageName: '@coveo/ui-kit-sample-headless-ssr-commerce-nextjs',
+    firstSupportedVersion: '2.9.26',
   },
   {
     name: 'headless-ssr-commerce-express',
     library: 'headless-ssr',
     label: 'Commerce SSR (Express, @coveo/headless/ssr)',
     packageName: '@coveo/ui-kit-sample-headless-ssr-commerce-express',
+    firstSupportedVersion: '3.53.2',
   },
 ];
 

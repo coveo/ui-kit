@@ -1,20 +1,20 @@
+import {BrowserRouter, Routes, Route} from 'react-router';
 import {EngineProvider} from './context/engine.js';
-import {CommerceInterfaceProvider} from './context/commerce-interface.js';
-import {SearchBox} from './components/SearchBox/SearchBox.js';
-import {ProductList} from './components/ProductList/ProductList.js';
-import {Pagination} from './components/Pagination/Pagination.js';
-import styles from './App.module.css';
+import {RootLayout} from './layouts/RootLayout.js';
+import {HomePage} from './pages/HomePage.js';
+import {CommercePage} from './pages/CommercePage.js';
 
 export default function App() {
   return (
-    <EngineProvider>
-      <CommerceInterfaceProvider>
-        <main className={styles.root}>
-          <SearchBox />
-          <ProductList />
-          <Pagination />
-        </main>
-      </CommerceInterfaceProvider>
-    </EngineProvider>
+    <BrowserRouter>
+      <EngineProvider>
+        <Routes>
+          <Route element={<RootLayout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/commerce" element={<CommercePage />} />
+          </Route>
+        </Routes>
+      </EngineProvider>
+    </BrowserRouter>
   );
 }

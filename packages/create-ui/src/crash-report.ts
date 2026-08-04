@@ -79,11 +79,12 @@ function normalizeOwnPackageStackLine(line: string): string {
     }
   }
 
-  const bareFrame = /^(\s*at\s+(?:async\s+)?)(.*)$/.exec(line);
-  if (bareFrame !== null) {
-    const appPath = ownPackageAppPath(bareFrame[2]);
+  const bareFramePrefix = /^\s*at\s+(?:async\s+)?/.exec(line);
+  if (bareFramePrefix !== null) {
+    const prefix = bareFramePrefix[0];
+    const appPath = ownPackageAppPath(line.slice(prefix.length));
     if (appPath !== undefined) {
-      return `${bareFrame[1]}${appPath}`;
+      return `${prefix}${appPath}`;
     }
   }
   return line;
@@ -205,7 +206,7 @@ export function resolveCrashReportPath(referenceOrPath: string): string {
   const candidate = referenceOrPath.trim();
   return CRASH_REPORT_REFERENCE_PATTERN.test(candidate)
     ? crashReportPathFromReference(candidate.toLowerCase())
-    : referenceOrPath;
+    : candidate;
 }
 
 export async function writeCrashReport(report: CrashReport): Promise<string> {
@@ -244,6 +245,11 @@ function isCrashReportV1(value: unknown): value is CrashReportV1 {
     return false;
   }
   const candidate = value as Partial<CrashReportV1>;
+  const os = candidate.os as Partial<CrashOsInfo> | undefined;
+  const device = candidate.device as Partial<CrashDeviceInfo> | undefined;
+  const metadata = candidate.metadata as Partial<ProjectMetadata> | undefined;
+  const dependencies = metadata?.dependencies;
+
   return (
     candidate.schemaVersion === 1 &&
     typeof candidate.runId === 'string' &&
@@ -251,12 +257,23 @@ function isCrashReportV1(value: unknown): value is CrashReportV1 {
     isCrashOrigin(candidate.origin) &&
     isCrashErrorInfo(candidate.error) &&
     isCrashDiagnostics(candidate.diagnostics) &&
-    typeof candidate.os === 'object' &&
-    candidate.os !== null &&
-    typeof candidate.device === 'object' &&
-    candidate.device !== null &&
-    typeof candidate.metadata === 'object' &&
-    candidate.metadata !== null
+    typeof os?.platform === 'string' &&
+    typeof os.arch === 'string' &&
+    typeof os.release === 'string' &&
+    typeof device?.cpuModel === 'string' &&
+    typeof device.cpuCount === 'number' &&
+    typeof device.memoryTotalBytes === 'number' &&
+    typeof device.memoryFreeBytes === 'number' &&
+    typeof metadata?.template === 'string' &&
+    typeof metadata.templateVersion === 'string' &&
+    typeof metadata.createdWith === 'string' &&
+    typeof metadata.createdOn === 'string' &&
+    typeof metadata.node === 'string' &&
+    typeof metadata.packageManager === 'string' &&
+    typeof dependencies === 'object' &&
+    dependencies !== null &&
+    !Array.isArray(dependencies) &&
+    Object.values(dependencies).every((entry) => typeof entry === 'string')
   );
 }
 

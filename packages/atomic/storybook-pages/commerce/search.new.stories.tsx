@@ -1,8 +1,7 @@
 import {getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
-import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
-import {type baseResponse, richResponse} from '@coveo/platform-mock-api/commerce/search-response';
+import {MockCommerceApi, searchResponses} from '@coveo/platform-mock-api/commerce';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 import {isTestMode} from '@/storybook-utils/common/is-test-mode';
 import '@/src/components/commerce/atomic-commerce-breadbox/atomic-commerce-breadbox.js';
@@ -60,7 +59,9 @@ const meta: Meta = {
     chromatic: {disableSnapshot: false},
   },
   beforeEach: async () => {
-    mockCommerceApi.searchEndpoint.mock(() => richResponse as unknown as typeof baseResponse);
+    mockCommerceApi.searchEndpoint.mock(
+      () => searchResponses.richResponse as unknown as typeof searchResponses.baseResponse
+    );
   },
   render: () => html`
     <atomic-commerce-interface

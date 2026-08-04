@@ -1,8 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
-import {MockInsightApi} from '@coveo/platform-mock-api/insight/mock';
-import {type baseResponse, richResponse} from '@coveo/platform-mock-api/insight/search-response';
+import {MockInsightApi, searchResponses} from '@coveo/platform-mock-api/insight';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import '@/src/components/insight/atomic-insight-facet/atomic-insight-facet.js';
@@ -32,7 +31,9 @@ const meta: Meta = {
   args,
   argTypes,
   beforeEach: async () => {
-    insightApiHarness.searchEndpoint.mock(() => richResponse as unknown as typeof baseResponse);
+    insightApiHarness.searchEndpoint.mock(
+      () => searchResponses.richResponse as unknown as typeof searchResponses.baseResponse
+    );
   },
   play,
 };

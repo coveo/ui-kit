@@ -111,8 +111,17 @@ jobs:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/setup-sfdx
-      - run: |
-          pnpm exec ts-node scripts/build/delete-org.ts --scratch-org-def-path=./config/lws-disabled-scratch-def.json
-          pnpm exec ts-node scripts/build/delete-org.ts --scratch-org-def-path=./config/lws-enabled-scratch-def.json
+      - name: Delete Quantic scratch orgs
+        run: |
+          umask 077
+          printf '%s\n' "$SFDX_AUTH_JWT_KEY" > server.key
+          trap 'rm -f -- server.key' EXIT
+          pnpm exec ts-node scripts/build/delete-org.ts
         shell: bash
         working-directory: ./packages/quantic
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+          SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
+          SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+          SFDX_AUTH_JWT_KEY_FILE: server.key
+          SFDX_AUTH_JWT_USERNAME: rdaccess@coveo.com
