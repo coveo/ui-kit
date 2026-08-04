@@ -44,31 +44,35 @@ export const renderAnswerContent: FunctionalComponent<RenderAnswerContentProps> 
 
   return html`
     <div>
-      ${hasRetryableError
-        ? renderRetryPrompt({
-            props: {
-              onClick: onRetry,
-              buttonLabel: i18n.t('retry'),
-              message: i18n.t('retry-stream-message'),
-            },
-          })
-        : nothing}
-      ${!hasRetryableError
-        ? renderGeneratedContentContainer({
-            props: {
-              answer,
-              answerContentFormat,
-              isStreaming: !!isStreaming,
-            },
-          })(html`
-            ${renderSourceCitations({
+      ${
+        hasRetryableError
+          ? renderRetryPrompt({
               props: {
-                label: i18n.t('citations'),
-                isVisible: !!citations?.length,
+                onClick: onRetry,
+                buttonLabel: i18n.t('retry'),
+                message: i18n.t('retry-stream-message'),
               },
-            })(renderCitationsSlot())}
-          `)
-        : nothing}
+            })
+          : nothing
+      }
+      ${
+        !hasRetryableError
+          ? renderGeneratedContentContainer({
+              props: {
+                answer,
+                answerContentFormat,
+                isStreaming: !!isStreaming,
+              },
+            })(html`
+              ${renderSourceCitations({
+                props: {
+                  label: i18n.t('citations'),
+                  isVisible: !!citations?.length,
+                },
+              })(renderCitationsSlot())}
+            `)
+          : nothing
+      }
       ${when(
         !hasRetryableError && (collapsible ? expanded : true),
         () => html`
@@ -77,24 +81,28 @@ export const renderAnswerContent: FunctionalComponent<RenderAnswerContentProps> 
           </div>
         `
       )}
-      ${!hasRetryableError
-        ? html`
-            <div part="generated-answer-footer" class="mt-6">
-              ${renderGeneratingAnswerLabel({
-                props: {i18n, isStreaming: !!isStreaming, collapsible},
-              })}
-              ${collapsible && !isStreaming
-                ? renderShowButton({
-                    props: {
-                      i18n,
-                      onClick: onClickShowButton,
-                      isCollapsed: !expanded,
-                    },
-                  })
-                : nothing}
-            </div>
-          `
-        : nothing}
+      ${
+        !hasRetryableError
+          ? html`
+              <div part="generated-answer-footer" class="mt-6">
+                ${renderGeneratingAnswerLabel({
+                  props: {i18n, isStreaming: !!isStreaming, collapsible},
+                })}
+                ${
+                  collapsible && !isStreaming
+                    ? renderShowButton({
+                        props: {
+                          i18n,
+                          onClick: onClickShowButton,
+                          isCollapsed: !expanded,
+                        },
+                      })
+                    : nothing
+                }
+              </div>
+            `
+          : nothing
+      }
     </div>
   `;
 };

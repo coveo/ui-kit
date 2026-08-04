@@ -41,24 +41,28 @@ export const renderCardHeader: FunctionalComponent<RenderCardHeaderProps> = ({pr
           class: 'text-primary inline-block rounded-md px-2.5 py-2 font-medium mr-auto shrink-0',
         },
       })(html`${i18n.t('generated-answer-title')}`)}
-      ${withDebug && conversationId
-        ? renderConversationDebugHeader({props: {i18n, conversationId}})
-        : nothing}
+      ${
+        withDebug && conversationId
+          ? renderConversationDebugHeader({props: {i18n, conversationId}})
+          : nothing
+      }
     </div>
-    ${withToggle
-      ? html`<div class="ml-auto flex h-9 items-center gap-1.5">
-          ${renderSwitch({
-            props: {
-              part: 'toggle',
-              checked: isAnswerVisible,
-              onToggle,
-              ariaLabel: i18n.t('generated-answer-title'),
-              title: toggleTooltip,
-              withToggle,
-              tabIndex: 0,
-            },
-          })}
-        </div>`
-      : nothing}
+    ${
+      withToggle
+        ? html`<div class="ml-auto flex h-9 items-center gap-1.5">
+            ${renderSwitch({
+              props: {
+                part: 'toggle',
+                checked: isAnswerVisible,
+                onToggle,
+                ariaLabel: i18n.t('generated-answer-title'),
+                title: toggleTooltip,
+                withToggle,
+                tabIndex: 0,
+              },
+            })}
+          </div>`
+        : nothing
+    }
   </div>`;
 };

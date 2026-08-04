@@ -34,9 +34,7 @@ Per-type functions return fully-typed interfaces with built-in facade code. `Sup
 **Simple case:**
 
 ```ts
-const engine = new Engine({
-  /* ... */
-});
+const engine = new Engine({/* ... */});
 
 const commerce = buildCommerceSearchInterface({engine});
 

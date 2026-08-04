@@ -114,11 +114,13 @@ export class FacetList extends LitElement {
                 `
               )}
             </div>
-            ${facet.state.hasActiveValues
-              ? html`<button type="button" class="clear" @click=${() => facet.deselectAll()}>
-                  Clear
-                </button>`
-              : nothing}
+            ${
+              facet.state.hasActiveValues
+                ? html`<button type="button" class="clear" @click=${() => facet.deselectAll()}>
+                    Clear
+                  </button>`
+                : nothing
+            }
           </div>
         `
       )}

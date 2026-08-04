@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@playwright/test": "catalog:",
-    "@vitejs/plugin-vue": "6.0.7",
+    "@vitejs/plugin-vue": "6.0.8",
     "typescript": "catalog:",
     "vite": "catalog:"
   }
