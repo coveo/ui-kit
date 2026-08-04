@@ -246,8 +246,6 @@ jobs:
   chromatic-update-main:
     name: 'Update Chromatic baseline on main'
     runs-on: ubuntu-latest
-    env:
-      CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
@@ -261,4 +259,11 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           load-cache: 'false'
-      - run: pnpm exec turbo chromatic --filter=@coveo/atomic -- --exit-zero-on-changes --auto-accept-changes --branchName=main
+      - name: Update Chromatic baseline
+        uses: chromaui/action@14cfaef73576e69f95f47f60058063f46ca38719 # v18.1.0
+        with:
+          autoAcceptChanges: true
+          branchName: main
+          exitZeroOnChanges: true
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          workingDir: packages/atomic
