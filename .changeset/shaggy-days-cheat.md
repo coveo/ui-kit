@@ -2,4 +2,4 @@
 "@coveo/quantic": patch
 ---
 
-feat(quantic): Implemented new solution example for search agent.
+feat(quantic): Implemented new example for search agent in both insight and search use cases.
