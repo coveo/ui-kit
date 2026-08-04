@@ -35,14 +35,10 @@ For example, a direct Storybook configuration change made after the fallback can
 Check whether the missing build came from a non-durable CI context:
 
 - GitHub `merge_group` commits are ephemeral.
-- `chromatic --skip` still records a Chromatic build and must not run on `merge_group` events.
+- `chromatic --skip` publishes the `UI Tests`, `UI Review`, and `Storybook Publish` statuses.
 - The durable `main` baseline is produced by `.github/workflows/cd.yml` after a real `push` to `main`.
 
-For this repository, `.github/workflows/ci.yml` must limit the fallback skip command to pull requests:
-
-```yaml
-if: github.event_name == 'pull_request' && steps.chromatic-run.outcome == 'skipped'
-```
+`UI Tests` and `UI Review` are required checks for `main`. Keep `chromatic --skip` on merge-group events so those statuses are present on the merge-queue SHA. Do not remove it solely to reduce TurboSnap costs; investigate the baseline-selection behavior separately.
 
 ## 3. Trace a specific changed file
 
@@ -78,11 +74,10 @@ Never mark `.storybook/main.ts` or `.storybook/preview.ts` as `untraced` merely 
 
 ## 5. Recover and validate
 
-1. Merge the CI baseline fix.
-2. Allow the CD workflow to publish a build for a durable `main` commit.
-3. Rebase long-lived branches that were created before that durable baseline.
-4. On a new or rebased pull request, confirm the log does not show `Missing commit detected` and reports affected story files instead of a config bailout.
-5. Review the next usage export: ordinary changes should show TurboSnaps and far fewer captured Chrome snapshots.
+1. Allow the CD workflow to publish a build for a durable `main` commit.
+2. Rebase long-lived branches that were created before that durable baseline.
+3. On a new or rebased pull request, confirm the log does not show `Missing commit detected` and reports affected story files instead of a config bailout.
+4. Review the next usage export: ordinary changes should show TurboSnaps and far fewer captured Chrome snapshots.
 
 ## Reporting checklist
 
