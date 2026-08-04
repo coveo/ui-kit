@@ -18,6 +18,7 @@
             <property name="insightId" type="String" default="142be676-703c-445f-b2d3-fcc7c0a3ded8" label="The Insight Panel configuration ID"/>
             <property name="agentId" type="String" default="" label="The search agent ID"/>
             <property name="searchHub" type="String" default="default" label="The search hub"/>
+            <property name="pipeline" type="String" default="" label="The query pipeline"/>
             <property name="analyticsMode" type="String" default="legacy" label="The analytics mode"/>
             <property name="answerConfigurationId" type="String" default="10f49a04-76d3-46bf-b8dc-22b0c291c254" label="The answer configuration ID"/>
         </targetConfig>
@@ -29,6 +30,7 @@
             <property name="insightId" type="String" default="142be676-703c-445f-b2d3-fcc7c0a3ded8" label="The Insight Panel configuration ID"/>
             <property name="agentId" type="String" default="" label="The search agent ID"/>
             <property name="searchHub" type="String" default="default" label="The search hub"/>
+            <property name="pipeline" type="String" default="" label="The query pipeline"/>
             <property name="analyticsMode" type="String" default="legacy" label="The analytics mode"/>
             <property name="answerConfigurationId" type="String" default="10f49a04-76d3-46bf-b8dc-22b0c291c254" label="The answer configuration ID"/>
         </targetConfig>

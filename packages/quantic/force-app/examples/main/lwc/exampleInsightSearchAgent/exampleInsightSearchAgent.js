@@ -24,6 +24,8 @@ export default class ExampleInsightSearchAgent extends LightningElement {
   /** @type {string} */
   @api searchHub = 'default';
   /** @type {string} */
+  @api pipeline = 'genqatest';
+  /** @type {string} */
   @api analyticsMode = 'legacy';
   /** @type {string} */
   @api answerConfigurationId = '10f49a04-76d3-46bf-b8dc-22b0c291c254';
@@ -75,6 +77,12 @@ export default class ExampleInsightSearchAgent extends LightningElement {
         label: 'Search Hub',
         description: 'The search hub to use for the insight interface.',
         defaultValue: this.searchHub,
+      },
+      {
+        attribute: 'pipeline',
+        label: 'Pipeline',
+        description: 'The query pipeline to use for the insight interface.',
+        defaultValue: this.pipeline,
       },
       {
         attribute: 'analyticsMode',
