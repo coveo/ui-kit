@@ -207,8 +207,8 @@ function main() {
     }
 
     const entry = {
-      _catalog: catalog[name] ?? null,
       _issues: issues,
+      _catalog: catalog[name] ?? null,
     };
 
     for (const occ of occurrences) {
