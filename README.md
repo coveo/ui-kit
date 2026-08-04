@@ -75,7 +75,7 @@ This monorepo uses [Turborepo remote caching](https://turborepo.com/docs/core-co
 
 Remote caching is optional locally and enabled through AWS:
 
-```sh
+````sh
 aws sso login --profile dev   # authenticate with the shared "dev" profile
 pnpm install    # runs turbo:login, which fetches the cache token from AWS SSM
 
@@ -83,7 +83,7 @@ pnpm install    # runs turbo:login, which fetches the cache token from AWS SSM
 
 ```sh
 pnpm turbo:login
-```
+````
 
 ### CI
 
