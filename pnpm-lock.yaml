@@ -2276,6 +2276,9 @@ importers:
       octokit:
         specifier: 5.0.5
         version: 5.0.5
+      yaml:
+        specifier: 'catalog:'
+        version: 2.9.0
 
 packages:
 
