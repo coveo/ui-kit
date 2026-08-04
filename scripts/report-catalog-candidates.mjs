@@ -189,9 +189,17 @@ function main() {
   const entries = {};
 
   for (const [name, occurrences] of depMap) {
-    if (occurrences.length < 2) continue;
+    if (occurrences.length < 2 && !(name in catalog)) continue;
 
-    const divergence = classifyDivergence(occurrences);
+    // When the dependency is in the catalog, include the catalog version
+    // in divergence classification so we compare against what the catalog
+    // prescribes, not just among the hardcoded occurrences themselves.
+    const versionsToClassify =
+      name in catalog
+        ? [...occurrences, {package: '_catalog', version: catalog[name]}]
+        : occurrences;
+
+    const divergence = classifyDivergence(versionsToClassify);
 
     const issues = [divergence];
     if (name in catalog) {
