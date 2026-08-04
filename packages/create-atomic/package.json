@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "@coveo/platform-client": "62.0.0",
-    "abortcontroller-polyfill": "1.7.8",
+    "abortcontroller-polyfill": "catalog:",
     "https-proxy-agent": "8.0.0",
     "isomorphic-fetch": "3.0.0",
     "minimist": "1.2.8",

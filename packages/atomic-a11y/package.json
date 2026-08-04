@@ -19,7 +19,7 @@
     "a11y:update-openacr": "node scripts/update-openacr.mjs"
   },
   "dependencies": {
-    "handlebars": "4.7.9",
+    "handlebars": "catalog:",
     "marked": "catalog:",
     "yaml": "catalog:"
   },
