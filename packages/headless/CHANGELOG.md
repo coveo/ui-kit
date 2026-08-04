@@ -1,3 +1,17 @@
+## 3.54.0
+
+### Minor Changes
+
+- [#8076](https://github.com/coveo/ui-kit/pull/8076) [`1dcb32f`](https://github.com/coveo/ui-kit/commit/1dcb32f02bc848b115a6016a083242cce9200cb2) - Add `analytics.disableBrowserPrivacySignals` engine configuration option. For legacy analytics (`analyticsMode: 'legacy'`), setting it to `true` stops honoring browser privacy signals (Do Not Track and Global Privacy Control) so analytics events are sent even when those signals are present. It defaults to `false` (privacy-friendly), has no effect with `analyticsMode: 'next'`, and does not override an explicit `enabled: false`. Enabling it means your integration takes ownership of privacy compliance. The option is intentionally introduced as `@deprecated` to signal that it is transitional and will be removed with legacy analytics.
+
+### Patch Changes
+
+- [#8085](https://github.com/coveo/ui-kit/pull/8085) [`e463261`](https://github.com/coveo/ui-kit/commit/e463261abb4edb95a009cf416c484f09af0e010f) - Fixed `logGeneratedAnswerStreamEnd` always logging the Search analytics event, even when the `GeneratedAnswer` controller is built on an Insight engine. The Insight-specific `logGeneratedAnswerStreamEnd` action is now correctly invoked for Insight use cases, and its signature was aligned with the Search version (`answerGenerated`, `answerId?`, `answerTextIsEmpty?`).
+
+- Updated dependencies [[`b69393a`](https://github.com/coveo/ui-kit/commit/b69393a3663b8b295964fbf6f75c8c3c5acd9bc5), [`f1ee3a9`](https://github.com/coveo/ui-kit/commit/f1ee3a9e6c1d281e437733fda9cc0d8b02beba2c), [`333a834`](https://github.com/coveo/ui-kit/commit/333a83499f3accd3ecaed83f2634dcd4bdd6b595), [`c2ebb1b`](https://github.com/coveo/ui-kit/commit/c2ebb1b490e2dd0ac8710c017825376c2ee94fe0), [`30abbfb`](https://github.com/coveo/ui-kit/commit/30abbfb43f4e0c303bcba6619768c93dec4a0e71), [`0047895`](https://github.com/coveo/ui-kit/commit/00478950dddf7005a1f8079c99f7a0edee9b5278), [`1dcb32f`](https://github.com/coveo/ui-kit/commit/1dcb32f02bc848b115a6016a083242cce9200cb2), [`0047895`](https://github.com/coveo/ui-kit/commit/00478950dddf7005a1f8079c99f7a0edee9b5278), [`13709a3`](https://github.com/coveo/ui-kit/commit/13709a3bce5e1a92810032395ea6447f7a1bec1a)]:
+  - coveo.analytics@2.31.0
+  - @coveo/relay@2.1.3
+
 ## 3.53.2
 
 ### Patch Changes

@@ -1,3 +1,13 @@
+## 3.60.4
+
+### Patch Changes
+
+- [#8130](https://github.com/coveo/ui-kit/pull/8130) [`eef0070`](https://github.com/coveo/ui-kit/commit/eef007037b673884705545272de5abe3a13c0aaf) - Fixed a Safari rendering bug where smooth scrolling during page navigation could cause stale visual layers (white rectangles or previous-page content) to appear over search results. `scrollToTop()` no longer forces `behavior: 'smooth'`, instead deferring to the CSS `scroll-behavior` property on the scroll container (which defaults to instant). Users who want smooth scrolling can opt in via CSS.
+
+- Updated dependencies [[`e463261`](https://github.com/coveo/ui-kit/commit/e463261abb4edb95a009cf416c484f09af0e010f), [`1dcb32f`](https://github.com/coveo/ui-kit/commit/1dcb32f02bc848b115a6016a083242cce9200cb2)]:
+  - @coveo/headless@3.54.0
+  - @coveo/atomic-legacy@0.0.26
+
 ## 3.60.3
 
 ### Patch Changes
