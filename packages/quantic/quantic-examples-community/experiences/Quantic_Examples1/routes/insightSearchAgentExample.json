@@ -1,0 +1,11 @@
+{
+  "activeViewId": "b4f2c8a1-d7e5-4b3a-9c6f-2a1d8e5b7c4f",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "d6e7f8a9-b0c1-4d2e-3f4a-5b6c7d8e9f0a",
+  "label": "Insight Search Agent Example",
+  "pageAccess": "UseParent",
+  "routeType": "custom-insight-search-agent-example",
+  "type": "route",
+  "urlPrefix": "insight-search-agent-example"
+}
