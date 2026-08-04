@@ -65,6 +65,32 @@ const versionReplaceInDeclaration = () => ({
 });
 
 /**
+ * Rollup inlines the `react-native-get-random-values` polyfill into the bundle, but the emitted
+ * declaration keeps the bare side-effect import, which consumers cannot resolve unless they install
+ * the package themselves. Strip it so the polyfill can stay a `devDependency` instead of dragging
+ * the whole React Native toolchain into every consumer install.
+ */
+const stripPolyfillImportFromDeclaration = () => ({
+  name: 'strip-polyfill-import-from-declaration',
+  writeBundle() {
+    const declaration = resolve(__dirname, './dist/definitions/react-native/index.d.ts');
+    if (!existsSync(declaration)) {
+      return;
+    }
+    const stripped = readFileSync(declaration, 'utf8').replace(
+      /^import ['"]react-native-get-random-values['"];\r?\n?/gm,
+      ''
+    );
+    if (stripped.includes('react-native-get-random-values')) {
+      this.error(
+        'Failed to strip the react-native-get-random-values import from react-native/index.d.ts. Publishing it would break consumers who typecheck our declarations without the package installed.'
+      );
+    }
+    writeFileSync(declaration, stripped);
+  },
+});
+
+/**
  * @param {{sourceFileName: string, aliasFileName: string}} options
  */
 const aliasFile = ({sourceFileName, aliasFileName}) => {
@@ -194,6 +220,7 @@ const reactNativeConfig = {
       target: 'es6',
     }),
     versionReplaceInDeclaration(),
+    stripPolyfillImportFromDeclaration(),
   ],
 };
 
