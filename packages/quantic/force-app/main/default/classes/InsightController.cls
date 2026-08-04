@@ -18,6 +18,6 @@ global with sharing class InsightController {
      * e.g. To switch to the Insight Token Provider, you simply need to replace the following line by:
      * `return InsightTokenProvider.getHeadlessConfiguration(recordId);`
      */
-    return SampleTokenProvider.getHeadlessConfiguration();
+    return SampleInsightTokenProvider.getHeadlessConfiguration(recordId);
   }
 }
