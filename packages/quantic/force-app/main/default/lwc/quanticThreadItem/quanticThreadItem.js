@@ -103,7 +103,6 @@ export default class QuanticThreadItem extends LightningElement {
   get lineColumnClass() {
     const classes = [
       'slds-grid',
-      'slds-grid_align-center',
       'slds-grid_vertical',
       'slds-grid_vertical-align-center',
       'slds-shrink-none',

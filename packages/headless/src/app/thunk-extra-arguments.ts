@@ -3,6 +3,7 @@ import type {AnalyticsClientSendEventHook} from 'coveo.analytics';
 import type {Logger} from 'pino';
 import type {GeneratedAnswerAPIClient} from '../api/generated-answer/generated-answer-client.js';
 import {NoopPreprocessRequest, type PreprocessRequest} from '../api/preprocess-request.js';
+import type {GeneratedAnswerAnalyticsClient} from '../features/generated-answer/generated-answer-analytics-client.js';
 import {validatePayloadAndThrow} from '../utils/validate-payload.js';
 import type {EngineConfiguration} from './engine-configuration.js';
 import type {NavigatorContext} from './navigator-context-provider.js';
@@ -15,6 +16,7 @@ export interface ClientThunkExtraArguments<
   streamingClient?: K;
   relay: Relay;
   navigatorContext: NavigatorContext;
+  generatedAnswerAnalyticsClient?: GeneratedAnswerAnalyticsClient;
 }
 
 export interface ThunkExtraArguments {
@@ -22,6 +24,13 @@ export interface ThunkExtraArguments {
   analyticsClientMiddleware: AnalyticsClientSendEventHook;
   logger: Logger;
   validatePayload: typeof validatePayloadAndThrow;
+  /**
+   * Legacy-analytics-only, immutable engine policy. When `true`, browser privacy
+   * signals (Do Not Track and Global Privacy Control) are not honored. Sourced from
+   * the engine configuration at build time and intentionally kept out of Redux
+   * analytics state so it cannot be mutated at runtime.
+   */
+  disableBrowserPrivacySignals?: boolean;
 }
 
 export function buildThunkExtraArguments(
@@ -37,6 +46,7 @@ export function buildThunkExtraArguments(
     validatePayload,
     preprocessRequest,
     logger,
+    disableBrowserPrivacySignals: configuration.analytics?.disableBrowserPrivacySignals,
   };
 }
 

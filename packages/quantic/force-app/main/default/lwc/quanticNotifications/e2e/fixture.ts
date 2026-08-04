@@ -27,6 +27,7 @@ export const testSearch =
       await use(new SearchObjectWithNotifyTrigger(page, searchRequestRegex));
     },
     notifications: async ({page, configuration, search}, use) => {
+      await search.mockSearchWithBaseResponse();
       await page.goto(pageUrl);
       configuration.configure();
       await search.waitForSearchResponse();
@@ -46,11 +47,14 @@ export const testInsight =
       await use(new InsightSetupObject(page));
     },
     notifications: async ({page, search, configuration, insightSetup}, use) => {
+      await search.mockSearchWithBaseResponse();
       await page.goto(pageUrl);
       configuration.configure({useCase: useCaseEnum.insight});
       await insightSetup.waitForInsightInterfaceInitialization();
-      await search.performSearch();
-      await search.waitForSearchResponse();
+      await Promise.all([
+        search.waitForSearchResponse(),
+        search.performSearch(),
+      ]);
       await use(new NotificationsObject(page));
     },
   });

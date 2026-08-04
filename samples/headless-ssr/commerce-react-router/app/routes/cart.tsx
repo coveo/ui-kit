@@ -1,5 +1,5 @@
 import {type NavigatorContext, SolutionType} from '@coveo/headless-react/ssr-commerce';
-import type {LoaderFunctionArgs} from 'react-router';
+import type {Route} from './+types/cart.js';
 import {useLoaderData} from 'react-router';
 import Cart from '@/app/components/cart';
 import ContextDropdown from '@/app/components/context-dropdown';
@@ -16,15 +16,15 @@ import {
 } from '@/lib/commerce-engine.server';
 import {getNavigatorContext} from '@/lib/navigator-context';
 
-export const loader = async ({request}: LoaderFunctionArgs) => {
-  const navigatorContext = await getNavigatorContext(request);
+export const loader = async ({request, url}: Route.LoaderArgs) => {
+  const navigatorContext = await getNavigatorContext(request, url);
 
   const items = await externalCartService.getItems();
   const totalPrice = await externalCartService.getTotalPrice();
   const {currency, language} = await externalContextService.getContextInformation();
 
   const baseFetchStaticStateConfiguration = await getBaseFetchStaticStateConfiguration(
-    new URL(request.url).pathname
+    url.pathname
   );
 
   const standaloneEngineDefinition = await getEngineDefinition(
