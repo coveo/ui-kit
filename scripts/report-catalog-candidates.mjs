@@ -189,7 +189,7 @@ function main() {
   const entries = {};
 
   for (const [name, occurrences] of depMap) {
-    if (occurrences.length < 2) continue;
+    if (occurrences.length < 2 && !(name in catalog)) continue;
 
     const divergence = classifyDivergence(occurrences);
 
