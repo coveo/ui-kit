@@ -2,4 +2,4 @@
 "@coveo/atomic": patch
 ---
 
-fix(atomic): add word break on citation text to prevent overflow
+Prevent citation text overflow by breaking long words.
