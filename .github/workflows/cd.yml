@@ -59,18 +59,22 @@ jobs:
         run: |
           echo "The publish command failed before any package was published." >&2
           exit 1
-      - name: Upload create-ui source maps to Sentry
+      - name: Read create-ui version
+        id: create-ui-version
         if: ${{ steps.changesets.outputs.published == 'true' && contains(steps.changesets.outputs.publishedPackages, '@coveo/create-ui') }}
         working-directory: packages/create-ui
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          pnpm exec sentry-cli sourcemaps upload \
-            --release="create-ui@${VERSION}" \
-            --url-prefix="app:///dist" \
-            --validate \
-            dist
+        run: echo "version=$(node -p \"require('./package.json').version\")" >> "$GITHUB_OUTPUT"
+      - name: Upload create-ui source maps to Sentry
+        if: ${{ steps.changesets.outputs.published == 'true' && contains(steps.changesets.outputs.publishedPackages, '@coveo/create-ui') }}
+        uses: getsentry/action-release@ff07929a6537bac57790c3451cf4d364aca38528 # v3
+        with:
+          release: create-ui@${{ steps.create-ui-version.outputs.version }}
+          sourcemaps: packages/create-ui/dist
+          url_prefix: app:///dist
+          inject: false
+          set_commits: skip
+          disable_telemetry: true
         env:
-          # Configure this organization token in the Release environment with org:ci scope.
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: coveo-platform
           SENTRY_PROJECT: create-ui
