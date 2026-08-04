@@ -181,21 +181,32 @@ export class SearchObject {
   /**
    * Mocks the search endpoint so that the first response reports more
    * results are available, and every subsequent response (i.e. after a
-   * "load more" fetch) reports all results have been loaded.
+   * "load more" fetch) reports all results have been loaded. Each response
+   * beyond the first returns a distinct batch of results (`uniqueId`s
+   * suffixed by response index), matching how a real "load more" batch
+   * differs from the initial page. `searchUid` is kept constant across the
+   * sequence, matching headless's `fetchMoreResults` behavior, which does
+   * not update `searchResponseId` on subsequent batches.
    */
   async mockSearchWithLoadMoreSequence(): Promise<void> {
     await this.page.unroute(this.searchRequestRegex);
-    let hasRespondedOnce = false;
+    let responseIndex = 0;
     await this.page.route(this.searchRequestRegex, async (route) => {
       const originalBody = searchResponses.richResponse;
-      const totalCount = hasRespondedOnce
-        ? originalBody.results.length
-        : originalBody.results.length * 2;
-      hasRespondedOnce = true;
+      const totalCount =
+        responseIndex === 0
+          ? originalBody.results.length * 2
+          : originalBody.results.length;
+      const results = originalBody.results.map((result) => ({
+        ...result,
+        uniqueId: `${result.uniqueId}-batch${responseIndex}`,
+      }));
+      responseIndex += 1;
 
       await route.fulfill({
         body: JSON.stringify({
           ...originalBody,
+          results,
           totalCount,
           totalCountFiltered: totalCount,
         }),

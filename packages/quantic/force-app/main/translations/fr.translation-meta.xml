@@ -45,10 +45,6 @@
     <name>quantic_ShowingResultsOfLoadMore_plural</name>
   </customLabels>
   <customLabels>
-    <label>Aucun résultat</label>
-    <name>quantic_ShowingResultsOfLoadMore_zero</name>
-  </customLabels>
-  <customLabels>
     <label>Tous les résultats ont été chargés</label>
     <name>quantic_AllResultsLoaded</name>
   </customLabels>

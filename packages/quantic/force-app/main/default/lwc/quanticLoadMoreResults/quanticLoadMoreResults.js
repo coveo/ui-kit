@@ -2,7 +2,6 @@ import allResultsLoaded from '@salesforce/label/c.quantic_AllResultsLoaded';
 import loadMoreResults from '@salesforce/label/c.quantic_LoadMoreResults';
 import showingResultsOfLoadMore from '@salesforce/label/c.quantic_ShowingResultsOfLoadMore';
 import showingResultsOfLoadMore_plural from '@salesforce/label/c.quantic_ShowingResultsOfLoadMore_plural';
-import showingResultsOfLoadMore_zero from '@salesforce/label/c.quantic_ShowingResultsOfLoadMore_zero';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -61,7 +60,6 @@ export default class QuanticLoadMoreResults extends LightningElement {
     loadMoreResults,
     showingResultsOfLoadMore,
     showingResultsOfLoadMore_plural,
-    showingResultsOfLoadMore_zero,
   };
 
   connectedCallback() {
