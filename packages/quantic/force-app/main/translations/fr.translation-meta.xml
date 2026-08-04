@@ -33,6 +33,26 @@
     <name>quantic_NoResultsFor</name>
   </customLabels>
   <customLabels>
+    <label>Charger plus de résultats</label>
+    <name>quantic_LoadMoreResults</name>
+  </customLabels>
+  <customLabels>
+    <label>{{0}} résultat affiché sur {{1}}</label>
+    <name>quantic_ShowingResultsOfLoadMore</name>
+  </customLabels>
+  <customLabels>
+    <label>{{0}} résultats affichés sur {{1}}</label>
+    <name>quantic_ShowingResultsOfLoadMore_plural</name>
+  </customLabels>
+  <customLabels>
+    <label>Aucun résultat</label>
+    <name>quantic_ShowingResultsOfLoadMore_zero</name>
+  </customLabels>
+  <customLabels>
+    <label>Tous les résultats ont été chargés</label>
+    <name>quantic_AllResultsLoaded</name>
+  </customLabels>
+  <customLabels>
     <label>Enlever tous les filtres</label>
     <name>quantic_ClearAllFilters</name>
   </customLabels>

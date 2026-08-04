@@ -178,6 +178,35 @@ export class SearchObject {
     });
   }
 
+  /**
+   * Mocks the search endpoint so that the first response reports more
+   * results are available, and every subsequent response (i.e. after a
+   * "load more" fetch) reports all results have been loaded.
+   */
+  async mockSearchWithLoadMoreSequence(): Promise<void> {
+    await this.page.unroute(this.searchRequestRegex);
+    let hasRespondedOnce = false;
+    await this.page.route(this.searchRequestRegex, async (route) => {
+      const originalBody = searchResponses.richResponse;
+      const totalCount = hasRespondedOnce
+        ? originalBody.results.length
+        : originalBody.results.length * 2;
+      hasRespondedOnce = true;
+
+      await route.fulfill({
+        body: JSON.stringify({
+          ...originalBody,
+          totalCount,
+          totalCountFiltered: totalCount,
+        }),
+        status: 200,
+        headers: {
+          'content-type': 'application/json',
+        },
+      });
+    });
+  }
+
   extractDataFromResponse(response: Response) {
     return response.request().postDataJSON();
   }
