@@ -3,7 +3,7 @@ import {
   type NavigatorContext,
   SolutionType,
 } from '@coveo/headless-react/ssr-commerce';
-import type {LoaderFunctionArgs} from 'react-router';
+import type {Route} from './+types/listings.$listingId.js';
 import {useLoaderData, useParams} from 'react-router';
 import invariant from 'tiny-invariant';
 import BreadcrumbManager from '@/app/components/breadcrumb-manager';
@@ -24,12 +24,11 @@ import {getNavigatorContext} from '@/lib/navigator-context';
 import ParameterManager from '../components/parameter-manager.js';
 import NotifyTrigger from '../components/triggers/notify-trigger.js';
 
-export const loader = async ({params, request}: LoaderFunctionArgs) => {
+export const loader = async ({params, request, url}: Route.LoaderArgs) => {
   invariant(params.listingId, 'Missing listingId parameter');
 
-  const navigatorContext = await getNavigatorContext(request);
+  const navigatorContext = await getNavigatorContext(request, url);
 
-  const url = new URL(request.url);
   const {deserialize} = buildParameterSerializer();
   const parameters = deserialize(url.searchParams);
 

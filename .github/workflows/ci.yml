@@ -111,39 +111,16 @@ jobs:
     if: ${{ github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/') }}
     runs-on: ubuntu-latest
     environment: PR Artifacts
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
-        with:
-          egress-policy: audit
-
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
-      - uses: ./.github/actions/setup
-  build-cdn:
-    name: Build CDN
-    if: ${{ github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/') }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
-        with:
-          egress-policy: audit
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
-      - uses: ./.github/actions/build-cdn
-        with:
-          commit-sha: ${{ github.sha }}
-  affected:
-    name: 'Determine affected projects'
-    runs-on: ubuntu-latest
-    needs: build
     outputs:
       projects: ${{ steps.set.outputs.projects }}
     steps:
-      - name: Harden the runner (Audit all outbound calls)
+      - name: Harden Runner
         uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
         with:
           egress-policy: audit
 
+      # Full history is required by `turbo --affected`, which compares the
+      # checkout against the base ref to determine which packages changed.
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           fetch-depth: 0
@@ -167,6 +144,19 @@ jobs:
           echo "Affected projects: ${STEPS_SET_OUTPUTS_PROJECTS}"
         env:
           STEPS_SET_OUTPUTS_PROJECTS: ${{ steps.set.outputs.projects }}
+  build-cdn:
+    name: Build CDN
+    if: ${{ github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: ./.github/actions/build-cdn
+        with:
+          commit-sha: ${{ github.sha }}
   knip:
     name: 'Look for unused code or dependencies'
     runs-on: ubuntu-latest
@@ -182,8 +172,8 @@ jobs:
         run: pnpm run knip
   cdn-checks:
     name: 'CDN Checks'
-    needs: [affected, build-cdn]
-    if: contains(needs.affected.outputs.projects, '@coveo/atomic') || contains(needs.affected.outputs.projects, '@coveo/atomic-hosted-page')
+    needs: [build, build-cdn]
+    if: contains(needs.build.outputs.projects, '@coveo/atomic') || contains(needs.build.outputs.projects, '@coveo/atomic-hosted-page')
     env:
       DEPLOYMENT_ENVIRONMENT: CDN
     runs-on: ubuntu-latest
@@ -268,8 +258,8 @@ jobs:
       - run: pnpm exec turbo test --affected
   relay-tests:
     name: 'Run Relay functional and playground smoke tests'
-    needs: affected
-    if: contains(needs.affected.outputs.projects, '@coveo/relay') || contains(needs.affected.outputs.projects, '@coveo/relay-playground')
+    needs: build
+    if: contains(needs.build.outputs.projects, '@coveo/relay') || contains(needs.build.outputs.projects, '@coveo/relay-playground')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
@@ -324,8 +314,8 @@ jobs:
       - run: pnpm run package-compatibility
   typedoc:
     name: 'Build typedoc'
-    needs: affected
-    if: contains(needs.affected.outputs.projects, '@coveo/headless') || contains(needs.affected.outputs.projects, '@coveo/headless-react')
+    needs: build
+    if: contains(needs.build.outputs.projects, '@coveo/headless') || contains(needs.build.outputs.projects, '@coveo/headless-react')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -343,8 +333,8 @@ jobs:
         working-directory: packages/headless-react
   puppeteer-atomic-csp:
     name: 'Run e2e tests on Atomic CSP'
-    needs: affected
-    if: contains(needs.affected.outputs.projects, '@coveo/atomic')
+    needs: build
+    if: contains(needs.build.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -358,7 +348,7 @@ jobs:
 
   chromatic:
     name: 'Run Chromatic visual tests on Atomic'
-    needs: affected
+    needs: build
     runs-on: ubuntu-latest
     env:
       CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
@@ -386,14 +376,14 @@ jobs:
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo chromatic --filter=@coveo/atomic
         id: chromatic-run
-        if: contains(needs.affected.outputs.projects, '@coveo/atomic') && github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'chromatic')
+        if: contains(needs.build.outputs.projects, '@coveo/atomic') && github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'chromatic')
       - run: pnpm exec turbo chromatic --filter=@coveo/atomic -- --skip
         working-directory: packages/atomic
         if: steps.chromatic-run.outcome == 'skipped'
   playwright-atomic:
     name: 'Run Playwright tests for Atomic'
-    needs: affected
-    if: contains(needs.affected.outputs.projects, '@coveo/atomic')
+    needs: build
+    if: contains(needs.build.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
@@ -438,8 +428,8 @@ jobs:
 
   playwright-atomic-theming:
     name: 'Run theming smoke tests for Atomic'
-    needs: affected
-    if: contains(needs.affected.outputs.projects, '@coveo/atomic')
+    needs: build
+    if: contains(needs.build.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
@@ -455,8 +445,8 @@ jobs:
       - uses: ./.github/actions/playwright-atomic-theming
   storybook-atomic:
     name: 'Run Storybook tests'
-    needs: affected
-    if: contains(needs.affected.outputs.projects, '@coveo/atomic')
+    needs: build
+    if: contains(needs.build.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
@@ -490,8 +480,8 @@ jobs:
           if-no-files-found: warn
   merge-storybook-a11y-reports:
     name: 'Merge Storybook a11y reports and validate OpenACR'
-    needs: [affected, storybook-atomic]
-    if: always() && contains(needs.affected.outputs.projects, '@coveo/atomic')
+    needs: [build, storybook-atomic]
+    if: always() && contains(needs.build.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -597,8 +587,8 @@ jobs:
           if-no-files-found: ignore
   playwright-pkg-new-template-test:
     name: 'Run smoke tests on pkg-new-template'
-    needs: affected
-    if: contains(needs.affected.outputs.projects, '@coveo/pkg-new-template')
+    needs: build
+    if: contains(needs.build.outputs.projects, '@coveo/pkg-new-template')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
@@ -614,8 +604,8 @@ jobs:
       - uses: ./.github/actions/playwright-pkg-new-template
   playwright-atomic-hosted-page-test:
     name: 'Run e2e tests for Atomic Hosted Page'
-    needs: affected
-    if: contains(needs.affected.outputs.projects, '@coveo/atomic-hosted-page')
+    needs: build
+    if: contains(needs.build.outputs.projects, '@coveo/atomic-hosted-page')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
@@ -631,8 +621,8 @@ jobs:
       - uses: ./.github/actions/playwright-atomic-hosted-pages
   e2e-quantic:
     name: 'Run Quantic E2E tests'
-    needs: affected
-    if: contains(needs.affected.outputs.projects, '@coveo/quantic') && !(github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'skip-quantic'))
+    needs: build
+    if: contains(needs.build.outputs.projects, '@coveo/quantic') && !(github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'skip-quantic'))
     permissions:
       contents: read
       pull-requests: write
