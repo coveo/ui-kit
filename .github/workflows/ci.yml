@@ -9,6 +9,7 @@ concurrency:
 
 permissions:
   contents: read
+  pull-requests: read
 
 jobs:
   pr-report:
@@ -372,10 +373,31 @@ jobs:
           fetch-depth: 0
 
       - uses: ./.github/actions/setup
+      - name: Detect Renovate merge group
+        id: merge-group
+        if: github.event_name == 'merge_group'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          branches=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/pulls" --jq '.[].head.ref' 2>/dev/null || true)
+          if [[ -z "${branches}" ]]; then
+            pr_ref=${GITHUB_REF_NAME#*pr-}
+            pr_number=${pr_ref%%-*}
+            if [[ "${pr_number}" =~ ^[0-9]+$ ]]; then
+              branches=$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${pr_number}" --jq '.head.ref')
+            fi
+          fi
+          if [[ "${branches}" == *"renovate/"* ]]; then
+            printf '%s\n' 'is-renovate=true' >> "${GITHUB_OUTPUT}"
+          else
+            printf '%s\n' 'is-renovate=false' >> "${GITHUB_OUTPUT}"
+          fi
       - name: Run Chromatic visual tests
         uses: chromaui/action@14cfaef73576e69f95f47f60058063f46ca38719 # v18.1.0
         id: chromatic-run
-        if: contains(needs.build.outputs.projects, '@coveo/atomic') && github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'chromatic')
+        if: >-
+          (github.event_name == 'merge_group' && steps.merge-group.outputs.is-renovate == 'true') ||
+          (github.event_name == 'pull_request' && !startsWith(github.head_ref, 'renovate/') && contains(needs.build.outputs.projects, '@coveo/atomic') && !contains(github.event.pull_request.labels.*.name, 'chromatic'))
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           workingDir: packages/atomic
