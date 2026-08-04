@@ -200,7 +200,7 @@ async function ensureScratchOrgExists(log: StepLogger, options: Options) {
   }
 }
 
-// Occasionally, community creation fails with an unknown error on the Salesforce side. 
+// Occasionally, community creation fails with an unknown error on the Salesforce side.
 // Retrying after a short delay often resolves it.
 const TRANSIENT_COMMUNITY_CREATE_ERROR =
   'Error: Unable to create a new experience.';
