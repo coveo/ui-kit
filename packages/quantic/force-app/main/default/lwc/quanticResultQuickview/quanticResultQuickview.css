@@ -16,7 +16,7 @@
 }
 
 .quickview__button-base:not([disabled]){
-  border-radius: 0.25rem;
+  border-radius: var(--slds-g-radius-border-2, 0.25rem);
   color: var(--slds-s-link-color-active, var(--lwc-colorTextLinkActive, #0f2d5d));
 }
 

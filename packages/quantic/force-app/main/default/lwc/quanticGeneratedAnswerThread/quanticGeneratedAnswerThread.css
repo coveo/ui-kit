@@ -55,5 +55,5 @@
 }
 
 .generated-answer-thread__show-previous-button:hover {
-  background-color: var(--slds-g-color-surface-container-1, var(--lwc-colorBackgroundRowHover, #f3f2f2));
+  background-color: var(--lwc-colorBackgroundRowHover, #f3f2f2);
 }
