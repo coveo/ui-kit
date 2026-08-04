@@ -42,12 +42,18 @@ catalogs:
     '@angular/router':
       specifier: 21.2.18
       version: 21.2.18
+    '@coveo/atomic-component-health-check':
+      specifier: 2.2.19
+      version: 2.2.19
     '@coveo/relay-event-types':
       specifier: 19.22.0
       version: 19.22.0
     '@msw/playwright':
       specifier: 0.6.7
       version: 0.6.7
+    '@mswjs/http-middleware':
+      specifier: ^0.10.3
+      version: 0.10.3
     '@playwright/mcp':
       specifier: 0.0.78
       version: 0.0.78
@@ -114,12 +120,18 @@ catalogs:
     '@vitest/browser-playwright':
       specifier: 4.1.9
       version: 4.1.9
+    abortcontroller-polyfill:
+      specifier: 1.7.8
+      version: 1.7.8
     chromatic:
       specifier: 18.0.1
       version: 18.0.1
     dayjs:
       specifier: 1.11.21
       version: 1.11.21
+    dompurify:
+      specifier: 3.4.11
+      version: 3.4.11
     dotenv:
       specifier: 17.2.3
       version: 17.2.3
@@ -129,6 +141,12 @@ catalogs:
     exponential-backoff:
       specifier: 3.1.3
       version: 3.1.3
+    handlebars:
+      specifier: 4.7.9
+      version: 4.7.9
+    i18next:
+      specifier: 25.10.10
+      version: 25.10.10
     jest:
       specifier: 30.3.0
       version: 30.3.0
@@ -141,6 +159,9 @@ catalogs:
     lit:
       specifier: 3.3.3
       version: 3.3.3
+    live-server:
+      specifier: 1.2.2
+      version: 1.2.2
     local-web-server:
       specifier: 5.4.0
       version: 5.4.0
@@ -150,6 +171,9 @@ catalogs:
     msw:
       specifier: 2.15.0
       version: 2.15.0
+    natural-orderby:
+      specifier: 5.0.0
+      version: 5.0.0
     next:
       specifier: 16.2.9
       version: 16.2.9
@@ -195,6 +219,9 @@ catalogs:
     yaml:
       specifier: 2.9.0
       version: 2.9.0
+    zone.js:
+      specifier: 0.15.1
+      version: 0.15.1
 
 overrides:
   braces: 3.0.3
@@ -329,13 +356,13 @@ importers:
         specifier: 'catalog:'
         version: 1.11.21
       dompurify:
-        specifier: 3.4.11
+        specifier: 'catalog:'
         version: 3.4.11
       escape-html:
         specifier: 1.0.3
         version: 1.0.3
       i18next:
-        specifier: 25.10.10
+        specifier: 'catalog:'
         version: 25.10.10(typescript@6.0.3)
       i18next-http-backend:
         specifier: 3.0.6
@@ -405,7 +432,7 @@ importers:
         specifier: 'catalog:'
         version: 18.0.1(@chromatic-com/playwright@0.14.10(@playwright/test@1.60.0)(@testing-library/dom@10.4.1)(encoding@0.1.13)(prettier@3.9.5)(react@19.2.7))
       handlebars:
-        specifier: 4.7.9
+        specifier: 'catalog:'
         version: 4.7.9
       lit-html:
         specifier: 3.3.3
@@ -420,7 +447,7 @@ importers:
         specifier: 2.0.7
         version: 2.0.7(msw@2.15.0(@types/node@24.12.4)(typescript@6.0.3))
       natural-orderby:
-        specifier: 5.0.0
+        specifier: 'catalog:'
         version: 5.0.0
       playwright:
         specifier: 'catalog:'
@@ -474,7 +501,7 @@ importers:
   packages/atomic-a11y:
     dependencies:
       handlebars:
-        specifier: 4.7.9
+        specifier: 'catalog:'
         version: 4.7.9
       marked:
         specifier: 'catalog:'
@@ -614,7 +641,7 @@ importers:
         version: 4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9)
     devDependencies:
       i18next:
-        specifier: 25.10.10
+        specifier: 'catalog:'
         version: 25.10.10(typescript@6.0.3)
 
   packages/atomic-react:
@@ -748,7 +775,7 @@ importers:
         specifier: 62.0.0
         version: 62.0.0
       abortcontroller-polyfill:
-        specifier: 1.7.8
+        specifier: 'catalog:'
         version: 1.7.8
       https-proxy-agent:
         specifier: 8.0.0
@@ -828,7 +855,7 @@ importers:
         version: 4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9)
     devDependencies:
       '@coveo/atomic-component-health-check':
-        specifier: 2.2.19
+        specifier: 'catalog:'
         version: 2.2.19
       '@coveo/create-atomic-rollup-plugin':
         specifier: workspace:*
@@ -871,7 +898,7 @@ importers:
         version: 4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9)
     devDependencies:
       '@coveo/atomic-component-health-check':
-        specifier: 2.2.19
+        specifier: 'catalog:'
         version: 2.2.19
       '@coveo/create-atomic-rollup-plugin':
         specifier: workspace:*
@@ -993,7 +1020,7 @@ importers:
         specifier: 2.12.0
         version: 2.12.0(react@19.2.7)
       abortcontroller-polyfill:
-        specifier: 1.7.8
+        specifier: 'catalog:'
         version: 1.7.8
       coveo.analytics:
         specifier: workspace:*
@@ -1036,7 +1063,7 @@ importers:
         specifier: workspace:*
         version: link:../documentation
       live-server:
-        specifier: 1.2.2
+        specifier: 'catalog:'
         version: 1.2.2
       node-fetch:
         specifier: 3.3.2
@@ -1073,7 +1100,7 @@ importers:
         specifier: 'catalog:'
         version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       live-server:
-        specifier: 1.2.2
+        specifier: 'catalog:'
         version: 1.2.2
       typedoc:
         specifier: 'catalog:'
@@ -1091,7 +1118,7 @@ importers:
         specifier: workspace:*
         version: link:../platform-mock-api
       '@mswjs/http-middleware':
-        specifier: ^0.10.3
+        specifier: 'catalog:'
         version: 0.10.3(msw@2.15.0(@types/node@24.12.4)(typescript@6.0.3))
       msw:
         specifier: 'catalog:'
@@ -1135,7 +1162,7 @@ importers:
         specifier: 'catalog:'
         version: 2.15.0(@types/node@26.1.0)(typescript@6.0.3)
       natural-orderby:
-        specifier: 5.0.0
+        specifier: 'catalog:'
         version: 5.0.0
       typescript:
         specifier: 6.0.3
@@ -1153,7 +1180,7 @@ importers:
         specifier: workspace:*
         version: link:../coveo-analytics
       dompurify:
-        specifier: 3.4.11
+        specifier: 'catalog:'
         version: 3.4.11
       marked:
         specifier: 'catalog:'
@@ -1447,10 +1474,10 @@ importers:
         specifier: 'catalog:'
         version: 7.8.2
       tslib:
-        specifier: 2.8.1
+        specifier: 'catalog:'
         version: 2.8.1
       zone.js:
-        specifier: 0.15.1
+        specifier: 'catalog:'
         version: 0.15.1
     devDependencies:
       '@angular/build':
@@ -1689,7 +1716,7 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/platform-mock-api
       '@mswjs/http-middleware':
-        specifier: ^0.10.3
+        specifier: 'catalog:'
         version: 0.10.3(msw@2.15.0(@types/node@24.12.4)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
@@ -1913,13 +1940,13 @@ importers:
         specifier: 'catalog:'
         version: 7.8.2
       tslib:
-        specifier: 2.8.1
+        specifier: 'catalog:'
         version: 2.8.1
       vitest:
         specifier: 4.1.9
         version: 4.1.9(@opentelemetry/api@1.9.1)(@types/node@26.1.0)(@vitest/browser-playwright@4.1.9)(jsdom@28.1.0)(msw@2.15.0(@types/node@26.1.0)(typescript@6.0.3))(vite@8.1.5(@types/node@26.1.0)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
       zone.js:
-        specifier: 0.15.1
+        specifier: 'catalog:'
         version: 0.15.1
     devDependencies:
       '@angular/build':
@@ -2075,7 +2102,7 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/thermidor
       dompurify:
-        specifier: 3.4.11
+        specifier: 'catalog:'
         version: 3.4.11
       marked:
         specifier: 'catalog:'
