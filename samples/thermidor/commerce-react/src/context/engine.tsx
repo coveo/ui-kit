@@ -12,6 +12,7 @@ const EngineContext = createContext<Engine | null>(null);
  */
 export function EngineProvider({children}: PropsWithChildren) {
   const engineRef = useRef<Engine | null>(null);
+
   engineRef.current ??= new Engine({
     configuration,
     navigatorContextProvider: getNavigatorContext,
