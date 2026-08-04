@@ -14,6 +14,7 @@ export function useBuildController<TController extends Controller<any>>(
   factory: () => TController
 ): [TController, StateOf<TController>] {
   const controllerRef = useRef<TController | null>(null);
+
   controllerRef.current ??= factory();
 
   const controller = controllerRef.current;
