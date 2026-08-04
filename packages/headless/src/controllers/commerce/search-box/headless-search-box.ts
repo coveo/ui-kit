@@ -97,7 +97,12 @@ export function buildSearchBox(engine: CommerceEngine, props: SearchBoxProps = {
 
   validateOptions(engine, searchBoxOptionsSchema, options, 'buildSearchBox');
   dispatch(registerQuerySetQuery({id, query: getState().commerceQuery.query ?? ''}));
-  dispatch(registerQuerySuggest({id}));
+  dispatch(
+    registerQuerySuggest({
+      id,
+      ...(options.numberOfSuggestions !== undefined && {count: options.numberOfSuggestions}),
+    })
+  );
 
   const getValue = () => getState().querySet[options.id];
 
@@ -125,12 +130,7 @@ export function buildSearchBox(engine: CommerceEngine, props: SearchBoxProps = {
     },
 
     showSuggestions() {
-      dispatch(
-        fetchQuerySuggestions({
-          id,
-          ...(options.numberOfSuggestions !== undefined && {count: options.numberOfSuggestions}),
-        })
-      );
+      dispatch(fetchQuerySuggestions({id}));
     },
 
     selectSuggestion(value: string) {

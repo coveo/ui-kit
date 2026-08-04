@@ -3,19 +3,14 @@ import type {NavigatorContext} from '../../../app/navigator-context-provider.js'
 import {buildBaseCommerceAPIRequest} from '../common/base-commerce-api-request-builder.js';
 import type {StateNeededByQuerySuggest} from './query-suggest-actions.js';
 
-export interface QuerySuggestRequestOptions {
-  count?: number;
-}
-
 export const buildQuerySuggestRequest = (
   id: string,
   state: StateNeededByQuerySuggest,
-  navigatorContext: NavigatorContext,
-  options: QuerySuggestRequestOptions = {}
+  navigatorContext: NavigatorContext
 ): QuerySuggestRequest => {
   return {
     ...buildBaseCommerceAPIRequest(state, navigatorContext),
     query: state.querySet[id],
-    count: options.count,
+    count: state.querySuggest?.[id]?.count,
   };
 };

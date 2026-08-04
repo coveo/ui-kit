@@ -165,19 +165,17 @@ describe('headless search box', () => {
   });
 
   describe('numberOfSuggestions option', () => {
-    it('dispatches #fetchQuerySuggestions with the provided count', () => {
+    it('dispatches #registerQuerySuggest with the provided count', () => {
       vi.resetAllMocks();
       searchBox = buildSearchBox(engine, {
         options: {id, numberOfSuggestions: 3},
       });
 
-      searchBox.showSuggestions();
-      expect(fetchQuerySuggestions).toHaveBeenCalledWith({id, count: 3});
+      expect(registerQuerySuggest).toHaveBeenCalledWith({id, count: 3});
     });
 
-    it('does not pass count when numberOfSuggestions is not specified', () => {
-      searchBox.showSuggestions();
-      expect(fetchQuerySuggestions).toHaveBeenCalledWith({id});
+    it('does not pass count to #registerQuerySuggest when numberOfSuggestions is not specified', () => {
+      expect(registerQuerySuggest).toHaveBeenCalledWith({id});
     });
   });
 

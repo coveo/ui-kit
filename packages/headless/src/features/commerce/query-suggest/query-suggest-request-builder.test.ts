@@ -5,6 +5,7 @@ import {
 } from '../../../app/navigator-context-provider.js';
 import {buildMockBaseCommerceAPIRequest} from '../../../test/mock-commerce-api-request.js';
 import {getQuerySetInitialState} from '../../query-set/query-set-state.js';
+import {getQuerySuggestSetInitialState} from '../../query-suggest/query-suggest-state.js';
 import {buildBaseCommerceAPIRequest} from '../common/base-commerce-api-request-builder.js';
 import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {getCartInitialState} from '../context/cart/cart-state.js';
@@ -30,6 +31,7 @@ describe('#buildQuerySuggestRequest', () => {
       commerceContext: getContextInitialState(),
       querySet: getQuerySetInitialState(),
       commerceQuery: getCommerceQueryInitialState(),
+      querySuggest: getQuerySuggestSetInitialState(),
       ...configuration,
     };
   };
@@ -48,11 +50,11 @@ describe('#buildQuerySuggestRequest', () => {
   });
 
   it('sets base properties to the value returned by #buildBaseCommerceAPIRequest(#state, #navigatorContext)', () => {
-    const {query: _query, ...restOfRequest} = buildQuerySuggestRequest(
-      querySetId,
-      state,
-      navigatorContext
-    );
+    const {
+      query: _query,
+      count: _count,
+      ...restOfRequest
+    } = buildQuerySuggestRequest(querySetId, state, navigatorContext);
 
     expect(buildBaseCommerceAPIRequest).toHaveBeenCalledWith(state, navigatorContext);
     expect(restOfRequest).toEqual(mockBaseCommerceAPIRequest);
@@ -70,20 +72,31 @@ describe('#buildQuerySuggestRequest', () => {
     expect(request.query).toBe(query);
   });
 
-  it('sets #count when provided in options', () => {
-    request = buildQuerySuggestRequest(querySetId, state, navigatorContext, {count: 3});
+  it('sets #count from #state.querySuggest[querySetId].count', () => {
+    setState({
+      querySuggest: {
+        [querySetId]: {
+          id: querySetId,
+          completions: [],
+          responseId: '',
+          count: 3,
+          currentRequestId: '',
+          error: null,
+          partialQueries: [],
+          isLoading: false,
+        },
+      },
+    });
+    request = buildQuerySuggestRequest(querySetId, state, navigatorContext);
 
     expect(request.count).toBe(3);
   });
 
-  it('sets #count to undefined when not provided in options', () => {
+  it('sets #count to undefined when querySuggest entry does not exist', () => {
+    setState({
+      querySuggest: {},
+    });
     request = buildQuerySuggestRequest(querySetId, state, navigatorContext);
-
-    expect(request.count).toBeUndefined();
-  });
-
-  it('sets #count to undefined when options.count is undefined', () => {
-    request = buildQuerySuggestRequest(querySetId, state, navigatorContext, {count: undefined});
 
     expect(request.count).toBeUndefined();
   });
