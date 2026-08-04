@@ -31,9 +31,11 @@ const configureTurbo = (token) => {
   const turboDir = './.turbo';
   const configFile = path.join(turboDir, 'config.json');
   if (!fs.existsSync(turboDir)) {
-    fs.mkdirSync(turboDir, {recursive: true});
+    fs.mkdirSync(turboDir, {recursive: true, mode: 0o700});
   }
-  fs.writeFileSync(configFile, `${JSON.stringify({token}, null, 2)}\n`);
+  fs.writeFileSync(configFile, `${JSON.stringify({token}, null, 2)}\n`, {
+    mode: 0o600,
+  });
 };
 
 try {
@@ -47,7 +49,9 @@ try {
 
   if (!(await isAwsAuthenticated())) {
     console.log('⚠️  Not logged in to AWS — skipping Turborepo remote cache login.');
-    console.log('   Run "aws sso login" then "pnpm install" again to enable remote caching.');
+    console.log(
+      '   Run "aws sso login --profile dev" then "pnpm install" again to enable remote caching.'
+    );
     process.exit(0);
   }
 

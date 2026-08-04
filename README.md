@@ -76,9 +76,8 @@ This monorepo uses [Turborepo remote caching](https://turborepo.com/docs/core-co
 Remote caching is optional locally and enabled through AWS:
 
 ```sh
-aws sso login   # authenticate with the shared "dev" profile
+aws sso login --profile dev   # authenticate with the shared "dev" profile
 pnpm install    # runs turbo:login, which fetches the cache token from AWS SSM
-```
 
 `pnpm install` triggers `pnpm turbo:login`, which reads the token from SSM and writes it to `.turbo/config.json` (gitignored). If you are not logged in to AWS, the step is skipped and Turbo falls back to the local cache — no error. Re-authenticate any time with:
 
