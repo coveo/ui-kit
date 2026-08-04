@@ -350,13 +350,6 @@ jobs:
     name: 'Run Chromatic visual tests on Atomic'
     needs: build
     runs-on: ubuntu-latest
-    env:
-      CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-      # Should be fine without because of https://github.com/chromaui/chromatic-cli/blob/56920bf704895dcef6d1106df608d8e0d7886b58/action-src/main.ts#L24-L82
-      # # https://www.chromatic.com/docs/faq/environment-variables/#how-to-set-chromatic-environment-variables-in-popular-ci-providers
-      # CHROMATIC_SHA: ${{ github.event.pull_request.head.sha }}
-      # CHROMATIC_BRANCH: ${{ github.head_ref }}
-      # CHROMATIC_SLUG: ${{ github.repository }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
@@ -374,12 +367,20 @@ jobs:
           fetch-depth: 0
 
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo chromatic --filter=@coveo/atomic
+      - name: Run Chromatic visual tests
+        uses: chromaui/action@14cfaef73576e69f95f47f60058063f46ca38719 # v18.1.0
         id: chromatic-run
         if: contains(needs.build.outputs.projects, '@coveo/atomic') && github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'chromatic')
-      - run: pnpm exec turbo chromatic --filter=@coveo/atomic -- --skip
-        working-directory: packages/atomic
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          workingDir: packages/atomic
+      - name: Skip Chromatic visual tests
+        uses: chromaui/action@14cfaef73576e69f95f47f60058063f46ca38719 # v18.1.0
         if: steps.chromatic-run.outcome == 'skipped'
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          skip: true
+          workingDir: packages/atomic
   playwright-atomic:
     name: 'Run Playwright tests for Atomic'
     needs: build
