@@ -1,5 +1,5 @@
 # Development container for pnpm-based monorepo
-FROM node:krypton-bookworm@sha256:8530f76a96d88820d288761f022e318970dda93d01536919fbc16076b7983e63
+FROM node:krypton-bookworm@sha256:934240a162082fd8b8a2f90cd5114446443f1eba1c5378f6687167ca405e6584
 
 # Install essential packages
 RUN apt-get update && apt-get install -y \
