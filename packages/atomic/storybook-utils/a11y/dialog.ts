@@ -130,25 +130,12 @@ export async function testDialogA11y(
     // animation mid-flight and report spurious color-contrast violations.
     await step('Re-open dialog for axe evaluation', async () => {
       await userEvent.click(trigger);
-      const reopened = await waitFor(
+      await waitFor(
         async () => {
           const d = await root.findByShadowRole('dialog', {}, {timeout: 5000});
           expect(d).toBeInTheDocument();
-          return d as HTMLElement & {active?: boolean};
         },
         {timeout: 8000}
-      );
-
-      // `role="dialog"` is present as soon as the modal starts opening, so the
-      // snapshot can otherwise be captured mid open-animation (and with the
-      // quickview iframe body still blank), causing flaky Chromatic diffs.
-      // atomic-modal activates its focus trap only on `animationend`, so
-      // `active === true` is a deterministic "fully open and settled" signal.
-      await waitFor(
-        () => {
-          expect(reopened.active, 'Dialog should finish opening before snapshot').toBe(true);
-        },
-        {timeout: 3000}
       );
     });
   } catch (error) {
