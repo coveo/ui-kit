@@ -101,7 +101,7 @@
     "@coveo/bueno": "workspace:*",
     "@coveo/relay": "workspace:*",
     "@coveo/relay-event-types": "catalog:",
-    "@reduxjs/toolkit": "2.12.0",
+    "@reduxjs/toolkit": "catalog:",
     "abortcontroller-polyfill": "catalog:",
     "coveo.analytics": "workspace:*",
     "dayjs": "catalog:",
