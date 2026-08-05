@@ -520,9 +520,11 @@ export class AtomicFacet extends LitElement implements InitializableComponent<Bi
             },
           })
       )}
-      ${shouldDisplaySearchResults(this.facetState.facetSearch)
-        ? html`${this.renderSearchResults()}${this.renderMatches()}`
-        : html`${this.renderValues()}${this.renderShowMoreLess()}`}
+      ${
+        shouldDisplaySearchResults(this.facetState.facetSearch)
+          ? html`${this.renderSearchResults()}${this.renderMatches()}`
+          : html`${this.renderValues()}${this.renderShowMoreLess()}`
+      }
     `;
   }
 

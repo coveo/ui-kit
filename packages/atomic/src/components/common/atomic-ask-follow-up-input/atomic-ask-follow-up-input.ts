@@ -110,9 +110,9 @@ export class AtomicAskFollowUpInput extends LitElement {
     return html`
       <div
         part="input-container"
-        class="relative flex rounded-md border ${this.isOverCharacterLimit
-          ? 'border-error'
-          : 'border-neutral'}"
+        class="relative flex rounded-md border ${
+          this.isOverCharacterLimit ? 'border-error' : 'border-neutral'
+        }"
       >
         <div part="textarea-expander" class="grid grow overflow-hidden">
           <textarea
@@ -160,11 +160,13 @@ export class AtomicAskFollowUpInput extends LitElement {
           class="text-error"
           aria-live="polite"
         >
-          ${this.isOverCharacterLimit
-            ? this.i18n.t('follow-up-input-too-long', {
-                max: MAX_FOLLOW_UP_QUESTION_LENGTH,
-              })
-            : ''}
+          ${
+            this.isOverCharacterLimit
+              ? this.i18n.t('follow-up-input-too-long', {
+                  max: MAX_FOLLOW_UP_QUESTION_LENGTH,
+                })
+              : ''
+          }
         </span>
         <span
           part="character-counter"

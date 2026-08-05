@@ -115,6 +115,7 @@
   },
   "devDependencies": {
     "@coveo/documentation": "workspace:*",
+    "jsdom": "catalog:",
     "live-server": "catalog:",
     "node-fetch": "3.3.2",
     "typedoc": "catalog:",

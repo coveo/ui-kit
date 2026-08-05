@@ -214,65 +214,75 @@ export class SearchBox extends LitElement {
           @blur=${() => (this.focused = false)}
           @keydown=${(e) => this.#onKeydown(e)}
         />
-        ${showDropdown
-          ? html`
-              <div class="dropdown" @mousedown=${(e) => e.preventDefault()}>
-                ${suggestions.length
-                  ? html`
-                      <div class="column">
-                        <p class="column-title">Suggestions</p>
-                        <ul role="listbox">
-                          ${suggestions.map(
-                            (suggestion, i) => html`
-                              <li role="presentation">
-                                <button
-                                  type="button"
-                                  role="option"
-                                  class="suggestion ${i === this.active ? 'active' : ''}"
-                                  aria-selected=${i === this.active}
-                                  @click=${() => this.#selectSuggestion(suggestion.rawValue)}
-                                >
-                                  ${suggestion.rawValue}
-                                </button>
-                              </li>
-                            `
-                          )}
-                        </ul>
-                      </div>
-                    `
-                  : nothing}
-                ${results.length
-                  ? html`
-                      <div class="column">
-                        <p class="column-title">Instant results</p>
-                        <ul>
-                          ${results.map(
-                            (result) => html`
-                              <li>
-                                <a
-                                  class="instant"
-                                  href=${result.clickUri}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  @click=${() => this.#selectInstant(result)}
-                                  @auxclick=${() => this.#selectInstant(result)}
-                                  @contextmenu=${() => this.#selectInstant(result)}
-                                >
-                                  <span class="instant-title">${result.title}</span>
-                                  ${result.excerpt
-                                    ? html`<span class="instant-excerpt">${result.excerpt}</span>`
-                                    : nothing}
-                                </a>
-                              </li>
-                            `
-                          )}
-                        </ul>
-                      </div>
-                    `
-                  : nothing}
-              </div>
-            `
-          : nothing}
+        ${
+          showDropdown
+            ? html`
+                <div class="dropdown" @mousedown=${(e) => e.preventDefault()}>
+                  ${
+                    suggestions.length
+                      ? html`
+                          <div class="column">
+                            <p class="column-title">Suggestions</p>
+                            <ul role="listbox">
+                              ${suggestions.map(
+                                (suggestion, i) => html`
+                                  <li role="presentation">
+                                    <button
+                                      type="button"
+                                      role="option"
+                                      class="suggestion ${i === this.active ? 'active' : ''}"
+                                      aria-selected=${i === this.active}
+                                      @click=${() => this.#selectSuggestion(suggestion.rawValue)}
+                                    >
+                                      ${suggestion.rawValue}
+                                    </button>
+                                  </li>
+                                `
+                              )}
+                            </ul>
+                          </div>
+                        `
+                      : nothing
+                  }
+                  ${
+                    results.length
+                      ? html`
+                          <div class="column">
+                            <p class="column-title">Instant results</p>
+                            <ul>
+                              ${results.map(
+                                (result) => html`
+                                  <li>
+                                    <a
+                                      class="instant"
+                                      href=${result.clickUri}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      @click=${() => this.#selectInstant(result)}
+                                      @auxclick=${() => this.#selectInstant(result)}
+                                      @contextmenu=${() => this.#selectInstant(result)}
+                                    >
+                                      <span class="instant-title">${result.title}</span>
+                                      ${
+                                        result.excerpt
+                                          ? html`<span class="instant-excerpt"
+                                              >${result.excerpt}</span
+                                            >`
+                                          : nothing
+                                      }
+                                    </a>
+                                  </li>
+                                `
+                              )}
+                            </ul>
+                          </div>
+                        `
+                      : nothing
+                  }
+                </div>
+              `
+            : nothing
+        }
       </div>
     `;
   }

@@ -70,20 +70,22 @@ export const renderFeedbackAndCopyButtons: FunctionalComponent<
             onClick: onClickDislike,
           },
         })}
-        ${hasClipboardSupport()
-          ? renderCopyButton({
-              props: {
-                title: getCopyToClipboardTooltip(),
-                isCopied: copied,
-                error: copyError,
-                onClick: async () => {
-                  if (answer) {
-                    await onCopyToClipboard(answer);
-                  }
+        ${
+          hasClipboardSupport()
+            ? renderCopyButton({
+                props: {
+                  title: getCopyToClipboardTooltip(),
+                  isCopied: copied,
+                  error: copyError,
+                  onClick: async () => {
+                    if (answer) {
+                      await onCopyToClipboard(answer);
+                    }
+                  },
                 },
-              },
-            })
-          : nothing}
+              })
+            : nothing
+        }
       </div>
     `
   )}`;

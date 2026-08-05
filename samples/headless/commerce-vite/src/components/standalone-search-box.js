@@ -242,63 +242,69 @@ export class StandaloneSearchBox extends LitElement {
     }
     return html`
       <div class="dropdown" @mousedown=${(e) => e.preventDefault()}>
-        ${suggestions.length
-          ? html`
-              <div class="column">
-                <p class="column-title">Query suggestions</p>
-                <ul>
-                  ${suggestions.map(
-                    (suggestion, i) => html`
-                      <li>
-                        <button
-                          type="button"
-                          class="suggestion ${i === this.active ? 'active' : ''}"
-                          @click=${() => this.#selectSuggestion(suggestion.rawValue)}
-                        >
-                          ${suggestion.rawValue}
-                        </button>
-                      </li>
-                    `
-                  )}
-                </ul>
-              </div>
-            `
-          : nothing}
-        ${products.length
-          ? html`
-              <div class="column">
-                <p class="column-title">Instant products</p>
-                <ul>
-                  ${products.map(
-                    (product) => html`
-                      <li>
-                        <button
-                          type="button"
-                          class="instant"
-                          @click=${() => this.#onClickInstantProduct(product)}
-                        >
-                          <img
-                            class="instant-image"
-                            src=${product.ec_images?.[0] ?? ''}
-                            alt=${product.ec_name ?? ''}
-                            loading="lazy"
-                          />
-                          <span class="instant-info">
-                            <span class="instant-name"
-                              >${product.ec_name ?? product.permanentid}</span
-                            >
-                            ${product.ec_price == null
-                              ? nothing
-                              : html`<span class="instant-price">$${product.ec_price}</span>`}
-                          </span>
-                        </button>
-                      </li>
-                    `
-                  )}
-                </ul>
-              </div>
-            `
-          : nothing}
+        ${
+          suggestions.length
+            ? html`
+                <div class="column">
+                  <p class="column-title">Query suggestions</p>
+                  <ul>
+                    ${suggestions.map(
+                      (suggestion, i) => html`
+                        <li>
+                          <button
+                            type="button"
+                            class="suggestion ${i === this.active ? 'active' : ''}"
+                            @click=${() => this.#selectSuggestion(suggestion.rawValue)}
+                          >
+                            ${suggestion.rawValue}
+                          </button>
+                        </li>
+                      `
+                    )}
+                  </ul>
+                </div>
+              `
+            : nothing
+        }
+        ${
+          products.length
+            ? html`
+                <div class="column">
+                  <p class="column-title">Instant products</p>
+                  <ul>
+                    ${products.map(
+                      (product) => html`
+                        <li>
+                          <button
+                            type="button"
+                            class="instant"
+                            @click=${() => this.#onClickInstantProduct(product)}
+                          >
+                            <img
+                              class="instant-image"
+                              src=${product.ec_images?.[0] ?? ''}
+                              alt=${product.ec_name ?? ''}
+                              loading="lazy"
+                            />
+                            <span class="instant-info">
+                              <span class="instant-name"
+                                >${product.ec_name ?? product.permanentid}</span
+                              >
+                              ${
+                                product.ec_price == null
+                                  ? nothing
+                                  : html`<span class="instant-price">$${product.ec_price}</span>`
+                              }
+                            </span>
+                          </button>
+                        </li>
+                      `
+                    )}
+                  </ul>
+                </div>
+              `
+            : nothing
+        }
       </div>
     `;
   }
