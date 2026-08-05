@@ -43,7 +43,13 @@ export class SortObject {
   async selectNextSortOptionUsingKeyboard(
     expectedLabel: string
   ): Promise<void> {
+    const previousDescendant =
+      await this.sortDropDown.getAttribute('aria-activedescendant');
     await this.sortDropDown.press('ArrowDown');
+    await expect(this.sortDropDown).not.toHaveAttribute(
+      'aria-activedescendant',
+      previousDescendant ?? ''
+    );
     await this.sortDropDown.press('Enter');
     await expect(this.sortDropDown).toHaveText(expectedLabel);
   }

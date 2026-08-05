@@ -31,6 +31,7 @@ export const testSearch =
       {page, options, configuration, search, urlHash},
       use
     ) => {
+      await search.mockSearchWithBaseResponse();
       await page.goto(urlHash ? `${pageUrl}#${urlHash}` : pageUrl);
       configuration.configure(options);
       await search.waitForSearchResponse();

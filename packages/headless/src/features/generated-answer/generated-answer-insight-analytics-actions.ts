@@ -189,14 +189,16 @@ export const logGeneratedAnswerFeedback = (feedback: GeneratedAnswerFeedback): I
   });
 
 //TODO: SFINT-5435
-export const logGeneratedAnswerStreamEnd = (answerGenerated: boolean): InsightAction =>
+export const logGeneratedAnswerStreamEnd = (
+  answerGenerated: boolean,
+  answerId?: string,
+  answerTextIsEmpty?: boolean
+): InsightAction =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.generatedAnswerStreamEnd)({
     prefix: 'analytics/generatedAnswer/streamEnd',
     __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId = generativeQuestionAnsweringIdSelector(state);
-      const answerTextIsEmpty = answerGenerated
-        ? !state.generatedAnswer?.answer?.trim()
-        : undefined;
+      const generativeQuestionAnsweringId =
+        answerId ?? generativeQuestionAnsweringIdSelector(state);
       if (!generativeQuestionAnsweringId) {
         return null;
       }
@@ -211,7 +213,8 @@ export const logGeneratedAnswerStreamEnd = (answerGenerated: boolean): InsightAc
     },
     analyticsType: 'Rga.AnswerReceived',
     analyticsPayloadBuilder: (state): Rga.AnswerReceived | undefined => {
-      const generativeQuestionAnsweringId = generativeQuestionAnsweringIdSelector(state);
+      const generativeQuestionAnsweringId =
+        answerId ?? generativeQuestionAnsweringIdSelector(state);
       return {
         answerId: generativeQuestionAnsweringId ?? '',
         answerGenerated,

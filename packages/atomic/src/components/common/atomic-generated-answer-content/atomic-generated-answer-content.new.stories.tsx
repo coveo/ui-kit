@@ -71,11 +71,13 @@ const renderCitations = (citations: GeneratedAnswerCitation[]) =>
           .citation=${citation}
           .index=${index}
           .sendHoverEndEvent=${() => {}}
-          .interactiveCitation=${{
-            select: () => {},
-            beginDelayedSelect: () => {},
-            cancelPendingSelect: () => {},
-          } as InteractiveCitation}
+          .interactiveCitation=${
+            {
+              select: () => {},
+              beginDelayedSelect: () => {},
+              cancelPendingSelect: () => {},
+            } as InteractiveCitation
+          }
         ></atomic-citation>
       </li>`
   )}`;

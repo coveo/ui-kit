@@ -9,7 +9,10 @@ export interface CommerceSearchRequest {
   facets?: CommerceSearchFacetRequest[];
   page?: number;
   perPage?: number;
-  sort?: CommerceSearchSortCriterion[];
+  sort?: {
+    sortCriteria: 'relevance' | 'fields';
+    fields?: Array<{field: string; direction?: 'asc' | 'desc'; displayName?: string}>;
+  };
   debug?: boolean;
   enableResults?: boolean;
   legacyFacetOptions?: {freezeFacetOrder?: boolean};
@@ -94,7 +97,8 @@ export interface CommerceSearchSort {
 }
 
 export interface CommerceSearchSortCriterion {
-  sortCriteria: string;
+  sortCriteria?: string;
+  fields?: Array<{field: string; direction?: string; displayName?: string}>;
 }
 
 export interface CommerceSearchTrigger {

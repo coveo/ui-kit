@@ -44,6 +44,7 @@ export const testSearch =
       );
     },
     didYouMean: async ({page, options, configuration, search}, use) => {
+      await search.mockSearchWithBaseResponse();
       await page.goto(pageUrl);
       configuration.configure(options);
       await search.waitForSearchResponse();
@@ -68,11 +69,14 @@ export const testInsight =
       {page, options, search, configuration, insightSetup},
       use
     ) => {
+      await search.mockSearchWithBaseResponse();
       await page.goto(pageUrl);
       configuration.configure({...options, useCase: useCaseEnum.insight});
       await insightSetup.waitForInsightInterfaceInitialization();
-      await search.performSearch();
-      await search.waitForSearchResponse();
+      await Promise.all([
+        search.waitForSearchResponse(),
+        search.performSearch(),
+      ]);
       await use(new DidYouMeanObject(page));
     },
   });

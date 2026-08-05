@@ -28,7 +28,7 @@ export function createCommerceSearchEndpointThunk(iface: InterfaceHandle) {
         query: request.query,
         page: request.page,
         perPage: request.perPage,
-        ...(request.sort.length > 0 ? {sort: request.sort} : {}),
+        ...(request.sort ? {sort: request.sort} : {}),
         clientId: navigatorContext?.clientId ?? undefined,
         context: {view: {url: navigatorContext?.location ?? ''}},
       };
