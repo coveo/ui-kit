@@ -18,6 +18,7 @@
     "package-compatibility": "node ./scripts/ci/package-compatibility.mjs",
     "pr:report": "echo 'TODO KIT-5109: pr:report must be reactivated after pnpm has been merged in main'",
     "report:bundle-size:time-series": "node ./scripts/reports/bundle-size/time-series.mjs",
+    "report:catalog:candidates": "node ./scripts/report-catalog-candidates.mjs",
     "pre-commit": "lint-staged",
     "changeset": "changeset",
     "version-packages": "changeset version",
@@ -36,22 +37,23 @@
     "@tsconfig/node22": "22.0.5",
     "@types/jest": "catalog:",
     "@types/node": "catalog:",
-    "concurrently": "9.2.3",
+    "concurrently": "9.2.4",
     "cspell": "9.8.0",
     "esbuild": "catalog:",
     "esbuild-plugin-alias": "0.2.1",
     "esbuild-plugin-umd-wrapper": "3.0.0",
     "husky": "9.1.7",
-    "knip": "6.23.0",
+    "knip": "6.29.0",
     "lint-staged": "16.4.0",
-    "oxfmt": "0.57.0",
-    "oxlint": "1.72.0",
+    "oxfmt": "0.61.0",
+    "oxlint": "1.76.0",
     "playwright": "catalog:",
-    "publint": "0.3.21",
+    "publint": "0.3.22",
     "semver": "7.8.5",
-    "turbo": "2.10.2",
+    "turbo": "2.10.7",
     "typescript": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "yaml": "catalog:"
   },
   "engines": {
     "node": "^22.14.0 || ^24.11.0",
@@ -71,7 +73,8 @@
       "typescript": "catalog:",
       "html-minifier": "npm:html-minifier-terser@^7.2.0",
       "@angular/core": "catalog:",
-      "@angular/common": "catalog:"
+      "@angular/common": "catalog:",
+      "undici@^7": "^7.29.0"
     }
   }
 }

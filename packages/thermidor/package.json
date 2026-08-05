@@ -38,8 +38,8 @@
     "@reduxjs/toolkit": "catalog:"
   },
   "devDependencies": {
-    "@microsoft/api-extractor": "7.58.9",
-    "tsdown": "0.22.0",
+    "@microsoft/api-extractor": "7.58.12",
+    "tsdown": "0.22.14",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
