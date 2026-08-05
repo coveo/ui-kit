@@ -26,6 +26,12 @@ export class AtomicProductExcerpt
   extends LightDomMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
+  private static readonly propsSchema = new Schema({
+    truncateAfter: new StringValue({
+      constrainTo: ['none', '1', '2', '3', '4'],
+    }),
+  });
+
   @state()
   bindings!: CommerceBindings;
 
@@ -67,11 +73,7 @@ export class AtomicProductExcerpt
   }
 
   private validateProps() {
-    new Schema({
-      truncateAfter: new StringValue({
-        constrainTo: ['none', '1', '2', '3', '4'],
-      }),
-    }).validate({
+    AtomicProductExcerpt.propsSchema.validate({
       truncateAfter: this.truncateAfter,
     });
   }
