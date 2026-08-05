@@ -4,7 +4,7 @@ import type {RawSSEEvent} from '@/src/internal/api/protocol/stream-types.js';
 import {extractA2uiOperations} from './unified-surface-hydration.js';
 
 export interface ExtractedUpdate {
-  path: string;
+  path: string | undefined;
   value: unknown;
 }
 

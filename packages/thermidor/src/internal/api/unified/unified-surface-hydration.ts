@@ -36,7 +36,7 @@ export interface CreateSurfacePayload {
 
 export interface UpdateDataModelPayload {
   surfaceId: string;
-  path: string;
+  path?: string;
   value: unknown;
 }
 
@@ -57,6 +57,10 @@ export function hydrateFromCreateSurface(
   cartInterface: InterfaceHandle
 ): UnifiedHydrationResult | null {
   if (!payload.dataModel) {
+    return null;
+  }
+
+  if (payload.surfaceProperties?.placement !== 'main') {
     return null;
   }
 
@@ -85,10 +89,10 @@ export function hydrateFromCreateSurface(
 export function applyDataModelUpdate(
   engine: FullEngine,
   iface: InterfaceHandle,
-  path: string,
+  path: string | undefined,
   value: unknown
 ): void {
-  if (path === '/') {
+  if (!path || path === '/') {
     const handleResponse = createCommerceSearchEndpointResponseHandler(iface);
     handleResponse(engine, value as CommerceSearchResponse);
     return;
@@ -102,10 +106,16 @@ export function applyDataModelUpdate(
     }
     case '/pagination': {
       const paginationActions = getOrCreatePaginationActions(iface);
-      const pagination = value as {page: number; perPage: number; totalEntries: number};
+      const pagination = value as {
+        page: number;
+        perPage?: number;
+        pageSize?: number;
+        totalEntries: number;
+      };
+      const perPage = pagination.perPage ?? pagination.pageSize ?? 20;
       engine.mutate(paginationActions.setTotalCount(pagination.totalEntries));
-      engine.mutate(paginationActions.setFirstResult(pagination.page * pagination.perPage));
-      engine.mutate(paginationActions.setPageSize(pagination.perPage));
+      engine.mutate(paginationActions.setFirstResult(pagination.page * perPage));
+      engine.mutate(paginationActions.setPageSize(perPage));
       break;
     }
     case '/facets': {

@@ -36,15 +36,15 @@ const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
         endpointType: 'admin',
       });
       const url =
-        `${organizationEndpoint}` +
+        organizationEndpoint +
         '/rest/organizations/' +
-        `${organizationId}` +
+        organizationId +
         '/commerce/unstable/agentic/converse';
 
       const response = await fetch(url, {
         method: 'POST',
         signal: options?.signal,
-        body: JSON.stringify(request),
+        body: JSON.stringify(request.agentInput),
         headers: {
           'Content-Type': 'application/json',
           Accept: 'text/event-stream',
