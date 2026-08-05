@@ -589,7 +589,7 @@ importers:
         specifier: workspace:*
         version: link:../platform-mock-api
       '@msw/playwright':
-        specifier: 0.6.7
+        specifier: 'catalog:'
         version: 0.6.7(msw@2.15.0(@types/node@26.1.0)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
@@ -1021,7 +1021,7 @@ importers:
         specifier: 'catalog:'
         version: 19.22.0
       '@reduxjs/toolkit':
-        specifier: 2.12.0
+        specifier: 'catalog:'
         version: 2.12.0(react@19.2.7)
       abortcontroller-polyfill:
         specifier: 'catalog:'
