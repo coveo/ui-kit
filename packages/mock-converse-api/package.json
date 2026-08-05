@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@coveo/platform-mock-api": "workspace:*",
-    "@mswjs/http-middleware": "^0.10.3",
+    "@mswjs/http-middleware": "catalog:",
     "msw": "catalog:"
   },
   "devDependencies": {

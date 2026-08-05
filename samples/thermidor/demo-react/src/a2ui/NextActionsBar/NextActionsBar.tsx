@@ -21,7 +21,7 @@ export function A2UINextActionsBar({surface, onAction}: A2UINextActionsBarProps)
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} role="group" aria-label="Follow-up actions">
       {items.map((action, i) => (
         <button
           key={i}

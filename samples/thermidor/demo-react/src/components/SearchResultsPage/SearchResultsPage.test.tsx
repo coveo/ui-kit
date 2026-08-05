@@ -11,8 +11,12 @@ function createMockController(state: Record<string, unknown> = {}) {
     },
     selectPage: vi.fn(),
     setPageSize: vi.fn(),
+    sortBy: vi.fn(),
+    isSortedBy: vi.fn(() => false),
   };
 }
+
+const mockSortController = createMockController({appliedSort: null, availableSorts: []});
 
 vi.mock('@coveo/thermidor', async (importOriginal) => {
   const actual = (await importOriginal()) as Record<string, unknown>;
@@ -26,7 +30,7 @@ vi.mock('@coveo/thermidor', async (importOriginal) => {
         totalCount: 0,
         totalPages: 0,
       }),
-    buildSearchBoxController: () => createMockController({query: ''}),
+    buildSortController: () => mockSortController,
   };
 });
 
@@ -35,6 +39,9 @@ describe('SearchResultsPage integration', () => {
     onSubmit: vi.fn(),
     isStreaming: false,
     routedInterface: {useCase: 'search', interface: {id: 'mock'}} as any,
+    products: [] as any[],
+    onProductsChange: vi.fn(),
+    onBackToConversation: vi.fn(),
   };
 
   function renderPage(overrides = {}) {
@@ -43,15 +50,11 @@ describe('SearchResultsPage integration', () => {
     return {...result, props};
   }
 
-  it('renders header with PromptInput', () => {
+  it('renders PromptInput via ProductTargeting', () => {
     renderPage();
-
-    const header = document.querySelector('header');
-    expect(header).not.toBeNull();
 
     const textarea = screen.getByLabelText('Prompt');
     expect(textarea).toBeDefined();
-    expect(header!.contains(textarea)).toBe(true);
   });
 
   it('renders sidebar with "Facets (coming soon)" text', () => {
@@ -60,7 +63,7 @@ describe('SearchResultsPage integration', () => {
     expect(screen.getByText('Facets (coming soon)')).toBeDefined();
   });
 
-  it('builds all 3 controllers via mock interface and renders without errors', () => {
+  it('builds controllers via mock interface and renders without errors', () => {
     renderPage();
 
     expect(screen.getByText('No results found')).toBeDefined();
@@ -68,20 +71,26 @@ describe('SearchResultsPage integration', () => {
 
   it('returns null when routedInterface is null', () => {
     const {container} = render(
-      <SearchResultsPage onSubmit={vi.fn()} isStreaming={false} routedInterface={null as any} />
+      <SearchResultsPage
+        onSubmit={vi.fn()}
+        isStreaming={false}
+        routedInterface={null as any}
+        onBackToConversation={vi.fn()}
+        products={[]}
+        onProductsChange={vi.fn()}
+      />
     );
 
     expect(container.firstChild).toBeNull();
   });
 
-  it('toast is shared between SortPlaceholder and suggestion actions', () => {
+  it('calls sortBy when a sort option is selected', () => {
     renderPage();
 
-    const sortSelect = screen.getByLabelText('Sort by:');
-    fireEvent.click(sortSelect);
+    const sortSelects = screen.getAllByLabelText('Sort by:') as HTMLSelectElement[];
+    fireEvent.change(sortSelects[0], {target: {value: '1'}});
 
-    expect(screen.getByRole('status')).toBeDefined();
-    expect(screen.getByText('Not supported yet')).toBeDefined();
+    expect(mockSortController.sortBy).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -90,6 +99,9 @@ describe('SearchResultsPage suggestions integration', () => {
     onSubmit: vi.fn(),
     isStreaming: false,
     routedInterface: {useCase: 'search', interface: {id: 'mock'}} as any,
+    products: [] as any[],
+    onProductsChange: vi.fn(),
+    onBackToConversation: vi.fn(),
   };
 
   function renderPage(overrides = {}) {
@@ -152,6 +164,9 @@ describe('SearchResultsPage PageSizeSelector integration', () => {
     onSubmit: vi.fn(),
     isStreaming: false,
     routedInterface: {useCase: 'search', interface: {id: 'mock'}} as any,
+    products: [] as any[],
+    onProductsChange: vi.fn(),
+    onBackToConversation: vi.fn(),
   };
 
   function renderPage(overrides = {}) {
@@ -186,6 +201,8 @@ describe('SearchResultsPage "Back to conversation" button', () => {
     isStreaming: false,
     routedInterface: {useCase: 'search', interface: {id: 'mock'}} as any,
     onBackToConversation: vi.fn(),
+    products: [] as any[],
+    onProductsChange: vi.fn(),
   };
 
   function renderPage(overrides = {}) {

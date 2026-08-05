@@ -1,11 +1,7 @@
 import {buildCommerceEngine, getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
-import {MockCommerceApi} from '@coveo/platform-mock-api/commerce/mock';
-import {
-  type baseResponse,
-  richResponse,
-} from '@coveo/platform-mock-api/commerce/recommendation-response';
+import {MockCommerceApi, recommendationResponses} from '@coveo/platform-mock-api/commerce';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 import {isTestMode} from '@/storybook-utils/common/is-test-mode';
 import '@/src/components/commerce/atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface.js';
@@ -51,7 +47,8 @@ const meta: Meta = {
   },
   beforeEach: async () => {
     mockCommerceApi.recommendationEndpoint.mock(
-      () => richResponse as unknown as typeof baseResponse
+      () =>
+        recommendationResponses.richResponse as unknown as typeof recommendationResponses.baseResponse
     );
   },
   render: () => html`

@@ -36,8 +36,8 @@ export class ConversationService {
     });
 
     this.applyState(this.controller.state);
-    this.controller.subscribe((state) => {
-      this.applyState(state);
+    this.controller.subscribe(() => {
+      this.applyState(this.controller.state);
       this.persistState();
     });
   }

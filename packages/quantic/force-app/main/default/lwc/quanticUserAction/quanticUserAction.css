@@ -5,9 +5,9 @@
 
 .user-action__separator {
   width: 0.125rem;
-  height: 1.75rem;
+  height: var(--slds-g-sizing-8, 1.75rem);
   background-color: var(--slds-g-color-on-surface-1, var(--lwc-colorTextIconDefault, #747474));
-  border-radius: var(--lwc-borderRadiusMedium, 0.25rem);
+  border-radius: var(--slds-g-radius-border-2, var(--lwc-borderRadiusMedium, 0.25rem));
 }
 
 .user-action__title {

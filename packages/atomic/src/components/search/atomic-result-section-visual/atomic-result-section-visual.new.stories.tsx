@@ -6,10 +6,9 @@ import {
   getResultSectionArgTypes,
   getResultSectionDecorators,
 } from '@/storybook-utils/search/result-section-story-utils';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
+import {MockSearchApi, type SearchResponse} from '@coveo/platform-mock-api/search';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-result-section-visual/atomic-result-section-visual.js';
-import {SearchResponse} from '@coveo/platform-mock-api/search/search-response';
 
 const {events, args, argTypes, template} = getStorybookHelpers('atomic-result-section-visual', {
   excludeCategories: ['methods'],

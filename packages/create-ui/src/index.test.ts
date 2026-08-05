@@ -164,7 +164,7 @@ describe('main', () => {
 
     await expect(
       main(['my-app', '--template', 'headless-search-react', '--template-version', '99.99.99'])
-    ).rejects.toThrow('Template "headless-search-react" version "99.99.99" is not available.');
+    ).rejects.toThrow(/headless-search-react.*99\.99\.99.*3\.53\.1/);
 
     outSpy.mockRestore();
     logSpy.mockRestore();

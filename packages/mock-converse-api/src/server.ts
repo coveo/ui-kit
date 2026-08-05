@@ -1,5 +1,5 @@
 import {createServer as createHttpMiddlewareServer} from '@mswjs/http-middleware';
-import {baseResponse} from '@coveo/platform-mock-api/converse/generate-response';
+import {converseResponses} from '@coveo/platform-mock-api/converse';
 import {http, HttpResponse} from 'msw';
 
 export interface ServerOptions {
@@ -57,7 +57,7 @@ const handleConversePost = async ({request}: {request: Request}) => {
     );
   }
 
-  return withCors(baseResponse(body));
+  return withCors(converseResponses.baseResponse(body));
 };
 
 const preflightResponse = () => withCors(new HttpResponse(null, {status: 204}));

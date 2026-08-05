@@ -12,6 +12,7 @@ export interface CoveoSearchEndpointRequest {
   pipeline?: string;
   locale?: string;
   timezone?: string;
+  sortCriteria?: string;
   analytics?: AnalyticsParams;
 }
 

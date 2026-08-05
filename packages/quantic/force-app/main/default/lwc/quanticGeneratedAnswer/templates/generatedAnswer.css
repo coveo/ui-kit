@@ -10,7 +10,7 @@
 }
 
 .generated-answer__footer {
-  gap: 1rem;
+  gap: var(--slds-g-spacing-4, 1rem);
 }
 
 .generated-answer__answer--collapsed {
@@ -19,7 +19,7 @@
 
 .generated-answer__answer--expanded {
   max-height: 100%;
-  margin-bottom: 1rem;
+  margin-bottom: var(--slds-g-spacing-4, 1rem);
   overflow: visible;
 }
 

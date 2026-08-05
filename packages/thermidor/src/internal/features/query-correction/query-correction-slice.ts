@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import {getOrCreateQueryCorrectionActions} from './query-correction-actions.js';
 import type {QueryCorrection} from './query-correction-actions.js';
@@ -35,7 +35,7 @@ export function createQueryCorrectionSlice(
 }
 
 export function getOrCreateQueryCorrectionSlice(iface: InterfaceHandle) {
-  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  const {stateId, cacheRegistry} = getInterfaceInternals(iface);
   return cacheRegistry.getOrCreate(CACHE_KEY, () => {
     const actions = getOrCreateQueryCorrectionActions(iface);
     return createQueryCorrectionSlice(stateId, actions);

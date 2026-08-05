@@ -44,3 +44,9 @@ export type {
   PaginationControllerOptions,
   PaginationControllerState,
 } from './pagination/pagination-controller.js';
+export {buildSortController} from './sort/sort-controller.js';
+export type {
+  SortController,
+  SortControllerOptions,
+  SortControllerState,
+} from './sort/sort-controller.js';

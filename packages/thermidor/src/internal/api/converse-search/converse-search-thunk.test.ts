@@ -1,7 +1,7 @@
 import {describe, it, expect, vi, beforeEach} from 'vitest';
 import {createConverseSearchEndpointThunk} from './converse-search-thunk.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
-import type {EndpointStateScope} from '@/src/internal/utils/index.js';
+import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 
 const mockCall = vi.fn();
 const mockHandleResponse = vi.fn();
@@ -21,7 +21,7 @@ vi.mock('@/src/internal/api/commerce-search/commerce-search-request-selector.js'
       query: '',
       page: 0,
       perPage: 10,
-      sort: [],
+      sort: undefined,
       facets: [],
     },
 }));
@@ -65,11 +65,10 @@ vi.mock('@/src/internal/api/commerce-search/commerce-search-thunk-slice.js', () 
   }),
 }));
 
+const mockGetInterfaceInternals = vi.fn();
+
 vi.mock('@/src/internal/utils/index.js', () => ({
-  getHandleInternals: () => ({
-    stateId: 'test-interface',
-    cacheRegistry: {getOrCreate: (_key: any, factory: any) => factory()},
-  }),
+  getInterfaceInternals: (...args: unknown[]) => mockGetInterfaceInternals(...args),
 }));
 
 function createMockEngine(state: Record<string, any> = {}): FullEngine {
@@ -94,15 +93,20 @@ const defaultRequest = {
   query: 'shoes',
   page: 0,
   perPage: 20,
-  sort: [{sortCriteria: 'price ascending'}],
+  sort: {sortCriteria: 'fields' as const, fields: [{field: 'price', direction: 'asc' as const}]},
   facets: [{facetId: 'brand', selectedValues: ['Nike']}],
 };
 
-function createScope(): EndpointStateScope {
-  return {
-    scopeInterface: {} as any,
-    baseInterface: {} as any,
-  };
+function createMockInterface(): InterfaceHandle {
+  return {disposed: false, dispose: vi.fn()};
+}
+
+function setupMockInternals(engine: FullEngine) {
+  mockGetInterfaceInternals.mockReturnValue({
+    engine,
+    stateId: 'test-interface',
+    cacheRegistry: {getOrCreate: (_key: any, factory: any) => factory()},
+  });
 }
 
 async function executeThunk(
@@ -118,7 +122,9 @@ async function executeThunk(
     ? ({...baseEngine, ...engineOverrides} as unknown as FullEngine)
     : baseEngine;
 
-  const thunk = createConverseSearchEndpointThunk(engine, createScope(), {} as any);
+  setupMockInternals(engine);
+
+  const thunk = createConverseSearchEndpointThunk(createMockInterface(), {} as any);
   const action = thunk({engine});
   return {
     result: await action(vi.fn(), () => ({}), undefined),
@@ -144,7 +150,9 @@ describe('createConverseSearchEndpointThunk', () => {
       __cart: [{productId: 'p1', name: 'Item', price: 10, quantity: 1}],
     });
 
-    const thunk = createConverseSearchEndpointThunk(engine, createScope(), {} as any);
+    setupMockInternals(engine);
+
+    const thunk = createConverseSearchEndpointThunk(createMockInterface(), {} as any);
     const action = thunk({engine});
     await action(vi.fn(), () => ({}), undefined);
 
@@ -157,7 +165,7 @@ describe('createConverseSearchEndpointThunk', () => {
         message: 'shoes',
         page: 0,
         perPage: 20,
-        sort: [{sortCriteria: 'price ascending'}],
+        sort: {sortCriteria: 'fields', fields: [{field: 'price', direction: 'asc'}]},
         facets: [{facetId: 'brand', selectedValues: ['Nike']}],
         clientId: 'client-abc',
         conversationSessionId: 'session-123',
@@ -191,9 +199,9 @@ describe('createConverseSearchEndpointThunk', () => {
     );
   });
 
-  it('omits sort when sort array is empty', async () => {
+  it('omits sort when sort is undefined', async () => {
     await executeThunk({
-      __request: {...defaultRequest, sort: []},
+      __request: {...defaultRequest, sort: undefined},
     });
 
     expect(mockCall).toHaveBeenCalledWith(
@@ -270,11 +278,13 @@ describe('createConverseSearchEndpointThunk', () => {
       __request: defaultRequest,
     });
 
-    const thunk = createConverseSearchEndpointThunk(engine, createScope(), {} as any);
+    setupMockInternals(engine);
+
+    const thunk = createConverseSearchEndpointThunk(createMockInterface(), {} as any);
     const action = thunk({engine});
     const result = await action(vi.fn(), () => ({}), undefined);
 
-    expect(result.meta.rejectedWithValue).toBeFalsy();
+    expect((result.meta as any).rejectedWithValue).toBeFalsy();
     expect((result as any).error.message).toBe('Converse endpoint failed');
   });
 
@@ -289,11 +299,13 @@ describe('createConverseSearchEndpointThunk', () => {
       __request: defaultRequest,
     });
 
-    const thunk = createConverseSearchEndpointThunk(engine, createScope(), {} as any);
+    setupMockInternals(engine);
+
+    const thunk = createConverseSearchEndpointThunk(createMockInterface(), {} as any);
     const action = thunk({engine});
     const result = await action(vi.fn(), () => ({}), undefined);
 
-    expect(result.meta.rejectedWithValue).toBeFalsy();
+    expect((result.meta as any).rejectedWithValue).toBeFalsy();
     expect((result as any).error.message).toBe(
       'No search response received from the converse stream'
     );
@@ -309,7 +321,9 @@ describe('createConverseSearchEndpointThunk', () => {
       __request: defaultRequest,
     });
 
-    const thunk = createConverseSearchEndpointThunk(engine, createScope(), {} as any);
+    setupMockInternals(engine);
+
+    const thunk = createConverseSearchEndpointThunk(createMockInterface(), {} as any);
     const action = thunk({engine});
     await action(vi.fn(), () => ({}), undefined);
 

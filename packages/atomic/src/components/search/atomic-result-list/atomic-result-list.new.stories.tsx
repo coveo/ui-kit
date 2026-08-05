@@ -1,7 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
+import {MockSearchApi, type SearchResponse} from '@coveo/platform-mock-api/search';
 import {
   playExecuteFirstSearch,
   wrapInSearchInterface,
@@ -28,7 +28,6 @@ import '@/src/components/search/atomic-result-template/atomic-result-template.js
 import '@/src/components/search/atomic-result-text/atomic-result-text.js';
 import '@/src/components/search/atomic-table-element/atomic-table-element.js';
 import '@/src/components/search/atomic-text/atomic-text.js';
-import {SearchResponse} from '@coveo/platform-mock-api/search/search-response';
 
 const defaultTemplateContent = `<atomic-result-template>
   <template>

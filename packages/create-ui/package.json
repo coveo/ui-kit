@@ -1,6 +1,6 @@
 {
   "name": "@coveo/create-ui",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Scaffold a Coveo UI project (Atomic or Headless) from the official samples.",
   "keywords": [
     "atomic",
@@ -42,7 +42,6 @@
     "pacote": "21.5.1"
   },
   "devDependencies": {
-    "@sentry/cli": "3.6.1",
     "@types/node": "catalog:",
     "@types/pacote": "11.1.8",
     "typescript": "catalog:",
