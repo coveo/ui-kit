@@ -21,24 +21,11 @@ interface ComparisonItem {
 }
 
 export function A2UIComparisonTable({surface}: A2UIComparisonTableProps) {
-  const heading = (surface.componentProps.heading as {literalString?: string})?.literalString ?? '';
+  const heading = extractHeading(surface);
+  const attributes = extractAttributes(surface);
+  const items = extractItems(surface);
   const targeting = useTargeting();
   const isTargetable = targeting?.isTargeting ?? false;
-
-  const attributes = (surface.componentProps.attributes as string[]) ?? [
-    'standout',
-    'trade_off',
-    'best_for',
-  ];
-
-  const rawItems = surface.data.items;
-  let items: ComparisonItem[] = [];
-
-  if (Array.isArray(rawItems)) {
-    items = rawItems as ComparisonItem[];
-  } else if (rawItems && typeof rawItems === 'object') {
-    items = Object.values(rawItems) as ComparisonItem[];
-  }
 
   const [startIndex, setStartIndex] = useState(0);
 
@@ -174,4 +161,31 @@ export function A2UIComparisonTable({surface}: A2UIComparisonTableProps) {
       )}
     </section>
   );
+}
+
+function extractHeading(surface: ParsedSurface): string {
+  const dataHeading = surface.data.heading as {value?: string} | string | undefined;
+  if (typeof dataHeading === 'string') return dataHeading;
+  if (dataHeading && typeof dataHeading === 'object' && 'value' in dataHeading)
+    return dataHeading.value ?? '';
+  return (surface.componentProps.heading as {literalString?: string})?.literalString ?? '';
+}
+
+function extractAttributes(surface: ParsedSurface): string[] {
+  if (Array.isArray(surface.data.attributes)) {
+    return surface.data.attributes as string[];
+  }
+  const dataAttrs = surface.data.attributes as {items?: string[]} | undefined;
+  if (dataAttrs?.items) return dataAttrs.items;
+  return (surface.componentProps.attributes as string[]) ?? ['standout', 'trade_off', 'best_for'];
+}
+
+function extractItems(surface: ParsedSurface): ComparisonItem[] {
+  const products = surface.data.products as {items?: ComparisonItem[]} | undefined;
+  if (products?.items) return products.items;
+  const dataItems = surface.data.items;
+  if (Array.isArray(dataItems)) return dataItems as ComparisonItem[];
+  if (dataItems && typeof dataItems === 'object')
+    return Object.values(dataItems) as ComparisonItem[];
+  return [];
 }

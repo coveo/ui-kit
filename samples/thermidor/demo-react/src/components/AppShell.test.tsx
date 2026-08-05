@@ -1,12 +1,12 @@
 import {render, screen, act} from '@testing-library/react';
 import {describe, it, expect, vi, beforeEach} from 'vitest';
-import type {ConverseControllerState, Turn} from '@coveo/thermidor';
+import type {UnifiedConverseControllerState, Turn} from '@coveo/thermidor';
 import {AppShell} from './AppShell.js';
 
 const mockSubmit = vi.fn();
 const mockClear = vi.fn();
 
-let mockConverseState: ConverseControllerState;
+let mockConverseState: UnifiedConverseControllerState;
 
 vi.mock('../context/generative-interface.js', () => ({
   useGenerativeInterface: () => ({}),

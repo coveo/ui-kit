@@ -12,9 +12,7 @@ interface ActionItem {
 }
 
 export function A2UINextActionsBar({surface, onAction}: A2UINextActionsBarProps) {
-  const items = ((surface.data.actions as ActionItem[]) ?? []).filter((action) =>
-    action.text?.trim()
-  );
+  const items = extractActions(surface);
 
   if (items.length === 0) {
     return null;
@@ -34,4 +32,20 @@ export function A2UINextActionsBar({surface, onAction}: A2UINextActionsBarProps)
       ))}
     </div>
   );
+}
+
+/**
+ * Extract action items from surface data.
+ * Unified endpoint format: dataModel.actions.items
+ * Legacy format: data.actions (flat array)
+ */
+function extractActions(surface: ParsedSurface): ActionItem[] {
+  const actions = surface.data.actions as {items?: ActionItem[]} | ActionItem[] | undefined;
+  if (actions && 'items' in actions && Array.isArray(actions.items)) {
+    return actions.items.filter((a) => a.text?.trim());
+  }
+  if (Array.isArray(actions)) {
+    return actions.filter((a) => a.text?.trim());
+  }
+  return [];
 }

@@ -76,9 +76,9 @@ export default defineConfig(({mode}) => {
         ? {
             proxy: {
               [`/rest/organizations/${orgId}/commerce/unstable/agentic`]: {
-                target: targets.admin,
+                target: 'https://local.stratus.coveo.com:8481',
                 changeOrigin: true,
-                secure: true,
+                secure: false,
               },
               '/rest': {
                 target: targets.platform,
