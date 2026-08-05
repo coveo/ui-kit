@@ -33,9 +33,9 @@
               "components": [
                 {
                   "componentAttributes": {
-                    "engineId": "example-insight-search-agent"
+                    "engineId": "example-insight-generative-answering"
                   },
-                  "componentName": "c:exampleInsightSearchAgent",
+                  "componentName": "c:exampleInsightGenerativeAnswering",
                   "id": "f8e7d6c5-b4a3-4291-8f0e-1d2c3b4a5f6e",
                   "renderPriority": "NEUTRAL",
                   "renditionMap": {},

@@ -5,12 +5,12 @@ import {
 } from 'c/quanticHeadlessLoader';
 import {LightningElement, api, track} from 'lwc';
 
-export default class ExampleInsightSearchAgent extends LightningElement {
+export default class ExampleInsightGenerativeAnswering extends LightningElement {
   @track config = {};
   isConfigured = false;
 
   /** @type {string} */
-  @api engineId = 'example-insight-search-agent';
+  @api engineId = 'example-insight-generative-answering';
   /** @type {string} */
   @api environment = 'prod';
   /** @type {string} */

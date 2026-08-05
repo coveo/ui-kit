@@ -15,7 +15,9 @@ global with sharing class InsightController {
   @AuraEnabled(cacheable=true)
   public static String getHeadlessConfiguration(String recordId) {
     /**
-     * e.g. To switch to the Insight Token Provider, you simply need to replace the following line by:
+     * The SampleInsightTokenProvider returns a static sample configuration with
+     * hardcoded demo credentials for the Coveo sample organization.
+     * To switch to the real Insight Token Provider, replace the following line by:
      * `return InsightTokenProvider.getHeadlessConfiguration(recordId);`
      */
     return SampleInsightTokenProvider.getHeadlessConfiguration(recordId);

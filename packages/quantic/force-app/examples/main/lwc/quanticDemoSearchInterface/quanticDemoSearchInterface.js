@@ -33,7 +33,7 @@ export default class QuanticDemoSearchInterface extends QuanticSearchInterface {
    */
   @api organizationId;
   /**
-   * The Coveo environment (e.g., 'prod', 'hipaa', 'staging', 'dev').
+   * The Coveo environment (e.g., 'prod').
    * @api
    * @type {string}
    */

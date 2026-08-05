@@ -78,9 +78,6 @@
       "c/quanticInsightInterface": [
         "quanticInsightInterface/quanticInsightInterface.js"
       ],
-      "c/organizationUtils": [
-        "../../../examples/main/lwc/organizationUtils/organizationUtils.js"
-      ],
       "c/quanticNumberButton": ["quanticNumberButton/quanticNumberButton.js"],
       "c/quanticPill": ["quanticPill/quanticPill.js"],
       "c/quanticSvg": ["quanticSvg/quanticSvg.js"],
@@ -104,7 +101,7 @@
     "coveo.d.ts",
     "force-app/solutionExamples/main/lwc"
   ],
-  "exclude": ["**/__tests__/**", "**/e2e/**", "force-app/examples/main/lwc/quanticDemoSearchInterface/**", "force-app/examples/main/lwc/quanticDemoInsightInterface/**"],
+  "exclude": ["**/__tests__/**", "**/e2e/**"],
   "typeAcquisition": {
     "include": ["jest"]
   },
