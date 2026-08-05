@@ -1,5 +1,5 @@
 diff --git a/dist/index.d.ts b/dist/index.d.ts
-index 1a969c8c5db3730eb974936e54c1eb49df5d1a0f..7dfc58dbdf9d44639a1494eef378ed426babada2 100644
+index f22a4c4..626c85e 100644
 --- a/dist/index.d.ts
 +++ b/dist/index.d.ts
 @@ -7,6 +7,8 @@ type StorybookHelpersOptions = {
@@ -11,7 +11,7 @@ index 1a969c8c5db3730eb974936e54c1eb49df5d1a0f..7dfc58dbdf9d44639a1494eef378ed42
      /** Adds a <script> tag where a `component` variable will reference the story's component */
      setComponentVariable?: boolean;
      /** renders default values for attributes and CSS properties */
-@@ -19,6 +21,8 @@ type Options = StorybookHelpersOptions;
+@@ -23,6 +25,8 @@ type Options = StorybookHelpersOptions;
  type StoryOptions = {
      /** Categories to exclude from these stories */
      excludeCategories?: Array<Categories>;
@@ -21,25 +21,25 @@ index 1a969c8c5db3730eb974936e54c1eb49df5d1a0f..7dfc58dbdf9d44639a1494eef378ed42
      setComponentVariable?: boolean;
  };
 diff --git a/dist/index.js b/dist/index.js
-index 744e2cdce7310b7c1cf20a5f2b3228e6979380aa..49c4484de945380ffc8c5198fb1f735e46724706 100644
+index cc73452..056a11b 100644
 --- a/dist/index.js
 +++ b/dist/index.js
-@@ -569,7 +569,7 @@ var options2 = {};
- setTimeout(() => {
-   options2 = globalThis?.__WC_STORYBOOK_HELPERS_CONFIG__ || {};
- });
+@@ -629,7 +629,7 @@ function transformToScoped(template, tagSelector) {
+   ${styleContent}
+ }`;
+ }
 -function getTemplate(component, args, slot, argTypes, excludeCategories, setComponentVariable) {
 +function getTemplate(component, args, slot, argTypes, excludeCategories, setComponentVariable, containerSelector) {
    if (!args) {
      return html`<${unsafeStatic(component.tagName)}></${unsafeStatic(component.tagName)}>`;
    }
-@@ -580,11 +580,23 @@ function getTemplate(component, args, slot, argTypes, excludeCategories, setComp
-   const { attrOperators, propOperators, additionalAttrs } = getTemplateOperators(component, args, argTypes);
-   const operators = { ...attrOperators, ...propOperators, ...additionalAttrs };
-   const slotsTemplate = getSlotsTemplate(component, args, excludeCategories);
+@@ -654,11 +654,23 @@ function getTemplate(component, args, slot, argTypes, excludeCategories, setComp
+     excludeCategories,
+     scopeSelector
+   );
 -  syncControls(component);
 +  syncControls(component, containerSelector);
-   return html`${getStyleTemplate(component, args, excludeCategories)}
+   return html`${styleTemplate}
  <${unsafeStatic(component.tagName)} ${spread(operators)}>${slotsTemplate}${slot || ""}</${unsafeStatic(component.tagName)}>
  ${options2.setComponentVariable || setComponentVariable ? unsafeHTML(
 -    "<script>\n  window.component = document.querySelector('" + component.tagName + "');\n</script>"
@@ -59,7 +59,7 @@ index 744e2cdce7310b7c1cf20a5f2b3228e6979380aa..49c4484de945380ffc8c5198fb1f735e
    ) : ""}
  `;
  }
-@@ -725,20 +737,32 @@ function getSlotsTemplate(component, args, excludeCategories) {
+@@ -806,15 +818,27 @@ function getSlotsTemplate(component, args, excludeCategories) {
  ${slotTemplates}
  `) : "";
  }
@@ -93,18 +93,26 @@ index 744e2cdce7310b7c1cf20a5f2b3228e6979380aa..49c4484de945380ffc8c5198fb1f735e
    });
  }
  function setArgObserver(component) {
+@@ -822,25 +846,34 @@ function setArgObserver(component) {
+     return;
+   }
    let isUpdating = false;
 -  const updateArgs = useArgs()[1];
 +  const [args, updateArgs] = useArgs();
    const { attrArgs: attributes } = getAttributesAndProperties(component);
    if (argObserver) {
      return;
-@@ -748,13 +772,24 @@ function setArgObserver(component) {
+   }
+   argObserver = new MutationObserver((mutations) => {
+     mutations.forEach((mutation) => {
+-      if (isUpdating) return;
+-      const attribute = attributes[`${mutation.attributeName}`];
+-      if (!attribute) return;
        if (mutation.attributeName === "class" && isUpdating) {
          return;
        }
 -      isUpdating = true;
-       const attribute = attributes[`${mutation.attributeName}`];
++      const attribute = attributes[`${mutation.attributeName}`];
 +      if (!attribute) { return; }
 +      if (mutation.oldValue === mutation.target.getAttribute(mutation.attributeName || "")) {
 +        return;
@@ -125,7 +133,7 @@ index 744e2cdce7310b7c1cf20a5f2b3228e6979380aa..49c4484de945380ffc8c5198fb1f735e
          updateArgs({
            [`${mutation.attributeName}`]: mutation.target.getAttribute(mutation.attributeName || "")
          });
-@@ -804,7 +839,8 @@ function getStorybookHelpers(tagName, options3) {
+@@ -897,7 +930,8 @@ function getStorybookHelpers(tagName, options3) {
        slot,
        argTypes,
        options3?.excludeCategories || [],
