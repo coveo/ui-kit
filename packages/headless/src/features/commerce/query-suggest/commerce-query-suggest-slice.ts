@@ -17,7 +17,7 @@ import {
   type RegisterQuerySuggestPayload,
 } from './query-suggest-actions.js';
 
-export type CommerceQuerySuggestState = Omit<QuerySuggestState, 'count'> & {
+type CommerceQuerySuggestState = Omit<QuerySuggestState, 'count'> & {
   count: number | undefined;
 };
 
