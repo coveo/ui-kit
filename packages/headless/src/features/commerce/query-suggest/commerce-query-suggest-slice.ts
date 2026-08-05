@@ -17,6 +17,10 @@ import {
   type RegisterQuerySuggestPayload,
 } from './query-suggest-actions.js';
 
+export type CommerceQuerySuggestState = Omit<QuerySuggestState, 'count'> & {
+  count: number | undefined;
+};
+
 export const commerceQuerySuggestReducer = createReducer(
   getQuerySuggestSetInitialState(),
   (builder) =>
@@ -65,15 +69,17 @@ function handleCommerceRegisterQuerySuggest(
     return;
   }
 
-  state[id] = buildCommerceQuerySuggest(payload);
+  state[id] = buildCommerceQuerySuggest(payload) as QuerySuggestState;
 }
 
-function buildCommerceQuerySuggest(config: Partial<QuerySuggestState>): QuerySuggestState {
+function buildCommerceQuerySuggest(
+  config: Partial<CommerceQuerySuggestState>
+): CommerceQuerySuggestState {
   return {
     id: '',
     completions: [],
     responseId: '',
-    count: config.count as number,
+    count: undefined,
     currentRequestId: '',
     error: null,
     partialQueries: [],

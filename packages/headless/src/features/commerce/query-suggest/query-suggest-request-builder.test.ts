@@ -100,4 +100,24 @@ describe('#buildQuerySuggestRequest', () => {
 
     expect(request.count).toBeUndefined();
   });
+
+  it('sets #count to undefined when #state.querySuggest[querySetId].count is 0', () => {
+    setState({
+      querySuggest: {
+        [querySetId]: {
+          id: querySetId,
+          completions: [],
+          responseId: '',
+          count: 0,
+          currentRequestId: '',
+          error: null,
+          partialQueries: [],
+          isLoading: false,
+        },
+      },
+    });
+    request = buildQuerySuggestRequest(querySetId, state, navigatorContext);
+
+    expect(request.count).toBeUndefined();
+  });
 });
