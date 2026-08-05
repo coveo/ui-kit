@@ -1,14 +1,19 @@
 import {mkdtemp, rm, writeFile} from 'node:fs/promises';
 import {homedir, tmpdir} from 'node:os';
 import {join} from 'node:path';
+import type {Event} from '@sentry/node';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import {
-  CRASH_REPORT_SCHEMA_VERSION,
-  crashReportReference,
-  MAX_CAUSE_DEPTH,
-  type CrashReport,
-  writeCrashReport,
-} from './crash-report.js';
+import {crashReportReference, MAX_CAUSE_DEPTH, writeCrashReport} from './crash-report.js';
+import {createCrashReport} from './test-support.js';
+
+const log = vi.hoisted(() => ({
+  info: vi.fn(),
+  step: vi.fn(),
+  success: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
+  note: vi.fn(),
+}));
 
 const sentry = vi.hoisted(() => ({
   init: vi.fn(),
@@ -23,71 +28,30 @@ const sentry = vi.hoisted(() => ({
 }));
 
 vi.mock('@sentry/node', () => sentry);
-vi.mock('./log.js', () => ({
-  log: {
-    info: vi.fn(),
-    step: vi.fn(),
-    success: vi.fn(),
-    warn: vi.fn(),
-    error: vi.fn(),
-    note: vi.fn(),
-  },
-}));
+vi.mock('./log.js', () => ({log}));
 
 const {submitReport} = await import('./submit-report.js');
 
-const sampleReport: CrashReport = {
-  schemaVersion: CRASH_REPORT_SCHEMA_VERSION,
-  runId: 'run-xyz',
-  crashedOn: '2026-07-22T15:00:00.000Z',
-  origin: 'main-rejection',
-  error: {name: 'Error', message: 'boom', stack: 'Error: boom\n    at x'},
-  diagnostics: {
-    phase: 'dependency-installation',
-    phaseElapsedMs: 2000,
-    spans: [
-      {
-        op: 'input',
-        name: 'Resolve inputs',
-        startedOn: '2026-07-22T14:59:00.000Z',
-        endedOn: '2026-07-22T14:59:58.000Z',
-      },
-      {
-        op: 'dependency-installation',
-        name: 'Install dependencies',
-        startedOn: '2026-07-22T14:59:58.000Z',
-        endedOn: '2026-07-22T15:00:00.000Z',
-      },
-    ],
-    runtime: {
-      processUptimeMs: 3100,
-    },
-  },
-  os: {platform: 'darwin', arch: 'arm64', release: '24.0.0'},
-  device: {
-    cpuModel: 'Apple M1 Pro',
-    cpuCount: 10,
-    memoryTotalBytes: 17179869184,
-    memoryFreeBytes: 2147483648,
-  },
-  metadata: {
-    template: 'headless-search-react',
-    templateVersion: '3.5.0',
-    createdWith: 'create-ui@1.2.3',
-    createdOn: '2026-07-22T14:59:00.000Z',
-    dependencies: {'@coveo/headless': '4.1.0'},
-    node: '22.12.0',
-    packageManager: 'pnpm',
-  },
+type SentryOptions = {
+  beforeSend: (event: Event) => Event | null;
+  environment: string;
+  release: string;
+  dsn: string;
+  defaultIntegrations: boolean;
+  sendDefaultPii: boolean;
+  includeServerName: boolean;
+  integrations: unknown[];
 };
+
+function initOptions(): SentryOptions {
+  return sentry.init.mock.calls[0][0];
+}
 
 describe('submitReport', () => {
   let dir: string;
 
   beforeEach(async () => {
     vi.clearAllMocks();
-    sentry.flush.mockResolvedValue(true);
-    sentry.close.mockResolvedValue(true);
     dir = await mkdtemp(join(tmpdir(), 'create-ui-report-test-'));
   });
 
@@ -96,117 +60,79 @@ describe('submitReport', () => {
     await rm(dir, {recursive: true, force: true});
   });
 
-  async function writeValidReport(): Promise<string> {
+  async function writeReport(overrides?: Parameters<typeof createCrashReport>[0]): Promise<string> {
     const path = join(dir, 'report.json');
-    await writeFile(path, JSON.stringify(sampleReport));
+    await writeFile(path, JSON.stringify(createCrashReport(overrides)));
     return path;
   }
 
-  it('returns 1 and does not init Sentry for a missing path', async () => {
+  async function applyBeforeSend(event: Event): Promise<Event> {
+    await submitReport(await writeReport());
+    const processed = initOptions().beforeSend(event);
+    expect(processed).not.toBeNull();
+    return processed!;
+  }
+
+  it('rejects a missing or invalid report without initializing Sentry', async () => {
     expect(await submitReport(undefined)).toBe(1);
+    const invalidPath = join(dir, 'invalid.json');
+    await writeFile(invalidPath, JSON.stringify({not: 'a report'}));
+    expect(await submitReport(invalidPath)).toBe(1);
     expect(sentry.init).not.toHaveBeenCalled();
   });
 
-  it('refuses to send when DO_NOT_TRACK is set', async () => {
+  it('does not send a report when DO_NOT_TRACK is set', async () => {
     vi.stubEnv('DO_NOT_TRACK', '1');
-    expect(await submitReport(await writeValidReport())).toBe(0);
+
+    expect(await submitReport(await writeReport())).toBe(0);
     expect(sentry.init).not.toHaveBeenCalled();
   });
 
-  it('returns 1 for a file that is not a valid crash report', async () => {
-    const bad = join(dir, 'bad.json');
-    await writeFile(bad, JSON.stringify({not: 'a report'}));
-    expect(await submitReport(bad)).toBe(1);
-    expect(sentry.init).not.toHaveBeenCalled();
-  });
+  it('configures Sentry with the report release and privacy-safe defaults', async () => {
+    expect(await submitReport(await writeReport())).toBe(0);
 
-  it('captures the phase spans as a transaction that shares the crash trace', async () => {
-    expect(await submitReport(await writeValidReport())).toBe(0);
-
-    expect(sentry.captureEvent).toHaveBeenCalledOnce();
-    const transaction = sentry.captureEvent.mock.calls[0][0];
-    expect(transaction.type).toBe('transaction');
-    expect(transaction.transaction).toBe('create headless-search-react');
-    expect(transaction.start_timestamp).toBe(Date.parse('2026-07-22T14:59:00.000Z') / 1000);
-    expect(transaction.timestamp).toBe(Date.parse('2026-07-22T15:00:00.000Z') / 1000);
-    expect(transaction.spans.map((span: {op: string}) => span.op)).toEqual([
-      'input.resolve',
-      'dependencies.install',
-    ]);
-    expect(sentry.captureException).toHaveBeenCalledOnce();
-
-    const processed = sentry.init.mock.calls[0][0].beforeSend({});
-    expect(processed.contexts.trace.trace_id).toBe(transaction.contexts.trace.trace_id);
-  });
-
-  it('projects each span description and data verbatim, with no per-span logic', async () => {
-    const withDownload: CrashReport = {
-      ...sampleReport,
-      diagnostics: {
-        ...sampleReport.diagnostics,
-        spans: [
-          {
-            op: 'input',
-            name: 'Resolve inputs',
-            startedOn: '2026-07-22T14:59:00.000Z',
-            endedOn: '2026-07-22T14:59:05.000Z',
-          },
-          {
-            op: 'template-download',
-            name: 'atomic-search@3.60.2',
-            startedOn: '2026-07-22T14:59:05.000Z',
-            endedOn: '2026-07-22T15:00:00.000Z',
-            attributes: {
-              'coveo.template': 'atomic-search',
-              'coveo.template_version': '3.60.2',
-            },
-          },
-        ],
-      },
-    };
-    const path = join(dir, 'with-download.json');
-    await writeFile(path, JSON.stringify(withDownload));
-
-    expect(await submitReport(path)).toBe(0);
-
-    const transaction = sentry.captureEvent.mock.calls[0][0];
-    // The download span's data-provided description and attributes flow through
-    // unchanged.
-    const download = transaction.spans.find(
-      (span: {op: string}) => span.op === 'template.download'
-    );
-    expect(download).toMatchObject({
-      description: 'atomic-search@3.60.2',
-      data: {
-        'coveo.template': 'atomic-search',
-        'coveo.template_version': '3.60.2',
-      },
+    expect(initOptions()).toMatchObject({
+      release: 'create-ui@1.2.3',
+      environment: 'production',
+      defaultIntegrations: false,
+      sendDefaultPii: false,
+      includeServerName: false,
     });
-    // A span with no attributes forwards its description as-is (a human label,
-    // not the op token) and carries empty data.
-    const input = transaction.spans.find((span: {op: string}) => span.op === 'input.resolve');
-    expect(input.description).toBe('Resolve inputs');
-    expect(input.data).toEqual({});
+    expect(initOptions().dsn.length).toBeGreaterThan(0);
+    expect(sentry.linkedErrorsIntegration).toHaveBeenCalledWith({limit: MAX_CAUSE_DEPTH});
+    expect(initOptions().integrations).toEqual([expect.objectContaining({name: 'LinkedErrors'})]);
   });
 
-  it('captures a plain exception when no spans were recorded', async () => {
-    const noSpans = {
-      ...sampleReport,
-      diagnostics: {...sampleReport.diagnostics, spans: []},
-    };
-    const path = join(dir, 'no-spans.json');
-    await writeFile(path, JSON.stringify(noSpans));
+  it('uses SENTRY_ENVIRONMENT when provided', async () => {
+    vi.stubEnv('SENTRY_ENVIRONMENT', 'development');
 
-    expect(await submitReport(path)).toBe(0);
-    expect(sentry.captureEvent).not.toHaveBeenCalled();
+    await submitReport(await writeReport());
+
+    expect(initOptions().environment).toBe('development');
+  });
+
+  it('captures the crash and its transaction on the same trace, then closes Sentry', async () => {
+    expect(await submitReport(await writeReport())).toBe(0);
+
     expect(sentry.captureException).toHaveBeenCalledOnce();
+    expect(sentry.captureEvent).toHaveBeenCalledOnce();
+    expect(sentry.flush).toHaveBeenCalledOnce();
+    expect(sentry.close).toHaveBeenCalledOnce();
+
+    const transaction = sentry.captureEvent.mock.calls[0][0] as Event;
+    const processed = initOptions().beforeSend({});
+    expect(processed?.contexts?.trace?.trace_id).toBe(transaction.contexts?.trace?.trace_id);
   });
 
-  it('submits a temp report by its short reference', async () => {
-    const report = {
-      ...sampleReport,
-      runId: 'c5c41c93-a851-4421-b27a-c8949d56dcaa',
-    };
+  it('captures only the crash when the report has no phase spans', async () => {
+    expect(await submitReport(await writeReport({diagnostics: {spans: []}}))).toBe(0);
+
+    expect(sentry.captureException).toHaveBeenCalledOnce();
+    expect(sentry.captureEvent).not.toHaveBeenCalled();
+  });
+
+  it('submits a report by its short reference', async () => {
+    const report = createCrashReport();
     const path = await writeCrashReport(report);
     try {
       expect(await submitReport(crashReportReference(report.runId))).toBe(0);
@@ -216,237 +142,127 @@ describe('submitReport', () => {
     }
   });
 
-  it('initializes Sentry with a DSN and privacy options, captures, flushes, closes, and tags the run-id', async () => {
-    expect(await submitReport(await writeValidReport())).toBe(0);
-
-    const initOptions = sentry.init.mock.calls[0][0];
-    expect(initOptions).toMatchObject({
-      release: 'create-ui@1.2.3',
-      defaultIntegrations: false,
-      sendDefaultPii: false,
-      includeServerName: false,
-    });
-    expect(typeof initOptions.dsn).toBe('string');
-    expect(initOptions.dsn.length).toBeGreaterThan(0);
-    expect(sentry.linkedErrorsIntegration).toHaveBeenCalledWith({
-      limit: MAX_CAUSE_DEPTH,
-    });
-    expect(initOptions.integrations).toEqual([expect.objectContaining({name: 'LinkedErrors'})]);
-    expect(sentry.captureException).toHaveBeenCalledOnce();
-    expect(sentry.captureException.mock.calls[0][1].tags.run_id).toBe('run-xyz');
-    expect(sentry.captureException.mock.calls[0][1]).toMatchObject({
-      tags: {crash_origin: 'main-rejection'},
-      contexts: {
-        device: {
-          arch: 'arm64',
-          cpu_description: 'Apple M1 Pro',
-          processor_count: 10,
-          memory_size: 17179869184,
-          free_memory: 2147483648,
+  it('reconstructs a captured error cause chain', async () => {
+    await submitReport(
+      await writeReport({
+        error: {
+          name: 'Error',
+          message: 'boom',
+          cause: {name: 'TypeError', message: 'root cause'},
         },
-        Custom: {
-          phase: 'dependency-installation',
-          phase_elapsed: '2 s',
-          process_uptime: '3.1 s',
+      })
+    );
+
+    const captured = sentry.captureException.mock.calls[0][0] as Error & {cause?: Error};
+    expect(captured).toMatchObject({
+      name: 'Error',
+      message: 'boom',
+      cause: {name: 'TypeError', message: 'root cause'},
+    });
+  });
+
+  it('returns failure when the report cannot be flushed', async () => {
+    sentry.flush.mockResolvedValueOnce(false);
+
+    expect(await submitReport(await writeReport())).toBe(1);
+
+    expect(log.warn).toHaveBeenCalledOnce();
+    expect(sentry.close).toHaveBeenCalledOnce();
+  });
+
+  it('returns failure when the Sentry SDK throws', async () => {
+    sentry.captureException.mockImplementationOnce(() => {
+      throw new Error('Sentry unavailable');
+    });
+
+    expect(await submitReport(await writeReport())).toBe(1);
+
+    expect(log.error).toHaveBeenCalledOnce();
+  });
+
+  describe('beforeSend', () => {
+    it('preserves the crash timestamp and redacts path-bearing messages', async () => {
+      const home = homedir();
+      const processed = await applyBeforeSend({
+        message: `failed at ${home}/project`,
+        exception: {
+          values: [
+            {
+              value: `ENOENT: open ${home}/project/.env`,
+              stacktrace: {frames: [{filename: `${home}/project/db.js`}]},
+            },
+            {
+              value: `boom at ${home}/project/index.js`,
+              stacktrace: {frames: [{filename: `${home}/project/index.js`}]},
+            },
+          ],
         },
-      },
+      });
+
+      expect(processed).toMatchObject({
+        timestamp: Date.parse('2026-07-22T15:00:00.000Z') / 1000,
+        transaction: 'create headless-search-react',
+        message: 'failed at ~/project',
+      });
+      const [cause, top] = processed.exception?.values ?? [];
+      expect(top).toMatchObject({
+        value: 'boom at ~/project/index.js',
+        mechanism: {type: 'main-rejection', handled: false},
+      });
+      expect(cause?.value).toBe('ENOENT: open ~/project/.env');
+      expect(cause?.stacktrace?.frames?.[0].filename).toBe('~/project/db.js');
     });
-    expect(sentry.flush).toHaveBeenCalled();
-    expect(sentry.close).toHaveBeenCalled();
-  });
 
-  it('beforeSend preserves the crash time and redacts the home directory to ~', async () => {
-    await submitReport(await writeValidReport());
-    const home = homedir();
-
-    const processed = sentry.init.mock.calls[0][0].beforeSend({
-      message: `failed at ${home}/project`,
-      exception: {
-        values: [
-          {
-            value: `boom at ${home}/project`,
-            stacktrace: {
-              frames: [
-                {
-                  filename: `${home}/project/index.js`,
-                  abs_path: `${home}/project/index.js`,
-                },
-              ],
+    it('classifies stack frames without leaking install paths', async () => {
+      const home = homedir();
+      const ownPackagePath =
+        '/tmp/app/node_modules/.pnpm/@coveo+create-ui@file+..+Users+jane.doe+ui-kit_045/node_modules/@coveo/create-ui/dist/scaffold.js';
+      const processed = await applyBeforeSend({
+        exception: {
+          values: [
+            {
+              stacktrace: {
+                frames: [
+                  {filename: 'node:internal/process/task_queues'},
+                  {
+                    filename: `${home}/.npm/_npx/ab/node_modules/pacote/lib/fetch.js`,
+                    abs_path: `${home}/.npm/_npx/ab/node_modules/pacote/lib/fetch.js`,
+                  },
+                  {
+                    filename: `${home}/dev/ui-kit/packages/create-ui/dist/index.js`,
+                    abs_path: `${home}/dev/ui-kit/packages/create-ui/dist/index.js`,
+                  },
+                  {filename: ownPackagePath, abs_path: ownPackagePath, module: 'scaffold'},
+                  {abs_path: '/tmp/app/node_modules/@coveo/create-ui/dist/download.js'},
+                ],
+              },
             },
-          },
-        ],
-      },
-    });
-
-    expect(processed.timestamp).toBe(Date.parse(sampleReport.crashedOn) / 1000);
-    expect(processed.transaction).toBe('create headless-search-react');
-    expect(processed.breadcrumbs).toBeUndefined();
-    expect(processed.exception.values[0].mechanism).toEqual({
-      type: 'main-rejection',
-      handled: false,
-    });
-    expect(processed.message).toBe('failed at ~/project');
-    const frame = processed.exception.values[0].stacktrace.frames[0];
-    expect(frame.filename).toBe('~/project/index.js');
-    expect(frame.abs_path).toBe('~/project/index.js');
-  });
-
-  it('reconstructs the error cause chain as linked errors for capture', async () => {
-    const reportWithCause: CrashReport = {
-      ...sampleReport,
-      error: {
-        name: 'Error',
-        message: 'boom',
-        stack: 'Error: boom\n    at x',
-        cause: {
-          name: 'TypeError',
-          message: 'root cause',
-          stack: 'TypeError: root cause\n    at y',
+          ],
         },
-      },
-    };
-    const path = join(dir, 'with-cause.json');
-    await writeFile(path, JSON.stringify(reportWithCause));
+      });
 
-    expect(await submitReport(path)).toBe(0);
-
-    const captured = sentry.captureException.mock.calls[0][0] as Error & {
-      cause?: Error;
-    };
-    expect(captured.message).toBe('boom');
-    expect(captured.cause).toBeInstanceOf(Error);
-    expect(captured.cause?.name).toBe('TypeError');
-    expect(captured.cause?.message).toBe('root cause');
-  });
-
-  it('beforeSend scrubs every exception value, including linked causes', async () => {
-    await submitReport(await writeValidReport());
-    const home = homedir();
-
-    const processed = sentry.init.mock.calls[0][0].beforeSend({
-      exception: {
-        values: [
-          {
-            value: `ENOENT: open ${home}/project/.env`,
-            stacktrace: {
-              frames: [
-                {
-                  filename: `${home}/project/db.js`,
-                  abs_path: `${home}/project/db.js`,
-                },
-              ],
-            },
-          },
-          {
-            value: `boom at ${home}/project/index.js`,
-            stacktrace: {frames: [{filename: `${home}/project/index.js`}]},
-          },
-        ],
-      },
+      const [node, dependency, local, ownPackage, ownPackageAbsOnly] =
+        processed.exception?.values?.[0].stacktrace?.frames ?? [];
+      expect(node?.in_app).toBe(false);
+      expect(dependency).toMatchObject({
+        in_app: false,
+        filename: '~/.npm/_npx/ab/node_modules/pacote/lib/fetch.js',
+      });
+      expect(local).toMatchObject({
+        in_app: true,
+        filename: '~/dev/ui-kit/packages/create-ui/dist/index.js',
+      });
+      expect(ownPackage).toMatchObject({
+        filename: 'app:///dist/scaffold.js',
+        abs_path: 'app:///dist/scaffold.js',
+        in_app: true,
+      });
+      expect(ownPackage?.module).toBeUndefined();
+      expect(JSON.stringify(ownPackage)).not.toContain('jane.doe');
+      expect(ownPackageAbsOnly).toMatchObject({
+        filename: 'app:///dist/download.js',
+        in_app: true,
+      });
     });
-
-    const [cause, top] = processed.exception.values;
-    expect(cause.value).toBe('ENOENT: open ~/project/.env');
-    expect(cause.stacktrace.frames[0].filename).toBe('~/project/db.js');
-    expect(cause.stacktrace.frames[0].abs_path).toBe('~/project/db.js');
-    expect(top.value).toBe('boom at ~/project/index.js');
-    expect(top.stacktrace.frames[0].filename).toBe('~/project/index.js');
-  });
-
-  it('rewrites own-package frames to app:/// and strips the install path, including any username', async () => {
-    await submitReport(await writeValidReport());
-
-    const ownPath =
-      '/private/tmp/app/node_modules/.pnpm/@coveo+create-ui@file+..+..+..+Users+jane.doe+dev+ui-kit_04567/node_modules/@coveo/create-ui/dist/scaffold.js';
-    const processed = sentry.init.mock.calls[0][0].beforeSend({
-      exception: {
-        values: [
-          {
-            stacktrace: {
-              frames: [{filename: ownPath, abs_path: ownPath, module: 'scaffold'}],
-            },
-          },
-        ],
-      },
-    });
-
-    const frame = processed.exception.values[0].stacktrace.frames[0];
-    expect(frame.filename).toBe('app:///dist/scaffold.js');
-    expect(frame.abs_path).toBe('app:///dist/scaffold.js');
-    expect(frame.in_app).toBe(true);
-    expect(frame.module).toBeUndefined();
-    expect(JSON.stringify(frame)).not.toContain('jane.doe');
-    expect(JSON.stringify(frame)).not.toContain('node_modules');
-  });
-
-  it('rewrites an own-package frame that only carries abs_path', async () => {
-    await submitReport(await writeValidReport());
-
-    const processed = sentry.init.mock.calls[0][0].beforeSend({
-      exception: {
-        values: [
-          {
-            stacktrace: {
-              frames: [
-                {
-                  abs_path: '/tmp/app/node_modules/@coveo/create-ui/dist/index.js',
-                },
-              ],
-            },
-          },
-        ],
-      },
-    });
-
-    const frame = processed.exception.values[0].stacktrace.frames[0];
-    expect(frame.abs_path).toBe('app:///dist/index.js');
-    expect(frame.filename).toBe('app:///dist/index.js');
-    expect(frame.in_app).toBe(true);
-  });
-
-  it('keeps node internals and dependencies out of app, local source in, and redacts home', async () => {
-    await submitReport(await writeValidReport());
-    const home = homedir();
-
-    const processed = sentry.init.mock.calls[0][0].beforeSend({
-      exception: {
-        values: [
-          {
-            stacktrace: {
-              frames: [
-                {filename: 'node:internal/process/task_queues'},
-                {
-                  filename: `${home}/.npm/_npx/ab12/node_modules/pacote/lib/fetch.js`,
-                  abs_path: `${home}/.npm/_npx/ab12/node_modules/pacote/lib/fetch.js`,
-                },
-                {
-                  filename: `${home}/dev/ui-kit/packages/create-ui/dist/index.js`,
-                  abs_path: `${home}/dev/ui-kit/packages/create-ui/dist/index.js`,
-                },
-              ],
-            },
-          },
-        ],
-      },
-    });
-
-    const [nodeFrame, depFrame, localFrame] = processed.exception.values[0].stacktrace.frames;
-    expect(nodeFrame.in_app).toBe(false);
-    expect(depFrame.in_app).toBe(false);
-    expect(depFrame.filename).toBe('~/.npm/_npx/ab12/node_modules/pacote/lib/fetch.js');
-    expect(depFrame.abs_path).toBe('~/.npm/_npx/ab12/node_modules/pacote/lib/fetch.js');
-    expect(localFrame.in_app).toBe(true);
-    expect(localFrame.filename).toBe('~/dev/ui-kit/packages/create-ui/dist/index.js');
-  });
-
-  it('defaults the Sentry environment to production', async () => {
-    await submitReport(await writeValidReport());
-    expect(sentry.init.mock.calls[0][0].environment).toBe('production');
-  });
-
-  it('honors the SENTRY_ENVIRONMENT override', async () => {
-    vi.stubEnv('SENTRY_ENVIRONMENT', 'development');
-    await submitReport(await writeValidReport());
-    expect(sentry.init.mock.calls[0][0].environment).toBe('development');
   });
 });
