@@ -131,7 +131,8 @@ function newSpanId(): string {
 }
 
 function toEpochSeconds(timestamp: string): number {
-  return Date.parse(timestamp) / 1000;
+  const ms = Date.parse(timestamp);
+  return Number.isNaN(ms) ? Date.now() / 1000 : ms / 1000;
 }
 
 function buildCrashTransactionEvent(report: CrashReport, trace: CrashTrace): Event {
