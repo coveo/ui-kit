@@ -21,7 +21,7 @@ index f22a4c4..626c85e 100644
      setComponentVariable?: boolean;
  };
 diff --git a/dist/index.js b/dist/index.js
-index cc73452..056a11b 100644
+index cc73452..10f7199 100644
 --- a/dist/index.js
 +++ b/dist/index.js
 @@ -629,7 +629,7 @@ function transformToScoped(template, tagSelector) {
@@ -93,7 +93,7 @@ index cc73452..056a11b 100644
    });
  }
  function setArgObserver(component) {
-@@ -822,25 +846,34 @@ function setArgObserver(component) {
+@@ -822,7 +846,7 @@ function setArgObserver(component) {
      return;
    }
    let isUpdating = false;
@@ -102,10 +102,10 @@ index cc73452..056a11b 100644
    const { attrArgs: attributes } = getAttributesAndProperties(component);
    if (argObserver) {
      return;
-   }
+@@ -830,17 +854,27 @@ function setArgObserver(component) {
    argObserver = new MutationObserver((mutations) => {
      mutations.forEach((mutation) => {
--      if (isUpdating) return;
+       if (isUpdating) return;
 -      const attribute = attributes[`${mutation.attributeName}`];
 -      if (!attribute) return;
        if (mutation.attributeName === "class" && isUpdating) {
@@ -133,7 +133,7 @@ index cc73452..056a11b 100644
          updateArgs({
            [`${mutation.attributeName}`]: mutation.target.getAttribute(mutation.attributeName || "")
          });
-@@ -897,7 +930,8 @@ function getStorybookHelpers(tagName, options3) {
+@@ -897,7 +931,8 @@ function getStorybookHelpers(tagName, options3) {
        slot,
        argTypes,
        options3?.excludeCategories || [],
