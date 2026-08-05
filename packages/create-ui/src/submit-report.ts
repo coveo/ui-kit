@@ -181,7 +181,7 @@ async function sendToSentry(report: CrashReport): Promise<boolean> {
       if (trace !== undefined) {
         event.contexts = {
           ...event.contexts,
-          trace: {trace_id: trace.traceId, span_id: trace.rootSpanId},
+          trace: {...event.contexts?.trace, trace_id: trace.traceId, span_id: trace.rootSpanId},
         };
       }
       return event;
