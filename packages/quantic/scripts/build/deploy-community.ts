@@ -200,16 +200,39 @@ async function ensureScratchOrgExists(log: StepLogger, options: Options) {
   }
 }
 
+// Occasionally, community creation fails with an unknown error on the Salesforce side.
+// Retrying after a short delay often resolves it.
+const TRANSIENT_COMMUNITY_CREATE_ERROR =
+  'Error: Unable to create a new experience.';
+
 async function ensureCommunityExists(
   log: StepLogger,
   options: Options
 ): Promise<void> {
   log(`Searching for '${options.community.name}' community`);
   try {
-    await sfdx.createCommunity({
-      alias: options.scratchOrg.alias,
-      community: options.community,
-    });
+    await backOff(
+      async () => {
+        await sfdx.createCommunity({
+          alias: options.scratchOrg.alias,
+          community: options.community,
+        });
+      },
+      {
+        numOfAttempts: 5,
+        startingDelay: 30000,
+        retry: (error) => {
+          const isTransient =
+            (error as Error).message === TRANSIENT_COMMUNITY_CREATE_ERROR;
+          if (isTransient) {
+            log(
+              'Community creation failed because the org domain is not ready yet. Retrying...'
+            );
+          }
+          return isTransient;
+        },
+      }
+    );
     log('Community created successfully.');
   } catch (error) {
     if ((error as Error).message === 'Enter a different name. That one already exists.') {

@@ -34,11 +34,14 @@ export const testInsight =
       {page, options, search, configuration, insightSetup},
       use
     ) => {
+      await search.mockSearchWithBaseResponse();
       await page.goto(pageUrl);
       configuration.configure(options);
       await insightSetup.waitForInsightInterfaceInitialization();
-      await search.performSearch();
-      await search.waitForSearchResponse();
+      await Promise.all([
+        search.waitForSearchResponse(),
+        search.performSearch(),
+      ]);
       await use(new ResultCopyToClipboard(page));
     },
   });

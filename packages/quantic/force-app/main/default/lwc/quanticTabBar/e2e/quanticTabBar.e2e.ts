@@ -116,6 +116,8 @@ useCaseTestCases.forEach((useCase) => {
           const expectedTabValue = 'Tab 4';
 
           const searchResponsePromise = search.waitForSearchResponse();
+          const uaRequestPromise =
+            tabBar.waitForDropdownOptionSelectUaAnalytics();
 
           await tabBar.clickMoreButton();
           const dropdownOptionsCount = await tabBar.allDropdownOptions.count();
@@ -140,8 +142,7 @@ useCaseTestCases.forEach((useCase) => {
             })
           );
 
-          const uaRequest =
-            await tabBar.waitForDropdownOptionSelectUaAnalytics();
+          const uaRequest = await uaRequestPromise;
           const requestBody = uaRequest.postDataJSON?.();
 
           expect(requestBody).not.toBeNull();

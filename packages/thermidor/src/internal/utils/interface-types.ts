@@ -30,12 +30,18 @@ export type InferInterfaceType<I> = {
 
 export declare const SupportsBrand: unique symbol;
 
+export declare const InterfaceTypeBrand: unique symbol;
+
 export type Supports<F extends Facades[InterfaceType]> = InterfaceHandle & {
   readonly [SupportsBrand]: {[K in F]: true};
 };
 
-export interface SearchInterface extends Supports<Facades['search']> {}
+export interface SearchInterface extends Supports<Facades['search']> {
+  readonly [InterfaceTypeBrand]: 'search';
+}
 
-export interface CommerceInterface extends Supports<Facades['commerce']> {}
+export interface CommerceInterface extends Supports<Facades['commerce']> {
+  readonly [InterfaceTypeBrand]: 'commerce';
+}
 
 export interface GenerativeInterface extends Supports<Facades['generative']> {}

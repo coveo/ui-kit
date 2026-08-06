@@ -5,7 +5,8 @@ import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import {getOrCreateProductListActions} from '@/src/internal/features/product-list/index.js';
 import {getOrCreatePaginationActions} from '@/src/internal/features/pagination/index.js';
 import {getOrCreateFacetsActions} from '@/src/internal/features/facets/index.js';
-import {getOrCreateSortActions} from '@/src/internal/features/sort/index.js';
+import {getOrCreateSortActions, fromCommerceApiSort} from '@/src/internal/features/sort/index.js';
+import type {CommerceApiSortPayload} from '@/src/internal/features/sort/index.js';
 import {getOrCreateTriggersActions} from '@/src/internal/features/triggers/index.js';
 import {getOrCreateQueryCorrectionActions} from '@/src/internal/features/query-correction/index.js';
 
@@ -33,7 +34,16 @@ export function createCommerceSearchEndpointResponseHandler(iface: InterfaceHand
     }
 
     if (response.sort) {
-      engine.mutate(sortActions.updateFromResponse(response.sort));
+      engine.mutate(
+        sortActions.updateFromResponse({
+          appliedSort: fromCommerceApiSort(
+            response.sort.appliedSort as unknown as CommerceApiSortPayload
+          ),
+          availableSorts: response.sort.availableSorts.map((s) =>
+            fromCommerceApiSort(s as unknown as CommerceApiSortPayload)
+          ),
+        })
+      );
     }
 
     if (response.triggers.length > 0) {

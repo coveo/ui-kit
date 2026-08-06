@@ -198,9 +198,11 @@ export class AtomicCommerceFacet
             },
           })}`
       )}
-      ${shouldDisplaySearchResults(this.facetState.facetSearch)
-        ? [this.renderSearchResults(), this.renderMatches()]
-        : [this.renderValues(), this.renderShowMoreLess()]}
+      ${
+        shouldDisplaySearchResults(this.facetState.facetSearch)
+          ? [this.renderSearchResults(), this.renderMatches()]
+          : [this.renderValues(), this.renderShowMoreLess()]
+      }
     `;
   }
 

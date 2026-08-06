@@ -12,6 +12,7 @@ const SearchInterfaceContext = createContext<SearchInterface | null>(null);
 export function SearchInterfaceProvider({children}: PropsWithChildren) {
   const engine = useEngine();
   const interfaceRef = useRef<SearchInterface | null>(null);
+
   interfaceRef.current ??= buildSearchInterface({engine});
 
   useEffect(() => {

@@ -527,9 +527,11 @@ export class AtomicColorFacet extends LitElement implements InitializableCompone
             },
           })
       )}
-      ${shouldDisplaySearchResults(this.facetState.facetSearch)
-        ? html`${this.renderSearchResults()}${this.renderMatches()}`
-        : html`${this.renderValues()}${this.renderShowMoreLess()}`}
+      ${
+        shouldDisplaySearchResults(this.facetState.facetSearch)
+          ? html`${this.renderSearchResults()}${this.renderMatches()}`
+          : html`${this.renderValues()}${this.renderShowMoreLess()}`
+      }
     `;
   }
 
