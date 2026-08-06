@@ -134,6 +134,12 @@ function getPackageVersion(): string {
 }
 
 const config: StorybookConfig = {
+  features: {
+    // Agentic Review requires change detection; experimentalReview enables the
+    // MCP display-review tool and the in-Storybook review UI.
+    changeDetection: true,
+    experimentalReview: true,
+  },
   stories: [
     './Introduction.mdx',
     './Crawling.stories.tsx',
@@ -162,7 +168,19 @@ const config: StorybookConfig = {
       },
     },
     '@storybook/addon-vitest',
-    '@storybook/addon-mcp',
+    {
+      name: '@storybook/addon-mcp',
+      options: {
+        endpoint: '/mcp',
+        toolsets: {
+          dev: true,
+          // Storybook's docs/manifest MCP toolset is React-only; the Web
+          // Components renderer does not expose it, so keep it off explicitly.
+          docs: false,
+          test: true,
+        },
+      },
+    },
   ],
   framework: {
     name: '@storybook/web-components-vite',
