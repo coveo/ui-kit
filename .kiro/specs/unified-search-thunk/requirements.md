@@ -8,7 +8,7 @@ Using `restore_state` as a catch-all was rejected because it loses `freezeCurren
 
 ## Glossary
 
-- **Unified_Endpoint**: The Coveo agentic converse API (`/commerce/unstable/agentic/converse`) that accepts `AgUiPayloadRequest` messages and returns SSE streams
+- **Unified_Endpoint**: The Coveo agentic converse API (`/commerce/unstable/agentic/converse`) that accepts `UnifiedEndpointRequest` messages and returns SSE streams
 - **Facade_Resolver**: A function `(iface: InterfaceHandle) => EndpointThunk` that produces an async thunk responsible for executing a search request
 - **Unified_Search_Thunk**: The async thunk created by the facade resolver that sends a specific action (via `actionIntent`) and applies the response
 - **ActionIntent**: A discriminated union on the thunk arg that specifies the exact action name and typed context for the server (e.g., `{name: 'select_page', context: {page: 2}}`)
@@ -59,11 +59,11 @@ Using `restore_state` as a catch-all was rejected because it loses `freezeCurren
 
 ### Requirement 4: Request Envelope Construction
 
-**User Story:** As a developer, I want the thunk to build a complete `AgUiPayloadRequest`, so that the unified endpoint receives all necessary context alongside the action.
+**User Story:** As a developer, I want the thunk to build a complete `UnifiedEndpointRequest`, so that the unified endpoint receives all necessary context alongside the action.
 
 #### Acceptance Criteria
 
-1. THE Unified_Search_Thunk SHALL build an `AgUiPayloadRequest` with `agentInput.message` set to null and `agentInput.action` set to the constructed `A2uiAction`
+1. THE Unified_Search_Thunk SHALL build an `UnifiedEndpointRequest` with `agentInput.message` set to null and `agentInput.action` set to the constructed `A2uiAction`
 2. THE Unified_Search_Thunk SHALL include `conversationSessionId` and `conversationToken` from the generative state selectors in `agentInput`
 3. THE Unified_Search_Thunk SHALL include `trackingId`, `language`, `country`, and `currency` from configuration selectors in `agentInput`
 4. THE Unified_Search_Thunk SHALL include navigator context (clientId, view url, referrer, userAgent) in `agentInput.context`

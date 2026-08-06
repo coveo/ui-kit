@@ -8,7 +8,7 @@ The `UnifiedRuntime` is a stream-processing runtime that sends user prompts to t
 
 - **UnifiedRuntime**: The runtime class responsible for sending prompts to the unified endpoint and consuming the SSE response stream
 - **GenerativeStatePort**: The state mutation interface used to update the generative feature slice (turns, messages, surfaces, tool calls)
-- **AgUiPayloadRequest**: The top-level request envelope sent to the unified endpoint, containing session, messages, and agentInput fields
+- **UnifiedEndpointRequest**: The top-level request envelope sent to the unified endpoint, containing session, messages, and agentInput fields
 - **Turn**: A single user-prompt-to-completion lifecycle, identified by a unique turn ID
 - **SSE_Stream**: The Server-Sent Events byte stream returned by the unified endpoint
 - **NormalizedStreamEvent**: A typed union of all possible events emitted by the SSE parser
@@ -18,11 +18,11 @@ The `UnifiedRuntime` is a stream-processing runtime that sends user prompts to t
 
 ### Requirement 1: Request Envelope Construction
 
-**User Story:** As a consuming controller, I want the runtime to build a valid `AgUiPayloadRequest` envelope from engine state, so that the unified endpoint receives all required session, message, and context data.
+**User Story:** As a consuming controller, I want the runtime to build a valid `UnifiedEndpointRequest` envelope from engine state, so that the unified endpoint receives all required session, message, and context data.
 
 #### Acceptance Criteria
 
-1. WHEN a prompt is submitted, THE UnifiedRuntime SHALL construct an `AgUiPayloadRequest` containing a `session` object with a `threadId` (from `conversationSessionId` or a generated ID), a `clientMessageId`, and empty `continuationTokens`
+1. WHEN a prompt is submitted, THE UnifiedRuntime SHALL construct an `UnifiedEndpointRequest` containing a `session` object with a `threadId` (from `conversationSessionId` or a generated ID), a `clientMessageId`, and empty `continuationTokens`
 2. WHEN a prompt is submitted, THE UnifiedRuntime SHALL include a single user message in the `messages` array with a generated `id`, role `user`, and the prompt as `content`
 3. WHEN a prompt is submitted, THE UnifiedRuntime SHALL populate the `agentInput` field with `trackingId`, `language`, `country`, `currency`, `clientId`, `message`, `conversationSessionId`, `conversationToken`, and a `context` object containing `view`, `user`, `cart`, `source`, and `custom` fields
 4. WHEN navigator context is unavailable, THE UnifiedRuntime SHALL use `null` for `view.url`, `view.referrer`, and `user.userAgent`

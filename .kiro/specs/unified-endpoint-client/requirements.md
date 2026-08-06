@@ -2,15 +2,15 @@
 
 ## Introduction
 
-This feature creates an independent HTTP client for the v0 unified endpoint (AgentGateway / AG-UI protocol) in the thermidor package. The unified endpoint uses a different request envelope (`AgUiPayloadRequest`) compared to the existing converse endpoint's flat request shape. The client lives in its own directory (`src/internal/api/unified/`) with no shared code with the existing conversation client, making it easy to delete when the converse endpoint is retired.
+This feature creates an independent HTTP client for the v0 unified endpoint (AgentGateway / AG-UI protocol) in the thermidor package. The unified endpoint uses a different request envelope (`UnifiedEndpointRequest`) compared to the existing converse endpoint's flat request shape. The client lives in its own directory (`src/internal/api/unified/`) with no shared code with the existing conversation client, making it easy to delete when the converse endpoint is retired.
 
 ## Glossary
 
-- **Unified_Endpoint_Client**: The HTTP client responsible for sending `AgUiPayloadRequest` payloads to the unified converse endpoint and returning a streaming response.
-- **AgUiPayloadRequest**: The top-level request envelope sent to the unified endpoint, containing session metadata, messages, and agent input.
-- **CommerceAguiRequestModel**: The `agentInput` field within the request envelope, containing commerce-specific context (tracking, locale, cart, actions).
+- **Unified_Endpoint_Client**: The HTTP client responsible for sending `UnifiedEndpointRequest` payloads to the unified converse endpoint and returning a streaming response.
+- **UnifiedEndpointRequest**: The top-level request envelope sent to the unified endpoint, containing session metadata, messages, and agent input.
+- **CommerceRequestModel**: The `agentInput` field within the request envelope, containing commerce-specific context (tracking, locale, cart, actions).
 - **A2uiAction**: A structured UI action envelope sent in lieu of a text message, describing a user interaction (facet toggle, sort change, pagination, etc.).
-- **Request_Selector**: A function that reads engine state (configuration, generative, cart, navigator context) and builds the `AgUiPayloadRequest`.
+- **Request_Selector**: A function that reads engine state (configuration, generative, cart, navigator context) and builds the `UnifiedEndpointRequest`.
 - **Engine_State**: The Redux-like state tree managed by thermidor's engine, including configuration, generative, and cart slices.
 
 ## Requirements
@@ -21,13 +21,13 @@ This feature creates an independent HTTP client for the v0 unified endpoint (Age
 
 #### Acceptance Criteria
 
-1. THE Unified_Endpoint_Client module SHALL export an `AgUiPayloadRequest` interface with fields: `session`, `messages`, `requestContext`, `forwardedProps`, and `agentInput`
-2. THE Unified_Endpoint_Client module SHALL export a `CommerceAguiRequestModel` interface with fields: `trackingId`, `language`, `country`, `currency`, `clientId`, `message`, `action`, `conversationSessionId`, `conversationToken`, `context`, and `pinnedProducts`
+1. THE Unified_Endpoint_Client module SHALL export an `UnifiedEndpointRequest` interface with fields: `session`, `messages`, `requestContext`, `forwardedProps`, and `agentInput`
+2. THE Unified_Endpoint_Client module SHALL export a `CommerceRequestModel` interface with fields: `trackingId`, `language`, `country`, `currency`, `clientId`, `message`, `action`, `conversationSessionId`, `conversationToken`, `context`, and `pinnedProducts`
 3. THE Unified_Endpoint_Client module SHALL export an `A2uiAction` interface with fields: `surfaceId`, `name`, `sourceComponentId`, `timestamp`, `actionId`, `wantResponse`, and `context`
 4. THE Unified_Endpoint_Client module SHALL export action context interfaces for search actions: `ExecuteSearchContext`, `ToggleFacetContext`, `DeselectAllFacetsContext`, `ToggleNumericFacetContext`, `SetNumericFacetRangeContext`, `SelectPageContext`, `SetPageSizeContext`, `SetSortContext`, `FetchMoreContext`, `RestoreStateContext`, `OverrideCorrectionContext`, `SelectProductsContext`
 5. THE Unified_Endpoint_Client module SHALL export action context interfaces for suggestion actions: `FetchSuggestionsContext`, `FacetSearchContext`
 6. THE Unified_Endpoint_Client module SHALL export action context interfaces for analytics actions: `CartActionContext`, `ProductClickContext`, `ProductViewContext`, `PurchaseContext`
-7. THE `CommerceAguiRequestModel` interface SHALL enforce that exactly one of `message` or `action` is defined per request through TypeScript discriminated types or documentation constraints
+7. THE `CommerceRequestModel` interface SHALL enforce that exactly one of `message` or `action` is defined per request through TypeScript discriminated types or documentation constraints
 
 ### Requirement 2: Unified Endpoint HTTP Client
 
@@ -49,7 +49,7 @@ This feature creates an independent HTTP client for the v0 unified endpoint (Age
 
 ### Requirement 3: Unified Request Selector
 
-**User Story:** As a developer, I want a request selector that builds the `AgUiPayloadRequest` from engine state, so that the client receives a properly constructed request envelope without manual assembly.
+**User Story:** As a developer, I want a request selector that builds the `UnifiedEndpointRequest` from engine state, so that the client receives a properly constructed request envelope without manual assembly.
 
 #### Acceptance Criteria
 

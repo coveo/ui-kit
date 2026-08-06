@@ -1,4 +1,4 @@
-import type {AgUiPayloadRequest} from './unified-endpoint-types.js';
+import type {UnifiedEndpointRequest} from './unified-endpoint-types.js';
 import {isSuccessResponse, transformError} from '@/src/internal/api/protocol/error-handling.js';
 import {getOrganizationEndpoint} from '@/src/internal/api/organization-endpoint.js';
 
@@ -8,7 +8,7 @@ const featureFlagOverridesHeaderValue = JSON.stringify({
 
 const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
   return async (
-    request: AgUiPayloadRequest,
+    request: UnifiedEndpointRequest,
     configuration: UnifiedEndpointClientConfiguration,
     options?: UnifiedEndpointCallOptions
   ): Promise<UnifiedEndpointClientResult> => {
@@ -114,7 +114,7 @@ export type UnifiedEndpointClientResult =
 
 export interface UnifiedEndpointClient {
   call: (
-    request: AgUiPayloadRequest,
+    request: UnifiedEndpointRequest,
     configuration: UnifiedEndpointClientConfiguration,
     options?: UnifiedEndpointCallOptions
   ) => Promise<UnifiedEndpointClientResult>;

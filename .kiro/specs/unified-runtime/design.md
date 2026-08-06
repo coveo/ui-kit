@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `UnifiedRuntime` is a stream-processing runtime that sends prompts to the Coveo unified endpoint (v0 AG-UI protocol) and dispatches SSE events to the `GenerativeStatePort`. It mirrors `GenerativeRuntime`'s structural patterns (singleton caching, turn lifecycle, state port dispatch) but operates on a different request envelope (`AgUiPayloadRequest`) and has critical differences in terminal-event semantics — most notably, `RUN_FINISHED` is non-terminal.
+The `UnifiedRuntime` is a stream-processing runtime that sends prompts to the Coveo unified endpoint (v0 AG-UI protocol) and dispatches SSE events to the `GenerativeStatePort`. It mirrors `GenerativeRuntime`'s structural patterns (singleton caching, turn lifecycle, state port dispatch) but operates on a different request envelope (`UnifiedEndpointRequest`) and has critical differences in terminal-event semantics — most notably, `RUN_FINISHED` is non-terminal.
 
 The runtime is a thin orchestration layer:
 1. Build a request envelope from engine state
@@ -24,7 +24,7 @@ sequenceDiagram
     Controller->>UnifiedRuntime: submit(prompt)
     UnifiedRuntime->>GenerativeStatePort: createTurn / setActiveTurnId
     UnifiedRuntime->>Engine: read(buildRequest) + getNavigatorContextProvider
-    UnifiedRuntime->>UnifiedRuntime: construct AgUiPayloadRequest
+    UnifiedRuntime->>UnifiedRuntime: construct UnifiedEndpointRequest
     UnifiedRuntime->>UnifiedEndpointClient: call(request, config)
     UnifiedEndpointClient-->>UnifiedRuntime: {success, data: {stream}}
     loop SSE events
@@ -74,7 +74,7 @@ Identical WeakMap + Map pattern as `GenerativeRuntime`. The WeakMap keys on engi
 - `FullEngine` from `@/src/internal/engine/index.js`
 - `InterfaceHandle` from `@/src/internal/utils/index.js`
 - `GenerativeStatePort`, `HydrateSubInterface` from `@/src/internal/api/generative/index.js`
-- `AgUiPayloadRequest` from `./unified-endpoint-types.js`
+- `UnifiedEndpointRequest` from `./unified-endpoint-types.js`
 
 **Hard boundary:** NEVER imports from `@/src/internal/api/conversation/`.
 
@@ -106,7 +106,7 @@ Internal type returned by `dispatchEvent` to signal whether stream consumption s
 
 ### Request Envelope Construction
 
-The runtime reads engine state via `createUnifiedEndpointRequestSelector` and constructs an `AgUiPayloadRequest`:
+The runtime reads engine state via `createUnifiedEndpointRequestSelector` and constructs an `UnifiedEndpointRequest`:
 
 | Field | Source |
 |-------|--------|

@@ -2,7 +2,7 @@ import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import {generateId} from '@/src/internal/utils/index.js';
 import {createUnifiedEndpointRequestSelector} from './unified-request-selector.js';
-import type {AgUiPayloadRequest} from './unified-endpoint-types.js';
+import type {UnifiedEndpointRequest} from './unified-endpoint-types.js';
 
 export function createConversationRequestBuilder(
   generativeInterface: InterfaceHandle,
@@ -13,7 +13,10 @@ export function createConversationRequestBuilder(
     cartInterface
   );
 
-  return function buildConversationRequest(engine: FullEngine, prompt: string): AgUiPayloadRequest {
+  return function buildConversationRequest(
+    engine: FullEngine,
+    prompt: string
+  ): UnifiedEndpointRequest {
     const {cart, conversationSessionId, conversationToken, ...fromState} =
       engine.read(buildStateRequest);
     const navigatorContext = engine.getNavigatorContextProvider()?.();

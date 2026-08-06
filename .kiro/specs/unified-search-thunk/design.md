@@ -43,7 +43,7 @@ graph TD
     Thunk --> Cart
     Thunk --> Config
     Thunk --> Navigator
-    Thunk -->|AgUiPayloadRequest| Client
+    Thunk -->|UnifiedEndpointRequest| Client
     Client -->|SSE stream| Extractor
     Extractor -->|ExtractedUpdate[]| Thunk
     Thunk --> Hydration
@@ -54,7 +54,7 @@ The data flow is:
 1. A controller optimistically mutates local state, then dispatches the thunk with `{engine, actionIntent}`.
 2. The thunk reads `actionIntent.name` and `actionIntent.context` directly (no state inference).
 3. The thunk reads engine state only for the request envelope (trackingId, language, conversationSessionId, etc.).
-4. It assembles the `A2uiAction` from the intent and wraps it in an `AgUiPayloadRequest`.
+4. It assembles the `A2uiAction` from the intent and wraps it in an `UnifiedEndpointRequest`.
 5. It calls the unified endpoint client, receiving an SSE stream.
 6. The stream extractor reads `ACTIVITY_SNAPSHOT` events, collecting `updateDataModel` operations.
 7. Each extracted update is applied to the interface via `applyDataModelUpdate`.
@@ -140,7 +140,7 @@ Key responsibilities:
 1. Read `actionIntent` from the thunk arg (throw if missing)
 2. Build `A2uiAction` directly from `actionIntent.name` and `actionIntent.context`
 3. Read generative/cart/config state for the request envelope only
-4. Build the full `AgUiPayloadRequest`
+4. Build the full `UnifiedEndpointRequest`
 5. Call the unified endpoint client
 6. Extract `updateDataModel` operations from the response stream
 7. Apply each update to the base interface
@@ -183,7 +183,7 @@ const thunk = createAsyncThunk<void, EndpointThunkArg>(
     const config = engine.read(configSelectors.getEndpointClientConfiguration);
     const {trackingId, language, country, currency} = engine.read(envelopeSelector);
 
-    const request: AgUiPayloadRequest = {
+    const request: UnifiedEndpointRequest = {
       session: {
         threadId: conversationSessionId || generateId(),
         clientMessageId: generateId(),
@@ -344,7 +344,7 @@ The runtime already stores config with interface handles — no structural chang
 | `null` | `actionId` |
 | `false` | `wantResponse` |
 
-### AgUiPayloadRequest Assembly (envelope)
+### UnifiedEndpointRequest Assembly (envelope)
 
 | Field | Source |
 |---|---|
@@ -431,7 +431,7 @@ There are no complex transformations, parsers, or serializers where input variat
 | Sets sourceComponentId to 'thermidor' | Req 3.4 |
 | Sets wantResponse to false | Req 3.7 |
 | Sets actionId to null | Req 3.6 |
-| Builds AgUiPayloadRequest with null message and action set | Req 4.1 |
+| Builds UnifiedEndpointRequest with null message and action set | Req 4.1 |
 | Includes conversationSessionId and conversationToken | Req 4.2 |
 | Includes trackingId, language, country, currency | Req 4.3 |
 | Includes navigator context in agentInput.context | Req 4.4 |

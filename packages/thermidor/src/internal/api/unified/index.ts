@@ -7,12 +7,12 @@ export type {
   UnifiedEndpointResponse,
 } from './unified-endpoint-client.js';
 export type {
-  AgUiPayloadRequest,
-  AgUiSession,
-  AgUiMessage,
-  CommerceAguiRequestModel,
-  CommerceAguiContext,
-  CommerceAguiCartItem,
+  UnifiedEndpointRequest,
+  UnifiedEndpointSession,
+  UnifiedEndpointMessage,
+  CommerceRequestModel,
+  CommerceRequestContext,
+  CommerceCartItem,
   A2uiAction,
   ExecuteSearchContext,
   ToggleFacetContext,

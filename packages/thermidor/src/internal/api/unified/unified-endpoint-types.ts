@@ -1,21 +1,21 @@
 // ─── Top-level request envelope ────────────────────────────────────────────
 
-export interface AgUiPayloadRequest {
-  session: AgUiSession;
-  messages: AgUiMessage[];
+export interface UnifiedEndpointRequest {
+  session: UnifiedEndpointSession;
+  messages: UnifiedEndpointMessage[];
   requestContext: Record<string, unknown>;
   forwardedProps: Record<string, unknown>;
-  agentInput: CommerceAguiRequestModel;
+  agentInput: CommerceRequestModel;
 }
 
-export interface AgUiSession {
+export interface UnifiedEndpointSession {
   threadId: string;
   continuationTokens: Record<string, unknown>;
   runId?: string;
   clientMessageId?: string;
 }
 
-export interface AgUiMessage {
+export interface UnifiedEndpointMessage {
   id: string;
   role: string;
   content: string;
@@ -23,7 +23,7 @@ export interface AgUiMessage {
 
 // ─── Commerce agent input ──────────────────────────────────────────────────
 
-export interface CommerceAguiRequestModel {
+export interface CommerceRequestModel {
   trackingId: string;
   language: string;
   country: string;
@@ -33,19 +33,19 @@ export interface CommerceAguiRequestModel {
   action: A2uiAction | null;
   conversationSessionId?: string;
   conversationToken?: string;
-  context: CommerceAguiContext;
+  context: CommerceRequestContext;
   pinnedProducts: string[];
 }
 
-export interface CommerceAguiContext {
+export interface CommerceRequestContext {
   view: {url: string | null; referrer: string | null};
   user: Record<string, unknown>;
-  cart: CommerceAguiCartItem[];
+  cart: CommerceCartItem[];
   source: string[];
   custom: Record<string, unknown>;
 }
 
-export interface CommerceAguiCartItem {
+export interface CommerceCartItem {
   productId: string;
   name: string;
   price: number;

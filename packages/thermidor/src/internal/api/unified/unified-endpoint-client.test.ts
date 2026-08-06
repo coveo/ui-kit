@@ -1,12 +1,12 @@
 import {beforeEach, describe, expect, it, vi, type MockedFunction} from 'vitest';
 import {createUnifiedEndpointClient} from './unified-endpoint-client.js';
-import type {AgUiPayloadRequest} from './unified-endpoint-types.js';
+import type {UnifiedEndpointRequest} from './unified-endpoint-types.js';
 
 describe('UnifiedEndpointClient', () => {
   let client: ReturnType<typeof createUnifiedEndpointClient>;
   let mockedFetch: MockedFunction<typeof fetch>;
 
-  const request: AgUiPayloadRequest = {
+  const request: UnifiedEndpointRequest = {
     session: {threadId: 'thread-1', continuationTokens: {}},
     messages: [{id: 'msg-1', role: 'user', content: 'Hello'}],
     requestContext: {},

@@ -4,7 +4,7 @@ import {generateId} from '@/src/internal/utils/index.js';
 import {getOrCreateConfigurationSelectors} from '@/src/internal/features/configuration/index.js';
 import {getOrCreateGenerativeSelectors} from '@/src/internal/features/generative/index.js';
 import {getOrCreateCartSelectors} from '@/src/internal/features/cart/index.js';
-import type {A2uiAction, AgUiPayloadRequest} from './unified-endpoint-types.js';
+import type {A2uiAction, UnifiedEndpointRequest} from './unified-endpoint-types.js';
 
 export function createUnifiedSearchRequestBuilder(
   generativeInterface: InterfaceHandle,
@@ -15,7 +15,10 @@ export function createUnifiedSearchRequestBuilder(
   const generativeSelectors = getOrCreateGenerativeSelectors(generativeInterface);
   const cartSelectors = getOrCreateCartSelectors(cartInterface);
 
-  return function buildRequest(engine: FullEngine, actionIntent: ActionIntent): AgUiPayloadRequest {
+  return function buildRequest(
+    engine: FullEngine,
+    actionIntent: ActionIntent
+  ): UnifiedEndpointRequest {
     const action: A2uiAction = {
       surfaceId,
       name: actionIntent.name,

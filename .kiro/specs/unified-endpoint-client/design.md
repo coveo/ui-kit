@@ -2,7 +2,7 @@
 
 ## Overview
 
-This design introduces an independent HTTP client for the v0 unified endpoint (AG-UI protocol) in the thermidor package. The module mirrors the architecture of the existing `conversation-endpoint-client` — a factory-created client with a `call` method, a typed request envelope, and a memoized state selector — but targets the AG-UI `AgUiPayloadRequest` contract instead of the flat converse request shape.
+This design introduces an independent HTTP client for the v0 unified endpoint (AG-UI protocol) in the thermidor package. The module mirrors the architecture of the existing `conversation-endpoint-client` — a factory-created client with a `call` method, a typed request envelope, and a memoized state selector — but targets the AG-UI `UnifiedEndpointRequest` contract instead of the flat converse request shape.
 
 The module lives at `src/internal/api/unified/` with no imports from `src/internal/api/conversation/`, ensuring either module can be deleted independently.
 
@@ -38,7 +38,7 @@ graph TD
 The data flow is:
 
 1. The runtime reads engine state via `unified-request-selector.ts`, producing the raw fields needed for a request.
-2. The runtime assembles the full `AgUiPayloadRequest` envelope (adding session metadata, messages, etc.) and passes it to the client.
+2. The runtime assembles the full `UnifiedEndpointRequest` envelope (adding session metadata, messages, etc.) and passes it to the client.
 3. `unified-endpoint-client.ts` serializes the envelope and POSTs it to the unified endpoint.
 4. On success, the client returns a `ReadableStream<Uint8Array>` for SSE processing downstream.
 
@@ -51,22 +51,22 @@ All type definitions live in a single file. These are pure interfaces/types with
 ```typescript
 // ─── Top-level request envelope ────────────────────────────────────────────
 
-export interface AgUiPayloadRequest {
-  session: AgUiSession;
-  messages: AgUiMessage[];
+export interface UnifiedEndpointRequest {
+  session: UnifiedEndpointSession;
+  messages: UnifiedEndpointMessage[];
   requestContext: Record<string, unknown>;
   forwardedProps: Record<string, unknown>;
-  agentInput: CommerceAguiRequestModel;
+  agentInput: CommerceRequestModel;
 }
 
-export interface AgUiSession {
+export interface UnifiedEndpointSession {
   threadId: string;
   continuationTokens: Record<string, unknown>;
   runId?: string;
   clientMessageId?: string;
 }
 
-export interface AgUiMessage {
+export interface UnifiedEndpointMessage {
   id: string;
   role: string;
   content: string;
@@ -74,7 +74,7 @@ export interface AgUiMessage {
 
 // ─── Commerce agent input ──────────────────────────────────────────────────
 
-export interface CommerceAguiRequestModel {
+export interface CommerceRequestModel {
   trackingId: string;
   language: string;
   country: string;
@@ -84,19 +84,19 @@ export interface CommerceAguiRequestModel {
   action: A2uiAction | null;
   conversationSessionId?: string;
   conversationToken?: string;
-  context: CommerceAguiContext;
+  context: CommerceRequestContext;
   pinnedProducts: string[];
 }
 
-export interface CommerceAguiContext {
+export interface CommerceRequestContext {
   view: { url: string | null; referrer: string | null };
   user: Record<string, unknown>;
-  cart: CommerceAguiCartItem[];
+  cart: CommerceCartItem[];
   source: string[];
   custom: Record<string, unknown>;
 }
 
-export interface CommerceAguiCartItem {
+export interface CommerceCartItem {
   productId: string;
   name: string;
   price: number;
@@ -279,7 +279,7 @@ export type UnifiedEndpointClientResult =
 
 export interface UnifiedEndpointClient {
   call: (
-    request: AgUiPayloadRequest,
+    request: UnifiedEndpointRequest,
     configuration: UnifiedEndpointClientConfiguration,
     options?: UnifiedEndpointCallOptions
   ) => Promise<UnifiedEndpointClientResult>;
@@ -336,9 +336,9 @@ The selector uses `createMemoizedStateSelector` combining:
 - `generative.getConversationSessionId`
 - `generative.getConversationToken`
 
-The output is the raw data the runtime needs to assemble `CommerceAguiRequestModel.context` and the top-level `agentInput` fields. The runtime is responsible for constructing the full `AgUiPayloadRequest` envelope (adding `session`, `messages`, `requestContext`, `forwardedProps`, navigator context, etc.).
+The output is the raw data the runtime needs to assemble `CommerceRequestModel.context` and the top-level `agentInput` fields. The runtime is responsible for constructing the full `UnifiedEndpointRequest` envelope (adding `session`, `messages`, `requestContext`, `forwardedProps`, navigator context, etc.).
 
-**Design decision:** The selector intentionally does NOT construct the full `AgUiPayloadRequest`. Session metadata, messages history, and navigator context are managed by the runtime layer and injected at call time. This keeps the selector pure and focused on engine state.
+**Design decision:** The selector intentionally does NOT construct the full `UnifiedEndpointRequest`. Session metadata, messages history, and navigator context are managed by the runtime layer and injected at call time. This keeps the selector pure and focused on engine state.
 
 ### 4. Barrel Export (`index.ts`)
 
@@ -351,12 +351,12 @@ export type {
   UnifiedEndpointCallOptions,
 } from './unified-endpoint-client.js';
 export type {
-  AgUiPayloadRequest,
-  AgUiSession,
-  AgUiMessage,
-  CommerceAguiRequestModel,
-  CommerceAguiContext,
-  CommerceAguiCartItem,
+  UnifiedEndpointRequest,
+  UnifiedEndpointSession,
+  UnifiedEndpointMessage,
+  CommerceRequestModel,
+  CommerceRequestContext,
+  CommerceCartItem,
   A2uiAction,
   UnifiedEndpointResponse,
   // Search action context types
@@ -394,7 +394,7 @@ export { createUnifiedEndpointRequestSelector } from './unified-request-selector
 
 ### Engine State → Request Mapping
 
-| Engine State Source | Selector Field | AgUiPayloadRequest Target |
+| Engine State Source | Selector Field | UnifiedEndpointRequest Target |
 |---|---|---|
 | `configuration.getTrackingId` | `trackingId` | `agentInput.trackingId` |
 | `configuration.getLanguage` | `language` | `agentInput.language` |
