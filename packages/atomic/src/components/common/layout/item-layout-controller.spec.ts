@@ -118,6 +118,66 @@ describe('ItemLayoutController', () => {
       expect(element2.classList.contains('display-list')).toBe(true);
     });
 
+    it('should apply layout classes to shared section elements even when their tag does not match the element prefix', () => {
+      mockOptions.elementPrefix = 'atomic-recs-result';
+      controller = new ItemLayoutController(mockElement, mockOptions);
+      controller.hostConnected();
+
+      const mockRoot = document.createElement('div');
+      mockRoot.className = 'result-root';
+      const section = document.createElement('atomic-result-section-visual');
+      const child = document.createElement('atomic-recs-result-link');
+      mockRoot.appendChild(section);
+      mockRoot.appendChild(child);
+
+      vi.spyOn(mockElement.shadowRoot!, 'querySelector').mockReturnValue(mockRoot);
+
+      controller.hostUpdated();
+
+      expect(section.classList.contains('display-list')).toBe(true);
+      expect(section.classList.contains('density-normal')).toBe(true);
+      expect(section.classList.contains('image-icon')).toBe(true);
+      // Prefixed children keep being classed when classesOnly is not set.
+      expect(child.classList.contains('display-list')).toBe(true);
+    });
+
+    describe('when classesOnly is true', () => {
+      beforeEach(() => {
+        mockOptions.elementPrefix = 'atomic-insight-result';
+        mockOptions.classesOnly = true;
+        controller = new ItemLayoutController(mockElement, mockOptions);
+        controller.hostConnected();
+      });
+
+      it('should still apply layout classes to shared section elements', () => {
+        const mockRoot = document.createElement('div');
+        mockRoot.className = 'result-root';
+        const section = document.createElement('atomic-result-section-title');
+        mockRoot.appendChild(section);
+
+        vi.spyOn(mockElement.shadowRoot!, 'querySelector').mockReturnValue(mockRoot);
+
+        controller.hostUpdated();
+
+        expect(section.classList.contains('display-list')).toBe(true);
+        expect(section.classList.contains('density-normal')).toBe(true);
+        expect(section.classList.contains('image-icon')).toBe(true);
+      });
+
+      it('should not apply layout classes to prefixed child elements', () => {
+        const mockRoot = document.createElement('div');
+        mockRoot.className = 'result-root';
+        const child = document.createElement('atomic-insight-result-children');
+        mockRoot.appendChild(child);
+
+        vi.spyOn(mockElement.shadowRoot!, 'querySelector').mockReturnValue(mockRoot);
+
+        controller.hostUpdated();
+
+        expect(child.classList.length).toBe(0);
+      });
+    });
+
     it('should use MutationObserver when custom render function is present', () => {
       const mockRenderFunction = vi.fn();
       mockOptions.renderingFunction = vi.fn().mockReturnValue(mockRenderFunction);

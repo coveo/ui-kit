@@ -41,13 +41,13 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(LitElement)
 
   static styles: CSSResultGroup = css`
     @reference '../../../utils/tailwind.global.tw.css';
-    @import '../../common/template-system/legacy-template-system.css';
+    @import '../../common/template-system/template-system.css';
 
     :host {
       @apply atomic-template-system;
       @apply relative;
 
-      .with-sections:not(.child-result) {
+      .result-root.with-sections:not(.child-result) {
         padding-top: var(--atomic-layout-spacing-y);
         padding-bottom: var(--atomic-layout-spacing-y);
         padding-right: var(--atomic-layout-spacing-x);
@@ -55,7 +55,7 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(LitElement)
       }
     }
 
-    :host(:hover) .with-sections {
+    :host(:hover) .result-root.with-sections {
       @apply bg-neutral-lighter;
     }
 
@@ -63,7 +63,7 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(LitElement)
       @apply visible;
     }
 
-    :host(:first-of-type) .with-sections:not(.child-result) {
+    :host(:first-of-type) .result-root.with-sections:not(.child-result) {
       @apply pt-8;
     }
 
