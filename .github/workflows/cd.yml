@@ -65,7 +65,7 @@ jobs:
         run: echo "version=$(node -p \"require('./package.json').version\")" >> "$GITHUB_OUTPUT"
       - name: Upload create-ui source maps to Sentry
         if: ${{ steps.changesets.outputs.published == 'true' && contains(steps.changesets.outputs.publishedPackages, '@coveo/create-ui') }}
-        uses: getsentry/action-release@ff07929a6537bac57790c3451cf4d364aca38528 # v3
+        uses: step-security/getsentry-action-release@4530160f6bc962e1dd67e2703064a7a5cfd401fb # v3.7.0
         with:
           release: create-ui@${{ steps.create-ui-version.outputs.version }}
           sourcemaps: packages/create-ui/dist
