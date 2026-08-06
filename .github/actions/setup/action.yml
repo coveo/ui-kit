@@ -10,6 +10,22 @@ inputs:
     description: 'Command used to build. Defaults to building every package.'
     required: false
     default: 'pnpm run build'
+  load-cache:
+    description: 'Download the per-run .turbo cache artifact produced by the build job (intra-run fan-out). Best-effort; falls back to the Turbo remote cache on a miss.'
+    required: false
+    default: 'true'
+  save-cache:
+    description: 'Upload the .turbo cache as a per-run artifact for other jobs to reuse. Set on the producer build job.'
+    required: false
+    default: 'false'
+  cache-prefix:
+    description: 'Prefix for the .turbo artifact name, to isolate environments (e.g. cdn).'
+    required: false
+    default: 'default'
+  cache-retention-days:
+    description: 'Retention (in days) for the .turbo cache artifact.'
+    required: false
+    default: '1'
 #endregion
 runs:
   using: composite
@@ -34,9 +50,33 @@ runs:
     - run: pnpm install --frozen-lockfile --prefer-offline
       shell: bash
     #endregion
+    #region Turbo cache (intra-run fan-out)
+    # Reuse the .turbo cache the build job produced once, so consumer jobs get
+    # LOCAL cache hits instead of each re-fetching the whole graph from the
+    # Turborepo remote cache. Best-effort: on a miss, turbo falls back to the
+    # remote cache (turbo.json remoteCache + TURBO_TOKEN).
+    - name: Download turbo cache
+      if: inputs.save-cache != 'true' && inputs.load-cache == 'true'
+      continue-on-error: true
+      uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+      with:
+        name: ${{ runner.os }}-${{ inputs.cache-prefix }}-turbo
+        path: .turbo
+    #endregion
     #region Build
-    # Turbo build outputs come from Turborepo remote caching (turbo.json remoteCache + TURBO_TOKEN).
+    # Build outputs come from the local .turbo cache above (intra-run fan-out)
+    # or the Turborepo remote cache.
     - run: ${{ inputs.build-command }}
       if: inputs.skip-build != 'true'
       shell: bash
+    # Publish the .turbo cache once (producer build job) for consumers to reuse.
+    - name: Upload turbo cache
+      if: inputs.save-cache == 'true'
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+      with:
+        name: ${{ runner.os }}-${{ inputs.cache-prefix }}-turbo
+        path: .turbo
+        include-hidden-files: true
+        retention-days: ${{ inputs.cache-retention-days }}
+        if-no-files-found: error
     #endregion
