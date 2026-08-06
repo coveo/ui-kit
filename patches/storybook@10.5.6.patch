@@ -1,0 +1,19 @@
+diff --git a/dist/_node-chunks/chunk-PUL3B5RN.js b/dist/_node-chunks/chunk-PUL3B5RN.js
+index 80a66e9f6fa1b1ef80bb35b5054d395080979a47..cefeb48b7ce1ba6cd8b29f70d4e5d384709670d2 100644
+--- a/dist/_node-chunks/chunk-PUL3B5RN.js
++++ b/dist/_node-chunks/chunk-PUL3B5RN.js
+@@ -1264,7 +1264,13 @@ var DEFAULT_EXTENSIONS = [".tsx", ".ts", ".d.ts", ".jsx", ".js", ".mjs", ".cjs",
+       tsconfig: "auto",
+       alias,
+       conditionNames,
+-      extensions: DEFAULT_EXTENSIONS
++      extensions: DEFAULT_EXTENSIONS,
++      extensionAlias: {
++        ".js": [".ts", ".tsx", ".js"],
++        ".mjs": [".mts", ".mjs"],
++        ".cjs": [".cts", ".cjs"],
++        ".jsx": [".tsx", ".jsx"]
++      }
+     }), this.projectRootEntry = join(config.projectRoot, "__sb_resolver_root__.ts");
+   }
+   /**

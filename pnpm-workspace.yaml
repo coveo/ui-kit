@@ -120,6 +120,7 @@ minimumReleaseAgeExclude:
   - '@wc-toolkit/storybook-helpers'
   - '@storybook/*'
   - storybook
+  - storybook-addon-pseudo-states
   - '@angular-devkit/*'
   - '@angular/*'
   - '@ngtools/*'
