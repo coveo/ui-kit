@@ -238,7 +238,7 @@ patchedDependencies:
     hash: 2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9
     path: patches/@stencil+core+4.20.0.patch
   '@wc-toolkit/storybook-helpers@10.5.1':
-    hash: 429bad4158f6bfa7bf49b2eb03e3b11a3e200344cfc0a31bcdd3e0c4cd52b9b7
+    hash: 619370a0b6eb58da1f55c3a8c43f69bfc57b33a12d4cc833915aa3a01870fb4b
     path: patches/@wc-toolkit__storybook-helpers@10.5.1.patch
   jest-environment-jsdom@29.7.0:
     hash: b419a992476c3323e67ee6c86f3f9ecf6f4f073127cb572aa9af3b9c6550751d
@@ -431,7 +431,7 @@ importers:
         version: 4.1.10(msw@2.15.0(@types/node@24.13.3)(typescript@6.0.3))(playwright@1.60.0)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))(vitest@4.1.10)
       '@wc-toolkit/storybook-helpers':
         specifier: 10.5.1
-        version: 10.5.1(patch_hash=429bad4158f6bfa7bf49b2eb03e3b11a3e200344cfc0a31bcdd3e0c4cd52b9b7)(lit@3.3.3)(storybook@10.5.5(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.7))
+        version: 10.5.1(patch_hash=619370a0b6eb58da1f55c3a8c43f69bfc57b33a12d4cc833915aa3a01870fb4b)(lit@3.3.3)(storybook@10.5.5(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.7))
       chromatic:
         specifier: 'catalog:'
         version: 18.1.0(@chromatic-com/playwright@0.14.11(@playwright/test@1.60.0)(@testing-library/dom@10.4.1)(encoding@0.1.13)(prettier@3.9.6)(react@19.2.7))
@@ -23788,7 +23788,7 @@ snapshots:
 
   '@vue/shared@3.5.39': {}
 
-  '@wc-toolkit/storybook-helpers@10.5.1(patch_hash=429bad4158f6bfa7bf49b2eb03e3b11a3e200344cfc0a31bcdd3e0c4cd52b9b7)(lit@3.3.3)(storybook@10.5.5(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.7))':
+  '@wc-toolkit/storybook-helpers@10.5.1(patch_hash=619370a0b6eb58da1f55c3a8c43f69bfc57b33a12d4cc833915aa3a01870fb4b)(lit@3.3.3)(storybook@10.5.5(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.7))':
     dependencies:
       lit: 3.3.3
       storybook: 10.5.5(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.7)
