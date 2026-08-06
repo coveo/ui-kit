@@ -23,6 +23,9 @@ on:
 permissions:
   contents: read
 
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+
 jobs:
   build-cdn:
     name: Build CDN
@@ -52,7 +55,6 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           skip-build: 'true'
-          load-cache: 'false'
       - name: Trigger commit artifact upload and hotfix pointer update
         run: node ./scripts/deploy/trigger-commit-upload.mjs
         env:

@@ -18,9 +18,11 @@ describe('atomic-tab-popover', () => {
   const renderTabPopover = async (options: {show?: boolean; slottedContent?: unknown} = {}) => {
     const {element} = await renderInAtomicSearchInterface<AtomicTabPopover>({
       template: html`<atomic-tab-popover>
-        ${options.slottedContent ??
-        html`<li><button>Tab 1</button></li>
-          <li><button>Tab 2</button></li>`}
+        ${
+          options.slottedContent ??
+          html`<li><button>Tab 1</button></li>
+            <li><button>Tab 2</button></li>`
+        }
       </atomic-tab-popover>`,
       selector: 'atomic-tab-popover',
       bindings: (bindings) => {

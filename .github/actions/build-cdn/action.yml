@@ -1,5 +1,5 @@
 name: Build CDN
-description: Build with CDN deployment environment and save turbo cache artifact
+description: Build with CDN deployment environment
 
 inputs:
   commit-sha:
@@ -11,10 +11,6 @@ runs:
   steps:
     - uses: ./.github/actions/setup
       with:
-        cache-prefix: 'cdn'
-        save-cache: 'true'
-        load-cache: 'false'
-        cache-retention-days: '7'
         # Samples are not CDN artifacts. Exclude them so the CDN build does not try
         # to bundle samples that depend on CDN-externalized packages.
         build-command: "pnpm exec turbo build --filter='!./samples/**'"

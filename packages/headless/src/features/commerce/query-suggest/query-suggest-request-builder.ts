@@ -11,5 +11,6 @@ export const buildQuerySuggestRequest = (
   return {
     ...buildBaseCommerceAPIRequest(state, navigatorContext),
     query: state.querySet[id],
+    count: state.querySuggest?.[id]?.count || undefined,
   };
 };
