@@ -47,6 +47,7 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           skip-build: 'true'
+          load-cache: 'false'
       - run: pnpm run pr:report
         env:
           GITHUB_CREDENTIALS: ${{ steps.generate-token.outputs.token }}
@@ -66,6 +67,8 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
       - uses: ./.github/actions/setup
+        with:
+          load-cache: 'false'
   build-missing:
     name: 'Build & commit missing generated files'
     if: ${{ github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/') }}
@@ -83,6 +86,8 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
       - uses: ./.github/actions/setup
+        with:
+          load-cache: 'false'
       - name: Check for uncommitted changes
         id: check-changes
         run: |
@@ -132,6 +137,8 @@ jobs:
       - run: git branch main origin/main
         if: ${{ github.event_name != 'pull_request' }}
       - uses: ./.github/actions/setup
+        with:
+          save-cache: 'true'
       - name: Get affected projects
         id: set
         run: |
