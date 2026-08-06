@@ -6,6 +6,9 @@ on:
 permissions:
   contents: read
 
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+
 jobs:
   release:
     concurrency:
@@ -38,10 +41,6 @@ jobs:
           fetch-depth: 0
           token: ${{ steps.generate-token.outputs.token }}
       - uses: ./.github/actions/setup
-        with:
-          load-cache: false
-          save-cache: true
-          cache-retention-days: 7
       - name: Create release PR or publish
         id: changesets
         continue-on-error: true
@@ -234,7 +233,6 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           skip-build: 'true'
-          load-cache: 'false'
       - name: Trigger commit artifact upload on ui-kit-cd
         run: node ./scripts/deploy/trigger-commit-upload.mjs
         env:
@@ -259,6 +257,4 @@ jobs:
           fetch-depth: 0
 
       - uses: ./.github/actions/setup
-        with:
-          load-cache: 'false'
       - run: pnpm exec turbo chromatic --filter=@coveo/atomic -- --exit-zero-on-changes --auto-accept-changes --branchName=main

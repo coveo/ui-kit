@@ -74,8 +74,8 @@ export class AtomicResultTablePlaceholder extends LitElement {
 
   render(): TemplateResult {
     return html`
-      <table class="list-root animate-pulse ${this.getClasses().join(' ')}">
-        <thead aria-hidden="true">
+      <table class="list-root animate-pulse ${this.getClasses().join(' ')}" aria-hidden="true">
+        <thead>
           <tr>
             <th>
               <div class="mt-2 h-8 block bg-neutral rounded" style="width: 14.5rem;"></div>
