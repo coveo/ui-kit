@@ -1,5 +1,5 @@
 import {execFileSync} from 'node:child_process';
-import {mkdir, mkdtemp, readdir, rm} from 'node:fs/promises';
+import {mkdir, mkdtemp, readFile, readdir, rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {dirname, join} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -26,6 +26,20 @@ try {
     ['install', '--ignore-scripts', '--no-package-lock', join(tempDir, packageFile)],
     {cwd: installDir, stdio: 'inherit'}
   );
+  const sourceMap = JSON.parse(
+    await readFile(
+      join(installDir, 'node_modules', '@coveo', 'create-ui', 'dist', 'index.js.map'),
+      'utf8'
+    )
+  );
+  if (
+    sourceMap.sourceRoot !== '/' ||
+    !Array.isArray(sourceMap.sourcesContent) ||
+    sourceMap.sourcesContent.length === 0
+  ) {
+    throw new Error('Packed create-ui source maps are missing original sources.');
+  }
+
   execFileSync('npm', ['exec', '--no', '--', 'create-ui', '--help'], {
     cwd: installDir,
     stdio: 'inherit',

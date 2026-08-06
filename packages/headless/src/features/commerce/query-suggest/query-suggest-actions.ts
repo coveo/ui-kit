@@ -11,6 +11,7 @@ import type {
   CommerceContextSection,
   CommerceQuerySection,
   QuerySetSection,
+  QuerySuggestionSection,
   VersionSection,
 } from '../../../state/state-sections.js';
 import {
@@ -21,7 +22,6 @@ import {
 import type {
   ClearQuerySuggestActionCreatorPayload,
   FetchQuerySuggestionsActionCreatorPayload,
-  RegisterQuerySuggestActionCreatorPayload,
   SelectQuerySuggestionActionCreatorPayload,
 } from '../../query-suggest/query-suggest-actions.js';
 import {buildQuerySuggestRequest} from './query-suggest-request-builder.js';
@@ -40,7 +40,7 @@ export type StateNeededByQuerySuggest = CommerceConfigurationSection &
   CartSection &
   QuerySetSection &
   CommerceQuerySection &
-  Partial<VersionSection>;
+  Partial<QuerySuggestionSection & VersionSection>;
 export interface FetchQuerySuggestionsThunkReturn
   extends FetchQuerySuggestionsActionCreatorPayload, QuerySuggestSuccessResponse {
   /**
@@ -78,7 +78,19 @@ export const fetchQuerySuggestions = createAsyncThunk<
   }
 );
 
-export type RegisterQuerySuggestPayload = RegisterQuerySuggestActionCreatorPayload;
+export interface RegisterQuerySuggestPayload {
+  /**
+   * A unique identifier for the query suggest entity (for example, `b953ab2e-022b-4de4-903f-68b2c0682942`). Usually, this will be the ID of the search box controller that requests the query suggestions.
+   */
+  id: string;
+
+  /**
+   * The number of query suggestions to request from the API.
+   *
+   * When not specified, the API determines the default number of suggestions returned.
+   */
+  count?: number;
+}
 
 export const registerQuerySuggest = createAction(
   'commerce/querySuggest/register',

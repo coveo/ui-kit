@@ -29,7 +29,7 @@ import {
 } from '../search-box/headless-search-box.js';
 import {defaultSearchBoxOptions} from '../search-box/headless-search-box-options.js';
 import {
-  type StandaloneSearchBoxOptions,
+  type ResolvedStandaloneSearchBoxOptions,
   standaloneSearchBoxSchema,
 } from './headless-standalone-search-box-options.js';
 
@@ -94,7 +94,7 @@ export function buildStandaloneSearchBox(
   const getState = () => engine[stateKey];
 
   const id = props.options.id || randomID('standalone_search_box');
-  const options: Required<StandaloneSearchBoxOptions> = {
+  const options: ResolvedStandaloneSearchBoxOptions = {
     id,
     highlightOptions: {...props.options.highlightOptions},
     ...defaultSearchBoxOptions,
