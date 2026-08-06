@@ -1,6 +1,5 @@
 import LOCALE from '@salesforce/i18n/locale';
 import TIMEZONE from '@salesforce/i18n/timeZone';
-import {getOrganizationEndpoints} from 'c/organizationUtils';
 import {
   getHeadlessBindings,
   loadDependencies,
@@ -41,7 +40,7 @@ export default class QuanticDemoSearchInterface extends QuanticSearchInterface {
   /**
    * The analytics mode to use (e.g., 'legacy' or 'next').
    * @api
-   * @type {string}
+   * @type {'legacy'|'next'}
    */
   @api analyticsMode = 'legacy';
 
@@ -49,15 +48,13 @@ export default class QuanticDemoSearchInterface extends QuanticSearchInterface {
     loadDependencies(this)
       .then(() => {
         if (!getHeadlessBindings(this.engineId)?.engine) {
-          const endpoints = getOrganizationEndpoints(
-            this.organizationId,
-            this.environment
-          );
           this.engineOptions = {
             configuration: {
               organizationId: this.organizationId,
               accessToken: this.accessToken,
-              organizationEndpoints: endpoints,
+              environment: /** @type {import('coveo').PlatformEnvironment} */ (
+                this.environment
+              ),
               search: {
                 searchHub: this.searchHub,
                 pipeline: this.pipeline,
