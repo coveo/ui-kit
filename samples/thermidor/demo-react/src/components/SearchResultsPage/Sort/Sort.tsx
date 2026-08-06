@@ -40,20 +40,21 @@ export function Sort({controller}: SortProps) {
 
   return (
     <div className={styles.container}>
-      <label className={styles.label}>
+      <label className={styles.label} htmlFor="sort-select">
         <strong>Sort by:</strong>
-        <select
-          className={styles.select}
-          value={selectedIndex >= 0 ? String(selectedIndex) : '0'}
-          onChange={handleChange}
-        >
-          {STATIC_OPTIONS.map((option, index) => (
-            <option key={index} value={String(index)}>
-              {option.label}
-            </option>
-          ))}
-        </select>
       </label>
+      <select
+        id="sort-select"
+        className={styles.select}
+        value={selectedIndex >= 0 ? String(selectedIndex) : '0'}
+        onChange={handleChange}
+      >
+        {STATIC_OPTIONS.map((option, index) => (
+          <option key={index} value={String(index)}>
+            {option.label}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }
