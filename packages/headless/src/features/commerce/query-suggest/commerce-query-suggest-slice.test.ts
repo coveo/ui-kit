@@ -52,11 +52,26 @@ describe('Commerce querySuggest slice', () => {
       expect(finalState[id]).toEqual(expectedState);
     });
 
-    it('when the id exists, it does not modify the registered state', () => {
+    it('when the id does not exist and count is not provided, it adds an entry with count undefined', () => {
+      const action = registerQuerySuggest({id});
+      const finalState = commerceQuerySuggestReducer(undefined, action);
+
+      expect(finalState[id]?.count).toBeUndefined();
+    });
+
+    it('when the id exists and count is provided, it updates the count', () => {
       const action = registerQuerySuggest({id, count: 10});
       const finalState = commerceQuerySuggestReducer(state, action);
 
-      expect(state[id]).toEqual(finalState[id]);
+      expect(finalState[id]?.count).toBe(10);
+    });
+
+    it('when the id exists and count is not provided, it does not modify the state', () => {
+      state[id] = buildMockQuerySuggest({id, count: 7});
+      const action = registerQuerySuggest({id});
+      const finalState = commerceQuerySuggestReducer(state, action);
+
+      expect(finalState[id]?.count).toBe(7);
     });
   });
 

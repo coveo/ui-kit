@@ -7,7 +7,10 @@ import {
   updateQuerySetQuery,
 } from '../../../features/commerce/query-set/query-set-actions.js';
 import {commerceQuerySuggestReducer as querySuggest} from '../../../features/commerce/query-suggest/commerce-query-suggest-slice.js';
-import {selectQuerySuggestion} from '../../../features/commerce/query-suggest/query-suggest-actions.js';
+import {
+  registerQuerySuggest,
+  selectQuerySuggestion,
+} from '../../../features/commerce/query-suggest/query-suggest-actions.js';
 import {
   fetchRedirectUrl,
   registerStandaloneSearchBox,
@@ -162,5 +165,19 @@ describe('headless standalone searchBox', () => {
   it('should dispatch a resetStandaloneSearchBox action when calling afterRedirection', () => {
     searchBox.afterRedirection();
     expect(resetStandaloneSearchBox).toHaveBeenCalledWith({id});
+  });
+
+  describe('numberOfSuggestions option', () => {
+    it('passes numberOfSuggestions as count to #registerQuerySuggest', () => {
+      vi.resetAllMocks();
+      options = {
+        id,
+        redirectionUrl: 'https://www.coveo.com/en/search',
+        numberOfSuggestions: 7,
+      };
+      initController();
+
+      expect(registerQuerySuggest).toHaveBeenCalledWith({id, count: 7});
+    });
   });
 });
