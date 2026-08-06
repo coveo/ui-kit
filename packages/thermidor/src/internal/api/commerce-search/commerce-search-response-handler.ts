@@ -21,7 +21,7 @@ export function createCommerceSearchEndpointResponseHandler(iface: InterfaceHand
   return (engine: FullEngine, response: CommerceSearchResponse) => {
     engine.mutate(productListActions.setProductsFromResponse(response.products));
 
-    const perPage = response.pagination.perPage ?? response.pagination.pageSize ?? 20;
+    const perPage = response.pagination.perPage ?? response.pagination.pageSize!;
     engine.mutate(paginationActions.setTotalCount(response.pagination.totalEntries));
     engine.mutate(paginationActions.setFirstResult(response.pagination.page * perPage));
     engine.mutate(paginationActions.setPageSize(perPage));
