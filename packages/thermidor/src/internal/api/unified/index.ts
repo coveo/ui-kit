@@ -7,9 +7,6 @@ export type {
   UnifiedEndpointResponse,
 } from './unified-endpoint-client.js';
 export type {
-  UnifiedEndpointRequest,
-  UnifiedEndpointSession,
-  UnifiedEndpointMessage,
   CommerceRequestModel,
   CommerceRequestContext,
   CommerceCartItem,

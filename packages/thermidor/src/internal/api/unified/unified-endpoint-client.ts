@@ -1,4 +1,4 @@
-import type {UnifiedEndpointRequest} from './unified-endpoint-types.js';
+import type {CommerceRequestModel} from './unified-endpoint-types.js';
 import {isSuccessResponse, transformError} from '@/src/internal/api/protocol/error-handling.js';
 import {getOrganizationEndpoint} from '@/src/internal/api/organization-endpoint.js';
 
@@ -8,7 +8,7 @@ const featureFlagOverridesHeaderValue = JSON.stringify({
 
 const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
   return async (
-    request: UnifiedEndpointRequest,
+    agentInput: CommerceRequestModel,
     configuration: UnifiedEndpointClientConfiguration,
     options?: UnifiedEndpointCallOptions
   ): Promise<UnifiedEndpointClientResult> => {
@@ -44,7 +44,7 @@ const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
       const response = await fetch(url, {
         method: 'POST',
         signal: options?.signal,
-        body: JSON.stringify(request.agentInput),
+        body: JSON.stringify(agentInput),
         headers: {
           'Content-Type': 'application/json',
           Accept: 'text/event-stream',
@@ -114,7 +114,7 @@ export type UnifiedEndpointClientResult =
 
 export interface UnifiedEndpointClient {
   call: (
-    request: UnifiedEndpointRequest,
+    agentInput: CommerceRequestModel,
     configuration: UnifiedEndpointClientConfiguration,
     options?: UnifiedEndpointCallOptions
   ) => Promise<UnifiedEndpointClientResult>;

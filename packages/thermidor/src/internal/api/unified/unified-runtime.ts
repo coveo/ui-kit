@@ -116,11 +116,11 @@ export class UnifiedRuntime {
     this.activeAbortController = abortController;
 
     try {
-      const request = this.buildConversationRequest(this.engine, this.currentPrompt ?? '');
+      const agentInput = this.buildConversationRequest(this.engine, this.currentPrompt ?? '');
       const clientConfig = this.engine.read(this.configSelectors.getEndpointClientConfiguration);
 
       const client = createUnifiedEndpointClient();
-      const result = await client.call(request, clientConfig, {signal: abortController.signal});
+      const result = await client.call(agentInput, clientConfig, {signal: abortController.signal});
 
       if (!result.success) {
         this.statePort.failTurn(turnId, result.error);

@@ -69,7 +69,7 @@ describe('createUnifiedSearchEndpointThunk', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockBuildRequest.mockReturnValue({agentInput: {action: {name: 'test'}}});
+    mockBuildRequest.mockReturnValue({action: {name: 'test'}});
     mockHandleResponse.mockResolvedValue(undefined);
   });
 
@@ -105,9 +105,9 @@ describe('createUnifiedSearchEndpointThunk', () => {
     expect(mockBuildRequest).toHaveBeenCalledWith(engine, actionIntent);
   });
 
-  it('passes built request and config to the endpoint client', async () => {
-    const mockRequest = {agentInput: {action: {name: 'select_page'}}};
-    mockBuildRequest.mockReturnValue(mockRequest);
+  it('passes built agent input and config to the endpoint client', async () => {
+    const mockAgentInput = {action: {name: 'select_page'}};
+    mockBuildRequest.mockReturnValue(mockAgentInput);
     mockCall.mockResolvedValue({success: true, data: {stream: 'mock-stream'}});
     const engine = createMockEngine();
 
@@ -124,7 +124,7 @@ describe('createUnifiedSearchEndpointThunk', () => {
     await action(vi.fn(), () => ({}), undefined);
 
     expect(mockCall).toHaveBeenCalledWith(
-      mockRequest,
+      mockAgentInput,
       expect.objectContaining({organizationId: 'org-1', accessToken: 'token-1'})
     );
   });

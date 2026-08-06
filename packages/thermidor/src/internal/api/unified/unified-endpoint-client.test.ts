@@ -1,35 +1,29 @@
 import {beforeEach, describe, expect, it, vi, type MockedFunction} from 'vitest';
 import {createUnifiedEndpointClient} from './unified-endpoint-client.js';
-import type {UnifiedEndpointRequest} from './unified-endpoint-types.js';
+import type {CommerceRequestModel} from './unified-endpoint-types.js';
 
 describe('UnifiedEndpointClient', () => {
   let client: ReturnType<typeof createUnifiedEndpointClient>;
   let mockedFetch: MockedFunction<typeof fetch>;
 
-  const request: UnifiedEndpointRequest = {
-    session: {threadId: 'thread-1', continuationTokens: {}},
-    messages: [{id: 'msg-1', role: 'user', content: 'Hello'}],
-    requestContext: {},
-    forwardedProps: {},
-    agentInput: {
-      trackingId: 'tracking-id',
-      language: 'en',
-      country: 'US',
-      currency: 'USD',
-      clientId: 'client-id',
-      message: 'Hello',
-      action: null,
-      conversationSessionId: 'session-1',
-      conversationToken: 'token-1',
-      context: {
-        view: {url: 'https://example.com/products', referrer: 'https://example.com'},
-        user: {userAgent: 'Mozilla/5.0'},
-        cart: [],
-        source: [],
-        custom: {},
-      },
-      pinnedProducts: [],
+  const request: CommerceRequestModel = {
+    trackingId: 'tracking-id',
+    language: 'en',
+    country: 'US',
+    currency: 'USD',
+    clientId: 'client-id',
+    message: 'Hello',
+    action: null,
+    conversationSessionId: 'session-1',
+    conversationToken: 'token-1',
+    context: {
+      view: {url: 'https://example.com/products', referrer: 'https://example.com'},
+      user: {userAgent: 'Mozilla/5.0'},
+      cart: [],
+      source: [],
+      custom: {},
     },
+    pinnedProducts: [],
   };
 
   beforeEach(() => {
@@ -89,7 +83,7 @@ describe('UnifiedEndpointClient', () => {
       {
         method: 'POST',
         signal: undefined,
-        body: JSON.stringify(request.agentInput),
+        body: JSON.stringify(request),
         headers: {
           'Content-Type': 'application/json',
           Accept: 'text/event-stream',

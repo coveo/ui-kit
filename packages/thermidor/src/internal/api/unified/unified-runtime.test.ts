@@ -226,15 +226,13 @@ describe('UnifiedRuntime', () => {
 
       expect(mockClient.call).toHaveBeenCalledWith(
         expect.objectContaining({
-          agentInput: expect.objectContaining({
-            clientId: 'test-client-id',
-            context: expect.objectContaining({
-              user: {userAgent: 'TestAgent/1.0'},
-              view: {
-                url: 'https://example.com',
-                referrer: 'https://referrer.com',
-              },
-            }),
+          clientId: 'test-client-id',
+          context: expect.objectContaining({
+            user: {userAgent: 'TestAgent/1.0'},
+            view: {
+              url: 'https://example.com',
+              referrer: 'https://referrer.com',
+            },
           }),
         }),
         expect.anything(),
@@ -693,12 +691,10 @@ describe('UnifiedRuntime', () => {
 
       expect(mockClient.call).toHaveBeenCalledWith(
         expect.objectContaining({
-          agentInput: expect.objectContaining({
-            clientId: undefined,
-            context: expect.objectContaining({
-              user: {userAgent: null},
-              view: {url: null, referrer: null},
-            }),
+          clientId: undefined,
+          context: expect.objectContaining({
+            user: {userAgent: null},
+            view: {url: null, referrer: null},
           }),
         }),
         expect.anything(),

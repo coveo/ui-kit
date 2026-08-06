@@ -1,10 +1,9 @@
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {InterfaceHandle, ActionIntent} from '@/src/internal/utils/index.js';
-import {generateId} from '@/src/internal/utils/index.js';
 import {getOrCreateConfigurationSelectors} from '@/src/internal/features/configuration/index.js';
 import {getOrCreateGenerativeSelectors} from '@/src/internal/features/generative/index.js';
 import {getOrCreateCartSelectors} from '@/src/internal/features/cart/index.js';
-import type {A2uiAction, UnifiedEndpointRequest} from './unified-endpoint-types.js';
+import type {A2uiAction, CommerceRequestModel} from './unified-endpoint-types.js';
 
 export function createUnifiedSearchRequestBuilder(
   generativeInterface: InterfaceHandle,
@@ -18,7 +17,7 @@ export function createUnifiedSearchRequestBuilder(
   return function buildRequest(
     engine: FullEngine,
     actionIntent: ActionIntent
-  ): UnifiedEndpointRequest {
+  ): CommerceRequestModel {
     const action: A2uiAction = {
       surfaceId,
       name: actionIntent.name,
@@ -39,36 +38,26 @@ export function createUnifiedSearchRequestBuilder(
     const currency = engine.read(configSelectors.getCurrency);
 
     return {
-      session: {
-        threadId: conversationSessionId || generateId(),
-        clientMessageId: generateId(),
-        continuationTokens: {},
-      },
-      messages: [],
-      requestContext: {},
-      forwardedProps: {},
-      agentInput: {
-        trackingId,
-        language,
-        country,
-        currency,
-        clientId: navigatorContext?.clientId ?? undefined,
-        message: null,
-        action,
-        conversationSessionId,
-        conversationToken,
-        context: {
-          view: {
-            url: navigatorContext?.location ?? null,
-            referrer: navigatorContext?.referrer ?? null,
-          },
-          user: {userAgent: navigatorContext?.userAgent ?? null},
-          cart: cart ?? [],
-          source: [],
-          custom: {},
+      trackingId,
+      language,
+      country,
+      currency,
+      clientId: navigatorContext?.clientId ?? undefined,
+      message: null,
+      action,
+      conversationSessionId,
+      conversationToken,
+      context: {
+        view: {
+          url: navigatorContext?.location ?? null,
+          referrer: navigatorContext?.referrer ?? null,
         },
-        pinnedProducts: [],
+        user: {userAgent: navigatorContext?.userAgent ?? null},
+        cart: cart ?? [],
+        source: [],
+        custom: {},
       },
+      pinnedProducts: [],
     };
   };
 }

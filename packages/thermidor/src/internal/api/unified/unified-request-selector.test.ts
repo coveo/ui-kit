@@ -13,7 +13,6 @@ vi.mock('@/src/internal/features/configuration/index.js', () => ({
 
 vi.mock('@/src/internal/features/generative/index.js', () => ({
   getOrCreateGenerativeSelectors: () => ({
-    getActiveMessage: (state: any) => state.__activeMessage ?? '',
     getConversationSessionId: (state: any) => state.__conversationSessionId,
     getConversationToken: (state: any) => state.__conversationToken,
   }),
@@ -64,18 +63,6 @@ describe('createUnifiedEndpointRequestSelector', () => {
     expect(result.conversationToken).toBe('token-abc');
   });
 
-  it('maps active message from generative state', () => {
-    const selector = createUnifiedEndpointRequestSelector(mockInterface, mockInterface);
-
-    const state = {
-      __activeMessage: 'What products do you have?',
-    };
-
-    const result = selector(state);
-
-    expect(result.message).toBe('What products do you have?');
-  });
-
   it('maps cart context from cart selectors', () => {
     const selector = createUnifiedEndpointRequestSelector(mockInterface, mockInterface);
 
@@ -101,7 +88,6 @@ describe('createUnifiedEndpointRequestSelector', () => {
       __language: 'en',
       __country: 'US',
       __currency: 'USD',
-      __activeMessage: 'hello',
       __cart: undefined,
       __conversationSessionId: 'sid',
       __conversationToken: 'tok',

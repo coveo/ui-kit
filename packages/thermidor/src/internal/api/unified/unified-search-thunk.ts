@@ -29,9 +29,9 @@ export function createUnifiedSearchEndpointThunk(
         throw new Error('Unified search thunk requires an actionIntent');
       }
 
-      const request = buildRequest(engine, actionIntent);
+      const agentInput = buildRequest(engine, actionIntent);
       const config = engine.read(configSelectors.getEndpointClientConfiguration);
-      const result = await createUnifiedEndpointClient().call(request, config);
+      const result = await createUnifiedEndpointClient().call(agentInput, config);
 
       if (!result.success) {
         throw new Error(result.error);

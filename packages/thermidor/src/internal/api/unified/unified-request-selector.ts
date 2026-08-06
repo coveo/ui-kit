@@ -17,25 +17,14 @@ export function createUnifiedEndpointRequestSelector(
     configuration.getLanguage,
     configuration.getCountry,
     configuration.getCurrency,
-    generative.getActiveMessage,
     cart.getCartContext,
     generative.getConversationSessionId,
     generative.getConversationToken,
-    (
+    (trackingId, language, country, currency, cart, conversationSessionId, conversationToken) => ({
       trackingId,
       language,
       country,
       currency,
-      message,
-      cart,
-      conversationSessionId,
-      conversationToken
-    ) => ({
-      trackingId,
-      language,
-      country,
-      currency,
-      message,
       cart,
       conversationSessionId,
       conversationToken,

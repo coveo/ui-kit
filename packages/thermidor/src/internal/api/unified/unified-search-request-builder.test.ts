@@ -26,10 +26,6 @@ vi.mock('@/src/internal/features/cart/index.js', () => ({
   }),
 }));
 
-vi.mock('@/src/internal/utils/index.js', () => ({
-  generateId: () => 'generated-id',
-}));
-
 function createMockEngine(state: Record<string, any> = {}): FullEngine {
   return {
     read: (selector: any) => selector(state),
@@ -63,7 +59,7 @@ describe('createUnifiedSearchRequestBuilder', () => {
 
     const request = buildRequest(engine, actionIntent);
 
-    expect(request.agentInput.action).toMatchObject({
+    expect(request.action).toMatchObject({
       surfaceId: 'my-surface',
       name: 'select_page',
       sourceComponentId: 'thermidor',
@@ -73,7 +69,7 @@ describe('createUnifiedSearchRequestBuilder', () => {
     });
   });
 
-  it('sets message to null and messages to empty array', () => {
+  it('sets message to null', () => {
     const buildRequest = createUnifiedSearchRequestBuilder(
       generativeInterface,
       cartInterface,
@@ -84,8 +80,7 @@ describe('createUnifiedSearchRequestBuilder', () => {
 
     const request = buildRequest(engine, actionIntent);
 
-    expect(request.messages).toEqual([]);
-    expect(request.agentInput.message).toBeNull();
+    expect(request.message).toBeNull();
   });
 
   it('includes conversationSessionId and conversationToken from generative state', () => {
@@ -99,8 +94,8 @@ describe('createUnifiedSearchRequestBuilder', () => {
 
     const request = buildRequest(engine, actionIntent);
 
-    expect(request.agentInput.conversationSessionId).toBe('session-abc');
-    expect(request.agentInput.conversationToken).toBe('token-xyz');
+    expect(request.conversationSessionId).toBe('session-abc');
+    expect(request.conversationToken).toBe('token-xyz');
   });
 
   it('includes trackingId, language, country, currency from configuration', () => {
@@ -114,10 +109,10 @@ describe('createUnifiedSearchRequestBuilder', () => {
 
     const request = buildRequest(engine, actionIntent);
 
-    expect(request.agentInput.trackingId).toBe('track-1');
-    expect(request.agentInput.language).toBe('en');
-    expect(request.agentInput.country).toBe('US');
-    expect(request.agentInput.currency).toBe('USD');
+    expect(request.trackingId).toBe('track-1');
+    expect(request.language).toBe('en');
+    expect(request.country).toBe('US');
+    expect(request.currency).toBe('USD');
   });
 
   it('includes navigator context', () => {
@@ -131,10 +126,10 @@ describe('createUnifiedSearchRequestBuilder', () => {
 
     const request = buildRequest(engine, actionIntent);
 
-    expect(request.agentInput.clientId).toBe('client-abc');
-    expect(request.agentInput.context.view.url).toBe('https://example.com');
-    expect(request.agentInput.context.view.referrer).toBe('https://google.com');
-    expect(request.agentInput.context.user).toEqual({userAgent: 'test-agent'});
+    expect(request.clientId).toBe('client-abc');
+    expect(request.context.view.url).toBe('https://example.com');
+    expect(request.context.view.referrer).toBe('https://google.com');
+    expect(request.context.user).toEqual({userAgent: 'test-agent'});
   });
 
   it('includes cart items from cart state', () => {
@@ -148,37 +143,9 @@ describe('createUnifiedSearchRequestBuilder', () => {
 
     const request = buildRequest(engine, actionIntent);
 
-    expect(request.agentInput.context.cart).toEqual([
+    expect(request.context.cart).toEqual([
       {productId: 'p1', name: 'Product 1', price: 10, quantity: 1},
     ]);
-  });
-
-  it('uses conversationSessionId as threadId when available', () => {
-    const buildRequest = createUnifiedSearchRequestBuilder(
-      generativeInterface,
-      cartInterface,
-      'surface-1'
-    );
-    const engine = createMockEngine();
-    const actionIntent: ActionIntent = {name: 'select_page', context: {page: 1}};
-
-    const request = buildRequest(engine, actionIntent);
-
-    expect(request.session.threadId).toBe('session-abc');
-  });
-
-  it('generates threadId when conversationSessionId is empty', () => {
-    const buildRequest = createUnifiedSearchRequestBuilder(
-      generativeInterface,
-      cartInterface,
-      'surface-1'
-    );
-    const engine = createMockEngine({__conversationSessionId: ''});
-    const actionIntent: ActionIntent = {name: 'select_page', context: {page: 1}};
-
-    const request = buildRequest(engine, actionIntent);
-
-    expect(request.session.threadId).toBe('generated-id');
   });
 
   it('handles missing navigator context gracefully', () => {
@@ -197,9 +164,9 @@ describe('createUnifiedSearchRequestBuilder', () => {
 
     const request = buildRequest(engine, actionIntent);
 
-    expect(request.agentInput.clientId).toBeUndefined();
-    expect(request.agentInput.context.view.url).toBeNull();
-    expect(request.agentInput.context.view.referrer).toBeNull();
-    expect(request.agentInput.context.user).toEqual({userAgent: null});
+    expect(request.clientId).toBeUndefined();
+    expect(request.context.view.url).toBeNull();
+    expect(request.context.view.referrer).toBeNull();
+    expect(request.context.user).toEqual({userAgent: null});
   });
 });

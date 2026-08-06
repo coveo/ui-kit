@@ -1,26 +1,3 @@
-// ─── Top-level request envelope ────────────────────────────────────────────
-
-export interface UnifiedEndpointRequest {
-  session: UnifiedEndpointSession;
-  messages: UnifiedEndpointMessage[];
-  requestContext: Record<string, unknown>;
-  forwardedProps: Record<string, unknown>;
-  agentInput: CommerceRequestModel;
-}
-
-export interface UnifiedEndpointSession {
-  threadId: string;
-  continuationTokens: Record<string, unknown>;
-  runId?: string;
-  clientMessageId?: string;
-}
-
-export interface UnifiedEndpointMessage {
-  id: string;
-  role: string;
-  content: string;
-}
-
 // ─── Commerce agent input ──────────────────────────────────────────────────
 
 export interface CommerceRequestModel {
