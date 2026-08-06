@@ -1,4 +1,4 @@
-{
+{   "workbench.colorTheme": "Vue Theme",
     "chat.useAgentSkills": true,
     "json.schemaDownload.trustedDomains": {
         "https://opencode.ai/config.json": true,

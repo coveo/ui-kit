@@ -1,0 +1,11 @@
+{
+  "activeViewId": "31e3f479-f79a-485a-99bc-4ce8b6c52dac",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "7894926a-e484-42cf-9f58-8f78042de3c0",
+  "label": "Quantic Load More Results",
+  "pageAccess": "UseParent",
+  "routeType": "custom-quantic-load-more-results",
+  "type": "route",
+  "urlPrefix": "quantic-load-more-results"
+}

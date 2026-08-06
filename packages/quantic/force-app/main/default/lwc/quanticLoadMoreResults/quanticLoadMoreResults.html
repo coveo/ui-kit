@@ -1,0 +1,38 @@
+<template>
+  <template lwc:if={hasInitializationError}>
+    <c-quantic-component-error component-name={template.host.localName}>
+    </c-quantic-component-error>
+  </template>
+  <template lwc:else>
+    <template lwc:if={hasResults}>
+      <div class="slds-text-align_center">
+        <p class="slds-text-color_weak slds-m-bottom_x-small" data-testid="summary">
+          {summaryLabel}
+        </p>
+        <div
+          class="slds-progress-bar slds-progress-bar_x-small slds-m-bottom_small"
+          role="progressbar"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow={progressPercentage}
+          data-testid="progress-bar"
+        >
+          <span
+            class="slds-progress-bar__value"
+            style={progressBarStyle}
+            data-testid="progress-bar-value"
+          ></span>
+        </div>
+        <template lwc:if={moreResultsAvailable}>
+          <lightning-button
+            variant="neutral"
+            label={labels.loadMoreResults}
+            title={labels.loadMoreResults}
+            onclick={fetchMoreResults}
+            data-testid="load-more-results-button"
+          ></lightning-button>
+        </template>
+      </div>
+    </template>
+  </template>
+</template>
