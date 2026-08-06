@@ -21,18 +21,20 @@ export const renderConversationDebugHeader: FunctionalComponent<
 
     <div class="flex items-center text-neutral-dark break-all">
       ${i18n.t('generated-answer-conversation-id', {conversationId})}
-      ${hasClipboardSupport()
-        ? renderButton({
-            props: {
-              style: 'text-transparent',
-              class: 'p-2 flex items-center',
-              title: i18n.t('generated-answer-copy-conversation-id'),
-              onClick: () => {
-                navigator.clipboard.writeText(conversationId).catch(() => {});
+      ${
+        hasClipboardSupport()
+          ? renderButton({
+              props: {
+                style: 'text-transparent',
+                class: 'p-2 flex items-center',
+                title: i18n.t('generated-answer-copy-conversation-id'),
+                onClick: () => {
+                  navigator.clipboard.writeText(conversationId).catch(() => {});
+                },
               },
-            },
-          })(html`<atomic-icon class="w-4 text-neutral-dark" .icon=${CopyIcon}></atomic-icon>`)
-        : nothing}
+            })(html`<atomic-icon class="w-4 text-neutral-dark" .icon=${CopyIcon}></atomic-icon>`)
+          : nothing
+      }
     </div>
   </div>`;
 };

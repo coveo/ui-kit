@@ -1,4 +1,4 @@
-import {Unsubscribe} from '@/src/internal/engine/index.js';
+import type {Unsubscribe} from '@/src/internal/engine/index.js';
 
 export interface Controller<T = unknown> {
   /**
@@ -9,8 +9,8 @@ export interface Controller<T = unknown> {
   /**
    * Subscribes to controller state changes.
    *
-   * @param callback - Invoked with the new state when the controller state changes.
+   * @param listener - Invoked when the controller state changes.
    * @returns A function that unsubscribes the listener.
    */
-  subscribe(callback: (state: T) => void): Unsubscribe;
+  subscribe(listener: () => void): Unsubscribe;
 }

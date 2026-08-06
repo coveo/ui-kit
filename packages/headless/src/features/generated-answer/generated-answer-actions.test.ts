@@ -7,14 +7,24 @@ import {
   setIsEnabled,
   setIsLoading,
   setIsVisible,
+  streamAnswer,
   updateCitations,
   updateError,
   updateMessage,
   updateResponseFormat,
 } from './generated-answer-actions.js';
+import {generatedAnswerAnalyticsClient} from './generated-answer-analytics-actions.js';
 import {type GeneratedContentFormat, generatedContentFormat} from './generated-response-format.js';
 
 vi.mock('./generated-answer-request.js', () => ({
+  buildStreamingRequest: vi.fn(() =>
+    Promise.resolve({
+      accessToken: 'test-token',
+      organizationId: 'test-org',
+      url: 'https://test.org',
+      streamId: 'test-stream-id',
+    })
+  ),
   constructAnswerAPIQueryParams: vi.fn(() => ({
     q: 'test query',
     searchHub: 'default',
@@ -141,6 +151,120 @@ describe('generated answer', () => {
         expect(() => setAnswerContentFormat(format)).not.toThrow();
       }
     );
+  });
+
+  describe('#streamAnswer', () => {
+    const buildFakeStreamingClient = () => {
+      let writeCallback: ((data: Record<string, unknown>) => void) | undefined;
+      return {
+        streamGeneratedAnswer: vi.fn((_request, callbacks) => {
+          writeCallback = callbacks.write;
+          return new AbortController();
+        }),
+        emitEndOfStream: (answerGenerated: boolean) => {
+          writeCallback?.({
+            payloadType: 'genqa.endOfStreamType',
+            payload: JSON.stringify({answerGenerated}),
+          });
+        },
+      };
+    };
+
+    const mockDispatch = vi.fn().mockImplementation((action) => {
+      if (typeof action === 'function') {
+        return Promise.resolve({type: 'mock/resolved'});
+      }
+      return action;
+    });
+
+    const mockLogger = {warn: vi.fn()};
+
+    const buildMockGetState = () =>
+      vi.fn(
+        () =>
+          ({
+            debug: false,
+            search: {
+              queryExecuted: 'test query',
+              extendedResults: {generativeQuestionAnsweringId: 'test-stream-id'},
+            },
+            generatedAnswer: {
+              answerId: 'test-answer-id',
+              answer: 'some answer',
+            },
+            configuration: {
+              accessToken: 'test-token',
+              organizationId: 'test-org',
+              environment: 'prod',
+              search: {apiBaseUrl: 'https://test.org'},
+            },
+          }) as any
+      );
+
+    beforeEach(() => {
+      vi.clearAllMocks();
+    });
+
+    it('should dispatch the extra thunk argument generatedAnswerAnalyticsClient.logGeneratedAnswerStreamEnd when it is registered', async () => {
+      const fakeStreamingClient = buildFakeStreamingClient();
+      const mockInsightAnalyticsClient = {
+        logGeneratedAnswerStreamEnd: vi.fn(() => ({
+          type: 'analytics/generatedAnswer/streamEnd',
+        })),
+      } as any;
+      const mockExtra = {
+        streamingClient: fakeStreamingClient,
+        logger: mockLogger,
+        generatedAnswerAnalyticsClient: mockInsightAnalyticsClient,
+      } as any;
+
+      const thunk = streamAnswer({setAbortControllerRef: vi.fn()});
+      const runPromise = thunk(mockDispatch, buildMockGetState(), mockExtra);
+      await Promise.resolve();
+      await Promise.resolve();
+      fakeStreamingClient.emitEndOfStream(true);
+      await runPromise;
+
+      expect(mockInsightAnalyticsClient.logGeneratedAnswerStreamEnd).toHaveBeenCalledTimes(1);
+    });
+
+    it('should fall back to the Search generatedAnswerAnalyticsClient when it is not registered as an extra thunk argument', async () => {
+      const fakeStreamingClient = buildFakeStreamingClient();
+      const mockExtra = {
+        streamingClient: fakeStreamingClient,
+        logger: mockLogger,
+        generatedAnswerAnalyticsClient: undefined,
+      } as any;
+      const logStreamEndSpy = vi.spyOn(
+        generatedAnswerAnalyticsClient,
+        'logGeneratedAnswerStreamEnd'
+      );
+
+      const thunk = streamAnswer({setAbortControllerRef: vi.fn()});
+      const runPromise = thunk(mockDispatch, buildMockGetState(), mockExtra);
+      await Promise.resolve();
+      await Promise.resolve();
+      fakeStreamingClient.emitEndOfStream(true);
+      await runPromise;
+
+      expect(logStreamEndSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not throw when generatedAnswerAnalyticsClient is entirely absent from extra', async () => {
+      const fakeStreamingClient = buildFakeStreamingClient();
+      const mockExtra = {
+        streamingClient: fakeStreamingClient,
+        logger: mockLogger,
+      } as any;
+
+      const thunk = streamAnswer({setAbortControllerRef: vi.fn()});
+      const runPromise = thunk(mockDispatch, buildMockGetState(), mockExtra);
+      await Promise.resolve();
+      await Promise.resolve();
+
+      expect(() => fakeStreamingClient.emitEndOfStream(false)).not.toThrow();
+      await expect(runPromise).resolves.not.toThrow();
+    });
   });
 
   describe('#generateAnswer', () => {

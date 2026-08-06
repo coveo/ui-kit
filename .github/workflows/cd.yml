@@ -6,6 +6,9 @@ on:
 permissions:
   contents: read
 
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+
 jobs:
   release:
     concurrency:
@@ -38,10 +41,6 @@ jobs:
           fetch-depth: 0
           token: ${{ steps.generate-token.outputs.token }}
       - uses: ./.github/actions/setup
-        with:
-          load-cache: false
-          save-cache: true
-          cache-retention-days: 7
       - name: Create release PR or publish
         id: changesets
         continue-on-error: true
@@ -59,6 +58,25 @@ jobs:
         run: |
           echo "The publish command failed before any package was published." >&2
           exit 1
+      - name: Read create-ui version
+        id: create-ui-version
+        if: ${{ steps.changesets.outputs.published == 'true' && contains(steps.changesets.outputs.publishedPackages, '@coveo/create-ui') }}
+        working-directory: packages/create-ui
+        run: echo "version=$(node -p \"require('./package.json').version\")" >> "$GITHUB_OUTPUT"
+      - name: Upload create-ui source maps to Sentry
+        if: ${{ steps.changesets.outputs.published == 'true' && contains(steps.changesets.outputs.publishedPackages, '@coveo/create-ui') }}
+        uses: getsentry/action-release@ff07929a6537bac57790c3451cf4d364aca38528 # v3
+        with:
+          release: create-ui@${{ steps.create-ui-version.outputs.version }}
+          sourcemaps: packages/create-ui/dist
+          url_prefix: app:///dist
+          inject: false
+          set_commits: skip
+          disable_telemetry: true
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: coveo-platform
+          SENTRY_PROJECT: create-ui
       - name: Update release/v3 bookmark
         if: ${{ steps.changesets.outputs.published == 'true' }}
         run: |
@@ -234,7 +252,6 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           skip-build: 'true'
-          load-cache: 'false'
       - name: Trigger commit artifact upload on ui-kit-cd
         run: node ./scripts/deploy/trigger-commit-upload.mjs
         env:
@@ -259,6 +276,4 @@ jobs:
           fetch-depth: 0
 
       - uses: ./.github/actions/setup
-        with:
-          load-cache: 'false'
       - run: pnpm exec turbo chromatic --filter=@coveo/atomic -- --exit-zero-on-changes --auto-accept-changes --branchName=main

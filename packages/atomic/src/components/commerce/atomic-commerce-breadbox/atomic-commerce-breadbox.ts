@@ -380,36 +380,38 @@ export class AtomicCommerceBreadbox
       },
     })(
       html`${this.renderBreadcrumbs(breadcrumbs)}
-      ${this.disableCollapse
-        ? nothing
-        : html`${renderBreadcrumbShowMore({
-            props: {
-              refCallback: async (el) => {
-                await this.breadcrumbShowLessFocus.setTarget(el!);
+      ${
+        this.disableCollapse
+          ? nothing
+          : html`${renderBreadcrumbShowMore({
+              props: {
+                refCallback: async (el) => {
+                  await this.breadcrumbShowLessFocus.setTarget(el!);
+                },
+                onShowMore: () => {
+                  this.firstExpandedBreadcrumbIndex =
+                    this.numberOfBreadcrumbs - this.numberOfCollapsedBreadcrumbs;
+                  this.breadcrumbShowMoreFocus.focusOnNextTarget();
+                  this.isCollapsed = false;
+                },
+                isCollapsed: this.isCollapsed,
+                i18n: this.bindings.i18n,
+                numberOfCollapsedBreadcrumbs: this.numberOfCollapsedBreadcrumbs,
+                value: this.showMoreText,
+                ariaLabel: this.showMoreText,
               },
-              onShowMore: () => {
-                this.firstExpandedBreadcrumbIndex =
-                  this.numberOfBreadcrumbs - this.numberOfCollapsedBreadcrumbs;
-                this.breadcrumbShowMoreFocus.focusOnNextTarget();
-                this.isCollapsed = false;
+            })}
+            ${renderBreadcrumbShowLess({
+              props: {
+                onShowLess: () => {
+                  this.breadcrumbShowLessFocus.focusOnNextTarget();
+                  this.isCollapsed = true;
+                },
+                isCollapsed: this.isCollapsed,
+                i18n: this.bindings.i18n,
               },
-              isCollapsed: this.isCollapsed,
-              i18n: this.bindings.i18n,
-              numberOfCollapsedBreadcrumbs: this.numberOfCollapsedBreadcrumbs,
-              value: this.showMoreText,
-              ariaLabel: this.showMoreText,
-            },
-          })}
-          ${renderBreadcrumbShowLess({
-            props: {
-              onShowLess: () => {
-                this.breadcrumbShowLessFocus.focusOnNextTarget();
-                this.isCollapsed = true;
-              },
-              isCollapsed: this.isCollapsed,
-              i18n: this.bindings.i18n,
-            },
-          })}`}
+            })}`
+      }
       ${renderBreadcrumbClearAll({
         props: {
           refCallback: async (ref) => {

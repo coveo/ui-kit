@@ -1,5 +1,6 @@
 import {enableDebug} from '../../features/debug/debug-actions.js';
 import * as ConfigurationActions from '../../features/configuration/configuration-actions.js';
+import {generatedAnswerAnalyticsClient} from '../../features/generated-answer/generated-answer-analytics-actions.js';
 import {setSearchHub} from '../../features/search-hub/search-hub-actions.js';
 import {buildSearchEngine, type SearchEngine, type SearchEngineOptions} from './search-engine.js';
 import {getSampleSearchEngineConfiguration} from './search-engine-configuration.js';
@@ -215,6 +216,14 @@ describe('searchEngine', () => {
       const thunkRelay = await engine.dispatch((_dispatch, _getState, extra) => extra.relay);
 
       expect(thunkRelay).toBe(engine.relay);
+    });
+
+    it('should register the Search generatedAnswerAnalyticsClient as a thunk extra argument', async () => {
+      const thunkAnalyticsClient = await engine.dispatch(
+        (_dispatch, _getState, extra) => extra.generatedAnswerAnalyticsClient
+      );
+
+      expect(thunkAnalyticsClient).toBe(generatedAnswerAnalyticsClient);
     });
   });
 });

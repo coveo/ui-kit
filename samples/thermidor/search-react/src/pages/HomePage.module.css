@@ -1,0 +1,31 @@
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.logo {
+  width: 40px;
+  height: 40px;
+}
+
+.title {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.content {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+}
+
+.content code {
+  background: var(--color-bg-tertiary);
+  padding: 2px var(--space-1);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+}
+
+.content ul {
+  padding-left: var(--space-5);
+}

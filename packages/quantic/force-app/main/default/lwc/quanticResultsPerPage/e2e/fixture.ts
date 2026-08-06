@@ -42,6 +42,7 @@ export const testSearch =
       {page, options, configuration, search, urlHash},
       use
     ) => {
+      await search.mockSearchWithBaseResponse();
       await page.goto(
         urlHash ? `${resultsPerPageUrl}#${urlHash}` : resultsPerPageUrl
       );
@@ -64,11 +65,14 @@ export const testInsight =
       {page, options, search, configuration, insightSetup},
       use
     ) => {
+      await search.mockSearchWithBaseResponse();
       await page.goto(resultsPerPageUrl);
       configuration.configure({...options, useCase: useCaseEnum.insight});
       await insightSetup.waitForInsightInterfaceInitialization();
-      await search.performSearch();
-      await search.waitForSearchResponse();
+      await Promise.all([
+        search.waitForSearchResponse(),
+        search.performSearch(),
+      ]);
       await use(new ResultsPerPageObject(page));
     },
   });

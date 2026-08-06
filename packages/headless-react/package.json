@@ -1,6 +1,6 @@
 {
   "name": "@coveo/headless-react",
-  "version": "2.9.26",
+  "version": "2.9.27",
   "description": "React utilities for SSR (Server Side Rendering) with headless",
   "keywords": [
     "headless",
@@ -43,7 +43,7 @@
   "devDependencies": {
     "@coveo/documentation": "workspace:*",
     "@testing-library/react": "catalog:",
-    "live-server": "1.2.2",
+    "live-server": "catalog:",
     "typedoc": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"

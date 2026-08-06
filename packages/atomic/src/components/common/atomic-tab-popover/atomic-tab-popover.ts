@@ -237,9 +237,9 @@ export class AtomicTabPopover extends LitElement implements InitializableCompone
       </span>
       <atomic-icon
         part="arrow-icon"
-        class="group-hover:text-primary group-focus:text-primary ml-auto w-2 ${this.isOpen
-          ? 'rotate-180'
-          : ''}"
+        class="group-hover:text-primary group-focus:text-primary ml-auto w-2 ${
+          this.isOpen ? 'rotate-180' : ''
+        }"
         .icon=${ArrowBottomIcon}
       ></atomic-icon>
     `);
@@ -261,10 +261,9 @@ export class AtomicTabPopover extends LitElement implements InitializableCompone
           id=${this.popoverId}
           ${ref(this.popupRef)}
           part="overflow-tabs"
-          class="bg-background border-neutral absolute rounded-lg border py-2 shadow-lg ${this
-            .isOpen
-            ? 'flex'
-            : 'hidden'}"
+          class="bg-background border-neutral absolute rounded-lg border py-2 shadow-lg ${
+            this.isOpen ? 'flex' : 'hidden'
+          }"
         >
           <slot></slot>
         </ul>

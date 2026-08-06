@@ -36,24 +36,26 @@ export class CategoryFacet extends LitElement {
 
     return html`
       <h3>${this.heading}</h3>
-      ${hasActiveValues
-        ? html`
-            <ol class="breadcrumb">
-              <li>
-                <button type="button" @click=${() => this.controller.deselectAll()}>All</button>
-              </li>
-              ${selectedValueAncestry.map(
-                (value) => html`
-                  <li>
-                    <button type="button" @click=${() => this.controller.toggleSelect(value)}>
-                      ${value.value}
-                    </button>
-                  </li>
-                `
-              )}
-            </ol>
-          `
-        : nothing}
+      ${
+        hasActiveValues
+          ? html`
+              <ol class="breadcrumb">
+                <li>
+                  <button type="button" @click=${() => this.controller.deselectAll()}>All</button>
+                </li>
+                ${selectedValueAncestry.map(
+                  (value) => html`
+                    <li>
+                      <button type="button" @click=${() => this.controller.toggleSelect(value)}>
+                        ${value.value}
+                      </button>
+                    </li>
+                  `
+                )}
+              </ol>
+            `
+          : nothing
+      }
       <ul>
         ${current.map(
           (value) => html`
@@ -70,13 +72,15 @@ export class CategoryFacet extends LitElement {
           `
         )}
       </ul>
-      ${canShowMoreValues
-        ? html`
-            <button type="button" class="more" @click=${() => this.controller.showMoreValues()}>
-              Show more
-            </button>
-          `
-        : nothing}
+      ${
+        canShowMoreValues
+          ? html`
+              <button type="button" class="more" @click=${() => this.controller.showMoreValues()}>
+                Show more
+              </button>
+            `
+          : nothing
+      }
     `;
   }
 }

@@ -1,3 +1,11 @@
+## 1.9.40
+
+### Patch Changes
+
+- Updated dependencies [[`e463261`](https://github.com/coveo/ui-kit/commit/e463261abb4edb95a009cf416c484f09af0e010f), [`1dcb32f`](https://github.com/coveo/ui-kit/commit/1dcb32f02bc848b115a6016a083242cce9200cb2), [`0047895`](https://github.com/coveo/ui-kit/commit/00478950dddf7005a1f8079c99f7a0edee9b5278), [`13709a3`](https://github.com/coveo/ui-kit/commit/13709a3bce5e1a92810032395ea6447f7a1bec1a)]:
+  - @coveo/headless@3.54.0
+  - @coveo/relay@2.1.3
+
 ## 1.9.39
 
 ### Patch Changes
