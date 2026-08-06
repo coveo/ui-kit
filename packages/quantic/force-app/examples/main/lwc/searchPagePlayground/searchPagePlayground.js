@@ -1,26 +1,19 @@
-import {
-  getHeadlessBundle,
-  registerComponentForInit,
-  initializeWithHeadless,
-} from 'c/quanticHeadlessLoader';
 import {LightningElement, api, track} from 'lwc';
 
-export default class ExampleInsightGenerativeAnswering extends LightningElement {
+export default class SearchPagePlayground extends LightningElement {
   @track config = {};
   isConfigured = false;
 
   /** @type {string} */
-  @api engineId = 'example-insight-generative-answering';
+  @api engineId = 'search-page-playground';
   /** @type {string} */
   @api environment = 'prod';
   /** @type {string} */
   @api organizationId = 'searchuisamples';
   /** @type {string} */
-  @api accessToken = 'xx564559b1-0045-48e1-953c-3addd1ee4457';
+  @api accessToken = 'xxcae0cb1a-cedf-4899-a61e-7aad0aa62a2f';
   /** @type {string} */
-  @api insightId = '142be676-703c-445f-b2d3-fcc7c0a3ded8';
-  /** @type {string} */
-  @api agentId = '';
+  @api agentId = '5fd0b5ea-d368-488e-bdeb-f6221ec0fb98';
   /** @type {string} */
   @api searchHub = 'default';
   /** @type {string} */
@@ -28,14 +21,11 @@ export default class ExampleInsightGenerativeAnswering extends LightningElement 
   /** @type {string} */
   @api analyticsMode = 'legacy';
   /** @type {string} */
-  @api answerConfigurationId = '10f49a04-76d3-46bf-b8dc-22b0c291c254';
+  @api answerConfigurationId = '';
 
-  /** @type {boolean} */
-  triggeredFirstSearch = false;
-
-  pageTitle = 'Insight Search Agent Example';
+  pageTitle = 'Search Page Playground';
   pageDescription =
-    'The Insight Search Agent example demonstrates an insight panel interface with generated answers powered by a Coveo AI agent.';
+    'The Search Page Playground offers a full search environment for experimenting with search features. You can modify the search interface, change the query pipeline, and test different configurations like answer manager and search agent.';
 
   get options() {
     return [
@@ -60,12 +50,6 @@ export default class ExampleInsightGenerativeAnswering extends LightningElement 
         defaultValue: this.accessToken,
       },
       {
-        attribute: 'insightId',
-        label: 'Insight ID',
-        description: 'The ID of the Insight Panel configuration to use.',
-        defaultValue: this.insightId,
-      },
-      {
         attribute: 'agentId',
         label: 'Agent ID',
         description:
@@ -75,13 +59,13 @@ export default class ExampleInsightGenerativeAnswering extends LightningElement 
       {
         attribute: 'searchHub',
         label: 'Search Hub',
-        description: 'The search hub to use for the insight interface.',
+        description: 'The search hub to use for the search interface.',
         defaultValue: this.searchHub,
       },
       {
         attribute: 'pipeline',
         label: 'Pipeline',
-        description: 'The query pipeline to use for the insight interface.',
+        description: 'The query pipeline to use for the search interface.',
         defaultValue: this.pipeline,
       },
       {
@@ -104,36 +88,4 @@ export default class ExampleInsightGenerativeAnswering extends LightningElement 
     this.config = evt.detail;
     this.isConfigured = true;
   }
-
-  connectedCallback() {
-    this.template.addEventListener(
-      'quantic__insightinterfaceinitialized',
-      this.handleInterfaceLoad
-    );
-    registerComponentForInit(this, this.engineId);
-  }
-
-  disconnectedCallback() {
-    this.template.removeEventListener(
-      'quantic__insightinterfaceinitialized',
-      this.handleInterfaceLoad
-    );
-  }
-
-  renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize);
-  }
-
-  initialize = (engine) => {
-    this.engine = engine;
-    this.headless = getHeadlessBundle(this.engineId);
-  };
-
-  handleInterfaceLoad = (event) => {
-    event.stopPropagation();
-    if (!this.triggeredFirstSearch) {
-      this.triggeredFirstSearch = true;
-      this.engine.executeFirstSearch();
-    }
-  };
 }

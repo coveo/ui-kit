@@ -1,24 +1,24 @@
 import LOCALE from '@salesforce/i18n/locale';
-import TIMEZONE from '@salesforce/i18n/timeZone';
 import {
   getHeadlessBindings,
   loadDependencies,
   setEngineOptions,
+  HeadlessBundleNames,
   setInitializedCallback,
 } from 'c/quanticHeadlessLoader';
-import QuanticSearchInterface from 'c/quanticSearchInterface';
+import QuanticInsightInterface from 'c/quanticInsightInterface';
 import {api} from 'lwc';
 
 /**
- * The `QuanticDemoSearchInterface` component extends `QuanticSearchInterface` to allow
- * passing `accessToken`, `organizationId`, `environment`, and `analyticsMode` directly
- * as public API properties, bypassing the Apex HeadlessController. This makes it reusable
+ * The `DemoInsightInterface` component extends `QuanticInsightInterface` to allow
+ * passing `accessToken`, `organizationId`, `insightId`, and `environment` directly as
+ * public API properties, bypassing the Apex InsightController. This makes it reusable
  * across different examples that require different credentials.
- * @category Search
+ * @category Insight Panel
  * @example
- * <c-quantic-demo-search-interface engine-id={engineId} access-token="my-token" organization-id="my-org" environment="prod" search-hub="myhub" pipeline="mypipeline"></c-quantic-demo-search-interface>
+ * <c-demo-insight-interface engine-id={engineId} access-token="my-token" organization-id="my-org" insight-id="my-insight-id" environment="prod"></c-demo-insight-interface>
  */
-export default class QuanticDemoSearchInterface extends QuanticSearchInterface {
+export default class DemoInsightInterface extends QuanticInsightInterface {
   /**
    * The access token to use for authentication.
    * @api
@@ -43,9 +43,21 @@ export default class QuanticDemoSearchInterface extends QuanticSearchInterface {
    * @type {'legacy'|'next'}
    */
   @api analyticsMode = 'legacy';
+  /**
+   * The search hub to use for the insight interface.
+   * @api
+   * @type {string}
+   */
+  @api searchHub = 'default';
+  /**
+   * The query pipeline to use for the insight interface.
+   * @api
+   * @type {string}
+   */
+  @api pipeline = 'genqatest';
 
   connectedCallback() {
-    loadDependencies(this)
+    loadDependencies(this, HeadlessBundleNames.insight)
       .then(() => {
         if (!getHeadlessBindings(this.engineId)?.engine) {
           this.engineOptions = {
@@ -55,14 +67,14 @@ export default class QuanticDemoSearchInterface extends QuanticSearchInterface {
               environment: /** @type {import('coveo').PlatformEnvironment} */ (
                 this.environment
               ),
+              insightId: this.insightId,
               search: {
-                searchHub: this.searchHub,
-                pipeline: this.pipeline,
                 locale: LOCALE,
-                timezone: TIMEZONE,
+                ...(this.pipeline && {pipeline: this.pipeline}),
               },
               analytics: {
                 analyticsMode: this.analyticsMode,
+                originContext: this.analyticsOriginContext,
                 ...(document.referrer && {
                   originLevel3: document.referrer.substring(0, 256),
                 }),
@@ -79,11 +91,12 @@ export default class QuanticDemoSearchInterface extends QuanticSearchInterface {
           };
           setEngineOptions(
             this.engineOptions,
-            CoveoHeadless.buildSearchEngine,
+            CoveoHeadlessInsight.buildInsightEngine,
             this.engineId,
             this,
-            CoveoHeadless
+            CoveoHeadlessInsight
           );
+          this.input.setAttribute('is-initialized', 'true');
           setInitializedCallback(this.initialize, this.engineId);
         } else {
           setInitializedCallback(this.initialize, this.engineId);

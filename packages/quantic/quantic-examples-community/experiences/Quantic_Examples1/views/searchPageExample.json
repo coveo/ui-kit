@@ -35,7 +35,7 @@
                   "componentAttributes": {
                     "engineId": "example-search-agent"
                   },
-                  "componentName": "c:exampleSearchAgent",
+                  "componentName": "c:searchPagePlayground",
                   "id": "9d4b2e7a-c1f5-4a8b-b6d3-5e8c2a1f7b4d",
                   "renderPriority": "NEUTRAL",
                   "renditionMap": {},
