@@ -96,6 +96,7 @@ describe('unified-surface-hydration', () => {
         fullEngine,
         {
           surfaceId: 'test',
+          surfaceProperties: {placement: 'main'},
           dataModel: validDataModel,
         },
         mockGenerativeInterface,
@@ -134,6 +135,7 @@ describe('unified-surface-hydration', () => {
         fullEngine,
         {
           surfaceId: 'test',
+          surfaceProperties: {placement: 'main'},
           dataModel: validDataModel,
         },
         mockGenerativeInterface,
@@ -159,6 +161,7 @@ describe('unified-surface-hydration', () => {
         fullEngine,
         {
           surfaceId: 'test',
+          surfaceProperties: {placement: 'main'},
           dataModel: validDataModel,
         },
         mockGenerativeInterface,
@@ -179,6 +182,7 @@ describe('unified-surface-hydration', () => {
         fullEngine,
         {
           surfaceId: 'test',
+          surfaceProperties: {placement: 'main'},
           dataModel: validDataModel,
         },
         mockGenerativeInterface,
@@ -256,6 +260,7 @@ describe('unified-surface-hydration', () => {
         fullEngine,
         {
           surfaceId: 'test',
+          surfaceProperties: {placement: 'main'},
           dataModel: validDataModel,
         },
         mockGenerativeInterface,

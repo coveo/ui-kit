@@ -97,6 +97,7 @@ const surfaceCreationEvents: SSEEvent[] = [
           {
             createSurface: {
               surfaceId: 'surface-1',
+              surfaceProperties: {placement: 'main'},
               dataModel: {
                 responseId: 'resp-1',
                 products: [
@@ -197,7 +198,7 @@ describe('UnifiedConverseController integration', () => {
   let controller: UnifiedConverseController;
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.resetAllMocks();
 
     engine = new Engine({
       configuration: {
