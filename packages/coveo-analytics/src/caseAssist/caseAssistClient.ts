@@ -1,6 +1,6 @@
 import CoveoAnalyticsClient, {AnalyticsClient, ClientOptions} from '../client/analytics';
 import {NoopAnalytics} from '../client/noopAnalytics';
-import doNotTrack from '../donottrack';
+import {shouldDisableAnalyticsForPrivacy} from '../donottrack';
 import {ClickEventRequest} from '../events';
 import {SVCPlugin} from '../plugins/svc';
 import {
@@ -45,7 +45,9 @@ export class CaseAssistClient {
     private options: Partial<CaseAssistClientOptions>,
     private provider?: CaseAssistClientProvider
   ) {
-    const analyticsEnabled = (options.enableAnalytics ?? true) && !doNotTrack();
+    const analyticsEnabled =
+      (options.enableAnalytics ?? true) &&
+      !shouldDisableAnalyticsForPrivacy(options.disableBrowserPrivacySignals);
 
     this.coveoAnalyticsClient = analyticsEnabled
       ? new CoveoAnalyticsClient(options)

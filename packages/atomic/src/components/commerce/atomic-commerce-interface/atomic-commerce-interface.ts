@@ -508,7 +508,7 @@ export class AtomicCommerceInterface
       return;
     }
 
-    scrollContainerElement.scrollIntoView({behavior: 'smooth'});
+    scrollContainerElement.scrollIntoView();
   }
 
   private updateHash() {

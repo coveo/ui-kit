@@ -1,0 +1,5 @@
+description: Coveo analytics library (coveo.analytics)
+file_patterns:
+  - packages/coveo-analytics/**
+reviewers:
+  dxui: ~

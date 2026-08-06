@@ -1,5 +1,6 @@
 import * as InsightInterfaceActions from '../../features/insight-interface/insight-interface-actions.js';
 import * as ConfigurationActions from '../../features/configuration/configuration-actions.js';
+import {generatedAnswerInsightAnalyticsClient} from '../../features/generated-answer/generated-answer-insight-analytics-actions.js';
 import {nextAnalyticsUsageWithServiceFeatureWarning} from '../engine.js';
 import {getSampleEngineConfiguration} from '../engine-configuration.js';
 import {
@@ -178,5 +179,13 @@ describe('buildInsightEngine', () => {
     const thunkRelay = await engine.dispatch((_dispatch, _getState, extra) => extra.relay);
 
     expect(thunkRelay).toBe(engine.relay);
+  });
+
+  it('should register the Insight generatedAnswerAnalyticsClient as a thunk extra argument', async () => {
+    const thunkAnalyticsClient = await engine.dispatch(
+      (_dispatch, _getState, extra) => extra.generatedAnswerAnalyticsClient
+    );
+
+    expect(thunkAnalyticsClient).toBe(generatedAnswerInsightAnalyticsClient);
   });
 });

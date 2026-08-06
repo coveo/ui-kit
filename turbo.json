@@ -1,9 +1,23 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
+  "remoteCache": {
+    "teamSlug": "ui-kit",
+    "apiUrl": "https://djcopdhbb4ijlio2hgabt64kjy0lxwet.lambda-url.us-east-1.on.aws"
+  },
+  "futureFlags": {
+    "affectedUsingTaskInputs": true
+  },
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/LICENSE*",
+        "!**/.vscode/**",
+        "!**/catalog-info*.yaml"
+      ],
       "outputs": [
         "dist/**",
         "cdn/**",
@@ -32,10 +46,24 @@
     },
     "test": {
       "dependsOn": ["build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/LICENSE*",
+        "!**/.vscode/**",
+        "!**/catalog-info*.yaml"
+      ],
       "outputs": []
     },
     "functional-test": {
       "dependsOn": ["build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/LICENSE*",
+        "!**/.vscode/**",
+        "!**/catalog-info*.yaml"
+      ],
       "outputs": []
     },
     "test:watch": {

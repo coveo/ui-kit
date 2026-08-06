@@ -77,9 +77,11 @@ describe('atomic-modal', () => {
         .close=${options.close}
       >
         <div slot="header">${options.headerContent ?? 'Modal Header'}</div>
-        ${options.withCloseButton
-          ? html`<button slot="header-actions" aria-label="Close">Close</button>`
-          : nothing}
+        ${
+          options.withCloseButton
+            ? html`<button slot="header-actions" aria-label="Close">Close</button>`
+            : nothing
+        }
         <div slot="body">${options.bodyContent ?? 'Modal Body Content'}</div>
         <div slot="footer">${options.footerContent ?? 'Modal Footer'}</div>
       </atomic-modal>`,

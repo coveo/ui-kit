@@ -16,7 +16,7 @@ export abstract class BaseController<TState> implements Controller<TState> {
     this.#stateSelector = stateSelector;
   }
 
-  subscribe(callback: (state: TState) => void): Unsubscribe {
-    return this.engine.subscribe(this.#stateSelector, callback);
+  subscribe(listener: () => void): Unsubscribe {
+    return this.engine.subscribe(this.#stateSelector, () => listener());
   }
 }

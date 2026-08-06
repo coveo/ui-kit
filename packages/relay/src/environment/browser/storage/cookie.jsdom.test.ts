@@ -9,6 +9,11 @@ describe('CookieManager', () => {
   const key = 'wow';
   const someData = 'something';
 
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2023-08-15T00:00:00.000Z'));
+  });
+
   afterEach(() => {
     vi.useRealTimers();
   });
@@ -25,9 +30,6 @@ describe('CookieManager', () => {
   });
 
   it('honors expiration date', () => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date('2023-08-15T00:00:00.000Z'));
-
     cookieManager.setItem(key, someData, 1000);
     vi.advanceTimersByTime(1001);
 

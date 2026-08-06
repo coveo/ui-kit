@@ -7,7 +7,7 @@
 }
 
 .card-border {
-  border: 1px solid var(--slds-g-color-border-1, #dddbda);
+  border: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-border-1, #dddbda);
 }
 
 .no-suggestion-message {

@@ -67,6 +67,28 @@ To build a single project for production (for instance, the `atomic` package), r
 pnpm turbo run @coveo/atomic#build
 ```
 
+## Remote caching
+
+This monorepo uses [Turborepo remote caching](https://turborepo.com/docs/core-concepts/remote-caching) backed by a self-hosted cache (AWS Lambda + S3). Build and task outputs are shared across CI runs, branches, and developers, so unchanged packages are restored instead of rebuilt.
+
+### Local setup
+
+Remote caching is optional locally and enabled through AWS:
+
+````sh
+aws sso login --profile dev   # authenticate with the shared "dev" profile
+pnpm install    # runs turbo:login, which fetches the cache token from AWS SSM
+
+`pnpm install` triggers `pnpm turbo:login`, which reads the token from SSM and writes it to `.turbo/config.json` (gitignored). If you are not logged in to AWS, the step is skipped and Turbo falls back to the local cache — no error. Re-authenticate any time with:
+
+```sh
+pnpm turbo:login
+````
+
+### CI
+
+CI authenticates with the `TURBO_TOKEN` repository secret; `teamSlug` and `apiUrl` live in `turbo.json`. Pull requests from forks do not receive the secret and therefore build without remote caching.
+
 ## Development mode
 
 Add the `--stencil` switch if you are changing stencil files.
