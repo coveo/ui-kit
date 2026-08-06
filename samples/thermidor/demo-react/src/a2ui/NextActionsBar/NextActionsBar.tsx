@@ -7,12 +7,19 @@ interface A2UINextActionsBarProps {
 }
 
 interface ActionItem {
-  text?: string;
-  type?: string;
+  text: string;
+  type: string;
+}
+
+interface NextActionsData {
+  actions?: {
+    items?: ActionItem[];
+  };
 }
 
 export function A2UINextActionsBar({surface, onAction}: A2UINextActionsBarProps) {
-  const items = extractActions(surface);
+  const data = surface.data as NextActionsData;
+  const items = data.actions?.items ?? [];
 
   if (items.length === 0) {
     return null;
@@ -24,7 +31,7 @@ export function A2UINextActionsBar({surface, onAction}: A2UINextActionsBarProps)
         <button
           key={i}
           className={styles.actionButton}
-          onClick={() => onAction?.(action.text!, action.type ?? 'followup')}
+          onClick={() => onAction?.(action.text, action.type)}
           type="button"
         >
           {action.text}
@@ -32,20 +39,4 @@ export function A2UINextActionsBar({surface, onAction}: A2UINextActionsBarProps)
       ))}
     </div>
   );
-}
-
-/**
- * Extract action items from surface data.
- * Unified endpoint format: dataModel.actions.items
- * Legacy format: data.actions (flat array)
- */
-function extractActions(surface: ParsedSurface): ActionItem[] {
-  const actions = surface.data.actions as {items?: ActionItem[]} | ActionItem[] | undefined;
-  if (actions && 'items' in actions && Array.isArray(actions.items)) {
-    return actions.items.filter((a) => a.text?.trim());
-  }
-  if (Array.isArray(actions)) {
-    return actions.filter((a) => a.text?.trim());
-  }
-  return [];
 }

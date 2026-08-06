@@ -7,8 +7,15 @@ interface A2UIComparisonSummaryProps {
   surface: ParsedSurface;
 }
 
+interface ComparisonSummaryData {
+  text?: {
+    value?: string;
+  };
+}
+
 export function A2UIComparisonSummary({surface}: A2UIComparisonSummaryProps) {
-  const text = extractText(surface);
+  const data = surface.data as ComparisonSummaryData;
+  const text = data.text?.value ?? '';
 
   const html = useMemo(() => {
     if (!text) return '';
@@ -30,17 +37,4 @@ export function A2UIComparisonSummary({surface}: A2UIComparisonSummaryProps) {
       <div className={styles.text} dangerouslySetInnerHTML={{__html: html}} />
     </div>
   );
-}
-
-function extractText(surface: ParsedSurface): string {
-  // Unified format: dataModel.text or dataModel.summary (string or {value})
-  const dataText = surface.data.text as string | {value?: string} | undefined;
-  if (typeof dataText === 'string') return dataText;
-  if (dataText && typeof dataText === 'object' && 'value' in dataText) return dataText.value ?? '';
-  const dataSummary = surface.data.summary as string | {value?: string} | undefined;
-  if (typeof dataSummary === 'string') return dataSummary;
-  if (dataSummary && typeof dataSummary === 'object' && 'value' in dataSummary)
-    return dataSummary.value ?? '';
-  // Legacy format
-  return (surface.componentProps.text as {literalString?: string})?.literalString ?? '';
 }

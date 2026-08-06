@@ -16,9 +16,19 @@ interface ProductItem {
   clickUri?: string;
 }
 
+interface ProductCarouselData {
+  heading?: {
+    value?: string;
+  };
+  products?: {
+    items?: ProductItem[];
+  };
+}
+
 export function A2UIProductCarousel({surface}: A2UIProductCarouselProps) {
-  const heading = extractHeading(surface);
-  const items = extractProducts(surface);
+  const data = surface.data as ProductCarouselData;
+  const heading = data.heading?.value ?? 'Products';
+  const items = data.products?.items ?? [];
   const trackRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -102,37 +112,4 @@ export function A2UIProductCarousel({surface}: A2UIProductCarouselProps) {
       </div>
     </section>
   );
-}
-
-/**
- * Extract heading from surface data.
- * Unified endpoint format: dataModel.heading.value
- * Legacy format: componentProps.heading.literalString
- */
-function extractHeading(surface: ParsedSurface): string {
-  const dataHeading = surface.data.heading as {value?: string} | undefined;
-  if (dataHeading?.value) {
-    return dataHeading.value;
-  }
-  const propsHeading = surface.componentProps.heading as {literalString?: string} | undefined;
-  if (propsHeading?.literalString) {
-    return propsHeading.literalString;
-  }
-  return 'Products';
-}
-
-/**
- * Extract product items from surface data.
- * Unified endpoint format: dataModel.products.items
- * Legacy format: data.items (flat array)
- */
-function extractProducts(surface: ParsedSurface): ProductItem[] {
-  const products = surface.data.products as {items?: ProductItem[]} | undefined;
-  if (products?.items) {
-    return products.items;
-  }
-  if (Array.isArray(surface.data.items)) {
-    return surface.data.items as ProductItem[];
-  }
-  return [];
 }

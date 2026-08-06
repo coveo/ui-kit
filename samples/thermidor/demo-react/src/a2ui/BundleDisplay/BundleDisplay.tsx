@@ -31,9 +31,17 @@ interface BundleItem {
   clickUri?: string;
 }
 
+interface BundleDisplayData {
+  title?: {
+    value?: string;
+  };
+  bundles?: BundleTier[];
+}
+
 export function A2UIBundleDisplay({surface, allSurfaces}: A2UIBundleDisplayProps) {
-  const title = extractTitle(surface);
-  const bundles = extractBundles(surface);
+  const data = surface.data as BundleDisplayData;
+  const title = data.title?.value ?? 'Bundle';
+  const bundles = data.bundles ?? [];
   const [activeTier, setActiveTier] = useState(bundles[0]?.bundleId ?? '');
   const targeting = useTargeting();
   const isTargetable = targeting?.isTargeting ?? false;
@@ -49,10 +57,7 @@ export function A2UIBundleDisplay({surface, allSurfaces}: A2UIBundleDisplayProps
     for (const slot of activeBundle.slots) {
       const refSurface = allSurfaces.find((s) => s.surfaceId === slot.surfaceRef);
       if (refSurface) {
-        const items = extractBundleItems(refSurface);
-        if (items[0]) {
-          resolvedItems.push(items[0]);
-        }
+        resolvedItems.push(refSurface.data as unknown as BundleItem);
       }
     }
   }
@@ -145,35 +150,4 @@ export function A2UIBundleDisplay({surface, allSurfaces}: A2UIBundleDisplayProps
       )}
     </section>
   );
-}
-
-function extractTitle(surface: ParsedSurface): string {
-  const dataTitle = surface.data.title as string | {value?: string} | undefined;
-  if (typeof dataTitle === 'string') return dataTitle;
-  if (dataTitle && typeof dataTitle === 'object' && 'value' in dataTitle)
-    return dataTitle.value ?? 'Bundle';
-  return (surface.componentProps.title as {literalString?: string})?.literalString ?? 'Bundle';
-}
-
-function extractBundles(surface: ParsedSurface): BundleTier[] {
-  // Unified format: dataModel.bundles or dataModel.bundles.items
-  const dataBundles = surface.data.bundles as BundleTier[] | {items?: BundleTier[]} | undefined;
-  if (Array.isArray(dataBundles)) return dataBundles;
-  if (dataBundles && 'items' in dataBundles && Array.isArray(dataBundles.items))
-    return dataBundles.items;
-  // Legacy format
-  return (surface.componentProps.bundles as BundleTier[]) ?? [];
-}
-
-function extractBundleItems(refSurface: ParsedSurface): BundleItem[] {
-  // Unified format: the dataModel IS a single product (flat object with ec_* fields)
-  if (refSurface.data.ec_name || refSurface.data.ec_product_id) {
-    return [refSurface.data as unknown as BundleItem];
-  }
-  // Unified format: products nested under data.products.items
-  const products = refSurface.data.products as {items?: BundleItem[]} | undefined;
-  if (products?.items) return products.items;
-  // Legacy format: flat items array
-  if (Array.isArray(refSurface.data.items)) return refSurface.data.items as BundleItem[];
-  return [];
 }
