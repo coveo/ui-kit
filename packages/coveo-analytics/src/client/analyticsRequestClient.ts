@@ -17,6 +17,14 @@ export interface IAnalyticsClientOptions {
   preprocessRequest?: PreprocessAnalyticsRequest;
 }
 
+/**
+ * The client that issues the request being preprocessed.
+ *
+ * `analyticsBeacon` identifies events that must survive a page unload, such as click events.
+ * Those events are sent with `fetch` and `keepalive: true` rather than the Beacon API, so
+ * they now support header mutations. The value itself is deprecated and will be merged into
+ * `analyticsFetch` in a future major version.
+ */
 export type AnalyticsClientOrigin = 'analyticsFetch' | 'analyticsBeacon';
 
 export type PreprocessAnalyticsRequest = (

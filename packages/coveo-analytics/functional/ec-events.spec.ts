@@ -1,7 +1,7 @@
 import {DefaultEventResponse} from '../src/events';
 import type {getCurrentClient} from '../src/coveoua/library';
 import coveoua from '../src/coveoua/browser';
-import {mockFetch} from '../tests/fetchMock';
+import {decodeEventBody, mockFetch} from '../tests/fetchMock';
 
 declare const self: any;
 const getClient: typeof getCurrentClient = (self.coveoanalytics as any).getCurrentClient;
@@ -40,7 +40,7 @@ describe('ec events', () => {
     const address = new RegExp('/rest/v15/analytics');
     fetchMock.reset();
     fetchMock.post(address, (url, {body}) => {
-      const parsedBody = JSON.parse(body!.toString());
+      const parsedBody = JSON.parse(decodeEventBody(body!.toString()));
       const visitorId = parsedBody.cid;
       return {
         visitId: 'firsttimevisiting',
@@ -1048,7 +1048,7 @@ describe('ec events', () => {
   });
 
   const getParsedBody = (): any[] => {
-    return fetchMock.calls().map(([, {body}]: any) => JSON.parse(body.toString()));
+    return fetchMock.calls().map(([, {body}]: any) => JSON.parse(decodeEventBody(body.toString())));
   };
 
   const changeDocumentLocation = (url: string) => {

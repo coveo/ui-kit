@@ -8,7 +8,7 @@ import {
   DocumentSuggestion,
   FieldSuggestion,
 } from './caseAssistActions';
-import {mockFetch, lastCallBody} from '../../tests/fetchMock';
+import {mockFetch, lastCallBody, decodeEventBody} from '../../tests/fetchMock';
 import {TicketProperties} from '../plugins/svc';
 const {fetchMock, fetchMockBeforeEach} = mockFetch();
 import doNotTrack from '../donottrack';
@@ -129,7 +129,7 @@ describe('CaseAssistClient', () => {
     doc: PartialDocumentInformation,
     meta = {}
   ) => {
-    const body: string = lastCallBody(fetchMock);
+    const body: string = decodeEventBody(lastCallBody(fetchMock));
     const customData = {...meta};
     expect(JSON.parse(body.toString())).toMatchObject({
       actionCause,

@@ -17,7 +17,7 @@ import {
 } from './searchPageEvents';
 import CoveoAnalyticsClient from '../client/analytics';
 import {NoopAnalytics} from '../client/noopAnalytics';
-import {mockFetch, lastCallBody} from '../../tests/fetchMock';
+import {mockFetch, lastCallBody, decodeEventBody} from '../../tests/fetchMock';
 import doNotTrack from '../donottrack';
 import {Cookie} from '../cookieutils';
 
@@ -136,7 +136,7 @@ describe('SearchPageClient', () => {
   });
 
   const expectMatchPayload = (actionCause: SearchPageEvents, meta = {}) => {
-    const body: string = lastCallBody(fetchMock);
+    const body: string = decodeEventBody(lastCallBody(fetchMock));
     const customData = {
       foo: 'bar',
       genQaMetadata: 'bar',
@@ -188,7 +188,7 @@ describe('SearchPageClient', () => {
     doc: PartialDocumentInformation,
     meta = {}
   ) => {
-    const body: string = lastCallBody(fetchMock);
+    const body: string = decodeEventBody(lastCallBody(fetchMock));
     const customData = {foo: 'bar', ...customDataFromMiddleware, ...meta};
     expect(JSON.parse(body)).toEqual({
       anonymous: false,
@@ -210,7 +210,7 @@ describe('SearchPageClient', () => {
     meta = {},
     eventType = CustomEventsTypes[actionCause]
   ) => {
-    const body: string = lastCallBody(fetchMock);
+    const body: string = decodeEventBody(lastCallBody(fetchMock));
     const customData = {foo: 'bar', ...customDataFromMiddleware, ...meta};
     expect(JSON.parse(body)).toEqual({
       anonymous: false,
@@ -232,7 +232,7 @@ describe('SearchPageClient', () => {
     eventType: string,
     meta = {}
   ) => {
-    const body: string = lastCallBody(fetchMock);
+    const body: string = decodeEventBody(lastCallBody(fetchMock));
     const customData = {foo: 'bar', ...customDataFromMiddleware, ...meta};
     expect(JSON.parse(body)).toEqual({
       anonymous: false,
