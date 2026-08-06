@@ -90,26 +90,6 @@ export class CaseClassificationObject {
     );
   }
 
-  async mockCaseAssistConfigurations(
-    caseAssistId = 'mock-case-assist-id',
-    configName = 'Demo'
-  ): Promise<void> {
-    await this.page.route(
-      '**/rest/organizations/*/caseassists',
-      async (route) => {
-        await route.fulfill({
-          status: 200,
-          headers: {
-            'content-type': 'application/json',
-          },
-          body: JSON.stringify({
-            configurations: [{id: caseAssistId, name: configName}],
-          }),
-        });
-      }
-    );
-  }
-
   async mockSfPicklistValues(field: string, values: Array<object>) {
     await this.page.route(
       '**/aura?*aura.RecordUi.getPicklistValuesByRecordType=1',

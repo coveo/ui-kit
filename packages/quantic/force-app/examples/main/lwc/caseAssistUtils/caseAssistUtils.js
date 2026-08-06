@@ -1,5 +1,5 @@
 // @ts-ignore
-import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
+import getCaseAssistHeadlessConfiguration from '@salesforce/apex/HeadlessController.getCaseAssistHeadlessConfiguration';
 
 export function getOrganizationEndpoints(orgId, env = 'prod') {
   const envSuffix = env === 'prod' ? '' : env;
@@ -14,7 +14,7 @@ export function getOrganizationEndpoints(orgId, env = 'prod') {
 
 export async function getCaseAssistId(configName) {
   try {
-    let data = await getHeadlessConfiguration();
+    let data = await getCaseAssistHeadlessConfiguration();
     const {accessToken, organizationId} = JSON.parse(data);
     const platform = getOrganizationEndpoints(organizationId).platform;
     const url = `${platform}/rest/organizations/${organizationId}/caseassists`;

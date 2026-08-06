@@ -3,52 +3,12 @@ import {
   isUaClickEvent,
   isEventProtocol,
 } from '../../../../../../playwright/utils/requests';
-import {mockCaseAssistId, mockDocuments} from './data';
 
 export class DocumentSuggestionObject {
   private page: Page;
 
   constructor(page: Page) {
     this.page = page;
-  }
-
-  async mockCaseAssistConfigurations(): Promise<void> {
-    await this.page.route(
-      '**/rest/organizations/*/caseassists',
-      async (route) => {
-        await route.fulfill({
-          status: 200,
-          headers: {
-            'content-type': 'application/json',
-          },
-          body: JSON.stringify({
-            configurations: [{id: mockCaseAssistId, name: 'Demo'}],
-          }),
-        });
-      }
-    );
-  }
-
-  async mockDocumentSuggestions(
-    documents = mockDocuments,
-    responseId = 'mock-response-id'
-  ): Promise<void> {
-    await this.page.route(
-      '**/rest/organizations/*/caseassists/*/documents/suggest',
-      async (route) => {
-        await route.fulfill({
-          status: 200,
-          headers: {
-            'content-type': 'application/json',
-          },
-          body: JSON.stringify({
-            documents,
-            totalCount: documents.length,
-            responseId,
-          }),
-        });
-      }
-    );
   }
 
   get documentSuggestion() {

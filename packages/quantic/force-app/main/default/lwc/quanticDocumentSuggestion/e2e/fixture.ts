@@ -29,12 +29,9 @@ export const test = quanticBase.extend<QuanticDocumentSuggestionE2EFixtures>({
     await use(new CaseAssistObject(page));
   },
   documentSuggestion: async ({page, options, configuration}, use) => {
-    const documentSuggestionObject = new DocumentSuggestionObject(page);
-    await documentSuggestionObject.mockCaseAssistConfigurations();
-    await documentSuggestionObject.mockDocumentSuggestions();
     await page.goto(pageUrl);
     await configuration.configure(options);
-    await use(documentSuggestionObject);
+    await use(new DocumentSuggestionObject(page));
   },
 });
 

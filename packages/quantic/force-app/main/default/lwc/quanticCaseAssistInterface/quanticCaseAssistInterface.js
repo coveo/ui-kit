@@ -1,5 +1,5 @@
 // @ts-ignore
-import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
+import getCaseAssistHeadlessConfiguration from '@salesforce/apex/HeadlessController.getCaseAssistHeadlessConfiguration';
 import {
   getHeadlessBindings,
   loadDependencies,
@@ -51,7 +51,7 @@ export default class QuanticCaseAssistInterface extends LightningElement {
     loadDependencies(this, HeadlessBundleNames.caseAssist)
       .then(() => {
         if (!getHeadlessBindings(this.engineId)?.engine) {
-          getHeadlessConfiguration()
+          getCaseAssistHeadlessConfiguration()
             .then((data) => {
               if (data) {
                 const {organizationId, accessToken, ...rest} = JSON.parse(data);
