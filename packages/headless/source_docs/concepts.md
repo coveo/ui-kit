@@ -31,7 +31,7 @@ Headless requires Node.js version 20.
 
 > [!NOTE]
 >
-> If your project uses TypeScript, you must use TypeScript 5.0 or later with Headless. Set `"moduleResolution": "bundler"` to use secondary entry points such as `@coveo/headless/commerce` or `@coveo/headless/ssr`.
+> If your project uses TypeScript, you must use TypeScript 5.0 or later with Headless v3. Set `"moduleResolution": "bundler"` to use secondary entry points such as `@coveo/headless/commerce` or `@coveo/headless/ssr`.
 > The `classic`, `node10`, and `node` `moduleResolution` options are not supported.
 > TypeScript is optional for JavaScript projects.
 > See [TypeScript module resolution](https://www.typescriptlang.org/docs/handbook/modules/theory.html#module-resolution) and [Announcing TypeScript 5.0 `--moduleResolution bundler`](https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#--moduleresolution-bundler).
