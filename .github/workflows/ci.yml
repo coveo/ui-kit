@@ -107,9 +107,10 @@ jobs:
     runs-on: ubuntu-latest
     environment: PR Artifacts
     outputs:
-      # When running on changeset-release branches, we don't want to run most downstream jobs, so we set the output to an empty string.
+      # When running on changeset-release branches, we don't want to run most downstream jobs, so we set most outputs to an empty string.
       # Notably, Chromatic will still run on changeset-release branches, but it will run with the `--skip` flag.
       projects: ${{ (github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/')) && steps.set.outputs.projects || '' }}
+      samples: ${{ (github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/')) && steps.set.outputs.samples || '[]' }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
@@ -130,9 +131,21 @@ jobs:
           echo "Affected tasks:"
           echo
           echo "$TASKS"
+          echo
 
           echo "tasks=$(echo "$TASKS" | sort -u | tr '\n' ' ')" >> "$GITHUB_OUTPUT"
           echo "projects=$(echo "$TASKS" | sed 's/#.*//' | sort -u | tr '\n' ' ')" >> "$GITHUB_OUTPUT"
+
+          SAMPLES="$(pnpm exec node scripts/turbo/outdated-tasks.mjs e2e \
+            | sed -nE 's/^(@(samples\/[^#]+|coveo\/ui-kit-samples))#e2e.*/\1/p' \
+            | sort)"
+          echo "Affected samples for e2e:"
+          echo
+          echo "$SAMPLES"
+          echo
+
+          echo "samples=$(echo "$SAMPLES" | jq -Rsc 'split("\n") | map(select(length > 0))')" >> "$GITHUB_OUTPUT"
+
   build-cdn:
     name: Build CDN
     if: ${{ github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/') }}
@@ -500,40 +513,11 @@ jobs:
       - name: 'Check openacr.yaml is up to date'
         run: node scripts/check-openacr-drift.mjs
         working-directory: packages/atomic-a11y
-  samples-e2e-matrix:
-    name: 'Discover affected sample e2e'
-    needs: build
-    runs-on: ubuntu-latest
-    outputs:
-      samples: ${{ steps.set.outputs.samples }}
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
-        with:
-          egress-policy: audit
-
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
-        with:
-          fetch-depth: 0
-          filter: blob:none
-      - uses: ./.github/actions/setup
-      - name: Get affected samples with e2e
-        id: set
-        run: |
-          SAMPLES="$(pnpm exec node scripts/turbo/outdated-tasks.mjs e2e \
-            | grep -E "^@(samples/[^#]+|coveo/ui-kit-samples)#e2e" \
-            | sed 's/#.*//' \
-            | sort)"
-          echo "Affected samples for e2e:"
-          echo
-          echo "$SAMPLES"
-
-          echo "samples=$(echo "$SAMPLES" | tr '\n' ' ')" >> "$GITHUB_OUTPUT"
 
   samples-e2e:
     name: 'E2E: ${{ matrix.sample }}'
-    needs: samples-e2e-matrix
-    if: ${{ needs.samples-e2e-matrix.outputs.samples != '[]' }}
+    needs: build
+    if: ${{ needs.build.outputs.samples != '[]' }}
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
@@ -541,7 +525,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sample: ${{ fromJson(needs.samples-e2e-matrix.outputs.samples) }}
+        sample: ${{ fromJson(needs.build.outputs.samples) }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
@@ -656,7 +640,6 @@ jobs:
       - 'playwright-atomic-hosted-page-test'
       - 'puppeteer-atomic-csp'
       - 'e2e-quantic'
-      - 'samples-e2e-matrix'
       - 'samples-e2e'
       - 'playwright-pkg-new-template-test'
       - 'publish-preview'
@@ -690,7 +673,6 @@ jobs:
       - 'playwright-atomic-theming'
       - 'playwright-atomic-hosted-page-test'
       - 'e2e-quantic'
-      - 'samples-e2e-matrix'
       - 'samples-e2e'
       - 'playwright-pkg-new-template-test'
       - 'changeset-merge-guard'
