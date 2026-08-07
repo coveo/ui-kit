@@ -80,8 +80,12 @@ export interface CommerceInterface extends Supports<Facades['commerce']> {
   readonly [InterfaceTypeBrand]: 'commerce';
 }
 
-export interface GenerativeInterface extends Supports<Facades['generative']> {}
+export interface GenerativeInterface extends Supports<Facades['generative']> {
+  readonly [InterfaceTypeBrand]: 'generative';
+}
 
-export interface GenerativeUnifiedInterface extends Supports<Facades['generativeUnified']> {}
+export interface GenerativeUnifiedInterface extends Supports<Facades['generativeUnified']> {
+  readonly [InterfaceTypeBrand]: 'generativeUnified';
+}
 
 export interface ComposedInterface<T extends InterfaceType> extends Supports<Facades[T]> {}

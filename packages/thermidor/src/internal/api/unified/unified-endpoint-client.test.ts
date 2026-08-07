@@ -83,7 +83,7 @@ describe('UnifiedEndpointClient', () => {
       {
         method: 'POST',
         signal: undefined,
-        body: JSON.stringify(request.agentInput),
+        body: JSON.stringify(request),
         headers: {
           'Content-Type': 'application/json',
           Accept: 'text/event-stream',

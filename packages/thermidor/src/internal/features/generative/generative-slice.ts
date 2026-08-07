@@ -55,7 +55,6 @@ export function createGenerativeSlice(
           const turn = state.turns.find((t) => t.id === payload.turnId);
           if (turn) {
             turn.routedInterface = {useCase: payload.useCase};
-            turn.status = 'complete';
           }
         })
         .addCase(actions.initAgentResponse, (state, {payload}) => {

@@ -175,6 +175,63 @@ describe('unified-surface-hydration', () => {
       }).not.toThrow();
     });
 
+    it('translates incremental sort updates to controller criteria', () => {
+      const fullEngine = createTestEngine();
+      const result = hydrateFromCreateSurface(
+        fullEngine,
+        {
+          surfaceId: 'test',
+          surfaceProperties: {placement: 'main'},
+          dataModel: validDataModel,
+        },
+        mockGenerativeInterface,
+        mockCartInterface
+      );
+      const iface = result!.interface;
+      adoptAllSlices(fullEngine, iface);
+
+      applyDataModelUpdate(fullEngine, iface, '/sort', {
+        appliedSort: {
+          sortCriteria: 'fields',
+          fields: [{field: 'price', direction: 'desc', displayName: 'Price'}],
+        },
+        availableSorts: [{sortCriteria: 'relevance'}],
+      });
+
+      const sortSelectors = getOrCreateSortSelectors(iface);
+      expect(fullEngine.read(sortSelectors.getAppliedSort)).toEqual({
+        by: 'field',
+        field: 'price',
+        direction: 'descending',
+        displayName: 'Price',
+      });
+      expect(fullEngine.read(sortSelectors.getAvailableSorts)).toEqual([{by: 'relevance'}]);
+    });
+
+    it.each([
+      {availableSorts: [{sortCriteria: 'relevance'}]},
+      {appliedSort: {sortCriteria: 'relevance'}},
+    ])('ignores incomplete incremental sort update %#', (sortUpdate) => {
+      const fullEngine = createTestEngine();
+      const result = hydrateFromCreateSurface(
+        fullEngine,
+        {
+          surfaceId: 'test',
+          surfaceProperties: {placement: 'main'},
+          dataModel: validDataModel,
+        },
+        mockGenerativeInterface,
+        mockCartInterface
+      );
+      const iface = result!.interface;
+      adoptAllSlices(fullEngine, iface);
+      const sortSelectors = getOrCreateSortSelectors(iface);
+
+      expect(() => applyDataModelUpdate(fullEngine, iface, '/sort', sortUpdate)).not.toThrow();
+      expect(fullEngine.read(sortSelectors.getAppliedSort)).toEqual({by: 'relevance'});
+      expect(fullEngine.read(sortSelectors.getAvailableSorts)).toEqual([]);
+    });
+
     it('runs full response handler when path is /', () => {
       const fullEngine = createTestEngine();
 

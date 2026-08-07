@@ -265,6 +265,7 @@ export class GenerativeRuntime {
 
         if (hydrationResult) {
           this.statePort.setRoutedInterface(turnId, hydrationResult);
+          this.statePort.completeTurn(turnId);
           return {turnId, isTerminal: true};
         }
 
