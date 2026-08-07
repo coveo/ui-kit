@@ -44,8 +44,6 @@ const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
           'Content-Type': 'application/json',
           Accept: 'text/event-stream',
           Authorization: `Bearer ${accessToken}`,
-          'x-coveo-agent-runtime-name': 'commerce_pr_676_Agent',
-          'x-coveo-agent-runtime-qualifier': 'DEFAULT',
         },
       });
 

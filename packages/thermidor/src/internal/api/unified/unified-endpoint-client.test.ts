@@ -88,14 +88,12 @@ describe('UnifiedEndpointClient', () => {
           'Content-Type': 'application/json',
           Accept: 'text/event-stream',
           Authorization: 'Bearer test-token',
-          'x-coveo-agent-runtime-name': 'commerce_pr_676_Agent',
-          'x-coveo-agent-runtime-qualifier': 'DEFAULT',
         },
       }
     );
   });
 
-  it('includes temporary AgentCore runtime override headers', async () => {
+  it('does not send temporary AgentCore runtime override headers', async () => {
     const stream = new ReadableStream<Uint8Array>();
     mockedFetch.mockResolvedValue(
       new Response(null, {
@@ -113,15 +111,9 @@ describe('UnifiedEndpointClient', () => {
       accessToken: 'test-token',
     });
 
-    expect(mockedFetch).toHaveBeenCalledWith(
-      expect.any(String),
-      expect.objectContaining({
-        headers: expect.objectContaining({
-          'x-coveo-agent-runtime-name': 'commerce_pr_676_Agent',
-          'x-coveo-agent-runtime-qualifier': 'DEFAULT',
-        }),
-      })
-    );
+    const [, options] = mockedFetch.mock.calls[0];
+    expect(options?.headers).not.toHaveProperty('x-coveo-agent-runtime-name');
+    expect(options?.headers).not.toHaveProperty('x-coveo-agent-runtime-qualifier');
   });
 
   it('uses configured custom endpoint', async () => {
