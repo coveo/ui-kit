@@ -6,12 +6,11 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
 import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
-import {MockSearchApi} from '@coveo/platform-mock-api/search/mock';
+import {MockSearchApi, type SearchResponse} from '@coveo/platform-mock-api/search';
 import '@/src/components/search/atomic-format-currency/atomic-format-currency.js';
 import '@/src/components/search/atomic-format-number/atomic-format-number.js';
 import '@/src/components/search/atomic-format-unit/atomic-format-unit.js';
 import '@/src/components/search/atomic-result-number/atomic-result-number.js';
-import {SearchResponse} from '@coveo/platform-mock-api/search/search-response';
 
 const searchApiHarness = new MockSearchApi();
 

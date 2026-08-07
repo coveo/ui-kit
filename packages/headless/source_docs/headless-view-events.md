@@ -87,12 +87,8 @@ The following code sample leverages the open source `coveoua.js` script to send 
    ```javascript
    async function sendEvents() {
      try {
-       await coveoua('send', 'view', {
-         /* event data */
-       });
-       await coveoua('send', 'view', {
-         /* event data */
-       });
+       await coveoua('send', 'view', {/* event data */});
+       await coveoua('send', 'view', {/* event data */});
      } catch (error) {
        console.error('Error sending events:', error);
      }

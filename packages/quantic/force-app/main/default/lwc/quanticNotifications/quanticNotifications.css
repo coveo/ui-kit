@@ -1,6 +1,6 @@
 .notification {
-  background-color: var(---lwc-colorBackgroundAlt, white);
-  border: 1px solid var(--lwc-colorBackgroundToast, rgb(116, 116, 116));
+  background-color: var(--lwc-colorBackgroundAlt, white);
+  border: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-neutral-base-50, var(--lwc-colorBackgroundToast, rgb(116, 116, 116)));
   margin-right: 0;
   margin-left: 0;
   width: 100%;

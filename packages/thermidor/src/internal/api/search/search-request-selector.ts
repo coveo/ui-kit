@@ -1,17 +1,19 @@
 import {createMemoizedStateSelector} from '@/src/internal/utils/index.js';
-import type {EndpointStateScope} from '@/src/internal/utils/index.js';
+import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import {getOrCreateSearchBoxSelectors} from '@/src/internal/features/search-box/index.js';
 import {getOrCreatePaginationSelectors} from '@/src/internal/features/pagination/index.js';
 import {getOrCreateFacetsSelectors} from '@/src/internal/features/facets/index.js';
 import {getOrCreateSearchParametersSelectors} from '@/src/internal/features/search-parameters/index.js';
 import {getOrCreateConfigurationSelectors} from '@/src/internal/features/configuration/index.js';
+import {getOrCreateSortSelectors} from '@/src/internal/features/sort/index.js';
 
-export function createSearchEndpointRequestSelector(scope: EndpointStateScope) {
-  const searchBox = getOrCreateSearchBoxSelectors(scope.scopeInterface);
-  const pagination = getOrCreatePaginationSelectors(scope.baseInterface);
-  const facets = getOrCreateFacetsSelectors(scope.baseInterface);
-  const searchParams = getOrCreateSearchParametersSelectors(scope.baseInterface);
+export function createSearchEndpointRequestSelector(iface: InterfaceHandle) {
+  const searchBox = getOrCreateSearchBoxSelectors(iface);
+  const pagination = getOrCreatePaginationSelectors(iface);
+  const facets = getOrCreateFacetsSelectors(iface);
+  const searchParams = getOrCreateSearchParametersSelectors(iface);
   const configuration = getOrCreateConfigurationSelectors();
+  const sort = getOrCreateSortSelectors(iface);
 
   return createMemoizedStateSelector(
     searchBox.getQuery,
@@ -21,7 +23,8 @@ export function createSearchEndpointRequestSelector(scope: EndpointStateScope) {
     searchParams.getPipeline,
     searchParams.getConstantQuery,
     configuration.getLanguage,
-    (query, firstResult, pageSize, facets, pipeline, cq, language) => ({
+    sort.buildSearchSortCriteria,
+    (query, firstResult, pageSize, facets, pipeline, cq, language, sortCriteria) => ({
       q: query,
       firstResult,
       numberOfResults: pageSize,
@@ -29,6 +32,7 @@ export function createSearchEndpointRequestSelector(scope: EndpointStateScope) {
       pipeline,
       cq,
       locale: language || undefined,
+      ...(sortCriteria ? {sortCriteria} : {}),
     })
   );
 }

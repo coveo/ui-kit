@@ -10,7 +10,8 @@ sarifs
 **.cy.ts.mp4
 .cspellcache
 scripts/translation-gpt/temporary.json
-packages/headless/docs
+packages/headless/docs/*
+!packages/headless/docs/adr/
 
 # CI Release
 topology.json

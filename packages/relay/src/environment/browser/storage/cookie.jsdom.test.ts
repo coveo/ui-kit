@@ -2,11 +2,21 @@
  * @vitest-environment-options {"url": "http://docs.foo.bar.com/tamtam"}
  */
 
+import {vi} from 'vitest';
 import {cookieManager} from './cookie';
 
 describe('CookieManager', () => {
   const key = 'wow';
   const someData = 'something';
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2023-08-15T00:00:00.000Z'));
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
 
   it('setItem writes data to a cookie', () => {
     cookieManager.setItem(key, someData, 1000);
@@ -19,9 +29,10 @@ describe('CookieManager', () => {
     expect(cookieManager.getItem(key)).toBe(null);
   });
 
-  it('honors expiration date', async () => {
+  it('honors expiration date', () => {
     cookieManager.setItem(key, someData, 1000);
-    await new Promise((res) => setTimeout(res, 1000)); // wait for 1 sec
+    vi.advanceTimersByTime(1001);
+
     expect(cookieManager.getItem(key)).toBe(null);
   });
 

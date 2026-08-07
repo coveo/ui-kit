@@ -1,7 +1,7 @@
 import {describe, it, expect, vi} from 'vitest';
 import {BaseController} from './base-controller.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
-import type {StateSelector, Unsubscribe} from '@/src/internal/engine/index.js';
+import type {StateSelector} from '@/src/internal/engine/index.js';
 
 interface TestState {
   value: number;
@@ -55,23 +55,40 @@ describe('BaseController', () => {
   });
 
   describe('subscribe', () => {
-    it('delegates to engine.subscribe with the selector and callback', () => {
+    it('delegates to engine.subscribe with the selector', () => {
       const mockEngine = createMockEngine();
       const unsubscribeFn = vi.fn();
       vi.mocked(mockEngine.subscribe).mockReturnValue(unsubscribeFn);
 
       const selector: StateSelector<TestState> = (state) => state as unknown as TestState;
       const controller = new TestController(mockEngine, selector);
-      const callback = vi.fn();
+      const listener = vi.fn();
 
-      controller.subscribe(callback);
+      controller.subscribe(listener);
 
-      expect(mockEngine.subscribe).toHaveBeenCalledWith(selector, callback);
+      expect(mockEngine.subscribe).toHaveBeenCalledWith(selector, expect.any(Function));
+    });
+
+    it('calls the listener without arguments when engine notifies', () => {
+      const mockEngine = createMockEngine();
+      vi.mocked(mockEngine.subscribe).mockImplementation((_selector, callback) => {
+        callback({value: 99, label: 'new'});
+        return vi.fn();
+      });
+
+      const selector: StateSelector<TestState> = (state) => state as unknown as TestState;
+      const controller = new TestController(mockEngine, selector);
+      const listener = vi.fn();
+
+      controller.subscribe(listener);
+
+      expect(listener).toHaveBeenCalledWith();
+      expect(listener).toHaveBeenCalledTimes(1);
     });
 
     it('returns the unsubscribe function from engine', () => {
       const mockEngine = createMockEngine();
-      const unsubscribeFn: Unsubscribe = vi.fn();
+      const unsubscribeFn = vi.fn();
       vi.mocked(mockEngine.subscribe).mockReturnValue(unsubscribeFn);
 
       const selector: StateSelector<TestState> = (state) => state as unknown as TestState;

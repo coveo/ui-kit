@@ -6,7 +6,7 @@
   display: grid;
   grid-template-columns: 10px 1fr;
   grid-template-rows: auto 1fr;
-  column-gap: var(--lwc-spacingXSmall, 8px);
+  column-gap: var(--slds-g-spacing-2, var(--lwc-spacingXSmall, 8px));
 }
 
 .thread-item__timeline {
@@ -17,7 +17,7 @@
 .thread-item__dot-column {
   width: 10px;
   height: 1lh;
-  margin-block: var(--lwc-spacingXxSmall, 4px);
+  margin-block: var(--slds-g-spacing-1, var(--lwc-spacingXxSmall, 4px));
 }
 
 .thread-item__line {
@@ -25,6 +25,7 @@
   flex: 1;
   width: 1px;
   background-color: var(--lwc-colorBorder, #dddbda);
+  transition: background-color 0.2s ease;
 }
 
 .thread-item__line::before,
@@ -33,8 +34,9 @@
   position: absolute;
   left: 0;
   width: 1px;
-  height: 8px;
+  height: var(--slds-g-sizing-3, 8px);
   background-color: var(--lwc-colorBorder, #dddbda);
+  transition: background-color 0.2s ease;
 }
 
 .thread-item__line::before {
@@ -45,16 +47,35 @@
   bottom: -8px;
 }
 
+.thread-item__line-column--interactive {
+  cursor: pointer;
+}
+
+.thread-item__line-column--interactive:hover .thread-item__line,
+.thread-item__line-column--interactive:hover .thread-item__line::before,
+.thread-item__line-column--interactive:hover .thread-item__line::after {
+  background-color: var(--lwc-colorTextDefault, #080707);
+}
+
 .thread-item__content {
   grid-column: 2;
   grid-row: 2;
 }
 
 .thread-item__dot {
-  height: 8px;
-  width: 8px;
+  height: var(--slds-g-sizing-3, 8px);
+  width: var(--slds-g-sizing-3, 8px);
   border-radius: 50%;
   background-color: var(--lwc-colorBorder, #dddbda);
+  transition: background-color 0.2s ease;
+}
+
+.thread-item__dot--interactive {
+  cursor: pointer;
+}
+
+.thread-item__dot--interactive:hover {
+  background-color: var(--lwc-colorTextDefault, #080707);
 }
 
 .thread-item__dot--expanded {
@@ -73,6 +94,6 @@
   border-radius: var(--slds-g-radius-border-2, 4px);
 }
 
-.thread-item__title-button:hover {
+button.thread-item__title-button:hover {
   background-color: var(--lwc-colorBackgroundRowHover, #f3f2f2);
 }

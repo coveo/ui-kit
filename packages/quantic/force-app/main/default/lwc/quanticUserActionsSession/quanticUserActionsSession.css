@@ -3,10 +3,10 @@
 }
 
 .session-start__icon-container {
-  background-color: orange;
+  background-color: var(--slds-g-color-warning-base-50, orange);
   border-radius: var(--lwc-borderRadiusCircle, 50%);
-  width: 24px;
-  height: 24px;
+  width: var(--slds-g-sizing-7, 24px);
+  height: var(--slds-g-sizing-7, 24px);
 }
 
 .session__show-more-actions-button {

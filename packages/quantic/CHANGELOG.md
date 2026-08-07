@@ -1,3 +1,30 @@
+## 3.43.4
+
+### Patch Changes
+
+- [#8079](https://github.com/coveo/ui-kit/pull/8079) [`2d908c1`](https://github.com/coveo/ui-kit/commit/2d908c18dfa2979f9cb4eaff005eab368e961123) - migration of spacing and sizing to slds2
+
+- [#8059](https://github.com/coveo/ui-kit/pull/8059) [`5df60ec`](https://github.com/coveo/ui-kit/commit/5df60ec8c1b143c063f690b7c5a6fa48609afc2f) - Migrated color issues in quantic to respect SLDS 2 and added a kiro agent that is able to migrate code to SLDS 2.
+
+- [#8053](https://github.com/coveo/ui-kit/pull/8053) [`756fdd5`](https://github.com/coveo/ui-kit/commit/756fdd5d697958a416276f78952c20a9eddffc9d) - Fixed an issue where the generated answer error state would not render for a follow-up question when the failure occurred before any SSE event was received (e.g., a network error), since the error object in that case has no error code.
+
+- [#8083](https://github.com/coveo/ui-kit/pull/8083) [`d53cbe6`](https://github.com/coveo/ui-kit/commit/d53cbe603ed6729b703b597e8cdc83ef295647de) - Fixed slds2 migration warnings for border related issues.
+
+- Updated dependencies [[`b69393a`](https://github.com/coveo/ui-kit/commit/b69393a3663b8b295964fbf6f75c8c3c5acd9bc5), [`f1ee3a9`](https://github.com/coveo/ui-kit/commit/f1ee3a9e6c1d281e437733fda9cc0d8b02beba2c), [`333a834`](https://github.com/coveo/ui-kit/commit/333a83499f3accd3ecaed83f2634dcd4bdd6b595), [`c2ebb1b`](https://github.com/coveo/ui-kit/commit/c2ebb1b490e2dd0ac8710c017825376c2ee94fe0), [`30abbfb`](https://github.com/coveo/ui-kit/commit/30abbfb43f4e0c303bcba6619768c93dec4a0e71), [`0047895`](https://github.com/coveo/ui-kit/commit/00478950dddf7005a1f8079c99f7a0edee9b5278), [`1dcb32f`](https://github.com/coveo/ui-kit/commit/1dcb32f02bc848b115a6016a083242cce9200cb2), [`e463261`](https://github.com/coveo/ui-kit/commit/e463261abb4edb95a009cf416c484f09af0e010f), [`1dcb32f`](https://github.com/coveo/ui-kit/commit/1dcb32f02bc848b115a6016a083242cce9200cb2)]:
+  - coveo.analytics@2.31.0
+  - @coveo/headless@3.54.0
+
+## 3.43.3
+
+### Patch Changes
+
+- [#8049](https://github.com/coveo/ui-kit/pull/8049) [`8c6d484`](https://github.com/coveo/ui-kit/commit/8c6d484c87e75a08d787d057a917eccac4d38586) - Made the quanticGeneratedAnswer timeline dot and lines interactive to expand/collapse.
+
+- [#8043](https://github.com/coveo/ui-kit/pull/8043) [`42f1e58`](https://github.com/coveo/ui-kit/commit/42f1e58bfbb5aeeee832d7da07b3bc77ededeff7) - fixed the issue with the no answer message not displaying after triggering the generated answer manually
+
+- Updated dependencies [[`42f1e58`](https://github.com/coveo/ui-kit/commit/42f1e58bfbb5aeeee832d7da07b3bc77ededeff7), [`51e15d1`](https://github.com/coveo/ui-kit/commit/51e15d1435d7435a0701754d9e418d6d87d376c3)]:
+  - @coveo/headless@3.53.2
+
 ## 3.43.2
 
 ### Patch Changes

@@ -1,0 +1,27 @@
+{
+  "skills": {
+    "jira-writer": {
+      "repo": "coveo/ai-tools",
+      "ref": "main",
+      "files": [
+        "README.md",
+        "SKILL.md",
+        "references/BUG_REPORT_TEMPLATE.md",
+        "references/EPIC_TEMPLATE.md",
+        "references/SPIKE_TEMPLATE.md",
+        "references/USER_STORY_TEMPLATE.md"
+      ]
+    },
+    "user-story": {
+      "repo": "coveo/ai-tools",
+      "ref": "main",
+      "files": [
+        "README.md",
+        "SKILL.md",
+        "references/USER_STORY_TEMPLATE.md"
+      ]
+    }
+  },
+  "steering": {},
+  "agents": {}
+}

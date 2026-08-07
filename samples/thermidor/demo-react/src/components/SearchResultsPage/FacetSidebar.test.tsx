@@ -9,6 +9,8 @@ function createMockController(state: Record<string, unknown> = {}) {
       cb();
       return () => {};
     },
+    sortBy: vi.fn(),
+    isSortedBy: vi.fn(() => false),
   };
 }
 
@@ -24,6 +26,7 @@ vi.mock('@coveo/thermidor', async (importOriginal) => {
         totalCount: 0,
         totalPages: 0,
       }),
+    buildSortController: () => createMockController({appliedSort: null, availableSorts: []}),
     buildSearchBoxController: () => createMockController({query: ''}),
   };
 });
@@ -33,6 +36,9 @@ describe('Facet sidebar placeholder', () => {
     onSubmit: vi.fn(),
     isStreaming: false,
     routedInterface: {useCase: 'search', interface: {id: 'mock'}} as any,
+    onBackToConversation: vi.fn(),
+    products: [] as any[],
+    onProductsChange: vi.fn(),
   };
 
   it('renders text "Facets (coming soon)"', () => {

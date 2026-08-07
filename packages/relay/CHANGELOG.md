@@ -1,3 +1,17 @@
+## 2.1.3
+
+### Patch Changes
+
+- [#8118](https://github.com/coveo/ui-kit/pull/8118) [`0047895`](https://github.com/coveo/ui-kit/commit/00478950dddf7005a1f8079c99f7a0edee9b5278) - Update `uuid` from 13 to 14. The npm entry points import `uuid` at runtime rather than bundling it, so consumers will resolve version 14. Only `v4` and `validate` are used, and both are unchanged between the two versions.
+
+- [#8081](https://github.com/coveo/ui-kit/pull/8081) [`13709a3`](https://github.com/coveo/ui-kit/commit/13709a3bce5e1a92810032395ea6447f7a1bec1a) - Restore the `relay-docs.json` documentation artifact in published Relay packages.
+
+## 2.1.2
+
+### Patch Changes
+
+- [#8027](https://github.com/coveo/ui-kit/pull/8027) [`484bacf`](https://github.com/coveo/ui-kit/commit/484bacf5ef1a89c3b712744c0489fecede73e03d) - Update Rollup to 4.62.2.
+
 ## 2.1.1
 
 ### Bug Fixes

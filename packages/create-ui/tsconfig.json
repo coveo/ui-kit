@@ -9,6 +9,9 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "declaration": false,
+    "sourceMap": true,
+    "inlineSources": true,
+    "sourceRoot": "/",
     "outDir": "dist",
     "rootDir": "src",
     "isolatedModules": true,
@@ -16,5 +19,5 @@
     "noUnusedParameters": true
   },
   "include": ["src/**/*"],
-  "exclude": ["src/**/*.test.ts"]
+  "exclude": ["src/**/*.test.ts", "src/test-support.ts"]
 }

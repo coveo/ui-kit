@@ -1,5 +1,17 @@
 # @coveo/create-ui
 
+## 0.2.2
+
+### Patch Changes
+
+- [#8064](https://github.com/coveo/ui-kit/pull/8064) [`5ed0225`](https://github.com/coveo/ui-kit/commit/5ed0225d363eb910b739a631148881b950a7eebf) - Clarify the earliest supported version when a requested sample version is unavailable.
+
+## 0.2.1
+
+### Patch Changes
+
+- [#8063](https://github.com/coveo/ui-kit/pull/8063) [`e202d74`](https://github.com/coveo/ui-kit/commit/e202d74534b6fab8037768607b06d374b0d8ad1b) - Clarify the primary Coveo library used by every template.
+
 ## 0.2.0
 
 ### Minor Changes

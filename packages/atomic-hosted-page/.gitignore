@@ -1,6 +1,7 @@
 dist/
+docs/*
+!docs/adr/
 cdn/
-docs/
 
 *~
 *.sw[mnpcod]

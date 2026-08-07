@@ -1,5 +1,6 @@
 .initial-summary-message {
-  background-color: #d8e6fe;
+  background-color: var(--slds-g-color-brand-base-90, #d8e6fe);
+  /* stylelint-disable-next-line slds/no-hardcoded-values-slds2 */
   color: #54698d;
   width: 100%;
 }

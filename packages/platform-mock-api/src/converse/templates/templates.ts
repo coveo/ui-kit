@@ -34,5 +34,5 @@ const templateEvents = {
 
 const getTemplateEvents = (templateId: TemplateId): ConverseEvent[] => templateEvents[templateId];
 
-export {getTemplateEvents, templateEvents};
+export {getTemplateEvents};
 export type {TemplateId};

@@ -143,11 +143,13 @@ export class ProductCard extends LitElement {
 
     return html`
       <article class="product">
-        ${image
-          ? html`<div class="image">
-              <img src=${image} alt=${product.ec_name ?? ''} loading="lazy" />
-            </div>`
-          : nothing}
+        ${
+          image
+            ? html`<div class="image">
+                <img src=${image} alt=${product.ec_name ?? ''} loading="lazy" />
+              </div>`
+            : nothing
+        }
         <a
           class="name"
           href=${product.clickUri}
@@ -160,16 +162,18 @@ export class ProductCard extends LitElement {
           ${product.ec_name ?? product.permanentid}
         </a>
         ${price == null ? nothing : html`<p class="price">$${price}</p>`}
-        ${this.cart
-          ? html`
-              <div class="cart-controls">
-                <button type="button" class="add" @click=${() => this.#adjustQuantity(1)}>
-                  Add to cart
-                </button>
-                ${quantity > 0 ? html`<span class="in-cart">In cart: ${quantity}</span>` : nothing}
-              </div>
-            `
-          : nothing}
+        ${
+          this.cart
+            ? html`
+                <div class="cart-controls">
+                  <button type="button" class="add" @click=${() => this.#adjustQuantity(1)}>
+                    Add to cart
+                  </button>
+                  ${quantity > 0 ? html`<span class="in-cart">In cart: ${quantity}</span>` : nothing}
+                </div>
+              `
+            : nothing
+        }
       </article>
     `;
   }

@@ -27,7 +27,7 @@ export function LandingPage({onSubmit, isStreaming}: LandingPageProps) {
           <PromptInput
             onSubmit={onSubmit}
             disabled={isStreaming}
-            placeholder="Search for products or ask a question..."
+            placeholder="Ask anything..."
             suggestions={sections}
             onSuggestionSelect={handleSuggestionSelect}
           />

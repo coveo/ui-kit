@@ -84,7 +84,7 @@ export interface FieldSuggestionsState {
  *
  * This controller is a wrapper around the basic facet controller search functionality, and thus exposes similar options and properties.
  *
- * Example: [field-suggestions.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/field-suggestions/specific-field/field-suggestions.fn.tsx)
+ * Example: [field-suggestions.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/field-suggestions.tsx)
  *
  * @group Controllers
  * @category FieldSuggestions

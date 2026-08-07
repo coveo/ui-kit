@@ -22,12 +22,14 @@ const createSectionLayoutDecorator = (): Decorator => {
 
     return html`
       <style>
-        ${isGridMode
-          ? `atomic-commerce-product-list::part(result-list) {
+        ${
+          isGridMode
+            ? `atomic-commerce-product-list::part(result-list) {
             grid-template-columns: 1fr;
             width: 24em;
           }`
-          : ''}
+            : ''
+        }
       </style>
       ${story()}
     `;

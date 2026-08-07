@@ -295,16 +295,23 @@ The app holds a single `ConverseController`. All prompts go through `controller.
 
 **Implementation guidance:**
 
-- Responsive breakpoints for the search results grid (5 columns → 3 → 2 → 1)
-- Mobile-friendly input and suggestion dropdown
-- Smooth transitions between views (optional CSS transitions)
-- Loading states for all async operations
-- Error handling (toast notifications for failures)
-- Accessibility basics: proper ARIA labels, focus management, keyboard navigation for suggestions
+- Responsive breakpoints aligned with `@coveo/atomic`: sm (640px), md (768px), lg (1024px), xl (1280px)
+- Product grid columns: 1 → 2 (sm) → 3 (md) → 4 (xl)
+- Mobile layout (below lg): single column, no sidebar, Sort & Filters modal, centered pagination
+- Sort & Filters modal on mobile: full-screen dialog with Sort section, Filters placeholder, and fixed "View results" button
+- Back-navigation button wraps below search box on screens < xl, absolutely positioned on xl+
+- Fixed max-width (560px) for the search box across all pages
+- Pill suggestions truncate with ellipsis and native title tooltip on narrow screens
+- Comparison table scrolls horizontally when too wide for viewport
+- CSS design tokens used consistently (no raw values)
+- View fade-in transition between pages
+- Loading states for async operations (spinner in submit button)
+- Error handling (toast notifications for unsupported features)
+- Accessibility: ARIA roles/labels on conversation log, comparison table, product carousel, next-actions bar; aria-live on streaming messages; aria-busy during streaming; keyboard-focusable carousel
 
-**Test requirements:** Visual regression tests or manual verification at key breakpoints.
+**Test requirements:** Visual verification at key breakpoints. All 246 unit tests pass.
 
-**Demo:** Demo looks polished on desktop and tablet. Error states are handled gracefully.
+**Demo:** Demo looks polished on desktop, tablet, and mobile. Error states are handled gracefully. Screen readers can navigate the conversation thread and comparison tables.
 
 ---
 

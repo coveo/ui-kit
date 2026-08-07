@@ -1,6 +1,6 @@
 {
   "name": "@coveo/shopify",
-  "version": "1.9.38",
+  "version": "1.9.40",
   "description": "Utilities to integrate Shopify with Coveo's commerce engine",
   "license": "Apache-2.0",
   "repository": {
@@ -57,7 +57,7 @@
   "dependencies": {
     "@coveo/headless": "workspace:*",
     "@coveo/relay": "workspace:*",
-    "uuid": "^14.0.0"
+    "uuid": "catalog:"
   },
   "devDependencies": {
     "@types/node": "catalog:",

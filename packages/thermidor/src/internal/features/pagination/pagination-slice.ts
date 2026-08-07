@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
-import {getHandleInternals} from '@/src/internal/utils/index.js';
+import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import {getOrCreatePaginationActions} from './pagination-actions.js';
 import {getOrCreateHydrateFromSnapshotAction} from '@/src/internal/features/generative/index.js';
@@ -45,10 +45,11 @@ export function createPaginationSlice(
         if (!payload) {
           return;
         }
+
         if (typeof payload.totalCount === 'number') {
           state.totalCount = payload.totalCount;
-          return;
         }
+
         const pagination = payload.pagination as Record<string, unknown> | undefined;
         if (typeof pagination?.totalEntries === 'number') {
           state.totalCount = pagination.totalEntries;
@@ -63,13 +64,22 @@ export function createPaginationSlice(
         ) {
           state.firstResult = pagination.page * pagination.perPage;
         }
+
+        if (state.pageSize === initialPaginationState.pageSize && !pagination?.perPage) {
+          const products = payload.products as unknown[] | undefined;
+          const results = payload.results as unknown[] | undefined;
+          const itemCount = products?.length ?? results?.length ?? 0;
+          if (itemCount > 0) {
+            state.pageSize = itemCount;
+          }
+        }
       });
     },
   });
 }
 
 export function getOrCreatePaginationSlice(iface: InterfaceHandle) {
-  const {stateId, cacheRegistry} = getHandleInternals(iface);
+  const {stateId, cacheRegistry} = getInterfaceInternals(iface);
   return cacheRegistry.getOrCreate(CACHE_KEY, () => {
     const actions = getOrCreatePaginationActions(iface);
     const hydrateAction = getOrCreateHydrateFromSnapshotAction(iface);

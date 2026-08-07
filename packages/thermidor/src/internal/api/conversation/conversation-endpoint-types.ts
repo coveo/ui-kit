@@ -1,4 +1,4 @@
-import type {CommerceSearchSortCriterion} from '@/src/internal/api/commerce-search/index.js';
+import type {CommerceApiSortPayload} from '@/src/internal/features/sort/index.js';
 
 export interface CoveoConversationCartItem {
   productId: string;
@@ -28,7 +28,7 @@ export interface CoveoConversationEndpointRequestBase {
   targetEngine: 'AGENT_CORE';
   page?: number;
   perPage?: number;
-  sort?: CommerceSearchSortCriterion[];
+  sort?: CommerceApiSortPayload;
   facets?: Array<{facetId: string; selectedValues: string[]}>;
 }
 

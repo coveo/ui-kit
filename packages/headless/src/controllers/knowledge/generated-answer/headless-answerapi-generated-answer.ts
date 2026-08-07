@@ -17,6 +17,7 @@ import {
   generateAnswer,
   resetAnswer,
   sendGeneratedAnswerFeedback,
+  setAnswerGenerationMode,
   updateAnswerConfigurationId,
 } from '../../../features/generated-answer/generated-answer-actions.js';
 import type {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
@@ -28,9 +29,9 @@ import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildCoreGeneratedAnswer,
   type GeneratedAnswer,
-  type GeneratedAnswerAnalyticsClient,
   type GeneratedAnswerProps,
 } from '../../core/generated-answer/headless-core-generated-answer.js';
+import type {GeneratedAnswerAnalyticsClient} from '../../../features/generated-answer/generated-answer-analytics-client.js';
 
 interface AnswerApiGeneratedAnswer extends Omit<GeneratedAnswer, 'sendFeedback'> {
   /**
@@ -105,6 +106,7 @@ const subscribeToSearchRequest = (engine: SearchEngine<StreamAnswerAPIState>) =>
       }
 
       if (triggerParams.q?.length > 0) {
+        engine.dispatch(setAnswerGenerationMode('automatic'));
         engine.dispatch(generateAnswer());
       }
     }

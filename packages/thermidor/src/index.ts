@@ -11,8 +11,7 @@ export type {
 export type {Product} from '@/src/internal/features/product-list/index.js';
 export * from './public/actions/index.js';
 export * from './public/controllers/index.js';
-export {composeInterfaces} from './public/interfaces/compose.js';
-export type {ComposedInterface} from './public/interfaces/compose.js';
+
 export {buildGenerativeInterface} from './public/interfaces/generative.js';
 export {buildSearchInterface} from './public/interfaces/search.js';
 export {buildCommerceInterface} from './public/interfaces/commerce.js';
@@ -50,3 +49,14 @@ export type {
   TurnStatus,
   UseCaseInterfaceMap,
 } from '@/src/internal/features/generative/index.js';
+export type {
+  SortByRelevance,
+  SortByDate,
+  SortByField,
+  SortByQRE,
+  SortByNoSort,
+  SearchSortCriterion,
+  CommerceSortCriterion,
+  SortCriterionFor,
+  SortDirection,
+} from './public/sort-types.js';
