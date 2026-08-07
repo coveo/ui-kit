@@ -83,18 +83,19 @@ describe('UnifiedEndpointClient', () => {
       {
         method: 'POST',
         signal: undefined,
-        body: JSON.stringify(request),
+        body: JSON.stringify(request.agentInput),
         headers: {
           'Content-Type': 'application/json',
           Accept: 'text/event-stream',
           Authorization: 'Bearer test-token',
-          'X-Coveo-Feature-Flags-Overrides': '{"cpd-stateful-commerce-enabled":true}',
+          'x-coveo-agent-runtime-name': 'commerce_pr_676_Agent',
+          'x-coveo-agent-runtime-qualifier': 'DEFAULT',
         },
       }
     );
   });
 
-  it('includes cpd-stateful-commerce-enabled feature flag header', async () => {
+  it('includes temporary AgentCore runtime override headers', async () => {
     const stream = new ReadableStream<Uint8Array>();
     mockedFetch.mockResolvedValue(
       new Response(null, {
@@ -116,7 +117,8 @@ describe('UnifiedEndpointClient', () => {
       expect.any(String),
       expect.objectContaining({
         headers: expect.objectContaining({
-          'X-Coveo-Feature-Flags-Overrides': '{"cpd-stateful-commerce-enabled":true}',
+          'x-coveo-agent-runtime-name': 'commerce_pr_676_Agent',
+          'x-coveo-agent-runtime-qualifier': 'DEFAULT',
         }),
       })
     );
