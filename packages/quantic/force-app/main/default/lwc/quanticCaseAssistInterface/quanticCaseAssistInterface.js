@@ -1,5 +1,5 @@
 // @ts-ignore
-import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
+import getHeadlessConfiguration from '@salesforce/apex/CaseAssistController.getHeadlessConfiguration';
 import {
   getHeadlessBindings,
   loadDependencies,
