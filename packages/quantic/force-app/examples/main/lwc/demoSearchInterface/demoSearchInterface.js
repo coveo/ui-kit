@@ -34,7 +34,7 @@ export default class DemoSearchInterface extends QuanticSearchInterface {
   /**
    * The Coveo environment (e.g., 'prod').
    * @api
-   * @type {string}
+   * @type {"dev" | "stg" | "hipaa" | "prod"}
    */
   @api environment = 'prod';
   /**
@@ -52,9 +52,7 @@ export default class DemoSearchInterface extends QuanticSearchInterface {
             configuration: {
               organizationId: this.organizationId,
               accessToken: this.accessToken,
-              environment: /** @type {import('coveo').PlatformEnvironment} */ (
-                this.environment
-              ),
+              environment: this.environment,
               search: {
                 searchHub: this.searchHub,
                 pipeline: this.pipeline,

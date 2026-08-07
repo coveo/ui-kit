@@ -34,7 +34,7 @@ export default class DemoInsightInterface extends QuanticInsightInterface {
   /**
    * The Coveo environment (e.g., 'prod').
    * @api
-   * @type {string}
+   * @type {"dev" | "stg" | "hipaa" | "prod"}
    */
   @api environment = 'prod';
   /**
@@ -64,9 +64,7 @@ export default class DemoInsightInterface extends QuanticInsightInterface {
             configuration: {
               organizationId: this.organizationId,
               accessToken: this.accessToken,
-              environment: /** @type {import('coveo').PlatformEnvironment} */ (
-                this.environment
-              ),
+              environment: this.environment,
               insightId: this.insightId,
               search: {
                 locale: LOCALE,

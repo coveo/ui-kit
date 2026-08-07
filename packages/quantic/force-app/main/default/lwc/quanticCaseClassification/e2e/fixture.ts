@@ -36,7 +36,6 @@ export const test = quanticBase.extend<QuanticCaseClassificationE2EFixtures>({
       coveoDefaultField,
       caseClassificationSuggestions
     );
-
     await page.goto(pageUrl);
     await configuration.configure({...options});
     await caseClassificationObject.allOptionsSelectInput.waitFor();

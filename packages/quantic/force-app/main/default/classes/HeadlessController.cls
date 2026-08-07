@@ -17,32 +17,4 @@ global with sharing class HeadlessController {
      */
     return SampleTokenProvider.getHeadlessConfiguration();
   }
-
-  /**
-   * Get the configuration object for the initialization of Coveo Headless Insight.
-   * This uses the sample token with Insight permissions.
-   * @return {String} A serialized object containing the Insight Headless configuration.
-   */
-  @AuraEnabled(cacheable=true)
-  public static String getInsightHeadlessConfiguration() {
-    /**
-     * e.g. To switch to the Coveo Token Provider, you simply need to replace the following line by:
-     * `return CoveoTokenProvider.getHeadlessConfiguration();`
-     */
-    return SampleInsightTokenProvider.getHeadlessConfiguration();
-  }
-
-  /**
-   * Get the configuration object for the initialization of Coveo Headless Case Assist.
-   * This uses the sample token with Case Assist permissions.
-   * @return {String} A serialized object containing the Case Assist Headless configuration.
-   */
-  @AuraEnabled(cacheable=true)
-  public static String getCaseAssistHeadlessConfiguration() {
-    /**
-     * e.g. To switch to the Coveo Token Provider, you simply need to replace the following line by:
-     * `return CoveoTokenProvider.getHeadlessConfiguration();`
-     */
-    return SampleCaseAssistTokenProvider.getHeadlessConfiguration();
-  }
 }
