@@ -46,20 +46,9 @@ function resolveEnvironment(value: string | undefined): PlatformEnvironment {
   return 'dev';
 }
 
-function getOrganizationAdminEndpoint(
-  organizationId: string,
-  environment: PlatformEnvironment
-): string {
+function getPlatformEndpoint(environment: PlatformEnvironment): string {
   const environmentSuffix = environment === 'prod' ? '' : environment;
-  return `https://${organizationId}.admin.org${environmentSuffix}.coveo.com`;
-}
-
-function getOrganizationPlatformEndpoint(
-  organizationId: string,
-  environment: PlatformEnvironment
-): string {
-  const environmentSuffix = environment === 'prod' ? '' : environment;
-  return `https://${organizationId}.org${environmentSuffix}.coveo.com`;
+  return `https://platform${environmentSuffix}.cloud.coveo.com`;
 }
 
 function getProxyTargets(mode: string) {
@@ -72,12 +61,11 @@ function getProxyTargets(mode: string) {
     return undefined;
   }
 
-  const platform = getOrganizationPlatformEndpoint(organizationId, environment);
-  const admin = endpointOverride
+  const platform = endpointOverride
     ? endpointOverride
-    : getOrganizationAdminEndpoint(organizationId, environment);
+    : getPlatformEndpoint(environment);
 
-  return {admin, platform};
+  return {platform};
 }
 
 export default defineConfig(({mode}) => {
@@ -99,8 +87,8 @@ export default defineConfig(({mode}) => {
       ...(useProxy && targets
         ? {
             proxy: {
-              [`/rest/organizations/${orgId}/commerce/unstable/agentic`]: {
-                target: targets.admin,
+              [`/api/preview/organizations/${orgId}/agents/commerce/agui`]: {
+                target: targets.platform,
                 changeOrigin: true,
                 secure: true,
               },

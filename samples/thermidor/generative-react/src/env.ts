@@ -60,12 +60,12 @@ function resolvePlatformEnvironment(): PlatformEnvironment {
   return 'dev';
 }
 
-function getOrganizationAdminEndpoint(
-  organizationId: string,
+function getOrganizationPlatformEndpoint(
+  _organizationId: string,
   environment: PlatformEnvironment
 ): string {
   const environmentSuffix = environment === 'prod' ? '' : environment;
-  return `https://${organizationId}.admin.org${environmentSuffix}.coveo.com`;
+  return `https://platform${environmentSuffix}.cloud.coveo.com`;
 }
 
 function shouldUseViteProxy() {
@@ -84,7 +84,7 @@ export function getSampleConfiguration() {
   const organizationId = getRequiredEnvValue('VITE_COVEO_ORGANIZATION_ID');
   const endpointOverride = getOptionalEnvValue('VITE_COVEO_ENDPOINT');
   const environment = resolvePlatformEnvironment();
-  const endpointFromEnvironment = getOrganizationAdminEndpoint(
+  const endpointFromEnvironment = getOrganizationPlatformEndpoint(
     organizationId,
     environment
   );

@@ -8,11 +8,6 @@ import {
 } from '@/src/api/internal/protocol/error-handling.js';
 import {getOrganizationEndpoint} from '@/src/api/internal/utils/organization-endpoint.js';
 
-const featureFlagOverridesHeaderValue = JSON.stringify({
-  'use-demo-agent-core-runtime': false,
-  'cpd-stateful-commerce-enabled': true,
-});
-
 const createCallConversationEndpoint =
   (): ConversationEndpointClient['call'] => {
     return async (
@@ -41,13 +36,12 @@ const createCallConversationEndpoint =
 
         const organizationEndpoint = getOrganizationEndpoint(organizationId, {
           endpoint,
-          endpointType: 'admin',
         });
         const url =
           `${organizationEndpoint}` +
-          '/rest/organizations/' +
+          '/api/preview/organizations/' +
           `${organizationId}` +
-          '/commerce/unstable/agentic/converse';
+          '/agents/commerce/agui/converse';
 
         const response = await fetch(url, {
           method: 'POST',
@@ -57,7 +51,7 @@ const createCallConversationEndpoint =
             'Content-Type': 'application/json',
             Accept: 'text/event-stream',
             Authorization: `Bearer ${accessToken}`,
-            'X-Coveo-Feature-Flags-Overrides': featureFlagOverridesHeaderValue,
+            'Coveo-Organization-Id': organizationId,
             ...(configuration.agentRuntimeName
               ? {'x-coveo-agent-runtime-name': configuration.agentRuntimeName}
               : {}),
