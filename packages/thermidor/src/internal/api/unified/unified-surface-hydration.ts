@@ -11,7 +11,11 @@ import type {CoveoFacetResponse} from '@/src/internal/api/search/index.js';
 import {getOrCreateProductListActions} from '@/src/internal/features/product-list/index.js';
 import {getOrCreatePaginationActions} from '@/src/internal/features/pagination/index.js';
 import {getOrCreateFacetsActions} from '@/src/internal/features/facets/index.js';
-import {getOrCreateSortActions} from '@/src/internal/features/sort/index.js';
+import {
+  fromCommerceApiSort,
+  getOrCreateSortActions,
+  type CommerceApiSortPayload,
+} from '@/src/internal/features/sort/index.js';
 import {getOrCreateTriggersActions} from '@/src/internal/features/triggers/index.js';
 import {getOrCreateQueryCorrectionActions} from '@/src/internal/features/query-correction/index.js';
 
@@ -125,7 +129,19 @@ export function applyDataModelUpdate(
     }
     case '/sort': {
       const sortActions = getOrCreateSortActions(iface);
-      engine.mutate(sortActions.updateFromResponse(value as never));
+      const sort = value as {
+        appliedSort?: CommerceApiSortPayload;
+        availableSorts?: CommerceApiSortPayload[];
+      };
+      if (!sort.appliedSort || !Array.isArray(sort.availableSorts)) {
+        break;
+      }
+      engine.mutate(
+        sortActions.updateFromResponse({
+          appliedSort: fromCommerceApiSort(sort.appliedSort),
+          availableSorts: sort.availableSorts.map(fromCommerceApiSort),
+        })
+      );
       break;
     }
     case '/triggers': {
