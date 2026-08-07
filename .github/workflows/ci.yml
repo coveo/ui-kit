@@ -137,7 +137,7 @@ jobs:
           echo "projects=\" $(echo "$TASKS" | sed 's/#.*//' | sort -u | tr '\n' ' ') \"" >> "$GITHUB_OUTPUT"
 
           SAMPLES="$(pnpm exec node scripts/turbo/outdated-tasks.mjs e2e \
-            | sed -nE 's/^(@(samples\/[^#]+|coveo\/ui-kit-samples))#e2e.*/\1/p' \
+            | sed -nE 's/^(@(samples\/[^#]+|coveo\/ui-kit-sample-))#e2e.*/\1/p' \
             | sort)"
           echo "Affected samples for e2e:"
           echo
