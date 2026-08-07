@@ -566,6 +566,7 @@ describe('GenerativeRuntime', () => {
         'generated-id-1',
         routedInterface
       );
+      expect(config.statePort.completeTurn).toHaveBeenCalledWith('generated-id-1');
     });
 
     it('does not set routed interface when hydration returns null', async () => {

@@ -75,8 +75,8 @@ export default defineConfig(({mode}) => {
       ...(useProxy && targets
         ? {
             proxy: {
-              [`/rest/organizations/${orgId}/commerce/unstable/agentic`]: {
-                target: targets.admin,
+              [`/api/preview/organizations/${orgId}/agents/commerce/agui`]: {
+                target: targets.platform,
                 changeOrigin: true,
                 secure: true,
               },

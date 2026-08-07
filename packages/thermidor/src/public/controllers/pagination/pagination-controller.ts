@@ -50,7 +50,9 @@ class PaginationControllerImpl extends BaseController<PaginationControllerState>
     }
 
     this.engine.mutate(this.#actions.setFirstResult(page * pageSize));
-    this.engine.mutate(this.#thunk({engine: this.engine}));
+    this.engine.mutate(
+      this.#thunk({engine: this.engine, actionIntent: {name: 'select_page', context: {page}}})
+    );
   }
 
   setPageSize(pageSize: number): void {
@@ -60,7 +62,9 @@ class PaginationControllerImpl extends BaseController<PaginationControllerState>
 
     this.engine.mutate(this.#actions.setFirstResult(0));
     this.engine.mutate(this.#actions.setPageSize(pageSize));
-    this.engine.mutate(this.#thunk({engine: this.engine}));
+    this.engine.mutate(
+      this.#thunk({engine: this.engine, actionIntent: {name: 'set_page_size', context: {pageSize}}})
+    );
   }
 }
 

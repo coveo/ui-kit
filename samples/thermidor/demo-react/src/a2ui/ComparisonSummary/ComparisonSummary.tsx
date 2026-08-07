@@ -7,8 +7,15 @@ interface A2UIComparisonSummaryProps {
   surface: ParsedSurface;
 }
 
+interface ComparisonSummaryData {
+  text?: {
+    value?: string;
+  };
+}
+
 export function A2UIComparisonSummary({surface}: A2UIComparisonSummaryProps) {
-  const text = (surface.componentProps.text as {literalString?: string})?.literalString ?? '';
+  const data = surface.data as ComparisonSummaryData;
+  const text = data.text?.value ?? '';
 
   const html = useMemo(() => {
     if (!text) return '';

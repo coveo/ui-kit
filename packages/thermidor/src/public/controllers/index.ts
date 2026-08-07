@@ -63,3 +63,9 @@ export type {
   SortControllerOptions,
   SortControllerState,
 } from './sort/sort-controller.js';
+export {buildUnifiedConverseController} from './unified-converse/unified-converse-controller.js';
+export type {
+  UnifiedConverseController,
+  UnifiedConverseControllerOptions,
+  UnifiedConverseControllerState,
+} from './unified-converse/unified-converse-controller.js';

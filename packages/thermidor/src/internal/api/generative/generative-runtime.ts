@@ -46,6 +46,7 @@ export interface HydrationResult<K extends RoutedUseCase = RoutedUseCase> {
   interface: UseCaseInterfaceMap[K];
   snapshot: Record<string, unknown>;
   query: string | undefined;
+  surfaceId?: string;
 }
 
 export type HydrateSubInterface = (
@@ -315,6 +316,7 @@ export class GenerativeRuntime {
 
         if (hydrationResult) {
           this.statePort.setRoutedInterface(turnId, hydrationResult);
+          this.statePort.completeTurn(turnId);
           return {turnId, isTerminal: true};
         }
 

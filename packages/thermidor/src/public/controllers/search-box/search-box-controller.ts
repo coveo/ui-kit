@@ -42,7 +42,13 @@ class SearchBoxControllerImpl extends BaseController<SearchBoxControllerState> {
   }
 
   async submit(): Promise<void> {
-    await this.engine.mutate(this.#thunk({engine: this.engine}));
+    const query = this.state.query;
+    await this.engine.mutate(
+      this.#thunk({
+        engine: this.engine,
+        actionIntent: {name: 'execute_search', context: {query}},
+      })
+    );
   }
 }
 

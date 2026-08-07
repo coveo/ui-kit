@@ -1,6 +1,6 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
-import type {FullEngine} from '@/src/internal/engine/index.js';
+import type {EndpointThunkArg} from '@/src/internal/utils/interface-types.js';
 import type {CommerceSearchRequest} from '@/src/internal/api/commerce-search/index.js';
 import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import {createCommerceSearchEndpointRequestSelector} from './commerce-search-request-selector.js';
@@ -15,7 +15,7 @@ export function createCommerceSearchEndpointThunk(iface: InterfaceHandle) {
   const buildRequest = createCommerceSearchEndpointRequestSelector(iface);
   const handleResponse = createCommerceSearchEndpointResponseHandler(iface);
 
-  const thunk = createAsyncThunk<void, {engine: FullEngine}>(
+  const thunk = createAsyncThunk<void, EndpointThunkArg>(
     `${stateId}/commerceSearchEndpoint/execute`,
     async ({engine}) => {
       const request = engine.read(buildRequest);
