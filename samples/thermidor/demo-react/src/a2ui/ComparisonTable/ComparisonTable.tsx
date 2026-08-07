@@ -20,25 +20,23 @@ interface ComparisonItem {
   [key: string]: unknown;
 }
 
+interface ComparisonTableData {
+  heading?: {
+    value?: string;
+  };
+  attributes?: string[];
+  products?: {
+    items?: ComparisonItem[];
+  };
+}
+
 export function A2UIComparisonTable({surface}: A2UIComparisonTableProps) {
-  const heading = (surface.componentProps.heading as {literalString?: string})?.literalString ?? '';
+  const data = surface.data as ComparisonTableData;
+  const heading = data.heading?.value ?? '';
+  const attributes = data.attributes ?? [];
+  const items = data.products?.items ?? [];
   const targeting = useTargeting();
   const isTargetable = targeting?.isTargeting ?? false;
-
-  const attributes = (surface.componentProps.attributes as string[]) ?? [
-    'standout',
-    'trade_off',
-    'best_for',
-  ];
-
-  const rawItems = surface.data.items;
-  let items: ComparisonItem[] = [];
-
-  if (Array.isArray(rawItems)) {
-    items = rawItems as ComparisonItem[];
-  } else if (rawItems && typeof rawItems === 'object') {
-    items = Object.values(rawItems) as ComparisonItem[];
-  }
 
   const [startIndex, setStartIndex] = useState(0);
 

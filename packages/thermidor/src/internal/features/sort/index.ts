@@ -6,6 +6,7 @@ export {
   toSearchApiCompoundSort,
   toCommerceApiSort,
   fromCommerceApiSort,
+  toSetSortContext,
 } from './sort-translate.js';
 export type {CommerceApiSortPayload} from './sort-translate.js';
 export type {

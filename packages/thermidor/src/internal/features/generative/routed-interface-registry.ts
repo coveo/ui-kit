@@ -14,6 +14,7 @@ export interface RoutedInterfaceEntry {
   interface: UseCaseInterfaceMap[RoutedUseCase];
   snapshot: Record<string, unknown>;
   query: string | undefined;
+  surfaceId?: string;
 }
 
 export class RoutedInterfaceRegistry {

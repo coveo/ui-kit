@@ -43,7 +43,7 @@ function renderTurnContent(turn: Turn, onAction: (text: string, type: string) =>
     return <ErrorTurnBlock error={turn.error} />;
   }
 
-  if (turn.status === 'complete' && turn.routedInterface && !turn.agentResponse) {
+  if (turn.status === 'complete' && turn.routedInterface) {
     return <RoutedTurnBlock />;
   }
 
