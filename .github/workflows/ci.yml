@@ -108,11 +108,12 @@ jobs:
           DEBUG: '*'
   build:
     name: 'Build'
-    if: ${{ github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/') }}
     runs-on: ubuntu-latest
     environment: PR Artifacts
     outputs:
-      projects: ${{ steps.set.outputs.projects }}
+      # When running on changeset-release branches, we don't want to run most downstream jobs, so we set the output to an empty string.
+      # Notably, Chromatic will still run on changeset-release branches, but it will run with the `--skip` flag.
+      projects: ${{ (github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/')) && steps.set.outputs.projects || '' }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
