@@ -189,6 +189,7 @@ jobs:
   validate-light-dom-styles:
     name: 'Validate Light DOM styles'
     needs: build
+    if: contains(needs.build.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -205,6 +206,7 @@ jobs:
   validate-no-new-light-dom:
     name: 'Validate no new Light DOM components'
     needs: build
+    if: contains(needs.build.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -262,6 +264,7 @@ jobs:
   validate-dts:
     name: 'Validate DTS API surface'
     needs: build
+    if: contains(needs.build.outputs.projects, '@coveo/thermidor')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
