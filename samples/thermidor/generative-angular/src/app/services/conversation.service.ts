@@ -4,6 +4,7 @@ import {
   buildConverseController,
   type ConverseController,
   type ConverseControllerState,
+  type Activity,
   type SerializedConverseState,
   type ReasoningStep,
 } from '@coveo/thermidor';
@@ -82,8 +83,10 @@ export class ConversationService {
     let turnComplete = true;
 
     for (const turn of turns) {
-      if (turn.agentResponse?.surfaces?.length) {
-        latestSurfaces = turn.agentResponse.surfaces;
+      if (turn.agentResponse?.activities?.length) {
+        latestSurfaces = turn.agentResponse.activities.map(
+          (activity: Activity) => activity.payload
+        );
         turnComplete = turn.status !== 'streaming';
       }
     }

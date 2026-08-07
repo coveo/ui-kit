@@ -4,6 +4,7 @@ packages:
   - packages/mock-converse-api
   - packages/headless
   - packages/thermidor
+  - packages/thermidor-contracts
   - packages/quantic
   - packages/headless-react
   - packages/atomic-hosted-page
@@ -115,6 +116,7 @@ catalog:
   vite: 8.1.5
   vitest: 4.1.10
   yaml: 2.9.0
+  zod: 3.25.76
   zone.js: 0.15.1
 
 minimumReleaseAge: 10080

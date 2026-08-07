@@ -112,14 +112,24 @@ export type RoutedInterface = {
 
 export interface AgentResponse {
   /**
+   * The latest server-owned AG-UI state snapshot for this turn.
+   *
+   * Thermidor retains this opaque object without coupling it to a UI protocol.
+   */
+  state: Record<string, unknown>;
+
+  /**
    * The ordered messages received from the agent during streaming.
    */
   messages: AgentMessage[];
 
   /**
-   * The opaque A2UI surfaces received during streaming.
+   * Structured activities emitted by the agent during streaming.
+   *
+   * Thermidor keeps each activity opaque; applications select and interpret the
+   * activity kinds they support.
    */
-  surfaces: A2UISurface[];
+  activities: Activity[];
 
   /**
    * An ordered sequence of reasoning steps that preserves the temporal
@@ -189,9 +199,18 @@ export interface AgentMessage {
 }
 
 /**
- * Opaque surface data passed through from `/converse` without interpretation.
+ * A normalized, structured activity emitted by an agent.
+ *
+ * `kind` and `payload` deliberately do not prescribe a presentation protocol.
+ * Applications can use them for A2-UI, another UI protocol, or a non-visual
+ * integration without Thermidor taking a dependency on any of those choices.
  */
-export type A2UISurface = Record<string, unknown>;
+export interface Activity {
+  id: string | undefined;
+  kind: string | undefined;
+  payload: Record<string, unknown>;
+  replace: boolean | undefined;
+}
 
 export interface GenerativeState {
   /**

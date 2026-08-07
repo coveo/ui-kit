@@ -2,16 +2,18 @@ import type {GenerativeState, StateTurn, Turn} from '@/src/internal/features/gen
 import {GenerativeRuntime} from '@/src/internal/api/generative/index.js';
 import {
   createHydrateSubInterface,
+  getOrCreateGenerativeActions,
+  getOrCreateGenerativeSelectors,
   getOrCreateRoutedInterfaceRegistry,
   mergeTurnsWithRegistry,
 } from '@/src/internal/features/generative/index.js';
-import {BaseController} from '@/src/internal/utils/index.js';
-import {createMemoizedStateSelector} from '@/src/internal/utils/index.js';
-import {getInterfaceInternals} from '@/src/internal/utils/index.js';
-import {getOrCreateGenerativeActions} from '@/src/internal/features/generative/index.js';
-import {getOrCreateGenerativeSelectors} from '@/src/internal/features/generative/index.js';
-import type {GenerativeInterface} from '@/src/internal/utils/index.js';
-import type {Controller} from '@/src/internal/utils/index.js';
+import {
+  BaseController,
+  createMemoizedStateSelector,
+  getInterfaceInternals,
+} from '@/src/internal/utils/index.js';
+import type {Controller, GenerativeInterface} from '@/src/internal/utils/index.js';
+import type {RemoteControllerAction} from '../remote/remote-controller.js';
 import {SerializedConverseState, SerializedTurn} from './converse-controller-serialization.js';
 
 class ConverseControllerImpl extends BaseController<ConverseControllerState> {
@@ -55,6 +57,9 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
       generativeInterface: options.interface,
       cartInterface: options.interface,
       statePort: {
+        getActiveTurnId: () => {
+          return this.engine.read(this.#selectors.getActiveTurnId);
+        },
         createTurn: (payload) => {
           this.engine.mutate(this.#actions.createTurn(payload));
         },
@@ -85,12 +90,11 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
         appendMessageDelta: (turnId, delta) => {
           this.engine.mutate(this.#actions.appendMessageDelta({turnId, delta}));
         },
-        appendSurface: (turnId, surface) => {
-          this.engine.mutate(this.#actions.appendSurface({turnId, surface}));
-          const ops = (surface as {operations?: unknown[]}).operations;
-          if (Array.isArray(ops)) {
-            options.onSurfaceOperation?.(ops);
-          }
+        appendActivity: (turnId, activity) => {
+          this.engine.mutate(this.#actions.appendActivity({turnId, activity}));
+        },
+        setStateSnapshot: (turnId, state) => {
+          this.engine.mutate(this.#actions.setStateSnapshot({turnId, state}));
         },
         startToolCall: (turnId, toolCallId, toolName) => {
           this.engine.mutate(this.#actions.startToolCall({turnId, toolCallId, toolName}));
@@ -198,6 +202,10 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
     }
     this.#runtime.resubmit(id, turn.prompt);
   }
+
+  dispatchAction(action: RemoteControllerAction): Promise<void> {
+    return this.#runtime.dispatchAction(action);
+  }
 }
 
 export const buildConverseController = (options: ConverseControllerOptions): ConverseController =>
@@ -210,6 +218,8 @@ export interface ConverseController extends Controller<ConverseControllerState> 
   submit(options: {prompt: string}): void;
   selectTurn(options: {id: string}): void;
   retry(options: {id: string}): void;
+  /** Sends a schema-derived remote controller action to the AG-UI gateway. */
+  dispatchAction(action: RemoteControllerAction): Promise<void>;
 }
 
 export interface ConverseControllerState {
@@ -221,7 +231,6 @@ export interface ConverseControllerState {
 export interface ConverseControllerOptions {
   interface: GenerativeInterface;
   conversationToRestore?: SerializedConverseState;
-  onSurfaceOperation?: (operations: unknown[]) => void;
 }
 
 function hydrateFromSerializedState(serialized: SerializedConverseState): GenerativeState {

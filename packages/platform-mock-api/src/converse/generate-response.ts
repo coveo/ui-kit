@@ -25,6 +25,10 @@ const PROMPT_TEMPLATE_MAP: ReadonlyArray<PromptMapping> = [
     prompt: 'i like cold-water surfing. compare wetsuits for it',
     templateId: 'response8',
   },
+  {
+    prompt: 'show the thermidor catalog',
+    templateId: 'thermidor-schema-catalog',
+  },
 ];
 
 const FALLBACK_TEMPLATE_ID: TemplateId = 'response5';

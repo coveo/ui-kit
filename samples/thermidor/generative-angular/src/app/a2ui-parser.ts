@@ -6,8 +6,8 @@
  *
  * Single public entry point: `parseSurfaces()`
  */
-import type {A2UISurface} from '@coveo/thermidor';
 import type {
+  A2UISurface,
   A2UIOperation,
   ActivitySnapshotContent,
   BundleDisplayTier,
@@ -328,7 +328,7 @@ function deduplicate(surfaces: RenderableCommerceSurface[]): RenderableCommerceS
  * Parse raw A2UI surface records into deduplicated, render-ready surfaces.
  */
 export function parseSurfaces(
-  rawSurfaces: A2UISurface[] | undefined,
+  rawSurfaces: Record<string, unknown>[] | undefined,
   options: {turnComplete: boolean} = {turnComplete: false}
 ): RenderableCommerceSurface[] {
   if (!rawSurfaces || rawSurfaces.length === 0) return [];

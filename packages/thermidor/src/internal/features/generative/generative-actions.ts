@@ -2,7 +2,7 @@ import {createAction} from '@reduxjs/toolkit';
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
 import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
-import type {A2UISurface, GenerativeState, RoutedUseCase, TurnStatus} from './generative-types.js';
+import type {Activity, GenerativeState, RoutedUseCase, TurnStatus} from './generative-types.js';
 
 type GenerativeActions = ReturnType<typeof createGenerativeActions>;
 
@@ -26,7 +26,10 @@ export function createGenerativeActions(interfaceId: string) {
     appendMessageDelta: createAction<{turnId: string; delta: string}>(
       `${prefix}/appendMessageDelta`
     ),
-    appendSurface: createAction<{turnId: string; surface: A2UISurface}>(`${prefix}/appendSurface`),
+    appendActivity: createAction<{turnId: string; activity: Activity}>(`${prefix}/appendActivity`),
+    setStateSnapshot: createAction<{turnId: string; state: Record<string, unknown>}>(
+      `${prefix}/setStateSnapshot`
+    ),
     startToolCall: createAction<{
       turnId: string;
       toolCallId: string;

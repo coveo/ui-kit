@@ -11,9 +11,9 @@ export interface AgentResponseProps {
 }
 
 export function AgentResponse({agentResponse, isStreaming, onAction}: AgentResponseProps) {
-  const {messages, reasoningSteps, surfaces} = agentResponse;
+  const {messages, reasoningSteps, activities} = agentResponse;
 
-  const hasContent = messages.length > 0 || reasoningSteps.length > 0 || surfaces.length > 0;
+  const hasContent = messages.length > 0 || reasoningSteps.length > 0 || activities.length > 0;
 
   if (!hasContent) {
     return null;
@@ -25,7 +25,12 @@ export function AgentResponse({agentResponse, isStreaming, onAction}: AgentRespo
         <ThinkingBlock reasoningSteps={reasoningSteps} isStreaming={isStreaming} />
       )}
       {messages.length > 0 && <StreamingMessage messages={messages} />}
-      {surfaces.length > 0 && <SurfaceRenderer surfaces={surfaces} onAction={onAction} />}
+      {activities.length > 0 && (
+        <SurfaceRenderer
+          surfaces={activities.map((activity) => activity.payload)}
+          onAction={onAction}
+        />
+      )}
     </div>
   );
 }

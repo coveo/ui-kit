@@ -1,6 +1,9 @@
 import {
   readConversationEventStream,
   type ConversationStreamEvent,
+  type CoveoConversationActionRequest,
+  type CoveoConversationControllerAction,
+  type CoveoConversationMessageRequest,
   createConversationEndpointClient,
 } from '@/src/internal/api/conversation/index.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
@@ -9,13 +12,14 @@ import {createConversationEndpointRequestSelector} from '@/src/internal/api/conv
 import {getOrCreateConfigurationSelectors} from '@/src/internal/features/configuration/index.js';
 import {generateId} from '@/src/internal/utils/index.js';
 import type {
-  A2UISurface,
+  Activity,
   RoutedUseCase,
   TurnStatus,
   UseCaseInterfaceMap,
 } from '@/src/internal/features/generative/index.js';
 
 export interface GenerativeStatePort {
+  getActiveTurnId(): string | undefined;
   createTurn(payload: {id: string; prompt: string; status: TurnStatus}): void;
   setActiveTurnId(id: string): void;
   replaceTurnId(oldId: string, newId: string): void;
@@ -23,7 +27,8 @@ export interface GenerativeStatePort {
   initAgentResponse(turnId: string): void;
   startMessage(turnId: string, role: string): void;
   appendMessageDelta(turnId: string, delta: string): void;
-  appendSurface(turnId: string, surface: A2UISurface): void;
+  appendActivity(turnId: string, activity: Activity): void;
+  setStateSnapshot(turnId: string, state: Record<string, unknown>): void;
   startToolCall(turnId: string, toolCallId: string, toolName: string): void;
   appendToolCallArgs(turnId: string, toolCallId: string, delta: string): void;
   completeToolCall(turnId: string, toolCallId: string, result: string): void;
@@ -118,30 +123,48 @@ export class GenerativeRuntime {
     await this.executeStream(turnId);
   }
 
+  /**
+   * Sends a schema-derived UI action through the same authenticated conversation
+   * transport as prompts. The gateway owns the mutation and replies with a
+   * stream, including the resulting `STATE_SNAPSHOT` for the active turn.
+   */
+  async dispatchAction(action: CoveoConversationControllerAction): Promise<void> {
+    const turnId = this.statePort.getActiveTurnId();
+    if (!turnId) {
+      throw new Error('Cannot dispatch a controller action without an active conversation turn.');
+    }
+
+    const {message: _message, ...requestBase} = this.createConversationRequest();
+    const request: CoveoConversationActionRequest = {...requestBase, action};
+    const clientConfig = this.engine.read(this.configSelectors.getEndpointClientConfiguration);
+    const client = createConversationEndpointClient();
+    const result = await client.call(request, clientConfig);
+
+    if (!result.success) {
+      throw new Error(result.error);
+    }
+
+    let streamError: unknown;
+    await readConversationEventStream({
+      stream: result.data.stream,
+      onEvent: (event) => {
+        this.dispatchEvent(turnId, event);
+      },
+      onError: (error) => {
+        streamError = error;
+      },
+    });
+
+    if (streamError) {
+      throw streamError;
+    }
+  }
+
   private async executeStream(turnId: string): Promise<void> {
     try {
-      const {cart, ...fromState} = this.engine.read(this.buildRequest);
-      const navigatorContext = this.engine.getNavigatorContextProvider()?.();
       const clientConfig = this.engine.read(this.configSelectors.getEndpointClientConfiguration);
-
-      const request = {
-        ...fromState,
-        clientId: navigatorContext?.clientId ?? undefined,
-        context: {
-          user: {
-            userAgent: navigatorContext?.userAgent ?? null,
-          },
-          view: {
-            url: navigatorContext?.location ?? null,
-            referrer: navigatorContext?.referrer ?? null,
-          },
-          ...(cart ? {cart} : {}),
-        },
-        targetEngine: 'AGENT_CORE' as const,
-      };
-
       const client = createConversationEndpointClient();
-      const result = await client.call(request, clientConfig);
+      const result = await client.call(this.createConversationRequest(), clientConfig);
 
       if (!result.success) {
         this.statePort.failTurn(turnId, result.error);
@@ -152,6 +175,27 @@ export class GenerativeRuntime {
     } catch (error) {
       this.statePort.failTurn(turnId, getErrorMessage(error));
     }
+  }
+
+  private createConversationRequest(): CoveoConversationMessageRequest {
+    const {cart, ...fromState} = this.engine.read(this.buildRequest);
+    const navigatorContext = this.engine.getNavigatorContextProvider()?.();
+
+    return {
+      ...fromState,
+      clientId: navigatorContext?.clientId ?? undefined,
+      context: {
+        user: {
+          userAgent: navigatorContext?.userAgent ?? null,
+        },
+        view: {
+          url: navigatorContext?.location ?? null,
+          referrer: navigatorContext?.referrer ?? null,
+        },
+        ...(cart ? {cart} : {}),
+      },
+      targetEngine: 'AGENT_CORE' as const,
+    };
   }
 
   private async consumeStream(turnId: string, stream: ReadableStream<Uint8Array>): Promise<void> {
@@ -249,12 +293,19 @@ export class GenerativeRuntime {
       }
 
       case 'STATE_SNAPSHOT': {
+        this.ensureAgentResponse(turnId);
+        this.statePort.setStateSnapshot(turnId, asRecord(event.snapshot));
         return {turnId, isTerminal: false};
       }
 
       case 'ACTIVITY_SNAPSHOT': {
         this.ensureAgentResponse(turnId);
-        this.statePort.appendSurface(turnId, event.content as Record<string, unknown>);
+        this.statePort.appendActivity(turnId, {
+          id: event.messageId,
+          kind: event.activityType,
+          payload: event.content as Record<string, unknown>,
+          replace: event.replace,
+        });
         return {turnId, isTerminal: false};
       }
 
@@ -304,6 +355,12 @@ export class GenerativeRuntime {
       this.agentResponseInitialized.add(turnId);
     }
   }
+}
+
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === 'object' && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : {};
 }
 
 function getErrorMessage(error: unknown): string {

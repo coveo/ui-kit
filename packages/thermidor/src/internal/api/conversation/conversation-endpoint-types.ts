@@ -7,13 +7,12 @@ export interface CoveoConversationCartItem {
   quantity: number;
 }
 
-export interface CoveoConversationEndpointRequest {
+export interface CoveoConversationEndpointRequestBase {
   trackingId?: string;
   language?: string;
   country?: string;
   currency?: string;
   clientId?: string;
-  message: string;
   context: {
     user: {
       userAgent?: string | null;
@@ -32,6 +31,30 @@ export interface CoveoConversationEndpointRequest {
   sort?: CommerceApiSortPayload;
   facets?: Array<{facetId: string; selectedValues: string[]}>;
 }
+
+export interface CoveoConversationMessageRequest extends CoveoConversationEndpointRequestBase {
+  message: string;
+}
+
+/**
+ * A schema-derived mutation for one server-owned controller state entry.
+ * `controllerSchema` identifies the generated contract that defines `action`
+ * and validates `payload`; `controllerId` identifies its runtime snapshot key.
+ */
+export interface CoveoConversationControllerAction {
+  controllerId: string;
+  controllerSchema: string;
+  action: string;
+  payload: unknown;
+}
+
+export interface CoveoConversationActionRequest extends CoveoConversationEndpointRequestBase {
+  action: CoveoConversationControllerAction;
+}
+
+export type CoveoConversationEndpointRequest =
+  | CoveoConversationMessageRequest
+  | CoveoConversationActionRequest;
 
 export interface CoveoConversationEndpointResponse {
   stream: ReadableStream<Uint8Array>;

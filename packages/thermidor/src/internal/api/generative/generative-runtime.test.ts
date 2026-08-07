@@ -37,6 +37,7 @@ vi.mock('@/src/internal/utils/index.js', () => ({
 
 function createMockStatePort(): GenerativeStatePort {
   return {
+    getActiveTurnId: vi.fn().mockReturnValue('active-turn-id'),
     createTurn: vi.fn(),
     setActiveTurnId: vi.fn(),
     replaceTurnId: vi.fn(),
@@ -44,7 +45,8 @@ function createMockStatePort(): GenerativeStatePort {
     initAgentResponse: vi.fn(),
     startMessage: vi.fn(),
     appendMessageDelta: vi.fn(),
-    appendSurface: vi.fn(),
+    appendActivity: vi.fn(),
+    setStateSnapshot: vi.fn(),
     startToolCall: vi.fn(),
     appendToolCallArgs: vi.fn(),
     completeToolCall: vi.fn(),
@@ -279,6 +281,57 @@ describe('GenerativeRuntime', () => {
     });
   });
 
+  describe('dispatchAction', () => {
+    it('posts a schema-derived action and applies its state snapshot to the active turn', async () => {
+      const config = createMockConfig();
+      const engine = createMockEngine();
+      const {mockClient} = setupSuccessfulStream([
+        {
+          type: 'STATE_SNAPSHOT',
+          snapshot: {controllers: {'shopping-cart': {items: []}}},
+        } as ConversationStreamEvent,
+      ]);
+
+      const runtime = GenerativeRuntime.getInstance(engine, 'dispatch-action', config);
+      await runtime.dispatchAction({
+        controllerId: 'shopping-cart',
+        controllerSchema: 'https://schema.thermidor.coveo.com/controllers/cart.schema.json',
+        action: 'updateItemQuantity',
+        payload: {item: {productId: 'p1', quantity: 2}},
+      });
+
+      expect(mockClient.call).toHaveBeenCalledWith(
+        expect.objectContaining({
+          action: {
+            controllerId: 'shopping-cart',
+            controllerSchema: 'https://schema.thermidor.coveo.com/controllers/cart.schema.json',
+            action: 'updateItemQuantity',
+            payload: {item: {productId: 'p1', quantity: 2}},
+          },
+        }),
+        expect.anything()
+      );
+      expect(config.statePort.setStateSnapshot).toHaveBeenCalledWith('active-turn-id', {
+        controllers: {'shopping-cart': {items: []}},
+      });
+    });
+
+    it('rejects when no active turn can receive the resulting snapshot', async () => {
+      const config = createMockConfig();
+      vi.mocked(config.statePort.getActiveTurnId).mockReturnValue(undefined);
+      const runtime = GenerativeRuntime.getInstance(createMockEngine(), 'no-active-turn', config);
+
+      await expect(
+        runtime.dispatchAction({
+          controllerId: 'shopping-cart',
+          controllerSchema: 'https://schema.thermidor.coveo.com/controllers/cart.schema.json',
+          action: 'updateItemQuantity',
+          payload: {},
+        })
+      ).rejects.toThrow('without an active conversation turn');
+    });
+  });
+
   describe('stream consumption', () => {
     it('fails the turn when stream ends without a terminal event', async () => {
       const config = createMockConfig();
@@ -453,16 +506,16 @@ describe('GenerativeRuntime', () => {
       );
     });
 
-    it('handles ACTIVITY_SNAPSHOT by appending surface', async () => {
+    it('normalizes ACTIVITY_SNAPSHOT before appending an activity', async () => {
       const config = createMockConfig();
       const engine = createMockEngine();
-      const surface = {component: 'product-card', data: {id: 'p1'}};
+      const payload = {component: 'product-card', data: {id: 'p1'}};
       setupSuccessfulStream([
         {
           type: 'ACTIVITY_SNAPSHOT',
           messageId: 'm1',
           activityType: 'ui-surface',
-          content: surface,
+          content: payload,
           replace: false,
         } as ConversationStreamEvent,
         {type: 'turn_complete'} as ConversationStreamEvent,
@@ -471,7 +524,12 @@ describe('GenerativeRuntime', () => {
       const runtime = GenerativeRuntime.getInstance(engine, 'activity', config);
       await runtime.submit('Hello');
 
-      expect(config.statePort.appendSurface).toHaveBeenCalledWith('generated-id-1', surface);
+      expect(config.statePort.appendActivity).toHaveBeenCalledWith('generated-id-1', {
+        id: 'm1',
+        kind: 'ui-surface',
+        payload,
+        replace: false,
+      });
     });
 
     it('handles commerce_search_api_response by routing when hydration succeeds', async () => {
@@ -632,17 +690,20 @@ describe('GenerativeRuntime', () => {
       expect(config.statePort.completeTurn).toHaveBeenCalledWith('generated-id-1');
     });
 
-    it('ignores STATE_SNAPSHOT events', async () => {
+    it('stores STATE_SNAPSHOT events as opaque Engine state', async () => {
       const config = createMockConfig();
       const engine = createMockEngine();
+      const snapshot = {controllers: {'featured-products': {products: []}}};
       setupSuccessfulStream([
-        {type: 'STATE_SNAPSHOT'} as ConversationStreamEvent,
+        {type: 'STATE_SNAPSHOT', snapshot} as ConversationStreamEvent,
         {type: 'turn_complete'} as ConversationStreamEvent,
       ]);
 
       const runtime = GenerativeRuntime.getInstance(engine, 'state-snap', config);
       await runtime.submit('Hello');
 
+      expect(config.statePort.initAgentResponse).toHaveBeenCalledWith('generated-id-1');
+      expect(config.statePort.setStateSnapshot).toHaveBeenCalledWith('generated-id-1', snapshot);
       expect(config.statePort.completeTurn).toHaveBeenCalled();
     });
 

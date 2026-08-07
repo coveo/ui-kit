@@ -39,7 +39,7 @@ export type {
   Supports,
 } from '@/src/internal/utils/index.js';
 export type {
-  A2UISurface,
+  Activity,
   AgentMessage,
   AgentResponse,
   ReasoningMessageStep,

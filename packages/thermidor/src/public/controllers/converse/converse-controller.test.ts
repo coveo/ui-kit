@@ -11,11 +11,13 @@ import {
 } from '@/src/public/interfaces/generative.js';
 import {buildConverseController} from './converse-controller.js';
 import type {SerializedConverseState} from './converse-controller-serialization.js';
+import type {RemoteControllerAction} from '../remote/remote-controller.js';
 
 const TEST_ID = 'test-generative';
 
 const mockSubmit = vi.fn<(prompt: string) => Promise<void>>();
 const mockResubmit = vi.fn<(turnId: string, prompt: string) => Promise<void>>();
+const mockDispatchAction = vi.fn<(action: RemoteControllerAction) => Promise<void>>();
 const mockSetConversationSession =
   vi.fn<(sessionId: string | undefined, token: string | undefined) => void>();
 const mockGetConversationSessionId = vi.fn<() => string | undefined>();
@@ -26,6 +28,7 @@ vi.mock('@/src/internal/api/generative/index.js', () => ({
     getInstance: vi.fn(() => ({
       submit: mockSubmit,
       resubmit: mockResubmit,
+      dispatchAction: mockDispatchAction,
       setConversationSession: mockSetConversationSession,
       getConversationSessionId: mockGetConversationSessionId,
       getConversationToken: mockGetConversationToken,
@@ -53,11 +56,13 @@ describe('buildConverseController', () => {
     vi.clearAllMocks();
     mockSubmit.mockReset();
     mockResubmit.mockReset();
+    mockDispatchAction.mockReset();
     mockSetConversationSession.mockReset();
     mockGetConversationSessionId.mockReset();
     mockGetConversationToken.mockReset();
     mockSubmit.mockResolvedValue();
     mockResubmit.mockResolvedValue();
+    mockDispatchAction.mockResolvedValue();
     mockGetConversationSessionId.mockReturnValue(undefined);
     mockGetConversationToken.mockReturnValue(undefined);
     engine = createTestEngine();
@@ -192,6 +197,22 @@ describe('buildConverseController', () => {
       controller.selectTurn({id: 'non-existent'});
 
       expect(controller.state.activeTurn?.id).toBe('turn-1');
+    });
+  });
+
+  describe('dispatchAction()', () => {
+    it('delegates a schema-derived controller action to the runtime', async () => {
+      const controller = buildController();
+      const action = {
+        controllerId: 'shopping-cart',
+        controllerSchema: 'https://schema.thermidor.coveo.com/controllers/cart.schema.json',
+        action: 'updateItemQuantity',
+        payload: {item: {productId: 'p1', quantity: 2}},
+      };
+
+      await controller.dispatchAction(action);
+
+      expect(mockDispatchAction).toHaveBeenCalledWith(action);
     });
   });
 
