@@ -127,18 +127,16 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-      - name: Get affected projects
+      - name: Affected tasks
         id: set
         run: |
-          AFFECTED=$(pnpm exec turbo build --affected --dry-run 2>/dev/null \
-          | awk '/^@(coveo|samples)/ && !/#/ {print $1}' \
-          | tr '\n' ' ')
-          echo "projects=$AFFECTED" >> "$GITHUB_OUTPUT"
-      - name: Log affected projects
-        run: |
-          echo "Affected projects: ${STEPS_SET_OUTPUTS_PROJECTS}"
-        env:
-          STEPS_SET_OUTPUTS_PROJECTS: ${{ steps.set.outputs.projects }}
+          TASKS="$(pnpm exec node scripts/turbo/outdated-tasks.mjs | sort)"
+          echo "Affected tasks:"
+          echo
+          echo "$TASKS"
+
+          echo "tasks=$(echo "$TASKS" | sort -u | tr '\n' ' ')" >> "$GITHUB_OUTPUT"
+          echo "projects=$(echo "$TASKS" | sed 's/#.*//' | sort -u | tr '\n' ' ')" >> "$GITHUB_OUTPUT"
   build-cdn:
     name: Build CDN
     if: ${{ github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/') }}
