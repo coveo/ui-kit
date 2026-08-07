@@ -79,7 +79,7 @@ describe('UnifiedEndpointClient', () => {
 
     expect(response.data.stream).toBe(stream);
     expect(mockedFetch).toHaveBeenCalledWith(
-      'https://test-org-id.admin.org.coveo.com/rest/organizations/test-org-id/commerce/unstable/agentic/converse',
+      'https://test-org-id.org.coveo.com/api/preview/organizations/test-org-id/agents/commerce/agui/converse',
       {
         method: 'POST',
         signal: undefined,
@@ -148,7 +148,7 @@ describe('UnifiedEndpointClient', () => {
     );
 
     expect(mockedFetch).toHaveBeenCalledWith(
-      'https://custom.platform.coveo.com/rest/organizations/test-org-id/commerce/unstable/agentic/converse',
+      'https://custom.platform.coveo.com/api/preview/organizations/test-org-id/agents/commerce/agui/converse',
       expect.objectContaining({
         method: 'POST',
       })

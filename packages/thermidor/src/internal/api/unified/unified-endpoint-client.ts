@@ -29,13 +29,12 @@ const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
 
       const organizationEndpoint = getOrganizationEndpoint(organizationId, {
         endpoint,
-        endpointType: 'admin',
       });
       const url =
         organizationEndpoint +
-        '/rest/organizations/' +
+        '/api/preview/organizations/' +
         organizationId +
-        '/commerce/unstable/agentic/converse';
+        '/agents/commerce/agui/converse';
 
       const response = await fetch(url, {
         method: 'POST',
