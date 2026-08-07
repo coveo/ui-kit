@@ -30,12 +30,12 @@ vi.mock('./log.js', async () => ({log: (await import('./test-support.js')).creat
 
 const {submitReport} = await import('./submit-report.js');
 
-function itemFromEnvelopes(envelopes: unknown[], type: string): Event {
+function envelopeItem(envelopes: unknown[], type: string): Event {
   for (const envelope of envelopes) {
     const [, items] = envelope as [unknown, Array<[{type: string}, Event]>];
-    const match = items.find(([headers]) => headers.type === type);
-    if (match !== undefined) {
-      return match[1];
+    const item = items.find(([headers]) => headers.type === type);
+    if (item !== undefined) {
+      return item[1];
     }
   }
   throw new Error(`Sentry transport did not receive a "${type}" item.`);
@@ -43,10 +43,7 @@ function itemFromEnvelopes(envelopes: unknown[], type: string): Event {
 
 const crashedOn = '2026-07-22T15:00:00.000Z';
 const spanStart = '2026-07-22T14:59:00.000Z';
-
-// Stack frames are already `app:///`-normalized (as the capture side writes them)
-// so the contract can assert the exact projection the real SDK produces.
-const contractReport = createCrashReport({
+const report = createCrashReport({
   runId: 'contract-run',
   crashedOn,
   origin: 'unhandled-rejection',
@@ -92,7 +89,7 @@ const contractReport = createCrashReport({
   },
 });
 
-describe('submit-report contract (real Sentry SDK, no network)', () => {
+describe('submit-report Sentry contract', () => {
   let event: Event;
   let transaction: Event;
 
@@ -101,26 +98,27 @@ describe('submit-report contract (real Sentry SDK, no network)', () => {
     const dir = await mkdtemp(join(tmpdir(), 'create-ui-sentry-contract-'));
     const path = join(dir, 'report.json');
     try {
-      await writeFile(path, JSON.stringify(contractReport));
+      await writeFile(path, JSON.stringify(report));
       expect(await submitReport(path)).toBe(0);
-      event = itemFromEnvelopes(sentryTransport.envelopes, 'event');
-      transaction = itemFromEnvelopes(sentryTransport.envelopes, 'transaction');
+      event = envelopeItem(sentryTransport.envelopes, 'event');
+      transaction = envelopeItem(sentryTransport.envelopes, 'transaction');
     } finally {
       await rm(dir, {recursive: true, force: true});
     }
   });
 
-  // os/runtime contexts are overwritten by the SDK with the live runtime, so the
-  // crash's own os/arch are asserted via tags instead of the (env-dependent) contexts.
-  it('projects the report into the event: metadata, tags, contexts, and privacy', () => {
+  it('serializes the report as a privacy-safe error event', () => {
     expect(event).toMatchObject({
       timestamp: Date.parse(crashedOn) / 1000,
       release: 'create-ui@1.2.3',
       environment: 'production',
       level: 'error',
+      transaction: 'create atomic-search',
       tags: {
         run_id: 'contract-run',
         template: 'atomic-search',
+        template_version: '3.60.2',
+        cli: 'create-ui@1.2.3',
         node: '24.14.1',
         package_manager: 'npm',
         os: 'darwin',
@@ -128,48 +126,82 @@ describe('submit-report contract (real Sentry SDK, no network)', () => {
         crash_origin: 'unhandled-rejection',
       },
       contexts: {
-        device: {cpu_description: 'Apple M1 Pro', processor_count: 10},
+        device: {
+          arch: 'arm64',
+          cpu_description: 'Apple M1 Pro',
+          processor_count: 10,
+          memory_size: 17179869184,
+          free_memory: 2147483648,
+        },
         Custom: {phase: 'dependency-installation', phase_elapsed: '2 s', process_uptime: '3.1 s'},
       },
-      extra: {dependencies: {'@coveo/atomic': '3.60.2'}},
+      extra: {
+        dependencies: {'@coveo/atomic': '3.60.2'},
+        createdOn: '2026-07-22T14:59:00.000Z',
+      },
     });
     expect(event.breadcrumbs ?? []).toEqual([]);
     expect(event).not.toHaveProperty('server_name');
     expect(event).not.toHaveProperty('user');
   });
 
-  it('reconstructs the cause chain as linked exceptions with app:/// frames', () => {
+  it('serializes linked exceptions with normalized application frames', () => {
     const exceptions = event.exception?.values ?? [];
     expect(exceptions.map(({type, value}) => ({type, value}))).toEqual([
       {type: 'TypeError', value: 'root cause'},
       {type: 'Error', value: 'top failure'},
     ]);
-    const top = exceptions.find(({value}) => value === 'top failure');
-    expect(top?.mechanism).toEqual({type: 'unhandled-rejection', handled: false});
-    expect(top?.stacktrace?.frames).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          filename: 'app:///dist/scaffold.js',
-          lineno: 77,
-          colno: 15,
-          in_app: true,
-        }),
-      ])
-    );
+
+    expect(exceptions[0]).toMatchObject({
+      stacktrace: {
+        frames: expect.arrayContaining([
+          expect.objectContaining({
+            filename: 'app:///dist/download.js',
+            lineno: 21,
+            colno: 9,
+            in_app: true,
+          }),
+        ]),
+      },
+    });
+    expect(exceptions[1]).toMatchObject({
+      mechanism: {type: 'unhandled-rejection', handled: false},
+      stacktrace: {
+        frames: expect.arrayContaining([
+          expect.objectContaining({
+            filename: 'app:///dist/scaffold.js',
+            lineno: 77,
+            colno: 15,
+            in_app: true,
+          }),
+        ]),
+      },
+    });
   });
 
-  it('replays the phase spans as a product-named transaction sharing the crash trace', () => {
-    expect(transaction.type).toBe('transaction');
-    expect(transaction.transaction).toBe('create atomic-search');
-    expect(transaction.start_timestamp).toBe(Date.parse(spanStart) / 1000);
-    expect(transaction.timestamp).toBe(Date.parse(crashedOn) / 1000);
-    expect((transaction.spans ?? []).map((span) => span.op)).toEqual(
-      expect.arrayContaining(['input.resolve', 'template.download', 'dependencies.install'])
-    );
-    const downloadSpan = (transaction.spans ?? []).find((span) => span.op === 'template.download');
-    expect(downloadSpan?.description).toBe('atomic-search@3.60.2');
-    expect(downloadSpan?.data).toMatchObject({'coveo.template': 'atomic-search'});
+  it('serializes the stored spans as a transaction on the error trace', () => {
+    expect(transaction).toMatchObject({
+      type: 'transaction',
+      transaction: 'create atomic-search',
+      start_timestamp: Date.parse(spanStart) / 1000,
+      timestamp: Date.parse(crashedOn) / 1000,
+      contexts: {
+        trace: {trace_id: expect.any(String), span_id: expect.any(String), op: 'create-ui'},
+      },
+      spans: expect.arrayContaining([
+        expect.objectContaining({op: 'input.resolve', description: 'Resolve inputs', data: {}}),
+        expect.objectContaining({
+          op: 'template.download',
+          description: 'atomic-search@3.60.2',
+          data: {'coveo.template': 'atomic-search', 'coveo.template_version': '3.60.2'},
+        }),
+        expect.objectContaining({
+          op: 'dependencies.install',
+          description: 'Install dependencies',
+          data: {},
+        }),
+      ]),
+    });
     expect(event.contexts?.trace?.trace_id).toBe(transaction.contexts?.trace?.trace_id);
-    expect(event.transaction).toBe('create atomic-search');
   });
 });
