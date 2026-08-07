@@ -554,19 +554,15 @@ jobs:
       - name: Get affected samples with e2e
         id: set
         run: |
-          pnpm exec turbo run e2e --affected --dry-run=json > turbo-e2e.json 2>/dev/null || echo '{"tasks":[]}' > turbo-e2e.json
-          SAMPLES=$(node -e "
-            let d;
-            try { d = JSON.parse(require('fs').readFileSync('turbo-e2e.json','utf8')); } catch (e) { d = {}; }
-            const tasks = Array.isArray(d.tasks) ? d.tasks : [];
-            const pkgs = tasks
-              .filter(t => t.taskId && t.taskId.endsWith('#e2e') && t.command && t.command !== '<NONEXISTENT>' && t.package && (t.package.startsWith('@samples') || t.package.startsWith('@coveo/ui-kit-sample')))
-              .map(t => t.package);
-            console.log(JSON.stringify(pkgs));
-          " || echo '[]')
-          echo "samples=$SAMPLES" >> "$GITHUB_OUTPUT"
-      - name: Log affected samples
-        run: echo "Affected samples for e2e:${{ steps.set.outputs.samples }}"
+          SAMPLES="$(pnpm exec node scripts/turbo/outdated-tasks.mjs e2e \
+            | grep -E "^@(samples/[^#]+|coveo/ui-kit-samples)#e2e" \
+            | sed 's/#.*//' \
+            | sort)"
+          echo "Affected samples for e2e:"
+          echo
+          echo "$SAMPLES"
+
+          echo "samples=$(echo "$SAMPLES" | tr '\n' ' ')" >> "$GITHUB_OUTPUT"
 
   samples-e2e:
     name: 'E2E: ${{ matrix.sample }}'

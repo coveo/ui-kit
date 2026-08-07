@@ -2,14 +2,8 @@
 import {execFile as execFileCallback} from 'node:child_process';
 import {promisify} from 'node:util';
 
-const turboArgs = [
-  'exec',
-  'turbo',
-  'build',
-  '--affected',
-  '--dry-run=json',
-  '--no-update-notifier',
-];
+const [task = 'build'] = process.argv.slice(2);
+const turboArgs = ['exec', 'turbo', task, '--affected', '--dry-run=json', '--no-update-notifier'];
 const packageManager = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
 const execFile = promisify(execFileCallback);
 
