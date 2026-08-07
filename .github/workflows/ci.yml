@@ -371,7 +371,13 @@ jobs:
       - name: Run Chromatic visual tests
         uses: chromaui/action@14cfaef73576e69f95f47f60058063f46ca38719 # v18.1.0
         id: chromatic-run
-        if: contains(needs.build.outputs.projects, '@coveo/atomic') && github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'chromatic')
+        # Set the CHROMATIC_RENOVATE_ALLOWLIST repository variable to a JSON array of exact branch names.
+        # Example: `["renovate/playwright", "renovate/chromatic"]`
+        if: >-
+          contains(needs.build.outputs.projects, '@coveo/atomic') &&
+          github.event_name == 'pull_request' &&
+          (!startsWith(github.head_ref, 'renovate/') ||
+          contains(fromJSON(vars.CHROMATIC_RENOVATE_ALLOWLIST || '[]'), github.head_ref))
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           workingDir: packages/atomic
