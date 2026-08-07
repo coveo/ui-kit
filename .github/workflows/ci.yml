@@ -12,6 +12,8 @@ permissions:
 
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || 'main' }}
+  TURBO_SCM_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
 
 jobs:
   pr-report:
@@ -38,12 +40,6 @@ jobs:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           fetch-depth: 0
-      - run: git branch ${GITHUB_EVENT_PULL_REQUEST_BASE_REF} origin/${GITHUB_EVENT_PULL_REQUEST_BASE_REF}
-        if: ${{ github.event_name == 'pull_request' }}
-        env:
-          GITHUB_EVENT_PULL_REQUEST_BASE_REF: ${{ github.event.pull_request.base.ref }}
-      - run: git branch main origin/main
-        if: ${{ github.event_name != 'pull_request' }}
       - uses: ./.github/actions/setup
         with:
           skip-build: 'true'
@@ -126,12 +122,6 @@ jobs:
         with:
           fetch-depth: 0
           filter: blob:none
-      - run: git branch ${GITHUB_EVENT_PULL_REQUEST_BASE_REF} origin/${GITHUB_EVENT_PULL_REQUEST_BASE_REF}
-        if: ${{ github.event_name == 'pull_request' }}
-        env:
-          GITHUB_EVENT_PULL_REQUEST_BASE_REF: ${{ github.event.pull_request.base.ref }}
-      - run: git branch main origin/main
-        if: ${{ github.event_name != 'pull_request' }}
       - uses: ./.github/actions/setup
       - name: Get affected projects
         id: set
@@ -249,12 +239,6 @@ jobs:
         with:
           fetch-depth: 0
           filter: blob:none
-      - run: git branch ${GITHUB_EVENT_PULL_REQUEST_BASE_REF} origin/${GITHUB_EVENT_PULL_REQUEST_BASE_REF}
-        if: ${{ github.event_name == 'pull_request' }}
-        env:
-          GITHUB_EVENT_PULL_REQUEST_BASE_REF: ${{ github.event.pull_request.base.ref }}
-      - run: git branch main origin/main
-        if: ${{ github.event_name != 'pull_request' }}
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo test --affected
   relay-tests:
@@ -292,12 +276,6 @@ jobs:
         with:
           fetch-depth: 0
           filter: blob:none
-      - run: git branch ${GITHUB_EVENT_PULL_REQUEST_BASE_REF} origin/${GITHUB_EVENT_PULL_REQUEST_BASE_REF}
-        if: ${{ github.event_name == 'pull_request' }}
-        env:
-          GITHUB_EVENT_PULL_REQUEST_BASE_REF: ${{ github.event.pull_request.base.ref }}
-      - run: git branch main origin/main
-        if: ${{ github.event_name != 'pull_request' }}
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo test:dts:ci --affected
   package-compatibility:
@@ -540,12 +518,6 @@ jobs:
         with:
           fetch-depth: 0
           filter: blob:none
-      - run: git branch ${GITHUB_EVENT_PULL_REQUEST_BASE_REF} origin/${GITHUB_EVENT_PULL_REQUEST_BASE_REF}
-        if: ${{ github.event_name == 'pull_request' }}
-        env:
-          GITHUB_EVENT_PULL_REQUEST_BASE_REF: ${{ github.event.pull_request.base.ref }}
-      - run: git branch main origin/main
-        if: ${{ github.event_name != 'pull_request' }}
       - uses: ./.github/actions/setup
       - name: Get affected samples with e2e
         id: set
