@@ -1,3 +1,16 @@
+## 3.55.0
+
+### Minor Changes
+
+- [#8160](https://github.com/coveo/ui-kit/pull/8160) [`7fd1533`](https://github.com/coveo/ui-kit/commit/7fd15334c494ef03d11016fbf673d97cd9108e8e) - Added `numberOfSuggestions` option to the Commerce SearchBox and StandaloneSearchBox controllers, allowing configuration of how many query suggestions are requested from the API.
+
+  Additionally, the `count` property passed to `registerQuerySuggest` is now sent in the commerce query-suggest API request. Previously it was stored in state but ignored when building the request.
+
+### Patch Changes
+
+- Updated dependencies [[`a1b2af5`](https://github.com/coveo/ui-kit/commit/a1b2af5c56bacd9a3756f55322295da8c13a5217)]:
+  - coveo.analytics@2.32.0
+
 ## 3.54.0
 
 ### Minor Changes

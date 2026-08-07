@@ -1,5 +1,13 @@
 # @coveo/create-ui
 
+## 0.3.0
+
+### Minor Changes
+
+- [#8098](https://github.com/coveo/ui-kit/pull/8098) [`5dfd97c`](https://github.com/coveo/ui-kit/commit/5dfd97c2b10c0409283ffd14c9131265da6ffc27) - Ship source maps in the published package and upload them to Sentry after release for stack trace resolution.
+
+- [#8097](https://github.com/coveo/ui-kit/pull/8097) [`5324b1b`](https://github.com/coveo/ui-kit/commit/5324b1bcb5f7ecb088d14ec18eaaf41a24563f12) - Add opt-in crash reporting to the CLI. When project scaffolding fails unexpectedly, `create-ui` now writes a local crash report and prints a `report` command you can run to submit it to Coveo. Nothing is ever sent automatically, and reporting is skipped entirely when `DO_NOT_TRACK` is set.
+
 ## 0.2.2
 
 ### Patch Changes

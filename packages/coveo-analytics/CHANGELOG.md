@@ -1,5 +1,11 @@
 # coveo.analytics
 
+## 2.32.0
+
+### Minor Changes
+
+- [#8121](https://github.com/coveo/ui-kit/pull/8121) [`a1b2af5`](https://github.com/coveo/ui-kit/commit/a1b2af5c56bacd9a3756f55322295da8c13a5217) - Removed `react-native-get-random-values` from the runtime dependencies. The polyfill is already inlined into `dist/react-native.es.js` at build time, but shipping it as a dependency pulled `react-native`, `metro` and `image-size` into every consumer install, including plain web projects. React Native consumers keep the same behavior with no action required.
+
 ## 2.31.0
 
 ### Minor Changes
