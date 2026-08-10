@@ -177,6 +177,8 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
+        with:
+          build-command: 'pnpm run build' # FIXME: https://coveord.atlassian.net/browse/KIT-6039
       - name: Run knip
         run: pnpm run knip
   cdn-checks:
@@ -320,6 +322,8 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
+        with:
+          build-command: 'pnpm run build' # FIXME: https://coveord.atlassian.net/browse/KIT-6040
       - run: pnpm run package-compatibility
   typedoc:
     name: 'Build typedoc'
