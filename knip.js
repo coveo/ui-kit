@@ -33,6 +33,7 @@ export default {
       ignoreDependencies: [
         // Can be removed once we bump our package to use more recent Angular versions that support Vite 7+.
         'vite',
+        'rxjs',
       ],
     },
     'packages/atomic-angular/projects/atomic-angular': {
