@@ -1,6 +1,6 @@
 {
   "$schema": "https://www.chromatic.com/config-file.schema.json",
-  "buildCommand": "turbo run build:storybook --filter=@coveo/atomic --",
+  "buildCommand": "pnpm --workspace-root exec turbo run build:storybook --filter=@coveo/atomic --",
   "outputDir": "dist-storybook",
   "exitOnceUploaded": true,
   "untraced": ["package.json", "pnpm-lock.yaml", "/virtual:*", "packages/coveo-analytics/**/*"],
