@@ -37,6 +37,16 @@ export class AtomicResultPlaceholder extends LitElement {
           }
         }
 
+        > atomic-result-section-excerpt {
+          @apply set-font-size-base;
+
+          @media (width >= theme(--breakpoint-desktop)) {
+            &.density-comfortable {
+              @apply set-font-size-lg;
+            }
+          }
+        }
+
         .badge {
           width: 14rem;
         }

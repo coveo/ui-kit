@@ -53,6 +53,68 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(LitElement)
         padding-right: var(--atomic-layout-spacing-x);
         padding-left: var(--atomic-layout-spacing-x);
       }
+
+      .result-root.with-sections.display-list {
+        &.density-comfortable {
+          &.child-result:not(.last-child),
+          .placeholder {
+            margin-bottom: 1.75rem;
+          }
+        }
+        &.density-normal {
+          &.child-result:not(.last-child),
+          .placeholder {
+            margin-bottom: 1.5rem;
+          }
+        }
+        &.density-compact {
+          &.child-result:not(.last-child),
+          .placeholder {
+            margin-bottom: 1rem;
+          }
+        }
+
+        @media not all and (width >= theme(--breakpoint-desktop)) {
+          atomic-result-section-children atomic-insight-result-children::part(children-root) {
+            margin: 1rem -1rem 0;
+            padding-right: 1rem;
+            padding-left: 1rem;
+          }
+
+          &.density-comfortable {
+            atomic-result-section-children atomic-insight-result-children::part(children-root) {
+              padding-top: 1.75rem;
+            }
+            atomic-result-section-children atomic-insight-result-children::part(show-hide-button) {
+              margin-top: 1.25rem;
+              margin-bottom: 1.25rem;
+            }
+          }
+          &.density-normal {
+            atomic-result-section-children atomic-insight-result-children::part(children-root) {
+              padding-top: 1.5rem;
+            }
+            atomic-result-section-children atomic-insight-result-children::part(show-hide-button) {
+              margin-top: 0.875rem;
+              margin-bottom: 0.875rem;
+            }
+          }
+          &.density-compact {
+            > atomic-result-section-excerpt {
+              margin-top: 0.75rem;
+              max-height: 1.25rem;
+              @apply line-clamp-1;
+            }
+            atomic-result-section-children atomic-insight-result-children::part(children-root) {
+              padding-top: 1rem;
+            }
+            atomic-result-section-children atomic-insight-result-children::part(show-hide-button) {
+              margin-top: 0.475rem;
+              margin-bottom: 0.475rem;
+            }
+          }
+        }
+      }
     }
 
     :host(:hover) .result-root.with-sections {
