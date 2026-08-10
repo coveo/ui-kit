@@ -28,14 +28,6 @@ function resolveEnvironment(value: string | undefined): PlatformEnvironment {
   return 'dev';
 }
 
-function getOrganizationAdminEndpoint(
-  organizationId: string,
-  environment: PlatformEnvironment
-): string {
-  const environmentSuffix = environment === 'prod' ? '' : environment;
-  return `https://${organizationId}.admin.org${environmentSuffix}.coveo.com`;
-}
-
 function getOrganizationPlatformEndpoint(
   organizationId: string,
   environment: PlatformEnvironment
@@ -44,22 +36,31 @@ function getOrganizationPlatformEndpoint(
   return `https://${organizationId}.org${environmentSuffix}.coveo.com`;
 }
 
-function getProxyTargets(mode: string) {
-  const env = loadEnv(mode, process.cwd(), '');
-  const organizationId = env.VITE_COVEO_ORGANIZATION_ID?.trim();
-  const endpointOverride = env.VITE_COVEO_ENDPOINT?.trim();
-  const environment = resolveEnvironment(env.VITE_COVEO_PLATFORM_ENVIRONMENT);
-
+export function resolveProxyTargets(
+  organizationId: string | undefined,
+  endpointOverride: string | undefined,
+  environment: PlatformEnvironment
+) {
   if (!organizationId) {
     return undefined;
   }
 
   const platform = getOrganizationPlatformEndpoint(organizationId, environment);
-  const admin = endpointOverride
-    ? endpointOverride
-    : getOrganizationAdminEndpoint(organizationId, environment);
 
-  return {admin, platform};
+  return {
+    agentGateway: endpointOverride || platform,
+    platform,
+  };
+}
+
+function getProxyTargets(mode: string) {
+  const env = loadEnv(mode, process.cwd(), '');
+
+  return resolveProxyTargets(
+    env.VITE_COVEO_ORGANIZATION_ID?.trim(),
+    env.VITE_COVEO_ENDPOINT?.trim(),
+    resolveEnvironment(env.VITE_COVEO_PLATFORM_ENVIRONMENT)
+  );
 }
 
 export default defineConfig(({mode}) => {
@@ -76,7 +77,7 @@ export default defineConfig(({mode}) => {
         ? {
             proxy: {
               [`/api/preview/organizations/${orgId}/agents/commerce/agui`]: {
-                target: targets.platform,
+                target: targets.agentGateway,
                 changeOrigin: true,
                 secure: true,
               },
