@@ -33,7 +33,7 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "express": "^5.0.0",
+    "express": "catalog:",
     "msw": "catalog:",
     "typescript": "catalog:"
   }

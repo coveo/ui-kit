@@ -117,7 +117,7 @@
     "@coveo/documentation": "workspace:*",
     "jsdom": "catalog:",
     "live-server": "catalog:",
-    "node-fetch": "3.3.2",
+    "node-fetch": "catalog:",
     "typedoc": "catalog:",
     "vitest": "catalog:"
   },
