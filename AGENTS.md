@@ -7,7 +7,7 @@ This repository uses [`mise.toml`](mise.toml) to manage the CLI toolchain.
 Before using `aws`, `pnpm` or `node`:
 1. If `mise` is not installed, stop and ask the user to install it with `brew install mise`. Do not do it for them.
 2. Run `mise install`
-3. Export all the env vars as given by `mise env`
+3. `export` all the env vars as given by `mise env` in the current shell for the next command invocations. Notably, this will override `PATH`.
 
 Do not use `nvm`, `corepack`, `npx`, or `npm`.
 
