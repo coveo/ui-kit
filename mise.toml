@@ -2,8 +2,9 @@ min_version = "2026.7.0"
 
 [tools]
 awscli = "2.36.13"
-node = "24.18.1"
-pnpm = "10.34.5"
+
+[settings]
+idiomatic_version_file_enable_tools = ["node", "pnpm"]
 
 [tasks.install]
 run = "pnpm install"
