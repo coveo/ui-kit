@@ -14,6 +14,7 @@
     "linkDirectory": false
   },
   "scripts": {
+    "publint": "pnpm run prepack && publint publish --pack=false",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",

@@ -34,6 +34,7 @@
     }
   },
   "scripts": {
+    "publint": "publint",
     "clean": "node ../../utils/ci/rm-rf.mjs dist",
     "gen:lit": "node ./scripts/build-lit.mjs",
     "build:bundles": "rollup --config rollup.config.js",

@@ -26,6 +26,7 @@
     "./ssr-commerce-next": "./dist/ssr-commerce-next/index.js"
   },
   "scripts": {
+    "publint": "publint",
     "build": "tsc --project ./tsconfig.build.json",
     "clean": "node ../../utils/ci/rm-rf.mjs dist",
     "test": "vitest run",

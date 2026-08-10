@@ -47,6 +47,7 @@
     }
   },
   "scripts": {
+    "publint": "publint",
     "dev": "pnpm run build:bundles -- dev",
     "build": "pnpm run build:bundles && pnpm run build:definitions",
     "build:bundles": "node esbuild.mjs",

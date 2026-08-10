@@ -29,7 +29,9 @@
   "publishConfig": {
     "access": "public"
   },
-  "scripts": {},
+  "scripts": {
+    "publint": "publint"
+  },
   "dependencies": {
     "@coveo/create-atomic-component-project": "workspace:*"
   },

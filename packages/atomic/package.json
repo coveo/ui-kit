@@ -55,6 +55,7 @@
     "./custom-elements-manifest": "./custom-elements.json"
   },
   "scripts": {
+    "publint": "publint",
     "clean": "node ../../utils/ci/rm-rf.mjs dist/* dist-storybook/* www/* docs/* playwright-report/*",
     "build:storybook": "storybook build -o dist-storybook",
     "build:cem": "cem analyze",

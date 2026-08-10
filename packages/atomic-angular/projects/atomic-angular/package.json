@@ -9,6 +9,9 @@
   "publishConfig": {
     "directory": "dist"
   },
+  "scripts": {
+    "publint": "publint dist --pack=false"
+  },
   "dependencies": {
     "@coveo/atomic": "workspace:*"
   },

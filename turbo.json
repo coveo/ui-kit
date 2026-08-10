@@ -32,6 +32,10 @@
         "**/*.tsbuildinfo"
       ]
     },
+    "publint": {
+      "dependsOn": ["build"],
+      "outputs": ["publish/**"]
+    },
     "dev": {
       "dependsOn": ["build"],
       "cache": false,
