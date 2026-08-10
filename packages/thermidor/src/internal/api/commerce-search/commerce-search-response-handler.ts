@@ -21,13 +21,12 @@ export function createCommerceSearchEndpointResponseHandler(iface: InterfaceHand
   return (engine: FullEngine, response: CommerceSearchResponse) => {
     engine.mutate(productListActions.setProductsFromResponse(response.products));
 
+    const perPage = response.pagination.perPage ?? response.pagination.pageSize!;
     engine.mutate(paginationActions.setTotalCount(response.pagination.totalEntries));
-    engine.mutate(
-      paginationActions.setFirstResult(response.pagination.page * response.pagination.perPage)
-    );
-    engine.mutate(paginationActions.setPageSize(response.pagination.perPage));
+    engine.mutate(paginationActions.setFirstResult(response.pagination.page * perPage));
+    engine.mutate(paginationActions.setPageSize(perPage));
 
-    if (response.facets.length > 0) {
+    if (response.facets && response.facets.length > 0) {
       engine.mutate(
         facetActions.updateFromResponse(response.facets as unknown as CoveoFacetResponse[])
       );
@@ -46,7 +45,7 @@ export function createCommerceSearchEndpointResponseHandler(iface: InterfaceHand
       );
     }
 
-    if (response.triggers.length > 0) {
+    if (response.triggers && response.triggers.length > 0) {
       engine.mutate(triggersActions.setTriggers(response.triggers));
     }
 

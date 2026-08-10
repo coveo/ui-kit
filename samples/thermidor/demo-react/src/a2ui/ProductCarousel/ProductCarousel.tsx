@@ -16,11 +16,19 @@ interface ProductItem {
   clickUri?: string;
 }
 
-export function A2UIProductCarousel({surface}: A2UIProductCarouselProps) {
-  const heading =
-    (surface.componentProps.heading as {literalString?: string})?.literalString ?? 'Products';
+interface ProductCarouselData {
+  heading?: {
+    value?: string;
+  };
+  products?: {
+    items?: ProductItem[];
+  };
+}
 
-  const items = (surface.data.items as ProductItem[]) ?? [];
+export function A2UIProductCarousel({surface}: A2UIProductCarouselProps) {
+  const data = surface.data as ProductCarouselData;
+  const heading = data.heading?.value ?? 'Products';
+  const items = data.products?.items ?? [];
   const trackRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);

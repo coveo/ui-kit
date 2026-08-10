@@ -47,6 +47,70 @@ describe('sort controller', () => {
       expect(result).toBeUndefined();
     });
 
+    it('passes actionIntent with set_sort for a single relevance criterion', async () => {
+      const controller = buildSortController({interface: searchInterface});
+      const mutateSpy = vi.spyOn(fullEngine, 'mutate');
+
+      controller.sortBy({by: 'relevance'});
+
+      const thunkResult = mutateSpy.mock.results.find(
+        (r) => r.value && typeof r.value === 'object' && 'then' in r.value
+      );
+
+      expect(thunkResult).toBeDefined();
+      const resolved = await thunkResult!.value;
+      expect(resolved?.meta?.arg?.actionIntent).toEqual({
+        name: 'set_sort',
+        context: {sortCriteria: 'relevance', fields: undefined},
+      });
+    });
+
+    it('passes actionIntent with set_sort and fields for field sort', async () => {
+      const controller = buildSortController({interface: searchInterface});
+      const mutateSpy = vi.spyOn(fullEngine, 'mutate');
+
+      controller.sortBy({by: 'field', field: 'price', direction: 'ascending'});
+
+      const thunkResult = mutateSpy.mock.results.find(
+        (r) => r.value && typeof r.value === 'object' && 'then' in r.value
+      );
+
+      expect(thunkResult).toBeDefined();
+      const resolved = await thunkResult!.value;
+      expect(resolved?.meta?.arg?.actionIntent).toEqual({
+        name: 'set_sort',
+        context: {
+          sortCriteria: 'fields',
+          fields: [{field: 'price', direction: 'asc'}],
+        },
+      });
+    });
+
+    it('passes actionIntent with set_sort and fields for compound array with field sorts', async () => {
+      const controller = buildSortController({interface: searchInterface});
+      const mutateSpy = vi.spyOn(fullEngine, 'mutate');
+      const compound = [
+        {by: 'field' as const, field: 'price', direction: 'ascending' as const},
+        {by: 'date' as const, direction: 'descending' as const},
+      ];
+
+      controller.sortBy(compound);
+
+      const thunkResult = mutateSpy.mock.results.find(
+        (r) => r.value && typeof r.value === 'object' && 'then' in r.value
+      );
+
+      expect(thunkResult).toBeDefined();
+      const resolved = await thunkResult!.value;
+      expect(resolved?.meta?.arg?.actionIntent).toEqual({
+        name: 'set_sort',
+        context: {
+          sortCriteria: 'fields',
+          fields: [{field: 'price', direction: 'asc'}],
+        },
+      });
+    });
+
     it('accepts a compound array', () => {
       const controller = buildSortController({interface: searchInterface});
       const compound = [

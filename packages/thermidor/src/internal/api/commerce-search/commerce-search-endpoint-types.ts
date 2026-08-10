@@ -86,7 +86,8 @@ export interface CommerceSearchFacetResponse {
 
 export interface CommerceSearchPagination {
   page: number;
-  perPage: number;
+  perPage?: number;
+  pageSize?: number;
   totalEntries: number;
   totalPages: number;
 }

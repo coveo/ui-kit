@@ -32,6 +32,16 @@ import '@/src/components/search/atomic-result-link/atomic-result-link';
 @customElement('atomic-recs-result')
 @withTailwindStyles
 export class AtomicRecsResult extends ChildrenUpdateCompleteMixin(LitElement) {
+  private static readonly propsSchema = new Schema({
+    display: new StringValue({constrainTo: ['grid', 'list', 'table']}),
+    density: new StringValue({
+      constrainTo: ['normal', 'comfortable', 'compact'],
+    }),
+    imageSize: new StringValue({
+      constrainTo: ['small', 'large', 'icon', 'none'],
+    }),
+  });
+
   private resultRootRef?: HTMLElement;
   private linkContainerRef?: HTMLElement;
   private itemLayoutController!: ItemLayoutController;
@@ -139,15 +149,7 @@ export class AtomicRecsResult extends ChildrenUpdateCompleteMixin(LitElement) {
         density: this.density,
         imageSize: this.imageSize,
       }),
-      new Schema({
-        display: new StringValue({constrainTo: ['grid', 'list', 'table']}),
-        density: new StringValue({
-          constrainTo: ['normal', 'comfortable', 'compact'],
-        }),
-        imageSize: new StringValue({
-          constrainTo: ['small', 'large', 'icon', 'none'],
-        }),
-      })
+      AtomicRecsResult.propsSchema
     );
   }
 

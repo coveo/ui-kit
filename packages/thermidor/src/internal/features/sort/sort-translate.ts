@@ -1,4 +1,5 @@
-import type {SearchSortCriterion, CommerceSortCriterion} from './sort-types.js';
+import type {SetSortContext} from '@/src/internal/api/unified/unified-endpoint-types.js';
+import type {SearchSortCriterion, CommerceSortCriterion, SortByField} from './sort-types.js';
 
 export interface CommerceApiSortField {
   field: string;
@@ -64,4 +65,26 @@ export function fromCommerceApiSort(raw: CommerceApiSortPayload): CommerceSortCr
   }
 
   return {by: 'relevance'};
+}
+
+export function toSetSortContext(
+  criterion:
+    | SearchSortCriterion
+    | CommerceSortCriterion
+    | (SearchSortCriterion | CommerceSortCriterion)[]
+): SetSortContext {
+  const criteria = Array.isArray(criterion) ? criterion : [criterion];
+  const fieldSorts = criteria.filter((c): c is SortByField => c.by === 'field');
+
+  if (fieldSorts.length > 0) {
+    return {
+      sortCriteria: 'fields',
+      fields: fieldSorts.map((c) => ({
+        field: c.field,
+        direction: c.direction === 'ascending' ? 'asc' : 'desc',
+      })),
+    };
+  }
+
+  return {sortCriteria: criteria[0]?.by ?? 'relevance'};
 }

@@ -1,6 +1,7 @@
 import type {Supports} from '@/src/internal/utils/index.js';
 import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import {getOrCreateSearchBoxActions} from '@/src/internal/features/search-box/index.js';
+import {getOrCreateSearchBoxSelectors} from '@/src/internal/features/search-box/index.js';
 import {getOrCreateSearchBoxSlice} from '@/src/internal/features/search-box/index.js';
 
 export interface LoadSearchBoxActionsOptions {
@@ -20,13 +21,17 @@ export function loadSearchBoxActions(options: LoadSearchBoxActionsOptions) {
   const thunk = resolveFacade('search');
 
   const actions = getOrCreateSearchBoxActions(options.interface);
+  const selectors = getOrCreateSearchBoxSelectors(options.interface);
 
   return {
     setQuery(payload: {query: string}) {
       engine.mutate(actions.setQuery(payload.query));
     },
     async submit() {
-      await engine.mutate(thunk({engine}));
+      const query = engine.read(selectors.getQuery);
+      await engine.mutate(
+        thunk({engine, actionIntent: {name: 'execute_search', context: {query}}})
+      );
     },
   };
 }

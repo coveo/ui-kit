@@ -22,6 +22,7 @@ export interface SurfaceRendererProps {
   surfaces: A2UISurface[];
   onAction?: (text: string, type: string) => void;
   isStreaming?: boolean;
+  pendingSkeletons?: string[];
 }
 
 interface RenderEntry {
@@ -37,7 +38,12 @@ interface SkeletonEntry {
 
 type RenderItem = RenderEntry | SkeletonEntry;
 
-export function SurfaceRenderer({surfaces, onAction, isStreaming = true}: SurfaceRendererProps) {
+export function SurfaceRenderer({
+  surfaces,
+  onAction,
+  isStreaming = true,
+  pendingSkeletons = [],
+}: SurfaceRendererProps) {
   const allParsed = useMemo(() => {
     const result: ParsedSurface[] = [];
     for (const surface of surfaces) {
@@ -87,6 +93,7 @@ export function SurfaceRenderer({surfaces, onAction, isStreaming = true}: Surfac
     }
 
     if (isStreaming) {
+      // Legacy skeleton surfaces from the stream
       for (const [componentType, skeletonIds] of skeletonIdsByType) {
         const realCount = realCountByType.get(componentType) ?? 0;
         const remaining = Math.max(0, skeletonIds.size - realCount);
@@ -99,10 +106,22 @@ export function SurfaceRenderer({surfaces, onAction, isStreaming = true}: Surfac
           });
         }
       }
+
+      // Skeletons from pending render plan (tool call hints)
+      for (const componentType of pendingSkeletons) {
+        const realCount = realCountByType.get(componentType) ?? 0;
+        if (realCount === 0) {
+          items.push({
+            type: 'skeleton',
+            surfaceId: `pending-${componentType}`,
+            componentType,
+          });
+        }
+      }
     }
 
     return items;
-  }, [allParsed, isStreaming]);
+  }, [allParsed, isStreaming, pendingSkeletons]);
 
   if (renderItems.length === 0) {
     return null;

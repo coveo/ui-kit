@@ -136,6 +136,17 @@ export class AtomicCommerceProductList
   public searchOrListing!: Search | ProductListing;
   public summary!: Summary<ProductListingSummaryState | SearchSummaryState>;
 
+  private static readonly propsSchema = new Schema({
+    density: new StringValue({
+      constrainTo: ['normal', 'comfortable', 'compact'],
+    }),
+    display: new StringValue({constrainTo: ['grid', 'list', 'table']}),
+    imageSize: new StringValue({
+      constrainTo: ['small', 'large', 'icon', 'none'],
+    }),
+    numberOfPlaceholders: new NumberValue({min: 0}),
+  });
+
   private itemRenderingFunction: ItemRenderingFunction;
   private loadingFlag = randomID('firstProductLoaded-');
   private nextNewResultTarget?: FocusTargetController;
@@ -307,16 +318,7 @@ export class AtomicCommerceProductList
   }
 
   private validateProps() {
-    new Schema({
-      density: new StringValue({
-        constrainTo: ['normal', 'comfortable', 'compact'],
-      }),
-      display: new StringValue({constrainTo: ['grid', 'list', 'table']}),
-      imageSize: new StringValue({
-        constrainTo: ['small', 'large', 'icon', 'none'],
-      }),
-      numberOfPlaceholders: new NumberValue({min: 0}),
-    }).validate({
+    AtomicCommerceProductList.propsSchema.validate({
       density: this.density,
       display: this.display,
       imageSize: this.imageSize,
