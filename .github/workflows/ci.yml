@@ -65,6 +65,7 @@ jobs:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           ref: ${{ github.head_ref }}
+          fetch-depth: 0
       - uses: ./.github/actions/setup
   build-missing:
     name: 'Build & commit missing generated files'
@@ -82,6 +83,7 @@ jobs:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           ref: ${{ github.head_ref }}
+          fetch-depth: 0
       - uses: ./.github/actions/setup
       - name: Check for uncommitted changes
         id: check-changes
@@ -168,6 +170,8 @@ jobs:
         with:
           egress-policy: audit
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
       - name: Run knip
         run: pnpm run knip
@@ -203,6 +207,8 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
       - run: pnpm run lint:check
   validate-light-dom-styles:
@@ -216,6 +222,8 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
       - run: pnpm --filter @coveo/atomic run validate:light-dom-styles
   validate-no-new-light-dom:
@@ -229,6 +237,8 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
       - run: pnpm --filter @coveo/atomic run validate:no-new-light-dom
   unit-test:
@@ -311,6 +321,8 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
       - run: pnpm run package-compatibility
   typedoc:
@@ -325,6 +337,8 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
       - name: 'Build headless typedoc'
         run: pnpm run build:typedoc
@@ -344,6 +358,8 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/puppeteer-atomic-csp
 
@@ -408,6 +424,8 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/playwright-atomic
         with:
@@ -426,6 +444,8 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
       - name: Merge Playwright reports
         uses: ./.github/actions/merge-playwright-reports
@@ -449,6 +469,8 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/playwright-atomic-theming
   storybook-atomic:
@@ -583,6 +605,8 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run e2e --filter=${{ matrix.sample }}
       - name: Upload Playwright report
@@ -608,6 +632,8 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/playwright-pkg-new-template
   playwright-atomic-hosted-page-test:
@@ -625,6 +651,8 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/playwright-atomic-hosted-pages
   e2e-quantic:
@@ -652,6 +680,8 @@ jobs:
         with:
           egress-policy: audit
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
       - name: Resolve catalog references in pkg.pr.new templates
         run: node packages/pkg-new-template/scripts/flatten-catalog.mjs
