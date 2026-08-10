@@ -308,12 +308,10 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-      - name: 'Build headless typedoc'
-        run: pnpm run build:typedoc
-        working-directory: packages/headless
-      - name: 'Build headless-react typedoc'
-        run: pnpm run build:typedoc
-        working-directory: packages/headless-react
+        with:
+          skip-build: 'true'
+      - name: 'Build headless and headless-react typedoc'
+        run: pnpm turbo build:typedoc --affected
   puppeteer-atomic-csp:
     name: 'Run e2e tests on Atomic CSP'
     needs: build

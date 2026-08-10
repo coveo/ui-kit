@@ -134,8 +134,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build typedoc site
-        run: pnpm run build:typedoc
-        working-directory: packages/headless
+        run: pnpm turbo build:typedoc --filter=@coveo/headless
         shell: bash
 
       - name: Read version from package.json
@@ -175,8 +174,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build typedoc site
-        run: pnpm run build:typedoc
-        working-directory: packages/headless-react
+        run: pnpm turbo build:typedoc --filter=@coveo/headless-react
         shell: bash
 
       - name: Read version from package.json
