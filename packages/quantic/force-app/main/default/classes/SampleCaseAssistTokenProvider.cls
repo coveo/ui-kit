@@ -1,18 +1,18 @@
 /**
- * Return a static sample configuration with pre-configured value for the sample organization.
+ * Return a static sample configuration with pre-configured value for the sample organization (Case Assist use case).
  */
-global with sharing class SampleTokenProvider implements ITokenProvider {
+global with sharing class SampleCaseAssistTokenProvider implements ITokenProvider {
   /**
    * @see `ITokenProvider.getHeadlessConfiguration`.
    */
-  public static String getHeadlessConfiguration() {
+  @AuraEnabled
+  global static String getHeadlessConfiguration() {
     Map<String, String> headlessConfiguration = new Map<String, String>();
     headlessConfiguration.put('organizationId', 'searchuisamples');
     headlessConfiguration.put(
       'accessToken',
       // This API key is intentionally public — it belongs to a sample organization used for samples/docs.
-      // Name: Quantic__sampleTokenProvider_key_dnd - Anonymous Search key.
-      'xxb9c21134-8dad-4d53-8a5e-855bacddba8f'
+      'xx564559b1-0045-48e1-953c-3addd1ee4457'
     );
     return JSON.serialize(headlessConfiguration);
   }
