@@ -9,7 +9,7 @@ inputs:
   build-command:
     description: 'Command used to build. Defaults to building every package.'
     required: false
-    default: 'pnpm run build'
+    default: 'pnpm run build --affected'
 #endregion
 runs:
   using: composite
