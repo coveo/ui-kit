@@ -53,6 +53,10 @@ export class AtomicInsightPager
   extends LitElement
   implements InitializableComponent<InsightBindings>
 {
+  private static readonly propsSchema = new Schema({
+    numberOfPages: new NumberValue({min: 0}),
+  });
+
   static styles = css`
     @reference '../../../utils/tailwind.global.tw.css';
 
@@ -102,9 +106,7 @@ export class AtomicInsightPager
       () => ({
         numberOfPages: this.numberOfPages,
       }),
-      new Schema({
-        numberOfPages: new NumberValue({min: 0}),
-      })
+      AtomicInsightPager.propsSchema
     );
   }
 

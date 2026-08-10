@@ -43,6 +43,10 @@ export class AtomicCommerceFacets
   extends LightDomMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
+  private static readonly propsSchema = new Schema({
+    collapseFacetsAfter: new NumberValue({min: -1, required: true}),
+  });
+
   @state()
   bindings!: CommerceBindings;
 
@@ -86,9 +90,7 @@ export class AtomicCommerceFacets
   }
 
   private validateProps() {
-    new Schema({
-      collapseFacetsAfter: new NumberValue({min: -1, required: true}),
-    }).validate({
+    AtomicCommerceFacets.propsSchema.validate({
       collapseFacetsAfter: this.collapseFacetsAfter,
     });
   }
