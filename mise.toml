@@ -7,4 +7,4 @@ awscli = "2.36.13"
 idiomatic_version_file_enable_tools = ["node", "pnpm"]
 
 [tasks.install]
-run = "pnpm install"
+run = "pnpm install --frozen-lockfile"
