@@ -6,6 +6,14 @@ on:
         required: false
         type: string
         default: 'pull_request'
+      turbo_scm_base:
+        description: 'The base commit used by Turborepo to determine affected projects'
+        required: true
+        type: string
+      turbo_scm_head:
+        description: 'The head commit used by Turborepo to determine affected projects'
+        required: true
+        type: string
     secrets:
       SFDX_AUTH_CLIENT_ID:
         required: true
@@ -20,6 +28,8 @@ permissions:
 
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_SCM_BASE: ${{ inputs.turbo_scm_base }}
+  TURBO_SCM_HEAD: ${{ inputs.turbo_scm_head }}
 
 jobs:
   e2e-quantic-setup:
@@ -36,6 +46,8 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/setup-sfdx
       - uses: ./.github/actions/e2e-quantic-setup
@@ -56,6 +68,8 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/post-scratch-org-links-on-pr
   e2e-quantic-playwright-test:
     name: 'Run Playwright e2e tests on Quantic'
@@ -76,6 +90,8 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/playwright-quantic
         with:
@@ -95,6 +111,8 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
       - name: Merge Playwright reports
         uses: ./.github/actions/merge-playwright-reports
@@ -114,6 +132,8 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/setup-sfdx
       - name: Delete Quantic scratch orgs

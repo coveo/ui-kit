@@ -1,6 +1,6 @@
 {
   "name": "@coveo/ui-kit-sample-headless-ssr-commerce-nextjs",
-  "version": "2.9.27",
+  "version": "2.9.28",
   "description": "Commerce server-side rendering (SSR) with @coveo/headless-react/ssr-commerce and the Next.js App Router",
   "repository": {
     "type": "git",
@@ -14,6 +14,7 @@
     "linkDirectory": false
   },
   "scripts": {
+    "publint": "pnpm run prepack && publint publish --pack=false",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

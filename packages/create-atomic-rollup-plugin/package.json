@@ -26,6 +26,7 @@
     "access": "public"
   },
   "scripts": {
+    "publint": "publint",
     "clean": "node ../../utils/ci/rm-rf.mjs dist",
     "build": "pnpm run clean && pnpm run build:ts",
     "build:ts": "tsc -p tsconfig.json",
