@@ -83,6 +83,15 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(LitElement)
           }
         }
 
+        @media (width >= theme(--breakpoint-desktop)) {
+          &.density-normal,
+          &.density-compact {
+            atomic-result-section-children {
+              margin-top: 0;
+            }
+          }
+        }
+
         @media not all and (width >= theme(--breakpoint-desktop)) {
           atomic-result-section-children atomic-insight-result-children::part(children-root) {
             margin: 1rem -1rem 0;
