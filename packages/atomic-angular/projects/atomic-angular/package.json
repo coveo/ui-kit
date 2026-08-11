@@ -15,6 +15,9 @@
   "dependencies": {
     "@coveo/atomic": "workspace:*"
   },
+  "devDependencies": {
+    "publint": "catalog:"
+  },
   "peerDependencies": {
     "@angular/common": "14 - 21",
     "@angular/core": "14 - 21",
