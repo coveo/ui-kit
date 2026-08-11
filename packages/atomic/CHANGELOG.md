@@ -1,3 +1,17 @@
+## 3.60.5
+
+### Patch Changes
+
+- [#8178](https://github.com/coveo/ui-kit/pull/8178) [`64e9884`](https://github.com/coveo/ui-kit/commit/64e988411fce135d72a529d3569cd0657c75a1e8) - Hide the decorative table loading placeholder from assistive technologies. The skeleton `atomic-result-table-placeholder` was exposed as an unlabeled `table` role, so screen readers announced an empty table during loading. It is now marked `aria-hidden`, leaving the actual results/products table as the only exposed table.
+
+- [#8125](https://github.com/coveo/ui-kit/pull/8125) [`48407c4`](https://github.com/coveo/ui-kit/commit/48407c44a7859ff42bf4195d4a65d495aa54565e) - Optimized validation schema declarations in Lit components by declaring Bueno schemas as private static readonly class properties, reducing memory allocation when multiple instances of the same component are present on a page.
+
+- [#8162](https://github.com/coveo/ui-kit/pull/8162) [`7ac71d6`](https://github.com/coveo/ui-kit/commit/7ac71d6f001239eaed0829048a5d6780b1484e21) - Prevent citation text overflow by breaking long words.
+
+- Updated dependencies [[`7fd1533`](https://github.com/coveo/ui-kit/commit/7fd15334c494ef03d11016fbf673d97cd9108e8e)]:
+  - @coveo/headless@3.55.0
+  - @coveo/atomic-legacy@0.0.27
+
 ## 3.60.4
 
 ### Patch Changes

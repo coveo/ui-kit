@@ -33,6 +33,7 @@
     "test:watch": "vitest"
   },
   "devDependencies": {
+    "esbuild-plugin-umd-wrapper": "catalog:",
     "vitest": "catalog:"
   },
   "engines": {
