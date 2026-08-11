@@ -35,6 +35,7 @@
   },
   "devDependencies": {
     "esbuild-plugin-umd-wrapper": "catalog:",
+    "publint": "catalog:",
     "vitest": "catalog:"
   },
   "engines": {

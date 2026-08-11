@@ -45,6 +45,7 @@
   "devDependencies": {
     "@types/node": "catalog:",
     "@types/pacote": "11.1.8",
+    "publint": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },

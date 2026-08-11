@@ -31,6 +31,7 @@
     "@playwright/test": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "msw": "catalog:",
+    "publint": "catalog:",
     "vite": "catalog:"
   },
   "browserslist": {

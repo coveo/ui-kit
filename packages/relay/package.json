@@ -55,6 +55,7 @@
     "@vitest/browser-playwright": "catalog:",
     "jsdom": "catalog:",
     "playwright": "catalog:",
+    "publint": "catalog:",
     "rollup": "catalog:",
     "typedoc": "catalog:",
     "vitest": "catalog:"

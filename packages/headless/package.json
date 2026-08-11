@@ -121,6 +121,7 @@
     "jsdom": "catalog:",
     "live-server": "catalog:",
     "node-fetch": "3.3.2",
+    "publint": "catalog:",
     "typedoc": "catalog:",
     "vitest": "catalog:"
   },
