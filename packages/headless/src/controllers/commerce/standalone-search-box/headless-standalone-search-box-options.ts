@@ -16,6 +16,11 @@ export interface StandaloneSearchBoxOptions extends SearchBoxOptions {
   overwrite?: boolean;
 }
 
+export type ResolvedStandaloneSearchBoxOptions = Required<
+  Omit<StandaloneSearchBoxOptions, 'numberOfSuggestions'>
+> &
+  Pick<StandaloneSearchBoxOptions, 'numberOfSuggestions'>;
+
 export const standaloneSearchBoxSchema = new Schema<Required<StandaloneSearchBoxOptions>>({
   ...searchBoxOptionDefinitions,
   redirectionUrl: new StringValue({

@@ -12,7 +12,7 @@ export function useBuildController<TController extends Controller<any>>(
   const controller = controllerRef.current;
 
   const subscribe = useCallback(
-    (onStoreChange: () => void) => controller.subscribe(onStoreChange),
+    (listener: () => void) => controller.subscribe(listener),
     [controller]
   );
 

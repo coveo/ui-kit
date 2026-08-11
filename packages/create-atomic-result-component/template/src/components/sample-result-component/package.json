@@ -30,7 +30,7 @@
     "@stencil/core": "catalog:"
   },
   "devDependencies": {
-    "@coveo/atomic-component-health-check": "2.2.19",
+    "@coveo/atomic-component-health-check": "catalog:",
     "@rollup/plugin-url": "catalog:",
     "@types/jest": "catalog:",
     "jest": "catalog:",

@@ -20,19 +20,21 @@ export const renderGeneratedContentContainer: FunctionalComponentWithChildren<
 > = ({props}) => {
   return (children) => html`
     <div part="generated-container">
-      ${props.answerContentFormat === 'text/markdown'
-        ? renderGeneratedMarkdownContent({
-            props: {
-              answer: props.answer,
-              isStreaming: props.isStreaming,
-            } satisfies GeneratedMarkdownContentProps,
-          })
-        : renderGeneratedTextContent({
-            props: {
-              answer: props.answer,
-              isStreaming: props.isStreaming,
-            } satisfies GeneratedTextContentProps,
-          })}
+      ${
+        props.answerContentFormat === 'text/markdown'
+          ? renderGeneratedMarkdownContent({
+              props: {
+                answer: props.answer,
+                isStreaming: props.isStreaming,
+              } satisfies GeneratedMarkdownContentProps,
+            })
+          : renderGeneratedTextContent({
+              props: {
+                answer: props.answer,
+                isStreaming: props.isStreaming,
+              } satisfies GeneratedTextContentProps,
+            })
+      }
       <div class="footer">${children}</div>
     </div>
   `;

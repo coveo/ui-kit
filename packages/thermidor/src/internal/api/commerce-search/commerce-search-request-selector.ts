@@ -5,7 +5,7 @@ import {getOrCreatePaginationSelectors} from '@/src/internal/features/pagination
 import {getOrCreateFacetsSelectors} from '@/src/internal/features/facets/index.js';
 import {getOrCreateSortSelectors} from '@/src/internal/features/sort/index.js';
 import {getOrCreateConfigurationSelectors} from '@/src/internal/features/configuration/index.js';
-import type {CommerceSearchSortCriterion} from '@/src/internal/api/commerce-search/index.js';
+import type {CommerceApiSortPayload} from '@/src/internal/features/sort/index.js';
 
 export interface CommerceSearchEndpointRequest {
   trackingId: string;
@@ -16,7 +16,7 @@ export interface CommerceSearchEndpointRequest {
   page: number;
   perPage: number;
   facets: Array<{facetId: string; selectedValues: string[]}>;
-  sort: CommerceSearchSortCriterion[];
+  sort: CommerceApiSortPayload | undefined;
   context: {view: {url: string}};
 }
 

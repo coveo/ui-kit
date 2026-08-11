@@ -36,6 +36,15 @@ type InsightInteractiveResultContextEvent<
 @customElement('atomic-insight-result')
 @withTailwindStyles
 export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(LitElement) {
+  private static readonly propsSchema = new Schema({
+    density: new StringValue({
+      constrainTo: ['normal', 'comfortable', 'compact'],
+    }),
+    imageSize: new StringValue({
+      constrainTo: ['small', 'large', 'icon', 'none'],
+    }),
+  });
+
   private resultRootRef: Ref<HTMLElement> = createRef();
   private itemLayoutController!: ItemLayoutController;
 
@@ -217,14 +226,7 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(LitElement)
         density: this.density,
         imageSize: this.imageSize,
       }),
-      new Schema({
-        density: new StringValue({
-          constrainTo: ['normal', 'comfortable', 'compact'],
-        }),
-        imageSize: new StringValue({
-          constrainTo: ['small', 'large', 'icon', 'none'],
-        }),
-      })
+      AtomicInsightResult.propsSchema
     );
   }
 

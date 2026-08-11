@@ -124,41 +124,43 @@ export class CartPage extends LitElement {
 
     return html`
       <h1>Cart</h1>
-      ${isEmpty
-        ? html`<p class="muted">Your cart is empty.</p>`
-        : html`
-            <ul class="items">
-              ${state.items.map(
-                (item) => html`
-                  <li class="item">
-                    <div>
-                      <div class="item-name">${item.name}</div>
-                      <div class="item-meta">
-                        $${item.price} × ${item.quantity} =
-                        $${(item.price * item.quantity).toFixed(2)}
+      ${
+        isEmpty
+          ? html`<p class="muted">Your cart is empty.</p>`
+          : html`
+              <ul class="items">
+                ${state.items.map(
+                  (item) => html`
+                    <li class="item">
+                      <div>
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-meta">
+                          $${item.price} × ${item.quantity} =
+                          $${(item.price * item.quantity).toFixed(2)}
+                        </div>
                       </div>
-                    </div>
-                    <div class="actions">
-                      <button type="button" @click=${() => this.#adjust(item, 1)}>Add one</button>
-                      <button type="button" @click=${() => this.#adjust(item, -1)}>
-                        Remove one
-                      </button>
-                      <button type="button" @click=${() => this.#adjust(item, -item.quantity)}>
-                        Remove all
-                      </button>
-                    </div>
-                  </li>
-                `
-              )}
-            </ul>
-            <div class="summary">
-              <span class="total">Total: $${state.totalPrice.toFixed(2)}</span>
-              <button type="button" class="purchase" @click=${() => this.#purchase()}>
-                Purchase
-              </button>
-              <button type="button" @click=${() => this.cart.empty()}>Empty cart</button>
-            </div>
-          `}
+                      <div class="actions">
+                        <button type="button" @click=${() => this.#adjust(item, 1)}>Add one</button>
+                        <button type="button" @click=${() => this.#adjust(item, -1)}>
+                          Remove one
+                        </button>
+                        <button type="button" @click=${() => this.#adjust(item, -item.quantity)}>
+                          Remove all
+                        </button>
+                      </div>
+                    </li>
+                  `
+                )}
+              </ul>
+              <div class="summary">
+                <span class="total">Total: $${state.totalPrice.toFixed(2)}</span>
+                <button type="button" class="purchase" @click=${() => this.#purchase()}>
+                  Purchase
+                </button>
+                <button type="button" @click=${() => this.cart.empty()}>Empty cart</button>
+              </div>
+            `
+      }
 
       <section>
         <h2>Recommended for you</h2>

@@ -129,16 +129,14 @@ export class SearchObject {
   }
 
   async mockSearchFacetOrder(facetIds: string[]): Promise<void> {
+    await this.page.unroute(this.searchRequestRegex);
     await this.page.route(this.searchRequestRegex, async (route) => {
-      const apiResponse = await this.page.request.fetch(route.request());
-      const originalBody = await apiResponse.json();
+      const originalBody = {...searchResponses.richResponse};
       const facets = originalBody.facets;
       const reorderedFacets: unknown[] = [];
 
       facetIds.forEach((facetId, idx) => {
-        const facet = facets.find(
-          (f: {facetId: string}) => f.facetId === facetId
-        );
+        const facet = facets.find((f) => f.facetId === facetId);
         if (facet) {
           reorderedFacets.push({
             ...facet,
@@ -163,11 +161,12 @@ export class SearchObject {
 
   async mockEmptySearchResponse() {
     await this.page.route(this.searchRequestRegex, async (route) => {
-      const apiResponse = await this.page.request.fetch(route.request());
-      const originalBody = await apiResponse.json();
-      originalBody.results = [];
-      originalBody.totalCount = 0;
-      originalBody.totalCountFiltered = 0;
+      const originalBody = {
+        ...searchResponses.richResponse,
+        results: [],
+        totalCount: 0,
+        totalCountFiltered: 0,
+      };
 
       await route.fulfill({
         body: JSON.stringify(originalBody),

@@ -44,3 +44,15 @@ export type {
   PaginationControllerOptions,
   PaginationControllerState,
 } from './pagination/pagination-controller.js';
+export {buildSortController} from './sort/sort-controller.js';
+export type {
+  SortController,
+  SortControllerOptions,
+  SortControllerState,
+} from './sort/sort-controller.js';
+export {buildUnifiedConverseController} from './unified-converse/unified-converse-controller.js';
+export type {
+  UnifiedConverseController,
+  UnifiedConverseControllerOptions,
+  UnifiedConverseControllerState,
+} from './unified-converse/unified-converse-controller.js';

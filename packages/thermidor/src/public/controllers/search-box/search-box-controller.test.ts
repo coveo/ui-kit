@@ -57,6 +57,45 @@ describe('buildSearchBoxController', () => {
 
       expect(result).toBeInstanceOf(Promise);
     });
+
+    it('should pass actionIntent with execute_search and current query', async () => {
+      const controller = buildController();
+      const mutateSpy = vi.spyOn(fullEngine, 'mutate');
+
+      controller.setQuery({query: 'shoes'});
+      mutateSpy.mockClear();
+
+      await controller.submit();
+
+      const dispatchResult = mutateSpy.mock.results.find(
+        (r) => r.value && typeof r.value === 'object' && 'then' in r.value
+      );
+
+      expect(dispatchResult).toBeDefined();
+      const resolved = await dispatchResult!.value;
+      expect(resolved?.meta?.arg?.actionIntent).toEqual({
+        name: 'execute_search',
+        context: {query: 'shoes'},
+      });
+    });
+
+    it('should pass actionIntent with empty query when no query set', async () => {
+      const controller = buildController();
+      const mutateSpy = vi.spyOn(fullEngine, 'mutate');
+
+      await controller.submit();
+
+      const dispatchResult = mutateSpy.mock.results.find(
+        (r) => r.value && typeof r.value === 'object' && 'then' in r.value
+      );
+
+      expect(dispatchResult).toBeDefined();
+      const resolved = await dispatchResult!.value;
+      expect(resolved?.meta?.arg?.actionIntent).toEqual({
+        name: 'execute_search',
+        context: {query: ''},
+      });
+    });
   });
 
   describe('state getter', () => {

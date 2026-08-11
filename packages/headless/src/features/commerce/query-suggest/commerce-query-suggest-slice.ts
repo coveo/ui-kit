@@ -1,23 +1,32 @@
 import {createReducer} from '@reduxjs/toolkit';
+import type {Draft as WritableDraft} from '@reduxjs/toolkit';
 import {
   handleClearQuerySuggest,
   handleFetchPending,
   handleFetchRejected,
-  handleRegisterQuerySuggest,
 } from '../../query-suggest/query-suggest-reducer-helpers.js';
-import {getQuerySuggestSetInitialState} from '../../query-suggest/query-suggest-state.js';
+import {
+  type QuerySuggestSet,
+  type QuerySuggestState,
+  getQuerySuggestSetInitialState,
+} from '../../query-suggest/query-suggest-state.js';
 import {
   clearQuerySuggest,
   fetchQuerySuggestions,
   registerQuerySuggest,
+  type RegisterQuerySuggestPayload,
 } from './query-suggest-actions.js';
+
+type CommerceQuerySuggestState = Omit<QuerySuggestState, 'count'> & {
+  count: number | undefined;
+};
 
 export const commerceQuerySuggestReducer = createReducer(
   getQuerySuggestSetInitialState(),
   (builder) =>
     builder
       .addCase(registerQuerySuggest, (state, action) => {
-        handleRegisterQuerySuggest(state, action.payload);
+        handleCommerceRegisterQuerySuggest(state, action.payload);
       })
       .addCase(fetchQuerySuggestions.pending, handleFetchPending)
       .addCase(fetchQuerySuggestions.fulfilled, (state, action) => {
@@ -46,3 +55,35 @@ export const commerceQuerySuggestReducer = createReducer(
         handleClearQuerySuggest(state, action.payload);
       })
 );
+
+function handleCommerceRegisterQuerySuggest(
+  state: WritableDraft<QuerySuggestSet>,
+  payload: RegisterQuerySuggestPayload
+) {
+  const id = payload.id;
+
+  if (id in state) {
+    if (payload.count !== undefined) {
+      state[id]!.count = payload.count;
+    }
+    return;
+  }
+
+  state[id] = buildCommerceQuerySuggest(payload) as QuerySuggestState;
+}
+
+function buildCommerceQuerySuggest(
+  config: Partial<CommerceQuerySuggestState>
+): CommerceQuerySuggestState {
+  return {
+    id: '',
+    completions: [],
+    responseId: '',
+    count: undefined,
+    currentRequestId: '',
+    error: null,
+    partialQueries: [],
+    isLoading: false,
+    ...config,
+  };
+}

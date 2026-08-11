@@ -48,6 +48,7 @@ export const testSearch = quanticBase.extend<QuanticSearchBoxE2ESearchFixtures>(
       {page, options, configuration, search, urlHash, analytics},
       use
     ) => {
+      await search.mockSearchWithBaseResponse();
       await page.goto(urlHash ? `${pageUrl}#${urlHash}` : pageUrl);
 
       configuration.configure(options);
@@ -70,9 +71,10 @@ export const testInsight =
       await use(new InsightSetupObject(page));
     },
     searchBox: async (
-      {page, options, configuration, insightSetup, analytics},
+      {page, options, configuration, insightSetup, analytics, search},
       use
     ) => {
+      await search.mockSearchWithBaseResponse();
       await page.goto(pageUrl);
 
       configuration.configure({...options, useCase: useCaseEnum.insight});

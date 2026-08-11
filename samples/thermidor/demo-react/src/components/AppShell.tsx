@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
-import {buildConverseController, type RoutedInterface, type Turn} from '@coveo/thermidor';
+import {buildUnifiedConverseController, type RoutedInterface, type Turn} from '@coveo/thermidor';
 import {useGenerativeInterface} from '../context/generative-interface.js';
 import {useBuildController} from '../hooks/use-build-controller.js';
 import {useAppState, deriveTransitionAction} from '../hooks/use-app-state.js';
@@ -11,7 +11,7 @@ import {ConversationPage} from './ConversationPage/index.js';
 export function AppShell() {
   const generativeInterface = useGenerativeInterface();
   const [controller, converseState] = useBuildController(() =>
-    buildConverseController({interface: generativeInterface})
+    buildUnifiedConverseController({interface: generativeInterface})
   );
 
   const {view, dispatch} = useAppState();

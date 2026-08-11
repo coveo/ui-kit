@@ -14,18 +14,23 @@ export type {Controller} from './controller-types.js';
 export {BaseInterface, getInterfaceInternals} from './base-interface.js';
 export type {InterfaceInternals} from './base-interface.js';
 export type {
+  ActionIntent,
   CommerceInterface,
   EndpointThunk,
+  EndpointThunkArg,
   FacadeResolver,
   Facades,
   GenerativeInterface,
+  GenerativeUnifiedInterface,
   InferInterfaceType,
   InterfaceHandle,
   InterfaceRegistry,
   InterfaceType,
+  InterfaceTypeBrand,
   InterfaceTypeMap,
   SearchInterface,
   Supports,
   SupportsBrand,
 } from './interface-types.js';
 export {createNoopThunk} from './noop-thunk.js';
+export {deepEqual} from './deep-equal.js';

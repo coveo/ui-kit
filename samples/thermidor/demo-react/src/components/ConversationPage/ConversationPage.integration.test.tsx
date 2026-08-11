@@ -171,42 +171,30 @@ describe('ConversationPage integration', () => {
       const nextActionsSurface = {
         operations: [
           {
-            beginRendering: {
+            createSurface: {
               surfaceId: 'surface-actions',
-              root: 'root-1',
             },
           },
           {
-            surfaceUpdate: {
+            updateComponents: {
               surfaceId: 'surface-actions',
               components: [
                 {
                   id: 'comp-1',
-                  component: {
-                    NextActionsBar: {
-                      actions: [{text: 'Show more', type: 'prompt'}],
-                    },
-                  },
+                  component: 'NextActionsBar',
                 },
               ],
             },
           },
           {
-            dataModelUpdate: {
+            updateDataModel: {
               surfaceId: 'surface-actions',
-              contents: [
-                {
-                  key: 'actions',
-                  valueMap: [
-                    {
-                      valueMap: [
-                        {key: 'text', valueString: 'Show more'},
-                        {key: 'type', valueString: 'prompt'},
-                      ],
-                    },
-                  ],
+              path: '/',
+              value: {
+                actions: {
+                  items: [{text: 'Show more', type: 'prompt'}],
                 },
-              ],
+              },
             },
           },
         ],
@@ -230,6 +218,7 @@ describe('ConversationPage integration', () => {
       const actionButton = screen.getByRole('button', {name: 'Show more'});
       fireEvent.click(actionButton);
 
+      expect(onSubmit).toHaveBeenCalledTimes(1);
       expect(onSubmit).toHaveBeenCalledWith('Show more');
     });
   });

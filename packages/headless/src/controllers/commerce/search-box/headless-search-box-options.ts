@@ -1,4 +1,4 @@
-import {BooleanValue, Schema} from '@coveo/bueno';
+import {BooleanValue, NumberValue, Schema} from '@coveo/bueno';
 import {
   type SearchBoxOptions as CoreSearchBoxOptions,
   searchBoxOptionDefinitions as coreSearchBoxOptionDefinitions,
@@ -8,6 +8,13 @@ export type SearchBoxOptions = Pick<
   CoreSearchBoxOptions,
   'id' | 'highlightOptions' | 'clearFilters'
 > & {
+  /**
+   * The number of query suggestions to request from the Coveo ML model (for example, `3`).
+   *
+   * When not specified, the API determines the number of suggestions returned.
+   */
+  numberOfSuggestions?: number;
+
   /**
    * When set to true, fills the `results` field rather than the `products` field
    * in the response. It may also include Spotlight Content in the results.
@@ -23,11 +30,15 @@ export const defaultSearchBoxOptions: Required<DefaultSearchBoxOptions> = {
   enableResults: false,
 };
 
+export type ResolvedSearchBoxOptions = Required<Omit<SearchBoxOptions, 'numberOfSuggestions'>> &
+  Pick<SearchBoxOptions, 'numberOfSuggestions'>;
+
 const {id, highlightOptions, clearFilters} = coreSearchBoxOptionDefinitions;
 export const searchBoxOptionDefinitions = {
   id,
   highlightOptions,
   clearFilters,
+  numberOfSuggestions: new NumberValue({min: 1}),
   enableResults: new BooleanValue(),
 };
 

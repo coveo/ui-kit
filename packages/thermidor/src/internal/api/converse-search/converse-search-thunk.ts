@@ -10,7 +10,7 @@ import {getOrCreateCartSelectors} from '@/src/internal/features/cart/index.js';
 import {createConversationEndpointClient} from '@/src/internal/api/conversation/index.js';
 import {getOrCreateCommerceSearchEndpointSlice} from '@/src/internal/api/commerce-search/commerce-search-thunk-slice.js';
 import {extractCommerceSearchResponseFromStream} from './converse-commerce-search-stream-extractor.js';
-import type {FullEngine} from '@/src/internal/engine/index.js';
+import type {EndpointThunkArg} from '@/src/internal/utils/interface-types.js';
 
 export function createConverseSearchEndpointThunk(
   iface: InterfaceHandle,
@@ -23,7 +23,7 @@ export function createConverseSearchEndpointThunk(
   const cartSelectors = getOrCreateCartSelectors(generativeInterface);
   const handleResponse = createCommerceSearchEndpointResponseHandler(iface);
 
-  const thunk = createAsyncThunk<void, {engine: FullEngine}>(
+  const thunk = createAsyncThunk<void, EndpointThunkArg>(
     `${stateId}/converseSearchEndpoint/execute`,
     async ({engine}) => {
       const request = engine.read(buildRequest);
@@ -40,7 +40,7 @@ export function createConverseSearchEndpointThunk(
         message: request.query,
         page: request.page,
         perPage: request.perPage,
-        ...(request.sort.length > 0 ? {sort: request.sort} : {}),
+        ...(request.sort ? {sort: request.sort} : {}),
         ...(request.facets.length > 0 ? {facets: request.facets} : {}),
         clientId: navigatorContext?.clientId,
         context: {

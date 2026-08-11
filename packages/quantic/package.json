@@ -1,6 +1,6 @@
 {
   "name": "@coveo/quantic",
-  "version": "3.43.3",
+  "version": "3.43.4",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
   "author": "coveo.com",
   "homepage": "https://coveo.com",
@@ -33,8 +33,8 @@
     "create:lws-disabled": "ts-node scripts/build/deploy-community.ts --scratch-org-def-path=./config/lws-disabled-scratch-def.json",
     "deploy:main": "sf project deploy start --source-dir force-app/main --target-org",
     "deploy:examples": "sf project deploy start --source-dir force-app/examples --source-dir force-app/solutionExamples --target-org",
-    "deploy:lws-disabled": "pnpm run deploy:main --target-org Quantic__LWS_disabled && pnpm run deploy:examples --target-org Quantic__LWS_disabled",
-    "deploy:lws-enabled": "pnpm run deploy:main --target-org Quantic__LWS_enabled && pnpm run deploy:examples --target-org Quantic__LWS_enabled",
+    "deploy:lws-disabled": "pnpm run deploy:main Quantic__LWS_disabled && pnpm run deploy:examples Quantic__LWS_disabled",
+    "deploy:lws-enabled": "pnpm run deploy:main Quantic__LWS_enabled && pnpm run deploy:examples Quantic__LWS_enabled",
     "deploy:all": "pnpm run deploy:lws-enabled && pnpm run deploy:lws-disabled",
     "build:doc": "jsdoc -c jsdoc-config.json",
     "publish:sfdx": "ts-node scripts/build/create-package.ts --remove-translations",
@@ -48,7 +48,7 @@
     "@coveo/bueno": "workspace:*",
     "@coveo/headless": "workspace:*",
     "coveo.analytics": "workspace:*",
-    "dompurify": "3.4.11",
+    "dompurify": "catalog:",
     "marked": "catalog:"
   },
   "engines": {
@@ -77,7 +77,7 @@
     "prettier": "catalog:",
     "prettier-plugin-apex": "2.2.6",
     "ts-node": "10.9.2",
-    "wait-on": "9.0.10",
+    "wait-on": "9.1.0",
     "xml2js": "0.6.2"
   },
   "files": [

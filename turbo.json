@@ -1,6 +1,10 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
+  "remoteCache": {
+    "teamSlug": "ui-kit",
+    "apiUrl": "https://djcopdhbb4ijlio2hgabt64kjy0lxwet.lambda-url.us-east-1.on.aws"
+  },
   "futureFlags": {
     "affectedUsingTaskInputs": true
   },
@@ -9,6 +13,9 @@
       "dependsOn": ["^build"],
       "inputs": [
         "$TURBO_DEFAULT$",
+        "!**/*.test.*",
+        "!**/*.spec.*",
+        "!**/__tests__/**",
         "!**/*.md",
         "!**/LICENSE*",
         "!**/.vscode/**",

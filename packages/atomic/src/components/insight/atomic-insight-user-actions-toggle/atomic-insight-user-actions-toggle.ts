@@ -30,6 +30,14 @@ export class AtomicInsightUserActionsToggle
   extends LitElement
   implements InitializableComponent<InsightBindings>
 {
+  private static readonly propsSchema = new Schema({
+    userId: new StringValue({required: true, emptyAllowed: false}),
+    ticketCreationDateTime: new StringValue({
+      required: true,
+      emptyAllowed: false,
+    }),
+  });
+
   @state()
   bindings!: InsightBindings;
 
@@ -72,13 +80,7 @@ export class AtomicInsightUserActionsToggle
         userId: this.userId,
         ticketCreationDateTime: this.ticketCreationDateTime,
       }),
-      new Schema({
-        userId: new StringValue({required: true, emptyAllowed: false}),
-        ticketCreationDateTime: new StringValue({
-          required: true,
-          emptyAllowed: false,
-        }),
-      }),
+      AtomicInsightUserActionsToggle.propsSchema,
       false
     );
   }

@@ -27,11 +27,17 @@ export function createGenerativeSlice(
     extraReducers: (builder) => {
       builder
         .addCase(actions.createTurn, (state, {payload}) => {
-          state.turns.push({
+          const existingIndex = state.turns.findIndex((t) => t.id === payload.id);
+          const newTurn = {
             id: payload.id,
             prompt: payload.prompt,
-            status: 'streaming',
-          });
+            status: payload.status,
+          };
+          if (existingIndex >= 0) {
+            state.turns[existingIndex] = newTurn;
+          } else {
+            state.turns.push(newTurn);
+          }
         })
         .addCase(actions.setActiveTurnId, (state, {payload}) => {
           state.activeTurnId = payload;
@@ -49,7 +55,6 @@ export function createGenerativeSlice(
           const turn = state.turns.find((t) => t.id === payload.turnId);
           if (turn) {
             turn.routedInterface = {useCase: payload.useCase};
-            turn.status = 'complete';
           }
         })
         .addCase(actions.initAgentResponse, (state, {payload}) => {
