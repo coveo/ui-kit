@@ -602,6 +602,8 @@ jobs:
     uses: ./.github/workflows/e2e-quantic.yml
     with:
       event_name: ${{ github.event_name }}
+      turbo_scm_base: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || 'main' }}
+      turbo_scm_head: ${{ github.event.pull_request.head.sha || github.sha }}
     secrets:
       SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
       SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
