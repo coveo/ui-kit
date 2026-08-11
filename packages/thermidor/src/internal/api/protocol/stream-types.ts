@@ -66,38 +66,42 @@ export type SearchApiResponseEvent = {
 
 export type A2UIOperation =
   | {
-      beginRendering: {
+      createSurface: {
         surfaceId: string;
-        root: string;
         catalogId?: string;
+        components?: Array<{
+          id: string;
+          component: string;
+          componentProps?: Record<string, unknown>;
+        }>;
+        dataModel?: Record<string, unknown>;
       };
     }
   | {
-      surfaceUpdate: {
+      updateComponents: {
         surfaceId: string;
         components: Array<{
           id: string;
-          component: Record<string, unknown>;
+          component: string;
+          componentProps?: Record<string, unknown>;
         }>;
       };
     }
   | {
-      dataModelUpdate: {
+      updateDataModel: {
         surfaceId: string;
-        contents: Array<{
-          key: string;
-          valueString?: string;
-          valueNumber?: number;
-          valueBoolean?: boolean;
-          valueMap?: Array<unknown>;
-        }>;
+        path?: string;
+        value: unknown;
       };
     }
   | {
       deleteSurface: {
         surfaceId: string;
       };
-    };
+    }
+  | {actionResponse: unknown};
+
+export type A2UIMessage = {version: 'v1.0'} & A2UIOperation;
 
 // ============================================================================
 // Unknown fallback (events not recognized by AG-UI or Coveo extensions)

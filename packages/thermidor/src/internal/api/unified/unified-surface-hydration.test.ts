@@ -56,6 +56,8 @@ const validDataModel = {
   triggers: [],
 };
 
+const statefulRoot = [{id: 'root', component: 'ProductSearchSurface'}];
+
 describe('unified-surface-hydration', () => {
   describe('hydrateFromCreateSurface', () => {
     it('returns null when dataModel is undefined', () => {
@@ -89,6 +91,23 @@ describe('unified-surface-hydration', () => {
       expect(result).toBeNull();
     });
 
+    it('returns null for display-only A2UI surfaces', () => {
+      const fullEngine = createTestEngine();
+
+      const result = hydrateFromCreateSurface(
+        fullEngine,
+        {
+          surfaceId: 'test',
+          components: [{id: 'root', component: 'ProductCarousel'}],
+          dataModel: validDataModel,
+        },
+        mockGenerativeInterface,
+        mockCartInterface
+      );
+
+      expect(result).toBeNull();
+    });
+
     it('returns non-null result with correct state for empty arrays', () => {
       const fullEngine = createTestEngine();
 
@@ -96,7 +115,7 @@ describe('unified-surface-hydration', () => {
         fullEngine,
         {
           surfaceId: 'test',
-          surfaceProperties: {placement: 'main'},
+          components: statefulRoot,
           dataModel: validDataModel,
         },
         mockGenerativeInterface,
@@ -135,7 +154,7 @@ describe('unified-surface-hydration', () => {
         fullEngine,
         {
           surfaceId: 'test',
-          surfaceProperties: {placement: 'main'},
+          components: statefulRoot,
           dataModel: validDataModel,
         },
         mockGenerativeInterface,
@@ -161,7 +180,7 @@ describe('unified-surface-hydration', () => {
         fullEngine,
         {
           surfaceId: 'test',
-          surfaceProperties: {placement: 'main'},
+          components: statefulRoot,
           dataModel: validDataModel,
         },
         mockGenerativeInterface,
@@ -181,7 +200,7 @@ describe('unified-surface-hydration', () => {
         fullEngine,
         {
           surfaceId: 'test',
-          surfaceProperties: {placement: 'main'},
+          components: statefulRoot,
           dataModel: validDataModel,
         },
         mockGenerativeInterface,
@@ -217,7 +236,7 @@ describe('unified-surface-hydration', () => {
         fullEngine,
         {
           surfaceId: 'test',
-          surfaceProperties: {placement: 'main'},
+          components: statefulRoot,
           dataModel: validDataModel,
         },
         mockGenerativeInterface,
@@ -239,7 +258,7 @@ describe('unified-surface-hydration', () => {
         fullEngine,
         {
           surfaceId: 'test',
-          surfaceProperties: {placement: 'main'},
+          components: statefulRoot,
           dataModel: validDataModel,
         },
         mockGenerativeInterface,
@@ -296,16 +315,69 @@ describe('unified-surface-hydration', () => {
       expect(extractA2uiOperations({})).toEqual([]);
     });
 
-    it('returns empty array when operations is not an array', () => {
-      expect(extractA2uiOperations({operations: 'not-an-array'})).toEqual([]);
+    it('returns empty array when messages is not an array', () => {
+      expect(extractA2uiOperations({messages: 'not-an-array'})).toEqual([]);
     });
 
-    it('returns the operations array when valid', () => {
-      const ops = [
+    it('unwraps valid versioned messages', () => {
+      const messages = [
+        {version: 'v1.0', createSurface: {surfaceId: 's1'}},
+        {version: 'v1.0', updateDataModel: {surfaceId: 's1', path: '/', value: {}}},
+      ];
+      expect(extractA2uiOperations({messages})).toEqual([
         {createSurface: {surfaceId: 's1'}},
         {updateDataModel: {surfaceId: 's1', path: '/', value: {}}},
-      ];
-      expect(extractA2uiOperations({operations: ops})).toEqual(ops);
+      ]);
+    });
+
+    it('unwraps a valid updateComponents message', () => {
+      expect(
+        extractA2uiOperations({
+          messages: [
+            {
+              version: 'v1.0',
+              updateComponents: {
+                surfaceId: 's1',
+                components: [{id: 'root', component: 'ProductSearchSurface'}],
+              },
+            },
+          ],
+        })
+      ).toEqual([
+        {
+          updateComponents: {
+            surfaceId: 's1',
+            components: [{id: 'root', component: 'ProductSearchSurface'}],
+          },
+        },
+      ]);
+    });
+
+    it('ignores malformed updateComponents messages', () => {
+      expect(
+        extractA2uiOperations({
+          messages: [
+            {version: 'v1.0', updateComponents: {surfaceId: 's1'}},
+            {version: 'v1.0', updateComponents: {surfaceId: 1, components: []}},
+          ],
+        })
+      ).toEqual([]);
+    });
+
+    it('ignores malformed messages while preserving valid siblings', () => {
+      expect(
+        extractA2uiOperations({
+          messages: [
+            {version: 'v0.8', createSurface: {surfaceId: 'old'}},
+            {
+              version: 'v1.0',
+              createSurface: {surfaceId: 'invalid'},
+              deleteSurface: {surfaceId: 'invalid'},
+            },
+            {version: 'v1.0', deleteSurface: {surfaceId: 's1'}},
+          ],
+        })
+      ).toEqual([{deleteSurface: {surfaceId: 's1'}}]);
     });
   });
 
@@ -317,7 +389,7 @@ describe('unified-surface-hydration', () => {
         fullEngine,
         {
           surfaceId: 'test',
-          surfaceProperties: {placement: 'main'},
+          components: statefulRoot,
           dataModel: validDataModel,
         },
         mockGenerativeInterface,

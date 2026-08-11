@@ -501,7 +501,7 @@ describe('buildUnifiedConverseController', () => {
   });
 
   describe('state port: appendSurface', () => {
-    it('invokes onSurfaceOperation callback when operations are present', async () => {
+    it('invokes onSurfaceOperation callback when messages are present', async () => {
       const onSurfaceOperation = vi.fn();
       buildController({onSurfaceOperation});
 
@@ -509,13 +509,13 @@ describe('buildUnifiedConverseController', () => {
       const getInstanceMock = UnifiedRuntime.getInstance as ReturnType<typeof vi.fn>;
       const config = getInstanceMock.mock.calls[0][2];
 
-      const ops = [{createSurface: {surfaceId: 's1'}}];
-      config.statePort.appendSurface('turn-1', {operations: ops});
+      const messages = [{version: 'v1.0', createSurface: {surfaceId: 's1'}}];
+      config.statePort.appendSurface('turn-1', {messages});
 
-      expect(onSurfaceOperation).toHaveBeenCalledWith(ops);
+      expect(onSurfaceOperation).toHaveBeenCalledWith(messages);
     });
 
-    it('does not invoke onSurfaceOperation when no operations field', async () => {
+    it('does not invoke onSurfaceOperation when no messages field', async () => {
       const onSurfaceOperation = vi.fn();
       buildController({onSurfaceOperation});
 

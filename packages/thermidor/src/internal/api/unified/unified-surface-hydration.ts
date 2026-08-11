@@ -20,28 +20,50 @@ import {getOrCreateTriggersActions} from '@/src/internal/features/triggers/index
 import {getOrCreateQueryCorrectionActions} from '@/src/internal/features/query-correction/index.js';
 
 export interface A2uiSurfaceContent {
-  operations: A2uiOperation[];
+  messages: A2uiMessage[];
 }
+
+export type A2uiMessage =
+  | {version: 'v1.0'; createSurface: CreateSurfacePayload}
+  | {version: 'v1.0'; updateDataModel: UpdateDataModelPayload}
+  | {version: 'v1.0'; updateComponents: UpdateComponentsPayload}
+  | {version: 'v1.0'; deleteSurface: DeleteSurfacePayload}
+  | {version: 'v1.0'; actionResponse: unknown};
 
 export type A2uiOperation =
   | {createSurface: CreateSurfacePayload}
   | {updateDataModel: UpdateDataModelPayload}
-  | {updateComponents: unknown}
+  | {updateComponents: UpdateComponentsPayload}
+  | {deleteSurface: DeleteSurfacePayload}
   | {actionResponse: unknown};
 
 export interface CreateSurfacePayload {
   surfaceId: string;
   catalogId?: string;
-  surfaceProperties?: Record<string, unknown>;
   sendDataModel?: boolean;
-  components?: unknown[];
+  components?: ComponentNode[];
   dataModel?: Record<string, unknown>;
+}
+
+export interface ComponentNode {
+  id: string;
+  component: string;
+  componentProps?: Record<string, unknown>;
 }
 
 export interface UpdateDataModelPayload {
   surfaceId: string;
   path?: string;
   value: unknown;
+}
+
+export interface UpdateComponentsPayload {
+  surfaceId: string;
+  components: ComponentNode[];
+}
+
+export interface DeleteSurfacePayload {
+  surfaceId: string;
 }
 
 export interface UnifiedHydrationResult {
@@ -64,7 +86,7 @@ export function hydrateFromCreateSurface(
     return null;
   }
 
-  if (payload.surfaceProperties?.placement !== 'main') {
+  if (!hasStatefulCommerceRootComponent(payload.components)) {
     return null;
   }
 
@@ -160,8 +182,106 @@ export function applyDataModelUpdate(
 }
 
 export function extractA2uiOperations(content: Record<string, unknown>): A2uiOperation[] {
-  if (content && Array.isArray(content.operations)) {
-    return content.operations as A2uiOperation[];
+  if (!Array.isArray(content.messages)) {
+    return [];
   }
-  return [];
+
+  return content.messages.flatMap(parseA2uiMessage);
+}
+
+function parseA2uiMessage(message: unknown): A2uiOperation[] {
+  if (!isRecord(message) || message.version !== 'v1.0') {
+    return [];
+  }
+
+  const operationKeys = [
+    'createSurface',
+    'updateDataModel',
+    'updateComponents',
+    'deleteSurface',
+    'actionResponse',
+  ].filter((key) => Object.prototype.hasOwnProperty.call(message, key));
+  if (operationKeys.length !== 1) {
+    return [];
+  }
+
+  switch (operationKeys[0]) {
+    case 'createSurface':
+      return isCreateSurfacePayload(message.createSurface)
+        ? [{createSurface: message.createSurface}]
+        : [];
+    case 'updateDataModel':
+      return isUpdateDataModelPayload(message.updateDataModel)
+        ? [{updateDataModel: message.updateDataModel}]
+        : [];
+    case 'updateComponents':
+      return isUpdateComponentsPayload(message.updateComponents)
+        ? [{updateComponents: message.updateComponents}]
+        : [];
+    case 'deleteSurface':
+      return isDeleteSurfacePayload(message.deleteSurface)
+        ? [{deleteSurface: message.deleteSurface}]
+        : [];
+    case 'actionResponse':
+      return [{actionResponse: message.actionResponse}];
+    default:
+      return [];
+  }
+}
+
+function hasStatefulCommerceRootComponent(components: ComponentNode[] | undefined): boolean {
+  const root = components?.find((component) => component.id === 'root');
+  return root?.component === 'ProductSearchSurface' || root?.component === 'ProductListingSurface';
+}
+
+function isCreateSurfacePayload(value: unknown): value is CreateSurfacePayload {
+  if (!isRecord(value) || typeof value.surfaceId !== 'string') {
+    return false;
+  }
+  if (value.catalogId !== undefined && typeof value.catalogId !== 'string') {
+    return false;
+  }
+  if (value.sendDataModel !== undefined && typeof value.sendDataModel !== 'boolean') {
+    return false;
+  }
+  if (value.components !== undefined && !isComponentNodes(value.components)) {
+    return false;
+  }
+  return value.dataModel === undefined || isRecord(value.dataModel);
+}
+
+function isUpdateDataModelPayload(value: unknown): value is UpdateDataModelPayload {
+  return (
+    isRecord(value) &&
+    typeof value.surfaceId === 'string' &&
+    Object.prototype.hasOwnProperty.call(value, 'value') &&
+    (value.path === undefined || typeof value.path === 'string')
+  );
+}
+
+function isUpdateComponentsPayload(value: unknown): value is UpdateComponentsPayload {
+  return (
+    isRecord(value) && typeof value.surfaceId === 'string' && isComponentNodes(value.components)
+  );
+}
+
+function isDeleteSurfacePayload(value: unknown): value is DeleteSurfacePayload {
+  return isRecord(value) && typeof value.surfaceId === 'string';
+}
+
+function isComponentNodes(value: unknown): value is ComponentNode[] {
+  return Array.isArray(value) && value.every(isComponentNode);
+}
+
+function isComponentNode(value: unknown): value is ComponentNode {
+  return (
+    isRecord(value) &&
+    typeof value.id === 'string' &&
+    typeof value.component === 'string' &&
+    (value.componentProps === undefined || isRecord(value.componentProps))
+  );
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
