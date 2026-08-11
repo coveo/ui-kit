@@ -16,36 +16,6 @@ env:
   TURBO_SCM_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
 
 jobs:
-  pr-report:
-    if: ${{ github.event_name == 'pull_request' && !startsWith(github.head_ref, 'changeset-release/') }}
-    name: 'PR Report'
-    runs-on: ubuntu-latest
-    environment: PR Artifacts
-    env:
-      NODE_OPTIONS: --max_old_space_size=4096
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
-        with:
-          egress-policy: audit
-      - name: Generate a token
-        if: ${{ always() && github.event_name == 'pull_request'}}
-        id: generate-token
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-          owner: coveo
-          repositories: 'ui-kit'
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
-        with:
-          fetch-depth: 0
-      - uses: ./.github/actions/setup
-        with:
-          skip-build: 'true'
-      - run: pnpm run pr:report
-        env:
-          GITHUB_CREDENTIALS: ${{ steps.generate-token.outputs.token }}
   build-windows:
     name: 'Build Windows'
     if: ${{ github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/') }}
