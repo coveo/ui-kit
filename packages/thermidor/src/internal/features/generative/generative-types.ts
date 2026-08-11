@@ -191,7 +191,9 @@ export interface AgentMessage {
 /**
  * Opaque surface data passed through from `/converse` without interpretation.
  */
-export type A2UISurface = Record<string, unknown>;
+export type A2UISurface = Record<string, unknown> & {
+  __thermidorActivityId?: string;
+};
 
 export interface GenerativeState {
   /**

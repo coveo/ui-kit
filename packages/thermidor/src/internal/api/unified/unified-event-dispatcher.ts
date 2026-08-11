@@ -81,7 +81,12 @@ export function dispatchStreamEvent(
     case 'ACTIVITY_SNAPSHOT': {
       deps.ensureAgentResponse(turnId);
       const content = event.content as Record<string, unknown>;
-      deps.statePort.appendSurface(turnId, content);
+      const activity = getActivityMetadata(event);
+      if (activity.id || activity.replace) {
+        deps.statePort.appendSurface(turnId, content, activity);
+      } else {
+        deps.statePort.appendSurface(turnId, content);
+      }
 
       if (event.activityType === 'a2ui-surface') {
         deps.onA2uiSurface(turnId, content);
@@ -113,6 +118,18 @@ export function dispatchStreamEvent(
     default:
       return handleUnknownEvent(turnId, event, deps);
   }
+}
+
+function getActivityMetadata(event: unknown): {id?: string; replace?: boolean} {
+  if (typeof event !== 'object' || event === null) {
+    return {};
+  }
+
+  const activity = event as {messageId?: unknown; replace?: unknown};
+  return {
+    ...(typeof activity.messageId === 'string' ? {id: activity.messageId} : {}),
+    ...(activity.replace === true ? {replace: true} : {}),
+  };
 }
 
 function handleUnknownEvent(

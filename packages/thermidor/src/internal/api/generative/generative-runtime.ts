@@ -24,7 +24,11 @@ export interface GenerativeStatePort {
   initAgentResponse(turnId: string): void;
   startMessage(turnId: string, role: string): void;
   appendMessageDelta(turnId: string, delta: string): void;
-  appendSurface(turnId: string, surface: A2UISurface): void;
+  appendSurface(
+    turnId: string,
+    surface: A2UISurface,
+    activity?: {id?: string; replace?: boolean}
+  ): void;
   startToolCall(turnId: string, toolCallId: string, toolName: string): void;
   appendToolCallArgs(turnId: string, toolCallId: string, delta: string): void;
   completeToolCall(turnId: string, toolCallId: string, result: string): void;
@@ -255,7 +259,12 @@ export class GenerativeRuntime {
 
       case 'ACTIVITY_SNAPSHOT': {
         this.ensureAgentResponse(turnId);
-        this.statePort.appendSurface(turnId, event.content as Record<string, unknown>);
+        const activity = getActivityMetadata(event);
+        if (activity.id || activity.replace) {
+          this.statePort.appendSurface(turnId, event.content as Record<string, unknown>, activity);
+        } else {
+          this.statePort.appendSurface(turnId, event.content as Record<string, unknown>);
+        }
         return {turnId, isTerminal: false};
       }
 
@@ -305,6 +314,18 @@ export class GenerativeRuntime {
       this.agentResponseInitialized.add(turnId);
     }
   }
+}
+
+function getActivityMetadata(event: unknown): {id?: string; replace?: boolean} {
+  if (typeof event !== 'object' || event === null) {
+    return {};
+  }
+
+  const activity = event as {messageId?: unknown; replace?: unknown};
+  return {
+    ...(typeof activity.messageId === 'string' ? {id: activity.messageId} : {}),
+    ...(activity.replace === true ? {replace: true} : {}),
+  };
 }
 
 function getErrorMessage(error: unknown): string {

@@ -89,7 +89,29 @@ export function createGenerativeSlice(
         .addCase(actions.appendSurface, (state, {payload}) => {
           const turn = state.turns.find((t) => t.id === payload.turnId);
           if (turn?.agentResponse) {
-            turn.agentResponse.surfaces.push(payload.surface);
+            const activityId = payload.activity?.id;
+            if (activityId && payload.activity?.replace) {
+              const existingIndex = turn.agentResponse.surfaces.findIndex(
+                (surface) => surface.__thermidorActivityId === activityId
+              );
+              const existingSurface = turn.agentResponse.surfaces[existingIndex];
+              const existingMessages = existingSurface?.messages;
+              const replacementMessages = payload.surface.messages;
+              const reconciledSurface = {
+                ...payload.surface,
+                ...(Array.isArray(existingMessages) && Array.isArray(replacementMessages)
+                  ? {messages: [...existingMessages, ...replacementMessages]}
+                  : {}),
+                __thermidorActivityId: activityId,
+              };
+              if (existingIndex >= 0) {
+                turn.agentResponse.surfaces[existingIndex] = reconciledSurface;
+              } else {
+                turn.agentResponse.surfaces.push(reconciledSurface);
+              }
+            } else {
+              turn.agentResponse.surfaces.push(payload.surface);
+            }
           }
         })
         .addCase(actions.startToolCall, (state, {payload}) => {

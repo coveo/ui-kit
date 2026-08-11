@@ -522,7 +522,9 @@ describe('UnifiedRuntime', () => {
       const runtime = UnifiedRuntime.getInstance(engine, 'activity', config);
       await runtime.submit('Hello');
 
-      expect(config.statePort.appendSurface).toHaveBeenCalledWith('generated-id-1', surface);
+      expect(config.statePort.appendSurface).toHaveBeenCalledWith('generated-id-1', surface, {
+        id: 'm1',
+      });
     });
 
     it('handles RUN_ERROR by failing the turn with the error message', async () => {
