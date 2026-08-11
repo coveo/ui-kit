@@ -115,6 +115,8 @@
   },
   "devDependencies": {
     "@coveo/documentation": "workspace:*",
+    "esbuild-plugin-alias": "0.2.1",
+    "esbuild-plugin-umd-wrapper": "catalog:",
     "jsdom": "catalog:",
     "live-server": "catalog:",
     "node-fetch": "3.3.2",
