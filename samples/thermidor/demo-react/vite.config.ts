@@ -41,14 +41,17 @@ export function resolveProxyTargets(
   endpointOverride: string | undefined,
   environment: PlatformEnvironment
 ) {
-  if (!organizationId) {
+  const normalizedOrganizationId = organizationId?.trim();
+  const normalizedEndpointOverride = endpointOverride?.trim();
+
+  if (!normalizedOrganizationId) {
     return undefined;
   }
 
-  const platform = getOrganizationPlatformEndpoint(organizationId, environment);
+  const platform = getOrganizationPlatformEndpoint(normalizedOrganizationId, environment);
 
   return {
-    agentGateway: endpointOverride || platform,
+    agentGateway: normalizedEndpointOverride || platform,
     platform,
   };
 }
@@ -70,12 +73,10 @@ export function resolveAgentRuntimeHeaders(
   };
 }
 
-function getProxyTargets(mode: string) {
-  const env = loadEnv(mode, process.cwd(), '');
-
+function getProxyTargets(env: Record<string, string>) {
   return resolveProxyTargets(
-    env.VITE_COVEO_ORGANIZATION_ID?.trim(),
-    env.VITE_COVEO_ENDPOINT?.trim(),
+    env.VITE_COVEO_ORGANIZATION_ID,
+    env.VITE_COVEO_ENDPOINT,
     resolveEnvironment(env.VITE_COVEO_PLATFORM_ENVIRONMENT)
   );
 }
@@ -83,7 +84,7 @@ function getProxyTargets(mode: string) {
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, process.cwd(), '');
   const useProxy = parseBoolean(env.VITE_COVEO_USE_VITE_PROXY) ?? true;
-  const targets = getProxyTargets(mode);
+  const targets = getProxyTargets(env);
   const orgId = env.VITE_COVEO_ORGANIZATION_ID?.trim();
   const agentRuntimeHeaders = resolveAgentRuntimeHeaders(
     env.VITE_COVEO_AGENT_RUNTIME_NAME,
