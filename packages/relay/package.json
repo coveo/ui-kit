@@ -35,6 +35,7 @@
     "access": "public"
   },
   "scripts": {
+    "publint": "publint",
     "build": "pnpm run clean && rollup --config ./config/rollup.config.mjs && pnpm run typedoc",
     "clean": "node ../../utils/ci/rm-rf.mjs lib",
     "test": "vitest run",

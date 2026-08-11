@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic-hosted-page",
-  "version": "1.2.52",
+  "version": "1.2.53",
   "description": "Web Component used to inject a Coveo Hosted Search Page in the DOM.",
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
     "./dist/*": "./dist/*"
   },
   "scripts": {
+    "publint": "publint",
     "clean": "node ../../utils/ci/rm-rf.mjs dist/*",
     "build": "node ../../utils/ci/rm-rf.mjs dist cdn && tsc --outdir dist && tsc --outdir cdn --project tsconfig.cdn.json && node ./scripts/esbuild.js",
     "start": "node ./scripts/start.js",

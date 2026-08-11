@@ -1,6 +1,6 @@
 {
   "name": "@coveo/ui-kit-sample-atomic-search-react",
-  "version": "3.11.36",
+  "version": "3.11.37",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coveo/ui-kit.git",
@@ -13,6 +13,7 @@
     "linkDirectory": false
   },
   "scripts": {
+    "publint": "pnpm run prepack && publint publish --pack=false",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",

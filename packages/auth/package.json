@@ -30,6 +30,7 @@
     "access": "public"
   },
   "scripts": {
+    "publint": "publint",
     "dev": "concurrently \"pnpm run build:definitions -- -w\" \"pnpm run build:bundles -- dev\"",
     "build": "pnpm run build:bundles && pnpm run build:definitions",
     "test": "vitest run",

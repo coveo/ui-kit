@@ -16,36 +16,6 @@ env:
   TURBO_SCM_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
 
 jobs:
-  pr-report:
-    if: ${{ github.event_name == 'pull_request' && !startsWith(github.head_ref, 'changeset-release/') }}
-    name: 'PR Report'
-    runs-on: ubuntu-latest
-    environment: PR Artifacts
-    env:
-      NODE_OPTIONS: --max_old_space_size=4096
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
-        with:
-          egress-policy: audit
-      - name: Generate a token
-        if: ${{ always() && github.event_name == 'pull_request'}}
-        id: generate-token
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-          owner: coveo
-          repositories: 'ui-kit'
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
-        with:
-          fetch-depth: 0
-      - uses: ./.github/actions/setup
-        with:
-          skip-build: 'true'
-      - run: pnpm run pr:report
-        env:
-          GITHUB_CREDENTIALS: ${{ steps.generate-token.outputs.token }}
   build-windows:
     name: 'Build Windows'
     if: ${{ github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/') }}
@@ -177,10 +147,8 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-        with:
-          build-command: 'pnpm run build' # FIXME: https://coveord.atlassian.net/browse/KIT-6039
       - name: Run knip
-        run: pnpm run knip
+        run: pnpm run knip:affected
   cdn-checks:
     name: 'CDN Checks'
     needs: [build, build-cdn]
@@ -322,9 +290,8 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-        with:
-          build-command: 'pnpm run build' # FIXME: https://coveord.atlassian.net/browse/KIT-6040
-      - run: pnpm run package-compatibility
+      - run: pnpm exec node ./scripts/ci/validate-publint-tasks.mjs
+      - run: pnpm turbo run publint --affected
   typedoc:
     name: 'Build typedoc'
     needs: build
@@ -477,6 +444,8 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
+        with:
+          skip-build: 'true'
       - uses: ./.github/actions/playwright-atomic-theming
   storybook-atomic:
     name: 'Run Storybook tests'
@@ -634,6 +603,8 @@ jobs:
     uses: ./.github/workflows/e2e-quantic.yml
     with:
       event_name: ${{ github.event_name }}
+      turbo_scm_base: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || 'main' }}
+      turbo_scm_head: ${{ github.event.pull_request.head.sha || github.sha }}
     secrets:
       SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
       SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
