@@ -141,6 +141,31 @@ describe('ItemLayoutController', () => {
       expect(child.classList.contains('display-list')).toBe(true);
     });
 
+    it('should not propagate item-level classes to shared section elements', () => {
+      mockOptions.elementPrefix = 'atomic-recs-result';
+      controller = new ItemLayoutController(mockElement, mockOptions);
+      controller.hostConnected();
+
+      const mockRoot = document.createElement('div');
+      mockRoot.className = 'result-root';
+      const section = document.createElement('atomic-result-section-children');
+      const child = document.createElement('atomic-recs-result-link');
+      mockRoot.appendChild(section);
+      mockRoot.appendChild(child);
+
+      vi.spyOn(mockElement.shadowRoot!, 'querySelector').mockReturnValue(mockRoot);
+
+      controller.hostUpdated();
+
+      // Sections receive only the layout classes.
+      expect(section.classList.contains('display-list')).toBe(true);
+      expect(section.classList.contains('custom-class')).toBe(false);
+      expect(section.classList.contains('extra-class')).toBe(false);
+      // Prefixed children still receive the combined (layout + item) classes.
+      expect(child.classList.contains('display-list')).toBe(true);
+      expect(child.classList.contains('custom-class')).toBe(true);
+    });
+
     describe('when classesOnly is true', () => {
       beforeEach(() => {
         mockOptions.elementPrefix = 'atomic-insight-result';

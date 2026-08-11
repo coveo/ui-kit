@@ -144,16 +144,28 @@ export class ItemLayoutController implements ReactiveController {
       return;
     }
 
+    // Shared item-section elements (e.g. `atomic-result-section-*`) only receive
+    // the layout classes (display/density/image size/`with-sections`) so they can
+    // lay themselves out under the sanitized template system, regardless of the
+    // host's element prefix or `classesOnly` flag.
+    //
+    // Item-level classes such as `child-result`/`last-child` or
+    // consumer-provided classes must stay on the item root only. Propagating
+    // them to sections makes shared section rules (e.g.
+    // `.child-result:not(.last-child)`) match the section element itself and add
+    // spurious spacing.
+    const config = this.getLayout();
+    const sectionClasses = config ? getItemLayoutClasses(config) : [];
+
     const elements = root.querySelectorAll('*');
     elements.forEach((element) => {
       const tagName = element.tagName.toLowerCase();
       const isPrefixedChild =
         !this.options.classesOnly && tagName.startsWith(`${this.options.elementPrefix}-`);
-      // Shared item-section elements always need the layout classes on
-      // themselves so they can lay themselves out under the sanitized template
-      // system, regardless of the host's element prefix or `classesOnly` flag.
-      if (isResultSectionNode(element) || isPrefixedChild) {
+      if (isPrefixedChild) {
         element.classList.add(...classes);
+      } else if (isResultSectionNode(element) && sectionClasses.length > 0) {
+        element.classList.add(...sectionClasses);
       }
     });
   }
