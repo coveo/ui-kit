@@ -53,6 +53,23 @@ export function resolveProxyTargets(
   };
 }
 
+export function resolveAgentRuntimeHeaders(
+  runtimeName: string | undefined,
+  runtimeQualifier: string | undefined
+) {
+  const name = runtimeName?.trim();
+  const qualifier = runtimeQualifier?.trim();
+
+  if (!name) {
+    return undefined;
+  }
+
+  return {
+    'x-coveo-agent-runtime-name': name,
+    ...(qualifier ? {'x-coveo-agent-runtime-qualifier': qualifier} : {}),
+  };
+}
+
 function getProxyTargets(mode: string) {
   const env = loadEnv(mode, process.cwd(), '');
 
@@ -68,6 +85,10 @@ export default defineConfig(({mode}) => {
   const useProxy = parseBoolean(env.VITE_COVEO_USE_VITE_PROXY) ?? true;
   const targets = getProxyTargets(mode);
   const orgId = env.VITE_COVEO_ORGANIZATION_ID?.trim();
+  const agentRuntimeHeaders = resolveAgentRuntimeHeaders(
+    env.VITE_COVEO_AGENT_RUNTIME_NAME,
+    env.VITE_COVEO_AGENT_RUNTIME_QUALIFIER
+  );
 
   return {
     plugins: [react()],
@@ -80,6 +101,7 @@ export default defineConfig(({mode}) => {
                 target: targets.agentGateway,
                 changeOrigin: true,
                 secure: true,
+                ...(agentRuntimeHeaders ? {headers: agentRuntimeHeaders} : {}),
               },
               '/rest': {
                 target: targets.platform,
