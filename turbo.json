@@ -34,7 +34,7 @@
     },
     "publint": {
       "dependsOn": ["build"],
-      "outputs": ["publish/**"]
+      "outputs": []
     },
     "dev": {
       "dependsOn": ["build"],
