@@ -169,13 +169,15 @@ describe('ConversationPage integration', () => {
     it('calls onSubmit with the action text when a next-action button is clicked', () => {
       const onSubmit = vi.fn();
       const nextActionsSurface = {
-        operations: [
+        messages: [
           {
+            version: 'v1.0',
             createSurface: {
               surfaceId: 'surface-actions',
             },
           },
           {
+            version: 'v1.0',
             updateComponents: {
               surfaceId: 'surface-actions',
               components: [
@@ -187,6 +189,7 @@ describe('ConversationPage integration', () => {
             },
           },
           {
+            version: 'v1.0',
             updateDataModel: {
               surfaceId: 'surface-actions',
               path: '/',
