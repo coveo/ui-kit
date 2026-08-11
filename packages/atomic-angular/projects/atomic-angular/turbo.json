@@ -1,0 +1,12 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["@coveo/atomic-angular-builder#build"],
+      "outputs": ["dist/**"]
+    },
+    "publint": {
+      "outputs": []
+    }
+  }
+}

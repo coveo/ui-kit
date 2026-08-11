@@ -14,6 +14,7 @@
     "linkDirectory": false
   },
   "scripts": {
+    "publint": "pnpm run prepack && publint publish --pack=false",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

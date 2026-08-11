@@ -28,6 +28,7 @@
     "access": "public"
   },
   "scripts": {
+    "publint": "publint",
     "build": "tsc -p tsconfig.json",
     "start": "node ./dist/index.js",
     "test": "vitest run && pnpm test:pack",

@@ -27,6 +27,7 @@
   "browser": "dist/coveoua.browser.js",
   "types": "dist/definitions/coveoua/library.d.ts",
   "scripts": {
+    "publint": "publint",
     "build": "rollup -c",
     "start": "rollup -c -w --environment SERVE",
     "test": "vitest run",

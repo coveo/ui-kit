@@ -290,9 +290,8 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-        with:
-          build-command: 'pnpm run build' # FIXME: https://coveord.atlassian.net/browse/KIT-6040
-      - run: pnpm run package-compatibility
+      - run: pnpm exec node ./scripts/ci/validate-publint-tasks.mjs
+      - run: pnpm turbo run publint --affected
   typedoc:
     name: 'Build typedoc'
     needs: build
