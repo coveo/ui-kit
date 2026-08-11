@@ -446,7 +446,7 @@ jobs:
           filter: blob:none
       - uses: ./.github/actions/setup
         with:
-          build-command: 'pnpm run build' # FIXME: https://coveord.atlassian.net/browse/KIT-6045
+          skip-build: 'true'
       - uses: ./.github/actions/playwright-atomic-theming
   storybook-atomic:
     name: 'Run Storybook tests'

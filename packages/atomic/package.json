@@ -69,6 +69,7 @@
     "dev:storybook": "storybook dev -p 4400",
     "web:dev": "npx vite serve dev",
     "web:cdn": "node ./scripts/start-cdn.mjs",
+    "e2e:theming": "playwright test -c dev",
     "test": "pnpm run test:lit",
     "test:stencil": "stencil test --spec -- src/utils/initialization-utils.spec.ts",
     "test:lit": "vitest run --project=atomic-default",
