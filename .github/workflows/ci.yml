@@ -12,6 +12,8 @@ permissions:
 
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  # Route large (>6MB) remote-cache artifacts directly to S3 via Turbo preflight.
+  TURBO_PREFLIGHT: true
   TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || 'main' }}
   TURBO_SCM_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
 

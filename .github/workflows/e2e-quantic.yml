@@ -20,6 +20,8 @@ permissions:
 
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  # Route large (>6MB) remote-cache artifacts directly to S3 via Turbo preflight.
+  TURBO_PREFLIGHT: true
 
 jobs:
   e2e-quantic-setup:
