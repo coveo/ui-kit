@@ -256,7 +256,15 @@ jobs:
       - run: git branch main origin/main
         if: ${{ github.event_name != 'pull_request' }}
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo test --affected
+      - run: node scripts/ci/turbo-telemetry-cli.mjs ci-telemetry-v1.json -- test --affected
+      - name: Upload CI telemetry
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: ci-telemetry-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ci-telemetry-v1.json
+          retention-days: 14
+          if-no-files-found: warn
   relay-tests:
     name: 'Run Relay functional and playground smoke tests'
     needs: build
