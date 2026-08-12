@@ -29,5 +29,8 @@
   "devDependencies": {
     "i18next": "catalog:",
     "publint": "catalog:"
+  },
+  "engines": {
+    "node": "^22.11.0 || ^24.11.0"
   }
 }
