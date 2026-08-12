@@ -34,6 +34,7 @@
   },
   "devDependencies": {
     "@types/node": "catalog:",
+    "publint": "catalog:",
     "typescript": "catalog:"
   },
   "engines": {

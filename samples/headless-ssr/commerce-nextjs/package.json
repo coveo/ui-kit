@@ -36,6 +36,7 @@
     "@types/react-dom": "catalog:",
     "express": "^5.0.0",
     "msw": "catalog:",
+    "publint": "catalog:",
     "typescript": "catalog:"
   }
 }

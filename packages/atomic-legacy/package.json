@@ -27,6 +27,7 @@
     "@stencil/core": "catalog:"
   },
   "devDependencies": {
-    "i18next": "catalog:"
+    "i18next": "catalog:",
+    "publint": "catalog:"
   }
 }
