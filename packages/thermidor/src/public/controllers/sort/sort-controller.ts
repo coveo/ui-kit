@@ -7,6 +7,7 @@ import {deepEqual} from '@/src/internal/utils/index.js';
 import {getOrCreateSortActions} from '@/src/internal/features/sort/index.js';
 import {getOrCreateSortSelectors} from '@/src/internal/features/sort/index.js';
 import {getOrCreateSortSlice} from '@/src/internal/features/sort/index.js';
+import {toSetSortContext} from '@/src/internal/features/sort/index.js';
 import type {SortCriterionFor} from '@/src/public/sort-types.js';
 import type {Controller} from '@/src/public/controllers/controller-types.js';
 
@@ -40,7 +41,12 @@ class SortControllerImpl extends BaseController<SortControllerState<any>> {
 
   sortBy(criterion: any): void {
     this.engine.mutate(this.#sortActions.sortBy(criterion));
-    this.engine.mutate(this.#thunk({engine: this.engine}));
+    this.engine.mutate(
+      this.#thunk({
+        engine: this.engine,
+        actionIntent: {name: 'set_sort', context: toSetSortContext(criterion)},
+      })
+    );
   }
 
   isSortedBy(criterion: any): boolean {

@@ -42,10 +42,12 @@ export class AtomicHtml extends LitElement implements InitializableComponent<Bin
     ></span>`;
   }
 
+  private static readonly propsSchema = new Schema({
+    value: new StringValue({emptyAllowed: false}),
+  });
+
   private validateProps() {
-    new Schema({
-      value: new StringValue({emptyAllowed: false}),
-    }).validate({
+    AtomicHtml.propsSchema.validate({
       value: this.value,
     });
   }

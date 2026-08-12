@@ -100,6 +100,18 @@ export class AtomicCommerceRecommendationList
   public recommendations!: Recommendations;
   public summary!: Summary<RecommendationsSummaryState>;
 
+  private static readonly propsSchema = new Schema({
+    density: new StringValue({
+      constrainTo: ['normal', 'comfortable', 'compact'],
+    }),
+    display: new StringValue({constrainTo: ['grid', 'list', 'table']}),
+    imageSize: new StringValue({
+      constrainTo: ['small', 'large', 'icon', 'none'],
+    }),
+    productsPerPage: new NumberValue({min: 0}),
+    slotId: new StringValue({emptyAllowed: false}),
+  });
+
   private itemRenderingFunction: ItemRenderingFunction;
   private loadingFlag = randomID('firstRecommendationLoaded-');
   private nextNewProductTarget?: FocusTargetController;
@@ -263,17 +275,7 @@ export class AtomicCommerceRecommendationList
   }
 
   private validateProps() {
-    new Schema({
-      density: new StringValue({
-        constrainTo: ['normal', 'comfortable', 'compact'],
-      }),
-      display: new StringValue({constrainTo: ['grid', 'list', 'table']}),
-      imageSize: new StringValue({
-        constrainTo: ['small', 'large', 'icon', 'none'],
-      }),
-      productsPerPage: new NumberValue({min: 0}),
-      slotId: new StringValue({emptyAllowed: false}),
-    }).validate({
+    AtomicCommerceRecommendationList.propsSchema.validate({
       density: this.density,
       display: this.display,
       imageSize: this.imageSize,
@@ -490,9 +492,11 @@ export class AtomicCommerceRecommendationList
             .density=${props.density}
             .display=${props.display}
             .imageSize=${props.imageSize}
-            .linkContent=${props.display === 'grid'
-              ? this.productTemplateProvider.getLinkTemplateContent(product)
-              : this.productTemplateProvider.getEmptyLinkTemplateContent()}
+            .linkContent=${
+              props.display === 'grid'
+                ? this.productTemplateProvider.getLinkTemplateContent(product)
+                : this.productTemplateProvider.getEmptyLinkTemplateContent()
+            }
             .loadingFlag=${props.loadingFlag}
             .interactiveProduct=${props.interactiveProduct}
             .product=${props.product}

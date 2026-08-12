@@ -4,7 +4,6 @@ export default {
   ignoreWorkspaces: ['packages/quantic', 'packages/create-atomic-component-project/template'],
   ignoreDependencies: ['semver'],
   ignore: [
-    '.kiro/**',
     '.agents/skills/**',
     'packages/quantic/**',
     'samples/headless/rga-react/src/components/Quickstart.tsx',
@@ -21,7 +20,7 @@ export default {
     '.': {
       entry: ['scripts/**/*.{js,mjs}'],
       ignoreBinaries: ['ts-node'],
-      ignoreDependencies: ['@playwright/mcp', 'handlebars'],
+      ignoreDependencies: ['@playwright/mcp'],
     },
     'packages/headless': {
       entry: ['src/*index.ts', 'ponyfills/*.js'],
@@ -34,12 +33,13 @@ export default {
       ignoreDependencies: [
         // Can be removed once we bump our package to use more recent Angular versions that support Vite 7+.
         'vite',
+        'rxjs', // Used by generated Angular wrapper; Knip can't trace it.
       ],
     },
     'packages/atomic-angular/projects/atomic-angular': {
       entry: ['src/public-api.ts'],
       ignore: [
-        'src/utils.ts', // Only used by generated files, so it 'seems' to have unused exports, but it's actually used.
+        'src/utils.ts', // Only used by generated files, so it 'seems' to have unused exports, but it's actually used.
       ],
     },
     'packages/atomic-react': {
@@ -49,10 +49,9 @@ export default {
       ],
     },
     'packages/headless-react': {
-      ignoreDependencies: ['@types/react-dom', '@types/react'],
-    },
-    'packages/auth': {
-      entry: ['src/auth.ts'],
+      // @types/react is an optional peer dep but referenced in source — consumers
+      // provide it, so we suppress the knip warning.
+      ignoreDependencies: ['@types/react'],
     },
     'packages/relay': {
       entry: ['src/relay.ts', 'config/rollup.config.mjs'],
@@ -93,12 +92,6 @@ export default {
     'samples/headless-ssr/commerce-express': {
       entry: ['src/server.ts'],
     },
-    'samples/headless/search-react': {
-      entry: ['server/server.tsx'],
-      ignore: [
-        'src/pages/AtomicReactPage.css', // TODO: Reassess if we can remove the file.
-      ],
-    },
     'samples/headless-ssr/commerce-nextjs': {
       // `mock-server.mjs` is a test utility, not exported publicly nor imported internally, so Knip cannot trace it.
       entry: ['mocks/mock-server.mjs'],
@@ -110,10 +103,15 @@ export default {
       ignoreUnresolved: [/^\.\/\+types\/.+/],
     },
     'samples/atomic/commerce-vite': {
-      // The search and listing pages share commerce-page.js. Vite resolves the
-      // HTML entries at runtime, so declare the shared JS entry explicitly
-      // (index.html → home-page.js is auto-detected).
+      // Knip cannot load vite.config.js because it throws when @coveo/atomic
+      // build artifacts (dist/lang, dist/assets) are missing. Disable the Vite
+      // plugin config loader.
+      vite: {config: []},
       entry: ['src/commerce-page.js'],
+    },
+    'samples/atomic/search-vite': {
+      // Same as commerce-vite: vite.config.js throws without build artifacts.
+      vite: {config: []},
     },
     'utils/ci': {},
     'utils/cdn': {},
@@ -148,8 +146,6 @@ export default {
         'storybook-utils/a11y/**/*.ts',
       ],
       ignore: [
-        // Ambient type declaration file, not an ES module
-        '.storybook/vite-env.d.ts',
         // Static file loaded via HTML <script> tag in manager-head.html
         '.storybook/public/cookieManager.js',
         // CSS files referenced via @import/@reference inside CSS tagged template literals.
@@ -158,9 +154,6 @@ export default {
       ],
     },
     'packages/atomic-legacy': {},
-    'packages/atomic-a11y': {
-      ignoreBinaries: ['gh'],
-    },
     'packages/create-atomic': {
       ignore: ['**/*'],
     },
@@ -187,7 +180,7 @@ export default {
     },
     'samples/thermidor/generative-angular': {
       entry: ['proxy.conf.js'],
-      ignore: ['src/app/services/engine.service.ts', 'src/app/app.css', 'src/styles.css'],
+      ignore: ['src/app/services/engine.service.ts'],
     },
   },
 };

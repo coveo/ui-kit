@@ -43,6 +43,7 @@
     "access": "public"
   },
   "scripts": {
+    "publint": "publint",
     "start": "node ./index.mjs",
     "build": "node ../../utils/ci/rm-rf.mjs template && pnpm run build:ts && node ./scripts/preparePackageJsonTemplate.mjs",
     "build:ts": "tsc -p tsconfig.json",
@@ -50,7 +51,7 @@
   },
   "dependencies": {
     "@coveo/platform-client": "62.0.0",
-    "abortcontroller-polyfill": "1.7.8",
+    "abortcontroller-polyfill": "catalog:",
     "https-proxy-agent": "8.0.0",
     "isomorphic-fetch": "3.0.0",
     "minimist": "1.2.8",
@@ -59,6 +60,7 @@
   },
   "devDependencies": {
     "@types/node": "catalog:",
+    "publint": "catalog:",
     "typescript": "catalog:",
     "yaml": "catalog:"
   },

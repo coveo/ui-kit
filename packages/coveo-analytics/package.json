@@ -1,6 +1,6 @@
 {
   "name": "coveo.analytics",
-  "version": "2.31.0",
+  "version": "2.32.0",
   "description": "📈 Coveo analytics client (node and browser compatible) ",
   "license": "MIT",
   "author": "Coveo",
@@ -28,6 +28,7 @@
   "browser": "dist/coveoua.browser.js",
   "types": "dist/definitions/coveoua/library.d.ts",
   "scripts": {
+    "publint": "publint",
     "build": "rollup -c",
     "start": "rollup -c -w --environment SERVE",
     "test": "vitest run",
@@ -51,6 +52,7 @@
     "fetch-mock": "9.11.0",
     "jsdom": "catalog:",
     "node-fetch": "2.7.0",
+    "publint": "catalog:",
     "react-native-get-random-values": "1.11.0",
     "rollup": "catalog:",
     "rollup-plugin-copy": "3.5.0",
@@ -58,5 +60,8 @@
     "tslib": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
+  },
+  "engines": {
+    "node": "^22.11.0 || ^24.11.0"
   }
 }

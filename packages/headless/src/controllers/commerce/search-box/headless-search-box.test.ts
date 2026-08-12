@@ -164,6 +164,21 @@ describe('headless search box', () => {
     });
   });
 
+  describe('numberOfSuggestions option', () => {
+    it('dispatches #registerQuerySuggest with the provided count', () => {
+      vi.resetAllMocks();
+      searchBox = buildSearchBox(engine, {
+        options: {id, numberOfSuggestions: 3},
+      });
+
+      expect(registerQuerySuggest).toHaveBeenCalledWith({id, count: 3});
+    });
+
+    it('does not pass count to #registerQuerySuggest when numberOfSuggestions is not specified', () => {
+      expect(registerQuerySuggest).toHaveBeenCalledWith({id});
+    });
+  });
+
   describe('#updateText', () => {
     it('updates the search box query in the querySet', () => {
       const text = 'query';

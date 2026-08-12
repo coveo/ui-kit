@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic-angular",
-  "version": "3.11.19",
+  "version": "3.11.20",
   "description": "An Angular component library for building modern UIs interfacing with the Coveo platform, wrapping the core Atomic web components",
   "license": "Apache-2.0",
   "repository": {
@@ -9,8 +9,14 @@
   "publishConfig": {
     "directory": "dist"
   },
+  "scripts": {
+    "publint": "publint dist --pack=false"
+  },
   "dependencies": {
     "@coveo/atomic": "workspace:*"
+  },
+  "devDependencies": {
+    "publint": "catalog:"
   },
   "peerDependencies": {
     "@angular/common": "14 - 21",

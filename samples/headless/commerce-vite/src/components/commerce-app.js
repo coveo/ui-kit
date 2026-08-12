@@ -178,12 +178,14 @@ export class CommerceApp extends LitElement {
             ${this.#tab('#/cart', `Cart (${this.cart.state.totalQuantity})`)}
           </nav>
         </div>
-        ${this.route.startsWith('#/search')
-          ? nothing
-          : html`<commerce-standalone-search-box
-              .controller=${this.standaloneSearchBox}
-              .instantProducts=${this.instantProducts}
-            ></commerce-standalone-search-box>`}
+        ${
+          this.route.startsWith('#/search')
+            ? nothing
+            : html`<commerce-standalone-search-box
+                .controller=${this.standaloneSearchBox}
+                .instantProducts=${this.instantProducts}
+              ></commerce-standalone-search-box>`
+        }
       </section>
       <main>${this.#renderPage()}</main>
     `;

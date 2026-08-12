@@ -217,13 +217,16 @@ import {nonPubliclyDocumentedFunction} from '@coveo/headless/dist/nonPublicFile.
 nonPubliclyDocumentedFunction();
 ```
 
-Also, it means you need to set `moduleResolution": "bundler"` in your `tsconfig.json` file to access secondary entry points such as `@coveo/headless/commerce` or `@coveo/headless/ssr`.
+Also, it means you need to set `"moduleResolution": "bundler"` in your `tsconfig.json` file to access secondary entry points such as `@coveo/headless/commerce` or `@coveo/headless/ssr`.
 See [TypeScript module resolution](https://www.typescriptlang.org/docs/handbook/modules/theory.html#module-resolution) for more information.
 
-### `moduleResolution` in `tsconfig.json` when installing via [npm](https://www.npmjs.com/)
+### TypeScript version and `moduleResolution`
 
-If you use Typescript, note that the `node10`/`node` module resolution is no longer supported.
-The `classic` module resolution, which was never supported, remains unsupported.
+If your project uses TypeScript, you must use TypeScript 5.0 or later with Headless v3. Headless v3 uses package exports for its public entry points, and TypeScript 5 is required to resolve these exports correctly.
+
+When using TypeScript, set `"moduleResolution": "bundler"` in your `tsconfig.json` file. The `node10`/`node` and `classic` module resolution options are not supported.
+
+TypeScript is an optional peer dependency, so JavaScript projects do not need to install it. If you cannot upgrade a TypeScript project to version 5 or later, remain on the last Headless version compatible with your toolchain or migrate your toolchain before upgrading to Headless v3.
 
 See [TypeScript module resolution](https://www.typescriptlang.org/docs/handbook/modules/theory.html#module-resolution) and [Announcing TypeScript 5.0 `--moduleResolution bundler`](https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#--moduleresolution-bundler).
 

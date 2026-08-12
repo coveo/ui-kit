@@ -28,6 +28,7 @@
       "env": ["STORYBOOK_INVOKED_BY"]
     },
     "chromatic": {
+      "cache": false,
       "dependsOn": [],
       "outputs": [],
       "env": ["CHROMATIC_PROJECT_TOKEN", "CHROMATIC_SHA", "CHROMATIC_BRANCH", "CHROMATIC_SLUG"]
@@ -121,6 +122,10 @@
       "dependsOn": ["build:cdn"],
       "cache": false,
       "persistent": true
+    },
+    "e2e:theming": {
+      "dependsOn": ["build:cdn"],
+      "outputs": ["playwright-report/**"]
     }
   }
 }

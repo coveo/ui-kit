@@ -31,11 +31,17 @@ interface BundleItem {
   clickUri?: string;
 }
 
-export function A2UIBundleDisplay({surface, allSurfaces}: A2UIBundleDisplayProps) {
-  const title =
-    (surface.componentProps.title as {literalString?: string})?.literalString ?? 'Bundle';
+interface BundleDisplayData {
+  title?: {
+    value?: string;
+  };
+  bundles?: BundleTier[];
+}
 
-  const bundles = (surface.componentProps.bundles as BundleTier[]) ?? [];
+export function A2UIBundleDisplay({surface, allSurfaces}: A2UIBundleDisplayProps) {
+  const data = surface.data as BundleDisplayData;
+  const title = data.title?.value ?? 'Bundle';
+  const bundles = data.bundles ?? [];
   const [activeTier, setActiveTier] = useState(bundles[0]?.bundleId ?? '');
   const targeting = useTargeting();
   const isTargetable = targeting?.isTargeting ?? false;
@@ -50,9 +56,8 @@ export function A2UIBundleDisplay({surface, allSurfaces}: A2UIBundleDisplayProps
   if (activeBundle) {
     for (const slot of activeBundle.slots) {
       const refSurface = allSurfaces.find((s) => s.surfaceId === slot.surfaceRef);
-      const items = (refSurface?.data.items as BundleItem[]) ?? [];
-      if (items[0]) {
-        resolvedItems.push(items[0]);
+      if (refSurface) {
+        resolvedItems.push(refSurface.data as unknown as BundleItem);
       }
     }
   }

@@ -28,14 +28,6 @@ function resolveEnvironment(value: string | undefined): PlatformEnvironment {
   return 'dev';
 }
 
-function getOrganizationAdminEndpoint(
-  organizationId: string,
-  environment: PlatformEnvironment
-): string {
-  const environmentSuffix = environment === 'prod' ? '' : environment;
-  return `https://${organizationId}.admin.org${environmentSuffix}.coveo.com`;
-}
-
 function getOrganizationPlatformEndpoint(
   organizationId: string,
   environment: PlatformEnvironment
@@ -44,29 +36,60 @@ function getOrganizationPlatformEndpoint(
   return `https://${organizationId}.org${environmentSuffix}.coveo.com`;
 }
 
-function getProxyTargets(mode: string) {
-  const env = loadEnv(mode, process.cwd(), '');
-  const organizationId = env.VITE_COVEO_ORGANIZATION_ID?.trim();
-  const endpointOverride = env.VITE_COVEO_ENDPOINT?.trim();
-  const environment = resolveEnvironment(env.VITE_COVEO_PLATFORM_ENVIRONMENT);
+export function resolveProxyTargets(
+  organizationId: string | undefined,
+  endpointOverride: string | undefined,
+  environment: PlatformEnvironment
+) {
+  const normalizedOrganizationId = organizationId?.trim();
+  const normalizedEndpointOverride = endpointOverride?.trim();
 
-  if (!organizationId) {
+  if (!normalizedOrganizationId) {
     return undefined;
   }
 
-  const platform = getOrganizationPlatformEndpoint(organizationId, environment);
-  const admin = endpointOverride
-    ? endpointOverride
-    : getOrganizationAdminEndpoint(organizationId, environment);
+  const platform = getOrganizationPlatformEndpoint(normalizedOrganizationId, environment);
 
-  return {admin, platform};
+  return {
+    agentGateway: normalizedEndpointOverride || platform,
+    platform,
+  };
+}
+
+export function resolveAgentRuntimeHeaders(
+  runtimeName: string | undefined,
+  runtimeQualifier: string | undefined
+) {
+  const name = runtimeName?.trim();
+  const qualifier = runtimeQualifier?.trim();
+
+  if (!name) {
+    return undefined;
+  }
+
+  return {
+    'x-coveo-agent-runtime-name': name,
+    ...(qualifier ? {'x-coveo-agent-runtime-qualifier': qualifier} : {}),
+  };
+}
+
+function getProxyTargets(env: Record<string, string>) {
+  return resolveProxyTargets(
+    env.VITE_COVEO_ORGANIZATION_ID,
+    env.VITE_COVEO_ENDPOINT,
+    resolveEnvironment(env.VITE_COVEO_PLATFORM_ENVIRONMENT)
+  );
 }
 
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, process.cwd(), '');
   const useProxy = parseBoolean(env.VITE_COVEO_USE_VITE_PROXY) ?? true;
-  const targets = getProxyTargets(mode);
+  const targets = getProxyTargets(env);
   const orgId = env.VITE_COVEO_ORGANIZATION_ID?.trim();
+  const agentRuntimeHeaders = resolveAgentRuntimeHeaders(
+    env.VITE_COVEO_AGENT_RUNTIME_NAME,
+    env.VITE_COVEO_AGENT_RUNTIME_QUALIFIER
+  );
 
   return {
     plugins: [react()],
@@ -75,10 +98,11 @@ export default defineConfig(({mode}) => {
       ...(useProxy && targets
         ? {
             proxy: {
-              [`/rest/organizations/${orgId}/commerce/unstable/agentic`]: {
-                target: targets.admin,
+              [`/api/preview/organizations/${orgId}/agents/commerce/agui`]: {
+                target: targets.agentGateway,
                 changeOrigin: true,
                 secure: true,
+                ...(agentRuntimeHeaders ? {headers: agentRuntimeHeaders} : {}),
               },
               '/rest': {
                 target: targets.platform,

@@ -60,10 +60,10 @@ describe('atomic-result-table-placeholder', () => {
       expect(table).toBeInTheDocument();
     });
 
-    it('should render thead with aria-hidden', async () => {
-      const {thead} = await renderComponent();
-      expect(thead).toBeInTheDocument();
-      expect(thead).toHaveAttribute('aria-hidden', 'true');
+    it('should hide the decorative table from assistive technologies', async () => {
+      const {table} = await renderComponent();
+      expect(table).toBeInTheDocument();
+      expect(table).toHaveAttribute('aria-hidden', 'true');
     });
 
     it('should render 3 header cells', async () => {

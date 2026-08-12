@@ -38,7 +38,12 @@ The devcontainer uses a Docker volume (`ui-kit-pnpm-store`) to persist the pnpm 
 
 ### Turbo Cache
 
-A separate Docker volume (`ui-kit-turbo-cache`) persists turbo's build cache across container rebuilds. Combined with the prebuild running `pnpm run build`:
+Two layers speed up builds:
+
+- **Remote cache** — [Turborepo remote caching](../README.md#remote-caching) (AWS Lambda + S3) shares build outputs across CI and developers. It activates when AWS credentials are available (`pnpm turbo:login` runs during `pnpm install`).
+- **Local volume fallback** — A Docker volume (`ui-kit-turbo-cache`, mounted at `/home/node/.cache/turbo`) persists Turbo's local cache across container rebuilds. This is the primary accelerator in Codespaces, where AWS credentials are typically unavailable.
+
+Combined with the prebuild running `pnpm run build`:
 
 - First build: Compiles all packages
 - Subsequent builds: Skips unchanged packages using cached outputs

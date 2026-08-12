@@ -11,7 +11,8 @@ global with sharing class SampleTokenProvider implements ITokenProvider {
     headlessConfiguration.put(
       'accessToken',
       // This API key is intentionally public — it belongs to a sample organization used for samples/docs.
-      'xx564559b1-0045-48e1-953c-3addd1ee4457'
+      // Name: Quantic__sampleTokenProvider_key_dnd - Anonymous Search key.
+      'xxb9c21134-8dad-4d53-8a5e-855bacddba8f'
     );
     return JSON.serialize(headlessConfiguration);
   }
