@@ -120,7 +120,7 @@
     "esbuild-plugin-umd-wrapper": "catalog:",
     "jsdom": "catalog:",
     "live-server": "catalog:",
-    "node-fetch": "3.3.2",
+    "node-fetch": "catalog:",
     "publint": "catalog:",
     "typedoc": "catalog:",
     "vitest": "catalog:"
