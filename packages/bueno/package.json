@@ -24,6 +24,7 @@
     }
   },
   "scripts": {
+    "publint": "publint",
     "dev": "concurrently \"pnpm run build:definitions -- -w\" \"pnpm run build:bundles -- dev\"",
     "build": "pnpm run build:bundles && pnpm run build:definitions",
     "build:bundles": "node esbuild.mjs",
@@ -34,6 +35,7 @@
   },
   "devDependencies": {
     "esbuild-plugin-umd-wrapper": "catalog:",
+    "publint": "catalog:",
     "vitest": "catalog:"
   },
   "engines": {

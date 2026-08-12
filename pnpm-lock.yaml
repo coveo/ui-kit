@@ -192,6 +192,9 @@ catalogs:
     prettier:
       specifier: 3.9.6
       version: 3.9.6
+    publint:
+      specifier: 0.3.22
+      version: 0.3.22
     puppeteer:
       specifier: 24.43.1
       version: 24.43.1
@@ -311,9 +314,6 @@ importers:
       playwright:
         specifier: 'catalog:'
         version: 1.60.0
-      publint:
-        specifier: 0.3.22
-        version: 0.3.22
       semver:
         specifier: 7.8.5
         version: 7.8.5
@@ -471,6 +471,9 @@ importers:
       prettier:
         specifier: 'catalog:'
         version: 3.9.6
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
       puppeteer:
         specifier: 'catalog:'
         version: 24.43.1(typescript@6.0.3)
@@ -584,6 +587,10 @@ importers:
       '@coveo/headless':
         specifier: workspace:^
         version: link:../../../headless
+    devDependencies:
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
     publishDirectory: dist
 
   packages/atomic-cdn-smoke:
@@ -637,6 +644,9 @@ importers:
       msw:
         specifier: 'catalog:'
         version: 2.15.0(@types/node@26.1.2)(typescript@6.0.3)
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
       vite:
         specifier: 'catalog:'
         version: 8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.8.1)(sass@1.102.0)(terser@5.49.0)(yaml@2.9.0)
@@ -653,6 +663,9 @@ importers:
       i18next:
         specifier: 'catalog:'
         version: 25.10.10(typescript@6.0.3)
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
 
   packages/atomic-react:
     dependencies:
@@ -687,6 +700,9 @@ importers:
       '@types/react-dom':
         specifier: 'catalog:'
         version: 19.2.3(@types/react@19.2.17)
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
       react:
         specifier: 19.2.7
         version: 19.2.7
@@ -702,6 +718,9 @@ importers:
 
   packages/auth:
     devDependencies:
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
       vite:
         specifier: 'catalog:'
         version: 8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.8.1)(sass@1.102.0)(terser@5.49.0)(yaml@2.9.0)
@@ -714,6 +733,9 @@ importers:
       esbuild-plugin-umd-wrapper:
         specifier: 'catalog:'
         version: 3.0.0
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
       vitest:
         specifier: 'catalog:'
         version: 4.1.10(@opentelemetry/api@1.9.1)(@types/node@26.1.2)(@vitest/browser-playwright@4.1.10)(jsdom@28.1.0)(msw@2.15.0(@types/node@26.1.2)(typescript@6.0.3))(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.8.1)(sass@1.102.0)(terser@5.49.0)(yaml@2.9.0))
@@ -760,6 +782,9 @@ importers:
       node-fetch:
         specifier: 2.7.0
         version: 2.7.0(encoding@0.1.13)
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
       react-native-get-random-values:
         specifier: 1.11.0
         version: 1.11.0(react-native@0.86.2(@babel/core@7.29.7)(@types/react@19.2.18)(react@19.2.7))
@@ -809,6 +834,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 24.13.3
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -821,8 +849,16 @@ importers:
       '@coveo/create-atomic-component-project':
         specifier: workspace:*
         version: link:../create-atomic-component-project
+    devDependencies:
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
 
-  packages/create-atomic-component-project: {}
+  packages/create-atomic-component-project:
+    devDependencies:
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
 
   packages/create-atomic-component-project/template:
     dependencies:
@@ -897,6 +933,10 @@ importers:
       '@coveo/create-atomic-component-project':
         specifier: workspace:*
         version: link:../create-atomic-component-project
+    devDependencies:
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
 
   packages/create-atomic-result-component/template/src/components/sample-result-component:
     dependencies:
@@ -937,6 +977,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 24.13.3
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -999,6 +1042,9 @@ importers:
       '@types/pacote':
         specifier: 11.1.8
         version: 11.1.8
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -1090,6 +1136,9 @@ importers:
       node-fetch:
         specifier: 'catalog:'
         version: 3.3.2
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
       typedoc:
         specifier: 'catalog:'
         version: 0.28.20(typescript@6.0.3)
@@ -1124,6 +1173,9 @@ importers:
       live-server:
         specifier: 'catalog:'
         version: 1.2.2
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
       typedoc:
         specifier: 'catalog:'
         version: 0.28.20(typescript@6.0.3)
@@ -1311,6 +1363,9 @@ importers:
       playwright:
         specifier: 'catalog:'
         version: 1.60.0
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
       rollup:
         specifier: 'catalog:'
         version: 4.62.4
@@ -1370,6 +1425,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 24.13.3
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
       vitest:
         specifier: 'catalog:'
         version: 4.1.10(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/browser-playwright@4.1.10)(jsdom@28.1.0)(msw@2.15.0(@types/node@24.13.3)(typescript@6.0.3))(vite@8.2.0(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(less@4.8.1)(sass@1.102.0)(terser@5.49.0)(yaml@2.9.0))
@@ -1386,6 +1444,9 @@ importers:
       '@microsoft/api-extractor':
         specifier: 7.58.12
         version: 7.58.12(@types/node@26.1.2)
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
       tsdown:
         specifier: 0.22.14
         version: 0.22.14(oxc-resolver@11.24.2)(publint@0.3.22)(typescript@6.0.3)
@@ -1432,6 +1493,9 @@ importers:
       msw:
         specifier: 'catalog:'
         version: 2.15.0(@types/node@26.1.2)(typescript@6.0.3)
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -1461,6 +1525,9 @@ importers:
       msw:
         specifier: 'catalog:'
         version: 2.15.0(@types/node@26.1.2)(typescript@6.0.3)
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
       vite:
         specifier: 'catalog:'
         version: 8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.8.1)(sass@1.102.0)(terser@5.49.0)(yaml@2.9.0)
@@ -1628,6 +1695,9 @@ importers:
       msw:
         specifier: 'catalog:'
         version: 2.15.0(@types/node@26.1.2)(typescript@6.0.3)
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -1657,6 +1727,9 @@ importers:
       msw:
         specifier: 'catalog:'
         version: 2.15.0(@types/node@26.1.2)(typescript@6.0.3)
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
       vite:
         specifier: 'catalog:'
         version: 8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.8.1)(sass@1.102.0)(terser@5.49.0)(yaml@2.9.0)
@@ -1714,6 +1787,9 @@ importers:
       msw:
         specifier: 'catalog:'
         version: 2.15.0(@types/node@24.13.3)(typescript@6.0.3)
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -1758,6 +1834,9 @@ importers:
       msw:
         specifier: 'catalog:'
         version: 2.15.0(@types/node@24.13.3)(typescript@6.0.3)
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -1904,6 +1983,9 @@ importers:
       msw:
         specifier: 'catalog:'
         version: 2.15.0(@types/node@26.1.2)(typescript@6.0.3)
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
       vite:
         specifier: 'catalog:'
         version: 8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.8.1)(sass@1.102.0)(terser@5.49.0)(yaml@2.9.0)
@@ -1930,6 +2012,9 @@ importers:
       msw:
         specifier: 'catalog:'
         version: 2.15.0(@types/node@26.1.2)(typescript@6.0.3)
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
       vite:
         specifier: 'catalog:'
         version: 8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.8.1)(sass@1.102.0)(terser@5.49.0)(yaml@2.9.0)
@@ -2041,6 +2126,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 6.0.5(vite@8.2.0(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(less@4.8.1)(sass@1.102.0)(terser@5.49.0)(yaml@2.9.0))
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -2070,6 +2158,9 @@ importers:
       msw:
         specifier: 'catalog:'
         version: 2.15.0(@types/node@26.1.2)(typescript@6.0.3)
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.22
       vite:
         specifier: 'catalog:'
         version: 8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.8.1)(sass@1.102.0)(terser@5.49.0)(yaml@2.9.0)

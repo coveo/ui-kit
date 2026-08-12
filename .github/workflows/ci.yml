@@ -290,9 +290,8 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-        with:
-          build-command: 'pnpm run build' # FIXME: https://coveord.atlassian.net/browse/KIT-6040
-      - run: pnpm run package-compatibility
+      - run: pnpm exec node ./scripts/ci/validate-publint-tasks.mjs
+      - run: pnpm turbo run publint --affected
   typedoc:
     name: 'Build typedoc'
     needs: build
@@ -445,6 +444,8 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
+        with:
+          skip-build: 'true'
       - uses: ./.github/actions/playwright-atomic-theming
   storybook-atomic:
     name: 'Run Storybook tests'
@@ -602,6 +603,8 @@ jobs:
     uses: ./.github/workflows/e2e-quantic.yml
     with:
       event_name: ${{ github.event_name }}
+      turbo_scm_base: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || 'main' }}
+      turbo_scm_head: ${{ github.event.pull_request.head.sha || github.sha }}
     secrets:
       SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
       SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}

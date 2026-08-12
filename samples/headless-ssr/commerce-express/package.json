@@ -14,6 +14,7 @@
     "linkDirectory": false
   },
   "scripts": {
+    "publint": "pnpm run prepack && publint publish --pack=false",
     "dev": "pnpm build:client --watch=forever & pnpm build:server --watch & node --watch ./dist/server.js",
     "build": "pnpm build:server && pnpm build:client",
     "build:e2e": "pnpm build && pnpm build:mocks",
@@ -37,6 +38,7 @@
     "@types/node": "catalog:",
     "esbuild": "catalog:",
     "msw": "catalog:",
+    "publint": "catalog:",
     "typescript": "catalog:"
   }
 }

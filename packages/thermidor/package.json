@@ -26,6 +26,7 @@
     "access": "public"
   },
   "scripts": {
+    "publint": "publint",
     "build": "tsdown",
     "clean": "node ../../utils/ci/rm-rf.mjs dist",
     "test": "vitest run",
@@ -39,6 +40,7 @@
   },
   "devDependencies": {
     "@microsoft/api-extractor": "7.58.12",
+    "publint": "catalog:",
     "tsdown": "0.22.14",
     "typescript": "catalog:",
     "vitest": "catalog:"
