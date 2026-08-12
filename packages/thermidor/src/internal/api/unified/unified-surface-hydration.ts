@@ -28,14 +28,14 @@ export type A2uiMessage =
   | {version: 'v1.0'; updateDataModel: UpdateDataModelPayload}
   | {version: 'v1.0'; updateComponents: UpdateComponentsPayload}
   | {version: 'v1.0'; deleteSurface: DeleteSurfacePayload}
-  | {version: 'v1.0'; actionResponse: unknown};
+  | {version: 'v1.0'; actionId: string; actionResponse: unknown};
 
 export type A2uiOperation =
   | {createSurface: CreateSurfacePayload}
   | {updateDataModel: UpdateDataModelPayload}
   | {updateComponents: UpdateComponentsPayload}
   | {deleteSurface: DeleteSurfacePayload}
-  | {actionResponse: unknown};
+  | {actionResponse: {actionId: string; response: unknown}};
 
 export interface CreateSurfacePayload {
   surfaceId: string;
@@ -45,11 +45,10 @@ export interface CreateSurfacePayload {
   dataModel?: Record<string, unknown>;
 }
 
-export interface ComponentNode {
+export type ComponentNode = {
   id: string;
   component: string;
-  componentProps?: Record<string, unknown>;
-}
+} & Record<string, unknown>;
 
 export interface UpdateDataModelPayload {
   surfaceId: string;
@@ -223,7 +222,9 @@ function parseA2uiMessage(message: unknown): A2uiOperation[] {
         ? [{deleteSurface: message.deleteSurface}]
         : [];
     case 'actionResponse':
-      return [{actionResponse: message.actionResponse}];
+      return typeof message.actionId === 'string'
+        ? [{actionResponse: {actionId: message.actionId, response: message.actionResponse}}]
+        : [];
     default:
       return [];
   }
@@ -278,7 +279,7 @@ function isComponentNode(value: unknown): value is ComponentNode {
     isRecord(value) &&
     typeof value.id === 'string' &&
     typeof value.component === 'string' &&
-    (value.componentProps === undefined || isRecord(value.componentProps))
+    !Object.prototype.hasOwnProperty.call(value, 'componentProps')
   );
 }
 

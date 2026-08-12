@@ -64,27 +64,24 @@ export type SearchApiResponseEvent = {
 // Structured snapshot events (A2UI — Coveo-specific payload shape)
 // ============================================================================
 
+export type A2UIComponent = {
+  id: string;
+  component: string;
+} & Record<string, unknown>;
+
 export type A2UIOperation =
   | {
       createSurface: {
         surfaceId: string;
         catalogId?: string;
-        components?: Array<{
-          id: string;
-          component: string;
-          componentProps?: Record<string, unknown>;
-        }>;
+        components?: A2UIComponent[];
         dataModel?: Record<string, unknown>;
       };
     }
   | {
       updateComponents: {
         surfaceId: string;
-        components: Array<{
-          id: string;
-          component: string;
-          componentProps?: Record<string, unknown>;
-        }>;
+        components: A2UIComponent[];
       };
     }
   | {
@@ -99,9 +96,11 @@ export type A2UIOperation =
         surfaceId: string;
       };
     }
-  | {actionResponse: unknown};
+  | {actionResponse: {actionId: string; response: unknown}};
 
-export type A2UIMessage = {version: 'v1.0'} & A2UIOperation;
+export type A2UIMessage =
+  | ({version: 'v1.0'} & Exclude<A2UIOperation, {actionResponse: unknown}>)
+  | {version: 'v1.0'; actionId: string; actionResponse: unknown};
 
 // ============================================================================
 // Unknown fallback (events not recognized by AG-UI or Coveo extensions)

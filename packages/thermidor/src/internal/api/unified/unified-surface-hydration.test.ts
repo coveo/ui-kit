@@ -353,15 +353,71 @@ describe('unified-surface-hydration', () => {
       ]);
     });
 
+    it('preserves direct catalog properties on component nodes', () => {
+      expect(
+        extractA2uiOperations({
+          messages: [
+            {
+              version: 'v1.0',
+              updateComponents: {
+                surfaceId: 's1',
+                components: [
+                  {
+                    id: 'root',
+                    component: 'ProductSearchSurface',
+                    accessibility: {label: 'Product search results'},
+                  },
+                ],
+              },
+            },
+          ],
+        })
+      ).toEqual([
+        {
+          updateComponents: {
+            surfaceId: 's1',
+            components: [
+              {
+                id: 'root',
+                component: 'ProductSearchSurface',
+                accessibility: {label: 'Product search results'},
+              },
+            ],
+          },
+        },
+      ]);
+    });
+
     it('ignores malformed updateComponents messages', () => {
       expect(
         extractA2uiOperations({
           messages: [
             {version: 'v1.0', updateComponents: {surfaceId: 's1'}},
             {version: 'v1.0', updateComponents: {surfaceId: 1, components: []}},
+            {
+              version: 'v1.0',
+              updateComponents: {
+                surfaceId: 's1',
+                components: [
+                  {
+                    id: 'root',
+                    component: 'ProductSearchSurface',
+                    componentProps: {label: 'Non-canonical'},
+                  },
+                ],
+              },
+            },
           ],
         })
       ).toEqual([]);
+    });
+
+    it('preserves the top-level action identifier on action responses', () => {
+      expect(
+        extractA2uiOperations({
+          messages: [{version: 'v1.0', actionId: 'action-1', actionResponse: {value: null}}],
+        })
+      ).toEqual([{actionResponse: {actionId: 'action-1', response: {value: null}}}]);
     });
 
     it('ignores malformed messages while preserving valid siblings', () => {
