@@ -182,7 +182,7 @@ describe('ConversationPage integration', () => {
               surfaceId: 'surface-actions',
               components: [
                 {
-                  id: 'comp-1',
+                  id: 'root',
                   component: 'NextActionsBar',
                 },
               ],

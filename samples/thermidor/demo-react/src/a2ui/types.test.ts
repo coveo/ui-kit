@@ -21,7 +21,7 @@ describe('parseSurfaceSnapshots', () => {
                 {
                   id: 'root',
                   component: 'ProductCarousel',
-                  componentProps: {heading: 'Featured'},
+                  heading: 'Featured',
                 },
               ],
               dataModel: {products: ['shoe']},
@@ -55,7 +55,7 @@ describe('parseSurfaceSnapshots', () => {
         message({
           updateComponents: {
             surfaceId: 'actions',
-            components: [{id: 'next-actions', component: 'NextActionsBar'}],
+            components: [{id: 'root', component: 'NextActionsBar'}],
           },
         }),
         message({
@@ -71,7 +71,7 @@ describe('parseSurfaceSnapshots', () => {
     expect(result).toEqual([
       {
         surfaceId: 'actions',
-        rootId: 'next-actions',
+        rootId: 'root',
         componentType: 'NextActionsBar',
         componentProps: {},
         data: {status: 'ready', count: 1},
@@ -104,6 +104,75 @@ describe('parseSurfaceSnapshots', () => {
     expect(result[0].data).toEqual({status: 'replacement'});
   });
 
+  it('applies nested and escaped JSON Pointer updates', () => {
+    const result = parseSurfaceSnapshot(
+      snapshot(
+        message({
+          createSurface: {
+            surfaceId: 'data',
+            dataModel: {query: {'display/name': 'old'}, products: ['first', 'second']},
+          },
+        }),
+        message({updateDataModel: {surfaceId: 'data', path: '/query/display~1name', value: 'new'}}),
+        message({updateDataModel: {surfaceId: 'data', path: '/products/0', value: null}})
+      )
+    );
+
+    expect(result[0].data).toEqual({query: {'display/name': 'new'}, products: ['second']});
+  });
+
+  it('keeps the existing surface when a duplicate createSurface arrives', () => {
+    const result = parseSurfaceSnapshot(
+      snapshot(
+        message({
+          createSurface: {
+            surfaceId: 'products',
+            components: [{id: 'root', component: 'ProductCarousel'}],
+            dataModel: {status: 'original'},
+          },
+        }),
+        message({
+          createSurface: {
+            surfaceId: 'products',
+            components: [{id: 'root', component: 'NextActionsBar'}],
+            dataModel: {status: 'duplicate'},
+          },
+        })
+      )
+    );
+
+    expect(result).toEqual([
+      {
+        surfaceId: 'products',
+        rootId: 'root',
+        componentType: 'ProductCarousel',
+        componentProps: {},
+        data: {status: 'original'},
+      },
+    ]);
+  });
+
+  it('does not replace the rendered root when a non-root component is updated', () => {
+    const result = parseSurfaceSnapshot(
+      snapshot(
+        message({
+          createSurface: {
+            surfaceId: 'products',
+            components: [{id: 'root', component: 'ProductCarousel'}],
+          },
+        }),
+        message({
+          updateComponents: {
+            surfaceId: 'products',
+            components: [{id: 'next-actions', component: 'NextActionsBar'}],
+          },
+        })
+      )
+    );
+
+    expect(result[0].componentType).toBe('ProductCarousel');
+  });
+
   it('removes a surface on deleteSurface', () => {
     expect(
       parseSurfaceSnapshot(
@@ -127,6 +196,15 @@ describe('parseSurfaceSnapshots', () => {
             deleteSurface: {surfaceId: 'invalid'},
           },
           {version: 'v1.0', createSurface: {surfaceId: 42}},
+          {
+            version: 'v1.0',
+            createSurface: {
+              surfaceId: 'nested-props',
+              components: [
+                {id: 'root', component: 'ProductCarousel', componentProps: {heading: 'Invalid'}},
+              ],
+            },
+          },
           message({createSurface: {surfaceId: 'valid', dataModel: {ok: true}}}),
         ],
       })

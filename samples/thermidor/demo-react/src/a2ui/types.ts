@@ -1,8 +1,7 @@
-interface ComponentDefinition {
+type ComponentDefinition = {
   id: string;
   component: string;
-  componentProps?: Record<string, unknown>;
-}
+} & Record<string, unknown>;
 
 interface CreateSurfaceOp {
   surfaceId: string;
@@ -20,7 +19,7 @@ interface UpdateDataModelOp {
 
 interface UpdateComponentsOp {
   surfaceId: string;
-  components?: ComponentDefinition[];
+  components: ComponentDefinition[];
 }
 
 interface DeleteSurfaceOp {
@@ -32,7 +31,7 @@ type A2UIOperation =
   | {updateDataModel: UpdateDataModelOp}
   | {updateComponents: UpdateComponentsOp}
   | {deleteSurface: DeleteSurfaceOp}
-  | {actionResponse: unknown};
+  | {actionResponse: {actionId: string; response: unknown}};
 
 /**
  * Parsed surface ready for rendering.
@@ -45,17 +44,22 @@ export interface ParsedSurface {
   data: Record<string, unknown>;
 }
 
-type SurfaceState = Omit<ParsedSurface, 'surfaceId'>;
+interface SurfaceState {
+  components: Map<string, ComponentDefinition>;
+  data?: Record<string, unknown>;
+}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 function isComponentDefinition(value: unknown): value is ComponentDefinition {
-  if (!isRecord(value) || typeof value.id !== 'string' || typeof value.component !== 'string') {
-    return false;
-  }
-  return value.componentProps === undefined || isRecord(value.componentProps);
+  return (
+    isRecord(value) &&
+    typeof value.id === 'string' &&
+    typeof value.component === 'string' &&
+    !Object.prototype.hasOwnProperty.call(value, 'componentProps')
+  );
 }
 
 function isComponentDefinitions(value: unknown): value is ComponentDefinition[] {
@@ -64,7 +68,7 @@ function isComponentDefinitions(value: unknown): value is ComponentDefinition[] 
 
 function normalizeComponent(
   component: ComponentDefinition | undefined
-): Omit<SurfaceState, 'data'> {
+): Pick<ParsedSurface, 'rootId' | 'componentType' | 'componentProps'> {
   if (!component) {
     return {
       rootId: 'root',
@@ -72,10 +76,11 @@ function normalizeComponent(
       componentProps: {},
     };
   }
+  const {id, component: componentType, ...componentProps} = component;
   return {
-    rootId: component.id,
-    componentType: component.component,
-    componentProps: component.componentProps ?? {},
+    rootId: id,
+    componentType,
+    componentProps,
   };
 }
 
@@ -105,7 +110,9 @@ function getOperation(message: unknown): A2UIOperation | undefined {
     case 'deleteSurface':
       return getDeleteSurfaceOperation(message);
     case 'actionResponse':
-      return {actionResponse: message.actionResponse};
+      return typeof message.actionId === 'string'
+        ? {actionResponse: {actionId: message.actionId, response: message.actionResponse}}
+        : undefined;
     default:
       return undefined;
   }
@@ -148,10 +155,7 @@ function getUpdateComponentsOperation(value: Record<string, unknown>): A2UIOpera
     return undefined;
   }
   const operation = value.updateComponents;
-  if (
-    typeof operation.surfaceId !== 'string' ||
-    (operation.components !== undefined && !isComponentDefinitions(operation.components))
-  ) {
+  if (typeof operation.surfaceId !== 'string' || !isComponentDefinitions(operation.components)) {
     return undefined;
   }
   return {updateComponents: operation as UpdateComponentsOp};
@@ -189,15 +193,24 @@ export function parseSurfaceSnapshots(
     }
   }
 
-  return Array.from(surfaces.entries()).map(([surfaceId, entry]) => ({surfaceId, ...entry}));
+  return Array.from(surfaces.entries()).map(([surfaceId, entry]) => ({
+    surfaceId,
+    ...normalizeComponent(entry.components.get('root')),
+    data: entry.data ?? {},
+  }));
 }
 
 function applyOperation(surfaces: Map<string, SurfaceState>, operation: A2UIOperation): void {
   if ('createSurface' in operation) {
     const createSurface = operation.createSurface;
+    if (surfaces.has(createSurface.surfaceId)) {
+      return;
+    }
     surfaces.set(createSurface.surfaceId, {
-      ...normalizeComponent(createSurface.components?.[0]),
-      data: createSurface.dataModel ?? {},
+      components: new Map(
+        (createSurface.components ?? []).map((component) => [component.id, component])
+      ),
+      data: createSurface.dataModel,
     });
     return;
   }
@@ -208,26 +221,16 @@ function applyOperation(surfaces: Map<string, SurfaceState>, operation: A2UIOper
     if (!entry) {
       return;
     }
-    if (updateDataModel.path === '/' || !updateDataModel.path) {
-      entry.data = isRecord(updateDataModel.value) ? updateDataModel.value : {};
-      return;
-    }
-
-    const key = updateDataModel.path.startsWith('/')
-      ? updateDataModel.path.slice(1)
-      : updateDataModel.path;
-    if (updateDataModel.value === null) {
-      delete entry.data[key];
-    } else {
-      entry.data[key] = updateDataModel.value;
-    }
+    entry.data = applyDataModelPatch(entry.data, updateDataModel.path, updateDataModel.value);
     return;
   }
 
   if ('updateComponents' in operation) {
     const entry = surfaces.get(operation.updateComponents.surfaceId);
-    if (entry && operation.updateComponents.components?.[0]) {
-      Object.assign(entry, normalizeComponent(operation.updateComponents.components[0]));
+    if (entry) {
+      for (const component of operation.updateComponents.components) {
+        entry.components.set(component.id, component);
+      }
     }
     return;
   }
@@ -235,4 +238,92 @@ function applyOperation(surfaces: Map<string, SurfaceState>, operation: A2UIOper
   if ('deleteSurface' in operation) {
     surfaces.delete(operation.deleteSurface.surfaceId);
   }
+}
+
+function applyDataModelPatch(
+  current: Record<string, unknown> | undefined,
+  path: string | undefined,
+  value: unknown
+): Record<string, unknown> | undefined {
+  if (!path || path === '/') {
+    return isRecord(value) ? value : undefined;
+  }
+  if (!path.startsWith('/')) {
+    return current;
+  }
+
+  const segments = path
+    .slice(1)
+    .split('/')
+    .map((segment) => segment.replace(/~1/g, '/').replace(/~0/g, '~'));
+  const root: Record<string, unknown> = {...(current ?? {})};
+  let target: Record<string, unknown> | unknown[] = root;
+
+  for (let index = 0; index < segments.length - 1; index++) {
+    const segment = segments[index];
+    const nextSegment = segments[index + 1];
+    const existing = getContainerValue(target, segment);
+    const child = isContainer(existing) ? cloneContainer(existing) : createContainer(nextSegment);
+    setContainerValue(target, segment, child);
+    target = child;
+  }
+
+  const leaf = segments.at(-1);
+  if (leaf === undefined) {
+    return root;
+  }
+  if (value === null) {
+    deleteContainerValue(target, leaf);
+  } else {
+    setContainerValue(target, leaf, value);
+  }
+  return root;
+}
+
+function createContainer(nextSegment: string): Record<string, unknown> | unknown[] {
+  return isArrayIndex(nextSegment) || nextSegment === '-' ? [] : {};
+}
+
+function cloneContainer(
+  value: Record<string, unknown> | unknown[]
+): Record<string, unknown> | unknown[] {
+  return Array.isArray(value) ? [...value] : {...value};
+}
+
+function isContainer(value: unknown): value is Record<string, unknown> | unknown[] {
+  return Array.isArray(value) || isRecord(value);
+}
+
+function getContainerValue(container: Record<string, unknown> | unknown[], key: string): unknown {
+  return Array.isArray(container) ? container[Number(key)] : container[key];
+}
+
+function setContainerValue(
+  container: Record<string, unknown> | unknown[],
+  key: string,
+  value: unknown
+): void {
+  if (Array.isArray(container)) {
+    if (key === '-') {
+      container.push(value);
+    } else if (isArrayIndex(key)) {
+      container[Number(key)] = value;
+    }
+    return;
+  }
+  container[key] = value;
+}
+
+function deleteContainerValue(container: Record<string, unknown> | unknown[], key: string): void {
+  if (Array.isArray(container)) {
+    if (isArrayIndex(key)) {
+      container.splice(Number(key), 1);
+    }
+    return;
+  }
+  delete container[key];
+}
+
+function isArrayIndex(value: string): boolean {
+  return /^(0|[1-9]\d*)$/.test(value);
 }
