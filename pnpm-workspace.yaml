@@ -121,12 +121,6 @@ catalog:
   yaml: 2.9.0
   zone.js: 0.15.1
 
-# node-fetch v2 line, pinned for fetch-mock@9 (CJS) compatibility in coveo.analytics.
-# The default catalog tracks node-fetch v3 (ESM-only), used by @coveo/headless.
-catalogs:
-  node-fetch-v2:
-    node-fetch: 2.7.0
-
 minimumReleaseAge: 10080
 
 minimumReleaseAgeExclude:

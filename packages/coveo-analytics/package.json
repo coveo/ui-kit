@@ -49,7 +49,7 @@
     "@types/node": "catalog:",
     "fetch-mock": "9.11.0",
     "jsdom": "catalog:",
-    "node-fetch": "catalog:node-fetch-v2",
+    "node-fetch": "2.7.0",
     "react-native-get-random-values": "1.11.0",
     "rollup": "catalog:",
     "rollup-plugin-copy": "3.5.0",

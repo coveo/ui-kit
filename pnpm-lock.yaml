@@ -234,10 +234,6 @@ catalogs:
     zone.js:
       specifier: 0.15.1
       version: 0.15.1
-  node-fetch-v2:
-    node-fetch:
-      specifier: 2.7.0
-      version: 2.7.0
 
 overrides:
   braces: 3.0.3
@@ -762,7 +758,7 @@ importers:
         specifier: 'catalog:'
         version: 28.1.0
       node-fetch:
-        specifier: catalog:node-fetch-v2
+        specifier: 2.7.0
         version: 2.7.0(encoding@0.1.13)
       react-native-get-random-values:
         specifier: 1.11.0
