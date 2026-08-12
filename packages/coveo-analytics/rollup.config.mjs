@@ -28,6 +28,13 @@ const browserFetch = () =>
     ],
   });
 
+/**
+ * `@rollup/plugin-typescript` forwards TypeScript's own source maps to Rollup rather
+ * than letting Rollup build them from the original sources, and `tsc` only fills
+ * `sourcesContent` when `inlineSources` is enabled. That option therefore has to stay
+ * on in `tsconfig.json`, or the published `coveoua*.js.map` files resolve stack frames
+ * to `src/*.ts` without carrying any of that source for a debugger to display.
+ */
 const tsPlugin = () =>
   typescript({
     tsconfig: './tsconfig.json',
