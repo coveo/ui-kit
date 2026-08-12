@@ -42,6 +42,7 @@
     "e2e:saml": "vite manual-e2e/saml/"
   },
   "devDependencies": {
+    "publint": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:"
   },

@@ -33,6 +33,9 @@
   "scripts": {
     "publint": "publint"
   },
+  "devDependencies": {
+    "publint": "catalog:"
+  },
   "engines": {
     "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
   }

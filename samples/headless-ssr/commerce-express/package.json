@@ -38,6 +38,7 @@
     "@types/node": "catalog:",
     "esbuild": "catalog:",
     "msw": "catalog:",
+    "publint": "catalog:",
     "typescript": "catalog:"
   }
 }

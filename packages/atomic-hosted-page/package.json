@@ -46,6 +46,7 @@
     "@playwright/test": "catalog:",
     "local-web-server": "catalog:",
     "msw": "catalog:",
+    "publint": "catalog:",
     "vite": "catalog:"
   },
   "engines": {

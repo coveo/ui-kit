@@ -45,6 +45,7 @@
     "@coveo/documentation": "workspace:*",
     "@testing-library/react": "catalog:",
     "live-server": "catalog:",
+    "publint": "catalog:",
     "typedoc": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"

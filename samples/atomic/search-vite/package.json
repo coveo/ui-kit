@@ -29,6 +29,7 @@
     "@msw/playwright": "catalog:",
     "@playwright/test": "catalog:",
     "msw": "catalog:",
+    "publint": "catalog:",
     "vite": "catalog:"
   }
 }
