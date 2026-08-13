@@ -70,6 +70,7 @@ function createMockStatePort(): GenerativeStatePort {
     setActiveTurnId: vi.fn(),
     replaceTurnId: vi.fn(),
     setRoutedInterface: vi.fn(),
+    clearRoutedInterface: vi.fn(),
     initAgentResponse: vi.fn(),
     startMessage: vi.fn(),
     appendMessageDelta: vi.fn(),
@@ -1155,6 +1156,49 @@ describe('UnifiedRuntime', () => {
         query: undefined,
         surfaceId: 's1',
       });
+    });
+
+    it('disposes and clears a routed interface when its surface is deleted', async () => {
+      const config = createMockConfig();
+      const engine = createMockEngine();
+      const mockIface = createMockInterface();
+      const creationContent = {
+        operations: [{createSurface: {surfaceId: 's1', dataModel: {products: []}}}],
+      };
+      const deletionContent = {
+        operations: [{deleteSurface: {surfaceId: 's1'}}],
+      };
+
+      mockExtractA2uiOperations
+        .mockReturnValueOnce(creationContent.operations)
+        .mockReturnValueOnce(deletionContent.operations);
+      mockHydrateFromCreateSurface.mockReturnValue({
+        surfaceId: 's1',
+        useCase: 'commerceSearch',
+        interface: mockIface,
+        snapshot: {products: []},
+        query: undefined,
+      });
+
+      setupSuccessfulStream([
+        {
+          type: 'ACTIVITY_SNAPSHOT',
+          activityType: 'a2ui-surface',
+          content: creationContent,
+        } as unknown as NormalizedStreamEvent,
+        {
+          type: 'ACTIVITY_SNAPSHOT',
+          activityType: 'a2ui-surface',
+          content: deletionContent,
+        } as unknown as NormalizedStreamEvent,
+        {type: 'turn_complete'} as NormalizedStreamEvent,
+      ]);
+
+      const runtime = UnifiedRuntime.getInstance(engine, 'a2ui-delete', config);
+      await runtime.submit('Hello');
+
+      expect(mockIface.dispose).toHaveBeenCalledOnce();
+      expect(config.statePort.clearRoutedInterface).toHaveBeenCalledWith('generated-id-1', 's1');
     });
 
     it('updateDataModel with path `/` calls applyDataModelUpdate with root path', async () => {

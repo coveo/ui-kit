@@ -39,4 +39,26 @@ describe('generative slice', () => {
 
     expect(state.turns[0].status).toBe('complete');
   });
+
+  it('clears a routed interface without removing the agent response', () => {
+    let state = reducer(
+      undefined,
+      actions.createTurn({id: 'turn-1', prompt: 'find shoes', status: 'streaming'})
+    );
+    state = reducer(
+      state,
+      actions.setRoutedInterface({turnId: 'turn-1', useCase: 'commerceSearch'})
+    );
+    state = reducer(state, actions.initAgentResponse({turnId: 'turn-1'}));
+
+    state = reducer(state, actions.clearRoutedInterface({turnId: 'turn-1'}));
+
+    expect(state.turns[0]).toEqual(
+      expect.objectContaining({
+        agentResponse: {messages: [], surfaces: [], reasoningSteps: []},
+        status: 'streaming',
+      })
+    );
+    expect(state.turns[0].routedInterface).toBeUndefined();
+  });
 });

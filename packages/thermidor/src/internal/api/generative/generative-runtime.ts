@@ -20,6 +20,7 @@ export interface GenerativeStatePort {
   setActiveTurnId(id: string): void;
   replaceTurnId(oldId: string, newId: string): void;
   setRoutedInterface(turnId: string, hydrationResult: HydrationResult): void;
+  clearRoutedInterface(turnId: string, surfaceId: string): void;
   initAgentResponse(turnId: string): void;
   startMessage(turnId: string, role: string): void;
   appendMessageDelta(turnId: string, delta: string): void;
