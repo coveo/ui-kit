@@ -61,7 +61,6 @@ jobs:
       - name: Read create-ui version
         id: create-ui-version
         if: ${{ steps.changesets.outputs.published == 'true' && contains(steps.changesets.outputs.publishedPackages, '@coveo/create-ui') }}
-        # Best-effort: source-map bookkeeping must never fail the release or block the CDN deploy.
         continue-on-error: true
         working-directory: packages/create-ui
         run: echo "version=$(jq -r '.version' package.json)" >> "$GITHUB_OUTPUT"
@@ -243,9 +242,6 @@ jobs:
   commit-artifact-upload:
     name: Upload commit artifacts to S3
     needs: [build-cdn, release]
-    # Deploy whenever the CDN build succeeded and the run wasn't cancelled, even if the
-    # release job failed on a non-critical step (e.g. best-effort Sentry/source-map upload).
-    # The private vs. private,preview channel choice still keys off release's `published` output.
     if: ${{ !cancelled() && needs.build-cdn.result == 'success' }}
     runs-on: ubuntu-latest
     # TODO(KIT-5712): Rename to 'CDN Deploy' once token vending machine is available
