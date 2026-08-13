@@ -3,6 +3,7 @@ import {
   type ConversationStreamEvent,
   createConversationEndpointClient,
 } from '@/src/internal/api/conversation/index.js';
+import {getActivityMetadata} from '@/src/internal/api/protocol/activity-metadata.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import {createConversationEndpointRequestSelector} from '@/src/internal/api/conversation/index.js';
@@ -314,18 +315,6 @@ export class GenerativeRuntime {
       this.agentResponseInitialized.add(turnId);
     }
   }
-}
-
-function getActivityMetadata(event: unknown): {id?: string; replace?: boolean} {
-  if (typeof event !== 'object' || event === null) {
-    return {};
-  }
-
-  const activity = event as {messageId?: unknown; replace?: unknown};
-  return {
-    ...(typeof activity.messageId === 'string' ? {id: activity.messageId} : {}),
-    ...(activity.replace === true ? {replace: true} : {}),
-  };
 }
 
 function getErrorMessage(error: unknown): string {

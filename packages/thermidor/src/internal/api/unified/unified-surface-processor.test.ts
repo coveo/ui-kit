@@ -282,4 +282,25 @@ describe('applyDataModelPatch', () => {
     expect(deleted).toEqual({query: {text: 'new', locale: 'en'}, products: ['p2']});
     expect(initial).toEqual({query: {text: 'old', locale: 'en'}, products: ['p1', 'p2']});
   });
+
+  it('decodes escaped JSON Pointer segments', () => {
+    const updated = applyDataModelPatch({metadata: {'a/b~c': 'old'}}, '/metadata/a~1b~0c', 'new');
+
+    expect(updated).toEqual({metadata: {'a/b~c': 'new'}});
+  });
+
+  it('replaces array entries and appends with the JSON Pointer append segment', () => {
+    const replaced = applyDataModelPatch({products: ['p1', 'p2']}, '/products/1', 'updated');
+    const appended = applyDataModelPatch(replaced, '/products/-', 'p3');
+
+    expect(appended).toEqual({products: ['p1', 'updated', 'p3']});
+  });
+
+  it('replaces and clears the entire data model at the root path', () => {
+    const replaced = applyDataModelPatch({products: ['p1']}, '/', {products: ['p2']});
+    const cleared = applyDataModelPatch(replaced, '/', null);
+
+    expect(replaced).toEqual({products: ['p2']});
+    expect(cleared).toBeUndefined();
+  });
 });

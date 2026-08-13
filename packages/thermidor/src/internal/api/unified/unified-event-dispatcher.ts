@@ -1,4 +1,5 @@
 import type {NormalizedStreamEvent} from '@/src/internal/api/protocol/stream-types.js';
+import {getActivityMetadata} from '@/src/internal/api/protocol/activity-metadata.js';
 import type {GenerativeStatePort} from '@/src/internal/api/generative/index.js';
 
 export interface DispatchResult {
@@ -118,18 +119,6 @@ export function dispatchStreamEvent(
     default:
       return handleUnknownEvent(turnId, event, deps);
   }
-}
-
-function getActivityMetadata(event: unknown): {id?: string; replace?: boolean} {
-  if (typeof event !== 'object' || event === null) {
-    return {};
-  }
-
-  const activity = event as {messageId?: unknown; replace?: unknown};
-  return {
-    ...(typeof activity.messageId === 'string' ? {id: activity.messageId} : {}),
-    ...(activity.replace === true ? {replace: true} : {}),
-  };
 }
 
 function handleUnknownEvent(

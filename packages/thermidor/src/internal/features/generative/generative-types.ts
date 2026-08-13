@@ -189,7 +189,8 @@ export interface AgentMessage {
 }
 
 /**
- * Opaque surface data passed through from `/converse` without interpretation.
+ * Opaque surface data passed through from `/converse`, augmented with an
+ * internal activity identifier for lifecycle tracking.
  */
 export type A2UISurface = Record<string, unknown> & {
   __thermidorActivityId?: string;
