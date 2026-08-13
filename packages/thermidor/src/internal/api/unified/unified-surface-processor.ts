@@ -62,6 +62,13 @@ function processOperations(
       if (iface) {
         applyDataModelUpdate(deps.engine, iface, op.updateDataModel.path, op.updateDataModel.value);
       }
+    } else if ('deleteSurface' in op) {
+      const iface = surfaceMap.get(op.deleteSurface.surfaceId);
+      if (iface) {
+        iface.dispose();
+        surfaceMap.delete(op.deleteSurface.surfaceId);
+        deps.statePort.clearRoutedInterface(turnId, op.deleteSurface.surfaceId);
+      }
     }
   }
 }
