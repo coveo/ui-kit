@@ -71,6 +71,7 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
             interface: hydrationResult.interface,
             snapshot: hydrationResult.snapshot,
             query: hydrationResult.query,
+            surfaceId: hydrationResult.surfaceId,
           });
           this.engine.mutate(
             this.#actions.setRoutedInterface({turnId, useCase: hydrationResult.useCase})

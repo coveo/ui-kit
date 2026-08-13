@@ -498,6 +498,33 @@ describe('buildUnifiedConverseController', () => {
       expect(entry!.snapshot).toEqual({products: []});
       expect(entry!.query).toBe('shoes');
     });
+
+    it('clears the registry and turn when the deleted surface matches', async () => {
+      const controller = buildController();
+      const actions = getOrCreateGenerativeActions(generativeInterface);
+      const registry = getOrCreateRoutedInterfaceRegistry(generativeInterface);
+      fullEngine.mutate(actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'complete'}));
+
+      const {UnifiedRuntime} = vi.mocked(await import('@/src/internal/api/unified/index.js'));
+      const getInstanceMock = UnifiedRuntime.getInstance as ReturnType<typeof vi.fn>;
+      const config = getInstanceMock.mock.calls[0][2];
+
+      config.statePort.setRoutedInterface('turn-1', {
+        useCase: 'commerceSearch',
+        interface: {} as never,
+        snapshot: {products: []},
+        query: undefined,
+        surfaceId: 'surface-abc',
+      });
+
+      config.statePort.clearRoutedInterface('turn-1', 'other-surface');
+      expect(registry.get('turn-1')).toBeDefined();
+      expect(controller.state.turns[0].routedInterface).toBeDefined();
+
+      config.statePort.clearRoutedInterface('turn-1', 'surface-abc');
+      expect(registry.get('turn-1')).toBeUndefined();
+      expect(controller.state.turns[0].routedInterface).toBeUndefined();
+    });
   });
 
   describe('state port: appendSurface', () => {

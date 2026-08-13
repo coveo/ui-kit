@@ -551,4 +551,30 @@ describe('buildConverseController', () => {
       });
     });
   });
+
+  describe('state port: setRoutedInterface', () => {
+    it('stores surfaceId in registry entries', async () => {
+      buildController();
+      const registry = getOrCreateRoutedInterfaceRegistry(generativeInterface);
+
+      const {GenerativeRuntime} = vi.mocked(await import('@/src/internal/api/generative/index.js'));
+      const getInstanceMock = GenerativeRuntime.getInstance as ReturnType<typeof vi.fn>;
+      const config = getInstanceMock.mock.calls[0][2];
+
+      config.statePort.setRoutedInterface('turn-1', {
+        useCase: 'commerceSearch',
+        interface: {} as never,
+        snapshot: {products: []},
+        query: 'shoes',
+        surfaceId: 'surface-abc',
+      });
+
+      const entry = registry.get('turn-1');
+      expect(entry).toBeDefined();
+      expect(entry!.surfaceId).toBe('surface-abc');
+      expect(entry!.useCase).toBe('commerceSearch');
+      expect(entry!.snapshot).toEqual({products: []});
+      expect(entry!.query).toBe('shoes');
+    });
+  });
 });
