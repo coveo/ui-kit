@@ -61,10 +61,10 @@
   },
   "peerDependencies": {
     "@coveo/headless": "workspace:^",
-    "@types/react": "^18 || ^19",
-    "@types/react-dom": "^18 || ^19",
-    "react": "^18 || ^19",
-    "react-dom": "^18 || ^19"
+    "@types/react": "catalog:react-compatibility",
+    "@types/react-dom": "catalog:react-compatibility",
+    "react": "catalog:react-compatibility",
+    "react-dom": "catalog:react-compatibility"
   },
   "peerDependenciesMeta": {
     "@types/react": {

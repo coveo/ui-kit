@@ -19,42 +19,6 @@ import {parse as parseYaml} from 'yaml';
 const DEP_TYPES = ['dependencies', 'devDependencies', 'peerDependencies'];
 
 /**
- * Dependencies intentionally kept as wide, hardcoded peer ranges instead of
- * `catalog:` to preserve backward compatibility for external consumers.
- *
- * The React wrapper packages keep `react`/`react-dom` (and their `@types/*`) at
- * `^18 || ^19` so consumers on React 18 or 19 can install them, even though the
- * catalog pins a single 19.x version for the monorepo's own tooling.
- *
- * See docs/adr/0004-react-peer-dependency-ranges.md (KIT-5994).
- *
- * @type {Record<string, string[]>} Dependency name -> workspace-relative package
- *   paths where bypassing the catalog is intentional.
- */
-const INTENTIONAL_CATALOG_BYPASSES = {
-  react: ['packages/headless-react', 'packages/atomic-react'],
-  'react-dom': ['packages/headless-react', 'packages/atomic-react'],
-  '@types/react': ['packages/headless-react', 'packages/atomic-react'],
-  '@types/react-dom': ['packages/headless-react', 'packages/atomic-react'],
-};
-
-/**
- * Returns `true` when every occurrence of a catalog-bypassing dependency is
- * covered by the intentional-bypass allowlist.
- *
- * @param {string} name
- * @param {DepOccurrence[]} occurrences
- * @returns {boolean}
- */
-function isIntentionalBypass(name, occurrences) {
-  const allowed = INTENTIONAL_CATALOG_BYPASSES[name];
-  if (!allowed) {
-    return false;
-  }
-  return occurrences.every((occurrence) => allowed.includes(occurrence.package));
-}
-
-/**
  * @typedef DepOccurrence
  * @property {string} package - Relative path from workspace root (e.g., `packages/atomic`, `samples/headless/search`, `.`).
  * @property {string} version - Raw version string from the manifest.
@@ -219,7 +183,6 @@ function main() {
     'different-patches': 0,
     'exact-same': 0,
     'bypasses-catalog': 0,
-    'intentional-bypass': 0,
   };
 
   /** @type {Record<string, object>} */
@@ -240,9 +203,7 @@ function main() {
 
     const issues = [divergence];
     if (name in catalog) {
-      issues.push(
-        isIntentionalBypass(name, occurrences) ? 'intentional-bypass' : 'bypasses-catalog'
-      );
+      issues.push('bypasses-catalog');
     }
 
     const entry = {
@@ -259,9 +220,6 @@ function main() {
     counts[divergence]++;
     if (issues.includes('bypasses-catalog')) {
       counts['bypasses-catalog']++;
-    }
-    if (issues.includes('intentional-bypass')) {
-      counts['intentional-bypass']++;
     }
   }
 

@@ -122,6 +122,13 @@ catalog:
   yaml: 2.9.0
   zone.js: 0.15.1
 
+catalogs:
+  react-compatibility:
+    '@types/react': '^18 || ^19'
+    '@types/react-dom': '^18 || ^19'
+    react: '^18 || ^19'
+    react-dom: '^18 || ^19'
+
 minimumReleaseAge: 10080
 
 minimumReleaseAgeExclude:
