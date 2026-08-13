@@ -1,5 +1,17 @@
 # coveo.analytics
 
+## 2.33.0
+
+### Minor Changes
+
+- [#8157](https://github.com/coveo/ui-kit/pull/8157) [`13d3dd7`](https://github.com/coveo/ui-kit/commit/13d3dd79e7830713da507a297a301d54dba1e0a9) - Publish unbundled per-module ESM output under `dist/esm/` (`history.mjs`, `storage.mjs`, `cookieutils.mjs`, `detector.mjs`, each with a matching `.d.mts`), so a consumer can import a single module instead of pulling in a full bundle. Purely additive: no `exports` map is introduced and every existing entry point resolves exactly as before.
+
+- [#8223](https://github.com/coveo/ui-kit/pull/8223) [`7373b67`](https://github.com/coveo/ui-kit/commit/7373b67f8f2747021e718525c1501c0804e07dfd) - Declared the supported Node.js versions through the `engines` field: `^22.11.0 || ^24.11.0`.
+
+### Patch Changes
+
+- [#8225](https://github.com/coveo/ui-kit/pull/8225) [`73d36e2`](https://github.com/coveo/ui-kit/commit/73d36e25d157834023f865e08e5bf07b562488ec) - Restore first-party sources in the CDN bundles' source maps. Since the migration to `@rollup/plugin-typescript`, `coveoua.js.map`, `coveoua.browser.js.map` and `coveoua.debug.js.map` shipped with `sourcesContent: null` for all 38 `src/*.ts` entries, so debuggers could resolve a stack frame to a file and line but could not display any coveo.analytics source. Enabling `inlineSources` in `tsconfig.json` populates them again. The emitted JavaScript is unchanged.
+
 ## 2.32.0
 
 ### Minor Changes
