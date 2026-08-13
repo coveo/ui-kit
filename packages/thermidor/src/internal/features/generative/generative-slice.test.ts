@@ -40,7 +40,7 @@ describe('generative slice', () => {
     expect(state.turns[0].status).toBe('complete');
   });
 
-  it('reconciles replacement activities by identity while retaining their A2UI messages', () => {
+  it('replaces activities by identity when their A2UI snapshot is replaced', () => {
     let state = reducer(
       undefined,
       actions.createTurn({id: 'turn-1', prompt: 'find shoes', status: 'streaming'})
@@ -74,7 +74,6 @@ describe('generative slice', () => {
       {
         __thermidorActivityId: 'activity-1',
         messages: [
-          {version: 'v1.0', createSurface: {surfaceId: 'surface-1'}},
           {
             version: 'v1.0',
             updateDataModel: {surfaceId: 'surface-1', path: '/', value: {products: []}},

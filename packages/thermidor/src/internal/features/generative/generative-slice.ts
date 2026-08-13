@@ -94,20 +94,14 @@ export function createGenerativeSlice(
               const existingIndex = turn.agentResponse.surfaces.findIndex(
                 (surface) => surface.__thermidorActivityId === activityId
               );
-              const existingSurface = turn.agentResponse.surfaces[existingIndex];
-              const existingMessages = existingSurface?.messages;
-              const replacementMessages = payload.surface.messages;
-              const reconciledSurface = {
+              const replacementSurface = {
                 ...payload.surface,
-                ...(Array.isArray(existingMessages) && Array.isArray(replacementMessages)
-                  ? {messages: [...existingMessages, ...replacementMessages]}
-                  : {}),
                 __thermidorActivityId: activityId,
               };
               if (existingIndex >= 0) {
-                turn.agentResponse.surfaces[existingIndex] = reconciledSurface;
+                turn.agentResponse.surfaces[existingIndex] = replacementSurface;
               } else {
-                turn.agentResponse.surfaces.push(reconciledSurface);
+                turn.agentResponse.surfaces.push(replacementSurface);
               }
             } else {
               turn.agentResponse.surfaces.push(payload.surface);
