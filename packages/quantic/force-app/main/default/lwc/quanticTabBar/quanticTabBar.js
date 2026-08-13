@@ -81,9 +81,13 @@ export default class QuanticTabBar extends LightningElement {
     this._lastTabStateSignature = tabStateSignature;
 
     const tabsCount = tabElements.length;
-    const snapshot = this.computeLayoutSnapshot(tabElements);
+    const slotContentWidth = this.computeSlotContentWidth(tabElements);
+    const isOverflow = slotContentWidth > this.containerWidth;
+    // Must run before computeLayoutSnapshot: while display:none, moreButtonWidth reads as 0.
+    this.updateMoreButtonVisibility(isOverflow);
 
-    this.updateMoreButtonVisibility(snapshot.isOverflow);
+    const snapshot = this.computeLayoutSnapshot(tabElements, isOverflow);
+
     this.updateTabVisibility(snapshot.overflowingTabs, false, tabsCount);
     this.updateTabVisibility(snapshot.displayedTabs, true, tabsCount);
     this.updateDropdownOptions(snapshot.overflowingTabs);
@@ -95,13 +99,8 @@ export default class QuanticTabBar extends LightningElement {
   /**
    * Derives a lightweight tab state signature representing the state relevant to the tab display
    * layout: the tab count, the container width, the identity of the currently active tab, and the
-   * total rendered width of the tabs. The rendered width is included because a tab's content (and
-   * thus its width) can change without the tab count, container width, or active tab changing
-   * (e.g. a placeholder label being replaced by the real label once data loads), which would
-   * otherwise cause a genuine overflow change to be missed by the skip-guard.
-   * Used to short-circuit `updateTabsDisplay` when nothing relevant has changed, so it deliberately
-   * only reads the small set of values needed for that decision rather than the full layout
-   * snapshot (which is more expensive and only computed once we know a real update is needed).
+   * total rendered width of the tabs. The rendered width is included since it can change without
+   * the other three changing (e.g. a placeholder label being replaced by the real one).
    * @param {Array<Element>} tabElements
    * @returns {string}
    */
@@ -114,16 +113,13 @@ export default class QuanticTabBar extends LightningElement {
 
   /**
    * Computes, in a single pass, all the layout values needed to update the tabs display.
-   * Groups all `getBoundingClientRect`/width reads together to avoid redundant recomputation
-   * and layout thrashing caused by interleaving reads and writes.
+   * Must be called after the "More" button's visibility has been set for this pass, so its
+   * width reflects its real rendered size rather than 0 from being `display: none`.
    * @param {Array<Element>} tabElements
-   * @returns {{isOverflow: boolean, overflowingTabs: Array<Element>, displayedTabs: Array<Element>}}
+   * @param {boolean} isOverflow Whether the tabs overflow the container.
+   * @returns {{overflowingTabs: Array<Element>, displayedTabs: Array<Element>}}
    */
-  computeLayoutSnapshot(tabElements) {
-    const containerWidth = this.containerWidth;
-    const slotContentWidth = this.computeSlotContentWidth(tabElements);
-    const isOverflow = slotContentWidth > containerWidth;
-
+  computeLayoutSnapshot(tabElements, isOverflow) {
     // @ts-ignore
     const selectedTab = tabElements.find((el) => el.isActive);
     const selectedTabWidth = selectedTab ? getAbsoluteWidth(selectedTab) : 0;
@@ -144,12 +140,13 @@ export default class QuanticTabBar extends LightningElement {
       })
     );
 
+    // Set avoids O(n²) lookups from Array.includes when filtering displayedTabs.
+    const overflowingTabsSet = new Set(overflowingTabs);
     const displayedTabs = tabElements.filter(
-      (el) => !overflowingTabs.includes(el)
+      (el) => !overflowingTabsSet.has(el)
     );
 
     return {
-      isOverflow,
       overflowingTabs,
       displayedTabs,
     };
@@ -364,9 +361,9 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {Array<Element>}
    */
   get displayedTabs() {
-    return this.getTabsFromSlot().filter(
-      (el) => !this.overflowingTabs.includes(el)
-    );
+    // Set avoids O(n²) lookups from Array#includes.
+    const overflowingTabsSet = new Set(this.overflowingTabs);
+    return this.getTabsFromSlot().filter((el) => !overflowingTabsSet.has(el));
   }
 
   /**

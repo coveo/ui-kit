@@ -14,10 +14,18 @@ jest.mock('@salesforce/label/c.quantic_More', () => ({default: 'More'}), {
 
 jest.mock('c/quanticUtils', () => ({
   getAbsoluteWidth: jest.fn((element) => {
+    if (!element) {
+      return 0;
+    }
     if (element?.tagName === 'C-QUANTIC-TAB') {
       // @ts-ignore
       return element.mockWidth ?? tabSlotWidth;
     } else if (element?.dataset?.testid === 'tab-bar_more-section') {
+      // Mirrors real getBoundingClientRect() behavior: an element with display:none has
+      // zero width, even though it still has layout dimensions once visibility is hidden.
+      if (element.style?.display === 'none') {
+        return 0;
+      }
       return moreButtonWidth;
     }
     return mockContainerWidth;
@@ -437,6 +445,91 @@ describe('c-quantic-tab-bar', () => {
       await flushPromises();
 
       expect(moreTabsSection.style.display).toBe('block');
+    });
+  });
+
+  describe('more button visibility', () => {
+    it('should correctly split tabs into displayed/overflowing on the very first pass, when the more button starts display:none', async () => {
+      // Reproduces a bug where measuring moreButtonWidth before setting visibility caused it
+      // to read as 0, under-reserving space and marking one extra tab as fitting.
+      const numberOfTabs = 3;
+      exampleTabSlots = createExampleTabSlots(numberOfTabs);
+      createTestComponent(defaultOptions, exampleTabSlots);
+      await flushPromises();
+
+      const expectedNumberOfTabsToBeVisible = 1;
+      const visibleTabs = exampleTabSlots.filter(
+        (tab) => tab.style.visibility === 'visible'
+      );
+      expect(visibleTabs.length).toBe(expectedNumberOfTabsToBeVisible);
+
+      const expectedNumberOfTabsToBeHidden = 2;
+      const hiddenTabs = exampleTabSlots.filter(
+        (tab) => tab.style.visibility === 'hidden'
+      );
+      expect(hiddenTabs.length).toBe(expectedNumberOfTabsToBeHidden);
+    });
+
+    it('should correctly position the more button when only the active tab is displayed from the very first render', async () => {
+      mockContainerWidth = 90;
+      const numberOfTabs = 4;
+      const tabs = createExampleTabSlots(numberOfTabs);
+      // @ts-ignore
+      tabs[0].isActive = true;
+      const element = createTestComponent(defaultOptions, tabs);
+      await flushPromises();
+
+      const moreTabsSection = element.shadowRoot.querySelector(
+        selectors.moreTabsSection
+      );
+      const moreTabsSectionIsVisible =
+        moreTabsSection.style.display === 'block';
+      expect(moreTabsSectionIsVisible).toBe(true);
+
+      const visibleTabs = tabs.filter(
+        (tab) => tab.style.visibility === 'visible'
+      );
+      expect(visibleTabs.length).toBe(1);
+      expect(visibleTabs[0]).toBe(tabs[0]);
+
+      const expectedLeft = tabs[0].getBoundingClientRect().right;
+      expect(moreTabsSection.style.left).toBe(`${expectedLeft}px`);
+      expect(moreTabsSection.style.left).not.toBe('0px');
+
+      mockContainerWidth = 200;
+    });
+
+    it('should show the More label on the more button once it is visible', async () => {
+      const numberOfTabs = 3;
+      const tabs = createExampleTabSlots(numberOfTabs);
+      // @ts-ignore
+      tabs[0].isActive = true;
+      const element = createTestComponent(defaultOptions, tabs);
+      await flushPromises();
+
+      const moreTabsButton = element.shadowRoot.querySelector(
+        selectors.moreTabsButton
+      );
+      expect(moreTabsButton.textContent.trim()).toContain('More');
+    });
+
+    it('should show the More label even when the active tab has a long label, as long as there is room for it', async () => {
+      mockContainerWidth = 500;
+      const numberOfTabs = 3;
+      const tabs = createExampleTabSlots(numberOfTabs);
+      // @ts-ignore
+      tabs[0].isActive = true;
+      // @ts-ignore
+      tabs[0].mockWidth = 300;
+      const element = createTestComponent(defaultOptions, tabs);
+      await flushPromises();
+
+      const moreTabsButton = element.shadowRoot.querySelector(
+        selectors.moreTabsButton
+      );
+      expect(moreTabsButton.textContent.trim()).toContain('More');
+
+      mockContainerWidth = 200;
     });
   });
 });
