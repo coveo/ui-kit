@@ -83,7 +83,6 @@ describe('generative slice', () => {
       },
     ]);
   });
-});
 
   it('clears a routed interface without removing the agent response', () => {
     let state = reducer(

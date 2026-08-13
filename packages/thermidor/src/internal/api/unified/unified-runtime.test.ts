@@ -1262,7 +1262,15 @@ describe('UnifiedRuntime', () => {
       const engine = createMockEngine();
       const mockIface = createMockInterface();
       const creationContent = {
-        operations: [{createSurface: {surfaceId: 's1', dataModel: {products: []}}}],
+        operations: [
+          {
+            createSurface: {
+              surfaceId: 's1',
+              components: statefulComponents,
+              dataModel: {products: []},
+            },
+          },
+        ],
       };
       const deletionContent = {
         operations: [{deleteSurface: {surfaceId: 's1'}}],
