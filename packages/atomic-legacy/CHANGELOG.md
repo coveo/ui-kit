@@ -1,3 +1,14 @@
+## 0.1.0
+
+### Minor Changes
+
+- [#8223](https://github.com/coveo/ui-kit/pull/8223) [`7373b67`](https://github.com/coveo/ui-kit/commit/7373b67f8f2747021e718525c1501c0804e07dfd) - Declared the supported Node.js versions through the `engines` field: `^22.11.0 || ^24.11.0`.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @coveo/headless@3.55.1
+
 ## 0.0.27
 
 ### Patch Changes
