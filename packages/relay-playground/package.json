@@ -17,7 +17,7 @@
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "ts-dedent": "2.2.0"
+    "ts-dedent": "catalog:"
   },
   "devDependencies": {
     "@types/react": "catalog:",

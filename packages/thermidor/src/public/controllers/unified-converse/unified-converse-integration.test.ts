@@ -91,13 +91,16 @@ const surfaceCreationEvents: SSEEvent[] = [
     event: 'message',
     data: JSON.stringify({
       type: 'ACTIVITY_SNAPSHOT',
+      messageId: 'surface-1-activity',
+      replace: true,
       activityType: 'a2ui-surface',
       content: {
-        operations: [
+        messages: [
           {
+            version: 'v1.0',
             createSurface: {
               surfaceId: 'surface-1',
-              surfaceProperties: {placement: 'main'},
+              components: [{id: 'root', component: 'ProductSearchSurface'}],
               dataModel: {
                 responseId: 'resp-1',
                 products: [
@@ -136,10 +139,13 @@ const actionResponseEvents: SSEEvent[] = [
     event: 'message',
     data: JSON.stringify({
       type: 'ACTIVITY_SNAPSHOT',
+      messageId: 'surface-1-activity',
+      replace: true,
       activityType: 'a2ui-surface',
       content: {
-        operations: [
+        messages: [
           {
+            version: 'v1.0',
             updateDataModel: {
               surfaceId: 'surface-1',
               path: '/pagination',
@@ -147,6 +153,7 @@ const actionResponseEvents: SSEEvent[] = [
             },
           },
           {
+            version: 'v1.0',
             updateDataModel: {
               surfaceId: 'surface-1',
               path: '/products',
@@ -165,6 +172,23 @@ const actionResponseEvents: SSEEvent[] = [
     event: 'turn_complete',
     data: JSON.stringify({conversationSessionId: 'session-1', conversationToken: 'token-1'}),
   },
+];
+
+const surfaceDeletionEvents: SSEEvent[] = [
+  ...surfaceCreationEvents.slice(0, -2),
+  {
+    event: 'message',
+    data: JSON.stringify({
+      type: 'ACTIVITY_SNAPSHOT',
+      messageId: 'surface-1-activity',
+      replace: true,
+      activityType: 'a2ui-surface',
+      content: {
+        messages: [{version: 'v1.0', deleteSurface: {surfaceId: 'surface-1'}}],
+      },
+    }),
+  },
+  ...surfaceCreationEvents.slice(-2),
 ];
 
 const errorEvents: SSEEvent[] = [
@@ -301,6 +325,23 @@ describe('UnifiedConverseController integration', () => {
 
       expect(paginationController.state.totalCount).toBe(100);
       expect(paginationController.state.pageSize).toBe(20);
+    });
+  });
+
+  describe('surface lifecycle', () => {
+    it('removes a routed interface when its A2UI surface is deleted', async () => {
+      mockClient.call.mockReturnValue({
+        success: true,
+        data: {stream: createSSEStream(surfaceDeletionEvents)},
+      });
+
+      controller.submit({prompt: 'Show me boots'});
+
+      await vi.waitFor(() => {
+        expect(controller.state.turns[0]?.status).toBe('complete');
+      });
+
+      expect(controller.state.turns[0].routedInterface).toBeUndefined();
     });
   });
 

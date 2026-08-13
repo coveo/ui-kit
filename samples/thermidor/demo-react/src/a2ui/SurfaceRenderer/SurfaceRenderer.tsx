@@ -5,7 +5,7 @@ import {A2UINextActionsBar} from '../NextActionsBar/NextActionsBar.js';
 import {A2UIComparisonTable} from '../ComparisonTable/ComparisonTable.js';
 import {A2UIComparisonSummary} from '../ComparisonSummary/ComparisonSummary.js';
 import {A2UISkeleton} from '../Skeleton/Skeleton.js';
-import {parseSurfaceSnapshot, type ParsedSurface} from '../types.js';
+import {parseSurfaceSnapshots, type ParsedSurface} from '../types.js';
 import styles from './SurfaceRenderer.module.css';
 
 type A2UISurface = Record<string, unknown>;
@@ -45,11 +45,7 @@ export function SurfaceRenderer({
   pendingSkeletons = [],
 }: SurfaceRendererProps) {
   const allParsed = useMemo(() => {
-    const result: ParsedSurface[] = [];
-    for (const surface of surfaces) {
-      result.push(...parseSurfaceSnapshot(surface));
-    }
-    return result;
+    return parseSurfaceSnapshots(surfaces);
   }, [surfaces]);
 
   const renderItems = useMemo(() => {

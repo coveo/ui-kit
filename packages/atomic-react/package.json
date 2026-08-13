@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic-react",
-  "version": "3.11.36",
+  "version": "3.11.38",
   "description": "React specific wrapper for the Atomic component library",
   "license": "Apache-2.0",
   "repository": {
@@ -34,6 +34,7 @@
     }
   },
   "scripts": {
+    "publint": "publint",
     "clean": "node ../../utils/ci/rm-rf.mjs dist",
     "gen:lit": "node ./scripts/build-lit.mjs",
     "build:bundles": "rollup --config rollup.config.js",
@@ -52,6 +53,7 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "publint": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "rollup": "catalog:",

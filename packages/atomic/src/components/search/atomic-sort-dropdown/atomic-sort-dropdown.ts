@@ -45,6 +45,10 @@ import type {Bindings} from '../atomic-search-interface/atomic-search-interface'
 @bindings()
 @withTailwindStyles
 export class AtomicSortDropdown extends LitElement implements InitializableComponent<Bindings> {
+  private static readonly sortExpressionSchema = new Schema({
+    label: new StringValue({emptyAllowed: false, required: true}),
+  });
+
   @state() bindings!: Bindings;
 
   private readonly dropdownId = randomID('atomic-sort-dropdown-');
@@ -95,9 +99,7 @@ export class AtomicSortDropdown extends LitElement implements InitializableCompo
       const tabsIncluded = JSON.parse(element.getAttribute('tabs-included') || '[]');
       const tabsExcluded = JSON.parse(element.getAttribute('tabs-excluded') || '[]');
 
-      new Schema({
-        label: new StringValue({emptyAllowed: false, required: true}),
-      }).validate({label});
+      AtomicSortDropdown.sortExpressionSchema.validate({label});
 
       return {
         tabs: {
