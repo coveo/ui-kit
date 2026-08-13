@@ -9,13 +9,6 @@ import {LightningElement, api, track} from 'lwc';
 /** @typedef {import("coveo").Tab} Tab */
 
 /**
- * Sentinel value used to represent "no previous dispatch yet", distinct from any real value
- * that `shouldDisplay`, `isActive`, or `label` could hold. This ensures the very first render
- * is always treated as a layout-relevant change.
- */
-const UNSET = Symbol('unset');
-
-/**
  * The `QuanticTab` component allows the end user to view a subset of results.
  * @category Search
  * @category Insight Panel
@@ -91,49 +84,14 @@ export default class QuanticTab extends LightningElement {
   /** @type {boolean} */
   hasInitializationError = false;
 
-  /**
-   * The `shouldDisplay` value as of the last `quantic__tabrendered` dispatch.
-   * @type {boolean|symbol}
-   */
-  _lastDispatchedShouldDisplay = UNSET;
-  /**
-   * The `isActive` value as of the last `quantic__tabrendered` dispatch.
-   * @type {boolean|symbol}
-   */
-  _lastDispatchedIsActive = UNSET;
-  /**
-   * The `label` value as of the last `quantic__tabrendered` dispatch.
-   * @type {string|symbol}
-   */
-  _lastDispatchedLabel = UNSET;
-
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
   }
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
-    if (this.hasLayoutRelevantChange()) {
-      this._lastDispatchedShouldDisplay = this.shouldDisplay;
-      this._lastDispatchedIsActive = this.isActive;
-      this._lastDispatchedLabel = this.label;
-      this.dispatchEvent(
-        new CustomEvent('quantic__tabrendered', {bubbles: true})
-      );
-    }
-  }
-
-  /**
-   * Indicates whether any of the fields that affect the tab bar's layout (`shouldDisplay`,
-   * `isActive`, or `label`) have changed since the last `quantic__tabrendered` dispatch.
-   * The very first call always returns `true`.
-   * @returns {boolean}
-   */
-  hasLayoutRelevantChange() {
-    return (
-      this.shouldDisplay !== this._lastDispatchedShouldDisplay ||
-      this.isActive !== this._lastDispatchedIsActive ||
-      this.label !== this._lastDispatchedLabel
+    this.dispatchEvent(
+      new CustomEvent('quantic__tabrendered', {bubbles: true})
     );
   }
 

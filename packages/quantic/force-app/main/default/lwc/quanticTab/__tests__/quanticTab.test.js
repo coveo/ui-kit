@@ -4,7 +4,6 @@ import QuanticTab from '../quanticTab';
 // @ts-ignore
 import {createElement} from 'lwc';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
-import {buildCreateTestComponent, cleanup, flushPromises} from 'c/testUtils';
 
 jest.mock('c/quanticHeadlessLoader');
 
@@ -64,28 +63,13 @@ const functionsMocks = {
 
 const expectedActiveTabClass = 'slds-is-active';
 
-const createTestComponent = buildCreateTestComponent(
-  QuanticTab,
-  'c-quantic-tab',
-  defaultOptions
-);
-
-/**
- * Creates the test component with the `quantic__tabrendered` listener already attached
- * before the element is inserted into the DOM, so that even the very first render's
- * dispatch (which may happen synchronously during insertion) is captured.
- * @param {object} options
- * @returns {Element}
- */
-function createTestComponentWithEventListeners(options = defaultOptions) {
+function createTestComponent(options = defaultOptions) {
   const element = createElement('c-quantic-tab', {
     is: QuanticTab,
   });
-  const optionsToApply = Object.assign({}, defaultOptions, options);
-  for (const [key, value] of Object.entries(optionsToApply)) {
+  for (const [key, value] of Object.entries(options)) {
     element[key] = value;
   }
-  setupEventListeners(element);
   document.body.appendChild(element);
   return element;
 }
@@ -98,6 +82,11 @@ function prepareHeadlessState() {
       buildSearchStatus: functionsMocks.buildSearchStatus,
     };
   };
+}
+
+// Helper function to wait until the microtask queue is empty.
+function flushPromises() {
+  return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
 function mockSuccessfulHeadlessInitialization() {
@@ -126,6 +115,15 @@ function setupEventListeners(element) {
   );
 }
 
+function cleanup() {
+  // The jsdom instance is shared across test cases in a single file so reset the DOM
+  while (document.body.firstChild) {
+    document.body.removeChild(document.body.firstChild);
+  }
+  jest.clearAllMocks();
+  isInitialized = false;
+}
+
 describe('c-quantic-tab', () => {
   beforeEach(() => {
     mockSuccessfulHeadlessInitialization();
@@ -133,10 +131,9 @@ describe('c-quantic-tab', () => {
   });
 
   afterEach(() => {
-    tabState = {...defaultTabState};
-    searchStatusState = {...defaultSearchStatusState};
+    tabState = defaultTabState;
+    searchStatusState = defaultSearchStatusState;
     cleanup();
-    isInitialized = false;
   });
 
   describe('component initialization', () => {
@@ -216,82 +213,11 @@ describe('c-quantic-tab', () => {
     });
 
     it('should dispatch the quantic__tabrendered event', async () => {
-      createTestComponentWithEventListeners();
+      const element = createTestComponent();
+      setupEventListeners(element);
       await flushPromises();
 
       expect(functionsMocks.exampleTabRendered).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe('the quantic__tabrendered dispatch gating', () => {
-    it('should dispatch the quantic__tabrendered event only once when re-rendered with no layout-relevant change', async () => {
-      createTestComponentWithEventListeners();
-      await flushPromises();
-
-      expect(functionsMocks.exampleTabRendered).toHaveBeenCalledTimes(1);
-
-      // Simulate additional headless state notifications with no actual change to
-      // shouldDisplay/isActive/label by invoking the subscriber callback again.
-      functionsMocks.tabStateSubscriber.mock.calls[0][0]();
-      await flushPromises();
-      functionsMocks.tabStateSubscriber.mock.calls[0][0]();
-      await flushPromises();
-
-      expect(functionsMocks.exampleTabRendered).toHaveBeenCalledTimes(1);
-    });
-
-    it('should dispatch the quantic__tabrendered event again when isActive changes', async () => {
-      createTestComponentWithEventListeners();
-      await flushPromises();
-
-      expect(functionsMocks.exampleTabRendered).toHaveBeenCalledTimes(1);
-
-      tabState.isActive = true;
-      functionsMocks.tabStateSubscriber.mock.calls[0][0]();
-      await flushPromises();
-
-      expect(functionsMocks.exampleTabRendered).toHaveBeenCalledTimes(2);
-    });
-
-    it('should dispatch the quantic__tabrendered event again when shouldDisplay changes', async () => {
-      searchStatusState = {...searchStatusState, firstSearchExecuted: false};
-      createTestComponentWithEventListeners();
-      await flushPromises();
-
-      expect(functionsMocks.exampleTabRendered).toHaveBeenCalledTimes(1);
-
-      searchStatusState.firstSearchExecuted = true;
-      functionsMocks.searchStatusStateSubscriber.mock.calls[0][0]();
-      await flushPromises();
-
-      expect(functionsMocks.exampleTabRendered).toHaveBeenCalledTimes(2);
-    });
-
-    it('should dispatch the quantic__tabrendered event again when label changes', async () => {
-      const element = createTestComponentWithEventListeners();
-      await flushPromises();
-
-      expect(functionsMocks.exampleTabRendered).toHaveBeenCalledTimes(1);
-
-      element.label = 'A different label';
-      await flushPromises();
-
-      expect(functionsMocks.exampleTabRendered).toHaveBeenCalledTimes(2);
-    });
-
-    it('should still attempt headless initialization on every render even when the dispatch is skipped', async () => {
-      createTestComponent();
-      await flushPromises();
-
-      expect(functionsMocks.buildTab).toHaveBeenCalledTimes(1);
-
-      // Simulate an additional no-op re-render.
-      functionsMocks.tabStateSubscriber.mock.calls[0][0]();
-      await flushPromises();
-
-      // The tab is already initialized so buildTab is not called again, but this confirms
-      // no error occurs when initializeWithHeadless runs again after a skipped dispatch.
-      expect(functionsMocks.buildTab).toHaveBeenCalledTimes(1);
     });
   });
 
