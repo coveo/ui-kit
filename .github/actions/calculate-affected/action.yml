@@ -1,0 +1,64 @@
+name: Calculate affected tasks
+description: Calculate affected Turbo tasks, projects, and samples.
+inputs:
+  base-sha:
+    description: Base commit to compare against.
+    required: true
+  head-sha:
+    description: Head commit to calculate affected tasks for.
+    required: true
+outputs:
+  tasks:
+    description: Affected Turbo task identifiers as a single-line JSON array of strings.
+    value: ${{ steps.calculate.outputs.tasks }}
+  projects:
+    description: Affected project identifiers as a single-line JSON array of strings.
+    value: ${{ steps.calculate.outputs.projects }}
+  samples:
+    description: Affected sample E2E task identifiers as a single-line JSON array of strings.
+    value: ${{ steps.calculate.outputs.samples }}
+runs:
+  using: composite
+  steps:
+    - name: Install calculation tooling
+      uses: step-security/mise-action@2796166110dee826668caddd4bffedae5116e7cd # v4
+      with:
+        install: true
+        cache: true
+    - name: Calculate and publish affected data
+      id: calculate
+      shell: bash
+      env:
+        BASE_SHA: ${{ inputs.base-sha }}
+        HEAD_SHA: ${{ inputs.head-sha }}
+      run: |
+        set -euo pipefail
+
+        turbo_version="$(node -p "require('./package.json').devDependencies.turbo")"
+        tasks="$(
+          pnpm dlx "turbo@$turbo_version" query affected \
+            --base "$BASE_SHA" \
+            --head "$HEAD_SHA" \
+            --no-update-notifier |
+            jq -c '.data.affectedTasks.items | map(.fullName) | sort | unique'
+        )"
+
+        projects="$(jq -c 'map(sub("#.*"; "")) | unique' <<< "${tasks}")"
+        samples="$(jq -c 'map(select(test("^@(samples/|coveo/ui-kit-sample-)[^#]+#e2e$")))' <<< "${tasks}")"
+
+        write_output() {
+          local name="$1"
+          local value="$2"
+
+          printf '%s=%s\n' "$name" "$value" >> "$GITHUB_OUTPUT"
+
+          # Show in logs
+          echo
+          echo "$name="
+          jq -r ".[]" <<< "$value"
+          echo
+        }
+
+        write_output tasks "$tasks"
+        write_output projects "$projects"
+        write_output samples "$samples"
