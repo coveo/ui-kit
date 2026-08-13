@@ -41,6 +41,7 @@ function createMockStatePort(): GenerativeStatePort {
     setActiveTurnId: vi.fn(),
     replaceTurnId: vi.fn(),
     setRoutedInterface: vi.fn(),
+    clearRoutedInterface: vi.fn(),
     initAgentResponse: vi.fn(),
     startMessage: vi.fn(),
     appendMessageDelta: vi.fn(),
@@ -471,7 +472,9 @@ describe('GenerativeRuntime', () => {
       const runtime = GenerativeRuntime.getInstance(engine, 'activity', config);
       await runtime.submit('Hello');
 
-      expect(config.statePort.appendSurface).toHaveBeenCalledWith('generated-id-1', surface);
+      expect(config.statePort.appendSurface).toHaveBeenCalledWith('generated-id-1', surface, {
+        id: 'm1',
+      });
     });
 
     it('handles commerce_search_api_response by routing when hydration succeeds', async () => {

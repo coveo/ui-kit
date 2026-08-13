@@ -27,7 +27,11 @@ export function createGenerativeActions(interfaceId: string) {
     appendMessageDelta: createAction<{turnId: string; delta: string}>(
       `${prefix}/appendMessageDelta`
     ),
-    appendSurface: createAction<{turnId: string; surface: A2UISurface}>(`${prefix}/appendSurface`),
+    appendSurface: createAction<{
+      turnId: string;
+      surface: A2UISurface;
+      activity?: {id?: string; replace?: boolean};
+    }>(`${prefix}/appendSurface`),
     startToolCall: createAction<{
       turnId: string;
       toolCallId: string;

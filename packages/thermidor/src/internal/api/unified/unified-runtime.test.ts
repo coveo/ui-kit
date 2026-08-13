@@ -522,7 +522,9 @@ describe('UnifiedRuntime', () => {
       const runtime = UnifiedRuntime.getInstance(engine, 'activity', config);
       await runtime.submit('Hello');
 
-      expect(config.statePort.appendSurface).toHaveBeenCalledWith('generated-id-1', surface);
+      expect(config.statePort.appendSurface).toHaveBeenCalledWith('generated-id-1', surface, {
+        id: 'm1',
+      });
     });
 
     it('handles RUN_ERROR by failing the turn with the error message', async () => {
@@ -935,6 +937,8 @@ describe('UnifiedRuntime', () => {
       return {disposed: false, dispose: vi.fn()} as InterfaceHandle;
     }
 
+    const statefulComponents = [{id: 'root', component: 'ProductSearchSurface'}];
+
     it('non-a2ui-surface ACTIVITY_SNAPSHOT only calls appendSurface', async () => {
       const config = createMockConfig();
       const engine = createMockEngine();
@@ -963,7 +967,15 @@ describe('UnifiedRuntime', () => {
       const engine = createMockEngine();
       const mockIface = createMockInterface();
       const content = {
-        operations: [{createSurface: {surfaceId: 's1', dataModel: {products: []}}}],
+        operations: [
+          {
+            createSurface: {
+              surfaceId: 's1',
+              components: statefulComponents,
+              dataModel: {products: []},
+            },
+          },
+        ],
       };
 
       mockExtractA2uiOperations.mockReturnValue(content.operations);
@@ -990,7 +1002,7 @@ describe('UnifiedRuntime', () => {
       expect(config.statePort.appendSurface).toHaveBeenCalledWith('generated-id-1', content);
       expect(mockHydrateFromCreateSurface).toHaveBeenCalledWith(
         engine,
-        {surfaceId: 's1', dataModel: {products: []}},
+        {surfaceId: 's1', components: statefulComponents, dataModel: {products: []}},
         config.generativeInterface,
         config.cartInterface
       );
@@ -1010,8 +1022,20 @@ describe('UnifiedRuntime', () => {
       const mockIface2 = createMockInterface();
       const content = {
         operations: [
-          {createSurface: {surfaceId: 's1', dataModel: {products: ['a']}}},
-          {createSurface: {surfaceId: 's2', dataModel: {products: ['b']}}},
+          {
+            createSurface: {
+              surfaceId: 's1',
+              components: statefulComponents,
+              dataModel: {products: ['a']},
+            },
+          },
+          {
+            createSurface: {
+              surfaceId: 's2',
+              components: statefulComponents,
+              dataModel: {products: ['b']},
+            },
+          },
         ],
       };
 
@@ -1068,7 +1092,13 @@ describe('UnifiedRuntime', () => {
       const mockIface = createMockInterface();
       const content = {
         operations: [
-          {createSurface: {surfaceId: 's1', dataModel: {products: []}}},
+          {
+            createSurface: {
+              surfaceId: 's1',
+              components: statefulComponents,
+              dataModel: {products: []},
+            },
+          },
           {updateDataModel: {surfaceId: 's1', path: '/products', value: ['new-product']}},
         ],
       };
@@ -1099,37 +1129,99 @@ describe('UnifiedRuntime', () => {
       ]);
     });
 
-    it('createSurface with already-existing surfaceId disposes old interface and registers new one', async () => {
+    it('hydrates a model-only createSurface when components arrive in a later snapshot', async () => {
+      const config = createMockConfig();
+      const engine = createMockEngine();
+      const mockIface = createMockInterface();
+      const createOperations = [{createSurface: {surfaceId: 's1', dataModel: {products: []}}}];
+      const componentOperations = [
+        {
+          updateComponents: {
+            surfaceId: 's1',
+            components: [{id: 'root', component: 'ProductSearchSurface'}],
+          },
+        },
+      ];
+
+      mockExtractA2uiOperations
+        .mockReturnValueOnce(createOperations)
+        .mockReturnValueOnce(componentOperations);
+      mockHydrateFromCreateSurface.mockReturnValue({
+        surfaceId: 's1',
+        useCase: 'commerceSearch',
+        interface: mockIface,
+        snapshot: {products: []},
+        query: undefined,
+      });
+
+      setupSuccessfulStream([
+        {
+          type: 'ACTIVITY_SNAPSHOT',
+          activityType: 'a2ui-surface',
+          content: {operations: createOperations},
+        } as unknown as NormalizedStreamEvent,
+        {
+          type: 'ACTIVITY_SNAPSHOT',
+          activityType: 'a2ui-surface',
+          content: {operations: componentOperations},
+        } as unknown as NormalizedStreamEvent,
+        {type: 'turn_complete'} as NormalizedStreamEvent,
+      ]);
+
+      const runtime = UnifiedRuntime.getInstance(engine, 'a2ui-split-hydration', config);
+      await runtime.submit('Hello');
+
+      expect(mockHydrateFromCreateSurface).toHaveBeenCalledWith(
+        engine,
+        expect.objectContaining({
+          surfaceId: 's1',
+          components: [{id: 'root', component: 'ProductSearchSurface'}],
+          dataModel: {products: []},
+        }),
+        config.generativeInterface,
+        config.cartInterface
+      );
+    });
+
+    it('ignores duplicate createSurface without replacing the existing interface', async () => {
       const config = createMockConfig();
       const engine = createMockEngine();
       const oldIface = createMockInterface();
-      const newIface = createMockInterface();
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
       const content1 = {
-        operations: [{createSurface: {surfaceId: 's1', dataModel: {products: ['old']}}}],
+        operations: [
+          {
+            createSurface: {
+              surfaceId: 's1',
+              components: statefulComponents,
+              dataModel: {products: ['old']},
+            },
+          },
+        ],
       };
       const content2 = {
-        operations: [{createSurface: {surfaceId: 's1', dataModel: {products: ['new']}}}],
+        operations: [
+          {
+            createSurface: {
+              surfaceId: 's1',
+              components: statefulComponents,
+              dataModel: {products: ['new']},
+            },
+          },
+        ],
       };
 
       mockExtractA2uiOperations
         .mockReturnValueOnce(content1.operations)
         .mockReturnValueOnce(content2.operations);
-      mockHydrateFromCreateSurface
-        .mockReturnValueOnce({
-          surfaceId: 's1',
-          useCase: 'commerceSearch',
-          interface: oldIface,
-          snapshot: {products: ['old']},
-          query: undefined,
-        })
-        .mockReturnValueOnce({
-          surfaceId: 's1',
-          useCase: 'commerceSearch',
-          interface: newIface,
-          snapshot: {products: ['new']},
-          query: undefined,
-        });
+      mockHydrateFromCreateSurface.mockReturnValue({
+        surfaceId: 's1',
+        useCase: 'commerceSearch',
+        interface: oldIface,
+        snapshot: {products: ['old']},
+        query: undefined,
+      });
 
       setupSuccessfulStream([
         {
@@ -1148,14 +1240,21 @@ describe('UnifiedRuntime', () => {
       const runtime = UnifiedRuntime.getInstance(engine, 'a2ui-recreate', config);
       await runtime.submit('Hello');
 
-      expect(oldIface.dispose).toHaveBeenCalled();
-      expect(config.statePort.setRoutedInterface).toHaveBeenLastCalledWith('generated-id-1', {
+      expect(oldIface.dispose).not.toHaveBeenCalled();
+      expect(mockHydrateFromCreateSurface).toHaveBeenCalledTimes(1);
+      expect(config.statePort.setRoutedInterface).toHaveBeenCalledOnce();
+      expect(config.statePort.setRoutedInterface).toHaveBeenCalledWith('generated-id-1', {
         useCase: 'commerceSearch',
-        interface: newIface,
-        snapshot: {products: ['new']},
+        interface: oldIface,
+        snapshot: {products: ['old']},
         query: undefined,
         surfaceId: 's1',
       });
+      expect(config.statePort.failTurn).not.toHaveBeenCalled();
+      expect(warn).toHaveBeenCalledWith(
+        'Ignoring duplicate A2UI createSurface for existing surfaceId "s1".'
+      );
+      warn.mockRestore();
     });
 
     it('disposes and clears a routed interface when its surface is deleted', async () => {
@@ -1163,7 +1262,15 @@ describe('UnifiedRuntime', () => {
       const engine = createMockEngine();
       const mockIface = createMockInterface();
       const creationContent = {
-        operations: [{createSurface: {surfaceId: 's1', dataModel: {products: []}}}],
+        operations: [
+          {
+            createSurface: {
+              surfaceId: 's1',
+              components: statefulComponents,
+              dataModel: {products: []},
+            },
+          },
+        ],
       };
       const deletionContent = {
         operations: [{deleteSurface: {surfaceId: 's1'}}],
@@ -1208,7 +1315,13 @@ describe('UnifiedRuntime', () => {
       const fullModel = {products: [], facets: [], pagination: {}};
       const content = {
         operations: [
-          {createSurface: {surfaceId: 's1', dataModel: {products: []}}},
+          {
+            createSurface: {
+              surfaceId: 's1',
+              components: statefulComponents,
+              dataModel: {products: []},
+            },
+          },
           {updateDataModel: {surfaceId: 's1', path: '/', value: fullModel}},
         ],
       };
@@ -1243,7 +1356,13 @@ describe('UnifiedRuntime', () => {
       const mockIface = createMockInterface();
       const content = {
         operations: [
-          {createSurface: {surfaceId: 's1', dataModel: {products: []}}},
+          {
+            createSurface: {
+              surfaceId: 's1',
+              components: statefulComponents,
+              dataModel: {products: []},
+            },
+          },
           {updateDataModel: {surfaceId: 's1', path: '/responseId', value: 'resp-123'}},
         ],
       };
