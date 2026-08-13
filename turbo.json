@@ -13,6 +13,9 @@
       "dependsOn": ["^build"],
       "inputs": [
         "$TURBO_DEFAULT$",
+        "!**/*.test.*",
+        "!**/*.spec.*",
+        "!**/__tests__/**",
         "!**/*.md",
         "!**/LICENSE*",
         "!**/.vscode/**",
@@ -28,6 +31,10 @@
         "!.next/cache/**",
         "**/*.tsbuildinfo"
       ]
+    },
+    "publint": {
+      "dependsOn": ["build"],
+      "outputs": []
     },
     "dev": {
       "dependsOn": ["build"],

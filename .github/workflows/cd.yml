@@ -61,10 +61,12 @@ jobs:
       - name: Read create-ui version
         id: create-ui-version
         if: ${{ steps.changesets.outputs.published == 'true' && contains(steps.changesets.outputs.publishedPackages, '@coveo/create-ui') }}
+        continue-on-error: true
         working-directory: packages/create-ui
-        run: echo "version=$(node -p \"require('./package.json').version\")" >> "$GITHUB_OUTPUT"
+        run: echo "version=$(jq -r '.version' package.json)" >> "$GITHUB_OUTPUT"
       - name: Upload create-ui source maps to Sentry
-        if: ${{ steps.changesets.outputs.published == 'true' && contains(steps.changesets.outputs.publishedPackages, '@coveo/create-ui') }}
+        if: ${{ steps.changesets.outputs.published == 'true' && contains(steps.changesets.outputs.publishedPackages, '@coveo/create-ui') && steps.create-ui-version.outputs.version != '' }}
+        continue-on-error: true
         uses: step-security/getsentry-action-release@4530160f6bc962e1dd67e2703064a7a5cfd401fb # v3.7.0
         with:
           release: create-ui@${{ steps.create-ui-version.outputs.version }}

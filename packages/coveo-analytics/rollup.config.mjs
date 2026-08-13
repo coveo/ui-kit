@@ -28,6 +28,13 @@ const browserFetch = () =>
     ],
   });
 
+/**
+ * `@rollup/plugin-typescript` forwards TypeScript's own source maps to Rollup rather
+ * than letting Rollup build them from the original sources, and `tsc` only fills
+ * `sourcesContent` when `inlineSources` is enabled. That option therefore has to stay
+ * on in `tsconfig.json`, or the published `coveoua*.js.map` files resolve stack frames
+ * to `src/*.ts` without carrying any of that source for a debugger to display.
+ */
 const tsPlugin = () =>
   typescript({
     tsconfig: './tsconfig.json',
@@ -201,6 +208,100 @@ const browserModulesConfig = {
 };
 
 /**
+ * TypeScript resolves the types of a `.mjs` file exclusively through a sibling `.d.mts`, so the
+ * existing `dist/definitions/*.d.ts` declarations cannot type the per-module ESM output on their
+ * own. Emit a `.d.mts` per module that re-exports those declarations, keeping the published types
+ * generated from source rather than hand-maintained.
+ *
+ * @param {string[]} moduleNames
+ */
+const declarationShims = (moduleNames) => ({
+  name: 'declaration-shims',
+  writeBundle() {
+    for (const moduleName of moduleNames) {
+      const declaration = resolve(__dirname, `./dist/definitions/${moduleName}.d.ts`);
+      if (!existsSync(declaration)) {
+        this.error(
+          `Cannot emit a declaration shim for '${moduleName}': ${declaration} does not exist.`
+        );
+      }
+      const content = readFileSync(declaration, 'utf8');
+      const defaultExport = /^export default (\w+);/m.exec(content);
+      if (!defaultExport && /\bexport default\b/.test(content)) {
+        this.warn(
+          `'${moduleName}.d.ts' has a default export the regex didn't capture. ` +
+            `The generated .d.mts will be missing it.`
+        );
+      }
+      const lines = [`export * from '../definitions/${moduleName}.js';`];
+      if (defaultExport) {
+        // `dist/definitions` is CJS, so `export {default} from` would resolve to the module
+        // namespace under interop rather than the declared default. Alias the named binding.
+        lines.push(
+          `export {${defaultExport[1]} as default} from '../definitions/${moduleName}.js';`
+        );
+      }
+      writeFileSync(resolve(__dirname, `./dist/esm/${moduleName}.d.mts`), `${lines.join('\n')}\n`);
+    }
+  },
+});
+
+/**
+ * The exact set of modules Headless previously vendored under
+ * `packages/headless/src/api/analytics/coveo.analytics/`, and nothing more.
+ *
+ * This list is deliberately scoped rather than "every leaf module": each entry becomes a
+ * `dist/esm/` path that consumers pin, so it cannot be moved or renamed afterwards. Other
+ * modules (`events`, `searchPage/searchPageEvents`, `donottrack`, `client/utils`, …) are just
+ * as cheap to unbundle but nothing imports them at runtime today — Headless references them
+ * only through `import type`, which resolves to `dist/definitions/**` and is erased. Add to
+ * this list when a real runtime consumer appears, not speculatively.
+ *
+ * Note that the analytics clients themselves are not viable candidates: `client/analytics`
+ * participates in an import cycle with `hook/*` and `plugins/*`, so unbundling any of them
+ * emits nearly the whole library and yields no treeshaking benefit.
+ */
+const unbundledModules = {
+  cookieutils: './src/cookieutils.ts',
+  detector: './src/detector.ts',
+  history: './src/history.ts',
+  storage: './src/storage.ts',
+};
+
+/**
+ * Unbundled, per-module ESM output so a consumer can import a single module instead of a whole
+ * bundle. `preserveModules` keeps one output file per source module. Emitted as `.mjs` because
+ * the package has no `"type": "module"`, so a `.js` file would be interpreted as CJS.
+ * @satisfies {RollupOptions}
+ */
+const unbundledModulesConfig = {
+  input: unbundledModules,
+  output: {
+    dir: './dist/esm',
+    format: 'es',
+    preserveModules: true,
+    preserveModulesRoot: 'src',
+    entryFileNames: '[name].mjs',
+    chunkFileNames: '[name].mjs',
+  },
+  plugins: [
+    nodeResolve({preferBuiltins: true}),
+    versionReplace(),
+    typescript({
+      tsconfig: './tsconfig.json',
+      // ES2020 keeps async/await native so no `tslib` helper import is emitted, which would
+      // otherwise leak a `node_modules/` path into the per-module output.
+      target: 'es2020',
+      importHelpers: false,
+      declaration: false,
+      declarationMap: false,
+      declarationDir: undefined,
+    }),
+    declarationShims(Object.keys(unbundledModules)),
+  ],
+};
+
+/**
  * @satisfies {RollupOptions}
  */
 const reactNativeConfig = {
@@ -224,4 +325,10 @@ const reactNativeConfig = {
   ],
 };
 
-export default [coveouaConfig, nodeModulesConfig, browserModulesConfig, reactNativeConfig];
+export default [
+  coveouaConfig,
+  nodeModulesConfig,
+  browserModulesConfig,
+  unbundledModulesConfig,
+  reactNativeConfig,
+];

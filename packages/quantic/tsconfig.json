@@ -75,6 +75,9 @@
       "c/quanticSearchInterface": [
         "quanticSearchInterface/quanticSearchInterface.js"
       ],
+      "c/quanticInsightInterface": [
+        "quanticInsightInterface/quanticInsightInterface.js"
+      ],
       "c/quanticNumberButton": ["quanticNumberButton/quanticNumberButton.js"],
       "c/quanticPill": ["quanticPill/quanticPill.js"],
       "c/quanticSvg": ["quanticSvg/quanticSvg.js"],
