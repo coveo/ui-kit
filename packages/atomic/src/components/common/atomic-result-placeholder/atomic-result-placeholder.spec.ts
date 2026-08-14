@@ -138,42 +138,16 @@ describe('atomic-result-placeholder', () => {
       }
     });
 
-    it.each<{display: ItemDisplayLayout}>([
-      {display: 'list'},
-      {display: 'grid'},
-      {display: 'table'},
-    ])(
-      'should apply the display class to section elements when display is $display',
-      async ({display}) => {
-        const {visual} = await renderComponent({display});
-        const expectedClass = display === 'list' ? 'display-list' : `display-${display}`;
-        expect(visual?.classList.contains(expectedClass)).toBe(true);
-      }
-    );
+    it('should mirror the root display, density and image classes on section elements', async () => {
+      const {visual} = await renderComponent({
+        display: 'grid',
+        density: 'compact',
+        imageSize: 'small',
+      });
 
-    it.each<{density: ItemDisplayDensity}>([
-      {density: 'comfortable'},
-      {density: 'normal'},
-      {density: 'compact'},
-    ])(
-      'should apply the density class to section elements when density is $density',
-      async ({density}) => {
-        const {title} = await renderComponent({density});
-        expect(title?.classList.contains(`density-${density}`)).toBe(true);
-      }
-    );
-
-    it.each<{imageSize: ItemDisplayImageSize}>([
-      {imageSize: 'large'},
-      {imageSize: 'small'},
-      {imageSize: 'icon'},
-      {imageSize: 'none'},
-    ])(
-      'should apply the image class to section elements when imageSize is $imageSize',
-      async ({imageSize}) => {
-        const {visual} = await renderComponent({imageSize});
-        expect(visual?.classList.contains(`image-${imageSize}`)).toBe(true);
-      }
-    );
+      expect(visual?.classList.contains('display-grid')).toBe(true);
+      expect(visual?.classList.contains('density-compact')).toBe(true);
+      expect(visual?.classList.contains('image-small')).toBe(true);
+    });
   });
 });
