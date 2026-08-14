@@ -3,6 +3,7 @@ import {
   type ConversationStreamEvent,
   createConversationEndpointClient,
 } from '@/src/internal/api/conversation/index.js';
+import {getActivityMetadata} from '@/src/internal/api/protocol/activity-metadata.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import {createConversationEndpointRequestSelector} from '@/src/internal/api/conversation/index.js';
@@ -20,10 +21,15 @@ export interface GenerativeStatePort {
   setActiveTurnId(id: string): void;
   replaceTurnId(oldId: string, newId: string): void;
   setRoutedInterface(turnId: string, hydrationResult: HydrationResult): void;
+  clearRoutedInterface(turnId: string, surfaceId: string): void;
   initAgentResponse(turnId: string): void;
   startMessage(turnId: string, role: string): void;
   appendMessageDelta(turnId: string, delta: string): void;
-  appendSurface(turnId: string, surface: A2UISurface): void;
+  appendSurface(
+    turnId: string,
+    surface: A2UISurface,
+    activity?: {id?: string; replace?: boolean}
+  ): void;
   startToolCall(turnId: string, toolCallId: string, toolName: string): void;
   appendToolCallArgs(turnId: string, toolCallId: string, delta: string): void;
   completeToolCall(turnId: string, toolCallId: string, result: string): void;
@@ -254,7 +260,12 @@ export class GenerativeRuntime {
 
       case 'ACTIVITY_SNAPSHOT': {
         this.ensureAgentResponse(turnId);
-        this.statePort.appendSurface(turnId, event.content as Record<string, unknown>);
+        const activity = getActivityMetadata(event);
+        if (activity.id || activity.replace) {
+          this.statePort.appendSurface(turnId, event.content as Record<string, unknown>, activity);
+        } else {
+          this.statePort.appendSurface(turnId, event.content as Record<string, unknown>);
+        }
         return {turnId, isTerminal: false};
       }
 

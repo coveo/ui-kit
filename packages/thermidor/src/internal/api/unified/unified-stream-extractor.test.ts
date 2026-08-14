@@ -48,9 +48,15 @@ describe('extractUpdateDataModelOperationsFromStream', () => {
         type: 'ACTIVITY_SNAPSHOT',
         activityType: 'a2ui-surface',
         content: {
-          operations: [
-            {updateDataModel: {path: '/products', value: [{id: '1'}]}},
-            {updateDataModel: {path: '/pagination', value: {page: 2}}},
+          messages: [
+            {
+              version: 'v1.0',
+              updateDataModel: {surfaceId: 's1', path: '/products', value: [{id: '1'}]},
+            },
+            {
+              version: 'v1.0',
+              updateDataModel: {surfaceId: 's1', path: '/pagination', value: {page: 2}},
+            },
           ],
         },
       });
@@ -73,7 +79,12 @@ describe('extractUpdateDataModelOperationsFromStream', () => {
         type: 'ACTIVITY_SNAPSHOT',
         activityType: 'some-other-activity',
         content: {
-          operations: [{updateDataModel: {path: '/ignored', value: 'data'}}],
+          messages: [
+            {
+              version: 'v1.0',
+              updateDataModel: {surfaceId: 's1', path: '/ignored', value: 'data'},
+            },
+          ],
         },
       });
       onDone?.();
@@ -92,16 +103,27 @@ describe('extractUpdateDataModelOperationsFromStream', () => {
         type: 'ACTIVITY_SNAPSHOT',
         activityType: 'a2ui-surface',
         content: {
-          operations: [{updateDataModel: {path: '/first', value: 1}}],
+          messages: [
+            {
+              version: 'v1.0',
+              updateDataModel: {surfaceId: 's1', path: '/first', value: 1},
+            },
+          ],
         },
       });
       onEvent({
         type: 'ACTIVITY_SNAPSHOT',
         activityType: 'a2ui-surface',
         content: {
-          operations: [
-            {updateDataModel: {path: '/second', value: 2}},
-            {updateDataModel: {path: '/third', value: 3}},
+          messages: [
+            {
+              version: 'v1.0',
+              updateDataModel: {surfaceId: 's1', path: '/second', value: 2},
+            },
+            {
+              version: 'v1.0',
+              updateDataModel: {surfaceId: 's1', path: '/third', value: 3},
+            },
           ],
         },
       });
