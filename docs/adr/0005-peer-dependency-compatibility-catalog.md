@@ -53,7 +53,7 @@ Option C — use the shared `peer-compatibility` catalog.
 
 The catalog is organized by intent rather than by dependency. The default catalog remains the source of exact versions used internally, while `peer-compatibility` is the source of public compatibility ranges. Pnpm replaces `catalog:peer-compatibility` with the stored range when packing or publishing, so consumers receive the same contract as if the range were written directly in each package manifest.
 
-TypeScript `>=5.0.0` is the first range managed by this catalog. Future common peer dependency ranges should be added to the same catalog so maintainers can review the repository's compatibility policy in one place.
+React (`^18 || ^19`) ranges were migrated from the former `react-compatibility` catalog, and TypeScript (`>=5.0.0`) is the first additional range managed by this catalog.
 
 ## Consequences
 
