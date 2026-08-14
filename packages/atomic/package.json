@@ -150,7 +150,7 @@
   "peerDependencies": {
     "@coveo/bueno": "workspace:^",
     "@coveo/headless": "workspace:^",
-    "typescript": "catalog:typescript-compatibility"
+    "typescript": "catalog:peer-compatibility"
   },
   "peerDependenciesMeta": {
     "typescript": {

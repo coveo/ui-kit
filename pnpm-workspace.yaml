@@ -123,7 +123,7 @@ catalog:
   zone.js: 0.15.1
 
 catalogs:
-  typescript-compatibility:
+  peer-compatibility:
     typescript: '>=5.0.0'
 
 minimumReleaseAge: 10080
