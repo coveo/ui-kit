@@ -134,10 +134,11 @@ jobs:
 
       - name: Set up and build the project
         uses: ./.github/actions/setup
+        with:
+          skip-build: 'true' # defer build to only build what's necessary
 
       - name: Build typedoc site
-        run: pnpm run build:typedoc
-        working-directory: packages/headless
+        run: pnpm exec turbo run build:typedoc --filter=@coveo/headless
         shell: bash
 
       - name: Read version from package.json
@@ -175,10 +176,11 @@ jobs:
 
       - name: Set up and build the project
         uses: ./.github/actions/setup
+        with:
+          skip-build: 'true' # defer build to only build what's necessary
 
       - name: Build typedoc site
-        run: pnpm run build:typedoc
-        working-directory: packages/headless-react
+        run: pnpm exec turbo run build:typedoc --filter=@coveo/headless-react
         shell: bash
 
       - name: Read version from package.json
