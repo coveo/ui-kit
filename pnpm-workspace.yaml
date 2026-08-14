@@ -124,6 +124,10 @@ catalog:
 
 catalogs:
   peer-compatibility:
+    '@types/react': '^18 || ^19'
+    '@types/react-dom': '^18 || ^19'
+    react: '^18 || ^19'
+    react-dom: '^18 || ^19'
     typescript: '>=5.0.0'
 
 minimumReleaseAge: 10080
