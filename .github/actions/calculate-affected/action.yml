@@ -1,5 +1,5 @@
 name: Calculate affected tasks
-description: Calculate affected Turbo tasks, projects, and samples.
+description: Calculate affected Turbo tasks, projects, samples, and required fetch depth.
 inputs:
   base-sha:
     description: Base commit to compare against.
@@ -8,6 +8,9 @@ inputs:
     description: Head commit to calculate affected tasks for.
     required: true
 outputs:
+  fetch-depth:
+    description: Minimum checkout depth required for the calculated commit range.
+    value: ${{ steps.calculate.outputs.fetch-depth }}
   tasks:
     description: Affected Turbo task identifiers as a single-line JSON array of strings.
     value: ${{ steps.calculate.outputs.tasks }}
@@ -59,6 +62,9 @@ runs:
         GIT_NO_LAZY_FETCH=1 git rev-parse --verify "${TURBO_SCM_BASE}^{commit}"
         GIT_NO_LAZY_FETCH=1 git rev-parse --verify "${TURBO_SCM_HEAD}^{commit}"
 
+        range_count="$(git rev-list --count "${TURBO_SCM_BASE}..${TURBO_SCM_HEAD}")"
+        fetch_depth=$((range_count + 1))
+
         turbo_version="$(node -p "require('./package.json').devDependencies.turbo")"
         affected_tasks="$(
           pnpm dlx "turbo@$turbo_version" query --no-update-notifier "${QUERY}" \
@@ -73,6 +79,8 @@ runs:
           value="$(jq -c "$query" <<< "${affected_tasks}")"
           echo "$name=$value" >> "$GITHUB_OUTPUT"
         }
+
+        echo "fetch-depth=$fetch_depth" >> "$GITHUB_OUTPUT"
 
         jq_output tasks    'map(.fullName)'
         jq_output projects 'map(.package.name) | unique'
