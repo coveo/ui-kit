@@ -4,7 +4,9 @@ date: 2026-08-14
 related:
   - https://coveord.atlassian.net/browse/KIT-5996
   - packages/atomic/package.json
+  - packages/atomic-react/package.json
   - packages/headless/package.json
+  - packages/headless-react/package.json
   - pnpm-workspace.yaml
   - docs/adr/0003-catalog-first-dependency-management-with-automated-reporting.md
 ---
@@ -33,11 +35,11 @@ Hardcoding peer ranges in package manifests duplicates shared compatibility cont
 - **Pros:** Uses the existing catalog entries.
 - **Cons:** Publishes exact internal versions instead of the wider ranges supported by consumers.
 
-### Option B: Create one compatibility catalog per dependency
+### Option B: Create one named catalog per dependency
 
-- **Summary:** Create named catalogs such as `typescript-compatibility` and `react-compatibility`.
+- **Summary:** Create a separate named catalog for each dependency needing a wide peer range (e.g., one for TypeScript, one for React).
 - **Pros:** Centralizes each dependency's range and preserves published behavior.
-- **Cons:** Produces many small catalogs and scatters the overall peer compatibility policy across separate sections.
+- **Cons:** Produces many small catalogs that grow with each new peer dependency. Scatters the overall peer compatibility policy across separate workspace sections, making it harder to review the full compatibility surface at a glance.
 
 ### Option C: Use one peer compatibility catalog
 
@@ -53,7 +55,7 @@ Option C — use the shared `peer-compatibility` catalog.
 
 The catalog is organized by intent rather than by dependency. The default catalog remains the source of exact versions used internally, while `peer-compatibility` is the source of public compatibility ranges. Pnpm replaces `catalog:peer-compatibility` with the stored range when packing or publishing, so consumers receive the same contract as if the range were written directly in each package manifest.
 
-TypeScript `>=5.0.0` is the first range managed by this catalog. Future common peer dependency ranges should be added to the same catalog so maintainers can review the repository's compatibility policy in one place.
+TypeScript `>=5.0.0` and React `^18 || ^19` are the initial ranges managed by this catalog. Future common peer dependency ranges should be added to the same catalog so maintainers can review the repository's compatibility policy in one place.
 
 ## Consequences
 
@@ -65,5 +67,6 @@ TypeScript `>=5.0.0` is the first range managed by this catalog. Future common p
 
 - Add `catalogs.peer-compatibility` to `pnpm-workspace.yaml`.
 - Reference `catalog:peer-compatibility` from the optional TypeScript peers in Atomic and Headless.
+- Reference `catalog:peer-compatibility` from the React peers in `atomic-react` and `headless-react`.
 - Add future shared peer dependency ranges to this catalog when all participating packages use the same compatibility contract.
 - Verify packed manifests publish the intended concrete ranges.
