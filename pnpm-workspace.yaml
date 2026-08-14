@@ -122,6 +122,10 @@ catalog:
   yaml: 2.9.0
   zone.js: 0.15.1
 
+catalogs:
+  typescript-compatibility:
+    typescript: '>=5.0.0'
+
 minimumReleaseAge: 10080
 
 minimumReleaseAgeExclude:
