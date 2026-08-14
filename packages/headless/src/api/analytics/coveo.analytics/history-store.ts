@@ -17,4 +17,8 @@ export default class HistoryStore extends CoveoAnalyticsHistoryStore {
     }
     return HistoryStore.instance;
   }
+
+  private constructor(store?: WebStorage) {
+    super(store);
+  }
 }

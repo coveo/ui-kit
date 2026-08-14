@@ -32,6 +32,15 @@ const buenoVersion = isNightly
 const buenoBase = commitSha ? `/bueno/commits/${commitSha}` : `/bueno/${buenoVersion}`;
 const buenoCdnPath = `${buenoBase}/bueno.esm.js`;
 
+/**
+ * Shared by the browser and node configs so they cannot drift. Every deep import into
+ * coveo.analytics must be listed here, see {@link resolveSubpath}.
+ */
+const coveoAnalyticsAliases = {
+  'coveo.analytics': resolveEsm('coveo.analytics'),
+  'coveo.analytics/dist/esm/history.mjs': resolveSubpath('coveo.analytics/dist/esm/history.mjs'),
+};
+
 function getUmdGlobalName(useCase) {
   const map = {
     search: 'CoveoHeadless',
@@ -256,10 +265,7 @@ async function buildBrowserConfig(options, outDir) {
     external: ['crypto', ...(options.external || [])],
     plugins: [
       alias({
-        'coveo.analytics': resolveEsm('coveo.analytics'),
-        'coveo.analytics/dist/esm/history.mjs': resolveSubpath(
-          'coveo.analytics/dist/esm/history.mjs'
-        ),
+        ...coveoAnalyticsAliases,
         pino: resolveBrowser('pino'),
       }),
       ...(options.plugins || []),
@@ -296,10 +302,7 @@ async function buildNodeConfig(options, outDir) {
     treeShaking: true,
     plugins: [
       alias({
-        'coveo.analytics': resolveEsm('coveo.analytics'),
-        'coveo.analytics/dist/esm/history.mjs': resolveSubpath(
-          'coveo.analytics/dist/esm/history.mjs'
-        ),
+        ...coveoAnalyticsAliases,
       }),
     ],
     ...options,
