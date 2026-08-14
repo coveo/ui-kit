@@ -6,14 +6,6 @@ on:
         required: false
         type: string
         default: 'pull_request'
-      turbo_scm_base:
-        description: 'The base commit used by Turborepo to determine affected projects'
-        required: true
-        type: string
-      turbo_scm_head:
-        description: 'The head commit used by Turborepo to determine affected projects'
-        required: true
-        type: string
     secrets:
       SFDX_AUTH_CLIENT_ID:
         required: true
@@ -28,8 +20,6 @@ permissions:
 
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-  TURBO_SCM_BASE: ${{ inputs.turbo_scm_base }}
-  TURBO_SCM_HEAD: ${{ inputs.turbo_scm_head }}
 
 jobs:
   e2e-quantic-setup:
