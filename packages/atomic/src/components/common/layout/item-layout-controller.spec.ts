@@ -118,7 +118,7 @@ describe('ItemLayoutController', () => {
       expect(element2.classList.contains('display-list')).toBe(true);
     });
 
-    it('should apply layout classes to shared section elements even when their tag does not match the element prefix', () => {
+    it('should apply only layout classes to shared sections while prefixed children receive layout and item classes', () => {
       mockOptions.elementPrefix = 'atomic-recs-result';
       controller = new ItemLayoutController(mockElement, mockOptions);
       controller.hostConnected();
@@ -137,19 +137,22 @@ describe('ItemLayoutController', () => {
       expect(section.classList.contains('display-list')).toBe(true);
       expect(section.classList.contains('density-normal')).toBe(true);
       expect(section.classList.contains('image-icon')).toBe(true);
-      // Prefixed children keep being classed when classesOnly is not set.
+      expect(section.classList.contains('custom-class')).toBe(false);
+      expect(section.classList.contains('extra-class')).toBe(false);
       expect(child.classList.contains('display-list')).toBe(true);
+      expect(child.classList.contains('custom-class')).toBe(true);
     });
 
-    it('should not propagate item-level classes to shared section elements', () => {
-      mockOptions.elementPrefix = 'atomic-recs-result';
+    it('should class shared sections but not prefixed children when classesOnly is true', () => {
+      mockOptions.elementPrefix = 'atomic-insight-result';
+      mockOptions.classesOnly = true;
       controller = new ItemLayoutController(mockElement, mockOptions);
       controller.hostConnected();
 
       const mockRoot = document.createElement('div');
       mockRoot.className = 'result-root';
-      const section = document.createElement('atomic-result-section-children');
-      const child = document.createElement('atomic-recs-result-link');
+      const section = document.createElement('atomic-result-section-title');
+      const child = document.createElement('atomic-insight-result-children');
       mockRoot.appendChild(section);
       mockRoot.appendChild(child);
 
@@ -157,50 +160,10 @@ describe('ItemLayoutController', () => {
 
       controller.hostUpdated();
 
-      // Sections receive only the layout classes.
       expect(section.classList.contains('display-list')).toBe(true);
-      expect(section.classList.contains('custom-class')).toBe(false);
-      expect(section.classList.contains('extra-class')).toBe(false);
-      // Prefixed children still receive the combined (layout + item) classes.
-      expect(child.classList.contains('display-list')).toBe(true);
-      expect(child.classList.contains('custom-class')).toBe(true);
-    });
-
-    describe('when classesOnly is true', () => {
-      beforeEach(() => {
-        mockOptions.elementPrefix = 'atomic-insight-result';
-        mockOptions.classesOnly = true;
-        controller = new ItemLayoutController(mockElement, mockOptions);
-        controller.hostConnected();
-      });
-
-      it('should still apply layout classes to shared section elements', () => {
-        const mockRoot = document.createElement('div');
-        mockRoot.className = 'result-root';
-        const section = document.createElement('atomic-result-section-title');
-        mockRoot.appendChild(section);
-
-        vi.spyOn(mockElement.shadowRoot!, 'querySelector').mockReturnValue(mockRoot);
-
-        controller.hostUpdated();
-
-        expect(section.classList.contains('display-list')).toBe(true);
-        expect(section.classList.contains('density-normal')).toBe(true);
-        expect(section.classList.contains('image-icon')).toBe(true);
-      });
-
-      it('should not apply layout classes to prefixed child elements', () => {
-        const mockRoot = document.createElement('div');
-        mockRoot.className = 'result-root';
-        const child = document.createElement('atomic-insight-result-children');
-        mockRoot.appendChild(child);
-
-        vi.spyOn(mockElement.shadowRoot!, 'querySelector').mockReturnValue(mockRoot);
-
-        controller.hostUpdated();
-
-        expect(child.classList.length).toBe(0);
-      });
+      expect(section.classList.contains('density-normal')).toBe(true);
+      expect(section.classList.contains('image-icon')).toBe(true);
+      expect(child.classList.length).toBe(0);
     });
 
     it('should use MutationObserver when custom render function is present', () => {
