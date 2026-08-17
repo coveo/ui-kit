@@ -21,6 +21,7 @@ export function createGenerativeActions(interfaceId: string) {
       turnId: string;
       useCase: RoutedUseCase;
     }>(`${prefix}/setRoutedInterface`),
+    clearRoutedInterface: createAction<{turnId: string}>(`${prefix}/clearRoutedInterface`),
     initAgentResponse: createAction<{turnId: string}>(`${prefix}/initAgentResponse`),
     startMessage: createAction<{turnId: string; role: string}>(`${prefix}/startMessage`),
     appendMessageDelta: createAction<{turnId: string; delta: string}>(

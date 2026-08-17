@@ -4,6 +4,9 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**"]
+    },
+    "publint": {
+      "outputs": ["publish/**"]
     }
   }
 }

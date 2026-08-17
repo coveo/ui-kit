@@ -1,6 +1,6 @@
 {
   "name": "@coveo/headless",
-  "version": "3.54.0",
+  "version": "3.55.1",
   "description": "A headless library for building search experiences on the Coveo platform",
   "homepage": "https://docs.coveo.com/en/headless/latest/",
   "license": "Apache-2.0",
@@ -74,6 +74,7 @@
     "./package.json": "./package.json"
   },
   "scripts": {
+    "publint": "publint",
     "dev": "concurrently \"pnpm run build:definitions -w\" \"pnpm run build:bundles dev\"",
     "build": "pnpm run build:definitions && pnpm run build:bundles && pnpm run build:esm",
     "build:bundles": "node esbuild.mjs",
@@ -115,16 +116,19 @@
   },
   "devDependencies": {
     "@coveo/documentation": "workspace:*",
+    "esbuild-plugin-alias": "0.2.1",
+    "esbuild-plugin-umd-wrapper": "catalog:",
     "jsdom": "catalog:",
     "live-server": "catalog:",
-    "node-fetch": "3.3.2",
+    "node-fetch": "catalog:",
+    "publint": "catalog:",
     "typedoc": "catalog:",
     "vitest": "catalog:"
   },
   "peerDependencies": {
     "encoding": "^0.1.13",
     "pino-pretty": "^6.0.0 || ^10.0.0 || ^11.0.0 || ^13.0.0",
-    "typescript": ">=5.0.0"
+    "typescript": "catalog:peer-compatibility"
   },
   "peerDependenciesMeta": {
     "typescript": {

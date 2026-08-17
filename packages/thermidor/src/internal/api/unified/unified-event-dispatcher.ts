@@ -81,7 +81,12 @@ export function dispatchStreamEvent(
     case 'ACTIVITY_SNAPSHOT': {
       deps.ensureAgentResponse(turnId);
       const content = event.content as Record<string, unknown>;
-      deps.statePort.appendSurface(turnId, content);
+      deps.statePort.appendActivity(turnId, {
+        id: event.messageId,
+        kind: event.activityType,
+        payload: content,
+        replace: event.replace,
+      });
 
       if (event.activityType === 'a2ui-surface') {
         deps.onA2uiSurface(turnId, content);
@@ -90,9 +95,14 @@ export function dispatchStreamEvent(
       return {turnId, isTerminal: false};
     }
 
+    case 'STATE_SNAPSHOT': {
+      deps.ensureAgentResponse(turnId);
+      deps.statePort.setStateSnapshot(turnId, asRecord(event.snapshot));
+      return {turnId, isTerminal: false};
+    }
+
     case 'RUN_STARTED':
     case 'RUN_FINISHED':
-    case 'STATE_SNAPSHOT':
     case 'CUSTOM': {
       return {turnId, isTerminal: false};
     }
@@ -113,6 +123,12 @@ export function dispatchStreamEvent(
     default:
       return handleUnknownEvent(turnId, event, deps);
   }
+}
+
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === 'object' && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : {};
 }
 
 function handleUnknownEvent(

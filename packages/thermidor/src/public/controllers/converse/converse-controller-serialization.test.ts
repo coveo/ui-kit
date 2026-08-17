@@ -147,7 +147,8 @@ describe('deserializeToGenerativeState', () => {
   it('preserves agentResponse data through deserialization', () => {
     const agentResponse = {
       messages: [{content: 'Here are your results', role: 'assistant'}],
-      surfaces: [],
+      state: {},
+      activities: [],
       reasoningSteps: [],
     };
 

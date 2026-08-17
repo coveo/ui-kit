@@ -57,6 +57,9 @@ class UnifiedConverseControllerImpl extends BaseController<UnifiedConverseContro
       generativeInterface: options.interface,
       cartInterface: options.interface,
       statePort: {
+        getActiveTurnId: () => {
+          return this.engine.read(this.#selectors.getActiveTurnId);
+        },
         createTurn: (payload) => {
           this.engine.mutate(this.#actions.createTurn(payload));
         },
@@ -79,6 +82,13 @@ class UnifiedConverseControllerImpl extends BaseController<UnifiedConverseContro
             this.#actions.setRoutedInterface({turnId, useCase: hydrationResult.useCase})
           );
         },
+        clearRoutedInterface: (turnId, surfaceId) => {
+          const registry = getOrCreateRoutedInterfaceRegistry(options.interface);
+          if (registry.get(turnId)?.surfaceId === surfaceId) {
+            registry.remove(turnId);
+            this.engine.mutate(this.#actions.clearRoutedInterface({turnId}));
+          }
+        },
         initAgentResponse: (turnId) => {
           this.engine.mutate(this.#actions.initAgentResponse({turnId}));
         },
@@ -88,12 +98,15 @@ class UnifiedConverseControllerImpl extends BaseController<UnifiedConverseContro
         appendMessageDelta: (turnId, delta) => {
           this.engine.mutate(this.#actions.appendMessageDelta({turnId, delta}));
         },
-        appendSurface: (turnId, surface) => {
-          this.engine.mutate(this.#actions.appendSurface({turnId, surface}));
-          const ops = (surface as {operations?: unknown[]}).operations;
-          if (Array.isArray(ops)) {
-            options.onSurfaceOperation?.(ops);
+        appendActivity: (turnId, activity) => {
+          this.engine.mutate(this.#actions.appendActivity({turnId, activity}));
+          const messages = (activity.payload as {messages?: unknown[]}).messages;
+          if (Array.isArray(messages)) {
+            options.onSurfaceOperation?.(messages);
           }
+        },
+        setStateSnapshot: (turnId, state) => {
+          this.engine.mutate(this.#actions.setStateSnapshot({turnId, state}));
         },
         startToolCall: (turnId, toolCallId, toolName) => {
           this.engine.mutate(this.#actions.startToolCall({turnId, toolCallId, toolName}));

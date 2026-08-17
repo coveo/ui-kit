@@ -1,6 +1,6 @@
 {
   "name": "@coveo/ui-kit-sample-headless-search-react",
-  "version": "3.54.0",
+  "version": "3.55.1",
   "description": "Minimal search UI built with @coveo/headless and React",
   "repository": {
     "type": "git",
@@ -14,6 +14,7 @@
     "linkDirectory": false
   },
   "scripts": {
+    "publint": "pnpm run prepack && publint publish --pack=false",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
@@ -31,6 +32,7 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
+    "publint": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:"
   },

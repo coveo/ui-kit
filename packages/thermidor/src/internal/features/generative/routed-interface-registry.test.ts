@@ -185,7 +185,8 @@ describe('mergeTurnsWithRegistry', () => {
       routedInterface: {useCase: 'commerceSearch'},
       agentResponse: {
         messages: [{content: 'here', role: 'assistant'}],
-        surfaces: [],
+        state: {},
+        activities: [],
         reasoningSteps: [],
       },
     });

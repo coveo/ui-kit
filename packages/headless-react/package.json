@@ -1,6 +1,6 @@
 {
   "name": "@coveo/headless-react",
-  "version": "2.9.27",
+  "version": "2.9.29",
   "description": "React utilities for SSR (Server Side Rendering) with headless",
   "keywords": [
     "headless",
@@ -26,6 +26,7 @@
     "./ssr-commerce-next": "./dist/ssr-commerce-next/index.js"
   },
   "scripts": {
+    "publint": "publint",
     "build": "tsc --project ./tsconfig.build.json",
     "clean": "node ../../utils/ci/rm-rf.mjs dist",
     "test": "vitest run",
@@ -44,15 +45,16 @@
     "@coveo/documentation": "workspace:*",
     "@testing-library/react": "catalog:",
     "live-server": "catalog:",
+    "publint": "catalog:",
     "typedoc": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
   "peerDependencies": {
-    "@types/react": "^18 || ^19",
-    "@types/react-dom": "^18 || ^19",
-    "react": "^18 || ^19",
-    "react-dom": "^18 || ^19"
+    "@types/react": "catalog:peer-compatibility",
+    "@types/react-dom": "catalog:peer-compatibility",
+    "react": "catalog:peer-compatibility",
+    "react-dom": "catalog:peer-compatibility"
   },
   "peerDependenciesMeta": {
     "@types/react": {
