@@ -34,6 +34,13 @@ export default class ExampleQuanticTimeframeFacet extends LightningElement {
       defaultValue: false,
     },
     {
+      attribute: 'generateAutomaticRanges',
+      label: 'Generate automatic ranges',
+      description:
+        'Whether to generate automatic ranges for the facet in addition to the manually defined ranges.',
+      defaultValue: false,
+    },
+    {
       attribute: 'useCase',
       label: 'Use Case',
       description:
