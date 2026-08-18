@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.thermidor.coveo.com/base/component.schema.json",
+  "title": "Component",
+  "description": "A Component is a discrete, renderable UI element — a 'Lego brick' for composing user experiences. Components describe what can be rendered, not how it is rendered. Rendering decisions belong to the consumer. A Component may have zero or more Controllers that drive its behavior.",
+  "type": "object",
+  "required": ["componentId", "displayName", "controllers"],
+  "properties": {
+    "componentId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Stable kebab-case identifier for this component (e.g. 'product-carousel'). Must be unique within a Catalog."
+    },
+    "displayName": {
+      "type": "string",
+      "description": "Human-readable name for this component (e.g. 'Product Carousel')."
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of this component's purpose and rendering intent."
+    },
+    "controllers": {
+      "type": "object",
+      "description": "Map of Controller definitions attached to this component. Each controller is responsible for a distinct concern. An empty object is valid for purely static components.",
+      "additionalProperties": {
+        "$ref": "https://schema.thermidor.coveo.com/base/controller.schema.json"
+      },
+      "unevaluatedProperties": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,14 @@
+{
+  "permanentid": "kayak-001",
+  "ec_name": "Touring Kayak",
+  "additionalFields": {
+    "ec_sku": "KAYAK-001"
+  },
+  "children": [
+    {
+      "permanentid": "kayak-001-blue",
+      "ec_name": "Touring Kayak — Blue",
+      "additionalFields": {}
+    }
+  ]
+}

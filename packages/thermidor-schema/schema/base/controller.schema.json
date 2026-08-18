@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.thermidor.coveo.com/base/controller.schema.json",
+  "title": "Controller",
+  "description": "A Controller is the logic unit associated with a Component. It holds State and exposes Actions. Controllers are the attachment points through which state flows and interactions occur. A Component may have multiple Controllers, each responsible for a distinct concern.",
+  "type": "object",
+  "required": ["controllerSchema", "state", "actions"],
+  "properties": {
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of what this controller is responsible for."
+    },
+    "controllerSchema": {
+      "type": "string",
+      "description": "Stable runtime discriminator for this controller contract."
+    }
+  }
+}

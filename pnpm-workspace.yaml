@@ -4,6 +4,7 @@ packages:
   - packages/mock-converse-api
   - packages/headless
   - packages/thermidor
+  - packages/thermidor-schema
   - packages/quantic
   - packages/headless-react
   - packages/atomic-hosted-page
@@ -120,6 +121,7 @@ catalog:
   vite: 8.2.1
   vitest: 4.1.10
   yaml: 2.9.0
+  zod: 4.4.3
   zone.js: 0.15.1
 
 catalogs:
