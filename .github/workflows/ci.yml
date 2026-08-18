@@ -60,7 +60,10 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-      - run: pnpm run build --affected
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: build
   build-missing:
     name: 'Build & commit missing generated files'
     needs: [affected, build]
@@ -81,7 +84,10 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-      - run: pnpm run build --affected
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: build
       - name: Check for uncommitted changes
         id: check-changes
         run: |
@@ -120,10 +126,14 @@ jobs:
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          fetch-depth: 0
+          fetch-depth: 1
+          fetch-tags: false
           filter: blob:none
       - uses: ./.github/actions/setup
-      - run: pnpm run build --affected
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: build
 
   build-cdn:
     name: Build CDN
@@ -179,7 +189,13 @@ jobs:
           egress-policy: audit
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo build --filter='!./samples/**'
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: build
+          packages: |
+            !@samples/*
+            !@coveo/ui-kit-sample-*
       - name: 'Run CDN checks'
         uses: ./.github/actions/cdn-checks
   lint-check:
@@ -216,7 +232,11 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo run validate:light-dom-styles --filter=@coveo/atomic --affected
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: validate:light-dom-styles
+          packages: '@coveo/atomic'
   validate-no-new-light-dom:
     name: 'Validate no new Light DOM components'
     needs: affected
@@ -233,10 +253,14 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo run validate:no-new-light-dom --filter=@coveo/atomic --affected
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: validate:no-new-light-dom
+          packages: '@coveo/atomic'
   unit-test:
     name: 'Run unit tests'
-    needs: [affected, build]
+    needs: affected
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
@@ -250,10 +274,14 @@ jobs:
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          fetch-depth: 0
+          fetch-depth: 1
+          fetch-tags: false
           filter: blob:none
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo test --affected
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: test
   relay-tests:
     name: 'Run Relay functional and playground smoke tests'
     needs: [affected, build]
@@ -269,10 +297,16 @@ jobs:
           egress-policy: audit
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: ./.github/actions/setup
-      - name: Run Relay functional tests in Chromium, Firefox, and WebKit
-        run: pnpm exec turbo run functional-test --filter=@coveo/relay --affected
-      - name: Build the playground and run its CJS/ESM Node smoke tests
-        run: pnpm exec turbo run test --filter=@coveo/relay-playground --affected
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: functional-test
+          packages: '@coveo/relay'
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: test
+          packages: '@coveo/relay-playground'
   validate-dts:
     name: 'Validate DTS API surface'
     needs: [affected, build]
@@ -289,7 +323,11 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo test:dts:ci --affected
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: test:dts:ci
+          packages: '@coveo/thermidor'
   package-compatibility:
     name: 'Verify compatibility of packages'
     needs: [affected, build]
@@ -306,7 +344,10 @@ jobs:
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec node ./scripts/ci/validate-publint-tasks.mjs
-      - run: pnpm exec turbo run publint --affected
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: publint
   typedoc:
     name: 'Build typedoc'
     needs: [affected, build]
@@ -323,8 +364,10 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-      - name: 'Build typedoc'
-        run: pnpm exec turbo run build:typedoc --affected
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: build:typedoc
   puppeteer-atomic-csp:
     name: 'Run e2e tests on Atomic CSP'
     needs: [affected, build]
@@ -410,7 +453,7 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-      - run: pnpm run build --affected
+      - run: pnpm exec turbo run build --filter=@coveo/atomic
       - uses: ./.github/actions/playwright-atomic
         with:
           shardIndex: ${{ matrix.shardIndex }}
@@ -484,8 +527,13 @@ jobs:
           filter: blob:none
       - run: git branch main origin/main
       - uses: ./.github/actions/setup
-      - run: pnpm run build --affected
-      - run: pnpm exec turbo run test:storybook --filter=@coveo/atomic --affected -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          packages: '@coveo/atomic'
+          tasks: test:storybook
+          arguments: |
+            --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
       - name: 'Upload a11y shard report'
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
@@ -558,8 +606,7 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-      - run: pnpm run build --affected
-      - run: pnpm exec turbo run "${{ matrix.sample }}"
+      - run: pnpm exec turbo run "${{ matrix.sample }}" # Already filtered by affected
       - name: Upload Playwright report
         if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
@@ -630,7 +677,7 @@ jobs:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
   publish-preview:
     if: ${{ !cancelled() && github.event_name == 'pull_request' && !startsWith(github.head_ref, 'changeset-release/') }}
-    needs: build
+    needs: [affected, build]
     name: 'Publish Preview Packages'
     runs-on: ubuntu-latest
     steps:
