@@ -11,6 +11,7 @@ function buildProduct(overrides: Partial<Product> = {}): Product {
     ec_name: 'Test Product',
     ec_brand: 'Test Brand',
     ec_price: 49.99,
+    additionalFields: {},
     ...overrides,
   };
 }

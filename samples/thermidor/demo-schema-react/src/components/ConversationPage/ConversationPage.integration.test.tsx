@@ -29,6 +29,8 @@ describe('ConversationPage integration', () => {
           prompt: 'Find me running shoes',
           status: 'complete',
           agentResponse: {
+            state: {},
+            activities: [],
             messages: [{content: 'Here are some running shoes.', role: 'assistant'}],
             surfaces: [],
             reasoningSteps: [{type: 'reasoning', content: 'Looking up running shoes'}],
@@ -69,6 +71,8 @@ describe('ConversationPage integration', () => {
           prompt: 'First question',
           status: 'complete',
           agentResponse: {
+            state: {},
+            activities: [],
             messages: [{content: 'First answer', role: 'assistant'}],
             surfaces: [],
             reasoningSteps: [],
@@ -79,6 +83,8 @@ describe('ConversationPage integration', () => {
           prompt: 'Second question',
           status: 'complete',
           agentResponse: {
+            state: {},
+            activities: [],
             messages: [{content: 'Second answer', role: 'assistant'}],
             surfaces: [],
             reasoningSteps: [],
@@ -118,6 +124,8 @@ describe('ConversationPage integration', () => {
           prompt: 'Compare these products',
           status: 'streaming',
           agentResponse: {
+            state: {},
+            activities: [],
             messages: [],
             surfaces: [],
             reasoningSteps: [

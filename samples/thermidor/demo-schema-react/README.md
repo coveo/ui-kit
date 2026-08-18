@@ -52,7 +52,7 @@ The app is structured around three views managed by `AppShell`:
 AppShell (providers + navigation)
 ├── LandingPage        — Prompt input with suggestion pills
 ├── ConversationPage   — Chat with A2-UI rendering (catalog-driven)
-└── SearchResultsPage  — Product grid, facets, sort, pagination (RoutedInterface)
+└── SearchResultsPage  — Product grid, facets, sort, pagination (RoutedInterface with Thermidor classic controllers)
 ```
 
 Navigation is determined by what the backend returns:

@@ -5,7 +5,7 @@ const MARGIN_TOP = 20;
 
 interface UseAutoScrollOptions {
   containerRef: React.RefObject<HTMLDivElement | null>;
-  turnRefs: React.MutableRefObject<Map<string, HTMLDivElement>>;
+  turnRefs: React.RefObject<Map<string, HTMLDivElement>>;
   turns: Turn[];
   isStreaming: boolean;
 }

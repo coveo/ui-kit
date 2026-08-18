@@ -95,7 +95,7 @@ describe('AgentResponseBlock', () => {
             id: 'tc1',
             name: 'store_render_plan',
             args: JSON.stringify({route: 'discovery'}),
-            status: 'complete',
+            status: 'completed',
           },
         ],
         messages: [{content: 'Hello world', role: 'assistant'}],
@@ -159,7 +159,7 @@ describe('AgentResponseBlock', () => {
             id: 'tc1',
             name: 'store_render_plan',
             args: JSON.stringify({route: 'discovery'}),
-            status: 'complete',
+            status: 'completed',
           },
         ],
       });
@@ -234,7 +234,7 @@ describe('AgentResponseBlock', () => {
             id: 'tc1',
             name: 'store_render_plan',
             args: JSON.stringify({route: 'discovery'}),
-            status: 'complete',
+            status: 'completed',
           },
         ],
       });

@@ -9,7 +9,7 @@ import styles from './ConversationThread.module.css';
 
 interface ConversationThreadProps {
   turns: Turn[];
-  turnRefs: React.MutableRefObject<Map<string, HTMLDivElement>>;
+  turnRefs: React.RefObject<Map<string, HTMLDivElement>>;
 }
 
 export function ConversationThread({turns, turnRefs}: ConversationThreadProps) {

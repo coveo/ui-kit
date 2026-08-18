@@ -37,7 +37,7 @@ describe('Sort', () => {
   });
 
   it('selects the matching option based on isSortedBy', () => {
-    const applied = {by: 'field', field: 'ec_price', direction: 'descending'};
+    const applied = {by: 'field' as const, field: 'ec_price', direction: 'descending' as const};
     const controller = createMockSortController(
       {appliedSort: applied, availableSorts: []},
       applied

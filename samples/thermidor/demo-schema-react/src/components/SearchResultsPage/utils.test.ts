@@ -4,39 +4,39 @@ import type {Product} from './utils.js';
 
 describe('resolveProductImage', () => {
   it('returns the first thumbnail when thumbnails exist', () => {
-    const product: Product = {
+    const product = {
       ec_thumbnails: ['thumb1.jpg', 'thumb2.jpg'],
       ec_images: ['img1.jpg'],
     };
-    expect(resolveProductImage(product)).toBe('thumb1.jpg');
+    expect(resolveProductImage(product as unknown as Product)).toBe('thumb1.jpg');
   });
 
   it('falls back to first image when thumbnails are empty', () => {
-    const product: Product = {
+    const product = {
       ec_thumbnails: [],
       ec_images: ['img1.jpg', 'img2.jpg'],
     };
-    expect(resolveProductImage(product)).toBe('img1.jpg');
+    expect(resolveProductImage(product as unknown as Product)).toBe('img1.jpg');
   });
 
   it('falls back to first image when thumbnails are undefined', () => {
-    const product: Product = {
+    const product = {
       ec_images: ['img1.jpg'],
     };
-    expect(resolveProductImage(product)).toBe('img1.jpg');
+    expect(resolveProductImage(product as unknown as Product)).toBe('img1.jpg');
   });
 
   it('returns null when neither thumbnails nor images exist', () => {
-    const product: Product = {};
-    expect(resolveProductImage(product)).toBeNull();
+    const product = {};
+    expect(resolveProductImage(product as unknown as Product)).toBeNull();
   });
 
   it('returns null when both arrays are empty', () => {
-    const product: Product = {
+    const product = {
       ec_thumbnails: [],
       ec_images: [],
     };
-    expect(resolveProductImage(product)).toBeNull();
+    expect(resolveProductImage(product as unknown as Product)).toBeNull();
   });
 });
 

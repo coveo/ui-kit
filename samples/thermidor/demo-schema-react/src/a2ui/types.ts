@@ -132,7 +132,7 @@ function getCreateSurfaceOperation(value: Record<string, unknown>): A2UIOperatio
   ) {
     return undefined;
   }
-  return {createSurface: operation as CreateSurfaceOp};
+  return {createSurface: operation as unknown as CreateSurfaceOp};
 }
 
 function getUpdateDataModelOperation(value: Record<string, unknown>): A2UIOperation | undefined {
@@ -147,7 +147,7 @@ function getUpdateDataModelOperation(value: Record<string, unknown>): A2UIOperat
   ) {
     return undefined;
   }
-  return {updateDataModel: operation as UpdateDataModelOp};
+  return {updateDataModel: operation as unknown as UpdateDataModelOp};
 }
 
 function getUpdateComponentsOperation(value: Record<string, unknown>): A2UIOperation | undefined {
@@ -161,14 +161,14 @@ function getUpdateComponentsOperation(value: Record<string, unknown>): A2UIOpera
   ) {
     return undefined;
   }
-  return {updateComponents: operation as UpdateComponentsOp};
+  return {updateComponents: operation as unknown as UpdateComponentsOp};
 }
 
 function getDeleteSurfaceOperation(value: Record<string, unknown>): A2UIOperation | undefined {
   if (!isRecord(value.deleteSurface) || typeof value.deleteSurface.surfaceId !== 'string') {
     return undefined;
   }
-  return {deleteSurface: value.deleteSurface as DeleteSurfaceOp};
+  return {deleteSurface: value.deleteSurface as unknown as DeleteSurfaceOp};
 }
 
 /**
