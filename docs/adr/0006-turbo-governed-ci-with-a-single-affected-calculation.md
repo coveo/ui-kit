@@ -77,7 +77,7 @@ The design has four parts:
 - `tasks` — affected task identifiers such as `@coveo/atomic#build` as a single-line JSON array;
 - `projects` — affected package names, used for coarse job-level `if:` guards;
 - `samples` — affected sample E2E task identifiers, used as the dynamic E2E matrix source.
-- `fetch-depth` — the commit count of the compared range. 
+- `fetch-depth` — the commit count of the compared range.
 
 The action verifies both commits before querying and writes a Markdown table of package, task, reason, and description to the job summary. The query requests [reason variants](https://turborepo.dev/docs/reference/query#understanding-affected-package-reasons) such as `TaskFileChanged` and `TaskDependencyTaskChanged`, so each run explains why tasks were selected.
 
