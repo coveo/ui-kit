@@ -1,12 +1,9 @@
 import {describe, expect, it} from 'vitest';
-import {
-  thermidorCatalogDefinitions,
-  productCarouselPropsSchema,
-  THERMIDOR_CATALOG_ID,
-} from './components.js';
+import {thermidorCatalogDefinitions, THERMIDOR_CATALOG_ID} from './components.js';
 import {
   CartControllerContractSchema,
   ProductListControllerContractSchema,
+  ProductCarouselPropsSchema,
   ProductSchema,
   CartItemSchema,
 } from '@coveo/thermidor-schema';
@@ -14,7 +11,7 @@ import {
 describe('thermidorCatalogDefinitions', () => {
   it('accepts the controller advertisements supplied by the catalog message', () => {
     expect(
-      productCarouselPropsSchema.safeParse({
+      ProductCarouselPropsSchema.safeParse({
         controllers: {
           productListController: {
             controllerId: 'featured-products',
@@ -60,7 +57,7 @@ describe('thermidorCatalogDefinitions', () => {
 
   it('enforces the controller contract literals and closed binding objects from JSON Schema', () => {
     expect(
-      productCarouselPropsSchema.safeParse({
+      ProductCarouselPropsSchema.safeParse({
         controllers: {
           productListController: {
             controllerId: 'featured-products',
@@ -94,9 +91,9 @@ describe('thermidorCatalogDefinitions', () => {
     expect(THERMIDOR_CATALOG_ID).toBe('https://schema.thermidor.coveo.com/a2-ui/catalog.json');
   });
 
-  it('local props schema literals match the controller contract schema values', () => {
+  it('generated props schema literals match the controller contract schema values', () => {
     expect(
-      productCarouselPropsSchema.shape.controllers.shape.productListController.shape
+      ProductCarouselPropsSchema.shape.controllers.shape.productListController.shape
         .controllerSchema.value
     ).toBe(ProductListControllerContractSchema.shape.controllerSchema.value);
   });

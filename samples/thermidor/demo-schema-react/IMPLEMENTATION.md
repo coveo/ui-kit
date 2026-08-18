@@ -48,12 +48,18 @@ The speculative sources are kept to stay aligned with `demo-react` but may be re
 
 ## Zod version mismatch
 
-The `as unknown as CatalogDefinitions` / `CatalogRenderers` casts in `components.tsx` exist because:
+`@coveo/thermidor-schema` and this sample use **Zod 4**, but `@copilotkit/a2ui-renderer` types are built against **Zod 3**. The `ZodObject` generics are structurally incompatible at the type level (`$strip` vs `UnknownKeysParam`) even though they are runtime-compatible.
 
-- `@coveo/thermidor-schema` and this sample use **Zod 4**
-- `@copilotkit/a2ui-renderer` types are built against **Zod 3**
+This is handled via two bridge helpers in `components.tsx` (same pattern as `convertV1ToV09`):
 
-The `ZodObject` generics are structurally incompatible at the type level (`$strip` vs `UnknownKeysParam`) even though they are runtime-compatible. These casts will be removable once `@copilotkit/a2ui-renderer` upgrades to Zod 4.
+- `asCatalogDefinitions(definitions)` — validates the input is `Record<string, {props: ZodObject<any>}>`, then casts to `CatalogDefinitions`
+- `asCatalogRenderers(renderers)` — validates the input is `Record<string, React.FC<any>>`, then casts to `CatalogRenderers`
+
+### When `@copilotkit/a2ui-renderer` upgrades to Zod 4
+
+1. Delete `asCatalogDefinitions` and `asCatalogRenderers` from `components.tsx`
+2. Pass definitions and renderers directly to `createCatalog` without wrappers
+3. Remove `import type {z} from 'zod'` (no longer needed for the bridge type constraint)
 
 ## Conformity validation
 
@@ -100,12 +106,33 @@ This implementation has been validated against the following references:
 
 ## Known limitations / Next steps
 
-| Item                                                   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Blocked by                                                                 |
-| ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| **`dispatchAction` no-op**                             | Remote controller actions (e.g. `selectAction` in NextActionsBar) are silently ignored. `UnifiedConverseController` needs to expose `dispatchAction` so the sample can wire it through `RemoteControllerSource`.                                                                                                                                                                                                                                                                                                                                                                    | `packages/thermidor` — add `dispatchAction` to unified converse controller |
-| **Skeleton detection**                                 | Three detection mechanisms coexist (see section above). Only `store_render_plan` tool calls are active; the other two are speculative.                                                                                                                                                                                                                                                                                                                                                                                                                                              | Backend team — standardize skeleton contract                               |
-| **v1.0 → v0.9 adapter**                                | The `convertV1ToV09` shim in `surfaces.tsx` can be deleted once the renderer supports v1.0 natively.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `@copilotkit/a2ui-renderer` — v1.0 MessageProcessor support                |
-| **Zod 4 type casts**                                   | `as unknown as CatalogDefinitions` / `CatalogRenderers` in `components.tsx` due to Zod version mismatch.                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | `@copilotkit/a2ui-renderer` — upgrade to Zod 4                             |
-| **Unified search rendering via A2-UI**                 | SearchResultsPage (product grid, facets, sort, pagination) uses a separate RoutedInterface/Headless path. Evaluate with backend whether routed search could emit A2-UI surfaces with controllers instead, unifying the rendering pipeline. Key challenges: high-frequency bidirectional interactions (facet clicks → re-fetch), latency via converse stream vs direct API, large state volume. Requires `dispatchAction` wiring first.                                                                                                                                              | Backend team — evaluate feasibility of A2-UI surfaces for search results   |
-| **Replace navigation state machine with React Router** | AppShell uses a manual reducer (`useNavigation`) and conditional rendering (`view === "search"`) for routing. Migrating to React Router would simplify JSX readability (each route has its own component, no conditionals), give free browser back-button support, and make the sample more representative of a real consumer integration. It would not significantly reduce the navigation logic complexity (effects that observe turns and trigger transitions, persisted RoutedInterface refs), but improves ergonomics for anyone reading the sample as an integration example. | Nice-to-have — no external blocker                                         |
-| **Extract surface parsing into thermidor**             | `src/a2ui/types.ts` contains raw A2-UI surface parsing logic (with `as unknown as` casts) that should live in `@coveo/thermidor` rather than in the sample. Consumers should not need to parse surfaces manually — the lib should expose typed utilities.                                                                                                                                                                                                                                                                                                                           | `packages/thermidor` — extract `parseSurfaceSnapshots` as a public utility |
+### Temporary workarounds (to remove when upstream dependencies evolve)
+
+| Item | Description | Remove when |
+| --- | --- | --- |
+| **`dispatchAction` no-op** | Remote controller actions (e.g. `selectAction` in NextActionsBar) are silently ignored. `UnifiedConverseController` needs to expose `dispatchAction` so the sample can wire it through `RemoteControllerSource`. | `packages/thermidor` adds `dispatchAction` to unified converse controller |
+| **v1.0 → v0.9 adapter** | The `convertV1ToV09` shim in `surfaces.tsx` can be deleted once the renderer supports v1.0 natively. | `@copilotkit/a2ui-renderer` supports v1.0 MessageProcessor |
+| **Zod 4 type casts** | `asCatalogDefinitions` / `asCatalogRenderers` bridge helpers in `components.tsx` due to Zod version mismatch. | `@copilotkit/a2ui-renderer` upgrades to Zod 4 |
+| **Skeleton detection** | Three detection mechanisms coexist (see section above). Only `store_render_plan` tool calls are active; the other two are speculative. | Backend team standardizes skeleton contract |
+
+### Consumer DX improvements (simplify what the consumer must implement)
+
+| Item | Description | Owner |
+| --- | --- | --- |
+| **Extract surface parsing into thermidor** | `src/a2ui/types.ts` contains raw A2-UI surface parsing logic (with `as unknown as` casts) that should live in `@coveo/thermidor` rather than in the sample. Consumers should not need to parse surfaces manually — the lib should expose typed utilities. | `packages/thermidor` |
+| **Provide a high-level surface extraction utility** | The consumer must replicate the logic in `src/a2ui/surfaces.tsx` (`getA2UIMessages`): filter activities by kind, handle per-activity-id replacement, and extract A2-UI operations. A framework-agnostic utility (e.g. `extractA2UISurfaces(activities)`) exported by thermidor would encapsulate this. The React rendering component (`ThermidorA2UISurfaces`) would remain in the consumer application. | `packages/thermidor` |
+| **Export skeleton detection logic** | The consumer must parse reasoning steps, map `store_render_plan` routes to component types, and manage skeleton/real-surface subtraction. A framework-agnostic utility (e.g. `computeSkeletons(reasoningSteps, surfaces)`) exported by thermidor would encapsulate this. The React hook wrapper would remain in the consumer application. | `packages/thermidor` |
+| **Simplify controller subscription ergonomics** | The consumer must mount a `StateSourceProvider`, understand the "state source" concept, and call `useAdvertisedController(stateSource, advertisement)`. The `buildRemoteController` API in thermidor could be simplified so the consumer passes fewer arguments. The React context/hook layer would remain in the consumer application. | `packages/thermidor` |
+
+### Nice-to-have (non-blocking improvements)
+
+| Item | Description |
+| --- | --- |
+| **Unified search rendering via A2-UI** | SearchResultsPage (product grid, facets, sort, pagination) uses a separate RoutedInterface/Headless path. Evaluate with backend whether routed search could emit A2-UI surfaces with controllers instead, unifying the rendering pipeline. Key challenges: high-frequency bidirectional interactions (facet clicks → re-fetch), latency via converse stream vs direct API, large state volume. Requires `dispatchAction` wiring first. |
+| **Replace navigation state machine with React Router** | AppShell uses a manual reducer (`useNavigation`) and conditional rendering (`view === "search"`) for routing. Migrating to React Router would simplify JSX readability (each route has its own component, no conditionals), give free browser back-button support, and make the sample more representative of a real consumer integration. It would not significantly reduce the navigation logic complexity (effects that observe turns and trigger transitions, persisted RoutedInterface refs), but improves ergonomics for anyone reading the sample as an integration example. |
+
+### Resolved
+
+| Item | Description |
+| --- | --- |
+| **Generate component props schemas in thermidor-schema** | ✅ The Zod generation script now produces component props schemas (`ProductCarouselPropsSchema`, `NextActionsBarPropsSchema`, etc.) from `schema/components/*.json`. Consumers import them directly — no more hand-written boilerplate in `components.tsx`. |

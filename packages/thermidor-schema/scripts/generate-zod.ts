@@ -21,6 +21,12 @@ interface DiscriminatedUnion {
   memberTypeNames: string[];
 }
 
+interface ComponentPropsEntry {
+  componentName: string;
+  schemaName: string;
+  controllers: Array<{name: string; controllerSchemaId: string}>;
+}
+
 class LocalSchemaStore extends JSONSchemaStore {
   private readonly documentsById: Map<string, SchemaDocument>;
   constructor(documentsById: Map<string, SchemaDocument>) {
@@ -179,9 +185,12 @@ const {lines} = await quicktype({
   outputFilename: 'schemas.ts',
 });
 
+const componentPropsEntries = loadComponentPropsEntries(documentsById);
+const componentPropsLines = renderComponentPropsSchemas(componentPropsEntries);
+
 const formatResult = await format(
   'schemas.ts',
-  [...lines, ...renderDiscriminatedUnions(discriminatedUnions)].join('\n')
+  [...lines, ...renderDiscriminatedUnions(discriminatedUnions), ...componentPropsLines].join('\n')
 );
 if (formatResult.errors.length > 0) {
   throw new Error(
@@ -201,7 +210,7 @@ if (checkOnly) {
   await mkdir(dirname(outputPath), {recursive: true});
   await writeFile(outputPath, generated, 'utf8');
   console.log(
-    `Generated ${entries.length} Zod schema exports at ${relative(packageRoot, outputPath)}.`
+    `Generated ${entries.length + componentPropsEntries.length} Zod schema exports at ${relative(packageRoot, outputPath)}.`
   );
 }
 
@@ -230,4 +239,47 @@ function renderDiscriminatedUnions(unions: DiscriminatedUnion[]): string[] {
     ']);',
     `export type ${typeName} = z.infer<typeof ${typeName}Schema>;`,
   ]);
+}
+
+function loadComponentPropsEntries(documents: Map<string, SchemaDocument>): ComponentPropsEntry[] {
+  const componentEntries: ComponentPropsEntry[] = [];
+  for (const [id, doc] of documents) {
+    if (!id.includes('/components/')) continue;
+    const title = doc.title as string | undefined;
+    const controllersProps = doc.properties?.controllers?.properties as
+      | Record<string, any>
+      | undefined;
+    if (!title || !controllersProps) continue;
+
+    const controllers: Array<{name: string; controllerSchemaId: string}> = [];
+    for (const [name, def] of Object.entries(controllersProps)) {
+      const ref = def.$ref as string | undefined;
+      if (ref) {
+        controllers.push({name, controllerSchemaId: ref});
+      }
+    }
+    if (controllers.length > 0) {
+      componentEntries.push({componentName: title, schemaName: `${title}Props`, controllers});
+    }
+  }
+  return componentEntries.sort((a, b) => a.componentName.localeCompare(b.componentName));
+}
+
+function renderComponentPropsSchemas(propsEntries: ComponentPropsEntry[]): string[] {
+  const output: string[] = ['', '// Component props schemas (generated from schema/components/)'];
+  for (const entry of propsEntries) {
+    const controllerFields = entry.controllers.map((c) => {
+      return `    ${c.name}: z.object({ controllerId: z.string(), controllerSchema: z.literal("${c.controllerSchemaId}") })`;
+    });
+    output.push(
+      `export const ${entry.schemaName}Schema = z.object({`,
+      '  controllers: z.object({',
+      ...controllerFields.map((f, i) => f + (i < controllerFields.length - 1 ? ',' : '')),
+      '  })',
+      '});',
+      `export type ${entry.schemaName} = z.infer<typeof ${entry.schemaName}Schema>;`,
+      ''
+    );
+  }
+  return output;
 }

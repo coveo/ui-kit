@@ -1,23 +1,22 @@
 import {useState} from 'react';
 import {selectRemoteControllerState} from '@coveo/thermidor';
-import type {Product, ProductListState, BundleTier} from '@coveo/thermidor-schema';
+
 import {useAdvertisedController} from '../controllers.js';
 import {useStateSource} from '../state-source-context.js';
-import {BUNDLE_DISPLAY_SCHEMA_ID} from '../components.js';
+import type {
+  BundleDisplayProps,
+  Product,
+  ProductListState,
+  BundleTier,
+} from '@coveo/thermidor-schema';
 import styles from './BundleDisplay.module.css';
-
-interface BundleDisplayProps {
-  controllers: {
-    bundleDisplayController: {
-      controllerId: string;
-      controllerSchema: typeof BUNDLE_DISPLAY_SCHEMA_ID;
-    };
-  };
-}
 
 export function BundleDisplayRenderer({props}: {props: BundleDisplayProps}) {
   const stateSource = useStateSource();
-  const controller = useAdvertisedController(stateSource, props.controllers.bundleDisplayController);
+  const controller = useAdvertisedController(
+    stateSource,
+    props.controllers.bundleDisplayController
+  );
   const tiers = controller.state?.tiers ?? [];
   const [activeTierIndex, setActiveTierIndex] = useState(0);
 
@@ -48,7 +47,14 @@ export function BundleDisplayRenderer({props}: {props: BundleDisplayProps}) {
       </div>
       <div className={styles.tabs}>
         {tiers.map((tier: BundleTier, i: number) => (
-          <button key={tier.label} className={`${styles.tab} ${i === activeTierIndex ? styles.tabActive : ''}`} onClick={() => setActiveTierIndex(i)} type="button">{tier.label}</button>
+          <button
+            key={tier.label}
+            className={`${styles.tab} ${i === activeTierIndex ? styles.tabActive : ''}`}
+            onClick={() => setActiveTierIndex(i)}
+            type="button"
+          >
+            {tier.label}
+          </button>
         ))}
       </div>
       {activeTier && (
@@ -58,12 +64,25 @@ export function BundleDisplayRenderer({props}: {props: BundleDisplayProps}) {
             {resolvedItems.map((item) => (
               <div key={item.categoryLabel} className={styles.itemRow}>
                 {item.product?.ec_images?.[0] && (
-                  <img className={styles.itemImage} src={item.product.ec_images[0]} alt={item.product.ec_name ?? item.categoryLabel} loading="lazy" />
+                  <img
+                    className={styles.itemImage}
+                    src={item.product.ec_images[0]}
+                    alt={item.product.ec_name ?? item.categoryLabel}
+                    loading="lazy"
+                  />
                 )}
                 <div className={styles.itemInfo}>
-                  <span className={styles.itemName}>{item.product?.ec_name ?? item.categoryLabel}</span>
-                  {item.product?.ec_shortdesc && <span className={styles.itemDescription}>{item.product.ec_shortdesc}</span>}
-                  {item.product?.ec_promo_price !== undefined && <span className={styles.itemPrice}>${item.product.ec_promo_price.toFixed(2)}</span>}
+                  <span className={styles.itemName}>
+                    {item.product?.ec_name ?? item.categoryLabel}
+                  </span>
+                  {item.product?.ec_shortdesc && (
+                    <span className={styles.itemDescription}>{item.product.ec_shortdesc}</span>
+                  )}
+                  {item.product?.ec_promo_price !== undefined && (
+                    <span className={styles.itemPrice}>
+                      ${item.product.ec_promo_price.toFixed(2)}
+                    </span>
+                  )}
                 </div>
               </div>
             ))}
@@ -72,7 +91,9 @@ export function BundleDisplayRenderer({props}: {props: BundleDisplayProps}) {
             <div className={styles.footer}>
               <div className={styles.footerLabel}>
                 <span className={styles.footerTitle}>Package Total</span>
-                <span className={styles.footerCount}>{resolvedItems.length} {resolvedItems.length === 1 ? 'item' : 'items'}</span>
+                <span className={styles.footerCount}>
+                  {resolvedItems.length} {resolvedItems.length === 1 ? 'item' : 'items'}
+                </span>
               </div>
               <span className={styles.footerPrice}>${totalPrice.toFixed(2)}</span>
             </div>

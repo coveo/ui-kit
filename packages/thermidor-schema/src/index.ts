@@ -1,3 +1,5 @@
+export const THERMIDOR_CATALOG_ID = 'https://schema.thermidor.coveo.com/a2-ui/catalog.json';
+
 export {
   ActionItemSchema,
   BundleDisplayControllerContractSchema,
@@ -20,6 +22,11 @@ export {
   SelectActionPayloadSchema,
   SetItemsPayloadSchema,
   UpdateItemQuantityPayloadSchema,
+  BundleDisplayPropsSchema,
+  CartPropsSchema,
+  ComparisonTablePropsSchema,
+  NextActionsBarPropsSchema,
+  ProductCarouselPropsSchema,
 } from './generated/schemas.js';
 export type {
   ActionItem,
@@ -43,4 +50,9 @@ export type {
   SelectActionPayload,
   SetItemsPayload,
   UpdateItemQuantityPayload,
+  BundleDisplayProps,
+  CartProps,
+  ComparisonTableProps,
+  NextActionsBarProps,
+  ProductCarouselProps,
 } from './generated/schemas.js';

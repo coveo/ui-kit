@@ -1,17 +1,7 @@
-import type {ActionItem} from '@coveo/thermidor-schema';
 import {useAdvertisedController} from '../controllers.js';
 import {useStateSource} from '../state-source-context.js';
-import {NEXT_ACTIONS_SCHEMA_ID} from '../components.js';
+import type {ActionItem, NextActionsBarProps} from '@coveo/thermidor-schema';
 import styles from './NextActionsBar.module.css';
-
-interface NextActionsBarProps {
-  controllers: {
-    nextActionsController: {
-      controllerId: string;
-      controllerSchema: typeof NEXT_ACTIONS_SCHEMA_ID;
-    };
-  };
-}
 
 export function NextActionsBarRenderer({props}: {props: NextActionsBarProps}) {
   const stateSource = useStateSource();
@@ -28,7 +18,9 @@ export function NextActionsBarRenderer({props}: {props: NextActionsBarProps}) {
         <button
           key={i}
           className={styles.actionButton}
-          onClick={() => controller.dispatch('selectAction', {text: action.text, type: action.type})}
+          onClick={() =>
+            controller.dispatch('selectAction', {text: action.text, type: action.type})
+          }
           type="button"
         >
           {action.text}
