@@ -49,6 +49,8 @@ jobs:
             })
       - name: Setup
         uses: ./.github/actions/setup
+      - name: Build Quantic
+        run: pnpm exec turbo run build --filter=@coveo/quantic
       - name: Setup SFDX
         uses: ./.github/actions/setup-sfdx
       - name: Create package version

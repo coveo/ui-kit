@@ -10,10 +10,10 @@ runs:
   using: composite
   steps:
     - uses: ./.github/actions/setup
-      with:
-        # Samples are not CDN artifacts. Exclude them so the CDN build does not try
-        # to bundle samples that depend on CDN-externalized packages.
-        build-command: "pnpm exec turbo build --filter='!./samples/**'"
+      # Samples are not CDN artifacts. Exclude them so the CDN build does not try
+      # to bundle samples that depend on CDN-externalized packages.
+    - run: pnpm exec turbo build --filter='!./samples/**'
+      shell: bash
       env:
         DEPLOYMENT_ENVIRONMENT: CDN
         CDN_COMMIT_SHA: ${{ inputs.commit-sha }}
