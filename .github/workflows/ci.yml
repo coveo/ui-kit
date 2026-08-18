@@ -60,6 +60,7 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
+      - run: pnpm run build --affected
   build-missing:
     name: 'Build & commit missing generated files'
     needs: [affected, build]
@@ -80,6 +81,7 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
+      - run: pnpm run build --affected
       - name: Check for uncommitted changes
         id: check-changes
         run: |
@@ -116,13 +118,12 @@ jobs:
         with:
           egress-policy: audit
 
-      # Full history is required by `turbo --affected`, which compares the
-      # checkout against the base ref to determine which packages changed.
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
+      - run: pnpm run build --affected
 
   build-cdn:
     name: Build CDN
@@ -178,8 +179,7 @@ jobs:
           egress-policy: audit
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: ./.github/actions/setup
-        with:
-          build-command: "pnpm exec turbo build --filter='!./samples/**'"
+      - run: pnpm exec turbo build --filter='!./samples/**'
       - name: 'Run CDN checks'
         uses: ./.github/actions/cdn-checks
   lint-check:
@@ -198,8 +198,7 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-        with:
-          skip-build: 'true'
+      # TODO: Convert to turbo tasks: https://coveord.atlassian.net/browse/KIT-6074
       - run: pnpm run lint:check
   validate-light-dom-styles:
     name: 'Validate Light DOM styles'
@@ -217,9 +216,7 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-        with:
-          skip-build: 'true'
-      - run: pnpm --filter @coveo/atomic run validate:light-dom-styles
+      - run: pnpm exec turbo run validate:light-dom-styles --filter=@coveo/atomic --affected
   validate-no-new-light-dom:
     name: 'Validate no new Light DOM components'
     needs: affected
@@ -236,9 +233,7 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-        with:
-          skip-build: 'true'
-      - run: pnpm --filter @coveo/atomic run validate:no-new-light-dom
+      - run: pnpm exec turbo run validate:no-new-light-dom --filter=@coveo/atomic --affected
   unit-test:
     name: 'Run unit tests'
     needs: [affected, build]
@@ -274,12 +269,10 @@ jobs:
           egress-policy: audit
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: ./.github/actions/setup
-        with:
-          skip-build: 'true'
       - name: Run Relay functional tests in Chromium, Firefox, and WebKit
-        run: pnpm exec turbo functional-test --filter=@coveo/relay
+        run: pnpm exec turbo run functional-test --filter=@coveo/relay --affected
       - name: Build the playground and run its CJS/ESM Node smoke tests
-        run: pnpm exec turbo test --filter=@coveo/relay-playground
+        run: pnpm exec turbo run test --filter=@coveo/relay-playground --affected
   validate-dts:
     name: 'Validate DTS API surface'
     needs: [affected, build]
@@ -296,8 +289,6 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-        with:
-          skip-build: 'true' # Defer to test:dts:ci building what it needs
       - run: pnpm exec turbo test:dts:ci --affected
   package-compatibility:
     name: 'Verify compatibility of packages'
@@ -315,7 +306,7 @@ jobs:
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec node ./scripts/ci/validate-publint-tasks.mjs
-      - run: pnpm turbo run publint --affected
+      - run: pnpm exec turbo run publint --affected
   typedoc:
     name: 'Build typedoc'
     needs: [affected, build]
@@ -332,8 +323,6 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-        with:
-          skip-build: 'true' # defer build to only build what's necessary
       - name: 'Build typedoc'
         run: pnpm exec turbo run build:typedoc --affected
   puppeteer-atomic-csp:
@@ -375,8 +364,6 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
-        with:
-          skip-build: 'true' # Defer build after determining if we run the tests
       - name: Run Chromatic visual tests
         uses: chromaui/action@14cfaef73576e69f95f47f60058063f46ca38719 # v18.1.0
         id: chromatic-run
@@ -423,6 +410,7 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
+      - run: pnpm run build --affected
       - uses: ./.github/actions/playwright-atomic
         with:
           shardIndex: ${{ matrix.shardIndex }}
@@ -470,8 +458,6 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-        with:
-          skip-build: 'true'
       - uses: ./.github/actions/playwright-atomic-theming
   storybook-atomic:
     name: 'Run Storybook tests'
@@ -498,8 +484,8 @@ jobs:
           filter: blob:none
       - run: git branch main origin/main
       - uses: ./.github/actions/setup
-      - run: npm run test:storybook -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
-        working-directory: packages/atomic
+      - run: pnpm run build --affected
+      - run: pnpm exec turbo run test:storybook --filter=@coveo/atomic --affected -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
       - name: 'Upload a11y shard report'
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
@@ -528,8 +514,6 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-        with:
-          skip-build: 'true'
       - name: 'Download a11y shard reports'
         continue-on-error: true
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
@@ -574,6 +558,7 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
+      - run: pnpm run build --affected
       - run: pnpm exec turbo run "${{ matrix.sample }}"
       - name: Upload Playwright report
         if: failure()
@@ -602,6 +587,7 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
+      - run: pnpm exec turbo run build --filter=@coveo/pkg-new-template
       - uses: ./.github/actions/playwright-pkg-new-template
   playwright-atomic-hosted-page-test:
     name: 'Run e2e tests for Atomic Hosted Page'
@@ -622,6 +608,7 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
+      - run: pnpm exec turbo run build --filter=@coveo/atomic-hosted-page
       - uses: ./.github/actions/playwright-atomic-hosted-pages
   e2e-quantic:
     name: 'Run Quantic E2E tests'
@@ -637,8 +624,6 @@ jobs:
     uses: ./.github/workflows/e2e-quantic.yml
     with:
       event_name: ${{ github.event_name }}
-      turbo_scm_base: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
-      turbo_scm_head: ${{ github.sha }}
     secrets:
       SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
       SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
@@ -658,6 +643,7 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
+      - run: pnpm exec turbo run build --filter='!./samples/**'
       - name: Resolve catalog references in pkg.pr.new templates
         run: node packages/pkg-new-template/scripts/flatten-catalog.mjs
       - name: Publish to pkg.pr.new
