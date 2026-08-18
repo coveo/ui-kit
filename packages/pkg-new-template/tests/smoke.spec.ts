@@ -1,9 +1,5 @@
 import {expect, type Page, test} from '@playwright/test';
 
-// Atomic layouts are `display: none` until the interface finishes initializing
-// and injects its generated layout styles. Waiting for the layout to become
-// visible first means the component assertions below only measure hydrated
-// elements instead of racing the interface bootstrap.
 async function gotoPage(page: Page, path: string, layout: string) {
   await page.goto(`http://localhost:3000/${path}`);
   await expect(page.locator(layout)).toBeVisible();

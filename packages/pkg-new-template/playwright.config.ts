@@ -7,9 +7,6 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
-  // The pages initialize a live Atomic interface against a sample org while Vite
-  // transforms the Atomic ESM graph on demand, so the default 5s expect timeout
-  // is not enough on a cold, single-worker CI runner.
   timeout: 90_000,
   expect: {
     timeout: 30_000,
