@@ -198,7 +198,8 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo run lint:check --affected
+      # TODO: Convert to turbo tasks: https://coveord.atlassian.net/browse/KIT-6074
+      - run: pnpm run lint:check
   validate-light-dom-styles:
     name: 'Validate Light DOM styles'
     needs: affected
