@@ -1,6 +1,6 @@
 import type {Turn} from '@coveo/thermidor';
 import {useRef} from 'react';
-import {useScrollAnchor} from '../../hooks/use-scroll-anchor.js';
+import {useAutoScroll} from '../../hooks/use-auto-scroll.js';
 import type {TargetedProduct} from '../../context/targeting.js';
 import {ProductTargeting} from '../ProductTargeting/ProductTargeting.js';
 import {ConversationThread} from './ConversationThread.js';
@@ -28,7 +28,7 @@ export function ConversationPage({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const turnRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
-  useScrollAnchor({containerRef, turnRefs, turns, isStreaming});
+  useAutoScroll({containerRef, turnRefs, turns, isStreaming});
 
   return (
     <section className={styles.page}>

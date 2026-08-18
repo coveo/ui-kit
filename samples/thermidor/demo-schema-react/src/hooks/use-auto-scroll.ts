@@ -3,25 +3,26 @@ import type {Turn} from '@coveo/thermidor';
 
 const MARGIN_TOP = 20;
 
-interface UseScrollAnchorOptions {
+interface UseAutoScrollOptions {
   containerRef: React.RefObject<HTMLDivElement | null>;
   turnRefs: React.MutableRefObject<Map<string, HTMLDivElement>>;
   turns: Turn[];
   isStreaming: boolean;
 }
 
-interface UseScrollAnchorReturn {
-  scrollToPrompt: (turnId: string) => void;
-  recalculatePadding: () => void;
-  clearPadding: () => void;
-}
-
-export function useScrollAnchor({
+/**
+ * Automatically manages scroll position and bottom padding during conversation streaming.
+ *
+ * - Scrolls to the latest turn when new turns arrive
+ * - Clears excess padding when streaming ends
+ * - Recalculates padding on container resize
+ */
+export function useAutoScroll({
   containerRef,
   turnRefs,
   turns,
   isStreaming,
-}: UseScrollAnchorOptions): UseScrollAnchorReturn {
+}: UseAutoScrollOptions): void {
   const lastScrolledTurnIdRef = useRef<string | null>(null);
   const prevTurnCountRef = useRef<number>(0);
   const hasMountedRef = useRef(false);
@@ -130,6 +131,4 @@ export function useScrollAnchor({
     observer.observe(container);
     return () => observer.disconnect();
   }, [containerRef, recalculatePadding]);
-
-  return {scrollToPrompt, recalculatePadding, clearPadding};
 }
