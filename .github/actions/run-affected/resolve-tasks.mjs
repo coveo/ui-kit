@@ -77,6 +77,13 @@ const parseInputs = () => {
   const affectedInput = process.env.AFFECTED_TASKS ?? '';
   const affectedTasks = affectedInput == '' ? null : JSON.parse(affectedInput);
 
+  if (
+    affectedInput != '' &&
+    (!Array.isArray(affectedTasks) || affectedTasks.some((task) => typeof task !== 'string'))
+  ) {
+    throw new TypeError('AFFECTED_TASKS must be a JSON array of strings.');
+  }
+
   return {requestedTasks, matchesPackage, affectedTasks};
 };
 

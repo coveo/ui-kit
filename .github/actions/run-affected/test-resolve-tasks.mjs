@@ -16,6 +16,20 @@ const run = (name, environment, expected) => {
     .trim();
   assert.equal(actual, expected.join('\n'), name);
 };
+const runFailure = (name, environment, expectedError) => {
+  assert.throws(
+    () =>
+      execFileSync(process.execPath, [resolver], {
+        cwd: workspace,
+        env: {...process.env, GITHUB_WORKSPACE: workspace, ...environment},
+        stdio: ['ignore', 'pipe', 'pipe'],
+      }),
+    (error) => {
+      assert.match(error.stderr.toString(), expectedError, name);
+      return true;
+    }
+  );
+};
 run(
   'matches an exact project filter',
   {
@@ -63,6 +77,16 @@ run(
   },
   []
 );
+for (const invalidAffectedTasks of ['null', '{}', '["@coveo/atomic#build", 1]']) {
+  runFailure(
+    `rejects invalid affected tasks: ${invalidAffectedTasks}`,
+    {
+      GITHUB_WORKSPACE: resolve(directory, 'missing-workspace'),
+      AFFECTED_TASKS: invalidAffectedTasks,
+    },
+    /AFFECTED_TASKS must be a JSON array of strings\./
+  );
+}
 run(
   'resolves the selected workspace when affected tasks are not provided',
   {
