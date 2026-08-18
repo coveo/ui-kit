@@ -32,6 +32,15 @@ const buenoVersion = isNightly
 const buenoBase = commitSha ? `/bueno/commits/${commitSha}` : `/bueno/${buenoVersion}`;
 const buenoCdnPath = `${buenoBase}/bueno.esm.js`;
 
+/**
+ * Shared by the browser and node configs so they cannot drift. Every deep import into
+ * coveo.analytics must be listed here, see {@link resolveSubpath}.
+ */
+const coveoAnalyticsAliases = {
+  'coveo.analytics': resolveEsm('coveo.analytics'),
+  'coveo.analytics/dist/esm/history.mjs': resolveSubpath('coveo.analytics/dist/esm/history.mjs'),
+};
+
 function getUmdGlobalName(useCase) {
   const map = {
     search: 'CoveoHeadless',
@@ -212,6 +221,18 @@ function resolveEsm(moduleName) {
   return resolve(dirname(packageJsonPath), packageJson.module || packageJson.main);
 }
 
+/**
+ * Absolute path for a package subpath. `packages: 'external'` does not externalize absolute
+ * paths, so aliasing to one keeps the module bundled. Required for the unbundled ESM modules of
+ * coveo.analytics: left as bare specifiers they would emit `require()` of an `.mjs` file, which
+ * throws `ERR_REQUIRE_ESM` on the older Node versions this package still supports.
+ *
+ * @param {string} subpath
+ */
+function resolveSubpath(subpath) {
+  return require.resolve(subpath);
+}
+
 function resolveBrowser(moduleName) {
   const packageJsonPath = require.resolve(`${moduleName}/package.json`);
   const packageJson = require(packageJsonPath);
@@ -244,7 +265,7 @@ async function buildBrowserConfig(options, outDir) {
     external: ['crypto', ...(options.external || [])],
     plugins: [
       alias({
-        'coveo.analytics': resolveEsm('coveo.analytics'),
+        ...coveoAnalyticsAliases,
         pino: resolveBrowser('pino'),
       }),
       ...(options.plugins || []),
@@ -281,7 +302,7 @@ async function buildNodeConfig(options, outDir) {
     treeShaking: true,
     plugins: [
       alias({
-        'coveo.analytics': resolveEsm('coveo.analytics'),
+        ...coveoAnalyticsAliases,
       }),
     ],
     ...options,
