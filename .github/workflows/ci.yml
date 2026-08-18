@@ -457,7 +457,6 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-      - run: pnpm run build --affected
       - uses: ./.github/actions/playwright-atomic-theming
   storybook-atomic:
     name: 'Run Storybook tests'
