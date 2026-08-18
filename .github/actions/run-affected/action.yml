@@ -1,0 +1,43 @@
+name: 'Run affected Turbo tasks'
+description: 'Select affected Turbo tasks from the current task graph and run them.'
+inputs:
+  affected-tasks:
+    description: 'Affected Turbo task identifiers as a JSON array. When not specified, run all tasks in the selected graph. When the array is empty, run no tasks.'
+    required: false
+    default: ''
+  tasks:
+    description: 'Turbo target task names, one per line.'
+    required: false
+    default: 'build'
+  packages:
+    description: 'Project package name selectors, one per line. Supports exact names, * wildcards, and ! negation. An empty value defaults to all projects.'
+    required: false
+    default: ''
+  arguments:
+    description: 'Additional arguments passed to Turbo tasks after --, one per line.'
+    required: false
+    default: ''
+runs:
+  using: composite
+  steps:
+    - name: Resolve affected tasks
+      id: resolve
+      shell: bash
+      env:
+        AFFECTED_TASKS: ${{ inputs.affected-tasks }}
+        TASKS: ${{ inputs.tasks }}
+        PACKAGES: ${{ inputs.packages }}
+      run: |
+        tasks="$(node "$GITHUB_ACTION_PATH/resolve-tasks.mjs")"
+        {
+          echo 'tasks<<EOF'
+          echo "$tasks"
+          echo EOF
+        } >> "$GITHUB_OUTPUT"
+    - name: Run tasks
+      if: ${{ steps.resolve.outputs.tasks != '' }}
+      shell: bash
+      env:
+        TASKS: ${{ steps.resolve.outputs.tasks }}
+        ARGUMENTS: ${{ inputs.arguments }}
+      run: bash "$GITHUB_ACTION_PATH/run-tasks.sh"
