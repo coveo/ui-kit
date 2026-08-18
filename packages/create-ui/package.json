@@ -1,6 +1,6 @@
 {
   "name": "@coveo/create-ui",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Scaffold a Coveo UI project (Atomic or Headless) from the official samples.",
   "keywords": [
     "atomic",
@@ -28,6 +28,7 @@
     "access": "public"
   },
   "scripts": {
+    "publint": "publint",
     "build": "tsc -p tsconfig.json",
     "start": "node ./dist/index.js",
     "test": "vitest run && pnpm test:pack",

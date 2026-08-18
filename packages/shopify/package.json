@@ -1,6 +1,6 @@
 {
   "name": "@coveo/shopify",
-  "version": "1.9.40",
+  "version": "1.9.41",
   "description": "Utilities to integrate Shopify with Coveo's commerce engine",
   "license": "Apache-2.0",
   "repository": {
@@ -47,6 +47,7 @@
     }
   },
   "scripts": {
+    "publint": "publint",
     "dev": "pnpm run build:bundles -- dev",
     "build": "pnpm run build:bundles && pnpm run build:definitions",
     "build:bundles": "node esbuild.mjs",

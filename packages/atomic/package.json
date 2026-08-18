@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "3.60.4",
+  "version": "3.60.5",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "license": "Apache-2.0",
@@ -55,6 +55,7 @@
     "./custom-elements-manifest": "./custom-elements.json"
   },
   "scripts": {
+    "publint": "publint",
     "clean": "node ../../utils/ci/rm-rf.mjs dist/* dist-storybook/* www/* docs/* playwright-report/*",
     "build:storybook": "storybook build -o dist-storybook",
     "build:cem": "cem analyze",
@@ -69,6 +70,7 @@
     "dev:storybook": "storybook dev -p 4400",
     "web:dev": "npx vite serve dev",
     "web:cdn": "node ./scripts/start-cdn.mjs",
+    "e2e:theming": "playwright test -c dev",
     "test": "pnpm run test:lit",
     "test:stencil": "stencil test --spec -- src/utils/initialization-utils.spec.ts",
     "test:lit": "vitest run --project=atomic-default",

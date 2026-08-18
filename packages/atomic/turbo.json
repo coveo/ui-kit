@@ -122,6 +122,10 @@
       "dependsOn": ["build:cdn"],
       "cache": false,
       "persistent": true
+    },
+    "e2e:theming": {
+      "dependsOn": ["build:cdn"],
+      "outputs": ["playwright-report/**"]
     }
   }
 }
