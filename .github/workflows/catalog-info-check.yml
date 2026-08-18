@@ -20,11 +20,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
-      - uses: step-security/mise-action@2796166110dee826668caddd4bffedae5116e7cd # v4
+      - uses: step-security/mise-action@6e96d2ffbc65c037f23c78818f2a339d6cf830f7 # v4
         with:
           install: true
           cache: true

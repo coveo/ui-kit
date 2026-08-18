@@ -16,7 +16,7 @@ runs:
   steps:
     #region Mise (Node + pnpm)
     - name: Install tools via mise
-      uses: step-security/mise-action@2796166110dee826668caddd4bffedae5116e7cd # v4
+      uses: step-security/mise-action@6e96d2ffbc65c037f23c78818f2a339d6cf830f7 # v4
       with:
         install: true
         cache: true
