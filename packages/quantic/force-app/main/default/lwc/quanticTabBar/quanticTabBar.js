@@ -1,5 +1,4 @@
 import more from '@salesforce/label/c.quantic_More';
-import {getAbsoluteWidth} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
 /**
@@ -39,6 +38,10 @@ export default class QuanticTabBar extends LightningElement {
   maxMoreButtonWidth = 0;
   /** @type {boolean} */
   expandedMoreButton = true;
+  /** @type {Array<Element>} */
+  _overflowingTabs = [];
+  /** @type {Array<Element>} */
+  _displayedTabs = [];
 
   /**
    * Signature of the state used during the last completed `updateTabsDisplay` pass.
@@ -46,6 +49,12 @@ export default class QuanticTabBar extends LightningElement {
    * @type {string|null}
    */
   _lastTabStateSignature = null;
+
+  /**
+   * Rects captured for the current layout pass.
+   * @type {{container: DOMRect, moreButton: DOMRect, tabs: Map<Element, DOMRect>}|null}
+   */
+  _layoutRects = null;
 
   connectedCallback() {
     window.addEventListener('click', this.closeDropdown);
@@ -57,7 +66,6 @@ export default class QuanticTabBar extends LightningElement {
     if (!this.hasRendered) {
       this.updateMoreButtonVisibility(false);
       this.hasRendered = true;
-      this.updateMoreButtonState();
     }
   }
 
@@ -69,46 +77,128 @@ export default class QuanticTabBar extends LightningElement {
    */
   updateTabsDisplay = () => {
     const tabElements = this.getTabsFromSlot();
-    const tabStateSignature = this.deriveTabStateSignature(tabElements);
+    this._layoutRects = {
+      container: this.container.getBoundingClientRect(),
+      moreButton: this.moreButton?.getBoundingClientRect(),
+      tabs: new Map(
+        tabElements.map((tab) => [tab, tab.getBoundingClientRect()])
+      ),
+    };
+
+    const containerWidth = this.containerWidth;
+    const slotContentWidth = this.computeSlotContentWidth(tabElements);
+    const tabStateSignature = this.deriveTabStateSignature(
+      tabElements,
+      containerWidth,
+      slotContentWidth
+    );
 
     if (
       this.hasRendered &&
       this._lastTabStateSignature !== null &&
       tabStateSignature === this._lastTabStateSignature
     ) {
+      this._layoutRects = null;
       return;
     }
     this._lastTabStateSignature = tabStateSignature;
 
     const tabsCount = tabElements.length;
-    const slotContentWidth = this.computeSlotContentWidth(tabElements);
-    const isOverflow = slotContentWidth > this.containerWidth;
-    // Must run before computeLayoutSnapshot: while display:none, moreButtonWidth reads as 0.
+    const isOverflow = slotContentWidth > containerWidth;
+    // Must run before categorizeTabsVisibility: while display:none, moreButtonWidth reads as 0.
     this.updateMoreButtonVisibility(isOverflow);
+    this._layoutRects.moreButton = this.moreButton?.getBoundingClientRect();
+    if (!this._layoutRects.moreButton?.width) {
+      const moreButton = this.moreButton?.querySelector('button');
+      if (moreButton) {
+        this._layoutRects.moreButton = moreButton.getBoundingClientRect();
+      }
+    }
 
-    const snapshot = this.computeLayoutSnapshot(tabElements, isOverflow);
-
-    this.updateTabVisibility(snapshot.overflowingTabs, false, tabsCount);
-    this.updateTabVisibility(snapshot.displayedTabs, true, tabsCount);
-    this.updateDropdownOptions(snapshot.overflowingTabs);
-    this.updateMoreButtonPosition(snapshot.displayedTabs);
     this.updateMoreButtonState();
+    this._layoutRects.moreButton = this.moreButton?.getBoundingClientRect();
+    if (!this._layoutRects.moreButton?.width) {
+      const moreButton = this.moreButton?.querySelector('button');
+      if (moreButton) {
+        this._layoutRects.moreButton = moreButton.getBoundingClientRect();
+      }
+    }
+
+    const {overflowingTabs, displayedTabs} = this.categorizeTabsVisibility(
+      tabElements,
+      isOverflow
+    );
+    this._overflowingTabs = overflowingTabs;
+    this._displayedTabs = displayedTabs;
+
+    this.updateTabVisibility(overflowingTabs, false, tabsCount);
+    this.updateTabVisibility(displayedTabs, true, tabsCount);
+    this.updateDropdownOptions(overflowingTabs);
+    this.updateMoreButtonPosition(displayedTabs);
     this.isDropdownOpen = false;
+    this._layoutRects = null;
   };
 
   /**
-   * Derives a lightweight tab state signature representing the state relevant to the tab display
-   * layout: the tab count, the container width, the identity of the currently active tab, and the
-   * total rendered width of the tabs. The rendered width is included since it can change without
-   * the other three changing (e.g. a placeholder label being replaced by the real one).
+   * Returns a cached rectangle during a layout pass, otherwise reads the live DOM.
+   * @param {Element|undefined} element
+   * @returns {DOMRect|undefined}
+   */
+  getElementRect(element) {
+    if (!element) {
+      return undefined;
+    }
+
+    if (this._layoutRects) {
+      if (element === this.container) {
+        return this._layoutRects.container;
+      }
+      if (element === this.moreButton) {
+        return this._layoutRects.moreButton;
+      }
+
+      return this._layoutRects.tabs.get(element);
+    }
+
+    return element.getBoundingClientRect();
+  }
+
+  /**
+   * Returns the width from a cached or live element rectangle.
+   * @param {Element|undefined} element
+   * @returns {number}
+   */
+  getElementWidth(element) {
+    const rect = this.getElementRect(element);
+    return rect ? Math.ceil(rect.width) : 0;
+  }
+
+  /**
+   * Builds a signature representing the current tab layout state.
+   * Includes the tab count, container width, active tab, content width, tab positions, labels,
+   * and expressions so changes affecting the display or dropdown options can be detected.
    * @param {Array<Element>} tabElements
+   * @param {number} [containerWidth]
+   * @param {number} [slotContentWidth]
    * @returns {string}
    */
-  deriveTabStateSignature(tabElements) {
+  deriveTabStateSignature(
+    tabElements,
+    containerWidth = this.containerWidth,
+    slotContentWidth = this.computeSlotContentWidth(tabElements)
+  ) {
     // @ts-ignore
     const activeTabIndex = tabElements.findIndex((el) => el.isActive);
-    const slotContentWidth = this.computeSlotContentWidth(tabElements);
-    return `${tabElements.length}|${this.containerWidth}|${activeTabIndex}|${slotContentWidth}`;
+    const tabPositions = tabElements
+      .map((tab) => this.getElementRect(tab)?.right ?? 0)
+      .join(',');
+    const tabMetadata = tabElements.map((tab) => [
+      // @ts-ignore
+      tab.label,
+      // @ts-ignore
+      tab.expression,
+    ]);
+    return `${tabElements.length}|${containerWidth}|${activeTabIndex}|${slotContentWidth}|${tabPositions}|${JSON.stringify(tabMetadata)}`;
   }
 
   /**
@@ -119,73 +209,44 @@ export default class QuanticTabBar extends LightningElement {
    * @param {boolean} isOverflow Whether the tabs overflow the container.
    * @returns {{overflowingTabs: Array<Element>, displayedTabs: Array<Element>}}
    */
-  computeLayoutSnapshot(tabElements, isOverflow) {
+  categorizeTabsVisibility(tabElements, isOverflow) {
     // @ts-ignore
     const selectedTab = tabElements.find((el) => el.isActive);
-    const selectedTabWidth = selectedTab ? getAbsoluteWidth(selectedTab) : 0;
-    const moreButtonWidth = this.moreButton
-      ? getAbsoluteWidth(this.moreButton)
-      : 0;
-
-    const containerRightPosition = this.container.getBoundingClientRect().right;
-    const selectedTabRightPosition = selectedTab?.getBoundingClientRect().right;
-
-    const overflowingTabs = tabElements.filter((element) =>
-      this.isTabOverflowing(element, {
-        isOverflow,
-        containerRightPosition,
-        selectedTabRightPosition,
-        moreButtonWidth,
-        selectedTabWidth,
-      })
+    const selectedTabWidth = this.getElementWidth(selectedTab);
+    const moreButton = this.moreButton?.querySelector('button');
+    const moreButtonWidth = Math.max(
+      this.getElementWidth(this.moreButton),
+      moreButton?.offsetWidth ?? 0,
+      moreButton?.scrollWidth ?? 0
     );
+    const containerWidth = this.containerWidth;
+    const displayedTabs = [];
+    const overflowingTabs = [];
+    let displayedTabsWidth = 0;
+    let selectedTabDisplayed = false;
 
-    // Set avoids O(n²) lookups from Array.includes when filtering displayedTabs.
-    const overflowingTabsSet = new Set(overflowingTabs);
-    const displayedTabs = tabElements.filter(
-      (el) => !overflowingTabsSet.has(el)
-    );
+    tabElements.forEach((tab) => {
+      const tabWidth = this.getElementWidth(tab);
+      // @ts-ignore
+      if (tab.isActive) {
+        displayedTabs.push(tab);
+        displayedTabsWidth += tabWidth;
+        selectedTabDisplayed = true;
+        return;
+      }
 
-    return {
-      overflowingTabs,
-      displayedTabs,
-    };
-  }
+      const reservedWidth = isOverflow
+        ? moreButtonWidth + (selectedTabDisplayed ? 0 : selectedTabWidth)
+        : 0;
+      if (displayedTabsWidth + tabWidth + reservedWidth <= containerWidth) {
+        displayedTabs.push(tab);
+        displayedTabsWidth += tabWidth;
+      } else {
+        overflowingTabs.push(tab);
+      }
+    });
 
-  /**
-   * Indicates whether a given tab overflows the container.
-   * A tab overflows once its right edge crosses the available space, where the available space
-   * is reduced to reserve room for the "More" button (always) and, for tabs positioned before the
-   * currently selected tab, also the selected tab itself (since the selected tab must always stay
-   * visible regardless of where it falls in the tab order).
-   * @param {Element} tabElement
-   * @param {{isOverflow: boolean, containerRightPosition: number, selectedTabRightPosition: number, moreButtonWidth: number, selectedTabWidth: number}} context
-   * @returns {boolean}
-   */
-  isTabOverflowing(tabElement, context) {
-    const {
-      isOverflow,
-      containerRightPosition,
-      selectedTabRightPosition,
-      moreButtonWidth,
-      selectedTabWidth,
-    } = context;
-
-    // @ts-ignore
-    if (tabElement.isActive) {
-      return false;
-    }
-
-    const tabRightPosition = tabElement.getBoundingClientRect().right;
-    const isBeforeSelectedTab = selectedTabRightPosition > tabRightPosition;
-    const reservedWidth = isBeforeSelectedTab
-      ? moreButtonWidth + selectedTabWidth
-      : moreButtonWidth;
-    const availableRightPosition = isOverflow
-      ? containerRightPosition - reservedWidth
-      : containerRightPosition;
-
-    return tabRightPosition > availableRightPosition;
+    return {overflowingTabs, displayedTabs};
   }
 
   /**
@@ -194,7 +255,7 @@ export default class QuanticTabBar extends LightningElement {
    *  to avoid recomputing it from the live DOM.
    * @returns {void}
    */
-  updateDropdownOptions(overflowingTabs = this.overflowingTabs) {
+  updateDropdownOptions(overflowingTabs = this._overflowingTabs) {
     this.tabsInDropdown = overflowingTabs.map((el, index) => ({
       id: index,
       // @ts-ignore
@@ -206,18 +267,29 @@ export default class QuanticTabBar extends LightningElement {
 
   /**
    * Updates the position of the "More" button element.
-   * We need to update the position of the "More" button so that it is always to the right of the last tab displayed, as hidden tabs are just hidden visually but there is always space allocated for them.
+   * The displayed tabs are assigned contiguous flex orders below, so their widths determine the
+   * position of More even before the browser applies the new order.
    * @param {Array<Element>} [displayedTabs] Optionally pass a pre-computed list of displayed tabs
    *  to avoid recomputing it from the live DOM.
    * @returns {void}
    */
-  updateMoreButtonPosition(displayedTabs = this.displayedTabs) {
-    const lastVisibleTab = displayedTabs[displayedTabs.length - 1];
-    const position = lastVisibleTab
-      ? lastVisibleTab.getBoundingClientRect().right -
-        this.tabBarListContainer.getBoundingClientRect().left
-      : 0;
-    this.moreButton?.style.setProperty('left', `${position}px`);
+  updateMoreButtonPosition(displayedTabs = this._displayedTabs) {
+    const selectedTab = this.selectedTab;
+    const position = displayedTabs.reduce(
+      (total, tab) => total + this.getElementWidth(tab),
+      0
+    );
+    const selectedTabWidth = this.getElementWidth(selectedTab);
+    const selectedTabPosition =
+      selectedTab &&
+      (selectedTabWidth === 0 || !displayedTabs.includes(selectedTab))
+        ? (this.getElementRect(selectedTab)?.right ?? 0) -
+          (this.getElementRect(this.container)?.left ?? 0)
+        : 0;
+    this.moreButton?.style.setProperty(
+      'left',
+      `${Math.max(position, selectedTabPosition)}px`
+    );
   }
 
   /**
@@ -267,14 +339,6 @@ export default class QuanticTabBar extends LightningElement {
   }
 
   /**
-   * Indicates whether the tabs are causing an overflow.
-   * @returns {boolean}
-   */
-  get isOverflow() {
-    return this.slotContentWidth > this.containerWidth;
-  }
-
-  /**
    * Returns the tab bar container element.
    * @returns {Element}
    */
@@ -287,27 +351,22 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {number}
    */
   get containerWidth() {
-    return getAbsoluteWidth(this.container);
-  }
-
-  /**
-   * returns the width of the content of the slot.
-   * @returns {number}
-   */
-  get slotContentWidth() {
-    return this.computeSlotContentWidth(this.getTabsFromSlot());
+    return this.getElementWidth(this.container);
   }
 
   /**
    * Computes the total rendered width of the given tab elements.
-   * Shared by `slotContentWidth`, `deriveTabStateSignature`, and `computeLayoutSnapshot` so the
-   * calculation only lives in one place, while still letting each caller pass in a `tabElements`
-   * array it already has on hand instead of re-querying the slot.
+   * Shared by the state signature and the layout pass so the calculation only lives in one place,
+   * while still letting each caller pass in a `tabElements` array it already has on hand instead
+   * of re-querying the slot.
    * @param {Array<Element>} tabElements
    * @returns {number}
    */
   computeSlotContentWidth(tabElements) {
-    return tabElements.reduce((total, el) => total + getAbsoluteWidth(el), 0);
+    return tabElements.reduce(
+      (total, el) => total + this.getElementWidth(el),
+      0
+    );
   }
 
   /**
@@ -315,7 +374,7 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {number}
    */
   get moreButtonWidth() {
-    return this.moreButton ? getAbsoluteWidth(this.moreButton) : 0;
+    return this.getElementWidth(this.moreButton);
   }
 
   /**
@@ -323,47 +382,7 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {number}
    */
   get selectedTabWidth() {
-    return getAbsoluteWidth(this.selectedTab);
-  }
-
-  /**
-   * Returns the overflowing tabs.
-   * We compare the right position of each tab to the right position of the tab container to find the tabs that overflow.
-   * We include in our calculations the minimum width needed to display the elements that should always be displayed, namely the More button and the currently selected tab.
-   * @returns {Array<Element>}
-   */
-  get overflowingTabs() {
-    const containerRelativeRightPosition =
-      this.container.getBoundingClientRect().right;
-    const selectedTabRelativeRightPosition =
-      this.selectedTab?.getBoundingClientRect().right;
-
-    return this.getTabsFromSlot().filter((element) => {
-      const tabPositionedBeforeSelectedTab =
-        selectedTabRelativeRightPosition >
-        element.getBoundingClientRect().right;
-      const minimumWidthNeeded = tabPositionedBeforeSelectedTab
-        ? this.moreButtonWidth + this.selectedTabWidth
-        : this.moreButtonWidth;
-      const rightPositionLimit = !this.isOverflow
-        ? containerRelativeRightPosition
-        : containerRelativeRightPosition - minimumWidthNeeded;
-      return (
-        element.getBoundingClientRect().right > rightPositionLimit &&
-        // @ts-ignore
-        !element.isActive
-      );
-    });
-  }
-
-  /**
-   * Returns the displayed tabs.
-   * @returns {Array<Element>}
-   */
-  get displayedTabs() {
-    // Set avoids O(n²) lookups from Array#includes.
-    const overflowingTabsSet = new Set(this.overflowingTabs);
-    return this.getTabsFromSlot().filter((el) => !overflowingTabsSet.has(el));
+    return this.getElementWidth(this.selectedTab);
   }
 
   /**
@@ -411,39 +430,12 @@ export default class QuanticTabBar extends LightningElement {
   }
 
   /**
-   * Returns the last visible tab element.
-   * @returns {Element}
-   */
-  get lastVisibleTab() {
-    return this.displayedTabs[this.displayedTabs.length - 1];
-  }
-
-  /**
    * Returns the currently selected tab element.
    * @returns {Element}
    */
   get selectedTab() {
     // @ts-ignore
     return this.getTabsFromSlot().find((el) => el.isActive);
-  }
-
-  /**
-   * Returns the tab bar list container element.
-   * @returns {Element}
-   */
-  get tabBarListContainer() {
-    return this.template.querySelector('.tab-bar_list-container');
-  }
-
-  /**
-   * Returns the right position of the last visible tab.
-   * @returns {number}
-   */
-  get lastVisibleTabRightPosition() {
-    return (
-      this.lastVisibleTab.getBoundingClientRect().right -
-      this.tabBarListContainer.getBoundingClientRect().left
-    );
   }
 
   /**
@@ -483,13 +475,26 @@ export default class QuanticTabBar extends LightningElement {
     event.stopPropagation();
     const targetValue = event.currentTarget.getAttribute('data-value');
     const targetLabel = event.currentTarget.getAttribute('data-label');
-    const clickedtab = this.overflowingTabs.find(
+    const clickedtab = this._overflowingTabs.find(
       // @ts-ignore
       (tab) => tab.expression === targetValue && tab.label === targetLabel
     );
+    // Tab selection updates Headless state asynchronously. Invalidate the previous signature so
+    // the next quantic__tabrendered event cannot skip the layout pass with stale state.
+    this._lastTabStateSignature = null;
     // @ts-ignore
     clickedtab?.select();
     this.isDropdownOpen = false;
+    if (typeof window.requestAnimationFrame === 'function') {
+      // eslint-disable-next-line @lwc/lwc/no-async-operation
+      window.requestAnimationFrame(() => {
+        // eslint-disable-next-line @lwc/lwc/no-async-operation
+        window.requestAnimationFrame(() => {
+          this._lastTabStateSignature = null;
+          this.updateTabsDisplay();
+        });
+      });
+    }
   };
 
   /**

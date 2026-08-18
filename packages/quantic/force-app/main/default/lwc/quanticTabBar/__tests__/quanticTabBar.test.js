@@ -55,7 +55,10 @@ function createExampleTabSlots(numberOfSlots) {
     const exampleSlot = document.createElement('c-quantic-tab');
     const value = `tab ${i + 1}`;
     // @ts-ignore
-    exampleSlot.getBoundingClientRect = () => ({right: (i + 1) * tabSlotWidth});
+    exampleSlot.getBoundingClientRect = () => ({
+      right: exampleSlot.mockRight ?? (i + 1) * tabSlotWidth,
+      width: exampleSlot.mockWidth ?? tabSlotWidth,
+    });
     // @ts-ignore
     exampleSlot.label = value;
     // @ts-ignore
@@ -99,7 +102,16 @@ function createTestComponent(options = defaultOptions, assignedElements = []) {
   const tabBarContainer = element.shadowRoot.querySelector(
     selectors.tabBarContainer
   );
-  tabBarContainer.getBoundingClientRect = () => ({right: mockContainerWidth});
+  tabBarContainer.getBoundingClientRect = () => ({
+    right: mockContainerWidth,
+    width: mockContainerWidth,
+  });
+  const moreTabsSection = element.shadowRoot.querySelector(
+    selectors.moreTabsSection
+  );
+  moreTabsSection.getBoundingClientRect = () => ({
+    width: moreTabsSection.style.display === 'none' ? 0 : moreButtonWidth,
+  });
 
   window.dispatchEvent(new CustomEvent('resize'));
   return element;
@@ -158,6 +170,7 @@ describe('c-quantic-tab-bar', () => {
         );
         tabBarContainer.getBoundingClientRect = () => ({
           right: mockContainerWidth,
+          width: mockContainerWidth,
         });
         window.dispatchEvent(new CustomEvent('resize'));
         await flushPromises();
@@ -186,6 +199,7 @@ describe('c-quantic-tab-bar', () => {
         );
         tabBarContainer.getBoundingClientRect = () => ({
           right: mockContainerWidth,
+          width: mockContainerWidth,
         });
         window.dispatchEvent(new CustomEvent('resize'));
         await flushPromises();
@@ -249,6 +263,46 @@ describe('c-quantic-tab-bar', () => {
       expect(tabsInDropdownLabels).toEqual(expectedTabsInDropdownLabels);
     });
 
+    it('should refresh dropdown labels when a tab label changes', async () => {
+      const element = createTestComponent(defaultOptions, exampleTabSlots);
+      await flushPromises();
+
+      // @ts-ignore
+      exampleTabSlots[1].label = 'New 2';
+      element.dispatchEvent(
+        new CustomEvent('quantic__tabrendered', {bubbles: true})
+      );
+      await flushPromises();
+
+      const tabItemsInDropdown = element.shadowRoot.querySelectorAll(
+        selectors.tabItemsInDropdown
+      );
+      expect(tabItemsInDropdown[0].textContent).toBe('New 2');
+    });
+
+    it('should refresh dropdown values when a tab expression changes', async () => {
+      const element = createTestComponent(defaultOptions, exampleTabSlots);
+      await flushPromises();
+      functionMocks.select.mockClear();
+
+      // @ts-ignore
+      exampleTabSlots[1].expression = '@newexpression';
+      element.dispatchEvent(
+        new CustomEvent('quantic__tabrendered', {bubbles: true})
+      );
+      await flushPromises();
+
+      const tabItemsInDropdown = element.shadowRoot.querySelectorAll(
+        selectors.tabItemsInDropdown
+      );
+      expect(tabItemsInDropdown[0].getAttribute('data-value')).toBe(
+        '@newexpression'
+      );
+
+      await tabItemsInDropdown[0].click();
+      expect(functionMocks.select).toHaveBeenCalledWith(1);
+    });
+
     it('should open and close the tabs dropdown list after clicking the more tabs button', async () => {
       const element = createTestComponent(defaultOptions, exampleTabSlots);
       await flushPromises();
@@ -296,6 +350,33 @@ describe('c-quantic-tab-bar', () => {
       expect(functionMocks.select).toHaveBeenCalledWith(
         expectedNumberOfTabsToBeVisible + exampleIndex
       );
+    });
+    it('should keep the more tabs section visible after selecting an overflowing tab', async () => {
+      const element = createTestComponent(defaultOptions, exampleTabSlots);
+      await flushPromises();
+
+      const moreTabsSection = element.shadowRoot.querySelector(
+        selectors.moreTabsSection
+      );
+      const tabItemsInDropdown = element.shadowRoot.querySelectorAll(
+        selectors.tabItemsInDropdown
+      );
+
+      // @ts-ignore
+      exampleTabSlots[1].select = () => {
+        // @ts-ignore
+        exampleTabSlots[0].isActive = false;
+        // @ts-ignore
+        exampleTabSlots[1].isActive = true;
+        element.dispatchEvent(
+          new CustomEvent('quantic__tabrendered', {bubbles: true})
+        );
+      };
+
+      await tabItemsInDropdown[0].click();
+      await flushPromises();
+
+      expect(moreTabsSection.style.display).toBe('block');
     });
   });
 
@@ -380,8 +461,6 @@ describe('c-quantic-tab-bar', () => {
       const element = createTestComponent(defaultOptions, exampleTabSlots);
       await flushPromises();
 
-      quanticUtils.getAbsoluteWidth.mockClear();
-
       // @ts-ignore
       exampleTabSlots[1].isActive = true;
       element.dispatchEvent(
@@ -389,7 +468,57 @@ describe('c-quantic-tab-bar', () => {
       );
       await flushPromises();
 
-      expect(quanticUtils.getAbsoluteWidth).toHaveBeenCalled();
+      const visibleTabs = exampleTabSlots.filter(
+        (tab) => tab.style.visibility === 'visible'
+      );
+      expect(visibleTabs).toEqual([exampleTabSlots[1]]);
+    });
+
+    it('should recompute when tab positions change after selecting an overflowing tab', async () => {
+      const tabs = createExampleTabSlots(4);
+      tabs.forEach((tab, index) => {
+        // @ts-ignore
+        tab.mockWidth = 60;
+        // @ts-ignore
+        tab.mockRight = (index + 1) * 60 + 20;
+      });
+      // @ts-ignore
+      tabs[0].isActive = true;
+      const element = createTestComponent(defaultOptions, tabs);
+      await flushPromises();
+
+      // The first render event sees the old positions while the newly selected tab is active.
+      // @ts-ignore
+      tabs[0].isActive = false;
+      // @ts-ignore
+      tabs[3].isActive = true;
+      element.dispatchEvent(
+        new CustomEvent('quantic__tabrendered', {bubbles: true})
+      );
+      await flushPromises();
+
+      // Flex ordering changes the tab positions after the first layout pass.
+      // @ts-ignore
+      tabs[0].mockRight = 100;
+      // @ts-ignore
+      tabs[1].mockRight = 220;
+      // @ts-ignore
+      tabs[2].mockRight = 280;
+      // @ts-ignore
+      tabs[3].mockRight = 160;
+      element.dispatchEvent(
+        new CustomEvent('quantic__tabrendered', {bubbles: true})
+      );
+      await flushPromises();
+
+      const visibleTabsAfterReorder = tabs.filter(
+        (tab) => tab.style.visibility === 'visible'
+      );
+      expect(visibleTabsAfterReorder).toEqual([tabs[0], tabs[3]]);
+      expect(
+        element.shadowRoot.querySelector(selectors.moreTabsSection).style
+          .display
+      ).toBe('block');
     });
 
     it('should reduce total layout-read work across a sequence of no-op dispatches compared to always doing a full pass', async () => {
@@ -529,6 +658,58 @@ describe('c-quantic-tab-bar', () => {
       );
       expect(moreTabsButton.textContent.trim()).toContain('More');
 
+      mockContainerWidth = 200;
+    });
+
+    it('should position the More button after selecting a long tab and then another overflowing tab', async () => {
+      mockContainerWidth = 300;
+      const tabs = createExampleTabSlots(4);
+      const widths = [100, 300, 100, 100];
+      const initialRights = [100, 400, 500, 600];
+      tabs.forEach((tab, index) => {
+        // @ts-ignore
+        tab.mockWidth = widths[index];
+        // @ts-ignore
+        tab.mockRight = initialRights[index];
+      });
+      // @ts-ignore
+      tabs[0].isActive = true;
+      const element = createTestComponent(defaultOptions, tabs);
+      await flushPromises();
+
+      const moreTabsSection = element.shadowRoot.querySelector(
+        selectors.moreTabsSection
+      );
+      const selectTab = (selectedIndex) => {
+        tabs.forEach((tab, index) => {
+          // @ts-ignore
+          tab.isActive = index === selectedIndex;
+        });
+        element.dispatchEvent(
+          new CustomEvent('quantic__tabrendered', {bubbles: true})
+        );
+      };
+
+      // Selecting the long tab makes it the first displayed tab after flex ordering.
+      selectTab(1);
+      await flushPromises();
+      expect(moreTabsSection.style.left).toBe('300px');
+
+      // Simulate the positions after the first pass has applied the new flex order.
+      // @ts-ignore
+      tabs[0].mockRight = 400;
+      // @ts-ignore
+      tabs[1].mockRight = 300;
+      // @ts-ignore
+      tabs[2].mockRight = 500;
+      // @ts-ignore
+      tabs[3].mockRight = 600;
+
+      selectTab(2);
+      await flushPromises();
+
+      expect(moreTabsSection.style.left).toBe('200px');
+      expect(moreTabsSection.style.display).toBe('block');
       mockContainerWidth = 200;
     });
   });
