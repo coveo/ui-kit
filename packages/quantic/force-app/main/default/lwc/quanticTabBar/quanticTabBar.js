@@ -49,6 +49,11 @@ export default class QuanticTabBar extends LightningElement {
    * @type {string|null}
    */
   _lastTabStateSignature = null;
+  /**
+   * Signature of tab labels and expressions used to refresh dropdown metadata.
+   * @type {string|null}
+   */
+  _lastTabMetadataSignature = null;
 
   /**
    * Rects captured for the current layout pass.
@@ -92,16 +97,20 @@ export default class QuanticTabBar extends LightningElement {
       containerWidth,
       slotContentWidth
     );
+    const tabMetadataSignature = this.deriveTabMetadataSignature(tabElements);
 
     if (
       this.hasRendered &&
       this._lastTabStateSignature !== null &&
-      tabStateSignature === this._lastTabStateSignature
+      this._lastTabMetadataSignature !== null &&
+      tabStateSignature === this._lastTabStateSignature &&
+      tabMetadataSignature === this._lastTabMetadataSignature
     ) {
       this._layoutRects = null;
       return;
     }
     this._lastTabStateSignature = tabStateSignature;
+    this._lastTabMetadataSignature = tabMetadataSignature;
 
     const tabsCount = tabElements.length;
     const isOverflow = slotContentWidth > containerWidth;
@@ -132,32 +141,17 @@ export default class QuanticTabBar extends LightningElement {
    * @param {Element|undefined} element
    * @returns {DOMRect|undefined}
    */
-  getElementRect(element) {
-    if (!element) {
-      return undefined;
-    }
-
-    if (this._layoutRects) {
-      if (element === this.container) {
-        return this._layoutRects.container;
-      }
-      if (element === this.moreButton) {
-        return this._layoutRects.moreButton;
-      }
-
-      return this._layoutRects.tabs.get(element);
-    }
-
-    return element.getBoundingClientRect();
-  }
-
-  /**
-   * Returns the width from a cached or live element rectangle.
-   * @param {Element|undefined} element
-   * @returns {number}
-   */
   getElementWidth(element) {
-    const rect = this.getElementRect(element);
+    if (!element) {
+      return 0;
+    }
+
+    const rect =
+      element === this.container
+        ? this._layoutRects.container
+        : element === this.moreButton
+          ? this._layoutRects.moreButton
+          : this._layoutRects.tabs.get(element);
     return rect ? Math.ceil(rect.width) : 0;
   }
 
@@ -178,15 +172,25 @@ export default class QuanticTabBar extends LightningElement {
     // @ts-ignore
     const activeTabIndex = tabElements.findIndex((el) => el.isActive);
     const tabPositions = tabElements
-      .map((tab) => this.getElementRect(tab)?.right ?? 0)
+      .map((tab) => this._layoutRects.tabs.get(tab)?.right ?? 0)
       .join(',');
-    const tabMetadata = tabElements.map((tab) => [
-      // @ts-ignore
-      tab.label,
-      // @ts-ignore
-      tab.expression,
-    ]);
-    return `${tabElements.length}|${containerWidth}|${activeTabIndex}|${slotContentWidth}|${tabPositions}|${JSON.stringify(tabMetadata)}`;
+    return `${tabElements.length}|${containerWidth}|${activeTabIndex}|${slotContentWidth}|${tabPositions}`;
+  }
+
+  /**
+   * Builds a signature for tab metadata used by the dropdown.
+   * @param {Array<Element>} tabElements
+   * @returns {string}
+   */
+  deriveTabMetadataSignature(tabElements) {
+    return JSON.stringify(
+      tabElements.map((tab) => [
+        // @ts-ignore
+        tab.label,
+        // @ts-ignore
+        tab.expression,
+      ])
+    );
   }
 
   /**
