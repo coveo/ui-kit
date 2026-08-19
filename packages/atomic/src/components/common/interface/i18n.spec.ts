@@ -77,7 +77,7 @@ describe('i18n', () => {
   });
 
   describe('#init18n', () => {
-    it('should call i18n.use and i18n.init with correct options', async () => {
+    it('should call i18n.init with correct options, without registering the backend', async () => {
       const use = vi.fn().mockReturnThis();
       const init = vi.fn();
       const atomicInterface = {
@@ -89,14 +89,15 @@ describe('i18n', () => {
 
       init18n(atomicInterface);
 
-      expect(use).toHaveBeenCalledExactlyOnceWith(Backend);
+      // Registering the backend would let i18next load the initial resources itself, which is
+      // what discarded the consumer's strings.
+      expect(use).not.toHaveBeenCalled();
       expect(init).toHaveBeenCalledExactlyOnceWith(
         expect.objectContaining({
           debug: true,
           lng: 'en',
           nsSeparator: '___',
           fallbackLng: 'en',
-          backend: expect.any(Object),
           interpolation: expect.any(Object),
           compatibilityJSON: 'v4',
         })
@@ -142,6 +143,26 @@ describe('i18n', () => {
       expect(i18n.t('load-all-results')).toBe('Show thread');
       // Strings the consumer did not customize still come from Atomic.
       expect(i18n.t('no-results')).toBe('No results');
+    });
+
+    it('should also load the fallback language when the locale is not English', async () => {
+      const requested: string[] = [];
+      globalThis.fetch = vi.fn().mockImplementation((url) => {
+        requested.push(String(url));
+        return Promise.resolve({status: 200, json: () => Promise.resolve({greeting: 'x'})});
+      });
+
+      const i18n = createInstance();
+      const atomicInterface = {
+        i18n,
+        language: 'fr-CA',
+        languageAssetsPath: '/lang',
+      } as unknown as BaseAtomicInterface<AnyEngineType>;
+
+      await init18n(atomicInterface);
+
+      expect(requested.some((u) => u.includes('/fr.json'))).toBe(true);
+      expect(requested.some((u) => u.includes('/en.json'))).toBe(true);
     });
   });
 

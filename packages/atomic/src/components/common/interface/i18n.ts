@@ -6,6 +6,7 @@ import type {AnyEngineType} from './bindings';
 import type {BaseAtomicInterface} from './interface-controller';
 
 export const i18nTranslationNamespace = 'translation';
+const FALLBACK_LANGUAGE = 'en';
 
 export function i18nBackendOptions(
   atomicInterface: BaseAtomicInterface<AnyEngineType>
@@ -75,28 +76,30 @@ export function loadTranslations(
 }
 
 export async function init18n(atomicInterface: BaseAtomicInterface<AnyEngineType>) {
-  const language = atomicInterface.language || 'en';
+  const language = atomicInterface.language || FALLBACK_LANGUAGE;
 
-  const t = await atomicInterface.i18n.use(Backend).init({
+  // The backend is deliberately not registered with `.use()`. Letting i18next's backend
+  // connector load the initial resources is what caused it to discard the consumer's strings:
+  // the connector stores what it loads with a shallow merge in which the incoming data wins.
+  // Atomic loads the same resources itself, non-destructively, right below.
+  const t = await atomicInterface.i18n.init({
     debug: atomicInterface.logLevel === 'debug',
     lng: atomicInterface.language,
     nsSeparator: '___',
-    fallbackLng: 'en',
-    backend: i18nBackendOptions(atomicInterface),
+    fallbackLng: FALLBACK_LANGUAGE,
     interpolation: {
       escape: (str) => DOMPurify.sanitize(str),
     },
     compatibilityJSON: 'v4',
-    // Seed the namespace so i18next's backend connector does not fetch it during `init`. That
-    // code path stores what it loads with a shallow merge in which the incoming data wins, which
-    // silently discarded strings the consumer had already registered. Atomic loads the same
-    // resources itself, non-destructively, in `loadTranslations` below. The backend stays
-    // registered so switching to a language that was never loaded still fetches it.
-    resources: {[language.split('-')[0]]: {[i18nTranslationNamespace]: {}}},
-    partialBundledLanguages: true,
   });
 
   await loadTranslations(atomicInterface, language);
+  // i18next used to pull the fallback language too, as part of resolving the language
+  // hierarchy. Keep doing so, otherwise a locale missing a key would render the key itself
+  // instead of falling back to English.
+  if (language.split('-')[0] !== FALLBACK_LANGUAGE) {
+    await loadTranslations(atomicInterface, FALLBACK_LANGUAGE);
+  }
 
   return t;
 }
