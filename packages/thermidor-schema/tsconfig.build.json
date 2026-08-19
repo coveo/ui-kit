@@ -2,15 +2,16 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "declaration": true,
+    "rootDir": "src/",
+    "outDir": "dist/",
     "moduleResolution": "NodeNext",
-    "noEmit": true,
-    "allowImportingTsExtensions": true,
     "module": "NodeNext",
     "target": "ES2022",
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "types": ["node"]
+    "types": ["node"],
+    "composite": true
   },
-  "include": ["src/**/*.ts", "scripts/**/*.ts"]
+  "include": ["src/**/*.ts"]
 }
