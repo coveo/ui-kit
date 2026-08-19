@@ -4,7 +4,7 @@ on:
     paths:
       - 'packages/**/package.json'
       - 'AGENTS.md'
-      - 'scripts/generate-agents-md-packages.mjs'
+      - 'scripts/generate/agents-md-packages.mjs'
       - 'scripts/packages.mjs'
   merge_group:
 
@@ -24,7 +24,7 @@ jobs:
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version-file: '.nvmrc'
-      - run: node scripts/generate-agents-md-packages.mjs
+      - run: node scripts/generate/agents-md-packages.mjs
       - name: Check for uncommitted changes
         run: |
           if [ -n "$(git status --porcelain AGENTS.md)" ]; then
