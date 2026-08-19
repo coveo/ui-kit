@@ -8,7 +8,7 @@ on:
       - 'catalog-info.yaml'
       - 'catalog-info.ui-kit.yaml'
       - 'catalog-info.ui-kit.config.yaml'
-      - 'scripts/generate-catalog-info.mjs'
+      - 'scripts/generate/catalog-info.mjs'
   merge_group:
 
 permissions:
@@ -28,11 +28,11 @@ jobs:
         with:
           install: true
           cache: true
-      - run: node scripts/generate-catalog-info.mjs
+      - run: node scripts/generate/catalog-info.mjs
       - name: Check for uncommitted changes
         run: |
           if [ -n "$(git status --porcelain '**/catalog-info.yaml' 'catalog-info.ui-kit.yaml')" ]; then
-            echo "::error::catalog-info files are out of date. Run 'node scripts/generate-catalog-info.mjs' and commit the results."
+            echo "::error::catalog-info files are out of date. Run 'node scripts/generate/catalog-info.mjs' and commit the results."
             git diff --stat
             exit 1
           fi
