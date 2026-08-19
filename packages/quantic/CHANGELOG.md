@@ -1,3 +1,14 @@
+## 3.44.0
+
+### Minor Changes
+
+- [#8218](https://github.com/coveo/ui-kit/pull/8218) [`f468eb2`](https://github.com/coveo/ui-kit/commit/f468eb2ea13dd98aa085320f5c5a61aad4b0381c) - Added the `generateAutomaticRanges` public property to `QuanticTimeframeFacet`, allowing the component to display automatically generated date ranges returned by the API in addition to manually defined `c-quantic-timeframe` ranges.
+
+### Patch Changes
+
+- Updated dependencies [[`3d91eec`](https://github.com/coveo/ui-kit/commit/3d91eecae945b274ef9a3b8f9d714fabd05e9970)]:
+  - @coveo/headless@3.55.2
+
 ## 3.43.6
 
 ### Patch Changes

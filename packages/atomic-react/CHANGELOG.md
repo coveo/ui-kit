@@ -1,3 +1,12 @@
+## 3.11.39
+
+### Patch Changes
+
+- [#8228](https://github.com/coveo/ui-kit/pull/8228) [`6a473fa`](https://github.com/coveo/ui-kit/commit/6a473fab5d0a64bbea54a1a8180d7d1d8f1d68cb) - Aligned the `react` and `react-dom` peer dependency ranges to `^18 || ^19` and declared `@types/react` and `@types/react-dom` as optional peer dependencies. React 18 and 19 both remain supported; there is no consumer-facing behavior change.
+
+- Updated dependencies []:
+  - @coveo/atomic@3.60.7
+
 ## 3.11.38
 
 ### Patch Changes

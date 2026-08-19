@@ -10,10 +10,14 @@ runs:
   using: composite
   steps:
     - uses: ./.github/actions/setup
+    - uses: ./.github/actions/run-affected
       with:
+        tasks: build
         # Samples are not CDN artifacts. Exclude them so the CDN build does not try
         # to bundle samples that depend on CDN-externalized packages.
-        build-command: "pnpm exec turbo build --filter='!./samples/**'"
+        packages: |
+          !@samples/*
+          !@coveo/ui-kit-sample-*
       env:
         DEPLOYMENT_ENVIRONMENT: CDN
         CDN_COMMIT_SHA: ${{ inputs.commit-sha }}
