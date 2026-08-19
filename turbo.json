@@ -33,6 +33,29 @@
     "//#generate:all": {
       "dependsOn": ["//#generate:agents-md-packages", "//#generate:catalog-info"]
     },
+    "//#lint:check:oxlint": {
+      "outputs": []
+    },
+    "//#lint:check:oxfmt": {
+      "outputs": []
+    },
+    "//#lint:check:cspell": {
+      "outputs": []
+    },
+    "//#lint:check:all": {
+      "dependsOn": ["//#lint:check:oxlint", "//#lint:check:oxfmt", "//#lint:check:cspell"],
+      "outputs": []
+    },
+    "//#lint:fix:oxlint": {
+      "outputs": []
+    },
+    "//#lint:fix:oxfmt": {
+      "outputs": []
+    },
+    "//#lint:fix:all": {
+      "dependsOn": ["//#lint:fix:oxlint", "//#lint:fix:oxfmt", "//#lint:check:cspell"],
+      "outputs": []
+    },
     "build": {
       "dependsOn": ["^build"],
       "inputs": [
@@ -113,10 +136,12 @@
     "lint": {
       "outputs": []
     },
-    "lint:check": {
+    "lint:check:all": {
+      "dependsOn": ["//#lint:check:all"],
       "outputs": []
     },
-    "lint:fix": {
+    "lint:fix:all": {
+      "dependsOn": ["//#lint:fix:all"],
       "outputs": []
     },
     "clean": {
