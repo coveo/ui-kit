@@ -2,14 +2,26 @@
   "name": "@coveo/quantic",
   "version": "3.44.0",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
-  "author": "coveo.com",
   "homepage": "https://coveo.com",
   "license": "Apache-2.0",
-  "main": "index.js",
+  "author": "coveo.com",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coveo/ui-kit.git"
   },
+  "files": [
+    "force-app/main/default/classes/*",
+    "force-app/main/default/labels/*",
+    "force-app/main/default/lwc/*",
+    "!force-app/main/default/lwc/testUtils",
+    "force-app/main/default/cspTrustedSites/*",
+    "force-app/main/default/staticresources/*",
+    "scripts/npm",
+    "docs/out/quantic-docs.json",
+    "!force-app/main/default/lwc/**/__tests__",
+    "!force-app/main/default/lwc/**/e2e"
+  ],
+  "main": "index.js",
   "scripts": {
     "lint:check:tests": "eslint force-app/main/default/lwc/ --format junit -o reports/eslint.xml",
     "lint:check": "eslint force-app/main/default/lwc/ && eslint force-app/examples/main/lwc/ && prettier \"force-app/{,**}/*.js\" --check",
@@ -52,9 +64,6 @@
     "dompurify": "catalog:",
     "marked": "catalog:"
   },
-  "engines": {
-    "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
-  },
   "devDependencies": {
     "@babel/cli": "7.28.3",
     "@babel/plugin-transform-async-to-generator": "7.27.1",
@@ -81,16 +90,7 @@
     "wait-on": "9.1.0",
     "xml2js": "0.6.2"
   },
-  "files": [
-    "force-app/main/default/classes/*",
-    "force-app/main/default/labels/*",
-    "force-app/main/default/lwc/*",
-    "!force-app/main/default/lwc/testUtils",
-    "force-app/main/default/cspTrustedSites/*",
-    "force-app/main/default/staticresources/*",
-    "scripts/npm",
-    "docs/out/quantic-docs.json",
-    "!force-app/main/default/lwc/**/__tests__",
-    "!force-app/main/default/lwc/**/e2e"
-  ]
+  "engines": {
+    "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
+  }
 }
