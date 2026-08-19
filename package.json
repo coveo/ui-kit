@@ -30,7 +30,8 @@
     "knip": "knip",
     "generate": "turbo run generate:all",
     "generate:catalog-info": "node scripts/generate/catalog-info.mjs",
-    "generate:agents-md-packages": "node scripts/generate/agents-md-packages.mjs"
+    "generate:agents-md-packages": "node scripts/generate/agents-md-packages.mjs",
+    "generate:turbo-lint-inputs": "node scripts/generate/turbo-lint-inputs.mjs"
   },
   "devDependencies": {
     "@actions/github": "9.1.1",
