@@ -51,6 +51,28 @@
     },
     "validate:types:build-scripts": {
       "outputs": []
+    },
+    "lint:check:eslint": {
+      "outputs": []
+    },
+    "lint:check:prettier": {
+      "outputs": []
+    },
+    "lint:check:all": {
+      "extends": false,
+      "dependsOn": ["lint:check:eslint", "lint:check:prettier", "//#lint:check:cspell"],
+      "outputs": []
+    },
+    "lint:fix:eslint": {
+      "outputs": []
+    },
+    "lint:fix:prettier": {
+      "outputs": []
+    },
+    "lint:fix:all": {
+      "extends": false,
+      "dependsOn": ["lint:fix:eslint", "lint:fix:prettier", "//#lint:check:cspell"],
+      "outputs": []
     }
   }
 }
