@@ -166,6 +166,10 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: build
       - name: Run selected Knip workspaces
         env:
           PROJECTS: ${{ needs.affected.outputs.projects }}
