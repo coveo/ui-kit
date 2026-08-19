@@ -30,6 +30,9 @@
       ],
       "outputs": ["packages/*/catalog-info.yaml", "catalog-info.yaml", "catalog-info.ui-kit.yaml"]
     },
+    "//#generate:all": {
+      "dependsOn": ["//#generate:agents-md-packages", "//#generate:catalog-info"]
+    },
     "build": {
       "dependsOn": ["^build"],
       "inputs": [
