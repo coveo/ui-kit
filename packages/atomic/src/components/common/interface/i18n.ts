@@ -45,8 +45,39 @@ export function i18nBackendOptions(
   };
 }
 
-export function init18n(atomicInterface: BaseAtomicInterface<AnyEngineType>) {
-  return atomicInterface.i18n.use(Backend).init({
+/**
+ * Loads Atomic's own translations for `language` into the interface's i18next instance.
+ *
+ * The bundle is added with `deep: true, overwrite: false` so that strings the consumer has
+ * already registered are preserved. Atomic's strings are defaults; an application that
+ * customizes them should win, regardless of whether it registered its values before or after
+ * this load resolves.
+ */
+export function loadTranslations(
+  atomicInterface: BaseAtomicInterface<AnyEngineType>,
+  language: string
+) {
+  const {i18n} = atomicInterface;
+  const lng = language.split('-')[0];
+
+  return new Promise<void>((resolve) => {
+    new Backend(i18n.services, i18nBackendOptions(atomicInterface)).read(
+      lng,
+      i18nTranslationNamespace,
+      (_error: unknown, data: unknown) => {
+        if (data) {
+          i18n.addResourceBundle(lng, i18nTranslationNamespace, data, true, false);
+        }
+        resolve();
+      }
+    );
+  });
+}
+
+export async function init18n(atomicInterface: BaseAtomicInterface<AnyEngineType>) {
+  const language = atomicInterface.language || 'en';
+
+  const t = await atomicInterface.i18n.use(Backend).init({
     debug: atomicInterface.logLevel === 'debug',
     lng: atomicInterface.language,
     nsSeparator: '___',
@@ -56,7 +87,18 @@ export function init18n(atomicInterface: BaseAtomicInterface<AnyEngineType>) {
       escape: (str) => DOMPurify.sanitize(str),
     },
     compatibilityJSON: 'v4',
+    // Seed the namespace so i18next's backend connector does not fetch it during `init`. That
+    // code path stores what it loads with a shallow merge in which the incoming data wins, which
+    // silently discarded strings the consumer had already registered. Atomic loads the same
+    // resources itself, non-destructively, in `loadTranslations` below. The backend stays
+    // registered so switching to a language that was never loaded still fetches it.
+    resources: {[language.split('-')[0]]: {[i18nTranslationNamespace]: {}}},
+    partialBundledLanguages: true,
   });
+
+  await loadTranslations(atomicInterface, language);
+
+  return t;
 }
 
 function isI18nLocaleAvailable(locale: string) {

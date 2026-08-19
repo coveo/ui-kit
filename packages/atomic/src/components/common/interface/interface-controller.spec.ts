@@ -1,31 +1,21 @@
 import {type CommerceEngine, VERSION} from '@coveo/headless/commerce';
-import Backend from 'i18next-http-backend';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
 import {setCoveoGlobal} from '@/src/global/environment';
 import {loadDayjsLocale} from '@/src/utils/dayjs-locales';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
-import {init18n} from './i18n';
+import {init18n, loadTranslations} from './i18n';
 import {type BaseAtomicInterface, InterfaceController} from './interface-controller';
 
 vi.mock('@/src/global/environment.js', {spy: true});
 vi.mock('./i18n.js', () => ({
   init18n: vi.fn(),
+  loadTranslations: vi.fn(() => Promise.resolve()),
   i18nBackendOptions: vi.fn(() => ({})),
   i18nTranslationNamespace: 'translation',
 }));
 vi.mock('@/src/utils/dayjs-locales.js', {spy: true});
-vi.mock('i18next-http-backend', () => {
-  const mockBackend = vi.fn(function (this: Backend) {
-    return {
-      read: vi.fn(),
-    };
-  });
-  return {
-    default: mockBackend,
-  };
-});
 
 describe('InterfaceController', () => {
   const setupElement = async () => {
@@ -266,57 +256,43 @@ describe('InterfaceController', () => {
 
   describe('#onLanguageChange', () => {
     it('should use the provided newLanguage parameter when it is defined', async () => {
-      const mockReadMethod = vi.fn();
-      vi.mocked(Backend).mockImplementation(function () {
-        this.read = mockReadMethod;
-      });
-
       const atomicInterface = await setupElement();
       (atomicInterface as BaseAtomicInterface<CommerceEngine>).language = 'fr';
-      const changeLanguageSpy = vi.spyOn(atomicInterface.i18n, 'changeLanguage');
       const helper = new InterfaceController(atomicInterface, 'CoveoAtomic', VERSION);
 
       helper.onLanguageChange('it');
 
-      expect(mockReadMethod).toHaveBeenCalledExactlyOnceWith(
-        'it',
-        'translation',
-        expect.any(Function)
-      );
-
-      const callback = mockReadMethod.mock.calls[0][2];
-      const mockData = {key: 'value'};
-      callback(null, mockData);
-
-      expect(changeLanguageSpy).toHaveBeenCalledExactlyOnceWith('it');
+      expect(vi.mocked(loadTranslations)).toHaveBeenCalledExactlyOnceWith(atomicInterface, 'it');
     });
 
     it('should use the atomic interface language when newLanguage is not provided', async () => {
-      const mockReadMethod = vi.fn();
-      vi.mocked(Backend).mockImplementation(function () {
-        this.read = mockReadMethod;
-      });
-
       const atomicInterface = await setupElement();
       (atomicInterface as BaseAtomicInterface<CommerceEngine>).language = 'fr';
-      const changeLanguageSpy = vi.spyOn(atomicInterface.i18n, 'changeLanguage');
       const helper = new InterfaceController(atomicInterface, 'CoveoAtomic', VERSION);
 
       helper.onLanguageChange();
 
-      expect(mockReadMethod).toHaveBeenCalledExactlyOnceWith(
-        'fr',
-        'translation',
-        expect.any(Function)
-      );
+      expect(vi.mocked(loadTranslations)).toHaveBeenCalledExactlyOnceWith(atomicInterface, 'fr');
+    });
 
-      // Execute the callback that would be called by Backend.read
-      const callback = mockReadMethod.mock.calls[0][2];
-      const mockData = {key: 'value'};
-      callback(null, mockData);
+    it("should fall back to 'en' when the atomic interface language is undefined", async () => {
+      const atomicInterface = await setupElement();
+      (atomicInterface as BaseAtomicInterface<CommerceEngine>).language = undefined;
+      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic', VERSION);
 
-      // Should use the interface language when no new language is provided
-      expect(changeLanguageSpy).toHaveBeenCalledExactlyOnceWith('fr');
+      helper.onLanguageChange();
+
+      expect(vi.mocked(loadTranslations)).toHaveBeenCalledExactlyOnceWith(atomicInterface, 'en');
+    });
+
+    it('should pass the full language code, region included, to #loadTranslations', async () => {
+      const atomicInterface = await setupElement();
+      (atomicInterface as BaseAtomicInterface<CommerceEngine>).language = 'fr-CA';
+      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic', VERSION);
+
+      helper.onLanguageChange();
+
+      expect(vi.mocked(loadTranslations)).toHaveBeenCalledExactlyOnceWith(atomicInterface, 'fr-CA');
     });
 
     it('should call #loadDayjsLocale with the atomic interface language when it is defined', async () => {
@@ -340,165 +316,20 @@ describe('InterfaceController', () => {
       expect(loadDayjsLocaleSpy).toHaveBeenCalledExactlyOnceWith('en');
     });
 
-    it('should create a new #Backend instance with i18n services and backend options', async () => {
-      const BackendSpy = vi.mocked(Backend);
-      const atomicInterface = await setupElement();
-      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic', VERSION);
-
-      helper.onLanguageChange();
-
-      expect(BackendSpy).toHaveBeenCalledExactlyOnceWith(
-        atomicInterface.i18n.services,
-        expect.any(Object)
-      );
-    });
-
-    it('should call #Backend.read with correct arguments for full language code', async () => {
-      const mockReadMethod = vi.fn();
-      const BackendSpy = vi.mocked(Backend).mockImplementation(function () {
-        this.read = mockReadMethod;
-      });
-
-      const atomicInterface = await setupElement();
-      (atomicInterface as BaseAtomicInterface<CommerceEngine>).language = 'fr-CA';
-      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic', VERSION);
-
-      helper.onLanguageChange();
-
-      expect(BackendSpy).toHaveBeenCalled();
-      expect(mockReadMethod).toHaveBeenCalledExactlyOnceWith(
-        'fr',
-        'translation',
-        expect.any(Function)
-      );
-    });
-
-    it('should call #Backend.read with correct arguments for simple language code', async () => {
-      const mockReadMethod = vi.fn();
-      const BackendSpy = vi.mocked(Backend).mockImplementation(function () {
-        this.read = mockReadMethod;
-      });
-
-      const atomicInterface = await setupElement();
-      (atomicInterface as BaseAtomicInterface<CommerceEngine>).language = 'es';
-      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic', VERSION);
-
-      helper.onLanguageChange();
-
-      expect(BackendSpy).toHaveBeenCalled();
-      expect(mockReadMethod).toHaveBeenCalledExactlyOnceWith(
-        'es',
-        'translation',
-        expect.any(Function)
-      );
-    });
-
-    describe('when #Backend.read callback is executed', () => {
-      it('should call #i18n.addResourceBundle with correct arguments', async () => {
-        const mockReadMethod = vi.fn();
-        vi.mocked(Backend).mockImplementation(function () {
-          this.read = mockReadMethod;
-        });
-
-        const atomicInterface = await setupElement();
-        (atomicInterface as BaseAtomicInterface<CommerceEngine>).language = 'de-DE';
-        const addResourceBundleSpy = vi.spyOn(atomicInterface.i18n, 'addResourceBundle');
-        const helper = new InterfaceController(atomicInterface, 'CoveoAtomic', VERSION);
-
-        helper.onLanguageChange();
-
-        // Execute the callback that would be called by Backend.read
-        const callback = mockReadMethod.mock.calls[0][2];
-        const mockData = {key: 'value'};
-        callback(null, mockData);
-
-        expect(addResourceBundleSpy).toHaveBeenCalledExactlyOnceWith(
-          'de',
-          'translation',
-          mockData,
-          true,
-          false
-        );
-      });
-
+    describe('once the translations have loaded', () => {
       it('should call #i18n.changeLanguage with the full language code', async () => {
-        const mockReadMethod = vi.fn();
-        vi.mocked(Backend).mockImplementation(function () {
-          this.read = mockReadMethod;
-        });
-
         const atomicInterface = await setupElement();
         (atomicInterface as BaseAtomicInterface<CommerceEngine>).language = 'pt-BR';
         const changeLanguageSpy = vi.spyOn(atomicInterface.i18n, 'changeLanguage');
         const helper = new InterfaceController(atomicInterface, 'CoveoAtomic', VERSION);
 
         helper.onLanguageChange();
-
-        // Execute the callback that would be called by Backend.read
-        const callback = mockReadMethod.mock.calls[0][2];
-        const mockData = {key: 'value'};
-        callback(null, mockData);
+        await vi.waitFor(() => expect(changeLanguageSpy).toHaveBeenCalled());
 
         expect(changeLanguageSpy).toHaveBeenCalledExactlyOnceWith('pt-BR');
       });
     });
-
-    it("should work correctly when language is undefined and fallback to 'en'", async () => {
-      const mockReadMethod = vi.fn();
-      vi.mocked(Backend).mockImplementation(function () {
-        this.read = mockReadMethod;
-      });
-
-      const atomicInterface = await setupElement();
-      (atomicInterface as BaseAtomicInterface<CommerceEngine>).language = undefined;
-      const addResourceBundleSpy = vi.spyOn(atomicInterface.i18n, 'addResourceBundle');
-      const changeLanguageSpy = vi.spyOn(atomicInterface.i18n, 'changeLanguage');
-      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic', VERSION);
-
-      helper.onLanguageChange();
-
-      expect(mockReadMethod).toHaveBeenCalledExactlyOnceWith(
-        'en',
-        'translation',
-        expect.any(Function)
-      );
-
-      // Execute the callback
-      const callback = mockReadMethod.mock.calls[0][2];
-      const mockData = {key: 'value'};
-      callback(null, mockData);
-
-      expect(addResourceBundleSpy).toHaveBeenCalledExactlyOnceWith(
-        'en',
-        'translation',
-        mockData,
-        true,
-        false
-      );
-      expect(changeLanguageSpy).toHaveBeenCalledExactlyOnceWith(undefined);
-    });
-
-    it('should handle complex language code with multiple dashes correctly', async () => {
-      const mockReadMethod = vi.fn();
-      vi.mocked(Backend).mockImplementation(function () {
-        this.read = mockReadMethod;
-      });
-
-      const atomicInterface = await setupElement();
-      (atomicInterface as BaseAtomicInterface<CommerceEngine>).language = 'zh-Hans-CN';
-      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic', VERSION);
-
-      helper.onLanguageChange();
-
-      // Should use only the first part before the first dash
-      expect(mockReadMethod).toHaveBeenCalledExactlyOnceWith(
-        'zh',
-        'translation',
-        expect.any(Function)
-      );
-    });
   });
-
   describe('#engineIsCreated', () => {
     it('should return true when engine is provided', async () => {
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
