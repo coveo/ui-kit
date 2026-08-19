@@ -72,7 +72,7 @@ import {api, LightningElement, track} from 'lwc';
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-timeframe-facet engine-id={engineId} field="Date" label="Indexed Date" is-collapsed with-date-picker>
+ * <c-quantic-timeframe-facet engine-id={engineId} field="Date" label="Indexed Date" is-collapsed with-date-picker generate-automatic-ranges>
  *   <c-quantic-timeframe period="past" unit="year" amount="10" label="Past decade"></c-quantic-timeframe>
  * </c-quantic-timeframe-facet>
  */
@@ -156,6 +156,13 @@ export default class QuanticTimeframeFacet extends LightningElement {
    * @type {DependsOn}
    */
   @api dependsOn;
+  /**
+   * Whether to generate automatic ranges for the facet in addition to the manually defined `c-quantic-timeframe` ranges.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api generateAutomaticRanges = false;
 
   static attributes = [
     'facetId',
@@ -165,6 +172,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
     'noFilterFacetCount',
     'injectionDepth',
     'dependsOn',
+    'generateAutomaticRanges',
   ];
 
   /** @type {DateFacetState} */
@@ -476,7 +484,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
       options: {
         field: this.field,
         currentValues: this.currentValues,
-        generateAutomaticRanges: false,
+        generateAutomaticRanges: this.generateAutomaticRanges,
         sortCriteria: 'descending',
         filterFacetCount: !this.noFilterFacetCount,
         injectionDepth: Number(this.injectionDepth),

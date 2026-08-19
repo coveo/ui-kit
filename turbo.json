@@ -32,6 +32,10 @@
         "**/*.tsbuildinfo"
       ]
     },
+    "build:typedoc": {
+      "dependsOn": ["^build"],
+      "outputs": ["docs/**", "!docs/adr/**"]
+    },
     "publint": {
       "dependsOn": ["build"],
       "outputs": []

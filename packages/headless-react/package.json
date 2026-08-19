@@ -1,6 +1,6 @@
 {
   "name": "@coveo/headless-react",
-  "version": "2.9.29",
+  "version": "2.9.30",
   "description": "React utilities for SSR (Server Side Rendering) with headless",
   "keywords": [
     "headless",
@@ -51,10 +51,10 @@
     "vitest": "catalog:"
   },
   "peerDependencies": {
-    "@types/react": "^18 || ^19",
-    "@types/react-dom": "^18 || ^19",
-    "react": "^18 || ^19",
-    "react-dom": "^18 || ^19"
+    "@types/react": "catalog:peer-compatibility",
+    "@types/react-dom": "catalog:peer-compatibility",
+    "react": "catalog:peer-compatibility",
+    "react-dom": "catalog:peer-compatibility"
   },
   "peerDependenciesMeta": {
     "@types/react": {

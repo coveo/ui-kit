@@ -12,19 +12,46 @@ permissions:
 
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-  TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || 'main' }}
-  TURBO_SCM_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+  TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+  TURBO_SCM_HEAD: ${{ github.sha }}
 
 jobs:
+  affected:
+    name: 'Calculate affected tasks'
+    runs-on: ubuntu-latest
+    outputs:
+      fetch-depth: ${{ steps.publish.outputs.fetch-depth }}
+      tasks: ${{ steps.publish.outputs.tasks }}
+      projects: ${{ steps.publish.outputs.projects }}
+      samples: ${{ steps.publish.outputs.samples }}
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          fetch-tags: false
+          filter: blob:none
+
+      - uses: ./.github/actions/calculate-affected
+        id: publish
+        with:
+          base-sha: ${{ env.TURBO_SCM_BASE }}
+          head-sha: ${{ env.TURBO_SCM_HEAD }}
+
   build-windows:
     name: 'Build Windows'
-    if: ${{ github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/') }}
+    needs: affected
+    if: ${{ needs.affected.outputs.projects != '[]' && (github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/')) }}
     runs-on: windows-latest
     permissions:
       contents: read
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
 
@@ -34,16 +61,21 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: build
   build-missing:
     name: 'Build & commit missing generated files'
-    if: ${{ github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/') }}
+    needs: [affected, build]
+    if: ${{ needs.affected.outputs.projects != '[]' && (github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/')) }}
     permissions:
       contents: write
     runs-on: ubuntu-latest
     environment: PR Artifacts
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
 
@@ -53,6 +85,10 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: build
       - name: Check for uncommitted changes
         id: check-changes
         run: |
@@ -76,70 +112,53 @@ jobs:
         env:
           GITHUB_INSTALLATION_TOKEN: ${{ steps.generate-token.outputs.token }}
           DEBUG: '*'
+
   build:
     name: 'Build'
+    needs: affected
+    if: needs.affected.outputs.projects != '[]'
     runs-on: ubuntu-latest
     environment: PR Artifacts
-    outputs:
-      # When running on changeset-release branches, we don't want to run most downstream jobs, so we set most outputs to an empty string.
-      # Notably, Chromatic will still run on changeset-release branches, but it will run with the `--skip` flag.
-      projects: ${{ (github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/')) && steps.set.outputs.projects || '' }}
-      samples: ${{ (github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/')) && steps.set.outputs.samples || '[]' }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
 
-      # Full history is required by `turbo --affected`, which compares the
-      # checkout against the base ref to determine which packages changed.
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          fetch-depth: 0
+          fetch-depth: 1
+          fetch-tags: false
           filter: blob:none
       - uses: ./.github/actions/setup
-      - name: Affected tasks
-        id: set
-        run: |
-          TASKS="$(pnpm exec node scripts/turbo/outdated-tasks.mjs | sort)"
-          echo "Affected tasks:"
-          echo
-          echo "$TASKS"
-          echo
-
-          echo "tasks=$(echo "$TASKS" | sort -u | tr '\n' ' ')" >> "$GITHUB_OUTPUT"
-          echo "projects=$(echo "$TASKS" | sed 's/#.*//' | sort -u | tr '\n' ' ')" >> "$GITHUB_OUTPUT"
-
-          SAMPLES="$(pnpm exec node scripts/turbo/outdated-tasks.mjs e2e \
-            | sed -nE 's/^(@(samples\/[^#]+|coveo\/ui-kit-samples))#e2e.*/\1/p' \
-            | sort)"
-          echo "Affected samples for e2e:"
-          echo
-          echo "$SAMPLES"
-          echo
-
-          echo "samples=$(echo "$SAMPLES" | jq -Rsc 'split("\n") | map(select(length > 0))')" >> "$GITHUB_OUTPUT"
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: build
 
   build-cdn:
     name: Build CDN
-    if: ${{ github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/') }}
+    needs: affected
+    if: ${{ needs.affected.outputs.projects != '[]' && (github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/')) }}
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: ./.github/actions/build-cdn
         with:
           commit-sha: ${{ github.sha }}
+
   knip:
     name: 'Look for unused code or dependencies'
+    if: ${{ needs.affected.outputs.projects != '[]' }}
     runs-on: ubuntu-latest
-    needs: build
+    needs: affected
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -147,12 +166,21 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-      - name: Run knip
-        run: pnpm run knip:affected
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: build
+      - name: Run selected Knip workspaces
+        env:
+          PROJECTS: ${{ needs.affected.outputs.projects }}
+        run: |
+          jq -r '.[] | "--workspace " + (if . == "//" then "." else . end)' <<< "${PROJECTS}" \
+            | xargs pnpm exec knip --exclude catalog
+
   cdn-checks:
     name: 'CDN Checks'
-    needs: [build, build-cdn]
-    if: contains(needs.build.outputs.projects, '@coveo/atomic') || contains(needs.build.outputs.projects, '@coveo/atomic-hosted-page')
+    needs: [affected, build-cdn]
+    if: needs.build-cdn.result == 'success' && (contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic') || contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic-hosted-page'))
     env:
       DEPLOYMENT_ENVIRONMENT: CDN
     runs-on: ubuntu-latest
@@ -161,22 +189,28 @@ jobs:
       options: --user 1001
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: ./.github/actions/setup
+      - uses: ./.github/actions/run-affected
         with:
-          build-command: "pnpm exec turbo build --filter='!./samples/**'"
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: build
+          packages: |
+            !@samples/*
+            !@coveo/ui-kit-sample-*
       - name: 'Run CDN checks'
         uses: ./.github/actions/cdn-checks
   lint-check:
     name: 'Check with linter'
-    needs: build
+    if: ${{ needs.affected.outputs.projects != '[]' }}
+    needs: affected
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
 
@@ -185,14 +219,16 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
+      # TODO: Convert to turbo tasks: https://coveord.atlassian.net/browse/KIT-6074
       - run: pnpm run lint:check
   validate-light-dom-styles:
     name: 'Validate Light DOM styles'
-    needs: build
+    needs: affected
+    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
 
@@ -201,14 +237,19 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-      - run: pnpm --filter @coveo/atomic run validate:light-dom-styles
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: validate:light-dom-styles
+          packages: '@coveo/atomic'
   validate-no-new-light-dom:
     name: 'Validate no new Light DOM components'
-    needs: build
+    needs: affected
+    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
 
@@ -217,10 +258,14 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-      - run: pnpm --filter @coveo/atomic run validate:no-new-light-dom
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: validate:no-new-light-dom
+          packages: '@coveo/atomic'
   unit-test:
     name: 'Run unit tests'
-    needs: build
+    needs: affected
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
@@ -228,44 +273,53 @@ jobs:
     timeout-minutes: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'long-test') && 120 || 15 }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          fetch-depth: 0
+          fetch-depth: 1
+          fetch-tags: false
           filter: blob:none
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo test --affected
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: test
   relay-tests:
     name: 'Run Relay functional and playground smoke tests'
-    needs: build
-    if: contains(needs.build.outputs.projects, '@coveo/relay') || contains(needs.build.outputs.projects, '@coveo/relay-playground')
+    needs: [affected, build]
+    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/relay') || contains(fromJSON(needs.affected.outputs.projects), '@coveo/relay-playground')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
       options: --user 1001
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: ./.github/actions/setup
+      - uses: ./.github/actions/run-affected
         with:
-          skip-build: 'true'
-      - name: Run Relay functional tests in Chromium, Firefox, and WebKit
-        run: pnpm exec turbo functional-test --filter=@coveo/relay
-      - name: Build the playground and run its CJS/ESM Node smoke tests
-        run: pnpm exec turbo test --filter=@coveo/relay-playground
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: functional-test
+          packages: '@coveo/relay'
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: test
+          packages: '@coveo/relay-playground'
   validate-dts:
     name: 'Validate DTS API surface'
-    needs: build
+    needs: [affected, build]
+    if: ${{ contains(fromJSON(needs.affected.outputs.projects), '@coveo/thermidor') }}
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
 
@@ -274,14 +328,18 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo test:dts:ci --affected
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: test:dts:ci
+          packages: '@coveo/thermidor'
   package-compatibility:
     name: 'Verify compatibility of packages'
-    needs: build
+    needs: [affected, build]
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
 
@@ -291,15 +349,18 @@ jobs:
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec node ./scripts/ci/validate-publint-tasks.mjs
-      - run: pnpm turbo run publint --affected
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: publint
   typedoc:
     name: 'Build typedoc'
-    needs: build
-    if: contains(needs.build.outputs.projects, '@coveo/headless') || contains(needs.build.outputs.projects, '@coveo/headless-react')
+    needs: [affected, build]
+    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/headless') || contains(fromJSON(needs.affected.outputs.projects), '@coveo/headless-react')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
 
@@ -308,20 +369,18 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-      - name: 'Build headless typedoc'
-        run: pnpm run build:typedoc
-        working-directory: packages/headless
-      - name: 'Build headless-react typedoc'
-        run: pnpm run build:typedoc
-        working-directory: packages/headless-react
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: build:typedoc
   puppeteer-atomic-csp:
     name: 'Run e2e tests on Atomic CSP'
-    needs: build
-    if: contains(needs.build.outputs.projects, '@coveo/atomic')
+    needs: [affected, build]
+    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
 
@@ -334,11 +393,12 @@ jobs:
 
   chromatic:
     name: 'Run Chromatic visual tests on Atomic'
-    needs: build
+    needs: [affected, build]
+    if: ${{ always() && !cancelled() }} # Run even if build is skipped
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
 
@@ -351,7 +411,6 @@ jobs:
         if: ${{ github.event_name != 'pull_request' }}
         with:
           fetch-depth: 0
-
       - uses: ./.github/actions/setup
       - name: Run Chromatic visual tests
         uses: chromaui/action@14cfaef73576e69f95f47f60058063f46ca38719 # v18.1.0
@@ -359,7 +418,8 @@ jobs:
         # Set the CHROMATIC_RENOVATE_ALLOWLIST repository variable to a JSON array of exact branch names.
         # Example: `["renovate/playwright", "renovate/chromatic"]`
         if: >-
-          contains(needs.build.outputs.projects, '@coveo/atomic') &&
+          needs.build.result == 'success' &&
+          contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic') &&
           github.event_name == 'pull_request' &&
           (!startsWith(github.head_ref, 'renovate/') ||
           contains(fromJSON(vars.CHROMATIC_RENOVATE_ALLOWLIST || '[]'), github.head_ref))
@@ -373,10 +433,11 @@ jobs:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           skip: true
           workingDir: packages/atomic
+
   playwright-atomic:
     name: 'Run Playwright tests for Atomic'
-    needs: build
-    if: contains(needs.build.outputs.projects, '@coveo/atomic')
+    needs: [affected, build]
+    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
@@ -388,7 +449,7 @@ jobs:
         shardTotal: [12]
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
 
@@ -397,6 +458,7 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
+      - run: pnpm exec turbo run build --filter=@coveo/atomic
       - uses: ./.github/actions/playwright-atomic
         with:
           shardIndex: ${{ matrix.shardIndex }}
@@ -409,7 +471,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
 
@@ -427,15 +489,15 @@ jobs:
 
   playwright-atomic-theming:
     name: 'Run theming smoke tests for Atomic'
-    needs: build
-    if: contains(needs.build.outputs.projects, '@coveo/atomic')
+    needs: [affected, build]
+    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
       options: --user 1001
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
 
@@ -444,13 +506,11 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-        with:
-          skip-build: 'true'
       - uses: ./.github/actions/playwright-atomic-theming
   storybook-atomic:
     name: 'Run Storybook tests'
-    needs: build
-    if: contains(needs.build.outputs.projects, '@coveo/atomic')
+    needs: [affected, build]
+    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
@@ -462,7 +522,7 @@ jobs:
         shardTotal: [10]
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
 
@@ -472,8 +532,13 @@ jobs:
           filter: blob:none
       - run: git branch main origin/main
       - uses: ./.github/actions/setup
-      - run: npm run test:storybook -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
-        working-directory: packages/atomic
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          packages: '@coveo/atomic'
+          tasks: test:storybook
+          arguments: |
+            --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
       - name: 'Upload a11y shard report'
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
@@ -484,12 +549,16 @@ jobs:
           if-no-files-found: warn
   merge-storybook-a11y-reports:
     name: 'Merge Storybook a11y reports and validate OpenACR'
-    needs: [build, storybook-atomic]
-    if: always() && contains(needs.build.outputs.projects, '@coveo/atomic')
+    needs: [affected, storybook-atomic]
+    if: >-
+      ${{
+        always() &&
+        contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic')
+      }}
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
 
@@ -498,8 +567,6 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-        with:
-          skip-build: 'true'
       - name: 'Download a11y shard reports'
         continue-on-error: true
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
@@ -523,8 +590,8 @@ jobs:
 
   samples-e2e:
     name: 'E2E: ${{ matrix.sample }}'
-    needs: build
-    if: ${{ needs.build.outputs.samples != '[]' }}
+    needs: [affected, build]
+    if: ${{ needs.affected.outputs.samples != '[]' }}
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
@@ -532,10 +599,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sample: ${{ fromJson(needs.build.outputs.samples) }}
+        sample: ${{ fromJson(needs.affected.outputs.samples) }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
 
@@ -544,7 +611,7 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo run e2e --filter=${{ matrix.sample }}
+      - run: pnpm exec turbo run "${{ matrix.sample }}" # Already filtered by affected
       - name: Upload Playwright report
         if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
@@ -555,15 +622,15 @@ jobs:
           if-no-files-found: ignore
   playwright-pkg-new-template-test:
     name: 'Run smoke tests on pkg-new-template'
-    needs: build
-    if: contains(needs.build.outputs.projects, '@coveo/pkg-new-template')
+    needs: [affected, build]
+    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/pkg-new-template')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
       options: --user 1001
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
 
@@ -572,18 +639,19 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
+      - run: pnpm exec turbo run build --filter=@coveo/pkg-new-template
       - uses: ./.github/actions/playwright-pkg-new-template
   playwright-atomic-hosted-page-test:
     name: 'Run e2e tests for Atomic Hosted Page'
-    needs: build
-    if: contains(needs.build.outputs.projects, '@coveo/atomic-hosted-page')
+    needs: [affected, build]
+    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic-hosted-page')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
       options: --user 1001
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
 
@@ -592,31 +660,34 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
+      - run: pnpm exec turbo run build --filter=@coveo/atomic-hosted-page
       - uses: ./.github/actions/playwright-atomic-hosted-pages
   e2e-quantic:
     name: 'Run Quantic E2E tests'
-    needs: build
-    if: contains(needs.build.outputs.projects, '@coveo/quantic') && !(github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'skip-quantic'))
+    needs: [affected, build]
+    if: >-
+      ${{
+        contains(fromJSON(needs.affected.outputs.projects), '@coveo/quantic') &&
+        !(github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'skip-quantic'))
+      }}
     permissions:
       contents: read
       pull-requests: write
     uses: ./.github/workflows/e2e-quantic.yml
     with:
       event_name: ${{ github.event_name }}
-      turbo_scm_base: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || 'main' }}
-      turbo_scm_head: ${{ github.event.pull_request.head.sha || github.sha }}
     secrets:
       SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
       SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
   publish-preview:
     if: ${{ !cancelled() && github.event_name == 'pull_request' && !startsWith(github.head_ref, 'changeset-release/') }}
-    needs: build
+    needs: [affected, build]
     name: 'Publish Preview Packages'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -624,6 +695,7 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
+      - run: pnpm exec turbo run build --filter='!./samples/**'
       - name: Resolve catalog references in pkg.pr.new templates
         run: node packages/pkg-new-template/scripts/flatten-catalog.mjs
       - name: Publish to pkg.pr.new
@@ -650,6 +722,7 @@ jobs:
     name: 'Confirm build is valid (PR)'
     if: ${{ always() && github.event_name == 'pull_request'}}
     needs:
+      - 'affected'
       - 'build'
       - 'lint-check'
       - 'knip'
@@ -667,7 +740,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
 
@@ -684,6 +757,7 @@ jobs:
     name: 'Confirm build is valid (merge group)'
     if: ${{ always() && github.event_name == 'merge_group'}}
     needs:
+      - 'affected'
       - 'build'
       - 'lint-check'
       - 'knip'
@@ -700,7 +774,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
 
@@ -722,7 +796,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
 
@@ -739,16 +813,18 @@ jobs:
   changeset-merge-guard:
     if: github.event_name == 'merge_group'
     name: 'Changeset merge guard'
+    needs: affected
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          fetch-depth: 0
+          fetch-depth: ${{ needs.affected.outputs.fetch-depth }}
+          fetch-tags: false
 
       - uses: ./.github/actions/changeset-merge-guard
         with:

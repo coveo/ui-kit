@@ -1,3 +1,10 @@
+## 2.9.30
+
+### Patch Changes
+
+- Updated dependencies [[`3d91eec`](https://github.com/coveo/ui-kit/commit/3d91eecae945b274ef9a3b8f9d714fabd05e9970)]:
+  - @coveo/headless@3.55.2
+
 ## 2.9.29
 
 ### Patch Changes

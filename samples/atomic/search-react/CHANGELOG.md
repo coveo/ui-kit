@@ -1,5 +1,13 @@
 # @coveo/ui-kit-sample-atomic-search-react
 
+## 3.11.39
+
+### Patch Changes
+
+- Updated dependencies [[`6a473fa`](https://github.com/coveo/ui-kit/commit/6a473fab5d0a64bbea54a1a8180d7d1d8f1d68cb), [`3d91eec`](https://github.com/coveo/ui-kit/commit/3d91eecae945b274ef9a3b8f9d714fabd05e9970)]:
+  - @coveo/atomic-react@3.11.39
+  - @coveo/headless@3.55.2
+
 ## 3.11.38
 
 ### Patch Changes
