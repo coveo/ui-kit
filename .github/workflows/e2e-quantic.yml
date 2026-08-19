@@ -6,6 +6,10 @@ on:
         required: false
         type: string
         default: 'pull_request'
+      affected_tasks:
+        description: 'Affected Turbo task identifiers as a JSON array'
+        required: true
+        type: string
     secrets:
       SFDX_AUTH_CLIENT_ID:
         required: true
@@ -84,11 +88,35 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo run build --filter=@coveo/quantic
-      - uses: ./.github/actions/playwright-quantic
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
-          shardIndex: ${{ matrix.shardIndex }}
-          shardTotal: ${{ matrix.shardTotal }}
+          pattern: quantic-playwright-env-*
+          path: packages/quantic/.env
+          merge-multiple: true
+      - name: Run Playwright e2e tests on Quantic
+        id: playwright
+        uses: ./.github/actions/run-affected
+        continue-on-error: true
+        with:
+          affected-tasks: ${{ inputs.affected_tasks }}
+          tasks: e2e
+          packages: '@coveo/quantic'
+          arguments: |
+            --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+      - name: Upload blob report to GitHub Actions Artifacts
+        if: cancelled() || failure() || success()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: quantic-blob-report-${{ matrix.shardIndex }}
+          path: packages/quantic/blob-report
+          retention-days: 5
+      - run: |
+          if [[ ${STEPS_PLAYWRIGHT_OUTCOME} == 'failure' ]]; then
+            exit 1
+          fi
+        shell: bash
+        env:
+          STEPS_PLAYWRIGHT_OUTCOME: ${{ steps.playwright.outcome }}
   merge-quantic-playwright-reports:
     name: 'Merge Playwright reports'
     environment: PR Artifacts
