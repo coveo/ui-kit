@@ -9,6 +9,27 @@
     "affectedUsingTaskInputs": true
   },
   "tasks": {
+    "//#generate:agents-md-packages": {
+      "inputs": [
+        "AGENTS.md",
+        "packages/**/package.json",
+        "scripts/generate/agents-md-packages.mjs",
+        "scripts/packages.mjs"
+      ],
+      "outputs": ["AGENTS.md"]
+    },
+    "//#generate:catalog-info": {
+      "inputs": [
+        "packages/*/package.json",
+        "packages/*/catalog-info.config.yaml",
+        "catalog-info.ui-kit.config.yaml",
+        "scripts/generate/catalog-info.mjs",
+        "packages/*/catalog-info.yaml",
+        "catalog-info.yaml",
+        "catalog-info.ui-kit.yaml"
+      ],
+      "outputs": ["packages/*/catalog-info.yaml", "catalog-info.yaml", "catalog-info.ui-kit.yaml"]
+    },
     "build": {
       "dependsOn": ["^build"],
       "inputs": [
