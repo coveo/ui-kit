@@ -24,8 +24,8 @@
   "main": "index.js",
   "scripts": {
     "lint:check:tests": "eslint force-app/main/default/lwc/ --format junit -o reports/eslint.xml",
-    "lint:check": "eslint force-app/main/default/lwc/ && eslint force-app/examples/main/lwc/ && prettier \"force-app/{,**}/*.{js,cls,trigger}\" --check",
-    "lint:fix": "eslint --fix force-app/main/default/lwc/ && eslint --fix force-app/examples/main/lwc/ && prettier \"force-app/{,**}/*.{js,cls,trigger}\" --write",
+    "lint:check": "eslint force-app/main/default/lwc/ force-app/examples/main/lwc/ && prettier \"force-app/{,**}/*.{js,cls,trigger}\" --check",
+    "lint:fix": "eslint --fix force-app/main/default/lwc/ force-app/examples/main/lwc/ && prettier \"force-app/{,**}/*.{js,cls,trigger}\" --write",
     "build:staticresources": "node build-static-resources.js",
     "dev": "node ../../utils/ci/rm-rf.mjs .localdevserver && pnpm run build:staticresources && pnpm run dev:sfdx",
     "dev:sfdx": "sf project deploy start --source-dir force-app/main && sfdx force:lightning:lwc:start --port 3334",
