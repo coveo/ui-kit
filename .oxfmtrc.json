@@ -9,6 +9,7 @@
     "**/.agents/**/*",
     "AGENTS.md",
     "**/packages/quantic/**/*",
+    "!**/packages/quantic/*.json",
     "!**/packages/quantic/catalog-info.yaml",
     "**/packages/create-atomic-template/**/*",
     "**/packages/create-atomic-component/template/**/*",
