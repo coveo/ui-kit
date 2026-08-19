@@ -23,7 +23,6 @@
   ],
   "main": "index.js",
   "scripts": {
-    "lint:check:tests": "eslint force-app/main/default/lwc/ --format junit -o reports/eslint.xml",
     "lint:check": "eslint force-app/main/default/lwc/ force-app/examples/main/lwc/ && prettier \"force-app/{,**}/*.{js,cls,trigger}\" --check",
     "lint:fix": "eslint --fix force-app/main/default/lwc/ force-app/examples/main/lwc/ && prettier \"force-app/{,**}/*.{js,cls,trigger}\" --write",
     "build:staticresources": "node build-static-resources.js",
