@@ -108,21 +108,9 @@ export default class QuanticTabBar extends LightningElement {
     // Must run before categorizeTabsVisibility: while display:none, moreButtonWidth reads as 0.
     this.updateMoreButtonVisibility(isOverflow);
     this._layoutRects.moreButton = this.moreButton?.getBoundingClientRect();
-    if (!this._layoutRects.moreButton?.width) {
-      const moreButton = this.moreButton?.querySelector('button');
-      if (moreButton) {
-        this._layoutRects.moreButton = moreButton.getBoundingClientRect();
-      }
-    }
 
     this.updateMoreButtonState();
     this._layoutRects.moreButton = this.moreButton?.getBoundingClientRect();
-    if (!this._layoutRects.moreButton?.width) {
-      const moreButton = this.moreButton?.querySelector('button');
-      if (moreButton) {
-        this._layoutRects.moreButton = moreButton.getBoundingClientRect();
-      }
-    }
 
     const {overflowingTabs, displayedTabs} = this.categorizeTabsVisibility(
       tabElements,
@@ -274,22 +262,11 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {void}
    */
   updateMoreButtonPosition(displayedTabs = this._displayedTabs) {
-    const selectedTab = this.selectedTab;
     const position = displayedTabs.reduce(
       (total, tab) => total + this.getElementWidth(tab),
       0
     );
-    const selectedTabWidth = this.getElementWidth(selectedTab);
-    const selectedTabPosition =
-      selectedTab &&
-      (selectedTabWidth === 0 || !displayedTabs.includes(selectedTab))
-        ? (this.getElementRect(selectedTab)?.right ?? 0) -
-          (this.getElementRect(this.container)?.left ?? 0)
-        : 0;
-    this.moreButton?.style.setProperty(
-      'left',
-      `${Math.max(position, selectedTabPosition)}px`
-    );
+    this.moreButton?.style.setProperty('left', `${position}px`);
   }
 
   /**
@@ -479,22 +456,9 @@ export default class QuanticTabBar extends LightningElement {
       // @ts-ignore
       (tab) => tab.expression === targetValue && tab.label === targetLabel
     );
-    // Tab selection updates Headless state asynchronously. Invalidate the previous signature so
-    // the next quantic__tabrendered event cannot skip the layout pass with stale state.
-    this._lastTabStateSignature = null;
     // @ts-ignore
     clickedtab?.select();
     this.isDropdownOpen = false;
-    if (typeof window.requestAnimationFrame === 'function') {
-      // eslint-disable-next-line @lwc/lwc/no-async-operation
-      window.requestAnimationFrame(() => {
-        // eslint-disable-next-line @lwc/lwc/no-async-operation
-        window.requestAnimationFrame(() => {
-          this._lastTabStateSignature = null;
-          this.updateTabsDisplay();
-        });
-      });
-    }
   };
 
   /**
