@@ -115,11 +115,13 @@ Follow the package split:
 
 Do not duplicate upstream Headless coverage unless the Quantic component adds behavior on top.
 
+Before or after any change to packages/quantic, use the `running-quantic-e2e-tests` skill to set up the scratch orgs, deploy, and run the Playwright specs — even when the change doesn't need a new E2E test, existing coverage for the touched component(s) should still be re-verified.
+
 ### Working Workflow
 
 1. Inspect the target component folder and a similar existing Quantic component before editing.
 2. Keep changes inside `packages/quantic/force-app/main/default/lwc` unless the request also needs examples, community pages, or tests.
-3. If the change needs E2E coverage, update or add the matching example-community component and route assets as needed.
+3. If the change needs E2E coverage, update or add the matching example-community component and route assets as needed. Then follow the `running-quantic-e2e-tests` skill to deploy and run it.
 4. **Before writing any CSS:** go through every style need and verify whether an SLDS utility class satisfies it. Only write custom CSS for styles that SLDS cannot achieve. When replicating a component from another library (e.g. Atomic), do not port its custom CSS directly — re-implement the layout and styling using SLDS classes.
 5. Update JSDoc and metadata consistently with the component's public surface.
 6. Run `pnpm run lint:fix` from `packages/quantic` before considering the work done.
