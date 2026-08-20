@@ -12,8 +12,6 @@ vi.mock('@/src/global/environment.js', {spy: true});
 vi.mock('./i18n.js', () => ({
   init18n: vi.fn(),
   loadTranslations: vi.fn(() => Promise.resolve()),
-  i18nBackendOptions: vi.fn(() => ({})),
-  i18nTranslationNamespace: 'translation',
 }));
 vi.mock('@/src/utils/dayjs-locales.js', {spy: true});
 

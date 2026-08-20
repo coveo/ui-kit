@@ -5,7 +5,7 @@ import availableLocales from '../../../generated/availableLocales.json';
 import type {AnyEngineType} from './bindings';
 import type {BaseAtomicInterface} from './interface-controller';
 
-export const i18nTranslationNamespace = 'translation';
+const i18nTranslationNamespace = 'translation';
 
 export function i18nBackendOptions(
   atomicInterface: BaseAtomicInterface<AnyEngineType>
