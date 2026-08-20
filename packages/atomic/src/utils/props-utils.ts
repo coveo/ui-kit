@@ -16,17 +16,39 @@ export function mapProperty<Element extends ReactiveElement>(options?: MapPropOp
     ctor.createProperty(propertyKey, {type: Object});
 
     ctor.addInitializer((instance) => {
-      const props = {};
       const prefix = options?.attributePrefix || camelToKebab(propertyKey.toString());
 
-      mapAttributesToProp(
-        prefix,
-        props,
-        Array.from(instance.attributes),
-        options?.splitValues ?? false
-      );
+      const readMappedAttributes = () => {
+        const props = {};
+        mapAttributesToProp(
+          prefix,
+          props,
+          Array.from(instance.attributes),
+          options?.splitValues ?? false
+        );
+        return props;
+      };
 
-      (instance as Instance)[propertyKey] = props as Instance[K];
+      // Initializers run from the constructor. An element parsed from markup is upgraded with
+      // its attributes already in place, so reading them here is enough for that case.
+      (instance as Instance)[propertyKey] = readMappedAttributes() as Instance[K];
+
+      // An element created programmatically has no attributes yet when the constructor runs:
+      // frameworks call `document.createElement`, then set attributes, then insert. Reading
+      // only in the constructor left the property empty forever, since these attributes are
+      // prefixed (`must-match-source`, `depends-on-category`) and so never map to a reactive
+      // property that Lit would observe. Read again once connected, which is after the
+      // attributes have been set.
+      instance.addController({
+        hostConnected: () => {
+          const props = readMappedAttributes();
+          // Only overwrite when attributes were actually found, so a value assigned straight to
+          // the property before insertion is preserved.
+          if (Object.keys(props).length > 0) {
+            (instance as Instance)[propertyKey] = props as Instance[K];
+          }
+        },
+      });
     });
   };
 }
