@@ -133,4 +133,19 @@ describe('atomic-field-condition', () => {
 
     expect(atomicResult.shadowRoot!.querySelector('atomic-field-condition')).not.toBeNull();
   });
+
+  it('should reevaluate its conditions when they change after the initial render', async () => {
+    const {element, isContentVisible} = await renderFieldCondition({
+      mustMatch: {filetype: ['pdf']},
+      resultState: {raw: {filetype: 'docx'}},
+    });
+
+    expect(isContentVisible()).toBe(false);
+
+    expect(element).not.toBeNull();
+    element.mustMatch = {filetype: ['docx']};
+    await element.updateComplete;
+
+    expect(isContentVisible()).toBe(true);
+  });
 });

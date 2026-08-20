@@ -125,4 +125,30 @@ describe('atomic-product-field-condition', () => {
 
     expect(isContentVisible()).toBe(false);
   });
+
+  it('should reevaluate its conditions when they change after the initial render', async () => {
+    const {element, isContentVisible} = await renderProductFieldCondition({
+      mustMatch: {ec_brand: ['other-brand']},
+      productState: {ec_brand: 'brand'},
+    });
+
+    expect(isContentVisible()).toBe(false);
+
+    expect(element).not.toBeNull();
+    element.mustMatch = {ec_brand: ['brand']};
+    await element.updateComplete;
+
+    expect(isContentVisible()).toBe(true);
+  });
+
+  it('should stay in the DOM when its conditions are not met', async () => {
+    const {atomicProduct} = await renderProductFieldCondition({
+      ifDefined: 'ec_brand',
+      productState: {ec_brand: undefined},
+    });
+
+    expect(
+      atomicProduct.shadowRoot!.querySelector('atomic-product-field-condition')
+    ).not.toBeNull();
+  });
 });
