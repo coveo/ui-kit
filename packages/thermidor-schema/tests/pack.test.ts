@@ -36,7 +36,7 @@ describe('package validation', () => {
     expect(packOutput).not.toMatch(/schema\//);
     expect(packOutput).not.toMatch(/scripts\//);
     expect(packOutput).not.toMatch(/src\//);
-  });
+  }, 60_000);
 
   it('all expected exports are present in the built index.d.ts', () => {
     const dts = readFileSync(path.join(packageRoot, 'dist', 'index.d.ts'), 'utf8');

@@ -32,6 +32,7 @@
     "generate:check": "node --experimental-strip-types scripts/generate-zod.ts --check",
     "validate:freshness:src": "node --experimental-strip-types scripts/check-freshness.ts src",
     "validate:freshness:dist": "node --experimental-strip-types scripts/check-freshness.ts dist",
+    "publint": "publint",
     "build": "tsc --project tsconfig.json",
     "test": "vitest run",
     "clean": "rm -rf dist"
@@ -42,6 +43,7 @@
   "devDependencies": {
     "ajv": "8.20.0",
     "ajv-formats": "3.0.1",
+    "publint": "catalog:",
     "quicktype-core": "26.0.0",
     "typescript": "catalog:",
     "vitest": "catalog:"
