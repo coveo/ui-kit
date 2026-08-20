@@ -10,6 +10,15 @@ env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
 
 jobs:
+  # ⚠️ Everything after `Create release PR or publish` in this job runs when npm
+  # has ALREADY been published to. A failure in any of those steps fails the whole
+  # job, and anything that declares a bare `needs: release` is then skipped.
+  # That is how @coveo/atomic 3.60.x reached npm without ever reaching the CDN
+  # (run 31519447241: `Read create-ui version` failed after a successful publish,
+  # and `Upload commit artifacts to S3` was skipped).
+  #
+  # If you add a post-publish step here, it MUST be `continue-on-error: true`.
+  # Better still, put it in its own job that depends on this one.
   release:
     concurrency:
       group: release-${{ github.ref }}
@@ -79,6 +88,11 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: coveo-platform
           SENTRY_PROJECT: create-ui
+      # Four jobs below check out `refs/tags/release/v3`, so this step is a
+      # prerequisite for them, not just a convenience marker. It deliberately has
+      # no `continue-on-error`: if the tag does not move, those jobs must skip
+      # rather than silently operate on the previous release. The CDN dispatch is
+      # protected from this failure by its own `always()` condition.
       - name: Update release/v3 bookmark
         if: ${{ steps.changesets.outputs.published == 'true' }}
         run: |
@@ -240,6 +254,17 @@ jobs:
   commit-artifact-upload:
     name: Upload commit artifacts to S3
     needs: [build-cdn, release]
+    # `always()` is load-bearing: do not replace this with a bare `needs:`.
+    #
+    # This dispatch is the only signal ui-kit-cd ever receives. With a bare
+    # `needs: release`, any failure in the `release` job skips this job — including
+    # failures in steps that run AFTER `changeset publish` has already pushed to
+    # npm. npm then permanently leads the CDN, because a later release only writes
+    # its own version folders. Recovery is the `Redeploy CDN` workflow.
+    #
+    # `build-cdn` stays a hard gate: it is the same build ui-kit-cd will run, so a
+    # red one means the deployment cannot succeed anyway.
+    if: ${{ always() && needs.build-cdn.result == 'success' && needs.release.result != 'cancelled' }}
     runs-on: ubuntu-latest
     # TODO(KIT-5712): Rename to 'CDN Deploy' once token vending machine is available
     environment: 'Prerelease (CDN)'
@@ -257,7 +282,55 @@ jobs:
           # Comma-separated list of CDN channels to update (e.g. "private" or "private,preview").
           # On release commits, update both private and preview pointers.
           # On regular merges, only update private pointers.
+          #
+          # ⚠️ `published` is only 'true' on the run that actually publishes. If you
+          # re-run ALL jobs of a release run, `release` re-runs, finds no pending
+          # changesets, and `published` flips to 'false' — this silently degrades to
+          # `private`, which never writes version folders, and the run goes green.
+          # To recover a release run, re-run FAILED jobs only, or use the
+          # `Redeploy CDN` workflow.
           CHANNELS: ${{ needs.release.outputs.published == 'true' && 'private,preview' || 'private' }}
+
+  # Turns "npm published but the CDN was never told" into a red run with a runbook,
+  # instead of a half-green release nobody notices. This checks only that the
+  # dispatch was sent; ui-kit-cd reports its own deployment failures to Slack.
+  cdn-signal-guard:
+    name: Verify the CDN was notified of the release
+    needs: [release, commit-artifact-upload]
+    if: ${{ always() && needs.release.outputs.published == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
+        with:
+          egress-policy: audit
+      - name: Fail if the CDN deployment was never dispatched
+        if: ${{ needs.commit-artifact-upload.result != 'success' }}
+        run: |
+          {
+            echo "## Release published to npm, but the CDN was not notified"
+            echo
+            echo "\`commit-artifact-upload\` finished as \`${{ needs.commit-artifact-upload.result }}\`."
+            echo "The published version has no CDN folder and will return 403 until this is fixed."
+            echo "A later release will NOT heal it: releases only write their own version folders."
+            echo
+            echo "### Recovery"
+            echo
+            echo "Run the **Redeploy CDN** workflow with:"
+            echo
+            echo "- \`ref\`: \`${{ github.sha }}\`"
+            echo "- \`channels\`: \`private,preview\`"
+            echo
+            echo "Then approve the \`cdn-stable\` gate in coveo-platform/ui-kit-cd."
+            echo
+            echo "Alternatively, re-run **failed jobs only** on this run."
+            echo "Do NOT re-run all jobs: \`release\` would find no changesets, \`published\`"
+            echo "would flip to 'false', and the dispatch would degrade to the \`private\`"
+            echo "channel, which never writes version folders."
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "npm published but the CDN deployment was not dispatched. See the job summary." >&2
+          exit 1
+
   chromatic-update-main:
     name: 'Update Chromatic baseline on main'
     runs-on: ubuntu-latest
