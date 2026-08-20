@@ -1,15 +1,6 @@
 #region Metadata
-name: 'Setup & build'
-description: 'Setup node, install dependencies & build'
-inputs:
-  skip-build:
-    description: 'Skip the build step'
-    required: false
-    default: 'false'
-  build-command:
-    description: 'Command used to build. Defaults to building every package.'
-    required: false
-    default: 'pnpm run build --affected'
+name: 'Setup'
+description: 'Setup node and install dependencies'
 #endregion
 runs:
   using: composite
@@ -32,11 +23,5 @@ runs:
         restore-keys: |
           ${{ runner.os }}-pnpm-store-
     - run: pnpm install --frozen-lockfile --prefer-offline
-      shell: bash
-    #endregion
-    #region Build
-    # Turbo build outputs come from Turborepo remote caching (turbo.json remoteCache + TURBO_TOKEN).
-    - run: ${{ inputs.build-command }}
-      if: inputs.skip-build != 'true'
       shell: bash
     #endregion

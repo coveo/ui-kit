@@ -25,11 +25,13 @@ type InferControllerPropsFromDefinition<
 export type InferControllerPropsMapFromDefinitions<
   TControllers extends ControllerDefinitionsMap<CoreEngine | CoreEngineNext, Controller>,
 > = {
-  [K in keyof TControllers as HasKeys<
-    InferControllerPropsFromDefinition<TControllers[K]>
-  > extends false
-    ? never
-    : K]: InferControllerPropsFromDefinition<TControllers[K]>;
+  [
+    K in keyof TControllers as HasKeys<
+      InferControllerPropsFromDefinition<TControllers[K]>
+    > extends false
+      ? never
+      : K
+  ]: InferControllerPropsFromDefinition<TControllers[K]>;
 };
 
 export type InferControllerFromDefinition<

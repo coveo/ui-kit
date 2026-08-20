@@ -1,7 +1,7 @@
 title: Coveo Accessibility Conformance Report
 product:
   name: Coveo Atomic
-  version: 3.60.0
+  version: 3.60.7
   description: Coveo Atomic is a web component library for building search and
     commerce interfaces.
 author:
@@ -13,12 +13,12 @@ vendor:
   company_name: Coveo
   email: support@coveo.com
   website: https://www.coveo.com
-report_date: '2026-07-02'
-last_modified_date: '2026-07-02'
+report_date: '2026-08-20'
+last_modified_date: '2026-08-20'
 version: 1
 notes: Generated from a11y/reports/a11y-report.json. Conformance is derived from
   axe-core results, interactive keyboard tests, and manual audits.
-evaluation_methods_used: 'Automated: axe-core 4.12.1 via Storybook addon-a11y;
+evaluation_methods_used: 'Automated: axe-core 4.13.0 via Storybook addon-a11y;
   Interactive: Storybook interactive tests for keyboard navigation and focus
   management; Manual audit: keyboard-only testing; screen reader testing; visual
   inspection at 200% and 400% zoom; reflow verification at 320 CSS px viewport
