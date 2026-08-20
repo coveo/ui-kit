@@ -8,6 +8,7 @@ import type {
 import {type CSSResultGroup, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
+import {getFirstNewFacetValueIndex} from '@/src/components/common/facets/facet-common';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
 import {renderFacetSearchInput} from '@/src/components/common/facets/facet-search/facet-search-input';
@@ -125,6 +126,7 @@ export class AtomicCommerceFacet
   private headerFocus!: FocusTargetController;
   private unsubscribeFacetController?: () => void;
   private ariaLiveRegion = new AriaLiveRegionController(this, 'facet-search');
+  private valuesBeforeShowMore = new Set<string>();
 
   public initialize() {
     this.validateFacet();
@@ -239,9 +241,15 @@ export class AtomicCommerceFacet
   }
 
   private renderValues() {
+    const firstNewValueIndex = getFirstNewFacetValueIndex(
+      this.facetState.values,
+      this.valuesBeforeShowMore
+    );
+
     return this.renderValuesContainer(
       this.facetState.values.map((value, i) => {
-        const shouldFocusAfterInteraction = i === 0;
+        const shouldFocusOnShowLessAfterInteraction = i === 0;
+        const shouldFocusOnShowMoreAfterInteraction = i === firstNewValueIndex;
 
         return renderFacetValue({
           props: {
@@ -252,10 +260,10 @@ export class AtomicCommerceFacet
             facetValue: value.value,
             facetState: value.state,
             setRef: (btn) => {
-              if (shouldFocusAfterInteraction) {
+              if (shouldFocusOnShowLessAfterInteraction) {
                 this.showLessFocus?.setTarget(btn as HTMLElement);
               }
-              if (shouldFocusAfterInteraction) {
+              if (shouldFocusOnShowMoreAfterInteraction) {
                 this.showMoreFocus?.setTarget(btn as HTMLElement);
               }
             },
@@ -278,6 +286,7 @@ export class AtomicCommerceFacet
             this.facet.showLessValues();
           },
           onShowMore: () => {
+            this.valuesBeforeShowMore = new Set(this.facetState.values.map(({value}) => value));
             this.focusTargets.showMore.focusAfterSearch();
             this.facet.showMoreValues();
           },
