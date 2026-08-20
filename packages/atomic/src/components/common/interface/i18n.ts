@@ -6,6 +6,7 @@ import type {AnyEngineType} from './bindings';
 import type {BaseAtomicInterface} from './interface-controller';
 
 const i18nTranslationNamespace = 'translation';
+const FALLBACK_LANGUAGE = 'en';
 
 export function i18nBackendOptions(
   atomicInterface: BaseAtomicInterface<AnyEngineType>
@@ -74,18 +75,33 @@ export function loadTranslations(
   });
 }
 
-export function init18n(atomicInterface: BaseAtomicInterface<AnyEngineType>) {
-  return atomicInterface.i18n.use(Backend).init({
+export async function init18n(atomicInterface: BaseAtomicInterface<AnyEngineType>) {
+  const language = atomicInterface.language || FALLBACK_LANGUAGE;
+
+  // The backend is deliberately not registered with `.use()`. Letting i18next's backend
+  // connector load the initial resources is what caused it to discard the consumer's strings:
+  // the connector stores what it loads with a shallow merge in which the incoming data wins.
+  // Atomic loads the same resources itself, non-destructively, right below.
+  const t = await atomicInterface.i18n.init({
     debug: atomicInterface.logLevel === 'debug',
     lng: atomicInterface.language,
     nsSeparator: '___',
-    fallbackLng: 'en',
-    backend: i18nBackendOptions(atomicInterface),
+    fallbackLng: FALLBACK_LANGUAGE,
     interpolation: {
       escape: (str) => DOMPurify.sanitize(str),
     },
     compatibilityJSON: 'v4',
   });
+
+  await loadTranslations(atomicInterface, language);
+  // i18next used to pull the fallback language too, as part of resolving the language
+  // hierarchy. Keep doing so, otherwise a locale missing a key would render the key itself
+  // instead of falling back to English.
+  if (language.split('-')[0] !== FALLBACK_LANGUAGE) {
+    await loadTranslations(atomicInterface, FALLBACK_LANGUAGE);
+  }
+
+  return t;
 }
 
 function isI18nLocaleAvailable(locale: string) {

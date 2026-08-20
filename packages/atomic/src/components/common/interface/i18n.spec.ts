@@ -77,7 +77,7 @@ describe('i18n', () => {
   });
 
   describe('#init18n', () => {
-    it('should call i18n.use and i18n.init with correct options', () => {
+    it('should call i18n.init with correct options, without registering the backend', async () => {
       const use = vi.fn().mockReturnThis();
       const init = vi.fn();
       const atomicInterface = {
@@ -89,20 +89,83 @@ describe('i18n', () => {
 
       init18n(atomicInterface);
 
-      expect(use).toHaveBeenCalledExactlyOnceWith(Backend);
+      // Registering the backend would let i18next load the initial resources itself, which is
+      // what discarded the consumer's strings.
+      expect(use).not.toHaveBeenCalled();
       expect(init).toHaveBeenCalledExactlyOnceWith(
         expect.objectContaining({
           debug: true,
           lng: 'en',
           nsSeparator: '___',
           fallbackLng: 'en',
-          backend: expect.any(Object),
           interpolation: expect.any(Object),
           compatibilityJSON: 'v4',
         })
       );
     });
+
+    it('should not let its own strings overwrite strings already registered by the consumer', async () => {
+      const atomicStrings = {
+        'load-all-results': 'Load all results',
+        'no-results': 'No results',
+      };
+      const respond = () => ({status: 200, json: () => Promise.resolve(atomicStrings)}) as Response;
+
+      // The first request is held open so the consumer can register its override while Atomic's
+      // resources are in flight; any later request resolves immediately.
+      let releaseFirst: (() => void) | undefined;
+      globalThis.fetch = vi.fn().mockImplementation(() => {
+        if (releaseFirst) {
+          return Promise.resolve(respond());
+        }
+        return new Promise((resolve) => {
+          releaseFirst = () => resolve(respond());
+        });
+      });
+
+      const i18n = createInstance();
+      const atomicInterface = {
+        i18n,
+        language: 'en',
+        languageAssetsPath: '/lang',
+      } as unknown as BaseAtomicInterface<AnyEngineType>;
+
+      const initialization = init18n(atomicInterface);
+
+      await vi.waitFor(() => expect(releaseFirst).toBeDefined());
+      i18n.addResourceBundle('en', 'translation', {
+        'load-all-results': 'Show thread',
+      });
+
+      releaseFirst!();
+      await initialization;
+
+      expect(i18n.t('load-all-results')).toBe('Show thread');
+      // Strings the consumer did not customize still come from Atomic.
+      expect(i18n.t('no-results')).toBe('No results');
+    });
+
+    it('should also load the fallback language when the locale is not English', async () => {
+      const requested: string[] = [];
+      globalThis.fetch = vi.fn().mockImplementation((url) => {
+        requested.push(String(url));
+        return Promise.resolve({status: 200, json: () => Promise.resolve({greeting: 'x'})});
+      });
+
+      const i18n = createInstance();
+      const atomicInterface = {
+        i18n,
+        language: 'fr-CA',
+        languageAssetsPath: '/lang',
+      } as unknown as BaseAtomicInterface<AnyEngineType>;
+
+      await init18n(atomicInterface);
+
+      expect(requested.some((u) => u.includes('/fr.json'))).toBe(true);
+      expect(requested.some((u) => u.includes('/en.json'))).toBe(true);
+    });
   });
+
   describe('#loadTranslations', () => {
     it('should add the loaded bundle without overwriting existing values', async () => {
       globalThis.fetch = vi.fn().mockResolvedValue({
