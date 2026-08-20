@@ -136,7 +136,7 @@
     },
     "e2e:theming": {
       "dependsOn": ["build:cdn"],
-      "outputs": ["playwright-report/**"]
+      "outputs": ["playwright-report/**", "blob-report/**", "test-results/**"]
     },
     "validate:light-dom-styles": {
       "outputs": []

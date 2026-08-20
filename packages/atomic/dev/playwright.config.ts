@@ -75,7 +75,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: `pnpm run web:dev -- --port ${vitePort}`,
+    command: `pnpm --dir .. run web:dev --port ${vitePort}`,
     timeout: 10 * 60e3,
     port: vitePort,
     reuseExistingServer: !process.env.CI,
