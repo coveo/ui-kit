@@ -1,0 +1,141 @@
+# Redeploy CDN
+#
+# Manual recovery for the case where npm publishing succeeded but the CDN never
+# received (or never completed) its deployment, leaving the published version's
+# folder returning 403 forever. A regular release cannot repair this: it only
+# writes its own version folders, so a skipped version stays missing.
+#
+# Why this exists even though `cd.yml` can be re-run:
+#   - GitHub only allows re-running a workflow run for ~30 days. After that there
+#     is no other recovery path.
+#   - Re-running ALL jobs of a release run is actively harmful: the `release` job
+#     re-runs, finds no pending changesets, so `published` becomes 'false' and
+#     the dispatch degrades to the `private` channel, which never writes version
+#     folders. Re-run FAILED jobs only, or use this workflow.
+#   - If the `ui-kit-cd` run failed for a reason that needs a code change in
+#     ui-kit, replaying the same commit fails forever. See "fix forward" below.
+#   - The `cdn-stable` approval in `ui-kit-cd` expires; the run is then cancelled
+#     and stable pointers are never written.
+#
+# Usage — replay a release that npm published but the CDN missed:
+#   ref      = @coveo/atomic@3.60.4   (the release tag, or its commit SHA)
+#   channels = private,preview
+#
+# Usage — fix forward when the deployment itself is broken:
+#   git checkout -b fix/cdn-<something> @coveo/atomic@3.60.4
+#   git cherry-pick <fix-sha>     # add NO changeset: versions must not change
+#   git push origin fix/cdn-<something>
+#   ref      = fix/cdn-<something>
+#   channels = private,preview
+#   The fixed artifacts land in the same v3.60.4/ folders, because folders are
+#   derived from package.json at the deployed commit.
+#
+# Do NOT use the `hotfix` channel to repair a published version: `hotfix.json` in
+# ui-kit-cd writes the major, minor and `preview/<major>` folders only — it has no
+# patch phase, so it cannot create `v3.60.4/`. The `private,preview` channels go
+# through preview -> `cdn-stable` approval -> stable, and stable writes major,
+# minor AND patch. That is the correct path for a repair.
+#
+# See: internal-docs/release-process.md
+name: Redeploy CDN
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Ref to deploy: a release tag (@coveo/atomic@3.60.4), a commit SHA, or a branch. Required — there is deliberately no default, because the release/v3 bookmark is skipped when a release job fails and would point at the wrong commit in exactly the incident this workflow recovers from.'
+        required: true
+        type: string
+      channels:
+        description: 'CDN pointer channels to update.'
+        required: true
+        default: 'private,preview'
+        type: choice
+        options:
+          - 'private,preview'
+          - 'private'
+
+permissions:
+  contents: read
+
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+
+jobs:
+  verify:
+    name: Verify ref is published on npm
+    runs-on: ubuntu-latest
+    outputs:
+      sha: ${{ steps.resolve.outputs.sha }}
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+      - name: Resolve ref to a commit SHA
+        id: resolve
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      # The CDN version folders come from package.json at this commit, so a ref
+      # whose versions are not on npm would mint folders for a version that does
+      # not exist. Refuse that before anything is built.
+      - name: Verify CDN package versions are published on npm
+        run: node ./scripts/deploy/verify-npm-published.mjs
+        env:
+          COMMIT_SHA: ${{ steps.resolve.outputs.sha }}
+          CHANNELS: ${{ inputs.channels }}
+
+  build-cdn:
+    name: Build CDN
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ inputs.ref }}
+      # Pre-flight only: ui-kit-cd rebuilds from the commit itself. This catches a
+      # broken build before burning a deployment run.
+      - uses: ./.github/actions/build-cdn
+        with:
+          commit-sha: ${{ needs.verify.outputs.sha }}
+
+  redeploy:
+    name: Dispatch CDN redeploy
+    needs: [verify, build-cdn]
+    runs-on: ubuntu-latest
+    # TODO(KIT-5712): Rename to 'CDN Deploy' once token vending machine is available
+    environment: 'Prerelease (CDN)'
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: ./.github/actions/setup
+      # SHA is passed explicitly: on a workflow_dispatch run `context.sha` is the
+      # default branch's HEAD, not the ref that was checked out above.
+      - name: Trigger commit artifact upload and pointer update
+        run: node ./scripts/deploy/trigger-commit-upload.mjs
+        env:
+          GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
+          SHA: ${{ needs.verify.outputs.sha }}
+          CHANNELS: ${{ inputs.channels }}
+      - name: Summarize
+        run: |
+          {
+            echo "## Dispatched"
+            echo
+            echo "Commit: \`${{ needs.verify.outputs.sha }}\`"
+            echo "Channels: \`${{ inputs.channels }}\`"
+            echo
+            echo "Follow the run in [coveo-platform/ui-kit-cd](https://github.com/coveo-platform/ui-kit-cd/actions)."
+            echo "The \`cdn-stable\` environment gate there must be approved to write the released version folders."
+          } >> "$GITHUB_STEP_SUMMARY"
