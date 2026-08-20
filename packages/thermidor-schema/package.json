@@ -33,7 +33,7 @@
     "validate:freshness:src": "node --experimental-strip-types scripts/check-freshness.ts src",
     "validate:freshness:dist": "node --experimental-strip-types scripts/check-freshness.ts dist",
     "publint": "publint",
-    "build": "tsc --project tsconfig.json",
+    "build": "tsc --project tsconfig.build.json",
     "test": "vitest run",
     "clean": "rm -rf dist"
   },
