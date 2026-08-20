@@ -4,7 +4,7 @@
     "e2e": {
       "dependsOn": ["build"],
       "inputs": ["$TURBO_DEFAULT$"],
-      "outputs": ["playwright-report/**", "blob-report/**", "test-results/**"]
+      "outputs": ["playwright-report/**", "test-results/**"]
     }
   }
 }
