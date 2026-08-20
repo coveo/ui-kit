@@ -42,112 +42,16 @@ const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const schemaDirectory = join(packageRoot, 'schema');
 const outputPath = join(packageRoot, 'src', 'generated', 'schemas.ts');
 const checkOnly = process.argv.includes('--check');
-
-const entries: ProjectionEntry[] = [
-  {
-    typeName: 'Product',
-    schemaId: 'https://schema.thermidor.coveo.com/definitions/product.schema.json',
-  },
-  {
-    typeName: 'CartItem',
-    schemaId: 'https://schema.thermidor.coveo.com/definitions/cart-item.schema.json',
-  },
-  {
-    typeName: 'ActionItem',
-    schemaId: 'https://schema.thermidor.coveo.com/definitions/action-item.schema.json',
-  },
-  {
-    typeName: 'BundleTier',
-    schemaId: 'https://schema.thermidor.coveo.com/definitions/bundle-tier.schema.json',
-  },
-  {
-    typeName: 'ComparisonProduct',
-    schemaId: 'https://schema.thermidor.coveo.com/definitions/comparison-product.schema.json',
-  },
-  {
-    typeName: 'ComparisonAttribute',
-    schemaId: 'https://schema.thermidor.coveo.com/definitions/comparison-attribute.schema.json',
-  },
-  {
-    typeName: 'ProductListState',
-    schemaId: 'https://schema.thermidor.coveo.com/controllers/product-list.schema.json',
-    pointer: '/$defs/ProductListState',
-  },
-  {
-    typeName: 'CartState',
-    schemaId: 'https://schema.thermidor.coveo.com/controllers/cart.schema.json',
-    pointer: '/$defs/CartState',
-  },
-  {
-    typeName: 'NextActionsState',
-    schemaId: 'https://schema.thermidor.coveo.com/controllers/next-actions.schema.json',
-    pointer: '/$defs/NextActionsState',
-  },
-  {
-    typeName: 'BundleDisplayState',
-    schemaId: 'https://schema.thermidor.coveo.com/controllers/bundle-display.schema.json',
-    pointer: '/$defs/BundleDisplayState',
-  },
-  {
-    typeName: 'ComparisonTableState',
-    schemaId: 'https://schema.thermidor.coveo.com/controllers/comparison-table.schema.json',
-    pointer: '/$defs/ComparisonTableState',
-  },
-  {
-    typeName: 'SetItemsPayload',
-    schemaId: 'https://schema.thermidor.coveo.com/controllers/cart.schema.json',
-    pointer: '/$defs/SetItemsAction/properties/payload',
-  },
-  {
-    typeName: 'UpdateItemQuantityPayload',
-    schemaId: 'https://schema.thermidor.coveo.com/controllers/cart.schema.json',
-    pointer: '/$defs/UpdateItemQuantityAction/properties/payload',
-  },
-  {
-    typeName: 'SelectActionPayload',
-    schemaId: 'https://schema.thermidor.coveo.com/controllers/next-actions.schema.json',
-    pointer: '/$defs/SelectActionAction/properties/payload',
-  },
-  {
-    typeName: 'ProductListControllerContract',
-    schemaId: 'https://schema.thermidor.coveo.com/controllers/product-list.schema.json',
-  },
-  {
-    typeName: 'CartControllerContract',
-    schemaId: 'https://schema.thermidor.coveo.com/controllers/cart.schema.json',
-  },
-  {
-    typeName: 'NextActionsControllerContract',
-    schemaId: 'https://schema.thermidor.coveo.com/controllers/next-actions.schema.json',
-  },
-  {
-    typeName: 'BundleDisplayControllerContract',
-    schemaId: 'https://schema.thermidor.coveo.com/controllers/bundle-display.schema.json',
-  },
-  {
-    typeName: 'ComparisonTableControllerContract',
-    schemaId: 'https://schema.thermidor.coveo.com/controllers/comparison-table.schema.json',
-  },
-].map((entry) => ({...entry, reference: `${entry.schemaId}#${entry.pointer ?? ''}`}));
-
-const discriminatedUnions: DiscriminatedUnion[] = [
-  {
-    typeName: 'ControllerContracts',
-    discriminator: 'controllerSchema',
-    memberTypeNames: [
-      'ProductListControllerContract',
-      'CartControllerContract',
-      'NextActionsControllerContract',
-      'BundleDisplayControllerContract',
-      'ComparisonTableControllerContract',
-    ],
-  },
-];
+const typeScriptIdentifierPattern = /^[$A-Z_a-z][$\w]*$/;
 
 const documents = await loadSchemaDocuments(schemaDirectory);
 const documentsById = new Map<string, SchemaDocument>(
   documents.map((document) => [document.$id, document])
 );
+const controllerIndex = loadControllerIndex(documentsById);
+const projectionDocuments = crawlSchemaDocuments(controllerIndex, documentsById);
+const entries = loadProjectionEntries(projectionDocuments);
+const discriminatedUnions = loadDiscriminatedUnions(controllerIndex, projectionDocuments);
 
 const [seed] = entries;
 const seedDocument = documentsById.get(seed?.schemaId);
@@ -213,6 +117,219 @@ if (checkOnly) {
   console.log(
     `Generated ${entries.length + componentPropsEntries.length} Zod schema exports at ${relative(packageRoot, outputPath)}.`
   );
+}
+
+function loadProjectionEntries(documents: SchemaDocument[]): ProjectionEntry[] {
+  const controllerDocuments = loadControllerDocuments(documents);
+  const definitionDocuments = documents.filter((document) =>
+    document.$id.includes('/definitions/')
+  );
+
+  return [
+    ...definitionDocuments.map((document) =>
+      createProjectionEntry(loadSchemaTitle(document), document.$id)
+    ),
+    ...controllerDocuments.flatMap((document) => loadControllerStateEntry(document)),
+    ...controllerDocuments.flatMap((document) => loadControllerPayloadEntries(document)),
+    ...controllerDocuments.map((document) =>
+      createProjectionEntry(loadSchemaTitle(document), document.$id)
+    ),
+  ];
+}
+
+function loadDiscriminatedUnions(
+  index: SchemaDocument,
+  documents: SchemaDocument[]
+): DiscriminatedUnion[] {
+  const union = loadControllerUnion(index);
+  return [
+    {
+      typeName: loadSchemaTitle(union),
+      discriminator: 'controllerSchema',
+      memberTypeNames: loadControllerDocuments(documents).map(loadSchemaTitle),
+    },
+  ];
+}
+
+function crawlSchemaDocuments(
+  root: SchemaDocument,
+  documents: Map<string, SchemaDocument>
+): SchemaDocument[] {
+  const crawled: SchemaDocument[] = [];
+  const visited = new Set<string>();
+  const schemaKeywords = [
+    'additionalItems',
+    'additionalProperties',
+    'allOf',
+    'anyOf',
+    'contains',
+    'contentSchema',
+    'else',
+    'if',
+    'items',
+    'not',
+    'oneOf',
+    'prefixItems',
+    'propertyNames',
+    'then',
+    'unevaluatedItems',
+    'unevaluatedProperties',
+  ] as const;
+  const schemaMapKeywords = [
+    '$defs',
+    'definitions',
+    'dependencies',
+    'dependentSchemas',
+    'patternProperties',
+    'properties',
+  ] as const;
+
+  const visitDocument = (document: SchemaDocument) => {
+    if (visited.has(document.$id)) {
+      return;
+    }
+    visited.add(document.$id);
+    crawled.push(document);
+    visitSchema(document);
+  };
+
+  const visitSchemas = (schemas: unknown) => {
+    if (Array.isArray(schemas)) {
+      schemas.forEach(visitSchema);
+      return;
+    }
+    visitSchema(schemas);
+  };
+
+  const visitSchema = (schema: unknown) => {
+    if (!schema || typeof schema !== 'object' || Array.isArray(schema)) {
+      return;
+    }
+
+    const schemaObject = schema as Schema;
+    const reference = schemaObject.$ref;
+    if (typeof reference === 'string' && !reference.startsWith('#')) {
+      const [schemaId] = reference.split('#');
+      const referencedDocument = documents.get(schemaId);
+      if (!referencedDocument) {
+        throw new Error(`Unable to find referenced schema document ${schemaId}.`);
+      }
+      visitDocument(referencedDocument);
+    }
+
+    schemaKeywords.forEach((keyword) => visitSchemas(schemaObject[keyword]));
+    schemaMapKeywords.forEach((keyword) => {
+      const schemaMap = schemaObject[keyword];
+      if (schemaMap && typeof schemaMap === 'object' && !Array.isArray(schemaMap)) {
+        Object.values(schemaMap).forEach(visitSchemas);
+      }
+    });
+  };
+
+  visitDocument(root);
+  return crawled;
+}
+
+function loadControllerDocuments(documents: SchemaDocument[]): SchemaDocument[] {
+  return documents.filter(
+    (document) => document.properties?.controllerSchema?.const === document.$id
+  );
+}
+
+function loadControllerIndex(documents: Map<string, SchemaDocument>): SchemaDocument {
+  const id = 'https://schema.thermidor.coveo.com/controllers/controller-contracts.schema.json';
+  const document = documents.get(id);
+  if (!document) {
+    throw new Error(`Unable to find controller index ${id}.`);
+  }
+  return document;
+}
+
+function loadControllerUnion(index: SchemaDocument): Schema & {oneOf: Schema[]} {
+  const definitions = Object.values((index.$defs ?? {}) as Record<string, Schema>);
+  const union = definitions.find((definition) => Array.isArray(definition.oneOf));
+  if (!union) {
+    throw new Error(`Unable to find controller union in ${index.$id}.`);
+  }
+  return union as Schema & {oneOf: Schema[]};
+}
+
+function loadControllerStateEntry(document: SchemaDocument): ProjectionEntry[] {
+  const reference = document.properties?.state?.$ref;
+  if (typeof reference !== 'string') {
+    return [];
+  }
+  return [
+    createProjectionEntry(
+      loadSchemaTitle(resolveLocalReference(document, reference)),
+      document.$id,
+      reference.slice(1)
+    ),
+  ];
+}
+
+function loadControllerPayloadEntries(document: SchemaDocument): ProjectionEntry[] {
+  const actions = Object.values(document.properties?.actions?.properties ?? {}) as Schema[];
+  return actions.flatMap((action) => {
+    const reference = action.$ref;
+    if (typeof reference !== 'string') {
+      return [];
+    }
+    const actionSchema = resolveLocalReference(document, reference);
+    if (!actionSchema.properties?.payload) {
+      return [];
+    }
+    const actionName = loadSchemaTitle(actionSchema);
+    const typeName = `${actionName[0].toUpperCase()}${actionName.slice(1)}Payload`;
+    return [
+      createProjectionEntry(typeName, document.$id, `${reference.slice(1)}/properties/payload`),
+    ];
+  });
+}
+
+function resolveLocalReference(document: SchemaDocument, reference: string): Schema {
+  if (!reference.startsWith('#/')) {
+    throw new Error(`Expected a local reference in ${document.$id}, received ${reference}.`);
+  }
+  const segments = reference
+    .slice(2)
+    .split('/')
+    .map((segment) => segment.replaceAll('~1', '/').replaceAll('~0', '~'));
+  const resolved = segments.reduce<unknown>((value, segment) => {
+    if (!value || typeof value !== 'object') {
+      return undefined;
+    }
+    return (value as Schema)[segment];
+  }, document);
+  if (!resolved || typeof resolved !== 'object') {
+    throw new Error(`Unable to resolve ${reference} in ${document.$id}.`);
+  }
+  return resolved as Schema;
+}
+
+function loadSchemaTitle(schema: Schema): string {
+  if (typeof schema.title !== 'string' || schema.title.length === 0) {
+    throw new Error('A projected schema is missing its title.');
+  }
+  if (!typeScriptIdentifierPattern.test(schema.title)) {
+    throw new Error(
+      `Projected schema title ${JSON.stringify(schema.title)} is not a valid TypeScript identifier.`
+    );
+  }
+  return schema.title;
+}
+
+function createProjectionEntry(
+  typeName: string,
+  schemaId: string,
+  pointer?: string
+): ProjectionEntry {
+  return {
+    typeName,
+    schemaId,
+    pointer,
+    reference: `${schemaId}#${pointer ?? ''}`,
+  };
 }
 
 async function loadSchemaDocuments(directory: string): Promise<SchemaDocument[]> {
