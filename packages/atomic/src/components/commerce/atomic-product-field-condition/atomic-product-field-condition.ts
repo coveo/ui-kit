@@ -1,6 +1,6 @@
 import type {ProductTemplateCondition} from '@coveo/headless/commerce';
 import {ProductTemplatesHelpers} from '@coveo/headless/commerce';
-import {html, LitElement} from 'lit';
+import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {createProductContextController} from '@/src/components/commerce/product-template-component-utils/context/product-context-controller';
 import {
@@ -68,11 +68,15 @@ export class AtomicProductFieldCondition
   render() {
     const product = this.productController.item;
 
-    if (!product || !this.conditions.every((condition) => condition(product))) {
-      this.remove();
+    if (!product) {
+      this.hidden = true;
+      return nothing;
     }
 
-    return html`<slot></slot>`;
+    const conditionsMet = this.conditions.every((condition) => condition(product));
+    this.hidden = !conditionsMet;
+
+    return conditionsMet ? html`<slot></slot>` : nothing;
   }
 }
 
