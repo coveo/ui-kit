@@ -5,7 +5,7 @@ import availableLocales from '../../../generated/availableLocales.json';
 import type {AnyEngineType} from './bindings';
 import type {BaseAtomicInterface} from './interface-controller';
 
-export const i18nTranslationNamespace = 'translation';
+const i18nTranslationNamespace = 'translation';
 
 export function i18nBackendOptions(
   atomicInterface: BaseAtomicInterface<AnyEngineType>
@@ -43,6 +43,35 @@ export function i18nBackendOptions(
       }
     },
   };
+}
+
+/**
+ * Loads Atomic's own translations for `language` into the interface's i18next instance.
+ *
+ * The bundle is added with `deep: true, overwrite: false` so that strings the consumer has
+ * already registered are preserved. Atomic's strings are defaults; an application that
+ * customizes them should win, regardless of whether it registered its values before or after
+ * this load resolves.
+ */
+export function loadTranslations(
+  atomicInterface: BaseAtomicInterface<AnyEngineType>,
+  language: string
+) {
+  const {i18n} = atomicInterface;
+  const lng = language.split('-')[0];
+
+  return new Promise<void>((resolve) => {
+    new Backend(i18n.services, i18nBackendOptions(atomicInterface)).read(
+      lng,
+      i18nTranslationNamespace,
+      (_error: unknown, data: unknown) => {
+        if (data) {
+          i18n.addResourceBundle(lng, i18nTranslationNamespace, data, true, false);
+        }
+        resolve();
+      }
+    );
+  });
 }
 
 export function init18n(atomicInterface: BaseAtomicInterface<AnyEngineType>) {
