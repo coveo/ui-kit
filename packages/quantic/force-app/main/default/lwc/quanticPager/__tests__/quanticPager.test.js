@@ -41,7 +41,7 @@ const selectors = {
   previousButton: '[data-testid="previous-button"]',
   nextButton: '[data-testid="next-button"]',
   pageButton: 'c-quantic-number-button',
-  pagerContainer: 'lightning-button-group',
+  pagerContainer: '[data-testid="pager-container"]',
   componentError: 'c-quantic-component-error',
 };
 
