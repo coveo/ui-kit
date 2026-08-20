@@ -22,11 +22,13 @@ type InferControllerPropsFromDefinition<TController extends ControllerDefinition
 export type InferControllerPropsMapFromDefinitions<
   TControllers extends ControllerDefinitionsMap<Controller>,
 > = {
-  [K in keyof TControllers as HasKeys<
-    InferControllerPropsFromDefinition<TControllers[K]>
-  > extends false
-    ? never
-    : K]: InferControllerPropsFromDefinition<TControllers[K]>;
+  [
+    K in keyof TControllers as HasKeys<
+      InferControllerPropsFromDefinition<TControllers[K]>
+    > extends false
+      ? never
+      : K
+  ]: InferControllerPropsFromDefinition<TControllers[K]>;
 };
 
 export type InferControllerFromDefinition<TDefinition extends ControllerDefinition<Controller>> =
@@ -36,17 +38,17 @@ export type InferControllersMapFromDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 > = {
-  [K in keyof TControllers as HasKey<TControllers[K], TSolutionType> extends never
-    ? never
-    : K]: InferControllerFromDefinition<TControllers[K]>;
+  [
+    K in keyof TControllers as HasKey<TControllers[K], TSolutionType> extends never ? never : K
+  ]: InferControllerFromDefinition<TControllers[K]>;
 };
 
 export type InferControllerStaticStateMapFromDefinitionsWithSolutionType<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 > = {
-  [K in keyof TControllers as HasKey<TControllers[K], TSolutionType> extends never
-    ? never
-    : K]: InferControllerStaticStateFromController<InferControllerFromDefinition<TControllers[K]>> &
+  [
+    K in keyof TControllers as HasKey<TControllers[K], TSolutionType> extends never ? never : K
+  ]: InferControllerStaticStateFromController<InferControllerFromDefinition<TControllers[K]>> &
     InferControllerPropsFromDefinition<TControllers[K]>;
 };
