@@ -17,7 +17,6 @@ import {NextActionsBarRenderer} from './NextActionsBar/NextActionsBar.js';
 import {BundleDisplayRenderer} from './BundleDisplay/BundleDisplay.js';
 import {ComparisonTableRenderer} from './ComparisonTable/ComparisonTable.js';
 
-
 /**
  * Converts Zod 4 catalog definitions to the Zod 3 CatalogDefinitions type
  * expected by @copilotkit/a2ui-renderer. Validates structure at compile time.

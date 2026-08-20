@@ -12,6 +12,7 @@
 The Thermidor stack connects a backend (Agent Gateway + AgentSmith services) with a frontend (UI-Kit based). For this integration to work across independently evolving teams and repositories, there needs to be a shared, explicit contract that both producers (backend) and consumers (frontend) can rely on.
 
 Without a formal contract:
+
 - The frontend cannot know what UI components to render, nor what state or operations are available.
 - The backend cannot make safe assumptions about how state changes will be consumed.
 - Any refactoring on either side risks silent breakage.
@@ -63,6 +64,7 @@ A single Component may have multiple Controllers, each responsible for a distinc
 State is structured, immutable-from-the-frontend data associated with a Controller. It represents what the UI should reflect at any given moment.
 
 Key constraints:
+
 - **The frontend must not mutate State directly.** State is owned and updated exclusively by the backend.
 - **State should closely mirror what is displayed.** Derivation logic on the frontend should be kept minimal. If a value needs to be shown, it should be in State rather than computed client-side.
 - Multiple Controller States are composed into a single **macro-state** using a slice pattern, where each Controller's state occupies a named slice of the aggregate.
@@ -104,7 +106,7 @@ sequenceDiagram
 - **Backend owns all state transitions.** This means any UI interaction that changes what is displayed requires a round-trip to the backend. Latency-sensitive interactions need to be accounted for in the transport layer (outside this ADR's scope).
 
 > [!NOTE]
-> It is accepted that components may have their own state, partially disjoint from the backend state. While the backend state remains the source of truth, the frontend components may have their own state that reexpose part of the state of its controller, and its own presentation state, dedicated to the frontend specifics (e.g. hover) that wouldn't be tracked in the backend state
+> It is accepted that components may have their own state, partially disjoint from the backend state. While the backend state remains the source of truth, the frontend components may have their own state that re-expose part of the state of its controller, and its own presentation state, dedicated to the frontend specifics (e.g. hover) that wouldn't be tracked in the backend state
 
 - **Schema versioning will be required.** As the contract evolves, a versioning strategy must be defined to avoid breaking producers or consumers. This is deferred to a future RFC.
 - **A2-UI catalog coupling.** The initial Catalog definition is tied to A2-UI. This is an acknowledged constraint, not a permanent decision.
