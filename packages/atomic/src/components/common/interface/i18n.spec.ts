@@ -1,10 +1,14 @@
 import Backend from 'i18next-http-backend';
-import {describe, expect, it, vi} from 'vitest';
+import {afterEach, describe, expect, it, vi} from 'vitest';
 import type {AnyEngineType} from './bindings';
 import {i18nBackendOptions, init18n} from './i18n';
 import type {BaseAtomicInterface} from './interface-controller';
 
 describe('i18n', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   describe('#i18nBackendOptions', () => {
     it('should return an object with a loadPath and request function', () => {
       const atomicInterface = {
@@ -73,8 +77,6 @@ describe('i18n', () => {
         status: 200,
         data: {foo: 'bar'},
       });
-
-      vi.unstubAllGlobals();
     });
   });
 
