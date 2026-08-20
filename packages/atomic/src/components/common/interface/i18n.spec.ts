@@ -1,11 +1,15 @@
 import {createInstance} from 'i18next';
 import Backend from 'i18next-http-backend';
-import {describe, expect, it, vi} from 'vitest';
+import {afterEach, describe, expect, it, vi} from 'vitest';
 import type {AnyEngineType} from './bindings';
 import {i18nBackendOptions, init18n, loadTranslations} from './i18n';
 import type {BaseAtomicInterface} from './interface-controller';
 
 describe('i18n', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   describe('#i18nBackendOptions', () => {
     it('should return an object with a loadPath and request function', () => {
       const atomicInterface = {
@@ -52,10 +56,13 @@ describe('i18n', () => {
     it('should execute callback with data for supported locale and namespace', async () => {
       vi.stubGlobal('isI18nLocaleAvailable', () => true);
 
-      globalThis.fetch = vi.fn().mockResolvedValue({
-        status: 200,
-        json: () => Promise.resolve({foo: 'bar'}),
-      });
+      vi.stubGlobal(
+        'fetch',
+        vi.fn().mockResolvedValue({
+          status: 200,
+          json: () => Promise.resolve({foo: 'bar'}),
+        })
+      );
       const atomicInterface = {
         languageAssetsPath: '/foo',
       } as BaseAtomicInterface<AnyEngineType>;
@@ -71,8 +78,6 @@ describe('i18n', () => {
         status: 200,
         data: {foo: 'bar'},
       });
-
-      vi.unstubAllGlobals();
     });
   });
 
