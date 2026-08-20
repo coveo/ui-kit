@@ -22,7 +22,7 @@ describe('atomic-product-field-condition', () => {
   } = {}) => {
     const product = buildFakeProduct(productState);
 
-    const {element} = await renderInAtomicProduct<AtomicProductFieldCondition>({
+    const {element, atomicProduct} = await renderInAtomicProduct<AtomicProductFieldCondition>({
       template: html`
         <atomic-product-field-condition
           if-defined="${ifDefined}"
@@ -37,86 +37,92 @@ describe('atomic-product-field-condition', () => {
       product,
     });
 
-    return {
-      element,
-      content: element?.querySelector('#condition-met'),
+    // Deliberately queried from the product rather than from the condition element, and
+    // returned as a boolean, so that the assertions describe what the user can see instead
+    // of how the component hides its content.
+    const isContentVisible = () => {
+      const content = atomicProduct.shadowRoot!.querySelector<HTMLElement>('#condition-met');
+      return content !== null && content.checkVisibility();
     };
+
+    return {element, atomicProduct, isContentVisible};
   };
 
   it('should render its content when no conditions are defined', async () => {
-    const {content} = await renderProductFieldCondition();
-    expect(content).toBeInTheDocument();
+    const {isContentVisible} = await renderProductFieldCondition();
+
+    expect(isContentVisible()).toBe(true);
   });
 
   it('should render its content when an if-defined condition is met', async () => {
-    const {content} = await renderProductFieldCondition({
+    const {isContentVisible} = await renderProductFieldCondition({
       ifDefined: 'ec_brand',
       productState: {ec_brand: 'brand'},
     });
 
-    expect(content).toBeInTheDocument();
+    expect(isContentVisible()).toBe(true);
   });
 
   it('should not render its content when an if-defined condition is not met', async () => {
-    const {content} = await renderProductFieldCondition({
+    const {isContentVisible} = await renderProductFieldCondition({
       ifDefined: 'ec_brand',
       productState: {ec_brand: undefined},
     });
 
-    expect(content).toBeUndefined();
+    expect(isContentVisible()).toBe(false);
   });
 
   it('should render its content when an if-not-defined condition is met', async () => {
-    const {content} = await renderProductFieldCondition({
+    const {isContentVisible} = await renderProductFieldCondition({
       ifNotDefined: 'ec_brand',
       productState: {ec_brand: undefined},
     });
 
-    expect(content).toBeInTheDocument();
+    expect(isContentVisible()).toBe(true);
   });
 
   it('should not render its content when an if-not-defined condition is not met', async () => {
-    const {content} = await renderProductFieldCondition({
+    const {isContentVisible} = await renderProductFieldCondition({
       ifNotDefined: 'ec_brand',
       productState: {ec_brand: 'brand'},
     });
 
-    expect(content).toBeUndefined();
+    expect(isContentVisible()).toBe(false);
   });
 
   it('should render its content when a must-match condition is met', async () => {
-    const {content} = await renderProductFieldCondition({
+    const {isContentVisible} = await renderProductFieldCondition({
       mustMatch: {ec_brand: ['brand']},
       productState: {ec_brand: 'brand'},
     });
 
-    expect(content).toBeInTheDocument();
+    expect(isContentVisible()).toBe(true);
   });
 
   it('should not render its content when a must-match condition is not met', async () => {
-    const {content} = await renderProductFieldCondition({
+    const {isContentVisible} = await renderProductFieldCondition({
       mustMatch: {ec_brand: ['brand']},
       productState: {ec_brand: 'other-brand'},
     });
 
-    expect(content).toBeUndefined();
+    expect(isContentVisible()).toBe(false);
   });
 
   it('should render its content when a must-not-match condition is met', async () => {
-    const {content} = await renderProductFieldCondition({
+    const {isContentVisible} = await renderProductFieldCondition({
       mustNotMatch: {ec_brand: ['other-brand']},
       productState: {ec_brand: 'brand'},
     });
 
-    expect(content).toBeInTheDocument();
+    expect(isContentVisible()).toBe(true);
   });
 
   it('should not render its content when a must-not-match condition is not met', async () => {
-    const {content} = await renderProductFieldCondition({
+    const {isContentVisible} = await renderProductFieldCondition({
       mustNotMatch: {ec_brand: ['other-brand']},
       productState: {ec_brand: 'other-brand'},
     });
 
-    expect(content).toBeUndefined();
+    expect(isContentVisible()).toBe(false);
   });
 });

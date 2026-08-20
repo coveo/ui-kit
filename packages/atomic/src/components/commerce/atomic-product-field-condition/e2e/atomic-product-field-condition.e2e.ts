@@ -33,8 +33,8 @@ test.describe('atomic-product-field-condition', () => {
     page,
   }) => {
     await productFieldCondition.load({args: {'if-not-defined': 'ec_name'}});
+    await page.locator('atomic-product.hydrated').first().waitFor({state: 'attached'});
 
-    const elements = await page.locator('atomic-product-field-condition').all();
-    expect(elements.length).toBe(0);
+    await expect(productFieldCondition.visibleConditions).toHaveCount(0);
   });
 });
