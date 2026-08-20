@@ -13,22 +13,22 @@ The goal is to verify that **all aspects covered by Option A are covered by Opti
 
 The SDK controller **exists in both options**. What changes is only what the public schema exposes:
 
-|                           | Option A                                                                                  | Option B                                                                                     |
-| ------------------------- | ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| Schema exposes            | `controllerId` + `controllerSchema` (which defines state + actions)                       | `state` + `actions` directly                                                                 |
-| Transport identifiers     | `controllerId` (in the public schema, also serves as correlation)                         | `surfaceId` (transport correlation) + `componentId` (component type)                         |
-| SDK exposes               | `buildRemoteController`                                                                   | `buildRemoteController` (same API, renamed params)                                           |
-| Consumer uses             | `useAdvertisedController(source, props.controllers.X)`                                    | `useRemoteController(source, surfaceId, componentId)`                                        |
-| Contract resolution       | Server sends `controllerSchema` (URI) → runtime lookup in `ControllerContractsSchema`     | Server sends `componentId` (type) → automatic lookup in `ComponentContractsSchema`           |
+|                       | Option A                                                                              | Option B                                                                           |
+| --------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Schema exposes        | `controllerId` + `controllerSchema` (which defines state + actions)                   | `state` + `actions` directly                                                       |
+| Transport identifiers | `controllerId` (in the public schema, also serves as correlation)                     | `surfaceId` (transport correlation) + `componentId` (component type)               |
+| SDK exposes           | `buildRemoteController`                                                               | `buildRemoteController` (same API, renamed params)                                 |
+| Consumer uses         | `useAdvertisedController(source, props.controllers.X)`                                | `useRemoteController(source, surfaceId, componentId)`                              |
+| Contract resolution   | Server sends `controllerSchema` (URI) → runtime lookup in `ControllerContractsSchema` | Server sends `componentId` (type) → automatic lookup in `ComponentContractsSchema` |
 
 ---
 
 ## Transport vocabulary
 
-| Identifier    | Role                                                                                                     | Sent in                                                    | Visible to the consumer? |
-| ------------- | -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | ------------------------ |
-| `surfaceId`   | Unique per-instance identifier. Correlates `updateComponents` ↔ `updateDataModel`. Key in the data model. | Both messages (`updateComponents` and `updateDataModel`)   | Yes (passed to SDK)      |
-| `componentId` | Component type (`"Cart"`, `"ProductCarousel"`). Used to resolve the Zod contract.                        | `updateComponents`                                         | Yes (passed to SDK)      |
+| Identifier    | Role                                                                                                      | Sent in                                                  | Visible to the consumer? |
+| ------------- | --------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- | ------------------------ |
+| `surfaceId`   | Unique per-instance identifier. Correlates `updateComponents` ↔ `updateDataModel`. Key in the data model. | Both messages (`updateComponents` and `updateDataModel`) | Yes (passed to SDK)      |
+| `componentId` | Component type (`"Cart"`, `"ProductCarousel"`). Used to resolve the Zod contract.                         | `updateComponents`                                       | Yes (passed to SDK)      |
 
 ---
 
@@ -304,19 +304,19 @@ export type ComponentContracts = z.infer<typeof ComponentContractsSchema>;
 
 ## Summary
 
-| Aspect                      | Option A                                                         | Option B                                               | Change?                    |
-| --------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------ | -------------------------- |
-| SDK (`buildRemoteController`) | ✅                                                             | ✅                                                     | Params renamed             |
-| Zod state validation        | ✅                                                               | ✅                                                     | None                       |
-| Reference-based cache       | ✅                                                               | ✅                                                     | None                       |
-| Reactive subscribe          | ✅                                                               | ✅                                                     | None                       |
-| State type-safety           | Via `controllerSchema` generic                                   | Via `componentId` generic                              | Different discriminant     |
-| Action type-safety          | `dispatch<TAction>`                                              | `dispatch<TAction>`                                    | None                       |
-| Payload validation          | Zod in `dispatch()`                                              | Zod in `dispatch()`                                    | None                       |
-| Server routing              | `controllerId` + `controllerSchema`                              | `surfaceId` + `componentId`                            | Names changed              |
-| Instance identifier source  | `controllerId` (public schema)                                   | `surfaceId` (A2-UI transport)                          | **Changed**                |
-| Contract resolution         | `controllerSchema` URI → lookup in `ControllerContractsSchema`   | `componentId` → lookup in `ComponentContractsSchema`   | **Changed**                |
-| Public schema               | Exposes `controllers` with `controllerId` + `controllerSchema`   | Exposes `state` + `actions` directly                   | **Changed**                |
+| Aspect                        | Option A                                                       | Option B                                             | Change?                |
+| ----------------------------- | -------------------------------------------------------------- | ---------------------------------------------------- | ---------------------- |
+| SDK (`buildRemoteController`) | ✅                                                             | ✅                                                   | Params renamed         |
+| Zod state validation          | ✅                                                             | ✅                                                   | None                   |
+| Reference-based cache         | ✅                                                             | ✅                                                   | None                   |
+| Reactive subscribe            | ✅                                                             | ✅                                                   | None                   |
+| State type-safety             | Via `controllerSchema` generic                                 | Via `componentId` generic                            | Different discriminant |
+| Action type-safety            | `dispatch<TAction>`                                            | `dispatch<TAction>`                                  | None                   |
+| Payload validation            | Zod in `dispatch()`                                            | Zod in `dispatch()`                                  | None                   |
+| Server routing                | `controllerId` + `controllerSchema`                            | `surfaceId` + `componentId`                          | Names changed          |
+| Instance identifier source    | `controllerId` (public schema)                                 | `surfaceId` (A2-UI transport)                        | **Changed**            |
+| Contract resolution           | `controllerSchema` URI → lookup in `ControllerContractsSchema` | `componentId` → lookup in `ComponentContractsSchema` | **Changed**            |
+| Public schema                 | Exposes `controllers` with `controllerId` + `controllerSchema` | Exposes `state` + `actions` directly                 | **Changed**            |
 
 ---
 
@@ -424,24 +424,24 @@ export type ComponentContracts = z.infer<typeof ComponentContractsSchema>;
 
 ### Impacted files
 
-| File                                      | Change                                                                                                                       |
-| ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `a2ui/controllers.tsx`                    | `useAdvertisedController` → `useRemoteController` (signature: `surfaceId` + `componentId`)                                   |
-| `a2ui/components.tsx`                     | Simplified renderers. Simplified props schemas. No more `SCHEMA_ID` constant imports.                                        |
-| `@coveo/thermidor` (remote-controller.ts) | Renamed params (`surfaceId` + `componentId`). Lookup via `ComponentContractsSchema` instead of `ControllerContractsSchema`.   |
-| `@coveo/thermidor-schema`                 | `ControllerContractsSchema` → `ComponentContractsSchema` (discriminant = `componentId`). Auto-generated.                     |
+| File                                      | Change                                                                                                                      |
+| ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `a2ui/controllers.tsx`                    | `useAdvertisedController` → `useRemoteController` (signature: `surfaceId` + `componentId`)                                  |
+| `a2ui/components.tsx`                     | Simplified renderers. Simplified props schemas. No more `SCHEMA_ID` constant imports.                                       |
+| `@coveo/thermidor` (remote-controller.ts) | Renamed params (`surfaceId` + `componentId`). Lookup via `ComponentContractsSchema` instead of `ControllerContractsSchema`. |
+| `@coveo/thermidor-schema`                 | `ControllerContractsSchema` → `ComponentContractsSchema` (discriminant = `componentId`). Auto-generated.                    |
 
 ---
 
 ## Responsibilities and package boundaries
 
-| Responsibility                                                                   | Package                                                         | Changes with Option B?                             |
-| -------------------------------------------------------------------------------- | --------------------------------------------------------------- | -------------------------------------------------- |
-| `buildRemoteController` (resolution + validation + cache + subscribe + dispatch) | `@coveo/thermidor`                                              | Renamed params, lookup via `componentId`           |
-| `ComponentContractsSchema` (contract registry)                                   | `@coveo/thermidor-schema`                                       | **New** (replaces `ControllerContractsSchema`)     |
-| `useRemoteController` (React hook)                                               | Consumer (`a2ui/controllers.tsx`)                               | Simplified signature                               |
-| A2-UI component props schemas                                                    | Consumer (`a2ui/components.tsx`)                                | Simplified (`surfaceId` + `componentId`)           |
-| Contract resolution (componentId → Zod schema mapping)                           | `@coveo/thermidor` (automatic via `ComponentContractsSchema`)   | Consumer no longer does any mapping                |
+| Responsibility                                                                   | Package                                                       | Changes with Option B?                         |
+| -------------------------------------------------------------------------------- | ------------------------------------------------------------- | ---------------------------------------------- |
+| `buildRemoteController` (resolution + validation + cache + subscribe + dispatch) | `@coveo/thermidor`                                            | Renamed params, lookup via `componentId`       |
+| `ComponentContractsSchema` (contract registry)                                   | `@coveo/thermidor-schema`                                     | **New** (replaces `ControllerContractsSchema`) |
+| `useRemoteController` (React hook)                                               | Consumer (`a2ui/controllers.tsx`)                             | Simplified signature                           |
+| A2-UI component props schemas                                                    | Consumer (`a2ui/components.tsx`)                              | Simplified (`surfaceId` + `componentId`)       |
+| Contract resolution (componentId → Zod schema mapping)                           | `@coveo/thermidor` (automatic via `ComponentContractsSchema`) | Consumer no longer does any mapping            |
 
 **`@coveo/thermidor` remains framework-agnostic.** The consumer no longer passes a contract explicitly — it provides a `surfaceId` and a `componentId`, the SDK does the rest.
 
