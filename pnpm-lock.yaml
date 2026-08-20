@@ -1485,6 +1485,9 @@ importers:
       ajv-formats:
         specifier: 3.0.1
         version: 3.0.1(ajv@8.20.0)
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.23
       quicktype-core:
         specifier: 26.0.0
         version: 26.0.0

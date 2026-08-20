@@ -190,7 +190,8 @@ const componentPropsLines = renderComponentPropsSchemas(componentPropsEntries);
 
 const formatResult = await format(
   'schemas.ts',
-  [...lines, ...renderDiscriminatedUnions(discriminatedUnions), ...componentPropsLines].join('\n')
+  [...lines, ...renderDiscriminatedUnions(discriminatedUnions), ...componentPropsLines].join('\n'),
+  {singleQuote: true, trailingComma: 'es5'}
 );
 if (formatResult.errors.length > 0) {
   throw new Error(

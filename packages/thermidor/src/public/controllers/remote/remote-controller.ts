@@ -12,21 +12,19 @@ export interface RemoteControllerAction<TAction extends string = string, TPayloa
 
 export type RemoteControllerSchemaId = ControllerContracts['controllerSchema'];
 
-type ControllerContractSchema = (typeof ControllerContractsSchema)['options'][number];
-
-type ControllerContractSchemaFor<TSchema extends RemoteControllerSchemaId> = Extract<
-  ControllerContractSchema,
+export type RemoteControllerContractSchemaFor<TSchema extends RemoteControllerSchemaId> = Extract<
+  (typeof ControllerContractsSchema)['options'][number],
   {shape: {controllerSchema: {value: TSchema}}}
 >;
 
 export type RemoteControllerActionNameForSchema<TSchema extends RemoteControllerSchemaId> =
-  keyof z.infer<ControllerContractSchemaFor<TSchema>['shape']['actions']> & string;
+  keyof z.infer<RemoteControllerContractSchemaFor<TSchema>['shape']['actions']> & string;
 
 export type RemoteControllerActionPayloadForSchema<
   TSchema extends RemoteControllerSchemaId,
   TAction extends RemoteControllerActionNameForSchema<TSchema>,
 > =
-  z.infer<ControllerContractSchemaFor<TSchema>['shape']['actions']> extends Record<
+  z.infer<RemoteControllerContractSchemaFor<TSchema>['shape']['actions']> extends Record<
     TAction,
     {payload: infer TPayload}
   >
@@ -34,11 +32,7 @@ export type RemoteControllerActionPayloadForSchema<
     : never;
 
 export type RemoteControllerStateForSchema<TSchema extends RemoteControllerSchemaId> = z.infer<
-  ControllerContractSchemaFor<TSchema>['shape']['state']
->;
-
-export type RemoteControllerActionsForSchema<TSchema extends RemoteControllerSchemaId> = z.infer<
-  ControllerContractSchemaFor<TSchema>['shape']['actions']
+  RemoteControllerContractSchemaFor<TSchema>['shape']['state']
 >;
 
 /**
@@ -79,7 +73,7 @@ class RemoteControllerImpl<
   constructor(
     private readonly source: RemoteControllerSource,
     controllerId: string,
-    private readonly contract: ControllerContractSchemaFor<TSchema>
+    private readonly contract: RemoteControllerContractSchemaFor<TSchema>
   ) {
     this.controllerId = controllerId;
   }
@@ -159,9 +153,9 @@ export function buildRemoteController<TSchema extends RemoteControllerSchemaId>(
 
 function findControllerContract<TSchema extends RemoteControllerSchemaId>(
   schemaId: TSchema
-): ControllerContractSchemaFor<TSchema> {
+): RemoteControllerContractSchemaFor<TSchema> {
   const contract = ControllerContractsSchema.options.find(
-    (candidate): candidate is ControllerContractSchemaFor<TSchema> =>
+    (candidate): candidate is RemoteControllerContractSchemaFor<TSchema> =>
       candidate.shape.controllerSchema.value === schemaId
   );
   if (!contract) {
@@ -172,7 +166,7 @@ function findControllerContract<TSchema extends RemoteControllerSchemaId>(
 }
 
 function isRemoteControllerState<TSchema extends RemoteControllerSchemaId>(
-  contract: ControllerContractSchemaFor<TSchema>,
+  contract: RemoteControllerContractSchemaFor<TSchema>,
   state: unknown
 ): state is RemoteControllerStateForSchema<TSchema> {
   return contract.shape.state.safeParse(state).success;
