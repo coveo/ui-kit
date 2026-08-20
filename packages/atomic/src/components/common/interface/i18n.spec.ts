@@ -51,10 +51,13 @@ describe('i18n', () => {
     it('should execute callback with data for supported locale and namespace', async () => {
       vi.stubGlobal('isI18nLocaleAvailable', () => true);
 
-      globalThis.fetch = vi.fn().mockResolvedValue({
-        status: 200,
-        json: () => Promise.resolve({foo: 'bar'}),
-      });
+      vi.stubGlobal(
+        'fetch',
+        vi.fn().mockResolvedValue({
+          status: 200,
+          json: () => Promise.resolve({foo: 'bar'}),
+        })
+      );
       const atomicInterface = {
         languageAssetsPath: '/foo',
       } as BaseAtomicInterface<AnyEngineType>;
