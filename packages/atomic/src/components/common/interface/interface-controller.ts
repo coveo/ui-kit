@@ -1,11 +1,10 @@
 import type {LogLevel} from '@coveo/headless';
 import type {i18n, TFunction} from 'i18next';
-import Backend from 'i18next-http-backend';
 import type {LitElement, ReactiveController} from 'lit';
 import {setCoveoGlobal} from '@/src/global/environment';
 import {loadDayjsLocale} from '@/src/utils/dayjs-locales';
 import type {AnyBindings, AnyEngineType} from './bindings';
-import {i18nBackendOptions, i18nTranslationNamespace, init18n} from './i18n';
+import {init18n, loadTranslations} from './i18n';
 import '@/src/components/common/atomic-aria-live/atomic-aria-live';
 
 type InitializeEventHandler = (bindings: AnyBindings) => void;
@@ -99,20 +98,9 @@ export class InterfaceController<EngineType extends AnyEngineType> implements Re
     const {i18n} = this.host;
 
     loadDayjsLocale(languageWithFallback);
-    new Backend(i18n.services, i18nBackendOptions(this.host)).read(
-      languageWithFallback.split('-')[0],
-      i18nTranslationNamespace,
-      (_: unknown, data: unknown) => {
-        i18n.addResourceBundle(
-          languageWithFallback.split('-')[0],
-          i18nTranslationNamespace,
-          data,
-          true,
-          false
-        );
-        i18n.changeLanguage(language);
-      }
-    );
+    loadTranslations(this.host, languageWithFallback).then(() => {
+      i18n.changeLanguage(language);
+    });
   }
 
   public engineIsCreated(engine?: EngineType): engine is EngineType {

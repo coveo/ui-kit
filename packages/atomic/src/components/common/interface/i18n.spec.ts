@@ -1,7 +1,8 @@
+import {createInstance} from 'i18next';
 import Backend from 'i18next-http-backend';
 import {describe, expect, it, vi} from 'vitest';
 import type {AnyEngineType} from './bindings';
-import {i18nBackendOptions, init18n} from './i18n';
+import {i18nBackendOptions, init18n, loadTranslations} from './i18n';
 import type {BaseAtomicInterface} from './interface-controller';
 
 describe('i18n', () => {
@@ -100,6 +101,43 @@ describe('i18n', () => {
           compatibilityJSON: 'v4',
         })
       );
+    });
+  });
+  describe('#loadTranslations', () => {
+    it('should add the loaded bundle without overwriting existing values', async () => {
+      globalThis.fetch = vi.fn().mockResolvedValue({
+        status: 200,
+        json: () => Promise.resolve({greeting: 'Hello', farewell: 'Goodbye'}),
+      });
+
+      const i18n = createInstance();
+      await i18n.init({lng: 'en', fallbackLng: 'en', resources: {}});
+      i18n.addResourceBundle('en', 'translation', {greeting: 'Bonjour'});
+
+      await loadTranslations(
+        {i18n, languageAssetsPath: '/lang'} as unknown as BaseAtomicInterface<AnyEngineType>,
+        'en'
+      );
+
+      expect(i18n.t('greeting')).toBe('Bonjour');
+      expect(i18n.t('farewell')).toBe('Goodbye');
+    });
+
+    it('should strip the region from the requested language', async () => {
+      globalThis.fetch = vi.fn().mockResolvedValue({
+        status: 200,
+        json: () => Promise.resolve({greeting: 'Bonjour'}),
+      });
+
+      const i18n = createInstance();
+      await i18n.init({lng: 'fr', fallbackLng: 'en', resources: {}});
+
+      await loadTranslations(
+        {i18n, languageAssetsPath: '/lang'} as unknown as BaseAtomicInterface<AnyEngineType>,
+        'fr-CA'
+      );
+
+      expect(i18n.getResourceBundle('fr', 'translation')).toEqual({greeting: 'Bonjour'});
     });
   });
 });
