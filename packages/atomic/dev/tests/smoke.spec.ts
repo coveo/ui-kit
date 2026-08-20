@@ -15,15 +15,21 @@ const urls = [
   '/examples/modal.html',
   '/examples/suggestions.html',
   '/examples/fashion.html',
-  '/examples/insights.html',
+  '/insights.html',
   '/examples/recommendations.html',
   '/examples/horizontal-facets.html',
-  '/examples/genqa.html',
+  '/genqa.html',
   '/examples/tabs.html',
   '/examples/commerce-website/homepage.html',
   '/examples/commerce-website/search.html',
   '/examples/commerce-website/listing-pants.html',
 ];
+
+const legacyExampleRoutes = [
+  {legacyUrl: '/examples/insights.html', canonicalUrl: '/insights.html'},
+  {legacyUrl: '/examples/genqa.html', canonicalUrl: '/genqa.html'},
+];
+const legacyRouteSuffix = '?legacy-route=true#legacy-route';
 
 const styles: {[key: string]: string} = {
   '--atomic-primary': 'rgb(255, 192, 203)',
@@ -81,6 +87,15 @@ test.describe('style encapsulation', () => {
       const stylesError = page.locator('.styles-error');
       await stylesError.waitFor({state: 'attached'});
       await expect(stylesError).not.toBeVisible();
+    });
+  }
+});
+
+test.describe('legacy example routes', () => {
+  for (const {legacyUrl, canonicalUrl} of legacyExampleRoutes) {
+    test(`${legacyUrl} redirects to ${canonicalUrl}`, async ({page}) => {
+      await page.goto(`${baseUrl}${legacyUrl}${legacyRouteSuffix}`);
+      await expect(page).toHaveURL(`${baseUrl}${canonicalUrl}${legacyRouteSuffix}`);
     });
   }
 });
