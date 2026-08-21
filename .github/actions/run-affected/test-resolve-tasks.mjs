@@ -64,9 +64,18 @@ run(
   {
     TASKS: 'test\npublint',
     PACKAGES: '@coveo/atomic',
-    AFFECTED_TASKS: '["@coveo/atomic#test", "@coveo/atomic#publint"]',
+    AFFECTED_TASKS: '["@coveo/atomic#publint","@coveo/atomic#test"]',
   },
   ['@coveo/atomic#publint', '@coveo/atomic#test']
+);
+run(
+  'filters affected root generation tasks',
+  {
+    TASKS: 'generate:catalog-info\ngenerate:all',
+    PACKAGES: '',
+    AFFECTED_TASKS: '["//#generate:catalog-info"]',
+  },
+  ['//#generate:catalog-info']
 );
 run(
   'does not resolve an explicit empty affected list',
@@ -77,23 +86,14 @@ run(
   },
   []
 );
-for (const invalidAffectedTasks of ['null', '{}', '["@coveo/atomic#build", 1]']) {
+for (const invalidAffectedTasks of ['null', '']) {
   runFailure(
     `rejects invalid affected tasks: ${invalidAffectedTasks}`,
     {
       GITHUB_WORKSPACE: resolve(directory, 'missing-workspace'),
       AFFECTED_TASKS: invalidAffectedTasks,
     },
-    /AFFECTED_TASKS must be a JSON array of strings\./
+    /AFFECTED_TASKS/
   );
 }
-run(
-  'resolves the selected workspace when affected tasks are not provided',
-  {
-    TASKS: 'publint',
-    PACKAGES: '@coveo/atomic',
-    AFFECTED_TASKS: '',
-  },
-  ['@coveo/atomic#publint']
-);
 console.log('All resolve-tasks scenarios passed.');

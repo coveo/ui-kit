@@ -1,9 +1,3 @@
-import {existsSync, globSync, readFileSync, statSync} from 'node:fs';
-import {resolve} from 'node:path';
-import {parse} from 'yaml';
-
-const root = resolve(process.env.GITHUB_WORKSPACE ?? process.cwd());
-
 const splitLines = (value = '') =>
   value
     .split('\n')
@@ -27,79 +21,66 @@ const globToRegExp = (pattern) => {
 
 const matchesPattern = (value, pattern) => globToRegExp(pattern).test(value);
 
-const matchesPackage = (project, packageName) => matchesPattern(project.name, packageName);
-
 const parsePackages = (value) => {
-  const packages = splitLines(value).map((packageName) => {
-    const negative = packageName.startsWith('!');
+  const rules = splitLines(value).map((packageName) => {
+    const included = !packageName.startsWith('!');
     return {
-      negative,
-      pattern: packageName.slice(negative ? 1 : 0),
+      included,
+      pattern: packageName.slice(included ? 0 : 1),
     };
   });
 
-  const positive = packages.filter(({negative}) => !negative);
-  const negative = packages.filter(({negative}) => negative);
+  // If it contains any "inclusion" rules, default to false
+  // Otherwise (including if empty), default to true
+  const defaultIncluded = !rules.some((rule) => rule.included);
 
   return (project) => {
-    const included =
-      positive.length === 0 || positive.some(({pattern}) => matchesPackage(project, pattern));
-    const excluded = negative.some(({pattern}) => matchesPackage(project, pattern));
-    return included && !excluded;
+    let included = defaultIncluded;
+    // Last rule wins
+    for (const rule of rules) {
+      if (matchesPattern(project, rule.pattern)) {
+        included = rule.included;
+      }
+    }
+    return included;
   };
 };
 
-const readPackage = (directory) => {
-  const path = resolve(root, directory, 'package.json');
-  const pkg = JSON.parse(readFileSync(path, 'utf8'));
+const parseJsonInput = (varName) => {
+  const input = process.env[varName] ?? '';
 
-  return {
-    name: pkg.name,
-    scripts: pkg.scripts ?? {},
-  };
-};
-
-const readWorkspacePackages = () => {
-  const workspace = parse(readFileSync(resolve(root, 'pnpm-workspace.yaml'), 'utf8'));
-  const directories = new Set(
-    (workspace.packages ?? []).flatMap((pattern) => globSync(pattern, {cwd: root}))
-  );
-  return [...directories]
-    .filter((directory) => statSync(resolve(root, directory)).isDirectory())
-    .filter((directory) => existsSync(resolve(root, directory, 'package.json')))
-    .map(readPackage);
-};
-
-const parseInputs = () => {
-  const requestedTasks = splitLines(process.env.TASKS || 'build');
-  const matchesPackage = parsePackages(process.env.PACKAGES);
-
-  const affectedInput = process.env.AFFECTED_TASKS ?? '';
-  const affectedTasks = affectedInput == '' ? null : JSON.parse(affectedInput);
-
-  if (
-    affectedInput != '' &&
-    (!Array.isArray(affectedTasks) || affectedTasks.some((task) => typeof task !== 'string'))
-  ) {
-    throw new TypeError('AFFECTED_TASKS must be a JSON array of strings.');
+  if (input === '') {
+    throw new TypeError(`${varName} must be defined.`);
   }
 
-  return {requestedTasks, matchesPackage, affectedTasks};
+  let value;
+
+  try {
+    value = JSON.parse(input);
+  } catch (error) {
+    throw new TypeError(`${varName} is not valid JSON: ${error}`);
+  }
+
+  if (value === null) {
+    throw new TypeError(`${varName} must be defined.`);
+  }
+
+  return value;
 };
+
+const parseInputs = () => ({
+  requestedTasks: new Set(splitLines(process.env.TASKS || 'build')),
+  matchesPackage: parsePackages(process.env.PACKAGES),
+  affectedTasks: parseJsonInput('AFFECTED_TASKS'),
+});
 
 const resolveTasks = () => {
   const {requestedTasks, matchesPackage, affectedTasks} = parseInputs();
-  const packages = readWorkspacePackages();
-  const projects = matchesPackage ? packages.filter(matchesPackage) : packages;
-  const tasks = projects.flatMap((project) =>
-    Object.keys(project.scripts).map((task) => ({project, task}))
-  );
 
-  return tasks
-    .filter(({task}) => requestedTasks.includes(task))
-    .map(({project, task}) => `${project.name}#${task}`)
-    .filter((task) => affectedTasks === null || affectedTasks.includes(task))
-    .sort();
+  return affectedTasks.filter((taskId) => {
+    const [project, task] = taskId.split('#');
+    return requestedTasks.has(task) && matchesPackage(project);
+  });
 };
 
 const tasks = resolveTasks();
