@@ -1,5 +1,5 @@
 import {execFileSync} from 'node:child_process';
-import {appendFileSync, existsSync, readFileSync, writeFileSync} from 'node:fs';
+import {appendFileSync, existsSync, readFileSync} from 'node:fs';
 import {join} from 'node:path';
 
 const {

@@ -161,7 +161,7 @@ jobs:
             !@coveo/ui-kit-sample-*
         env:
           DEPLOYMENT_ENVIRONMENT: CDN
-          CDN_COMMIT_SHA: ${{ inputs.commit-sha }}
+          CDN_COMMIT_SHA: ${{ github.sha }}
 
   knip:
     name: 'Look for unused code or dependencies'
