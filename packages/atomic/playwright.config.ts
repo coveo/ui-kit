@@ -1,3 +1,4 @@
+// Temporary no-op change to make @coveo/atomic#e2e affected for CI verification.
 import {defineConfig, devices} from '@playwright/test';
 
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
