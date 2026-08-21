@@ -57,6 +57,11 @@
         "!./src/**/e2e/**"
       ]
     },
+    "dev:lit": {
+      "dependsOn": ["build:lit"],
+      "cache": false,
+      "persistent": true
+    },
     "build:lit": {
       "dependsOn": ["^build", "build:locales", "build:indexes"],
       "outputs": [

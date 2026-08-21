@@ -1,0 +1,18 @@
+{
+  "name": "@coveo/atomic-playground",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Local playground for developing Atomic components against a real interface, with hot reload for Atomic and Headless changes",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently --names headless-esm,headless-types,atomic,vite --prefix-colors cyan,blue,magenta,green \"pnpm --filter @coveo/headless run dev:esm\" \"pnpm --filter @coveo/headless run dev:definitions\" \"pnpm --filter @coveo/atomic run dev:lit\" \"vite\"",
+    "serve": "vite"
+  },
+  "devDependencies": {
+    "@coveo/atomic": "workspace:*",
+    "@coveo/headless": "workspace:*",
+    "@types/node": "catalog:",
+    "concurrently": "9.2.4",
+    "vite": "catalog:"
+  }
+}

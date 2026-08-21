@@ -63,6 +63,7 @@
     "build:assets": "node scripts/build-assets.mjs",
     "build:themes": "node scripts/build-themes.mjs",
     "build:lit": "rslib build",
+    "dev:lit": "rslib build --watch --no-clean",
     "build:cdn": "node rsbuild.cdn.mjs",
     "build:angular": "npx turbo gen:lit --filter=@coveo/atomic-angular-builder",
     "build:react": "npx turbo gen:lit --filter=@coveo/atomic-react",
