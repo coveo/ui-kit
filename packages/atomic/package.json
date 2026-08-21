@@ -72,7 +72,6 @@
     "web:cdn": "node ./scripts/start-cdn.mjs",
     "e2e": "playwright test",
     "e2e:csp": "node ./csp/test.mjs || exit 0",
-    "e2e:theming": "playwright test -c dev",
     "test": "pnpm run test:lit",
     "test:stencil": "stencil test --spec -- src/utils/initialization-utils.spec.ts",
     "test:lit": "vitest run --project=atomic-default",
