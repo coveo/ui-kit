@@ -51,6 +51,54 @@
     },
     "validate:types:build-scripts": {
       "outputs": []
+    },
+    "lint:check:eslint": {
+      "inputs": [
+        "package.json",
+        "force-app/main/default/.eslintrc.json",
+        "force-app/main/default/lwc/**",
+        "force-app/examples/main/lwc/**"
+      ],
+      "outputs": []
+    },
+    "lint:check:prettier": {
+      "inputs": [
+        "package.json",
+        ".prettierrc.js",
+        "force-app/**/*.js",
+        "force-app/**/*.cls",
+        "force-app/**/*.trigger"
+      ],
+      "outputs": []
+    },
+    "lint:check:all": {
+      "extends": false,
+      "dependsOn": ["lint:check:eslint", "lint:check:prettier", "//#lint:check:cspell"],
+      "outputs": []
+    },
+    "lint:fix:eslint": {
+      "inputs": [
+        "package.json",
+        "force-app/main/default/.eslintrc.json",
+        "force-app/main/default/lwc/**",
+        "force-app/examples/main/lwc/**"
+      ],
+      "outputs": []
+    },
+    "lint:fix:prettier": {
+      "inputs": [
+        "package.json",
+        ".prettierrc.js",
+        "force-app/**/*.js",
+        "force-app/**/*.cls",
+        "force-app/**/*.trigger"
+      ],
+      "outputs": []
+    },
+    "lint:fix:all": {
+      "extends": false,
+      "dependsOn": ["lint:fix:eslint", "lint:fix:prettier", "//#lint:check:cspell"],
+      "outputs": []
     }
   }
 }
