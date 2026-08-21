@@ -1,0 +1,21 @@
+{
+  "name": "@coveo/atomic-playground",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Local playground for developing Atomic components against a real interface, with hot reload for Atomic and Headless changes",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "serve": "vite"
+  },
+  "devDependencies": {
+    "@coveo/atomic": "workspace:*",
+    "@coveo/headless": "workspace:*",
+    "@tailwindcss/postcss": "4.3.3",
+    "@tailwindcss/vite": "4.3.3",
+    "@types/node": "catalog:",
+    "dayjs": "catalog:",
+    "postcss": "8.5.26",
+    "vite": "catalog:"
+  }
+}
