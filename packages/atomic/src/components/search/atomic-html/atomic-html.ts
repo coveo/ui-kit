@@ -5,6 +5,7 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
+
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
