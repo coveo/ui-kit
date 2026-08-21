@@ -1,23 +1,12 @@
 const links = [
   {href: '/', label: 'Main'},
   {href: '/examples/custom.html', label: 'Custom'},
-  {href: '/examples/external.html', label: 'External'},
-  {href: '/examples/folding.html', label: 'Folding'},
   {href: '/examples/slack.html', label: 'Slack'},
   {href: '/examples/headless.html', label: 'Headless'},
-  {href: '/examples/standalone.html', label: 'Standalone'},
   {href: '/examples/modal.html', label: 'Modal'},
   {href: '/examples/suggestions.html', label: 'Custom Query Suggestions'},
-  {href: '/examples/fashion.html', label: 'Fashion (Instant results + Recs)'},
   {href: '/examples/insights.html', label: 'Insight Panel'},
-  {
-    href: '/examples/recommendations.html',
-    label: 'Recommendations',
-  },
-  {href: '/examples/horizontal-facets.html', label: 'Horizontal Facets'},
-  {href: '/examples/ipx.html', label: 'IPX'},
   {href: '/examples/genqa.html', label: 'Gen Q&A'},
-  {href: '/examples/tabs.html', label: 'Tabs'},
   {href: '/examples/commerce-website/homepage.html', label: 'Commerce Website'},
 ];
 
