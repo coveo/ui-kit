@@ -2,9 +2,13 @@ import {basename, dirname, relative} from 'node:path';
 import {argv} from 'node:process';
 import {fileURLToPath} from 'node:url';
 import {
+  createEmitAndSemanticDiagnosticsBuilderProgram,
   createProgram,
+  createWatchCompilerHost,
+  createWatchProgram,
   DiagnosticCategory,
   flattenDiagnosticMessageText,
+  formatDiagnostic,
   getLineAndCharacterOfPosition,
   getPreEmitDiagnostics,
   parseJsonConfigFileContent,
@@ -25,6 +29,7 @@ if (configArg === undefined) {
   throw new Error('Missing --config=[PATH] argument');
 }
 const tsConfigPath = configArg.split('=')[1];
+const watchMode = args.includes('--watch');
 const transformers = [versionTransformer, analyticsTransformer, wildcardExportTransformer];
 
 function loadTsConfig(configPath) {
@@ -94,9 +99,65 @@ function compileWithTransformer() {
   process.exit(exitCode);
 }
 
+/**
+ * Recompiles on every change, applying the same custom transformers as a one-shot build.
+ *
+ * TypeScript's watch API emits through the builder program it creates, so the transformers
+ * have to be injected by taking over `afterProgramCreate` rather than by calling `emit`
+ * directly as the one-shot path does. The write callback is supplied explicitly because the
+ * watch host does not persist emitted output on its own.
+ */
+function watchWithTransformer() {
+  console.log(colors.blue('Using tsconfig:'), colors.green(basename(tsConfigPath)));
+
+  const host = createWatchCompilerHost(
+    tsConfigPath,
+    {},
+    sys,
+    createEmitAndSemanticDiagnosticsBuilderProgram,
+    (diagnostic) => process.stderr.write(formatDiagnostic(diagnostic, formatHost)),
+    (diagnostic) =>
+      console.log(colors.blue(flattenDiagnosticMessageText(diagnostic.messageText, '\n')))
+  );
+
+  host.afterProgramCreate = (builderProgram) => {
+    let emittedFileCount = 0;
+    const targetSourceFile = undefined;
+    const cancellationToken = undefined;
+    const emitOnlyDtsFiles = false;
+
+    builderProgram.emit(
+      targetSourceFile,
+      (fileName, text, writeByteOrderMark) => {
+        sys.writeFile(fileName, text, writeByteOrderMark);
+        emittedFileCount++;
+      },
+      cancellationToken,
+      emitOnlyDtsFiles,
+      {before: transformers}
+    );
+
+    console.log(colors.green(`Emitted ${emittedFileCount} files.`));
+  };
+
+  watchProgram = createWatchProgram(host);
+}
+
+let watchProgram;
+
+const formatHost = {
+  getCanonicalFileName: (fileName) => fileName,
+  getCurrentDirectory: sys.getCurrentDirectory,
+  getNewLine: () => sys.newLine,
+};
+
 try {
   console.log(colors.blue('Starting TypeScript compilation'));
-  compileWithTransformer();
+  if (watchMode) {
+    watchWithTransformer();
+  } else {
+    compileWithTransformer();
+  }
 } catch (error) {
   console.error(colors.red('Build failed:'), error);
   process.exit(1);
