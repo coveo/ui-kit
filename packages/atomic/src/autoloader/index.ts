@@ -142,4 +142,3 @@ export function registerAutoloader(
     initializeDiscovery();
   }
 }
-//# sourceMappingURL=index.js.map
