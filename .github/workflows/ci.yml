@@ -167,7 +167,7 @@ jobs:
     name: 'Look for unused code or dependencies'
     if: ${{ contains(needs.affected.outputs.tasks, '#build"') }}
     runs-on: ubuntu-latest
-    needs: affected
+    needs: [affected, build]
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
@@ -281,7 +281,7 @@ jobs:
       - run: pnpm exec turbo run validate:no-new-light-dom --filter=@coveo/atomic
   unit-test:
     name: 'Run unit tests'
-    needs: affected
+    needs: [affected, build]
     # Best effort at short-circuiting
     if: contains(needs.affected.outputs.tasks, '#test"')
     runs-on: ubuntu-latest
