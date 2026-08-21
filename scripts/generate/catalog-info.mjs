@@ -9,14 +9,14 @@
  * - catalog-info.yaml (the Location entity that references all component files)
  *
  * Usage:
- *   node scripts/generate-catalog-info.mjs
+ *   node scripts/generate/catalog-info.mjs
  */
 
 import {readFileSync, writeFileSync, readdirSync, statSync, existsSync} from 'node:fs';
 import {resolve, relative} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
-const rootDir = resolve(fileURLToPath(import.meta.url), '..', '..');
+const rootDir = resolve(fileURLToPath(import.meta.url), '..', '..', '..');
 const packagesDir = resolve(rootDir, 'packages');
 
 /**
