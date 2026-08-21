@@ -674,6 +674,33 @@ importers:
         specifier: 'catalog:'
         version: 0.3.23
 
+  packages/atomic-playground:
+    devDependencies:
+      '@coveo/atomic':
+        specifier: workspace:*
+        version: link:../atomic
+      '@coveo/headless':
+        specifier: workspace:*
+        version: link:../headless
+      '@tailwindcss/postcss':
+        specifier: 4.3.3
+        version: 4.3.3
+      '@tailwindcss/vite':
+        specifier: 4.3.3
+        version: 4.3.3(vite@8.2.1(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(less@4.8.1)(sass@1.102.0)(terser@5.49.0)(yaml@2.9.0))
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
+      dayjs:
+        specifier: 'catalog:'
+        version: 1.11.21
+      postcss:
+        specifier: 8.5.26
+        version: 8.5.26
+      vite:
+        specifier: 'catalog:'
+        version: 8.2.1(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(less@4.8.1)(sass@1.102.0)(terser@5.49.0)(yaml@2.9.0)
+
   packages/atomic-react:
     dependencies:
       '@coveo/atomic':

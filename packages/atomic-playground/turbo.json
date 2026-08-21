@@ -1,0 +1,16 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "dev": {
+      "dependsOn": [
+        "@coveo/atomic-legacy#build",
+        "@coveo/atomic#build:indexes",
+        "@coveo/atomic#build:locales",
+        "@coveo/atomic#build:assets",
+        "@coveo/atomic#build:themes"
+      ],
+      "cache": false,
+      "persistent": true
+    }
+  }
+}
