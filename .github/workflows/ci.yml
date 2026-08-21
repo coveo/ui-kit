@@ -45,7 +45,7 @@ jobs:
   build-windows:
     name: 'Build Windows'
     needs: affected
-    if: ${{ needs.affected.outputs.projects != '[]' && (github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/')) }}
+    if: ${{ contains(needs.affected.outputs.tasks, '#build') && (github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/')) }}
     runs-on: windows-latest
     permissions:
       contents: read
@@ -68,7 +68,7 @@ jobs:
   build-missing:
     name: 'Build & commit missing generated files'
     needs: [affected, build]
-    if: ${{ needs.affected.outputs.projects != '[]' && (github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/')) }}
+    if: ${{ contains(needs.affected.outputs.tasks, '#build') && (github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/')) }}
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -116,7 +116,7 @@ jobs:
   build:
     name: 'Build'
     needs: affected
-    if: needs.affected.outputs.projects != '[]'
+    if: contains(needs.affected.outputs.tasks, '#build')
     runs-on: ubuntu-latest
     environment: PR Artifacts
     steps:
@@ -139,7 +139,7 @@ jobs:
   build-cdn:
     name: Build CDN
     needs: affected
-    if: ${{ needs.affected.outputs.projects != '[]' && (github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/')) }}
+    if: ${{ contains(needs.affected.outputs.tasks, '#build') && (github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/')) }}
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -165,7 +165,7 @@ jobs:
 
   knip:
     name: 'Look for unused code or dependencies'
-    if: ${{ needs.affected.outputs.projects != '[]' }}
+    if: ${{ contains(needs.affected.outputs.tasks, '#build') }}
     runs-on: ubuntu-latest
     needs: affected
     steps:
@@ -184,15 +184,20 @@ jobs:
           tasks: build
       - name: Run selected Knip workspaces
         env:
-          PROJECTS: ${{ needs.affected.outputs.projects }}
+          TASKS: ${{ needs.affected.outputs.tasks }}
+          JQ_QUERY: |
+            [.[] | select(contains("#build")) | split("#")[0]]
+            | unique
+            | .[]
+            | "--workspace " + (if . == "//" then "." else . end)
         run: |
-          jq -r '.[] | "--workspace " + (if . == "//" then "." else . end)' <<< "${PROJECTS}" \
+          jq -r "${JQ_QUERY}" <<< "${TASKS}" \
             | xargs pnpm exec knip --exclude catalog
 
   cdn-checks:
     name: 'CDN Checks'
     needs: [affected, build-cdn]
-    if: needs.build-cdn.result == 'success' && (contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic') || contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic-hosted-page'))
+    if: needs.build-cdn.result == 'success' && (contains(needs.affected.outputs.tasks, '"@coveo/atomic#build"') || contains(needs.affected.outputs.tasks, '"@coveo/atomic-hosted-page#build"'))
     env:
       DEPLOYMENT_ENVIRONMENT: CDN
     runs-on: ubuntu-latest
@@ -236,7 +241,7 @@ jobs:
   validate-light-dom-styles:
     name: 'Validate Light DOM styles'
     needs: affected
-    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic')
+    if: contains(needs.affected.outputs.tasks, '"@coveo/atomic#validate:light-dom-styles"')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -249,15 +254,11 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/run-affected
-        with:
-          affected-tasks: ${{ needs.affected.outputs.tasks }}
-          tasks: validate:light-dom-styles
-          packages: '@coveo/atomic'
+      - run: pnpm exec turbo run validate:light-dom-styles --filter=@coveo/atomic
   validate-no-new-light-dom:
     name: 'Validate no new Light DOM components'
     needs: affected
-    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic')
+    if: contains(needs.affected.outputs.tasks, '"@coveo/atomic#validate:no-new-light-dom"')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -270,11 +271,7 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/run-affected
-        with:
-          affected-tasks: ${{ needs.affected.outputs.tasks }}
-          tasks: validate:no-new-light-dom
-          packages: '@coveo/atomic'
+      - run: pnpm exec turbo run validate:no-new-light-dom --filter=@coveo/atomic
   unit-test:
     name: 'Run unit tests'
     needs: affected
@@ -301,10 +298,10 @@ jobs:
         with:
           affected-tasks: ${{ needs.affected.outputs.tasks }}
           tasks: test
-  relay-tests:
-    name: 'Run Relay functional and playground smoke tests'
+  relay-functional-tests:
+    name: 'Run Relay functional tests'
     needs: [affected, build]
-    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/relay') || contains(fromJSON(needs.affected.outputs.projects), '@coveo/relay-playground')
+    if: contains(needs.affected.outputs.tasks, '"@coveo/relay#functional-test"')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
@@ -316,20 +313,11 @@ jobs:
           egress-policy: audit
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/run-affected
-        with:
-          affected-tasks: ${{ needs.affected.outputs.tasks }}
-          tasks: functional-test
-          packages: '@coveo/relay'
-      - uses: ./.github/actions/run-affected
-        with:
-          affected-tasks: ${{ needs.affected.outputs.tasks }}
-          tasks: test
-          packages: '@coveo/relay-playground'
+      - run: pnpm exec turbo run functional-test --filter=@coveo/relay
   validate-dts:
     name: 'Validate DTS API surface'
     needs: [affected, build]
-    if: ${{ contains(fromJSON(needs.affected.outputs.projects), '@coveo/thermidor') }}
+    if: ${{ contains(needs.affected.outputs.tasks, '"@coveo/thermidor#validate:test:dts:ci"') }}
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -342,11 +330,7 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/run-affected
-        with:
-          affected-tasks: ${{ needs.affected.outputs.tasks }}
-          tasks: test:dts:ci
-          packages: '@coveo/thermidor'
+      - run: pnpm exec turbo run validate:test:dts:ci --filter=@coveo/thermidor
   package-compatibility:
     name: 'Verify compatibility of packages'
     needs: [affected, build]
@@ -370,7 +354,7 @@ jobs:
   typedoc:
     name: 'Build typedoc'
     needs: [affected, build]
-    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/headless') || contains(fromJSON(needs.affected.outputs.projects), '@coveo/headless-react')
+    if: contains(needs.affected.outputs.tasks, '#build:typedoc"')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -390,7 +374,7 @@ jobs:
   puppeteer-atomic-csp:
     name: 'Run e2e tests on Atomic CSP'
     needs: [affected, build]
-    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic')
+    if: contains(needs.affected.outputs.tasks, '"@coveo/atomic#build"')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -433,7 +417,7 @@ jobs:
         # Example: `["renovate/playwright", "renovate/chromatic"]`
         if: >-
           needs.build.result == 'success' &&
-          contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic') &&
+          contains(needs.affected.outputs.tasks, '"@coveo/atomic#build"') &&
           github.event_name == 'pull_request' &&
           (!startsWith(github.head_ref, 'renovate/') ||
           contains(fromJSON(vars.CHROMATIC_RENOVATE_ALLOWLIST || '[]'), github.head_ref))
@@ -451,7 +435,7 @@ jobs:
   playwright-atomic:
     name: 'Run Playwright tests for Atomic'
     needs: [affected, build]
-    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic')
+    if: contains(needs.affected.outputs.tasks, '"@coveo/atomic#build"')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
@@ -504,7 +488,7 @@ jobs:
   playwright-atomic-theming:
     name: 'Run theming smoke tests for Atomic'
     needs: [affected, build]
-    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic-theming-e2e')
+    if: contains(needs.affected.outputs.tasks, '"@coveo/atomic-theming-e2e#build"')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
@@ -524,7 +508,7 @@ jobs:
   storybook-atomic:
     name: 'Run Storybook tests'
     needs: [affected, build]
-    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic')
+    if: contains(needs.affected.outputs.tasks, '"@coveo/atomic#test:storybook"')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
@@ -546,13 +530,7 @@ jobs:
           filter: blob:none
       - run: git branch main origin/main
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/run-affected
-        with:
-          affected-tasks: ${{ needs.affected.outputs.tasks }}
-          packages: '@coveo/atomic'
-          tasks: test:storybook
-          arguments: |
-            --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+      - run: pnpm exec turbo run test:storybook --filter=@coveo/atomic -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
       - name: 'Upload a11y shard report'
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
@@ -567,7 +545,7 @@ jobs:
     if: >-
       ${{
         always() &&
-        contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic')
+        contains(needs.affected.outputs.tasks, '"@coveo/atomic#test:storybook"')
       }}
     runs-on: ubuntu-latest
     steps:
@@ -637,7 +615,7 @@ jobs:
   playwright-pkg-new-template-test:
     name: 'Run smoke tests on pkg-new-template'
     needs: [affected, build]
-    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/pkg-new-template')
+    if: contains(needs.affected.outputs.tasks, '"@coveo/pkg-new-template#build"')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
@@ -658,7 +636,7 @@ jobs:
   playwright-atomic-hosted-page-test:
     name: 'Run e2e tests for Atomic Hosted Page'
     needs: [affected, build]
-    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic-hosted-page')
+    if: contains(needs.affected.outputs.tasks, '"@coveo/atomic-hosted-page#build"')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
@@ -681,7 +659,7 @@ jobs:
     needs: [affected, build]
     if: >-
       ${{
-        contains(fromJSON(needs.affected.outputs.projects), '@coveo/quantic') &&
+        contains(needs.affected.outputs.tasks, '"@coveo/quantic#build"') &&
         !(github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'skip-quantic'))
       }}
     permissions:
