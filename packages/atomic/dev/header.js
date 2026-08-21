@@ -3,8 +3,6 @@ const links = [
   {href: '/examples/custom.html', label: 'Custom'},
   {href: '/examples/slack.html', label: 'Slack'},
   {href: '/examples/headless.html', label: 'Headless'},
-  {href: '/examples/modal.html', label: 'Modal'},
-  {href: '/examples/suggestions.html', label: 'Custom Query Suggestions'},
   {href: '/examples/insights.html', label: 'Insight Panel'},
   {href: '/examples/genqa.html', label: 'Gen Q&A'},
   {href: '/examples/commerce-website/homepage.html', label: 'Commerce Website'},
