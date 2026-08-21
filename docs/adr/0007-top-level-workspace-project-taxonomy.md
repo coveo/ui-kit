@@ -76,7 +76,7 @@ A project belongs to the class that describes its primary interface:
 - If it automates repository maintenance, build, release, or CI operations, it is a tool.
 - If its contents are source material for generated projects, it is a template.
 
-The presence of a `package.json`, the pnpm `private` field, and inclusion in the workspace graph do not determine placement. Publication and versioning policies remain manifest and Changesets concerns.
+The presence of a `package.json`, the pnpm `private` field, and inclusion in the workspace graph do not determine placement. Publication and versioning continue to be governed by package manifests and Changesets, not workspace location.
 
 Package-specific tests, tools, fixtures, and templates remain colocated with their owning package. They become top-level workspaces only when they are independently operated, independently owned, or shared across projects.
 
