@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Atomic playground</title>
+    <title>Atomic playground: Gen Q&amp;A</title>
     <link rel="icon" href="data:," />
-    <script type="module" src="./search.js"></script>
+    <script type="module" src="./genqa.js"></script>
     <style>
       body {
         margin: 0;
@@ -16,7 +16,7 @@
   <body>
     <atomic-search-interface language-assets-path="/lang" icon-assets-path="/assets">
       <atomic-search-layout>
-        <atomic-layout-section section="search">
+        <atomic-layout-section section="search" expanding>
           <atomic-search-box></atomic-search-box>
         </atomic-layout-section>
         <atomic-layout-section section="facets">
@@ -27,16 +27,12 @@
           </atomic-facet-manager>
         </atomic-layout-section>
         <atomic-layout-section section="main">
+          <atomic-generated-answer></atomic-generated-answer>
           <atomic-layout-section section="status">
             <atomic-breadbox></atomic-breadbox>
             <atomic-query-summary></atomic-query-summary>
-            <atomic-sort-dropdown>
-              <atomic-sort-expression label="relevance" expression="relevancy">
-              </atomic-sort-expression>
-              <atomic-sort-expression label="most-recent" expression="date descending">
-              </atomic-sort-expression>
-            </atomic-sort-dropdown>
             <atomic-did-you-mean></atomic-did-you-mean>
+            <atomic-notifications></atomic-notifications>
           </atomic-layout-section>
           <atomic-layout-section section="results">
             <atomic-result-list>
@@ -56,14 +52,6 @@
                   <atomic-result-section-excerpt>
                     <atomic-result-text field="excerpt"></atomic-result-text>
                   </atomic-result-section-excerpt>
-                  <atomic-result-section-bottom-metadata>
-                    <atomic-result-fields-list>
-                      <atomic-field-condition if-defined="author">
-                        <span><atomic-text value="author"></atomic-text>:</span>
-                        <atomic-result-text field="author"></atomic-result-text>
-                      </atomic-field-condition>
-                    </atomic-result-fields-list>
-                  </atomic-result-section-bottom-metadata>
                 </template>
               </atomic-result-template>
             </atomic-result-list>
