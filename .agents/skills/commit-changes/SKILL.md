@@ -7,6 +7,10 @@ metadata:
   version: '1.0'
 ---
 
+## Global rules
+
+NEVER mention customers by name in Git or GitHub
+
 ## Commit message
 
 ### Commit subject (title)
