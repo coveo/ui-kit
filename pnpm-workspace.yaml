@@ -156,6 +156,10 @@ minimumReleaseAgeExclude:
   - react-router
   - '@react-router/*'
 
+# Keep the local package resolver out of ordinary installs and the committed lockfile.
+# Thermidor integration tasks enable it explicitly with --config.ignore-pnpmfile=false.
+ignorePnpmfile: true
+
 # Allow using the shell emulator for all commands, which is required for some commands to work properly on Windows.
 # https://pnpm.io/cli/run#shellemulator
 shellEmulator: true
