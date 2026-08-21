@@ -278,6 +278,8 @@ jobs:
   unit-test:
     name: 'Run unit tests'
     needs: affected
+    # Best effort at short-circuiting
+    if: contains(needs.affected.outputs.tasks, '#test')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
