@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "node ./scripts/copyResources.mjs && vite",
-    "test": "playwright test"
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@coveo/atomic": "workspace:*",

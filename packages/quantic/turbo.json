@@ -45,6 +45,12 @@
       "dependsOn": ["build"],
       "outputs": []
     },
+    "e2e": {
+      "dependsOn": ["build"],
+      "inputs": ["$TURBO_DEFAULT$"],
+      "outputs": ["playwright-report/**", "blob-report/**", "test-results/**"],
+      "cache": false
+    },
     "validate:types": {
       "dependsOn": ["build"],
       "outputs": []
