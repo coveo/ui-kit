@@ -40,12 +40,6 @@ const example = getCurrentExample();
 const styleTag = document.createElement('style');
 styleTag.innerHTML = `
   html {
-  @layer base {
-    .styles-error {
-      display: none;
-    }
-  }
-
   body{
   margin: 0;
   padding: 0;}
@@ -77,8 +71,6 @@ styleTag.innerHTML = `
 styleTag.setAttribute('nonce', '1234567890');
 
 header.innerHTML = `
-  <span class="styles-error block  font-bold text-error">If you can see this, our styles have escaped shadow DOM
-</span>
   <nav>
 
     <span>${example ? example.label : ''} example</span>

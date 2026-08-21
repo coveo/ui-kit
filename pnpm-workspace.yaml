@@ -15,6 +15,7 @@ packages:
   - packages/atomic-a11y
   - packages/platform-mock-api
   - packages/atomic-cdn-smoke
+  - packages/atomic-theming-e2e
   - packages/atomic-legacy
   - packages/shopify
   - packages/relay

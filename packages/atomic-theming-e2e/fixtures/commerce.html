@@ -1,0 +1,47 @@
+<!doctype html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Atomic commerce style encapsulation</title>
+    <link rel="icon" href="data:," />
+    <script type="module" src="./load-atomic.js"></script>
+    <script type="module" src="./style-leak-sentinel.js"></script>
+  </head>
+
+  <body>
+    <atomic-commerce-interface type="search">
+      <atomic-commerce-layout>
+        <atomic-layout-section section="search">
+          <atomic-commerce-search-box></atomic-commerce-search-box>
+        </atomic-layout-section>
+        <atomic-layout-section section="facets">
+          <atomic-commerce-facets></atomic-commerce-facets>
+        </atomic-layout-section>
+        <atomic-layout-section section="main">
+          <atomic-layout-section section="status">
+            <atomic-commerce-breadbox></atomic-commerce-breadbox>
+            <atomic-commerce-query-summary></atomic-commerce-query-summary>
+          </atomic-layout-section>
+          <atomic-layout-section section="products">
+            <atomic-commerce-product-list display="grid" density="normal" image-size="small">
+              <atomic-product-template>
+                <template>
+                  <atomic-product-section-name>
+                    <atomic-product-link></atomic-product-link>
+                  </atomic-product-section-name>
+                  <atomic-product-section-description>
+                    <atomic-product-excerpt></atomic-product-excerpt>
+                  </atomic-product-section-description>
+                </template>
+              </atomic-product-template>
+            </atomic-commerce-product-list>
+          </atomic-layout-section>
+          <atomic-layout-section section="pagination">
+            <atomic-commerce-load-more-products></atomic-commerce-load-more-products>
+          </atomic-layout-section>
+        </atomic-layout-section>
+      </atomic-commerce-layout>
+    </atomic-commerce-interface>
+  </body>
+</html>

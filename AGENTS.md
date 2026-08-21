@@ -45,6 +45,7 @@
 - [`@coveo/atomic-a11y`](packages/atomic-a11y/): Accessibility utilities and tools for Coveo Atomic components
 - [`@coveo/atomic-angular-builder`](packages/atomic-angular/): Angular workspace used to build and publish the @coveo/atomic-angular package
 - [`@coveo/atomic-cdn-smoke`](packages/atomic-cdn-smoke/): CDN visual smoke tests for Atomic components using Playwright + Chromatic
+- [`@coveo/atomic-theming-e2e`](packages/atomic-theming-e2e/): End-to-end tests validating Atomic theme customization and shadow DOM style encapsulation
 - [`@coveo/create-atomic-template`](packages/create-atomic-template/): Template project scaffolded by @coveo/create-atomic when generating a new Atomic search page
 - [`@coveo/documentation`](packages/documentation/): Typedoc plugin enforcing Coveo's documentation styling and navigation conventions across the monorepo
 - [`@coveo/mock-converse-api`](packages/mock-converse-api/): HTTP server exposing mock Converse API endpoints, built on @coveo/platform-mock-api, for local development and testing
