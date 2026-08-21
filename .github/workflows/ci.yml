@@ -301,6 +301,30 @@ jobs:
         with:
           affected-tasks: ${{ needs.affected.outputs.tasks }}
           tasks: test
+  apex-quantic-tests:
+    name: "Run Quantic Apex unit tests"
+    needs: affected
+    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/quantic')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 1
+          filter: blob:none
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-sfdx
+      - uses: ./.github/actions/apex-unit-tests
+        with:
+          clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
+          jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+          username: rdaccess@coveo.com
+
   relay-tests:
     name: 'Run Relay functional and playground smoke tests'
     needs: [affected, build]
@@ -741,6 +765,7 @@ jobs:
       - 'lint-check'
       - 'knip'
       - 'unit-test'
+      - 'apex-quantic-tests'
       - 'chromatic'
       - 'storybook-atomic'
       - 'playwright-atomic'
@@ -776,6 +801,7 @@ jobs:
       - 'lint-check'
       - 'knip'
       - 'unit-test'
+      - 'apex-quantic-tests'
       - 'chromatic'
       - 'storybook-atomic'
       - 'playwright-atomic'
