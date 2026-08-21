@@ -514,7 +514,7 @@ jobs:
   playwright-atomic-theming:
     name: 'Run theming smoke tests for Atomic'
     needs: [affected, build]
-    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic')
+    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic-theming-e2e')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble

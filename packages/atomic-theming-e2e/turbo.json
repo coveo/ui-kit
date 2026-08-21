@@ -1,0 +1,14 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "e2e": {
+      "dependsOn": ["@coveo/atomic#build", "@coveo/platform-mock-api#build"],
+      "inputs": ["$TURBO_DEFAULT$"],
+      "outputs": ["playwright-report/**", "test-results/**"]
+    },
+    "tsc:check": {
+      "dependsOn": ["@coveo/platform-mock-api#build"],
+      "outputs": []
+    }
+  }
+}
