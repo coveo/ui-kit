@@ -79,4 +79,3 @@ If they agree:
 1. Push the branch to GitHub
 2. Open a draft pull request, using the title and description from before
 3. Print the link to the PR.
-   
