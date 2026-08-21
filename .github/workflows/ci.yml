@@ -147,9 +147,21 @@ jobs:
         with:
           egress-policy: audit
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
-      - uses: ./.github/actions/build-cdn
+      - uses: ./.github/actions/setup
+      # Note that this does not use .github/actions/build-cdn/action.yml.
+      # It purposefully doesn't support affected because it's used by the cd and hotfix workflows.
+      - uses: ./.github/actions/run-affected
         with:
-          commit-sha: ${{ github.sha }}
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: build
+          # Samples are not CDN artifacts. Exclude them so the CDN build does not try
+          # to bundle samples that depend on CDN-externalized packages.
+          packages: |
+            !@samples/*
+            !@coveo/ui-kit-sample-*
+        env:
+          DEPLOYMENT_ENVIRONMENT: CDN
+          CDN_COMMIT_SHA: ${{ inputs.commit-sha }}
 
   knip:
     name: 'Look for unused code or dependencies'
