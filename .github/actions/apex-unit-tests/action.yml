@@ -31,6 +31,9 @@ runs:
         sf plugins --core
       shell: bash
       working-directory: packages/quantic
+    - name: Build Quantic static resources
+      run: pnpm exec turbo run build:staticresources --filter=@coveo/quantic
+      shell: bash
     - name: Authenticate to Dev Hub
       run: sf org login jwt --client-id "$INPUTS_CLIENTID" --jwt-key-file server.key --username "$INPUTS_USERNAME" --set-default-dev-hub
       shell: bash
