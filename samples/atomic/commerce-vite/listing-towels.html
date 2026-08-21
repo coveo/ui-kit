@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="stylesheet" href="/src/style.css" />
-    <title>Atomic Commerce Sample — Search</title>
+    <title>Atomic Commerce Sample — Towels</title>
   </head>
   <body>
     <a class="skip-link" href="#maincontent">Skip to main content</a>
@@ -16,42 +16,27 @@
       </div>
       <nav class="app-nav">
         <a href="/index.html">Home</a>
-        <a href="/search.html" aria-current="page">Search</a>
+        <a href="/search.html">Search</a>
         <a href="/listing-pants.html">Pants</a>
         <a href="/listing-surf-accessories.html">Surf Accessories</a>
-        <a href="/listing-towels.html">Towels</a>
+        <a href="/listing-towels.html" aria-current="page">Towels</a>
         <a href="/listing-toys.html">Toys</a>
         <a href="/cart.html">Cart</a>
       </nav>
     </header>
 
     <main id="maincontent">
+      <h2 class="page-title">Towels</h2>
+
       <atomic-commerce-interface
-        type="search"
-        data-view-url="https://sports.barca.group/commerce-search"
+        type="product-listing"
+        data-view-url="https://sports.barca.group/browse/promotions/accessories/towels"
       >
         <atomic-commerce-layout>
           <atomic-layout-section section="search">
-            <atomic-commerce-search-box>
+            <atomic-commerce-search-box redirection-url="/search.html">
               <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
               <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
-              <atomic-commerce-search-box-instant-products image-size="small">
-                <atomic-product-template>
-                  <template>
-                    <atomic-product-section-visual>
-                      <atomic-product-field-condition if-defined="ec_thumbnails">
-                        <atomic-product-image field="ec_thumbnails"></atomic-product-image>
-                      </atomic-product-field-condition>
-                    </atomic-product-section-visual>
-                    <atomic-product-section-name>
-                      <atomic-product-link></atomic-product-link>
-                    </atomic-product-section-name>
-                    <atomic-product-section-emphasized>
-                      <atomic-product-price currency="USD"></atomic-product-price>
-                    </atomic-product-section-emphasized>
-                  </template>
-                </atomic-product-template>
-              </atomic-commerce-search-box-instant-products>
             </atomic-commerce-search-box>
           </atomic-layout-section>
 

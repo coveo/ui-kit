@@ -18,7 +18,7 @@ test('search page renders the commerce search experience', async ({page}) => {
   await expect(page.locator('atomic-commerce-product-list')).toBeVisible();
 });
 
-for (const listing of ['surf-accessories', 'toys']) {
+for (const listing of ['pants', 'surf-accessories', 'towels', 'toys']) {
   test(`${listing} listing renders products and a search box`, async ({page}) => {
     await page.goto(`/listing-${listing}.html`);
 
@@ -27,3 +27,12 @@ for (const listing of ['surf-accessories', 'toys']) {
     await expect(page.locator('atomic-commerce-facets')).toBeVisible();
   });
 }
+
+test('cart page renders recommendations and a search box', async ({page}) => {
+  await page.goto('/cart.html');
+
+  await expect(page.locator('atomic-commerce-search-box')).toBeVisible();
+  const recommendationList = page.locator('atomic-commerce-recommendation-list');
+  await expect(recommendationList).toHaveCount(1);
+  await expect(recommendationList).toBeVisible();
+});
