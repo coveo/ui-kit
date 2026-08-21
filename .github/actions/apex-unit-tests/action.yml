@@ -1,0 +1,50 @@
+name: Apex Unit Tests
+description: Run Quantic Apex unit tests.
+inputs:
+  clientid:
+    description: Salesforce Dev Hub JWT client ID
+    required: true
+  jwtkey:
+    description: Salesforce Dev Hub JWT key contents
+    required: true
+  username:
+    description: Salesforce Dev Hub username
+    required: true
+  scratch-definition:
+    description: Scratch org definition file
+    required: false
+    default: packages/quantic/config/lws-enabled-scratch-def.json
+runs:
+  using: composite
+  steps:
+    - name: Create JWT key file
+      run: |
+        umask 077
+        printf '%s\n' "$INPUTS_JWTKEY" > server.key
+      shell: bash
+      env:
+        INPUTS_JWTKEY: ${{ inputs.jwtkey }}
+    - name: Install Salesforce CLI plugins
+      run: |
+        sf --version
+        sf plugins --core
+      shell: bash
+    - name: Authenticate to Dev Hub
+      run: sf org login jwt --client-id "$INPUTS_CLIENTID" --jwt-key-file server.key --username "$INPUTS_USERNAME" --set-default-dev-hub
+      shell: bash
+      env:
+        INPUTS_CLIENTID: ${{ inputs.clientid }}
+        INPUTS_USERNAME: ${{ inputs.username }}
+    - name: Create scratch org
+      run: sf org create scratch --set-default --definition-file "$INPUTS_SCRATCH_DEFINITION" --duration-days 1
+      shell: bash
+      env:
+        INPUTS_SCRATCH_DEFINITION: ${{ inputs.scratch-definition }}
+    - name: Deploy Quantic source
+      run: sf project deploy start --source-dir packages/quantic/force-app/main/default
+      shell: bash
+    - name: Run Apex unit tests
+      run: |
+        mkdir -p packages/quantic/test-results
+        sf apex run test --test-level RunLocalTests --result-format junit --wait 30 > packages/quantic/test-results/apex.xml
+      shell: bash
