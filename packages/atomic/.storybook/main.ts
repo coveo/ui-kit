@@ -8,6 +8,8 @@ import type {Plugin} from 'vite';
 import {mergeConfig} from 'vite';
 import {generateExternalPackageMappings} from '../scripts/externalPackageMappings.mjs';
 
+type ConfigType = 'DEVELOPMENT' | 'PRODUCTION' | undefined;
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const isVitest = process.env.VITEST !== undefined;
@@ -81,24 +83,25 @@ const virtualOpenApiModules = (): Plugin => {
   };
 };
 
-const externalizeDependencies = (configType: 'DEVELOPMENT' | 'PRODUCTION' | undefined): Plugin => {
+const externalizeDependencies = (configType: ConfigType): Plugin => {
   const packageMappings: Record<string, {cdn?: string; local: string}> =
     generateExternalPackageMappings();
+
   return {
     name: 'externalize-dependencies',
     enforce: 'pre',
     resolveId(source, _importer, _options) {
-      if (/^\/(headless|bueno)/.test(source)) {
+      if (/^\/(headless|bueno|relay)/.test(source)) {
         return false;
       }
 
-      if (/(.*)(\/|\\)+(bueno|headless)\/v\d+\.\d+\.\d+(-nightly)?(\/|\\).*/.test(source)) {
+      if (/(.*)(\/|\\)+(bueno|headless|relay)\/v\d+\.\d+\.\d+(-nightly)?(\/|\\).*/.test(source)) {
         return false;
       }
 
-      const packageMapping = packageMappings[source];
+      const {cdn, local} = packageMappings[source] ?? {};
 
-      if (!packageMapping) {
+      if (!local) {
         // If the package isn't in our mapping, we assume it's a local dependency and leave it as-is
         return null;
       }
@@ -112,18 +115,21 @@ const externalizeDependencies = (configType: 'DEVELOPMENT' | 'PRODUCTION' | unde
       // We also want to use local packages for Chromatic builds so TurboSnap can resolve changes in Atomic dependencies.
       if (configType === 'DEVELOPMENT' || isChromatic) {
         return {
-          id: packageMapping.local,
+          id: local,
         };
       }
 
-      if (!packageMapping.cdn) {
-        return null;
+      // For production Storybook builds, we want to use Domain-relative URL to use the CDN versions of the packages.
+      if (cdn) {
+        return {
+          id: cdn,
+          external: 'absolute',
+        };
       }
 
-      // For production Storybook builds, we want to use Domain-relative URL to use the CDN versions of the packages.
+      // Some packages, like platform-mock-api, do not have a CDN path and are only available through the local files.
       return {
-        id: packageMapping.cdn,
-        external: 'absolute',
+        id: local,
       };
     },
   };
@@ -345,9 +351,7 @@ const virtualAssetsList = (): Plugin => {
 };
 
 export default config;
-function markComponentImportsAsSideEffectful(
-  configType: 'DEVELOPMENT' | 'PRODUCTION' | undefined
-): Plugin {
+function markComponentImportsAsSideEffectful(configType: ConfigType): Plugin {
   const absolutePathToRoot = resolve(__dirname, '..');
   return {
     name: 'mark-components-as-side-effectful',
