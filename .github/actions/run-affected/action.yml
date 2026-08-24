@@ -2,9 +2,8 @@ name: 'Run affected Turbo tasks'
 description: 'Select affected Turbo tasks from the current task graph and run them.'
 inputs:
   affected-tasks:
-    description: 'Affected Turbo task identifiers as a JSON array. When not specified, run all tasks in the selected graph. When the array is empty, run no tasks.'
-    required: false
-    default: ''
+    description: 'Affected Turbo task identifiers as a JSON array. When the array is empty, run no tasks.'
+    required: true
   tasks:
     description: 'Turbo target task names, one per line.'
     required: false
