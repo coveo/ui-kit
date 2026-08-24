@@ -6,4 +6,4 @@ node = "24.18.1"
 pnpm = "11.17.0"
 
 [tasks.install]
-run = "node scripts/setup-thermidor-schema.mjs && pnpm install"
+run = "git submodule update --init packages/thermidor-schema && pnpm install"

@@ -18,7 +18,7 @@
 
   // Lifecycle commands optimized for GitHub Codespaces
   // updateContentCommand runs during prebuild (expensive operations cached)
-  "updateContentCommand": "node scripts/setup-thermidor-schema.mjs && pnpm install --frozen-lockfile && pnpm run build",
+  "updateContentCommand": "git submodule update --init packages/thermidor-schema && pnpm install --frozen-lockfile && pnpm run build",
 
   // postStartCommand runs every time the codespace starts
   "postStartCommand": "echo '✓ Codespace ready!'",
