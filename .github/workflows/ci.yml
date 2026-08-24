@@ -721,7 +721,7 @@ jobs:
       SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
   publish-preview:
-    if: ${{ !cancelled() && contains(needs.affected.outputs.tasks, '#build') && github.event_name == 'pull_request' && !startsWith(github.head_ref, 'changeset-release/') }}
+    if: ${{ !cancelled() && contains(needs.affected.outputs.tasks, '#build"') && github.event_name == 'pull_request' && !startsWith(github.head_ref, 'changeset-release/') }}
     needs: [affected, build]
     name: 'Publish Preview Packages'
     runs-on: ubuntu-latest
