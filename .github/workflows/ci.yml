@@ -198,28 +198,18 @@ jobs:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: ./.github/actions/setup
       - name: 'Build local CDN'
-        uses: ./.github/actions/run-affected
-        with:
-          tasks: build
-          packages: '@coveo/cdn'
+        run: pnpm exec turbo run @coveo/cdn#build
       - name: 'Run Atomic CDN checks'
-        uses: ./.github/actions/run-affected
-        with:
-          affected-tasks: ${{ needs.affected.outputs.tasks }}
-          tasks: e2e
-          packages: '@coveo/atomic'
-          arguments: |
-            atomic-commerce-query-error.e2e.ts
-            atomic-icon.e2e.ts
-            atomic-commerce-text.e2e.ts
-            atomic-commerce-query-summary.e2e.ts
-            --shard=1/1
+        if: contains(fromJSON(needs.affected.outputs.tasks), '@coveo/atomic#e2e')
+        run: >-
+          pnpm exec turbo run @coveo/atomic#e2e --
+          atomic-commerce-query-error.e2e.ts
+          atomic-icon.e2e.ts
+          atomic-commerce-text.e2e.ts
+          atomic-commerce-query-summary.e2e.ts
       - name: 'Run Atomic Hosted Page CDN checks'
-        uses: ./.github/actions/run-affected
-        with:
-          affected-tasks: ${{ needs.affected.outputs.tasks }}
-          tasks: e2e
-          packages: '@coveo/atomic-hosted-page'
+        if: contains(fromJSON(needs.affected.outputs.tasks), '@coveo/atomic-hosted-page#e2e')
+        run: pnpm exec turbo run @coveo/atomic-hosted-page#e2e
   lint-check:
     name: 'Check with linter'
     if: ${{ needs.affected.outputs.projects != '[]' }}
