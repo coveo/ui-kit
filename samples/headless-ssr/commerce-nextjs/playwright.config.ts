@@ -23,9 +23,6 @@ export default defineConfig({
   webServer: [
     {
       // Standalone Express server powered by @mswjs/http-middleware.
-      // All Coveo Commerce API calls (SSR and client-side) are intercepted here
-      // because the Next.js server is started with MOCK_API_URL, which the
-      // headless engine uses as its proxyBaseUrl.
       command: 'node mocks/mock-server.mjs',
       url: `${MOCK_API_URL}/health`,
       reuseExistingServer: !process.env.CI,
@@ -34,10 +31,15 @@ export default defineConfig({
     },
     {
       // Run the production build so tests exercise the same output users ship.
-      command: 'pnpm start',
+      //
+      // The build must happen here rather than through the package's `build`
+      // task: NEXT_PUBLIC_MOCK_API_URL is inlined into the client bundle at
+      // build time, and without it the hydrated page calls the live Coveo API
+      // instead of the mock server.
+      command: 'pnpm build && pnpm start',
       url: 'http://localhost:3000',
       reuseExistingServer: false,
-      timeout: 120 * 1000,
+      timeout: 180 * 1000,
       env: {NEXT_PUBLIC_MOCK_API_URL: MOCK_API_URL},
     },
   ],

@@ -58,7 +58,9 @@ pnpm add @coveo/headless-react@<version>
 
 ## How the tests stay deterministic
 
-The Playwright tests never call a live API. During `pnpm e2e`, Playwright starts a standalone Express server powered by [`@mswjs/http-middleware`](https://www.npmjs.com/package/@mswjs/http-middleware) (see `mocks/mock-server.mjs`) and passes its URL to the Next.js server through `NEXT_PUBLIC_MOCK_API_URL` (see `playwright.config.ts`). The commerce engine then uses `proxyBaseUrl` to route both the server-side `fetchStaticState` calls and the client-side hydration/interactions through that mock server (see `lib/commerce-engine-config.ts`). The mock server reuses the handlers from `@coveo/platform-mock-api`.
+The Playwright tests never call a live Commerce API. During `pnpm e2e`, Playwright starts a standalone Express server powered by [`@mswjs/http-middleware`](https://www.npmjs.com/package/@mswjs/http-middleware) (see `mocks/mock-server.mjs`) and passes its URL through `NEXT_PUBLIC_MOCK_API_URL` (see `playwright.config.ts`). The commerce engine then uses `proxyBaseUrl` to route both the server-side `fetchStaticState` calls and the client-side hydration/interactions through that mock server (see `lib/commerce-engine-config.ts`). The mock server reuses the handlers from `@coveo/platform-mock-api`.
+
+Next.js bakes `NEXT_PUBLIC_*` variables into the client bundle at build time, so the Playwright web server builds the app itself rather than reusing the output of the package's `build` task. Without that, only the server half would reach the mock and the hydrated page would query the live API. A fixture in `e2e/fixtures.ts` fails any test whose browser reaches a non-local Commerce API, so this cannot regress unnoticed.
 
 ## Learn more
 
