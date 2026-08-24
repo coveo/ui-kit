@@ -14,6 +14,9 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Initialize Thermidor schema submodule
+      run: git submodule update --init packages/thermidor-schema
+      shell: bash
     #region Mise (Node + pnpm)
     - name: Install tools via mise
       uses: step-security/mise-action@6e96d2ffbc65c037f23c78818f2a339d6cf830f7 # v4

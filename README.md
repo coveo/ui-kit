@@ -41,9 +41,10 @@ Looking for code examples? Check out the [samples](samples/) directory for worki
 
 ## Install
 
-To install all dependencies and link local packages, run:
+To initialize the canonical Thermidor schema, install all dependencies, and link local packages, run:
 
 ```sh
+git submodule update --init packages/thermidor-schema
 pnpm install
 ```
 

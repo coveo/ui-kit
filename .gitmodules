@@ -1,0 +1,3 @@
+[submodule "packages/thermidor-schema"]
+	path = packages/thermidor-schema
+	url = https://github.com/coveo-platform/thermidor-schema.git

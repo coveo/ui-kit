@@ -5,6 +5,7 @@ packages:
   - packages/headless
   - packages/thermidor
   - packages/thermidor-schema
+  - packages/thermidor-schema/packages/typescript
   - packages/quantic
   - packages/headless-react
   - packages/atomic-hosted-page
@@ -160,3 +161,33 @@ minimumReleaseAgeExclude:
 # Allow using the shell emulator for all commands, which is required for some commands to work properly on Windows.
 # https://pnpm.io/cli/run#shellemulator
 shellEmulator: true
+
+overrides:
+  braces: 3.0.3
+  react: 'catalog:'
+  react-dom: 'catalog:'
+  '@coveo/thermidor-schema>typescript': 7.0.2
+  'thermidor-schema-workspace>typescript': 7.0.2
+  typescript: 'catalog:'
+  html-minifier: npm:html-minifier-terser@^7.2.0
+  '@angular/core': 'catalog:'
+  '@angular/common': 'catalog:'
+  undici@^7: ^7.29.0
+
+patchedDependencies:
+  '@stencil/core@4.20.0': patches/@stencil+core+4.20.0.patch
+  'jest-environment-jsdom@29.7.0': patches/jest-environment-jsdom+29.7.0.patch
+  '@wc-toolkit/storybook-helpers@10.5.1': patches/@wc-toolkit__storybook-helpers@10.5.1.patch
+
+allowBuilds:
+  '@parcel/watcher': false
+  core-js: false
+  esbuild: false
+  fsevents: false
+  lmdb: false
+  msgpackr-extract: false
+  msw: false
+  puppeteer: false
+  rs-module-lexer: false
+  sharp: false
+  unrs-resolver: false

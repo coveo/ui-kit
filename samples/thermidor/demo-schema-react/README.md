@@ -4,6 +4,13 @@ A React sample demonstrating contract-driven A2-UI rendering using `@coveo/therm
 
 This sample duplicates `samples/thermidor/demo-react` and refactors the A2-UI rendering layer to use catalog-based resolution with validated controller contracts from `@coveo/thermidor-schema`.
 
+`@coveo/thermidor-schema` resolves through pnpm to the canonical repository's `packages/typescript` workspace package. Initialize the mandatory submodule before installing dependencies:
+
+```bash
+git submodule update --init packages/thermidor-schema
+pnpm install
+```
+
 ## Running locally with the Mock API
 
 ```bash
@@ -131,7 +138,7 @@ AgentResponseBlock
 - Contract-driven surfaces use `props.controllers` with `controllerId` + `controllerSchema` for typed controller resolution
 - Controller state is delivered via AG-UI `StateSnapshot` and read by `buildRemoteController` from `@coveo/thermidor`
 - BundleDisplay resolves product-list controllers from the same StateSnapshot via `selectRemoteControllerState`
-- Props schemas for catalog components are defined locally and validated at runtime via Zod
+- Props schemas for catalog components are generated from canonical JSON Schema and imported from `@coveo/thermidor-schema`
 
 ## Further reading
 
