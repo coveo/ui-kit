@@ -9,12 +9,11 @@ runs:
   using: composite
   steps:
     - name: Run Playwright tests
-      run: pnpm exec turbo run e2e:theming --filter=@coveo/atomic
-      working-directory: packages/atomic
+      run: pnpm exec turbo run e2e --filter=@coveo/atomic-theming-e2e
       shell: bash
     - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
       if: ${{ !cancelled() && inputs.uploadArtifacts == 'true' }}
       with:
         name: atomic-theming-playwright-report
-        path: packages/atomic/playwright-report/
+        path: packages/atomic-theming-e2e/playwright-report/
         retention-days: 5

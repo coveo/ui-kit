@@ -123,9 +123,22 @@
       "cache": false,
       "persistent": true
     },
-    "e2e:theming": {
-      "dependsOn": ["build:cdn"],
-      "outputs": ["playwright-report/**"]
+    "e2e": {
+      "dependsOn": ["build"],
+      "inputs": ["$TURBO_DEFAULT$"],
+      "outputs": ["playwright-report/**", "blob-report/**", "test-results/**"]
+    },
+    "e2e:csp": {
+      "dependsOn": ["build"],
+      "inputs": ["$TURBO_DEFAULT$"],
+      "outputs": [],
+      "cache": false
+    },
+    "validate:light-dom-styles": {
+      "outputs": []
+    },
+    "validate:no-new-light-dom": {
+      "outputs": []
     }
   }
 }
