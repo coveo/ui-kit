@@ -35,11 +35,6 @@ export const ProductSchema = z.strictObject({
 });
 export type Product = z.infer<typeof ProductSchema>;
 
-export const ProductListControllerContractActionsSchema = z.strictObject({});
-export type ProductListControllerContractActions = z.infer<
-  typeof ProductListControllerContractActionsSchema
->;
-
 export const ProductListStateSchema = z.strictObject({
   products: z.array(ProductSchema),
 });
@@ -53,43 +48,17 @@ export const CartItemSchema = z.strictObject({
 });
 export type CartItem = z.infer<typeof CartItemSchema>;
 
-export const UpdateItemQuantityPayloadSchema = z.strictObject({
-  item: CartItemSchema,
-});
-export type UpdateItemQuantityPayload = z.infer<typeof UpdateItemQuantityPayloadSchema>;
-
-export const CartStateSchema = z.strictObject({
-  items: z.array(CartItemSchema),
-});
-export type CartState = z.infer<typeof CartStateSchema>;
-
-export const SelectActionPayloadSchema = z.strictObject({
-  text: z.string(),
-  type: z.enum(['followup', 'search']),
-});
-export type SelectActionPayload = z.infer<typeof SelectActionPayloadSchema>;
-
 export const ActionItemSchema = z.strictObject({
   text: z.string(),
   type: z.enum(['followup', 'search']),
 });
 export type ActionItem = z.infer<typeof ActionItemSchema>;
 
-export const BundleDisplayControllerContractActionsSchema = z.strictObject({});
-export type BundleDisplayControllerContractActions = z.infer<
-  typeof BundleDisplayControllerContractActionsSchema
->;
-
 export const BundleSlotSchema = z.strictObject({
   categoryLabel: z.string(),
   surfaceRef: z.string(),
 });
 export type BundleSlot = z.infer<typeof BundleSlotSchema>;
-
-export const ComparisonTableControllerContractActionsSchema = z.strictObject({});
-export type ComparisonTableControllerContractActions = z.infer<
-  typeof ComparisonTableControllerContractActionsSchema
->;
 
 export const ComparisonAttributeSchema = z.strictObject({
   key: z.string(),
@@ -107,29 +76,56 @@ export const ComparisonProductSchema = z.strictObject({
 });
 export type ComparisonProduct = z.infer<typeof ComparisonProductSchema>;
 
-export const ProductListControllerContractSchema = z.strictObject({
-  actions: ProductListControllerContractActionsSchema,
-  controllerSchema: z.literal(
-    'https://schema.thermidor.coveo.com/controllers/product-list.schema.json'
-  ),
-  state: ProductListStateSchema,
+export const ProductCarouselActionsSchema = z.strictObject({});
+export type ProductCarouselActions = z.infer<typeof ProductCarouselActionsSchema>;
+
+export const StateClassSchema = z.strictObject({
+  products: z.array(ProductSchema),
 });
-export type ProductListControllerContract = z.infer<typeof ProductListControllerContractSchema>;
+export type StateClass = z.infer<typeof StateClassSchema>;
 
 export const SetItemsPayloadSchema = z.strictObject({
   items: z.array(CartItemSchema),
 });
 export type SetItemsPayload = z.infer<typeof SetItemsPayloadSchema>;
 
-export const UpdateItemQuantitySchema = z.strictObject({
-  payload: UpdateItemQuantityPayloadSchema,
+export const UpdateItemQuantityPayloadSchema = z.strictObject({
+  item: CartItemSchema,
 });
-export type UpdateItemQuantity = z.infer<typeof UpdateItemQuantitySchema>;
+export type UpdateItemQuantityPayload = z.infer<typeof UpdateItemQuantityPayloadSchema>;
 
-export const SelectActionSchema = z.strictObject({
-  payload: SelectActionPayloadSchema,
+export const CartStateClassSchema = z.strictObject({
+  items: z.array(CartItemSchema),
 });
-export type SelectAction = z.infer<typeof SelectActionSchema>;
+export type CartStateClass = z.infer<typeof CartStateClassSchema>;
+
+export const SelectActionPayloadSchema = z.strictObject({
+  text: z.string(),
+  type: z.enum(['followup', 'search']),
+});
+export type SelectActionPayload = z.infer<typeof SelectActionPayloadSchema>;
+
+export const NextActionsBarStateSchema = z.strictObject({
+  actions: z.array(ActionItemSchema),
+});
+export type NextActionsBarState = z.infer<typeof NextActionsBarStateSchema>;
+
+export const BundleDisplayActionsSchema = z.strictObject({});
+export type BundleDisplayActions = z.infer<typeof BundleDisplayActionsSchema>;
+
+export const ComparisonTableActionsSchema = z.strictObject({});
+export type ComparisonTableActions = z.infer<typeof ComparisonTableActionsSchema>;
+
+export const ComparisonTableStateClassSchema = z.strictObject({
+  attributes: z.array(ComparisonAttributeSchema),
+  products: z.array(ComparisonProductSchema),
+});
+export type ComparisonTableStateClass = z.infer<typeof ComparisonTableStateClassSchema>;
+
+export const CartStateSchema = z.strictObject({
+  items: z.array(CartItemSchema),
+});
+export type CartState = z.infer<typeof CartStateSchema>;
 
 export const NextActionsStateSchema = z.strictObject({
   actions: z.array(ActionItemSchema),
@@ -149,131 +145,118 @@ export const ComparisonTableStateSchema = z.strictObject({
 });
 export type ComparisonTableState = z.infer<typeof ComparisonTableStateSchema>;
 
+export const ProductCarouselSchema = z.strictObject({
+  actions: ProductCarouselActionsSchema,
+  componentType: z.literal('product-carousel'),
+  state: StateClassSchema,
+});
+export type ProductCarousel = z.infer<typeof ProductCarouselSchema>;
+
 export const SetItemsSchema = z.strictObject({
   payload: SetItemsPayloadSchema,
 });
 export type SetItems = z.infer<typeof SetItemsSchema>;
 
-export const NextActionsControllerContractActionsSchema = z.strictObject({
-  selectAction: SelectActionSchema,
+export const UpdateItemQuantitySchema = z.strictObject({
+  payload: UpdateItemQuantityPayloadSchema,
 });
-export type NextActionsControllerContractActions = z.infer<
-  typeof NextActionsControllerContractActionsSchema
->;
+export type UpdateItemQuantity = z.infer<typeof UpdateItemQuantitySchema>;
+
+export const SelectActionSchema = z.strictObject({
+  payload: SelectActionPayloadSchema,
+});
+export type SelectAction = z.infer<typeof SelectActionSchema>;
+
+export const BundleDisplayStateClassSchema = z.strictObject({
+  tiers: z.array(BundleTierSchema),
+});
+export type BundleDisplayStateClass = z.infer<typeof BundleDisplayStateClassSchema>;
+
+export const ComparisonTableSchema = z.strictObject({
+  actions: ComparisonTableActionsSchema,
+  componentType: z.literal('comparison-table'),
+  state: ComparisonTableStateClassSchema,
+});
+export type ComparisonTable = z.infer<typeof ComparisonTableSchema>;
 
 export const BundleDisplayStateSchema = z.strictObject({
   tiers: z.array(BundleTierSchema),
 });
 export type BundleDisplayState = z.infer<typeof BundleDisplayStateSchema>;
 
-export const ComparisonTableControllerContractSchema = z.strictObject({
-  actions: ComparisonTableControllerContractActionsSchema,
-  controllerSchema: z.literal(
-    'https://schema.thermidor.coveo.com/controllers/comparison-table.schema.json'
-  ),
-  state: ComparisonTableStateSchema,
-});
-export type ComparisonTableControllerContract = z.infer<
-  typeof ComparisonTableControllerContractSchema
->;
-
-export const CartControllerContractActionsSchema = z.strictObject({
+export const CartActionsSchema = z.strictObject({
   setItems: SetItemsSchema,
   updateItemQuantity: UpdateItemQuantitySchema,
 });
-export type CartControllerContractActions = z.infer<typeof CartControllerContractActionsSchema>;
+export type CartActions = z.infer<typeof CartActionsSchema>;
 
-export const NextActionsControllerContractSchema = z.strictObject({
-  actions: NextActionsControllerContractActionsSchema,
-  controllerSchema: z.literal(
-    'https://schema.thermidor.coveo.com/controllers/next-actions.schema.json'
-  ),
-  state: NextActionsStateSchema,
+export const NextActionsBarActionsSchema = z.strictObject({
+  selectAction: SelectActionSchema,
 });
-export type NextActionsControllerContract = z.infer<typeof NextActionsControllerContractSchema>;
+export type NextActionsBarActions = z.infer<typeof NextActionsBarActionsSchema>;
 
-export const BundleDisplayControllerContractSchema = z.strictObject({
-  actions: BundleDisplayControllerContractActionsSchema,
-  controllerSchema: z.literal(
-    'https://schema.thermidor.coveo.com/controllers/bundle-display.schema.json'
-  ),
-  state: BundleDisplayStateSchema,
+export const BundleDisplaySchema = z.strictObject({
+  actions: BundleDisplayActionsSchema,
+  componentType: z.literal('bundle-display'),
+  state: BundleDisplayStateClassSchema,
 });
-export type BundleDisplayControllerContract = z.infer<typeof BundleDisplayControllerContractSchema>;
+export type BundleDisplay = z.infer<typeof BundleDisplaySchema>;
 
-export const CartControllerContractSchema = z.strictObject({
-  actions: CartControllerContractActionsSchema,
-  controllerSchema: z.literal('https://schema.thermidor.coveo.com/controllers/cart.schema.json'),
-  state: CartStateSchema,
+export const CartSchema = z.strictObject({
+  actions: CartActionsSchema,
+  componentType: z.literal('cart'),
+  state: CartStateClassSchema,
 });
-export type CartControllerContract = z.infer<typeof CartControllerContractSchema>;
+export type Cart = z.infer<typeof CartSchema>;
 
-export const ControllerContractsSchema = z.discriminatedUnion('controllerSchema', [
-  ProductListControllerContractSchema,
-  CartControllerContractSchema,
-  NextActionsControllerContractSchema,
-  BundleDisplayControllerContractSchema,
-  ComparisonTableControllerContractSchema,
+export const NextActionsBarSchema = z.strictObject({
+  actions: NextActionsBarActionsSchema,
+  componentType: z.literal('next-actions-bar'),
+  state: NextActionsBarStateSchema,
+});
+export type NextActionsBar = z.infer<typeof NextActionsBarSchema>;
+
+export const ComponentContractsSchema = z.discriminatedUnion('componentType', [
+  ProductCarouselSchema,
+  CartSchema,
+  NextActionsBarSchema,
+  BundleDisplaySchema,
+  ComparisonTableSchema,
 ]);
-export type ControllerContracts = z.infer<typeof ControllerContractsSchema>;
+export type ComponentContracts = z.infer<typeof ComponentContractsSchema>;
 
-// Component props schemas (generated from schema/components/)
+/**
+ * Component props schemas.
+ * These props are injected by the A2-UI surface layer (backend) and passed to catalog
+ * renderers automatically. Consumers should NOT hardcode these values; they arrive via
+ * the createSurface message's components[].props.
+ */
 export const BundleDisplayPropsSchema = z.object({
-  controllers: z.object({
-    bundleDisplayController: z.object({
-      controllerId: z.string(),
-      controllerSchema: z.literal(
-        'https://schema.thermidor.coveo.com/controllers/bundle-display.schema.json'
-      ),
-    }),
-  }),
+  componentId: z.string(),
+  componentType: z.literal('bundle-display'),
 });
 export type BundleDisplayProps = z.infer<typeof BundleDisplayPropsSchema>;
 
 export const CartPropsSchema = z.object({
-  controllers: z.object({
-    cartController: z.object({
-      controllerId: z.string(),
-      controllerSchema: z.literal(
-        'https://schema.thermidor.coveo.com/controllers/cart.schema.json'
-      ),
-    }),
-  }),
+  componentId: z.string(),
+  componentType: z.literal('cart'),
 });
 export type CartProps = z.infer<typeof CartPropsSchema>;
 
 export const ComparisonTablePropsSchema = z.object({
-  controllers: z.object({
-    comparisonTableController: z.object({
-      controllerId: z.string(),
-      controllerSchema: z.literal(
-        'https://schema.thermidor.coveo.com/controllers/comparison-table.schema.json'
-      ),
-    }),
-  }),
+  componentId: z.string(),
+  componentType: z.literal('comparison-table'),
 });
 export type ComparisonTableProps = z.infer<typeof ComparisonTablePropsSchema>;
 
 export const NextActionsBarPropsSchema = z.object({
-  controllers: z.object({
-    nextActionsController: z.object({
-      controllerId: z.string(),
-      controllerSchema: z.literal(
-        'https://schema.thermidor.coveo.com/controllers/next-actions.schema.json'
-      ),
-    }),
-  }),
+  componentId: z.string(),
+  componentType: z.literal('next-actions-bar'),
 });
 export type NextActionsBarProps = z.infer<typeof NextActionsBarPropsSchema>;
 
 export const ProductCarouselPropsSchema = z.object({
-  controllers: z.object({
-    productListController: z.object({
-      controllerId: z.string(),
-      controllerSchema: z.literal(
-        'https://schema.thermidor.coveo.com/controllers/product-list.schema.json'
-      ),
-    }),
-  }),
+  componentId: z.string(),
+  componentType: z.literal('product-carousel'),
 });
 export type ProductCarouselProps = z.infer<typeof ProductCarouselPropsSchema>;

@@ -25,11 +25,12 @@ describe('projection determinism', () => {
     }).not.toThrow();
   });
 
-  it('canonical $id values appear as string literals in generated Zod schemas', async () => {
+  it('componentType literals appear in generated Zod schemas', async () => {
     const content = await readFile(generatedPath, 'utf8');
-    expect(content).toContain(
-      'https://schema.thermidor.coveo.com/controllers/product-list.schema.json'
-    );
-    expect(content).toContain('https://schema.thermidor.coveo.com/controllers/cart.schema.json');
+    expect(content).toContain("z.literal('product-carousel')");
+    expect(content).toContain("z.literal('cart')");
+    expect(content).toContain("z.literal('next-actions-bar')");
+    expect(content).toContain("z.literal('bundle-display')");
+    expect(content).toContain("z.literal('comparison-table')");
   });
 });

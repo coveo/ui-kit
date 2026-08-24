@@ -5,12 +5,32 @@
   "description": "Renders an ordered list of commerce products for a single category or intent bucket. Read-only from the frontend: the backend is the sole source of truth for which products are displayed and in what order.",
   "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/component.schema.json"}],
   "properties": {
-    "controllers": {
+    "componentType": {
+      "type": "string",
+      "const": "product-carousel"
+    },
+    "state": {"$ref": "#/$defs/ProductListState"},
+    "actions": {
       "type": "object",
-      "required": ["productListController"],
+      "properties": {},
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "ProductListState": {
+      "title": "ProductListState",
+      "description": "The ordered list of products to render. Owned exclusively by the backend; the frontend must not mutate this directly.",
+      "$comment": "This schema validates the runtime state value the backend pushes to the frontend.",
+      "type": "object",
+      "required": ["products"],
       "properties": {
-        "productListController": {
-          "$ref": "https://schema.thermidor.coveo.com/controllers/product-list.schema.json"
+        "products": {
+          "type": "array",
+          "description": "Ordered list of products to render.",
+          "items": {
+            "$ref": "https://schema.thermidor.coveo.com/definitions/product.schema.json"
+          }
         }
       },
       "additionalProperties": false

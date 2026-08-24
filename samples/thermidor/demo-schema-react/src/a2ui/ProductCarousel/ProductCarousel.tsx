@@ -1,6 +1,6 @@
 import {useState, useRef, useEffect, useCallback} from 'react';
 
-import {useAdvertisedController} from '../controllers.js';
+import {useRemoteController} from '../controllers.js';
 import {useStateSource} from '../state-source-context.js';
 import type {Product, ProductCarouselProps} from '@coveo/thermidor-schema';
 import {A2UIProductCard} from '../ProductCard/ProductCard.js';
@@ -12,7 +12,7 @@ export function ProductCarouselRenderer({
   props: ProductCarouselProps & {heading?: string};
 }) {
   const stateSource = useStateSource();
-  const controller = useAdvertisedController(stateSource, props.controllers.productListController);
+  const controller = useRemoteController(stateSource, props.componentId, props.componentType);
   const products = controller.state?.products ?? [];
   const heading = props.heading ?? 'Featured products';
   const trackRef = useRef<HTMLDivElement>(null);

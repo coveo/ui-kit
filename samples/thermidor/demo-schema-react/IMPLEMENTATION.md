@@ -17,7 +17,7 @@ The `convertV1ToV09` function in `src/a2ui/surfaces.tsx` bridges this gap by con
 | `updateComponents`                        | Same shape, version changed to `v0.9`                                                           |
 | `deleteSurface`                           | Same shape, version changed to `v0.9`                                                           |
 
-The key transformation: v1.0 puts controller advertisements in `components[].props.controllers`, while v0.9 expects them directly on the component node (`components[].controllers`). The adapter spreads `props` onto the node.
+The key transformation: v1.0 puts component props in `components[].props` (with `componentId` and `componentType`), while v0.9 expects them flattened directly on the component node. The adapter spreads `props` onto the node.
 
 ### When `@copilotkit/a2ui-renderer` supports v1.0
 
@@ -25,8 +25,8 @@ Once the renderer natively handles v1.0 messages:
 
 1. Delete the `convertV1ToV09` function in `src/a2ui/surfaces.tsx`
 2. Pass v1.0 messages directly to `processMessages` without conversion
-3. Verify that `processMessages` passes `components[].props` (including `controllers`) to catalog renderers correctly
-4. Everything else (catalog definitions, renderers, `useAdvertisedController`, `StateSnapshot` handling) remains unchanged
+3. Verify that `processMessages` passes `components[].props` (including `componentId` and `componentType`) to catalog renderers correctly
+4. Everything else (catalog definitions, renderers, `useRemoteController`, `StateSnapshot` handling) remains unchanged
 
 ## Skeleton detection (⚠️ needs clarification)
 
@@ -72,37 +72,37 @@ This implementation has been validated against the following references:
 
 ### Schema conformity
 
-| Check                                                                                                                                                                             | Status |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| Controller schemas follow the product-list/cart pattern (`$id`, `allOf` → base/controller, `controllerSchema` const, `state` → `$defs`, `actions`, `additionalProperties: false`) | ✅     |
-| `controllerSchema` is a stable const string discriminator                                                                                                                         | ✅     |
-| `controller-contracts.schema.json` discriminated union includes all 5 variants                                                                                                    | ✅     |
-| Definition schemas have `additionalProperties: false`                                                                                                                             | ✅     |
-| Actions reference `base/action.schema.json` via `allOf`                                                                                                                           | ✅     |
-| Read-only controllers have empty `actions` object                                                                                                                                 | ✅     |
-| Zod generation is up to date (`pnpm run generate --check` passes)                                                                                                                 | ✅     |
-| Ajv/Zod cross-validation tests pass (47 tests)                                                                                                                                    | ✅     |
+| Check                                                                                                                                                                     | Status |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| Component schemas follow the base component pattern (`$id`, `allOf` → base/component, `componentType` const, `state` → `$defs`, `actions`, `additionalProperties: false`) | ✅     |
+| `componentType` is a stable const string discriminator                                                                                                                    | ✅     |
+| `component-contracts.schema.json` discriminated union includes all 5 variants                                                                                             | ✅     |
+| Definition schemas have `additionalProperties: false`                                                                                                                     | ✅     |
+| Actions reference `base/action.schema.json` via `allOf`                                                                                                                   | ✅     |
+| Read-only components have empty `actions` object                                                                                                                          | ✅     |
+| Zod generation is up to date (`pnpm run generate --check` passes)                                                                                                         | ✅     |
+| Ajv/Zod cross-validation tests pass (47 tests)                                                                                                                            | ✅     |
 
 ### ADR conformity
 
-| ADR principle                                                                   | Implementation                                                                             |
-| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| Controller state is backend-owned, immutable on the frontend                    | State delivered via AG-UI `StateSnapshot`, never mutated locally                           |
-| `controllerSchema` is the stable discriminator                                  | Used in surface `props.controllers` and in `ControllerContractsSchema` discriminated union |
-| AG-UI `StateSnapshot` transports controller state                               | `setStateSnapshot` stores in `agentResponse.state.controllers`                             |
-| A2-UI transports component advertisements (`controllerId` + `controllerSchema`) | Via `createSurface` → `components[].props.controllers`                                     |
-| Frontend correlates advertisement with state by `controllerId`                  | `selectRemoteControllerState(state, controllerId)`                                         |
-| Actions are dispatched via the remote controller, not via callbacks             | `controller.dispatch('selectAction', {...})`                                               |
+| ADR principle                                                         | Implementation                                                                     |
+| --------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Component state is backend-owned, immutable on the frontend           | State delivered via AG-UI `StateSnapshot`, never mutated locally                   |
+| `componentType` is the stable discriminator                           | Used in `ComponentContractsSchema` discriminated union and `findComponentContract` |
+| AG-UI `StateSnapshot` transports component state                      | `setStateSnapshot` stores in `agentResponse.state.components`                      |
+| A2-UI transports component identity (`componentId` + `componentType`) | Via `createSurface` → `components[].props.{componentId, componentType}`            |
+| Frontend correlates component identity with state by `componentId`    | `selectRemoteControllerState(state, componentId)`                                  |
+| Actions are dispatched via the remote controller, not via callbacks   | `controller.dispatch('selectAction', {...})`                                       |
 
 ### PoC pattern conformity (PR #8088)
 
-| Pattern                                                                  | Implementation                                                              |
-| ------------------------------------------------------------------------ | --------------------------------------------------------------------------- |
-| `useAdvertisedController(stateSource, props.controllers.xxx)`            | Used in catalog renderers (ProductCarousel, BundleDisplay, ComparisonTable) |
-| `controller.state` is automatically typed from the schema literal        | Via `typeof SCHEMA_ID` → TypeScript infers the correct state type           |
-| `controller.dispatch('action', payload)` without casts                   | Used in `CatalogNextActionsBar`                                             |
-| `useSyncExternalStore` for reactive subscription                         | Added in `controllers.tsx`                                                  |
-| `StateSnapshot` contains state directly under controllerId (not wrapped) | `{controllers: {'bundle-ctrl-1': {tiers: [...]}}}`                          |
+| Pattern                                                                    | Implementation                                                              |
+| -------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `useRemoteController(stateSource, props.componentId, props.componentType)` | Used in catalog renderers (ProductCarousel, BundleDisplay, ComparisonTable) |
+| `controller.state` is automatically typed from the `componentType` literal | Via `typeof SCHEMA_ID` → TypeScript infers the correct state type           |
+| `controller.dispatch('action', payload)` without casts                     | Used in `CatalogNextActionsBar`                                             |
+| `useSyncExternalStore` for reactive subscription                           | Added in `controllers.tsx`                                                  |
+| `StateSnapshot` contains state directly under componentId (not wrapped)    | `{components: {'bundle-root': {tiers: [...]}}}`                             |
 
 ## Known limitations / Next steps
 
@@ -117,12 +117,14 @@ This implementation has been validated against the following references:
 
 ### Consumer DX improvements (simplify what the consumer must implement)
 
-| Item                                                | Description                                                                                                                                                                                                                                                                                                                                                                                              | Owner                |
-| --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
-| **Extract surface parsing into thermidor**          | `src/a2ui/types.ts` contains raw A2-UI surface parsing logic (with `as unknown as` casts) that should live in `@coveo/thermidor` rather than in the sample. Consumers should not need to parse surfaces manually — the lib should expose typed utilities.                                                                                                                                                | `packages/thermidor` |
-| **Provide a high-level surface extraction utility** | The consumer must replicate the logic in `src/a2ui/surfaces.tsx` (`getA2UIMessages`): filter activities by kind, handle per-activity-id replacement, and extract A2-UI operations. A framework-agnostic utility (e.g. `extractA2UISurfaces(activities)`) exported by thermidor would encapsulate this. The React rendering component (`ThermidorA2UISurfaces`) would remain in the consumer application. | `packages/thermidor` |
-| **Export skeleton detection logic**                 | The consumer must parse reasoning steps, map `store_render_plan` routes to component types, and manage skeleton/real-surface subtraction. A framework-agnostic utility (e.g. `computeSkeletons(reasoningSteps, surfaces)`) exported by thermidor would encapsulate this. The React hook wrapper would remain in the consumer application.                                                                | `packages/thermidor` |
-| **Simplify controller subscription ergonomics**     | The consumer must mount a `StateSourceProvider`, understand the "state source" concept, and call `useAdvertisedController(stateSource, advertisement)`. The `buildRemoteController` API in thermidor could be simplified so the consumer passes fewer arguments. The React context/hook layer would remain in the consumer application.                                                                  | `packages/thermidor` |
+| Item                                                | Description                                                                                                                                                                                                                                                                                                                                                                                                                     | Owner                |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
+| **Extract surface parsing into thermidor**          | `src/a2ui/types.ts` contains raw A2-UI surface parsing logic (with `as unknown as` casts) that should live in `@coveo/thermidor` rather than in the sample. Consumers should not need to parse surfaces manually — the lib should expose typed utilities.                                                                                                                                                                       | `packages/thermidor` |
+| **Provide a high-level surface extraction utility** | The consumer must replicate the logic in `src/a2ui/surfaces.tsx` (`getA2UIMessages`): filter activities by kind, handle per-activity-id replacement, and extract A2-UI operations. A framework-agnostic utility (e.g. `extractA2UISurfaces(activities)`) exported by thermidor would encapsulate this. The React rendering component (`ThermidorA2UISurfaces`) would remain in the consumer application.                        | `packages/thermidor` |
+| **Export skeleton detection logic**                 | The consumer must parse reasoning steps, map `store_render_plan` routes to component types, and manage skeleton/real-surface subtraction. A framework-agnostic utility (e.g. `computeSkeletons(reasoningSteps, surfaces)`) exported by thermidor would encapsulate this. The React hook wrapper would remain in the consumer application.                                                                                       | `packages/thermidor` |
+| **Simplify component subscription ergonomics**      | The consumer must mount a `StateSourceProvider`, understand the "state source" concept, and call `useRemoteController(stateSource, componentId, componentType)`. The `buildRemoteController` API in thermidor could be simplified so the consumer passes fewer arguments. The React context/hook layer would remain in the consumer application.                                                                                | `packages/thermidor` |
+| **Friendlier type aliases for consumers**           | The exported types `RemoteController`, `RemoteControllerSource`, `RemoteControllerStateForSchema` carry internal naming. Exporting consumer-facing aliases like `ComponentController<T>`, `ComponentControllerSource`, and `ComponentState<T>` would improve discoverability and readability in consumer code without breaking existing imports.                                                                                | `packages/thermidor` |
+| **Inline nested state in BundleDisplay contract**   | `BundleDisplay` currently reads other components' state (product-list slots) via `selectRemoteControllerState` + an unsafe `as ProductListState` cast. This cross-component state access is a workaround. The backend should inline product data directly in the BundleDisplay state (e.g. `tiers[].slots[].products[]` instead of `tiers[].slots[].surfaceRef`), making each component fully self-contained. This eliminates the need for any typed helper or cross-component access pattern on the frontend. | Backend              |
 
 ### Nice-to-have (non-blocking improvements)
 
@@ -130,6 +132,7 @@ This implementation has been validated against the following references:
 | ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Unified search rendering via A2-UI**                 | SearchResultsPage (product grid, facets, sort, pagination) uses a separate RoutedInterface/Headless path. Evaluate with backend whether routed search could emit A2-UI surfaces with controllers instead, unifying the rendering pipeline. Key challenges: high-frequency bidirectional interactions (facet clicks → re-fetch), latency via converse stream vs direct API, large state volume. Requires `dispatchAction` wiring first.                                                                                                                                              |
 | **Replace navigation state machine with React Router** | AppShell uses a manual reducer (`useNavigation`) and conditional rendering (`view === "search"`) for routing. Migrating to React Router would simplify JSX readability (each route has its own component, no conditionals), give free browser back-button support, and make the sample more representative of a real consumer integration. It would not significantly reduce the navigation logic complexity (effects that observe turns and trigger transitions, persisted RoutedInterface refs), but improves ergonomics for anyone reading the sample as an integration example. |
+| **`@coveo/thermidor-react` package**                   | The `useRemoteController` hook is currently copy-pasted into each React consumer. Extracting it into a dedicated `@coveo/thermidor-react` package (or a `@coveo/thermidor/react` subpath export) would eliminate this boilerplate and ensure consumers get bug fixes and performance improvements automatically. `@coveo/thermidor` itself remains framework-agnostic.                                                                                                                                                                                                              | `packages/thermidor` |
 
 ### Resolved
 

@@ -9,10 +9,6 @@ import {
 
 const runId = 'schema-bundle-4957b383';
 
-const BUNDLE_CONTROLLER_SCHEMA =
-  'https://schema.thermidor.coveo.com/controllers/bundle-display.schema.json';
-const NEXT_ACTIONS_CONTROLLER_SCHEMA =
-  'https://schema.thermidor.coveo.com/controllers/next-actions.schema.json';
 const CATALOG_ID = 'https://schema.thermidor.coveo.com/a2-ui/catalog.json';
 
 const bundleSurfaceActivity: ConverseEvent = ActivitySnapshot({
@@ -31,12 +27,8 @@ const bundleSurfaceActivity: ConverseEvent = ActivitySnapshot({
               id: 'root',
               component: 'BundleDisplay',
               props: {
-                controllers: {
-                  bundleDisplayController: {
-                    controllerId: 'bundle-ctrl-1',
-                    controllerSchema: BUNDLE_CONTROLLER_SCHEMA,
-                  },
-                },
+                componentId: 'bundle-root',
+                componentType: 'bundle-display',
               },
             },
           ],
@@ -62,12 +54,8 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
               id: 'root',
               component: 'NextActionsBar',
               props: {
-                controllers: {
-                  nextActionsController: {
-                    controllerId: 'next-actions-ctrl-1',
-                    controllerSchema: NEXT_ACTIONS_CONTROLLER_SCHEMA,
-                  },
-                },
+                componentId: 'next-actions-root',
+                componentType: 'next-actions-bar',
               },
             },
           ],
@@ -78,8 +66,8 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
 });
 
 const stateSnapshot: ConverseEvent = StateSnapshot({
-  controllers: {
-    'bundle-ctrl-1': {
+  components: {
+    'bundle-root': {
       tiers: [
         {
           label: 'Budget',
@@ -342,7 +330,7 @@ const stateSnapshot: ConverseEvent = StateSnapshot({
         },
       ],
     },
-    'next-actions-ctrl-1': {
+    'next-actions-root': {
       actions: [
         {text: 'Explore Budget tier ($315 total)', type: 'followup'},
         {text: 'Explore Mid-Range tier ($1,065 total)', type: 'followup'},

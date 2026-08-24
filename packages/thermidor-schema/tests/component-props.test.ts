@@ -5,47 +5,41 @@ import {
   BundleDisplayPropsSchema,
   ComparisonTablePropsSchema,
   CartPropsSchema,
-  ProductListControllerContractSchema,
-  NextActionsControllerContractSchema,
-  BundleDisplayControllerContractSchema,
-  ComparisonTableControllerContractSchema,
-  CartControllerContractSchema,
+  ProductCarouselSchema,
+  NextActionsBarSchema,
+  BundleDisplaySchema,
+  ComparisonTableSchema,
+  CartSchema,
 } from '../src/index.js';
 
 describe('component props schemas', () => {
   describe('schema literal alignment', () => {
-    it('ProductCarouselPropsSchema controllerSchema matches ProductListControllerContract', () => {
-      expect(
-        ProductCarouselPropsSchema.shape.controllers.shape.productListController.shape
-          .controllerSchema.value
-      ).toBe(ProductListControllerContractSchema.shape.controllerSchema.value);
+    it('ProductCarouselPropsSchema componentType matches ProductCarousel contract', () => {
+      expect(ProductCarouselPropsSchema.shape.componentType.value).toBe(
+        ProductCarouselSchema.shape.componentType.value
+      );
     });
 
-    it('NextActionsBarPropsSchema controllerSchema matches NextActionsControllerContract', () => {
-      expect(
-        NextActionsBarPropsSchema.shape.controllers.shape.nextActionsController.shape
-          .controllerSchema.value
-      ).toBe(NextActionsControllerContractSchema.shape.controllerSchema.value);
+    it('NextActionsBarPropsSchema componentType matches NextActionsBar contract', () => {
+      expect(NextActionsBarPropsSchema.shape.componentType.value).toBe(
+        NextActionsBarSchema.shape.componentType.value
+      );
     });
 
-    it('BundleDisplayPropsSchema controllerSchema matches BundleDisplayControllerContract', () => {
-      expect(
-        BundleDisplayPropsSchema.shape.controllers.shape.bundleDisplayController.shape
-          .controllerSchema.value
-      ).toBe(BundleDisplayControllerContractSchema.shape.controllerSchema.value);
+    it('BundleDisplayPropsSchema componentType matches BundleDisplay contract', () => {
+      expect(BundleDisplayPropsSchema.shape.componentType.value).toBe(
+        BundleDisplaySchema.shape.componentType.value
+      );
     });
 
-    it('ComparisonTablePropsSchema controllerSchema matches ComparisonTableControllerContract', () => {
-      expect(
-        ComparisonTablePropsSchema.shape.controllers.shape.comparisonTableController.shape
-          .controllerSchema.value
-      ).toBe(ComparisonTableControllerContractSchema.shape.controllerSchema.value);
+    it('ComparisonTablePropsSchema componentType matches ComparisonTable contract', () => {
+      expect(ComparisonTablePropsSchema.shape.componentType.value).toBe(
+        ComparisonTableSchema.shape.componentType.value
+      );
     });
 
-    it('CartPropsSchema controllerSchema matches CartControllerContract', () => {
-      expect(
-        CartPropsSchema.shape.controllers.shape.cartController.shape.controllerSchema.value
-      ).toBe(CartControllerContractSchema.shape.controllerSchema.value);
+    it('CartPropsSchema componentType matches Cart contract', () => {
+      expect(CartPropsSchema.shape.componentType.value).toBe(CartSchema.shape.componentType.value);
     });
   });
 
@@ -53,39 +47,25 @@ describe('component props schemas', () => {
     it('accepts valid ProductCarousel props', () => {
       expect(
         ProductCarouselPropsSchema.safeParse({
-          controllers: {
-            productListController: {
-              controllerId: 'featured-products',
-              controllerSchema:
-                'https://schema.thermidor.coveo.com/controllers/product-list.schema.json',
-            },
-          },
+          componentId: 'featured-products',
+          componentType: 'product-carousel',
         }).success
       ).toBe(true);
     });
 
-    it('rejects ProductCarousel props with wrong controllerSchema literal', () => {
+    it('rejects ProductCarousel props with wrong componentType literal', () => {
       expect(
         ProductCarouselPropsSchema.safeParse({
-          controllers: {
-            productListController: {
-              controllerId: 'featured-products',
-              controllerSchema: 'https://schema.thermidor.coveo.com/controllers/cart.schema.json',
-            },
-          },
+          componentId: 'featured-products',
+          componentType: 'cart',
         }).success
       ).toBe(false);
     });
 
-    it('rejects ProductCarousel props with missing controllerId', () => {
+    it('rejects ProductCarousel props with missing componentId', () => {
       expect(
         ProductCarouselPropsSchema.safeParse({
-          controllers: {
-            productListController: {
-              controllerSchema:
-                'https://schema.thermidor.coveo.com/controllers/product-list.schema.json',
-            },
-          },
+          componentType: 'product-carousel',
         }).success
       ).toBe(false);
     });
@@ -93,13 +73,8 @@ describe('component props schemas', () => {
     it('accepts valid NextActionsBar props', () => {
       expect(
         NextActionsBarPropsSchema.safeParse({
-          controllers: {
-            nextActionsController: {
-              controllerId: 'suggested-actions',
-              controllerSchema:
-                'https://schema.thermidor.coveo.com/controllers/next-actions.schema.json',
-            },
-          },
+          componentId: 'suggested-actions',
+          componentType: 'next-actions-bar',
         }).success
       ).toBe(true);
     });
@@ -107,12 +82,8 @@ describe('component props schemas', () => {
     it('accepts valid Cart props', () => {
       expect(
         CartPropsSchema.safeParse({
-          controllers: {
-            cartController: {
-              controllerId: 'shopping-cart',
-              controllerSchema: 'https://schema.thermidor.coveo.com/controllers/cart.schema.json',
-            },
-          },
+          componentId: 'shopping-cart',
+          componentType: 'cart',
         }).success
       ).toBe(true);
     });

@@ -1,29 +1,21 @@
 import {useCallback, useMemo, useSyncExternalStore} from 'react';
 import {
   buildRemoteController,
-  type AdvertisedRemoteController,
+  type ComponentType,
+  type RemoteController,
   type RemoteControllerSource,
 } from '@coveo/thermidor';
-import type {ControllerContracts} from '@coveo/thermidor-schema';
-
-type ControllerSchemaId = ControllerContracts['controllerSchema'];
-
-export type ControllerAdvertisement<TSchema extends ControllerSchemaId = ControllerSchemaId> = {
-  controllerId: string;
-  controllerSchema: TSchema;
-};
 
 export type EngineStateSource = RemoteControllerSource;
 
-type AdvertisedController<TSchema extends ControllerSchemaId> = AdvertisedRemoteController<TSchema>;
-
-export function useAdvertisedController<TSchema extends ControllerSchemaId>(
-  source: EngineStateSource,
-  {controllerId, controllerSchema: contract}: ControllerAdvertisement<TSchema>
-): AdvertisedController<TSchema> {
+export function useRemoteController<TComponentType extends ComponentType>(
+  source: RemoteControllerSource,
+  componentId: string,
+  componentType: TComponentType
+): RemoteController<TComponentType> {
   const controller = useMemo(
-    () => buildRemoteController({source, controllerId, contract}),
-    [controllerId, contract, source]
+    () => buildRemoteController({source, componentId, componentType}),
+    [componentId, componentType, source]
   );
 
   const subscribe = useCallback(
@@ -32,7 +24,6 @@ export function useAdvertisedController<TSchema extends ControllerSchemaId>(
   );
   const getSnapshot = useCallback(() => controller.state, [controller]);
 
-  // Force re-render when the remote controller's state changes
   useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
 
   return controller;

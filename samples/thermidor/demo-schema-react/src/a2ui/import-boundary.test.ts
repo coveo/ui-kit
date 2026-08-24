@@ -1,6 +1,8 @@
 import {readdirSync, readFileSync, statSync} from 'node:fs';
 import {join, resolve} from 'node:path';
 import {describe, expect, it} from 'vitest';
+import * as thermidorSchema from '@coveo/thermidor-schema';
+import * as thermidor from '@coveo/thermidor';
 
 const srcRoot = resolve(process.cwd(), 'src');
 
@@ -52,6 +54,35 @@ describe('import boundary', () => {
       const content = readFileSync(file, 'utf-8');
       for (const pattern of nonExistentImports) {
         expect(content, `Import of non-existent export in ${file}`).not.toMatch(pattern);
+      }
+    }
+  });
+
+  it('does not export removed controller symbols from @coveo/thermidor-schema', () => {
+    expect('ControllerContracts' in thermidorSchema).toBe(false);
+    expect('ControllerContractsSchema' in thermidorSchema).toBe(false);
+    expect('CartControllerContractSchema' in thermidorSchema).toBe(false);
+    expect('ProductListControllerContractSchema' in thermidorSchema).toBe(false);
+  });
+
+  it('does not export removed controller symbols from @coveo/thermidor', () => {
+    expect('AdvertisedRemoteController' in thermidor).toBe(false);
+    expect('RemoteControllerSchemaId' in thermidor).toBe(false);
+  });
+
+  it('does not reference removed controller symbols in source files', () => {
+    const removedSymbols = [
+      /\bControllerContracts\b/,
+      /\bControllerContractsSchema\b/,
+      /\bCartControllerContractSchema\b/,
+      /\bProductListControllerContractSchema\b/,
+      /\bAdvertisedRemoteController\b/,
+      /\bRemoteControllerSchemaId\b/,
+    ];
+    for (const file of sourceFiles) {
+      const content = readFileSync(file, 'utf-8');
+      for (const pattern of removedSymbols) {
+        expect(content, `Reference to removed symbol ${pattern} in ${file}`).not.toMatch(pattern);
       }
     }
   });

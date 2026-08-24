@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {selectRemoteControllerState} from '@coveo/thermidor';
 
-import {useAdvertisedController} from '../controllers.js';
+import {useRemoteController} from '../controllers.js';
 import {useStateSource} from '../state-source-context.js';
 import type {
   BundleDisplayProps,
@@ -13,10 +13,7 @@ import styles from './BundleDisplay.module.css';
 
 export function BundleDisplayRenderer({props}: {props: BundleDisplayProps}) {
   const stateSource = useStateSource();
-  const controller = useAdvertisedController(
-    stateSource,
-    props.controllers.bundleDisplayController
-  );
+  const controller = useRemoteController(stateSource, props.componentId, props.componentType);
   const tiers = controller.state?.tiers ?? [];
   const [activeTierIndex, setActiveTierIndex] = useState(0);
 

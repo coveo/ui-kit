@@ -24,7 +24,7 @@ interface DiscriminatedUnion {
 interface ComponentPropsEntry {
   componentName: string;
   schemaName: string;
-  controllers: Array<{name: string; controllerSchemaId: string}>;
+  componentType: string;
 }
 
 class LocalSchemaStore extends JSONSchemaStore {
@@ -48,10 +48,10 @@ const documents = await loadSchemaDocuments(schemaDirectory);
 const documentsById = new Map<string, SchemaDocument>(
   documents.map((document) => [document.$id, document])
 );
-const controllerIndex = loadControllerIndex(documentsById);
-const projectionDocuments = crawlSchemaDocuments(controllerIndex, documentsById);
+const componentIndex = loadComponentIndex(documentsById);
+const projectionDocuments = crawlSchemaDocuments(componentIndex, documentsById);
 const entries = loadProjectionEntries(projectionDocuments);
-const discriminatedUnions = loadDiscriminatedUnions(controllerIndex, projectionDocuments);
+const discriminatedUnions = loadDiscriminatedUnions(componentIndex, projectionDocuments);
 
 const [seed] = entries;
 const seedDocument = documentsById.get(seed?.schemaId);
@@ -120,7 +120,7 @@ if (checkOnly) {
 }
 
 function loadProjectionEntries(documents: SchemaDocument[]): ProjectionEntry[] {
-  const controllerDocuments = loadControllerDocuments(documents);
+  const componentDocuments = loadComponentContractDocuments(documents);
   const definitionDocuments = documents.filter((document) =>
     document.$id.includes('/definitions/')
   );
@@ -129,9 +129,9 @@ function loadProjectionEntries(documents: SchemaDocument[]): ProjectionEntry[] {
     ...definitionDocuments.map((document) =>
       createProjectionEntry(loadSchemaTitle(document), document.$id)
     ),
-    ...controllerDocuments.flatMap((document) => loadControllerStateEntry(document)),
-    ...controllerDocuments.flatMap((document) => loadControllerPayloadEntries(document)),
-    ...controllerDocuments.map((document) =>
+    ...componentDocuments.flatMap((document) => loadComponentStateEntry(document)),
+    ...componentDocuments.flatMap((document) => loadComponentPayloadEntries(document)),
+    ...componentDocuments.map((document) =>
       createProjectionEntry(loadSchemaTitle(document), document.$id)
     ),
   ];
@@ -141,12 +141,12 @@ function loadDiscriminatedUnions(
   index: SchemaDocument,
   documents: SchemaDocument[]
 ): DiscriminatedUnion[] {
-  const union = loadControllerUnion(index);
+  const union = loadComponentUnion(index);
   return [
     {
       typeName: loadSchemaTitle(union),
-      discriminator: 'controllerSchema',
-      memberTypeNames: loadControllerDocuments(documents).map(loadSchemaTitle),
+      discriminator: 'componentType',
+      memberTypeNames: loadComponentContractDocuments(documents).map(loadSchemaTitle),
     },
   ];
 }
@@ -230,31 +230,31 @@ function crawlSchemaDocuments(
   return crawled;
 }
 
-function loadControllerDocuments(documents: SchemaDocument[]): SchemaDocument[] {
+function loadComponentContractDocuments(documents: SchemaDocument[]): SchemaDocument[] {
   return documents.filter(
-    (document) => document.properties?.controllerSchema?.const === document.$id
+    (document) => typeof document.properties?.componentType?.const === 'string'
   );
 }
 
-function loadControllerIndex(documents: Map<string, SchemaDocument>): SchemaDocument {
-  const id = 'https://schema.thermidor.coveo.com/controllers/controller-contracts.schema.json';
+function loadComponentIndex(documents: Map<string, SchemaDocument>): SchemaDocument {
+  const id = 'https://schema.thermidor.coveo.com/components/component-contracts.schema.json';
   const document = documents.get(id);
   if (!document) {
-    throw new Error(`Unable to find controller index ${id}.`);
+    throw new Error(`Unable to find component index ${id}.`);
   }
   return document;
 }
 
-function loadControllerUnion(index: SchemaDocument): Schema & {oneOf: Schema[]} {
+function loadComponentUnion(index: SchemaDocument): Schema & {oneOf: Schema[]} {
   const definitions = Object.values((index.$defs ?? {}) as Record<string, Schema>);
   const union = definitions.find((definition) => Array.isArray(definition.oneOf));
   if (!union) {
-    throw new Error(`Unable to find controller union in ${index.$id}.`);
+    throw new Error(`Unable to find component union in ${index.$id}.`);
   }
   return union as Schema & {oneOf: Schema[]};
 }
 
-function loadControllerStateEntry(document: SchemaDocument): ProjectionEntry[] {
+function loadComponentStateEntry(document: SchemaDocument): ProjectionEntry[] {
   const reference = document.properties?.state?.$ref;
   if (typeof reference !== 'string') {
     return [];
@@ -268,7 +268,7 @@ function loadControllerStateEntry(document: SchemaDocument): ProjectionEntry[] {
   ];
 }
 
-function loadControllerPayloadEntries(document: SchemaDocument): ProjectionEntry[] {
+function loadComponentPayloadEntries(document: SchemaDocument): ProjectionEntry[] {
   const actions = Object.values(document.properties?.actions?.properties ?? {}) as Schema[];
   return actions.flatMap((action) => {
     const reference = action.$ref;
@@ -360,40 +360,36 @@ function renderDiscriminatedUnions(unions: DiscriminatedUnion[]): string[] {
 }
 
 function loadComponentPropsEntries(documents: Map<string, SchemaDocument>): ComponentPropsEntry[] {
-  const componentEntries: ComponentPropsEntry[] = [];
+  const entries: ComponentPropsEntry[] = [];
   for (const [id, doc] of documents) {
-    if (!id.includes('/components/')) continue;
+    if (!id.includes('/components/') || id.includes('component-contracts')) continue;
     const title = doc.title as string | undefined;
-    const controllersProps = doc.properties?.controllers?.properties as
-      | Record<string, any>
-      | undefined;
-    if (!title || !controllersProps) continue;
-
-    const controllers: Array<{name: string; controllerSchemaId: string}> = [];
-    for (const [name, def] of Object.entries(controllersProps)) {
-      const ref = def.$ref as string | undefined;
-      if (ref) {
-        controllers.push({name, controllerSchemaId: ref});
-      }
-    }
-    if (controllers.length > 0) {
-      componentEntries.push({componentName: title, schemaName: `${title}Props`, controllers});
-    }
+    const componentType = doc.properties?.componentType?.const as string | undefined;
+    if (!title || !componentType) continue;
+    entries.push({
+      componentName: title,
+      schemaName: `${title}Props`,
+      componentType,
+    });
   }
-  return componentEntries.sort((a, b) => a.componentName.localeCompare(b.componentName));
+  return entries.sort((a, b) => a.componentName.localeCompare(b.componentName));
 }
 
 function renderComponentPropsSchemas(propsEntries: ComponentPropsEntry[]): string[] {
-  const output: string[] = ['', '// Component props schemas (generated from schema/components/)'];
+  const output: string[] = [
+    '',
+    '/**',
+    ' * Component props schemas.',
+    ' * These props are injected by the A2-UI surface layer (backend) and passed to catalog',
+    ' * renderers automatically. Consumers should NOT hardcode these values; they arrive via',
+    " * the createSurface message's components[].props.",
+    ' */',
+  ];
   for (const entry of propsEntries) {
-    const controllerFields = entry.controllers.map((c) => {
-      return `    ${c.name}: z.object({ controllerId: z.string(), controllerSchema: z.literal("${c.controllerSchemaId}") })`;
-    });
     output.push(
       `export const ${entry.schemaName}Schema = z.object({`,
-      '  controllers: z.object({',
-      ...controllerFields.map((f, i) => f + (i < controllerFields.length - 1 ? ',' : '')),
-      '  })',
+      `  componentId: z.string(),`,
+      `  componentType: z.literal("${entry.componentType}"),`,
       '});',
       `export type ${entry.schemaName} = z.infer<typeof ${entry.schemaName}Schema>;`,
       ''

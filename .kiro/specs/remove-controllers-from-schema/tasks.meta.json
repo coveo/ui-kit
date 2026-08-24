@@ -1,0 +1,843 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Rewrite `base/component.schema.json` to remove `controllers` and add `componentId`, `displayName`, `componentType`, `state`, `actions` as required top-level properties with `additionalProperties: false`": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339093200
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339104766
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339188780
+      }
+    ],
+    "1.2 Create `components/component-contracts.schema.json` with a `oneOf` discriminated by `componentType` referencing all five component contracts": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339093241
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339105698
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339189682
+      }
+    ],
+    "1.3 Rewrite all five component contract schemas under `schema/components/` to inline `componentType` (const literal), `state`, and `actions` as top-level properties, referencing `base/component.schema.json` via `allOf`": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339093294
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339207099
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339385004
+      }
+    ],
+    "1.4 Delete `base/controller.schema.json`": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339093341
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339388848
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339547006
+      }
+    ],
+    "1.5 Delete the entire `schema/controllers/` directory (including `controller-contracts.schema.json`, `product-list.schema.json`, `cart.schema.json`, `next-actions.schema.json`, `bundle-display.schema.json`, `comparison-table.schema.json`)": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339093394
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339389975
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339548163
+      }
+    ],
+    "2.1 Update `scripts/generate-zod.ts`: rename `loadControllerIndex` to `loadComponentIndex`, change the entry point URI to `components/component-contracts.schema.json`": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339093476
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339560059
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339741701
+      }
+    ],
+    "2.2 Update the component detection heuristic: replace `loadControllerDocuments` with `loadComponentContractDocuments` filtering on `document.properties?.componentType?.const`": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339093519
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339561887
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339742940
+      }
+    ],
+    "2.3 Update `loadDiscriminatedUnions`: change discriminator from `'controllerSchema'` to `'componentType'` and update member type name resolution": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339093562
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339563013
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339744179
+      }
+    ],
+    "2.4 Update `loadComponentPropsEntries` to emit flat `{componentId: z.string(), componentType: z.literal(...)}` props schemas instead of nested `controllers` objects": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339093610
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339564592
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339745270
+      }
+    ],
+    "2.5 Rename `loadControllerStateEntry`/`loadControllerPayloadEntries` to `loadComponentStateEntry`/`loadComponentPayloadEntries` with matching logic updates to read `state` and `actions` from the top-level component contract": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339093661
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339566308
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339747000
+      }
+    ],
+    "3.1 Run `pnpm run generate` in `packages/thermidor-schema` and verify it produces `src/generated/schemas.ts` with `ComponentContractsSchema` discriminated on `componentType`": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339093706
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339752965
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339823928
+      }
+    ],
+    "3.2 Run `pnpm run generate:check` and verify exit 0 (schemas are fresh)": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339093742
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339753925
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339824782
+      }
+    ],
+    "3.3 Run `pnpm run validate:schema` and verify zero errors against `schema/base/` and `schema/components/`": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339093792
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339754719
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339825753
+      }
+    ],
+    "4.1 Update `src/index.ts`: export `ComponentContractsSchema`, `ComponentContracts`, individual component contract schemas (`CartSchema`, `ProductCarouselSchema`, `NextActionsBarSchema`, `BundleDisplaySchema`, `ComparisonTableSchema`) and their types; remove all `ControllerContractsSchema`, `ControllerContracts`, and individual controller contract exports": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339093840
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339833797
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339903892
+      }
+    ],
+    "5. Checkpoint - Ensure schema package builds": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339093900
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339916433
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339986213
+      }
+    ],
+    "6.1 Update types: replace `RemoteControllerSchemaId` with `ComponentType` (derived from `ComponentContracts['componentType']`), update `RemoteControllerContractSchemaFor`, `RemoteControllerStateForSchema`, `RemoteControllerActionNameForSchema`, `RemoteControllerActionPayloadForSchema` to use `componentType` discriminant": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339093970
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340001858
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340207826
+      }
+    ],
+    "6.2 Update `RemoteControllerOptions` to accept `{source, componentId, componentType}` instead of `{source, controllerId, contract}`": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339094021
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340002798
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340208751
+      }
+    ],
+    "6.3 Update `buildRemoteController` to resolve the contract via `ComponentContractsSchema` using `componentType` as discriminant, throw for unknown types": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339094067
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340004368
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340210018
+      }
+    ],
+    "6.4 Update `selectRemoteControllerState` to read from `state.components[componentId]` instead of `state.controllers[controllerId]`, returning singleton empty object when missing": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339094103
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340005770
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340211143
+      }
+    ],
+    "6.5 Update dispatch to send `{componentId, componentType, action, payload}` instead of `{controllerId, controllerSchema, action, payload}`": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339094151
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340006891
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340212033
+      }
+    ],
+    "6.6 Update `RemoteController` interface: remove `AdvertisedRemoteController`, add `componentId` readonly property, parameterize by `TComponentType extends ComponentType`": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339094193
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340011230
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340213262
+      }
+    ],
+    "6.7 Update `packages/thermidor/src/public/controllers/index.ts` exports: export `ComponentType`, remove `RemoteControllerSchemaId` and `AdvertisedRemoteController`": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339094240
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340217545
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340266917
+      }
+    ],
+    "7.1 Rewrite `remote-controller.test.ts`: update all calls to use `{source, componentId, componentType}` options, structure mock state as `{components: {[componentId]: state}}`, assert dispatch payload contains `{componentId, componentType, action, payload}`": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339094293
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340273023
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340493250
+      }
+    ],
+    "7.2 Write property test: Schema round-trip preservation (Property 1)": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339094333
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340273861
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340494323
+      }
+    ],
+    "7.3 Write property test: Component contract resolution (Property 3)": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339094380
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340274630
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340495141
+      }
+    ],
+    "7.4 Write property test: State selector isolation (Property 4)": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339094422
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340275417
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340496103
+      }
+    ],
+    "7.5 Write property test: Empty state singleton identity (Property 5)": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339094469
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340276293
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340496741
+      }
+    ],
+    "7.6 Write property test: Action dispatch payload round-trip (Property 6)": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339094520
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340280850
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340497524
+      }
+    ],
+    "7.7 Write property test: Invalid payload rejection (Property 7)": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339094568
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340281669
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340498337
+      }
+    ],
+    "8. Checkpoint - Ensure SDK builds and tests pass": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339094608
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340513765
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340765838
+      }
+    ],
+    "9.1 Update `schema-response-fallback.ts`: remove `controllers` from component props, use `components` keyed by `componentId` in `StateSnapshot`, remove controller schema URI constants": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339094652
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340518567
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340767754
+      }
+    ],
+    "9.2 Update `schema-response-discovery.ts`: same pattern — remove `controllers` props, use `components[componentId]` state": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339094702
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340519479
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340768932
+      }
+    ],
+    "9.3 Update `schema-response-comparison.ts`: same pattern": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339094753
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340520317
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340769703
+      }
+    ],
+    "9.4 Update `schema-response-bundle.ts`: same pattern (multi-component surface with nested product carousels)": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339094801
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340521130
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340770880
+      }
+    ],
+    "9.5 Update `schema-response-search.ts`: same pattern": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339094851
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340521989
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340771755
+      }
+    ],
+    "9.6 Update shared constants/helpers (`shared.ts`, `events.ts`): remove controller schema URI constants, update `StateSnapshot`/`ActivitySnapshot` helper type signatures if needed": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339094901
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340776497
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340860772
+      }
+    ],
+    "10. Checkpoint - Ensure mock API package builds": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339094944
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340868626
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340874850
+      }
+    ],
+    "11.1 Replace `useAdvertisedController` with `useRemoteController` hook in `src/a2ui/controllers.tsx`: accept `(source, componentId, componentType)`, call `buildRemoteController({source, componentId, componentType})`, remove all `ControllerContracts`/`ControllerAdvertisement`/`AdvertisedRemoteController` references": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339094989
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340869946
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787341169206
+      }
+    ],
+    "11.2 Update all component renderers (ProductCarousel, NextActionsBar, BundleDisplay, ComparisonTable) to call `useRemoteController(stateSource, props.componentId, props.componentType)` instead of `useAdvertisedController(stateSource, props.controllers.X)`": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339095038
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340910359
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787341170422
+      }
+    ],
+    "11.3 Update `src/a2ui/controllers.test.ts`: use `{components: {[componentId]: state}}` mock structure, call `buildRemoteController` with new options, assert `{componentId, componentType, action, payload}` dispatch": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339095083
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340912306
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787341172524
+      }
+    ],
+    "11.4 Update `src/a2ui/components.test.ts`: validate props with flat `{componentId, componentType}`, replace controller contract tests with component contract equivalents": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339095149
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340911139
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787341174003
+      }
+    ],
+    "11.5 Verify `import-boundary.test.ts` rejects imports of removed symbols (`ControllerContracts`, `ControllerContractsSchema`, `CartControllerContractSchema`, `ProductListControllerContractSchema`, `AdvertisedRemoteController`, `RemoteControllerSchemaId`)": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339095232
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787341178665
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787341284192
+      }
+    ],
+    "12. Final checkpoint - Ensure full build and tests pass": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339095282
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787341289225
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787341501754
+      }
+    ],
+    "13. Write property test: Zod generation idempotence (Property 2)": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339095332
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787341506441
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787341635270
+      }
+    ],
+    "14. Write property test: Data type backward compatibility (Property 8)": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339095383
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787341507362
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787341636016
+      }
+    ],
+    "15. Write property test: Controllers property rejection (Property 9)": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339095432
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787341508232
+      },
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787341639425
+      }
+    ],
+    "1. Restructure JSON Schema layer": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339548225
+      }
+    ],
+    "2. Update Zod code generation script": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339747060
+      }
+    ],
+    "3. Run generation and validate output": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339825794
+      }
+    ],
+    "4. Update `thermidor-schema` package exports": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787339903994
+      }
+    ],
+    "6. Adapt SDK runtime (`remote-controller.ts`)": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340266960
+      }
+    ],
+    "7. Update SDK unit tests": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340498394
+      }
+    ],
+    "9. Update Platform Mock API templates": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787340860822
+      }
+    ],
+    "11. Migrate demo-schema-react sample consumer": [
+      {
+        "executionId": "aa6d953f-1fd5-4f68-916d-196a4a455469",
+        "chatSessionId": "sess_07b56750-229d-48f2-a2f4-dd7c28aa5c62",
+        "timestamp": 1787341284249
+      }
+    ]
+  }
+}
