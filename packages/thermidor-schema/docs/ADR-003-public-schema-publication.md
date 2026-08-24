@@ -1,8 +1,10 @@
 # ADR-003: Publish the Thermidor Schema Contract and TypeScript Projection
 
-**Status:** Accepted
-**Date:** 2026-08-03
+**Status:** Accepted  
+**Date:** 2026-08-03  
 **Deciders:** Thermidor Stack team
+
+> **Note:** The repository location assumed by this ADR (standalone repo) has been revised by [ADR-007](./ADR-007-schema-package-in-ui-kit-monorepo.md). The publication decision and its requirements remain valid; the package is now hosted in the ui-kit monorepo.
 
 ## Context
 

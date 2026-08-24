@@ -5,17 +5,17 @@ import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 import {describe, expect, it} from 'vitest';
 import {
-  BundleDisplayControllerContractSchema,
+  BundleDisplaySchema,
   BundleDisplayStateSchema,
   CartItemSchema,
-  CartControllerContractSchema,
+  CartSchema,
   CartStateSchema,
-  ComparisonTableControllerContractSchema,
+  ComparisonTableSchema,
   ComparisonTableStateSchema,
-  ControllerContractsSchema,
-  NextActionsControllerContractSchema,
+  ComponentContractsSchema,
+  NextActionsBarSchema,
   NextActionsStateSchema,
-  ProductListControllerContractSchema,
+  ProductCarouselSchema,
   ProductListStateSchema,
   ProductSchema,
   SelectActionPayloadSchema,
@@ -92,97 +92,97 @@ const fixtures = [
     file: 'product-list-state.valid.json',
     schema: ProductListStateSchema,
     schemaId:
-      'https://schema.thermidor.coveo.com/controllers/product-list.schema.json#/$defs/ProductListState',
+      'https://schema.thermidor.coveo.com/components/product-carousel.schema.json#/$defs/ProductListState',
     valid: true,
   },
   {
     file: 'cart-state.valid.json',
     schema: CartStateSchema,
-    schemaId: 'https://schema.thermidor.coveo.com/controllers/cart.schema.json#/$defs/CartState',
+    schemaId: 'https://schema.thermidor.coveo.com/components/cart.schema.json#/$defs/CartState',
     valid: true,
   },
   {
     file: 'set-items-payload.valid.json',
     schema: SetItemsPayloadSchema,
     schemaId:
-      'https://schema.thermidor.coveo.com/controllers/cart.schema.json#/$defs/SetItemsAction/properties/payload',
+      'https://schema.thermidor.coveo.com/components/cart.schema.json#/$defs/SetItemsAction/properties/payload',
     valid: true,
   },
   {
     file: 'set-items-payload.invalid-extra-property.json',
     schema: SetItemsPayloadSchema,
     schemaId:
-      'https://schema.thermidor.coveo.com/controllers/cart.schema.json#/$defs/SetItemsAction/properties/payload',
+      'https://schema.thermidor.coveo.com/components/cart.schema.json#/$defs/SetItemsAction/properties/payload',
     valid: false,
   },
   {
     file: 'update-item-quantity-payload.valid.json',
     schema: UpdateItemQuantityPayloadSchema,
     schemaId:
-      'https://schema.thermidor.coveo.com/controllers/cart.schema.json#/$defs/UpdateItemQuantityAction/properties/payload',
+      'https://schema.thermidor.coveo.com/components/cart.schema.json#/$defs/UpdateItemQuantityAction/properties/payload',
     valid: true,
   },
   {
     file: 'update-item-quantity-payload.invalid-missing-item.json',
     schema: UpdateItemQuantityPayloadSchema,
     schemaId:
-      'https://schema.thermidor.coveo.com/controllers/cart.schema.json#/$defs/UpdateItemQuantityAction/properties/payload',
+      'https://schema.thermidor.coveo.com/components/cart.schema.json#/$defs/UpdateItemQuantityAction/properties/payload',
     valid: false,
   },
   {
     file: 'next-actions-state.valid.json',
     schema: NextActionsStateSchema,
     schemaId:
-      'https://schema.thermidor.coveo.com/controllers/next-actions.schema.json#/$defs/NextActionsState',
+      'https://schema.thermidor.coveo.com/components/next-actions-bar.schema.json#/$defs/NextActionsState',
     valid: true,
   },
   {
     file: 'next-actions-state.invalid-type.json',
     schema: NextActionsStateSchema,
     schemaId:
-      'https://schema.thermidor.coveo.com/controllers/next-actions.schema.json#/$defs/NextActionsState',
+      'https://schema.thermidor.coveo.com/components/next-actions-bar.schema.json#/$defs/NextActionsState',
     valid: false,
   },
   {
     file: 'bundle-display-state.valid.json',
     schema: BundleDisplayStateSchema,
     schemaId:
-      'https://schema.thermidor.coveo.com/controllers/bundle-display.schema.json#/$defs/BundleDisplayState',
+      'https://schema.thermidor.coveo.com/components/bundle-display.schema.json#/$defs/BundleDisplayState',
     valid: true,
   },
   {
     file: 'bundle-display-state.invalid-missing-label.json',
     schema: BundleDisplayStateSchema,
     schemaId:
-      'https://schema.thermidor.coveo.com/controllers/bundle-display.schema.json#/$defs/BundleDisplayState',
+      'https://schema.thermidor.coveo.com/components/bundle-display.schema.json#/$defs/BundleDisplayState',
     valid: false,
   },
   {
     file: 'comparison-table-state.valid.json',
     schema: ComparisonTableStateSchema,
     schemaId:
-      'https://schema.thermidor.coveo.com/controllers/comparison-table.schema.json#/$defs/ComparisonTableState',
+      'https://schema.thermidor.coveo.com/components/comparison-table.schema.json#/$defs/ComparisonTableState',
     valid: true,
   },
   {
     file: 'comparison-table-state.invalid-missing-name.json',
     schema: ComparisonTableStateSchema,
     schemaId:
-      'https://schema.thermidor.coveo.com/controllers/comparison-table.schema.json#/$defs/ComparisonTableState',
+      'https://schema.thermidor.coveo.com/components/comparison-table.schema.json#/$defs/ComparisonTableState',
     valid: false,
   },
   {
     file: 'select-action-payload.valid.json',
     schema: SelectActionPayloadSchema,
     schemaId:
-      'https://schema.thermidor.coveo.com/controllers/next-actions.schema.json#/$defs/SelectActionAction/properties/payload',
+      'https://schema.thermidor.coveo.com/components/next-actions-bar.schema.json#/$defs/SelectActionAction/properties/payload',
     valid: true,
   },
   {
     file: 'select-action-payload.invalid-type.json',
     schema: SelectActionPayloadSchema,
     schemaId:
-      'https://schema.thermidor.coveo.com/controllers/next-actions.schema.json#/$defs/SelectActionAction/properties/payload',
+      'https://schema.thermidor.coveo.com/components/next-actions-bar.schema.json#/$defs/SelectActionAction/properties/payload',
     valid: false,
   },
 ];
@@ -199,86 +199,84 @@ describe('generated Zod schemas match Ajv for all fixtures', () => {
   }
 });
 
-describe('controller contract discriminated union', () => {
-  it('accepts valid ProductListControllerContract', () => {
+describe('component contract discriminated union', () => {
+  it('accepts valid ProductCarousel contract', () => {
     const contract = {
       actions: {},
-      controllerSchema: 'https://schema.thermidor.coveo.com/controllers/product-list.schema.json',
+      componentType: 'product-carousel',
       state: {products: []},
     };
-    expect(ControllerContractsSchema.safeParse(contract).success).toBe(true);
+    expect(ComponentContractsSchema.safeParse(contract).success).toBe(true);
   });
 
-  it('accepts valid CartControllerContract', () => {
+  it('accepts valid Cart contract', () => {
     const cartItem = {name: 'Kayak', price: 1, productId: 'kayak-001', quantity: 1};
     const contract = {
       actions: {
         setItems: {payload: {items: [cartItem]}},
         updateItemQuantity: {payload: {item: cartItem}},
       },
-      controllerSchema: 'https://schema.thermidor.coveo.com/controllers/cart.schema.json',
+      componentType: 'cart',
       state: {items: [cartItem]},
     };
-    expect(ControllerContractsSchema.safeParse(contract).success).toBe(true);
+    expect(ComponentContractsSchema.safeParse(contract).success).toBe(true);
   });
 
-  it('rejects cart contract with product-list controllerSchema', () => {
+  it('rejects cart contract with product-carousel componentType', () => {
     const cartItem = {name: 'Kayak', price: 1, productId: 'kayak-001', quantity: 1};
     const contract = {
       actions: {
         setItems: {payload: {items: [cartItem]}},
         updateItemQuantity: {payload: {item: cartItem}},
       },
-      controllerSchema: 'https://schema.thermidor.coveo.com/controllers/product-list.schema.json',
+      componentType: 'product-carousel',
       state: {items: [cartItem]},
     };
-    expect(ControllerContractsSchema.safeParse(contract).success).toBe(false);
+    expect(ComponentContractsSchema.safeParse(contract).success).toBe(false);
   });
 
-  it('rejects unknown controllerSchema value', () => {
+  it('rejects unknown componentType value', () => {
     const contract = {
       actions: {},
-      controllerSchema: 'https://schema.thermidor.coveo.com/controllers/unknown.schema.json',
+      componentType: 'unknown-component',
       state: {products: []},
     };
-    expect(ControllerContractsSchema.safeParse(contract).success).toBe(false);
+    expect(ComponentContractsSchema.safeParse(contract).success).toBe(false);
   });
 
   it('accesses nested action payload schemas', () => {
     expect(
-      CartControllerContractSchema.shape.actions.shape.setItems.shape.payload.safeParse({items: []})
-        .success
+      CartSchema.shape.actions.shape.setItems.shape.payload.safeParse({items: []}).success
     ).toBe(true);
   });
 
-  it('accepts valid NextActionsControllerContract', () => {
+  it('accepts valid NextActionsBar contract', () => {
     const contract = {
       actions: {selectAction: {payload: {text: 'test', type: 'followup'}}},
-      controllerSchema: 'https://schema.thermidor.coveo.com/controllers/next-actions.schema.json',
+      componentType: 'next-actions-bar',
       state: {actions: [{text: 'Hello', type: 'followup'}]},
     };
-    expect(ControllerContractsSchema.safeParse(contract).success).toBe(true);
+    expect(ComponentContractsSchema.safeParse(contract).success).toBe(true);
   });
 
-  it('accepts valid BundleDisplayControllerContract', () => {
+  it('accepts valid BundleDisplay contract', () => {
     const contract = {
       actions: {},
-      controllerSchema: 'https://schema.thermidor.coveo.com/controllers/bundle-display.schema.json',
+      componentType: 'bundle-display',
       state: {tiers: [{label: 'Budget', description: 'Cheap', slots: []}]},
     };
-    expect(ControllerContractsSchema.safeParse(contract).success).toBe(true);
+    expect(ComponentContractsSchema.safeParse(contract).success).toBe(true);
   });
 
-  it('accepts valid ComparisonTableControllerContract', () => {
+  it('accepts valid ComparisonTable contract', () => {
     const contract = {
       actions: {},
-      controllerSchema:
-        'https://schema.thermidor.coveo.com/controllers/comparison-table.schema.json',
+      componentType: 'comparison-table',
       state: {
         products: [{productId: 'p1', name: 'Product', values: {}}],
         attributes: [{key: 'k', label: 'K'}],
       },
     };
-    expect(ControllerContractsSchema.safeParse(contract).success).toBe(true);
+    expect(ComponentContractsSchema.safeParse(contract).success).toBe(true);
   });
 });

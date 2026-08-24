@@ -25,13 +25,8 @@ const surfaceActivitySnapshot: ConverseEvent = ActivitySnapshot({
               id: 'root',
               component: 'NextActionsBar',
               props: {
-                controllers: {
-                  nextActionsController: {
-                    controllerId: 'next-actions-ctrl-1',
-                    controllerSchema:
-                      'https://schema.thermidor.coveo.com/controllers/next-actions.schema.json',
-                  },
-                },
+                componentId: 'next-actions-root',
+                componentType: 'next-actions-bar',
               },
             },
           ],
@@ -42,8 +37,8 @@ const surfaceActivitySnapshot: ConverseEvent = ActivitySnapshot({
 });
 
 const stateSnapshot: ConverseEvent = StateSnapshot({
-  controllers: {
-    'next-actions-ctrl-1': {
+  components: {
+    'next-actions-root': {
       actions: [
         {text: 'Show me popular products', type: 'followup'},
         {text: 'sports equipment', type: 'search'},

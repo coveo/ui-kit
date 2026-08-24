@@ -1,45 +1,33 @@
 import {describe, expect, it} from 'vitest';
-import {
-  ProductListControllerContractSchema,
-  CartControllerContractSchema,
-  ControllerContractsSchema,
-} from '../src/index.js';
+import {ProductCarouselSchema, CartSchema, ComponentContractsSchema} from '../src/index.js';
 
 describe('canonical schema IDs', () => {
-  it('ProductListControllerContract exposes the exact canonical ID literal', () => {
-    expect(ProductListControllerContractSchema.shape.controllerSchema.value).toBe(
-      'https://schema.thermidor.coveo.com/controllers/product-list.schema.json'
-    );
+  it('ProductCarousel exposes the exact componentType literal', () => {
+    expect(ProductCarouselSchema.shape.componentType.value).toBe('product-carousel');
   });
 
-  it('CartControllerContract exposes the exact canonical ID literal', () => {
-    expect(CartControllerContractSchema.shape.controllerSchema.value).toBe(
-      'https://schema.thermidor.coveo.com/controllers/cart.schema.json'
-    );
+  it('Cart exposes the exact componentType literal', () => {
+    expect(CartSchema.shape.componentType.value).toBe('cart');
   });
 
-  it('ControllerContracts discriminated union uses controllerSchema as discriminator', () => {
-    const productOption = ControllerContractsSchema.options.find(
-      (option: any) =>
-        option.shape.controllerSchema.value ===
-        'https://schema.thermidor.coveo.com/controllers/product-list.schema.json'
+  it('ComponentContracts discriminated union uses componentType as discriminator', () => {
+    const productOption = ComponentContractsSchema.options.find(
+      (option: any) => option.shape.componentType.value === 'product-carousel'
     );
-    expect(productOption).toBe(ProductListControllerContractSchema);
+    expect(productOption).toBe(ProductCarouselSchema);
 
-    const cartOption = ControllerContractsSchema.options.find(
-      (option: any) =>
-        option.shape.controllerSchema.value ===
-        'https://schema.thermidor.coveo.com/controllers/cart.schema.json'
+    const cartOption = ComponentContractsSchema.options.find(
+      (option: any) => option.shape.componentType.value === 'cart'
     );
-    expect(cartOption).toBe(CartControllerContractSchema);
+    expect(cartOption).toBe(CartSchema);
   });
 
-  it('rejects a value with unknown controllerSchema', () => {
+  it('rejects a value with unknown componentType', () => {
     const unknownContract = {
       actions: {},
-      controllerSchema: 'https://schema.thermidor.coveo.com/controllers/unknown.schema.json',
+      componentType: 'unknown-component',
       state: {products: []},
     };
-    expect(ControllerContractsSchema.safeParse(unknownContract).success).toBe(false);
+    expect(ComponentContractsSchema.safeParse(unknownContract).success).toBe(false);
   });
 });

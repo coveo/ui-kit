@@ -9,10 +9,6 @@ import {
 
 const runId = 'schema-comparison-462287cc';
 
-const COMPARISON_TABLE_CONTROLLER_SCHEMA =
-  'https://schema.thermidor.coveo.com/controllers/comparison-table.schema.json';
-const NEXT_ACTIONS_CONTROLLER_SCHEMA =
-  'https://schema.thermidor.coveo.com/controllers/next-actions.schema.json';
 const CATALOG_ID = 'https://schema.thermidor.coveo.com/a2-ui/catalog.json';
 
 const comparisonSurfaceActivity: ConverseEvent = ActivitySnapshot({
@@ -31,12 +27,8 @@ const comparisonSurfaceActivity: ConverseEvent = ActivitySnapshot({
               id: 'root',
               component: 'ComparisonTable',
               props: {
-                controllers: {
-                  comparisonTableController: {
-                    controllerId: 'comparison-ctrl-1',
-                    controllerSchema: COMPARISON_TABLE_CONTROLLER_SCHEMA,
-                  },
-                },
+                componentId: 'comparison-root',
+                componentType: 'comparison-table',
               },
             },
           ],
@@ -62,12 +54,8 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
               id: 'root',
               component: 'NextActionsBar',
               props: {
-                controllers: {
-                  nextActionsController: {
-                    controllerId: 'next-actions-ctrl-1',
-                    controllerSchema: NEXT_ACTIONS_CONTROLLER_SCHEMA,
-                  },
-                },
+                componentId: 'next-actions-root',
+                componentType: 'next-actions-bar',
               },
             },
           ],
@@ -78,8 +66,8 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
 });
 
 const stateSnapshot: ConverseEvent = StateSnapshot({
-  controllers: {
-    'comparison-ctrl-1': {
+  components: {
+    'comparison-root': {
       products: [
         {
           productId: 'gid://shopify/ProductVariant/50674633900306',
@@ -132,7 +120,7 @@ const stateSnapshot: ConverseEvent = StateSnapshot({
         {key: 'bestFor', label: 'Best for'},
       ],
     },
-    'next-actions-ctrl-1': {
+    'next-actions-root': {
       actions: [
         {text: 'Add ThermoFlex Winter Wetsuit to cart', type: 'followup'},
         {text: 'View more cold-water wetsuits', type: 'followup'},

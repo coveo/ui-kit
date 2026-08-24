@@ -42,14 +42,19 @@ describe('package validation', () => {
     const dts = readFileSync(path.join(packageRoot, 'dist', 'index.d.ts'), 'utf8');
     const expectedExports = [
       'CartItemSchema',
-      'CartControllerContractSchema',
+      'CartSchema',
       'CartStateSchema',
-      'ControllerContractsSchema',
-      'ProductListControllerContractSchema',
+      'ComponentContractsSchema',
+      'ProductCarouselSchema',
       'ProductListStateSchema',
       'ProductSchema',
       'SetItemsPayloadSchema',
       'UpdateItemQuantityPayloadSchema',
+      'BundleDisplaySchema',
+      'ComparisonTableSchema',
+      'NextActionsBarSchema',
+      'ProductCarouselPropsSchema',
+      'CartPropsSchema',
     ];
     for (const name of expectedExports) {
       expect(dts).toContain(name);
