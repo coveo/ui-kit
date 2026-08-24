@@ -19,6 +19,9 @@ import {
 const rootDir = resolve(fileURLToPath(import.meta.url), '..', '..');
 const agentsMdPath = resolve(rootDir, 'AGENTS.md');
 
+// External submodules are not UI Kit-owned packages and may be uninitialized in CI.
+const ignoredPackageDirs = new Set(['thermidor-schema']);
+
 /**
  * @typedef PackageEntry
  * @property {string} dir - Relative path under `packages/`, e.g. `atomic`.
@@ -208,7 +211,7 @@ export function replacePackagesSection(agentsMdContent, newSection) {
  * regenerated content.
  */
 function main() {
-  const dirs = getAllPackageDirs();
+  const dirs = getAllPackageDirs().filter((dir) => !ignoredPackageDirs.has(dir));
   const entries = dirs.map(readPackageEntry);
 
   const newSection = renderPackagesSection(entries);

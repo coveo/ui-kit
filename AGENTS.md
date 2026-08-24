@@ -52,7 +52,6 @@
 - [`@coveo/pkg-new-template`](packages/pkg-new-template/): Preview app used by pkg.pr.new to let reviewers try out Atomic and Headless builds from a pull request
 - [`@coveo/platform-mock-api`](packages/platform-mock-api/): Coveo Platform API mock layer for testing (search, commerce, insight, recommendations)
 - [`@coveo/relay-playground`](packages/relay-playground/): Next.js playground app for manually testing and exploring the @coveo/relay analytics library
-- [`thermidor-schema-workspace`](packages/thermidor-schema/)
 
 ## Technology
 
