@@ -581,6 +581,42 @@ describe('atomic-facet', () => {
       expect(showMoreValues).toHaveBeenCalled();
     });
 
+    it('should focus the first newly added value when show more reorders values', async () => {
+      const showMoreValues = vi.fn();
+      const facet = buildFakeFacet({
+        implementation: {showMoreValues},
+        state: {
+          canShowMoreValues: true,
+          values: [
+            {value: 'April', state: 'idle', numberOfResults: 10},
+            {value: 'August', state: 'idle', numberOfResults: 5},
+          ],
+        },
+      });
+      showMoreValues.mockImplementation(() => {
+        Object.assign(facet.state, {
+          values: [
+            {value: 'April', state: 'idle', numberOfResults: 10},
+            {value: 'December', state: 'idle', numberOfResults: 8},
+            {value: 'August', state: 'idle', numberOfResults: 5},
+          ],
+        });
+      });
+      vi.mocked(buildFacet).mockReturnValue(facet);
+      const {element, locators} = await setupElement();
+      vi.mocked(element.bindings.store.getUniqueIDFromEngine)
+        .mockReturnValueOnce('before-show-more')
+        .mockReturnValue('after-show-more');
+
+      await userEvent.click(locators.showMore);
+      element.requestUpdate();
+      await element.updateComplete;
+
+      await vi.waitFor(() => {
+        expect(element.shadowRoot?.activeElement?.getAttribute('aria-label')).toContain('December');
+      });
+    });
+
     it('should call facet.showLessValues when the show less button is clicked', async () => {
       const showLessValues = vi.fn();
       vi.mocked(buildFacet).mockReturnValue(

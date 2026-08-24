@@ -4,6 +4,7 @@ import {
   collapseFacetsAfter,
   getAutomaticFacetGenerator,
   getFacetsInChildren,
+  getFirstNewFacetValueIndex,
   isAutomaticFacetGenerator,
   shouldDisplayInputForFacetRange,
   sortFacetVisibility,
@@ -19,6 +20,20 @@ describe('facet-common', () => {
     visibleFacet.isCollapsed = props.isCollapsed || false;
     return visibleFacet;
   };
+
+  describe('#getFirstNewFacetValueIndex', () => {
+    it('returns the first new value index after values are reordered', () => {
+      const values = [{value: 'April'}, {value: 'December'}, {value: 'August'}];
+
+      expect(getFirstNewFacetValueIndex(values, new Set(['April', 'August']))).toBe(1);
+    });
+
+    it('returns -1 when there are no new values', () => {
+      const values = [{value: 'April'}, {value: 'August'}];
+
+      expect(getFirstNewFacetValueIndex(values, new Set(['April', 'August']))).toBe(-1);
+    });
+  });
 
   describe('#shouldDisplayInputForFacetRange', () => {
     it('should return false when there is no input', () => {
