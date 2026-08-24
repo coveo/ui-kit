@@ -46,6 +46,11 @@ jobs:
           clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
           jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
           lws-status: ${{ matrix.lws-status }}
+      - name: Run Apex unit tests
+        if: matrix.lws-status == 'enabled'
+        uses: ./.github/actions/apex-unit-tests
+        with:
+          target-org: Quantic__LWS_enabled
   post-scratch-org-links-to-pr:
     name: 'Post Scratch Org Links to PR'
     needs: e2e-quantic-setup
