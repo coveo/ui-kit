@@ -19,6 +19,18 @@ runs:
           echo "$package_paths"
           echo EOF
         } >> "$GITHUB_OUTPUT"
+    - name: Build
+      if: ${{ steps.resolve.outputs.packages != '' }}
+      shell: bash
+      env:
+        PACKAGE_PATHS: ${{ steps.resolve.outputs.packages }}
+      run: |
+        filters=()
+        while IFS= read -r package_path; do
+          [[ -z "$package_path" ]] || filters+=("--filter=${package_path}")
+        done <<< "$PACKAGE_PATHS"
+
+        pnpm exec turbo run build "${filters[@]}"
     - name: Resolve catalog references in pkg.pr.new templates
       if: ${{ steps.resolve.outputs.packages != '' }}
       shell: bash
