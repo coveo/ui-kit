@@ -4,12 +4,14 @@ A React sample demonstrating contract-driven A2-UI rendering using `@coveo/therm
 
 This sample duplicates `samples/thermidor/demo-react` and refactors the A2-UI rendering layer to use catalog-based resolution with validated controller contracts from `@coveo/thermidor-schema`.
 
-`@coveo/thermidor-schema` resolves through pnpm to the canonical repository's `packages/typescript` workspace package. Initialize the mandatory submodule before installing dependencies:
+`@coveo/thermidor-schema` resolves through pnpm to the canonical repository's `packages/typescript` workspace package. Resolve the mandatory schema source before installing dependencies:
 
 ```bash
-git submodule update --init packages/thermidor-schema
+node scripts/setup-thermidor-schema.mjs
 pnpm install
 ```
+
+The resolver is submodule-first. A pinned npm fallback for `@coveo/thermidor-schema@0.1.0` is implemented for review but remains disabled until that package is published.
 
 ## Running locally with the Mock API
 

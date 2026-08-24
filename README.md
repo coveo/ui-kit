@@ -41,12 +41,14 @@ Looking for code examples? Check out the [samples](samples/) directory for worki
 
 ## Install
 
-To initialize the canonical Thermidor schema, install all dependencies, and link local packages, run:
+To resolve the canonical Thermidor schema, install all dependencies, and link local packages, run:
 
 ```sh
-git submodule update --init packages/thermidor-schema
+node scripts/setup-thermidor-schema.mjs
 pnpm install
 ```
+
+The resolver initializes `packages/thermidor-schema` as a git submodule. It also contains a pinned npm fallback for `@coveo/thermidor-schema@0.1.0` that materializes the published package at the same workspace path, preserving all `workspace:*` declarations and public imports. The fallback is intentionally disabled by `THERMIDOR_SCHEMA_NPM_FALLBACK.enabled` until the package is published; a submodule failure therefore remains fatal for now.
 
 To install a dependency in a specific package, specify the workspace:
 

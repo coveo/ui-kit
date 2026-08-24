@@ -39,7 +39,6 @@
 - [`@coveo/relay`](packages/relay/): A library for sending analytics events using Coveo's Event protocol.
 - [`@coveo/shopify`](packages/shopify/): Utilities to integrate Shopify with Coveo's commerce engine
 - [`@coveo/thermidor`](packages/thermidor/): Experimental package for a unified, framework-agnostic headless engine for search and conversational experiences
-- [`@coveo/thermidor-schema`](packages/thermidor-schema/): Versioned JSON Schema-derived Zod contracts for Thermidor controllers
 
 ### Private
 
@@ -53,6 +52,7 @@
 - [`@coveo/pkg-new-template`](packages/pkg-new-template/): Preview app used by pkg.pr.new to let reviewers try out Atomic and Headless builds from a pull request
 - [`@coveo/platform-mock-api`](packages/platform-mock-api/): Coveo Platform API mock layer for testing (search, commerce, insight, recommendations)
 - [`@coveo/relay-playground`](packages/relay-playground/): Next.js playground app for manually testing and exploring the @coveo/relay analytics library
+- [`thermidor-schema-workspace`](packages/thermidor-schema/)
 
 ## Technology
 

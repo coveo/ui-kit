@@ -5,8 +5,8 @@ description: 'Setup node and install dependencies'
 runs:
   using: composite
   steps:
-    - name: Initialize Thermidor schema submodule
-      run: git submodule update --init packages/thermidor-schema
+    - name: Resolve Thermidor schema source
+      run: node scripts/setup-thermidor-schema.mjs
       shell: bash
     #region Mise (Node + pnpm)
     - name: Install tools via mise
