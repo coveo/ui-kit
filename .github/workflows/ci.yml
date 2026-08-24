@@ -745,7 +745,7 @@ jobs:
     needs: [affected, build]
     if: >-
       ${{
-        contains(fromJSON(needs.affected.outputs.projects), '@coveo/quantic') &&
+        contains(fromJSON(needs.affected.outputs.tasks), '@coveo/quantic#e2e') &&
         !(github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'skip-quantic'))
       }}
     permissions:
