@@ -29,6 +29,7 @@ import {AriaLiveRegionController, FocusTargetController} from '@/src/utils/acces
 import {mapProperty} from '@/src/utils/props-utils';
 import {getFieldCaptions} from '../../../utils/field-utils';
 import {parseDependsOn} from '../../common/facets/depends-on';
+import {getFirstNewFacetValueIndex} from '../../common/facets/facet-common';
 import type {FacetInfo} from '../../common/facets/facet-common-store';
 import {renderFacetContainer} from '../../common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '../../common/facets/facet-header/facet-header';
@@ -381,6 +382,7 @@ export class AtomicFacet extends LitElement implements InitializableComponent<Bi
   private headerFocus?: FocusTargetController;
   private facetConditionsManager?: FacetConditionsManager;
   private facetSearchAriaLive?: AriaLiveRegionController;
+  private valuesBeforeShowMore = new Set<string>();
 
   constructor() {
     super();
@@ -564,14 +566,15 @@ export class AtomicFacet extends LitElement implements InitializableComponent<Bi
   }
 
   private renderValues() {
+    const firstNewValueIndex = getFirstNewFacetValueIndex(
+      this.facet.state.values,
+      this.valuesBeforeShowMore
+    );
+
     return this.renderValuesContainer(
       this.facet.state.values.map((value, i) => {
         const shouldFocusOnShowLessAfterInteraction = i === 0;
-        const shouldFocusOnShowMoreAfterInteraction =
-          i ===
-          (this.sortCriteria === 'automatic'
-            ? 0
-            : this.facet.state.values.length - this.numberOfValues);
+        const shouldFocusOnShowMoreAfterInteraction = i === firstNewValueIndex;
 
         return renderFacetValue({
           props: {
@@ -604,6 +607,7 @@ export class AtomicFacet extends LitElement implements InitializableComponent<Bi
         label: this.label,
         i18n: this.bindings.i18n,
         onShowMore: () => {
+          this.valuesBeforeShowMore = new Set(this.facet.state.values.map(({value}) => value));
           this.focusTargets.showMore.focusAfterSearch();
           this.facet.showMoreValues();
         },

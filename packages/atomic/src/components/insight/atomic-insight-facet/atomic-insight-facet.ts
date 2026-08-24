@@ -17,6 +17,7 @@ import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {parseDependsOn} from '@/src/components/common/facets/depends-on';
+import {getFirstNewFacetValueIndex} from '@/src/components/common/facets/facet-common';
 import type {FacetInfo} from '@/src/components/common/facets/facet-common-store';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
@@ -177,6 +178,7 @@ export class AtomicInsightFacet
   private headerFocus?: FocusTargetController;
   private facetConditionsManager?: InsightFacetConditionsManager;
   private facetSearchAriaLiveController!: AriaLiveRegionController;
+  private valuesBeforeShowMore = new Set<string>();
 
   constructor() {
     super();
@@ -301,10 +303,13 @@ export class AtomicInsightFacet
   }
 
   private renderValues() {
+    const firstNewValueIndex = getFirstNewFacetValueIndex(
+      this.facet.state.values,
+      this.valuesBeforeShowMore
+    );
     const values = this.facet.state.values.map((value, i) => {
       const shouldFocusOnShowLessAfterInteraction = i === 0;
-      const shouldFocusOnShowMoreAfterInteraction =
-        i === (this.sortCriteria === 'automatic' ? 0 : this.facetState.values.length - 1);
+      const shouldFocusOnShowMoreAfterInteraction = i === firstNewValueIndex;
 
       return renderFacetValue({
         props: {
@@ -338,6 +343,7 @@ export class AtomicInsightFacet
         label: this.label,
         i18n: this.bindings.i18n,
         onShowMore: () => {
+          this.valuesBeforeShowMore = new Set(this.facet.state.values.map(({value}) => value));
           this.focusTargets.showMore.focusAfterSearch();
           this.facet.showMoreValues();
         },
