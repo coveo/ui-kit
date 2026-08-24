@@ -23,7 +23,7 @@ env:
 
 jobs:
   e2e-quantic-setup:
-    name: 'Setup e2e tests on Quantic'
+    name: 'Setup e2e tests on Quantic (${{ matrix.lws-status }})'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: ${{ inputs.event_name == 'merge_group' }}
@@ -47,10 +47,9 @@ jobs:
           jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
           lws-status: ${{ matrix.lws-status }}
       - name: Run Apex unit tests
-        if: matrix.lws-status == 'enabled'
         uses: ./.github/actions/apex-unit-tests
         with:
-          target-org: Quantic__LWS_enabled
+          target-org: Quantic__LWS_${{ matrix.lws-status }}
   post-scratch-org-links-to-pr:
     name: 'Post Scratch Org Links to PR'
     needs: e2e-quantic-setup
