@@ -27,8 +27,5 @@
     "@angular/cli": "catalog:",
     "@angular/compiler-cli": "catalog:",
     "typescript": "catalog:"
-  },
-  "peerDependencies": {
-    "vitest": "4.1.10"
   }
 }
