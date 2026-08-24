@@ -46,10 +46,63 @@ jobs:
           clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
           jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
           lws-status: ${{ matrix.lws-status }}
-      - name: Run Apex unit tests
-        uses: ./.github/actions/apex-unit-tests
+      - name: Export enabled scratch org username
+        if: ${{ matrix.lws-status == 'enabled' }}
+        run: sf org display --target-org Quantic__LWS_enabled --json | jq -r '.result.username' > apex-org-username.txt
+        shell: bash
+        working-directory: ./packages/quantic
+      - name: Upload enabled scratch org username
+        if: ${{ matrix.lws-status == 'enabled' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          target-org: Quantic__LWS_${{ matrix.lws-status }}
+          name: quantic-apex-org-username
+          path: packages/quantic/apex-org-username.txt
+          retention-days: 1
+          if-no-files-found: error
+  apex-quantic-tests:
+    name: 'Run Quantic Apex unit tests'
+    needs: e2e-quantic-setup
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 1
+          filter: blob:none
+      - uses: ./.github/actions/setup-sfdx
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: quantic-apex-org-username
+          path: packages/quantic
+      - name: Resolve Apex target org
+        id: apex-org
+        run: echo "target-org=$(cat packages/quantic/apex-org-username.txt)" >> "$GITHUB_OUTPUT"
+        shell: bash
+      - name: Authenticate to Quantic scratch org
+        run: |
+          umask 077
+          printf '%s\n' "$SFDX_AUTH_JWT_KEY" > server.key
+          trap 'rm -f -- server.key' EXIT
+          sf org login jwt \
+            --client-id "$SFDX_AUTH_CLIENT_ID" \
+            --jwt-key-file server.key \
+            --username "$APEX_ORG_USERNAME" \
+            --instance-url https://test.salesforce.com \
+            --set-default
+        shell: bash
+        env:
+          APEX_ORG_USERNAME: ${{ steps.apex-org.outputs.target-org }}
+          SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
+          SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+      - uses: ./.github/actions/apex-unit-tests
+        with:
+          target-org: ${{ steps.apex-org.outputs.target-org }}
   post-scratch-org-links-to-pr:
     name: 'Post Scratch Org Links to PR'
     needs: e2e-quantic-setup
@@ -120,6 +173,7 @@ jobs:
     if: cancelled() || failure() || success()
     needs:
       - e2e-quantic-playwright-test
+      - apex-quantic-tests
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
