@@ -4,14 +4,17 @@
     </c-quantic-component-error>
   </template>
   <template lwc:else>
-    <template if:true={hasResults}>
-      <lightning-button-group>
+    <template lwc:if={hasResults}>
+      <div
+        class="slds-grid slds-wrap slds-grid_vertical-align-center"
+        data-testid="pager-container"
+      >
         <lightning-button
           variant="base"
           disabled={previousDisabled}
           title={labels.previousPage}
           icon-name="utility:left"
-          class="slds-m-left_x-small"
+          class="slds-m-left_x-small slds-m-bottom_x-small"
           onclick={previous}
           aria-label={labels.previousPage}
           data-testid="previous-button"
@@ -32,12 +35,12 @@
           variant="base"
           title={labels.nextPage}
           icon-name="utility:right"
-          class="slds-m-left_x-small"
+          class="slds-m-left_x-small slds-m-bottom_x-small"
           onclick={next}
           aria-label={labels.nextPage}
           data-testid="next-button"
         ></lightning-button>
-      </lightning-button-group>
+      </div>
     </template>
   </template>
 </template>

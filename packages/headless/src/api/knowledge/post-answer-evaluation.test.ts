@@ -3,7 +3,6 @@ import type {Mock} from 'vitest';
 import {type AnswerEvaluationPOSTParams, answerEvaluation} from './post-answer-evaluation.js';
 
 const {Response} = await vi.importActual('node-fetch');
-const originalFetch = global.fetch;
 
 const mockEvaluationBody: AnswerEvaluationPOSTParams = {
   additionalNotes: null,
@@ -47,16 +46,13 @@ const buildStore = () =>
 describe('answerEvaluation', () => {
   beforeEach(() => {
     vi.useFakeTimers();
-    global.fetch = vi.fn();
+    vi.stubGlobal('fetch', vi.fn());
   });
 
   afterEach(() => {
     vi.useRealTimers();
+    vi.unstubAllGlobals();
     vi.clearAllMocks();
-  });
-
-  afterAll(() => {
-    global.fetch = originalFetch;
   });
 
   it('treats a failed evaluation request as an RTK Query error and expects the correct error object', async () => {

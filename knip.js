@@ -5,6 +5,7 @@ export default {
   ignoreDependencies: ['semver'],
   ignore: [
     '.agents/skills/**',
+    '.github/actions/run-affected/test-resolve-tasks.mjs',
     'packages/quantic/**',
     'samples/headless/rga-react/src/components/Quickstart.tsx',
     'samples/headless/rga-react/src/components/Citation.tsx',
@@ -28,6 +29,9 @@ export default {
     },
     'packages/atomic-hosted-page': {
       entry: ['src/atomic-hosted-page.esm.ts', 'dev/vite.config.ts'],
+    },
+    'packages/atomic-theming-e2e': {
+      entry: ['tests/**/*.spec.ts', 'fixtures/*.js'],
     },
     'packages/atomic-angular': {
       ignoreDependencies: [

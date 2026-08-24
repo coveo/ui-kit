@@ -49,9 +49,7 @@ export default defineConfig({
   },
   webServer: process.env.CI
     ? {
-        command: isCDN
-          ? 'pnpm --filter @coveo/cdn start'
-          : `pnpm exec turbo dev --filter=@coveo/atomic`,
+        command: isCDN ? 'pnpm --filter @coveo/cdn start' : 'pnpm run dev:storybook',
         env: {
           STORYBOOK_INVOKED_BY: 'playwright',
         },
