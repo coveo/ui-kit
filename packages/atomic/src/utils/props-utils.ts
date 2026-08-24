@@ -16,17 +16,34 @@ export function mapProperty<Element extends ReactiveElement>(options?: MapPropOp
     ctor.createProperty(propertyKey, {type: Object});
 
     ctor.addInitializer((instance) => {
-      const props = {};
       const prefix = options?.attributePrefix || camelToKebab(propertyKey.toString());
 
-      mapAttributesToProp(
-        prefix,
-        props,
-        Array.from(instance.attributes),
-        options?.splitValues ?? false
-      );
+      const readMappedAttributes = () => {
+        const props = {};
+        mapAttributesToProp(
+          prefix,
+          props,
+          Array.from(instance.attributes),
+          options?.splitValues ?? false
+        );
+        return props;
+      };
 
-      (instance as Instance)[propertyKey] = props as Instance[K];
+      // Covers elements written in markup: they are upgraded with their attributes already set.
+      (instance as Instance)[propertyKey] = readMappedAttributes() as Instance[K];
+
+      // Covers elements built in code, where the order is createElement, setAttribute, insert.
+      // The constructor sees no attributes yet, and these are prefixed (`must-match-source`,
+      // `depends-on-category`) so Lit never observes them either. Read once more on connect.
+      instance.addController({
+        hostConnected: () => {
+          const props = readMappedAttributes();
+          // Skip when there are no attributes, to keep a value assigned to the property directly.
+          if (Object.keys(props).length > 0) {
+            (instance as Instance)[propertyKey] = props as Instance[K];
+          }
+        },
+      });
     });
   };
 }

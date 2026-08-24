@@ -1,3 +1,9 @@
+## 3.44.1
+
+### Patch Changes
+
+- [#8242](https://github.com/coveo/ui-kit/pull/8242) [`ce53caf`](https://github.com/coveo/ui-kit/commit/ce53caf6fd3f7ebe4b24190f9bb7cb691b3b9347) - Improved the responsiveness of the `quantic-pager` component so that its navigation and page buttons wrap onto multiple lines instead of overflowing or being clipped when the component is displayed in a narrow container, such as in the Insight Panel.
+
 ## 3.44.0
 
 ### Minor Changes
