@@ -76,7 +76,7 @@ This implementation has been validated against the following references:
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
 | Component schemas follow the base component pattern (`$id`, `allOf` → base/component, `componentType` const, `state` → `$defs`, `actions`, `additionalProperties: false`) | ✅     |
 | `componentType` is a stable const string discriminator                                                                                                                    | ✅     |
-| `component-contracts.schema.json` discriminated union includes all 5 variants                                                                                             | ✅     |
+| `component-contracts.schema.json` discriminated union includes all 9 variants                                                                                             | ✅     |
 | Definition schemas have `additionalProperties: false`                                                                                                                     | ✅     |
 | Actions reference `base/action.schema.json` via `allOf`                                                                                                                   | ✅     |
 | Read-only components have empty `actions` object                                                                                                                          | ✅     |
@@ -96,13 +96,13 @@ This implementation has been validated against the following references:
 
 ### PoC pattern conformity (PR #8088)
 
-| Pattern                                                                    | Implementation                                                              |
-| -------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| `useRemoteController(stateSource, props.componentId, props.componentType)` | Used in catalog renderers (ProductCarousel, BundleDisplay, ComparisonTable) |
-| `controller.state` is automatically typed from the `componentType` literal | Via `typeof SCHEMA_ID` → TypeScript infers the correct state type           |
-| `controller.dispatch('action', payload)` without casts                     | Used in `CatalogNextActionsBar`                                             |
-| `useSyncExternalStore` for reactive subscription                           | Added in `controllers.tsx`                                                  |
-| `StateSnapshot` contains state directly under componentId (not wrapped)    | `{components: {'bundle-root': {tiers: [...]}}}`                             |
+| Pattern                                                                    | Implementation                                                                                                        |
+| -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `useRemoteController(stateSource, props.componentId, props.componentType)` | Used in catalog renderers (ProductCarousel, BundleDisplay, ComparisonTable, ProductList, Pagination, Sort, SearchBox) |
+| `controller.state` is automatically typed from the `componentType` literal | Via `typeof SCHEMA_ID` → TypeScript infers the correct state type                                                     |
+| `controller.dispatch('action', payload)` without casts                     | Used in `CatalogNextActionsBar`                                                                                       |
+| `useSyncExternalStore` for reactive subscription                           | Added in `controllers.tsx`                                                                                            |
+| `StateSnapshot` contains state directly under componentId (not wrapped)    | `{components: {'bundle-root': {tiers: [...]}}}`                                                                       |
 
 ## Known limitations / Next steps
 
