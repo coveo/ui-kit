@@ -20,8 +20,9 @@ const analyticsEsm = createRequire(resolve(monorepoRoot, 'packages/headless/pack
 );
 
 export default defineConfig({
-  // Serves /assets, /lang and /themes. These come from copy-only scripts (`build:assets`,
-  // `build:locales`, `build:themes`), not from compiling Atomic.
+  // Serves /assets and /lang. These come from copy-only scripts (`build:assets`,
+  // `build:locales`), not from compiling Atomic. Theme CSS is imported from source instead,
+  // so `build:themes` is not needed.
   publicDir: atomicDist,
   appType: 'mpa',
   server: {
