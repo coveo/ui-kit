@@ -163,22 +163,27 @@ describe('buildUnifiedConverseController', () => {
   });
 
   describe('dispatchAction()', () => {
-    it('delegates to the runtime with the given action', () => {
+    it('builds an A2uiAction envelope from the remote controller action and delegates to the runtime', () => {
       const controller = buildController();
-      const action = {
-        surfaceId: 'surface-1',
-        name: 'selectPage',
-        sourceComponentId: 'pager',
-        timestamp: '2024-01-01T00:00:00.000Z',
-        actionId: null,
-        wantResponse: false,
-        context: {page: 2},
-      };
 
-      controller.dispatchAction(action);
+      controller.dispatchAction({
+        componentId: 'pagination-1',
+        componentType: 'pagination',
+        action: 'selectPage',
+        payload: {page: 2},
+      });
 
-      expect(mockDispatchAction).toHaveBeenCalledWith(action);
       expect(mockDispatchAction).toHaveBeenCalledTimes(1);
+      expect(mockDispatchAction).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: 'selectPage',
+          sourceComponentId: 'pagination-1',
+          context: {page: 2},
+          actionId: null,
+          wantResponse: false,
+          surfaceId: null,
+        })
+      );
     });
   });
 

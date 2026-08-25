@@ -1,6 +1,7 @@
 import type {GenerativeState, StateTurn, Turn} from '@/src/internal/features/generative/index.js';
 import {UnifiedRuntime} from '@/src/internal/api/unified/index.js';
 import type {A2uiAction} from '@/src/internal/api/unified/index.js';
+import type {RemoteControllerAction} from '../remote/remote-controller.js';
 import {
   getOrCreateRoutedInterfaceRegistry,
   mergeTurnsWithRegistry,
@@ -223,8 +224,22 @@ class UnifiedConverseControllerImpl extends BaseController<UnifiedConverseContro
     this.#runtime.submit(prompt);
   }
 
-  dispatchAction(action: A2uiAction): void {
-    this.#runtime.dispatchAction(action);
+  dispatchAction(action: RemoteControllerAction): Promise<void> {
+    const routedInterface = this.state.activeTurn?.routedInterface;
+    const surfaceId =
+      routedInterface?.useCase === 'decomposedCommerce' ? routedInterface.surfaceId : null;
+
+    const a2uiAction: A2uiAction = {
+      surfaceId,
+      name: action.action,
+      sourceComponentId: action.componentId,
+      timestamp: new Date().toISOString(),
+      actionId: null,
+      wantResponse: false,
+      context: action.payload,
+    };
+
+    return this.#runtime.dispatchAction(a2uiAction);
   }
 
   cancel(): void {
@@ -257,7 +272,8 @@ export interface UnifiedConverseController extends Controller<UnifiedConverseCon
   restore(state: SerializedConverseState): void;
   clear(): void;
   submit(options: {prompt: string}): void;
-  dispatchAction(action: A2uiAction): void;
+  /** Sends a schema-derived remote controller action to the AG-UI gateway. */
+  dispatchAction(action: RemoteControllerAction): Promise<void>;
   cancel(): void;
   selectTurn(options: {id: string}): void;
   retry(options: {id: string}): void;
