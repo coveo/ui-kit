@@ -116,14 +116,14 @@ class RemoteControllerImpl<
     >;
     const actionEntry = actionsShape[action];
     if (!actionEntry) {
-      return Promise.reject(new Error(`Unknown controller action ${this.componentId}/${action}.`));
+      return Promise.reject(new Error(`Unknown component action ${this.componentId}/${action}.`));
     }
 
     const payloadSchema = actionEntry.shape.payload;
     const result = payloadSchema.safeParse(payload);
     if (!result.success) {
       return Promise.reject(
-        new Error(`Invalid payload for controller action ${this.componentId}/${action}.`)
+        new Error(`Invalid payload for component action ${this.componentId}/${action}.`)
       );
     }
 
