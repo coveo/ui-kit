@@ -5,6 +5,9 @@
   labels: ['dependencies'],
   dependencyDashboard: true,
   minimumReleaseAge: '7 days',
+  // Raised from the config:recommended default of 2 so the weekly schedule window can drain
+  // more of the backlog. prConcurrentLimit stays at its default of 10 to bound CI load.
+  prHourlyLimit: 5,
   packageRules: [
     {
       groupName: 'all production dependencies',
