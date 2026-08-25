@@ -4,7 +4,7 @@
  * `package.json`.
  *
  * Usage:
- *   node scripts/generate-agents-md-packages.mjs
+ *   node scripts/generate/agents-md-packages.mjs
  */
 
 import {readFileSync, writeFileSync} from 'node:fs';
@@ -14,9 +14,9 @@ import {
   getAllPackageDirs,
   getPackageManifestFromPackagePath,
   getPackagePathFromPackageDir,
-} from './packages.mjs';
+} from '../packages.mjs';
 
-const rootDir = resolve(fileURLToPath(import.meta.url), '..', '..');
+const rootDir = resolve(fileURLToPath(import.meta.url), '..', '..', '..');
 const agentsMdPath = resolve(rootDir, 'AGENTS.md');
 
 /**
