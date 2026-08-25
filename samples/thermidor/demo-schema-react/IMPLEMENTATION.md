@@ -61,6 +61,14 @@ This is handled via two bridge helpers in `components.tsx` (same pattern as `con
 2. Pass definitions and renderers directly to `createCatalog` without wrappers
 3. Remove `import type {z} from 'zod'` (no longer needed for the bridge type constraint)
 
+## Action state transport (full snapshot)
+
+When a decomposed commerce control (sort, pagination, page size) dispatches an action, `UnifiedConverseController.dispatchAction` POSTs the action to the Converse API. The backend then streams back an updated AG-UI `STATE_SNAPSHOT` for the surface's components.
+
+- The current implementation always applies the **full** `STATE_SNAPSHOT`: the backend re-sends the complete component state, which replaces the prior state on each action.
+- Per ADR-002, AG-UI also defines `STATE_DELTA` (RFC 6902 JSON Patch) for incremental updates layered on top of a snapshot baseline. Thermidor currently handles only `STATE_SNAPSHOT`; supporting `STATE_DELTA` is a future transport optimization and is intentionally out of scope here.
+- Full-snapshot transport is functionally complete on its own. Deltas would only reduce payload size for high-frequency updates, not change behaviour.
+
 ## Conformity validation
 
 This implementation has been validated against the following references:
