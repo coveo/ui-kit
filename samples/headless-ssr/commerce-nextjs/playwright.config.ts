@@ -31,16 +31,13 @@ export default defineConfig({
     },
     {
       // Run the production build so tests exercise the same output users ship.
-      //
-      // The build must happen here rather than through the package's `build`
-      // task: NEXT_PUBLIC_MOCK_API_URL is inlined into the client bundle at
-      // build time, and without it the hydrated page calls the live Coveo API
-      // instead of the mock server.
-      command: 'pnpm build && pnpm start',
+      // MOCK_API_URL is read at runtime, both by the server and — through the
+      // global published by the root layout — by the browser.
+      command: 'pnpm start',
       url: 'http://localhost:3000',
       reuseExistingServer: false,
-      timeout: 180 * 1000,
-      env: {NEXT_PUBLIC_MOCK_API_URL: MOCK_API_URL},
+      timeout: 120 * 1000,
+      env: {MOCK_API_URL},
     },
   ],
 });

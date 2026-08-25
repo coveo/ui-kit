@@ -1,36 +1,52 @@
 import {expect, test as base} from '@playwright/test';
 
+const isCommerceApiCall = (url: string) => url.includes('/commerce/v2');
+
 /**
  * Every Coveo Commerce API call — server-side (SSR) and client-side (hydration /
  * interactions) — is routed to the @mswjs/http-middleware mock server through the
- * engine's proxyBaseUrl.
+ * engine's proxyBaseUrl. The client half depends on the root layout publishing
+ * MOCK_API_URL to the browser.
  *
- * The client half of that only works when NEXT_PUBLIC_MOCK_API_URL is set at build
- * time, since Next.js bakes it into the client bundle. This fixture fails the test
- * when the browser reaches the live API instead, which would otherwise turn these
- * tests into flaky assertions against production data.
+ * This fixture fails the test when a browser Commerce API call either reaches the
+ * live API or does not succeed against the mock. Both cases otherwise go unnoticed:
+ * headless leaves the server-rendered state in place when a request fails, so
+ * assertions keep passing against stale data instead of what they mean to check.
  *
  * Analytics events are not proxied and still reach the live endpoint, so they are
  * deliberately left alone here.
  */
-export const test = base.extend<{blockLiveApiCalls: void}>({
-  blockLiveApiCalls: [
+export const test = base.extend<{checkCommerceApiCalls: void}>({
+  checkCommerceApiCalls: [
     async ({page}, use) => {
-      const liveCalls: string[] = [];
+      const problems: string[] = [];
 
       await page.route(
-        (url) => url.hostname !== 'localhost' && url.pathname.includes('/commerce/v2'),
+        (url) => url.hostname !== 'localhost' && isCommerceApiCall(url.pathname),
         async (route) => {
-          liveCalls.push(route.request().url());
+          problems.push(`reached the live API: ${route.request().url()}`);
           await route.abort();
         }
       );
 
+      page.on('requestfailed', (request) => {
+        const url = request.url();
+        if (isCommerceApiCall(url) && new URL(url).hostname === 'localhost') {
+          problems.push(`request failed: ${url} (${request.failure()?.errorText})`);
+        }
+      });
+
+      page.on('response', (response) => {
+        if (isCommerceApiCall(response.url()) && !response.ok()) {
+          problems.push(`responded ${response.status()}: ${response.url()}`);
+        }
+      });
+
       await use();
 
       expect(
-        liveCalls,
-        'The browser called the live Coveo API instead of the mock server. Check that NEXT_PUBLIC_MOCK_API_URL is set when the app is built.'
+        problems,
+        'Commerce API calls made by the browser did not all reach the mock server'
       ).toEqual([]);
     },
     {auto: true},
