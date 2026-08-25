@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic-react",
-  "version": "3.11.38",
+  "version": "3.11.39",
   "description": "React specific wrapper for the Atomic component library",
   "license": "Apache-2.0",
   "repository": {
@@ -61,8 +61,18 @@
   },
   "peerDependencies": {
     "@coveo/headless": "workspace:^",
-    "react": ">=18.0.0",
-    "react-dom": ">=18.0.0"
+    "@types/react": "catalog:peer-compatibility",
+    "@types/react-dom": "catalog:peer-compatibility",
+    "react": "catalog:peer-compatibility",
+    "react-dom": "catalog:peer-compatibility"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    },
+    "@types/react-dom": {
+      "optional": true
+    }
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0 || ^24.11.0"

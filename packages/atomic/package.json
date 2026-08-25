@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "3.60.6",
+  "version": "3.60.7",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "license": "Apache-2.0",
@@ -150,7 +150,7 @@
   "peerDependencies": {
     "@coveo/bueno": "workspace:^",
     "@coveo/headless": "workspace:^",
-    "typescript": ">=5.0.0"
+    "typescript": "catalog:peer-compatibility"
   },
   "peerDependenciesMeta": {
     "typescript": {

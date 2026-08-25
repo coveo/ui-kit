@@ -1,3 +1,10 @@
+## 3.11.22
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @coveo/atomic@3.60.7
+
 ## 3.11.21
 
 ### Patch Changes

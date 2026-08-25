@@ -126,6 +126,12 @@
     "e2e:theming": {
       "dependsOn": ["build:cdn"],
       "outputs": ["playwright-report/**"]
+    },
+    "validate:light-dom-styles": {
+      "outputs": []
+    },
+    "validate:no-new-light-dom": {
+      "outputs": []
     }
   }
 }

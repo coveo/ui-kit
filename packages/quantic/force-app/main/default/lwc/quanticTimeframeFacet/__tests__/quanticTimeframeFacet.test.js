@@ -252,6 +252,28 @@ describe('c-quantic-timeframe-facet', () => {
       );
     });
 
+    it('should build the facet controller with generateAutomaticRanges set to true when the generateAutomaticRanges property is set to true', async () => {
+      createTestComponent({
+        ...defaultOptions,
+        generateAutomaticRanges: true,
+      });
+      await flushPromises();
+
+      expect(functionsMocks.buildDateFacet).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildDateFacet).toHaveBeenCalledWith(
+        exampleEngine,
+        expect.objectContaining({
+          options: expect.objectContaining({
+            field: defaultOptions.field,
+            facetId: defaultOptions.facetId,
+            generateAutomaticRanges: true,
+            sortCriteria: 'descending',
+            injectionDepth: defaultOptions.injectionDepth,
+          }),
+        })
+      );
+    });
+
     it('should register the facet to the quantic store', async () => {
       const expectedFacetType = 'dateFacets';
       const element = createTestComponent();

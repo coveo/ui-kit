@@ -5,6 +5,7 @@ export default {
   ignoreDependencies: ['semver'],
   ignore: [
     '.agents/skills/**',
+    '.github/actions/run-affected/test-resolve-tasks.mjs',
     'packages/quantic/**',
     'samples/headless/rga-react/src/components/Quickstart.tsx',
     'samples/headless/rga-react/src/components/Citation.tsx',

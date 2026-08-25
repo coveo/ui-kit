@@ -1,3 +1,9 @@
+## 3.55.2
+
+### Patch Changes
+
+- [#8169](https://github.com/coveo/ui-kit/pull/8169) [`3d91eec`](https://github.com/coveo/ui-kit/commit/3d91eecae945b274ef9a3b8f9d714fabd05e9970) - Import `HistoryStore` from `coveo.analytics` instead of keeping a vendored copy of the history store (and its supporting helpers), removing a source of drift between the two packages. No public API change.
+
 ## 3.55.1
 
 ### Patch Changes
