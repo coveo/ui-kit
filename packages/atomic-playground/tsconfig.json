@@ -4,6 +4,7 @@
     "moduleResolution": "bundler",
     "target": "ES2022",
     "strict": true,
+    "allowJs": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,

@@ -6,6 +6,7 @@ import {normalizePath, type Plugin, type PluginOption} from 'vite';
 import {atomicPackageRoot, resolveToSource} from './source-mappings.js';
 
 const atomicSrc = normalizePath(resolve(atomicPackageRoot, 'src'));
+const atomicTailwindEntry = normalizePath(resolve(atomicSrc, 'utils/tailwind.global.tw.css'));
 
 /**
  * Module ids arrive from Vite with POSIX separators even on Windows, so both sides of the
@@ -87,13 +88,15 @@ const forceInlineCssImports = (): Plugin => ({
     if (!isAtomicSource(id)) {
       return null;
     }
-    return {
-      code: code.replace(
-        /import\s+([^'"]+)\s+from\s+['"]([^'"]+\.css)['"]/g,
-        (_, importName, cssPath) => `import ${importName} from '${cssPath}?inline'`
-      ),
-      map: null,
-    };
+    const transformed = code.replace(
+      /import\s+([^'"]+)\s+from\s+['"]([^'"]+\.css)['"]/g,
+      (_, importName, cssPath) => `import ${importName} from '${cssPath}?inline'`
+    );
+    // Returning a result for a file this left untouched would discard its source map.
+    if (transformed === code) {
+      return null;
+    }
+    return {code: transformed, map: null};
   },
 });
 
@@ -157,6 +160,26 @@ const processInlineCssImports = (): Plugin => {
 };
 
 /**
+ * Points Tailwind's content scanning at Atomic source.
+ *
+ * `@tailwindcss/vite` infers what to scan from the Vite root, which here holds only the
+ * playground's own two files. Components spell out utility classes in their Lit templates and
+ * rely on the global sheet `withTailwindStyles` adopts, so without this the `utilities` layer
+ * comes out nearly empty and components render unstyled. The production build avoids the problem
+ * by running PostCSS from the Atomic package directory.
+ */
+const scanAtomicSourceForUtilities = (): Plugin => ({
+  name: 'scan-atomic-source-for-utilities',
+  enforce: 'pre',
+  transform(code, id) {
+    if (normalizePath(id.split('?')[0]) !== atomicTailwindEntry) {
+      return null;
+    }
+    return {code: `${code}\n@source '${atomicSrc}';\n`, map: null};
+  },
+});
+
+/**
  * Inlines `.svg` imports as strings, matching how the production build handles them.
  */
 const svgTransform = (): Plugin => ({
@@ -165,18 +188,20 @@ const svgTransform = (): Plugin => ({
     if (!isAtomicSource(id)) {
       return null;
     }
-    return {
-      code: code.replace(
-        /import\s+([a-zA-Z]+)\s+from\s+['"]([^'"]+\.svg)['"]/g,
-        (_, importName, importPath) => {
-          const svgContent = readFileSync(resolve(dirname(id), importPath), 'utf8')
-            .replace(/\r?\n/g, '')
-            .replace(/'/g, "\\'");
-          return `const ${importName} = '${svgContent}';`;
-        }
-      ),
-      map: null,
-    };
+    const transformed = code.replace(
+      /import\s+([a-zA-Z]+)\s+from\s+['"]([^'"]+\.svg)['"]/g,
+      (_, importName, importPath) => {
+        const svgContent = readFileSync(resolve(dirname(id), importPath), 'utf8')
+          .replace(/\r?\n/g, '')
+          .replace(/'/g, "\\'");
+        return `const ${importName} = '${svgContent}';`;
+      }
+    );
+    // Returning a result for a file this left untouched would discard its source map.
+    if (transformed === code) {
+      return null;
+    }
+    return {code: transformed, map: null};
   },
 });
 
@@ -194,6 +219,7 @@ export const atomicSourcePlugins = (): PluginOption[] => [
   virtualCustomElementTags(),
   forceInlineCssImports(),
   processInlineCssImports(),
+  scanAtomicSourceForUtilities(),
   svgTransform(),
   tailwindcss(),
 ];

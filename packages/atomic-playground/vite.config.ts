@@ -40,9 +40,6 @@ export default defineConfig({
   resolve: {
     // Picks up the `source` export condition that @coveo/platform-mock-api declares.
     conditions: ['source', ...defaultClientConditions],
-    // Atomic source and the playground must share one Lit instance, otherwise the
-    // reactive element and context registries are duplicated.
-    dedupe: ['lit', '@lit/context'],
     alias: [{find: /^coveo\.analytics$/, replacement: analyticsEsm}],
   },
   optimizeDeps: {

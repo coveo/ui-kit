@@ -1,28 +1,26 @@
 import {resolve} from 'node:path';
+import {generateExternalPackageMappings} from '../../atomic/scripts/externalPackageMappings.mjs';
 
 const packagesDir = resolve(import.meta.dirname, '../..');
 
 const atomicSrc = resolve(packagesDir, 'atomic/src');
-const headlessSrc = resolve(packagesDir, 'headless/src');
-const buenoSrc = resolve(packagesDir, 'bueno/src');
-const relaySrc = resolve(packagesDir, 'relay/src');
 
 /**
  * Bare specifiers the playground resolves to workspace source instead of built output.
  *
- * `@coveo/platform-mock-api` is absent on purpose: it declares `source` conditions in its
- * `exports`, so `resolve.conditions` already resolves all of its subpaths to source.
+ * The Headless, Bueno, Relay and `@coveo/platform-mock-api` entries are taken from the mapping
+ * Atomic's Storybook already drives its own source resolution from, so a new subpath only has to
+ * be declared in one place. A specifier that is not mapped falls through to `dist`, which would
+ * put a second copy of Headless state in the module graph.
  */
 const sourceMappings: Record<string, string> = {
+  ...Object.fromEntries(
+    Object.entries(generateExternalPackageMappings() as Record<string, {local: string}>).map(
+      ([specifier, {local}]) => [specifier, local]
+    )
+  ),
   '@coveo/atomic': resolve(atomicSrc, 'index.ts'),
   '@coveo/atomic/loader': resolve(atomicSrc, 'loader.ts'),
-  '@coveo/headless': resolve(headlessSrc, 'index.ts'),
-  '@coveo/headless/case-assist': resolve(headlessSrc, 'case-assist.index.ts'),
-  '@coveo/headless/commerce': resolve(headlessSrc, 'commerce.index.ts'),
-  '@coveo/headless/insight': resolve(headlessSrc, 'insight.index.ts'),
-  '@coveo/headless/recommendation': resolve(headlessSrc, 'recommendation.index.ts'),
-  '@coveo/bueno': resolve(buenoSrc, 'index.ts'),
-  '@coveo/relay': resolve(relaySrc, 'relay.ts'),
 };
 
 const themesPrefix = '@coveo/atomic/themes/';
