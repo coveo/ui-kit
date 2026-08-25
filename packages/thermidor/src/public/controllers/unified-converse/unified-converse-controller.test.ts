@@ -16,6 +16,7 @@ const TEST_ID = 'test-unified-generative';
 
 const mockSubmit = vi.fn<(prompt: string) => Promise<void>>();
 const mockResubmit = vi.fn<(turnId: string, prompt: string) => Promise<void>>();
+const mockDispatchAction = vi.fn<(action: unknown) => Promise<void>>();
 const mockCancel = vi.fn<() => void>();
 
 vi.mock('@/src/internal/api/unified/index.js', () => ({
@@ -23,6 +24,7 @@ vi.mock('@/src/internal/api/unified/index.js', () => ({
     getInstance: vi.fn(() => ({
       submit: mockSubmit,
       resubmit: mockResubmit,
+      dispatchAction: mockDispatchAction,
       cancel: mockCancel,
     })),
   },
@@ -45,9 +47,11 @@ describe('buildUnifiedConverseController', () => {
     vi.clearAllMocks();
     mockSubmit.mockReset();
     mockResubmit.mockReset();
+    mockDispatchAction.mockReset();
     mockCancel.mockReset();
     mockSubmit.mockResolvedValue();
     mockResubmit.mockResolvedValue();
+    mockDispatchAction.mockResolvedValue();
     engine = createTestEngine();
     fullEngine = getFullEngine(engine);
     generativeInterface = buildGenerativeUnifiedInterface({engine, id: TEST_ID});
@@ -155,6 +159,26 @@ describe('buildUnifiedConverseController', () => {
       controller.submit({prompt: 'new prompt'});
 
       expect(mockSubmit).toHaveBeenCalledWith('new prompt');
+    });
+  });
+
+  describe('dispatchAction()', () => {
+    it('delegates to the runtime with the given action', () => {
+      const controller = buildController();
+      const action = {
+        surfaceId: 'surface-1',
+        name: 'selectPage',
+        sourceComponentId: 'pager',
+        timestamp: '2024-01-01T00:00:00.000Z',
+        actionId: null,
+        wantResponse: false,
+        context: {page: 2},
+      };
+
+      controller.dispatchAction(action);
+
+      expect(mockDispatchAction).toHaveBeenCalledWith(action);
+      expect(mockDispatchAction).toHaveBeenCalledTimes(1);
     });
   });
 

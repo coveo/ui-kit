@@ -1,5 +1,6 @@
 import type {GenerativeState, StateTurn, Turn} from '@/src/internal/features/generative/index.js';
 import {UnifiedRuntime} from '@/src/internal/api/unified/index.js';
+import type {A2uiAction} from '@/src/internal/api/unified/index.js';
 import {
   getOrCreateRoutedInterfaceRegistry,
   mergeTurnsWithRegistry,
@@ -222,6 +223,10 @@ class UnifiedConverseControllerImpl extends BaseController<UnifiedConverseContro
     this.#runtime.submit(prompt);
   }
 
+  dispatchAction(action: A2uiAction): void {
+    this.#runtime.dispatchAction(action);
+  }
+
   cancel(): void {
     this.#runtime.cancel();
   }
@@ -252,6 +257,7 @@ export interface UnifiedConverseController extends Controller<UnifiedConverseCon
   restore(state: SerializedConverseState): void;
   clear(): void;
   submit(options: {prompt: string}): void;
+  dispatchAction(action: A2uiAction): void;
   cancel(): void;
   selectTurn(options: {id: string}): void;
   retry(options: {id: string}): void;

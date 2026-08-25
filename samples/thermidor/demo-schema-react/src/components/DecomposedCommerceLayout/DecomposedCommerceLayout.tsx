@@ -2,6 +2,7 @@ import {useCallback, useEffect, useMemo, useRef, useSyncExternalStore} from 'rea
 import {useA2UI} from '@copilotkit/a2ui-renderer';
 import {ProductListRenderer} from '../../a2ui/ProductList/ProductList.js';
 import {PaginationRenderer} from '../../a2ui/Pagination/Pagination.js';
+import {PageSizeSelector} from '../../a2ui/PageSizeSelector/PageSizeSelector.js';
 import {SortRenderer} from '../../a2ui/Sort/Sort.js';
 import {useRemoteController} from '../../a2ui/controllers.js';
 import {getA2UIMessages} from '../../a2ui/surfaces.js';
@@ -116,9 +117,7 @@ export function DecomposedCommerceLayout({surfaceId}: DecomposedCommerceLayoutPr
               <PaginationRenderer props={pagination.properties as unknown as PaginationProps} />
             )}
             {pagination && (
-              <PageSizeSelector
-                paginationProps={pagination.properties as unknown as PaginationProps}
-              />
+              <PageSizeSelector props={pagination.properties as unknown as PaginationProps} />
             )}
           </div>
         </main>
@@ -185,36 +184,6 @@ function QuerySummary({
         </>
       )}
     </p>
-  );
-}
-
-function PageSizeSelector({paginationProps}: {paginationProps: PaginationProps}) {
-  const stateSource = useStateSource();
-  const paginationCtrl = useRemoteController(
-    stateSource,
-    paginationProps.componentId,
-    paginationProps.componentType
-  );
-
-  const pageSize = paginationCtrl.state?.pageSize ?? 20;
-  const baseOptions = [10, 20, 25, 50];
-  const options = baseOptions.includes(pageSize)
-    ? baseOptions
-    : [...new Set([...baseOptions, pageSize])].sort((a, b) => a - b);
-
-  return (
-    <div className={styles.pageSizeContainer}>
-      <label className={styles.pageSizeLabel} htmlFor="page-size-select">
-        <strong>Products per page:</strong>
-      </label>
-      <select id="page-size-select" className={styles.pageSizeSelect} value={pageSize} readOnly>
-        {options.map((size) => (
-          <option key={size} value={size}>
-            {size}
-          </option>
-        ))}
-      </select>
-    </div>
   );
 }
 

@@ -154,6 +154,11 @@ export const SelectPagePayloadSchema = z.strictObject({
 });
 export type SelectPagePayload = z.infer<typeof SelectPagePayloadSchema>;
 
+export const SetPageSizePayloadSchema = z.strictObject({
+  pageSize: z.number().int().min(1),
+});
+export type SetPageSizePayload = z.infer<typeof SetPageSizePayloadSchema>;
+
 export const PaginationStateClassSchema = z.strictObject({
   page: z.number().int().min(0),
   pageSize: z.number().int().min(1),
@@ -162,11 +167,11 @@ export const PaginationStateClassSchema = z.strictObject({
 });
 export type PaginationStateClass = z.infer<typeof PaginationStateClassSchema>;
 
-export const SelectSortPayloadSchema = z.strictObject({
+export const SetSortPayloadSchema = z.strictObject({
   fields: z.array(z.unknown()),
   sortCriteria: z.string(),
 });
-export type SelectSortPayload = z.infer<typeof SelectSortPayloadSchema>;
+export type SetSortPayload = z.infer<typeof SetSortPayloadSchema>;
 
 export const SortStateClassSchema = z.strictObject({
   appliedSort: SortCriterionSchema,
@@ -259,10 +264,15 @@ export const SelectPageSchema = z.strictObject({
 });
 export type SelectPage = z.infer<typeof SelectPageSchema>;
 
-export const SelectSortSchema = z.strictObject({
-  payload: SelectSortPayloadSchema,
+export const SetPageSizeSchema = z.strictObject({
+  payload: SetPageSizePayloadSchema,
 });
-export type SelectSort = z.infer<typeof SelectSortSchema>;
+export type SetPageSize = z.infer<typeof SetPageSizeSchema>;
+
+export const SetSortSchema = z.strictObject({
+  payload: SetSortPayloadSchema,
+});
+export type SetSort = z.infer<typeof SetSortSchema>;
 
 export const SubmitQuerySchema = z.strictObject({
   payload: SubmitQueryPayloadSchema,
@@ -294,11 +304,12 @@ export type BundleDisplay = z.infer<typeof BundleDisplaySchema>;
 
 export const PaginationActionsSchema = z.strictObject({
   selectPage: SelectPageSchema,
+  setPageSize: SetPageSizeSchema,
 });
 export type PaginationActions = z.infer<typeof PaginationActionsSchema>;
 
 export const SortActionsSchema = z.strictObject({
-  selectSort: SelectSortSchema,
+  setSort: SetSortSchema,
 });
 export type SortActions = z.infer<typeof SortActionsSchema>;
 

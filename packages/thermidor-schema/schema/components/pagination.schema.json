@@ -12,9 +12,10 @@
     "state": {"$ref": "#/$defs/PaginationState"},
     "actions": {
       "type": "object",
-      "required": ["selectPage"],
+      "required": ["selectPage", "setPageSize"],
       "properties": {
-        "selectPage": {"$ref": "#/$defs/SelectPageAction"}
+        "selectPage": {"$ref": "#/$defs/SelectPageAction"},
+        "setPageSize": {"$ref": "#/$defs/SetPageSizeAction"}
       },
       "additionalProperties": false
     }
@@ -63,6 +64,25 @@
               "type": "integer",
               "minimum": 0,
               "description": "The zero-indexed page number to navigate to."
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "SetPageSizeAction": {
+      "title": "setPageSize",
+      "description": "Changes the number of items displayed per page.",
+      "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"}],
+      "properties": {
+        "payload": {
+          "type": "object",
+          "required": ["pageSize"],
+          "properties": {
+            "pageSize": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "The number of items to display per page."
             }
           },
           "additionalProperties": false

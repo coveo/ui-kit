@@ -144,7 +144,7 @@ describe('SortRenderer', () => {
     expect(select.value).toBe('1');
   });
 
-  it('dispatches selectSort when a different sort is selected', () => {
+  it('dispatches setSort when a different sort is selected', () => {
     mockControllerState = {
       appliedSort: {sortCriteria: 'relevance', fields: []},
       availableSorts: [
@@ -157,7 +157,7 @@ describe('SortRenderer', () => {
     const select = screen.getByLabelText('Sort by:');
     fireEvent.change(select, {target: {value: '1'}});
 
-    expect(mockDispatch).toHaveBeenCalledWith('selectSort', {
+    expect(mockDispatch).toHaveBeenCalledWith('setSort', {
       sortCriteria: 'price_asc',
       fields: [{field: 'ec_price', direction: 'asc'}],
     });

@@ -1,5 +1,6 @@
 import {useMemo} from 'react';
 import {buildUnifiedConverseController} from '@coveo/thermidor';
+import type {A2uiAction} from '@coveo/thermidor';
 import {A2UIProvider} from '@copilotkit/a2ui-renderer';
 import {useGenerativeInterface} from '../context/generative-interface.js';
 import {useBuildController} from '../hooks/use-build-controller.js';
@@ -20,19 +21,30 @@ export function AppShell() {
     buildUnifiedConverseController({interface: generativeInterface})
   );
 
-  // TODO: Remove wrapper when UnifiedConverseController exposes dispatchAction.
-  // Remote controller actions (e.g. selectAction in NextActionsBar) are
-  // silently no-op until then.
-  const stateSource: EngineStateSource = useMemo(
-    () => ({
+  // TODO: This stateSource adapter is temporary and will be removed in a follow-up refactor.
+  // UnifiedConverseController should implement RemoteControllerSource directly (matching
+  // ConverseController.dispatchAction(RemoteControllerAction)) so the controller can be passed
+  // straight to StateSourceProvider and consumers no longer hand-build the A2uiAction envelope.
+  const stateSource: EngineStateSource = useMemo(() => {
+    return {
       get state() {
         return controller.state;
       },
       subscribe: (listener: () => void) => controller.subscribe(listener),
-      dispatchAction: async () => {},
-    }),
-    [controller]
-  );
+      dispatchAction: async ({componentId, action, payload}) => {
+        const a2uiAction: A2uiAction = {
+          surfaceId: null,
+          name: action,
+          sourceComponentId: componentId,
+          timestamp: new Date().toISOString(),
+          actionId: null,
+          wantResponse: true,
+          context: payload,
+        };
+        controller.dispatchAction(a2uiAction);
+      },
+    };
+  }, [controller]);
 
   const nav = useNavigation(controller, converseState);
 

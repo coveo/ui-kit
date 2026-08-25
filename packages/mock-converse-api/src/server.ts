@@ -85,18 +85,29 @@ const handleSchemaConversePost = async ({request}: {request: Request}) => {
     );
   }
 
-  if (
-    typeof body !== 'object' ||
-    body === null ||
-    !('message' in body) ||
-    typeof (body as Record<string, unknown>).message !== 'string'
-  ) {
+  const bodyRecord =
+    typeof body === 'object' && body !== null ? (body as Record<string, unknown>) : undefined;
+  const action = bodyRecord?.action;
+  const hasAction = typeof action === 'object' && action !== null;
+  const hasMessage = typeof bodyRecord?.message === 'string';
+
+  // Accept either a prompt (`message` string) or a component action (non-null `action` object,
+  // which arrives with `message: null`). Reject only when neither is present.
+  if (!hasMessage && !hasAction) {
     return withCors(
       HttpResponse.json(
         {
           error: 'Missing required field: message',
         },
         {status: 400}
+      )
+    );
+  }
+
+  if (hasAction) {
+    return withCors(
+      converseSchemaResponses.buildSchemaActionResponse(
+        action as {name: string; context: Record<string, unknown>; sourceComponentId?: string}
       )
     );
   }

@@ -23,7 +23,7 @@ export function SortRenderer({props}: {props: SortProps}) {
     const selectedIndex = Number(event.target.value);
     const selected = availableSorts[selectedIndex];
     if (selected) {
-      controller.dispatch('selectSort', {
+      controller.dispatch('setSort', {
         sortCriteria: selected.sortCriteria,
         fields: selected.fields,
       });

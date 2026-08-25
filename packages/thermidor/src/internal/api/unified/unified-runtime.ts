@@ -10,6 +10,7 @@ import type {GenerativeStatePort} from '@/src/internal/api/generative/index.js';
 import {dispatchStreamEvent} from './unified-event-dispatcher.js';
 import {createConversationRequestBuilder} from './unified-conversation-request-builder.js';
 import {createSurfaceProcessor} from './unified-surface-processor.js';
+import type {A2uiAction, CommerceRequestModel} from './unified-endpoint-types.js';
 
 export interface UnifiedRuntimeConfig {
   statePort: GenerativeStatePort;
@@ -77,15 +78,14 @@ export class UnifiedRuntime {
   private engine: FullEngine;
   private statePort: GenerativeStatePort;
   private agentResponseInitialized = new Set<string>();
-  private currentPrompt: string | undefined;
   private activeAbortController: AbortController | null = null;
-  private buildConversationRequest: ReturnType<typeof createConversationRequestBuilder>;
+  private requestBuilder: ReturnType<typeof createConversationRequestBuilder>;
   private surfaceProcessor: ReturnType<typeof createSurfaceProcessor>;
 
   private constructor(engine: FullEngine, _interfaceId: string, config: UnifiedRuntimeConfig) {
     this.engine = engine;
     this.statePort = config.statePort;
-    this.buildConversationRequest = createConversationRequestBuilder(
+    this.requestBuilder = createConversationRequestBuilder(
       config.generativeInterface,
       config.cartInterface
     );
@@ -122,22 +122,38 @@ export class UnifiedRuntime {
 
     const tempId = generateId();
 
-    this.currentPrompt = prompt;
     this.statePort.createTurn({id: tempId, prompt, status: 'streaming'});
     this.statePort.setActiveTurnId(tempId);
 
-    await this.executeStream(tempId);
+    await this.executeStream(
+      tempId,
+      this.requestBuilder.buildConversationRequest(this.engine, prompt)
+    );
   }
 
   async resubmit(turnId: string, prompt: string): Promise<void> {
     this.cancel();
 
-    this.currentPrompt = prompt;
     this.statePort.clearTurnResponse(turnId);
     this.statePort.createTurn({id: turnId, prompt, status: 'streaming'});
     this.agentResponseInitialized.delete(turnId);
 
-    await this.executeStream(turnId);
+    await this.executeStream(
+      turnId,
+      this.requestBuilder.buildConversationRequest(this.engine, prompt)
+    );
+  }
+
+  async dispatchAction(action: A2uiAction): Promise<void> {
+    const turnId = this.statePort.getActiveTurnId();
+
+    if (!turnId) {
+      return;
+    }
+
+    this.cancel();
+
+    await this.executeStream(turnId, this.requestBuilder.buildActionRequest(this.engine, action));
   }
 
   cancel(): void {
@@ -147,12 +163,11 @@ export class UnifiedRuntime {
     }
   }
 
-  private async executeStream(turnId: string): Promise<void> {
+  private async executeStream(turnId: string, agentInput: CommerceRequestModel): Promise<void> {
     const abortController = new AbortController();
     this.activeAbortController = abortController;
 
     try {
-      const agentInput = this.buildConversationRequest(this.engine, this.currentPrompt ?? '');
       const clientConfig = this.engine.read(this.configSelectors.getEndpointClientConfiguration);
 
       const client = createUnifiedEndpointClient();

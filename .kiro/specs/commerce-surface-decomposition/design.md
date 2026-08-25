@@ -170,7 +170,7 @@ export const SortContractSchema = z.strictObject({
     availableSorts: z.array(z.object({ sortCriteria: z.string(), fields: z.array(z.unknown()) })),
   }),
   actions: z.strictObject({
-    selectSort: z.strictObject({
+    setSort: z.strictObject({
       payload: z.strictObject({ sortCriteria: z.string(), fields: z.array(z.unknown()) }),
     }),
   }),
@@ -309,7 +309,7 @@ Four new catalog renderers following the same pattern as `ProductCarouselRendere
 |----------|----------------|-------------------|---------|
 | `ProductListRenderer` | `product-list` | `products[]` | — |
 | `PaginationRenderer` | `pagination` | `page`, `pageSize`, `totalEntries`, `totalPages` | `selectPage` |
-| `SortRenderer` | `sort` | `appliedSort`, `availableSorts` | `selectSort` |
+| `SortRenderer` | `sort` | `appliedSort`, `availableSorts` | `setSort` |
 | `SearchBoxRenderer` | `search-box` | `query` | `submitQuery` |
 
 Each renderer:
@@ -388,7 +388,7 @@ interface SearchBoxState {
 interface SelectPagePayload { page: number; }
 
 // sort action
-interface SelectSortPayload { sortCriteria: string; fields: unknown[]; }
+interface SetSortPayload { sortCriteria: string; fields: unknown[]; }
 
 // searchBox action
 interface SubmitQueryPayload { query: string; }

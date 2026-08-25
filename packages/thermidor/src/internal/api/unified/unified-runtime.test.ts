@@ -329,6 +329,81 @@ describe('UnifiedRuntime', () => {
     });
   });
 
+  describe('dispatchAction', () => {
+    const action = {
+      surfaceId: 'surface-1',
+      name: 'selectPage',
+      sourceComponentId: 'pager',
+      timestamp: '2024-01-01T00:00:00.000Z',
+      actionId: null,
+      wantResponse: false,
+      context: {page: 2},
+    };
+
+    it('is a no-op when there is no active turn id', async () => {
+      const config = createMockConfig();
+      (config.statePort.getActiveTurnId as ReturnType<typeof vi.fn>).mockReturnValue(undefined);
+      const engine = createMockEngine();
+      const {mockClient} = setupSuccessfulStream([
+        {type: 'turn_complete'} as NormalizedStreamEvent,
+      ]);
+
+      const runtime = UnifiedRuntime.getInstance(engine, 'action-noop', config);
+      await runtime.dispatchAction(action);
+
+      expect(mockClient.call).not.toHaveBeenCalled();
+      expect(config.statePort.createTurn).not.toHaveBeenCalled();
+    });
+
+    it('targets the active turn without creating a new turn', async () => {
+      const config = createMockConfig();
+      (config.statePort.getActiveTurnId as ReturnType<typeof vi.fn>).mockReturnValue('active-turn');
+      const engine = createMockEngine();
+      setupSuccessfulStream([{type: 'turn_complete'} as NormalizedStreamEvent]);
+
+      const runtime = UnifiedRuntime.getInstance(engine, 'action-active', config);
+      await runtime.dispatchAction(action);
+
+      expect(config.statePort.createTurn).not.toHaveBeenCalled();
+      expect(config.statePort.setActiveTurnId).not.toHaveBeenCalled();
+      expect(config.statePort.completeTurn).toHaveBeenCalledWith('active-turn');
+    });
+
+    it('posts a request with message null and the given action', async () => {
+      const config = createMockConfig();
+      (config.statePort.getActiveTurnId as ReturnType<typeof vi.fn>).mockReturnValue('active-turn');
+      const engine = createMockEngine();
+      const {mockClient} = setupSuccessfulStream([
+        {type: 'turn_complete'} as NormalizedStreamEvent,
+      ]);
+
+      const runtime = UnifiedRuntime.getInstance(engine, 'action-post', config);
+      await runtime.dispatchAction(action);
+
+      expect(mockClient.call).toHaveBeenCalledWith(
+        expect.objectContaining({message: null, action}),
+        expect.anything(),
+        expect.anything()
+      );
+    });
+
+    it('updates the active turn state from STATE_SNAPSHOT events', async () => {
+      const config = createMockConfig();
+      (config.statePort.getActiveTurnId as ReturnType<typeof vi.fn>).mockReturnValue('active-turn');
+      const engine = createMockEngine();
+      const snapshot = {pagination: {page: 2}};
+      setupSuccessfulStream([
+        {type: 'STATE_SNAPSHOT', snapshot} as unknown as NormalizedStreamEvent,
+        {type: 'turn_complete'} as NormalizedStreamEvent,
+      ]);
+
+      const runtime = UnifiedRuntime.getInstance(engine, 'action-snapshot', config);
+      await runtime.dispatchAction(action);
+
+      expect(config.statePort.setStateSnapshot).toHaveBeenCalledWith('active-turn', snapshot);
+    });
+  });
+
   describe('stream consumption', () => {
     it('fails the turn when stream ends without a terminal event', async () => {
       const config = createMockConfig();

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://schema.thermidor.coveo.com/components/sort.schema.json",
   "title": "Sort",
-  "description": "Provides sort controls for a commerce search surface. Renders available sort options and dispatches selectSort when the user changes the sort order.",
+  "description": "Provides sort controls for a commerce search surface. Renders available sort options and dispatches setSort when the user changes the sort order.",
   "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/component.schema.json"}],
   "properties": {
     "componentType": {
@@ -12,9 +12,9 @@
     "state": {"$ref": "#/$defs/SortState"},
     "actions": {
       "type": "object",
-      "required": ["selectSort"],
+      "required": ["setSort"],
       "properties": {
-        "selectSort": {"$ref": "#/$defs/SelectSortAction"}
+        "setSort": {"$ref": "#/$defs/SetSortAction"}
       },
       "additionalProperties": false
     }
@@ -56,8 +56,8 @@
       },
       "additionalProperties": false
     },
-    "SelectSortAction": {
-      "title": "selectSort",
+    "SetSortAction": {
+      "title": "setSort",
       "description": "Applies a new sort criterion.",
       "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"}],
       "properties": {
