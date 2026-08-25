@@ -16,6 +16,7 @@ packages:
   - packages/platform-mock-api
   - packages/atomic-cdn-smoke
   - packages/atomic-theming-e2e
+  - packages/atomic-playground
   - packages/atomic-legacy
   - packages/shopify
   - packages/relay
@@ -76,6 +77,8 @@ catalog:
   '@rollup/plugin-typescript': 12.3.0
   '@rollup/plugin-url': 8.0.2
   '@stencil/core': 4.20.0
+  '@tailwindcss/postcss': 4.3.3
+  '@tailwindcss/vite': 4.3.3
   '@testing-library/react': 16.3.2
   '@types/jest': 30.0.0
   '@types/node': 24.13.3
@@ -103,6 +106,7 @@ catalog:
   natural-orderby: 5.0.0
   next: 16.2.12
   node-fetch: 3.3.2
+  postcss: 8.5.26
   prettier: 3.9.6
   publint: 0.3.23
   puppeteer: 24.43.1

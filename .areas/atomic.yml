@@ -2,6 +2,7 @@ description: Atomic UI components package
 file_patterns:
   - packages/atomic/**
   - packages/atomic-angular/**
+  - packages/atomic-playground/**
   - packages/atomic-react/**
   - packages/atomic-hosted-page/**
   - packages/create-atomic/**
