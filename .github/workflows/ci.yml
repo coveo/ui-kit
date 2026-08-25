@@ -147,9 +147,21 @@ jobs:
         with:
           egress-policy: audit
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
-      - uses: ./.github/actions/build-cdn
+      - uses: ./.github/actions/setup
+      # Note that this does not use .github/actions/build-cdn/action.yml.
+      # It purposefully doesn't support affected because it's used by the cd and hotfix workflows.
+      - uses: ./.github/actions/run-affected
         with:
-          commit-sha: ${{ github.sha }}
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: build
+          # Samples are not CDN artifacts. Exclude them so the CDN build does not try
+          # to bundle samples that depend on CDN-externalized packages.
+          packages: |
+            !@samples/*
+            !@coveo/ui-kit-sample-*
+        env:
+          DEPLOYMENT_ENVIRONMENT: CDN
+          CDN_COMMIT_SHA: ${{ github.sha }}
 
   knip:
     name: 'Look for unused code or dependencies'
@@ -166,6 +178,10 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: build
       - name: Run selected Knip workspaces
         env:
           PROJECTS: ${{ needs.affected.outputs.projects }}
@@ -176,7 +192,10 @@ jobs:
   cdn-checks:
     name: 'CDN Checks'
     needs: [affected, build-cdn]
-    if: needs.build-cdn.result == 'success' && (contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic') || contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic-hosted-page'))
+    if: >-
+      needs.build-cdn.result == 'success' &&
+      (contains(fromJSON(needs.affected.outputs.tasks), '@coveo/atomic#e2e') ||
+      contains(fromJSON(needs.affected.outputs.tasks), '@coveo/atomic-hosted-page#e2e'))
     env:
       DEPLOYMENT_ENVIRONMENT: CDN
     runs-on: ubuntu-latest
@@ -190,15 +209,19 @@ jobs:
           egress-policy: audit
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/run-affected
-        with:
-          affected-tasks: ${{ needs.affected.outputs.tasks }}
-          tasks: build
-          packages: |
-            !@samples/*
-            !@coveo/ui-kit-sample-*
-      - name: 'Run CDN checks'
-        uses: ./.github/actions/cdn-checks
+      - name: 'Build local CDN'
+        run: pnpm exec turbo run @coveo/cdn#build
+      - name: 'Run Atomic CDN checks'
+        if: contains(fromJSON(needs.affected.outputs.tasks), '@coveo/atomic#e2e')
+        run: >-
+          pnpm exec turbo run @coveo/atomic#e2e --
+          atomic-commerce-query-error.e2e.ts
+          atomic-icon.e2e.ts
+          atomic-commerce-text.e2e.ts
+          atomic-commerce-query-summary.e2e.ts
+      - name: 'Run Atomic Hosted Page CDN checks'
+        if: contains(fromJSON(needs.affected.outputs.tasks), '@coveo/atomic-hosted-page#e2e')
+        run: pnpm exec turbo run @coveo/atomic-hosted-page#e2e
   lint-check:
     name: 'Check with linter'
     if: ${{ needs.affected.outputs.projects != '[]' }}
@@ -262,6 +285,8 @@ jobs:
   unit-test:
     name: 'Run unit tests'
     needs: affected
+    # Best effort at short-circuiting
+    if: contains(needs.affected.outputs.tasks, '#test')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
@@ -372,7 +397,7 @@ jobs:
   puppeteer-atomic-csp:
     name: 'Run e2e tests on Atomic CSP'
     needs: [affected, build]
-    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic')
+    if: contains(fromJSON(needs.affected.outputs.tasks), '@coveo/atomic#e2e:csp')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -382,10 +407,15 @@ jobs:
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          fetch-depth: 0
+          fetch-depth: 1
+          fetch-tags: false
           filter: blob:none
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/puppeteer-atomic-csp
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: e2e:csp
+          packages: '@coveo/atomic'
 
   chromatic:
     name: 'Run Chromatic visual tests on Atomic'
@@ -433,7 +463,7 @@ jobs:
   playwright-atomic:
     name: 'Run Playwright tests for Atomic'
     needs: [affected, build]
-    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic')
+    if: contains(fromJSON(needs.affected.outputs.tasks), '@coveo/atomic#e2e')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
@@ -451,14 +481,34 @@ jobs:
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          fetch-depth: 0
+          fetch-depth: 1
+          fetch-tags: false
           filter: blob:none
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo run build --filter=@coveo/atomic
-      - uses: ./.github/actions/playwright-atomic
+      - name: Run Playwright tests
+        id: playwright
+        uses: ./.github/actions/run-affected
+        continue-on-error: true
         with:
-          shardIndex: ${{ matrix.shardIndex }}
-          shardTotal: ${{ matrix.shardTotal }}
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: e2e
+          packages: '@coveo/atomic'
+          arguments: |
+            --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        if: ${{ !cancelled() }}
+        with:
+          name: atomic-blob-report-${{ matrix.shardIndex }}
+          path: packages/atomic/blob-report
+          retention-days: 5
+      - run: |
+          if [[ ${STEPS_PLAYWRIGHT_OUTCOME} == 'failure' ]];
+            then exit 1;
+            else exit 0;
+          fi
+        shell: bash
+        env:
+          STEPS_PLAYWRIGHT_OUTCOME: ${{ steps.playwright.outcome}}
   merge-atomic-playwright-reports:
     name: 'Merge Playwright reports'
     if: ${{ !cancelled() && !contains(needs.*.result, 'skipped') }}
@@ -473,7 +523,8 @@ jobs:
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          fetch-depth: 0
+          fetch-depth: 1
+          fetch-tags: false
           filter: blob:none
       - uses: ./.github/actions/setup
       - name: Merge Playwright reports
@@ -486,7 +537,7 @@ jobs:
   playwright-atomic-theming:
     name: 'Run theming smoke tests for Atomic'
     needs: [affected, build]
-    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic')
+    if: contains(fromJSON(needs.affected.outputs.tasks), '@coveo/atomic-theming-e2e#e2e')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
@@ -499,10 +550,21 @@ jobs:
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          fetch-depth: 0
+          fetch-depth: 1
+          fetch-tags: false
           filter: blob:none
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/playwright-atomic-theming
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          packages: '@coveo/atomic-theming-e2e'
+          tasks: e2e
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        if: ${{ !cancelled() }}
+        with:
+          name: atomic-theming-playwright-report
+          path: packages/atomic-theming-e2e/playwright-report/
+          retention-days: 5
   storybook-atomic:
     name: 'Run Storybook tests'
     needs: [affected, build]
@@ -604,7 +666,8 @@ jobs:
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          fetch-depth: 0
+          fetch-depth: 1
+          fetch-tags: false
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run "${{ matrix.sample }}" # Already filtered by affected
@@ -619,7 +682,7 @@ jobs:
   playwright-pkg-new-template-test:
     name: 'Run smoke tests on pkg-new-template'
     needs: [affected, build]
-    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/pkg-new-template')
+    if: contains(fromJSON(needs.affected.outputs.tasks), '@coveo/pkg-new-template#e2e')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
@@ -632,15 +695,24 @@ jobs:
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          fetch-depth: 0
+          fetch-depth: 1
+          fetch-tags: false
           filter: blob:none
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo run build --filter=@coveo/pkg-new-template
-      - uses: ./.github/actions/playwright-pkg-new-template
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: e2e
+          packages: '@coveo/pkg-new-template'
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        if: failure()
+        with:
+          name: pkg-new-template-playwright-report
+          path: packages/pkg-new-template/playwright-report/
   playwright-atomic-hosted-page-test:
     name: 'Run e2e tests for Atomic Hosted Page'
     needs: [affected, build]
-    if: contains(fromJSON(needs.affected.outputs.projects), '@coveo/atomic-hosted-page')
+    if: contains(fromJSON(needs.affected.outputs.tasks), '@coveo/atomic-hosted-page#e2e')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
@@ -653,11 +725,21 @@ jobs:
 
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          fetch-depth: 0
+          fetch-depth: 1
+          fetch-tags: false
           filter: blob:none
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo run build --filter=@coveo/atomic-hosted-page
-      - uses: ./.github/actions/playwright-atomic-hosted-pages
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: e2e
+          packages: '@coveo/atomic-hosted-page'
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        if: ${{ !cancelled() }}
+        with:
+          name: atomic-hosted-page-playwright-report
+          path: packages/atomic-hosted-page/playwright-report/
+          retention-days: 5
   e2e-quantic:
     name: 'Run Quantic E2E tests'
     needs: [affected, build]

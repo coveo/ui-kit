@@ -10,7 +10,7 @@ inputs:
 outputs:
   fetch-depth:
     description: Minimum checkout depth required for the calculated commit range.
-    value: ${{ steps.calculate.outputs.fetch-depth }}
+    value: ${{ steps.git.outputs.fetch-depth }}
   tasks:
     description: Affected Turbo task identifiers as a single-line JSON array of strings.
     value: ${{ steps.calculate.outputs.tasks }}
@@ -28,77 +28,25 @@ runs:
       with:
         install: true
         cache: true
+
+    - name: Calculate Git fetch depth
+      id: git
+      shell: bash
+      env:
+        TURBO_SCM_BASE: ${{ inputs.base-sha }}
+        TURBO_SCM_HEAD: ${{ inputs.head-sha }}
+      run: |
+        GIT_NO_LAZY_FETCH=1 git rev-parse --verify "${TURBO_SCM_BASE}^{commit}"
+        GIT_NO_LAZY_FETCH=1 git rev-parse --verify "${TURBO_SCM_HEAD}^{commit}"
+
+        range_count="$(git rev-list --count "${TURBO_SCM_BASE}..${TURBO_SCM_HEAD}")"
+        fetch_depth=$((range_count + 1))
+        echo "fetch-depth=$fetch_depth" >> "$GITHUB_OUTPUT"
+
     - name: Calculate and publish affected data
       id: calculate
       shell: bash
       env:
         TURBO_SCM_BASE: ${{ inputs.base-sha }}
         TURBO_SCM_HEAD: ${{ inputs.head-sha }}
-        # Inspired from https://github.com/vercel/turborepo/discussions/12949
-        QUERY: |
-          query {
-            affectedTasks(base: "${{ inputs.base-sha }}", head: "${{ inputs.head-sha }}") {
-              items {
-                name
-                fullName
-                package {
-                  name
-                }
-                reason {
-                  __typename
-                  ... on TaskFileChanged { filePath }
-                  ... on TaskDependencyTaskChanged { taskName packageName }
-                  ... on TaskPackageDependencyChanged { packageName }
-                  ... on TaskGlobalFileChanged { filePath }
-                  ... on TaskGlobalDepsChanged { filePath }
-                  ... on TaskAllChanged { description }
-                }
-              }
-            }
-          }
-      run: |
-        set -euo pipefail
-
-        GIT_NO_LAZY_FETCH=1 git rev-parse --verify "${TURBO_SCM_BASE}^{commit}"
-        GIT_NO_LAZY_FETCH=1 git rev-parse --verify "${TURBO_SCM_HEAD}^{commit}"
-
-        range_count="$(git rev-list --count "${TURBO_SCM_BASE}..${TURBO_SCM_HEAD}")"
-        fetch_depth=$((range_count + 1))
-
-        turbo_version="$(node -p "require('./package.json').devDependencies.turbo")"
-        affected_tasks="$(
-          pnpm dlx "turbo@$turbo_version" query --no-update-notifier "${QUERY}" \
-             | jq -c '.data.affectedTasks.items | sort_by(.fullName)'
-        )"
-
-        jq_output() {
-          local name="$1"
-          local query="$2"
-          local value
-
-          value="$(jq -c "$query" <<< "${affected_tasks}")"
-          echo "$name=$value" >> "$GITHUB_OUTPUT"
-        }
-
-        echo "fetch-depth=$fetch_depth" >> "$GITHUB_OUTPUT"
-
-        jq_output tasks    'map(.fullName)'
-        jq_output projects 'map(.package.name) | unique'
-        jq_output samples  'map(.fullName | select(test("^@(samples/|coveo/ui-kit-sample-)[^#]+#e2e$")))'
-
-        {
-          echo '### Affected tasks'
-          echo '| package | task | reason | description |'
-          echo '| --- | --- | --- | --- |'
-
-          jq -r '
-            .[]
-            | .reason as $reason
-            | ($reason | .description // .filePath // "\(.packageName)#\(.taskName)" // "") as $description
-            | [.package.name, .name, $reason.__typename, $description]
-            | map("`\(.)`")
-            | "| \(. | join(" | ")) |"
-          ' <<< "${affected_tasks}"
-        } >> "${GITHUB_STEP_SUMMARY}"
-
-        echo "Affected tasks summary: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+      run: node "$GITHUB_ACTION_PATH/affected.mjs"

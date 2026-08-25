@@ -83,7 +83,8 @@
     },
     "e2e": {
       "dependsOn": ["build"],
-      "outputs": ["playwright-report/**"]
+      "inputs": ["$TURBO_DEFAULT$"],
+      "outputs": ["playwright-report/**", "blob-report/**", "test-results/**"]
     },
     "lint": {
       "outputs": []

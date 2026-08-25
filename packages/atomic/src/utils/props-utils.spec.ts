@@ -133,4 +133,45 @@ describe('mapProperty', () => {
 
     document.body.removeChild(element);
   });
+
+  it('should map attributes set after creation, before insertion', async () => {
+    // The ordering a framework produces when it renders these components dynamically:
+    // createElement, then set attributes, then insert. Reading the attributes only from the
+    // constructor missed them entirely, which silently emptied every prefixed map property.
+    class TestElement4 extends LitElement {
+      @mapProperty({splitValues: true, attributePrefix: 'must-match'})
+      public mustMatch!: Record<string, string[]>;
+    }
+
+    customElement('test-map-property-4')(TestElement4);
+
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Testing dynamic property access
+    const element = document.createElement('test-map-property-4') as any;
+    element.setAttribute('must-match-source', 'Workday - People');
+    document.body.appendChild(element);
+    await element.updateComplete;
+
+    expect(element.mustMatch).toEqual({source: ['Workday - People']});
+
+    document.body.removeChild(element);
+  });
+
+  it('should not clobber a value assigned directly to the property', async () => {
+    class TestElement5 extends LitElement {
+      @mapProperty({splitValues: true, attributePrefix: 'must-match'})
+      public mustMatch!: Record<string, string[]>;
+    }
+
+    customElement('test-map-property-5')(TestElement5);
+
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Testing dynamic property access
+    const element = document.createElement('test-map-property-5') as any;
+    element.mustMatch = {filetype: ['pdf']};
+    document.body.appendChild(element);
+    await element.updateComplete;
+
+    expect(element.mustMatch).toEqual({filetype: ['pdf']});
+
+    document.body.removeChild(element);
+  });
 });

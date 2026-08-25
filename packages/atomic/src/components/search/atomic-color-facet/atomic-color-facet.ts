@@ -22,6 +22,7 @@ import {css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {parseDependsOn} from '@/src/components/common/facets/depends-on';
+import {getFirstNewFacetValueIndex} from '@/src/components/common/facets/facet-common';
 import facetCommonStyles from '@/src/components/common/facets/facet-common.tw.css';
 import type {FacetInfo} from '@/src/components/common/facets/facet-common-store';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
@@ -388,7 +389,7 @@ export class AtomicColorFacet extends LitElement implements InitializableCompone
   private headerFocus?: FocusTargetController;
   private facetConditionsManager?: FacetConditionsManager;
   private facetSearchAriaLive?: AriaLiveRegionController;
-  private resultIndexToFocusOnShowMore = 0;
+  private valuesBeforeShowMore = new Set<string>();
 
   constructor() {
     super();
@@ -639,11 +640,15 @@ export class AtomicColorFacet extends LitElement implements InitializableCompone
   }
 
   private renderValues() {
+    const firstNewValueIndex = getFirstNewFacetValueIndex(
+      this.facet.state.values,
+      this.valuesBeforeShowMore
+    );
+
     return this.renderValuesContainer(
       this.facet.state.values.map((value, i) => {
         const shouldFocusOnShowLessAfterInteraction = i === 0;
-        const shouldFocusOnShowMoreAfterInteraction =
-          i === (this.sortCriteria === 'automatic' ? 0 : this.resultIndexToFocusOnShowMore);
+        const shouldFocusOnShowMoreAfterInteraction = i === firstNewValueIndex;
 
         return this.renderValue(
           value,
@@ -661,7 +666,7 @@ export class AtomicColorFacet extends LitElement implements InitializableCompone
         label: this.label,
         i18n: this.bindings.i18n,
         onShowMore: () => {
-          this.resultIndexToFocusOnShowMore = this.facet.state.values.length;
+          this.valuesBeforeShowMore = new Set(this.facet.state.values.map(({value}) => value));
           this.focusTargets.showMore.focusAfterSearch();
           this.facet.showMoreValues();
         },

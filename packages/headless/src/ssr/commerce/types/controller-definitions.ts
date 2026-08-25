@@ -161,18 +161,15 @@ type OptionalEngineDefinitionControllersPropsOption<
   TControllersPropsMap extends ControllersPropsMap,
   TSolutionType extends SolutionType,
 > = {
-  [K in keyof TControllers as HasKey<TControllers[K], TSolutionType> extends never
-    ? never
-    : HasOptionalKeys<
-          ConditionalControllerProps<TControllers, TControllersPropsMap, TSolutionType, K>
-        > extends false
+  [
+    K in keyof TControllers as HasKey<TControllers[K], TSolutionType> extends never
       ? never
-      : 'controllers']?: ConditionalControllerProps<
-    TControllers,
-    TControllersPropsMap,
-    TSolutionType,
-    K
-  >;
+      : HasOptionalKeys<
+            ConditionalControllerProps<TControllers, TControllersPropsMap, TSolutionType, K>
+          > extends false
+        ? never
+        : 'controllers'
+  ]?: ConditionalControllerProps<TControllers, TControllersPropsMap, TSolutionType, K>;
 };
 
 /**
@@ -211,18 +208,15 @@ type RequiredEngineDefinitionControllersPropsOption<
   TControllersPropsMap extends ControllersPropsMap,
   TSolutionType extends SolutionType,
 > = {
-  [K in keyof TControllers as HasKey<TControllers[K], TSolutionType> extends never
-    ? never
-    : HasRequiredKeys<
-          ConditionalControllerProps<TControllers, TControllersPropsMap, TSolutionType, K>
-        > extends false
+  [
+    K in keyof TControllers as HasKey<TControllers[K], TSolutionType> extends never
       ? never
-      : 'controllers']: ConditionalControllerProps<
-    TControllers,
-    TControllersPropsMap,
-    TSolutionType,
-    K
-  >;
+      : HasRequiredKeys<
+            ConditionalControllerProps<TControllers, TControllersPropsMap, TSolutionType, K>
+          > extends false
+        ? never
+        : 'controllers'
+  ]: ConditionalControllerProps<TControllers, TControllersPropsMap, TSolutionType, K>;
 };
 
 type IsRecommendationController<TController extends ControllerDefinition<Controller>> = HasKey<
@@ -261,17 +255,21 @@ type RecommendationControllerProps<
   TControllersPropsMap extends ControllersPropsMap,
   K extends keyof TControllers,
 > = {
-  [I in keyof TControllersPropsMap as I extends K
-    ? IsRecommendationController<TControllers[I]> extends never
-      ? never
-      : I
-    : never]?: TControllersPropsMap[I];
-} & {
-  [I in keyof TControllersPropsMap as I extends K
-    ? IsRecommendationController<TControllers[I]> extends never
-      ? I
+  [
+    I in keyof TControllersPropsMap as I extends K
+      ? IsRecommendationController<TControllers[I]> extends never
+        ? never
+        : I
       : never
-    : never]: TControllersPropsMap[I];
+  ]?: TControllersPropsMap[I];
+} & {
+  [
+    I in keyof TControllersPropsMap as I extends K
+      ? IsRecommendationController<TControllers[I]> extends never
+        ? I
+        : never
+      : never
+  ]: TControllersPropsMap[I];
 };
 
 type DefaultControllerProps<
