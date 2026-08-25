@@ -141,7 +141,7 @@ export default {
         'src/cdn.ts',
         'src/**/*.e2e.ts',
         'dev/**/*.{ts,js,mjs}',
-        'scripts/**/*.{mjs,js}',
+        'scripts/**/*.{mjs,js,ts}',
         'csp/**/*.{mjs,js}',
         'custom-elements-manifest.config.mjs',
         // Build-generated barrel indexes (created by `pnpm build:lit`).
