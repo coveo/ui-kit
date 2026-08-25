@@ -3,6 +3,7 @@ import {join, relative, resolve, sep} from 'node:path';
 
 const root = resolve(process.env.GITHUB_WORKSPACE ?? process.cwd());
 const buildTaskSuffix = '#build';
+const turboMaxBuffer = 100 * 1024 * 1024;
 
 const parseAffectedTasks = () => {
   const input = process.env.AFFECTED_TASKS ?? '';
@@ -13,6 +14,24 @@ const parseAffectedTasks = () => {
   }
 
   return affectedTasks;
+};
+
+const resolveAffectedTasks = () => {
+  const affectedTasks = parseAffectedTasks().filter((task) => task.endsWith(buildTaskSuffix));
+
+  if (affectedTasks.length === 0) {
+    return [];
+  }
+
+  const output = execFileSync('pnpm', ['exec', 'turbo', 'run', ...affectedTasks, '--dry=json'], {
+    cwd: root,
+    encoding: 'utf8',
+    maxBuffer: turboMaxBuffer,
+  });
+  const dryRun = JSON.parse(output);
+  const taskIds = dryRun.tasks.map(({taskId}) => taskId);
+
+  return taskIds;
 };
 
 const getWorkspacePackages = () => {
@@ -37,13 +56,14 @@ const shouldPublishPackage = (workspacePackage) => {
   return !workspacePackage.private && !isSamplePackage(workspacePackage);
 };
 
-const getAffectedPackages = () =>
-  new Set(
-    parseAffectedTasks()
-      .filter((task) => task.endsWith(buildTaskSuffix))
-      .map((task) => task.slice(0, -buildTaskSuffix.length))
-      .filter((packageName) => packageName !== '//')
-  );
+const getAffectedPackages = () => {
+  const tasks = resolveAffectedTasks();
+  const projects = tasks
+    .map((task) => task.split('#')[0])
+    .filter((packageName) => packageName !== '//');
+
+  return new Set(projects);
+};
 
 const resolvePreviewPackages = () => {
   const workspacePackages = getWorkspacePackages();
