@@ -2,12 +2,14 @@
 
 ## Problem Statement
 
-In the current implementation, the backend sends an `ACTIVITY_SNAPSHOT` of type `a2ui-surface` containing a monolithic root component (e.g., `"component": "ProductSearchSurface"`). Thermidor uses this root component name as a discriminant to:
+Today, the backend sends an `ACTIVITY_SNAPSHOT` of type `a2ui-surface` containing a monolithic root component (e.g., `"component": "ProductSearchSurface"`). Thermidor uses this root component name as a discriminant to:
 
 1. Determine that the surface requires a **routed interface** (triggering navigation to the search results page)
 2. Hydrate the appropriate sub-interface (commerce search vs. product listing)
 
-If we adopt Option B from ADR-006 (removing controllers from the schema and decomposing monolithic components into smaller, specialized ones), we lose this single discriminant. The question becomes: **how does the renderer know which page/layout to display, and where to place each component?**
+Adopting Option B from ADR-006 (removing controllers from the schema and decomposing monolithic components into smaller, specialized ones) removes that single discriminant. This raises the question: **how would the renderer know which page/layout to display, and where to place each component?**
+
+Removing the monolithic discriminant also invites a second, related question: with the components decomposed, is the `routedInterface` + sub-interface hydration machinery still needed at all? This document proposes an explicit `surfaceType` field as the discriminant, and argues that in the decomposed model the hydration step disappears entirely.
 
 ## Current Behavior (Pre-Option B)
 
@@ -38,20 +40,18 @@ The backend sends:
 }
 ```
 
-In `unified-surface-processor.ts`, the function `getStatefulCommerceRootKind` checks:
+Thermidor inspects the root component name (via a helper like `getStatefulCommerceRootKind`):
 
 ```typescript
 const kind = components?.find((c) => c.id === 'root')?.component;
 return kind === 'ProductSearchSurface' || kind === 'ProductListingSurface' ? kind : undefined;
 ```
 
-This determines that the surface is a commerce search interface and triggers `setRoutedInterface`, which causes `use-navigation.ts` to navigate to `SearchResultsPage`.
+When the root component is recognized, this determines that the surface is a commerce search interface and triggers `setRoutedInterface`, which hydrates a sub-interface and causes `use-navigation.ts` to navigate to `SearchResultsPage`. This is the behavior we are proposing to change.
 
-## Proposed Solution: `surfaceType` as Explicit Discriminant
+## Proposed Solution: surfaceType as Explicit Discriminant
 
-### Schema Change
-
-Add a `surfaceType` field at the `createSurface` level:
+We would add a `surfaceType` field at the `createSurface` level, alongside decomposed components. Each component would carry a `componentType` (and each component instance would be addressed by a `componentId`), with per-component `state`/`actions` forming the contract.
 
 ```json
 {
@@ -60,37 +60,59 @@ Add a `surfaceType` field at the `createSurface` level:
     "surfaceType": "commerceSearch",
     "catalogId": "https://agent-gateway.coveo.com/a2ui/commerce/v1/catalog.json",
     "components": [
-      {"componentType": "searchBox", "state": {"query": "wetsuits"}},
-      {"componentType": "productList", "state": {"products": [...]}},
-      {"componentType": "pagination", "state": {"page": 0, "pageSize": 20, "totalEntries": 52}},
-      {"componentType": "sort", "state": {"appliedSort": {...}, "availableSorts": [...]}},
-      {"componentType": "facetList", "state": {"facets": []}}
+      {"props": {"componentId": "search-box-1", "componentType": "searchBox"},
+       "state": {"query": "wetsuits"}},
+      {"props": {"componentId": "product-list-1", "componentType": "productList"},
+       "state": {"products": [...]}},
+      {"props": {"componentId": "pagination-1", "componentType": "pagination"},
+       "state": {"page": 0, "pageSize": 24, "totalEntries": 137, "totalPages": 6}},
+      {"props": {"componentId": "sort-1", "componentType": "sort"},
+       "state": {"appliedSort": {...}, "availableSorts": [...]}}
     ]
   }
 }
 ```
 
+> **Note:** The inline `state` above is shown for readability. The concrete delivery mechanism for per-component state — inline on each component versus a separate per-turn state snapshot keyed by `componentId` — is an implementation detail to be settled during implementation. What matters for this proposal is that each component's state is server-owned and addressed by `componentId`.
+
+### Eliminating routedInterface and sub-interface hydration
+
+The reviewer pointed out that the monolithic root component currently serves two responsibilities — determining that the surface needs a routed interface, and hydrating the appropriate sub-interface — and that the decomposed model would need neither.
+
+In the decomposed model:
+
+- We would keep a **single** `GenerativeUnifiedInterface` for the whole session, across both the conversation and the commerce-search surface. We would no longer create per-use-case sub-interfaces.
+- Because there are no sub-interfaces, there would be nothing to hydrate. The `routedInterface` concept — including `setRoutedInterface`, the registry of interface instances, and the hydration of `commerceSearch` vs. `productListing` sub-interfaces — would no longer be needed for decomposed surfaces.
+- The individual `build*Controller` functions (`buildProductListController`, `buildPaginationController`, `buildSortController`, and the like) would no longer be used in the decomposed path. Instead, each decomposed component would read its own server-owned slice of state from the unified interface — addressed by `componentId` — through a generic remote-controller mechanism, and would dispatch actions back through the same unified interface.
+- Navigation to the search-results layout would be driven directly by observing `surfaceType` on the incoming surface, rather than by the presence of a hydrated `routedInterface`.
+
+The net effect is a simplification: one interface, one state store, no hydration step, and no registry of non-serializable interface instances.
+
 ### Responsibilities Separation
 
-| Concern                        | Provided by                                  | Consumed by                                    |
-| ------------------------------ | -------------------------------------------- | ---------------------------------------------- |
-| **What data exists**           | `components[].state`                         | Individual component renderers                 |
-| **What actions are available** | `components[].actions`                       | Individual component renderers                 |
-| **Which page/layout to show**  | `surfaceType`                                | Navigation layer (e.g., `use-navigation.ts`)   |
-| **Where each component goes**  | Renderer's layout template per `surfaceType` | Layout component (e.g., `SearchResultsLayout`) |
+| Concern                       | Provided by                                              | Consumed by                                     |
+| ----------------------------- | -------------------------------------------------------- | ----------------------------------------------- |
+| **What data exists**          | Per-component server-owned state, keyed by `componentId` | Generic remote controller per component         |
+| **Which components exist**    | `createSurface.components`                               | Renderer's layout                               |
+| **Which page/layout to show** | `surfaceType`                                            | Navigation / layout layer (`SearchResultsPage`) |
+| **Where each component goes** | Renderer's layout for the surface type                   | The layout                                      |
+
+Navigation is driven by observing `surfaceType`; there is no `routedInterface` acting as the layout or navigation driver.
 
 ### Key Insight
 
-The `surfaceType` solves two distinct problems simultaneously:
+The `surfaceType` would solve two distinct problems simultaneously:
 
-1. **Routing/Navigation**: Thermidor uses it to determine whether to set a `routedInterface` and navigate away from the conversation page
-2. **Layout Selection**: The renderer uses it to select the appropriate layout template that controls component placement
+1. **Routing/Navigation**: Thermidor would use it to decide whether to navigate away from the conversation page to the search results layout.
+2. **Layout Selection**: The renderer would use it to select the appropriate layout that controls component placement.
+
+Notably, `surfaceType` would **not** drive any interface hydration — that step disappears entirely in the decomposed model.
 
 ## Renderer Implementation
 
 ### Layout Templates by Surface Type
 
-The renderer maintains a mapping of `surfaceType` to layout templates. Each layout template knows exactly where to place each `componentType`:
+The renderer would maintain a mapping of `surfaceType` to layout templates. Each layout template knows exactly where to place each `componentType`:
 
 ```tsx
 function renderSurface(surface: Surface) {
@@ -107,31 +129,31 @@ function renderSurface(surface: Surface) {
 }
 ```
 
-### Example: Commerce Search Layout
+For a `commerceSearch` surface, the layout would look up components by `componentType` and place them into spatial slots:
 
 ```tsx
-function CommerceSearchLayout({components}: {components: Component[]}) {
+function CommerceSearchLayout({components}) {
   const searchBox = components.find((c) => c.componentType === 'searchBox');
-  const productList = components.find((c) => c.componentType === 'productList');
-  const pagination = components.find((c) => c.componentType === 'pagination');
   const facets = components.find((c) => c.componentType === 'facetList');
   const sort = components.find((c) => c.componentType === 'sort');
+  const productList = components.find((c) => c.componentType === 'productList');
+  const pagination = components.find((c) => c.componentType === 'pagination');
 
   return (
-    <div className="search-layout">
-      <header>
-        {searchBox && <SearchBox state={searchBox.state} actions={searchBox.actions} />}
-      </header>
-      <aside>{facets && <FacetList state={facets.state} actions={facets.actions} />}</aside>
+    <div className="commerce-search">
+      <header>{searchBox && <Component {...searchBox} />}</header>
+      <aside>{facets && <Component {...facets} />}</aside>
       <main>
-        <div className="toolbar">{sort && <Sort state={sort.state} actions={sort.actions} />}</div>
-        {productList && <ProductList state={productList.state} actions={productList.actions} />}
-        {pagination && <Pagination state={pagination.state} actions={pagination.actions} />}
+        {sort && <Component {...sort} />}
+        {productList && <Component {...productList} />}
+        {pagination && <Component {...pagination} />}
       </main>
     </div>
   );
 }
 ```
+
+Components that are absent from the surface would simply render as empty slots without error.
 
 ### Why Not Describe Layout in the Schema?
 
@@ -156,26 +178,21 @@ This is **not recommended** because:
 
 ## Impact on Thermidor Internals
 
-### `unified-surface-processor.ts`
+### Routing
 
-The current `getStatefulCommerceRootKind` check on `root.component` would be replaced by a check on `createSurface.surfaceType`:
+A check on `createSurface.surfaceType` would replace the root-component-name check that `getStatefulCommerceRootKind` performs today. When `surfaceType` indicates a routed commerce surface (e.g., `commerceSearch` or `productListing`), Thermidor would signal navigation **without** hydrating a sub-interface — no `routedInterface`, and no `build*Controller`.
 
-```typescript
-// Before
-const kind = components?.find(c => c.id === 'root')?.component;
-if (kind === 'ProductSearchSurface' || kind === 'ProductListingSurface') { ... }
+Conceptually, before and after:
 
-// After
-if (createSurface.surfaceType === 'commerceSearch' || createSurface.surfaceType === 'productListing') { ... }
-```
+- **Before:** inspect the root component name → `setRoutedInterface` (hydrates a sub-interface) → `use-navigation.ts` navigates.
+- **After:** observe `surfaceType` → signal navigation directly → no sub-interface, no hydration.
 
-### `use-navigation.ts` (demo app)
+The sub-interface hydration path would be removed. The single `GenerativeUnifiedInterface` would remain the only interface for the session.
 
-No change needed at the navigation hook level. The `routedInterface` mechanism stays the same — it's just triggered by a different internal check in thermidor.
+### Demo App
 
-### `AppShell.tsx` (demo app)
-
-The `SearchResultsPage` component would receive the individual components instead of a monolithic interface, and apply its own layout logic.
+- `use-navigation.ts` would navigate based on `surfaceType` instead of the presence of a hydrated routed interface.
+- `SearchResultsPage` would render the decomposed components through the layout for the surface type, rather than driving `buildProductListController`, `buildPaginationController`, or `buildSortController`. Each component would read its state from the unified interface via the generic remote-controller mechanism.
 
 ## Known Surface Types
 
@@ -247,3 +264,4 @@ This keeps ADR-006 focused on its core question (controllers yes/no in the schem
 2. Should there be a fallback behavior when `surfaceType` is unknown (graceful degradation)?
 3. Does `surfaceType` fully replace the need for `catalogId` as a discriminant, or do they serve complementary purposes?
 4. Is the agent gateway network path latency acceptable for high-frequency bidirectional interactions (facets, sort, pagination), or does the monolith decomposition require a direct API bypass for these?
+5. Does dropping `routedInterface` / sub-interface hydration in favor of the single `GenerativeUnifiedInterface` have any downside for the legacy (non-decomposed) surfaces still in flight — and if both models must coexist during migration, how do they coexist cleanly?
