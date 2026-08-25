@@ -105,7 +105,7 @@ describe('VitestA11yReporter — run-end gating', () => {
     const reporter = new VitestA11yReporter({outputFile, packageJsonPath});
 
     reporter.onTestCaseResult(
-      // biome-ignore lint/suspicious/noExplicitAny: simplified test fixture
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- simplified test fixture
       buildTestCase({
         storyId: 'atomic-tab--default',
         modulePath: 'src/components/common/atomic-tab/atomic-tab.stories.tsx',
@@ -133,7 +133,7 @@ describe('VitestA11yReporter — run-end gating', () => {
     const reporter = new VitestA11yReporter({outputFile, packageJsonPath});
 
     reporter.onTestCaseResult(
-      // biome-ignore lint/suspicious/noExplicitAny: simplified test fixture
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- simplified test fixture
       buildTestCase({
         storyId: 'atomic-tab--broken',
         modulePath: 'src/components/common/atomic-tab/atomic-tab.stories.tsx',
@@ -169,7 +169,7 @@ describe('VitestA11yReporter — run-end gating', () => {
 
     reporter.onTestRunStart();
     reporter.onTestCaseResult(
-      // biome-ignore lint/suspicious/noExplicitAny: simplified test fixture
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- simplified test fixture
       buildTestCase({
         storyId: 'atomic-tab--broken',
         modulePath: 'src/components/common/atomic-tab/atomic-tab.stories.tsx',
@@ -187,7 +187,7 @@ describe('VitestA11yReporter — run-end gating', () => {
 
     reporter.onTestRunStart();
     reporter.onTestCaseResult(
-      // biome-ignore lint/suspicious/noExplicitAny: simplified test fixture
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- simplified test fixture
       buildTestCase({
         storyId: 'atomic-tab--broken',
         modulePath: 'src/components/common/atomic-tab/atomic-tab.stories.tsx',
@@ -218,7 +218,7 @@ describe('VitestA11yReporter — run-end gating', () => {
     });
 
     reporter.onTestCaseResult(
-      // biome-ignore lint/suspicious/noExplicitAny: simplified test fixture
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- simplified test fixture
       buildTestCase({
         storyId: 'atomic-tab--broken',
         modulePath: 'src/components/common/atomic-tab/atomic-tab.stories.tsx',
@@ -238,7 +238,7 @@ describe('VitestA11yReporter — run-end gating', () => {
     const reporter = new VitestA11yReporter({outputFile, packageJsonPath});
 
     reporter.onTestCaseResult(
-      // biome-ignore lint/suspicious/noExplicitAny: simplified test fixture
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- simplified test fixture
       buildTestCase({
         storyId: 'atomic-tab--broken',
         modulePath: 'src/components/common/atomic-tab/atomic-tab.stories.tsx',
