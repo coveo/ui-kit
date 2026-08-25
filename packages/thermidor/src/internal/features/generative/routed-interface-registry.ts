@@ -2,16 +2,16 @@ import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
 import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import type {
+  HydratedUseCase,
   RoutedInterface,
-  RoutedUseCase,
   StateTurn,
   Turn,
   UseCaseInterfaceMap,
 } from './generative-types.js';
 
 export interface RoutedInterfaceEntry {
-  useCase: RoutedUseCase;
-  interface: UseCaseInterfaceMap[RoutedUseCase];
+  useCase: HydratedUseCase;
+  interface: UseCaseInterfaceMap[HydratedUseCase];
   snapshot: Record<string, unknown>;
   query: string | undefined;
   surfaceId?: string;
@@ -48,6 +48,10 @@ export function mergeTurnsWithRegistry(
   return stateTurns.map((stateTurn): Turn => {
     if (!stateTurn.routedInterface) {
       return stateTurn as Turn;
+    }
+
+    if (stateTurn.routedInterface.useCase === 'decomposedCommerce') {
+      return {...stateTurn, routedInterface: stateTurn.routedInterface} as Turn;
     }
 
     const entry = registry.get(stateTurn.id);

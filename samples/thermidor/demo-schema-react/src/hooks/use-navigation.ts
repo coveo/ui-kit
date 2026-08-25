@@ -70,7 +70,7 @@ export function useNavigation(controller: Controller, converseState: ConverseSta
 
   const persistAndNavigateToSearch = useCallback(
     (turn: Turn) => {
-      if (persistedInterfaceRef.current) {
+      if (persistedInterfaceRef.current && 'interface' in persistedInterfaceRef.current) {
         persistedInterfaceRef.current.interface.dispose();
       }
       persistedInterfaceRef.current = turn.routedInterface!;
@@ -87,7 +87,9 @@ export function useNavigation(controller: Controller, converseState: ConverseSta
 
   useEffect(() => {
     return () => {
-      persistedInterfaceRef.current?.interface.dispose();
+      if (persistedInterfaceRef.current && 'interface' in persistedInterfaceRef.current) {
+        persistedInterfaceRef.current.interface.dispose();
+      }
     };
   }, []);
 
@@ -162,7 +164,9 @@ export function useNavigation(controller: Controller, converseState: ConverseSta
 
   const handleResetToLanding = useCallback(() => {
     if (persistedInterfaceRef.current) {
-      persistedInterfaceRef.current.interface.dispose();
+      if ('interface' in persistedInterfaceRef.current) {
+        persistedInterfaceRef.current.interface.dispose();
+      }
       persistedInterfaceRef.current = null;
       persistedInterfaceTurnIdRef.current = null;
       setCanGoBackToSearch(false);

@@ -11,7 +11,11 @@
         {"$ref": "https://schema.thermidor.coveo.com/components/cart.schema.json"},
         {"$ref": "https://schema.thermidor.coveo.com/components/next-actions-bar.schema.json"},
         {"$ref": "https://schema.thermidor.coveo.com/components/bundle-display.schema.json"},
-        {"$ref": "https://schema.thermidor.coveo.com/components/comparison-table.schema.json"}
+        {"$ref": "https://schema.thermidor.coveo.com/components/comparison-table.schema.json"},
+        {"$ref": "https://schema.thermidor.coveo.com/components/product-list.schema.json"},
+        {"$ref": "https://schema.thermidor.coveo.com/components/pagination.schema.json"},
+        {"$ref": "https://schema.thermidor.coveo.com/components/sort.schema.json"},
+        {"$ref": "https://schema.thermidor.coveo.com/components/search-box.schema.json"}
       ]
     }
   }

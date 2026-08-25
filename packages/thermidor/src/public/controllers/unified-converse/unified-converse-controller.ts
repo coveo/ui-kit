@@ -70,6 +70,17 @@ class UnifiedConverseControllerImpl extends BaseController<UnifiedConverseContro
           this.engine.mutate(this.#actions.replaceTurnId({oldId, newId}));
         },
         setRoutedInterface: (turnId, hydrationResult) => {
+          if (hydrationResult.useCase === 'decomposedCommerce') {
+            this.engine.mutate(
+              this.#actions.setRoutedInterface({
+                turnId,
+                useCase: 'decomposedCommerce',
+                surfaceType: hydrationResult.surfaceType,
+                surfaceId: hydrationResult.surfaceId,
+              })
+            );
+            return;
+          }
           const registry = getOrCreateRoutedInterfaceRegistry(options.interface);
           registry.register(turnId, {
             useCase: hydrationResult.useCase,
@@ -153,12 +164,22 @@ class UnifiedConverseControllerImpl extends BaseController<UnifiedConverseContro
       const {routedInterface, ...rest} = turn;
       const serialized: SerializedTurn = {...rest};
       if (routedInterface) {
-        const entry = registry.get(turn.id);
-        serialized.routedInterface = {
-          useCase: routedInterface.useCase,
-          snapshot: entry?.snapshot ?? {},
-          query: entry?.query,
-        };
+        if (routedInterface.useCase === 'decomposedCommerce') {
+          serialized.routedInterface = {
+            useCase: routedInterface.useCase,
+            surfaceType: routedInterface.surfaceType,
+            surfaceId: routedInterface.surfaceId,
+            snapshot: {},
+            query: undefined,
+          };
+        } else {
+          const entry = registry.get(turn.id);
+          serialized.routedInterface = {
+            useCase: routedInterface.useCase,
+            snapshot: entry?.snapshot ?? {},
+            query: entry?.query,
+          };
+        }
       }
       return serialized;
     });
@@ -258,11 +279,19 @@ function hydrateFromSerializedState(serialized: SerializedConverseState): Genera
       turn.error = 'Stream was interrupted';
     }
 
-    if (
-      routedInterface &&
-      (routedInterface.useCase === 'commerceSearch' || routedInterface.useCase === 'search')
-    ) {
-      turn.routedInterface = {useCase: routedInterface.useCase};
+    if (routedInterface) {
+      if (routedInterface.useCase === 'decomposedCommerce') {
+        turn.routedInterface = {
+          useCase: 'decomposedCommerce',
+          surfaceType: routedInterface.surfaceType ?? '',
+          surfaceId: routedInterface.surfaceId ?? '',
+        };
+      } else if (
+        routedInterface.useCase === 'commerceSearch' ||
+        routedInterface.useCase === 'search'
+      ) {
+        turn.routedInterface = {useCase: routedInterface.useCase};
+      }
     }
 
     return turn;

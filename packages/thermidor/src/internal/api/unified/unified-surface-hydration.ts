@@ -39,6 +39,7 @@ export type A2uiOperation =
 
 export interface CreateSurfacePayload {
   surfaceId: string;
+  surfaceType?: string;
   catalogId?: string;
   sendDataModel?: boolean;
   components?: ComponentNode[];

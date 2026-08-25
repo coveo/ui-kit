@@ -12,7 +12,7 @@ import {generateId} from '@/src/internal/utils/index.js';
 import type {
   A2UISurface,
   Activity,
-  RoutedUseCase,
+  HydratedUseCase,
   TurnStatus,
   UseCaseInterfaceMap,
 } from '@/src/internal/features/generative/index.js';
@@ -24,12 +24,21 @@ export interface CoveoConversationControllerAction {
   payload: unknown;
 }
 
+export interface DecomposedRouteSignal {
+  useCase: 'decomposedCommerce';
+  surfaceType: string;
+  surfaceId: string;
+}
+
 export interface GenerativeStatePort {
   createTurn(payload: {id: string; prompt: string; status: TurnStatus}): void;
   setActiveTurnId(id: string): void;
   getActiveTurnId(): string | undefined;
   replaceTurnId(oldId: string, newId: string): void;
-  setRoutedInterface(turnId: string, hydrationResult: HydrationResult): void;
+  setRoutedInterface(
+    turnId: string,
+    hydrationResult: HydrationResult | DecomposedRouteSignal
+  ): void;
   clearRoutedInterface(turnId: string, surfaceId: string): void;
   initAgentResponse(turnId: string): void;
   startMessage(turnId: string, role: string): void;
@@ -53,7 +62,7 @@ export interface GenerativeStatePort {
   setConversationSession(sessionId: string | undefined, token: string | undefined): void;
 }
 
-export interface HydrationResult<K extends RoutedUseCase = RoutedUseCase> {
+export interface HydrationResult<K extends HydratedUseCase = HydratedUseCase> {
   useCase: K;
   interface: UseCaseInterfaceMap[K];
   snapshot: Record<string, unknown>;

@@ -76,13 +76,32 @@ export const ComparisonProductSchema = z.strictObject({
 });
 export type ComparisonProduct = z.infer<typeof ComparisonProductSchema>;
 
+export const PaginationStateSchema = z.strictObject({
+  page: z.number().int().min(0),
+  pageSize: z.number().int().min(1),
+  totalEntries: z.number().int().min(0),
+  totalPages: z.number().int().min(0),
+});
+export type PaginationState = z.infer<typeof PaginationStateSchema>;
+
+export const SortCriterionSchema = z.strictObject({
+  fields: z.array(z.unknown()),
+  sortCriteria: z.string(),
+});
+export type SortCriterion = z.infer<typeof SortCriterionSchema>;
+
+export const SearchBoxStateSchema = z.strictObject({
+  query: z.string(),
+});
+export type SearchBoxState = z.infer<typeof SearchBoxStateSchema>;
+
 export const ProductCarouselActionsSchema = z.strictObject({});
 export type ProductCarouselActions = z.infer<typeof ProductCarouselActionsSchema>;
 
-export const StateClassSchema = z.strictObject({
+export const ProductCarouselStateSchema = z.strictObject({
   products: z.array(ProductSchema),
 });
-export type StateClass = z.infer<typeof StateClassSchema>;
+export type ProductCarouselState = z.infer<typeof ProductCarouselStateSchema>;
 
 export const SetItemsPayloadSchema = z.strictObject({
   items: z.array(CartItemSchema),
@@ -94,10 +113,10 @@ export const UpdateItemQuantityPayloadSchema = z.strictObject({
 });
 export type UpdateItemQuantityPayload = z.infer<typeof UpdateItemQuantityPayloadSchema>;
 
-export const CartStateClassSchema = z.strictObject({
+export const StateClassSchema = z.strictObject({
   items: z.array(CartItemSchema),
 });
-export type CartStateClass = z.infer<typeof CartStateClassSchema>;
+export type StateClass = z.infer<typeof StateClassSchema>;
 
 export const SelectActionPayloadSchema = z.strictObject({
   text: z.string(),
@@ -122,6 +141,49 @@ export const ComparisonTableStateClassSchema = z.strictObject({
 });
 export type ComparisonTableStateClass = z.infer<typeof ComparisonTableStateClassSchema>;
 
+export const ProductListActionsSchema = z.strictObject({});
+export type ProductListActions = z.infer<typeof ProductListActionsSchema>;
+
+export const ProductListStateClassSchema = z.strictObject({
+  products: z.array(ProductSchema),
+});
+export type ProductListStateClass = z.infer<typeof ProductListStateClassSchema>;
+
+export const SelectPagePayloadSchema = z.strictObject({
+  page: z.number().int().min(0),
+});
+export type SelectPagePayload = z.infer<typeof SelectPagePayloadSchema>;
+
+export const PaginationStateClassSchema = z.strictObject({
+  page: z.number().int().min(0),
+  pageSize: z.number().int().min(1),
+  totalEntries: z.number().int().min(0),
+  totalPages: z.number().int().min(0),
+});
+export type PaginationStateClass = z.infer<typeof PaginationStateClassSchema>;
+
+export const SelectSortPayloadSchema = z.strictObject({
+  fields: z.array(z.unknown()),
+  sortCriteria: z.string(),
+});
+export type SelectSortPayload = z.infer<typeof SelectSortPayloadSchema>;
+
+export const SortStateClassSchema = z.strictObject({
+  appliedSort: SortCriterionSchema,
+  availableSorts: z.array(SortCriterionSchema),
+});
+export type SortStateClass = z.infer<typeof SortStateClassSchema>;
+
+export const SubmitQueryPayloadSchema = z.strictObject({
+  query: z.string(),
+});
+export type SubmitQueryPayload = z.infer<typeof SubmitQueryPayloadSchema>;
+
+export const SearchBoxStateClassSchema = z.strictObject({
+  query: z.string(),
+});
+export type SearchBoxStateClass = z.infer<typeof SearchBoxStateClassSchema>;
+
 export const CartStateSchema = z.strictObject({
   items: z.array(CartItemSchema),
 });
@@ -145,10 +207,16 @@ export const ComparisonTableStateSchema = z.strictObject({
 });
 export type ComparisonTableState = z.infer<typeof ComparisonTableStateSchema>;
 
+export const SortStateSchema = z.strictObject({
+  appliedSort: SortCriterionSchema,
+  availableSorts: z.array(SortCriterionSchema),
+});
+export type SortState = z.infer<typeof SortStateSchema>;
+
 export const ProductCarouselSchema = z.strictObject({
   actions: ProductCarouselActionsSchema,
   componentType: z.literal('product-carousel'),
-  state: StateClassSchema,
+  state: ProductCarouselStateSchema,
 });
 export type ProductCarousel = z.infer<typeof ProductCarouselSchema>;
 
@@ -179,6 +247,28 @@ export const ComparisonTableSchema = z.strictObject({
 });
 export type ComparisonTable = z.infer<typeof ComparisonTableSchema>;
 
+export const ProductListSchema = z.strictObject({
+  actions: ProductListActionsSchema,
+  componentType: z.literal('product-list'),
+  state: ProductListStateClassSchema,
+});
+export type ProductList = z.infer<typeof ProductListSchema>;
+
+export const SelectPageSchema = z.strictObject({
+  payload: SelectPagePayloadSchema,
+});
+export type SelectPage = z.infer<typeof SelectPageSchema>;
+
+export const SelectSortSchema = z.strictObject({
+  payload: SelectSortPayloadSchema,
+});
+export type SelectSort = z.infer<typeof SelectSortSchema>;
+
+export const SubmitQuerySchema = z.strictObject({
+  payload: SubmitQueryPayloadSchema,
+});
+export type SubmitQuery = z.infer<typeof SubmitQuerySchema>;
+
 export const BundleDisplayStateSchema = z.strictObject({
   tiers: z.array(BundleTierSchema),
 });
@@ -202,10 +292,25 @@ export const BundleDisplaySchema = z.strictObject({
 });
 export type BundleDisplay = z.infer<typeof BundleDisplaySchema>;
 
+export const PaginationActionsSchema = z.strictObject({
+  selectPage: SelectPageSchema,
+});
+export type PaginationActions = z.infer<typeof PaginationActionsSchema>;
+
+export const SortActionsSchema = z.strictObject({
+  selectSort: SelectSortSchema,
+});
+export type SortActions = z.infer<typeof SortActionsSchema>;
+
+export const SearchBoxActionsSchema = z.strictObject({
+  submitQuery: SubmitQuerySchema,
+});
+export type SearchBoxActions = z.infer<typeof SearchBoxActionsSchema>;
+
 export const CartSchema = z.strictObject({
   actions: CartActionsSchema,
   componentType: z.literal('cart'),
-  state: CartStateClassSchema,
+  state: StateClassSchema,
 });
 export type Cart = z.infer<typeof CartSchema>;
 
@@ -216,12 +321,37 @@ export const NextActionsBarSchema = z.strictObject({
 });
 export type NextActionsBar = z.infer<typeof NextActionsBarSchema>;
 
+export const PaginationSchema = z.strictObject({
+  actions: PaginationActionsSchema,
+  componentType: z.literal('pagination'),
+  state: PaginationStateClassSchema,
+});
+export type Pagination = z.infer<typeof PaginationSchema>;
+
+export const SortSchema = z.strictObject({
+  actions: SortActionsSchema,
+  componentType: z.literal('sort'),
+  state: SortStateClassSchema,
+});
+export type Sort = z.infer<typeof SortSchema>;
+
+export const SearchBoxSchema = z.strictObject({
+  actions: SearchBoxActionsSchema,
+  componentType: z.literal('search-box'),
+  state: SearchBoxStateClassSchema,
+});
+export type SearchBox = z.infer<typeof SearchBoxSchema>;
+
 export const ComponentContractsSchema = z.discriminatedUnion('componentType', [
   ProductCarouselSchema,
   CartSchema,
   NextActionsBarSchema,
   BundleDisplaySchema,
   ComparisonTableSchema,
+  ProductListSchema,
+  PaginationSchema,
+  SortSchema,
+  SearchBoxSchema,
 ]);
 export type ComponentContracts = z.infer<typeof ComponentContractsSchema>;
 
@@ -255,8 +385,32 @@ export const NextActionsBarPropsSchema = z.object({
 });
 export type NextActionsBarProps = z.infer<typeof NextActionsBarPropsSchema>;
 
+export const PaginationPropsSchema = z.object({
+  componentId: z.string(),
+  componentType: z.literal('pagination'),
+});
+export type PaginationProps = z.infer<typeof PaginationPropsSchema>;
+
 export const ProductCarouselPropsSchema = z.object({
   componentId: z.string(),
   componentType: z.literal('product-carousel'),
 });
 export type ProductCarouselProps = z.infer<typeof ProductCarouselPropsSchema>;
+
+export const ProductListPropsSchema = z.object({
+  componentId: z.string(),
+  componentType: z.literal('product-list'),
+});
+export type ProductListProps = z.infer<typeof ProductListPropsSchema>;
+
+export const SearchBoxPropsSchema = z.object({
+  componentId: z.string(),
+  componentType: z.literal('search-box'),
+});
+export type SearchBoxProps = z.infer<typeof SearchBoxPropsSchema>;
+
+export const SortPropsSchema = z.object({
+  componentId: z.string(),
+  componentType: z.literal('sort'),
+});
+export type SortProps = z.infer<typeof SortPropsSchema>;

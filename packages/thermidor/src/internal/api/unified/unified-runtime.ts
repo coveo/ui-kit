@@ -33,6 +33,42 @@ function getErrorMessage(error: unknown): string {
   return 'An unexpected error occurred while reading the conversation stream.';
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+export function extractSurfaceType(content: Record<string, unknown>): string | undefined {
+  const messages = content.messages;
+  if (!Array.isArray(messages)) {
+    return undefined;
+  }
+  for (const message of messages) {
+    if (isRecord(message) && 'createSurface' in message) {
+      const cs = message.createSurface;
+      if (isRecord(cs) && typeof cs.surfaceType === 'string') {
+        return cs.surfaceType;
+      }
+    }
+  }
+  return undefined;
+}
+
+export function extractSurfaceId(content: Record<string, unknown>): string {
+  const messages = content.messages;
+  if (!Array.isArray(messages)) {
+    return '';
+  }
+  for (const message of messages) {
+    if (isRecord(message) && 'createSurface' in message) {
+      const cs = message.createSurface;
+      if (isRecord(cs) && typeof cs.surfaceId === 'string') {
+        return cs.surfaceId;
+      }
+    }
+  }
+  return '';
+}
+
 export class UnifiedRuntime {
   private static cache = new WeakMap<FullEngine, Map<string, UnifiedRuntime>>();
 
@@ -153,7 +189,20 @@ export class UnifiedRuntime {
       statePort: this.statePort,
       ensureAgentResponse: (tid: string) => this.ensureAgentResponse(tid),
       onA2uiSurface: (tid: string, content: Record<string, unknown>) => {
-        this.surfaceProcessor.processSnapshot(tid, content);
+        const surfaceType = extractSurfaceType(content);
+
+        if (surfaceType) {
+          if (surfaceType === 'commerceSearch') {
+            const surfaceId = extractSurfaceId(content);
+            this.statePort.setRoutedInterface(tid, {
+              useCase: 'decomposedCommerce',
+              surfaceType,
+              surfaceId,
+            });
+          }
+        } else {
+          this.surfaceProcessor.processSnapshot(tid, content);
+        }
       },
     };
 

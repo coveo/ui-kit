@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.thermidor.coveo.com/components/pagination.schema.json",
+  "title": "Pagination",
+  "description": "Controls page navigation for a commerce search surface. Manages current page, page size, and total counts; dispatches selectPage to navigate.",
+  "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/component.schema.json"}],
+  "properties": {
+    "componentType": {
+      "type": "string",
+      "const": "pagination"
+    },
+    "state": {"$ref": "#/$defs/PaginationState"},
+    "actions": {
+      "type": "object",
+      "required": ["selectPage"],
+      "properties": {
+        "selectPage": {"$ref": "#/$defs/SelectPageAction"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "PaginationState": {
+      "title": "PaginationState",
+      "description": "The current pagination state. Owned exclusively by the backend.",
+      "type": "object",
+      "required": ["page", "pageSize", "totalEntries", "totalPages"],
+      "properties": {
+        "page": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The current zero-indexed page number."
+        },
+        "pageSize": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "The number of items per page."
+        },
+        "totalEntries": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The total number of items across all pages."
+        },
+        "totalPages": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The total number of pages."
+        }
+      },
+      "additionalProperties": false
+    },
+    "SelectPageAction": {
+      "title": "selectPage",
+      "description": "Navigates to a specific page.",
+      "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"}],
+      "properties": {
+        "payload": {
+          "type": "object",
+          "required": ["page"],
+          "properties": {
+            "page": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "The zero-indexed page number to navigate to."
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

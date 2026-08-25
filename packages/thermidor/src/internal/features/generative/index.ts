@@ -17,6 +17,7 @@ export type {
   AgentMessage,
   AgentResponse,
   GenerativeState,
+  HydratedUseCase,
   ReasoningMessageStep,
   ReasoningStep,
   RoutedInterface,

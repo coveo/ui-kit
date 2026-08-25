@@ -10,6 +10,7 @@ import {ProductTargeting} from '../ProductTargeting/ProductTargeting.js';
 import {useTargeting, type TargetedProduct} from '../../context/targeting.js';
 import {useSuggestions} from '../../hooks/use-suggestions.js';
 import {useBuildController} from '../../hooks/use-build-controller.js';
+import {DecomposedCommerceLayout} from '../DecomposedCommerceLayout/DecomposedCommerceLayout.js';
 import {ProductGrid} from './ProductGrid/ProductGrid.js';
 import {Pagination} from './Pagination/Pagination.js';
 import {QuerySummaryPlaceholder} from './QuerySummaryPlaceholder/QuerySummaryPlaceholder.js';
@@ -31,6 +32,46 @@ interface SearchResultsPageProps {
 export function SearchResultsPage(props: SearchResultsPageProps) {
   if (!props.routedInterface) {
     return null;
+  }
+
+  if (props.routedInterface.useCase === 'decomposedCommerce') {
+    return (
+      <div className={styles.searchLayout}>
+        <ProductTargeting
+          products={props.products}
+          onProductsChange={props.onProductsChange}
+          onSubmit={props.onSubmit}
+          isStreaming={props.isStreaming}
+          promptProps={{
+            initialValue: props.query ?? '',
+          }}
+        >
+          <DecomposedCommerceLayout
+            surfaceId={props.routedInterface.surfaceId}
+            surfaceType={props.routedInterface.surfaceType}
+          />
+        </ProductTargeting>
+        <button
+          type="button"
+          className={styles.floatingBackButton}
+          onClick={props.onBackToConversation}
+          title="Back to conversation"
+          aria-label="Back to conversation"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+          </svg>
+        </button>
+      </div>
+    );
   }
 
   return <SearchResultsPageInner {...props} />;
