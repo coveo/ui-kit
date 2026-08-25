@@ -34,6 +34,7 @@ export function ProductCard({product}: ProductCardProps) {
     ? {
         role: 'button' as const,
         tabIndex: 0,
+        'aria-pressed': isSelected,
         onClick: () =>
           targeting!.onProductTargeted(
             product.permanentid ?? '',
