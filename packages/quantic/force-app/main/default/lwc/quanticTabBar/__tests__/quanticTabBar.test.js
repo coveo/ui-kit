@@ -1,6 +1,5 @@
 /* eslint-disable no-import-assign */
 import QuanticTabBar from '../quanticTabBar';
-import * as quanticUtils from 'c/quanticUtils';
 import {buildCreateTestComponent, cleanup, flushPromises} from 'c/testUtils';
 
 const tabSlotWidth = 100;
@@ -12,29 +11,16 @@ jest.mock('@salesforce/label/c.quantic_More', () => ({default: 'More'}), {
   virtual: true,
 });
 
-jest.mock('c/quanticUtils', () => ({
-  getAbsoluteWidth: jest.fn((element) => {
-    if (!element) {
-      return 0;
-    }
-    if (element?.tagName === 'C-QUANTIC-TAB') {
-      // @ts-ignore
-      return element.mockWidth ?? tabSlotWidth;
-    } else if (element?.dataset?.testid === 'tab-bar_more-section') {
-      // Mirrors real getBoundingClientRect() behavior: an element with display:none has
-      // zero width, even though it still has layout dimensions once visibility is hidden.
-      if (element.style?.display === 'none') {
-        return 0;
-      }
-      return moreButtonWidth;
-    }
-    return mockContainerWidth;
-  }),
-}));
-
 const defaultOptions = {
   lightTheme: false,
 };
+
+function flushTabRender() {
+  // eslint-disable-next-line @lwc/lwc/no-async-operation
+  return new Promise((resolve) => requestAnimationFrame(resolve)).then(
+    flushPromises
+  );
+}
 
 const selectors = {
   tabBarContainer: '.tab-bar_container',
@@ -272,7 +258,7 @@ describe('c-quantic-tab-bar', () => {
       element.dispatchEvent(
         new CustomEvent('quantic__tabrendered', {bubbles: true})
       );
-      await flushPromises();
+      await flushTabRender();
 
       const tabItemsInDropdown = element.shadowRoot.querySelectorAll(
         selectors.tabItemsInDropdown
@@ -290,7 +276,7 @@ describe('c-quantic-tab-bar', () => {
       element.dispatchEvent(
         new CustomEvent('quantic__tabrendered', {bubbles: true})
       );
-      await flushPromises();
+      await flushTabRender();
 
       const tabItemsInDropdown = element.shadowRoot.querySelectorAll(
         selectors.tabItemsInDropdown
@@ -404,57 +390,34 @@ describe('c-quantic-tab-bar', () => {
     });
   });
 
-  describe('performance: reduced recomputation on repeated re-renders', () => {
+  describe('performance: batched tab-render updates', () => {
     beforeEach(() => {
       const numberOfTabs = 3;
       exampleTabSlots = createExampleTabSlots(numberOfTabs);
     });
 
-    it('should not recompute the layout when quantic__tabrendered is dispatched repeatedly with no underlying change', async () => {
+    it('should run one layout update for multiple tab-render events in one frame', async () => {
       const element = createTestComponent(defaultOptions, exampleTabSlots);
       await flushPromises();
 
-      const moreTabsSection = element.shadowRoot.querySelector(
-        selectors.moreTabsSection
+      const layoutReadSpies = exampleTabSlots.map((tab) =>
+        jest.spyOn(tab, 'getBoundingClientRect')
       );
-      const initialMoreButtonLeft = moreTabsSection.style.left;
-      const initialVisibleTabs = exampleTabSlots
-        .filter((tab) => tab.style.visibility === 'visible')
-        .map((tab) => tab.label);
-
-      quanticUtils.getAbsoluteWidth.mockClear();
-
-      // Simulate several QuanticTab children dispatching quantic__tabrendered with no
-      // layout-relevant change (e.g. repeated no-op state updates), as would happen with
-      // the dispatch-gating fix in place on QuanticTab, and even without it (defense in depth).
+      layoutReadSpies.forEach((spy) => spy.mockClear());
       const numberOfDispatches = 5;
       for (let i = 0; i < numberOfDispatches; i++) {
         element.dispatchEvent(
           new CustomEvent('quantic__tabrendered', {bubbles: true})
         );
-        // eslint-disable-next-line no-await-in-loop
-        await flushPromises();
       }
 
-      // The skip-guard still needs to read the container width and each tab's rendered width
-      // once per dispatch to compute the fingerprint and decide whether to skip (the tab
-      // width is included so that a tab's content changing width, without the tab count,
-      // container width, or active tab changing, is still correctly detected as
-      // layout-relevant). It should not perform the full layout pass beyond that, which
-      // would call getAbsoluteWidth many more times per dispatch (once per tab for
-      // slotContentWidth again, plus the more button and selected tab). One call per tab
-      // plus one for the container (tabCount + 1) is the expected minimal cost per dispatch;
-      // anything close to double that would indicate the skip-guard failed to skip.
-      const callsPerDispatch =
-        quanticUtils.getAbsoluteWidth.mock.calls.length / numberOfDispatches;
-      expect(callsPerDispatch).toBeLessThanOrEqual(exampleTabSlots.length + 1);
+      await flushTabRender();
 
-      // Rendered output must remain correct despite the skipped recomputation.
-      const finalVisibleTabs = exampleTabSlots
-        .filter((tab) => tab.style.visibility === 'visible')
-        .map((tab) => tab.label);
-      expect(finalVisibleTabs).toEqual(initialVisibleTabs);
-      expect(moreTabsSection.style.left).toBe(initialMoreButtonLeft);
+      layoutReadSpies.forEach((spy) => {
+        // Each layout pass reads the cached tab rect once for the snapshot and once
+        // when the rendered DOM applies the updated tab state.
+        expect(spy).toHaveBeenCalledTimes(2);
+      });
     });
 
     it('should recompute the layout when the active tab changes between quantic__tabrendered dispatches', async () => {
@@ -466,7 +429,7 @@ describe('c-quantic-tab-bar', () => {
       element.dispatchEvent(
         new CustomEvent('quantic__tabrendered', {bubbles: true})
       );
-      await flushPromises();
+      await flushTabRender();
 
       const visibleTabs = exampleTabSlots.filter(
         (tab) => tab.style.visibility === 'visible'
@@ -495,7 +458,7 @@ describe('c-quantic-tab-bar', () => {
       element.dispatchEvent(
         new CustomEvent('quantic__tabrendered', {bubbles: true})
       );
-      await flushPromises();
+      await flushTabRender();
 
       // Flex ordering changes the tab positions after the first layout pass.
       // @ts-ignore
@@ -509,7 +472,7 @@ describe('c-quantic-tab-bar', () => {
       element.dispatchEvent(
         new CustomEvent('quantic__tabrendered', {bubbles: true})
       );
-      await flushPromises();
+      await flushTabRender();
 
       const visibleTabsAfterReorder = tabs.filter(
         (tab) => tab.style.visibility === 'visible'
@@ -519,32 +482,6 @@ describe('c-quantic-tab-bar', () => {
         element.shadowRoot.querySelector(selectors.moreTabsSection).style
           .display
       ).toBe('block');
-    });
-
-    it('should reduce total layout-read work across a sequence of no-op dispatches compared to always doing a full pass', async () => {
-      const element = createTestComponent(defaultOptions, exampleTabSlots);
-      await flushPromises();
-
-      quanticUtils.getAbsoluteWidth.mockClear();
-
-      const numberOfDispatches = 10;
-      for (let i = 0; i < numberOfDispatches; i++) {
-        element.dispatchEvent(
-          new CustomEvent('quantic__tabrendered', {bubbles: true})
-        );
-        // eslint-disable-next-line no-await-in-loop
-        await flushPromises();
-      }
-
-      // A full (unguarded) layout pass reads getAbsoluteWidth for each tab plus the more
-      // button and selected tab, so it is always more than the tab count. With the
-      // skip-guard, ten no-op dispatches should cost far less than ten full passes worth
-      // of calls (i.e. less than numberOfDispatches * (tabCount + 2)).
-      const unguardedUpperBound =
-        numberOfDispatches * (exampleTabSlots.length + 2);
-      expect(quanticUtils.getAbsoluteWidth.mock.calls.length).toBeLessThan(
-        unguardedUpperBound
-      );
     });
 
     it('should recompute the layout when a tab changes width without the tab count, container width, or active tab changing', async () => {
@@ -571,7 +508,7 @@ describe('c-quantic-tab-bar', () => {
       element.dispatchEvent(
         new CustomEvent('quantic__tabrendered', {bubbles: true})
       );
-      await flushPromises();
+      await flushTabRender();
 
       expect(moreTabsSection.style.display).toBe('block');
     });
@@ -692,7 +629,7 @@ describe('c-quantic-tab-bar', () => {
 
       // Selecting the long tab makes it the first displayed tab after flex ordering.
       selectTab(1);
-      await flushPromises();
+      await flushTabRender();
       expect(moreTabsSection.style.left).toBe('300px');
 
       // Simulate the positions after the first pass has applied the new flex order.
@@ -706,7 +643,7 @@ describe('c-quantic-tab-bar', () => {
       tabs[3].mockRight = 600;
 
       selectTab(2);
-      await flushPromises();
+      await flushTabRender();
 
       expect(moreTabsSection.style.left).toBe('200px');
       expect(moreTabsSection.style.display).toBe('block');

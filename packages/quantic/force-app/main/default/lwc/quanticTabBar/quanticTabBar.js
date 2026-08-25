@@ -42,18 +42,10 @@ export default class QuanticTabBar extends LightningElement {
   _overflowingTabs = [];
   /** @type {Array<Element>} */
   _displayedTabs = [];
-
-  /**
-   * Signature of the state used during the last completed `updateTabsDisplay` pass.
-   * Used to skip the entire pass when nothing layout-relevant has changed.
-   * @type {string|null}
-   */
-  _lastTabStateSignature = null;
-  /**
-   * Signature of tab labels and expressions used to refresh dropdown metadata.
-   * @type {string|null}
-   */
-  _lastTabMetadataSignature = null;
+  /** @type {boolean} */
+  _updateDisplayDirty = false;
+  /** @type {boolean} */
+  _updateScheduled = false;
 
   /**
    * Rects captured for the current layout pass.
@@ -64,7 +56,7 @@ export default class QuanticTabBar extends LightningElement {
   connectedCallback() {
     window.addEventListener('click', this.closeDropdown);
     window.addEventListener('resize', this.updateTabsDisplay);
-    this.addEventListener('quantic__tabrendered', this.updateTabsDisplay);
+    this.addEventListener('quantic__tabrendered', this.handleTabRendered);
   }
 
   renderedCallback() {
@@ -74,10 +66,26 @@ export default class QuanticTabBar extends LightningElement {
     }
   }
 
+  handleTabRendered = () => {
+    this._updateDisplayDirty = true;
+
+    if (this._updateScheduled) {
+      return;
+    }
+    this._updateScheduled = true;
+    // eslint-disable-next-line @lwc/lwc/no-async-operation
+    requestAnimationFrame(() => {
+      this._updateScheduled = false;
+      if (this._updateDisplayDirty) {
+        this._updateDisplayDirty = false;
+        this.updateTabsDisplay();
+      }
+    });
+  };
+
   /**
    * Updates the display of the tabs.
-   * Skips the whole pass when nothing layout-relevant has changed since the last call, and otherwise
-   * computes a single layout snapshot up front to avoid redundant `getBoundingClientRect` reads.
+   * Computes a single layout snapshot up front to avoid redundant `getBoundingClientRect` reads.
    * @returns {void}
    */
   updateTabsDisplay = () => {
@@ -92,26 +100,6 @@ export default class QuanticTabBar extends LightningElement {
 
     const containerWidth = this.containerWidth;
     const slotContentWidth = this.computeSlotContentWidth(tabElements);
-    const tabStateSignature = this.deriveTabStateSignature(
-      tabElements,
-      containerWidth,
-      slotContentWidth
-    );
-    const tabMetadataSignature = this.deriveTabMetadataSignature(tabElements);
-
-    if (
-      this.hasRendered &&
-      this._lastTabStateSignature !== null &&
-      this._lastTabMetadataSignature !== null &&
-      tabStateSignature === this._lastTabStateSignature &&
-      tabMetadataSignature === this._lastTabMetadataSignature
-    ) {
-      this._layoutRects = null;
-      return;
-    }
-    this._lastTabStateSignature = tabStateSignature;
-    this._lastTabMetadataSignature = tabMetadataSignature;
-
     const tabsCount = tabElements.length;
     const isOverflow = slotContentWidth > containerWidth;
     // Must run before categorizeTabsVisibility: while display:none, moreButtonWidth reads as 0.
@@ -153,44 +141,6 @@ export default class QuanticTabBar extends LightningElement {
           ? this._layoutRects.moreButton
           : this._layoutRects.tabs.get(element);
     return rect ? Math.ceil(rect.width) : 0;
-  }
-
-  /**
-   * Builds a signature representing the current tab layout state.
-   * Includes the tab count, container width, active tab, content width, tab positions, labels,
-   * and expressions so changes affecting the display or dropdown options can be detected.
-   * @param {Array<Element>} tabElements
-   * @param {number} [containerWidth]
-   * @param {number} [slotContentWidth]
-   * @returns {string}
-   */
-  deriveTabStateSignature(
-    tabElements,
-    containerWidth = this.containerWidth,
-    slotContentWidth = this.computeSlotContentWidth(tabElements)
-  ) {
-    // @ts-ignore
-    const activeTabIndex = tabElements.findIndex((el) => el.isActive);
-    const tabPositions = tabElements
-      .map((tab) => this._layoutRects.tabs.get(tab)?.right ?? 0)
-      .join(',');
-    return `${tabElements.length}|${containerWidth}|${activeTabIndex}|${slotContentWidth}|${tabPositions}`;
-  }
-
-  /**
-   * Builds a signature for tab metadata used by the dropdown.
-   * @param {Array<Element>} tabElements
-   * @returns {string}
-   */
-  deriveTabMetadataSignature(tabElements) {
-    return JSON.stringify(
-      tabElements.map((tab) => [
-        // @ts-ignore
-        tab.label,
-        // @ts-ignore
-        tab.expression,
-      ])
-    );
   }
 
   /**
