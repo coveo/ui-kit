@@ -23,8 +23,9 @@
     "notify:docs": "node ./scripts/notify-docs/published-ui-kit.mjs",
     "release": "pnpm run build && changeset publish",
     "knip": "knip",
-    "generate:catalog-info": "node scripts/generate-catalog-info.mjs",
-    "generate:agents-md-packages": "node scripts/generate-agents-md-packages.mjs"
+    "generate": "turbo run generate:all",
+    "generate:catalog-info": "node scripts/generate/catalog-info.mjs",
+    "generate:agents-md-packages": "node scripts/generate/agents-md-packages.mjs"
   },
   "devDependencies": {
     "@actions/github": "9.1.1",
@@ -52,24 +53,7 @@
   },
   "engines": {
     "node": "^22.14.0 || ^24.11.0",
-    "pnpm": ">=10.0.0"
+    "pnpm": ">=11.17.0"
   },
-  "packageManager": "pnpm@10.34.5",
-  "pnpm": {
-    "patchedDependencies": {
-      "@stencil/core@4.20.0": "patches/@stencil+core+4.20.0.patch",
-      "jest-environment-jsdom@29.7.0": "patches/jest-environment-jsdom+29.7.0.patch",
-      "@wc-toolkit/storybook-helpers@10.5.1": "patches/@wc-toolkit__storybook-helpers@10.5.1.patch"
-    },
-    "overrides": {
-      "braces": "3.0.3",
-      "react": "catalog:",
-      "react-dom": "catalog:",
-      "typescript": "catalog:",
-      "html-minifier": "npm:html-minifier-terser@^7.2.0",
-      "@angular/core": "catalog:",
-      "@angular/common": "catalog:",
-      "undici@^7": "^7.29.0"
-    }
-  }
+  "packageManager": "pnpm@11.17.0"
 }

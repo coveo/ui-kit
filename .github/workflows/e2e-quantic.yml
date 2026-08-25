@@ -136,7 +136,6 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo run build --filter=@coveo/quantic
       - uses: ./.github/actions/playwright-quantic
         with:
           shardIndex: ${{ matrix.shardIndex }}
