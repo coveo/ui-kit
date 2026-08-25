@@ -71,9 +71,9 @@ Three problems follow from having no rule.
 Option C. Concretely:
 
 1. **Every shared peer range lives in `catalogs.peer-compatibility`** (ADR-0005) and is referenced as `catalog:peer-compatibility`. This extends that catalog beyond TypeScript and React to Angular and any future framework peer.
-2. **Every framework peer range has an explicit lower and upper bound.** Contiguous support uses a hyphen range (`16 - 22`); genuinely non-contiguous support uses a caret union (`^6.0.0 || ^10.0.0`).
+2. **Every framework peer range has an explicit lower and upper bound.** Contiguous support uses a hyphen range (`16 - 21`); genuinely non-contiguous support uses a caret union (`^6.0.0 || ^10.0.0`).
 3. **The lower bound is the oldest major that can technically resolve**, determined by the transitive constraints our packages impose — chiefly the TypeScript peer — and confirmed by CI.
-4. **The upper bound is the newest major CI validates.** Raising it requires a passing CI leg for that major.
+4. **The upper bound is the newest major CI validates**, which is at minimum the major the monorepo itself builds against. It may extend one major beyond that — the pattern `@angular/material` uses with `^22.0.0 || ^23.0.0` — but only once a CI leg validates that next major. `latest` on npm is not a criterion; having a passing CI leg is.
 5. **CI must validate both bounds** for every framework with a declared peer range. A range without a corresponding test is not permitted.
 6. **The support commitment is documented in one monorepo-level location**, covering every published package rather than Headless alone, and every published package's README links to it. Where upstream publishes a support schedule, the commitment is the intersection of that schedule with our peer range. Where upstream publishes none, the commitment is the two most recent majors.
 7. **Narrowing a range is a bug fix when it removes majors that could never resolve**, and a breaking change when it removes majors that previously resolved.
@@ -100,21 +100,63 @@ Option A is rejected because it is the state that produced two wrong bounds on o
 - **Negative:** Ranges and documentation must be kept in sync by review discipline rather than tooling. Each new framework major needs its ceiling raised, and until then its consumers see a peer warning. Rule 5 means adding a framework peer now obliges adding a CI matrix for it.
 - **Neutral:** Lower bounds will rise as the TypeScript floor in `@coveo/atomic` and `@coveo/headless` rises. Each rise is a separate decision, and breaking once it excludes a major that previously resolved.
 
+## Operational Rules
+
+These four mechanisms make the policy enforceable rather than aspirational.
+
+### Keeping the range honest when the catalog moves
+
+A unit test reads `pnpm-workspace.yaml`, takes the default catalog version of each framework and the corresponding `peer-compatibility` range, and asserts the former satisfies the latter. When Renovate bumps the Angular catalog to a major outside the declared ceiling, that pull request fails until someone widens the ceiling deliberately or decides not to adopt the major yet. The test runs offline in milliseconds on every pull request, and it also asserts that each bound has a corresponding CI leg, which makes rule 5 machine-checked.
+
+Renovate is deliberately not configured to widen the range itself. Auto-widening would assert compatibility without evidence, which is what rules 2 and 4 exist to prevent. As a backstop at the integration level, one matrix leg installs at the catalog version *without* `--legacy-peer-deps`, so the version we build against must fall inside the range we publish.
+
+### Keeping the matrix cheap
+
+- One job builds and packs the library, and uploads the tarball as an artifact that every leg consumes. Legs never rebuild the monorepo.
+- Each major has a committed minimal fixture application with a committed lockfile, installed with `npm ci --prefer-offline`. Scaffolding with `ng new` at run time is avoided: it is slow, network-dependent, and not reproducible.
+- Each leg uses a component in a template rather than importing the module alone, so `strictTemplates` type-checks the generated inputs.
+- Runtime coverage of the wrapper lives in version-agnostic unit tests over `utils.ts`, exercised with plain stubs and no Angular at all. These run once, outside the matrix. Running them per major is not viable, because Angular's own unit-test tooling differs across the supported range, so a cross-major harness would cost more than the build legs it replaced.
+
+Consequently, majors between the bounds are build-verified only. Runtime verification happens on the primary version through the existing Playwright suite. This is stated in the support document rather than implied.
+
+### Removing a major
+
+The two numbers carry different semver weight, which is what makes narrowing tractable for packages whose major tracks a product line rather than a framework:
+
+- Removing a major from the **documented commitment** is not a semver event. It ships in any release.
+- Removing a major from the **peer range** is breaking, and waits for the next major of the affected package. `@coveo/atomic-angular` tracks the Atomic major line, so no independent major is cut for this purpose.
+- Removing a major that could never resolve is a **patch**, per rule 7.
+
+A deprecation window expressed as a minor is rejected: consumers experience a narrowed range as a hard resolution change regardless of the release type. The accepted consequence is that a peer range stays wider than its commitment for a long time, which is the intended behaviour of separating them.
+
+### Detecting the end of upstream support
+
+A monthly scheduled job reads published end-of-life data — `https://endoflife.date/api/angular.json` for Angular — and opens an issue when the documented commitment still contains a major that is out of support.
+
+End-of-life dates must be read from published data, never derived. A "release plus eighteen months" heuristic matches Angular 19 and 20 exactly but diverges by roughly six weeks for Angular 21 and seven months for Angular 22, whose published end-of-life is later than the heuristic predicts. The heuristic is retained only as a cross-check: disagreement means the upstream schedule changed and warrants review.
+
+This signal targets the commitment rather than the peer range, because narrowing the range waits for a major.
+
 ## Implementation and Follow-up
 
 Angular is the first application of this policy, under epic KIT-4735:
 
 - Add `@angular/common` and `@angular/core` to `catalogs.peer-compatibility` and reference them from `@coveo/atomic-angular`, replacing the hardcoded `14 - 21`.
-- The intended range is `16 - 22`. Both bounds are provisional pending the CI matrix. The floor derives from the TypeScript overlap alone, and one constraint is untested: the package is `exports`-only with no root `main`, and `moduleResolution: bundler` did not become the Angular CLI default until v17, so the floor may be 17. If the newest-major leg fails, the ceiling stays at 21.
-- Under rule 6, the Angular commitment is currently majors 20, 21 and 22, since Angular 19's LTS window has lapsed.
+- The intended range is `16 - 21`. The ceiling is 21 because that is the major the monorepo builds against; Angular 22 is `latest` on npm but is not built or tested here, and rule 4 does not accept `latest` as evidence. The floor is provisional: it derives from the TypeScript overlap alone, and one constraint is untested — the package is `exports`-only with no root `main`, and `moduleResolution: bundler` did not become the Angular CLI default until v17, so the floor may be 17.
+- Raising the ceiling to 22 belongs with the change that upgrades the Angular catalog to 22, so the range and the build move together.
+- Under rule 6 the Angular commitment is majors 20 and 21. Angular 19 is out of support, and Angular 22, while still supported upstream, sits outside our peer range and therefore outside the intersection.
+
+Note that `@angular/core` and `@angular/common` also appear under `pnpm.overrides` in `pnpm-workspace.yaml`. Those entries pin the version used to build and test inside this workspace and have no effect on published manifests. They are not a substitute for, and must not be confused with, the `peer-compatibility` entries.
 
 Remaining work, each its own change:
 
 - Establish the monorepo-level support document required by rule 6. `product-lifecycle.md` is Headless-scoped and cannot serve as-is; its stale TypeScript entry should be corrected in the same change.
 - Add the README links required by rule 6. `@coveo/atomic-angular` publishes Angular CLI 13 scaffolding boilerplate as its README, so that package needs a real README before a link is meaningful.
-- Audit `pino-pretty` against rule 2 and bring it into the catalog.
-- Confirm the React range against rule 6 and add the CI matrix rule 5 requires, which does not exist for React today.
+- Audit `pino-pretty` against rule 2 and bring it into the catalog. Its optional peers, and those of `@coveo/headless`, should also carry `peerDependenciesMeta.optional` so consumers are not warned about dependencies they do not use.
+- Confirm the React range against rule 6 and add the CI coverage rule 5 requires, which does not exist for React today.
 
 Node.js is deliberately out of scope. It is expressed through `engines` rather than `peerDependencies` and already tracks Node's own LTS lines.
+
+Wide ranges are a legacy position, not a goal. Across the Angular ecosystem, one or two supported majors is the norm — `ngx-markdown` and `@ng-bootstrap/ng-bootstrap` each pin a single major, and `@angular/material` supports the current major plus the next. The `16 - 21` range exists because a broader promise was already published, and the intent is to converge toward two majors at the next major of `@coveo/atomic-angular`.
 
 This ADR should be revisited when a framework peer is added or removed, or when the TypeScript exception stops holding.
