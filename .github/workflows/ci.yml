@@ -231,7 +231,8 @@ jobs:
         run: pnpm exec turbo run @coveo/atomic-hosted-page#e2e
   lint-check:
     name: 'Check with linter'
-    if: contains(needs.affected.outputs.tasks, '#lint:check"')
+    # Best effort at short-circuiting
+    if: contains(needs.affected.outputs.tasks, '#lint:check:')
     needs: affected
     runs-on: ubuntu-latest
     steps:
@@ -245,8 +246,10 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-      # TODO: Convert to turbo tasks: https://coveord.atlassian.net/browse/KIT-6074
-      - run: pnpm run lint:check
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: lint:check:all
   validate-light-dom-styles:
     name: 'Validate Light DOM styles'
     needs: affected
