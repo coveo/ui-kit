@@ -52,9 +52,10 @@ class CustomTemplateComponent extends HTMLElement {
   }
 
   template(result) {
-    const label = this.getAttribute('label');
+    const label = this.getAttribute('label') ?? '';
     const template = document.createElement('template');
-    template.innerHTML = `<p>${label}: ${result.title}</p>`;
+    template.innerHTML = '<p></p>';
+    template.content.querySelector('p').textContent = `${label}: ${result.title ?? ''}`;
     return template;
   }
 
