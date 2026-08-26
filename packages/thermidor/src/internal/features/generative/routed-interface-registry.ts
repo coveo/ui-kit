@@ -50,10 +50,6 @@ export function mergeTurnsWithRegistry(
       return stateTurn as Turn;
     }
 
-    if (stateTurn.routedInterface.useCase === 'decomposedCommerceSearch') {
-      return {...stateTurn, routedInterface: stateTurn.routedInterface} as Turn;
-    }
-
     const entry = registry.get(stateTurn.id);
     if (!entry) {
       const {routedInterface: _, ...rest} = stateTurn;

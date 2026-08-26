@@ -1,13 +1,12 @@
-import type {RoutedInterface} from '@coveo/thermidor';
 import {ProductTargeting} from '../ProductTargeting/ProductTargeting.js';
 import {type TargetedProduct} from '../../context/targeting.js';
 import {CommerceSearchLayout} from '../CommerceSearchLayout/CommerceSearchLayout.js';
 import styles from './SearchResultsPage.module.css';
 
 interface SearchResultsPageProps {
+  surfaceId: string;
   onSubmit: (prompt: string) => void;
   isStreaming: boolean;
-  routedInterface: RoutedInterface;
   query?: string;
   onBackToConversation: () => void;
   products: TargetedProduct[];
@@ -15,19 +14,17 @@ interface SearchResultsPageProps {
 }
 
 /**
- * Layout shell for a routed search surface.
+ * Layout shell for a routed commerce search surface.
  *
  * Commerce search surfaces are decomposed into individual A2-UI components
  * (search-box, product-list, pagination, sort) rendered through the catalog
  * pipeline. This page only arranges them spatially via `CommerceSearchLayout`
  * and does not instantiate headless controllers.
+ *
+ * Navigation to this page is derived directly from the A2-UI activities
+ * (presence of a createSurface with surfaceType 'commerceSearch').
  */
 export function SearchResultsPage(props: SearchResultsPageProps) {
-  const {routedInterface} = props;
-  if (!routedInterface || routedInterface.useCase !== 'decomposedCommerceSearch') {
-    return null;
-  }
-
   return (
     <div className={styles.searchLayout}>
       <ProductTargeting
@@ -39,10 +36,7 @@ export function SearchResultsPage(props: SearchResultsPageProps) {
           initialValue: props.query ?? '',
         }}
       >
-        <CommerceSearchLayout
-          surfaceId={routedInterface.surfaceId}
-          surfaceType={routedInterface.surfaceType}
-        />
+        <CommerceSearchLayout surfaceId={props.surfaceId} surfaceType="commerceSearch" />
       </ProductTargeting>
       <button
         type="button"

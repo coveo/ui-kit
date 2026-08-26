@@ -1,16 +1,17 @@
 import fc from 'fast-check';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {extractSurfaceId, extractSurfaceType} from './unified-runtime.js';
+import {extractSurfaceType} from './unified-runtime.js';
 
 /**
  * Property-based tests for the surfaceType routing logic in unified-runtime.ts.
  *
  * The routing callback (`onA2uiSurface`) decides:
- * 1. If surfaceType is present AND equals 'commerceSearch': emit navigation signal
- * 2. If surfaceType is present but NOT 'commerceSearch': do nothing
- * 3. If surfaceType is absent: delegate to SurfaceProcessor (legacy path)
+ * 1. If surfaceType is present: do nothing (consumer derives navigation from activities)
+ * 2. If surfaceType is absent: delegate to SurfaceProcessor (legacy path)
  *
- * These tests verify Properties 1, 2, 3, and 5 from the design document.
+ * These tests verify that surfaceType-bearing surfaces never trigger the legacy
+ * SurfaceProcessor or emit a navigation signal, while the legacy path is preserved
+ * for surfaces without surfaceType.
  */
 
 const NUM_RUNS = 100;
@@ -41,18 +42,11 @@ function routeA2uiSurface(
 ): void {
   const surfaceType = extractSurfaceType(content);
 
-  if (surfaceType) {
-    if (surfaceType === 'commerceSearch') {
-      const surfaceId = extractSurfaceId(content);
-      deps.statePort.setRoutedInterface(turnId, {
-        useCase: 'decomposedCommerceSearch',
-        surfaceType,
-        surfaceId,
-      });
-    }
-  } else {
+  if (!surfaceType) {
     deps.surfaceProcessor.processSnapshot(turnId, content);
   }
+  // Surfaces with a surfaceType need no routing signal — the consumer
+  // derives navigation directly from the A2-UI activities.
 }
 
 /**
@@ -388,12 +382,10 @@ describe('Feature: commerce-surface-decomposition, Property 3: Decomposed surfac
     );
   });
 
-  it('decomposed path navigation signal carries no CommerceInterfaceImpl instance', () => {
+  it('commerceSearch surfaceType → setRoutedInterface is NOT called (no navigation signal emitted)', () => {
     /**
-     * Validates: Requirements 4.4
-     *
-     * When the decomposed path emits a navigation signal (commerceSearch),
-     * it carries { useCase, surfaceType, surfaceId } without any interface field.
+     * Validates: surfaceType-bearing surfaces derive navigation from activities,
+     * not from a routing signal. The runtime does not emit setRoutedInterface.
      */
     fc.assert(
       fc.property(
@@ -401,13 +393,10 @@ describe('Feature: commerce-surface-decomposition, Property 3: Decomposed surfac
         arbContentWithCommerceSearch(),
         (turnId, content) => {
           routeA2uiSurface(turnId, content, deps);
-          expect(deps.statePort.setRoutedInterface).toHaveBeenCalledOnce();
-          const [, routedData] = deps.statePort.setRoutedInterface.mock.calls[0];
-          expect(routedData).not.toHaveProperty('interface');
-          expect(routedData).not.toHaveProperty('snapshot');
-          expect(routedData.useCase).toBe('decomposedCommerceSearch');
-          deps.surfaceProcessor.processSnapshot.mockClear();
+          expect(deps.statePort.setRoutedInterface).not.toHaveBeenCalled();
+          expect(deps.surfaceProcessor.processSnapshot).not.toHaveBeenCalled();
           deps.statePort.setRoutedInterface.mockClear();
+          deps.surfaceProcessor.processSnapshot.mockClear();
         }
       ),
       {numRuns: NUM_RUNS}
@@ -415,7 +404,7 @@ describe('Feature: commerce-surface-decomposition, Property 3: Decomposed surfac
   });
 });
 
-describe('Feature: commerce-surface-decomposition, Property 5: Navigation signal for commerceSearch surfaceType', () => {
+describe('Feature: commerce-surface-decomposition, Property 5: No navigation signal for any surfaceType', () => {
   let deps: RoutingDeps;
 
   beforeEach(() => {
@@ -425,13 +414,10 @@ describe('Feature: commerce-surface-decomposition, Property 5: Navigation signal
     };
   });
 
-  it('commerceSearch surfaceType → setRoutedInterface is called with correct shape', () => {
+  it('commerceSearch surfaceType → setRoutedInterface is NOT called', () => {
     /**
-     * Validates: Requirements 2.1
-     *
-     * For ANY A2-UI snapshot with surfaceType === 'commerceSearch',
-     * the callback SHALL emit a routed navigation signal via setRoutedInterface
-     * with useCase='decomposedCommerceSearch', surfaceType, and surfaceId.
+     * Validates: navigation is derived from activities, not from a routing signal.
+     * The runtime no longer emits setRoutedInterface for decomposed surfaces.
      */
     fc.assert(
       fc.property(
@@ -439,38 +425,10 @@ describe('Feature: commerce-surface-decomposition, Property 5: Navigation signal
         arbContentWithCommerceSearch(),
         (turnId, content) => {
           routeA2uiSurface(turnId, content, deps);
-          expect(deps.statePort.setRoutedInterface).toHaveBeenCalledOnce();
-          const [calledTurnId, routedData] = deps.statePort.setRoutedInterface.mock.calls[0];
-          expect(calledTurnId).toBe(turnId);
-          expect(routedData.useCase).toBe('decomposedCommerceSearch');
-          expect(routedData.surfaceType).toBe('commerceSearch');
-          expect(typeof routedData.surfaceId).toBe('string');
+          expect(deps.statePort.setRoutedInterface).not.toHaveBeenCalled();
+          expect(deps.surfaceProcessor.processSnapshot).not.toHaveBeenCalled();
           deps.statePort.setRoutedInterface.mockClear();
-        }
-      ),
-      {numRuns: NUM_RUNS}
-    );
-  });
-
-  it('commerceSearch surfaceType → surfaceId matches extracted value from content', () => {
-    /**
-     * Validates: Requirements 2.1
-     *
-     * The surfaceId in the navigation signal matches what extractSurfaceId
-     * returns from the content payload.
-     */
-    fc.assert(
-      fc.property(
-        fc.string({minLength: 1, maxLength: 50}),
-        fc.string({minLength: 1, maxLength: 100}),
-        (turnId, surfaceId) => {
-          const content = {
-            messages: [{createSurface: {surfaceType: 'commerceSearch', surfaceId}}],
-          };
-          routeA2uiSurface(turnId, content, deps);
-          const [, routedData] = deps.statePort.setRoutedInterface.mock.calls[0];
-          expect(routedData.surfaceId).toBe(surfaceId);
-          deps.statePort.setRoutedInterface.mockClear();
+          deps.surfaceProcessor.processSnapshot.mockClear();
         }
       ),
       {numRuns: NUM_RUNS}
@@ -478,12 +436,6 @@ describe('Feature: commerce-surface-decomposition, Property 5: Navigation signal
   });
 
   it('converse surfaceType → setRoutedInterface is NOT called', () => {
-    /**
-     * Validates: Requirements 2.2
-     *
-     * For ANY A2-UI snapshot with surfaceType === 'converse',
-     * no navigation signal SHALL be emitted.
-     */
     fc.assert(
       fc.property(
         fc.string({minLength: 1, maxLength: 50}),
@@ -500,17 +452,11 @@ describe('Feature: commerce-surface-decomposition, Property 5: Navigation signal
     );
   });
 
-  it('non-commerceSearch surfaceType (arbitrary string) → setRoutedInterface is NOT called', () => {
-    /**
-     * Validates: Requirements 2.2
-     *
-     * For ANY surfaceType that is not 'commerceSearch',
-     * no navigation signal SHALL be emitted and no SurfaceProcessor call happens.
-     */
+  it('arbitrary non-commerceSearch surfaceType → setRoutedInterface is NOT called', () => {
     fc.assert(
       fc.property(
         fc.string({minLength: 1, maxLength: 50}),
-        fc.string({minLength: 1, maxLength: 50}).filter((s) => s !== 'commerceSearch'),
+        fc.string({minLength: 1, maxLength: 50}),
         fc.string({minLength: 0, maxLength: 100}),
         (turnId, surfaceType, surfaceId) => {
           const content = {

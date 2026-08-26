@@ -40,9 +40,23 @@ describe('ConversationPage integration', () => {
           id: 'turn-2',
           prompt: 'Show me results',
           status: 'complete',
-          routedInterface: {
-            interface: {dispose: vi.fn()},
-          } as unknown as Turn['routedInterface'],
+          routedInterface: undefined,
+          agentResponse: {
+            messages: [],
+            surfaces: [],
+            activities: [
+              {
+                id: 'activity-search',
+                kind: 'a2ui-surface',
+                replace: true,
+                payload: {
+                  messages: [{createSurface: {surfaceType: 'commerceSearch', surfaceId: 's1'}}],
+                },
+              },
+            ],
+            state: {},
+            reasoningSteps: [],
+          },
         },
         {
           id: 'turn-3',

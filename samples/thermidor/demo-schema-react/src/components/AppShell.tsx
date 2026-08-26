@@ -24,13 +24,12 @@ export function AppShell() {
     <A2UIProvider catalog={catalog}>
       <StateSourceProvider stateSource={controller}>
         <div className="view-shell">
-          {nav.persistedInterface && (
+          {nav.commerceSurfaceId && (
             <div className={`view-panel ${nav.view === 'search' ? 'view-panel--active' : ''}`}>
               <SearchResultsPage
-                key={nav.persistedTurnId!}
+                surfaceId={nav.commerceSurfaceId}
                 onSubmit={nav.handleSubmit}
                 isStreaming={converseState.isStreaming}
-                routedInterface={nav.persistedInterface}
                 query={nav.persistedQuery}
                 onBackToConversation={nav.handleBackToConversation}
                 products={nav.targetedProducts}

@@ -21,6 +21,7 @@ const carousel1SurfaceActivity: ConverseEvent = ActivitySnapshot({
         version: 'v1.0',
         createSurface: {
           surfaceId: 'product-surface-life-jackets',
+          surfaceType: 'converse',
           catalogId: CATALOG_ID,
           components: [
             {
@@ -48,6 +49,7 @@ const carousel2SurfaceActivity: ConverseEvent = ActivitySnapshot({
         version: 'v1.0',
         createSurface: {
           surfaceId: 'product-surface-safety-gear',
+          surfaceType: 'converse',
           catalogId: CATALOG_ID,
           components: [
             {
@@ -75,6 +77,7 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
         version: 'v1.0',
         createSurface: {
           surfaceId: 'next-actions-surface',
+          surfaceType: 'converse',
           catalogId: CATALOG_ID,
           components: [
             {

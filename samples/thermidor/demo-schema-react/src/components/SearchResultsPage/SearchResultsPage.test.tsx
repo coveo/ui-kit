@@ -1,6 +1,5 @@
 import {render, screen, fireEvent} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
-import type {RoutedInterface} from '@coveo/thermidor';
 import {SearchResultsPage} from './SearchResultsPage.js';
 
 vi.mock('../CommerceSearchLayout/CommerceSearchLayout.js', () => ({
@@ -15,23 +14,17 @@ vi.mock('../ProductTargeting/ProductTargeting.js', () => ({
   ),
 }));
 
-const decomposedInterface = {
-  useCase: 'decomposedCommerceSearch',
-  surfaceType: 'commerceSearch',
-  surfaceId: 'ui-commerce-search',
-} as RoutedInterface;
-
 const defaultProps = {
+  surfaceId: 'ui-commerce-search',
   onSubmit: vi.fn(),
   isStreaming: false,
-  routedInterface: decomposedInterface,
   onBackToConversation: vi.fn(),
-  products: [],
+  products: [] as never[],
   onProductsChange: vi.fn(),
 };
 
 describe('SearchResultsPage', () => {
-  it('renders the decomposed commerce layout for a decomposedCommerceSearch interface', () => {
+  it('renders the commerce search layout with the given surfaceId', () => {
     render(<SearchResultsPage {...defaultProps} />);
 
     expect(screen.getByTestId('commerce-search-layout')).toBeDefined();
@@ -52,24 +45,5 @@ describe('SearchResultsPage', () => {
     fireEvent.click(screen.getByRole('button', {name: 'Back to conversation'}));
 
     expect(onBackToConversation).toHaveBeenCalledTimes(1);
-  });
-
-  it('renders nothing when routedInterface is null', () => {
-    const {container} = render(
-      <SearchResultsPage {...defaultProps} routedInterface={null as unknown as RoutedInterface} />
-    );
-
-    expect(container.firstChild).toBeNull();
-  });
-
-  it('renders nothing for a non-decomposed (hydrated) interface', () => {
-    const {container} = render(
-      <SearchResultsPage
-        {...defaultProps}
-        routedInterface={{useCase: 'search', interface: {id: 'mock'}} as unknown as RoutedInterface}
-      />
-    );
-
-    expect(container.firstChild).toBeNull();
   });
 });

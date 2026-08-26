@@ -24,21 +24,12 @@ export interface CoveoConversationControllerAction {
   payload: unknown;
 }
 
-export interface DecomposedRouteSignal {
-  useCase: 'decomposedCommerceSearch';
-  surfaceType: string;
-  surfaceId: string;
-}
-
 export interface GenerativeStatePort {
   createTurn(payload: {id: string; prompt: string; status: TurnStatus}): void;
   setActiveTurnId(id: string): void;
   getActiveTurnId(): string | undefined;
   replaceTurnId(oldId: string, newId: string): void;
-  setRoutedInterface(
-    turnId: string,
-    hydrationResult: HydrationResult | DecomposedRouteSignal
-  ): void;
+  setRoutedInterface(turnId: string, hydrationResult: HydrationResult): void;
   clearRoutedInterface(turnId: string, surfaceId: string): void;
   initAgentResponse(turnId: string): void;
   startMessage(turnId: string, role: string): void;

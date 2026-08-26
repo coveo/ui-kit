@@ -6,11 +6,7 @@ import type {
   StateTurn,
 } from '@/src/internal/features/generative/index.js';
 
-const VALID_USE_CASES: Set<string> = new Set<string>([
-  'commerceSearch',
-  'search',
-  'decomposedCommerceSearch',
-]);
+const VALID_USE_CASES: Set<string> = new Set<string>(['commerceSearch', 'search']);
 
 export interface SerializedConverseState {
   name: string;
@@ -57,13 +53,7 @@ export function deserializeToGenerativeState(
     }
 
     if (routedInterface && VALID_USE_CASES.has(routedInterface.useCase)) {
-      if (routedInterface.useCase === 'decomposedCommerceSearch') {
-        turn.routedInterface = {
-          useCase: 'decomposedCommerceSearch',
-          surfaceType: routedInterface.surfaceType ?? '',
-          surfaceId: routedInterface.surfaceId ?? '',
-        };
-      } else if (!registry || registry.get(turn.id)) {
+      if (!registry || registry.get(turn.id)) {
         turn.routedInterface = {
           useCase: routedInterface.useCase as HydratedUseCase,
         } as SerializableRoutedInterface;

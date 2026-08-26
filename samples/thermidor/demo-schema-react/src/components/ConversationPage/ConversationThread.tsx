@@ -1,4 +1,5 @@
 import type {Turn} from '@coveo/thermidor';
+import {findCommerceSurfaceId} from '../../hooks/use-navigation.js';
 import {AgentResponseBlock} from './AgentResponseBlock.js';
 import {ErrorTurnBlock} from './ErrorTurnBlock.js';
 import {RoutedTurnBlock} from './RoutedTurnBlock.js';
@@ -42,7 +43,7 @@ function renderTurnContent(turn: Turn) {
     return <ErrorTurnBlock error={turn.error} />;
   }
 
-  if (turn.status === 'complete' && turn.routedInterface) {
+  if (turn.status === 'complete' && findCommerceSurfaceId(turn.agentResponse?.activities)) {
     return <RoutedTurnBlock />;
   }
 
