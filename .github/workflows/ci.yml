@@ -404,7 +404,7 @@ jobs:
 
   chromatic:
     name: 'Run Chromatic visual tests on Atomic'
-    needs: [affected, build]
+    needs: [build]
     if: ${{ always() && !cancelled() }} # Run even if build is skipped
     runs-on: ubuntu-latest
     steps:
@@ -425,12 +425,9 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Run Chromatic visual tests
         uses: chromaui/action@14cfaef73576e69f95f47f60058063f46ca38719 # v18.1.0
-        id: chromatic-run
         # Set the CHROMATIC_RENOVATE_ALLOWLIST repository variable to a JSON array of exact branch names.
         # Example: `["renovate/playwright", "renovate/chromatic"]`
         if: >-
-          needs.build.result == 'success' &&
-          contains(needs.affected.outputs.tasks, '"@coveo/atomic#build"') &&
           github.event_name == 'pull_request' &&
           (!startsWith(github.head_ref, 'renovate/') ||
           contains(fromJSON(vars.CHROMATIC_RENOVATE_ALLOWLIST || '[]'), github.head_ref))
@@ -439,7 +436,11 @@ jobs:
           workingDir: packages/atomic
       - name: Skip Chromatic visual tests
         uses: chromaui/action@14cfaef73576e69f95f47f60058063f46ca38719 # v18.1.0
-        if: steps.chromatic-run.outcome == 'skipped'
+        if: >-
+          github.event_name == 'merge_group' ||
+          (github.event_name == 'pull_request' &&
+          startsWith(github.head_ref, 'renovate/') &&
+          !contains(fromJSON(vars.CHROMATIC_RENOVATE_ALLOWLIST || '[]'), github.head_ref))
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           skip: true
