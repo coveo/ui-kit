@@ -296,7 +296,9 @@ describe('#renderQuickviewIframe', () => {
         uniqueIdentifier: 'async-load-test',
       });
 
-      expect(eventPromise).toHaveBeenCalledWith(iframe, 'load', 5000);
+      expect(eventPromise).toHaveBeenCalledTimes(2);
+      expect(eventPromise).toHaveBeenNthCalledWith(1, iframe, 'load', 1000);
+      expect(eventPromise).toHaveBeenNthCalledWith(2, iframe, 'load', 5000);
       expect(mockOnSetIframeRef).not.toHaveBeenCalled();
 
       resolveContentLoaded(new Event('load'));
@@ -318,6 +320,10 @@ describe('#renderQuickviewIframe', () => {
         uniqueIdentifier: 'async-timeout-test',
         logger: mockLogger,
       });
+
+      expect(eventPromise).toHaveBeenCalledTimes(2);
+      expect(eventPromise).toHaveBeenNthCalledWith(1, iframe, 'load', 1000);
+      expect(eventPromise).toHaveBeenNthCalledWith(2, iframe, 'load', 5000);
 
       await vi.waitFor(() => {
         expect(mockOnSetIframeRef).toHaveBeenCalledWith(iframe);
