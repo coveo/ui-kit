@@ -1,8 +1,11 @@
 import type {SearchEngine} from '@coveo/headless';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {eventPromise} from '@/src/utils/event-utils';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {renderQuickviewIframe} from './quickview-iframe';
+
+vi.mock('@/src/utils/event-utils', {spy: true});
 
 describe('#renderQuickviewIframe', () => {
   let mockOnSetIframeRef: (ref: HTMLIFrameElement) => void;
@@ -276,6 +279,54 @@ describe('#renderQuickviewIframe', () => {
   });
 
   describe('async behavior', () => {
+    it('should wait for the iframe content to load before setting the iframe reference', async () => {
+      let resolveContentLoaded!: (event: Event) => void;
+      vi.mocked(eventPromise)
+        .mockResolvedValueOnce(new Event('load'))
+        .mockReturnValueOnce(
+          new Promise<Event>((resolve) => {
+            resolveContentLoaded = resolve;
+          })
+        );
+
+      const iframe = await renderComponent({
+        title: 'Test Title',
+        content: '<p>Async Content</p>',
+        onSetIframeRef: mockOnSetIframeRef,
+        uniqueIdentifier: 'async-load-test',
+      });
+
+      expect(eventPromise).toHaveBeenCalledWith(iframe, 'load', 5000);
+      expect(mockOnSetIframeRef).not.toHaveBeenCalled();
+
+      resolveContentLoaded(new Event('load'));
+
+      await vi.waitFor(() => {
+        expect(mockOnSetIframeRef).toHaveBeenCalledWith(iframe);
+      });
+    });
+
+    it('should set the iframe reference when waiting for the content times out', async () => {
+      vi.mocked(eventPromise)
+        .mockResolvedValueOnce(new Event('load'))
+        .mockRejectedValueOnce(new Error('Promise timed out.'));
+
+      const iframe = await renderComponent({
+        title: 'Test Title',
+        content: '<p>Async Content</p>',
+        onSetIframeRef: mockOnSetIframeRef,
+        uniqueIdentifier: 'async-timeout-test',
+        logger: mockLogger,
+      });
+
+      await vi.waitFor(() => {
+        expect(mockOnSetIframeRef).toHaveBeenCalledWith(iframe);
+      });
+      expect(mockLogger.warn).toHaveBeenCalledWith(
+        'Quickview timed out waiting for the iframe content to load.'
+      );
+    });
+
     it('should call onSetIframeRef after content is written asynchronously', async () => {
       const callOrder: string[] = [];
 
