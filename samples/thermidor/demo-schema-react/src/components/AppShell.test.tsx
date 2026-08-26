@@ -31,7 +31,7 @@ vi.mock('./LandingPage/LandingPage.js', () => ({
 vi.mock('./SearchResultsPage/SearchResultsPage.js', () => ({
   SearchResultsPage: (props: any) => (
     <div data-testid="search-results-page">
-      <span data-testid="use-case">{props.routedInterface?.useCase}</span>
+      <span data-testid="surface-id">{props.surfaceId}</span>
       <button data-testid="search-submit-btn" onClick={() => props.onSubmit('follow up')} />
     </div>
   ),
@@ -48,6 +48,17 @@ vi.mock('./ConversationPage/index.js', () => ({
     </div>
   ),
 }));
+
+function makeCommerceSearchActivity(surfaceId = 'commerce-surface-1') {
+  return {
+    id: `activity-${surfaceId}`,
+    kind: 'a2ui-surface',
+    replace: true,
+    payload: {
+      messages: [{createSurface: {surfaceType: 'commerceSearch', surfaceId}}],
+    },
+  };
+}
 
 function makeTurn(overrides: Partial<Turn> & {id: string}): Turn {
   return {
@@ -72,22 +83,27 @@ describe('AppShell', () => {
     expect(screen.getByTestId('landing-page')).toBeDefined();
   });
 
-  it('renders SearchResultsPage after a turn completes with routedInterface', () => {
-    const mockDispose = vi.fn();
-    const routedInterface = {
-      useCase: 'search' as const,
-      interface: {dispose: mockDispose},
-    };
-
+  it('renders SearchResultsPage after a turn completes with a commerce-search activity', () => {
     mockConverseState = {
-      turns: [makeTurn({id: 'turn-1', routedInterface: routedInterface as any})],
+      turns: [
+        makeTurn({
+          id: 'turn-1',
+          agentResponse: {
+            messages: [],
+            surfaces: [],
+            activities: [makeCommerceSearchActivity('wetsuits-surface')],
+            state: {},
+            reasoningSteps: [],
+          },
+        }),
+      ],
       activeTurn: undefined,
       isStreaming: false,
     };
 
     render(<AppShell />);
     expect(screen.getByTestId('search-results-page')).toBeDefined();
-    expect(screen.getByTestId('use-case').textContent).toBe('search');
+    expect(screen.getByTestId('surface-id').textContent).toBe('wetsuits-surface');
   });
 
   it('renders ConversationPage after submitting and a turn completes with agentResponse', () => {
@@ -108,7 +124,13 @@ describe('AppShell', () => {
       turns: [
         makeTurn({
           id: 'turn-1',
-          agentResponse: {text: 'Hello!'} as any,
+          agentResponse: {
+            messages: [{content: 'Hello!', role: 'assistant'}],
+            surfaces: [],
+            activities: [],
+            state: {},
+            reasoningSteps: [{type: 'reasoning', content: 'thinking'}],
+          },
         }),
       ],
       activeTurn: undefined,
@@ -146,53 +168,20 @@ describe('AppShell', () => {
     expect(mockSubmit).not.toHaveBeenCalled();
   });
 
-  it('disposes the first routedInterface when a second one arrives', () => {
-    const mockDispose1 = vi.fn();
-    const routedInterface1 = {
-      useCase: 'search' as const,
-      interface: {dispose: mockDispose1},
-    };
-
-    mockConverseState = {
-      turns: [makeTurn({id: 'turn-1', routedInterface: routedInterface1 as any})],
-      activeTurn: undefined,
-      isStreaming: false,
-    };
-
-    const {rerender} = render(<AppShell />);
-    expect(screen.getByTestId('search-results-page')).toBeDefined();
-    expect(mockDispose1).not.toHaveBeenCalled();
-
-    const mockDispose2 = vi.fn();
-    const routedInterface2 = {
-      useCase: 'search' as const,
-      interface: {dispose: mockDispose2},
-    };
-
+  it('"Back to search results" navigates from conversation to search view', () => {
     mockConverseState = {
       turns: [
-        makeTurn({id: 'turn-1', routedInterface: routedInterface1 as any}),
-        makeTurn({id: 'turn-2', routedInterface: routedInterface2 as any}),
+        makeTurn({
+          id: 'turn-1',
+          agentResponse: {
+            messages: [],
+            surfaces: [],
+            activities: [makeCommerceSearchActivity()],
+            state: {},
+            reasoningSteps: [],
+          },
+        }),
       ],
-      activeTurn: undefined,
-      isStreaming: false,
-    };
-
-    rerender(<AppShell />);
-
-    expect(mockDispose1).toHaveBeenCalledTimes(1);
-    expect(mockDispose2).not.toHaveBeenCalled();
-  });
-
-  it('"Back to search results" navigates from conversation to search view', () => {
-    const mockDispose = vi.fn();
-    const routedInterface = {
-      useCase: 'search' as const,
-      interface: {dispose: mockDispose},
-    };
-
-    mockConverseState = {
-      turns: [makeTurn({id: 'turn-1', routedInterface: routedInterface as any})],
       activeTurn: undefined,
       isStreaming: false,
     };
@@ -206,8 +195,26 @@ describe('AppShell', () => {
 
     mockConverseState = {
       turns: [
-        makeTurn({id: 'turn-1', routedInterface: routedInterface as any}),
-        makeTurn({id: 'turn-2', agentResponse: {text: 'Hello!'} as any}),
+        makeTurn({
+          id: 'turn-1',
+          agentResponse: {
+            messages: [],
+            surfaces: [],
+            activities: [makeCommerceSearchActivity()],
+            state: {},
+            reasoningSteps: [],
+          },
+        }),
+        makeTurn({
+          id: 'turn-2',
+          agentResponse: {
+            messages: [{content: 'More info', role: 'assistant'}],
+            surfaces: [],
+            activities: [],
+            state: {},
+            reasoningSteps: [{type: 'reasoning', content: 'thinking'}],
+          },
+        }),
       ],
       activeTurn: undefined,
       isStreaming: false,
@@ -223,7 +230,7 @@ describe('AppShell', () => {
     expect(screen.getByTestId('search-results-page')).toBeDefined();
   });
 
-  it('"Back to search results" is disabled when no persisted interface exists', () => {
+  it('"Back to search results" is disabled when no commerce surface exists', () => {
     mockConverseState = {
       turns: [],
       activeTurn: undefined,
@@ -237,7 +244,18 @@ describe('AppShell', () => {
     });
 
     mockConverseState = {
-      turns: [makeTurn({id: 'turn-1', agentResponse: {text: 'Hello!'} as any})],
+      turns: [
+        makeTurn({
+          id: 'turn-1',
+          agentResponse: {
+            messages: [{content: 'Hello!', role: 'assistant'}],
+            surfaces: [],
+            activities: [],
+            state: {},
+            reasoningSteps: [{type: 'reasoning', content: 'thinking'}],
+          },
+        }),
+      ],
       activeTurn: undefined,
       isStreaming: false,
     };

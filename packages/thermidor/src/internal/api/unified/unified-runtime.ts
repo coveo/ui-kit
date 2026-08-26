@@ -191,18 +191,14 @@ export class UnifiedRuntime {
       onA2uiSurface: (tid: string, content: Record<string, unknown>) => {
         const surfaceType = extractSurfaceType(content);
 
-        if (surfaceType) {
-          if (surfaceType === 'commerceSearch') {
-            const surfaceId = extractSurfaceId(content);
-            this.statePort.setRoutedInterface(tid, {
-              useCase: 'decomposedCommerceSearch',
-              surfaceType,
-              surfaceId,
-            });
-          }
-        } else {
+        if (!surfaceType) {
+          // Legacy: surfaces without surfaceType route through the SurfaceProcessor
+          // for hydration (monolithic ProductSearchSurface / ProductListingSurface).
           this.surfaceProcessor.processSnapshot(tid, content);
         }
+        // Surfaces with a surfaceType (e.g. 'commerceSearch', 'converse') need no
+        // routing signal — the consumer derives navigation directly from the A2-UI
+        // activities already stored via appendSurface/appendActivity.
       },
     };
 

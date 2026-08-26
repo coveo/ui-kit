@@ -69,17 +69,6 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
           this.engine.mutate(this.#actions.replaceTurnId({oldId, newId}));
         },
         setRoutedInterface: (turnId, hydrationResult) => {
-          if (hydrationResult.useCase === 'decomposedCommerceSearch') {
-            this.engine.mutate(
-              this.#actions.setRoutedInterface({
-                turnId,
-                useCase: 'decomposedCommerceSearch',
-                surfaceType: hydrationResult.surfaceType,
-                surfaceId: hydrationResult.surfaceId,
-              })
-            );
-            return;
-          }
           const registry = getOrCreateRoutedInterfaceRegistry(options.interface);
           registry.register(turnId, {
             useCase: hydrationResult.useCase,
@@ -158,22 +147,12 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
       const {routedInterface, ...rest} = turn;
       const serialized: SerializedTurn = {...rest};
       if (routedInterface) {
-        if (routedInterface.useCase === 'decomposedCommerceSearch') {
-          serialized.routedInterface = {
-            useCase: routedInterface.useCase,
-            surfaceType: routedInterface.surfaceType,
-            surfaceId: routedInterface.surfaceId,
-            snapshot: {},
-            query: undefined,
-          };
-        } else {
-          const entry = registry.get(turn.id);
-          serialized.routedInterface = {
-            useCase: routedInterface.useCase,
-            snapshot: entry?.snapshot ?? {},
-            query: entry?.query,
-          };
-        }
+        const entry = registry.get(turn.id);
+        serialized.routedInterface = {
+          useCase: routedInterface.useCase,
+          snapshot: entry?.snapshot ?? {},
+          query: entry?.query,
+        };
       }
       return serialized;
     });
@@ -274,16 +253,7 @@ function hydrateFromSerializedState(serialized: SerializedConverseState): Genera
     }
 
     if (routedInterface) {
-      if (routedInterface.useCase === 'decomposedCommerceSearch') {
-        turn.routedInterface = {
-          useCase: 'decomposedCommerceSearch',
-          surfaceType: routedInterface.surfaceType ?? '',
-          surfaceId: routedInterface.surfaceId ?? '',
-        };
-      } else if (
-        routedInterface.useCase === 'commerceSearch' ||
-        routedInterface.useCase === 'search'
-      ) {
+      if (routedInterface.useCase === 'commerceSearch' || routedInterface.useCase === 'search') {
         turn.routedInterface = {useCase: routedInterface.useCase};
       }
     }

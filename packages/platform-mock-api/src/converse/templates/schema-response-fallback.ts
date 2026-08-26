@@ -19,6 +19,7 @@ const surfaceActivitySnapshot: ConverseEvent = ActivitySnapshot({
         version: 'v1.0',
         createSurface: {
           surfaceId: 'next-actions-surface',
+          surfaceType: 'converse',
           catalogId: 'https://schema.thermidor.coveo.com/a2-ui/catalog.json',
           components: [
             {

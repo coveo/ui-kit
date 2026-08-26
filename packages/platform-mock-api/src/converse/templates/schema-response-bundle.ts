@@ -21,6 +21,7 @@ const bundleSurfaceActivity: ConverseEvent = ActivitySnapshot({
         version: 'v1.0',
         createSurface: {
           surfaceId: 'bundle-surface',
+          surfaceType: 'converse',
           catalogId: CATALOG_ID,
           components: [
             {
@@ -48,6 +49,7 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
         version: 'v1.0',
         createSurface: {
           surfaceId: 'next-actions-surface',
+          surfaceType: 'converse',
           catalogId: CATALOG_ID,
           components: [
             {
