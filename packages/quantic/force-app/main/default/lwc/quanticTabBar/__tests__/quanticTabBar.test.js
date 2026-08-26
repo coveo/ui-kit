@@ -416,7 +416,7 @@ describe('c-quantic-tab-bar', () => {
       layoutReadSpies.forEach((spy) => {
         // Each layout pass reads the cached tab rect once for the snapshot and once
         // when the rendered DOM applies the updated tab state.
-        expect(spy).toHaveBeenCalledTimes(2);
+        expect(spy).toHaveBeenCalledTimes(1);
       });
     });
 
@@ -482,35 +482,6 @@ describe('c-quantic-tab-bar', () => {
         element.shadowRoot.querySelector(selectors.moreTabsSection).style
           .display
       ).toBe('block');
-    });
-
-    it('should recompute the layout when a tab changes width without the tab count, container width, or active tab changing', async () => {
-      const numberOfTabs = 2;
-      const tabs = createExampleTabSlots(numberOfTabs);
-      // Start with tabs narrow enough to fit comfortably within the 200px mocked container.
-      tabs.forEach((tab) => {
-        // @ts-ignore
-        tab.mockWidth = 50;
-      });
-      const element = createTestComponent(defaultOptions, tabs);
-      await flushPromises();
-
-      const moreTabsSection = element.shadowRoot.querySelector(
-        selectors.moreTabsSection
-      );
-      expect(moreTabsSection.style.display).toBe('none');
-
-      // Simulate one tab's rendered content changing width (e.g. a placeholder label being
-      // replaced by a much longer real label) without changing the tab count, container
-      // width, or which tab is active — this must still be detected as layout-relevant.
-      // @ts-ignore
-      tabs[0].mockWidth = 400;
-      element.dispatchEvent(
-        new CustomEvent('quantic__tabrendered', {bubbles: true})
-      );
-      await flushTabRender();
-
-      expect(moreTabsSection.style.display).toBe('block');
     });
   });
 

@@ -145,8 +145,6 @@ export default class QuanticTabBar extends LightningElement {
 
   /**
    * Computes, in a single pass, all the layout values needed to update the tabs display.
-   * Must be called after the "More" button's visibility has been set for this pass, so its
-   * width reflects its real rendered size rather than 0 from being `display: none`.
    * @param {Array<Element>} tabElements
    * @param {boolean} isOverflow Whether the tabs overflow the container.
    * @returns {{overflowingTabs: Array<Element>, displayedTabs: Array<Element>}}
@@ -193,8 +191,7 @@ export default class QuanticTabBar extends LightningElement {
 
   /**
    * Updates the dropdown options.
-   * @param {Array<Element>} [overflowingTabs] Optionally pass a pre-computed list of overflowing tabs
-   *  to avoid recomputing it from the live DOM.
+   * @param {Array<Element>} [overflowingTabs]
    * @returns {void}
    */
   updateDropdownOptions(overflowingTabs = this._overflowingTabs) {
