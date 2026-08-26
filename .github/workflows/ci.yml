@@ -30,6 +30,7 @@ jobs:
         with:
           egress-policy: audit
 
+      # Full history is required to calculate the base-to-head range and publish the minimum depth.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
@@ -413,6 +414,7 @@ jobs:
         with:
           egress-policy: audit
 
+      # Chromatic needs full history to compare the checked-out revision with its baseline.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         if: ${{ github.event_name == 'pull_request' }}
         with:
@@ -560,6 +562,7 @@ jobs:
         with:
           egress-policy: audit
 
+      # The Storybook suite requires origin/main for baseline-aware tests.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
