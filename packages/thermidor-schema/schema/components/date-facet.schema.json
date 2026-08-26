@@ -1,0 +1,233 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.thermidor.coveo.com/components/date-facet.schema.json",
+  "title": "DateFacet",
+  "description": "Renders a range-based date commerce facet. Presents date range values with their result counts and selection state, and dispatches actions to select, clear active values, apply a custom date range, and show more or fewer values.",
+  "allOf": [
+    {
+      "$ref": "https://schema.thermidor.coveo.com/base/component.schema.json"
+    }
+  ],
+  "properties": {
+    "componentType": {
+      "type": "string",
+      "const": "date-facet"
+    },
+    "state": {
+      "$ref": "#/$defs/DateFacetState"
+    },
+    "actions": {
+      "type": "object",
+      "required": [
+        "toggleSelect",
+        "clearAllActiveValues",
+        "applyCustomRange",
+        "showMoreValues",
+        "showLessValues"
+      ],
+      "properties": {
+        "toggleSelect": {
+          "$ref": "#/$defs/DateFacetToggleSelectAction"
+        },
+        "clearAllActiveValues": {
+          "$ref": "#/$defs/DateFacetClearAllActiveValuesAction"
+        },
+        "applyCustomRange": {
+          "$ref": "#/$defs/DateFacetApplyCustomRangeAction"
+        },
+        "showMoreValues": {
+          "$ref": "#/$defs/DateFacetShowMoreValuesAction"
+        },
+        "showLessValues": {
+          "$ref": "#/$defs/DateFacetShowLessValuesAction"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "DateFacetState": {
+      "title": "DateFacetState",
+      "description": "The observable state of a date facet. Owned exclusively by the backend.",
+      "type": "object",
+      "required": [
+        "field",
+        "displayName",
+        "values",
+        "customRange",
+        "hasActiveValues",
+        "canShowMoreValues",
+        "canShowLessValues"
+      ],
+      "properties": {
+        "field": {
+          "type": "string",
+          "description": "The commerce index field the facet operates on."
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Human-readable label for the facet."
+        },
+        "values": {
+          "type": "array",
+          "description": "The date range values currently exposed by the facet.",
+          "items": {
+            "$ref": "#/$defs/DateFacetValue"
+          }
+        },
+        "customRange": {
+          "description": "The currently applied custom range, or null when none is active. Mutually exclusive with selected values.",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/DateFacetCustomRange"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "hasActiveValues": {
+          "type": "boolean",
+          "description": "Whether at least one range value is not in the idle state."
+        },
+        "canShowMoreValues": {
+          "type": "boolean",
+          "description": "Whether more values than currently shown are available."
+        },
+        "canShowLessValues": {
+          "type": "boolean",
+          "description": "Whether the number of shown values can be reduced."
+        }
+      },
+      "additionalProperties": false
+    },
+    "DateFacetValue": {
+      "title": "DateFacetValue",
+      "description": "A single selectable date range within a date facet.",
+      "type": "object",
+      "required": ["start", "end", "numberOfResults", "state"],
+      "properties": {
+        "start": {
+          "type": "string",
+          "description": "The inclusive start of the date range."
+        },
+        "end": {
+          "type": "string",
+          "description": "The end of the date range."
+        },
+        "numberOfResults": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The number of results matching this range."
+        },
+        "state": {
+          "$ref": "https://schema.thermidor.coveo.com/definitions/selectable-facet-value-state.schema.json",
+          "description": "The selection state of this facet value (idle or selected; exclusion is not supported)."
+        }
+      },
+      "additionalProperties": false
+    },
+    "DateFacetCustomRange": {
+      "title": "DateFacetCustomRange",
+      "description": "A custom date range applied by the user, with its result count.",
+      "type": "object",
+      "required": ["start", "end", "numberOfResults"],
+      "properties": {
+        "start": {
+          "type": "string",
+          "description": "The inclusive start of the custom date range."
+        },
+        "end": {
+          "type": "string",
+          "description": "The end of the custom date range."
+        },
+        "numberOfResults": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The number of results matching this custom range."
+        }
+      },
+      "additionalProperties": false
+    },
+    "DateFacetToggleSelectAction": {
+      "title": "dateFacetToggleSelect",
+      "description": "Toggles the selection of a date facet value.",
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ],
+      "properties": {
+        "payload": {
+          "type": "object",
+          "required": ["start", "end"],
+          "properties": {
+            "start": {
+              "type": "string",
+              "description": "The inclusive start of the date range to toggle."
+            },
+            "end": {
+              "type": "string",
+              "description": "The end of the date range to toggle."
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "DateFacetClearAllActiveValuesAction": {
+      "title": "dateFacetClearAllActiveValues",
+      "description": "Resets all date range values to the idle state, clearing every selection.",
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ]
+    },
+    "DateFacetApplyCustomRangeAction": {
+      "title": "dateFacetApplyCustomRange",
+      "description": "Applies a single custom date range, clearing any selected displayed ranges.",
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ],
+      "properties": {
+        "payload": {
+          "type": "object",
+          "required": ["start", "end"],
+          "properties": {
+            "start": {
+              "type": "string",
+              "description": "The inclusive start of the custom date range."
+            },
+            "end": {
+              "type": "string",
+              "description": "The end of the custom date range."
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "DateFacetShowMoreValuesAction": {
+      "title": "dateFacetShowMoreValues",
+      "description": "Increases the number of date range values shown.",
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ]
+    },
+    "DateFacetShowLessValuesAction": {
+      "title": "dateFacetShowLessValues",
+      "description": "Decreases the number of date range values shown.",
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ]
+    }
+  }
+}
