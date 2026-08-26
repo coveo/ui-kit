@@ -347,6 +347,7 @@ describe('c-quantic-tab-bar', () => {
       const tabItemsInDropdown = element.shadowRoot.querySelectorAll(
         selectors.tabItemsInDropdown
       );
+      expect(tabItemsInDropdown[0].getAttribute('data-value')).toBe('tab 2');
 
       // @ts-ignore
       exampleTabSlots[1].select = () => {
@@ -416,7 +417,7 @@ describe('c-quantic-tab-bar', () => {
       layoutReadSpies.forEach((spy) => {
         // Each layout pass reads the cached tab rect once for the snapshot and once
         // when the rendered DOM applies the updated tab state.
-        expect(spy).toHaveBeenCalledTimes(1);
+        expect(spy).toHaveBeenCalledTimes(2);
       });
     });
 

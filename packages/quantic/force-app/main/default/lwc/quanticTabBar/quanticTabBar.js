@@ -98,16 +98,14 @@ export default class QuanticTabBar extends LightningElement {
       ),
     };
 
-    const containerWidth = this.containerWidth;
+    const containerWidth = this._layoutRects.container.width;
     const slotContentWidth = this.computeSlotContentWidth(tabElements);
     const tabsCount = tabElements.length;
     const isOverflow = slotContentWidth > containerWidth;
     // Must run before categorizeTabsVisibility: while display:none, moreButtonWidth reads as 0.
     this.updateMoreButtonVisibility(isOverflow);
     this._layoutRects.moreButton = this.moreButton?.getBoundingClientRect();
-
     this.updateMoreButtonState();
-    this._layoutRects.moreButton = this.moreButton?.getBoundingClientRect();
 
     const {overflowingTabs, displayedTabs} = this.categorizeTabsVisibility(
       tabElements,
@@ -125,25 +123,6 @@ export default class QuanticTabBar extends LightningElement {
   };
 
   /**
-   * Returns a cached rectangle during a layout pass, otherwise reads the live DOM.
-   * @param {Element|undefined} element
-   * @returns {DOMRect|undefined}
-   */
-  getElementWidth(element) {
-    if (!element) {
-      return 0;
-    }
-
-    const rect =
-      element === this.container
-        ? this._layoutRects.container
-        : element === this.moreButton
-          ? this._layoutRects.moreButton
-          : this._layoutRects.tabs.get(element);
-    return rect ? Math.ceil(rect.width) : 0;
-  }
-
-  /**
    * Computes, in a single pass, all the layout values needed to update the tabs display.
    * @param {Array<Element>} tabElements
    * @param {boolean} isOverflow Whether the tabs overflow the container.
@@ -152,21 +131,23 @@ export default class QuanticTabBar extends LightningElement {
   categorizeTabsVisibility(tabElements, isOverflow) {
     // @ts-ignore
     const selectedTab = tabElements.find((el) => el.isActive);
-    const selectedTabWidth = this.getElementWidth(selectedTab);
+    const selectedTabWidth = Math.ceil(
+      this._layoutRects.tabs.get(selectedTab)?.width ?? 0
+    );
     const moreButton = this.moreButton?.querySelector('button');
     const moreButtonWidth = Math.max(
-      this.getElementWidth(this.moreButton),
+      this._layoutRects.moreButton?.width ?? 0,
       moreButton?.offsetWidth ?? 0,
       moreButton?.scrollWidth ?? 0
     );
-    const containerWidth = this.containerWidth;
+    const containerWidth = this._layoutRects.container.width;
     const displayedTabs = [];
     const overflowingTabs = [];
     let displayedTabsWidth = 0;
     let selectedTabDisplayed = false;
 
     tabElements.forEach((tab) => {
-      const tabWidth = this.getElementWidth(tab);
+      const tabWidth = Math.ceil(this._layoutRects.tabs.get(tab)?.width ?? 0);
       // @ts-ignore
       if (tab.isActive) {
         displayedTabs.push(tab);
@@ -194,7 +175,8 @@ export default class QuanticTabBar extends LightningElement {
    * @param {Array<Element>} [overflowingTabs]
    * @returns {void}
    */
-  updateDropdownOptions(overflowingTabs = this._overflowingTabs) {
+  updateDropdownOptions(overflowingTabs) {
+    // @ts-ignore
     this.tabsInDropdown = overflowingTabs.map((el, index) => ({
       id: index,
       // @ts-ignore
@@ -212,9 +194,10 @@ export default class QuanticTabBar extends LightningElement {
    *  to avoid recomputing it from the live DOM.
    * @returns {void}
    */
-  updateMoreButtonPosition(displayedTabs = this._displayedTabs) {
+  updateMoreButtonPosition(displayedTabs) {
     const position = displayedTabs.reduce(
-      (total, tab) => total + this.getElementWidth(tab),
+      (total, tab) =>
+        total + Math.ceil(this._layoutRects.tabs.get(tab)?.width ?? 0),
       0
     );
     this.moreButton?.style.setProperty('left', `${position}px`);
@@ -226,12 +209,18 @@ export default class QuanticTabBar extends LightningElement {
    */
   updateMoreButtonState() {
     if (this.hasRendered) {
-      if (this.maxMoreButtonWidth < this.moreButtonWidth) {
-        this.maxMoreButtonWidth = this.moreButtonWidth;
+      const moreButtonWidth = this._layoutRects.moreButton?.width ?? 0;
+      const selectedTabWidth = Math.ceil(
+        this._layoutRects.tabs.get(this.selectedTab)?.width ?? 0
+      );
+
+      if (this.maxMoreButtonWidth < moreButtonWidth) {
+        this.maxMoreButtonWidth = moreButtonWidth;
       }
 
       this.expandedMoreButton =
-        this.containerWidth > this.maxMoreButtonWidth + this.selectedTabWidth;
+        this._layoutRects.container.width >
+        this.maxMoreButtonWidth + selectedTabWidth;
     }
   }
 
@@ -275,42 +264,16 @@ export default class QuanticTabBar extends LightningElement {
   }
 
   /**
-   * Returns the container's width.
-   * @returns {number}
-   */
-  get containerWidth() {
-    return this.getElementWidth(this.container);
-  }
-
-  /**
    * Computes the total rendered width of the given tab elements.
-   * Shared by the state signature and the layout pass so the calculation only lives in one place,
-   * while still letting each caller pass in a `tabElements` array it already has on hand instead
-   * of re-querying the slot.
    * @param {Array<Element>} tabElements
    * @returns {number}
    */
   computeSlotContentWidth(tabElements) {
     return tabElements.reduce(
-      (total, el) => total + this.getElementWidth(el),
+      (total, el) =>
+        total + Math.ceil(this._layoutRects.tabs.get(el)?.width ?? 0),
       0
     );
-  }
-
-  /**
-   * returns the width of the more button.
-   * @returns {number}
-   */
-  get moreButtonWidth() {
-    return this.getElementWidth(this.moreButton);
-  }
-
-  /**
-   * returns the width of the currently selected tab.
-   * @returns {number}
-   */
-  get selectedTabWidth() {
-    return this.getElementWidth(this.selectedTab);
   }
 
   /**
