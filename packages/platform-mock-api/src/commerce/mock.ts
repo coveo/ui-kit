@@ -1,6 +1,7 @@
 import type {HttpHandler} from 'msw';
 import {EndpointHarness, type MockApi} from '../_base.js';
 import type {APIErrorWithStatusCode} from '../_common/error.js';
+import {commerceEnableResultsTransformer} from './enable-results-transformer.js';
 import type {FacetSearchResponse} from './facet-transformer.js';
 import {richResponse as baseListingResponse} from './listing-response.js';
 import {baseResponse as baseProductSuggestResponse} from './productSuggest-response.js';
@@ -29,7 +30,7 @@ export class MockCommerceApi implements MockApi {
       'POST',
       `${basePath}/rest/organizations/:orgId/commerce/v2/search`,
       baseSearchResponse
-    );
+    ).addRequestTransformer<CommerceSearchResponse>(commerceEnableResultsTransformer);
 
     this.recommendationEndpoint = new EndpointHarness(
       'POST',
@@ -50,7 +51,7 @@ export class MockCommerceApi implements MockApi {
       'POST',
       `${basePath}/rest/organizations/:orgId/commerce/v2/listing`,
       baseListingResponse
-    );
+    ).addRequestTransformer(commerceEnableResultsTransformer);
 
     this.facetSearchEndpoint = new EndpointHarness<FacetSearchResponse>(
       'POST',

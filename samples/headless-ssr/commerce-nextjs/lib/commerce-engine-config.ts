@@ -16,8 +16,24 @@ import {
   defineSummary,
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless-react/ssr-commerce';
+import {MOCK_API_URL_GLOBAL} from './mock-api-url';
 
 const sampleCommerceEngineConfiguration = getSampleCommerceEngineConfiguration();
+
+// Used internally in https://github.com/coveo/ui-kit for testing purposes, not
+// needed in your own implementation.
+//
+// On the server this reads the environment directly. In the browser it reads the
+// value published by the root layout, so the mock URL stays a runtime concern and
+// never has to be baked into the client bundle at build time.
+function getMockApiUrl() {
+  if (typeof window === 'undefined') {
+    return process.env.MOCK_API_URL;
+  }
+  return window[MOCK_API_URL_GLOBAL];
+}
+
+const mockApiUrl = getMockApiUrl();
 
 export default {
   // By default, the logger level is set to 'warn'. To get more detailed error
@@ -26,10 +42,10 @@ export default {
   configuration: {
     ...sampleCommerceEngineConfiguration,
     // Used internally in https://github.com/coveo/ui-kit for testing purposes, not needed in your own implementation.
-    // When NEXT_PUBLIC_MOCK_API_URL is set (e.g. during e2e tests), route all API calls
+    // When MOCK_API_URL is set (e.g. during e2e tests), route all API calls
     // through the local @mswjs/http-middleware mock server.
-    ...(process.env.NEXT_PUBLIC_MOCK_API_URL && {
-      proxyBaseUrl: `${process.env.NEXT_PUBLIC_MOCK_API_URL}/rest/organizations/${sampleCommerceEngineConfiguration.organizationId}/commerce/v2`,
+    ...(mockApiUrl && {
+      proxyBaseUrl: `${mockApiUrl}/rest/organizations/${sampleCommerceEngineConfiguration.organizationId}/commerce/v2`,
     }),
   },
   controllers: {
