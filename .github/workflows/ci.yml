@@ -407,6 +407,10 @@ jobs:
     needs: [affected, build]
     if: ${{ always() && !cancelled() }} # Run even if build is skipped
     runs-on: ubuntu-latest
+    env:
+      CHROMATIC_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+      CHROMATIC_SHA: ${{ github.event.pull_request.head.sha || github.ref }}
+      CHROMATIC_SLUG: ${{ github.repository }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
