@@ -65,8 +65,12 @@ class CustomTemplateComponent extends HTMLElement {
   }
 }
 
-customElements.define('custom-component', CustomComponent);
-customElements.define('custom-template-component', CustomTemplateComponent);
+if (!customElements.get('custom-component')) {
+  customElements.define('custom-component', CustomComponent);
+}
+if (!customElements.get('custom-template-component')) {
+  customElements.define('custom-template-component', CustomTemplateComponent);
+}
 
 await customElements.whenDefined('atomic-search-interface');
 
