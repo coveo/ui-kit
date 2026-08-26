@@ -240,6 +240,9 @@ function isCreateSurfacePayload(value: unknown): value is CreateSurfacePayload {
   if (!isRecord(value) || typeof value.surfaceId !== 'string') {
     return false;
   }
+  if (value.surfaceType !== undefined && typeof value.surfaceType !== 'string') {
+    return false;
+  }
   if (value.catalogId !== undefined && typeof value.catalogId !== 'string') {
     return false;
   }

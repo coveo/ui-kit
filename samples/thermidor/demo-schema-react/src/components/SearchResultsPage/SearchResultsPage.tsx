@@ -36,7 +36,7 @@ export function SearchResultsPage(props: SearchResultsPageProps) {
           initialValue: props.query ?? '',
         }}
       >
-        <CommerceSearchLayout surfaceId={props.surfaceId} surfaceType="commerceSearch" />
+        <CommerceSearchLayout surfaceId={props.surfaceId} />
       </ProductTargeting>
       <button
         type="button"
