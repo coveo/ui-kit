@@ -58,7 +58,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ github.head_ref }}
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/run-affected
@@ -82,7 +82,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ github.head_ref }}
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/run-affected
@@ -177,7 +177,7 @@ jobs:
           egress-policy: audit
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/run-affected
@@ -243,7 +243,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/run-affected
@@ -263,7 +263,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run validate:light-dom-styles --filter=@coveo/atomic
@@ -280,7 +280,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run validate:no-new-light-dom --filter=@coveo/atomic
@@ -339,7 +339,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run validate:test:dts:ci --filter=@coveo/thermidor
@@ -355,7 +355,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec node ./scripts/ci/validate-publint-tasks.mjs
@@ -376,7 +376,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/run-affected
@@ -592,7 +592,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - name: 'Download a11y shard reports'
@@ -732,7 +732,7 @@ jobs:
           egress-policy: audit
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run build --filter='!./samples/**'
