@@ -40,8 +40,8 @@ packages:
   - utils/ci
 
 catalog:
-  '@ag-ui/client': 0.0.57
-  chromatic: 18.1.0
+  '@ag-ui/client': 0.0.58
+  chromatic: 18.5.0
   '@msw/playwright': 0.6.7
   '@mswjs/http-middleware': ^0.10.3
   msw: 2.15.0
@@ -84,7 +84,7 @@ catalog:
   '@vitejs/plugin-react': 6.0.5
   '@vitest/browser-playwright': 4.1.10
   abortcontroller-polyfill: 1.7.8
-  dayjs: 1.11.21
+  dayjs: 1.11.23
   dompurify: 3.4.13
   dotenv: 17.2.3
   esbuild: 0.28.2
@@ -104,7 +104,7 @@ catalog:
   next: 16.2.12
   node-fetch: 3.3.2
   prettier: 3.9.6
-  publint: 0.3.23
+  publint: 0.3.24
   puppeteer: 24.43.1
   playwright: 1.60.0
   rxjs: 7.8.2
@@ -117,7 +117,7 @@ catalog:
   tslib: 2.8.1
   typedoc: 0.28.20
   typescript: 6.0.3
-  uuid: 14.0.1
+  uuid: 14.0.2
   vite: 8.2.1
   vitest: 4.1.10
   yaml: 2.9.0
