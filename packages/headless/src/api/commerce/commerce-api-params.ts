@@ -51,8 +51,6 @@ export interface ViewParams {
 
 export type UserParams = {
   userAgent?: string;
-  latitude?: number;
-  longitude?: number;
 };
 
 export interface CartItemParam {

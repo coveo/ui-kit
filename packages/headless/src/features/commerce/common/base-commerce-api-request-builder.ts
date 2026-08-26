@@ -19,7 +19,7 @@ export const buildBaseCommerceAPIRequest = (
   state: StateNeededForBaseCommerceAPIRequest,
   navigatorContext: NavigatorContext
 ): BaseCommerceAPIRequest => {
-  const {view, location, custom, ...restOfContext} = state.commerceContext;
+  const {view, custom, ...restOfContext} = state.commerceContext;
   return {
     accessToken: state.configuration.accessToken,
     url:
@@ -31,7 +31,6 @@ export const buildBaseCommerceAPIRequest = (
     ...(state.configuration.analytics.enabled ? {clientId: navigatorContext.clientId} : {}),
     context: {
       user: {
-        ...location,
         ...(navigatorContext.userAgent ? {userAgent: navigatorContext.userAgent} : {}),
       },
       view: {

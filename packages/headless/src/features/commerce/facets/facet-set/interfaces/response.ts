@@ -8,13 +8,13 @@ import type {
 export type CategoryFacetResponse = BaseFacetResponse<CategoryFacetValue, 'hierarchical'> &
   CategoryFacetDelimitingCharacter;
 
-interface NonLocationFacetValue {
+interface SharedFacetValueProperties {
   numberOfResults: number;
   isAutoSelected: boolean;
   isSuggested: boolean;
 }
 
-export interface CategoryFacetValue extends BaseFacetValue, NonLocationFacetValue {
+export interface CategoryFacetValue extends BaseFacetValue, SharedFacetValueProperties {
   value: string;
   path: string[];
   isLeafValue: boolean;
@@ -33,7 +33,7 @@ export type NumericFacetValue = RangeFacetValue<number>;
 
 export type RegularFacetResponse = BaseFacetResponse<RegularFacetValue, 'regular'>;
 
-export interface RegularFacetValue extends BaseFacetValue, NonLocationFacetValue {
+export interface RegularFacetValue extends BaseFacetValue, SharedFacetValueProperties {
   value: string;
   /**
    * @deprecated Use the facet's `moreValuesAvailable` property instead.
@@ -41,13 +41,7 @@ export interface RegularFacetValue extends BaseFacetValue, NonLocationFacetValue
   moreValuesAvailable: boolean;
 }
 
-export type LocationFacetResponse = BaseFacetResponse<LocationFacetValue, 'location'>;
-
-export interface LocationFacetValue extends BaseFacetValue {
-  value: string;
-}
-
-interface RangeFacetValue<T> extends BaseFacetValue, NonLocationFacetValue {
+interface RangeFacetValue<T> extends BaseFacetValue, SharedFacetValueProperties {
   start: T;
   end: T;
   endInclusive: boolean;
@@ -75,7 +69,6 @@ export interface BaseFacetValue {
 
 export type AnyFacetValueResponse =
   | RegularFacetValue
-  | LocationFacetValue
   | NumericFacetValue
   | DateFacetValue
   | CategoryFacetValue;
@@ -89,9 +82,7 @@ type MappedFacetResponse = {
         ? DateFacetResponse
         : T extends 'hierarchical'
           ? CategoryFacetResponse
-          : T extends 'location'
-            ? LocationFacetResponse
-            : never;
+          : never;
 };
 
 export type AnyFacetResponse = MappedFacetResponse[FacetType];

@@ -4,7 +4,6 @@ import {stateKey} from '../../../app/state-key.js';
 import {
   setContext,
   setCustom,
-  setLocation,
   setView,
 } from '../../../features/commerce/context/context-actions.js';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice.js';
@@ -18,17 +17,11 @@ export interface ContextOptions {
   country: string;
   currency: CurrencyCodeISO4217;
   view: View;
-  location?: UserLocation;
   custom?: CustomContext;
 }
 
 export interface View {
   url: string;
-}
-
-export interface UserLocation {
-  latitude: number;
-  longitude: number;
 }
 
 /**
@@ -79,12 +72,6 @@ export interface Context extends Controller {
   setView(view: View): void;
 
   /**
-   * Sets the location.
-   * @param location - The new location.
-   */
-  setLocation(location: UserLocation): void;
-
-  /**
    * Sets custom context values.
    * @param custom - An object containing custom key-value pairs.
    */
@@ -107,7 +94,6 @@ export interface ContextState {
   country: string;
   currency: CurrencyCodeISO4217;
   view: View;
-  location?: UserLocation;
   custom?: CustomContext;
 }
 
@@ -167,8 +153,6 @@ export function buildContext(engine: CommerceEngine, props: ContextProps = {}): 
       ),
 
     setView: (view: View) => dispatch(setView(view)),
-
-    setLocation: (location: UserLocation) => dispatch(setLocation(location)),
 
     setCustom: (custom: CustomContext) => dispatch(setCustom(custom)),
   };

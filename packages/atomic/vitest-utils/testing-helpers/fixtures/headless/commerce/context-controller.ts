@@ -18,7 +18,6 @@ export const defaultImplementation = {
   setCountry: vi.fn(),
   setCurrency: vi.fn(),
   setView: vi.fn(),
-  setLocation: vi.fn(),
 } satisfies Context;
 
 export const buildFakeContext = ({

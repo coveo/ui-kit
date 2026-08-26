@@ -130,17 +130,13 @@ describe('#augmentCommerceEngineOptions', () => {
 
       const engineOptions = augmentCommerceEngineOptions(sampleCommerceConfig, {
         navigatorContext,
-        context: {
-          ...buildMockCommerceContext(),
-          location: {latitude: 37.7749, longitude: -122.4194},
-        },
+        context: buildMockCommerceContext(),
       });
 
       expect(engineOptions.configuration.context).toEqual({
         view: {url: 'https://example.com'},
         language: 'some-language',
         country: 'some-country',
-        location: {latitude: 37.7749, longitude: -122.4194},
         currency: 'some-currency',
       });
     });

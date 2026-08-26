@@ -8,7 +8,6 @@ import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-face
 import {
   buildMockCategoryFacetResponse,
   buildMockCommerceDateFacetResponse,
-  buildMockCommerceLocationFacetResponse,
   buildMockCommerceNumericFacetResponse,
   buildMockCommerceRegularFacetResponse,
 } from '../../../../test/mock-commerce-facet-response.js';
@@ -55,9 +54,6 @@ describe('SSR FacetGenerator', () => {
           break;
         case 'numericalRange':
           response = buildMockCommerceNumericFacetResponse({facetId, type});
-          break;
-        case 'location':
-          response = buildMockCommerceLocationFacetResponse({facetId, type});
           break;
         default:
           response = buildMockCommerceRegularFacetResponse({facetId, type});
@@ -117,10 +113,6 @@ describe('SSR FacetGenerator', () => {
           {
             facetId: 'regular-facet',
             type: 'regular',
-          },
-          {
-            facetId: 'location-facet',
-            type: 'location',
           },
         ];
         state = buildMockCommerceState();

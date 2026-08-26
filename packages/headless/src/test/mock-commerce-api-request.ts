@@ -16,8 +16,6 @@ export const buildMockBaseCommerceAPIRequest = (
     currency: 'CAD',
     context: {
       user: {
-        latitude: 46.767531,
-        longitude: -71.3096,
         userAgent:
           'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36',
       },

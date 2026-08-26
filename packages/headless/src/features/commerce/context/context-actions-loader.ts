@@ -3,16 +3,14 @@ import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.
 import {
   type SetContextPayload,
   type SetCustomPayload,
-  type SetLocationPayload,
   type SetViewPayload,
   setContext,
   setCustom,
-  setLocation,
   setView,
 } from './context-actions.js';
 import {contextReducer as commerceContext} from './context-slice.js';
 
-export type {SetContextPayload, SetCustomPayload, SetLocationPayload, SetViewPayload};
+export type {SetContextPayload, SetCustomPayload, SetViewPayload};
 
 /**
  * The context action creators.
@@ -38,14 +36,6 @@ export interface ContextActionCreators {
   setView(payload: SetViewPayload): PayloadAction<SetViewPayload>;
 
   /**
-   * Sets the location context property without modifying any other context properties.
-   *
-   * @param payload - The action creator payload.
-   * @returns A dispatchable action.
-   */
-  setLocation(payload: SetLocationPayload): PayloadAction<SetLocationPayload>;
-
-  /**
    * Sets the custom context property without modifying any other context properties.
    *
    * @param payload - The action creator payload.
@@ -68,7 +58,6 @@ export function loadContextActions(engine: CommerceEngine): ContextActionCreator
   return {
     setContext,
     setView,
-    setLocation,
     setCustom,
   };
 }

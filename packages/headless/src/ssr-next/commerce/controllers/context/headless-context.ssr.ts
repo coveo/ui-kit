@@ -5,21 +5,12 @@ import {
   type ContextProps,
   type ContextState,
   type CustomContext,
-  type UserLocation,
   type View,
 } from '../../../../controllers/commerce/context/headless-context.js';
 import {MissingControllerProps} from '../../../common/errors.js';
 import type {UniversalControllerDefinitionWithProps} from '../../types/controller-definitions.js';
 
-export type {
-  Context,
-  ContextOptions,
-  ContextProps,
-  ContextState,
-  CustomContext,
-  UserLocation,
-  View,
-};
+export type {Context, ContextOptions, ContextProps, ContextState, CustomContext, View};
 
 export type ContextDefinition = UniversalControllerDefinitionWithProps<
   Context,

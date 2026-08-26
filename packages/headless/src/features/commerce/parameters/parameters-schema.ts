@@ -3,7 +3,6 @@ import {NumberValue, RecordValue} from '@coveo/bueno';
 export const parametersDefinition = {
   f: new RecordValue(),
   fExcluded: new RecordValue(),
-  lf: new RecordValue(),
   cf: new RecordValue(),
   nf: new RecordValue(),
   nfExcluded: new RecordValue(),

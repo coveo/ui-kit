@@ -258,23 +258,6 @@ describe('#buildBaseCommerceAPIRequest', () => {
     expect(request.currency).toBe(currency);
   });
 
-  it('sets #context.user.latitude and #context.user.longitude to the corresponding #state.commerceContext.location values', () => {
-    const location = {
-      latitude: 1,
-      longitude: 2,
-    };
-    setState({
-      commerceContext: {
-        ...state.commerceContext,
-        location,
-      },
-    });
-    request = buildBaseCommerceAPIRequest(state, navigatorContext);
-
-    expect(request.context.user?.latitude).toBe(location.latitude);
-    expect(request.context.user?.longitude).toBe(location.longitude);
-  });
-
   it('when #navigatorContext.userAgent is defined, sets #context.user.userAgent to its specified value', () => {
     const userAgent = 'some-user-agent';
     setNavigatorContext({

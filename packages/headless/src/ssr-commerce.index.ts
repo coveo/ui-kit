@@ -114,7 +114,6 @@ export type {
   ContextProps,
   ContextState,
   CustomContext,
-  UserLocation,
   View,
 } from './ssr/commerce/controllers/context/headless-context.ssr.js';
 export {defineContext} from './ssr/commerce/controllers/context/headless-context.ssr.js';
@@ -148,9 +147,6 @@ export type {
   FacetGenerator,
   FacetGeneratorState,
   FacetType,
-  LocationFacet,
-  LocationFacetState,
-  LocationFacetValue,
   MappedFacetState,
   MappedFacetStates,
   MappedGeneratedFacetController,

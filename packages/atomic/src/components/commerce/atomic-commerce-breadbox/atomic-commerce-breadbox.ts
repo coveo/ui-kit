@@ -11,7 +11,6 @@ import {
   type Context,
   type ContextState,
   type DateFacetValue,
-  type LocationFacetValue,
   type NumericFacetValue,
   type ProductListing,
   type RegularFacetValue,
@@ -43,12 +42,7 @@ import {AriaLiveRegionController, FocusTargetController} from '@/src/utils/acces
 import {parseDate} from '@/src/utils/date-utils';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
 
-type AnyFacetValue =
-  | RegularFacetValue
-  | LocationFacetValue
-  | NumericFacetValue
-  | DateFacetValue
-  | CategoryFacetValue;
+type AnyFacetValue = RegularFacetValue | NumericFacetValue | DateFacetValue | CategoryFacetValue;
 
 /**
  * The `atomic-commerce-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
@@ -300,7 +294,6 @@ export class AtomicCommerceBreadbox
           getFieldValueCaption(field, (value.value as RegularFacetValue).value, this.bindings.i18n),
         ];
       default: {
-        // TODO COMHUB-291 support location breadcrumb
         this.bindings.engine.logger.warn('Unexpected breadcrumb type.');
         return [];
       }

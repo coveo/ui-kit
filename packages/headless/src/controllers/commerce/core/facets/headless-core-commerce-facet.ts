@@ -11,7 +11,6 @@ import type {FacetType} from '../../../../features/commerce/facets/facet-set/int
 import type {
   AnyFacetRequest,
   CategoryFacetValueRequest,
-  LocationFacetValueRequest,
 } from '../../../../features/commerce/facets/facet-set/interfaces/request.js';
 import type {
   AnyFacetResponse,
@@ -19,7 +18,6 @@ import type {
   BaseFacetValue,
   CategoryFacetValue,
   DateFacetValue,
-  LocationFacetValue,
   NumericFacetValue,
   RegularFacetValue,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response.js';
@@ -44,8 +42,6 @@ export type {
   DateRangeRequest,
   FacetType,
   FacetValueRequest,
-  LocationFacetValue,
-  LocationFacetValueRequest,
   NumericFacetValue,
   NumericRangeRequest,
   RegularFacetValue,
