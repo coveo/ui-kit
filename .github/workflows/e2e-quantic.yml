@@ -35,7 +35,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
@@ -58,7 +58,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 1
           filter: blob:none
@@ -110,7 +110,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
       - uses: ./.github/actions/post-scratch-org-links-on-pr
@@ -132,7 +132,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
@@ -153,7 +153,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
@@ -175,7 +175,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
