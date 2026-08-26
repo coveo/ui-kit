@@ -103,16 +103,10 @@ export type {
   DateRangeRequest,
   FacetType,
   FacetValueRequest,
-  LocationFacetValue,
-  LocationFacetValueRequest,
   NumericFacetValue,
   NumericRangeRequest,
   RegularFacetValue,
 } from './controllers/commerce/core/facets/headless-core-commerce-facet.js';
-export type {
-  LocationFacet,
-  LocationFacetState,
-} from './controllers/commerce/core/facets/location/headless-commerce-location-facet.js';
 export type {
   NumericFacet,
   NumericFacetState,
@@ -301,7 +295,6 @@ export * from './features/commerce/facets/category-facet/category-facet-actions-
 export * from './features/commerce/facets/core-facet/core-facet-actions-loader.js';
 export * from './features/commerce/facets/date-facet/date-facet-actions-loader.js';
 export type {FieldSuggestionsFacet} from './features/commerce/facets/field-suggestions-order/field-suggestions-order-state.ts';
-export * from './features/commerce/facets/location-facet/location-facet-actions-loader.js';
 export * from './features/commerce/facets/numeric-facet/numeric-facet-actions-loader.js';
 export * from './features/commerce/facets/regular-facet/regular-facet-actions-loader.js';
 export * from './features/commerce/instant-products/instant-products-actions-loader.js';
