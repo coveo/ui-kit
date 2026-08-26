@@ -53,22 +53,6 @@ export function extractSurfaceType(content: Record<string, unknown>): string | u
   return undefined;
 }
 
-export function extractSurfaceId(content: Record<string, unknown>): string {
-  const messages = content.messages;
-  if (!Array.isArray(messages)) {
-    return '';
-  }
-  for (const message of messages) {
-    if (isRecord(message) && 'createSurface' in message) {
-      const cs = message.createSurface;
-      if (isRecord(cs) && typeof cs.surfaceId === 'string') {
-        return cs.surfaceId;
-      }
-    }
-  }
-  return '';
-}
-
 export class UnifiedRuntime {
   private static cache = new WeakMap<FullEngine, Map<string, UnifiedRuntime>>();
 

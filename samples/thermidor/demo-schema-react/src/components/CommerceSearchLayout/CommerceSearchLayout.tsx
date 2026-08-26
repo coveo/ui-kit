@@ -17,7 +17,6 @@ import styles from './CommerceSearchLayout.module.css';
 
 interface CommerceSearchLayoutProps {
   surfaceId: string;
-  surfaceType: string;
 }
 
 interface ComponentEntry {
