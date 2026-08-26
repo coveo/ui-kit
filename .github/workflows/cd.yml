@@ -240,6 +240,10 @@ jobs:
   commit-artifact-upload:
     name: Upload commit artifacts to S3
     needs: [build-cdn, release]
+    # `release` is a soft dependency: it is only read to decide which channels to
+    # update. If npm was published, the CDN must follow, so a failure anywhere in
+    # the release job must never skip this deploy.
+    if: ${{ !cancelled() && needs.build-cdn.result == 'success' }}
     runs-on: ubuntu-latest
     # TODO(KIT-5712): Rename to 'CDN Deploy' once token vending machine is available
     environment: 'Prerelease (CDN)'
