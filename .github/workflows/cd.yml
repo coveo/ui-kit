@@ -22,6 +22,7 @@ jobs:
       id-token: write
     outputs:
       published: ${{ steps.changesets.outputs.published }}
+      publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
@@ -58,15 +59,33 @@ jobs:
         run: |
           echo "The publish command failed before any package was published." >&2
           exit 1
+      - name: Update release/v3 bookmark
+        if: ${{ steps.changesets.outputs.published == 'true' }}
+        run: |
+          git tag -f release/v3
+          git push origin refs/tags/release/v3 --force
+  sentry-create-ui:
+    name: Upload create-ui source maps to Sentry
+    needs: release
+    if: ${{ contains(needs.release.outputs.publishedPackages, '@coveo/create-ui') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: 'refs/tags/release/v3'
+      - uses: ./.github/actions/setup
+      - name: Build create-ui
+        run: pnpm exec turbo run build --filter=@coveo/create-ui
       - name: Read create-ui version
         id: create-ui-version
-        if: ${{ steps.changesets.outputs.published == 'true' && contains(steps.changesets.outputs.publishedPackages, '@coveo/create-ui') }}
-        continue-on-error: true
         working-directory: packages/create-ui
         run: echo "version=$(jq -r '.version' package.json)" >> "$GITHUB_OUTPUT"
-      - name: Upload create-ui source maps to Sentry
-        if: ${{ steps.changesets.outputs.published == 'true' && contains(steps.changesets.outputs.publishedPackages, '@coveo/create-ui') && steps.create-ui-version.outputs.version != '' }}
-        continue-on-error: true
+      - name: Upload source maps
         uses: step-security/getsentry-action-release@4530160f6bc962e1dd67e2703064a7a5cfd401fb # v3.7.0
         with:
           release: create-ui@${{ steps.create-ui-version.outputs.version }}
@@ -79,11 +98,6 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: coveo-platform
           SENTRY_PROJECT: create-ui
-      - name: Update release/v3 bookmark
-        if: ${{ steps.changesets.outputs.published == 'true' }}
-        run: |
-          git tag -f release/v3
-          git push origin refs/tags/release/v3 --force
   quantic-prod:
     if: ${{ needs.release.outputs.published == 'true' }}
     needs: release
