@@ -6,15 +6,11 @@ import type {Product, ProductCarouselProps} from '@coveo/thermidor-schema';
 import {A2UIProductCard} from '../ProductCard/ProductCard.js';
 import styles from './ProductCarousel.module.css';
 
-export function ProductCarouselRenderer({
-  props,
-}: {
-  props: ProductCarouselProps & {heading?: string};
-}) {
+export function ProductCarouselRenderer({props}: {props: ProductCarouselProps}) {
   const stateSource = useStateSource();
   const controller = useRemoteController(stateSource, props.componentId, props.componentType);
   const products = controller.state?.products ?? [];
-  const heading = props.heading ?? 'Featured products';
+  const heading = controller.state?.heading ?? '';
   const trackRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -55,7 +51,7 @@ export function ProductCarouselRenderer({
 
   return (
     <section className={styles.container}>
-      <h3 className={styles.heading}>{heading}</h3>
+      {heading && <h3 className={styles.heading}>{heading}</h3>}
       <div className={styles.trackWrapper}>
         {canScrollLeft && (
           <button
@@ -71,7 +67,7 @@ export function ProductCarouselRenderer({
           ref={trackRef}
           tabIndex={0}
           role="region"
-          aria-label={heading}
+          aria-label={heading || 'Products'}
         >
           {products.map((product: Product) => (
             <div className={styles.cardSlot} key={product.permanentid}>

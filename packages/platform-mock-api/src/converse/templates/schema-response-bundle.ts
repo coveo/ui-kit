@@ -105,6 +105,7 @@ const stateSnapshot: ConverseEvent = StateSnapshot({
       ],
     },
     'pl-budget-surfboard': {
+      heading: 'Surfboard',
       products: [
         {
           permanentid: 'gid://shopify/ProductVariant/50674988548370',
@@ -123,6 +124,7 @@ const stateSnapshot: ConverseEvent = StateSnapshot({
       ],
     },
     'pl-budget-wetsuit': {
+      heading: 'Wetsuit',
       products: [
         {
           permanentid: 'gid://shopify/ProductVariant/50674590384402',
@@ -142,6 +144,7 @@ const stateSnapshot: ConverseEvent = StateSnapshot({
       ],
     },
     'pl-budget-bag': {
+      heading: 'Surfboard Bag',
       products: [
         {
           permanentid: 'gid://shopify/ProductVariant/50677311504658',
@@ -161,6 +164,7 @@ const stateSnapshot: ConverseEvent = StateSnapshot({
       ],
     },
     'pl-budget-wax': {
+      heading: 'Surf Wax',
       products: [
         {
           permanentid: 'gid://shopify/ProductVariant/50670409482514',
@@ -180,6 +184,7 @@ const stateSnapshot: ConverseEvent = StateSnapshot({
       ],
     },
     'pl-midrange-surfboard': {
+      heading: 'Surfboard',
       products: [
         {
           permanentid: 'gid://shopify/ProductVariant/50677302952210',
@@ -199,6 +204,7 @@ const stateSnapshot: ConverseEvent = StateSnapshot({
       ],
     },
     'pl-midrange-wetsuit': {
+      heading: 'Wetsuit',
       products: [
         {
           permanentid: 'gid://shopify/ProductVariant/50674582290706',
@@ -218,6 +224,7 @@ const stateSnapshot: ConverseEvent = StateSnapshot({
       ],
     },
     'pl-midrange-bag': {
+      heading: 'Surfboard Bag',
       products: [
         {
           permanentid: 'gid://shopify/ProductVariant/50675961954578',
@@ -236,6 +243,7 @@ const stateSnapshot: ConverseEvent = StateSnapshot({
       ],
     },
     'pl-midrange-wax': {
+      heading: 'Surf Wax',
       products: [
         {
           permanentid: 'gid://shopify/ProductVariant/50670410924306',
@@ -255,6 +263,7 @@ const stateSnapshot: ConverseEvent = StateSnapshot({
       ],
     },
     'pl-premium-surfboard': {
+      heading: 'Surfboard',
       products: [
         {
           permanentid: 'gid://shopify/ProductVariant/50675335627026',
@@ -274,6 +283,7 @@ const stateSnapshot: ConverseEvent = StateSnapshot({
       ],
     },
     'pl-premium-wetsuit': {
+      heading: 'Wetsuit',
       products: [
         {
           permanentid: 'gid://shopify/ProductVariant/50674626887954',
@@ -293,6 +303,7 @@ const stateSnapshot: ConverseEvent = StateSnapshot({
       ],
     },
     'pl-premium-bag': {
+      heading: 'Surfboard Bag',
       products: [
         {
           permanentid: 'gid://shopify/ProductVariant/50677311832338',
@@ -312,6 +323,7 @@ const stateSnapshot: ConverseEvent = StateSnapshot({
       ],
     },
     'pl-premium-wax': {
+      heading: 'Surf Wax',
       products: [
         {
           permanentid: 'gid://shopify/ProductVariant/50670411088146',

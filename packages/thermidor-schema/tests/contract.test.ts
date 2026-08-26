@@ -16,7 +16,7 @@ import {
   NextActionsBarSchema,
   NextActionsStateSchema,
   ProductCarouselSchema,
-  ProductListStateSchema,
+  ProductCarouselStateSchema,
   ProductSchema,
   SelectActionPayloadSchema,
   SetItemsPayloadSchema,
@@ -89,10 +89,10 @@ const fixtures = [
     valid: false,
   },
   {
-    file: 'product-list-state.valid.json',
-    schema: ProductListStateSchema,
+    file: 'product-carousel-state.valid.json',
+    schema: ProductCarouselStateSchema,
     schemaId:
-      'https://schema.thermidor.coveo.com/components/product-carousel.schema.json#/$defs/ProductListState',
+      'https://schema.thermidor.coveo.com/components/product-carousel.schema.json#/$defs/ProductCarouselState',
     valid: true,
   },
   {
@@ -204,7 +204,7 @@ describe('component contract discriminated union', () => {
     const contract = {
       actions: {},
       componentType: 'product-carousel',
-      state: {products: []},
+      state: {heading: 'Featured', products: []},
     };
     expect(ComponentContractsSchema.safeParse(contract).success).toBe(true);
   });
