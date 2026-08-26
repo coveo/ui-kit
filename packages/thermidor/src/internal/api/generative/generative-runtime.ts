@@ -25,7 +25,7 @@ export interface CoveoConversationControllerAction {
 }
 
 export interface DecomposedRouteSignal {
-  useCase: 'decomposedCommerce';
+  useCase: 'decomposedCommerceSearch';
   surfaceType: string;
   surfaceId: string;
 }

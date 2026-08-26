@@ -1,6 +1,6 @@
 import {describe, it, expect, vi, beforeEach} from 'vitest';
 import {render, screen} from '@testing-library/react';
-import {DecomposedCommerceLayout} from './DecomposedCommerceLayout.js';
+import {CommerceSearchLayout} from '../CommerceSearchLayout/CommerceSearchLayout.js';
 
 /**
  * Feature: commerce-surface-decomposition, Property 6: Partial component set handling
@@ -73,7 +73,7 @@ vi.mock('../../a2ui/SearchBox/SearchBox.js', () => ({
   ),
 }));
 
-vi.mock('./DecomposedCommerceLayout.module.css', () => ({
+vi.mock('./CommerceSearchLayout.module.css', () => ({
   default: {
     layout: 'layout',
     header: 'header',
@@ -113,9 +113,9 @@ beforeEach(() => {
 describe('Feature: commerce-surface-decomposition, Property 6: Partial component set handling', () => {
   it('renders all four components when all are present', () => {
     mockSurface = buildSurface([...ALL_COMPONENT_TYPES]);
-    render(<DecomposedCommerceLayout surfaceId="test-surface" surfaceType="commerceSearch" />);
+    render(<CommerceSearchLayout surfaceId="test-surface" surfaceType="commerceSearch" />);
 
-    expect(screen.getByTestId('decomposed-commerce-layout')).toBeDefined();
+    expect(screen.getByTestId('commerce-search-layout')).toBeDefined();
     expect(screen.getByTestId('product-list-product-list-1')).toBeDefined();
     expect(screen.getByTestId('pagination-pagination-1')).toBeDefined();
     expect(screen.getByTestId('sort-sort-1')).toBeDefined();
@@ -123,9 +123,9 @@ describe('Feature: commerce-surface-decomposition, Property 6: Partial component
 
   it('renders only product-list and pagination without error when search-box and sort are absent', () => {
     mockSurface = buildSurface(['product-list', 'pagination']);
-    render(<DecomposedCommerceLayout surfaceId="test-surface" surfaceType="commerceSearch" />);
+    render(<CommerceSearchLayout surfaceId="test-surface" surfaceType="commerceSearch" />);
 
-    expect(screen.getByTestId('decomposed-commerce-layout')).toBeDefined();
+    expect(screen.getByTestId('commerce-search-layout')).toBeDefined();
     expect(screen.getByTestId('product-list-product-list-1')).toBeDefined();
     expect(screen.getByTestId('pagination-pagination-1')).toBeDefined();
     expect(screen.queryByTestId('sort-sort-1')).toBeNull();
@@ -133,9 +133,9 @@ describe('Feature: commerce-surface-decomposition, Property 6: Partial component
 
   it('renders only search-box without error when all others are absent', () => {
     mockSurface = buildSurface(['search-box']);
-    render(<DecomposedCommerceLayout surfaceId="test-surface" surfaceType="commerceSearch" />);
+    render(<CommerceSearchLayout surfaceId="test-surface" surfaceType="commerceSearch" />);
 
-    expect(screen.getByTestId('decomposed-commerce-layout')).toBeDefined();
+    expect(screen.getByTestId('commerce-search-layout')).toBeDefined();
     expect(screen.queryByTestId('product-list-product-list-1')).toBeNull();
     expect(screen.queryByTestId('pagination-pagination-1')).toBeNull();
     expect(screen.queryByTestId('sort-sort-1')).toBeNull();
@@ -143,9 +143,9 @@ describe('Feature: commerce-surface-decomposition, Property 6: Partial component
 
   it('renders empty layout without error when no components are present', () => {
     mockSurface = buildSurface([]);
-    render(<DecomposedCommerceLayout surfaceId="test-surface" surfaceType="commerceSearch" />);
+    render(<CommerceSearchLayout surfaceId="test-surface" surfaceType="commerceSearch" />);
 
-    expect(screen.getByTestId('decomposed-commerce-layout')).toBeDefined();
+    expect(screen.getByTestId('commerce-search-layout')).toBeDefined();
     expect(screen.queryByTestId('product-list-product-list-1')).toBeNull();
     expect(screen.queryByTestId('pagination-pagination-1')).toBeNull();
     expect(screen.queryByTestId('sort-sort-1')).toBeNull();
@@ -153,9 +153,9 @@ describe('Feature: commerce-surface-decomposition, Property 6: Partial component
 
   it('renders only sort and product-list without error when search-box and pagination are absent', () => {
     mockSurface = buildSurface(['sort', 'product-list']);
-    render(<DecomposedCommerceLayout surfaceId="test-surface" surfaceType="commerceSearch" />);
+    render(<CommerceSearchLayout surfaceId="test-surface" surfaceType="commerceSearch" />);
 
-    expect(screen.getByTestId('decomposed-commerce-layout')).toBeDefined();
+    expect(screen.getByTestId('commerce-search-layout')).toBeDefined();
     expect(screen.getByTestId('sort-sort-1')).toBeDefined();
     expect(screen.getByTestId('product-list-product-list-1')).toBeDefined();
     expect(screen.queryByTestId('search-box-search-box-1')).toBeNull();
@@ -165,7 +165,7 @@ describe('Feature: commerce-surface-decomposition, Property 6: Partial component
   it('renders null when surface is not found', () => {
     mockSurface = undefined;
     const {container} = render(
-      <DecomposedCommerceLayout surfaceId="non-existent" surfaceType="commerceSearch" />
+      <CommerceSearchLayout surfaceId="non-existent" surfaceType="commerceSearch" />
     );
 
     expect(container.innerHTML).toBe('');
@@ -203,12 +203,10 @@ describe('Feature: commerce-surface-decomposition, Property 6: Partial component
       (_label, subset) => {
         mockSurface = buildSurface(subset as string[]);
         const {container} = render(
-          <DecomposedCommerceLayout surfaceId="test-surface" surfaceType="commerceSearch" />
+          <CommerceSearchLayout surfaceId="test-surface" surfaceType="commerceSearch" />
         );
 
-        expect(
-          container.querySelector('[data-testid="decomposed-commerce-layout"]')
-        ).not.toBeNull();
+        expect(container.querySelector('[data-testid="commerce-search-layout"]')).not.toBeNull();
 
         for (const componentType of RENDERED_COMPONENT_TYPES) {
           const testId = `${componentType}-${componentType}-1`;
@@ -232,7 +230,7 @@ describe('Feature: commerce-surface-decomposition, Property 6: Partial component
     it('renders the non-interactive "Facets (coming soon)" placeholder', () => {
       mockSurface = buildSurface(['product-list']);
       const {container} = render(
-        <DecomposedCommerceLayout surfaceId="test-surface" surfaceType="commerceSearch" />
+        <CommerceSearchLayout surfaceId="test-surface" surfaceType="commerceSearch" />
       );
 
       const sidebar = screen.getByText('Facets (coming soon)').closest('aside')!;
@@ -247,7 +245,7 @@ describe('Feature: commerce-surface-decomposition, Property 6: Partial component
     it('sort, product-list, and pagination render in the main slot', () => {
       mockSurface = buildSurface(['sort', 'product-list', 'pagination']);
       const {container} = render(
-        <DecomposedCommerceLayout surfaceId="test-surface" surfaceType="commerceSearch" />
+        <CommerceSearchLayout surfaceId="test-surface" surfaceType="commerceSearch" />
       );
 
       const main = container.querySelector('main');
@@ -260,7 +258,7 @@ describe('Feature: commerce-surface-decomposition, Property 6: Partial component
     it('search-box is not rendered as a visible component (state consumed by QuerySummary)', () => {
       mockSurface = buildSurface(['search-box', 'product-list', 'pagination', 'sort']);
       const {container} = render(
-        <DecomposedCommerceLayout surfaceId="test-surface" surfaceType="commerceSearch" />
+        <CommerceSearchLayout surfaceId="test-surface" surfaceType="commerceSearch" />
       );
 
       expect(container.querySelector('[data-testid="search-box-search-box-1"]')).toBeNull();

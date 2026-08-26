@@ -95,7 +95,7 @@ export type HydratedUseCase = 'commerceSearch' | 'search';
 /**
  * All routed use cases, including decomposed surfaces that bypass hydration.
  */
-export type RoutedUseCase = HydratedUseCase | 'decomposedCommerce';
+export type RoutedUseCase = HydratedUseCase | 'decomposedCommerceSearch';
 
 /**
  * The serializable portion of a routed interface stored in state.
@@ -103,7 +103,7 @@ export type RoutedUseCase = HydratedUseCase | 'decomposedCommerce';
  */
 export type SerializableRoutedInterface =
   | {[K in HydratedUseCase]: {useCase: K}}[HydratedUseCase]
-  | {useCase: 'decomposedCommerce'; surfaceType: string; surfaceId: string};
+  | {useCase: 'decomposedCommerceSearch'; surfaceType: string; surfaceId: string};
 
 /**
  * The full routed interface exposed to public consumers.
@@ -112,7 +112,7 @@ export type SerializableRoutedInterface =
  */
 export type RoutedInterface =
   | {[K in HydratedUseCase]: {useCase: K; interface: UseCaseInterfaceMap[K]}}[HydratedUseCase]
-  | {useCase: 'decomposedCommerce'; surfaceType: string; surfaceId: string};
+  | {useCase: 'decomposedCommerceSearch'; surfaceType: string; surfaceId: string};
 
 export interface AgentResponse {
   /**

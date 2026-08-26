@@ -13,9 +13,9 @@ import type {
   SortProps,
   SearchBoxProps,
 } from '@coveo/thermidor-schema';
-import styles from './DecomposedCommerceLayout.module.css';
+import styles from './CommerceSearchLayout.module.css';
 
-interface DecomposedCommerceLayoutProps {
+interface CommerceSearchLayoutProps {
   surfaceId: string;
   surfaceType: string;
 }
@@ -38,7 +38,7 @@ interface ComponentEntry {
  *
  * Absent component slots render nothing (no error).
  */
-export function DecomposedCommerceLayout({surfaceId}: DecomposedCommerceLayoutProps) {
+export function CommerceSearchLayout({surfaceId}: CommerceSearchLayoutProps) {
   const {getSurface, clearSurfaces, processMessages, version} = useA2UI();
 
   const stateSource = useStateSource();
@@ -94,7 +94,7 @@ export function DecomposedCommerceLayout({surfaceId}: DecomposedCommerceLayoutPr
   }
 
   return (
-    <div data-testid="decomposed-commerce-layout">
+    <div data-testid="commerce-search-layout">
       <div className={styles.page}>
         <aside className={styles.sidebar}>Facets (coming soon)</aside>
         <main className={styles.main}>

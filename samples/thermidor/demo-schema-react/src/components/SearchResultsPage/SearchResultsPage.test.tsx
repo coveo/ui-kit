@@ -3,9 +3,9 @@ import {describe, it, expect, vi} from 'vitest';
 import type {RoutedInterface} from '@coveo/thermidor';
 import {SearchResultsPage} from './SearchResultsPage.js';
 
-vi.mock('../DecomposedCommerceLayout/DecomposedCommerceLayout.js', () => ({
-  DecomposedCommerceLayout: ({surfaceId}: {surfaceId: string}) => (
-    <div data-testid="decomposed-commerce-layout">{surfaceId}</div>
+vi.mock('../CommerceSearchLayout/CommerceSearchLayout.js', () => ({
+  CommerceSearchLayout: ({surfaceId}: {surfaceId: string}) => (
+    <div data-testid="commerce-search-layout">{surfaceId}</div>
   ),
 }));
 
@@ -16,7 +16,7 @@ vi.mock('../ProductTargeting/ProductTargeting.js', () => ({
 }));
 
 const decomposedInterface = {
-  useCase: 'decomposedCommerce',
+  useCase: 'decomposedCommerceSearch',
   surfaceType: 'commerceSearch',
   surfaceId: 'ui-commerce-search',
 } as RoutedInterface;
@@ -31,10 +31,10 @@ const defaultProps = {
 };
 
 describe('SearchResultsPage', () => {
-  it('renders the decomposed commerce layout for a decomposedCommerce interface', () => {
+  it('renders the decomposed commerce layout for a decomposedCommerceSearch interface', () => {
     render(<SearchResultsPage {...defaultProps} />);
 
-    expect(screen.getByTestId('decomposed-commerce-layout')).toBeDefined();
+    expect(screen.getByTestId('commerce-search-layout')).toBeDefined();
     expect(screen.getByText('ui-commerce-search')).toBeDefined();
   });
 
@@ -42,7 +42,7 @@ describe('SearchResultsPage', () => {
     render(<SearchResultsPage {...defaultProps} />);
 
     const targeting = screen.getByTestId('product-targeting');
-    expect(targeting.contains(screen.getByTestId('decomposed-commerce-layout'))).toBe(true);
+    expect(targeting.contains(screen.getByTestId('commerce-search-layout'))).toBe(true);
   });
 
   it('renders a "Back to conversation" button that calls onBackToConversation', () => {

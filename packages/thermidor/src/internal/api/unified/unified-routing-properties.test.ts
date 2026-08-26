@@ -45,7 +45,7 @@ function routeA2uiSurface(
     if (surfaceType === 'commerceSearch') {
       const surfaceId = extractSurfaceId(content);
       deps.statePort.setRoutedInterface(turnId, {
-        useCase: 'decomposedCommerce',
+        useCase: 'decomposedCommerceSearch',
         surfaceType,
         surfaceId,
       });
@@ -405,7 +405,7 @@ describe('Feature: commerce-surface-decomposition, Property 3: Decomposed surfac
           const [, routedData] = deps.statePort.setRoutedInterface.mock.calls[0];
           expect(routedData).not.toHaveProperty('interface');
           expect(routedData).not.toHaveProperty('snapshot');
-          expect(routedData.useCase).toBe('decomposedCommerce');
+          expect(routedData.useCase).toBe('decomposedCommerceSearch');
           deps.surfaceProcessor.processSnapshot.mockClear();
           deps.statePort.setRoutedInterface.mockClear();
         }
@@ -431,7 +431,7 @@ describe('Feature: commerce-surface-decomposition, Property 5: Navigation signal
      *
      * For ANY A2-UI snapshot with surfaceType === 'commerceSearch',
      * the callback SHALL emit a routed navigation signal via setRoutedInterface
-     * with useCase='decomposedCommerce', surfaceType, and surfaceId.
+     * with useCase='decomposedCommerceSearch', surfaceType, and surfaceId.
      */
     fc.assert(
       fc.property(
@@ -442,7 +442,7 @@ describe('Feature: commerce-surface-decomposition, Property 5: Navigation signal
           expect(deps.statePort.setRoutedInterface).toHaveBeenCalledOnce();
           const [calledTurnId, routedData] = deps.statePort.setRoutedInterface.mock.calls[0];
           expect(calledTurnId).toBe(turnId);
-          expect(routedData.useCase).toBe('decomposedCommerce');
+          expect(routedData.useCase).toBe('decomposedCommerceSearch');
           expect(routedData.surfaceType).toBe('commerceSearch');
           expect(typeof routedData.surfaceId).toBe('string');
           deps.statePort.setRoutedInterface.mockClear();

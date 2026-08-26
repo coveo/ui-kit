@@ -9,7 +9,7 @@ import type {
 const VALID_USE_CASES: Set<string> = new Set<string>([
   'commerceSearch',
   'search',
-  'decomposedCommerce',
+  'decomposedCommerceSearch',
 ]);
 
 export interface SerializedConverseState {
@@ -57,9 +57,9 @@ export function deserializeToGenerativeState(
     }
 
     if (routedInterface && VALID_USE_CASES.has(routedInterface.useCase)) {
-      if (routedInterface.useCase === 'decomposedCommerce') {
+      if (routedInterface.useCase === 'decomposedCommerceSearch') {
         turn.routedInterface = {
-          useCase: 'decomposedCommerce',
+          useCase: 'decomposedCommerceSearch',
           surfaceType: routedInterface.surfaceType ?? '',
           surfaceId: routedInterface.surfaceId ?? '',
         };

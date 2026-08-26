@@ -195,7 +195,7 @@ export class UnifiedRuntime {
           if (surfaceType === 'commerceSearch') {
             const surfaceId = extractSurfaceId(content);
             this.statePort.setRoutedInterface(tid, {
-              useCase: 'decomposedCommerce',
+              useCase: 'decomposedCommerceSearch',
               surfaceType,
               surfaceId,
             });

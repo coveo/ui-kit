@@ -25,7 +25,7 @@ This sample uses the `/converse-schema` route on the mock server (via `VITE_COVE
 
 | Prompt                                                                     | Scenario                                                                                                                                                | Status              |
 | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
-| `wetsuits`                                                                 | Decomposed commerce search — navigates to a DecomposedCommerceLayout with search-box, product-list, pagination, and sort catalog components (read-only) | ✅ Fully functional |
+| `wetsuits`                                                                 | Decomposed commerce search — navigates to a CommerceSearchLayout with search-box, product-list, pagination, and sort catalog components (read-only) | ✅ Fully functional |
 | `build a beginner surfing kit with budget, mid-range, and premium options` | BundleDisplay with 3 tiers (Budget/Mid-Range/Premium), product-list state per slot, and NextActionsBar                                                  | ✅ Fully functional |
 | `i like cold-water surfing. compare wetsuits for it`                       | ComparisonTable with 3 wetsuits, images, prices, annotations (Standout/Trade-off/Best for), AI Summary, and NextActionsBar                              | ✅ Fully functional |
 | `boating safety`                                                           | Discovery with 2 ProductCarousels (Life Jackets + Boating Safety Gear) and NextActionsBar                                                               | ✅ Fully functional |
@@ -52,13 +52,13 @@ The app is structured around three views managed by `AppShell`:
 AppShell (providers + navigation)
 ├── LandingPage        — Prompt input with suggestion pills
 ├── ConversationPage   — Chat with A2-UI rendering (catalog-driven)
-└── SearchResultsPage  — Branches by routed use case: `decomposedCommerce` renders DecomposedCommerceLayout (A2-UI catalog renderers);
+└── SearchResultsPage  — Branches by routed use case: `decomposedCommerceSearch` renders CommerceSearchLayout (A2-UI catalog renderers);
                           legacy `commerceSearch` renders the Headless classic-controller UI (product grid, facets, sort, pagination)
 ```
 
 Navigation is determined by what the backend returns:
 
-- Turn with `routedInterface`, use case `decomposedCommerce` → SearchResultsPage rendering `DecomposedCommerceLayout` (A2-UI catalog renderers); legacy `commerceSearch` → SearchResultsPage rendering Headless classic controllers
+- Turn with `routedInterface`, use case `decomposedCommerceSearch` → SearchResultsPage rendering `CommerceSearchLayout` (A2-UI catalog renderers); legacy `commerceSearch` → SearchResultsPage rendering Headless classic controllers
 - Turn with `agentResponse` (reasoning steps / surfaces) → ConversationPage (A2-UI catalog renderers)
 
 ### ConversationPage component tree
@@ -94,7 +94,7 @@ The catalog renderers (ProductCarousel, BundleDisplay, ComparisonTable, NextActi
 
 ### SearchResultsPage (decomposed commerce)
 
-SearchResultsPage branches on `routedInterface.useCase`. For the `decomposedCommerce` use case, it renders `DecomposedCommerceLayout`, which finds components from the A2-UI surface state by `componentType` and places them into spatial slots: the search box in the header, and sort, product list, and pagination in the main region.
+SearchResultsPage branches on `routedInterface.useCase`. For the `decomposedCommerceSearch` use case, it renders `CommerceSearchLayout`, which finds components from the A2-UI surface state by `componentType` and places them into spatial slots: the search box in the header, and sort, product list, and pagination in the main region.
 
 Each slot is a catalog renderer (`SearchBoxRenderer`, `SortRenderer`, `ProductListRenderer`, `PaginationRenderer`) that uses `useRemoteController` to read its component state by `componentId`. Absent components render as empty slots without error.
 
@@ -106,7 +106,7 @@ On this branch these controls are read-only — they render component state only
 | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `src/hooks/use-navigation.ts`                            | Navigation state machine (view transitions, persisted RoutedInterface, submit handling)                                                                                                                                         |
 | `src/a2ui/components.tsx`                                | Catalog definitions and renderers (ProductCarousel, BundleDisplay, ComparisonTable, NextActionsBar) registered via `createCatalog`; also registers the decomposed commerce renderers (ProductList, Pagination, Sort, SearchBox) |
-| `src/components/DecomposedCommerceLayout/`               | Layout shell for decomposed commerce surfaces — places search-box, product-list, pagination, and sort catalog renderers into spatial slots                                                                                      |
+| `src/components/CommerceSearchLayout/`               | Layout shell for decomposed commerce surfaces — places search-box, product-list, pagination, and sort catalog renderers into spatial slots                                                                                      |
 | `src/a2ui/controllers.tsx`                               | `useRemoteController` hook — reactive component state via `useSyncExternalStore`                                                                                                                                                |
 | `src/a2ui/state-source-context.tsx`                      | React context providing `EngineStateSource` to catalog renderers                                                                                                                                                                |
 | `src/a2ui/surfaces.tsx`                                  | Extracts A2-UI messages from activities, converts v1.0 → v0.9, passes to catalog resolver                                                                                                                                       |

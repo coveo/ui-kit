@@ -54,9 +54,9 @@ export function createGenerativeSlice(
         .addCase(actions.setRoutedInterface, (state, {payload}) => {
           const turn = state.turns.find((t) => t.id === payload.turnId);
           if (turn) {
-            if (payload.useCase === 'decomposedCommerce') {
+            if (payload.useCase === 'decomposedCommerceSearch') {
               turn.routedInterface = {
-                useCase: 'decomposedCommerce',
+                useCase: 'decomposedCommerceSearch',
                 surfaceType: payload.surfaceType ?? '',
                 surfaceId: payload.surfaceId ?? '',
               };
