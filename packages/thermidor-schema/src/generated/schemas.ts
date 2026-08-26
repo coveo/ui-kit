@@ -35,6 +35,9 @@ export const ProductSchema = z.strictObject({
 });
 export type Product = z.infer<typeof ProductSchema>;
 
+export const ProductCarouselActionsSchema = z.strictObject({});
+export type ProductCarouselActions = z.infer<typeof ProductCarouselActionsSchema>;
+
 export const ProductListStateSchema = z.strictObject({
   heading: z.string(),
   products: z.array(ProductSchema),
@@ -49,17 +52,39 @@ export const CartItemSchema = z.strictObject({
 });
 export type CartItem = z.infer<typeof CartItemSchema>;
 
+export const UpdateItemQuantityPayloadSchema = z.strictObject({
+  item: CartItemSchema,
+});
+export type UpdateItemQuantityPayload = z.infer<typeof UpdateItemQuantityPayloadSchema>;
+
+export const CartStateSchema = z.strictObject({
+  items: z.array(CartItemSchema),
+});
+export type CartState = z.infer<typeof CartStateSchema>;
+
+export const SelectActionPayloadSchema = z.strictObject({
+  text: z.string(),
+  type: z.enum(['followup', 'search']),
+});
+export type SelectActionPayload = z.infer<typeof SelectActionPayloadSchema>;
+
 export const ActionItemSchema = z.strictObject({
   text: z.string(),
   type: z.enum(['followup', 'search']),
 });
 export type ActionItem = z.infer<typeof ActionItemSchema>;
 
+export const BundleDisplayActionsSchema = z.strictObject({});
+export type BundleDisplayActions = z.infer<typeof BundleDisplayActionsSchema>;
+
 export const BundleSlotSchema = z.strictObject({
   categoryLabel: z.string(),
   surfaceRef: z.string(),
 });
 export type BundleSlot = z.infer<typeof BundleSlotSchema>;
+
+export const ComparisonTableActionsSchema = z.strictObject({});
+export type ComparisonTableActions = z.infer<typeof ComparisonTableActionsSchema>;
 
 export const ComparisonAttributeSchema = z.strictObject({
   key: z.string(),
@@ -77,57 +102,27 @@ export const ComparisonProductSchema = z.strictObject({
 });
 export type ComparisonProduct = z.infer<typeof ComparisonProductSchema>;
 
-export const ProductCarouselActionsSchema = z.strictObject({});
-export type ProductCarouselActions = z.infer<typeof ProductCarouselActionsSchema>;
-
-export const StateClassSchema = z.strictObject({
-  heading: z.string(),
-  products: z.array(ProductSchema),
+export const ProductCarouselSchema = z.strictObject({
+  actions: ProductCarouselActionsSchema,
+  componentType: z.literal('product-carousel'),
+  state: ProductListStateSchema,
 });
-export type StateClass = z.infer<typeof StateClassSchema>;
+export type ProductCarousel = z.infer<typeof ProductCarouselSchema>;
 
 export const SetItemsPayloadSchema = z.strictObject({
   items: z.array(CartItemSchema),
 });
 export type SetItemsPayload = z.infer<typeof SetItemsPayloadSchema>;
 
-export const UpdateItemQuantityPayloadSchema = z.strictObject({
-  item: CartItemSchema,
+export const UpdateItemQuantitySchema = z.strictObject({
+  payload: UpdateItemQuantityPayloadSchema,
 });
-export type UpdateItemQuantityPayload = z.infer<typeof UpdateItemQuantityPayloadSchema>;
+export type UpdateItemQuantity = z.infer<typeof UpdateItemQuantitySchema>;
 
-export const CartStateClassSchema = z.strictObject({
-  items: z.array(CartItemSchema),
+export const SelectActionSchema = z.strictObject({
+  payload: SelectActionPayloadSchema,
 });
-export type CartStateClass = z.infer<typeof CartStateClassSchema>;
-
-export const SelectActionPayloadSchema = z.strictObject({
-  text: z.string(),
-  type: z.enum(['followup', 'search']),
-});
-export type SelectActionPayload = z.infer<typeof SelectActionPayloadSchema>;
-
-export const NextActionsBarStateSchema = z.strictObject({
-  actions: z.array(ActionItemSchema),
-});
-export type NextActionsBarState = z.infer<typeof NextActionsBarStateSchema>;
-
-export const BundleDisplayActionsSchema = z.strictObject({});
-export type BundleDisplayActions = z.infer<typeof BundleDisplayActionsSchema>;
-
-export const ComparisonTableActionsSchema = z.strictObject({});
-export type ComparisonTableActions = z.infer<typeof ComparisonTableActionsSchema>;
-
-export const ComparisonTableStateClassSchema = z.strictObject({
-  attributes: z.array(ComparisonAttributeSchema),
-  products: z.array(ComparisonProductSchema),
-});
-export type ComparisonTableStateClass = z.infer<typeof ComparisonTableStateClassSchema>;
-
-export const CartStateSchema = z.strictObject({
-  items: z.array(CartItemSchema),
-});
-export type CartState = z.infer<typeof CartStateSchema>;
+export type SelectAction = z.infer<typeof SelectActionSchema>;
 
 export const NextActionsStateSchema = z.strictObject({
   actions: z.array(ActionItemSchema),
@@ -147,44 +142,27 @@ export const ComparisonTableStateSchema = z.strictObject({
 });
 export type ComparisonTableState = z.infer<typeof ComparisonTableStateSchema>;
 
-export const ProductCarouselSchema = z.strictObject({
-  actions: ProductCarouselActionsSchema,
-  componentType: z.literal('product-carousel'),
-  state: StateClassSchema,
-});
-export type ProductCarousel = z.infer<typeof ProductCarouselSchema>;
-
 export const SetItemsSchema = z.strictObject({
   payload: SetItemsPayloadSchema,
 });
 export type SetItems = z.infer<typeof SetItemsSchema>;
 
-export const UpdateItemQuantitySchema = z.strictObject({
-  payload: UpdateItemQuantityPayloadSchema,
+export const NextActionsBarActionsSchema = z.strictObject({
+  selectAction: SelectActionSchema,
 });
-export type UpdateItemQuantity = z.infer<typeof UpdateItemQuantitySchema>;
-
-export const SelectActionSchema = z.strictObject({
-  payload: SelectActionPayloadSchema,
-});
-export type SelectAction = z.infer<typeof SelectActionSchema>;
-
-export const BundleDisplayStateClassSchema = z.strictObject({
-  tiers: z.array(BundleTierSchema),
-});
-export type BundleDisplayStateClass = z.infer<typeof BundleDisplayStateClassSchema>;
-
-export const ComparisonTableSchema = z.strictObject({
-  actions: ComparisonTableActionsSchema,
-  componentType: z.literal('comparison-table'),
-  state: ComparisonTableStateClassSchema,
-});
-export type ComparisonTable = z.infer<typeof ComparisonTableSchema>;
+export type NextActionsBarActions = z.infer<typeof NextActionsBarActionsSchema>;
 
 export const BundleDisplayStateSchema = z.strictObject({
   tiers: z.array(BundleTierSchema),
 });
 export type BundleDisplayState = z.infer<typeof BundleDisplayStateSchema>;
+
+export const ComparisonTableSchema = z.strictObject({
+  actions: ComparisonTableActionsSchema,
+  componentType: z.literal('comparison-table'),
+  state: ComparisonTableStateSchema,
+});
+export type ComparisonTable = z.infer<typeof ComparisonTableSchema>;
 
 export const CartActionsSchema = z.strictObject({
   setItems: SetItemsSchema,
@@ -192,31 +170,26 @@ export const CartActionsSchema = z.strictObject({
 });
 export type CartActions = z.infer<typeof CartActionsSchema>;
 
-export const NextActionsBarActionsSchema = z.strictObject({
-  selectAction: SelectActionSchema,
+export const NextActionsBarSchema = z.strictObject({
+  actions: NextActionsBarActionsSchema,
+  componentType: z.literal('next-actions-bar'),
+  state: NextActionsStateSchema,
 });
-export type NextActionsBarActions = z.infer<typeof NextActionsBarActionsSchema>;
+export type NextActionsBar = z.infer<typeof NextActionsBarSchema>;
 
 export const BundleDisplaySchema = z.strictObject({
   actions: BundleDisplayActionsSchema,
   componentType: z.literal('bundle-display'),
-  state: BundleDisplayStateClassSchema,
+  state: BundleDisplayStateSchema,
 });
 export type BundleDisplay = z.infer<typeof BundleDisplaySchema>;
 
 export const CartSchema = z.strictObject({
   actions: CartActionsSchema,
   componentType: z.literal('cart'),
-  state: CartStateClassSchema,
+  state: CartStateSchema,
 });
 export type Cart = z.infer<typeof CartSchema>;
-
-export const NextActionsBarSchema = z.strictObject({
-  actions: NextActionsBarActionsSchema,
-  componentType: z.literal('next-actions-bar'),
-  state: NextActionsBarStateSchema,
-});
-export type NextActionsBar = z.infer<typeof NextActionsBarSchema>;
 
 export const ComponentContractsSchema = z.discriminatedUnion('componentType', [
   ProductCarouselSchema,
