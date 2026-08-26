@@ -54,7 +54,6 @@ vi.mock('../../../../features/commerce/facets/core-facet/core-facet-actions');
 vi.mock('../../../../features/commerce/facets/numeric-facet/numeric-facet-actions');
 vi.mock('../../../../features/commerce/facets/date-facet/date-facet-actions');
 vi.mock('../../../../features/commerce/facets/regular-facet/regular-facet-actions');
-vi.mock('../../../../features/commerce/facets/location-facet/location-facet-actions');
 
 describe('core breadcrumb manager', () => {
   let engine: MockedCommerceEngine;
