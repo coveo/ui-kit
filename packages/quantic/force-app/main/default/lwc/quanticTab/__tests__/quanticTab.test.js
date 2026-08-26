@@ -5,6 +5,7 @@ import QuanticTab from '../quanticTab';
 import {createElement} from 'lwc';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 
+
 jest.mock('c/quanticHeadlessLoader');
 
 let isInitialized = false;
