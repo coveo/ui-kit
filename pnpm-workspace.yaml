@@ -15,6 +15,7 @@ packages:
   - packages/atomic-a11y
   - packages/platform-mock-api
   - packages/atomic-cdn-smoke
+  - packages/atomic-theming-e2e
   - packages/atomic-legacy
   - packages/shopify
   - packages/relay
@@ -39,24 +40,24 @@ packages:
   - utils/ci
 
 catalog:
-  '@ag-ui/client': 0.0.57
-  chromatic: 18.1.0
+  '@ag-ui/client': 0.0.58
+  chromatic: 18.5.0
   '@msw/playwright': 0.6.7
   '@mswjs/http-middleware': ^0.10.3
   msw: 2.15.0
   '@angular-devkit/build-angular': 21.2.20
-  '@angular/animations': 21.2.18
+  '@angular/animations': 21.2.20
   '@angular/build': 21.2.20
   '@angular/cli': 21.2.20
-  '@angular/common': 21.2.18
-  '@angular/compiler': 21.2.18
-  '@angular/compiler-cli': 21.2.18
-  '@angular/core': 21.2.18
-  '@angular/forms': 21.2.18
-  '@angular/platform-browser': 21.2.18
-  '@angular/platform-browser-dynamic': 21.2.18
-  '@angular/platform-server': 21.2.18
-  '@angular/router': 21.2.18
+  '@angular/common': 21.2.20
+  '@angular/compiler': 21.2.20
+  '@angular/compiler-cli': 21.2.20
+  '@angular/core': 21.2.20
+  '@angular/forms': 21.2.20
+  '@angular/platform-browser': 21.2.20
+  '@angular/platform-browser-dynamic': 21.2.20
+  '@angular/platform-server': 21.2.20
+  '@angular/router': 21.2.20
   '@coveo/atomic-component-health-check': 2.2.19
   '@coveo/relay-event-types': 19.22.0
   '@playwright/mcp': 0.0.79
@@ -83,7 +84,7 @@ catalog:
   '@vitejs/plugin-react': 6.0.5
   '@vitest/browser-playwright': 4.1.10
   abortcontroller-polyfill: 1.7.8
-  dayjs: 1.11.21
+  dayjs: 1.11.23
   dompurify: 3.4.13
   dotenv: 17.2.3
   esbuild: 0.28.2
@@ -103,7 +104,7 @@ catalog:
   next: 16.2.12
   node-fetch: 3.3.2
   prettier: 3.9.6
-  publint: 0.3.23
+  publint: 0.3.24
   puppeteer: 24.43.1
   playwright: 1.60.0
   rxjs: 7.8.2
@@ -116,7 +117,7 @@ catalog:
   tslib: 2.8.1
   typedoc: 0.28.20
   typescript: 6.0.3
-  uuid: 14.0.1
+  uuid: 14.0.2
   vite: 8.2.1
   vitest: 4.1.10
   yaml: 2.9.0
@@ -158,3 +159,31 @@ minimumReleaseAgeExclude:
 # Allow using the shell emulator for all commands, which is required for some commands to work properly on Windows.
 # https://pnpm.io/cli/run#shellemulator
 shellEmulator: true
+
+overrides:
+  braces: 3.0.3
+  react: 'catalog:'
+  react-dom: 'catalog:'
+  typescript: 'catalog:'
+  html-minifier: npm:html-minifier-terser@^7.2.0
+  '@angular/core': 'catalog:'
+  '@angular/common': 'catalog:'
+  undici@^7: ^7.29.0
+
+patchedDependencies:
+  '@stencil/core@4.20.0': patches/@stencil+core+4.20.0.patch
+  'jest-environment-jsdom@29.7.0': patches/jest-environment-jsdom+29.7.0.patch
+  '@wc-toolkit/storybook-helpers@10.5.1': patches/@wc-toolkit__storybook-helpers@10.5.1.patch
+
+allowBuilds:
+  '@parcel/watcher': false
+  core-js: false
+  esbuild: false
+  fsevents: false
+  lmdb: false
+  msgpackr-extract: false
+  msw: false
+  puppeteer: false
+  rs-module-lexer: false
+  sharp: false
+  unrs-resolver: false

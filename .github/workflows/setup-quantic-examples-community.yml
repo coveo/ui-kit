@@ -33,6 +33,9 @@ jobs:
       - name: Project setup
         uses: ./.github/actions/setup
 
+      - name: Build Quantic
+        run: pnpm exec turbo run build --filter=@coveo/quantic
+
       - name: Setup Salesforce CLI
         uses: ./.github/actions/setup-sfdx
 

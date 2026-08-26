@@ -1,0 +1,37 @@
+<!doctype html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Atomic commerce recommendations style encapsulation</title>
+    <link rel="icon" href="data:," />
+    <script type="module" src="./load-atomic.js"></script>
+    <script type="module" src="./commerce-recommendation.js"></script>
+    <script type="module" src="./style-leak-sentinel.js"></script>
+  </head>
+
+  <body>
+    <atomic-commerce-recommendation-interface>
+      <atomic-commerce-recommendation-list
+        slot-id="af4fb7ba-6641-4b67-9cf9-be67e9f30174"
+        products-per-page="3"
+      >
+        <atomic-product-template>
+          <template>
+            <atomic-product-section-name>
+              <atomic-product-link></atomic-product-link>
+            </atomic-product-section-name>
+            <atomic-product-section-metadata>
+              <atomic-product-field-condition if-defined="ec_brand">
+                <atomic-product-text field="ec_brand"></atomic-product-text>
+              </atomic-product-field-condition>
+            </atomic-product-section-metadata>
+            <atomic-product-section-emphasized>
+              <atomic-product-price currency="USD"></atomic-product-price>
+            </atomic-product-section-emphasized>
+          </template>
+        </atomic-product-template>
+      </atomic-commerce-recommendation-list>
+    </atomic-commerce-recommendation-interface>
+  </body>
+</html>

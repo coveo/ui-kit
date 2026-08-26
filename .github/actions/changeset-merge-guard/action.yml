@@ -2,7 +2,7 @@ name: 'Changeset merge guard'
 description: >
   Detects stale version PRs in a merge queue group by checking whether
   unprocessed changeset files still exist after the version-packages commit.
-  Requires the repository to be checked out with full history (fetch-depth: 0).
+  Requires enough checkout history to resolve the supplied base-to-head range.
 inputs:
   base-sha:
     description: 'Base SHA of the merge group'
@@ -24,7 +24,7 @@ runs:
         echo "Checking commits in range ${BASE_SHA}..${HEAD_SHA}"
 
         if ! COMMITS=$(git log --format='%s' "${BASE_SHA}..${HEAD_SHA}"); then
-          echo "::error::Failed to resolve commit range. Ensure the repository is checked out with sufficient history (fetch-depth: 0)."
+          echo "::error::Failed to resolve commit range. Ensure the repository is checked out with enough history to include ${BASE_SHA}..${HEAD_SHA}."
           exit 1
         fi
 

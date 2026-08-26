@@ -247,11 +247,12 @@ describe('accessibility-utils', () => {
         expect(mockedDefer).toHaveBeenCalledOnce();
       });
 
-      it('should focus on the current element', async () => {
+      it('should focus on the current element with minimal scrolling', async () => {
         const {focusTargetController} = await renderComponent();
 
         const element = document.createElement('div');
         const elementFocusSpy = vi.spyOn(element, 'focus');
+        const scrollIntoViewSpy = vi.spyOn(element, 'scrollIntoView');
 
         focusTargetController.setTarget(element);
 
@@ -259,7 +260,11 @@ describe('accessibility-utils', () => {
 
         await focusTargetController.focus();
 
-        expect(elementFocusSpy).toHaveBeenCalledOnce();
+        expect(elementFocusSpy).toHaveBeenCalledExactlyOnceWith({preventScroll: true});
+        expect(scrollIntoViewSpy).toHaveBeenCalledExactlyOnceWith({
+          block: 'nearest',
+          inline: 'nearest',
+        });
       });
 
       it('should call the registered focus callbacks', async () => {
@@ -506,16 +511,21 @@ describe('accessibility-utils', () => {
           expect(mockedDefer).toHaveBeenCalledOnce();
         });
 
-        it('should focus on the target element', async () => {
+        it('should focus on the target element with minimal scrolling', async () => {
           const element = document.createElement('div');
           const elementFocusSpy = vi.spyOn(element, 'focus');
+          const scrollIntoViewSpy = vi.spyOn(element, 'scrollIntoView');
 
           await setup({element});
 
           component.requestUpdate();
           await vi.runAllTimersAsync();
 
-          expect(elementFocusSpy).toHaveBeenCalledOnce();
+          expect(elementFocusSpy).toHaveBeenCalledExactlyOnceWith({preventScroll: true});
+          expect(scrollIntoViewSpy).toHaveBeenCalledExactlyOnceWith({
+            block: 'nearest',
+            inline: 'nearest',
+          });
         });
 
         it('should call the registered focus callbacks', async () => {

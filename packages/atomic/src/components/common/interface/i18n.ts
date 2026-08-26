@@ -5,7 +5,8 @@ import availableLocales from '../../../generated/availableLocales.json';
 import type {AnyEngineType} from './bindings';
 import type {BaseAtomicInterface} from './interface-controller';
 
-export const i18nTranslationNamespace = 'translation';
+const i18nTranslationNamespace = 'translation';
+const FALLBACK_LANGUAGE = 'en';
 
 export function i18nBackendOptions(
   atomicInterface: BaseAtomicInterface<AnyEngineType>
@@ -45,18 +46,62 @@ export function i18nBackendOptions(
   };
 }
 
-export function init18n(atomicInterface: BaseAtomicInterface<AnyEngineType>) {
-  return atomicInterface.i18n.use(Backend).init({
+/**
+ * Loads Atomic's own translations for `language` into the interface's i18next instance.
+ *
+ * The bundle is added with `deep: true, overwrite: false` so that strings the consumer has
+ * already registered are preserved. Atomic's strings are defaults; an application that
+ * customizes them should win, regardless of whether it registered its values before or after
+ * this load resolves.
+ */
+export function loadTranslations(
+  atomicInterface: BaseAtomicInterface<AnyEngineType>,
+  language: string
+) {
+  const {i18n} = atomicInterface;
+  const lng = language.split('-')[0];
+
+  return new Promise<void>((resolve) => {
+    new Backend(i18n.services, i18nBackendOptions(atomicInterface)).read(
+      lng,
+      i18nTranslationNamespace,
+      (_error: unknown, data: unknown) => {
+        if (data) {
+          i18n.addResourceBundle(lng, i18nTranslationNamespace, data, true, false);
+        }
+        resolve();
+      }
+    );
+  });
+}
+
+export async function init18n(atomicInterface: BaseAtomicInterface<AnyEngineType>) {
+  const language = atomicInterface.language || FALLBACK_LANGUAGE;
+
+  // The backend is deliberately not registered with `.use()`. Letting i18next's backend
+  // connector load the initial resources is what caused it to discard the consumer's strings:
+  // the connector stores what it loads with a shallow merge in which the incoming data wins.
+  // Atomic loads the same resources itself, non-destructively, right below.
+  const t = await atomicInterface.i18n.init({
     debug: atomicInterface.logLevel === 'debug',
     lng: atomicInterface.language,
     nsSeparator: '___',
-    fallbackLng: 'en',
-    backend: i18nBackendOptions(atomicInterface),
+    fallbackLng: FALLBACK_LANGUAGE,
     interpolation: {
       escape: (str) => DOMPurify.sanitize(str),
     },
     compatibilityJSON: 'v4',
   });
+
+  await loadTranslations(atomicInterface, language);
+  // i18next used to pull the fallback language too, as part of resolving the language
+  // hierarchy. Keep doing so, otherwise a locale missing a key would render the key itself
+  // instead of falling back to English.
+  if (language.split('-')[0] !== FALLBACK_LANGUAGE) {
+    await loadTranslations(atomicInterface, FALLBACK_LANGUAGE);
+  }
+
+  return t;
 }
 
 function isI18nLocaleAvailable(locale: string) {
