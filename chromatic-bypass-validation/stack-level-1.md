@@ -5,3 +5,5 @@ This temporary non-UI change verifies that an intercalary pull request receives 
 Do not merge this validation file.
 
 Synchronization marker: level-one default-base validation.
+
+Unique check-suite marker: direct-base level one.
