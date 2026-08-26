@@ -409,7 +409,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CHROMATIC_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
-      CHROMATIC_SHA: ${{ github.event.pull_request.head.sha || github.ref }}
+      CHROMATIC_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       CHROMATIC_SLUG: ${{ github.repository }}
     steps:
       - name: Harden Runner
