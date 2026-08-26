@@ -38,8 +38,8 @@ function renderModalWithTrigger({fullscreen, isOpen}: {fullscreen?: boolean; isO
       <button
         type="button"
         @click=${(event: Event) => {
-          const trigger = event.target as HTMLElement;
-          const modal = trigger.closest('div')?.querySelector('atomic-modal');
+          const trigger = event.currentTarget as HTMLButtonElement;
+          const modal = trigger.parentElement?.querySelector('atomic-modal');
           if (modal) {
             modal.source = trigger;
             modal.isOpen = true;
@@ -55,7 +55,7 @@ function renderModalWithTrigger({fullscreen, isOpen}: {fullscreen?: boolean; isO
           <button
             type="button"
             @click=${(event: Event) => {
-              const modal = (event.target as HTMLElement).closest('atomic-modal');
+              const modal = (event.currentTarget as HTMLButtonElement).closest('atomic-modal');
               if (modal) {
                 modal.isOpen = false;
               }
