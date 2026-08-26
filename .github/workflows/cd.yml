@@ -10,6 +10,16 @@ env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
 
 jobs:
+  # ⚠️  Keep this job limited to publishing and tagging.
+  #
+  # A failing step here fails the whole job, and anything that runs after the
+  # publish step then never happens — including the release/v3 tag. Post-release
+  # side work (source maps, docs, notifications) belongs in its own job below,
+  # so that it cannot take the release down with it.
+  #
+  # `commit-artifact-upload` is deliberately insulated from this job: see the
+  # `if:` on it. Do not add `needs: release` gating that would let a failure
+  # here skip the CDN deploy.
   release:
     concurrency:
       group: release-${{ github.ref }}
