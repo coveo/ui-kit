@@ -37,7 +37,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run build --filter=@coveo/quantic
       - uses: ./.github/actions/setup-sfdx
@@ -112,7 +112,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
       - uses: ./.github/actions/post-scratch-org-links-on-pr
   e2e-quantic-playwright-test:
     name: 'Run Playwright e2e tests on Quantic'
@@ -134,7 +134,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/playwright-quantic
         with:
@@ -155,7 +155,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
       - uses: ./.github/actions/setup
       - name: Merge Playwright reports
         uses: ./.github/actions/merge-playwright-reports
@@ -177,7 +177,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/setup-sfdx
       - name: Delete Quantic scratch orgs
