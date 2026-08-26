@@ -6,7 +6,7 @@ import {useStateSource} from '../state-source-context.js';
 import type {
   BundleDisplayProps,
   Product,
-  ProductListState,
+  ProductCarouselState,
   BundleTier,
 } from '@coveo/thermidor-schema';
 import styles from './BundleDisplay.module.css';
@@ -27,7 +27,7 @@ export function BundleDisplayRenderer({props}: {props: BundleDisplayProps}) {
   if (activeTier) {
     for (const slot of activeTier.slots) {
       const controllerState = selectRemoteControllerState(stateSource.state, slot.surfaceRef);
-      const products = (controllerState as ProductListState | undefined)?.products;
+      const products = (controllerState as ProductCarouselState | undefined)?.products;
       resolvedItems.push({categoryLabel: slot.categoryLabel, product: products?.[0] ?? null});
     }
   }

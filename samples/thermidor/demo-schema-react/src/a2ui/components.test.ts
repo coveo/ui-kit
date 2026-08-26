@@ -63,6 +63,7 @@ describe('thermidorCatalogDefinitions', () => {
   it('validates component contract state and actions via ComponentContractsSchema', () => {
     expect(
       ProductCarouselSchema.shape.state.safeParse({
+        heading: 'Trail shoes',
         products: [{permanentid: 'p1', ec_name: 'Trail shoes', additionalFields: {}}],
       }).success
     ).toBe(true);

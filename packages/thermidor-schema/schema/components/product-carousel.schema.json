@@ -9,7 +9,7 @@
       "type": "string",
       "const": "product-carousel"
     },
-    "state": {"$ref": "#/$defs/ProductListState"},
+    "state": {"$ref": "#/$defs/ProductCarouselState"},
     "actions": {
       "type": "object",
       "properties": {},
@@ -18,13 +18,17 @@
   },
   "additionalProperties": false,
   "$defs": {
-    "ProductListState": {
-      "title": "ProductListState",
+    "ProductCarouselState": {
+      "title": "ProductCarouselState",
       "description": "The ordered list of products to render. Owned exclusively by the backend; the frontend must not mutate this directly.",
       "$comment": "This schema validates the runtime state value the backend pushes to the frontend.",
       "type": "object",
-      "required": ["products"],
+      "required": ["heading", "products"],
       "properties": {
+        "heading": {
+          "type": "string",
+          "description": "Display heading for this product list (e.g. 'Life Jackets'). An empty string is a valid transient value while the list is still loading."
+        },
         "products": {
           "type": "array",
           "description": "Ordered list of products to render.",

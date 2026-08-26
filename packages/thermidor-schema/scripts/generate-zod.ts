@@ -129,7 +129,6 @@ function loadProjectionEntries(documents: SchemaDocument[]): ProjectionEntry[] {
     ...definitionDocuments.map((document) =>
       createProjectionEntry(loadSchemaTitle(document), document.$id)
     ),
-    ...componentDocuments.flatMap((document) => loadComponentStateEntry(document)),
     ...componentDocuments.flatMap((document) => loadComponentPayloadEntries(document)),
     ...componentDocuments.map((document) =>
       createProjectionEntry(loadSchemaTitle(document), document.$id)
@@ -252,20 +251,6 @@ function loadComponentUnion(index: SchemaDocument): Schema & {oneOf: Schema[]} {
     throw new Error(`Unable to find component union in ${index.$id}.`);
   }
   return union as Schema & {oneOf: Schema[]};
-}
-
-function loadComponentStateEntry(document: SchemaDocument): ProjectionEntry[] {
-  const reference = document.properties?.state?.$ref;
-  if (typeof reference !== 'string') {
-    return [];
-  }
-  return [
-    createProjectionEntry(
-      loadSchemaTitle(resolveLocalReference(document, reference)),
-      document.$id,
-      reference.slice(1)
-    ),
-  ];
 }
 
 function loadComponentPayloadEntries(document: SchemaDocument): ProjectionEntry[] {

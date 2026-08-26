@@ -40,7 +40,7 @@ sequenceDiagram
 
     alt surfaceType present (decomposed)
         alt surfaceType === 'commerceSearch'
-            RuntimeCallback->>StatePort: setRoutedInterface(turnId, {useCase: 'decomposedCommerce', surfaceType, surfaceId})
+            RuntimeCallback->>StatePort: setRoutedInterface(turnId, {useCase: 'decomposedCommerceSearch', surfaceType, surfaceId})
             StatePort->>NavigationHook: turn.routedInterface updated
             NavigationHook->>LayoutTemplate: navigate to search view
             LayoutTemplate->>CatalogRenderer: render component by componentType
@@ -207,7 +207,7 @@ onA2uiSurface: (tid: string, content: Record<string, unknown>) => {
     if (surfaceType === 'commerceSearch') {
       const surfaceId = extractSurfaceId(content);
       this.statePort.setRoutedInterface(tid, {
-        useCase: 'decomposedCommerce',
+        useCase: 'decomposedCommerceSearch',
         surfaceType,
         surfaceId,
       });
@@ -277,7 +277,7 @@ The current `setRoutedInterface` carries a `CommerceInterfaceImpl` instance. For
 ```typescript
 export type RoutedInterface =
   | { useCase: 'commerceSearch'; interface: CommerceInterface; snapshot: unknown; query: string; surfaceId: string }  // legacy
-  | { useCase: 'decomposedCommerce'; surfaceType: 'commerceSearch'; surfaceId: string };  // new
+  | { useCase: 'decomposedCommerceSearch'; surfaceType: 'commerceSearch'; surfaceId: string };  // new
 ```
 
 The navigation hook (`use-navigation.ts`) already dispatches `NAVIGATE_SEARCH` when `turn.routedInterface` is truthy — this continues to work. `SearchResultsPage` checks `routedInterface.useCase` to decide which rendering path to use.
@@ -288,15 +288,15 @@ The navigation hook (`use-navigation.ts`) already dispatches `NAVIGATE_SEARCH` w
 
 ```typescript
 function SearchResultsPage({ routedInterface, ... }) {
-  if (routedInterface.useCase === 'decomposedCommerce') {
-    return <DecomposedCommerceLayout surfaceId={routedInterface.surfaceId} surfaceType={routedInterface.surfaceType} />;
+  if (routedInterface.useCase === 'decomposedCommerceSearch') {
+    return <CommerceSearchLayout surfaceId={routedInterface.surfaceId} surfaceType={routedInterface.surfaceType} />;
   }
   // Legacy path (existing code)
   return <SearchResultsPageLegacy routedInterface={routedInterface} ... />;
 }
 ```
 
-The `DecomposedCommerceLayout` component:
+The `CommerceSearchLayout` component:
 - Finds components from A2-UI surface state by `componentType`
 - Places them into spatial slots (header: searchBox; main: sort, productList, pagination)
 - Each slot renders its catalog renderer, which uses `useRemoteController` for state
@@ -408,7 +408,7 @@ interface SubmitQueryPayload { query: string; }
 // Extended RoutedInterface for decomposed surfaces
 type RoutedInterface =
   | { useCase: 'commerceSearch'; interface: CommerceInterface; snapshot: unknown; query: string; surfaceId: string }  // legacy
-  | { useCase: 'decomposedCommerce'; surfaceType: 'commerceSearch'; surfaceId: string };  // new
+  | { useCase: 'decomposedCommerceSearch'; surfaceType: 'commerceSearch'; surfaceId: string };  // new
 ```
 
 ## Correctness Properties

@@ -13,7 +13,7 @@ function getAllSourceFiles(directory: string): string[] {
     if (statSync(entryPath).isDirectory()) {
       if (entry === 'node_modules' || entry === '__test-shims__') continue;
       files.push(...getAllSourceFiles(entryPath));
-    } else if (/\.(ts|tsx)$/.test(entry) && !entry.endsWith('.test.ts')) {
+    } else if (/\.(ts|tsx)$/.test(entry) && !/\.(test|spec)\.(ts|tsx)$/.test(entry)) {
       files.push(entryPath);
     }
   }

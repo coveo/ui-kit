@@ -72,11 +72,11 @@ class UnifiedConverseControllerImpl extends BaseController<UnifiedConverseContro
           this.engine.mutate(this.#actions.replaceTurnId({oldId, newId}));
         },
         setRoutedInterface: (turnId, hydrationResult) => {
-          if (hydrationResult.useCase === 'decomposedCommerce') {
+          if (hydrationResult.useCase === 'decomposedCommerceSearch') {
             this.engine.mutate(
               this.#actions.setRoutedInterface({
                 turnId,
-                useCase: 'decomposedCommerce',
+                useCase: 'decomposedCommerceSearch',
                 surfaceType: hydrationResult.surfaceType,
                 surfaceId: hydrationResult.surfaceId,
               })
@@ -166,7 +166,7 @@ class UnifiedConverseControllerImpl extends BaseController<UnifiedConverseContro
       const {routedInterface, ...rest} = turn;
       const serialized: SerializedTurn = {...rest};
       if (routedInterface) {
-        if (routedInterface.useCase === 'decomposedCommerce') {
+        if (routedInterface.useCase === 'decomposedCommerceSearch') {
           serialized.routedInterface = {
             useCase: routedInterface.useCase,
             surfaceType: routedInterface.surfaceType,
@@ -227,7 +227,7 @@ class UnifiedConverseControllerImpl extends BaseController<UnifiedConverseContro
   dispatchAction(action: RemoteControllerAction): Promise<void> {
     const routedInterface = this.state.activeTurn?.routedInterface;
     const surfaceId =
-      routedInterface?.useCase === 'decomposedCommerce' ? routedInterface.surfaceId : null;
+      routedInterface?.useCase === 'decomposedCommerceSearch' ? routedInterface.surfaceId : null;
 
     const a2uiAction: A2uiAction = {
       surfaceId,
@@ -302,9 +302,9 @@ function hydrateFromSerializedState(serialized: SerializedConverseState): Genera
     }
 
     if (routedInterface) {
-      if (routedInterface.useCase === 'decomposedCommerce') {
+      if (routedInterface.useCase === 'decomposedCommerceSearch') {
         turn.routedInterface = {
-          useCase: 'decomposedCommerce',
+          useCase: 'decomposedCommerceSearch',
           surfaceType: routedInterface.surfaceType ?? '',
           surfaceId: routedInterface.surfaceId ?? '',
         };

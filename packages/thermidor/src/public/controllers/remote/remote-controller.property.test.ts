@@ -44,7 +44,7 @@ describe('remote-controller property tests', () => {
     const minimalInstances: Record<ComponentType, unknown> = {
       'product-carousel': {
         componentType: 'product-carousel',
-        state: {products: []},
+        state: {heading: 'Featured', products: []},
         actions: {},
       },
       cart: {

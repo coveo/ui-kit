@@ -6,7 +6,7 @@ import {
   ProductSchema,
   CartItemSchema,
   CartStateSchema,
-  ProductListStateSchema,
+  ProductCarouselStateSchema,
   NextActionsStateSchema,
   BundleDisplayStateSchema,
   ComparisonTableStateSchema,
@@ -64,9 +64,10 @@ describe('data type backward compatibility', () => {
     ).toBe(true);
   });
 
-  it('ProductListState schema structure is unchanged', () => {
+  it('ProductCarouselState schema structure is unchanged', () => {
     expect(
-      ProductListStateSchema.safeParse({
+      ProductCarouselStateSchema.safeParse({
+        heading: 'Shoes',
         products: [{permanentid: 'p1', ec_name: 'Shoes', additionalFields: {}}],
       }).success
     ).toBe(true);

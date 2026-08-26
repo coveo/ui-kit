@@ -46,14 +46,14 @@ This plan decomposes the monolithic `ProductSearchSurface` into individually-sta
   - [x] 2.2 Modify the `onA2uiSurface` callback to route by surfaceType
     - In `consumeStream`, update the `onA2uiSurface` callback:
       - Call `extractSurfaceType(content)` first
-      - If `surfaceType` is present and equals `'commerceSearch'`: call `this.statePort.setRoutedInterface(tid, { useCase: 'decomposedCommerce', surfaceType, surfaceId })` — no SurfaceProcessor call
+      - If `surfaceType` is present and equals `'commerceSearch'`: call `this.statePort.setRoutedInterface(tid, { useCase: 'decomposedCommerceSearch', surfaceType, surfaceId })` — no SurfaceProcessor call
       - If `surfaceType` is present but not `'commerceSearch'` (e.g., `'converse'`): do nothing (no navigation signal, no SurfaceProcessor)
       - If `surfaceType` is absent: delegate to `this.surfaceProcessor.processSnapshot(tid, content)` (existing legacy path)
     - _Requirements: 2.1, 2.2, 2.3, 4.1, 4.2, 4.3, 4.4, 10.1, 10.3, 10.4_
 
   - [x] 2.3 Extend `RoutedInterface` / `RoutedUseCase` types for decomposed commerce
-    - Add `'decomposedCommerce'` to `RoutedUseCase` (or extend the type union with a new variant)
-    - The new variant carries `{ useCase: 'decomposedCommerce'; surfaceType: 'commerceSearch'; surfaceId: string }` — no `CommerceInterfaceImpl` instance
+    - Add `'decomposedCommerceSearch'` to `RoutedUseCase` (or extend the type union with a new variant)
+    - The new variant carries `{ useCase: 'decomposedCommerceSearch'; surfaceType: 'commerceSearch'; surfaceId: string }` — no `CommerceInterfaceImpl` instance
     - Update `UseCaseInterfaceMap` if needed (the decomposed variant has no `interface` field, so it may need a separate union branch)
     - _Requirements: 4.4, 5.2_
 
@@ -125,7 +125,7 @@ This plan decomposes the monolithic `ProductSearchSurface` into individually-sta
     - **Validates: Requirements 7.5, 9.1, 9.2, 9.3, 9.4**
 
 - [x] 6. Implement layout template and refactor SearchResultsPage
-  - [x] 6.1 Create `DecomposedCommerceLayout` component
+  - [x] 6.1 Create `CommerceSearchLayout` component
     - Create a layout shell component that receives `surfaceId` and `surfaceType`
     - Find components from A2-UI surface state by `componentType`
     - Arrange into spatial slots: header (search-box), main (sort, product-list, pagination)
@@ -134,7 +134,7 @@ This plan decomposes the monolithic `ProductSearchSurface` into individually-sta
     - _Requirements: 6.1, 6.2, 6.3, 5.3_
 
   - [x] 6.2 Refactor `SearchResultsPage` to branch on `routedInterface.useCase`
-    - When `routedInterface.useCase === 'decomposedCommerce'`: render `DecomposedCommerceLayout`
+    - When `routedInterface.useCase === 'decomposedCommerceSearch'`: render `CommerceSearchLayout`
     - When `routedInterface.useCase === 'commerceSearch'` (legacy): render existing headless-controller-based UI
     - Remove no-longer-needed headless controller imports from the decomposed path
     - _Requirements: 5.1, 5.2, 5.3, 6.1_
@@ -178,7 +178,7 @@ This plan decomposes the monolithic `ProductSearchSurface` into individually-sta
 - `unified-surface-processor.ts` is NOT modified — it remains the untouched legacy path
 - The main thermidor change is concentrated in `unified-runtime.ts` (the `onA2uiSurface` callback)
 - Commerce catalog renderers follow the same `useRemoteController` pattern as `ProductCarouselRenderer`
-- The `RoutedInterface` type must be extended with a `'decomposedCommerce'` variant that carries no `CommerceInterfaceImpl` instance
+- The `RoutedInterface` type must be extended with a `'decomposedCommerceSearch'` variant that carries no `CommerceInterfaceImpl` instance
 
 ## Task Dependency Graph
 

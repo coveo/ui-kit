@@ -185,6 +185,36 @@ describe('buildUnifiedConverseController', () => {
         })
       );
     });
+
+    it('forwards the surfaceId of the active decomposedCommerceSearch routed interface', () => {
+      const controller = buildController();
+      const actions = getOrCreateGenerativeActions(generativeInterface);
+
+      fullEngine.mutate(actions.createTurn({id: 'turn-1', prompt: 'wetsuits', status: 'complete'}));
+      fullEngine.mutate(
+        actions.setRoutedInterface({
+          turnId: 'turn-1',
+          useCase: 'decomposedCommerceSearch',
+          surfaceType: 'commerceSearch',
+          surfaceId: 'ui-commerce-search',
+        })
+      );
+      fullEngine.mutate(actions.setActiveTurnId('turn-1'));
+
+      controller.dispatchAction({
+        componentId: 'pagination-1',
+        componentType: 'pagination',
+        action: 'selectPage',
+        payload: {page: 2},
+      });
+
+      expect(mockDispatchAction).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: 'selectPage',
+          surfaceId: 'ui-commerce-search',
+        })
+      );
+    });
   });
 
   describe('cancel()', () => {
