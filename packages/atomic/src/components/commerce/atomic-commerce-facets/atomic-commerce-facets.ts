@@ -164,7 +164,6 @@ export class AtomicCommerceFacets
             ></atomic-commerce-category-facet>`
           )}`;
         default: {
-          // TODO COMHUB-291 support location facet
           this.bindings.engine.logger.warn('Unexpected facet type.');
           return nothing;
         }
