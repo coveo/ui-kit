@@ -67,6 +67,7 @@ describe('data type backward compatibility', () => {
   it('ProductListState schema structure is unchanged', () => {
     expect(
       ProductListStateSchema.safeParse({
+        heading: 'Shoes',
         products: [{permanentid: 'p1', ec_name: 'Shoes', additionalFields: {}}],
       }).success
     ).toBe(true);

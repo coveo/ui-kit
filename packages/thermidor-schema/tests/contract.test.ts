@@ -204,7 +204,7 @@ describe('component contract discriminated union', () => {
     const contract = {
       actions: {},
       componentType: 'product-carousel',
-      state: {products: []},
+      state: {heading: 'Featured', products: []},
     };
     expect(ComponentContractsSchema.safeParse(contract).success).toBe(true);
   });

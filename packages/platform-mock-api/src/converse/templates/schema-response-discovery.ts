@@ -95,6 +95,7 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
 const stateSnapshot: ConverseEvent = StateSnapshot({
   components: {
     'pl-life-jackets': {
+      heading: 'Life Jackets',
       products: [
         {
           permanentid: 'gid://shopify/ProductVariant/50681799147794',
@@ -276,6 +277,7 @@ const stateSnapshot: ConverseEvent = StateSnapshot({
       ],
     },
     'pl-safety-gear': {
+      heading: 'Boating Safety Gear',
       products: [
         {
           permanentid: 'gid://shopify/ProductVariant/50681803145490',

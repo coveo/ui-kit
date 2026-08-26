@@ -36,6 +36,7 @@ export const ProductSchema = z.strictObject({
 export type Product = z.infer<typeof ProductSchema>;
 
 export const ProductListStateSchema = z.strictObject({
+  heading: z.string(),
   products: z.array(ProductSchema),
 });
 export type ProductListState = z.infer<typeof ProductListStateSchema>;
@@ -80,6 +81,7 @@ export const ProductCarouselActionsSchema = z.strictObject({});
 export type ProductCarouselActions = z.infer<typeof ProductCarouselActionsSchema>;
 
 export const StateClassSchema = z.strictObject({
+  heading: z.string(),
   products: z.array(ProductSchema),
 });
 export type StateClass = z.infer<typeof StateClassSchema>;
