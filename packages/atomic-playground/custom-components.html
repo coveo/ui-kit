@@ -1,0 +1,33 @@
+<!doctype html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Atomic playground: Custom components</title>
+    <link rel="icon" href="data:," />
+    <script type="module" src="./custom-components.js"></script>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <atomic-search-interface language-assets-path="/lang" icon-assets-path="/assets">
+      <custom-component></custom-component>
+      <atomic-segmented-facet field="language"></atomic-segmented-facet>
+      <atomic-query-summary></atomic-query-summary>
+      <atomic-result-list>
+        <atomic-result-template>
+          <template>
+            <custom-template-component label="Hello"></custom-template-component>
+            <atomic-field-condition must-not-match-language="Swedish">
+              <custom-template-component label="Hallå"></custom-template-component>
+            </atomic-field-condition>
+          </template>
+        </atomic-result-template>
+      </atomic-result-list>
+    </atomic-search-interface>
+  </body>
+</html>
