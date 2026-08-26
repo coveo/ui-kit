@@ -2,7 +2,6 @@ import type {
   CategoryFacetValue,
   DateFacetValue,
   BreadcrumbManager as HeadlessBreadcrumbManager,
-  LocationFacetValue,
   NumericFacetValue,
   RegularFacetValue,
 } from '@coveo/headless/commerce';
@@ -11,6 +10,12 @@ import {useEffect, useState} from 'react';
 interface BreadcrumbManagerProps {
   controller: HeadlessBreadcrumbManager;
 }
+
+type FacetBreadcrumbValue =
+  | CategoryFacetValue
+  | RegularFacetValue
+  | NumericFacetValue
+  | DateFacetValue;
 
 export default function BreadcrumbManager(props: BreadcrumbManagerProps) {
   const {controller} = props;
@@ -25,15 +30,7 @@ export default function BreadcrumbManager(props: BreadcrumbManagerProps) {
     return null;
   }
 
-  const renderBreadcrumbValue = (
-    value:
-      | CategoryFacetValue
-      | RegularFacetValue
-      | NumericFacetValue
-      | DateFacetValue
-      | LocationFacetValue,
-    type: string
-  ) => {
+  const renderBreadcrumbValue = (value: FacetBreadcrumbValue, type: string) => {
     switch (type) {
       case 'hierarchical':
         return (value as CategoryFacetValue).path.join(' > ');
@@ -44,7 +41,6 @@ export default function BreadcrumbManager(props: BreadcrumbManagerProps) {
       case 'dateRange':
         return (value as DateFacetValue).start + ' - ' + (value as DateFacetValue).end;
       default:
-        // TODO COMHUB-292 add location facet example
         return null;
     }
   };
@@ -69,7 +65,11 @@ export default function BreadcrumbManager(props: BreadcrumbManagerProps) {
                     onClick={() => value.deselect()}
                   >
                     {facetBreadcrumb.facetDisplayName}:{' '}
-                    {renderBreadcrumbValue(value.value, facetBreadcrumb.type)} X
+                    {renderBreadcrumbValue(
+                      value.value as FacetBreadcrumbValue,
+                      facetBreadcrumb.type
+                    )}{' '}
+                    X
                   </button>
                 );
               })}
