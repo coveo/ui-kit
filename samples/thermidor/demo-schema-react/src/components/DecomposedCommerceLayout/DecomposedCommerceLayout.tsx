@@ -207,7 +207,7 @@ function PageSizeSelector({paginationProps}: {paginationProps: PaginationProps})
       <label className={styles.pageSizeLabel} htmlFor="page-size-select">
         <strong>Products per page:</strong>
       </label>
-      <select id="page-size-select" className={styles.pageSizeSelect} value={pageSize} readOnly>
+      <select id="page-size-select" className={styles.pageSizeSelect} value={pageSize} disabled>
         {options.map((size) => (
           <option key={size} value={size}>
             {size}

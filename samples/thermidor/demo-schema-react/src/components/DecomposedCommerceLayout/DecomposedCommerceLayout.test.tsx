@@ -228,6 +228,21 @@ describe('Feature: commerce-surface-decomposition, Property 6: Partial component
     );
   });
 
+  describe('facets sidebar placeholder', () => {
+    it('renders the non-interactive "Facets (coming soon)" placeholder', () => {
+      mockSurface = buildSurface(['product-list']);
+      const {container} = render(
+        <DecomposedCommerceLayout surfaceId="test-surface" surfaceType="commerceSearch" />
+      );
+
+      const sidebar = screen.getByText('Facets (coming soon)').closest('aside')!;
+      expect(sidebar).not.toBeNull();
+      expect(sidebar.getAttribute('role')).toBeNull();
+      expect(sidebar.getAttribute('tabindex')).toBeNull();
+      expect(container.querySelector('[role="status"]')).toBeNull();
+    });
+  });
+
   describe('slot placement correctness', () => {
     it('sort, product-list, and pagination render in the main slot', () => {
       mockSurface = buildSurface(['sort', 'product-list', 'pagination']);
