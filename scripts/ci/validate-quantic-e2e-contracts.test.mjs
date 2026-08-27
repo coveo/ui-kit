@@ -520,30 +520,50 @@ const replaceOnce = (contents, original, replacement) => {
   )}`;
 };
 
-const replaceImporterVersion = (contents, importer, dependency, from, to) => {
-  const importerStart = contents.indexOf(`  ${importer}:\n`);
+const replaceImporterDependencyFields = (contents, importer, dependency, replacements) => {
+  const importerMarker = `  ${importer}:\n`;
+  const importerStart = contents.indexOf(importerMarker);
   assert.notEqual(importerStart, -1, `Missing lockfile importer: ${importer}`);
-  const remainingContents = contents.slice(importerStart + 3);
+  const importerBodyStart = importerStart + importerMarker.length;
+  const remainingContents = contents.slice(importerBodyStart);
   const nextImporterOffset = remainingContents.search(/\n  \S/);
   const importerEnd =
-    nextImporterOffset === -1 ? contents.length : importerStart + 3 + nextImporterOffset;
+    nextImporterOffset === -1 ? contents.length : importerBodyStart + nextImporterOffset;
   const importerContents = contents.slice(importerStart, importerEnd);
-  const dependencyStart = importerContents.indexOf(`      ${dependency}:\n`);
-  assert.notEqual(dependencyStart, -1, `Missing ${dependency} in ${importer}`);
-  const version = `        version: ${from}`;
-  const dependencyBodyStart = dependencyStart + `      ${dependency}:\n`.length;
+  const dependencyMarkers = [
+    `      ${dependency}:\n`,
+    `      '${dependency}':\n`,
+    `      "${dependency}":\n`,
+  ];
+  const matchingMarkers = dependencyMarkers.filter(
+    (marker) => importerContents.indexOf(marker) !== -1
+  );
+  assert.equal(matchingMarkers.length, 1, `Missing or ambiguous ${dependency} in ${importer}`);
+  const dependencyMarker = matchingMarkers[0];
+  const dependencyStart = importerContents.indexOf(dependencyMarker);
+  const dependencyBodyStart = dependencyStart + dependencyMarker.length;
   const nextDependencyOffset = importerContents.slice(dependencyBodyStart).search(/\n      \S/);
   const dependencyEnd =
     nextDependencyOffset === -1
       ? importerContents.length
       : dependencyBodyStart + nextDependencyOffset;
   const dependencyContents = importerContents.slice(dependencyStart, dependencyEnd);
-  const versionStart = dependencyContents.indexOf(version);
-  assert.notEqual(versionStart, -1, `Missing ${dependency}@${from} in ${importer}`);
-  const updatedDependency = `${dependencyContents.slice(0, versionStart)}        version: ${to}${dependencyContents.slice(versionStart + version.length)}`;
+  let updatedDependency = dependencyContents;
+  for (const [field, {from, to}] of Object.entries(replacements)) {
+    updatedDependency = replaceOnce(
+      updatedDependency,
+      `        ${field}: ${from}`,
+      `        ${field}: ${to}`
+    );
+  }
   const updatedImporter = `${importerContents.slice(0, dependencyStart)}${updatedDependency}${importerContents.slice(dependencyEnd)}`;
   return `${contents.slice(0, importerStart)}${updatedImporter}${contents.slice(importerEnd)}`;
 };
+
+const replaceImporterVersion = (contents, importer, dependency, from, to) =>
+  replaceImporterDependencyFields(contents, importer, dependency, {
+    version: {from, to},
+  });
 
 const fixtureManifestPaths = [
   'packages/atomic/package.json',
@@ -579,16 +599,12 @@ const createFrozenValidTurboSpecifierHead = (checkout, baseline, specifier, name
   const packageManifest = JSON.parse(readFileSync(packagePath, 'utf8'));
   packageManifest.devDependencies.turbo = specifier;
   writeFileSync(packagePath, `${JSON.stringify(packageManifest, null, 2)}\n`);
-  runPnpm(
-    [
-      'install',
-      '--lockfile-only',
-      '--no-frozen-lockfile',
-      '--ignore-scripts',
-      '--offline',
-      '--config.trust-lockfile=true',
-    ],
-    checkout
+  const lockfilePath = resolve(checkout, 'pnpm-lock.yaml');
+  writeFileSync(
+    lockfilePath,
+    replaceImporterDependencyFields(readFileSync(lockfilePath, 'utf8'), '.', 'turbo', {
+      specifier: {from: '2.10.9', to: specifier},
+    })
   );
   validateFrozenLockfile(checkout);
   const head = commitWorkingTree(checkout, baseline, ['package.json', 'pnpm-lock.yaml'], name);
@@ -656,17 +672,27 @@ const prepareLockfileFixtureBaseline = (checkout, baseline) => {
     '@ag-ui/core',
     '>=0.0.57 <=0.0.58'
   );
-  runPnpm(
+  const lockfilePath = resolve(checkout, 'pnpm-lock.yaml');
+  const replacements = [
+    ['packages/quantic', 'dompurify', {specifier: {from: "'catalog:'", to: '^3.4.0'}}],
+    ['packages/quantic', 'wait-on', {specifier: {from: '9.1.0', to: "'>=8.0.5 <10'"}}],
+    ['packages/quantic', 'dotenv', {specifier: {from: "'catalog:'", to: "'>=16.6.1 <18'"}}],
+    ['packages/atomic', 'prettier', {specifier: {from: "'catalog:'", to: "'>=2.8.8 <4'"}}],
     [
-      'install',
-      '--lockfile-only',
-      '--no-frozen-lockfile',
-      '--ignore-scripts',
-      '--offline',
-      '--config.trust-lockfile=true',
+      'packages/thermidor',
+      '@ag-ui/core',
+      {
+        specifier: {from: '0.0.57', to: "'>=0.0.57 <=0.0.58'"},
+        version: {from: '0.0.57', to: '0.0.58'},
+      },
     ],
-    checkout
+  ];
+  const fixtureLockfile = replacements.reduce(
+    (lockfile, [importer, dependency, fields]) =>
+      replaceImporterDependencyFields(lockfile, importer, dependency, fields),
+    readFileSync(lockfilePath, 'utf8')
   );
+  writeFileSync(lockfilePath, fixtureLockfile);
   validateFrozenLockfile(checkout);
   const fixtureBaseline = commitWorkingTree(
     checkout,
@@ -682,19 +708,16 @@ const prepareLockfileFixtureBaseline = (checkout, baseline) => {
 
 const generateLockfileOnlyHead = (checkout, fixtureBaseline, scenario) => {
   runGit(checkout, ['checkout', '--quiet', '--detach', fixtureBaseline]);
-  runPnpm(
-    [
-      '--filter',
-      scenario.filter,
-      'update',
-      `${scenario.dependency}@${scenario.version}`,
-      '--no-save',
-      '--lockfile-only',
-      '--ignore-scripts',
-      '--offline',
-      '--config.trust-lockfile=true',
-    ],
-    checkout
+  const lockfilePath = resolve(checkout, 'pnpm-lock.yaml');
+  writeFileSync(
+    lockfilePath,
+    replaceImporterVersion(
+      readFileSync(lockfilePath, 'utf8'),
+      scenario.importer,
+      scenario.dependency,
+      scenario.baselineVersion,
+      scenario.version
+    )
   );
   validateFrozenLockfile(checkout);
   assert.equal(runGit(checkout, ['status', '--short']).trim(), 'M pnpm-lock.yaml');
@@ -1344,7 +1367,9 @@ test('selects Quantic E2E only for frozen-valid lockfile-only CI dependency chan
     {
       name: 'Quantic runtime dependency',
       filter: '@coveo/quantic',
+      importer: 'packages/quantic',
       dependency: 'dompurify',
+      baselineVersion: '3.4.13',
       version: '3.4.8',
       ...quanticExpectations,
     },
@@ -1356,7 +1381,9 @@ test('selects Quantic E2E only for frozen-valid lockfile-only CI dependency chan
     {
       name: 'Quantic Playwright configuration dependency',
       filter: '@coveo/quantic',
+      importer: 'packages/quantic',
       dependency: 'dotenv',
+      baselineVersion: '17.2.3',
       version: '16.6.1',
       ...quanticExpectations,
     },
@@ -1383,7 +1410,9 @@ test('selects Quantic E2E only for frozen-valid lockfile-only CI dependency chan
     {
       name: 'unrelated Thermidor runtime dependency',
       filter: '@coveo/thermidor',
+      importer: 'packages/thermidor',
       dependency: '@ag-ui/core',
+      baselineVersion: '0.0.58',
       version: '0.0.57',
       mustInclude: {
         tasks: [
