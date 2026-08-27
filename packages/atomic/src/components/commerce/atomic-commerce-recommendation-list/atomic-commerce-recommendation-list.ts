@@ -367,6 +367,15 @@ export class AtomicCommerceRecommendationList
     });
   }
 
+  private getProductId(product: Product) {
+    return this.productListCommon.getResultId(
+      product.permanentid,
+      product.responseId ?? this.recommendationsState.responseId,
+      this.density,
+      this.imageSize
+    );
+  }
+
   private getAtomicProductProps(product: Product) {
     const linkContent = this.productTemplateProvider.getLinkTemplateContent(product);
 
@@ -377,12 +386,7 @@ export class AtomicCommerceRecommendationList
       product: product,
       renderingFunction: this.itemRenderingFunction,
       loadingFlag: this.loadingFlag,
-      key: this.productListCommon.getResultId(
-        product.permanentid,
-        this.recommendationsState.responseId,
-        this.density,
-        this.imageSize
-      ),
+      key: this.getProductId(product),
       content: this.productTemplateProvider.getTemplateContent(product),
       linkContent,
       stopPropagation: !!linkContent,
