@@ -1,0 +1,24 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "build:quantic": {
+      "dependsOn": ["@coveo/bueno#build", "@coveo/relay#build", "coveo.analytics#build"],
+      "inputs": [
+        "$TURBO_ROOT$/scripts/esbuild/**",
+        "$TURBO_ROOT$/scripts/license/apache.mjs",
+        "$TURBO_ROOT$/utils/ci/rm-rf.mjs",
+        "build.config.json",
+        "esbuild.mjs",
+        "package.json",
+        "ponyfills/**",
+        "scripts/write-quantic-manifest.mjs",
+        "src/**",
+        "tsconfig.json",
+        "!src/**/*.spec.*",
+        "!src/**/*.test.*",
+        "!src/**/__tests__/**"
+      ],
+      "outputs": [".tmp/quantic/**"]
+    }
+  }
+}

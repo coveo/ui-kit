@@ -1,5 +1,8 @@
 const fs = require('fs/promises');
 const path = require('path');
+const {
+  resolveHeadlessDefinitionsPath,
+} = require('./scripts/npm/headless-build-output');
 
 const STATIC_RESOURCES_PATH = './force-app/main/default/staticresources';
 const SOLUTION_EXAMPLES_STATIC_RESOURCES_PATH =
@@ -79,7 +82,7 @@ const LIBRARY_CONFIG = {
         dest: `${STATIC_RESOURCES_PATH}/coveoheadless/recommendation/headless.js`,
       },
       {
-        src: resolveLibraryPath('@coveo/headless', '../../dist/definitions'),
+        src: resolveHeadlessDefinitionsPath(),
         dest: `${STATIC_RESOURCES_PATH}/coveoheadless/definitions`,
       },
     ],

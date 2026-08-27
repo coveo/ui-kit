@@ -20,7 +20,16 @@ const buildConfig = JSON.parse(readFileSync(buildConfigPath, 'utf-8'));
 const {useCaseEntries, quanticUseCaseEntries} = buildConfig;
 
 const require = createRequire(import.meta.url);
-const devMode = process.argv[2] === 'dev';
+const buildMode = process.argv[2];
+const devMode = buildMode === 'dev';
+const quanticMode = buildMode === 'quantic';
+const quanticOutputRoot = quanticMode ? '.tmp/quantic/bundles' : 'dist/quantic';
+const quanticStaticResourceUseCases = new Set([
+  'search',
+  'recommendation',
+  'case-assist',
+  'insight',
+]);
 
 const isNightly = process.env.IS_NIGHTLY === 'true';
 const commitSha = process.env.CDN_COMMIT_SHA;
@@ -85,7 +94,7 @@ const base = {
   banner: {js: apacheLicense()},
 };
 
-const browserEsm = Object.entries(useCaseEntries).map((entry) => {
+const browserEsm = Object.entries(useCaseEntries).map((entry) => () => {
   const [useCase, entryPoint] = entry;
   const outDir = getUseCaseDir('cdn', useCase);
   // ⚠️  Changing this filename affects CDN pointer files in ui-kit-cd.
@@ -111,7 +120,7 @@ const browserEsm = Object.entries(useCaseEntries).map((entry) => {
   return buildBrowserConfig(config, outDir);
 });
 
-const browserUmd = Object.entries(useCaseEntries).map((entry) => {
+const browserUmd = Object.entries(useCaseEntries).map((entry) => () => {
   const [useCase, entryPoint] = entry;
   const outDir = getUseCaseDir('cdn', useCase);
   const outfile = `${outDir}/headless.js`;
@@ -151,15 +160,17 @@ const codeReplacerPlugin = (filePath, target, replacement) => ({
   },
 });
 
-const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
-  const [useCase, entryPoint] = entry;
-  const outDir = getUseCaseDir('dist/quantic/', useCase);
-  const outfile = `${outDir}/headless.js`;
-  const globalName = getUmdGlobalName(useCase);
+const quanticUmd = Object.entries(quanticUseCaseEntries)
+  .filter(([useCase]) => !quanticMode || quanticStaticResourceUseCases.has(useCase))
+  .map((entry) => () => {
+    const [useCase, entryPoint] = entry;
+    const outDir = getUseCaseDir(quanticOutputRoot, useCase);
+    const outfile = `${outDir}/headless.js`;
+    const globalName = getUmdGlobalName(useCase);
 
-  const target = /}\)\(updatedArgs, api, extraOptions\);/g;
+    const target = /}\)\(updatedArgs, api, extraOptions\);/g;
 
-  const replacement = `
+    const replacement = `
   fetchFn: async (request: Request | String) => {
     if (request instanceof String) {
       throw new Error("The provided 'request' must be a Request object.");
@@ -189,28 +200,29 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
 })(updatedArgs,{...api, signal: null},extraOptions);
 `;
 
-  return buildBrowserConfig(
-    {
-      entryPoints: [entryPoint],
-      outfile,
-      format: 'cjs',
-      banner: {
-        js: `${base.banner.js}`,
+    return buildBrowserConfig(
+      {
+        entryPoints: [entryPoint],
+        outfile,
+        format: 'cjs',
+        ...(quanticMode ? {metafile: false, sourcemap: false} : {}),
+        banner: {
+          js: `${base.banner.js}`,
+        },
+        inject: [
+          'ponyfills/headers-shim.js',
+          'ponyfills/global-this-shim.js',
+          'ponyfills/abortable-fetch-shim.js',
+          require.resolve('navigator.sendbeacon/dist/navigator.sendbeacon.cjs.js'),
+        ],
+        plugins: [
+          umdWrapper({libraryName: globalName}),
+          codeReplacerPlugin('src/api/knowledge/answer-slice.ts', target, replacement),
+        ],
       },
-      inject: [
-        'ponyfills/headers-shim.js',
-        'ponyfills/global-this-shim.js',
-        'ponyfills/abortable-fetch-shim.js',
-        require.resolve('navigator.sendbeacon/dist/navigator.sendbeacon.cjs.js'),
-      ],
-      plugins: [
-        umdWrapper({libraryName: globalName}),
-        codeReplacerPlugin('src/api/knowledge/answer-slice.ts', target, replacement),
-      ],
-    },
-    outDir
-  );
-});
+      outDir
+    );
+  });
 
 /**
  * @param {string} moduleName
@@ -271,11 +283,13 @@ async function buildBrowserConfig(options, outDir) {
       ...(options.plugins || []),
     ],
   });
-  outputMetafile(`browser.${options.format}`, outDir, out.metafile);
+  if (out.metafile) {
+    outputMetafile(`browser.${options.format}`, outDir, out.metafile);
+  }
   return out;
 }
 
-const nodeCjs = Object.entries(useCaseEntries).map((entry) => {
+const nodeCjs = Object.entries(useCaseEntries).map((entry) => () => {
   const [useCase, entryPoint] = entry;
   const dir = getUseCaseDir('dist/cjs', useCase);
   const outfile = `${dir}/headless.cjs`;
@@ -319,7 +333,10 @@ function outputMetafile(platform, outDir, metafile) {
 }
 
 async function main() {
-  await Promise.all([...browserEsm, ...browserUmd, ...nodeCjs, ...quanticUmd]);
+  const builds = quanticMode
+    ? quanticUmd
+    : [...browserEsm, ...browserUmd, ...nodeCjs, ...quanticUmd];
+  await Promise.all(builds.map((runBuild) => runBuild()));
 }
 
 main();

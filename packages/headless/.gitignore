@@ -1,5 +1,6 @@
 docs/js
 temp/
+.tmp/
 doc-parser/build
 
 src/external-builds

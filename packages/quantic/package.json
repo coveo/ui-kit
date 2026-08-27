@@ -58,7 +58,7 @@
     "promote:sfdx:ci": "pnpm run publish:sfdx -- --promote --ci",
     "preinstall": "node scripts/npm/check-sfdx-project.js",
     "postinstall": "node scripts/npm/setup-quantic.js",
-    "babel:headless": "babel ./node_modules/@coveo/headless/dist/quantic --delete-dir-on-start --out-dir .tmp/quantic-compiled --extensions .js --minified"
+    "babel:headless": "node scripts/npm/babel-headless.js"
   },
   "dependencies": {
     "@coveo/bueno": "workspace:*",

@@ -77,6 +77,7 @@
     "publint": "publint",
     "dev": "concurrently \"pnpm run build:definitions -w\" \"pnpm run build:bundles dev\"",
     "build": "pnpm run build:definitions && pnpm run build:bundles && pnpm run build:esm",
+    "build:quantic": "node ../../utils/ci/rm-rf.mjs .tmp/quantic && tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir .tmp/quantic/definitions && node esbuild.mjs quantic && node scripts/write-quantic-manifest.mjs",
     "build:bundles": "node esbuild.mjs",
     "build:esm": "node ./scripts/build.mjs --config=tsconfig.build-esm.json",
     "build:definitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
