@@ -741,6 +741,72 @@ jobs:
       - uses: ./.github/actions/publish-preview
         with:
           affected-tasks: ${{ needs.affected.outputs.tasks }}
+  angular-compat:
+    # Verifies that the floor of the Angular peer range can actually consume the
+    # published wrapper. The ceiling is not checked: it is the version the monorepo
+    # builds against, and samples/atomic/search-commerce-angular already builds
+    # against it. See docs/adr/0007-supported-major-versions-of-peer-frameworks.md.
+    name: 'Compat: Angular ${{ matrix.major }}'
+    needs: [affected, build]
+    if: contains(needs.affected.outputs.tasks, '"@coveo/atomic-angular#build"')
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 16 is the declared floor: the oldest major whose TypeScript range
+        # (>=4.9.3 <5.2) still overlaps the typescript >=5.0.0 peer that
+        # @coveo/atomic and @coveo/headless declare, leaving TypeScript 5.0 and 5.1
+        # as the workable window. Later majors in the range are not checked; per
+        # ADR-0007 rule 5 only the floor is.
+        major: [16]
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 1
+          fetch-tags: false
+          filter: blob:none
+      - uses: ./.github/actions/setup
+
+      - name: Verify Angular ${{ matrix.major }}
+        # The same command a developer runs locally. Every supported major accepts the
+        # Node version the monorepo pins: Angular 16 allows >=18.10.0 and later majors
+        # are looser still, so no per-leg Node setup is needed.
+        run: node scripts/verify-framework-compat.mjs angular ${{ matrix.major }}
+
+  react-compat:
+    # Same as angular-compat, for the React wrapper. See
+    # docs/adr/0007-supported-major-versions-of-peer-frameworks.md.
+    name: 'Compat: React ${{ matrix.major }}'
+    needs: [affected, build]
+    if: contains(needs.affected.outputs.tasks, '"@coveo/atomic-react#build"')
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 18 is the floor of the published ^18 || ^19 range. 19 is the ceiling and the
+        # version the monorepo builds against, so it is already covered.
+        major: [18]
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 1
+          fetch-tags: false
+          filter: blob:none
+      - uses: ./.github/actions/setup
+
+      - name: Verify React ${{ matrix.major }}
+        run: node scripts/verify-framework-compat.mjs react ${{ matrix.major }}
+
   is-valid-pr:
     name: 'Confirm build is valid (PR)'
     if: ${{ always() && github.event_name == 'pull_request'}}
@@ -760,6 +826,8 @@ jobs:
       - 'samples-e2e'
       - 'playwright-pkg-new-template-test'
       - 'publish-preview'
+      - 'angular-compat'
+      - 'react-compat'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -794,6 +862,8 @@ jobs:
       - 'samples-e2e'
       - 'playwright-pkg-new-template-test'
       - 'changeset-merge-guard'
+      - 'angular-compat'
+      - 'react-compat'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
