@@ -137,7 +137,11 @@ Note that, unlike the category facet (where search results reuse the same `Categ
 
 **Thermidor schema:** Consumers call `toggleSelect` / `toggleExclude` with the search result's identifying value.
 
-**Why:** A facet search result identifies the same underlying value as a list value. The payload is the same (`{ value }` for regular, `{ path }` for category). Separate actions would be redundant, and the "select and clear search" convenience is just two sequential actions (`toggleSelect` + `clearSearch`).
+**Why:** A facet search result identifies the same underlying value as a list value. The payload is the same (`{ value }` for regular, `{ path }` for category). Selecting a search result is therefore just `toggleSelect` with that value.
+
+The "select and clear search" convenience that headless's `facetSearch.select` bundles is handled by the backend: toggling any facet value should always clear the facet search as a side effect. That way there's no need for the consumer to sequence two actions, and no need for dedicated search-result actions.
+
+This assumes toggling always clears search. If we ever decide that toggling a search result should *not* clear the search (or that the two behaviors should be independently controllable), then dedicated `selectSearchResult` / `excludeSearchResult` actions would be the right way to distinguish "toggle this value and clear search" from "toggle this value and keep the search open." For now, the simpler always-clear behavior keeps the action surface minimal.
 
 ### `setRanges` replaced by `applyCustomRange` (singular)
 
