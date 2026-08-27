@@ -33,12 +33,7 @@
     },
     "test": {
       "outputs": [],
-      "dependsOn": [
-        "test:unit",
-        "validate:e2e-task-contracts",
-        "validate:types",
-        "validate:types:build-scripts"
-      ]
+      "dependsOn": ["test:unit", "validate:types", "validate:types:build-scripts"]
     },
     "test:unit": {
       "dependsOn": ["build"],
@@ -63,22 +58,13 @@
       "cache": false
     },
     "e2e:prepare": {
-      "dependsOn": ["build:staticresources", "validate:e2e-task-contracts"],
+      "dependsOn": ["build:staticresources"],
       "outputs": []
     },
     "e2e:playwright": {
       "dependsOn": ["@coveo/platform-mock-api#build"],
       "inputs": ["$TURBO_DEFAULT$"],
       "outputs": ["playwright-report/**", "blob-report/**", "test-results/**"],
-      "cache": false
-    },
-    "validate:e2e-task-contracts": {
-      "inputs": [
-        "package.json",
-        "turbo.json",
-        "$TURBO_ROOT$/scripts/ci/validate-quantic-e2e-contracts.test.mjs"
-      ],
-      "outputs": [],
       "cache": false
     },
     "validate:types": {

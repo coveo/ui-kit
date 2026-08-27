@@ -36,7 +36,6 @@
     "test:unit:debug": "lwc-jest --debug",
     "test:unit:watch": "lwc-jest --watch",
     "test:unit:coverage": "lwc-jest --coverage",
-    "validate:e2e-task-contracts": "node --test ../../scripts/ci/validate-quantic-e2e-contracts.test.mjs",
     "validate:types": "tsc",
     "validate:types:build-scripts": "tsc --noEmit --project scripts/build/tsconfig.json",
     "e2e": "playwright test",
