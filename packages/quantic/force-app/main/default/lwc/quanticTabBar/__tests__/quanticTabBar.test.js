@@ -397,14 +397,14 @@ describe('c-quantic-tab-bar', () => {
       exampleTabSlots = createExampleTabSlots(numberOfTabs);
     });
 
-    it('should run one layout update for multiple tab-render events in one frame', async () => {
+    it('should schedule one frame for multiple tab-render events in one frame', async () => {
       const element = createTestComponent(defaultOptions, exampleTabSlots);
       await flushPromises();
 
-      const layoutReadSpies = exampleTabSlots.map((tab) =>
-        jest.spyOn(tab, 'getBoundingClientRect')
+      const requestAnimationFrameSpy = jest.spyOn(
+        window,
+        'requestAnimationFrame'
       );
-      layoutReadSpies.forEach((spy) => spy.mockClear());
       const numberOfDispatches = 5;
       for (let i = 0; i < numberOfDispatches; i++) {
         element.dispatchEvent(
@@ -412,13 +412,9 @@ describe('c-quantic-tab-bar', () => {
         );
       }
 
+      expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
+      requestAnimationFrameSpy.mockRestore();
       await flushTabRender();
-
-      layoutReadSpies.forEach((spy) => {
-        // Each layout pass reads the cached tab rect once for the snapshot and once
-        // when the rendered DOM applies the updated tab state.
-        expect(spy).toHaveBeenCalledTimes(2);
-      });
     });
 
     it('should recompute the layout when the active tab changes between quantic__tabrendered dispatches', async () => {
