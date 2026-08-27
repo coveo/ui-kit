@@ -110,25 +110,23 @@ TypeScript is carved out of the ceiling rule deliberately. It releases roughly q
 
 ## Enforcement
 
-The rules are enforced at two levels, and it matters which is which. A static check answers whether the range is *declared* correctly; the version matrix answers whether the code *works* on a given major. The first is cheap and runs on every pull request; the second is expensive and does not.
+Enforcement rests on the compatibility matrix tracked by KIT-5983 and proposed in pull request #8324. There is deliberately no separate static check.
 
-### Static, on every pull request
-
-A unit test reads `pnpm-workspace.yaml` and asserts that the default catalog version of each framework satisfies the corresponding `peer-compatibility` range. When Renovate bumps the Angular catalog to a major outside the declared ceiling, that pull request fails until someone widens the ceiling deliberately or decides not to adopt the major yet. The test runs offline in milliseconds.
-
-Renovate is deliberately not configured to widen the range itself. Auto-widening would assert compatibility without evidence, which is what rules 2 and 4 exist to prevent.
-
-Rule 2's format is **not** machine-checked. It is a review-time convention, enforced the way the rest of the repository's manifest conventions are. A malformed range is visible in a one-line diff, and a wrong range is caught by the assertion above regardless of how it is written, so a shape test would add maintenance for little benefit.
-
-### Version matrix, not on every pull request
-
-Rules 3, 4 and 5 need real builds against real framework versions. That is the compatibility matrix tracked by KIT-5983 and proposed in pull request #8324.
+### What the matrix does
 
 A leg installs the packed library into a minimal consumer application for one framework major and builds it. That exercises package resolution, the TypeScript range that major pins, and — because the fixture uses a component in a template — `strictTemplates` against the generated inputs. It is a build check, not a runtime one.
 
-The design of that matrix is not settled at the time of writing. Two questions are open: how many legs to run, and whether it runs per pull request or on a schedule. The floor and ceiling are the bounds that must be covered under rule 5; intermediate majors are optional. Until the matrix lands, rules 3 and 4 rest on the analysis recorded here rather than on measurement, and the Angular floor stays provisional.
+One leg installs at the default catalog version *without* `--legacy-peer-deps`. That is what keeps rule 4 honest: the major the monorepo builds against must fall inside the range we publish, so a catalog bump to a major outside the declared ceiling fails that leg. Renovate is deliberately not configured to widen the range itself, because auto-widening would assert compatibility without evidence.
 
-As a backstop at the integration level, one leg installs at the catalog version *without* `--legacy-peer-deps`, so the version we build against must fall inside the range we publish.
+The design of the matrix is not settled at the time of writing. Two questions are open: how many legs to run, and whether it runs per pull request or on a schedule. The floor and ceiling are the bounds that must be covered under rule 5; intermediate majors are optional. Until the matrix lands, rules 3 and 4 rest on the analysis recorded here rather than on measurement, and the Angular floor stays provisional.
+
+### What is not enforced mechanically
+
+A unit test asserting that the catalog version satisfies the declared range was considered and rejected as redundant: the no-`--legacy-peer-deps` leg already covers the same divergence, and a second mechanism would need maintaining alongside it.
+
+Rule 2's format is also not machine-checked. It is a review-time convention, enforced the way the rest of the repository's manifest conventions are. A malformed range is visible in a one-line diff.
+
+The cost of relying on the matrix alone is feedback latency. If the matrix runs on a schedule rather than per pull request, a catalog bump that moves outside the range can merge and be caught afterwards rather than blocked. That is accepted: the failure is a peer warning for consumers, not a broken build, and pnpm's `strict-peer-dependencies` defaults to false.
 
 ### Keeping the matrix cheap
 
