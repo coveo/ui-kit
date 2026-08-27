@@ -120,7 +120,7 @@ A leg scaffolds a consumer application pinned to one framework major, installs t
 
 Peers are installed explicitly from the packed manifest rather than left to the package manager, so a missing peer cannot fail a leg for the wrong reason.
 
-The matrix lives in `ci.yml` rather than a separate workflow, gated on the affected task set so it runs only on pull requests touching a wrapper. Each leg is a single call to `scripts/verify-framework-compat.mjs`, which is the same command a developer runs locally — the check is reproducible outside CI, which is why it is a script rather than inline workflow steps.
+The checks live in `ci.yml` rather than a separate workflow, as one job per wrapper. Each is gated on its own package appearing in the affected task set, so touching one wrapper does not run another's legs. Each leg is a single call to `scripts/verify-framework-compat.mjs`, which is the same command a developer runs locally — the check is reproducible outside CI, which is why it is a script rather than inline workflow steps.
 
 **Only floors are covered.** Angular runs 16 and 17, because the floor is undecided between them; React runs 18. Ceilings are deliberately excluded: the ceiling is the version the monorepo builds against, and the in-repo samples already build against it on every pull request, so a ceiling leg would duplicate existing coverage. Intermediate majors are not covered either.
 
