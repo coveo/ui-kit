@@ -19,8 +19,8 @@
     "publint": "catalog:"
   },
   "peerDependencies": {
-    "@angular/common": "14 - 21",
-    "@angular/core": "14 - 21",
+    "@angular/common": "catalog:peer-compatibility",
+    "@angular/core": "catalog:peer-compatibility",
     "@coveo/headless": "workspace:^"
   },
   "engines": {
