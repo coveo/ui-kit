@@ -68,7 +68,7 @@ This ADR governs the range declared in `peerDependencies` for every framework pe
 
 Option C. Concretely:
 
-1. **Every shared peer range lives in `catalogs.peer-compatibility`** (ADR-0005) and is referenced as `catalog:peer-compatibility`. This extends that catalog beyond TypeScript and React to Angular and any future framework peer.
+1. **Every peer range declared by more than one package lives in `catalogs.peer-compatibility`** (ADR-0005) and is referenced as `catalog:peer-compatibility`. This extends that catalog beyond TypeScript and React to Angular and any future framework peer. A peer declared by exactly one package stays in that package's manifest: the catalog exists to stop participating packages from drifting apart, and with a single declarer there is nothing to drift.
 2. **Every framework peer range is expressed as a caret union with one clause per supported major**, using the bare major form: `^16 || ^17 || ^18`. This applies whether the supported majors are contiguous or not. Hyphen ranges are not used.
 3. **The lower bound is the oldest major that can technically resolve**, determined by the transitive constraints our packages impose — chiefly the TypeScript peer — and confirmed by CI.
 4. **The upper bound is the newest major CI validates**, which is at minimum the major the monorepo itself builds against. It may extend one major beyond that — the pattern `@angular/material` uses with `^22.0.0 || ^23.0.0` — but only once a CI leg validates that next major. Being `latest` on npm is not evidence.
@@ -77,6 +77,8 @@ Option C. Concretely:
 7. **The lower bound rises only at a major of the affected package.** At each major, it is raised to the oldest framework major still in upstream long-term support at that time. Between majors the range only widens. Determining which majors are still supported is part of planning that major release; it is not tracked continuously.
 
 TypeScript is an explicit exception to rules 2 and 4: it keeps an open lower bound with no ceiling.
+
+Rules 2 through 5 apply to framework peers — the packages a consumer builds their application with, where a major version is a migration. They do not apply to incidental peers such as an optional log formatter, which should instead be marked optional so consumers are not warned about dependencies they never install.
 
 ### Rationale
 
@@ -150,7 +152,7 @@ Note that `@angular/core` and `@angular/common` also appear under `pnpm.override
 Remaining work, each its own change:
 
 - At the next major of `@coveo/atomic-angular`, apply rule 7 and raise the floor to the oldest Angular major then in long-term support. On today's schedule that would be 20, since Angular 19 left support in May 2026. This is not yet scheduled: the v4 Feature (KIT-5934) is on hold.
-- Audit `pino-pretty` against rule 2 and bring it into the catalog (KIT-6103). Its optional peers, and those of `@coveo/headless`, should also carry `peerDependenciesMeta.optional` so consumers are not warned about dependencies they do not use.
+- Determine the real supported `pino-pretty` range (KIT-6103). The declared `^6.0.0 || ^10.0.0 || ^11.0.0 || ^13.0.0` skips majors 7 through 9 and 12, which looks accreted rather than deliberate. Under rule 1 it stays in the `@coveo/headless` manifest, since no other package declares it.
 - Confirm the React range against rules 2 to 5 and add the CI coverage rule 5 requires, which does not exist for React today.
 
 Node.js is deliberately out of scope. It is expressed through `engines` rather than `peerDependencies` and already tracks Node's own LTS lines.
