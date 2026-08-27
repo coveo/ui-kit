@@ -122,7 +122,7 @@ Peers are installed explicitly from the packed manifest rather than left to the 
 
 The checks live in `ci.yml` rather than a separate workflow, as one job per wrapper. Each is gated on its own package appearing in the affected task set, so touching one wrapper does not run another's legs. Each leg is a single call to `scripts/verify-framework-compat.mjs`, which is the same command a developer runs locally — the check is reproducible outside CI, which is why it is a script rather than inline workflow steps.
 
-**Only floors are covered.** Angular runs 16 and 17, because the floor is undecided between them; React runs 18. Ceilings are deliberately excluded: the ceiling is the version the monorepo builds against, and the in-repo samples already build against it on every pull request, so a ceiling leg would duplicate existing coverage. Intermediate majors are not covered either.
+**Only floors are covered.** Angular runs 16, React runs 18. Ceilings are deliberately excluded: the ceiling is the version the monorepo builds against, and the in-repo samples already build against it on every pull request, so a ceiling leg would duplicate existing coverage. Intermediate majors are not covered either, so a leg exists for each wrapper rather than for each supported major.
 
 Until the matrix has run, rules 3 and 4 rest on the analysis recorded here rather than on measurement, and the Angular floor stays provisional.
 
@@ -149,7 +149,9 @@ Consequently, majors between the bounds are build-verified only. Runtime verific
 Angular is the first application of this policy, under epic KIT-4735:
 
 - Add `@angular/common` and `@angular/core` to `catalogs.peer-compatibility` and reference them from `@coveo/atomic-angular`, replacing the hardcoded `14 - 21`.
-- The range becomes `^16 || ^17 || ^18 || ^19 || ^20 || ^21`. The ceiling is 21 because that is the major the monorepo builds against; Angular 22 is `latest` on npm but is neither built nor tested here, and rule 4 does not accept registry recency as evidence. The floor is provisional: it derives from the TypeScript overlap alone, and one constraint is untested — the package is `exports`-only with no root `main`, and `moduleResolution: bundler` did not become the Angular CLI default until v17, so the floor may be 17.
+- The range becomes `^16 || ^17 || ^18 || ^19 || ^20 || ^21`. The ceiling is 21 because that is the major the monorepo builds against; Angular 22 is `latest` on npm but is neither built nor tested here, and rule 4 does not accept registry recency as evidence.
+- The floor of 16 is the oldest major that can still resolve. Angular 16 caps TypeScript at `<5.2` and our packages require `>=5.0.0`, so the workable window is TypeScript 5.0 and 5.1 — narrow, but non-empty, which is what distinguishes 16 from 14 and 15. One constraint remains untested: the package is `exports`-only with no root `main`, and `moduleResolution: bundler` did not become the Angular CLI default until v17, so Angular 16's default `node` resolution may not find it. The floor leg exists to answer that.
+- If that leg fails, Angular 16 joins 14 and 15 as never resolvable, so removing it is also a bug fix under rule 6 and the floor moves to 17 in the same change. That sequencing matters: dropping 16 _without_ that evidence would be breaking under rule 6, because an Angular 16 consumer on TypeScript 5.0 or 5.1 has a coherent install today.
 - Raising the ceiling to 22 belongs with the change that upgrades the Angular catalog to 22, so the range and the build move together.
 
 Note that `@angular/core` and `@angular/common` also appear under `pnpm.overrides` in `pnpm-workspace.yaml`. Those entries pin the version used to build and test inside this workspace and have no effect on published manifests. They are not a substitute for, and must not be confused with, the `peer-compatibility` entries.
