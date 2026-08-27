@@ -1,0 +1,28 @@
+<!doctype html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Atomic recommendations style encapsulation</title>
+    <link rel="icon" href="data:," />
+    <script type="module" src="./load-atomic.js"></script>
+    <script type="module" src="./style-leak-sentinel.js"></script>
+  </head>
+
+  <body>
+    <atomic-recs-interface>
+      <atomic-recs-list number-of-recommendations="3">
+        <atomic-recs-result-template>
+          <template>
+            <atomic-result-section-title>
+              <atomic-result-link></atomic-result-link>
+            </atomic-result-section-title>
+            <atomic-result-section-excerpt>
+              <atomic-result-text field="excerpt"></atomic-result-text>
+            </atomic-result-section-excerpt>
+          </template>
+        </atomic-recs-result-template>
+      </atomic-recs-list>
+    </atomic-recs-interface>
+  </body>
+</html>

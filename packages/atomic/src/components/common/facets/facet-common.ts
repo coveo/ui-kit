@@ -16,6 +16,13 @@ export interface FacetValuePropsBase {
   buttonRef?: RefOrCallback;
 }
 
+export function getFirstNewFacetValueIndex(
+  currentValues: readonly {value: string}[],
+  previouslyDisplayedValues: ReadonlySet<string>
+) {
+  return currentValues.findIndex(({value}) => !previouslyDisplayedValues.has(value));
+}
+
 export function shouldDisplayInputForFacetRange(facetRange: {
   hasInput: boolean;
   hasInputRange: boolean;

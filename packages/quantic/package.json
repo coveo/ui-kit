@@ -1,20 +1,34 @@
 {
   "name": "@coveo/quantic",
-  "version": "3.44.0",
+  "version": "3.44.1",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
-  "author": "coveo.com",
   "homepage": "https://coveo.com",
   "license": "Apache-2.0",
-  "main": "index.js",
+  "author": "coveo.com",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coveo/ui-kit.git"
   },
+  "files": [
+    "force-app/main/default/classes/*",
+    "force-app/main/default/labels/*",
+    "force-app/main/default/lwc/*",
+    "!force-app/main/default/lwc/testUtils",
+    "force-app/main/default/cspTrustedSites/*",
+    "force-app/main/default/staticresources/*",
+    "scripts/npm",
+    "docs/out/quantic-docs.json",
+    "!force-app/main/default/lwc/**/__tests__",
+    "!force-app/main/default/lwc/**/e2e"
+  ],
+  "main": "index.js",
   "scripts": {
-    "lint:check:tests": "eslint force-app/main/default/lwc/ --format junit -o reports/eslint.xml",
-    "lint:check": "eslint force-app/main/default/lwc/ && eslint force-app/examples/main/lwc/ && prettier \"force-app/{,**}/*.js\" --check",
-    "lint:fix": "eslint --fix force-app/main/default/lwc/ && eslint --fix force-app/examples/main/lwc/ && prettier \"force-app/{,**}/*.js\" --write",
-    "lint:fix:apex": "prettier \"force-app/{,**}/*.{cls,trigger}\" --write",
+    "lint:check:eslint": "eslint force-app/main/default/lwc/ force-app/examples/main/lwc/",
+    "lint:check:prettier": "prettier \"force-app/{,**}/*.{js,cls,trigger}\" --check",
+    "lint:check": "turbo run lint:check:all",
+    "lint:fix:eslint": "eslint --fix force-app/main/default/lwc/ force-app/examples/main/lwc/",
+    "lint:fix:prettier": "prettier \"force-app/{,**}/*.{js,cls,trigger}\" --write",
+    "lint:fix": "turbo run lint:fix:all",
     "build:staticresources": "node build-static-resources.js",
     "dev": "node ../../utils/ci/rm-rf.mjs .localdevserver && pnpm run build:staticresources && pnpm run dev:sfdx",
     "dev:sfdx": "sf project deploy start --source-dir force-app/main && sfdx force:lightning:lwc:start --port 3334",
@@ -24,9 +38,10 @@
     "test:unit:coverage": "lwc-jest --coverage",
     "validate:types": "tsc",
     "validate:types:build-scripts": "tsc --noEmit --project scripts/build/tsconfig.json",
-    "e2e:playwright": "npx playwright test",
-    "e2e:playwright:lws-enabled": "npx playwright test --project=LWS-enabled",
-    "e2e:playwright:lws-disabled": "npx playwright test --project=LWS-disabled",
+    "e2e": "playwright test",
+    "e2e:playwright": "playwright test",
+    "e2e:playwright:lws-enabled": "playwright test --project=LWS-enabled",
+    "e2e:playwright:lws-disabled": "playwright test --project=LWS-disabled",
     "scratch:create": "sf org create scratch --set-default --definition-file config/lws-enabled-scratch-def.json --alias Quantic__LWS_enabled",
     "setup:examples": "pnpm run create:lws-enabled && pnpm run create:lws-disabled",
     "create:lws-enabled": "ts-node scripts/build/deploy-community.ts --scratch-org-def-path=./config/lws-enabled-scratch-def.json",
@@ -50,9 +65,6 @@
     "coveo.analytics": "workspace:*",
     "dompurify": "catalog:",
     "marked": "catalog:"
-  },
-  "engines": {
-    "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
   },
   "devDependencies": {
     "@babel/cli": "7.28.3",
@@ -80,16 +92,7 @@
     "wait-on": "9.1.0",
     "xml2js": "0.6.2"
   },
-  "files": [
-    "force-app/main/default/classes/*",
-    "force-app/main/default/labels/*",
-    "force-app/main/default/lwc/*",
-    "!force-app/main/default/lwc/testUtils",
-    "force-app/main/default/cspTrustedSites/*",
-    "force-app/main/default/staticresources/*",
-    "scripts/npm",
-    "docs/out/quantic-docs.json",
-    "!force-app/main/default/lwc/**/__tests__",
-    "!force-app/main/default/lwc/**/e2e"
-  ]
+  "engines": {
+    "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
+  }
 }

@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "target": "ES2022",
+    "strict": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "types": ["node"],
+    "paths": {
+      "@/*": ["../atomic/*"],
+      "@coveo/atomic": ["../atomic/src/index.ts"],
+      "@coveo/atomic/loader": ["../atomic/src/loader.ts"],
+      "@coveo/headless": ["../headless/src/index.ts"],
+      "@coveo/headless/case-assist": ["../headless/src/case-assist.index.ts"],
+      "@coveo/headless/commerce": ["../headless/src/commerce.index.ts"],
+      "@coveo/headless/insight": ["../headless/src/insight.index.ts"],
+      "@coveo/headless/recommendation": ["../headless/src/recommendation.index.ts"],
+      "@coveo/bueno": ["../bueno/src/index.ts"],
+      "@coveo/relay": ["../relay/src/relay.ts"]
+    }
+  },
+  "include": ["vite.config.ts", "vite"]
+}

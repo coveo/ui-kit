@@ -30,6 +30,15 @@ export default {
     'packages/atomic-hosted-page': {
       entry: ['src/atomic-hosted-page.esm.ts', 'dev/vite.config.ts'],
     },
+    'packages/atomic-theming-e2e': {
+      entry: ['tests/**/*.spec.ts', 'fixtures/*.js'],
+    },
+    'packages/atomic-playground': {
+      entry: ['*.js'],
+      ignoreDependencies: [
+        'dayjs', // Transitive dep pre-bundled via optimizeDeps.include in vite.config.ts.
+      ],
+    },
     'packages/atomic-angular': {
       ignoreDependencies: [
         // Can be removed once we bump our package to use more recent Angular versions that support Vite 7+.

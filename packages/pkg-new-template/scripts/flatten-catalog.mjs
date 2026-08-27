@@ -17,25 +17,35 @@ const pkgDir = path.dirname(pkgPath);
 
 const pkgJson = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
 
-function resolveCatalogEntries(deps) {
-  if (!deps) return;
-  for (const [name, version] of Object.entries(deps)) {
-    if (version !== 'catalog:') continue;
-    const output = execSync(`pnpm list ${name} --json --depth 0`, {
+function listDependencies() {
+  const output = execSync(
+    `pnpm ls --filter . --json --depth 0 | jq '.[0] | {dependencies, devDependencies}'`,
+    {
       cwd: pkgDir,
       encoding: 'utf8',
-    });
-    const parsed = JSON.parse(output)[0];
-    const resolved =
-      parsed.dependencies?.[name]?.version || parsed.devDependencies?.[name]?.version;
-    if (resolved) {
-      deps[name] = `^${resolved}`;
-      console.log(`Resolved ${name} "catalog:" → "^${resolved}"`);
+    }
+  );
+
+  return JSON.parse(output);
+}
+
+function resolveCatalogEntries(configuration, resolved) {
+  if (!configuration) return;
+
+  for (const [name, version] of Object.entries(configuration)) {
+    if (version !== 'catalog:') continue;
+
+    const resolvedVersion = resolved[name]?.version;
+    if (resolvedVersion) {
+      configuration[name] = `^${resolvedVersion}`;
+      console.log(`Resolved ${name} "catalog:" → "^${resolvedVersion}"`);
     }
   }
 }
 
-resolveCatalogEntries(pkgJson.dependencies);
-resolveCatalogEntries(pkgJson.devDependencies);
+const {dependencies, devDependencies} = listDependencies();
+
+resolveCatalogEntries(pkgJson.dependencies, dependencies);
+resolveCatalogEntries(pkgJson.devDependencies, devDependencies);
 
 fs.writeFileSync(pkgPath, JSON.stringify(pkgJson, null, 2) + '\n');

@@ -1,6 +1,6 @@
 import type {Result, ResultTemplateCondition} from '@coveo/headless';
 import {ResultTemplatesHelpers} from '@coveo/headless';
-import {html, LitElement} from 'lit';
+import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {
   makeDefinedConditions,
@@ -76,14 +76,15 @@ export class AtomicFieldCondition
   render() {
     const result = this.getResult();
 
-    if (!result || !this.conditions.every((condition) => condition(result))) {
-      // TODO: Replace this.hidden = true with this.remove() once all Search components are migrated from Stencil to Lit.
-      // Currently using hidden to avoid breaking Stencil initialization event system in mixed Stencil/Lit component trees.
+    if (!result) {
       this.hidden = true;
-      return html``;
+      return nothing;
     }
 
-    return html`<slot></slot>`;
+    const conditionsMet = this.conditions.every((condition) => condition(result));
+    this.hidden = !conditionsMet;
+
+    return conditionsMet ? html`<slot></slot>` : nothing;
   }
 }
 

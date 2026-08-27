@@ -1,0 +1,125 @@
+<!doctype html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Atomic playground: Insight Panel</title>
+    <link rel="icon" href="data:," />
+    <script type="module" src="./insight.js"></script>
+    <style>
+      body {
+        margin: 0;
+      }
+
+      atomic-insight-interface:not([widget='false']),
+      atomic-insight-layout:not([widget='false']) {
+        width: 500px;
+        height: 1000px;
+        margin-left: auto;
+        margin-right: auto;
+        box-shadow: 0px 3px 24px 0px #0000001a;
+      }
+
+      .insight-status {
+        display: flex;
+        align-items: center;
+        background-color: #f1f2ff;
+      }
+
+      .insight-status atomic-insight-query-summary {
+        flex-grow: 1;
+      }
+
+      .insight-status atomic-insight-generate-answer-button {
+        padding: 0rem 1.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <button type="button" id="widget-view">Toggle widget view</button>
+    <atomic-insight-interface
+      fields-to-include='["sfid", "inat_kingdom", "inat_family", "inat_class"]'
+      language-assets-path="/lang"
+      icon-assets-path="/assets"
+    >
+      <atomic-insight-full-search-button
+        slot="full-search"
+        tooltip="Full Search Button Tooltip"
+      ></atomic-insight-full-search-button>
+      <atomic-insight-layout>
+        <atomic-layout-section section="search">
+          <atomic-insight-search-box></atomic-insight-search-box>
+          <atomic-insight-refine-toggle></atomic-insight-refine-toggle>
+          <atomic-insight-edit-toggle tooltip="This is a tooltip"></atomic-insight-edit-toggle>
+          <atomic-insight-history-toggle
+            tooltip="This is a tooltip"
+          ></atomic-insight-history-toggle>
+          <atomic-insight-tabs>
+            <atomic-insight-tab label="All" expression="" active></atomic-insight-tab>
+            <atomic-insight-tab
+              label="Folding"
+              expression="@source=iNaturalistTaxons"
+            ></atomic-insight-tab>
+            <atomic-insight-tab
+              label="Service Cases"
+              expression="@objecttype==Case"
+            ></atomic-insight-tab>
+          </atomic-insight-tabs>
+        </atomic-layout-section>
+        <atomic-layout-section section="facets">
+          <atomic-facet-manager>
+            <atomic-insight-facet
+              field="source"
+              label="Source"
+              display-values-as="link"
+            ></atomic-insight-facet>
+            <atomic-insight-facet field="filetype" label="Filetype"></atomic-insight-facet>
+          </atomic-facet-manager>
+        </atomic-layout-section>
+        <atomic-layout-section section="status">
+          <div class="insight-status">
+            <atomic-insight-query-summary></atomic-insight-query-summary>
+            <atomic-insight-generate-answer-button></atomic-insight-generate-answer-button>
+          </div>
+        </atomic-layout-section>
+        <atomic-layout-section section="results">
+          <atomic-insight-smart-snippet></atomic-insight-smart-snippet>
+          <atomic-insight-folded-result-list image-size="none">
+            <atomic-insight-result-template>
+              <template>
+                <atomic-insight-result-action-bar>
+                  <atomic-insight-result-action
+                    tooltip="Copy to Clipboard"
+                    tooltip-on-click="Copied!"
+                    action="copyToClipboard"
+                  ></atomic-insight-result-action>
+                  <atomic-insight-result-action
+                    tooltip="post to feed"
+                    action="postToFeed"
+                  ></atomic-insight-result-action>
+                  <atomic-insight-result-attach-to-case-action></atomic-insight-result-attach-to-case-action>
+                  <atomic-insight-result-quickview-action></atomic-insight-result-quickview-action>
+                </atomic-insight-result-action-bar>
+                <atomic-result-section-actions>
+                  <atomic-insight-result-attach-to-case-indicator></atomic-insight-result-attach-to-case-indicator>
+                </atomic-result-section-actions>
+                <atomic-result-section-title>
+                  <atomic-result-link></atomic-result-link>
+                </atomic-result-section-title>
+                <atomic-result-section-excerpt>
+                  <atomic-result-text field="excerpt"></atomic-result-text>
+                </atomic-result-section-excerpt>
+              </template>
+            </atomic-insight-result-template>
+          </atomic-insight-folded-result-list>
+          <atomic-insight-no-results></atomic-insight-no-results>
+          <atomic-insight-query-error></atomic-insight-query-error>
+        </atomic-layout-section>
+        <atomic-layout-section section="pagination">
+          <atomic-insight-pager></atomic-insight-pager>
+        </atomic-layout-section>
+      </atomic-insight-layout>
+    </atomic-insight-interface>
+  </body>
+</html>

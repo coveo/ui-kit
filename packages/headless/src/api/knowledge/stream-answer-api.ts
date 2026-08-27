@@ -223,6 +223,7 @@ export const answerApi = answerSlice.injectEndpoints({
             'Content-Type': 'application/json',
             'Accept-Encoding': '*',
           },
+          openWhenHidden: true,
           fetch,
           onopen: async (res) => {
             const answerId = res.headers.get('x-answer-id');

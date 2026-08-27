@@ -5,12 +5,13 @@ describe('fetchAppProxyConfig', () => {
   const mockFetch = vi.fn();
 
   beforeEach(() => {
-    global.fetch = mockFetch;
+    vi.stubGlobal('fetch', mockFetch);
     clearAppProxyCache();
     vi.clearAllMocks();
   });
 
   afterEach(() => {
+    vi.unstubAllGlobals();
     vi.clearAllMocks();
   });
 
