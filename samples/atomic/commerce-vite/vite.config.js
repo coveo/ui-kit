@@ -29,7 +29,7 @@ for (const name of ['lang', 'assets']) {
 }
 
 export default defineConfig({
-  // Multi-page app: home, search, and two product-listing pages.
+  // Multi-page app: home, search, cart, and four product-listing pages.
   appType: 'mpa',
   server: {
     open: '/index.html',
@@ -39,7 +39,10 @@ export default defineConfig({
       input: {
         index: resolve('index.html'),
         search: resolve('search.html'),
+        cart: resolve('cart.html'),
+        'listing-pants': resolve('listing-pants.html'),
         'listing-surf-accessories': resolve('listing-surf-accessories.html'),
+        'listing-towels': resolve('listing-towels.html'),
         'listing-toys': resolve('listing-toys.html'),
       },
     },

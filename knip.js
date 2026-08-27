@@ -117,7 +117,7 @@ export default {
       // build artifacts (dist/lang, dist/assets) are missing. Disable the Vite
       // plugin config loader.
       vite: {config: []},
-      entry: ['src/commerce-page.js'],
+      entry: ['src/*-page.js'],
     },
     'samples/atomic/search-vite': {
       // Same as commerce-vite: vite.config.js throws without build artifacts.
