@@ -131,6 +131,8 @@ catalog:
 
 catalogs:
   peer-compatibility:
+    '@angular/common': '^18 || ^19 || ^20 || ^21'
+    '@angular/core': '^18 || ^19 || ^20 || ^21'
     '@types/react': '^18 || ^19'
     '@types/react-dom': '^18 || ^19'
     react: '^18 || ^19'
