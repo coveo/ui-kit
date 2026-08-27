@@ -126,11 +126,13 @@
     "vitest": "catalog:"
   },
   "peerDependencies": {
-    "encoding": "^0.1.13",
     "pino-pretty": "^6.0.0 || ^10.0.0 || ^11.0.0 || ^13.0.0",
     "typescript": "catalog:peer-compatibility"
   },
   "peerDependenciesMeta": {
+    "pino-pretty": {
+      "optional": true
+    },
     "typescript": {
       "optional": true
     }
