@@ -405,7 +405,7 @@ jobs:
 
   chromatic:
     name: 'Run Chromatic visual tests on Atomic'
-    needs: [build]
+    needs: [affected, build]
     if: ${{ always() && !cancelled() }} # Run even if build is skipped
     runs-on: ubuntu-latest
     steps:
@@ -434,6 +434,11 @@ jobs:
           (!startsWith(github.head_ref, 'renovate/') ||
           contains(fromJSON(vars.CHROMATIC_RENOVATE_ALLOWLIST || '[]'), github.head_ref))
         with:
+          # Unaffected PRs should have one reachable baseline so unchanged Storybooks use
+          # TurboSnap bypass pricing. If affected calculation fails, keep normal baseline selection.
+          # Reachable same-branch builds are still found in Git history; this only drops Chromatic's
+          # continuity fallback for an orphaned branch build.
+          ignoreLastBuildOnBranch: ${{ needs.affected.result == 'success' && !contains(needs.affected.outputs.tasks, '"@coveo/atomic#build"') && github.head_ref || '' }}
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           workingDir: packages/atomic
       - name: Skip Chromatic visual tests
