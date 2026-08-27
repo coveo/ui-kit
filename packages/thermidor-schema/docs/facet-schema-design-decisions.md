@@ -106,7 +106,7 @@ Each `CategoryFacetValue` is just `{ path: string[], value: string, numberOfResu
 
 **Why:** The `displayValue`/`rawValue` distinction is unnecessary when the backend always returns what should be rendered. One `value` field serves both display and action identification. `count` → `numberOfResults` for consistency with all other value models.
 
-Note that, unlike the category facet (where search results reuse the same `CategoryFacetValue` model as the facet's values), the regular facet's search results are a *separate* model from `RegularFacetValue`. A regular facet value carries a `state` (`idle`/`selected`/`excluded`), but a search result never needs one: facet search only ever returns idle (unselected) values, so a `state` field would always be `idle` and is omitted. The result is a model with the same field names as `RegularFacetValue` minus `state`. Category values, by contrast, have no `state` field to begin with (selection is structural), so there was nothing to strip and the models could be shared outright.
+Note that, unlike the category facet (where search results reuse the same `CategoryFacetValue` model as the facet's values), the regular facet's search results are a _separate_ model from `RegularFacetValue`. A regular facet value carries a `state` (`idle`/`selected`/`excluded`), but a search result never needs one: facet search only ever returns idle (unselected) values, so a `state` field would always be `idle` and is omitted. The result is a model with the same field names as `RegularFacetValue` minus `state`. Category values, by contrast, have no `state` field to begin with (selection is structural), so there was nothing to strip and the models could be shared outright.
 
 ## Action changes
 
@@ -131,6 +131,18 @@ Note that, unlike the category facet (where search results reuse the same `Categ
 
 **Why:** The backend does not support exclusion for numeric, date, or category facets. Modeling unsupported actions would let consumers dispatch actions the backend silently ignores, hiding contract violations.
 
+### `toggleSingleSelect` / `toggleSingleExclude` (single-select facets)
+
+**Headless:** Both are defined on the core commerce facet. Category and location omit `toggleSingleSelect`; category, location, numeric, and date omit `toggleSingleExclude` in various combinations.
+
+**Thermidor schema:**
+
+- `toggleSingleSelect` is available on regular, numeric, and date facets (payload mirrors `toggleSelect`: `{ value }` for regular, `{ start, end }` for numeric/date). It selects a value while deselecting all others.
+- `toggleSingleExclude` is available on the regular facet only (payload `{ value }`).
+- Category has neither: it is inherently single-select through `selectPath` navigation.
+
+**Why:** Single-select facets (radio-button-style UIs where picking a value replaces the previous selection, rather than checkbox-style multi-select) are a common pattern. Without a dedicated action, a consumer would have to emulate "select this and deselect everything else" by dispatching a deselect-all followed by a select — two round-trips and a flash of intermediate state. `toggleSingleSelect` expresses the intent in one action. `toggleSingleExclude` follows the same exclusion-is-regular-only rule as `toggleExclude`, since the backend supports exclusion only for regular facets.
+
 ### No dedicated `selectSearchResult` / `excludeSearchResult` actions
 
 **Headless:** `facetSearch.select(result)` and `facetSearch.exclude(result)` are separate methods.
@@ -141,13 +153,13 @@ Note that, unlike the category facet (where search results reuse the same `Categ
 
 The "select and clear search" convenience that headless's `facetSearch.select` bundles is handled by the backend: toggling any facet value should always clear the facet search as a side effect. That way there's no need for the consumer to sequence two actions, and no need for dedicated search-result actions.
 
-This assumes toggling always clears search. If we ever decide that toggling a search result should *not* clear the search (or that the two behaviors should be independently controllable), then dedicated `selectSearchResult` / `excludeSearchResult` actions would be the right way to distinguish "toggle this value and clear search" from "toggle this value and keep the search open." For now, the simpler always-clear behavior keeps the action surface minimal.
+This assumes toggling always clears search. If we ever decide that toggling a search result should _not_ clear the search (or that the two behaviors should be independently controllable), then dedicated `selectSearchResult` / `excludeSearchResult` actions would be the right way to distinguish "toggle this value and clear search" from "toggle this value and keep the search open." For now, the simpler always-clear behavior keeps the action surface minimal.
 
 ### `setRanges` replaced by `applyCustomRange` (singular)
 
 **Headless:** `setRanges(ranges)` accepts an array of ranges.
 
-**Thermidor schema:** `applyCustomRange({ start, end, endInclusive })` applies a single custom range.
+**Thermidor schema:** `applyCustomRange({ start, end })` applies a single custom range.
 
 **Why:** The real use case is one user-entered range. Applying a custom range clears selected listed ranges (mutually exclusive). The name "setRanges" (plural) was misleading and the array payload over-permitted. A single range with a clear action name communicates the intent and constraint.
 

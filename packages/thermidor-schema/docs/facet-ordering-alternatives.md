@@ -36,12 +36,12 @@ The `facet-manager` gets the ordering benefit of a central component _without_ a
 
 ## Comparison
 
-| Property                             | Catalog array order                            | Distributed `position`                      | Monolithic component                                  | Dedicated `facet-manager`         |
-| ------------------------------------ | ---------------------------------------------- | ------------------------------------------- | ----------------------------------------------------- | --------------------------------- |
-| Single source of truth               | ✅ (array position)                            | ❌ (spread across facets)                   | ✅ (ordered state array)                              | ✅ (one `facetIds` array)         |
-| Reorder expressible as one delta     | ❌ (resend whole array or invent array ops)    | ❌ (multi-component update)                 | ✅ (ordered state array)                              | ✅ (one state update)             |
-| Decoupled from unrelated components  | ❌ (facets mixed with all other components)    | ✅                                          | ✅                                                    | ✅                                |
-| Extensible to cross-facet actions    | ❌ (no component to attach actions to)         | ❌                                          | ✅                                                    | ✅ (add actions to the component) |
-| Facets stay independently consumable | ✅ (separate components)                       | ✅ (separate components)                    | ❌ (tagged-union entries, union of all actions)       | ✅ (separate components)          |
-| Action validity enforced by contract | ✅ (per-facet schemas)                         | ✅ (per-facet schemas)                      | ❌ (depends on target's runtime `facetType`)          | ✅ (per-facet schemas)            |
-| Consistent with the component model  | ❌ (ordering lives outside components)         | ⚠️ partial (state spread across components) | ⚠️ partial (one component absorbs all facet concerns) | ✅ (uniform state/actions)        |
+| Property                             | Catalog array order                         | Distributed `position`                      | Monolithic component                                  | Dedicated `facet-manager`         |
+| ------------------------------------ | ------------------------------------------- | ------------------------------------------- | ----------------------------------------------------- | --------------------------------- |
+| Single source of truth               | ✅ (array position)                         | ❌ (spread across facets)                   | ✅ (ordered state array)                              | ✅ (one `facetIds` array)         |
+| Reorder expressible as one delta     | ❌ (resend whole array or invent array ops) | ❌ (multi-component update)                 | ✅ (ordered state array)                              | ✅ (one state update)             |
+| Decoupled from unrelated components  | ❌ (facets mixed with all other components) | ✅                                          | ✅                                                    | ✅                                |
+| Extensible to cross-facet actions    | ❌ (no component to attach actions to)      | ❌                                          | ✅                                                    | ✅ (add actions to the component) |
+| Facets stay independently consumable | ✅ (separate components)                    | ✅ (separate components)                    | ❌ (tagged-union entries, union of all actions)       | ✅ (separate components)          |
+| Action validity enforced by contract | ✅ (per-facet schemas)                      | ✅ (per-facet schemas)                      | ❌ (depends on target's runtime `facetType`)          | ✅ (per-facet schemas)            |
+| Consistent with the component model  | ❌ (ordering lives outside components)      | ⚠️ partial (state spread across components) | ⚠️ partial (one component absorbs all facet concerns) | ✅ (uniform state/actions)        |
