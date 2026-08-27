@@ -21,6 +21,8 @@
       "required": [
         "toggleSelect",
         "toggleExclude",
+        "toggleSingleSelect",
+        "toggleSingleExclude",
         "clearAllActiveValues",
         "search",
         "showMoreSearchResults",
@@ -34,6 +36,12 @@
         },
         "toggleExclude": {
           "$ref": "#/$defs/RegularFacetToggleExcludeAction"
+        },
+        "toggleSingleSelect": {
+          "$ref": "#/$defs/RegularFacetToggleSingleSelectAction"
+        },
+        "toggleSingleExclude": {
+          "$ref": "#/$defs/RegularFacetToggleSingleExcludeAction"
         },
         "clearAllActiveValues": {
           "$ref": "#/$defs/RegularFacetClearAllActiveValuesAction"
@@ -229,6 +237,54 @@
               "minLength": 1,
               "maxLength": 1024,
               "description": "The raw facet value to toggle exclusion for."
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "RegularFacetToggleSingleSelectAction": {
+      "title": "regularFacetToggleSingleSelect",
+      "description": "Toggles the selected state of a facet value, deselecting all other values (single-select behavior).",
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ],
+      "properties": {
+        "payload": {
+          "type": "object",
+          "required": ["value"],
+          "properties": {
+            "value": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024,
+              "description": "The raw facet value to single-select."
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "RegularFacetToggleSingleExcludeAction": {
+      "title": "regularFacetToggleSingleExclude",
+      "description": "Toggles the excluded state of a facet value, clearing all other selections/exclusions (single-exclude behavior).",
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ],
+      "properties": {
+        "payload": {
+          "type": "object",
+          "required": ["value"],
+          "properties": {
+            "value": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024,
+              "description": "The raw facet value to single-exclude."
             }
           },
           "additionalProperties": false

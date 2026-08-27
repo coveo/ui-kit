@@ -12,11 +12,15 @@ import {
   CategoryFacetSearchPayloadSchema,
   DateFacetApplyCustomRangePayloadSchema,
   DateFacetToggleSelectPayloadSchema,
+  DateFacetToggleSingleSelectPayloadSchema,
   NumericFacetApplyCustomRangePayloadSchema,
   NumericFacetToggleSelectPayloadSchema,
+  NumericFacetToggleSingleSelectPayloadSchema,
   RegularFacetSchema,
   RegularFacetToggleExcludePayloadSchema,
   RegularFacetToggleSelectPayloadSchema,
+  RegularFacetToggleSingleExcludePayloadSchema,
+  RegularFacetToggleSingleSelectPayloadSchema,
 } from '../src/index.js';
 
 const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -243,6 +247,38 @@ const categoryToggleInvalidArb = fc.oneof(
 );
 
 const cases: PayloadCase[] = [
+  {
+    name: 'regular facet toggleSingleSelect payload',
+    schemaId:
+      'https://schema.thermidor.coveo.com/components/regular-facet.schema.json#/$defs/RegularFacetToggleSingleSelectAction/properties/payload',
+    zodSchema: RegularFacetToggleSingleSelectPayloadSchema,
+    validArb: regularToggleValidArb,
+    invalidArb: regularToggleInvalidArb,
+  },
+  {
+    name: 'regular facet toggleSingleExclude payload',
+    schemaId:
+      'https://schema.thermidor.coveo.com/components/regular-facet.schema.json#/$defs/RegularFacetToggleSingleExcludeAction/properties/payload',
+    zodSchema: RegularFacetToggleSingleExcludePayloadSchema,
+    validArb: regularToggleValidArb,
+    invalidArb: regularToggleInvalidArb,
+  },
+  {
+    name: 'numeric facet toggleSingleSelect payload',
+    schemaId:
+      'https://schema.thermidor.coveo.com/components/numeric-facet.schema.json#/$defs/NumericFacetToggleSingleSelectAction/properties/payload',
+    zodSchema: NumericFacetToggleSingleSelectPayloadSchema,
+    validArb: numericToggleValidArb,
+    invalidArb: numericToggleInvalidArb,
+  },
+  {
+    name: 'date facet toggleSingleSelect payload',
+    schemaId:
+      'https://schema.thermidor.coveo.com/components/date-facet.schema.json#/$defs/DateFacetToggleSingleSelectAction/properties/payload',
+    zodSchema: DateFacetToggleSingleSelectPayloadSchema,
+    validArb: dateToggleValidArb,
+    invalidArb: dateToggleInvalidArb,
+  },
   {
     name: 'regular facet toggleSelect payload',
     schemaId:

@@ -187,6 +187,20 @@ export const RegularFacetToggleSelectPayloadSchema = z.strictObject({
 });
 export type RegularFacetToggleSelectPayload = z.infer<typeof RegularFacetToggleSelectPayloadSchema>;
 
+export const RegularFacetToggleSingleExcludePayloadSchema = z.strictObject({
+  value: z.string().min(1).max(1024),
+});
+export type RegularFacetToggleSingleExcludePayload = z.infer<
+  typeof RegularFacetToggleSingleExcludePayloadSchema
+>;
+
+export const RegularFacetToggleSingleSelectPayloadSchema = z.strictObject({
+  value: z.string().min(1).max(1024),
+});
+export type RegularFacetToggleSingleSelectPayload = z.infer<
+  typeof RegularFacetToggleSingleSelectPayloadSchema
+>;
+
 export const RegularFacetSearchResultSchema = z.strictObject({
   numberOfResults: z.number().int().min(0).max(999999999),
   value: z.string().min(1).max(1024),
@@ -213,6 +227,14 @@ export const NumericFacetToggleSelectPayloadSchema = z.strictObject({
   start: z.number(),
 });
 export type NumericFacetToggleSelectPayload = z.infer<typeof NumericFacetToggleSelectPayloadSchema>;
+
+export const NumericFacetToggleSingleSelectPayloadSchema = z.strictObject({
+  end: z.number(),
+  start: z.number(),
+});
+export type NumericFacetToggleSingleSelectPayload = z.infer<
+  typeof NumericFacetToggleSingleSelectPayloadSchema
+>;
 
 export const NumericFacetCustomRangeSchema = z.strictObject({
   end: z.number(),
@@ -248,6 +270,14 @@ export const DateFacetToggleSelectPayloadSchema = z.strictObject({
   start: z.string(),
 });
 export type DateFacetToggleSelectPayload = z.infer<typeof DateFacetToggleSelectPayloadSchema>;
+
+export const DateFacetToggleSingleSelectPayloadSchema = z.strictObject({
+  end: z.string(),
+  start: z.string(),
+});
+export type DateFacetToggleSingleSelectPayload = z.infer<
+  typeof DateFacetToggleSingleSelectPayloadSchema
+>;
 
 export const DateFacetCustomRangeSchema = z.strictObject({
   end: z.string(),
@@ -384,6 +414,16 @@ export const RegularFacetToggleSelectSchema = z.strictObject({
 });
 export type RegularFacetToggleSelect = z.infer<typeof RegularFacetToggleSelectSchema>;
 
+export const RegularFacetToggleSingleExcludeSchema = z.strictObject({
+  payload: RegularFacetToggleSingleExcludePayloadSchema,
+});
+export type RegularFacetToggleSingleExclude = z.infer<typeof RegularFacetToggleSingleExcludeSchema>;
+
+export const RegularFacetToggleSingleSelectSchema = z.strictObject({
+  payload: RegularFacetToggleSingleSelectPayloadSchema,
+});
+export type RegularFacetToggleSingleSelect = z.infer<typeof RegularFacetToggleSingleSelectSchema>;
+
 export const RegularFacetSearchSchema = z.strictObject({
   canShowMoreResults: z.boolean(),
   query: z.string().min(0).max(1024),
@@ -400,6 +440,11 @@ export const NumericFacetToggleSelectSchema = z.strictObject({
   payload: NumericFacetToggleSelectPayloadSchema,
 });
 export type NumericFacetToggleSelect = z.infer<typeof NumericFacetToggleSelectSchema>;
+
+export const NumericFacetToggleSingleSelectSchema = z.strictObject({
+  payload: NumericFacetToggleSingleSelectPayloadSchema,
+});
+export type NumericFacetToggleSingleSelect = z.infer<typeof NumericFacetToggleSingleSelectSchema>;
 
 export const NumericFacetStateSchema = z.strictObject({
   canShowLessValues: z.boolean(),
@@ -422,6 +467,11 @@ export const DateFacetToggleSelectSchema = z.strictObject({
   payload: DateFacetToggleSelectPayloadSchema,
 });
 export type DateFacetToggleSelect = z.infer<typeof DateFacetToggleSelectSchema>;
+
+export const DateFacetToggleSingleSelectSchema = z.strictObject({
+  payload: DateFacetToggleSingleSelectPayloadSchema,
+});
+export type DateFacetToggleSingleSelect = z.infer<typeof DateFacetToggleSingleSelectSchema>;
 
 export const DateFacetStateSchema = z.strictObject({
   canShowLessValues: z.boolean(),
@@ -505,6 +555,8 @@ export const RegularFacetActionsSchema = z.strictObject({
   showMoreValues: ActionSchema,
   toggleExclude: RegularFacetToggleExcludeSchema,
   toggleSelect: RegularFacetToggleSelectSchema,
+  toggleSingleExclude: RegularFacetToggleSingleExcludeSchema,
+  toggleSingleSelect: RegularFacetToggleSingleSelectSchema,
 });
 export type RegularFacetActions = z.infer<typeof RegularFacetActionsSchema>;
 
@@ -525,6 +577,7 @@ export const NumericFacetActionsSchema = z.strictObject({
   showLessValues: ActionSchema,
   showMoreValues: ActionSchema,
   toggleSelect: NumericFacetToggleSelectSchema,
+  toggleSingleSelect: NumericFacetToggleSingleSelectSchema,
 });
 export type NumericFacetActions = z.infer<typeof NumericFacetActionsSchema>;
 
@@ -534,6 +587,7 @@ export const DateFacetActionsSchema = z.strictObject({
   showLessValues: ActionSchema,
   showMoreValues: ActionSchema,
   toggleSelect: DateFacetToggleSelectSchema,
+  toggleSingleSelect: DateFacetToggleSingleSelectSchema,
 });
 export type DateFacetActions = z.infer<typeof DateFacetActionsSchema>;
 

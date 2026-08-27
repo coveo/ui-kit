@@ -120,6 +120,8 @@ const facetCases: FacetCase[] = [
       actions: {
         toggleSelect: {payload: {value: 'Coveo'}},
         toggleExclude: {payload: {value: 'Coveo'}},
+        toggleSingleSelect: {payload: {value: 'Coveo'}},
+        toggleSingleExclude: {payload: {value: 'Coveo'}},
         clearAllActiveValues: {payload: null},
         search: {payload: {query: 'cov'}},
         showMoreSearchResults: {payload: null},
@@ -147,6 +149,7 @@ const facetCases: FacetCase[] = [
       },
       actions: {
         toggleSelect: {payload: {start: 0, end: 100}},
+        toggleSingleSelect: {payload: {start: 0, end: 100}},
         clearAllActiveValues: {payload: null},
         applyCustomRange: {payload: {start: 0, end: 100}},
         showMoreValues: {payload: null},
@@ -179,6 +182,9 @@ const facetCases: FacetCase[] = [
       },
       actions: {
         toggleSelect: {
+          payload: {start: '2024-01-01', end: '2024-12-31'},
+        },
+        toggleSingleSelect: {
           payload: {start: '2024-01-01', end: '2024-12-31'},
         },
         clearAllActiveValues: {payload: null},

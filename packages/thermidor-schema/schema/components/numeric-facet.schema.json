@@ -20,6 +20,7 @@
       "type": "object",
       "required": [
         "toggleSelect",
+        "toggleSingleSelect",
         "clearAllActiveValues",
         "applyCustomRange",
         "showMoreValues",
@@ -28,6 +29,9 @@
       "properties": {
         "toggleSelect": {
           "$ref": "#/$defs/NumericFacetToggleSelectAction"
+        },
+        "toggleSingleSelect": {
+          "$ref": "#/$defs/NumericFacetToggleSingleSelectAction"
         },
         "clearAllActiveValues": {
           "$ref": "#/$defs/NumericFacetClearAllActiveValuesAction"
@@ -192,6 +196,32 @@
             "end": {
               "type": "number",
               "description": "The upper bound of the range to toggle."
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "NumericFacetToggleSingleSelectAction": {
+      "title": "numericFacetToggleSingleSelect",
+      "description": "Toggles the selection of a range value, deselecting all other values (single-select behavior).",
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ],
+      "properties": {
+        "payload": {
+          "type": "object",
+          "required": ["start", "end"],
+          "properties": {
+            "start": {
+              "type": "number",
+              "description": "The inclusive lower bound of the range to single-select."
+            },
+            "end": {
+              "type": "number",
+              "description": "The upper bound of the range to single-select."
             }
           },
           "additionalProperties": false
