@@ -16,12 +16,12 @@ related:
 
 This monorepo publishes wrappers around third-party frameworks (`@coveo/atomic-angular`, `@coveo/atomic-react`, `@coveo/headless-react`) plus core packages that declare a TypeScript peer. Each advertises which major versions it works with, and today each does so differently:
 
-| Peer | Declared range | Style | In catalog |
-| --- | --- | --- | --- |
-| `@angular/common`, `@angular/core` | `14 - 21` | Hyphen range | No |
-| `react`, `react-dom`, `@types/react`, `@types/react-dom` | `^18 \|\| ^19` | Caret union | Yes |
-| `typescript` | `>=5.0.0` | Open lower bound | Yes |
-| `pino-pretty` | `^6.0.0 \|\| ^10.0.0 \|\| ^11.0.0 \|\| ^13.0.0` | Sparse caret union | No |
+| Peer                                                     | Declared range                                  | Style              | In catalog |
+| -------------------------------------------------------- | ----------------------------------------------- | ------------------ | ---------- |
+| `@angular/common`, `@angular/core`                       | `14 - 21`                                       | Hyphen range       | No         |
+| `react`, `react-dom`, `@types/react`, `@types/react-dom` | `^18 \|\| ^19`                                  | Caret union        | Yes        |
+| `typescript`                                             | `>=5.0.0`                                       | Open lower bound   | Yes        |
+| `pino-pretty`                                            | `^6.0.0 \|\| ^10.0.0 \|\| ^11.0.0 \|\| ^13.0.0` | Sparse caret union | No         |
 
 With no rule for choosing bounds, ranges drift in both directions unnoticed. The Angular range claims support for majors 14 and 15, which cannot resolve: `@coveo/atomic` and `@coveo/headless` declare a `typescript: '>=5.0.0'` peer, while Angular's `@angular/compiler-cli` caps TypeScript at `<4.9` for v14 and `<5.0` for v15. The same range excludes Angular 22, which is `latest` on npm.
 
@@ -128,7 +128,7 @@ Until the matrix has run, rules 3 and 4 rest on the analysis recorded here rathe
 
 ### What is not enforced mechanically
 
-**Rule 4 has no automated check.** Nothing verifies that the version the monorepo builds against still falls inside the published ceiling. The in-repo samples resolve the wrapper through `workspace:*`, which links the source directory and never resolves the published `peerDependencies`, so they prove the ceiling *builds* without proving it is *declared*. Raising the ceiling when the framework catalog is bumped is therefore a review-time obligation.
+**Rule 4 has no automated check.** Nothing verifies that the version the monorepo builds against still falls inside the published ceiling. The in-repo samples resolve the wrapper through `workspace:*`, which links the source directory and never resolves the published `peerDependencies`, so they prove the ceiling _builds_ without proving it is _declared_. Raising the ceiling when the framework catalog is bumped is therefore a review-time obligation.
 
 Two mechanisms were considered and rejected. A unit test asserting the catalog version satisfies the range is a second source of truth to maintain. A matrix leg installing at the catalog version with strict peers duplicates a build the samples already perform, purely to assert a range. Both were judged more machinery than the failure warrants: publishing a ceiling one major behind produces a peer warning for early adopters of that major, not a broken build, and pnpm's `strict-peer-dependencies` defaults to false.
 
