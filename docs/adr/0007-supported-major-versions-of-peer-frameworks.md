@@ -50,7 +50,7 @@ This ADR governs the range declared in `peerDependencies` for every framework pe
 
 - **Summary:** Track each framework's own support window, dropping majors from the range as they leave upstream LTS.
 - **Pros:** Smallest advertised surface. The range always reflects a currently maintained framework version.
-- **Cons:** Narrowing a range is breaking for consumers, and upstream cadences do not match ours. Angular ships a major every six months while `@coveo/atomic-angular` versions along the Atomic line, so this would mean shipping breaking changes in patch or minor releases. It also conflates "upstream stopped maintaining this" with "this cannot work": Angular 16 through 19 resolve and build today.
+- **Cons:** Narrowing a range is breaking for consumers, and upstream cadences do not match ours. Angular ships a major every six months while `@coveo/atomic-angular` versions along the Atomic line, so this would mean shipping breaking changes in patch or minor releases. It also conflates "upstream stopped maintaining this" with "this cannot work": Angular 18 and 19 resolve and build today.
 
 ### Option C: A range bounded by what CI validates
 
@@ -60,7 +60,7 @@ This ADR governs the range declared in `peerDependencies` for every framework pe
 
 ### Option D: A range with an open upper bound
 
-- **Summary:** As Option C, but with no ceiling (`>=16`).
+- **Summary:** As Option C, but with no ceiling (`>=18`).
 - **Pros:** No edit when a framework ships a major.
 - **Cons:** Asserts compatibility with majors that do not exist yet. A consumer on a future incompatible major gets a broken build rather than a warning.
 
@@ -82,7 +82,7 @@ Rules 2 through 5 apply to framework peers — the packages a consumer builds th
 
 ### Rationale
 
-A peer range is a machine-checked resolvability constraint, not a statement of where we choose to invest. Option B conflates the two, so a framework leaving upstream support would break installs that work — for Angular that would mean dropping majors 16 through 19 while they still resolve and build, buying nothing technically.
+A peer range is a machine-checked resolvability constraint, not a statement of where we choose to invest. Option B conflates the two, so a framework leaving upstream support would break installs that work — for Angular that would mean dropping majors 18 and 19 while they still resolve and build, buying nothing technically.
 
 Between Options C and D, the deciding factor is that a range should assert only what has been measured. An open upper bound claims every future major works; when one does not, the consumer gets a broken build and no explanation, where a bounded range gives an unsupported-peer warning that names the problem. Because pnpm's `strict-peer-dependencies` defaults to false, that warning is advisory rather than an install failure, so the cost to consumers on a not-yet-validated major is mild.
 
@@ -96,7 +96,7 @@ Rule 6 distinguishes the two cases because they differ in observable effect. Rem
 
 Rule 7 exists so that narrowing is predictable and semver-honest. Tying retirement to the framework's own cadence was considered and rejected: Angular ships a major every six months, while `@coveo/atomic-angular` versions along the Atomic line, so retiring on Angular's schedule would mean shipping breaking changes in patch or minor releases. Deferring to our own majors keeps the release type honest, and batching the increase means one large, well-communicated jump instead of a series of small breaking ones.
 
-This also keeps the two wrappers consistent. The same question was settled for React in KIT-5994 and pull request #8228, which considered narrowing to `^19` only and rejected it: neither React package used a React-19-only API, React 18 remained security-supported, and narrowing would have forced a migration on consumers for no functional gain. `@coveo/atomic-react` was widened to `^18 || ^19` instead. Angular 16 through 19 are in the same position today — they resolve and build — so they are retained until a major, at which point rule 7 applies.
+This also keeps the two wrappers consistent. The same question was settled for React in KIT-5994 and pull request #8228, which considered narrowing to `^19` only and rejected it: neither React package used a React-19-only API, React 18 remained security-supported, and narrowing would have forced a migration on consumers for no functional gain. `@coveo/atomic-react` was widened to `^18 || ^19` instead. Angular 18 and 19 are in the same position today — they resolve and build — so they are retained until a major, at which point rule 7 applies.
 
 Wide ranges are a legacy position rather than a goal. Across the Angular ecosystem, one or two supported majors is the norm: `ngx-markdown` and `@ng-bootstrap/ng-bootstrap` each pin a single major, and `@angular/material` supports the current major plus the next. Rule 4 borrows Material's pattern rather than inventing one.
 
@@ -106,52 +106,55 @@ TypeScript is carved out of the ceiling rule deliberately. It releases roughly q
 
 - **Positive:** No published range can advertise a combination that cannot resolve. Ranges state only what CI verified. All framework peers become visible in one catalog, in one style.
 - **Negative:** Each new framework major needs its ceiling raised, and until then its consumers see a peer warning. Rule 5 means adding a framework peer obliges adding CI coverage for it.
-- **Negative:** A caret union is verbose for a wide span: `^16 || ^17 || ^18 || ^19 || ^20 || ^21` against `16 - 21`. Rule 7 narrows the span at each major, so the verbosity is self-limiting.
-- **Negative:** Under rule 7 a range stays wider than the set of majors we would otherwise choose to support, for as long as the next major release is away. Angular 16 through 19 remain in the published range despite having left upstream long-term support.
+- **Negative:** A caret union is verbose for a wide span: `^18 || ^19 || ^20 || ^21` against `18 - 21`. Rule 7 narrows the span at each major, so the verbosity is self-limiting.
+- **Negative:** Under rule 7 a range stays wider than the set of majors we would otherwise choose to support, for as long as the next major release is away. Angular 18 and 19 remain in the published range despite having left upstream long-term support.
 - **Neutral:** Lower bounds will rise as the TypeScript floor in `@coveo/atomic` and `@coveo/headless` rises. Each rise is a separate decision, and breaking once it excludes a major that previously resolved.
 
 ## Enforcement
 
-Enforcement rests on the compatibility matrix tracked by KIT-5983 and proposed in pull request #8324. There is deliberately no separate static check.
+Enforcement rests on building a real consumer application against the packed wrapper at each range floor.
 
-### What the matrix does
+### What the floor check does
 
-A leg scaffolds a consumer application pinned to one framework major, installs the packed wrapper and its declared peers into it, references a generated component's type from real source, and builds. That exercises package resolution, the TypeScript range that major pins, and the generated type surface. It is a build check, not a runtime one.
+Each leg scaffolds a consumer application pinned to one framework major, installs the packed wrapper and the peers it declares, references a generated component's type from real source, and builds. That exercises package resolution, the TypeScript range that major pins, and the generated type surface together — which is what makes it evidence about the range rather than about the package alone.
 
 Peers are installed explicitly from the packed manifest rather than left to the package manager, so a missing peer cannot fail a leg for the wrong reason.
 
-The checks live in `ci.yml` rather than a separate workflow, as one job per wrapper. Each is gated on its own package appearing in the affected task set, so touching one wrapper does not run another's legs. Each leg is a single call to `scripts/verify-framework-compat.mjs`, which is the same command a developer runs locally — the check is reproducible outside CI, which is why it is a script rather than inline workflow steps.
+The leg body lives in `scripts/verify-framework-compat.mjs`, invoked identically in CI and locally, so a maintainer can reproduce a failure without pushing. There is one job per wrapper, each gated on its own package in the affected task set, so touching one wrapper does not run another's legs.
 
-**Only floors are covered.** Angular runs 16, React runs 18. Ceilings are deliberately excluded: the ceiling is the version the monorepo builds against, and the in-repo samples already build against it on every pull request, so a ceiling leg would duplicate existing coverage. Intermediate majors are not covered either, so a leg exists for each wrapper rather than for each supported major.
-
-Until the matrix has run, rules 3 and 4 rest on the analysis recorded here rather than on measurement, and the Angular floor stays provisional.
+**Only floors are covered.** Angular runs 18, React runs 18. Ceilings are excluded because the ceiling is the version the monorepo builds against and the in-repo samples already build against it. Intermediate majors are not covered either, so a leg exists per wrapper rather than per supported major.
 
 ### What is not enforced mechanically
 
 **Rule 4 has no automated check.** Nothing verifies that the version the monorepo builds against still falls inside the published ceiling. The in-repo samples resolve the wrapper through `workspace:*`, which links the source directory and never resolves the published `peerDependencies`, so they prove the ceiling _builds_ without proving it is _declared_. Raising the ceiling when the framework catalog is bumped is therefore a review-time obligation.
 
-Two mechanisms were considered and rejected. A unit test asserting the catalog version satisfies the range is a second source of truth to maintain. A matrix leg installing at the catalog version with strict peers duplicates a build the samples already perform, purely to assert a range. Both were judged more machinery than the failure warrants: publishing a ceiling one major behind produces a peer warning for early adopters of that major, not a broken build, and pnpm's `strict-peer-dependencies` defaults to false.
+A leg installing at the catalog version with strict peers was considered and rejected: it duplicates a build the samples already perform, purely to assert a range. That was judged more machinery than the failure warrants, because publishing a ceiling one major behind produces a peer warning for early adopters of that major rather than a broken build, and pnpm's `strict-peer-dependencies` defaults to false.
 
 Rule 2's format is also not machine-checked. It is a review-time convention, enforced the way the rest of the repository's manifest conventions are. A malformed range is visible in a one-line diff.
 
-### Keeping the matrix cheap
+### Keeping the floor checks cheap
 
-- One job builds and packs the library, and uploads the tarball as an artifact that every leg consumes. Legs never rebuild the monorepo.
-- Only floors are covered, so the matrix grows with the number of wrappers rather than with the width of each range.
-- The Angular application is scaffolded with the CLI for the major under test. A committed fixture per major was considered and rejected: `angular.json` builders differ across majors — Angular 16 uses `@angular-devkit/build-angular:browser` where 17 and later use `@angular/build:application` — so a hand-maintained configuration per major is more fragile than letting the matching CLI generate a valid one. The cost is that each leg downloads the CLI. React needs no scaffolding tool, so its application is written directly.
-- Each leg references a generated component's type rather than importing the module alone, so a type error surfaces if the generated surface changes.
-- Runtime coverage of a wrapper's own logic belongs in version-agnostic unit tests, exercised with plain stubs and no framework at all. Running those per major is not viable, because framework test tooling differs across majors, so a cross-major harness would cost more than the build legs it replaced.
-
-Consequently, majors between the bounds are build-verified only. Runtime verification happens on the version the monorepo builds against, through the existing Playwright suite. This limitation should be stated wherever the supported range is published, rather than implied.
+- One leg per wrapper, so the number of legs grows with the number of wrappers rather than with the width of any range.
+- The Angular application is scaffolded with the CLI for the major under test. A committed fixture per major was considered and rejected: `angular.json` builders and the generated `tsconfig.json` both differ across majors — `@angular-devkit/build-angular:browser` gave way to `@angular/build:application`, and `moduleResolution` changed twice — so a hand-maintained configuration per major is both more fragile and less faithful than letting the matching CLI generate one. Generating it is also what made the floor measurable: the resolution default under test is the CLI's, not ours. React needs no scaffolding tool, so its application is written directly.
+- Each leg references a generated component's type rather than importing the module alone, so a change to the generated surface fails the build.
 
 ## Implementation and Follow-up
 
 Angular is the first application of this policy, under epic KIT-4735:
 
 - Add `@angular/common` and `@angular/core` to `catalogs.peer-compatibility` and reference them from `@coveo/atomic-angular`, replacing the hardcoded `14 - 21`.
-- The range becomes `^16 || ^17 || ^18 || ^19 || ^20 || ^21`. The ceiling is 21 because that is the major the monorepo builds against; Angular 22 is `latest` on npm but is neither built nor tested here, and rule 4 does not accept registry recency as evidence.
-- The floor of 16 is the oldest major that can still resolve. Angular 16 caps TypeScript at `<5.2` and our packages require `>=5.0.0`, so the workable window is TypeScript 5.0 and 5.1 — narrow, but non-empty, which is what distinguishes 16 from 14 and 15. One constraint remains untested: the package is `exports`-only with no root `main`, and `moduleResolution: bundler` did not become the Angular CLI default until v17, so Angular 16's default `node` resolution may not find it. The floor leg exists to answer that.
-- If that leg fails, Angular 16 joins 14 and 15 as never resolvable, so removing it is also a bug fix under rule 6 and the floor moves to 17 in the same change. That sequencing matters: dropping 16 _without_ that evidence would be breaking under rule 6, because an Angular 16 consumer on TypeScript 5.0 or 5.1 has a coherent install today.
+- The range becomes `^18 || ^19 || ^20 || ^21`. The ceiling is 21 because that is the major the monorepo builds against; Angular 22 is `latest` on npm but is neither built nor tested here, and rule 4 does not accept registry recency as evidence.
+- The floor is 18, measured rather than assumed. The constraint is not TypeScript but module resolution. Angular 16 and 17 both emit `moduleResolution: node` from their own CLI, which predates the `exports` field. The wrapper's types reach `@coveo/atomic/components` and `@coveo/headless/commerce`, and both are reachable only through `exports` subpaths with no root-level declaration file, so neither resolves under classic resolution. Taken from the `tsconfig.json` template each major's `@schematics/angular` generates:
+
+| Angular major | Generated setting                      | Resolves `exports` subpaths |
+| ------------- | -------------------------------------- | --------------------------- |
+| 16, 17        | `moduleResolution: node`               | No                          |
+| 18, 19        | `moduleResolution: bundler`            | Yes                         |
+| 20, 21        | `module: preserve`, implying `bundler` | Yes                         |
+
+- The two failures below the floor differ in how visible they are, which is the reason the floor leg builds an application instead of inspecting the package. On Angular 16 the build fails outright with `TS2307`. On Angular 17 those same errors sit inside a declaration file and are suppressed by the `skipLibCheck: true` the CLI generates, so the build reports nothing while the wrapper's type surface silently collapses to its protected members. A consumer binding `[field]` on `atomic-facet` then gets `NG8002` against a component the compiler believes has no inputs. No check that reads the published package alone would surface either case, because the package is identical in both.
+- Removing 16 and 17 is a bug fix under rule 6 rather than a breaking change, on the narrow ground that neither ever worked with the framework's own defaults. The qualification matters: setting `moduleResolution: bundler` by hand does make both work, so a consumer who had already done that was relying on a configuration this package never documented or tested. Had the floor leg passed at 16, dropping it would have been breaking and would have waited for a major under rule 7.
+- Raising the floor treats a symptom. The underlying defect is that `@coveo/atomic` and `@coveo/headless` expose subpaths only through `exports`, which degrades types for any TypeScript consumer on classic resolution, not only Angular ones. Adding `typesVersions` or root declaration files would restore 16 and 17 and fix non-Angular consumers at the same time; that is tracked separately, since it changes two packages beyond this one.
 - Raising the ceiling to 22 belongs with the change that upgrades the Angular catalog to 22, so the range and the build move together.
 
 Note that `@angular/core` and `@angular/common` also appear under `pnpm.overrides` in `pnpm-workspace.yaml`. Those entries pin the version used to build and test inside this workspace and have no effect on published manifests. They are not a substitute for, and must not be confused with, the `peer-compatibility` entries.
@@ -160,7 +163,7 @@ Remaining work, each its own change:
 
 - At the next major of `@coveo/atomic-angular`, apply rule 7 and raise the floor to the oldest Angular major then in long-term support. On today's schedule that would be 20, since Angular 19 left support in May 2026. This is not yet scheduled: the v4 Feature (KIT-5934) is on hold.
 - Determine the real supported `pino-pretty` range (KIT-6103). The declared `^6.0.0 || ^10.0.0 || ^11.0.0 || ^13.0.0` skips majors 7 through 9 and 12, which looks accreted rather than deliberate. Under rule 1 it stays in the `@coveo/headless` manifest, since no other package declares it.
-- Confirm the React range against rules 2 to 4. Rule 5 coverage now exists: the matrix runs a React 18 floor leg.
+- Confirm the React range against rules 2 to 4. Rule 5 does not apply to React, which imposes no TypeScript requirement of its own.
 
 Node.js is deliberately out of scope. It is expressed through `engines` rather than `peerDependencies` and already tracks Node's own LTS lines.
 
