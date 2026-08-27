@@ -106,6 +106,8 @@ Each `CategoryFacetValue` is just `{ path: string[], value: string, numberOfResu
 
 **Why:** The `displayValue`/`rawValue` distinction is unnecessary when the backend always returns what should be rendered. One `value` field serves both display and action identification. `count` → `numberOfResults` for consistency with all other value models.
 
+Note that, unlike the category facet (where search results reuse the same `CategoryFacetValue` model as the facet's values), the regular facet's search results are a *separate* model from `RegularFacetValue`. A regular facet value carries a `state` (`idle`/`selected`/`excluded`), but a search result never needs one: facet search only ever returns idle (unselected) values, so a `state` field would always be `idle` and is omitted. The result is a model with the same field names as `RegularFacetValue` minus `state`. Category values, by contrast, have no `state` field to begin with (selection is structural), so there was nothing to strip and the models could be shared outright.
+
 ## Action changes
 
 ### Simplified toggle payloads (value-identifying only)
