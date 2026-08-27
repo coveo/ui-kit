@@ -179,14 +179,6 @@ This assumes toggling always clears search. If we ever decide that toggling a se
 
 **Why:** "Deselect" implies it only affects selections, missing exclusions. "Clear all active values" (anything non-idle) is accurate about scope. Not present on category (where `clearSelectedPath` serves the same purpose for single-select navigation).
 
-### `showMoreValues` / `showLessValues` / `showMoreSearchResults` / `clearSearch` as explicit actions
-
-**Headless:** These exist as methods on the core facet and facet-search sub-controller.
-
-**Thermidor schema:** Surfaced as top-level actions on each facet.
-
-**Why:** Every state flag that implies actionability (`canShowMoreValues`, `canShowLessValues`, `canShowMoreResults`) has a corresponding action. No unactionable state flags.
-
 ### Renamed `clearFacetSearch` to `clearSearch`
 
 **Why:** The `search` action is already named without the "facet" prefix. `clearSearch` is consistent.
