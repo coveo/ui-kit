@@ -1,0 +1,15 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "dev": {
+      "dependsOn": [
+        "@coveo/atomic-legacy#build",
+        "@coveo/atomic#build:indexes",
+        "@coveo/atomic#build:locales",
+        "@coveo/atomic#build:assets"
+      ],
+      "cache": false,
+      "persistent": true
+    }
+  }
+}

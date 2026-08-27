@@ -17,7 +17,7 @@ import {
 } from './preprocess-request.js';
 
 const {Response} = await vi.importActual('node-fetch');
-global.fetch = vi.fn();
+vi.stubGlobal('fetch', vi.fn());
 const mockFetch = global.fetch as Mock;
 
 it.each([

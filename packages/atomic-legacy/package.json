@@ -7,6 +7,9 @@
     "url": "git+https://github.com/coveo/ui-kit.git",
     "directory": "packages/atomic-legacy"
   },
+  "files": [
+    "dist/"
+  ],
   "type": "module",
   "exports": {
     "./atomic-suggestion-renderer": {

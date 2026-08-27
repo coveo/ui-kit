@@ -97,12 +97,14 @@ export type BakedInControllers = {
  * @template TSolutionType - The target solution type to filter controllers for
  */
 export type FilteredBakedInControllers<TSolutionType extends SolutionType> = {
-  [K in keyof BakedInControllers as HasSolutionType<
-    BakedInControllerDefinitions[K],
-    TSolutionType
-  > extends true
-    ? K
-    : never]: BakedInControllers[K];
+  [
+    K in keyof BakedInControllers as HasSolutionType<
+      BakedInControllerDefinitions[K],
+      TSolutionType
+    > extends true
+      ? K
+      : never
+  ]: BakedInControllers[K];
 };
 
 /**
@@ -135,13 +137,17 @@ type RequiredEngineDefinitionControllersPropsOption<
   TControllersPropsMap extends ControllersPropsMap,
   TSolutionType extends SolutionType,
 > = {
-  [K in keyof TControllers as HasKey<TControllers[K], TSolutionType> extends never
-    ? never
-    : IsRecommendationController<TControllers[K]> extends never
-      ? HasRequiredKeys<DefaultControllerProps<TControllers, TControllersPropsMap, K>> extends false
-        ? never
-        : 'controllers'
-      : never]: DefaultControllerProps<TControllers, TControllersPropsMap, K>;
+  [
+    K in keyof TControllers as HasKey<TControllers[K], TSolutionType> extends never
+      ? never
+      : IsRecommendationController<TControllers[K]> extends never
+        ? HasRequiredKeys<
+            DefaultControllerProps<TControllers, TControllersPropsMap, K>
+          > extends false
+          ? never
+          : 'controllers'
+        : never
+  ]: DefaultControllerProps<TControllers, TControllersPropsMap, K>;
 };
 
 export type IsRecommendationController<TController extends ControllerDefinition<Controller>> =

@@ -82,6 +82,14 @@ export class FocusTargetController implements ReactiveController {
     }
   }
 
+  private focusElement(element?: HTMLElement) {
+    if (!element) {
+      return;
+    }
+    element.focus({preventScroll: true});
+    element.scrollIntoView({block: 'nearest', inline: 'nearest'});
+  }
+
   public async setTarget(el?: HTMLElement) {
     if (!el) {
       return;
@@ -96,7 +104,7 @@ export class FocusTargetController implements ReactiveController {
   public async focus() {
     // Not sure why this is needed; should be investigated after Lit Migration (KIT-4235)
     await defer();
-    this.element?.focus();
+    this.focusElement(this.element);
     this.clearFocusCallbacks();
   }
 
@@ -131,7 +139,7 @@ export class FocusTargetController implements ReactiveController {
         const el = this.element;
         // The focus seems to be flaky without deferring, especially on iOS; should be investigated after Lit Migration (KIT-4235)
         await defer().then(() => {
-          el.focus();
+          this.focusElement(el);
           this.clearFocusCallbacks();
         });
       }

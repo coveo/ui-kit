@@ -1,0 +1,22 @@
+{
+  "name": "@coveo/atomic-theming-e2e",
+  "version": "0.0.0",
+  "private": true,
+  "description": "End-to-end tests validating Atomic theme customization and shadow DOM style encapsulation",
+  "type": "module",
+  "scripts": {
+    "e2e": "playwright test",
+    "e2e:watch": "playwright test --ui",
+    "tsc:check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@coveo/atomic": "workspace:*",
+    "@coveo/headless": "workspace:*",
+    "@coveo/platform-mock-api": "workspace:*",
+    "@msw/playwright": "catalog:",
+    "@playwright/test": "catalog:",
+    "msw": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  }
+}

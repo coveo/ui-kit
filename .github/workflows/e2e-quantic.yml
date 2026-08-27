@@ -23,7 +23,7 @@ env:
 
 jobs:
   e2e-quantic-setup:
-    name: 'Setup e2e tests on Quantic'
+    name: 'Setup e2e tests on Quantic (LWS-${{ matrix.lws-status }})'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: ${{ inputs.event_name == 'merge_group' }}
@@ -35,7 +35,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
@@ -46,6 +46,58 @@ jobs:
           clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
           jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
           lws-status: ${{ matrix.lws-status }}
+  apex-quantic-tests:
+    name: 'Run Quantic Apex unit tests'
+    needs: e2e-quantic-setup
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 1
+          filter: blob:none
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-sfdx
+      - name: Resolve Apex target org
+        id: apex-org
+        run: |
+          umask 077
+          printf '%s\n' "$SFDX_AUTH_JWT_KEY" > server.key
+          trap 'rm -f -- server.key' EXIT
+          echo "target-org=$(pnpm exec ts-node scripts/build/resolve-org-username.ts)" >> "$GITHUB_OUTPUT"
+        shell: bash
+        working-directory: ./packages/quantic
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+          SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
+          SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+          SFDX_AUTH_JWT_KEY_FILE: server.key
+          SFDX_AUTH_JWT_USERNAME: rdaccess@coveo.com
+      - name: Authenticate to Quantic scratch org
+        run: |
+          umask 077
+          printf '%s\n' "$SFDX_AUTH_JWT_KEY" > server.key
+          trap 'rm -f -- server.key' EXIT
+          sf org login jwt \
+            --client-id "$SFDX_AUTH_CLIENT_ID" \
+            --jwt-key-file server.key \
+            --username "$APEX_ORG_USERNAME" \
+            --instance-url https://test.salesforce.com \
+            --set-default
+        shell: bash
+        env:
+          APEX_ORG_USERNAME: ${{ steps.apex-org.outputs.target-org }}
+          SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
+          SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+      - uses: ./.github/actions/apex-unit-tests
+        with:
+          target-org: ${{ steps.apex-org.outputs.target-org }}
   post-scratch-org-links-to-pr:
     name: 'Post Scratch Org Links to PR'
     needs: e2e-quantic-setup
@@ -58,7 +110,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
       - uses: ./.github/actions/post-scratch-org-links-on-pr
@@ -80,11 +132,10 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo run build --filter=@coveo/quantic
       - uses: ./.github/actions/playwright-quantic
         with:
           shardIndex: ${{ matrix.shardIndex }}
@@ -102,7 +153,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
@@ -116,6 +167,7 @@ jobs:
     if: cancelled() || failure() || success()
     needs:
       - e2e-quantic-playwright-test
+      - apex-quantic-tests
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -123,7 +175,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup

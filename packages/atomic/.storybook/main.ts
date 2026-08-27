@@ -274,7 +274,7 @@ const svgTransform = (): Plugin => {
  * directives, so the CSS must be fully resolved before reaching the browser.
  */
 const processInlineCssImports = (): Plugin => {
-  // biome-ignore lint/suspicious/noExplicitAny: PostCSS plugin types are complex
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- PostCSS plugin types are complex
   let postcssPlugins: any[];
   let initialized = false;
 
