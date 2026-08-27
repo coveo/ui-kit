@@ -33,16 +33,52 @@
     },
     "test": {
       "outputs": [],
-      "dependsOn": ["test:unit", "validate:types", "validate:types:build-scripts"]
+      "dependsOn": [
+        "test:unit",
+        "validate:e2e-task-contracts",
+        "validate:types",
+        "validate:types:build-scripts"
+      ]
     },
     "test:unit": {
       "dependsOn": ["build"],
       "outputs": []
     },
     "e2e": {
-      "dependsOn": ["build"],
+      "dependsOn": ["e2e:prepare"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/.github/actions/apex-unit-tests/**",
+        "$TURBO_ROOT$/.github/actions/calculate-affected/**",
+        "$TURBO_ROOT$/.github/actions/e2e-quantic-setup/**",
+        "$TURBO_ROOT$/.github/actions/merge-playwright-reports/**",
+        "$TURBO_ROOT$/.github/actions/playwright-quantic/**",
+        "$TURBO_ROOT$/.github/actions/post-scratch-org-links-on-pr/**",
+        "$TURBO_ROOT$/.github/actions/setup/**",
+        "$TURBO_ROOT$/.github/actions/setup-sfdx/**",
+        "$TURBO_ROOT$/.github/workflows/ci.yml",
+        "$TURBO_ROOT$/.github/workflows/e2e-quantic.yml"
+      ],
+      "outputs": ["playwright-report/**", "blob-report/**", "test-results/**"],
+      "cache": false
+    },
+    "e2e:prepare": {
+      "dependsOn": ["build:staticresources", "validate:e2e-task-contracts"],
+      "outputs": []
+    },
+    "e2e:playwright": {
+      "dependsOn": ["@coveo/platform-mock-api#build"],
       "inputs": ["$TURBO_DEFAULT$"],
       "outputs": ["playwright-report/**", "blob-report/**", "test-results/**"],
+      "cache": false
+    },
+    "validate:e2e-task-contracts": {
+      "inputs": [
+        "package.json",
+        "turbo.json",
+        "$TURBO_ROOT$/scripts/ci/validate-quantic-e2e-contracts.test.mjs"
+      ],
+      "outputs": [],
       "cache": false
     },
     "validate:types": {

@@ -710,6 +710,10 @@ jobs:
     needs: [affected, build]
     if: >-
       ${{
+        always() &&
+        !cancelled() &&
+        needs.affected.result == 'success' &&
+        (needs.build.result == 'success' || needs.build.result == 'skipped') &&
         contains(fromJSON(needs.affected.outputs.tasks), '@coveo/quantic#e2e') &&
         !(github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'skip-quantic'))
       }}
