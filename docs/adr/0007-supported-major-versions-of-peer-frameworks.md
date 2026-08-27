@@ -69,7 +69,7 @@ This ADR governs the range declared in `peerDependencies` for every framework pe
 Option C. Concretely:
 
 1. **Every shared peer range lives in `catalogs.peer-compatibility`** (ADR-0005) and is referenced as `catalog:peer-compatibility`. This extends that catalog beyond TypeScript and React to Angular and any future framework peer.
-2. **Every framework peer range has an explicit lower and upper bound.** Contiguous support uses a hyphen range (`16 - 21`); genuinely non-contiguous support uses a caret union (`^6.0.0 || ^10.0.0`).
+2. **Every framework peer range is expressed as a caret union with one clause per supported major**, using the bare major form: `^16 || ^17 || ^18`. This applies whether the supported majors are contiguous or not. Hyphen ranges are not used.
 3. **The lower bound is the oldest major that can technically resolve**, determined by the transitive constraints our packages impose — chiefly the TypeScript peer — and confirmed by CI.
 4. **The upper bound is the newest major CI validates**, which is at minimum the major the monorepo itself builds against. It may extend one major beyond that — the pattern `@angular/material` uses with `^22.0.0 || ^23.0.0` — but only once a CI leg validates that next major. Being `latest` on npm is not evidence.
 5. **CI validates both bounds** for every framework with a declared range. A bound without a corresponding test is not permitted.
@@ -86,6 +86,10 @@ Between Options C and D, the deciding factor is that a range should assert only 
 
 The maintenance cost of an upper bound is what makes it affordable. ADR-0005 reduces each range to a single entry in `pnpm-workspace.yaml`, and Renovate already edits that file to bump framework catalogs, so raising a ceiling is one line in a pull request that was going to happen anyway.
 
+Rule 2 chooses the caret union over a hyphen range for three reasons. A hyphen range is easy to misread: `16 - 21` resolves to `>=16.0.0 <22.0.0-0`, so it accepts `21.99.99`, but it is commonly read as stopping at `21.0.0`. A union enumerates the supported majors explicitly, so adding or removing one is a single clause in the diff. And because a genuinely non-contiguous range such as `pino-pretty` requires a union anyway, using it everywhere means one form rather than two, and no per-case judgement about whether a span counts as contiguous. `^16` and `^16.0.0` are semver-identical; the bare major form is used for brevity.
+
+This also matches what the repository and the ecosystem already do. `@coveo/atomic-react` publishes `^18 || ^19`, and `@angular/material` publishes `^22.0.0 || ^23.0.0`. No surveyed Angular library uses a hyphen range.
+
 Rule 6 distinguishes the two cases because they differ in observable effect. Removing `14 - 15` cannot break any consumer, since no coherent install existed. Removing a major that did resolve is a breaking change regardless of what the release is called, because consumers experience it as a hard resolution change.
 
 Rule 7 exists so that narrowing is predictable and semver-honest. Tying retirement to the framework's own cadence was considered and rejected: Angular ships a major every six months, while `@coveo/atomic-angular` versions along the Atomic line, so retiring on Angular's schedule would mean shipping breaking changes in patch or minor releases. Deferring to our own majors keeps the release type honest, and batching the increase means one large, well-communicated jump instead of a series of small breaking ones.
@@ -100,6 +104,7 @@ TypeScript is carved out of the ceiling rule deliberately. It releases roughly q
 
 - **Positive:** No published range can advertise a combination that cannot resolve. Ranges state only what CI verified. All framework peers become visible in one catalog, in one style.
 - **Negative:** Each new framework major needs its ceiling raised, and until then its consumers see a peer warning. Rule 5 means adding a framework peer obliges adding CI coverage for it.
+- **Negative:** A caret union is verbose for a wide span: `^16 || ^17 || ^18 || ^19 || ^20 || ^21` against `16 - 21`. Rule 7 narrows the span at each major, so the verbosity is self-limiting.
 - **Negative:** Under rule 7 a range stays wider than the set of majors we would otherwise choose to support, for as long as the next major release is away. Angular 16 through 19 remain in the published range despite having left upstream long-term support.
 - **Neutral:** Lower bounds will rise as the TypeScript floor in `@coveo/atomic` and `@coveo/headless` rises. Each rise is a separate decision, and breaking once it excludes a major that previously resolved.
 
@@ -125,7 +130,7 @@ Consequently, majors between the bounds are build-verified only. Runtime verific
 Angular is the first application of this policy, under epic KIT-4735:
 
 - Add `@angular/common` and `@angular/core` to `catalogs.peer-compatibility` and reference them from `@coveo/atomic-angular`, replacing the hardcoded `14 - 21`.
-- The range becomes `16 - 21`. The ceiling is 21 because that is the major the monorepo builds against; Angular 22 is `latest` on npm but is neither built nor tested here, and rule 4 does not accept registry recency as evidence. The floor is provisional: it derives from the TypeScript overlap alone, and one constraint is untested — the package is `exports`-only with no root `main`, and `moduleResolution: bundler` did not become the Angular CLI default until v17, so the floor may be 17.
+- The range becomes `^16 || ^17 || ^18 || ^19 || ^20 || ^21`. The ceiling is 21 because that is the major the monorepo builds against; Angular 22 is `latest` on npm but is neither built nor tested here, and rule 4 does not accept registry recency as evidence. The floor is provisional: it derives from the TypeScript overlap alone, and one constraint is untested — the package is `exports`-only with no root `main`, and `moduleResolution: bundler` did not become the Angular CLI default until v17, so the floor may be 17.
 - Raising the ceiling to 22 belongs with the change that upgrades the Angular catalog to 22, so the range and the build move together.
 
 Note that `@angular/core` and `@angular/common` also appear under `pnpm.overrides` in `pnpm-workspace.yaml`. Those entries pin the version used to build and test inside this workspace and have no effect on published manifests. They are not a substitute for, and must not be confused with, the `peer-compatibility` entries.
