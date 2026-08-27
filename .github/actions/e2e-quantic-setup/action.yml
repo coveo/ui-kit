@@ -8,15 +8,18 @@ inputs:
     description: The SFDX JWT key contents
     required: true
   lws-status:
-    description: 'Set to "enabled" to deploy the LWS enabled community, and "disabled to deploy the LWS disabled community'
+    description: 'Set to "enabled" to deploy the LWS enabled community, and "disabled" to deploy the LWS disabled community'
     required: true
 runs:
   using: composite
   steps:
-    - run: |
-        echo "${INPUTS_JWTKEY}" > server.key
+    - name: Deploy Quantic community
+      id: deploy
+      run: |
+        umask 077
+        printf '%s\n' "$INPUTS_JWTKEY" > server.key
+        trap 'rm -f -- server.key' EXIT
         pnpm exec ts-node scripts/build/deploy-community.ts --ci --scratch-org-def-path=./config/lws-${INPUTS_LWS_STATUS}-scratch-def.json
-        rm server.key
       shell: bash
       working-directory: ./packages/quantic
       env:
@@ -27,6 +30,20 @@ runs:
         SFDX_AUTH_JWT_INSTANCE_URL: https://login.salesforce.com
         INPUTS_JWTKEY: ${{ inputs.jwtkey }}
         INPUTS_LWS_STATUS: ${{ inputs.lws-status }}
+        QUANTIC_LWS_STATUS: ${{ inputs.lws-status }}
+    - name: Validate scratch-org handoff
+      if: steps.deploy.outcome == 'success'
+      run: |
+        node .github/scripts/quantic-scratch-org-handoff.mjs validate-ready \
+          --artifact-directory "$RUNNER_TEMP/quantic-scratch-org-handoffs/quantic-scratch-org-repo-${GITHUB_REPOSITORY_ID}-run-${GITHUB_RUN_ID}-attempt-${GITHUB_RUN_ATTEMPT}-lws-${INPUTS_LWS_STATUS}" \
+          --trusted-root "$RUNNER_TEMP" \
+          --lws-status "$INPUTS_LWS_STATUS" \
+          --producer-attempt "$GITHUB_RUN_ATTEMPT" \
+          --dev-hub-username "$SFDX_AUTH_JWT_USERNAME"
+      shell: bash
+      env:
+        INPUTS_LWS_STATUS: ${{ inputs.lws-status }}
+        SFDX_AUTH_JWT_USERNAME: rdaccess@coveo.com
     - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
       with:
         name: quantic-playwright-env-lws-${{ inputs.lws-status }}
@@ -34,3 +51,11 @@ runs:
         include-hidden-files: true
         retention-days: 1
         if-no-files-found: error
+    - name: Upload scratch-org handoff
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+      with:
+        name: quantic-scratch-org-repo-${{ github.repository_id }}-run-${{ github.run_id }}-attempt-${{ github.run_attempt }}-lws-${{ inputs.lws-status }}
+        path: ${{ runner.temp }}/quantic-scratch-org-handoffs/quantic-scratch-org-repo-${{ github.repository_id }}-run-${{ github.run_id }}-attempt-${{ github.run_attempt }}-lws-${{ inputs.lws-status }}/scratch-org.json
+        retention-days: 1
+        if-no-files-found: ignore

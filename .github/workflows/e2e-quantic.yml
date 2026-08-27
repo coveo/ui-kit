@@ -62,42 +62,62 @@ jobs:
         with:
           fetch-depth: 1
           filter: blob:none
-      - uses: ./.github/actions/setup
       - uses: ./.github/actions/setup-sfdx
-      - name: Resolve Apex target org
-        id: apex-org
+      - name: Download Apex scratch-org handoff
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: quantic-scratch-org-repo-${{ github.repository_id }}-run-${{ github.run_id }}-attempt-${{ github.run_attempt }}-lws-enabled
+          path: ${{ runner.temp }}/quantic-scratch-org-handoffs/quantic-scratch-org-repo-${{ github.repository_id }}-run-${{ github.run_id }}-attempt-${{ github.run_attempt }}-lws-enabled
+      - name: Authenticate Apex reconciliation to the Salesforce Dev Hub
+        id: apex-salesforce-auth
         run: |
           umask 077
-          printf '%s\n' "$SFDX_AUTH_JWT_KEY" > server.key
-          trap 'rm -f -- server.key' EXIT
-          echo "target-org=$(pnpm exec ts-node scripts/build/resolve-org-username.ts)" >> "$GITHUB_OUTPUT"
-        shell: bash
-        working-directory: ./packages/quantic
-        env:
-          COMMIT_SHA: ${{ github.sha }}
-          SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
-          SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
-          SFDX_AUTH_JWT_KEY_FILE: server.key
-          SFDX_AUTH_JWT_USERNAME: rdaccess@coveo.com
-      - name: Authenticate to Quantic scratch org
-        run: |
-          umask 077
-          printf '%s\n' "$SFDX_AUTH_JWT_KEY" > server.key
-          trap 'rm -f -- server.key' EXIT
+          printf '%s\n' "$SFDX_AUTH_JWT_KEY" > "$JWT_KEY_FILE"
           sf org login jwt \
             --client-id "$SFDX_AUTH_CLIENT_ID" \
-            --jwt-key-file server.key \
+            --jwt-key-file "$JWT_KEY_FILE" \
+            --username "$SFDX_AUTH_JWT_USERNAME" \
+            --instance-url https://login.salesforce.com \
+            --set-default-dev-hub
+        shell: bash
+        env:
+          JWT_KEY_FILE: ${{ runner.temp }}/quantic-apex-jwt.key
+          SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
+          SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+          SFDX_AUTH_JWT_USERNAME: rdaccess@coveo.com
+      - name: Validate Apex scratch-org handoff
+        id: apex-org
+        run: |
+          node .github/scripts/quantic-scratch-org-handoff.mjs validate-ready \
+            --artifact-directory "$RUNNER_TEMP/quantic-scratch-org-handoffs/quantic-scratch-org-repo-${GITHUB_REPOSITORY_ID}-run-${GITHUB_RUN_ID}-attempt-${GITHUB_RUN_ATTEMPT}-lws-enabled" \
+            --trusted-root "$RUNNER_TEMP" \
+            --lws-status enabled \
+            --producer-attempt "$GITHUB_RUN_ATTEMPT" \
+            --dev-hub-username "$SFDX_AUTH_JWT_USERNAME" \
+            --github-output "$GITHUB_OUTPUT"
+        shell: bash
+        env:
+          SFDX_AUTH_JWT_USERNAME: rdaccess@coveo.com
+      - name: Authenticate to authoritative Quantic scratch org
+        run: |
+          sf org login jwt \
+            --client-id "$SFDX_AUTH_CLIENT_ID" \
+            --jwt-key-file "$JWT_KEY_FILE" \
             --username "$APEX_ORG_USERNAME" \
             --instance-url https://test.salesforce.com \
             --set-default
         shell: bash
         env:
-          APEX_ORG_USERNAME: ${{ steps.apex-org.outputs.target-org }}
+          APEX_ORG_USERNAME: ${{ steps.apex-org.outputs.username }}
+          JWT_KEY_FILE: ${{ runner.temp }}/quantic-apex-jwt.key
           SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
-          SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
       - uses: ./.github/actions/apex-unit-tests
         with:
-          target-org: ${{ steps.apex-org.outputs.target-org }}
+          target-org: ${{ steps.apex-org.outputs.username }}
+      - name: Remove Apex authentication material
+        if: always()
+        run: rm -f -- "$RUNNER_TEMP/quantic-apex-jwt.key"
+        shell: bash
   post-scratch-org-links-to-pr:
     name: 'Post Scratch Org Links to PR'
     needs: e2e-quantic-setup
@@ -164,8 +184,9 @@ jobs:
           artifact-pattern: quantic-blob-report-*
           upload-artifact-name: quantic-playwright-report
   e2e-quantic-cleanup:
-    if: cancelled() || failure() || success()
+    if: ${{ cancelled() || failure() || success() }}
     needs:
+      - e2e-quantic-setup
       - e2e-quantic-playwright-test
       - apex-quantic-tests
     runs-on: ubuntu-latest
@@ -178,19 +199,72 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 1
-      - uses: ./.github/actions/setup
+          filter: blob:none
       - uses: ./.github/actions/setup-sfdx
-      - name: Delete Quantic scratch orgs
+      - name: Download scratch-org handoffs
+        id: download-handoffs
+        continue-on-error: true
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          pattern: quantic-scratch-org-repo-${{ github.repository_id }}-run-${{ github.run_id }}-attempt-*-lws-*
+          path: ${{ runner.temp }}/quantic-scratch-org-handoffs
+      - name: Authenticate cleanup to the Salesforce Dev Hub
+        id: cleanup-salesforce-auth
         run: |
           umask 077
-          printf '%s\n' "$SFDX_AUTH_JWT_KEY" > server.key
-          trap 'rm -f -- server.key' EXIT
-          pnpm exec ts-node scripts/build/delete-org.ts
+          printf '%s\n' "$SFDX_AUTH_JWT_KEY" > "$JWT_KEY_FILE"
+          sf org login jwt \
+            --client-id "$SFDX_AUTH_CLIENT_ID" \
+            --jwt-key-file "$JWT_KEY_FILE" \
+            --username "$SFDX_AUTH_JWT_USERNAME" \
+            --instance-url https://login.salesforce.com \
+            --set-default-dev-hub
         shell: bash
-        working-directory: ./packages/quantic
         env:
-          COMMIT_SHA: ${{ github.sha }}
+          JWT_KEY_FILE: ${{ runner.temp }}/quantic-cleanup-jwt.key
           SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
           SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
-          SFDX_AUTH_JWT_KEY_FILE: server.key
           SFDX_AUTH_JWT_USERNAME: rdaccess@coveo.com
+      - name: Reconcile cleanup scratch-org handoffs
+        id: scratch-orgs
+        if: ${{ always() && steps.cleanup-salesforce-auth.outcome == 'success' }}
+        run: |
+          node .github/scripts/quantic-scratch-org-handoff.mjs validate-cleanup \
+            --artifact-root "$RUNNER_TEMP/quantic-scratch-org-handoffs" \
+            --trusted-root "$RUNNER_TEMP" \
+            --dev-hub-username "$SFDX_AUTH_JWT_USERNAME" \
+            --targets-file "$RUNNER_TEMP/quantic-scratch-org-cleanup-targets.json" \
+            --github-output "$GITHUB_OUTPUT"
+        shell: bash
+        env:
+          SFDX_AUTH_JWT_USERNAME: rdaccess@coveo.com
+      - name: Delete LWS-enabled Quantic scratch org
+        if: ${{ always() && steps.scratch-orgs.outcome == 'success' && steps.scratch-orgs.outputs.enabled-target-count != '0' }}
+        run: |
+          node .github/scripts/quantic-scratch-org-handoff.mjs delete-cleanup \
+            --targets-file "$RUNNER_TEMP/quantic-scratch-org-cleanup-targets.json" \
+            --trusted-root "$RUNNER_TEMP" \
+            --lws-status enabled \
+            --dev-hub-username "$SFDX_AUTH_JWT_USERNAME"
+        shell: bash
+        env:
+          SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
+          SFDX_AUTH_JWT_KEY_FILE: ${{ runner.temp }}/quantic-cleanup-jwt.key
+          SFDX_AUTH_JWT_USERNAME: rdaccess@coveo.com
+      - name: Delete LWS-disabled Quantic scratch org
+        if: ${{ always() && steps.scratch-orgs.outcome == 'success' && steps.scratch-orgs.outputs.disabled-target-count != '0' }}
+        run: |
+          node .github/scripts/quantic-scratch-org-handoff.mjs delete-cleanup \
+            --targets-file "$RUNNER_TEMP/quantic-scratch-org-cleanup-targets.json" \
+            --trusted-root "$RUNNER_TEMP" \
+            --lws-status disabled \
+            --dev-hub-username "$SFDX_AUTH_JWT_USERNAME"
+        shell: bash
+        env:
+          SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
+          SFDX_AUTH_JWT_KEY_FILE: ${{ runner.temp }}/quantic-cleanup-jwt.key
+          SFDX_AUTH_JWT_USERNAME: rdaccess@coveo.com
+      - name: Remove cleanup authentication material
+        if: always()
+        run: rm -f -- "$RUNNER_TEMP/quantic-cleanup-jwt.key"
+        shell: bash

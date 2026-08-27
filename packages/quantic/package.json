@@ -33,7 +33,7 @@
     "dev": "node ../../utils/ci/rm-rf.mjs .localdevserver && pnpm run build:staticresources && pnpm run dev:sfdx",
     "dev:sfdx": "sf project deploy start --source-dir force-app/main && sfdx force:lightning:lwc:start --port 3334",
     "test:unit": "lwc-jest",
-    "test:build-scripts": "TS_NODE_PROJECT=scripts/build/tsconfig.json node --test --require ts-node/register scripts/build/*.node-test.ts scripts/build/util/*.node-test.ts",
+    "test:build-scripts": "TS_NODE_PROJECT=scripts/build/tsconfig.json node --test --require ts-node/register scripts/build/*.node-test.ts scripts/build/util/*.node-test.ts ../../.github/scripts/*.node-test.mjs",
     "test:unit:debug": "lwc-jest --debug",
     "test:unit:watch": "lwc-jest --watch",
     "test:unit:coverage": "lwc-jest --coverage",

@@ -1,7 +1,19 @@
-import {isSalesforceDeploymentId, sfdx, SfdxResponse, sfCommand} from './sfdx';
+import {isSalesforceDeploymentId, sfdx, sfCommand} from './sfdx';
+import type {SfdxResponse} from './sfdx';
+
+const SCRATCH_ORG_COMMAND_TIMEOUT_MS = 10 * 60 * 1000;
+
+export type SfJsonCommandRunner = <T>(
+  args: readonly string[],
+  timeoutMs: number
+) => Promise<T>;
+
+const defaultSfJsonCommandRunner: SfJsonCommandRunner = (args, timeoutMs) =>
+  sfCommand(args, timeoutMs);
 
 export interface SfdxOrg {
   alias?: string;
+  orgId?: string;
   username: string;
   status: string;
 }
@@ -19,25 +31,13 @@ export interface SfdxListOrgsResponse extends SfdxResponse {
   };
 }
 
-export interface SfdxActiveScratchOrgsResponse extends SfdxResponse {
-  result: {
-    records: {
-      SignupUsername: string;
-    }[];
-  };
-}
-
-export interface SfdxOldScratchOrgsResponse extends SfdxResponse {
-  result: {
-    records: {
-      SignupUsername: string;
-      CreatedDate: string;
-    }[];
-  };
-}
-
 export interface SfdxCreateOrgResponse extends SfdxResponse {
-  result: SfdxOrg;
+  result: {
+    alias?: string;
+    orgId: string;
+    status?: string;
+    username: string;
+  };
 }
 
 export interface SfdxPublishCommunityResponse extends SfdxResponse {
@@ -96,37 +96,6 @@ export interface SfdxGetPackageListResponse extends SfdxResponse {
   result: SfdxPackageDetails[];
 }
 
-export async function getActiveScratchOrgUsernames(
-  devHubAlias: string,
-  scratchOrgName: string
-): Promise<string[]> {
-  const response = await sfdx<SfdxActiveScratchOrgsResponse>(
-    `data query --target-org ${devHubAlias} --query "SELECT SignupUsername FROM ScratchOrgInfo WHERE OrgName='${scratchOrgName}' AND Status != 'Deleted'"`
-  );
-
-  return response.result.records.map((r) => r.SignupUsername);
-}
-
-export async function getOldScratchOrgUsernames(
-  devHubAlias: string,
-  scratchOrgName: string
-): Promise<string[]> {
-  const response = await sfdx<SfdxOldScratchOrgsResponse>(
-    `data query --target-org ${devHubAlias} --query "SELECT SignupUsername, CreatedDate FROM ScratchOrgInfo WHERE OrgName='${scratchOrgName}' AND Status != 'Deleted'"`
-  );
-
-  const ageThresholdMsec = 2 * 60 * 60 * 1000;
-  const isOldOrg = (createdDateString: string) => {
-    const created = new Date(createdDateString).getTime();
-    const now = new Date(Date.now()).getTime();
-    return now - created > ageThresholdMsec;
-  };
-
-  return response.result.records
-    .filter((r) => isOldOrg(r.CreatedDate))
-    .map((r) => r.SignupUsername);
-}
-
 export interface AuthorizeOrgArguments {
   username: string;
   isScratchOrg: boolean;
@@ -149,108 +118,63 @@ export interface CreateScratchOrgArguments {
   duration: number;
 }
 
-export async function createScratchOrg(args: CreateScratchOrgArguments) {
-  await sfdx(
-    `org create scratch --set-default --definition-file "${args.defFile}" --alias ${args.alias} --duration-days ${args.duration}`
+export async function createScratchOrg(
+  args: CreateScratchOrgArguments,
+  runSfCommand: SfJsonCommandRunner = defaultSfJsonCommandRunner
+): Promise<SfdxOrg> {
+  const response = await runSfCommand<SfdxCreateOrgResponse>(
+    [
+      'org',
+      'create',
+      'scratch',
+      '--set-default',
+      '--definition-file',
+      args.defFile,
+      '--alias',
+      args.alias,
+      '--duration-days',
+      String(args.duration),
+    ],
+    SCRATCH_ORG_COMMAND_TIMEOUT_MS
   );
-}
-
-interface DeleteActiveScratchOrgsArguments {
-  devHubUsername: string;
-  scratchOrgName: string;
-  jwtClientId: string;
-  jwtKeyFile: string;
-}
-
-export interface DeleteActiveScratchOrgsResult {
-  foundOrgUsernames: string[];
-  deletedOrgUsernames: string[];
-}
-
-export async function deleteActiveScratchOrgs(
-  args: DeleteActiveScratchOrgsArguments
-): Promise<DeleteActiveScratchOrgsResult> {
-  const foundOrgUsernames = await getActiveScratchOrgUsernames(
-    args.devHubUsername,
-    args.scratchOrgName
-  );
-  const deletedOrgUsernames: string[] = [];
-
-  for (const username of foundOrgUsernames) {
-    try {
-      await authorizeOrg({
-        username,
-        isScratchOrg: true,
-        jwtClientId: args.jwtClientId,
-        jwtKeyFile: args.jwtKeyFile,
-      });
-      await deleteOrg(username);
-      deletedOrgUsernames.push(username);
-    } catch (error) {
-      console.warn(`Failed to delete organization ${username}`);
-      console.warn(
-        error instanceof Error ? (error.stack ?? error.message) : String(error)
-      );
-    }
+  if (!response.result.username || !response.result.orgId) {
+    throw new Error(
+      'Salesforce did not return the created scratch-org identity.'
+    );
   }
-
-  return {foundOrgUsernames, deletedOrgUsernames};
+  return {
+    alias: response.result.alias ?? args.alias,
+    orgId: response.result.orgId,
+    status: response.result.status ?? 'Active',
+    username: response.result.username,
+  };
 }
 
-interface DeleteOldScratchOrgsArguments {
-  devHubUsername: string;
-  scratchOrgName: string;
-  jwtClientId: string;
-  jwtKeyFile: string;
-}
-
-export async function deleteOldScratchOrgs(
-  args: DeleteOldScratchOrgsArguments
-): Promise<number> {
-  const usernames = await getOldScratchOrgUsernames(
-    args.devHubUsername,
-    args.scratchOrgName
-  );
-
-  let nbDeletedOrgs = 0;
-  for (const username of usernames) {
-    try {
-      await authorizeOrg({
-        username,
-        isScratchOrg: true,
-        jwtClientId: args.jwtClientId,
-        jwtKeyFile: args.jwtKeyFile,
-      });
-      await deleteOrg(username);
-      nbDeletedOrgs += 1;
-    } catch (error) {
-      console.warn(`Failed to delete organization ${username}`);
-      console.warn(JSON.stringify(error));
-    }
-  }
-
-  return nbDeletedOrgs;
-}
-
-export async function orgExists(alias: string): Promise<boolean> {
+export async function getScratchOrg(
+  alias: string
+): Promise<SfdxOrg | undefined> {
   const response = await sfdx<SfdxListOrgsResponse>('org list');
 
   const org = response.result.scratchOrgs.find((o) => o.alias === alias);
-
-  const isOrgFound = !!org;
-  const isOrgActive = isOrgFound && org.status === 'Active';
-
-  if (isOrgFound && !isOrgActive) {
+  if (org && org.status !== 'Active') {
     console.warn(
       `Org ${alias} is found but status is not active. Status is ${org.status}.`
     );
   }
-
-  return isOrgActive;
+  return org?.status === 'Active' ? org : undefined;
 }
 
-export async function deleteOrg(alias: string): Promise<void> {
-  await sfdx(`org delete scratch --target-org ${alias} --no-prompt`);
+export async function deleteOrg(
+  targetOrg: string,
+  runSfCommand: SfJsonCommandRunner = defaultSfJsonCommandRunner
+): Promise<void> {
+  if (!/^[A-Za-z0-9._+%@=-]+$/.test(targetOrg)) {
+    throw new Error('The scratch-org deletion target is invalid.');
+  }
+  await runSfCommand(
+    ['org', 'delete', 'scratch', '--target-org', targetOrg, '--no-prompt'],
+    SCRATCH_ORG_COMMAND_TIMEOUT_MS
+  );
 }
 
 export interface CreateCommunityArguments {

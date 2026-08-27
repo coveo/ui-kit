@@ -41,6 +41,20 @@
       ]
     },
     "test:build-scripts": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/.github/actions/apex-unit-tests/action.yml",
+        "$TURBO_ROOT$/.github/actions/e2e-quantic-setup/action.yml",
+        "$TURBO_ROOT$/.github/actions/playwright-quantic/action.yml",
+        "$TURBO_ROOT$/.github/actions/post-scratch-org-links-on-pr/action.yml",
+        "$TURBO_ROOT$/.github/scripts/e2e-quantic-workflow.node-test.mjs",
+        "$TURBO_ROOT$/.github/scripts/fake-salesforce.node-test-helper.mjs",
+        "$TURBO_ROOT$/.github/scripts/quantic-scratch-org-handoff.mjs",
+        "$TURBO_ROOT$/.github/scripts/quantic-scratch-org-handoff.node-test.mjs",
+        "$TURBO_ROOT$/.github/scripts/salesforce-scratch-org.mjs",
+        "$TURBO_ROOT$/.github/scripts/salesforce-scratch-org.node-test.mjs",
+        "$TURBO_ROOT$/.github/workflows/e2e-quantic.yml"
+      ],
       "outputs": []
     },
     "test:unit": {

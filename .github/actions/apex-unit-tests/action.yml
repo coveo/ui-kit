@@ -2,7 +2,7 @@ name: Apex Unit Tests
 description: Run Quantic Apex unit tests against an existing scratch org.
 inputs:
   target-org:
-    description: Existing Salesforce org alias to run the Apex tests against
+    description: Exact authenticated Salesforce org username to run the Apex tests against
     required: true
 runs:
   using: composite

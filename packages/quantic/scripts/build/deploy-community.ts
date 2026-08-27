@@ -10,6 +10,16 @@ import {
 import * as sfdx from './util/sfdx-commands';
 import {SfdxJWTAuth} from './util/sfdx-commands';
 import {
+  buildScratchOrgIdentity,
+  buildScratchOrgName,
+  createScratchOrgHandoff,
+  LwsStatus,
+  ScratchOrgHandoff,
+  ScratchOrgHandoffContext,
+  ScratchOrgHandoffPhase,
+  writeScratchOrgHandoff,
+} from './scratch-org-handoff';
+import {
   getOrgNameFromScratchDefFile,
   getScratchOrgDefPath,
 } from './util/scratchOrgDefUtils';
@@ -41,8 +51,8 @@ export interface Options {
     path: string;
     template: string;
   };
-  deleteOldOrgs: boolean;
   deleteOrgOnError: boolean;
+  handoff?: ScratchOrgHandoffContext;
   jwt: SfdxJWTAuth;
   scratchOrg: {
     alias: string;
@@ -57,11 +67,10 @@ type CommunitySfdxCommands = Pick<
   | 'authorizeOrg'
   | 'createCommunity'
   | 'createScratchOrg'
-  | 'deleteOldScratchOrgs'
   | 'deleteOrg'
   | 'deployCommunityMetadata'
   | 'deploySource'
-  | 'orgExists'
+  | 'getScratchOrg'
   | 'publishCommunity'
   | 'resumeMetadataDeployment'
 >;
@@ -74,6 +83,10 @@ export interface DeploymentDependencies {
   sleep: (durationMs: number) => Promise<void>;
   waitForUrl: (url: string, timeoutMs: number) => Promise<void>;
   writeCommunityUrl: (communityUrl: string, orgName: string) => Promise<void>;
+  writeScratchOrgHandoff: (
+    context: ScratchOrgHandoffContext,
+    handoff: ScratchOrgHandoff
+  ) => Promise<void>;
   writeTelemetry: (line: string) => void;
 }
 
@@ -135,28 +148,109 @@ const defaultDependencies: DeploymentDependencies = {
     await waitOn({resources: [url], timeout: timeoutMs});
   },
   writeCommunityUrl,
+  writeScratchOrgHandoff,
   writeTelemetry: console.log,
 };
 
-function ensureEnvVariables() {
-  [
+function ensureEnvironmentVariables(
+  environment: NodeJS.ProcessEnv,
+  variables: string[]
+): void {
+  variables.forEach((variable) => {
+    if (!environment[variable]) {
+      throw new Error(`The environment variable ${variable} must be defined.`);
+    }
+  });
+}
+
+function ensureEnvVariables(environment: NodeJS.ProcessEnv) {
+  ensureEnvironmentVariables(environment, [
     'COMMIT_SHA',
     'SFDX_AUTH_CLIENT_ID',
     'SFDX_AUTH_JWT_KEY_FILE',
     'SFDX_AUTH_JWT_USERNAME',
-  ].forEach((variable) => {
-    if (!process.env[variable]) {
-      throw new Error(`The environment variable ${variable} must be defined.`);
-    }
-  });
+    'GITHUB_REPOSITORY',
+    'GITHUB_REPOSITORY_ID',
+    'GITHUB_RUN_ATTEMPT',
+    'GITHUB_RUN_ID',
+    'GITHUB_SHA',
+    'QUANTIC_LWS_STATUS',
+    'RUNNER_TEMP',
+  ]);
+  if (environment.COMMIT_SHA !== environment.GITHUB_SHA) {
+    throw new Error('COMMIT_SHA must match GITHUB_SHA.');
+  }
 }
 
 function isCi(argv: string[]) {
   return argv.some((arg) => arg === '--ci');
 }
 
-function getCiOrgName() {
-  return `quantic-${process.env.COMMIT_SHA!.substring(0, 6)}`;
+function getLwsStatus(environment: NodeJS.ProcessEnv): LwsStatus {
+  const lwsStatus = environment.QUANTIC_LWS_STATUS;
+  if (lwsStatus !== 'enabled' && lwsStatus !== 'disabled') {
+    throw new Error('QUANTIC_LWS_STATUS must be enabled or disabled.');
+  }
+  return lwsStatus;
+}
+
+export function getCiOrgName(
+  repositoryId: string,
+  runId: string,
+  runAttempt: number,
+  lwsStatus: LwsStatus
+) {
+  return buildScratchOrgName(repositoryId, runId, runAttempt, lwsStatus);
+}
+
+export function buildCiHandoffContext(
+  orgAlias: string,
+  environment: NodeJS.ProcessEnv
+): ScratchOrgHandoffContext {
+  ensureEnvironmentVariables(environment, [
+    'COMMIT_SHA',
+    'GITHUB_REPOSITORY',
+    'GITHUB_REPOSITORY_ID',
+    'GITHUB_RUN_ATTEMPT',
+    'GITHUB_RUN_ID',
+    'GITHUB_SHA',
+    'QUANTIC_LWS_STATUS',
+    'RUNNER_TEMP',
+  ]);
+  const lwsStatus = getLwsStatus(environment);
+  if (orgAlias !== `Quantic__LWS_${lwsStatus}`) {
+    throw new Error(
+      'The scratch-org definition does not match QUANTIC_LWS_STATUS.'
+    );
+  }
+  const runAttempt = Number(environment.GITHUB_RUN_ATTEMPT);
+  if (
+    !/^[1-9][0-9]*$/.test(environment.GITHUB_RUN_ID!) ||
+    !Number.isSafeInteger(runAttempt) ||
+    runAttempt < 1
+  ) {
+    throw new Error('The GitHub workflow run identity is invalid.');
+  }
+  if (!/^[^/\s]+\/[^/\s]+$/.test(environment.GITHUB_REPOSITORY!)) {
+    throw new Error('The GitHub workflow repository is invalid.');
+  }
+  if (!/^[a-f0-9]{40}$/.test(environment.GITHUB_SHA!)) {
+    throw new Error('The GitHub workflow commit SHA is invalid.');
+  }
+  if (environment.COMMIT_SHA !== environment.GITHUB_SHA) {
+    throw new Error('COMMIT_SHA must match GITHUB_SHA.');
+  }
+  const context: ScratchOrgHandoffContext = {
+    commitSha: environment.GITHUB_SHA!,
+    lwsStatus,
+    repository: environment.GITHUB_REPOSITORY!,
+    repositoryId: environment.GITHUB_REPOSITORY_ID!,
+    runAttempt,
+    runId: environment.GITHUB_RUN_ID!,
+    trustedRoot: environment.RUNNER_TEMP!,
+  };
+  buildScratchOrgIdentity(context);
+  return context;
 }
 
 async function readDefinitionFile(file: string): Promise<object> {
@@ -165,9 +259,9 @@ async function readDefinitionFile(file: string): Promise<object> {
 
 async function prepareScratchOrgDefinitionFile(
   baseDefinitionFile: string,
-  ci: boolean
+  ciOrgName?: string
 ): Promise<string> {
-  if (!ci) {
+  if (!ciOrgName) {
     return baseDefinitionFile;
   }
 
@@ -180,7 +274,7 @@ async function prepareScratchOrgDefinitionFile(
     JSON.stringify(
       {
         ...(await readDefinitionFile(baseDefinitionFile)),
-        orgName: getCiOrgName(),
+        orgName: ciOrgName,
       },
       null,
       2
@@ -189,15 +283,19 @@ async function prepareScratchOrgDefinitionFile(
   return ciDefinitionFile;
 }
 
-async function buildOptions(
+export async function buildDeploymentOptions(
   scratchOrgDefPath: string,
-  argv: string[]
+  argv: string[],
+  environment: NodeJS.ProcessEnv = process.env
 ): Promise<Options> {
   const ci = isCi(argv);
   const orgName = getOrgNameFromScratchDefFile(scratchOrgDefPath);
   if (ci) {
-    ensureEnvVariables();
+    ensureEnvVariables(environment);
   }
+  const handoff = ci ? buildCiHandoffContext(orgName, environment) : undefined;
+  const ciIdentity = handoff ? buildScratchOrgIdentity(handoff) : undefined;
+  const ciOrgName = ciIdentity?.orgName;
 
   return {
     ci,
@@ -206,21 +304,21 @@ async function buildOptions(
       path: 'examples',
       template: 'Build Your Own',
     },
-    deleteOldOrgs: ci,
     deleteOrgOnError: ci,
+    handoff,
     jwt: {
-      clientId: process.env.SFDX_AUTH_CLIENT_ID!,
-      keyFile: process.env.SFDX_AUTH_JWT_KEY_FILE!,
-      username: process.env.SFDX_AUTH_JWT_USERNAME!,
+      clientId: environment.SFDX_AUTH_CLIENT_ID!,
+      keyFile: environment.SFDX_AUTH_JWT_KEY_FILE!,
+      username: environment.SFDX_AUTH_JWT_USERNAME!,
     },
     scratchOrg: {
-      alias: orgName,
+      alias: ciIdentity?.alias ?? orgName,
       defFile: await prepareScratchOrgDefinitionFile(
         path.resolve(scratchOrgDefPath),
-        ci
+        ciOrgName
       ),
       duration: ci ? 1 : 7,
-      name: ci ? getCiOrgName() : orgName,
+      name: ciOrgName ?? orgName,
     },
   };
 }
@@ -285,37 +383,57 @@ async function authorizeDevOrg(
   log('Authorization successful');
 }
 
-async function deleteOldOrgs(
-  log: StepLogger,
-  options: Options,
-  dependencies: DeploymentDependencies
-): Promise<void> {
-  log('Deleting old scratch organizations...');
-  const deletedCount = await dependencies.sfdx.deleteOldScratchOrgs({
-    devHubUsername: options.jwt.username,
-    scratchOrgName: options.scratchOrg.name,
-    jwtClientId: options.jwt.clientId,
-    jwtKeyFile: options.jwt.keyFile,
-  });
-  log(`${deletedCount} scratch organizations deleted.`);
-}
-
 async function ensureScratchOrgExists(
   log: StepLogger,
   options: Options,
   dependencies: DeploymentDependencies
-) {
-  log(`Searching for ${options.scratchOrg.alias} organization...`);
-  if (await dependencies.sfdx.orgExists(options.scratchOrg.alias)) {
-    log(`${options.scratchOrg.alias} organization found.`);
-    return;
+): Promise<sfdx.SfdxOrg> {
+  if (!options.ci) {
+    log(`Searching for ${options.scratchOrg.alias} organization...`);
+    const existingOrg = await dependencies.sfdx.getScratchOrg(
+      options.scratchOrg.alias
+    );
+    if (existingOrg) {
+      log(`${options.scratchOrg.alias} organization found.`);
+      return existingOrg;
+    }
   }
 
-  log(
-    `${options.scratchOrg.alias} organization not found. Creating organization.`
+  log(`Creating ${options.scratchOrg.alias} organization...`);
+  const createdOrg = await dependencies.sfdx.createScratchOrg(
+    options.scratchOrg
   );
-  await dependencies.sfdx.createScratchOrg(options.scratchOrg);
+  if (!createdOrg.username || !createdOrg.orgId) {
+    throw new Error(
+      'Salesforce did not return the created scratch-org identity.'
+    );
+  }
   log('Organization created successfully.');
+  return createdOrg;
+}
+
+async function updateScratchOrgHandoff(
+  options: Options,
+  username: string,
+  orgId: string,
+  phase: ScratchOrgHandoffPhase,
+  communityUrl: string | null,
+  dependencies: DeploymentDependencies
+): Promise<void> {
+  if (!options.handoff) {
+    return;
+  }
+  await dependencies.writeScratchOrgHandoff(
+    options.handoff,
+    createScratchOrgHandoff(
+      options.handoff,
+      options.scratchOrg.alias,
+      username,
+      orgId,
+      phase,
+      communityUrl
+    )
+  );
 }
 
 async function ensureCommunityExists(
@@ -451,10 +569,11 @@ async function waitForCommunity(
 async function deleteScratchOrg(
   log: StepLogger,
   options: Options,
+  username: string,
   dependencies: DeploymentDependencies
 ): Promise<void> {
   log(`Deleting ${options.scratchOrg.alias} organization...`);
-  await dependencies.sfdx.deleteOrg(options.scratchOrg.alias);
+  await dependencies.sfdx.deleteOrg(username);
   log('Organization deleted successfully.');
 }
 
@@ -465,6 +584,8 @@ export async function runCommunityDeployment(
 ): Promise<string> {
   let communityUrl = '';
   let scratchOrgAvailable = false;
+  let scratchOrgId = '';
+  let scratchOrgUsername = '';
   const runner = new StepsRunner();
   const telemetry = new DeploymentTelemetry(
     dependencies.writeTelemetry,
@@ -479,18 +600,25 @@ export async function runCommunityDeployment(
         )
       );
     }
-    if (options.deleteOldOrgs) {
-      runner.add(async (log) =>
-        telemetry.measure('old_org_deletion', () =>
-          deleteOldOrgs(log, options, dependencies)
-        )
-      );
-    }
     runner
       .add(async (log) =>
         telemetry.measure('scratch_org_creation', async () => {
-          await ensureScratchOrgExists(log, options, dependencies);
+          const scratchOrg = await ensureScratchOrgExists(
+            log,
+            options,
+            dependencies
+          );
+          scratchOrgId = scratchOrg.orgId ?? '';
+          scratchOrgUsername = scratchOrg.username;
           scratchOrgAvailable = true;
+          await updateScratchOrgHandoff(
+            options,
+            scratchOrgUsername,
+            scratchOrgId,
+            'provisioned',
+            null,
+            dependencies
+          );
         })
       )
       .add(async (log) =>
@@ -511,15 +639,31 @@ export async function runCommunityDeployment(
       .add(async (log) =>
         telemetry.measure('publication', async () => {
           communityUrl = await publishCommunity(log, options, dependencies);
+          await updateScratchOrgHandoff(
+            options,
+            scratchOrgUsername,
+            scratchOrgId,
+            'published',
+            communityUrl,
+            dependencies
+          );
         })
       )
       .add(async () => {
         await dependencies.writeCommunityUrl(communityUrl, orgName);
       })
       .add(async (log) =>
-        telemetry.measure('availability_checks', () =>
-          waitForCommunity(log, communityUrl, dependencies)
-        )
+        telemetry.measure('availability_checks', async () => {
+          await waitForCommunity(log, communityUrl, dependencies);
+          await updateScratchOrgHandoff(
+            options,
+            scratchOrgUsername,
+            scratchOrgId,
+            'ready',
+            communityUrl,
+            dependencies
+          );
+        })
       );
 
     await runner.run();
@@ -527,7 +671,24 @@ export async function runCommunityDeployment(
   } catch (error) {
     if (options.deleteOrgOnError && scratchOrgAvailable) {
       try {
-        await deleteScratchOrg(runner.getLogger(), options, dependencies);
+        await deleteScratchOrg(
+          runner.getLogger(),
+          options,
+          scratchOrgUsername,
+          dependencies
+        );
+        try {
+          await updateScratchOrgHandoff(
+            options,
+            scratchOrgUsername,
+            scratchOrgId,
+            'deleted',
+            communityUrl || null,
+            dependencies
+          );
+        } catch (handoffError) {
+          dependencies.reportCleanupError(handoffError);
+        }
       } catch (cleanupError) {
         dependencies.reportCleanupError(cleanupError);
       }
@@ -540,7 +701,11 @@ export async function main(argv: string[] = process.argv): Promise<void> {
   dotenv.config({path: path.resolve(__dirname, '.env')});
   const scratchOrgDefPath = getScratchOrgDefPath(argv);
   const orgName = getOrgNameFromScratchDefFile(scratchOrgDefPath);
-  const options = await buildOptions(scratchOrgDefPath, argv);
+  const options = await buildDeploymentOptions(
+    scratchOrgDefPath,
+    argv,
+    process.env
+  );
   const communityUrl = await runCommunityDeployment(options, orgName);
 
   console.log(
