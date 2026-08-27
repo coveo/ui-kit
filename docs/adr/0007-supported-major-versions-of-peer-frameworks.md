@@ -120,7 +120,9 @@ A leg installs the packed library into a minimal consumer application for one fr
 
 One leg installs at the default catalog version *without* `--legacy-peer-deps`. That is what keeps rule 4 honest: the major the monorepo builds against must fall inside the range we publish, so a catalog bump to a major outside the declared ceiling fails that leg. Renovate is deliberately not configured to widen the range itself, because auto-widening would assert compatibility without evidence.
 
-The design of the matrix is not settled at the time of writing. Two questions are open: how many legs to run, and whether it runs per pull request or on a schedule. The floor and ceiling are the bounds that must be covered under rule 5; intermediate majors are optional. Until the matrix lands, rules 3 and 4 rest on the analysis recorded here rather than on measurement, and the Angular floor stays provisional.
+The matrix lives in `ci.yml` rather than a separate workflow, and is gated on `@coveo/atomic-angular#build` appearing in the affected task set, so it runs on pull requests that touch the wrapper and is skipped otherwise. A single job builds and packs the library once and uploads the tarball; each leg downloads it, so no leg rebuilds the monorepo.
+
+Rule 5 requires the floor and ceiling to be covered. Angular currently runs three legs: 16 and 17 because the floor is provisional between them, and 21 as both the ceiling and the strict-peer leg. Intermediate majors are deliberately not covered. Until the matrix has run, rules 3 and 4 rest on the analysis recorded here rather than on measurement, and the Angular floor stays provisional.
 
 ### What is not enforced mechanically
 
@@ -133,8 +135,8 @@ The cost of relying on the matrix alone is feedback latency. If the matrix runs 
 ### Keeping the matrix cheap
 
 - One job builds and packs the library, and uploads the tarball as an artifact that every leg consumes. Legs never rebuild the monorepo.
-- Each major has a committed minimal fixture application with a committed lockfile, installed with `npm ci --prefer-offline`. Scaffolding with `ng new` at run time is avoided: it is slow, network-dependent, and not reproducible.
-- Each leg uses a component in a template rather than importing the module alone, so `strictTemplates` type-checks the generated inputs.
+- The consumer application is scaffolded with the Angular CLI for the major under test. A committed fixture per major was considered and rejected: `angular.json` builders differ across majors — Angular 16 uses `@angular-devkit/build-angular:browser` where 17 and later use `@angular/build:application` — so a hand-maintained configuration per major is more fragile than letting the matching CLI generate a valid one. The cost is that each leg downloads the CLI.
+- Each leg references a generated component's input type rather than importing the module alone, so a type error surfaces if the generated surface changes.
 - Runtime coverage of the wrapper lives in version-agnostic unit tests over `utils.ts`, exercised with plain stubs and no Angular at all. These run once, outside the matrix. Running them per major is not viable, because Angular's own unit-test tooling differs across the supported range, so a cross-major harness would cost more than the build legs it replaced.
 
 Consequently, majors between the bounds are build-verified only. Runtime verification happens on the version the monorepo builds against, through the existing Playwright suite. This limitation should be stated wherever the supported range is published, rather than implied.
