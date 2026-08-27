@@ -72,7 +72,7 @@ Option C. Concretely:
 2. **Every framework peer range is expressed as a caret union with one clause per supported major**, using the bare major form: `^16 || ^17 || ^18`. This applies whether the supported majors are contiguous or not. Hyphen ranges are not used.
 3. **The lower bound is the oldest major that can technically resolve**, determined by the transitive constraints our packages impose — chiefly the TypeScript peer — and confirmed by CI.
 4. **The upper bound is the newest major CI validates**, which is at minimum the major the monorepo itself builds against. It may extend one major beyond that — the pattern `@angular/material` uses with `^22.0.0 || ^23.0.0` — but only once a CI leg validates that next major. Being `latest` on npm is not evidence.
-5. **CI validates both bounds** for every framework with a declared range. A bound without a corresponding test is not permitted.
+5. **CI validates the floor** of every framework range, by building a consumer application pinned to that major against the packed wrapper. The ceiling needs no dedicated check: it is the version the monorepo builds against, so the in-repo samples already exercise it.
 6. **Narrowing a range is a bug fix when it removes majors that could never resolve**, and a breaking change otherwise.
 7. **The lower bound rises only at a major of the affected package.** At each major, it is raised to the oldest framework major still in upstream long-term support at that time. Between majors the range only widens. Determining which majors are still supported is part of planning that major release; it is not tracked continuously.
 
@@ -116,28 +116,31 @@ Enforcement rests on the compatibility matrix tracked by KIT-5983 and proposed i
 
 ### What the matrix does
 
-A leg installs the packed library into a minimal consumer application for one framework major and builds it. That exercises package resolution, the TypeScript range that major pins, and — because the fixture uses a component in a template — `strictTemplates` against the generated inputs. It is a build check, not a runtime one.
+A leg scaffolds a consumer application pinned to one framework major, installs the packed wrapper and its declared peers into it, references a generated component's type from real source, and builds. That exercises package resolution, the TypeScript range that major pins, and the generated type surface. It is a build check, not a runtime one.
 
-One leg installs at the default catalog version *without* `--legacy-peer-deps`. That is what keeps rule 4 honest: the major the monorepo builds against must fall inside the range we publish, so a catalog bump to a major outside the declared ceiling fails that leg. Renovate is deliberately not configured to widen the range itself, because auto-widening would assert compatibility without evidence.
+Peers are installed explicitly from the packed manifest rather than left to the package manager, so a missing peer cannot fail a leg for the wrong reason.
 
-The matrix lives in `ci.yml` rather than a separate workflow, and is gated on `@coveo/atomic-angular#build` appearing in the affected task set, so it runs on pull requests that touch the wrapper and is skipped otherwise. A single job builds and packs the library once and uploads the tarball; each leg downloads it, so no leg rebuilds the monorepo.
+The matrix lives in `ci.yml` rather than a separate workflow, gated on the affected task set so it runs only on pull requests touching a wrapper. Each leg is a single call to `scripts/verify-framework-compat.mjs`, which is the same command a developer runs locally — the check is reproducible outside CI, which is why it is a script rather than inline workflow steps.
 
-Rule 5 requires the floor and ceiling to be covered. Angular currently runs three legs: 16 and 17 because the floor is provisional between them, and 21 as both the ceiling and the strict-peer leg. Intermediate majors are deliberately not covered. Until the matrix has run, rules 3 and 4 rest on the analysis recorded here rather than on measurement, and the Angular floor stays provisional.
+**Only floors are covered.** Angular runs 16 and 17, because the floor is undecided between them; React runs 18. Ceilings are deliberately excluded: the ceiling is the version the monorepo builds against, and the in-repo samples already build against it on every pull request, so a ceiling leg would duplicate existing coverage. Intermediate majors are not covered either.
+
+Until the matrix has run, rules 3 and 4 rest on the analysis recorded here rather than on measurement, and the Angular floor stays provisional.
 
 ### What is not enforced mechanically
 
-A unit test asserting that the catalog version satisfies the declared range was considered and rejected as redundant: the no-`--legacy-peer-deps` leg already covers the same divergence, and a second mechanism would need maintaining alongside it.
+**Rule 4 has no automated check.** Nothing verifies that the version the monorepo builds against still falls inside the published ceiling. The in-repo samples resolve the wrapper through `workspace:*`, which links the source directory and never resolves the published `peerDependencies`, so they prove the ceiling *builds* without proving it is *declared*. Raising the ceiling when the framework catalog is bumped is therefore a review-time obligation.
+
+Two mechanisms were considered and rejected. A unit test asserting the catalog version satisfies the range is a second source of truth to maintain. A matrix leg installing at the catalog version with strict peers duplicates a build the samples already perform, purely to assert a range. Both were judged more machinery than the failure warrants: publishing a ceiling one major behind produces a peer warning for early adopters of that major, not a broken build, and pnpm's `strict-peer-dependencies` defaults to false.
 
 Rule 2's format is also not machine-checked. It is a review-time convention, enforced the way the rest of the repository's manifest conventions are. A malformed range is visible in a one-line diff.
-
-The cost of relying on the matrix alone is feedback latency. If the matrix runs on a schedule rather than per pull request, a catalog bump that moves outside the range can merge and be caught afterwards rather than blocked. That is accepted: the failure is a peer warning for consumers, not a broken build, and pnpm's `strict-peer-dependencies` defaults to false.
 
 ### Keeping the matrix cheap
 
 - One job builds and packs the library, and uploads the tarball as an artifact that every leg consumes. Legs never rebuild the monorepo.
-- The consumer application is scaffolded with the Angular CLI for the major under test. A committed fixture per major was considered and rejected: `angular.json` builders differ across majors — Angular 16 uses `@angular-devkit/build-angular:browser` where 17 and later use `@angular/build:application` — so a hand-maintained configuration per major is more fragile than letting the matching CLI generate a valid one. The cost is that each leg downloads the CLI.
-- Each leg references a generated component's input type rather than importing the module alone, so a type error surfaces if the generated surface changes.
-- Runtime coverage of the wrapper lives in version-agnostic unit tests over `utils.ts`, exercised with plain stubs and no Angular at all. These run once, outside the matrix. Running them per major is not viable, because Angular's own unit-test tooling differs across the supported range, so a cross-major harness would cost more than the build legs it replaced.
+- Only floors are covered, so the matrix grows with the number of wrappers rather than with the width of each range.
+- The Angular application is scaffolded with the CLI for the major under test. A committed fixture per major was considered and rejected: `angular.json` builders differ across majors — Angular 16 uses `@angular-devkit/build-angular:browser` where 17 and later use `@angular/build:application` — so a hand-maintained configuration per major is more fragile than letting the matching CLI generate a valid one. The cost is that each leg downloads the CLI. React needs no scaffolding tool, so its application is written directly.
+- Each leg references a generated component's type rather than importing the module alone, so a type error surfaces if the generated surface changes.
+- Runtime coverage of a wrapper's own logic belongs in version-agnostic unit tests, exercised with plain stubs and no framework at all. Running those per major is not viable, because framework test tooling differs across majors, so a cross-major harness would cost more than the build legs it replaced.
 
 Consequently, majors between the bounds are build-verified only. Runtime verification happens on the version the monorepo builds against, through the existing Playwright suite. This limitation should be stated wherever the supported range is published, rather than implied.
 
@@ -155,7 +158,7 @@ Remaining work, each its own change:
 
 - At the next major of `@coveo/atomic-angular`, apply rule 7 and raise the floor to the oldest Angular major then in long-term support. On today's schedule that would be 20, since Angular 19 left support in May 2026. This is not yet scheduled: the v4 Feature (KIT-5934) is on hold.
 - Determine the real supported `pino-pretty` range (KIT-6103). The declared `^6.0.0 || ^10.0.0 || ^11.0.0 || ^13.0.0` skips majors 7 through 9 and 12, which looks accreted rather than deliberate. Under rule 1 it stays in the `@coveo/headless` manifest, since no other package declares it.
-- Confirm the React range against rules 2 to 5 and add the CI coverage rule 5 requires, which does not exist for React today.
+- Confirm the React range against rules 2 to 4. Rule 5 coverage now exists: the matrix runs a React 18 floor leg.
 
 Node.js is deliberately out of scope. It is expressed through `engines` rather than `peerDependencies` and already tracks Node's own LTS lines.
 
