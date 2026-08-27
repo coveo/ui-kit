@@ -38,6 +38,22 @@ The problem is that ordering becomes a **global invariant spread across independ
 
 Additionally, "the set of facets reordered" is not expressible as a delta to any single component's state, since reordering touches multiple components' `position` fields simultaneously. The `facet-manager` component expresses the same change as one field update on one component.
 
+**Alternative 3: A single monolithic facet component.**
+
+One component whose `state` is the ordered list of every facet's state, and whose `actions` are the union of all facet actions (`toggleSelect`, `toggleExclude`, `applyCustomRange`, `selectPath`, `search`, `showMoreValues`, ...), each taking a `facetId` in its payload to target a specific facet. Ordering falls out for free because the state is an ordered array.
+
+This was rejected for two reasons:
+
+*Bad DX.* Each state entry would be a tagged union across the four facet types, so the consumer discriminates on a `facetType` field before rendering each one, rather than receiving four cleanly-typed components. The action surface is the union of every facet's actions, so the consumer sees actions that only apply to some entries (e.g. `applyCustomRange` is meaningless for a regular facet, `search` is meaningless for numeric/date). Every action call must thread a `facetId`. The component becomes a catch-all that's harder to consume than four focused components.
+
+*Weaker contract.* This is the more important reason. With separate components, each facet's schema fully validates its own contract: a `date-facet` document is checked against exactly the actions and value shapes that date facets support. In the monolithic model, whether a given action is valid depends on the *runtime type of the facet its `facetId` points at*.
+
+A TypeScript consumer could partly recover safety here with a discriminated union plus a mapped/conditional type (mapping each `facetType` to its allowed actions), so a typed dispatch helper would reject `applyCustomRange` on a regular facet at compile time. But that workaround lives entirely in the TypeScript layer, and this package's contract is JSON Schema (with generated Zod), not TypeScript. The rule "this action is valid iff it matches the runtime `facetType` of the entry its `facetId` targets" is a cross-referential, data-dependent constraint that JSON Schema 2020-12 cannot express and that `Schema.safeParse(document)` therefore cannot enforce against an arbitrary document (e.g. one produced by the backend or a non-TypeScript consumer). A mapped type helps the author writing TypeScript; it does nothing for the validation contract itself, and it only holds if every dispatch is routed through the typed helper.
+
+With separate components, the discriminant *is* the schema (the `componentType` constant), so the guarantee holds at the contract level for every consumer regardless of language or access pattern. The monolithic component would validate the *shape* of a payload but not whether that action is legal for its target, pushing that correctness out of the contract and into runtime logic.
+
+The `facet-manager` gets the ordering benefit of a central component *without* absorbing per-facet state or actions. It holds only the ordered `facetIds`; the facets remain independent, self-validating components. This captures the one genuine advantage of the monolithic approach (native ordering) while avoiding both of its costs.
+
 **Why the component approach wins:**
 
 | Property                            | Catalog array order                         | Distributed `position`                   | Dedicated component                |
