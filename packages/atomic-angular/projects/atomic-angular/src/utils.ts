@@ -100,3 +100,5 @@ export function ProxyCmp(opts: {defineCustomElementFn?: () => void; inputs?: any
   return decorator;
 }
 /* oxlint-enable prefer-arrow-callback */
+
+// TEMP: trigger @coveo/atomic-angular#build so angular-compat runs. Do not merge.
