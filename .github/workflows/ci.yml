@@ -435,9 +435,10 @@ jobs:
           contains(fromJSON(vars.CHROMATIC_RENOVATE_ALLOWLIST || '[]'), github.head_ref))
         with:
           # Unaffected PRs should have one reachable baseline so unchanged Storybooks use
-          # TurboSnap bypass pricing. Reachable same-branch builds are still found in Git history;
-          # this only drops Chromatic's continuity fallback for an orphaned branch build.
-          ignoreLastBuildOnBranch: ${{ !contains(needs.affected.outputs.tasks, '"@coveo/atomic#build"') && github.head_ref || '' }}
+          # TurboSnap bypass pricing. If affected calculation fails, keep normal baseline selection.
+          # Reachable same-branch builds are still found in Git history; this only drops Chromatic's
+          # continuity fallback for an orphaned branch build.
+          ignoreLastBuildOnBranch: ${{ needs.affected.result == 'success' && !contains(needs.affected.outputs.tasks, '"@coveo/atomic#build"') && github.head_ref || '' }}
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           workingDir: packages/atomic
       - name: Skip Chromatic visual tests
