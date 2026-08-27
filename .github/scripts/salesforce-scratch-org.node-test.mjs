@@ -43,7 +43,7 @@ describe('Salesforce scratch-org adapter', () => {
     );
 
     assert.deepEqual(result, {
-      orgId: '00D000000000001AAA',
+      orgId: '00D000000000001EAA',
       username: 'created@example.invalid',
     });
     assert.deepEqual(readFakeSalesforceCalls(fake.callsFile), [
@@ -63,12 +63,12 @@ describe('Salesforce scratch-org adapter', () => {
     ]);
   });
 
-  it('queries one exact repository-qualified OrgName through a fixed SOQL argument', () => {
+  it('queries one exact OrgName and canonicalizes its mixed-case 15-character org ID', () => {
     const directory = temporaryDirectory();
     const orgName = 'q-rgc0uy9-w21i3v9-a2-e';
     const record = {
       Id: '2SR000000000001AAA',
-      ScratchOrg: '00D000000000001AAA',
+      ScratchOrg: '00DAb0000000001',
       SignupUsername: 'created@example.invalid',
       OrgName: orgName,
       Status: 'Active',
@@ -85,7 +85,7 @@ describe('Salesforce scratch-org adapter', () => {
       [
         {
           scratchOrgInfoId: record.Id,
-          orgId: record.ScratchOrg,
+          orgId: '00DAb0000000001MAA',
           orgName,
           status: 'Active',
           username: record.SignupUsername,
@@ -103,6 +103,31 @@ describe('Salesforce scratch-org adapter', () => {
         '--json',
       ],
     ]);
+  });
+
+  it('rejects an invalid 18-character scratch-org checksum', () => {
+    const directory = temporaryDirectory();
+    const orgName = 'q-rgc0uy9-w21i3v9-a2-e';
+    const fake = createFakeSalesforce(directory, {
+      queries: {
+        [orgName]: [
+          {
+            Id: '2SR000000000001AAA',
+            ScratchOrg: '00D000000000001AAA',
+            SignupUsername: 'created@example.invalid',
+            OrgName: orgName,
+            Status: 'Active',
+          },
+        ],
+      },
+    });
+
+    assert.throws(() =>
+      queryScratchOrgsByName(
+        {devHubUsername: 'dev-hub@example.invalid', orgName},
+        {sfExecutable: fake.executable}
+      )
+    );
   });
 
   it('validates recognized provisioning and terminal statuses without requiring unfinished IDs', () => {

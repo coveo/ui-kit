@@ -16,7 +16,7 @@ let result = {};
 if (args[0] === 'org' && args[1] === 'create' && args[2] === 'scratch') {
   result = config.create ?? {
     username: 'created@example.invalid',
-    orgId: '00D000000000001AAA',
+    orgId: '00D000000000001EAA',
     accessToken: 'not-returned-by-adapter'
   };
 } else if (args[0] === 'data' && args[1] === 'query') {

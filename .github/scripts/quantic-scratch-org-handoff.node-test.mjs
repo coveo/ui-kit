@@ -43,7 +43,7 @@ function identityIndex(producerAttempt, lwsStatus) {
 }
 
 function orgId(producerAttempt, lwsStatus) {
-  return `00D00000000000${identityIndex(producerAttempt, lwsStatus)}AAA`;
+  return `00D00000000000${identityIndex(producerAttempt, lwsStatus)}EAA`;
 }
 
 function scratchOrgInfoId(producerAttempt, lwsStatus) {
@@ -84,7 +84,7 @@ function manifest(lwsStatus, producerAttempt, overrides = {}) {
 function record(lwsStatus, producerAttempt, overrides = {}) {
   return {
     Id: scratchOrgInfoId(producerAttempt, lwsStatus),
-    ScratchOrg: orgId(producerAttempt, lwsStatus),
+    ScratchOrg: orgId(producerAttempt, lwsStatus).slice(0, 15),
     SignupUsername: username(producerAttempt, lwsStatus),
     OrgName: orgName(producerAttempt, lwsStatus),
     Status: 'Active',
@@ -199,7 +199,7 @@ describe('validate-ready workflow CLI', () => {
   it('rejects canonical artifacts with a different username or immutable org ID', () => {
     for (const overrides of [
       {username: 'another-active-org@example.invalid'},
-      {orgId: '00D000000000009AAA'},
+      {orgId: '00D000000000009EAA'},
     ]) {
       const trustedRoot = temporaryDirectory();
       const artifactIdentity = writeArtifact(
@@ -247,7 +247,7 @@ describe('validate-ready workflow CLI', () => {
           {
             ...serverRecord,
             Id: '2SR000000000009AAA',
-            ScratchOrg: '00D000000000009AAA',
+            ScratchOrg: '00D000000000009',
             SignupUsername: 'duplicate@example.invalid',
           },
         ],
@@ -812,7 +812,7 @@ describe('validate-cleanup workflow CLI', () => {
   });
 
   it('blocks login and deletion when authoritative IDs change after validation', () => {
-    for (const changedFields of [{ScratchOrg: '00D000000000009AAA'}, {Id: '2SR000000000009AAA'}]) {
+    for (const changedFields of [{ScratchOrg: '00D000000000009'}, {Id: '2SR000000000009AAA'}]) {
       const trustedRoot = temporaryDirectory();
       const initialRecord = record('enabled', 2);
       const fake = createFakeSalesforce(temporaryDirectory(), {
@@ -875,7 +875,7 @@ describe('validate-cleanup workflow CLI', () => {
 
   it('writes no outputs or targets when equal usernames have mismatched org IDs', () => {
     const trustedRoot = temporaryDirectory();
-    writeArtifact(trustedRoot, 'enabled', 1, manifest('enabled', 1, {orgId: '00D000000000009AAA'}));
+    writeArtifact(trustedRoot, 'enabled', 1, manifest('enabled', 1, {orgId: '00D000000000009EAA'}));
     const fake = createFakeSalesforce(temporaryDirectory(), queryConfig([record('enabled', 1)]));
     const outputFile = path.join(trustedRoot, 'github-output');
     const targetsFile = path.join(trustedRoot, CLEANUP_TARGETS_FILE_NAME);
@@ -955,6 +955,28 @@ describe('artifact trust boundaries', () => {
         )
       );
     }
+  });
+
+  it('rejects noncanonical scratch-org IDs in handoffs', () => {
+    const trustedRoot = temporaryDirectory();
+    const artifactIdentity = writeArtifact(
+      trustedRoot,
+      'enabled',
+      2,
+      manifest('enabled', 2, {orgId: '00D000000000001AAA'})
+    );
+
+    assert.throws(
+      () =>
+        validateArtifactDirectory(
+          artifactIdentity.artifactDirectory,
+          trustedRoot,
+          CONTEXT,
+          'enabled',
+          2
+        ),
+      /scratch-org ID is invalid/
+    );
   });
 
   it('rejects traversal, oversized files, and symlinked roots, directories, and ancestors', () => {

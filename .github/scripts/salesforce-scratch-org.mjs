@@ -5,6 +5,7 @@ const SCRATCH_ORG_ID = /^00D[A-Za-z0-9]{12}(?:[A-Za-z0-9]{3})?$/;
 const SCRATCH_ORG_INFO_ID = /^2SR[A-Za-z0-9]{12}(?:[A-Za-z0-9]{3})?$/;
 const USERNAME = /^[A-Za-z0-9][A-Za-z0-9._+%=-]*@[A-Za-z0-9][A-Za-z0-9.-]*$/;
 const ORG_NAME = /^q-r[1-9a-z][0-9a-z]{0,12}-w[1-9a-z][0-9a-z]{0,12}-a[1-9a-z][0-9a-z]{0,10}-[ed]$/;
+const SALESFORCE_ID_CHECKSUM_CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ012345';
 
 export const SALESFORCE_ORG_NAME_MAX_LENGTH = 80;
 export const SCRATCH_ORG_STATUSES = ['New', 'Creating', 'Active', 'Error', 'Deleted'];
@@ -24,8 +25,31 @@ export function assertSalesforceUsername(username) {
   }
 }
 
-export function assertScratchOrgId(orgId) {
+function canonicalizeScratchOrgId(orgId) {
   if (typeof orgId !== 'string' || !SCRATCH_ORG_ID.test(orgId)) {
+    fail('The Salesforce scratch-org ID is invalid.');
+  }
+  const baseId = orgId.slice(0, 15);
+  let checksum = '';
+  for (let offset = 0; offset < baseId.length; offset += 5) {
+    let uppercaseMask = 0;
+    for (let index = 0; index < 5; index++) {
+      const character = baseId[offset + index];
+      if (character >= 'A' && character <= 'Z') {
+        uppercaseMask |= 1 << index;
+      }
+    }
+    checksum += SALESFORCE_ID_CHECKSUM_CHARACTERS[uppercaseMask];
+  }
+  const canonicalId = `${baseId}${checksum}`;
+  if (orgId.length === 18 && orgId !== canonicalId) {
+    fail('The Salesforce scratch-org ID is invalid.');
+  }
+  return canonicalId;
+}
+
+export function assertScratchOrgId(orgId) {
+  if (canonicalizeScratchOrgId(orgId) !== orgId) {
     fail('The Salesforce scratch-org ID is invalid.');
   }
 }
@@ -116,8 +140,8 @@ export function createScratchOrg({alias, definitionFile, durationDays}, options 
     options
   );
   assertSalesforceUsername(result.username);
-  assertScratchOrgId(result.orgId);
-  return {orgId: result.orgId, username: result.username};
+  const orgId = canonicalizeScratchOrgId(result.orgId);
+  return {orgId, username: result.username};
 }
 
 export function queryScratchOrgsByName({devHubUsername, orgName}, options = {}) {
@@ -143,11 +167,8 @@ export function queryScratchOrgsByName({devHubUsername, orgName}, options = {}) 
       fail('The Salesforce ScratchOrgInfo record is invalid.');
     }
     assertScratchOrgInfoId(record.Id);
-    const orgId = record.ScratchOrg ?? null;
+    const orgId = record.ScratchOrg === null ? null : canonicalizeScratchOrgId(record.ScratchOrg);
     const username = record.SignupUsername ?? null;
-    if (orgId !== null) {
-      assertScratchOrgId(orgId);
-    }
     if (username !== null) {
       assertSalesforceUsername(username);
     }
