@@ -171,7 +171,7 @@ This assumes toggling always clears search. If we ever decide that toggling a se
 
 **Why:** Category facets are single-select, drill-down navigation. "Toggle" implies selecting/deselecting the same value, which is misleading for hierarchical navigation. `selectPath` describes intent (navigate here) and `clearSelectedPath` is the explicit "go back to root" that headless achieves through `deselectAll`.
 
-### `clearAllActiveValues` instead of `deselectAll`
+### Renamed `deselectAll` to `clearAllActiveValues`
 
 **Headless:** `deselectAll()` clears selections and exclusions.
 
