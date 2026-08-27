@@ -10,7 +10,7 @@ inputs:
 outputs:
   fetch-depth:
     description: Minimum checkout depth required for the calculated commit range.
-    value: ${{ steps.git.outputs.fetch-depth }}
+    value: ${{ steps.calculate.outputs.fetch-depth }}
   tasks:
     description: Affected Turbo task identifiers as a single-line JSON array of strings.
     value: ${{ steps.calculate.outputs.tasks }}
@@ -28,20 +28,6 @@ runs:
       with:
         install: true
         cache: true
-
-    - name: Calculate Git fetch depth
-      id: git
-      shell: bash
-      env:
-        TURBO_SCM_BASE: ${{ inputs.base-sha }}
-        TURBO_SCM_HEAD: ${{ inputs.head-sha }}
-      run: |
-        GIT_NO_LAZY_FETCH=1 git rev-parse --verify "${TURBO_SCM_BASE}^{commit}"
-        GIT_NO_LAZY_FETCH=1 git rev-parse --verify "${TURBO_SCM_HEAD}^{commit}"
-
-        range_count="$(git rev-list --count "${TURBO_SCM_BASE}..${TURBO_SCM_HEAD}")"
-        fetch_depth=$((range_count + 1))
-        echo "fetch-depth=$fetch_depth" >> "$GITHUB_OUTPUT"
 
     - name: Calculate and publish affected data
       id: calculate

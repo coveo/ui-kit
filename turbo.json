@@ -260,13 +260,7 @@
       "cache": false
     }
   },
-  "globalDependencies": [
-    "package.json",
-    "pnpm-lock.yaml",
-    "pnpm-workspace.yaml",
-    ".npmrc",
-    "tsconfig.json"
-  ],
+  "globalDependencies": ["package.json", "pnpm-workspace.yaml", ".npmrc", "tsconfig.json"],
   "globalEnv": ["DEPLOYMENT_ENVIRONMENT", "NODE_ENV", "CI", "CDN_COMMIT_SHA"],
   "globalPassThroughEnv": ["GITHUB_*", "RUNNER_*", "SFDX_*", "PLAYWRIGHT_BROWSERS_PATH"]
 }

@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
-import {execFileSync} from 'node:child_process';
+import {execFileSync, spawnSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {
+  chmodSync,
   cpSync,
   existsSync,
   mkdirSync,
@@ -15,10 +16,20 @@ import {
 } from 'node:fs';
 import {createRequire} from 'node:module';
 import {tmpdir} from 'node:os';
-import {dirname, join, resolve} from 'node:path';
+import {delimiter, dirname, join, resolve} from 'node:path';
 import test from 'node:test';
 import {fileURLToPath} from 'node:url';
 import {parse} from 'yaml';
+
+import {
+  analyzeTaskGraph,
+  approvedTurboVersion,
+  assertApprovedTurboVersion,
+  escapeMarkdownValue,
+  markdownTable,
+  normalizeTurboTaskKey,
+  pnpmLockfileValidationArguments,
+} from '../../.github/actions/calculate-affected/affected-utils.mjs';
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const read = (path) => readFileSync(resolve(repositoryRoot, path), 'utf8');
@@ -27,11 +38,19 @@ const headlessTurbo = JSON.parse(read('packages/headless/turbo.json'));
 const quanticPackage = JSON.parse(read('packages/quantic/package.json'));
 const quanticTurbo = JSON.parse(read('packages/quantic/turbo.json'));
 const ciWorkflow = parse(read('.github/workflows/ci.yml'));
+const calculateAffectedAction = parse(read('.github/actions/calculate-affected/action.yml'));
 const e2eWorkflow = parse(read('.github/workflows/e2e-quantic.yml'));
 const e2eSetupAction = parse(read('.github/actions/e2e-quantic-setup/action.yml'));
 const playwrightConfig = read('packages/quantic/playwright.config.ts');
 const playwrightAction = parse(read('.github/actions/playwright-quantic/action.yml'));
+const rootPackage = JSON.parse(read('package.json'));
+const rootTurbo = JSON.parse(read('turbo.json'));
 const turboBinary = resolve(repositoryRoot, 'node_modules/.bin/turbo');
+const pnpmBinary = execFileSync(process.platform === 'win32' ? 'where' : 'which', ['pnpm'], {
+  encoding: 'utf8',
+})
+  .trim()
+  .split(/\r?\n/u)[0];
 const require = createRequire(import.meta.url);
 const {
   expectedHeadlessBundlePaths,
@@ -41,6 +60,9 @@ const {
   resolveHeadlessDefinitionsPath,
 } = require(resolve(repositoryRoot, 'packages/quantic/scripts/npm/headless-build-output.js'));
 const affectednessContractPaths = [
+  '.github/actions/calculate-affected/action.yml',
+  '.github/actions/calculate-affected/affected.mjs',
+  '.github/actions/calculate-affected/affected-utils.mjs',
   'packages/headless/.gitignore',
   'packages/headless/esbuild.mjs',
   'packages/headless/package.json',
@@ -52,6 +74,7 @@ const affectednessContractPaths = [
   'packages/quantic/scripts/npm/headless-build-output.js',
   'packages/quantic/turbo.json',
   'scripts/ci/validate-quantic-e2e-contracts.test.mjs',
+  'turbo.json',
 ];
 
 const playwrightOutputs = ['playwright-report/**', 'blob-report/**', 'test-results/**'];
@@ -124,6 +147,131 @@ test('selects Quantic E2E for workflow and action changes', () => {
     quanticTurbo.tasks.e2e.inputs.toSorted(),
     ['$TURBO_DEFAULT$', ...expectedRootInputs].toSorted()
   );
+});
+
+test('delegates lockfile affectedness to Turbo package resolution', () => {
+  assert.equal(rootTurbo.globalDependencies.includes('pnpm-lock.yaml'), false);
+});
+
+test('installs pinned pnpm before the single affected-output step', () => {
+  assert.equal(rootPackage.packageManager, 'pnpm@11.22.0');
+  assert.equal(approvedTurboVersion, '2.10.9');
+  assert.equal(rootPackage.devDependencies.turbo, approvedTurboVersion);
+  assert.match(read('mise.toml'), /^pnpm = "11\.22\.0"$/m);
+  assert.match(calculateAffectedAction.runs.steps[0].uses, /^step-security\/mise-action@/);
+  assert.equal(calculateAffectedAction.runs.steps[0].with.install, true);
+  assert.equal(calculateAffectedAction.runs.steps.length, 2);
+  assert.equal(
+    calculateAffectedAction.outputs['fetch-depth'].value,
+    '${{ steps.calculate.outputs.fetch-depth }}'
+  );
+});
+
+test('accepts only the approved Turbo specifier and repository task-key grammar', () => {
+  assert.doesNotThrow(() => assertApprovedTurboVersion('2.10.9'));
+  for (const specifier of [
+    'npm:turbo@2.10.9',
+    '^2.10.9',
+    'https://registry.npmjs.org/turbo/-/turbo-2.10.9.tgz',
+    'file:../turbo',
+    'workspace:*',
+    'v2.10.9',
+    '2.10.9 ',
+  ]) {
+    assert.throws(() => assertApprovedTurboVersion(specifier), /repository-approved Turbo version/);
+  }
+
+  for (const [taskKey, expected] of [
+    ['build', 'build'],
+    ['functional-test', 'functional-test'],
+    ['a11y:update-openacr', 'a11y:update-openacr'],
+    ['//#lint:check:all', 'lint:check:all'],
+  ]) {
+    assert.equal(normalizeTurboTaskKey(taskKey), expected);
+  }
+  for (const taskKey of ['--help', '-build', '//#--help', 'build=--cache', 'build:-cache']) {
+    assert.throws(() => normalizeTurboTaskKey(taskKey), /CLI-option syntax|task-name grammar/);
+  }
+  assert.throws(() => normalizeTurboTaskKey('build\n--help'), /control characters/);
+  for (const taskKey of ['', 'build::test', 'build_test', 'Build']) {
+    assert.throws(() => normalizeTurboTaskKey(taskKey), /non-empty strings|task-name grammar/);
+  }
+});
+
+test('analyzes the validated Turbo task graph once with bounded traversals', () => {
+  const graph = [
+    {
+      package: '@coveo/headless',
+      task: 'build:quantic',
+      taskId: '@coveo/headless#build:quantic',
+      dependents: ['@coveo/quantic#babel:headless'],
+    },
+    {
+      package: '@coveo/quantic',
+      task: 'babel:headless',
+      taskId: '@coveo/quantic#babel:headless',
+      dependents: ['@coveo/quantic#e2e'],
+    },
+    {
+      package: '@coveo/quantic',
+      task: 'e2e',
+      taskId: '@coveo/quantic#e2e',
+      dependents: [],
+    },
+  ];
+
+  assert.deepEqual(analyzeTaskGraph(graph, ['@coveo/headless#build:quantic']), {
+    affectedTaskNames: [
+      '@coveo/headless#build:quantic',
+      '@coveo/quantic#babel:headless',
+      '@coveo/quantic#e2e',
+    ],
+    selected: true,
+    triggerTaskNames: ['@coveo/headless#build:quantic'],
+  });
+  assert.throws(
+    () =>
+      analyzeTaskGraph(
+        graph.map((task, index) =>
+          index === 0 ? {...task, dependents: ['@coveo/missing#build']} : task
+        ),
+        ['@coveo/headless#build:quantic']
+      ),
+    /dangling dependent/
+  );
+  assert.throws(
+    () => analyzeTaskGraph(graph, ['@coveo/missing#build']),
+    /Directly affected task is missing/
+  );
+  assert.throws(
+    () => analyzeTaskGraph([...graph, graph[0]], ['@coveo/headless#build:quantic']),
+    /duplicate task/
+  );
+  assert.throws(
+    () => analyzeTaskGraph(graph.slice(0, 2), ['@coveo/headless#build:quantic']),
+    /missing the selection target/
+  );
+  assert.throws(
+    () => analyzeTaskGraph(graph, [], '@coveo/quantic#e2e', {tasks: 10, edges: 1}),
+    /oversized task graph/
+  );
+  assert.throws(
+    () => analyzeTaskGraph(graph, [], '@coveo/quantic#e2e', {tasks: 2, edges: 10}),
+    /oversized task graph/
+  );
+});
+
+test('escapes and bounds every dynamic Markdown value', () => {
+  const malicious = `first\r\n# forged <script>& \`code\` \\ | [link](target) ${'*_!'.repeat(300)}`;
+  const escaped = escapeMarkdownValue(malicious);
+  assert.ok(escaped.length <= 512);
+  assert.doesNotMatch(escaped, /[\r\n<>`\\|[\]()]/u);
+  assert.match(escaped, /&#60;script&#62;/);
+  assert.match(escaped, /&#8230;$/);
+
+  const table = markdownTable(['value'], [[malicious]]);
+  assert.doesNotMatch(table, /<script>|# forged|`code`|\[link\]/u);
+  assert.ok(table.includes(escaped));
 });
 
 test('routes each Quantic E2E stage through its task contract', () => {
@@ -226,6 +374,7 @@ const runGit = (cwd, arguments_, options = {}) =>
   execFileSync('git', arguments_, {
     cwd,
     encoding: 'utf8',
+    maxBuffer: 100 * 1024 * 1024,
     ...options,
   });
 
@@ -242,10 +391,14 @@ const runTurbo = (arguments_, cwd = repositoryRoot) =>
     maxBuffer: 100 * 1024 * 1024,
   });
 
-const runPnpm = (arguments_, cwd) => {
+const runPnpm = (arguments_, cwd, environmentOverrides = {}) => {
   const environment = {...process.env};
-  delete environment.TURBO_HASH;
-  delete environment.TURBO_TASK_ID;
+  for (const name of Object.keys(environment)) {
+    if (name.startsWith('GIT_') || name.startsWith('TURBO_')) {
+      delete environment[name];
+    }
+  }
+  Object.assign(environment, environmentOverrides);
   return execFileSync('pnpm', arguments_, {
     cwd,
     encoding: 'utf8',
@@ -260,7 +413,7 @@ const linkDirectory = (source, destination) => {
   symlinkSync(source, destination, 'dir');
 };
 
-const withIsolatedRepository = (callback) => {
+const withIsolatedRepository = (callback, {linkNodeModules = true} = {}) => {
   const temporaryDirectory = mkdtempSync(join(tmpdir(), 'quantic-e2e-repository-'));
 
   try {
@@ -290,15 +443,18 @@ const withIsolatedRepository = (callback) => {
     assert.equal(runGit(checkout, ['status', '--short']).trim(), '');
     assert.equal(existsSync(resolve(checkout, '.git/objects/info/alternates')), false);
 
-    linkDirectory(resolve(repositoryRoot, 'node_modules'), resolve(checkout, 'node_modules'));
-    linkDirectory(
-      resolve(repositoryRoot, 'packages/headless/node_modules'),
-      resolve(checkout, 'packages/headless/node_modules')
-    );
+    if (linkNodeModules) {
+      linkDirectory(resolve(repositoryRoot, 'node_modules'), resolve(checkout, 'node_modules'));
+      linkDirectory(
+        resolve(repositoryRoot, 'packages/headless/node_modules'),
+        resolve(checkout, 'packages/headless/node_modules')
+      );
+    }
 
     return callback({baseline, checkout});
   } finally {
     rmSync(temporaryDirectory, {recursive: true, force: true});
+    assert.equal(existsSync(temporaryDirectory), false);
   }
 };
 
@@ -320,10 +476,20 @@ const createCommit = (checkout, base, updateIndex, message) => {
     }).trim();
   } finally {
     rmSync(temporaryDirectory, {recursive: true, force: true});
+    assert.equal(existsSync(temporaryDirectory), false);
   }
 };
 
 const createScenarioCommit = (checkout, base, filePath, scenario) =>
+  createFileContentsScenarioCommit(
+    checkout,
+    base,
+    filePath,
+    (contents) => `${contents}\n// ${scenario}\n`,
+    scenario
+  );
+
+const createFileContentsScenarioCommit = (checkout, base, filePath, transformContents, scenario) =>
   createCommit(
     checkout,
     base,
@@ -333,9 +499,10 @@ const createScenarioCommit = (checkout, base, filePath, scenario) =>
       }).trim();
       assert.notEqual(stagedFile, '', `${filePath} must be tracked`);
       const [mode] = stagedFile.split(' ');
+      const contents = readFileSync(resolve(checkout, filePath), 'utf8');
       const blob = runGit(checkout, ['hash-object', '-w', '--stdin'], {
         env: environment,
-        input: `${readFileSync(resolve(checkout, filePath), 'utf8')}\n// ${scenario}\n`,
+        input: transformContents(contents),
       }).trim();
       runGit(checkout, ['update-index', '--add', '--cacheinfo', mode, blob, filePath], {
         env: environment,
@@ -343,6 +510,371 @@ const createScenarioCommit = (checkout, base, filePath, scenario) =>
     },
     scenario
   );
+
+const replaceOnce = (contents, original, replacement) => {
+  const firstMatch = contents.indexOf(original);
+  assert.notEqual(firstMatch, -1, `Expected to find:\n${original}`);
+  assert.equal(contents.indexOf(original, firstMatch + original.length), -1, `Expected one match`);
+  return `${contents.slice(0, firstMatch)}${replacement}${contents.slice(
+    firstMatch + original.length
+  )}`;
+};
+
+const replaceImporterVersion = (contents, importer, dependency, from, to) => {
+  const importerStart = contents.indexOf(`  ${importer}:\n`);
+  assert.notEqual(importerStart, -1, `Missing lockfile importer: ${importer}`);
+  const remainingContents = contents.slice(importerStart + 3);
+  const nextImporterOffset = remainingContents.search(/\n  \S/);
+  const importerEnd =
+    nextImporterOffset === -1 ? contents.length : importerStart + 3 + nextImporterOffset;
+  const importerContents = contents.slice(importerStart, importerEnd);
+  const dependencyStart = importerContents.indexOf(`      ${dependency}:\n`);
+  assert.notEqual(dependencyStart, -1, `Missing ${dependency} in ${importer}`);
+  const version = `        version: ${from}`;
+  const dependencyBodyStart = dependencyStart + `      ${dependency}:\n`.length;
+  const nextDependencyOffset = importerContents.slice(dependencyBodyStart).search(/\n      \S/);
+  const dependencyEnd =
+    nextDependencyOffset === -1
+      ? importerContents.length
+      : dependencyBodyStart + nextDependencyOffset;
+  const dependencyContents = importerContents.slice(dependencyStart, dependencyEnd);
+  const versionStart = dependencyContents.indexOf(version);
+  assert.notEqual(versionStart, -1, `Missing ${dependency}@${from} in ${importer}`);
+  const updatedDependency = `${dependencyContents.slice(0, versionStart)}        version: ${to}${dependencyContents.slice(versionStart + version.length)}`;
+  const updatedImporter = `${importerContents.slice(0, dependencyStart)}${updatedDependency}${importerContents.slice(dependencyEnd)}`;
+  return `${contents.slice(0, importerStart)}${updatedImporter}${contents.slice(importerEnd)}`;
+};
+
+const fixtureManifestPaths = [
+  'packages/atomic/package.json',
+  'packages/quantic/package.json',
+  'packages/thermidor/package.json',
+];
+
+const updateDependencyRange = (checkout, manifestPath, dependency, range) => {
+  const path = resolve(checkout, manifestPath);
+  const manifest = JSON.parse(readFileSync(path, 'utf8'));
+  const dependencyGroup = ['dependencies', 'devDependencies', 'optionalDependencies'].find(
+    (group) => manifest[group]?.[dependency]
+  );
+  assert.ok(dependencyGroup, `${manifestPath} must declare ${dependency}`);
+  manifest[dependencyGroup][dependency] = range;
+  writeFileSync(path, `${JSON.stringify(manifest, null, 2)}\n`);
+};
+
+const validateFrozenLockfile = (checkout) => {
+  const lockfilePath = resolve(checkout, 'pnpm-lock.yaml');
+  const before = readFileSync(lockfilePath);
+  runPnpm(
+    [...pnpmLockfileValidationArguments, '--offline', '--config.trust-lockfile=true'],
+    checkout
+  );
+  assert.deepEqual(readFileSync(lockfilePath), before);
+};
+
+const createFrozenValidTurboSpecifierHead = (checkout, baseline, specifier, name) => {
+  runGit(checkout, ['checkout', '--quiet', '--detach', baseline]);
+  validateFrozenLockfile(checkout);
+  const packagePath = resolve(checkout, 'package.json');
+  const packageManifest = JSON.parse(readFileSync(packagePath, 'utf8'));
+  packageManifest.devDependencies.turbo = specifier;
+  writeFileSync(packagePath, `${JSON.stringify(packageManifest, null, 2)}\n`);
+  runPnpm(
+    [
+      'install',
+      '--lockfile-only',
+      '--no-frozen-lockfile',
+      '--ignore-scripts',
+      '--offline',
+      '--config.trust-lockfile=true',
+    ],
+    checkout
+  );
+  validateFrozenLockfile(checkout);
+  const head = commitWorkingTree(checkout, baseline, ['package.json', 'pnpm-lock.yaml'], name);
+  assert.deepEqual(runGit(checkout, ['diff', '--name-only', baseline, head]).trim().split('\n'), [
+    'package.json',
+    'pnpm-lock.yaml',
+  ]);
+  runGit(checkout, ['checkout', '--quiet', '--detach', head]);
+  validateFrozenLockfile(checkout);
+  return head;
+};
+
+const createTurboTaskKeyHead = (checkout, baseline, taskKey, name) => {
+  runGit(checkout, ['checkout', '--quiet', '--detach', baseline]);
+  validateFrozenLockfile(checkout);
+  const head = createFileContentsScenarioCommit(
+    checkout,
+    baseline,
+    'turbo.json',
+    (contents) => {
+      const turboConfig = JSON.parse(contents);
+      turboConfig.tasks[taskKey] = {cache: false};
+      return `${JSON.stringify(turboConfig, null, 2)}\n`;
+    },
+    name
+  );
+  runGit(checkout, ['checkout', '--quiet', '--detach', head]);
+  validateFrozenLockfile(checkout);
+  return head;
+};
+
+const commitWorkingTree = (checkout, parent, paths, message) => {
+  runGit(checkout, ['add', '--', ...paths]);
+  const tree = runGit(checkout, ['write-tree']).trim();
+  return runGit(checkout, ['commit-tree', tree, '-p', parent], {
+    env: {...process.env, ...gitIdentityEnvironment},
+    input: `${message}\n`,
+  }).trim();
+};
+
+const assertOnlyLockfileChanged = (checkout, base, head) => {
+  const changed = runGit(checkout, ['diff', '--name-only', base, head])
+    .trim()
+    .split('\n')
+    .filter(Boolean);
+  assert.deepEqual(changed, ['pnpm-lock.yaml']);
+  for (const manifestPath of fixtureManifestPaths) {
+    assert.equal(
+      runGit(checkout, ['rev-parse', `${base}:${manifestPath}`]).trim(),
+      runGit(checkout, ['rev-parse', `${head}:${manifestPath}`]).trim(),
+      manifestPath
+    );
+  }
+};
+
+const prepareLockfileFixtureBaseline = (checkout, baseline) => {
+  runGit(checkout, ['checkout', '--quiet', '--detach', baseline]);
+  updateDependencyRange(checkout, 'packages/quantic/package.json', 'dompurify', '^3.4.0');
+  updateDependencyRange(checkout, 'packages/quantic/package.json', 'wait-on', '>=8.0.5 <10');
+  updateDependencyRange(checkout, 'packages/quantic/package.json', 'dotenv', '>=16.6.1 <18');
+  updateDependencyRange(checkout, 'packages/atomic/package.json', 'prettier', '>=2.8.8 <4');
+  updateDependencyRange(
+    checkout,
+    'packages/thermidor/package.json',
+    '@ag-ui/core',
+    '>=0.0.57 <=0.0.58'
+  );
+  runPnpm(
+    [
+      'install',
+      '--lockfile-only',
+      '--no-frozen-lockfile',
+      '--ignore-scripts',
+      '--offline',
+      '--config.trust-lockfile=true',
+    ],
+    checkout
+  );
+  validateFrozenLockfile(checkout);
+  const fixtureBaseline = commitWorkingTree(
+    checkout,
+    baseline,
+    [...fixtureManifestPaths, 'pnpm-lock.yaml'],
+    'frozen-valid lockfile fixture baseline'
+  );
+  runGit(checkout, ['checkout', '--quiet', '--detach', fixtureBaseline]);
+  validateFrozenLockfile(checkout);
+  assert.equal(runGit(checkout, ['status', '--short']).trim(), '');
+  return fixtureBaseline;
+};
+
+const generateLockfileOnlyHead = (checkout, fixtureBaseline, scenario) => {
+  runGit(checkout, ['checkout', '--quiet', '--detach', fixtureBaseline]);
+  runPnpm(
+    [
+      '--filter',
+      scenario.filter,
+      'update',
+      `${scenario.dependency}@${scenario.version}`,
+      '--no-save',
+      '--lockfile-only',
+      '--ignore-scripts',
+      '--offline',
+      '--config.trust-lockfile=true',
+    ],
+    checkout
+  );
+  validateFrozenLockfile(checkout);
+  assert.equal(runGit(checkout, ['status', '--short']).trim(), 'M pnpm-lock.yaml');
+  const head = commitWorkingTree(checkout, fixtureBaseline, ['pnpm-lock.yaml'], scenario.name);
+  assertOnlyLockfileChanged(checkout, fixtureBaseline, head);
+  return head;
+};
+
+const createCapturedWaitOnHead = (checkout, fixtureBaseline, scenario) => {
+  runGit(checkout, ['checkout', '--quiet', '--detach', fixtureBaseline]);
+  const head = createFileContentsScenarioCommit(
+    checkout,
+    fixtureBaseline,
+    'pnpm-lock.yaml',
+    (lockfile) => replaceImporterVersion(lockfile, 'packages/quantic', 'wait-on', '9.1.0', '8.0.5'),
+    scenario.name
+  );
+  runGit(checkout, ['checkout', '--quiet', '--detach', head]);
+  validateFrozenLockfile(checkout);
+  assertOnlyLockfileChanged(checkout, fixtureBaseline, head);
+  return head;
+};
+
+const createCapturedAtomicPrettierHead = (checkout, fixtureBaseline, scenario) => {
+  runGit(checkout, ['checkout', '--quiet', '--detach', fixtureBaseline]);
+  const head = createFileContentsScenarioCommit(
+    checkout,
+    fixtureBaseline,
+    'pnpm-lock.yaml',
+    (lockfile) => replaceImporterVersion(lockfile, 'packages/atomic', 'prettier', '3.9.6', '2.8.8'),
+    scenario.name
+  );
+  runGit(checkout, ['checkout', '--quiet', '--detach', head]);
+  validateFrozenLockfile(checkout);
+  assertOnlyLockfileChanged(checkout, fixtureBaseline, head);
+  return head;
+};
+
+const removeLastYamlBlock = (contents, key) => {
+  const marker = `  ${key}:\n`;
+  const start = contents.lastIndexOf(marker);
+  assert.notEqual(start, -1, `Missing final YAML block ${key}`);
+  const nextBlockOffset = contents.slice(start + marker.length).search(/\n  \S/u);
+  const end =
+    nextBlockOffset === -1 ? contents.length : start + marker.length + nextBlockOffset + 1;
+  return `${contents.slice(0, start)}${contents.slice(end)}`;
+};
+
+const parseActionOutputs = (contents) =>
+  Object.fromEntries(
+    contents
+      .trim()
+      .split('\n')
+      .filter(Boolean)
+      .map((line) => {
+        const separator = line.indexOf('=');
+        return [line.slice(0, separator), JSON.parse(line.slice(separator + 1))];
+      })
+  );
+
+const runAffectedCalculation = (checkout, base, head, environmentOverrides = {}) => {
+  const temporaryDirectory = mkdtempSync(join(tmpdir(), 'quantic-affected-action-'));
+  let result;
+
+  try {
+    const binDirectory = resolve(temporaryDirectory, 'bin');
+    const invocationLogPath = resolve(temporaryDirectory, 'invocations.jsonl');
+    const outputPath = resolve(temporaryDirectory, 'output');
+    const summaryPath = resolve(temporaryDirectory, 'summary');
+    const fakePnpmPath = resolve(binDirectory, 'pnpm');
+    mkdirSync(binDirectory, {recursive: true});
+    writeFileSync(invocationLogPath, '');
+    writeFileSync(outputPath, '');
+    writeFileSync(summaryPath, '');
+    writeFileSync(
+      fakePnpmPath,
+      `#!/usr/bin/env node
+const {spawnSync} = require('node:child_process');
+const {appendFileSync} = require('node:fs');
+const arguments_ = process.argv.slice(2);
+appendFileSync(
+  process.env.KIT_6131_INVOCATION_LOG,
+  JSON.stringify({
+    arguments: arguments_,
+    environment: {
+      GIT_DIR: process.env.GIT_DIR,
+      GIT_INDEX_FILE: process.env.GIT_INDEX_FILE,
+      TURBO_API: process.env.TURBO_API,
+      TURBO_CACHE_DIR: process.env.TURBO_CACHE_DIR,
+      TURBO_HASH: process.env.TURBO_HASH,
+      TURBO_TEAM: process.env.TURBO_TEAM,
+      TURBO_TOKEN: process.env.TURBO_TOKEN,
+    },
+  }) + '\\n'
+);
+let executable;
+let delegatedArguments;
+if (arguments_[0] === 'install') {
+  executable = process.env.KIT_6131_PNPM_BINARY;
+  delegatedArguments = [...arguments_, '--offline', '--config.trust-lockfile=true'];
+} else {
+  const [command, turboSpecifier, ...turboArguments] = arguments_;
+  if (command !== 'dlx' || turboSpecifier !== 'turbo@${approvedTurboVersion}') {
+    throw new Error('Unexpected pnpm invocation');
+  }
+  executable = process.env.KIT_6131_TURBO_BINARY;
+  delegatedArguments = turboArguments;
+}
+const result = spawnSync(executable, delegatedArguments, {
+  env: process.env,
+  stdio: 'inherit',
+});
+if (result.error) {
+  throw result.error;
+}
+process.exit(result.status ?? 1);
+`
+    );
+    chmodSync(fakePnpmPath, 0o755);
+
+    const environment = {
+      ...process.env,
+      GITHUB_OUTPUT: outputPath,
+      GITHUB_REPOSITORY: 'coveo/ui-kit',
+      GITHUB_RUN_ID: '6131',
+      GITHUB_SERVER_URL: 'https://example.invalid',
+      GITHUB_STEP_SUMMARY: summaryPath,
+      GIT_DIR: '/untrusted/inherited/git-dir',
+      GIT_INDEX_FILE: '/untrusted/inherited/git-index',
+      KIT_6131_INVOCATION_LOG: invocationLogPath,
+      KIT_6131_PNPM_BINARY: pnpmBinary,
+      KIT_6131_TURBO_BINARY: turboBinary,
+      NO_COLOR: '1',
+      PATH: `${binDirectory}${delimiter}${process.env.PATH}`,
+      TURBO_API: 'https://untrusted.invalid',
+      TURBO_CACHE_DIR: '/untrusted/inherited/cache',
+      TURBO_HASH: 'untrusted-hash',
+      TURBO_SCM_BASE: base,
+      TURBO_SCM_HEAD: head,
+      TURBO_TEAM: 'untrusted-team',
+      TURBO_TOKEN: 'untrusted-token',
+      ...environmentOverrides,
+    };
+
+    const actionResult = spawnSync(
+      process.execPath,
+      [resolve(checkout, '.github/actions/calculate-affected/affected.mjs')],
+      {
+        cwd: checkout,
+        encoding: 'utf8',
+        env: environment,
+        maxBuffer: 100 * 1024 * 1024,
+      }
+    );
+    let error = actionResult.error;
+    if (!error && actionResult.status !== 0) {
+      error = Object.assign(new Error(`Affected calculation exited ${actionResult.status}`), {
+        status: actionResult.status,
+        stderr: actionResult.stderr,
+        stdout: actionResult.stdout,
+      });
+    }
+
+    result = {
+      error,
+      invocations: readFileSync(invocationLogPath, 'utf8')
+        .trim()
+        .split('\n')
+        .filter(Boolean)
+        .map((line) => JSON.parse(line)),
+      outputs: parseActionOutputs(readFileSync(outputPath, 'utf8')),
+      summary: readFileSync(summaryPath, 'utf8'),
+      temporaryDirectory,
+    };
+  } finally {
+    rmSync(temporaryDirectory, {recursive: true, force: true});
+    assert.equal(existsSync(temporaryDirectory), false);
+  }
+  return result;
+};
 
 const getAffectedTasks = (base, head, checkout) => {
   const query = `
@@ -375,8 +907,8 @@ const reachesQuanticE2E = (affectedTasks, dependentsByTask) => {
   const affected = new Set(affectedTasks);
   const queue = [...affectedTasks];
 
-  while (queue.length) {
-    const task = queue.shift();
+  for (let index = 0; index < queue.length; index += 1) {
+    const task = queue[index];
     for (const dependent of dependentsByTask.get(task) ?? []) {
       if (!affected.has(dependent)) {
         affected.add(dependent);
@@ -747,4 +1279,380 @@ test('selects Quantic E2E from Turbo affectedness of embedded Headless output', 
       );
     }
   });
+});
+
+const assertInvocationEnvironmentIsControlled = (invocations) => {
+  for (const invocation of invocations) {
+    assert.deepEqual(invocation.environment, {});
+  }
+};
+
+const assertSuccessfulInvocationOrder = (invocations) => {
+  assert.equal(invocations.length, 3);
+  assert.deepEqual(invocations[0].arguments, [...pnpmLockfileValidationArguments]);
+  assert.deepEqual(invocations[1].arguments.slice(0, 4), [
+    'dlx',
+    `turbo@${approvedTurboVersion}`,
+    'query',
+    '--no-update-notifier',
+  ]);
+  assert.deepEqual(invocations[2].arguments.slice(0, 5), [
+    'dlx',
+    `turbo@${approvedTurboVersion}`,
+    'run',
+    '--dry=json',
+    '--cache=local:rw',
+  ]);
+  assertInvocationEnvironmentIsControlled(invocations);
+};
+
+const assertIncludesAndExcludes = (scenario, outputs) => {
+  for (const outputName of ['tasks', 'projects', 'samples']) {
+    const values = new Set(outputs[outputName]);
+    for (const value of scenario.mustInclude[outputName]) {
+      assert.ok(values.has(value), `${scenario.name} ${outputName} should include ${value}`);
+    }
+    for (const value of scenario.mustExclude[outputName]) {
+      assert.ok(
+        !values.has(value),
+        `${scenario.name} ${outputName} should exclude ${value}; actual: ${JSON.stringify([...values])}`
+      );
+    }
+  }
+};
+
+test('selects Quantic E2E only for frozen-valid lockfile-only CI dependency changes', () => {
+  const quanticExpectations = {
+    mustInclude: {
+      tasks: [
+        '@coveo/quantic#build',
+        '@coveo/quantic#e2e',
+        '@coveo/quantic#lint:check:all',
+        '@coveo/quantic#promote:sfdx:ci',
+        '@coveo/quantic#test',
+      ],
+      projects: ['@coveo/quantic'],
+      samples: [],
+    },
+    mustExclude: {
+      tasks: ['@coveo/thermidor#build', '@coveo/thermidor#publint', '@coveo/thermidor#test'],
+      projects: ['@ag-ui/core'],
+      samples: ['@samples/thermidor-search-react#e2e'],
+    },
+  };
+  const scenarios = [
+    {
+      name: 'Quantic runtime dependency',
+      filter: '@coveo/quantic',
+      dependency: 'dompurify',
+      version: '3.4.8',
+      ...quanticExpectations,
+    },
+    {
+      name: 'Quantic deployment dependency from PR #7982',
+      capturedWaitOn: true,
+      ...quanticExpectations,
+    },
+    {
+      name: 'Quantic Playwright configuration dependency',
+      filter: '@coveo/quantic',
+      dependency: 'dotenv',
+      version: '16.6.1',
+      ...quanticExpectations,
+    },
+    {
+      name: 'unrelated Atomic development dependency',
+      filter: '@coveo/atomic',
+      capturedAtomicPrettier: true,
+      mustInclude: {
+        tasks: [
+          '@coveo/atomic#build',
+          '@coveo/atomic#lint:check:all',
+          '@coveo/atomic#publint',
+          '@coveo/atomic#test',
+        ],
+        projects: ['@coveo/atomic', '@coveo/ui-kit-sample-atomic-search-vite'],
+        samples: ['@coveo/ui-kit-sample-atomic-search-vite#e2e'],
+      },
+      mustExclude: {
+        tasks: ['@coveo/quantic#e2e', '@coveo/quantic#promote:sfdx:ci'],
+        projects: ['prettier'],
+        samples: ['@samples/thermidor-search-react#e2e'],
+      },
+    },
+    {
+      name: 'unrelated Thermidor runtime dependency',
+      filter: '@coveo/thermidor',
+      dependency: '@ag-ui/core',
+      version: '0.0.57',
+      mustInclude: {
+        tasks: [
+          '//#lint:check:all',
+          '@coveo/quantic#lint:check:all',
+          '@coveo/thermidor#build',
+          '@coveo/thermidor#publint',
+          '@coveo/thermidor#test',
+        ],
+        projects: ['@coveo/thermidor', '@samples/thermidor-search-react'],
+        samples: ['@samples/thermidor-search-react#e2e'],
+      },
+      mustExclude: {
+        tasks: ['@coveo/quantic#e2e', '@coveo/quantic#promote:sfdx:ci'],
+        projects: ['@ag-ui/core'],
+        samples: ['@coveo/ui-kit-sample-atomic-search-vite#e2e'],
+      },
+    },
+  ];
+
+  withIsolatedRepository(
+    ({baseline, checkout}) => {
+      const fixtureBaseline = prepareLockfileFixtureBaseline(checkout, baseline);
+      for (const [index, scenario] of scenarios.entries()) {
+        const head = scenario.capturedWaitOn
+          ? createCapturedWaitOnHead(checkout, fixtureBaseline, scenario)
+          : scenario.capturedAtomicPrettier
+            ? createCapturedAtomicPrettierHead(checkout, fixtureBaseline, scenario)
+            : generateLockfileOnlyHead(checkout, fixtureBaseline, scenario);
+        runGit(checkout, ['checkout', '--quiet', '--detach', head]);
+        const lockfileBeforeAction = readFileSync(resolve(checkout, 'pnpm-lock.yaml'));
+        const actionResult = runAffectedCalculation(checkout, fixtureBaseline, head, {
+          TURBO_CACHE_DIR: `/untrusted/cache/${index}`,
+          TURBO_TOKEN: `untrusted-token-${index}`,
+        });
+        const {error, invocations, outputs, summary, temporaryDirectory} = actionResult;
+
+        assert.equal(
+          error,
+          undefined,
+          `${scenario.name}: ${error?.stderr ?? error?.message ?? ''}`
+        );
+        assert.equal(existsSync(temporaryDirectory), false);
+        assert.deepEqual(readFileSync(resolve(checkout, 'pnpm-lock.yaml')), lockfileBeforeAction);
+        assert.equal(outputs['fetch-depth'], 2);
+        assertIncludesAndExcludes(scenario, outputs);
+        assertSuccessfulInvocationOrder(invocations);
+        assert.match(summary, /### Quantic E2E selection/);
+        assert.match(summary, /TaskPackageDependencyChanged/);
+
+        if (scenario.filter === '@coveo/quantic' || scenario.capturedWaitOn) {
+          assert.ok(
+            summary.includes(
+              'Selected `@coveo/quantic#e2e` because these directly affected Turbo tasks reach it through declared task dependencies:'
+            )
+          );
+          assert.ok(summary.includes(escapeMarkdownValue('@coveo/quantic#e2e')));
+          assert.ok(summary.includes(escapeMarkdownValue('@coveo/quantic')));
+        } else {
+          assert.ok(
+            summary.includes(
+              'Skipped `@coveo/quantic#e2e` because no directly affected Turbo task reaches it through declared task dependencies.'
+            )
+          );
+          assert.ok(summary.includes(escapeMarkdownValue(scenario.filter)));
+        }
+
+        if (index === 0) {
+          const warmResult = runAffectedCalculation(checkout, fixtureBaseline, head, {
+            GIT_WORK_TREE: '/untrusted/inherited/work-tree',
+            TURBO_CACHE_DIR: '/different/untrusted/cache',
+            TURBO_TOKEN: 'different-untrusted-token',
+          });
+          assert.equal(warmResult.error, undefined);
+          assert.deepEqual(warmResult.outputs, outputs);
+          assert.equal(warmResult.summary, summary);
+          assertSuccessfulInvocationOrder(warmResult.invocations);
+          assert.equal(existsSync(warmResult.temporaryDirectory), false);
+        }
+      }
+
+      rmSync(resolve(checkout, '.turbo'), {recursive: true, force: true});
+      assert.equal(existsSync(resolve(checkout, '.turbo')), false);
+      rmSync(resolve(checkout, 'node_modules'), {recursive: true, force: true});
+      assert.equal(existsSync(resolve(checkout, 'node_modules')), false);
+    },
+    {linkNodeModules: false}
+  );
+});
+
+test('sanitizes hostile Turbo reason paths in the action summary', () => {
+  withIsolatedRepository(
+    ({baseline, checkout}) => {
+      const maliciousPath = `packages/quantic/summary-\r\n# forged-<script>-\`code\`-\\-|-[x](y)-${'*'.repeat(80)}.txt`;
+      const head = createCommit(
+        checkout,
+        baseline,
+        (environment) => {
+          const blob = runGit(checkout, ['hash-object', '-w', '--stdin'], {
+            env: environment,
+            input: 'hostile summary fixture\n',
+          }).trim();
+          runGit(
+            checkout,
+            ['update-index', '--add', '--cacheinfo', '100644', blob, maliciousPath],
+            {
+              env: environment,
+            }
+          );
+        },
+        'hostile affected path'
+      );
+      runGit(checkout, ['checkout', '--quiet', '--detach', head]);
+      const {error, invocations, summary} = runAffectedCalculation(checkout, baseline, head);
+
+      assert.equal(error, undefined);
+      assertSuccessfulInvocationOrder(invocations);
+      assert.ok(summary.includes(escapeMarkdownValue(maliciousPath)));
+      assert.equal(summary.includes('<script>'), false);
+      assert.equal(summary.includes('# forged'), false);
+      assert.equal(summary.includes('[x](y)'), false);
+    },
+    {linkNodeModules: false}
+  );
+});
+
+test('rejects frozen-valid noncanonical Turbo specs before pnpm dlx and output', () => {
+  withIsolatedRepository(
+    ({baseline, checkout}) => {
+      const scenarios = [
+        {name: 'aliased Turbo dependency', specifier: 'npm:turbo@2.10.9'},
+        {name: 'ranged Turbo dependency', specifier: '^2.10.9'},
+      ];
+
+      for (const scenario of scenarios) {
+        const head = createFrozenValidTurboSpecifierHead(
+          checkout,
+          baseline,
+          scenario.specifier,
+          scenario.name
+        );
+        const lockfileBeforeAction = readFileSync(resolve(checkout, 'pnpm-lock.yaml'));
+        const {error, invocations, outputs, summary, temporaryDirectory} = runAffectedCalculation(
+          checkout,
+          baseline,
+          head
+        );
+
+        assert.ok(error, `${scenario.name} should fail before pnpm dlx`);
+        assert.match(
+          `${error.stderr ?? ''}${error.stdout ?? ''}`,
+          /repository-approved Turbo version/
+        );
+        assert.deepEqual(invocations, []);
+        assert.deepEqual(outputs, {});
+        assert.equal(summary, '');
+        assert.deepEqual(readFileSync(resolve(checkout, 'pnpm-lock.yaml')), lockfileBeforeAction);
+        assert.equal(existsSync(temporaryDirectory), false);
+      }
+      rmSync(resolve(checkout, 'node_modules'), {recursive: true, force: true});
+      assert.equal(existsSync(resolve(checkout, 'node_modules')), false);
+    },
+    {linkNodeModules: false}
+  );
+});
+
+test('rejects frozen-valid hostile task keys before Turbo and output', () => {
+  withIsolatedRepository(
+    ({baseline, checkout}) => {
+      const scenarios = [
+        {name: 'option-shaped task key', taskKey: '--cache=remote:rw', error: /CLI-option syntax/},
+        {
+          name: 'control-character task key',
+          taskKey: 'build\n--cache=remote:rw',
+          error: /control characters/,
+        },
+      ];
+
+      for (const scenario of scenarios) {
+        const head = createTurboTaskKeyHead(checkout, baseline, scenario.taskKey, scenario.name);
+        const lockfileBeforeAction = readFileSync(resolve(checkout, 'pnpm-lock.yaml'));
+        const {error, invocations, outputs, summary, temporaryDirectory} = runAffectedCalculation(
+          checkout,
+          baseline,
+          head
+        );
+
+        assert.ok(error, `${scenario.name} should fail before Turbo`);
+        assert.match(`${error.stderr ?? ''}${error.stdout ?? ''}`, scenario.error);
+        assert.deepEqual(invocations, []);
+        assert.deepEqual(outputs, {});
+        assert.equal(summary, '');
+        assert.deepEqual(readFileSync(resolve(checkout, 'pnpm-lock.yaml')), lockfileBeforeAction);
+        assert.equal(existsSync(temporaryDirectory), false);
+      }
+      rmSync(resolve(checkout, 'node_modules'), {recursive: true, force: true});
+      assert.equal(existsSync(resolve(checkout, 'node_modules')), false);
+    },
+    {linkNodeModules: false}
+  );
+});
+
+test('fails semantic lockfile validation before Turbo and all GitHub output', () => {
+  withIsolatedRepository(
+    ({baseline, checkout}) => {
+      const fixtureBaseline = prepareLockfileFixtureBaseline(checkout, baseline);
+      const fixtureLock = parse(runGit(checkout, ['show', `${fixtureBaseline}:pnpm-lock.yaml`]));
+      const dompurifyVersion =
+        fixtureLock.importers['packages/quantic'].dependencies.dompurify.version;
+      const scenarios = [
+        {
+          name: 'syntactically valid dangling snapshot',
+          base: fixtureBaseline,
+          transform: (lockfile) => removeLastYamlBlock(lockfile, `dompurify@${dompurifyVersion}`),
+        },
+        {
+          name: 'importer specifier mismatch against exact Quantic manifest',
+          base: baseline,
+          transform: (lockfile) =>
+            replaceImporterVersion(lockfile, 'packages/quantic', 'wait-on', '9.1.0', '8.0.5'),
+        },
+        {
+          name: 'malformed pnpm lockfile',
+          base: baseline,
+          transform: () => "lockfileVersion: '9.0'\nimporters: [\n",
+        },
+        {
+          name: 'unsupported pnpm lockfile version',
+          base: baseline,
+          transform: (lockfile) =>
+            replaceOnce(lockfile, "lockfileVersion: '9.0'", "lockfileVersion: '99.0'"),
+        },
+      ];
+
+      for (const scenario of scenarios) {
+        runGit(checkout, ['checkout', '--quiet', '--detach', scenario.base]);
+        const head = createFileContentsScenarioCommit(
+          checkout,
+          scenario.base,
+          'pnpm-lock.yaml',
+          scenario.transform,
+          scenario.name
+        );
+        runGit(checkout, ['checkout', '--quiet', '--detach', head]);
+        const lockfileBeforeAction = readFileSync(resolve(checkout, 'pnpm-lock.yaml'));
+        const {error, invocations, outputs, summary, temporaryDirectory} = runAffectedCalculation(
+          checkout,
+          scenario.base,
+          head
+        );
+
+        assert.ok(error, `${scenario.name} should fail semantic validation`);
+        assert.match(
+          `${error.stderr ?? ''}${error.stdout ?? ''}${error.message}`,
+          /pnpm frozen lockfile validation (failed|modified)/
+        );
+        assert.deepEqual(
+          invocations.map((invocation) => invocation.arguments),
+          [[...pnpmLockfileValidationArguments]]
+        );
+        assertInvocationEnvironmentIsControlled(invocations);
+        assert.deepEqual(outputs, {});
+        assert.equal(summary, '');
+        assert.deepEqual(readFileSync(resolve(checkout, 'pnpm-lock.yaml')), lockfileBeforeAction);
+        assert.equal(existsSync(temporaryDirectory), false);
+      }
+      rmSync(resolve(checkout, 'node_modules'), {recursive: true, force: true});
+      assert.equal(existsSync(resolve(checkout, 'node_modules')), false);
+    },
+    {linkNodeModules: false}
+  );
 });
