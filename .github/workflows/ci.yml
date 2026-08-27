@@ -30,6 +30,7 @@ jobs:
         with:
           egress-policy: audit
 
+      # Full history is required to calculate the base-to-head range and publish the minimum depth.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
@@ -58,7 +59,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ github.head_ref }}
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/run-affected
@@ -82,7 +83,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ github.head_ref }}
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/run-affected
@@ -177,7 +178,7 @@ jobs:
           egress-policy: audit
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/run-affected
@@ -243,7 +244,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/run-affected
@@ -263,7 +264,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run validate:light-dom-styles --filter=@coveo/atomic
@@ -280,7 +281,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run validate:no-new-light-dom --filter=@coveo/atomic
@@ -339,7 +340,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run validate:test:dts:ci --filter=@coveo/thermidor
@@ -355,7 +356,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec node ./scripts/ci/validate-publint-tasks.mjs
@@ -376,7 +377,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/run-affected
@@ -413,6 +414,7 @@ jobs:
         with:
           egress-policy: audit
 
+      # Chromatic needs full history to compare the checked-out revision with its baseline.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         if: ${{ github.event_name == 'pull_request' }}
         with:
@@ -560,6 +562,7 @@ jobs:
         with:
           egress-policy: audit
 
+      # The Storybook suite requires origin/main for baseline-aware tests.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
@@ -592,7 +595,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - name: 'Download a11y shard reports'
@@ -732,7 +735,7 @@ jobs:
           egress-policy: audit
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run build --filter='!./samples/**'
