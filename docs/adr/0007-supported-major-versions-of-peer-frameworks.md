@@ -74,7 +74,7 @@ Option C. Concretely:
 4. **The upper bound is the newest major CI validates**, which is at minimum the major the monorepo itself builds against. It may extend one major beyond that — the pattern `@angular/material` uses with `^22.0.0 || ^23.0.0` — but only once a CI leg validates that next major. Being `latest` on npm is not evidence.
 5. **CI validates both bounds** for every framework with a declared range. A bound without a corresponding test is not permitted.
 6. **Narrowing a range is a bug fix when it removes majors that could never resolve**, and a breaking change otherwise.
-7. **The lower bound rises only at a major of the affected package.** At each major, it is raised to the oldest framework major still in upstream long-term support at that time. Between majors the range only widens.
+7. **The lower bound rises only at a major of the affected package.** At each major, it is raised to the oldest framework major still in upstream long-term support at that time. Between majors the range only widens. Determining which majors are still supported is part of planning that major release; it is not tracked continuously.
 
 TypeScript is an explicit exception to rules 2 and 4: it keeps an open lower bound with no ceiling.
 
@@ -108,15 +108,29 @@ TypeScript is carved out of the ceiling rule deliberately. It releases roughly q
 - **Negative:** Under rule 7 a range stays wider than the set of majors we would otherwise choose to support, for as long as the next major release is away. Angular 16 through 19 remain in the published range despite having left upstream long-term support.
 - **Neutral:** Lower bounds will rise as the TypeScript floor in `@coveo/atomic` and `@coveo/headless` rises. Each rise is a separate decision, and breaking once it excludes a major that previously resolved.
 
-## Operational Rules
+## Enforcement
 
-### Keeping the range honest when the catalog moves
+The rules are enforced at two levels, and it matters which is which. A static check answers whether the range is *declared* correctly; the version matrix answers whether the code *works* on a given major. The first is cheap and runs on every pull request; the second is expensive and does not.
 
-A unit test reads `pnpm-workspace.yaml`, takes the default catalog version of each framework and the corresponding `peer-compatibility` range, and asserts the former satisfies the latter. When Renovate bumps the Angular catalog to a major outside the declared ceiling, that pull request fails until someone widens the ceiling deliberately or decides not to adopt the major yet. The test runs offline in milliseconds on every pull request, and it also asserts that each bound has a corresponding CI leg, which makes rule 5 machine-checked.
+### Static, on every pull request
 
-Renovate is deliberately not configured to widen the range itself. Auto-widening would assert compatibility without evidence, which is what rules 2 and 4 exist to prevent. As a backstop at the integration level, one CI leg installs at the catalog version *without* `--legacy-peer-deps`, so the version we build against must fall inside the range we publish.
+A unit test reads `pnpm-workspace.yaml` and asserts that the default catalog version of each framework satisfies the corresponding `peer-compatibility` range. When Renovate bumps the Angular catalog to a major outside the declared ceiling, that pull request fails until someone widens the ceiling deliberately or decides not to adopt the major yet. The test runs offline in milliseconds.
 
-### Keeping CI coverage cheap
+Renovate is deliberately not configured to widen the range itself. Auto-widening would assert compatibility without evidence, which is what rules 2 and 4 exist to prevent.
+
+Rule 2's format is **not** machine-checked. It is a review-time convention, enforced the way the rest of the repository's manifest conventions are. A malformed range is visible in a one-line diff, and a wrong range is caught by the assertion above regardless of how it is written, so a shape test would add maintenance for little benefit.
+
+### Version matrix, not on every pull request
+
+Rules 3, 4 and 5 need real builds against real framework versions. That is the compatibility matrix tracked by KIT-5983 and proposed in pull request #8324.
+
+A leg installs the packed library into a minimal consumer application for one framework major and builds it. That exercises package resolution, the TypeScript range that major pins, and — because the fixture uses a component in a template — `strictTemplates` against the generated inputs. It is a build check, not a runtime one.
+
+The design of that matrix is not settled at the time of writing. Two questions are open: how many legs to run, and whether it runs per pull request or on a schedule. The floor and ceiling are the bounds that must be covered under rule 5; intermediate majors are optional. Until the matrix lands, rules 3 and 4 rest on the analysis recorded here rather than on measurement, and the Angular floor stays provisional.
+
+As a backstop at the integration level, one leg installs at the catalog version *without* `--legacy-peer-deps`, so the version we build against must fall inside the range we publish.
+
+### Keeping the matrix cheap
 
 - One job builds and packs the library, and uploads the tarball as an artifact that every leg consumes. Legs never rebuild the monorepo.
 - Each major has a committed minimal fixture application with a committed lockfile, installed with `npm ci --prefer-offline`. Scaffolding with `ng new` at run time is avoided: it is slow, network-dependent, and not reproducible.
