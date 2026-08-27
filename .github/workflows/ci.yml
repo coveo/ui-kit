@@ -438,7 +438,16 @@ jobs:
           # TurboSnap bypass pricing. If affected calculation fails, keep normal baseline selection.
           # Reachable same-branch builds are still found in Git history; this only drops Chromatic's
           # continuity fallback for an orphaned branch build.
-          ignoreLastBuildOnBranch: ${{ needs.affected.result == 'success' && !contains(needs.affected.outputs.tasks, '"@coveo/atomic#build"') && github.head_ref || '' }}
+          # GitHub expressions use `condition && value || fallback` as a ternary.
+          ignoreLastBuildOnBranch: >-
+            ${{
+              (
+                needs.affected.result == 'success' &&
+                !contains(needs.affected.outputs.tasks, '"@coveo/atomic#build"')
+              ) &&
+              github.head_ref ||
+              ''
+            }}
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           workingDir: packages/atomic
       - name: Skip Chromatic visual tests
