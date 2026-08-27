@@ -17,13 +17,25 @@
  * catalog holds a single version of each framework for the whole monorepo, and
  * `pnpm.overrides` pins it transitively, so an in-repo sample cannot vary it.
  *
+ * The scaffolded application installs with npm rather than pnpm, which is deliberate
+ * and load-bearing. npm fails an install whose peer ranges cannot be satisfied, and
+ * that failure is what this check asserts on. pnpm defaults to
+ * `strict-peer-dependencies=false` and `auto-install-peers=true`, so the same
+ * conflict is only a warning and the install succeeds: against Angular 14's cap of
+ * `typescript >=4.6.2 <4.9` alongside TypeScript 5, npm exits 1 with ERESOLVE while
+ * pnpm exits 0. Switching this to pnpm would make the check pass on exactly the
+ * defect it exists to catch. pnpm remains the package manager for everything inside
+ * the workspace, which is what `pnpm turbo run` and `pnpm pack` below use.
+ *
  * Uses only Node builtins, plus `tar` to read the packed manifest.
  *
  * Usage:
- *   node scripts/verify-framework-compat.mjs <framework> <major> [options]
+ *   node scripts/verify-framework-compat.mjs <framework> [major] [options]
  *
  *   <framework>          angular or react.
- *   <major>              Framework major version to test, for example 16.
+ *   [major]              Framework major version to test. Defaults to the floor of the
+ *                        peer-compatibility catalog range in pnpm-workspace.yaml, which
+ *                        is where the wrappers resolve their framework peers from.
  *   --tarball <path>     Tarball to install. Built and packed from the workspace when
  *                        omitted.
  *   --legacy-peers       Install with --legacy-peer-deps, so the declared peer range
@@ -33,8 +45,8 @@
  *   --keep               Leave the scaffolded application in place on success.
  *
  * Examples:
- *   node scripts/verify-framework-compat.mjs angular 16
- *   node scripts/verify-framework-compat.mjs react 18
+ *   node scripts/verify-framework-compat.mjs angular
+ *   node scripts/verify-framework-compat.mjs react
  *   node scripts/verify-framework-compat.mjs angular 22 --legacy-peers
  */
 
@@ -62,6 +74,7 @@ const FRAMEWORKS = {
     packDirectory: 'packages/atomic-angular/projects/atomic-angular',
     tarballPrefix: 'coveo-atomic-angular-',
     buildTask: '@coveo/atomic-angular#build',
+    peerPackage: '@angular/core',
     scaffold(workdir, major) {
       // Scaffolded with the CLI for this major rather than from a committed fixture:
       // angular.json builders differ across majors, so the matching CLI is the only
@@ -81,12 +94,17 @@ const FRAMEWORKS = {
         ],
         workdir
       );
-      return join(workdir, 'consumer');
+      const application = join(workdir, 'consumer');
+      clearBundleBudgets(application);
+      return application;
     },
     useLibrary(application) {
-      // A type reference, not a bare import, so a change to the generated surface
-      // fails the build. Appended to main.ts to stay version-agnostic: Angular 16
-      // bootstraps an NgModule while 17 and later default to standalone.
+      // A type reference rather than a bare import, and the part of this check that
+      // earns its keep. Below the floor the wrapper's types can collapse to nothing
+      // without the build saying so: the errors live in a declaration file and the
+      // CLI generates skipLibCheck: true. An import alone still compiles in that
+      // state, so it would pass. Naming an input does not.
+      // Appended to main.ts to stay version-agnostic across bootstrap styles.
       appendFileSync(
         join(application, 'src', 'main.ts'),
         [
@@ -110,6 +128,7 @@ const FRAMEWORKS = {
     packDirectory: 'packages/atomic-react',
     tarballPrefix: 'coveo-atomic-react-',
     buildTask: '@coveo/atomic-react#build',
+    peerPackage: 'react',
     scaffold(workdir, major) {
       // React needs no scaffolding tool: a Vite application is a manifest, a
       // tsconfig and an entry point. Writing them directly keeps the React version
@@ -213,23 +232,95 @@ const FRAMEWORKS = {
   },
 };
 
+/**
+ * Removes the CLI's default bundle budgets from a scaffolded application.
+ *
+ * This check asks whether the wrapper compiles, not how large it is. Atomic ships a
+ * fixed payload well past the CLI's 1 MB default, so a passing leg would otherwise
+ * fail on size for a reason that has nothing to do with the framework major.
+ */
+function clearBundleBudgets(application) {
+  const path = join(application, 'angular.json');
+  const workspace = JSON.parse(readFileSync(path, 'utf8'));
+
+  for (const project of Object.values(workspace.projects ?? {})) {
+    for (const target of Object.values(project.architect ?? project.targets ?? {})) {
+      for (const configuration of Object.values(target.configurations ?? {})) {
+        delete configuration.budgets;
+      }
+    }
+  }
+
+  writeFileSync(path, `${JSON.stringify(workspace, null, 2)}\n`);
+}
+
+const PEER_CATALOG = 'peer-compatibility';
+
+/**
+ * Reads a range from the `peer-compatibility` catalog in pnpm-workspace.yaml, which
+ * is the single source the wrappers resolve their framework peers from.
+ *
+ * Scans lines rather than using a YAML parser so the script keeps working before
+ * `pnpm install` has run, matching the rest of its builtins-only dependencies.
+ */
+function readPeerCatalogRange(packageName) {
+  const path = join(WORKSPACE_ROOT, 'pnpm-workspace.yaml');
+  const lines = readFileSync(path, 'utf8').split('\n');
+
+  const start = lines.findIndex((line) => line.trim() === `${PEER_CATALOG}:`);
+  if (start === -1) {
+    fail(`no ${PEER_CATALOG} catalog in pnpm-workspace.yaml`);
+  }
+
+  const indent = lines[start].search(/\S/);
+  const quoted = `(?:'${packageName}'|"${packageName}"|${packageName})`;
+  const entry = new RegExp(`^\\s+${quoted}:\\s*(.+?)\\s*$`);
+
+  for (const line of lines.slice(start + 1)) {
+    if (line.trim() && line.search(/\S/) <= indent) {
+      break;
+    }
+    const match = line.match(entry);
+    if (match) {
+      return match[1].replace(/^['"]|['"]$/g, '');
+    }
+  }
+
+  return fail(`${packageName} is not in the ${PEER_CATALOG} catalog`);
+}
+
+/** Lowest major accepted by a range such as `^18 || ^19`. */
+function lowestMajorInRange(range) {
+  const majors = range
+    .split('||')
+    .map((clause) => clause.match(/\d+/)?.[0])
+    .filter(Boolean)
+    .map(Number);
+
+  if (!majors.length) {
+    fail(`no major version found in range: ${range}`);
+  }
+  return Math.min(...majors);
+}
+
 function printUsage() {
   console.log(
     [
       'Verify that a packed Coveo framework wrapper can be consumed by a given framework major.',
       '',
-      'Usage: node scripts/verify-framework-compat.mjs <framework> <major> [options]',
+      'Usage: node scripts/verify-framework-compat.mjs <framework> [major] [options]',
       '',
       `  <framework>        ${Object.keys(FRAMEWORKS).join(' or ')}.`,
-      '  <major>            Framework major version to test, for example 16.',
+      `  [major]            Framework major to test. Defaults to the floor of the`,
+      `                     ${PEER_CATALOG} catalog range in pnpm-workspace.yaml.`,
       '  --tarball <path>   Tarball to install. Built and packed from the workspace when omitted.',
       '  --legacy-peers     Install with --legacy-peer-deps, so the peer range is not enforced.',
       '  --workdir <path>   Where to scaffold. Defaults to a temporary directory.',
       '  --keep             Leave the scaffolded application in place on success.',
       '',
       'Examples:',
-      '  node scripts/verify-framework-compat.mjs angular 16',
-      '  node scripts/verify-framework-compat.mjs react 18',
+      '  node scripts/verify-framework-compat.mjs angular',
+      '  node scripts/verify-framework-compat.mjs react',
       '  node scripts/verify-framework-compat.mjs angular 22 --legacy-peers',
     ].join('\n')
   );
@@ -285,17 +376,30 @@ function parseArguments(argv) {
   if (!Object.hasOwn(FRAMEWORKS, framework ?? '')) {
     fail(`framework must be one of: ${Object.keys(FRAMEWORKS).join(', ')}`);
   }
-  if (!/^\d+$/.test(major ?? '')) {
-    fail('a framework major version is required, for example: 16');
+  if (major !== undefined && !/^\d+$/.test(major)) {
+    fail(`major must be a number, for example: 16 (got ${major})`);
   }
   if (options.tarball && !existsSync(options.tarball)) {
     fail(`tarball not found: ${options.tarball}`);
   }
 
+  if (major !== undefined) {
+    return {
+      ...options,
+      framework,
+      major,
+      majorSource: 'argument',
+      tarball: options.tarball ? resolve(options.tarball) : null,
+    };
+  }
+
+  const range = readPeerCatalogRange(FRAMEWORKS[framework].peerPackage);
+
   return {
     ...options,
     framework,
-    major,
+    major: String(lowestMajorInRange(range)),
+    majorSource: `${PEER_CATALOG} catalog floor of ${range}`,
     tarball: options.tarball ? resolve(options.tarball) : null,
   };
 }
@@ -359,7 +463,7 @@ function main() {
     return;
   }
 
-  const {framework, major, legacyPeers, keep} = options;
+  const {framework, major, majorSource, legacyPeers, keep} = options;
   const config = FRAMEWORKS[framework];
   const tarball = options.tarball ?? packFromWorkspace(config);
   const workdir = options.workdir
@@ -370,6 +474,7 @@ function main() {
   console.log(`\n=== verifying ${framework} ${major} against ${config.packageName} ===`);
   console.log(`tarball : ${tarball}`);
   console.log(`workdir : ${workdir}`);
+  console.log(`major   : ${major} (${majorSource})`);
   console.log(`peers   : ${legacyPeers ? 'not enforced (--legacy-peer-deps)' : 'enforced'}`);
 
   const application = config.scaffold(workdir, major);
