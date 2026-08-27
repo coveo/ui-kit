@@ -1,9 +1,4 @@
-const links = [
-  {href: '/', label: 'Main'},
-  {href: '/examples/insights.html', label: 'Insight Panel'},
-  {href: '/examples/genqa.html', label: 'Gen Q&A'},
-  {href: '/examples/commerce-website/homepage.html', label: 'Commerce Website'},
-];
+const links = [{href: '/', label: 'Main'}];
 
 const header = document.createElement('header');
 
