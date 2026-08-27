@@ -29,7 +29,7 @@ RUN mkdir -p /pnpm/store && chown -R node:node /pnpm
 USER node
 
 # Pre-install pnpm as the node user so it's ready to use
-RUN corepack prepare pnpm@11.17.0 --activate
+RUN corepack prepare pnpm@11.22.0 --activate
 
 # Install turbo globally so it's available in terminal
 RUN pnpm add -g turbo@2.5.5

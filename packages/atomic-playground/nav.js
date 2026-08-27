@@ -2,6 +2,8 @@ const pages = [
   {href: '/', label: 'Search'},
   {href: '/genqa.html', label: 'Gen Q&A'},
   {href: '/insight.html', label: 'Insight Panel'},
+  {href: '/custom-components.html', label: 'Custom components'},
+  {href: '/headless-actions.html', label: 'Headless actions'},
 ];
 
 const style = document.createElement('style');
