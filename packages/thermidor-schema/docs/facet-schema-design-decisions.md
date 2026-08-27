@@ -56,14 +56,15 @@ The `facet-manager` gets the ordering benefit of a central component *without* a
 
 **Why the component approach wins:**
 
-| Property                            | Catalog array order                         | Distributed `position`                   | Dedicated component                |
-| ----------------------------------- | ------------------------------------------- | ---------------------------------------- | ---------------------------------- |
-| Single source of truth              | yes (array position)                        | no (spread across facets)                | yes (one `facetIds` array)         |
-| Reorder expressible as one delta    | no (resend whole array or invent array ops) | no (multi-component update)              | yes (one state update)             |
-| Decoupled from unrelated components | no (facets mixed with all other components) | yes                                      | yes                                |
-| Failure mode for inconsistency      | n/a (array is always ordered)               | collisions / gaps (ambiguous)            | dangling id (clear error)          |
-| Extensible to cross-facet actions   | no (no component to attach actions to)      | no                                       | yes (add actions to the component) |
-| Consistent with the component model | no (ordering lives outside components)      | partial (state spread across components) | yes (uniform state/actions)        |
+| Property                                | Catalog array order                         | Distributed `position`                   | Monolithic component                              | Dedicated `facet-manager`          |
+| --------------------------------------- | ------------------------------------------- | ---------------------------------------- | ------------------------------------------------- | ---------------------------------- |
+| Single source of truth                  | yes (array position)                        | no (spread across facets)                | yes (ordered state array)                         | yes (one `facetIds` array)         |
+| Reorder expressible as one delta        | no (resend whole array or invent array ops) | no (multi-component update)              | yes (ordered state array)                         | yes (one state update)             |
+| Decoupled from unrelated components     | no (facets mixed with all other components) | yes                                      | yes                                               | yes                                |
+| Extensible to cross-facet actions       | no (no component to attach actions to)      | no                                       | yes                                               | yes (add actions to the component) |
+| Facets stay independently consumable    | yes (separate components)                   | yes (separate components)                | no (tagged-union entries, union of all actions)   | yes (separate components)          |
+| Action validity enforced by contract    | yes (per-facet schemas)                     | yes (per-facet schemas)                  | no (depends on target's runtime `facetType`)      | yes (per-facet schemas)            |
+| Consistent with the component model     | no (ordering lives outside components)      | partial (state spread across components) | partial (one component absorbs all facet concerns) | yes (uniform state/actions)        |
 
 #### Future direction
 
