@@ -1,4 +1,4 @@
-import {sfdx, SfdxResponse} from './sfdx';
+import {isSalesforceDeploymentId, sfdx, SfdxResponse, sfCommand} from './sfdx';
 
 export interface SfdxOrg {
   alias?: string;
@@ -188,7 +188,9 @@ export async function deleteActiveScratchOrgs(
       deletedOrgUsernames.push(username);
     } catch (error) {
       console.warn(`Failed to delete organization ${username}`);
-      console.warn(error instanceof Error ? error.stack ?? error.message : String(error));
+      console.warn(
+        error instanceof Error ? (error.stack ?? error.message) : String(error)
+      );
     }
   }
 
@@ -270,30 +272,93 @@ export async function createCommunity(
 
 export interface DeploySourceArguments {
   alias: string;
+  executionTimeoutMs: number;
   packagePaths: string[];
 }
 
-export async function deploySource(args: DeploySourceArguments): Promise<void> {
-  const sourceDirs = args.packagePaths
-    .map((p) => `--source-dir "${p}"`)
-    .join(' ');
+export interface SfdxMetadataDeployResponse extends SfdxResponse {
+  result: {
+    details?: unknown;
+    done?: boolean;
+    id?: string;
+    status?: string;
+    success?: boolean;
+  };
+}
 
-  await sfdx(
-    `project deploy start --ignore-conflicts --target-org ${args.alias} ${sourceDirs}`
+export async function deploySource(
+  args: DeploySourceArguments
+): Promise<SfdxMetadataDeployResponse> {
+  return sfCommand<SfdxMetadataDeployResponse>(
+    [
+      'project',
+      'deploy',
+      'start',
+      '--async',
+      '--ignore-conflicts',
+      '--target-org',
+      args.alias,
+      ...args.packagePaths.flatMap((packagePath) => [
+        '--source-dir',
+        packagePath,
+      ]),
+    ],
+    args.executionTimeoutMs
   );
 }
 
 export interface DeployCommunityMetadataArguments {
   alias: string;
   communityMetadataPath: string;
-  timeout: number;
+  executionTimeoutMs: number;
 }
 
 export async function deployCommunityMetadata(
   args: DeployCommunityMetadataArguments
-): Promise<void> {
-  await sfdx(
-    `project deploy start --target-org ${args.alias} --ignore-conflicts --metadata-dir "${args.communityMetadataPath}" --wait ${args.timeout}`
+): Promise<SfdxMetadataDeployResponse> {
+  return sfCommand<SfdxMetadataDeployResponse>(
+    [
+      'project',
+      'deploy',
+      'start',
+      '--async',
+      '--target-org',
+      args.alias,
+      '--ignore-conflicts',
+      '--metadata-dir',
+      args.communityMetadataPath,
+    ],
+    args.executionTimeoutMs
+  );
+}
+
+export interface ResumeMetadataDeploymentArguments {
+  deploymentId: string;
+  executionTimeoutMs: number;
+  waitMinutes: number;
+}
+
+export async function resumeMetadataDeployment(
+  args: ResumeMetadataDeploymentArguments
+): Promise<SfdxMetadataDeployResponse> {
+  if (!isSalesforceDeploymentId(args.deploymentId)) {
+    throw new Error('The Salesforce metadata deployment ID is invalid.');
+  }
+  if (!Number.isInteger(args.waitMinutes) || args.waitMinutes < 1) {
+    throw new Error('The Salesforce metadata deployment wait is invalid.');
+  }
+
+  return sfCommand<SfdxMetadataDeployResponse>(
+    [
+      'project',
+      'deploy',
+      'resume',
+      '--job-id',
+      args.deploymentId,
+      '--wait',
+      String(args.waitMinutes),
+    ],
+    args.executionTimeoutMs
   );
 }
 

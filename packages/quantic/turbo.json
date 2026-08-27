@@ -33,7 +33,15 @@
     },
     "test": {
       "outputs": [],
-      "dependsOn": ["test:unit", "validate:types", "validate:types:build-scripts"]
+      "dependsOn": [
+        "test:build-scripts",
+        "test:unit",
+        "validate:types",
+        "validate:types:build-scripts"
+      ]
+    },
+    "test:build-scripts": {
+      "outputs": []
     },
     "test:unit": {
       "dependsOn": ["build"],
