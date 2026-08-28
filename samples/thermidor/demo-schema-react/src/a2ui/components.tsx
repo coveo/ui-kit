@@ -13,7 +13,12 @@ import {
   PaginationPropsSchema,
   SortPropsSchema,
   SearchBoxPropsSchema,
+  RegularFacetPropsSchema,
+  NumericFacetPropsSchema,
+  CategoryFacetPropsSchema,
+  FacetManagerPropsSchema,
   THERMIDOR_CATALOG_ID,
+  type FacetManagerProps,
 } from '@coveo/thermidor-schema';
 export {THERMIDOR_CATALOG_ID};
 import {ProductCarouselRenderer} from './ProductCarousel/ProductCarousel.js';
@@ -24,6 +29,10 @@ import {ProductListRenderer} from './ProductList/ProductList.js';
 import {PaginationRenderer} from './Pagination/Pagination.js';
 import {SortRenderer} from './Sort/Sort.js';
 import {SearchBoxRenderer} from './SearchBox/SearchBox.js';
+import {RegularFacetRenderer} from './RegularFacet/RegularFacet.js';
+import {NumericFacetRenderer} from './NumericFacet/NumericFacet.js';
+import {CategoryFacetRenderer} from './CategoryFacet/CategoryFacet.js';
+import {FacetManagerRenderer, type FacetProps} from './FacetManager/FacetManager.js';
 
 /**
  * Converts Zod 4 catalog definitions to the Zod 3 CatalogDefinitions type
@@ -82,7 +91,29 @@ export const thermidorCatalogDefinitions = asCatalogDefinitions({
     description: 'Query input for decomposed commerce search surfaces.',
     props: SearchBoxPropsSchema,
   },
+  RegularFacet: {
+    description: 'A multi-select facet backed by a regular-facet controller.',
+    props: RegularFacetPropsSchema,
+  },
+  NumericFacet: {
+    description: 'A numeric-range facet backed by a numeric-facet controller.',
+    props: NumericFacetPropsSchema,
+  },
+  CategoryFacet: {
+    description: 'A hierarchical category facet backed by a category-facet controller.',
+    props: CategoryFacetPropsSchema,
+  },
+  FacetManager: {
+    description: 'Orders and renders sidebar facets for a commerce search surface.',
+    props: FacetManagerPropsSchema,
+  },
 });
+
+const EMPTY_CHILD_COMPONENTS = new Map<string, FacetProps>();
+
+function FacetManagerCatalogRenderer({props}: {props: FacetManagerProps}) {
+  return <FacetManagerRenderer props={props} childComponents={EMPTY_CHILD_COMPONENTS} />;
+}
 
 export function createThermidorCatalog() {
   const renderers = asCatalogRenderers({
@@ -94,6 +125,10 @@ export function createThermidorCatalog() {
     Pagination: PaginationRenderer,
     Sort: SortRenderer,
     SearchBox: SearchBoxRenderer,
+    RegularFacet: RegularFacetRenderer,
+    NumericFacet: NumericFacetRenderer,
+    CategoryFacet: CategoryFacetRenderer,
+    FacetManager: FacetManagerCatalogRenderer,
   });
 
   return createCatalog(thermidorCatalogDefinitions, renderers, {
