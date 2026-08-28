@@ -8,7 +8,7 @@ import {createPlatformClient} from './client.js';
 import {defaultPageManifest} from './default/default-page.js';
 import {fetchPageManifest, type IManifest} from './fetch-page.js';
 import {listSearchPagesOptions} from './list-pages.js';
-import {getPackageManager} from './utils.js';
+import {getPackageManager, getStencilCommand} from './utils.js';
 
 interface PlopData {
   project: string;
@@ -66,6 +66,7 @@ export default function (plop: NodePlopAPI) {
   }
 
   plop.setHelper('inc', (value) => parseInt(value, 10) + 1);
+  plop.setHelper('stencil', () => getStencilCommand());
 
   plop.setGenerator('@coveo/atomic', {
     description: 'A Coveo Atomic Generator',
