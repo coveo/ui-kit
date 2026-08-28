@@ -1,0 +1,9 @@
+{
+  "products": [
+    {
+      "productId": "prod-1",
+      "values": {"brand": "TestBrand"}
+    }
+  ],
+  "attributes": [{"key": "brand", "label": "Brand"}]
+}

@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.thermidor.coveo.com/controllers/next-actions.schema.json",
+  "title": "NextActionsControllerContract",
+  "description": "Owns the list of suggested next actions the assistant offers the user. Exposes a selectAction action for the frontend to signal which action the user picked.",
+  "required": ["controllerSchema"],
+  "properties": {
+    "controllerSchema": {
+      "type": "string",
+      "const": "https://schema.thermidor.coveo.com/controllers/next-actions.schema.json"
+    },
+    "state": {"$ref": "#/$defs/NextActionsState"},
+    "actions": {
+      "type": "object",
+      "required": ["selectAction"],
+      "properties": {
+        "selectAction": {"$ref": "#/$defs/SelectActionAction"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/controller.schema.json"}],
+  "$defs": {
+    "NextActionsState": {
+      "title": "NextActionsState",
+      "description": "The list of suggested actions to render. Owned exclusively by the backend; the frontend must not mutate this directly.",
+      "$comment": "This schema validates the runtime state value the backend pushes to the frontend.",
+      "type": "object",
+      "required": ["actions"],
+      "properties": {
+        "actions": {
+          "type": "array",
+          "description": "Suggested actions the assistant offers the user.",
+          "items": {
+            "$ref": "https://schema.thermidor.coveo.com/definitions/action-item.schema.json"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "SelectActionAction": {
+      "title": "selectAction",
+      "description": "Signals that the user selected one of the suggested actions.",
+      "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"}],
+      "properties": {
+        "payload": {
+          "type": "object",
+          "required": ["text", "type"],
+          "properties": {
+            "text": {
+              "type": "string",
+              "description": "The display text of the action the user selected."
+            },
+            "type": {
+              "type": "string",
+              "enum": ["followup", "search"],
+              "description": "The kind of action selected: \"followup\" or \"search\"."
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

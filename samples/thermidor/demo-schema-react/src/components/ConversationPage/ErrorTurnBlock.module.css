@@ -1,0 +1,13 @@
+.container {
+  padding: var(--space-3) var(--space-4);
+  background: #fef2f2;
+  border: 1px solid var(--color-error, #ef4444);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+}
+
+.message {
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+  color: #991b1b;
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.thermidor.coveo.com/components/next-actions-bar.schema.json",
+  "title": "NextActionsBar",
+  "description": "Renders a set of suggested next actions the user can pick from. The selectAction action is dispatched when the user clicks an action button.",
+  "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/component.schema.json"}],
+  "properties": {
+    "controllers": {
+      "type": "object",
+      "required": ["nextActionsController"],
+      "properties": {
+        "nextActionsController": {
+          "$ref": "https://schema.thermidor.coveo.com/controllers/next-actions.schema.json"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

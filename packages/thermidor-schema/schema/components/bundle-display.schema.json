@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.thermidor.coveo.com/components/bundle-display.schema.json",
+  "title": "BundleDisplay",
+  "description": "Renders a tiered product bundle layout with budget, mid-range, and premium options. Each tier contains slots that reference product surfaces.",
+  "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/component.schema.json"}],
+  "properties": {
+    "controllers": {
+      "type": "object",
+      "required": ["bundleDisplayController"],
+      "properties": {
+        "bundleDisplayController": {
+          "$ref": "https://schema.thermidor.coveo.com/controllers/bundle-display.schema.json"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

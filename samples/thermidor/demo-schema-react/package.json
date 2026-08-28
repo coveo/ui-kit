@@ -1,0 +1,38 @@
+{
+  "name": "@samples/thermidor-demo-schema-react",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:agent-gateway": "VITE_COVEO_ENDPOINT=http://localhost:8980 VITE_COVEO_USE_VITE_PROXY=true vite",
+    "dev:mock": "bash scripts/dev-mock.sh",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "e2e": "playwright test --pass-with-no-tests",
+    "e2e:watch": "playwright test --ui"
+  },
+  "dependencies": {
+    "@copilotkit/a2ui-renderer": "1.61.2",
+    "@coveo/thermidor": "workspace:*",
+    "@coveo/thermidor-schema": "workspace:*",
+    "dompurify": "catalog:",
+    "marked": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@playwright/test": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "playwright": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  }
+}
