@@ -99,7 +99,7 @@ catalog:
   i18next: 25.10.10
   jest: 30.3.0
   jest-cli: 30.3.0
-  jsdom: 28.1.0
+  jsdom: 30.0.1
   lit: 3.3.3
   live-server: 1.2.2
   local-web-server: 5.4.0
