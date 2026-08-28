@@ -3,9 +3,11 @@ import {describe, expect, it} from 'vitest';
 import {
   collapseFacetsAfter,
   getAutomaticFacetGenerator,
+  getFacetElementToReorder,
   getFacetsInChildren,
   getFirstNewFacetValueIndex,
   isAutomaticFacetGenerator,
+  isFacetNestedInPopover,
   shouldDisplayInputForFacetRange,
   sortFacetVisibility,
   triageFacetsByParents,
@@ -167,6 +169,72 @@ describe('facet-common', () => {
       expect(result).toContain(facet1);
       expect(result).toContain(facet2);
       expect(result).not.toContain(notFacet);
+    });
+
+    it('should return facets nested inside a popover', () => {
+      const parent = document.createElement('div');
+      const facet = buildMockFacetElement({facetId: 'f1'});
+      const popover = document.createElement('atomic-popover');
+      popover.appendChild(facet);
+      parent.appendChild(popover);
+
+      expect(getFacetsInChildren(parent)).toEqual([facet]);
+    });
+
+    it('should preserve the DOM order of facets when some are nested inside a popover', () => {
+      const parent = document.createElement('div');
+      const facet1 = buildMockFacetElement({facetId: 'f1'});
+      const facet2 = buildMockFacetElement({facetId: 'f2'});
+      const popover = document.createElement('atomic-popover');
+      popover.appendChild(facet2);
+
+      parent.appendChild(facet1);
+      parent.appendChild(popover);
+
+      expect(getFacetsInChildren(parent)).toEqual([facet1, facet2]);
+    });
+
+    it('should not return the content of a popover without a facet', () => {
+      const parent = document.createElement('div');
+      const popover = document.createElement('atomic-popover');
+      popover.appendChild(document.createElement('div'));
+      parent.appendChild(popover);
+
+      expect(getFacetsInChildren(parent)).toEqual([]);
+    });
+  });
+
+  describe('#isFacetNestedInPopover', () => {
+    it('should return true when the facet is slotted in a popover', () => {
+      const popover = document.createElement('atomic-popover');
+      const facet = buildMockFacetElement({facetId: 'f1'});
+      popover.appendChild(facet);
+
+      expect(isFacetNestedInPopover(facet)).toBe(true);
+    });
+
+    it('should return false when the facet is not slotted in a popover', () => {
+      const parent = document.createElement('div');
+      const facet = buildMockFacetElement({facetId: 'f1'});
+      parent.appendChild(facet);
+
+      expect(isFacetNestedInPopover(facet)).toBe(false);
+    });
+  });
+
+  describe('#getFacetElementToReorder', () => {
+    it('should return the popover when the facet is slotted in one', () => {
+      const popover = document.createElement('atomic-popover');
+      const facet = buildMockFacetElement({facetId: 'f1'});
+      popover.appendChild(facet);
+
+      expect(getFacetElementToReorder(facet)).toBe(popover);
+    });
+
+    it('should return the facet itself when it is not slotted in a popover', () => {
+      const facet = buildMockFacetElement({facetId: 'f1'});
+
+      expect(getFacetElementToReorder(facet)).toBe(facet);
     });
   });
 
