@@ -79,7 +79,7 @@ searchInterface.i18n.addResourceBundle('en', 'translation', {
 
 Add one bundle per locale you support to translate the label along with the rest of the interface. See [Localize Atomic](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/) for the general localization workflow.
 
-When you don't set the `facet-id` attribute, the facet ID defaults to the field name, so `all-categories-{field}` is usually enough. Reach for `all-categories-{facetId}` when several category facets share the same field and need different labels. In that case, set `facet-id` explicitly on each of them: otherwise the extra facets get a generated, suffixed ID such as `geographicalhierarchy_1`.
+When you don't set the `facet-id` attribute, the facet ID defaults to the field name, as long as no other facet in the interface already uses that ID, so `all-categories-{field}` is usually enough. Reach for `all-categories-{facetId}` when several category facets share the same field and need different labels. In that case, set `facet-id` explicitly on each of them: the facets that don't get the bare field name fall back to a generated, suffixed ID such as `geographicalhierarchy_1`.
 
 The resolved label is also used in the facet search results, where it represents the root of the hierarchy for values that have no parent.
 
