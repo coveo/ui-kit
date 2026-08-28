@@ -26,7 +26,6 @@ const FACET_CLASS: Record<string, string> = {
   numericalRange: 'NumericFacet',
   dateRange: 'DateFacet',
   hierarchical: 'CategoryFacet',
-  location: 'RegularFacet',
 };
 
 function hasVisibleFacets(states: FacetStates): boolean {

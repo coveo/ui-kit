@@ -10,6 +10,16 @@ env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
 
 jobs:
+  # ⚠️  Keep this job limited to publishing and tagging.
+  #
+  # A failing step here fails the whole job, and anything that runs after the
+  # publish step then never happens — including the release/v3 tag. Post-release
+  # side work (source maps, docs, notifications) belongs in its own job below,
+  # so that it cannot take the release down with it.
+  #
+  # `commit-artifact-upload` is deliberately insulated from this job: see the
+  # `if:` on it. Do not add `needs: release` gating that would let a failure
+  # here skip the CDN deploy.
   release:
     concurrency:
       group: release-${{ github.ref }}
@@ -22,6 +32,7 @@ jobs:
       id-token: write
     outputs:
       published: ${{ steps.changesets.outputs.published }}
+      publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
@@ -36,7 +47,7 @@ jobs:
           private-key: ${{ secrets.RELEASER_PRIVATE_KEY }}
           owner: coveo
           repositories: 'ui-kit'
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
           token: ${{ steps.generate-token.outputs.token }}
@@ -58,15 +69,33 @@ jobs:
         run: |
           echo "The publish command failed before any package was published." >&2
           exit 1
+      - name: Update release/v3 bookmark
+        if: ${{ steps.changesets.outputs.published == 'true' }}
+        run: |
+          git tag -f release/v3
+          git push origin refs/tags/release/v3 --force
+  sentry-create-ui:
+    name: Upload create-ui source maps to Sentry
+    needs: release
+    if: ${{ contains(needs.release.outputs.publishedPackages, '@coveo/create-ui') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: 'refs/tags/release/v3'
+      - uses: ./.github/actions/setup
+      - name: Build create-ui
+        run: pnpm exec turbo run build --filter=@coveo/create-ui
       - name: Read create-ui version
         id: create-ui-version
-        if: ${{ steps.changesets.outputs.published == 'true' && contains(steps.changesets.outputs.publishedPackages, '@coveo/create-ui') }}
-        continue-on-error: true
         working-directory: packages/create-ui
         run: echo "version=$(jq -r '.version' package.json)" >> "$GITHUB_OUTPUT"
-      - name: Upload create-ui source maps to Sentry
-        if: ${{ steps.changesets.outputs.published == 'true' && contains(steps.changesets.outputs.publishedPackages, '@coveo/create-ui') && steps.create-ui-version.outputs.version != '' }}
-        continue-on-error: true
+      - name: Upload source maps
         uses: step-security/getsentry-action-release@4530160f6bc962e1dd67e2703064a7a5cfd401fb # v3.7.0
         with:
           release: create-ui@${{ steps.create-ui-version.outputs.version }}
@@ -79,11 +108,6 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: coveo-platform
           SENTRY_PROJECT: create-ui
-      - name: Update release/v3 bookmark
-        if: ${{ steps.changesets.outputs.published == 'true' }}
-        run: |
-          git tag -f release/v3
-          git push origin refs/tags/release/v3 --force
   quantic-prod:
     if: ${{ needs.release.outputs.published == 'true' }}
     needs: release
@@ -99,7 +123,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: 'refs/tags/release/v3'
       - uses: ./.github/actions/setup
@@ -128,7 +152,7 @@ jobs:
           egress-policy: audit
 
       - name: Checkout code
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: 'refs/tags/release/v3'
 
@@ -168,7 +192,7 @@ jobs:
           egress-policy: audit
 
       - name: Checkout code
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: 'refs/tags/release/v3'
 
@@ -208,7 +232,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: 'refs/tags/release/v3'
       - uses: ./.github/actions/setup
@@ -233,13 +257,17 @@ jobs:
         uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: ./.github/actions/build-cdn
         with:
           commit-sha: ${{ github.sha }}
   commit-artifact-upload:
     name: Upload commit artifacts to S3
     needs: [build-cdn, release]
+    # `release` is a soft dependency: it is only read to decide which channels to
+    # update. If npm was published, the CDN must follow, so a failure anywhere in
+    # the release job must never skip this deploy.
+    if: ${{ !cancelled() && needs.build-cdn.result == 'success' }}
     runs-on: ubuntu-latest
     # TODO(KIT-5712): Rename to 'CDN Deploy' once token vending machine is available
     environment: 'Prerelease (CDN)'
@@ -248,7 +276,7 @@ jobs:
         uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: ./.github/actions/setup
       - name: Trigger commit artifact upload on ui-kit-cd
         run: node ./scripts/deploy/trigger-commit-upload.mjs
@@ -267,7 +295,8 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      # Chromatic needs full history to update the main branch baseline.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
 
