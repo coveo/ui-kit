@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.thermidor.coveo.com/definitions/bundle-tier.schema.json",
+  "title": "BundleTier",
+  "description": "A tier in a product bundle, grouping product slots by price/quality level.",
+  "type": "object",
+  "required": ["label", "description", "slots"],
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Display label for the tier (e.g. 'Budget')."
+    },
+    "description": {
+      "type": "string",
+      "description": "Brief description of what the tier includes."
+    },
+    "slots": {
+      "type": "array",
+      "description": "Product category slots within this tier.",
+      "items": {
+        "$ref": "#/$defs/BundleSlot"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "BundleSlot": {
+      "title": "BundleSlot",
+      "type": "object",
+      "required": ["categoryLabel", "surfaceRef"],
+      "properties": {
+        "categoryLabel": {
+          "type": "string",
+          "description": "Display name of the product category for this slot."
+        },
+        "surfaceRef": {
+          "type": "string",
+          "description": "Surface ID where this slot's products are rendered via a ProductCarousel."
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

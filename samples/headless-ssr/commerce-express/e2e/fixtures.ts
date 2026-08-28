@@ -1,12 +1,12 @@
-import {MockCommerceApi} from '@coveo/platform-mock-api';
 import {defineNetworkFixture, type NetworkFixture} from '@msw/playwright';
 import {test as base, expect} from '@playwright/test';
+import {createCommerceApi} from '../mocks/commerce-api.js';
 
 interface Fixtures {
   network: NetworkFixture;
 }
 
-const commerceApi = new MockCommerceApi();
+const commerceApi = createCommerceApi();
 
 /**
  * Extends the Playwright test with an MSW network fixture that mocks the Coveo

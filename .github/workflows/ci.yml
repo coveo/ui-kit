@@ -30,7 +30,8 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      # Full history is required to calculate the base-to-head range and publish the minimum depth.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
           fetch-tags: false
@@ -55,10 +56,10 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ github.head_ref }}
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/run-affected
@@ -79,10 +80,10 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ github.head_ref }}
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/run-affected
@@ -127,7 +128,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 1
           fetch-tags: false
@@ -148,7 +149,7 @@ jobs:
         uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: ./.github/actions/setup
       # Note that this does not use .github/actions/build-cdn/action.yml.
       # It purposefully doesn't support affected because it's used by the cd and hotfix workflows.
@@ -175,9 +176,9 @@ jobs:
         uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/run-affected
@@ -214,7 +215,7 @@ jobs:
         uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: ./.github/actions/setup
       - name: 'Build local CDN'
         run: pnpm exec turbo run @coveo/cdn#build
@@ -241,9 +242,9 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/run-affected
@@ -261,9 +262,9 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run validate:light-dom-styles --filter=@coveo/atomic
@@ -278,9 +279,9 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run validate:no-new-light-dom --filter=@coveo/atomic
@@ -300,7 +301,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 1
           fetch-tags: false
@@ -323,7 +324,7 @@ jobs:
         uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run functional-test --filter=@coveo/relay
   validate-dts:
@@ -337,9 +338,9 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run validate:test:dts:ci --filter=@coveo/thermidor
@@ -353,9 +354,9 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec node ./scripts/ci/validate-publint-tasks.mjs
@@ -374,9 +375,9 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/run-affected
@@ -394,7 +395,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 1
           fetch-tags: false
@@ -413,33 +414,40 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      # Chromatic needs full history to compare the checked-out revision with its baseline.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         if: ${{ github.event_name == 'pull_request' }}
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.ref }} # https://www.chromatic.com/docs/github-actions/#recommended-configuration-for-build-events
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         if: ${{ github.event_name != 'pull_request' }}
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
       - name: Run Chromatic visual tests
         uses: chromaui/action@14cfaef73576e69f95f47f60058063f46ca38719 # v18.1.0
-        id: chromatic-run
         # Set the CHROMATIC_RENOVATE_ALLOWLIST repository variable to a JSON array of exact branch names.
         # Example: `["renovate/playwright", "renovate/chromatic"]`
         if: >-
-          needs.build.result == 'success' &&
-          contains(needs.affected.outputs.tasks, '"@coveo/atomic#build"') &&
           github.event_name == 'pull_request' &&
           (!startsWith(github.head_ref, 'renovate/') ||
           contains(fromJSON(vars.CHROMATIC_RENOVATE_ALLOWLIST || '[]'), github.head_ref))
         with:
+          # Unaffected PRs should have one reachable baseline so unchanged Storybooks use
+          # TurboSnap bypass pricing. If affected calculation fails, keep normal baseline selection.
+          # Reachable same-branch builds are still found in Git history; this only drops Chromatic's
+          # continuity fallback for an orphaned branch build.
+          ignoreLastBuildOnBranch: ${{ needs.affected.result == 'success' && !contains(needs.affected.outputs.tasks, '"@coveo/atomic#build"') && github.head_ref || '' }}
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           workingDir: packages/atomic
       - name: Skip Chromatic visual tests
         uses: chromaui/action@14cfaef73576e69f95f47f60058063f46ca38719 # v18.1.0
-        if: steps.chromatic-run.outcome == 'skipped'
+        if: >-
+          github.event_name == 'merge_group' ||
+          (github.event_name == 'pull_request' &&
+          startsWith(github.head_ref, 'renovate/') &&
+          !contains(fromJSON(vars.CHROMATIC_RENOVATE_ALLOWLIST || '[]'), github.head_ref))
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           skip: true
@@ -464,7 +472,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 1
           fetch-tags: false
@@ -500,7 +508,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 1
           fetch-tags: false
@@ -527,7 +535,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 1
           fetch-tags: false
@@ -559,7 +567,8 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      # The Storybook suite requires origin/main for baseline-aware tests.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
           filter: blob:none
@@ -589,9 +598,9 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
       - name: 'Download a11y shard reports'
@@ -633,7 +642,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 1
           fetch-tags: false
@@ -662,7 +671,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 1
           fetch-tags: false
@@ -688,7 +697,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 1
           fetch-tags: false
@@ -720,7 +729,7 @@ jobs:
       SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
   publish-preview:
-    if: ${{ !cancelled() && github.event_name == 'pull_request' && !startsWith(github.head_ref, 'changeset-release/') }}
+    if: ${{ !cancelled() && contains(needs.affected.outputs.tasks, '#build"') && github.event_name == 'pull_request' && !startsWith(github.head_ref, 'changeset-release/') }}
     needs: [affected, build]
     name: 'Publish Preview Packages'
     runs-on: ubuntu-latest
@@ -729,34 +738,14 @@ jobs:
         uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: audit
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo run build --filter='!./samples/**'
-      - name: Resolve catalog references in pkg.pr.new templates
-        run: node packages/pkg-new-template/scripts/flatten-catalog.mjs
-      - name: Publish to pkg.pr.new
-        run: |
-          pnpm dlx pkg-pr-new publish --pnpm \
-            --template './packages/pkg-new-template' \
-            './packages/atomic' \
-            './packages/atomic-hosted-page' \
-            './packages/atomic-legacy' \
-            './packages/atomic-react' \
-            './packages/auth' \
-            './packages/bueno' \
-            './packages/create-atomic' \
-            './packages/create-atomic-component' \
-            './packages/create-atomic-component-project' \
-            './packages/create-atomic-result-component' \
-            './packages/create-atomic-rollup-plugin' \
-            './packages/create-ui' \
-            './packages/headless' \
-            './packages/headless-react' \
-            './packages/relay' \
-            './packages/shopify'
+      - uses: ./.github/actions/publish-preview
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
   is-valid-pr:
     name: 'Confirm build is valid (PR)'
     if: ${{ always() && github.event_name == 'pull_request'}}
@@ -860,7 +849,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: ${{ needs.affected.outputs.fetch-depth }}
           fetch-tags: false

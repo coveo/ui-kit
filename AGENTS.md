@@ -39,12 +39,14 @@
 - [`@coveo/relay`](packages/relay/): A library for sending analytics events using Coveo's Event protocol.
 - [`@coveo/shopify`](packages/shopify/): Utilities to integrate Shopify with Coveo's commerce engine
 - [`@coveo/thermidor`](packages/thermidor/): Experimental package for a unified, framework-agnostic headless engine for search and conversational experiences
+- [`@coveo/thermidor-schema`](packages/thermidor-schema/): Versioned JSON Schema-derived Zod contracts for Thermidor controllers
 
 ### Private
 
 - [`@coveo/atomic-a11y`](packages/atomic-a11y/): Accessibility utilities and tools for Coveo Atomic components
 - [`@coveo/atomic-angular-builder`](packages/atomic-angular/): Angular workspace used to build and publish the @coveo/atomic-angular package
 - [`@coveo/atomic-cdn-smoke`](packages/atomic-cdn-smoke/): CDN visual smoke tests for Atomic components using Playwright + Chromatic
+- [`@coveo/atomic-playground`](packages/atomic-playground/): Local playground for developing Atomic components against a real interface, with hot reload for Atomic and Headless changes
 - [`@coveo/atomic-theming-e2e`](packages/atomic-theming-e2e/): End-to-end tests validating Atomic theme customization and shadow DOM style encapsulation
 - [`@coveo/create-atomic-template`](packages/create-atomic-template/): Template project scaffolded by @coveo/create-atomic when generating a new Atomic search page
 - [`@coveo/documentation`](packages/documentation/): Typedoc plugin enforcing Coveo's documentation styling and navigation conventions across the monorepo

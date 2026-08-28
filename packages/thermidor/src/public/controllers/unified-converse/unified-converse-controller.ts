@@ -63,6 +63,9 @@ class UnifiedConverseControllerImpl extends BaseController<UnifiedConverseContro
         setActiveTurnId: (id) => {
           this.engine.mutate(this.#actions.setActiveTurnId(id));
         },
+        getActiveTurnId: () => {
+          return this.engine.read(this.#selectors.getActiveTurnId);
+        },
         replaceTurnId: (oldId, newId) => {
           this.engine.mutate(this.#actions.replaceTurnId({oldId, newId}));
         },
@@ -101,6 +104,12 @@ class UnifiedConverseControllerImpl extends BaseController<UnifiedConverseContro
           if (Array.isArray(messages)) {
             options.onSurfaceOperation?.(messages);
           }
+        },
+        appendActivity: (turnId, activity) => {
+          this.engine.mutate(this.#actions.appendActivity({turnId, activity}));
+        },
+        setStateSnapshot: (turnId, state) => {
+          this.engine.mutate(this.#actions.setStateSnapshot({turnId, state}));
         },
         startToolCall: (turnId, toolCallId, toolName) => {
           this.engine.mutate(this.#actions.startToolCall({turnId, toolCallId, toolName}));

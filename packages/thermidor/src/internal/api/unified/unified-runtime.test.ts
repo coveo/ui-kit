@@ -68,6 +68,7 @@ function createMockStatePort(): GenerativeStatePort {
   return {
     createTurn: vi.fn(),
     setActiveTurnId: vi.fn(),
+    getActiveTurnId: vi.fn(),
     replaceTurnId: vi.fn(),
     setRoutedInterface: vi.fn(),
     clearRoutedInterface: vi.fn(),
@@ -75,6 +76,8 @@ function createMockStatePort(): GenerativeStatePort {
     startMessage: vi.fn(),
     appendMessageDelta: vi.fn(),
     appendSurface: vi.fn(),
+    appendActivity: vi.fn(),
+    setStateSnapshot: vi.fn(),
     startToolCall: vi.fn(),
     appendToolCallArgs: vi.fn(),
     completeToolCall: vi.fn(),
@@ -557,24 +560,20 @@ describe('UnifiedRuntime', () => {
       );
     });
 
-    it('treats RUN_FINISHED as NOT terminal — events continue after it', async () => {
+    it('treats RUN_FINISHED as terminal — completes the turn', async () => {
       const config = createMockConfig();
       const engine = createMockEngine();
       setupSuccessfulStream([
-        {type: 'RUN_FINISHED'} as NormalizedStreamEvent,
         {type: 'TEXT_MESSAGE_START', role: 'assistant'} as NormalizedStreamEvent,
-        {type: 'TEXT_MESSAGE_CONTENT', delta: 'after run'} as NormalizedStreamEvent,
-        {type: 'turn_complete'} as NormalizedStreamEvent,
+        {type: 'TEXT_MESSAGE_CONTENT', delta: 'hello'} as NormalizedStreamEvent,
+        {type: 'RUN_FINISHED'} as NormalizedStreamEvent,
       ]);
 
       const runtime = UnifiedRuntime.getInstance(engine, 'run-finished', config);
       await runtime.submit('Hello');
 
       expect(config.statePort.startMessage).toHaveBeenCalledWith('generated-id-1', 'assistant');
-      expect(config.statePort.appendMessageDelta).toHaveBeenCalledWith(
-        'generated-id-1',
-        'after run'
-      );
+      expect(config.statePort.appendMessageDelta).toHaveBeenCalledWith('generated-id-1', 'hello');
       expect(config.statePort.completeTurn).toHaveBeenCalledTimes(1);
       expect(config.statePort.completeTurn).toHaveBeenCalledWith('generated-id-1');
     });

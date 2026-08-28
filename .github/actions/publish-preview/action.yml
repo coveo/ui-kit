@@ -1,0 +1,51 @@
+name: Publish preview packages
+description: Publish affected public packages to pkg.pr.new.
+inputs:
+  affected-tasks:
+    description: Affected Turbo task identifiers as a JSON array.
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Resolve preview package paths
+      id: resolve
+      shell: bash
+      env:
+        AFFECTED_TASKS: ${{ inputs.affected-tasks }}
+      run: |
+        package_paths="$(node "$GITHUB_ACTION_PATH/resolve-packages.mjs")"
+        {
+          echo 'packages<<EOF'
+          echo "$package_paths"
+          echo EOF
+        } >> "$GITHUB_OUTPUT"
+    - name: Build
+      if: ${{ steps.resolve.outputs.packages != '' }}
+      shell: bash
+      env:
+        PACKAGE_PATHS: ${{ steps.resolve.outputs.packages }}
+      run: |
+        filters=()
+        while IFS= read -r package_path; do
+          [[ -z "$package_path" ]] || filters+=("--filter=${package_path}")
+        done <<< "$PACKAGE_PATHS"
+
+        pnpm exec turbo run build "${filters[@]}"
+    - name: Resolve catalog references in pkg.pr.new templates
+      if: ${{ steps.resolve.outputs.packages != '' }}
+      shell: bash
+      run: node packages/pkg-new-template/scripts/flatten-catalog.mjs
+    - name: Publish to pkg.pr.new
+      if: ${{ steps.resolve.outputs.packages != '' }}
+      shell: bash
+      env:
+        PACKAGE_PATHS: ${{ steps.resolve.outputs.packages }}
+      run: |
+        package_paths=()
+        while IFS= read -r package_path; do
+          [[ -z "$package_path" ]] || package_paths+=("$package_path")
+        done <<< "$PACKAGE_PATHS"
+
+        pnpm dlx pkg-pr-new publish --pnpm \
+          --template './packages/pkg-new-template' \
+          "${package_paths[@]}"
