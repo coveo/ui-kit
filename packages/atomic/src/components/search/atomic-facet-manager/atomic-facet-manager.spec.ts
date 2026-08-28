@@ -55,6 +55,21 @@ describe('atomic-facet-manager', () => {
     };
   };
 
+  type MockFacet = HTMLElement & {facetId: string; isCollapsed: boolean};
+
+  const createMockFacet = (facetId: string): MockFacet => {
+    const facet = document.createElement('div') as unknown as MockFacet;
+    facet.facetId = facetId;
+    facet.isCollapsed = false;
+    return facet;
+  };
+
+  const createMockPopover = (facet: MockFacet) => {
+    const popover = document.createElement('atomic-popover');
+    popover.appendChild(facet);
+    return popover;
+  };
+
   it('should be defined', () => {
     const el = document.createElement('atomic-facet-manager');
     expect(el).toBeInstanceOf(AtomicFacetManager);
@@ -123,21 +138,6 @@ describe('atomic-facet-manager', () => {
   });
 
   describe('when managing collapse state', () => {
-    const createMockFacet = (
-      facetId: string
-    ): HTMLElement & {
-      facetId: string;
-      isCollapsed: boolean;
-    } => {
-      const facet = document.createElement('div') as unknown as HTMLElement & {
-        facetId: string;
-        isCollapsed: boolean;
-      };
-      facet.facetId = facetId;
-      facet.isCollapsed = false;
-      return facet;
-    };
-
     const createMockGenerator = () => {
       const generator = document.createElement(
         'atomic-automatic-facet-generator'
@@ -237,6 +237,106 @@ describe('atomic-facet-manager', () => {
       expect(mockGenerator.updateCollapseFacetsDependingOnFacetsVisibility).toHaveBeenCalledWith(
         3,
         2
+      );
+    });
+  });
+
+  describe('when facets are nested inside popovers', () => {
+    const reverseSort = <T>(payload: T[]) => [...payload].reverse();
+
+    it('should sort the facets nested inside popovers', async () => {
+      const mockSort = vi.fn(reverseSort);
+      const facet1 = createMockFacet('facet1');
+      const facet2 = createMockFacet('facet2');
+
+      const {element} = await renderComponent({
+        mockSortImplementation: mockSort as never,
+      });
+
+      element?.append(createMockPopover(facet1), createMockPopover(facet2));
+
+      await element?.sortFacets();
+
+      expect(mockSort).toHaveBeenCalledWith([
+        {facetId: 'facet1', payload: facet1},
+        {facetId: 'facet2', payload: facet2},
+      ]);
+    });
+
+    it('should reorder the popovers rather than their nested facets', async () => {
+      const facet1 = createMockFacet('facet1');
+      const facet2 = createMockFacet('facet2');
+      const popover1 = createMockPopover(facet1);
+      const popover2 = createMockPopover(facet2);
+
+      const {element} = await renderComponent({
+        mockSortImplementation: reverseSort as never,
+      });
+
+      element?.append(popover1, popover2);
+
+      await element?.sortFacets();
+
+      expect(popover1.previousElementSibling).toBe(popover2);
+      expect(facet1.parentElement).toBe(popover1);
+      expect(facet2.parentElement).toBe(popover2);
+    });
+
+    it('should reorder popovers alongside facets that are not nested', async () => {
+      const facet1 = createMockFacet('facet1');
+      const facet2 = createMockFacet('facet2');
+      const facet3 = createMockFacet('facet3');
+      const popover = createMockPopover(facet2);
+
+      const {element} = await renderComponent({
+        mockSortImplementation: reverseSort as never,
+      });
+
+      element?.append(facet1, popover, facet3);
+
+      await element?.sortFacets();
+
+      expect(popover.previousElementSibling).toBe(facet3);
+      expect(popover.nextElementSibling).toBe(facet1);
+    });
+
+    it('should not collapse facets nested inside popovers', async () => {
+      const facet = createMockFacet('facet1');
+
+      const {element} = await renderComponent({
+        props: {collapseFacetsAfter: 0},
+      });
+
+      element?.append(createMockPopover(facet));
+
+      await element?.sortFacets();
+
+      expect(facet.isCollapsed).toBe(false);
+    });
+
+    it('should exclude facets nested inside popovers from the automatic facet generator collapse count', async () => {
+      const mockGenerator = document.createElement(
+        'atomic-automatic-facet-generator'
+      ) as unknown as HTMLElement & {
+        updateCollapseFacetsDependingOnFacetsVisibility: ReturnType<typeof vi.fn>;
+      };
+      mockGenerator.updateCollapseFacetsDependingOnFacetsVisibility = vi.fn();
+
+      const {element} = await renderComponent({
+        props: {collapseFacetsAfter: 3},
+      });
+
+      element?.append(
+        createMockFacet('facet1'),
+        createMockPopover(createMockFacet('facet2')),
+        mockGenerator
+      );
+
+      await element?.sortFacets();
+
+      expect(mockGenerator.updateCollapseFacetsDependingOnFacetsVisibility).toHaveBeenCalledWith(
+        3,
+        1
       );
     });
   });

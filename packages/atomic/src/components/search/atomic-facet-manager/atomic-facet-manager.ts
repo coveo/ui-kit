@@ -6,7 +6,9 @@ import {
   type BaseFacetElement,
   collapseFacetsAfter,
   getAutomaticFacetGenerator,
+  getFacetElementToReorder,
   getFacetsInChildren,
+  isFacetNestedInPopover,
   sortFacetVisibility,
 } from '@/src/components/common/facets/facet-common';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
@@ -89,14 +91,19 @@ export class AtomicFacetManager
 
     const generator = getAutomaticFacetGenerator(this);
 
-    collapseFacetsAfter(visibleFacets, this.collapseFacetsAfter);
+    const collapsibleFacets = visibleFacets.filter((facet) => !isFacetNestedInPopover(facet));
+
+    collapseFacetsAfter(collapsibleFacets, this.collapseFacetsAfter);
 
     generator?.updateCollapseFacetsDependingOnFacetsVisibility?.(
       this.collapseFacetsAfter,
-      visibleFacets.length
+      collapsibleFacets.length
     );
 
-    this.append(...[...visibleFacets, ...invisibleFacets, ...(generator ? [generator] : [])]);
+    this.append(
+      ...[...visibleFacets, ...invisibleFacets].map((facet) => getFacetElementToReorder(facet)),
+      ...(generator ? [generator] : [])
+    );
   };
 
   private sortFacetsUsingManager(
