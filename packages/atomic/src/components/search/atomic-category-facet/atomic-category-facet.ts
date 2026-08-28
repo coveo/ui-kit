@@ -64,6 +64,10 @@ import {mapProperty} from '@/src/utils/props-utils';
 /**
  * The `atomic-category-facet` component displays a facet of values in a browsable, hierarchical fashion.
  *
+ * The label of the "All Categories" button comes from the `all-categories` localization key. To override it for a
+ * single facet, add an `all-categories-{facetId}` key, or an `all-categories-{field}` key to override it for every
+ * facet on a given field.
+ *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
  *
@@ -85,7 +89,7 @@ import {mapProperty} from '@/src/utils/props-utils';
  * @part parents - The container surrounding the whole hierarchy of values.
  * @part sub-parents - The container surrounding a sub-hierarchy of values.
  * @part values - The container surrounding either the children of the active value or the values at the base.
- * @part all-categories-button - The "View all" button displayed first within the parents.
+ * @part all-categories-button - The "All Categories" button displayed first within the parents.
  * @part parent-button - The clickable parent button displayed first within sub-parents.
  * @part active-parent - The clickable active parent displayed first within the last sub-parents.
  * @part value-link - The clickable value displayed first within values.
