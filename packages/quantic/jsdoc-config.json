@@ -2,11 +2,7 @@
   "tags": {
     "allowUnknownTags": true
   },
-  "plugins": [
-    "plugins/markdown",
-    "jsdoc-plugins/export-fixer",
-    "jsdoc-tsimport-plugin/index.js"
-  ],
+  "plugins": ["plugins/markdown", "jsdoc-plugins/export-fixer", "jsdoc-tsimport-plugin/index.js"],
   "recurseDepth": 10,
   "source": {
     "include": ["force-app/main/default/lwc"],

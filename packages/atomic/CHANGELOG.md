@@ -1,3 +1,29 @@
+## 3.61.0
+
+### Minor Changes
+
+- [#8278](https://github.com/coveo/ui-kit/pull/8278) [`ef34fce`](https://github.com/coveo/ui-kit/commit/ef34fcea1d61408d69883b536fa92c4e21d08e86) - Improve focus scrolling after Atomic content updates and move focus to the first newly added facet value after **Show more**.
+
+### Patch Changes
+
+- [#8286](https://github.com/coveo/ui-kit/pull/8286) [`8f8c377`](https://github.com/coveo/ui-kit/commit/8f8c37704f4a41ff2eeef24f52f6f5e80e1b4d11) - Fix `must-match-*`, `must-not-match-*` and `depends-on-*` attributes being ignored when a component
+  is created in JavaScript rather than written in HTML.
+
+  These attributes were only read in the constructor, before `setAttribute` had been called. On result
+  templates the conditions were dropped, so every template matched every result and a catch-all won.
+  They are now read again once the element is connected.
+
+- [#8267](https://github.com/coveo/ui-kit/pull/8267) [`ed1bb10`](https://github.com/coveo/ui-kit/commit/ed1bb108620ab1a055d5dd3b9f1a80ebae1a9137) - Stop Atomic's own translations from overwriting strings already registered by the consumer.
+
+  Atomic loads its translations asynchronously through `i18next-http-backend`. When that load was
+  driven by i18next's backend connector during `init`, the connector stored the result with a shallow
+  merge in which the incoming data wins, silently discarding any string an application had already
+  registered on the interface's i18next instance — for example a customized `load-all-results` label.
+
+  Atomic now loads those resources itself with `deep: true, overwrite: false`, the same
+  non-destructive semantics the language-change path already used, so its strings act as defaults and
+  consumer customizations win regardless of ordering.
+
 ## 3.60.7
 
 ### Patch Changes
