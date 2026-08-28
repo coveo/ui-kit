@@ -1,68 +1,77 @@
 import {describe, expect, it, vi} from 'vitest';
-import {CartControllerContractSchema} from '@coveo/thermidor-schema';
 import {
   buildRemoteController,
   selectRemoteControllerState,
   type RemoteControllerSource,
 } from './remote-controller.js';
 
-const cartContract = CartControllerContractSchema.shape.controllerSchema.value;
 const cartItem = {productId: 'p1', name: 'Product', price: 10, quantity: 2};
 
 describe('buildRemoteController', () => {
-  it('selects its server-owned state from the active conversation turn', () => {
-    const source = createSource({controllers: {cart: {items: [cartItem]}}});
+  it('selects its server-owned state from state.components[componentId]', () => {
+    const source = createSource({components: {cart: {items: [cartItem]}}});
     const controller = buildRemoteController({
       source,
-      controllerId: 'cart',
-      contract: cartContract,
+      componentId: 'cart',
+      componentType: 'cart',
     });
 
     expect(controller.state).toEqual({items: [cartItem]});
   });
 
-  it('notifies subscribers when its snapshot slice changes, but not for another controller', () => {
+  it('throws for unknown componentType', () => {
+    const source = createSource({components: {}});
+    expect(() =>
+      buildRemoteController({
+        source,
+        componentId: 'x',
+        componentType: 'unknown-type' as any,
+      })
+    ).toThrow('Unknown component contract');
+  });
+
+  it('notifies subscribers when its component slice changes, but not for another component', () => {
     const cart = {items: []};
-    const source = createSource({controllers: {cart, products: {products: []}}});
+    const source = createSource({components: {cart, products: {products: []}}});
     const controller = buildRemoteController({
       source,
-      controllerId: 'cart',
-      contract: cartContract,
+      componentId: 'cart',
+      componentType: 'cart',
     });
     const callback = vi.fn();
 
     controller.subscribe(callback);
-    source.setSnapshot({controllers: {cart, products: {products: ['p1']}}});
+    source.setSnapshot({components: {cart, products: {products: ['p1']}}});
     expect(callback).not.toHaveBeenCalled();
 
-    source.setSnapshot({controllers: {cart: {items: [cartItem]}}});
+    source.setSnapshot({components: {cart: {items: [cartItem]}}});
     expect(callback).toHaveBeenCalledWith({items: [cartItem]});
   });
 
-  it('dispatches schema-derived actions without locally changing server-owned state', async () => {
-    const source = createSource({controllers: {cart: {items: []}}});
+  it('dispatches actions with {componentId, componentType, action, payload}', async () => {
+    const source = createSource({components: {cart: {items: []}}});
     const controller = buildRemoteController({
       source,
-      controllerId: 'cart',
-      contract: cartContract,
+      componentId: 'cart',
+      componentType: 'cart',
     });
 
     await controller.dispatch('updateItemQuantity', {item: cartItem});
 
     expect(source.dispatchAction).toHaveBeenCalledWith({
-      controllerId: 'cart',
-      controllerSchema: 'https://schema.thermidor.coveo.com/controllers/cart.schema.json',
+      componentId: 'cart',
+      componentType: 'cart',
       action: 'updateItemQuantity',
       payload: {item: cartItem},
     });
     expect(controller.state).toEqual({items: []});
   });
 
-  it('returns undefined for an invalid snapshot and rejects an invalid action payload', async () => {
+  it('returns undefined for invalid state and rejects invalid action payload', async () => {
     const controller = buildRemoteController({
-      source: createSource({controllers: {cart: {items: 'invalid'}}}),
-      controllerId: 'cart',
-      contract: cartContract,
+      source: createSource({components: {cart: {items: 'invalid'}}}),
+      componentId: 'cart',
+      componentType: 'cart',
     });
 
     expect(controller.state).toBeUndefined();
@@ -70,13 +79,32 @@ describe('buildRemoteController', () => {
       controller.dispatch('updateItemQuantity', {item: {...cartItem, quantity: 0}})
     ).rejects.toThrow('Invalid payload');
   });
+
+  it('exposes componentId as a readonly property', () => {
+    const source = createSource({components: {}});
+    const controller = buildRemoteController({
+      source,
+      componentId: 'my-cart',
+      componentType: 'cart',
+    });
+    expect(controller.componentId).toBe('my-cart');
+  });
 });
 
 describe('selectRemoteControllerState', () => {
-  it('returns the stable empty state when no matching snapshot entry exists', () => {
-    const state = {activeTurn: {agentResponse: {state: {controllers: {}}}}};
+  it('returns the stable singleton empty object when no matching component entry exists', () => {
+    const state = {activeTurn: {agentResponse: {state: {components: {}}}}};
+    const result1 = selectRemoteControllerState(state as never, 'missing');
+    const result2 = selectRemoteControllerState(state as never, 'also-missing');
 
-    expect(selectRemoteControllerState(state as never, 'missing')).toEqual({});
+    expect(result1).toEqual({});
+    expect(result1).toBe(result2);
+  });
+
+  it('returns the stable singleton when components key is missing', () => {
+    const state = {activeTurn: {agentResponse: {state: {}}}};
+    const result = selectRemoteControllerState(state as never, 'anything');
+    expect(result).toEqual({});
   });
 });
 

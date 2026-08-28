@@ -56,16 +56,19 @@ export type {
   UnifiedConverseControllerOptions,
   UnifiedConverseControllerState,
 } from './unified-converse/unified-converse-controller.js';
-export {buildRemoteController, selectRemoteControllerState} from './remote/remote-controller.js';
+export {
+  buildRemoteController,
+  selectRemoteControllerState,
+  findComponentContract,
+} from './remote/remote-controller.js';
 export type {
   RemoteController,
   RemoteControllerSource,
-  RemoteControllerSchemaId,
+  ComponentType,
   RemoteControllerContractSchemaFor,
   RemoteControllerStateForSchema,
   RemoteControllerActionNameForSchema,
   RemoteControllerActionPayloadForSchema,
-  AdvertisedRemoteController,
   RemoteControllerOptions,
   RemoteControllerAction,
 } from './remote/remote-controller.js';

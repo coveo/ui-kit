@@ -18,8 +18,8 @@ import type {
 } from '@/src/internal/features/generative/index.js';
 
 export interface CoveoConversationControllerAction {
-  controllerId: string;
-  controllerSchema: string;
+  componentId: string;
+  componentType: string;
   action: string;
   payload: unknown;
 }

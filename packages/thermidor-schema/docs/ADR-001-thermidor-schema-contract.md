@@ -2,8 +2,9 @@
 
 **Status:** Accepted  
 **Date:** 2026-07-22  
-**Deciders:** Thermidor Stack team  
-**Superseded by:** _(none)_
+**Deciders:** Thermidor Stack team
+
+> **Note:** The entity model defined in this ADR (5 entities: Catalog, Component, Controller, State, Action) has been revised by [ADR-006](./ADR-006-remove-controllers-from-public-schema.md). The Controller is removed from the public schema. The rest of this ADR (data flow, state ownership, action semantics) remains valid.
 
 ---
 

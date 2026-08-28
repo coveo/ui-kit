@@ -1,11 +1,11 @@
-import {useAdvertisedController} from '../controllers.js';
+import {useRemoteController} from '../controllers.js';
 import {useStateSource} from '../state-source-context.js';
 import type {ActionItem, NextActionsBarProps} from '@coveo/thermidor-schema';
 import styles from './NextActionsBar.module.css';
 
 export function NextActionsBarRenderer({props}: {props: NextActionsBarProps}) {
   const stateSource = useStateSource();
-  const controller = useAdvertisedController(stateSource, props.controllers.nextActionsController);
+  const controller = useRemoteController(stateSource, props.componentId, props.componentType);
   const actions = controller.state?.actions ?? [];
 
   if (actions.length === 0) {

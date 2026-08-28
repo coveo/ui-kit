@@ -1,4 +1,4 @@
-import {useAdvertisedController} from '../controllers.js';
+import {useRemoteController} from '../controllers.js';
 import {useStateSource} from '../state-source-context.js';
 import type {
   ComparisonTableProps,
@@ -9,10 +9,7 @@ import styles from './ComparisonTable.module.css';
 
 export function ComparisonTableRenderer({props}: {props: ComparisonTableProps}) {
   const stateSource = useStateSource();
-  const controller = useAdvertisedController(
-    stateSource,
-    props.controllers.comparisonTableController
-  );
+  const controller = useRemoteController(stateSource, props.componentId, props.componentType);
   const products = controller.state?.products ?? [];
   const attributes = controller.state?.attributes ?? [];
 

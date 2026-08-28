@@ -9,10 +9,6 @@ import {
 
 const runId = 'schema-discovery-d8d8e15c';
 
-const PRODUCT_LIST_CONTROLLER_SCHEMA =
-  'https://schema.thermidor.coveo.com/controllers/product-list.schema.json';
-const NEXT_ACTIONS_CONTROLLER_SCHEMA =
-  'https://schema.thermidor.coveo.com/controllers/next-actions.schema.json';
 const CATALOG_ID = 'https://schema.thermidor.coveo.com/a2-ui/catalog.json';
 
 const carousel1SurfaceActivity: ConverseEvent = ActivitySnapshot({
@@ -31,13 +27,8 @@ const carousel1SurfaceActivity: ConverseEvent = ActivitySnapshot({
               id: 'root',
               component: 'ProductCarousel',
               props: {
-                controllers: {
-                  productListController: {
-                    controllerId: 'pl-life-jackets',
-                    controllerSchema: PRODUCT_LIST_CONTROLLER_SCHEMA,
-                  },
-                },
-                heading: 'Life Jackets',
+                componentId: 'pl-life-jackets',
+                componentType: 'product-carousel',
               },
             },
           ],
@@ -63,13 +54,8 @@ const carousel2SurfaceActivity: ConverseEvent = ActivitySnapshot({
               id: 'root',
               component: 'ProductCarousel',
               props: {
-                controllers: {
-                  productListController: {
-                    controllerId: 'pl-safety-gear',
-                    controllerSchema: PRODUCT_LIST_CONTROLLER_SCHEMA,
-                  },
-                },
-                heading: 'Boating Safety Gear',
+                componentId: 'pl-safety-gear',
+                componentType: 'product-carousel',
               },
             },
           ],
@@ -95,12 +81,8 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
               id: 'root',
               component: 'NextActionsBar',
               props: {
-                controllers: {
-                  nextActionsController: {
-                    controllerId: 'next-actions-ctrl-1',
-                    controllerSchema: NEXT_ACTIONS_CONTROLLER_SCHEMA,
-                  },
-                },
+                componentId: 'next-actions-root',
+                componentType: 'next-actions-bar',
               },
             },
           ],
@@ -111,8 +93,9 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
 });
 
 const stateSnapshot: ConverseEvent = StateSnapshot({
-  controllers: {
+  components: {
     'pl-life-jackets': {
+      heading: 'Life Jackets',
       products: [
         {
           permanentid: 'gid://shopify/ProductVariant/50681799147794',
@@ -294,6 +277,7 @@ const stateSnapshot: ConverseEvent = StateSnapshot({
       ],
     },
     'pl-safety-gear': {
+      heading: 'Boating Safety Gear',
       products: [
         {
           permanentid: 'gid://shopify/ProductVariant/50681803145490',
@@ -400,7 +384,7 @@ const stateSnapshot: ConverseEvent = StateSnapshot({
         },
       ],
     },
-    'next-actions-ctrl-1': {
+    'next-actions-root': {
       actions: [
         {text: 'Compare life jackets by size', type: 'followup'},
         {text: 'Show safety vests under $100', type: 'followup'},

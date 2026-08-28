@@ -23,8 +23,8 @@
  *    converted.push(...v1Messages.filter(isRecord));
  *    ```
  * 3. Verify that `processMessages` handles `createSurface` with `components[].props`
- *    and passes `props` (including `controllers`) to catalog renderers correctly
- * 4. Everything else (renderers, catalog definitions, useAdvertisedController) stays unchanged
+ *    and passes `props` (including `componentId` and `componentType`) to catalog renderers correctly
+ * 4. Everything else (renderers, catalog definitions, useRemoteController) stays unchanged
  */
 import {useEffect, useMemo, useRef} from 'react';
 import {A2UIRenderer, useA2UI} from '@copilotkit/a2ui-renderer';

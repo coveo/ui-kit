@@ -4,14 +4,14 @@ import {
   selectRemoteControllerState,
   type RemoteControllerSource,
 } from '@coveo/thermidor';
-import {CartControllerContractSchema, type CartControllerContract} from '@coveo/thermidor-schema';
+import {CartSchema, ComponentContractsSchema} from '@coveo/thermidor-schema';
 
 describe('selectRemoteControllerState', () => {
-  it('selects the advertised controller slice from the active Thermidor turn', () => {
+  it('selects state from components[componentId] in the active Thermidor turn', () => {
     const state = {
       activeTurn: {
         agentResponse: {
-          state: {controllers: {'featured-products': {products: [{permanentid: 'p1'}]}}},
+          state: {components: {'featured-products': {products: [{permanentid: 'p1'}]}}},
         },
       },
     } as unknown as Parameters<typeof selectRemoteControllerState>[0];
@@ -19,13 +19,13 @@ describe('selectRemoteControllerState', () => {
     expect(selectRemoteControllerState(state, 'featured-products')).toEqual({
       products: [{permanentid: 'p1'}],
     });
-    expect(selectRemoteControllerState(state, 'unknown-controller')).toEqual({});
+    expect(selectRemoteControllerState(state, 'unknown-component')).toEqual({});
   });
 
-  it('defines CartControllerContract as a v2 contract with nested actions', () => {
+  it('validates Cart component contract with state and actions', () => {
     const cartItem = {productId: 'p1', name: 'Product', price: 10, quantity: 2};
-    const contract: CartControllerContract = {
-      controllerSchema: 'https://schema.thermidor.coveo.com/controllers/cart.schema.json',
+    const contract = {
+      componentType: 'cart',
       state: {items: [cartItem]},
       actions: {
         setItems: {payload: {items: [cartItem]}},
@@ -33,22 +33,22 @@ describe('selectRemoteControllerState', () => {
       },
     };
 
-    expect(CartControllerContractSchema.parse(contract)).toEqual(contract);
+    expect(CartSchema.parse(contract)).toEqual(contract);
   });
 
-  it('builds a remote controller from the advertised CartController schema ID', async () => {
+  it('builds a remote controller from componentType and dispatches correctly', async () => {
     const dispatchAction = vi.fn();
     const source = {
       state: {
-        activeTurn: {agentResponse: {state: {controllers: {'shopping-cart': {items: []}}}}},
+        activeTurn: {agentResponse: {state: {components: {'shopping-cart': {items: []}}}}},
       },
       subscribe: () => () => undefined,
       dispatchAction,
     } as unknown as RemoteControllerSource;
     const controller = buildRemoteController({
       source,
-      controllerId: 'shopping-cart',
-      contract: 'https://schema.thermidor.coveo.com/controllers/cart.schema.json',
+      componentId: 'shopping-cart',
+      componentType: 'cart',
     });
 
     await controller.dispatch('updateItemQuantity', {
@@ -56,8 +56,8 @@ describe('selectRemoteControllerState', () => {
     });
 
     expect(dispatchAction).toHaveBeenCalledWith({
-      controllerId: 'shopping-cart',
-      controllerSchema: 'https://schema.thermidor.coveo.com/controllers/cart.schema.json',
+      componentId: 'shopping-cart',
+      componentType: 'cart',
       action: 'updateItemQuantity',
       payload: {item: {productId: 'p1', name: 'Product', price: 10, quantity: 2}},
     });
