@@ -10,7 +10,7 @@ const HEAD_ANSWER_ID = `${RUN_ID}-head`;
 const getFollowUpAnswerId = (followUpAnswerIndex: number) =>
   `${RUN_ID}-follow-up-${followUpAnswerIndex}`;
 
-interface AgentEvent {
+export interface AgentEvent {
   type: EventType;
   threadId?: string;
   runId?: string;
@@ -203,6 +203,42 @@ const cloneMessagesForResponse = (messages: AgentEvent[], answerId: string) => {
   }));
 };
 
+export const agentResponseData = {
+  threadId: THREAD_ID,
+  conversationToken: CONVERSATION_TOKEN,
+  citations: CITATIONS,
+  headAnswer: {
+    answerId: HEAD_ANSWER_ID,
+    messages: cloneMessagesForResponse(headAnswerMessages, HEAD_ANSWER_ID),
+  },
+  followUpAnswers: [1, 2].map((index) => ({
+    answerId: getFollowUpAnswerId(index),
+    messages: cloneMessagesForResponse(agentMessages, getFollowUpAnswerId(index)),
+  })),
+  followUpTurnLimitError: {
+    answerId: 'error',
+    messages: [
+      buildMessage({type: EventType.RUN_STARTED}),
+      buildMessage({
+        type: EventType.RUN_ERROR,
+        message: 'The conversation turn limit has been reached.',
+        code: 'KNOWLEDGE:SSE_TURN_LIMIT_REACHED',
+      }),
+    ],
+  },
+  followUpGenericError: {
+    answerId: 'error',
+    messages: [
+      buildMessage({type: EventType.RUN_STARTED}),
+      buildMessage({
+        type: EventType.RUN_ERROR,
+        message: 'An unexpected error occurred.',
+        code: 'KNOWLEDGE:SSE_INTERNAL_ERROR',
+      }),
+    ],
+  },
+};
+
 const buildAnsweringStreamingResponse = ({
   messages = agentMessages,
   delayBetweenMessages = 'real',
@@ -246,12 +282,13 @@ const buildAnsweringStreamingResponse = ({
 
 const followUpAnswerResponse = (followUpAnswerIndex: number) =>
   buildAnsweringStreamingResponse({
+    messages: agentResponseData.followUpAnswers[followUpAnswerIndex - 1]?.messages ?? agentMessages,
     delayBetweenMessages: 'real',
     answerId: getFollowUpAnswerId(followUpAnswerIndex),
   });
 const headAnswerResponse = () =>
   buildAnsweringStreamingResponse({
-    messages: headAnswerMessages,
+    messages: agentResponseData.headAnswer.messages,
     delayBetweenMessages: 'real',
     answerId: HEAD_ANSWER_ID,
   });
@@ -260,28 +297,14 @@ const followUpNetworkErrorResponse = () => new HttpResponse(null, {status: 500})
 
 const followUpTurnLimitErrorResponse = () =>
   buildAnsweringStreamingResponse({
-    messages: [
-      buildMessage({type: EventType.RUN_STARTED}),
-      buildMessage({
-        type: EventType.RUN_ERROR,
-        message: 'The conversation turn limit has been reached.',
-        code: 'KNOWLEDGE:SSE_TURN_LIMIT_REACHED',
-      }),
-    ],
-    answerId: 'error',
+    messages: agentResponseData.followUpTurnLimitError.messages,
+    answerId: agentResponseData.followUpTurnLimitError.answerId,
   });
 
 const followUpGenericErrorResponse = () =>
   buildAnsweringStreamingResponse({
-    messages: [
-      buildMessage({type: EventType.RUN_STARTED}),
-      buildMessage({
-        type: EventType.RUN_ERROR,
-        message: 'An unexpected error occurred.',
-        code: 'KNOWLEDGE:SSE_INTERNAL_ERROR',
-      }),
-    ],
-    answerId: 'error',
+    messages: agentResponseData.followUpGenericError.messages,
+    answerId: agentResponseData.followUpGenericError.answerId,
   });
 
 export {
