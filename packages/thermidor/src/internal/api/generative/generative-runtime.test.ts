@@ -39,6 +39,7 @@ function createMockStatePort(): GenerativeStatePort {
   return {
     createTurn: vi.fn(),
     setActiveTurnId: vi.fn(),
+    getActiveTurnId: vi.fn(),
     replaceTurnId: vi.fn(),
     setRoutedInterface: vi.fn(),
     clearRoutedInterface: vi.fn(),
@@ -46,6 +47,8 @@ function createMockStatePort(): GenerativeStatePort {
     startMessage: vi.fn(),
     appendMessageDelta: vi.fn(),
     appendSurface: vi.fn(),
+    appendActivity: vi.fn(),
+    setStateSnapshot: vi.fn(),
     startToolCall: vi.fn(),
     appendToolCallArgs: vi.fn(),
     completeToolCall: vi.fn(),

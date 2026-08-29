@@ -3,11 +3,16 @@
 import type {
   CategoryFacetValue,
   DateFacetValue,
-  LocationFacetValue,
   NumericFacetValue,
   RegularFacetValue,
 } from '@coveo/headless-react/ssr-commerce';
 import {useBreadcrumbManager} from '@/lib/commerce-engine';
+
+type FacetBreadcrumbValue =
+  | CategoryFacetValue
+  | RegularFacetValue
+  | NumericFacetValue
+  | DateFacetValue;
 
 export default function BreadcrumbManager() {
   const {state, methods} = useBreadcrumbManager();
@@ -17,15 +22,7 @@ export default function BreadcrumbManager() {
     return null;
   }
 
-  const renderBreadcrumbValue = (
-    value:
-      | CategoryFacetValue
-      | RegularFacetValue
-      | NumericFacetValue
-      | DateFacetValue
-      | LocationFacetValue,
-    type: string
-  ) => {
+  const renderBreadcrumbValue = (value: FacetBreadcrumbValue, type: string) => {
     switch (type) {
       case 'hierarchical':
         return (value as CategoryFacetValue).path.join(' > ');
@@ -36,7 +33,6 @@ export default function BreadcrumbManager() {
       case 'dateRange':
         return (value as DateFacetValue).start + ' - ' + (value as DateFacetValue).end;
       default:
-        // TODO COMHUB-291 support location breadcrumb
         return null;
     }
   };
@@ -60,7 +56,11 @@ export default function BreadcrumbManager() {
                     onClick={() => value.deselect()}
                   >
                     {facetBreadcrumb.facetDisplayName}:{' '}
-                    {renderBreadcrumbValue(value.value, facetBreadcrumb.type)} X
+                    {renderBreadcrumbValue(
+                      value.value as FacetBreadcrumbValue,
+                      facetBreadcrumb.type
+                    )}{' '}
+                    X
                   </button>
                 );
               })}

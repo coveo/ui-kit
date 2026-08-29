@@ -36,7 +36,9 @@
   },
   "dependencies": {
     "@ag-ui/core": "0.0.57",
-    "@reduxjs/toolkit": "catalog:"
+    "@coveo/thermidor-schema": "workspace:*",
+    "@reduxjs/toolkit": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "7.58.12",

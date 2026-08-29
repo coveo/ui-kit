@@ -33,6 +33,12 @@ export default {
     'packages/atomic-theming-e2e': {
       entry: ['tests/**/*.spec.ts', 'fixtures/*.js'],
     },
+    'packages/atomic-playground': {
+      entry: ['*.js'],
+      ignoreDependencies: [
+        'dayjs', // Transitive dep pre-bundled via optimizeDeps.include in vite.config.ts.
+      ],
+    },
     'packages/atomic-angular': {
       ignoreDependencies: [
         // Can be removed once we bump our package to use more recent Angular versions that support Vite 7+.
@@ -88,6 +94,12 @@ export default {
         '**/*.css', //TODO: Find a better solution
       ],
     },
+    'packages/thermidor-schema': {
+      entry: ['src/index.ts', 'src/generated/schemas.ts'],
+      ignoreUnresolved: [
+        /^\.\.\/\.\.\/thermidor-contracts\/src\/generated\/catalog-contracts\.js$/,
+      ],
+    },
     'samples/headless/commerce-react': {
       // ShowMore and ProductsPerPage are kept as reference examples but are not
       // wired into the UI, so Knip should not flag them as unused files.
@@ -111,7 +123,7 @@ export default {
       // build artifacts (dist/lang, dist/assets) are missing. Disable the Vite
       // plugin config loader.
       vite: {config: []},
-      entry: ['src/commerce-page.js'],
+      entry: ['src/*-page.js'],
     },
     'samples/atomic/search-vite': {
       // Same as commerce-vite: vite.config.js throws without build artifacts.
