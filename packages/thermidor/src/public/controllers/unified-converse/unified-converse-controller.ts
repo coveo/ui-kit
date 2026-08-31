@@ -205,7 +205,20 @@ class UnifiedConverseControllerImpl extends BaseController<UnifiedConverseContro
   }
 
   dispatchAction(action: RemoteControllerAction): Promise<void> {
+    // A dispatch would cancel an in-flight prompt/action and replay onto the same
+    // turn before it has committed its state. Mirror `submit`'s streaming guard
+    // and ignore the action while the active turn is still streaming.
+    if (this.state.isStreaming) {
+      return Promise.resolve();
+    }
+
     const surfaceId = deriveCommerceSurfaceId(this.state.activeTurn?.agentResponse?.activities);
+
+    // Without a target surface the action has nowhere to go; skip dispatching an
+    // untargeted action rather than sending one with a null surfaceId.
+    if (surfaceId === null) {
+      return Promise.resolve();
+    }
 
     const a2uiAction: A2uiAction = {
       surfaceId,

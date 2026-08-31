@@ -68,6 +68,7 @@ When a decomposed commerce control (sort, pagination, page size) dispatches an a
 - The current implementation always applies the **full** `STATE_SNAPSHOT`: the backend re-sends the complete component state, which replaces the prior state on each action.
 - Per ADR-002, AG-UI also defines `STATE_DELTA` (RFC 6902 JSON Patch) for incremental updates layered on top of a snapshot baseline. Thermidor currently handles only `STATE_SNAPSHOT`; supporting `STATE_DELTA` is a future transport optimization and is intentionally out of scope here.
 - Full-snapshot transport is functionally complete on its own. Deltas would only reduce payload size for high-frequency updates, not change behaviour.
+- **Single-surface addressing constraint:** `dispatchAction` resolves its target `surfaceId` via `deriveCommerceSurfaceId`, which returns the **first** `commerceSearch` surface found in the active turn's activities. This assumes a turn renders at most one decomposed commerce surface (true for the current demo). If a turn ever emits multiple commerce surfaces, actions from the second onward would be silently routed to the first — supporting multiple commerce surfaces per turn would require threading the originating `surfaceId` from the dispatching component rather than deriving it from the turn.
 
 ## Conformity validation
 

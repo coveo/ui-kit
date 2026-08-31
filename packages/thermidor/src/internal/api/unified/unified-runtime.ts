@@ -22,6 +22,15 @@ function isAbortError(error: unknown): boolean {
   return error instanceof Error && error.name === 'AbortError';
 }
 
+/**
+ * True when a stream has been superseded by a newer one: a different controller
+ * is now active. A plain cancel resets the active controller to null (no
+ * successor), which is NOT superseded — that stream still reports its outcome.
+ */
+function isSuperseded(active: AbortController | null, streamController: AbortController): boolean {
+  return active !== null && active !== streamController;
+}
+
 function getErrorMessage(error: unknown): string {
   if (error instanceof Error && error.message.trim()) {
     return error.message;
@@ -162,8 +171,15 @@ export class UnifiedRuntime {
         return;
       }
 
-      await this.consumeStream(turnId, result.data.stream, abortController.signal);
+      await this.consumeStream(turnId, result.data.stream, abortController);
     } catch (error) {
+      // A stream aborted because a NEWER stream superseded it (e.g. a dispatched
+      // action cancelling an in-flight request on the same turn) must not touch
+      // the turn: the newer stream owns the outcome. A plain cancel (no successor,
+      // controller reset to null) still reports the failure.
+      if (isSuperseded(this.activeAbortController, abortController)) {
+        return;
+      }
       if (isAbortError(error)) {
         this.statePort.failTurn(turnId, 'Cancelled');
         return;
@@ -179,7 +195,7 @@ export class UnifiedRuntime {
   private async consumeStream(
     turnId: string,
     stream: ReadableStream<Uint8Array>,
-    signal: AbortSignal
+    abortController: AbortController
   ): Promise<void> {
     let activeTurnId = turnId;
     let terminalEventReceived = false;
@@ -203,7 +219,7 @@ export class UnifiedRuntime {
 
     await readEventStream({
       stream,
-      signal,
+      signal: abortController.signal,
       onEvent: (rawEvent: RawSSEEvent) => {
         const event = parseSSEEvent(rawEvent);
         const result = dispatchStreamEvent(activeTurnId, event, deps);
@@ -213,17 +229,20 @@ export class UnifiedRuntime {
         }
       },
       onDone: () => {
-        if (!terminalEventReceived) {
+        // A stream superseded by a newer one must not touch the turn; the newer
+        // stream owns the outcome.
+        if (!terminalEventReceived && !isSuperseded(this.activeAbortController, abortController)) {
           this.statePort.failTurn(activeTurnId, 'Stream ended without a terminal event.');
         }
       },
       onError: (error) => {
-        if (!terminalEventReceived) {
-          if (isAbortError(error)) {
-            this.statePort.failTurn(activeTurnId, 'Cancelled');
-          } else {
-            this.statePort.failTurn(activeTurnId, getErrorMessage(error));
-          }
+        if (terminalEventReceived || isSuperseded(this.activeAbortController, abortController)) {
+          return;
+        }
+        if (isAbortError(error)) {
+          this.statePort.failTurn(activeTurnId, 'Cancelled');
+        } else {
+          this.statePort.failTurn(activeTurnId, getErrorMessage(error));
         }
       },
     });

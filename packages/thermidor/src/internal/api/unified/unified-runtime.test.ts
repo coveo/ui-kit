@@ -402,6 +402,66 @@ describe('UnifiedRuntime', () => {
 
       expect(config.statePort.setStateSnapshot).toHaveBeenCalledWith('active-turn', snapshot);
     });
+
+    it('does not fail the turn when a dispatch supersedes an in-flight stream on the same turn', async () => {
+      const config = createMockConfig();
+      (config.statePort.getActiveTurnId as ReturnType<typeof vi.fn>).mockReturnValue('active-turn');
+      const engine = createMockEngine();
+      mockParseSSEEvent.mockImplementation((raw: unknown) => raw);
+
+      let firstStreamResolve: (() => void) | undefined;
+      let callCount = 0;
+
+      mockCreateUnifiedEndpointClient.mockReturnValue({
+        call: vi.fn().mockResolvedValue({
+          success: true,
+          data: {stream: {} as ReadableStream<Uint8Array>},
+        }),
+      });
+
+      let secondStreamResolve: (() => void) | undefined;
+
+      mockReadEventStream.mockImplementation(async ({onEvent, onDone, onError}: any) => {
+        callCount++;
+        if (callCount === 1) {
+          await new Promise<void>((resolve) => {
+            firstStreamResolve = resolve;
+          });
+          const abortError = new Error('The operation was aborted.');
+          abortError.name = 'AbortError';
+          onError?.(abortError);
+          throw abortError;
+        } else {
+          await new Promise<void>((resolve) => {
+            secondStreamResolve = resolve;
+          });
+          onEvent({type: 'turn_complete'});
+          onDone?.();
+        }
+      });
+
+      const runtime = UnifiedRuntime.getInstance(engine, 'action-supersede', config);
+      const firstDispatch = runtime.dispatchAction(action);
+      await Promise.resolve();
+
+      // Start the second dispatch; it supersedes the first (a newer controller
+      // becomes active) and stays in flight.
+      const secondDispatch = runtime.dispatchAction(action);
+      await Promise.resolve();
+
+      // Now let the superseded first stream abort. It must NOT touch the turn.
+      firstStreamResolve?.();
+      await Promise.resolve();
+
+      expect(config.statePort.failTurn).not.toHaveBeenCalled();
+
+      // Let the active (second) stream finish and own the outcome.
+      secondStreamResolve?.();
+      await Promise.allSettled([firstDispatch, secondDispatch]);
+
+      expect(config.statePort.failTurn).not.toHaveBeenCalled();
+      expect(config.statePort.completeTurn).toHaveBeenCalledWith('active-turn');
+    });
   });
 
   describe('stream consumption', () => {
