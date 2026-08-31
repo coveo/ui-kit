@@ -1,7 +1,14 @@
+import {mkdtemp, writeFile} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import path from 'node:path';
 import {describe, expect, it} from 'vitest';
-import {mergeComponents, mergeCriteria} from '../reporter/merge-shards.js';
-import {createSummary} from '../reporter/summary.js';
-import type {A11yComponentReport, A11yCriterionReport, A11yReport} from '../shared/types.js';
+import {
+  mergeA11yShardReports,
+  mergeComponents,
+  mergeCriteria,
+} from '../src/reporter/merge-shards.js';
+import {createSummary} from '../src/reporter/summary.js';
+import type {A11yComponentReport, A11yCriterionReport, A11yReport} from '../src/shared/types.js';
 
 function createComponent(overrides: Partial<A11yComponentReport> = {}): A11yComponentReport {
   return {
@@ -239,5 +246,46 @@ describe('createSummary() integration with merge-shards', () => {
     expect(summary.totalComponents).toBe(2);
     expect(summary.storyCoverage.total).toBe(5);
     expect(summary.automatedCoverage).toBe('7%');
+  });
+});
+
+describe('mergeA11yShardReports()', () => {
+  async function createShardDir(shardIndices: number[]) {
+    const dir = await mkdtemp(path.join(tmpdir(), 'a11y-shards-'));
+    for (const index of shardIndices) {
+      await writeFile(
+        path.join(dir, `a11y-report.shard-${index}.json`),
+        JSON.stringify(createReport([createComponent()], [createCriterion()]))
+      );
+    }
+    return path.join(dir, 'a11y-report.json');
+  }
+
+  it('should merge when the number of shard reports matches expectedShards', async () => {
+    const outputFile = await createShardDir([1, 2, 3]);
+
+    await expect(mergeA11yShardReports({outputFile, expectedShards: 3})).resolves.not.toBeNull();
+  });
+
+  it('should throw when fewer shard reports are found than expectedShards', async () => {
+    const outputFile = await createShardDir([1]);
+
+    await expect(mergeA11yShardReports({outputFile, expectedShards: 10})).rejects.toThrow(
+      'Expected 10 shard report(s)'
+    );
+  });
+
+  it('should throw when the shard directory does not exist and expectedShards is set', async () => {
+    const outputFile = path.join(tmpdir(), 'a11y-missing-dir', 'a11y-report.json');
+
+    await expect(mergeA11yShardReports({outputFile, expectedShards: 10})).rejects.toThrow(
+      'does not exist'
+    );
+  });
+
+  it('should stay lenient when expectedShards is omitted', async () => {
+    const outputFile = path.join(tmpdir(), 'a11y-missing-dir', 'a11y-report.json');
+
+    await expect(mergeA11yShardReports({outputFile})).resolves.toBeNull();
   });
 });

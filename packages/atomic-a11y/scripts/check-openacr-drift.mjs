@@ -23,8 +23,17 @@ if (!existsSync(COMMITTED_OPENACR)) {
 const INPUT_REPORT = resolve(REPO_ROOT, 'packages/atomic/reports/a11y-report.json');
 
 if (!existsSync(INPUT_REPORT)) {
-  console.log('⏭️  No a11y-report.json found. Skipping drift check.');
-  process.exit(0);
+  console.error(`
+❌ No a11y-report.json found at ${INPUT_REPORT}.
+
+The drift check cannot validate openacr.yaml without a merged a11y report.
+Skipping silently here is what allowed a partial report to be committed, so
+this is now a hard failure. Run the Storybook suite (or the merge step) first:
+
+  pnpm exec turbo run test:storybook --filter=@coveo/atomic
+  pnpm exec turbo run a11y:merge-shards --filter=@coveo/atomic-a11y -- ../atomic/reports/a11y-report.json
+`);
+  process.exit(1);
 }
 
 // Generate fresh openacr from the merged a11y report
