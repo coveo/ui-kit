@@ -367,14 +367,16 @@ function getHeadlessBindings(engineId) {
 function getQuanticStore(engineId) {
   return window.coveoHeadless?.[engineId]?.bindings?.store;
 }
+
 /**
  * Initializes a component with Coveo Headless.
- * Initialization failures are reported through the existing component error UI.
+ * Failures while initializing the Quantic store, Headless engine, or component
+ * callback are logged and reported through the component error UI.
  * @param element The component to initialize.
  * @param {string} engineId The ID of the engine.
  * @param {Function} initialize The component initialization callback function.
  * @returns {Promise<void>} A promise that resolves after initialization handling completes.
- * @throws {Error} If the component is not registered before initialization.
+ * @throws {Error} If the component was not registered before initialization.
  */
 async function initializeWithHeadless(element, engineId, initialize) {
   const component = getRegisteredComponent(element, engineId);
