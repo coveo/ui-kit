@@ -97,7 +97,7 @@ const handleSchemaConversePost = async ({request}: {request: Request}) => {
     return withCors(
       HttpResponse.json(
         {
-          error: 'Missing required field: message',
+          error: 'Missing required field: message or action',
         },
         {status: 400}
       )

@@ -215,7 +215,7 @@ describe('createMockConverseServer', () => {
 
     expect(res.statusCode).toBe(400);
     expect(JSON.parse(res.body)).toEqual({
-      error: 'Missing required field: message',
+      error: 'Missing required field: message or action',
     });
   });
 });
