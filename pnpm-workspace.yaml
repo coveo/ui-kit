@@ -63,7 +63,7 @@ catalog:
   '@coveo/atomic-component-health-check': 2.2.19
   '@coveo/relay-event-types': 19.22.0
   '@playwright/mcp': 0.0.79
-  '@playwright/test': 1.60.0
+  '@playwright/test': 1.62.1
   '@react-router/dev': 8.3.0
   '@react-router/fs-routes': 8.3.0
   '@react-router/node': 8.3.0
@@ -111,7 +111,7 @@ catalog:
   prettier: 3.9.6
   publint: 0.3.24
   puppeteer: 24.43.1
-  playwright: 1.60.0
+  playwright: 1.62.1
   rxjs: 7.8.2
   react: 19.2.8
   react-dom: 19.2.8
