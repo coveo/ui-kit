@@ -82,6 +82,8 @@ Replace `<RUN_ID>` with the GitHub Actions run ID from the failing check (shown 
 
 > Requires the [GitHub CLI](https://cli.github.com/) (`gh`) to be installed and authenticated.
 
+The command refuses to run when the chosen run covers fewer components than the committed `openacr.yaml` does, which is how an incomplete set of Storybook a11y shards would silently downgrade conformance levels. Pick a run whose `Run Storybook tests` shards all succeeded, or pass `--allow-coverage-drop` when the reduction is genuinely intended (for example after removing components).
+
 ### Option 2: Run tests locally
 
 If you prefer to regenerate from scratch:
