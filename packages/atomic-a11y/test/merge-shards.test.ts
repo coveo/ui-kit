@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'vitest';
-import {mergeComponents, mergeCriteria} from '../reporter/merge-shards.js';
-import {createSummary} from '../reporter/summary.js';
-import type {A11yComponentReport, A11yCriterionReport, A11yReport} from '../shared/types.js';
+import {mergeComponents, mergeCriteria} from '../src/reporter/merge-shards.js';
+import {createSummary} from '../src/reporter/summary.js';
+import type {A11yComponentReport, A11yCriterionReport, A11yReport} from '../src/shared/types.js';
 
 function createComponent(overrides: Partial<A11yComponentReport> = {}): A11yComponentReport {
   return {
