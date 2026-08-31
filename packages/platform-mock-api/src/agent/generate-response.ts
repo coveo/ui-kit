@@ -22,6 +22,9 @@ export interface AgentEvent {
   };
   stepName?: string;
   messageId?: string;
+  parentMessageId?: string;
+  toolCallId?: string;
+  toolCallName?: string;
   delta?: string;
   message?: string;
   code?: string;
@@ -35,6 +38,9 @@ const buildMessage = (
     value,
     stepName,
     messageId,
+    parentMessageId,
+    toolCallId,
+    toolCallName,
     delta,
     result,
     message,
@@ -52,6 +58,9 @@ const buildMessage = (
     ...(result !== undefined && {result}),
     ...(stepName !== undefined && {stepName}),
     ...(messageId !== undefined && {messageId}),
+    ...(parentMessageId !== undefined && {parentMessageId}),
+    ...(toolCallId !== undefined && {toolCallId}),
+    ...(toolCallName !== undefined && {toolCallName}),
     ...(delta !== undefined && {delta}),
     ...(message !== undefined && {message}),
     ...(code !== undefined && {code}),
@@ -114,7 +123,40 @@ const ANSWER = [
   ' modem and Internet service are functioning properly.\\n- If necessary, bypass your router by connecting your TiVo directly to the modem using an Ethernet cable to identify if the router is the issue.\\n\\nFollowing these steps should help resolve your Netflix connection issues with TiVo.',
 ];
 
-const agentMessages: AgentEvent[] = [
+const FOLLOW_UP_QUERIES = ['follow-up question', 'third question'];
+
+const buildSearchingStepMessages = (query: string) => [
+  buildMessage({
+    type: EventType.STEP_STARTED,
+    stepName: 'Searching',
+  }),
+  buildMessage({
+    type: EventType.TOOL_CALL_START,
+    toolCallId: 'tool_call_1',
+    toolCallName: 'search',
+    parentMessageId: 'message_1',
+  }),
+  buildMessage({
+    type: EventType.TOOL_CALL_ARGS,
+    toolCallId: 'tool_call_1',
+    delta: JSON.stringify({q: query}),
+  }),
+  buildMessage({
+    type: EventType.TOOL_CALL_END,
+    toolCallId: 'tool_call_1',
+    toolCallName: 'search',
+    parentMessageId: 'message_1',
+  }),
+  buildMessage(
+    {
+      type: EventType.STEP_FINISHED,
+      stepName: 'Searching',
+    },
+    1500
+  ),
+];
+
+const buildAgentMessages = (query: string): AgentEvent[] => [
   buildMessage({
     type: EventType.RUN_STARTED,
   }),
@@ -139,17 +181,7 @@ const agentMessages: AgentEvent[] = [
     },
     1500
   ),
-  buildMessage({
-    type: EventType.STEP_STARTED,
-    stepName: 'Searching',
-  }),
-  buildMessage(
-    {
-      type: EventType.STEP_FINISHED,
-      stepName: 'Searching',
-    },
-    1500
-  ),
+  ...buildSearchingStepMessages(query),
   buildMessage({
     type: EventType.STEP_STARTED,
     stepName: 'Thinking',
@@ -191,10 +223,9 @@ const agentMessages: AgentEvent[] = [
   }),
 ];
 
-const headAnswerMessages = agentMessages.filter(
-  (message) =>
-    !(message.stepName && (message.stepName === 'Searching' || message.stepName === 'Thinking'))
-);
+const agentMessages = buildAgentMessages('test');
+
+const headAnswerMessages = agentMessages.filter((message) => message.stepName !== 'Thinking');
 
 const cloneMessagesForResponse = (messages: AgentEvent[], answerId: string) => {
   return messages.map((message) => ({
@@ -232,9 +263,9 @@ export const agentResponseData = {
     answerId: HEAD_ANSWER_ID,
     messages: stripDelayMs(headAnswerMessages, HEAD_ANSWER_ID),
   },
-  followUpAnswers: [1, 2].map((index) => ({
-    answerId: getFollowUpAnswerId(index),
-    messages: stripDelayMs(agentMessages, getFollowUpAnswerId(index)),
+  followUpAnswers: FOLLOW_UP_QUERIES.map((query, index) => ({
+    answerId: getFollowUpAnswerId(index + 1),
+    messages: stripDelayMs(buildAgentMessages(query), getFollowUpAnswerId(index + 1)),
   })),
   followUpTurnLimitError: {
     answerId: 'error',
@@ -289,7 +320,9 @@ const buildAnsweringStreamingResponse = ({
 
 const followUpAnswerResponse = (followUpAnswerIndex: number) =>
   buildAnsweringStreamingResponse({
-    messages: agentMessages,
+    messages: buildAgentMessages(
+      FOLLOW_UP_QUERIES[followUpAnswerIndex - 1] ?? 'follow-up question'
+    ),
     delayBetweenMessages: 'real',
     answerId: getFollowUpAnswerId(followUpAnswerIndex),
   });
