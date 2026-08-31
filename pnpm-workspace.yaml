@@ -174,7 +174,7 @@ overrides:
   html-minifier: npm:html-minifier-terser@^7.2.0
   '@angular/core': 'catalog:'
   '@angular/common': 'catalog:'
-  undici@^7: ^7.29.0
+  undici@^7: ^8.0.0
 
 patchedDependencies:
   '@stencil/core@4.20.0': patches/@stencil+core+4.20.0.patch
