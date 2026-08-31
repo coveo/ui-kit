@@ -47,14 +47,12 @@ export function createRenewAccessTokenMiddleware(
     return accessToken;
   };
 
+  const shouldProactivelyRenewToken = (store: MiddlewareAPI) => {
+    const accessToken = getAccessTokenFromState(store.getState());
+    return !!accessToken && shouldRenewAccessToken(accessToken);
+  };
+
   const handleProactiveTokenRenewal = async (store: MiddlewareAPI) => {
-    const state = store.getState();
-    const accessToken = getAccessTokenFromState(state);
-
-    if (!accessToken || !shouldRenewAccessToken(accessToken)) {
-      return;
-    }
-
     logger.debug('Access token is expired or about to expire, attempting renewal.');
 
     try {
@@ -102,46 +100,79 @@ export function createRenewAccessTokenMiddleware(
     return;
   };
 
-  return (store) => (next) => async (action) => {
-    const isThunk = typeof action === 'function';
-    const hasRenewFunction = typeof renewToken === 'function';
+  /**
+   * Inspects a resolved action result for an expired-token error and triggers
+   * reactive renewal when needed. Otherwise returns the result unchanged.
+   */
+  const handleResolvedActionResult = (
+    store: MiddlewareAPI,
+    action: unknown,
+    actionResult: unknown
+  ): unknown => {
+    if (!isExpiredTokenError(actionResult)) {
+      return actionResult;
+    }
 
+    if (!renewToken) {
+      logger.warn(
+        'Unable to renew the expired token because a renew function was not provided. Please specify the #renewAccessToken option when initializing the engine.'
+      );
+      dispatchError(store, actionResult.error);
+      return actionResult;
+    }
+
+    return handleExpiredToken(store, actionResult, action);
+  };
+
+  /**
+   * Routes an action result to `handleResolvedActionResult` without changing its synchronous or
+   * asynchronous nature: a synchronous result is handled immediately, a Promise result is handled
+   * once it resolves.
+   */
+  const handleActionResult = (
+    store: MiddlewareAPI,
+    action: unknown,
+    actionResult: unknown
+  ): unknown => {
+    if (isPromiseLike(actionResult)) {
+      return Promise.resolve(actionResult).then((resolvedActionResult) =>
+        handleResolvedActionResult(store, action, resolvedActionResult)
+      );
+    }
+
+    return handleResolvedActionResult(store, action, actionResult);
+  };
+
+  return (store) => (next) => (action) => {
+    const isThunk = typeof action === 'function';
     if (!isThunk) {
       return next(action);
     }
 
-    // Proactive JWT expiration check before action execution
-    if (hasRenewFunction) {
-      await handleProactiveTokenRenewal(store);
+    const executeAction = () => handleActionResult(store, action, next(action));
+    const shouldRenew = typeof renewToken === 'function' && shouldProactivelyRenewToken(store);
+
+    if (!shouldRenew) {
+      return executeAction();
     }
 
-    // Notes:
-    //
-    // - No race condition with the preceding `handleProactiveTokenRenewal` call because:
-    //   1. Token renewal is de-duped: concurrent calls await the same in-flight promise; only the first successful renewal updates the configuration.
-    //   2. Dispatch of the new token is synchronous; state is updated before the thunk continues.
-    //   3. The state is guaranteed to contain the fresh token before this point is reached.
-    //
-    // - Execution continues after successful proactive renewal because:
-    //   1. The API is the authoritative source for token validity (401/419 responses).
-    //   2. Reactive error handling provides defense-in-depth for rare edge cases.
-    //   3. This ensures consistent error handling across all action types
-    const payload = await next(action);
-
-    if (!isExpiredTokenError(payload)) {
-      return payload;
-    }
-
-    if (!hasRenewFunction) {
-      logger.warn(
-        'Unable to renew the expired token because a renew function was not provided. Please specify the #renewAccessToken option when initializing the engine.'
-      );
-      dispatchError(store, payload.error);
-      return payload;
-    }
-
-    return await handleExpiredToken(store, payload, action);
+    // Concurrent calls share the same in-flight renewal (deduped), and only the initiating
+    // call updates the configuration once renewal succeeds. That update is dispatched
+    // synchronously, so by the time `executeAction` runs below, the state already has the new
+    // token, if renewal succeeded. If renewal failed or returned no token, execution still
+    // continues: the API is the authoritative source for token validity, so an unauthorized
+    // response can still trigger reactive renewal afterward.
+    return handleProactiveTokenRenewal(store).then(executeAction);
   };
+}
+
+function isPromiseLike(value: unknown): value is PromiseLike<unknown> {
+  return (
+    (typeof value === 'object' || typeof value === 'function') &&
+    value !== null &&
+    'then' in value &&
+    typeof value.then === 'function'
+  );
 }
 
 function isExpiredTokenError(action: unknown): action is {error: UnauthorizedTokenError} {
