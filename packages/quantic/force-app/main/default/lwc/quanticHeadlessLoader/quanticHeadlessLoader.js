@@ -91,7 +91,13 @@ const loadDependencies = async (element, headlessUseCase) => {
  * @returns {void}
  */
 const setInitializedCallback = (callback, engineId) => {
-  window.coveoHeadless[engineId].initializedCallback = callback;
+  const engine = window.coveoHeadless?.[engineId];
+  if (!engine) {
+    throw new Error(
+      `Engine has not been registered for engine ID: ${engineId}`
+    );
+  }
+  engine.initializedCallback = callback;
 };
 
 /**
@@ -112,9 +118,17 @@ const cancelInitializedCallback = (engineId) => {
  * @returns {Promise<void>}
  */
 const executeInitializedCallback = async (engineId) => {
-  if (window.coveoHeadless[engineId]) {
-    window.coveoHeadless[engineId].initializedCallback(
-      await window.coveoHeadless[engineId].enginePromise
+  const engine = window.coveoHeadless?.[engineId];
+  if (!engine?.initializedCallback) {
+    return;
+  }
+
+  try {
+    await engine.initializedCallback(await engine.enginePromise);
+  } catch (error) {
+    console.error(
+      `Fatal error: unable to execute the initialization callback for engine ID: ${engineId}`,
+      error
     );
   }
 };
@@ -139,10 +153,13 @@ const debounceInitializedCallback = (engineId) => {
  * @param {string} engineId The ID of the engine.
  * @returns {boolean}
  */
-const areAllComponentsInitialized = (engineId) =>
-  !window.coveoHeadless[engineId].components.find(
-    (component) => component.initialized === false
+const areAllComponentsInitialized = (engineId) => {
+  const components = window.coveoHeadless?.[engineId]?.components;
+  return Boolean(
+    components &&
+    !components.find((component) => component.initialized === false)
   );
+};
 
 /**
  * Finds a component registered for an engine.
@@ -151,7 +168,7 @@ const areAllComponentsInitialized = (engineId) =>
  * @returns {Object | undefined} The registered component, if found.
  */
 const getRegisteredComponent = (element, engineId) =>
-  window.coveoHeadless[engineId].components.find(
+  window.coveoHeadless?.[engineId]?.components?.find(
     (component) => component.element === element
   );
 
@@ -186,18 +203,25 @@ const instantiateWindowEngineObject = (element, engineId) => {
  */
 async function initEngine(engineId) {
   try {
-    if (window.coveoHeadless[engineId].bindings.engine) {
+    const engineState = window.coveoHeadless?.[engineId];
+    if (!engineState) {
+      throw new Error(
+        `Engine has not been registered for engine ID: ${engineId}`
+      );
+    }
+    if (engineState.bindings.engine) {
       throw new Error(`Engine already instantiated for engine ID: ${engineId}`);
     }
-    if (!window.coveoHeadless[engineId].options) {
+    if (!engineState.options) {
       throw new Error('Engine options have not been set.');
     }
 
-    const options = await window.coveoHeadless[engineId].options.promise;
-    return window.coveoHeadless[engineId].engineConstructor(options);
+    const options = await engineState.options.promise;
+    return engineState.engineConstructor(options);
   } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
     throw new Error(
-      'Fatal error: unable to initialize Coveo Headless: ' + error
+      'Fatal error: unable to initialize Coveo Headless: ' + message
     );
   }
 }
@@ -210,12 +234,19 @@ async function initEngine(engineId) {
  */
 const initQuanticStore = (engineId) => {
   try {
-    if (!window.coveoHeadless[engineId].bindings.store) {
-      window.coveoHeadless[engineId].bindings.store = Store.initialize();
+    const engineState = window.coveoHeadless?.[engineId];
+    if (!engineState) {
+      throw new Error(
+        `Engine has not been registered for engine ID: ${engineId}`
+      );
+    }
+    if (!engineState.bindings.store) {
+      engineState.bindings.store = Store.initialize();
     }
   } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
     throw new Error(
-      'Fatal error: unable to initialize Quantic store: ' + error
+      'Fatal error: unable to initialize Quantic store: ' + message
     );
   }
 };
@@ -282,9 +313,11 @@ function setComponentInitialized(element, engineId) {
     : undefined;
 
   if (!component) {
-    throw new Error(
+    const error = new Error(
       'Fatal Error: Component was not registered before initialization'
     );
+    console.error(error.message);
+    throw error;
   }
   component.initialized = true;
   if (
@@ -302,15 +335,19 @@ function setComponentInitialized(element, engineId) {
  * @throws {Error} If engine initialization fails.
  */
 function getHeadlessEnginePromise(engineId) {
-  if (!window.coveoHeadless[engineId].enginePromise) {
-    window.coveoHeadless[engineId].enginePromise = initEngine(engineId).then(
-      (engine) => {
-        window.coveoHeadless[engineId].bindings.engine = engine;
-        return engine;
-      }
+  const engineState = window.coveoHeadless?.[engineId];
+  if (!engineState) {
+    throw new Error(
+      `Engine has not been registered for engine ID: ${engineId}`
     );
   }
-  return window.coveoHeadless[engineId].enginePromise;
+  if (!engineState.enginePromise) {
+    engineState.enginePromise = initEngine(engineId).then((engine) => {
+      engineState.bindings.engine = engine;
+      return engine;
+    });
+  }
+  return engineState.enginePromise;
 }
 
 /**
@@ -340,7 +377,15 @@ function getQuanticStore(engineId) {
  * @throws {Error} If the component is not registered before initialization.
  */
 async function initializeWithHeadless(element, engineId, initialize) {
-  if (getRegisteredComponent(element, engineId).initialized) {
+  const component = getRegisteredComponent(element, engineId);
+  if (!component) {
+    const error = new Error(
+      'Fatal Error: Component was not registered before initialization'
+    );
+    console.error(error.message);
+    throw error;
+  }
+  if (component.initialized) {
     return;
   }
   try {
@@ -462,7 +507,7 @@ function getAllSortOptionsFromStore(engineId) {
  * @returns {AnyHeadless} The configured Headless bundle, or the default search bundle.
  */
 function getHeadlessBundle(engineId) {
-  return window.coveoHeadless[engineId]?.bundle ?? CoveoHeadless;
+  return window.coveoHeadless?.[engineId]?.bundle ?? CoveoHeadless;
 }
 
 /**
