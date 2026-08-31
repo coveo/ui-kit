@@ -84,6 +84,7 @@ describe('remote-controller property tests', () => {
         state: {page: 0, pageSize: 10, totalEntries: 0, totalPages: 0},
         actions: {
           selectPage: {payload: {page: 0}},
+          setPageSize: {payload: {pageSize: 10}},
         },
       },
       sort: {

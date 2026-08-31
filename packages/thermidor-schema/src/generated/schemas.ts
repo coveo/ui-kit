@@ -115,6 +115,11 @@ export const SelectPagePayloadSchema = z.strictObject({
 });
 export type SelectPagePayload = z.infer<typeof SelectPagePayloadSchema>;
 
+export const SetPageSizePayloadSchema = z.strictObject({
+  pageSize: z.number().int().min(1),
+});
+export type SetPageSizePayload = z.infer<typeof SetPageSizePayloadSchema>;
+
 export const PaginationStateSchema = z.strictObject({
   page: z.number().int().min(0),
   pageSize: z.number().int().min(1),
@@ -197,6 +202,11 @@ export const SelectPageSchema = z.strictObject({
 });
 export type SelectPage = z.infer<typeof SelectPageSchema>;
 
+export const SetPageSizeSchema = z.strictObject({
+  payload: SetPageSizePayloadSchema,
+});
+export type SetPageSize = z.infer<typeof SetPageSizeSchema>;
+
 export const SelectSortSchema = z.strictObject({
   payload: SelectSortPayloadSchema,
 });
@@ -237,6 +247,7 @@ export type ComparisonTable = z.infer<typeof ComparisonTableSchema>;
 
 export const PaginationActionsSchema = z.strictObject({
   selectPage: SelectPageSchema,
+  setPageSize: SetPageSizeSchema,
 });
 export type PaginationActions = z.infer<typeof PaginationActionsSchema>;
 

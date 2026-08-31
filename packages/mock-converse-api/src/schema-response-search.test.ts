@@ -1,11 +1,32 @@
-import {describe, it, expect} from 'vitest';
+import {describe, it, expect, beforeEach} from 'vitest';
 import {converseSchemaResponses} from '@coveo/platform-mock-api/converse';
 import type {ConverseEvent} from '@coveo/platform-mock-api/converse';
 
-const {matchSchemaPrompt} = converseSchemaResponses;
+const {matchSchemaPrompt, buildSearchActionEvents} = converseSchemaResponses;
+
+// The surface now keeps an in-memory view across calls, so reset it to defaults before any
+// assertion that assumes a fresh surface by rebuilding the initial "wetsuits" response.
+function resetSurface(): ConverseEvent[] {
+  return matchSchemaPrompt('wetsuits');
+}
+
+function findStateSnapshotComponents(events: ConverseEvent[]): Record<string, unknown> {
+  const snapshotEvent = events.find(
+    (e) =>
+      e.event === 'message' &&
+      (e.data as Record<string, unknown>).type === 'STATE_SNAPSHOT' &&
+      (e.data as Record<string, unknown>).snapshot !== undefined &&
+      Object.keys((e.data as Record<string, unknown>).snapshot as object).length > 0
+  );
+  const snapshot = (snapshotEvent!.data as Record<string, unknown>).snapshot as Record<
+    string,
+    unknown
+  >;
+  return snapshot.components as Record<string, unknown>;
+}
 
 describe('schema-response-search decomposed surface structure', () => {
-  const events: ConverseEvent[] = matchSchemaPrompt('wetsuits');
+  const events: ConverseEvent[] = resetSurface();
 
   const activitySnapshot = events.find(
     (e) =>
@@ -145,5 +166,128 @@ describe('schema-response-search decomposed surface structure', () => {
       expect(sortState.appliedSort).toBeDefined();
       expect(Array.isArray(sortState.availableSorts)).toBe(true);
     });
+  });
+});
+
+describe('schema-response-search initial response totals', () => {
+  const events = resetSurface();
+  const components = findStateSnapshotComponents(events);
+
+  it('uses a pageSize of 12 with real product totals across 2 pages', () => {
+    const pagination = components['pagination-1'] as Record<string, unknown>;
+    const productList = components['product-list-1'] as Record<string, unknown>;
+
+    expect(pagination.page).toBe(0);
+    expect(pagination.pageSize).toBe(12);
+    expect(pagination.totalEntries).toBe(18);
+    expect(pagination.totalPages).toBe(2);
+    // Page 0 slice is capped at the page size.
+    expect((productList.products as unknown[]).length).toBe(12);
+  });
+});
+
+describe('schema-response-search action-driven recomputation', () => {
+  // State now persists across calls, so reset the surface to defaults before each test.
+  beforeEach(() => {
+    resetSurface();
+  });
+
+  function findActivitySnapshot(events: ConverseEvent[]) {
+    return events.find(
+      (e) =>
+        e.event === 'ACTIVITY_SNAPSHOT' &&
+        (e.data as Record<string, unknown>).activityType === 'a2ui-surface'
+    );
+  }
+
+  it('selectPage returns the requested page and its product slice', () => {
+    const events = buildSearchActionEvents({name: 'selectPage', context: {page: 1}});
+    const components = findStateSnapshotComponents(events);
+    const pagination = components['pagination-1'] as Record<string, unknown>;
+    const productList = components['product-list-1'] as Record<string, unknown>;
+
+    expect(pagination.page).toBe(1);
+    expect(pagination.pageSize).toBe(12);
+    // 18 products, page size 12 => page 1 holds the remaining 6.
+    expect((productList.products as unknown[]).length).toBe(6);
+  });
+
+  it('selectSort with price_asc sorts by ascending price on page 0', () => {
+    const events = buildSearchActionEvents({
+      name: 'selectSort',
+      context: {sortCriteria: 'price_asc'},
+    });
+    const components = findStateSnapshotComponents(events);
+    const pagination = components['pagination-1'] as Record<string, unknown>;
+    const sort = components['sort-1'] as Record<string, unknown>;
+    const productList = components['product-list-1'] as Record<string, unknown>;
+    const prices = (productList.products as Array<Record<string, unknown>>).map(
+      (p) => p.ec_price as number
+    );
+
+    expect(pagination.page).toBe(0);
+    expect((sort.appliedSort as Record<string, unknown>).sortCriteria).toBe('price_asc');
+    const sortedAscending = [...prices].sort((a, b) => a - b);
+    expect(prices).toEqual(sortedAscending);
+  });
+
+  it('setPageSize recomputes pageSize and totalPages', () => {
+    const events = buildSearchActionEvents({name: 'setPageSize', context: {pageSize: 6}});
+    const components = findStateSnapshotComponents(events);
+    const pagination = components['pagination-1'] as Record<string, unknown>;
+    const productList = components['product-list-1'] as Record<string, unknown>;
+
+    expect(pagination.page).toBe(0);
+    expect(pagination.pageSize).toBe(6);
+    expect(pagination.totalEntries).toBe(18);
+    expect(pagination.totalPages).toBe(3);
+    expect((productList.products as unknown[]).length).toBe(6);
+  });
+
+  it('does not re-create the surface (no ACTIVITY_SNAPSHOT) for action responses', () => {
+    const events = buildSearchActionEvents({name: 'selectPage', context: {page: 1}});
+    expect(findActivitySnapshot(events)).toBeUndefined();
+  });
+});
+
+describe('schema-response-search stateful surface across actions', () => {
+  beforeEach(() => {
+    resetSurface();
+  });
+
+  it('preserves the sort criteria when changing page after sorting', () => {
+    buildSearchActionEvents({name: 'selectSort', context: {sortCriteria: 'price_asc'}});
+    const events = buildSearchActionEvents({name: 'selectPage', context: {page: 1}});
+    const components = findStateSnapshotComponents(events);
+    const sort = components['sort-1'] as Record<string, unknown>;
+    const pagination = components['pagination-1'] as Record<string, unknown>;
+
+    expect((sort.appliedSort as Record<string, unknown>).sortCriteria).toBe('price_asc');
+    expect(pagination.page).toBe(1);
+  });
+
+  it('preserves the page size when changing page after resizing', () => {
+    buildSearchActionEvents({name: 'setPageSize', context: {pageSize: 6}});
+    const events = buildSearchActionEvents({name: 'selectPage', context: {page: 2}});
+    const components = findStateSnapshotComponents(events);
+    const pagination = components['pagination-1'] as Record<string, unknown>;
+
+    expect(pagination.pageSize).toBe(6);
+    expect(pagination.page).toBe(2);
+  });
+
+  it('resets the view to defaults when the initial wetsuits response is rebuilt', () => {
+    buildSearchActionEvents({name: 'selectSort', context: {sortCriteria: 'price_desc'}});
+    buildSearchActionEvents({name: 'setPageSize', context: {pageSize: 6}});
+    buildSearchActionEvents({name: 'selectPage', context: {page: 2}});
+
+    const events = matchSchemaPrompt('wetsuits');
+    const components = findStateSnapshotComponents(events);
+    const pagination = components['pagination-1'] as Record<string, unknown>;
+    const sort = components['sort-1'] as Record<string, unknown>;
+
+    expect(pagination.page).toBe(0);
+    expect(pagination.pageSize).toBe(12);
+    expect((sort.appliedSort as Record<string, unknown>).sortCriteria).toBe('relevance');
   });
 });

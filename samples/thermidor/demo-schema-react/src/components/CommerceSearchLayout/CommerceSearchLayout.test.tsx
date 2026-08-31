@@ -61,6 +61,12 @@ vi.mock('../../a2ui/Pagination/Pagination.js', () => ({
   ),
 }));
 
+vi.mock('../../a2ui/PageSizeSelector/PageSizeSelector.js', () => ({
+  PageSizeSelector: ({props}: {props: {componentId: string}}) => (
+    <div data-testid={`page-size-selector-${props.componentId}`}>PageSizeSelector</div>
+  ),
+}));
+
 vi.mock('../../a2ui/Sort/Sort.js', () => ({
   SortRenderer: ({props}: {props: {componentId: string}}) => (
     <div data-testid={`sort-${props.componentId}`}>Sort</div>
