@@ -83,8 +83,8 @@ catalog:
   '@testing-library/react': 16.3.2
   '@types/jest': 30.0.0
   '@types/node': 24.13.3
-  '@types/react': 19.2.17
-  '@types/react-dom': 19.2.3
+  '@types/react': 19.2.18
+  '@types/react-dom': 19.2.5
   '@vitejs/plugin-react': 6.0.5
   '@vitest/browser-playwright': 4.1.10
   abortcontroller-polyfill: 1.7.8
@@ -113,8 +113,8 @@ catalog:
   puppeteer: 24.43.1
   playwright: 1.60.0
   rxjs: 7.8.2
-  react: 19.2.7
-  react-dom: 19.2.7
+  react: 19.2.8
+  react-dom: 19.2.8
   rollup: 4.62.4
   rollup-plugin-string: 3.0.0
   rollup-plugin-node-polyfills: 0.2.1
