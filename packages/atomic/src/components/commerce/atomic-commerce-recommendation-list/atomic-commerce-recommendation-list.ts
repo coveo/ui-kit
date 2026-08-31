@@ -159,8 +159,8 @@ export class AtomicCommerceRecommendationList
    * To modify the number of products per column and row, modify the `--atomic-recs-number-of-columns` and `--atomic-recs-number-of-rows` CSS variables.
    *
    * This property also determines which part of a recommended product is clickable:
-   * - When set to `grid`, the entire product is wrapped in a link, so clicking anywhere on it navigates to the product.
-   * - When set to `list`, the product is not wrapped in a link, so you control where the interactive elements are by adding them to your product template (for example, an `atomic-product-link`).
+   * - When set to `grid`, the whole product is clickable: a click anywhere on it is forwarded to a product link rendered alongside your template content, which navigates to the product. Interactive elements in your template must stop click propagation to avoid triggering this navigation; `atomic-product-link` does so by default.
+   * - When set to `list`, clicks on the product are not forwarded to a product link, so you control where the interactive elements are by adding them to your product template (for example, an `atomic-product-link`).
    */
   @property({reflect: true, type: String})
   public display: ItemDisplayBasicLayout = 'list';

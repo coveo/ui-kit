@@ -21,7 +21,9 @@ You can include multiple recommendation lists within a single interface:
 
 The `display` property changes more than the visual layout: it also determines what part of a recommended product is clickable.
 
-When `display` is set to `grid`, the whole product is wrapped in a link, so clicking anywhere on the product navigates to it. Interactive elements you place in your template still work, since their clicks are not forwarded to the surrounding link.
+When `display` is set to `grid`, the whole product is clickable: your template content is not nested inside an `<a>` element, but a click anywhere on the product is forwarded to a product link rendered alongside it, which navigates to the product.
+
+Interactive elements you place in your template still work, as long as they stop the click event from propagating to the product. `atomic-product-link` does this by default; for your own interactive elements, call `event.stopPropagation()` in their click handler.
 
 ```html
 <atomic-commerce-recommendation-list display="grid">
@@ -38,7 +40,7 @@ When `display` is set to `grid`, the whole product is wrapped in a link, so clic
 </atomic-commerce-recommendation-list>
 ```
 
-When `display` is set to `list`, the product is not wrapped in a link. You decide where the interactive elements are by adding them to your template, typically with an `atomic-product-link`. Only those elements are clickable.
+When `display` is set to `list`, clicks on the product are not forwarded to a product link. You decide where the interactive elements are by adding them to your template, typically with an `atomic-product-link`. Only those elements are clickable.
 
 ```html
 <atomic-commerce-recommendation-list display="list">
