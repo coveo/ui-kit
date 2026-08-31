@@ -16,6 +16,7 @@ import {
   NextActionsBarSchema,
   NextActionsStateSchema,
   ProductCarouselSchema,
+  ProductCarouselStateSchema,
   ProductListStateSchema,
   ProductSchema,
   SelectActionPayloadSchema,
@@ -89,10 +90,17 @@ const fixtures = [
     valid: false,
   },
   {
+    file: 'product-carousel-state.valid.json',
+    schema: ProductCarouselStateSchema,
+    schemaId:
+      'https://schema.thermidor.coveo.com/components/product-carousel.schema.json#/$defs/ProductCarouselState',
+    valid: true,
+  },
+  {
     file: 'product-list-state.valid.json',
     schema: ProductListStateSchema,
     schemaId:
-      'https://schema.thermidor.coveo.com/components/product-carousel.schema.json#/$defs/ProductListState',
+      'https://schema.thermidor.coveo.com/components/product-list.schema.json#/$defs/ProductListState',
     valid: true,
   },
   {

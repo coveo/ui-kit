@@ -74,6 +74,35 @@ describe('remote-controller property tests', () => {
         state: {attributes: [], products: []},
         actions: {},
       },
+      'product-list': {
+        componentType: 'product-list',
+        state: {products: []},
+        actions: {},
+      },
+      pagination: {
+        componentType: 'pagination',
+        state: {page: 0, pageSize: 10, totalEntries: 0, totalPages: 0},
+        actions: {
+          selectPage: {payload: {page: 0}},
+        },
+      },
+      sort: {
+        componentType: 'sort',
+        state: {
+          appliedSort: {sortCriteria: 'relevance', fields: []},
+          availableSorts: [{sortCriteria: 'relevance', fields: []}],
+        },
+        actions: {
+          selectSort: {payload: {sortCriteria: 'relevance', fields: []}},
+        },
+      },
+      'search-box': {
+        componentType: 'search-box',
+        state: {query: ''},
+        actions: {
+          submitQuery: {payload: {query: ''}},
+        },
+      },
     };
 
     it.each(componentTypes)('round-trip preservation for %s', (componentType) => {

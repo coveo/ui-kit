@@ -1,0 +1,489 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Add `SurfaceTypeSchema` and `surfaceType` field to the createSurface payload schema": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603402125
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603410703
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603618388
+      }
+    ],
+    "1.2 Add props schemas for decomposed commerce components": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603402184
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603411459
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603619386
+      }
+    ],
+    "1.3 Add contract schemas for decomposed commerce components": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603402246
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603623322
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603917619
+      }
+    ],
+    "1.4 Write property test for schema round-trip (Property 4)": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603402331
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603624148
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603918690
+      }
+    ],
+    "2.1 Add `extractSurfaceType` and `extractSurfaceId` helper functions": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603402364
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603922919
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787604362961
+      }
+    ],
+    "2.2 Modify the `onA2uiSurface` callback to route by surfaceType": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603402405
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787604366727
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787604655774
+      }
+    ],
+    "2.3 Extend `RoutedInterface` / `RoutedUseCase` types for decomposed commerce": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603402453
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603923781
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787604362095
+      }
+    ],
+    "2.4 Write unit tests for `extractSurfaceType` and `extractSurfaceId`": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603402494
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787604367530
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787604656741
+      }
+    ],
+    "2.5 Write property tests for routing logic (Properties 1, 2, 3, 5)": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603402541
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787604662271
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787604889351
+      }
+    ],
+    "3. Checkpoint - Ensure schema and routing tests pass": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603402575
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787606275074
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787606279386
+      }
+    ],
+    "4.1 Refactor `schema-response-search.ts` to emit decomposed components with surfaceType": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603402615
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787604368375
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787604658028
+      }
+    ],
+    "4.2 Write unit tests verifying mock API response structure": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603402663
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787604663098
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787604890172
+      }
+    ],
+    "5.1 Create `ProductListRenderer` catalog renderer": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603402717
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787604663851
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787604891002
+      }
+    ],
+    "5.2 Create `PaginationRenderer` catalog renderer": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603402802
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787604664638
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787604892967
+      }
+    ],
+    "5.3 Create `SortRenderer` catalog renderer": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603402844
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787604665451
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787604893014
+      }
+    ],
+    "5.4 Create `SearchBoxRenderer` catalog renderer": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603402893
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787604897376
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787604992067
+      }
+    ],
+    "5.5 Register all commerce renderers in the catalog": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603402933
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787604996171
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787605321572
+      }
+    ],
+    "5.6 Write unit tests for catalog renderers": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603402975
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787604996957
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787605320666
+      }
+    ],
+    "6.1 Create `DecomposedCommerceLayout` component": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603403023
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787605326502
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787605948406
+      }
+    ],
+    "6.2 Refactor `SearchResultsPage` to branch on `routedInterface.useCase`": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603403063
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787605952055
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787606259002
+      }
+    ],
+    "6.3 Write unit tests for layout template partial component handling (Property 6)": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603403107
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787605952835
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787606260123
+      }
+    ],
+    "7. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603403156
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787606275856
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787606280200
+      }
+    ],
+    "8.1 Verify legacy path still works (no regressions)": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603403203
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787606283909
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787606537128
+      }
+    ],
+    "8.2 Write import boundary test for module isolation": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603403243
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787606284626
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787606538818
+      }
+    ],
+    "8.3 Write property test for event dispatcher ordering (Property 7)": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603403286
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787606285480
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787606538013
+      }
+    ],
+    "9. Final checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603403336
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787606543008
+      },
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787606777777
+      }
+    ],
+    "1. Define commerce component schemas in thermidor-schema": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787603918778
+      }
+    ],
+    "2. Implement surfaceType-based routing in unified-runtime.ts": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787604889408
+      }
+    ],
+    "4. Update mock API to emit decomposed commerce surfaces": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787604890283
+      }
+    ],
+    "5. Implement commerce catalog renderers in demo app": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787605321618
+      }
+    ],
+    "6. Implement layout template and refactor SearchResultsPage": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787606260176
+      }
+    ],
+    "8. Verify backward compatibility and module isolation": [
+      {
+        "executionId": "c2399040-eb91-477e-a24e-2cf68d5c60f0",
+        "chatSessionId": "sess_26b968cf-8e8e-4453-a8fb-d93ecf757974",
+        "timestamp": 1787606538864
+      }
+    ]
+  }
+}

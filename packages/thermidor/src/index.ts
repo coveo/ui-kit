@@ -43,6 +43,7 @@ export type {
   Activity,
   AgentMessage,
   AgentResponse,
+  HydratedUseCase,
   ReasoningMessageStep,
   ReasoningStep,
   RoutedInterface,

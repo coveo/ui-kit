@@ -12,7 +12,7 @@ import {generateId} from '@/src/internal/utils/index.js';
 import type {
   A2UISurface,
   Activity,
-  RoutedUseCase,
+  HydratedUseCase,
   TurnStatus,
   UseCaseInterfaceMap,
 } from '@/src/internal/features/generative/index.js';
@@ -53,7 +53,7 @@ export interface GenerativeStatePort {
   setConversationSession(sessionId: string | undefined, token: string | undefined): void;
 }
 
-export interface HydrationResult<K extends RoutedUseCase = RoutedUseCase> {
+export interface HydrationResult<K extends HydratedUseCase = HydratedUseCase> {
   useCase: K;
   interface: UseCaseInterfaceMap[K];
   snapshot: Record<string, unknown>;

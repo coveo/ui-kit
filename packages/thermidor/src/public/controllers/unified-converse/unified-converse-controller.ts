@@ -258,11 +258,10 @@ function hydrateFromSerializedState(serialized: SerializedConverseState): Genera
       turn.error = 'Stream was interrupted';
     }
 
-    if (
-      routedInterface &&
-      (routedInterface.useCase === 'commerceSearch' || routedInterface.useCase === 'search')
-    ) {
-      turn.routedInterface = {useCase: routedInterface.useCase};
+    if (routedInterface) {
+      if (routedInterface.useCase === 'commerceSearch' || routedInterface.useCase === 'search') {
+        turn.routedInterface = {useCase: routedInterface.useCase};
+      }
     }
 
     return turn;
