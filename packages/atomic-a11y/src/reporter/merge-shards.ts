@@ -17,6 +17,12 @@ const SHARD_FILE_PATTERN = /^a11y-report\.shard-(\d+)\.json$/;
 interface MergeShardOptions {
   /** Full path (directory + filename) where the merged report is written. Shard files are read from the same directory. */
   outputFile: string;
+  /**
+   * Number of shard reports the caller expects to find. When set and the actual
+   * count differs, the merge throws instead of silently producing a report with
+   * partial component coverage.
+   */
+  expectedShards?: number;
 }
 
 interface MutableAutomatedResults extends Omit<
@@ -319,6 +325,12 @@ export async function mergeA11yShardReports(
   try {
     directoryEntries = await readdir(inputDir);
   } catch {
+    if (options.expectedShards !== undefined) {
+      throw new Error(
+        `[merge-shards] Expected ${options.expectedShards} shard report(s) but ${inputDir} does not exist. ` +
+          'Shard reports are produced by @coveo/atomic#test:storybook; a missing directory means no shard ran or uploaded its report.'
+      );
+    }
     console.warn(`[merge-shards] Could not read directory: ${inputDir}`);
     return null;
   }
@@ -332,6 +344,13 @@ export async function mergeA11yShardReports(
     .sort((first, second) => first.index - second.index)
     .map(({entry}) => path.join(inputDir, entry));
 
+  if (options.expectedShards !== undefined && shardFiles.length !== options.expectedShards) {
+    throw new Error(
+      `[merge-shards] Expected ${options.expectedShards} shard report(s) in ${inputDir} but found ${shardFiles.length}. ` +
+        'Merging a partial set would understate component coverage in openacr.yaml.'
+    );
+  }
+
   if (shardFiles.length === 0) {
     console.warn(`[merge-shards] No shard reports were found in ${inputDir}`);
     return null;
@@ -340,6 +359,11 @@ export async function mergeA11yShardReports(
   console.log(`[merge-shards] Found ${shardFiles.length} shard files, reading...`);
 
   const shardReports = await readShardReports(shardFiles);
+  if (options.expectedShards !== undefined && shardReports.length !== shardFiles.length) {
+    throw new Error(
+      `[merge-shards] Only ${shardReports.length} of ${shardFiles.length} shard report(s) in ${inputDir} could be parsed.`
+    );
+  }
   if (shardReports.length === 0) {
     console.warn('[merge-shards] No valid shard report could be loaded.');
     return null;
