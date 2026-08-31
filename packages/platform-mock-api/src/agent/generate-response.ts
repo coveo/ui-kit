@@ -203,39 +203,46 @@ const cloneMessagesForResponse = (messages: AgentEvent[], answerId: string) => {
   }));
 };
 
+const stripDelayMs = (messages: AgentEvent[], answerId: string) =>
+  cloneMessagesForResponse(messages, answerId).map(({delayMs: _delayMs, ...message}) => message);
+
+const followUpTurnLimitErrorMessages = [
+  buildMessage({type: EventType.RUN_STARTED}),
+  buildMessage({
+    type: EventType.RUN_ERROR,
+    message: 'The conversation turn limit has been reached.',
+    code: 'KNOWLEDGE:SSE_TURN_LIMIT_REACHED',
+  }),
+];
+
+const followUpGenericErrorMessages = [
+  buildMessage({type: EventType.RUN_STARTED}),
+  buildMessage({
+    type: EventType.RUN_ERROR,
+    message: 'An unexpected error occurred.',
+    code: 'KNOWLEDGE:SSE_INTERNAL_ERROR',
+  }),
+];
+
 export const agentResponseData = {
   threadId: THREAD_ID,
   conversationToken: CONVERSATION_TOKEN,
   citations: CITATIONS,
   headAnswer: {
     answerId: HEAD_ANSWER_ID,
-    messages: cloneMessagesForResponse(headAnswerMessages, HEAD_ANSWER_ID),
+    messages: stripDelayMs(headAnswerMessages, HEAD_ANSWER_ID),
   },
   followUpAnswers: [1, 2].map((index) => ({
     answerId: getFollowUpAnswerId(index),
-    messages: cloneMessagesForResponse(agentMessages, getFollowUpAnswerId(index)),
+    messages: stripDelayMs(agentMessages, getFollowUpAnswerId(index)),
   })),
   followUpTurnLimitError: {
     answerId: 'error',
-    messages: [
-      buildMessage({type: EventType.RUN_STARTED}),
-      buildMessage({
-        type: EventType.RUN_ERROR,
-        message: 'The conversation turn limit has been reached.',
-        code: 'KNOWLEDGE:SSE_TURN_LIMIT_REACHED',
-      }),
-    ],
+    messages: stripDelayMs(followUpTurnLimitErrorMessages, 'error'),
   },
   followUpGenericError: {
     answerId: 'error',
-    messages: [
-      buildMessage({type: EventType.RUN_STARTED}),
-      buildMessage({
-        type: EventType.RUN_ERROR,
-        message: 'An unexpected error occurred.',
-        code: 'KNOWLEDGE:SSE_INTERNAL_ERROR',
-      }),
-    ],
+    messages: stripDelayMs(followUpGenericErrorMessages, 'error'),
   },
 };
 
@@ -282,13 +289,13 @@ const buildAnsweringStreamingResponse = ({
 
 const followUpAnswerResponse = (followUpAnswerIndex: number) =>
   buildAnsweringStreamingResponse({
-    messages: agentResponseData.followUpAnswers[followUpAnswerIndex - 1]?.messages ?? agentMessages,
+    messages: agentMessages,
     delayBetweenMessages: 'real',
     answerId: getFollowUpAnswerId(followUpAnswerIndex),
   });
 const headAnswerResponse = () =>
   buildAnsweringStreamingResponse({
-    messages: agentResponseData.headAnswer.messages,
+    messages: headAnswerMessages,
     delayBetweenMessages: 'real',
     answerId: HEAD_ANSWER_ID,
   });
@@ -297,13 +304,13 @@ const followUpNetworkErrorResponse = () => new HttpResponse(null, {status: 500})
 
 const followUpTurnLimitErrorResponse = () =>
   buildAnsweringStreamingResponse({
-    messages: agentResponseData.followUpTurnLimitError.messages,
+    messages: followUpTurnLimitErrorMessages,
     answerId: agentResponseData.followUpTurnLimitError.answerId,
   });
 
 const followUpGenericErrorResponse = () =>
   buildAnsweringStreamingResponse({
-    messages: agentResponseData.followUpGenericError.messages,
+    messages: followUpGenericErrorMessages,
     answerId: agentResponseData.followUpGenericError.answerId,
   });
 
