@@ -5,6 +5,9 @@
   labels: ['dependencies'],
   dependencyDashboard: true,
   minimumReleaseAge: '7 days',
+  // Raised from the config:recommended default of 2 so the weekly schedule window can drain
+  // more of the backlog. prConcurrentLimit stays at its default of 10 to bound CI load.
+  prHourlyLimit: 5,
   packageRules: [
     {
       groupName: 'all production dependencies',
@@ -62,6 +65,29 @@
       groupSlug: 'playwright',
       description: 'Keep the Playwright CI container image (mcr.microsoft.com/playwright) in lockstep with the playwright/@playwright/test packages so browser binaries always match the installed version',
       matchPackageNames: ['mcr.microsoft.com/playwright', 'playwright', '@playwright/test'],
+    },
+    {
+      groupName: 'pnpm',
+      groupSlug: 'pnpm',
+      description: 'Keep pnpm in lockstep across the packageManager field, mise.toml and the devcontainer, since the mise and custom managers are not part of the js category and would otherwise get their own PRs',
+      matchDatasources: ['npm'],
+      matchPackageNames: ['pnpm'],
+    },
+  ],
+  customManagers: [
+    {
+      customType: 'regex',
+      description: 'Detect the pnpm version activated through corepack in the devcontainer',
+      managerFilePatterns: [
+        '/^\\.devcontainer\\/Dockerfile$/',
+        '/^\\.devcontainer\\/README\\.md$/',
+      ],
+      matchStrings: [
+        'corepack prepare pnpm@(?<currentValue>\\d+\\.\\d+\\.\\d+)',
+        'pnpm (?<currentValue>\\d+\\.\\d+\\.\\d+) via corepack',
+      ],
+      depNameTemplate: 'pnpm',
+      datasourceTemplate: 'npm',
     },
   ],
   lockFileMaintenance: {

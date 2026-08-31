@@ -98,7 +98,7 @@ describe('generative slice', () => {
 
     expect(state.turns[0]).toEqual(
       expect.objectContaining({
-        agentResponse: {messages: [], surfaces: [], reasoningSteps: []},
+        agentResponse: {state: {}, messages: [], surfaces: [], activities: [], reasoningSteps: []},
         status: 'streaming',
       })
     );

@@ -1,19 +1,34 @@
 'use client';
 
+import {ResultType} from '@coveo/headless-react/ssr-commerce';
 import {useCart, useContext, useProductList} from '@/lib/commerce-engine';
 import {addToCart} from '@/utils/cart';
 import ProductButtonWithImage from './product-button-with-image';
 import ProductPrice from './product-price';
 import ProductVariants from './product-variants';
+import SpotlightContentCard from './spotlight-content-card';
 
 export default function ProductList() {
   const {state, methods} = useProductList();
   const {state: cartState, methods: cartMethods} = useCart();
   const {state: contextState} = useContext();
 
+  // The controller is configured with `enableResults`, so the API returns items
+  // under `results`, which may also contain spotlight content. `products` is
+  // only populated for requests that did not opt into `results`.
+  const items = state.results.length > 0 ? state.results : state.products;
+
   return (
     <ul aria-label="Product List" className="ProductList">
-      {state.products.map((item) => {
+      {items.map((item) => {
+        if (item.resultType === ResultType.SPOTLIGHT) {
+          return (
+            <li key={item.id} className="ProductCard">
+              <SpotlightContentCard methods={methods} spotlightContent={item} />
+            </li>
+          );
+        }
+
         const quantityInCart =
           cartState.items.find((cartItem) => cartItem.productId === item.ec_product_id)?.quantity ??
           0;

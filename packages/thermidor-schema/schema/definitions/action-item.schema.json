@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.thermidor.coveo.com/definitions/action-item.schema.json",
+  "title": "ActionItem",
+  "description": "A suggested action the assistant offers the user, such as a follow-up question or a search query.",
+  "type": "object",
+  "required": ["text", "type"],
+  "properties": {
+    "text": {
+      "type": "string",
+      "description": "The display text of the action shown to the user."
+    },
+    "type": {
+      "type": "string",
+      "enum": ["followup", "search"],
+      "description": "The kind of action: \"followup\" triggers a conversational follow-up, \"search\" triggers a standalone search."
+    }
+  },
+  "additionalProperties": false
+}
