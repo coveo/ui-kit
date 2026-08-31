@@ -47,10 +47,7 @@ private class CustomTokenProviderTest {
   @IsTest
   static void withEmptyOrgId() {
     Test.startTest();
-    CustomTokenProviderTest.setupTokenSettings(
-      '',
-      'someToken'
-    );
+    CustomTokenProviderTest.setupTokenSettings('', 'someToken');
     try {
       CustomTokenProvider.getHeadlessConfiguration();
     } catch (Exception e) {
@@ -61,10 +58,7 @@ private class CustomTokenProviderTest {
 
   @IsTest
   static void withEmptyApiKey() {
-    CustomTokenProviderTest.setupTokenSettings(
-      'someOrgId',
-      ''
-    );
+    CustomTokenProviderTest.setupTokenSettings('someOrgId', '');
     try {
       CustomTokenProvider.getHeadlessConfiguration();
     } catch (Exception e) {
@@ -78,10 +72,7 @@ private class CustomTokenProviderTest {
       'foo1',
       'System Administrator'
     );
-    CustomTokenProviderTest.setupTokenSettings(
-      'someOrgId',
-      'someToken'
-    );
+    CustomTokenProviderTest.setupTokenSettings('someOrgId', 'someToken');
     Test.setMock(
       HttpCalloutMock.class,
       new MockHttpTokenResponse(

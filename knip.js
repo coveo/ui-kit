@@ -33,6 +33,12 @@ export default {
     'packages/atomic-theming-e2e': {
       entry: ['tests/**/*.spec.ts', 'fixtures/*.js'],
     },
+    'packages/atomic-playground': {
+      entry: ['*.js'],
+      ignoreDependencies: [
+        'dayjs', // Transitive dep pre-bundled via optimizeDeps.include in vite.config.ts.
+      ],
+    },
     'packages/atomic-angular': {
       ignoreDependencies: [
         // Can be removed once we bump our package to use more recent Angular versions that support Vite 7+.
@@ -117,7 +123,7 @@ export default {
       // build artifacts (dist/lang, dist/assets) are missing. Disable the Vite
       // plugin config loader.
       vite: {config: []},
-      entry: ['src/commerce-page.js'],
+      entry: ['src/*-page.js'],
     },
     'samples/atomic/search-vite': {
       // Same as commerce-vite: vite.config.js throws without build artifacts.

@@ -5,11 +5,12 @@
 
 ## What it shows
 
-Three page types, mirroring the Headless commerce samples:
+Four page types, mirroring the Headless commerce samples:
 
 - **Home** (`index.html`) — product recommendations plus a **standalone search box** that redirects to the search page on submit.
 - **Search** (`search.html`) — `atomic-commerce-interface type="search"`: search box with query suggestions + instant products, facets, breadbox, sort, product grid, and a pager.
-- **Product listings** (`listing-surf-accessories.html`, `listing-toys.html`) — `atomic-commerce-interface type="product-listing"` bound to a catalog `view` URL, each with its own standalone search box, facets, sort, product grid, and pager.
+- **Product listings** (`listing-pants.html`, `listing-surf-accessories.html`, `listing-towels.html`, `listing-toys.html`) — `atomic-commerce-interface type="product-listing"` bound to a catalog `view` URL, each with its own standalone search box, facets, sort, product grid, and pager.
+- **Cart** (`cart.html`) — `atomic-commerce-recommendation-interface` scoped to the cart `view` URL, so recommendations reflect the cart step rather than a listing.
 
 Every non-search page has a search box (`atomic-commerce-search-box` with a `redirection-url`) so a query always takes the shopper to the search page.
 
@@ -35,6 +36,7 @@ pnpm e2e      # end-to-end tests (Playwright)
 - `src/engine.js` builds a commerce engine from `getSampleCommerceEngineConfiguration()` bound to a page's catalog `view.url` (declared via a `data-view-url` attribute).
 - `src/commerce-page.js` initializes the single interface on the **search** and **listing** pages.
 - `src/home-page.js` initializes the standalone search-box interface and the recommendation interface(s) on the **home** page.
+- `src/cart-page.js` initializes the recommendation interface on the **cart** page.
 - On the home and listing pages the search box sets `redirection-url="/search.html"`, so submitting a query navigates to the search page.
 - `vite.config.js` runs as a multi-page app and copies Atomic's runtime `lang/` and `assets/` out of the installed package (served at `/lang` and `/assets`).
 

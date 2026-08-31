@@ -196,17 +196,31 @@ export const WithDependsOn: Story = {
     'with-input': 'integer',
     'depends-on-filetype': 'YouTubeVideo',
   },
+  beforeEach: () => {
+    // Return the dependency as already selected. The base mock always reports filetype values as
+    // idle no matter what the request asks for, so clicking a value never selected anything and
+    // the facet stayed independent of `depends-on-filetype` — the assertion passed whether or not
+    // the dependency was ever evaluated.
+    searchApiHarness.searchEndpoint.mockOnce((response) => ({
+      ...response,
+      facets: response.facets?.map((facet) =>
+        facet.facetId === 'filetype'
+          ? {
+              ...facet,
+              values: facet.values.map((value) =>
+                'value' in value && value.value === 'YouTubeVideo'
+                  ? {...value, state: 'selected'}
+                  : value
+              ),
+            }
+          : facet
+      ),
+    }));
+  },
   play: async (context) => {
     //TODO: Fix component registration race condition #6480
     await customElements.whenDefined('atomic-facet');
     await play(context);
-    const {canvas, step} = context;
-    await step('Select YouTubeVideo in filetype facet', async () => {
-      const button = await canvas.findByShadowLabelText('Inclusion filter on YouTubeVideo', {
-        exact: false,
-      });
-      button.ariaChecked === 'false' ? button.click() : null;
-    });
   },
 };
 

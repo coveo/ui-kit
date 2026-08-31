@@ -1,0 +1,25 @@
+name: Apex Unit Tests
+description: Run Quantic Apex unit tests against an existing scratch org.
+inputs:
+  target-org:
+    description: Existing Salesforce org alias to run the Apex tests against
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Run Apex unit tests
+      run: |
+        mkdir -p test-results
+        sf apex run test --target-org "$INPUTS_TARGET_ORG" --test-level RunLocalTests --result-format junit --wait 5 > test-results/apex.xml
+      shell: bash
+      working-directory: packages/quantic
+      env:
+        INPUTS_TARGET_ORG: ${{ inputs.target-org }}
+    - name: Upload Apex test results
+      if: cancelled() || failure() || success()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+      with:
+        name: quantic-apex-test-results
+        path: packages/quantic/test-results/apex.xml
+        retention-days: 5
+        if-no-files-found: warn

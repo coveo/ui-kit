@@ -75,7 +75,7 @@ No consumer profile derives value from the controller being in the schema. The `
 - **Pros:**
   - Flat, readable schema: `component.state`, `component.actions.setItems`.
   - Direct correspondence with the observable surface — what travels on the wire.
-  - Optimal DX: the consumer reads the schema and immediately knows what to receive and emit.
+  - Better DX: the consumer reads the schema and immediately knows what to receive and emit.
   - Clean separation of contract and implementation.
   - Minimal onboarding: three concepts (Catalog, Component, Action).
   - Consumer-agnostic: no imposed implementation pattern.
@@ -226,6 +226,7 @@ Before proceeding to public publication (ADR-003), the revised schema structure 
 3. **Update consumer demos** (`demo-schema-react`): Simplify component props schemas, replace `useAdvertisedController` with `useRemoteController`.
 4. **Deprecate ADR-001's entity model**: Mark ADR-001 as superseded by this ADR for the entity model section. The rest of ADR-001 (data flow, state ownership, action semantics) remains valid.
 5. **Validate with the demo implementation**: The `demo-schema-react` Option B implementation serves as the reference for the migration.
+6. **Validate with facets as a proof-of-concept**: Facets are the strongest stress test for the controller-less model. In current Headless commerce, a facet generator controller exposes an ordered list of heterogeneous facet controllers, each with its own facet search controller — a hierarchical, multi-controller composition where facet order is significant. Implementing facets under Option B (as composed components rather than nested controllers) will validate whether the model holds for genuinely composite, order-sensitive concerns, or whether it surfaces a case that warrants revisiting the decision.
 
 ---
 

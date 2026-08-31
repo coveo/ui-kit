@@ -24,9 +24,11 @@ test.describe('atomic-field-condition', () => {
 
   test('should not render its content when if-not-defined condition is not met', async ({
     fieldCondition,
+    page,
   }) => {
     await fieldCondition.load({args: {'if-not-defined': 'title'}});
+    await page.locator('atomic-result.hydrated').first().waitFor({state: 'attached'});
 
-    expect(fieldCondition.hydrated).not.toBeVisible;
+    await expect(fieldCondition.visibleCondition).toHaveCount(0);
   });
 });

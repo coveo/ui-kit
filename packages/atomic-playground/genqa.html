@@ -1,0 +1,69 @@
+<!doctype html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Atomic playground: Gen Q&amp;A</title>
+    <link rel="icon" href="data:," />
+    <script type="module" src="./genqa.js"></script>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <atomic-search-interface language-assets-path="/lang" icon-assets-path="/assets">
+      <atomic-search-layout>
+        <atomic-layout-section section="search" expanding>
+          <atomic-search-box></atomic-search-box>
+        </atomic-layout-section>
+        <atomic-layout-section section="facets">
+          <atomic-facet-manager>
+            <atomic-facet field="author" label="Authors"></atomic-facet>
+            <atomic-facet field="source" label="Source" display-values-as="link"></atomic-facet>
+            <atomic-facet field="filetype" label="File type"></atomic-facet>
+          </atomic-facet-manager>
+        </atomic-layout-section>
+        <atomic-layout-section section="main">
+          <atomic-generated-answer></atomic-generated-answer>
+          <atomic-layout-section section="status">
+            <atomic-breadbox></atomic-breadbox>
+            <atomic-query-summary></atomic-query-summary>
+            <atomic-did-you-mean></atomic-did-you-mean>
+            <atomic-notifications></atomic-notifications>
+          </atomic-layout-section>
+          <atomic-layout-section section="results">
+            <atomic-result-list>
+              <atomic-result-template>
+                <template>
+                  <atomic-result-section-visual>
+                    <atomic-result-icon></atomic-result-icon>
+                  </atomic-result-section-visual>
+                  <atomic-result-section-title>
+                    <atomic-result-link></atomic-result-link>
+                  </atomic-result-section-title>
+                  <atomic-result-section-title-metadata>
+                    <atomic-result-printable-uri
+                      max-number-of-parts="3"
+                    ></atomic-result-printable-uri>
+                  </atomic-result-section-title-metadata>
+                  <atomic-result-section-excerpt>
+                    <atomic-result-text field="excerpt"></atomic-result-text>
+                  </atomic-result-section-excerpt>
+                </template>
+              </atomic-result-template>
+            </atomic-result-list>
+            <atomic-query-error></atomic-query-error>
+            <atomic-no-results></atomic-no-results>
+          </atomic-layout-section>
+          <atomic-layout-section section="pagination">
+            <atomic-pager></atomic-pager>
+            <atomic-results-per-page></atomic-results-per-page>
+          </atomic-layout-section>
+        </atomic-layout-section>
+      </atomic-search-layout>
+    </atomic-search-interface>
+  </body>
+</html>

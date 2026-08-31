@@ -2,6 +2,7 @@ import type {GenerativeState, StateTurn, Turn} from '@/src/internal/features/gen
 import {UnifiedRuntime} from '@/src/internal/api/unified/index.js';
 import type {A2uiAction} from '@/src/internal/api/unified/index.js';
 import type {RemoteControllerAction} from '../remote/remote-controller.js';
+import {deriveCommerceSurfaceId} from './derive-surface-id.js';
 import {
   getOrCreateRoutedInterfaceRegistry,
   mergeTurnsWithRegistry,
@@ -204,9 +205,7 @@ class UnifiedConverseControllerImpl extends BaseController<UnifiedConverseContro
   }
 
   dispatchAction(action: RemoteControllerAction): Promise<void> {
-    const routedInterface = this.state.activeTurn?.routedInterface;
-    const surfaceId =
-      routedInterface?.useCase === 'decomposedCommerceSearch' ? routedInterface.surfaceId : null;
+    const surfaceId = deriveCommerceSurfaceId(this.state.activeTurn?.agentResponse?.activities);
 
     const a2uiAction: A2uiAction = {
       surfaceId,

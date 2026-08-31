@@ -128,11 +128,11 @@ export const PaginationStateSchema = z.strictObject({
 });
 export type PaginationState = z.infer<typeof PaginationStateSchema>;
 
-export const SetSortPayloadSchema = z.strictObject({
+export const SelectSortPayloadSchema = z.strictObject({
   fields: z.array(z.unknown()),
   sortCriteria: z.string(),
 });
-export type SetSortPayload = z.infer<typeof SetSortPayloadSchema>;
+export type SelectSortPayload = z.infer<typeof SelectSortPayloadSchema>;
 
 export const SortCriterionSchema = z.strictObject({
   fields: z.array(z.unknown()),
@@ -207,10 +207,10 @@ export const SetPageSizeSchema = z.strictObject({
 });
 export type SetPageSize = z.infer<typeof SetPageSizeSchema>;
 
-export const SetSortSchema = z.strictObject({
-  payload: SetSortPayloadSchema,
+export const SelectSortSchema = z.strictObject({
+  payload: SelectSortPayloadSchema,
 });
-export type SetSort = z.infer<typeof SetSortSchema>;
+export type SelectSort = z.infer<typeof SelectSortSchema>;
 
 export const SortStateSchema = z.strictObject({
   appliedSort: SortCriterionSchema,
@@ -252,7 +252,7 @@ export const PaginationActionsSchema = z.strictObject({
 export type PaginationActions = z.infer<typeof PaginationActionsSchema>;
 
 export const SortActionsSchema = z.strictObject({
-  setSort: SetSortSchema,
+  selectSort: SelectSortSchema,
 });
 export type SortActions = z.infer<typeof SortActionsSchema>;
 

@@ -212,9 +212,9 @@ describe('schema-response-search action-driven recomputation', () => {
     expect((productList.products as unknown[]).length).toBe(6);
   });
 
-  it('setSort with price_asc sorts by ascending price on page 0', () => {
+  it('selectSort with price_asc sorts by ascending price on page 0', () => {
     const events = buildSearchActionEvents({
-      name: 'setSort',
+      name: 'selectSort',
       context: {sortCriteria: 'price_asc'},
     });
     const components = findStateSnapshotComponents(events);
@@ -256,7 +256,7 @@ describe('schema-response-search stateful surface across actions', () => {
   });
 
   it('preserves the sort criteria when changing page after sorting', () => {
-    buildSearchActionEvents({name: 'setSort', context: {sortCriteria: 'price_asc'}});
+    buildSearchActionEvents({name: 'selectSort', context: {sortCriteria: 'price_asc'}});
     const events = buildSearchActionEvents({name: 'selectPage', context: {page: 1}});
     const components = findStateSnapshotComponents(events);
     const sort = components['sort-1'] as Record<string, unknown>;
@@ -277,7 +277,7 @@ describe('schema-response-search stateful surface across actions', () => {
   });
 
   it('resets the view to defaults when the initial wetsuits response is rebuilt', () => {
-    buildSearchActionEvents({name: 'setSort', context: {sortCriteria: 'price_desc'}});
+    buildSearchActionEvents({name: 'selectSort', context: {sortCriteria: 'price_desc'}});
     buildSearchActionEvents({name: 'setPageSize', context: {pageSize: 6}});
     buildSearchActionEvents({name: 'selectPage', context: {page: 2}});
 

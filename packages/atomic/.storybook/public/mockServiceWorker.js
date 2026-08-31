@@ -1,7 +1,5 @@
 /* eslint-disable */
 /* tslint:disable */
-// biome-ignore-all lint: generated
-// biome-ignore-all assist: generated
 
 /**
  * Mock Service Worker.

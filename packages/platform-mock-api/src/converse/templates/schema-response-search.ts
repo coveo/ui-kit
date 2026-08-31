@@ -544,7 +544,7 @@ function deriveViewState(action: {
         page: 0,
       };
       break;
-    case 'setSort':
+    case 'selectSort':
       // changing sort resets to the first page
       currentView = {
         ...currentView,

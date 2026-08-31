@@ -1,5 +1,5 @@
-import {MockCommerceApi} from '@coveo/platform-mock-api';
 import {setupServer} from 'msw/node';
+import {createCommerceApi} from './commerce-api.js';
 
 /**
  * MSW mock server returning deterministic Coveo Commerce API responses.
@@ -10,6 +10,6 @@ import {setupServer} from 'msw/node';
  * `pnpm dev` / `pnpm start`, where the sample talks to the public
  * `searchuisamples` organization.
  */
-const commerceApi = new MockCommerceApi();
+const commerceApi = createCommerceApi();
 
 export const server = setupServer(...commerceApi.handlers);

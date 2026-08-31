@@ -6,6 +6,7 @@ import * as searchResponses from './search-response.js';
 
 export {MockCommerceApi} from './mock.js';
 export {commerceFacetTransformer, createFacetSearchTransformer} from './facet-transformer.js';
+export {commerceEnableResultsTransformer} from './enable-results-transformer.js';
 export {commercePaginationTransformer} from './pagination-transformer.js';
 export type {FacetSearchResponse as CommerceFacetSearchResponse} from './facet-transformer.js';
 export type {CommerceSearchResponse} from './search-response.js';

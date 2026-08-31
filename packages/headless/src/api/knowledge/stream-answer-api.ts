@@ -198,7 +198,7 @@ export const answerApi = answerSlice.injectEndpoints({
         const {configuration, generatedAnswer, insightConfiguration} =
           getState() as unknown as StreamAnswerAPIState;
         // We have to await here because the extra arguments we receive are a promise because of the 'renew-access-token-middleware.ts'.
-        const {generatedAnswerAnalyticsClient} = (await extra) as {
+        const {generatedAnswerAnalyticsClient} = extra as {
           generatedAnswerAnalyticsClient?: GeneratedAnswerAnalyticsClient;
         };
         const {organizationId, environment, accessToken} = configuration;
@@ -223,6 +223,7 @@ export const answerApi = answerSlice.injectEndpoints({
             'Content-Type': 'application/json',
             'Accept-Encoding': '*',
           },
+          openWhenHidden: true,
           fetch,
           onopen: async (res) => {
             const answerId = res.headers.get('x-answer-id');

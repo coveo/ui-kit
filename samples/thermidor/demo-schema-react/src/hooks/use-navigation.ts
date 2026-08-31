@@ -49,7 +49,7 @@ function navReducer(state: NavState, action: NavAction): NavState {
   }
 }
 
-export interface DerivedSurface {
+interface DerivedSurface {
   surfaceType: string;
   surfaceId: string;
 }
@@ -59,7 +59,7 @@ export interface DerivedSurface {
  * returns its surfaceType and surfaceId. Returns null when no such surface
  * exists (e.g. a plain-text conversational response).
  */
-export function findSurface(activities: Activity[] | undefined): DerivedSurface | null {
+function findSurface(activities: Activity[] | undefined): DerivedSurface | null {
   if (!activities) return null;
 
   for (const activity of activities) {

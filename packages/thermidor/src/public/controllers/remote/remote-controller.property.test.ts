@@ -94,7 +94,7 @@ describe('remote-controller property tests', () => {
           availableSorts: [{sortCriteria: 'relevance', fields: []}],
         },
         actions: {
-          setSort: {payload: {sortCriteria: 'relevance', fields: []}},
+          selectSort: {payload: {sortCriteria: 'relevance', fields: []}},
         },
       },
       'search-box': {

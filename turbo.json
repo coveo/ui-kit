@@ -9,6 +9,165 @@
     "affectedUsingTaskInputs": true
   },
   "tasks": {
+    "//#generate:agents-md-packages": {
+      "inputs": [
+        "AGENTS.md",
+        "packages/**/package.json",
+        "scripts/generate/agents-md-packages.mjs",
+        "scripts/packages.mjs"
+      ],
+      "outputs": ["AGENTS.md"]
+    },
+    "//#generate:catalog-info": {
+      "inputs": [
+        "packages/*/package.json",
+        "packages/*/catalog-info.config.yaml",
+        "catalog-info.ui-kit.config.yaml",
+        "scripts/generate/catalog-info.mjs",
+        "packages/*/catalog-info.yaml",
+        "catalog-info.yaml",
+        "catalog-info.ui-kit.yaml"
+      ],
+      "outputs": ["packages/*/catalog-info.yaml", "catalog-info.yaml", "catalog-info.ui-kit.yaml"]
+    },
+    "//#generate:turbo-lint-inputs": {
+      "inputs": [
+        ".oxfmtrc.json",
+        ".oxlintrc.json",
+        ".cspell.json",
+        "scripts/generate/turbo-lint-inputs.mjs",
+        "turbo.json"
+      ],
+      "outputs": ["turbo.json"]
+    },
+    "//#generate:all": {
+      "dependsOn": [
+        "//#generate:agents-md-packages",
+        "//#generate:catalog-info",
+        "//#generate:turbo-lint-inputs"
+      ]
+    },
+    "//#lint:check:oxlint": {
+      "inputs": [
+        ".oxlintrc.json",
+        "$TURBO_DEFAULT$",
+        "!**/.kiro/**",
+        "!**/.agents/skills/**",
+        "!**/node_modules/**",
+        "!**/dist/**",
+        "!**/packages/quantic/**",
+        "!**/packages/create-atomic-template/**",
+        "!**/packages/create-atomic-component/template/**",
+        "!**/packages/create-atomic-component-project/template/**",
+        "!**/packages/create-atomic-result-component/template/**",
+        "!**/.deployment.config/**",
+        "!**/packages/atomic/**/*.d.ts",
+        "!**/packages/atomic/stencil-proxy/**",
+        "!**/packages/documentation/**/assets/**",
+        "!**/packages/headless/**/coveo.analytics/**"
+      ],
+      "outputs": []
+    },
+    "//#lint:check:oxfmt": {
+      "inputs": [
+        ".oxfmtrc.json",
+        "$TURBO_DEFAULT$",
+        "!**/.kiro/**/*",
+        "!**/.agents/**/*",
+        "!AGENTS.md",
+        "!**/packages/quantic/**/*",
+        "**/packages/quantic/*.json",
+        "**/packages/quantic/catalog-info.yaml",
+        "!**/packages/create-atomic-template/**/*",
+        "!**/packages/create-atomic-component/template/**/*",
+        "!**/packages/create-atomic-component-project/template/**/*",
+        "!**/packages/create-atomic-result-component/template/**/*",
+        "!**/.deployment.config/**/*",
+        "!**/packages/atomic-legacy/**/*.tsx",
+        "!**/packages/atomic/**/*.d.ts",
+        "!**/packages/atomic/stencil-proxy/**/*",
+        "!**/packages/documentation/**/assets/**/*",
+        "!**/packages/headless/**/coveo.analytics/**/*",
+        "!**/samples/headless/rga-angular/**/*.html",
+        "!**/*.hbs",
+        "!**/*.handlebars",
+        "!**/*.tw.css",
+        "!**/*.mdx",
+        "!**/CHANGELOG.md",
+        "!.changeset/*.md",
+        ".changeset/README.md"
+      ],
+      "outputs": []
+    },
+    "//#lint:check:cspell": {
+      "inputs": [
+        ".cspell.json",
+        "**/*.md",
+        "!**/CHANGELOG.md",
+        "!packages/platform-mock-api/src/converse/templates/**"
+      ],
+      "outputs": []
+    },
+    "//#lint:check:all": {
+      "dependsOn": ["//#lint:check:oxlint", "//#lint:check:oxfmt", "//#lint:check:cspell"],
+      "outputs": []
+    },
+    "//#lint:fix:oxlint": {
+      "outputs": [],
+      "inputs": [
+        ".oxlintrc.json",
+        "$TURBO_DEFAULT$",
+        "!**/.kiro/**",
+        "!**/.agents/skills/**",
+        "!**/node_modules/**",
+        "!**/dist/**",
+        "!**/packages/quantic/**",
+        "!**/packages/create-atomic-template/**",
+        "!**/packages/create-atomic-component/template/**",
+        "!**/packages/create-atomic-component-project/template/**",
+        "!**/packages/create-atomic-result-component/template/**",
+        "!**/.deployment.config/**",
+        "!**/packages/atomic/**/*.d.ts",
+        "!**/packages/atomic/stencil-proxy/**",
+        "!**/packages/documentation/**/assets/**",
+        "!**/packages/headless/**/coveo.analytics/**"
+      ]
+    },
+    "//#lint:fix:oxfmt": {
+      "outputs": [],
+      "inputs": [
+        ".oxfmtrc.json",
+        "$TURBO_DEFAULT$",
+        "!**/.kiro/**/*",
+        "!**/.agents/**/*",
+        "!AGENTS.md",
+        "!**/packages/quantic/**/*",
+        "**/packages/quantic/*.json",
+        "**/packages/quantic/catalog-info.yaml",
+        "!**/packages/create-atomic-template/**/*",
+        "!**/packages/create-atomic-component/template/**/*",
+        "!**/packages/create-atomic-component-project/template/**/*",
+        "!**/packages/create-atomic-result-component/template/**/*",
+        "!**/.deployment.config/**/*",
+        "!**/packages/atomic-legacy/**/*.tsx",
+        "!**/packages/atomic/**/*.d.ts",
+        "!**/packages/atomic/stencil-proxy/**/*",
+        "!**/packages/documentation/**/assets/**/*",
+        "!**/packages/headless/**/coveo.analytics/**/*",
+        "!**/samples/headless/rga-angular/**/*.html",
+        "!**/*.hbs",
+        "!**/*.handlebars",
+        "!**/*.tw.css",
+        "!**/*.mdx",
+        "!**/CHANGELOG.md",
+        "!.changeset/*.md",
+        ".changeset/README.md"
+      ]
+    },
+    "//#lint:fix:all": {
+      "dependsOn": ["//#lint:fix:oxlint", "//#lint:fix:oxfmt", "//#lint:check:cspell"],
+      "outputs": []
+    },
     "build": {
       "dependsOn": ["^build"],
       "inputs": [
@@ -89,10 +248,12 @@
     "lint": {
       "outputs": []
     },
-    "lint:check": {
+    "lint:check:all": {
+      "dependsOn": ["//#lint:check:all"],
       "outputs": []
     },
-    "lint:fix": {
+    "lint:fix:all": {
+      "dependsOn": ["//#lint:fix:all"],
       "outputs": []
     },
     "clean": {
@@ -104,10 +265,7 @@
     "pnpm-lock.yaml",
     "pnpm-workspace.yaml",
     ".npmrc",
-    "tsconfig.json",
-    ".oxlintrc.json",
-    ".oxfmtrc.json",
-    ".cspell.json"
+    "tsconfig.json"
   ],
   "globalEnv": ["DEPLOYMENT_ENVIRONMENT", "NODE_ENV", "CI", "CDN_COMMIT_SHA"],
   "globalPassThroughEnv": ["GITHUB_*", "RUNNER_*", "SFDX_*", "PLAYWRIGHT_BROWSERS_PATH"]

@@ -186,17 +186,30 @@ describe('buildUnifiedConverseController', () => {
       );
     });
 
-    it('forwards the surfaceId of the active decomposedCommerceSearch routed interface', () => {
+    it('derives the surfaceId from the active turn commerceSearch surface activity', () => {
       const controller = buildController();
       const actions = getOrCreateGenerativeActions(generativeInterface);
 
       fullEngine.mutate(actions.createTurn({id: 'turn-1', prompt: 'wetsuits', status: 'complete'}));
+      fullEngine.mutate(actions.initAgentResponse({turnId: 'turn-1'}));
       fullEngine.mutate(
-        actions.setRoutedInterface({
+        actions.appendActivity({
           turnId: 'turn-1',
-          useCase: 'decomposedCommerceSearch',
-          surfaceType: 'commerceSearch',
-          surfaceId: 'ui-commerce-search',
+          activity: {
+            id: 'activity-1',
+            kind: 'a2ui-surface',
+            replace: false,
+            payload: {
+              messages: [
+                {
+                  createSurface: {
+                    surfaceType: 'commerceSearch',
+                    surfaceId: 'ui-commerce-search',
+                  },
+                },
+              ],
+            },
+          },
         })
       );
       fullEngine.mutate(actions.setActiveTurnId('turn-1'));

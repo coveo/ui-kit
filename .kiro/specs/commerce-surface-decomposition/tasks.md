@@ -24,7 +24,7 @@ This plan decomposes the monolithic `ProductSearchSurface` into individually-sta
   - [x] 1.3 Add contract schemas for decomposed commerce components
     - Add `ProductListContractSchema` (componentType `'product-list'`, state: `{ products: z.array(ProductSchema) }`, actions: `{}`)
     - Add `PaginationContractSchema` (componentType `'pagination'`, state: `{ page, pageSize, totalEntries, totalPages }`, actions: `{ selectPage: { payload: { page } } }`)
-    - Add `SortContractSchema` (componentType `'sort'`, state: `{ appliedSort, availableSorts }`, actions: `{ setSort: { payload: { sortCriteria, fields } } }`)
+    - Add `SortContractSchema` (componentType `'sort'`, state: `{ appliedSort, availableSorts }`, actions: `{ selectSort: { payload: { sortCriteria, fields } } }`)
     - Add `SearchBoxContractSchema` (componentType `'search-box'`, state: `{ query }`, actions: `{ submitQuery: { payload: { query } } }`)
     - Extend the `ComponentContractsSchema` discriminated union to include all four new schemas
     - _Requirements: 3.2, 3.3, 3.4, 3.5, 8.1, 8.2, 8.3, 8.4_
@@ -104,7 +104,7 @@ This plan decomposes the monolithic `ProductSearchSurface` into individually-sta
   - [x] 5.3 Create `SortRenderer` catalog renderer
     - Create `samples/thermidor/demo-schema-react/src/a2ui/Sort/Sort.tsx`
     - Render sort options from `controller.state` (appliedSort, availableSorts)
-    - Dispatch `setSort` action on sort change via `controller.dispatch`
+    - Dispatch `selectSort` action on sort change via `controller.dispatch`
     - _Requirements: 7.3, 9.2_
 
   - [x] 5.4 Create `SearchBoxRenderer` catalog renderer
