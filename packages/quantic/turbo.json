@@ -57,7 +57,7 @@
         "package.json",
         "force-app/main/default/.eslintrc.json",
         "force-app/main/default/lwc/**",
-        "force-app/examples/main/lwc/**"
+        "force-app/playgroundComponents/main/lwc/**"
       ],
       "outputs": []
     },
@@ -81,7 +81,7 @@
         "package.json",
         "force-app/main/default/.eslintrc.json",
         "force-app/main/default/lwc/**",
-        "force-app/examples/main/lwc/**"
+        "force-app/playgroundComponents/main/lwc/**"
       ],
       "outputs": []
     },
