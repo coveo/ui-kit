@@ -4,16 +4,13 @@ import {CoveoLinkParam, LinkPlugin} from './link';
 import {createAnalyticsClientMock} from '../../tests/analyticsClientMock';
 import {v4 as uuidv4} from 'uuid';
 
-function currentSecsSinceEpoch() {
-  return Math.floor(Date.now() / 1000);
-}
-
 describe('CoveoLinkParam class', () => {
   it('can create a new link using a uuid', () => {
     const uuid = uuidv4();
-    const link: CoveoLinkParam = new CoveoLinkParam(uuid, Date.now());
+    const creationTimestamp = Date.now();
+    const link: CoveoLinkParam = new CoveoLinkParam(uuid, creationTimestamp);
     expect(link.clientId).toBe(uuid);
-    expect(link.creationDate).toBe(currentSecsSinceEpoch());
+    expect(link.creationDate).toBe(Math.floor(creationTimestamp / 1000));
   });
 
   it('can create a new link using a uuid and timestamp', () => {
@@ -55,14 +52,15 @@ describe('CoveoLinkParam class', () => {
   });
 
   it('can serialize a link to a string', () => {
+    const creationTimestamp = Date.now();
     const coveoLink: CoveoLinkParam = new CoveoLinkParam(
       '074af291-224b-4705-9dc5-a47bd80a8db9',
-      Date.now()
+      creationTimestamp
     );
     const link = coveoLink.toString();
     const parts = link.split('.');
     expect(parts[0]).toBe('074af291224b47059dc5a47bd80a8db9');
-    expect(Number.parseInt(parts[1])).toBe(currentSecsSinceEpoch());
+    expect(Number.parseInt(parts[1])).toBe(Math.floor(creationTimestamp / 1000));
   });
 
   it('checks for expiration on a link', () => {
@@ -113,10 +111,15 @@ describe('CoveoLinkParam class', () => {
 });
 
 describe('CoveoLinkPlugin', () => {
+  // decorate() reads Date.now() internally, so the clock is frozen to keep the
+  // serialized timestamp comparable.
+  const frozenNow = 1700000000000;
+  const frozenSecsSinceEpoch = Math.floor(frozenNow / 1000);
   let link: LinkPlugin;
 
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.spyOn(Date, 'now').mockReturnValue(frozenNow);
     const analyticsClient = createAnalyticsClientMock();
     analyticsClient.getCurrentVisitorId = vi.fn(() =>
       Promise.resolve('85698661-efdf-4c6d-9cad-c4632bf81ce3')
@@ -124,11 +127,15 @@ describe('CoveoLinkPlugin', () => {
     link = new LinkPlugin({client: analyticsClient});
   });
 
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it('decorates links with valid urls and no params', async () => {
     const url: string = 'https://coveo.com';
     const result: string = await link.decorate(url);
     expect(result).toBe(
-      'https://coveo.com/?cvo_cid=85698661efdf4c6d9cadc4632bf81ce3.' + currentSecsSinceEpoch()
+      'https://coveo.com/?cvo_cid=85698661efdf4c6d9cadc4632bf81ce3.' + frozenSecsSinceEpoch
     );
   });
 
@@ -137,7 +144,7 @@ describe('CoveoLinkPlugin', () => {
     const result: string = await link.decorate(url);
     expect(result).toBe(
       'https://coveo.com/some/path/?cvo_cid=85698661efdf4c6d9cadc4632bf81ce3.' +
-        currentSecsSinceEpoch()
+        frozenSecsSinceEpoch
     );
   });
 
@@ -146,7 +153,7 @@ describe('CoveoLinkPlugin', () => {
     const result: string = await link.decorate(url);
     expect(result).toBe(
       'https://coveo.com/query?q=something&p=param&cvo_cid=85698661efdf4c6d9cadc4632bf81ce3.' +
-        currentSecsSinceEpoch()
+        frozenSecsSinceEpoch
     );
   });
 
@@ -155,7 +162,7 @@ describe('CoveoLinkPlugin', () => {
     const result: string = await link.decorate(url);
     expect(result).toBe(
       'https://coveo.com/?q=something&cvo_cid=85698661efdf4c6d9cadc4632bf81ce3.' +
-        currentSecsSinceEpoch() +
+        frozenSecsSinceEpoch +
         '#frag'
     );
   });
@@ -164,7 +171,7 @@ describe('CoveoLinkPlugin', () => {
     const url: string = 'https://coveo.com/?cvo_cid=c0b48880743e484f8044d7c37910c55b.1676298678';
     const result: string = await link.decorate(url);
     expect(result).toBe(
-      'https://coveo.com/?cvo_cid=85698661efdf4c6d9cadc4632bf81ce3.' + currentSecsSinceEpoch()
+      'https://coveo.com/?cvo_cid=85698661efdf4c6d9cadc4632bf81ce3.' + frozenSecsSinceEpoch
     );
   });
 
