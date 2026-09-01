@@ -85,11 +85,11 @@ catalog:
   '@types/node': 24.13.3
   '@types/react': 19.2.18
   '@types/react-dom': 19.2.5
-  '@vitejs/plugin-react': 6.0.5
+  '@vitejs/plugin-react': 6.1.0
   '@vitest/browser-playwright': 4.1.10
   abortcontroller-polyfill: 1.7.8
   dayjs: 1.11.23
-  dompurify: 3.4.13
+  dompurify: 3.4.14
   dotenv: 17.4.2
   esbuild: 0.28.2
   esbuild-plugin-umd-wrapper: 3.0.0
@@ -115,7 +115,7 @@ catalog:
   rxjs: 7.8.2
   react: 19.2.8
   react-dom: 19.2.8
-  rollup: 4.62.4
+  rollup: 4.63.0
   rollup-plugin-string: 3.0.0
   rollup-plugin-node-polyfills: 0.2.1
   ts-dedent: 2.3.0
@@ -123,7 +123,7 @@ catalog:
   typedoc: 0.28.20
   typescript: 6.0.3
   uuid: 14.0.2
-  vite: 8.2.1
+  vite: 8.2.2
   vitest: 4.1.10
   yaml: 2.9.0
   zod: 4.4.3
