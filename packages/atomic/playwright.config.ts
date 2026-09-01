@@ -12,6 +12,8 @@ const DEFAULT_DESKTOP_VIEWPORT = {
   height: 1080,
 };
 
+// TEMPORARY: touch this file so the affected-task calculation schedules the
+// sharded Atomic jobs, which a CI-config-only change does not. Not for merge.
 export default defineConfig({
   testDir: './src',
   testMatch: '*.e2e.ts',
