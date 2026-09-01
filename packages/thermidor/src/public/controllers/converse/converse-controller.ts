@@ -13,6 +13,7 @@ import {getOrCreateGenerativeSelectors} from '@/src/internal/features/generative
 import type {GenerativeInterface} from '@/src/internal/utils/index.js';
 import type {Controller} from '@/src/internal/utils/index.js';
 import {SerializedConverseState, SerializedTurn} from './converse-controller-serialization.js';
+import type {RemoteControllerAction} from '../remote/remote-controller.js';
 
 class ConverseControllerImpl extends BaseController<ConverseControllerState> {
   #runtime: GenerativeRuntime;
@@ -60,6 +61,9 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
         },
         setActiveTurnId: (id) => {
           this.engine.mutate(this.#actions.setActiveTurnId(id));
+        },
+        getActiveTurnId: () => {
+          return this.engine.read(this.#selectors.getActiveTurnId);
         },
         replaceTurnId: (oldId, newId) => {
           this.engine.mutate(this.#actions.replaceTurnId({oldId, newId}));
@@ -206,6 +210,10 @@ class ConverseControllerImpl extends BaseController<ConverseControllerState> {
     }
     this.#runtime.resubmit(id, turn.prompt);
   }
+
+  dispatchAction(action: RemoteControllerAction): Promise<void> {
+    return this.#runtime.dispatchAction(action);
+  }
 }
 
 export const buildConverseController = (options: ConverseControllerOptions): ConverseController =>
@@ -218,6 +226,8 @@ export interface ConverseController extends Controller<ConverseControllerState> 
   submit(options: {prompt: string}): void;
   selectTurn(options: {id: string}): void;
   retry(options: {id: string}): void;
+  /** Sends a schema-derived remote controller action to the AG-UI gateway. */
+  dispatchAction(action: RemoteControllerAction): Promise<void>;
 }
 
 export interface ConverseControllerState {
@@ -242,11 +252,10 @@ function hydrateFromSerializedState(serialized: SerializedConverseState): Genera
       turn.error = 'Stream was interrupted';
     }
 
-    if (
-      routedInterface &&
-      (routedInterface.useCase === 'commerceSearch' || routedInterface.useCase === 'search')
-    ) {
-      turn.routedInterface = {useCase: routedInterface.useCase};
+    if (routedInterface) {
+      if (routedInterface.useCase === 'commerceSearch' || routedInterface.useCase === 'search') {
+        turn.routedInterface = {useCase: routedInterface.useCase};
+      }
     }
 
     return turn;

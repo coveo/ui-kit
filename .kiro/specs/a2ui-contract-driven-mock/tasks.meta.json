@@ -1,0 +1,411 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Create `packages/thermidor-schema/schema/definitions/action-item.schema.json`": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649843017
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649860014
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649938198
+      }
+    ],
+    "1.2 Create `packages/thermidor-schema/schema/definitions/bundle-tier.schema.json`": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649843045
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649860924
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649939028
+      }
+    ],
+    "1.3 Create `packages/thermidor-schema/schema/definitions/comparison-product.schema.json`": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649843072
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649861875
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649939871
+      }
+    ],
+    "1.4 Create `packages/thermidor-schema/schema/definitions/comparison-attribute.schema.json`": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649843096
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649862887
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649940770
+      }
+    ],
+    "2.1 Create `packages/thermidor-schema/schema/controllers/next-actions.schema.json`": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649843134
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649956314
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650045286
+      }
+    ],
+    "2.2 Create `packages/thermidor-schema/schema/controllers/bundle-display.schema.json`": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649843176
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649957160
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650046157
+      }
+    ],
+    "2.3 Create `packages/thermidor-schema/schema/controllers/comparison-table.schema.json`": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649843202
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649958121
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650047076
+      }
+    ],
+    "3.1 Create `packages/thermidor-schema/schema/components/next-actions-bar.schema.json`": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649843226
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650055833
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650136256
+      }
+    ],
+    "3.2 Create `packages/thermidor-schema/schema/components/bundle-display.schema.json`": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649843251
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650056741
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650137074
+      }
+    ],
+    "3.3 Create `packages/thermidor-schema/schema/components/comparison-table.schema.json`": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649843284
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650057593
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650137965
+      }
+    ],
+    "3.4 Update `packages/thermidor-schema/schema/controllers/controller-contracts.schema.json`": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649843311
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650058514
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650138902
+      }
+    ],
+    "4.1 Run `pnpm run generate` in `packages/thermidor-schema`": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649843335
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650142937
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650281494
+      }
+    ],
+    "4.2 Update `packages/thermidor-schema/src/index.ts` to export new schemas and types": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649843361
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650285506
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650348417
+      }
+    ],
+    "5. Checkpoint - Verify schema generation": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649843395
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650353691
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650361477
+      }
+    ],
+    "6.1 Rewrite `packages/platform-mock-api/src/converse/templates/response5.ts` (fallback — NextActionsBar)": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649843436
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650388373
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650653692
+      }
+    ],
+    "6.2 Rewrite `packages/platform-mock-api/src/converse/templates/response1.ts` (BundleDisplay)": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649843464
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650389510
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650654472
+      }
+    ],
+    "6.3 Rewrite `packages/platform-mock-api/src/converse/templates/response8.ts` (ComparisonTable)": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649843495
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650390590
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650655383
+      }
+    ],
+    "7.1 Update `samples/thermidor/demo-schema-react/src/a2ui/components.tsx` to add new catalog definitions and renderers": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649843524
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650392011
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650656431
+      }
+    ],
+    "8. Checkpoint - Build and verify end-to-end": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649843552
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650661419
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650679292
+      }
+    ],
+    "9.1 Add test fixtures and extend `packages/thermidor-schema/tests/contract.test.ts`": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649843578
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650688248
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650854790
+      }
+    ],
+    "10. Final checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649843608
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650859763
+      },
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650898767
+      }
+    ],
+    "1. Create JSON Schema definition files": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786649940820
+      }
+    ],
+    "2. Create controller JSON Schema files": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650047119
+      }
+    ],
+    "3. Create component JSON Schema files and update controller-contracts": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650138975
+      }
+    ],
+    "4. Run schema generation and update exports": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650348466
+      }
+    ],
+    "6. Rewrite mock templates in `packages/platform-mock-api`": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650655434
+      }
+    ],
+    "7. Register catalog renderers in `samples/thermidor/demo-schema-react`": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650656479
+      }
+    ],
+    "9. Write unit tests and property-based tests": [
+      {
+        "executionId": "8071884d-62ab-47c8-8d8e-c821eb714c36",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786650854851
+      }
+    ]
+  }
+}

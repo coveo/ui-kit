@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.thermidor.coveo.com/components/product-list.schema.json",
+  "title": "ProductList",
+  "description": "Renders an ordered list of commerce products from a decomposed commerce search surface. Read-only from the frontend: the backend is the sole source of truth for which products are displayed and in what order.",
+  "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/component.schema.json"}],
+  "properties": {
+    "componentType": {
+      "type": "string",
+      "const": "product-list"
+    },
+    "state": {"$ref": "#/$defs/ProductListState"},
+    "actions": {
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "ProductListState": {
+      "title": "ProductListState",
+      "description": "The ordered list of products to render. Owned exclusively by the backend; the frontend must not mutate this directly.",
+      "type": "object",
+      "required": ["products"],
+      "properties": {
+        "products": {
+          "type": "array",
+          "description": "Ordered list of products to render.",
+          "items": {
+            "$ref": "https://schema.thermidor.coveo.com/definitions/product.schema.json"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

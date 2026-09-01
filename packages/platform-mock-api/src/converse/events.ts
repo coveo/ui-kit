@@ -8,6 +8,9 @@ const DEFAULT_DELAY_MS = 25;
 let runSequence = 0;
 
 type ConverseEventType =
+  | 'RUN_STARTED'
+  | 'RUN_FINISHED'
+  | 'ACTIVITY_SNAPSHOT'
   | 'turn_started'
   | 'turn_complete'
   | 'message'
@@ -52,7 +55,7 @@ const TurnComplete = (options: Partial<TurnStartedData> = {}): ConverseEvent => 
 });
 
 const RunStarted = (options: {threadId?: string; runId?: string} = {}): ConverseEvent => ({
-  event: 'message',
+  event: 'RUN_STARTED',
   data: {
     type: 'RUN_STARTED',
     threadId: options.threadId ?? DEFAULT_THREAD_ID,
@@ -61,7 +64,7 @@ const RunStarted = (options: {threadId?: string; runId?: string} = {}): Converse
 });
 
 const RunFinished = (options: {threadId?: string; runId?: string} = {}): ConverseEvent => ({
-  event: 'message',
+  event: 'RUN_FINISHED',
   data: {
     type: 'RUN_FINISHED',
     threadId: options.threadId ?? DEFAULT_THREAD_ID,
@@ -146,7 +149,7 @@ const ActivitySnapshot = (options: {
   content: Record<string, unknown>;
   replace?: boolean;
 }): ConverseEvent => ({
-  event: 'message',
+  event: 'ACTIVITY_SNAPSHOT',
   data: {
     type: 'ACTIVITY_SNAPSHOT',
     timestamp: options.timestamp ?? Date.now(),

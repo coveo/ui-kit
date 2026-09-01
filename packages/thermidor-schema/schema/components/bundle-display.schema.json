@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.thermidor.coveo.com/components/bundle-display.schema.json",
+  "title": "BundleDisplay",
+  "description": "Renders a tiered product bundle layout with budget, mid-range, and premium options. Each tier contains slots that reference product surfaces.",
+  "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/component.schema.json"}],
+  "properties": {
+    "componentType": {
+      "type": "string",
+      "const": "bundle-display"
+    },
+    "state": {"$ref": "#/$defs/BundleDisplayState"},
+    "actions": {
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "BundleDisplayState": {
+      "title": "BundleDisplayState",
+      "description": "The tiered product bundle layout. Owned exclusively by the backend; the frontend must not mutate this directly.",
+      "$comment": "This schema validates the runtime state value the backend pushes to the frontend.",
+      "type": "object",
+      "required": ["tiers"],
+      "properties": {
+        "tiers": {
+          "type": "array",
+          "description": "Ordered list of bundle tiers to render.",
+          "items": {
+            "$ref": "https://schema.thermidor.coveo.com/definitions/bundle-tier.schema.json"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

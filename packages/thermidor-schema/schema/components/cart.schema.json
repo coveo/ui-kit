@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.thermidor.coveo.com/components/cart.schema.json",
+  "title": "Cart",
+  "description": "Renders the current cart contents and exposes actions for the frontend to manage line items.",
+  "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/component.schema.json"}],
+  "properties": {
+    "componentType": {
+      "type": "string",
+      "const": "cart"
+    },
+    "state": {"$ref": "#/$defs/CartState"},
+    "actions": {
+      "type": "object",
+      "required": ["setItems", "updateItemQuantity"],
+      "properties": {
+        "setItems": {"$ref": "#/$defs/SetItemsAction"},
+        "updateItemQuantity": {"$ref": "#/$defs/UpdateItemQuantityAction"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "CartState": {
+      "title": "CartState",
+      "description": "The current contents of the cart. Owned exclusively by the backend; the frontend must not mutate this directly.",
+      "$comment": "This schema validates the runtime state value the backend pushes to the frontend.",
+      "type": "object",
+      "required": ["items"],
+      "properties": {
+        "items": {
+          "type": "array",
+          "description": "The current line items in the cart.",
+          "items": {
+            "$ref": "https://schema.thermidor.coveo.com/definitions/cart-item.schema.json"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "SetItemsAction": {
+      "title": "setItems",
+      "description": "Replaces the entire cart contents with the provided list of items.",
+      "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"}],
+      "properties": {
+        "payload": {
+          "type": "object",
+          "required": ["items"],
+          "properties": {
+            "items": {
+              "type": "array",
+              "description": "The new complete list of cart items. An empty array clears the cart.",
+              "items": {
+                "$ref": "https://schema.thermidor.coveo.com/definitions/cart-item.schema.json"
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "UpdateItemQuantityAction": {
+      "title": "updateItemQuantity",
+      "description": "Updates the quantity of a single existing cart line item identified by productId.",
+      "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"}],
+      "properties": {
+        "payload": {
+          "type": "object",
+          "required": ["item"],
+          "properties": {
+            "item": {
+              "$ref": "https://schema.thermidor.coveo.com/definitions/cart-item.schema.json"
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}
