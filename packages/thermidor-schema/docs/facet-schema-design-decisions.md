@@ -72,7 +72,7 @@ If the transport evolves to keep the SSE connection open (enabling push-based in
 
 **Headless:** The custom range is mixed into the `values` array or tracked implicitly.
 
-**Thermidor schema:** A separate required nullable `customRange: { start, end, endInclusive, numberOfResults } | null` field on the state, alongside the `values` array.
+**Thermidor schema:** A separate required nullable `customRange: { start, end, numberOfResults } | null` field on the state, alongside the `values` array.
 
 **Why:** Custom ranges and listed ranges are mutually exclusive and serve different UI purposes (manual input vs. checkboxes). Keeping them separate makes the mutual exclusivity visible in state structure and lets the consumer populate the input field directly from `customRange` without scanning `values`.
 
