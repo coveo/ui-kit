@@ -1,7 +1,11 @@
 {
   $schema: 'https://docs.renovatebot.com/renovate-schema.json',
   enabled: true,
-  extends: ['github>coveo/renovate-presets', 'helpers:pinGitHubActionDigests'],
+  extends: [
+    'github>coveo/renovate-presets',
+    'github>coveo/renovate-presets//auto-merge.json',
+    'helpers:pinGitHubActionDigests',
+  ],
   labels: ['dependencies'],
   dependencyDashboard: true,
   minimumReleaseAge: '7 days',
@@ -26,6 +30,7 @@
       groupSlug: 'changesets',
       description: 'Isolate @changesets/* since we rely on experimental options that may change in a patch update',
       matchPackageNames: ['@changesets/*'],
+      automerge: false,
     },
     {
       groupName: 'wc-toolkit storybook-helpers',
