@@ -46,8 +46,8 @@ catalogs:
       specifier: 2.2.19
       version: 2.2.19
     '@coveo/relay-event-types':
-      specifier: 19.22.0
-      version: 19.22.0
+      specifier: 20.5.1
+      version: 20.5.1
     '@msw/playwright':
       specifier: 0.6.7
       version: 0.6.7
@@ -356,7 +356,7 @@ importers:
         version: link:../headless
       '@coveo/relay-event-types':
         specifier: 'catalog:'
-        version: 19.22.0
+        version: 20.5.1
       '@lit/context':
         specifier: 1.1.6
         version: 1.1.6
@@ -1141,7 +1141,7 @@ importers:
         version: link:../relay
       '@coveo/relay-event-types':
         specifier: 'catalog:'
-        version: 19.22.0
+        version: 20.5.1
       '@reduxjs/toolkit':
         specifier: 'catalog:'
         version: 2.12.0(react@19.2.8)
@@ -1338,7 +1338,7 @@ importers:
         version: link:../platform-mock-api
       '@coveo/relay-event-types':
         specifier: 'catalog:'
-        version: 19.22.0
+        version: 20.5.1
       '@octokit/graphql':
         specifier: 9.0.3
         version: 9.0.3
@@ -2006,7 +2006,7 @@ importers:
     devDependencies:
       '@coveo/relay-event-types':
         specifier: 'catalog:'
-        version: 19.22.0
+        version: 20.5.1
       '@react-router/dev':
         specifier: 'catalog:'
         version: 8.3.0(@react-router/serve@8.3.0(react-router@8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(supports-color@8.1.1)(typescript@6.0.3))(react-router@8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(supports-color@8.1.1)(typescript@6.0.3)(vite@8.2.1(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.0(supports-color@8.1.1))(sass@1.103.1)(terser@5.50.0)(yaml@2.9.0))
@@ -3801,8 +3801,8 @@ packages:
   '@coveo/platform-client@62.0.0':
     resolution: {integrity: sha512-ATiguoYVKcfNSHWTBaMQmVdaZ6e+T/cKubjlvV/201O7p9+97WbLFnHkviD/IprfY0oP40pDs3dxECU/iAXw3g==}
 
-  '@coveo/relay-event-types@19.22.0':
-    resolution: {integrity: sha512-LBU5lP+C9tCwZmjh8VgRi36yBfBgEBp9FAASneG9ZRUmnZZUfXkOqaWqSDzSdmrAcFwBQSYMLw1fr28usw/x1Q==}
+  '@coveo/relay-event-types@20.5.1':
+    resolution: {integrity: sha512-LVIRBps/lUI2SW53qH7cNtYPu0impjNjsTjndA55qEw4o1dhW7PeuudhUaGN7sOq2tZQoXi+ElL+gbmPyAxASQ==}
 
   '@coveo/semantic-monorepo-tools@2.7.1':
     resolution: {integrity: sha512-yPUdpPgoZWxX/lyhQWaskwGXS4ZFLsOK4QVUyD+1BtOk/827vqw93Q7UD4aumuYMVKTDnGjjHOEmHl07nzUvYw==}
@@ -19296,7 +19296,7 @@ snapshots:
       query-string-cjs: query-string@7.1.3
       query-string-esm: query-string@9.5.0
 
-  '@coveo/relay-event-types@19.22.0': {}
+  '@coveo/relay-event-types@20.5.1': {}
 
   '@coveo/semantic-monorepo-tools@2.7.1(supports-color@8.1.1)':
     dependencies:
