@@ -20,7 +20,7 @@
     "@angular/compiler-cli": "catalog:",
     "@coveo/headless": "workspace:*",
     "@types/node": "catalog:",
-    "ng-packagr": "20.3.2",
+    "ng-packagr": "22.1.1",
     "tslib": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:"
