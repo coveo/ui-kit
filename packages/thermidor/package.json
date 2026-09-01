@@ -41,7 +41,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@microsoft/api-extractor": "7.58.12",
+    "@microsoft/api-extractor": "7.59.0",
     "fast-check": "4.9.0",
     "publint": "catalog:",
     "tsdown": "0.22.14",
