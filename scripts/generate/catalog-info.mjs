@@ -12,9 +12,10 @@
  *   node scripts/generate/catalog-info.mjs
  */
 
-import {readFileSync, writeFileSync, readdirSync, statSync, existsSync} from 'node:fs';
+import {readFileSync, writeFileSync, existsSync} from 'node:fs';
 import {resolve, relative} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {getAllPackageDirs} from '../packages.mjs';
 
 const rootDir = resolve(fileURLToPath(import.meta.url), '..', '..', '..');
 const packagesDir = resolve(rootDir, 'packages');
@@ -194,10 +195,7 @@ function getWorkspaceDependsOn(manifest, catalogComponents) {
 }
 
 function main() {
-  const packageDirs = readdirSync(packagesDir).filter((dir) => {
-    const fullPath = resolve(packagesDir, dir);
-    return statSync(fullPath).isDirectory() && existsSync(resolve(fullPath, 'package.json'));
-  });
+  const packageDirs = getAllPackageDirs(rootDir);
 
   /** @type {Map<string, {manifest: object, config: Record<string, string>}>} */
   const catalogPackages = new Map();
