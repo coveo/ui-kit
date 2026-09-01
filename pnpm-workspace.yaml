@@ -90,7 +90,7 @@ catalog:
   abortcontroller-polyfill: 1.7.8
   dayjs: 1.11.23
   dompurify: 3.4.13
-  dotenv: 17.2.3
+  dotenv: 17.4.2
   esbuild: 0.28.2
   esbuild-plugin-umd-wrapper: 3.0.0
   exponential-backoff: 3.1.3
