@@ -1,0 +1,61 @@
+<template>
+  <c-example-layout
+    title={pageTitle}
+    description={pageDescription}
+    show-preview={isConfigured}
+  >
+    <c-configurator
+      slot="configuration"
+      options={options}
+      ontryitnow={handleTryItNow}
+    >
+      <div slot="actions" class="slds-var-p-bottom_x-small">
+        <c-action-add-facets
+          label="Add Facets"
+          data-id="add-facets"
+          slot="actions"
+          disabled={notConfigured}
+          engine-id={engineId}
+        >
+        </c-action-add-facets>
+      </div>
+      <c-action-add-facets
+        label="Add Facets Without Inputs"
+        data-id="add-facets-without-inputs"
+        slot="actions"
+        disabled={notConfigured}
+        engine-id={engineId}
+        without-inputs
+      >
+      </c-action-add-facets>
+    </c-configurator>
+
+    <c-quantic-search-interface slot="preview" engine-id={engineId}>
+      <div class="container slds-is-relative slds-var-p-around_small">
+        <div>
+          <c-quantic-refine-toggle
+            engine-id={engineId}
+            full-screen={config.fullScreen}
+            hide-sort={config.hideSort}
+            title={config.title}
+            disable-dynamic-navigation={config.disableDynamicNavigation}
+          >
+            <div slot="refine-title" class="refine-modal__title">
+              Custom Title
+            </div>
+            <div slot="button-content">
+              Custom Label
+              <lightning-icon
+                size="x-small"
+                icon-name="utility:filterList"
+                alternative-text={config.title}
+                class="custom-refine-icon slds-current-color slds-var-p-vertical_x-small slds-button__icon_right"
+              >
+              </lightning-icon>
+            </div>
+          </c-quantic-refine-toggle>
+        </div>
+      </div>
+    </c-quantic-search-interface>
+  </c-example-layout>
+</template>

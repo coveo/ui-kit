@@ -1,0 +1,10 @@
+.page-content {
+    max-width: 1400px;
+    width: 100%;
+    min-width: 800px;
+    min-height: 500px;
+}
+
+.content-grow > .slds-col.flex-grow {
+    flex-grow: 1;
+}

@@ -1,0 +1,34 @@
+<template>
+  <c-example-layout
+    title={pageTitle}
+    description={pageDescription}
+    show-preview={isConfigured}
+  >
+    <c-configurator slot="configuration" options={options} ontryitnow={handleTryItNow}>
+      <c-action-perform-search slot="actions" engine-id={engineId}></c-action-perform-search>
+    </c-configurator>
+
+    <c-example-use-case slot="preview" use-case={config.useCase} engine-id={engineId}>
+      <div class="slds-grid">
+        <ul class="slds-tabs_default slds-tabs_default__nav" role="tablist">
+          <c-quantic-tab engine-id={engineId} name="All" label="All" clear-filters-on-tab-change={config.clearFiltersOnTabChange}></c-quantic-tab>
+          <c-quantic-tab
+            engine-id={engineId}
+            name={config.name}
+            label={config.label}
+            expression={config.expression}
+            is-active={config.isActive}
+            clear-filters-on-tab-change={config.clearFiltersOnTabChange}
+          ></c-quantic-tab>
+          <c-quantic-tab
+            engine-id={engineId}
+            name="Knowledge"
+            label="Knowledge"
+            expression="@objecttype==Knowledge"
+            clear-filters-on-tab-change={config.clearFiltersOnTabChange}
+          ></c-quantic-tab>
+        </ul> 
+      </div>
+    </c-example-use-case>
+  </c-example-layout>
+</template>

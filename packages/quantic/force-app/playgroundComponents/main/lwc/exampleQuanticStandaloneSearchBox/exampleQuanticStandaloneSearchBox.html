@@ -1,0 +1,25 @@
+<template>
+    <c-example-layout
+        title={pageTitle}
+        description={pageDescription}
+        show-preview={isConfigured}>
+      
+        <div slot="configuration">
+          <c-configurator options={options} ontryitnow={handleTryItNow}>
+            <c-action-local-storage slot="actions" storage-key={standaloneSearchboxStorageKey}></c-action-local-storage>
+          </c-configurator>
+        </div>
+    
+        <c-quantic-standalone-search-box
+            slot="preview"
+            engine-id={engineId}
+            placeholder={config.placeholder}
+            without-submit-button={config.withoutSubmitButton}
+            number-of-suggestions={config.numberOfSuggestions}
+            redirect-url={config.redirectUrl}
+            search-hub={config.searchHub}
+            pipeline={config.pipeline}
+            textarea={config.textarea}>
+        </c-quantic-standalone-search-box>
+    </c-example-layout>
+</template>
