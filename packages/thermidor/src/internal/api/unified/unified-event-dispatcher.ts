@@ -103,12 +103,17 @@ export function dispatchStreamEvent(
       return {turnId, isTerminal: false};
     }
 
-    case 'RUN_STARTED':
+    case 'RUN_STARTED': {
+      updateConversationSession(event, deps.statePort);
+      return {turnId, isTerminal: false};
+    }
+
     case 'CUSTOM': {
       return {turnId, isTerminal: false};
     }
 
     case 'RUN_FINISHED': {
+      updateConversationSession(event, deps.statePort);
       deps.statePort.completeTurn(turnId);
       return {turnId, isTerminal: true};
     }
@@ -121,7 +126,6 @@ export function dispatchStreamEvent(
       }
       return {turnId, isTerminal: false};
     }
-
     case 'turn_complete': {
       if (event.conversationSessionId || event.conversationToken) {
         deps.statePort.setConversationSession(event.conversationSessionId, event.conversationToken);
@@ -137,6 +141,24 @@ export function dispatchStreamEvent(
 
     default:
       return handleUnknownEvent(turnId, event, deps);
+  }
+}
+
+function updateConversationSession(
+  event: NormalizedStreamEvent,
+  statePort: GenerativeStatePort
+): void {
+  const metadata = event as NormalizedStreamEvent & {
+    conversationSessionId?: unknown;
+    conversationToken?: unknown;
+  };
+  const sessionId =
+    typeof metadata.conversationSessionId === 'string' ? metadata.conversationSessionId : undefined;
+  const token =
+    typeof metadata.conversationToken === 'string' ? metadata.conversationToken : undefined;
+
+  if (sessionId || token) {
+    statePort.setConversationSession(sessionId, token);
   }
 }
 

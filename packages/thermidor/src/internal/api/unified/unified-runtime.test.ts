@@ -701,7 +701,11 @@ describe('UnifiedRuntime', () => {
       setupSuccessfulStream([
         {type: 'TEXT_MESSAGE_START', role: 'assistant'} as NormalizedStreamEvent,
         {type: 'TEXT_MESSAGE_CONTENT', delta: 'hello'} as NormalizedStreamEvent,
-        {type: 'RUN_FINISHED'} as NormalizedStreamEvent,
+        {
+          type: 'RUN_FINISHED',
+          conversationSessionId: 'final-local-session',
+          conversationToken: 'final-local-token',
+        } as NormalizedStreamEvent,
       ]);
 
       const runtime = UnifiedRuntime.getInstance(engine, 'run-finished', config);
@@ -709,6 +713,10 @@ describe('UnifiedRuntime', () => {
 
       expect(config.statePort.startMessage).toHaveBeenCalledWith('generated-id-1', 'assistant');
       expect(config.statePort.appendMessageDelta).toHaveBeenCalledWith('generated-id-1', 'hello');
+      expect(config.statePort.setConversationSession).toHaveBeenCalledWith(
+        'final-local-session',
+        'final-local-token'
+      );
       expect(config.statePort.completeTurn).toHaveBeenCalledTimes(1);
       expect(config.statePort.completeTurn).toHaveBeenCalledWith('generated-id-1');
     });
@@ -734,17 +742,25 @@ describe('UnifiedRuntime', () => {
       expect(config.statePort.completeTurn).toHaveBeenCalledWith('generated-id-1');
     });
 
-    it('ignores RUN_STARTED events', async () => {
+    it('handles RUN_STARTED by updating the conversation session', async () => {
       const config = createMockConfig();
       const engine = createMockEngine();
       setupSuccessfulStream([
-        {type: 'RUN_STARTED'} as NormalizedStreamEvent,
+        {
+          type: 'RUN_STARTED',
+          conversationSessionId: 'local-session',
+          conversationToken: 'local-token',
+        } as NormalizedStreamEvent,
         {type: 'turn_complete'} as NormalizedStreamEvent,
       ]);
 
       const runtime = UnifiedRuntime.getInstance(engine, 'run-started', config);
       await runtime.submit('Hello');
 
+      expect(config.statePort.setConversationSession).toHaveBeenCalledWith(
+        'local-session',
+        'local-token'
+      );
       expect(config.statePort.completeTurn).toHaveBeenCalled();
     });
 

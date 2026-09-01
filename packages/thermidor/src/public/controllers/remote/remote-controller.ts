@@ -83,6 +83,11 @@ class RemoteControllerImpl<
 
     this.#lastRawState = rawState;
     const result = this.contract.shape.state.safeParse(rawState);
+    if (!result.success) {
+      console.warn(
+        `Invalid remote component state for ${this.componentId}: ${JSON.stringify(result.error.issues)}`
+      );
+    }
     this.#lastValidatedState =
       result.success && isRemoteControllerState(this.contract, result.data)
         ? result.data
