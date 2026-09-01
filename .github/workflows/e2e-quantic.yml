@@ -124,8 +124,8 @@ jobs:
     strategy:
       fail-fast: ${{ inputs.event_name == 'merge_group' }}
       matrix:
-        shardIndex: [1, 2, 3, 4]
-        shardTotal: [4]
+        shardIndex: [1, 2, 3, 4, 5, 6]
+        shardTotal: [6]
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
