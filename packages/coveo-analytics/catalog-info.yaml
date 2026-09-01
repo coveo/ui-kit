@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: coveo.analytics
+  title: coveo.analytics
+  description: 📈 Coveo analytics client (node and browser compatible) 
+spec:
+  type: library
+  lifecycle: production
+  owner: group:default/dxui
+  system: ui-kit
