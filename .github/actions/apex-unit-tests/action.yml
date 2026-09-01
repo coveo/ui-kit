@@ -1,4 +1,4 @@
-name: Apex Unit Tests
+name: Apex Unit Tests Tests
 description: Run Quantic Apex unit tests against an existing scratch org.
 inputs:
   target-org:
