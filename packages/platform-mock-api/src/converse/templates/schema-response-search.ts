@@ -758,11 +758,7 @@ function pageFacetSearch<T>(
   return {canShowMoreResults: matches.length > results.length, results};
 }
 
-function deriveRegularFacetSearch(
-  view: SearchViewState,
-  filteredProducts: WaterSportsProduct[],
-  componentId: string
-) {
+function deriveRegularFacetSearch(view: SearchViewState, componentId: string) {
   const query = view.facetSearchQueries[componentId];
   if (!query) {
     return {query: '', canShowMoreResults: false, results: []};
@@ -782,11 +778,7 @@ function deriveRegularFacetSearch(
   return {query, ...pageFacetSearch(matches, page)};
 }
 
-function deriveRegularFacetValues(
-  view: SearchViewState,
-  filteredProducts: WaterSportsProduct[],
-  componentId: string
-) {
+function deriveRegularFacetValues(view: SearchViewState, componentId: string) {
   // Facet counts reflect the result set as if this facet's own selections were not applied,
   // so selecting one brand never zeroes out the sibling brand counts. Other facets still
   // constrain the counts.
@@ -825,7 +817,7 @@ function deriveRegularFacetValues(
     hasActiveValues: view.selectedBrands.length > 0 || view.excludedBrands.length > 0,
     canShowMoreValues: displayCount < eligibleBrands.length,
     canShowLessValues: displayCount > REGULAR_FACET_DISPLAY_LIMIT,
-    facetSearch: deriveRegularFacetSearch(view, filteredProducts, componentId),
+    facetSearch: deriveRegularFacetSearch(view, componentId),
   };
 }
 
@@ -838,7 +830,7 @@ function rangesEqual(a: PriceRange, b: PriceRange): boolean {
   return a.start === b.start && a.end === b.end;
 }
 
-function deriveNumericFacetValues(view: SearchViewState, filteredProducts: WaterSportsProduct[]) {
+function deriveNumericFacetValues(view: SearchViewState) {
   const selectedRange = view.selectedPriceRange;
   // Range counts reflect the result set as if this facet's own range were not applied, so the
   // listed ranges keep stable counts when one of them is selected. Other facets still constrain.
@@ -960,11 +952,7 @@ function allNodePaths(): string[][] {
   return paths;
 }
 
-function deriveCategoryFacetSearch(
-  view: SearchViewState,
-  filteredProducts: WaterSportsProduct[],
-  componentId: string
-) {
+function deriveCategoryFacetSearch(view: SearchViewState, componentId: string) {
   const query = view.facetSearchQueries[componentId];
   if (!query) {
     return {query: '', canShowMoreResults: false, results: []};
@@ -983,11 +971,7 @@ function deriveCategoryFacetSearch(
   return {query, ...pageFacetSearch(matches, page)};
 }
 
-function deriveCategoryFacetValues(
-  view: SearchViewState,
-  filteredProducts: WaterSportsProduct[],
-  componentId: string
-) {
+function deriveCategoryFacetValues(view: SearchViewState, componentId: string) {
   const selectedDepth = view.selectedCategoryPath.length;
   // Category counts reflect the other active facets only; each value's own path scopes it, so
   // this facet's current selection is not applied to its own counts.
@@ -1017,7 +1001,7 @@ function deriveCategoryFacetValues(
     // Gate on the actual displayed count (bounded by the available children), so a cross-facet
     // filter that shrinks the set below the initial increment also hides "Show less".
     canShowLessValues: displayCount > CATEGORY_FACET_DISPLAY_LIMIT,
-    facetSearch: deriveCategoryFacetSearch(view, filteredProducts, componentId),
+    facetSearch: deriveCategoryFacetSearch(view, componentId),
   };
 }
 
@@ -1050,13 +1034,9 @@ function computeComponentsState(view: SearchViewState): Record<string, unknown> 
       appliedSort,
       availableSorts,
     },
-    'facet-brand-2': deriveRegularFacetValues(view, filteredProducts, FACET_COMPONENT_IDS.regular),
-    'facet-price-2': deriveNumericFacetValues(view, filteredProducts),
-    'facet-category-2': deriveCategoryFacetValues(
-      view,
-      filteredProducts,
-      FACET_COMPONENT_IDS.category
-    ),
+    'facet-brand-2': deriveRegularFacetValues(view, FACET_COMPONENT_IDS.regular),
+    'facet-price-2': deriveNumericFacetValues(view),
+    'facet-category-2': deriveCategoryFacetValues(view, FACET_COMPONENT_IDS.category),
     'facet-manager-2': {
       facetIds: ['facet-brand-2', 'facet-price-2', 'facet-category-2'],
     },
