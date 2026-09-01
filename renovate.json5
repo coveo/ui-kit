@@ -28,8 +28,8 @@
     {
       groupName: 'Changesets',
       groupSlug: 'changesets',
-      description: 'Isolate @changesets/* since we rely on experimental options that may change in a patch update',
-      matchPackageNames: ['@changesets/*'],
+      description: 'Isolate @changesets/* since we rely on experimental options that may change in a patch update. step-security/changeset-action is included so the CLI and the action that runs it move in a single PR: @changesets/cli v3 needs the action v2, whose inputs are renamed, so they cannot be bumped separately',
+      matchPackageNames: ['@changesets/*', 'step-security/changeset-action'],
       automerge: false,
     },
     {
