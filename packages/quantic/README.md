@@ -42,6 +42,15 @@ Optionally install the [VSCode Salesforce Extension Pack](https://marketplace.vi
 - You can also run this command from the command line. `sf org login web --set-default-dev-hub --alias LWC-Hub`
 - Running this command opens a browser to the Salesforce login page. Enter your Salesforce username and password. Authorize only once, not every time you work on your project.
 
+### Examples and Solution Examples
+
+Quantic has two separate Salesforce folders for examples. Use the following rule when adding a component:
+
+- **`force-app/playgroundComponents`** contains the components used to build the Quantic Examples community playground and to support Playwright end-to-end tests. Add a component here when it demonstrates an individual Quantic component, exposes its configurable properties for experimentation, or provides test coverage for the component.
+- **`force-app/solutionExamples`** contains real-world reference implementations that demonstrate how to combine Quantic components to solve a broader Salesforce use case. Examples include `exampleInsightPanel`, `exampleRelevantGenerativeAnswering`, `examplePageViewTracker` and more. Add a component here when it demonstrates an integration or reusable solution pattern rather than an individual component playground.
+
+Both folders are deployed by `pnpm run deploy:examples`. The `playgroundComponents` directory is intended for playground and test infrastructure; `solutionExamples` is intended for solution-oriented reference implementations.
+
 ### Single Command Run
 
 - Make sure you are at the root of `packages/quantic`.
