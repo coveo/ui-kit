@@ -23,16 +23,17 @@ This sample uses the `/converse-schema` route on the mock server (via `VITE_COVE
 
 ### Mock scenarios
 
-| Prompt                                                                     | Scenario                                                                                                                                            | Status              |
-| -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
-| `wetsuits`                                                                 | Decomposed commerce search — navigates to a CommerceSearchLayout with search-box, product-list, pagination, and sort catalog components (read-only) | ✅ Fully functional |
-| `build a beginner surfing kit with budget, mid-range, and premium options` | BundleDisplay with 3 tiers (Budget/Mid-Range/Premium), product-list state per slot, and NextActionsBar                                              | ✅ Fully functional |
-| `i like cold-water surfing. compare wetsuits for it`                       | ComparisonTable with 3 wetsuits, images, prices, annotations (Standout/Trade-off/Best for), AI Summary, and NextActionsBar                          | ✅ Fully functional |
-| `boating safety`                                                           | Discovery with 2 ProductCarousels (Life Jackets + Boating Safety Gear) and NextActionsBar                                                           | ✅ Fully functional |
-| Any other text (fallback)                                                  | NextActionsBar with suggested follow-up actions                                                                                                     | ✅ Fully functional |
-| `what should i pack for a snorkeling trip?`                                | Conversational with surfaces (built for `demo-react`, legacy format)                                                                                | ❌ Not supported    |
-| `kayaks`                                                                   | Routed commerce search (built for `demo-react`)                                                                                                     | ❌ Not supported    |
-| `surfboard care`                                                           | Routed search (built for `demo-react`)                                                                                                              | ❌ Not supported    |
+| Prompt                                                                     | Scenario                                                                                                                   | Status                 |
+| -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| `water sports`                                                             | Stateful decomposed commerce search with products, pagination, sorting, and brand, price, and category facets              | ✅ Fully functional    |
+| `wetsuits`                                                                 | Former decomposed commerce search scenario                                                                                 | ❌ No longer supported |
+| `build a beginner surfing kit with budget, mid-range, and premium options` | BundleDisplay with 3 tiers (Budget/Mid-Range/Premium), product-list state per slot, and NextActionsBar                     | ✅ Fully functional    |
+| `i like cold-water surfing. compare wetsuits for it`                       | ComparisonTable with 3 wetsuits, images, prices, annotations (Standout/Trade-off/Best for), AI Summary, and NextActionsBar | ✅ Fully functional    |
+| `boating safety`                                                           | Discovery with 2 ProductCarousels (Life Jackets + Boating Safety Gear) and NextActionsBar                                  | ✅ Fully functional    |
+| Any other text (fallback)                                                  | NextActionsBar with suggested follow-up actions                                                                            | ✅ Fully functional    |
+| `what should i pack for a snorkeling trip?`                                | Conversational with surfaces (built for `demo-react`, legacy format)                                                       | ❌ Not supported       |
+| `kayaks`                                                                   | Routed commerce search (built for `demo-react`)                                                                            | ❌ Not supported       |
+| `surfboard care`                                                           | Routed search (built for `demo-react`)                                                                                     | ❌ Not supported       |
 
 ## Available scripts
 

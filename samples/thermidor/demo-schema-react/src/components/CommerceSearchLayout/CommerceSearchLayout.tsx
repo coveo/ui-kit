@@ -4,6 +4,7 @@ import {ProductListRenderer} from '../../a2ui/ProductList/ProductList.js';
 import {PaginationRenderer} from '../../a2ui/Pagination/Pagination.js';
 import {PageSizeSelector} from '../../a2ui/PageSizeSelector/PageSizeSelector.js';
 import {SortRenderer} from '../../a2ui/Sort/Sort.js';
+import {FacetManagerRenderer, type FacetProps} from '../../a2ui/FacetManager/FacetManager.js';
 import {useRemoteController} from '../../a2ui/controllers.js';
 import {getA2UIMessages} from '../../a2ui/surfaces.js';
 import {useStateSource} from '../../a2ui/state-source-context.js';
@@ -13,6 +14,7 @@ import type {
   PaginationProps,
   SortProps,
   SearchBoxProps,
+  FacetManagerProps,
 } from '@coveo/thermidor-schema';
 import styles from './CommerceSearchLayout.module.css';
 
@@ -25,6 +27,10 @@ interface ComponentEntry {
   type: string;
   properties: Record<string, unknown>;
 }
+
+// The FacetManager only renders these facet leaf types; other surface components are excluded
+// from the child lookup so the map matches its name and intent.
+const FACET_COMPONENT_TYPES = new Set(['regular-facet', 'numeric-facet', 'category-facet']);
 
 /**
  * Layout shell for decomposed commerce surfaces.
@@ -88,6 +94,25 @@ export function CommerceSearchLayout({surfaceId}: CommerceSearchLayoutProps) {
   const sort = findByComponentType(components, 'sort');
   const productList = findByComponentType(components, 'product-list');
   const pagination = findByComponentType(components, 'pagination');
+  const facetManager = findByComponentType(components, 'facet-manager');
+
+  const facetChildComponents = useMemo(() => {
+    const map = new Map<string, FacetProps>();
+    for (const entry of components) {
+      const componentId = entry.properties.componentId;
+      const componentType = entry.properties.componentType;
+      if (
+        typeof componentId === 'string' &&
+        typeof componentType === 'string' &&
+        FACET_COMPONENT_TYPES.has(componentType)
+      ) {
+        // The runtime type guard above narrows this surface entry to a facet component, so
+        // its untyped properties are safely treated as facet props at this single boundary.
+        map.set(componentId, entry.properties as unknown as FacetProps);
+      }
+    }
+    return map;
+  }, [components]);
 
   if (!surface) {
     return null;
@@ -96,7 +121,14 @@ export function CommerceSearchLayout({surfaceId}: CommerceSearchLayoutProps) {
   return (
     <div data-testid="commerce-search-layout">
       <div className={styles.page}>
-        <aside className={styles.sidebar}>Facets (coming soon)</aside>
+        <aside className={styles.sidebar}>
+          {facetManager && (
+            <FacetManagerRenderer
+              props={facetManager.properties as unknown as FacetManagerProps}
+              childComponents={facetChildComponents}
+            />
+          )}
+        </aside>
         <main className={styles.main}>
           <div className={styles.topRow}>
             {searchBox && pagination && productList && (

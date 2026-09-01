@@ -5,6 +5,7 @@ export const PROMPT_SUGGESTIONS = [
   'what should i pack for a snorkeling trip?',
   'kayaks',
   'wetsuits',
+  'water sports',
   'surfboard care',
   'boating safety',
   'I like cold-water surfing. Compare wetsuits for it',
