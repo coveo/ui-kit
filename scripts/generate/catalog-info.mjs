@@ -115,7 +115,7 @@ function generateComponentYaml(manifest, config, relations) {
     metadata: {
       name: componentName,
       title: manifest.name,
-      description: manifest.description,
+      description: manifest.description.trim(),
     },
     spec: {
       type: config.type || 'library',

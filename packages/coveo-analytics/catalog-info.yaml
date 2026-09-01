@@ -3,7 +3,7 @@ kind: Component
 metadata:
   name: coveo.analytics
   title: coveo.analytics
-  description: 📈 Coveo analytics client (node and browser compatible) 
+  description: 📈 Coveo analytics client (node and browser compatible)
 spec:
   type: library
   lifecycle: production
