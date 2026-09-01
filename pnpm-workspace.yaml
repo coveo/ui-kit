@@ -61,7 +61,7 @@ catalog:
   '@angular/platform-server': 21.2.20
   '@angular/router': 21.2.20
   '@coveo/atomic-component-health-check': 2.2.19
-  '@coveo/relay-event-types': 19.22.0
+  '@coveo/relay-event-types': 20.5.1
   '@playwright/mcp': 0.0.79
   '@playwright/test': 1.62.1
   '@react-router/dev': 8.3.0
