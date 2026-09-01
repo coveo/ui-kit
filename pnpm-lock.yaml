@@ -688,9 +688,6 @@ importers:
       '@coveo/headless':
         specifier: workspace:*
         version: link:../headless
-      '@tailwindcss/postcss':
-        specifier: 'catalog:'
-        version: 4.3.3
       '@tailwindcss/vite':
         specifier: 'catalog:'
         version: 4.3.3(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.0(supports-color@8.1.1))(sass@1.103.1)(terser@5.50.0)(yaml@2.9.0))
@@ -700,9 +697,6 @@ importers:
       dayjs:
         specifier: 'catalog:'
         version: 1.11.23
-      postcss:
-        specifier: 'catalog:'
-        version: 8.5.26
       vite:
         specifier: 'catalog:'
         version: 8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.0(supports-color@8.1.1))(sass@1.103.1)(terser@5.50.0)(yaml@2.9.0)
