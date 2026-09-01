@@ -40,6 +40,15 @@ for (const {path: schemaPath, value: schema} of schemas) {
 }
 
 const catalogSchemaId = 'https://schema.thermidor.coveo.com/base/catalog.schema.json';
+const facetComponentTypes = [
+  'regular-facet',
+  'numeric-facet',
+  'date-facet',
+  'category-facet',
+] as const;
+const facetComponentTypeSet = new Set<string>(facetComponentTypes);
+
+type FacetComponentType = (typeof facetComponentTypes)[number];
 
 interface CatalogComponent {
   componentId: string;
@@ -59,6 +68,10 @@ type ReferentialIntegrityResult =
   | {valid: true; ordering: string[]}
   | {valid: false; unmatchedIds: string[]};
 
+function isFacetComponent(component: CatalogComponent): boolean {
+  return facetComponentTypeSet.has(component.componentType);
+}
+
 /**
  * Referential-integrity validator for the facet-manager component's
  * state.facetIds (Requirement 5.6).
@@ -66,11 +79,11 @@ type ReferentialIntegrityResult =
  * JSON Schema draft 2020-12 cannot generically assert that each facetIds entry
  * equals some catalog component's componentId, so per design.md this rule is
  * enforced by a validation function in the test suite. The validator reads the
- * facet-manager component's state.facetIds, collects the set of the OTHER
- * catalog components' componentIds, and checks that every ordering identifier
- * is a member. On success it returns the ordering unchanged; on mismatch it
- * returns a failure naming every unmatched identifier and produces NO reordered
- * or partial representation.
+ * facet-manager component's state.facetIds, collects the facet catalog
+ * components' componentIds, and checks that every ordering identifier is a
+ * member. On success it returns the ordering unchanged; on mismatch it returns
+ * a failure naming every unmatched identifier and produces NO reordered or
+ * partial representation.
  */
 function validateFacetManagerReferentialIntegrity(catalog: Catalog): ReferentialIntegrityResult {
   const orderingComponent = catalog.components.find(
@@ -78,9 +91,7 @@ function validateFacetManagerReferentialIntegrity(catalog: Catalog): Referential
   );
   const facetIds = (orderingComponent?.state.facetIds as string[] | undefined) ?? [];
   const componentIds = new Set(
-    catalog.components
-      .filter((component) => component.componentType !== 'facet-manager')
-      .map((component) => component.componentId)
+    catalog.components.filter(isFacetComponent).map((component) => component.componentId)
   );
   const unmatchedIds = facetIds.filter((id) => !componentIds.has(id));
   if (unmatchedIds.length > 0) {
@@ -104,7 +115,6 @@ function validateFacetManagerReferentialIntegrity(catalog: Catalog): Referential
 describe('Feature: commerce-facet-schemas, Property 6: Facet ordering referential integrity', () => {
   const NUM_RUNS = 100;
 
-  // Facet identifiers matching the componentId pattern ^[a-z][a-z0-9-]*$.
   const componentIdArb = fc
     .tuple(
       fc.constantFrom(...'abcdefghijklmnopqrstuvwxyz'.split('')),
@@ -114,7 +124,20 @@ describe('Feature: commerce-facet-schemas, Property 6: Facet ordering referentia
     )
     .map(([head, tail]) => `${head}${tail}`);
 
-  function buildComponent(componentId: string): CatalogComponent {
+  function buildFacetComponent(
+    componentId: string,
+    componentType: FacetComponentType
+  ): CatalogComponent {
+    return {
+      componentId,
+      displayName: 'Facet',
+      componentType,
+      state: {},
+      actions: {},
+    };
+  }
+
+  function buildNonFacetComponent(componentId: string): CatalogComponent {
     return {
       componentId,
       displayName: 'Product Carousel',
@@ -134,43 +157,64 @@ describe('Feature: commerce-facet-schemas, Property 6: Facet ordering referentia
     };
   }
 
-  function buildCatalog(componentIds: string[], facetIds: string[]): Catalog {
+  function buildCatalog(
+    facetComponentIds: string[],
+    facetIds: string[],
+    additionalComponents: CatalogComponent[] = []
+  ): Catalog {
     return {
       catalogId: 'a2ui-commerce-v1',
       version: '0.1.0',
-      // A catalog requires at least one component; a stable base component is
-      // always present, plus the facet-manager component holding the sequence.
       components: [
-        buildComponent('base-component'),
-        ...componentIds.map(buildComponent),
+        ...additionalComponents,
+        ...facetComponentIds.map((componentId, index) =>
+          buildFacetComponent(componentId, facetComponentTypes[index % facetComponentTypes.length]!)
+        ),
         buildOrderingComponent(facetIds),
       ],
     };
   }
 
-  it('accepts iff every facetIds entry matches a component, and names unmatched ids otherwise', () => {
+  it('accepts facet identifiers for every supported facet component type', () => {
+    const facetComponents = facetComponentTypes.map((componentType) =>
+      buildFacetComponent(`${componentType}-id`, componentType)
+    );
+    const facetIds = facetComponents.map((component) => component.componentId);
+    const catalog = buildCatalog([], facetIds, facetComponents);
+
+    const result = validateFacetManagerReferentialIntegrity(catalog);
+
+    expect(result).toStrictEqual({valid: true, ordering: facetIds});
+  });
+
+  it('rejects an identifier that only matches a non-facet component', () => {
+    const nonFacetComponentId = 'product-carousel';
+    const catalog = buildCatalog(
+      [],
+      [nonFacetComponentId],
+      [buildNonFacetComponent(nonFacetComponentId)]
+    );
+
+    const result = validateFacetManagerReferentialIntegrity(catalog);
+
+    expect(result).toStrictEqual({valid: false, unmatchedIds: [nonFacetComponentId]});
+  });
+
+  it('accepts iff every facetIds entry matches a facet component, and names unmatched ids otherwise', () => {
     const validate = ajv.getSchema(catalogSchemaId);
     expect(validate, `Ajv did not register ${catalogSchemaId}`).toBeDefined();
 
     fc.assert(
       fc.property(
-        // A set of facet component ids present in the catalog (deduplicated).
         fc.uniqueArray(componentIdArb, {minLength: 0, maxLength: 8}),
-        // Candidate ordering ids mixed with freshly generated ids that may or
-        // may not match a present component.
         fc.array(componentIdArb, {minLength: 0, maxLength: 8}),
         (presentIds, extraIds) => {
-          // 'facet-manager' is the ordering component's own id, never a facet target.
           fc.pre(!presentIds.includes('facet-manager'));
           fc.pre(!extraIds.includes('facet-manager'));
 
-          const componentIds = [...new Set([...presentIds, 'base-component'])];
-
-          // Case A: ordering drawn only from present component ids -> accepted.
-          const validOrdering = presentIds.length > 0 ? [...presentIds, 'base-component'] : [];
+          const validOrdering = presentIds;
           const validCatalog = buildCatalog(presentIds, validOrdering);
 
-          // The document is structurally valid against the catalog schema.
           expect(validate?.(validCatalog)).toBe(true);
 
           const validResult = validateFacetManagerReferentialIntegrity(validCatalog);
@@ -179,14 +223,12 @@ describe('Feature: commerce-facet-schemas, Property 6: Facet ordering referentia
             expect(validResult.ordering).toStrictEqual(validOrdering);
           }
 
-          // Case B: ordering mixes present ids with candidate ids. The iff must
-          // hold: valid exactly when every id is a known component id.
           const mixedOrdering = [...validOrdering, ...extraIds];
           const mixedCatalog = buildCatalog(presentIds, mixedOrdering);
           const mixedResult = validateFacetManagerReferentialIntegrity(mixedCatalog);
 
-          const componentIdSet = new Set(componentIds);
-          const expectedUnmatched = mixedOrdering.filter((id) => !componentIdSet.has(id));
+          const facetIdSet = new Set(presentIds);
+          const expectedUnmatched = mixedOrdering.filter((id) => !facetIdSet.has(id));
 
           if (expectedUnmatched.length === 0) {
             expect(mixedResult.valid).toBe(true);
@@ -203,15 +245,14 @@ describe('Feature: commerce-facet-schemas, Property 6: Facet ordering referentia
     );
   });
 
-  it('fails and identifies a facetIds entry absent from the catalog components', () => {
+  it('fails and identifies a facetIds entry absent from catalog facet components', () => {
     fc.assert(
       fc.property(
         fc.uniqueArray(componentIdArb, {minLength: 0, maxLength: 6}),
         componentIdArb,
         (presentIds, candidateId) => {
-          const componentIdSet = new Set([...presentIds, 'base-component']);
-          // Only exercise the mismatch branch: skip when the candidate matches.
-          fc.pre(!componentIdSet.has(candidateId));
+          const facetIdSet = new Set(presentIds);
+          fc.pre(!facetIdSet.has(candidateId));
           fc.pre(candidateId !== 'facet-manager');
           fc.pre(!presentIds.includes('facet-manager'));
 
