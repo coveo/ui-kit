@@ -22,7 +22,7 @@ import {
 // required property, carries numberOfResults < 0, carries a `state` value
 // outside {idle, selected, excluded}, or violates a documented
 // string-length/array-size bound, validation REJECTS the state. For the
-// category facet this holds at every depth of the recursive value tree.
+// category facet this holds for every value in the flat ancestry/selected/children structure.
 //
 // Validates: Requirements 1.4, 1.5, 1.6, 1.7, 2.4, 2.5, 2.6, 2.11, 3.4, 3.5,
 // 3.10, 4.4, 4.5, 4.6
