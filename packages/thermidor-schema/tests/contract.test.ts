@@ -10,15 +10,20 @@ import {
   CartItemSchema,
   CartSchema,
   CartStateSchema,
+  CategoryFacetStateSchema,
   ComparisonTableSchema,
   ComparisonTableStateSchema,
   ComponentContractsSchema,
+  DateFacetStateSchema,
+  FacetManagerStateSchema,
   NextActionsBarSchema,
   NextActionsStateSchema,
+  NumericFacetStateSchema,
   ProductCarouselSchema,
   ProductCarouselStateSchema,
   ProductListStateSchema,
   ProductSchema,
+  RegularFacetStateSchema,
   SelectActionPayloadSchema,
   SetItemsPayloadSchema,
   UpdateItemQuantityPayloadSchema,
@@ -191,6 +196,111 @@ const fixtures = [
     schema: SelectActionPayloadSchema,
     schemaId:
       'https://schema.thermidor.coveo.com/components/next-actions-bar.schema.json#/$defs/SelectActionAction/properties/payload',
+    valid: false,
+  },
+  {
+    file: 'regular-facet-state.valid.json',
+    schema: RegularFacetStateSchema,
+    schemaId:
+      'https://schema.thermidor.coveo.com/components/regular-facet.schema.json#/$defs/RegularFacetState',
+    valid: true,
+  },
+  {
+    file: 'regular-facet-state.invalid-extra-property.json',
+    schema: RegularFacetStateSchema,
+    schemaId:
+      'https://schema.thermidor.coveo.com/components/regular-facet.schema.json#/$defs/RegularFacetState',
+    valid: false,
+  },
+  {
+    file: 'regular-facet-state.invalid-state-value.json',
+    schema: RegularFacetStateSchema,
+    schemaId:
+      'https://schema.thermidor.coveo.com/components/regular-facet.schema.json#/$defs/RegularFacetState',
+    valid: false,
+  },
+  {
+    file: 'numeric-facet-state.valid.json',
+    schema: NumericFacetStateSchema,
+    schemaId:
+      'https://schema.thermidor.coveo.com/components/numeric-facet.schema.json#/$defs/NumericFacetState',
+    valid: true,
+  },
+  {
+    file: 'numeric-facet-state.invalid-negative-results.json',
+    schema: NumericFacetStateSchema,
+    schemaId:
+      'https://schema.thermidor.coveo.com/components/numeric-facet.schema.json#/$defs/NumericFacetState',
+    valid: false,
+  },
+  {
+    file: 'numeric-facet-state.invalid-state-value.json',
+    schema: NumericFacetStateSchema,
+    schemaId:
+      'https://schema.thermidor.coveo.com/components/numeric-facet.schema.json#/$defs/NumericFacetState',
+    valid: false,
+  },
+  {
+    file: 'date-facet-state.valid.json',
+    schema: DateFacetStateSchema,
+    schemaId:
+      'https://schema.thermidor.coveo.com/components/date-facet.schema.json#/$defs/DateFacetState',
+    valid: true,
+  },
+  {
+    file: 'date-facet-state.invalid-extra-property.json',
+    schema: DateFacetStateSchema,
+    schemaId:
+      'https://schema.thermidor.coveo.com/components/date-facet.schema.json#/$defs/DateFacetState',
+    valid: false,
+  },
+  {
+    file: 'date-facet-state.invalid-negative-results.json',
+    schema: DateFacetStateSchema,
+    schemaId:
+      'https://schema.thermidor.coveo.com/components/date-facet.schema.json#/$defs/DateFacetState',
+    valid: false,
+  },
+  {
+    file: 'category-facet-state.valid.json',
+    schema: CategoryFacetStateSchema,
+    schemaId:
+      'https://schema.thermidor.coveo.com/components/category-facet.schema.json#/$defs/CategoryFacetState',
+    valid: true,
+  },
+  {
+    file: 'category-facet-state.invalid-extra-property.json',
+    schema: CategoryFacetStateSchema,
+    schemaId:
+      'https://schema.thermidor.coveo.com/components/category-facet.schema.json#/$defs/CategoryFacetState',
+    valid: false,
+  },
+  {
+    file: 'category-facet-state.invalid-query-too-long.json',
+    schema: CategoryFacetStateSchema,
+    schemaId:
+      'https://schema.thermidor.coveo.com/components/category-facet.schema.json#/$defs/CategoryFacetState',
+    valid: false,
+  },
+  {
+    file: 'facet-manager-state.valid.json',
+    schema: FacetManagerStateSchema,
+    schemaId:
+      'https://schema.thermidor.coveo.com/components/facet-manager.schema.json#/$defs/FacetManagerState',
+    valid: true,
+  },
+  {
+    file: 'facet-manager-state.valid-empty.json',
+    schema: FacetManagerStateSchema,
+    schemaId:
+      'https://schema.thermidor.coveo.com/components/facet-manager.schema.json#/$defs/FacetManagerState',
+    valid: true,
+  },
+  {
+    file: 'facet-manager-state.invalid-bad-id.json',
+    schema: FacetManagerStateSchema,
+    schemaId:
+      'https://schema.thermidor.coveo.com/components/facet-manager.schema.json#/$defs/FacetManagerState',
     valid: false,
   },
 ];

@@ -115,6 +115,10 @@ This implementation has been validated against the following references:
 
 ## Known limitations / Next steps
 
+### In-flight interaction behavior (open question)
+
+`isLoading` is intentionally not part of the current contract. The frontend still needs guidance for interactions while an action request is in flight—for example, whether to disable controls, queue subsequent actions, ignore them, or show a pending state. Define this behavior before adding loading state support.
+
 ### Temporary workarounds (to remove when upstream dependencies evolve)
 
 | Item                    | Description                                                                                                                            | Remove when                                                |
