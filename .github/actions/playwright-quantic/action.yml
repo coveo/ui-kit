@@ -15,8 +15,14 @@ runs:
         pattern: quantic-playwright-env-*
         path: packages/quantic/.env
         merge-multiple: true
+    - name: Build Quantic and its dependencies
+      # Keep the build in its own argument-free Turbo invocation: passing
+      # `--shard` through `turbo run -- ...` folds the arguments into the hash
+      # of every task in the graph, defeating the remote cache for each shard.
+      run: pnpm exec turbo run '@coveo/quantic#build' --no-update-notifier
+      shell: bash
     - name: Run Playwright Tests
-      run: pnpm exec turbo run @coveo/quantic#e2e -- --shard=${INPUTS_SHARDINDEX}/${INPUTS_SHARDTOTAL}
+      run: pnpm --filter @coveo/quantic run e2e --shard=${INPUTS_SHARDINDEX}/${INPUTS_SHARDTOTAL}
       shell: bash
       env:
         INPUTS_SHARDINDEX: ${{ inputs.shardIndex }}

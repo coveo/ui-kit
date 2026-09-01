@@ -478,9 +478,15 @@ jobs:
           fetch-tags: false
           filter: blob:none
       - uses: ./.github/actions/setup
+      # Build in a separate, argument-free Turbo invocation. Passing `--shard`
+      # through `turbo run -- ...` folds the arguments into the hash of every
+      # task in the graph, so each shard produced unique build hashes and could
+      # never reuse the remote cache.
+      - name: Build Atomic and its dependencies
+        run: pnpm exec turbo run '@coveo/atomic#build' --no-update-notifier
       - name: Run Playwright tests
         id: playwright
-        run: pnpm exec turbo run '@coveo/atomic#e2e' -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+        run: pnpm --filter @coveo/atomic run e2e --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
         continue-on-error: true
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         if: ${{ !cancelled() }}
@@ -574,7 +580,11 @@ jobs:
           filter: blob:none
       - run: git branch main origin/main
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo run test:storybook --filter=@coveo/atomic -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+      # See the Playwright job: keep the build invocation free of passthrough
+      # arguments so its task hashes are shared across shards.
+      - name: Build Atomic and its dependencies
+        run: pnpm exec turbo run build --filter=@coveo/atomic --no-update-notifier
+      - run: pnpm --filter @coveo/atomic run test:storybook --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
       - name: 'Upload a11y shard report'
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
