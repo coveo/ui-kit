@@ -110,7 +110,7 @@ catalog:
   postcss: 8.5.26
   prettier: 3.9.6
   publint: 0.3.24
-  puppeteer: 24.43.1
+  puppeteer: 25.9.0
   playwright: 1.62.1
   rxjs: 7.8.2
   react: 19.2.8
