@@ -1,5 +1,13 @@
 # @coveo/ui-kit-sample-atomic-commerce-vite
 
+## 3.61.1
+
+### Patch Changes
+
+- Updated dependencies [[`94b9ec1`](https://github.com/coveo/ui-kit/commit/94b9ec1098673f370c9e1de1a702ce4119b6cf1b), [`b48aa94`](https://github.com/coveo/ui-kit/commit/b48aa94f676580bf1530c5455c296e25fe4b252f), [`f766993`](https://github.com/coveo/ui-kit/commit/f766993c34faa3ea4df05750de50b567f8995f9e), [`1c0e996`](https://github.com/coveo/ui-kit/commit/1c0e9965842f9bc9124de0cb049f6c596ce28e20), [`16404f8`](https://github.com/coveo/ui-kit/commit/16404f85bf54eeaaf748ac31103823fcf14f9610), [`2901b89`](https://github.com/coveo/ui-kit/commit/2901b893b763b9636a9be2639346663e929ca09d)]:
+  - @coveo/atomic@3.61.1
+  - @coveo/headless@3.55.3
+
 ## 3.61.0
 
 ### Patch Changes
