@@ -19,7 +19,9 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   snapshotPathTemplate: '{testDir}/{testFileDir}/__snapshots__/{arg}{ext}',
-  workers: process.env.CI ? 1 : undefined,
+  // CI runners have 4 vCPUs. The Storybook dev server shares them with the
+  // browsers, so this stays well below the core count rather than matching it.
+  workers: process.env.CI ? 2 : undefined,
   reporter: process.env.CI ? [['html'], ['list'], ['github'], ['blob']] : [['html'], ['list']],
   use: {
     trace: 'retain-on-failure',
