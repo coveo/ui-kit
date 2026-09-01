@@ -86,7 +86,7 @@ catalog:
   '@types/react': 19.2.18
   '@types/react-dom': 19.2.5
   '@vitejs/plugin-react': 6.1.0
-  '@vitest/browser-playwright': 4.1.10
+  '@vitest/browser-playwright': 4.1.11
   abortcontroller-polyfill: 1.7.8
   dayjs: 1.11.23
   dompurify: 3.4.14
@@ -124,7 +124,7 @@ catalog:
   typescript: 6.0.3
   uuid: 14.0.2
   vite: 8.2.2
-  vitest: 4.1.10
+  vitest: 4.1.11
   yaml: 2.9.0
   zod: 4.4.3
   zone.js: 0.15.1
