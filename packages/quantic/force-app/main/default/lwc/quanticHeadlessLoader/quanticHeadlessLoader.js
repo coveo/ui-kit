@@ -70,6 +70,13 @@ const getBueno = (element) => {
  * @throws {Error} If a dependency cannot be loaded.
  */
 const loadDependencies = async (element, headlessUseCase) => {
+  if (
+    headlessUseCase &&
+    !Object.prototype.hasOwnProperty.call(headlessBundles, headlessUseCase)
+  ) {
+    throw new Error(`Unsupported Headless use case: ${headlessUseCase}`);
+  }
+
   const bundleInfo = headlessUseCase
     ? headlessBundles[headlessUseCase]
     : headlessBundles.search;
@@ -88,7 +95,6 @@ const loadDependencies = async (element, headlessUseCase) => {
  * Registers the callback to run after all components for an engine are initialized.
  * @param {Function} callback The callback to invoke with the initialized engine.
  * @param {string} engineId The ID of the engine.
- * @returns {void}
  */
 const setInitializedCallback = (callback, engineId) => {
   const engine = window.coveoHeadless?.[engineId];
@@ -103,7 +109,6 @@ const setInitializedCallback = (callback, engineId) => {
 /**
  * Cancels the delayed search query.
  * @param {string} engineId The ID of the engine.
- * @returns {void}
  */
 const cancelInitializedCallback = (engineId) => {
   if (debouncers[engineId]) {
@@ -136,7 +141,6 @@ const executeInitializedCallback = async (engineId) => {
 /**
  * Schedules the engine's initialization callback after a short debounce period.
  * @param {string} engineId The ID of the engine.
- * @returns {void}
  */
 const debounceInitializedCallback = (engineId) => {
   if (!debouncers[engineId]) {
@@ -173,10 +177,9 @@ const getRegisteredComponent = (element, engineId) =>
   );
 
 /**
- * Creates the shared window state for an engine if it does not already exist.
+ * Instantiates the coveoHeadless window object and the engine attribute for the provided ID.
  * @param element The Lightning element associated with the engine.
  * @param {string} engineId The ID of the engine.
- * @returns {void}
  */
 const instantiateWindowEngineObject = (element, engineId) => {
   const newWindowEngineObject = {
@@ -219,17 +222,13 @@ async function initEngine(engineId) {
     const options = await engineState.options.promise;
     return engineState.engineConstructor(options);
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    throw new Error(
-      'Fatal error: unable to initialize Coveo Headless: ' + message
-    );
+    throw new Error('Fatal error: unable to initialize Coveo Headless', { cause: error });
   }
 }
 
 /**
  * Initializes the Quantic store for an engine when one is not already available.
  * @param {string} engineId The ID of the engine.
- * @returns {void}
  * @throws {Error} If the engine state cannot be accessed or the store cannot be initialized.
  */
 const initQuanticStore = (engineId) => {
@@ -244,10 +243,7 @@ const initQuanticStore = (engineId) => {
       engineState.bindings.store = Store.initialize();
     }
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    throw new Error(
-      'Fatal error: unable to initialize Quantic store: ' + message
-    );
+    throw new Error('Fatal error: unable to initialize Quantic store', { cause: error });
   }
 };
 
@@ -258,7 +254,6 @@ const initQuanticStore = (engineId) => {
  * @param {string} engineId The ID of the engine.
  * @param element The Lightning element to use to load dependencies.
  * @param headlessBundle The Headless bundle associated with the engine.
- * @returns {void}
  */
 function setEngineOptions(
   options,
@@ -285,7 +280,6 @@ function setEngineOptions(
  * Registers a component for future initialization.
  * @param element The Lightning element to use to load dependencies.
  * @param {string} engineId The ID of the engine.
- * @returns {void}
  */
 function registerComponentForInit(element, engineId) {
   cancelInitializedCallback(engineId);
@@ -304,7 +298,6 @@ function registerComponentForInit(element, engineId) {
  * Sets registered component to initialized.
  * @param element The Lightning element to use to load dependencies.
  * @param {string} engineId The ID of the engine.
- * @returns {void}
  * @throws {Error} If the component was not registered for the engine.
  */
 function setComponentInitialized(element, engineId) {
@@ -418,7 +411,6 @@ async function initializeWithHeadless(element, engineId, initialize) {
 /**
  * Removes the headless engine instance from the window object.
  * @param {string} engineId The ID of the engine to remove.
- * @returns {void}
  */
 function destroyEngine(engineId) {
   if (window.coveoHeadless?.[engineId]) {
@@ -431,7 +423,6 @@ function destroyEngine(engineId) {
  * @param {string} engineId The ID of the engine.
  * @param {string} facetType The store facet collection to update.
  * @param {{label: string, facetId: string, format?: Function, element?: HTMLElement, metadata?: object}} data The facet data to register.
- * @returns {void}
  */
 function registerToStore(engineId, facetType, data) {
   const store = getQuanticStore(engineId);
@@ -446,7 +437,6 @@ function registerToStore(engineId, facetType, data) {
  * Registers sort options in the engine's store.
  * @param {string} engineId The ID of the engine.
  * @param {Array<{label: string, value: string, criterion: SortCriterion}>} data The sort options to register.
- * @returns {void}
  */
 function registerSortOptionsToStore(engineId, data) {
   const store = getQuanticStore(engineId);

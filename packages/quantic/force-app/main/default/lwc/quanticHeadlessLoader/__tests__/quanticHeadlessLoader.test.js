@@ -3,6 +3,7 @@
 import LightningAlert from 'lightning/alert';
 import {Deferred} from '../../quanticUtils/quanticUtils';
 import {
+  loadDependencies,
   setInitializedCallback,
   setEngineOptions,
   registerComponentForInit,
@@ -82,6 +83,14 @@ describe('c/quanticHeadlessLoader', () => {
     testElement = document.createElement('div');
     resolvedTestConfig = new Deferred();
     resolvedTestConfig.resolve(testOptions);
+  });
+
+  describe('loadDependencies', () => {
+    it('should reject with a clear error for an unsupported use case', async () => {
+      await expect(
+        loadDependencies(testElement, 'unsupported-use-case')
+      ).rejects.toThrow('Unsupported Headless use case: unsupported-use-case');
+    });
   });
 
   afterEach(() => {
