@@ -1,32 +1,6 @@
 /* oxlint-disable @typescript-eslint/no-explicit-any -- Copied file from stencil angular output */
 
-import customElementsManifest from '@coveo/atomic/custom-elements-manifest';
 import {fromEvent} from 'rxjs';
-
-const createPropertyToAttributeMap = (): Map<string, string> => {
-  const map = new Map<string, string>();
-
-  customElementsManifest.modules.forEach((module: any) => {
-    module.declarations?.forEach((declaration: any) => {
-      if (declaration.kind === 'class' && declaration.attributes) {
-        declaration.attributes.forEach((attr: any) => {
-          if (attr.fieldName && attr.name) {
-            map.set(attr.fieldName, attr.name);
-          }
-        });
-      }
-    });
-  });
-
-  return map;
-};
-
-const propertyToAttributeMap = createPropertyToAttributeMap();
-
-const getAttributeName = (propertyName: string): string => {
-  const mappedAttr = propertyToAttributeMap.get(propertyName);
-  return mappedAttr || propertyName.replace(/([A-Z])/g, '-$1').toLowerCase();
-};
 
 export const proxyInputs = (Cmp: any, inputs: string[]) => {
   const Prototype = Cmp.prototype;
@@ -37,8 +11,7 @@ export const proxyInputs = (Cmp: any, inputs: string[]) => {
       },
       set(val: any) {
         this.z.runOutsideAngular(() => {
-          const attrName = getAttributeName(item);
-          this.el.setAttribute(attrName, val);
+          this.el[item] = val;
         });
       },
       /**

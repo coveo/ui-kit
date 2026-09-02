@@ -6,12 +6,24 @@ spec:
   type: url
   targets:
     - ./catalog-info.ui-kit.yaml
+    - ./packages/atomic-angular/projects/atomic-angular/catalog-info.yaml
     - ./packages/atomic-hosted-page/catalog-info.yaml
+    - ./packages/atomic-legacy/catalog-info.yaml
     - ./packages/atomic-react/catalog-info.yaml
     - ./packages/atomic/catalog-info.yaml
+    - ./packages/auth/catalog-info.yaml
     - ./packages/bueno/catalog-info.yaml
+    - ./packages/coveo-analytics/catalog-info.yaml
+    - ./packages/create-atomic-component-project/catalog-info.yaml
+    - ./packages/create-atomic-component/catalog-info.yaml
+    - ./packages/create-atomic-result-component/catalog-info.yaml
+    - ./packages/create-atomic-rollup-plugin/catalog-info.yaml
+    - ./packages/create-atomic/catalog-info.yaml
+    - ./packages/create-ui/catalog-info.yaml
     - ./packages/headless-react/catalog-info.yaml
     - ./packages/headless/catalog-info.yaml
     - ./packages/quantic/catalog-info.yaml
+    - ./packages/relay/catalog-info.yaml
     - ./packages/shopify/catalog-info.yaml
+    - ./packages/thermidor-schema/catalog-info.yaml
     - ./packages/thermidor/catalog-info.yaml

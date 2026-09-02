@@ -1,0 +1,16 @@
+{
+  "field": "category",
+  "displayName": "Category",
+  "values": {
+    "ancestry": [],
+    "selected": null,
+    "children": []
+  },
+  "canShowMoreValues": false,
+  "canShowLessValues": false,
+  "facetSearch": {
+    "query": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "canShowMoreResults": false,
+    "results": []
+  }
+}

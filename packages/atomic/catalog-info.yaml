@@ -10,5 +10,6 @@ spec:
   owner: group:default/dxui
   system: ui-kit
   dependsOn:
+    - component:atomic-legacy
     - component:bueno
     - component:headless

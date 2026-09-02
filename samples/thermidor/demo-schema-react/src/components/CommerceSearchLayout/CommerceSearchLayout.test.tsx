@@ -79,6 +79,12 @@ vi.mock('../../a2ui/SearchBox/SearchBox.js', () => ({
   ),
 }));
 
+vi.mock('../../a2ui/FacetManager/FacetManager.js', () => ({
+  FacetManagerRenderer: ({props}: {props: {componentId: string}}) => (
+    <div data-testid={`facet-manager-${props.componentId}`}>FacetManager</div>
+  ),
+}));
+
 vi.mock('./CommerceSearchLayout.module.css', () => ({
   default: {
     layout: 'layout',
@@ -228,16 +234,21 @@ describe('Feature: commerce-surface-decomposition, Property 6: Partial component
     );
   });
 
-  describe('facets sidebar placeholder', () => {
-    it('renders the non-interactive "Facets (coming soon)" placeholder', () => {
+  describe('facets sidebar', () => {
+    it('renders the FacetManager in the sidebar when a facet-manager component is present', () => {
+      mockSurface = buildSurface(['product-list', 'facet-manager']);
+      render(<CommerceSearchLayout surfaceId="test-surface" />);
+
+      const facetManager = screen.getByTestId('facet-manager-facet-manager-1');
+      expect(facetManager).toBeDefined();
+      expect(facetManager.closest('aside')).not.toBeNull();
+    });
+
+    it('renders no FacetManager in the sidebar when no facet-manager component is present', () => {
       mockSurface = buildSurface(['product-list']);
       const {container} = render(<CommerceSearchLayout surfaceId="test-surface" />);
 
-      const sidebar = screen.getByText('Facets (coming soon)').closest('aside')!;
-      expect(sidebar).not.toBeNull();
-      expect(sidebar.getAttribute('role')).toBeNull();
-      expect(sidebar.getAttribute('tabindex')).toBeNull();
-      expect(container.querySelector('[role="status"]')).toBeNull();
+      expect(container.querySelector('[data-testid="facet-manager-facet-manager-1"]')).toBeNull();
     });
   });
 

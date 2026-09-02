@@ -1,0 +1,23 @@
+{
+  "field": "category",
+  "displayName": "Category",
+  "values": {
+    "ancestry": [],
+    "selected": null,
+    "children": [
+      {
+        "path": ["Sports"],
+        "value": "Sports",
+        "numberOfResults": 30
+      }
+    ]
+  },
+  "canShowMoreValues": true,
+  "canShowLessValues": false,
+  "facetSearch": {
+    "query": "",
+    "canShowMoreResults": false,
+    "results": []
+  },
+  "unsupported": true
+}

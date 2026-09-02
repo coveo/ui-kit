@@ -1,0 +1,16 @@
+{
+  "field": "date",
+  "displayName": "Date",
+  "values": [
+    {
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "numberOfResults": 7,
+      "state": "selected"
+    }
+  ],
+  "hasActiveValues": true,
+  "canShowMoreValues": true,
+  "canShowLessValues": false,
+  "customRange": null
+}
