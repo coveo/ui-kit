@@ -39,7 +39,7 @@ jobs:
         with:
           fetch-depth: 1
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo run @coveo/quantic#e2e:prepare
+      - run: pnpm exec turbo run @coveo/quantic#build:staticresources
       - uses: ./.github/actions/setup-sfdx
       - uses: ./.github/actions/e2e-quantic-setup
         with:

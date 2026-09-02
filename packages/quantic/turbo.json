@@ -40,7 +40,7 @@
       "outputs": []
     },
     "e2e": {
-      "dependsOn": ["e2e:prepare"],
+      "dependsOn": ["build:staticresources"],
       "inputs": [
         "$TURBO_DEFAULT$",
         "$TURBO_ROOT$/.github/actions/apex-unit-tests/**",
@@ -56,10 +56,6 @@
       ],
       "outputs": ["playwright-report/**", "blob-report/**", "test-results/**"],
       "cache": false
-    },
-    "e2e:prepare": {
-      "dependsOn": ["build:staticresources"],
-      "outputs": []
     },
     "e2e:playwright": {
       "dependsOn": ["@coveo/platform-mock-api#build"],
