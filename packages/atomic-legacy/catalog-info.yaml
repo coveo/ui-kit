@@ -1,0 +1,13 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: atomic-legacy
+  title: '@coveo/atomic-legacy'
+  description: Package used internally by @coveo/atomic for components using legacy technologies (e.g., Stencil). This package is not intended for public use.
+spec:
+  type: library
+  lifecycle: production
+  owner: group:default/dxui
+  system: ui-kit
+  dependsOn:
+    - component:headless
