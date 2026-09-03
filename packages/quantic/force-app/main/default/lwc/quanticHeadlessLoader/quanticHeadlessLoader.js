@@ -219,7 +219,11 @@ async function initEngine(engineId) {
     const options = await engineState.options.promise;
     return engineState.engineConstructor(options);
   } catch (error) {
-    throw new Error('Fatal error: unable to initialize Coveo Headless', { cause: error });
+    const wrappedError = /** @type {Error & {cause: unknown}} */ (
+      new Error('Fatal error: unable to initialize Coveo Headless')
+    );
+    wrappedError.cause = error;
+    throw wrappedError;
   }
 }
 
@@ -240,7 +244,11 @@ const initQuanticStore = (engineId) => {
       engineState.bindings.store = Store.initialize();
     }
   } catch (error) {
-    throw new Error('Fatal error: unable to initialize Quantic store', { cause: error });
+    const wrappedError = /** @type {Error & {cause: unknown}} */ (
+      new Error('Fatal error: unable to initialize Quantic store')
+    );
+    wrappedError.cause = error;
+    throw wrappedError;
   }
 };
 
