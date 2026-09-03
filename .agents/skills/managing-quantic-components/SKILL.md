@@ -22,7 +22,7 @@ packages/quantic/force-app/main/default/lwc/<component-name>/
 Example-community components live in:
 
 ```
-packages/quantic/force-app/examples/main/lwc/<example-component-name>/
+packages/quantic/force-app/playgroundComponents/main/lwc/<example-component-name>/
 ```
 
 Use example components when a component needs an interactive example page or E2E harness in the Quantic Examples community.
