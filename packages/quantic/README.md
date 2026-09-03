@@ -66,6 +66,15 @@ To access the links to the created communities, check the generated `.env` file 
 
 Or you can run the individual commands below.
 
+### Playground Components and Solution Examples
+
+Quantic has two separate folders for example components, each serving a different purpose, use the following rules when adding an example component:
+
+- **`force-app/playgroundComponents`** contains the components used to build the Quantic Examples community playground and to support Playwright end-to-end tests. Add a component here when it demonstrates an individual Quantic component, exposes its configurable properties for experimentation, or provides test coverage for the component.
+- **`force-app/solutionExamples`** contains real-world reference implementations that demonstrate how to combine Quantic components to solve a broader Salesforce use case. Examples include `exampleInsightPanel`, `exampleRelevantGenerativeAnswering`, `examplePageViewTracker` and more. Add a component here when it demonstrates an integration or reusable solution pattern rather than an individual component playground.
+
+Both folders are deployed by `pnpm run deploy:examples`.
+
 #### Create a Default Scratch Org
 
 - Make sure you are in the `packages/quantic` root folder.
