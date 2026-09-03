@@ -21,7 +21,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   /**
    * The citation item information.
    * @api
-   * @type {{title: string, index: number, text: string, uri: string, clickUri: string, fields: object}}
+   * @type {{title: string, index: number, text: string, uri: string, clickUri: string, fields: object, filetype: string}}
    */
   @api citation;
   /**
@@ -78,7 +78,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   hideTimer = null;
 
   connectedCallback() {
-    const fileType = this.citation?.fields?.filetype;
+    const fileType = this.citation.filetype ?? this.citation.fields?.filetype;
     this.isHrefWithTextFragment =
       !this.disableCitationAnchoring &&
       supportedFileTypesForTextFragment.includes(fileType) &&
