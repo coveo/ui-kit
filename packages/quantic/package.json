@@ -1,6 +1,6 @@
 {
   "name": "@coveo/quantic",
-  "version": "3.44.2",
+  "version": "3.44.3",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://coveo.com",
   "license": "Apache-2.0",
