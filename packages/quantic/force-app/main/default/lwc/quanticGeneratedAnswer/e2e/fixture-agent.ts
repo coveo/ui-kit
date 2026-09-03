@@ -6,8 +6,7 @@ import {
   agentFollowUpRequestRegex,
 } from '../../../../../../playwright/utils/requests';
 import {GeneratedAnswerObject} from './pageObject';
-import agentData from './agentData';
-import type {AgentData} from './agentData';
+import {agentResponseData} from '@coveo/platform-mock-api/agent';
 import {AnalyticsModeEnum} from '../../../../../../playwright/utils/analyticsMode';
 
 const pageUrl = 's/quantic-generated-answer';
@@ -18,7 +17,7 @@ interface AgentOptions {
 }
 
 type QuanticGeneratedAnswerAgentE2EFixtures = {
-  agentData: AgentData;
+  agentData: typeof agentResponseData;
   generatedAnswer: GeneratedAnswerObject;
   search: SearchObject;
   options: Partial<AgentOptions>;
@@ -29,7 +28,7 @@ export const exampleQuery = 'test';
 export const testAgent =
   quanticBase.extend<QuanticGeneratedAnswerAgentE2EFixtures>({
     pageUrl,
-    agentData,
+    agentData: agentResponseData,
     options: {},
     analyticsMode: AnalyticsModeEnum.legacy,
     search: async ({page}, use) => {
@@ -41,7 +40,7 @@ export const testAgent =
     ) => {
       const generatedAnswerObject = new GeneratedAnswerObject(
         page,
-        data.answerId1,
+        data.headAnswer.answerId,
         analytics,
         {
           headAnswerRequestRegex: agentAnswerRequestRegex,
@@ -50,10 +49,10 @@ export const testAgent =
       );
 
       await generatedAnswerObject.mockAgentAnswerResponse(
-        data.answerStreams
+        data.headAnswer.messages
       );
       await generatedAnswerObject.mockAgentFollowUpResponse(
-        data.followUpStreams
+        data.followUpAnswers.map(({messages}) => messages)
       );
       
       await search.mockSearchWithBaseResponse();
