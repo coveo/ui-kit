@@ -128,4 +128,26 @@ describe('atomic-result-placeholder', () => {
       expect(resultRoot?.classList.contains(`image-${imageSize}`)).toBe(true);
     });
   });
+
+  describe('section layout classes', () => {
+    it('should apply the with-sections class to section elements', async () => {
+      const {visual, badges, title, excerpt, bottomMetadata} = await renderComponent();
+
+      for (const section of [visual, badges, title, excerpt, bottomMetadata]) {
+        expect(section?.classList.contains('with-sections')).toBe(true);
+      }
+    });
+
+    it('should mirror the root display, density and image classes on section elements', async () => {
+      const {visual} = await renderComponent({
+        display: 'grid',
+        density: 'compact',
+        imageSize: 'small',
+      });
+
+      expect(visual?.classList.contains('display-grid')).toBe(true);
+      expect(visual?.classList.contains('density-compact')).toBe(true);
+      expect(visual?.classList.contains('image-small')).toBe(true);
+    });
+  });
 });

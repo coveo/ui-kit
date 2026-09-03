@@ -25,7 +25,7 @@ const placeholderClasses = 'block bg-neutral w-full h-full rounded';
 @withTailwindStyles
 export class AtomicResultPlaceholder extends LitElement {
   static styles = css`
-    @reference '../../common/template-system/legacy-template-system.css';
+    @reference '../../common/template-system/template-system.css';
 
     :host {
       @apply atomic-template-system;
@@ -34,6 +34,16 @@ export class AtomicResultPlaceholder extends LitElement {
         &.display-grid {
           atomic-result-section-actions {
             display: none;
+          }
+        }
+
+        > atomic-result-section-excerpt {
+          @apply set-font-size-base;
+
+          @media (width >= theme(--breakpoint-desktop)) {
+            &.density-comfortable {
+              @apply set-font-size-lg;
+            }
           }
         }
 
@@ -93,35 +103,43 @@ export class AtomicResultPlaceholder extends LitElement {
   }
 
   render(): TemplateResult {
+    const displayClasses = getItemDisplayClasses(this.display, this.density, this.imageSize);
+
     const classes = [
       'result-root',
       'placeholder',
       'with-sections',
       'animate-pulse',
-      ...getItemDisplayClasses(this.display, this.density, this.imageSize),
+      ...displayClasses,
     ]
       .join(' ')
       .trim();
 
+    // The sanitized template system lays each section out via layout classes
+    // applied to the section element itself. The placeholder renders its
+    // sections directly (without the item layout controller), so mirror those
+    // classes here.
+    const sectionClasses = ['with-sections', ...displayClasses].join(' ').trim();
+
     return html`
       <div class=${classes}>
-        <atomic-result-section-visual>
+        <atomic-result-section-visual class=${sectionClasses}>
           <div class=${placeholderClasses}></div>
         </atomic-result-section-visual>
-        <atomic-result-section-badges>
+        <atomic-result-section-badges class=${sectionClasses}>
           <div class="badge ${placeholderClasses}"></div>
         </atomic-result-section-badges>
-        <atomic-result-section-actions>
+        <atomic-result-section-actions class=${sectionClasses}>
           <div class="action ${placeholderClasses}"></div>
         </atomic-result-section-actions>
-        <atomic-result-section-title>
+        <atomic-result-section-title class=${sectionClasses}>
           <div class="title ${placeholderClasses}"></div>
         </atomic-result-section-title>
-        <atomic-result-section-excerpt>
+        <atomic-result-section-excerpt class=${sectionClasses}>
           ${this.renderExcerptLine('100%')} ${this.renderExcerptLine('95%')}
           ${this.renderExcerptLine('98%')}
         </atomic-result-section-excerpt>
-        <atomic-result-section-bottom-metadata>
+        <atomic-result-section-bottom-metadata class=${sectionClasses}>
           <div class="fields-placeholder">
             ${Array.from(
               {length: 4},
