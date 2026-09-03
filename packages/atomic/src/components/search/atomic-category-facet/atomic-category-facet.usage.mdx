@@ -43,23 +43,45 @@ Search results display the full path to each matching value, helping users under
 
 ## Customizing the "All Categories" Label
 
-You can customize the "All Categories" button label using i18n. The component looks for translation keys in this order:
+By default, every category facet in an interface shares the same "All Categories" label, which comes from the `all-categories` translation key. You can override it globally, per field, or per facet by adding more specific keys to the interface's i18n instance. The label is resolved in this order, and the first key that exists wins:
 
-1. `all-categories-{facet-id}` - Custom label for a specific facet by ID
-2. `all-categories-{field}` - Custom label for facets using a specific field
-3. `all-categories` - Default fallback
+1. `all-categories-{facetId}` — applies to the single facet with that ID
+2. `all-categories-{field}` — applies to every facet on that field
+3. `all-categories` — the default, applied to all remaining category facets
+
+```html
+<atomic-category-facet
+  field="geographicalhierarchy"
+  facet-id="my-location-facet"
+  label="Location"
+></atomic-category-facet>
+```
 
 ```javascript
-// Customize by facet ID
+const searchInterface = document.querySelector('atomic-search-interface');
+await searchInterface.initialize({/* ... */});
+
+// Applies only to the facet whose facet-id is "my-location-facet"
 searchInterface.i18n.addResourceBundle('en', 'translation', {
-  'all-categories-my-location-facet': 'All Locations'
+  'all-categories-my-location-facet': 'All Locations',
 });
 
-// Or customize by field
+// Applies to every category facet on the "geographicalhierarchy" field
 searchInterface.i18n.addResourceBundle('en', 'translation', {
-  'all-categories-geographicalhierarchy': 'All Regions'
+  'all-categories-geographicalhierarchy': 'All Regions',
+});
+
+// Applies to every category facet without a more specific key
+searchInterface.i18n.addResourceBundle('en', 'translation', {
+  'all-categories': 'All Results',
 });
 ```
+
+Add one bundle per locale you support to translate the label along with the rest of the interface. See [Localize Atomic](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/) for the general localization workflow.
+
+When you don't set the `facet-id` attribute, the facet ID defaults to the field name, as long as no other facet in the interface already uses that ID, so `all-categories-{field}` is usually enough. Reach for `all-categories-{facetId}` when several category facets share the same field and need different labels. In that case, set `facet-id` explicitly on each of them: the facets that don't get the bare field name fall back to a generated, suffixed ID such as `geographicalhierarchy_1`.
+
+The resolved label is also used in the facet search results, where it represents the root of the hierarchy for values that have no parent.
 
 ## UX Best Practices
 
