@@ -231,10 +231,11 @@ describe('c/quanticHeadlessLoader', () => {
 
   describe('setComponentInitialized', () => {
     describe('when coveoHeadless is undefined', () => {
-      it('should log an error', () => {
+      it('should throw an error without logging it', () => {
         expect(() => setComponentInitialized(testElement, testId)).toThrow(
           'Fatal Error: Component was not registered before initialization'
         );
+        expect(mockedConsoleError).not.toHaveBeenCalled();
       });
     });
 
@@ -380,6 +381,17 @@ describe('c/quanticHeadlessLoader', () => {
   });
 
   describe('initializeWithHeadless', () => {
+    describe('when the component is not registered', () => {
+      it('should throw an error without logging it', async () => {
+        await expect(
+          initializeWithHeadless(testElement, testId, initialize)
+        ).rejects.toThrow(
+          'Fatal Error: Component was not registered before initialization'
+        );
+        expect(mockedConsoleError).not.toHaveBeenCalled();
+      });
+    });
+
     describe('when the engine is undefined', () => {
       beforeEach(() => {
         window.coveoHeadless = {
