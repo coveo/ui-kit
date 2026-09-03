@@ -1,0 +1,30 @@
+<template>
+  <template lwc:if={hasInitializationError}>
+    <c-quantic-component-error component-name={template.host.localName}>
+    </c-quantic-component-error>
+  </template>
+  <template lwc:elseif={hasResults}>
+    <div class="load-more-results">
+      <p class="slds-text-color_weak">
+        <lightning-formatted-rich-text
+          value={summaryLabel}
+          disable-linkify
+        ></lightning-formatted-rich-text>
+      </p>
+      <div class="load-more-results__progress-bar">
+        <div
+          class="load-more-results__progress-bar-fill"
+          style={progressBarStyle}
+        ></div>
+      </div>
+      <template lwc:if={moreResultsAvailable}>
+        <button
+          class="slds-button slds-button_neutral load-more-results__button"
+          onclick={fetchMoreResults}
+        >
+          {labels.loadMoreResults}
+        </button>
+      </template>
+    </div>
+  </template>
+</template>

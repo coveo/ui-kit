@@ -14,6 +14,8 @@ import {LightningElement, api, track} from 'lwc';
 
 /**
  * The `QuanticPager` provides buttons that allow the end user to navigate through the different result pages.
+ *
+ * This component is an alternative to the `quantic-load-more-results` component: use one or the other, not both on the same page.
  * @category Search
  * @category Insight Panel
  * @example
