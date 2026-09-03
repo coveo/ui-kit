@@ -12,9 +12,10 @@
  *   node scripts/generate/catalog-info.mjs
  */
 
-import {readFileSync, writeFileSync, readdirSync, statSync, existsSync} from 'node:fs';
+import {readFileSync, writeFileSync, existsSync} from 'node:fs';
 import {resolve, relative} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {getAllPackageDirs, getPackageManifestFromPackagePath} from '../packages.mjs';
 
 const rootDir = resolve(fileURLToPath(import.meta.url), '..', '..', '..');
 const packagesDir = resolve(rootDir, 'packages');
@@ -46,6 +47,10 @@ function parseSimpleYaml(filePath) {
  */
 function getComponentName(name) {
   return name.replace(/^@[^/]+\//, '');
+}
+
+function isPublicPackage(manifest) {
+  return manifest.private !== true;
 }
 
 /**
@@ -110,7 +115,7 @@ function generateComponentYaml(manifest, config, relations) {
     metadata: {
       name: componentName,
       title: manifest.name,
-      description: manifest.description,
+      description: manifest.description.trim(),
     },
     spec: {
       type: config.type || 'library',
@@ -194,22 +199,46 @@ function getWorkspaceDependsOn(manifest, catalogComponents) {
 }
 
 function main() {
-  const packageDirs = readdirSync(packagesDir).filter((dir) => {
-    const fullPath = resolve(packagesDir, dir);
-    return statSync(fullPath).isDirectory() && existsSync(resolve(fullPath, 'package.json'));
-  });
+  const packageDirs = getAllPackageDirs(rootDir);
+  const exampleConfigPath = resolve(packagesDir, 'headless', 'catalog-info.config.yaml');
+  const exampleConfigRelativePath = relative(rootDir, exampleConfigPath);
+  const exampleConfig = readFileSync(exampleConfigPath, 'utf-8').trimEnd();
 
   /** @type {Map<string, {manifest: object, config: Record<string, string>}>} */
   const catalogPackages = new Map();
+  const missingPublicConfigs = [];
 
   for (const dir of packageDirs) {
-    const configPath = resolve(packagesDir, dir, 'catalog-info.config.yaml');
-    if (!existsSync(configPath)) continue;
+    const packagePath = resolve(packagesDir, dir);
+    const manifest = getPackageManifestFromPackagePath(packagePath);
+    const configPath = resolve(packagePath, 'catalog-info.config.yaml');
 
-    const manifestPath = resolve(packagesDir, dir, 'package.json');
-    const manifest = JSON.parse(readFileSync(manifestPath, 'utf-8'));
+    if (!existsSync(configPath)) {
+      if (isPublicPackage(manifest)) {
+        missingPublicConfigs.push(dir);
+      }
+      continue;
+    }
+
     const config = parseSimpleYaml(configPath);
     catalogPackages.set(dir, {manifest, config});
+  }
+
+  if (missingPublicConfigs.length) {
+    const missingConfigs = missingPublicConfigs.map((dir) => `- ${dir}`).join('\n');
+    const errorMessage = [
+      'Packages missing catalog-info.config.yaml files:',
+      missingConfigs,
+      '',
+      'Create a catalog-info.config.yaml in each listed package.',
+      `For example, use the contents of ${exampleConfigRelativePath}:`,
+      '',
+      exampleConfig,
+      '',
+    ].join('\n');
+    console.error(errorMessage);
+
+    throw new Error('Some packages are missing catalog-info.config.yaml files');
   }
 
   const catalogComponents = new Set(

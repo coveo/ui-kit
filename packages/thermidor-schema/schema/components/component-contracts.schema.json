@@ -7,11 +7,48 @@
     "ComponentContracts": {
       "title": "ComponentContracts",
       "oneOf": [
-        {"$ref": "https://schema.thermidor.coveo.com/components/product-carousel.schema.json"},
-        {"$ref": "https://schema.thermidor.coveo.com/components/cart.schema.json"},
-        {"$ref": "https://schema.thermidor.coveo.com/components/next-actions-bar.schema.json"},
-        {"$ref": "https://schema.thermidor.coveo.com/components/bundle-display.schema.json"},
-        {"$ref": "https://schema.thermidor.coveo.com/components/comparison-table.schema.json"}
+        {
+          "$ref": "https://schema.thermidor.coveo.com/components/product-carousel.schema.json"
+        },
+        {
+          "$ref": "https://schema.thermidor.coveo.com/components/cart.schema.json"
+        },
+        {
+          "$ref": "https://schema.thermidor.coveo.com/components/next-actions-bar.schema.json"
+        },
+        {
+          "$ref": "https://schema.thermidor.coveo.com/components/bundle-display.schema.json"
+        },
+        {
+          "$ref": "https://schema.thermidor.coveo.com/components/comparison-table.schema.json"
+        },
+        {
+          "$ref": "https://schema.thermidor.coveo.com/components/product-list.schema.json"
+        },
+        {
+          "$ref": "https://schema.thermidor.coveo.com/components/pagination.schema.json"
+        },
+        {
+          "$ref": "https://schema.thermidor.coveo.com/components/sort.schema.json"
+        },
+        {
+          "$ref": "https://schema.thermidor.coveo.com/components/search-box.schema.json"
+        },
+        {
+          "$ref": "https://schema.thermidor.coveo.com/components/regular-facet.schema.json"
+        },
+        {
+          "$ref": "https://schema.thermidor.coveo.com/components/numeric-facet.schema.json"
+        },
+        {
+          "$ref": "https://schema.thermidor.coveo.com/components/date-facet.schema.json"
+        },
+        {
+          "$ref": "https://schema.thermidor.coveo.com/components/category-facet.schema.json"
+        },
+        {
+          "$ref": "https://schema.thermidor.coveo.com/components/facet-manager.schema.json"
+        }
       ]
     }
   }

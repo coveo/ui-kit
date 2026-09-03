@@ -1,7 +1,11 @@
 {
   $schema: 'https://docs.renovatebot.com/renovate-schema.json',
   enabled: true,
-  extends: ['github>coveo/renovate-presets', 'helpers:pinGitHubActionDigests'],
+  extends: [
+    'github>coveo/renovate-presets',
+    'github>coveo/renovate-presets//auto-merge.json',
+    'helpers:pinGitHubActionDigests',
+  ],
   labels: ['dependencies'],
   dependencyDashboard: true,
   minimumReleaseAge: '7 days',
@@ -24,8 +28,9 @@
     {
       groupName: 'Changesets',
       groupSlug: 'changesets',
-      description: 'Isolate @changesets/* since we rely on experimental options that may change in a patch update',
-      matchPackageNames: ['@changesets/*'],
+      description: 'Isolate @changesets/* since we rely on experimental options that may change in a patch update. step-security/changeset-action is included so the CLI and the action that runs it move in a single PR: @changesets/cli v3 needs the action v2, whose inputs are renamed, so they cannot be bumped separately',
+      matchPackageNames: ['@changesets/*', 'step-security/changeset-action'],
+      automerge: false,
     },
     {
       groupName: 'wc-toolkit storybook-helpers',

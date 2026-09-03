@@ -1,38 +1,8 @@
 import {render, screen, fireEvent} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
-import type {Turn, RoutedInterface} from '@coveo/thermidor';
+import type {Turn} from '@coveo/thermidor';
 import {LandingPage} from './LandingPage/LandingPage.js';
-import {SearchResultsPage} from './SearchResultsPage/SearchResultsPage.js';
 import {ConversationPage} from './ConversationPage/index.js';
-
-function createMockController(state: Record<string, unknown> = {}) {
-  return {
-    state,
-    subscribe: (cb: () => void) => {
-      cb();
-      return () => {};
-    },
-    sortBy: vi.fn(),
-    isSortedBy: vi.fn(() => false),
-  };
-}
-
-vi.mock('@coveo/thermidor', async (importOriginal) => {
-  const actual = (await importOriginal()) as Record<string, unknown>;
-  return {
-    ...actual,
-    buildProductListController: () => createMockController({products: []}),
-    buildPaginationController: () =>
-      createMockController({
-        page: 0,
-        pageSize: 10,
-        totalCount: 0,
-        totalPages: 0,
-      }),
-    buildSortController: () => createMockController({appliedSort: null, availableSorts: []}),
-    buildSearchBoxController: () => createMockController({query: ''}),
-  };
-});
 
 describe('LandingPage', () => {
   it('renders the heading', () => {
@@ -71,75 +41,6 @@ describe('LandingPage', () => {
     for (const pill of pills) {
       expect((pill as HTMLButtonElement).disabled).toBe(true);
     }
-  });
-});
-
-describe('SearchResultsPage', () => {
-  const mockRoutedInterface = {
-    useCase: 'search',
-    interface: {id: 'mock'},
-  } as unknown as RoutedInterface;
-
-  it('renders the search results page container', () => {
-    render(
-      <SearchResultsPage
-        onSubmit={vi.fn()}
-        isStreaming={false}
-        routedInterface={mockRoutedInterface}
-        onBackToConversation={vi.fn()}
-        products={[]}
-        onProductsChange={vi.fn()}
-      />
-    );
-    expect(screen.getByTestId('search-results-page')).toBeDefined();
-  });
-
-  it('renders the facet sidebar placeholder', () => {
-    render(
-      <SearchResultsPage
-        onSubmit={vi.fn()}
-        isStreaming={false}
-        routedInterface={mockRoutedInterface}
-        onBackToConversation={vi.fn()}
-        products={[]}
-        onProductsChange={vi.fn()}
-      />
-    );
-    expect(screen.getByText('Facets (coming soon)')).toBeDefined();
-  });
-
-  it('calls onSubmit with the input value on form submission', () => {
-    const onSubmit = vi.fn();
-    render(
-      <SearchResultsPage
-        onSubmit={onSubmit}
-        isStreaming={false}
-        routedInterface={mockRoutedInterface}
-        onBackToConversation={vi.fn()}
-        products={[]}
-        onProductsChange={vi.fn()}
-      />
-    );
-
-    const input = screen.getByLabelText('Prompt');
-    fireEvent.change(input, {target: {value: 'find products'}});
-    fireEvent.keyDown(input, {key: 'Enter', code: 'Enter'});
-
-    expect(onSubmit).toHaveBeenCalledWith('find products');
-  });
-
-  it('disables the input when isStreaming is true', () => {
-    render(
-      <SearchResultsPage
-        onSubmit={vi.fn()}
-        isStreaming={true}
-        routedInterface={mockRoutedInterface}
-        onBackToConversation={vi.fn()}
-        products={[]}
-        onProductsChange={vi.fn()}
-      />
-    );
-    expect((screen.getByLabelText('Prompt') as HTMLInputElement).disabled).toBe(true);
   });
 });
 

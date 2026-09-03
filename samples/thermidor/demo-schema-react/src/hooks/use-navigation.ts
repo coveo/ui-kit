@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useReducer, useRef, useState} from 'react';
-import type {RoutedInterface, Turn} from '@coveo/thermidor';
+import type {Turn, Activity} from '@coveo/thermidor';
 import type {TargetedProduct} from '../context/targeting.js';
 
 type ViewState = 'landing' | 'search' | 'conversation';
@@ -25,8 +25,7 @@ interface Controller {
 
 export interface Navigation {
   view: ViewState;
-  persistedInterface: RoutedInterface | null;
-  persistedTurnId: string | null;
+  commerceSurfaceId: string | null;
   persistedQuery: string;
   canGoBackToSearch: boolean;
   targetedProducts: TargetedProduct[];
@@ -50,18 +49,79 @@ function navReducer(state: NavState, action: NavAction): NavState {
   }
 }
 
+interface DerivedSurface {
+  surfaceType: string;
+  surfaceId: string;
+}
+
+/**
+ * Scans a turn's activities for the first A2-UI createSurface message and
+ * returns its surfaceType and surfaceId. Returns null when no such surface
+ * exists (e.g. a plain-text conversational response).
+ */
+function findSurface(activities: Activity[] | undefined): DerivedSurface | null {
+  if (!activities) return null;
+
+  for (const activity of activities) {
+    if (activity.kind !== 'a2ui-surface') continue;
+
+    const messages = activity.payload['messages'];
+    if (!Array.isArray(messages)) continue;
+
+    for (const msg of messages) {
+      if (
+        msg &&
+        typeof msg === 'object' &&
+        'createSurface' in msg &&
+        msg.createSurface &&
+        typeof msg.createSurface === 'object' &&
+        'surfaceType' in msg.createSurface &&
+        typeof msg.createSurface.surfaceType === 'string' &&
+        'surfaceId' in msg.createSurface &&
+        typeof msg.createSurface.surfaceId === 'string'
+      ) {
+        return {
+          surfaceType: msg.createSurface.surfaceType,
+          surfaceId: msg.createSurface.surfaceId,
+        };
+      }
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Returns the surfaceId of a turn's commerce-search surface, or null.
+ */
+export function findCommerceSurfaceId(activities: Activity[] | undefined): string | null {
+  const surface = findSurface(activities);
+  return surface?.surfaceType === 'commerceSearch' ? surface.surfaceId : null;
+}
+
 function deriveTransitionAction(turn: Turn): NavAction | null {
   if (turn.status !== 'complete') return null;
-  if (turn.routedInterface) return {type: 'NAVIGATE_SEARCH'};
-  if (turn.agentResponse) return {type: 'NAVIGATE_CONVERSATION'};
+
+  const surface = findSurface(turn.agentResponse?.activities);
+
+  // Commerce-search surfaces navigate to the dedicated results page.
+  if (surface?.surfaceType === 'commerceSearch') return {type: 'NAVIGATE_SEARCH'};
+
+  // Converse surfaces render inline in the conversation flow.
+  if (surface?.surfaceType === 'converse') return {type: 'NAVIGATE_CONVERSATION'};
+
+  // A plain-text response without any surface also routes to the conversation.
+  if (!surface && turn.agentResponse) return {type: 'NAVIGATE_CONVERSATION'};
+
+  // Any other (unknown) surfaceType is intentionally not routed: the consumer
+  // must add an explicit branch rather than fall back to a default view.
   return null;
 }
 
 export function useNavigation(controller: Controller, converseState: ConverseState): Navigation {
   const [{view}, dispatch] = useReducer(navReducer, {view: 'landing'});
 
-  const persistedInterfaceRef = useRef<RoutedInterface | null>(null);
-  const persistedInterfaceTurnIdRef = useRef<string | null>(null);
+  const commerceSurfaceIdRef = useRef<string | null>(null);
   const persistedQueryRef = useRef<string>('');
   const lastObservedTurnIdRef = useRef<string | null>(null);
   const pendingNavigationRef = useRef(false);
@@ -70,11 +130,8 @@ export function useNavigation(controller: Controller, converseState: ConverseSta
 
   const persistAndNavigateToSearch = useCallback(
     (turn: Turn) => {
-      if (persistedInterfaceRef.current) {
-        persistedInterfaceRef.current.interface.dispose();
-      }
-      persistedInterfaceRef.current = turn.routedInterface!;
-      persistedInterfaceTurnIdRef.current = turn.id;
+      const surfaceId = findCommerceSurfaceId(turn.agentResponse?.activities);
+      commerceSurfaceIdRef.current = surfaceId;
       persistedQueryRef.current = turn.prompt;
       lastObservedTurnIdRef.current = turn.id;
 
@@ -86,22 +143,13 @@ export function useNavigation(controller: Controller, converseState: ConverseSta
   );
 
   useEffect(() => {
-    return () => {
-      persistedInterfaceRef.current?.interface.dispose();
-    };
-  }, []);
-
-  useEffect(() => {
     const turns = converseState.turns;
 
-    // NAVIGATION ORDERING INVARIANT: When pendingNavigationRef is true,
-    // we check routedInterface BEFORE agentResponse.reasoningSteps.
-    // This ensures that if a turn produces a routed interface, we navigate to
-    // search regardless of whether reasoning steps also appeared.
     if (pendingNavigationRef.current && turns.length > 0) {
       const latestTurn = turns[turns.length - 1];
 
-      if (latestTurn.routedInterface) {
+      const surfaceId = findCommerceSurfaceId(latestTurn.agentResponse?.activities);
+      if (surfaceId) {
         pendingNavigationRef.current = false;
         persistAndNavigateToSearch(latestTurn);
         return;
@@ -128,7 +176,7 @@ export function useNavigation(controller: Controller, converseState: ConverseSta
 
     const action = deriveTransitionAction(latestCompletedTurn);
 
-    if (action?.type === 'NAVIGATE_SEARCH' && latestCompletedTurn.routedInterface) {
+    if (action?.type === 'NAVIGATE_SEARCH') {
       persistAndNavigateToSearch(latestCompletedTurn);
     } else if (action?.type === 'NAVIGATE_CONVERSATION') {
       if (pendingNavigationRef.current) {
@@ -150,7 +198,7 @@ export function useNavigation(controller: Controller, converseState: ConverseSta
   );
 
   const handleBackToSearch = useCallback(() => {
-    if (persistedInterfaceRef.current) {
+    if (commerceSurfaceIdRef.current) {
       persistedQueryRef.current = '';
       dispatch({type: 'NAVIGATE_SEARCH'});
     }
@@ -161,24 +209,16 @@ export function useNavigation(controller: Controller, converseState: ConverseSta
   }, []);
 
   const handleResetToLanding = useCallback(() => {
-    if (persistedInterfaceRef.current) {
-      persistedInterfaceRef.current.interface.dispose();
-      persistedInterfaceRef.current = null;
-      persistedInterfaceTurnIdRef.current = null;
-      setCanGoBackToSearch(false);
-    }
-
+    commerceSurfaceIdRef.current = null;
+    setCanGoBackToSearch(false);
     setTargetedProducts([]);
-
     controller.clear();
-
     dispatch({type: 'NAVIGATE_LANDING'});
   }, [controller]);
 
   return {
     view,
-    persistedInterface: persistedInterfaceRef.current,
-    persistedTurnId: persistedInterfaceTurnIdRef.current,
+    commerceSurfaceId: commerceSurfaceIdRef.current,
     persistedQuery: persistedQueryRef.current,
     canGoBackToSearch,
     targetedProducts,

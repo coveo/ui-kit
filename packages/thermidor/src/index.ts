@@ -43,6 +43,7 @@ export type {
   Activity,
   AgentMessage,
   AgentResponse,
+  HydratedUseCase,
   ReasoningMessageStep,
   ReasoningStep,
   RoutedInterface,
@@ -66,3 +67,10 @@ export type {
   SortCriterionFor,
   SortDirection,
 } from './public/sort-types.js';
+export type {
+  A2uiAction,
+  SelectPageContext,
+  SetPageSizeContext,
+  SetSortContext,
+  SortField,
+} from '@/src/internal/api/unified/index.js';

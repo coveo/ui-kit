@@ -73,6 +73,7 @@ export type A2UIOperation =
   | {
       createSurface: {
         surfaceId: string;
+        surfaceType?: string;
         catalogId?: string;
         components?: A2UIComponent[];
         dataModel?: Record<string, unknown>;
