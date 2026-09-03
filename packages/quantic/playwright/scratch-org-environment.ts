@@ -60,19 +60,11 @@ function loadScratchOrgUrl(
 
   const environment = dotenv.parse(environmentFileContents);
   const url = environment[environmentVariable]?.trim();
-  if (!url || !isHttpsUrl(url)) {
+  if (!url) {
     throw new Error(
-      `Cannot run Quantic Playwright tests because .env/${environmentFile} must define ${environmentVariable} with an HTTPS URL. Run "pnpm run setup:examples" to create the Quantic scratch-org communities.`
+      `Cannot run Quantic Playwright tests because .env/${environmentFile} must define ${environmentVariable} with an URL. Run "pnpm run setup:examples" to create the Quantic scratch-org communities.`
     );
   }
 
   return url;
-}
-
-function isHttpsUrl(value: string): boolean {
-  try {
-    return new URL(value).protocol === 'https:';
-  } catch {
-    return false;
-  }
 }
