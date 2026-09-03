@@ -157,13 +157,10 @@ const debounceInitializedCallback = (engineId) => {
  * @param {string} engineId The ID of the engine.
  * @returns {boolean}
  */
-const areAllComponentsInitialized = (engineId) => {
-  const components = window.coveoHeadless?.[engineId]?.components;
-  return Boolean(
-    components &&
-    !components.find((component) => component.initialized === false)
-  );
-};
+const areAllComponentsInitialized = (engineId) =>
+  window.coveoHeadless?.[engineId]?.components?.every(
+    (component) => component.initialized === true
+  ) ?? false;
 
 /**
  * Finds a component registered for an engine.
@@ -306,11 +303,9 @@ function setComponentInitialized(element, engineId) {
     : undefined;
 
   if (!component) {
-    const error = new Error(
+    throw new Error(
       'Fatal Error: Component was not registered before initialization'
     );
-    console.error(error.message);
-    throw error;
   }
   component.initialized = true;
   if (
@@ -374,11 +369,9 @@ function getQuanticStore(engineId) {
 async function initializeWithHeadless(element, engineId, initialize) {
   const component = getRegisteredComponent(element, engineId);
   if (!component) {
-    const error = new Error(
+    throw new Error(
       'Fatal Error: Component was not registered before initialization'
     );
-    console.error(error.message);
-    throw error;
   }
   if (component.initialized) {
     return;

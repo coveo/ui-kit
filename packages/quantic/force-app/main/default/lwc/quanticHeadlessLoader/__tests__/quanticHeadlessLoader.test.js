@@ -346,10 +346,12 @@ describe('c/quanticHeadlessLoader', () => {
         try {
           await getHeadlessEnginePromise(testId);
         } catch (error) {
-          caughtError = error.message;
+          caughtError = error;
         }
 
-        expect(caughtError).toContain('Engine options have not been set.');
+        expect(caughtError.cause.message).toContain(
+          'Engine options have not been set.'
+        );
       });
     });
 
@@ -418,10 +420,10 @@ describe('c/quanticHeadlessLoader', () => {
           try {
             await window.coveoHeadless[testId].enginePromise;
           } catch (error) {
-            caughtError = error.message;
+            caughtError = error;
           }
 
-          expect(caughtError).toContain(errorMessage);
+          expect(caughtError.cause).toBe(errorMessage);
           expect(LightningAlert.open).toHaveBeenCalledTimes(1);
         });
       });
