@@ -1,0 +1,14 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: atomic-angular
+  title: '@coveo/atomic-angular'
+  description: An Angular component library for building modern UIs interfacing with the Coveo platform, wrapping the core Atomic web components
+spec:
+  type: library
+  lifecycle: production
+  owner: group:default/dxui
+  system: ui-kit
+  dependsOn:
+    - component:atomic
+    - component:headless
