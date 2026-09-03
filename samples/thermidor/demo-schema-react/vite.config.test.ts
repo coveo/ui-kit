@@ -1,5 +1,9 @@
 import {describe, expect, it} from 'vitest';
-import {resolveAgentRuntimeHeaders, resolveProxyTargets} from './vite.config.js';
+import {
+  resolveAgentRuntimeHeaders,
+  resolveGatewayProxyHeaders,
+  resolveProxyTargets,
+} from './vite.config.js';
 
 describe('resolveProxyTargets', () => {
   it('does not configure a proxy without an organization ID', () => {
@@ -43,6 +47,22 @@ describe('resolveAgentRuntimeHeaders', () => {
   it('forwards the configured runtime name and qualifier when both are present', () => {
     expect(resolveAgentRuntimeHeaders(' commerce_pr_676_Agent ', ' stable ')).toEqual({
       'x-coveo-agent-runtime-name': 'commerce_pr_676_Agent',
+      'x-coveo-agent-runtime-qualifier': 'stable',
+    });
+  });
+});
+
+describe('resolveGatewayProxyHeaders', () => {
+  it('enables stateful commerce for local schema-contract development', () => {
+    expect(resolveGatewayProxyHeaders(undefined, undefined)).toEqual({
+      'X-Coveo-Feature-Flags-Overrides': '{"cpd-stateful-commerce-enabled":true}',
+    });
+  });
+
+  it('combines the stateful override with configured runtime routing', () => {
+    expect(resolveGatewayProxyHeaders('commerce-local', 'stable')).toEqual({
+      'X-Coveo-Feature-Flags-Overrides': '{"cpd-stateful-commerce-enabled":true}',
+      'x-coveo-agent-runtime-name': 'commerce-local',
       'x-coveo-agent-runtime-qualifier': 'stable',
     });
   });
