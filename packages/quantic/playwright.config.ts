@@ -1,13 +1,7 @@
 import {defineConfig, devices} from '@playwright/test';
+import {loadScratchOrgEnvironment} from './playwright/scratch-org-environment';
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-import dotenv from 'dotenv';
-import path from 'path';
-dotenv.config({path: path.resolve(__dirname, '.env/Quantic__LWS_enabled.env')});
-dotenv.config({path: path.resolve(__dirname, '.env/Quantic__LWS_disabled.env')});
+const {lwsEnabledUrl, lwsDisabledUrl} = loadScratchOrgEnvironment(__dirname);
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -41,14 +35,14 @@ export default defineConfig({
       name: 'LWS-enabled',
       use: {
         ...devices['Desktop Chrome'],
-        baseURL: process.env.Quantic__LWS_enabled_URL,
+        baseURL: lwsEnabledUrl,
       },
     },
     {
       name: 'LWS-disabled',
       use: {
         ...devices['Desktop Chrome'],
-        baseURL: process.env.Quantic__LWS_disabled_URL,
+        baseURL: lwsDisabledUrl,
       },
     },
   ],
