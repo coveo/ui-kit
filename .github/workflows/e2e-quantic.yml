@@ -39,7 +39,7 @@ jobs:
         with:
           fetch-depth: 1
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo run build --filter=@coveo/quantic
+      - run: pnpm exec turbo run @coveo/quantic#build:staticresources
       - uses: ./.github/actions/setup-sfdx
       - uses: ./.github/actions/e2e-quantic-setup
         with:
@@ -124,8 +124,8 @@ jobs:
     strategy:
       fail-fast: ${{ inputs.event_name == 'merge_group' }}
       matrix:
-        shardIndex: [1, 2, 3, 4]
-        shardTotal: [4]
+        shardIndex: [1, 2, 3, 4, 5, 6]
+        shardTotal: [6]
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0

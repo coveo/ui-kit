@@ -16,7 +16,7 @@ runs:
         path: packages/quantic/.env
         merge-multiple: true
     - name: Run Playwright Tests
-      run: pnpm exec turbo run @coveo/quantic#e2e -- --shard=${INPUTS_SHARDINDEX}/${INPUTS_SHARDTOTAL}
+      run: pnpm exec turbo run @coveo/quantic#e2e:playwright -- --shard=${INPUTS_SHARDINDEX}/${INPUTS_SHARDTOTAL}
       shell: bash
       env:
         INPUTS_SHARDINDEX: ${{ inputs.shardIndex }}

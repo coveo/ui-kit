@@ -715,7 +715,11 @@ jobs:
     needs: [affected, build]
     if: >-
       ${{
-        contains(fromJSON(needs.affected.outputs.tasks), '@coveo/quantic#e2e') &&
+        always() &&
+        !cancelled() &&
+        needs.affected.result == 'success' &&
+        (needs.build.result == 'success' || needs.build.result == 'skipped') &&
+        contains(fromJSON(needs.affected.outputs.tasks), '@coveo/quantic#e2e:pre-provisioned') &&
         !(github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'skip-quantic'))
       }}
     permissions:

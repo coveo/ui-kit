@@ -39,8 +39,26 @@
       "dependsOn": ["build"],
       "outputs": []
     },
-    "e2e": {
-      "dependsOn": ["build"],
+    "e2e:pre-provisioned": {
+      "dependsOn": ["build:staticresources"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/.github/actions/apex-unit-tests/**",
+        "$TURBO_ROOT$/.github/actions/calculate-affected/**",
+        "$TURBO_ROOT$/.github/actions/e2e-quantic-setup/**",
+        "$TURBO_ROOT$/.github/actions/merge-playwright-reports/**",
+        "$TURBO_ROOT$/.github/actions/playwright-quantic/**",
+        "$TURBO_ROOT$/.github/actions/post-scratch-org-links-on-pr/**",
+        "$TURBO_ROOT$/.github/actions/setup/**",
+        "$TURBO_ROOT$/.github/actions/setup-sfdx/**",
+        "$TURBO_ROOT$/.github/workflows/ci.yml",
+        "$TURBO_ROOT$/.github/workflows/e2e-quantic.yml"
+      ],
+      "outputs": ["playwright-report/**", "blob-report/**", "test-results/**"],
+      "cache": false
+    },
+    "e2e:playwright": {
+      "dependsOn": ["@coveo/platform-mock-api#build"],
       "inputs": ["$TURBO_DEFAULT$"],
       "outputs": ["playwright-report/**", "blob-report/**", "test-results/**"],
       "cache": false
