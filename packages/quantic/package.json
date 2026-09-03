@@ -38,7 +38,7 @@
     "test:unit:coverage": "lwc-jest --coverage",
     "validate:types": "tsc",
     "validate:types:build-scripts": "tsc --noEmit --project scripts/build/tsconfig.json",
-    "e2e": "playwright test",
+    "e2e:pre-provisioned": "playwright test",
     "e2e:playwright": "playwright test",
     "e2e:playwright:lws-enabled": "playwright test --project=LWS-enabled",
     "e2e:playwright:lws-disabled": "playwright test --project=LWS-disabled",

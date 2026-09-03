@@ -39,7 +39,7 @@
       "dependsOn": ["build"],
       "outputs": []
     },
-    "e2e": {
+    "e2e:pre-provisioned": {
       "dependsOn": ["build:staticresources"],
       "inputs": [
         "$TURBO_DEFAULT$",
