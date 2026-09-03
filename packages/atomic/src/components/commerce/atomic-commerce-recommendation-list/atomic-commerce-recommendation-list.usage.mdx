@@ -17,6 +17,46 @@ You can include multiple recommendation lists within a single interface:
 </atomic-commerce-recommendation-interface>
 ```
 
+### How the `display` property affects clickable areas
+
+The `display` property changes more than the visual layout: it also determines what part of a recommended product is clickable.
+
+When `display` is set to `grid`, the whole product is clickable: your template content is not nested inside an `<a>` element, but a click anywhere on the product is forwarded to a product link rendered alongside it, which navigates to the product.
+
+Interactive elements you place in your template still work, as long as they stop the click event from propagating to the product. `atomic-product-link` does this by default; for your own interactive elements, call `event.stopPropagation()` in their click handler.
+
+```html
+<atomic-commerce-recommendation-list display="grid">
+  <atomic-product-template>
+    <template>
+      <atomic-product-section-visual>
+        <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+      </atomic-product-section-visual>
+      <atomic-product-section-name>
+        <atomic-product-text field="ec_name"></atomic-product-text>
+      </atomic-product-section-name>
+    </template>
+  </atomic-product-template>
+</atomic-commerce-recommendation-list>
+```
+
+When `display` is set to `list`, clicks on the product are not forwarded to a product link. You decide where the interactive elements are by adding them to your template, typically with an `atomic-product-link`. Only those elements are clickable.
+
+```html
+<atomic-commerce-recommendation-list display="list">
+  <atomic-product-template>
+    <template>
+      <atomic-product-section-visual>
+        <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+      </atomic-product-section-visual>
+      <atomic-product-section-name>
+        <atomic-product-link class="font-bold"></atomic-product-link>
+      </atomic-product-section-name>
+    </template>
+  </atomic-product-template>
+</atomic-commerce-recommendation-list>
+```
+
 ### Using `setRenderFunction` for custom rendering
 
 <SetRenderFunctionNote />
