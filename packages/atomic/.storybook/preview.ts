@@ -2,7 +2,8 @@ import '@/src/themes/coveo.css';
 import type {Preview} from '@storybook/web-components-vite';
 import {setCustomElementsManifest} from '@storybook/web-components-vite';
 import {setStorybookHelpersConfig} from '@wc-toolkit/storybook-helpers';
-import {initialize, mswLoader} from 'msw-storybook-addon';
+import {setupWorker} from 'msw/browser';
+import {mswLoader} from 'msw-storybook-addon/csf3';
 import {within} from 'shadow-dom-testing-library';
 import {create} from 'storybook/theming';
 import customElements from '../custom-elements.json';
@@ -17,11 +18,19 @@ if (!isChromatic() && import.meta.env.PROD) {
   import(url.href);
 }
 
-initialize({
-  quiet: true,
-  onUnhandledRequest: 'bypass',
-  serviceWorker: {url: './mockServiceWorker.js'},
-});
+// msw-storybook-addon v3 starts the worker itself, but its default setup warns on
+// unhandled requests and resolves the worker script from the server root. Keep the
+// previous behaviour: stay silent, and use a relative URL so Storybook keeps working
+// when served from a sub-path (CDN builds).
+const startWorker = async () => {
+  const worker = setupWorker();
+  await worker.start({
+    quiet: true,
+    onUnhandledRequest: 'bypass',
+    serviceWorker: {url: './mockServiceWorker.js'},
+  });
+  return worker;
+};
 
 setCustomElementsManifest(customElements);
 
@@ -31,7 +40,7 @@ setStorybookHelpersConfig({
 });
 
 const preview: Preview = {
-  loaders: [mswLoader],
+  loaders: [mswLoader(startWorker)],
   parameters: {
     options: {
       storySort: {
