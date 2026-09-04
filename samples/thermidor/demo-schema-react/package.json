@@ -16,7 +16,7 @@
   "dependencies": {
     "@copilotkit/a2ui-renderer": "1.61.2",
     "@coveo/thermidor": "workspace:*",
-    "@coveo/thermidor-schema": "workspace:*",
+    "@coveo/thermidor-schema": "^0.0.0",
     "dompurify": "catalog:",
     "marked": "catalog:",
     "react": "catalog:",

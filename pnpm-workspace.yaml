@@ -4,7 +4,6 @@ packages:
   - packages/mock-converse-api
   - packages/headless
   - packages/thermidor
-  - packages/thermidor-schema
   - packages/quantic
   - packages/headless-react
   - packages/atomic-hosted-page
