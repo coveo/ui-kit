@@ -3,6 +3,7 @@
 import LightningAlert from 'lightning/alert';
 import {Deferred} from '../../quanticUtils/quanticUtils';
 import {
+  loadDependencies,
   setInitializedCallback,
   setEngineOptions,
   registerComponentForInit,
@@ -82,6 +83,14 @@ describe('c/quanticHeadlessLoader', () => {
     testElement = document.createElement('div');
     resolvedTestConfig = new Deferred();
     resolvedTestConfig.resolve(testOptions);
+  });
+
+  describe('loadDependencies', () => {
+    it('should reject with a clear error for an unsupported use case', async () => {
+      await expect(
+        loadDependencies(testElement, 'unsupported-use-case')
+      ).rejects.toThrow('Unsupported Headless use case: unsupported-use-case');
+    });
   });
 
   afterEach(() => {
@@ -222,10 +231,11 @@ describe('c/quanticHeadlessLoader', () => {
 
   describe('setComponentInitialized', () => {
     describe('when coveoHeadless is undefined', () => {
-      it('should log an error', () => {
+      it('should throw an error without logging it', () => {
         expect(() => setComponentInitialized(testElement, testId)).toThrow(
           'Fatal Error: Component was not registered before initialization'
         );
+        expect(mockedConsoleError).not.toHaveBeenCalled();
       });
     });
 
@@ -337,10 +347,12 @@ describe('c/quanticHeadlessLoader', () => {
         try {
           await getHeadlessEnginePromise(testId);
         } catch (error) {
-          caughtError = error.message;
+          caughtError = error;
         }
 
-        expect(caughtError).toContain('Engine options have not been set.');
+        expect(caughtError.cause.message).toContain(
+          'Engine options have not been set.'
+        );
       });
     });
 
@@ -369,6 +381,17 @@ describe('c/quanticHeadlessLoader', () => {
   });
 
   describe('initializeWithHeadless', () => {
+    describe('when the component is not registered', () => {
+      it('should throw an error without logging it', async () => {
+        await expect(
+          initializeWithHeadless(testElement, testId, initialize)
+        ).rejects.toThrow(
+          'Fatal Error: Component was not registered before initialization'
+        );
+        expect(mockedConsoleError).not.toHaveBeenCalled();
+      });
+    });
+
     describe('when the engine is undefined', () => {
       beforeEach(() => {
         window.coveoHeadless = {
@@ -409,10 +432,10 @@ describe('c/quanticHeadlessLoader', () => {
           try {
             await window.coveoHeadless[testId].enginePromise;
           } catch (error) {
-            caughtError = error.message;
+            caughtError = error;
           }
 
-          expect(caughtError).toContain(errorMessage);
+          expect(caughtError.cause).toBe(errorMessage);
           expect(LightningAlert.open).toHaveBeenCalledTimes(1);
         });
       });
