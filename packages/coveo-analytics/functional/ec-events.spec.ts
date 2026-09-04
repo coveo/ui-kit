@@ -39,7 +39,7 @@ describe('ec events', () => {
     changeDocumentLocation(initialLocation);
     const address = new RegExp('/rest/v15/analytics');
     fetchMock.reset();
-    fetchMock.post(address, (url, {body}) => {
+    fetchMock.post(address, ({options: {body}}) => {
       const parsedBody = JSON.parse(body!.toString());
       const visitorId = parsedBody.cid;
       return {
