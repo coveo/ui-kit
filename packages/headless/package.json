@@ -107,12 +107,12 @@
     "coveo.analytics": "workspace:*",
     "dayjs": "catalog:",
     "exponential-backoff": "catalog:",
-    "fast-equals": "6.0.0",
+    "fast-equals": "6.0.2",
     "headers-polyfill": "5.0.1",
     "navigator.sendbeacon": "0.0.20",
     "pino": "10.3.1",
     "redux-thunk": "3.1.0",
-    "reselect": "5.2.0"
+    "reselect": "5.3.0"
   },
   "devDependencies": {
     "@coveo/documentation": "workspace:*",
