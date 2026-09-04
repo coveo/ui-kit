@@ -1,0 +1,11 @@
+{
+  "name": "turbo-preflight-reproduction",
+  "private": true,
+  "workspaces": [
+    "app"
+  ],
+  "scripts": {
+    "test": "node --test ./preflight.test.mjs"
+  },
+  "packageManager": "npm@10.9.0"
+}

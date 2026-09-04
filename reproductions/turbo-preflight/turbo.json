@@ -1,0 +1,12 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "remoteCache": {
+    "apiUrl": "http://127.0.0.1:8787",
+    "teamSlug": "ui-kit"
+  },
+  "tasks": {
+    "build": {
+      "outputs": ["dist/**"]
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "turbo-preflight-fixture",
+  "private": true,
+  "scripts": {
+    "build": "node -e \"const fs = require('node:fs'); fs.mkdirSync('dist', {recursive: true}); fs.writeFileSync('dist/output.txt', 'cached artifact\\n');\""
+  }
+}
