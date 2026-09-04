@@ -62,8 +62,8 @@
   },
   "additionalProperties": false,
   "$defs": {
-    "Triad": {
-      "title": "NumericFacetTriad",
+    "SnapshotEntry": {
+      "title": "NumericFacetSnapshotEntry",
       "type": "object",
       "required": ["componentType", "state", "actions"],
       "properties": {

@@ -35,8 +35,8 @@
   },
   "additionalProperties": false,
   "$defs": {
-    "Triad": {
-      "title": "FacetManagerTriad",
+    "SnapshotEntry": {
+      "title": "FacetManagerSnapshotEntry",
       "type": "object",
       "required": ["componentType", "state", "actions"],
       "properties": {

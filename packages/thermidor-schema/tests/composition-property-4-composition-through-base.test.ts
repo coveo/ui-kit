@@ -20,7 +20,7 @@ import {ComponentContractsSchema} from '../src/index.js';
 const NUM_RUNS = 100;
 
 /**
- * A minimal valid triad ({componentType, state, actions}) per componentType,
+ * A minimal valid entry ({componentType, state, actions}) per componentType,
  * mirroring the SDK's `minimalInstances` map
  * (packages/thermidor/src/public/controllers/remote/remote-controller.property.test.ts)
  * and the fixtures in contract.test.ts. Each base instance declares NEITHER

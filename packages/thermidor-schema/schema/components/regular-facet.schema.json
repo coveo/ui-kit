@@ -78,8 +78,8 @@
   },
   "additionalProperties": false,
   "$defs": {
-    "Triad": {
-      "title": "RegularFacetTriad",
+    "SnapshotEntry": {
+      "title": "RegularFacetSnapshotEntry",
       "type": "object",
       "required": ["componentType", "state", "actions"],
       "properties": {

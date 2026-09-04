@@ -21,9 +21,9 @@ const NUM_RUNS = 100;
 const ID_PATTERN = /^[a-z][a-z0-9-]*$/;
 
 /**
- * A minimal valid triad ({componentType, state, actions}) used as the base
+ * A minimal valid entry ({componentType, state, actions}) used as the base
  * instance onto which an invalid `children` value is added. `search-box` is
- * the simplest triad with a non-empty state/actions shape.
+ * the simplest entry with a non-empty state/actions shape.
  */
 const baseInstance = () => ({
   componentType: 'search-box',

@@ -36,8 +36,8 @@
   },
   "additionalProperties": false,
   "$defs": {
-    "Triad": {
-      "title": "CommerceSearchTriad",
+    "SnapshotEntry": {
+      "title": "CommerceSearchSnapshotEntry",
       "type": "object",
       "required": ["componentType", "state", "actions"],
       "properties": {

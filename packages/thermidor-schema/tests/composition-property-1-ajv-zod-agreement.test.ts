@@ -1,10 +1,10 @@
 // Feature: thermidor-schema-adjacency-list, Property 1: Ajv–Zod agreement per changed contract
 //
 // Property 1: For any generated input value and for each changed contract (the base
-// component contract with composition fields exercised via the union member triad,
+// component contract with composition fields exercised via the union member entry,
 // the commerce-search component, the Component_Contracts_Union, and the
 // Composition_Snapshot_Contract whose components map values validate against the
-// ComponentContractsTriad view), the generated Zod projection accepts the value if and
+// CompositionSnapshotEntry view), the generated Zod projection accepts the value if and
 // only if the Ajv-validated canonical JSON Schema document accepts it.
 //
 // Validates: Requirements 8.3, 8.4, 6.6
@@ -68,25 +68,25 @@ function ajvValidatorFor(schemaId: string): (value: unknown) => boolean {
 }
 
 // The Zod projection is ALWAYS the identity-free `{componentType, state, actions, children?, child?}`
-// triad — `componentId`/`displayName` live on the A2-UI props layer, never on the runtime
+// entry — `componentId`/`displayName` live on the A2-UI props layer, never on the runtime
 // contract (see design "Why additionalProperties:false is the decisive keyword"). The matching
-// Ajv entry points are therefore the identity-free triad views, not the identity-bearing member
+// Ajv entry points are therefore the identity-free entry views, not the identity-bearing member
 // documents / `#/$defs/ComponentContracts` union (which `allOf` the base and so require identity).
-// This is the divergence the triad view exists to remove and that Property 1 forbids (design
-// "Component-contracts triad view").
+// This is the divergence the entry view exists to remove and that Property 1 forbids (design
+// "Component-contracts entry view").
 //
-// - Base+composition on a component / the union  -> `#/$defs/ComponentContractsTriad`   vs  ComponentContractsSchema
-// - commerce-search                              -> `commerce-search...#/$defs/Triad`   vs  CommerceSearchSchema
-// - Composition snapshot (map values via triad)  -> composition-snapshot `$id`          vs  CompositionSnapshotSchema
-const UNION_TRIAD_ID =
-  'https://schema.thermidor.coveo.com/components/component-contracts.schema.json#/$defs/ComponentContractsTriad';
-const COMMERCE_SEARCH_TRIAD_ID =
-  'https://schema.thermidor.coveo.com/components/commerce-search.schema.json#/$defs/Triad';
+// - Base+composition on a component / the union  -> `#/$defs/CompositionSnapshotEntry`   vs  ComponentContractsSchema
+// - commerce-search                              -> `commerce-search...#/$defs/SnapshotEntry`   vs  CommerceSearchSchema
+// - Composition snapshot (map values via entry)  -> composition-snapshot `$id`          vs  CompositionSnapshotSchema
+const UNION_ENTRY_ID =
+  'https://schema.thermidor.coveo.com/components/component-contracts.schema.json#/$defs/CompositionSnapshotEntry';
+const COMMERCE_SEARCH_ENTRY_ID =
+  'https://schema.thermidor.coveo.com/components/commerce-search.schema.json#/$defs/SnapshotEntry';
 const SNAPSHOT_ID =
   'https://schema.thermidor.coveo.com/composition/composition-snapshot.schema.json';
 
-const ajvUnion = ajvValidatorFor(UNION_TRIAD_ID);
-const ajvCommerceSearch = ajvValidatorFor(COMMERCE_SEARCH_TRIAD_ID);
+const ajvUnion = ajvValidatorFor(UNION_ENTRY_ID);
+const ajvCommerceSearch = ajvValidatorFor(COMMERCE_SEARCH_ENTRY_ID);
 const ajvSnapshot = ajvValidatorFor(SNAPSHOT_ID);
 
 // --- Generators (per design Testing Strategy) ---
@@ -121,7 +121,7 @@ const childrenArb: fc.Arbitrary<unknown> = fc.oneof(
 const childArb: fc.Arbitrary<unknown> = fc.oneof(validIdArb, adversarialIdArb, fc.integer());
 
 // Minimal valid per-type instances (aligned with the SDK minimalInstances map), used to build
-// components that carry composition. Each is the identity-free member triad.
+// components that carry composition. Each is the identity-free member entry.
 const minimalInstances: Record<string, Record<string, unknown>> = {
   'product-carousel': {
     componentType: 'product-carousel',
@@ -261,7 +261,7 @@ const minimalInstances: Record<string, Record<string, unknown>> = {
 
 const componentTypes = Object.keys(minimalInstances);
 
-// A component instance (member triad) with optional/adversarial composition fields attached,
+// A component instance (member entry) with optional/adversarial composition fields attached,
 // plus occasional structural corruption to exercise both accept and reject branches.
 const componentInstanceArb: fc.Arbitrary<unknown> = fc
   .record(
@@ -290,7 +290,7 @@ const componentInstanceArb: fc.Arbitrary<unknown> = fc
     } else if (corrupt === 'extra-prop') {
       instance.somethingExtra = true;
     } else if (corrupt === 'identity') {
-      // base identity fields are rejected by the triad view (additionalProperties:false) and by
+      // base identity fields are rejected by the entry view (additionalProperties:false) and by
       // the strictObject Zod projection — both engines reject, so they must agree.
       instance.componentId = 'some-id';
       instance.displayName = 'Some Name';
@@ -352,11 +352,11 @@ const commerceSearchInstanceArb: fc.Arbitrary<unknown> = fc
   });
 
 // A composition snapshot: a components map keyed by generated ids whose values are member
-// triads, with a rootId sometimes present in the map and sometimes not, incl. the empty map.
+// entries, with a rootId sometimes present in the map and sometimes not, incl. the empty map.
 const snapshotArb: fc.Arbitrary<unknown> = fc
   .record({
-    // Map values mix well-formed member triads with cross-typed (type-swapped) values so the
-    // snapshot's `components` map exercises the ComponentContractsTriad discrimination on both the
+    // Map values mix well-formed member entries with cross-typed (type-swapped) values so the
+    // snapshot's `components` map exercises the CompositionSnapshotEntry discrimination on both the
     // accept and reject branches.
     entries: fc.array(fc.tuple(anyIdArb, fc.oneof(componentInstanceArb, typeSwapArb)), {
       maxLength: 4,
@@ -378,7 +378,7 @@ const snapshotArb: fc.Arbitrary<unknown> = fc
     } else if (corrupt === 'extra-prop') {
       snapshot.unexpected = true;
     } else if (corrupt === 'bad-value') {
-      components['ok-id'] = {not: 'a triad'};
+      components['ok-id'] = {not: 'an entry'};
     }
     return snapshot;
   });
@@ -402,11 +402,11 @@ function assertAgreement(
 }
 
 describe('Property 1: Ajv–Zod agreement per changed contract', () => {
-  it('agrees on the base+composition contract via the union member triad', () => {
+  it('agrees on the base+composition contract via the union member entry', () => {
     fc.assert(
       fc.property(componentInstanceArb, (value) => {
         assertAgreement(
-          'Component_Contracts_Union (member triad)',
+          'Component_Contracts_Union (member entry)',
           ComponentContractsSchema,
           ajvUnion,
           value
@@ -434,7 +434,7 @@ describe('Property 1: Ajv–Zod agreement per changed contract', () => {
     );
   });
 
-  it('agrees on the Composition_Snapshot_Contract (map values via ComponentContractsTriad)', () => {
+  it('agrees on the Composition_Snapshot_Contract (map values via CompositionSnapshotEntry)', () => {
     fc.assert(
       fc.property(snapshotArb, (value) => {
         assertAgreement(
@@ -448,7 +448,7 @@ describe('Property 1: Ajv–Zod agreement per changed contract', () => {
     );
   });
 
-  it('agrees on cross-typed (type-swapped) values via the union member triad', () => {
+  it('agrees on cross-typed (type-swapped) values via the union member entry', () => {
     fc.assert(
       fc.property(typeSwapArb, (value) => {
         assertAgreement(

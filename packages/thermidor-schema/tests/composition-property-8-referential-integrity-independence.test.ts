@@ -12,7 +12,7 @@ import {CompositionSnapshotSchema} from '../src/index.js';
  * Referential integrity (rootId keying an entry, children/child pointing at
  * present entries) is owned by the backend and is NOT enforced at parse time;
  * the only parse-time gate is structural validity — a pattern-valid `rootId`
- * and triad-valid map values.
+ * and entry-valid map values.
  *
  * Specifically:
  *  - A snapshot whose `rootId` does NOT key any entry in `components` is still
@@ -31,10 +31,10 @@ const NUM_RUNS = 100;
 const ID_PATTERN = /^[a-z][a-z0-9-]*$/;
 
 /**
- * A minimal valid triad ({componentType, state, actions}) per componentType,
+ * A minimal valid entry ({componentType, state, actions}) per componentType,
  * reused from the sibling Property 5 discriminant-resolution test
  * (tests/composition-property-5-discriminant-resolution.test.ts). Each value is
- * a valid `ComponentContractsTriad`, i.e. a legal value of the snapshot's
+ * a valid `CompositionSnapshotEntry`, i.e. a legal value of the snapshot's
  * `components` map. The optional `children`/`child` composition fields are added
  * per-test below to exercise dangling references.
  */
@@ -199,8 +199,8 @@ const minimalInstances: Record<string, Record<string, unknown>> = {
 
 const componentTypes = Object.keys(minimalInstances);
 
-// A fresh copy of a minimal triad, safe to extend with children/child.
-const triad = (componentType: string): Record<string, unknown> =>
+// A fresh copy of a minimal entry, safe to extend with children/child.
+const entry = (componentType: string): Record<string, unknown> =>
   structuredClone(minimalInstances[componentType]);
 
 // A pattern-valid component id derived from an arbitrary alphanumeric-ish tail.
@@ -223,7 +223,7 @@ describe('Feature: thermidor-schema-adjacency-list, Property 8: Snapshot validit
 
           const snapshot = {
             rootId,
-            components: {[mapKey]: triad(componentType)},
+            components: {[mapKey]: entry(componentType)},
           };
 
           // rootId is structurally valid (pattern-matching) but references no
@@ -253,7 +253,7 @@ describe('Feature: thermidor-schema-adjacency-list, Property 8: Snapshot validit
         fc.constantFrom(...componentTypes),
         fc.uniqueArray(idArb, {minLength: 1, maxLength: 5}),
         (rootId, componentType, danglingChildren) => {
-          const value = {...triad(componentType), children: danglingChildren};
+          const value = {...entry(componentType), children: danglingChildren};
 
           const snapshot = {
             rootId,
@@ -262,7 +262,7 @@ describe('Feature: thermidor-schema-adjacency-list, Property 8: Snapshot validit
 
           // The children ids reference components that do not exist in the map.
           // Dangling references are not a parse-time concern (Req 4.8): the
-          // snapshot is ACCEPTED as long as each value is a valid triad.
+          // snapshot is ACCEPTED as long as each value is a valid entry.
           expect(CompositionSnapshotSchema.safeParse(snapshot).success).toBe(true);
         }
       ),
@@ -277,7 +277,7 @@ describe('Feature: thermidor-schema-adjacency-list, Property 8: Snapshot validit
         fc.constantFrom(...componentTypes),
         idArb,
         (rootId, componentType, danglingChild) => {
-          const value = {...triad(componentType), child: danglingChild};
+          const value = {...entry(componentType), child: danglingChild};
 
           const snapshot = {
             rootId,
@@ -285,7 +285,7 @@ describe('Feature: thermidor-schema-adjacency-list, Property 8: Snapshot validit
           };
 
           // The single `child` id references a component absent from the map.
-          // Structural validity (valid rootId, valid triad value) is the only
+          // Structural validity (valid rootId, valid entry value) is the only
           // gate, so the snapshot is ACCEPTED (Req 4.8).
           expect(CompositionSnapshotSchema.safeParse(snapshot).success).toBe(true);
         }

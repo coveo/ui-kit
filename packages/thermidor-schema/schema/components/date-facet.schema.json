@@ -62,8 +62,8 @@
   },
   "additionalProperties": false,
   "$defs": {
-    "Triad": {
-      "title": "DateFacetTriad",
+    "SnapshotEntry": {
+      "title": "DateFacetSnapshotEntry",
       "type": "object",
       "required": ["componentType", "state", "actions"],
       "properties": {

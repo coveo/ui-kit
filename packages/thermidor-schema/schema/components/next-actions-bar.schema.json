@@ -3,18 +3,26 @@
   "$id": "https://schema.thermidor.coveo.com/components/next-actions-bar.schema.json",
   "title": "NextActionsBar",
   "description": "Renders a set of suggested next actions the user can pick from. The selectAction action is dispatched when the user clicks an action button.",
-  "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/component.schema.json"}],
+  "allOf": [
+    {
+      "$ref": "https://schema.thermidor.coveo.com/base/component.schema.json"
+    }
+  ],
   "properties": {
     "componentType": {
       "type": "string",
       "const": "next-actions-bar"
     },
-    "state": {"$ref": "#/$defs/NextActionsState"},
+    "state": {
+      "$ref": "#/$defs/NextActionsState"
+    },
     "actions": {
       "type": "object",
       "required": ["selectAction"],
       "properties": {
-        "selectAction": {"$ref": "#/$defs/SelectActionAction"}
+        "selectAction": {
+          "$ref": "#/$defs/SelectActionAction"
+        }
       },
       "additionalProperties": false
     },
@@ -32,8 +40,8 @@
   },
   "additionalProperties": false,
   "$defs": {
-    "Triad": {
-      "title": "NextActionsBarTriad",
+    "SnapshotEntry": {
+      "title": "NextActionsBarSnapshotEntry",
       "type": "object",
       "required": ["componentType", "state", "actions"],
       "properties": {
@@ -41,12 +49,16 @@
           "type": "string",
           "const": "next-actions-bar"
         },
-        "state": {"$ref": "#/$defs/NextActionsState"},
+        "state": {
+          "$ref": "#/$defs/NextActionsState"
+        },
         "actions": {
           "type": "object",
           "required": ["selectAction"],
           "properties": {
-            "selectAction": {"$ref": "#/$defs/SelectActionAction"}
+            "selectAction": {
+              "$ref": "#/$defs/SelectActionAction"
+            }
           },
           "additionalProperties": false
         },
@@ -84,7 +96,11 @@
     "SelectActionAction": {
       "title": "selectAction",
       "description": "Signals that the user selected one of the suggested actions.",
-      "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"}],
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ],
       "properties": {
         "payload": {
           "type": "object",

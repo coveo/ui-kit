@@ -3,18 +3,26 @@
   "$id": "https://schema.thermidor.coveo.com/components/sort.schema.json",
   "title": "Sort",
   "description": "Provides sort controls for a commerce search surface. Renders available sort options and dispatches selectSort when the user changes the sort order.",
-  "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/component.schema.json"}],
+  "allOf": [
+    {
+      "$ref": "https://schema.thermidor.coveo.com/base/component.schema.json"
+    }
+  ],
   "properties": {
     "componentType": {
       "type": "string",
       "const": "sort"
     },
-    "state": {"$ref": "#/$defs/SortState"},
+    "state": {
+      "$ref": "#/$defs/SortState"
+    },
     "actions": {
       "type": "object",
       "required": ["selectSort"],
       "properties": {
-        "selectSort": {"$ref": "#/$defs/SelectSortAction"}
+        "selectSort": {
+          "$ref": "#/$defs/SelectSortAction"
+        }
       },
       "additionalProperties": false
     },
@@ -32,8 +40,8 @@
   },
   "additionalProperties": false,
   "$defs": {
-    "Triad": {
-      "title": "SortTriad",
+    "SnapshotEntry": {
+      "title": "SortSnapshotEntry",
       "type": "object",
       "required": ["componentType", "state", "actions"],
       "properties": {
@@ -41,12 +49,16 @@
           "type": "string",
           "const": "sort"
         },
-        "state": {"$ref": "#/$defs/SortState"},
+        "state": {
+          "$ref": "#/$defs/SortState"
+        },
         "actions": {
           "type": "object",
           "required": ["selectSort"],
           "properties": {
-            "selectSort": {"$ref": "#/$defs/SelectSortAction"}
+            "selectSort": {
+              "$ref": "#/$defs/SelectSortAction"
+            }
           },
           "additionalProperties": false
         },
@@ -77,7 +89,9 @@
         "availableSorts": {
           "type": "array",
           "description": "All available sort options.",
-          "items": {"$ref": "#/$defs/SortCriterion"}
+          "items": {
+            "$ref": "#/$defs/SortCriterion"
+          }
         }
       },
       "additionalProperties": false
@@ -102,7 +116,11 @@
     "SelectSortAction": {
       "title": "selectSort",
       "description": "Applies a new sort criterion.",
-      "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"}],
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ],
       "properties": {
         "payload": {
           "type": "object",

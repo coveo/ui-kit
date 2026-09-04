@@ -8,10 +8,10 @@ import {CompositionSnapshotSchema} from '../src/index.js';
  * A CompositionSnapshot is accepted iff:
  *   - `rootId` is present, a string, and matches `^[a-z][a-z0-9-]*$`;
  *   - `components` is present (an object);
- *   - each map VALUE conforms to the triad view (ComponentContractsTriad):
- *     a `{componentType, state, actions, children?, child?}` triad is accepted;
+ *   - each map VALUE conforms to the entry view (CompositionSnapshotEntry):
+ *     a `{componentType, state, actions, children?, child?}` entry is accepted;
  *     a value carrying identity fields (componentId/displayName) or a malformed
- *     triad is rejected per the schema.
+ *     entry is rejected per the schema.
  *   - an EMPTY `components` map is accepted (no `minProperties`);
  *   - map KEYS are NOT pattern-validated — the schema deliberately has NO
  *     `propertyNames` constraint on `components`, so keys like "", "1bad",
@@ -26,11 +26,11 @@ import {CompositionSnapshotSchema} from '../src/index.js';
 const NUM_RUNS = 100;
 
 /**
- * A minimal valid triad ({componentType, state, actions}) per componentType,
+ * A minimal valid entry ({componentType, state, actions}) per componentType,
  * reusing the minimal-instance pattern from the sibling Property 5 test
  * (tests/composition-property-5-discriminant-resolution.test.ts). Each value is
- * an identity-free triad, which is exactly what the composition snapshot's
- * `components` map values must conform to (ComponentContractsTriad).
+ * an identity-free entry, which is exactly what the composition snapshot's
+ * `components` map values must conform to (CompositionSnapshotEntry).
  */
 const minimalInstances: Record<string, Record<string, unknown>> = {
   'product-carousel': {
@@ -193,8 +193,8 @@ const minimalInstances: Record<string, Record<string, unknown>> = {
 
 const componentTypes = Object.keys(minimalInstances);
 
-/** Arbitrary producing a valid, identity-free triad map value. */
-const validTriadValueArb = fc
+/** Arbitrary producing a valid, identity-free entry map value. */
+const validEntryValueArb = fc
   .constantFrom(...componentTypes)
   .map((componentType) => minimalInstances[componentType]);
 
@@ -209,9 +209,9 @@ const validRootIdArb = fc
 const idPattern = /^[a-z][a-z0-9-]*$/;
 
 describe('Feature: thermidor-schema-adjacency-list, Property 7: Composition-snapshot structural validity', () => {
-  it('accepts a snapshot with a valid rootId, a valid triad value, and a valid key', () => {
+  it('accepts a snapshot with a valid rootId, a valid entry value, and a valid key', () => {
     fc.assert(
-      fc.property(validRootIdArb, validTriadValueArb, (rootId, value) => {
+      fc.property(validRootIdArb, validEntryValueArb, (rootId, value) => {
         const snapshot = {rootId, components: {[rootId]: value}};
         expect(CompositionSnapshotSchema.safeParse(snapshot).success).toBe(true);
       }),
@@ -231,7 +231,7 @@ describe('Feature: thermidor-schema-adjacency-list, Property 7: Composition-snap
 
   it('rejects a snapshot missing rootId', () => {
     fc.assert(
-      fc.property(validTriadValueArb, (value) => {
+      fc.property(validEntryValueArb, (value) => {
         const snapshot = {components: {root: value}};
         expect(CompositionSnapshotSchema.safeParse(snapshot).success).toBe(false);
       }),
@@ -273,9 +273,9 @@ describe('Feature: thermidor-schema-adjacency-list, Property 7: Composition-snap
     );
   });
 
-  it('rejects a map value carrying identity fields (componentId/displayName) — triad-only view', () => {
+  it('rejects a map value carrying identity fields (componentId/displayName) — entry-only view', () => {
     fc.assert(
-      fc.property(validRootIdArb, validTriadValueArb, (rootId, value) => {
+      fc.property(validRootIdArb, validEntryValueArb, (rootId, value) => {
         const withIdentity = {
           ...value,
           componentId: 'some-id',
@@ -288,7 +288,7 @@ describe('Feature: thermidor-schema-adjacency-list, Property 7: Composition-snap
     );
   });
 
-  it('rejects a malformed triad map value (unknown componentType)', () => {
+  it('rejects a malformed entry map value (unknown componentType)', () => {
     fc.assert(
       fc.property(validRootIdArb, (rootId) => {
         const malformed = {componentType: 'not-a-real-component', state: {}, actions: {}};
@@ -312,7 +312,7 @@ describe('Feature: thermidor-schema-adjacency-list, Property 7: Composition-snap
       '-leading'
     );
     fc.assert(
-      fc.property(validRootIdArb, validTriadValueArb, nonConformingKeyArb, (rootId, value, key) => {
+      fc.property(validRootIdArb, validEntryValueArb, nonConformingKeyArb, (rootId, value, key) => {
         // Guard: ensure the key genuinely does NOT match the id pattern, so the
         // assertion truly exercises the "keys not validated" behavior.
         fc.pre(!idPattern.test(key));
