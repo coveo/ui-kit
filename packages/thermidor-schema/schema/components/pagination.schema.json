@@ -18,10 +18,54 @@
         "setPageSize": {"$ref": "#/$defs/SetPageSizeAction"}
       },
       "additionalProperties": false
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+      },
+      "maxItems": 1000,
+      "default": []
+    },
+    "child": {
+      "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
     }
   },
   "additionalProperties": false,
   "$defs": {
+    "Triad": {
+      "title": "PaginationTriad",
+      "type": "object",
+      "required": ["componentType", "state", "actions"],
+      "properties": {
+        "componentType": {
+          "type": "string",
+          "const": "pagination"
+        },
+        "state": {"$ref": "#/$defs/PaginationState"},
+        "actions": {
+          "type": "object",
+          "required": ["selectPage", "setPageSize"],
+          "properties": {
+            "selectPage": {"$ref": "#/$defs/SelectPageAction"},
+            "setPageSize": {"$ref": "#/$defs/SetPageSizeAction"}
+          },
+          "additionalProperties": false
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+          },
+          "maxItems": 1000,
+          "default": []
+        },
+        "child": {
+          "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+        }
+      },
+      "additionalProperties": false
+    },
     "PaginationState": {
       "title": "PaginationState",
       "description": "The current pagination state. Owned exclusively by the backend.",

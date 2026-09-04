@@ -47,10 +47,79 @@
         }
       },
       "additionalProperties": false
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+      },
+      "maxItems": 1000,
+      "default": []
+    },
+    "child": {
+      "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
     }
   },
   "additionalProperties": false,
   "$defs": {
+    "Triad": {
+      "title": "DateFacetTriad",
+      "type": "object",
+      "required": ["componentType", "state", "actions"],
+      "properties": {
+        "componentType": {
+          "type": "string",
+          "const": "date-facet"
+        },
+        "state": {
+          "$ref": "#/$defs/DateFacetState"
+        },
+        "actions": {
+          "type": "object",
+          "required": [
+            "toggleSelect",
+            "toggleSingleSelect",
+            "clearAllActiveValues",
+            "applyCustomRange",
+            "showMoreValues",
+            "showLessValues"
+          ],
+          "properties": {
+            "toggleSelect": {
+              "$ref": "#/$defs/DateFacetToggleSelectAction"
+            },
+            "toggleSingleSelect": {
+              "$ref": "#/$defs/DateFacetToggleSingleSelectAction"
+            },
+            "clearAllActiveValues": {
+              "$ref": "#/$defs/DateFacetClearAllActiveValuesAction"
+            },
+            "applyCustomRange": {
+              "$ref": "#/$defs/DateFacetApplyCustomRangeAction"
+            },
+            "showMoreValues": {
+              "$ref": "#/$defs/DateFacetShowMoreValuesAction"
+            },
+            "showLessValues": {
+              "$ref": "#/$defs/DateFacetShowLessValuesAction"
+            }
+          },
+          "additionalProperties": false
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+          },
+          "maxItems": 1000,
+          "default": []
+        },
+        "child": {
+          "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+        }
+      },
+      "additionalProperties": false
+    },
     "DateFacetState": {
       "title": "DateFacetState",
       "description": "The observable state of a date facet. Owned exclusively by the backend.",

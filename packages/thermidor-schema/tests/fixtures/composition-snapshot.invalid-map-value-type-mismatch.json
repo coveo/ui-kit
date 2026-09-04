@@ -1,0 +1,12 @@
+{
+  "rootId": "cart-1",
+  "components": {
+    "cart-1": {
+      "componentType": "cart",
+      "state": {
+        "facetIds": []
+      },
+      "actions": {}
+    }
+  }
+}

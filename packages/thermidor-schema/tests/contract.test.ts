@@ -14,6 +14,7 @@ import {
   ComparisonTableSchema,
   ComparisonTableStateSchema,
   ComponentContractsSchema,
+  CompositionSnapshotSchema,
   DateFacetStateSchema,
   FacetManagerStateSchema,
   NextActionsBarSchema,
@@ -301,6 +302,30 @@ const fixtures = [
     schema: FacetManagerStateSchema,
     schemaId:
       'https://schema.thermidor.coveo.com/components/facet-manager.schema.json#/$defs/FacetManagerState',
+    valid: false,
+  },
+  {
+    file: 'composition-snapshot.valid.json',
+    schema: CompositionSnapshotSchema,
+    schemaId: 'https://schema.thermidor.coveo.com/composition/composition-snapshot.schema.json',
+    valid: true,
+  },
+  {
+    file: 'composition-snapshot.invalid-root-pattern.json',
+    schema: CompositionSnapshotSchema,
+    schemaId: 'https://schema.thermidor.coveo.com/composition/composition-snapshot.schema.json',
+    valid: false,
+  },
+  {
+    file: 'composition-snapshot.invalid-map-value.json',
+    schema: CompositionSnapshotSchema,
+    schemaId: 'https://schema.thermidor.coveo.com/composition/composition-snapshot.schema.json',
+    valid: false,
+  },
+  {
+    file: 'composition-snapshot.invalid-map-value-type-mismatch.json',
+    schema: CompositionSnapshotSchema,
+    schemaId: 'https://schema.thermidor.coveo.com/composition/composition-snapshot.schema.json',
     valid: false,
   },
 ];

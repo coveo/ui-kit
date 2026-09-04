@@ -14,6 +14,11 @@ export type Type = z.infer<typeof TypeSchema>;
 // The selection state of a facet value, shared across all commerce facet components.
 //
 // The selection state of this facet value.
+//
+// The selection state of a facet value that supports selection but not exclusion (e.g.
+// numeric and date facets). Constrained to 'idle' or 'selected'.
+//
+// The selection state of this facet value (idle or selected; exclusion is not supported).
 
 export const FacetValueStateSchema = z.enum(['excluded', 'idle', 'selected']);
 export type FacetValueState = z.infer<typeof FacetValueStateSchema>;
@@ -326,8 +331,140 @@ export const FacetManagerStateSchema = z.strictObject({
 });
 export type FacetManagerState = z.infer<typeof FacetManagerStateSchema>;
 
+export const CommerceSearchActionsSchema = z.strictObject({});
+export type CommerceSearchActions = z.infer<typeof CommerceSearchActionsSchema>;
+
+export const StateSchema = z.strictObject({});
+export type State = z.infer<typeof StateSchema>;
+
+export const FacetApplyCustomRangePayloadSchema = z.strictObject({
+  end: z.union([z.number(), z.string()]),
+  start: z.union([z.number(), z.string()]),
+});
+export type FacetApplyCustomRangePayload = z.infer<typeof FacetApplyCustomRangePayloadSchema>;
+
+export const PayloadClassSchema = z.strictObject({
+  query: z.string().max(1024),
+});
+export type PayloadClass = z.infer<typeof PayloadClassSchema>;
+
+export const SelectActionSchema = z.strictObject({
+  payload: SelectActionPayloadSchema,
+});
+export type SelectAction = z.infer<typeof SelectActionSchema>;
+
+export const SelectPageSchema = z.strictObject({
+  payload: SelectPagePayloadSchema,
+});
+export type SelectPage = z.infer<typeof SelectPageSchema>;
+
+export const CategoryFacetSelectPathSchema = z.strictObject({
+  payload: CategoryFacetSelectPathPayloadSchema,
+});
+export type CategoryFacetSelectPath = z.infer<typeof CategoryFacetSelectPathSchema>;
+
+export const SelectSortSchema = z.strictObject({
+  payload: SelectSortPayloadSchema,
+});
+export type SelectSort = z.infer<typeof SelectSortSchema>;
+
+export const SetPageSizeSchema = z.strictObject({
+  payload: SetPageSizePayloadSchema,
+});
+export type SetPageSize = z.infer<typeof SetPageSizeSchema>;
+
+export const SubmitQuerySchema = z.strictObject({
+  payload: SubmitQueryPayloadSchema,
+});
+export type SubmitQuery = z.infer<typeof SubmitQuerySchema>;
+
+export const RegularFacetToggleExcludeSchema = z.strictObject({
+  payload: RegularFacetToggleExcludePayloadSchema,
+});
+export type RegularFacetToggleExclude = z.infer<typeof RegularFacetToggleExcludeSchema>;
+
+export const FacetToggleSelectPayloadSchema = z.strictObject({
+  value: z.string().min(1).max(1024).optional(),
+  end: z.union([z.number(), z.string()]).optional(),
+  start: z.union([z.number(), z.string()]).optional(),
+});
+export type FacetToggleSelectPayload = z.infer<typeof FacetToggleSelectPayloadSchema>;
+
+export const RegularFacetToggleSingleExcludeSchema = z.strictObject({
+  payload: RegularFacetToggleSingleExcludePayloadSchema,
+});
+export type RegularFacetToggleSingleExclude = z.infer<typeof RegularFacetToggleSingleExcludeSchema>;
+
+export const FacetToggleSingleSelectPayloadSchema = z.strictObject({
+  value: z.string().min(1).max(1024).optional(),
+  end: z.union([z.number(), z.string()]).optional(),
+  start: z.union([z.number(), z.string()]).optional(),
+});
+export type FacetToggleSingleSelectPayload = z.infer<typeof FacetToggleSingleSelectPayloadSchema>;
+
+export const UpdateItemQuantitySchema = z.strictObject({
+  payload: UpdateItemQuantityPayloadSchema,
+});
+export type UpdateItemQuantity = z.infer<typeof UpdateItemQuantitySchema>;
+
+export const FacetCustomRangeSchema = z.strictObject({
+  end: z.union([z.number(), z.string()]),
+  numberOfResults: z.number().int().min(0),
+  start: z.union([z.number(), z.string()]),
+});
+export type FacetCustomRange = z.infer<typeof FacetCustomRangeSchema>;
+
+export const PurpleRegularFacetSearchResultSchema = z.strictObject({
+  numberOfResults: z.number().int().min(0),
+  value: z.string().min(1).max(1024),
+  path: z.array(z.string()).optional(),
+});
+export type PurpleRegularFacetSearchResult = z.infer<typeof PurpleRegularFacetSearchResultSchema>;
+
+export const ProductElementSchema = z.strictObject({
+  additionalFields: z.record(z.string(), z.unknown()).optional(),
+  children: z.array(ProductSchema).optional(),
+  clickUri: z.url().optional(),
+  ec_brand: z.string().optional(),
+  ec_category: z.array(z.string()).optional(),
+  ec_color: z.string().optional(),
+  ec_description: z.string().optional(),
+  ec_images: z.array(z.url()).optional(),
+  ec_in_stock: z.boolean().optional(),
+  ec_item_group_id: z.string().optional(),
+  ec_item_group_name: z.string().optional(),
+  ec_name: z.string().optional(),
+  ec_price: z.number().optional(),
+  ec_promo_price: z.number().optional(),
+  ec_rating: z.union([z.number().min(0).max(5), z.null()]).optional(),
+  ec_shortdesc: z.string().optional(),
+  ec_thumbnails: z.array(z.url()).optional(),
+  permanentid: z.string().optional(),
+  imageUrl: z.url().optional(),
+  name: z.string().optional(),
+  price: z.number().optional(),
+  productId: z.string().optional(),
+  rating: z.number().min(0).max(5).optional(),
+  values: z.record(z.string(), z.string()).optional(),
+});
+export type ProductElement = z.infer<typeof ProductElementSchema>;
+
+export const FacetValueSchema = z.strictObject({
+  numberOfResults: z.number().int().min(0),
+  state: z.enum(['idle', 'selected', 'excluded']),
+  value: z.string().min(1).max(1024).optional(),
+  end: z.union([z.number(), z.string()]).optional(),
+  start: z.union([z.number(), z.string()]).optional(),
+});
+export type FacetValue = z.infer<typeof FacetValueSchema>;
+
 export const ProductCarouselSchema = z.strictObject({
   actions: ProductCarouselActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
   componentType: z.literal('product-carousel'),
   state: ProductCarouselStateSchema,
 });
@@ -338,15 +475,15 @@ export const SetItemsPayloadSchema = z.strictObject({
 });
 export type SetItemsPayload = z.infer<typeof SetItemsPayloadSchema>;
 
-export const UpdateItemQuantitySchema = z.strictObject({
+export const UpdateItemQuantityClassSchema = z.strictObject({
   payload: UpdateItemQuantityPayloadSchema,
 });
-export type UpdateItemQuantity = z.infer<typeof UpdateItemQuantitySchema>;
+export type UpdateItemQuantityClass = z.infer<typeof UpdateItemQuantityClassSchema>;
 
-export const SelectActionSchema = z.strictObject({
+export const SelectActionClassSchema = z.strictObject({
   payload: SelectActionPayloadSchema,
 });
-export type SelectAction = z.infer<typeof SelectActionSchema>;
+export type SelectActionClass = z.infer<typeof SelectActionClassSchema>;
 
 export const NextActionsStateSchema = z.strictObject({
   actions: z.array(ActionItemSchema),
@@ -368,25 +505,30 @@ export type ComparisonTableState = z.infer<typeof ComparisonTableStateSchema>;
 
 export const ProductListSchema = z.strictObject({
   actions: ProductListActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
   componentType: z.literal('product-list'),
   state: ProductListStateSchema,
 });
 export type ProductList = z.infer<typeof ProductListSchema>;
 
-export const SelectPageSchema = z.strictObject({
+export const SelectPageClassSchema = z.strictObject({
   payload: SelectPagePayloadSchema,
 });
-export type SelectPage = z.infer<typeof SelectPageSchema>;
+export type SelectPageClass = z.infer<typeof SelectPageClassSchema>;
 
-export const SetPageSizeSchema = z.strictObject({
+export const SetPageSizeClassSchema = z.strictObject({
   payload: SetPageSizePayloadSchema,
 });
-export type SetPageSize = z.infer<typeof SetPageSizeSchema>;
+export type SetPageSizeClass = z.infer<typeof SetPageSizeClassSchema>;
 
-export const SelectSortSchema = z.strictObject({
+export const SelectSortClassSchema = z.strictObject({
   payload: SelectSortPayloadSchema,
 });
-export type SelectSort = z.infer<typeof SelectSortSchema>;
+export type SelectSortClass = z.infer<typeof SelectSortClassSchema>;
 
 export const SortStateSchema = z.strictObject({
   appliedSort: SortCriterionSchema,
@@ -394,30 +536,30 @@ export const SortStateSchema = z.strictObject({
 });
 export type SortState = z.infer<typeof SortStateSchema>;
 
-export const SubmitQuerySchema = z.strictObject({
+export const SubmitQueryClassSchema = z.strictObject({
   payload: SubmitQueryPayloadSchema,
 });
-export type SubmitQuery = z.infer<typeof SubmitQuerySchema>;
+export type SubmitQueryClass = z.infer<typeof SubmitQueryClassSchema>;
 
-export const SearchSchema = z.strictObject({
+export const PurpleSearchSchema = z.strictObject({
   payload: SearchPayloadSchema,
 });
-export type Search = z.infer<typeof SearchSchema>;
+export type PurpleSearch = z.infer<typeof PurpleSearchSchema>;
 
-export const RegularFacetToggleExcludeSchema = z.strictObject({
+export const ToggleExcludeClassSchema = z.strictObject({
   payload: RegularFacetToggleExcludePayloadSchema,
 });
-export type RegularFacetToggleExclude = z.infer<typeof RegularFacetToggleExcludeSchema>;
+export type ToggleExcludeClass = z.infer<typeof ToggleExcludeClassSchema>;
 
 export const RegularFacetToggleSelectSchema = z.strictObject({
   payload: RegularFacetToggleSelectPayloadSchema,
 });
 export type RegularFacetToggleSelect = z.infer<typeof RegularFacetToggleSelectSchema>;
 
-export const RegularFacetToggleSingleExcludeSchema = z.strictObject({
+export const ToggleSingleExcludeClassSchema = z.strictObject({
   payload: RegularFacetToggleSingleExcludePayloadSchema,
 });
-export type RegularFacetToggleSingleExclude = z.infer<typeof RegularFacetToggleSingleExcludeSchema>;
+export type ToggleSingleExcludeClass = z.infer<typeof ToggleSingleExcludeClassSchema>;
 
 export const RegularFacetToggleSingleSelectSchema = z.strictObject({
   payload: RegularFacetToggleSingleSelectPayloadSchema,
@@ -489,10 +631,10 @@ export const CategoryFacetSearchSchema = z.strictObject({
 });
 export type CategoryFacetSearch = z.infer<typeof CategoryFacetSearchSchema>;
 
-export const CategoryFacetSelectPathSchema = z.strictObject({
+export const SelectPathClassSchema = z.strictObject({
   payload: CategoryFacetSelectPathPayloadSchema,
 });
-export type CategoryFacetSelectPath = z.infer<typeof CategoryFacetSelectPathSchema>;
+export type SelectPathClass = z.infer<typeof SelectPathClassSchema>;
 
 export const FacetSearchClassSchema = z.strictObject({
   canShowMoreResults: z.boolean(),
@@ -503,18 +645,67 @@ export type FacetSearchClass = z.infer<typeof FacetSearchClassSchema>;
 
 export const FacetManagerSchema = z.strictObject({
   actions: FacetManagerActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
   componentType: z.literal('facet-manager'),
   state: FacetManagerStateSchema,
 });
 export type FacetManager = z.infer<typeof FacetManagerSchema>;
+
+export const CommerceSearchSchema = z.strictObject({
+  actions: CommerceSearchActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
+  componentType: z.literal('commerce-search'),
+  state: StateSchema,
+});
+export type CommerceSearch = z.infer<typeof CommerceSearchSchema>;
+
+export const FacetApplyCustomRangeSchema = z.strictObject({
+  payload: FacetApplyCustomRangePayloadSchema,
+});
+export type FacetApplyCustomRange = z.infer<typeof FacetApplyCustomRangeSchema>;
+
+export const FluffySearchSchema = z.strictObject({
+  payload: PayloadClassSchema,
+});
+export type FluffySearch = z.infer<typeof FluffySearchSchema>;
 
 export const SetItemsSchema = z.strictObject({
   payload: SetItemsPayloadSchema,
 });
 export type SetItems = z.infer<typeof SetItemsSchema>;
 
+export const FacetToggleSelectSchema = z.strictObject({
+  payload: FacetToggleSelectPayloadSchema,
+});
+export type FacetToggleSelect = z.infer<typeof FacetToggleSelectSchema>;
+
+export const FacetToggleSingleSelectSchema = z.strictObject({
+  payload: FacetToggleSingleSelectPayloadSchema,
+});
+export type FacetToggleSingleSelect = z.infer<typeof FacetToggleSingleSelectSchema>;
+
+export const FacetSearchSchema = z.strictObject({
+  canShowMoreResults: z.boolean(),
+  query: z.string().max(1024),
+  results: z.array(PurpleRegularFacetSearchResultSchema).max(1000),
+});
+export type FacetSearch = z.infer<typeof FacetSearchSchema>;
+
+export const SetItemsClassSchema = z.strictObject({
+  payload: SetItemsPayloadSchema,
+});
+export type SetItemsClass = z.infer<typeof SetItemsClassSchema>;
+
 export const NextActionsBarActionsSchema = z.strictObject({
-  selectAction: SelectActionSchema,
+  selectAction: SelectActionClassSchema,
 });
 export type NextActionsBarActions = z.infer<typeof NextActionsBarActionsSchema>;
 
@@ -525,37 +716,42 @@ export type BundleDisplayState = z.infer<typeof BundleDisplayStateSchema>;
 
 export const ComparisonTableSchema = z.strictObject({
   actions: ComparisonTableActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
   componentType: z.literal('comparison-table'),
   state: ComparisonTableStateSchema,
 });
 export type ComparisonTable = z.infer<typeof ComparisonTableSchema>;
 
 export const PaginationActionsSchema = z.strictObject({
-  selectPage: SelectPageSchema,
-  setPageSize: SetPageSizeSchema,
+  selectPage: SelectPageClassSchema,
+  setPageSize: SetPageSizeClassSchema,
 });
 export type PaginationActions = z.infer<typeof PaginationActionsSchema>;
 
 export const SortActionsSchema = z.strictObject({
-  selectSort: SelectSortSchema,
+  selectSort: SelectSortClassSchema,
 });
 export type SortActions = z.infer<typeof SortActionsSchema>;
 
 export const SearchBoxActionsSchema = z.strictObject({
-  submitQuery: SubmitQuerySchema,
+  submitQuery: SubmitQueryClassSchema,
 });
 export type SearchBoxActions = z.infer<typeof SearchBoxActionsSchema>;
 
 export const RegularFacetActionsSchema = z.strictObject({
   clearAllActiveValues: ActionSchema,
   clearSearch: ActionSchema,
-  search: SearchSchema,
+  search: PurpleSearchSchema,
   showLessValues: ActionSchema,
   showMoreSearchResults: ActionSchema,
   showMoreValues: ActionSchema,
-  toggleExclude: RegularFacetToggleExcludeSchema,
+  toggleExclude: ToggleExcludeClassSchema,
   toggleSelect: RegularFacetToggleSelectSchema,
-  toggleSingleExclude: RegularFacetToggleSingleExcludeSchema,
+  toggleSingleExclude: ToggleSingleExcludeClassSchema,
   toggleSingleSelect: RegularFacetToggleSingleSelectSchema,
 });
 export type RegularFacetActions = z.infer<typeof RegularFacetActionsSchema>;
@@ -595,7 +791,7 @@ export const CategoryFacetActionsSchema = z.strictObject({
   clearSearch: ActionSchema,
   clearSelectedPath: ActionSchema,
   search: CategoryFacetSearchSchema,
-  selectPath: CategoryFacetSelectPathSchema,
+  selectPath: SelectPathClassSchema,
   showLessValues: ActionSchema,
   showMoreSearchResults: ActionSchema,
   showMoreValues: ActionSchema,
@@ -613,13 +809,18 @@ export const CategoryFacetStateSchema = z.strictObject({
 export type CategoryFacetState = z.infer<typeof CategoryFacetStateSchema>;
 
 export const CartActionsSchema = z.strictObject({
-  setItems: SetItemsSchema,
-  updateItemQuantity: UpdateItemQuantitySchema,
+  setItems: SetItemsClassSchema,
+  updateItemQuantity: UpdateItemQuantityClassSchema,
 });
 export type CartActions = z.infer<typeof CartActionsSchema>;
 
 export const NextActionsBarSchema = z.strictObject({
   actions: NextActionsBarActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
   componentType: z.literal('next-actions-bar'),
   state: NextActionsStateSchema,
 });
@@ -627,6 +828,11 @@ export type NextActionsBar = z.infer<typeof NextActionsBarSchema>;
 
 export const BundleDisplaySchema = z.strictObject({
   actions: BundleDisplayActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
   componentType: z.literal('bundle-display'),
   state: BundleDisplayStateSchema,
 });
@@ -634,6 +840,11 @@ export type BundleDisplay = z.infer<typeof BundleDisplaySchema>;
 
 export const PaginationSchema = z.strictObject({
   actions: PaginationActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
   componentType: z.literal('pagination'),
   state: PaginationStateSchema,
 });
@@ -641,6 +852,11 @@ export type Pagination = z.infer<typeof PaginationSchema>;
 
 export const SortSchema = z.strictObject({
   actions: SortActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
   componentType: z.literal('sort'),
   state: SortStateSchema,
 });
@@ -648,6 +864,11 @@ export type Sort = z.infer<typeof SortSchema>;
 
 export const SearchBoxSchema = z.strictObject({
   actions: SearchBoxActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
   componentType: z.literal('search-box'),
   state: SearchBoxStateSchema,
 });
@@ -655,6 +876,11 @@ export type SearchBox = z.infer<typeof SearchBoxSchema>;
 
 export const RegularFacetSchema = z.strictObject({
   actions: RegularFacetActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
   componentType: z.literal('regular-facet'),
   state: RegularFacetStateSchema,
 });
@@ -662,6 +888,11 @@ export type RegularFacet = z.infer<typeof RegularFacetSchema>;
 
 export const NumericFacetSchema = z.strictObject({
   actions: NumericFacetActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
   componentType: z.literal('numeric-facet'),
   state: NumericFacetStateSchema,
 });
@@ -669,6 +900,11 @@ export type NumericFacet = z.infer<typeof NumericFacetSchema>;
 
 export const DateFacetSchema = z.strictObject({
   actions: DateFacetActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
   componentType: z.literal('date-facet'),
   state: DateFacetStateSchema,
 });
@@ -676,6 +912,11 @@ export type DateFacet = z.infer<typeof DateFacetSchema>;
 
 export const CategoryFacetSchema = z.strictObject({
   actions: CategoryFacetActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
   componentType: z.literal('category-facet'),
   state: CategoryFacetStateSchema,
 });
@@ -683,10 +924,40 @@ export type CategoryFacet = z.infer<typeof CategoryFacetSchema>;
 
 export const CartSchema = z.strictObject({
   actions: CartActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
   componentType: z.literal('cart'),
   state: CartStateSchema,
 });
 export type Cart = z.infer<typeof CartSchema>;
+
+export const ComponentContractsTriadSchema = z.discriminatedUnion('componentType', [
+  ProductCarouselSchema,
+  CartSchema,
+  NextActionsBarSchema,
+  BundleDisplaySchema,
+  ComparisonTableSchema,
+  ProductListSchema,
+  PaginationSchema,
+  SortSchema,
+  SearchBoxSchema,
+  RegularFacetSchema,
+  NumericFacetSchema,
+  DateFacetSchema,
+  CategoryFacetSchema,
+  FacetManagerSchema,
+  CommerceSearchSchema,
+]);
+export type ComponentContractsTriad = z.infer<typeof ComponentContractsTriadSchema>;
+
+export const CompositionSnapshotSchema = z.strictObject({
+  components: z.record(z.string(), ComponentContractsTriadSchema),
+  rootId: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')),
+});
+export type CompositionSnapshot = z.infer<typeof CompositionSnapshotSchema>;
 
 export const ComponentContractsSchema = z.discriminatedUnion('componentType', [
   ProductCarouselSchema,
@@ -703,6 +974,7 @@ export const ComponentContractsSchema = z.discriminatedUnion('componentType', [
   DateFacetSchema,
   CategoryFacetSchema,
   FacetManagerSchema,
+  CommerceSearchSchema,
 ]);
 export type ComponentContracts = z.infer<typeof ComponentContractsSchema>;
 
@@ -729,6 +1001,12 @@ export const CategoryFacetPropsSchema = z.object({
   componentType: z.literal('category-facet'),
 });
 export type CategoryFacetProps = z.infer<typeof CategoryFacetPropsSchema>;
+
+export const CommerceSearchPropsSchema = z.object({
+  componentId: z.string(),
+  componentType: z.literal('commerce-search'),
+});
+export type CommerceSearchProps = z.infer<typeof CommerceSearchPropsSchema>;
 
 export const ComparisonTablePropsSchema = z.object({
   componentId: z.string(),

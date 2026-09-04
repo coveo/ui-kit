@@ -193,6 +193,11 @@ describe('remote-controller property tests', () => {
         state: {facetIds: []},
         actions: {},
       },
+      'commerce-search': {
+        componentType: 'commerce-search',
+        state: {},
+        actions: {},
+      },
     };
 
     it.each(componentTypes)('round-trip preservation for %s', (componentType) => {

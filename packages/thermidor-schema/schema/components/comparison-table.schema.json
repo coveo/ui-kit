@@ -14,10 +14,50 @@
       "type": "object",
       "properties": {},
       "additionalProperties": false
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+      },
+      "maxItems": 1000,
+      "default": []
+    },
+    "child": {
+      "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
     }
   },
   "additionalProperties": false,
   "$defs": {
+    "Triad": {
+      "title": "ComparisonTableTriad",
+      "type": "object",
+      "required": ["componentType", "state", "actions"],
+      "properties": {
+        "componentType": {
+          "type": "string",
+          "const": "comparison-table"
+        },
+        "state": {"$ref": "#/$defs/ComparisonTableState"},
+        "actions": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": false
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+          },
+          "maxItems": 1000,
+          "default": []
+        },
+        "child": {
+          "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+        }
+      },
+      "additionalProperties": false
+    },
     "ComparisonTableState": {
       "title": "ComparisonTableState",
       "description": "The comparison data to render. Contains a list of products with their attribute values and the attribute descriptors defining the columns.",
