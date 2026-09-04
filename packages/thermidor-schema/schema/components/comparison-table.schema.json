@@ -3,13 +3,19 @@
   "$id": "https://schema.thermidor.coveo.com/components/comparison-table.schema.json",
   "title": "ComparisonTable",
   "description": "Renders a tabular product comparison with attribute columns. Read-only: the product set and attributes are owned by the backend.",
-  "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/component.schema.json"}],
+  "allOf": [
+    {
+      "$ref": "https://schema.thermidor.coveo.com/base/component.schema.json"
+    }
+  ],
   "properties": {
     "componentType": {
       "type": "string",
       "const": "comparison-table"
     },
-    "state": {"$ref": "#/$defs/ComparisonTableState"},
+    "state": {
+      "$ref": "#/$defs/ComparisonTableState"
+    },
     "actions": {
       "type": "object",
       "properties": {},
@@ -29,8 +35,8 @@
   },
   "additionalProperties": false,
   "$defs": {
-    "Triad": {
-      "title": "ComparisonTableTriad",
+    "SnapshotEntry": {
+      "title": "ComparisonTableSnapshotEntry",
       "type": "object",
       "required": ["componentType", "state", "actions"],
       "properties": {
@@ -38,7 +44,9 @@
           "type": "string",
           "const": "comparison-table"
         },
-        "state": {"$ref": "#/$defs/ComparisonTableState"},
+        "state": {
+          "$ref": "#/$defs/ComparisonTableState"
+        },
         "actions": {
           "type": "object",
           "properties": {},

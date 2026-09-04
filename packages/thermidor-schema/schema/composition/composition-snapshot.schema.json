@@ -15,7 +15,7 @@
       "type": "object",
       "description": "Flat component map keyed by componentId. Referential integrity between rootId and this map is backend-owned and not enforced at parse time.",
       "additionalProperties": {
-        "$ref": "https://schema.thermidor.coveo.com/components/component-contracts.schema.json#/$defs/ComponentContractsTriad"
+        "$ref": "https://schema.thermidor.coveo.com/components/component-contracts.schema.json#/$defs/CompositionSnapshotEntry"
       }
     }
   },

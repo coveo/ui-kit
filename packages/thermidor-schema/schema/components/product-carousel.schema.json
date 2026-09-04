@@ -3,13 +3,19 @@
   "$id": "https://schema.thermidor.coveo.com/components/product-carousel.schema.json",
   "title": "ProductCarousel",
   "description": "Renders an ordered list of commerce products for a single category or intent bucket. Read-only from the frontend: the backend is the sole source of truth for which products are displayed and in what order.",
-  "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/component.schema.json"}],
+  "allOf": [
+    {
+      "$ref": "https://schema.thermidor.coveo.com/base/component.schema.json"
+    }
+  ],
   "properties": {
     "componentType": {
       "type": "string",
       "const": "product-carousel"
     },
-    "state": {"$ref": "#/$defs/ProductCarouselState"},
+    "state": {
+      "$ref": "#/$defs/ProductCarouselState"
+    },
     "actions": {
       "type": "object",
       "properties": {},
@@ -29,8 +35,8 @@
   },
   "additionalProperties": false,
   "$defs": {
-    "Triad": {
-      "title": "ProductCarouselTriad",
+    "SnapshotEntry": {
+      "title": "ProductCarouselSnapshotEntry",
       "type": "object",
       "required": ["componentType", "state", "actions"],
       "properties": {
@@ -38,7 +44,9 @@
           "type": "string",
           "const": "product-carousel"
         },
-        "state": {"$ref": "#/$defs/ProductCarouselState"},
+        "state": {
+          "$ref": "#/$defs/ProductCarouselState"
+        },
         "actions": {
           "type": "object",
           "properties": {},

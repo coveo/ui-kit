@@ -21,7 +21,7 @@ interface DiscriminatedUnion {
   memberTypeNames: string[];
 }
 
-interface ComponentContractsTriad {
+interface CompositionSnapshotEntryUnion {
   typeName: string;
   discriminator: string;
   memberTypeNames: string[];
@@ -102,8 +102,11 @@ const {lines} = await quicktype({
 const componentPropsEntries = loadComponentPropsEntries(documentsById);
 const componentPropsLines = renderComponentPropsSchemas(componentPropsEntries);
 
-const componentContractsTriad = loadComponentContractsTriad(componentIndex, projectionDocuments);
-const projectedLines = injectComponentContractsTriadUnion(lines, componentContractsTriad);
+const compositionSnapshotEntry = loadCompositionSnapshotEntryUnion(
+  componentIndex,
+  projectionDocuments
+);
+const projectedLines = injectCompositionSnapshotEntryUnion(lines, compositionSnapshotEntry);
 
 const formatResult = await format(
   'schemas.ts',
@@ -177,57 +180,57 @@ function loadDiscriminatedUnions(
   ];
 }
 
-function loadComponentContractsTriad(
+function loadCompositionSnapshotEntryUnion(
   index: SchemaDocument,
   documents: SchemaDocument[]
-): ComponentContractsTriad {
-  const triad = loadComponentTriadView(index);
+): CompositionSnapshotEntryUnion {
+  const entryUnion = loadCompositionSnapshotEntryView(index);
   return {
-    typeName: loadSchemaTitle(triad),
+    typeName: loadSchemaTitle(entryUnion),
     discriminator: 'componentType',
     memberTypeNames: loadComponentContractDocuments(documents).map(loadSchemaTitle),
   };
 }
 
-function loadComponentTriadView(index: SchemaDocument): Schema & {oneOf: Schema[]} {
-  const definition = (index.$defs ?? ({} as Record<string, Schema>))['ComponentContractsTriad'];
+function loadCompositionSnapshotEntryView(index: SchemaDocument): Schema & {oneOf: Schema[]} {
+  const definition = (index.$defs ?? ({} as Record<string, Schema>))['CompositionSnapshotEntry'];
   if (!definition || !Array.isArray((definition as Schema).oneOf)) {
-    throw new Error(`Unable to find ComponentContractsTriad view in ${index.$id}.`);
+    throw new Error(`Unable to find CompositionSnapshotEntry view in ${index.$id}.`);
   }
   return definition as Schema & {oneOf: Schema[]};
 }
 
-// quicktype structurally unifies the 15 identity-free triad views (they share the same shape) into
-// a single flat, permissive object that decouples componentType from state/actions — which lets a
-// cross-type mismatch (e.g. componentType 'cart' with a facet-manager state) pass the Zod projection
-// while Ajv's per-member `oneOf` rejects it. We strip that flattened projection and its merged
-// sub-schemas, then re-emit ComponentContractsTriadSchema as a strict discriminated union over the
-// per-component member schemas (which are the identity-free triads), restoring Ajv↔Zod agreement.
-function injectComponentContractsTriadUnion(
+// quicktype structurally unifies the 15 identity-free CompositionSnapshotEntry views (they share the
+// same shape) into a single flat, permissive object that decouples componentType from state/actions —
+// which lets a cross-type mismatch (e.g. componentType 'cart' with a facet-manager state) pass the Zod
+// projection while Ajv's per-member `oneOf` rejects it. We strip that flattened projection and its
+// merged sub-schemas, then re-emit CompositionSnapshotEntrySchema as a strict discriminated union over
+// the per-component member schemas (which are the identity-free entries), restoring Ajv↔Zod agreement.
+function injectCompositionSnapshotEntryUnion(
   lines: string[],
-  triad: ComponentContractsTriad
+  entryUnion: CompositionSnapshotEntryUnion
 ): string[] {
-  const stripped = stripFlattenedTriadDeclarations(lines, triad.typeName);
+  const stripped = stripFlattenedEntryDeclarations(lines, entryUnion.typeName);
   const anchorIndex = stripped.findIndex((line) =>
     line.startsWith(`export const CompositionSnapshotSchema`)
   );
   if (anchorIndex === -1) {
-    throw new Error('Unable to locate CompositionSnapshotSchema to anchor the triad union.');
+    throw new Error('Unable to locate CompositionSnapshotSchema to anchor the entry union.');
   }
   return [
     ...stripped.slice(0, anchorIndex),
-    ...renderComponentContractsTriadUnion(triad),
+    ...renderCompositionSnapshotEntryUnion(entryUnion),
     '',
     ...stripped.slice(anchorIndex),
   ];
 }
 
-function stripFlattenedTriadDeclarations(lines: string[], triadTypeName: string): string[] {
+function stripFlattenedEntryDeclarations(lines: string[], entryTypeName: string): string[] {
   const flattenedTypeNames = [
-    triadTypeName,
-    `${triadTypeName}State`,
-    `${triadTypeName}Actions`,
-    `${triadTypeName}ComponentType`,
+    entryTypeName,
+    `${entryTypeName}State`,
+    `${entryTypeName}Actions`,
+    `${entryTypeName}ComponentType`,
   ];
   let result = lines;
   for (const typeName of flattenedTypeNames) {
@@ -257,14 +260,14 @@ function removeSchemaDeclaration(lines: string[], typeName: string): string[] {
   return [...lines.slice(0, start), ...lines.slice(after)];
 }
 
-function renderComponentContractsTriadUnion(triad: ComponentContractsTriad): string[] {
+function renderCompositionSnapshotEntryUnion(entryUnion: CompositionSnapshotEntryUnion): string[] {
   return [
-    `export const ${triad.typeName}Schema = z.discriminatedUnion(${JSON.stringify(
-      triad.discriminator
+    `export const ${entryUnion.typeName}Schema = z.discriminatedUnion(${JSON.stringify(
+      entryUnion.discriminator
     )}, [`,
-    ...triad.memberTypeNames.map((memberTypeName) => `  ${memberTypeName}Schema,`),
+    ...entryUnion.memberTypeNames.map((memberTypeName) => `  ${memberTypeName}Schema,`),
     ']);',
-    `export type ${triad.typeName} = z.infer<typeof ${triad.typeName}Schema>;`,
+    `export type ${entryUnion.typeName} = z.infer<typeof ${entryUnion.typeName}Schema>;`,
   ];
 }
 

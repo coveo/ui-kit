@@ -934,7 +934,7 @@ export const CartSchema = z.strictObject({
 });
 export type Cart = z.infer<typeof CartSchema>;
 
-export const ComponentContractsTriadSchema = z.discriminatedUnion('componentType', [
+export const CompositionSnapshotEntrySchema = z.discriminatedUnion('componentType', [
   ProductCarouselSchema,
   CartSchema,
   NextActionsBarSchema,
@@ -951,10 +951,10 @@ export const ComponentContractsTriadSchema = z.discriminatedUnion('componentType
   FacetManagerSchema,
   CommerceSearchSchema,
 ]);
-export type ComponentContractsTriad = z.infer<typeof ComponentContractsTriadSchema>;
+export type CompositionSnapshotEntry = z.infer<typeof CompositionSnapshotEntrySchema>;
 
 export const CompositionSnapshotSchema = z.strictObject({
-  components: z.record(z.string(), ComponentContractsTriadSchema),
+  components: z.record(z.string(), CompositionSnapshotEntrySchema),
   rootId: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')),
 });
 export type CompositionSnapshot = z.infer<typeof CompositionSnapshotSchema>;

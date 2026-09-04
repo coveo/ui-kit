@@ -13,7 +13,7 @@ const COMPOSITION_SNAPSHOT_ID =
 const COMPONENT_CONTRACTS_ID =
   'https://schema.thermidor.coveo.com/components/component-contracts.schema.json';
 const ID_PATTERN = '^[a-z][a-z0-9-]*$';
-const TRIAD_REF = `${COMPONENT_CONTRACTS_ID}#/$defs/ComponentContractsTriad`;
+const ENTRY_REF = `${COMPONENT_CONTRACTS_ID}#/$defs/CompositionSnapshotEntry`;
 
 async function readSchema(filePath: string): Promise<Record<string, any>> {
   return JSON.parse(await readFile(filePath, 'utf8'));
@@ -52,8 +52,8 @@ describe('composition-snapshot.schema.json structural conventions', () => {
       expect(components()?.propertyNames).toBeUndefined();
     });
 
-    it('routes map values through the identity-free ComponentContractsTriad view (Req 4.5)', () => {
-      expect(components()?.additionalProperties?.$ref).toBe(TRIAD_REF);
+    it('routes map values through the identity-free CompositionSnapshotEntry view (Req 4.5)', () => {
+      expect(components()?.additionalProperties?.$ref).toBe(ENTRY_REF);
     });
 
     it('does NOT reference the identity-bearing ComponentContracts union', () => {
@@ -80,14 +80,14 @@ describe('composition-snapshot.schema.json structural conventions', () => {
   });
 });
 
-describe('ComponentContractsTriad view is identity-free (Req 4.5)', () => {
+describe('CompositionSnapshotEntry view is identity-free (Req 4.5)', () => {
   it('exists as a oneOf in component-contracts.schema.json', async () => {
     const contracts = await readSchema(
       path.join(componentsDirectory, 'component-contracts.schema.json')
     );
-    const triad = contracts.$defs?.ComponentContractsTriad;
-    expect(triad).toBeDefined();
-    expect(Array.isArray(triad?.oneOf)).toBe(true);
-    expect(triad.oneOf.length).toBeGreaterThan(0);
+    const entryUnion = contracts.$defs?.CompositionSnapshotEntry;
+    expect(entryUnion).toBeDefined();
+    expect(Array.isArray(entryUnion?.oneOf)).toBe(true);
+    expect(entryUnion.oneOf.length).toBeGreaterThan(0);
   });
 });
