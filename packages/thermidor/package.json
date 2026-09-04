@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "@ag-ui/core": "0.0.57",
-    "@coveo/thermidor-schema": "workspace:*",
+    "@coveo/thermidor-schema": "^0.0.0",
     "@reduxjs/toolkit": "catalog:",
     "zod": "catalog:"
   },
