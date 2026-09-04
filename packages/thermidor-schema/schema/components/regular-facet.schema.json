@@ -63,10 +63,95 @@
         }
       },
       "additionalProperties": false
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+      },
+      "maxItems": 1000,
+      "default": []
+    },
+    "child": {
+      "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
     }
   },
   "additionalProperties": false,
   "$defs": {
+    "Triad": {
+      "title": "RegularFacetTriad",
+      "type": "object",
+      "required": ["componentType", "state", "actions"],
+      "properties": {
+        "componentType": {
+          "type": "string",
+          "const": "regular-facet"
+        },
+        "state": {
+          "$ref": "#/$defs/RegularFacetState"
+        },
+        "actions": {
+          "type": "object",
+          "required": [
+            "toggleSelect",
+            "toggleExclude",
+            "toggleSingleSelect",
+            "toggleSingleExclude",
+            "clearAllActiveValues",
+            "search",
+            "showMoreSearchResults",
+            "clearSearch",
+            "showMoreValues",
+            "showLessValues"
+          ],
+          "properties": {
+            "toggleSelect": {
+              "$ref": "#/$defs/RegularFacetToggleSelectAction"
+            },
+            "toggleExclude": {
+              "$ref": "#/$defs/RegularFacetToggleExcludeAction"
+            },
+            "toggleSingleSelect": {
+              "$ref": "#/$defs/RegularFacetToggleSingleSelectAction"
+            },
+            "toggleSingleExclude": {
+              "$ref": "#/$defs/RegularFacetToggleSingleExcludeAction"
+            },
+            "clearAllActiveValues": {
+              "$ref": "#/$defs/RegularFacetClearAllActiveValuesAction"
+            },
+            "search": {
+              "$ref": "#/$defs/RegularFacetSearchAction"
+            },
+            "showMoreSearchResults": {
+              "$ref": "#/$defs/RegularFacetShowMoreSearchResultsAction"
+            },
+            "clearSearch": {
+              "$ref": "#/$defs/RegularFacetClearSearchAction"
+            },
+            "showMoreValues": {
+              "$ref": "#/$defs/RegularFacetShowMoreValuesAction"
+            },
+            "showLessValues": {
+              "$ref": "#/$defs/RegularFacetShowLessValuesAction"
+            }
+          },
+          "additionalProperties": false
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+          },
+          "maxItems": 1000,
+          "default": []
+        },
+        "child": {
+          "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+        }
+      },
+      "additionalProperties": false
+    },
     "RegularFacetState": {
       "title": "RegularFacetState",
       "description": "The current regular facet state. Owned exclusively by the backend.",

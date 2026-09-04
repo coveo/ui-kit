@@ -1,0 +1,81 @@
+{
+  "rootId": "commerce-search-1",
+  "components": {
+    "commerce-search-1": {
+      "componentType": "commerce-search",
+      "children": ["search-box-1", "facet-manager-1", "product-list-1"],
+      "state": {},
+      "actions": {}
+    },
+    "facet-manager-1": {
+      "componentType": "facet-manager",
+      "children": ["brand-facet", "price-facet"],
+      "state": {
+        "facetIds": ["brand-facet", "price-facet"]
+      },
+      "actions": {}
+    },
+    "brand-facet": {
+      "componentType": "regular-facet",
+      "child": "price-facet",
+      "state": {
+        "field": "brand",
+        "displayName": "Brand",
+        "values": [
+          {
+            "value": "Coveo",
+            "numberOfResults": 42,
+            "state": "selected"
+          }
+        ],
+        "hasActiveValues": true,
+        "canShowMoreValues": true,
+        "canShowLessValues": false,
+        "facetSearch": {
+          "query": "cov",
+          "canShowMoreResults": true,
+          "results": [
+            {
+              "value": "coveo",
+              "numberOfResults": 42
+            }
+          ]
+        }
+      },
+      "actions": {
+        "toggleSelect": {"payload": {"value": "Coveo"}},
+        "toggleExclude": {"payload": {"value": "Coveo"}},
+        "toggleSingleSelect": {"payload": {"value": "Coveo"}},
+        "toggleSingleExclude": {"payload": {"value": "Coveo"}},
+        "clearAllActiveValues": {"payload": {}},
+        "search": {"payload": {"query": "cov"}},
+        "showMoreSearchResults": {"payload": {}},
+        "clearSearch": {"payload": {}},
+        "showMoreValues": {"payload": {}},
+        "showLessValues": {"payload": {}}
+      }
+    },
+    "search-box-1": {
+      "componentType": "search-box",
+      "state": {
+        "query": "wetsuit"
+      },
+      "actions": {
+        "submitQuery": {"payload": {"query": "wetsuit"}}
+      }
+    },
+    "product-list-1": {
+      "componentType": "product-list",
+      "state": {
+        "products": [
+          {
+            "permanentid": "kayak-001",
+            "ec_name": "Touring Kayak",
+            "additionalFields": {}
+          }
+        ]
+      },
+      "actions": {}
+    }
+  }
+}

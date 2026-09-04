@@ -35,6 +35,19 @@
       "additionalProperties": {
         "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
       }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+      },
+      "maxItems": 1000,
+      "default": [],
+      "description": "Ordered list of child component ids referencing other components in the same flat map. Order is backend-owned and meaningful for container components; referential integrity and uniqueness are owned by the backend and not enforced at parse time."
+    },
+    "child": {
+      "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json",
+      "description": "A single child component id following the A2-UI single-child convention."
     }
   },
   "additionalProperties": false
