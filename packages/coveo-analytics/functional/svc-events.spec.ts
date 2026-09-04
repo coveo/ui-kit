@@ -34,7 +34,7 @@ describe('svc events', () => {
     changeDocumentLocation(initialLocation);
     const address = `${anEndpoint}/rest/v15/analytics/collect`;
     fetchMock.reset();
-    fetchMock.post(address, (url, {body}) => {
+    fetchMock.post(address, ({options: {body}}) => {
       const parsedBody = JSON.parse(body!.toString());
       const visitorId = parsedBody.cid;
       return {

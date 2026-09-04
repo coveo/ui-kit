@@ -62,29 +62,42 @@ function getValidator(schemaId: string): ValidateFunction {
   return validate;
 }
 
+/**
+ * fast-check 4 lets `fc.record` emit null-prototype objects (roughly half the
+ * time). These arbitraries stand in for JSON payloads, which are always plain
+ * objects, and the no-mutation check below snapshots with `structuredClone`,
+ * which always returns plain objects — so a null prototype fails the strict
+ * comparison without any mutation having occurred.
+ */
+function record<T, K extends keyof T = keyof T>(model: {
+  [P in keyof T]: fc.Arbitrary<T[P]>;
+}): fc.Arbitrary<fc.RecordValue<T, K>> {
+  return fc.record<T, K>(model, {noNullPrototype: true});
+}
+
 const facetValueStateArb = fc.constantFrom('idle', 'selected', 'excluded');
 const selectableFacetValueStateArb = fc.constantFrom('idle', 'selected');
 
 // --- Regular facet arbitraries ---------------------------------------------
 
-const regularFacetValueArb = fc.record({
+const regularFacetValueArb = record({
   value: fc.string({minLength: 1, maxLength: 64}),
   numberOfResults: fc.integer({min: 0, max: 999999999}),
   state: facetValueStateArb,
 });
 
-const regularFacetSearchResultArb = fc.record({
+const regularFacetSearchResultArb = record({
   value: fc.string({minLength: 1, maxLength: 64}),
   numberOfResults: fc.integer({min: 0, max: 999999999}),
 });
 
-const regularFacetSearchArb = fc.record({
+const regularFacetSearchArb = record({
   query: fc.string({minLength: 0, maxLength: 64}),
   canShowMoreResults: fc.boolean(),
   results: fc.array(regularFacetSearchResultArb, {maxLength: 4}),
 });
 
-const regularFacetStateArb = fc.record({
+const regularFacetStateArb = record({
   field: fc.string({minLength: 1, maxLength: 64}),
   displayName: fc.string({minLength: 1, maxLength: 64}),
   values: fc.array(regularFacetValueArb, {maxLength: 4}),
@@ -95,14 +108,14 @@ const regularFacetStateArb = fc.record({
 
 // --- Numeric facet arbitraries ----------------------------------------------
 
-const numericFacetValueArb = fc.record({
+const numericFacetValueArb = record({
   start: fc.double({noNaN: true, noDefaultInfinity: true}),
   end: fc.double({noNaN: true, noDefaultInfinity: true}),
   numberOfResults: fc.integer({min: 0, max: 999999999}),
   state: selectableFacetValueStateArb,
 });
 
-const numericFacetStateArb = fc.record({
+const numericFacetStateArb = record({
   field: fc.string({minLength: 1, maxLength: 64}),
   displayName: fc.string({minLength: 1, maxLength: 64}),
   values: fc.array(numericFacetValueArb, {maxLength: 4}),
@@ -112,21 +125,21 @@ const numericFacetStateArb = fc.record({
   canShowLessValues: fc.boolean(),
 });
 
-const numericApplyCustomRangePayloadArb = fc.record({
+const numericApplyCustomRangePayloadArb = record({
   start: fc.double({noNaN: true, noDefaultInfinity: true}),
   end: fc.double({noNaN: true, noDefaultInfinity: true}),
 });
 
 // --- Date facet arbitraries -------------------------------------------------
 
-const dateFacetValueArb = fc.record({
+const dateFacetValueArb = record({
   start: fc.string({minLength: 1, maxLength: 32}),
   end: fc.string({minLength: 1, maxLength: 32}),
   numberOfResults: fc.integer({min: 0, max: 999999999}),
   state: selectableFacetValueStateArb,
 });
 
-const dateFacetStateArb = fc.record({
+const dateFacetStateArb = record({
   field: fc.string({minLength: 1, maxLength: 64}),
   displayName: fc.string({minLength: 1, maxLength: 64}),
   values: fc.array(dateFacetValueArb, {maxLength: 4}),
@@ -136,32 +149,32 @@ const dateFacetStateArb = fc.record({
   canShowLessValues: fc.boolean(),
 });
 
-const dateApplyCustomRangePayloadArb = fc.record({
+const dateApplyCustomRangePayloadArb = record({
   start: fc.string({minLength: 1, maxLength: 32}),
   end: fc.string({minLength: 1, maxLength: 32}),
 });
 
 // --- Category facet arbitraries ---------------------------------------------
 
-const categoryFacetPathValueArb = fc.record({
+const categoryFacetPathValueArb = record({
   path: fc.array(fc.string({minLength: 1, maxLength: 16}), {maxLength: 3}),
   value: fc.string({minLength: 1, maxLength: 32}),
   numberOfResults: fc.integer({min: 0, max: 999999999}),
 });
 
-const categoryFacetValuesArb = fc.record({
+const categoryFacetValuesArb = record({
   ancestry: fc.array(categoryFacetPathValueArb, {maxLength: 3}),
   selected: fc.oneof(fc.constant(null), categoryFacetPathValueArb),
   children: fc.array(categoryFacetPathValueArb, {maxLength: 3}),
 });
 
-const categoryFacetSearchArb = fc.record({
+const categoryFacetSearchArb = record({
   query: fc.string({minLength: 0, maxLength: 64}),
   canShowMoreResults: fc.boolean(),
   results: fc.array(categoryFacetPathValueArb, {maxLength: 4}),
 });
 
-const categoryFacetStateArb = fc.record({
+const categoryFacetStateArb = record({
   field: fc.string({minLength: 1, maxLength: 64}),
   displayName: fc.string({minLength: 1, maxLength: 64}),
   values: categoryFacetValuesArb,
@@ -180,22 +193,23 @@ const categoryFacetStateArb = fc.record({
  */
 function collectClosedObjects(root: unknown): Array<Record<string, unknown>> {
   const targets: Array<Record<string, unknown>> = [];
-  const visit = (node: unknown): void => {
+  // Iterative walk: fast-check 4 generates deeper values than 3 did, which
+  // overflowed the call stack when this was recursive.
+  const queue: unknown[] = [root];
+  while (queue.length > 0) {
+    const node = queue.pop();
     if (Array.isArray(node)) {
-      for (const item of node) {
-        visit(item);
-      }
-      return;
+      queue.push(...node);
+      continue;
     }
     if (node !== null && typeof node === 'object') {
       const record = node as Record<string, unknown>;
       targets.push(record);
       for (const key of Object.keys(record)) {
-        visit(record[key]);
+        queue.push(record[key]);
       }
     }
-  };
-  visit(root);
+  }
   return targets;
 }
 

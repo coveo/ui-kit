@@ -128,7 +128,7 @@
     "lit-html": "3.3.3",
     "local-web-server": "catalog:",
     "msw": "catalog:",
-    "msw-storybook-addon": "2.0.7",
+    "msw-storybook-addon": "3.0.0",
     "natural-orderby": "catalog:",
     "playwright": "catalog:",
     "postcss": "catalog:",
