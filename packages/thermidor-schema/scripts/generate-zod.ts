@@ -21,6 +21,12 @@ interface DiscriminatedUnion {
   memberTypeNames: string[];
 }
 
+interface CompositionSnapshotEntryUnion {
+  typeName: string;
+  discriminator: string;
+  memberTypeNames: string[];
+}
+
 interface ComponentPropsEntry {
   componentName: string;
   schemaName: string;
@@ -49,7 +55,11 @@ const documentsById = new Map<string, SchemaDocument>(
   documents.map((document) => [document.$id, document])
 );
 const componentIndex = loadComponentIndex(documentsById);
-const projectionDocuments = crawlSchemaDocuments(componentIndex, documentsById);
+const compositionDocuments = loadCompositionDocuments(documentsById);
+const projectionDocuments = crawlSchemaDocuments(
+  [componentIndex, ...compositionDocuments],
+  documentsById
+);
 const entries = loadProjectionEntries(projectionDocuments);
 const discriminatedUnions = loadDiscriminatedUnions(componentIndex, projectionDocuments);
 
@@ -92,9 +102,19 @@ const {lines} = await quicktype({
 const componentPropsEntries = loadComponentPropsEntries(documentsById);
 const componentPropsLines = renderComponentPropsSchemas(componentPropsEntries);
 
+const compositionSnapshotEntry = loadCompositionSnapshotEntryUnion(
+  componentIndex,
+  projectionDocuments
+);
+const projectedLines = injectCompositionSnapshotEntryUnion(lines, compositionSnapshotEntry);
+
 const formatResult = await format(
   'schemas.ts',
-  [...lines, ...renderDiscriminatedUnions(discriminatedUnions), ...componentPropsLines].join('\n'),
+  [
+    ...projectedLines,
+    ...renderDiscriminatedUnions(discriminatedUnions),
+    ...componentPropsLines,
+  ].join('\n'),
   {singleQuote: true, trailingComma: 'es5'}
 );
 if (formatResult.errors.length > 0) {
@@ -124,6 +144,9 @@ function loadProjectionEntries(documents: SchemaDocument[]): ProjectionEntry[] {
   const definitionDocuments = documents.filter((document) =>
     document.$id.includes('/definitions/')
   );
+  const compositionDocuments = documents.filter((document) =>
+    document.$id.includes('/composition/')
+  );
 
   return [
     ...definitionDocuments.map((document) =>
@@ -133,7 +156,14 @@ function loadProjectionEntries(documents: SchemaDocument[]): ProjectionEntry[] {
     ...componentDocuments.map((document) =>
       createProjectionEntry(loadSchemaTitle(document), document.$id)
     ),
+    ...compositionDocuments.map((document) =>
+      createProjectionEntry(loadSchemaTitle(document), document.$id)
+    ),
   ];
+}
+
+function loadCompositionDocuments(documents: Map<string, SchemaDocument>): SchemaDocument[] {
+  return [...documents.values()].filter((document) => document.$id.includes('/composition/'));
 }
 
 function loadDiscriminatedUnions(
@@ -150,8 +180,99 @@ function loadDiscriminatedUnions(
   ];
 }
 
+function loadCompositionSnapshotEntryUnion(
+  index: SchemaDocument,
+  documents: SchemaDocument[]
+): CompositionSnapshotEntryUnion {
+  const entryUnion = loadCompositionSnapshotEntryView(index);
+  return {
+    typeName: loadSchemaTitle(entryUnion),
+    discriminator: 'componentType',
+    memberTypeNames: loadComponentContractDocuments(documents).map(loadSchemaTitle),
+  };
+}
+
+function loadCompositionSnapshotEntryView(index: SchemaDocument): Schema & {oneOf: Schema[]} {
+  const definition = (index.$defs ?? ({} as Record<string, Schema>))['CompositionSnapshotEntry'];
+  if (!definition || !Array.isArray((definition as Schema).oneOf)) {
+    throw new Error(`Unable to find CompositionSnapshotEntry view in ${index.$id}.`);
+  }
+  return definition as Schema & {oneOf: Schema[]};
+}
+
+// quicktype structurally unifies the 15 identity-free CompositionSnapshotEntry views (they share the
+// same shape) into a single flat, permissive object that decouples componentType from state/actions —
+// which lets a cross-type mismatch (e.g. componentType 'cart' with a facet-manager state) pass the Zod
+// projection while Ajv's per-member `oneOf` rejects it. We strip that flattened projection and its
+// merged sub-schemas, then re-emit CompositionSnapshotEntrySchema as a strict discriminated union over
+// the per-component member schemas (which are the identity-free entries), restoring Ajv↔Zod agreement.
+function injectCompositionSnapshotEntryUnion(
+  lines: string[],
+  entryUnion: CompositionSnapshotEntryUnion
+): string[] {
+  const stripped = stripFlattenedEntryDeclarations(lines, entryUnion.typeName);
+  const anchorIndex = stripped.findIndex((line) =>
+    line.startsWith(`export const CompositionSnapshotSchema`)
+  );
+  if (anchorIndex === -1) {
+    throw new Error('Unable to locate CompositionSnapshotSchema to anchor the entry union.');
+  }
+  return [
+    ...stripped.slice(0, anchorIndex),
+    ...renderCompositionSnapshotEntryUnion(entryUnion),
+    '',
+    ...stripped.slice(anchorIndex),
+  ];
+}
+
+function stripFlattenedEntryDeclarations(lines: string[], entryTypeName: string): string[] {
+  const flattenedTypeNames = [
+    entryTypeName,
+    `${entryTypeName}State`,
+    `${entryTypeName}Actions`,
+    `${entryTypeName}ComponentType`,
+  ];
+  let result = lines;
+  for (const typeName of flattenedTypeNames) {
+    result = removeSchemaDeclaration(result, typeName);
+  }
+  return result;
+}
+
+// Removes a generated declaration spanning the `export const <TypeName>Schema = ...` value (which
+// may be a multi-line object/enum literal and, for objects, carries no trailing semicolon) through
+// its paired `export type <TypeName> = z.infer<...>;` alias line, inclusive.
+function removeSchemaDeclaration(lines: string[], typeName: string): string[] {
+  const start = lines.findIndex((line) => line.startsWith(`export const ${typeName}Schema`));
+  if (start === -1) {
+    throw new Error(`Unable to find generated declaration "export const ${typeName}Schema".`);
+  }
+  const end = lines.findIndex(
+    (line, index) => index >= start && line.startsWith(`export type ${typeName} =`)
+  );
+  if (end === -1) {
+    throw new Error(`Unable to find generated declaration "export type ${typeName} =".`);
+  }
+  let after = end + 1;
+  while (after < lines.length && lines[after].trim() === '') {
+    after += 1;
+  }
+  return [...lines.slice(0, start), ...lines.slice(after)];
+}
+
+function renderCompositionSnapshotEntryUnion(entryUnion: CompositionSnapshotEntryUnion): string[] {
+  return [
+    `export const ${entryUnion.typeName}Schema = z.discriminatedUnion(${JSON.stringify(
+      entryUnion.discriminator
+    )}, [`,
+    ...entryUnion.memberTypeNames.map((memberTypeName) => `  ${memberTypeName}Schema,`),
+    ']);',
+    `export type ${entryUnion.typeName} = z.infer<typeof ${entryUnion.typeName}Schema>;`,
+  ];
+}
+
 function crawlSchemaDocuments(
-  root: SchemaDocument,
+  roots: SchemaDocument | SchemaDocument[],
   documents: Map<string, SchemaDocument>
 ): SchemaDocument[] {
   const crawled: SchemaDocument[] = [];
@@ -225,7 +346,7 @@ function crawlSchemaDocuments(
     });
   };
 
-  visitDocument(root);
+  (Array.isArray(roots) ? roots : [roots]).forEach(visitDocument);
   return crawled;
 }
 

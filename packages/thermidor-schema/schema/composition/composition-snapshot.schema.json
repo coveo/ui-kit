@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.thermidor.coveo.com/composition/composition-snapshot.schema.json",
+  "title": "CompositionSnapshot",
+  "description": "The A2-UI composition envelope of a surface: an explicit rootId plus the flat component map. Expresses composition only; per-component state travels on the AG-UI transport keyed by componentId (ADR-002, ADR-006).",
+  "type": "object",
+  "required": ["rootId", "components"],
+  "properties": {
+    "rootId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "The componentId at the top of the composition tree."
+    },
+    "components": {
+      "type": "object",
+      "description": "Flat component map keyed by componentId. Referential integrity between rootId and this map is backend-owned and not enforced at parse time.",
+      "additionalProperties": {
+        "$ref": "https://schema.thermidor.coveo.com/components/component-contracts.schema.json#/$defs/CompositionSnapshotEntry"
+      }
+    }
+  },
+  "additionalProperties": false
+}

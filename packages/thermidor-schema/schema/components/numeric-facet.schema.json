@@ -47,10 +47,79 @@
         }
       },
       "additionalProperties": false
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+      },
+      "maxItems": 1000,
+      "default": []
+    },
+    "child": {
+      "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
     }
   },
   "additionalProperties": false,
   "$defs": {
+    "SnapshotEntry": {
+      "title": "NumericFacetSnapshotEntry",
+      "type": "object",
+      "required": ["componentType", "state", "actions"],
+      "properties": {
+        "componentType": {
+          "type": "string",
+          "const": "numeric-facet"
+        },
+        "state": {
+          "$ref": "#/$defs/NumericFacetState"
+        },
+        "actions": {
+          "type": "object",
+          "required": [
+            "toggleSelect",
+            "toggleSingleSelect",
+            "clearAllActiveValues",
+            "applyCustomRange",
+            "showMoreValues",
+            "showLessValues"
+          ],
+          "properties": {
+            "toggleSelect": {
+              "$ref": "#/$defs/NumericFacetToggleSelectAction"
+            },
+            "toggleSingleSelect": {
+              "$ref": "#/$defs/NumericFacetToggleSingleSelectAction"
+            },
+            "clearAllActiveValues": {
+              "$ref": "#/$defs/NumericFacetClearAllActiveValuesAction"
+            },
+            "applyCustomRange": {
+              "$ref": "#/$defs/NumericFacetApplyCustomRangeAction"
+            },
+            "showMoreValues": {
+              "$ref": "#/$defs/NumericFacetShowMoreValuesAction"
+            },
+            "showLessValues": {
+              "$ref": "#/$defs/NumericFacetShowLessValuesAction"
+            }
+          },
+          "additionalProperties": false
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+          },
+          "maxItems": 1000,
+          "default": []
+        },
+        "child": {
+          "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+        }
+      },
+      "additionalProperties": false
+    },
     "NumericFacetState": {
       "title": "NumericFacetState",
       "description": "The current numeric facet state. Owned exclusively by the backend.",

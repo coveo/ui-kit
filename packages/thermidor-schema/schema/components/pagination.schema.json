@@ -3,25 +3,85 @@
   "$id": "https://schema.thermidor.coveo.com/components/pagination.schema.json",
   "title": "Pagination",
   "description": "Controls page navigation for a commerce search surface. Manages current page, page size, and total counts; dispatches selectPage to navigate.",
-  "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/component.schema.json"}],
+  "allOf": [
+    {
+      "$ref": "https://schema.thermidor.coveo.com/base/component.schema.json"
+    }
+  ],
   "properties": {
     "componentType": {
       "type": "string",
       "const": "pagination"
     },
-    "state": {"$ref": "#/$defs/PaginationState"},
+    "state": {
+      "$ref": "#/$defs/PaginationState"
+    },
     "actions": {
       "type": "object",
       "required": ["selectPage", "setPageSize"],
       "properties": {
-        "selectPage": {"$ref": "#/$defs/SelectPageAction"},
-        "setPageSize": {"$ref": "#/$defs/SetPageSizeAction"}
+        "selectPage": {
+          "$ref": "#/$defs/SelectPageAction"
+        },
+        "setPageSize": {
+          "$ref": "#/$defs/SetPageSizeAction"
+        }
       },
       "additionalProperties": false
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+      },
+      "maxItems": 1000,
+      "default": []
+    },
+    "child": {
+      "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
     }
   },
   "additionalProperties": false,
   "$defs": {
+    "SnapshotEntry": {
+      "title": "PaginationSnapshotEntry",
+      "type": "object",
+      "required": ["componentType", "state", "actions"],
+      "properties": {
+        "componentType": {
+          "type": "string",
+          "const": "pagination"
+        },
+        "state": {
+          "$ref": "#/$defs/PaginationState"
+        },
+        "actions": {
+          "type": "object",
+          "required": ["selectPage", "setPageSize"],
+          "properties": {
+            "selectPage": {
+              "$ref": "#/$defs/SelectPageAction"
+            },
+            "setPageSize": {
+              "$ref": "#/$defs/SetPageSizeAction"
+            }
+          },
+          "additionalProperties": false
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+          },
+          "maxItems": 1000,
+          "default": []
+        },
+        "child": {
+          "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+        }
+      },
+      "additionalProperties": false
+    },
     "PaginationState": {
       "title": "PaginationState",
       "description": "The current pagination state. Owned exclusively by the backend.",
@@ -54,7 +114,11 @@
     "SelectPageAction": {
       "title": "selectPage",
       "description": "Navigates to a specific page.",
-      "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"}],
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ],
       "properties": {
         "payload": {
           "type": "object",
@@ -73,7 +137,11 @@
     "SetPageSizeAction": {
       "title": "setPageSize",
       "description": "Changes the number of items displayed per page.",
-      "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"}],
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ],
       "properties": {
         "payload": {
           "type": "object",

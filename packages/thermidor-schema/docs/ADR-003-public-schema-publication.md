@@ -4,8 +4,6 @@
 **Date:** 2026-08-03  
 **Deciders:** Thermidor Stack team
 
-> **Note:** The repository location assumed by this ADR (standalone repo) has been revised by [ADR-007](./ADR-007-schema-package-in-ui-kit-monorepo.md). The publication decision and its requirements remain valid; the package is now hosted in the ui-kit monorepo.
-
 ## Context
 
 ADR-001 establishes Thermidor's schema as a standalone contract that producers and consumers can evolve against independently. It also identifies public exposure as the intended long-term direction. The contract is currently maintained in a private repository and is expressed only as JSON Schema documents.

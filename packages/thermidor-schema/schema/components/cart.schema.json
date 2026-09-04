@@ -3,25 +3,85 @@
   "$id": "https://schema.thermidor.coveo.com/components/cart.schema.json",
   "title": "Cart",
   "description": "Renders the current cart contents and exposes actions for the frontend to manage line items.",
-  "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/component.schema.json"}],
+  "allOf": [
+    {
+      "$ref": "https://schema.thermidor.coveo.com/base/component.schema.json"
+    }
+  ],
   "properties": {
     "componentType": {
       "type": "string",
       "const": "cart"
     },
-    "state": {"$ref": "#/$defs/CartState"},
+    "state": {
+      "$ref": "#/$defs/CartState"
+    },
     "actions": {
       "type": "object",
       "required": ["setItems", "updateItemQuantity"],
       "properties": {
-        "setItems": {"$ref": "#/$defs/SetItemsAction"},
-        "updateItemQuantity": {"$ref": "#/$defs/UpdateItemQuantityAction"}
+        "setItems": {
+          "$ref": "#/$defs/SetItemsAction"
+        },
+        "updateItemQuantity": {
+          "$ref": "#/$defs/UpdateItemQuantityAction"
+        }
       },
       "additionalProperties": false
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+      },
+      "maxItems": 1000,
+      "default": []
+    },
+    "child": {
+      "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
     }
   },
   "additionalProperties": false,
   "$defs": {
+    "SnapshotEntry": {
+      "title": "CartSnapshotEntry",
+      "type": "object",
+      "required": ["componentType", "state", "actions"],
+      "properties": {
+        "componentType": {
+          "type": "string",
+          "const": "cart"
+        },
+        "state": {
+          "$ref": "#/$defs/CartState"
+        },
+        "actions": {
+          "type": "object",
+          "required": ["setItems", "updateItemQuantity"],
+          "properties": {
+            "setItems": {
+              "$ref": "#/$defs/SetItemsAction"
+            },
+            "updateItemQuantity": {
+              "$ref": "#/$defs/UpdateItemQuantityAction"
+            }
+          },
+          "additionalProperties": false
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+          },
+          "maxItems": 1000,
+          "default": []
+        },
+        "child": {
+          "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+        }
+      },
+      "additionalProperties": false
+    },
     "CartState": {
       "title": "CartState",
       "description": "The current contents of the cart. Owned exclusively by the backend; the frontend must not mutate this directly.",
@@ -42,7 +102,11 @@
     "SetItemsAction": {
       "title": "setItems",
       "description": "Replaces the entire cart contents with the provided list of items.",
-      "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"}],
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ],
       "properties": {
         "payload": {
           "type": "object",
@@ -63,7 +127,11 @@
     "UpdateItemQuantityAction": {
       "title": "updateItemQuantity",
       "description": "Updates the quantity of a single existing cart line item identified by productId.",
-      "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"}],
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ],
       "properties": {
         "payload": {
           "type": "object",

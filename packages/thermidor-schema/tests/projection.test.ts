@@ -33,4 +33,11 @@ describe('projection determinism', () => {
     expect(content).toContain("z.literal('bundle-display')");
     expect(content).toContain("z.literal('comparison-table')");
   });
+
+  it('projects the composition schemas without recursion (no z.lazy)', async () => {
+    const content = await readFile(generatedPath, 'utf8');
+    expect(content).toContain('CompositionSnapshotSchema');
+    expect(content).toContain('CompositionSnapshotEntrySchema');
+    expect(content).not.toContain('z.lazy(');
+  });
 });

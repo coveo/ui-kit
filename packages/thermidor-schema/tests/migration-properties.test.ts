@@ -14,6 +14,7 @@ import {
   UpdateItemQuantityPayloadSchema,
   SelectActionPayloadSchema,
   ComponentContractsSchema,
+  FacetManagerStateSchema,
 } from '../src/index.js';
 
 const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -122,6 +123,11 @@ describe('data type backward compatibility', () => {
         attributes: [{key: 'k', label: 'K'}],
       }).success
     ).toBe(true);
+  });
+
+  it('FacetManagerState schema still requires facetIds (additive track retains it)', () => {
+    expect(FacetManagerStateSchema.safeParse({facetIds: ['regular-facet']}).success).toBe(true);
+    expect(FacetManagerStateSchema.safeParse({}).success).toBe(false);
   });
 });
 

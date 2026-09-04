@@ -51,10 +51,83 @@
         }
       },
       "additionalProperties": false
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+      },
+      "maxItems": 1000,
+      "default": []
+    },
+    "child": {
+      "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
     }
   },
   "additionalProperties": false,
   "$defs": {
+    "SnapshotEntry": {
+      "title": "CategoryFacetSnapshotEntry",
+      "type": "object",
+      "required": ["componentType", "state", "actions"],
+      "properties": {
+        "componentType": {
+          "type": "string",
+          "const": "category-facet"
+        },
+        "state": {
+          "$ref": "#/$defs/CategoryFacetState"
+        },
+        "actions": {
+          "type": "object",
+          "required": [
+            "selectPath",
+            "clearSelectedPath",
+            "search",
+            "showMoreSearchResults",
+            "clearSearch",
+            "showMoreValues",
+            "showLessValues"
+          ],
+          "properties": {
+            "selectPath": {
+              "$ref": "#/$defs/CategoryFacetSelectPathAction"
+            },
+            "clearSelectedPath": {
+              "$ref": "#/$defs/CategoryFacetClearSelectedPathAction"
+            },
+            "search": {
+              "$ref": "#/$defs/CategoryFacetSearchAction"
+            },
+            "showMoreSearchResults": {
+              "$ref": "#/$defs/CategoryFacetShowMoreSearchResultsAction"
+            },
+            "clearSearch": {
+              "$ref": "#/$defs/CategoryFacetClearSearchAction"
+            },
+            "showMoreValues": {
+              "$ref": "#/$defs/CategoryFacetShowMoreValuesAction"
+            },
+            "showLessValues": {
+              "$ref": "#/$defs/CategoryFacetShowLessValuesAction"
+            }
+          },
+          "additionalProperties": false
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+          },
+          "maxItems": 1000,
+          "default": []
+        },
+        "child": {
+          "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+        }
+      },
+      "additionalProperties": false
+    },
     "CategoryFacetState": {
       "title": "CategoryFacetState",
       "description": "The current category facet state. Owned exclusively by the backend. Presents a flat view of the category hierarchy: the ancestry path, the currently selected value, and the children available for further navigation.",

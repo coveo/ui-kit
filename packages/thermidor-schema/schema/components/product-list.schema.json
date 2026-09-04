@@ -3,21 +3,69 @@
   "$id": "https://schema.thermidor.coveo.com/components/product-list.schema.json",
   "title": "ProductList",
   "description": "Renders an ordered list of commerce products from a decomposed commerce search surface. Read-only from the frontend: the backend is the sole source of truth for which products are displayed and in what order.",
-  "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/component.schema.json"}],
+  "allOf": [
+    {
+      "$ref": "https://schema.thermidor.coveo.com/base/component.schema.json"
+    }
+  ],
   "properties": {
     "componentType": {
       "type": "string",
       "const": "product-list"
     },
-    "state": {"$ref": "#/$defs/ProductListState"},
+    "state": {
+      "$ref": "#/$defs/ProductListState"
+    },
     "actions": {
       "type": "object",
       "properties": {},
       "additionalProperties": false
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+      },
+      "maxItems": 1000,
+      "default": []
+    },
+    "child": {
+      "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
     }
   },
   "additionalProperties": false,
   "$defs": {
+    "SnapshotEntry": {
+      "title": "ProductListSnapshotEntry",
+      "type": "object",
+      "required": ["componentType", "state", "actions"],
+      "properties": {
+        "componentType": {
+          "type": "string",
+          "const": "product-list"
+        },
+        "state": {
+          "$ref": "#/$defs/ProductListState"
+        },
+        "actions": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": false
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+          },
+          "maxItems": 1000,
+          "default": []
+        },
+        "child": {
+          "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+        }
+      },
+      "additionalProperties": false
+    },
     "ProductListState": {
       "title": "ProductListState",
       "description": "The ordered list of products to render. Owned exclusively by the backend; the frontend must not mutate this directly.",

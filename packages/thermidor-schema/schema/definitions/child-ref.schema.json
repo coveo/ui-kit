@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json",
+  "title": "ChildRef",
+  "type": "string",
+  "pattern": "^[a-z][a-z0-9-]*$",
+  "description": "A reference to another component in the same flat map, by componentId."
+}
