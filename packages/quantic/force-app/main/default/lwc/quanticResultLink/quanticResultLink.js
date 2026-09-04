@@ -9,9 +9,9 @@ import {NavigationMixin} from 'lightning/navigation';
 import {LightningElement, api} from 'lwc';
 
 /**
- * Some document types cannot be opened directly in Salesforce, but we need to open their parent record, as is the case for the Case Comment document type.
+ * Some document types cannot be opened directly in Salesforce, so we navigate to their parent record (e.g., CaseComment and FeedComment).
  */
-const documentTypesRequiringParentRecord = ['CaseComment'];
+const documentTypesRequiringParentRecord = ['CaseComment', 'FeedComment'];
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
