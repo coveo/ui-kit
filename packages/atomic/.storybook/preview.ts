@@ -18,10 +18,6 @@ if (!isChromatic() && import.meta.env.PROD) {
   import(url.href);
 }
 
-// msw-storybook-addon v3 starts the worker itself, but its default setup warns on
-// unhandled requests and resolves the worker script from the server root. Keep the
-// previous behaviour: stay silent, and use a relative URL so Storybook keeps working
-// when served from a sub-path (CDN builds).
 const startWorker = async () => {
   const worker = setupWorker();
   await worker.start({
