@@ -882,9 +882,6 @@ importers:
       jsdom:
         specifier: 'catalog:'
         version: 30.1.3(@noble/hashes@1.8.0)
-      node-fetch:
-        specifier: 3.3.2
-        version: 3.3.2
       publint:
         specifier: 'catalog:'
         version: 0.3.25
