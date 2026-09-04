@@ -51,7 +51,6 @@
     "@types/node": "catalog:",
     "fetch-mock": "12.6.0",
     "jsdom": "catalog:",
-    "node-fetch": "3.3.2",
     "publint": "catalog:",
     "react-native-get-random-values": "2.0.0",
     "rollup": "catalog:",

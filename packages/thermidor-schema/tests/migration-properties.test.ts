@@ -23,6 +23,8 @@ const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '
  * Validates: Requirements 10.2, 10.6
  */
 describe('Zod generation idempotence', () => {
+  // Spawns a TS-stripping node process that regenerates the Zod contracts,
+  // which routinely runs past vitest's 5s default on CI runners.
   it('generation script is idempotent (running twice produces identical output)', () => {
     execFileSync(
       'node',
@@ -32,7 +34,7 @@ describe('Zod generation idempotence', () => {
         stdio: 'pipe',
       }
     );
-  });
+  }, 60_000);
 });
 
 /**

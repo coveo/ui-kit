@@ -840,9 +840,6 @@ importers:
       jsdom:
         specifier: 'catalog:'
         version: 30.0.1
-      node-fetch:
-        specifier: 3.3.2
-        version: 3.3.2
       publint:
         specifier: 'catalog:'
         version: 0.3.24

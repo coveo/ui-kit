@@ -118,7 +118,8 @@ describe('Feature: commerce-facet-schemas, Property 6: Facet ordering referentia
   const componentIdArb = fc
     .tuple(
       fc.constantFrom(...'abcdefghijklmnopqrstuvwxyz'.split('')),
-      fc.stringOf(fc.constantFrom(...'abcdefghijklmnopqrstuvwxyz0123456789-'.split('')), {
+      fc.string({
+        unit: fc.constantFrom(...'abcdefghijklmnopqrstuvwxyz0123456789-'.split('')),
         maxLength: 12,
       })
     )
