@@ -35,7 +35,7 @@
     "test:dts:ci": "api-extractor run"
   },
   "dependencies": {
-    "@ag-ui/core": "0.0.57",
+    "@ag-ui/core": "0.0.59",
     "@coveo/thermidor-schema": "workspace:*",
     "@reduxjs/toolkit": "catalog:",
     "zod": "catalog:"
