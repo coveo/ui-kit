@@ -8,6 +8,8 @@ const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '
 const generatedPath = path.join(packageRoot, 'src', 'generated', 'schemas.ts');
 
 describe('projection determinism', () => {
+  // Spawns a TS-stripping node process that regenerates the Zod contracts,
+  // which routinely runs past vitest's 5s default on CI runners.
   it('re-running generation produces byte-identical output (--check passes)', () => {
     expect(() => {
       execFileSync(
@@ -23,7 +25,7 @@ describe('projection determinism', () => {
         }
       );
     }).not.toThrow();
-  });
+  }, 60_000);
 
   it('componentType literals appear in generated Zod schemas', async () => {
     const content = await readFile(generatedPath, 'utf8');
