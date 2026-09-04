@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.thermidor.coveo.com/base/component.schema.json",
+  "title": "Component",
+  "description": "A Component is a discrete, renderable UI element. Components describe what can be rendered, not how it is rendered. Each component has a type, an observable state, and a set of available actions.",
+  "type": "object",
+  "required": ["componentId", "displayName", "componentType", "state", "actions"],
+  "properties": {
+    "componentId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Stable kebab-case identifier for this component (e.g. 'product-carousel'). Must be unique within a Catalog."
+    },
+    "displayName": {
+      "type": "string",
+      "description": "Human-readable name for this component (e.g. 'Product Carousel')."
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of this component's purpose and rendering intent."
+    },
+    "componentType": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+      "maxLength": 128,
+      "description": "Stable kebab-case type identifier (e.g. 'cart'). Used as discriminant for contract resolution."
+    },
+    "state": {
+      "type": "object",
+      "description": "The observable state owned by the backend. An empty object {} is valid for components with no observable state."
+    },
+    "actions": {
+      "type": "object",
+      "description": "Map of available actions. Each value conforms to base/action.schema.json. An empty object {} is valid for read-only components.",
+      "additionalProperties": {
+        "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+      }
+    }
+  },
+  "additionalProperties": false
+}

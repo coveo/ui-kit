@@ -1,0 +1,285 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.thermidor.coveo.com/components/numeric-facet.schema.json",
+  "title": "NumericFacet",
+  "description": "A numeric range facet for a commerce search surface. Renders numeric range values and dispatches toggleSelect, clearAllActiveValues, applyCustomRange, showMoreValues, and showLessValues to refine results.",
+  "allOf": [
+    {
+      "$ref": "https://schema.thermidor.coveo.com/base/component.schema.json"
+    }
+  ],
+  "properties": {
+    "componentType": {
+      "type": "string",
+      "const": "numeric-facet"
+    },
+    "state": {
+      "$ref": "#/$defs/NumericFacetState"
+    },
+    "actions": {
+      "type": "object",
+      "required": [
+        "toggleSelect",
+        "toggleSingleSelect",
+        "clearAllActiveValues",
+        "applyCustomRange",
+        "showMoreValues",
+        "showLessValues"
+      ],
+      "properties": {
+        "toggleSelect": {
+          "$ref": "#/$defs/NumericFacetToggleSelectAction"
+        },
+        "toggleSingleSelect": {
+          "$ref": "#/$defs/NumericFacetToggleSingleSelectAction"
+        },
+        "clearAllActiveValues": {
+          "$ref": "#/$defs/NumericFacetClearAllActiveValuesAction"
+        },
+        "applyCustomRange": {
+          "$ref": "#/$defs/NumericFacetApplyCustomRangeAction"
+        },
+        "showMoreValues": {
+          "$ref": "#/$defs/NumericFacetShowMoreValuesAction"
+        },
+        "showLessValues": {
+          "$ref": "#/$defs/NumericFacetShowLessValuesAction"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "NumericFacetState": {
+      "title": "NumericFacetState",
+      "description": "The current numeric facet state. Owned exclusively by the backend.",
+      "type": "object",
+      "required": [
+        "field",
+        "displayName",
+        "values",
+        "customRange",
+        "hasActiveValues",
+        "canShowMoreValues",
+        "canShowLessValues"
+      ],
+      "properties": {
+        "field": {
+          "type": "string",
+          "description": "The index field this facet queries."
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Human-readable name for this facet."
+        },
+        "values": {
+          "type": "array",
+          "description": "The numeric range values available for this facet.",
+          "minItems": 0,
+          "maxItems": 500,
+          "items": {
+            "$ref": "#/$defs/NumericFacetValue"
+          }
+        },
+        "customRange": {
+          "description": "The currently applied custom range, or null when none is active. Mutually exclusive with selected values.",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/NumericFacetCustomRange"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "hasActiveValues": {
+          "type": "boolean",
+          "description": "Whether at least one range value is not in the idle state."
+        },
+        "canShowMoreValues": {
+          "type": "boolean",
+          "description": "Whether more values can be shown."
+        },
+        "canShowLessValues": {
+          "type": "boolean",
+          "description": "Whether fewer values can be shown."
+        },
+        "domain": {
+          "$ref": "#/$defs/NumericFacetDomain",
+          "description": "The optional numeric domain (min/max) of the facet."
+        }
+      },
+      "additionalProperties": false
+    },
+    "NumericFacetValue": {
+      "title": "NumericFacetValue",
+      "description": "A single numeric range value within a numeric facet.",
+      "type": "object",
+      "required": ["start", "end", "numberOfResults", "state"],
+      "properties": {
+        "start": {
+          "type": "number",
+          "description": "The inclusive lower bound of the range."
+        },
+        "end": {
+          "type": "number",
+          "description": "The upper bound of the range."
+        },
+        "numberOfResults": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The number of results matching this range."
+        },
+        "state": {
+          "$ref": "https://schema.thermidor.coveo.com/definitions/selectable-facet-value-state.schema.json",
+          "description": "The selection state of this facet value (idle or selected; exclusion is not supported)."
+        }
+      },
+      "additionalProperties": false
+    },
+    "NumericFacetCustomRange": {
+      "title": "NumericFacetCustomRange",
+      "description": "A custom numeric range applied by the user, with its result count.",
+      "type": "object",
+      "required": ["start", "end", "numberOfResults"],
+      "properties": {
+        "start": {
+          "type": "number",
+          "description": "The inclusive lower bound of the custom range."
+        },
+        "end": {
+          "type": "number",
+          "description": "The upper bound of the custom range."
+        },
+        "numberOfResults": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The number of results matching this custom range."
+        }
+      },
+      "additionalProperties": false
+    },
+    "NumericFacetDomain": {
+      "title": "NumericFacetDomain",
+      "description": "The numeric domain bounds of a numeric facet.",
+      "type": "object",
+      "properties": {
+        "min": {
+          "type": "number",
+          "description": "The minimum value of the domain."
+        },
+        "max": {
+          "type": "number",
+          "description": "The maximum value of the domain."
+        }
+      },
+      "additionalProperties": false
+    },
+    "NumericFacetToggleSelectAction": {
+      "title": "numericFacetToggleSelect",
+      "description": "Toggles the selection of a numeric range value.",
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ],
+      "properties": {
+        "payload": {
+          "type": "object",
+          "required": ["start", "end"],
+          "properties": {
+            "start": {
+              "type": "number",
+              "description": "The inclusive lower bound of the range to toggle."
+            },
+            "end": {
+              "type": "number",
+              "description": "The upper bound of the range to toggle."
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "NumericFacetToggleSingleSelectAction": {
+      "title": "numericFacetToggleSingleSelect",
+      "description": "Toggles the selection of a range value, deselecting all other values (single-select behavior).",
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ],
+      "properties": {
+        "payload": {
+          "type": "object",
+          "required": ["start", "end"],
+          "properties": {
+            "start": {
+              "type": "number",
+              "description": "The inclusive lower bound of the range to single-select."
+            },
+            "end": {
+              "type": "number",
+              "description": "The upper bound of the range to single-select."
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "NumericFacetClearAllActiveValuesAction": {
+      "title": "numericFacetClearAllActiveValues",
+      "description": "Resets all numeric range values to the idle state, clearing every selection.",
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ]
+    },
+    "NumericFacetApplyCustomRangeAction": {
+      "title": "numericFacetApplyCustomRange",
+      "description": "Applies a single custom numeric range, clearing any selected displayed ranges.",
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ],
+      "properties": {
+        "payload": {
+          "type": "object",
+          "required": ["start", "end"],
+          "properties": {
+            "start": {
+              "type": "number",
+              "description": "The inclusive lower bound of the custom range."
+            },
+            "end": {
+              "type": "number",
+              "description": "The upper bound of the custom range."
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "NumericFacetShowMoreValuesAction": {
+      "title": "numericFacetShowMoreValues",
+      "description": "Increases the number of numeric range values shown.",
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ]
+    },
+    "NumericFacetShowLessValuesAction": {
+      "title": "numericFacetShowLessValues",
+      "description": "Decreases the number of numeric range values shown.",
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ]
+    }
+  }
+}

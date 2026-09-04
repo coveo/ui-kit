@@ -89,6 +89,13 @@ export function dispatchStreamEvent(
         deps.statePort.appendSurface(turnId, content);
       }
 
+      deps.statePort.appendActivity(turnId, {
+        id: event.messageId ?? '',
+        kind: event.activityType ?? '',
+        payload: content,
+        replace: activity.replace ?? false,
+      });
+
       if (event.activityType === 'a2ui-surface') {
         deps.onA2uiSurface(turnId, content);
       }
@@ -97,9 +104,21 @@ export function dispatchStreamEvent(
     }
 
     case 'RUN_STARTED':
-    case 'RUN_FINISHED':
-    case 'STATE_SNAPSHOT':
     case 'CUSTOM': {
+      return {turnId, isTerminal: false};
+    }
+
+    case 'RUN_FINISHED': {
+      deps.statePort.completeTurn(turnId);
+      return {turnId, isTerminal: true};
+    }
+
+    case 'STATE_SNAPSHOT': {
+      deps.ensureAgentResponse(turnId);
+      const snapshot = (event as unknown as {snapshot?: unknown}).snapshot;
+      if (snapshot && typeof snapshot === 'object' && !Array.isArray(snapshot)) {
+        deps.statePort.setStateSnapshot(turnId, snapshot as Record<string, unknown>);
+      }
       return {turnId, isTerminal: false};
     }
 

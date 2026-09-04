@@ -1,0 +1,48 @@
+{
+  "field": "ec_category",
+  "displayName": "Category",
+  "values": {
+    "ancestry": [
+      {
+        "path": ["Sports"],
+        "value": "Sports",
+        "numberOfResults": 1150
+      },
+      {
+        "path": ["Sports", "Surfboarding"],
+        "value": "Surfboarding",
+        "numberOfResults": 555
+      }
+    ],
+    "selected": {
+      "path": ["Sports", "Surfboarding", "Accessories"],
+      "value": "Accessories",
+      "numberOfResults": 150
+    },
+    "children": [
+      {
+        "path": ["Sports", "Surfboarding", "Accessories", "Padlocks"],
+        "value": "Padlocks",
+        "numberOfResults": 15
+      },
+      {
+        "path": ["Sports", "Surfboarding", "Accessories", "Wax"],
+        "value": "Wax",
+        "numberOfResults": 25
+      }
+    ]
+  },
+  "canShowMoreValues": true,
+  "canShowLessValues": false,
+  "facetSearch": {
+    "query": "pad",
+    "canShowMoreResults": false,
+    "results": [
+      {
+        "path": ["Sports", "Surfboarding", "Accessories", "Padlocks"],
+        "value": "Padlocks",
+        "numberOfResults": 15
+      }
+    ]
+  }
+}

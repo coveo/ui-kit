@@ -112,6 +112,7 @@ describe('main', () => {
     out.mockRestore();
     const output = chunks.join('');
     expect(output).toContain('https://docs.coveo.com');
+    expect(output).toContain('https://docs.coveo.com/en/q8qh2338');
     expect(output).toContain('https://docs.coveo.com/en/atomic/latest');
     expect(output).toContain('https://docs.coveo.com/en/headless/latest');
   });

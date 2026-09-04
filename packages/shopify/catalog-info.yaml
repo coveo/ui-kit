@@ -11,3 +11,4 @@ spec:
   system: ui-kit
   dependsOn:
     - component:headless
+    - component:relay

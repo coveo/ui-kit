@@ -1,7 +1,8 @@
 import type {
   GenerativeState,
+  HydratedUseCase,
   RoutedInterfaceRegistry,
-  RoutedUseCase,
+  SerializableRoutedInterface,
   StateTurn,
 } from '@/src/internal/features/generative/index.js';
 
@@ -20,6 +21,8 @@ export interface SerializedRoutedInterface {
   useCase: string;
   snapshot: Record<string, unknown>;
   query: string | undefined;
+  surfaceType?: string;
+  surfaceId?: string;
 }
 
 export interface SerializedTurn extends Omit<StateTurn, 'routedInterface'> {
@@ -33,6 +36,8 @@ export interface SerializedTurn extends Omit<StateTurn, 'routedInterface'> {
  *
  * Only populates `routedInterface` on a turn when the registry has a
  * corresponding entry, ensuring store and registry stay in sync.
+ * Decomposed commerce turns do not require a registry entry since they
+ * carry no non-serializable interface instance.
  */
 export function deserializeToGenerativeState(
   serialized: SerializedConverseState,
@@ -47,14 +52,12 @@ export function deserializeToGenerativeState(
       turn.error = 'Stream was interrupted';
     }
 
-    if (
-      routedInterface &&
-      VALID_USE_CASES.has(routedInterface.useCase) &&
-      (!registry || registry.get(turn.id))
-    ) {
-      turn.routedInterface = {
-        useCase: routedInterface.useCase as RoutedUseCase,
-      };
+    if (routedInterface && VALID_USE_CASES.has(routedInterface.useCase)) {
+      if (!registry || registry.get(turn.id)) {
+        turn.routedInterface = {
+          useCase: routedInterface.useCase as HydratedUseCase,
+        } as SerializableRoutedInterface;
+      }
     }
 
     return turn;

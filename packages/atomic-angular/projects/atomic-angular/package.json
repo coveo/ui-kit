@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic-angular",
-  "version": "3.11.23",
+  "version": "3.11.24",
   "description": "An Angular component library for building modern UIs interfacing with the Coveo platform, wrapping the core Atomic web components",
   "license": "Apache-2.0",
   "repository": {
@@ -19,8 +19,8 @@
     "publint": "catalog:"
   },
   "peerDependencies": {
-    "@angular/common": "14 - 21",
-    "@angular/core": "14 - 21",
+    "@angular/common": "catalog:peer-compatibility",
+    "@angular/core": "catalog:peer-compatibility",
     "@coveo/headless": "workspace:^"
   },
   "engines": {
