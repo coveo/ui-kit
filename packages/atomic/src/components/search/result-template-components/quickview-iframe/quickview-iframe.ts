@@ -73,13 +73,6 @@ interface QuickviewIframeProps {
 export const renderQuickviewIframe: FunctionalComponent<QuickviewIframeProps> = ({props}) => {
   const {title, onSetIframeRef, uniqueIdentifier, content, sandbox, src, logger} = props;
 
-  // When a document is written with document.open/document.write/document.close
-  // it is not synchronous and the content of the iframe is only available to be queried at the end of the current call stack.
-  // This adds a "wait" (setTimeout 0) before calling the `onSetIframeRef` from the parent modal quickview
-  const waitForIframeContentToBeWritten = () => {
-    return new Promise((resolve) => setTimeout(resolve));
-  };
-
   const handleRef = (el: Element | undefined) => {
     if (!el) return;
 
@@ -106,10 +99,13 @@ export const renderQuickviewIframe: FunctionalComponent<QuickviewIframeProps> = 
         return;
       }
 
+      const contentLoaded = eventPromise(iframeRef, 'load', 5000);
       writeDocument(documentWriter, content);
       ensureSameResultIsNotOverwritten(documentWriter, uniqueIdentifier);
 
-      await waitForIframeContentToBeWritten();
+      await contentLoaded.catch(() => {
+        logger?.warn('Quickview timed out waiting for the iframe content to load.');
+      });
       onSetIframeRef(iframeRef);
     };
 

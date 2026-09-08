@@ -11,14 +11,23 @@ import {getOrCreateConfigurationSelectors} from '@/src/internal/features/configu
 import {generateId} from '@/src/internal/utils/index.js';
 import type {
   A2UISurface,
-  RoutedUseCase,
+  Activity,
+  HydratedUseCase,
   TurnStatus,
   UseCaseInterfaceMap,
 } from '@/src/internal/features/generative/index.js';
 
+export interface CoveoConversationControllerAction {
+  componentId: string;
+  componentType: string;
+  action: string;
+  payload: unknown;
+}
+
 export interface GenerativeStatePort {
   createTurn(payload: {id: string; prompt: string; status: TurnStatus}): void;
   setActiveTurnId(id: string): void;
+  getActiveTurnId(): string | undefined;
   replaceTurnId(oldId: string, newId: string): void;
   setRoutedInterface(turnId: string, hydrationResult: HydrationResult): void;
   clearRoutedInterface(turnId: string, surfaceId: string): void;
@@ -30,6 +39,8 @@ export interface GenerativeStatePort {
     surface: A2UISurface,
     activity?: {id?: string; replace?: boolean}
   ): void;
+  appendActivity(turnId: string, activity: Activity): void;
+  setStateSnapshot(turnId: string, state: Record<string, unknown>): void;
   startToolCall(turnId: string, toolCallId: string, toolName: string): void;
   appendToolCallArgs(turnId: string, toolCallId: string, delta: string): void;
   completeToolCall(turnId: string, toolCallId: string, result: string): void;
@@ -42,7 +53,7 @@ export interface GenerativeStatePort {
   setConversationSession(sessionId: string | undefined, token: string | undefined): void;
 }
 
-export interface HydrationResult<K extends RoutedUseCase = RoutedUseCase> {
+export interface HydrationResult<K extends HydratedUseCase = HydratedUseCase> {
   useCase: K;
   interface: UseCaseInterfaceMap[K];
   snapshot: Record<string, unknown>;
@@ -126,25 +137,8 @@ export class GenerativeRuntime {
 
   private async executeStream(turnId: string): Promise<void> {
     try {
-      const {cart, ...fromState} = this.engine.read(this.buildRequest);
-      const navigatorContext = this.engine.getNavigatorContextProvider()?.();
+      const request = this.createConversationRequest();
       const clientConfig = this.engine.read(this.configSelectors.getEndpointClientConfiguration);
-
-      const request = {
-        ...fromState,
-        clientId: navigatorContext?.clientId ?? undefined,
-        context: {
-          user: {
-            userAgent: navigatorContext?.userAgent ?? null,
-          },
-          view: {
-            url: navigatorContext?.location ?? null,
-            referrer: navigatorContext?.referrer ?? null,
-          },
-          ...(cart ? {cart} : {}),
-        },
-        targetEngine: 'AGENT_CORE' as const,
-      };
 
       const client = createConversationEndpointClient();
       const result = await client.call(request, clientConfig);
@@ -158,6 +152,67 @@ export class GenerativeRuntime {
     } catch (error) {
       this.statePort.failTurn(turnId, getErrorMessage(error));
     }
+  }
+
+  /**
+   * Sends a schema-derived UI action through the same authenticated conversation
+   * transport as prompts. The gateway owns the mutation and replies with a
+   * stream, including the resulting `STATE_SNAPSHOT` for the active turn.
+   */
+  async dispatchAction(action: CoveoConversationControllerAction): Promise<void> {
+    const turnId = this.statePort.getActiveTurnId();
+    if (!turnId) {
+      throw new Error('Cannot dispatch a controller action without an active conversation turn.');
+    }
+
+    const {message: _message, ...requestBase} = this.createConversationRequest();
+    const request = {
+      ...requestBase,
+      action,
+    };
+
+    const clientConfig = this.engine.read(this.configSelectors.getEndpointClientConfiguration);
+    const client = createConversationEndpointClient();
+    const result = await client.call(request as never, clientConfig);
+
+    if (!result.success) {
+      throw new Error(result.error);
+    }
+
+    let streamError: unknown;
+    await readConversationEventStream({
+      stream: result.data.stream,
+      onEvent: (event) => {
+        this.dispatchEvent(turnId, event);
+      },
+      onError: (error) => {
+        streamError = error;
+      },
+    });
+    if (streamError) {
+      throw streamError;
+    }
+  }
+
+  private createConversationRequest() {
+    const {cart, ...fromState} = this.engine.read(this.buildRequest);
+    const navigatorContext = this.engine.getNavigatorContextProvider()?.();
+
+    return {
+      ...fromState,
+      clientId: navigatorContext?.clientId ?? undefined,
+      context: {
+        user: {
+          userAgent: navigatorContext?.userAgent ?? null,
+        },
+        view: {
+          url: navigatorContext?.location ?? null,
+          referrer: navigatorContext?.referrer ?? null,
+        },
+        ...(cart ? {cart} : {}),
+      },
+      targetEngine: 'AGENT_CORE' as const,
+    };
   }
 
   private async consumeStream(turnId: string, stream: ReadableStream<Uint8Array>): Promise<void> {
@@ -255,6 +310,11 @@ export class GenerativeRuntime {
       }
 
       case 'STATE_SNAPSHOT': {
+        this.ensureAgentResponse(turnId);
+        const snapshot = (event as Record<string, unknown>).snapshot;
+        if (snapshot && typeof snapshot === 'object' && !Array.isArray(snapshot)) {
+          this.statePort.setStateSnapshot(turnId, snapshot as Record<string, unknown>);
+        }
         return {turnId, isTerminal: false};
       }
 
@@ -266,6 +326,12 @@ export class GenerativeRuntime {
         } else {
           this.statePort.appendSurface(turnId, event.content as Record<string, unknown>);
         }
+        this.statePort.appendActivity(turnId, {
+          id: event.messageId ?? '',
+          kind: event.activityType ?? '',
+          payload: event.content as Record<string, unknown>,
+          replace: activity.replace ?? false,
+        });
         return {turnId, isTerminal: false};
       }
 

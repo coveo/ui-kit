@@ -279,10 +279,14 @@ describe('UnifiedConverseController integration', () => {
       const turn = controller.state.turns[0];
       expect(turn.routedInterface).toBeDefined();
       expect(turn.routedInterface?.useCase).toBe('commerceSearch');
-      expect(turn.routedInterface?.interface).toBeDefined();
+      const routedInterface = turn.routedInterface!;
+      if (routedInterface.useCase !== 'commerceSearch') {
+        throw new Error('Expected commerceSearch useCase');
+      }
+      expect(routedInterface.interface).toBeDefined();
 
       const paginationController = buildPaginationController({
-        interface: turn.routedInterface!.interface,
+        interface: routedInterface.interface,
       });
       expect(paginationController.state.totalCount).toBe(100);
       expect(paginationController.state.pageSize).toBe(20);
@@ -309,8 +313,12 @@ describe('UnifiedConverseController integration', () => {
       });
 
       const turn = controller.state.turns[0];
+      const routedInterface = turn.routedInterface!;
+      if (routedInterface.useCase !== 'commerceSearch') {
+        throw new Error('Expected commerceSearch useCase');
+      }
       const paginationController = buildPaginationController({
-        interface: turn.routedInterface!.interface,
+        interface: routedInterface.interface,
       });
 
       expect(paginationController.state.page).toBe(0);

@@ -27,7 +27,7 @@ These files contain metadata about the build process, specifically providing inf
 
 # esbuild analyzer
 
-To visually analyze these files, you can utilize the [esbuild analyzer](esbuild.github.io/analyze/).
+To visually analyze these files, you can utilize the [esbuild analyzer](https://esbuild.github.io/analyze/).
 
 Using the visualizer, you can manually inspect each file and identify any that should not be part of a specific bundle.
 

@@ -1,0 +1,271 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Copy the entire `samples/thermidor/demo-react/` directory to `samples/thermidor/demo-schema-react/`": [
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786390775111
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786390785532
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786390792668
+      }
+    ],
+    "1.2 Update `samples/thermidor/demo-schema-react/package.json` with new identity and dependencies": [
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786390775153
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786390797462
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786390842749
+      }
+    ],
+    "1.3 Run `pnpm install` to resolve workspace dependencies and generate lockfile entries": [
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786390775203
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786390848064
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786391090348
+      }
+    ],
+    "2.1 Create `samples/thermidor/demo-schema-react/src/a2ui/controllers.tsx`": [
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786390775238
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786391097426
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786391334368
+      }
+    ],
+    "2.2 Create `samples/thermidor/demo-schema-react/src/a2ui/components.tsx`": [
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786390775284
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786391341096
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786391771434
+      }
+    ],
+    "2.3 Create `samples/thermidor/demo-schema-react/src/a2ui/surfaces.tsx`": [
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786390775358
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786391098374
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786391335272
+      }
+    ],
+    "3.1 Modify `samples/thermidor/demo-schema-react/src/a2ui/SurfaceRenderer/SurfaceRenderer.tsx` for hybrid catalog + direct rendering": [
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786390775401
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786391777788
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786392184010
+      }
+    ],
+    "3.2 Wire A2UIProvider and ThermidorA2UISurfaces into the app": [
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786390775446
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786391778647
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786392183027
+      }
+    ],
+    "4. Checkpoint - Verify build succeeds": [
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786390775489
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786392191622
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786392206380
+      }
+    ],
+    "5.1 Create `samples/thermidor/demo-schema-react/src/a2ui/controllers.test.ts`": [
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786390775527
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786392212800
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786393243740
+      }
+    ],
+    "5.2 Create `samples/thermidor/demo-schema-react/src/a2ui/components.test.ts`": [
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786390775581
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786392213741
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786393244601
+      }
+    ],
+    "5.3 Create `samples/thermidor/demo-schema-react/src/a2ui/surfaces.test.ts`": [
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786390775639
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786392214595
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786393245498
+      }
+    ],
+    "5.4 Create `samples/thermidor/demo-schema-react/src/a2ui/import-boundary.test.ts`": [
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786390775678
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786392215546
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786393246453
+      }
+    ],
+    "6. Final checkpoint - Verify build and all tests pass": [
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786390775721
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786393251687
+      },
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786393282548
+      }
+    ],
+    "1. Scaffold sample by copying demo-react and updating identity": [
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786391090429
+      }
+    ],
+    "2. Create the contract-driven A2-UI layer files": [
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786391771476
+      }
+    ],
+    "3. Wire catalog rendering into the existing app shell": [
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786392184066
+      }
+    ],
+    "5. Create test suites for contract-driven rendering": [
+      {
+        "executionId": "02c78174-dfd1-4ed5-b130-d0b51618ce09",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786393246491
+      }
+    ]
+  }
+}

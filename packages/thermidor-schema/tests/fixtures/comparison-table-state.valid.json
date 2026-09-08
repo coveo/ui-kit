@@ -1,0 +1,13 @@
+{
+  "products": [
+    {
+      "productId": "prod-1",
+      "name": "Test Product",
+      "values": {"brand": "TestBrand", "thickness": "4mm"}
+    }
+  ],
+  "attributes": [
+    {"key": "brand", "label": "Brand"},
+    {"key": "thickness", "label": "Thickness"}
+  ]
+}

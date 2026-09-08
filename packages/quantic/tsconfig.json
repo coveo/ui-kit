@@ -62,7 +62,7 @@
   },
   "include": [
     "force-app/main/default/lwc",
-    "force-app/examples/main/lwc",
+    "force-app/playgroundComponents/main/lwc",
     "typings/lwc/**/*.d.ts",
     "coveo.d.ts",
     "force-app/solutionExamples/main/lwc"

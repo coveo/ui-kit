@@ -89,6 +89,58 @@ describe('createRenewAccessTokenMiddleware', () => {
     expect(renewFn).not.toHaveBeenCalled();
   });
 
+  it('should apply nested RTK Query cache update thunks synchronously when JWT is not expired', async () => {
+    const {configureStore} = await import('@reduxjs/toolkit');
+    const {createApi} = await import('@reduxjs/toolkit/query');
+    const {shouldRenewJWT} = await import('../utils/jwt-utils.js');
+    (shouldRenewJWT as Mock).mockReturnValue(false);
+
+    const renewFn = vi.fn();
+    const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
+    const testApi = createApi({
+      reducerPath: 'generatedAnswerTestApi',
+      baseQuery: async () => ({data: null}),
+      endpoints: (builder) => ({
+        answer: builder.query<{answer: string}, void>({
+          queryFn: () => ({data: {answer: ''}}),
+        }),
+      }),
+    });
+    const testStore = configureStore({
+      reducer: {
+        configuration: (state = {accessToken: 'test-jwt-token'}) => state,
+        [testApi.reducerPath]: testApi.reducer,
+      },
+      middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().prepend(middleware).concat(testApi.middleware),
+    });
+
+    await testStore.dispatch(testApi.endpoints.answer.initiate());
+    await vi.waitFor(() =>
+      expect(testApi.endpoints.answer.select(undefined)(testStore.getState()).data).toEqual({
+        answer: '',
+      })
+    );
+
+    const appendAnswer = (textDelta: string) =>
+      testStore.dispatch(
+        testApi.util.updateQueryData('answer', undefined, (draft) => {
+          draft.answer += textDelta;
+        })
+      );
+
+    appendAnswer('FIRST PART ');
+    appendAnswer('SECOND PART ');
+    appendAnswer('THIRD PART');
+
+    expect(testApi.endpoints.answer.select(undefined)(testStore.getState()).data?.answer).toBe(
+      'FIRST PART SECOND PART THIRD PART'
+    );
+    expect(renewFn).not.toHaveBeenCalled();
+
+    testStore.dispatch(testApi.util.resetApiState());
+  });
+
   it('should handle proactive renewal failure gracefully', async () => {
     const {shouldRenewJWT} = await import('../utils/jwt-utils.js');
     (shouldRenewJWT as Mock).mockReturnValue(true);

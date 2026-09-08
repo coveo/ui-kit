@@ -180,4 +180,42 @@ describe('createMockConverseServer', () => {
     expect(res.statusCode).toBe(404);
     expect(res.headers['access-control-allow-origin']).toBe('*');
   });
+
+  it('accepts a schema action request with message: null and an action object', async () => {
+    await startServer();
+    const res = await makeRequest(
+      server,
+      {
+        method: 'POST',
+        path: '/converse-schema',
+        headers: {'Content-Type': 'application/json'},
+      },
+      JSON.stringify({
+        message: null,
+        action: {name: 'selectPage', sourceComponentId: 'pagination-1', context: {page: 1}},
+      })
+    );
+
+    expect(res.statusCode).toBe(200);
+    expect(res.headers['content-type']).toBe('text/event-stream');
+    expect(res.headers['access-control-allow-origin']).toBe('*');
+  });
+
+  it('returns 400 on schema route when both message and action are absent', async () => {
+    await startServer();
+    const res = await makeRequest(
+      server,
+      {
+        method: 'POST',
+        path: '/converse-schema',
+        headers: {'Content-Type': 'application/json'},
+      },
+      JSON.stringify({trackingId: 'x'})
+    );
+
+    expect(res.statusCode).toBe(400);
+    expect(JSON.parse(res.body)).toEqual({
+      error: 'Missing required field: message or action',
+    });
+  });
 });

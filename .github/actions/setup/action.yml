@@ -9,6 +9,7 @@ runs:
     - name: Install tools via mise
       uses: step-security/mise-action@6e96d2ffbc65c037f23c78818f2a339d6cf830f7 # v4
       with:
+        version: 2026.9.2
         install: true
         cache: true
     - name: Get pnpm store directory

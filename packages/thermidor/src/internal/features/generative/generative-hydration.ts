@@ -4,7 +4,7 @@ import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import {generateId} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
-import type {RoutedUseCase} from './generative-types.js';
+import type {HydratedUseCase} from './generative-types.js';
 import type {HydrateSubInterface, HydrationResult} from '@/src/internal/api/generative/index.js';
 import {CommerceInterfaceImpl} from '@/src/internal/interfaces/index.js';
 import {SearchInterfaceImpl} from '@/src/internal/interfaces/index.js';
@@ -14,12 +14,12 @@ import {createConverseSearchFacadeResolver} from '@/src/internal/api/converse-se
 import {createCommerceSuggestionsFacadeResolver} from '@/src/internal/api/commerce-query-suggest/index.js';
 import type {RoutedInterfaceRegistry} from './routed-interface-registry.js';
 
-const ACTIVITY_TYPE_TO_ROUTED_USE_CASE: Record<string, RoutedUseCase> = {
+const ACTIVITY_TYPE_TO_ROUTED_USE_CASE: Record<string, HydratedUseCase> = {
   commerce_search_api_response: 'commerceSearch',
   search_api_response: 'search',
 };
 
-const ROUTED_USE_CASE_TO_ACTIVITY_TYPE: Record<RoutedUseCase, string> = {
+const ROUTED_USE_CASE_TO_ACTIVITY_TYPE: Record<HydratedUseCase, string> = {
   commerceSearch: 'commerce_search_api_response',
   search: 'search_api_response',
 };
@@ -124,7 +124,7 @@ export function rehydrateRoutedInterfaces(
       continue;
     }
     const activityType =
-      ROUTED_USE_CASE_TO_ACTIVITY_TYPE[turn.routedInterface.useCase as RoutedUseCase];
+      ROUTED_USE_CASE_TO_ACTIVITY_TYPE[turn.routedInterface.useCase as HydratedUseCase];
     if (!activityType) {
       continue;
     }

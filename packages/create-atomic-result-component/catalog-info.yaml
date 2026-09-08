@@ -1,0 +1,13 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: create-atomic-result-component
+  title: '@coveo/create-atomic-result-component'
+  description: Initialize a Coveo Atomic Result Component
+spec:
+  type: library
+  lifecycle: production
+  owner: group:default/dxui
+  system: ui-kit
+  dependsOn:
+    - component:create-atomic-component-project

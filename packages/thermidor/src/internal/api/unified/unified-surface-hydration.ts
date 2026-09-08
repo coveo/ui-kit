@@ -39,6 +39,7 @@ export type A2uiOperation =
 
 export interface CreateSurfacePayload {
   surfaceId: string;
+  surfaceType?: string;
   catalogId?: string;
   sendDataModel?: boolean;
   components?: ComponentNode[];
@@ -237,6 +238,9 @@ function hasStatefulCommerceRootComponent(components: ComponentNode[] | undefine
 
 function isCreateSurfacePayload(value: unknown): value is CreateSurfacePayload {
   if (!isRecord(value) || typeof value.surfaceId !== 'string') {
+    return false;
+  }
+  if (value.surfaceType !== undefined && typeof value.surfaceType !== 'string') {
     return false;
   }
   if (value.catalogId !== undefined && typeof value.catalogId !== 'string') {

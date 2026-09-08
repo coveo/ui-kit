@@ -100,7 +100,7 @@
     },
     "test:storybook": {
       "dependsOn": ["^build", "build"],
-      "outputs": []
+      "outputs": ["reports/a11y-report.shard-*.json", "reports/a11y-report.json"]
     },
     "dev": {
       "extends": false,

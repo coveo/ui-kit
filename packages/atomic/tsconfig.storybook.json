@@ -7,6 +7,7 @@
   },
   "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"],
   "include": [
+    "scripts/vite-source-plugins.ts",
     "storybook-utils/**/*.ts",
     "storybook-utils/**/*.tsx",
     "src/**/*.d.ts",

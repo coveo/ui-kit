@@ -1,0 +1,14 @@
+{
+  "field": "date",
+  "displayName": "Date",
+  "values": [
+    {
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "numberOfResults": -5,
+      "state": "idle"
+    }
+  ],
+  "canShowMoreValues": true,
+  "canShowLessValues": false
+}

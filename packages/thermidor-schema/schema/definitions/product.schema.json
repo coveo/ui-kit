@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.thermidor.coveo.com/definitions/product.schema.json",
+  "title": "Product",
+  "description": "A single commerce product as exposed by the ProductListController state. Field names follow the Coveo commerce field conventions (ec_* prefix).",
+  "type": "object",
+  "required": ["permanentid", "ec_name", "additionalFields"],
+  "properties": {
+    "permanentid": {
+      "type": "string",
+      "description": "The stable, unique product identifier."
+    },
+    "ec_name": {
+      "type": "string",
+      "description": "The display name of the product."
+    },
+    "ec_description": {
+      "type": "string",
+      "description": "Long-form product description."
+    },
+    "ec_shortdesc": {
+      "type": "string",
+      "description": "Short product description or tagline."
+    },
+    "ec_brand": {
+      "type": "string",
+      "description": "The brand or manufacturer name."
+    },
+    "ec_category": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Ordered list of category path segments (e.g. [\"Sports\", \"Kayaks\"])."
+    },
+    "ec_price": {
+      "type": "number",
+      "description": "Regular unit price in the request currency."
+    },
+    "ec_promo_price": {
+      "type": "number",
+      "description": "Promotional/sale price. When present and lower than ec_price, this is the effective price."
+    },
+    "ec_images": {
+      "type": "array",
+      "items": {"type": "string", "format": "uri"},
+      "description": "Full-resolution image URLs, in display order."
+    },
+    "ec_thumbnails": {
+      "type": "array",
+      "items": {"type": "string", "format": "uri"},
+      "description": "Thumbnail image URLs, in display order."
+    },
+    "ec_in_stock": {
+      "type": "boolean",
+      "description": "Whether the product is currently available for purchase."
+    },
+    "ec_rating": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 5,
+      "description": "Average customer rating on a 0-5 scale. Null when no ratings exist."
+    },
+    "ec_color": {
+      "type": "string",
+      "description": "Primary product colour."
+    },
+    "ec_item_group_id": {
+      "type": "string",
+      "description": "Identifier of the parent product group (used for variant grouping)."
+    },
+    "ec_item_group_name": {
+      "type": "string",
+      "description": "Display name of the parent product group."
+    },
+    "clickUri": {
+      "type": "string",
+      "format": "uri",
+      "$comment": "TODO(quicktype): Restore format: uri-reference when quicktype-core preserves that JSON Schema format through its TypeGraph.",
+      "description": "Absolute URL to the product detail page."
+    },
+    "additionalFields": {
+      "type": "object",
+      "description": "Catch-all bag for any extra fields returned by the index that are not part of the standard schema.",
+      "additionalProperties": true
+    },
+    "children": {
+      "type": "array",
+      "items": {"$ref": "#"},
+      "description": "Product variants (e.g. sizes or colours). Each child is itself a Product."
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,5 +1,8 @@
 import type {GenerativeState, StateTurn, Turn} from '@/src/internal/features/generative/index.js';
 import {UnifiedRuntime} from '@/src/internal/api/unified/index.js';
+import type {A2uiAction} from '@/src/internal/api/unified/index.js';
+import type {RemoteControllerAction} from '../remote/remote-controller.js';
+import {deriveCommerceSurfaceId} from './derive-surface-id.js';
 import {
   getOrCreateRoutedInterfaceRegistry,
   mergeTurnsWithRegistry,
@@ -63,6 +66,9 @@ class UnifiedConverseControllerImpl extends BaseController<UnifiedConverseContro
         setActiveTurnId: (id) => {
           this.engine.mutate(this.#actions.setActiveTurnId(id));
         },
+        getActiveTurnId: () => {
+          return this.engine.read(this.#selectors.getActiveTurnId);
+        },
         replaceTurnId: (oldId, newId) => {
           this.engine.mutate(this.#actions.replaceTurnId({oldId, newId}));
         },
@@ -101,6 +107,12 @@ class UnifiedConverseControllerImpl extends BaseController<UnifiedConverseContro
           if (Array.isArray(messages)) {
             options.onSurfaceOperation?.(messages);
           }
+        },
+        appendActivity: (turnId, activity) => {
+          this.engine.mutate(this.#actions.appendActivity({turnId, activity}));
+        },
+        setStateSnapshot: (turnId, state) => {
+          this.engine.mutate(this.#actions.setStateSnapshot({turnId, state}));
         },
         startToolCall: (turnId, toolCallId, toolName) => {
           this.engine.mutate(this.#actions.startToolCall({turnId, toolCallId, toolName}));
@@ -192,6 +204,35 @@ class UnifiedConverseControllerImpl extends BaseController<UnifiedConverseContro
     this.#runtime.submit(prompt);
   }
 
+  dispatchAction(action: RemoteControllerAction): Promise<void> {
+    // A dispatch would cancel an in-flight prompt/action and replay onto the same
+    // turn before it has committed its state. Mirror `submit`'s streaming guard
+    // and ignore the action while the active turn is still streaming.
+    if (this.state.isStreaming) {
+      return Promise.resolve();
+    }
+
+    const surfaceId = deriveCommerceSurfaceId(this.state.activeTurn?.agentResponse?.activities);
+
+    // Without a target surface the action has nowhere to go; skip dispatching an
+    // untargeted action rather than sending one with a null surfaceId.
+    if (surfaceId === null) {
+      return Promise.resolve();
+    }
+
+    const a2uiAction: A2uiAction = {
+      surfaceId,
+      name: action.action,
+      sourceComponentId: action.componentId,
+      timestamp: new Date().toISOString(),
+      actionId: null,
+      wantResponse: false,
+      context: action.payload,
+    };
+
+    return this.#runtime.dispatchAction(a2uiAction);
+  }
+
   cancel(): void {
     this.#runtime.cancel();
   }
@@ -222,6 +263,8 @@ export interface UnifiedConverseController extends Controller<UnifiedConverseCon
   restore(state: SerializedConverseState): void;
   clear(): void;
   submit(options: {prompt: string}): void;
+  /** Sends a schema-derived remote controller action to the AG-UI gateway. */
+  dispatchAction(action: RemoteControllerAction): Promise<void>;
   cancel(): void;
   selectTurn(options: {id: string}): void;
   retry(options: {id: string}): void;
@@ -249,11 +292,10 @@ function hydrateFromSerializedState(serialized: SerializedConverseState): Genera
       turn.error = 'Stream was interrupted';
     }
 
-    if (
-      routedInterface &&
-      (routedInterface.useCase === 'commerceSearch' || routedInterface.useCase === 'search')
-    ) {
-      turn.routedInterface = {useCase: routedInterface.useCase};
+    if (routedInterface) {
+      if (routedInterface.useCase === 'commerceSearch' || routedInterface.useCase === 'search') {
+        turn.routedInterface = {useCase: routedInterface.useCase};
+      }
     }
 
     return turn;

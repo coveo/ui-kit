@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: create-atomic
+  title: '@coveo/create-atomic'
+  description: Coveo Atomic Generator
+spec:
+  type: library
+  lifecycle: production
+  owner: group:default/dxui
+  system: ui-kit

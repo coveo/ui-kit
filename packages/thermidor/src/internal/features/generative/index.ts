@@ -13,9 +13,11 @@ export {
 export type {RoutedInterfaceEntry, RoutedInterfaceRegistry} from './routed-interface-registry.js';
 export type {
   A2UISurface,
+  Activity,
   AgentMessage,
   AgentResponse,
   GenerativeState,
+  HydratedUseCase,
   ReasoningMessageStep,
   ReasoningStep,
   RoutedInterface,

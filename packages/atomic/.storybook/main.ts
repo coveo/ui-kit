@@ -1,44 +1,19 @@
 import {readdirSync, readFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
-import path, {dirname, relative, resolve} from 'node:path';
+import {dirname, relative, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import type {StorybookConfig} from '@storybook/web-components-vite';
 import remarkGfm from 'remark-gfm';
 import type {Plugin} from 'vite';
 import {mergeConfig} from 'vite';
 import {generateExternalPackageMappings} from '../scripts/externalPackageMappings.mjs';
+import {atomicSourceTransformPlugins} from '../scripts/vite-source-plugins.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const isVitest = process.env.VITEST !== undefined;
 const isChromatic = process.env.STORYBOOK_INVOKED_BY === 'chromatic';
 const isPlaywright = process.env.STORYBOOK_INVOKED_BY === 'playwright';
-
-const virtualCustomElementTags = (): Plugin => {
-  return {
-    name: 'virtual-custom-element-tags',
-    enforce: 'pre',
-    resolveId(id, importer) {
-      if (
-        importer &&
-        resolve(dirname(importer), id) ===
-          resolve(import.meta.dirname, '../src/utils/custom-element-tags.js')
-      ) {
-        return `virtual:custom-element-tags`;
-      }
-      return null;
-    },
-    async load(id) {
-      if (id === 'virtual:custom-element-tags') {
-        return `
-          import elementMap from '@/src/components/lazy-index.js';
-          export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set(Object.keys(elementMap));
-        `;
-      }
-      return null;
-    },
-  };
-};
 
 const virtualOpenApiModules = (): Plugin => {
   const virtualModules = new Map<string, string>();
@@ -195,131 +170,15 @@ const config: StorybookConfig = {
         ],
       },
       plugins: [
-        virtualCustomElementTags(),
+        ...atomicSourceTransformPlugins(),
         virtualOpenApiModules(),
         tailwindcss(),
-        resolvePathAliases(),
         markComponentImportsAsSideEffectful(configType),
-        processInlineCssImports(),
-        forceInlineCssImports(),
-        svgTransform(),
         virtualAssetsList(),
         externalizeDependencies(configType),
       ],
     });
   },
-};
-
-const resolvePathAliases = (): Plugin => {
-  return {
-    name: 'resolve-path-aliases',
-    enforce: 'pre',
-    async resolveId(source: string, importer, options) {
-      if (source.startsWith('@/')) {
-        const aliasPath = source.slice(2); // Remove the "@/" prefix
-        const resolvedPath = path.resolve(__dirname, `../${aliasPath}`);
-
-        return this.resolve(resolvedPath, importer, options);
-      }
-    },
-  };
-};
-
-const forceInlineCssImports = (): Plugin => {
-  return {
-    name: 'force-inline-css-imports',
-    enforce: 'pre',
-    transform(code, id) {
-      if (id.endsWith('.ts')) {
-        return {
-          code: code.replace(
-            /import\s+([^'"]+)\s+from\s+['"]([^'"]+\.css)['"]/g,
-            (_, importName, cssPath) => `import ${importName} from '${cssPath}?inline'`
-          ),
-          map: null,
-        };
-      }
-      return null;
-    },
-  };
-};
-
-const svgTransform = (): Plugin => {
-  return {
-    name: 'svg-transform',
-    transform(code, id) {
-      if (id.endsWith('.ts')) {
-        return code.replace(
-          /import\s+([a-zA-Z]+)\s+from\s+['"]([^'"]+\.svg)['"]/g,
-          (_, importName, importPath) => {
-            const svgContent = readFileSync(resolve(dirname(id), importPath), 'utf8')
-              .replace(/\r?\n/g, '')
-              .replace(/'/g, "\\'");
-            return `const ${importName} = '${svgContent}';`;
-          }
-        );
-      }
-      return null;
-    },
-  };
-};
-
-/**
- * Process Tailwind CSS directives inside Lit `css` tagged template literals.
- *
- * Components use `@import`, `@reference`, and `@apply` in `css\`...\`` templates
- * for their shadow DOM styles. In production builds, the `litCssPlugin`
- * post-processes these through PostCSS. In dev mode (Storybook), we need this
- * Vite plugin to do the same — constructable stylesheets don't support these
- * directives, so the CSS must be fully resolved before reaching the browser.
- */
-const processInlineCssImports = (): Plugin => {
-  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- PostCSS plugin types are complex
-  let postcssPlugins: any[];
-  let initialized = false;
-
-  return {
-    name: 'process-inline-css-imports',
-    enforce: 'pre',
-    async transform(code, id) {
-      const cleanId = id.split('?')[0];
-      if (!cleanId.endsWith('.ts')) return null;
-
-      const cssPattern = /css\s*`([\s\S]*?)`/g;
-      const matches = [...code.matchAll(cssPattern)];
-      const tailwindMatches = matches.filter(
-        (m) => m[1].includes('@import') || m[1].includes('@reference') || m[1].includes('@apply')
-      );
-      if (tailwindMatches.length === 0) return null;
-
-      if (!initialized) {
-        const {default: tailwindPostcss} = await import('@tailwindcss/postcss');
-        postcssPlugins = [tailwindPostcss()];
-        initialized = true;
-      }
-
-      const {default: postcss} = await import('postcss');
-      let result = code;
-
-      for (const match of tailwindMatches.reverse()) {
-        const processed = await postcss(postcssPlugins).process(match[1], {
-          from: id,
-        });
-        // Escape backticks and template expression markers so the
-        // processed CSS can safely live inside a tagged template literal.
-        const escaped = processed.css
-          .replace(/\\/g, '\\\\')
-          .replace(/`/g, '\\`')
-          .replace(/\$\{/g, '\\${');
-        result =
-          result.slice(0, match.index) +
-          `css\`${escaped}\`` +
-          result.slice(match.index! + match[0].length);
-      }
-
-      return {code: result, map: null};
-    },
-  };
 };
 
 const virtualAssetsList = (): Plugin => {

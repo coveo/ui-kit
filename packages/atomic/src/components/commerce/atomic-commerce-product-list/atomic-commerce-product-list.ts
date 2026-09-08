@@ -393,6 +393,15 @@ export class AtomicCommerceProductList
     );
   }
 
+  private getProductId(product: ProductListingState['products'][number]) {
+    return this.productListCommon.getResultId(
+      product.permanentid,
+      product.responseId ?? this.searchOrListingState.responseId,
+      this.density,
+      this.imageSize
+    );
+  }
+
   private renderGrid() {
     return html`${map(this.searchOrListingState.products, (product, index) => {
       return renderGridLayout({
@@ -409,12 +418,7 @@ export class AtomicCommerceProductList
         },
       })(
         html`${keyed(
-          this.productListCommon.getResultId(
-            product.permanentid,
-            this.searchOrListingState.responseId,
-            this.density,
-            this.imageSize
-          ),
+          this.getProductId(product),
           html`<atomic-product
             .content=${this.productTemplateProvider.getTemplateContent(product)}
             .density=${this.density}
@@ -437,12 +441,7 @@ export class AtomicCommerceProductList
   private renderList() {
     return html`${map(this.searchOrListingState.products, (product, index) => {
       return html`${keyed(
-        this.productListCommon.getResultId(
-          product.permanentid,
-          this.searchOrListingState.responseId,
-          this.density,
-          this.imageSize
-        ),
+        this.getProductId(product),
         html`<atomic-product
           part="outline"
           ${ref(
@@ -487,12 +486,7 @@ export class AtomicCommerceProductList
           },
         })(
           html`${map(this.searchOrListingState.products, (product, index) => {
-            const key = this.productListCommon.getResultId(
-              product.permanentid,
-              this.searchOrListingState.responseId,
-              this.density,
-              this.imageSize
-            );
+            const key = this.getProductId(product);
             return renderTableRow({
               props: {
                 key,

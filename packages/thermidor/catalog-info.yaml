@@ -9,3 +9,5 @@ spec:
   lifecycle: experimental
   owner: group:default/dxui
   system: ui-kit
+  dependsOn:
+    - component:thermidor-schema

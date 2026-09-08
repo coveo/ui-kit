@@ -246,6 +246,51 @@ describe('atomic-commerce-recommendation-list', () => {
   });
 
   describe.each<{display: ItemDisplayBasicLayout}>([{display: 'grid'}, {display: 'list'}])(
+    'when appending products in the $display display',
+    ({display}) => {
+      it('should preserve the existing atomic-product element', async () => {
+        const existingProduct = buildFakeProduct({
+          permanentid: 'existing-product',
+          responseId: 'initial-response',
+        });
+        const appendedProduct = buildFakeProduct({
+          permanentid: 'appended-product',
+          responseId: 'appended-response',
+        });
+
+        vi.mocked(buildRecommendations).mockImplementation(() =>
+          buildFakeRecommendations({
+            implementation: {
+              interactiveProduct,
+              promoteChildToParent,
+              summary,
+            },
+            state: {
+              products: [existingProduct],
+              responseId: 'initial-response',
+            },
+          })
+        );
+
+        const element = await setupElement({display});
+        const existingElement = element.shadowRoot?.querySelector('atomic-product');
+
+        element.recommendationsState = {
+          ...element.recommendationsState,
+          products: [existingProduct, appendedProduct],
+          responseId: 'appended-response',
+        };
+        await element.updateComplete;
+
+        const productElements = element.shadowRoot?.querySelectorAll('atomic-product');
+
+        expect(productElements).toHaveLength(2);
+        expect(productElements?.item(0)).toBe(existingElement);
+      });
+    }
+  );
+
+  describe.each<{display: ItemDisplayBasicLayout}>([{display: 'grid'}, {display: 'list'}])(
     'when #display is $display',
     ({display}) => {
       describe('when app is loaded', () => {

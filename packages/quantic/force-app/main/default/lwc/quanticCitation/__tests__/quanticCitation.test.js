@@ -343,6 +343,25 @@ describe('c-quantic-citation', () => {
       });
     });
 
+    describe('when the citation filetype is defined directly on the citation rather than in its fields', () => {
+      it('should generate a text fragment URL', async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          citation: {
+            ...exampleCitation,
+            fields: {
+              filetype: undefined,
+            },
+            filetype: 'html',
+          },
+        });
+        await flushPromises();
+
+        const link = element.shadowRoot.querySelector(selectors.citationLink);
+        expect(link.href).toBe(`${exampleCitationUrl}${urlFragment}`);
+      });
+    });
+
     describe('when the citation filetype is not HTML', () => {
       it('should not generate a text fragment URL', async () => {
         const element = createTestComponent({

@@ -24,7 +24,7 @@ Luckily, there are some components that can help you:
 Now you need to create a LWC that ties everything together. Here is the resulting `exampleQuanticGreeting` component:
 
 ```html
-<!-- force-app/examples/main/lwc/exampleQuanticGreeting/exampleQuanticGreeting.html -->
+<!-- force-app/playgroundComponents/main/lwc/exampleQuanticGreeting/exampleQuanticGreeting.html -->
 
 <template>
   <c-example-layout
@@ -47,7 +47,7 @@ Now you need to create a LWC that ties everything together. Here is the resultin
 ```
 
 ```javascript
-// force-app/examples/main/lwc/exampleQuanticGreeting/exampleQuanticGreeting.js
+// force-app/playgroundComponents/main/lwc/exampleQuanticGreeting/exampleQuanticGreeting.js
 import {LightningElement, track} from 'lwc';
 
 export default class ExampleQuanticGreeting extends LightningElement {
@@ -80,7 +80,7 @@ export default class ExampleQuanticGreeting extends LightningElement {
 ```
 
 ```xml
-<!-- force-app/examples/main/lwc/exampleQuanticGreeting/exampleQuanticGreeting.js-meta.xml -->
+<!-- force-app/playgroundComponents/main/lwc/exampleQuanticGreeting/exampleQuanticGreeting.js-meta.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">

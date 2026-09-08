@@ -1,0 +1,13 @@
+{
+  "field": "brand",
+  "displayName": "Brand",
+  "values": [],
+  "canShowMoreValues": true,
+  "canShowLessValues": false,
+  "facetSearch": {
+    "query": "",
+    "canShowMoreResults": false,
+    "results": []
+  },
+  "unsupported": true
+}

@@ -18,14 +18,13 @@ import {describeTemplate, getTemplates} from './templates.js';
 import {buildCrashDisclosure, isTrackingDisabled} from './telemetry.js';
 import {formatError} from './utils.js';
 
-// TODO: (KIT-5833): add a link to the "How to use @coveo/create-ui" guide here
-// once that documentation page is published.
 const DOCS = `
 Coveo documentation:
 
-  Docs home   https://docs.coveo.com
-  Atomic      https://docs.coveo.com/en/atomic/latest
-  Headless    https://docs.coveo.com/en/headless/latest
+  Docs home          https://docs.coveo.com
+  Create a project   https://docs.coveo.com/en/q8qh2338
+  Atomic             https://docs.coveo.com/en/atomic/latest
+  Headless           https://docs.coveo.com/en/headless/latest
 `;
 
 function buildProgram(): Command {

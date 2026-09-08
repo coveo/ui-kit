@@ -254,7 +254,7 @@ async function deployComponents(
       alias: options.scratchOrg.alias,
       packagePaths: [
         'force-app/main',
-        'force-app/examples',
+        'force-app/playgroundComponents',
         'force-app/solutionExamples',
       ],
     });

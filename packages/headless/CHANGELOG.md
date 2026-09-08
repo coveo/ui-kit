@@ -1,3 +1,11 @@
+## 3.55.3
+
+### Patch Changes
+
+- [#8289](https://github.com/coveo/ui-kit/pull/8289) [`b48aa94`](https://github.com/coveo/ui-kit/commit/b48aa94f676580bf1530c5455c296e25fe4b252f) - Preserve synchronous Redux thunk execution during access token checks to prevent buffered generated answer chunks from overwriting one another.
+
+- [#8248](https://github.com/coveo/ui-kit/pull/8248) [`2901b89`](https://github.com/coveo/ui-kit/commit/2901b893b763b9636a9be2639346663e929ca09d) - FetchEventSource call was missing openWhenHidden: true, causing the CRGA-with-Answer-API stream to abort and reopen a brand-new /generate request whenever the tab/app lost visibility mid-stream and with the previous partial answer never reset, it produced duplicated content.
+
 ## 3.55.2
 
 ### Patch Changes

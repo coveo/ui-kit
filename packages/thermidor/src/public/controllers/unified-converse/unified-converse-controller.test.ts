@@ -16,6 +16,7 @@ const TEST_ID = 'test-unified-generative';
 
 const mockSubmit = vi.fn<(prompt: string) => Promise<void>>();
 const mockResubmit = vi.fn<(turnId: string, prompt: string) => Promise<void>>();
+const mockDispatchAction = vi.fn<(action: unknown) => Promise<void>>();
 const mockCancel = vi.fn<() => void>();
 
 vi.mock('@/src/internal/api/unified/index.js', () => ({
@@ -23,6 +24,7 @@ vi.mock('@/src/internal/api/unified/index.js', () => ({
     getInstance: vi.fn(() => ({
       submit: mockSubmit,
       resubmit: mockResubmit,
+      dispatchAction: mockDispatchAction,
       cancel: mockCancel,
     })),
   },
@@ -45,9 +47,11 @@ describe('buildUnifiedConverseController', () => {
     vi.clearAllMocks();
     mockSubmit.mockReset();
     mockResubmit.mockReset();
+    mockDispatchAction.mockReset();
     mockCancel.mockReset();
     mockSubmit.mockResolvedValue();
     mockResubmit.mockResolvedValue();
+    mockDispatchAction.mockResolvedValue();
     engine = createTestEngine();
     fullEngine = getFullEngine(engine);
     generativeInterface = buildGenerativeUnifiedInterface({engine, id: TEST_ID});
@@ -155,6 +159,147 @@ describe('buildUnifiedConverseController', () => {
       controller.submit({prompt: 'new prompt'});
 
       expect(mockSubmit).toHaveBeenCalledWith('new prompt');
+    });
+  });
+
+  describe('dispatchAction()', () => {
+    it('builds an A2uiAction envelope from the remote controller action and delegates to the runtime', () => {
+      const controller = buildController();
+      const actions = getOrCreateGenerativeActions(generativeInterface);
+
+      fullEngine.mutate(actions.createTurn({id: 'turn-1', prompt: 'wetsuits', status: 'complete'}));
+      fullEngine.mutate(actions.initAgentResponse({turnId: 'turn-1'}));
+      fullEngine.mutate(
+        actions.appendActivity({
+          turnId: 'turn-1',
+          activity: {
+            id: 'activity-1',
+            kind: 'a2ui-surface',
+            replace: false,
+            payload: {
+              messages: [
+                {createSurface: {surfaceType: 'commerceSearch', surfaceId: 'ui-commerce-search'}},
+              ],
+            },
+          },
+        })
+      );
+      fullEngine.mutate(actions.setActiveTurnId('turn-1'));
+
+      controller.dispatchAction({
+        componentId: 'pagination-1',
+        componentType: 'pagination',
+        action: 'selectPage',
+        payload: {page: 2},
+      });
+
+      expect(mockDispatchAction).toHaveBeenCalledTimes(1);
+      expect(mockDispatchAction).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: 'selectPage',
+          sourceComponentId: 'pagination-1',
+          context: {page: 2},
+          actionId: null,
+          wantResponse: false,
+          surfaceId: 'ui-commerce-search',
+        })
+      );
+    });
+
+    it('derives the surfaceId from the active turn commerceSearch surface activity', () => {
+      const controller = buildController();
+      const actions = getOrCreateGenerativeActions(generativeInterface);
+
+      fullEngine.mutate(actions.createTurn({id: 'turn-1', prompt: 'wetsuits', status: 'complete'}));
+      fullEngine.mutate(actions.initAgentResponse({turnId: 'turn-1'}));
+      fullEngine.mutate(
+        actions.appendActivity({
+          turnId: 'turn-1',
+          activity: {
+            id: 'activity-1',
+            kind: 'a2ui-surface',
+            replace: false,
+            payload: {
+              messages: [
+                {
+                  createSurface: {
+                    surfaceType: 'commerceSearch',
+                    surfaceId: 'ui-commerce-search',
+                  },
+                },
+              ],
+            },
+          },
+        })
+      );
+      fullEngine.mutate(actions.setActiveTurnId('turn-1'));
+
+      controller.dispatchAction({
+        componentId: 'pagination-1',
+        componentType: 'pagination',
+        action: 'selectPage',
+        payload: {page: 2},
+      });
+
+      expect(mockDispatchAction).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: 'selectPage',
+          surfaceId: 'ui-commerce-search',
+        })
+      );
+    });
+
+    it('does not dispatch when the active turn has no commerce surface', () => {
+      const controller = buildController();
+      const actions = getOrCreateGenerativeActions(generativeInterface);
+
+      fullEngine.mutate(actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'complete'}));
+      fullEngine.mutate(actions.initAgentResponse({turnId: 'turn-1'}));
+      fullEngine.mutate(actions.setActiveTurnId('turn-1'));
+
+      controller.dispatchAction({
+        componentId: 'pagination-1',
+        componentType: 'pagination',
+        action: 'selectPage',
+        payload: {page: 2},
+      });
+
+      expect(mockDispatchAction).not.toHaveBeenCalled();
+    });
+
+    it('does not dispatch while the active turn is still streaming', () => {
+      const controller = buildController();
+      const actions = getOrCreateGenerativeActions(generativeInterface);
+
+      fullEngine.mutate(
+        actions.createTurn({id: 'turn-1', prompt: 'wetsuits', status: 'streaming'})
+      );
+      fullEngine.mutate(actions.initAgentResponse({turnId: 'turn-1'}));
+      fullEngine.mutate(
+        actions.appendActivity({
+          turnId: 'turn-1',
+          activity: {
+            id: 'activity-1',
+            kind: 'a2ui-surface',
+            replace: false,
+            payload: {
+              messages: [
+                {createSurface: {surfaceType: 'commerceSearch', surfaceId: 'ui-commerce-search'}},
+              ],
+            },
+          },
+        })
+      );
+      fullEngine.mutate(actions.setActiveTurnId('turn-1'));
+
+      controller.dispatchAction({
+        componentId: 'pagination-1',
+        componentType: 'pagination',
+        action: 'selectPage',
+        payload: {page: 2},
+      });
+
+      expect(mockDispatchAction).not.toHaveBeenCalled();
     });
   });
 

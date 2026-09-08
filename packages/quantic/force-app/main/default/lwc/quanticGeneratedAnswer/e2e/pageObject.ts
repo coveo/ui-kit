@@ -5,7 +5,7 @@ import {
 } from '../../../../../../playwright/utils/analyticsMode';
 import {AnalyticsObject} from '../../../../../../playwright/page-object/analytics';
 import {isRgaEvaluationRequest} from '../../../../../../playwright/utils/requests';
-import type {AgentMessage} from './agentData';
+import type {AgentEvent} from '@coveo/platform-mock-api/agent';
 
 const minimumCitationTooltipDisplayDurationMs = 1500;
 const removeUnknownFields = (object: Record<string, unknown>) => {
@@ -512,7 +512,7 @@ export class GeneratedAnswerObject {
   }
 
   async mockAgentAnswerResponse(
-    body: Array<AgentMessage>
+    body: Array<AgentEvent>
   ) {
     await this.page.route('**/agents/*/answer', (route) => {
       let bodyText = '';
@@ -528,7 +528,7 @@ export class GeneratedAnswerObject {
   }
 
   async mockAgentFollowUpResponse(
-    bodies: Array<Array<AgentMessage>>
+    bodies: Array<Array<AgentEvent>>
   ) {
     let callCount = 0;
     await this.page.route('**/agents/*/follow-up', (route) => {

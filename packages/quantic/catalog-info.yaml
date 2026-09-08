@@ -11,4 +11,5 @@ spec:
   system: ui-kit
   dependsOn:
     - component:bueno
+    - component:coveo.analytics
     - component:headless

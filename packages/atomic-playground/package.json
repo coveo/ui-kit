@@ -11,11 +11,9 @@
   "devDependencies": {
     "@coveo/atomic": "workspace:*",
     "@coveo/headless": "workspace:*",
-    "@tailwindcss/postcss": "catalog:",
     "@tailwindcss/vite": "catalog:",
     "@types/node": "catalog:",
     "dayjs": "catalog:",
-    "postcss": "catalog:",
     "vite": "catalog:"
   }
 }

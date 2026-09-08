@@ -322,6 +322,60 @@ describe('atomic-result-list', () => {
       .toBeInTheDocument();
   });
 
+  describe.each<{display: ItemDisplayLayout}>([
+    {display: 'grid'},
+    {display: 'list'},
+    {display: 'table'},
+  ])('when appending results in the $display display', ({display}) => {
+    it('should preserve the existing atomic-result element', async () => {
+      const existingResult = buildFakeResult({
+        uniqueId: 'existing-result',
+        searchUid: 'initial-response',
+      });
+      const appendedResult = buildFakeResult({
+        uniqueId: 'appended-result',
+        searchUid: 'appended-response',
+      });
+
+      vi.mocked(buildResultList).mockReturnValue(
+        buildFakeResultList({
+          state: {
+            results: [existingResult],
+            searchResponseId: 'initial-response',
+          },
+        })
+      );
+
+      const element = await setupElement({display});
+
+      if (display === 'table') {
+        const mockTableTemplate = document.createDocumentFragment();
+        mockTableTemplate.appendChild(document.createElement('atomic-table-element'));
+        vi.spyOn(
+          // @ts-expect-error - mocking method on private property
+          element.resultTemplateProvider,
+          'getTemplateContent'
+        ).mockReturnValue(mockTableTemplate);
+        element.requestUpdate();
+        await element.updateComplete;
+      }
+
+      const existingElement = element.shadowRoot?.querySelector('atomic-result');
+
+      element.resultListState = {
+        ...element.resultListState,
+        results: [existingResult, appendedResult],
+        searchResponseId: 'initial-response',
+      };
+      await element.updateComplete;
+
+      const resultElements = element.shadowRoot?.querySelectorAll('atomic-result');
+
+      expect(resultElements).toHaveLength(2);
+      expect(resultElements?.item(0)).toBe(existingElement);
+    });
+  });
+
   describe.each<{display: ItemDisplayLayout}>([{display: 'grid'}, {display: 'list'}])(
     'when #display is $display',
     ({display}) => {

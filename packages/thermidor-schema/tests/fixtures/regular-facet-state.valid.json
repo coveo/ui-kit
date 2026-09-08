@@ -1,0 +1,24 @@
+{
+  "field": "brand",
+  "displayName": "Brand",
+  "values": [
+    {
+      "value": "Coveo",
+      "numberOfResults": 42,
+      "state": "selected"
+    }
+  ],
+  "hasActiveValues": true,
+  "canShowMoreValues": true,
+  "canShowLessValues": false,
+  "facetSearch": {
+    "query": "cov",
+    "canShowMoreResults": true,
+    "results": [
+      {
+        "value": "coveo",
+        "numberOfResults": 42
+      }
+    ]
+  }
+}

@@ -1,3 +1,25 @@
+## 3.61.1
+
+### Patch Changes
+
+- [#8335](https://github.com/coveo/ui-kit/pull/8335) [`94b9ec1`](https://github.com/coveo/ui-kit/commit/94b9ec1098673f370c9e1de1a702ce4119b6cf1b) - Remove a stale `sourceMappingURL` comment from the autoloader source.
+
+  `src/autoloader/index.ts` ended with `//# sourceMappingURL=index.js.map`, a fragment of compiled
+  output pasted into the file when the Lit migration was scaffolded. No source map is emitted for that
+  module, so the reference never resolved. Production bundles are unaffected — the comment is stripped
+  during the build — but any tool that consumes Atomic source directly, such as Storybook or the
+  playground, logged a source map read error for the module on every dev server start.
+
+- [#8389](https://github.com/coveo/ui-kit/pull/8389) [`f766993`](https://github.com/coveo/ui-kit/commit/f766993c34faa3ea4df05750de50b567f8995f9e) - Preserve existing commerce product cards when loading more products.
+
+- [#8259](https://github.com/coveo/ui-kit/pull/8259) [`1c0e996`](https://github.com/coveo/ui-kit/commit/1c0e9965842f9bc9124de0cb049f6c596ce28e20) - `atomic-product-field-condition` and `atomic-field-condition` now reevaluate their conditions on every update. `atomic-product-field-condition` no longer removes itself from the DOM when its conditions are not met, and `atomic-field-condition` no longer stays hidden once its conditions become true. Both toggle their `hidden` state instead.
+
+- [#8373](https://github.com/coveo/ui-kit/pull/8373) [`16404f8`](https://github.com/coveo/ui-kit/commit/16404f85bf54eeaaf748ac31103823fcf14f9610) - Wait for Quick View iframe content to load before rendering keyword highlights.
+
+- Updated dependencies [[`b48aa94`](https://github.com/coveo/ui-kit/commit/b48aa94f676580bf1530c5455c296e25fe4b252f), [`2901b89`](https://github.com/coveo/ui-kit/commit/2901b893b763b9636a9be2639346663e929ca09d)]:
+  - @coveo/headless@3.55.3
+  - @coveo/atomic-legacy@0.1.2
+
 ## 3.61.0
 
 ### Minor Changes

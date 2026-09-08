@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.thermidor.coveo.com/definitions/selectable-facet-value-state.schema.json",
+  "title": "SelectableFacetValueState",
+  "description": "The selection state of a facet value that supports selection but not exclusion (e.g. numeric and date facets). Constrained to 'idle' or 'selected'.",
+  "type": "string",
+  "enum": ["idle", "selected"]
+}

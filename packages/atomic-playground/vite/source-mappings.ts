@@ -1,9 +1,8 @@
 import {resolve} from 'node:path';
 import {generateExternalPackageMappings} from '../../atomic/scripts/externalPackageMappings.mjs';
+import {atomicPackageRoot} from '../../atomic/scripts/vite-source-plugins.js';
 
-const packagesDir = resolve(import.meta.dirname, '../..');
-
-const atomicSrc = resolve(packagesDir, 'atomic/src');
+const atomicSrc = resolve(atomicPackageRoot, 'src');
 
 /**
  * Bare specifiers the playground resolves to workspace source instead of built output.
@@ -35,5 +34,3 @@ export function resolveToSource(specifier: string): string | undefined {
   }
   return sourceMappings[specifier];
 }
-
-export const atomicPackageRoot = resolve(packagesDir, 'atomic');

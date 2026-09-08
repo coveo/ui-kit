@@ -1,7 +1,7 @@
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import {createUnifiedEndpointRequestSelector} from './unified-request-selector.js';
-import type {CommerceRequestModel} from './unified-endpoint-types.js';
+import type {A2uiAction, CommerceRequestModel} from './unified-endpoint-types.js';
 
 export function createConversationRequestBuilder(
   generativeInterface: InterfaceHandle,
@@ -12,10 +12,7 @@ export function createConversationRequestBuilder(
     cartInterface
   );
 
-  return function buildConversationRequest(
-    engine: FullEngine,
-    prompt: string
-  ): CommerceRequestModel {
+  function buildBaseRequest(engine: FullEngine): Omit<CommerceRequestModel, 'message' | 'action'> {
     const {cart, conversationSessionId, conversationToken, ...fromState} =
       engine.read(buildStateRequest);
     const navigatorContext = engine.getNavigatorContextProvider()?.();
@@ -26,8 +23,6 @@ export function createConversationRequestBuilder(
       country: fromState.country,
       currency: fromState.currency,
       clientId: navigatorContext?.clientId ?? undefined,
-      message: prompt,
-      action: null,
       conversationSessionId,
       conversationToken,
       context: {
@@ -42,5 +37,23 @@ export function createConversationRequestBuilder(
       },
       pinnedProducts: [],
     };
-  };
+  }
+
+  function buildConversationRequest(engine: FullEngine, prompt: string): CommerceRequestModel {
+    return {
+      ...buildBaseRequest(engine),
+      message: prompt,
+      action: null,
+    };
+  }
+
+  function buildActionRequest(engine: FullEngine, action: A2uiAction): CommerceRequestModel {
+    return {
+      ...buildBaseRequest(engine),
+      message: null,
+      action,
+    };
+  }
+
+  return {buildConversationRequest, buildActionRequest};
 }

@@ -1,0 +1,364 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.thermidor.coveo.com/components/regular-facet.schema.json",
+  "title": "RegularFacet",
+  "description": "Provides a string/specific-value facet for a commerce search surface. Renders selectable facet values, supports facet search, and dispatches value-selection, facet-search, and show-more/less actions.",
+  "allOf": [
+    {
+      "$ref": "https://schema.thermidor.coveo.com/base/component.schema.json"
+    }
+  ],
+  "properties": {
+    "componentType": {
+      "type": "string",
+      "const": "regular-facet"
+    },
+    "state": {
+      "$ref": "#/$defs/RegularFacetState"
+    },
+    "actions": {
+      "type": "object",
+      "required": [
+        "toggleSelect",
+        "toggleExclude",
+        "toggleSingleSelect",
+        "toggleSingleExclude",
+        "clearAllActiveValues",
+        "search",
+        "showMoreSearchResults",
+        "clearSearch",
+        "showMoreValues",
+        "showLessValues"
+      ],
+      "properties": {
+        "toggleSelect": {
+          "$ref": "#/$defs/RegularFacetToggleSelectAction"
+        },
+        "toggleExclude": {
+          "$ref": "#/$defs/RegularFacetToggleExcludeAction"
+        },
+        "toggleSingleSelect": {
+          "$ref": "#/$defs/RegularFacetToggleSingleSelectAction"
+        },
+        "toggleSingleExclude": {
+          "$ref": "#/$defs/RegularFacetToggleSingleExcludeAction"
+        },
+        "clearAllActiveValues": {
+          "$ref": "#/$defs/RegularFacetClearAllActiveValuesAction"
+        },
+        "search": {
+          "$ref": "#/$defs/RegularFacetSearchAction"
+        },
+        "showMoreSearchResults": {
+          "$ref": "#/$defs/RegularFacetShowMoreSearchResultsAction"
+        },
+        "clearSearch": {
+          "$ref": "#/$defs/RegularFacetClearSearchAction"
+        },
+        "showMoreValues": {
+          "$ref": "#/$defs/RegularFacetShowMoreValuesAction"
+        },
+        "showLessValues": {
+          "$ref": "#/$defs/RegularFacetShowLessValuesAction"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "RegularFacetState": {
+      "title": "RegularFacetState",
+      "description": "The current regular facet state. Owned exclusively by the backend.",
+      "type": "object",
+      "required": [
+        "field",
+        "displayName",
+        "values",
+        "hasActiveValues",
+        "canShowMoreValues",
+        "canShowLessValues",
+        "facetSearch"
+      ],
+      "properties": {
+        "field": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "description": "The index field the facet is built on."
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "description": "Human-readable name for the facet."
+        },
+        "values": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 1000,
+          "description": "The facet values available for selection.",
+          "items": {
+            "$ref": "#/$defs/RegularFacetValue"
+          }
+        },
+        "hasActiveValues": {
+          "type": "boolean",
+          "description": "Whether at least one facet value is not in the idle state (i.e. selected or excluded)."
+        },
+        "canShowMoreValues": {
+          "type": "boolean",
+          "description": "Whether more facet values can be shown."
+        },
+        "canShowLessValues": {
+          "type": "boolean",
+          "description": "Whether fewer facet values can be shown."
+        },
+        "facetSearch": {
+          "$ref": "#/$defs/RegularFacetSearch",
+          "description": "The current facet search state."
+        }
+      },
+      "additionalProperties": false
+    },
+    "RegularFacetValue": {
+      "title": "RegularFacetValue",
+      "description": "A single selectable value within a regular facet.",
+      "type": "object",
+      "required": ["value", "numberOfResults", "state"],
+      "properties": {
+        "value": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024,
+          "description": "The raw facet value."
+        },
+        "numberOfResults": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999999999,
+          "description": "The number of results matching this facet value."
+        },
+        "state": {
+          "$ref": "https://schema.thermidor.coveo.com/definitions/facet-value-state.schema.json",
+          "description": "The selection state of this facet value."
+        }
+      },
+      "additionalProperties": false
+    },
+    "RegularFacetSearch": {
+      "title": "RegularFacetSearch",
+      "description": "The facet search state for a regular facet.",
+      "type": "object",
+      "required": ["query", "canShowMoreResults", "results"],
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 1024,
+          "description": "The current facet search query."
+        },
+        "canShowMoreResults": {
+          "type": "boolean",
+          "description": "Whether more facet search results can be shown for the current query."
+        },
+        "results": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 1000,
+          "description": "The current facet search results.",
+          "items": {
+            "$ref": "#/$defs/RegularFacetSearchResult"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "RegularFacetSearchResult": {
+      "title": "RegularFacetSearchResult",
+      "description": "A single result returned by a regular facet search. Facet search only returns idle (unselected) values, so it carries no selection state.",
+      "type": "object",
+      "required": ["value", "numberOfResults"],
+      "properties": {
+        "value": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024,
+          "description": "The raw facet value. Pass this to toggleSelect/toggleExclude to act on it."
+        },
+        "numberOfResults": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999999999,
+          "description": "The number of results matching this facet search value."
+        }
+      },
+      "additionalProperties": false
+    },
+    "RegularFacetToggleSelectAction": {
+      "title": "regularFacetToggleSelect",
+      "description": "Toggles the selected state of a facet value.",
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ],
+      "properties": {
+        "payload": {
+          "type": "object",
+          "required": ["value"],
+          "properties": {
+            "value": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024,
+              "description": "The raw facet value to toggle selection for."
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "RegularFacetToggleExcludeAction": {
+      "title": "regularFacetToggleExclude",
+      "description": "Toggles the excluded state of a facet value.",
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ],
+      "properties": {
+        "payload": {
+          "type": "object",
+          "required": ["value"],
+          "properties": {
+            "value": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024,
+              "description": "The raw facet value to toggle exclusion for."
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "RegularFacetToggleSingleSelectAction": {
+      "title": "regularFacetToggleSingleSelect",
+      "description": "Toggles the selected state of a facet value, deselecting all other values (single-select behavior).",
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ],
+      "properties": {
+        "payload": {
+          "type": "object",
+          "required": ["value"],
+          "properties": {
+            "value": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024,
+              "description": "The raw facet value to single-select."
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "RegularFacetToggleSingleExcludeAction": {
+      "title": "regularFacetToggleSingleExclude",
+      "description": "Toggles the excluded state of a facet value, clearing all other selections/exclusions (single-exclude behavior).",
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ],
+      "properties": {
+        "payload": {
+          "type": "object",
+          "required": ["value"],
+          "properties": {
+            "value": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024,
+              "description": "The raw facet value to single-exclude."
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "RegularFacetClearAllActiveValuesAction": {
+      "title": "regularFacetClearAllActiveValues",
+      "description": "Resets all facet values to the idle state, clearing every selection and exclusion.",
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ]
+    },
+    "RegularFacetSearchAction": {
+      "title": "search",
+      "description": "Runs a facet search with the given query.",
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ],
+      "properties": {
+        "payload": {
+          "type": "object",
+          "required": ["query"],
+          "properties": {
+            "query": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 1024,
+              "description": "The facet search query to run."
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "RegularFacetShowMoreSearchResultsAction": {
+      "title": "regularFacetShowMoreSearchResults",
+      "description": "Requests the next page of facet search results for the current query.",
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ]
+    },
+    "RegularFacetClearSearchAction": {
+      "title": "regularFacetClearSearch",
+      "description": "Clears the facet search query and results.",
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ]
+    },
+    "RegularFacetShowMoreValuesAction": {
+      "title": "showMoreValues",
+      "description": "Increases the number of facet values shown.",
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ]
+    },
+    "RegularFacetShowLessValuesAction": {
+      "title": "showLessValues",
+      "description": "Decreases the number of facet values shown.",
+      "allOf": [
+        {
+          "$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"
+        }
+      ]
+    }
+  }
+}

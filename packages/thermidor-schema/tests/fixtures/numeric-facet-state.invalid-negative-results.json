@@ -1,0 +1,14 @@
+{
+  "field": "price",
+  "displayName": "Price",
+  "values": [
+    {
+      "start": 0,
+      "end": 100,
+      "numberOfResults": -1,
+      "state": "idle"
+    }
+  ],
+  "canShowMoreValues": false,
+  "canShowLessValues": false
+}

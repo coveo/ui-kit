@@ -94,6 +94,12 @@ export default {
         '**/*.css', //TODO: Find a better solution
       ],
     },
+    'packages/thermidor-schema': {
+      entry: ['src/index.ts', 'src/generated/schemas.ts'],
+      ignoreUnresolved: [
+        /^\.\.\/\.\.\/thermidor-contracts\/src\/generated\/catalog-contracts\.js$/,
+      ],
+    },
     'samples/headless/commerce-react': {
       // ShowMore and ProductsPerPage are kept as reference examples but are not
       // wired into the UI, so Knip should not flag them as unused files.
@@ -141,7 +147,7 @@ export default {
         'src/cdn.ts',
         'src/**/*.e2e.ts',
         'dev/**/*.{ts,js,mjs}',
-        'scripts/**/*.{mjs,js}',
+        'scripts/**/*.{mjs,js,ts}',
         'csp/**/*.{mjs,js}',
         'custom-elements-manifest.config.mjs',
         // Build-generated barrel indexes (created by `pnpm build:lit`).

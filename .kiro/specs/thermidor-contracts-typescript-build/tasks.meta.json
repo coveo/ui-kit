@@ -1,0 +1,588 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Create `packages/thermidor-schema/package.json` with monorepo-aligned versions": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056056
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786380766858
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786380865540
+      }
+    ],
+    "1.2 Create `packages/thermidor-schema/tsconfig.json`": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056083
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786380767636
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786380866347
+      }
+    ],
+    "1.3 Create `packages/thermidor-schema/turbo.json` with package-level task graph": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056111
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786380768508
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786380867243
+      }
+    ],
+    "1.4 Create `packages/thermidor-schema/vitest.config.ts`": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056153
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786380769375
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786380868109
+      }
+    ],
+    "2.1 Create `packages/thermidor-schema/schema/controllers/product-list.schema.json`": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056177
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786380874608
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786381764919
+      }
+    ],
+    "2.2 Create `packages/thermidor-schema/schema/controllers/cart.schema.json`": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056203
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786380875888
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786381765821
+      }
+    ],
+    "3.1 Add local devDependencies (`quicktype-core@26.0.0`, `ajv@8.20.0`, `ajv-formats@3.0.1`)": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056228
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786381785502
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786382029590
+      }
+    ],
+    "3.2 Create `packages/thermidor-schema/scripts/validate-schema.ts`": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056252
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786381786698
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786382030477
+      }
+    ],
+    "3.3 Create `packages/thermidor-schema/scripts/generate-zod.ts`": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056276
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786381787568
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786382031182
+      }
+    ],
+    "3.4 Create `packages/thermidor-schema/scripts/check-freshness.ts`": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056302
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786381788559
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786382032126
+      }
+    ],
+    "4.1 Run schema validation and generation to produce `src/generated/schemas.ts`": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056326
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786382045331
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786382057559
+      }
+    ],
+    "4.2 Create `packages/thermidor-schema/src/index.ts` barrel re-export": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056352
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786382061903
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786382163979
+      }
+    ],
+    "4.3 Run build to produce `dist/`": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056380
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786382168234
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786382961056
+      }
+    ],
+    "5. Checkpoint - Ensure generation and build succeed": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056408
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786382968896
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786382981387
+      }
+    ],
+    "6.1 Create valid and invalid fixtures for product-list contract": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056442
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383005246
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383012662
+      }
+    ],
+    "6.2 Create valid and invalid fixtures for cart contract": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056466
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383006059
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383013452
+      }
+    ],
+    "6.3 Create valid and invalid fixtures for setItems payload": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056492
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383006829
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383014201
+      }
+    ],
+    "6.4 Create valid and invalid fixtures for updateItemQuantity payload": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056517
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383007695
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383015105
+      }
+    ],
+    "7.1 Create `tests/schema-validation.test.ts`": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056543
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383032733
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383234270
+      }
+    ],
+    "7.2 Create `tests/projection.test.ts`": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056566
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383033546
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383235003
+      }
+    ],
+    "7.3 Create `tests/freshness.test.ts`": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056592
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383034327
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383235791
+      }
+    ],
+    "7.4 Create `tests/contract.test.ts`": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056616
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383243187
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383485458
+      }
+    ],
+    "7.5 Create `tests/canonical-ids.test.ts`": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056644
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383035275
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383236585
+      }
+    ],
+    "7.6 Create `tests/boundary.test.ts`": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056670
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383036129
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383237385
+      }
+    ],
+    "7.7 Create `tests/pack.test.ts`": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056696
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383244017
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383486297
+      }
+    ],
+    "7.8 Create `tests/spot-check-equivalence.test.ts`": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056722
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383244961
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383484722
+      }
+    ],
+    "8. Checkpoint - Ensure all test suites pass": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056747
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383493258
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383499786
+      }
+    ],
+    "9.1 Create `packages/thermidor-schema/ADAPTATIONS.md`": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056778
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383500638
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383594276
+      }
+    ],
+    "9.2 Create `packages/thermidor-schema/CONSUMER-HANDOFF.md`": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056820
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383501537
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383595128
+      }
+    ],
+    "10.1 Run complete Turbo pipeline and verify end-to-end success": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056846
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383601027
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383618991
+      }
+    ],
+    "11. Final checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786378056872
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383623746
+      },
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383630341
+      }
+    ],
+    "1. Scaffold package structure and configuration": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786380868137
+      }
+    ],
+    "2. Copy JSON Schema inputs from external reference": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786381765854
+      }
+    ],
+    "3. Create and adapt generator/validation scripts": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786382032169
+      }
+    ],
+    "4. Run generation and build pipeline": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786382961088
+      }
+    ],
+    "6. Create test fixtures": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383015144
+      }
+    ],
+    "7. Create test suites": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383486335
+      }
+    ],
+    "9. Create documentation artifacts": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383595168
+      }
+    ],
+    "10. Full pipeline validation": [
+      {
+        "executionId": "c9ae2829-e935-4a49-8103-22a8e2f5383d",
+        "chatSessionId": "sess_4a1fea5d-8482-4cba-9c70-d3bcb40bbf7d",
+        "timestamp": 1786383619026
+      }
+    ]
+  }
+}

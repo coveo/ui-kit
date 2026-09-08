@@ -1,3 +1,12 @@
+## 3.44.2
+
+### Patch Changes
+
+- [#8222](https://github.com/coveo/ui-kit/pull/8222) [`f5b3816`](https://github.com/coveo/ui-kit/commit/f5b38169eec0c68e21acbd2fba5a7e74fb88dae1) - Refactored the quantic tab bar component to improve performance.
+
+- Updated dependencies [[`b48aa94`](https://github.com/coveo/ui-kit/commit/b48aa94f676580bf1530c5455c296e25fe4b252f), [`2901b89`](https://github.com/coveo/ui-kit/commit/2901b893b763b9636a9be2639346663e929ca09d)]:
+  - @coveo/headless@3.55.3
+
 ## 3.44.1
 
 ### Patch Changes

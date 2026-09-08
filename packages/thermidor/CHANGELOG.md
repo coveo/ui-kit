@@ -1,5 +1,11 @@
 # @coveo/thermidor
 
+## 0.0.3
+
+### Patch Changes
+
+- [#8319](https://github.com/coveo/ui-kit/pull/8319) [`6917368`](https://github.com/coveo/ui-kit/commit/69173688c232edd4beced6df237795ec23e89747) - Export schema-derived remote controller contract, state, and action types from the public package entry point.
+
 ## 0.0.2
 
 ### Patch Changes

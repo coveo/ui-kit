@@ -1,0 +1,18 @@
+{
+  "field": "brand",
+  "displayName": "Brand",
+  "values": [
+    {
+      "value": "Coveo",
+      "numberOfResults": 42,
+      "state": "highlighted"
+    }
+  ],
+  "canShowMoreValues": true,
+  "canShowLessValues": false,
+  "facetSearch": {
+    "query": "",
+    "canShowMoreResults": false,
+    "results": []
+  }
+}

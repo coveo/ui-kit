@@ -1,6 +1,6 @@
 {
   "name": "@coveo/ui-kit-sample-headless-search-react",
-  "version": "3.55.2",
+  "version": "3.55.3",
   "description": "Minimal search UI built with @coveo/headless and React",
   "repository": {
     "type": "git",

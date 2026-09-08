@@ -87,30 +87,38 @@ export type UseCaseInterfaceMap = {
   search: SearchInterface;
 };
 
-export type RoutedUseCase = 'commerceSearch' | 'search';
+/**
+ * Use cases that carry a non-serializable interface instance (legacy hydration).
+ */
+export type HydratedUseCase = 'commerceSearch' | 'search';
+
+/**
+ * All routed use cases that carry a non-serializable interface instance (legacy hydration).
+ */
+export type RoutedUseCase = HydratedUseCase;
 
 /**
  * The serializable portion of a routed interface stored in state.
  * Does NOT contain the non-serializable interface instance.
  */
-export type SerializableRoutedInterface = {
-  [K in RoutedUseCase]: {
-    useCase: K;
-  };
-}[RoutedUseCase];
+export type SerializableRoutedInterface = {[K in HydratedUseCase]: {useCase: K}}[HydratedUseCase];
 
 /**
  * The full routed interface exposed to public consumers.
- * Contains the non-serializable interface instance merged back from the registry.
+ * Contains the non-serializable interface instance merged back from the registry
+ * for hydrated use cases.
  */
 export type RoutedInterface = {
-  [K in RoutedUseCase]: {
-    useCase: K;
-    interface: UseCaseInterfaceMap[K];
-  };
-}[RoutedUseCase];
+  [K in HydratedUseCase]: {useCase: K; interface: UseCaseInterfaceMap[K]};
+}[HydratedUseCase];
 
 export interface AgentResponse {
+  /**
+   * The latest server-owned AG-UI state snapshot for this turn.
+   * Thermidor retains this opaque object without coupling it to a UI protocol.
+   */
+  state: Record<string, unknown>;
+
   /**
    * The ordered messages received from the agent during streaming.
    */
@@ -120,6 +128,13 @@ export interface AgentResponse {
    * The opaque A2UI surfaces received during streaming.
    */
   surfaces: A2UISurface[];
+
+  /**
+   * Structured activities emitted by the agent during streaming.
+   * Thermidor keeps each activity opaque; applications select and interpret the
+   * activity kinds they support.
+   */
+  activities: Activity[];
 
   /**
    * An ordered sequence of reasoning steps that preserves the temporal
@@ -195,6 +210,16 @@ export interface AgentMessage {
 export type A2UISurface = Record<string, unknown> & {
   __thermidorActivityId?: string;
 };
+
+/**
+ * Represents a single activity emitted during an agent response turn.
+ */
+export interface Activity {
+  id: string;
+  kind: string;
+  replace: boolean;
+  payload: Record<string, unknown>;
+}
 
 export interface GenerativeState {
   /**

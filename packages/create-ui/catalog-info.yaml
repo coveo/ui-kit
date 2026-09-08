@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: create-ui
+  title: '@coveo/create-ui'
+  description: Scaffold a Coveo UI project (Atomic or Headless) from the official samples.
+spec:
+  type: library
+  lifecycle: production
+  owner: group:default/dxui
+  system: ui-kit

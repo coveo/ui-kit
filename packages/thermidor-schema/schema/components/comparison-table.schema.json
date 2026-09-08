@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.thermidor.coveo.com/components/comparison-table.schema.json",
+  "title": "ComparisonTable",
+  "description": "Renders a tabular product comparison with attribute columns. Read-only: the product set and attributes are owned by the backend.",
+  "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/component.schema.json"}],
+  "properties": {
+    "componentType": {
+      "type": "string",
+      "const": "comparison-table"
+    },
+    "state": {"$ref": "#/$defs/ComparisonTableState"},
+    "actions": {
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "ComparisonTableState": {
+      "title": "ComparisonTableState",
+      "description": "The comparison data to render. Contains a list of products with their attribute values and the attribute descriptors defining the columns.",
+      "type": "object",
+      "required": ["products", "attributes"],
+      "properties": {
+        "products": {
+          "type": "array",
+          "description": "Products to compare, each with attribute values keyed by attribute key.",
+          "items": {
+            "$ref": "https://schema.thermidor.coveo.com/definitions/comparison-product.schema.json"
+          }
+        },
+        "attributes": {
+          "type": "array",
+          "description": "Attribute descriptors defining the comparison columns.",
+          "items": {
+            "$ref": "https://schema.thermidor.coveo.com/definitions/comparison-attribute.schema.json"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
