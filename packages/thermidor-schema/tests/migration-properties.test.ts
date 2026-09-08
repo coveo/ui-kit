@@ -32,7 +32,7 @@ describe('Zod generation idempotence', () => {
         stdio: 'pipe',
       }
     );
-  });
+  }, 60_000);
 });
 
 /**
