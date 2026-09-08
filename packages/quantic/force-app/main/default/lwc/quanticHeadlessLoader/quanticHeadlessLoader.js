@@ -92,9 +92,9 @@ const loadDependencies = async (element, headlessUseCase) => {
 };
 
 /**
- * Registers the callback to run after all components for an engine are initialized.
- * @param {Function} callback The callback to invoke with the initialized engine.
- * @param {string} engineId The ID of the engine.
+ * Registers a callback to run after the Headless engine has been initialized.
+ * @param {(engine: AnyEngine) => void} callback The callback to invoke with the initialized engine
+ * @throws {Error} If no engine is registered for the specified engine ID.
  */
 const setInitializedCallback = (callback, engineId) => {
   const engine = window.coveoHeadless?.[engineId];
@@ -135,8 +135,11 @@ const executeInitializedCallback = async (engineId) => {
       `Fatal error: unable to execute the initialization callback for engine ID: ${engineId}`,
       error
     );
-    // @ts-ignore
-    throw new Error(`Fatal error: unable to execute the initialization callback for engine ID: ${engineId}`, {cause: error});
+    throw new Error(
+      `Fatal error: unable to execute the initialization callback for engine ID: ${engineId}`,
+      // @ts-ignore Error constructor cause options are supported at runtime.
+      {cause: error}
+    );
   }
 };
 
@@ -221,8 +224,10 @@ async function initEngine(engineId) {
     const options = await engineState.options.promise;
     return engineState.engineConstructor(options);
   } catch (error) {
-    // @ts-ignore
-    throw new Error('Fatal error: unable to initialize Coveo Headless', {cause: error});
+    // @ts-ignore Error constructor cause options are supported at runtime.
+    throw new Error('Fatal error: unable to initialize Coveo Headless', {
+      cause: error,
+    });
   }
 }
 
@@ -243,8 +248,10 @@ const initQuanticStore = (engineId) => {
       engineState.bindings.store = Store.initialize();
     }
   } catch (error) {
-    // @ts-ignore
-    throw new Error('Fatal error: unable to initialize Quantic store', {cause: error});
+    // @ts-ignore Error constructor cause options are supported at runtime.
+    throw new Error('Fatal error: unable to initialize Quantic store', {
+      cause: error,
+    });
   }
 };
 
@@ -366,7 +373,7 @@ function getQuanticStore(engineId) {
  * callback are logged and reported through the component error UI.
  * @param element The component to initialize.
  * @param {string} engineId The ID of the engine.
- * @param {Function} initialize The component initialization callback function.
+ * @param {(engine: AnyEngine) => void} initialize The component initialization callback function.
  * @returns {Promise<void>} A promise that resolves after initialization handling completes.
  * @throws {Error} If the component was not registered before initialization.
  */
