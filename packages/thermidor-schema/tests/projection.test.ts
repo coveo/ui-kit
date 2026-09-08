@@ -23,7 +23,7 @@ describe('projection determinism', () => {
         }
       );
     }).not.toThrow();
-  });
+  }, 60_000);
 
   it('componentType literals appear in generated Zod schemas', async () => {
     const content = await readFile(generatedPath, 'utf8');

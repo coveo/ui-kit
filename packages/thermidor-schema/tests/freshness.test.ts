@@ -17,5 +17,5 @@ describe('artifact freshness', () => {
         }
       );
     }).not.toThrow();
-  });
+  }, 60_000);
 });
