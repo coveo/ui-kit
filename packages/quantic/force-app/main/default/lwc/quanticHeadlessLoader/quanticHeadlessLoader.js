@@ -135,10 +135,8 @@ const executeInitializedCallback = async (engineId) => {
       `Fatal error: unable to execute the initialization callback for engine ID: ${engineId}`,
       error
     );
-    throw new Error(
-      `Fatal error: unable to execute the initialization callback for engine ID: ${engineId}`,
-      {cause: error}
-    );
+    // @ts-ignore
+    throw new Error(`Fatal error: unable to execute the initialization callback for engine ID: ${engineId}`, {cause: error});
   }
 };
 
@@ -223,9 +221,8 @@ async function initEngine(engineId) {
     const options = await engineState.options.promise;
     return engineState.engineConstructor(options);
   } catch (error) {
-    throw new Error('Fatal error: unable to initialize Coveo Headless', {
-      cause: error,
-    });
+    // @ts-ignore
+    throw new Error('Fatal error: unable to initialize Coveo Headless', {cause: error});
   }
 }
 
@@ -246,9 +243,8 @@ const initQuanticStore = (engineId) => {
       engineState.bindings.store = Store.initialize();
     }
   } catch (error) {
-    throw new Error('Fatal error: unable to initialize Quantic store', {
-      cause: error,
-    });
+    // @ts-ignore
+    throw new Error('Fatal error: unable to initialize Quantic store', {cause: error});
   }
 };
 
