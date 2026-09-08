@@ -118,6 +118,54 @@ describe('ItemLayoutController', () => {
       expect(element2.classList.contains('display-list')).toBe(true);
     });
 
+    it('should apply only layout classes to shared sections while prefixed children receive layout and item classes', () => {
+      mockOptions.elementPrefix = 'atomic-recs-result';
+      controller = new ItemLayoutController(mockElement, mockOptions);
+      controller.hostConnected();
+
+      const mockRoot = document.createElement('div');
+      mockRoot.className = 'result-root';
+      const section = document.createElement('atomic-result-section-visual');
+      const child = document.createElement('atomic-recs-result-link');
+      mockRoot.appendChild(section);
+      mockRoot.appendChild(child);
+
+      vi.spyOn(mockElement.shadowRoot!, 'querySelector').mockReturnValue(mockRoot);
+
+      controller.hostUpdated();
+
+      expect(section.classList.contains('display-list')).toBe(true);
+      expect(section.classList.contains('density-normal')).toBe(true);
+      expect(section.classList.contains('image-icon')).toBe(true);
+      expect(section.classList.contains('custom-class')).toBe(false);
+      expect(section.classList.contains('extra-class')).toBe(false);
+      expect(child.classList.contains('display-list')).toBe(true);
+      expect(child.classList.contains('custom-class')).toBe(true);
+    });
+
+    it('should class shared sections but not prefixed children when classesOnly is true', () => {
+      mockOptions.elementPrefix = 'atomic-insight-result';
+      mockOptions.classesOnly = true;
+      controller = new ItemLayoutController(mockElement, mockOptions);
+      controller.hostConnected();
+
+      const mockRoot = document.createElement('div');
+      mockRoot.className = 'result-root';
+      const section = document.createElement('atomic-result-section-title');
+      const child = document.createElement('atomic-insight-result-children');
+      mockRoot.appendChild(section);
+      mockRoot.appendChild(child);
+
+      vi.spyOn(mockElement.shadowRoot!, 'querySelector').mockReturnValue(mockRoot);
+
+      controller.hostUpdated();
+
+      expect(section.classList.contains('display-list')).toBe(true);
+      expect(section.classList.contains('density-normal')).toBe(true);
+      expect(section.classList.contains('image-icon')).toBe(true);
+      expect(child.classList.length).toBe(0);
+    });
+
     it('should use MutationObserver when custom render function is present', () => {
       const mockRenderFunction = vi.fn();
       mockOptions.renderingFunction = vi.fn().mockReturnValue(mockRenderFunction);
