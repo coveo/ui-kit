@@ -39,7 +39,7 @@
       "dependsOn": ["build"],
       "outputs": []
     },
-    "e2e:pre-provisioned": {
+    "e2e": {
       "dependsOn": ["build:staticresources"],
       "inputs": [
         "$TURBO_DEFAULT$",
@@ -57,7 +57,7 @@
       "outputs": ["playwright-report/**", "blob-report/**", "test-results/**"],
       "cache": false
     },
-    "e2e:playwright": {
+    "e2e:pre-provisioned": {
       "dependsOn": ["@coveo/platform-mock-api#build"],
       "inputs": ["$TURBO_DEFAULT$"],
       "outputs": ["playwright-report/**", "blob-report/**", "test-results/**"],

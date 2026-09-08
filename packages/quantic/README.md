@@ -130,19 +130,19 @@ pnpm run deploy:examples MyCustomOrg
 To run Playwright tests, run:
 
 ```bash
-pnpm run e2e:playwright
+pnpm run e2e:pre-provisioned
 ```
 
 To run Playwright tests only for the scratch org where LWS is enabled, run:
 
 ```bash
-pnpm run e2e:playwright:lws-enabled
+pnpm run e2e:pre-provisioned:lws-enabled
 ```
 
 To run Playwright tests only for the scratch org where LWS is disabled, run:
 
 ```bash
-pnpm run e2e:playwright:lws-disabled
+pnpm run e2e:pre-provisioned:lws-disabled
 ```
 
 ### Run LWC unit tests for Quantic Components
