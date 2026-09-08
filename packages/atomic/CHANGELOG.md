@@ -1,3 +1,13 @@
+## 3.61.2
+
+### Patch Changes
+
+- [#8149](https://github.com/coveo/ui-kit/pull/8149) [`4e0bb15`](https://github.com/coveo/ui-kit/commit/4e0bb15910eb64175a65d1548b51882e164487f6) - Removed the legacy result template-system stylesheet and migrated the Insight, Recommendation, and result placeholder components to the sanitized template system. Result sections now receive their layout classes consistently across every interface, so per-section styling is applied by the shared result-section components instead of the removed monolithic stylesheet.
+
+- Updated dependencies [[`463927f`](https://github.com/coveo/ui-kit/commit/463927fd7fe3b41ed55879a0643267d0b2008595)]:
+  - @coveo/headless@3.55.4
+  - @coveo/atomic-legacy@0.1.3
+
 ## 3.61.1
 
 ### Patch Changes
