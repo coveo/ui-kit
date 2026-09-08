@@ -34,39 +34,5 @@
       "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
     }
   },
-  "additionalProperties": false,
-  "$defs": {
-    "SnapshotEntry": {
-      "title": "CommerceSearchSnapshotEntry",
-      "type": "object",
-      "required": ["componentType", "state", "actions"],
-      "properties": {
-        "componentType": {
-          "type": "string",
-          "const": "commerce-search"
-        },
-        "state": {
-          "type": "object",
-          "additionalProperties": false
-        },
-        "actions": {
-          "type": "object",
-          "properties": {},
-          "additionalProperties": false
-        },
-        "children": {
-          "type": "array",
-          "items": {
-            "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
-          },
-          "maxItems": 1000,
-          "default": []
-        },
-        "child": {
-          "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
-        }
-      },
-      "additionalProperties": false
-    }
-  }
+  "additionalProperties": false
 }

@@ -14,11 +14,6 @@ export type Type = z.infer<typeof TypeSchema>;
 // The selection state of a facet value, shared across all commerce facet components.
 //
 // The selection state of this facet value.
-//
-// The selection state of a facet value that supports selection but not exclusion (e.g.
-// numeric and date facets). Constrained to 'idle' or 'selected'.
-//
-// The selection state of this facet value (idle or selected; exclusion is not supported).
 
 export const FacetValueStateSchema = z.enum(['excluded', 'idle', 'selected']);
 export type FacetValueState = z.infer<typeof FacetValueStateSchema>;
@@ -337,127 +332,6 @@ export type CommerceSearchActions = z.infer<typeof CommerceSearchActionsSchema>;
 export const StateSchema = z.strictObject({});
 export type State = z.infer<typeof StateSchema>;
 
-export const FacetApplyCustomRangePayloadSchema = z.strictObject({
-  end: z.union([z.number(), z.string()]),
-  start: z.union([z.number(), z.string()]),
-});
-export type FacetApplyCustomRangePayload = z.infer<typeof FacetApplyCustomRangePayloadSchema>;
-
-export const PayloadClassSchema = z.strictObject({
-  query: z.string().max(1024),
-});
-export type PayloadClass = z.infer<typeof PayloadClassSchema>;
-
-export const SelectActionSchema = z.strictObject({
-  payload: SelectActionPayloadSchema,
-});
-export type SelectAction = z.infer<typeof SelectActionSchema>;
-
-export const SelectPageSchema = z.strictObject({
-  payload: SelectPagePayloadSchema,
-});
-export type SelectPage = z.infer<typeof SelectPageSchema>;
-
-export const CategoryFacetSelectPathSchema = z.strictObject({
-  payload: CategoryFacetSelectPathPayloadSchema,
-});
-export type CategoryFacetSelectPath = z.infer<typeof CategoryFacetSelectPathSchema>;
-
-export const SelectSortSchema = z.strictObject({
-  payload: SelectSortPayloadSchema,
-});
-export type SelectSort = z.infer<typeof SelectSortSchema>;
-
-export const SetPageSizeSchema = z.strictObject({
-  payload: SetPageSizePayloadSchema,
-});
-export type SetPageSize = z.infer<typeof SetPageSizeSchema>;
-
-export const SubmitQuerySchema = z.strictObject({
-  payload: SubmitQueryPayloadSchema,
-});
-export type SubmitQuery = z.infer<typeof SubmitQuerySchema>;
-
-export const RegularFacetToggleExcludeSchema = z.strictObject({
-  payload: RegularFacetToggleExcludePayloadSchema,
-});
-export type RegularFacetToggleExclude = z.infer<typeof RegularFacetToggleExcludeSchema>;
-
-export const FacetToggleSelectPayloadSchema = z.strictObject({
-  value: z.string().min(1).max(1024).optional(),
-  end: z.union([z.number(), z.string()]).optional(),
-  start: z.union([z.number(), z.string()]).optional(),
-});
-export type FacetToggleSelectPayload = z.infer<typeof FacetToggleSelectPayloadSchema>;
-
-export const RegularFacetToggleSingleExcludeSchema = z.strictObject({
-  payload: RegularFacetToggleSingleExcludePayloadSchema,
-});
-export type RegularFacetToggleSingleExclude = z.infer<typeof RegularFacetToggleSingleExcludeSchema>;
-
-export const FacetToggleSingleSelectPayloadSchema = z.strictObject({
-  value: z.string().min(1).max(1024).optional(),
-  end: z.union([z.number(), z.string()]).optional(),
-  start: z.union([z.number(), z.string()]).optional(),
-});
-export type FacetToggleSingleSelectPayload = z.infer<typeof FacetToggleSingleSelectPayloadSchema>;
-
-export const UpdateItemQuantitySchema = z.strictObject({
-  payload: UpdateItemQuantityPayloadSchema,
-});
-export type UpdateItemQuantity = z.infer<typeof UpdateItemQuantitySchema>;
-
-export const FacetCustomRangeSchema = z.strictObject({
-  end: z.union([z.number(), z.string()]),
-  numberOfResults: z.number().int().min(0),
-  start: z.union([z.number(), z.string()]),
-});
-export type FacetCustomRange = z.infer<typeof FacetCustomRangeSchema>;
-
-export const PurpleRegularFacetSearchResultSchema = z.strictObject({
-  numberOfResults: z.number().int().min(0),
-  value: z.string().min(1).max(1024),
-  path: z.array(z.string()).optional(),
-});
-export type PurpleRegularFacetSearchResult = z.infer<typeof PurpleRegularFacetSearchResultSchema>;
-
-export const ProductElementSchema = z.strictObject({
-  additionalFields: z.record(z.string(), z.unknown()).optional(),
-  children: z.array(ProductSchema).optional(),
-  clickUri: z.url().optional(),
-  ec_brand: z.string().optional(),
-  ec_category: z.array(z.string()).optional(),
-  ec_color: z.string().optional(),
-  ec_description: z.string().optional(),
-  ec_images: z.array(z.url()).optional(),
-  ec_in_stock: z.boolean().optional(),
-  ec_item_group_id: z.string().optional(),
-  ec_item_group_name: z.string().optional(),
-  ec_name: z.string().optional(),
-  ec_price: z.number().optional(),
-  ec_promo_price: z.number().optional(),
-  ec_rating: z.union([z.number().min(0).max(5), z.null()]).optional(),
-  ec_shortdesc: z.string().optional(),
-  ec_thumbnails: z.array(z.url()).optional(),
-  permanentid: z.string().optional(),
-  imageUrl: z.url().optional(),
-  name: z.string().optional(),
-  price: z.number().optional(),
-  productId: z.string().optional(),
-  rating: z.number().min(0).max(5).optional(),
-  values: z.record(z.string(), z.string()).optional(),
-});
-export type ProductElement = z.infer<typeof ProductElementSchema>;
-
-export const FacetValueSchema = z.strictObject({
-  numberOfResults: z.number().int().min(0),
-  state: z.enum(['idle', 'selected', 'excluded']),
-  value: z.string().min(1).max(1024).optional(),
-  end: z.union([z.number(), z.string()]).optional(),
-  start: z.union([z.number(), z.string()]).optional(),
-});
-export type FacetValue = z.infer<typeof FacetValueSchema>;
-
 export const ProductCarouselSchema = z.strictObject({
   actions: ProductCarouselActionsSchema,
   child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
@@ -475,15 +349,15 @@ export const SetItemsPayloadSchema = z.strictObject({
 });
 export type SetItemsPayload = z.infer<typeof SetItemsPayloadSchema>;
 
-export const UpdateItemQuantityClassSchema = z.strictObject({
+export const UpdateItemQuantitySchema = z.strictObject({
   payload: UpdateItemQuantityPayloadSchema,
 });
-export type UpdateItemQuantityClass = z.infer<typeof UpdateItemQuantityClassSchema>;
+export type UpdateItemQuantity = z.infer<typeof UpdateItemQuantitySchema>;
 
-export const SelectActionClassSchema = z.strictObject({
+export const SelectActionSchema = z.strictObject({
   payload: SelectActionPayloadSchema,
 });
-export type SelectActionClass = z.infer<typeof SelectActionClassSchema>;
+export type SelectAction = z.infer<typeof SelectActionSchema>;
 
 export const NextActionsStateSchema = z.strictObject({
   actions: z.array(ActionItemSchema),
@@ -515,20 +389,20 @@ export const ProductListSchema = z.strictObject({
 });
 export type ProductList = z.infer<typeof ProductListSchema>;
 
-export const SelectPageClassSchema = z.strictObject({
+export const SelectPageSchema = z.strictObject({
   payload: SelectPagePayloadSchema,
 });
-export type SelectPageClass = z.infer<typeof SelectPageClassSchema>;
+export type SelectPage = z.infer<typeof SelectPageSchema>;
 
-export const SetPageSizeClassSchema = z.strictObject({
+export const SetPageSizeSchema = z.strictObject({
   payload: SetPageSizePayloadSchema,
 });
-export type SetPageSizeClass = z.infer<typeof SetPageSizeClassSchema>;
+export type SetPageSize = z.infer<typeof SetPageSizeSchema>;
 
-export const SelectSortClassSchema = z.strictObject({
+export const SelectSortSchema = z.strictObject({
   payload: SelectSortPayloadSchema,
 });
-export type SelectSortClass = z.infer<typeof SelectSortClassSchema>;
+export type SelectSort = z.infer<typeof SelectSortSchema>;
 
 export const SortStateSchema = z.strictObject({
   appliedSort: SortCriterionSchema,
@@ -536,30 +410,30 @@ export const SortStateSchema = z.strictObject({
 });
 export type SortState = z.infer<typeof SortStateSchema>;
 
-export const SubmitQueryClassSchema = z.strictObject({
+export const SubmitQuerySchema = z.strictObject({
   payload: SubmitQueryPayloadSchema,
 });
-export type SubmitQueryClass = z.infer<typeof SubmitQueryClassSchema>;
+export type SubmitQuery = z.infer<typeof SubmitQuerySchema>;
 
-export const PurpleSearchSchema = z.strictObject({
+export const SearchSchema = z.strictObject({
   payload: SearchPayloadSchema,
 });
-export type PurpleSearch = z.infer<typeof PurpleSearchSchema>;
+export type Search = z.infer<typeof SearchSchema>;
 
-export const ToggleExcludeClassSchema = z.strictObject({
+export const RegularFacetToggleExcludeSchema = z.strictObject({
   payload: RegularFacetToggleExcludePayloadSchema,
 });
-export type ToggleExcludeClass = z.infer<typeof ToggleExcludeClassSchema>;
+export type RegularFacetToggleExclude = z.infer<typeof RegularFacetToggleExcludeSchema>;
 
 export const RegularFacetToggleSelectSchema = z.strictObject({
   payload: RegularFacetToggleSelectPayloadSchema,
 });
 export type RegularFacetToggleSelect = z.infer<typeof RegularFacetToggleSelectSchema>;
 
-export const ToggleSingleExcludeClassSchema = z.strictObject({
+export const RegularFacetToggleSingleExcludeSchema = z.strictObject({
   payload: RegularFacetToggleSingleExcludePayloadSchema,
 });
-export type ToggleSingleExcludeClass = z.infer<typeof ToggleSingleExcludeClassSchema>;
+export type RegularFacetToggleSingleExclude = z.infer<typeof RegularFacetToggleSingleExcludeSchema>;
 
 export const RegularFacetToggleSingleSelectSchema = z.strictObject({
   payload: RegularFacetToggleSingleSelectPayloadSchema,
@@ -631,10 +505,10 @@ export const CategoryFacetSearchSchema = z.strictObject({
 });
 export type CategoryFacetSearch = z.infer<typeof CategoryFacetSearchSchema>;
 
-export const SelectPathClassSchema = z.strictObject({
+export const CategoryFacetSelectPathSchema = z.strictObject({
   payload: CategoryFacetSelectPathPayloadSchema,
 });
-export type SelectPathClass = z.infer<typeof SelectPathClassSchema>;
+export type CategoryFacetSelectPath = z.infer<typeof CategoryFacetSelectPathSchema>;
 
 export const FacetSearchClassSchema = z.strictObject({
   canShowMoreResults: z.boolean(),
@@ -667,45 +541,13 @@ export const CommerceSearchSchema = z.strictObject({
 });
 export type CommerceSearch = z.infer<typeof CommerceSearchSchema>;
 
-export const FacetApplyCustomRangeSchema = z.strictObject({
-  payload: FacetApplyCustomRangePayloadSchema,
-});
-export type FacetApplyCustomRange = z.infer<typeof FacetApplyCustomRangeSchema>;
-
-export const FluffySearchSchema = z.strictObject({
-  payload: PayloadClassSchema,
-});
-export type FluffySearch = z.infer<typeof FluffySearchSchema>;
-
 export const SetItemsSchema = z.strictObject({
   payload: SetItemsPayloadSchema,
 });
 export type SetItems = z.infer<typeof SetItemsSchema>;
 
-export const FacetToggleSelectSchema = z.strictObject({
-  payload: FacetToggleSelectPayloadSchema,
-});
-export type FacetToggleSelect = z.infer<typeof FacetToggleSelectSchema>;
-
-export const FacetToggleSingleSelectSchema = z.strictObject({
-  payload: FacetToggleSingleSelectPayloadSchema,
-});
-export type FacetToggleSingleSelect = z.infer<typeof FacetToggleSingleSelectSchema>;
-
-export const FacetSearchSchema = z.strictObject({
-  canShowMoreResults: z.boolean(),
-  query: z.string().max(1024),
-  results: z.array(PurpleRegularFacetSearchResultSchema).max(1000),
-});
-export type FacetSearch = z.infer<typeof FacetSearchSchema>;
-
-export const SetItemsClassSchema = z.strictObject({
-  payload: SetItemsPayloadSchema,
-});
-export type SetItemsClass = z.infer<typeof SetItemsClassSchema>;
-
 export const NextActionsBarActionsSchema = z.strictObject({
-  selectAction: SelectActionClassSchema,
+  selectAction: SelectActionSchema,
 });
 export type NextActionsBarActions = z.infer<typeof NextActionsBarActionsSchema>;
 
@@ -727,31 +569,31 @@ export const ComparisonTableSchema = z.strictObject({
 export type ComparisonTable = z.infer<typeof ComparisonTableSchema>;
 
 export const PaginationActionsSchema = z.strictObject({
-  selectPage: SelectPageClassSchema,
-  setPageSize: SetPageSizeClassSchema,
+  selectPage: SelectPageSchema,
+  setPageSize: SetPageSizeSchema,
 });
 export type PaginationActions = z.infer<typeof PaginationActionsSchema>;
 
 export const SortActionsSchema = z.strictObject({
-  selectSort: SelectSortClassSchema,
+  selectSort: SelectSortSchema,
 });
 export type SortActions = z.infer<typeof SortActionsSchema>;
 
 export const SearchBoxActionsSchema = z.strictObject({
-  submitQuery: SubmitQueryClassSchema,
+  submitQuery: SubmitQuerySchema,
 });
 export type SearchBoxActions = z.infer<typeof SearchBoxActionsSchema>;
 
 export const RegularFacetActionsSchema = z.strictObject({
   clearAllActiveValues: ActionSchema,
   clearSearch: ActionSchema,
-  search: PurpleSearchSchema,
+  search: SearchSchema,
   showLessValues: ActionSchema,
   showMoreSearchResults: ActionSchema,
   showMoreValues: ActionSchema,
-  toggleExclude: ToggleExcludeClassSchema,
+  toggleExclude: RegularFacetToggleExcludeSchema,
   toggleSelect: RegularFacetToggleSelectSchema,
-  toggleSingleExclude: ToggleSingleExcludeClassSchema,
+  toggleSingleExclude: RegularFacetToggleSingleExcludeSchema,
   toggleSingleSelect: RegularFacetToggleSingleSelectSchema,
 });
 export type RegularFacetActions = z.infer<typeof RegularFacetActionsSchema>;
@@ -791,7 +633,7 @@ export const CategoryFacetActionsSchema = z.strictObject({
   clearSearch: ActionSchema,
   clearSelectedPath: ActionSchema,
   search: CategoryFacetSearchSchema,
-  selectPath: SelectPathClassSchema,
+  selectPath: CategoryFacetSelectPathSchema,
   showLessValues: ActionSchema,
   showMoreSearchResults: ActionSchema,
   showMoreValues: ActionSchema,
@@ -809,8 +651,8 @@ export const CategoryFacetStateSchema = z.strictObject({
 export type CategoryFacetState = z.infer<typeof CategoryFacetStateSchema>;
 
 export const CartActionsSchema = z.strictObject({
-  setItems: SetItemsClassSchema,
-  updateItemQuantity: UpdateItemQuantityClassSchema,
+  setItems: SetItemsSchema,
+  updateItemQuantity: UpdateItemQuantitySchema,
 });
 export type CartActions = z.infer<typeof CartActionsSchema>;
 
@@ -933,31 +775,6 @@ export const CartSchema = z.strictObject({
   state: CartStateSchema,
 });
 export type Cart = z.infer<typeof CartSchema>;
-
-export const CompositionSnapshotEntrySchema = z.discriminatedUnion('componentType', [
-  ProductCarouselSchema,
-  CartSchema,
-  NextActionsBarSchema,
-  BundleDisplaySchema,
-  ComparisonTableSchema,
-  ProductListSchema,
-  PaginationSchema,
-  SortSchema,
-  SearchBoxSchema,
-  RegularFacetSchema,
-  NumericFacetSchema,
-  DateFacetSchema,
-  CategoryFacetSchema,
-  FacetManagerSchema,
-  CommerceSearchSchema,
-]);
-export type CompositionSnapshotEntry = z.infer<typeof CompositionSnapshotEntrySchema>;
-
-export const CompositionSnapshotSchema = z.strictObject({
-  components: z.record(z.string(), CompositionSnapshotEntrySchema),
-  rootId: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')),
-});
-export type CompositionSnapshot = z.infer<typeof CompositionSnapshotSchema>;
 
 export const ComponentContractsSchema = z.discriminatedUnion('componentType', [
   ProductCarouselSchema,
