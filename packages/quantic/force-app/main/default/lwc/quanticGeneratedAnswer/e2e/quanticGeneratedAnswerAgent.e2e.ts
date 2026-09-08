@@ -1,5 +1,4 @@
 import {testAgent, expect} from './fixture-agent';
-import agentData, {turnLimitErrorStream, genericErrorStream} from './agentData';
 import {
   analyticsModeTest,
   AnalyticsModeEnum,
@@ -22,7 +21,7 @@ analyticsModeTest.forEach((analytics) => {
 
     testAgent(
       'should handle multiple answer generation, feedback, clipboard, citation, and follow-up interactions',
-      async ({generatedAnswer, page}) => {
+      async ({generatedAnswer, page, agentData}) => {
         await testAgent.step(
           'should send a stream end analytics event when the first answer is generated',
           async () => {
@@ -61,7 +60,9 @@ analyticsModeTest.forEach((analytics) => {
             const clipboardContent = await page.evaluate(() =>
               navigator.clipboard.readText()
             );
-            expect(clipboardContent).toContain('Testing in Coveo');
+            expect(clipboardContent).toContain(
+              'Resolving Netflix Connection Issues with TiVo'
+            );
           }
         );
 
@@ -115,7 +116,7 @@ analyticsModeTest.forEach((analytics) => {
             const followUpRequest = await followUpRequestPromise;
             const followUpRequestBody = followUpRequest.postDataJSON();
             expect(followUpRequestBody.conversationId).toBe(
-              agentData.conversationId
+              agentData.threadId
             );
             expect(followUpRequestBody.conversationToken).toBe(
               agentData.conversationToken
@@ -128,7 +129,7 @@ analyticsModeTest.forEach((analytics) => {
           async () => {
             const followUpStreamEndPromise =
               generatedAnswer.waitForFollowUpStreamEndAnalytics(
-                agentData.answerId2
+                agentData.followUpAnswers[0].answerId
               );
             await followUpStreamEndPromise;
           }
@@ -139,7 +140,7 @@ analyticsModeTest.forEach((analytics) => {
           async () => {
             const likeAnalyticRequestPromise =
               generatedAnswer.waitForLikeGeneratedAnswerAnalyticsForId(
-                agentData.answerId2
+                agentData.followUpAnswers[0].answerId
               );
             // Should be the first like button, since the previous answers are collapsed and the follow-up answer is the only one visible.
             await generatedAnswer.clickNthLikeButton(0);
@@ -161,7 +162,7 @@ analyticsModeTest.forEach((analytics) => {
             const followUpRequest = await followUpRequestPromise;
             const followUpRequestBody = followUpRequest.postDataJSON();
             expect(followUpRequestBody.conversationId).toBe(
-              agentData.conversationId
+              agentData.threadId
             );
             expect(followUpRequestBody.conversationToken).toBe(
               agentData.conversationToken
@@ -174,7 +175,7 @@ analyticsModeTest.forEach((analytics) => {
           async () => {
             const followUpStreamEndPromise =
               generatedAnswer.waitForFollowUpStreamEndAnalytics(
-                agentData.answerId3
+                agentData.followUpAnswers[1].answerId
               );
             await followUpStreamEndPromise;
           }
@@ -185,7 +186,7 @@ analyticsModeTest.forEach((analytics) => {
           async () => {
             const dislikeAnalyticRequestPromise =
               generatedAnswer.waitForDislikeGeneratedAnswerAnalyticsForId(
-                agentData.answerId3
+                agentData.followUpAnswers[1].answerId
               );
             // Should be the first dislike button, since the previous answers are collapsed and the second follow-up answer is the only one visible.
             await generatedAnswer.clickNthDislikeButton(0);
@@ -216,7 +217,7 @@ analyticsModeTest.forEach((analytics) => {
           async () => {
             const likeAnalyticRequestPromise =
               generatedAnswer.waitForLikeGeneratedAnswerAnalyticsForId(
-                agentData.answerId1
+                agentData.headAnswer.answerId
               );
             await generatedAnswer.clickNthLikeButton(0);
             await likeAnalyticRequestPromise;
@@ -258,9 +259,11 @@ testAgent.describe('quantic generated answer - agent follow-up error handling', 
 
   testAgent(
     'should display a distinct turn-limit message when the follow-up SSE stream reports a turn-limit error',
-    async ({generatedAnswer}) => {
+    async ({generatedAnswer, agentData}) => {
       await generatedAnswer.streamEndAnalyticRequestPromise;
-      await generatedAnswer.mockAgentFollowUpResponse([turnLimitErrorStream]);
+      await generatedAnswer.mockAgentFollowUpResponse([
+        agentData.followUpTurnLimitError.messages,
+      ]);
 
       await generatedAnswer.typeFollowUpQuestion('follow-up question');
       await generatedAnswer.submitFollowUp();
@@ -279,9 +282,11 @@ testAgent.describe('quantic generated answer - agent follow-up error handling', 
 
   testAgent(
     'should display a generic error message when the follow-up SSE stream reports a generic error',
-    async ({generatedAnswer}) => {
+    async ({generatedAnswer, agentData}) => {
       await generatedAnswer.streamEndAnalyticRequestPromise;
-      await generatedAnswer.mockAgentFollowUpResponse([genericErrorStream]);
+      await generatedAnswer.mockAgentFollowUpResponse([
+        agentData.followUpGenericError.messages,
+      ]);
 
       await generatedAnswer.typeFollowUpQuestion('follow-up question');
       await generatedAnswer.submitFollowUp();
