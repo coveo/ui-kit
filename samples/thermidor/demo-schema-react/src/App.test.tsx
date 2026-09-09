@@ -16,9 +16,13 @@ vi.mock('./components/AppShell.js', () => ({
   AppShell: () => <div data-testid="app-shell">AppShell</div>,
 }));
 
+vi.mock('./components/StorefrontPreview/StorefrontPreviewPage.js', () => ({
+  StorefrontPreviewPage: () => <div data-testid="storefront-preview">Storefront Preview</div>,
+}));
+
 describe('App', () => {
-  it('renders AppShell inside providers', () => {
+  it('redirects directly to the storefront preview', async () => {
     render(<App />);
-    expect(screen.getByTestId('app-shell')).toBeDefined();
+    expect(await screen.findByTestId('storefront-preview')).toBeDefined();
   });
 });

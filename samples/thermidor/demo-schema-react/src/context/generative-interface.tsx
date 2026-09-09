@@ -4,10 +4,14 @@ import {useEngine} from './engine.js';
 
 const GenerativeInterfaceContext = createContext<GenerativeUnifiedInterface | null>(null);
 
-export function GenerativeInterfaceProvider({children}: PropsWithChildren) {
+interface GenerativeInterfaceProviderProps extends PropsWithChildren {
+  id?: string;
+}
+
+export function GenerativeInterfaceProvider({children, id}: GenerativeInterfaceProviderProps) {
   const engine = useEngine();
   const interfaceRef = useRef<GenerativeUnifiedInterface | null>(null);
-  interfaceRef.current ??= buildGenerativeUnifiedInterface({engine});
+  interfaceRef.current ??= buildGenerativeUnifiedInterface({engine, id});
 
   useEffect(() => {
     return () => interfaceRef.current?.dispose();

@@ -1,13 +1,17 @@
+import {HashRouter, Navigate, Route, Routes} from 'react-router';
 import {EngineProvider} from './context/engine.js';
-import {GenerativeInterfaceProvider} from './context/generative-interface.js';
-import {AppShell} from './components/AppShell.js';
+import {StorefrontPreviewPage} from './components/StorefrontPreview/StorefrontPreviewPage.js';
 
 export default function App() {
   return (
     <EngineProvider>
-      <GenerativeInterfaceProvider>
-        <AppShell />
-      </GenerativeInterfaceProvider>
+      <HashRouter>
+        <Routes>
+          <Route path="/" element={<Navigate to="/storefront-preview/home" replace />} />
+          <Route path="/storefront-preview/*" element={<StorefrontPreviewPage />} />
+          <Route path="*" element={<Navigate to="/storefront-preview/home" replace />} />
+        </Routes>
+      </HashRouter>
     </EngineProvider>
   );
 }

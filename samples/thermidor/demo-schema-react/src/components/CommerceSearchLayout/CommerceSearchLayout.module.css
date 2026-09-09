@@ -8,6 +8,11 @@
   margin-top: var(--space-2);
 }
 
+.embedded {
+  min-height: auto;
+  margin-top: 0;
+}
+
 .sidebar {
   grid-column: 1;
   padding: var(--space-5) var(--space-2);
@@ -38,7 +43,7 @@
   flex-wrap: wrap;
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 767px) {
   .page {
     grid-template-columns: 1fr;
     column-gap: 0;

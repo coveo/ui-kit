@@ -1,3 +1,4 @@
+import {useEffect, useRef} from 'react';
 import {buildUnifiedConverseController} from '@coveo/thermidor';
 import {A2UIProvider} from '@copilotkit/a2ui-renderer';
 import {useGenerativeInterface} from '../context/generative-interface.js';
@@ -11,7 +12,11 @@ import {ConversationPage} from './ConversationPage/index.js';
 
 const catalog = createThermidorCatalog();
 
-export function AppShell() {
+interface AppShellProps {
+  initialPrompt?: string;
+}
+
+export function AppShell({initialPrompt}: AppShellProps = {}) {
   const generativeInterface = useGenerativeInterface();
 
   const [controller, converseState] = useBuildController(() =>
@@ -19,6 +24,13 @@ export function AppShell() {
   );
 
   const nav = useNavigation(controller, converseState);
+  const submittedInitialPromptRef = useRef(false);
+
+  useEffect(() => {
+    if (!initialPrompt || submittedInitialPromptRef.current) return;
+    submittedInitialPromptRef.current = true;
+    nav.handleSubmit(initialPrompt);
+  }, [initialPrompt, nav]);
 
   return (
     <A2UIProvider catalog={catalog}>

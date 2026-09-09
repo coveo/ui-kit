@@ -128,3 +128,20 @@
   color: var(--color-text-muted);
   text-decoration: line-through;
 }
+
+.addToCart {
+  margin-top: var(--space-2);
+  padding: 9px var(--space-3);
+  color: #5b0ab6;
+  background: #f4edfc;
+  border: 1px solid #dec9f6;
+  border-radius: var(--radius-md);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.addToCart:hover {
+  color: #ffffff;
+  background: #6e15d5;
+}

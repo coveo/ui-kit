@@ -24,6 +24,7 @@ const SCHEMA_PROMPT_TEMPLATE_MAP: ReadonlyArray<SchemaPromptMapping> = [
     buildEvents: () => schemaBundleEvents,
   },
   {prompt: 'water sports', buildEvents: () => buildWaterSportsInitialEvents()},
+  {prompt: 'kayaks', buildEvents: () => buildWaterSportsInitialEvents('Kayaks')},
   {
     prompt: 'i like cold-water surfing. compare wetsuits for it',
     buildEvents: () => schemaComparisonEvents,

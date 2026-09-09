@@ -1,5 +1,6 @@
 import {useRemoteController} from '../controllers.js';
 import {useStateSource} from '../state-source-context.js';
+import {useOptionalPreviewSession} from '../../context/preview-session.js';
 import type {Product, ProductListProps} from '@coveo/thermidor-schema';
 import styles from './ProductList.module.css';
 
@@ -17,6 +18,7 @@ function resolveProductImage(product: Product): string | null {
 
 export function ProductListRenderer({props}: {props: ProductListProps}) {
   const stateSource = useStateSource();
+  const previewSession = useOptionalPreviewSession();
   const controller = useRemoteController(stateSource, props.componentId, props.componentType);
   const products = controller.state?.products ?? [];
 
@@ -36,14 +38,30 @@ export function ProductListRenderer({props}: {props: ProductListProps}) {
     <section>
       <div className={styles.grid} role="list" aria-label="Product list">
         {products.map((product: Product) => (
-          <ProductCard key={product.permanentid} product={product} />
+          <ProductCard
+            key={product.permanentid}
+            product={product}
+            onAddToCart={
+              previewSession &&
+              product.permanentid &&
+              product.ec_name &&
+              product.ec_price !== undefined
+                ? () =>
+                    previewSession.addToCart({
+                      id: product.permanentid,
+                      name: product.ec_name!,
+                      price: product.ec_promo_price ?? product.ec_price!,
+                    })
+                : undefined
+            }
+          />
         ))}
       </div>
     </section>
   );
 }
 
-function ProductCard({product}: {product: Product}) {
+function ProductCard({product, onAddToCart}: {product: Product; onAddToCart?: () => void}) {
   const imageUrl = resolveProductImage(product);
   const {ec_name: name, ec_brand: brand, ec_price: price, ec_promo_price: promoPrice} = product;
   const hasPromo = promoPrice !== undefined && price !== undefined && promoPrice < price;
@@ -74,6 +92,11 @@ function ProductCard({product}: {product: Product}) {
             <span className={styles.price}>{formatPrice(price)}</span>
           )}
         </div>
+        {onAddToCart && (
+          <button className={styles.addToCart} type="button" onClick={onAddToCart}>
+            Add to cart
+          </button>
+        )}
       </div>
     </article>
   );

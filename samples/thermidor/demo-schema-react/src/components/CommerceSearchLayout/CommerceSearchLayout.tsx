@@ -20,6 +20,7 @@ import styles from './CommerceSearchLayout.module.css';
 
 interface CommerceSearchLayoutProps {
   surfaceId: string;
+  embedded?: boolean;
 }
 
 interface ComponentEntry {
@@ -44,7 +45,7 @@ const FACET_COMPONENT_TYPES = new Set(['regular-facet', 'numeric-facet', 'catego
  *
  * Absent component slots render nothing (no error).
  */
-export function CommerceSearchLayout({surfaceId}: CommerceSearchLayoutProps) {
+export function CommerceSearchLayout({surfaceId, embedded = false}: CommerceSearchLayoutProps) {
   const {getSurface, clearSurfaces, processMessages, version} = useA2UI();
 
   const stateSource = useStateSource();
@@ -120,7 +121,7 @@ export function CommerceSearchLayout({surfaceId}: CommerceSearchLayoutProps) {
 
   return (
     <div data-testid="commerce-search-layout">
-      <div className={styles.page}>
+      <div className={`${styles.page} ${embedded ? styles.embedded : ''}`}>
         <aside className={styles.sidebar}>
           {facetManager && (
             <FacetManagerRenderer

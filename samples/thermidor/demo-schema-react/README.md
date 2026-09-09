@@ -1,8 +1,40 @@
-# Thermidor Demo Schema React
+# Thermidor Storefront Preview POC
 
-A React sample demonstrating contract-driven A2-UI rendering using `@coveo/thermidor-schema`.
+A React proof of concept for a Storefront Preview built with contract-driven A2-UI rendering
+using `@coveo/thermidor-schema`.
 
-This sample duplicates `samples/thermidor/demo-react` and refactors the A2-UI rendering layer to use catalog-based resolution with validated component contracts from `@coveo/thermidor-schema`.
+Opening the project redirects directly to `#/storefront-preview/home`.
+
+## POC scope
+
+The preview is one routed feature with a persistent shell and nested pages:
+
+| Route                                     | Surface                     | Session mode  |
+| ----------------------------------------- | --------------------------- | ------------- |
+| `/storefront-preview/home`                | Homepage and featured items | Deterministic |
+| `/storefront-preview/listings/kayaks`     | Listing preview             | Deterministic |
+| `/storefront-preview/search?q=kayaks`     | Search listing              | Deterministic |
+| `/storefront-preview/products/:productId` | Product detail              | Deterministic |
+| `/storefront-preview/cart`                | Cart                        | Deterministic |
+| `/storefront-preview/conversation`        | Agent conversation          | Agentic       |
+
+`PreviewSessionProvider` owns the long-lived Thermidor interface and the POC adapter state used
+by the top bar and cart. Every routed page mounts a separate `PageSessionProvider`, which creates
+and disposes its own Thermidor interface. There is deliberately no backend parent/child session
+relationship: components below a page can explicitly access both React contexts.
+
+The session inspector in the bottom-right corner makes this behavior observable. The main ID
+stays stable while navigating, while the page ID changes. Query and cart state are local adapters
+until the private Unified API contract exposes their authoritative state.
+
+### Intentional POC boundaries
+
+- `surfaceType` and `mode` are recorded on the page-session boundary but are not sent to Unified
+  API yet.
+- The homepage, product detail, and cart use local fixture data.
+- The top-bar suggestions are local fixtures standing in for agent-provided suggestions.
+- The schema mock returns a deterministic `kayaks` listing so routing, Data Components, facets,
+  actions, and cross-context cart updates can be exercised without a model call.
 
 ## Running locally with the Mock API
 
@@ -32,7 +64,7 @@ This sample uses the `/converse-schema` route on the mock server (via `VITE_COVE
 | `boating safety`                                                           | Discovery with 2 ProductCarousels (Life Jackets + Boating Safety Gear) and NextActionsBar                                  | ✅ Fully functional    |
 | Any other text (fallback)                                                  | NextActionsBar with suggested follow-up actions                                                                            | ✅ Fully functional    |
 | `what should i pack for a snorkeling trip?`                                | Conversational with surfaces (built for `demo-react`, legacy format)                                                       | ❌ Not supported       |
-| `kayaks`                                                                   | Routed commerce search (built for `demo-react`)                                                                            | ❌ Not supported       |
+| `kayaks`                                                                   | Stateful decomposed commerce listing scoped to kayaks, with facets, sorting, pagination, and cart actions                  | ✅ Fully functional    |
 | `surfboard care`                                                           | Routed search (built for `demo-react`)                                                                                     | ❌ Not supported       |
 
 ## Available scripts
@@ -47,17 +79,23 @@ This sample uses the `/converse-schema` route on the mock server (via `VITE_COVE
 
 ## Architecture
 
-The app is structured around three views managed by `AppShell`:
+The app uses one preview feature shell with nested routes:
 
 ```
-AppShell (providers + navigation)
-├── LandingPage        — Prompt input with suggestion pills
-├── ConversationPage   — Chat with A2-UI rendering (catalog-driven)
-└── SearchResultsPage  — Branches by routed use case: `decomposedCommerceSearch` renders CommerceSearchLayout (A2-UI catalog renderers);
-                          legacy `commerceSearch` renders the Headless classic-controller UI (product grid, facets, sort, pagination)
+EngineProvider
+└── StorefrontPreviewPage
+    └── PreviewSessionProvider (persistent main session)
+        ├── Admin bar + storefront top bar + search popover + cart
+        └── Routed page
+            └── PageSessionProvider (fresh interface per navigation)
+                ├── Home / Listing / Product / Cart
+                └── AppShell (fresh agent conversation)
 ```
 
-Navigation is determined by what the backend returns:
+Submitting the top-bar search navigates to the listing route. Choosing a conversational suggestion
+navigates to the conversation route and submits it through a fresh agentic session. The listing
+route submits its query through its isolated page interface and renders the returned
+`commerceSearch` surface through the A2-UI catalog.
 
 - Turn with `routedInterface`, use case `decomposedCommerceSearch` → SearchResultsPage rendering `CommerceSearchLayout` (A2-UI catalog renderers); legacy `commerceSearch` → SearchResultsPage rendering Headless classic controllers
 - Turn with `agentResponse` (reasoning steps / surfaces) → ConversationPage (A2-UI catalog renderers)

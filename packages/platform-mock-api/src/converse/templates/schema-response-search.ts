@@ -13,6 +13,8 @@ const CATEGORY_FACET_DISPLAY_LIMIT = 3;
 
 const FACET_SEARCH_PAGE_SIZE = 5;
 
+let currentSearchQuery = 'Water Sports';
+
 // The full candidate brand set for ec_brand, ordered as displayed. It is intentionally larger
 // than REGULAR_FACET_DISPLAY_LIMIT so the displayed values list is capped while facet search
 // can still surface the remaining brands. The set contains many brands sharing the substrings
@@ -1019,7 +1021,7 @@ function computeComponentsState(view: SearchViewState): Record<string, unknown> 
 
   return {
     'search-box-2': {
-      query: 'Water Sports',
+      query: currentSearchQuery,
     },
     'product-list-2': {
       products: pageProducts,
@@ -1106,8 +1108,12 @@ const surfaceActivitySnapshot: ConverseEvent = ActivitySnapshot({
 
 // A new "water sports" search resets the surface, so the initial events are built on demand:
 // each call resets the in-memory view to defaults and recomputes the initial state snapshot.
-function buildWaterSportsInitialEvents(): ConverseEvent[] {
-  currentView = {...DEFAULT_VIEW};
+function buildWaterSportsInitialEvents(query = 'Water Sports'): ConverseEvent[] {
+  currentView = {
+    ...DEFAULT_VIEW,
+    selectedCategoryPath: query.toLowerCase() === 'kayaks' ? ['Paddling', 'Kayaks'] : [],
+  };
+  currentSearchQuery = query;
   const initialStateSnapshot: ConverseEvent = StateSnapshot({
     components: computeComponentsState(currentView),
   });
