@@ -1496,8 +1496,8 @@ importers:
         specifier: 0.0.57
         version: 0.0.57
       '@coveo/thermidor-schema':
-        specifier: ^0.0.0
-        version: 0.0.0
+        specifier: 1.0.0-beta.1
+        version: 1.0.0-beta.1(zod@4.4.3)
       '@reduxjs/toolkit':
         specifier: 'catalog:'
         version: 2.12.0(react@19.2.8)
@@ -2331,8 +2331,8 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/thermidor
       '@coveo/thermidor-schema':
-        specifier: ^0.0.0
-        version: 0.0.0
+        specifier: 1.0.0-beta.1
+        version: 1.0.0-beta.1(zod@4.4.3)
       dompurify:
         specifier: 'catalog:'
         version: 3.4.14
@@ -3804,8 +3804,11 @@ packages:
   '@coveo/semantic-monorepo-tools@2.7.1':
     resolution: {integrity: sha512-yPUdpPgoZWxX/lyhQWaskwGXS4ZFLsOK4QVUyD+1BtOk/827vqw93Q7UD4aumuYMVKTDnGjjHOEmHl07nzUvYw==}
 
-  '@coveo/thermidor-schema@0.0.0':
-    resolution: {integrity: sha512-tukpjIG58ZvZmA8hPMsCjL/Q4XIQ3ZKDUxWIhov3RnZl3o1IJ4K+Ehhf2zZBQ1r5w5x0OATQ0U2CSFQ1PxXNWA==}
+  '@coveo/thermidor-schema@1.0.0-beta.1':
+    resolution: {integrity: sha512-05kDhtORsuTX6I+l7MevS9GR5zwZRIF5nN0q+Zf0hW3fy2X0NAV7rRU9c+mFauJAzrhjXBHfm4OP8SGrPlNY9g==}
+    engines: {node: '>=22.14.0'}
+    peerDependencies:
+      zod: ^4.4.3
 
   '@cspell/cspell-bundled-dicts@9.8.0':
     resolution: {integrity: sha512-MpXFpVyBPfJQ1YuVotljqUaGf6lWuf+fuWBBgs0PHFYTSjRPWuIxviAaCDnup/CJLLH60xQL4IlcQe4TOjzljw==}
@@ -18699,7 +18702,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@coveo/thermidor-schema@0.0.0': {}
+  '@coveo/thermidor-schema@1.0.0-beta.1(zod@4.4.3)':
+    dependencies:
+      zod: 4.4.3
 
   '@cspell/cspell-bundled-dicts@9.8.0':
     dependencies:
