@@ -6,7 +6,16 @@ import {
   ComponentContractsSchema,
   ProductCarouselPropsSchema,
   ProductSchema,
+  ProductSummarySchema,
+  ProductSummaryPropsSchema,
   CartItemSchema,
+  ComparisonTableSchema,
+  LayoutStackSchema,
+  LayoutStackPropsSchema,
+  QuerySummarySchema,
+  QuerySummaryPropsSchema,
+  PageSizeSchema,
+  PageSizePropsSchema,
 } from '@coveo/thermidor-schema';
 
 describe('thermidorCatalogDefinitions', () => {
@@ -78,6 +87,82 @@ describe('thermidorCatalogDefinitions', () => {
         item: {productId: 'p1', name: 'Trail shoes', price: 99.99, quantity: 0},
       }).success
     ).toBe(false);
+  });
+
+  it('registers the product-summary component in the catalog with a matching contract', () => {
+    expect(thermidorCatalogDefinitions).toHaveProperty('ProductSummary');
+    expect(ProductSummaryPropsSchema.shape.componentType.value).toBe(
+      ProductSummarySchema.shape.componentType.value
+    );
+    expect(
+      ProductSummarySchema.shape.state.safeParse({
+        categoryLabel: 'Surfboard',
+        product: {permanentid: 'p1', ec_name: 'Board', additionalFields: {}},
+      }).success
+    ).toBe(true);
+    // The single product may be null when no product is available for the slot.
+    expect(
+      ProductSummarySchema.shape.state.safeParse({categoryLabel: 'Surfboard', product: null})
+        .success
+    ).toBe(true);
+  });
+
+  it('registers the comparison-table leaf with heading, summary, products and attributes state', () => {
+    expect(thermidorCatalogDefinitions).toHaveProperty('ComparisonTable');
+    expect(
+      ComparisonTableSchema.shape.state.safeParse({
+        heading: 'Comparison',
+        summary: 'A short summary.',
+        products: [{productId: 'p1', name: 'Board', values: {brand: 'Acme'}}],
+        attributes: [{key: 'brand', label: 'Brand'}],
+      }).success
+    ).toBe(true);
+    // Products are required leaf state; omitting them is rejected.
+    expect(
+      ComparisonTableSchema.shape.state.safeParse({
+        heading: 'Comparison',
+        summary: 'A short summary.',
+        attributes: [],
+      }).success
+    ).toBe(false);
+  });
+
+  it('registers the layout-stack container in the catalog with an empty state contract', () => {
+    expect(thermidorCatalogDefinitions).toHaveProperty('LayoutStack');
+    expect(LayoutStackPropsSchema.shape.componentType.value).toBe(
+      LayoutStackSchema.shape.componentType.value
+    );
+    expect(LayoutStackSchema.shape.state.safeParse({}).success).toBe(true);
+    // A layout container holds no business data; extra state keys are rejected.
+    expect(LayoutStackSchema.shape.state.safeParse({direction: 'row'}).success).toBe(false);
+  });
+
+  it('registers the query-summary component with its aggregate state contract', () => {
+    expect(thermidorCatalogDefinitions).toHaveProperty('QuerySummary');
+    expect(QuerySummaryPropsSchema.shape.componentType.value).toBe(
+      QuerySummarySchema.shape.componentType.value
+    );
+    expect(
+      QuerySummarySchema.shape.state.safeParse({
+        query: 'Water Sports',
+        firstIndex: 1,
+        lastIndex: 12,
+        totalEntries: 43,
+      }).success
+    ).toBe(true);
+    // All four aggregate fields are required.
+    expect(QuerySummarySchema.shape.state.safeParse({query: 'x'}).success).toBe(false);
+  });
+
+  it('registers the page-size component with its own pageSize state and setPageSize action', () => {
+    expect(thermidorCatalogDefinitions).toHaveProperty('PageSize');
+    expect(PageSizePropsSchema.shape.componentType.value).toBe(
+      PageSizeSchema.shape.componentType.value
+    );
+    expect(PageSizeSchema.shape.state.safeParse({pageSize: 24}).success).toBe(true);
+    expect(
+      PageSizeSchema.shape.actions.shape.setPageSize.shape.payload.safeParse({pageSize: 48}).success
+    ).toBe(true);
   });
 
   it('exports the correct catalog ID', () => {

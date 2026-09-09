@@ -1,22 +1,19 @@
 import {useRemoteController} from '../controllers.js';
 import {useStateSource} from '../state-source-context.js';
-import type {PaginationProps} from '@coveo/thermidor-schema';
-import styles from './PageSizeSelector.module.css';
+import type {PageSizeProps} from '@coveo/thermidor-schema';
+import styles from './PageSize.module.css';
 
 const DEFAULT_PAGE_SIZE_OPTIONS = [12, 24, 48];
 
 /**
- * Renders a "Products per page" dropdown backed by the pagination component's
- * remote controller.
+ * A2-UI renderer for the `page-size` component: a "Products per page" selector.
  *
- * This is intentionally a plain React component rather than a catalog-registered
- * renderer: page size lives in the pagination component's state and the
- * `setPageSize` action is on the pagination contract. The pagination
- * component instance is already rendered by `PaginationRenderer`, and a catalog
- * maps a single renderer per component type. `DecomposedCommerceLayout` renders
- * this control directly using the pagination component's props.
+ * It reads the current page size from its own AG-UI state entry and dispatches `setPageSize`.
+ * The backend applies the change to the surface's paging so the sibling pagination component
+ * re-renders from the shared view. As a catalog renderer (one per component type), it is
+ * mounted through the A2-UI tree like any other component.
  */
-export function PageSizeSelector({props}: {props: PaginationProps}) {
+export function PageSizeRenderer({props}: {props: PageSizeProps}) {
   const stateSource = useStateSource();
   const controller = useRemoteController(stateSource, props.componentId, props.componentType);
 

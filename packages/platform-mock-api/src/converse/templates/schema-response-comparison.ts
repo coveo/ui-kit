@@ -1,4 +1,9 @@
-import {buildConversationResponse} from './shared.js';
+import {
+  CATALOG_ID,
+  buildConversationResponse,
+  buildValidatedSurface,
+  type A2uiComponentNode,
+} from './shared.js';
 import {
   ActivitySnapshot,
   StateSnapshot,
@@ -9,7 +14,32 @@ import {
 
 const runId = 'schema-comparison-462287cc';
 
-const CATALOG_ID = 'https://schema.thermidor.coveo.com/a2-ui/catalog.json';
+export type {A2uiComponentNode as ComparisonSurfaceNode};
+
+const COMPARISON_ROOT_ID = 'comparison-root';
+
+// The comparison surface is a single leaf node: the comparison-table owns its heading, AI
+// summary, compared products, and attribute descriptors in AG-UI state (keyed by componentId).
+// The node's `componentId` equals its `id` so AG-UI state correlates to the node.
+const COMPARISON_SURFACE_NODES: A2uiComponentNode[] = [
+  {
+    id: COMPARISON_ROOT_ID,
+    component: 'ComparisonTable',
+    props: {componentId: COMPARISON_ROOT_ID, componentType: 'comparison-table'},
+  },
+];
+
+export function buildValidatedComparisonSurface(
+  rootId: string,
+  nodes: A2uiComponentNode[]
+): Record<string, unknown> {
+  return buildValidatedSurface({
+    templateName: 'Mock_Comparison_Template',
+    surfaceId: 'comparison-surface',
+    rootId,
+    nodes,
+  });
+}
 
 const comparisonSurfaceActivity: ConverseEvent = ActivitySnapshot({
   messageId: 'activity-comparison-table',
@@ -19,21 +49,10 @@ const comparisonSurfaceActivity: ConverseEvent = ActivitySnapshot({
     messages: [
       {
         version: 'v1.0',
-        createSurface: {
-          surfaceId: 'comparison-surface',
-          surfaceType: 'converse',
-          catalogId: CATALOG_ID,
-          components: [
-            {
-              id: 'root',
-              component: 'ComparisonTable',
-              props: {
-                componentId: 'comparison-root',
-                componentType: 'comparison-table',
-              },
-            },
-          ],
-        },
+        createSurface: buildValidatedComparisonSurface(
+          COMPARISON_ROOT_ID,
+          COMPARISON_SURFACE_NODES
+        ),
       },
     ],
   },
@@ -49,7 +68,7 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
         version: 'v1.0',
         createSurface: {
           surfaceId: 'next-actions-surface',
-          surfaceType: 'converse',
+          rootId: 'root',
           catalogId: CATALOG_ID,
           components: [
             {
@@ -67,70 +86,73 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
   },
 });
 
-const stateSnapshot: ConverseEvent = StateSnapshot({
-  components: {
-    'comparison-root': {
-      products: [
-        {
-          productId: 'gid://shopify/ProductVariant/50674633900306',
-          name: 'ThermoFlex Winter Wetsuit - Red / M',
-          imageUrl:
-            'https://cdn.shopify.com/s/files/1/0910/6502/4786/files/8c6d80ac5b9b_bottom_left_852e0a5c-9b08-43bd-a6e5-67ec90d5d6f2.webp?v=1766164226',
-          price: 399.99,
-          rating: 3.6,
-          values: {
-            brand: 'Rip Curl',
-            standout: '7mm thickness with sealed zip provides maximum insulation for extreme cold',
-            tradeOff: 'Premium price point at $399.99',
-            bestFor: 'Serious cold-water paddleboarders seeking peak thermal performance',
-          },
+const comparisonStateComponents: Record<string, unknown> = {
+  'comparison-root': {
+    heading: 'Cold-Water Surfing Wetsuits Comparison',
+    summary:
+      "All three wetsuits excel at cold-water protection with premium seam construction and 3-year warranties. ThermoFlex stands out with 7mm thickness for extreme conditions, while both O'Neill options use sustainable materials and offer excellent flexibility. Choose ThermoFlex for maximum warmth in the coldest waters, ZenSurf for proven durability and ratings, or EcoWave for sustainability and UV protection.",
+    products: [
+      {
+        productId: 'gid://shopify/ProductVariant/50674633900306',
+        name: 'ThermoFlex Winter Wetsuit - Red / M',
+        imageUrl:
+          'https://cdn.shopify.com/s/files/1/0910/6502/4786/files/8c6d80ac5b9b_bottom_left_852e0a5c-9b08-43bd-a6e5-67ec90d5d6f2.webp?v=1766164226',
+        price: 399.99,
+        rating: 3.6,
+        values: {
+          brand: 'Rip Curl',
+          standout: '7mm thickness with sealed zip provides maximum insulation for extreme cold',
+          tradeOff: 'Premium price point at $399.99',
+          bestFor: 'Serious cold-water paddleboarders seeking peak thermal performance',
         },
-        {
-          productId: 'gid://shopify/ProductVariant/50674625773842',
-          name: 'ZenSurf Full Suit - Red / L',
-          imageUrl:
-            'https://cdn.shopify.com/s/files/1/0910/6502/4786/files/8d486fbcd37e_bottom_right_9f239b34-f80a-43d9-8d3a-4db4185b6ce3.webp?v=1766164198',
-          price: 299.99,
-          rating: 4.5,
-          values: {
-            brand: "O'Neill",
-            standout: 'Sustainable neoprene with blindstitched seams and highest rating (4.5)',
-            tradeOff:
-              'Designed primarily for paddleboarders, may have different fit for dedicated surfers',
-            bestFor: 'Eco-conscious surfers wanting proven reliability',
-          },
+      },
+      {
+        productId: 'gid://shopify/ProductVariant/50674625773842',
+        name: 'ZenSurf Full Suit - Red / L',
+        imageUrl:
+          'https://cdn.shopify.com/s/files/1/0910/6502/4786/files/8d486fbcd37e_bottom_right_9f239b34-f80a-43d9-8d3a-4db4185b6ce3.webp?v=1766164198',
+        price: 299.99,
+        rating: 4.5,
+        values: {
+          brand: "O'Neill",
+          standout: 'Sustainable neoprene with blindstitched seams and highest rating (4.5)',
+          tradeOff:
+            'Designed primarily for paddleboarders, may have different fit for dedicated surfers',
+          bestFor: 'Eco-conscious surfers wanting proven reliability',
         },
-        {
-          productId: 'gid://shopify/ProductVariant/50674627838226',
-          name: 'EcoWave Thermal Suit - Blue / S',
-          imageUrl:
-            'https://cdn.shopify.com/s/files/1/0910/6502/4786/files/041224485b64_top_left.webp?v=1766164210',
-          price: 299.99,
-          rating: 4.1,
-          values: {
-            brand: "O'Neill",
-            standout: 'High-stretch neoprene with UV resistance and eco-friendly materials',
-            tradeOff: 'Front zip (vs. back zip) requires different entry method',
-            bestFor: 'Environmentally-minded surfers prioritizing flexibility and UV protection',
-          },
+      },
+      {
+        productId: 'gid://shopify/ProductVariant/50674627838226',
+        name: 'EcoWave Thermal Suit - Blue / S',
+        imageUrl:
+          'https://cdn.shopify.com/s/files/1/0910/6502/4786/files/041224485b64_top_left.webp?v=1766164210',
+        price: 299.99,
+        rating: 4.1,
+        values: {
+          brand: "O'Neill",
+          standout: 'High-stretch neoprene with UV resistance and eco-friendly materials',
+          tradeOff: 'Front zip (vs. back zip) requires different entry method',
+          bestFor: 'Environmentally-minded surfers prioritizing flexibility and UV protection',
         },
-      ],
-      attributes: [
-        {key: 'brand', label: 'Brand'},
-        {key: 'standout', label: 'Standout'},
-        {key: 'tradeOff', label: 'Trade-off'},
-        {key: 'bestFor', label: 'Best for'},
-      ],
-    },
-    'next-actions-root': {
-      actions: [
-        {text: 'Add ThermoFlex Winter Wetsuit to cart', type: 'followup'},
-        {text: 'View more cold-water wetsuits', type: 'followup'},
-        {text: 'Compare sizing guides', type: 'followup'},
-      ],
-    },
+      },
+    ],
+    attributes: [
+      {key: 'brand', label: 'Brand'},
+      {key: 'standout', label: 'Standout'},
+      {key: 'tradeOff', label: 'Trade-off'},
+      {key: 'bestFor', label: 'Best for'},
+    ],
   },
-});
+  'next-actions-root': {
+    actions: [
+      {text: 'Add ThermoFlex Winter Wetsuit to cart', type: 'followup'},
+      {text: 'View more cold-water wetsuits', type: 'followup'},
+      {text: 'Compare sizing guides', type: 'followup'},
+    ],
+  },
+};
+
+const stateSnapshot: ConverseEvent = StateSnapshot({components: comparisonStateComponents});
 
 const middleEvents: ConverseEvent[] = [
   ...toolCall({
@@ -166,3 +188,7 @@ const schemaComparisonEvents: ConverseEvent[] = buildConversationResponse({
 });
 
 export {schemaComparisonEvents};
+
+// Exposed for property-based tests exercising the emitted composition (closure, plane
+// boundary, and rejection).
+export {COMPARISON_ROOT_ID, COMPARISON_SURFACE_NODES, comparisonStateComponents};

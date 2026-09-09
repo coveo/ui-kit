@@ -3,7 +3,7 @@ import {render, screen, fireEvent} from '@testing-library/react';
 import {RegularFacetRenderer} from './RegularFacet/RegularFacet.js';
 import {NumericFacetRenderer} from './NumericFacet/NumericFacet.js';
 import {CategoryFacetRenderer} from './CategoryFacet/CategoryFacet.js';
-import {FacetManagerRenderer, type FacetProps} from './FacetManager/FacetManager.js';
+import {FacetManagerRenderer} from './FacetManager/FacetManager.js';
 
 const mockDispatch = vi.fn().mockResolvedValue(undefined);
 let mockControllerState: unknown = undefined;
@@ -508,60 +508,32 @@ describe('CategoryFacetRenderer', () => {
 describe('FacetManagerRenderer', () => {
   const props = {componentId: 'facet-manager-1', componentType: 'facet-manager' as const};
 
-  function makeFacetProps(
-    componentId: string,
-    componentType: 'regular-facet' | 'numeric-facet' | 'category-facet'
-  ): FacetProps {
-    return {componentId, componentType};
+  // The set of facet child ids the composition can resolve. A children(id) mock stands in
+  // for the A2UI_Renderer Children_Mount_Function: it mounts a marker node for a present id
+  // and returns nothing for an id with no corresponding component (a declared-but-missing id).
+  const presentIds = new Set(['facet-brand-1', 'facet-price-1', 'facet-category-1']);
+
+  function makeMountFn() {
+    return vi.fn((id: string) => (presentIds.has(id) ? <span data-testid={id}>{id}</span> : null));
   }
 
-  // Superset state so each child renderer renders a distinguishable node keyed by its
-  // own props.componentId. RegularFacet/NumericFacet iterate `values` as an array while
-  // CategoryFacet destructures it as an object, so `values` is an empty array carrying
-  // the category shape as attached properties to satisfy all three without crashing.
-  const childrenValues = Object.assign([] as unknown[], {
-    ancestry: [],
-    selected: null,
-    children: [],
-  });
-  const childrenState = {
-    field: 'field',
-    displayName: 'Facet',
-    hasActiveValues: false,
-    canShowMoreValues: false,
-    canShowLessValues: false,
-    values: childrenValues,
-    customRange: null,
-    facetSearch: {query: '', canShowMoreResults: false, results: []},
-  };
+  // A FacetManager renderer receives its ordered child ids on the composition-carrying props
+  // (the `children` array flattened from the A2-UI node), not from AG-UI state.
+  function propsWithChildren(children?: unknown) {
+    return {...props, ...(children === undefined ? {} : {children})} as typeof props;
+  }
 
-  it('renders nothing when state is undefined', () => {
-    mockControllerState = undefined;
-    const childComponents = new Map<string, FacetProps>();
-    const {container} = render(
-      <FacetManagerRenderer props={props} childComponents={childComponents} />
-    );
-    expect(container.innerHTML).toBe('');
-  });
+  it('mounts each facet child id in declared order via the children mount function', () => {
+    const childIds = ['facet-category-1', 'facet-brand-1', 'facet-price-1'];
+    const mount = makeMountFn();
 
-  it('renders children in facetIds order regardless of childComponents insertion order', () => {
-    const facetIds = ['facet-category-1', 'facet-brand-1', 'facet-price-1'];
-    // childComponents is built in a different (shuffled) order and with a different
-    // catalog/insertion order than facetIds.
-    const childComponents = new Map<string, FacetProps>([
-      ['facet-price-1', makeFacetProps('facet-price-1', 'numeric-facet')],
-      ['facet-brand-1', makeFacetProps('facet-brand-1', 'regular-facet')],
-      ['facet-category-1', makeFacetProps('facet-category-1', 'category-facet')],
-    ]);
+    render(<FacetManagerRenderer props={propsWithChildren(childIds)} children={mount} />);
 
-    mockControllerState = {facetIds, ...childrenState};
-    // The manager reads facetIds off its own state; the shared mock state also supplies
-    // the fields each child renderer needs to render its container.
-    render(<FacetManagerRenderer props={props} childComponents={childComponents} />);
-
-    const rendered = screen.getAllByTestId(/^facet-(brand|price|category)-1$/);
-    const renderedOrder = rendered.map((node) => node.getAttribute('data-testid'));
-    expect(renderedOrder).toEqual(facetIds);
+    expect(mount.mock.calls.map((call) => call[0])).toEqual(childIds);
+    const renderedOrder = screen
+      .getAllByTestId(/^facet-(brand|price|category)-1$/)
+      .map((node) => node.getAttribute('data-testid'));
+    expect(renderedOrder).toEqual(childIds);
   });
 
   it.each([
@@ -569,37 +541,49 @@ describe('FacetManagerRenderer', () => {
     ['facet-price-1', 'facet-category-1', 'facet-brand-1'],
     ['facet-category-1', 'facet-brand-1', 'facet-price-1'],
     ['facet-price-1', 'facet-brand-1', 'facet-category-1'],
-  ])('renders DOM order equal to facetIds for permutation %#', (...facetIds) => {
-    const entries: [string, FacetProps][] = [
-      ['facet-category-1', makeFacetProps('facet-category-1', 'category-facet')],
-      ['facet-price-1', makeFacetProps('facet-price-1', 'numeric-facet')],
-      ['facet-brand-1', makeFacetProps('facet-brand-1', 'regular-facet')],
-    ];
-    const childComponents = new Map<string, FacetProps>(entries);
+  ])('mounts DOM order equal to the children list for permutation %#', (...childIds) => {
+    const mount = makeMountFn();
 
-    mockControllerState = {facetIds, ...childrenState};
-    render(<FacetManagerRenderer props={props} childComponents={childComponents} />);
+    render(<FacetManagerRenderer props={propsWithChildren(childIds)} children={mount} />);
 
+    expect(mount.mock.calls.map((call) => call[0])).toEqual(childIds);
     const renderedOrder = screen
       .getAllByTestId(/^facet-(brand|price|category)-1$/)
       .map((node) => node.getAttribute('data-testid'));
-    expect(renderedOrder).toEqual(facetIds);
+    expect(renderedOrder).toEqual([...childIds]);
   });
 
-  it('skips facetIds with no resolvable child entry', () => {
-    const facetIds = ['facet-brand-1', 'facet-unknown-1', 'facet-price-1'];
-    const childComponents = new Map<string, FacetProps>([
-      ['facet-brand-1', makeFacetProps('facet-brand-1', 'regular-facet')],
-      ['facet-price-1', makeFacetProps('facet-price-1', 'numeric-facet')],
-    ]);
+  it('skips a declared child id with no corresponding component, keeping the rest in order', () => {
+    const childIds = ['facet-brand-1', 'facet-unknown-1', 'facet-price-1'];
+    const mount = makeMountFn();
 
-    mockControllerState = {facetIds, ...childrenState};
-    render(<FacetManagerRenderer props={props} childComponents={childComponents} />);
+    render(<FacetManagerRenderer props={propsWithChildren(childIds)} children={mount} />);
 
+    // The renderer still calls the mount function for every declared id; the mount function
+    // yields nothing renderable for the absent one, so it is skipped in the DOM.
+    expect(mount.mock.calls.map((call) => call[0])).toEqual(childIds);
     const renderedOrder = screen
       .getAllByTestId(/^facet-(brand|price|category)-1$/)
       .map((node) => node.getAttribute('data-testid'));
     expect(renderedOrder).toEqual(['facet-brand-1', 'facet-price-1']);
     expect(screen.queryByTestId('facet-unknown-1')).toBeNull();
+  });
+
+  it('mounts no facets and renders without error when the children list is empty', () => {
+    const mount = makeMountFn();
+
+    render(<FacetManagerRenderer props={propsWithChildren([])} children={mount} />);
+
+    expect(mount).not.toHaveBeenCalled();
+    expect(screen.getByTestId('facet-manager-1')).toBeDefined();
+  });
+
+  it('mounts no facets and renders without error when composition is unavailable', () => {
+    const mount = makeMountFn();
+
+    render(<FacetManagerRenderer props={propsWithChildren(undefined)} children={mount} />);
+
+    expect(mount).not.toHaveBeenCalled();
+    expect(screen.getByTestId('facet-manager-1')).toBeDefined();
   });
 });

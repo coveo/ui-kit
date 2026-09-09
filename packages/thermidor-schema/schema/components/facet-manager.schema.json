@@ -37,19 +37,10 @@
   "$defs": {
     "FacetManagerState": {
       "title": "FacetManagerState",
-      "description": "The facet manager state. Holds the ordered list of facet component identifiers. Owned exclusively by the backend.",
+      "description": "The facet manager state. Facet ordering is expressed via the facet-manager A2-UI component node's 'children'; this state carries no facet-ordering data.",
       "type": "object",
-      "required": ["facetIds"],
-      "properties": {
-        "facetIds": {
-          "type": "array",
-          "description": "Ordered facet component identifiers. Position (indexed from 0) determines the facet's rendering rank. Each identifier is expected to match the 'componentId' of a facet component registered in the catalog; referential integrity is enforced outside JSON Schema.",
-          "items": {
-            "type": "string",
-            "pattern": "^[a-z][a-z0-9-]*$"
-          }
-        }
-      },
+      "required": [],
+      "properties": {},
       "additionalProperties": false
     }
   }

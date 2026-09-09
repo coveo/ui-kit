@@ -2,9 +2,9 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://schema.thermidor.coveo.com/definitions/comparison-product.schema.json",
   "title": "ComparisonProduct",
-  "description": "A product entry in a comparison table, containing required identifiers and a values record mapping attribute keys to display strings.",
+  "description": "A product entry (column) in a ComparisonTable, containing required identifiers and a values record mapping attribute keys to display strings.",
   "type": "object",
-  "required": ["productId", "name", "values"],
+  "required": ["productId", "name"],
   "properties": {
     "productId": {
       "type": "string",

@@ -71,12 +71,17 @@ describe('remote-controller property tests', () => {
       },
       'comparison-table': {
         componentType: 'comparison-table',
-        state: {attributes: [], products: []},
+        state: {products: [], attributes: [], heading: '', summary: ''},
         actions: {},
       },
       'product-list': {
         componentType: 'product-list',
         state: {products: []},
+        actions: {},
+      },
+      'product-summary': {
+        componentType: 'product-summary',
+        state: {categoryLabel: 'Surfboard', product: null},
         actions: {},
       },
       pagination: {
@@ -95,13 +100,6 @@ describe('remote-controller property tests', () => {
         },
         actions: {
           selectSort: {payload: {sortCriteria: 'relevance', fields: []}},
-        },
-      },
-      'search-box': {
-        componentType: 'search-box',
-        state: {query: ''},
-        actions: {
-          submitQuery: {payload: {query: ''}},
         },
       },
       'regular-facet': {
@@ -190,13 +188,30 @@ describe('remote-controller property tests', () => {
       },
       'facet-manager': {
         componentType: 'facet-manager',
-        state: {facetIds: []},
+        state: {},
         actions: {},
       },
       'commerce-search': {
         componentType: 'commerce-search',
         state: {},
         actions: {},
+      },
+      'layout-stack': {
+        componentType: 'layout-stack',
+        state: {},
+        actions: {},
+      },
+      'query-summary': {
+        componentType: 'query-summary',
+        state: {query: '', firstIndex: 0, lastIndex: 0, totalEntries: 0},
+        actions: {},
+      },
+      'page-size': {
+        componentType: 'page-size',
+        state: {pageSize: 12},
+        actions: {
+          setPageSize: {payload: {pageSize: 12}},
+        },
       },
     };
 

@@ -5,7 +5,8 @@ import {ComponentContractsSchema} from '../src/index.js';
 /**
  * Property 4: Every component type carries composition through the base
  *
- * For ANY of the 15 componentTypes in the union (14 existing + commerce-search)
+ * For ANY of the 18 componentTypes in the union (13 existing + commerce-search + product-summary
+ * + layout-stack + query-summary + page-size)
  * and ANY valid `children` array and/or `child` id, a valid instance of that
  * type augmented with those composition fields is accepted by
  * ComponentContractsSchema, AND the instance's state/actions validate exactly
@@ -56,12 +57,17 @@ const minimalInstances: Record<string, Record<string, unknown>> = {
   },
   'comparison-table': {
     componentType: 'comparison-table',
-    state: {attributes: [], products: []},
+    state: {products: [], attributes: [], heading: '', summary: ''},
     actions: {},
   },
   'product-list': {
     componentType: 'product-list',
     state: {products: []},
+    actions: {},
+  },
+  'product-summary': {
+    componentType: 'product-summary',
+    state: {categoryLabel: 'Surfboard', product: null},
     actions: {},
   },
   pagination: {
@@ -80,13 +86,6 @@ const minimalInstances: Record<string, Record<string, unknown>> = {
     },
     actions: {
       selectSort: {payload: {sortCriteria: 'relevance', fields: []}},
-    },
-  },
-  'search-box': {
-    componentType: 'search-box',
-    state: {query: ''},
-    actions: {
-      submitQuery: {payload: {query: ''}},
     },
   },
   'regular-facet': {
@@ -175,13 +174,30 @@ const minimalInstances: Record<string, Record<string, unknown>> = {
   },
   'facet-manager': {
     componentType: 'facet-manager',
-    state: {facetIds: []},
+    state: {},
     actions: {},
   },
   'commerce-search': {
     componentType: 'commerce-search',
     state: {},
     actions: {},
+  },
+  'layout-stack': {
+    componentType: 'layout-stack',
+    state: {},
+    actions: {},
+  },
+  'query-summary': {
+    componentType: 'query-summary',
+    state: {query: '', firstIndex: 0, lastIndex: 0, totalEntries: 0},
+    actions: {},
+  },
+  'page-size': {
+    componentType: 'page-size',
+    state: {pageSize: 12},
+    actions: {
+      setPageSize: {payload: {pageSize: 12}},
+    },
   },
 };
 
@@ -199,8 +215,8 @@ const childrenArb = fc.array(componentId, {maxLength: 8});
 const childArb = fc.option(componentId, {nil: undefined});
 
 describe('Feature: thermidor-schema-adjacency-list, Property 4: Every component type carries composition through the base', () => {
-  it('the union covers 14 existing members + commerce-search', () => {
-    expect(componentTypes).toHaveLength(15);
+  it('the union covers 13 existing members + commerce-search + product-summary + layout-stack + query-summary + page-size', () => {
+    expect(componentTypes).toHaveLength(18);
   });
 
   it('accepts any type augmented with valid children/child, and composition does not change state/actions validity', () => {
