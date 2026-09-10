@@ -1,3 +1,16 @@
+## 3.44.3
+
+### Patch Changes
+
+- [#8446](https://github.com/coveo/ui-kit/pull/8446) [`c9ce121`](https://github.com/coveo/ui-kit/commit/c9ce1215855bc40b97a2db763db7102764f175b6) - fixed support for citation anchoring for search agent
+
+- [#8414](https://github.com/coveo/ui-kit/pull/8414) [`e41fa5d`](https://github.com/coveo/ui-kit/commit/e41fa5d403b8763a4a43994c6193e3e1c7db3dab) - Improvements to the quantic headless loader error handling and documentation.
+
+- [#8391](https://github.com/coveo/ui-kit/pull/8391) [`7c9fe6a`](https://github.com/coveo/ui-kit/commit/7c9fe6a637353a29ff70e6ce3d853b264aace4c4) - Rename the pre-provisioned Quantic E2E runner to `e2e:pre-provisioned` to distinguish it from the generic E2E task.
+
+- Updated dependencies [[`463927f`](https://github.com/coveo/ui-kit/commit/463927fd7fe3b41ed55879a0643267d0b2008595)]:
+  - @coveo/headless@3.55.4
+
 ## 3.44.2
 
 ### Patch Changes
