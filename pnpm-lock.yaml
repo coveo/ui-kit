@@ -249,13 +249,6 @@ catalogs:
     zone.js:
       specifier: 0.15.1
       version: 0.15.1
-  peer-compatibility:
-    '@types/react':
-      specifier: ^18 || ^19
-      version: 19.2.18
-    '@types/react-dom':
-      specifier: ^18 || ^19
-      version: 19.2.5
 
 overrides:
   braces: 3.0.3
@@ -5818,6 +5811,9 @@ packages:
   '@octokit/openapi-types@28.0.0':
     resolution: {integrity: sha512-0rFyLuyHvIj6uuZWuDslxkowFYdPXoNIkeAv4b27dzm2Tf4vGWXnPsMcxs7d65kLdMERgP3wc1AEPlqMz8e1cQ==}
 
+  '@octokit/openapi-types@29.0.1':
+    resolution: {integrity: sha512-9qWOMFNxxLokERcms42rU0PTLqQmVs7g5E41TI4mCOxmpFayD1rfC7XxOL55cG9MBZLFlC31BrR37myMKardwg==}
+
   '@octokit/openapi-webhooks-types@12.1.0':
     resolution: {integrity: sha512-WiuzhOsiOvb7W3Pvmhf8d2C6qaLHXrWiLBP4nJ/4kydu+wpagV5Fkz9RfQwV2afYzv3PB+3xYgp4mAdNGjDprA==}
 
@@ -5857,8 +5853,8 @@ packages:
     peerDependencies:
       '@octokit/core': ^7.0.0
 
-  '@octokit/request-error@7.1.1':
-    resolution: {integrity: sha512-+eaY7G2VVpSf2pc5Gn1+mph837V/d/TYTJAgWL9Tb0ogGYcpN3IlAVFgjL+Vv93F/sevrxkvsYCedtpLdcFLzA==}
+  '@octokit/request-error@7.1.2':
+    resolution: {integrity: sha512-XZRuT3xZ84D3gYErI1DZvhJ33dCWVV6uzBtWkaBB4TvA/L6eOeTZodxLFVB44bBEEo3vEx7y00UfX1tBLrtLRg==}
     engines: {node: '>= 20'}
 
   '@octokit/request@10.0.15':
@@ -5870,6 +5866,9 @@ packages:
 
   '@octokit/types@17.0.0':
     resolution: {integrity: sha512-ByP1v7YL5SMveFPP7+sj0/ZuWCOOg/Chs4NafOMpq6WNIM/hdGY0S7C0TCGDBWu1aGmOxmUIhMx3cO+IdwYZ1Q==}
+
+  '@octokit/types@18.0.0':
+    resolution: {integrity: sha512-l6bAF43PNxkJp6g+W4PjoUSSkxHomXw2nOum5CTftJz1NlV3vu93NImgOYtLf6CbBUb5j+fiuzW0PPQ5JTSvZA==}
 
   '@octokit/webhooks-methods@6.0.0':
     resolution: {integrity: sha512-MFlzzoDJVw/GcbfzVC1RLR36QqkTLUf79vLVO3D+xn7r0QgxnFoLZgtrzxiQErAjFUOdH6fas2KeQJ1yr/qaXQ==}
@@ -17020,7 +17019,7 @@ snapshots:
       '@octokit/plugin-paginate-rest': 14.0.0(@octokit/core@7.0.7)
       '@octokit/plugin-rest-endpoint-methods': 17.0.0(@octokit/core@7.0.7)
       '@octokit/request': 10.0.15
-      '@octokit/request-error': 7.1.1
+      '@octokit/request-error': 7.1.2
       undici: 6.28.0
 
   '@actions/http-client@3.0.2':
@@ -20797,7 +20796,7 @@ snapshots:
       '@octokit/auth-oauth-app': 9.0.4
       '@octokit/auth-oauth-user': 6.0.3
       '@octokit/request': 10.0.15
-      '@octokit/request-error': 7.1.1
+      '@octokit/request-error': 7.1.2
       '@octokit/types': 17.0.0
       toad-cache: 3.7.4
       universal-github-app-jwt: 2.2.2
@@ -20830,7 +20829,7 @@ snapshots:
 
   '@octokit/auth-unauthenticated@7.0.4':
     dependencies:
-      '@octokit/request-error': 7.1.1
+      '@octokit/request-error': 7.1.2
       '@octokit/types': 17.0.0
 
   '@octokit/core@7.0.7':
@@ -20838,7 +20837,7 @@ snapshots:
       '@octokit/auth-token': 6.0.0
       '@octokit/graphql': 9.0.4
       '@octokit/request': 10.0.15
-      '@octokit/request-error': 7.1.1
+      '@octokit/request-error': 7.1.2
       '@octokit/types': 17.0.0
       before-after-hook: 4.0.0
       universal-user-agent: 7.0.3
@@ -20876,12 +20875,14 @@ snapshots:
     dependencies:
       '@octokit/oauth-authorization-url': 8.0.0
       '@octokit/request': 10.0.15
-      '@octokit/request-error': 7.1.1
+      '@octokit/request-error': 7.1.2
       '@octokit/types': 17.0.0
 
   '@octokit/openapi-types@27.0.0': {}
 
   '@octokit/openapi-types@28.0.0': {}
+
+  '@octokit/openapi-types@29.0.1': {}
 
   '@octokit/openapi-webhooks-types@12.1.0': {}
 
@@ -20907,7 +20908,7 @@ snapshots:
   '@octokit/plugin-retry@8.1.1(@octokit/core@7.0.7)':
     dependencies:
       '@octokit/core': 7.0.7
-      '@octokit/request-error': 7.1.1
+      '@octokit/request-error': 7.1.2
       '@octokit/types': 17.0.0
       bottleneck: 2.19.5
 
@@ -20917,14 +20918,14 @@ snapshots:
       '@octokit/types': 17.0.0
       bottleneck: 2.19.5
 
-  '@octokit/request-error@7.1.1':
+  '@octokit/request-error@7.1.2':
     dependencies:
-      '@octokit/types': 17.0.0
+      '@octokit/types': 18.0.0
 
   '@octokit/request@10.0.15':
     dependencies:
       '@octokit/endpoint': 11.0.4
-      '@octokit/request-error': 7.1.1
+      '@octokit/request-error': 7.1.2
       '@octokit/types': 17.0.0
       content-type: 3.0.0
       json-with-bigint: 3.5.12
@@ -20938,12 +20939,16 @@ snapshots:
     dependencies:
       '@octokit/openapi-types': 28.0.0
 
+  '@octokit/types@18.0.0':
+    dependencies:
+      '@octokit/openapi-types': 29.0.1
+
   '@octokit/webhooks-methods@6.0.0': {}
 
   '@octokit/webhooks@14.2.0':
     dependencies:
       '@octokit/openapi-webhooks-types': 12.1.0
-      '@octokit/request-error': 7.1.1
+      '@octokit/request-error': 7.1.2
       '@octokit/webhooks-methods': 6.0.0
 
   '@open-draft/deferred-promise@2.2.0': {}
@@ -29965,7 +29970,7 @@ snapshots:
       '@octokit/plugin-rest-endpoint-methods': 17.0.0(@octokit/core@7.0.7)
       '@octokit/plugin-retry': 8.1.1(@octokit/core@7.0.7)
       '@octokit/plugin-throttling': 11.0.5(@octokit/core@7.0.7)
-      '@octokit/request-error': 7.1.1
+      '@octokit/request-error': 7.1.2
       '@octokit/types': 16.0.0
       '@octokit/webhooks': 14.2.0
 
