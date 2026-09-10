@@ -48,6 +48,9 @@ catalogs:
     '@coveo/relay-event-types':
       specifier: 20.5.1
       version: 20.5.1
+    '@coveo/thermidor-schema':
+      specifier: 1.0.0-beta.1
+      version: 1.0.0-beta.1
     '@msw/playwright':
       specifier: 0.6.7
       version: 0.6.7
@@ -1496,7 +1499,7 @@ importers:
         specifier: 0.0.57
         version: 0.0.57
       '@coveo/thermidor-schema':
-        specifier: 1.0.0-beta.1
+        specifier: 'catalog:'
         version: 1.0.0-beta.1(zod@4.4.3)
       '@reduxjs/toolkit':
         specifier: 'catalog:'
@@ -2331,7 +2334,7 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/thermidor
       '@coveo/thermidor-schema':
-        specifier: 1.0.0-beta.1
+        specifier: 'catalog:'
         version: 1.0.0-beta.1(zod@4.4.3)
       dompurify:
         specifier: 'catalog:'
