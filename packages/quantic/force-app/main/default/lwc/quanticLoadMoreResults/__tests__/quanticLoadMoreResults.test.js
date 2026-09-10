@@ -1,3 +1,4 @@
+/* eslint-disable no-import-assign */
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 import QuanticLoadMoreResults from 'c/quanticLoadMoreResults';
 import {buildCreateTestComponent, cleanup, flushPromises} from 'c/testUtils';
