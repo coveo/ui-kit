@@ -14,8 +14,7 @@
       "const": "commerce-search"
     },
     "state": {
-      "type": "object",
-      "additionalProperties": false
+      "$ref": "#/$defs/CommerceSearchState"
     },
     "actions": {
       "type": "object",
@@ -34,5 +33,13 @@
       "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$defs": {
+    "CommerceSearchState": {
+      "title": "CommerceSearchState",
+      "description": "The commerce search surface state. Owned exclusively by the backend.",
+      "type": "object",
+      "additionalProperties": false
+    }
+  }
 }

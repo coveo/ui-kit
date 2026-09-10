@@ -329,8 +329,8 @@ export type FacetManagerState = z.infer<typeof FacetManagerStateSchema>;
 export const CommerceSearchActionsSchema = z.strictObject({});
 export type CommerceSearchActions = z.infer<typeof CommerceSearchActionsSchema>;
 
-export const StateSchema = z.strictObject({});
-export type State = z.infer<typeof StateSchema>;
+export const CommerceSearchStateSchema = z.strictObject({});
+export type CommerceSearchState = z.infer<typeof CommerceSearchStateSchema>;
 
 export const ProductCarouselSchema = z.strictObject({
   actions: ProductCarouselActionsSchema,
@@ -537,7 +537,7 @@ export const CommerceSearchSchema = z.strictObject({
     .max(1000)
     .optional(),
   componentType: z.literal('commerce-search'),
-  state: StateSchema,
+  state: CommerceSearchStateSchema,
 });
 export type CommerceSearch = z.infer<typeof CommerceSearchSchema>;
 
