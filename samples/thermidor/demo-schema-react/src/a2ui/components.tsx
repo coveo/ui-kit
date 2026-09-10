@@ -133,27 +133,27 @@ export const thermidorCatalogDefinitions = asCatalogDefinitions({
   },
 });
 
-export function createThermidorCatalog() {
-  const renderers = asCatalogRenderers({
-    ProductCarousel: ProductCarouselRenderer,
-    NextActionsBar: NextActionsBarRenderer,
-    BundleDisplay: BundleDisplayRenderer,
-    ComparisonTable: ComparisonTableRenderer,
-    ProductList: ProductListRenderer,
-    ProductSummary: ProductSummaryRenderer,
-    Pagination: PaginationRenderer,
-    Sort: SortRenderer,
-    RegularFacet: RegularFacetRenderer,
-    NumericFacet: NumericFacetRenderer,
-    CategoryFacet: CategoryFacetRenderer,
-    FacetManager: FacetManagerRenderer,
-    CommerceSearch: CommerceSearchRenderer,
-    LayoutStack: LayoutStackRenderer,
-    QuerySummary: QuerySummaryRenderer,
-    PageSize: PageSizeRenderer,
-  });
+const thermidorCatalogRenderers = asCatalogRenderers({
+  ProductCarousel: ProductCarouselRenderer,
+  NextActionsBar: NextActionsBarRenderer,
+  BundleDisplay: BundleDisplayRenderer,
+  ComparisonTable: ComparisonTableRenderer,
+  ProductList: ProductListRenderer,
+  ProductSummary: ProductSummaryRenderer,
+  Pagination: PaginationRenderer,
+  Sort: SortRenderer,
+  RegularFacet: RegularFacetRenderer,
+  NumericFacet: NumericFacetRenderer,
+  CategoryFacet: CategoryFacetRenderer,
+  FacetManager: FacetManagerRenderer,
+  CommerceSearch: CommerceSearchRenderer,
+  LayoutStack: LayoutStackRenderer,
+  QuerySummary: QuerySummaryRenderer,
+  PageSize: PageSizeRenderer,
+});
 
-  return createCatalog(thermidorCatalogDefinitions, renderers, {
+export function createThermidorCatalog() {
+  return createCatalog(thermidorCatalogDefinitions, thermidorCatalogRenderers, {
     catalogId: THERMIDOR_CATALOG_ID,
     includeBasicCatalog: true,
   });
