@@ -7,7 +7,7 @@ export default class ExampleQuanticLoadMoreResults extends LightningElement {
 
   pageTitle = 'Quantic Load More Results';
   pageDescription =
-    'The Quantic Load More Results component allows users to load additional results into the current result list without navigating to a new page.';
+    'The Quantic Load More Results component allows users to load additional results into the current result list.';
   options = [
     {
       attribute: 'useCase',
