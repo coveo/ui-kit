@@ -1059,8 +1059,6 @@ function computeComponentsState(view: SearchViewState): Record<string, unknown> 
   };
 }
 
-export type {A2uiComponentNode as SearchSurfaceNode};
-
 const COMMERCE_SEARCH_ROOT_ID = 'commerce-search-2';
 
 // Facet ids in emission order; the facet-manager node's `children` expresses facet ordering.
@@ -1170,7 +1168,7 @@ const SEARCH_SURFACE_NODES: A2uiComponentNode[] = [
 // Validates that the declared root and every referenced child resolve to an emitted node,
 // then assembles the createSurface. A missing root or child throws an error naming the missing
 // node so no partial tree is ever emitted.
-export function buildValidatedSearchSurface(
+function buildValidatedSearchSurface(
   rootId: string,
   nodes: A2uiComponentNode[]
 ): Record<string, unknown> {
@@ -1519,13 +1517,3 @@ function buildWaterSportsActionEvents(
 }
 
 export {buildWaterSportsInitialEvents, buildWaterSportsActionEvents};
-
-// Exposed for property-based tests exercising the emitted composition (closure, plane
-// boundary, and rejection). The exported view helper lets tests assert AG-UI state carries no
-// composition fields and is keyed by componentId.
-export {
-  COMMERCE_SEARCH_ROOT_ID,
-  SEARCH_SURFACE_NODES,
-  DEFAULT_VIEW as SEARCH_DEFAULT_VIEW,
-  computeComponentsState as computeSearchComponentsState,
-};

@@ -14,8 +14,6 @@ import {
 
 const runId = 'schema-bundle-4957b383';
 
-export type {A2uiComponentNode as BundleSurfaceNode};
-
 const BUNDLE_ROOT_ID = 'bundle-root';
 
 // One product-summary node per (tier, slot) pair, in slot-enumeration order (tier order,
@@ -54,7 +52,7 @@ const BUNDLE_SURFACE_NODES: A2uiComponentNode[] = [
   })),
 ];
 
-export function buildValidatedBundleSurface(
+function buildValidatedBundleSurface(
   rootId: string,
   nodes: A2uiComponentNode[]
 ): Record<string, unknown> {
@@ -406,7 +404,3 @@ const schemaBundleEvents: ConverseEvent[] = buildConversationResponse({
 });
 
 export {schemaBundleEvents};
-
-// Exposed for property-based tests exercising the emitted composition (closure, plane
-// boundary, and rejection).
-export {BUNDLE_ROOT_ID, BUNDLE_SURFACE_NODES, bundleStateComponents};

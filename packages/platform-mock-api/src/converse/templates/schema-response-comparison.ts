@@ -14,8 +14,6 @@ import {
 
 const runId = 'schema-comparison-462287cc';
 
-export type {A2uiComponentNode as ComparisonSurfaceNode};
-
 const COMPARISON_ROOT_ID = 'comparison-root';
 
 // The comparison surface is a single leaf node: the comparison-table owns its heading, AI
@@ -29,7 +27,7 @@ const COMPARISON_SURFACE_NODES: A2uiComponentNode[] = [
   },
 ];
 
-export function buildValidatedComparisonSurface(
+function buildValidatedComparisonSurface(
   rootId: string,
   nodes: A2uiComponentNode[]
 ): Record<string, unknown> {
@@ -188,7 +186,3 @@ const schemaComparisonEvents: ConverseEvent[] = buildConversationResponse({
 });
 
 export {schemaComparisonEvents};
-
-// Exposed for property-based tests exercising the emitted composition (closure, plane
-// boundary, and rejection).
-export {COMPARISON_ROOT_ID, COMPARISON_SURFACE_NODES, comparisonStateComponents};
