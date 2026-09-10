@@ -1750,4 +1750,39 @@
     <protected>false</protected>
     <shortDescription>Dislike</shortDescription>
   </labels>
+  <labels>
+    <fullName>quantic_LoadMoreResults</fullName>
+    <value>Load more results</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Load more results</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_ShowingResultsOfLoadMore</fullName>
+    <value>Showing {{0}} of {{1}} result</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>ex: Showing 10 of 123 result</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_ShowingResultsOfLoadMore_plural</fullName>
+    <value>Showing {{0}} of {{1}} results</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>ex: Showing 10 of 123 results</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_ShowingResultsOfLoadMore_zero</fullName>
+    <value>No results</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>No Results</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_AllResultsLoaded</fullName>
+    <value>All results have been loaded.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>All results have been loaded.</shortDescription>
+  </labels>
 </CustomLabels>
