@@ -1,5 +1,11 @@
 # @coveo/thermidor
 
+## 0.0.4
+
+### Patch Changes
+
+- [#8452](https://github.com/coveo/ui-kit/pull/8452) [`95a2707`](https://github.com/coveo/ui-kit/commit/95a2707b292ee5f67aa9f6082a874363113c0c29) - Updated `@coveo/thermidor-schema` dependency to `1.0.0-beta.3`.
+
 ## 0.0.3
 
 ### Patch Changes
