@@ -1,3 +1,9 @@
+## 3.44.4
+
+### Patch Changes
+
+- [#8466](https://github.com/coveo/ui-kit/pull/8466) [`9579bda`](https://github.com/coveo/ui-kit/commit/9579bda4e359767ed509aa90e1385ecb30688f4c) - Fix quanticResultLink to better handle feedComment documents.
+
 ## 3.44.3
 
 ### Patch Changes
