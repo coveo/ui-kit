@@ -1,6 +1,6 @@
 import type {z} from 'zod/v4';
 import {ComponentContractsSchema, type ComponentContracts} from '@coveo/thermidor-schema';
-import type {ConverseController} from '../converse/converse-controller.js';
+import type {UnifiedConverseController} from '../unified-converse/unified-converse-controller.js';
 import type {Controller} from '../controller-types.js';
 
 export interface RemoteControllerAction<TAction extends string = string, TPayload = unknown> {
@@ -39,7 +39,7 @@ export type RemoteControllerStateForSchema<TComponentType extends ComponentType>
  * A controller state source backed by Thermidor's active conversation turn.
  */
 export type RemoteControllerSource = Pick<
-  ConverseController,
+  UnifiedConverseController,
   'state' | 'subscribe' | 'dispatchAction'
 >;
 

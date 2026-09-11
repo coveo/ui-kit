@@ -1,11 +1,8 @@
 export {getOrCreateGenerativeSlice} from './generative-slice.js';
 export {getOrCreateGenerativeActions} from './generative-actions.js';
 export {getOrCreateGenerativeSelectors} from './generative-selectors.js';
-export {
-  createHydrateSubInterface,
-  getOrCreateHydrateFromSnapshotAction,
-  rehydrateRoutedInterfaces,
-} from './generative-hydration.js';
+export {getOrCreateHydrateFromSnapshotAction} from './generative-hydration.js';
+export type {GenerativeStatePort, HydrationResult} from './generative-state-port.js';
 export {
   getOrCreateRoutedInterfaceRegistry,
   mergeTurnsWithRegistry,
