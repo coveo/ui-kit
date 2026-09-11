@@ -51,11 +51,9 @@ Server-side rendering with Headless controllers for improved performance and SEO
 
 Samples using `@coveo/thermidor` for upcoming conversational and search experiences.
 
-| Sample                                                | Description                                                       | Framework    | Use Case     |
-| ----------------------------------------------------- | ----------------------------------------------------------------- | ------------ | ------------ |
-| [conversation-react](./thermidor/conversation-react/) | React + Vite conversational integration sample                    | React + Vite | Conversation |
-| [commerce-react](./thermidor/commerce-react/)         | React + Vite commerce sample with ProductList, Pagination         | React + Vite | Commerce     |
-| [search-react](./thermidor/search-react/)             | React + Vite search sample with SearchBox, ResultList, Pagination | React + Vite | Search       |
+| Sample                                              | Description                                                                                   | Framework    | Use Case     |
+| --------------------------------------------------- | --------------------------------------------------------------------------------------------- | ------------ | ------------ |
+| [demo-schema-react](./thermidor/demo-schema-react/) | React + Vite conversational commerce demo driven by `@coveo/thermidor-schema` A2-UI contracts | React + Vite | Conversation |
 
 ## 🚀 Quick Start
 
