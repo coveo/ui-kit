@@ -417,7 +417,9 @@ export class AtomicRefineModal extends LitElement implements InitializableCompon
   private updateCloneDisplay(clone: BaseFacetElement) {
     const facetId = clone.getAttribute('facet-id') ?? clone.facetId;
     const facetInfo = facetId ? this.bindings.store.getAllFacets()[facetId] : undefined;
-    clone.hidden = !!facetInfo?.isHidden();
+    const isHidden = !!facetInfo?.isHidden();
+    clone.hidden = isHidden;
+    clone.style.display = isHidden ? 'none' : '';
   }
 }
 

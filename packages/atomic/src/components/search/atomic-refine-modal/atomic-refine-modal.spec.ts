@@ -428,10 +428,11 @@ describe('atomic-refine-modal', () => {
         element.querySelector('div[slot="facets"]')?.children ?? []
       ) as HTMLElement[];
       expect(clonedFacets).toHaveLength(2);
-      clonedFacets.forEach((facet) => expect(facet.hidden).toBe(false));
+      expect(clonedFacets.map((facet) => facet.hidden)).toEqual([false, false]);
+      expect(clonedFacets.map((facet) => facet.style.display)).toEqual(['', '']);
     });
 
-    it('should keep initially hidden cloned facets hidden until they become visible', async () => {
+    it('should keep initially hidden cloned facets out of the layout until they become visible', async () => {
       const facets = ['parent', 'dependent', 'unrelated'].map((facetId) => {
         const facet = Object.assign(document.createElement('div'), {
           facetId,
@@ -471,12 +472,14 @@ describe('atomic-refine-modal', () => {
         element.querySelector('div[slot="facets"]')?.children ?? []
       ) as HTMLElement[];
       expect(clonedFacets.map((facet) => facet.hidden)).toEqual([false, true, false]);
+      expect(clonedFacets.map((facet) => facet.style.display)).toEqual(['', 'none', '']);
 
       dependentIsHidden = false;
       element.requestUpdate();
       await element.updateComplete;
 
       expect(clonedFacets.map((facet) => facet.hidden)).toEqual([false, false, false]);
+      expect(clonedFacets.map((facet) => facet.style.display)).toEqual(['', '', '']);
     });
 
     it('should preserve facet order when a facet is initially hidden', async () => {
