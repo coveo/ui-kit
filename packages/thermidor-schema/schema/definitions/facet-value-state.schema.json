@@ -1,8 +1,0 @@
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schema.thermidor.coveo.com/definitions/facet-value-state.schema.json",
-  "title": "FacetValueState",
-  "description": "The selection state of a facet value, shared across all commerce facet components.",
-  "type": "string",
-  "enum": ["idle", "selected", "excluded"]
-}

@@ -1,6 +1,0 @@
-{
-  "actions": [
-    {"text": "Show me popular products", "type": "followup"},
-    {"text": "sports equipment", "type": "search"}
-  ]
-}
