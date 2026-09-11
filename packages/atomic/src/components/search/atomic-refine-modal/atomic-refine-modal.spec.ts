@@ -421,6 +421,32 @@ describe('atomic-refine-modal', () => {
       expect(facetSlot).toBeInTheDocument();
     });
 
+    it('should preserve facet order when a facet is initially hidden', async () => {
+      const facets = ['parent', 'dependent', 'unrelated'].map((facetId) => {
+        const facet = Object.assign(document.createElement('div'), {
+          facetId,
+          isCollapsed: false,
+        });
+        facet.dataset.facetId = facetId;
+        return facet;
+      });
+      const {element} = await renderRefineModal({isOpen: false});
+      element.bindings.store.getFacetElements = () => facets;
+      element.bindings.store.getAllFacets = () => ({
+        parent: {isHidden: () => false},
+        dependent: {isHidden: () => true},
+        unrelated: {isHidden: () => false},
+      });
+
+      element.isOpen = true;
+      await element.updateComplete;
+
+      const clonedFacetIds = Array.from(
+        element.querySelector('div[slot="facets"]')?.children ?? []
+      ).map((facet) => (facet as HTMLElement).dataset.facetId);
+      expect(clonedFacetIds).toEqual(['parent', 'dependent', 'unrelated']);
+    });
+
     it('should render filter clear all button when hasBreadcrumbs is true', async () => {
       const {filterClearAllButton} = await renderRefineModal({
         breadcrumbManagerState: {hasBreadcrumbs: true},

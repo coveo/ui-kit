@@ -84,8 +84,89 @@ const refineModalDecorators: Decorator[] = [
   commerceFacetWidthDecorator,
 ];
 
+const dependentFacetDecorators: Decorator[] = [
+  () => html`
+    <atomic-refine-toggle></atomic-refine-toggle>
+    <div style="display:none;">
+      <atomic-sort-dropdown
+        ><atomic-sort-expression label="relevance" expression="relevancy"></atomic-sort-expression
+      ></atomic-sort-dropdown>
+      <atomic-facet field="filetype" label="File Type"></atomic-facet>
+      <atomic-facet
+        field="language"
+        label="Language (dependent)"
+        depends-on-filetype="YouTubeVideo"
+      ></atomic-facet>
+      <atomic-facet field="objecttype" label="Type"></atomic-facet>
+    </div>
+  `,
+  decorator,
+  commerceFacetWidthDecorator,
+];
+
 export const Default: Story = {
   decorators: refineModalDecorators,
+};
+
+export const DependentFacetOrder: Story = {
+  name: 'Dependent Facet Order',
+  tags: ['test'],
+  decorators: dependentFacetDecorators,
+  beforeEach: () => {
+    const withFacetState = (state: 'idle' | 'selected') =>
+      searchApiHarness.searchEndpoint.mockOnce((response) => ({
+        ...response,
+        facets: [
+          {
+            facetId: 'filetype',
+            field: 'filetype',
+            moreValuesAvailable: false,
+            values: [{value: 'YouTubeVideo', state, numberOfResults: 10}],
+          },
+          {
+            facetId: 'language',
+            field: 'language',
+            moreValuesAvailable: false,
+            values: [{value: 'English', state: 'idle', numberOfResults: 5}],
+          },
+          {
+            facetId: 'objecttype',
+            field: 'objecttype',
+            moreValuesAvailable: false,
+            values: [{value: 'Video', state: 'idle', numberOfResults: 10}],
+          },
+        ],
+      }));
+
+    searchApiHarness.searchEndpoint.clear();
+    withFacetState('idle');
+    withFacetState('selected');
+  },
+  play: async (context) => {
+    await meta.play?.(context);
+    const {canvasElement, step, userEvent} = context;
+    const refineModal = canvasElement.querySelector('atomic-refine-modal')!;
+
+    await step('Select the parent facet', async () => {
+      const parentFacetToggle = await within(refineModal).findByShadowRole('button', {
+        name: 'Expand the File Type facet',
+      });
+      await userEvent.click(parentFacetToggle);
+      const parentValue = await within(refineModal).findByShadowLabelText(
+        'Inclusion filter on YouTubeVideo',
+        {exact: false}
+      );
+      await userEvent.click(parentValue);
+    });
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
+    const facetLabels = Array.from(
+      refineModal.querySelector('div[slot="facets"]')?.children ?? []
+    ).map((facet) => facet.getAttribute('label'));
+    if (facetLabels.join() !== 'File Type,Language (dependent),Type') {
+      throw new Error(`Unexpected facet order: ${facetLabels.join()}`);
+    }
+  },
 };
 
 export const A11yDialog: Story = {
