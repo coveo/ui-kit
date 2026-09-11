@@ -135,7 +135,9 @@ export default class QuanticLoadMoreResults extends LightningElement {
     );
     return I18nUtils.format(
       this.labels[labelName],
-      Intl.NumberFormat(LOCALE).format(this.querySummaryState?.lastResult).toString(),
+      Intl.NumberFormat(LOCALE)
+        .format(this.querySummaryState?.lastResult)
+        .toString(),
       Intl.NumberFormat(LOCALE).format(this.querySummaryState?.total).toString()
     );
   }
