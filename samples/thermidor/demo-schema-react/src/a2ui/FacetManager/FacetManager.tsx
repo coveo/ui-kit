@@ -1,4 +1,4 @@
-import type React from 'react';
+import type {ReactNode} from 'react';
 import type {FacetManagerProps} from '@coveo/thermidor-schema';
 import {readChildIds} from '../read-child-ids.js';
 import styles from './FacetManager.module.css';
@@ -8,7 +8,7 @@ export function FacetManagerRenderer({
   children,
 }: {
   props: FacetManagerProps;
-  children: (id: string) => React.ReactNode;
+  children: (id: string) => ReactNode;
 }) {
   const childIds = readChildIds(props);
 

@@ -45,7 +45,7 @@ export function ComparisonTableRenderer({props}: {props: ComparisonTableProps}) 
                 Product
               </div>
               {products.map((product: ComparisonProduct) => (
-                <div key={product.productId} className={styles.productCell} role="cell">
+                <div key={product.productId} className={styles.productCell} role="columnheader">
                   {product.imageUrl && (
                     <img
                       className={styles.productImage}

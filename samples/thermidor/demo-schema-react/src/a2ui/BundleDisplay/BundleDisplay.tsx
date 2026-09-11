@@ -73,7 +73,7 @@ export function BundleDisplayRenderer({
       {activeTier && (
         <div className={styles.tierContent}>
           {activeTier.description && <p className={styles.description}>{activeTier.description}</p>}
-          <div className={styles.itemList}>
+          <div className={styles.itemList} role="list" aria-label="Bundle items">
             {activeSlots.map((slot: BundleSlot) => (
               <Fragment key={slot.childId}>{children(slot.childId)}</Fragment>
             ))}
