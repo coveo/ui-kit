@@ -249,6 +249,13 @@ catalogs:
     zone.js:
       specifier: 0.15.1
       version: 0.15.1
+  peer-compatibility:
+    '@types/react':
+      specifier: ^18 || ^19
+      version: 19.2.18
+    '@types/react-dom':
+      specifier: ^18 || ^19
+      version: 19.2.5
 
 overrides:
   braces: 3.0.3
@@ -2251,98 +2258,6 @@ importers:
         version: 8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.0(supports-color@8.1.1))(sass@1.103.1)(terser@5.50.0)(yaml@2.9.0)
     publishDirectory: publish
 
-  samples/thermidor/commerce-react:
-    dependencies:
-      '@coveo/thermidor':
-        specifier: workspace:*
-        version: link:../../../packages/thermidor
-      react:
-        specifier: 19.2.8
-        version: 19.2.8
-      react-dom:
-        specifier: 19.2.8
-        version: 19.2.8(react@19.2.8)
-      react-router:
-        specifier: 'catalog:'
-        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-    devDependencies:
-      '@playwright/test':
-        specifier: 'catalog:'
-        version: 1.62.1
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.13.3
-      '@types/react':
-        specifier: 'catalog:'
-        version: 19.2.18
-      '@types/react-dom':
-        specifier: 'catalog:'
-        version: 19.2.5(@types/react@19.2.18)
-      '@vitejs/plugin-react':
-        specifier: 'catalog:'
-        version: 6.1.0(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.0(supports-color@8.1.1))(sass@1.103.1)(terser@5.50.0)(yaml@2.9.0))
-      playwright:
-        specifier: 'catalog:'
-        version: 1.62.1
-      typescript:
-        specifier: 6.0.3
-        version: 6.0.3
-      vite:
-        specifier: 'catalog:'
-        version: 8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.0(supports-color@8.1.1))(sass@1.103.1)(terser@5.50.0)(yaml@2.9.0)
-      vitest:
-        specifier: 'catalog:'
-        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/browser-playwright@4.1.11)(jsdom@30.0.1)(msw@2.15.0(@types/node@24.13.3)(typescript@6.0.3))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.0(supports-color@8.1.1))(sass@1.103.1)(terser@5.50.0)(yaml@2.9.0))
-
-  samples/thermidor/demo-react:
-    dependencies:
-      '@coveo/thermidor':
-        specifier: workspace:*
-        version: link:../../../packages/thermidor
-      dompurify:
-        specifier: 'catalog:'
-        version: 3.4.14
-      marked:
-        specifier: 'catalog:'
-        version: 12.0.2
-      react:
-        specifier: 19.2.8
-        version: 19.2.8
-      react-dom:
-        specifier: 19.2.8
-        version: 19.2.8(react@19.2.8)
-    devDependencies:
-      '@playwright/test':
-        specifier: 'catalog:'
-        version: 1.62.1
-      '@testing-library/react':
-        specifier: 'catalog:'
-        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.13.3
-      '@types/react':
-        specifier: 'catalog:'
-        version: 19.2.18
-      '@types/react-dom':
-        specifier: 'catalog:'
-        version: 19.2.5(@types/react@19.2.18)
-      '@vitejs/plugin-react':
-        specifier: 'catalog:'
-        version: 6.1.0(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.0(supports-color@8.1.1))(sass@1.103.1)(terser@5.50.0)(yaml@2.9.0))
-      playwright:
-        specifier: 'catalog:'
-        version: 1.62.1
-      typescript:
-        specifier: 6.0.3
-        version: 6.0.3
-      vite:
-        specifier: 'catalog:'
-        version: 8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.0(supports-color@8.1.1))(sass@1.103.1)(terser@5.50.0)(yaml@2.9.0)
-      vitest:
-        specifier: 'catalog:'
-        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/browser-playwright@4.1.11)(jsdom@30.0.1)(msw@2.15.0(@types/node@24.13.3)(typescript@6.0.3))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.0(supports-color@8.1.1))(sass@1.103.1)(terser@5.50.0)(yaml@2.9.0))
-
   samples/thermidor/demo-schema-react:
     dependencies:
       '@copilotkit/a2ui-renderer':
@@ -2391,141 +2306,6 @@ importers:
       fast-check:
         specifier: ^3.22.0
         version: 3.23.2
-      playwright:
-        specifier: 'catalog:'
-        version: 1.62.1
-      typescript:
-        specifier: 6.0.3
-        version: 6.0.3
-      vite:
-        specifier: 'catalog:'
-        version: 8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.0(supports-color@8.1.1))(sass@1.103.1)(terser@5.50.0)(yaml@2.9.0)
-      vitest:
-        specifier: 'catalog:'
-        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/browser-playwright@4.1.11)(jsdom@30.0.1)(msw@2.15.0(@types/node@24.13.3)(typescript@6.0.3))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.0(supports-color@8.1.1))(sass@1.103.1)(terser@5.50.0)(yaml@2.9.0))
-
-  samples/thermidor/generative-angular:
-    dependencies:
-      '@angular/common':
-        specifier: 22.1.3
-        version: 22.1.3(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
-      '@angular/compiler':
-        specifier: 'catalog:'
-        version: 22.1.3
-      '@angular/core':
-        specifier: 22.1.3
-        version: 22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.2)(zone.js@0.15.1)
-      '@angular/platform-browser':
-        specifier: 'catalog:'
-        version: 22.1.3(@angular/animations@22.1.3(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@22.1.3(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.2)(zone.js@0.15.1))
-      '@coveo/thermidor':
-        specifier: workspace:*
-        version: link:../../../packages/thermidor
-      marked:
-        specifier: 'catalog:'
-        version: 12.0.2
-      rxjs:
-        specifier: 'catalog:'
-        version: 7.8.2
-    devDependencies:
-      '@angular/build':
-        specifier: 'catalog:'
-        version: 22.1.5(3f0959120c2861d0a5ed557f6625725a)
-      '@angular/cli':
-        specifier: 'catalog:'
-        version: 22.1.5(@types/node@24.13.3)(chokidar@5.0.0)(supports-color@8.1.1)
-      '@angular/compiler-cli':
-        specifier: 'catalog:'
-        version: 22.1.3(@angular/compiler@22.1.3)(typescript@6.0.3)
-      dotenv:
-        specifier: 'catalog:'
-        version: 17.4.2
-      typescript:
-        specifier: 6.0.3
-        version: 6.0.3
-
-  samples/thermidor/generative-react:
-    dependencies:
-      '@coveo/thermidor':
-        specifier: workspace:*
-        version: link:../../../packages/thermidor
-      marked:
-        specifier: 'catalog:'
-        version: 12.0.2
-      react:
-        specifier: 19.2.8
-        version: 19.2.8
-      react-dom:
-        specifier: 19.2.8
-        version: 19.2.8(react@19.2.8)
-    devDependencies:
-      '@playwright/test':
-        specifier: 'catalog:'
-        version: 1.62.1
-      '@testing-library/jest-dom':
-        specifier: ^6.6.3
-        version: 6.10.0(@testing-library/dom@10.4.1)
-      '@testing-library/react':
-        specifier: 'catalog:'
-        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.13.3
-      '@types/react':
-        specifier: 'catalog:'
-        version: 19.2.18
-      '@types/react-dom':
-        specifier: 'catalog:'
-        version: 19.2.5(@types/react@19.2.18)
-      '@vitejs/plugin-react':
-        specifier: 'catalog:'
-        version: 6.1.0(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.0(supports-color@8.1.1))(sass@1.103.1)(terser@5.50.0)(yaml@2.9.0))
-      fast-check:
-        specifier: ^3.22.0
-        version: 3.23.2
-      playwright:
-        specifier: 'catalog:'
-        version: 1.62.1
-      typescript:
-        specifier: 6.0.3
-        version: 6.0.3
-      vite:
-        specifier: 'catalog:'
-        version: 8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.0(supports-color@8.1.1))(sass@1.103.1)(terser@5.50.0)(yaml@2.9.0)
-      vitest:
-        specifier: 'catalog:'
-        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/browser-playwright@4.1.11)(jsdom@30.0.1)(msw@2.15.0(@types/node@24.13.3)(typescript@6.0.3))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.0(supports-color@8.1.1))(sass@1.103.1)(terser@5.50.0)(yaml@2.9.0))
-
-  samples/thermidor/search-react:
-    dependencies:
-      '@coveo/thermidor':
-        specifier: workspace:*
-        version: link:../../../packages/thermidor
-      react:
-        specifier: 19.2.8
-        version: 19.2.8
-      react-dom:
-        specifier: 19.2.8
-        version: 19.2.8(react@19.2.8)
-      react-router:
-        specifier: 'catalog:'
-        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-    devDependencies:
-      '@playwright/test':
-        specifier: 'catalog:'
-        version: 1.62.1
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.13.3
-      '@types/react':
-        specifier: 'catalog:'
-        version: 19.2.18
-      '@types/react-dom':
-        specifier: 'catalog:'
-        version: 19.2.5(@types/react@19.2.18)
-      '@vitejs/plugin-react':
-        specifier: 'catalog:'
-        version: 6.1.0(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.0(supports-color@8.1.1))(sass@1.103.1)(terser@5.50.0)(yaml@2.9.0))
       playwright:
         specifier: 'catalog:'
         version: 1.62.1
