@@ -48,6 +48,9 @@
         },
         {
           "$ref": "https://schema.thermidor.coveo.com/components/facet-manager.schema.json"
+        },
+        {
+          "$ref": "https://schema.thermidor.coveo.com/components/commerce-search.schema.json"
         }
       ]
     }
