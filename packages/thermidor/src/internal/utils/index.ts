@@ -20,7 +20,6 @@ export type {
   EndpointThunkArg,
   FacadeResolver,
   Facades,
-  GenerativeInterface,
   GenerativeUnifiedInterface,
   InferInterfaceType,
   InterfaceHandle,

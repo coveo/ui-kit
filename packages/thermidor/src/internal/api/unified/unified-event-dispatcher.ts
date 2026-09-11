@@ -1,6 +1,6 @@
 import type {NormalizedStreamEvent} from '@/src/internal/api/protocol/stream-types.js';
 import {getActivityMetadata} from '@/src/internal/api/protocol/activity-metadata.js';
-import type {GenerativeStatePort} from '@/src/internal/api/generative/index.js';
+import type {GenerativeStatePort} from '@/src/internal/features/generative/index.js';
 
 export interface DispatchResult {
   turnId: string;

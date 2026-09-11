@@ -20,17 +20,11 @@ export type {
   CartControllerItem,
   CartControllerState,
 } from './cart/cart-controller.js';
-export {buildConverseController} from './converse/converse-controller.js';
-export type {
-  ConverseController,
-  ConverseControllerOptions,
-  ConverseControllerState,
-} from './converse/converse-controller.js';
 export type {
   SerializedConverseState,
   SerializedRoutedInterface,
   SerializedTurn,
-} from './converse/converse-controller-serialization.js';
+} from './unified-converse/converse-controller-serialization.js';
 export {buildProductListController} from './product-list/product-list-controller.js';
 export type {
   ProductListController,
