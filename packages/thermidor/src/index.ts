@@ -9,21 +9,13 @@ export type {
   UpdateItemQuantityPayload,
 } from '@/src/internal/features/cart/index.js';
 export type {Product} from '@/src/internal/features/product-list/index.js';
-export * from './public/actions/index.js';
 export * from './public/controllers/index.js';
 
 export {buildGenerativeUnifiedInterface} from './public/interfaces/generative-unified.js';
-export {buildSearchInterface} from './public/interfaces/search.js';
-export {buildCommerceInterface} from './public/interfaces/commerce.js';
 export type {
   BuildGenerativeUnifiedInterfaceOptions,
   GenerativeUnifiedInterface,
 } from './public/interfaces/generative-unified.js';
-export type {BuildSearchInterfaceOptions, SearchInterface} from './public/interfaces/search.js';
-export type {
-  BuildCommerceInterfaceOptions,
-  CommerceInterface,
-} from './public/interfaces/commerce.js';
 export type {
   Facades,
   InferInterfaceType,
@@ -31,6 +23,8 @@ export type {
   InterfaceRegistry,
   InterfaceType,
   InterfaceTypeMap,
+  SearchInterface,
+  CommerceInterface,
   Supports,
 } from '@/src/internal/utils/index.js';
 export type {
