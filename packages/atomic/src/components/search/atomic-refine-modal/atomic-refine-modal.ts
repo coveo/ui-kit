@@ -274,6 +274,7 @@ export class AtomicRefineModal extends LitElement implements InitializableCompon
       facet.classList.remove(popoverClass);
       facet.setAttribute(isRefineModalFacet, '');
       const clone = facet.cloneNode(true) as BaseFacetElement;
+      clone.style.display = 'contents';
       clone.isCollapsed =
         this.collapseFacetsAfter === -1 ? false : i + 1 > this.collapseFacetsAfter;
       return clone;

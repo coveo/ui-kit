@@ -421,6 +421,16 @@ describe('atomic-refine-modal', () => {
       expect(facetSlot).toBeInTheDocument();
     });
 
+    it('should remove cloned facet hosts from the facet slot layout', async () => {
+      const {element} = await renderRefineModal();
+
+      const clonedFacets = Array.from(
+        element.querySelector('div[slot="facets"]')?.children ?? []
+      ) as HTMLElement[];
+      expect(clonedFacets).toHaveLength(2);
+      clonedFacets.forEach((facet) => expect(facet.style.display).toBe('contents'));
+    });
+
     it('should preserve facet order when a facet is initially hidden', async () => {
       const facets = ['parent', 'dependent', 'unrelated'].map((facetId) => {
         const facet = Object.assign(document.createElement('div'), {
