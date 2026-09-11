@@ -433,9 +433,19 @@ describe('atomic-refine-modal', () => {
       const {element} = await renderRefineModal({isOpen: false});
       element.bindings.store.getFacetElements = () => facets;
       element.bindings.store.getAllFacets = () => ({
-        parent: {isHidden: () => false},
-        dependent: {isHidden: () => true},
-        unrelated: {isHidden: () => false},
+        parent: {facetId: 'parent', label: () => 'Parent', element: facets[0], isHidden: () => false},
+        dependent: {
+          facetId: 'dependent',
+          label: () => 'Dependent',
+          element: facets[1],
+          isHidden: () => true,
+        },
+        unrelated: {
+          facetId: 'unrelated',
+          label: () => 'Unrelated',
+          element: facets[2],
+          isHidden: () => false,
+        },
       });
 
       element.isOpen = true;
