@@ -49,8 +49,8 @@ catalogs:
       specifier: 20.5.1
       version: 20.5.1
     '@coveo/thermidor-schema':
-      specifier: 1.0.0-beta.1
-      version: 1.0.0-beta.1
+      specifier: 1.0.0-beta.3
+      version: 1.0.0-beta.3
     '@msw/playwright':
       specifier: 0.6.7
       version: 0.6.7
@@ -252,6 +252,13 @@ catalogs:
     zone.js:
       specifier: 0.15.1
       version: 0.15.1
+  peer-compatibility:
+    '@types/react':
+      specifier: ^18 || ^19
+      version: 19.2.18
+    '@types/react-dom':
+      specifier: ^18 || ^19
+      version: 19.2.5
 
 overrides:
   braces: 3.0.3
@@ -1493,7 +1500,7 @@ importers:
         version: 0.0.57
       '@coveo/thermidor-schema':
         specifier: 'catalog:'
-        version: 1.0.0-beta.1(zod@4.4.3)
+        version: 1.0.0-beta.3(zod@4.4.3)
       '@reduxjs/toolkit':
         specifier: 'catalog:'
         version: 2.12.0(react@19.2.8)
@@ -2328,7 +2335,7 @@ importers:
         version: link:../../../packages/thermidor
       '@coveo/thermidor-schema':
         specifier: 'catalog:'
-        version: 1.0.0-beta.1(zod@4.4.3)
+        version: 1.0.0-beta.3(zod@4.4.3)
       dompurify:
         specifier: 'catalog:'
         version: 3.4.14
@@ -3803,8 +3810,8 @@ packages:
   '@coveo/semantic-monorepo-tools@2.7.1':
     resolution: {integrity: sha512-yPUdpPgoZWxX/lyhQWaskwGXS4ZFLsOK4QVUyD+1BtOk/827vqw93Q7UD4aumuYMVKTDnGjjHOEmHl07nzUvYw==}
 
-  '@coveo/thermidor-schema@1.0.0-beta.1':
-    resolution: {integrity: sha512-05kDhtORsuTX6I+l7MevS9GR5zwZRIF5nN0q+Zf0hW3fy2X0NAV7rRU9c+mFauJAzrhjXBHfm4OP8SGrPlNY9g==}
+  '@coveo/thermidor-schema@1.0.0-beta.3':
+    resolution: {integrity: sha512-Cif1fL3FjOoXK8n1HwbrJtDMCEl4OXU4T6jkWYT8QHP2plz6TahUVLTiIyxNuYfq8aa/N7fgXzgmum6JHp6okA==}
     engines: {node: '>=22.14.0'}
     peerDependencies:
       zod: ^4.4.3
@@ -18707,7 +18714,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@coveo/thermidor-schema@1.0.0-beta.1(zod@4.4.3)':
+  '@coveo/thermidor-schema@1.0.0-beta.3(zod@4.4.3)':
     dependencies:
       zod: 4.4.3
 
