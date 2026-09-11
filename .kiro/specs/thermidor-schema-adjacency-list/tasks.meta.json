@@ -1,0 +1,434 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Create `schema/definitions/child-ref.schema.json`": [
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788451811883
+      },
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788451824218
+      },
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788451891722
+      }
+    ],
+    "2.1 Add optional `children` and `child` to `schema/base/component.schema.json`": [
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788451811922
+      },
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788451898042
+      },
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788451996657
+      }
+    ],
+    "3.1 Re-declare `children`/`child` in each of the 14 existing component documents' own `properties`": [
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788451811945
+      },
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788452004355
+      },
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788452134719
+      }
+    ],
+    "3.2 Create `schema/components/commerce-search.schema.json`": [
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788451811971
+      },
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788451899246
+      },
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788451998583
+      }
+    ],
+    "3.3 Add `commerce-search` to the `oneOf` in `schema/components/component-contracts.schema.json`": [
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788451811995
+      },
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788452005461
+      },
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788452134858
+      }
+    ],
+    "4.1 Add the co-located per-member triad `$defs` view to each component document": [
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788451812020
+      },
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788452142039
+      },
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788452379052
+      }
+    ],
+    "4.2 Add `ComponentContractsTriad` to `schema/components/component-contracts.schema.json`": [
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788451812067
+      },
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788452412368
+      },
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788452486506
+      }
+    ],
+    "4.3 Create `schema/composition/composition-snapshot.schema.json`": [
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788451812096
+      },
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788452494302
+      },
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788452636171
+      }
+    ],
+    "5.1 Add `composition-snapshot.schema.json` as an explicit projection entry in `scripts/generate-zod.ts`": [
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788451812121
+      },
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788452637405
+      },
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788452808928
+      }
+    ],
+    "5.2 Regenerate `src/generated/schemas.ts`": [
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788451812146
+      },
+      {
+        "executionId": "84d57a57-a1ca-487b-a671-59c2a02a94ef",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788452986177
+      },
+      {
+        "executionId": "84d57a57-a1ca-487b-a671-59c2a02a94ef",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788453173381
+      }
+    ],
+    "6.1 Add new exports to `src/index.ts`": [
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788451812171
+      },
+      {
+        "executionId": "84d57a57-a1ca-487b-a671-59c2a02a94ef",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788453295900
+      },
+      {
+        "executionId": "84d57a57-a1ca-487b-a671-59c2a02a94ef",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788453414364
+      }
+    ],
+    "8. Checkpoint \u2014 schema package builds and generates cleanly": [
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788451812246
+      },
+      {
+        "executionId": "84d57a57-a1ca-487b-a671-59c2a02a94ef",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788453420009
+      },
+      {
+        "executionId": "84d57a57-a1ca-487b-a671-59c2a02a94ef",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788453431812
+      }
+    ],
+    "9.1 Add a minimal `commerce-search` instance to the SDK property test": [
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788451812272
+      },
+      {
+        "executionId": "84d57a57-a1ca-487b-a671-59c2a02a94ef",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788453433179
+      },
+      {
+        "executionId": "84d57a57-a1ca-487b-a671-59c2a02a94ef",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788453573900
+      }
+    ],
+    "10.1 Add valid and invalid composition-snapshot fixtures": [
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788451812296
+      },
+      {
+        "executionId": "84d57a57-a1ca-487b-a671-59c2a02a94ef",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788453434847
+      },
+      {
+        "executionId": "84d57a57-a1ca-487b-a671-59c2a02a94ef",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788453575244
+      }
+    ],
+    "10.2 Register the fixtures in `tests/contract.test.ts`": [
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788451812329
+      },
+      {
+        "executionId": "84d57a57-a1ca-487b-a671-59c2a02a94ef",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788453576346
+      },
+      {
+        "executionId": "84d57a57-a1ca-487b-a671-59c2a02a94ef",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788453644511
+      }
+    ],
+    "13.1 Run the full schema-package verification suite": [
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788451812354
+      }
+    ],
+    "13.2 Confirm mocks and both samples build/pass UNCHANGED": [
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788451812381
+      }
+    ],
+    "13.3 Add the changeset for `@coveo/thermidor-schema`": [
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788451812406
+      }
+    ],
+    "14. Final checkpoint \u2014 Ensure all tests pass": [
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788451812434
+      }
+    ],
+    "1. Add the shared child-ref definition": [
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788451891765
+      }
+    ],
+    "2. Extend the base component contract with composition fields": [
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788451996698
+      }
+    ],
+    "3. Re-declare composition fields per component, add commerce-search, and widen the union": [
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788452134889
+      }
+    ],
+    "4. Add the composition snapshot contract and the triad view": [
+      {
+        "executionId": "2ac59ccb-578e-42f1-91d0-a3b9b4cca44c",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788452636212
+      }
+    ],
+    "5. Wire generation reachability and regenerate the Zod projection": [
+      {
+        "executionId": "84d57a57-a1ca-487b-a671-59c2a02a94ef",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788453173413
+      }
+    ],
+    "6. Export the new schemas and types from the package entry point": [
+      {
+        "executionId": "84d57a57-a1ca-487b-a671-59c2a02a94ef",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788453414397
+      }
+    ],
+    "9. Widen the `@coveo/thermidor` SDK union enumeration (only cross-package change)": [
+      {
+        "executionId": "84d57a57-a1ca-487b-a671-59c2a02a94ef",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788453573936
+      }
+    ],
+    "10. Add composition-snapshot fixtures and the fixture-driven table entries": [
+      {
+        "executionId": "84d57a57-a1ca-487b-a671-59c2a02a94ef",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788453644552
+      }
+    ],
+    "3.4 Structural assertions for base/commerce-search/union (extend `tests/facet-schemas.test.ts` pattern)": [
+      {
+        "executionId": "b28b999d-24d0-4ed7-8e55-e3e34ea80308",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788454385730
+      },
+      {
+        "executionId": "b28b999d-24d0-4ed7-8e55-e3e34ea80308",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788454553237
+      }
+    ],
+    "4.4 Structural assertions for the composition snapshot document": [
+      {
+        "executionId": "b28b999d-24d0-4ed7-8e55-e3e34ea80308",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788454386773
+      },
+      {
+        "executionId": "b28b999d-24d0-4ed7-8e55-e3e34ea80308",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788454554604
+      }
+    ],
+    "5.3 Assert the projection is non-recursive and fresh": [
+      {
+        "executionId": "b28b999d-24d0-4ed7-8e55-e3e34ea80308",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788454388075
+      },
+      {
+        "executionId": "b28b999d-24d0-4ed7-8e55-e3e34ea80308",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788454555596
+      }
+    ],
+    "12.1 Confirm existing state fixtures and `migration-properties.test.ts` still pass": [
+      {
+        "executionId": "b28b999d-24d0-4ed7-8e55-e3e34ea80308",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788454390310
+      },
+      {
+        "executionId": "b28b999d-24d0-4ed7-8e55-e3e34ea80308",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788454558043
+      }
+    ],
+    "12. Backward-compat regression": [
+      {
+        "executionId": "b28b999d-24d0-4ed7-8e55-e3e34ea80308",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788454558075
+      }
+    ],
+    "11.1 Property 1 \u2014 Ajv\u2013Zod agreement per changed contract": [
+      {
+        "executionId": "b28b999d-24d0-4ed7-8e55-e3e34ea80308",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788454564725
+      }
+    ],
+    "11.2 Property 2 \u2014 Composition-field optionality": [
+      {
+        "executionId": "b28b999d-24d0-4ed7-8e55-e3e34ea80308",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788454565703
+      }
+    ],
+    "11.3 Property 3 \u2014 Child-reference pattern enforcement": [
+      {
+        "executionId": "b28b999d-24d0-4ed7-8e55-e3e34ea80308",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788454567063
+      }
+    ],
+    "11.4 Property 4 \u2014 Every component type carries composition through the base": [
+      {
+        "executionId": "b28b999d-24d0-4ed7-8e55-e3e34ea80308",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788454568515
+      }
+    ],
+    "11.5 Property 5 \u2014 Discriminant resolution": [
+      {
+        "executionId": "b28b999d-24d0-4ed7-8e55-e3e34ea80308",
+        "chatSessionId": "sess_141ad6c2-0cca-4cf1-85ef-eec885000115",
+        "timestamp": 1788454569286
+      }
+    ]
+  }
+}
