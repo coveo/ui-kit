@@ -80,7 +80,7 @@ export async function legacyFetchMoreResults(
   const processor = new AsyncInsightSearchThunkProcessor<ReturnType<typeof config.rejectWithValue>>(
     {
       ...config,
-      analyticsAction: logFetchMoreResults,
+      analyticsAction: logFetchMoreResults(),
     }
   );
 
