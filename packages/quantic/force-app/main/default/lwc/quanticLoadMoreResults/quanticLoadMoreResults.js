@@ -1,3 +1,4 @@
+import LOCALE from '@salesforce/i18n/locale';
 import allResultsLoaded from '@salesforce/label/c.quantic_AllResultsLoaded';
 import loadMoreResults from '@salesforce/label/c.quantic_LoadMoreResults';
 import showingResultsOfLoadMore from '@salesforce/label/c.quantic_ShowingResultsOfLoadMore';
@@ -134,8 +135,8 @@ export default class QuanticLoadMoreResults extends LightningElement {
     );
     return I18nUtils.format(
       this.labels[labelName],
-      Intl.NumberFormat().format(this.querySummaryState?.lastResult).toString(),
-      Intl.NumberFormat().format(this.querySummaryState?.total).toString()
+      Intl.NumberFormat(LOCALE).format(this.querySummaryState?.lastResult).toString(),
+      Intl.NumberFormat(LOCALE).format(this.querySummaryState?.total).toString()
     );
   }
 
