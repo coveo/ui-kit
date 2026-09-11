@@ -5,11 +5,7 @@ import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 import {describe, expect, it} from 'vitest';
 import {
-  BundleDisplaySchema,
   BundleDisplayStateSchema,
-  CartItemSchema,
-  CartSchema,
-  CartStateSchema,
   CategoryFacetStateSchema,
   ComparisonTableStateSchema,
   ComponentContractsSchema,
@@ -21,15 +17,12 @@ import {
   PageSizeStateSchema,
   QuerySummaryStateSchema,
   NumericFacetStateSchema,
-  ProductCarouselSchema,
   ProductCarouselStateSchema,
   ProductListStateSchema,
   ProductSummaryStateSchema,
   ProductSchema,
   RegularFacetStateSchema,
   SelectActionPayloadSchema,
-  SetItemsPayloadSchema,
-  UpdateItemQuantityPayloadSchema,
 } from '../src/index.js';
 
 const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -86,18 +79,6 @@ const fixtures = [
     valid: false,
   },
   {
-    file: 'cart-item.valid.json',
-    schema: CartItemSchema,
-    schemaId: 'https://schema.thermidor.coveo.com/definitions/cart-item.schema.json',
-    valid: true,
-  },
-  {
-    file: 'cart-item.invalid-quantity.json',
-    schema: CartItemSchema,
-    schemaId: 'https://schema.thermidor.coveo.com/definitions/cart-item.schema.json',
-    valid: false,
-  },
-  {
     file: 'product-carousel-state.valid.json',
     schema: ProductCarouselStateSchema,
     schemaId:
@@ -124,40 +105,6 @@ const fixtures = [
     schemaId:
       'https://schema.thermidor.coveo.com/components/product-summary.schema.json#/$defs/ProductSummaryState',
     valid: true,
-  },
-  {
-    file: 'cart-state.valid.json',
-    schema: CartStateSchema,
-    schemaId: 'https://schema.thermidor.coveo.com/components/cart.schema.json#/$defs/CartState',
-    valid: true,
-  },
-  {
-    file: 'set-items-payload.valid.json',
-    schema: SetItemsPayloadSchema,
-    schemaId:
-      'https://schema.thermidor.coveo.com/components/cart.schema.json#/$defs/SetItemsAction/properties/payload',
-    valid: true,
-  },
-  {
-    file: 'set-items-payload.invalid-extra-property.json',
-    schema: SetItemsPayloadSchema,
-    schemaId:
-      'https://schema.thermidor.coveo.com/components/cart.schema.json#/$defs/SetItemsAction/properties/payload',
-    valid: false,
-  },
-  {
-    file: 'update-item-quantity-payload.valid.json',
-    schema: UpdateItemQuantityPayloadSchema,
-    schemaId:
-      'https://schema.thermidor.coveo.com/components/cart.schema.json#/$defs/UpdateItemQuantityAction/properties/payload',
-    valid: true,
-  },
-  {
-    file: 'update-item-quantity-payload.invalid-missing-item.json',
-    schema: UpdateItemQuantityPayloadSchema,
-    schemaId:
-      'https://schema.thermidor.coveo.com/components/cart.schema.json#/$defs/UpdateItemQuantityAction/properties/payload',
-    valid: false,
   },
   {
     file: 'next-actions-state.valid.json',
@@ -379,32 +326,6 @@ describe('component contract discriminated union', () => {
     expect(ComponentContractsSchema.safeParse(contract).success).toBe(true);
   });
 
-  it('accepts valid Cart contract', () => {
-    const cartItem = {name: 'Kayak', price: 1, productId: 'kayak-001', quantity: 1};
-    const contract = {
-      actions: {
-        setItems: {payload: {items: [cartItem]}},
-        updateItemQuantity: {payload: {item: cartItem}},
-      },
-      componentType: 'cart',
-      state: {items: [cartItem]},
-    };
-    expect(ComponentContractsSchema.safeParse(contract).success).toBe(true);
-  });
-
-  it('rejects cart contract with product-carousel componentType', () => {
-    const cartItem = {name: 'Kayak', price: 1, productId: 'kayak-001', quantity: 1};
-    const contract = {
-      actions: {
-        setItems: {payload: {items: [cartItem]}},
-        updateItemQuantity: {payload: {item: cartItem}},
-      },
-      componentType: 'product-carousel',
-      state: {items: [cartItem]},
-    };
-    expect(ComponentContractsSchema.safeParse(contract).success).toBe(false);
-  });
-
   it('rejects unknown componentType value', () => {
     const contract = {
       actions: {},
@@ -416,7 +337,10 @@ describe('component contract discriminated union', () => {
 
   it('accesses nested action payload schemas', () => {
     expect(
-      CartSchema.shape.actions.shape.setItems.shape.payload.safeParse({items: []}).success
+      NextActionsBarSchema.shape.actions.shape.selectAction.shape.payload.safeParse({
+        text: 'test',
+        type: 'followup',
+      }).success
     ).toBe(true);
   });
 

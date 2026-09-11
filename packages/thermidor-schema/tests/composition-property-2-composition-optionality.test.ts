@@ -30,16 +30,6 @@ const minimalInstances: Record<string, Record<string, unknown>> = {
     state: {heading: 'Featured', products: []},
     actions: {},
   },
-  cart: {
-    componentType: 'cart',
-    state: {items: []},
-    actions: {
-      setItems: {payload: {items: []}},
-      updateItemQuantity: {
-        payload: {item: {productId: 'p1', name: 'Widget', price: 5, quantity: 1}},
-      },
-    },
-  },
   'next-actions-bar': {
     componentType: 'next-actions-bar',
     state: {actions: []},
@@ -202,9 +192,9 @@ const componentTypes = Object.keys(minimalInstances);
 
 describe('Feature: thermidor-schema-adjacency-list, Property 2: Composition-field optionality', () => {
   it('every componentType has a minimal instance declaring neither children nor child', () => {
-    // 13 existing members + commerce-search + product-summary + layout-stack + query-summary +
-    // page-size = 18.
-    expect(componentTypes).toHaveLength(18);
+    // 12 existing members + commerce-search + product-summary + layout-stack + query-summary +
+    // page-size = 17.
+    expect(componentTypes).toHaveLength(17);
     for (const instance of Object.values(minimalInstances)) {
       expect(instance).not.toHaveProperty('children');
       expect(instance).not.toHaveProperty('child');

@@ -1,14 +1,11 @@
 import {describe, expect, it} from 'vitest';
 import {thermidorCatalogDefinitions, THERMIDOR_CATALOG_ID} from './components.js';
 import {
-  CartSchema,
   ProductCarouselSchema,
-  ComponentContractsSchema,
   ProductCarouselPropsSchema,
   ProductSchema,
   ProductSummarySchema,
   ProductSummaryPropsSchema,
-  CartItemSchema,
   ComparisonTableSchema,
   LayoutStackSchema,
   LayoutStackPropsSchema,
@@ -28,7 +25,7 @@ describe('thermidorCatalogDefinitions', () => {
     ).toBe(true);
   });
 
-  it('validates generated Product and CartItem values against their JSON Schema constraints', () => {
+  it('validates generated Product values against their JSON Schema constraints', () => {
     expect(
       ProductSchema.safeParse({
         permanentid: 'p1',
@@ -46,47 +43,24 @@ describe('thermidorCatalogDefinitions', () => {
         additionalFields: {},
       }).success
     ).toBe(false);
-    expect(
-      CartItemSchema.safeParse({productId: 'p1', name: 'Trail shoes', price: 0, quantity: 1})
-        .success
-    ).toBe(true);
-    expect(
-      CartItemSchema.safeParse({productId: 'p1', name: 'Trail shoes', price: -1, quantity: 1})
-        .success
-    ).toBe(false);
-    expect(
-      CartItemSchema.safeParse({productId: 'p1', name: 'Trail shoes', price: 99.99, quantity: 1.5})
-        .success
-    ).toBe(false);
   });
 
   it('rejects props with wrong componentType literal', () => {
     expect(
       ProductCarouselPropsSchema.safeParse({
         componentId: 'featured-products',
-        componentType: 'cart',
+        componentType: 'comparison-table',
       }).success
     ).toBe(false);
   });
 
-  it('validates component contract state and actions via ComponentContractsSchema', () => {
+  it('validates component contract state via the generated component schema', () => {
     expect(
       ProductCarouselSchema.shape.state.safeParse({
         heading: 'Trail shoes',
         products: [{permanentid: 'p1', ec_name: 'Trail shoes', additionalFields: {}}],
       }).success
     ).toBe(true);
-    expect(CartSchema.shape.state.safeParse({items: []}).success).toBe(true);
-    expect(
-      CartSchema.shape.actions.shape.setItems.shape.payload.safeParse({
-        items: [{productId: 'p1', name: 'Trail shoes', price: 99.99, quantity: 1}],
-      }).success
-    ).toBe(true);
-    expect(
-      CartSchema.shape.actions.shape.updateItemQuantity.shape.payload.safeParse({
-        item: {productId: 'p1', name: 'Trail shoes', price: 99.99, quantity: 0},
-      }).success
-    ).toBe(false);
   });
 
   it('registers the product-summary component in the catalog with a matching contract', () => {

@@ -59,24 +59,6 @@ export const ProductCarouselStateSchema = z.strictObject({
 });
 export type ProductCarouselState = z.infer<typeof ProductCarouselStateSchema>;
 
-export const CartItemSchema = z.strictObject({
-  name: z.string(),
-  price: z.number().min(0),
-  productId: z.string(),
-  quantity: z.number().int().min(1),
-});
-export type CartItem = z.infer<typeof CartItemSchema>;
-
-export const UpdateItemQuantityPayloadSchema = z.strictObject({
-  item: CartItemSchema,
-});
-export type UpdateItemQuantityPayload = z.infer<typeof UpdateItemQuantityPayloadSchema>;
-
-export const CartStateSchema = z.strictObject({
-  items: z.array(CartItemSchema),
-});
-export type CartState = z.infer<typeof CartStateSchema>;
-
 export const SelectActionPayloadSchema = z.strictObject({
   text: z.string(),
   type: z.enum(['followup', 'search']),
@@ -368,16 +350,6 @@ export const ProductCarouselSchema = z.strictObject({
 });
 export type ProductCarousel = z.infer<typeof ProductCarouselSchema>;
 
-export const SetItemsPayloadSchema = z.strictObject({
-  items: z.array(CartItemSchema),
-});
-export type SetItemsPayload = z.infer<typeof SetItemsPayloadSchema>;
-
-export const UpdateItemQuantitySchema = z.strictObject({
-  payload: UpdateItemQuantityPayloadSchema,
-});
-export type UpdateItemQuantity = z.infer<typeof UpdateItemQuantitySchema>;
-
 export const SelectActionSchema = z.strictObject({
   payload: SelectActionPayloadSchema,
 });
@@ -603,11 +575,6 @@ export const FluffySetPageSizeSchema = z.strictObject({
 });
 export type FluffySetPageSize = z.infer<typeof FluffySetPageSizeSchema>;
 
-export const SetItemsSchema = z.strictObject({
-  payload: SetItemsPayloadSchema,
-});
-export type SetItems = z.infer<typeof SetItemsSchema>;
-
 export const NextActionsBarActionsSchema = z.strictObject({
   selectAction: SelectActionSchema,
 });
@@ -711,12 +678,6 @@ export const PageSizeActionsSchema = z.strictObject({
   setPageSize: FluffySetPageSizeSchema,
 });
 export type PageSizeActions = z.infer<typeof PageSizeActionsSchema>;
-
-export const CartActionsSchema = z.strictObject({
-  setItems: SetItemsSchema,
-  updateItemQuantity: UpdateItemQuantitySchema,
-});
-export type CartActions = z.infer<typeof CartActionsSchema>;
 
 export const NextActionsBarSchema = z.strictObject({
   actions: NextActionsBarActionsSchema,
@@ -826,21 +787,8 @@ export const PageSizeSchema = z.strictObject({
 });
 export type PageSize = z.infer<typeof PageSizeSchema>;
 
-export const CartSchema = z.strictObject({
-  actions: CartActionsSchema,
-  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
-  children: z
-    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
-    .max(1000)
-    .optional(),
-  componentType: z.literal('cart'),
-  state: CartStateSchema,
-});
-export type Cart = z.infer<typeof CartSchema>;
-
 export const ComponentContractsSchema = z.discriminatedUnion('componentType', [
   ProductCarouselSchema,
-  CartSchema,
   NextActionsBarSchema,
   BundleDisplaySchema,
   ComparisonTableSchema,
@@ -871,12 +819,6 @@ export const BundleDisplayPropsSchema = z.object({
   componentType: z.literal('bundle-display'),
 });
 export type BundleDisplayProps = z.infer<typeof BundleDisplayPropsSchema>;
-
-export const CartPropsSchema = z.object({
-  componentId: z.string(),
-  componentType: z.literal('cart'),
-});
-export type CartProps = z.infer<typeof CartPropsSchema>;
 
 export const CategoryFacetPropsSchema = z.object({
   componentId: z.string(),

@@ -26,31 +26,88 @@ Turbo's `^build` dependency rule ensures that `@coveo/thermidor-schema` is fully
 
 ## Published Exports
 
-Value exports (Zod schemas):
+The authoritative source is the package barrel `src/index.ts` (re-exported from `src/generated/schemas.ts`). The list below is a convenience snapshot; if it disagrees with `src/index.ts`, `src/index.ts` wins.
 
-- `CartItemSchema`
-- `CartControllerContractSchema`
-- `CartStateSchema`
-- `ControllerContractsSchema`
-- `ProductListControllerContractSchema`
-- `ProductListStateSchema`
+The schema exposes flat component contracts (`componentType`, `state`, `actions`) aggregated by `ComponentContractsSchema`.
+
+Besides the exported schemas and types listed below, the package also exports the constant `THERMIDOR_CATALOG_ID`.
+
+### Value exports (Zod schemas)
+
+#### Component contracts
+
+- `ProductCarouselSchema`
+- `NextActionsBarSchema`
+- `BundleDisplaySchema`
+- `ComparisonTableSchema`
+- `ProductListSchema`
+- `ProductSummarySchema`
+- `PaginationSchema`
+- `SortSchema`
+- `RegularFacetSchema`
+- `NumericFacetSchema`
+- `DateFacetSchema`
+- `CategoryFacetSchema`
+- `FacetManagerSchema`
+- `CommerceSearchSchema`
+- `LayoutStackSchema`
+- `QuerySummarySchema`
+- `PageSizeSchema`
+- `ComponentContractsSchema` (discriminated union of all component contracts)
+
+#### Component props
+
+- `BundleDisplayPropsSchema`
+- `CategoryFacetPropsSchema`
+- `CommerceSearchPropsSchema`
+- `ComparisonTablePropsSchema`
+- `DateFacetPropsSchema`
+- `FacetManagerPropsSchema`
+- `LayoutStackPropsSchema`
+- `NextActionsBarPropsSchema`
+- `NumericFacetPropsSchema`
+- `PageSizePropsSchema`
+- `PaginationPropsSchema`
+- `ProductCarouselPropsSchema`
+- `ProductListPropsSchema`
+- `ProductSummaryPropsSchema`
+- `QuerySummaryPropsSchema`
+- `RegularFacetPropsSchema`
+- `SortPropsSchema`
+
+#### State, actions, value, and action-payload schemas
+
+Each contract also exports the schemas that compose it:
+
+- `*StateSchema`
+- `*ActionsSchema`
+- `*ValueSchema`
+- `*PayloadSchema`
+
+#### Shared definitions
+
 - `ProductSchema`
-- `SetItemsPayloadSchema`
-- `UpdateItemQuantityPayloadSchema`
+- `ActionItemSchema`
+- `BundleSlotSchema`
+- `BundleTierSchema`
+- `ComparisonAttributeSchema`
+- `ComparisonProductSchema`
+- `SortCriterionSchema`
+- `FacetValueStateSchema`
+- `SelectableFacetValueStateSchema`
 
-Type exports:
+### Type exports
 
-- `CartItem`
-- `CartControllerContract`
-- `CartState`
-- `ControllerContracts`
+The inferred TypeScript type for every exported schema above, for example:
+
+- `ProductCarousel`
+- `ComponentContracts`
 - `Product`
-- `ProductListControllerContract`
-- `ProductListState`
-- `SetItemsPayload`
-- `UpdateItemQuantityPayload`
+- `Sort`
+- `SortState`
+- `NumericFacetValue`
+- `ProductCarouselProps`
 
 ## Canonical Schema IDs
 
-- Product List Controller: `https://schema.thermidor.coveo.com/controllers/product-list.schema.json`
-- Cart Controller: `https://schema.thermidor.coveo.com/controllers/cart.schema.json`
+Component contract `$id`s follow the pattern `https://schema.thermidor.coveo.com/components/<component>.schema.json`; shared definitions use `https://schema.thermidor.coveo.com/definitions/<definition>.schema.json`. The authoritative IDs live in the JSON Schema sources under `schema/`.

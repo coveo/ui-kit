@@ -4,7 +4,6 @@ import {
   selectRemoteControllerState,
   type RemoteControllerSource,
 } from '@coveo/thermidor';
-import {CartSchema, ComponentContractsSchema} from '@coveo/thermidor-schema';
 
 describe('selectRemoteControllerState', () => {
   it('selects state from components[componentId] in the active Thermidor turn', () => {
@@ -22,44 +21,28 @@ describe('selectRemoteControllerState', () => {
     expect(selectRemoteControllerState(state, 'unknown-component')).toEqual({});
   });
 
-  it('validates Cart component contract with state and actions', () => {
-    const cartItem = {productId: 'p1', name: 'Product', price: 10, quantity: 2};
-    const contract = {
-      componentType: 'cart',
-      state: {items: [cartItem]},
-      actions: {
-        setItems: {payload: {items: [cartItem]}},
-        updateItemQuantity: {payload: {item: cartItem}},
-      },
-    };
-
-    expect(CartSchema.parse(contract)).toEqual(contract);
-  });
-
   it('builds a remote controller from componentType and dispatches correctly', async () => {
     const dispatchAction = vi.fn();
     const source = {
       state: {
-        activeTurn: {agentResponse: {state: {components: {'shopping-cart': {items: []}}}}},
+        activeTurn: {agentResponse: {state: {components: {'page-size': {pageSize: 12}}}}},
       },
       subscribe: () => () => undefined,
       dispatchAction,
     } as unknown as RemoteControllerSource;
     const controller = buildRemoteController({
       source,
-      componentId: 'shopping-cart',
-      componentType: 'cart',
+      componentId: 'page-size',
+      componentType: 'page-size',
     });
 
-    await controller.dispatch('updateItemQuantity', {
-      item: {productId: 'p1', name: 'Product', price: 10, quantity: 2},
-    });
+    await controller.dispatch('setPageSize', {pageSize: 24});
 
     expect(dispatchAction).toHaveBeenCalledWith({
-      componentId: 'shopping-cart',
-      componentType: 'cart',
-      action: 'updateItemQuantity',
-      payload: {item: {productId: 'p1', name: 'Product', price: 10, quantity: 2}},
+      componentId: 'page-size',
+      componentType: 'page-size',
+      action: 'setPageSize',
+      payload: {pageSize: 24},
     });
   });
 });

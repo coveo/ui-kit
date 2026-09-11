@@ -5,7 +5,7 @@ import {ComponentContractsSchema} from '../src/index.js';
 /**
  * Property 4: Every component type carries composition through the base
  *
- * For ANY of the 18 componentTypes in the union (13 existing + commerce-search + product-summary
+ * For ANY of the 17 componentTypes in the union (12 existing + commerce-search + product-summary
  * + layout-stack + query-summary + page-size)
  * and ANY valid `children` array and/or `child` id, a valid instance of that
  * type augmented with those composition fields is accepted by
@@ -32,16 +32,6 @@ const minimalInstances: Record<string, Record<string, unknown>> = {
     componentType: 'product-carousel',
     state: {heading: 'Featured', products: []},
     actions: {},
-  },
-  cart: {
-    componentType: 'cart',
-    state: {items: []},
-    actions: {
-      setItems: {payload: {items: []}},
-      updateItemQuantity: {
-        payload: {item: {productId: 'p1', name: 'Widget', price: 5, quantity: 1}},
-      },
-    },
   },
   'next-actions-bar': {
     componentType: 'next-actions-bar',
@@ -215,8 +205,8 @@ const childrenArb = fc.array(componentId, {maxLength: 8});
 const childArb = fc.option(componentId, {nil: undefined});
 
 describe('Feature: thermidor-schema-adjacency-list, Property 4: Every component type carries composition through the base', () => {
-  it('the union covers 13 existing members + commerce-search + product-summary + layout-stack + query-summary + page-size', () => {
-    expect(componentTypes).toHaveLength(18);
+  it('the union covers 12 existing members + commerce-search + product-summary + layout-stack + query-summary + page-size', () => {
+    expect(componentTypes).toHaveLength(17);
   });
 
   it('accepts any type augmented with valid children/child, and composition does not change state/actions validity', () => {

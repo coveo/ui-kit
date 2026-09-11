@@ -67,7 +67,6 @@ const VALID_FACET_COMPONENT_TYPES = [
 // "arbitrary other" string, so that the negative case remains meaningful.
 const OTHER_REAL_COMPONENT_TYPES = [
   'product-carousel',
-  'cart',
   'next-actions-bar',
   'bundle-display',
   'comparison-table',

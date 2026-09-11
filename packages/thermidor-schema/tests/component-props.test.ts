@@ -4,12 +4,10 @@ import {
   NextActionsBarPropsSchema,
   BundleDisplayPropsSchema,
   ComparisonTablePropsSchema,
-  CartPropsSchema,
   ProductCarouselSchema,
   NextActionsBarSchema,
   BundleDisplaySchema,
   ComparisonTableSchema,
-  CartSchema,
 } from '../src/index.js';
 
 describe('component props schemas', () => {
@@ -37,10 +35,6 @@ describe('component props schemas', () => {
         ComparisonTableSchema.shape.componentType.value
       );
     });
-
-    it('CartPropsSchema componentType matches Cart contract', () => {
-      expect(CartPropsSchema.shape.componentType.value).toBe(CartSchema.shape.componentType.value);
-    });
   });
 
   describe('validation', () => {
@@ -57,7 +51,7 @@ describe('component props schemas', () => {
       expect(
         ProductCarouselPropsSchema.safeParse({
           componentId: 'featured-products',
-          componentType: 'cart',
+          componentType: 'comparison-table',
         }).success
       ).toBe(false);
     });
@@ -75,15 +69,6 @@ describe('component props schemas', () => {
         NextActionsBarPropsSchema.safeParse({
           componentId: 'suggested-actions',
           componentType: 'next-actions-bar',
-        }).success
-      ).toBe(true);
-    });
-
-    it('accepts valid Cart props', () => {
-      expect(
-        CartPropsSchema.safeParse({
-          componentId: 'shopping-cart',
-          componentType: 'cart',
         }).success
       ).toBe(true);
     });

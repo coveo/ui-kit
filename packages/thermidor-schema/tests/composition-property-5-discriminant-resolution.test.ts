@@ -25,25 +25,15 @@ const NUM_RUNS = 100;
  * A minimal valid entry ({componentType, state, actions}) per componentType,
  * mirroring the SDK's `minimalInstances` map
  * (packages/thermidor/src/public/controllers/remote/remote-controller.property.test.ts)
- * and the sibling Property 2 test. Covers the 13 existing members plus the
+ * and the sibling Property 2 test. Covers the 12 existing members plus the
  * `commerce-search`, `product-summary`, `layout-stack`, `query-summary` and
- * `page-size` members (18 total).
+ * `page-size` members (17 total).
  */
 const minimalInstances: Record<string, Record<string, unknown>> = {
   'product-carousel': {
     componentType: 'product-carousel',
     state: {heading: 'Featured', products: []},
     actions: {},
-  },
-  cart: {
-    componentType: 'cart',
-    state: {items: []},
-    actions: {
-      setItems: {payload: {items: []}},
-      updateItemQuantity: {
-        payload: {item: {productId: 'p1', name: 'Widget', price: 5, quantity: 1}},
-      },
-    },
   },
   'next-actions-bar': {
     componentType: 'next-actions-bar',
@@ -206,8 +196,8 @@ const minimalInstances: Record<string, Record<string, unknown>> = {
 const componentTypes = Object.keys(minimalInstances);
 
 describe('Feature: thermidor-schema-adjacency-list, Property 5: Discriminant resolution', () => {
-  it('covers the 13 existing members plus commerce-search, product-summary, layout-stack, query-summary and page-size (18 total)', () => {
-    expect(componentTypes).toHaveLength(18);
+  it('covers the 12 existing members plus commerce-search, product-summary, layout-stack, query-summary and page-size (17 total)', () => {
+    expect(componentTypes).toHaveLength(17);
     expect(componentTypes).toContain('commerce-search');
     expect(componentTypes).toContain('product-summary');
     expect(componentTypes).toContain('layout-stack');

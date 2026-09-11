@@ -23,7 +23,7 @@
       "type": "string",
       "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
       "maxLength": 128,
-      "description": "Stable kebab-case type identifier (e.g. 'cart'). Used as discriminant for contract resolution."
+      "description": "Stable kebab-case type identifier (e.g. 'product-carousel'). Used as discriminant for contract resolution."
     },
     "state": {
       "type": "object",

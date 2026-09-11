@@ -41,20 +41,14 @@ describe('package validation', () => {
   it('all expected exports are present in the built index.d.ts', () => {
     const dts = readFileSync(path.join(packageRoot, 'dist', 'index.d.ts'), 'utf8');
     const expectedExports = [
-      'CartItemSchema',
-      'CartSchema',
-      'CartStateSchema',
       'ComponentContractsSchema',
       'ProductCarouselSchema',
       'ProductListStateSchema',
       'ProductSchema',
-      'SetItemsPayloadSchema',
-      'UpdateItemQuantityPayloadSchema',
       'BundleDisplaySchema',
       'ComparisonTableSchema',
       'NextActionsBarSchema',
       'ProductCarouselPropsSchema',
-      'CartPropsSchema',
     ];
     for (const name of expectedExports) {
       expect(dts).toContain(name);
