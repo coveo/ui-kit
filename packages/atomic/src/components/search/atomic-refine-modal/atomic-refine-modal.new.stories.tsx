@@ -2,6 +2,7 @@ import type {Decorator, Meta, StoryObj as Story} from '@storybook/web-components
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
+import {expect, waitFor} from 'storybook/test';
 import {testDialogA11y} from '@/storybook-utils/a11y/dialog.js';
 import {MockSearchApi} from '@coveo/platform-mock-api/search';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -14,6 +15,23 @@ import '@/src/components/search/atomic-sort-expression/atomic-sort-expression.js
 
 const searchApiHarness = new MockSearchApi();
 const {decorator, play} = wrapInSearchInterface();
+
+async function waitForModalAnimationEnd(canvasElement: HTMLElement) {
+  let animations: Animation[] = [];
+
+  await waitFor(() => {
+    const refineModal = canvasElement.querySelector('atomic-refine-modal');
+    const modal = refineModal?.shadowRoot?.querySelector('atomic-modal');
+    expect(modal).toBeTruthy();
+    const container = modal?.shadowRoot?.querySelector('[part="container"]');
+    expect(container).toBeTruthy();
+    animations = container?.getAnimations() ?? [];
+    expect(animations.length).toBeGreaterThan(0);
+  });
+
+  await Promise.all(animations.map((animation) => animation.finished));
+}
+
 const {events, args, argTypes, template} = getStorybookHelpers('atomic-refine-modal', {
   excludeCategories: ['methods'],
 });
@@ -27,6 +45,9 @@ const meta: Meta = {
   render: (args) => template(args),
   parameters: {
     ...commonParameters,
+    a11y: {
+      context: 'atomic-refine-modal',
+    },
     actions: {
       handles: events,
     },
@@ -60,9 +81,7 @@ const meta: Meta = {
     await step('Open refine modal', async () => {
       await userEvent.click(refineToggleButton);
     });
-    // The modal open animation runs for 500ms. Wait for it to finish so accessibility
-    // checks run after the backdrop has fully settled.
-    await new Promise((resolve) => setTimeout(resolve, 600));
+    await waitForModalAnimationEnd(canvasElement);
   },
 };
 
@@ -159,7 +178,11 @@ export const DependentFacetOrder: Story = {
       );
       await userEvent.click(parentValue);
     });
-    await new Promise((resolve) => setTimeout(resolve, 300));
+    await within(refineModal).findByShadowRole(
+      'button',
+      {name: 'Expand the Language (dependent) facet'},
+      {timeout: 3000}
+    );
 
     const facetLabels = Array.from(
       refineModal.querySelector('div[slot="facets"]')?.children ?? []
