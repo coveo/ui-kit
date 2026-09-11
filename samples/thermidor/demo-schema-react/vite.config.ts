@@ -3,6 +3,10 @@ import {defineConfig, loadEnv} from 'vite';
 
 type PlatformEnvironment = 'prod' | 'dev' | 'stg' | 'hipaa';
 
+const STATEFUL_COMMERCE_FLAG_OVERRIDES = JSON.stringify({
+  'cpd-stateful-commerce-enabled': true,
+});
+
 function parseBoolean(value: string | undefined): boolean | undefined {
   if (!value) {
     return undefined;
@@ -70,6 +74,16 @@ export function resolveAgentRuntimeHeaders(
   };
 }
 
+export function resolveGatewayProxyHeaders(
+  runtimeName: string | undefined,
+  runtimeQualifier: string | undefined
+) {
+  return {
+    'X-Coveo-Feature-Flags-Overrides': STATEFUL_COMMERCE_FLAG_OVERRIDES,
+    ...(resolveAgentRuntimeHeaders(runtimeName, runtimeQualifier) ?? {}),
+  };
+}
+
 function getProxyTargets(mode: string) {
   const env = loadEnv(mode, process.cwd(), '');
 
@@ -85,7 +99,7 @@ export default defineConfig(({mode}) => {
   const useProxy = parseBoolean(env.VITE_COVEO_USE_VITE_PROXY) ?? true;
   const targets = getProxyTargets(mode);
   const orgId = env.VITE_COVEO_ORGANIZATION_ID?.trim();
-  const agentRuntimeHeaders = resolveAgentRuntimeHeaders(
+  const gatewayProxyHeaders = resolveGatewayProxyHeaders(
     env.VITE_COVEO_AGENT_RUNTIME_NAME,
     env.VITE_COVEO_AGENT_RUNTIME_QUALIFIER
   );
@@ -101,7 +115,7 @@ export default defineConfig(({mode}) => {
                 target: targets.agentGateway,
                 changeOrigin: true,
                 secure: true,
-                ...(agentRuntimeHeaders ? {headers: agentRuntimeHeaders} : {}),
+                headers: gatewayProxyHeaders,
               },
               '/rest': {
                 target: targets.platform,
