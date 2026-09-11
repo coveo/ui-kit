@@ -178,7 +178,24 @@ describe('buildUnifiedConverseController', () => {
             replace: false,
             payload: {
               messages: [
-                {createSurface: {surfaceType: 'commerceSearch', surfaceId: 'ui-commerce-search'}},
+                {
+                  version: 'v1.0',
+                  createSurface: {
+                    surfaceId: 'ui-commerce-search',
+                    rootId: 'commerce-search-root',
+                    components: [
+                      {
+                        id: 'commerce-search-root',
+                        component: 'CommerceSearch',
+                        props: {
+                          componentId: 'commerce-search-root',
+                          componentType: 'commerce-search',
+                        },
+                        children: [],
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -222,9 +239,21 @@ describe('buildUnifiedConverseController', () => {
             payload: {
               messages: [
                 {
+                  version: 'v1.0',
                   createSurface: {
-                    surfaceType: 'commerceSearch',
                     surfaceId: 'ui-commerce-search',
+                    rootId: 'commerce-search-root',
+                    components: [
+                      {
+                        id: 'commerce-search-root',
+                        component: 'CommerceSearch',
+                        props: {
+                          componentId: 'commerce-search-root',
+                          componentType: 'commerce-search',
+                        },
+                        children: [],
+                      },
+                    ],
                   },
                 },
               ],
@@ -284,7 +313,24 @@ describe('buildUnifiedConverseController', () => {
             replace: false,
             payload: {
               messages: [
-                {createSurface: {surfaceType: 'commerceSearch', surfaceId: 'ui-commerce-search'}},
+                {
+                  version: 'v1.0',
+                  createSurface: {
+                    surfaceId: 'ui-commerce-search',
+                    rootId: 'commerce-search-root',
+                    components: [
+                      {
+                        id: 'commerce-search-root',
+                        component: 'CommerceSearch',
+                        props: {
+                          componentId: 'commerce-search-root',
+                          componentType: 'commerce-search',
+                        },
+                        children: [],
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },

@@ -1,4 +1,4 @@
-import {buildConversationResponse} from './shared.js';
+import {CATALOG_ID, buildConversationResponse} from './shared.js';
 import {
   ActivitySnapshot,
   StateSnapshot,
@@ -8,8 +8,6 @@ import {
 } from '../events.js';
 
 const runId = 'schema-discovery-d8d8e15c';
-
-const CATALOG_ID = 'https://schema.thermidor.coveo.com/a2-ui/catalog.json';
 
 const carousel1SurfaceActivity: ConverseEvent = ActivitySnapshot({
   messageId: 'activity-carousel-life-jackets',
@@ -21,7 +19,7 @@ const carousel1SurfaceActivity: ConverseEvent = ActivitySnapshot({
         version: 'v1.0',
         createSurface: {
           surfaceId: 'product-surface-life-jackets',
-          surfaceType: 'converse',
+          rootId: 'root',
           catalogId: CATALOG_ID,
           components: [
             {
@@ -49,7 +47,7 @@ const carousel2SurfaceActivity: ConverseEvent = ActivitySnapshot({
         version: 'v1.0',
         createSurface: {
           surfaceId: 'product-surface-safety-gear',
-          surfaceType: 'converse',
+          rootId: 'root',
           catalogId: CATALOG_ID,
           components: [
             {
@@ -77,7 +75,7 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
         version: 'v1.0',
         createSurface: {
           surfaceId: 'next-actions-surface',
-          surfaceType: 'converse',
+          rootId: 'root',
           catalogId: CATALOG_ID,
           components: [
             {

@@ -2,10 +2,18 @@ import {render, screen, fireEvent} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
 import {SearchResultsPage} from './SearchResultsPage.js';
 
-vi.mock('../CommerceSearchLayout/CommerceSearchLayout.js', () => ({
-  CommerceSearchLayout: ({surfaceId}: {surfaceId: string}) => (
-    <div data-testid="commerce-search-layout">{surfaceId}</div>
+vi.mock('../../a2ui/surfaces.js', () => ({
+  getA2UIMessages: () => [{createSurface: {surfaceId: 'ui-commerce-search'}}],
+  ThermidorA2UISurfaces: ({messages}: {messages: unknown[]}) => (
+    <div data-testid="a2ui-surfaces">{messages.length}</div>
   ),
+}));
+
+vi.mock('../../a2ui/state-source-context.js', () => ({
+  useStateSource: () => ({
+    state: {activeTurn: undefined},
+    subscribe: () => () => {},
+  }),
 }));
 
 vi.mock('../ProductTargeting/ProductTargeting.js', () => ({
@@ -24,18 +32,17 @@ const defaultProps = {
 };
 
 describe('SearchResultsPage', () => {
-  it('renders the commerce search layout with the given surfaceId', () => {
+  it('mounts the commerce-search surface through the A2-UI renderer pipeline', () => {
     render(<SearchResultsPage {...defaultProps} />);
 
-    expect(screen.getByTestId('commerce-search-layout')).toBeDefined();
-    expect(screen.getByText('ui-commerce-search')).toBeDefined();
+    expect(screen.getByTestId('a2ui-surfaces')).toBeDefined();
   });
 
-  it('wraps the layout in ProductTargeting', () => {
+  it('wraps the A2-UI surfaces in ProductTargeting', () => {
     render(<SearchResultsPage {...defaultProps} />);
 
     const targeting = screen.getByTestId('product-targeting');
-    expect(targeting.contains(screen.getByTestId('commerce-search-layout'))).toBe(true);
+    expect(targeting.contains(screen.getByTestId('a2ui-surfaces'))).toBe(true);
   });
 
   it('renders a "Back to conversation" button that calls onBackToConversation', () => {

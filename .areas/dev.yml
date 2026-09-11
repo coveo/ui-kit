@@ -9,3 +9,8 @@ file_patterns:
 reviewers:
   dxui:
     minimum_approvals: 1
+
+review_bypass:
+  # Renovate @ Coveo (GitHub App id 245330). Dependency PRs are gated on
+  # green CI instead of a DXUI review.
+  integration/245330: pull_request
