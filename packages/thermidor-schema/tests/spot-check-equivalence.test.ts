@@ -21,23 +21,16 @@ describe('spot-check equivalence with existing thermidor-contracts', () => {
 
       const nameMapping: Record<string, string> = {
         productSchema: 'ProductSchema',
-        cartItemSchema: 'CartItemSchema',
         productListControllerStateSchema: 'ProductListStateSchema',
-        cartControllerStateSchema: 'CartStateSchema',
-        cartControllerContractSetItemsPayloadSchema: 'SetItemsPayloadSchema',
-        cartControllerContractUpdateItemQuantityPayloadSchema: 'UpdateItemQuantityPayloadSchema',
         productListControllerContract: 'ProductListControllerContractSchema',
-        cartControllerContract: 'CartControllerContractSchema',
         controllerContracts: 'ControllerContractsSchema',
       };
 
-      // Component-level schemas (productCarouselPropsSchema, cartPropsSchema) are not part of the
+      // Component-level schemas (productCarouselPropsSchema) are not part of the
       // controller contract surface area and are intentionally excluded from the new package.
       const componentSchemas = new Set([
         'productCarouselPropsSchema',
-        'cartPropsSchema',
         'productCarouselControllersSchema',
-        'cartControllersSchema',
       ]);
 
       const existingExportNames = Object.keys(existingContracts).filter(
@@ -72,85 +65,6 @@ describe('spot-check equivalence with existing thermidor-contracts', () => {
         );
         expect(newSchema.ProductSchema.safeParse(invalidProduct).success).toBe(
           existingProductSchema.safeParse(invalidProduct).success
-        );
-      }
-    }
-  );
-
-  it.skipIf(!existingContracts)(
-    'cart-item fixture produces same safeParse result in both packages',
-    async () => {
-      if (!existingContracts) return;
-      const validItem = JSON.parse(
-        await readFile(path.join(fixtureDirectory, 'cart-item.valid.json'), 'utf8')
-      );
-      const invalidItem = JSON.parse(
-        await readFile(path.join(fixtureDirectory, 'cart-item.invalid-quantity.json'), 'utf8')
-      );
-
-      const existingCartItemSchema = (existingContracts as any).cartItemSchema;
-      if (existingCartItemSchema) {
-        expect(newSchema.CartItemSchema.safeParse(validItem).success).toBe(
-          existingCartItemSchema.safeParse(validItem).success
-        );
-        expect(newSchema.CartItemSchema.safeParse(invalidItem).success).toBe(
-          existingCartItemSchema.safeParse(invalidItem).success
-        );
-      }
-    }
-  );
-
-  it.skipIf(!existingContracts)(
-    'set-items-payload fixture produces same safeParse result in both packages',
-    async () => {
-      if (!existingContracts) return;
-      const validPayload = JSON.parse(
-        await readFile(path.join(fixtureDirectory, 'set-items-payload.valid.json'), 'utf8')
-      );
-      const invalidPayload = JSON.parse(
-        await readFile(
-          path.join(fixtureDirectory, 'set-items-payload.invalid-extra-property.json'),
-          'utf8'
-        )
-      );
-
-      const existingSchema = (existingContracts as any).cartControllerContractSetItemsPayloadSchema;
-      if (existingSchema) {
-        expect(newSchema.SetItemsPayloadSchema.safeParse(validPayload).success).toBe(
-          existingSchema.safeParse(validPayload).success
-        );
-        expect(newSchema.SetItemsPayloadSchema.safeParse(invalidPayload).success).toBe(
-          existingSchema.safeParse(invalidPayload).success
-        );
-      }
-    }
-  );
-
-  it.skipIf(!existingContracts)(
-    'update-item-quantity-payload fixture produces same safeParse result in both packages',
-    async () => {
-      if (!existingContracts) return;
-      const validPayload = JSON.parse(
-        await readFile(
-          path.join(fixtureDirectory, 'update-item-quantity-payload.valid.json'),
-          'utf8'
-        )
-      );
-      const invalidPayload = JSON.parse(
-        await readFile(
-          path.join(fixtureDirectory, 'update-item-quantity-payload.invalid-missing-item.json'),
-          'utf8'
-        )
-      );
-
-      const existingSchema = (existingContracts as any)
-        .cartControllerContractUpdateItemQuantityPayloadSchema;
-      if (existingSchema) {
-        expect(newSchema.UpdateItemQuantityPayloadSchema.safeParse(validPayload).success).toBe(
-          existingSchema.safeParse(validPayload).success
-        );
-        expect(newSchema.UpdateItemQuantityPayloadSchema.safeParse(invalidPayload).success).toBe(
-          existingSchema.safeParse(invalidPayload).success
         );
       }
     }

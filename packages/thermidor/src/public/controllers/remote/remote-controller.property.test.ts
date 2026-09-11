@@ -47,16 +47,6 @@ describe('remote-controller property tests', () => {
         state: {heading: 'Featured', products: []},
         actions: {},
       },
-      cart: {
-        componentType: 'cart',
-        state: {items: []},
-        actions: {
-          setItems: {payload: {items: []}},
-          updateItemQuantity: {
-            payload: {item: {productId: 'p1', name: 'Widget', price: 5, quantity: 1}},
-          },
-        },
-      },
       'next-actions-bar': {
         componentType: 'next-actions-bar',
         state: {actions: []},
@@ -327,35 +317,35 @@ describe('remote-controller property tests', () => {
    */
   describe('Property 6: Action dispatch payload round-trip', () => {
     it('dispatches with correct {componentId, componentType, action, payload}', async () => {
-      const source = createSource({components: {'my-cart': {items: []}}});
+      const source = createSource({components: {'my-facet': {values: []}}});
       const controller = buildRemoteController({
         source,
-        componentId: 'my-cart',
-        componentType: 'cart',
+        componentId: 'my-facet',
+        componentType: 'numeric-facet',
       });
-      const payload = {item: {productId: 'p1', name: 'Widget', price: 5, quantity: 1}};
-      await controller.dispatch('updateItemQuantity', payload);
+      const payload = {start: 0, end: 100};
+      await controller.dispatch('applyCustomRange', payload);
       expect(source.dispatchAction).toHaveBeenCalledWith({
-        componentId: 'my-cart',
-        componentType: 'cart',
-        action: 'updateItemQuantity',
+        componentId: 'my-facet',
+        componentType: 'numeric-facet',
+        action: 'applyCustomRange',
         payload,
       });
     });
 
-    it('dispatches setItems with the correct payload structure', async () => {
-      const source = createSource({components: {'my-cart': {items: []}}});
+    it('dispatches toggleSelect with the correct payload structure', async () => {
+      const source = createSource({components: {'my-facet': {values: []}}});
       const controller = buildRemoteController({
         source,
-        componentId: 'my-cart',
-        componentType: 'cart',
+        componentId: 'my-facet',
+        componentType: 'numeric-facet',
       });
-      const payload = {items: [{productId: 'p1', name: 'Widget', price: 10, quantity: 3}]};
-      await controller.dispatch('setItems', payload);
+      const payload = {start: 10, end: 50};
+      await controller.dispatch('toggleSelect', payload);
       expect(source.dispatchAction).toHaveBeenCalledWith({
-        componentId: 'my-cart',
-        componentType: 'cart',
-        action: 'setItems',
+        componentId: 'my-facet',
+        componentType: 'numeric-facet',
+        action: 'toggleSelect',
         payload,
       });
     });
@@ -369,28 +359,30 @@ describe('remote-controller property tests', () => {
    */
   describe('Property 7: Invalid payload rejection', () => {
     it('rejects invalid payload without calling dispatchAction', async () => {
-      const source = createSource({components: {'my-cart': {items: []}}});
+      const source = createSource({components: {'my-facet': {values: []}}});
       const controller = buildRemoteController({
         source,
-        componentId: 'my-cart',
-        componentType: 'cart',
+        componentId: 'my-facet',
+        componentType: 'numeric-facet',
       });
       await expect(
-        controller.dispatch('updateItemQuantity', {
-          item: {productId: 'p1', name: 'X', price: -1, quantity: 0},
+        controller.dispatch('applyCustomRange', {
+          start: 0,
+          end: 100,
+          unexpected: true,
         } as any)
       ).rejects.toThrow();
       expect(source.dispatchAction).not.toHaveBeenCalled();
     });
 
     it('rejects when required payload fields are missing', async () => {
-      const source = createSource({components: {'my-cart': {items: []}}});
+      const source = createSource({components: {'my-facet': {values: []}}});
       const controller = buildRemoteController({
         source,
-        componentId: 'my-cart',
-        componentType: 'cart',
+        componentId: 'my-facet',
+        componentType: 'numeric-facet',
       });
-      await expect(controller.dispatch('updateItemQuantity', {} as any)).rejects.toThrow();
+      await expect(controller.dispatch('applyCustomRange', {} as any)).rejects.toThrow();
       expect(source.dispatchAction).not.toHaveBeenCalled();
     });
   });

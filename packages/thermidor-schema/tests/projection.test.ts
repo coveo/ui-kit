@@ -28,7 +28,6 @@ describe('projection determinism', () => {
   it('componentType literals appear in generated Zod schemas', async () => {
     const content = await readFile(generatedPath, 'utf8');
     expect(content).toContain("z.literal('product-carousel')");
-    expect(content).toContain("z.literal('cart')");
     expect(content).toContain("z.literal('next-actions-bar')");
     expect(content).toContain("z.literal('bundle-display')");
     expect(content).toContain("z.literal('comparison-table')");

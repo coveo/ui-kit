@@ -11,9 +11,6 @@
           "$ref": "https://schema.thermidor.coveo.com/components/product-carousel.schema.json"
         },
         {
-          "$ref": "https://schema.thermidor.coveo.com/components/cart.schema.json"
-        },
-        {
           "$ref": "https://schema.thermidor.coveo.com/components/next-actions-bar.schema.json"
         },
         {
