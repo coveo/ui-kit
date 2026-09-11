@@ -9,9 +9,9 @@ RUN apt-get update && apt-get install -y \
 # Enable corepack globally
 RUN corepack enable
 
-# Configure pnpm home and path
+# Configure pnpm home and path, including pnpm 11's global bin directory
 ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
+ENV PATH="$PNPM_HOME/bin:$PNPM_HOME:$PATH"
 
 # Configure pnpm to use the mounted store directory
 ENV PNPM_STORE_PATH="/pnpm/store"
