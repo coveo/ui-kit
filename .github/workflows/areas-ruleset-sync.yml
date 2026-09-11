@@ -30,7 +30,7 @@ jobs:
           app-id: ${{ vars.CODE_AREAS_APP_ID }}
           private-key: ${{ secrets.CODE_AREAS_PEM }}
 
-      - uses: coveooss/areas@b3ca247fb24809a01a25dc009f6754dd5c06f314 # v0
+      - uses: coveooss/areas@f8f6f24e80b13e412de4132d81e2c17713b41ca7 # areas@0.2.0
         with:
           token: ${{ steps.generate-token.outputs.token }}
           command: ruleset-sync
