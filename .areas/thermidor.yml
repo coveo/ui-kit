@@ -1,7 +1,6 @@
 description: Thermidor package
 file_patterns:
   - packages/thermidor/**
-  - packages/thermidor-schema/**
 
 reviewers:
   dxui: ~
