@@ -60,8 +60,9 @@ const meta: Meta = {
     await step('Open refine modal', async () => {
       await userEvent.click(refineToggleButton);
     });
-    // It's tough to wait exactly for the modal to be visible because of animations. Thus, we add a small delay here.
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    // The modal open animation runs for 500ms. Wait for it to finish so accessibility
+    // checks run after the backdrop has fully settled.
+    await new Promise((resolve) => setTimeout(resolve, 600));
   },
 };
 
