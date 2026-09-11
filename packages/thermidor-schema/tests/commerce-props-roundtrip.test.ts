@@ -1,11 +1,6 @@
 import fc from 'fast-check';
 import {describe, expect, it} from 'vitest';
-import {
-  PaginationPropsSchema,
-  ProductListPropsSchema,
-  SearchBoxPropsSchema,
-  SortPropsSchema,
-} from '../src/index.js';
+import {PaginationPropsSchema, ProductListPropsSchema, SortPropsSchema} from '../src/index.js';
 
 /**
  * Property 4: Schema round-trip for decomposed component props
@@ -50,18 +45,6 @@ describe('Feature: commerce-surface-decomposition, Property 4: Schema round-trip
         const input = {componentId, componentType: 'sort' as const};
         const parsed = SortPropsSchema.parse(input);
         const roundTripped = SortPropsSchema.parse(JSON.parse(JSON.stringify(parsed)));
-        expect(roundTripped).toStrictEqual(parsed);
-      }),
-      {numRuns: NUM_RUNS}
-    );
-  });
-
-  it('SearchBoxPropsSchema round-trips through JSON serialization', () => {
-    fc.assert(
-      fc.property(componentIdArb, (componentId) => {
-        const input = {componentId, componentType: 'search-box' as const};
-        const parsed = SearchBoxPropsSchema.parse(input);
-        const roundTripped = SearchBoxPropsSchema.parse(JSON.parse(JSON.stringify(parsed)));
         expect(roundTripped).toStrictEqual(parsed);
       }),
       {numRuns: NUM_RUNS}

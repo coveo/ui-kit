@@ -22,13 +22,13 @@ const ID_PATTERN = /^[a-z][a-z0-9-]*$/;
 
 /**
  * A minimal valid entry ({componentType, state, actions}) used as the base
- * instance onto which an invalid `children` value is added. `search-box` is
+ * instance onto which an invalid `children` value is added. `page-size` is
  * the simplest entry with a non-empty state/actions shape.
  */
 const baseInstance = () => ({
-  componentType: 'search-box',
-  state: {query: ''},
-  actions: {submitQuery: {payload: {query: ''}}},
+  componentType: 'page-size',
+  state: {pageSize: 12},
+  actions: {setPageSize: {payload: {pageSize: 12}}},
 });
 
 /**

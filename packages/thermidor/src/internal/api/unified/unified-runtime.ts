@@ -43,26 +43,6 @@ function getErrorMessage(error: unknown): string {
   return 'An unexpected error occurred while reading the conversation stream.';
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-export function extractSurfaceType(content: Record<string, unknown>): string | undefined {
-  const messages = content.messages;
-  if (!Array.isArray(messages)) {
-    return undefined;
-  }
-  for (const message of messages) {
-    if (isRecord(message) && 'createSurface' in message) {
-      const cs = message.createSurface;
-      if (isRecord(cs) && typeof cs.surfaceType === 'string') {
-        return cs.surfaceType;
-      }
-    }
-  }
-  return undefined;
-}
-
 export class UnifiedRuntime {
   private static cache = new WeakMap<FullEngine, Map<string, UnifiedRuntime>>();
 
@@ -204,16 +184,12 @@ export class UnifiedRuntime {
       statePort: this.statePort,
       ensureAgentResponse: (tid: string) => this.ensureAgentResponse(tid),
       onA2uiSurface: (tid: string, content: Record<string, unknown>) => {
-        const surfaceType = extractSurfaceType(content);
-
-        if (!surfaceType) {
-          // Legacy: surfaces without surfaceType route through the SurfaceProcessor
-          // for hydration (monolithic ProductSearchSurface / ProductListingSurface).
-          this.surfaceProcessor.processSnapshot(tid, content);
-        }
-        // Surfaces with a surfaceType (e.g. 'commerceSearch', 'converse') need no
-        // routing signal — the consumer derives navigation directly from the A2-UI
-        // activities already stored via appendSurface/appendActivity.
+        // Surfaces route through the SurfaceProcessor for hydration (monolithic
+        // ProductSearchSurface / ProductListingSurface). The SurfaceProcessor is a
+        // no-op for surfaces that do not require hydration; navigation is derived by
+        // the consumer from the root component's componentType, not from any routing
+        // signal emitted here.
+        this.surfaceProcessor.processSnapshot(tid, content);
       },
     };
 

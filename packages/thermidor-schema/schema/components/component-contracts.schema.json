@@ -26,13 +26,13 @@
           "$ref": "https://schema.thermidor.coveo.com/components/product-list.schema.json"
         },
         {
+          "$ref": "https://schema.thermidor.coveo.com/components/product-summary.schema.json"
+        },
+        {
           "$ref": "https://schema.thermidor.coveo.com/components/pagination.schema.json"
         },
         {
           "$ref": "https://schema.thermidor.coveo.com/components/sort.schema.json"
-        },
-        {
-          "$ref": "https://schema.thermidor.coveo.com/components/search-box.schema.json"
         },
         {
           "$ref": "https://schema.thermidor.coveo.com/components/regular-facet.schema.json"
@@ -51,6 +51,15 @@
         },
         {
           "$ref": "https://schema.thermidor.coveo.com/components/commerce-search.schema.json"
+        },
+        {
+          "$ref": "https://schema.thermidor.coveo.com/components/layout-stack.schema.json"
+        },
+        {
+          "$ref": "https://schema.thermidor.coveo.com/components/query-summary.schema.json"
+        },
+        {
+          "$ref": "https://schema.thermidor.coveo.com/components/page-size.schema.json"
         }
       ]
     }

@@ -109,25 +109,35 @@ describe('data type backward compatibility', () => {
           {
             label: 'Budget',
             description: 'Cheap',
-            slots: [{categoryLabel: 'Board', surfaceRef: 'pl-1'}],
+            slots: [{categoryLabel: 'Board', childId: 'pl-1'}],
           },
         ],
       }).success
     ).toBe(true);
   });
 
-  it('ComparisonTableState schema structure is unchanged', () => {
+  it('ComparisonTableState holds heading, summary, products and attributes on the leaf', () => {
     expect(
       ComparisonTableStateSchema.safeParse({
+        heading: 'Comparison',
+        summary: 'A short summary.',
         products: [{productId: 'p1', name: 'P', values: {}}],
         attributes: [{key: 'k', label: 'K'}],
       }).success
     ).toBe(true);
+    // Products are required leaf state; omitting them is rejected.
+    expect(
+      ComparisonTableStateSchema.safeParse({
+        heading: 'Comparison',
+        summary: 'A short summary.',
+        attributes: [{key: 'k', label: 'K'}],
+      }).success
+    ).toBe(false);
   });
 
-  it('FacetManagerState schema still requires facetIds (additive track retains it)', () => {
-    expect(FacetManagerStateSchema.safeParse({facetIds: ['regular-facet']}).success).toBe(true);
-    expect(FacetManagerStateSchema.safeParse({}).success).toBe(false);
+  it('FacetManagerState carries no facetIds (ordering moved to the facet-manager node children)', () => {
+    expect(FacetManagerStateSchema.safeParse({}).success).toBe(true);
+    expect(FacetManagerStateSchema.safeParse({facetIds: ['regular-facet']}).success).toBe(false);
   });
 });
 

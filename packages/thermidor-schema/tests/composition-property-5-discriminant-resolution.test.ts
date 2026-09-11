@@ -25,8 +25,9 @@ const NUM_RUNS = 100;
  * A minimal valid entry ({componentType, state, actions}) per componentType,
  * mirroring the SDK's `minimalInstances` map
  * (packages/thermidor/src/public/controllers/remote/remote-controller.property.test.ts)
- * and the sibling Property 2 test. Covers the 14 existing members plus the new
- * `commerce-search` surface-root member (15 total).
+ * and the sibling Property 2 test. Covers the 13 existing members plus the
+ * `commerce-search`, `product-summary`, `layout-stack`, `query-summary` and
+ * `page-size` members (18 total).
  */
 const minimalInstances: Record<string, Record<string, unknown>> = {
   'product-carousel': {
@@ -58,12 +59,17 @@ const minimalInstances: Record<string, Record<string, unknown>> = {
   },
   'comparison-table': {
     componentType: 'comparison-table',
-    state: {attributes: [], products: []},
+    state: {products: [], attributes: [], heading: '', summary: ''},
     actions: {},
   },
   'product-list': {
     componentType: 'product-list',
     state: {products: []},
+    actions: {},
+  },
+  'product-summary': {
+    componentType: 'product-summary',
+    state: {categoryLabel: 'Surfboard', product: null},
     actions: {},
   },
   pagination: {
@@ -82,13 +88,6 @@ const minimalInstances: Record<string, Record<string, unknown>> = {
     },
     actions: {
       selectSort: {payload: {sortCriteria: 'relevance', fields: []}},
-    },
-  },
-  'search-box': {
-    componentType: 'search-box',
-    state: {query: ''},
-    actions: {
-      submitQuery: {payload: {query: ''}},
     },
   },
   'regular-facet': {
@@ -177,7 +176,7 @@ const minimalInstances: Record<string, Record<string, unknown>> = {
   },
   'facet-manager': {
     componentType: 'facet-manager',
-    state: {facetIds: []},
+    state: {},
     actions: {},
   },
   'commerce-search': {
@@ -185,14 +184,35 @@ const minimalInstances: Record<string, Record<string, unknown>> = {
     state: {},
     actions: {},
   },
+  'layout-stack': {
+    componentType: 'layout-stack',
+    state: {},
+    actions: {},
+  },
+  'query-summary': {
+    componentType: 'query-summary',
+    state: {query: '', firstIndex: 0, lastIndex: 0, totalEntries: 0},
+    actions: {},
+  },
+  'page-size': {
+    componentType: 'page-size',
+    state: {pageSize: 12},
+    actions: {
+      setPageSize: {payload: {pageSize: 12}},
+    },
+  },
 };
 
 const componentTypes = Object.keys(minimalInstances);
 
 describe('Feature: thermidor-schema-adjacency-list, Property 5: Discriminant resolution', () => {
-  it('covers the 14 existing members plus commerce-search (15 total)', () => {
-    expect(componentTypes).toHaveLength(15);
+  it('covers the 13 existing members plus commerce-search, product-summary, layout-stack, query-summary and page-size (18 total)', () => {
+    expect(componentTypes).toHaveLength(18);
     expect(componentTypes).toContain('commerce-search');
+    expect(componentTypes).toContain('product-summary');
+    expect(componentTypes).toContain('layout-stack');
+    expect(componentTypes).toContain('query-summary');
+    expect(componentTypes).toContain('page-size');
   });
 
   it('explicitly resolves a minimal commerce-search instance', () => {
@@ -238,6 +258,22 @@ describe('Feature: thermidor-schema-adjacency-list, Property 5: Discriminant res
         fc.constantFrom(...componentTypes),
         (typeA, typeB) => {
           fc.pre(typeA !== typeB);
+          // Some members share an identical minimal state/actions shape (e.g.
+          // facet-manager and commerce-search both carry empty state/actions).
+          // Stamping one with the other's componentType yields a structurally
+          // valid instance of that other member, so the swap is legitimately
+          // accepted. Skip those interchangeable pairs; the discriminant is
+          // still exercised by every pair whose shapes actually differ.
+          const swapResolvesToOtherMember = ComponentContractsSchema.safeParse(
+            minimalInstances[typeB]
+          ).success;
+          fc.pre(
+            JSON.stringify(minimalInstances[typeA].state) !==
+              JSON.stringify(minimalInstances[typeB].state) ||
+              JSON.stringify(minimalInstances[typeA].actions) !==
+                JSON.stringify(minimalInstances[typeB].actions) ||
+              !swapResolvesToOtherMember
+          );
           const document = {...minimalInstances[typeA], componentType: typeB};
           expect(ComponentContractsSchema.safeParse(document).success).toBe(false);
         }

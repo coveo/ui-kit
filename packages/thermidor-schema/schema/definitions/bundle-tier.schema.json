@@ -27,15 +27,15 @@
     "BundleSlot": {
       "title": "BundleSlot",
       "type": "object",
-      "required": ["categoryLabel", "surfaceRef"],
+      "required": ["categoryLabel", "childId"],
       "properties": {
         "categoryLabel": {
           "type": "string",
           "description": "Display name of the product category for this slot."
         },
-        "surfaceRef": {
+        "childId": {
           "type": "string",
-          "description": "Surface ID where this slot's products are rendered via a ProductCarousel."
+          "description": "Id of the bundle-display child product-list node that renders this slot's products. Associates the slot with its child on the A2-UI composition plane; the renderer mounts the child via children(id)."
         }
       },
       "additionalProperties": false

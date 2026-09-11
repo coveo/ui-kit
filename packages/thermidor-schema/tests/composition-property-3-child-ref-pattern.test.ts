@@ -24,13 +24,13 @@ const ID_PATTERN = /^[a-z][a-z0-9-]*$/;
 
 /**
  * A minimal valid entry ({componentType, state, actions}) used as the base
- * instance onto which composition fields are added. `search-box` is the
+ * instance onto which composition fields are added. `page-size` is the
  * simplest entry with a non-empty state/actions shape.
  */
 const baseInstance = () => ({
-  componentType: 'search-box',
-  state: {query: ''},
-  actions: {submitQuery: {payload: {query: ''}}},
+  componentType: 'page-size',
+  state: {pageSize: 12},
+  actions: {setPageSize: {payload: {pageSize: 12}}},
 });
 
 /** Generator producing pattern-valid component-id strings. */
