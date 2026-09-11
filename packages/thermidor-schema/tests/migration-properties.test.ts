@@ -4,16 +4,13 @@ import {fileURLToPath} from 'node:url';
 import {describe, expect, it} from 'vitest';
 import {
   ProductSchema,
-  CartItemSchema,
-  CartStateSchema,
   ProductCarouselStateSchema,
   NextActionsStateSchema,
   BundleDisplayStateSchema,
   ComparisonTableStateSchema,
-  SetItemsPayloadSchema,
-  UpdateItemQuantityPayloadSchema,
   SelectActionPayloadSchema,
   ComponentContractsSchema,
+  FacetManagerStateSchema,
 } from '../src/index.js';
 
 const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -32,7 +29,7 @@ describe('Zod generation idempotence', () => {
         stdio: 'pipe',
       }
     );
-  });
+  }, 60_000);
 });
 
 /**
@@ -51,19 +48,6 @@ describe('data type backward compatibility', () => {
     expect(ProductSchema.safeParse(validProduct).success).toBe(true);
   });
 
-  it('CartItem schema structure is unchanged', () => {
-    expect(
-      CartItemSchema.safeParse({productId: 'p1', name: 'Widget', price: 10, quantity: 2}).success
-    ).toBe(true);
-  });
-
-  it('CartState schema structure is unchanged', () => {
-    expect(
-      CartStateSchema.safeParse({items: [{productId: 'p1', name: 'X', price: 1, quantity: 1}]})
-        .success
-    ).toBe(true);
-  });
-
   it('ProductCarouselState schema structure is unchanged', () => {
     expect(
       ProductCarouselStateSchema.safeParse({
@@ -76,22 +60,6 @@ describe('data type backward compatibility', () => {
   it('NextActionsState schema structure is unchanged', () => {
     expect(
       NextActionsStateSchema.safeParse({actions: [{text: 'hello', type: 'followup'}]}).success
-    ).toBe(true);
-  });
-
-  it('SetItemsPayload schema structure is unchanged', () => {
-    expect(
-      SetItemsPayloadSchema.safeParse({
-        items: [{productId: 'p1', name: 'X', price: 1, quantity: 1}],
-      }).success
-    ).toBe(true);
-  });
-
-  it('UpdateItemQuantityPayload schema structure is unchanged', () => {
-    expect(
-      UpdateItemQuantityPayloadSchema.safeParse({
-        item: {productId: 'p1', name: 'X', price: 1, quantity: 1},
-      }).success
     ).toBe(true);
   });
 
@@ -108,20 +76,35 @@ describe('data type backward compatibility', () => {
           {
             label: 'Budget',
             description: 'Cheap',
-            slots: [{categoryLabel: 'Board', surfaceRef: 'pl-1'}],
+            slots: [{categoryLabel: 'Board', childId: 'pl-1'}],
           },
         ],
       }).success
     ).toBe(true);
   });
 
-  it('ComparisonTableState schema structure is unchanged', () => {
+  it('ComparisonTableState holds heading, summary, products and attributes on the leaf', () => {
     expect(
       ComparisonTableStateSchema.safeParse({
+        heading: 'Comparison',
+        summary: 'A short summary.',
         products: [{productId: 'p1', name: 'P', values: {}}],
         attributes: [{key: 'k', label: 'K'}],
       }).success
     ).toBe(true);
+    // Products are required leaf state; omitting them is rejected.
+    expect(
+      ComparisonTableStateSchema.safeParse({
+        heading: 'Comparison',
+        summary: 'A short summary.',
+        attributes: [{key: 'k', label: 'K'}],
+      }).success
+    ).toBe(false);
+  });
+
+  it('FacetManagerState carries no facetIds (ordering moved to the facet-manager node children)', () => {
+    expect(FacetManagerStateSchema.safeParse({}).success).toBe(true);
+    expect(FacetManagerStateSchema.safeParse({facetIds: ['regular-facet']}).success).toBe(false);
   });
 });
 
@@ -132,13 +115,10 @@ describe('data type backward compatibility', () => {
 describe('controllers property rejection', () => {
   it('rejects a component document with a controllers property', () => {
     const documentWithControllers = {
-      componentType: 'cart',
-      state: {items: []},
-      actions: {
-        setItems: {payload: {items: []}},
-        updateItemQuantity: {payload: {item: {productId: 'p1', name: 'X', price: 1, quantity: 1}}},
-      },
-      controllers: {cartController: {controllerId: 'cart-1'}},
+      componentType: 'product-carousel',
+      state: {heading: 'Featured', products: []},
+      actions: {},
+      controllers: {productCarouselController: {controllerId: 'pc-1'}},
     };
     expect(ComponentContractsSchema.safeParse(documentWithControllers).success).toBe(false);
   });

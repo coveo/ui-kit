@@ -5,28 +5,24 @@ import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 import {describe, expect, it} from 'vitest';
 import {
-  BundleDisplaySchema,
   BundleDisplayStateSchema,
-  CartItemSchema,
-  CartSchema,
-  CartStateSchema,
   CategoryFacetStateSchema,
-  ComparisonTableSchema,
   ComparisonTableStateSchema,
   ComponentContractsSchema,
   DateFacetStateSchema,
   FacetManagerStateSchema,
+  LayoutStackStateSchema,
   NextActionsBarSchema,
   NextActionsStateSchema,
+  PageSizeStateSchema,
+  QuerySummaryStateSchema,
   NumericFacetStateSchema,
-  ProductCarouselSchema,
   ProductCarouselStateSchema,
   ProductListStateSchema,
+  ProductSummaryStateSchema,
   ProductSchema,
   RegularFacetStateSchema,
   SelectActionPayloadSchema,
-  SetItemsPayloadSchema,
-  UpdateItemQuantityPayloadSchema,
 } from '../src/index.js';
 
 const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -83,18 +79,6 @@ const fixtures = [
     valid: false,
   },
   {
-    file: 'cart-item.valid.json',
-    schema: CartItemSchema,
-    schemaId: 'https://schema.thermidor.coveo.com/definitions/cart-item.schema.json',
-    valid: true,
-  },
-  {
-    file: 'cart-item.invalid-quantity.json',
-    schema: CartItemSchema,
-    schemaId: 'https://schema.thermidor.coveo.com/definitions/cart-item.schema.json',
-    valid: false,
-  },
-  {
     file: 'product-carousel-state.valid.json',
     schema: ProductCarouselStateSchema,
     schemaId:
@@ -109,38 +93,18 @@ const fixtures = [
     valid: true,
   },
   {
-    file: 'cart-state.valid.json',
-    schema: CartStateSchema,
-    schemaId: 'https://schema.thermidor.coveo.com/components/cart.schema.json#/$defs/CartState',
+    file: 'product-summary-state.valid.json',
+    schema: ProductSummaryStateSchema,
+    schemaId:
+      'https://schema.thermidor.coveo.com/components/product-summary.schema.json#/$defs/ProductSummaryState',
     valid: true,
   },
   {
-    file: 'set-items-payload.valid.json',
-    schema: SetItemsPayloadSchema,
+    file: 'product-summary-state.valid-null-product.json',
+    schema: ProductSummaryStateSchema,
     schemaId:
-      'https://schema.thermidor.coveo.com/components/cart.schema.json#/$defs/SetItemsAction/properties/payload',
+      'https://schema.thermidor.coveo.com/components/product-summary.schema.json#/$defs/ProductSummaryState',
     valid: true,
-  },
-  {
-    file: 'set-items-payload.invalid-extra-property.json',
-    schema: SetItemsPayloadSchema,
-    schemaId:
-      'https://schema.thermidor.coveo.com/components/cart.schema.json#/$defs/SetItemsAction/properties/payload',
-    valid: false,
-  },
-  {
-    file: 'update-item-quantity-payload.valid.json',
-    schema: UpdateItemQuantityPayloadSchema,
-    schemaId:
-      'https://schema.thermidor.coveo.com/components/cart.schema.json#/$defs/UpdateItemQuantityAction/properties/payload',
-    valid: true,
-  },
-  {
-    file: 'update-item-quantity-payload.invalid-missing-item.json',
-    schema: UpdateItemQuantityPayloadSchema,
-    schemaId:
-      'https://schema.thermidor.coveo.com/components/cart.schema.json#/$defs/UpdateItemQuantityAction/properties/payload',
-    valid: false,
   },
   {
     file: 'next-actions-state.valid.json',
@@ -178,7 +142,7 @@ const fixtures = [
     valid: true,
   },
   {
-    file: 'comparison-table-state.invalid-missing-name.json',
+    file: 'comparison-table-state.invalid-missing-heading.json',
     schema: ComparisonTableStateSchema,
     schemaId:
       'https://schema.thermidor.coveo.com/components/comparison-table.schema.json#/$defs/ComparisonTableState',
@@ -290,17 +254,52 @@ const fixtures = [
     valid: true,
   },
   {
-    file: 'facet-manager-state.valid-empty.json',
+    file: 'facet-manager-state.invalid-extra-property.json',
     schema: FacetManagerStateSchema,
     schemaId:
       'https://schema.thermidor.coveo.com/components/facet-manager.schema.json#/$defs/FacetManagerState',
+    valid: false,
+  },
+  {
+    file: 'layout-stack-state.valid.json',
+    schema: LayoutStackStateSchema,
+    schemaId:
+      'https://schema.thermidor.coveo.com/components/layout-stack.schema.json#/$defs/LayoutStackState',
     valid: true,
   },
   {
-    file: 'facet-manager-state.invalid-bad-id.json',
-    schema: FacetManagerStateSchema,
+    file: 'layout-stack-state.invalid-extra-property.json',
+    schema: LayoutStackStateSchema,
     schemaId:
-      'https://schema.thermidor.coveo.com/components/facet-manager.schema.json#/$defs/FacetManagerState',
+      'https://schema.thermidor.coveo.com/components/layout-stack.schema.json#/$defs/LayoutStackState',
+    valid: false,
+  },
+  {
+    file: 'query-summary-state.valid.json',
+    schema: QuerySummaryStateSchema,
+    schemaId:
+      'https://schema.thermidor.coveo.com/components/query-summary.schema.json#/$defs/QuerySummaryState',
+    valid: true,
+  },
+  {
+    file: 'query-summary-state.invalid-missing-field.json',
+    schema: QuerySummaryStateSchema,
+    schemaId:
+      'https://schema.thermidor.coveo.com/components/query-summary.schema.json#/$defs/QuerySummaryState',
+    valid: false,
+  },
+  {
+    file: 'page-size-state.valid.json',
+    schema: PageSizeStateSchema,
+    schemaId:
+      'https://schema.thermidor.coveo.com/components/page-size.schema.json#/$defs/PageSizeState',
+    valid: true,
+  },
+  {
+    file: 'page-size-state.invalid-missing-page-size.json',
+    schema: PageSizeStateSchema,
+    schemaId:
+      'https://schema.thermidor.coveo.com/components/page-size.schema.json#/$defs/PageSizeState',
     valid: false,
   },
 ];
@@ -327,32 +326,6 @@ describe('component contract discriminated union', () => {
     expect(ComponentContractsSchema.safeParse(contract).success).toBe(true);
   });
 
-  it('accepts valid Cart contract', () => {
-    const cartItem = {name: 'Kayak', price: 1, productId: 'kayak-001', quantity: 1};
-    const contract = {
-      actions: {
-        setItems: {payload: {items: [cartItem]}},
-        updateItemQuantity: {payload: {item: cartItem}},
-      },
-      componentType: 'cart',
-      state: {items: [cartItem]},
-    };
-    expect(ComponentContractsSchema.safeParse(contract).success).toBe(true);
-  });
-
-  it('rejects cart contract with product-carousel componentType', () => {
-    const cartItem = {name: 'Kayak', price: 1, productId: 'kayak-001', quantity: 1};
-    const contract = {
-      actions: {
-        setItems: {payload: {items: [cartItem]}},
-        updateItemQuantity: {payload: {item: cartItem}},
-      },
-      componentType: 'product-carousel',
-      state: {items: [cartItem]},
-    };
-    expect(ComponentContractsSchema.safeParse(contract).success).toBe(false);
-  });
-
   it('rejects unknown componentType value', () => {
     const contract = {
       actions: {},
@@ -364,7 +337,10 @@ describe('component contract discriminated union', () => {
 
   it('accesses nested action payload schemas', () => {
     expect(
-      CartSchema.shape.actions.shape.setItems.shape.payload.safeParse({items: []}).success
+      NextActionsBarSchema.shape.actions.shape.selectAction.shape.payload.safeParse({
+        text: 'test',
+        type: 'followup',
+      }).success
     ).toBe(true);
   });
 
@@ -391,9 +367,34 @@ describe('component contract discriminated union', () => {
       actions: {},
       componentType: 'comparison-table',
       state: {
-        products: [{productId: 'p1', name: 'Product', values: {}}],
+        heading: 'Comparison',
+        summary: 'A short summary.',
+        products: [{productId: 'p1', name: 'Product', values: {k: 'v'}}],
         attributes: [{key: 'k', label: 'K'}],
       },
+    };
+    expect(ComponentContractsSchema.safeParse(contract).success).toBe(true);
+  });
+
+  it('accepts valid LayoutStack contract (empty state, no actions)', () => {
+    const contract = {actions: {}, componentType: 'layout-stack', state: {}};
+    expect(ComponentContractsSchema.safeParse(contract).success).toBe(true);
+  });
+
+  it('accepts valid QuerySummary contract', () => {
+    const contract = {
+      actions: {},
+      componentType: 'query-summary',
+      state: {query: 'Water Sports', firstIndex: 1, lastIndex: 12, totalEntries: 43},
+    };
+    expect(ComponentContractsSchema.safeParse(contract).success).toBe(true);
+  });
+
+  it('accepts valid PageSize contract with a setPageSize action', () => {
+    const contract = {
+      actions: {setPageSize: {payload: {pageSize: 24}}},
+      componentType: 'page-size',
+      state: {pageSize: 24},
     };
     expect(ComponentContractsSchema.safeParse(contract).success).toBe(true);
   });

@@ -239,17 +239,15 @@ describe('facet-manager component (Requirement 5)', () => {
     expect(schema.additionalProperties).toBe(false);
   });
 
-  it('has a state with a required facetIds string array and no facet data', async () => {
+  it('has an empty state carrying no facet-ordering data (ordering moved to children)', async () => {
     const schema = await readSchema(path.join(componentsDirectory, 'facet-manager.schema.json'));
     const state = schema.$defs?.FacetManagerState;
     expect(state?.type).toBe('object');
-    expect(state?.required).toEqual(['facetIds']);
-    expect(state?.properties?.facetIds?.type).toBe('array');
-    expect(state?.properties?.facetIds?.items?.type).toBe('string');
-    expect(state?.properties?.facetIds?.items?.pattern).toBe('^[a-z][a-z0-9-]*$');
+    expect(state?.required).toEqual([]);
+    expect(state?.properties?.facetIds).toBeUndefined();
     expect(state?.additionalProperties).toBe(false);
-    // Owns only the ordering; no facet value/search state leaks in.
-    expect(Object.keys(state?.properties ?? {})).toEqual(['facetIds']);
+    // Ordering now lives on the facet-manager A2-UI node's children; no state fields leak in.
+    expect(Object.keys(state?.properties ?? {})).toEqual([]);
   });
 
   it('exposes an empty actions object (thin ordering authority, not an aggregate controller)', async () => {

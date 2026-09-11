@@ -1,6 +1,9 @@
+import {useCallback, useMemo, useSyncExternalStore} from 'react';
+import type {Activity} from '@coveo/thermidor';
 import {ProductTargeting} from '../ProductTargeting/ProductTargeting.js';
 import {type TargetedProduct} from '../../context/targeting.js';
-import {CommerceSearchLayout} from '../CommerceSearchLayout/CommerceSearchLayout.js';
+import {getA2UIMessages, ThermidorA2UISurfaces} from '../../a2ui/surfaces.js';
+import {useStateSource} from '../../a2ui/state-source-context.js';
 import styles from './SearchResultsPage.module.css';
 
 interface SearchResultsPageProps {
@@ -17,14 +20,31 @@ interface SearchResultsPageProps {
  * Layout shell for a routed commerce search surface.
  *
  * Commerce search surfaces are decomposed into individual A2-UI components
- * (search-box, product-list, pagination, sort) rendered through the catalog
- * pipeline. This page only arranges them spatially via `CommerceSearchLayout`
- * and does not instantiate headless controllers.
+ * (commerce-search root, search-box, facet-manager, sort, pagination, product-list)
+ * mounted through the A2-UI renderer pipeline, exactly like every other surface. The
+ * `commerce-search` root renderer owns the sidebar/main layout and mounts its children
+ * by id from the composition on the A2-UI plane; this page only reads the active turn's
+ * A2-UI activities and hands them to `ThermidorA2UISurfaces`.
  *
  * Navigation to this page is derived directly from the A2-UI activities
- * (presence of a createSurface with surfaceType 'commerceSearch').
+ * (a createSurface whose root component's componentType is 'commerce-search').
  */
 export function SearchResultsPage(props: SearchResultsPageProps) {
+  const stateSource = useStateSource();
+  const subscribe = useCallback(
+    (onStoreChange: () => void) => stateSource.subscribe(onStoreChange),
+    [stateSource]
+  );
+  const getActivities = useCallback(
+    (): Activity[] | undefined =>
+      (stateSource.state as {activeTurn?: {agentResponse?: {activities?: Activity[]}}}).activeTurn
+        ?.agentResponse?.activities,
+    [stateSource]
+  );
+  const activities = useSyncExternalStore(subscribe, getActivities, getActivities);
+
+  const a2uiMessages = useMemo(() => getA2UIMessages(activities), [activities]);
+
   return (
     <div className={styles.searchLayout}>
       <ProductTargeting
@@ -36,7 +56,7 @@ export function SearchResultsPage(props: SearchResultsPageProps) {
           initialValue: props.query ?? '',
         }}
       >
-        <CommerceSearchLayout surfaceId={props.surfaceId} />
+        <ThermidorA2UISurfaces messages={a2uiMessages} />
       </ProductTargeting>
       <button
         type="button"

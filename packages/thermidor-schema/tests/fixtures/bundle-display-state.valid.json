@@ -3,7 +3,7 @@
     {
       "label": "Budget",
       "description": "Affordable gear.",
-      "slots": [{"categoryLabel": "Surfboard", "surfaceRef": "products-budget-surfboard"}]
+      "slots": [{"categoryLabel": "Surfboard", "childId": "products-budget-surfboard"}]
     }
   ]
 }

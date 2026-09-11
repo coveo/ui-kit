@@ -53,13 +53,12 @@ The app is structured around three views managed by `AppShell`:
 AppShell (providers + navigation)
 ├── LandingPage        — Prompt input with suggestion pills
 ├── ConversationPage   — Chat with A2-UI rendering (catalog-driven)
-└── SearchResultsPage  — Branches by routed use case: `decomposedCommerceSearch` renders CommerceSearchLayout (A2-UI catalog renderers);
-                          legacy `commerceSearch` renders the Headless classic-controller UI (product grid, facets, sort, pagination)
+└── SearchResultsPage  — Mounts the decomposed commerce-search surface through the A2-UI renderer pipeline (the `commerce-search` root composes two `layout-stack` columns that mount the rest of the surface by id)
 ```
 
 Navigation is determined by what the backend returns:
 
-- Turn with `routedInterface`, use case `decomposedCommerceSearch` → SearchResultsPage rendering `CommerceSearchLayout` (A2-UI catalog renderers); legacy `commerceSearch` → SearchResultsPage rendering Headless classic controllers
+- Turn whose surface root component's `componentType` is `commerce-search` → SearchResultsPage mounting the surface via `ThermidorA2UISurfaces`
 - Turn with `agentResponse` (reasoning steps / surfaces) → ConversationPage (A2-UI catalog renderers)
 
 ### ConversationPage component tree
@@ -95,24 +94,38 @@ The catalog renderers (ProductCarousel, BundleDisplay, ComparisonTable, NextActi
 
 ### SearchResultsPage (decomposed commerce)
 
-SearchResultsPage branches on `routedInterface.useCase`. For the `decomposedCommerceSearch` use case, it renders `CommerceSearchLayout`, which finds components from the A2-UI surface state by `componentType` and places them into spatial slots: the search box in the header, and sort, product list, and pagination in the main region.
+SearchResultsPage reads the active turn's A2-UI activities and hands them to `ThermidorA2UISurfaces`, mounting the decomposed commerce-search surface through the same renderer pipeline every other surface uses. The layout lives entirely on the A2-UI composition plane: the `commerce-search` root composes two `layout-stack` columns, and each generic `layout-stack` mounts its own children (in a column or row) by id.
 
-Each slot is a catalog renderer (`SearchBoxRenderer`, `SortRenderer`, `ProductListRenderer`, `PaginationRenderer`) that uses `useRemoteController` to read its component state by `componentId`. Absent components render as empty slots without error.
+The composition tree the mock emits is:
+
+```
+commerce-search (root)
+├── search-sidebar   (layout-stack, column) → facet-manager → regular/numeric/category facets
+└── search-main      (layout-stack, column)
+    ├── search-top    (layout-stack, row) → query-summary, sort
+    ├── product-list
+    └── search-bottom (layout-stack, row) → pagination, page-size
+```
+
+Each mounted node is a catalog renderer (`CommerceSearchRenderer`, `LayoutStackRenderer`, `FacetManagerRenderer`, the facet renderers, `QuerySummaryRenderer`, `SortRenderer`, `ProductListRenderer`, `PaginationRenderer`, `PageSizeRenderer`) that uses `useRemoteController` to read its component state by `componentId`. Container renderers (`CommerceSearch`, `LayoutStack`, `FacetManager`) hold no business state; they only mount their declared children in order. Absent components render as empty slots without error.
+
+There is no `search-box` on this surface: the query input is the app-level search bar above the surface, so the composition starts at the `query-summary` row.
 
 On this branch these controls are read-only — they render component state only.
 
 ### Key modules
 
-| Module                                                   | Role                                                                                                                                                                                                                            |
-| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `src/hooks/use-navigation.ts`                            | Navigation state machine (view transitions, persisted RoutedInterface, submit handling)                                                                                                                                         |
-| `src/a2ui/components.tsx`                                | Catalog definitions and renderers (ProductCarousel, BundleDisplay, ComparisonTable, NextActionsBar) registered via `createCatalog`; also registers the decomposed commerce renderers (ProductList, Pagination, Sort, SearchBox) |
-| `src/components/CommerceSearchLayout/`                   | Layout shell for decomposed commerce surfaces — places search-box, product-list, pagination, and sort catalog renderers into spatial slots                                                                                      |
-| `src/a2ui/controllers.tsx`                               | `useRemoteController` hook — reactive component state via `useSyncExternalStore`                                                                                                                                                |
-| `src/a2ui/state-source-context.tsx`                      | React context providing `EngineStateSource` to catalog renderers                                                                                                                                                                |
-| `src/a2ui/surfaces.tsx`                                  | Extracts A2-UI messages from activities, converts v1.0 → v0.9, passes to catalog resolver                                                                                                                                       |
-| `src/a2ui/Skeleton/`                                     | Skeleton placeholders during streaming                                                                                                                                                                                          |
-| `src/components/ConversationPage/AgentResponseBlock.tsx` | Orchestrates streaming display: ThinkingBlock → StreamingMessage → Skeletons → A2UI Surfaces                                                                                                                                    |
+| Module                                                   | Role                                                                                                                                                                                                                                                                                                                                                |
+| -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/hooks/use-navigation.ts`                            | Navigation state machine (view transitions, persisted RoutedInterface, submit handling)                                                                                                                                                                                                                                                             |
+| `src/a2ui/components.tsx`                                | Catalog definitions and renderers registered via `createCatalog`: conversational (ProductCarousel, BundleDisplay, ComparisonTable, NextActionsBar, ProductSummary) and decomposed commerce (CommerceSearch, LayoutStack, FacetManager, RegularFacet, NumericFacet, CategoryFacet, QuerySummary, Sort, ProductList, Pagination, PageSize, SearchBox) |
+| `src/a2ui/CommerceSearch/`                               | `commerce-search` root renderer — composes the sidebar and main columns and mounts them by id via the A2-UI `children(id)` function                                                                                                                                                                                                                 |
+| `src/a2ui/LayoutStack/`                                  | Generic layout container renderer — stacks its declared children in a column or row (direction is a presentation node prop); reused for the sidebar, main, and top/bottom rows                                                                                                                                                                      |
+| `src/a2ui/controllers.tsx`                               | `useRemoteController` hook — reactive component state via `useSyncExternalStore`                                                                                                                                                                                                                                                                    |
+| `src/a2ui/state-source-context.tsx`                      | React context providing `EngineStateSource` to catalog renderers                                                                                                                                                                                                                                                                                    |
+| `src/a2ui/surfaces.tsx`                                  | Extracts A2-UI messages from activities, converts v1.0 → v0.9, passes to catalog resolver                                                                                                                                                                                                                                                           |
+| `src/a2ui/Skeleton/`                                     | Skeleton placeholders during streaming                                                                                                                                                                                                                                                                                                              |
+| `src/components/ConversationPage/AgentResponseBlock.tsx` | Orchestrates streaming display: ThinkingBlock → StreamingMessage → Skeletons → A2UI Surfaces                                                                                                                                                                                                                                                        |
 
 ### Data flow (conversational turn)
 

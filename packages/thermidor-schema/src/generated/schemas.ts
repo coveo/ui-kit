@@ -59,24 +59,6 @@ export const ProductCarouselStateSchema = z.strictObject({
 });
 export type ProductCarouselState = z.infer<typeof ProductCarouselStateSchema>;
 
-export const CartItemSchema = z.strictObject({
-  name: z.string(),
-  price: z.number().min(0),
-  productId: z.string(),
-  quantity: z.number().int().min(1),
-});
-export type CartItem = z.infer<typeof CartItemSchema>;
-
-export const UpdateItemQuantityPayloadSchema = z.strictObject({
-  item: CartItemSchema,
-});
-export type UpdateItemQuantityPayload = z.infer<typeof UpdateItemQuantityPayloadSchema>;
-
-export const CartStateSchema = z.strictObject({
-  items: z.array(CartItemSchema),
-});
-export type CartState = z.infer<typeof CartStateSchema>;
-
 export const SelectActionPayloadSchema = z.strictObject({
   text: z.string(),
   type: z.enum(['followup', 'search']),
@@ -94,7 +76,7 @@ export type BundleDisplayActions = z.infer<typeof BundleDisplayActionsSchema>;
 
 export const BundleSlotSchema = z.strictObject({
   categoryLabel: z.string(),
-  surfaceRef: z.string(),
+  childId: z.string(),
 });
 export type BundleSlot = z.infer<typeof BundleSlotSchema>;
 
@@ -113,7 +95,7 @@ export const ComparisonProductSchema = z.strictObject({
   price: z.number().optional(),
   productId: z.string(),
   rating: z.number().min(0).max(5).optional(),
-  values: z.record(z.string(), z.string()),
+  values: z.record(z.string(), z.string()).optional(),
 });
 export type ComparisonProduct = z.infer<typeof ComparisonProductSchema>;
 
@@ -125,15 +107,24 @@ export const ProductListStateSchema = z.strictObject({
 });
 export type ProductListState = z.infer<typeof ProductListStateSchema>;
 
+export const ProductSummaryActionsSchema = z.strictObject({});
+export type ProductSummaryActions = z.infer<typeof ProductSummaryActionsSchema>;
+
+export const ProductSummaryStateSchema = z.strictObject({
+  categoryLabel: z.string(),
+  product: z.union([ProductSchema, z.null()]),
+});
+export type ProductSummaryState = z.infer<typeof ProductSummaryStateSchema>;
+
 export const SelectPagePayloadSchema = z.strictObject({
   page: z.number().int().min(0),
 });
 export type SelectPagePayload = z.infer<typeof SelectPagePayloadSchema>;
 
-export const SetPageSizePayloadSchema = z.strictObject({
+export const PayloadSchema = z.strictObject({
   pageSize: z.number().int().min(1),
 });
-export type SetPageSizePayload = z.infer<typeof SetPageSizePayloadSchema>;
+export type Payload = z.infer<typeof PayloadSchema>;
 
 export const PaginationStateSchema = z.strictObject({
   page: z.number().int().min(0),
@@ -154,16 +145,6 @@ export const SortCriterionSchema = z.strictObject({
   sortCriteria: z.string(),
 });
 export type SortCriterion = z.infer<typeof SortCriterionSchema>;
-
-export const SubmitQueryPayloadSchema = z.strictObject({
-  query: z.string(),
-});
-export type SubmitQueryPayload = z.infer<typeof SubmitQueryPayloadSchema>;
-
-export const SearchBoxStateSchema = z.strictObject({
-  query: z.string(),
-});
-export type SearchBoxState = z.infer<typeof SearchBoxStateSchema>;
 
 export const ActionSchema = z.strictObject({
   payload: z.unknown(),
@@ -321,27 +302,53 @@ export type CategoryFacetValues = z.infer<typeof CategoryFacetValuesSchema>;
 export const FacetManagerActionsSchema = z.strictObject({});
 export type FacetManagerActions = z.infer<typeof FacetManagerActionsSchema>;
 
-export const FacetManagerStateSchema = z.strictObject({
-  facetIds: z.array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$'))),
-});
+export const FacetManagerStateSchema = z.strictObject({});
 export type FacetManagerState = z.infer<typeof FacetManagerStateSchema>;
+
+export const CommerceSearchActionsSchema = z.strictObject({});
+export type CommerceSearchActions = z.infer<typeof CommerceSearchActionsSchema>;
+
+export const CommerceSearchStateSchema = z.strictObject({});
+export type CommerceSearchState = z.infer<typeof CommerceSearchStateSchema>;
+
+export const LayoutStackActionsSchema = z.strictObject({});
+export type LayoutStackActions = z.infer<typeof LayoutStackActionsSchema>;
+
+export const LayoutStackStateSchema = z.strictObject({});
+export type LayoutStackState = z.infer<typeof LayoutStackStateSchema>;
+
+export const QuerySummaryActionsSchema = z.strictObject({});
+export type QuerySummaryActions = z.infer<typeof QuerySummaryActionsSchema>;
+
+export const QuerySummaryStateSchema = z.strictObject({
+  firstIndex: z.number().int().min(0),
+  lastIndex: z.number().int().min(0),
+  query: z.string(),
+  totalEntries: z.number().int().min(0),
+});
+export type QuerySummaryState = z.infer<typeof QuerySummaryStateSchema>;
+
+export const SetPageSizePayloadSchema = z.strictObject({
+  pageSize: z.number().int().min(1),
+});
+export type SetPageSizePayload = z.infer<typeof SetPageSizePayloadSchema>;
+
+export const PageSizeStateSchema = z.strictObject({
+  pageSize: z.number().int().min(1),
+});
+export type PageSizeState = z.infer<typeof PageSizeStateSchema>;
 
 export const ProductCarouselSchema = z.strictObject({
   actions: ProductCarouselActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
   componentType: z.literal('product-carousel'),
   state: ProductCarouselStateSchema,
 });
 export type ProductCarousel = z.infer<typeof ProductCarouselSchema>;
-
-export const SetItemsPayloadSchema = z.strictObject({
-  items: z.array(CartItemSchema),
-});
-export type SetItemsPayload = z.infer<typeof SetItemsPayloadSchema>;
-
-export const UpdateItemQuantitySchema = z.strictObject({
-  payload: UpdateItemQuantityPayloadSchema,
-});
-export type UpdateItemQuantity = z.infer<typeof UpdateItemQuantitySchema>;
 
 export const SelectActionSchema = z.strictObject({
   payload: SelectActionPayloadSchema,
@@ -362,26 +369,45 @@ export type BundleTier = z.infer<typeof BundleTierSchema>;
 
 export const ComparisonTableStateSchema = z.strictObject({
   attributes: z.array(ComparisonAttributeSchema),
+  heading: z.string(),
   products: z.array(ComparisonProductSchema),
+  summary: z.string(),
 });
 export type ComparisonTableState = z.infer<typeof ComparisonTableStateSchema>;
 
 export const ProductListSchema = z.strictObject({
   actions: ProductListActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
   componentType: z.literal('product-list'),
   state: ProductListStateSchema,
 });
 export type ProductList = z.infer<typeof ProductListSchema>;
+
+export const ProductSummarySchema = z.strictObject({
+  actions: ProductSummaryActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
+  componentType: z.literal('product-summary'),
+  state: ProductSummaryStateSchema,
+});
+export type ProductSummary = z.infer<typeof ProductSummarySchema>;
 
 export const SelectPageSchema = z.strictObject({
   payload: SelectPagePayloadSchema,
 });
 export type SelectPage = z.infer<typeof SelectPageSchema>;
 
-export const SetPageSizeSchema = z.strictObject({
-  payload: SetPageSizePayloadSchema,
+export const PurpleSetPageSizeSchema = z.strictObject({
+  payload: PayloadSchema,
 });
-export type SetPageSize = z.infer<typeof SetPageSizeSchema>;
+export type PurpleSetPageSize = z.infer<typeof PurpleSetPageSizeSchema>;
 
 export const SelectSortSchema = z.strictObject({
   payload: SelectSortPayloadSchema,
@@ -393,11 +419,6 @@ export const SortStateSchema = z.strictObject({
   availableSorts: z.array(SortCriterionSchema),
 });
 export type SortState = z.infer<typeof SortStateSchema>;
-
-export const SubmitQuerySchema = z.strictObject({
-  payload: SubmitQueryPayloadSchema,
-});
-export type SubmitQuery = z.infer<typeof SubmitQuerySchema>;
 
 export const SearchSchema = z.strictObject({
   payload: SearchPayloadSchema,
@@ -503,15 +524,56 @@ export type FacetSearchClass = z.infer<typeof FacetSearchClassSchema>;
 
 export const FacetManagerSchema = z.strictObject({
   actions: FacetManagerActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
   componentType: z.literal('facet-manager'),
   state: FacetManagerStateSchema,
 });
 export type FacetManager = z.infer<typeof FacetManagerSchema>;
 
-export const SetItemsSchema = z.strictObject({
-  payload: SetItemsPayloadSchema,
+export const CommerceSearchSchema = z.strictObject({
+  actions: CommerceSearchActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
+  componentType: z.literal('commerce-search'),
+  state: CommerceSearchStateSchema,
 });
-export type SetItems = z.infer<typeof SetItemsSchema>;
+export type CommerceSearch = z.infer<typeof CommerceSearchSchema>;
+
+export const LayoutStackSchema = z.strictObject({
+  actions: LayoutStackActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
+  componentType: z.literal('layout-stack'),
+  state: LayoutStackStateSchema,
+});
+export type LayoutStack = z.infer<typeof LayoutStackSchema>;
+
+export const QuerySummarySchema = z.strictObject({
+  actions: QuerySummaryActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
+  componentType: z.literal('query-summary'),
+  state: QuerySummaryStateSchema,
+});
+export type QuerySummary = z.infer<typeof QuerySummarySchema>;
+
+export const FluffySetPageSizeSchema = z.strictObject({
+  payload: SetPageSizePayloadSchema,
+});
+export type FluffySetPageSize = z.infer<typeof FluffySetPageSizeSchema>;
 
 export const NextActionsBarActionsSchema = z.strictObject({
   selectAction: SelectActionSchema,
@@ -525,6 +587,11 @@ export type BundleDisplayState = z.infer<typeof BundleDisplayStateSchema>;
 
 export const ComparisonTableSchema = z.strictObject({
   actions: ComparisonTableActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
   componentType: z.literal('comparison-table'),
   state: ComparisonTableStateSchema,
 });
@@ -532,7 +599,7 @@ export type ComparisonTable = z.infer<typeof ComparisonTableSchema>;
 
 export const PaginationActionsSchema = z.strictObject({
   selectPage: SelectPageSchema,
-  setPageSize: SetPageSizeSchema,
+  setPageSize: PurpleSetPageSizeSchema,
 });
 export type PaginationActions = z.infer<typeof PaginationActionsSchema>;
 
@@ -540,11 +607,6 @@ export const SortActionsSchema = z.strictObject({
   selectSort: SelectSortSchema,
 });
 export type SortActions = z.infer<typeof SortActionsSchema>;
-
-export const SearchBoxActionsSchema = z.strictObject({
-  submitQuery: SubmitQuerySchema,
-});
-export type SearchBoxActions = z.infer<typeof SearchBoxActionsSchema>;
 
 export const RegularFacetActionsSchema = z.strictObject({
   clearAllActiveValues: ActionSchema,
@@ -612,14 +674,18 @@ export const CategoryFacetStateSchema = z.strictObject({
 });
 export type CategoryFacetState = z.infer<typeof CategoryFacetStateSchema>;
 
-export const CartActionsSchema = z.strictObject({
-  setItems: SetItemsSchema,
-  updateItemQuantity: UpdateItemQuantitySchema,
+export const PageSizeActionsSchema = z.strictObject({
+  setPageSize: FluffySetPageSizeSchema,
 });
-export type CartActions = z.infer<typeof CartActionsSchema>;
+export type PageSizeActions = z.infer<typeof PageSizeActionsSchema>;
 
 export const NextActionsBarSchema = z.strictObject({
   actions: NextActionsBarActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
   componentType: z.literal('next-actions-bar'),
   state: NextActionsStateSchema,
 });
@@ -627,6 +693,11 @@ export type NextActionsBar = z.infer<typeof NextActionsBarSchema>;
 
 export const BundleDisplaySchema = z.strictObject({
   actions: BundleDisplayActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
   componentType: z.literal('bundle-display'),
   state: BundleDisplayStateSchema,
 });
@@ -634,6 +705,11 @@ export type BundleDisplay = z.infer<typeof BundleDisplaySchema>;
 
 export const PaginationSchema = z.strictObject({
   actions: PaginationActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
   componentType: z.literal('pagination'),
   state: PaginationStateSchema,
 });
@@ -641,20 +717,23 @@ export type Pagination = z.infer<typeof PaginationSchema>;
 
 export const SortSchema = z.strictObject({
   actions: SortActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
   componentType: z.literal('sort'),
   state: SortStateSchema,
 });
 export type Sort = z.infer<typeof SortSchema>;
 
-export const SearchBoxSchema = z.strictObject({
-  actions: SearchBoxActionsSchema,
-  componentType: z.literal('search-box'),
-  state: SearchBoxStateSchema,
-});
-export type SearchBox = z.infer<typeof SearchBoxSchema>;
-
 export const RegularFacetSchema = z.strictObject({
   actions: RegularFacetActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
   componentType: z.literal('regular-facet'),
   state: RegularFacetStateSchema,
 });
@@ -662,6 +741,11 @@ export type RegularFacet = z.infer<typeof RegularFacetSchema>;
 
 export const NumericFacetSchema = z.strictObject({
   actions: NumericFacetActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
   componentType: z.literal('numeric-facet'),
   state: NumericFacetStateSchema,
 });
@@ -669,6 +753,11 @@ export type NumericFacet = z.infer<typeof NumericFacetSchema>;
 
 export const DateFacetSchema = z.strictObject({
   actions: DateFacetActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
   componentType: z.literal('date-facet'),
   state: DateFacetStateSchema,
 });
@@ -676,33 +765,46 @@ export type DateFacet = z.infer<typeof DateFacetSchema>;
 
 export const CategoryFacetSchema = z.strictObject({
   actions: CategoryFacetActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
   componentType: z.literal('category-facet'),
   state: CategoryFacetStateSchema,
 });
 export type CategoryFacet = z.infer<typeof CategoryFacetSchema>;
 
-export const CartSchema = z.strictObject({
-  actions: CartActionsSchema,
-  componentType: z.literal('cart'),
-  state: CartStateSchema,
+export const PageSizeSchema = z.strictObject({
+  actions: PageSizeActionsSchema,
+  child: z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')).optional(),
+  children: z
+    .array(z.string().regex(new RegExp('^[a-z][a-z0-9-]*$')))
+    .max(1000)
+    .optional(),
+  componentType: z.literal('page-size'),
+  state: PageSizeStateSchema,
 });
-export type Cart = z.infer<typeof CartSchema>;
+export type PageSize = z.infer<typeof PageSizeSchema>;
 
 export const ComponentContractsSchema = z.discriminatedUnion('componentType', [
   ProductCarouselSchema,
-  CartSchema,
   NextActionsBarSchema,
   BundleDisplaySchema,
   ComparisonTableSchema,
   ProductListSchema,
+  ProductSummarySchema,
   PaginationSchema,
   SortSchema,
-  SearchBoxSchema,
   RegularFacetSchema,
   NumericFacetSchema,
   DateFacetSchema,
   CategoryFacetSchema,
   FacetManagerSchema,
+  CommerceSearchSchema,
+  LayoutStackSchema,
+  QuerySummarySchema,
+  PageSizeSchema,
 ]);
 export type ComponentContracts = z.infer<typeof ComponentContractsSchema>;
 
@@ -718,17 +820,17 @@ export const BundleDisplayPropsSchema = z.object({
 });
 export type BundleDisplayProps = z.infer<typeof BundleDisplayPropsSchema>;
 
-export const CartPropsSchema = z.object({
-  componentId: z.string(),
-  componentType: z.literal('cart'),
-});
-export type CartProps = z.infer<typeof CartPropsSchema>;
-
 export const CategoryFacetPropsSchema = z.object({
   componentId: z.string(),
   componentType: z.literal('category-facet'),
 });
 export type CategoryFacetProps = z.infer<typeof CategoryFacetPropsSchema>;
+
+export const CommerceSearchPropsSchema = z.object({
+  componentId: z.string(),
+  componentType: z.literal('commerce-search'),
+});
+export type CommerceSearchProps = z.infer<typeof CommerceSearchPropsSchema>;
 
 export const ComparisonTablePropsSchema = z.object({
   componentId: z.string(),
@@ -748,6 +850,12 @@ export const FacetManagerPropsSchema = z.object({
 });
 export type FacetManagerProps = z.infer<typeof FacetManagerPropsSchema>;
 
+export const LayoutStackPropsSchema = z.object({
+  componentId: z.string(),
+  componentType: z.literal('layout-stack'),
+});
+export type LayoutStackProps = z.infer<typeof LayoutStackPropsSchema>;
+
 export const NextActionsBarPropsSchema = z.object({
   componentId: z.string(),
   componentType: z.literal('next-actions-bar'),
@@ -759,6 +867,12 @@ export const NumericFacetPropsSchema = z.object({
   componentType: z.literal('numeric-facet'),
 });
 export type NumericFacetProps = z.infer<typeof NumericFacetPropsSchema>;
+
+export const PageSizePropsSchema = z.object({
+  componentId: z.string(),
+  componentType: z.literal('page-size'),
+});
+export type PageSizeProps = z.infer<typeof PageSizePropsSchema>;
 
 export const PaginationPropsSchema = z.object({
   componentId: z.string(),
@@ -778,17 +892,23 @@ export const ProductListPropsSchema = z.object({
 });
 export type ProductListProps = z.infer<typeof ProductListPropsSchema>;
 
+export const ProductSummaryPropsSchema = z.object({
+  componentId: z.string(),
+  componentType: z.literal('product-summary'),
+});
+export type ProductSummaryProps = z.infer<typeof ProductSummaryPropsSchema>;
+
+export const QuerySummaryPropsSchema = z.object({
+  componentId: z.string(),
+  componentType: z.literal('query-summary'),
+});
+export type QuerySummaryProps = z.infer<typeof QuerySummaryPropsSchema>;
+
 export const RegularFacetPropsSchema = z.object({
   componentId: z.string(),
   componentType: z.literal('regular-facet'),
 });
 export type RegularFacetProps = z.infer<typeof RegularFacetPropsSchema>;
-
-export const SearchBoxPropsSchema = z.object({
-  componentId: z.string(),
-  componentType: z.literal('search-box'),
-});
-export type SearchBoxProps = z.infer<typeof SearchBoxPropsSchema>;
 
 export const SortPropsSchema = z.object({
   componentId: z.string(),

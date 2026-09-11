@@ -1,12 +1,18 @@
 import {describe, expect, it} from 'vitest';
 import {thermidorCatalogDefinitions, THERMIDOR_CATALOG_ID} from './components.js';
 import {
-  CartSchema,
   ProductCarouselSchema,
-  ComponentContractsSchema,
   ProductCarouselPropsSchema,
   ProductSchema,
-  CartItemSchema,
+  ProductSummarySchema,
+  ProductSummaryPropsSchema,
+  ComparisonTableSchema,
+  LayoutStackSchema,
+  LayoutStackPropsSchema,
+  QuerySummarySchema,
+  QuerySummaryPropsSchema,
+  PageSizeSchema,
+  PageSizePropsSchema,
 } from '@coveo/thermidor-schema';
 
 describe('thermidorCatalogDefinitions', () => {
@@ -19,7 +25,7 @@ describe('thermidorCatalogDefinitions', () => {
     ).toBe(true);
   });
 
-  it('validates generated Product and CartItem values against their JSON Schema constraints', () => {
+  it('validates generated Product values against their JSON Schema constraints', () => {
     expect(
       ProductSchema.safeParse({
         permanentid: 'p1',
@@ -37,47 +43,100 @@ describe('thermidorCatalogDefinitions', () => {
         additionalFields: {},
       }).success
     ).toBe(false);
-    expect(
-      CartItemSchema.safeParse({productId: 'p1', name: 'Trail shoes', price: 0, quantity: 1})
-        .success
-    ).toBe(true);
-    expect(
-      CartItemSchema.safeParse({productId: 'p1', name: 'Trail shoes', price: -1, quantity: 1})
-        .success
-    ).toBe(false);
-    expect(
-      CartItemSchema.safeParse({productId: 'p1', name: 'Trail shoes', price: 99.99, quantity: 1.5})
-        .success
-    ).toBe(false);
   });
 
   it('rejects props with wrong componentType literal', () => {
     expect(
       ProductCarouselPropsSchema.safeParse({
         componentId: 'featured-products',
-        componentType: 'cart',
+        componentType: 'comparison-table',
       }).success
     ).toBe(false);
   });
 
-  it('validates component contract state and actions via ComponentContractsSchema', () => {
+  it('validates component contract state via the generated component schema', () => {
     expect(
       ProductCarouselSchema.shape.state.safeParse({
         heading: 'Trail shoes',
         products: [{permanentid: 'p1', ec_name: 'Trail shoes', additionalFields: {}}],
       }).success
     ).toBe(true);
-    expect(CartSchema.shape.state.safeParse({items: []}).success).toBe(true);
+  });
+
+  it('registers the product-summary component in the catalog with a matching contract', () => {
+    expect(thermidorCatalogDefinitions).toHaveProperty('ProductSummary');
+    expect(ProductSummaryPropsSchema.shape.componentType.value).toBe(
+      ProductSummarySchema.shape.componentType.value
+    );
     expect(
-      CartSchema.shape.actions.shape.setItems.shape.payload.safeParse({
-        items: [{productId: 'p1', name: 'Trail shoes', price: 99.99, quantity: 1}],
+      ProductSummarySchema.shape.state.safeParse({
+        categoryLabel: 'Surfboard',
+        product: {permanentid: 'p1', ec_name: 'Board', additionalFields: {}},
       }).success
     ).toBe(true);
+    // The single product may be null when no product is available for the slot.
     expect(
-      CartSchema.shape.actions.shape.updateItemQuantity.shape.payload.safeParse({
-        item: {productId: 'p1', name: 'Trail shoes', price: 99.99, quantity: 0},
+      ProductSummarySchema.shape.state.safeParse({categoryLabel: 'Surfboard', product: null})
+        .success
+    ).toBe(true);
+  });
+
+  it('registers the comparison-table leaf with heading, summary, products and attributes state', () => {
+    expect(thermidorCatalogDefinitions).toHaveProperty('ComparisonTable');
+    expect(
+      ComparisonTableSchema.shape.state.safeParse({
+        heading: 'Comparison',
+        summary: 'A short summary.',
+        products: [{productId: 'p1', name: 'Board', values: {brand: 'Acme'}}],
+        attributes: [{key: 'brand', label: 'Brand'}],
+      }).success
+    ).toBe(true);
+    // Products are required leaf state; omitting them is rejected.
+    expect(
+      ComparisonTableSchema.shape.state.safeParse({
+        heading: 'Comparison',
+        summary: 'A short summary.',
+        attributes: [],
       }).success
     ).toBe(false);
+  });
+
+  it('registers the layout-stack container in the catalog with an empty state contract', () => {
+    expect(thermidorCatalogDefinitions).toHaveProperty('LayoutStack');
+    expect(LayoutStackPropsSchema.shape.componentType.value).toBe(
+      LayoutStackSchema.shape.componentType.value
+    );
+    expect(LayoutStackSchema.shape.state.safeParse({}).success).toBe(true);
+    // A layout container holds no business data; extra state keys are rejected.
+    expect(LayoutStackSchema.shape.state.safeParse({direction: 'row'}).success).toBe(false);
+  });
+
+  it('registers the query-summary component with its aggregate state contract', () => {
+    expect(thermidorCatalogDefinitions).toHaveProperty('QuerySummary');
+    expect(QuerySummaryPropsSchema.shape.componentType.value).toBe(
+      QuerySummarySchema.shape.componentType.value
+    );
+    expect(
+      QuerySummarySchema.shape.state.safeParse({
+        query: 'Water Sports',
+        firstIndex: 1,
+        lastIndex: 12,
+        totalEntries: 43,
+      }).success
+    ).toBe(true);
+    // All four aggregate fields are required.
+    expect(QuerySummarySchema.shape.state.safeParse({query: 'x'}).success).toBe(false);
+  });
+
+  it('registers the page-size component with its own pageSize state and setPageSize action', () => {
+    expect(thermidorCatalogDefinitions).toHaveProperty('PageSize');
+    expect(PageSizePropsSchema.shape.componentType.value).toBe(
+      PageSizeSchema.shape.componentType.value
+    );
+    expect(PageSizeSchema.shape.state.safeParse({pageSize: 24}).success).toBe(true);
+    expect(
+      PageSizeSchema.shape.actions.shape.setPageSize.shape.payload.safeParse({pageSize: 48}).success
+    ).toBe(true);
   });
 
   it('exports the correct catalog ID', () => {

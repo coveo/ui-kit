@@ -29,8 +29,43 @@
 import {useEffect, useMemo, useRef} from 'react';
 import {A2UIRenderer, useA2UI} from '@copilotkit/a2ui-renderer';
 import type {Activity} from '@coveo/thermidor';
+import {isRecord} from '../utils.js';
 
 type A2UIMessage = Record<string, unknown>;
+
+/**
+ * The literal component id at which `@copilotkit/a2ui-renderer` begins mounting a
+ * surface's component tree. A surface whose declared root id differs from this value
+ * must be remapped to it so the renderer can locate the root.
+ */
+const RENDERER_ROOT_ID = 'root';
+
+/**
+ * Rewrites a component node so that any reference to `declaredRootId` becomes the
+ * Renderer_Root_Id (`"root"`): the node's own `id`, every matching entry in its
+ * `children[]`, and a matching `child`. `props` is intentionally left untouched — the
+ * `componentId`/`componentType` correlation lives there and must survive the rename.
+ */
+function remapId(node: Record<string, unknown>, declaredRootId: string): Record<string, unknown> {
+  const remapped: Record<string, unknown> = {...node};
+
+  if (remapped['id'] === declaredRootId) {
+    remapped['id'] = RENDERER_ROOT_ID;
+  }
+
+  const children = remapped['children'];
+  if (Array.isArray(children)) {
+    remapped['children'] = children.map((childId) =>
+      childId === declaredRootId ? RENDERER_ROOT_ID : childId
+    );
+  }
+
+  if (remapped['child'] === declaredRootId) {
+    remapped['child'] = RENDERER_ROOT_ID;
+  }
+
+  return remapped;
+}
 
 /**
  * Converts a single v1.0 A2-UI message into one or more v0.9 messages
@@ -39,11 +74,14 @@ type A2UIMessage = Record<string, unknown>;
  * Conversion rules:
  * - `createSurface` (v1.0) → `createSurface` + `updateComponents` (v0.9)
  *   - `components[].props` are flattened onto the component node directly
+ *   - when `createSurface.rootId` names exactly one component whose id is not already
+ *     `"root"`, that node's id (and every reference to it) is remapped to `"root"` so
+ *     the renderer can mount a surface whose declared root differs from `"root"`
  * - `updateDataModel` / `updateComponents` / `deleteSurface` → same shape, version changed to v0.9
  *
  * @deprecated Remove when @copilotkit/a2ui-renderer supports v1.0 natively.
  */
-function convertV1ToV09(message: Record<string, unknown>): A2UIMessage[] {
+export function convertV1ToV09(message: Record<string, unknown>): A2UIMessage[] {
   if (message['version'] !== 'v1.0') {
     return [message];
   }
@@ -59,12 +97,20 @@ function convertV1ToV09(message: Record<string, unknown>): A2UIMessage[] {
     ];
 
     if (components && components.length > 0) {
+      const rootId = createSurface['rootId'];
+      const declaredRootId =
+        typeof rootId === 'string' && rootId !== RENDERER_ROOT_ID ? rootId : undefined;
+      const resolveRoot =
+        declaredRootId !== undefined &&
+        components.filter((comp) => comp['id'] === declaredRootId).length === 1;
+
       const v09Components = components.map((comp) => {
         const {props, ...rest} = comp;
+        const remapped = resolveRoot ? remapId(rest, declaredRootId!) : rest;
         if (isRecord(props)) {
-          return {...rest, ...props};
+          return {...remapped, ...props};
         }
-        return rest;
+        return remapped;
       });
       results.push({version: 'v0.9', updateComponents: {surfaceId, components: v09Components}});
     }
@@ -201,8 +247,4 @@ function getSurfaceIds(messages: A2UIMessage[]): string[] {
     }
   }
   return [...surfaceIds];
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
 }

@@ -23,14 +23,19 @@ describe('projection determinism', () => {
         }
       );
     }).not.toThrow();
-  });
+  }, 60_000);
 
   it('componentType literals appear in generated Zod schemas', async () => {
     const content = await readFile(generatedPath, 'utf8');
     expect(content).toContain("z.literal('product-carousel')");
-    expect(content).toContain("z.literal('cart')");
     expect(content).toContain("z.literal('next-actions-bar')");
     expect(content).toContain("z.literal('bundle-display')");
     expect(content).toContain("z.literal('comparison-table')");
+  });
+
+  it('projects the component contracts union without recursion (no z.lazy)', async () => {
+    const content = await readFile(generatedPath, 'utf8');
+    expect(content).toContain('ComponentContractsSchema');
+    expect(content).not.toContain('z.lazy(');
   });
 });

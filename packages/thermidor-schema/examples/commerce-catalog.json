@@ -2,7 +2,7 @@
   "$schema": "https://schema.thermidor.coveo.com/base/catalog.schema.json",
   "catalogId": "a2ui-commerce-v1",
   "version": "0.1.0",
-  "description": "Commerce catalog for the Thermidor A2-UI use case. Covers the ProductCarousel (read-only) and Cart (interactive) components.",
+  "description": "Commerce catalog for the Thermidor A2-UI use case. Covers the ProductCarousel (read-only) component.",
   "components": [
     {
       "componentId": "product-carousel",
@@ -28,63 +28,6 @@
             "additionalProperties": false
           },
           "actions": {}
-        }
-      }
-    },
-    {
-      "componentId": "cart",
-      "displayName": "Cart",
-      "description": "A component blueprint for displaying the current cart contents and allowing these contents to be updated.",
-      "controllers": {
-        "cartController": {
-          "description": "The dynamic, stateful controls for a commerce cart.",
-          "controllerSchema": "https://schema.thermidor.coveo.com/controllers/cart.schema.json",
-          "state": {
-            "description": "The current state of the cart.",
-            "type": "object",
-            "required": ["items"],
-            "properties": {
-              "items": {
-                "type": "array",
-                "description": "The list of items in the cart.",
-                "items": {
-                  "$ref": "https://schema.thermidor.coveo.com/definitions/cart-item.schema.json"
-                }
-              }
-            },
-            "additionalProperties": false
-          },
-          "actions": {
-            "setItems": {
-              "payload": {
-                "type": "object",
-                "required": ["items"],
-                "properties": {
-                  "items": {
-                    "type": "array",
-                    "description": "The new complete list of cart items. An empty array clears the cart.",
-                    "items": {
-                      "$ref": "https://schema.thermidor.coveo.com/definitions/cart-item.schema.json"
-                    }
-                  }
-                },
-                "additionalProperties": false
-              }
-            },
-            "updateItemQuantity": {
-              "payload": {
-                "type": "object",
-                "required": ["item"],
-                "properties": {
-                  "item": {
-                    "$ref": "https://schema.thermidor.coveo.com/definitions/cart-item.schema.json",
-                    "description": "The cart item with the updated quantity. The productId identifies the existing line item; all other fields reflect the desired new state."
-                  }
-                },
-                "additionalProperties": false
-              }
-            }
-          }
         }
       }
     }

@@ -1,5 +1,13 @@
 # @coveo/create-ui
 
+## 0.3.1
+
+### Patch Changes
+
+- [#8447](https://github.com/coveo/ui-kit/pull/8447) [`2f149ef`](https://github.com/coveo/ui-kit/commit/2f149ef35baf9ee88eaa0d4d09438fdaf94ed7e0) - Add the "Create a Coveo search interface project" guide to the `--docs` output.
+
+  `create-ui --docs` now lists https://docs.coveo.com/en/q8qh2338 under "Create a project", alongside the docs home, Atomic, and Headless links.
+
 ## 0.3.0
 
 ### Minor Changes
