@@ -1,6 +1,6 @@
 # ADR-006: Remove Controllers from the Public Schema Contract
 
-**Status:** Proposed  
+**Status:** Accepted  
 **Date:** 2026-08-19  
 **Deciders:** Thermidor Stack team  
 **Related:** [ADR-001](./ADR-001-thermidor-schema-contract.md), [ADR-002](./ADR-002-agui-controller-state-transport.md), [Annex A](./ADR-006-annex-a-schema-controllers-analysis.md), [Annex B](./ADR-006-annex-b-option-b-implementation.md)

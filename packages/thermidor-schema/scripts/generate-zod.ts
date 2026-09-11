@@ -49,7 +49,7 @@ const documentsById = new Map<string, SchemaDocument>(
   documents.map((document) => [document.$id, document])
 );
 const componentIndex = loadComponentIndex(documentsById);
-const projectionDocuments = crawlSchemaDocuments(componentIndex, documentsById);
+const projectionDocuments = crawlSchemaDocuments([componentIndex], documentsById);
 const entries = loadProjectionEntries(projectionDocuments);
 const discriminatedUnions = loadDiscriminatedUnions(componentIndex, projectionDocuments);
 
@@ -151,7 +151,7 @@ function loadDiscriminatedUnions(
 }
 
 function crawlSchemaDocuments(
-  root: SchemaDocument,
+  roots: SchemaDocument | SchemaDocument[],
   documents: Map<string, SchemaDocument>
 ): SchemaDocument[] {
   const crawled: SchemaDocument[] = [];
@@ -225,7 +225,7 @@ function crawlSchemaDocuments(
     });
   };
 
-  visitDocument(root);
+  (Array.isArray(roots) ? roots : [roots]).forEach(visitDocument);
   return crawled;
 }
 

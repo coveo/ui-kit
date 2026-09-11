@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.thermidor.coveo.com/components/commerce-search.schema.json",
+  "title": "CommerceSearch",
+  "description": "Surface-root component for a commerce search surface. Its componentType carries the surface intent; it owns the surface's top-level components via children.",
+  "allOf": [
+    {
+      "$ref": "https://schema.thermidor.coveo.com/base/component.schema.json"
+    }
+  ],
+  "properties": {
+    "componentType": {
+      "type": "string",
+      "const": "commerce-search"
+    },
+    "state": {
+      "$ref": "#/$defs/CommerceSearchState"
+    },
+    "actions": {
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+      },
+      "maxItems": 1000,
+      "default": []
+    },
+    "child": {
+      "$ref": "https://schema.thermidor.coveo.com/definitions/child-ref.schema.json"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "CommerceSearchState": {
+      "title": "CommerceSearchState",
+      "description": "The commerce search surface state. Owned exclusively by the backend.",
+      "type": "object",
+      "additionalProperties": false
+    }
+  }
+}
