@@ -274,9 +274,10 @@ export class AtomicRefineModal extends LitElement implements InitializableCompon
       facet.classList.remove(popoverClass);
       facet.setAttribute(isRefineModalFacet, '');
       const clone = facet.cloneNode(true) as BaseFacetElement;
-      clone.style.display = 'contents';
+      clone.setAttribute('facet-id', facet.getAttribute('facet-id') ?? facet.facetId);
       clone.isCollapsed =
         this.collapseFacetsAfter === -1 ? false : i + 1 > this.collapseFacetsAfter;
+      this.updateCloneDisplay(clone);
       return clone;
     });
   }
@@ -392,6 +393,31 @@ export class AtomicRefineModal extends LitElement implements InitializableCompon
         ${this.renderSort()} ${this.renderFilters()}
       `)
     )}`;
+  }
+
+  public updated() {
+    if (!this.isOpen) {
+      return;
+    }
+
+    this.syncClonedFacetVisibility();
+  }
+
+  private syncClonedFacetVisibility() {
+    const facetSlot = this.querySelector('div[slot="facets"]');
+    if (!facetSlot) {
+      return;
+    }
+
+    Array.from(facetSlot.children).forEach((facet) => {
+      this.updateCloneDisplay(facet as BaseFacetElement);
+    });
+  }
+
+  private updateCloneDisplay(clone: BaseFacetElement) {
+    const facetId = clone.getAttribute('facet-id') ?? clone.facetId;
+    const facetInfo = facetId ? this.bindings.store.getAllFacets()[facetId] : undefined;
+    clone.hidden = !!facetInfo?.isHidden();
   }
 }
 
