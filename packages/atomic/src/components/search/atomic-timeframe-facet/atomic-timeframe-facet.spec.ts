@@ -237,9 +237,10 @@ describe('atomic-timeframe-facet', () => {
         buildFakeSearchStatus({firstSearchExecuted: false})
       );
 
-      const {locators} = await setupElement();
+      const {element, locators} = await setupElement();
       expect(locators.placeholder).not.toBeNull();
       expect(locators.facet).toBeNull();
+      expect(getComputedStyle(element).display).not.toBe('none');
     });
 
     it('should not render facet when there is an error', async () => {
@@ -252,8 +253,9 @@ describe('atomic-timeframe-facet', () => {
     });
 
     it('should not render facet when no values are available', async () => {
-      const {locators} = await setupElement();
+      const {element, locators} = await setupElement();
       expect(locators.facet).toBeNull();
+      expect(getComputedStyle(element).display).toBe('none');
     });
   });
 

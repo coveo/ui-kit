@@ -11,7 +11,7 @@ import type {
   RelativeDateUnit,
   SearchStatusState,
 } from '@coveo/headless';
-import {html, nothing, type TemplateResult} from 'lit';
+import {html, nothing, type ReactiveControllerHost, type TemplateResult} from 'lit';
 import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
 import type {Bindings as SearchBindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import type {FocusTargetController} from '@/src/utils/accessibility-utils';
@@ -29,6 +29,7 @@ import {renderFacetValuesGroup} from './facet-values-group/facet-values-group';
 import {initializePopover} from './popover/popover-type';
 import '@/src/components/common/atomic-facet-date-input/atomic-facet-date-input';
 import '@/src/components/common/atomic-timeframe/atomic-timeframe';
+import {FacetVisibilityController} from './facet-visibility-controller';
 
 export interface Timeframe {
   period: RelativeDatePeriod;
@@ -39,7 +40,7 @@ export interface Timeframe {
 
 interface TimeframeFacetCommonOptions {
   facetId?: string;
-  host: HTMLElement;
+  host: HTMLElement & ReactiveControllerHost;
   bindings: SearchBindings | InsightBindings;
   label: string;
   field: string;
@@ -60,8 +61,6 @@ interface TimeframeFacetCommonOptions {
 }
 
 interface TimeframeFacetCommonRenderProps {
-  hasError: boolean;
-  firstSearchExecuted: boolean;
   isCollapsed: boolean;
   headerFocus: FocusTargetController;
   onToggleCollapse: () => boolean;
@@ -111,6 +110,8 @@ export class TimeframeFacetCommon {
         this.filter?.state.facetId
       );
     }
+
+    new FacetVisibilityController(props.host, () => this.isHidden);
 
     this.registerFacetToStore();
   }
@@ -202,7 +203,13 @@ export class TimeframeFacetCommon {
   }
 
   private get isHidden() {
-    return !this.shouldRenderFacet || !this.enabled;
+    const searchStatusState = this.props.getSearchStatusState();
+    if (!searchStatusState) {
+      return false;
+    }
+
+    const {hasError, firstSearchExecuted} = searchStatusState;
+    return hasError || !this.enabled || (firstSearchExecuted && !this.shouldRenderFacet);
   }
 
   private registerFacetToStore() {
@@ -354,17 +361,15 @@ export class TimeframeFacetCommon {
   }
 
   public render({
-    hasError,
-    firstSearchExecuted,
     isCollapsed,
     headerFocus,
     onToggleCollapse,
   }: TimeframeFacetCommonRenderProps): TemplateResult | typeof nothing {
-    if (hasError || !this.enabled) {
+    if (this.props.getSearchStatusState().hasError || !this.enabled) {
       return nothing;
     }
 
-    if (!firstSearchExecuted) {
+    if (!this.props.getSearchStatusState().firstSearchExecuted) {
       return renderFacetPlaceholder({
         props: {
           numberOfValues: this.currentValues.length,

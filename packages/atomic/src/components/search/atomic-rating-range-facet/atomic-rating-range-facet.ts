@@ -26,6 +26,7 @@ import {renderRating} from '@/src/components/common/atomic-rating/rating';
 import {parseDependsOn} from '@/src/components/common/facets/depends-on';
 import facetCommonStyles from '@/src/components/common/facets/facet-common.tw.css';
 import type {FacetInfo} from '@/src/components/common/facets/facet-common-store';
+import {FacetVisibilityController} from '@/src/components/common/facets/facet-visibility-controller';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
 import {renderFacetPlaceholder} from '@/src/components/common/facets/facet-placeholder/facet-placeholder';
@@ -51,6 +52,8 @@ import Star from '../../../images/star.svg';
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
  * An `atomic-rating-range-facet` displays a facet of the results for the current query as ratings.
  * It only supports numeric fields.
+ *
+ * @cssState hidden - Applied when the facet is hidden.
  *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
@@ -257,7 +260,7 @@ export class AtomicRatingRangeFacet extends LitElement implements InitializableC
 
   constructor() {
     super();
-
+    new FacetVisibilityController(this, () => this.isHidden);
     new ValidatePropsController(
       this,
       () => ({
@@ -312,8 +315,14 @@ export class AtomicRatingRangeFacet extends LitElement implements InitializableC
   }
 
   private get isHidden() {
+    if (!this.searchStatusState || !this.facetState) {
+      return false;
+    }
+
     return (
-      !this.valuesToRender.length || this.searchStatusState.hasError || !this.facet.state.enabled
+      this.searchStatusState.hasError ||
+      !this.facetState.enabled ||
+      (this.searchStatusState.firstSearchExecuted && !this.valuesToRender.length)
     );
   }
 

@@ -11,6 +11,7 @@ import {when} from 'lit/directives/when.js';
 import {getFirstNewFacetValueIndex} from '@/src/components/common/facets/facet-common';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
+import {FacetVisibilityController} from '@/src/components/common/facets/facet-visibility-controller';
 import {renderFacetSearchInput} from '@/src/components/common/facets/facet-search/facet-search-input';
 import {facetSearchInputGuard} from '@/src/components/common/facets/facet-search/facet-search-input-guard';
 import {renderFacetSearchMatches} from '@/src/components/common/facets/facet-search/facet-search-matches';
@@ -40,6 +41,8 @@ import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerc
 
 /**
  * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
+ *
+ * @cssState hidden - Applied when the facet is hidden.
  *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
@@ -127,6 +130,22 @@ export class AtomicCommerceFacet
   private unsubscribeFacetController?: () => void;
   private ariaLiveRegion = new AriaLiveRegionController(this, 'facet-search');
   private valuesBeforeShowMore = new Set<string>();
+
+  constructor() {
+    super();
+    new FacetVisibilityController(this, () => this.isHidden);
+  }
+
+  private get isHidden() {
+    if (!this.summaryState || !this.facetState) {
+      return false;
+    }
+
+    return (
+      this.summaryState.hasError ||
+      (this.summaryState.firstRequestExecuted && !this.facetState.values.length)
+    );
+  }
 
   public initialize() {
     this.validateFacet();

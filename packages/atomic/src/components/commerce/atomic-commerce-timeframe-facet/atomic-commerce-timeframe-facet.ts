@@ -13,6 +13,7 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
+import {FacetVisibilityController} from '@/src/components/common/facets/facet-visibility-controller';
 import {renderFacetValueLabelHighlight} from '@/src/components/common/facets/facet-value-label-highlight/facet-value-label-highlight';
 import {renderFacetValueLink} from '@/src/components/common/facets/facet-value-link/facet-value-link';
 import {renderFacetValuesGroup} from '@/src/components/common/facets/facet-values-group/facet-values-group';
@@ -34,6 +35,8 @@ import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerc
 /**
  * A facet is a list of values for a certain field occurring in the products.
  * An `atomic-commerce-timeframe-facet` displays a facet of the products for the current query as date intervals.
+ *
+ * @cssState hidden - Applied when the facet is hidden.
  *
  * @part facet - The wrapper for the entire facet.
  * @part label-button - The header button to expand/collapse the facet.
@@ -96,6 +99,22 @@ export class AtomicCommerceTimeframeFacet
   @state() private inputRange?: DateFilterRange;
 
   private headerFocus?: FocusTargetController;
+
+  constructor() {
+    super();
+    new FacetVisibilityController(this, () => this.isHidden);
+  }
+
+  private get isHidden() {
+    if (!this.summaryState || !this.facetState) {
+      return false;
+    }
+
+    return (
+      this.summaryState.hasError ||
+      (this.summaryState.firstRequestExecuted && !this.shouldRenderFacet)
+    );
+  }
 
   private get displayName() {
     return this.facetState.displayName || 'no-label';

@@ -156,10 +156,11 @@ describe('atomic-category-facet', () => {
 
   describe('when first search has not been executed', () => {
     it('should render placeholder', async () => {
-      const {placeholder} = await renderCategoryFacet(undefined, {
+      const {element, placeholder} = await renderCategoryFacet(undefined, {
         searchStatusState: {firstSearchExecuted: false},
       });
       expect(placeholder).toBeInTheDocument();
+      expect(getComputedStyle(element).display).not.toBe('none');
     });
 
     it('should not render facet container', async () => {
@@ -245,10 +246,11 @@ describe('atomic-category-facet', () => {
   });
 
   it('should not render facet when there are no values', async () => {
-    const {facet} = await renderCategoryFacet(undefined, {
+    const {element, facet} = await renderCategoryFacet(undefined, {
       facetState: {valuesAsTrees: []},
     });
     expect(facet).not.toBeInTheDocument();
+    expect(getComputedStyle(element).display).toBe('none');
   });
 
   describe('when facet has selected value ancestry', () => {

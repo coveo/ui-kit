@@ -22,6 +22,7 @@ import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {parseDependsOn} from '@/src/components/common/facets/depends-on';
+import {FacetVisibilityController} from '@/src/components/common/facets/facet-visibility-controller';
 import facetCommonStyles from '@/src/components/common/facets/facet-common.tw.css';
 import {renderFacetValuesGroup} from '@/src/components/common/facets/facet-values-group/facet-values-group';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
@@ -40,6 +41,9 @@ import {mapProperty} from '@/src/utils/props-utils';
 
 /**
  * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
+ *
+ * @cssState hidden - Applied when the facet is hidden.
+ *
  * @part segmented-container - The container that holds the segmented facets.
  * @part label - The facet value label.
  * @part values - The facet values container.
@@ -253,6 +257,23 @@ export class AtomicSegmentedFacet extends LitElement implements InitializableCom
   private dependenciesManager?: FacetConditionsManager;
 
   static styles: CSSResultGroup = [facetCommonStyles, facetSegmentedValueStyles];
+
+  constructor() {
+    super();
+    new FacetVisibilityController(this, () => this.isHidden);
+  }
+
+  private get isHidden() {
+    if (!this.searchStatusState || !this.facetState) {
+      return false;
+    }
+
+    return (
+      this.searchStatusState.hasError ||
+      !this.facetState.enabled ||
+      (this.searchStatusState.firstSearchExecuted && !this.facetState.values.length)
+    );
+  }
 
   initialize() {
     if (this.tabsIncluded.length > 0 && this.tabsExcluded.length > 0) {

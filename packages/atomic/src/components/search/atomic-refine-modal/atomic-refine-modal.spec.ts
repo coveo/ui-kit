@@ -421,67 +421,6 @@ describe('atomic-refine-modal', () => {
       expect(facetSlot).toBeInTheDocument();
     });
 
-    it('should keep visible cloned facet hosts in the facet slot layout', async () => {
-      const {element} = await renderRefineModal();
-
-      const clonedFacets = Array.from(
-        element.querySelector('div[slot="facets"]')?.children ?? []
-      ) as HTMLElement[];
-      expect(clonedFacets).toHaveLength(2);
-      expect(clonedFacets.map((facet) => facet.hidden)).toEqual([false, false]);
-      expect(clonedFacets.map((facet) => facet.style.display)).toEqual(['', '']);
-    });
-
-    it('should keep initially hidden cloned facets out of the layout until they become visible', async () => {
-      const facets = ['parent', 'dependent', 'unrelated'].map((facetId) => {
-        const facet = Object.assign(document.createElement('div'), {
-          facetId,
-          isCollapsed: false,
-        });
-        facet.setAttribute('facet-id', facetId);
-        return facet;
-      });
-      let dependentIsHidden = true;
-      const {element} = await renderRefineModal({isOpen: false});
-      element.bindings.store.getFacetElements = () => facets;
-      element.bindings.store.getAllFacets = () => ({
-        parent: {
-          facetId: 'parent',
-          label: () => 'Parent',
-          element: facets[0],
-          isHidden: () => false,
-        },
-        dependent: {
-          facetId: 'dependent',
-          label: () => 'Dependent',
-          element: facets[1],
-          isHidden: () => dependentIsHidden,
-        },
-        unrelated: {
-          facetId: 'unrelated',
-          label: () => 'Unrelated',
-          element: facets[2],
-          isHidden: () => false,
-        },
-      });
-
-      element.isOpen = true;
-      await element.updateComplete;
-
-      const clonedFacets = Array.from(
-        element.querySelector('div[slot="facets"]')?.children ?? []
-      ) as HTMLElement[];
-      expect(clonedFacets.map((facet) => facet.hidden)).toEqual([false, true, false]);
-      expect(clonedFacets.map((facet) => facet.style.display)).toEqual(['', 'none', '']);
-
-      dependentIsHidden = false;
-      element.requestUpdate();
-      await element.updateComplete;
-
-      expect(clonedFacets.map((facet) => facet.hidden)).toEqual([false, false, false]);
-      expect(clonedFacets.map((facet) => facet.style.display)).toEqual(['', '', '']);
-    });
-
     it('should preserve facet order when a facet is initially hidden', async () => {
       const facets = ['parent', 'dependent', 'unrelated'].map((facetId) => {
         const facet = Object.assign(document.createElement('div'), {

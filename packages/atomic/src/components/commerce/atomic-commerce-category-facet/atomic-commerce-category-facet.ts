@@ -14,6 +14,7 @@ import {when} from 'lit/directives/when.js';
 import type {CommerceBindings} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
+import {FacetVisibilityController} from '@/src/components/common/facets/facet-visibility-controller';
 import {announceFacetSearchResultsWithAriaLive} from '@/src/components/common/facets/facet-search/facet-search-aria-live';
 import {renderFacetSearchInput} from '@/src/components/common/facets/facet-search/facet-search-input';
 import {renderFacetSearchMatches} from '@/src/components/common/facets/facet-search/facet-search-matches';
@@ -47,6 +48,8 @@ import facetSearchStyles from '../../common/facets/facet-search/facet-search.tw.
 /**
  * A facet is a list of values for a certain field occurring in the products.
  * An `atomic-commerce-category-facet` displays a facet of values in a browsable, hierarchical fashion.
+ *
+ * @cssState hidden - Applied when the facet is hidden.
  *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
@@ -162,6 +165,22 @@ export class AtomicCommerceCategoryFacet
   private activeValueFocus?: FocusTargetController;
 
   private facetSearchAriaMessage = new AriaLiveRegionController(this, 'facet-search');
+
+  constructor() {
+    super();
+    new FacetVisibilityController(this, () => this.isHidden);
+  }
+
+  private get isHidden() {
+    if (!this.summaryState || !this.facetState) {
+      return false;
+    }
+
+    return (
+      this.summaryState.hasError ||
+      (this.summaryState.firstRequestExecuted && !this.facetState.values.length)
+    );
+  }
 
   public initialize() {
     this.validateFacet();

@@ -225,6 +225,7 @@ describe('atomic-rating-range-facet', () => {
       const {element} = await renderRatingRangeFacet();
       const placeholder = element.shadowRoot?.querySelector('atomic-facet-placeholder');
       expect(placeholder).toBeDefined();
+      expect(getComputedStyle(element).display).not.toBe('none');
     });
 
     it('should render nothing when there are no values', async () => {
@@ -238,6 +239,7 @@ describe('atomic-rating-range-facet', () => {
       const {element} = await renderRatingRangeFacet();
       const facetContainer = element.shadowRoot?.querySelector('[part="facet"]');
       expect(facetContainer).toBeNull();
+      expect(getComputedStyle(element).display).toBe('none');
     });
 
     it('should render nothing when search has error', async () => {
