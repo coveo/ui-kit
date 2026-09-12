@@ -389,8 +389,7 @@ export class AtomicFacet extends LitElement implements InitializableComponent<Bi
 
   constructor() {
     super();
-
-    new FacetVisibilityController(this, () => this.isHidden);
+    new FacetVisibilityController(this, () => !!this.facet && this.facetInfo.isHidden());
     new ValidatePropsController(
       this,
       () => ({
@@ -675,15 +674,7 @@ export class AtomicFacet extends LitElement implements InitializableComponent<Bi
   }
 
   private get isHidden() {
-    if (!this.searchStatusState || !this.facetState) {
-      return false;
-    }
-
-    return (
-      this.searchStatusState.hasError ||
-      !this.facetState.enabled ||
-      (this.searchStatusState.firstSearchExecuted && !this.facetState.values.length)
-    );
+    return !this.facet.state.enabled || !this.facet.state.values.length;
   }
 
   private get host() {

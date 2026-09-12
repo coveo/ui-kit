@@ -200,10 +200,9 @@ describe('atomic-color-facet', () => {
         buildFakeSearchStatus({firstSearchExecuted: false})
       );
 
-      const {element, locators} = await setupElement();
+      const {locators} = await setupElement();
       expect(locators.placeholder).toBeInTheDocument();
       expect(locators.facet).toBeNull();
-      expect(getComputedStyle(element).display).not.toBe('none');
     });
 
     it('should not render facet when no values are available', async () => {
@@ -216,9 +215,8 @@ describe('atomic-color-facet', () => {
         })
       );
 
-      const {element, locators} = await setupElement();
+      const {locators} = await setupElement();
       expect(locators.facet).toBeNull();
-      expect(getComputedStyle(element).display).toBe('none');
     });
 
     it('should not render facet when disabled', async () => {

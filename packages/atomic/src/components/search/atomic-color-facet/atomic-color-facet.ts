@@ -25,7 +25,6 @@ import {parseDependsOn} from '@/src/components/common/facets/depends-on';
 import {getFirstNewFacetValueIndex} from '@/src/components/common/facets/facet-common';
 import facetCommonStyles from '@/src/components/common/facets/facet-common.tw.css';
 import type {FacetInfo} from '@/src/components/common/facets/facet-common-store';
-import {FacetVisibilityController} from '@/src/components/common/facets/facet-visibility-controller';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
 import {renderFacetPlaceholder} from '@/src/components/common/facets/facet-placeholder/facet-placeholder';
@@ -61,8 +60,6 @@ import {mapProperty} from '@/src/utils/props-utils';
 
 /**
  * The `atomic-color-facet` component displays facet values as color boxes or checkboxes with color indicators.
- *
- * @cssState hidden - Applied when the facet is hidden.
  *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
@@ -396,7 +393,6 @@ export class AtomicColorFacet extends LitElement implements InitializableCompone
 
   constructor() {
     super();
-    new FacetVisibilityController(this, () => this.isHidden);
     new ValidatePropsController(
       this,
       () => ({
@@ -720,15 +716,7 @@ export class AtomicColorFacet extends LitElement implements InitializableCompone
   }
 
   private get isHidden() {
-    if (!this.searchStatusState || !this.facetState) {
-      return false;
-    }
-
-    return (
-      this.searchStatusState.hasError ||
-      !this.facetState.enabled ||
-      (this.searchStatusState.firstSearchExecuted && !this.facetState.values.length)
-    );
+    return !this.facet.state.enabled || !this.facet.state.values.length;
   }
 
   private get host() {

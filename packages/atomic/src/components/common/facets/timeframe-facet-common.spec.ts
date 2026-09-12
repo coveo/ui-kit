@@ -5,7 +5,7 @@ import type {
   DateRangeRequest,
   SearchStatusState,
 } from '@coveo/headless';
-import {html, LitElement, nothing} from 'lit';
+import {html, nothing} from 'lit';
 import {beforeEach, describe, expect, it, type Mock, vi} from 'vitest';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import type {FocusTargetController} from '@/src/utils/accessibility-utils';
@@ -14,9 +14,6 @@ import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless
 import {buildFakeFacetConditionsManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/facet-conditions-manager';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {TimeframeFacetCommon} from './timeframe-facet-common';
-
-class TestTimeframeFacetHost extends LitElement {}
-customElements.define('test-timeframe-facet-host', TestTimeframeFacetHost);
 
 const buildFakeDateFacet = (overrides?: Partial<DateFacet>): DateFacet => {
   return {
@@ -51,7 +48,7 @@ const buildFakeDateFilter = (overrides?: Partial<DateFilter>): DateFilter => {
 };
 
 describe('TimeframeFacetCommon', () => {
-  let mockHost: TestTimeframeFacetHost;
+  let mockHost: HTMLElement;
   let mockBindings: Partial<Bindings>;
   let setFacetIdSpy: Mock<(id: string) => string>;
   let getSearchStatusStateSpy: Mock<() => SearchStatusState>;
@@ -64,7 +61,7 @@ describe('TimeframeFacetCommon', () => {
   let initializeFilterSpy: Mock<() => DateFilter>;
 
   beforeEach(async () => {
-    mockHost = document.createElement('test-timeframe-facet-host') as TestTimeframeFacetHost;
+    mockHost = document.createElement('div');
     mockHost.querySelectorAll = vi.fn(() => []) as unknown as typeof mockHost.querySelectorAll;
 
     mockBindings = {
@@ -594,15 +591,11 @@ describe('TimeframeFacetCommon', () => {
     });
 
     it('should render nothing when hasError is true', () => {
-      getSearchStatusStateSpy.mockReturnValue({
-        hasError: true,
-        firstSearchExecuted: true,
-        hasResults: false,
-        isLoading: false,
-      } as SearchStatusState);
       const common = createInstance();
 
       const result = common.render({
+        hasError: true,
+        firstSearchExecuted: true,
         isCollapsed: false,
         headerFocus: mockHeaderFocus,
         onToggleCollapse: vi.fn(),
@@ -628,6 +621,8 @@ describe('TimeframeFacetCommon', () => {
       const common = createInstance({withDatePicker: true});
 
       const result = common.render({
+        hasError: false,
+        firstSearchExecuted: true,
         isCollapsed: false,
         headerFocus: mockHeaderFocus,
         onToggleCollapse: vi.fn(),
@@ -642,6 +637,8 @@ describe('TimeframeFacetCommon', () => {
       const common = createInstance();
 
       const result = common.render({
+        hasError: false,
+        firstSearchExecuted: true,
         isCollapsed: false,
         headerFocus: mockHeaderFocus,
         onToggleCollapse: vi.fn(),
@@ -658,15 +655,11 @@ describe('TimeframeFacetCommon', () => {
         () => mockTimeframeElements
       ) as unknown as typeof mockHost.querySelectorAll;
 
-      getSearchStatusStateSpy.mockReturnValue({
-        hasError: false,
-        firstSearchExecuted: false,
-        hasResults: false,
-        isLoading: false,
-      } as SearchStatusState);
       const common = createInstance();
 
       const result = common.render({
+        hasError: false,
+        firstSearchExecuted: false,
         isCollapsed: false,
         headerFocus: mockHeaderFocus,
         onToggleCollapse: vi.fn(),
@@ -711,6 +704,8 @@ describe('TimeframeFacetCommon', () => {
       const common = createInstance();
 
       const result = common.render({
+        hasError: false,
+        firstSearchExecuted: true,
         isCollapsed: false,
         headerFocus: mockHeaderFocus,
         onToggleCollapse: vi.fn(),
@@ -755,6 +750,8 @@ describe('TimeframeFacetCommon', () => {
       const common = createInstance();
 
       const result = common.render({
+        hasError: false,
+        firstSearchExecuted: true,
         isCollapsed: true,
         headerFocus: mockHeaderFocus,
         onToggleCollapse: vi.fn(),
@@ -802,6 +799,8 @@ describe('TimeframeFacetCommon', () => {
       const common = createInstance();
 
       const result = common.render({
+        hasError: false,
+        firstSearchExecuted: true,
         isCollapsed: false,
         headerFocus: mockHeaderFocus,
         onToggleCollapse: vi.fn(),
@@ -834,6 +833,8 @@ describe('TimeframeFacetCommon', () => {
       const common = createInstance({withDatePicker: true});
 
       const result = common.render({
+        hasError: false,
+        firstSearchExecuted: true,
         isCollapsed: false,
         headerFocus: mockHeaderFocus,
         onToggleCollapse: vi.fn(),

@@ -321,9 +321,8 @@ describe('atomic-numeric-facet', () => {
         },
       });
 
-      const {element, locators} = await setupElement();
+      const {locators} = await setupElement();
       expect(locators.facet).not.toBeInTheDocument();
-      expect(getComputedStyle(element).display).toBe('none');
     });
 
     it('should not render the facet when disabled', async () => {
@@ -343,7 +342,6 @@ describe('atomic-numeric-facet', () => {
       const {element} = await setupElement();
       const placeholder = element.shadowRoot?.querySelector('[part="placeholder"]');
       expect(placeholder).toBeInTheDocument();
-      expect(getComputedStyle(element).display).not.toBe('none');
     });
   });
 

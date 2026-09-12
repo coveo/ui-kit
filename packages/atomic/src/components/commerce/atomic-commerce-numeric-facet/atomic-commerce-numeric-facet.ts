@@ -12,7 +12,6 @@ import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {renderNumericFacetValuesGroup} from '@/src/components/common/facets/numeric-facet/values-container';
-import {FacetVisibilityController} from '@/src/components/common/facets/facet-visibility-controller';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -33,8 +32,6 @@ import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerc
 
 /**
  * The `atomic-commerce-numeric-facet` component renders a commerce facet that allows the user to filter products using numeric ranges.
- *
- * @cssState hidden - Applied when the facet is hidden.
  *
  * @part facet - The wrapper around the entire facet.
  * @part label-button - The clickable label button that toggles facet visibility.
@@ -106,22 +103,6 @@ export class AtomicCommerceNumericFacet
   private unsubscribeFacetController?: () => void;
 
   static styles: CSSResultGroup = numericFacetCommonStyles;
-
-  constructor() {
-    super();
-    new FacetVisibilityController(this, () => this.isHidden);
-  }
-
-  private get isHidden() {
-    if (!this.summaryState || !this.facetState) {
-      return false;
-    }
-
-    return (
-      this.summaryState.hasError ||
-      (this.summaryState.firstRequestExecuted && !this.shouldRenderFacet)
-    );
-  }
 
   public initialize() {
     this.validateFacet();

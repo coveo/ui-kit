@@ -2,7 +2,6 @@ import type {Decorator, Meta, StoryObj as Story} from '@storybook/web-components
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
-import {expect, waitFor} from 'storybook/test';
 import {testDialogA11y} from '@/storybook-utils/a11y/dialog.js';
 import {MockSearchApi} from '@coveo/platform-mock-api/search';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -15,23 +14,6 @@ import '@/src/components/search/atomic-sort-expression/atomic-sort-expression.js
 
 const searchApiHarness = new MockSearchApi();
 const {decorator, play} = wrapInSearchInterface();
-
-async function waitForModalAnimationEnd(canvasElement: HTMLElement) {
-  let animations: Animation[] = [];
-
-  await waitFor(() => {
-    const refineModal = canvasElement.querySelector('atomic-refine-modal');
-    const modal = refineModal?.shadowRoot?.querySelector('atomic-modal');
-    expect(modal).toBeTruthy();
-    const container = modal?.shadowRoot?.querySelector('[part="container"]');
-    expect(container).toBeTruthy();
-    animations = container?.getAnimations() ?? [];
-    expect(animations.length).toBeGreaterThan(0);
-  });
-
-  await Promise.all(animations.map((animation) => animation.finished));
-}
-
 const {events, args, argTypes, template} = getStorybookHelpers('atomic-refine-modal', {
   excludeCategories: ['methods'],
 });
@@ -45,9 +27,6 @@ const meta: Meta = {
   render: (args) => template(args),
   parameters: {
     ...commonParameters,
-    a11y: {
-      context: 'atomic-refine-modal',
-    },
     actions: {
       handles: events,
     },
@@ -67,9 +46,6 @@ const meta: Meta = {
     'collapse-facets-after': '0',
   },
   argTypes,
-  beforeEach: () => {
-    searchApiHarness.searchEndpoint.clear();
-  },
   play: async (context) => {
     await play(context);
     const {canvasElement, step, userEvent} = context;
@@ -84,7 +60,8 @@ const meta: Meta = {
     await step('Open refine modal', async () => {
       await userEvent.click(refineToggleButton);
     });
-    await waitForModalAnimationEnd(canvasElement);
+    // It's tough to wait exactly for the modal to be visible because of animations. Thus, we add a small delay here.
+    await new Promise((resolve) => setTimeout(resolve, 100));
   },
 };
 
@@ -107,93 +84,8 @@ const refineModalDecorators: Decorator[] = [
   commerceFacetWidthDecorator,
 ];
 
-const dependentFacetDecorators: Decorator[] = [
-  () => html`
-    <atomic-refine-toggle></atomic-refine-toggle>
-    <div style="display:none;">
-      <atomic-sort-dropdown
-        ><atomic-sort-expression label="relevance" expression="relevancy"></atomic-sort-expression
-      ></atomic-sort-dropdown>
-      <atomic-facet field="filetype" label="File Type"></atomic-facet>
-      <atomic-facet
-        field="language"
-        label="Language (dependent)"
-        depends-on-filetype="YouTubeVideo"
-      ></atomic-facet>
-      <atomic-facet field="objecttype" label="Type"></atomic-facet>
-    </div>
-  `,
-  decorator,
-  commerceFacetWidthDecorator,
-];
-
 export const Default: Story = {
   decorators: refineModalDecorators,
-};
-
-export const DependentFacetOrder: Story = {
-  name: 'Dependent Facet Order',
-  tags: ['test'],
-  decorators: dependentFacetDecorators,
-  beforeEach: () => {
-    const withFacetState = (state: 'idle' | 'selected') =>
-      searchApiHarness.searchEndpoint.mockOnce((response) => ({
-        ...response,
-        facets: [
-          {
-            facetId: 'filetype',
-            field: 'filetype',
-            moreValuesAvailable: false,
-            values: [{value: 'YouTubeVideo', state, numberOfResults: 10}],
-          },
-          {
-            facetId: 'language',
-            field: 'language',
-            moreValuesAvailable: false,
-            values: [{value: 'English', state: 'idle', numberOfResults: 5}],
-          },
-          {
-            facetId: 'objecttype',
-            field: 'objecttype',
-            moreValuesAvailable: false,
-            values: [{value: 'Video', state: 'idle', numberOfResults: 10}],
-          },
-        ],
-      }));
-
-    searchApiHarness.searchEndpoint.clear();
-    withFacetState('idle');
-    withFacetState('selected');
-  },
-  play: async (context) => {
-    await meta.play?.(context);
-    const {canvasElement, step, userEvent} = context;
-    const refineModal = canvasElement.querySelector('atomic-refine-modal')!;
-
-    await step('Select the parent facet', async () => {
-      const parentFacetToggle = await within(refineModal).findByShadowRole('button', {
-        name: 'Expand the File Type facet',
-      });
-      await userEvent.click(parentFacetToggle);
-      const parentValue = await within(refineModal).findByShadowLabelText(
-        'Inclusion filter on YouTubeVideo',
-        {exact: false}
-      );
-      await userEvent.click(parentValue);
-    });
-    await within(refineModal).findByShadowRole(
-      'button',
-      {name: 'Expand the Language (dependent) facet'},
-      {timeout: 3000}
-    );
-
-    const facetLabels = Array.from(
-      refineModal.querySelector('div[slot="facets"]')?.children ?? []
-    ).map((facet) => facet.getAttribute('label'));
-    if (facetLabels.join() !== 'File Type,Language (dependent),Type') {
-      throw new Error(`Unexpected facet order: ${facetLabels.join()}`);
-    }
-  },
 };
 
 export const A11yDialog: Story = {

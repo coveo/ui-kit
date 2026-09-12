@@ -32,7 +32,6 @@ import {renderFacetContainer} from '@/src/components/common/facets/facet-contain
 import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
 import type {NumberInputType} from '@/src/components/common/facets/facet-number-input/number-input-type';
 import {renderFacetPlaceholder} from '@/src/components/common/facets/facet-placeholder/facet-placeholder';
-import {FacetVisibilityController} from '@/src/components/common/facets/facet-visibility-controller';
 import {formatHumanReadable} from '@/src/components/common/facets/numeric-facet/formatter';
 import {renderNumericFacetValue} from '@/src/components/common/facets/numeric-facet/value-link';
 import {renderNumericFacetValuesGroup} from '@/src/components/common/facets/numeric-facet/values-container';
@@ -60,8 +59,6 @@ import '@/src/components/common/atomic-numeric-range/atomic-numeric-range';
 /**
  * The `atomic-numeric-facet` component displays a facet of the results for the current query as numeric ranges.
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria.
- *
- * @cssState hidden - Applied when the facet is hidden.
  *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
@@ -267,7 +264,6 @@ export class AtomicNumericFacet extends LitElement implements InitializableCompo
 
   constructor() {
     super();
-    new FacetVisibilityController(this, () => this.isHidden);
     new ValidatePropsController(
       this,
       () => ({
@@ -362,15 +358,7 @@ export class AtomicNumericFacet extends LitElement implements InitializableCompo
   }
 
   private get isHidden() {
-    if (!this.searchStatusState) {
-      return false;
-    }
-
-    return (
-      this.searchStatusState.hasError ||
-      !this.enabled ||
-      (this.searchStatusState.firstSearchExecuted && !this.shouldRenderFacet)
-    );
+    return !this.shouldRenderFacet || !this.enabled;
   }
 
   private get hasValues() {

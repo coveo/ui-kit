@@ -4,7 +4,6 @@ import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import facetCommonStyles from '@/src/components/common/facets/facet-common.tw.css';
-import {FacetVisibilityController} from '@/src/components/common/facets/facet-visibility-controller';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
 import {renderFacetValueCheckbox} from '@/src/components/common/facets/facet-value-checkbox/facet-value-checkbox';
@@ -30,8 +29,6 @@ import {getFieldValueCaption} from '@/src/utils/field-utils';
  * component to automatically render updated facets. However, you can use the shadow parts to style the automatically generated facets.
  *
  * To learn more about the automatic facet generator feature, see: [About the Facet Generator](https://docs.coveo.com/en/n9sd0159/).
- *
- * @cssState hidden - Applied when the facet is hidden.
  *
  * @part facet - The wrapper for the entire facet.
  *
@@ -96,21 +93,7 @@ export class AtomicAutomaticFacet
 
   private headerFocus?: FocusTargetController;
 
-  constructor() {
-    super();
-    new FacetVisibilityController(this, () => this.isHidden);
-  }
-
   public initialize() {}
-
-  private get isHidden() {
-    if (!this.searchStatus || !this.facet) {
-      return false;
-    }
-
-    const {hasError, firstSearchExecuted} = this.searchStatus.state;
-    return hasError || (firstSearchExecuted && !this.facet.state.values.length);
-  }
 
   private get focusTarget() {
     if (!this.headerFocus) {

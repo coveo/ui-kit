@@ -19,7 +19,6 @@ import {when} from 'lit/directives/when.js';
 import {parseDependsOn} from '@/src/components/common/facets/depends-on';
 import {getFirstNewFacetValueIndex} from '@/src/components/common/facets/facet-common';
 import type {FacetInfo} from '@/src/components/common/facets/facet-common-store';
-import {FacetVisibilityController} from '@/src/components/common/facets/facet-visibility-controller';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
 import {announceFacetSearchResultsWithAriaLive} from '@/src/components/common/facets/facet-search/facet-search-aria-live';
@@ -48,8 +47,6 @@ import {ValidatePropsController} from '@/src/components/common/validate-props-co
 /**
  * The `atomic-insight-facet` component displays a facet of the results for the current query in an Insight interface.
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
- *
- * @cssState hidden - Applied when the facet is hidden.
  *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
@@ -185,7 +182,6 @@ export class AtomicInsightFacet
 
   constructor() {
     super();
-    new FacetVisibilityController(this, () => this.isHidden);
 
     new ValidatePropsController(
       this,
@@ -408,15 +404,7 @@ export class AtomicInsightFacet
   }
 
   private get isHidden() {
-    if (!this.searchStatusState || !this.facetState) {
-      return false;
-    }
-
-    return (
-      this.searchStatusState.hasError ||
-      !this.facetState.enabled ||
-      (this.searchStatusState.firstSearchExecuted && !this.facetState.values.length)
-    );
+    return !this.facet.state.enabled || !this.facet.state.values.length;
   }
 
   private get facetInfo(): FacetInfo {

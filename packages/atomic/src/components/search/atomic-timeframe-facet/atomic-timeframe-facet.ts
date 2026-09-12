@@ -42,8 +42,6 @@ import {mapProperty} from '@/src/utils/props-utils';
 /**
  * The `atomic-timeframe-facet` component displays a facet of results for the current query as date intervals.
  *
- * @cssState hidden - Applied when the facet is hidden.
- *
  * @slot default - The atomic-timeframe components defining the timeframes to display.
  *
  * @part facet - The wrapper for the entire facet.
@@ -377,6 +375,8 @@ export class AtomicTimeframeFacet extends LitElement implements InitializableCom
       this.timeframeFacetCommon,
       () =>
         this.timeframeFacetCommon!.render({
+          hasError: this.searchStatusState.hasError,
+          firstSearchExecuted: this.searchStatusState.firstSearchExecuted,
           isCollapsed: this.isCollapsed,
           headerFocus: this.focusTarget,
           onToggleCollapse: () => {
