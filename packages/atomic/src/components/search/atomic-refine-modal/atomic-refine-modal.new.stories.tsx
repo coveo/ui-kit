@@ -67,6 +67,9 @@ const meta: Meta = {
     'collapse-facets-after': '0',
   },
   argTypes,
+  beforeEach: () => {
+    searchApiHarness.searchEndpoint.clear();
+  },
   play: async (context) => {
     await play(context);
     const {canvasElement, step, userEvent} = context;
