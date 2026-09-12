@@ -1,5 +1,5 @@
 diff --git a/dist/index.d.ts b/dist/index.d.ts
-index f22a4c4..626c85e 100644
+index 0d9914d3135028e369c8f1be08e5383346a7e212..1c550aed43dde0e0702607367866ceeec7cfaa36 100644
 --- a/dist/index.d.ts
 +++ b/dist/index.d.ts
 @@ -7,6 +7,8 @@ type StorybookHelpersOptions = {
@@ -11,7 +11,7 @@ index f22a4c4..626c85e 100644
      /** Adds a <script> tag where a `component` variable will reference the story's component */
      setComponentVariable?: boolean;
      /** renders default values for attributes and CSS properties */
-@@ -23,6 +25,8 @@ type Options = StorybookHelpersOptions;
+@@ -25,6 +27,8 @@ type Options = StorybookHelpersOptions;
  type StoryOptions = {
      /** Categories to exclude from these stories */
      excludeCategories?: Array<Categories>;
@@ -21,10 +21,10 @@ index f22a4c4..626c85e 100644
      setComponentVariable?: boolean;
  };
 diff --git a/dist/index.js b/dist/index.js
-index cc73452..854c6df 100644
+index 468a76af1d8bf1c70aeb2bcf6d6b19c9d4ad78f7..8e2c1f4bdf38ca6848c600afeaf8fd6ca2d5d06c 100644
 --- a/dist/index.js
 +++ b/dist/index.js
-@@ -629,7 +629,7 @@ function transformToScoped(template, tagSelector) {
+@@ -723,7 +723,7 @@ function transformToScoped(template, tagSelector) {
    ${styleContent}
  }`;
  }
@@ -33,7 +33,7 @@ index cc73452..854c6df 100644
    if (!args) {
      return html`<${unsafeStatic(component.tagName)}></${unsafeStatic(component.tagName)}>`;
    }
-@@ -654,11 +654,23 @@ function getTemplate(component, args, slot, argTypes, excludeCategories, setComp
+@@ -748,11 +748,23 @@ function getTemplate(component, args, slot, argTypes, excludeCategories, setComp
      excludeCategories,
      scopeSelector
    );
@@ -41,10 +41,10 @@ index cc73452..854c6df 100644
 +  syncControls(component, containerSelector);
    return html`${styleTemplate}
  <${unsafeStatic(component.tagName)} ${spread(operators)}>${slotsTemplate}${slot || ""}</${unsafeStatic(component.tagName)}>
- ${options2.setComponentVariable || setComponentVariable ? unsafeHTML(
+ ${options.setComponentVariable || setComponentVariable ? unsafeHTML(
 -    "<script>\n  window.component = document.querySelector('" + component.tagName + "');\n</script>"
 +    `<script>
-+      var containerElement = ${containerSelector ? `document.querySelector('${containerSelector}')` : 'document'};
++      var containerElement = ${containerSelector ? `document.querySelector('${containerSelector}')` : "document"};
 +      if (!containerElement) {
 +        containerElement = document;
 +      }
@@ -55,21 +55,11 @@ index cc73452..854c6df 100644
 +        containerElement = containerElement.shadowRoot;
 +      }
 +      window.component = containerElement.querySelector('` + component.tagName + `');
-+    }\n</script>`
++    </script>`
    ) : ""}
  `;
  }
-@@ -716,6 +728,9 @@ function getTemplateOperators(component, args, argTypes) {
-       return;
-     }
-     const propValue = args[key];
-+    if (propValue === "" && !propArgs[key].defaultValue) {
-+      return;
-+    }
-     propOperators[`.${key}`] = propValue;
-   });
-   Object.keys(args).filter((x) => !Object.keys(argTypes || {}).includes(x)).forEach((key) => {
-@@ -806,15 +821,27 @@ function getSlotsTemplate(component, args, excludeCategories) {
+@@ -902,15 +914,27 @@ function getSlotsTemplate(component, args, excludeCategories) {
  ${slotTemplates}
  `) : "";
  }
@@ -91,19 +81,19 @@ index cc73452..854c6df 100644
 +    }
 +    if (containerElement.shadowRoot) {
 +      containerElement = containerElement.shadowRoot;
-+    }
+     }
 +    const selectedComponent = containerElement.querySelector(component.tagName);
 +    if (!selectedComponent) {
 +      return;
-     }
++    }
 +    argObserver?.observe(selectedComponent, {
 +      attributes: true,
-+      attributeOldValue: true,
++      attributeOldValue: true
 +    });
    });
  }
  function setArgObserver(component) {
-@@ -822,25 +849,34 @@ function setArgObserver(component) {
+@@ -918,38 +942,44 @@ function setArgObserver(component) {
      return;
    }
    let isUpdating = false;
@@ -122,34 +112,60 @@ index cc73452..854c6df 100644
          return;
        }
 -      isUpdating = true;
-+      const attribute = attributes[`${mutation.attributeName}`];
-+      if (!attribute) { return; }
-+      if (mutation.oldValue === mutation.target.getAttribute(mutation.attributeName || "")) {
+-      if (attribute?.control === "boolean" || attribute?.control?.type === "boolean") {
+-        updateArgs({
+-          [`${mutation.attributeName}`]: mutation.target?.hasAttribute(mutation.attributeName || "")
+-        });
+-      } else if (attribute?.control === "number" || attribute?.control?.type === "number") {
+-        updateArgs({
+-          [`${mutation.attributeName}`]: Number(
+-            mutation.target.getAttribute(
+-              mutation.attributeName || ""
+-            )
+-          )
+-        });
++      const attributeName = mutation.attributeName || "";
++      const attribute = attributes[attributeName];
++      if (!attribute) return;
++      const currentValue = mutation.target.getAttribute(attributeName);
++      if (mutation.oldValue === currentValue) {
 +        return;
 +      }
-       if (attribute?.control === "boolean" || attribute?.control?.type === "boolean") {
-+        if (args[`${mutation.attributeName}`] === mutation.target.hasAttribute(mutation.attributeName || "")) {
++      if (attribute.control === "boolean" || attribute.control?.type === "boolean") {
++        const nextValue = mutation.target.hasAttribute(attributeName);
++        if (args[attributeName] === nextValue) {
 +          return;
 +        }
 +        isUpdating = true;
-         updateArgs({
-           [`${mutation.attributeName}`]: mutation.target?.hasAttribute(mutation.attributeName || "")
-         });
++        updateArgs({ [attributeName]: nextValue });
++      } else if (attribute.control === "number" || attribute.control?.type === "number") {
++        const nextValue = Number(currentValue);
++        if (args[attributeName] === nextValue) {
++          return;
++        }
++        isUpdating = true;
++        updateArgs({ [attributeName]: nextValue });
        } else {
-+        if (args[`${mutation.attributeName}`] == mutation.target.getAttribute(mutation.attributeName || "")) {
+-        updateArgs({
+-          [`${mutation.attributeName}`]: mutation.target.getAttribute(mutation.attributeName || "")
+-        });
++        if (args[attributeName] === currentValue) {
 +          return;
 +        }
 +        isUpdating = true;
-         updateArgs({
-           [`${mutation.attributeName}`]: mutation.target.getAttribute(mutation.attributeName || "")
-         });
-@@ -897,7 +933,8 @@ function getStorybookHelpers(tagName, options3) {
++        updateArgs({ [attributeName]: currentValue });
+       }
+-      isUpdating = false;
+     });
+   });
+ }
+@@ -1001,7 +1031,8 @@ function getStorybookHelpers(tagName, options2) {
        slot,
        argTypes,
-       options3?.excludeCategories || [],
--      options3?.setComponentVariable
-+      options3?.setComponentVariable,
-+      options3?.containerSelector
+       options2?.excludeCategories || [],
+-      options2?.setComponentVariable
++      options2?.setComponentVariable,
++      options2?.containerSelector
      )
    };
    return helpers;

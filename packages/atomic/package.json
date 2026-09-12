@@ -122,7 +122,7 @@
     "@types/escape-html": "1.0.4",
     "@types/node": "catalog:",
     "@vitest/browser-playwright": "catalog:",
-    "@wc-toolkit/storybook-helpers": "10.5.1",
+    "@wc-toolkit/storybook-helpers": "10.7.7",
     "chromatic": "catalog:",
     "handlebars": "catalog:",
     "lit-html": "3.3.3",

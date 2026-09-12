@@ -180,8 +180,8 @@ overrides:
 
 patchedDependencies:
   '@stencil/core@4.20.0': patches/@stencil+core+4.20.0.patch
+  '@wc-toolkit/storybook-helpers@10.7.7': patches/@wc-toolkit__storybook-helpers@10.7.7.patch
   'jest-environment-jsdom@29.7.0': patches/jest-environment-jsdom+29.7.0.patch
-  '@wc-toolkit/storybook-helpers@10.5.1': patches/@wc-toolkit__storybook-helpers@10.5.1.patch
 
 allowBuilds:
   '@parcel/watcher': false
