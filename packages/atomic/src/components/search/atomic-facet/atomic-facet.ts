@@ -51,6 +51,7 @@ import {arrayConverter} from '@/src/converters/array-converter';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindings} from '@/src/decorators/bindings';
 import facetCommonStyles from '../../common/facets/facet-common.tw.css';
+import {FacetVisibilityController} from '../../common/facets/facet-visibility-controller';
 import facetSearchStyles from '../../common/facets/facet-search/facet-search.tw.css';
 import facetValueBoxStyles from '../../common/facets/facet-value-box/facet-value-box.tw.css';
 import facetValueCheckboxStyles from '../../common/facets/facet-value-checkbox/facet-value-checkbox.tw.css';
@@ -60,6 +61,8 @@ import {ValidatePropsController} from '../../common/validate-props-controller/va
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
  * An `atomic-facet` displays a facet of the results for the current query.
+ *
+ * @cssState hidden - Applied when the facet is hidden.
  *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
@@ -386,6 +389,7 @@ export class AtomicFacet extends LitElement implements InitializableComponent<Bi
 
   constructor() {
     super();
+    new FacetVisibilityController(this, () => !!this.facet && this.facetInfo.isHidden());
     new ValidatePropsController(
       this,
       () => ({

@@ -201,9 +201,11 @@ describe('atomic-facet', () => {
         })
       );
 
-      const {locators} = await setupElement();
+      const {element, locators} = await setupElement();
 
       expect(locators.facet).not.toBeInTheDocument();
+      expect(element.matches(':state(hidden)')).toBe(true);
+      expect(getComputedStyle(element).display).toBe('none');
     });
 
     it('should not display facet is disabled', async () => {
@@ -780,8 +782,9 @@ describe('atomic-facet', () => {
           isLoading: false,
         })
       );
-      const {locators} = await setupElement();
+      const {element, locators} = await setupElement();
       await expect(locators.placeholder).toBeInTheDocument();
+      expect(getComputedStyle(element).display).not.toBe('none');
     });
 
     it('should not render placeholder when first search has been executed', async () => {
