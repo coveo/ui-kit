@@ -1,12 +1,14 @@
 import {BaseInterface} from '@/src/internal/utils/index.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {CommerceInterface, FacadeResolver, Facades} from '@/src/internal/utils/index.js';
-import {createCommerceSearchFacadeResolver} from '@/src/internal/api/commerce-search/index.js';
-import {createCommerceSuggestionsFacadeResolver} from '@/src/internal/api/commerce-query-suggest/index.js';
+import {createNoopThunk} from '@/src/internal/utils/index.js';
+
+const noopThunk = createNoopThunk('commerce-interface-noop');
+const noopResolver: FacadeResolver = () => noopThunk;
 
 const defaultResolvers: Record<Facades['commerce'], FacadeResolver> = {
-  search: createCommerceSearchFacadeResolver,
-  suggestions: createCommerceSuggestionsFacadeResolver,
+  search: noopResolver,
+  suggestions: noopResolver,
 };
 
 export class CommerceInterfaceImpl extends BaseInterface<'commerce'> implements CommerceInterface {

@@ -16,7 +16,7 @@ import type {
   SelectProductsContext,
 } from '@/src/internal/api/unified/unified-endpoint-types.js';
 
-export type ActionIntent =
+type ActionIntent =
   | {name: 'execute_search'; context: ExecuteSearchContext}
   | {name: 'toggle_facet'; context: ToggleFacetContext}
   | {name: 'toggle_exclude_facet'; context: ToggleExcludeFacetContext}

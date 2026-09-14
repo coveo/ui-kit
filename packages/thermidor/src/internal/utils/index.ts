@@ -8,10 +8,8 @@ export {BaseController} from './base-controller.js';
 export type {Controller} from './controller-types.js';
 export {BaseInterface, getInterfaceInternals} from './base-interface.js';
 export type {
-  ActionIntent,
   CommerceInterface,
   EndpointThunk,
-  EndpointThunkArg,
   FacadeResolver,
   Facades,
   GenerativeUnifiedInterface,

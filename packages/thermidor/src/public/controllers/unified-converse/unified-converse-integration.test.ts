@@ -9,12 +9,6 @@ import {
   type UnifiedConverseController,
 } from './unified-converse-controller.js';
 import {buildUnifiedConverseController as barrelExport} from '@/src/public/controllers/index.js';
-import {getFullEngine} from '@/src/internal/engine/index.js';
-import {
-  getOrCreatePaginationSlice,
-  getOrCreatePaginationSelectors,
-} from '@/src/internal/features/pagination/index.js';
-import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 
 // ---------------------------------------------------------------------------
 // Mock: createUnifiedEndpointClient
@@ -176,17 +170,6 @@ const incompleteStreamEvents: SSEEvent[] = [
 // Test Suite
 // ---------------------------------------------------------------------------
 
-function readPaginationState(engine: Engine, iface: InterfaceHandle) {
-  const fullEngine = getFullEngine(engine);
-  fullEngine.adoptSlice(getOrCreatePaginationSlice(iface));
-  const selectors = getOrCreatePaginationSelectors(iface);
-  return {
-    page: fullEngine.read(selectors.getPage),
-    pageSize: fullEngine.read(selectors.getPageSize),
-    totalCount: fullEngine.read(selectors.getTotalCount),
-  };
-}
-
 describe('UnifiedConverseController integration', () => {
   let engine: Engine;
   let generativeInterface: GenerativeUnifiedInterface;
@@ -255,11 +238,6 @@ describe('UnifiedConverseController integration', () => {
         throw new Error('Expected commerceSearch useCase');
       }
       expect(routedInterface.interface).toBeDefined();
-
-      const pagination = readPaginationState(engine, routedInterface.interface);
-      expect(pagination.totalCount).toBe(100);
-      expect(pagination.pageSize).toBe(20);
-      expect(pagination.page).toBe(0);
     });
   });
 

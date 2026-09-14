@@ -14,7 +14,6 @@ const {
   mockGenerateId,
   mockGetEndpointClientConfiguration,
   mockHydrateFromCreateSurface,
-  mockApplyDataModelUpdate,
   mockExtractA2uiOperations,
 } = vi.hoisted(() => ({
   mockReadEventStream: vi.fn(),
@@ -24,7 +23,6 @@ const {
   mockGenerateId: vi.fn(),
   mockGetEndpointClientConfiguration: vi.fn(),
   mockHydrateFromCreateSurface: vi.fn(),
-  mockApplyDataModelUpdate: vi.fn(),
   mockExtractA2uiOperations: vi.fn(),
 }));
 
@@ -60,7 +58,6 @@ vi.mock('@/src/internal/utils/index.js', async (importOriginal) => {
 
 vi.mock('./unified-surface-hydration.js', () => ({
   hydrateFromCreateSurface: mockHydrateFromCreateSurface,
-  applyDataModelUpdate: mockApplyDataModelUpdate,
   extractA2uiOperations: mockExtractA2uiOperations,
 }));
 
@@ -1134,12 +1131,11 @@ describe('UnifiedRuntime', () => {
       await runtime.submit('Hello');
 
       expect(config.statePort.appendSurface).toHaveBeenCalledWith('generated-id-1', content);
-      expect(mockHydrateFromCreateSurface).toHaveBeenCalledWith(
-        engine,
-        {surfaceId: 's1', components: statefulComponents, dataModel: {products: []}},
-        config.generativeInterface,
-        config.cartInterface
-      );
+      expect(mockHydrateFromCreateSurface).toHaveBeenCalledWith(engine, {
+        surfaceId: 's1',
+        components: statefulComponents,
+        dataModel: {products: []},
+      });
       expect(config.statePort.setRoutedInterface).toHaveBeenCalledWith('generated-id-1', {
         useCase: 'commerceSearch',
         interface: mockIface,
@@ -1220,49 +1216,6 @@ describe('UnifiedRuntime', () => {
       });
     });
 
-    it('updateDataModel after createSurface updates state', async () => {
-      const config = createMockConfig();
-      const engine = createMockEngine();
-      const mockIface = createMockInterface();
-      const content = {
-        operations: [
-          {
-            createSurface: {
-              surfaceId: 's1',
-              components: statefulComponents,
-              dataModel: {products: []},
-            },
-          },
-          {updateDataModel: {surfaceId: 's1', path: '/products', value: ['new-product']}},
-        ],
-      };
-
-      mockExtractA2uiOperations.mockReturnValue(content.operations);
-      mockHydrateFromCreateSurface.mockReturnValue({
-        surfaceId: 's1',
-        useCase: 'commerceSearch',
-        interface: mockIface,
-        snapshot: {products: []},
-        query: undefined,
-      });
-
-      setupSuccessfulStream([
-        {
-          type: 'ACTIVITY_SNAPSHOT',
-          activityType: 'a2ui-surface',
-          content,
-        } as unknown as NormalizedStreamEvent,
-        {type: 'turn_complete'} as NormalizedStreamEvent,
-      ]);
-
-      const runtime = UnifiedRuntime.getInstance(engine, 'a2ui-update', config);
-      await runtime.submit('Hello');
-
-      expect(mockApplyDataModelUpdate).toHaveBeenCalledWith(engine, mockIface, '/products', [
-        'new-product',
-      ]);
-    });
-
     it('hydrates a model-only createSurface when components arrive in a later snapshot', async () => {
       const config = createMockConfig();
       const engine = createMockEngine();
@@ -1311,9 +1264,7 @@ describe('UnifiedRuntime', () => {
           surfaceId: 's1',
           components: [{id: 'root', component: 'ProductSearchSurface'}],
           dataModel: {products: []},
-        }),
-        config.generativeInterface,
-        config.cartInterface
+        })
       );
     });
 
@@ -1440,94 +1391,6 @@ describe('UnifiedRuntime', () => {
 
       expect(mockIface.dispose).toHaveBeenCalledOnce();
       expect(config.statePort.clearRoutedInterface).toHaveBeenCalledWith('generated-id-1', 's1');
-    });
-
-    it('updateDataModel with path `/` calls applyDataModelUpdate with root path', async () => {
-      const config = createMockConfig();
-      const engine = createMockEngine();
-      const mockIface = createMockInterface();
-      const fullModel = {products: [], facets: [], pagination: {}};
-      const content = {
-        operations: [
-          {
-            createSurface: {
-              surfaceId: 's1',
-              components: statefulComponents,
-              dataModel: {products: []},
-            },
-          },
-          {updateDataModel: {surfaceId: 's1', path: '/', value: fullModel}},
-        ],
-      };
-
-      mockExtractA2uiOperations.mockReturnValue(content.operations);
-      mockHydrateFromCreateSurface.mockReturnValue({
-        surfaceId: 's1',
-        useCase: 'commerceSearch',
-        interface: mockIface,
-        snapshot: {products: []},
-        query: undefined,
-      });
-
-      setupSuccessfulStream([
-        {
-          type: 'ACTIVITY_SNAPSHOT',
-          activityType: 'a2ui-surface',
-          content,
-        } as unknown as NormalizedStreamEvent,
-        {type: 'turn_complete'} as NormalizedStreamEvent,
-      ]);
-
-      const runtime = UnifiedRuntime.getInstance(engine, 'a2ui-root-update', config);
-      await runtime.submit('Hello');
-
-      expect(mockApplyDataModelUpdate).toHaveBeenCalledWith(engine, mockIface, '/', fullModel);
-    });
-
-    it('updateDataModel with path `/responseId` calls applyDataModelUpdate (function handles ignoring)', async () => {
-      const config = createMockConfig();
-      const engine = createMockEngine();
-      const mockIface = createMockInterface();
-      const content = {
-        operations: [
-          {
-            createSurface: {
-              surfaceId: 's1',
-              components: statefulComponents,
-              dataModel: {products: []},
-            },
-          },
-          {updateDataModel: {surfaceId: 's1', path: '/responseId', value: 'resp-123'}},
-        ],
-      };
-
-      mockExtractA2uiOperations.mockReturnValue(content.operations);
-      mockHydrateFromCreateSurface.mockReturnValue({
-        surfaceId: 's1',
-        useCase: 'commerceSearch',
-        interface: mockIface,
-        snapshot: {products: []},
-        query: undefined,
-      });
-
-      setupSuccessfulStream([
-        {
-          type: 'ACTIVITY_SNAPSHOT',
-          activityType: 'a2ui-surface',
-          content,
-        } as unknown as NormalizedStreamEvent,
-        {type: 'turn_complete'} as NormalizedStreamEvent,
-      ]);
-
-      const runtime = UnifiedRuntime.getInstance(engine, 'a2ui-responseid', config);
-      await runtime.submit('Hello');
-
-      expect(mockApplyDataModelUpdate).toHaveBeenCalledWith(
-        engine,
-        mockIface,
-        '/responseId',
-        'resp-123'
-      );
     });
   });
 });

@@ -1,11 +1,6 @@
 import {describe, it, expectTypeOf} from 'vitest';
-import type {Supports, SearchInterface, CommerceInterface} from './interface-types.js';
+import type {Supports, SearchInterface} from './interface-types.js';
 import type {GenerativeUnifiedInterface} from '@/src/public/interfaces/generative-unified.js';
-import type {
-  SortCriterionFor,
-  CommerceSortCriterion,
-  SearchSortCriterion,
-} from '@/src/internal/features/sort/index.js';
 
 describe('Supports<F> type safety', () => {
   describe('BaseInterface', () => {
@@ -16,14 +11,5 @@ describe('Supports<F> type safety', () => {
     it('rejects an interface that does not declare the facade', () => {
       expectTypeOf<GenerativeUnifiedInterface>().not.toExtend<Supports<'search'>>();
     });
-  });
-});
-
-describe('SortCriterionFor narrowing', () => {
-  it('narrows to CommerceSortCriterion for CommerceInterface', () => {
-    expectTypeOf<SortCriterionFor<CommerceInterface>>().toEqualTypeOf<CommerceSortCriterion>();
-  });
-  it('narrows to SearchSortCriterion for SearchInterface', () => {
-    expectTypeOf<SortCriterionFor<SearchInterface>>().toEqualTypeOf<SearchSortCriterion>();
   });
 });

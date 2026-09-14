@@ -1,16 +1,10 @@
-import type {SearchBoxState} from '@/src/internal/features/search-box/index.js';
 import type {CartState} from '@/src/internal/features/cart/index.js';
 import type {ConfigurationState} from '@/src/internal/features/configuration/index.js';
-import type {FacetState} from '@/src/internal/features/facets/index.js';
 import type {NavigatorContextProvider} from '@/src/internal/utils/index.js';
-import type {PaginationState} from '@/src/internal/features/pagination/index.js';
 
 export interface State {
   cart?: CartState;
   configuration?: ConfigurationState;
-  facets?: Record<string, FacetState>;
-  pagination?: PaginationState;
-  searchBox?: SearchBoxState;
   [key: string]: unknown;
 }
 

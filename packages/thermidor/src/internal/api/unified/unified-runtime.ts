@@ -65,8 +65,6 @@ export class UnifiedRuntime {
     this.surfaceProcessor = createSurfaceProcessor({
       engine,
       statePort: config.statePort,
-      generativeInterface: config.generativeInterface,
-      cartInterface: config.cartInterface,
     });
   }
 

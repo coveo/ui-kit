@@ -39,20 +39,12 @@ export type {
 export {createUnifiedEndpointRequestSelector} from './unified-request-selector.js';
 export {UnifiedRuntime} from './unified-runtime.js';
 export type {UnifiedRuntimeConfig} from './unified-runtime.js';
-export {
-  hydrateFromCreateSurface,
-  applyDataModelUpdate,
-  extractA2uiOperations,
-} from './unified-surface-hydration.js';
+export {hydrateFromCreateSurface, extractA2uiOperations} from './unified-surface-hydration.js';
 export type {
   A2uiOperation,
   CreateSurfacePayload,
   UpdateDataModelPayload,
   UnifiedHydrationResult,
 } from './unified-surface-hydration.js';
-export {createUnifiedSearchFacadeResolver} from './unified-search-facade.js';
 export {extractUpdateDataModelOperationsFromStream} from './unified-stream-extractor.js';
 export type {ExtractedUpdate} from './unified-stream-extractor.js';
-export {createUnifiedSearchRequestBuilder} from './unified-search-request-builder.js';
-export {createUnifiedSearchResponseHandler} from './unified-search-response-handler.js';
-export {createUnifiedSearchEndpointThunk} from './unified-search-thunk.js';

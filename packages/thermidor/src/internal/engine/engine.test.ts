@@ -6,18 +6,39 @@
 
 import {describe, it, expect, beforeEach, vi} from 'vitest';
 import {createTestEngine, createTestInterface} from '@/src/test/test-utils.js';
-import {getQuery} from '@/src/internal/features/search-box/index.js';
-import {setQuery} from '@/src/internal/features/search-box/index.js';
+import {createSlice} from '@reduxjs/toolkit';
 import {Engine, FullEngine, getFullEngine} from './engine.js';
-import {getOrCreateSearchBoxSlice} from '@/src/internal/features/search-box/index.js';
-import {
-  getOrCreateProductListSlice,
-  getOrCreateProductListActions,
-} from '@/src/internal/features/product-list/index.js';
 import type {NavigatorContextProvider} from '@/src/internal/utils/index.js';
 import {EngineOptions} from './engine-types.js';
 import {ConfigurationState} from '@/src/internal/features/configuration/index.js';
 import type {CommerceInterface} from '@/src/internal/utils/index.js';
+
+// Minimal in-file slices to exercise the engine's generic slice mechanism,
+// decoupled from any feature module.
+const searchBoxTestSlice = createSlice({
+  name: 'default/searchBox',
+  initialState: {query: ''},
+  reducers: {
+    setQuery: (state, action: {type: string; payload: string}) => {
+      state.query = action.payload;
+    },
+  },
+});
+const productsTestSlice = createSlice({
+  name: 'default/products',
+  initialState: {products: [] as unknown[]},
+  reducers: {
+    setProductsFromResponse: (state, action: {type: string; payload: unknown[]}) => {
+      state.products = action.payload;
+    },
+  },
+});
+const getOrCreateSearchBoxSlice = (_iface: unknown) => searchBoxTestSlice;
+const getOrCreateProductListSlice = (_iface: unknown) => productsTestSlice;
+const getOrCreateProductListActions = (_iface: unknown) => productsTestSlice.actions;
+const getQuery = (_iface: unknown) => (state: Record<string, unknown>) =>
+  (state['default/searchBox'] as {query: string} | undefined)?.query ?? '';
+const setQuery = (query: string, _iface: unknown) => searchBoxTestSlice.actions.setQuery(query);
 
 describe('Engine: read()', () => {
   let engine: FullEngine;
