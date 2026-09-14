@@ -1,8 +1,6 @@
 import {describe, it, expectTypeOf} from 'vitest';
-import type {Supports} from './interface-types.js';
-import type {SearchInterface} from '@/src/public/interfaces/search.js';
+import type {Supports, SearchInterface, CommerceInterface} from './interface-types.js';
 import type {GenerativeUnifiedInterface} from '@/src/public/interfaces/generative-unified.js';
-import type {CommerceInterface} from '@/src/public/interfaces/commerce.js';
 import type {
   SortCriterionFor,
   CommerceSortCriterion,
