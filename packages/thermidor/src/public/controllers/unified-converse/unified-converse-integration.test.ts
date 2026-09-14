@@ -128,23 +128,6 @@ const surfaceCreationEvents: SSEEvent[] = [
   },
 ];
 
-const surfaceDeletionEvents: SSEEvent[] = [
-  ...surfaceCreationEvents.slice(0, -2),
-  {
-    event: 'message',
-    data: JSON.stringify({
-      type: 'ACTIVITY_SNAPSHOT',
-      messageId: 'surface-1-activity',
-      replace: true,
-      activityType: 'a2ui-surface',
-      content: {
-        messages: [{version: 'v1.0', deleteSurface: {surfaceId: 'surface-1'}}],
-      },
-    }),
-  },
-  ...surfaceCreationEvents.slice(-2),
-];
-
 const errorEvents: SSEEvent[] = [
   {
     event: 'turn_started',
@@ -217,8 +200,8 @@ describe('UnifiedConverseController integration', () => {
     });
   });
 
-  describe('surface hydration', () => {
-    it('creates a routedInterface with commerceSearch useCase', async () => {
+  describe('surface passthrough', () => {
+    it('stores the A2UI surface in the turn agent response', async () => {
       mockClient.call.mockReturnValue({
         success: true,
         data: {stream: createSSEStream(surfaceCreationEvents)},
@@ -231,30 +214,9 @@ describe('UnifiedConverseController integration', () => {
       });
 
       const turn = controller.state.turns[0];
-      expect(turn.routedInterface).toBeDefined();
-      expect(turn.routedInterface?.useCase).toBe('commerceSearch');
-      const routedInterface = turn.routedInterface!;
-      if (routedInterface.useCase !== 'commerceSearch') {
-        throw new Error('Expected commerceSearch useCase');
-      }
-      expect(routedInterface.interface).toBeDefined();
-    });
-  });
-
-  describe('surface lifecycle', () => {
-    it('removes a routed interface when its A2UI surface is deleted', async () => {
-      mockClient.call.mockReturnValue({
-        success: true,
-        data: {stream: createSSEStream(surfaceDeletionEvents)},
-      });
-
-      controller.submit({prompt: 'Show me boots'});
-
-      await vi.waitFor(() => {
-        expect(controller.state.turns[0]?.status).toBe('complete');
-      });
-
-      expect(controller.state.turns[0].routedInterface).toBeUndefined();
+      expect(turn.agentResponse?.surfaces.length).toBe(1);
+      const surface = turn.agentResponse!.surfaces[0] as {messages?: unknown[]};
+      expect(Array.isArray(surface.messages)).toBe(true);
     });
   });
 

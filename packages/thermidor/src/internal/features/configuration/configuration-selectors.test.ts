@@ -1,10 +1,7 @@
 import {describe, it, expect, beforeEach} from 'vitest';
 import type {State} from '@/src/internal/engine/engine-types.js';
 import type {ConfigurationState} from './configuration-types.js';
-import {
-  createConfigurationSelectors,
-  getOrCreateConfigurationSelectors,
-} from './configuration-selectors.js';
+import {getOrCreateConfigurationSelectors} from './configuration-selectors.js';
 
 function createState(
   config: Partial<ConfigurationState> = {}
@@ -23,21 +20,11 @@ function createState(
   };
 }
 
-describe('createConfigurationSelectors', () => {
-  let selectors: ReturnType<typeof createConfigurationSelectors>;
+describe('configuration selectors', () => {
+  let selectors: ReturnType<typeof getOrCreateConfigurationSelectors>;
 
   beforeEach(() => {
-    selectors = createConfigurationSelectors();
-  });
-
-  it('getOrganizationId returns the organization ID', () => {
-    const state = createState({organizationId: 'org-abc'});
-    expect(selectors.getOrganizationId(state)).toBe('org-abc');
-  });
-
-  it('getAccessToken returns the access token', () => {
-    const state = createState({accessToken: 'tok-xyz'});
-    expect(selectors.getAccessToken(state)).toBe('tok-xyz');
+    selectors = getOrCreateConfigurationSelectors();
   });
 
   it('getTrackingId returns the tracking ID', () => {
@@ -58,16 +45,6 @@ describe('createConfigurationSelectors', () => {
   it('getCurrency returns the currency', () => {
     const state = createState({currency: 'EUR'});
     expect(selectors.getCurrency(state)).toBe('EUR');
-  });
-
-  it('getEndpoint returns the endpoint', () => {
-    const state = createState({endpoint: 'https://override.com'});
-    expect(selectors.getEndpoint(state)).toBe('https://override.com');
-  });
-
-  it('getEndpoint returns undefined when not set', () => {
-    const state = createState({endpoint: undefined});
-    expect(selectors.getEndpoint(state)).toBeUndefined();
   });
 
   describe('getEndpointClientConfiguration', () => {
@@ -116,13 +93,10 @@ describe('createConfigurationSelectors', () => {
     it('returns defaults when configuration slice is missing', () => {
       const state: State = {};
 
-      expect(selectors.getOrganizationId(state)).toBe('');
-      expect(selectors.getAccessToken(state)).toBe('');
       expect(selectors.getTrackingId(state)).toBe('');
       expect(selectors.getLanguage(state)).toBe('');
       expect(selectors.getCountry(state)).toBe('');
       expect(selectors.getCurrency(state)).toBe('');
-      expect(selectors.getEndpoint(state)).toBeUndefined();
     });
 
     it('getEndpointClientConfiguration returns defaults when configuration is missing', () => {

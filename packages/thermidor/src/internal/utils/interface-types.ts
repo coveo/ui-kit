@@ -1,39 +1,8 @@
 import type {AsyncThunk} from '@reduxjs/toolkit';
 import type {FullEngine} from '@/src/internal/engine/index.js';
-import type {
-  ExecuteSearchContext,
-  ToggleFacetContext,
-  ToggleExcludeFacetContext,
-  DeselectAllFacetsContext,
-  ToggleNumericFacetContext,
-  SetNumericFacetRangeContext,
-  SelectPageContext,
-  SetPageSizeContext,
-  SetSortContext,
-  FetchMoreContext,
-  RestoreStateContext,
-  OverrideCorrectionContext,
-  SelectProductsContext,
-} from '@/src/internal/api/unified/unified-endpoint-types.js';
-
-type ActionIntent =
-  | {name: 'execute_search'; context: ExecuteSearchContext}
-  | {name: 'toggle_facet'; context: ToggleFacetContext}
-  | {name: 'toggle_exclude_facet'; context: ToggleExcludeFacetContext}
-  | {name: 'deselect_all_facets'; context: DeselectAllFacetsContext}
-  | {name: 'toggle_numeric_facet'; context: ToggleNumericFacetContext}
-  | {name: 'set_numeric_facet_range'; context: SetNumericFacetRangeContext}
-  | {name: 'select_page'; context: SelectPageContext}
-  | {name: 'set_page_size'; context: SetPageSizeContext}
-  | {name: 'set_sort'; context: SetSortContext}
-  | {name: 'fetch_more'; context: FetchMoreContext}
-  | {name: 'restore_state'; context: RestoreStateContext}
-  | {name: 'override_correction'; context: OverrideCorrectionContext}
-  | {name: 'select_products'; context: SelectProductsContext};
 
 export interface EndpointThunkArg {
   engine: FullEngine;
-  actionIntent?: ActionIntent;
 }
 
 export interface InterfaceHandle {
@@ -46,8 +15,6 @@ export type EndpointThunk = AsyncThunk<void, EndpointThunkArg, {}>;
 export type FacadeResolver = (iface: InterfaceHandle) => EndpointThunk;
 
 interface InterfaceRegistry {
-  search: {interface: SearchInterface; facades: 'search' | 'suggestions'};
-  commerce: {interface: CommerceInterface; facades: 'search' | 'suggestions'};
   generativeUnified: {interface: GenerativeUnifiedInterface; facades: 'conversation'};
 }
 
@@ -62,14 +29,6 @@ export declare const InterfaceTypeBrand: unique symbol;
 export type Supports<F extends Facades[InterfaceType]> = InterfaceHandle & {
   readonly [SupportsBrand]: {[K in F]: true};
 };
-
-export interface SearchInterface extends Supports<Facades['search']> {
-  readonly [InterfaceTypeBrand]: 'search';
-}
-
-export interface CommerceInterface extends Supports<Facades['commerce']> {
-  readonly [InterfaceTypeBrand]: 'commerce';
-}
 
 export interface GenerativeUnifiedInterface extends Supports<Facades['generativeUnified']> {
   readonly [InterfaceTypeBrand]: 'generativeUnified';

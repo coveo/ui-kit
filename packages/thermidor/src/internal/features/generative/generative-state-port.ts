@@ -1,26 +1,10 @@
-import type {
-  A2UISurface,
-  Activity,
-  HydratedUseCase,
-  TurnStatus,
-  UseCaseInterfaceMap,
-} from './generative-types.js';
-
-interface HydrationResult<K extends HydratedUseCase = HydratedUseCase> {
-  useCase: K;
-  interface: UseCaseInterfaceMap[K];
-  snapshot: Record<string, unknown>;
-  query: string | undefined;
-  surfaceId?: string;
-}
+import type {A2UISurface, Activity, TurnStatus} from './generative-types.js';
 
 export interface GenerativeStatePort {
   createTurn(payload: {id: string; prompt: string; status: TurnStatus}): void;
   setActiveTurnId(id: string): void;
   getActiveTurnId(): string | undefined;
   replaceTurnId(oldId: string, newId: string): void;
-  setRoutedInterface(turnId: string, hydrationResult: HydrationResult): void;
-  clearRoutedInterface(turnId: string, surfaceId: string): void;
   initAgentResponse(turnId: string): void;
   startMessage(turnId: string, role: string): void;
   appendMessageDelta(turnId: string, delta: string): void;

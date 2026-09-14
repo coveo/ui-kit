@@ -10,7 +10,6 @@ export interface DispatchResult {
 export interface EventDispatcherDeps {
   statePort: GenerativeStatePort;
   ensureAgentResponse: (turnId: string) => void;
-  onA2uiSurface: (turnId: string, content: Record<string, unknown>) => void;
 }
 
 export function dispatchStreamEvent(
@@ -95,10 +94,6 @@ export function dispatchStreamEvent(
         payload: content,
         replace: activity.replace ?? false,
       });
-
-      if (event.activityType === 'a2ui-surface') {
-        deps.onA2uiSurface(turnId, content);
-      }
 
       return {turnId, isTerminal: false};
     }

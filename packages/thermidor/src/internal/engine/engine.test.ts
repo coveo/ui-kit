@@ -11,7 +11,7 @@ import {Engine, FullEngine, getFullEngine} from './engine.js';
 import type {NavigatorContextProvider} from '@/src/internal/utils/index.js';
 import {EngineOptions} from './engine-types.js';
 import {ConfigurationState} from '@/src/internal/features/configuration/index.js';
-import type {CommerceInterface} from '@/src/internal/utils/index.js';
+import type {GenerativeUnifiedInterface} from '@/src/internal/utils/index.js';
 
 // Minimal in-file slices to exercise the engine's generic slice mechanism,
 // decoupled from any feature module.
@@ -42,7 +42,7 @@ const setQuery = (query: string, _iface: unknown) => searchBoxTestSlice.actions.
 
 describe('Engine: read()', () => {
   let engine: FullEngine;
-  let iface: CommerceInterface;
+  let iface: GenerativeUnifiedInterface;
 
   beforeEach(() => {
     const rawEngine = createTestEngine();
@@ -79,7 +79,7 @@ describe('Engine: read()', () => {
 
 describe('Engine: subscribe()', () => {
   let engine: FullEngine;
-  let iface: CommerceInterface;
+  let iface: GenerativeUnifiedInterface;
 
   beforeEach(() => {
     const rawEngine = createTestEngine();
@@ -172,7 +172,7 @@ describe('Engine: subscribe()', () => {
 
 describe('Engine: mutate()', () => {
   let engine: FullEngine;
-  let iface: CommerceInterface;
+  let iface: GenerativeUnifiedInterface;
 
   beforeEach(() => {
     const rawEngine = createTestEngine();
@@ -360,7 +360,7 @@ describe('Engine: constructor()', () => {
 describe('Engine.dispose()', () => {
   let engine: Engine;
   let fullEngine: FullEngine;
-  let iface: CommerceInterface;
+  let iface: GenerativeUnifiedInterface;
 
   beforeEach(() => {
     engine = createTestEngine();

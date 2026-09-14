@@ -5,8 +5,6 @@ import {configurationSlice} from '@/src/internal/features/configuration/index.js
 import {setConfiguration} from '@/src/internal/features/configuration/index.js';
 import type {NavigatorContextProvider} from '@/src/internal/utils/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
-import {getInterfaceInternals} from '@/src/internal/utils/index.js';
-import {getOrCreateHydrateFromSnapshotAction} from '@/src/internal/features/generative/index.js';
 import {
   Dispatchable,
   EngineOptions,
@@ -23,18 +21,12 @@ export type FullEngine = Engine & {
   getNavigatorContextProvider(): NavigatorContextProvider | undefined;
   mutate(mutation: Dispatchable): unknown;
   read<T>(selector: StateSelector<T>): T;
-  storeHydrationSnapshot(content: Record<string, unknown>, iface: InterfaceHandle): void;
   subscribe<T>(selector: StateSelector<T>, callback: StateChangeCallback<T>): Unsubscribe;
 };
 
 export let getFullEngine: (engine: Engine) => FullEngine;
 
 const fullEngineWrappers = new WeakMap<Engine, FullEngine>();
-
-interface HydrationSnapshot {
-  content: Record<string, unknown>;
-  iface: InterfaceHandle;
-}
 
 /**
  * Store engine wrapper object to encapsulate state and avoid module-level side effects
@@ -53,7 +45,6 @@ export class Engine {
   #interfaces = new Set<InterfaceHandle>();
   #navigatorContextProvider: NavigatorContextProvider | undefined;
   #didWarnMissingNavigatorContextProvider = false;
-  #hydrationSnapshots = new Map<string, HydrationSnapshot>();
   #disposed = false;
 
   static {
@@ -70,8 +61,6 @@ export class Engine {
         read: <T>(selector: StateSelector<T>) => engine.#read(selector),
         addInterface: (iface: InterfaceHandle) => engine.#addInterface(iface),
         removeInterface: (iface: InterfaceHandle) => engine.#removeInterface(iface),
-        storeHydrationSnapshot: (content: Record<string, unknown>, iface: InterfaceHandle) =>
-          engine.#storeHydrationSnapshot(content, iface),
         subscribe: <T>(selector: StateSelector<T>, callback: StateChangeCallback<T>) =>
           engine.#subscribe(selector, callback),
       } as FullEngine;
@@ -98,7 +87,6 @@ export class Engine {
     }
 
     this.#interfaces.clear();
-    this.#hydrationSnapshots.clear();
     this.#navigatorContextProvider = undefined;
     fullEngineWrappers.delete(this);
   }
@@ -117,16 +105,6 @@ export class Engine {
     this.#adoptedSlices.add(slice);
     this.#rootReducer.inject(slice);
     this.#mutate({type: '@@engine/ADOPT_SLICE'});
-
-    const separatorIndex = slice.name.lastIndexOf('/');
-    if (separatorIndex > 0) {
-      const interfaceId = slice.name.substring(0, separatorIndex);
-      if (this.#hydrationSnapshots.has(interfaceId)) {
-        const {content, iface} = this.#hydrationSnapshots.get(interfaceId)!;
-        const hydrateAction = getOrCreateHydrateFromSnapshotAction(iface);
-        this.#mutate(hydrateAction(content));
-      }
-    }
   }
 
   #addInterface(iface: InterfaceHandle): void {
@@ -136,12 +114,6 @@ export class Engine {
 
   #removeInterface(iface: InterfaceHandle): void {
     this.#interfaces.delete(iface);
-  }
-
-  #storeHydrationSnapshot(content: Record<string, unknown>, iface: InterfaceHandle) {
-    this.#assertNotDisposed();
-    const {stateId} = getInterfaceInternals(iface);
-    this.#hydrationSnapshots.set(stateId, {content, iface});
   }
 
   #getNavigatorContextProvider(): NavigatorContextProvider | undefined {
