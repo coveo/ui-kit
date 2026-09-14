@@ -15,7 +15,7 @@ type GenerativeActions = ReturnType<typeof createGenerativeActions>;
 const CACHE_KEY: CacheKey<GenerativeActions> =
   createCacheKey<GenerativeActions>('generative/actions');
 
-export function createGenerativeActions(interfaceId: string) {
+function createGenerativeActions(interfaceId: string) {
   const prefix = `${interfaceId}/generative`;
   return {
     createTurn: createAction<{id: string; prompt: string; status: TurnStatus}>(

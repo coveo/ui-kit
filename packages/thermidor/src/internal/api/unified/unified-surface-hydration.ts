@@ -23,7 +23,7 @@ export type ComponentNode = {
   component: string;
 } & Record<string, unknown>;
 
-export interface UpdateDataModelPayload {
+interface UpdateDataModelPayload {
   surfaceId: string;
   path?: string;
   value: unknown;

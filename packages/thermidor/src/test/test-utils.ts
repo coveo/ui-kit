@@ -5,7 +5,7 @@
  */
 
 import {Engine, getFullEngine} from '@/src/internal/engine/index.js';
-import {CommerceInterfaceImpl} from '@/src/internal/interfaces/index.js';
+import {CommerceInterfaceImpl} from '@/src/internal/interfaces/commerce.js';
 import type {CommerceInterface} from '@/src/internal/utils/index.js';
 
 /**

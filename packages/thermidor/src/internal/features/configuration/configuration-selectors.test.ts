@@ -4,13 +4,6 @@ import type {ConfigurationState} from './configuration-types.js';
 import {
   createConfigurationSelectors,
   getOrCreateConfigurationSelectors,
-  organizationId,
-  accessToken,
-  trackingId,
-  language,
-  country,
-  currency,
-  endpoint,
 } from './configuration-selectors.js';
 
 function createState(
@@ -29,43 +22,6 @@ function createState(
     },
   };
 }
-
-describe('standalone selectors', () => {
-  it('organizationId reads from state', () => {
-    const state = createState({organizationId: 'my-org'});
-    expect(organizationId(state)).toBe('my-org');
-  });
-
-  it('accessToken reads from state', () => {
-    const state = createState({accessToken: 'abc123'});
-    expect(accessToken(state)).toBe('abc123');
-  });
-
-  it('trackingId reads from state', () => {
-    const state = createState({trackingId: 'trk'});
-    expect(trackingId(state)).toBe('trk');
-  });
-
-  it('language reads from state', () => {
-    const state = createState({language: 'fr'});
-    expect(language(state)).toBe('fr');
-  });
-
-  it('country reads from state', () => {
-    const state = createState({country: 'CA'});
-    expect(country(state)).toBe('CA');
-  });
-
-  it('currency reads from state', () => {
-    const state = createState({currency: 'CAD'});
-    expect(currency(state)).toBe('CAD');
-  });
-
-  it('endpoint reads from state', () => {
-    const state = createState({endpoint: 'https://custom.com'});
-    expect(endpoint(state)).toBe('https://custom.com');
-  });
-});
 
 describe('createConfigurationSelectors', () => {
   let selectors: ReturnType<typeof createConfigurationSelectors>;

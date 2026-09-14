@@ -14,7 +14,7 @@ export interface CommerceRequestModel {
   pinnedProducts: string[];
 }
 
-export interface CommerceRequestContext {
+interface CommerceRequestContext {
   view: {url: string | null; referrer: string | null};
   user: Record<string, unknown>;
   cart: CommerceCartItem[];
@@ -22,7 +22,7 @@ export interface CommerceRequestContext {
   custom: Record<string, unknown>;
 }
 
-export interface CommerceCartItem {
+interface CommerceCartItem {
   productId: string;
   name: string;
   price: number;
@@ -90,7 +90,7 @@ export interface SetSortContext {
   fields?: SortField[];
 }
 
-export interface SortField {
+interface SortField {
   field: string;
   direction: string;
 }
@@ -106,13 +106,13 @@ export interface RestoreStateContext {
   pinnedProducts?: string[];
 }
 
-export interface FacetRestore {
+interface FacetRestore {
   facetId: string;
   values: string[];
   numericRanges: NumericRange[];
 }
 
-export interface NumericRange {
+interface NumericRange {
   start: number;
   end: number;
   endInclusive: boolean;
@@ -128,18 +128,18 @@ export interface SelectProductsContext {
 
 // ─── Suggestion action contexts ────────────────────────────────────────────
 
-export interface FetchSuggestionsContext {
+interface FetchSuggestionsContext {
   query: string;
 }
 
-export interface FacetSearchContext {
+interface FacetSearchContext {
   facetId: string;
   query: string;
 }
 
 // ─── Analytics action contexts ─────────────────────────────────────────────
 
-export interface CartActionContext {
+interface CartActionContext {
   productId: string;
   name?: string;
   price?: number;
@@ -147,32 +147,32 @@ export interface CartActionContext {
   action: 'add' | 'remove';
 }
 
-export interface ProductClickContext {
+interface ProductClickContext {
   productId: string;
   name?: string;
   price?: number;
   position: number;
 }
 
-export interface ProductViewContext {
+interface ProductViewContext {
   productId: string;
   name?: string;
   price?: number;
 }
 
-export interface PurchaseContext {
+interface PurchaseContext {
   products: PurchaseProduct[];
   transaction: Transaction;
 }
 
-export interface PurchaseProduct {
+interface PurchaseProduct {
   productId: string;
   name?: string;
   price?: number;
   quantity: number;
 }
 
-export interface Transaction {
+interface Transaction {
   id: string;
   revenue: number;
 }
