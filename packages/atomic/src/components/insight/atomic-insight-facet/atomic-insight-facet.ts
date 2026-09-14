@@ -29,6 +29,7 @@ import {
 } from '@/src/components/common/facets/facet-value/facet-value';
 import {renderFacetValuesGroup} from '@/src/components/common/facets/facet-values-group/facet-values-group';
 import {initializePopover} from '@/src/components/common/facets/popover/popover-type';
+import {FacetVisibilityController} from '@/src/components/common/facets/facet-visibility-controller';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -47,6 +48,8 @@ import {ValidatePropsController} from '@/src/components/common/validate-props-co
 /**
  * The `atomic-insight-facet` component displays a facet of the results for the current query in an Insight interface.
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
+ *
+ * @cssState hidden - Applied when the facet is hidden.
  *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
@@ -183,6 +186,7 @@ export class AtomicInsightFacet
   constructor() {
     super();
 
+    new FacetVisibilityController(this, () => !!this.facet && this.facetInfo.isHidden());
     new ValidatePropsController(
       this,
       () => ({
