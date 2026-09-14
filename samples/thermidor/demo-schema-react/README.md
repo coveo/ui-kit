@@ -2,7 +2,7 @@
 
 A React sample demonstrating contract-driven A2-UI rendering using `@coveo/thermidor-schema`.
 
-This sample duplicates `samples/thermidor/demo-react` and refactors the A2-UI rendering layer to use catalog-based resolution with validated component contracts from `@coveo/thermidor-schema`.
+This sample uses catalog-based A2-UI resolution with validated component contracts from `@coveo/thermidor-schema`.
 
 ## Running locally with the Mock API
 
