@@ -50,8 +50,9 @@ Légende : ✅ fait · ⚠️ partiel/en cours · ❌ non commencé
 ### Demande 4 — Token par requête + sample documenté
 - **Ce que le client veut** (§9.4, §5, §8.2) : un `accessToken` par requête sur `fetchStaticState()` (aussi `ssr-commerce-next`), **et** un sample SSR documenté montrant l'usage de tokens par utilisateur en multi-tenant.
 - **Livraison — partie fix** — PR #8481 (`feat(headless)`, minor) : `accessToken` optionnel ajouté à `CommonBuildConfig` (ssr-next), consommé dans `augmentCommerceEngineOptions` — override par requête sans muter la définition partagée. Scope `ssr-commerce-next` uniquement (le chemin beta `ssr-commerce` est déprécié et racy).
+- **Preuve** : repro F3 (mesure directe sur `augmentCommerceEngineOptions`) — avant : override ignoré (`perRequestTokenApplied: false`) ; après : token par requête appliqué **et** définition partagée non mutée.
 - **Livraison — partie doc/sample** : ❌ **manquante**. Aucun sample per-user-token n'a été créé.
-- **Statut** : ⚠️ Partiel — code livré (draft, CI verte), sample documenté à faire.
+- **Statut** : ⚠️ Partiel — code livré et prouvé (draft, CI verte), sample documenté à faire.
 
 ### Demande 5 — Position produit + documentation « singleton »
 - **Ce que le client veut** (§9.5, §7, §8.6) : une prise de position sur son pattern (définition request-scoped serveur + définition client séparée) — supporté ou non — et une MAJ de la doc qui affirme aujourd'hui que la définition « must be a singleton shared between server and client » (formulation qui, combinée à F1, produit la fuite).
@@ -82,7 +83,7 @@ Contraintes de communication (préférences projet) :
 | Sujet | Décision attendue | Qui |
 |---|---|---|
 | CI #8480 bloquée sur OpenACR | Rerun complet vs régénérer `openacr.yaml` vs vérifier drift sur `main` | Toi |
-| Sonde F3 du repro | Corriger pour prouver le token par requête ssr-next (teste actuellement le mauvais chemin) | Toi / moi |
+| Sonde F3 du repro | ✅ Corrigée — teste `augmentCommerceEngineOptions` directement, F3 prouvé sur after-f3 | Fait |
 | Sample per-user-token (demande 4) | Le créer ? où ? | Toi / PM |
 | Demande 5 (doc + pattern supporté) | Router vers R&D/PM | Toi |
 | Sort de ce doc de suivi + harnais repro | Rester hors PR (jetable) ou committer quelque part | Toi |
@@ -102,8 +103,13 @@ Contraintes de communication (préférences projet) :
 
 | Métrique | before (main) | after-f1 | after-f2 | after-f3 |
 |---|---|---|---|---|
-| F1 `fetchStaticState` KB/call | 37.7 | **4.2** ✅ | 37.8 | 37.3 |
+| F1 `fetchStaticState` KB/call | 37.2 | **3.7** ✅ | 36.6 | 37.8 |
 | F2 plus vieux token encore en cache | true | true | **false** ✅ | true |
-| F3 mute la définition partagée | true | true | true | true |
+| F3 token par requête appliqué | false | false | false | **true** ✅ |
+| F3 définition partagée non mutée | true | true | true | **true** |
 
-Écart assumé : nos ~37 KB/moteur (sample minimal) vs 65–129 KB du client (jeu de controllers réel) — l'ampleur scale avec les controllers (le rapport le prédit, §3.3). F3 n'est pas prouvé par le repro (sonde à corriger).
+Diagonale FIXED (F1→after-f1, F2→after-f2, F3→after-f3) : chaque fix corrige son finding et aucun autre — confirmation empirique de l'indépendance des 3 PRs.
+
+Écart assumé : nos ~37 KB/moteur (sample minimal) vs 65–129 KB du client (jeu de controllers réel) — l'ampleur scale avec les controllers (le rapport le prédit, §3.3).
+
+Sonde F3 : teste `augmentCommerceEngineOptions` directement (le fichier exact que le fix modifie), sans réseau. Prouve les 3 propriétés — override par requête appliqué, définition partagée non mutée, fallback au token de définition si omis.

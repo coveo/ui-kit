@@ -77,7 +77,9 @@ row('F1 verdict',           d => d.f1.verdict.split(' ')[0]);
 row('F2 firstTokenCached',  d => d.f2.firstTokenStillCachedAfterFlood);
 row('F2 memoizationWorks',  d => d.f2.memoizationWorks);
 row('F2 verdict',           d => d.f2.verdict.split(' ')[0]);
-row('F3 mutatesShared',     d => d.f3.mutatesSharedDefinition);
+row('F3 perReqApplied',     d => d.f3.available ? d.f3.perRequestTokenApplied : 'n/a');
+row('F3 sharedNotMutated',  d => d.f3.available ? d.f3.sharedDefinitionNotMutated : 'n/a');
+row('F3 verdict',           d => d.f3.verdict.split(' ')[0]);
 NODE
 echo "================================================================"
 echo "Raw JSON per ref under: $OUT"

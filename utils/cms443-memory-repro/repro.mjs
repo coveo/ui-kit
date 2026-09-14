@@ -182,27 +182,68 @@ async function finding2() {
 }
 
 // ---------------------------------------------------------------------------
-// F3 — per-request token. Does fetchStaticState accept accessToken WITHOUT mutating the
-// shared definition? Detected structurally (no network): build two engines via build() with
-// distinct per-call tokens is not available in beta; we probe the ssr-next fetchStaticState
-// path by checking whether passing accessToken leaves the definition's own token untouched.
+// F3 — per-request access token on the ssr-next fetchStaticState path.
+// The fix lives entirely in augmentCommerceEngineOptions (a pure, synchronous, network-free
+// function): when buildConfig.accessToken is provided it overrides configuration.accessToken for
+// THAT call, via a spread (so the shared definition is NOT mutated). We test that function
+// directly — it is the exact code the fix changes.
+//   BEFORE: no accessToken field is read -> override ignored -> engine keeps the definition token.
+//   AFTER:  override applied for the request, definition left untouched.
 // ---------------------------------------------------------------------------
 async function finding3() {
-  const {searchEngineDefinition} = defineCommerceEngine({
-    configuration: {...getSampleCommerceEngineConfiguration(), accessToken: 'token-A'},
-  });
-  searchEngineDefinition.setNavigatorContextProvider(navigatorContextProvider);
+  let augment;
+  try {
+    ({augmentCommerceEngineOptions: augment} = await import(
+      `${distEsm}/ssr-next/commerce/utils/engine-wiring.js`
+    ));
+  } catch {
+    return {
+      available: false,
+      note: 'augmentCommerceEngineOptions not found in this build (ssr-next path absent)',
+      verdict: 'N/A',
+    };
+  }
 
-  const before = searchEngineDefinition.getAccessToken();
-  // The only lever on the shared (ssr beta) definition: mutate it.
-  searchEngineDefinition.setAccessToken('token-B');
-  const after = searchEngineDefinition.getAccessToken();
+  const DEFINITION_TOKEN = 'definition-shared-token';
+  const PER_REQUEST_TOKEN = 'per-request-user-token';
+
+  // A shared engine definition config (as a module-level singleton would hold).
+  const makeEngineOptions = () => ({
+    configuration: {
+      ...getSampleCommerceEngineConfiguration(),
+      accessToken: DEFINITION_TOKEN,
+    },
+  });
+  const buildConfigBase = {
+    navigatorContext: navigatorContextProvider(),
+    context: {},
+  };
+
+  // 1) Per-request override: passing accessToken should produce an engine config carrying it.
+  const sharedOptions = makeEngineOptions();
+  const withPerRequest = augment(sharedOptions, {
+    ...buildConfigBase,
+    accessToken: PER_REQUEST_TOKEN,
+  });
+  const perRequestApplied = withPerRequest.configuration.accessToken === PER_REQUEST_TOKEN;
+
+  // 2) Shared definition NOT mutated by that call (no cross-request bleed under concurrency).
+  const sharedNotMutated = sharedOptions.configuration.accessToken === DEFINITION_TOKEN;
+
+  // 3) Omitting accessToken falls back to the definition's token.
+  const withoutPerRequest = augment(makeEngineOptions(), {...buildConfigBase});
+  const fallbackToDefinition = withoutPerRequest.configuration.accessToken === DEFINITION_TOKEN;
+
+  const fixed = perRequestApplied && sharedNotMutated && fallbackToDefinition;
 
   return {
-    sharedTokenBefore: before,
-    sharedTokenAfterSetAccessToken: after,
-    mutatesSharedDefinition: before !== after,
-    note: 'ssr beta path is racy by design; per-request token is added in ssr-next fetchStaticState (see #8481)',
+    available: true,
+    perRequestTokenApplied: perRequestApplied,
+    sharedDefinitionNotMutated: sharedNotMutated,
+    fallbackToDefinitionWhenOmitted: fallbackToDefinition,
+    verdict: fixed
+      ? 'FIXED — per-request token applied without mutating the shared definition'
+      : 'LEAK — no per-request token (override ignored)',
   };
 }
 
