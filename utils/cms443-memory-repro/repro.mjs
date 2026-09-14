@@ -58,18 +58,23 @@ const navigatorContextProvider = () => ({
 });
 
 // ---------------------------------------------------------------------------
-// F1 — engine retention. Causal proof via WeakRef + FinalizationRegistry.
-// A single module-level definition (as documented); build() once per "request".
-// After the fix, static-state paths don't register; here we use build() which, in the
-// beta ssr tree, still registers ONLY when the definition wired it — so to measure the
-// DEFAULT server path we use fetchStaticState (the real leak surface), falling back to
-// build() when fetchStaticState hits the network. We measure fetchStaticState via a
-// try/catch that still exercises engine construction + registration before any network use.
+// F1 — engine retention. Causal proof via WeakRef + FinalizationRegistry, plus a
+// non-regression check on the live hydrated engine.
+// A single module-level definition (as documented) registers a token-update callback for every
+// engine it builds. The fix makes that registry WEAK, so the GC releases the subscription once
+// the engine is unreachable — fixing every path without dropping updates for live engines.
+//   F1a — fetchStaticState (default server path): retained heap after forced GC. Engine not
+//         exposed here, so heap growth is the signal. BEFORE: linear; AFTER: flat.
+//   F1b — build() (engine exposed): causal WeakRef + FinalizationRegistry count. BEFORE (strong
+//         Set): 0 collected / all retained. AFTER (weak): all collected.
+//   F1c — hydrateStaticState non-regression: a LIVE engine (as the browser keeps in useState)
+//         must still receive a later setAccessToken. BEFORE/AFTER(weak): propagated.
+//         The option-A skip-registration approach REGRESSED this (stale token).
 // ---------------------------------------------------------------------------
 async function finding1() {
   // --- F1a: the DEFAULT server path, fetchStaticState. The engine is NOT exposed here, so we
   // measure retained heap after a forced full GC: BEFORE the fix each call registers a callback
-  // that retains the engine -> linear growth; AFTER (option A) nothing is registered -> flat.
+  // that retains the engine -> linear growth; AFTER nothing is retained -> flat.
   const defA = defineCommerceEngine({configuration: getSampleCommerceEngineConfiguration()});
   defA.standaloneEngineDefinition.setNavigatorContextProvider(navigatorContextProvider);
 
@@ -86,9 +91,9 @@ async function finding1() {
   const afterHeap = heap();
   const fetchPerIterKB = (afterHeap - beforeHeap) / ITER / 1024;
 
-  // --- F1b: the build() edge-case, where the engine IS exposed. Causal proof via WeakRef +
-  // FinalizationRegistry. Option A intentionally KEEPS registration here (long-lived engines),
-  // so this is expected to still retain — it documents the deliberate carve-out, not a leak.
+  // --- F1b: build() exposes the engine. Causal proof via WeakRef + FinalizationRegistry.
+  // BEFORE (strong Set): the registry retains every engine -> 0 finalized. AFTER (weak registry):
+  // the GC reclaims each engine once the loop drops its reference -> all finalized.
   const defB = defineCommerceEngine({configuration: getSampleCommerceEngineConfiguration()});
   defB.standaloneEngineDefinition.setNavigatorContextProvider(navigatorContextProvider);
 
@@ -106,9 +111,37 @@ async function finding1() {
   await settle();
   const aliveByWeakRef = refs.filter((w) => w.deref() !== undefined).length;
 
-  // The verdict for the FINDING is driven by the default path (fetchStaticState) heap growth.
+  // --- F1c: non-regression. Hydrate a live engine (kept referenced, as the browser provider does
+  // via useState), rotate the token, and read the engine's EFFECTIVE token from Redux state. The
+  // weak registry must still propagate it; the skip-registration approach left it stale.
+  const defC = defineCommerceEngine({configuration: getSampleCommerceEngineConfiguration()});
+  defC.standaloneEngineDefinition.setNavigatorContextProvider(navigatorContextProvider);
+  const {engine: liveEngine} = await defC.standaloneEngineDefinition.hydrateStaticState({
+    searchActions: [],
+    navigatorContext: navigatorContextProvider(),
+  });
+  const tokenBeforeRotation = liveEngine[stateKey].configuration.accessToken;
+  defC.standaloneEngineDefinition.setAccessToken('rotated-token');
+  const tokenAfterRotation = liveEngine[stateKey].configuration.accessToken;
+  const liveEngineReceivedRotatedToken = tokenAfterRotation === 'rotated-token';
+
   const LEAK_THRESHOLD_KB = 5; // a released engine leaves ~0; a retained one is tens of KB
   const fetchPathLeaks = fetchPerIterKB > LEAK_THRESHOLD_KB;
+  // Use the WeakRef 'alive' count as the causal signal: it is deterministic right after a forced
+  // GC, whereas FinalizationRegistry finalizers may not have been scheduled yet (spec allows it).
+  // A single lingering engine (the last one still referenced at GC time) is a measurement artifact,
+  // not a leak, so allow a small slack.
+  const buildRetained = aliveByWeakRef > 1;
+  const hydrateRegressed = !liveEngineReceivedRotatedToken;
+
+  let verdict;
+  if (fetchPathLeaks || buildRetained) {
+    verdict = `LEAK — fetchStaticState ~${fetchPerIterKB.toFixed(1)} KB/call, build alive ${aliveByWeakRef}/${ITER}`;
+  } else if (hydrateRegressed) {
+    verdict = 'REGRESSION — hydrated live engine did not receive the rotated token';
+  } else {
+    verdict = 'FIXED — all paths released, live hydrated engine still updated';
+  }
 
   return {
     iterations: ITER,
@@ -116,9 +149,8 @@ async function finding1() {
     fetchStaticState_totalMB: MB(afterHeap - beforeHeap),
     build_enginesStillAlive: aliveByWeakRef,
     build_enginesFinalized: finalized,
-    verdict: fetchPathLeaks
-      ? `LEAK — fetchStaticState retains ~${fetchPerIterKB.toFixed(1)} KB/call`
-      : 'FIXED — fetchStaticState retains ~0 KB/call',
+    hydrate_liveEngineReceivedRotatedToken: liveEngineReceivedRotatedToken,
+    verdict,
   };
 }
 

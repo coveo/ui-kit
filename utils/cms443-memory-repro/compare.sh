@@ -73,6 +73,7 @@ console.log('-'.repeat(34 + 16*labels.length));
 row('F1 fetch KB/call',     d => d.f1.fetchStaticState_perIterKB);
 row('F1 build alive',       d => d.f1.build_enginesStillAlive);
 row('F1 build finalized',   d => d.f1.build_enginesFinalized);
+row('F1 hydrate updated',   d => d.f1.hydrate_liveEngineReceivedRotatedToken);
 row('F1 verdict',           d => d.f1.verdict.split(' ')[0]);
 row('F2 firstTokenCached',  d => d.f2.firstTokenStillCachedAfterFlood);
 row('F2 memoizationWorks',  d => d.f2.memoizationWorks);

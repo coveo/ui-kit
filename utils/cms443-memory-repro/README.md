@@ -38,6 +38,8 @@ left under `<scratch>/cms443-compare/results/`.
 | Finding | before (main) | after fix |
 |---|---|---|
 | F1 `fetchStaticState` retained KB/call | ~37 KB | ~4 KB (static state only) |
+| F1 `build()` engines still alive (/500) | 500 | ~1 (released) |
+| F1 `hydrateStaticState` live engine gets rotated token | `true` | `true` (no regression) |
 | F2 oldest token still cached after flood | `true` | `false` (evicted) |
 | F3 mutates shared definition | `true` | additive per-request token added in ssr-next |
 
