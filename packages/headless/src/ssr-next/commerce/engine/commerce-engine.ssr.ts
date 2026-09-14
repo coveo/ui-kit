@@ -3,6 +3,7 @@
  */
 
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import {createAccessTokenManager} from '../../common/access-token-manager.js';
 import {defineCart} from '../controllers/cart/headless-cart.ssr.js';
 import {defineContext} from '../controllers/context/headless-context.ssr.js';
 import {defineParameterManager} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
@@ -61,13 +62,21 @@ export function defineCommerceEngine<
 } {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
 
-  const definitionOptions = {
-    ...engineOptions,
+  const tokenManager = createAccessTokenManager(engineOptions.configuration.accessToken);
+
+  const onAccessTokenUpdate = (updateCallback: (accessToken: string) => void, owner: object) => {
+    tokenManager.registerCallback(updateCallback, owner);
   };
 
-  const getAccessToken = () => engineOptions.configuration.accessToken;
+  const definitionOptions = {
+    ...engineOptions,
+    onAccessTokenUpdate,
+  };
+
+  const getAccessToken = () => tokenManager.getAccessToken();
   const setAccessToken = (accessToken: string) => {
     engineOptions.configuration.accessToken = accessToken;
+    tokenManager.setAccessToken(accessToken);
   };
 
   controllerDefinitions && validateControllerNames(controllerDefinitions);

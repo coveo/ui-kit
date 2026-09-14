@@ -57,8 +57,8 @@ export function defineCommerceEngine<
 
   const tokenManager = createAccessTokenManager(engineOptions.configuration.accessToken);
 
-  const onAccessTokenUpdate = (updateCallback: (accessToken: string) => void) => {
-    tokenManager.registerCallback(updateCallback);
+  const onAccessTokenUpdate = (updateCallback: (accessToken: string) => void, owner: object) => {
+    tokenManager.registerCallback(updateCallback, owner);
   };
 
   /**
@@ -87,11 +87,7 @@ export function defineCommerceEngine<
     tokenManager.setAccessToken(accessToken);
   };
 
-  const build = buildFactory<TControllerDefinitions>(
-    controllerDefinitions,
-    definitionOptions,
-    true
-  );
+  const build = buildFactory<TControllerDefinitions>(controllerDefinitions, definitionOptions);
   const fetchStaticState = fetchStaticStateFactory<TControllerDefinitions>(
     controllerDefinitions,
     definitionOptions

@@ -61,7 +61,7 @@ export type CommerceEngineDefinitionOptions<
   /**
    * Callback invoked when the access token changes.
    */
-  onAccessTokenUpdate?: (updateCallback: (token: string) => void) => void;
+  onAccessTokenUpdate?: (updateCallback: (token: string) => void, owner: object) => void;
 };
 
 function isListingFetchCompletedAction(action: unknown): action is Action {
@@ -155,8 +155,7 @@ function fetchActiveRecommendationControllers(
 export const buildFactory =
   <TControllerDefinitions extends CommerceControllerDefinitionsMap>(
     controllerDefinitions: TControllerDefinitions | undefined,
-    options: CommerceEngineDefinitionOptions<TControllerDefinitions>,
-    registerForTokenUpdates = false
+    options: CommerceEngineDefinitionOptions<TControllerDefinitions>
   ) =>
   <T extends SolutionType>(solutionType: T) =>
   async (...[buildOptions]: BuildParameters<TControllerDefinitions>) => {
@@ -194,8 +193,8 @@ export const buildFactory =
       );
     };
 
-    if (registerForTokenUpdates && options.onAccessTokenUpdate) {
-      options.onAccessTokenUpdate(updateEngineConfiguration);
+    if (options.onAccessTokenUpdate) {
+      options.onAccessTokenUpdate(updateEngineConfiguration, engine);
     }
 
     const controllers = buildControllerDefinitions({
