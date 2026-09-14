@@ -1,8 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {CartItem, CartState} from './cart-types.js';
-import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
-import {getInterfaceInternals} from '@/src/internal/utils/index.js';
-import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import {getOrCreateCartActions} from './cart-actions.js';
 
 export const initialCartState: CartState = {
@@ -10,10 +7,6 @@ export const initialCartState: CartState = {
 };
 
 const cartKey = (item: CartItem) => `${item.productId},${item.name},${item.price}`;
-
-type CartSlice = ReturnType<typeof createCartSlice>;
-
-const CACHE_KEY: CacheKey<CartSlice> = createCacheKey<CartSlice>('cart/slice');
 
 export function createCartSlice(
   interfaceId: string,
@@ -45,13 +38,5 @@ export function createCartSlice(
         state.items[index] = action.payload;
       });
     },
-  });
-}
-
-export function getOrCreateCartSlice(iface: InterfaceHandle) {
-  const {stateId, cacheRegistry} = getInterfaceInternals(iface);
-  return cacheRegistry.getOrCreate(CACHE_KEY, () => {
-    const actions = getOrCreateCartActions(iface);
-    return createCartSlice(stateId, actions);
   });
 }

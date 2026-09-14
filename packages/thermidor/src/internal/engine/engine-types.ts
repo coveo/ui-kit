@@ -4,14 +4,12 @@ import type {ConfigurationState} from '@/src/internal/features/configuration/ind
 import type {FacetState} from '@/src/internal/features/facets/index.js';
 import type {NavigatorContextProvider} from '@/src/internal/utils/index.js';
 import type {PaginationState} from '@/src/internal/features/pagination/index.js';
-import type {ResultListState} from '@/src/internal/features/result-list/index.js';
 
 export interface State {
   cart?: CartState;
   configuration?: ConfigurationState;
   facets?: Record<string, FacetState>;
   pagination?: PaginationState;
-  results?: ResultListState;
   searchBox?: SearchBoxState;
   [key: string]: unknown;
 }

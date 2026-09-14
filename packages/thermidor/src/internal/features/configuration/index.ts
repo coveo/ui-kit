@@ -1,22 +1,4 @@
 export {configurationSlice} from './configuration-slice.js';
-export {
-  setOrganizationId,
-  setAccessToken,
-  setTrackingId,
-  setLanguage,
-  setCountry,
-  setCurrency,
-  setEndpoint,
-  setConfiguration,
-} from './configuration-actions.js';
-export {
-  getOrCreateConfigurationSelectors,
-  organizationId,
-  accessToken,
-  trackingId,
-  language,
-  country,
-  currency,
-  endpoint,
-} from './configuration-selectors.js';
+export {setConfiguration} from './configuration-actions.js';
+export {getOrCreateConfigurationSelectors} from './configuration-selectors.js';
 export type {ConfigurationState} from './configuration-types.js';

@@ -183,7 +183,8 @@ export default {
       ignore: ['template/**/*'],
     },
     'packages/thermidor': {
-      ignore: ['**/*'],
+      entry: ['src/**/*.test-d.ts'],
+      ignoreExportsUsedInFile: true,
     },
   },
 };

@@ -1,6 +1,6 @@
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
-import type {GenerativeStatePort} from '@/src/internal/api/generative/index.js';
+import type {GenerativeStatePort} from '@/src/internal/features/generative/index.js';
 import {
   hydrateFromCreateSurface,
   applyDataModelUpdate,

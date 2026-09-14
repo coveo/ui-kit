@@ -68,10 +68,3 @@ export function createCommerceSearchEndpointSelectors(interfaceId: string) {
     getError: createMemoizedStateSelector(sliceSelector, (state) => state.error),
   };
 }
-
-export function getOrCreateCommerceSearchEndpointSelectors(iface: InterfaceHandle) {
-  const {stateId, cacheRegistry} = getInterfaceInternals(iface);
-  return cacheRegistry.getOrCreate(SELECTORS_CACHE_KEY, () =>
-    createCommerceSearchEndpointSelectors(stateId)
-  );
-}

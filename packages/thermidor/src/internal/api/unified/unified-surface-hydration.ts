@@ -19,17 +19,6 @@ import {
 import {getOrCreateTriggersActions} from '@/src/internal/features/triggers/index.js';
 import {getOrCreateQueryCorrectionActions} from '@/src/internal/features/query-correction/index.js';
 
-export interface A2uiSurfaceContent {
-  messages: A2uiMessage[];
-}
-
-export type A2uiMessage =
-  | {version: 'v1.0'; createSurface: CreateSurfacePayload}
-  | {version: 'v1.0'; updateDataModel: UpdateDataModelPayload}
-  | {version: 'v1.0'; updateComponents: UpdateComponentsPayload}
-  | {version: 'v1.0'; deleteSurface: DeleteSurfacePayload}
-  | {version: 'v1.0'; actionId: string; actionResponse: unknown};
-
 export type A2uiOperation =
   | {createSurface: CreateSurfacePayload}
   | {updateDataModel: UpdateDataModelPayload}

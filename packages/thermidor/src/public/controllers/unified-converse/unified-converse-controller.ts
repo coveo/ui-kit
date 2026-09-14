@@ -14,10 +14,7 @@ import {getOrCreateGenerativeActions} from '@/src/internal/features/generative/i
 import {getOrCreateGenerativeSelectors} from '@/src/internal/features/generative/index.js';
 import type {GenerativeUnifiedInterface} from '@/src/internal/utils/index.js';
 import type {Controller} from '@/src/internal/utils/index.js';
-import {
-  SerializedConverseState,
-  SerializedTurn,
-} from '../converse/converse-controller-serialization.js';
+import {SerializedConverseState, SerializedTurn} from './converse-controller-serialization.js';
 
 class UnifiedConverseControllerImpl extends BaseController<UnifiedConverseControllerState> {
   #runtime: UnifiedRuntime;

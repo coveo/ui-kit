@@ -1,6 +1,5 @@
 export {getOrCreateSearchBoxSlice} from './search-box-slice.js';
 export type {SearchBoxState} from './search-box-slice.js';
-export {getOrCreateSearchBoxActions} from './search-box-actions.js';
 export {getOrCreateSearchBoxSelectors} from './search-box-selectors.js';
 
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';

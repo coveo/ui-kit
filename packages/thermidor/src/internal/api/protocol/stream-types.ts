@@ -30,8 +30,6 @@ export type {
   CustomEvent,
 } from '@ag-ui/core';
 
-export {EventType} from '@ag-ui/core';
-
 // ============================================================================
 // Turn lifecycle (Coveo converse wire format — no AG-UI equivalent)
 // ============================================================================
@@ -63,45 +61,6 @@ export type SearchApiResponseEvent = {
 // ============================================================================
 // Structured snapshot events (A2UI — Coveo-specific payload shape)
 // ============================================================================
-
-export type A2UIComponent = {
-  id: string;
-  component: string;
-} & Record<string, unknown>;
-
-export type A2UIOperation =
-  | {
-      createSurface: {
-        surfaceId: string;
-        surfaceType?: string;
-        catalogId?: string;
-        components?: A2UIComponent[];
-        dataModel?: Record<string, unknown>;
-      };
-    }
-  | {
-      updateComponents: {
-        surfaceId: string;
-        components: A2UIComponent[];
-      };
-    }
-  | {
-      updateDataModel: {
-        surfaceId: string;
-        path?: string;
-        value: unknown;
-      };
-    }
-  | {
-      deleteSurface: {
-        surfaceId: string;
-      };
-    }
-  | {actionResponse: {actionId: string; response: unknown}};
-
-export type A2UIMessage =
-  | ({version: 'v1.0'} & Exclude<A2UIOperation, {actionResponse: unknown}>)
-  | {version: 'v1.0'; actionId: string; actionResponse: unknown};
 
 // ============================================================================
 // Unknown fallback (events not recognized by AG-UI or Coveo extensions)

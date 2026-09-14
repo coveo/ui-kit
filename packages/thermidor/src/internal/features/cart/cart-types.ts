@@ -32,23 +32,3 @@ export interface CartState {
    */
   items: CartItem[];
 }
-
-/**
- * ============================================================================
- * Operation types (for mutations / actions)
- * ============================================================================
- */
-
-export interface SetCartItemsPayload {
-  /**
-   * The items to set in the cart.
-   */
-  items: CartItem[];
-}
-
-export interface UpdateItemQuantityPayload {
-  /**
-   * The item with updated quantity.
-   */
-  item: CartItem;
-}
