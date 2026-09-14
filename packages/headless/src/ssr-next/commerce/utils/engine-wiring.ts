@@ -31,6 +31,9 @@ export function augmentCommerceEngineOptions<
     navigatorContextProvider: () => buildConfig.navigatorContext,
     configuration: {
       ...engineOptions.configuration,
+      ...(buildConfig.accessToken !== undefined && {
+        accessToken: buildConfig.accessToken,
+      }),
       preprocessRequest: augmentPreprocessRequestWithForwardedFor({
         preprocessRequest: engineOptions.configuration.preprocessRequest,
         navigatorContext: buildConfig.navigatorContext,

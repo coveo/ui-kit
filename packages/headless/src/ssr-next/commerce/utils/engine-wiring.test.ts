@@ -168,4 +168,31 @@ describe('#augmentCommerceEngineOptions', () => {
       });
     });
   });
+
+  describe('access token configuration', () => {
+    it('should override the access token when provided in buildConfig', () => {
+      const navigatorContext = createNavigatorContext();
+
+      const engineOptions = augmentCommerceEngineOptions(sampleCommerceConfig, {
+        navigatorContext,
+        context: buildMockCommerceContext(),
+        accessToken: 'per-request-token',
+      });
+
+      expect(engineOptions.configuration.accessToken).toBe('per-request-token');
+    });
+
+    it('should keep the definition access token when none is provided in buildConfig', () => {
+      const navigatorContext = createNavigatorContext();
+
+      const engineOptions = augmentCommerceEngineOptions(sampleCommerceConfig, {
+        navigatorContext,
+        context: buildMockCommerceContext(),
+      });
+
+      expect(engineOptions.configuration.accessToken).toBe(
+        sampleCommerceConfig.configuration.accessToken
+      );
+    });
+  });
 });
