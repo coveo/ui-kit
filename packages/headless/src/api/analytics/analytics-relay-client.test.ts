@@ -69,4 +69,38 @@ describe('#getRelayInstanceFromState', () => {
     getRelayInstanceFromState(state);
     expect(mockedCreateRelay).toHaveBeenCalledWith(expect.objectContaining({mode: 'disabled'}));
   });
+
+  it('memoizes the relay instance for identical inputs', () => {
+    const state = createMockState();
+
+    const first = getRelayInstanceFromState(state);
+    const second = getRelayInstanceFromState(state);
+
+    expect(first).toBe(second);
+    expect(mockedCreateRelay).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not retain relay instances unboundedly across distinct access tokens', () => {
+    const cacheSize = 50;
+    const makeStateWithToken = (token: string) => {
+      const state = createMockState();
+      state.configuration.accessToken = token;
+      return state;
+    };
+
+    const oldest = makeStateWithToken('token-0');
+    getRelayInstanceFromState(oldest);
+    const callsAfterOldest = mockedCreateRelay.mock.calls.length;
+
+    // Fill the cache past its size with distinct tokens, evicting the oldest entry.
+    for (let i = 1; i <= cacheSize; i++) {
+      getRelayInstanceFromState(makeStateWithToken(`token-${i}`));
+    }
+
+    // Re-selecting the oldest token must recompute (its entry was evicted),
+    // proving the cache is bounded rather than keeping every token forever.
+    getRelayInstanceFromState(oldest);
+
+    expect(mockedCreateRelay.mock.calls.length).toBeGreaterThan(callsAfterOldest + cacheSize);
+  });
 });

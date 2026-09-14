@@ -1,5 +1,5 @@
 import {buildBrowserEnvironment, type CustomEnvironment, createRelay} from '@coveo/relay';
-import {createSelector} from '@reduxjs/toolkit';
+import {createSelectorCreator, lruMemoize} from '@reduxjs/toolkit';
 import type {NavigatorContextProvider} from '../../app/navigator-context-provider.js';
 import type {
   CommerceConfigurationSection,
@@ -11,7 +11,25 @@ import {getAnalyticsSource} from './analytics-selectors.js';
 
 type StateNeededByRelay = ConfigurationSection | CommerceConfigurationSection;
 
-export const getRelayInstanceFromState = createSelector(
+/**
+ * Maximum number of memoized relay instances kept at once.
+ *
+ * The selector is keyed (among others) by `accessToken`, a primitive. reselect's default
+ * `weakMapMemoize` never evicts primitive keys, so on a server with per-user access tokens the
+ * cache would grow without bound. An LRU cache with a fixed size keeps the memoization benefit
+ * while capping retention. Sized generously so that concurrent, distinct tokens in flight during a
+ * single render pass still hit the cache.
+ */
+const RELAY_INSTANCE_CACHE_SIZE = 50;
+
+const createBoundedSelector = createSelectorCreator({
+  memoize: lruMemoize,
+  memoizeOptions: {maxSize: RELAY_INSTANCE_CACHE_SIZE},
+  argsMemoize: lruMemoize,
+  argsMemoizeOptions: {maxSize: RELAY_INSTANCE_CACHE_SIZE},
+});
+
+export const getRelayInstanceFromState = createBoundedSelector(
   (state: StateNeededByRelay) => state.configuration.organizationId,
   (state: StateNeededByRelay) => state.configuration.environment,
   (state: StateNeededByRelay) => state.configuration.accessToken,
