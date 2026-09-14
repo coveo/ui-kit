@@ -55,7 +55,6 @@ class UnifiedConverseControllerImpl extends BaseController<UnifiedConverseContro
     this.#generativeInterface = options.interface;
     this.#runtime = UnifiedRuntime.getInstance(fullEngine, stateId, {
       generativeInterface: options.interface,
-      cartInterface: options.interface,
       statePort: {
         createTurn: (payload) => {
           this.engine.mutate(this.#actions.createTurn(payload));

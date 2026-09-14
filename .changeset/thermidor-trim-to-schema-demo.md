@@ -1,5 +1,5 @@
 ---
-"@coveo/thermidor": patch
+"@coveo/thermidor": minor
 ---
 
 Trimmed `@coveo/thermidor` to the minimal surface consumed by the `demo-schema-react` sample (the unified conversational + `@coveo/thermidor-schema` experience).

@@ -15,7 +15,6 @@ import type {A2uiAction, CommerceRequestModel} from './unified-endpoint-types.js
 export interface UnifiedRuntimeConfig {
   statePort: GenerativeStatePort;
   generativeInterface: InterfaceHandle;
-  cartInterface: InterfaceHandle;
 }
 
 function isAbortError(error: unknown): boolean {
@@ -58,10 +57,7 @@ export class UnifiedRuntime {
   private constructor(engine: FullEngine, _interfaceId: string, config: UnifiedRuntimeConfig) {
     this.engine = engine;
     this.statePort = config.statePort;
-    this.requestBuilder = createConversationRequestBuilder(
-      config.generativeInterface,
-      config.cartInterface
-    );
+    this.requestBuilder = createConversationRequestBuilder(config.generativeInterface);
     this.surfaceProcessor = createSurfaceProcessor({
       engine,
       statePort: config.statePort,

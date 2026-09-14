@@ -1,9 +1,7 @@
-import type {CartState} from '@/src/internal/features/cart/index.js';
 import type {ConfigurationState} from '@/src/internal/features/configuration/index.js';
 import type {NavigatorContextProvider} from '@/src/internal/utils/index.js';
 
 export interface State {
-  cart?: CartState;
   configuration?: ConfigurationState;
   [key: string]: unknown;
 }

@@ -122,7 +122,6 @@ function createMockConfig(overrides: Partial<UnifiedRuntimeConfig> = {}): Unifie
   return {
     statePort: createMockStatePort(),
     generativeInterface: {disposed: false, dispose: vi.fn()} as InterfaceHandle,
-    cartInterface: {disposed: false, dispose: vi.fn()} as InterfaceHandle,
     ...overrides,
   };
 }
