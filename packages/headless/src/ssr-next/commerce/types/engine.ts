@@ -34,10 +34,6 @@ export type CommerceEngineDefinitionOptions<
    * The controllers to initialize with the commerce engine.
    */
   controllers?: ValidateControllerNames<TControllers>;
-  /**
-   * Callback invoked when the access token changes.
-   */
-  onAccessTokenUpdate?: (updateCallback: (token: string) => void) => void;
 };
 
 export interface CommerceEngineDefinition<
