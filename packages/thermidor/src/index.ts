@@ -9,7 +9,6 @@ export type {
   UpdateItemQuantityPayload,
 } from '@/src/internal/features/cart/index.js';
 export type {Product} from '@/src/internal/features/product-list/index.js';
-export * from './public/actions/index.js';
 export * from './public/controllers/index.js';
 
 export {buildGenerativeInterface} from './public/interfaces/generative.js';

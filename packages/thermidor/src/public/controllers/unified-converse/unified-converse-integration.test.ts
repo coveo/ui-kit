@@ -9,7 +9,12 @@ import {
   type UnifiedConverseController,
 } from './unified-converse-controller.js';
 import {buildUnifiedConverseController as barrelExport} from '@/src/public/controllers/index.js';
-import {buildPaginationController} from '@/src/public/controllers/pagination/pagination-controller.js';
+import {getFullEngine} from '@/src/internal/engine/index.js';
+import {
+  getOrCreatePaginationSlice,
+  getOrCreatePaginationSelectors,
+} from '@/src/internal/features/pagination/index.js';
+import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 
 // ---------------------------------------------------------------------------
 // Mock: createUnifiedEndpointClient
@@ -129,51 +134,6 @@ const surfaceCreationEvents: SSEEvent[] = [
   },
 ];
 
-const actionResponseEvents: SSEEvent[] = [
-  {
-    event: 'turn_started',
-    data: JSON.stringify({conversationSessionId: 'session-1', conversationToken: 'token-1'}),
-  },
-  {event: 'message', data: JSON.stringify({type: 'RUN_STARTED'})},
-  {
-    event: 'message',
-    data: JSON.stringify({
-      type: 'ACTIVITY_SNAPSHOT',
-      messageId: 'surface-1-activity',
-      replace: true,
-      activityType: 'a2ui-surface',
-      content: {
-        messages: [
-          {
-            version: 'v1.0',
-            updateDataModel: {
-              surfaceId: 'surface-1',
-              path: '/pagination',
-              value: {page: 1, perPage: 20, totalEntries: 100},
-            },
-          },
-          {
-            version: 'v1.0',
-            updateDataModel: {
-              surfaceId: 'surface-1',
-              path: '/products',
-              value: [
-                {permanentid: 'p3', ec_name: 'Boot C', ec_price: 149.99},
-                {permanentid: 'p4', ec_name: 'Boot D', ec_price: 179.99},
-              ],
-            },
-          },
-        ],
-      },
-    }),
-  },
-  {event: 'message', data: JSON.stringify({type: 'RUN_FINISHED'})},
-  {
-    event: 'turn_complete',
-    data: JSON.stringify({conversationSessionId: 'session-1', conversationToken: 'token-1'}),
-  },
-];
-
 const surfaceDeletionEvents: SSEEvent[] = [
   ...surfaceCreationEvents.slice(0, -2),
   {
@@ -215,6 +175,17 @@ const incompleteStreamEvents: SSEEvent[] = [
 // ---------------------------------------------------------------------------
 // Test Suite
 // ---------------------------------------------------------------------------
+
+function readPaginationState(engine: Engine, iface: InterfaceHandle) {
+  const fullEngine = getFullEngine(engine);
+  fullEngine.adoptSlice(getOrCreatePaginationSlice(iface));
+  const selectors = getOrCreatePaginationSelectors(iface);
+  return {
+    page: fullEngine.read(selectors.getPage),
+    pageSize: fullEngine.read(selectors.getPageSize),
+    totalCount: fullEngine.read(selectors.getTotalCount),
+  };
+}
 
 describe('UnifiedConverseController integration', () => {
   let engine: Engine;
@@ -285,54 +256,10 @@ describe('UnifiedConverseController integration', () => {
       }
       expect(routedInterface.interface).toBeDefined();
 
-      const paginationController = buildPaginationController({
-        interface: routedInterface.interface,
-      });
-      expect(paginationController.state.totalCount).toBe(100);
-      expect(paginationController.state.pageSize).toBe(20);
-      expect(paginationController.state.page).toBe(0);
-    });
-  });
-
-  describe('surface interaction', () => {
-    it('updates pagination state after selectPage and updateDataModel', async () => {
-      mockClient.call
-        .mockReturnValueOnce({
-          success: true,
-          data: {stream: createSSEStream(surfaceCreationEvents)},
-        })
-        .mockReturnValueOnce({
-          success: true,
-          data: {stream: createSSEStream(actionResponseEvents)},
-        });
-
-      controller.submit({prompt: 'Show me boots'});
-
-      await vi.waitFor(() => {
-        expect(controller.state.turns[0]?.status).toBe('complete');
-      });
-
-      const turn = controller.state.turns[0];
-      const routedInterface = turn.routedInterface!;
-      if (routedInterface.useCase !== 'commerceSearch') {
-        throw new Error('Expected commerceSearch useCase');
-      }
-      const paginationController = buildPaginationController({
-        interface: routedInterface.interface,
-      });
-
-      expect(paginationController.state.page).toBe(0);
-      expect(paginationController.state.pageSize).toBe(20);
-      expect(paginationController.state.totalCount).toBe(100);
-
-      paginationController.selectPage(1);
-
-      await vi.waitFor(() => {
-        expect(paginationController.state.page).toBe(1);
-      });
-
-      expect(paginationController.state.totalCount).toBe(100);
-      expect(paginationController.state.pageSize).toBe(20);
+      const pagination = readPaginationState(engine, routedInterface.interface);
+      expect(pagination.totalCount).toBe(100);
+      expect(pagination.pageSize).toBe(20);
+      expect(pagination.page).toBe(0);
     });
   });
 
