@@ -87,7 +87,11 @@ export function defineCommerceEngine<
     tokenManager.setAccessToken(accessToken);
   };
 
-  const build = buildFactory<TControllerDefinitions>(controllerDefinitions, definitionOptions);
+  const build = buildFactory<TControllerDefinitions>(
+    controllerDefinitions,
+    definitionOptions,
+    true
+  );
   const fetchStaticState = fetchStaticStateFactory<TControllerDefinitions>(
     controllerDefinitions,
     definitionOptions

@@ -64,13 +64,8 @@ export function defineCommerceEngine<
 
   const tokenManager = createAccessTokenManager(engineOptions.configuration.accessToken);
 
-  const onAccessTokenUpdate = (updateCallback: (accessToken: string) => void) => {
-    tokenManager.registerCallback(updateCallback);
-  };
-
   const definitionOptions = {
     ...engineOptions,
-    onAccessTokenUpdate,
   };
 
   const getAccessToken = () => tokenManager.getAccessToken();

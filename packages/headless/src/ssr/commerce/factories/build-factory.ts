@@ -155,7 +155,8 @@ function fetchActiveRecommendationControllers(
 export const buildFactory =
   <TControllerDefinitions extends CommerceControllerDefinitionsMap>(
     controllerDefinitions: TControllerDefinitions | undefined,
-    options: CommerceEngineDefinitionOptions<TControllerDefinitions>
+    options: CommerceEngineDefinitionOptions<TControllerDefinitions>,
+    registerForTokenUpdates = false
   ) =>
   <T extends SolutionType>(solutionType: T) =>
   async (...[buildOptions]: BuildParameters<TControllerDefinitions>) => {
@@ -193,7 +194,7 @@ export const buildFactory =
       );
     };
 
-    if (options.onAccessTokenUpdate) {
+    if (registerForTokenUpdates && options.onAccessTokenUpdate) {
       options.onAccessTokenUpdate(updateEngineConfiguration);
     }
 
