@@ -9,7 +9,7 @@ export type {
   SerializedConverseState,
   SerializedRoutedInterface,
   SerializedTurn,
-} from './converse/converse-controller-serialization.js';
+} from './unified-converse/converse-controller-serialization.js';
 export {
   buildRemoteController,
   selectRemoteControllerState,

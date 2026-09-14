@@ -1,7 +1,7 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {UnifiedRuntime} from './unified-runtime.js';
 import type {UnifiedRuntimeConfig} from './unified-runtime.js';
-import type {GenerativeStatePort} from '@/src/internal/api/generative/index.js';
+import type {GenerativeStatePort} from '@/src/internal/features/generative/index.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import type {NormalizedStreamEvent} from '@/src/internal/api/protocol/stream-types.js';

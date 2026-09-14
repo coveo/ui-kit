@@ -8,25 +8,27 @@ import {describe, it, expect, beforeEach, vi} from 'vitest';
 import {createTestEngine, createTestInterface} from '@/src/test/test-utils.js';
 import {getQuery} from '@/src/internal/features/search-box/index.js';
 import {setQuery} from '@/src/internal/features/search-box/index.js';
-import {setResultsFromResponse} from '@/src/internal/features/result-list/index.js';
 import {Engine, FullEngine, getFullEngine} from './engine.js';
 import {getOrCreateSearchBoxSlice} from '@/src/internal/features/search-box/index.js';
-import {getOrCreateResultsSlice} from '@/src/internal/features/result-list/index.js';
+import {
+  getOrCreateProductListSlice,
+  getOrCreateProductListActions,
+} from '@/src/internal/features/product-list/index.js';
 import type {NavigatorContextProvider} from '@/src/internal/utils/index.js';
 import {EngineOptions} from './engine-types.js';
 import {ConfigurationState} from '@/src/internal/features/configuration/index.js';
-import type {SearchInterface} from '@/src/public/interfaces/search.js';
+import type {CommerceInterface} from '@/src/internal/utils/index.js';
 
 describe('Engine: read()', () => {
   let engine: FullEngine;
-  let iface: SearchInterface;
+  let iface: CommerceInterface;
 
   beforeEach(() => {
     const rawEngine = createTestEngine();
     engine = getFullEngine(rawEngine);
     iface = createTestInterface(rawEngine, 'default');
     engine.adoptSlice(getOrCreateSearchBoxSlice(iface));
-    engine.adoptSlice(getOrCreateResultsSlice(iface));
+    engine.adoptSlice(getOrCreateProductListSlice(iface));
   });
 
   it('should read values from state using a selector', () => {
@@ -56,14 +58,14 @@ describe('Engine: read()', () => {
 
 describe('Engine: subscribe()', () => {
   let engine: FullEngine;
-  let iface: SearchInterface;
+  let iface: CommerceInterface;
 
   beforeEach(() => {
     const rawEngine = createTestEngine();
     engine = getFullEngine(rawEngine);
     iface = createTestInterface(rawEngine, 'default');
     engine.adoptSlice(getOrCreateSearchBoxSlice(iface));
-    engine.adoptSlice(getOrCreateResultsSlice(iface));
+    engine.adoptSlice(getOrCreateProductListSlice(iface));
   });
 
   it('should trigger callback when subscribed value changes', () => {
@@ -93,7 +95,7 @@ describe('Engine: subscribe()', () => {
 
     engine.subscribe(getQuery(iface), callback);
 
-    engine.mutate(setResultsFromResponse([], iface));
+    engine.mutate(getOrCreateProductListActions(iface).setProductsFromResponse([]));
 
     expect(callback).not.toHaveBeenCalled();
   });
@@ -149,14 +151,14 @@ describe('Engine: subscribe()', () => {
 
 describe('Engine: mutate()', () => {
   let engine: FullEngine;
-  let iface: SearchInterface;
+  let iface: CommerceInterface;
 
   beforeEach(() => {
     const rawEngine = createTestEngine();
     engine = getFullEngine(rawEngine);
     iface = createTestInterface(rawEngine, 'default');
     engine.adoptSlice(getOrCreateSearchBoxSlice(iface));
-    engine.adoptSlice(getOrCreateResultsSlice(iface));
+    engine.adoptSlice(getOrCreateProductListSlice(iface));
   });
 
   it('should update state correctly', () => {
@@ -337,7 +339,7 @@ describe('Engine: constructor()', () => {
 describe('Engine.dispose()', () => {
   let engine: Engine;
   let fullEngine: FullEngine;
-  let iface: SearchInterface;
+  let iface: CommerceInterface;
 
   beforeEach(() => {
     engine = createTestEngine();

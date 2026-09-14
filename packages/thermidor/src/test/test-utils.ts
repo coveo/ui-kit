@@ -4,10 +4,10 @@
  * Common helpers and mock data builders for unit tests
  */
 
-import {Engine} from '@/src/internal/engine/index.js';
-import type {SearchResult} from '@/src/internal/features/result-list/index.js';
+import {Engine, getFullEngine} from '@/src/internal/engine/index.js';
 import type {FacetValue} from '@/src/internal/features/facets/index.js';
-import {buildSearchInterface, type SearchInterface} from '@/src/public/interfaces/search.js';
+import {CommerceInterfaceImpl} from '@/src/internal/interfaces/index.js';
+import type {CommerceInterface} from '@/src/internal/utils/index.js';
 
 /**
  * Create a fresh engine instance for testing
@@ -18,42 +18,11 @@ export function createTestEngine(): Engine {
 }
 
 /**
- * Create a mock interface handle for testing controllers that require a search-capable interface.
- * The stateId defaults to 'test'.
+ * Create a mock interface handle for testing controllers and slices that
+ * require a search-capable interface. The stateId defaults to 'test'.
  */
-export function createTestInterface(engine: Engine, stateId = 'test'): SearchInterface {
-  return buildSearchInterface({engine, id: stateId});
-}
-
-/**
- * Mock search result builder
- */
-export function createMockSearchResult(overrides?: Partial<SearchResult>): SearchResult {
-  return {
-    uniqueId: 'result-1',
-    title: 'Test Result',
-    uri: 'https://example.com/doc',
-    excerpt: 'This is a test excerpt...',
-    printableUri: 'https://example.com/doc',
-    clickUri: 'https://example.com/doc',
-    raw: {},
-    score: 0,
-    ...overrides,
-  };
-}
-
-/**
- * Create multiple mock search results
- */
-export function createMockSearchResults(count: number): SearchResult[] {
-  return Array.from({length: count}, (_, i) =>
-    createMockSearchResult({
-      uniqueId: `result-${i + 1}`,
-      title: `Test Result ${i + 1}`,
-      uri: `https://example.com/doc-${i + 1}`,
-      excerpt: `This is test excerpt ${i + 1}...`,
-    })
-  );
+export function createTestInterface(engine: Engine, stateId = 'test'): CommerceInterface {
+  return new CommerceInterfaceImpl(getFullEngine(engine), stateId);
 }
 
 /**
