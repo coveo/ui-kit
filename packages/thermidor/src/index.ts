@@ -3,11 +3,7 @@ export type {EngineOptions} from '@/src/internal/engine/index.js';
 export type {Unsubscribe} from '@/src/internal/engine/index.js';
 export type {NavigatorContext, NavigatorContextProvider} from '@/src/internal/utils/index.js';
 export type {ConfigurationState} from '@/src/internal/features/configuration/index.js';
-export type {
-  CartItem,
-  SetCartItemsPayload,
-  UpdateItemQuantityPayload,
-} from '@/src/internal/features/cart/index.js';
+export type {CartItem} from '@/src/internal/features/cart/index.js';
 export type {Product} from '@/src/internal/features/product-list/index.js';
 export * from './public/controllers/index.js';
 
@@ -45,17 +41,6 @@ export type {
   TurnStatus,
   UseCaseInterfaceMap,
 } from '@/src/internal/features/generative/index.js';
-export type {
-  SortByRelevance,
-  SortByDate,
-  SortByField,
-  SortByQRE,
-  SortByNoSort,
-  SearchSortCriterion,
-  CommerceSortCriterion,
-  SortCriterionFor,
-  SortDirection,
-} from './public/sort-types.js';
 export type {
   A2uiAction,
   SelectPageContext,
