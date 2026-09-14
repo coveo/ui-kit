@@ -17,10 +17,12 @@ export type RemoteControllerContractSchemaFor<TComponentType extends ComponentTy
   {shape: {componentType: {value: TComponentType}}}
 >;
 
-export type RemoteControllerActionNameForSchema<TComponentType extends ComponentType> =
-  keyof z.infer<RemoteControllerContractSchemaFor<TComponentType>['shape']['actions']> & string;
+type RemoteControllerActionNameForSchema<TComponentType extends ComponentType> = keyof z.infer<
+  RemoteControllerContractSchemaFor<TComponentType>['shape']['actions']
+> &
+  string;
 
-export type RemoteControllerActionPayloadForSchema<
+type RemoteControllerActionPayloadForSchema<
   TComponentType extends ComponentType,
   TAction extends RemoteControllerActionNameForSchema<TComponentType>,
 > =
@@ -31,7 +33,7 @@ export type RemoteControllerActionPayloadForSchema<
     ? TPayload
     : never;
 
-export type RemoteControllerStateForSchema<TComponentType extends ComponentType> = z.infer<
+type RemoteControllerStateForSchema<TComponentType extends ComponentType> = z.infer<
   RemoteControllerContractSchemaFor<TComponentType>['shape']['state']
 >;
 

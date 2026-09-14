@@ -184,7 +184,7 @@ export default {
     },
     'packages/thermidor': {
       entry: ['src/**/*.test-d.ts'],
-      ignoreExportsUsedInFile: true,
+      ignoreExportsUsedInFile: false,
     },
   },
 };

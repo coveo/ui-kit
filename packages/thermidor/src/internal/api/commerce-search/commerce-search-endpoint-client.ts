@@ -71,13 +71,13 @@ export const createCommerceSearchEndpointClient = (): CommerceSearchEndpointClie
   };
 };
 
-export interface CommerceSearchEndpointClientConfiguration {
+interface CommerceSearchEndpointClientConfiguration {
   organizationId?: string;
   accessToken?: string;
   endpoint?: string;
 }
 
-export type CommerceSearchEndpointClientResult =
+type CommerceSearchEndpointClientResult =
   | {
       success: true;
       data?: CommerceSearchResponse;
@@ -87,7 +87,7 @@ export type CommerceSearchEndpointClientResult =
       error: string;
     };
 
-export interface CommerceSearchEndpointCallOptions {
+interface CommerceSearchEndpointCallOptions {
   signal?: AbortSignal;
 }
 

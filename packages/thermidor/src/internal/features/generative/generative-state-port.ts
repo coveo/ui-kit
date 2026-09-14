@@ -6,7 +6,7 @@ import type {
   UseCaseInterfaceMap,
 } from './generative-types.js';
 
-export interface HydrationResult<K extends HydratedUseCase = HydratedUseCase> {
+interface HydrationResult<K extends HydratedUseCase = HydratedUseCase> {
   useCase: K;
   interface: UseCaseInterfaceMap[K];
   snapshot: Record<string, unknown>;

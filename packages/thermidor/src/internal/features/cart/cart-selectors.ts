@@ -9,7 +9,7 @@ type CartSelectors = ReturnType<typeof createCartSelectors>;
 
 const CACHE_KEY: CacheKey<CartSelectors> = createCacheKey<CartSelectors>('cart/selectors');
 
-export function createCartSelectors(interfaceId: string) {
+function createCartSelectors(interfaceId: string) {
   const sliceSelector = createSelectSlice(interfaceId, 'cart', initialCartState);
   return {
     getItems: createMemoizedStateSelector(sliceSelector, (state) => state.items),

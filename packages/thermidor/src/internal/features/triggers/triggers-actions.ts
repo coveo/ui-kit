@@ -12,7 +12,7 @@ type TriggersActions = ReturnType<typeof createTriggersActions>;
 
 const CACHE_KEY: CacheKey<TriggersActions> = createCacheKey<TriggersActions>('triggers/actions');
 
-export function createTriggersActions(interfaceId: string) {
+function createTriggersActions(interfaceId: string) {
   return {
     setTriggers: createAction<Trigger[]>(`${interfaceId}/triggers/setTriggers`),
   };

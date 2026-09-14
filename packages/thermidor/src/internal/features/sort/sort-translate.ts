@@ -1,7 +1,7 @@
 import type {SetSortContext} from '@/src/internal/api/unified/unified-endpoint-types.js';
 import type {SearchSortCriterion, CommerceSortCriterion, SortByField} from './sort-types.js';
 
-export interface CommerceApiSortField {
+interface CommerceApiSortField {
   field: string;
   direction?: 'asc' | 'desc';
   displayName?: string;

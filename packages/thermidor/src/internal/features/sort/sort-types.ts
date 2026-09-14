@@ -1,17 +1,17 @@
 import type {CommerceInterface, SearchInterface} from '@/src/internal/utils/index.js';
 
-export type SortDirection = 'ascending' | 'descending';
+type SortDirection = 'ascending' | 'descending';
 
-export type SortByRelevance = {by: 'relevance'};
-export type SortByDate = {by: 'date'; direction: SortDirection};
+type SortByRelevance = {by: 'relevance'};
+type SortByDate = {by: 'date'; direction: SortDirection};
 export type SortByField = {
   by: 'field';
   field: string;
   direction: SortDirection;
   displayName?: string;
 };
-export type SortByQRE = {by: 'qre'};
-export type SortByNoSort = {by: 'nosort'};
+type SortByQRE = {by: 'qre'};
+type SortByNoSort = {by: 'nosort'};
 
 export type SearchSortCriterion =
   | SortByRelevance

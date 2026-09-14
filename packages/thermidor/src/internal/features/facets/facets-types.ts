@@ -26,7 +26,7 @@ export interface FacetState {
 /**
  * Individual facet value
  */
-export interface FacetValue {
+interface FacetValue {
   /** Unique identifier for the value */
   id: string;
   /** Display label */

@@ -45,7 +45,7 @@ export type EndpointThunk = AsyncThunk<void, EndpointThunkArg, {}>;
 
 export type FacadeResolver = (iface: InterfaceHandle) => EndpointThunk;
 
-export interface InterfaceRegistry {
+interface InterfaceRegistry {
   search: {interface: SearchInterface; facades: 'search' | 'suggestions'};
   commerce: {interface: CommerceInterface; facades: 'search' | 'suggestions'};
   generativeUnified: {interface: GenerativeUnifiedInterface; facades: 'conversation'};

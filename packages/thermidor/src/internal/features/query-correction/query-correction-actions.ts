@@ -13,7 +13,7 @@ type QueryCorrectionActions = ReturnType<typeof createQueryCorrectionActions>;
 const CACHE_KEY: CacheKey<QueryCorrectionActions> =
   createCacheKey<QueryCorrectionActions>('queryCorrection/actions');
 
-export function createQueryCorrectionActions(interfaceId: string) {
+function createQueryCorrectionActions(interfaceId: string) {
   return {
     setQueryCorrection: createAction<QueryCorrection | null>(
       `${interfaceId}/queryCorrection/setQueryCorrection`

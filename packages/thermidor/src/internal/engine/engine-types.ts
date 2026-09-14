@@ -31,7 +31,7 @@ export type StateSelector<T> = {
  * Library-agnostic representation of a state change.
  * Does NOT expose Redux action types.
  */
-export interface StateMutation {
+interface StateMutation {
   /** Mutation type identifier */
   type: string;
   /** Optional mutation payload */

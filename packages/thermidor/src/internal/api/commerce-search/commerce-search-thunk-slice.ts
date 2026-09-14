@@ -5,12 +5,12 @@ import type {EndpointThunk, InterfaceHandle} from '@/src/internal/utils/index.js
 import {type CacheKey, createCacheKey} from '@/src/internal/utils/index.js';
 import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 
-export interface CommerceSearchEndpointThunkState {
+interface CommerceSearchEndpointThunkState {
   status: 'idle' | 'pending';
   error: string | null;
 }
 
-export const initialCommerceSearchEndpointThunkState: CommerceSearchEndpointThunkState = {
+const initialCommerceSearchEndpointThunkState: CommerceSearchEndpointThunkState = {
   status: 'idle',
   error: null,
 };
@@ -20,7 +20,7 @@ type CommerceSearchEndpointSlice = ReturnType<typeof createCommerceSearchEndpoin
 const SLICE_CACHE_KEY: CacheKey<CommerceSearchEndpointSlice> =
   createCacheKey<CommerceSearchEndpointSlice>('api/commerceSearch/endpointSlice');
 
-export function createCommerceSearchEndpointSlice(interfaceId: string, thunk: EndpointThunk) {
+function createCommerceSearchEndpointSlice(interfaceId: string, thunk: EndpointThunk) {
   return createSlice({
     name: `${interfaceId}/commerceSearchEndpoint`,
     initialState: initialCommerceSearchEndpointThunkState,
@@ -57,7 +57,7 @@ type CommerceSearchEndpointSelectors = ReturnType<typeof createCommerceSearchEnd
 const SELECTORS_CACHE_KEY: CacheKey<CommerceSearchEndpointSelectors> =
   createCacheKey<CommerceSearchEndpointSelectors>('api/commerceSearch/endpointSelectors');
 
-export function createCommerceSearchEndpointSelectors(interfaceId: string) {
+function createCommerceSearchEndpointSelectors(interfaceId: string) {
   const sliceSelector = createSelectSlice(
     interfaceId,
     'commerceSearchEndpoint',

@@ -18,7 +18,7 @@ export interface CommerceSearchRequest {
   legacyFacetOptions?: {freezeFacetOrder?: boolean};
 }
 
-export interface CommerceSearchContext {
+interface CommerceSearchContext {
   view: {url: string};
   user?: {userAgent?: string};
   cart?: Array<{productId: string; quantity: number}>;
@@ -39,7 +39,7 @@ export interface CommerceSearchResponse {
   queryCorrection?: CommerceSearchQueryCorrection;
 }
 
-export interface CommerceProduct {
+interface CommerceProduct {
   permanentid: string;
   ec_name: string;
   ec_description?: string;
@@ -60,7 +60,7 @@ export interface CommerceProduct {
   children?: CommerceProduct[];
 }
 
-export interface CommerceResult {
+interface CommerceResult {
   uniqueId: string;
   title: string;
   uri: string;
@@ -70,21 +70,21 @@ export interface CommerceResult {
   raw: Record<string, unknown>;
 }
 
-export interface CommerceSearchFacetRequest {
+interface CommerceSearchFacetRequest {
   field: string;
   type: string;
   numberOfValues?: number;
   currentValues?: Array<{value: string; state: 'selected' | 'idle'}>;
 }
 
-export interface CommerceSearchFacetResponse {
+interface CommerceSearchFacetResponse {
   facetId: string;
   field: string;
   type: string;
   values: Array<{value: string; numberOfResults: number; state: string}>;
 }
 
-export interface CommerceSearchPagination {
+interface CommerceSearchPagination {
   page: number;
   perPage?: number;
   pageSize?: number;
@@ -92,22 +92,22 @@ export interface CommerceSearchPagination {
   totalPages: number;
 }
 
-export interface CommerceSearchSort {
+interface CommerceSearchSort {
   appliedSort: CommerceSearchSortCriterion;
   availableSorts: CommerceSearchSortCriterion[];
 }
 
-export interface CommerceSearchSortCriterion {
+interface CommerceSearchSortCriterion {
   sortCriteria?: string;
   fields?: Array<{field: string; direction?: string; displayName?: string}>;
 }
 
-export interface CommerceSearchTrigger {
+interface CommerceSearchTrigger {
   type: string;
   content: string;
 }
 
-export interface CommerceSearchQueryCorrection {
+interface CommerceSearchQueryCorrection {
   correctedQuery: string;
   originalQuery: string;
 }

@@ -5,11 +5,11 @@ import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import {getOrCreateQueryCorrectionActions} from './query-correction-actions.js';
 import type {QueryCorrection} from './query-correction-actions.js';
 
-export interface QueryCorrectionState {
+interface QueryCorrectionState {
   correction: QueryCorrection | null;
 }
 
-export const initialQueryCorrectionState: QueryCorrectionState = {
+const initialQueryCorrectionState: QueryCorrectionState = {
   correction: null,
 };
 
@@ -18,7 +18,7 @@ type QueryCorrectionSlice = ReturnType<typeof createQueryCorrectionSlice>;
 const CACHE_KEY: CacheKey<QueryCorrectionSlice> =
   createCacheKey<QueryCorrectionSlice>('queryCorrection/slice');
 
-export function createQueryCorrectionSlice(
+function createQueryCorrectionSlice(
   interfaceId: string,
   actions: ReturnType<typeof getOrCreateQueryCorrectionActions>
 ) {

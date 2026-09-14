@@ -151,7 +151,7 @@ export interface AgentResponse {
  */
 export type ReasoningStep = ReasoningMessageStep | ToolCallStep;
 
-export interface ReasoningMessageStep {
+interface ReasoningMessageStep {
   type: 'reasoning';
 
   /**
@@ -160,7 +160,7 @@ export interface ReasoningMessageStep {
   content: string;
 }
 
-export type ToolCallStatus = 'calling' | 'completed';
+type ToolCallStatus = 'calling' | 'completed';
 
 export interface ToolCallStep {
   type: 'tool-call';

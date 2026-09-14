@@ -11,7 +11,7 @@ type ProductListSelectors = ReturnType<typeof createProductListSelectors>;
 const CACHE_KEY: CacheKey<ProductListSelectors> =
   createCacheKey<ProductListSelectors>('productList/selectors');
 
-export function createProductListSelectors(interfaceId: string) {
+function createProductListSelectors(interfaceId: string) {
   const sliceSelector = createSelectSlice(interfaceId, 'products', initialProductListState);
 
   return {

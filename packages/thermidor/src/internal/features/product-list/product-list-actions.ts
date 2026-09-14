@@ -8,7 +8,7 @@ type ProductListActions = ReturnType<typeof createProductListActions>;
 const CACHE_KEY: CacheKey<ProductListActions> =
   createCacheKey<ProductListActions>('productList/actions');
 
-export function createProductListActions(interfaceId: string) {
+function createProductListActions(interfaceId: string) {
   return {
     setProductsFromResponse: createAction<unknown[]>(
       `${interfaceId}/products/setProductsFromResponse`

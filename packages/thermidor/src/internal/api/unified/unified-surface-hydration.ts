@@ -45,12 +45,12 @@ export interface UpdateDataModelPayload {
   value: unknown;
 }
 
-export interface UpdateComponentsPayload {
+interface UpdateComponentsPayload {
   surfaceId: string;
   components: ComponentNode[];
 }
 
-export interface DeleteSurfacePayload {
+interface DeleteSurfacePayload {
   surfaceId: string;
 }
 

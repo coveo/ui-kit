@@ -8,13 +8,13 @@ export interface TriggersState {
   triggers: Trigger[];
 }
 
-export const initialTriggersState: TriggersState = {triggers: []};
+const initialTriggersState: TriggersState = {triggers: []};
 
 type TriggersSlice = ReturnType<typeof createTriggersSlice>;
 
 const CACHE_KEY: CacheKey<TriggersSlice> = createCacheKey<TriggersSlice>('triggers/slice');
 
-export function createTriggersSlice(
+function createTriggersSlice(
   interfaceId: string,
   actions: ReturnType<typeof getOrCreateTriggersActions>
 ) {

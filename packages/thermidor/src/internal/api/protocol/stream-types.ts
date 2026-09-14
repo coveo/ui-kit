@@ -8,39 +8,16 @@
  */
 
 // ============================================================================
-// AG-UI standard events (re-exported)
-// ============================================================================
-
-export type {
-  RunStartedEvent,
-  RunFinishedEvent,
-  RunErrorEvent,
-  TextMessageStartEvent,
-  TextMessageContentEvent,
-  TextMessageEndEvent,
-  ReasoningMessageStartEvent,
-  ReasoningMessageContentEvent,
-  ReasoningMessageEndEvent,
-  ToolCallStartEvent,
-  ToolCallArgsEvent,
-  ToolCallEndEvent,
-  ToolCallResultEvent,
-  StateSnapshotEvent,
-  ActivitySnapshotEvent,
-  CustomEvent,
-} from '@ag-ui/core';
-
-// ============================================================================
 // Turn lifecycle (Coveo converse wire format — no AG-UI equivalent)
 // ============================================================================
 
-export type TurnStartedEvent = {
+type TurnStartedEvent = {
   type: 'turn_started';
   conversationSessionId?: string;
   conversationToken?: string;
 };
 
-export type TurnCompleteEvent = {
+type TurnCompleteEvent = {
   type: 'turn_complete';
   conversationSessionId?: string;
   conversationToken?: string;
@@ -50,11 +27,11 @@ export type TurnCompleteEvent = {
 // Routed interface events (Coveo converse wire format — no AG-UI equivalent)
 // ============================================================================
 
-export type CommerceSearchApiResponseEvent = {
+type CommerceSearchApiResponseEvent = {
   type: 'commerce_search_api_response';
 } & Record<string, unknown>;
 
-export type SearchApiResponseEvent = {
+type SearchApiResponseEvent = {
   type: 'search_api_response';
 } & Record<string, unknown>;
 
@@ -66,7 +43,7 @@ export type SearchApiResponseEvent = {
 // Unknown fallback (events not recognized by AG-UI or Coveo extensions)
 // ============================================================================
 
-export type UnknownEvent = {
+type UnknownEvent = {
   type: 'UNKNOWN';
   event: string;
   payload: unknown;

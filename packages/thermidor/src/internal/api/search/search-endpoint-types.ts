@@ -4,7 +4,7 @@ export interface CoveoFacetResponse {
   values: CoveoFacetValue[];
 }
 
-export interface CoveoFacetValue {
+interface CoveoFacetValue {
   value: string;
   numberOfResults: number;
   state?: 'selected' | 'idle';

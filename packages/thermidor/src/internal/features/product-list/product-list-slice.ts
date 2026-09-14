@@ -41,7 +41,7 @@ type ProductListSlice = ReturnType<typeof createProductListSlice>;
 
 const CACHE_KEY: CacheKey<ProductListSlice> = createCacheKey<ProductListSlice>('productList/slice');
 
-export function createProductListSlice(
+function createProductListSlice(
   interfaceId: string,
   actions: ReturnType<typeof getOrCreateProductListActions>,
   hydrateAction: ReturnType<typeof getOrCreateHydrateFromSnapshotAction>
