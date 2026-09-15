@@ -185,7 +185,7 @@ export interface CommonBuildConfig {
 
   /**
    * A per-request access token (for example, a per-user Coveo search token) to use for this
-   * `fetchStaticState()` call only.
+   * `fetchStaticState()` or `hydrateStaticState()` call only.
    *
    * When provided, it overrides the access token from the engine definition configuration for this
    * request without mutating the shared definition, which is the supported way to use per-user
