@@ -66,6 +66,10 @@ export interface Turn {
   error?: string;
 }
 
+/**
+ * The agent's response for a turn: the latest server-owned state snapshot plus
+ * the messages, surfaces, activities, and reasoning steps received while streaming.
+ */
 export interface AgentResponse {
   /**
    * The latest server-owned AG-UI state snapshot for this turn.
@@ -116,6 +120,9 @@ interface ReasoningMessageStep {
 
 type ToolCallStatus = 'calling' | 'completed';
 
+/**
+ * A reasoning step representing a single tool-call invocation made by the agent.
+ */
 export interface ToolCallStep {
   type: 'tool-call';
 
@@ -145,6 +152,9 @@ export interface ToolCallStep {
   status: ToolCallStatus;
 }
 
+/**
+ * A single message produced by the agent during a turn.
+ */
 export interface AgentMessage {
   /**
    * The text content of the message.
@@ -169,9 +179,13 @@ export type A2UISurface = Record<string, unknown> & {
  * Represents a single activity emitted during an agent response turn.
  */
 export interface Activity {
+  /** Stable identifier of the activity within the turn. */
   id: string;
+  /** The activity kind; applications interpret the kinds they support. */
   kind: string;
+  /** When `true`, this activity replaces the prior activity with the same id. */
   replace: boolean;
+  /** The opaque, kind-specific activity payload. */
   payload: Record<string, unknown>;
 }
 
