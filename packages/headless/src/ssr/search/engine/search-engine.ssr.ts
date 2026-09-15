@@ -145,7 +145,7 @@ export function defineSearchEngine<
       );
     };
 
-    tokenManager.registerCallback(updateEngineConfiguration);
+    tokenManager.registerCallback(updateEngineConfiguration, engine);
 
     const controllers = buildControllerDefinitions({
       definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
