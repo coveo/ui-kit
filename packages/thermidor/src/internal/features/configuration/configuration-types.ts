@@ -23,4 +23,17 @@ export interface ConfigurationState {
   currency: string;
   /** Optional API endpoint URL */
   endpoint?: string;
+  /**
+   * Full override for the converse request URL. When set, Thermidor sends every
+   * converse request to this exact URL, bypassing all endpoint/path composition
+   * (organization endpoint resolution and the `/api/preview/.../agui/converse`
+   * path).
+   *
+   * Escape hatch for fast iteration — e.g. pointing at a local gateway or an
+   * internal endpoint — until catalog-bound endpoint resolution lands. For
+   * normal proxying, prefer the `endpoint` base override instead.
+   *
+   * @internal
+   */
+  converseUrl?: string;
 }

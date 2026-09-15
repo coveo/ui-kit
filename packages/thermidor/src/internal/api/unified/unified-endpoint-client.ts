@@ -9,7 +9,7 @@ const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
     options?: UnifiedEndpointCallOptions
   ): Promise<UnifiedEndpointClientResult> => {
     try {
-      const {organizationId, accessToken, endpoint} = configuration;
+      const {organizationId, accessToken, endpoint, converseUrl} = configuration;
 
       if (!organizationId) {
         return {
@@ -30,11 +30,14 @@ const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
       const organizationEndpoint = getOrganizationEndpoint(organizationId, {
         endpoint,
       });
+      // `converseUrl` is a full-URL escape hatch (see ConfigurationState.converseUrl):
+      // when set, it bypasses endpoint/path composition entirely.
       const url =
+        converseUrl ??
         organizationEndpoint +
-        '/api/preview/organizations/' +
-        organizationId +
-        '/agents/commerce/agui/converse';
+          '/api/preview/organizations/' +
+          organizationId +
+          '/agents/commerce/agui/converse';
 
       const response = await fetch(url, {
         method: 'POST',
@@ -86,6 +89,8 @@ interface UnifiedEndpointClientConfiguration {
   organizationId?: string;
   accessToken?: string;
   endpoint?: string;
+  /** Full-URL override; bypasses endpoint/path composition. @internal */
+  converseUrl?: string;
 }
 
 interface UnifiedEndpointCallOptions {
