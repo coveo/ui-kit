@@ -1,3 +1,16 @@
+## 3.45.0
+
+### Minor Changes
+
+- [#8464](https://github.com/coveo/ui-kit/pull/8464) [`e8c6ee4`](https://github.com/coveo/ui-kit/commit/e8c6ee4a5080953a2497664acf807dcf02102620) - Added the `quantic-load-more-results` component, letting users load additional results for both Search and Insight Panel use cases.
+
+### Patch Changes
+
+- [#8466](https://github.com/coveo/ui-kit/pull/8466) [`9579bda`](https://github.com/coveo/ui-kit/commit/9579bda4e359767ed509aa90e1385ecb30688f4c) - Fix quanticResultLink to better handle feedComment documents.
+
+- Updated dependencies [[`818bdf0`](https://github.com/coveo/ui-kit/commit/818bdf001edfdafa887ea49c0880f3cb2ce7e9ce), [`01434bc`](https://github.com/coveo/ui-kit/commit/01434bcbd3ee4e6545fa874bb0f0f5e4d0b46ef8), [`e8c6ee4`](https://github.com/coveo/ui-kit/commit/e8c6ee4a5080953a2497664acf807dcf02102620), [`fa2e9de`](https://github.com/coveo/ui-kit/commit/fa2e9de00d868bb4c10215fffcfa09c4acf7d2af)]:
+  - @coveo/headless@3.56.0
+
 ## 3.44.3
 
 ### Patch Changes

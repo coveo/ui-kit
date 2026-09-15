@@ -1,5 +1,27 @@
 # @coveo/thermidor
 
+## 0.1.0
+
+### Minor Changes
+
+- [#8482](https://github.com/coveo/ui-kit/pull/8482) [`7891c28`](https://github.com/coveo/ui-kit/commit/7891c284d971f81499a60755aae75e8841791064) - Trimmed `@coveo/thermidor` to the minimal surface consumed by the `demo-schema-react` sample (the unified conversational + `@coveo/thermidor-schema` experience).
+
+  - Removed the legacy `/converse` generative stack, the standalone search/commerce controllers and `public/actions` helpers, the non-unified interface builders (`buildGenerativeInterface`, `buildSearchInterface`, `buildCommerceInterface`), and the internal API/feature machinery that only supported them.
+  - Reduced the public API to what the sample uses: `Engine`, `buildGenerativeUnifiedInterface`, `buildUnifiedConverseController`, `buildRemoteController`, `selectRemoteControllerState`, and their supporting types (`GenerativeUnifiedInterface`, `Controller`, `UnifiedConverseControllerState`, `RemoteController`, `RemoteControllerSource`, `ComponentType`, `Activity`, `AgentMessage`, `AgentResponse`, `ReasoningStep`, `ToolCallStep`, `Turn`).
+  - Pruned all now-unused exports and dead files across the remaining internal modules, and enabled Knip enforcement for the package to keep it from regrowing.
+  - Removed the client-side commerce state-management layer entirely. In the unified experience the remote controller derives all component state from the A2UI snapshot (`agentResponse.state`), so the feature slices/actions/selectors (`facets`, `sort`, `pagination`, `product-list`, `search-box`, `query-correction`, `triggers`), the `commerce-search`/`commerce-query-suggest` API subsystems, and the surface-hydration → slice population they fed were all dead in production (exercised only by their own tests). Surface hydration now produces the routed interface + snapshot only.
+
+### Patch Changes
+
+- [#8484](https://github.com/coveo/ui-kit/pull/8484) [`612cd2b`](https://github.com/coveo/ui-kit/commit/612cd2b608212ce149dbf57efb4d04fee14adeaa) - Removed the remaining dead code in `@coveo/thermidor` after the unified-surface trim.
+
+  - Removed the orphaned snapshot-hydration chain: `Engine.storeHydrationSnapshot` (method, wiring, private impl, `#hydrationSnapshots` map and the `#adoptSlice` consumption branch) and the `generative-hydration.ts` module (`getOrCreateHydrateFromSnapshotAction`), which no runtime code path reached.
+  - Removed `deserializeToGenerativeState` (test-only; the controller uses its own private hydration), keeping the still-used `SerializedConverseState` / `SerializedTurn` types.
+  - Pruned dead interface-framework types (`SearchInterface`, `CommerceInterface`, `ActionIntent` and its `*Context` inputs, the `search`/`commerce` `InterfaceRegistry` entries) and the matching dead barrel re-exports.
+  - Removed unreferenced request context types in the unified endpoint types, the unused `getActiveMessage` selector, and the test-only configuration selectors (`getOrganizationId` / `getAccessToken` / `getEndpoint` and the `createConfigurationSelectors` factory).
+
+- [#8452](https://github.com/coveo/ui-kit/pull/8452) [`95a2707`](https://github.com/coveo/ui-kit/commit/95a2707b292ee5f67aa9f6082a874363113c0c29) - Updated `@coveo/thermidor-schema` dependency to `1.0.0-beta.3`.
+
 ## 0.0.3
 
 ### Patch Changes
