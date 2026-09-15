@@ -30,6 +30,10 @@ export type Supports<F extends Facades[InterfaceType]> = InterfaceHandle & {
   readonly [SupportsBrand]: {[K in F]: true};
 };
 
+/**
+ * A generative unified interface handle: the disposable, opaque token returned
+ * by {@link buildGenerativeUnifiedInterface} that unified controllers bind to.
+ */
 export interface GenerativeUnifiedInterface extends Supports<Facades['generativeUnified']> {
   readonly [InterfaceTypeBrand]: 'generativeUnified';
 }
