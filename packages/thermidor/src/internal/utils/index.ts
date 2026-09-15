@@ -8,12 +8,9 @@ export {BaseController} from './base-controller.js';
 export type {Controller} from './controller-types.js';
 export {BaseInterface, getInterfaceInternals} from './base-interface.js';
 export type {
-  CommerceInterface,
-  EndpointThunk,
   FacadeResolver,
   Facades,
   GenerativeUnifiedInterface,
   InterfaceHandle,
-  SearchInterface,
 } from './interface-types.js';
 export {createNoopThunk} from './noop-thunk.js';

@@ -51,18 +51,6 @@ function createGenerativeSlice(
             }
           }
         })
-        .addCase(actions.setRoutedInterface, (state, {payload}) => {
-          const turn = state.turns.find((t) => t.id === payload.turnId);
-          if (turn) {
-            turn.routedInterface = {useCase: payload.useCase};
-          }
-        })
-        .addCase(actions.clearRoutedInterface, (state, {payload}) => {
-          const turn = state.turns.find((t) => t.id === payload.turnId);
-          if (turn) {
-            delete turn.routedInterface;
-          }
-        })
         .addCase(actions.initAgentResponse, (state, {payload}) => {
           const turn = state.turns.find((t) => t.id === payload.turnId);
           if (turn) {
@@ -169,7 +157,6 @@ function createGenerativeSlice(
         .addCase(actions.clearTurnResponse, (state, {payload}) => {
           const turn = state.turns.find((t) => t.id === payload.turnId);
           if (turn) {
-            delete turn.routedInterface;
             delete turn.agentResponse;
             delete turn.error;
           }

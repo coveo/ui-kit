@@ -5,8 +5,13 @@
  */
 
 import {Engine, getFullEngine} from '@/src/internal/engine/index.js';
-import {CommerceInterfaceImpl} from '@/src/internal/interfaces/commerce.js';
-import type {CommerceInterface} from '@/src/internal/utils/index.js';
+import type {FullEngine} from '@/src/internal/engine/index.js';
+import {BaseInterface, createNoopThunk} from '@/src/internal/utils/index.js';
+import type {
+  FacadeResolver,
+  Facades,
+  GenerativeUnifiedInterface,
+} from '@/src/internal/utils/index.js';
 
 /**
  * Create a fresh engine instance for testing
@@ -16,10 +21,24 @@ export function createTestEngine(): Engine {
   return new Engine();
 }
 
+const noopThunk = createNoopThunk('test-interface-noop');
+const noopResolver: FacadeResolver = () => noopThunk;
+
+class TestInterface
+  extends BaseInterface<'generativeUnified'>
+  implements GenerativeUnifiedInterface
+{
+  constructor(engine: FullEngine, stateId: string) {
+    super(engine, stateId, 'generativeUnified', {
+      conversation: noopResolver,
+    } satisfies Record<Facades['generativeUnified'], FacadeResolver>);
+  }
+}
+
 /**
  * Create a mock interface handle for testing controllers and slices that
- * require a search-capable interface. The stateId defaults to 'test'.
+ * require an interface handle. The stateId defaults to 'test'.
  */
-export function createTestInterface(engine: Engine, stateId = 'test'): CommerceInterface {
-  return new CommerceInterfaceImpl(getFullEngine(engine), stateId);
+export function createTestInterface(engine: Engine, stateId = 'test'): GenerativeUnifiedInterface {
+  return new TestInterface(getFullEngine(engine), stateId);
 }

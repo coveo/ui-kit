@@ -1,6 +1,3 @@
-import type {CommerceInterface} from '@/src/internal/utils/index.js';
-import type {SearchInterface} from '@/src/internal/utils/index.js';
-
 /**
  * ============================================================================
  * Domain types (for state / selectors)
@@ -10,8 +7,7 @@ import type {SearchInterface} from '@/src/internal/utils/index.js';
 export type TurnStatus = 'streaming' | 'complete' | 'error';
 
 /**
- * The store-level turn shape. Uses `SerializableRoutedInterface` to avoid
- * storing non-serializable class instances in the store.
+ * The store-level turn shape.
  */
 export interface StateTurn {
   /**
@@ -30,11 +26,6 @@ export interface StateTurn {
   status: TurnStatus;
 
   /**
-   * Present when the turn resulted in routing mode (serializable portion only).
-   */
-  routedInterface?: SerializableRoutedInterface;
-
-  /**
    * Present when the turn resulted in agent mode.
    */
   agentResponse?: AgentResponse;
@@ -47,8 +38,6 @@ export interface StateTurn {
 
 /**
  * The public-facing turn shape exposed to consumers.
- * Contains the full `RoutedInterface` (with the non-serializable interface instance
- * merged back from the registry).
  */
 export interface Turn {
   /**
@@ -67,11 +56,6 @@ export interface Turn {
   status: TurnStatus;
 
   /**
-   * Present when the turn resulted in routing mode.
-   */
-  routedInterface?: RoutedInterface;
-
-  /**
    * Present when the turn resulted in agent mode.
    */
   agentResponse?: AgentResponse;
@@ -81,36 +65,6 @@ export interface Turn {
    */
   error?: string;
 }
-
-export type UseCaseInterfaceMap = {
-  commerceSearch: CommerceInterface;
-  search: SearchInterface;
-};
-
-/**
- * Use cases that carry a non-serializable interface instance (legacy hydration).
- */
-export type HydratedUseCase = 'commerceSearch' | 'search';
-
-/**
- * All routed use cases that carry a non-serializable interface instance (legacy hydration).
- */
-export type RoutedUseCase = HydratedUseCase;
-
-/**
- * The serializable portion of a routed interface stored in state.
- * Does NOT contain the non-serializable interface instance.
- */
-export type SerializableRoutedInterface = {[K in HydratedUseCase]: {useCase: K}}[HydratedUseCase];
-
-/**
- * The full routed interface exposed to public consumers.
- * Contains the non-serializable interface instance merged back from the registry
- * for hydrated use cases.
- */
-export type RoutedInterface = {
-  [K in HydratedUseCase]: {useCase: K; interface: UseCaseInterfaceMap[K]};
-}[HydratedUseCase];
 
 export interface AgentResponse {
   /**
