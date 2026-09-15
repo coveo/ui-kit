@@ -131,7 +131,7 @@ export const buildInsightFetchMoreResultsRequest = async (
   const mappedRequest = await buildInsightSearchRequest(state, eventDescription);
   mappedRequest.request = {
     ...mappedRequest.request,
-    firstResult: (state.pagination?.firstResult ?? 0) + (state.pagination?.numberOfResults ?? 0),
+    firstResult: (state.pagination?.firstResult ?? 0) + (state.search?.results.length ?? 0),
   };
   return mappedRequest;
 };
