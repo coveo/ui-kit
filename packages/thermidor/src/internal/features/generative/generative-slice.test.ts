@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {createTestEngine, createTestInterface} from '@/src/test/test-utils.js';
+import {createTestEngine, createTestInterface} from '@/test/test-utils.js';
 import {getOrCreateGenerativeActions} from './generative-actions.js';
 import {getOrCreateGenerativeSlice} from './generative-slice.js';
 
