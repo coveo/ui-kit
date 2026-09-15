@@ -6,16 +6,14 @@ import {generateId} from '@/src/internal/utils/index.js';
 import type {RawSSEEvent} from '@/src/internal/api/protocol/stream-types.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
-import type {GenerativeStatePort} from '@/src/internal/api/generative/index.js';
+import type {GenerativeStatePort} from '@/src/internal/features/generative/index.js';
 import {dispatchStreamEvent} from './unified-event-dispatcher.js';
 import {createConversationRequestBuilder} from './unified-conversation-request-builder.js';
-import {createSurfaceProcessor} from './unified-surface-processor.js';
 import type {A2uiAction, CommerceRequestModel} from './unified-endpoint-types.js';
 
 export interface UnifiedRuntimeConfig {
   statePort: GenerativeStatePort;
   generativeInterface: InterfaceHandle;
-  cartInterface: InterfaceHandle;
 }
 
 function isAbortError(error: unknown): boolean {
@@ -53,21 +51,11 @@ export class UnifiedRuntime {
   private agentResponseInitialized = new Set<string>();
   private activeAbortController: AbortController | null = null;
   private requestBuilder: ReturnType<typeof createConversationRequestBuilder>;
-  private surfaceProcessor: ReturnType<typeof createSurfaceProcessor>;
 
   private constructor(engine: FullEngine, _interfaceId: string, config: UnifiedRuntimeConfig) {
     this.engine = engine;
     this.statePort = config.statePort;
-    this.requestBuilder = createConversationRequestBuilder(
-      config.generativeInterface,
-      config.cartInterface
-    );
-    this.surfaceProcessor = createSurfaceProcessor({
-      engine,
-      statePort: config.statePort,
-      generativeInterface: config.generativeInterface,
-      cartInterface: config.cartInterface,
-    });
+    this.requestBuilder = createConversationRequestBuilder(config.generativeInterface);
   }
 
   static getInstance(
@@ -183,14 +171,6 @@ export class UnifiedRuntime {
     const deps = {
       statePort: this.statePort,
       ensureAgentResponse: (tid: string) => this.ensureAgentResponse(tid),
-      onA2uiSurface: (tid: string, content: Record<string, unknown>) => {
-        // Surfaces route through the SurfaceProcessor for hydration (monolithic
-        // ProductSearchSurface / ProductListingSurface). The SurfaceProcessor is a
-        // no-op for surfaces that do not require hydration; navigation is derived by
-        // the consumer from the root component's componentType, not from any routing
-        // signal emitted here.
-        this.surfaceProcessor.processSnapshot(tid, content);
-      },
     };
 
     await readEventStream({

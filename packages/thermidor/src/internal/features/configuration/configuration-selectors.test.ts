@@ -1,17 +1,7 @@
 import {describe, it, expect, beforeEach} from 'vitest';
 import type {State} from '@/src/internal/engine/engine-types.js';
 import type {ConfigurationState} from './configuration-types.js';
-import {
-  createConfigurationSelectors,
-  getOrCreateConfigurationSelectors,
-  organizationId,
-  accessToken,
-  trackingId,
-  language,
-  country,
-  currency,
-  endpoint,
-} from './configuration-selectors.js';
+import {getOrCreateConfigurationSelectors} from './configuration-selectors.js';
 
 function createState(
   config: Partial<ConfigurationState> = {}
@@ -30,58 +20,11 @@ function createState(
   };
 }
 
-describe('standalone selectors', () => {
-  it('organizationId reads from state', () => {
-    const state = createState({organizationId: 'my-org'});
-    expect(organizationId(state)).toBe('my-org');
-  });
-
-  it('accessToken reads from state', () => {
-    const state = createState({accessToken: 'abc123'});
-    expect(accessToken(state)).toBe('abc123');
-  });
-
-  it('trackingId reads from state', () => {
-    const state = createState({trackingId: 'trk'});
-    expect(trackingId(state)).toBe('trk');
-  });
-
-  it('language reads from state', () => {
-    const state = createState({language: 'fr'});
-    expect(language(state)).toBe('fr');
-  });
-
-  it('country reads from state', () => {
-    const state = createState({country: 'CA'});
-    expect(country(state)).toBe('CA');
-  });
-
-  it('currency reads from state', () => {
-    const state = createState({currency: 'CAD'});
-    expect(currency(state)).toBe('CAD');
-  });
-
-  it('endpoint reads from state', () => {
-    const state = createState({endpoint: 'https://custom.com'});
-    expect(endpoint(state)).toBe('https://custom.com');
-  });
-});
-
-describe('createConfigurationSelectors', () => {
-  let selectors: ReturnType<typeof createConfigurationSelectors>;
+describe('configuration selectors', () => {
+  let selectors: ReturnType<typeof getOrCreateConfigurationSelectors>;
 
   beforeEach(() => {
-    selectors = createConfigurationSelectors();
-  });
-
-  it('getOrganizationId returns the organization ID', () => {
-    const state = createState({organizationId: 'org-abc'});
-    expect(selectors.getOrganizationId(state)).toBe('org-abc');
-  });
-
-  it('getAccessToken returns the access token', () => {
-    const state = createState({accessToken: 'tok-xyz'});
-    expect(selectors.getAccessToken(state)).toBe('tok-xyz');
+    selectors = getOrCreateConfigurationSelectors();
   });
 
   it('getTrackingId returns the tracking ID', () => {
@@ -102,16 +45,6 @@ describe('createConfigurationSelectors', () => {
   it('getCurrency returns the currency', () => {
     const state = createState({currency: 'EUR'});
     expect(selectors.getCurrency(state)).toBe('EUR');
-  });
-
-  it('getEndpoint returns the endpoint', () => {
-    const state = createState({endpoint: 'https://override.com'});
-    expect(selectors.getEndpoint(state)).toBe('https://override.com');
-  });
-
-  it('getEndpoint returns undefined when not set', () => {
-    const state = createState({endpoint: undefined});
-    expect(selectors.getEndpoint(state)).toBeUndefined();
   });
 
   describe('getEndpointClientConfiguration', () => {
@@ -160,13 +93,10 @@ describe('createConfigurationSelectors', () => {
     it('returns defaults when configuration slice is missing', () => {
       const state: State = {};
 
-      expect(selectors.getOrganizationId(state)).toBe('');
-      expect(selectors.getAccessToken(state)).toBe('');
       expect(selectors.getTrackingId(state)).toBe('');
       expect(selectors.getLanguage(state)).toBe('');
       expect(selectors.getCountry(state)).toBe('');
       expect(selectors.getCurrency(state)).toBe('');
-      expect(selectors.getEndpoint(state)).toBeUndefined();
     });
 
     it('getEndpointClientConfiguration returns defaults when configuration is missing', () => {

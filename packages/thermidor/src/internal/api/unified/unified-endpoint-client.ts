@@ -82,21 +82,21 @@ export const createUnifiedEndpointClient = (): UnifiedEndpointClient => {
   };
 };
 
-export interface UnifiedEndpointClientConfiguration {
+interface UnifiedEndpointClientConfiguration {
   organizationId?: string;
   accessToken?: string;
   endpoint?: string;
 }
 
-export interface UnifiedEndpointCallOptions {
+interface UnifiedEndpointCallOptions {
   signal?: AbortSignal;
 }
 
-export interface UnifiedEndpointResponse {
+interface UnifiedEndpointResponse {
   stream: ReadableStream<Uint8Array>;
 }
 
-export type UnifiedEndpointClientResult =
+type UnifiedEndpointClientResult =
   | {
       success: true;
       data: UnifiedEndpointResponse;

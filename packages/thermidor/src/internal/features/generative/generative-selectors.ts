@@ -11,7 +11,7 @@ type GenerativeSelectors = ReturnType<typeof createGenerativeSelectors>;
 const CACHE_KEY: CacheKey<GenerativeSelectors> =
   createCacheKey<GenerativeSelectors>('generative/selectors');
 
-export function createGenerativeSelectors(interfaceId: string) {
+function createGenerativeSelectors(interfaceId: string) {
   const sliceSelector = createSelectSlice(interfaceId, 'generative', initialGenerativeState);
 
   return {
@@ -20,13 +20,6 @@ export function createGenerativeSelectors(interfaceId: string) {
       sliceSelector,
       (state): string | undefined => state.activeTurnId
     ),
-    getActiveMessage: createMemoizedStateSelector(sliceSelector, (state): string => {
-      if (!state.activeTurnId) {
-        return '';
-      }
-      const turn = state.turns.find((t) => t.id === state.activeTurnId);
-      return turn?.prompt ?? '';
-    }),
     getConversationSessionId: createMemoizedStateSelector(
       sliceSelector,
       (state): string | undefined => state.conversationSessionId

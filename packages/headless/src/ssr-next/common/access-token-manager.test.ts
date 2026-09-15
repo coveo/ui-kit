@@ -17,7 +17,7 @@ describe('AccessTokenManager', () => {
   describe('when callback is registered BEFORE #setAccessToken', () => {
     it('should immediately notify the callback when token is updated', () => {
       const mockCallback = vi.fn();
-      tokenManager.registerCallback(mockCallback);
+      tokenManager.registerCallback(mockCallback, {});
 
       tokenManager.setAccessToken('new-token');
 
@@ -28,14 +28,14 @@ describe('AccessTokenManager', () => {
     it('should not invoke callback if no token was previously set', () => {
       const mockCallback = vi.fn();
 
-      tokenManager.registerCallback(mockCallback);
+      tokenManager.registerCallback(mockCallback, {});
 
       expect(mockCallback).not.toHaveBeenCalled();
     });
 
     it('should handle multiple token updates correctly', () => {
       const mockCallback = vi.fn();
-      tokenManager.registerCallback(mockCallback);
+      tokenManager.registerCallback(mockCallback, {});
 
       tokenManager.setAccessToken('token-1');
       tokenManager.setAccessToken('token-2');
@@ -55,7 +55,7 @@ describe('AccessTokenManager', () => {
       tokenManager.setAccessToken(queuedToken);
 
       const mockCallback = vi.fn();
-      tokenManager.registerCallback(mockCallback);
+      tokenManager.registerCallback(mockCallback, {});
 
       expect(mockCallback).toHaveBeenCalledExactlyOnceWith(queuedToken);
       expect(tokenManager.getAccessToken()).toBe(queuedToken);
@@ -67,12 +67,12 @@ describe('AccessTokenManager', () => {
 
       // Register first callback - should receive queued token
       const mockCallback1 = vi.fn();
-      tokenManager.registerCallback(mockCallback1);
+      tokenManager.registerCallback(mockCallback1, {});
       expect(mockCallback1).toHaveBeenCalledWith(queuedToken);
 
       // Register second callback - should NOT receive queued token (already cleared)
       const mockCallback2 = vi.fn();
-      tokenManager.registerCallback(mockCallback2);
+      tokenManager.registerCallback(mockCallback2, {});
       expect(mockCallback2).not.toHaveBeenCalled();
     });
 
@@ -82,7 +82,7 @@ describe('AccessTokenManager', () => {
       tokenManager.setAccessToken('final-token');
 
       const mockCallback = vi.fn();
-      tokenManager.registerCallback(mockCallback);
+      tokenManager.registerCallback(mockCallback, {});
 
       // Should only receive the latest token
       expect(mockCallback).toHaveBeenCalledExactlyOnceWith('final-token');
@@ -93,7 +93,7 @@ describe('AccessTokenManager', () => {
       tokenManager.setAccessToken('queued-token');
 
       const mockCallback = vi.fn();
-      tokenManager.registerCallback(mockCallback);
+      tokenManager.registerCallback(mockCallback, {});
 
       // Should have received queued token
       expect(mockCallback).toHaveBeenCalledWith('queued-token');
@@ -102,6 +102,45 @@ describe('AccessTokenManager', () => {
       tokenManager.setAccessToken('updated-token');
       expect(mockCallback).toHaveBeenCalledWith('updated-token');
       expect(mockCallback).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('when a callback is unregistered', () => {
+    it('should stop notifying the unregistered callback', () => {
+      const mockCallback = vi.fn();
+      const unregister = tokenManager.registerCallback(mockCallback, {});
+
+      tokenManager.setAccessToken('token-1');
+      expect(mockCallback).toHaveBeenCalledExactlyOnceWith('token-1');
+
+      unregister();
+      tokenManager.setAccessToken('token-2');
+      expect(mockCallback).toHaveBeenCalledTimes(1);
+    });
+
+    it('should keep notifying the other subscribers', () => {
+      const mockCallback1 = vi.fn();
+      const mockCallback2 = vi.fn();
+      const unregister1 = tokenManager.registerCallback(mockCallback1, {});
+      tokenManager.registerCallback(mockCallback2, {});
+
+      unregister1();
+      tokenManager.setAccessToken('token-1');
+
+      expect(mockCallback1).not.toHaveBeenCalled();
+      expect(mockCallback2).toHaveBeenCalledExactlyOnceWith('token-1');
+    });
+
+    it('should re-queue the token once every subscriber is gone', () => {
+      const mockCallback = vi.fn();
+      const unregister = tokenManager.registerCallback(mockCallback, {});
+      unregister();
+
+      tokenManager.setAccessToken('queued-again');
+
+      const laterCallback = vi.fn();
+      tokenManager.registerCallback(laterCallback, {});
+      expect(laterCallback).toHaveBeenCalledExactlyOnceWith('queued-again');
     });
   });
 });

@@ -1,8 +1,7 @@
-import {describe, it, expect, expectTypeOf, vi} from 'vitest';
+import {describe, it, expect, vi} from 'vitest';
 import {GenerativeUnifiedInterfaceImpl} from './generative-unified.js';
 import {getInterfaceInternals} from '@/src/internal/utils/index.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
-import type {GenerativeInterface, GenerativeUnifiedInterface} from '@/src/internal/utils/index.js';
 
 function createMockEngine(): FullEngine {
   return {
@@ -10,7 +9,6 @@ function createMockEngine(): FullEngine {
     read: vi.fn(),
     subscribe: vi.fn(),
     adoptSlice: vi.fn(),
-    storeHydrationSnapshot: vi.fn(),
     getNavigatorContextProvider: vi.fn(),
     addInterface: vi.fn(),
     removeInterface: vi.fn(),
@@ -18,11 +16,6 @@ function createMockEngine(): FullEngine {
 }
 
 describe('GenerativeUnifiedInterfaceImpl', () => {
-  it('is nominally distinct from the legacy generative interface', () => {
-    expectTypeOf<GenerativeUnifiedInterface>().not.toMatchTypeOf<GenerativeInterface>();
-    expectTypeOf<GenerativeInterface>().not.toMatchTypeOf<GenerativeUnifiedInterface>();
-  });
-
   it('calls engine.adoptSlice with the generative slice on construction', () => {
     const engine = createMockEngine();
 

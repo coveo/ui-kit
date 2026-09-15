@@ -1,6 +1,6 @@
 import type {NormalizedStreamEvent} from '@/src/internal/api/protocol/stream-types.js';
 import {getActivityMetadata} from '@/src/internal/api/protocol/activity-metadata.js';
-import type {GenerativeStatePort} from '@/src/internal/api/generative/index.js';
+import type {GenerativeStatePort} from '@/src/internal/features/generative/index.js';
 
 export interface DispatchResult {
   turnId: string;
@@ -10,7 +10,6 @@ export interface DispatchResult {
 export interface EventDispatcherDeps {
   statePort: GenerativeStatePort;
   ensureAgentResponse: (turnId: string) => void;
-  onA2uiSurface: (turnId: string, content: Record<string, unknown>) => void;
 }
 
 export function dispatchStreamEvent(
@@ -95,10 +94,6 @@ export function dispatchStreamEvent(
         payload: content,
         replace: activity.replace ?? false,
       });
-
-      if (event.activityType === 'a2ui-surface') {
-        deps.onA2uiSurface(turnId, content);
-      }
 
       return {turnId, isTerminal: false};
     }

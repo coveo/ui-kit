@@ -3,18 +3,11 @@ import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 import {createUnifiedEndpointRequestSelector} from './unified-request-selector.js';
 import type {A2uiAction, CommerceRequestModel} from './unified-endpoint-types.js';
 
-export function createConversationRequestBuilder(
-  generativeInterface: InterfaceHandle,
-  cartInterface: InterfaceHandle
-) {
-  const buildStateRequest = createUnifiedEndpointRequestSelector(
-    generativeInterface,
-    cartInterface
-  );
+export function createConversationRequestBuilder(generativeInterface: InterfaceHandle) {
+  const buildStateRequest = createUnifiedEndpointRequestSelector(generativeInterface);
 
   function buildBaseRequest(engine: FullEngine): Omit<CommerceRequestModel, 'message' | 'action'> {
-    const {cart, conversationSessionId, conversationToken, ...fromState} =
-      engine.read(buildStateRequest);
+    const {conversationSessionId, conversationToken, ...fromState} = engine.read(buildStateRequest);
     const navigatorContext = engine.getNavigatorContextProvider()?.();
 
     return {
@@ -31,7 +24,7 @@ export function createConversationRequestBuilder(
           referrer: navigatorContext?.referrer ?? null,
         },
         user: {userAgent: navigatorContext?.userAgent ?? null},
-        cart: cart ?? [],
+        cart: [],
         source: [],
         custom: {},
       },

@@ -40,7 +40,6 @@ describe('ConversationPage integration', () => {
           id: 'turn-2',
           prompt: 'Show me results',
           status: 'complete',
-          routedInterface: undefined,
           agentResponse: {
             messages: [],
             surfaces: [],

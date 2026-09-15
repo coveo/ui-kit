@@ -1,7 +1,7 @@
 import {describe, it, expect, vi} from 'vitest';
 import {BaseController} from './base-controller.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
-import type {StateSelector} from '@/src/internal/engine/index.js';
+import type {StateSelector} from '@/src/internal/engine/engine-types.js';
 
 interface TestState {
   value: number;
