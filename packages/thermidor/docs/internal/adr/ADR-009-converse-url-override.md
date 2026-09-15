@@ -12,8 +12,8 @@ related:
 
 Thermidor's transport hard-codes the converse request path
 (`{organizationEndpoint}/api/preview/organizations/{orgId}/agents/commerce/agui/converse`);
-only the host is configurable (via `endpoint`). Consumers that need a _different
-path_ — a local gateway, or the internal `/private/converse` endpoint for the
+only the host is configurable (via `endpoint`). Consumers that need a *different
+path* — a local gateway, or the internal `/private/converse` endpoint for the
 unified internal-search work — cannot reach it without editing the engine.
 
 The durable fix (making transport coordinates a property of the contract set) is
