@@ -25,6 +25,7 @@ function createConfigurationSelectors() {
         organizationId: state.organizationId,
         accessToken: state.accessToken,
         endpoint: state.endpoint,
+        converseUrl: state.converseUrl,
       })
     ),
   };
