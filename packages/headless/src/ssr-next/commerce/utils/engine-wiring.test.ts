@@ -168,4 +168,37 @@ describe('#augmentCommerceEngineOptions', () => {
       });
     });
   });
+
+  describe('access token configuration', () => {
+    it('should override the access token when provided in buildConfig', () => {
+      const navigatorContext = createNavigatorContext();
+      const definitionTokenBefore = sampleCommerceConfig.configuration.accessToken;
+
+      const engineOptions = augmentCommerceEngineOptions(sampleCommerceConfig, {
+        navigatorContext,
+        context: buildMockCommerceContext(),
+        accessToken: 'per-request-token',
+      });
+
+      expect(engineOptions.configuration.accessToken).toBe('per-request-token');
+      // The override must be request-scoped: the shared definition must NOT be mutated, otherwise
+      // one request's token would leak into every later request (and the fallback test below would
+      // pass spuriously by reading the mutated value).
+      expect(sampleCommerceConfig.configuration.accessToken).toBe(definitionTokenBefore);
+      expect(engineOptions.configuration).not.toBe(sampleCommerceConfig.configuration);
+    });
+
+    it('should keep the definition access token when none is provided in buildConfig', () => {
+      const navigatorContext = createNavigatorContext();
+
+      const engineOptions = augmentCommerceEngineOptions(sampleCommerceConfig, {
+        navigatorContext,
+        context: buildMockCommerceContext(),
+      });
+
+      expect(engineOptions.configuration.accessToken).toBe(
+        sampleCommerceConfig.configuration.accessToken
+      );
+    });
+  });
 });
