@@ -8,7 +8,7 @@ export function createAccessTokenManager(initialToken: string) {
   const subscriptions = new Set<WeakRef<TokenChangeCallback>>();
   // Anchors each callback's lifetime to its owner engine so the GC releases the subscription only
   // once the engine itself is unreachable, never while the engine is still alive.
-  const callbacksByOwner = new WeakMap<WeakKey, TokenChangeCallback>();
+  const callbacksByOwner = new WeakMap<object, TokenChangeCallback>();
   const collectedSubscriptions = new FinalizationRegistry<WeakRef<TokenChangeCallback>>(
     (subscription) => {
       subscriptions.delete(subscription);
@@ -53,7 +53,7 @@ export function createAccessTokenManager(initialToken: string) {
      * @param owner - The object whose lifetime bounds the subscription (the engine).
      * @returns An unsubscribe function that removes the callback immediately.
      */
-    registerCallback(callback: TokenChangeCallback, owner: WeakKey): () => void {
+    registerCallback(callback: TokenChangeCallback, owner: object): () => void {
       const subscription = new WeakRef(callback);
       subscriptions.add(subscription);
       callbacksByOwner.set(owner, callback);
