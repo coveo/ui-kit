@@ -97,7 +97,7 @@ Contraintes de communication (préférences projet) :
 - **Rapport client** : `docs/investigation/CMS-443-headless-memory-leak-report_2026-09-10.md` (stashé, non suivi).
 - **Harnais de repro/validation** : branche `chore/CMS-443-memory-repro`, `utils/cms443-memory-repro/` (`repro.mjs`, `compare.sh`, `README.md`) — poussée, sans PR.
 - **PRs de fix** (draft, tous off `main`, sans stack) :
-  - #8479 — Finding 1 (option A, patch)
+  - #8479 — Finding 1 (registre faible : WeakRef + WeakMap + FinalizationRegistry, patch)
   - #8480 — Finding 2 (lruMemoize, patch)
   - #8481 — Finding 3 (token par requête ssr-next, minor)
 
