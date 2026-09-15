@@ -103,13 +103,13 @@ export default class QuanticLoadMoreResults extends LightningElement {
   }
 
   announceWhenAllResultsAreLoaded() {
-    const justLoadedLastBatch =
+    const isLastBatchLoaded =
       this.previousResultListState?.moreResultsAvailable === true &&
       this.resultListState?.moreResultsAvailable === false &&
       this.previousResultListState?.searchResponseId ===
         this.resultListState?.searchResponseId;
 
-    if (justLoadedLastBatch) {
+    if (isLastBatchLoaded) {
       this.allResultsLoadedAriaMessage.dispatchMessage(
         this.labels.allResultsLoaded
       );
