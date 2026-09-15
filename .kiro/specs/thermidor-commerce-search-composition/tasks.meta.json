@@ -1,0 +1,298 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1. Remove `facetIds` from `FacetManagerState` in `@coveo/thermidor-schema`": [
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788552255670
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788552267298
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788552570727
+      }
+    ],
+    "2.1 Property test P1 — root mapping resolves, preserves identity, tolerates no-match": [
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788552255710
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788552583285
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788553016965
+      }
+    ],
+    "3. Remove `surfaceType` from the `@coveo/thermidor` SDK": [
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788552255753
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788552584156
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788553018067
+      }
+    ],
+    "4. New `CommerceSearch` renderer that mounts children by id": [
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788552255800
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788553035986
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788553596168
+      }
+    ],
+    "5. Convert `FacetManager` into a true A2-UI renderer": [
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788552255842
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788553036266
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788553597461
+      }
+    ],
+    "6.1 Property test P3 — container mount order/tolerance (one harness for the three renderers)": [
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788552255881
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788553603666
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788553608348
+      }
+    ],
+    "6.2 Property test P5 — slot product data correlates to AG-UI state solely by componentId": [
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788552255912
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788553604923
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788553609339
+      }
+    ],
+    "7. Update `Mock_Search_Template` (`schema-response-search.ts`) to emit the full adjacency-list tree": [
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788552255960
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788553616599
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788553936669
+      }
+    ],
+    "8. Update `Mock_Bundle_Template` (`schema-response-bundle.ts`) to emit slot product-lists as nodes": [
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788552256001
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788553617522
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788553937648
+      }
+    ],
+    "9.1 Property tests P2, P4, P6 — closure, plane boundary, rejection (mock templates)": [
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788552256032
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788553951757
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788554383392
+      }
+    ],
+    "10. Register the catalog and wire the new/converted renderers (`components.tsx`)": [
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788552256070
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788553951926
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788554384396
+      }
+    ],
+    "11.1 Property test P9 — surface routing partitions on root componentType": [
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788552256134
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788553955849
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788554380457
+      }
+    ],
+    "12.1 Schema-validation property tests P7, P8, P10": [
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788552256169
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788554397904
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788554823669
+      }
+    ],
+    "13. Verification — builds, suites, mock validity, real-backend sample untouched, changeset": [
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788552256209
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788554828678
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788555031031
+      }
+    ],
+    "2. Resolve the Root_Mapping inside `convertV1ToV09` (`a2ui/surfaces.tsx`)": [
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788553017005
+      }
+    ],
+    "9. Remove `surfaceType` from the remaining mock templates": [
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788553037084
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788553599712
+      }
+    ],
+    "6. Convert `BundleDisplay` into a fully adjacency-list renderer": [
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788553040825
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788553599341
+      }
+    ],
+    "11. Route navigation by the Root_Component's `componentType` (`hooks/use-navigation.ts`)": [
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788553952656
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788554380496
+      }
+    ],
+    "12. Remove `CommerceSearchLayout` and the last workaround remnants": [
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788554396878
+      },
+      {
+        "executionId": "32cd07ab-3271-4648-9909-ab2f4a606544",
+        "chatSessionId": "sess_7c91b4bc-9ca2-43fa-9237-24e5aac6a5e4",
+        "timestamp": 1788554823735
+      }
+    ]
+  }
+}

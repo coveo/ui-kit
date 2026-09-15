@@ -37,7 +37,7 @@ export type CommerceEngineDefinitionOptions<
   /**
    * Callback invoked when the access token changes.
    */
-  onAccessTokenUpdate?: (updateCallback: (token: string) => void) => void;
+  onAccessTokenUpdate?: (updateCallback: (token: string) => void, owner: object) => void;
 };
 
 export interface CommerceEngineDefinition<

@@ -1,4 +1,4 @@
-export interface NavigatorContext {
+interface NavigatorContext {
   /**
    * The unique identifier of the browser client in a Coveo-powered page.
    */

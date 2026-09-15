@@ -3,10 +3,6 @@ import {UnifiedRuntime} from '@/src/internal/api/unified/index.js';
 import type {A2uiAction} from '@/src/internal/api/unified/index.js';
 import type {RemoteControllerAction} from '../remote/remote-controller.js';
 import {deriveCommerceSurfaceId} from './derive-surface-id.js';
-import {
-  getOrCreateRoutedInterfaceRegistry,
-  mergeTurnsWithRegistry,
-} from '@/src/internal/features/generative/index.js';
 import {BaseController} from '@/src/internal/utils/index.js';
 import {createMemoizedStateSelector} from '@/src/internal/utils/index.js';
 import {getInterfaceInternals} from '@/src/internal/utils/index.js';
@@ -14,16 +10,12 @@ import {getOrCreateGenerativeActions} from '@/src/internal/features/generative/i
 import {getOrCreateGenerativeSelectors} from '@/src/internal/features/generative/index.js';
 import type {GenerativeUnifiedInterface} from '@/src/internal/utils/index.js';
 import type {Controller} from '@/src/internal/utils/index.js';
-import {
-  SerializedConverseState,
-  SerializedTurn,
-} from '../converse/converse-controller-serialization.js';
+import {SerializedConverseState, SerializedTurn} from './converse-controller-serialization.js';
 
 class UnifiedConverseControllerImpl extends BaseController<UnifiedConverseControllerState> {
   #runtime: UnifiedRuntime;
   #actions: ReturnType<typeof getOrCreateGenerativeActions>;
   #selectors: ReturnType<typeof getOrCreateGenerativeSelectors>;
-  #generativeInterface: GenerativeUnifiedInterface;
 
   constructor(options: UnifiedConverseControllerOptions) {
     const {engine: fullEngine, stateId} = getInterfaceInternals(options.interface);
@@ -36,13 +28,11 @@ class UnifiedConverseControllerImpl extends BaseController<UnifiedConverseContro
       fullEngine.mutate(actions.hydrateState(hydratedState));
     }
 
-    const registry = getOrCreateRoutedInterfaceRegistry(options.interface);
-
     const controllerState = createMemoizedStateSelector(
       selectors.getTurns,
       selectors.getActiveTurnId,
       (stateTurns, activeTurnId): UnifiedConverseControllerState => {
-        const turns = mergeTurnsWithRegistry(stateTurns, registry);
+        const turns = stateTurns as Turn[];
         return {
           turns,
           activeTurn: activeTurnId ? turns.find((t) => t.id === activeTurnId) : undefined,
@@ -55,10 +45,8 @@ class UnifiedConverseControllerImpl extends BaseController<UnifiedConverseContro
 
     this.#actions = actions;
     this.#selectors = selectors;
-    this.#generativeInterface = options.interface;
     this.#runtime = UnifiedRuntime.getInstance(fullEngine, stateId, {
       generativeInterface: options.interface,
-      cartInterface: options.interface,
       statePort: {
         createTurn: (payload) => {
           this.engine.mutate(this.#actions.createTurn(payload));
@@ -71,26 +59,6 @@ class UnifiedConverseControllerImpl extends BaseController<UnifiedConverseContro
         },
         replaceTurnId: (oldId, newId) => {
           this.engine.mutate(this.#actions.replaceTurnId({oldId, newId}));
-        },
-        setRoutedInterface: (turnId, hydrationResult) => {
-          const registry = getOrCreateRoutedInterfaceRegistry(options.interface);
-          registry.register(turnId, {
-            useCase: hydrationResult.useCase,
-            interface: hydrationResult.interface,
-            snapshot: hydrationResult.snapshot,
-            query: hydrationResult.query,
-            surfaceId: hydrationResult.surfaceId,
-          });
-          this.engine.mutate(
-            this.#actions.setRoutedInterface({turnId, useCase: hydrationResult.useCase})
-          );
-        },
-        clearRoutedInterface: (turnId, surfaceId) => {
-          const registry = getOrCreateRoutedInterfaceRegistry(options.interface);
-          if (registry.get(turnId)?.surfaceId === surfaceId) {
-            registry.remove(turnId);
-            this.engine.mutate(this.#actions.clearRoutedInterface({turnId}));
-          }
         },
         initAgentResponse: (turnId) => {
           this.engine.mutate(this.#actions.initAgentResponse({turnId}));
@@ -150,21 +118,8 @@ class UnifiedConverseControllerImpl extends BaseController<UnifiedConverseContro
 
   serialize(): SerializedConverseState {
     const {turns, activeTurn} = this.state;
-    const registry = getOrCreateRoutedInterfaceRegistry(this.#generativeInterface);
 
-    const serializedTurns: SerializedTurn[] = turns.map((turn) => {
-      const {routedInterface, ...rest} = turn;
-      const serialized: SerializedTurn = {...rest};
-      if (routedInterface) {
-        const entry = registry.get(turn.id);
-        serialized.routedInterface = {
-          useCase: routedInterface.useCase,
-          snapshot: entry?.snapshot ?? {},
-          query: entry?.query,
-        };
-      }
-      return serialized;
-    });
+    const serializedTurns: SerializedTurn[] = turns.map((turn) => ({...turn}));
 
     const firstPrompt = turns.length > 0 ? turns[0].prompt : '';
 
@@ -284,18 +239,11 @@ export interface UnifiedConverseControllerOptions {
 
 function hydrateFromSerializedState(serialized: SerializedConverseState): GenerativeState {
   const turns: StateTurn[] = serialized.turns.map((serializedTurn) => {
-    const {routedInterface, ...rest} = serializedTurn;
-    const turn: StateTurn = {...rest};
+    const turn: StateTurn = {...serializedTurn};
 
     if (turn.status === 'streaming') {
       turn.status = 'error';
       turn.error = 'Stream was interrupted';
-    }
-
-    if (routedInterface) {
-      if (routedInterface.useCase === 'commerceSearch' || routedInterface.useCase === 'search') {
-        turn.routedInterface = {useCase: routedInterface.useCase};
-      }
     }
 
     return turn;

@@ -40,7 +40,6 @@ describe('ConversationPage integration', () => {
           id: 'turn-2',
           prompt: 'Show me results',
           status: 'complete',
-          routedInterface: undefined,
           agentResponse: {
             messages: [],
             surfaces: [],
@@ -50,7 +49,25 @@ describe('ConversationPage integration', () => {
                 kind: 'a2ui-surface',
                 replace: true,
                 payload: {
-                  messages: [{createSurface: {surfaceType: 'commerceSearch', surfaceId: 's1'}}],
+                  messages: [
+                    {
+                      createSurface: {
+                        surfaceId: 's1',
+                        rootId: 'commerce-search-s1',
+                        components: [
+                          {
+                            id: 'commerce-search-s1',
+                            component: 'CommerceSearch',
+                            props: {
+                              componentId: 'commerce-search-s1',
+                              componentType: 'commerce-search',
+                            },
+                            children: [],
+                          },
+                        ],
+                      },
+                    },
+                  ],
                 },
               },
             ],

@@ -50,12 +50,28 @@ vi.mock('./ConversationPage/index.js', () => ({
 }));
 
 function makeCommerceSearchActivity(surfaceId = 'commerce-surface-1') {
+  const rootId = `commerce-search-${surfaceId}`;
   return {
     id: `activity-${surfaceId}`,
     kind: 'a2ui-surface',
     replace: true,
     payload: {
-      messages: [{createSurface: {surfaceType: 'commerceSearch', surfaceId}}],
+      messages: [
+        {
+          createSurface: {
+            surfaceId,
+            rootId,
+            components: [
+              {
+                id: rootId,
+                component: 'CommerceSearch',
+                props: {componentId: rootId, componentType: 'commerce-search'},
+                children: [],
+              },
+            ],
+          },
+        },
+      ],
     },
   };
 }

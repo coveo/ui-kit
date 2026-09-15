@@ -191,6 +191,53 @@ describe('c-quantic-result-link', () => {
         );
       });
     });
+
+    describe('when the result is a feed comment', () => {
+      const exampleFeedCommentResult = {
+        ...exampleResult,
+        raw: {
+          sfid: '1234',
+          sfparentid: '5678',
+          documenttype: 'FeedComment',
+        },
+      };
+      it('should open the parent FeedItem in a Salesforce console subtab', async () => {
+        const element = createTestComponent({result: exampleFeedCommentResult});
+        await flushPromises();
+
+        const link = element.shadowRoot.querySelector('a');
+        link.click();
+
+        const {pageReference} = getNavigateCalledWith();
+
+        expect(pageReference.attributes.recordId).toBe(
+          exampleFeedCommentResult.raw.sfparentid
+        );
+      });
+
+      it('should open the FeedComment record when its parent ID is unavailable', async () => {
+        const feedCommentWithoutParent = {
+          ...exampleFeedCommentResult,
+          raw: {
+            ...exampleFeedCommentResult.raw,
+            sfparentid: undefined,
+          },
+        };
+        const element = createTestComponent({
+          result: feedCommentWithoutParent,
+        });
+        await flushPromises();
+
+        const link = element.shadowRoot.querySelector('a');
+        link.click();
+
+        const {pageReference} = getNavigateCalledWith();
+
+        expect(pageReference.attributes.recordId).toBe(
+          feedCommentWithoutParent.raw.sfid
+        );
+      });
+    });
   });
 
   describe('when the result is NOT of type salesforce', () => {

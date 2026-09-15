@@ -6,27 +6,50 @@
 
 import {describe, it, expect, beforeEach, vi} from 'vitest';
 import {createTestEngine, createTestInterface} from '@/src/test/test-utils.js';
-import {getQuery} from '@/src/internal/features/search-box/index.js';
-import {setQuery} from '@/src/internal/features/search-box/index.js';
-import {setResultsFromResponse} from '@/src/internal/features/result-list/index.js';
+import {createSlice} from '@reduxjs/toolkit';
 import {Engine, FullEngine, getFullEngine} from './engine.js';
-import {getOrCreateSearchBoxSlice} from '@/src/internal/features/search-box/index.js';
-import {getOrCreateResultsSlice} from '@/src/internal/features/result-list/index.js';
 import type {NavigatorContextProvider} from '@/src/internal/utils/index.js';
 import {EngineOptions} from './engine-types.js';
 import {ConfigurationState} from '@/src/internal/features/configuration/index.js';
-import type {SearchInterface} from '@/src/public/interfaces/search.js';
+import type {GenerativeUnifiedInterface} from '@/src/internal/utils/index.js';
+
+// Minimal in-file slices to exercise the engine's generic slice mechanism,
+// decoupled from any feature module.
+const searchBoxTestSlice = createSlice({
+  name: 'default/searchBox',
+  initialState: {query: ''},
+  reducers: {
+    setQuery: (state, action: {type: string; payload: string}) => {
+      state.query = action.payload;
+    },
+  },
+});
+const productsTestSlice = createSlice({
+  name: 'default/products',
+  initialState: {products: [] as unknown[]},
+  reducers: {
+    setProductsFromResponse: (state, action: {type: string; payload: unknown[]}) => {
+      state.products = action.payload;
+    },
+  },
+});
+const getOrCreateSearchBoxSlice = (_iface: unknown) => searchBoxTestSlice;
+const getOrCreateProductListSlice = (_iface: unknown) => productsTestSlice;
+const getOrCreateProductListActions = (_iface: unknown) => productsTestSlice.actions;
+const getQuery = (_iface: unknown) => (state: Record<string, unknown>) =>
+  (state['default/searchBox'] as {query: string} | undefined)?.query ?? '';
+const setQuery = (query: string, _iface: unknown) => searchBoxTestSlice.actions.setQuery(query);
 
 describe('Engine: read()', () => {
   let engine: FullEngine;
-  let iface: SearchInterface;
+  let iface: GenerativeUnifiedInterface;
 
   beforeEach(() => {
     const rawEngine = createTestEngine();
     engine = getFullEngine(rawEngine);
     iface = createTestInterface(rawEngine, 'default');
     engine.adoptSlice(getOrCreateSearchBoxSlice(iface));
-    engine.adoptSlice(getOrCreateResultsSlice(iface));
+    engine.adoptSlice(getOrCreateProductListSlice(iface));
   });
 
   it('should read values from state using a selector', () => {
@@ -56,14 +79,14 @@ describe('Engine: read()', () => {
 
 describe('Engine: subscribe()', () => {
   let engine: FullEngine;
-  let iface: SearchInterface;
+  let iface: GenerativeUnifiedInterface;
 
   beforeEach(() => {
     const rawEngine = createTestEngine();
     engine = getFullEngine(rawEngine);
     iface = createTestInterface(rawEngine, 'default');
     engine.adoptSlice(getOrCreateSearchBoxSlice(iface));
-    engine.adoptSlice(getOrCreateResultsSlice(iface));
+    engine.adoptSlice(getOrCreateProductListSlice(iface));
   });
 
   it('should trigger callback when subscribed value changes', () => {
@@ -93,7 +116,7 @@ describe('Engine: subscribe()', () => {
 
     engine.subscribe(getQuery(iface), callback);
 
-    engine.mutate(setResultsFromResponse([], iface));
+    engine.mutate(getOrCreateProductListActions(iface).setProductsFromResponse([]));
 
     expect(callback).not.toHaveBeenCalled();
   });
@@ -149,14 +172,14 @@ describe('Engine: subscribe()', () => {
 
 describe('Engine: mutate()', () => {
   let engine: FullEngine;
-  let iface: SearchInterface;
+  let iface: GenerativeUnifiedInterface;
 
   beforeEach(() => {
     const rawEngine = createTestEngine();
     engine = getFullEngine(rawEngine);
     iface = createTestInterface(rawEngine, 'default');
     engine.adoptSlice(getOrCreateSearchBoxSlice(iface));
-    engine.adoptSlice(getOrCreateResultsSlice(iface));
+    engine.adoptSlice(getOrCreateProductListSlice(iface));
   });
 
   it('should update state correctly', () => {
@@ -337,7 +360,7 @@ describe('Engine: constructor()', () => {
 describe('Engine.dispose()', () => {
   let engine: Engine;
   let fullEngine: FullEngine;
-  let iface: SearchInterface;
+  let iface: GenerativeUnifiedInterface;
 
   beforeEach(() => {
     engine = createTestEngine();

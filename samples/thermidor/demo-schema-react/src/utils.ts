@@ -23,3 +23,8 @@ export function renderMarkdown(text: string): string {
     return DOMPurify.sanitize(text);
   }
 }
+
+/** Narrows an unknown value to a plain (non-array) object record. */
+export function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}

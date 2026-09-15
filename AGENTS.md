@@ -39,7 +39,6 @@
 - [`@coveo/relay`](packages/relay/): A library for sending analytics events using Coveo's Event protocol.
 - [`@coveo/shopify`](packages/shopify/): Utilities to integrate Shopify with Coveo's commerce engine
 - [`@coveo/thermidor`](packages/thermidor/): Experimental package for a unified, framework-agnostic headless engine for search and conversational experiences
-- [`@coveo/thermidor-schema`](packages/thermidor-schema/): Versioned JSON Schema-derived Zod contracts for Thermidor controllers
 
 ### Private
 

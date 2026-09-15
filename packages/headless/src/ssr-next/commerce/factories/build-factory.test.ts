@@ -175,6 +175,18 @@ describe('buildFactory', () => {
     );
   });
 
+  it('should register the engine for token updates with the engine as owner', async () => {
+    const onAccessTokenUpdate = vi.fn();
+    const factory = buildFactory(mockEmptyDefinition, {
+      ...mockEngineOptions,
+      onAccessTokenUpdate,
+    });
+
+    const {engine} = await factory(SolutionType.listing)(mockBuildOptions as ListingBuildConfig);
+
+    expect(onAccessTokenUpdate).toHaveBeenCalledExactlyOnceWith(expect.any(Function), engine);
+  });
+
   describe('when building for standalone', () => {
     const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
     const build = factory(SolutionType.standalone);

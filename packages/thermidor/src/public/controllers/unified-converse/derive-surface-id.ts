@@ -1,11 +1,20 @@
 import type {Activity} from '@/src/internal/features/generative/index.js';
 
+const COMMERCE_SEARCH_ROOT_TYPE = 'commerce-search';
+
 /**
  * Internal helper: scans a turn's activities for the first A2-UI `createSurface`
- * message declaring a `commerceSearch` surfaceType and returns its `surfaceId`.
+ * message whose root component is a commerce-search surface and returns its
+ * `surfaceId`.
+ *
+ * The root is resolved from `createSurface.rootId` against the raw v1.0 payload
+ * (as authored by the producer): the node in `createSurface.components` whose
+ * `id` equals `rootId` supplies `props.componentType`. A surface is treated as
+ * commerce-search when that `componentType` equals `'commerce-search'`.
  *
  * Returns null when no such surface exists (e.g. a plain-text conversational
- * response, or a surface of another type).
+ * response, a surface with a different root componentType, or a payload missing
+ * the rootId/components/props/componentType chain).
  *
  * NOTE: This duplicates `findSurface` / `findCommerceSurfaceId` from the
  * demo-schema-react sample. Both should be replaced by a framework-agnostic
@@ -27,9 +36,9 @@ export function deriveCommerceSurfaceId(activities: Activity[] | undefined): str
     }
 
     for (const message of messages) {
-      const createSurface = getCreateSurface(message);
-      if (createSurface?.surfaceType === 'commerceSearch') {
-        return createSurface.surfaceId;
+      const surfaceId = getCommerceSearchSurfaceId(message);
+      if (surfaceId !== null) {
+        return surfaceId;
       }
     }
   }
@@ -37,23 +46,40 @@ export function deriveCommerceSurfaceId(activities: Activity[] | undefined): str
   return null;
 }
 
-function getCreateSurface(message: unknown): {surfaceType: string; surfaceId: string} | undefined {
-  if (
-    message &&
-    typeof message === 'object' &&
-    'createSurface' in message &&
-    message.createSurface &&
-    typeof message.createSurface === 'object' &&
-    'surfaceType' in message.createSurface &&
-    typeof message.createSurface.surfaceType === 'string' &&
-    'surfaceId' in message.createSurface &&
-    typeof message.createSurface.surfaceId === 'string'
-  ) {
-    return {
-      surfaceType: message.createSurface.surfaceType,
-      surfaceId: message.createSurface.surfaceId,
-    };
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
+}
+
+function getCommerceSearchSurfaceId(message: unknown): string | null {
+  if (!isRecord(message)) {
+    return null;
   }
 
-  return undefined;
+  const createSurface = message['createSurface'];
+  if (!isRecord(createSurface)) {
+    return null;
+  }
+
+  const surfaceId = createSurface['surfaceId'];
+  const rootId = createSurface['rootId'];
+  if (typeof surfaceId !== 'string' || typeof rootId !== 'string') {
+    return null;
+  }
+
+  const components = createSurface['components'];
+  if (!Array.isArray(components)) {
+    return null;
+  }
+
+  const rootComponent = components.find((comp) => isRecord(comp) && comp['id'] === rootId);
+  if (!isRecord(rootComponent)) {
+    return null;
+  }
+
+  const props = rootComponent['props'];
+  if (!isRecord(props) || props['componentType'] !== COMMERCE_SEARCH_ROOT_TYPE) {
+    return null;
+  }
+
+  return surfaceId;
 }

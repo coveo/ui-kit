@@ -28,6 +28,32 @@ Once the renderer natively handles v1.0 messages:
 3. Verify that `processMessages` passes `components[].props` (including `componentId` and `componentType`) to catalog renderers correctly
 4. Everything else (catalog definitions, renderers, `useRemoteController`, `StateSnapshot` handling) remains unchanged
 
+## Dual identity on component nodes (`id`/`component` vs `componentId`/`componentType`)
+
+Every emitted A2-UI node carries what looks like duplicated identity:
+
+```jsonc
+{
+  "id": "facet-manager-2", // A2-UI node id (adjacency-list / mount key)
+  "component": "FacetManager", // A2-UI component type (PascalCase, catalog renderer key)
+  "props": {
+    "componentId": "facet-manager-2", // thermidor component id (AG-UI state key)
+    "componentType": "facet-manager", // thermidor component type (kebab-case, contract discriminant)
+  },
+}
+```
+
+By value these are two equivalent pairs (`id` === `props.componentId`, and `component` is the PascalCase spelling of `props.componentType`). The duplication is **not** an artifact of the adjacency-list work (spec 1) or the commerce-search composition (spec 2) — both pairs predate them: `componentId`/`componentType` were added to the base component contract in #8319 and the dual-carrier node shape in #8333, both on `main`. Specs 1/2 only extended the existing shape to new components.
+
+It is **intentional and not reducible from the sample**, because each pair belongs to a different protocol layer, and neither layer can read the other's fields:
+
+- `id` / `component` are the **A2-UI protocol** (`@copilotkit/a2ui-renderer`). `id` drives the adjacency-list tree (the renderer mounts by id); `component` (PascalCase) resolves the catalog renderer. This vocabulary is owned by the external renderer.
+- `componentId` / `componentType` are the **thermidor contract**. `componentId` is the AG-UI state key — the SDK reads `state.components[componentId]` (`selectRemoteControllerState`) and dispatches actions as `{componentId, componentType, action, payload}`. `componentType` (kebab-case) is the discriminant the SDK resolves contracts by (`findComponentContract` → `ComponentContractsSchema.options.find(c => c.shape.componentType.value === t)`). This vocabulary is the contract with the Coveo backend.
+
+Collapsing the two into a single `id`/`component` pair is therefore **out of scope** and undesirable: it would require the SDK to resolve contracts and key AG-UI state by the renderer's PascalCase names, a breaking change to the public `@coveo/thermidor-schema` contract (`base/component.schema.json`), and a matching change on the backend that emits the AG-UI state and routes actions. The convention that `id === componentId` (and that `component` mirrors `componentType`) is the deliberate bridge between the two planes, kept 1:1 so correlation is trivial.
+
+If the write-time repetition in the mock templates ever becomes a maintenance concern, the safe lever is a producer-side node builder (fill both pairs from one source of truth) — never a change to the contracts or the emitted shape.
+
 ## Skeleton detection (⚠️ needs clarification)
 
 Skeletons are shown during streaming to indicate which components are loading. The current implementation supports **two detection sources**, but only one is actively used:
@@ -118,6 +144,17 @@ This implementation has been validated against the following references:
 ### In-flight interaction behavior (open question)
 
 `isLoading` is intentionally not part of the current contract. The frontend still needs guidance for interactions while an action request is in flight—for example, whether to disable controls, queue subsequent actions, ignore them, or show a pending state. Define this behavior before adding loading state support.
+
+### Dynamic composition updates not exercised (facet reorder / add / remove)
+
+Composition is emitted **once** in the initial `createSurface` and never changed afterwards. Action responses only re-emit a `StateSnapshot` (per-component data), so the set and order of facets are fixed for the surface's lifetime: the facet-manager node's `children` (`['facet-brand-2', 'facet-price-2', 'facet-category-2']`) is a static constant, and its AG-UI state is `{}`. No mock scenario reorders facets, adds one, or removes one.
+
+A real backend can reorder facets (relevance-driven) or add/remove them dynamically. Before that is supported, note the following:
+
+- **The bridge's `updateComponents` handling is incomplete.** In `convertV1ToV09` (`surfaces.tsx`), the `createSurface` branch applies the root-id remap (`remapId`) **and** flattens `components[].props` onto each node, but the `updateComponents` branch is a bare passthrough — it does neither. A dynamic `updateComponents` whose nodes carry `props` would reach the renderer without `componentId`/`componentType`/`direction` flattened. Making `updateComponents` symmetric with `createSurface` (remap + prop flatten) is the prerequisite for any dynamic composition update.
+- **Reorder / add are supported by the protocol; remove is not, directly.** A2UI v0.9 defines `updateComponents` as _adding to or updating_ components in a surface (adjacency list via `children`); reordering the facet-manager `children` and adding a new facet node fit that contract, and `FacetManagerRenderer` already re-renders from `readChildIds(props)`. There is no component-removal primitive: dropping a facet means emitting a `children` list without its id (the orphaned node lingers in the surface) or recreating the surface via `deleteSurface` + `createSurface`.
+
+This is out of scope for the static switchover; capture it before wiring dynamic facet composition.
 
 ### Temporary workarounds (to remove when upstream dependencies evolve)
 

@@ -5,18 +5,26 @@ import {
   type RemoteControllerSource,
 } from './remote-controller.js';
 
-const cartItem = {productId: 'p1', name: 'Product', price: 10, quantity: 2};
+const facetState = {
+  field: 'price',
+  displayName: 'Price',
+  values: [],
+  customRange: null,
+  hasActiveValues: false,
+  canShowMoreValues: false,
+  canShowLessValues: false,
+};
 
 describe('buildRemoteController', () => {
   it('selects its server-owned state from state.components[componentId]', () => {
-    const source = createSource({components: {cart: {items: [cartItem]}}});
+    const source = createSource({components: {'price-facet': facetState}});
     const controller = buildRemoteController({
       source,
-      componentId: 'cart',
-      componentType: 'cart',
+      componentId: 'price-facet',
+      componentType: 'numeric-facet',
     });
 
-    expect(controller.state).toEqual({items: [cartItem]});
+    expect(controller.state).toEqual(facetState);
   });
 
   it('throws for unknown componentType', () => {
@@ -31,52 +39,54 @@ describe('buildRemoteController', () => {
   });
 
   it('notifies subscribers when its component slice changes, but not for another component', () => {
-    const cart = {items: []};
-    const source = createSource({components: {cart, products: {products: []}}});
+    const source = createSource({
+      components: {'price-facet': facetState, products: {products: []}},
+    });
     const controller = buildRemoteController({
       source,
-      componentId: 'cart',
-      componentType: 'cart',
+      componentId: 'price-facet',
+      componentType: 'numeric-facet',
     });
     const callback = vi.fn();
 
     controller.subscribe(callback);
-    source.setSnapshot({components: {cart, products: {products: ['p1']}}});
+    source.setSnapshot({components: {'price-facet': facetState, products: {products: ['p1']}}});
     expect(callback).not.toHaveBeenCalled();
 
-    source.setSnapshot({components: {cart: {items: [cartItem]}}});
-    expect(callback).toHaveBeenCalledWith({items: [cartItem]});
+    const nextState = {...facetState, hasActiveValues: true};
+    source.setSnapshot({components: {'price-facet': nextState}});
+    expect(callback).toHaveBeenCalledWith(nextState);
   });
 
   it('dispatches actions with {componentId, componentType, action, payload}', async () => {
-    const source = createSource({components: {cart: {items: []}}});
+    const source = createSource({components: {'price-facet': facetState}});
     const controller = buildRemoteController({
       source,
-      componentId: 'cart',
-      componentType: 'cart',
+      componentId: 'price-facet',
+      componentType: 'numeric-facet',
     });
 
-    await controller.dispatch('updateItemQuantity', {item: cartItem});
+    await controller.dispatch('applyCustomRange', {start: 0, end: 100});
 
     expect(source.dispatchAction).toHaveBeenCalledWith({
-      componentId: 'cart',
-      componentType: 'cart',
-      action: 'updateItemQuantity',
-      payload: {item: cartItem},
+      componentId: 'price-facet',
+      componentType: 'numeric-facet',
+      action: 'applyCustomRange',
+      payload: {start: 0, end: 100},
     });
-    expect(controller.state).toEqual({items: []});
+    expect(controller.state).toEqual(facetState);
   });
 
   it('returns undefined for invalid state and rejects invalid action payload', async () => {
     const controller = buildRemoteController({
-      source: createSource({components: {cart: {items: 'invalid'}}}),
-      componentId: 'cart',
-      componentType: 'cart',
+      source: createSource({components: {'price-facet': {...facetState, values: 'invalid'}}}),
+      componentId: 'price-facet',
+      componentType: 'numeric-facet',
     });
 
     expect(controller.state).toBeUndefined();
     await expect(
-      controller.dispatch('updateItemQuantity', {item: {...cartItem, quantity: 0}})
+      controller.dispatch('applyCustomRange', {start: 0, end: 100, unexpected: true} as never)
     ).rejects.toThrow('Invalid payload');
   });
 
@@ -84,10 +94,10 @@ describe('buildRemoteController', () => {
     const source = createSource({components: {}});
     const controller = buildRemoteController({
       source,
-      componentId: 'my-cart',
-      componentType: 'cart',
+      componentId: 'my-facet',
+      componentType: 'numeric-facet',
     });
-    expect(controller.componentId).toBe('my-cart');
+    expect(controller.componentId).toBe('my-facet');
   });
 });
 

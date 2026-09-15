@@ -30,21 +30,6 @@ describe('import boundary', () => {
     }
   });
 
-  it('does not import from internal thermidor-schema paths', () => {
-    const forbidden = [
-      /packages\/thermidor-schema\/src/,
-      /packages\/thermidor-schema\/schema/,
-      /packages\/thermidor-schema\/scripts/,
-      /packages\/thermidor-schema\/generated/,
-    ];
-    for (const file of sourceFiles) {
-      const content = readFileSync(file, 'utf-8');
-      for (const pattern of forbidden) {
-        expect(content, `Forbidden internal import in ${file}`).not.toMatch(pattern);
-      }
-    }
-  });
-
   it('does not import non-existent props schemas from @coveo/thermidor-schema', () => {
     const nonExistentImports = [
       /productCarouselPropsSchema.*from\s+['"]@coveo\/thermidor-schema['"]/,

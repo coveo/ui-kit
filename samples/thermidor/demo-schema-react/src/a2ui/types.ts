@@ -1,3 +1,5 @@
+import {isRecord} from '../utils.js';
+
 interface ComponentDefinition {
   id: string;
   component: string;
@@ -47,10 +49,6 @@ export interface ParsedSurface {
 }
 
 type SurfaceState = Omit<ParsedSurface, 'surfaceId'>;
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
 
 function isComponentDefinition(value: unknown): value is ComponentDefinition {
   if (!isRecord(value) || typeof value.id !== 'string' || typeof value.component !== 'string') {

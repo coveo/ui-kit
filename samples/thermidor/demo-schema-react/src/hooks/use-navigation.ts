@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useReducer, useRef, useState} from 'react';
 import type {Turn, Activity} from '@coveo/thermidor';
 import type {TargetedProduct} from '../context/targeting.js';
+import {isRecord} from '../utils.js';
 
 type ViewState = 'landing' | 'search' | 'conversation';
 
@@ -49,15 +50,21 @@ function navReducer(state: NavState, action: NavAction): NavState {
   }
 }
 
+const COMMERCE_SEARCH_ROOT_TYPE = 'commerce-search';
+
 interface DerivedSurface {
-  surfaceType: string;
+  rootComponentType: string;
   surfaceId: string;
 }
 
 /**
  * Scans a turn's activities for the first A2-UI createSurface message and
- * returns its surfaceType and surfaceId. Returns null when no such surface
- * exists (e.g. a plain-text conversational response).
+ * returns the surface's root componentType alongside its surfaceId. The root
+ * is resolved from `createSurface.rootId` against the raw v1.0 payload (as
+ * authored by the producer, before the Surface_Bridge id-rewrite): the node
+ * whose `id` equals `rootId` supplies `props.componentType`. Returns null when
+ * no such surface exists (e.g. a plain-text conversational response) or when
+ * the declared root cannot be resolved to a component with a componentType.
  */
 function findSurface(activities: Activity[] | undefined): DerivedSurface | null {
   if (!activities) return null;
@@ -69,22 +76,27 @@ function findSurface(activities: Activity[] | undefined): DerivedSurface | null 
     if (!Array.isArray(messages)) continue;
 
     for (const msg of messages) {
-      if (
-        msg &&
-        typeof msg === 'object' &&
-        'createSurface' in msg &&
-        msg.createSurface &&
-        typeof msg.createSurface === 'object' &&
-        'surfaceType' in msg.createSurface &&
-        typeof msg.createSurface.surfaceType === 'string' &&
-        'surfaceId' in msg.createSurface &&
-        typeof msg.createSurface.surfaceId === 'string'
-      ) {
-        return {
-          surfaceType: msg.createSurface.surfaceType,
-          surfaceId: msg.createSurface.surfaceId,
-        };
-      }
+      if (!isRecord(msg)) continue;
+      const createSurface = msg['createSurface'];
+      if (!isRecord(createSurface)) continue;
+
+      const surfaceId = createSurface['surfaceId'];
+      const rootId = createSurface['rootId'];
+      if (typeof surfaceId !== 'string' || typeof rootId !== 'string') continue;
+
+      const components = createSurface['components'];
+      if (!Array.isArray(components)) continue;
+
+      const rootComponent = components.find((comp) => isRecord(comp) && comp['id'] === rootId);
+      if (!isRecord(rootComponent)) continue;
+
+      const props = rootComponent['props'];
+      if (!isRecord(props) || typeof props['componentType'] !== 'string') continue;
+
+      return {
+        rootComponentType: props['componentType'],
+        surfaceId,
+      };
     }
   }
 
@@ -96,25 +108,23 @@ function findSurface(activities: Activity[] | undefined): DerivedSurface | null 
  */
 export function findCommerceSurfaceId(activities: Activity[] | undefined): string | null {
   const surface = findSurface(activities);
-  return surface?.surfaceType === 'commerceSearch' ? surface.surfaceId : null;
+  return surface?.rootComponentType === COMMERCE_SEARCH_ROOT_TYPE ? surface.surfaceId : null;
 }
 
-function deriveTransitionAction(turn: Turn): NavAction | null {
+export function deriveTransitionAction(turn: Turn): NavAction | null {
   if (turn.status !== 'complete') return null;
 
   const surface = findSurface(turn.agentResponse?.activities);
 
-  // Commerce-search surfaces navigate to the dedicated results page.
-  if (surface?.surfaceType === 'commerceSearch') return {type: 'NAVIGATE_SEARCH'};
+  // A commerce-search root navigates to the dedicated results page.
+  if (surface?.rootComponentType === COMMERCE_SEARCH_ROOT_TYPE) return {type: 'NAVIGATE_SEARCH'};
 
-  // Converse surfaces render inline in the conversation flow.
-  if (surface?.surfaceType === 'converse') return {type: 'NAVIGATE_CONVERSATION'};
+  // Any other root componentType renders inline in the conversation flow.
+  if (surface) return {type: 'NAVIGATE_CONVERSATION'};
 
   // A plain-text response without any surface also routes to the conversation.
-  if (!surface && turn.agentResponse) return {type: 'NAVIGATE_CONVERSATION'};
+  if (turn.agentResponse) return {type: 'NAVIGATE_CONVERSATION'};
 
-  // Any other (unknown) surfaceType is intentionally not routed: the consumer
-  // must add an explicit branch rather than fall back to a default view.
   return null;
 }
 

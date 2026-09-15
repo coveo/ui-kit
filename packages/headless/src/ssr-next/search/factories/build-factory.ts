@@ -65,7 +65,7 @@ export const buildFactory =
     };
 
     if (options.onAccessTokenUpdate) {
-      options.onAccessTokenUpdate(updateEngineConfiguration);
+      options.onAccessTokenUpdate(updateEngineConfiguration, engine);
     }
 
     const controllers = buildControllerDefinitions({

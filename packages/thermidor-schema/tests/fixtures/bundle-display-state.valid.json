@@ -1,9 +1,0 @@
-{
-  "tiers": [
-    {
-      "label": "Budget",
-      "description": "Affordable gear.",
-      "slots": [{"categoryLabel": "Surfboard", "surfaceRef": "products-budget-surfboard"}]
-    }
-  ]
-}

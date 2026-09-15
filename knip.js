@@ -94,12 +94,6 @@ export default {
         '**/*.css', //TODO: Find a better solution
       ],
     },
-    'packages/thermidor-schema': {
-      entry: ['src/index.ts', 'src/generated/schemas.ts'],
-      ignoreUnresolved: [
-        /^\.\.\/\.\.\/thermidor-contracts\/src\/generated\/catalog-contracts\.js$/,
-      ],
-    },
     'samples/headless/commerce-react': {
       // ShowMore and ProductsPerPage are kept as reference examples but are not
       // wired into the UI, so Knip should not flag them as unused files.
@@ -189,14 +183,8 @@ export default {
       ignore: ['template/**/*'],
     },
     'packages/thermidor': {
-      ignore: ['**/*'],
-    },
-    'samples/thermidor/generative-react': {
-      ignore: ['**/*'],
-    },
-    'samples/thermidor/generative-angular': {
-      entry: ['proxy.conf.js'],
-      ignore: ['src/app/services/engine.service.ts'],
+      entry: ['src/**/*.test-d.ts'],
+      ignoreExportsUsedInFile: false,
     },
   },
 };

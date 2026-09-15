@@ -5,6 +5,6 @@ reviewers:
   dxui: ~
 
 review_bypass:
-  # Renovate @ Coveo (installation id 30846434). Dependency PRs are gated on
+  # Renovate @ Coveo (GitHub App id 245330). Dependency PRs are gated on
   # green CI instead of a DXUI review.
-  integration/30846434: pull_request
+  integration/245330: pull_request

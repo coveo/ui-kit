@@ -1,16 +1,13 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {createTestEngine} from '@/src/test/test-utils.js';
 import {type Engine, type FullEngine, getFullEngine} from '@/src/internal/engine/index.js';
-import {
-  getOrCreateGenerativeActions,
-  getOrCreateRoutedInterfaceRegistry,
-} from '@/src/internal/features/generative/index.js';
+import {getOrCreateGenerativeActions} from '@/src/internal/features/generative/index.js';
 import {
   buildGenerativeUnifiedInterface,
   type GenerativeUnifiedInterface,
 } from '@/src/public/interfaces/generative-unified.js';
 import {buildUnifiedConverseController} from './unified-converse-controller.js';
-import type {SerializedConverseState} from '../converse/converse-controller-serialization.js';
+import type {SerializedConverseState} from './converse-controller-serialization.js';
 
 const TEST_ID = 'test-unified-generative';
 
@@ -178,7 +175,24 @@ describe('buildUnifiedConverseController', () => {
             replace: false,
             payload: {
               messages: [
-                {createSurface: {surfaceType: 'commerceSearch', surfaceId: 'ui-commerce-search'}},
+                {
+                  version: 'v1.0',
+                  createSurface: {
+                    surfaceId: 'ui-commerce-search',
+                    rootId: 'commerce-search-root',
+                    components: [
+                      {
+                        id: 'commerce-search-root',
+                        component: 'CommerceSearch',
+                        props: {
+                          componentId: 'commerce-search-root',
+                          componentType: 'commerce-search',
+                        },
+                        children: [],
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -222,9 +236,21 @@ describe('buildUnifiedConverseController', () => {
             payload: {
               messages: [
                 {
+                  version: 'v1.0',
                   createSurface: {
-                    surfaceType: 'commerceSearch',
                     surfaceId: 'ui-commerce-search',
+                    rootId: 'commerce-search-root',
+                    components: [
+                      {
+                        id: 'commerce-search-root',
+                        component: 'CommerceSearch',
+                        props: {
+                          componentId: 'commerce-search-root',
+                          componentType: 'commerce-search',
+                        },
+                        children: [],
+                      },
+                    ],
                   },
                 },
               ],
@@ -284,7 +310,24 @@ describe('buildUnifiedConverseController', () => {
             replace: false,
             payload: {
               messages: [
-                {createSurface: {surfaceType: 'commerceSearch', surfaceId: 'ui-commerce-search'}},
+                {
+                  version: 'v1.0',
+                  createSurface: {
+                    surfaceId: 'ui-commerce-search',
+                    rootId: 'commerce-search-root',
+                    components: [
+                      {
+                        id: 'commerce-search-root',
+                        component: 'CommerceSearch',
+                        props: {
+                          componentId: 'commerce-search-root',
+                          componentType: 'commerce-search',
+                        },
+                        children: [],
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -419,30 +462,6 @@ describe('buildUnifiedConverseController', () => {
       expect(result.activeTurnId).toBe('turn-1');
     });
 
-    it('serializes routedInterface with useCase, snapshot, and query', () => {
-      const controller = buildController();
-      const actions = getOrCreateGenerativeActions(generativeInterface);
-      const registry = getOrCreateRoutedInterfaceRegistry(generativeInterface);
-
-      fullEngine.mutate(actions.createTurn({id: 'turn-1', prompt: 'search', status: 'streaming'}));
-      registry.register('turn-1', {
-        useCase: 'commerceSearch',
-        interface: {} as never,
-        snapshot: {results: []},
-        query: 'shoes',
-      });
-      fullEngine.mutate(actions.setRoutedInterface({turnId: 'turn-1', useCase: 'commerceSearch'}));
-      fullEngine.mutate(actions.completeTurn({turnId: 'turn-1'}));
-
-      const result = controller.serialize();
-
-      expect(result.turns[0].routedInterface).toEqual({
-        useCase: 'commerceSearch',
-        snapshot: {results: []},
-        query: 'shoes',
-      });
-    });
-
     it('produces output that survives JSON round-trip', () => {
       const controller = buildController();
       const actions = getOrCreateGenerativeActions(generativeInterface);
@@ -458,18 +477,6 @@ describe('buildUnifiedConverseController', () => {
       const roundTripped = JSON.parse(JSON.stringify(serialized));
 
       expect(roundTripped).toEqual(serialized);
-    });
-
-    it('excludes routedInterface when not set', () => {
-      const controller = buildController();
-      const actions = getOrCreateGenerativeActions(generativeInterface);
-
-      fullEngine.mutate(actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'streaming'}));
-      fullEngine.mutate(actions.completeTurn({turnId: 'turn-1'}));
-
-      const result = controller.serialize();
-
-      expect(result.turns[0].routedInterface).toBeUndefined();
     });
   });
 
@@ -616,59 +623,6 @@ describe('buildUnifiedConverseController', () => {
       expect(controller.state.turns[0].status).toBe('complete');
       expect(controller.state.turns[1].status).toBe('error');
       expect(controller.state.turns[1].error).toBe('network failure');
-    });
-  });
-
-  describe('state port: setRoutedInterface', () => {
-    it('stores surfaceId in registry entries', async () => {
-      buildController();
-      const registry = getOrCreateRoutedInterfaceRegistry(generativeInterface);
-
-      const {UnifiedRuntime} = vi.mocked(await import('@/src/internal/api/unified/index.js'));
-      const getInstanceMock = UnifiedRuntime.getInstance as ReturnType<typeof vi.fn>;
-      const config = getInstanceMock.mock.calls[0][2];
-
-      config.statePort.setRoutedInterface('turn-1', {
-        useCase: 'commerceSearch',
-        interface: {} as never,
-        snapshot: {products: []},
-        query: 'shoes',
-        surfaceId: 'surface-abc',
-      });
-
-      const entry = registry.get('turn-1');
-      expect(entry).toBeDefined();
-      expect(entry!.surfaceId).toBe('surface-abc');
-      expect(entry!.useCase).toBe('commerceSearch');
-      expect(entry!.snapshot).toEqual({products: []});
-      expect(entry!.query).toBe('shoes');
-    });
-
-    it('clears the registry and turn when the deleted surface matches', async () => {
-      const controller = buildController();
-      const actions = getOrCreateGenerativeActions(generativeInterface);
-      const registry = getOrCreateRoutedInterfaceRegistry(generativeInterface);
-      fullEngine.mutate(actions.createTurn({id: 'turn-1', prompt: 'hello', status: 'complete'}));
-
-      const {UnifiedRuntime} = vi.mocked(await import('@/src/internal/api/unified/index.js'));
-      const getInstanceMock = UnifiedRuntime.getInstance as ReturnType<typeof vi.fn>;
-      const config = getInstanceMock.mock.calls[0][2];
-
-      config.statePort.setRoutedInterface('turn-1', {
-        useCase: 'commerceSearch',
-        interface: {} as never,
-        snapshot: {products: []},
-        query: undefined,
-        surfaceId: 'surface-abc',
-      });
-
-      config.statePort.clearRoutedInterface('turn-1', 'other-surface');
-      expect(registry.get('turn-1')).toBeDefined();
-      expect(controller.state.turns[0].routedInterface).toBeDefined();
-
-      config.statePort.clearRoutedInterface('turn-1', 'surface-abc');
-      expect(registry.get('turn-1')).toBeUndefined();
-      expect(controller.state.turns[0].routedInterface).toBeUndefined();
     });
   });
 

@@ -2,7 +2,6 @@ import {describe, it, expect, vi, beforeEach} from 'vitest';
 import {render, screen, fireEvent} from '@testing-library/react';
 import {PaginationRenderer} from './Pagination/Pagination.js';
 import {SortRenderer} from './Sort/Sort.js';
-import {SearchBoxRenderer} from './SearchBox/SearchBox.js';
 import {ProductListRenderer} from './ProductList/ProductList.js';
 import {TargetingProvider, type TargetingContext} from '../context/targeting.js';
 
@@ -161,47 +160,6 @@ describe('SortRenderer', () => {
       sortCriteria: 'price_asc',
       fields: [{field: 'ec_price', direction: 'asc'}],
     });
-  });
-});
-
-describe('SearchBoxRenderer', () => {
-  const props = {componentId: 'test-search-box', componentType: 'search-box' as const};
-
-  it('renders nothing when state is undefined (loading)', () => {
-    mockControllerState = undefined;
-    const {container} = render(<SearchBoxRenderer props={props} />);
-    expect(container.innerHTML).toBe('');
-  });
-
-  it('renders search input with the query from state', () => {
-    mockControllerState = {query: 'shoes'};
-    render(<SearchBoxRenderer props={props} />);
-
-    const input = screen.getByLabelText('Search') as HTMLInputElement;
-    expect(input).toBeDefined();
-    expect(input.value).toBe('shoes');
-  });
-
-  it('dispatches submitQuery on form submission', () => {
-    mockControllerState = {query: ''};
-    render(<SearchBoxRenderer props={props} />);
-
-    const input = screen.getByLabelText('Search');
-    fireEvent.change(input, {target: {value: 'running shoes'}});
-    fireEvent.submit(screen.getByRole('search'));
-
-    expect(mockDispatch).toHaveBeenCalledWith('submitQuery', {query: 'running shoes'});
-  });
-
-  it('dispatches submitQuery with updated input value on submit button click', () => {
-    mockControllerState = {query: 'initial'};
-    render(<SearchBoxRenderer props={props} />);
-
-    const input = screen.getByLabelText('Search');
-    fireEvent.change(input, {target: {value: 'updated query'}});
-    fireEvent.click(screen.getByLabelText('Submit search'));
-
-    expect(mockDispatch).toHaveBeenCalledWith('submitQuery', {query: 'updated query'});
   });
 });
 

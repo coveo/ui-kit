@@ -46,14 +46,15 @@ describe('schema-response-search decomposed surface structure', () => {
       expect((activitySnapshot!.data as Record<string, unknown>).activityType).toBe('a2ui-surface');
     });
 
-    it('includes surfaceType: commerceSearch in the createSurface payload', () => {
+    it('places the surface in the main region via surfaceProperties', () => {
       const content = (activitySnapshot!.data as Record<string, unknown>).content as Record<
         string,
         unknown
       >;
       const messages = content.messages as Array<Record<string, unknown>>;
       const createSurface = messages[0].createSurface as Record<string, unknown>;
-      expect(createSurface.surfaceType).toBe('commerceSearch');
+      const surfaceProperties = createSurface.surfaceProperties as Record<string, unknown>;
+      expect(surfaceProperties.placement).toBe('main');
     });
 
     it('includes individual decomposed components', () => {
@@ -65,10 +66,53 @@ describe('schema-response-search decomposed surface structure', () => {
       const createSurface = messages[0].createSurface as Record<string, unknown>;
       const components = createSurface.components as Array<Record<string, unknown>>;
       const componentIds = components.map((c) => c.id);
-      expect(componentIds).toContain('search-box-2');
+      expect(componentIds).toContain('query-summary-2');
       expect(componentIds).toContain('product-list-2');
       expect(componentIds).toContain('pagination-2');
       expect(componentIds).toContain('sort-2');
+      expect(componentIds).toContain('page-size-2');
+    });
+
+    it('composes the two-column layout from generic layout-stack nodes', () => {
+      const content = (activitySnapshot!.data as Record<string, unknown>).content as Record<
+        string,
+        unknown
+      >;
+      const messages = content.messages as Array<Record<string, unknown>>;
+      const createSurface = messages[0].createSurface as Record<string, unknown>;
+      const components = createSurface.components as Array<Record<string, unknown>>;
+      const componentMap = new Map(components.map((c) => [c.id, c]));
+
+      // The root composes exactly the sidebar and main columns.
+      expect(componentMap.get('commerce-search-2')!.children as string[]).toEqual([
+        'search-sidebar',
+        'search-main',
+      ]);
+
+      // Each layout region is a layout-stack carrying its direction as a node prop.
+      const layoutRegions: [string, 'column' | 'row'][] = [
+        ['search-sidebar', 'column'],
+        ['search-main', 'column'],
+        ['search-top', 'row'],
+        ['search-bottom', 'row'],
+      ];
+      for (const [id, direction] of layoutRegions) {
+        const entry = componentMap.get(id);
+        expect(entry, `expected surface to declare ${id}`).toBeDefined();
+        const props = entry!.props as Record<string, unknown>;
+        expect(props.componentType).toBe('layout-stack');
+        expect(props.direction).toBe(direction);
+      }
+
+      // The top row places the summary before the sort; the bottom row pagination before page size.
+      expect(componentMap.get('search-top')!.children as string[]).toEqual([
+        'query-summary-2',
+        'sort-2',
+      ]);
+      expect(componentMap.get('search-bottom')!.children as string[]).toEqual([
+        'pagination-2',
+        'page-size-2',
+      ]);
     });
 
     it('includes the three facets and a facet manager', () => {
@@ -104,8 +148,8 @@ describe('schema-response-search decomposed surface structure', () => {
       const components = createSurface.components as Array<Record<string, unknown>>;
       const componentMap = new Map(components.map((c) => [c.id, c]));
       expect(
-        (componentMap.get('search-box-2')!.props as Record<string, unknown>).componentType
-      ).toBe('search-box');
+        (componentMap.get('query-summary-2')!.props as Record<string, unknown>).componentType
+      ).toBe('query-summary');
       expect(
         (componentMap.get('product-list-2')!.props as Record<string, unknown>).componentType
       ).toBe('product-list');
@@ -144,11 +188,21 @@ describe('schema-response-search decomposed surface structure', () => {
       return snapshot.components as Record<string, unknown>;
     }
 
-    it('delivers state for search-box-2 with query', () => {
+    it('delivers state for query-summary-2 with the result-window aggregate', () => {
       const components = getComponents();
-      const searchBoxState = components['search-box-2'] as Record<string, unknown>;
-      expect(searchBoxState).toBeDefined();
-      expect(typeof searchBoxState.query).toBe('string');
+      const summaryState = components['query-summary-2'] as Record<string, unknown>;
+      expect(summaryState).toBeDefined();
+      expect(typeof summaryState.query).toBe('string');
+      expect(typeof summaryState.firstIndex).toBe('number');
+      expect(typeof summaryState.lastIndex).toBe('number');
+      expect(typeof summaryState.totalEntries).toBe('number');
+    });
+
+    it('delivers state for page-size-2 with the current pageSize', () => {
+      const components = getComponents();
+      const pageSizeState = components['page-size-2'] as Record<string, unknown>;
+      expect(pageSizeState).toBeDefined();
+      expect(typeof pageSizeState.pageSize).toBe('number');
     });
 
     it('delivers state for product-list-2 with products array', () => {
@@ -183,8 +237,10 @@ describe('schema-response-search decomposed surface structure', () => {
       expect(Array.isArray(brandFacet.values)).toBe(true);
       expect((brandFacet.values as unknown[]).length).toBeGreaterThan(0);
 
+      // Facet ordering lives on the facet-manager A2-UI node's children, not in AG-UI state.
       const facetManager = components['facet-manager-2'] as Record<string, unknown>;
-      expect(facetManager.facetIds).toEqual(['facet-brand-2', 'facet-price-2', 'facet-category-2']);
+      expect(facetManager).toBeDefined();
+      expect(facetManager.facetIds).toBeUndefined();
     });
   });
 });
@@ -202,6 +258,14 @@ describe('schema-response-search initial response totals', () => {
     expect(pagination.totalPages).toBe(4);
     // Page 0 slice is capped at the page size.
     expect((productList.products as unknown[]).length).toBe(12);
+  });
+
+  it('summarizes the initial window as "1-12 of 43 for Water Sports"', () => {
+    const summary = components['query-summary-2'] as Record<string, unknown>;
+    expect(summary.query).toBe('Water Sports');
+    expect(summary.firstIndex).toBe(1);
+    expect(summary.lastIndex).toBe(12);
+    expect(summary.totalEntries).toBe(43);
   });
 });
 

@@ -9,7 +9,6 @@ function createMockEngine(): FullEngine {
     read: vi.fn(),
     subscribe: vi.fn(),
     adoptSlice: vi.fn(),
-    storeHydrationSnapshot: vi.fn(),
     getNavigatorContextProvider: vi.fn(),
     addInterface: vi.fn(),
     removeInterface: vi.fn(),

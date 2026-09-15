@@ -1,6 +1,6 @@
-export type PlatformEnvironment = 'prod' | 'dev' | 'stg' | 'hipaa';
+type PlatformEnvironment = 'prod' | 'dev' | 'stg' | 'hipaa';
 
-export type PlatformEndpointType = 'admin' | 'analytics' | 'platform';
+type PlatformEndpointType = 'admin' | 'analytics' | 'platform';
 
 export interface ResolveOrganizationEndpointOptions {
   environment?: PlatformEnvironment;

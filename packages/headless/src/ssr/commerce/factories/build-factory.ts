@@ -61,7 +61,7 @@ export type CommerceEngineDefinitionOptions<
   /**
    * Callback invoked when the access token changes.
    */
-  onAccessTokenUpdate?: (updateCallback: (token: string) => void) => void;
+  onAccessTokenUpdate?: (updateCallback: (token: string) => void, owner: object) => void;
 };
 
 function isListingFetchCompletedAction(action: unknown): action is Action {
@@ -194,7 +194,7 @@ export const buildFactory =
     };
 
     if (options.onAccessTokenUpdate) {
-      options.onAccessTokenUpdate(updateEngineConfiguration);
+      options.onAccessTokenUpdate(updateEngineConfiguration, engine);
     }
 
     const controllers = buildControllerDefinitions({

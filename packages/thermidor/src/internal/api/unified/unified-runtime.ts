@@ -6,16 +6,14 @@ import {generateId} from '@/src/internal/utils/index.js';
 import type {RawSSEEvent} from '@/src/internal/api/protocol/stream-types.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
-import type {GenerativeStatePort} from '@/src/internal/api/generative/index.js';
+import type {GenerativeStatePort} from '@/src/internal/features/generative/index.js';
 import {dispatchStreamEvent} from './unified-event-dispatcher.js';
 import {createConversationRequestBuilder} from './unified-conversation-request-builder.js';
-import {createSurfaceProcessor} from './unified-surface-processor.js';
 import type {A2uiAction, CommerceRequestModel} from './unified-endpoint-types.js';
 
 export interface UnifiedRuntimeConfig {
   statePort: GenerativeStatePort;
   generativeInterface: InterfaceHandle;
-  cartInterface: InterfaceHandle;
 }
 
 function isAbortError(error: unknown): boolean {
@@ -43,26 +41,6 @@ function getErrorMessage(error: unknown): string {
   return 'An unexpected error occurred while reading the conversation stream.';
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-export function extractSurfaceType(content: Record<string, unknown>): string | undefined {
-  const messages = content.messages;
-  if (!Array.isArray(messages)) {
-    return undefined;
-  }
-  for (const message of messages) {
-    if (isRecord(message) && 'createSurface' in message) {
-      const cs = message.createSurface;
-      if (isRecord(cs) && typeof cs.surfaceType === 'string') {
-        return cs.surfaceType;
-      }
-    }
-  }
-  return undefined;
-}
-
 export class UnifiedRuntime {
   private static cache = new WeakMap<FullEngine, Map<string, UnifiedRuntime>>();
 
@@ -73,21 +51,11 @@ export class UnifiedRuntime {
   private agentResponseInitialized = new Set<string>();
   private activeAbortController: AbortController | null = null;
   private requestBuilder: ReturnType<typeof createConversationRequestBuilder>;
-  private surfaceProcessor: ReturnType<typeof createSurfaceProcessor>;
 
   private constructor(engine: FullEngine, _interfaceId: string, config: UnifiedRuntimeConfig) {
     this.engine = engine;
     this.statePort = config.statePort;
-    this.requestBuilder = createConversationRequestBuilder(
-      config.generativeInterface,
-      config.cartInterface
-    );
-    this.surfaceProcessor = createSurfaceProcessor({
-      engine,
-      statePort: config.statePort,
-      generativeInterface: config.generativeInterface,
-      cartInterface: config.cartInterface,
-    });
+    this.requestBuilder = createConversationRequestBuilder(config.generativeInterface);
   }
 
   static getInstance(
@@ -203,18 +171,6 @@ export class UnifiedRuntime {
     const deps = {
       statePort: this.statePort,
       ensureAgentResponse: (tid: string) => this.ensureAgentResponse(tid),
-      onA2uiSurface: (tid: string, content: Record<string, unknown>) => {
-        const surfaceType = extractSurfaceType(content);
-
-        if (!surfaceType) {
-          // Legacy: surfaces without surfaceType route through the SurfaceProcessor
-          // for hydration (monolithic ProductSearchSurface / ProductListingSurface).
-          this.surfaceProcessor.processSnapshot(tid, content);
-        }
-        // Surfaces with a surfaceType (e.g. 'commerceSearch', 'converse') need no
-        // routing signal — the consumer derives navigation directly from the A2-UI
-        // activities already stored via appendSurface/appendActivity.
-      },
     };
 
     await readEventStream({

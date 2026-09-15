@@ -25,5 +25,4 @@ spec:
     - ./packages/quantic/catalog-info.yaml
     - ./packages/relay/catalog-info.yaml
     - ./packages/shopify/catalog-info.yaml
-    - ./packages/thermidor-schema/catalog-info.yaml
     - ./packages/thermidor/catalog-info.yaml
