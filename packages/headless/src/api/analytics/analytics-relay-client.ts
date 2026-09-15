@@ -14,7 +14,7 @@ type StateNeededByRelay = ConfigurationSection | CommerceConfigurationSection;
 /**
  * Maximum number of memoized relay instances kept at once.
  *
- * The selector is keyed (among others) by `accessToken`, a primitive. reselect's default
+ * The result cache is keyed (among others) by `accessToken`, a primitive. reselect's default
  * `weakMapMemoize` never evicts primitive keys, so on a server with per-user access tokens the
  * cache would grow without bound. An LRU cache with a fixed size keeps the memoization benefit
  * while capping retention. Sized generously so that concurrent, distinct tokens in flight during a
@@ -22,11 +22,13 @@ type StateNeededByRelay = ConfigurationSection | CommerceConfigurationSection;
  */
 const RELAY_INSTANCE_CACHE_SIZE = 50;
 
+// Only `memoize` (the result cache keyed by the primitive token) is bounded. `argsMemoize` is left
+// at its default `weakMapMemoize`, which keys weakly on the argument objects (the full SSR state,
+// the navigator context) so they stay garbage-collectable; bounding it with a strong LRU would
+// instead retain up to 50 complete state trees.
 const createBoundedSelector = createSelectorCreator({
   memoize: lruMemoize,
   memoizeOptions: {maxSize: RELAY_INSTANCE_CACHE_SIZE},
-  argsMemoize: lruMemoize,
-  argsMemoizeOptions: {maxSize: RELAY_INSTANCE_CACHE_SIZE},
 });
 
 export const getRelayInstanceFromState = createBoundedSelector(
