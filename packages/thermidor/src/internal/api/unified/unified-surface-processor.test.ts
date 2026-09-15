@@ -1,11 +1,10 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import type {FullEngine} from '@/src/internal/engine/index.js';
-import type {GenerativeStatePort} from '@/src/internal/api/generative/index.js';
+import type {GenerativeStatePort} from '@/src/internal/features/generative/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
 
-const {mockHydrateFromCreateSurface, mockApplyDataModelUpdate} = vi.hoisted(() => ({
+const {mockHydrateFromCreateSurface} = vi.hoisted(() => ({
   mockHydrateFromCreateSurface: vi.fn(),
-  mockApplyDataModelUpdate: vi.fn(),
 }));
 
 vi.mock('./unified-surface-hydration.js', async (importOriginal) => {
@@ -13,7 +12,6 @@ vi.mock('./unified-surface-hydration.js', async (importOriginal) => {
   return {
     ...actual,
     hydrateFromCreateSurface: mockHydrateFromCreateSurface,
-    applyDataModelUpdate: mockApplyDataModelUpdate,
   };
 });
 
@@ -32,8 +30,6 @@ function createDeps() {
     deps: {
       engine: {} as FullEngine,
       statePort,
-      generativeInterface: createMockInterface(),
-      cartInterface: createMockInterface(),
     },
     statePort,
   };
@@ -76,9 +72,7 @@ describe('createSurfaceProcessor', () => {
 
     expect(mockHydrateFromCreateSurface).toHaveBeenCalledWith(
       deps.engine,
-      expect.objectContaining({surfaceId: 's1', components: searchRoot, dataModel: {products: []}}),
-      deps.generativeInterface,
-      deps.cartInterface
+      expect.objectContaining({surfaceId: 's1', components: searchRoot, dataModel: {products: []}})
     );
     expect(statePort.setRoutedInterface).toHaveBeenCalledOnce();
   });
@@ -110,9 +104,7 @@ describe('createSurfaceProcessor', () => {
 
     expect(mockHydrateFromCreateSurface).toHaveBeenCalledWith(
       deps.engine,
-      expect.objectContaining({dataModel: {products: ['p1']}, components: searchRoot}),
-      deps.generativeInterface,
-      deps.cartInterface
+      expect.objectContaining({dataModel: {products: ['p1']}, components: searchRoot})
     );
   });
 
@@ -182,9 +174,7 @@ describe('createSurfaceProcessor', () => {
     );
     expect(mockHydrateFromCreateSurface).toHaveBeenCalledWith(
       deps.engine,
-      expect.objectContaining({components: searchRoot, dataModel: {products: ['fresh']}}),
-      deps.generativeInterface,
-      deps.cartInterface
+      expect.objectContaining({components: searchRoot, dataModel: {products: ['fresh']}})
     );
     warn.mockRestore();
   });
@@ -265,9 +255,7 @@ describe('createSurfaceProcessor', () => {
     expect(mockHydrateFromCreateSurface).toHaveBeenCalledOnce();
     expect(mockHydrateFromCreateSurface).toHaveBeenCalledWith(
       deps.engine,
-      expect.objectContaining({dataModel: {products: ['fresh']}}),
-      deps.generativeInterface,
-      deps.cartInterface
+      expect.objectContaining({dataModel: {products: ['fresh']}})
     );
   });
 });

@@ -1,6 +1,6 @@
 import type {z} from 'zod/v4';
 import {ComponentContractsSchema, type ComponentContracts} from '@coveo/thermidor-schema';
-import type {ConverseController} from '../converse/converse-controller.js';
+import type {UnifiedConverseController} from '../unified-converse/unified-converse-controller.js';
 import type {Controller} from '../controller-types.js';
 
 export interface RemoteControllerAction<TAction extends string = string, TPayload = unknown> {
@@ -17,10 +17,12 @@ export type RemoteControllerContractSchemaFor<TComponentType extends ComponentTy
   {shape: {componentType: {value: TComponentType}}}
 >;
 
-export type RemoteControllerActionNameForSchema<TComponentType extends ComponentType> =
-  keyof z.infer<RemoteControllerContractSchemaFor<TComponentType>['shape']['actions']> & string;
+type RemoteControllerActionNameForSchema<TComponentType extends ComponentType> = keyof z.infer<
+  RemoteControllerContractSchemaFor<TComponentType>['shape']['actions']
+> &
+  string;
 
-export type RemoteControllerActionPayloadForSchema<
+type RemoteControllerActionPayloadForSchema<
   TComponentType extends ComponentType,
   TAction extends RemoteControllerActionNameForSchema<TComponentType>,
 > =
@@ -31,7 +33,7 @@ export type RemoteControllerActionPayloadForSchema<
     ? TPayload
     : never;
 
-export type RemoteControllerStateForSchema<TComponentType extends ComponentType> = z.infer<
+type RemoteControllerStateForSchema<TComponentType extends ComponentType> = z.infer<
   RemoteControllerContractSchemaFor<TComponentType>['shape']['state']
 >;
 
@@ -39,7 +41,7 @@ export type RemoteControllerStateForSchema<TComponentType extends ComponentType>
  * A controller state source backed by Thermidor's active conversation turn.
  */
 export type RemoteControllerSource = Pick<
-  ConverseController,
+  UnifiedConverseController,
   'state' | 'subscribe' | 'dispatchAction'
 >;
 

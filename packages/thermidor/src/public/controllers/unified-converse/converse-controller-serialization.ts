@@ -17,7 +17,7 @@ export interface SerializedConverseState {
   activeTurnId: string | undefined;
 }
 
-export interface SerializedRoutedInterface {
+interface SerializedRoutedInterface {
   useCase: string;
   snapshot: Record<string, unknown>;
   query: string | undefined;

@@ -1,9 +1,8 @@
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
-import type {GenerativeStatePort} from '@/src/internal/api/generative/index.js';
+import type {GenerativeStatePort} from '@/src/internal/features/generative/index.js';
 import {
   hydrateFromCreateSurface,
-  applyDataModelUpdate,
   extractA2uiOperations,
   type ComponentNode,
   type CreateSurfacePayload,
@@ -13,8 +12,6 @@ import {
 export interface SurfaceProcessorDeps {
   engine: FullEngine;
   statePort: GenerativeStatePort;
-  generativeInterface: InterfaceHandle;
-  cartInterface: InterfaceHandle;
 }
 
 interface SurfaceLifecycleState {
@@ -92,13 +89,6 @@ function processOperations(
         state.interface = undefined;
         state.rootKind = undefined;
         deps.statePort.clearRoutedInterface(turnId, op.updateDataModel.surfaceId);
-      } else if (state.interface) {
-        applyDataModelUpdate(
-          deps.engine,
-          state.interface,
-          op.updateDataModel.path,
-          op.updateDataModel.value
-        );
       }
       maybeHydrate(turnId, op.updateDataModel.surfaceId, state, deps);
     } else if ('deleteSurface' in op) {
@@ -122,16 +112,11 @@ function maybeHydrate(
     return;
   }
 
-  const result = hydrateFromCreateSurface(
-    deps.engine,
-    {
-      ...state.createSurface,
-      components: state.components,
-      dataModel: state.dataModel,
-    },
-    deps.generativeInterface,
-    deps.cartInterface
-  );
+  const result = hydrateFromCreateSurface(deps.engine, {
+    ...state.createSurface,
+    components: state.components,
+    dataModel: state.dataModel,
+  });
   if (!result) {
     return;
   }

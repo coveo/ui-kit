@@ -1,34 +1,7 @@
 import type {FullEngine} from '@/src/internal/engine/index.js';
-import type {InterfaceHandle, CommerceInterface} from '@/src/internal/utils/index.js';
+import type {CommerceInterface} from '@/src/internal/utils/index.js';
 import {createNoopThunk, generateId} from '@/src/internal/utils/index.js';
 import {CommerceInterfaceImpl} from '@/src/internal/interfaces/commerce.js';
-import {createUnifiedSearchFacadeResolver} from './unified-search-facade.js';
-import {
-  createCommerceSearchEndpointResponseHandler,
-  type CommerceSearchResponse,
-} from '@/src/internal/api/commerce-search/index.js';
-import type {CoveoFacetResponse} from '@/src/internal/api/search/index.js';
-import {getOrCreateProductListActions} from '@/src/internal/features/product-list/index.js';
-import {getOrCreatePaginationActions} from '@/src/internal/features/pagination/index.js';
-import {getOrCreateFacetsActions} from '@/src/internal/features/facets/index.js';
-import {
-  fromCommerceApiSort,
-  getOrCreateSortActions,
-  type CommerceApiSortPayload,
-} from '@/src/internal/features/sort/index.js';
-import {getOrCreateTriggersActions} from '@/src/internal/features/triggers/index.js';
-import {getOrCreateQueryCorrectionActions} from '@/src/internal/features/query-correction/index.js';
-
-export interface A2uiSurfaceContent {
-  messages: A2uiMessage[];
-}
-
-export type A2uiMessage =
-  | {version: 'v1.0'; createSurface: CreateSurfacePayload}
-  | {version: 'v1.0'; updateDataModel: UpdateDataModelPayload}
-  | {version: 'v1.0'; updateComponents: UpdateComponentsPayload}
-  | {version: 'v1.0'; deleteSurface: DeleteSurfacePayload}
-  | {version: 'v1.0'; actionId: string; actionResponse: unknown};
 
 export type A2uiOperation =
   | {createSurface: CreateSurfacePayload}
@@ -50,18 +23,18 @@ export type ComponentNode = {
   component: string;
 } & Record<string, unknown>;
 
-export interface UpdateDataModelPayload {
+interface UpdateDataModelPayload {
   surfaceId: string;
   path?: string;
   value: unknown;
 }
 
-export interface UpdateComponentsPayload {
+interface UpdateComponentsPayload {
   surfaceId: string;
   components: ComponentNode[];
 }
 
-export interface DeleteSurfacePayload {
+interface DeleteSurfacePayload {
   surfaceId: string;
 }
 
@@ -73,13 +46,11 @@ export interface UnifiedHydrationResult {
   query: undefined;
 }
 
-const noopSuggestionsThunk = createNoopThunk('unified-surface-suggestions');
+const noopThunk = createNoopThunk('unified-surface-noop');
 
 export function hydrateFromCreateSurface(
   engine: FullEngine,
-  payload: CreateSurfacePayload,
-  generativeInterface: InterfaceHandle,
-  cartInterface: InterfaceHandle
+  payload: CreateSurfacePayload
 ): UnifiedHydrationResult | null {
   if (!payload.dataModel) {
     return null;
@@ -89,18 +60,11 @@ export function hydrateFromCreateSurface(
     return null;
   }
 
-  const searchResolver = createUnifiedSearchFacadeResolver(
-    generativeInterface,
-    cartInterface,
-    payload.surfaceId
-  );
   const iface = new CommerceInterfaceImpl(engine, generateId(), {
-    search: searchResolver,
-    suggestions: (_iface) => noopSuggestionsThunk,
+    search: (_iface) => noopThunk,
+    suggestions: (_iface) => noopThunk,
   });
   engine.storeHydrationSnapshot(payload.dataModel, iface);
-  const handleResponse = createCommerceSearchEndpointResponseHandler(iface);
-  handleResponse(engine, payload.dataModel as unknown as CommerceSearchResponse);
 
   return {
     surfaceId: payload.surfaceId,
@@ -109,75 +73,6 @@ export function hydrateFromCreateSurface(
     snapshot: payload.dataModel,
     query: undefined,
   };
-}
-
-export function applyDataModelUpdate(
-  engine: FullEngine,
-  iface: InterfaceHandle,
-  path: string | undefined,
-  value: unknown
-): void {
-  if (!path || path === '/') {
-    const handleResponse = createCommerceSearchEndpointResponseHandler(iface);
-    handleResponse(engine, value as CommerceSearchResponse);
-    return;
-  }
-
-  switch (path) {
-    case '/products': {
-      const productListActions = getOrCreateProductListActions(iface);
-      engine.mutate(productListActions.setProductsFromResponse(value as never));
-      break;
-    }
-    case '/pagination': {
-      const paginationActions = getOrCreatePaginationActions(iface);
-      const pagination = value as {
-        page: number;
-        perPage?: number;
-        pageSize?: number;
-        totalEntries: number;
-      };
-      const perPage = pagination.perPage ?? pagination.pageSize ?? 20;
-      engine.mutate(paginationActions.setTotalCount(pagination.totalEntries));
-      engine.mutate(paginationActions.setFirstResult(pagination.page * perPage));
-      engine.mutate(paginationActions.setPageSize(perPage));
-      break;
-    }
-    case '/facets': {
-      const facetActions = getOrCreateFacetsActions(iface);
-      engine.mutate(facetActions.updateFromResponse(value as unknown as CoveoFacetResponse[]));
-      break;
-    }
-    case '/sort': {
-      const sortActions = getOrCreateSortActions(iface);
-      const sort = value as {
-        appliedSort?: CommerceApiSortPayload;
-        availableSorts?: CommerceApiSortPayload[];
-      };
-      if (!sort.appliedSort || !Array.isArray(sort.availableSorts)) {
-        break;
-      }
-      engine.mutate(
-        sortActions.updateFromResponse({
-          appliedSort: fromCommerceApiSort(sort.appliedSort),
-          availableSorts: sort.availableSorts.map(fromCommerceApiSort),
-        })
-      );
-      break;
-    }
-    case '/triggers': {
-      const triggersActions = getOrCreateTriggersActions(iface);
-      engine.mutate(triggersActions.setTriggers(value as never));
-      break;
-    }
-    case '/queryCorrection': {
-      const queryCorrectionActions = getOrCreateQueryCorrectionActions(iface);
-      engine.mutate(queryCorrectionActions.setQueryCorrection(value as never));
-      break;
-    }
-    default:
-      break;
-  }
 }
 
 export function extractA2uiOperations(content: Record<string, unknown>): A2uiOperation[] {

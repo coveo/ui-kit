@@ -1,5 +1,5 @@
-import type {FullEngine} from '@/src/internal/engine/index.js';
-import type {StateSelector, Unsubscribe} from '@/src/internal/engine/index.js';
+import type {FullEngine, Unsubscribe} from '@/src/internal/engine/index.js';
+import type {StateSelector} from '@/src/internal/engine/engine-types.js';
 import type {Controller} from './controller-types.js';
 
 export abstract class BaseController<TState> implements Controller<TState> {

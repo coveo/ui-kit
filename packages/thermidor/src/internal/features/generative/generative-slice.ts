@@ -16,7 +16,7 @@ type GenerativeSlice = ReturnType<typeof createGenerativeSlice>;
 
 const CACHE_KEY: CacheKey<GenerativeSlice> = createCacheKey<GenerativeSlice>('generative/slice');
 
-export function createGenerativeSlice(
+function createGenerativeSlice(
   interfaceId: string,
   actions: ReturnType<typeof getOrCreateGenerativeActions>
 ) {

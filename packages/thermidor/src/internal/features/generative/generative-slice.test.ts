@@ -1,10 +1,12 @@
 import {describe, expect, it} from 'vitest';
-import {createGenerativeActions} from './generative-actions.js';
-import {createGenerativeSlice} from './generative-slice.js';
+import {createTestEngine, createTestInterface} from '@/src/test/test-utils.js';
+import {getOrCreateGenerativeActions} from './generative-actions.js';
+import {getOrCreateGenerativeSlice} from './generative-slice.js';
 
 describe('generative slice', () => {
-  const actions = createGenerativeActions('test');
-  const reducer = createGenerativeSlice('test', actions).reducer;
+  const iface = createTestInterface(createTestEngine(), 'test');
+  const actions = getOrCreateGenerativeActions(iface);
+  const reducer = getOrCreateGenerativeSlice(iface).reducer;
 
   it('keeps a turn streaming when attaching a routed interface', () => {
     let state = reducer(

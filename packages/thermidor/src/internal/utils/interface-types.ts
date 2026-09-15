@@ -16,7 +16,7 @@ import type {
   SelectProductsContext,
 } from '@/src/internal/api/unified/unified-endpoint-types.js';
 
-export type ActionIntent =
+type ActionIntent =
   | {name: 'execute_search'; context: ExecuteSearchContext}
   | {name: 'toggle_facet'; context: ToggleFacetContext}
   | {name: 'toggle_exclude_facet'; context: ToggleExcludeFacetContext}
@@ -45,24 +45,15 @@ export type EndpointThunk = AsyncThunk<void, EndpointThunkArg, {}>;
 
 export type FacadeResolver = (iface: InterfaceHandle) => EndpointThunk;
 
-export interface InterfaceRegistry {
+interface InterfaceRegistry {
   search: {interface: SearchInterface; facades: 'search' | 'suggestions'};
   commerce: {interface: CommerceInterface; facades: 'search' | 'suggestions'};
-  generative: {interface: GenerativeInterface; facades: 'conversation'};
   generativeUnified: {interface: GenerativeUnifiedInterface; facades: 'conversation'};
 }
 
 export type InterfaceType = keyof InterfaceRegistry;
 
 export type Facades = {[T in InterfaceType]: InterfaceRegistry[T]['facades']};
-
-export type InterfaceTypeMap = {
-  [T in InterfaceType]: InterfaceRegistry[T]['interface'];
-};
-
-export type InferInterfaceType<I> = {
-  [T in InterfaceType]: InterfaceTypeMap[T] extends I ? T : never;
-}[InterfaceType];
 
 export declare const SupportsBrand: unique symbol;
 
@@ -80,12 +71,6 @@ export interface CommerceInterface extends Supports<Facades['commerce']> {
   readonly [InterfaceTypeBrand]: 'commerce';
 }
 
-export interface GenerativeInterface extends Supports<Facades['generative']> {
-  readonly [InterfaceTypeBrand]: 'generative';
-}
-
 export interface GenerativeUnifiedInterface extends Supports<Facades['generativeUnified']> {
   readonly [InterfaceTypeBrand]: 'generativeUnified';
 }
-
-export interface ComposedInterface<T extends InterfaceType> extends Supports<Facades[T]> {}

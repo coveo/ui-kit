@@ -6,7 +6,7 @@ import {generateId} from '@/src/internal/utils/index.js';
 import type {RawSSEEvent} from '@/src/internal/api/protocol/stream-types.js';
 import type {FullEngine} from '@/src/internal/engine/index.js';
 import type {InterfaceHandle} from '@/src/internal/utils/index.js';
-import type {GenerativeStatePort} from '@/src/internal/api/generative/index.js';
+import type {GenerativeStatePort} from '@/src/internal/features/generative/index.js';
 import {dispatchStreamEvent} from './unified-event-dispatcher.js';
 import {createConversationRequestBuilder} from './unified-conversation-request-builder.js';
 import {createSurfaceProcessor} from './unified-surface-processor.js';
@@ -15,7 +15,6 @@ import type {A2uiAction, CommerceRequestModel} from './unified-endpoint-types.js
 export interface UnifiedRuntimeConfig {
   statePort: GenerativeStatePort;
   generativeInterface: InterfaceHandle;
-  cartInterface: InterfaceHandle;
 }
 
 function isAbortError(error: unknown): boolean {
@@ -58,15 +57,10 @@ export class UnifiedRuntime {
   private constructor(engine: FullEngine, _interfaceId: string, config: UnifiedRuntimeConfig) {
     this.engine = engine;
     this.statePort = config.statePort;
-    this.requestBuilder = createConversationRequestBuilder(
-      config.generativeInterface,
-      config.cartInterface
-    );
+    this.requestBuilder = createConversationRequestBuilder(config.generativeInterface);
     this.surfaceProcessor = createSurfaceProcessor({
       engine,
       statePort: config.statePort,
-      generativeInterface: config.generativeInterface,
-      cartInterface: config.cartInterface,
     });
   }
 

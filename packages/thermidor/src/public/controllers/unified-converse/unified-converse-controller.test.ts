@@ -10,7 +10,7 @@ import {
   type GenerativeUnifiedInterface,
 } from '@/src/public/interfaces/generative-unified.js';
 import {buildUnifiedConverseController} from './unified-converse-controller.js';
-import type {SerializedConverseState} from '../converse/converse-controller-serialization.js';
+import type {SerializedConverseState} from './converse-controller-serialization.js';
 
 const TEST_ID = 'test-unified-generative';
 

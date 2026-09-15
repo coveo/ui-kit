@@ -11,7 +11,7 @@ type GenerativeSelectors = ReturnType<typeof createGenerativeSelectors>;
 const CACHE_KEY: CacheKey<GenerativeSelectors> =
   createCacheKey<GenerativeSelectors>('generative/selectors');
 
-export function createGenerativeSelectors(interfaceId: string) {
+function createGenerativeSelectors(interfaceId: string) {
   const sliceSelector = createSelectSlice(interfaceId, 'generative', initialGenerativeState);
 
   return {
