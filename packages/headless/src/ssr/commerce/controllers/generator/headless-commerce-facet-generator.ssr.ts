@@ -24,11 +24,6 @@ import type {
 } from '../../../../controllers/commerce/core/facets/headless-core-commerce-facet.js';
 import {getCoreFacetState} from '../../../../controllers/commerce/core/facets/headless-core-commerce-facet.js';
 import type {
-  LocationFacet,
-  LocationFacetState,
-} from '../../../../controllers/commerce/core/facets/location/headless-commerce-location-facet.js';
-import {getLocationFacetState} from '../../../../controllers/commerce/core/facets/location/headless-commerce-location-facet.js';
-import type {
   NumericFacet,
   NumericFacetState,
   NumericFacetValue,
@@ -53,7 +48,6 @@ import {facetRequestSelector} from '../../../../features/commerce/facets/facet-s
 import type {CategoryFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request.js';
 import type {
   AnyFacetResponse,
-  LocationFacetValue,
   RegularFacetValue,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response.js';
 import {manualNumericFacetSelector} from '../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-selectors.js';
@@ -79,9 +73,6 @@ export type {
   DateFacet,
   DateFacetState,
   DateFacetValue,
-  LocationFacet,
-  LocationFacetState,
-  LocationFacetValue,
   MappedGeneratedFacetController,
   NumericFacet,
   NumericFacetState,
@@ -106,9 +97,7 @@ export type MappedFacetState = {
         ? DateFacetState
         : T extends 'hierarchical'
           ? CategoryFacetState
-          : T extends 'location'
-            ? LocationFacetState
-            : never;
+          : never;
 };
 
 /**
@@ -253,10 +242,6 @@ export function buildFacetGenerator(
             return getRegularFacetState(
               createFacetState(facetResponseSelector) as RegularFacetState,
               specificFacetSearchStateSelector(getEngineState(), facetId)
-            );
-          case 'location':
-            return getLocationFacetState(
-              createFacetState(facetResponseSelector) as LocationFacetState
             );
         }
       });

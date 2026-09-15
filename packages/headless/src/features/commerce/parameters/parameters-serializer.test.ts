@@ -106,12 +106,6 @@ describe.each([
       expect(result).toBe('fExcluded-one=a&fExcluded-two=b,c');
     });
 
-    it('should serialize lf-* records', () => {
-      const result = serialize({lf: {one: ['a'], two: ['b', 'c']}});
-
-      expect(result).toBe('lf-one=a&lf-two=b,c');
-    });
-
     it('should serialize mnf-* records', () => {
       const result = serialize({
         mnf: {
@@ -251,13 +245,9 @@ describe.each([
     it('should deserialize fExcluded-* parameters', () => {
       const result = deserialize('fExcluded-one=a&fExcluded-two=b,c');
 
-      expect(result).toStrictEqual({fExcluded: {one: ['a'], two: ['b', 'c']}});
-    });
-
-    it('should deserialize lf-* parameters', () => {
-      const result = deserialize('lf-one=a&lf-two=b,c');
-
-      expect(result).toStrictEqual({lf: {one: ['a'], two: ['b', 'c']}});
+      expect(result).toStrictEqual({
+        fExcluded: {one: ['a'], two: ['b', 'c']},
+      });
     });
 
     it('should deserialize mnf-* parameters', () => {
@@ -345,7 +335,6 @@ const getParameters = (includeQ = true) => {
       two: ['d', 'e'],
       three: [valueWithSpecialCharacters],
     },
-    lf: {four: [valueWithSpecialCharacters, 'b'], five: ['c']},
     cf: {six: [valueWithSpecialCharacters, 'b'], seven: ['c']},
     nf: {
       eight: [
