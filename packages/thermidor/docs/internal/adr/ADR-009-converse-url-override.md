@@ -1,9 +1,7 @@
 ---
 status: Accepted
 date: 2026-09-15
-related:
-  - https://coveord.atlassian.net/wiki/spaces/JSUI/pages/6896418852 # RFC — Catalog-Bound Endpoint Resolution
-  - https://coveord.atlassian.net/wiki/spaces/JSUI/pages/6899990561 # RFC — Signalling Execution Mode from Client to Backend
+related: []
 ---
 
 # Internal full-URL converse override as a fast-path escape hatch
@@ -12,13 +10,13 @@ related:
 
 Thermidor's transport hard-codes the converse request path
 (`{organizationEndpoint}/api/preview/organizations/{orgId}/agents/commerce/agui/converse`);
-only the host is configurable (via `endpoint`). Consumers that need a *different
-path* — a local gateway, or the internal `/private/converse` endpoint for the
+only the host is configurable (via `endpoint`). Consumers that need a different
+path — a local gateway, or the internal `/private/converse` endpoint for the
 unified internal-search work — cannot reach it without editing the engine.
 
-The durable fix (making transport coordinates a property of the contract set) is
-designed in the Catalog-Bound Endpoint Resolution RFC. That is a larger change.
-The internal work needs to move now, and does not want to block on the RFC.
+A more structured solution (making transport coordinates a property of the
+contract set) is possible but larger. The internal work needs to move now and
+should not block on that design.
 
 ## Decision Drivers
 
@@ -36,26 +34,31 @@ The internal work needs to move now, and does not want to block on the RFC.
 - **Pros:** One tiny option; ships today; no public-surface commitment; trivially removable.
 - **Cons:** A raw URL escape hatch; scatters endpoint knowledge if overused; no per-surface structure.
 
-### Option B: Catalog-Bound Endpoint Resolution (the RFC)
+### Option B: Structured, contract-bound endpoint resolution
 
-- **Summary:** Resolve transport coordinates from the surface's `catalogId` via a
-  typed endpoint descriptor + resolver + pluggable transport adapter; execution
-  mode rides the same descriptor.
-- **Pros:** Restores the schema-agnostic engine; one seam for path + routing policy; no forks.
-- **Cons:** Larger, cross-team effort; not ready now.
+- **Summary:** Resolve transport coordinates from the surface's contract set (e.g.
+  a `catalogId` → typed endpoint descriptor via a resolver / pluggable transport
+  adapter), so the engine never hard-codes a path.
+- **Pros:** Would keep the engine schema-agnostic; a single seam for path and
+  related routing concerns; no per-consumer forks.
+- **Cons:** Larger, cross-team effort; not ready now; design not settled — it is
+  one possibility among several, not a committed direction.
 
 ## Decision Outcome
 
-Adopt **Option A now** to iterate fast, and pursue **Option B** as the durable
-solution. `converseUrl` is deliberately `@internal` and documented as an escape
-hatch that Option B will supersede.
+Adopt **Option A now** to iterate fast. Option B is recorded as a possibility to
+keep on the table, not a committed plan — we may revisit this problem more
+thoroughly later (likely via one or more RFCs) once there is appetite and the
+requirements are clearer. `converseUrl` is deliberately `@internal` so it never
+becomes part of the public contract.
 
 ### Rationale
 
-The override is the smallest possible change that unblocks the internal endpoint
-today, while the `@internal` tag keeps it out of the public contract so adopting
-the RFC later requires no public deprecation. Option B is preferred long-term but
-must not gate current work.
+The override is the smallest change that unblocks the internal endpoint today.
+The `@internal` tag keeps it out of the public API, so if a more structured
+approach is adopted later, replacing the override requires no public deprecation.
+This ADR exists to leave a trace of why the escape hatch is here and of the
+alternatives we considered, without committing to any particular future design.
 
 ## Consequences
 
@@ -67,5 +70,5 @@ must not gate current work.
 
 - `converseUrl?: string` on the engine configuration (`@internal`), threaded to the
   unified endpoint client, which uses it verbatim when present.
-- Remove `converseUrl` once Catalog-Bound Endpoint Resolution lands, migrating
-  internal consumers to `catalogId`-driven resolution.
+- Revisit if/when a more structured endpoint-resolution approach is taken up; the
+  override can then be removed. Until then it stays as the fast path.
