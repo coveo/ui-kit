@@ -19,9 +19,9 @@ Dernière mise à jour : 2026-09-16
 | # | Demande client (§9 du rapport) | Type | Livraison | Statut |
 |---|---|---|---|---|
 | 1 | Confirmer Finding 1 et Finding 2 comme défauts | Confirmation | Réponse écrite + repro chiffré | ✅ Confirmé |
-| 2 | Finding 1 : ne plus retenir les moteurs (dispose / weak / skip registration), `ssr-commerce` **et** `ssr-commerce-next` | Fix | PR #8479 (registre faible : WeakRef + WeakMap + FinalizationRegistry, tous les chemins des 2 trees) | ✅ Mergé (`fa2e9de00d`) |
-| 3 | Finding 2 : mémoïsation bornée pour `getRelayInstanceFromState` | Fix | PR #8480 (`lruMemoize`, maxSize 50, uniquement `memoize`) | ✅ Mergé (`818bdf001e`) |
-| 4a | Token par requête first-class sur `fetchStaticState()` / `hydrateStaticState()` (`ssr-commerce-next`) | Fix | PR #8481 (param `accessToken`) | ✅ Mergé (`01434bcbd3`) |
+| 2 | Finding 1 : ne plus retenir les moteurs (dispose / weak / skip registration), `ssr-commerce` **et** `ssr-commerce-next` | Fix | [PR #8479](https://github.com/coveo/ui-kit/pull/8479) (registre faible : WeakRef + WeakMap + FinalizationRegistry, tous les chemins des 2 trees) | ✅ Mergé ([`fa2e9de00d`](https://github.com/coveo/ui-kit/commit/fa2e9de00d)) |
+| 3 | Finding 2 : mémoïsation bornée pour `getRelayInstanceFromState` | Fix | [PR #8480](https://github.com/coveo/ui-kit/pull/8480) (`lruMemoize`, maxSize 50, uniquement `memoize`) | ✅ Mergé ([`818bdf001e`](https://github.com/coveo/ui-kit/commit/818bdf001e)) |
+| 4a | Token par requête first-class sur `fetchStaticState()` / `hydrateStaticState()` (`ssr-commerce-next`) | Fix | [PR #8481](https://github.com/coveo/ui-kit/pull/8481) (param `accessToken`) | ✅ Mergé ([`01434bcbd3`](https://github.com/coveo/ui-kit/commit/01434bcbd3)) |
 
 **→ Tout le périmètre CODE demandé est livré et mergé.** La confirmation (1) et les trois fixes (2, 3, 4a) sont clos. **Disponible dans `@coveo/headless` 3.56.0.**
 
@@ -119,9 +119,9 @@ Contraintes de communication (préférences projet) :
 - **Rapport client** : `docs/investigation/CMS-443-headless-memory-leak-report_2026-09-10.md` (stashé, non suivi).
 - **Harnais de repro/validation** : branche `chore/CMS-443-memory-repro`, `utils/cms443-memory-repro/` (`repro.mjs`, `compare.sh`, `README.md`) — poussée, sans PR.
 - **PRs de fix** (toutes **mergées** sur `main` le 2026-09-15, off `main`, sans stack) :
-  - #8479 — Finding 1 (registre faible : WeakRef + WeakMap + FinalizationRegistry, patch) — merge `fa2e9de00d`
-  - #8480 — Finding 2 (lruMemoize sur `memoize` uniquement, patch) — merge `818bdf001e`
-  - #8481 — Finding 3 (token par requête ssr-next, minor) — merge `01434bcbd3`
+  - [PR #8479](https://github.com/coveo/ui-kit/pull/8479) — Finding 1 (registre faible : WeakRef + WeakMap + FinalizationRegistry, patch) — merge [`fa2e9de00d`](https://github.com/coveo/ui-kit/commit/fa2e9de00d)
+  - [PR #8480](https://github.com/coveo/ui-kit/pull/8480) — Finding 2 (lruMemoize sur `memoize` uniquement, patch) — merge [`818bdf001e`](https://github.com/coveo/ui-kit/commit/818bdf001e)
+  - [PR #8481](https://github.com/coveo/ui-kit/pull/8481) — Finding 3 (token par requête ssr-next, minor) — merge [`01434bcbd3`](https://github.com/coveo/ui-kit/commit/01434bcbd3)
 
 ### Résultats repro avant/après (harnais, jeu de controllers minimal)
 
