@@ -241,7 +241,7 @@ const hydratedState = await hydrateStaticState({
 
 ## Keep per-request data out of the shared definition (server)
 
-The engine definition is created once and shared across every request the server handles. Keeping the server and client aligned (above) is about the *manipulations* you apply to that definition — it does **not** mean per-request data belongs on the shared definition.
+The engine definition is created once and shared across every request the server handles. Keeping the server and client aligned (above) is about the _manipulations_ you apply to that definition — it does **not** mean per-request data belongs on the shared definition.
 
 On the server, requests are handled concurrently. Data that varies from one request to the next — the access token and the navigator context — must not be written onto the shared definition, because a value set for one request would be visible to the others in flight at the same time. Instead, pass that data per request:
 
