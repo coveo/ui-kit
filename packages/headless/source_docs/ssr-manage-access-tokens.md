@@ -20,7 +20,7 @@ For the following examples, assume a shared configuration file (`engine.ts`) tha
 ```ts
 // engine.ts
 
-import {defineCommerceEngine} from '@coveo/headless/ssr-commerce';
+import {defineCommerceEngine} from '@coveo/headless/ssr-commerce-next';
 
 export const engineDefinition = defineCommerceEngine({
   configuration: {
@@ -66,12 +66,14 @@ export default async function ProductListing({request}: {request: Request}) {
   });
 
   return (
-    <StaticStateProvider staticState={staticState}>
+    <ListingProvider staticState={staticState}>
       {/* Other components */}
-    </StaticStateProvider>
+    </ListingProvider>
   );
 }
 ```
+
+`ListingProvider` here is a provider you build once from your engine definition with `buildProviderWithDefinition` (from `@coveo/headless-react/ssr-commerce-next`), as shown in the [SSR commerce providers documentation](https://docs.coveo.com/en/obif0156/#create-providers).
 
 The token you pass applies to that request only; it doesn’t affect the shared definition or any other request.
 When you omit `accessToken`, the request uses the token configured in the definition.
@@ -82,7 +84,8 @@ When you omit `accessToken`, the request uses the token configured in the defini
 
 > [!NOTE]
 >
-> The per-request `accessToken` is available on the `@coveo/headless/ssr-commerce` engine definition, and on its `@coveo/headless-react/ssr-commerce` React wrapper.
+> The per-request `accessToken` is available on the `@coveo/headless/ssr-commerce-next` engine definition, and on its `@coveo/headless-react/ssr-commerce-next` React wrapper.
+> It is not available on the older `@coveo/headless/ssr-commerce` engine definition.
 
 ## Update the token on the client
 
