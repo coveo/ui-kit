@@ -1,4 +1,5 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
+import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {
   ControllerStaticStateMap,
@@ -29,6 +30,14 @@ export type FetchStaticStateOptions = {
    * access token is used.
    */
   accessToken?: string;
+  /**
+   * The navigator context to use for this request only.
+   *
+   * When provided, it is applied to this request's engine without mutating the shared definition,
+   * so concurrent requests do not read each other's client ID, user agent, or forwarded-for values.
+   * When omitted, the provider set with `setNavigatorContextProvider` is used.
+   */
+  navigatorContext?: NavigatorContext;
 };
 
 export type FetchStaticState<
@@ -60,10 +69,10 @@ export type FetchStaticState<
    */
   fromBuildResult: FromBuildResult<
     TControllers,
-    // `accessToken` is a per-request option of `fetchStaticState()` only; `fromBuildResult`
-    // re-executes an already-built engine and never reads it, so it is excluded here to avoid
-    // silently accepting a token that would have no effect.
-    Omit<FetchStaticStateOptions, 'accessToken'>,
+    // `accessToken` and `navigatorContext` are per-request options of `fetchStaticState()` only;
+    // `fromBuildResult` re-executes an already-built engine and never reads them, so they are
+    // excluded here to avoid silently accepting a token/context that would have no effect.
+    Omit<FetchStaticStateOptions, 'accessToken' | 'navigatorContext'>,
     EngineStaticState<TSearchAction, TControllersStaticState>
   >;
 };
