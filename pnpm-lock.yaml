@@ -1498,15 +1498,6 @@ importers:
       '@ag-ui/core':
         specifier: 0.0.59
         version: 0.0.59
-      '@coveo/thermidor-schema':
-        specifier: 'catalog:'
-        version: 1.0.0-beta.3(zod@4.5.4)
-      '@reduxjs/toolkit':
-        specifier: 'catalog:'
-        version: 2.12.0(react@19.2.8)
-      zod:
-        specifier: 'catalog:'
-        version: 4.5.4
     devDependencies:
       '@microsoft/api-extractor':
         specifier: 7.59.1
@@ -1526,6 +1517,9 @@ importers:
       vitest:
         specifier: 'catalog:'
         version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/browser-playwright@4.1.11)(jsdom@30.0.1)(msw@2.15.0(@types/node@24.13.3)(typescript@6.0.3))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(sass@1.104.0)(terser@5.51.2)(yaml@2.9.0))
+      zod:
+        specifier: 'catalog:'
+        version: 4.5.4
 
   samples/atomic/commerce-react:
     dependencies:
