@@ -238,3 +238,25 @@ const hydratedState = await hydrateStaticState({
 >   searchAction: staticState.searchAction,
 > });
 > ```
+
+## Keep per-request data out of the shared definition (server)
+
+The engine definition is created once and shared across every request the server handles. Keeping the server and client aligned (above) is about the *manipulations* you apply to that definition — it does **not** mean per-request data belongs on the shared definition.
+
+On the server, requests are handled concurrently. Data that varies from one request to the next — the access token and the navigator context — must not be written onto the shared definition, because a value set for one request would be visible to the others in flight at the same time. Instead, pass that data per request:
+
+```ts
+// server.ts
+
+const staticState = await engineDefinition.fetchStaticState({
+  accessToken: getSearchTokenForUser(request), // per-user token
+  navigatorContext: getNavigatorContext(request), // per-request client id, user agent, etc.
+  controllers: {/* ... */},
+});
+```
+
+Each value applies to that request only and leaves the shared definition untouched, so concurrent requests stay isolated. See [Manage access tokens](./manage-access-tokens.html) for the full token and navigator-context guidance.
+
+> [!NOTE]
+>
+> `setAccessToken()` and `setNavigatorContextProvider()` write onto the shared definition. They are the right tools on the **client**, where a single hydrated engine runs for the session, but on the **server** prefer the per-request options shown above.
