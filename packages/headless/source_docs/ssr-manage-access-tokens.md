@@ -43,6 +43,8 @@ Every request uses this token, and you don’t need to do anything else.
 
 This is the default: the token you configure in `engine.ts` is the one used unless you override it for a specific request.
 
+For more details about the `accessToken` configuration and about `renewAccessToken` (the callback the engine runs to obtain a new token when the current one expires), see [Configure a Headless Engine](../../index.html#configure-a-headless-engine).
+
 ## Use a different token per user
 
 In a multi-tenant application, each request may need its own token — for example, a search token minted for the currently authenticated user.
