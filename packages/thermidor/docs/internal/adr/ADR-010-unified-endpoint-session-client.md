@@ -312,8 +312,12 @@ already exist without proportional benefit.
   controller vending ([ADR-013](./ADR-013-remote-controller-vending.md)), and
   consumer-supplied endpoint & schema ([ADR-014](./ADR-014-consumer-supplied-endpoint-and-schema.md)).
 - **Open follow-ups:**
-  - Provide a framework-agnostic surface-discovery utility to replace the
-    duplicated `deriveCommerceSurfaceId` / sample `findSurface` helpers.
+  - Surface & route derivation: today the duplicated `deriveCommerceSurfaceId` /
+    sample `findSurface` helpers reverse-engineer surface identity and route type by
+    re-parsing raw `activities`. This is a protocol-gap workaround, not a permanent
+    client responsibility — see [ADR-015](./ADR-015-surface-and-route-derivation.md)
+    (interim: derive once in the fold and expose a typed `response.surfaces`; target:
+    server-surfaced typed routing, coupled to the SSR route-determination ADR).
   - Rewrite `spec.md`, `README.md`, and `docs/architecture.md` to describe the
     session-client model (they still describe earlier visions).
 - **Validation:** `pnpm --filter @coveo/thermidor build` and `test`; Knip is

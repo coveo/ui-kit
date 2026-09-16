@@ -8,6 +8,7 @@ related:
   - ./ADR-012-client-owned-context.md
   - ./ADR-013-remote-controller-vending.md
   - ./ADR-014-consumer-supplied-endpoint-and-schema.md
+  - ./ADR-015-surface-and-route-derivation.md
 ---
 
 # Architecture Decision Charter (v2) — unified-endpoint session client
@@ -197,3 +198,5 @@ The unified-endpoint session-client family, all governed by this charter:
   from the session.
 - [ADR-014](./ADR-014-consumer-supplied-endpoint-and-schema.md) — Consumer-supplied
   endpoint & injected schema (+ typing annex).
+- [ADR-015](./ADR-015-surface-and-route-derivation.md) — Surface & route derivation
+  (interim client-side; target server-surfaced).
