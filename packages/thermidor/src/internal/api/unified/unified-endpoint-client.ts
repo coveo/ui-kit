@@ -30,8 +30,6 @@ const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
       const organizationEndpoint = getOrganizationEndpoint(organizationId, {
         endpoint,
       });
-      // `converseUrl` is a full-URL escape hatch (see ConfigurationState.converseUrl):
-      // when set, it bypasses endpoint/path composition entirely.
       const url =
         converseUrl ??
         organizationEndpoint +

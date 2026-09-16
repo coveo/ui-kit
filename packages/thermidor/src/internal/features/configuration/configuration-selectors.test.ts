@@ -68,6 +68,20 @@ describe('configuration selectors', () => {
       expect(selectors.getEndpointClientConfiguration(state).endpoint).toBeUndefined();
     });
 
+    it('passes through converseUrl when set', () => {
+      const state = createState({converseUrl: 'https://gateway.internal/converse'});
+
+      expect(selectors.getEndpointClientConfiguration(state).converseUrl).toBe(
+        'https://gateway.internal/converse'
+      );
+    });
+
+    it('leaves converseUrl undefined when not set', () => {
+      const state = createState();
+
+      expect(selectors.getEndpointClientConfiguration(state).converseUrl).toBeUndefined();
+    });
+
     it('returns the same reference when state has not changed', () => {
       const state = createState();
       const first = selectors.getEndpointClientConfiguration(state);
