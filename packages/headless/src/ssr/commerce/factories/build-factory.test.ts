@@ -297,5 +297,52 @@ describe('buildFactory', () => {
       expect(tokensUsed).toContain('token-A');
       expect(tokensUsed).toContain('token-B');
     });
+
+    it('should NOT subscribe a per-request-token engine to shared token updates', async () => {
+      // A per-request token must stay authoritative for this call only: subscribing would let a
+      // queued or concurrent setAccessToken() overwrite it. So the shared subscription is skipped.
+      const onAccessTokenUpdate = vi.fn();
+      const factory = buildFactory(mockEmptyDefinition, {
+        ...mockEngineOptions,
+        onAccessTokenUpdate,
+      });
+      const build = factory(SolutionType.listing);
+
+      await build({accessToken: 'per-request-token'});
+
+      expect(onAccessTokenUpdate).not.toHaveBeenCalled();
+    });
+
+    it('should still subscribe to shared token updates when no per-request token is provided', async () => {
+      const onAccessTokenUpdate = vi.fn();
+      const factory = buildFactory(mockEmptyDefinition, {
+        ...mockEngineOptions,
+        onAccessTokenUpdate,
+      });
+      const build = factory(SolutionType.listing);
+
+      const {engine} = await build();
+
+      expect(onAccessTokenUpdate).toHaveBeenCalledExactlyOnceWith(expect.any(Function), engine);
+    });
+
+    it('should let the deprecated extend hook override the per-request token', async () => {
+      // The per-request token is applied before `extend` runs, so an extender that returns a
+      // different access token wins — matching the documented "extend takes precedence".
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+      const build = factory(SolutionType.listing);
+
+      await build({
+        accessToken: 'per-request-token',
+        extend: async (options) => ({
+          ...options,
+          configuration: {...options.configuration, accessToken: 'extend-token'},
+        }),
+      });
+
+      expect(
+        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0].configuration.accessToken
+      ).toBe('extend-token');
+    });
   });
 });

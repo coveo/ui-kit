@@ -176,28 +176,28 @@ export const buildFactory =
       solutionType
     );
 
-    // Resolve the options for THIS request without mutating the shared definition options.
-    // A per-request access token overrides the definition's configured token for this call only;
-    // omitting it falls back to the shared configuration. The `extend` hook (deprecated) still
-    // takes precedence when provided.
-    const baseOptions =
-      buildOptions && 'extend' in buildOptions && buildOptions?.extend
-        ? await buildOptions.extend(options)
-        : options;
-
     const perRequestAccessToken =
       buildOptions && 'accessToken' in buildOptions ? buildOptions.accessToken : undefined;
 
-    const engineOptions =
+    // Apply the per-request access token BEFORE running `extend`, on a non-mutating copy of the
+    // shared definition options. This keeps the documented precedence correct: the deprecated
+    // `extend` hook sees the per-request token and its return value wins, so an extender can
+    // deliberately override it. Without `extend`, the per-request token simply carries through.
+    const optionsForRequest =
       perRequestAccessToken !== undefined
         ? {
-            ...baseOptions,
+            ...options,
             configuration: {
-              ...baseOptions.configuration,
+              ...options.configuration,
               accessToken: perRequestAccessToken,
             },
           }
-        : baseOptions;
+        : options;
+
+    const engineOptions =
+      buildOptions && 'extend' in buildOptions && buildOptions?.extend
+        ? await buildOptions.extend(optionsForRequest)
+        : optionsForRequest;
 
     const engine = buildSSRCommerceEngine(
       solutionType,
@@ -214,7 +214,11 @@ export const buildFactory =
       );
     };
 
-    if (options.onAccessTokenUpdate) {
+    // Subscribe this engine to shared token updates ONLY when it uses the definition's token. When
+    // a per-request access token is supplied, the override must stay authoritative for this request:
+    // subscribing would let a queued/concurrent `setAccessToken()` overwrite it (violating the
+    // "this call only" contract), so we skip the shared subscription entirely.
+    if (options.onAccessTokenUpdate && perRequestAccessToken === undefined) {
       options.onAccessTokenUpdate(updateEngineConfiguration, engine);
     }
 

@@ -60,7 +60,10 @@ export type FetchStaticState<
    */
   fromBuildResult: FromBuildResult<
     TControllers,
-    FetchStaticStateOptions,
+    // `accessToken` is a per-request option of `fetchStaticState()` only; `fromBuildResult`
+    // re-executes an already-built engine and never reads it, so it is excluded here to avoid
+    // silently accepting a token that would have no effect.
+    Omit<FetchStaticStateOptions, 'accessToken'>,
     EngineStaticState<TSearchAction, TControllersStaticState>
   >;
 };
