@@ -1,4 +1,5 @@
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import type {ControllersMap, ControllersPropsMap} from '../../common/types/controllers.js';
 import type {OptionsExtender, OptionsTuple} from '../../common/types/utilities.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
@@ -21,6 +22,10 @@ export interface BuildOptions<TEngineOptions> {
    * A per-request access token applied to this call only, without mutating the shared definition.
    */
   accessToken?: string;
+  /**
+   * A per-request navigator context applied to this call only, without mutating the shared definition.
+   */
+  navigatorContext?: NavigatorContext;
 }
 
 /**

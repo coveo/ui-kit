@@ -4,6 +4,7 @@ import * as commerceEngine from '../../../app/commerce-engine/commerce-engine.js
 import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
 import {buildLogger} from '../../../app/logger.js';
 import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
+import * as augmentModule from '../../common/augment-preprocess-request.js';
 import {defineCart} from '../controllers/cart/headless-cart.ssr.js';
 import {defineProductList} from '../controllers/product-list/headless-product-list.ssr.js';
 import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
@@ -361,6 +362,59 @@ describe('buildFactory', () => {
       expect(
         (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0].configuration.accessToken
       ).toBe('extend-token');
+    });
+  });
+
+  describe('per-request navigator context', () => {
+    const navigatorContext = {
+      clientId: 'per-request-client-id',
+      referrer: null,
+      userAgent: 'per-request-ua',
+      location: 'http://per-request/',
+      forwardedFor: '9.9.9.9',
+    };
+
+    it('should build the engine with the per-request navigator context when provided', async () => {
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+      const build = factory(SolutionType.listing);
+
+      await build({navigatorContext});
+
+      const usedProvider = (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0]
+        .navigatorContextProvider;
+      expect(usedProvider()).toEqual(navigatorContext);
+    });
+
+    it('should not mutate the shared definition navigator context provider', async () => {
+      const sharedProvider = mockEngineOptions.navigatorContextProvider;
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+      const build = factory(SolutionType.listing);
+
+      await build({navigatorContext});
+
+      expect(mockEngineOptions.navigatorContextProvider).toBe(sharedProvider);
+    });
+
+    it('should fall back to the definition provider when none is provided', async () => {
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+      const build = factory(SolutionType.listing);
+
+      await build();
+
+      expect(
+        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0].navigatorContextProvider
+      ).toBe(mockEngineOptions.navigatorContextProvider);
+    });
+
+    it('should augment preprocessRequest with the forwarded-for wrapper on every request', async () => {
+      const spy = vi.spyOn(augmentModule, 'augmentPreprocessRequestWithForwardedFor');
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+      const build = factory(SolutionType.listing);
+
+      await build();
+
+      expect(spy).toHaveBeenCalled();
+      spy.mockRestore();
     });
   });
 });

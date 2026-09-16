@@ -6,6 +6,7 @@ import {
 } from '../../../app/commerce-engine/commerce-engine.js';
 import {buildLogger} from '../../../app/logger.js';
 import {stateKey} from '../../../app/state-key.js';
+import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {loadConfigurationActions} from '../../../features/commerce/configuration/configuration-actions-loader.js';
 import {
@@ -192,6 +193,10 @@ export const buildFactory =
 
     const perRequestAccessToken =
       buildOptions && 'accessToken' in buildOptions ? buildOptions.accessToken : undefined;
+    const perRequestNavigatorContext =
+      buildOptions && 'navigatorContext' in buildOptions
+        ? buildOptions.navigatorContext
+        : undefined;
 
     // Apply the per-request access token BEFORE running `extend`, on a non-mutating copy of the
     // shared definition options. This keeps the documented precedence correct: the deprecated
@@ -208,10 +213,31 @@ export const buildFactory =
           }
         : options;
 
-    const engineOptions =
+    const baseOptions =
       buildOptions && 'extend' in buildOptions && buildOptions?.extend
         ? await buildOptions.extend(optionsForRequest)
         : optionsForRequest;
+
+    const navigatorContextProvider = perRequestNavigatorContext
+      ? () => perRequestNavigatorContext
+      : baseOptions.navigatorContextProvider;
+
+    // Always build a per-request copy (never mutate the shared definition options). The
+    // forwarded-for augmentation of preprocessRequest is applied per request, and the optional
+    // per-request navigator context is layered on top. The per-request access token is already
+    // present in `baseOptions.configuration` (applied before `extend` above).
+    const engineOptions = {
+      ...baseOptions,
+      navigatorContextProvider,
+      configuration: {
+        ...baseOptions.configuration,
+        preprocessRequest: augmentPreprocessRequestWithForwardedFor({
+          preprocessRequest: baseOptions.configuration.preprocessRequest,
+          navigatorContextProvider,
+          loggerOptions: baseOptions.loggerOptions,
+        }),
+      },
+    };
 
     const engine = buildSSRCommerceEngine(
       solutionType,
