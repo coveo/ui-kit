@@ -12,15 +12,27 @@ Dernière mise à jour : 2026-09-16
 
 ## 1. Vue d'ensemble
 
+### 1a. Livrables CODE — target de l'équipe support (livrés)
+
 | # | Demande client (§9 du rapport) | Type | Livraison | Statut |
 |---|---|---|---|---|
 | 1 | Confirmer Finding 1 et Finding 2 comme défauts | Confirmation | Réponse écrite + repro chiffré | ✅ Confirmé |
 | 2 | Finding 1 : ne plus retenir les moteurs (dispose / weak / skip registration), `ssr-commerce` **et** `ssr-commerce-next` | Fix | PR #8479 (registre faible : WeakRef + WeakMap + FinalizationRegistry, tous les chemins des 2 trees) | ✅ Mergé (`fa2e9de00d`) |
 | 3 | Finding 2 : mémoïsation bornée pour `getRelayInstanceFromState` | Fix | PR #8480 (`lruMemoize`, maxSize 50, uniquement `memoize`) | ✅ Mergé (`818bdf001e`) |
-| 4 | Token par requête first-class sur `fetchStaticState()` (aussi `ssr-commerce-next`) **+ sample SSR documenté per-user token** | Fix + doc | PR #8481 (param `accessToken`) mergé ; sample doc = **manquant** | ⚠️ Partiel (code mergé, sample à faire) |
-| 5 | Position produit : pattern « definition request-scoped serveur + définition client séparée » supporté ? + MAJ doc « singleton » | Décision + doc | **Hors périmètre code** — R&D/PM | ❌ Non traité |
+| 4a | Token par requête first-class sur `fetchStaticState()` / `hydrateStaticState()` (`ssr-commerce-next`) | Fix | PR #8481 (param `accessToken`) | ✅ Mergé (`01434bcbd3`) |
 
-Légende : ✅ fait · ⚠️ partiel/en cours · ❌ non commencé
+**→ Tout le périmètre CODE demandé est livré et mergé.** La confirmation (1) et les trois fixes (2, 3, 4a) sont clos.
+
+### 1b. Livrables DOC / DÉCISION PRODUIT — à valider avec l'équipe
+
+Les items ci-dessous ne sont **pas des fixes de code** : ce sont de la documentation et une prise de position produit dont la **pertinence et le propriétaire** doivent être tranchés par l'équipe (R&D / PM / DevEx), pas engagés unilatéralement par le support. La question à poser n'est pas « quand ? » mais « est-ce raisonnable, et qui le porte ? ».
+
+| # | Demande client (§9 du rapport) | Type | Question ouverte pour l'équipe | Statut |
+|---|---|---|---|---|
+| 4b | Sample SSR documenté montrant l'usage de tokens per-user en multi-tenant | Doc / DevEx | Raisonnable d'ajouter un sample dédié ? Où (samples/ ? doc headless SSR ?) ? Qui l'écrit ? | ⏸️ À valider avec l'équipe |
+| 5 | Position produit : pattern « definition request-scoped serveur + définition client séparée » supporté ? + MAJ doc « singleton shared server/client » | Décision + doc | Le pattern est-il officiellement supporté ? La doc « singleton » doit-elle être nuancée/corrigée ? | ⏸️ À router vers R&D/PM |
+
+Légende : ✅ fait · ⚠️ partiel/en cours · ⏸️ en attente de décision d'équipe · ❌ non commencé
 
 ---
 
@@ -49,17 +61,23 @@ Légende : ✅ fait · ⚠️ partiel/en cours · ❌ non commencé
 - **Preuve** : repro F2 en mesure directe — après 500 tokens distincts, le plus ancien token n'est plus en cache (évincé) ; la mémoïsation locale fonctionne toujours.
 - **Statut** : ✅ Mergé sur `main` (`818bdf001e`, 2026-09-15). La CI avait été bloquée par un faux drift OpenACR (report a11y incomplet, non lié au changement) — résolu par rerun complet.
 
-### Demande 4 — Token par requête + sample documenté
-- **Ce que le client veut** (§9.4, §5, §8.2) : un `accessToken` par requête sur `fetchStaticState()` (aussi `ssr-commerce-next`), **et** un sample SSR documenté montrant l'usage de tokens par utilisateur en multi-tenant.
-- **Livraison — partie fix** — PR #8481 (`feat(headless)`, minor) : `accessToken` optionnel ajouté à `CommonBuildConfig` (ssr-next), consommé dans `augmentCommerceEngineOptions` — override par requête sans muter la définition partagée. S'applique à `fetchStaticState()` **et** `hydrateStaticState()`. Scope `ssr-commerce-next` uniquement (le chemin beta `ssr-commerce` est déprécié et racy).
+### Demande 4a — Token par requête (CODE) ✅
+- **Ce que le client veut** (§9.4, §5, §8.2) : un `accessToken` par requête sur `fetchStaticState()` (aussi `ssr-commerce-next`).
+- **Livraison** — PR #8481 (`feat(headless)`, minor) : `accessToken` optionnel ajouté à `CommonBuildConfig` (ssr-next), consommé dans `augmentCommerceEngineOptions` — override par requête sans muter la définition partagée. S'applique à `fetchStaticState()` **et** `hydrateStaticState()`. Scope `ssr-commerce-next` uniquement (le chemin beta `ssr-commerce` est déprécié et racy).
 - **Preuve** : repro F3 (mesure directe sur `augmentCommerceEngineOptions`) — avant : override ignoré (`perRequestTokenApplied: false`) ; après : token par requête appliqué **et** définition partagée non mutée.
-- **Livraison — partie doc/sample** : ❌ **manquante**. Aucun sample per-user-token n'a été créé.
-- **Statut** : ⚠️ Partiel — code **mergé** sur `main` (`01434bcbd3`, 2026-09-15) et prouvé ; **sample documenté à faire**.
+- **Statut** : ✅ Mergé sur `main` (`01434bcbd3`, 2026-09-15) et prouvé.
 
-### Demande 5 — Position produit + documentation « singleton »
+### Demande 4b — Sample SSR per-user-token documenté (DOC) ⏸️
+- **Ce que le client veut** (§5, §8.2) : un sample SSR documenté montrant l'usage de tokens par utilisateur en multi-tenant, au-delà du simple param.
+- **Nature** : livrable **documentation / DevEx**, pas un fix. Le param existe (4a) ; il s'agirait d'illustrer son usage.
+- **À trancher avec l'équipe** : est-ce raisonnable d'ajouter un sample dédié ? Où le placer (`samples/` ? doc headless SSR ? README) ? Qui l'écrit (support / DevEx / PM) ?
+- **Statut** : ⏸️ En attente de décision d'équipe — pas un engagement unilatéral du support.
+
+### Demande 5 — Position produit + documentation « singleton » (DÉCISION + DOC) ⏸️
 - **Ce que le client veut** (§9.5, §7, §8.6) : une prise de position sur son pattern (définition request-scoped serveur + définition client séparée) — supporté ou non — et une MAJ de la doc qui affirme aujourd'hui que la définition « must be a singleton shared between server and client » (formulation qui, combinée à F1, produit la fuite).
-- **Livraison** : ❌ **Hors périmètre des 3 PRs de code.** Décision R&D/PM + travail de documentation.
-- **Statut** : ❌ Non traité — à router vers R&D/PM.
+- **Nature** : **décision produit + documentation.** Hors périmètre des fixes de code.
+- **À trancher avec l'équipe** : le pattern request-scoped est-il officiellement supporté ? La doc « singleton » doit-elle être nuancée/corrigée ?
+- **Statut** : ⏸️ À router vers R&D/PM — décision d'équipe requise.
 
 ---
 
