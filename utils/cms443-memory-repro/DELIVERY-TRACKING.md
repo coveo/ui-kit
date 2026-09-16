@@ -8,7 +8,7 @@
 
 Dernière mise à jour : 2026-09-16
 
-**Versions publiées contenant les fixes** : `@coveo/headless` **3.56.0** (fix direct) et `@coveo/atomic` **3.61.3** (re-bundle de headless, propage le fix aux consommateurs Atomic).
+**Version publiée contenant les fixes** : `@coveo/headless` **3.56.0**.
 
 ---
 
@@ -23,7 +23,7 @@ Dernière mise à jour : 2026-09-16
 | 3 | Finding 2 : mémoïsation bornée pour `getRelayInstanceFromState` | Fix | PR #8480 (`lruMemoize`, maxSize 50, uniquement `memoize`) | ✅ Mergé (`818bdf001e`) |
 | 4a | Token par requête first-class sur `fetchStaticState()` / `hydrateStaticState()` (`ssr-commerce-next`) | Fix | PR #8481 (param `accessToken`) | ✅ Mergé (`01434bcbd3`) |
 
-**→ Tout le périmètre CODE demandé est livré et mergé.** La confirmation (1) et les trois fixes (2, 3, 4a) sont clos. **Disponible dans `@coveo/headless` 3.56.0 et `@coveo/atomic` 3.61.3.**
+**→ Tout le périmètre CODE demandé est livré et mergé.** La confirmation (1) et les trois fixes (2, 3, 4a) sont clos. **Disponible dans `@coveo/headless` 3.56.0.**
 
 ### 1b. Livrables DOC / DÉCISION PRODUIT — à valider avec l'équipe
 
