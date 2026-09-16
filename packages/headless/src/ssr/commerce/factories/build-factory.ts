@@ -176,11 +176,32 @@ export const buildFactory =
       solutionType
     );
 
-    const engine = buildSSRCommerceEngine(
-      solutionType,
+    // Resolve the options for THIS request without mutating the shared definition options.
+    // A per-request access token overrides the definition's configured token for this call only;
+    // omitting it falls back to the shared configuration. The `extend` hook (deprecated) still
+    // takes precedence when provided.
+    const baseOptions =
       buildOptions && 'extend' in buildOptions && buildOptions?.extend
         ? await buildOptions.extend(options)
-        : options,
+        : options;
+
+    const perRequestAccessToken =
+      buildOptions && 'accessToken' in buildOptions ? buildOptions.accessToken : undefined;
+
+    const engineOptions =
+      perRequestAccessToken !== undefined
+        ? {
+            ...baseOptions,
+            configuration: {
+              ...baseOptions.configuration,
+              accessToken: perRequestAccessToken,
+            },
+          }
+        : baseOptions;
+
+    const engine = buildSSRCommerceEngine(
+      solutionType,
+      engineOptions,
       enabledRecommendationControllers
     );
 

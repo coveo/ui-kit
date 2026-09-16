@@ -18,7 +18,18 @@ import type {FromBuildResult} from './from-build-result.js';
  * @deprecated This interface will be remove on the next major version.
  * Use BuildConfig interface instead
  */
-export type FetchStaticStateOptions = {};
+export type FetchStaticStateOptions = {
+  /**
+   * A per-request access token (for example, a per-user Coveo search token) to use for this
+   * `fetchStaticState()` call only.
+   *
+   * When provided, it overrides the access token from the engine definition configuration for this
+   * request without mutating the shared definition, which is the supported way to use per-user
+   * search tokens in a multi-tenant server process. When omitted, the definition's configured
+   * access token is used.
+   */
+  accessToken?: string;
+};
 
 export type FetchStaticState<
   TControllers extends ControllersMap,
