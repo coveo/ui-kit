@@ -25,7 +25,8 @@ so the fixes can be proven with numbers, and so a colleague can replay the befor
      navigator context, stacked): per-request `accessToken` **and** `navigatorContext` on
      `build()`/`fetchStaticState()`, applied on a per-request options copy with the shared
      definition no longer mutated. Causal proof via two concurrent `build()` calls with distinct
-     tokens, asserting isolation + the shared definition token stays untouched.
+     tokens, asserting isolation + the shared definition token stays untouched + a per-request
+     token stays authoritative even after a later shared `setAccessToken()`.
 
 ## Usage
 
@@ -53,6 +54,7 @@ left under `<scratch>/cms443-compare/results/`.
 | F3a `ssr-next` per-request token applied | `false` | `true` (added in ssr-commerce-next, #8481) |
 | F3b `ssr-commerce` per-request token isolated | `false` | `true` (added on supported tree, #8494) |
 | F3b `ssr-commerce` per-request navigator context | `false` | `true` (added on supported tree, #8495) |
+| F3b `ssr-commerce` per-request token stays authoritative after a later `setAccessToken` | `false` | `true` (engine with a per-request token is not subscribed to the shared token manager, #8494) |
 | F3b `ssr-commerce` shared definition mutated | `true` | `false` (per-request options copy) |
 
 > **Note on requirements:** run Node with `--expose-gc`. The measurement performs **no network
