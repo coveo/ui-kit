@@ -29,12 +29,27 @@ these without forking.
 Two config inputs cover all deployments: an overridable endpoint URL and an
 injected contracts schema.
 
-**Endpoint — full override.** `endpoint` is a fully-overridable base/converse URL,
-not a host that the client decorates with a fixed commerce path. This serves the
-internal endpoint (different URL shape) and proxy consumers at once. (Confirm the
-exact contract: "provide the full converse URL" vs. "provide a base"; today
-`getOrganizationEndpoint` appends `/api/preview/.../agents/commerce/agui/converse`,
-which the internal endpoint will not share.)
+**Endpoint — full converse-URL override.** `endpoint`, when provided, is the
+**exact URL the client POSTs to**; the client appends nothing. When it is absent,
+the client derives the Coveo URL as it does today: `getOrganizationEndpoint`
+resolves the organization host (e.g. `https://{orgId}.org.coveo.com`) and the
+unified endpoint client appends the fixed path
+`/api/preview/organizations/{orgId}/agents/commerce/agui/converse`
+(see `unified-endpoint-client.ts`; `getOrganizationEndpoint` itself only resolves
+the host/base, per `organization-endpoint.ts`).
+
+A full-URL override is required — not a host/base override — because the two
+non-Coveo deployments have URL shapes that do **not** end in that fixed path: a
+consumer-provided **proxy** and the **internal Command endpoint**. A base-only
+override would force the client to append the Coveo path onto those hosts,
+producing a wrong URL and defeating the purpose. The full-URL form is the only one
+that supports arbitrary endpoint shapes.
+
+This is a deliberate contract change from the current internal `endpoint` option,
+which is a host/base override (`getOrganizationEndpoint` returns it verbatim, then
+the client still appends the fixed path). Acceptable per the charter (no external
+consumers; sample-only) — the public option becomes "full converse URL, appended
+to by nothing."
 
 **Schema — injected, not imported.** Verified by tracing: only the remote
 controller depends on `@coveo/thermidor-schema` (`remote-controller.ts` for
@@ -103,7 +118,7 @@ the *consumer* owns that install.
   deployments; stronger public-API independence; no fork, no registry trickery;
   full consumer DX preserved (annex).
 - **Negative:** Requires generic type-threading discipline (annex) to keep
-  intellisense; the endpoint-shape contract needs confirmation with the internal
-  team.
+  intellisense. The `endpoint` option changes contract from a host/base override to
+  a full converse-URL override (deliberate; see Decision).
 - **Neutral:** Public consumers now install `@coveo/thermidor-schema` themselves and
   pass it in, rather than getting it transitively.
