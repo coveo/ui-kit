@@ -15,6 +15,12 @@ This article shows how to set a token for your whole application, how to use a d
 > Use a [search token](https://docs.coveo.com/en/56/build-a-search-ui/search-token-authentication) rather than an API key in a server-side rendered application.
 > A search token is scoped and short-lived, so it is safe to send to the browser during hydration, whereas an API key must never reach the client.
 
+> [!NOTE]
+>
+> The per-request access token shown in this article is part of `@coveo/headless/ssr-commerce-next`, the next-generation SSR commerce sub-package that will become the default in Headless v4.
+> It is currently in open alpha, so its APIs may change before the final release.
+> The memory-safety behavior described here (no manual cleanup needed) also applies to the stable `@coveo/headless/ssr-commerce` sub-package — only the per-request `accessToken` option is specific to `ssr-commerce-next`.
+
 For the following examples, assume a shared configuration file (`engine.ts`) that defines the commerce engine:
 
 ```ts
