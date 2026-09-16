@@ -6,7 +6,7 @@
 > seulement le build). Ce fichier est un artefact de suivi, gardé sur la branche `chore/CMS-443-memory-repro`
 > (commité mais sans PR) — **hors des PRs de fix**.
 
-Dernière mise à jour : 2026-09-14
+Dernière mise à jour : 2026-09-16
 
 ---
 
@@ -15,9 +15,9 @@ Dernière mise à jour : 2026-09-14
 | # | Demande client (§9 du rapport) | Type | Livraison | Statut |
 |---|---|---|---|---|
 | 1 | Confirmer Finding 1 et Finding 2 comme défauts | Confirmation | Réponse écrite + repro chiffré | ✅ Confirmé |
-| 2 | Finding 1 : ne plus retenir les moteurs (dispose / weak / skip registration), `ssr-commerce` **et** `ssr-commerce-next` | Fix | PR #8479 (registre faible : WeakRef + WeakMap + FinalizationRegistry, tous les chemins des 2 trees) | ✅ Code prêt (draft) |
-| 3 | Finding 2 : mémoïsation bornée pour `getRelayInstanceFromState` | Fix | PR #8480 (`lruMemoize`, maxSize 50) | ⚠️ Code prêt, CI bloquée (check a11y non lié) |
-| 4 | Token par requête first-class sur `fetchStaticState()` (aussi `ssr-commerce-next`) **+ sample SSR documenté per-user token** | Fix + doc | PR #8481 (param `accessToken`) ; sample doc = **manquant** | ⚠️ Partiel |
+| 2 | Finding 1 : ne plus retenir les moteurs (dispose / weak / skip registration), `ssr-commerce` **et** `ssr-commerce-next` | Fix | PR #8479 (registre faible : WeakRef + WeakMap + FinalizationRegistry, tous les chemins des 2 trees) | ✅ Mergé (`fa2e9de00d`) |
+| 3 | Finding 2 : mémoïsation bornée pour `getRelayInstanceFromState` | Fix | PR #8480 (`lruMemoize`, maxSize 50, uniquement `memoize`) | ✅ Mergé (`818bdf001e`) |
+| 4 | Token par requête first-class sur `fetchStaticState()` (aussi `ssr-commerce-next`) **+ sample SSR documenté per-user token** | Fix + doc | PR #8481 (param `accessToken`) mergé ; sample doc = **manquant** | ⚠️ Partiel (code mergé, sample à faire) |
 | 5 | Position produit : pattern « definition request-scoped serveur + définition client séparée » supporté ? + MAJ doc « singleton » | Décision + doc | **Hors périmètre code** — R&D/PM | ❌ Non traité |
 
 Légende : ✅ fait · ⚠️ partiel/en cours · ❌ non commencé
@@ -36,25 +36,25 @@ Légende : ✅ fait · ⚠️ partiel/en cours · ❌ non commencé
 - **Livraison** — PR #8479 (`fix(headless)`, patch), **registre faible** :
   - Le registre de callbacks du token manager devient faible : `Set<WeakRef>` + `WeakMap<engine, callback>` (ancrage de durée de vie) + `FinalizationRegistry` (élagage). Appliqué aux 2 copies (`ssr/common` et `ssr-next/common`).
   - Le GC libère la souscription dès que le moteur devient inatteignable → corrige **tous** les chemins (`fetchStaticState`, `hydrateStaticState`, `build()`) dans **les deux** trees (commerce + search).
-  - `owner` typé `WeakKey` (clé faible), pas `object` : exprime l'intention exacte.
+  - `owner` typé `object` (pas `WeakKey`) : `WeakKey` n'existe dans le lib TypeScript qu'à partir de 5.2, or le peer range du package est `typescript >=5.0.0` — l'exposer sur la signature publique `onAccessTokenUpdate` casserait les déclarations pour les consommateurs sur TS 5.0/5.1. `object` suffit pour une clé faible et est disponible partout. (Une révision antérieure typait `WeakKey` ; revert `27ea69b364` suite à la review Copilot.)
   - `dispose()` public **retiré** (une révision antérieure l'exposait ; abandonné car il traitait le symptôme et supposait que le consommateur l'appelle).
 - **Correspondance avec la demande** : le client proposait « revisiter avec WeakRef/WeakMap/FinalizationRegistry pour laisser le GC faire son travail » — c'est exactement cette approche.
 - **Pourquoi pas l'option A (skip registration)** : elle **régressait** `hydrateStaticState`, qui s'exécute dans le navigateur (`providers.tsx` est `'use client'`, garde le moteur hydraté dans `useState` toute la session). Ne pas enregistrer ce moteur vivant le laissait sur un token périmé — prouvé par la sonde F1c.
 - **Preuve** : repro F1 — `fetchStaticState` **37 KB/call → 4 KB/call** ; `build()` **500 moteurs retenus → 1** (libérés) ; `hydrateStaticState` moteur vivant **reçoit toujours** le token renouvelé (non-régression), **sans appeler dispose()**.
-- **Statut** : ✅ Code prêt, draft ouvert.
+- **Statut** : ✅ Mergé sur `main` (`fa2e9de00d`, 2026-09-15).
 
 ### Demande 3 — Finding 2 : mémoïsation bornée
 - **Ce que le client veut** (§9.3, §8.3) : cache borné (ou par moteur) pour `getRelayInstanceFromState` au lieu du `weakMapMemoize` par défaut (qui n'évince jamais les clés primitives).
-- **Livraison** — PR #8480 (`fix(headless)`, patch) : `createSelectorCreator({ memoize: lruMemoize })` borné (maxSize 50).
+- **Livraison** — PR #8480 (`fix(headless)`, patch) : `createSelectorCreator({ memoize: lruMemoize, memoizeOptions: { maxSize: 50 } })`. **Seul `memoize` (le cache résultat keyé par le token primitif) est borné** ; `argsMemoize` reste au défaut `weakMapMemoize` — sinon un LRU fort sur les args retiendrait jusqu'à 50 arbres de state SSR complets par référence (correction `7c3a5456bb` suite review Copilot).
 - **Preuve** : repro F2 en mesure directe — après 500 tokens distincts, le plus ancien token n'est plus en cache (évincé) ; la mémoïsation locale fonctionne toujours.
-- **Statut** : ⚠️ Code prêt. **CI bloquée** sur `Merge Storybook a11y reports and validate OpenACR` → `Check openacr.yaml is up to date`. Diagnostiqué **non lié** au changement (headless-only ; le même check passe sur #8479 et #8481, même base `main`). En attente de décision (voir §4).
+- **Statut** : ✅ Mergé sur `main` (`818bdf001e`, 2026-09-15). La CI avait été bloquée par un faux drift OpenACR (report a11y incomplet, non lié au changement) — résolu par rerun complet.
 
 ### Demande 4 — Token par requête + sample documenté
 - **Ce que le client veut** (§9.4, §5, §8.2) : un `accessToken` par requête sur `fetchStaticState()` (aussi `ssr-commerce-next`), **et** un sample SSR documenté montrant l'usage de tokens par utilisateur en multi-tenant.
-- **Livraison — partie fix** — PR #8481 (`feat(headless)`, minor) : `accessToken` optionnel ajouté à `CommonBuildConfig` (ssr-next), consommé dans `augmentCommerceEngineOptions` — override par requête sans muter la définition partagée. Scope `ssr-commerce-next` uniquement (le chemin beta `ssr-commerce` est déprécié et racy).
+- **Livraison — partie fix** — PR #8481 (`feat(headless)`, minor) : `accessToken` optionnel ajouté à `CommonBuildConfig` (ssr-next), consommé dans `augmentCommerceEngineOptions` — override par requête sans muter la définition partagée. S'applique à `fetchStaticState()` **et** `hydrateStaticState()`. Scope `ssr-commerce-next` uniquement (le chemin beta `ssr-commerce` est déprécié et racy).
 - **Preuve** : repro F3 (mesure directe sur `augmentCommerceEngineOptions`) — avant : override ignoré (`perRequestTokenApplied: false`) ; après : token par requête appliqué **et** définition partagée non mutée.
 - **Livraison — partie doc/sample** : ❌ **manquante**. Aucun sample per-user-token n'a été créé.
-- **Statut** : ⚠️ Partiel — code livré et prouvé (draft, CI verte), sample documenté à faire.
+- **Statut** : ⚠️ Partiel — code **mergé** sur `main` (`01434bcbd3`, 2026-09-15) et prouvé ; **sample documenté à faire**.
 
 ### Demande 5 — Position produit + documentation « singleton »
 - **Ce que le client veut** (§9.5, §7, §8.6) : une prise de position sur son pattern (définition request-scoped serveur + définition client séparée) — supporté ou non — et une MAJ de la doc qui affirme aujourd'hui que la définition « must be a singleton shared between server and client » (formulation qui, combinée à F1, produit la fuite).
@@ -84,10 +84,12 @@ Contraintes de communication (préférences projet) :
 
 | Sujet | Décision attendue | Qui |
 |---|---|---|
-| CI #8480 bloquée sur OpenACR | Rerun complet vs régénérer `openacr.yaml` vs vérifier drift sur `main` | Toi |
+| CI #8480 bloquée sur OpenACR | ✅ Résolu — faux drift (report a11y incomplet), rerun complet | Fait |
 | Sonde F3 du repro | ✅ Corrigée — teste `augmentCommerceEngineOptions` directement, F3 prouvé sur after-f3 | Fait |
+| Les 3 PRs de fix | ✅ Mergées sur `main` (2026-09-15) | Fait |
 | Sample per-user-token (demande 4) | Le créer ? où ? | Toi / PM |
 | Demande 5 (doc + pattern supporté) | Router vers R&D/PM | Toi |
+| Réponse client (confirmation F1/F2, position pattern §7, hooks alternatifs) | À rédiger | Toi / Support |
 | Sort de ce doc de suivi + harnais repro | Rester hors PR (jetable) ou committer quelque part | Toi |
 
 ---
@@ -96,10 +98,10 @@ Contraintes de communication (préférences projet) :
 
 - **Rapport client** : `docs/investigation/CMS-443-headless-memory-leak-report_2026-09-10.md` (stashé, non suivi).
 - **Harnais de repro/validation** : branche `chore/CMS-443-memory-repro`, `utils/cms443-memory-repro/` (`repro.mjs`, `compare.sh`, `README.md`) — poussée, sans PR.
-- **PRs de fix** (draft, tous off `main`, sans stack) :
-  - #8479 — Finding 1 (registre faible : WeakRef + WeakMap + FinalizationRegistry, patch)
-  - #8480 — Finding 2 (lruMemoize, patch)
-  - #8481 — Finding 3 (token par requête ssr-next, minor)
+- **PRs de fix** (toutes **mergées** sur `main` le 2026-09-15, off `main`, sans stack) :
+  - #8479 — Finding 1 (registre faible : WeakRef + WeakMap + FinalizationRegistry, patch) — merge `fa2e9de00d`
+  - #8480 — Finding 2 (lruMemoize sur `memoize` uniquement, patch) — merge `818bdf001e`
+  - #8481 — Finding 3 (token par requête ssr-next, minor) — merge `01434bcbd3`
 
 ### Résultats repro avant/après (harnais, jeu de controllers minimal)
 
