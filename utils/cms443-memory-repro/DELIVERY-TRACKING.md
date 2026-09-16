@@ -8,7 +8,7 @@
 
 Dernière mise à jour : 2026-09-16
 
-**Version publiée contenant les fixes** : `@coveo/headless` **3.56.0**.
+**Version publiée contenant les fixes** : `@coveo/headless` **3.56.0**. **Cible de livraison en production : jeudi 17 septembre 2026.** (Date de suivi interne — ne pas la promettre au client, cf. contraintes §3.)
 
 ---
 
