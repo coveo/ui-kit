@@ -276,13 +276,20 @@ describe('buildFactory', () => {
     });
 
     it('should not mutate the shared definition configuration', async () => {
-      const definitionToken = mockEngineOptions.configuration.accessToken;
-      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+      // Use a fresh options object with a known token (not the shared fixture) so the assertion
+      // genuinely verifies non-mutation: reusing the shared fixture could capture an already-leaked
+      // value and pass even if the shared configuration were mutated.
+      const definitionToken = 'definition-token';
+      const freshOptions: CommerceEngineOptions = {
+        configuration: {...getSampleCommerceEngineConfiguration(), accessToken: definitionToken},
+        navigatorContextProvider: buildMockNavigatorContextProvider(),
+      };
+      const factory = buildFactory(mockEmptyDefinition, freshOptions);
       const build = factory(SolutionType.listing);
 
       await build({accessToken: 'per-request-token'});
 
-      expect(mockEngineOptions.configuration.accessToken).toBe(definitionToken);
+      expect(freshOptions.configuration.accessToken).toBe(definitionToken);
     });
 
     it('should isolate the token across concurrent builds', async () => {
