@@ -1,7 +1,7 @@
 # ADR-003: Centralized Request Building and Response Handling for Endpoint Facades
 
-**Status**: `⚫️ Superseded` by [ADR-009](./ADR-009-unified-endpoint-session-client.md) (endpoint facades are removed; a single unified endpoint replaces the facade model). Retained for historical rationale only.  
-**Related docs**: [ADR-009 Unified-Endpoint Session Client](./ADR-009-unified-endpoint-session-client.md), [ADR-000 Architecture Decision Charter](./ADR-000-architecture-decision-charter.md), [ADR-002 Multi-Interface Engine](./ADR-002-multi-interface-engine.md)
+**Status**: `⚫️ Superseded` by [ADR-010](./ADR-010-unified-endpoint-session-client.md) (endpoint facades are removed; a single unified endpoint replaces the facade model). Retained for historical rationale only.  
+**Related docs**: [ADR-010 Unified-Endpoint Session Client](./ADR-010-unified-endpoint-session-client.md), [ADR-000 Architecture Decision Charter](./ADR-000-architecture-decision-charter.md), [ADR-002 Multi-Interface Engine](./ADR-002-multi-interface-engine.md)
 
 ## 1. Context
 

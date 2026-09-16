@@ -3,7 +3,11 @@ status: Proposed
 date: 2026-09-15
 related:
   - ./ADR-000-architecture-decision-charter.md
-  - ./ADR-009-unified-endpoint-session-client.md
+  - ./ADR-010-unified-endpoint-session-client.md
+  - ./ADR-011-session-serialization.md
+  - ./ADR-012-client-owned-context.md
+  - ./ADR-013-remote-controller-vending.md
+  - ./ADR-014-consumer-supplied-endpoint-and-schema.md
 ---
 
 # Architecture Decision Charter (v2) — unified-endpoint session client
@@ -15,7 +19,7 @@ decisions for thermidor. It **supersedes ADR-000**.
 
 ADR-000 assumed thermidor was a unified interaction *engine* — one engine, N
 interfaces, many feature controllers, a state library isolated behind an
-abstraction. That assumption no longer holds (see ADR-009). Thermidor is now a
+abstraction. That assumption no longer holds (see ADR-010). Thermidor is now a
 thin client for a **single, stateful, intent-routing unified endpoint**; UI is
 defined by server-streamed, schema-described A2UI components, not by client-side
 feature controllers. Most of ADR-000's requirements are therefore obsolete,
@@ -47,7 +51,7 @@ endpoint** and the **schemas**, not to thermidor.
 - **Public API surface**: all exported runtime behavior, types, options, and
   guarantees visible to consumers of `@coveo/thermidor`.
 - **Session**: the client-side handle for one continuous interaction with the
-  unified endpoint (see ADR-009).
+  unified endpoint (see ADR-010).
 - **Turn**: one input paired with the server's streamed result.
 - **Component / contract**: a server-streamed A2UI renderable unit and its
   schema-declared state + actions. Owned by the schema, not thermidor.
@@ -74,14 +78,15 @@ endpoint** and the **schemas**, not to thermidor.
   compile-time checking for component types, action names, and action payloads,
   plus typed component state — derived from the consumer-supplied schema. This is a
   primary driver (it was not a concern under ADR-000) and is a first-class
-  acceptance criterion. See ADR-009 for the verified mechanism and the design rule
+  acceptance criterion. See ADR-014 for the verified mechanism and the design rule
   that preserves it.
 
 - **Consumer-owned inputs**
   Client-owned inputs (endpoint URL, contracts schema, navigator/commerce context)
   **MUST** be supplied by the consumer, not baked into the package. A single
   `@coveo/thermidor` **MUST** serve public, internal (private-registry), and
-  proxied deployments without forking.
+  proxied deployments without forking. See ADR-012 (context) and ADR-014 (endpoint
+  and schema).
 
 ### SHOULD
 
@@ -121,7 +126,7 @@ A major decision is approved only if all applicable gates pass.
 - **Leakage gate** — No prohibited implementation/transport concepts in the public
   contract.
 - **DX gate** — Intellisense for component types, action names, payloads, and state
-  is preserved end-to-end from the consumer-supplied schema (see ADR-009's design
+  is preserved end-to-end from the consumer-supplied schema (see ADR-014's design
   rule and failure mode).
 - **Multi-deployment gate** — Public, internal, and proxied deployments remain
   supported by a single package (endpoint override + injected schema).
@@ -177,3 +182,18 @@ A proposal is ready to implement when:
 2. Acceptance gates are defined and testable.
 3. Known **SHOULD** gaps (notably conditional SSR) are documented with mitigation.
 4. Decision record is complete and approved.
+
+## Governed decisions
+
+The unified-endpoint session-client family, all governed by this charter:
+
+- [ADR-010](./ADR-010-unified-endpoint-session-client.md) — Collapse to a lean
+  unified-endpoint session client (core: vision, `Session`/`Turn` model, options).
+- [ADR-011](./ADR-011-session-serialization.md) — Session serialization &
+  restoration.
+- [ADR-012](./ADR-012-client-owned-context.md) — Client-owned context via
+  providers.
+- [ADR-013](./ADR-013-remote-controller-vending.md) — Remote controller vended
+  from the session.
+- [ADR-014](./ADR-014-consumer-supplied-endpoint-and-schema.md) — Consumer-supplied
+  endpoint & injected schema (+ typing annex).
