@@ -8,7 +8,7 @@
 
 Dernière mise à jour : 2026-09-16
 
-**Versions** : les fixes de fuite (Findings 1 et 2) sont publiés dans `@coveo/headless` **3.56.0** (cible production : jeudi 17 septembre 2026 — date de suivi interne, ne pas la promettre au client, cf. §3). Le **token par requête sur le tree supporté `ssr-commerce`** (Finding 3, demandes 4a-bis + 4c) n'est **pas** dans 3.56.0 : ses PRs sont prêtes mais pas encore ouvertes/mergées (le `accessToken` de 3.56.0 est sur `ssr-commerce-next`, tree abandonné — voir §1a).
+**Versions** : les fixes de fuite (Findings 1 et 2) sont publiés dans `@coveo/headless` **3.56.0** (cible production : jeudi 17 septembre 2026 — date de suivi interne, ne pas la promettre au client, cf. §3). Le token par requête (Finding 3) est livré sur `ssr-commerce-next` dans 3.56.0 (#8481) et en cours d'**extension au tree supporté `ssr-commerce`** (demandes 4a-bis + 4c, PRs prêtes, non encore ouvertes/mergées — voir §1a).
 
 ---
 
@@ -21,13 +21,13 @@ Dernière mise à jour : 2026-09-16
 | 1 | Confirmer Finding 1 et Finding 2 comme défauts | Confirmation | Réponse écrite + repro chiffré | ✅ Confirmé |
 | 2 | Finding 1 : ne plus retenir les moteurs (dispose / weak / skip registration), `ssr-commerce` **et** `ssr-commerce-next` | Fix | Registre faible : WeakRef + WeakMap + FinalizationRegistry, tous les chemins des 2 trees | ✅ Mergé ([`fa2e9de00d`](https://github.com/coveo/ui-kit/commit/fa2e9de00d)) |
 | 3 | Finding 2 : mémoïsation bornée pour `getRelayInstanceFromState` | Fix | `lruMemoize`, maxSize 50, uniquement `memoize` | ✅ Mergé ([`818bdf001e`](https://github.com/coveo/ui-kit/commit/818bdf001e)) |
-| 4a | Token par requête first-class sur `fetchStaticState()` / `hydrateStaticState()` — **tree `ssr-commerce-next` (ABANDONNÉ)** | Fix | Param `accessToken` par requête, sans muter la définition partagée | ⚠️ Mergé ([`01434bcbd3`](https://github.com/coveo/ui-kit/commit/01434bcbd3)) mais sur le **mauvais tree** — voir note |
-| 4a-bis | Token par requête sur le tree **supporté `ssr-commerce`** | Fix | Param `accessToken` par requête via copie d'options par requête (jamais de mutation partagée) | 🟡 Prêt, PR à ouvrir (`feat/CMS-443-ssr-per-request-token`, [`16efc31b2f`](https://github.com/coveo/ui-kit/commit/16efc31b2f)) |
+| 4a | Token par requête first-class sur `fetchStaticState()` / `hydrateStaticState()` — tree `ssr-commerce-next` | Fix | Param `accessToken` par requête, sans muter la définition partagée | ✅ Mergé ([`01434bcbd3`](https://github.com/coveo/ui-kit/commit/01434bcbd3)) |
+| 4a-bis | **Même fix sur le tree supporté `ssr-commerce`** (celui que le client utilise) | Fix | Param `accessToken` par requête via copie d'options par requête (jamais de mutation partagée) | 🟡 Prêt, PR à ouvrir (`feat/CMS-443-ssr-per-request-token`, [`16efc31b2f`](https://github.com/coveo/ui-kit/commit/16efc31b2f)) |
 | 4c | Navigator context par requête sur `ssr-commerce` (Finding 3, point a) | Fix | Param `navigatorContext` par requête + retrait de la mutation partagée du `preprocessRequest`/navigator | 🟡 Prêt, PR stack sur 4a-bis (`feat/CMS-443-ssr-per-request-navigator-context`, [`e913b0662d`](https://github.com/coveo/ui-kit/commit/e913b0662d)) |
 
-> **⚠️ Correction de tree** : `ssr-commerce-next` est **abandonné** (malgré son nom « next » et son statut « open alpha » dans les README) ; le package **supporté** est `@coveo/headless/ssr-commerce`. La PR #8481 (4a) a livré le token par requête sur le tree abandonné, donc **ne répond pas au besoin du client** (qui est sur `ssr-commerce`). Le vrai travail est porté par 4a-bis + 4c sur le tree supporté, qui corrigent en plus la mutation d'état partagé par requête (racine de Finding 3).
+> **Note de tree** : le token par requête a d'abord été livré sur `ssr-commerce-next` (#8481, mergé — **conservé**). Comme le client utilise le tree supporté `@coveo/headless/ssr-commerce`, on **étend** le même fix à ce tree via 4a-bis, et 4c y ajoute le navigator context par requête en corrigeant au passage la mutation d'état partagé (racine de Finding 3). Les deux trees sont ainsi couverts.
 
-**→ Findings 1 et 2 (les fuites) sont livrés et mergés (`@coveo/headless` 3.56.0), sur le tree supporté comme abandonné.** La confirmation (1) est close. Le token par requête (Finding 3) est refait sur le bon tree via 4a-bis + 4c (PRs prêtes, non ouvertes).
+**→ Findings 1 et 2 (les fuites) sont livrés et mergés (`@coveo/headless` 3.56.0) sur les deux trees.** Le token par requête (Finding 3) est livré sur `ssr-commerce-next` (#8481) et en cours d'extension au tree supporté `ssr-commerce` via 4a-bis + 4c (PRs prêtes, non ouvertes).
 
 ### 1b. Livrables DOC / DÉCISION PRODUIT — à valider avec l'équipe
 
@@ -67,14 +67,15 @@ Légende : ✅ fait · ⚠️ partiel/en cours · ⏸️ en attente de décision
 - **Preuve** : repro F2 en mesure directe — après 500 tokens distincts, le plus ancien token n'est plus en cache (évincé) ; la mémoïsation locale fonctionne toujours.
 - **Statut** : ✅ Mergé sur `main` (`818bdf001e`, 2026-09-15). La CI avait été bloquée par un faux drift OpenACR (report a11y incomplet, non lié au changement) — résolu par rerun complet.
 
-### Demande 4a — Token par requête (CODE) ⚠️→🟡
+### Demande 4a — Token par requête (CODE) ✅→🟡
 - **Ce que le client veut** (§9.4, §5, §8.2) : un `accessToken` par requête sur `fetchStaticState()`, sur le package qu'il utilise (`@coveo/headless/ssr-commerce`). Finding 3 pointe aussi le `navigatorContext` forcé à travers la définition partagée (race inter-requêtes).
-- **Première livraison (mauvais tree)** — PR #8481 (`feat(headless)`, minor) : `accessToken` ajouté à `CommonBuildConfig` du tree **`ssr-commerce-next`**, mergé (`01434bcbd3`). **Problème** : `ssr-commerce-next` est **abandonné** (open alpha, ne sera pas le package supporté) ; le client est sur `ssr-commerce`. Cette PR **ne répond donc pas** au besoin réel.
-- **Vraie livraison (tree supporté `ssr-commerce`)** — deux PRs en stack, prêtes, non ouvertes :
+- **Livraison sur `ssr-commerce-next`** — PR #8481 (`feat(headless)`, minor) : `accessToken` ajouté à `CommonBuildConfig`, mergé (`01434bcbd3`). **Conservé.**
+- **Extension au tree supporté `ssr-commerce`** — deux PRs en stack, prêtes, non ouvertes :
   - **4a-bis** — `feat/CMS-443-ssr-per-request-token` ([`16efc31b2f`](https://github.com/coveo/ui-kit/commit/16efc31b2f)) : `accessToken?` optionnel sur `fetchStaticState()`/`build()`, appliqué via une **copie d'options par requête** (jamais de mutation partagée). Additif, backward compatible.
   - **4c** — `feat/CMS-443-ssr-per-request-navigator-context` ([`e913b0662d`](https://github.com/coveo/ui-kit/commit/e913b0662d), stack sur 4a-bis) : `navigatorContext?` par requête + **suppression de la mutation partagée** du `preprocessRequest`/navigator (racine de la race Finding 3).
+- **Pourquoi étendre à `ssr-commerce`** : le client utilise ce tree (supporté), pas `ssr-commerce-next`. Étendre le fix y répond directement, sans retirer la couverture déjà livrée sur `-next`.
 - **Preuve** : sonde `repro-ssr-per-request-token.mjs` sur `ssr-commerce` — AVANT : LEAK (aucun token par requête ; `setAccessToken` bleed entre requêtes) ; APRÈS : FIXED (token + navigator context par requête, moteurs concurrents isolés, définition partagée non mutée). Suite headless complète verte (5576 tests).
-- **Statut** : ⚠️ #8481 mergé sur le tree abandonné (sans valeur pour le client) ; 🟡 4a-bis + 4c prêtes sur le tree supporté, PRs à ouvrir (stack) avec JP.
+- **Statut** : ✅ #8481 mergé (`ssr-commerce-next`) ; 🟡 4a-bis + 4c prêtes (`ssr-commerce`), PRs à ouvrir en stack avec JP.
 
 ### Demande 4b — Sample SSR per-user-token documenté (DOC) ⏸️
 - **Ce que le client veut** (§5, §8.2) : un sample SSR documenté montrant l'usage de tokens par utilisateur en multi-tenant, au-delà du simple param.
@@ -114,7 +115,7 @@ Contraintes de communication (préférences projet) :
 | CI #8480 bloquée sur OpenACR | ✅ Résolu — faux drift (report a11y incomplet), rerun complet | Fait |
 | Sonde F3 du repro | ✅ Corrigée — teste `augmentCommerceEngineOptions` directement, F3 prouvé sur after-f3 | Fait |
 | Les 3 PRs de fix (F1/F2/F3) | ✅ Mergées sur `main` (2026-09-15) | Fait |
-| **Token par requête sur le mauvais tree** | #8481 a livré `accessToken` sur `ssr-commerce-next` (abandonné) ; refait sur `ssr-commerce` via 4a-bis + 4c | Fait (PRs prêtes) |
+| **Token par requête — couverture des 2 trees** | Livré sur `ssr-commerce-next` (#8481, conservé) ; étendu au tree supporté `ssr-commerce` via 4a-bis + 4c | Fait (PRs prêtes) |
 | **Ouvrir le stack 4a-bis + 4c** (`ssr-commerce` token + navigator context) | Ouvrir les 2 PRs en stack, reviewer JP | Toi |
 | Sample per-user-token (demande 4b) | Le créer ? où ? | Toi / PM |
 | Demande 5 (doc + pattern supporté) | Router vers R&D/PM | Toi |
