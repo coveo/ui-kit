@@ -1,5 +1,5 @@
 ---
-status: Proposed
+status: Accepted
 date: 2026-09-15
 related:
   - ./ADR-010-unified-endpoint-session-client.md
