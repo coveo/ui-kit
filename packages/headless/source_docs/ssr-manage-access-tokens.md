@@ -8,7 +8,7 @@ slug: usage/server-side-rendering/manage-access-tokens
 # Manage access tokens
 
 When you render a Coveo experience server-side, you decide which access token each request uses.
-This article shows how to set a token for your whole application, how to use a different token per user in a multi-tenant application, and how to update the token of an engine that is running in the browser.
+This article shows how to set a token for your whole application, how to use a different token per user in a multi-tenant application, and how to update the token on the client after hydration.
 
 > [!NOTE]
 >
@@ -33,7 +33,7 @@ export const engineDefinition = defineCommerceEngine({
   },
 });
 
-export const {fetchStaticState, hydrateStaticState} = engineDefinition;
+export const {fetchStaticState, hydrateStaticState, setAccessToken} = engineDefinition;
 ```
 
 ## Use one token for the whole application
@@ -66,9 +66,9 @@ export default async function ProductListing({request}: {request: Request}) {
   });
 
   return (
-    <CommercePageProvider staticState={staticState}>
+    <StaticStateProvider staticState={staticState}>
       {/* Other components */}
-    </CommercePageProvider>
+    </StaticStateProvider>
   );
 }
 ```
@@ -84,20 +84,33 @@ When you omit `accessToken`, the request uses the token configured in the defini
 >
 > The per-request `accessToken` is available on the `@coveo/headless/ssr-commerce` engine definition, and on its `@coveo/headless-react/ssr-commerce` React wrapper.
 
-## Update the token of a running browser engine
+## Update the token on the client
 
-After hydration, the engine keeps running in the browser for the rest of the session.
-If you need to change its token while it’s running — for example, after refreshing the user’s session — call `setAccessToken()` on the hydrated engine.
-Requests the engine issues afterward use the new token.
+After hydration, an engine keeps running in the browser for the rest of the session.
+If you need to change its token while it’s running — for example, after refreshing the user’s session — call `setAccessToken()` on the engine definition on the client.
+The new token is propagated to the live engine, and the requests it issues afterward use it.
+
+```tsx
+// component/rotate-token.tsx
+
+'use client';
+
+import {setAccessToken} from '../path/to/engine.ts';
+
+export function onSessionRefreshed(newToken: string) {
+  setAccessToken(newToken);
+}
+```
 
 You don’t need to clean anything up when you’re done with a hydrated engine: once your application stops referencing it, it is released automatically.
 
-## Don’t change the per-request token on the shared definition
+## Don’t use `setAccessToken()` to change the token per request on the server
 
-To use a different token per request on the server, use the per-request `accessToken` shown above — don’t call `setAccessToken()` on the shared engine definition.
-The definition is shared across every request, so changing its token from one request affects the others handling requests at the same time.
+`setAccessToken()` updates the token on the shared engine definition, which every request uses.
+On the server, where many requests are handled concurrently, calling it for one request changes the token for the others in flight at the same time — one user could end up issuing requests with another user’s token.
 
-Reserve `setAccessToken()` for updating a single engine that is running in the browser.
+To use a different token per request on the server, use the per-request `accessToken` shown above instead.
+`setAccessToken()` is safe on the client, where a single hydrated engine runs for the session and no concurrent requests share the definition.
 
 ## Summary
 
@@ -105,5 +118,5 @@ Reserve `setAccessToken()` for updating a single engine that is running in the b
 |---|---|
 | Use one token for all users | Set `accessToken` in the engine definition `configuration` |
 | Use a different token per user | Pass `accessToken` to `fetchStaticState()` and `hydrateStaticState()` |
-| Change the token of a running browser engine | Call `setAccessToken()` on the hydrated engine |
-| Use a different token per request on the server | Use the per-request `accessToken` — don’t mutate the shared definition |
+| Update the token on the client | Call `setAccessToken()` on the engine definition |
+| Use a different token per request on the server | Use the per-request `accessToken` — don’t call `setAccessToken()` |
