@@ -19,7 +19,7 @@ This article shows how to set a token for your whole application, how to use a d
 >
 > The per-request access token shown in this article is part of `@coveo/headless/ssr-commerce-next`, the next-generation SSR commerce sub-package that will become the default in Headless v4.
 > It is currently in open alpha, so its APIs may change before the final release.
-> The memory-safety behavior described here (no manual cleanup needed) also applies to the stable `@coveo/headless/ssr-commerce` sub-package — only the per-request `accessToken` option is specific to `ssr-commerce-next`.
+> The per-request `accessToken` option is specific to `ssr-commerce-next`; the stable `@coveo/headless/ssr-commerce` sub-package supports the default token and `setAccessToken()` but not a per-request token.
 
 For the following examples, assume a shared configuration file (`engine.ts`) that defines the commerce engine:
 
@@ -110,8 +110,6 @@ export function onSessionRefreshed(newToken: string) {
   setAccessToken(newToken);
 }
 ```
-
-You don’t need to clean anything up when you’re done with a hydrated engine: once your application stops referencing it, it is released automatically.
 
 ## Don’t use `setAccessToken()` to change the token per request on the server
 
