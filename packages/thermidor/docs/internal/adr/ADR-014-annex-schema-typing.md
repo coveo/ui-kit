@@ -1,5 +1,5 @@
 ---
-status: Proposed
+status: Accepted
 date: 2026-09-15
 related:
   - ./ADR-014-consumer-supplied-endpoint-and-schema.md
