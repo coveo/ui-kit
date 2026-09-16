@@ -22,6 +22,7 @@ REFS=(
   "after-f1:origin/fix/CMS-443-finding-1-engine-retention"
   "after-f2:origin/fix/CMS-443-finding-2-relay-selector-cache"
   "after-f3:origin/feat/CMS-443-finding-3-per-request-token"
+  "after-f3-ssr-commerce:origin/feat/CMS-443-ssr-per-request-navigator-context"
 )
 
 echo "==> Fetching latest refs"
@@ -61,15 +62,15 @@ node - "$OUT" <<'NODE'
 import {readFileSync, readdirSync} from 'node:fs';
 const dir = process.argv[2];
 const load = (f) => { try { return JSON.parse(readFileSync(`${dir}/${f}`,'utf8')); } catch { return null; } };
-const labels = ['before','after-f1','after-f2','after-f3'];
+const labels = ['before','after-f1','after-f2','after-f3','after-f3-ssr-commerce'];
 const data = Object.fromEntries(labels.map(l => [l, load(`${l}.json`)]));
 
 const row = (name, fn) => {
   const cells = labels.map(l => data[l] ? fn(data[l]) : 'n/a');
-  console.log(name.padEnd(34) + cells.map(c => String(c).padStart(16)).join(''));
+  console.log(name.padEnd(34) + cells.map(c => String(c).padStart(22)).join(''));
 };
-console.log('metric'.padEnd(34) + labels.map(l=>l.padStart(16)).join(''));
-console.log('-'.repeat(34 + 16*labels.length));
+console.log('metric'.padEnd(34) + labels.map(l=>l.padStart(22)).join(''));
+console.log('-'.repeat(34 + 22*labels.length));
 row('F1 fetch KB/call',     d => d.f1.fetchStaticState_perIterKB);
 row('F1 build alive',       d => d.f1.build_enginesStillAlive);
 row('F1 build finalized',   d => d.f1.build_enginesFinalized);
@@ -78,9 +79,13 @@ row('F1 verdict',           d => d.f1.verdict.split(' ')[0]);
 row('F2 firstTokenCached',  d => d.f2.firstTokenStillCachedAfterFlood);
 row('F2 memoizationWorks',  d => d.f2.memoizationWorks);
 row('F2 verdict',           d => d.f2.verdict.split(' ')[0]);
-row('F3 perReqApplied',     d => d.f3.available ? d.f3.perRequestTokenApplied : 'n/a');
-row('F3 sharedNotMutated',  d => d.f3.available ? d.f3.sharedDefinitionNotMutated : 'n/a');
-row('F3 verdict',           d => d.f3.verdict.split(' ')[0]);
+row('F3a perReqApplied',    d => d.f3_ssrNext.available ? d.f3_ssrNext.perRequestTokenApplied : 'n/a');
+row('F3a sharedNotMutated', d => d.f3_ssrNext.available ? d.f3_ssrNext.sharedDefinitionNotMutated : 'n/a');
+row('F3a verdict (ssr-next)', d => d.f3_ssrNext.verdict.split(' ')[0]);
+row('F3b perReqApplied',    d => d.f3_ssrCommerce.perRequestTokenApplied);
+row('F3b navCtxApplied',    d => d.f3_ssrCommerce.perRequestNavigatorContextApplied);
+row('F3b sharedNotMutated', d => d.f3_ssrCommerce.sharedDefinitionNotMutated);
+row('F3b verdict (ssr-commerce)', d => d.f3_ssrCommerce.verdict.split(' ')[0]);
 NODE
 echo "================================================================"
 echo "Raw JSON per ref under: $OUT"

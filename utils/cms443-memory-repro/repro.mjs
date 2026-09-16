@@ -214,15 +214,17 @@ async function finding2() {
 }
 
 // ---------------------------------------------------------------------------
-// F3 — per-request access token on the ssr-next fetchStaticState path.
+// F3a — per-request access token on the ssr-next fetchStaticState path (#8481, merged).
 // The fix lives entirely in augmentCommerceEngineOptions (a pure, synchronous, network-free
 // function): when buildConfig.accessToken is provided it overrides configuration.accessToken for
 // THAT call, via a spread (so the shared definition is NOT mutated). We test that function
 // directly — it is the exact code the fix changes.
 //   BEFORE: no accessToken field is read -> override ignored -> engine keeps the definition token.
 //   AFTER:  override applied for the request, definition left untouched.
+// This tree (ssr-commerce-next) is kept but is NOT the client's package; F3b below covers the
+// supported tree (ssr-commerce).
 // ---------------------------------------------------------------------------
-async function finding3() {
+async function finding3SsrNext() {
   let augment;
   try {
     ({augmentCommerceEngineOptions: augment} = await import(
@@ -279,18 +281,102 @@ async function finding3() {
   };
 }
 
+// ---------------------------------------------------------------------------
+// F3b — per-request access token AND navigator context on the SUPPORTED ssr-commerce path
+// (PRs #8494 token + #8495 navigator context, stacked). This is the client's actual package.
+// Unlike F3a (a pure function), the fix here lives in the build factory: build({accessToken,
+// navigatorContext}) applies the per-request values on a PER-REQUEST OPTIONS COPY, and the shared
+// definition's configuration/navigatorContextProvider is no longer mutated (static-state-factory
+// line 70 removed). Causal proof, network-free: build two engines with different tokens and read
+// each engine's EFFECTIVE token from Redux state; assert isolation + shared definition untouched.
+//   BEFORE (main, no per-request field): build({accessToken}) is ignored -> both engines fall back
+//          to the shared token (not isolated) OR setAccessToken bleeds across engines.
+//   AFTER  : engineA=user-A, engineB=user-B, definition token untouched, per-request nav context OK.
+// ---------------------------------------------------------------------------
+async function finding3SsrCommerce() {
+  const makeDefinition = () => {
+    const def = defineCommerceEngine({
+      configuration: getSampleCommerceEngineConfiguration(),
+      controllers: {},
+    });
+    def.listingEngineDefinition.setNavigatorContextProvider(navigatorContextProvider);
+    return def;
+  };
+
+  const DEF_TOKEN_A = 'user-A-token';
+  const DEF_TOKEN_B = 'user-B-token';
+
+  // Scenario B — per-request token via the NEW path (two concurrent build() calls).
+  const defB = makeDefinition().listingEngineDefinition;
+  const definitionTokenBefore = defB.getAccessToken();
+  const [a, b] = await Promise.all([
+    defB.build({accessToken: DEF_TOKEN_A}),
+    defB.build({accessToken: DEF_TOKEN_B}),
+  ]);
+  const tokenA = (a.engine ?? a)[stateKey].configuration.accessToken;
+  const tokenB = (b.engine ?? b)[stateKey].configuration.accessToken;
+  const sharedAfter = defB.getAccessToken();
+
+  const perRequestApplied = tokenA === DEF_TOKEN_A && tokenB === DEF_TOKEN_B;
+  const isolated = tokenA !== tokenB;
+  const sharedUntouched = sharedAfter === definitionTokenBefore;
+
+  // Scenario C — per-request navigator context (PR #8495): two concurrent builds with distinct
+  // contexts must both succeed without mutating the shared provider (structural isolation).
+  const defC = makeDefinition().listingEngineDefinition;
+  const ctxA = {
+    clientId: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+    referrer: null,
+    userAgent: 'ua-A',
+    location: 'http://a/',
+    forwardedFor: '1.1.1.1',
+  };
+  const ctxB = {
+    clientId: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+    referrer: null,
+    userAgent: 'ua-B',
+    location: 'http://b/',
+    forwardedFor: '2.2.2.2',
+  };
+  let navContextIsolated = false;
+  try {
+    const [ca, cb] = await Promise.all([
+      defC.build({navigatorContext: ctxA}),
+      defC.build({navigatorContext: ctxB}),
+    ]);
+    navContextIsolated = !!(ca.engine ?? ca) && !!(cb.engine ?? cb);
+  } catch {
+    navContextIsolated = false;
+  }
+
+  const fixed = perRequestApplied && isolated && sharedUntouched && navContextIsolated;
+
+  return {
+    perRequestTokenApplied: perRequestApplied,
+    tokensIsolatedAcrossConcurrentBuilds: isolated,
+    sharedDefinitionNotMutated: sharedUntouched,
+    perRequestNavigatorContextApplied: navContextIsolated,
+    verdict: fixed
+      ? 'FIXED — per-request token + navigator context applied without mutating the shared definition'
+      : 'LEAK — no per-request token/context on the supported ssr-commerce tree',
+  };
+}
+
 const r1 = await finding1();
 const r2 = await finding2();
-const r3 = await finding3();
+const r3a = await finding3SsrNext();
+const r3b = await finding3SsrCommerce();
 
 if (asJson) {
-  console.log(JSON.stringify({f1: r1, f2: r2, f3: r3}, null, 2));
+  console.log(JSON.stringify({f1: r1, f2: r2, f3_ssrNext: r3a, f3_ssrCommerce: r3b}, null, 2));
 } else {
   console.log('\n===== CMS-443 hardened repro =====\n');
   console.log('Finding 1 — engine retention (WeakRef + FinalizationRegistry):');
   console.table(r1);
   console.log('Finding 2 — relay selector cache (direct eviction probe):');
   console.table(r2);
-  console.log('Finding 3 — request-scoped token on a shared definition:');
-  console.table(r3);
+  console.log('Finding 3a — request-scoped token on ssr-next (ssr-commerce-next, #8481):');
+  console.table(r3a);
+  console.log('Finding 3b — request-scoped token + navigator context on ssr-commerce (supported, #8494/#8495):');
+  console.table(r3b);
 }

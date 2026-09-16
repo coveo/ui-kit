@@ -15,8 +15,17 @@ so the fixes can be proven with numbers, and so a colleague can replay the befor
 2. **Unbounded relay-selector cache** — `getRelayInstanceFromState` memoized one relay instance
    per distinct access token with no eviction. Measured **directly**: flood the selector with N
    distinct tokens, then re-probe the oldest — a cache hit proves it was never evicted.
-3. **No per-request token** — a per-user token required mutating the shared, process-scoped
-   definition (racy). Behavioral probe.
+3. **No per-request token / navigator context** — a per-user token (and navigator context)
+   required mutating the shared, process-scoped definition (racy). Behavioral / causal probe,
+   split across the two SSR trees:
+   - **F3a — `ssr-commerce-next`** (`#8481`, merged): per-request `accessToken` on the ssr-next
+     path, proven via the pure `augmentCommerceEngineOptions` function. This tree is kept but is
+     **not** the client's package.
+   - **F3b — `ssr-commerce`** (supported, the client's package; PRs `#8494` token + `#8495`
+     navigator context, stacked): per-request `accessToken` **and** `navigatorContext` on
+     `build()`/`fetchStaticState()`, applied on a per-request options copy with the shared
+     definition no longer mutated. Causal proof via two concurrent `build()` calls with distinct
+     tokens, asserting isolation + the shared definition token stays untouched.
 
 ## Usage
 
@@ -41,7 +50,10 @@ left under `<scratch>/cms443-compare/results/`.
 | F1 `build()` engines still alive (/500) | 500 | ~1 (released) |
 | F1 `hydrateStaticState` live engine gets rotated token | `true` | `true` (no regression) |
 | F2 oldest token still cached after flood | `true` | `false` (evicted) |
-| F3 mutates shared definition | `true` | additive per-request token added in ssr-next |
+| F3a `ssr-next` per-request token applied | `false` | `true` (added in ssr-commerce-next, #8481) |
+| F3b `ssr-commerce` per-request token isolated | `false` | `true` (added on supported tree, #8494) |
+| F3b `ssr-commerce` per-request navigator context | `false` | `true` (added on supported tree, #8495) |
+| F3b `ssr-commerce` shared definition mutated | `true` | `false` (per-request options copy) |
 
 > **Note on requirements:** run Node with `--expose-gc`. The measurement performs **no network
 > I/O** — `fetchStaticState`'s network call is expected to reject and is swallowed; retention

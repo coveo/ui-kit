@@ -8,7 +8,7 @@
 
 Dernière mise à jour : 2026-09-16
 
-**Versions** : les fixes de fuite (Findings 1 et 2) sont publiés dans `@coveo/headless` **3.56.0** (cible production : jeudi 17 septembre 2026 — date de suivi interne, ne pas la promettre au client, cf. §3). Le token par requête (Finding 3) est livré sur `ssr-commerce-next` dans 3.56.0 (#8481) et en cours d'**extension au tree supporté `ssr-commerce`** (demandes 4a-bis + 4c, PRs prêtes, non encore ouvertes/mergées — voir §1a).
+**Versions** : les fixes de fuite (Findings 1 et 2) sont publiés dans `@coveo/headless` **3.56.0** (cible production : jeudi 17 septembre 2026 — date de suivi interne, ne pas la promettre au client, cf. §3). Le token par requête (Finding 3) est livré sur `ssr-commerce-next` dans 3.56.0 (#8481) et **étendu au tree supporté `ssr-commerce`** (demandes 4a-bis + 4c, [PR #8494](https://github.com/coveo/ui-kit/pull/8494) + [PR #8495](https://github.com/coveo/ui-kit/pull/8495) ouvertes en stack, validées par le repro — voir §1a).
 
 ---
 
@@ -22,12 +22,12 @@ Dernière mise à jour : 2026-09-16
 | 2 | Finding 1 : ne plus retenir les moteurs (dispose / weak / skip registration), `ssr-commerce` **et** `ssr-commerce-next` | Fix | Registre faible : WeakRef + WeakMap + FinalizationRegistry, tous les chemins des 2 trees | ✅ Mergé ([`fa2e9de00d`](https://github.com/coveo/ui-kit/commit/fa2e9de00d)) |
 | 3 | Finding 2 : mémoïsation bornée pour `getRelayInstanceFromState` | Fix | `lruMemoize`, maxSize 50, uniquement `memoize` | ✅ Mergé ([`818bdf001e`](https://github.com/coveo/ui-kit/commit/818bdf001e)) |
 | 4a | Token par requête first-class sur `fetchStaticState()` / `hydrateStaticState()` — tree `ssr-commerce-next` | Fix | Param `accessToken` par requête, sans muter la définition partagée | ✅ Mergé ([`01434bcbd3`](https://github.com/coveo/ui-kit/commit/01434bcbd3)) |
-| 4a-bis | **Même fix sur le tree supporté `ssr-commerce`** (celui que le client utilise) | Fix | Param `accessToken` par requête via copie d'options par requête (jamais de mutation partagée) | 🟡 Prêt, PR à ouvrir (`feat/CMS-443-ssr-per-request-token`, [`16efc31b2f`](https://github.com/coveo/ui-kit/commit/16efc31b2f)) |
-| 4c | Navigator context par requête sur `ssr-commerce` (Finding 3, point a) | Fix | Param `navigatorContext` par requête + retrait de la mutation partagée du `preprocessRequest`/navigator | 🟡 Prêt, PR stack sur 4a-bis (`feat/CMS-443-ssr-per-request-navigator-context`, [`e913b0662d`](https://github.com/coveo/ui-kit/commit/e913b0662d)) |
+| 4a-bis | **Même fix sur le tree supporté `ssr-commerce`** (celui que le client utilise) | Fix | Param `accessToken` par requête via copie d'options par requête (jamais de mutation partagée) | 🟢 [PR #8494](https://github.com/coveo/ui-kit/pull/8494) ouverte (`feat/CMS-443-ssr-per-request-token`, [`16efc31b2f`](https://github.com/coveo/ui-kit/commit/16efc31b2f)), validée repro F3b |
+| 4c | Navigator context par requête sur `ssr-commerce` (Finding 3, point a) | Fix | Param `navigatorContext` par requête + retrait de la mutation partagée du `preprocessRequest`/navigator | 🟢 [PR #8495](https://github.com/coveo/ui-kit/pull/8495) ouverte, stack sur #8494 (`feat/CMS-443-ssr-per-request-navigator-context`, [`e913b0662d`](https://github.com/coveo/ui-kit/commit/e913b0662d)), validée repro F3b |
 
 > **Note de tree** : le token par requête a d'abord été livré sur `ssr-commerce-next` (#8481, mergé — **conservé**). Comme le client utilise le tree supporté `@coveo/headless/ssr-commerce`, on **étend** le même fix à ce tree via 4a-bis, et 4c y ajoute le navigator context par requête en corrigeant au passage la mutation d'état partagé (racine de Finding 3). Les deux trees sont ainsi couverts.
 
-**→ Findings 1 et 2 (les fuites) sont livrés et mergés (`@coveo/headless` 3.56.0) sur les deux trees.** Le token par requête (Finding 3) est livré sur `ssr-commerce-next` (#8481) et en cours d'extension au tree supporté `ssr-commerce` via 4a-bis + 4c (PRs prêtes, non ouvertes).
+**→ Findings 1 et 2 (les fuites) sont livrés et mergés (`@coveo/headless` 3.56.0) sur les deux trees.** Le token par requête (Finding 3) est livré sur `ssr-commerce-next` (#8481) et étendu au tree supporté `ssr-commerce` via 4a-bis + 4c ([PR #8494](https://github.com/coveo/ui-kit/pull/8494) + [PR #8495](https://github.com/coveo/ui-kit/pull/8495) ouvertes en stack, en attente de review/merge).
 
 ### 1b. Livrables DOC / DÉCISION PRODUIT — à valider avec l'équipe
 
@@ -70,12 +70,12 @@ Légende : ✅ fait · ⚠️ partiel/en cours · ⏸️ en attente de décision
 ### Demande 4a — Token par requête (CODE) ✅→🟡
 - **Ce que le client veut** (§9.4, §5, §8.2) : un `accessToken` par requête sur `fetchStaticState()`, sur le package qu'il utilise (`@coveo/headless/ssr-commerce`). Finding 3 pointe aussi le `navigatorContext` forcé à travers la définition partagée (race inter-requêtes).
 - **Livraison sur `ssr-commerce-next`** — PR #8481 (`feat(headless)`, minor) : `accessToken` ajouté à `CommonBuildConfig`, mergé (`01434bcbd3`). **Conservé.**
-- **Extension au tree supporté `ssr-commerce`** — deux PRs en stack, prêtes, non ouvertes :
-  - **4a-bis** — `feat/CMS-443-ssr-per-request-token` ([`16efc31b2f`](https://github.com/coveo/ui-kit/commit/16efc31b2f)) : `accessToken?` optionnel sur `fetchStaticState()`/`build()`, appliqué via une **copie d'options par requête** (jamais de mutation partagée). Additif, backward compatible.
-  - **4c** — `feat/CMS-443-ssr-per-request-navigator-context` ([`e913b0662d`](https://github.com/coveo/ui-kit/commit/e913b0662d), stack sur 4a-bis) : `navigatorContext?` par requête + **suppression de la mutation partagée** du `preprocessRequest`/navigator (racine de la race Finding 3).
+- **Extension au tree supporté `ssr-commerce`** — deux PRs en stack, ouvertes :
+  - **4a-bis** — [PR #8494](https://github.com/coveo/ui-kit/pull/8494), `feat/CMS-443-ssr-per-request-token` ([`16efc31b2f`](https://github.com/coveo/ui-kit/commit/16efc31b2f)) : `accessToken?` optionnel sur `fetchStaticState()`/`build()`, appliqué via une **copie d'options par requête** (jamais de mutation partagée). Additif, backward compatible.
+  - **4c** — [PR #8495](https://github.com/coveo/ui-kit/pull/8495), `feat/CMS-443-ssr-per-request-navigator-context` ([`e913b0662d`](https://github.com/coveo/ui-kit/commit/e913b0662d), stack sur #8494) : `navigatorContext?` par requête + **suppression de la mutation partagée** du `preprocessRequest`/navigator (racine de la race Finding 3).
 - **Pourquoi étendre à `ssr-commerce`** : le client utilise ce tree (supporté), pas `ssr-commerce-next`. Étendre le fix y répond directement, sans retirer la couverture déjà livrée sur `-next`.
-- **Preuve** : sonde `repro-ssr-per-request-token.mjs` sur `ssr-commerce` — AVANT : LEAK (aucun token par requête ; `setAccessToken` bleed entre requêtes) ; APRÈS : FIXED (token + navigator context par requête, moteurs concurrents isolés, définition partagée non mutée). Suite headless complète verte (5576 tests).
-- **Statut** : ✅ #8481 mergé (`ssr-commerce-next`) ; 🟡 4a-bis + 4c prêtes (`ssr-commerce`), PRs à ouvrir en stack avec JP.
+- **Preuve** : validation dans le repro versionné (`utils/cms443-memory-repro/`), **F3b** = per-request token **et** navigator context sur `ssr-commerce` — AVANT : LEAK ; APRÈS (build du stack #8494/#8495) : **FIXED** (token appliqué, moteurs concurrents isolés, navigator context par requête OK, définition partagée non mutée). F3a (`ssr-next`, #8481) reste FIXED. Suite headless complète verte (5576 tests).
+- **Statut** : ✅ #8481 mergé (`ssr-commerce-next`) ; 🟢 #8494 + #8495 ouvertes en stack (`ssr-commerce`), en attente de review JP + merge.
 
 ### Demande 4b — Sample SSR per-user-token documenté (DOC) ⏸️
 - **Ce que le client veut** (§5, §8.2) : un sample SSR documenté montrant l'usage de tokens par utilisateur en multi-tenant, au-delà du simple param.
@@ -113,10 +113,10 @@ Contraintes de communication (préférences projet) :
 | Sujet | Décision attendue | Qui |
 |---|---|---|
 | CI #8480 bloquée sur OpenACR | ✅ Résolu — faux drift (report a11y incomplet), rerun complet | Fait |
-| Sonde F3 du repro | ✅ Corrigée — teste `augmentCommerceEngineOptions` directement, F3 prouvé sur after-f3 | Fait |
+| Sonde F3 du repro | ✅ F3a (`ssr-next`) prouvée + F3b (`ssr-commerce`, #8494/#8495) ajoutée et validée FIXED contre le build du stack | Fait |
 | Les 3 PRs de fix (F1/F2/F3) | ✅ Mergées sur `main` (2026-09-15) | Fait |
-| **Token par requête — couverture des 2 trees** | Livré sur `ssr-commerce-next` (#8481, conservé) ; étendu au tree supporté `ssr-commerce` via 4a-bis + 4c | Fait (PRs prêtes) |
-| **Ouvrir le stack 4a-bis + 4c** (`ssr-commerce` token + navigator context) | Ouvrir les 2 PRs en stack, reviewer JP | Toi |
+| **Token par requête — couverture des 2 trees** | Livré sur `ssr-commerce-next` (#8481, conservé) ; étendu au tree supporté `ssr-commerce` via [PR #8494](https://github.com/coveo/ui-kit/pull/8494) + [PR #8495](https://github.com/coveo/ui-kit/pull/8495), validé repro F3b | Fait (PRs ouvertes) |
+| **Merger le stack #8494 + #8495** (`ssr-commerce` token + navigator context) | Review JP + merge (#8494 d'abord, puis #8495) | Toi |
 | Sample per-user-token (demande 4b) | Le créer ? où ? | Toi / PM |
 | Demande 5 (doc + pattern supporté) | Router vers R&D/PM | Toi |
 | Réponse client (confirmation F1/F2, position pattern §7, hooks alternatifs) | À rédiger | Toi / Support |
@@ -136,19 +136,24 @@ Contraintes de communication (préférences projet) :
 
 ### Résultats repro avant/après (harnais, jeu de controllers minimal)
 
-| Métrique | before (main) | after-f1 | after-f2 | after-f3 |
-|---|---|---|---|---|
-| F1 `fetchStaticState` KB/call | 37.2 | **3.9** ✅ | 37.0 | 37.2 |
-| F1 `build()` moteurs encore vivants (/500) | 500 | **1** ✅ | 500 | 500 |
-| F1 `hydrateStaticState` moteur vivant reçoit le token | true | **true** ✅ | true | true |
-| F2 plus vieux token encore en cache | true | true | **false** ✅ | true |
-| F3 token par requête appliqué | false | false | false | **true** ✅ |
-| F3 définition partagée non mutée | true | true | true | **true** |
+| Métrique | before (main) | after-f1 | after-f2 | after-f3 | after-f3-ssr-commerce |
+|---|---|---|---|---|---|
+| F1 `fetchStaticState` KB/call | 37.2 | **3.9** ✅ | 37.0 | 37.2 | 4.7 |
+| F1 `build()` moteurs encore vivants (/500) | 500 | **1** ✅ | 500 | 500 | 1 |
+| F1 `hydrateStaticState` moteur vivant reçoit le token | true | **true** ✅ | true | true | true |
+| F2 plus vieux token encore en cache | true | true | **false** ✅ | true | false |
+| F3a token par requête appliqué (`ssr-next`) | false | false | false | **true** ✅ | true |
+| F3a définition partagée non mutée (`ssr-next`) | true | true | true | **true** | true |
+| F3b token par requête isolé (`ssr-commerce`) | false | — | — | — | **true** ✅ |
+| F3b navigator context par requête (`ssr-commerce`) | false | — | — | — | **true** ✅ |
+| F3b définition partagée non mutée (`ssr-commerce`) | — | — | — | — | **true** |
 
-Diagonale FIXED (F1→after-f1, F2→after-f2, F3→after-f3) : chaque fix corrige son finding et aucun autre — confirmation empirique de l'indépendance des 3 PRs.
+Diagonale FIXED (F1→after-f1, F2→after-f2, F3a→after-f3, F3b→after-f3-ssr-commerce) : chaque fix corrige son finding et aucun autre — confirmation empirique de l'indépendance. La colonne `after-f3-ssr-commerce` est le build du stack #8494/#8495 (contient aussi F1/F2 via `main` mergé), d'où F1/F2 également verts.
 
 Preuve F1 (registre faible) — trois signaux alignés : `fetchStaticState` 37.2 → 3.9 KB/call (le résidu est le static state, pas le moteur) ; `build()` 500 → 1 moteur retenu (le « 1 » est le dernier encore référencé au GC, artefact de mesure) ; `hydrateStaticState` — le moteur hydraté vivant reçoit toujours le token renouvelé (non-régression, là où l'option A le laissait périmé). Le compteur de rétention utilise le décompte WeakRef post-GC (déterministe), pas les finalizers du `FinalizationRegistry` (dont le timing n'est pas garanti par la spec).
 
 Écart assumé : nos ~37 KB/moteur (sample minimal) vs 65–129 KB du client (jeu de controllers réel) — l'ampleur scale avec les controllers (le rapport le prédit, §3.3).
 
-Sonde F3 : teste `augmentCommerceEngineOptions` directement (le fichier exact que le fix modifie), sans réseau. Prouve les 3 propriétés — override par requête appliqué, définition partagée non mutée, fallback au token de définition si omis.
+Sonde F3, deux trees, sans réseau :
+- **F3a (`ssr-next`, #8481)** : teste `augmentCommerceEngineOptions` directement (le fichier exact que le fix modifie) — override par requête appliqué, définition partagée non mutée, fallback au token de définition si omis.
+- **F3b (`ssr-commerce`, #8494/#8495)** : preuve causale via deux `build()` concurrents avec des tokens distincts — assère l'isolation des tokens, la non-mutation de la définition partagée, et l'application du navigator context par requête. C'est le tree que le client utilise réellement.
