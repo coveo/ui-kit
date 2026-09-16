@@ -87,7 +87,13 @@ interface UnifiedEndpointClientConfiguration {
   organizationId?: string;
   accessToken?: string;
   endpoint?: string;
-  /** Full-URL override; bypasses endpoint/path composition. @internal */
+  /**
+   * Full override for the converse request URL. When set, the request is sent
+   * to this exact URL, bypassing organization endpoint resolution and path
+   * composition entirely.
+   *
+   * @internal
+   */
   converseUrl?: string;
 }
 
