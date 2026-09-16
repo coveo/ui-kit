@@ -8,11 +8,11 @@ const mockClear = vi.fn();
 
 let mockConverseState: UnifiedConverseControllerState;
 
-vi.mock('../context/generative-interface.js', () => ({
+vi.mock('../../context/generative-interface.js', () => ({
   useGenerativeInterface: () => ({}),
 }));
 
-vi.mock('../hooks/use-build-controller.js', () => ({
+vi.mock('../../hooks/use-build-controller.js', () => ({
   useBuildController: () => [
     {submit: mockSubmit, clear: mockClear, subscribe: vi.fn(), state: {}},
     mockConverseState,
@@ -27,7 +27,7 @@ vi.mock('./LandingPage/LandingPage.js', () => ({
   ),
 }));
 
-vi.mock('./SearchResultsPage/SearchResultsPage.js', () => ({
+vi.mock('../conversation/SearchResultsPage.js', () => ({
   SearchResultsPage: (props: any) => (
     <div data-testid="search-results-page">
       <span data-testid="surface-id">{props.surfaceId}</span>
@@ -37,7 +37,7 @@ vi.mock('./SearchResultsPage/SearchResultsPage.js', () => ({
   ),
 }));
 
-vi.mock('./ConversationPage/index.js', () => ({
+vi.mock('../conversation/index.js', () => ({
   ConversationPage: (props: any) => (
     <div data-testid="conversation-page">
       <button data-testid="back-to-search" onClick={props.onBackToSearch} />

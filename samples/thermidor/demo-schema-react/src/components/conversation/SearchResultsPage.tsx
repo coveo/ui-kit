@@ -1,9 +1,9 @@
 import {useCallback, useMemo, useSyncExternalStore} from 'react';
 import type {Activity} from '@coveo/thermidor';
-import {ProductTargeting} from '../ProductTargeting/ProductTargeting.js';
+import {ProductTargeting} from '../PromptSuggestions/ProductTargeting/ProductTargeting.js';
 import {type TargetedProduct} from '../../context/targeting.js';
-import {getA2UIMessages, ThermidorA2UISurfaces} from '../../a2ui/surfaces.js';
-import {useStateSource} from '../../a2ui/state-source-context.js';
+import {getA2UIMessages, ThermidorA2UISurfaces} from './A2UI/surfaces.js';
+import {useStateSource} from './A2UI/state-source-context.js';
 import styles from './SearchResultsPage.module.css';
 
 interface SearchResultsPageProps {

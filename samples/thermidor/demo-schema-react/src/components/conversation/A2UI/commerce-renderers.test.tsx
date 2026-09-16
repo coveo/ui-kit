@@ -3,7 +3,7 @@ import {render, screen, fireEvent} from '@testing-library/react';
 import {PaginationRenderer} from './Pagination/Pagination.js';
 import {SortRenderer} from './Sort/Sort.js';
 import {ProductListRenderer} from './ProductList/ProductList.js';
-import {TargetingProvider, type TargetingContext} from '../context/targeting.js';
+import {TargetingProvider, type TargetingContext} from '../../../context/targeting.js';
 
 const mockDispatch = vi.fn().mockResolvedValue(undefined);
 let mockControllerState: unknown = undefined;

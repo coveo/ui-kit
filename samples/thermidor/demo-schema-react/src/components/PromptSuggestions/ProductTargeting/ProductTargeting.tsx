@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useMemo, type ReactNode} from 'react';
 import {PromptInput} from '../PromptInput/PromptInput.js';
-import {TargetingProvider, type TargetedProduct} from '../../context/targeting.js';
-import {useTargetingMode} from '../../hooks/use-targeting-mode.js';
+import {TargetingProvider, type TargetedProduct} from '../../../context/targeting.js';
+import {useTargetingMode} from '../../../hooks/use-targeting-mode.js';
 import type {SuggestionSection, SuggestionItem} from '../SuggestionsDropdown/index.js';
 import styles from './ProductTargeting.module.css';
 

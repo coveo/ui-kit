@@ -12,7 +12,7 @@ vi.mock('./context/generative-interface.js', () => ({
   useGenerativeInterface: () => ({}),
 }));
 
-vi.mock('./components/AppShell.js', () => ({
+vi.mock('./components/Layout/AppShell.js', () => ({
   AppShell: () => <div data-testid="app-shell">AppShell</div>,
 }));
 

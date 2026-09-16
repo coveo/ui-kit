@@ -1,7 +1,10 @@
-import {SECTION_ACTIONS, type SuggestionItem} from '../SuggestionsDropdown/index.js';
-import {PromptInput} from '../PromptInput/PromptInput.js';
-import {SuggestionPills} from '../SuggestionPills/SuggestionPills.js';
-import {useSuggestions} from '../../hooks/use-suggestions.js';
+import {
+  SECTION_ACTIONS,
+  type SuggestionItem,
+} from '../../PromptSuggestions/SuggestionsDropdown/index.js';
+import {PromptInput} from '../../PromptSuggestions/PromptInput/PromptInput.js';
+import {SuggestionPills} from '../../PromptSuggestions/SuggestionPills/SuggestionPills.js';
+import {useSuggestions} from '../../../hooks/use-suggestions.js';
 import styles from './LandingPage.module.css';
 
 interface LandingPageProps {

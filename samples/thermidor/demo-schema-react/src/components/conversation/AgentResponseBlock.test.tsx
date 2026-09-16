@@ -25,13 +25,13 @@ vi.mock('./StreamingMessage.js', () => ({
   ),
 }));
 
-vi.mock('../../a2ui/Skeleton/Skeleton.js', () => ({
+vi.mock('./A2UI/Skeleton/Skeleton.js', () => ({
   A2UISkeleton: ({componentType}: {componentType: string}) => (
     <div data-testid="skeleton" data-component-type={componentType} />
   ),
 }));
 
-vi.mock('../../a2ui/surfaces.js', () => ({
+vi.mock('./A2UI/surfaces.js', () => ({
   getA2UIMessages: () => [],
   ThermidorA2UISurfaces: () => null,
 }));

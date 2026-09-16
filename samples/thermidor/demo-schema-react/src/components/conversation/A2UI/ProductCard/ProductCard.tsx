@@ -1,5 +1,5 @@
-import {useTargeting} from '../../context/targeting.js';
-import {formatPrice} from '../../utils.js';
+import {useTargeting} from '../../../../context/targeting.js';
+import {formatPrice} from '../../../../utils.js';
 import styles from './ProductCard.module.css';
 
 interface A2UIProductCardProps {

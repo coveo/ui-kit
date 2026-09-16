@@ -1,8 +1,8 @@
 import {render, screen, fireEvent} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
 import type {Turn} from '@coveo/thermidor';
-import {LandingPage} from './LandingPage/LandingPage.js';
-import {ConversationPage} from './ConversationPage/index.js';
+import {LandingPage} from './Layout/LandingPage/LandingPage.js';
+import {ConversationPage} from './conversation/index.js';
 
 describe('LandingPage', () => {
   it('renders the heading', () => {
