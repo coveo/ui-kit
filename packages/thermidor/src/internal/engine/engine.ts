@@ -29,12 +29,21 @@ export let getFullEngine: (engine: Engine) => FullEngine;
 const fullEngineWrappers = new WeakMap<Engine, FullEngine>();
 
 /**
- * Store engine wrapper object to encapsulate state and avoid module-level side effects
- * Following the pattern from Coveo Headless
+ * The Thermidor engine: the framework-agnostic core that owns state and wires
+ * the controllers and interfaces built against it. State management is fully
+ * encapsulated (no store internals leak to consumers), and multiple independent
+ * engine instances can coexist (multi-engine paradigm).
  *
- * Supports multi-engine paradigm - multiple independent engine instances can coexist
+ * @example
+ * ```ts
+ * const engine = new Engine({configuration});
+ * const iface = buildGenerativeUnifiedInterface({engine});
+ * // …build controllers from `iface`…
+ * engine.dispose();
+ * ```
  */
 export class Engine {
+  /** Whether this engine has been disposed. A disposed engine must not be used. */
   get disposed(): boolean {
     return this.#disposed;
   }
@@ -71,11 +80,20 @@ export class Engine {
     });
   }
 
+  /**
+   * Creates a new engine.
+   *
+   * @param options - Optional initial configuration and navigator context provider.
+   */
   constructor(options?: EngineOptions) {
     this.#_initializeConfiguration(options?.configuration);
     this.#_initializeNavigatorContext(options?.navigatorContextProvider);
   }
 
+  /**
+   * Disposes the engine and every interface built from it, releasing internal
+   * resources. Idempotent; subsequent calls are no-ops.
+   */
   dispose(): void {
     if (this.#disposed) {
       return;
