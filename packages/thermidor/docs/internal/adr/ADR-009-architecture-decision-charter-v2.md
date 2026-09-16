@@ -189,7 +189,8 @@ A proposal is ready to implement when:
 The unified-endpoint session-client family, all governed by this charter:
 
 - [ADR-010](./ADR-010-unified-endpoint-session-client.md) — Collapse to a lean
-  unified-endpoint session client (core: vision, `Session`/`Turn` model, options).
+  unified-endpoint session client (core: vision, options, trade-offs; the typed
+  model and rationale are in its [model annex](./ADR-010-annex-model.md)).
 - [ADR-011](./ADR-011-session-serialization.md) — Session serialization &
   restoration.
 - [ADR-012](./ADR-012-client-owned-context.md) — Client-owned context via

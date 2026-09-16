@@ -3,6 +3,7 @@ status: Proposed
 date: 2026-09-15
 related:
   - ./ADR-009-architecture-decision-charter-v2.md
+  - ./ADR-010-annex-model.md
   - ./ADR-011-session-serialization.md
   - ./ADR-012-client-owned-context.md
   - ./ADR-013-remote-controller-vending.md
@@ -28,6 +29,10 @@ related:
 > - [ADR-013](./ADR-013-remote-controller-vending.md) — remote controller vending
 > - [ADR-014](./ADR-014-consumer-supplied-endpoint-and-schema.md) — endpoint &
 >   injected schema
+>
+> The full public model (types), the per-field naming rationale, and the per-MUST
+> charter mapping live in the [model annex](./ADR-010-annex-model.md) to keep this
+> record focused on the decision and trade-offs.
 
 ## Context and Problem Statement
 
@@ -58,19 +63,12 @@ changesets):
    conversational**. The backend may return A2UI components for a commerce search
    page with no agent involved. Modeling the result as a "conversation" of "agent
    responses" is inaccurate for the common commerce-routed case.
-3. **Feature controllers are superseded by schema-defined components.** The old
-   vision had thermidor own a controller per feature (`SearchBoxController`,
-   `FacetController`, `PaginationController`, …), each encapsulating that feature's
-   state and API. That is no longer how UI is defined: the server streams A2UI
-   **components** whose contracts (state shape + available actions) live in the
-   schema (`@coveo/thermidor-schema` and its internal counterpart). The client no
-   longer needs — and should not have — hand-written feature controllers; it needs
-   one generic, schema-validated **remote controller** that binds any component to
-   its server-owned state and exposes its schema-declared actions. Feature
-   controllers were not trimmed for leanness; they were made obsolete by where UI
-   definition moved (from client code to server-streamed, schema-described
-   components). This is why the public surface collapses to a session plus a single
-   generic remote controller rather than a catalog of per-feature controllers.
+3. **Feature controllers are superseded by schema-defined components.** UI is now
+   defined by server-streamed A2UI **components** whose contracts live in the
+   schema — not by client-side per-feature controllers (`SearchBoxController`,
+   `FacetController`, …). The client needs one generic, schema-validated **remote
+   controller** rather than a catalog of per-feature controllers. This is *why* the
+   public surface collapses to a session plus a single generic remote controller.
 
 This ADR records the decision to collapse thermidor to the leanest client that
 satisfies the charter for this single-endpoint reality, and defines the public
@@ -162,110 +160,25 @@ and governs this decision.
 ## Decision Outcome
 
 Adopt **Option B**: collapse thermidor to a lean session client for the unified
-endpoint, in place (same package).
+endpoint, in place (same package). The public surface is a single `createSession`
+factory returning a `Session` that owns the interaction lifecycle (submit /
+dispatchAction / cancel / retry / serialize / subscribe) and vends a generic,
+schema-validated remote controller. Its state is a plain observable list of
+`Turn`s, each pairing an `input` with a `response` (`state` + `activities`, plus an
+optional `agent` facet present only when the router invoked an agent).
 
-The public model is:
+The full typed model, the per-field naming rationale (why `Session`/`Turn`/
+`response`, why `agent` is optional and routing-neutral), and the per-MUST charter
+mapping are in the [model annex](./ADR-010-annex-model.md).
 
-```ts
-// SessionConfig (auth/org + context providers + injected contracts schema) is
-// specified in ADR-012 (context) and ADR-014 (endpoint & schema).
-function createSession(config: SessionConfig): Session;
+### Rationale (summary)
 
-interface Session {
-  readonly turns: readonly Turn[];
-  subscribe(listener: () => void): () => void;
-  submit(input: {prompt?: string}): Promise<void>;
-  dispatchAction(action: RemoteAction): Promise<void>;
-  cancel(): void;
-  retry(turnId: string): void;
-  serialize(): SerializedSession; // see ADR-011
-
-  // Vended remote controller (see ADR-013). Binds to the ACTIVE turn's server
-  // state snapshot (`response.state.components[componentId]`), schema-validated.
-  remoteController<T extends ComponentType>(
-    componentId: string,
-    componentType: T,
-    options?: RemoteControllerOptions // reserved; empty today
-  ): RemoteController<T>;
-}
-
-interface Turn {
-  id: string;
-  input: TurnInput;
-  response: TurnResponse;
-  status: 'streaming' | 'complete' | 'error';
-  error?: string; // populated when status === 'error'
-}
-
-interface TurnResponse {
-  // Server-authoritative UI state snapshot. Always present (defaults to {}).
-  // Remote controllers read this. Present for commerce-routed and agent-routed
-  // turns alike — it is not agent-specific.
-  state: A2uiState;
-
-  // Ordered raw event log for the turn. Always present. Surface discovery and
-  // navigation read this. Not agent-specific.
-  activities: Activity[];
-
-  // Agent-specific content. Present ONLY when the router invoked an agent.
-  agent?: {
-    messages: AgentMessage[];
-    reasoningSteps: ReasoningStep[];
-    surfaces: A2UISurface[];
-  };
-}
-```
-
-### Rationale
-
-**Naming reflects the contract, not one outcome of it.**
-
-- `Session` (not "conversation") captures the continuous, token-carrying nature
-  of the interaction without implying dialogue. Routing may or may not produce
-  agent content; the container should not presuppose it.
-- `Turn` is the unit: one input and its streamed result. It is a familiar,
-  idiomatic word for this shape. It carries a mild conversational connotation, but
-  so does every credible alternative (`exchange`, `interaction`); none buys real
-  routing-neutrality, so the most familiar word wins. The turn's shape — an
-  explicit `input` paired with a `response` — is what makes it honest, not the
-  noun.
-- `response` groups the server-sent content and separates it from turn metadata
-  (`id`, `input`, `status`, `error`). `status` governs the readiness of a single
-  `response` object rather than a set of loose sibling fields.
-- `state` and `activities` are **routing-neutral** and live at the top of
-  `response`. Verified against current usage: remote controllers read
-  `state.components`, and navigation/surface-discovery reads `activities`, on both
-  commerce-routed and agent-routed turns. Only `messages`, `reasoningSteps`, and
-  `surfaces` are genuinely agent-specific, so they move under an optional `agent`
-  facet. `agent?` optionality now means exactly "did the router invoke an agent" —
-  the real distinction — instead of hiding non-agent state behind an agent-named
-  object (the confusion in the pre-collapse `AgentResponse`).
-- `state` is non-optional (`>= {}`): the current stream initializes it on the
-  first content event and the remote controller already treats a missing snapshot
-  as `{}`. Only the existence of a `response` at all is conditional (before the
-  first event / after a clear).
-
-**Charter mapping ([ADR-009](./ADR-009-architecture-decision-charter-v2.md)):**
-
-- **Faithful transmission and rendering (MUST):** The session transmits input and
-  exposes the server's streamed result; use-case support is inherited from the
-  endpoint + schemas, not owned here. (This is a bet that the collapse to the
-  unified endpoint is permanent — recorded as the load-bearing assumption.)
-- **Public API independence (MUST):** Strengthened. With no state library and no
-  transport DTO in the surface, there is almost nothing to leak; the ADR-001
-  anti-corruption boundary becomes near-trivial to hold.
-- **Best-in-class consumer DX (MUST):** Met and verified — full intellisense for
-  component types, action names, payloads, and state from the injected schema (see
-  [ADR-014](./ADR-014-consumer-supplied-endpoint-and-schema.md)).
-- **Consumer-owned inputs (MUST):** Endpoint URL, contracts schema, and context are
-  supplied by the consumer; one package serves all deployments (ADR-012, ADR-014).
-- **Conditional SSR (SHOULD, open):** `createSession` is a plain factory (no
-  singletons, no module-level state); `serialize()` + restore cover hydration
-  (ADR-011); request building is pure — so deterministic-route SSR is feasible.
-  Agentic-route SSR is out of scope (too slow); the route-determination mechanism
-  is unresolved and deferred to a dedicated ADR.
-- **Simplicity and legibility (SHOULD):** One object, one mental model; adding
-  behavior does not require touching an engine or interface.
+The model names the *contract* (an input, a server-routed result) rather than one
+of its outcomes (a "conversation"), which keeps it accurate for the common
+commerce-routed case where no agent runs. Dropping the engine/interface/Redux
+layers makes non-leakage structural rather than enforced, and the pure-factory
+shape keeps deterministic-route SSR feasible. Full per-item rationale and the
+charter mapping are in the [model annex](./ADR-010-annex-model.md).
 
 Option A was rejected because its abstractions are justified only by a
 multi-interface future that no longer exists; keeping Redux retains the exact
