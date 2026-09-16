@@ -1,8 +1,8 @@
 import {render, screen, fireEvent} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
-import type {Turn} from '@coveo/thermidor';
 import {LandingPage} from './LandingPage/LandingPage.js';
 import {ConversationPage} from './ConversationPage/index.js';
+import {makeTurn} from '../test/turn-fixtures.js';
 
 describe('LandingPage', () => {
   it('renders the heading', () => {
@@ -45,11 +45,7 @@ describe('LandingPage', () => {
 });
 
 describe('ConversationPage', () => {
-  const baseTurn: Turn = {
-    id: 'turn-1',
-    prompt: 'tell me about shoes',
-    status: 'complete',
-  };
+  const baseTurn = makeTurn({id: 'turn-1', prompt: 'tell me about shoes'});
 
   it('renders the PromptInput', () => {
     render(

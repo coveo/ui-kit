@@ -16,10 +16,6 @@ vi.mock('./controllers.js', () => ({
   }),
 }));
 
-vi.mock('./state-source-context.js', () => ({
-  useStateSource: () => ({}),
-}));
-
 beforeEach(() => {
   mockControllerState = undefined;
   mockDispatch.mockClear();

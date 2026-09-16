@@ -1,5 +1,4 @@
 import {useRemoteController} from '../controllers.js';
-import {useStateSource} from '../state-source-context.js';
 import type {
   ComparisonTableProps,
   ComparisonAttribute,
@@ -19,8 +18,7 @@ function formatPrice(price: number): string {
  * products, and attributes are owned by the backend and correlated solely by componentId.
  */
 export function ComparisonTableRenderer({props}: {props: ComparisonTableProps}) {
-  const stateSource = useStateSource();
-  const controller = useRemoteController(stateSource, props.componentId, props.componentType);
+  const controller = useRemoteController(props.componentId, props.componentType);
   const heading = controller.state?.heading ?? '';
   const summary = controller.state?.summary ?? '';
   const products = controller.state?.products ?? [];

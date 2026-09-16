@@ -1,22 +1,25 @@
 import {render, screen, act} from '@testing-library/react';
 import {describe, it, expect, vi, beforeEach} from 'vitest';
-import type {UnifiedConverseControllerState, Turn} from '@coveo/thermidor';
+import type {Session, Turn} from '@coveo/thermidor';
 import {AppShell} from './AppShell.js';
+import {makeTurn, makeSurface} from '../test/turn-fixtures.js';
 
 const mockSubmit = vi.fn();
-const mockClear = vi.fn();
 
-let mockConverseState: UnifiedConverseControllerState;
+let mockTurns: Turn[] = [];
 
-vi.mock('../context/generative-interface.js', () => ({
-  useGenerativeInterface: () => ({}),
-}));
-
-vi.mock('../hooks/use-build-controller.js', () => ({
-  useBuildController: () => [
-    {submit: mockSubmit, clear: mockClear, subscribe: vi.fn(), state: {}},
-    mockConverseState,
-  ],
+// AppShell reads turns through `useSession()` and drives navigation off the
+// `response.surfaces` projection. The fake session exposes just the members the
+// shell touches: `turns`, `subscribe`, and `submit`.
+vi.mock('../context/session.js', () => ({
+  useSession: () =>
+    ({
+      get turns() {
+        return mockTurns;
+      },
+      subscribe: () => () => undefined,
+      submit: mockSubmit,
+    }) as unknown as Session<never>,
 }));
 
 vi.mock('./LandingPage/LandingPage.js', () => ({
@@ -49,49 +52,10 @@ vi.mock('./ConversationPage/index.js', () => ({
   ),
 }));
 
-function makeCommerceSearchActivity(surfaceId = 'commerce-surface-1') {
-  const rootId = `commerce-search-${surfaceId}`;
-  return {
-    id: `activity-${surfaceId}`,
-    kind: 'a2ui-surface',
-    replace: true,
-    payload: {
-      messages: [
-        {
-          createSurface: {
-            surfaceId,
-            rootId,
-            components: [
-              {
-                id: rootId,
-                component: 'CommerceSearch',
-                props: {componentId: rootId, componentType: 'commerce-search'},
-                children: [],
-              },
-            ],
-          },
-        },
-      ],
-    },
-  };
-}
-
-function makeTurn(overrides: Partial<Turn> & {id: string}): Turn {
-  return {
-    prompt: 'test prompt',
-    status: 'complete',
-    ...overrides,
-  } as Turn;
-}
-
 describe('AppShell', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockConverseState = {
-      turns: [],
-      activeTurn: undefined,
-      isStreaming: false,
-    };
+    mockTurns = [];
   });
 
   it('renders LandingPage initially', () => {
@@ -99,35 +63,21 @@ describe('AppShell', () => {
     expect(screen.getByTestId('landing-page')).toBeDefined();
   });
 
-  it('renders SearchResultsPage after a turn completes with a commerce-search activity', () => {
-    mockConverseState = {
-      turns: [
-        makeTurn({
-          id: 'turn-1',
-          agentResponse: {
-            messages: [],
-            surfaces: [],
-            activities: [makeCommerceSearchActivity('wetsuits-surface')],
-            state: {},
-            reasoningSteps: [],
-          },
-        }),
-      ],
-      activeTurn: undefined,
-      isStreaming: false,
-    };
+  it('renders SearchResultsPage after a turn completes with a commerce-search surface', () => {
+    mockTurns = [
+      makeTurn({
+        id: 'turn-1',
+        response: {surfaces: [makeSurface('wetsuits-surface', 'commerce-search')]},
+      }),
+    ];
 
     render(<AppShell />);
     expect(screen.getByTestId('search-results-page')).toBeDefined();
     expect(screen.getByTestId('surface-id').textContent).toBe('wetsuits-surface');
   });
 
-  it('renders ConversationPage after submitting and a turn completes with agentResponse', () => {
-    mockConverseState = {
-      turns: [],
-      activeTurn: undefined,
-      isStreaming: false,
-    };
+  it('renders ConversationPage after submitting and a turn completes with an agent response', () => {
+    mockTurns = [];
 
     const {rerender} = render(<AppShell />);
     expect(screen.getByTestId('landing-page')).toBeDefined();
@@ -136,44 +86,31 @@ describe('AppShell', () => {
       screen.getByTestId('submit-btn').click();
     });
 
-    mockConverseState = {
-      turns: [
-        makeTurn({
-          id: 'turn-1',
-          agentResponse: {
+    mockTurns = [
+      makeTurn({
+        id: 'turn-1',
+        response: {
+          agent: {
             messages: [{content: 'Hello!', role: 'assistant'}],
-            surfaces: [],
-            activities: [],
-            state: {},
             reasoningSteps: [{type: 'reasoning', content: 'thinking'}],
           },
-        }),
-      ],
-      activeTurn: undefined,
-      isStreaming: false,
-    };
+        },
+      }),
+    ];
 
     rerender(<AppShell />);
     expect(screen.getByTestId('conversation-page')).toBeDefined();
   });
 
   it('does not change view on error turn', () => {
-    mockConverseState = {
-      turns: [makeTurn({id: 'turn-1', status: 'error', error: 'Something'})],
-      activeTurn: undefined,
-      isStreaming: false,
-    };
+    mockTurns = [makeTurn({id: 'turn-1', status: 'error', error: 'Something'})];
 
     render(<AppShell />);
     expect(screen.getByTestId('landing-page')).toBeDefined();
   });
 
   it('prevents submission while streaming', () => {
-    mockConverseState = {
-      turns: [],
-      activeTurn: undefined,
-      isStreaming: true,
-    };
+    mockTurns = [makeTurn({id: 'turn-1', status: 'streaming'})];
 
     render(<AppShell />);
 
@@ -185,22 +122,12 @@ describe('AppShell', () => {
   });
 
   it('"Back to search results" navigates from conversation to search view', () => {
-    mockConverseState = {
-      turns: [
-        makeTurn({
-          id: 'turn-1',
-          agentResponse: {
-            messages: [],
-            surfaces: [],
-            activities: [makeCommerceSearchActivity()],
-            state: {},
-            reasoningSteps: [],
-          },
-        }),
-      ],
-      activeTurn: undefined,
-      isStreaming: false,
-    };
+    mockTurns = [
+      makeTurn({
+        id: 'turn-1',
+        response: {surfaces: [makeSurface('commerce-surface-1', 'commerce-search')]},
+      }),
+    ];
 
     const {rerender} = render(<AppShell />);
     expect(screen.getByTestId('search-results-page')).toBeDefined();
@@ -209,32 +136,21 @@ describe('AppShell', () => {
       screen.getByTestId('search-submit-btn').click();
     });
 
-    mockConverseState = {
-      turns: [
-        makeTurn({
-          id: 'turn-1',
-          agentResponse: {
-            messages: [],
-            surfaces: [],
-            activities: [makeCommerceSearchActivity()],
-            state: {},
-            reasoningSteps: [],
-          },
-        }),
-        makeTurn({
-          id: 'turn-2',
-          agentResponse: {
+    mockTurns = [
+      makeTurn({
+        id: 'turn-1',
+        response: {surfaces: [makeSurface('commerce-surface-1', 'commerce-search')]},
+      }),
+      makeTurn({
+        id: 'turn-2',
+        response: {
+          agent: {
             messages: [{content: 'More info', role: 'assistant'}],
-            surfaces: [],
-            activities: [],
-            state: {},
             reasoningSteps: [{type: 'reasoning', content: 'thinking'}],
           },
-        }),
-      ],
-      activeTurn: undefined,
-      isStreaming: false,
-    };
+        },
+      }),
+    ];
 
     rerender(<AppShell />);
     expect(screen.getByTestId('conversation-page')).toBeDefined();
@@ -247,11 +163,7 @@ describe('AppShell', () => {
   });
 
   it('"Back to search results" is disabled when no commerce surface exists', () => {
-    mockConverseState = {
-      turns: [],
-      activeTurn: undefined,
-      isStreaming: false,
-    };
+    mockTurns = [];
 
     const {rerender} = render(<AppShell />);
 
@@ -259,22 +171,17 @@ describe('AppShell', () => {
       screen.getByTestId('submit-btn').click();
     });
 
-    mockConverseState = {
-      turns: [
-        makeTurn({
-          id: 'turn-1',
-          agentResponse: {
+    mockTurns = [
+      makeTurn({
+        id: 'turn-1',
+        response: {
+          agent: {
             messages: [{content: 'Hello!', role: 'assistant'}],
-            surfaces: [],
-            activities: [],
-            state: {},
             reasoningSteps: [{type: 'reasoning', content: 'thinking'}],
           },
-        }),
-      ],
-      activeTurn: undefined,
-      isStreaming: false,
-    };
+        },
+      }),
+    ];
 
     rerender(<AppShell />);
     expect(screen.getByTestId('conversation-page')).toBeDefined();
