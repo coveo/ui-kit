@@ -190,7 +190,9 @@ The unified-endpoint session-client family, all governed by this charter:
 
 - [ADR-010](./ADR-010-unified-endpoint-session-client.md) — Collapse to a lean
   unified-endpoint session client (core: vision, options, trade-offs; the typed
-  model and rationale are in its [model annex](./ADR-010-annex-model.md)).
+  model and rationale are in its [model annex](./ADR-010-annex-model.md), and an
+  illustrative current → target package structure in its
+  [structure annex](./ADR-010-annex-structure.md)).
 - [ADR-011](./ADR-011-session-serialization.md) — Session serialization &
   restoration.
 - [ADR-012](./ADR-012-client-owned-context.md) — Client-owned context via

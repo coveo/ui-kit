@@ -4,6 +4,7 @@ date: 2026-09-15
 related:
   - ./ADR-009-architecture-decision-charter-v2.md
   - ./ADR-010-annex-model.md
+  - ./ADR-010-annex-structure.md
   - ./ADR-011-session-serialization.md
   - ./ADR-012-client-owned-context.md
   - ./ADR-013-remote-controller-vending.md
@@ -32,7 +33,8 @@ related:
 >
 > The full public model (types), the per-field naming rationale, and the per-MUST
 > charter mapping live in the [model annex](./ADR-010-annex-model.md) to keep this
-> record focused on the decision and trade-offs.
+> record focused on the decision and trade-offs. An illustrative current → target
+> package structure is in the [structure annex](./ADR-010-annex-structure.md).
 
 ## Context and Problem Statement
 
