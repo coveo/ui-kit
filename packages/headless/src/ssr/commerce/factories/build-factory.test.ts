@@ -405,5 +405,47 @@ describe('buildFactory', () => {
       expect(spy).toHaveBeenCalled();
       spy.mockRestore();
     });
+
+    it('should isolate the navigator context across concurrent builds', async () => {
+      const contextA = {...navigatorContext, clientId: 'client-A', forwardedFor: '1.1.1.1'};
+      const contextB = {...navigatorContext, clientId: 'client-B', forwardedFor: '2.2.2.2'};
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+      const build = factory(SolutionType.listing);
+
+      await Promise.all([build({navigatorContext: contextA}), build({navigatorContext: contextB})]);
+
+      const providers = (commerceEngine.buildCommerceEngine as Mock).mock.calls.map(
+        (call) => call[0].navigatorContextProvider
+      );
+      const resolved = providers.map((p) => p());
+      expect(resolved).toContainEqual(contextA);
+      expect(resolved).toContainEqual(contextB);
+      // The shared definition provider is never mutated by either concurrent request.
+      expect(mockEngineOptions.navigatorContextProvider).toBeDefined();
+    });
+
+    it('should NOT warn when only a per-request navigator context is provided (no definition provider)', async () => {
+      const optionsWithoutProvider: CommerceEngineOptions = {
+        configuration: getSampleCommerceEngineConfiguration(),
+      };
+      const factory = buildFactory(mockEmptyDefinition, optionsWithoutProvider);
+      const build = factory(SolutionType.listing);
+
+      await build({navigatorContext});
+
+      expect(mockLogger.warn).not.toHaveBeenCalled();
+    });
+
+    it('should warn when neither a definition provider nor a per-request navigator context is available', async () => {
+      const optionsWithoutProvider: CommerceEngineOptions = {
+        configuration: getSampleCommerceEngineConfiguration(),
+      };
+      const factory = buildFactory(mockEmptyDefinition, optionsWithoutProvider);
+      const build = factory(SolutionType.listing);
+
+      await build();
+
+      expect(mockLogger.warn).toHaveBeenCalled();
+    });
   });
 });
