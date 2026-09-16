@@ -2,14 +2,10 @@ import {render, screen} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
 import type {Turn} from '@coveo/thermidor';
 import {ConversationThread} from './ConversationThread.js';
+import {makeTurn} from '../../test/turn-fixtures.js';
 
-function createTurn(overrides: Partial<Turn> = {}): Turn {
-  return {
-    id: 'turn-1',
-    prompt: 'Hello agent',
-    status: 'complete',
-    ...overrides,
-  };
+function createTurn(overrides: {id?: string; prompt?: string; status?: Turn['status']} = {}): Turn {
+  return makeTurn({id: 'turn-1', prompt: 'Hello agent', ...overrides});
 }
 
 function renderThread(

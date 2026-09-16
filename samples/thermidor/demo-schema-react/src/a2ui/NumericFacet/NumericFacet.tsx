@@ -1,6 +1,5 @@
 import {useState} from 'react';
 import {useRemoteController} from '../controllers.js';
-import {useStateSource} from '../state-source-context.js';
 import type {NumericFacetProps} from '@coveo/thermidor-schema';
 import styles from './NumericFacet.module.css';
 
@@ -9,8 +8,7 @@ function formatRange(start: number, end: number): string {
 }
 
 export function NumericFacetRenderer({props}: {props: NumericFacetProps}) {
-  const stateSource = useStateSource();
-  const controller = useRemoteController(stateSource, props.componentId, props.componentType);
+  const controller = useRemoteController(props.componentId, props.componentType);
 
   const [customStart, setCustomStart] = useState('');
   const [customEnd, setCustomEnd] = useState('');

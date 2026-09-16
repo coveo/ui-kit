@@ -1,48 +1,54 @@
-import {describe, expect, it, vi} from 'vitest';
-import {
-  buildRemoteController,
-  selectRemoteControllerState,
-  type RemoteControllerSource,
-} from '@coveo/thermidor';
+import {describe, expect, it, vi, beforeEach} from 'vitest';
+import {renderHook} from '@testing-library/react';
+import type {RemoteController} from '@coveo/thermidor';
+import {useRemoteController} from './controllers.js';
 
-describe('selectRemoteControllerState', () => {
-  it('selects state from components[componentId] in the active Thermidor turn', () => {
-    const state = {
-      activeTurn: {
-        agentResponse: {
-          state: {components: {'featured-products': {products: [{permanentid: 'p1'}]}}},
-        },
-      },
-    } as unknown as Parameters<typeof selectRemoteControllerState>[0];
+const mockRemoteController = vi.fn();
 
-    expect(selectRemoteControllerState(state, 'featured-products')).toEqual({
-      products: [{permanentid: 'p1'}],
-    });
-    expect(selectRemoteControllerState(state, 'unknown-component')).toEqual({});
+vi.mock('../context/session.js', () => ({
+  useSession: () => ({
+    remoteController: mockRemoteController,
+  }),
+}));
+
+/**
+ * Builds a fake {@link RemoteController} matching the shape the sample's
+ * `useRemoteController` hook consumes: a `state` snapshot, a `subscribe` seam,
+ * and a `dispatch` method.
+ */
+function fakeController(state: unknown): RemoteController<never, never> {
+  return {
+    componentId: 'component-under-test',
+    state,
+    subscribe: () => () => undefined,
+    dispatch: vi.fn().mockResolvedValue(undefined),
+  } as unknown as RemoteController<never, never>;
+}
+
+describe('useRemoteController', () => {
+  beforeEach(() => {
+    mockRemoteController.mockReset();
   });
 
-  it('builds a remote controller from componentType and dispatches correctly', async () => {
-    const dispatchAction = vi.fn();
-    const source = {
-      state: {
-        activeTurn: {agentResponse: {state: {components: {'page-size': {pageSize: 12}}}}},
-      },
-      subscribe: () => () => undefined,
-      dispatchAction,
-    } as unknown as RemoteControllerSource;
-    const controller = buildRemoteController({
-      source,
-      componentId: 'page-size',
-      componentType: 'page-size',
-    });
+  it('vends a controller from the session for the given componentId and componentType', () => {
+    const controller = fakeController({products: [{permanentid: 'p1'}]});
+    mockRemoteController.mockReturnValue(controller);
 
-    await controller.dispatch('setPageSize', {pageSize: 24});
+    const {result} = renderHook(() => useRemoteController('featured-products', 'product-list'));
 
-    expect(dispatchAction).toHaveBeenCalledWith({
-      componentId: 'page-size',
-      componentType: 'page-size',
-      action: 'setPageSize',
-      payload: {pageSize: 24},
-    });
+    expect(mockRemoteController).toHaveBeenCalledWith('featured-products', 'product-list');
+    expect(result.current).toBe(controller);
+    expect(result.current.state).toEqual({products: [{permanentid: 'p1'}]});
+  });
+
+  it('exposes the controller dispatch so consumers forward validated actions', async () => {
+    const controller = fakeController({pageSize: 12});
+    mockRemoteController.mockReturnValue(controller);
+
+    const {result} = renderHook(() => useRemoteController('page-size', 'page-size'));
+
+    await result.current.dispatch('setPageSize', {pageSize: 24});
+
+    expect(controller.dispatch).toHaveBeenCalledWith('setPageSize', {pageSize: 24});
   });
 });

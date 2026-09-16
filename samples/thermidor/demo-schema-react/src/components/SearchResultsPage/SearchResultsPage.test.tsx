@@ -9,10 +9,10 @@ vi.mock('../../a2ui/surfaces.js', () => ({
   ),
 }));
 
-vi.mock('../../a2ui/state-source-context.js', () => ({
-  useStateSource: () => ({
-    state: {activeTurn: undefined},
-    subscribe: () => () => {},
+vi.mock('../../context/session.js', () => ({
+  useSession: () => ({
+    turns: [],
+    subscribe: () => () => undefined,
   }),
 }));
 

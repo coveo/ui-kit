@@ -1,5 +1,5 @@
 import {useMemo} from 'react';
-import type {AgentResponse} from '@coveo/thermidor';
+import type {Activity, ReasoningStep, TurnResponse} from '@coveo/thermidor';
 import {ThinkingBlock} from './ThinkingBlock.js';
 import {StreamingMessage} from './StreamingMessage.js';
 import {A2UISkeleton} from '../../a2ui/Skeleton/Skeleton.js';
@@ -21,22 +21,25 @@ const ROUTE_TO_COMPONENT: Record<string, string> = {
 };
 
 export interface AgentResponseBlockProps {
-  agentResponse: AgentResponse;
+  response: TurnResponse;
   isStreaming: boolean;
 }
 
-export function AgentResponseBlock({agentResponse, isStreaming}: AgentResponseBlockProps) {
-  const {messages, surfaces, reasoningSteps} = agentResponse;
+export function AgentResponseBlock({response, isStreaming}: AgentResponseBlockProps) {
+  const {activities, agent} = response;
+  const messages = agent?.messages ?? [];
+  const reasoningSteps = agent?.reasoningSteps ?? [];
 
   const showThinkingBlock = reasoningSteps.length > 0 || isStreaming;
   const showStreamingMessage = messages.some((m) => m.content.length > 0);
 
-  const skeletonItems = useSkeletonItems(surfaces, reasoningSteps, isStreaming);
+  // `response.surfaces` (typed DiscoveredSurface[]) drives navigation only; the
+  // skeleton placeholders need the raw surface snapshots (component props,
+  // `isLoading`), which live in the `a2ui-surface` activity payloads.
+  const surfaceSnapshots = useMemo(() => toSurfaceSnapshots(activities), [activities]);
+  const skeletonItems = useSkeletonItems(surfaceSnapshots, reasoningSteps, isStreaming);
 
-  const a2uiMessages = useMemo(
-    () => getA2UIMessages(agentResponse.activities),
-    [agentResponse.activities]
-  );
+  const a2uiMessages = useMemo(() => getA2UIMessages(activities), [activities]);
 
   return (
     <div className={styles.container}>
@@ -63,9 +66,20 @@ export function AgentResponseBlock({agentResponse, isStreaming}: AgentResponseBl
  * Real (non-skeleton) surfaces subtract from the count so skeletons disappear
  * as actual content arrives.
  */
+/**
+ * Extracts the raw `a2ui-surface` activity payloads as surface snapshots that
+ * `parseSurfaceSnapshots` understands (each carries a `messages` array). This is
+ * the same data the pre-reshape `agentResponse.surfaces` exposed.
+ */
+function toSurfaceSnapshots(activities: Activity[]): Record<string, unknown>[] {
+  return activities
+    .filter((activity) => activity.kind === 'a2ui-surface')
+    .map((activity) => activity.payload);
+}
+
 function useSkeletonItems(
-  surfaces: AgentResponse['surfaces'],
-  reasoningSteps: AgentResponse['reasoningSteps'],
+  surfaces: Record<string, unknown>[],
+  reasoningSteps: ReasoningStep[],
   isStreaming: boolean
 ) {
   return useMemo(() => {
@@ -122,7 +136,7 @@ function useSkeletonItems(
   }, [surfaces, reasoningSteps, isStreaming]);
 }
 
-function extractPendingSkeletons(reasoningSteps: AgentResponse['reasoningSteps']): string[] {
+function extractPendingSkeletons(reasoningSteps: ReasoningStep[]): string[] {
   const componentTypes: string[] = [];
   for (const step of reasoningSteps) {
     if (step.type !== 'tool-call' || step.name !== 'store_render_plan') continue;

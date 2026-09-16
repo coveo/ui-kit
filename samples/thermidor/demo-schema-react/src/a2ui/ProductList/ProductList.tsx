@@ -1,5 +1,4 @@
 import {useRemoteController} from '../controllers.js';
-import {useStateSource} from '../state-source-context.js';
 import type {Product, ProductListProps} from '@coveo/thermidor-schema';
 import styles from './ProductList.module.css';
 
@@ -16,8 +15,7 @@ function resolveProductImage(product: Product): string | null {
 }
 
 export function ProductListRenderer({props}: {props: ProductListProps}) {
-  const stateSource = useStateSource();
-  const controller = useRemoteController(stateSource, props.componentId, props.componentType);
+  const controller = useRemoteController(props.componentId, props.componentType);
   const products = controller.state?.products ?? [];
 
   if (!controller.state) {
