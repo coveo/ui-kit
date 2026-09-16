@@ -1,3 +1,15 @@
+> **Status: `⚫️ Deprecated` — superseded by [ADR-010: Architecture Decision
+> Charter (v2)](./ADR-010-architecture-decision-charter-v2.md).**
+>
+> This charter assumed thermidor was a unified interaction *engine* (one engine, N
+> interfaces, many feature controllers, an isolated state library). That assumption
+> no longer holds — thermidor is now a thin client for a single, stateful,
+> intent-routing unified endpoint, with UI defined by server-streamed,
+> schema-described components (see [ADR-009](./ADR-009-unified-endpoint-session-client.md)).
+> Most requirements below are obsolete, relocated to the endpoint/schemas, or
+> satisfied by construction. It is retained for historical rationale only; **do not
+> use it to guide new work.** See ADR-010.
+
 ## 1. Purpose
 
 This charter defines the criteria used to evaluate architecture and design decisions for thermidor.
