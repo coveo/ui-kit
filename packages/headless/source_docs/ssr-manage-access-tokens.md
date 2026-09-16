@@ -33,9 +33,7 @@ export const engineDefinition = defineCommerceEngine({
     accessToken: '<DEFAULT_ACCESS_TOKEN>',
     // ...
   },
-  controllers: {
-    /* ... */
-  },
+  controllers: {/* ... */},
 });
 
 export const {fetchStaticState, hydrateStaticState, setAccessToken} = engineDefinition;
@@ -70,11 +68,7 @@ export default async function ProductListing({request}: {request: Request}) {
     controllers: {/* ... */},
   });
 
-  return (
-    <ListingProvider staticState={staticState}>
-      {/* Other components */}
-    </ListingProvider>
-  );
+  return <ListingProvider staticState={staticState}>{/* Other components */}</ListingProvider>;
 }
 ```
 
@@ -147,11 +141,11 @@ To use a different token per request on the server, use the per-request `accessT
 
 ## Summary
 
-| What you want to do | How |
-|---|---|
-| Use one token for all users | Set `accessToken` in the engine definition `configuration` |
-| Use a different token per user | Pass `accessToken` to `fetchStaticState()` and `hydrateStaticState()` |
-| Update the token on the client | Call `setAccessToken()` on the engine definition |
-| Use a different token per request on the server | Use the per-request `accessToken` — don’t call `setAccessToken()` |
+| What you want to do                                 | How                                                                                          |
+| --------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| Use one token for all users                         | Set `accessToken` in the engine definition `configuration`                                   |
+| Use a different token per user                      | Pass `accessToken` to `fetchStaticState()` and `hydrateStaticState()`                        |
+| Update the token on the client                      | Call `setAccessToken()` on the engine definition                                             |
+| Use a different token per request on the server     | Use the per-request `accessToken` — don’t call `setAccessToken()`                            |
 | Set the navigator context per request on the server | Pass `navigatorContext` to `fetchStaticState()` — don’t call `setNavigatorContextProvider()` |
-| Set the navigator context on the client | Call `setNavigatorContextProvider()` on the engine definition |
+| Set the navigator context on the client             | Call `setNavigatorContextProvider()` on the engine definition                                |
