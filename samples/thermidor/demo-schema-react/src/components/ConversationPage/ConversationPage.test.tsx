@@ -1,13 +1,9 @@
 import {render, screen, fireEvent} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
-import type {Turn} from '@coveo/thermidor';
 import {ConversationPage} from './ConversationPage.js';
+import {makeTurn} from '../../test/turn-fixtures.js';
 
-const baseTurn: Turn = {
-  id: 'turn-1',
-  prompt: 'tell me about shoes',
-  status: 'complete',
-};
+const baseTurn = makeTurn({id: 'turn-1', prompt: 'tell me about shoes'});
 
 function renderPage(overrides: Partial<Parameters<typeof ConversationPage>[0]> = {}) {
   const defaultProps = {

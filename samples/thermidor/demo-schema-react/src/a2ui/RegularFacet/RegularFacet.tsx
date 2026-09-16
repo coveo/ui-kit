@@ -1,14 +1,12 @@
 import {useCallback} from 'react';
 import {useRemoteController} from '../controllers.js';
-import {useStateSource} from '../state-source-context.js';
 import {SearchIcon} from '../icons/index.js';
 import {useOptimisticFacetSearch} from '../use-optimistic-facet-search.js';
 import type {RegularFacetProps} from '@coveo/thermidor-schema';
 import styles from './RegularFacet.module.css';
 
 export function RegularFacetRenderer({props}: {props: RegularFacetProps}) {
-  const stateSource = useStateSource();
-  const controller = useRemoteController(stateSource, props.componentId, props.componentType);
+  const controller = useRemoteController(props.componentId, props.componentType);
 
   const dispatchSearch = useCallback(
     (query: string) => controller.dispatch('search', {query}),

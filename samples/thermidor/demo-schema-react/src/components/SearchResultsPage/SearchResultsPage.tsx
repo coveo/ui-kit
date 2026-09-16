@@ -3,7 +3,7 @@ import type {Activity} from '@coveo/thermidor';
 import {ProductTargeting} from '../ProductTargeting/ProductTargeting.js';
 import {type TargetedProduct} from '../../context/targeting.js';
 import {getA2UIMessages, ThermidorA2UISurfaces} from '../../a2ui/surfaces.js';
-import {useStateSource} from '../../a2ui/state-source-context.js';
+import {useSession} from '../../context/session.js';
 import styles from './SearchResultsPage.module.css';
 
 interface SearchResultsPageProps {
@@ -30,17 +30,15 @@ interface SearchResultsPageProps {
  * (a createSurface whose root component's componentType is 'commerce-search').
  */
 export function SearchResultsPage(props: SearchResultsPageProps) {
-  const stateSource = useStateSource();
+  const session = useSession();
   const subscribe = useCallback(
-    (onStoreChange: () => void) => stateSource.subscribe(onStoreChange),
-    [stateSource]
+    (onStoreChange: () => void) => session.subscribe(onStoreChange),
+    [session]
   );
-  const getActivities = useCallback(
-    (): Activity[] | undefined =>
-      (stateSource.state as {activeTurn?: {agentResponse?: {activities?: Activity[]}}}).activeTurn
-        ?.agentResponse?.activities,
-    [stateSource]
-  );
+  const getActivities = useCallback((): Activity[] | undefined => {
+    const turns = session.turns;
+    return turns[turns.length - 1]?.response.activities;
+  }, [session]);
   const activities = useSyncExternalStore(subscribe, getActivities, getActivities);
 
   const a2uiMessages = useMemo(() => getA2UIMessages(activities), [activities]);

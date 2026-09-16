@@ -2,6 +2,7 @@ import {render, screen, fireEvent} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
 import type {Turn} from '@coveo/thermidor';
 import {ConversationPage} from './ConversationPage.js';
+import {makeTurn, makeSurface} from '../../test/turn-fixtures.js';
 
 function renderPage(overrides: Partial<Parameters<typeof ConversationPage>[0]> = {}) {
   const defaultProps = {
@@ -24,63 +25,27 @@ describe('ConversationPage integration', () => {
   describe('multi-turn conversation rendering', () => {
     it('renders a mix of agent turns, routed turns, and error turns', () => {
       const turns: Turn[] = [
-        {
+        makeTurn({
           id: 'turn-1',
           prompt: 'Find me running shoes',
-          status: 'complete',
-          agentResponse: {
-            state: {},
-            activities: [],
-            messages: [{content: 'Here are some running shoes.', role: 'assistant'}],
-            surfaces: [],
-            reasoningSteps: [{type: 'reasoning', content: 'Looking up running shoes'}],
+          response: {
+            agent: {
+              messages: [{content: 'Here are some running shoes.', role: 'assistant'}],
+              reasoningSteps: [{type: 'reasoning', content: 'Looking up running shoes'}],
+            },
           },
-        },
-        {
+        }),
+        makeTurn({
           id: 'turn-2',
           prompt: 'Show me results',
-          status: 'complete',
-          agentResponse: {
-            messages: [],
-            surfaces: [],
-            activities: [
-              {
-                id: 'activity-search',
-                kind: 'a2ui-surface',
-                replace: true,
-                payload: {
-                  messages: [
-                    {
-                      createSurface: {
-                        surfaceId: 's1',
-                        rootId: 'commerce-search-s1',
-                        components: [
-                          {
-                            id: 'commerce-search-s1',
-                            component: 'CommerceSearch',
-                            props: {
-                              componentId: 'commerce-search-s1',
-                              componentType: 'commerce-search',
-                            },
-                            children: [],
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-            state: {},
-            reasoningSteps: [],
-          },
-        },
-        {
+          response: {surfaces: [makeSurface('s1', 'commerce-search')]},
+        }),
+        makeTurn({
           id: 'turn-3',
           prompt: 'What about hiking boots?',
           status: 'error',
           error: 'Service unavailable',
-        },
+        }),
       ];
 
       renderPage({turns});
@@ -97,30 +62,20 @@ describe('ConversationPage integration', () => {
 
     it('renders separators between turns but not after the last turn', () => {
       const turns: Turn[] = [
-        {
+        makeTurn({
           id: 'turn-1',
           prompt: 'First question',
-          status: 'complete',
-          agentResponse: {
-            state: {},
-            activities: [],
-            messages: [{content: 'First answer', role: 'assistant'}],
-            surfaces: [],
-            reasoningSteps: [],
+          response: {
+            agent: {messages: [{content: 'First answer', role: 'assistant'}], reasoningSteps: []},
           },
-        },
-        {
+        }),
+        makeTurn({
           id: 'turn-2',
           prompt: 'Second question',
-          status: 'complete',
-          agentResponse: {
-            state: {},
-            activities: [],
-            messages: [{content: 'Second answer', role: 'assistant'}],
-            surfaces: [],
-            reasoningSteps: [],
+          response: {
+            agent: {messages: [{content: 'Second answer', role: 'assistant'}], reasoningSteps: []},
           },
-        },
+        }),
       ];
 
       const {container} = renderPage({turns});
@@ -133,11 +88,7 @@ describe('ConversationPage integration', () => {
   describe('streaming state', () => {
     it('disables prompt input and shows thinking dots when streaming with no response yet', () => {
       const turns: Turn[] = [
-        {
-          id: 'turn-1',
-          prompt: 'Tell me about shoes',
-          status: 'streaming',
-        },
+        makeTurn({id: 'turn-1', prompt: 'Tell me about shoes', status: 'streaming'}),
       ];
 
       renderPage({turns, isStreaming: true});
@@ -150,27 +101,26 @@ describe('ConversationPage integration', () => {
 
     it('shows thinking block with reasoning steps during streaming', () => {
       const turns: Turn[] = [
-        {
+        makeTurn({
           id: 'turn-1',
           prompt: 'Compare these products',
           status: 'streaming',
-          agentResponse: {
-            state: {},
-            activities: [],
-            messages: [],
-            surfaces: [],
-            reasoningSteps: [
-              {type: 'reasoning', content: 'Analyzing products...'},
-              {
-                type: 'tool-call',
-                id: 'tc-1',
-                name: 'product_search',
-                args: '{"query":"shoes"}',
-                status: 'calling',
-              },
-            ],
+          response: {
+            agent: {
+              messages: [],
+              reasoningSteps: [
+                {type: 'reasoning', content: 'Analyzing products...'},
+                {
+                  type: 'tool-call',
+                  id: 'tc-1',
+                  name: 'product_search',
+                  args: '{"query":"shoes"}',
+                  status: 'calling',
+                },
+              ],
+            },
           },
-        },
+        }),
       ];
 
       renderPage({turns, isStreaming: true});
@@ -181,14 +131,14 @@ describe('ConversationPage integration', () => {
 
   describe('Back to search results visibility', () => {
     it('shows "Back to search results" when canGoBackToSearch is true', () => {
-      const turns: Turn[] = [{id: 'turn-1', prompt: 'Hello', status: 'complete'}];
+      const turns: Turn[] = [makeTurn({id: 'turn-1', prompt: 'Hello'})];
 
       renderPage({turns, canGoBackToSearch: true});
       expect(screen.getByRole('button', {name: /Back to search results/})).toBeDefined();
     });
 
     it('hides "Back to search results" when canGoBackToSearch is false', () => {
-      const turns: Turn[] = [{id: 'turn-1', prompt: 'Hello', status: 'complete'}];
+      const turns: Turn[] = [makeTurn({id: 'turn-1', prompt: 'Hello'})];
 
       renderPage({turns, canGoBackToSearch: false});
       expect(screen.queryByRole('button', {name: /Back to search results/})).toBeNull();
@@ -196,7 +146,7 @@ describe('ConversationPage integration', () => {
 
     it('calls onBackToSearch when the button is clicked', () => {
       const onBackToSearch = vi.fn();
-      const turns: Turn[] = [{id: 'turn-1', prompt: 'Hello', status: 'complete'}];
+      const turns: Turn[] = [makeTurn({id: 'turn-1', prompt: 'Hello'})];
 
       renderPage({turns, canGoBackToSearch: true, onBackToSearch});
       fireEvent.click(screen.getByRole('button', {name: /Back to search results/}));

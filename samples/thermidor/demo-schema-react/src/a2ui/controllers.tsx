@@ -1,21 +1,25 @@
 import {useCallback, useMemo, useSyncExternalStore} from 'react';
-import {
-  buildRemoteController,
-  type ComponentType,
-  type RemoteController,
-  type RemoteControllerSource,
-} from '@coveo/thermidor';
+import type {ComponentContractsSchema} from '@coveo/thermidor-schema';
+import type {ComponentTypeOf, RemoteController} from '@coveo/thermidor';
+import {useSession} from '../context/session.js';
 
-export type EngineStateSource = RemoteControllerSource;
+type Contracts = typeof ComponentContractsSchema;
 
-export function useRemoteController<TComponentType extends ComponentType>(
-  source: RemoteControllerSource,
+/**
+ * Obtains a schema-validated {@link RemoteController} for a component from the
+ * active session and keeps it subscribed through `useSyncExternalStore`. The
+ * controller binds to the active turn's AG-UI state snapshot and re-points as
+ * the session's active turn changes.
+ */
+export function useRemoteController<TComponentType extends ComponentTypeOf<Contracts>>(
   componentId: string,
   componentType: TComponentType
-): RemoteController<TComponentType> {
+): RemoteController<Contracts, TComponentType> {
+  const session = useSession();
+
   const controller = useMemo(
-    () => buildRemoteController({source, componentId, componentType}),
-    [componentId, componentType, source]
+    () => session.remoteController(componentId, componentType),
+    [session, componentId, componentType]
   );
 
   const subscribe = useCallback(

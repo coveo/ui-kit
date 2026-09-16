@@ -16,10 +16,6 @@ vi.mock('./controllers.js', () => ({
   }),
 }));
 
-vi.mock('./state-source-context.js', () => ({
-  useStateSource: () => ({}),
-}));
-
 const defaultTargeting: TargetingContext = {
   isTargeting: false,
   onProductTargeted: vi.fn(),

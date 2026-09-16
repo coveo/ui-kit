@@ -13,10 +13,6 @@ vi.mock('../controllers.js', () => ({
   }),
 }));
 
-vi.mock('../state-source-context.js', () => ({
-  useStateSource: () => ({}),
-}));
-
 const props = {componentId: 'page-size-2', componentType: 'page-size' as const};
 
 beforeEach(() => {

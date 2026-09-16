@@ -1,5 +1,4 @@
 import {useRemoteController} from '../controllers.js';
-import {useStateSource} from '../state-source-context.js';
 import type {Product, ProductSummaryProps} from '@coveo/thermidor-schema';
 import styles from './ProductSummary.module.css';
 
@@ -20,8 +19,7 @@ function resolvePrice(product: Product): number | undefined {
 }
 
 export function ProductSummaryRenderer({props}: {props: ProductSummaryProps}) {
-  const stateSource = useStateSource();
-  const controller = useRemoteController(stateSource, props.componentId, props.componentType);
+  const controller = useRemoteController(props.componentId, props.componentType);
   const state = controller.state;
 
   if (!state) {

@@ -1,9 +1,7 @@
 import type {Turn} from '@coveo/thermidor';
-import {findCommerceSurfaceId} from '../../hooks/use-navigation.js';
 import {AgentResponseBlock} from './AgentResponseBlock.js';
 import {ErrorTurnBlock} from './ErrorTurnBlock.js';
 import {RoutedTurnBlock} from './RoutedTurnBlock.js';
-import {ThinkingBlock} from './ThinkingBlock.js';
 import {UserPromptBubble} from './UserPromptBubble.js';
 import {TurnSeparator} from './TurnSeparator.js';
 import styles from './ConversationThread.module.css';
@@ -28,7 +26,7 @@ export function ConversationThread({turns, turnRefs}: ConversationThreadProps) {
               }
             }}
           >
-            <UserPromptBubble prompt={turn.prompt} />
+            <UserPromptBubble prompt={turn.input.prompt ?? ''} />
             <div className={styles.agentContent}>{renderTurnContent(turn)}</div>
           </div>
           {index < turns.length - 1 && <TurnSeparator />}
@@ -38,27 +36,20 @@ export function ConversationThread({turns, turnRefs}: ConversationThreadProps) {
   );
 }
 
+const COMMERCE_SEARCH_ROOT_TYPE = 'commerce-search';
+
 function renderTurnContent(turn: Turn) {
   if (turn.status === 'error') {
     return <ErrorTurnBlock error={turn.error} />;
   }
 
-  if (turn.status === 'complete' && findCommerceSurfaceId(turn.agentResponse?.activities)) {
+  const hasCommerceSurface = turn.response.surfaces.some(
+    (s) => s.rootComponentType === COMMERCE_SEARCH_ROOT_TYPE
+  );
+
+  if (turn.status === 'complete' && hasCommerceSurface) {
     return <RoutedTurnBlock />;
   }
 
-  if (turn.agentResponse) {
-    return (
-      <AgentResponseBlock
-        agentResponse={turn.agentResponse}
-        isStreaming={turn.status === 'streaming'}
-      />
-    );
-  }
-
-  if (turn.status === 'streaming') {
-    return <ThinkingBlock reasoningSteps={[]} isStreaming={true} />;
-  }
-
-  return null;
+  return <AgentResponseBlock response={turn.response} isStreaming={turn.status === 'streaming'} />;
 }
