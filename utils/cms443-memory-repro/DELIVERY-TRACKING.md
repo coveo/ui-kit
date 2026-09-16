@@ -81,12 +81,14 @@ Légende : ✅ fait · ⚠️ partiel/en cours · ⏸️ en attente de décision
 ### Demande 4b — Sample SSR per-user-token documenté (DOC) ⏸️
 - **Ce que le client veut** (§5, §8.2) : un sample SSR documenté montrant l'usage de tokens par utilisateur en multi-tenant, au-delà du simple param.
 - **Nature** : livrable **documentation / DevEx**, pas un fix. Le param existe (4a) ; il s'agirait d'illustrer son usage.
-- **À trancher avec l'équipe** : est-ce raisonnable d'ajouter un sample dédié ? Où le placer (`samples/` ? doc headless SSR ? README) ? Qui l'écrit (support / DevEx / PM) ?
-- **Statut** : ⏸️ En attente de décision d'équipe — pas un engagement unilatéral du support.
+- **Point de départ déjà amorcé par la révision** : #8495 a **migré le sample `commerce-express`** (`server.ts`, endpoints `/search` et `/listing/:id`) vers `fetchStaticState({navigatorContext})` — le sample démontre désormais le **chemin concurrency-safe** au lieu de muter la définition partagée. 4b ne part donc plus de « le sample est racy » mais de « étendre le sample migré pour illustrer aussi le token par requête (`accessToken`) par utilisateur ».
+- **À trancher avec l'équipe** : est-ce raisonnable d'ajouter/étendre un sample dédié per-user-token ? Où (le sample `commerce-express` migré ? doc headless SSR ? README) ? Qui l'écrit (support / DevEx / PM) ?
+- **Statut** : ⏸️ En attente de décision d'équipe — pas un engagement unilatéral du support. (Amorce technique : sample déjà sur le bon pattern via #8495.)
 
 ### Demande 5 — Position produit + documentation « singleton » (DÉCISION + DOC) ⏸️
 - **Ce que le client veut** (§9.5, §7, §8.6) : une prise de position sur son pattern (définition request-scoped serveur + définition client séparée) — supporté ou non — et une MAJ de la doc qui affirme aujourd'hui que la définition « must be a singleton shared between server and client » (formulation qui, combinée à F1, produit la fuite).
 - **Nature** : **décision produit + documentation.** Hors périmètre des fixes de code.
+- **Argument produit renforcé par la révision (#8494, fix #2)** : un moteur construit avec un token par requête n'est **plus abonné** au token-manager partagé — un `setAccessToken()` partagé (queué ou concurrent) ne peut plus l'écraser. L'isolation « this call only » est donc désormais une **propriété garantie de l'API supportée `ssr-commerce`**, et non plus seulement un effet obtenu à la main par le pattern request-scoped du client. La position produit peut s'appuyer là-dessus : le param par requête fournit nativement l'isolation que le contournement du client visait.
 - **À trancher avec l'équipe** : le pattern request-scoped est-il officiellement supporté ? La doc « singleton » doit-elle être nuancée/corrigée ?
 - **Statut** : ⏸️ À router vers R&D/PM — décision d'équipe requise.
 
@@ -98,8 +100,8 @@ Au-delà du code, le client attend explicitement :
 
 1. **Confirmation écrite** que F1 + F2 sont des défauts reconnus (§9.1).
 2. **Position sur le pattern §7** (definition request-scoped + définition client séparée) : supporté ou non (§9.5).
-3. **Réponse sur les hooks alternatifs** qu'il a évalués — `preprocessRequest` et `renewAccessToken` (§5) — et pourquoi le param par requête est la bonne réponse plutôt que ces hooks.
-4. **MAJ documentation** : phrase « singleton partagé serveur/client », absence de sample per-user-token, `build()` à la fois déprécié et seul chemin de token par requête.
+3. **Réponse sur les hooks alternatifs** qu'il a évalués — `preprocessRequest` et `renewAccessToken` (§5) — et pourquoi le param par requête est la bonne réponse plutôt que ces hooks. *(Précision apportée par le fix #1 : le token par requête est appliqué **avant** le hook déprécié `extend`, donc `extend` reste autoritaire s'il est fourni — la précédence est claire et documentée.)*
+4. **MAJ documentation** : phrase « singleton partagé serveur/client », absence de sample per-user-token, et le point historique « `build()` à la fois déprécié et seul chemin de token par requête » — **ce dernier n'est plus vrai sur le tree supporté `ssr-commerce`** : `accessToken`/`navigatorContext` par requête sont acceptés **aussi par `fetchStaticState()`**, pas seulement `build()`. La réponse client doit refléter que le chemin nominal (`fetchStaticState`) porte nativement le token par requête.
 
 Contraintes de communication (préférences projet) :
 - Pas de nom de client dans les artefacts publics / git.
