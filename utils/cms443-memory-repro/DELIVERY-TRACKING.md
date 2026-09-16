@@ -78,19 +78,22 @@ Légende : ✅ fait · ⚠️ partiel/en cours · ⏸️ en attente de décision
 - **Review** : les deux PRs ont passé la review automatique **Copilot** — tous les commentaires fondés adressés et **tous les threads résolus** (#8494 : precedence extend/token, non-abonnement au token-manager partagé, `fromBuildResult` ; #8495 : faux warning per-request-only, test concurrent navigator, commentaire de précédence, migration du sample). Aucun commentaire ouvert restant.
 - **Statut** : ✅ #8481 mergé (`ssr-commerce-next`) ; 🟢 #8494 + #8495 ouvertes en stack (`ssr-commerce`), Copilot vert, **en attente de review JP + merge** (#8494 d'abord, puis #8495).
 
-### Demande 4b — Sample SSR per-user-token documenté (DOC) ⏸️
+### Demande 4b — Sample SSR per-user-token documenté (DOC) 🟢/⏸️
 - **Ce que le client veut** (§5, §8.2) : un sample SSR documenté montrant l'usage de tokens par utilisateur en multi-tenant, au-delà du simple param.
-- **Nature** : livrable **documentation / DevEx**, pas un fix. Le param existe (4a) ; il s'agirait d'illustrer son usage.
-- **Point de départ déjà amorcé par la révision** : #8495 a **migré le sample `commerce-express`** (`server.ts`, endpoints `/search` et `/listing/:id`) vers `fetchStaticState({navigatorContext})` — le sample démontre désormais le **chemin concurrency-safe** au lieu de muter la définition partagée. 4b ne part donc plus de « le sample est racy » mais de « étendre le sample migré pour illustrer aussi le token par requête (`accessToken`) par utilisateur ».
-- **À trancher avec l'équipe** : est-ce raisonnable d'ajouter/étendre un sample dédié per-user-token ? Où (le sample `commerce-express` migré ? doc headless SSR ? README) ? Qui l'écrit (support / DevEx / PM) ?
-- **Statut** : ⏸️ En attente de décision d'équipe — pas un engagement unilatéral du support. (Amorce technique : sample déjà sur le bon pattern via #8495.)
+- **Nature** : livrable **documentation / DevEx**, pas un fix. Le param existe (4a) ; il s'agit d'illustrer son usage.
+- **Partie DOC livrée** : la [PR #8500](https://github.com/coveo/ui-kit/pull/8500) (article `ssr-manage-access-tokens.md`, réorienté vers `ssr-commerce`) **documente l'usage du token par utilisateur** (section « Use a different token per user » : mint d'un token par requête + passage à `fetchStaticState`/`hydrateStaticState`), avec un exemple serveur concret. Le besoin « documenté » est donc couvert.
+- **Amorce sample code** : #8495 a migré le sample `commerce-express` (`server.ts`) vers `fetchStaticState({navigatorContext})` — sur le bon pattern concurrency-safe.
+- **Reste (optionnel, décision d'équipe)** : faut-il un **sample de code dédié** per-user-token (au-delà de la doc + du sample migré) ? Où ? Qui l'écrit ?
+- **Statut** : 🟢 partie DOC livrée dans #8500 ; ⏸️ sample de code dédié = décision d'équipe (pas un engagement unilatéral du support).
 
 ### Demande 5 — Position produit + documentation « singleton » (DÉCISION + DOC) ⏸️
 - **Ce que le client veut** (§9.5, §7, §8.6) : une prise de position sur son pattern (définition request-scoped serveur + définition client séparée) — supporté ou non — et une MAJ de la doc qui affirme aujourd'hui que la définition « must be a singleton shared between server and client » (formulation qui, combinée à F1, produit la fuite).
 - **Nature** : **décision produit + documentation.** Hors périmètre des fixes de code.
 - **Argument produit renforcé par la révision (#8494, fix #2)** : un moteur construit avec un token par requête n'est **plus abonné** au token-manager partagé — un `setAccessToken()` partagé (queué ou concurrent) ne peut plus l'écraser. L'isolation « this call only » est donc désormais une **propriété garantie de l'API supportée `ssr-commerce`**, et non plus seulement un effet obtenu à la main par le pattern request-scoped du client. La position produit peut s'appuyer là-dessus : le param par requête fournit nativement l'isolation que le contournement du client visait.
-- **À trancher avec l'équipe** : le pattern request-scoped est-il officiellement supporté ? La doc « singleton » doit-elle être nuancée/corrigée ?
-- **Statut** : ⏸️ À router vers R&D/PM — décision d'équipe requise.
+- **À trancher avec l'équipe** : le pattern request-scoped est-il **officiellement supporté** (engagement de compat) ? Cette affirmation-là n'est PAS dans #8500 — c'est le seul bout qui relève du produit.
+- **Partie DOC « mécanisme » livrée** : la [PR #8500](https://github.com/coveo/ui-kit/pull/8500) ajoute à `ssr-extend-engine-definitons.md` une section « Keep per-request data out of the shared definition (server) » qui **clarifie le mécanisme** — token/navigator par requête via `fetchStaticState`, jamais sur la définition partagée (racy en concurrence). Elle documente le *comment*, factuel et prouvé par le code, **sans** décréter qu'un pattern client est « officiellement supporté ».
+- **Note sur la formulation « singleton »** : le libellé exact « must be a singleton shared between server and client » **n'existe pas** littéralement dans la doc actuelle (formulations réelles plus douces : « shared definition »). La Demande 5 est donc « préciser/positionner », pas « corriger une phrase fautive ».
+- **Statut** : 🟢 mécanisme documenté dans #8500 ; ⏸️ position « pattern officiellement supporté » à router vers R&D/PM — décision d'équipe requise.
 
 ---
 
@@ -101,7 +104,7 @@ Au-delà du code, le client attend explicitement :
 1. **Confirmation écrite** que F1 + F2 sont des défauts reconnus (§9.1).
 2. **Position sur le pattern §7** (definition request-scoped + définition client séparée) : supporté ou non (§9.5).
 3. **Réponse sur les hooks alternatifs** qu'il a évalués — `preprocessRequest` et `renewAccessToken` (§5) — et pourquoi le param par requête est la bonne réponse plutôt que ces hooks. *(Précision apportée par le fix #1 : le token par requête est appliqué **avant** le hook déprécié `extend`, donc `extend` reste autoritaire s'il est fourni — la précédence est claire et documentée.)*
-4. **MAJ documentation** : phrase « singleton partagé serveur/client », absence de sample per-user-token, et le point historique « `build()` à la fois déprécié et seul chemin de token par requête » — **ce dernier n'est plus vrai sur le tree supporté `ssr-commerce`** : `accessToken`/`navigatorContext` par requête sont acceptés **aussi par `fetchStaticState()`**, pas seulement `build()`. La réponse client doit refléter que le chemin nominal (`fetchStaticState`) porte nativement le token par requête.
+4. **MAJ documentation** : phrase « singleton partagé serveur/client », absence de sample per-user-token, et le point historique « `build()` à la fois déprécié et seul chemin de token par requête » — **ce dernier n'est plus vrai sur le tree supporté `ssr-commerce`** : `accessToken`/`navigatorContext` par requête sont acceptés **aussi par `fetchStaticState()`**, pas seulement `build()`. La réponse client doit refléter que le chemin nominal (`fetchStaticState`) porte nativement le token par requête. *(Largement livré par la [PR #8500](https://github.com/coveo/ui-kit/pull/8500) : l'article documente le token/navigator par requête via `fetchStaticState` sur `ssr-commerce` et clarifie que la définition partagée ne doit pas porter de données par requête sur le serveur.)*
 
 Contraintes de communication (préférences projet) :
 - Pas de nom de client dans les artefacts publics / git.
@@ -120,10 +123,10 @@ Contraintes de communication (préférences projet) :
 | Les 3 PRs de fix (F1/F2/F3) | ✅ Mergées sur `main` (2026-09-15) | Fait |
 | **Token par requête — couverture des 2 trees** | Livré sur `ssr-commerce-next` (#8481, conservé) ; étendu au tree supporté `ssr-commerce` via [PR #8494](https://github.com/coveo/ui-kit/pull/8494) + [PR #8495](https://github.com/coveo/ui-kit/pull/8495), validé repro F3b | Fait (PRs ouvertes) |
 | **Merger le stack #8494 + #8495** (`ssr-commerce` token + navigator context) | Copilot vert (tous threads résolus) ; reste review JP + merge (#8494 d'abord, puis #8495) | Toi |
-| Sample per-user-token (demande 4b) | Le créer ? où ? | Toi / PM |
-| Demande 5 (doc + pattern supporté) | Router vers R&D/PM | Toi |
+| **PR doc [#8500](https://github.com/coveo/ui-kit/pull/8500)** (`ssr-manage-access-tokens.md` réorienté vers `ssr-commerce` + section navigator context + clarification request-scoped serveur dans `ssr-extend-engine-definitons.md`) | En review (JP) ; stackée sur #8495, à merger APRÈS le stack code | Toi |
+| Sample per-user-token de CODE dédié (demande 4b) | Optionnel — la partie DOC est livrée dans #8500 ; sample de code = décision d'équipe | Toi / PM |
+| Demande 5 — « pattern officiellement supporté » | Mécanisme documenté dans #8500 ; l'affirmation de support à router vers R&D/PM | Toi |
 | Réponse client (confirmation F1/F2, position pattern §7, hooks alternatifs) | À rédiger | Toi / Support |
-| Article `ssr-manage-access-tokens.md` | Réorienter vers `ssr-commerce` (actuellement pointe `ssr-commerce-next` abandonné) | Toi |
 | Sort de ce doc de suivi + harnais repro | Rester hors PR (jetable) ou committer quelque part | Toi |
 
 ---
