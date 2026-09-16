@@ -35,10 +35,7 @@
     "test:dts:ci": "api-extractor run"
   },
   "dependencies": {
-    "@ag-ui/core": "0.0.57",
-    "@coveo/thermidor-schema": "catalog:",
-    "@reduxjs/toolkit": "catalog:",
-    "zod": "catalog:"
+    "@ag-ui/core": "0.0.57"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "7.59.1",
@@ -46,7 +43,11 @@
     "publint": "catalog:",
     "tsdown": "0.23.0",
     "typescript": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "zod": "catalog:"
+  },
+  "peerDependencies": {
+    "zod": "catalog:"
   },
   "engines": {
     "node": "^22.11.0 || ^24.11.0"
