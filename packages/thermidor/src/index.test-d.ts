@@ -1,9 +1,8 @@
 /**
  * Public-surface type test for the `@coveo/thermidor` package entry.
  *
- * Guards the public API independence charter conformance (ADR-009): the public
- * exports stay free of state-library concepts and form the compile-time surface
- * acceptance gate.
+ * Guards public API independence: the public exports stay free of state-library
+ * concepts and form the compile-time surface acceptance gate.
  *
  * POSITIVE assertions (below) confirm the intended session-client surface is
  * exported and usable. NEGATIVE assertions use `@ts-expect-error` on imports of

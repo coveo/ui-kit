@@ -1,18 +1,13 @@
 /**
- * ============================================================================
- * Session factory + runtime
- * ============================================================================
+ * Session factory + runtime.
  *
  * `createSession(config)` returns a {@link Session}: the lean client handle for
  * one continuous, token-carrying interaction with the unified converse
- * endpoint. It replaces the engine/interface/Redux/facade stack (ADR-010).
+ * endpoint.
  *
  * The session owns a plain {@link SessionStore} and drives it with the pure
- * {@link foldActivity} reduction. The submit / dispatchAction / cancel /
- * stream-consume orchestration that previously lived in `UnifiedRuntime` is
- * folded into this factory, running against the observable store rather than an
- * engine. No engine, interface, or state-library object is reachable from the
- * returned Session.
+ * {@link foldActivity} reduction, plus the submit / dispatchAction / cancel /
+ * stream-consume orchestration.
  *
  * There are no singletons and no module-level mutable state: every call to
  * `createSession` builds a fresh store, so two sessions created from identical
@@ -63,35 +58,38 @@ export interface RemoteAction<TPayload = unknown> {
 /**
  * The configuration accepted by {@link createSession}.
  *
- * Generic over the injected contracts schema `TContracts` (ADR-014): the
- * concrete schema pinned here threads unbroken through the returned
- * {@link Session} into the vended {@link RemoteController}, so component-type,
- * state, and action-name typings resolve at the call site. The context
- * providers (ADR-012) are pull-based and synchronous: the request builder calls
- * `navigatorContextProvider` and `commerceContextProvider` fresh per request so
- * the app's current context is always sent without thermidor-side context
- * state.
+ * Generic over the injected contracts schema `TContracts`: the concrete schema
+ * pinned here threads unbroken through the returned {@link Session} into the
+ * vended {@link RemoteController}, so component-type, state, and action-name
+ * typings resolve at the call site. The context providers are pull-based and
+ * synchronous: the request builder calls `navigatorContextProvider` and
+ * `commerceContextProvider` fresh per request so the app's current context is
+ * always sent without thermidor-side context state.
  */
 export interface SessionConfig<TContracts extends ContractsSchema> {
   organizationId: string;
   accessToken: string;
   /**
-   * The injected component contracts schema (ADR-014). Remote-controller
-   * vending validates component state and action payloads against it. It is the
-   * sole validation source; the field must exist here to thread the concrete
+   * The injected component contracts schema. Remote-controller vending
+   * validates component state and action payloads against it. It is the sole
+   * validation source; the field must exist here to thread the concrete
    * `TContracts` type through the session.
    */
   contracts: TContracts;
-  /** Full converse URL override; see ADR-014. */
+  /**
+   * Full converse URL override. When provided the client POSTs to it verbatim
+   * (appending nothing); when absent the Coveo converse URL is derived from
+   * `organizationId`.
+   */
   endpoint?: string;
-  /** Ambient navigator context, read fresh per request (ADR-012). */
+  /** Ambient navigator context, read fresh per request. */
   navigatorContextProvider?: NavigatorContextProvider;
   /**
    * App-owned commerce context (cart / pinnedProducts / source / custom), read
-   * fresh per request (ADR-012). When absent, the request carries the
-   * structural-empty "absent" encoding; when present, it carries the values the
-   * provider returns as the "present" encoding, distinguishable on the wire
-   * from the absent encoding even when the returned cart is empty.
+   * fresh per request. When absent, the request carries the structural-empty
+   * "absent" encoding; when present, it carries the values the provider returns
+   * as the "present" encoding, distinguishable on the wire from the absent
+   * encoding even when the returned cart is empty.
    */
   commerceContextProvider?: CommerceContextProvider;
   /** Additional per-request commerce request fields (tracking/locale). */
@@ -246,10 +244,10 @@ export function createSession<TContracts extends ContractsSchema>(
 
   /**
    * Builds the request fields shared by `submit` and `dispatchAction`, invoking
-   * BOTH context providers fresh at request-build time (ADR-012). Because
-   * the providers are functions, context is never stored on the session and is
-   * never serialized; a restored session therefore reads today's context
-   * from the providers rather than any persisted value.
+   * BOTH context providers fresh at request-build time. Because the providers
+   * are functions, context is never stored on the session and is never
+   * serialized; a restored session therefore reads today's context from the
+   * providers rather than any persisted value.
    *
    * Commerce-context encoding — the two encodings are
    * distinguishable on the wire:
@@ -455,9 +453,9 @@ export function createSession<TContracts extends ContractsSchema>(
     }
 
     // Resolve the target surface from the active turn's typed `surfaces`
-    // projection (ADR-015) rather than walking raw activities. Without a
-    // target surface the action has nowhere to go; skip dispatching an
-    // untargeted action rather than sending one with a null surfaceId.
+    // projection rather than walking raw activities. Without a target surface
+    // the action has nowhere to go; skip dispatching an untargeted action
+    // rather than sending one with a null surfaceId.
     const activeTurn = turns.find((turn) => turn.id === activeTurnId);
     const surfaceId = resolveTargetSurfaceId(activeTurn?.response.surfaces ?? []);
     if (surfaceId === null) {

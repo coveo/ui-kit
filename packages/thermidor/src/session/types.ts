@@ -1,30 +1,10 @@
 /**
- * ============================================================================
- * Domain view types (ADR-010 model)
- * ============================================================================
- *
- * The canonical runtime domain model for the session client. Reshaped from the
- * pre-rework `generative-types.ts` shape (`turn.prompt` + `turn.agentResponse`)
- * into the ADR-010 `Turn` / `TurnInput` / `TurnResponse` model.
- *
- * Reshape (see design "Reshape from the current model"):
- *
- *   turn.prompt                        → turn.input.prompt
- *   turn.agentResponse                 → turn.response (always present)
- *   turn.agentResponse.state           → turn.response.state (non-optional, >= {})
- *   turn.agentResponse.activities      → turn.response.activities
- *   turn.agentResponse.surfaces        → turn.response.surfaces (derived; ADR-015)
- *   turn.agentResponse.messages        → turn.response.agent?.messages
- *   turn.agentResponse.reasoningSteps  → turn.response.agent?.reasoningSteps
+ * The canonical runtime domain model for the session client.
  *
  * `state` and `activities` are routing-neutral and live at the top of
  * `response`; only `messages` and `reasoningSteps` are agent-specific and move
  * under the optional `agent` facet, whose presence signals "the router invoked
  * an agent".
- *
- * The lower-level activity/message/step shapes (`Activity`, `AgentMessage`,
- * `ReasoningStep`, `ToolCallStep`) are carried over verbatim from the surviving
- * `generative-types.ts` per the ADR-010 structure annex.
  */
 
 /**
@@ -34,10 +14,9 @@ export type TurnStatus = 'streaming' | 'complete' | 'error';
 
 /**
  * The server-authoritative UI state snapshot for a turn. Always present on a
- * {@link TurnResponse}, defaulting to `{}`. Reshaped from the pre-rework
- * `AgentResponse.state` per the ADR-010 model annex. Remote controllers read
- * this; it is present for commerce-routed and agent-routed turns alike (it is
- * NOT agent-specific).
+ * {@link TurnResponse}, defaulting to `{}`. Remote controllers read this; it is
+ * present for commerce-routed and agent-routed turns alike (it is NOT
+ * agent-specific).
  */
 export type A2uiState = Record<string, unknown>;
 
@@ -124,8 +103,7 @@ export interface Activity {
 
 /**
  * Agent-specific content, present only when the router invoked an agent for the
- * turn. Moved out of the routing-neutral {@link TurnResponse} fields per
- * ADR-010.
+ * turn. Kept separate from the routing-neutral {@link TurnResponse} fields.
  */
 export interface TurnAgent {
   messages: AgentMessage[];
@@ -142,7 +120,7 @@ export interface TurnInput {
 }
 
 /**
- * The streamed result of a {@link Turn}, reshaped to the ADR-010 model.
+ * The streamed result of a {@link Turn}.
  *
  * `state` and `activities` are routing-neutral and always present. `surfaces`
  * is a derived projection of `activities` (ADR-015 interim). `agent` is present
@@ -173,7 +151,7 @@ export interface TurnResponse {
 }
 
 /**
- * One `input` paired with its streamed `response`, per the ADR-010 model.
+ * One `input` paired with its streamed `response`.
  */
 export interface Turn {
   id: string;

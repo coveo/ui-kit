@@ -19,9 +19,9 @@ const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
         };
       }
 
-      // Endpoint contract (ADR-014): when `endpoint` is provided it is the exact
-      // URL to POST to (append nothing). When absent, derive the org host and
-      // append the fixed converse path — which requires a non-empty org id.
+      // When `endpoint` is provided it is the exact URL to POST to (append
+      // nothing). When absent, derive the org host and append the fixed
+      // converse path — which requires a non-empty org id.
       let url: string;
       if (endpoint) {
         url = endpoint;

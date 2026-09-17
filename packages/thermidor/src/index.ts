@@ -1,7 +1,5 @@
 /**
- * ============================================================================
- * `@coveo/thermidor` public surface (ADR-010 / ADR-014)
- * ============================================================================
+ * `@coveo/thermidor` public surface.
  *
  * The package exposes exactly the session-client surface: the `createSession`
  * factory, the `Session` handle, the `Turn` / `TurnResponse` domain model, the
@@ -24,7 +22,7 @@ export type {
   RemoteControllerOptions,
 } from '@/src/session/create-session.js';
 
-// ── Client-owned context config types (ADR-012) ─────────────────────────────
+// ── Client-owned context config types ───────────────────────────────────────
 export type {
   NavigatorContext,
   NavigatorContextProvider,

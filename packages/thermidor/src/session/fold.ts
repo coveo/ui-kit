@@ -56,9 +56,7 @@ function ensureAgent(response: TurnResponse): TurnAgent {
  * response, returning a new turn without mutating the input.
  *
  * This is the single place a {@link TurnResponse} is constructed from the
- * stream. It reproduces the reducer semantics that previously lived in the
- * generative slice + `dispatchStreamEvent`, reshaped to the ADR-010
- * `Turn`/`TurnResponse` model.
+ * stream.
  *
  * The fold is pure: `(previousTurn, activity) → nextTurn`. Folding the same
  * activity sequence twice yields deeply-equal turns.
@@ -247,11 +245,9 @@ export function foldActivities(initialTurn: Turn, activities: NormalizedStreamEv
 }
 
 /**
- * ============================================================================
- * Surface derivation (ADR-015 — RECORDED INTERIM DEBT)
- * ============================================================================
+ * Surface derivation — RECORDED INTERIM DEBT (ADR-015).
  *
- * RECORDED INTERIM DEBT (ADR-015): this block is the SINGLE location in the
+ * This block is the SINGLE location in the
  * package that walks a raw A2-UI activity payload (`activity.payload.messages`
  * → `createSurface` → resolve `rootId` against `components` → read
  * `props.componentType`) and the SINGLE location that knows the

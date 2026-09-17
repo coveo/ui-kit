@@ -4,18 +4,15 @@ import {createSession} from '@/src/session/create-session.js';
 import type {ActionNameFor, ComponentTypeOf, StateFor} from './types.js';
 
 /**
- * ============================================================================
- * DX type test — compile-time acceptance gate (ADR-009).
- * ============================================================================
+ * DX type test — compile-time acceptance gate.
  *
  * This test pins a *real*, concrete contracts schema at the `createSession`
  * call site and asserts that the concrete `TContracts` threads unbroken through
- * `Session<TContracts>` → `remoteController<T>()` → `RemoteController<TContracts, T>`
- * (ADR-014 typing annex). It is the compile-time gate for the end-to-end typed
- * developer experience: if any internal seam widens the schema
- * back to the bare `ContractsSchema` constraint, `ActionNameFor` collapses to
- * `never` and the action-name assertions below fail to compile — surfacing the
- * regression in CI.
+ * `Session<TContracts>` → `remoteController<T>()` → `RemoteController<TContracts, T>`.
+ * It is the compile-time gate for the end-to-end typed developer experience: if
+ * any internal seam widens the schema back to the bare `ContractsSchema`
+ * constraint, `ActionNameFor` collapses to `never` and the action-name
+ * assertions below fail to compile — surfacing the regression in CI.
  *
  * The schema is declared IN this file (not imported from a schema package): it
  * is a realistic multi-component discriminated union built with the Zod v4

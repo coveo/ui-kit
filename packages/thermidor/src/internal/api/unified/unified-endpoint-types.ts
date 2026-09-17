@@ -14,9 +14,9 @@ export interface CommerceRequestModel {
   conversationToken?: string;
   context: CommerceRequestContext;
   /**
-   * Present only when the consumer supplies a `commerceContextProvider`
-   * (ADR-012). Omitted entirely under the "absent" encoding so the router can
-   * distinguish "no commerce context" from a present-but-empty context.
+   * Present only when the consumer supplies a `commerceContextProvider`.
+   * Omitted entirely under the "absent" encoding so the router can distinguish
+   * "no commerce context" from a present-but-empty context.
    */
   pinnedProducts?: string[];
 }
@@ -26,13 +26,13 @@ interface CommerceRequestContext {
   user: Record<string, unknown>;
   cart: CommerceCartItem[];
   /**
-   * Present only under the "present" commerce-context encoding (ADR-012).
-   * Omitted under the "absent" encoding.
+   * Present only under the "present" commerce-context encoding; omitted under
+   * the "absent" encoding.
    */
   source?: string[];
   /**
-   * Present only under the "present" commerce-context encoding (ADR-012).
-   * Omitted under the "absent" encoding.
+   * Present only under the "present" commerce-context encoding; omitted under
+   * the "absent" encoding.
    */
   custom?: Record<string, unknown>;
 }

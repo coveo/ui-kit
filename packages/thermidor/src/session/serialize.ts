@@ -1,14 +1,14 @@
 /**
- * ============================================================================
- * Session serialization / restoration (ADR-011)
- * ============================================================================
+ * Session serialization / restoration.
  *
  * A distinct, versioned persistence model for a session. The serialized shape
  * is intentionally NOT `= Turn` so persistence never silently couples to the
  * runtime domain shape; a persisted blob carries an integer `version` that is
  * bumped whenever the shape changes.
  *
- * Persistence scope (see design "Serialization (ADR-011)"):
+ * Persistence scope — note `response.state` is persisted for the ACTIVE turn
+ * only, an invariant coupled to the reserved historical-turn selector (ADR-011
+ * + ADR-013):
  *
  *   | Field                                       | Persist | Scope            |
  *   | ------------------------------------------- | ------- | ---------------- |
@@ -73,7 +73,7 @@ export interface SerializedTurnResponse {
 
 /**
  * A single persisted turn. Distinct from the runtime {@link Turn} shape so
- * persistence and runtime evolve independently (ADR-011).
+ * persistence and runtime evolve independently.
  */
 export interface SerializedTurn {
   id: string;
@@ -86,7 +86,7 @@ export interface SerializedTurn {
 /**
  * A versioned, persistable snapshot of a session. Distinct from the runtime
  * store state so the persisted shape never silently couples to the runtime
- * domain model (ADR-011).
+ * domain model.
  */
 export interface SerializedSession {
   /** Integer `>= 1`; identifies the persisted shape. */
