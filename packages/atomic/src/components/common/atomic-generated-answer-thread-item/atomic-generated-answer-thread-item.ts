@@ -175,7 +175,7 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
 
     return html`
       <div class="group/title grid min-w-0 grid-cols-[10px_1fr] gap-x-3">
-        <div class="row-span-2 flex flex-col items-center">
+        <div class="row-span-2 flex flex-col items-center" aria-hidden="true">
           <div class=${timelineDotToggleClasses}>
             ${when(
               this.showTimelineDot,
@@ -222,8 +222,9 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
               >`
           )}
         </div>
-        <div id=${this.contentId} class="min-w-0 pl-2 py-1.5">
+        <div class="min-w-0 pl-2 py-1.5">
           <div
+            id=${this.contentId}
             class="mb-2"
             ?hidden=${!this.isExpanded}
             aria-hidden=${this.isExpanded ? 'false' : 'true'}

@@ -463,6 +463,7 @@ export class AtomicGeneratedAnswer extends LitElement implements InitializableCo
                       'generated-answer-content-background': this.areFollowUpsEnabled,
                       'agent-scrollable': this.areFollowUpsEnabled,
                     })}
+                    tabindex=${this.areFollowUpsEnabled ? '0' : nothing}
                   >
                     <article>${this.renderAnswerContent()}</article>
                   </div>

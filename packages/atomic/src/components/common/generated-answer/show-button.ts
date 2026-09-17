@@ -10,6 +10,7 @@ import ArrowTopIcon from '../../../images/arrow-top-rounded.svg';
 export interface ShowButtonProps {
   i18n: i18n;
   isCollapsed: boolean;
+  controlsId?: string;
   onClick: () => void;
 }
 
@@ -20,6 +21,7 @@ export const renderShowButton: FunctionalComponent<ShowButtonProps> = ({props}) 
       part: 'answer-show-button',
       class: 'hidden items-center hover:bg-transparent',
       ariaExpanded: props.isCollapsed ? 'false' : 'true',
+      ariaControls: props.controlsId,
       onClick: props.onClick,
     },
   })(html`

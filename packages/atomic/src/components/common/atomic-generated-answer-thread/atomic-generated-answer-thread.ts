@@ -196,7 +196,7 @@ export class AtomicGeneratedAnswerThread extends LitElement {
 
     return html`
       <li class="group/title grid min-w-0 grid-cols-[10px_1fr] gap-x-3">
-        <div class="row-span-2 flex flex-col items-center">
+        <div class="row-span-2 flex flex-col items-center" aria-hidden="true">
           <div class="flex justify-center items-center text-base h-[1lh] my-1.5">
             <span class=${timelineDotClasses}></span>
           </div>
