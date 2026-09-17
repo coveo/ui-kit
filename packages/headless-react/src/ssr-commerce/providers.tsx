@@ -51,6 +51,7 @@ export function buildProviderWithDefinition<
   return function WrappedProvider({
     staticState,
     navigatorContext,
+    accessToken,
     children,
   }: PropsWithChildren<{
     staticState: EngineStaticState<
@@ -61,6 +62,18 @@ export function buildProviderWithDefinition<
      * @deprecated will be removed in the next major release. The navigator context provider can now be set when fetching the static state
      */
     navigatorContext: NavigatorContext;
+    /**
+     * The per-request access token the static state was fetched with.
+     *
+     * Pass the same token you passed to `fetchStaticState()` so the hydrated engine keeps querying
+     * with the same permissions for facets, pagination, and every request issued after hydration.
+     * When omitted, the engine definition's configured access token is used.
+     *
+     * To rotate an expiring token on the running engine, configure `renewAccessToken` on the engine
+     * configuration rather than changing this prop, which would rebuild the engine and lose its
+     * interaction state.
+     */
+    accessToken?: string;
   }>) {
     const [hydratedState, setHydratedState] = useState<
       InferHydratedState<typeof definition> | undefined
@@ -124,6 +137,10 @@ export function buildProviderWithDefinition<
       const args: HydrateStaticStateOptions<UnknownAction> & ControllerPropsMap = {
         searchActions,
       };
+
+      if (accessToken !== undefined) {
+        args.accessToken = accessToken;
+      }
 
       if (hydrateArguments) {
         args.controllers = hydrateArguments;
