@@ -100,11 +100,27 @@ export interface EngineDefinition<
   setNavigatorContextProvider: (navigatorContextProvider: NavigatorContextProvider) => void;
 
   /**
+   * @deprecated This method will be removed in a future major version. The access token is no longer
+   * read from the shared engine definition: provide it directly when fetching the static state.
+   *
    * Returns the access token.
    */
   getAccessToken: () => string;
 
   /**
+   * @deprecated This method will be removed in a future major version. It mutates the shared engine
+   * definition, so on a server handling concurrent requests one request can overwrite another
+   * request's token. Provide the access token directly when fetching the static state, and pass the
+   * same token to `hydrateStaticState()`. To rotate the token of an engine that is already running,
+   * configure `renewAccessToken` on the engine configuration.
+   *
+   * @example
+   * ```ts
+   * const staticState = await engineDefinition.fetchStaticState({
+   *   accessToken: perUserSearchToken,
+   * });
+   * ```
+   *
    * Updates the access token.
    * @param accessToken - The access token to update.
    */
