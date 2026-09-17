@@ -18,16 +18,16 @@ Api-extractor resolves all types reachable from the public entry point. If a typ
 
 ### Key configuration choices
 
-| Setting               | Value                 | Reason                                                                                                     |
-| --------------------- | --------------------- | --------------------------------------------------------------------------------------------------------- |
-| `mainEntryPointFilePath` | `./dist/index.d.ts` | Validates the compiled public entry point, the exact surface consumers resolve.                           |
-| `bundledPackages`     | `[]` (empty)          | No third-party package gets a free pass. If a `zod` or AG-UI type appears in the public surface, it's an error. |
-| `ae-forgotten-export` | `"logLevel": "error"` | Fail immediately on any leak — no warnings to ignore.                                                     |
-| `apiReport.enabled`   | `false`               | Disabled until the API stabilizes (see below).                                                            |
+| Setting                  | Value                 | Reason                                                                                                          |
+| ------------------------ | --------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `mainEntryPointFilePath` | `./dist/index.d.ts`   | Validates the compiled public entry point, the exact surface consumers resolve.                                 |
+| `bundledPackages`        | `[]` (empty)          | No third-party package gets a free pass. If a `zod` or AG-UI type appears in the public surface, it's an error. |
+| `ae-forgotten-export`    | `"logLevel": "error"` | Fail immediately on any leak — no warnings to ignore.                                                           |
+| `apiReport.enabled`      | `false`               | Disabled until the API stabilizes (see below).                                                                  |
 
 ### Why this catches what lint cannot
 
-There is no lint rule policing the public surface for state-library or transport imports — the collapse to the session client removed the layers that made such a rule meaningful, and non-leakage is now largely structural. What remains worth guarding is the *transitive* case: exporting a domain type that happens to reference an internal or third-party type in its definition. A direct-import lint rule would never catch that; api-extractor does, because it walks every type reachable from the entry point rather than inspecting import statements. (The one structural import rule the package still keeps is the `zod` peer-only, type-only ban in `.oxlintrc.json`, per [ADR-014](adr/ADR-014-consumer-supplied-endpoint-and-schema.md) — that guards the runtime dependency boundary, not the `.d.ts` surface.)
+There is no lint rule policing the public surface for state-library or transport imports — the collapse to the session client removed the layers that made such a rule meaningful, and non-leakage is now largely structural. What remains worth guarding is the _transitive_ case: exporting a domain type that happens to reference an internal or third-party type in its definition. A direct-import lint rule would never catch that; api-extractor does, because it walks every type reachable from the entry point rather than inspecting import statements. (The one structural import rule the package still keeps is the `zod` peer-only, type-only ban in `.oxlintrc.json`, per [ADR-014](adr/ADR-014-consumer-supplied-endpoint-and-schema.md) — that guards the runtime dependency boundary, not the `.d.ts` surface.)
 
 ### Commands
 
