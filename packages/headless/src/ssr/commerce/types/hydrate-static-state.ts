@@ -13,6 +13,25 @@ import type {FromBuildResult} from './from-build-result.js';
 
 export interface HydrateStaticStateOptions<TSearchAction> {
   searchActions: TSearchAction[];
+  /**
+   * A per-request access token (for example, a per-user Coveo search token) to use for this
+   * `hydrateStaticState()` call only.
+   *
+   * When provided, it overrides the access token from the engine definition configuration for this
+   * call without mutating the shared definition. When omitted, the definition's configured access
+   * token is used.
+   *
+   * Unlike `fetchStaticState()`, the engine returned by `hydrateStaticState()` outlives the call, so
+   * it stays subscribed to `setAccessToken()` updates even when this option is provided.
+   *
+   * @remarks
+   * The token passed to `fetchStaticState()` is NOT carried over here. If you passed an
+   * `accessToken` to the matching `fetchStaticState()` call, you MUST pass the same token here,
+   * otherwise the hydrated engine falls back to the definition's configured token and every
+   * client-side request (facets, pagination, search-as-you-type) queries with the wrong
+   * permissions.
+   */
+  accessToken?: string;
 }
 
 export type HydrateStaticState<
@@ -43,7 +62,10 @@ export type HydrateStaticState<
    */
   fromBuildResult: FromBuildResult<
     TControllers,
-    HydrateStaticStateOptions<TSearchAction>,
+    // `accessToken` is a per-request option of `hydrateStaticState()` only; `fromBuildResult`
+    // replays search actions on an already-built engine and never reads it, so it is excluded here
+    // to avoid silently accepting a token that would have no effect.
+    Omit<HydrateStaticStateOptions<TSearchAction>, 'accessToken'>,
     HydratedState<SSRCommerceEngine, TControllers>
   >;
 };

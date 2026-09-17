@@ -18,10 +18,9 @@ export function hydratedRecommendationStaticStateFactory<
 ): HydrateStaticStateFunction<TControllerDefinitions> {
   return composeFunction(
     async (...params: HydrateStaticStateParameters<TControllerDefinitions>) => {
-      const solutionTypeBuild = await buildFactory(
-        controllerDefinitions,
-        options
-      )(SolutionType.recommendation);
+      const solutionTypeBuild = await buildFactory(controllerDefinitions, options, {
+        engineOutlivesRequest: true,
+      })(SolutionType.recommendation);
 
       const buildResult = (await solutionTypeBuild(
         ...(params as BuildParameters<TControllerDefinitions>)

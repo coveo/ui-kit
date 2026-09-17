@@ -66,11 +66,10 @@ describe('buildFactory', () => {
 
   it('should register the engine for token updates with the engine as owner', async () => {
     const onAccessTokenUpdate = vi.fn();
-    const factory = buildFactory(
-      mockEmptyDefinition,
-      {...mockEngineOptions, onAccessTokenUpdate},
-      true
-    );
+    const factory = buildFactory(mockEmptyDefinition, {
+      ...mockEngineOptions,
+      onAccessTokenUpdate,
+    });
 
     const {engine} = await factory(SolutionType.listing)();
 
@@ -305,9 +304,7 @@ describe('buildFactory', () => {
       expect(tokensUsed).toContain('token-B');
     });
 
-    it('should NOT subscribe a per-request-token engine to shared token updates', async () => {
-      // A per-request token must stay authoritative for this call only: subscribing would let a
-      // queued or concurrent setAccessToken() overwrite it. So the shared subscription is skipped.
+    it('should NOT subscribe a request-scoped per-request-token engine to shared token updates', async () => {
       const onAccessTokenUpdate = vi.fn();
       const factory = buildFactory(mockEmptyDefinition, {
         ...mockEngineOptions,
@@ -318,6 +315,20 @@ describe('buildFactory', () => {
       await build({accessToken: 'per-request-token'});
 
       expect(onAccessTokenUpdate).not.toHaveBeenCalled();
+    });
+
+    it('should subscribe a per-request-token engine that outlives the request to shared token updates', async () => {
+      const onAccessTokenUpdate = vi.fn();
+      const factory = buildFactory(
+        mockEmptyDefinition,
+        {...mockEngineOptions, onAccessTokenUpdate},
+        {engineOutlivesRequest: true}
+      );
+      const build = factory(SolutionType.listing);
+
+      const {engine} = await build({accessToken: 'per-request-token'});
+
+      expect(onAccessTokenUpdate).toHaveBeenCalledExactlyOnceWith(expect.any(Function), engine);
     });
 
     it('should still subscribe to shared token updates when no per-request token is provided', async () => {
