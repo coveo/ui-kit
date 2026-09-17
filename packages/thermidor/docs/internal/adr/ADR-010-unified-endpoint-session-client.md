@@ -69,7 +69,7 @@ changesets):
    defined by server-streamed A2UI **components** whose contracts live in the
    schema — not by client-side per-feature controllers (`SearchBoxController`,
    `FacetController`, …). The client needs one generic, schema-validated **remote
-   controller** rather than a catalog of per-feature controllers. This is *why* the
+   controller** rather than a catalog of per-feature controllers. This is _why_ the
    public surface collapses to a session plus a single generic remote controller.
 
 This ADR records the decision to collapse thermidor to the leanest client that
@@ -87,7 +87,7 @@ and governs this decision.
 > simplicity, contribution readiness).
 
 - **Faithful transmission and rendering (charter MUST).** Full use-case support is
-  *inherited* from the endpoint + schemas, not owned by thermidor; thermidor
+  _inherited_ from the endpoint + schemas, not owned by thermidor; thermidor
   transmits input and exposes the server's streamed result for rendering.
 - **Public API independence (charter MUST).** No state-library or transport DTO
   leakage — now satisfied largely by construction, but still a hard requirement.
@@ -175,7 +175,7 @@ mapping are in the [model annex](./ADR-010-annex-model.md).
 
 ### Rationale (summary)
 
-The model names the *contract* (an input, a server-routed result) rather than one
+The model names the _contract_ (an input, a server-routed result) rather than one
 of its outcomes (a "conversation"), which keeps it accurate for the common
 commerce-routed case where no agent runs. Dropping the engine/interface/Redux
 layers makes non-leakage structural rather than enforced, and the pure-factory

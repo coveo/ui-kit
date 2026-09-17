@@ -33,7 +33,7 @@ work — a plain serializable state shape, the pure hydration transform, and the
 server session id/token — are unchanged.
 
 **Continuity vs. reconstruction.** The server session id and token are the
-continuity keys: they let a restored session *continue* the same backend
+continuity keys: they let a restored session _continue_ the same backend
 conversation, and they MUST be persisted. They are not a reconstruction
 mechanism — history is not replayed against the server (the endpoint is stateful
 and intent-routing; replay is neither guaranteed idempotent nor supported).
@@ -44,18 +44,18 @@ Restored transcript content therefore comes entirely from the persisted blob.
 the runtime shape). Persist per the table below. Read scopes were verified against
 the `demo-schema-react` sample.
 
-| Field | Persist | Scope | Why |
-| --- | --- | --- | --- |
-| `id`, `input`, `status`, `error` | Yes | all turns | Identity/metadata; not derivable |
-| `sessionId`, `sessionToken`, `activeTurnId` | Yes | session-level | Continuity keys + active pointer |
-| `response.activities` | Yes | **all turns** | Transcript rendering source. Verified: `ConversationThread` re-scans every turn's activities for branch selection; `AgentResponseBlock` renders each turn via `getA2UIMessages(activities)` |
-| `response.agent.messages`, `reasoningSteps` | Yes | all turns | Visible transcript; not derivable |
-| `response.state` | Yes | **active turn only** | Live interactive server snapshot. Verified: `selectRemoteControllerState` reads only `activeTurn.…state`; no historical turn's `state` is read |
-| `response.agent.surfaces` | No | — | Derivable from `activities`; only reader is streaming-skeleton computation, irrelevant to a restored (non-streaming) turn |
+| Field                                       | Persist | Scope                | Why                                                                                                                                                                                         |
+| ------------------------------------------- | ------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`, `input`, `status`, `error`            | Yes     | all turns            | Identity/metadata; not derivable                                                                                                                                                            |
+| `sessionId`, `sessionToken`, `activeTurnId` | Yes     | session-level        | Continuity keys + active pointer                                                                                                                                                            |
+| `response.activities`                       | Yes     | **all turns**        | Transcript rendering source. Verified: `ConversationThread` re-scans every turn's activities for branch selection; `AgentResponseBlock` renders each turn via `getA2UIMessages(activities)` |
+| `response.agent.messages`, `reasoningSteps` | Yes     | all turns            | Visible transcript; not derivable                                                                                                                                                           |
+| `response.state`                            | Yes     | **active turn only** | Live interactive server snapshot. Verified: `selectRemoteControllerState` reads only `activeTurn.…state`; no historical turn's `state` is read                                              |
+| `response.agent.surfaces`                   | No      | —                    | Derivable from `activities`; only reader is streaming-skeleton computation, irrelevant to a restored (non-streaming) turn                                                                   |
 
 **Documented invariant (fragility to encode, not silently assume):** persisting
-`response.state` for the active turn only is safe *only while live component state
-is read exclusively on the active turn*. The specific trigger that would break this
+`response.state` for the active turn only is safe _only while live component state
+is read exclusively on the active turn_. The specific trigger that would break this
 is adding a historical-turn selector to the vended remote controller
 (`remoteController(id, type, { turnId })`, see
 [ADR-013](./ADR-013-remote-controller-vending.md)): enabling it requires persisting

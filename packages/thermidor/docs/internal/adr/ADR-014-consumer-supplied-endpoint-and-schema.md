@@ -55,7 +55,7 @@ to by nothing."
 controller depends on `@coveo/thermidor-schema` (`remote-controller.ts` for
 `ComponentContractsSchema` + `ComponentContracts`; its property test for
 enumeration). Nothing in the session/streaming/fold/request path touches it. The
-controller depends on a *shape*, not specific contracts: a Zod discriminated union
+controller depends on a _shape_, not specific contracts: a Zod discriminated union
 whose members expose `componentType` (discriminant literal), `state` (a schema to
 `safeParse`), and `actions.shape[name].payload`.
 
@@ -63,7 +63,7 @@ Therefore **`@coveo/thermidor` drops its dependency on `@coveo/thermidor-schema`
 and accepts the contracts as input:
 
 ```ts
-createSession({ ...config, endpoint, contracts: ComponentContractsSchema });
+createSession({...config, endpoint, contracts: ComponentContractsSchema});
 ```
 
 - `ComponentType` and `RemoteController<T>` become **generic over the injected
@@ -77,7 +77,7 @@ createSession({ ...config, endpoint, contracts: ComponentContractsSchema });
   with the same member shape — injection is a drop-in, no adapter interface needed.
   `zod` is a peer dependency of the schema package, so both schemas share the
   consumer's single `zod` instance (no dual-instance parsing hazard).
-- **Charter fit:** this *strengthens* public-API independence (ADR-009 MUST,
+- **Charter fit:** this _strengthens_ public-API independence (ADR-009 MUST,
   ADR-001) — thermidor no longer bakes a specific contract catalog into its
   published surface — and directly serves the consumer-owned-inputs MUST.
 
@@ -110,7 +110,7 @@ Duplicate publish pipelines, two version streams to keep in lockstep, standing
 drift risk — all to vary which schema is imported. It also does not fully solve the
 problem: the forked package would still import the JFrog schema, reintroducing the
 private-registry question inside the fork. Injection sidesteps it entirely because
-the *consumer* owns that install.
+the _consumer_ owns that install.
 
 ## Consequences
 

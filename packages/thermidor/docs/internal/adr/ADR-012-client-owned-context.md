@@ -39,10 +39,10 @@ session creation:
 interface SessionConfig<TContracts> {
   organizationId: string;
   accessToken: string;
-  endpoint?: string;                                   // full override; see ADR-014
-  contracts: TContracts;                               // injected component contracts; see ADR-014
-  navigatorContextProvider?: () => NavigatorContext;  // ambient: view.url, referrer, userAgent, clientId
-  commerceContextProvider?: () => CommerceContext;    // app-owned: cart, pinnedProducts, source, custom
+  endpoint?: string; // full override; see ADR-014
+  contracts: TContracts; // injected component contracts; see ADR-014
+  navigatorContextProvider?: () => NavigatorContext; // ambient: view.url, referrer, userAgent, clientId
+  commerceContextProvider?: () => CommerceContext; // app-owned: cart, pinnedProducts, source, custom
 }
 ```
 
@@ -54,7 +54,7 @@ thermidor-side context state to keep in sync. `dispatchAction` needs no context
 argument for the same reason (a dispatching component need not know cart state).
 
 **Absent vs. empty (do not conflate):** send structural empties (`cart: []`,
-etc.) only when a provider is *absent* (a purely conversational / non-commerce
+etc.) only when a provider is _absent_ (a purely conversational / non-commerce
 consumer with no cart concept). When a provider is present and returns an empty
 cart, send `cart: []` meaningfully — the router's intent decision may distinguish
 "no commerce context" from "empty cart".
@@ -67,7 +67,7 @@ async or one-off-override need arises, add an optional per-call
 `submit({ prompt, context })` override rather than making the common path async.
 
 **Not serialized:** context is never part of the serialized session. It reflects
-the app's *current* world; a restored session must read today's context from the
+the app's _current_ world; a restored session must read today's context from the
 app's store, not a stale snapshot. Using functions as providers excludes context
 from the blob by construction (see [ADR-011](./ADR-011-session-serialization.md)).
 

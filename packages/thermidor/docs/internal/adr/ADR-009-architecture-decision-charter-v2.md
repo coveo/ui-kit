@@ -18,7 +18,7 @@ related:
 This charter defines the criteria used to evaluate architecture and design
 decisions for thermidor. It **supersedes ADR-000**.
 
-ADR-000 assumed thermidor was a unified interaction *engine* — one engine, N
+ADR-000 assumed thermidor was a unified interaction _engine_ — one engine, N
 interfaces, many feature controllers, a state library isolated behind an
 abstraction. That assumption no longer holds (see ADR-010). Thermidor is now a
 thin client for a **single, stateful, intent-routing unified endpoint**; UI is
@@ -65,7 +65,7 @@ endpoint** and the **schemas**, not to thermidor.
   Thermidor **MUST** faithfully transmit consumer input (prompt, actions,
   context) to the endpoint and faithfully expose the server's streamed result for
   rendering. It **MUST NOT** attempt to own or reinterpret use-case behavior —
-  full use-case support is *inherited* from the endpoint and schemas, not provided
+  full use-case support is _inherited_ from the endpoint and schemas, not provided
   by thermidor.
 
 - **Public API independence**
@@ -147,7 +147,7 @@ Recorded explicitly so their absence is a decision, not an oversight:
   essentially all of it. (Per-contract tree-shaking, where relevant, lives in the
   consumer's schema package, not thermidor.)
 - **Migration simplicity (was SHOULD)** — Retired as a design driver. The concepts
-  differ too fundamentally from current headless for the *design* to ease
+  differ too fundamentally from current headless for the _design_ to ease
   migration; a clean break plus migration guides carries this instead.
 - **External contribution readiness (was SHOULD)** — Retired. Triviality of the
   package makes it moot, and the substantive contribution surface has moved to the

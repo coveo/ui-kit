@@ -34,7 +34,7 @@ it to the literal string `'commerce-search'`, with `isRecord` guards at every ho
 This is a smell, not merely duplicated code. It is the client **reverse-engineering
 the server's routing/structure decision from transport artifacts**:
 
-- It reaches *through* the schema boundary. We built a typed, validated,
+- It reaches _through_ the schema boundary. We built a typed, validated,
   consumer-injected component system (ADR-013, ADR-014), then hand-walk the untyped
   wire format underneath it and hardcode a magic `componentType` string to recover
   a fact the schema/server already knows.
@@ -98,7 +98,7 @@ the target end state upstream.
   `findSurface`/`findCommerceSurfaceId`, which read the typed projection instead.
 - Target (upstream): server-surfaced typed routing/surface identity, coordinated
   with the conditional-SSR route-determination ADR (both are the same underlying
-  need: the client should be *told* the route, not infer it).
+  need: the client should be _told_ the route, not infer it).
 
 **Retirement condition:** when Option C lands, the fold's raw traversal and the
 hardcoded `'commerce-search'` string are removed; `response.surfaces` (or its

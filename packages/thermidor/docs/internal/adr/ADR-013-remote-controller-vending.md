@@ -18,8 +18,8 @@ related:
 
 A2UI components render from server-owned state and dispatch schema-declared
 actions. In the lean model (ADR-010) the client binds a component to its slice of
-the active turn's `response.state` via a generic, schema-validated *remote
-controller*. This ADR decides how that controller is obtained and what it binds
+the active turn's `response.state` via a generic, schema-validated _remote
+controller_. This ADR decides how that controller is obtained and what it binds
 to.
 
 ## Decision
@@ -30,7 +30,7 @@ a2ui components (there is no conversational-only consumer), so the tree-shaking
 argument for a separate opt-in import does not apply here. Vending removes the
 manual state-source wiring consumers do today (the `StateSourceProvider` /
 `useStateSource` / passing a `RemoteControllerSource` everywhere) — the session
-*is* the source.
+_is_ the source.
 
 - **Internalized:** `buildRemoteController`, the `RemoteControllerSource` type, and
   `selectRemoteControllerState` are no longer public. The vended method delegates
@@ -46,8 +46,8 @@ manual state-source wiring consumers do today (the `StateSourceProvider` /
   changes. It re-points when the active turn changes — desired for live rendering
   (always show the latest), but call it out in docs, since a controller created
   under turn 3 will reflect turn 5 once turn 5 is active.
-- **Forward-compatible seam (not built now):** binding a controller to a *specific
-  historical* turn is theoretically possible but has no current consumer. Reserve
+- **Forward-compatible seam (not built now):** binding a controller to a _specific
+  historical_ turn is theoretically possible but has no current consumer. Reserve
   an options bag (`remoteController(id, type, { turnId? })`) so the capability can
   be added additively later. Do **not** implement `turnId` now.
 

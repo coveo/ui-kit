@@ -18,7 +18,7 @@ DX (intellisense) is a charter MUST. This was prototyped against the real
 
 - **Full intellisense is achievable and confirmed** when the concrete schema is
   pinned at `createSession(...)`. Verified: `createSession({ contracts:
-  ComponentContractsSchema })` → `session.remoteController('cmp', 'next-actions-bar')`
+ComponentContractsSchema })` → `session.remoteController('cmp', 'next-actions-bar')`
   → `.dispatch('selectAction', { text, type: 'search' })` gives autocomplete on the
   component type, autocomplete on the action name (a real literal union, not
   `string`), a type-checked payload (wrong enum value errors), and typed `state`.
@@ -53,25 +53,30 @@ match and must not be used.
 Parameterized on the injected schema type `TContracts`:
 
 ```ts
-type ComponentTypeOf<TContracts extends ContractsSchema> =
-  z.infer<TContracts>['componentType'];
+type ComponentTypeOf<TContracts extends ContractsSchema> = z.infer<TContracts>['componentType'];
 
-type ContractFor<TContracts extends ContractsSchema, T extends ComponentTypeOf<TContracts>> =
-  Extract<TContracts['options'][number], {shape: {componentType: {value: T}}}>;
+type ContractFor<
+  TContracts extends ContractsSchema,
+  T extends ComponentTypeOf<TContracts>,
+> = Extract<TContracts['options'][number], {shape: {componentType: {value: T}}}>;
 
-type StateFor<TContracts extends ContractsSchema, T extends ComponentTypeOf<TContracts>> =
-  z.infer<ContractFor<TContracts, T>['shape']['state']>;
+type StateFor<TContracts extends ContractsSchema, T extends ComponentTypeOf<TContracts>> = z.infer<
+  ContractFor<TContracts, T>['shape']['state']
+>;
 
-type ActionNameFor<TContracts extends ContractsSchema, T extends ComponentTypeOf<TContracts>> =
-  keyof z.infer<ContractFor<TContracts, T>['shape']['actions']> & string;
+type ActionNameFor<
+  TContracts extends ContractsSchema,
+  T extends ComponentTypeOf<TContracts>,
+> = keyof z.infer<ContractFor<TContracts, T>['shape']['actions']> & string;
 
 type ActionPayloadFor<
   TContracts extends ContractsSchema,
   T extends ComponentTypeOf<TContracts>,
   A extends ActionNameFor<TContracts, T>,
-> = z.infer<ContractFor<TContracts, T>['shape']['actions']> extends Record<A, {payload: infer P}>
-  ? P
-  : never;
+> =
+  z.infer<ContractFor<TContracts, T>['shape']['actions']> extends Record<A, {payload: infer P}>
+    ? P
+    : never;
 ```
 
 These resolve correctly only when `TContracts` is the concrete injected type at the
