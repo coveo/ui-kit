@@ -13,6 +13,12 @@
 - **Fix linting errors across the monorepo**: `pnpm run lint:fix`
 - **Add a changeset**: `pnpm changeset`
 
+**Linting and formatting**:
+
+- Always lint and format by running the `lint:check` / `lint:fix` package scripts (or the root scripts above) rather than invoking a linter or formatter binary directly. The scripts route each package to its correct tool.
+- Everywhere except `packages/quantic`, linting uses **oxlint** and formatting uses **oxfmt**.
+- In `packages/quantic`, linting uses **ESLint** and formatting uses **Prettier** (see `packages/quantic/AGENTS.md`).
+
 ## Packages
 
 <!-- AUTO-GENERATED: run `pnpm run generate:agents-md-packages` to update this section. Do not edit by hand. -->
@@ -83,3 +89,4 @@
 
 - Commit unencrypted API keys, secrets, or Personally Identifiable Information (PII)
 - Write inline comments that restate what the code is doing
+- Use Biome to lint or format anything in this repository. Biome was removed in favor of oxlint/oxfmt (and ESLint/Prettier in `packages/quantic`)
