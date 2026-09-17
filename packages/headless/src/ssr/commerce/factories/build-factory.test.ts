@@ -4,7 +4,6 @@ import * as commerceEngine from '../../../app/commerce-engine/commerce-engine.js
 import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
 import {buildLogger} from '../../../app/logger.js';
 import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
-import * as augmentModule from '../../common/augment-preprocess-request.js';
 import {defineCart} from '../controllers/cart/headless-cart.ssr.js';
 import {defineProductList} from '../controllers/product-list/headless-product-list.ssr.js';
 import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
@@ -395,20 +394,36 @@ describe('buildFactory', () => {
       ).toBe(mockEngineOptions.navigatorContextProvider);
     });
 
-    it('should augment preprocessRequest with the forwarded-for wrapper on every request', async () => {
-      const spy = vi.spyOn(augmentModule, 'augmentPreprocessRequestWithForwardedFor');
+    it('should give each request a preprocessRequest bound to its own navigator context', async () => {
+      // The augmentation reads its navigator context from the options object it captured, and it
+      // short-circuits on an already-augmented function. Sharing one wrapper across requests would
+      // therefore pin every x-forwarded-for to whichever request created it first, so each request
+      // must get its own wrapper.
+      const contextA = {...navigatorContext, clientId: 'client-A', forwardedFor: '1.1.1.1'};
+      const contextB = {...navigatorContext, clientId: 'client-B', forwardedFor: '2.2.2.2'};
       const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
       const build = factory(SolutionType.listing);
 
-      await build();
+      await build({navigatorContext: contextA});
+      await build({navigatorContext: contextB});
 
-      expect(spy).toHaveBeenCalled();
-      spy.mockRestore();
+      const forwardedForOf = async (callIndex: number) => {
+        const {preprocessRequest} = (commerceEngine.buildCommerceEngine as Mock).mock.calls[
+          callIndex
+        ][0].configuration;
+        const request = {headers: {}} as never;
+        await preprocessRequest(request, 'searchApiFetch', undefined);
+        return new Headers((request as {headers: HeadersInit}).headers).get('x-forwarded-for');
+      };
+
+      expect(await forwardedForOf(0)).toBe('1.1.1.1');
+      expect(await forwardedForOf(1)).toBe('2.2.2.2');
     });
 
     it('should isolate the navigator context across concurrent builds', async () => {
       const contextA = {...navigatorContext, clientId: 'client-A', forwardedFor: '1.1.1.1'};
       const contextB = {...navigatorContext, clientId: 'client-B', forwardedFor: '2.2.2.2'};
+      const sharedProvider = mockEngineOptions.navigatorContextProvider;
       const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
       const build = factory(SolutionType.listing);
 
@@ -420,8 +435,7 @@ describe('buildFactory', () => {
       const resolved = providers.map((p) => p());
       expect(resolved).toContainEqual(contextA);
       expect(resolved).toContainEqual(contextB);
-      // The shared definition provider is never mutated by either concurrent request.
-      expect(mockEngineOptions.navigatorContextProvider).toBeDefined();
+      expect(mockEngineOptions.navigatorContextProvider).toBe(sharedProvider);
     });
 
     it('should NOT warn when only a per-request navigator context is provided (no definition provider)', async () => {

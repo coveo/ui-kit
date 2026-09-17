@@ -6,13 +6,13 @@ import {
 } from '../../../app/commerce-engine/commerce-engine.js';
 import {buildLogger} from '../../../app/logger.js';
 import {stateKey} from '../../../app/state-key.js';
-import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {loadConfigurationActions} from '../../../features/commerce/configuration/configuration-actions-loader.js';
 import {
   createWaitForActionMiddleware,
   createWaitForActionMiddlewareForRecommendation,
 } from '../../../utils/utils.js';
+import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
 import type {ControllersPropsMap} from '../../common/types/controllers.js';
 import {buildControllerDefinitions} from '../controller-utils.js';
 import {SolutionType} from '../types/controller-constants.js';
