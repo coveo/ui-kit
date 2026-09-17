@@ -1,8 +1,8 @@
 /**
  * Ambient navigator context — one of the client-owned context inputs a consumer
- * supplies through a pull-based provider on `SessionConfig` (ADR-012). The
- * request builder reads it fresh per request and maps it onto the wire request;
- * it is never stored on the session and never serialized.
+ * supplies through a pull-based provider on `SessionConfig`. The request builder
+ * reads it fresh per request and maps it onto the wire request; it is never
+ * stored on the session and never serialized.
  */
 export interface NavigatorContext {
   /**
@@ -28,7 +28,7 @@ export interface NavigatorContext {
 
 /**
  * The pull-based provider a consumer supplies for ambient
- * {@link NavigatorContext} (ADR-012). Synchronous by design: the request
- * builder calls it fresh per request.
+ * {@link NavigatorContext}. Synchronous by design: the request builder calls it
+ * fresh per request.
  */
 export type NavigatorContextProvider = () => NavigatorContext;

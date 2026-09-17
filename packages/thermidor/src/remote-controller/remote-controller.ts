@@ -1,13 +1,11 @@
 /**
- * ============================================================================
- * Remote controller (generic, schema-validated) — INTERNAL
- * ============================================================================
+ * Remote controller (generic, schema-validated) — INTERNAL.
  *
  * `buildRemoteController` builds one {@link RemoteController} for a single
  * server-owned entry in the ACTIVE turn's AG-UI state snapshot
  * (`response.state.components[componentId]`), validated against the injected
- * contracts schema (ADR-013/014). The controller never mutates its local
- * state; action results arrive through a subsequent snapshot from the server.
+ * contracts schema. The controller never mutates its local state; action
+ * results arrive through a subsequent snapshot from the server.
  *
  * This module is INTERNAL to the package. `buildRemoteController`,
  * `RemoteControllerSource`, and `selectRemoteControllerState` are NOT part of

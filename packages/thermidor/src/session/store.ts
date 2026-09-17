@@ -1,13 +1,8 @@
 /**
- * ============================================================================
- * Observable store
- * ============================================================================
- *
  * A plain, in-memory observable store holding the session runtime state
  * (`{ turns, activeTurnId?, sessionId?, sessionToken? }`). It exposes a
  * `subscribe(listener) → unsubscribe` seam and notifies every registered
- * subscriber exactly once per change. It replaces the RTK slice + state port;
- * there is no Redux here (ADR-010).
+ * subscriber exactly once per change.
  */
 
 /**
@@ -16,10 +11,8 @@
 export type Unsubscribe = () => void;
 
 /**
- * The runtime state held by the observable store.
- *
- * The turn shape is a type parameter so the store can be constructed before the
- * reshaped runtime `Turn` type lands, and pinned to it once it does.
+ * The runtime state held by the observable store. The turn shape is a type
+ * parameter so the store stays decoupled from the runtime `Turn` type.
  */
 export interface SessionStoreState<TTurn> {
   /**
@@ -79,7 +72,7 @@ export interface SessionStore<TTurn> {
  * Creates a plain observable store seeded with `initialState`.
  *
  * The store owns no singletons and no module-level mutable state, so two stores
- * created from identical initial state share nothing (ADR-010).
+ * created from identical initial state share nothing.
  */
 export function createSessionStore<TTurn>(
   initialState: SessionStoreState<TTurn>

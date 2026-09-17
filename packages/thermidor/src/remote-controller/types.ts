@@ -2,9 +2,9 @@ import type {z} from 'zod/v4';
 import type {Unsubscribe} from '@/src/session/store.js';
 
 /**
- * The surviving base controller shape: a current `state` snapshot plus a
- * `subscribe(listener)` seam. It replaces the engine-backed base controller
- * (ADR-010) and depends only on the observable store's `Unsubscribe`.
+ * The base controller shape: a current `state` snapshot plus a
+ * `subscribe(listener)` seam, depending only on the observable store's
+ * `Unsubscribe`.
  */
 export interface Controller<T = unknown> {
   /**
@@ -22,9 +22,7 @@ export interface Controller<T = unknown> {
 }
 
 /**
- * ============================================================================
- * Generic remote-controller contract type helpers (Zod v4)
- * ============================================================================
+ * Generic remote-controller contract type helpers (Zod v4).
  *
  * These types derive component state and action typings from an *injected*
  * contracts schema (`TContracts`). They resolve correctly only when

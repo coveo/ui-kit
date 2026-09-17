@@ -6,9 +6,9 @@ import {z} from 'zod/v4';
  * Absent vs. empty context.
  *
  * `createSession(config)` builds every request through `buildBaseRequest()`,
- * invoking the `commerceContextProvider` fresh at request-build time (ADR-012).
- * The two commerce-context encodings must be distinguishable on the wire even
- * when the provider returns an empty cart:
+ * invoking the `commerceContextProvider` fresh at request-build time. The two
+ * commerce-context encodings must be distinguishable on the wire even when the
+ * provider returns an empty cart:
  *
  *   - ABSENT (no `commerceContextProvider`): `context = { view, user,
  *     cart: [] }` with NO `context.source`, NO `context.custom`, and NO
