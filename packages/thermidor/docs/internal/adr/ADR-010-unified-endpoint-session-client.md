@@ -233,11 +233,8 @@ already exist without proportional benefit.
     client responsibility — see [ADR-015](./ADR-015-surface-and-route-derivation.md)
     (interim: derive once in the fold and expose a typed `response.surfaces`; target:
     server-surfaced typed routing, coupled to the SSR route-determination ADR).
-  - Rewrite `README.md` and `docs/architecture.md` to describe the session-client
-    model (they still describe earlier visions). The former standalone `spec.md` is
-    retired rather than rewritten: `docs/architecture.md` plus the ADRs are the
-    documentation of record, and the implementation and its property/type tests are
-    the executable spec, so a fourth restatement only invited drift.
+  - Rewrite `spec.md`, `README.md`, and `docs/architecture.md` to describe the
+    session-client model (they still describe earlier visions).
 - **Validation:** `pnpm --filter @coveo/thermidor build` and `test`; Knip is
   already enforced for the package to prevent surface regrowth.
 - **Review trigger:** Revisit if the unified endpoint splits into multiple
