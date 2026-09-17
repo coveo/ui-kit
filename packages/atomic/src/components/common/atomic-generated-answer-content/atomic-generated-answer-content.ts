@@ -6,7 +6,9 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import atomicGeneratedAnswerStyles from '@/src/components/search/atomic-generated-answer/atomic-generated-answer.tw.css.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import '../atomic-agent-stream-of-thought/atomic-agent-stream-of-thought';
+import {getAnswerAnnouncement, isSettledAnswer} from '../generated-answer/answer-announcement';
 import {renderGeneratedContentContainer} from '../generated-answer/generated-content-container';
 import {renderFeedbackAndCopyButtons} from '../generated-answer/render-feedback-and-copy-buttons';
 import {renderSourceCitations} from '../generated-answer/source-citations';
@@ -78,6 +80,11 @@ export class AtomicGeneratedAnswerContent extends LitElement {
 
   private resetCopyTimeout?: number;
 
+  private ariaMessage = new AriaLiveRegionController(this, 'generated-answer', false, true);
+  private ariaErrorMessage = new AriaLiveRegionController(this, 'generated-answer-error', true);
+  private lastAnnouncedMessage?: string;
+  private hasObservedAnswer = false;
+
   public override disconnectedCallback(): void {
     super.disconnectedCallback();
     clearTimeout(this.resetCopyTimeout);
@@ -139,6 +146,39 @@ export class AtomicGeneratedAnswerContent extends LitElement {
         )}
       </div>
     `;
+  }
+
+  protected override updated(): void {
+    this.announceAnswerStatus();
+  }
+
+  private announceAnswerStatus(): void {
+    if (!this.i18n || !this.generatedAnswer) {
+      return;
+    }
+
+    const {message, assertive} = getAnswerAnnouncement(this.generatedAnswer, this.i18n);
+
+    if (!this.hasObservedAnswer) {
+      this.hasObservedAnswer = true;
+
+      if (isSettledAnswer(this.generatedAnswer)) {
+        this.lastAnnouncedMessage = message;
+        return;
+      }
+    }
+
+    if (message === this.lastAnnouncedMessage) {
+      return;
+    }
+
+    this.lastAnnouncedMessage = message;
+
+    if (assertive) {
+      this.ariaErrorMessage.message = message;
+    } else {
+      this.ariaMessage.message = message;
+    }
   }
 
   private renderFeedbackAndCopyButtons(answerId: string) {
