@@ -1,3 +1,5 @@
+import type {CommerceCartItem} from '@/src/internal/context/commerce-context.js';
+
 // ─── Commerce agent input ──────────────────────────────────────────────────
 
 export interface CommerceRequestModel {
@@ -32,32 +34,6 @@ interface CommerceRequestContext {
    * Present only under the "present" commerce-context encoding (ADR-012).
    * Omitted under the "absent" encoding.
    */
-  custom?: Record<string, unknown>;
-}
-
-/**
- * A single cart line item carried by the app-owned commerce context (ADR-012).
- */
-export interface CommerceCartItem {
-  productId: string;
-  name: string;
-  price: number;
-  quantity: number;
-}
-
-/**
- * The app-owned commerce context a consumer supplies through
- * `commerceContextProvider` (ADR-012). The request builder reads it fresh per
- * request and maps it onto the wire request. `cart` is required (an empty cart
- * is a meaningful "present-but-empty" signal); the remaining fields are
- * optional and, when supplied, are carried on the wire as the "present"
- * encoding — distinguishable from the "absent" encoding sent when no provider
- * is configured.
- */
-export interface CommerceContext {
-  cart: CommerceCartItem[];
-  pinnedProducts?: string[];
-  source?: string[];
   custom?: Record<string, unknown>;
 }
 

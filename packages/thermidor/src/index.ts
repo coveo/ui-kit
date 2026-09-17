@@ -22,14 +22,16 @@ export type {
   SessionConfig,
   RemoteAction,
   RemoteControllerOptions,
-  CommerceContext,
 } from '@/src/session/create-session.js';
 
-// ── Additional commerce-context config shape ────────────────────────────────
-export type {CommerceCartItem} from '@/src/internal/api/unified/index.js';
-
-// ── Ambient navigator-context provider config type ──────────────────────────
-export type {NavigatorContextProvider, NavigatorContext} from '@/src/internal/utils/index.js';
+// ── Client-owned context config types (ADR-012) ─────────────────────────────
+export type {
+  NavigatorContext,
+  NavigatorContextProvider,
+  CommerceContext,
+  CommerceCartItem,
+  CommerceContextProvider,
+} from '@/src/internal/context/index.js';
 
 // ── Domain / view types ─────────────────────────────────────────────────────
 export type {

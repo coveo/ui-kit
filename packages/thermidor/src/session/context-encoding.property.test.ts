@@ -39,7 +39,8 @@ vi.mock('@/src/internal/api/unified/unified-endpoint-client.js', () => ({
   createUnifiedEndpointClient: () => ({call: callMock}),
 }));
 
-import {createSession, type CommerceContext, type SessionConfig} from './create-session.js';
+import type {CommerceContext} from '@/src/internal/context/index.js';
+import {createSession, type SessionConfig} from './create-session.js';
 
 const encoder = new TextEncoder();
 
