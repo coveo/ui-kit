@@ -47,7 +47,7 @@
     "zod": "catalog:"
   },
   "peerDependencies": {
-    "zod": "catalog:"
+    "zod": "^4"
   },
   "engines": {
     "node": "^22.11.0 || ^24.11.0"
