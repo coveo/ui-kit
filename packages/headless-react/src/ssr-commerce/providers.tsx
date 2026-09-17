@@ -70,8 +70,8 @@ export function buildProviderWithDefinition<
      * When omitted, the engine definition's configured access token is used.
      *
      * To rotate an expiring token on the running engine, configure `renewAccessToken` on the engine
-     * configuration rather than changing this prop, which would rebuild the engine and lose its
-     * interaction state.
+     * configuration. Changing this prop after hydration does not update the engine, so use the
+     * renewal callback to avoid rebuilding and losing interaction state.
      */
     accessToken?: string;
   }>) {
