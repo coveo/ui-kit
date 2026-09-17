@@ -5,7 +5,6 @@ import {
   type CommerceEngineOptions,
 } from '../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../app/state-key.js';
-import {loadConfigurationActions} from '../../../features/commerce/configuration/configuration-actions-loader.js';
 import {
   createWaitForActionMiddleware,
   createWaitForActionMiddlewareForRecommendation,
@@ -138,19 +137,6 @@ export const buildFactory =
       engineOptions,
       enabledRecommendationControllers
     );
-
-    const updateEngineConfiguration = (accessToken: string) => {
-      const {updateBasicConfiguration} = loadConfigurationActions(engine);
-      engine.dispatch(
-        updateBasicConfiguration({
-          accessToken,
-        })
-      );
-    };
-
-    if (options.onAccessTokenUpdate) {
-      options.onAccessTokenUpdate(updateEngineConfiguration, engine);
-    }
 
     const controllers = buildControllerDefinitions({
       definitionsMap: controllerDefinitions ?? {},
