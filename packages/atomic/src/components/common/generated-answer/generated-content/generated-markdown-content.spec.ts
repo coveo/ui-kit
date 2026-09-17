@@ -33,6 +33,16 @@ describe('#renderGeneratedMarkdownContent', () => {
     );
   };
 
+  it('should preserve heading role and level through sanitization', async () => {
+    const element = await renderComponent({answer: '## Second level heading'});
+
+    const heading = locators(element).generatedText?.querySelector('[part="answer-heading-2"]');
+
+    expect(heading).toHaveAttribute('role', 'heading');
+    expect(heading).toHaveAttribute('aria-level', '2');
+    expect(heading).toHaveTextContent('Second level heading');
+  });
+
   it('should render a div element for the generated text in the document', async () => {
     const element = await renderComponent();
     const generatedText = locators(element).generatedText;
