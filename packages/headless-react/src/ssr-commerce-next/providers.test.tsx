@@ -30,9 +30,6 @@ describe('buildProviderWithDefinition', () => {
     >;
   });
 
-  // fetchStaticState returns the build config alongside the static state, and this provider forwards
-  // the whole object, so a per-request access token reaches the hydrated engine without the consumer
-  // wiring anything. This asserts that path stays intact.
   it('should forward the per-request access token carried by the static state', async () => {
     const Provider = buildProviderWithDefinition(definition);
     const staticState = {
