@@ -25,7 +25,7 @@ For the following examples, assume a shared configuration file (`engine.ts`) tha
 ```ts
 // engine.ts
 
-import {defineCommerceEngine} from '@coveo/headless/ssr-commerce';
+import {defineCommerceEngine} from '@coveo/headless-react/ssr-commerce';
 
 export const engineDefinition = defineCommerceEngine({
   configuration: {
