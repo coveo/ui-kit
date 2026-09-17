@@ -6,7 +6,7 @@
 > seulement le build). Ce fichier est un artefact de suivi, gardé sur la branche `chore/CMS-443-memory-repro`
 > (commité mais sans PR) — **hors des PRs de fix**.
 
-Dernière mise à jour : 2026-09-16
+Dernière mise à jour : 2026-09-17
 
 **Versions** : les fixes de fuite (Findings 1 et 2) sont publiés dans `@coveo/headless` **3.56.0** (cible production : jeudi 17 septembre 2026 — date de suivi interne, ne pas la promettre au client, cf. §3). Le token par requête (Finding 3) est livré sur `ssr-commerce-next` dans 3.56.0 (#8481) et **étendu au tree supporté `ssr-commerce`** (demandes 4a-bis + 4c, [PR #8494](https://github.com/coveo/ui-kit/pull/8494) + [PR #8495](https://github.com/coveo/ui-kit/pull/8495) ouvertes en stack, validées par le repro — voir §1a).
 
@@ -130,13 +130,14 @@ Contraintes de communication (préférences projet) :
 | **PR doc [#8500](https://github.com/coveo/ui-kit/pull/8500)** (`ssr-manage-access-tokens.md` réorienté vers `ssr-commerce` + section navigator context + clarification request-scoped serveur dans `ssr-extend-engine-definitons.md`) | En review (JP) ; stackée sur #8495, à merger APRÈS le stack code | Toi |
 | Sample per-user-token de CODE dédié (demande 4b) | Optionnel — la partie DOC est livrée dans #8500 ; sample de code = décision d'équipe | Toi / PM |
 | Demande 5 — « pattern officiellement supporté » | Mécanisme documenté dans #8500 ; l'affirmation de support à router vers R&D/PM | Toi |
-| Réponse client (confirmation F1/F2, position pattern §7, hooks alternatifs) | À rédiger | Toi / Support |
+| Réponse client (confirmation F1/F2, position pattern §7, hooks alternatifs) | À rédiger — statut intermédiaire relayé le 2026-09-17 via le [fil Slack](https://coveo.slack.com/archives/C016TA2G485/p1789063923761429) (F1/F2 dans 3.56.0, F3 reporté) | Toi / Support |
 | Sort de ce doc de suivi + harnais repro | Rester hors PR (jetable) ou committer quelque part | Toi |
 
 ---
 
 ## 5. Artefacts
 
+- **Fil Slack support ↔ client (via @sallain / PS)** : [thread #support-...](https://coveo.slack.com/archives/C016TA2G485/p1789063923761429) (workspace `coveo.slack.com`, accès SSO Coveo requis). Canal de communication du statut au client — statut relayé : F1/F2 livrés dans `@coveo/headless` 3.56.0, token par requête (F3) reporté à une release ultérieure.
 - **Rapport client** : `docs/investigation/CMS-443-headless-memory-leak-report_2026-09-10.md` (stashé, non suivi).
 - **Harnais de repro/validation** : branche `chore/CMS-443-memory-repro`, `utils/cms443-memory-repro/` (`repro.mjs`, `compare.sh`, `README.md`) — poussée, sans PR.
 - **PRs de fix** (toutes **mergées** sur `main` le 2026-09-15, off `main`, sans stack) :
