@@ -15,6 +15,7 @@ import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderAnswerContent} from '@/src/components/common/generated-answer/render-answer-content';
+import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 import {buildFakeGeneratedAnswer} from '@/vitest-utils/testing-helpers/fixtures/headless/search/generated-answer-controller';
@@ -1043,6 +1044,34 @@ describe('atomic-generated-answer', () => {
   });
 
   describe('follow up capability', () => {
+    it('should not announce the top-level answer status when follow-ups are enabled', async () => {
+      const messageSetterSpy = vi.spyOn(AriaLiveRegionController.prototype, 'message', 'set');
+      const {element} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-123'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({isEnabled: true}),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      messageSetterSpy.mockClear();
+      element.onGeneratedAnswerStateUpdate();
+
+      expect(messageSetterSpy).not.toHaveBeenCalled();
+    });
+
+    it('should announce the top-level answer status when follow-ups are disabled', async () => {
+      const messageSetterSpy = vi.spyOn(AriaLiveRegionController.prototype, 'message', 'set');
+      const {element} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-123'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({isEnabled: false}),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      messageSetterSpy.mockClear();
+      element.onGeneratedAnswerStateUpdate();
+
+      expect(messageSetterSpy).toHaveBeenCalled();
+    });
+
     it('should render a scrollable content container when agentId is provided', async () => {
       const {scrollableContainer} = await renderGeneratedAnswer({
         props: {agentId: 'agent-123'},

@@ -1,5 +1,16 @@
 import {html, type TemplateResult} from 'lit';
-import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
+import {
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  type MockInstance,
+  vi,
+} from 'vitest';
+import type {AtomicAriaLive} from '@/src/components/common/atomic-aria-live/atomic-aria-live';
+import '@/src/components/common/atomic-aria-live/atomic-aria-live';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {renderGeneratedContentContainer} from '../generated-answer/generated-content-container';
@@ -372,5 +383,114 @@ describe('atomic-generated-answer-content', () => {
     expect(consoleErrorSpy).toHaveBeenCalled();
 
     consoleErrorSpy.mockRestore();
+  });
+
+  describe('screen reader announcements', () => {
+    let ariaLive: AtomicAriaLive;
+    let updateMessageSpy: MockInstance<AtomicAriaLive['updateMessage']>;
+
+    const announcements = () =>
+      updateMessageSpy.mock.calls
+        .filter(
+          ([region, message]) =>
+            ['generated-answer', 'generated-answer-error'].includes(region) && message !== ''
+        )
+        .map(([region, message, assertive]) => ({region, message, assertive}));
+
+    beforeEach(() => {
+      ariaLive = document.createElement('atomic-aria-live');
+      document.body.appendChild(ariaLive);
+      updateMessageSpy = vi.spyOn(ariaLive, 'updateMessage');
+    });
+
+    afterEach(() => {
+      ariaLive.remove();
+    });
+
+    it('should stay silent when an already completed answer is rendered for the first time', async () => {
+      await renderComponent();
+
+      expect(announcements()).toEqual([]);
+    });
+
+    it('should announce that generation is in progress when mounting while streaming', async () => {
+      await renderComponent({generatedAnswer: {answer: '', isStreaming: true}});
+
+      expect(announcements()).toEqual([
+        {region: 'generated-answer', message: 'Generating answer', assertive: false},
+      ]);
+    });
+
+    it('should announce the answer politely once streaming completes', async () => {
+      const {element} = await renderComponent({
+        generatedAnswer: {answer: '', isStreaming: true},
+      });
+
+      element.generatedAnswer = {
+        ...element.generatedAnswer,
+        answer: 'The final answer.',
+        isStreaming: false,
+      };
+      await element.updateComplete;
+
+      expect(announcements()).toEqual([
+        {region: 'generated-answer', message: 'Generating answer', assertive: false},
+        {
+          region: 'generated-answer',
+          message: 'Generated answer: The final answer.',
+          assertive: false,
+        },
+      ]);
+    });
+
+    it('should announce the error assertively when generation fails', async () => {
+      const {element} = await renderComponent({
+        generatedAnswer: {answer: '', isStreaming: true},
+      });
+
+      element.generatedAnswer = {
+        ...element.generatedAnswer,
+        isStreaming: false,
+        error: {message: 'boom'},
+      };
+      await element.updateComplete;
+
+      expect(announcements().at(-1)).toEqual({
+        region: 'generated-answer-error',
+        message: 'Something went wrong while generating the answer. Please try again later.',
+        assertive: true,
+      });
+    });
+
+    it('should announce cannot-answer assertively', async () => {
+      const {element} = await renderComponent({
+        generatedAnswer: {answer: '', isStreaming: true},
+      });
+
+      element.generatedAnswer = {
+        ...element.generatedAnswer,
+        isStreaming: false,
+        cannotAnswer: true,
+      };
+      await element.updateComplete;
+
+      const latest = announcements().at(-1);
+      expect(latest?.region).toBe('generated-answer-error');
+      expect(latest?.assertive).toBe(true);
+      expect(latest?.message).toContain("I couldn't find an answer to that.");
+    });
+
+    it('should not repeat an announcement when the answer state is unchanged', async () => {
+      const {element} = await renderComponent({
+        generatedAnswer: {answer: '', isStreaming: true},
+      });
+
+      element.requestUpdate();
+      await element.updateComplete;
+
+      expect(announcements()).toEqual([
+        {region: 'generated-answer', message: 'Generating answer', assertive: false},
+      ]);
+    });
   });
 });
