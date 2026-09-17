@@ -184,6 +184,7 @@ export class AtomicInsightGeneratedAnswer
 
   private ariaMessage = new AriaLiveRegionController(this, 'generated-answer', false, true);
   private ariaErrorMessage = new AriaLiveRegionController(this, 'generated-answer-error', true);
+  private ariaCopyMessage = new AriaLiveRegionController(this, 'generated-answer-copy', true);
 
   constructor() {
     super();
@@ -349,12 +350,14 @@ export class AtomicInsightGeneratedAnswer
       answer,
       () => {
         this.copied = true;
+        this.ariaCopyMessage.message = this.bindings.i18n.t('generated-answer-copied');
         setTimeout(() => {
           this.copied = false;
         }, 2000);
       },
       () => {
         this.copyError = true;
+        this.ariaCopyMessage.message = this.bindings.i18n.t('failed-to-copy-generated-answer');
         setTimeout(() => {
           this.copyError = false;
         }, 2000);
