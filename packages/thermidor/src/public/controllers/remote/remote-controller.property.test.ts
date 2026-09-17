@@ -184,7 +184,7 @@ describe('remote-controller property tests', () => {
       'commerce-search': {
         componentType: 'commerce-search',
         state: {},
-        actions: {},
+        actions: {submitQuery: {payload: {query: 'water sports'}}},
       },
       'layout-stack': {
         componentType: 'layout-stack',
