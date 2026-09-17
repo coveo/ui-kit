@@ -34,10 +34,6 @@ export type SearchEngineDefinitionOptions<
    * The controllers to initialize with the search engine.
    */
   controllers?: ValidateControllerNames<TControllers>;
-  /**
-   * Callback invoked when the access token changes.
-   */
-  onAccessTokenUpdate?: (updateCallback: (token: string) => void, owner: object) => void;
 };
 
 export interface SearchEngineDefinition<
@@ -61,16 +57,6 @@ export interface SearchEngineDefinition<
     UnknownAction,
     InferControllerPropsMapFromDefinitions<TControllers>
   >;
-  /**
-   * Returns the access token.
-   */
-  getAccessToken: () => string;
-
-  /**
-   * Updates the access token.
-   * @param accessToken - The access token to update.
-   */
-  setAccessToken: (accessToken: string) => void;
 }
 
 /**
