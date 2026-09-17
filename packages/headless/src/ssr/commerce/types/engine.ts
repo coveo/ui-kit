@@ -100,8 +100,8 @@ export interface EngineDefinition<
   setNavigatorContextProvider: (navigatorContextProvider: NavigatorContextProvider) => void;
 
   /**
-   * @deprecated This method will be removed in a future major version. The access token is no longer
-   * read from the shared engine definition: provide it directly when fetching the static state.
+   * @deprecated This method will be removed in a future major version. Prefer providing the access token
+   * directly when fetching the static state to avoid relying on the shared definition.
    *
    * Returns the access token.
    */
