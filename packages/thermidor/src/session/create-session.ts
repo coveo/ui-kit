@@ -25,12 +25,13 @@ import type {NormalizedStreamEvent, RawSSEEvent} from '@/src/internal/api/protoc
 import {createUnifiedEndpointClient} from '@/src/internal/api/unified/unified-endpoint-client.js';
 import type {
   A2uiAction,
-  CommerceContext,
   CommerceRequestModel,
 } from '@/src/internal/api/unified/unified-endpoint-types.js';
-export type {CommerceContext} from '@/src/internal/api/unified/unified-endpoint-types.js';
+import type {
+  CommerceContextProvider,
+  NavigatorContextProvider,
+} from '@/src/internal/context/index.js';
 import {generateId} from '@/src/internal/utils/id-generator.js';
-import type {NavigatorContextProvider} from '@/src/internal/utils/navigator-context-types.js';
 import {
   buildRemoteController,
   type RemoteControllerSource,
@@ -92,7 +93,7 @@ export interface SessionConfig<TContracts extends ContractsSchema> {
    * provider returns as the "present" encoding, distinguishable on the wire
    * from the absent encoding even when the returned cart is empty.
    */
-  commerceContextProvider?: () => CommerceContext;
+  commerceContextProvider?: CommerceContextProvider;
   /** Additional per-request commerce request fields (tracking/locale). */
   trackingId?: string;
   language?: string;
