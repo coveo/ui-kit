@@ -79,6 +79,14 @@ interface TurnResponse {
 - `response` groups the server-sent content and separates it from turn metadata
   (`id`, `input`, `status`, `error`). `status` governs the readiness of a single
   `response` object rather than a set of loose sibling fields.
+- `status` is deliberately a three-way union (`streaming | complete | error`).
+  Cancellation is not a fourth state: `cancel()` produces a terminal `error`
+  turn (message `'Cancelled'`) because a cancelled turn shares every lifecycle
+  property with a failed one (terminal, non-streaming, retryable, partial
+  `response` retained). A separate `cancelled` status would widen the union
+  without any branch acting on it. If a consumer ever needs to distinguish a
+  user-initiated stop from a genuine failure, add a structured discriminator
+  (e.g. an error `reason`) rather than a new status.
 - `state` and `activities` are **routing-neutral** and live at the top of
   `response`. Verified against current usage: remote controllers read
   `state.components`, and navigation/surface-discovery reads `activities`, on both
