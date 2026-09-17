@@ -28,7 +28,7 @@ import type {Parameters} from './parameters-actions.js';
 const sortFieldAndDirectionSeparator = ' ';
 const sortFieldsJoiner = ',';
 export const commerceFacetsRegex =
-  /^(f|fExcluded|cf|nf|nfExcluded|df|dfExcluded|mnf|mnfExcluded|lf)-(.+)$/;
+  /^(f|fExcluded|cf|nf|nfExcluded|df|dfExcluded|mnf|mnfExcluded)-(.+)$/;
 
 export interface Serializer<T extends Parameters> {
   serialize: (parameters: T) => string;
@@ -49,23 +49,13 @@ type ParametersKey = keyof CommerceSearchParameters;
 
 export type FacetParameters = keyof Pick<
   Parameters,
-  | 'f'
-  | 'fExcluded'
-  | 'lf'
-  | 'cf'
-  | 'nf'
-  | 'nfExcluded'
-  | 'df'
-  | 'dfExcluded'
-  | 'mnf'
-  | 'mnfExcluded'
+  'f' | 'fExcluded' | 'cf' | 'nf' | 'nfExcluded' | 'df' | 'dfExcluded' | 'mnf' | 'mnfExcluded'
 >;
 
 type FacetKey = keyof typeof supportedFacetParameters;
 const supportedFacetParameters: Record<FacetParameters, boolean> = {
   f: true,
   fExcluded: true,
-  lf: true,
   cf: true,
   nf: true,
   nfExcluded: true,
