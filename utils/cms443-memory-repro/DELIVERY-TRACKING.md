@@ -35,10 +35,11 @@ Les items ci-dessous ne sont **pas des fixes de code** : ce sont de la documenta
 
 | # | Demande client (§9 du rapport) | Type | Question ouverte pour l'équipe | Statut |
 |---|---|---|---|---|
-| 4b | Sample SSR documenté montrant l'usage de tokens per-user en multi-tenant | Doc / DevEx | Raisonnable d'ajouter un sample dédié ? Où (samples/ ? doc headless SSR ?) ? Qui l'écrit ? | ⏸️ À valider avec l'équipe |
-| 5 | Position produit : pattern « definition request-scoped serveur + définition client séparée » supporté ? + MAJ doc « singleton shared server/client » | Décision + doc | Le pattern est-il officiellement supporté ? La doc « singleton » doit-elle être nuancée/corrigée ? | ⏸️ À router vers R&D/PM |
+| Doc | **Article SSR de gestion des tokens/context réorienté + étendu** — [PR #8500](https://github.com/coveo/ui-kit/pull/8500) : `ssr-manage-access-tokens.md` réorienté `ssr-commerce-next`→`ssr-commerce` + section navigator context par requête ; clarification request-scoped serveur dans `ssr-extend-engine-definitons.md` | Doc / DevEx | Écrit — documente le **mécanisme** (prouvé par le code), sans décréter de contrat de support. Reviewer JP | 🟢 En review (stackée sur #8495, merge APRÈS le stack code) |
+| 4b | Sample SSR documenté montrant l'usage de tokens per-user en multi-tenant | Doc / DevEx | Partie DOC couverte par #8500 (usage per-user documenté) ; reste : faut-il un **sample de code dédié** au-delà ? Où ? Qui ? | 🟢/⏸️ Doc livrée (#8500) ; sample de code = à valider |
+| 5 | Position produit : pattern « definition request-scoped serveur + définition client séparée » supporté ? + MAJ doc « singleton shared server/client » | Décision + doc | Mécanisme documenté dans #8500. Reste : le pattern est-il **officiellement supporté** (engagement compat) ? | 🟢/⏸️ Mécanisme livré (#8500) ; « officiellement supporté » à router vers R&D/PM |
 
-Légende : ✅ fait · ⚠️ partiel/en cours · ⏸️ en attente de décision d'équipe · ❌ non commencé
+Légende : ✅ fait · 🟢 livré / en PR · ⚠️ partiel/en cours · ⏸️ en attente de décision d'équipe · ❌ non commencé
 
 ---
 
