@@ -54,6 +54,29 @@
           }
         ]
       }
+    },
+    {
+      "files": ["src/**"],
+      "excludeFiles": ["**/*.test.ts", "**/*.test-d.ts", "**/*.test.tsx"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "zod",
+                "allowTypeImports": true,
+                "message": "zod is a peer-only dependency of @coveo/thermidor: import types only (import type). A value import would make zod a runtime dependency and risk a second zod instance (dual-instance parsing hazard). Validate against the consumer-supplied schema instance instead. See ADR-014."
+              },
+              {
+                "name": "zod/v4",
+                "allowTypeImports": true,
+                "message": "zod is a peer-only dependency of @coveo/thermidor: import types only (import type). See ADR-014."
+              }
+            ]
+          }
+        ]
+      }
     }
   ]
 }
