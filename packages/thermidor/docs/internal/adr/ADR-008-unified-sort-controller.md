@@ -1,7 +1,7 @@
 # Unified Sort Controller with Domain-Level Criterion Types
 
-**Status**: `🟡 Proposed (partially superseded)` by [ADR-010](./ADR-010-unified-endpoint-session-client.md). The client-side `buildSortController` and its per-interface generics are superseded — sort is now a server-streamed, schema-defined component driven through the generic remote controller, not a hand-written thermidor controller. The domain-level, non-leaking modeling principle it argues (no REST syntax in the public surface) still holds and is now inherited from the schema contracts.  
-**Related docs**: [ADR-010 Unified-Endpoint Session Client](./ADR-010-unified-endpoint-session-client.md), [ADR-009 Architecture Decision Charter (v2)](./ADR-009-architecture-decision-charter-v2.md), [ADR-001](./ADR-001-anti-corruption-layer.md), [ADR-005](./ADR-005-public-facing-abstractions.md)
+**Status**: `🟡 Proposed`  
+**Related docs**: [ADR-000](./ADR-000-architecture-decision-charter.md), [ADR-001](./ADR-001-anti-corruption-layer.md), [ADR-005](./ADR-005-public-facing-abstractions.md)
 
 ## 1. Context
 

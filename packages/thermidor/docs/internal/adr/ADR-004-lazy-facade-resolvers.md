@@ -1,7 +1,7 @@
 # ADR-004: Lazy Facade Resolvers on Interface Objects
 
-**Status**: `⚫️ Superseded` by [ADR-010](./ADR-010-unified-endpoint-session-client.md) (facade resolvers, interfaces, and the `Supports<F>` machinery are removed). Retained for historical rationale only.  
-**Related docs**: [ADR-010 Unified-Endpoint Session Client](./ADR-010-unified-endpoint-session-client.md), [ADR-002 Multi-Interface Engine](./ADR-002-multi-interface-engine.md), [ADR-003 Facade Request Response](./ADR-003-facade-request-response.md)
+**Status**: `🟡 Proposed`  
+**Related docs**: [ADR-002 Multi-Interface Engine](./ADR-002-multi-interface-engine.md), [ADR-003 Facade Request Response](./ADR-003-facade-request-response.md)
 
 ## 1. Context
 

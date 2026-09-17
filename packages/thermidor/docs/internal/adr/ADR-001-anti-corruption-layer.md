@@ -1,7 +1,7 @@
 # ADR-001: Anti-Corruption Layer
 
-**Status**: `🟡 Proposed` — **not superseded; still applicable.** This decision survived the session-client collapse (ADR-010) intact and is now governed by the v2 charter [ADR-009](./ADR-009-architecture-decision-charter-v2.md) (not the deprecated ADR-000). Under the v2 design the anti-corruption boundary is **largely satisfied by construction** — there is no engine/Redux/transport DTO left to leak — so its cost (the boilerplate/cognitive overhead noted below) has largely evaporated while its benefit remains. §3 below has been re-mapped to the v2 charter; the original ADR-000 mapping is preserved in git history.  
-**Related docs**: [ADR-009 Architecture Decision Charter (v2)](./ADR-009-architecture-decision-charter-v2.md), [ADR-010 Unified-Endpoint Session Client](./ADR-010-unified-endpoint-session-client.md)
+**Status**: `🟡 Proposed`  
+**Related docs**: -
 
 ## 1. Context
 
@@ -15,32 +15,35 @@ Implement an anti-corruption layer to isolate the public API surface from the Co
 
 ## 3. Requirements & Considerations Mapping
 
-Mapped against the current charter, [ADR-009 (v2)](./ADR-009-architecture-decision-charter-v2.md). (The original mapping was against ADR-000, whose "Full use-case support", "First-class SSR", tree-shaking, migration-simplicity, and contribution-readiness requirements have since been retired or relocated; see ADR-009 §7. That mapping is preserved in git history.)
+Map this decision to thermidor's Architecture Decision Charter requirements.
 
 ### MUST
 
-1. **Requirement**: Public API independence
-   - **Impact**: Positive — this is the very purpose of an anti-corruption layer.
-   - **Under the v2 design**: largely satisfied *by construction*. With no state library, engine, or transport DTOs in the public surface, there is almost nothing left to leak; the anti-corruption boundary is now cheap to hold rather than a standing tax.
+1. **Requirement**: Full use-case support
+   - **Impact**: None
+   - **How satisfied**: N/A
 
-2. **Requirement**: Faithful transmission and rendering
-   - **Impact**: None (orthogonal). The layer isolates types/concepts; it does not affect what is transmitted or rendered.
+2. **Requirement**: Public API independence
+   - **Impact**: Positive
+   - **How satisfied**: This is the very purpose of an anti-corruption layer
 
-3. **Requirement**: Best-in-class consumer DX
-   - **Impact**: Positive. Keeping implementation/transport types out of the surface is a precondition for the clean, domain-level, schema-derived types consumers interact with.
-
-4. **Requirement**: Consumer-owned inputs
-   - **Impact**: None directly (orthogonal), though the same isolation discipline is what lets the schema be injected rather than baked in (see ADR-014).
+3. **Requirement**: First-class SSR
+   - **Impact**: None
+   - **How satisfied**: N/A
 
 ### SHOULD
 
-1. **Consideration**: Conditional SSR
-   - **Impact**: None (orthogonal).
+1. **Consideration**: Tree-shaking efficiency
+   - **Impact**: None
+   - **How addressed (or why deferred)**: N/A
 
-2. **Consideration**: Simplicity and legibility
-   - **Impact**: Positive under v2. The original ADR-000 concern was that the layer added boilerplate and cognitive overhead (a negative against the retired "external contribution readiness" SHOULD). Because the v2 surface has no Redux/engine to wrap, that overhead has largely evaporated — the boundary is now mostly a lint/structural guarantee rather than hand-written indirection.
+2. **Consideration**: Migration simplicity
+   - **Impact**: Negative
+   - **How addressed (or why deferred)**: Right now in Headless, Redux and Coveo REST API types and concepts leak directly into the public API surface, preventing public API independence altogether. We established public independence as a MUST of thermidor, which almost unavoidably implies introducing breaking changes. The anti-corruption layer does not cause that (the overall architectural decision does), but it confirms it.
 
-**Note on migration**: as under ADR-000, public API independence implies breaking changes from current headless. The anti-corruption layer does not *cause* that (the overall architectural decision does); it confirms it. The v2 charter retired "migration simplicity" as a design driver (ADR-009 §7), so this is no longer weighed as a con here.
+3. **Consideration**: External contribution readiness
+   - **Impact**: Negative
+   - **How addressed (or why deferred)**: An anti-corruption layer implies additional boilerplate and cognitive overhead. In this case, we believe the benefit outweighs the cost. The boilerplate overhead can at least be partially mitigated through code snippets, scripts, and/or AI agent instructions. The cognitive overhead is something we will have to deal with.
 
 ## 4. Options Considered
 
@@ -69,9 +72,10 @@ Mapped against the current charter, [ADR-009 (v2)](./ADR-009-architecture-decisi
 
 ## 5. Decision Rationale
 
-- Public API independence is a MUST (see the v2 charter, [ADR-009](./ADR-009-architecture-decision-charter-v2.md)); the anti-corruption layer directly serves it.
-- The positive impact on public API independence is significant enough to be worthwhile.
-- The original concern — a negative impact on the (now-retired) "external contribution readiness" SHOULD from added boilerplate/overhead — has largely evaporated under the v2 design, where there is no engine/Redux to wrap and the boundary is mostly structural.
+- Public API independence is a MUST (see ADR-000)
+- External contributor readiness is the 3rd-priority SHOULD (see ADR-000)
+- The positive impact on public API independence is significant enough to be worthwhile
+- The negative impact on external contributor readiness is relatively minor and can be mitigated to some extent
 
 ## 6. Public API and Contract Impact
 
