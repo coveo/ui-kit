@@ -77,6 +77,18 @@ createSession({...config, endpoint, contracts: ComponentContractsSchema});
   with the same member shape — injection is a drop-in, no adapter interface needed.
   `zod` is a peer dependency of the schema package, so both schemas share the
   consumer's single `zod` instance (no dual-instance parsing hazard).
+- **`zod` is a peer dependency of `@coveo/thermidor`, never a direct
+  dependency.** Thermidor imports only zod _types_ (`import type`) and never
+  constructs a schema; it validates against the consumer-supplied schema
+  instance by calling `safeParse`/reading `.shape` on it. Declaring zod as a
+  dependency would risk a second zod runtime, and a schema built with the
+  consumer's zod would then cross an instance boundary (the dual-instance
+  parsing hazard). A peer forces the single shared instance the injection model
+  requires. The peer range is a permissive `^4` (the compatibility window is
+  "any zod 4.x exposing the `/v4` subpath"), not the exact monorepo catalog pin —
+  an exact-pinned peer would be hostile to external consumers on a different 4.x.
+  Structurally forbidding zod from `dependencies` is a boundary the package must
+  keep (see Consequences).
 - **Charter fit:** this _strengthens_ public-API independence (ADR-009 MUST,
   ADR-001) — thermidor no longer bakes a specific contract catalog into its
   published surface — and directly serves the consumer-owned-inputs MUST.
@@ -122,3 +134,6 @@ the _consumer_ owns that install.
   a full converse-URL override (deliberate; see Decision).
 - **Neutral:** Public consumers now install `@coveo/thermidor-schema` themselves and
   pass it in, rather than getting it transitively.
+- **Constraint:** `zod` must remain a peer (and `import type`-only) — it must
+  never appear in `dependencies`, so validation always runs on the consumer's
+  single zod instance.
