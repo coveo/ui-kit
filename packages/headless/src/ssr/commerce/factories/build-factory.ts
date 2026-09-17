@@ -65,6 +65,19 @@ export type CommerceEngineDefinitionOptions<
   onAccessTokenUpdate?: (updateCallback: (token: string) => void, owner: object) => void;
 };
 
+/**
+ * Internal options describing the lifecycle of the engines a factory produces.
+ * @internal
+ */
+export interface BuildFactoryOptions {
+  /**
+   * Set by paths that produce an engine outliving the call that created it, namely client-side
+   * hydration. Such an engine keeps its subscription to the definition's shared access token even
+   * when a per-request token is supplied, so a later `setAccessToken()` still reaches it.
+   */
+  engineOutlivesRequest?: boolean;
+}
+
 function isListingFetchCompletedAction(action: unknown): action is Action {
   return /^commerce\/productListing\/fetch\/(fulfilled|rejected)$/.test(
     (action as UnknownAction).type
@@ -156,7 +169,8 @@ function fetchActiveRecommendationControllers(
 export const buildFactory =
   <TControllerDefinitions extends CommerceControllerDefinitionsMap>(
     controllerDefinitions: TControllerDefinitions | undefined,
-    options: CommerceEngineDefinitionOptions<TControllerDefinitions>
+    options: CommerceEngineDefinitionOptions<TControllerDefinitions>,
+    factoryOptions: BuildFactoryOptions = {}
   ) =>
   <T extends SolutionType>(solutionType: T) =>
   async (...[buildOptions]: BuildParameters<TControllerDefinitions>) => {
@@ -245,11 +259,15 @@ export const buildFactory =
       );
     };
 
-    // Subscribe this engine to shared token updates ONLY when it uses the definition's token. When
-    // a per-request access token is supplied, the override must stay authoritative for this request:
-    // subscribing would let a queued/concurrent `setAccessToken()` overwrite it (violating the
-    // "this call only" contract), so we skip the shared subscription entirely.
-    if (options.onAccessTokenUpdate && perRequestAccessToken === undefined) {
+    // A per-request token must stay authoritative for the request that supplied it, so a
+    // request-scoped engine skips the shared subscription: staying subscribed would let a queued or
+    // concurrent `setAccessToken()` from another request overwrite it. An engine that outlives the
+    // request (client-side hydration) faces no such concurrency and must keep receiving
+    // `setAccessToken()` updates, otherwise it would be stuck with the token it was hydrated with.
+    const subscribeToSharedAccessToken =
+      perRequestAccessToken === undefined || factoryOptions.engineOutlivesRequest === true;
+
+    if (options.onAccessTokenUpdate && subscribeToSharedAccessToken) {
       options.onAccessTokenUpdate(updateEngineConfiguration, engine);
     }
 
