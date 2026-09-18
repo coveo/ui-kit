@@ -6,6 +6,7 @@ import {
   errorSelector,
   isLoadingSelector,
   moreProductsAvailableSelector,
+  numberOfProductsForNextPageSelector,
   numberOfProductsSelector,
   requestIdSelector,
   responseIdSelector,
@@ -220,5 +221,30 @@ describe('commerce product listing selectors', () => {
   it('#errorSelector should return null when the error value is not set', () => {
     const state = buildMockCommerceState();
     expect(errorSelector(state)).toBeNull();
+  });
+  it('#numberOfProductsForNextPageSelector should count only products, excluding spotlight content', () => {
+    const state = buildMockCommerceState({
+      productListing: {
+        responseId: 'some-response-id',
+        products: [buildMockProduct(), buildMockProduct(), buildMockProduct()],
+        results: [
+          buildMockProduct(),
+          buildMockSpotlightContent(),
+          buildMockProduct(),
+          buildMockSpotlightContent(),
+          buildMockProduct(),
+        ],
+        isLoading: false,
+        error: null,
+        facets: [],
+        requestId: 'some-request-id',
+      },
+    });
+    expect(numberOfProductsForNextPageSelector(state)).toEqual(3);
+  });
+
+  it('#numberOfProductsForNextPageSelector should return 0 when there are no products', () => {
+    const state = buildMockCommerceState();
+    expect(numberOfProductsForNextPageSelector(state)).toEqual(0);
   });
 });

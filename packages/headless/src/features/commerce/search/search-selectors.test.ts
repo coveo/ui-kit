@@ -5,6 +5,7 @@ import {buildMockProduct} from '../../../test/mock-product.js';
 import {buildMockSpotlightContent} from '../../../test/mock-spotlight-content.js';
 import {
   moreProductsAvailableSelector,
+  numberOfProductsForNextPageSelector,
   numberOfProductsSelector,
   queryExecutedFromResponseSelector,
   requestIdSelector,
@@ -194,5 +195,31 @@ describe('commerce search selectors', () => {
     });
     const response = {} as SearchCommerceSuccessResponse;
     expect(queryExecutedFromResponseSelector(state, response)).toEqual('original query');
+  });
+  it('#numberOfProductsForNextPageSelector should count only products, excluding spotlight content', () => {
+    const state = buildMockCommerceState({
+      commerceSearch: {
+        responseId: 'some-response-id',
+        products: [buildMockProduct(), buildMockProduct(), buildMockProduct()],
+        results: [
+          buildMockProduct(),
+          buildMockSpotlightContent(),
+          buildMockProduct(),
+          buildMockSpotlightContent(),
+          buildMockProduct(),
+        ],
+        isLoading: false,
+        error: null,
+        requestId: 'some-request-id',
+        facets: [],
+        queryExecuted: '',
+      },
+    });
+    expect(numberOfProductsForNextPageSelector(state)).toEqual(3);
+  });
+
+  it('#numberOfProductsForNextPageSelector should return 0 when there are no products', () => {
+    const state = buildMockCommerceState();
+    expect(numberOfProductsForNextPageSelector(state)).toEqual(0);
   });
 });
