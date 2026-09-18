@@ -64,6 +64,19 @@ export type CommerceEngineDefinitionOptions<
   onAccessTokenUpdate?: (updateCallback: (token: string) => void, owner: object) => void;
 };
 
+/**
+ * Internal options describing the lifecycle of the engines a factory produces.
+ * @internal
+ */
+export interface BuildFactoryOptions {
+  /**
+   * Set by paths that produce an engine outliving the call that created it, namely client-side
+   * hydration. Such an engine keeps its subscription to the definition's shared access token even
+   * when a per-request token is supplied, so a later `setAccessToken()` still reaches it.
+   */
+  engineOutlivesRequest?: boolean;
+}
+
 function isListingFetchCompletedAction(action: unknown): action is Action {
   return /^commerce\/productListing\/fetch\/(fulfilled|rejected)$/.test(
     (action as UnknownAction).type
@@ -155,7 +168,8 @@ function fetchActiveRecommendationControllers(
 export const buildFactory =
   <TControllerDefinitions extends CommerceControllerDefinitionsMap>(
     controllerDefinitions: TControllerDefinitions | undefined,
-    options: CommerceEngineDefinitionOptions<TControllerDefinitions>
+    options: CommerceEngineDefinitionOptions<TControllerDefinitions>,
+    factoryOptions: BuildFactoryOptions = {}
   ) =>
   <T extends SolutionType>(solutionType: T) =>
   async (...[buildOptions]: BuildParameters<TControllerDefinitions>) => {
@@ -176,11 +190,32 @@ export const buildFactory =
       solutionType
     );
 
+    const perRequestAccessToken =
+      buildOptions && 'accessToken' in buildOptions ? buildOptions.accessToken : undefined;
+
+    // Apply the per-request access token BEFORE running `extend`, on a non-mutating copy of the
+    // shared definition options. This keeps the documented precedence correct: the deprecated
+    // `extend` hook sees the per-request token and its return value wins, so an extender can
+    // deliberately override it. Without `extend`, the per-request token simply carries through.
+    const optionsForRequest =
+      perRequestAccessToken !== undefined
+        ? {
+            ...options,
+            configuration: {
+              ...options.configuration,
+              accessToken: perRequestAccessToken,
+            },
+          }
+        : options;
+
+    const engineOptions =
+      buildOptions && 'extend' in buildOptions && buildOptions?.extend
+        ? await buildOptions.extend(optionsForRequest)
+        : optionsForRequest;
+
     const engine = buildSSRCommerceEngine(
       solutionType,
-      buildOptions && 'extend' in buildOptions && buildOptions?.extend
-        ? await buildOptions.extend(options)
-        : options,
+      engineOptions,
       enabledRecommendationControllers
     );
 
@@ -193,8 +228,19 @@ export const buildFactory =
       );
     };
 
-    if (options.onAccessTokenUpdate) {
+    // A per-request token must stay authoritative for the request that supplied it, so a
+    // request-scoped engine skips the shared subscription: staying subscribed would let a queued or
+    // concurrent `setAccessToken()` from another request overwrite it. An engine that outlives the
+    // request (client-side hydration) faces no such concurrency and must keep receiving
+    // `setAccessToken()` updates, otherwise it would be stuck with the token it was hydrated with.
+    const subscribeToSharedAccessToken =
+      perRequestAccessToken === undefined || factoryOptions.engineOutlivesRequest === true;
+
+    if (options.onAccessTokenUpdate && subscribeToSharedAccessToken) {
       options.onAccessTokenUpdate(updateEngineConfiguration, engine);
+      if (perRequestAccessToken !== undefined && factoryOptions.engineOutlivesRequest === true) {
+        updateEngineConfiguration(perRequestAccessToken);
+      }
     }
 
     const controllers = buildControllerDefinitions({
