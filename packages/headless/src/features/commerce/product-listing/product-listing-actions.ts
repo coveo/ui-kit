@@ -15,7 +15,7 @@ import {
 import {perPagePrincipalSelector} from '../pagination/pagination-selectors.js';
 import {
   moreProductsAvailableSelector,
-  numberOfProductsSelector,
+  numberOfProductsForNextPageSelector,
 } from './product-listing-selectors.js';
 
 export interface QueryCommerceAPIThunkReturn {
@@ -72,7 +72,10 @@ export const fetchMoreProducts = createAsyncThunk<
       return null;
     }
     const perPage = perPagePrincipalSelector(state);
-    const numberOfProducts = numberOfProductsSelector(state);
+    // Exclude spotlight content from the count: pagination is product-based, and
+    // spotlights in the accumulated results would otherwise yield a fractional page
+    // that the Commerce API floors, skipping a product page (KIT-6205).
+    const numberOfProducts = numberOfProductsForNextPageSelector(state);
     const nextPageToRequest = numberOfProducts / perPage;
 
     const fetched = await apiClient.getProductListing({

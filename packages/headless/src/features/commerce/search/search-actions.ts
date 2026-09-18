@@ -22,7 +22,7 @@ import {
 } from './search-actions-thunk-processor.js';
 import {
   moreProductsAvailableSelector,
-  numberOfProductsSelector,
+  numberOfProductsForNextPageSelector,
   querySelector,
 } from './search-selectors.js';
 
@@ -111,7 +111,10 @@ export const fetchMoreProducts = createAsyncThunk<
   }
 
   const perPage = perPagePrincipalSelector(state);
-  const numberOfProducts = numberOfProductsSelector(state);
+  // Exclude spotlight content from the count: pagination is product-based, and
+  // spotlights in the accumulated results would otherwise yield a fractional page
+  // that the Commerce API floors, skipping a product page (KIT-6205).
+  const numberOfProducts = numberOfProductsForNextPageSelector(state);
   const nextPageToRequest = numberOfProducts / perPage;
   const query = querySelector(state);
 

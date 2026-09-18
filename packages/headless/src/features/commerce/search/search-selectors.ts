@@ -31,6 +31,9 @@ export const requestIdSelector = (state: CommerceEngineState) => state.commerceS
 export const numberOfProductsSelector = (state: Partial<CommerceSearchSection>) =>
   state.commerceSearch?.results.length || state.commerceSearch?.products.length || 0;
 
+export const numberOfProductsForNextPageSelector = (state: Partial<CommerceSearchSection>) =>
+  state.commerceSearch?.products.length || 0;
+
 export const moreProductsAvailableSelector = createSelector(
   (state: Partial<CommercePaginationSection & CommerceSearchSection>) => ({
     total: totalEntriesPrincipalSelector(state),
