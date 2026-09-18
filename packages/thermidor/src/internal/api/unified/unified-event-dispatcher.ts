@@ -98,7 +98,13 @@ export function dispatchStreamEvent(
       return {turnId, isTerminal: false};
     }
 
-    case 'RUN_STARTED':
+    case 'RUN_STARTED': {
+      if (event.conversationSessionId || event.conversationToken) {
+        deps.statePort.setConversationSession(event.conversationSessionId, event.conversationToken);
+      }
+      return {turnId, isTerminal: false};
+    }
+
     case 'CUSTOM': {
       return {turnId, isTerminal: false};
     }

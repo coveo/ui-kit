@@ -718,7 +718,28 @@ describe('UnifiedRuntime', () => {
       expect(config.statePort.completeTurn).toHaveBeenCalledWith('generated-id-1');
     });
 
-    it('ignores RUN_STARTED events', async () => {
+    it('handles RUN_STARTED by setting the Gateway conversation session', async () => {
+      const config = createMockConfig();
+      const engine = createMockEngine();
+      setupSuccessfulStream([
+        {
+          type: 'RUN_STARTED',
+          conversationSessionId: 'gateway-session-123',
+          conversationToken: 'gateway-token-abc',
+        } as NormalizedStreamEvent,
+        {type: 'turn_complete'} as NormalizedStreamEvent,
+      ]);
+
+      const runtime = UnifiedRuntime.getInstance(engine, 'gateway-run-started', config);
+      await runtime.submit('Hello');
+
+      expect(config.statePort.setConversationSession).toHaveBeenCalledWith(
+        'gateway-session-123',
+        'gateway-token-abc'
+      );
+    });
+
+    it('ignores RUN_STARTED events without conversation metadata', async () => {
       const config = createMockConfig();
       const engine = createMockEngine();
       setupSuccessfulStream([
