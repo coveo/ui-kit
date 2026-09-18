@@ -1,4 +1,4 @@
-import {afterAll, beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
+import {afterAll, beforeAll, beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import {registerAutoloader} from './index';
 
 const mockCustomElementsRegistry = new Map<string, CustomElementConstructor>();
@@ -18,6 +18,8 @@ const mockCustomElements = {
 class XTestComponent extends HTMLElement {}
 class XTestComponentInside extends HTMLElement {}
 
+const failingComponentError = new Error('chunk load failed');
+
 vi.mock('@/src/components/lazy-index.js', () => ({
   __esModule: true,
   default: {
@@ -26,6 +28,9 @@ vi.mock('@/src/components/lazy-index.js', () => ({
     },
     'x-test-component-inside': async () => {
       customElements.define('x-test-component-inside', XTestComponentInside);
+    },
+    'x-failing-component': async () => {
+      throw failingComponentError;
     },
   },
 }));
@@ -133,6 +138,50 @@ describe('autoloader', () => {
 
       await setupComponent(() => document.createElement('div'));
       expect(upgradeSpy).toHaveBeenCalled();
+    });
+
+    describe('when a component fails to register', () => {
+      let consoleErrorSpy: MockInstance<typeof console.error>;
+
+      beforeEach(() => {
+        consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      });
+
+      it('should log an error mentioning the failing tag name', async () => {
+        await setupComponent(() => document.createElement('x-failing-component'));
+
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
+          expect.stringContaining('x-failing-component'),
+          failingComponentError
+        );
+      });
+
+      it('should not throw', async () => {
+        await expect(
+          setupComponent(() => document.createElement('x-failing-component'))
+        ).resolves.toBeDefined();
+      });
+
+      it('should still register the other components in the same batch', async () => {
+        await setupComponent(() => {
+          const container = document.createElement('div');
+          container.innerHTML = `
+            <x-failing-component></x-failing-component>
+            <x-test-component></x-test-component>
+          `;
+          return container;
+        });
+
+        expect(customElements.get('x-test-component')).toBeDefined();
+      });
+    });
+
+    it('should not log an error when a component registers successfully', async () => {
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      await setupComponent(() => document.createElement('x-test-component'));
+
+      expect(consoleErrorSpy).not.toHaveBeenCalled();
     });
   });
 });
