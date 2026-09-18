@@ -303,13 +303,14 @@ const {events, argTypes} = getStorybookHelpers('atomic-category-facet', {
   excludeCategories: ['methods'],
 });
 
-const {template} = getStorybookHelpers('atomic-category-facet', {
+const {args, template} = getStorybookHelpers('atomic-category-facet', {
   excludeCategories: ['methods', 'cssParts'],
 });
 
 const meta: Meta = {
   component: 'atomic-category-facet',
   title: 'Search/Facet (Category)',
+  args,
   id: 'atomic-category-facet',
   render: (args) => template(args),
   decorators: [decorator],

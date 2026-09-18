@@ -32,6 +32,7 @@ import {renderCategoryFacetTreeValueContainer} from '@/src/components/common/fac
 import {renderCategoryFacetValueLink} from '@/src/components/common/facets/category-facet/value-link';
 import {parseDependsOn} from '@/src/components/common/facets/depends-on';
 import facetCommonStyles from '@/src/components/common/facets/facet-common.tw.css';
+import {FacetVisibilityController} from '@/src/components/common/facets/facet-visibility-controller';
 import type {FacetInfo} from '@/src/components/common/facets/facet-common-store';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
@@ -63,6 +64,8 @@ import {mapProperty} from '@/src/utils/props-utils';
 
 /**
  * The `atomic-category-facet` component displays a facet of values in a browsable, hierarchical fashion.
+ *
+ * @cssState hidden - Applied when the facet is hidden.
  *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
@@ -339,9 +342,19 @@ export class AtomicCategoryFacet extends LitElement implements InitializableComp
 
   private facetSearchAriaMessage = new AriaLiveRegionController(this, 'facet-search');
 
+  private get facetInfo(): FacetInfo {
+    return {
+      label: () => this.bindings.i18n.t(this.label),
+      facetId: this.facetId!,
+      element: this,
+      isHidden: () => this.isHidden,
+    };
+  }
+
   constructor() {
     super();
 
+    new FacetVisibilityController(this, () => !!this.facet && this.facetInfo.isHidden());
     new ValidatePropsController(
       this,
       () => ({
@@ -396,17 +409,10 @@ export class AtomicCategoryFacet extends LitElement implements InitializableComp
       this.bindings.i18n
     );
 
-    const facetInfo: FacetInfo = {
-      label: () => this.bindings.i18n.t(this.label),
-      facetId: this.facetId!,
-      element: this,
-      isHidden: () => this.isHidden,
-    };
-
-    this.bindings.store.registerFacet('categoryFacets', facetInfo);
+    this.bindings.store.registerFacet('categoryFacets', this.facetInfo);
 
     initializePopover(this, {
-      ...facetInfo,
+      ...this.facetInfo,
       hasValues: () => !!this.facet.state.valuesAsTrees.length,
       numberOfActiveValues: () => (this.facetState.hasActiveValues ? 1 : 0),
     });

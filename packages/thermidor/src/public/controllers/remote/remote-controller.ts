@@ -3,13 +3,24 @@ import {ComponentContractsSchema, type ComponentContracts} from '@coveo/thermido
 import type {UnifiedConverseController} from '../unified-converse/unified-converse-controller.js';
 import type {Controller} from '../controller-types.js';
 
+/**
+ * A typed action a {@link RemoteController} dispatches back to the AG-UI gateway,
+ * targeting one server-owned component in the active turn's state snapshot.
+ */
 export interface RemoteControllerAction<TAction extends string = string, TPayload = unknown> {
+  /** Id of the component instance the action targets. */
   componentId: string;
+  /** Type of the targeted component (the contract discriminant). */
   componentType: string;
+  /** The action name, as defined by the component's contract. */
   action: TAction;
+  /** The action payload, as defined by the component's contract. */
   payload: TPayload;
 }
 
+/**
+ * The union of component-type discriminants defined by the Thermidor schema.
+ */
 export type ComponentType = ComponentContracts['componentType'];
 
 export type RemoteControllerContractSchemaFor<TComponentType extends ComponentType> = Extract<
@@ -45,19 +56,43 @@ export type RemoteControllerSource = Pick<
   'state' | 'subscribe' | 'dispatchAction'
 >;
 
+/**
+ * A controller over one server-owned component in the active turn's state
+ * snapshot. Its {@link Controller.state} is the validated component state (or
+ * `undefined` until the component appears); it never mutates state locally —
+ * dispatched actions are reflected by a subsequent server snapshot.
+ *
+ * @typeParam TComponentType - The component-type discriminant this controller targets.
+ */
 export interface RemoteController<TComponentType extends ComponentType> extends Controller<
   RemoteControllerStateForSchema<TComponentType> | undefined
 > {
+  /** Id of the component instance this controller targets. */
   readonly componentId: string;
+  /**
+   * Dispatches a typed, contract-checked action for this component to the gateway.
+   *
+   * @param action - The action name defined by the component's contract.
+   * @param payload - The action payload, typed to the contract.
+   * @returns A promise that resolves once the action has been sent.
+   */
   dispatch<TAction extends RemoteControllerActionNameForSchema<TComponentType>>(
     action: TAction,
     payload: RemoteControllerActionPayloadForSchema<TComponentType, TAction>
   ): Promise<void>;
 }
 
+/**
+ * Options for {@link buildRemoteController}.
+ *
+ * @typeParam TComponentType - The component-type discriminant to bind to.
+ */
 export interface RemoteControllerOptions<TComponentType extends ComponentType> {
+  /** The state source (typically the unified converse controller). */
   source: RemoteControllerSource;
+  /** Id of the component instance to control. */
   componentId: string;
+  /** Type of the component to control (selects the contract). */
   componentType: TComponentType;
 }
 
@@ -177,6 +212,16 @@ function isRemoteControllerState<TComponentType extends ComponentType>(
 
 const EMPTY_REMOTE_CONTROLLER_STATE = {};
 
+/**
+ * Selects the raw state of a single component from a controller state source
+ * (the active turn's AG-UI state snapshot), by component id. Returns an empty
+ * object when the snapshot or component is absent. The returned value is
+ * unvalidated; {@link buildRemoteController} validates it against the contract.
+ *
+ * @param state - The state of a {@link RemoteControllerSource}.
+ * @param componentId - The id of the component whose state to select.
+ * @returns The component's raw state, or an empty object when not present.
+ */
 export function selectRemoteControllerState(
   state: RemoteControllerSource['state'],
   componentId: string

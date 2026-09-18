@@ -1,3 +1,41 @@
+## 3.56.0
+
+### Minor Changes
+
+- [#8481](https://github.com/coveo/ui-kit/pull/8481) [`01434bc`](https://github.com/coveo/ui-kit/commit/01434bcbd3ee4e6545fa874bb0f0f5e4d0b46ef8) - feat(headless): support a per-request access token in SSR commerce `fetchStaticState()`
+
+  `fetchStaticState()` (and `hydrateStaticState()`) in `/ssr-commerce-next` now accept an optional
+  `accessToken` in their build config. When provided, it overrides the engine definition's configured
+  access token for that request only, without mutating the shared definition — the supported way to
+  use per-user Coveo search tokens in a multi-tenant server process. When omitted, the definition's
+  configured token is used, so the change is fully backward compatible.
+
+### Patch Changes
+
+- [#8480](https://github.com/coveo/ui-kit/pull/8480) [`818bdf0`](https://github.com/coveo/ui-kit/commit/818bdf001edfdafa887ea49c0880f3cb2ce7e9ce) - fix(headless): bound the memoized relay-instance selector to prevent unbounded growth
+
+  `getRelayInstanceFromState` used reselect's default `weakMapMemoize`, which never evicts
+  primitive cache keys. Because the selector is keyed by `accessToken` (a string), servers using
+  per-user search tokens accumulated one cache entry per distinct token for the lifetime of the
+  process. The selector now uses a bounded `lruMemoize` cache, keeping the memoization benefit while
+  capping retention. The change is internal — no public API changes.
+
+- [#8464](https://github.com/coveo/ui-kit/pull/8464) [`e8c6ee4`](https://github.com/coveo/ui-kit/commit/e8c6ee4a5080953a2497664acf807dcf02102620) - Fixed an issue in the insight panel where calling `fetchMoreResults` more than once re-fetched the same batch of results instead of fetching the next one.
+
+  Fixed the insight panel's fetchMoreResults analytics logging, which was silently dropped because an action factory was passed instead of a dispatchable analytics action.
+
+- [#8479](https://github.com/coveo/ui-kit/pull/8479) [`fa2e9de`](https://github.com/coveo/ui-kit/commit/fa2e9de00d868bb4c10215fffcfa09c4acf7d2af) - Fix a memory leak in the SSR access-token manager. The manager held token-update callbacks in a
+  plain `Set`, and because the manager lives at module scope for the whole process, every engine
+  built through `buildFactory` (`fetchStaticState`, `hydrateStaticState`, and `build()`) was retained
+  for the process lifetime — an unbounded, per-request leak of the Redux store, logger, relay
+  instance, and API client.
+
+  The registry is now weak: callbacks are held through `WeakRef` and anchored to their owner engine
+  via a `WeakMap`, and a `FinalizationRegistry` prunes dead entries. The garbage collector now
+  releases a subscription once its engine is unreachable, which fixes every path in both the commerce
+  and search trees, with no behavior change for engines that are still alive (a hydrated browser
+  engine keeps receiving token updates).
+
 ## 3.55.4
 
 ### Patch Changes

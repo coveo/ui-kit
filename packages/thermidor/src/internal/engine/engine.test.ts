@@ -5,7 +5,7 @@
  */
 
 import {describe, it, expect, beforeEach, vi} from 'vitest';
-import {createTestEngine, createTestInterface} from '@/src/test/test-utils.js';
+import {createTestEngine, createTestInterface} from '@/test/test-utils.js';
 import {createSlice} from '@reduxjs/toolkit';
 import {Engine, FullEngine, getFullEngine} from './engine.js';
 import type {NavigatorContextProvider} from '@/src/internal/utils/index.js';

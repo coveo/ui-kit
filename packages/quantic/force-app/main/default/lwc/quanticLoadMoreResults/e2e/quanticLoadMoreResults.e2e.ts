@@ -37,7 +37,6 @@ useCaseTestCases.forEach((useCase) => {
         });
       });
     });
-
     test.describe('when no results are available', () => {
       test.use({emptyResults: true});
 

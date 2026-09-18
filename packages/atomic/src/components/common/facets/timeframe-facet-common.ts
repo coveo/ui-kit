@@ -201,25 +201,34 @@ export class TimeframeFacetCommon {
     this.filterDependenciesManager?.stopWatching();
   }
 
-  private get isHidden() {
-    return !this.shouldRenderFacet || !this.enabled;
+  public isHostHidden({
+    hasError,
+    firstSearchExecuted,
+  }: Pick<SearchStatusState, 'hasError' | 'firstSearchExecuted'>) {
+    return hasError || !this.enabled || (firstSearchExecuted && this.facetInfo.isHidden());
   }
 
-  private registerFacetToStore() {
-    const facetInfo: FacetInfo = {
+  private get facetInfo(): FacetInfo {
+    return {
       label: () => this.props.bindings.i18n.t(this.props.label),
       facetId: this.facetId!,
       element: this.props.host,
       isHidden: () => this.isHidden,
     };
+  }
 
+  private get isHidden() {
+    return !this.shouldRenderFacet || !this.enabled;
+  }
+
+  private registerFacetToStore() {
     this.props.bindings.store.registerFacet('dateFacets', {
-      ...facetInfo,
+      ...this.facetInfo,
       format: (value) => this.formatFacetValue(value),
     });
 
     initializePopover(this.props.host, {
-      ...facetInfo,
+      ...this.facetInfo,
       hasValues: () => this.hasValues,
       numberOfActiveValues: () => this.numberOfSelectedValues,
     });
@@ -360,7 +369,7 @@ export class TimeframeFacetCommon {
     headerFocus,
     onToggleCollapse,
   }: TimeframeFacetCommonRenderProps): TemplateResult | typeof nothing {
-    if (hasError || !this.enabled) {
+    if (this.isHostHidden({hasError, firstSearchExecuted})) {
       return nothing;
     }
 
@@ -371,10 +380,6 @@ export class TimeframeFacetCommon {
           isCollapsed,
         },
       });
-    }
-
-    if (!this.shouldRenderFacet) {
-      return nothing;
     }
 
     return renderFacetContainer()(

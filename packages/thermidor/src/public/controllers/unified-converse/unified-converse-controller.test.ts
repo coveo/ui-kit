@@ -1,5 +1,5 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {createTestEngine} from '@/src/test/test-utils.js';
+import {createTestEngine} from '@/test/test-utils.js';
 import {type Engine, type FullEngine, getFullEngine} from '@/src/internal/engine/index.js';
 import {getOrCreateGenerativeActions} from '@/src/internal/features/generative/index.js';
 import {

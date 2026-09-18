@@ -64,6 +64,19 @@ describe('buildFactory', () => {
     await expect(build()).rejects.toThrow('Unsupported solution type');
   });
 
+  it('should register the engine for token updates with the engine as owner', async () => {
+    const onAccessTokenUpdate = vi.fn();
+    const factory = buildFactory(
+      mockEmptyDefinition,
+      {...mockEngineOptions, onAccessTokenUpdate},
+      true
+    );
+
+    const {engine} = await factory(SolutionType.listing)();
+
+    expect(onAccessTokenUpdate).toHaveBeenCalledExactlyOnceWith(expect.any(Function), engine);
+  });
+
   describe('when building for standalone', () => {
     const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
     const build = factory(SolutionType.standalone);

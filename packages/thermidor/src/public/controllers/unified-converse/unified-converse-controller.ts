@@ -209,31 +209,63 @@ class UnifiedConverseControllerImpl extends BaseController<UnifiedConverseContro
   }
 }
 
+/**
+ * Builds a controller that drives a unified conversation: it submits prompts,
+ * streams the agent's turns, and exposes the resulting turn history as state.
+ *
+ * @param options - The generative unified interface to bind to (plus optional
+ *   conversation to restore and surface-operation callback).
+ * @returns A `UnifiedConverseController` bound to the interface.
+ */
 export const buildUnifiedConverseController = (
   options: UnifiedConverseControllerOptions
 ): UnifiedConverseController => new UnifiedConverseControllerImpl(options);
 
+/**
+ * Controller for a unified conversation. Emits typed actions (submit, retry,
+ * cancel, …) and exposes the turn history via {@link Controller.state}; the
+ * backend owns all state transitions, which arrive through streamed turns.
+ */
 export interface UnifiedConverseController extends Controller<UnifiedConverseControllerState> {
+  /** Serializes the current conversation so it can be persisted and later restored. */
   serialize(): SerializedConverseState;
+  /** Restores a previously {@link serialize}d conversation into this controller. */
   restore(state: SerializedConverseState): void;
+  /** Clears the conversation, removing all turns. */
   clear(): void;
+  /** Submits a user prompt, starting a new turn. */
   submit(options: {prompt: string}): void;
   /** Sends a schema-derived remote controller action to the AG-UI gateway. */
   dispatchAction(action: RemoteControllerAction): Promise<void>;
+  /** Cancels the in-flight turn, if any. */
   cancel(): void;
+  /** Selects the turn with the given id as the active turn. */
   selectTurn(options: {id: string}): void;
+  /** Re-runs the turn with the given id (e.g. after an error). */
   retry(options: {id: string}): void;
 }
 
+/**
+ * Observable state of a unified converse controller.
+ */
 export interface UnifiedConverseControllerState {
+  /** The ordered turn history of the conversation. */
   turns: Turn[];
+  /** The currently active turn, or `undefined` when there are no turns. */
   activeTurn: Turn | undefined;
+  /** `true` while a turn is streaming from the backend. */
   isStreaming: boolean;
 }
 
+/**
+ * Options for {@link buildUnifiedConverseController}.
+ */
 export interface UnifiedConverseControllerOptions {
+  /** The generative unified interface to bind the controller to. */
   interface: GenerativeUnifiedInterface;
+  /** An optional previously-serialized conversation to restore on creation. */
   conversationToRestore?: SerializedConverseState;
+  /** Optional callback invoked with raw A2UI surface operations as they stream in. */
   onSurfaceOperation?: (operations: unknown[]) => void;
 }
 

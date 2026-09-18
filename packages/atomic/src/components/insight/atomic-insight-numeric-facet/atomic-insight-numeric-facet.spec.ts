@@ -125,7 +125,7 @@ describe('atomic-insight-numeric-facet', () => {
         return qs('facet');
       },
       get placeholder() {
-        return element.shadowRoot?.querySelector('atomic-facet-placeholder');
+        return element.shadowRoot?.querySelector('[part="placeholder"]');
       },
       get labelButton() {
         return qs('label-button');
@@ -309,8 +309,10 @@ describe('atomic-insight-numeric-facet', () => {
         },
       });
 
-      const {locators} = await setupElement();
+      const {element, locators} = await setupElement();
       expect(locators.facet).not.toBeInTheDocument();
+      expect(element.matches(':state(hidden)')).toBe(true);
+      expect(getComputedStyle(element).display).toBe('none');
     });
 
     it('should not render the facet when disabled', async () => {
@@ -320,16 +322,29 @@ describe('atomic-insight-numeric-facet', () => {
         },
       });
 
-      const {locators} = await setupElement();
+      const {element, locators} = await setupElement();
       expect(locators.facet).not.toBeInTheDocument();
+      expect(element.matches(':state(hidden)')).toBe(true);
+      expect(getComputedStyle(element).display).toBe('none');
     });
 
     it('should render placeholder before first search is executed', async () => {
       mockedSearchStatus = buildFakeSearchStatus({firstSearchExecuted: false});
 
-      const {element} = await setupElement();
-      const placeholder = element.shadowRoot?.querySelector('[part="placeholder"]');
-      expect(placeholder).toBeInTheDocument();
+      const {element, locators} = await setupElement();
+      expect(locators.placeholder).toBeInTheDocument();
+      expect(element.matches(':state(hidden)')).toBe(false);
+      expect(getComputedStyle(element).display).not.toBe('none');
+    });
+
+    it('should hide an empty facet host before the first search', async () => {
+      mockedNumericFacet = buildFakeNumericFacet({state: {values: []}});
+      mockedSearchStatus = buildFakeSearchStatus({firstSearchExecuted: false});
+
+      const {element, locators} = await setupElement();
+      expect(locators.placeholder).toBeInTheDocument();
+      expect(element.matches(':state(hidden)')).toBe(true);
+      expect(getComputedStyle(element).display).toBe('none');
     });
   });
 
@@ -947,8 +962,10 @@ describe('atomic-insight-numeric-facet', () => {
         },
       });
 
-      const {locators} = await setupElement({withInput: true});
+      const {element, locators} = await setupElement({withInput: true});
       await expect.element(locators.numberInput).toBeInTheDocument();
+      expect(element.matches(':state(hidden)')).toBe(false);
+      expect(getComputedStyle(element).display).not.toBe('none');
     });
   });
 });

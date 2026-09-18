@@ -1,6 +1,6 @@
 {
   "name": "@coveo/thermidor",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Experimental package for a unified, framework-agnostic headless engine for search and conversational experiences",
   "license": "Apache-2.0",
   "repository": {
@@ -41,10 +41,10 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@microsoft/api-extractor": "7.58.12",
+    "@microsoft/api-extractor": "7.59.1",
     "fast-check": "4.9.0",
     "publint": "catalog:",
-    "tsdown": "0.22.14",
+    "tsdown": "0.23.0",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
