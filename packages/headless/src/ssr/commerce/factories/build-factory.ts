@@ -236,12 +236,11 @@ export const buildFactory =
     const subscribeToSharedAccessToken =
       perRequestAccessToken === undefined || factoryOptions.engineOutlivesRequest === true;
 
-if (options.onAccessTokenUpdate && subscribeToSharedAccessToken) {
-  options.onAccessTokenUpdate(updateEngineConfiguration, engine);
-  if (perRequestAccessToken !== undefined && factoryOptions.engineOutlivesRequest === true) {
-    updateEngineConfiguration(perRequestAccessToken);
-  }
-}
+    if (options.onAccessTokenUpdate && subscribeToSharedAccessToken) {
+      options.onAccessTokenUpdate(updateEngineConfiguration, engine);
+      if (perRequestAccessToken !== undefined && factoryOptions.engineOutlivesRequest === true) {
+        updateEngineConfiguration(perRequestAccessToken);
+      }
     }
 
     const controllers = buildControllerDefinitions({
