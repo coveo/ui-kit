@@ -1,3 +1,9 @@
+## 3.45.1
+
+### Patch Changes
+
+- [#8514](https://github.com/coveo/ui-kit/pull/8514) [`5af7f28`](https://github.com/coveo/ui-kit/commit/5af7f281d0188dfd34fb650576d09b249d754b4c) - Fix loading shimmer misalignment issue.
+
 ## 3.45.0
 
 ### Minor Changes

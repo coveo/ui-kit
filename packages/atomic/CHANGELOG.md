@@ -1,3 +1,9 @@
+## 3.61.4
+
+### Patch Changes
+
+- [#8497](https://github.com/coveo/ui-kit/pull/8497) [`0912501`](https://github.com/coveo/ui-kit/commit/0912501c34bb3fa388b87fc8d1eb4cbe6eda73b0) - Fix `atomic-sort-dropdown` to render nothing when all `atomic-sort-expression` children are filtered out by tab conditions, instead of rendering an empty `select`. The misconfiguration case (no `atomic-sort-expression` children at all) still renders an `atomic-error` and logs the error.
+
 ## 3.61.3
 
 ### Patch Changes

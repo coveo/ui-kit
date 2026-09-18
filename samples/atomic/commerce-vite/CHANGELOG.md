@@ -1,5 +1,12 @@
 # @coveo/ui-kit-sample-atomic-commerce-vite
 
+## 3.61.4
+
+### Patch Changes
+
+- Updated dependencies [[`0912501`](https://github.com/coveo/ui-kit/commit/0912501c34bb3fa388b87fc8d1eb4cbe6eda73b0)]:
+  - @coveo/atomic@3.61.4
+
 ## 3.61.3
 
 ### Patch Changes
