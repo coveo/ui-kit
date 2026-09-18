@@ -4,6 +4,7 @@ import {restoreProductListingParameters} from '../../product-listing-parameters/
 import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions.js';
 import {
   clearAllCoreFacets,
+  deleteAllCoreFacets,
   deselectAllValuesInCoreFacet,
 } from '../core-facet/core-facet-actions.js';
 import {
@@ -40,6 +41,11 @@ export const manualNumericFacetReducer = createReducer(
         restoreParameters(state, action.payload.mnf);
       })
       .addCase(clearAllCoreFacets, (state) => {
+        for (const facetId of Object.keys(state)) {
+          clearManualRange(state, facetId);
+        }
+      })
+      .addCase(deleteAllCoreFacets, (state) => {
         for (const facetId of Object.keys(state)) {
           clearManualRange(state, facetId);
         }
