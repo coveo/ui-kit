@@ -3,7 +3,6 @@ import {
   buildSearchEngine,
   type SearchEngineOptions,
 } from '../../../app/search-engine/search-engine.js';
-import {loadConfigurationActions} from '../../../features/configuration/configuration-actions-loader.js';
 import {createWaitForActionMiddleware} from '../../../utils/utils.js';
 import {buildControllerDefinitions} from '../controller-utils.js';
 import type {SearchCompletedAction, SSRSearchEngine} from '../types/build.js';
@@ -54,19 +53,6 @@ export const buildFactory =
     const engineOptions = augmentSearchEngineOptions(options, buildOptions);
 
     const engine = buildSSRSearchEngine(engineOptions);
-
-    const updateEngineConfiguration = (accessToken: string) => {
-      const {updateBasicConfiguration} = loadConfigurationActions(engine);
-      engine.dispatch(
-        updateBasicConfiguration({
-          accessToken,
-        })
-      );
-    };
-
-    if (options.onAccessTokenUpdate) {
-      options.onAccessTokenUpdate(updateEngineConfiguration, engine);
-    }
 
     const controllers = buildControllerDefinitions({
       definitionsMap: controllerDefinitions,
