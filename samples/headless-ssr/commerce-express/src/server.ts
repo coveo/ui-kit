@@ -2,9 +2,10 @@
  * Express server for Coveo Headless Commerce SSR sample.
  *
  * Server-side SSR lifecycle (per request):
- * 1. Sets the navigator context provider (user agent, referrer, etc.) for analytics/personalization
+ * 1. Reads the navigator context (user agent, referrer, etc.) for analytics/personalization from the request
  * 2. Deserializes commerce parameters (query, facets, sort, pagination) from the URL
- * 3. Fetches static state from the Coveo engine using those parameters and the context
+ * 3. Fetches static state from the Coveo engine using those parameters and the per-request context
+ *    (passed to `fetchStaticState`, so concurrent requests never share a context)
  * 4. Renders the app HTML with the static state and injects it (plus the navigator context) into the template
  * 5. Sends the fully rendered HTML to the client for fast, SEO-friendly delivery
  *
@@ -53,9 +54,9 @@ app.get('/', (_req, res) => {
 app.get('/search', async (req, res) => {
   try {
     const navigatorContext = getNavigatorContext(req);
-    searchEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
     const staticState = await searchEngineDefinition.fetchStaticState({
+      navigatorContext,
       controllers: {
         cart: {initialState: {items: getCartItems(req)}},
         context: {
@@ -90,9 +91,9 @@ app.get('/listing/:listingId', async (req, res) => {
 
   try {
     const navigatorContext = getNavigatorContext(req);
-    listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
     const staticState = await listingEngineDefinition.fetchStaticState({
+      navigatorContext,
       controllers: {
         cart: {initialState: {items: getCartItems(req)}},
         context: {
