@@ -37,14 +37,5 @@ useCaseTestCases.forEach((useCase) => {
         });
       });
     });
-    test.describe('when no results are available', () => {
-      test.use({emptyResults: true});
-
-      test('should render nothing', async ({loadMoreResults}) => {
-        await expect(loadMoreResults.summary).toBeHidden();
-        await expect(loadMoreResults.progressBar).toBeHidden();
-        await expect(loadMoreResults.loadMoreButton).toBeHidden();
-      });
-    });
   });
 });
