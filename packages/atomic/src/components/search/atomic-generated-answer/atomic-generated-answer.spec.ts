@@ -1072,6 +1072,29 @@ describe('atomic-generated-answer', () => {
       expect(messageSetterSpy).toHaveBeenCalled();
     });
 
+    it('should make the scrollable content container keyboard focusable', async () => {
+      const {scrollableContainer} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-123'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({isEnabled: true}),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(scrollableContainer).toHaveAttribute('tabindex', '0');
+    });
+
+    it('should not make the content container focusable when follow-ups are disabled', async () => {
+      const {element} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-123'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({isEnabled: false}),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      const contentContainer = element.shadowRoot?.querySelector(
+        '[part="generated-content"] .pt-6'
+      );
+      expect(contentContainer).not.toHaveAttribute('tabindex');
+    });
+
     it('should render a scrollable content container when agentId is provided', async () => {
       const {scrollableContainer} = await renderGeneratedAnswer({
         props: {agentId: 'agent-123'},
