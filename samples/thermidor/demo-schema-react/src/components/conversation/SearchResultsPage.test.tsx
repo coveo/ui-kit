@@ -2,21 +2,21 @@ import {render, screen, fireEvent} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
 import {SearchResultsPage} from './SearchResultsPage.js';
 
-vi.mock('../../a2ui/surfaces.js', () => ({
+vi.mock('./A2UI/surfaces.js', () => ({
   getA2UIMessages: () => [{createSurface: {surfaceId: 'ui-commerce-search'}}],
   ThermidorA2UISurfaces: ({messages}: {messages: unknown[]}) => (
     <div data-testid="a2ui-surfaces">{messages.length}</div>
   ),
 }));
 
-vi.mock('../../a2ui/state-source-context.js', () => ({
+vi.mock('./A2UI/state-source-context.js', () => ({
   useStateSource: () => ({
     state: {activeTurn: undefined},
     subscribe: () => () => {},
   }),
 }));
 
-vi.mock('../ProductTargeting/ProductTargeting.js', () => ({
+vi.mock('../PromptSuggestions/ProductTargeting/ProductTargeting.js', () => ({
   ProductTargeting: ({children}: {children: React.ReactNode}) => (
     <div data-testid="product-targeting">{children}</div>
   ),

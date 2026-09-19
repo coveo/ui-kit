@@ -3,7 +3,7 @@ import {describe, expect, it} from 'vitest';
 import {render, screen, cleanup} from '@testing-library/react';
 import type {RemoteControllerSource} from '@coveo/thermidor';
 import {StateSourceProvider} from './state-source-context.js';
-import {TargetingProvider, type TargetingContext} from '../context/targeting.js';
+import {TargetingProvider, type TargetingContext} from '../../../context/targeting.js';
 import {ProductListRenderer} from './ProductList/ProductList.js';
 import {ProductSummaryRenderer} from './ProductSummary/ProductSummary.js';
 

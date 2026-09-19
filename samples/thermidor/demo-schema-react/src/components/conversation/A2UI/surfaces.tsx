@@ -29,7 +29,7 @@
 import {useEffect, useMemo, useRef} from 'react';
 import {A2UIRenderer, useA2UI} from '@copilotkit/a2ui-renderer';
 import type {Activity} from '@coveo/thermidor';
-import {isRecord} from '../utils.js';
+import {isRecord} from '../../../utils.js';
 
 type A2UIMessage = Record<string, unknown>;
 

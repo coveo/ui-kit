@@ -2,9 +2,9 @@ import {useMemo} from 'react';
 import type {AgentResponse} from '@coveo/thermidor';
 import {ThinkingBlock} from './ThinkingBlock.js';
 import {StreamingMessage} from './StreamingMessage.js';
-import {A2UISkeleton} from '../../a2ui/Skeleton/Skeleton.js';
-import {parseSurfaceSnapshots} from '../../a2ui/types.js';
-import {getA2UIMessages, ThermidorA2UISurfaces} from '../../a2ui/surfaces.js';
+import {A2UISkeleton} from './A2UI/Skeleton/Skeleton.js';
+import {parseSurfaceSnapshots} from './A2UI/types.js';
+import {getA2UIMessages, ThermidorA2UISurfaces} from './A2UI/surfaces.js';
 import styles from './AgentResponseBlock.module.css';
 
 const KNOWN_COMPONENTS = new Set([

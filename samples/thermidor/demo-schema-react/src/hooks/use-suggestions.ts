@@ -1,4 +1,4 @@
-import type {SuggestionSection} from '../components/SuggestionsDropdown/types.js';
+import type {SuggestionSection} from '../components/PromptSuggestions/SuggestionsDropdown/types.js';
 
 export interface UseSuggestionsOptions {
   inputValue: string;

@@ -1,4 +1,4 @@
-import {isRecord} from '../utils.js';
+import {isRecord} from '../../../utils.js';
 
 interface ComponentDefinition {
   id: string;

@@ -1,7 +1,7 @@
 import {describe, it, expect, vi} from 'vitest';
 import {render, screen, fireEvent} from '@testing-library/react';
 import {ProductTargeting, type ProductTargetingProps} from './ProductTargeting.js';
-import type {TargetedProduct} from '../../context/targeting.js';
+import type {TargetedProduct} from '../../../context/targeting.js';
 
 vi.mock('../PromptInput/PromptInput.js', () => ({
   PromptInput: ({onSubmit, disabled}: {onSubmit: (prompt: string) => void; disabled?: boolean}) => (

@@ -1,13 +1,13 @@
 import {buildUnifiedConverseController} from '@coveo/thermidor';
 import {A2UIProvider} from '@copilotkit/a2ui-renderer';
-import {useGenerativeInterface} from '../context/generative-interface.js';
-import {useBuildController} from '../hooks/use-build-controller.js';
-import {useNavigation} from '../hooks/use-navigation.js';
-import {createThermidorCatalog} from '../a2ui/components.js';
-import {StateSourceProvider} from '../a2ui/state-source-context.js';
+import {useGenerativeInterface} from '../../context/generative-interface.js';
+import {useBuildController} from '../../hooks/use-build-controller.js';
+import {useNavigation} from '../../hooks/use-navigation.js';
+import {createThermidorCatalog} from '../conversation/A2UI/components.js';
+import {StateSourceProvider} from '../conversation/A2UI/state-source-context.js';
 import {LandingPage} from './LandingPage/LandingPage.js';
-import {SearchResultsPage} from './SearchResultsPage/SearchResultsPage.js';
-import {ConversationPage} from './ConversationPage/index.js';
+import {SearchResultsPage} from '../conversation/SearchResultsPage.js';
+import {ConversationPage} from '../conversation/index.js';
 
 const catalog = createThermidorCatalog();
 

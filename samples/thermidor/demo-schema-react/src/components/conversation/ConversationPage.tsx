@@ -2,7 +2,7 @@ import type {Turn} from '@coveo/thermidor';
 import {useRef} from 'react';
 import {useAutoScroll} from '../../hooks/use-auto-scroll.js';
 import type {TargetedProduct} from '../../context/targeting.js';
-import {ProductTargeting} from '../ProductTargeting/ProductTargeting.js';
+import {ProductTargeting} from '../PromptSuggestions/ProductTargeting/ProductTargeting.js';
 import {ConversationThread} from './ConversationThread.js';
 import styles from './ConversationPage.module.css';
 

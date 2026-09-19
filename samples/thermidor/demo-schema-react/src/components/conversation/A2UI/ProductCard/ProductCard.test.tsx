@@ -1,9 +1,9 @@
 import {describe, it, expect, vi} from 'vitest';
 import {render, screen} from '@testing-library/react';
 import {A2UIProductCard} from './ProductCard.js';
-import {TargetingProvider, type TargetingContext} from '../../context/targeting.js';
+import {TargetingProvider, type TargetingContext} from '../../../../context/targeting.js';
 
-vi.mock('../../utils.js', () => ({
+vi.mock('../../../../utils.js', () => ({
   formatPrice: (v: number) => `$${v.toFixed(2)}`,
 }));
 
