@@ -32,17 +32,6 @@ describe('UnifiedEndpointClient', () => {
     vi.stubGlobal('fetch', mockedFetch);
   });
 
-  it('returns configuration error when organizationId is missing', async () => {
-    const response = await client.call(request, {accessToken: 'test-token'});
-
-    expect(response.success).toBe(false);
-    if (response.success) {
-      throw new Error('Expected unified endpoint call to fail');
-    }
-    expect(response.error).toContain('Organization ID is not set');
-    expect(mockedFetch).not.toHaveBeenCalled();
-  });
-
   it('returns configuration error when accessToken is missing', async () => {
     const response = await client.call(request, {organizationId: 'test-org'});
 
@@ -116,7 +105,7 @@ describe('UnifiedEndpointClient', () => {
     expect(options?.headers).not.toHaveProperty('x-coveo-agent-runtime-qualifier');
   });
 
-  it('uses configured custom endpoint', async () => {
+  it('POSTs to the provided endpoint verbatim without appending the fixed path', async () => {
     const stream = new ReadableStream<Uint8Array>();
     mockedFetch.mockResolvedValue(
       new Response(null, {
@@ -129,22 +118,96 @@ describe('UnifiedEndpointClient', () => {
       get: () => stream,
     });
 
+    const endpoint = 'https://proxy.example.com/some/custom/converse/path';
+
     await client.call(
       request,
       {
         organizationId: 'test-org-id',
         accessToken: 'test-token',
-        endpoint: 'https://custom.platform.coveo.com',
+        endpoint,
       },
       {signal: new AbortController().signal}
     );
 
-    expect(mockedFetch).toHaveBeenCalledWith(
-      'https://custom.platform.coveo.com/api/preview/organizations/test-org-id/agents/commerce/agui/converse',
-      expect.objectContaining({
-        method: 'POST',
+    const [calledUrl] = mockedFetch.mock.calls[0];
+    expect(calledUrl).toBe(endpoint);
+  });
+
+  it('POSTs to the provided endpoint verbatim even when it lacks a path or ends unusually', async () => {
+    const stream = new ReadableStream<Uint8Array>();
+    mockedFetch.mockResolvedValue(
+      new Response(null, {
+        status: 200,
       })
     );
+
+    Object.defineProperty(Response.prototype, 'body', {
+      configurable: true,
+      get: () => stream,
+    });
+
+    const endpoint = 'https://custom.platform.coveo.com';
+
+    await client.call(request, {
+      organizationId: 'test-org-id',
+      accessToken: 'test-token',
+      endpoint,
+    });
+
+    const [calledUrl] = mockedFetch.mock.calls[0];
+    expect(calledUrl).toBe(endpoint);
+    expect(calledUrl).not.toContain('/api/preview/organizations');
+    expect(calledUrl).not.toContain('?');
+  });
+
+  it('derives the org host and fixed converse path when endpoint is absent', async () => {
+    const stream = new ReadableStream<Uint8Array>();
+    mockedFetch.mockResolvedValue(
+      new Response(null, {
+        status: 200,
+      })
+    );
+
+    Object.defineProperty(Response.prototype, 'body', {
+      configurable: true,
+      get: () => stream,
+    });
+
+    await client.call(request, {
+      organizationId: 'test-org-id',
+      accessToken: 'test-token',
+    });
+
+    const [calledUrl] = mockedFetch.mock.calls[0];
+    expect(calledUrl).toBe(
+      'https://test-org-id.org.coveo.com/api/preview/organizations/test-org-id/agents/commerce/agui/converse'
+    );
+  });
+
+  it('fails without a network call when endpoint is absent and organizationId is missing', async () => {
+    const response = await client.call(request, {accessToken: 'test-token'});
+
+    expect(response.success).toBe(false);
+    if (response.success) {
+      throw new Error('Expected unified endpoint call to fail');
+    }
+    expect(response.error).toContain('Organization ID is not set');
+    expect(mockedFetch).not.toHaveBeenCalled();
+  });
+
+  it('fails without a network call when endpoint is absent and organizationId is empty', async () => {
+    const response = await client.call(request, {
+      organizationId: '',
+      accessToken: 'test-token',
+    });
+
+    expect(response.success).toBe(false);
+    if (response.success) {
+      throw new Error('Expected unified endpoint call to fail');
+    }
+    expect(response.error).toContain('Organization ID is not set');
+    expect(mockedFetch).not.toHaveBeenCalled();
   });
 
   it('returns success with stream on 2xx response', async () => {

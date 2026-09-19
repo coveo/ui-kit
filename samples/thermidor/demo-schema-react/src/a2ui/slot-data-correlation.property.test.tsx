@@ -1,30 +1,29 @@
 import fc from 'fast-check';
-import {describe, expect, it} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {render, screen, cleanup} from '@testing-library/react';
-import type {RemoteControllerSource} from '@coveo/thermidor';
-import {StateSourceProvider} from './state-source-context.js';
 import {TargetingProvider, type TargetingContext} from '../context/targeting.js';
 import {ProductListRenderer} from './ProductList/ProductList.js';
 import {ProductSummaryRenderer} from './ProductSummary/ProductSummary.js';
+
+// The renderers resolve their state through `useRemoteController`, which binds to
+// the active turn's `components[componentId]` entry. The mock reproduces that
+// correlation path: the controller's `state` is looked up solely by componentId.
+let mockComponents: Record<string, unknown> = {};
+
+vi.mock('./controllers.js', () => ({
+  useRemoteController: (componentId: string) => ({
+    componentId,
+    state: mockComponents[componentId],
+    dispatch: vi.fn(),
+    subscribe: () => () => undefined,
+  }),
+}));
 
 const targeting: TargetingContext = {
   isTargeting: false,
   onProductTargeted: () => undefined,
   selectedProductIds: new Set(),
 };
-
-/**
- * Builds a RemoteControllerSource whose active turn carries the given per-componentId
- * state map. This is the real AG-UI correlation path: `useRemoteController` resolves a
- * component's state from `components[componentId]` and nothing else.
- */
-function buildStateSource(components: Record<string, unknown>): RemoteControllerSource {
-  return {
-    state: {activeTurn: {agentResponse: {state: {components}}}},
-    subscribe: () => () => undefined,
-    dispatchAction: () => undefined,
-  } as unknown as RemoteControllerSource;
-}
 
 interface GeneratedProduct {
   permanentid: string;
@@ -83,19 +82,17 @@ describe('slot product data correlates to AG-UI state solely by componentId (Pro
         for (const [id, products] of Object.entries(productsById)) {
           components[id] = {products};
         }
-        const stateSource = buildStateSource(components);
+        mockComponents = components;
 
         expect(() =>
           render(
-            <StateSourceProvider stateSource={stateSource}>
-              <TargetingProvider value={targeting}>
-                {mountedIds.map((id, index) => (
-                  <div key={id} data-testid={`slot-${index}`}>
-                    <ProductListRenderer props={{componentId: id, componentType: 'product-list'}} />
-                  </div>
-                ))}
-              </TargetingProvider>
-            </StateSourceProvider>
+            <TargetingProvider value={targeting}>
+              {mountedIds.map((id, index) => (
+                <div key={id} data-testid={`slot-${index}`}>
+                  <ProductListRenderer props={{componentId: id, componentType: 'product-list'}} />
+                </div>
+              ))}
+            </TargetingProvider>
           )
         ).not.toThrow();
 
@@ -184,21 +181,19 @@ describe('summary slot data correlates to AG-UI state solely by componentId (Pro
         for (const [id, summary] of Object.entries(summariesById)) {
           components[id] = summary;
         }
-        const stateSource = buildStateSource(components);
+        mockComponents = components;
 
         expect(() =>
           render(
-            <StateSourceProvider stateSource={stateSource}>
-              <TargetingProvider value={targeting}>
-                {mountedIds.map((id, index) => (
-                  <div key={id} data-testid={`summary-slot-${index}`}>
-                    <ProductSummaryRenderer
-                      props={{componentId: id, componentType: 'product-summary'}}
-                    />
-                  </div>
-                ))}
-              </TargetingProvider>
-            </StateSourceProvider>
+            <TargetingProvider value={targeting}>
+              {mountedIds.map((id, index) => (
+                <div key={id} data-testid={`summary-slot-${index}`}>
+                  <ProductSummaryRenderer
+                    props={{componentId: id, componentType: 'product-summary'}}
+                  />
+                </div>
+              ))}
+            </TargetingProvider>
           )
         ).not.toThrow();
 

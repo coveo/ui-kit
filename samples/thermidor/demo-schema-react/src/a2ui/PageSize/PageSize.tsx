@@ -1,5 +1,4 @@
 import {useRemoteController} from '../controllers.js';
-import {useStateSource} from '../state-source-context.js';
 import type {PageSizeProps} from '@coveo/thermidor-schema';
 import styles from './PageSize.module.css';
 
@@ -14,8 +13,7 @@ const DEFAULT_PAGE_SIZE_OPTIONS = [12, 24, 48];
  * mounted through the A2-UI tree like any other component.
  */
 export function PageSizeRenderer({props}: {props: PageSizeProps}) {
-  const stateSource = useStateSource();
-  const controller = useRemoteController(stateSource, props.componentId, props.componentType);
+  const controller = useRemoteController(props.componentId, props.componentType);
 
   if (!controller.state) {
     return null;

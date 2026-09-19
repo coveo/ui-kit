@@ -1,22 +1,24 @@
 import {render, screen, act} from '@testing-library/react';
 import {describe, it, expect, vi, beforeEach} from 'vitest';
-import type {UnifiedConverseControllerState, Turn} from '@coveo/thermidor';
+import type {Session, Turn} from '@coveo/thermidor';
 import {AppShell} from './AppShell.js';
+import {makeTurn, makeSurface} from '../test/turn-fixtures.js';
 
 const mockSubmit = vi.fn();
-const mockClear = vi.fn();
 
-let mockConverseState: UnifiedConverseControllerState;
+let mockTurns: Turn[] = [];
 
-vi.mock('../context/generative-interface.js', () => ({
-  useGenerativeInterface: () => ({}),
-}));
-
-vi.mock('../hooks/use-build-controller.js', () => ({
-  useBuildController: () => [
-    {submit: mockSubmit, clear: mockClear, subscribe: vi.fn(), state: {}},
-    mockConverseState,
-  ],
+// AppShell reads turns through `useSession()`. The fake session exposes the
+// members the shell touches: an observable `turns` list and `submit`.
+vi.mock('../context/session.js', () => ({
+  useSession: () =>
+    ({
+      get turns() {
+        return mockTurns;
+      },
+      subscribe: () => () => undefined,
+      submit: mockSubmit,
+    }) as unknown as Session<never>,
 }));
 
 vi.mock('./LandingPage/LandingPage.js', () => ({
@@ -49,52 +51,13 @@ vi.mock('./ConversationPage/index.js', () => ({
   ),
 }));
 
-function makeCommerceSearchActivity(surfaceId = 'commerce-surface-1') {
-  const rootId = `commerce-search-${surfaceId}`;
-  return {
-    id: `activity-${surfaceId}`,
-    kind: 'a2ui-surface',
-    replace: true,
-    payload: {
-      messages: [
-        {
-          createSurface: {
-            surfaceId,
-            rootId,
-            components: [
-              {
-                id: rootId,
-                component: 'CommerceSearch',
-                props: {componentId: rootId, componentType: 'commerce-search'},
-                children: [],
-              },
-            ],
-          },
-        },
-      ],
-    },
-  };
-}
-
-function makeTurn(overrides: Partial<Turn> & {id: string}): Turn {
-  return {
-    prompt: 'test prompt',
-    status: 'complete',
-    ...overrides,
-  } as Turn;
-}
-
 describe('AppShell bidirectional navigation', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockConverseState = {
-      turns: [],
-      activeTurn: undefined,
-      isStreaming: false,
-    };
+    mockTurns = [];
   });
 
-  it('controller session continuity: same controller instance used across all transitions', () => {
+  it('session continuity: same session submit used across all transitions', () => {
     const {rerender} = render(<AppShell />);
 
     // Landing → submit
@@ -103,28 +66,18 @@ describe('AppShell bidirectional navigation', () => {
     });
     expect(mockSubmit).toHaveBeenCalledWith({prompt: 'surfboards'});
 
-    // Turn completes with commerce search → navigate to search
-    mockConverseState = {
-      turns: [
-        makeTurn({
-          id: 'turn-1',
-          prompt: 'surfboards',
-          agentResponse: {
-            messages: [],
-            surfaces: [],
-            activities: [makeCommerceSearchActivity('s1')],
-            state: {},
-            reasoningSteps: [],
-          },
-        }),
-      ],
-      activeTurn: undefined,
-      isStreaming: false,
-    };
+    // Turn completes with a commerce-search surface → navigate to search
+    mockTurns = [
+      makeTurn({
+        id: 'turn-1',
+        prompt: 'surfboards',
+        response: {surfaces: [makeSurface('s1', 'commerce-search')]},
+      }),
+    ];
     rerender(<AppShell />);
     expect(screen.getByTestId('search-results-page')).toBeDefined();
 
-    // Submit from search → same controller
+    // Submit from search → same session submit
     mockSubmit.mockClear();
     act(() => {
       screen.getByTestId('search-submit-btn').click();
@@ -133,24 +86,14 @@ describe('AppShell bidirectional navigation', () => {
   });
 
   it('"Back to conversation" navigates from search to conversation without submitting', () => {
-    // Turn with commerce search → search view
-    mockConverseState = {
-      turns: [
-        makeTurn({
-          id: 'turn-1',
-          prompt: 'surfboards',
-          agentResponse: {
-            messages: [],
-            surfaces: [],
-            activities: [makeCommerceSearchActivity('s1')],
-            state: {},
-            reasoningSteps: [],
-          },
-        }),
-      ],
-      activeTurn: undefined,
-      isStreaming: false,
-    };
+    // Turn with commerce-search surface → search view
+    mockTurns = [
+      makeTurn({
+        id: 'turn-1',
+        prompt: 'surfboards',
+        response: {surfaces: [makeSurface('s1', 'commerce-search')]},
+      }),
+    ];
 
     const {rerender} = render(<AppShell />);
     expect(screen.getByTestId('search-results-page')).toBeDefined();
@@ -160,34 +103,23 @@ describe('AppShell bidirectional navigation', () => {
       screen.getByTestId('search-submit-btn').click();
     });
 
-    mockConverseState = {
-      turns: [
-        makeTurn({
-          id: 'turn-1',
-          prompt: 'surfboards',
-          agentResponse: {
-            messages: [],
-            surfaces: [],
-            activities: [makeCommerceSearchActivity('s1')],
-            state: {},
-            reasoningSteps: [],
-          },
-        }),
-        makeTurn({
-          id: 'turn-2',
-          prompt: 'kayaks',
-          agentResponse: {
+    mockTurns = [
+      makeTurn({
+        id: 'turn-1',
+        prompt: 'surfboards',
+        response: {surfaces: [makeSurface('s1', 'commerce-search')]},
+      }),
+      makeTurn({
+        id: 'turn-2',
+        prompt: 'kayaks',
+        response: {
+          agent: {
             messages: [{content: 'Here are kayaks', role: 'assistant'}],
-            surfaces: [],
-            activities: [],
-            state: {},
             reasoningSteps: [{type: 'reasoning', content: 'thinking'}],
           },
-        }),
-      ],
-      activeTurn: undefined,
-      isStreaming: false,
-    };
+        },
+      }),
+    ];
     rerender(<AppShell />);
     expect(screen.getByTestId('conversation-page')).toBeDefined();
 
@@ -199,12 +131,8 @@ describe('AppShell bidirectional navigation', () => {
     expect(mockSubmit).toHaveBeenCalledTimes(1); // only the kayaks submit, no extra
   });
 
-  it('navigates to search when a turn has both commerce-search activity and reasoning steps (ordering invariant)', () => {
-    mockConverseState = {
-      turns: [],
-      activeTurn: undefined,
-      isStreaming: false,
-    };
+  it('navigates to search when a turn has both a commerce-search surface and reasoning steps (ordering invariant)', () => {
+    mockTurns = [];
 
     const {rerender} = render(<AppShell />);
 
@@ -212,25 +140,21 @@ describe('AppShell bidirectional navigation', () => {
       screen.getByTestId('submit-btn').click();
     });
 
-    // Turn arrives with BOTH a commerce-search activity AND reasoning steps.
-    // Per the ordering invariant: commerce-search activity takes precedence → search view.
-    mockConverseState = {
-      turns: [
-        makeTurn({
-          id: 'turn-1',
-          prompt: 'surfboards',
-          agentResponse: {
+    // Turn arrives with BOTH a commerce-search surface AND reasoning steps.
+    // Per the ordering invariant: the commerce-search surface takes precedence → search view.
+    mockTurns = [
+      makeTurn({
+        id: 'turn-1',
+        prompt: 'surfboards',
+        response: {
+          surfaces: [makeSurface('s1', 'commerce-search')],
+          agent: {
             messages: [],
-            surfaces: [],
-            activities: [makeCommerceSearchActivity('s1')],
-            state: {},
             reasoningSteps: [{type: 'reasoning', content: 'let me search for surfboards'}],
           },
-        }),
-      ],
-      activeTurn: undefined,
-      isStreaming: false,
-    };
+        },
+      }),
+    ];
     rerender(<AppShell />);
 
     expect(screen.getByTestId('search-results-page')).toBeDefined();
