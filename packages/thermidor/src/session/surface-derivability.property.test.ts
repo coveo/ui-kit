@@ -26,8 +26,8 @@ const shortText = fc.string({maxLength: 20});
  * A well-formed `a2ui-surface` `createSurface` activity payload, mirroring the
  * shape `readSurface` walks: `messages[].createSurface` with a `surfaceId`, a
  * `rootId`, and a `components` entry whose `id` matches `rootId` and whose
- * `props.componentType` is the (non-empty) root component type. Yields exactly
- * one `DiscoveredSurface` per message when folded.
+ * top-level `component` discriminant is the (non-empty) root component type.
+ * Yields exactly one `DiscoveredSurface` per message when folded.
  */
 const surfaceMessageArbitrary = fc
   .record({
@@ -41,7 +41,7 @@ const surfaceMessageArbitrary = fc
       createSurface: {
         surfaceId,
         rootId,
-        components: [{id: rootId, props: {componentType: rootComponentType}}],
+        components: [{id: rootId, component: rootComponentType}],
       },
     };
   });

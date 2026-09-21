@@ -1,22 +1,19 @@
-import {useRemoteController} from '../controllers.js';
-import type {PaginationProps} from '@coveo/thermidor-schema';
+import type {PaginationProps, PaginationAction} from '@coveo/thermidor-schema';
+import type {TypedRendererProps} from '../renderer-props.js';
 import styles from './Pagination.module.css';
 
-export function PaginationRenderer({props}: {props: PaginationProps}) {
-  const controller = useRemoteController(props.componentId, props.componentType);
-
-  if (!controller.state) {
-    return null;
-  }
-
-  const {page, totalPages} = controller.state;
+export function PaginationRenderer({
+  props,
+  dispatch,
+}: TypedRendererProps<PaginationProps, PaginationAction>) {
+  const {page, totalPages} = props;
 
   if (totalPages <= 1) {
     return null;
   }
 
   const handlePageChange = (newPage: number) => {
-    controller.dispatch('selectPage', {page: newPage});
+    dispatch?.({event: {name: 'selectPage', context: {page: newPage}}});
   };
 
   return (

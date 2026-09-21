@@ -1,20 +1,26 @@
 import {
   CATALOG_ID,
+  bindStateFields,
   buildConversationResponse,
   buildValidatedSurface,
+  statePath,
   type A2uiComponentNode,
 } from './shared.js';
 import {
   ActivitySnapshot,
-  StateSnapshot,
+  UpdateDataModelActivity,
   textMessage,
   toolCall,
   type ConverseEvent,
+  type UpdateDataModelOp,
 } from '../events.js';
 
 const runId = 'schema-bundle-4957b383';
 
+const BUNDLE_SURFACE_ID = 'bundle-surface';
 const BUNDLE_ROOT_ID = 'bundle-root';
+const NEXT_ACTIONS_SURFACE_ID = 'next-actions-surface';
+const NEXT_ACTIONS_ROOT_ID = 'root';
 
 // One product-summary node per (tier, slot) pair, in slot-enumeration order (tier order,
 // then slot order within each tier). Each id is also the AG-UI state key holding that slot's
@@ -35,20 +41,20 @@ const SLOT_PRODUCT_SUMMARY_IDS = [
 ];
 
 // The bundle-display root composes one product-summary node per slot; each slot summary is
-// emitted as its own node. Each node's `componentId` equals its own `id` so AG-UI state (keyed
-// by componentId) correlates to the node. The compact single-product presentation is
-// expressed by the `product-summary` component type on the A2-UI plane, never as AG-UI state.
+// emitted as its own node. Each node carries a single identity (`id` + `component`). BundleDisplay
+// is a homogeneous container: its ordered `children` list (in `props`) mounts the product-summary
+// slots. BundleDisplay binds its `tiers` state and each ProductSummary binds its
+// `categoryLabel`/`product` state to `{ path }` objects beneath `statePath(id)`.
 const BUNDLE_SURFACE_NODES: A2uiComponentNode[] = [
   {
     id: BUNDLE_ROOT_ID,
     component: 'BundleDisplay',
-    props: {componentId: BUNDLE_ROOT_ID, componentType: 'bundle-display'},
-    children: SLOT_PRODUCT_SUMMARY_IDS,
+    props: {...bindStateFields(BUNDLE_ROOT_ID, ['tiers']), children: SLOT_PRODUCT_SUMMARY_IDS},
   },
   ...SLOT_PRODUCT_SUMMARY_IDS.map<A2uiComponentNode>((id) => ({
     id,
     component: 'ProductSummary',
-    props: {componentId: id, componentType: 'product-summary'},
+    props: bindStateFields(id, ['categoryLabel', 'product']),
   })),
 ];
 
@@ -58,7 +64,7 @@ function buildValidatedBundleSurface(
 ): Record<string, unknown> {
   return buildValidatedSurface({
     templateName: 'Mock_Bundle_Template',
-    surfaceId: 'bundle-surface',
+    surfaceId: BUNDLE_SURFACE_ID,
     rootId,
     nodes,
   });
@@ -87,17 +93,14 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
       {
         version: 'v1.0',
         createSurface: {
-          surfaceId: 'next-actions-surface',
-          rootId: 'root',
+          surfaceId: NEXT_ACTIONS_SURFACE_ID,
+          rootId: NEXT_ACTIONS_ROOT_ID,
           catalogId: CATALOG_ID,
           components: [
             {
-              id: 'root',
+              id: NEXT_ACTIONS_ROOT_ID,
               component: 'NextActionsBar',
-              props: {
-                componentId: 'next-actions-root',
-                componentType: 'next-actions-bar',
-              },
+              props: bindStateFields(NEXT_ACTIONS_ROOT_ID, ['actions']),
             },
           ],
         },
@@ -106,7 +109,9 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
   },
 });
 
-const bundleStateComponents: Record<string, unknown> = {
+// Whole-component Component_State for every node on the bundle surface, keyed by node id. Each
+// entry is written whole at `statePath(id)` on `bundle-surface`.
+const bundleComponentState: Record<string, unknown> = {
   'bundle-root': {
     tiers: [
       {
@@ -358,17 +363,37 @@ const bundleStateComponents: Record<string, unknown> = {
       additionalFields: {},
     },
   },
-  'next-actions-root': {
-    actions: [
-      {text: 'Explore Budget tier ($315 total)', type: 'followup'},
-      {text: 'Explore Mid-Range tier ($1,065 total)', type: 'followup'},
-      {text: 'Explore Premium tier ($735 total)', type: 'followup'},
-      {text: 'Browse all surfboards', type: 'followup'},
-    ],
-  },
 };
 
-const stateSnapshot: ConverseEvent = StateSnapshot({components: bundleStateComponents});
+const nextActionsState = {
+  actions: [
+    {text: 'Explore Budget tier ($315 total)', type: 'followup'},
+    {text: 'Explore Mid-Range tier ($1,065 total)', type: 'followup'},
+    {text: 'Explore Premium tier ($735 total)', type: 'followup'},
+    {text: 'Browse all surfboards', type: 'followup'},
+  ],
+};
+
+// Each bundle-surface node's whole state becomes one `updateDataModel` op at `statePath(id)`.
+const bundleStateOps: UpdateDataModelOp[] = Object.entries(bundleComponentState).map(
+  ([nodeId, value]) => ({surfaceId: BUNDLE_SURFACE_ID, path: statePath(nodeId), value})
+);
+
+const bundleStateActivity: ConverseEvent = UpdateDataModelActivity({
+  messageId: 'activity-bundle-display-state',
+  ops: bundleStateOps,
+});
+
+const nextActionsStateActivity: ConverseEvent = UpdateDataModelActivity({
+  messageId: 'activity-bundle-next-actions-state',
+  ops: [
+    {
+      surfaceId: NEXT_ACTIONS_SURFACE_ID,
+      path: statePath(NEXT_ACTIONS_ROOT_ID),
+      value: nextActionsState,
+    },
+  ],
+});
 
 const middleEvents: ConverseEvent[] = [
   ...toolCall({
@@ -392,8 +417,9 @@ const middleEvents: ConverseEvent[] = [
     "I've built out your beginner surfing kit with three tiers—Budget ($484.97 total), Mid-Range ($794.97 total), and Premium ($1,164.97 total)—each covering board, wetsuit, bag, and wax to get you started in the water.\n\nPick the tier that fits your comfort level, and you're ready to go."
   ),
   {...bundleSurfaceActivity, delayMs: 2500},
-  {...stateSnapshot, delayMs: 50},
+  {...bundleStateActivity, delayMs: 50},
   {...nextActionsSurfaceActivity, delayMs: 800},
+  {...nextActionsStateActivity, delayMs: 50},
 ];
 
 const schemaBundleEvents: ConverseEvent[] = buildConversationResponse({

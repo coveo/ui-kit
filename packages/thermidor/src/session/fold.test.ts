@@ -134,7 +134,7 @@ const surfaceMessage = (surfaceId: string, rootComponentType: string) => {
     createSurface: {
       surfaceId,
       rootId,
-      components: [{id: rootId, props: {componentType: rootComponentType}}],
+      components: [{id: rootId, component: rootComponentType}],
     },
   };
 };
@@ -157,30 +157,30 @@ describe('fold surface derivation', () => {
 
   it('computes surfaceId and rootComponentType once while folding', () => {
     const turn = foldActivities(createTurn('t1', {}), [
-      surfaceSnapshot([surfaceMessage('ui-1', 'commerce-search')]),
+      surfaceSnapshot([surfaceMessage('ui-1', 'CommerceSearch')]),
       runFinished,
     ]);
 
     expect(turn.response.surfaces).toEqual([
-      {surfaceId: 'ui-1', rootComponentType: 'commerce-search'},
+      {surfaceId: 'ui-1', rootComponentType: 'CommerceSearch'},
     ]);
   });
 
   it('preserves activity order across multiple surfaces', () => {
     const turn = foldActivities(createTurn('t1', {}), [
-      surfaceSnapshot([surfaceMessage('c-1', 'converse')]),
-      surfaceSnapshot([surfaceMessage('ui-2', 'commerce-search')]),
+      surfaceSnapshot([surfaceMessage('c-1', 'Converse')]),
+      surfaceSnapshot([surfaceMessage('ui-2', 'CommerceSearch')]),
     ]);
 
     expect(turn.response.surfaces).toEqual([
-      {surfaceId: 'c-1', rootComponentType: 'converse'},
-      {surfaceId: 'ui-2', rootComponentType: 'commerce-search'},
+      {surfaceId: 'c-1', rootComponentType: 'Converse'},
+      {surfaceId: 'ui-2', rootComponentType: 'CommerceSearch'},
     ]);
   });
 
   it('re-derives an identical list from response.activities', () => {
     const turn = foldActivities(createTurn('t1', {}), [
-      surfaceSnapshot([surfaceMessage('ui-1', 'commerce-search')]),
+      surfaceSnapshot([surfaceMessage('ui-1', 'CommerceSearch')]),
     ]);
 
     expect(deriveSurfaces(turn.response.activities)).toEqual(turn.response.surfaces);
@@ -194,7 +194,7 @@ describe('fold surface derivation', () => {
           createSurface: {
             surfaceId: 'ui-1',
             rootId: 'missing',
-            components: [{id: 'other', props: {componentType: 'commerce-search'}}],
+            components: [{id: 'other', component: 'CommerceSearch'}],
           },
         },
       ]),
@@ -202,21 +202,56 @@ describe('fold surface derivation', () => {
 
     expect(turn.response.surfaces).toEqual([]);
   });
+
+  // Regression (single-identity discovery): feed a REAL single-identity
+  // `createSurface` message whose root node carries its identity as a top-level
+  // PascalCase `component` discriminant (NO `props.componentType`), exactly as
+  // the platform mock emits it. `readSurface`/`deriveSurfaces` must discover the
+  // surface and `resolveTargetSurfaceId` must find it — the path the prior
+  // fixtures (which put the discriminant under `props.componentType`) bypassed,
+  // letting a commerce-search surface silently fail discovery and mis-route.
+  it('discovers a single-identity commerce-search root by its top-level component discriminant', () => {
+    const singleIdentitySurface = {
+      version: 'v1.0',
+      createSurface: {
+        surfaceId: 'commerce-search-2',
+        rootId: 'commerce-search-2-root',
+        components: [
+          {
+            id: 'commerce-search-2-root',
+            component: 'CommerceSearch',
+            props: {sidebarChild: 'facets-1', mainChild: 'products-1'},
+          },
+        ],
+      },
+    };
+
+    const turn = foldActivities(createTurn('t1', {}), [
+      surfaceSnapshot([singleIdentitySurface]),
+      runFinished,
+    ]);
+
+    expect(turn.response.surfaces).toEqual([
+      {surfaceId: 'commerce-search-2', rootComponentType: 'CommerceSearch'},
+    ]);
+    expect(deriveSurfaces(turn.response.activities)).toEqual(turn.response.surfaces);
+    expect(resolveTargetSurfaceId(turn.response.surfaces)).toBe('commerce-search-2');
+  });
 });
 
 describe('resolveTargetSurfaceId', () => {
   it('returns the first commerce-search surfaceId', () => {
     expect(
       resolveTargetSurfaceId([
-        {surfaceId: 'c-1', rootComponentType: 'converse'},
-        {surfaceId: 'ui-2', rootComponentType: 'commerce-search'},
-        {surfaceId: 'ui-3', rootComponentType: 'commerce-search'},
+        {surfaceId: 'c-1', rootComponentType: 'Converse'},
+        {surfaceId: 'ui-2', rootComponentType: 'CommerceSearch'},
+        {surfaceId: 'ui-3', rootComponentType: 'CommerceSearch'},
       ])
     ).toBe('ui-2');
   });
 
   it('returns null when no commerce-search surface exists', () => {
-    expect(resolveTargetSurfaceId([{surfaceId: 'c-1', rootComponentType: 'converse'}])).toBeNull();
+    expect(resolveTargetSurfaceId([{surfaceId: 'c-1', rootComponentType: 'Converse'}])).toBeNull();
   });
 
   it('returns null for an empty surfaces list', () => {

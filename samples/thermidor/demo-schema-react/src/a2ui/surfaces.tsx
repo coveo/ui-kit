@@ -13,6 +13,22 @@
  * The `convertV1ToV09` adapter translates each v1.0 message into the equivalent v0.9
  * messages so the MessageProcessor can create surfaces and resolve catalog renderers.
  *
+ * ## What the conversion preserves
+ *
+ * Under the inline-state model a node carries a single `id`/`component` identity and its
+ * `props` hold presentation values and A2-UI Data_Binding objects of the form
+ * `{ "path": <JSON Pointer> }`. The conversion:
+ *
+ * - flattens `components[].props` onto each v0.9 node so the binder can resolve the
+ *   `{ "path": ... }` bindings against the A2-UI data model — every binding is carried
+ *   through byte-for-byte and no identity correlation (`componentId`/`componentType`) is
+ *   ever synthesized;
+ * - passes `updateDataModel` ops through unchanged (only the version is bumped to v0.9), so
+ *   the renderer applies each `{ surfaceId, path, value }` op to its own data model and
+ *   re-resolves the affected `{ path }` bindings;
+ * - rejects any message it cannot convert by leaving it out of the v0.9 stream (renderer
+ *   state stays unchanged) so a malformed message never corrupts a surface.
+ *
  * ## When @copilotkit/a2ui-renderer supports v1.0
  *
  * Once the renderer natively understands v1.0, remove the conversion:
@@ -23,8 +39,8 @@
  *    converted.push(...v1Messages.filter(isRecord));
  *    ```
  * 3. Verify that `processMessages` handles `createSurface` with `components[].props`
- *    and passes `props` (including `componentId` and `componentType`) to catalog renderers correctly
- * 4. Everything else (renderers, catalog definitions, useRemoteController) stays unchanged
+ *    and resolves each node's `{ path }` bindings against the data model correctly
+ * 4. Everything else (dumb renderers, catalog definitions) stays unchanged
  */
 import {useEffect, useMemo, useRef} from 'react';
 import {A2UIRenderer, useA2UI} from '@copilotkit/a2ui-renderer';
@@ -44,7 +60,8 @@ const RENDERER_ROOT_ID = 'root';
  * Rewrites a component node so that any reference to `declaredRootId` becomes the
  * Renderer_Root_Id (`"root"`): the node's own `id`, every matching entry in its
  * `children[]`, and a matching `child`. `props` is intentionally left untouched — the
- * `componentId`/`componentType` correlation lives there and must survive the rename.
+ * node's `{ "path": ... }` Data_Binding objects live there and must survive the rename
+ * byte-for-byte.
  */
 function remapId(node: Record<string, unknown>, declaredRootId: string): Record<string, unknown> {
   const remapped: Record<string, unknown> = {...node};
@@ -73,11 +90,17 @@ function remapId(node: Record<string, unknown>, declaredRootId: string): Record<
  *
  * Conversion rules:
  * - `createSurface` (v1.0) → `createSurface` + `updateComponents` (v0.9)
- *   - `components[].props` are flattened onto the component node directly
+ *   - `components[].props` are flattened onto the component node directly, carrying every
+ *     `{ "path": ... }` Data_Binding object through byte-for-byte and preserving the single
+ *     `id`/`component` identity (no `componentId`/`componentType` is ever introduced)
  *   - when `createSurface.rootId` names exactly one component whose id is not already
  *     `"root"`, that node's id (and every reference to it) is remapped to `"root"` so
  *     the renderer can mount a surface whose declared root differs from `"root"`
- * - `updateDataModel` / `updateComponents` / `deleteSurface` → same shape, version changed to v0.9
+ * - `updateDataModel` passes through carrying its `{ surfaceId, path, value }` unchanged
+ *   (only the version is bumped to v0.9); the renderer applies it to its data model
+ * - `updateComponents` / `deleteSurface` → same shape, version changed to v0.9
+ * - a v1.0 message carrying no recognized operation is unconvertible and is REJECTED
+ *   (dropped), so it never reaches the renderer and cannot mutate its state
  *
  * @deprecated Remove when @copilotkit/a2ui-renderer supports v1.0 natively.
  */
@@ -133,7 +156,13 @@ export function convertV1ToV09(message: Record<string, unknown>): A2UIMessage[] 
     return [{version: 'v0.9', deleteSurface}];
   }
 
-  return [message];
+  // A v1.0 message carrying no recognized operation is unconvertible: it is REJECTED
+  // (dropped from the v0.9 stream) so it can never mutate the renderer's state. The failure
+  // is reported as a dev-only warning; the previously rendered UI stays displayed.
+  if (import.meta.env?.DEV) {
+    console.warn('[A2UI bridge] Dropped unconvertible v1.0 message', message);
+  }
+  return [];
 }
 
 /** Extracts A2-UI messages from activities, converting v1.0 to v0.9 for the renderer. */

@@ -27,7 +27,7 @@ interface SearchResultsPageProps {
  * A2-UI activities and hands them to `ThermidorA2UISurfaces`.
  *
  * Navigation to this page is derived directly from the A2-UI activities
- * (a createSurface whose root component's componentType is 'commerce-search').
+ * (a createSurface whose root node's `component` discriminant is 'CommerceSearch').
  */
 export function SearchResultsPage(props: SearchResultsPageProps) {
   const session = useSession();

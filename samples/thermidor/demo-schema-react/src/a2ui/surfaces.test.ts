@@ -47,7 +47,7 @@ describe('getA2UIMessages', () => {
     ).toEqual([updatedVersion]);
   });
 
-  it('converts v1.0 messages to v0.9 format', () => {
+  it('converts v1.0 createSurface to v0.9, flattening props and preserving {path} bindings', () => {
     const result = getA2UIMessages([
       {
         id: 'activity-1',
@@ -59,7 +59,13 @@ describe('getA2UIMessages', () => {
               version: 'v1.0',
               createSurface: {
                 surfaceId: 'my-surface',
-                components: [{id: 'root', component: 'ProductCarousel', props: {controllers: {}}}],
+                components: [
+                  {
+                    id: 'root',
+                    component: 'ProductCarousel',
+                    props: {heading: {path: '/state/root/heading'}},
+                  },
+                ],
               },
             },
           ],
@@ -72,7 +78,9 @@ describe('getA2UIMessages', () => {
       version: 'v0.9',
       updateComponents: {
         surfaceId: 'my-surface',
-        components: [{id: 'root', component: 'ProductCarousel', controllers: {}}],
+        components: [
+          {id: 'root', component: 'ProductCarousel', heading: {path: '/state/root/heading'}},
+        ],
       },
     });
   });
@@ -91,27 +99,27 @@ describe('getA2UIMessages', () => {
   });
 });
 
-// Feature: thermidor-commerce-search-composition, Property 1: For any v1.0 createSurface
-// message, convertV1ToV09 (a) rewrites the single node matching a declared rootId (other
-// than "root") — and every children[]/child reference to it — to "root"; (b) performs no
-// rewrite and synthesizes no "root" node when rootId is absent or matches zero or more
-// than one node, completing without throwing; and (c) preserves each node's
-// props.componentId/componentType and its children/child fields (including their absence),
-// except for the single root-id rename in case (a).
-describe('convertV1ToV09 root mapping (Property 1)', () => {
+// Feature: a2ui-inline-state-data-model, Property 7: For any v1.0 createSurface + updateDataModel
+// messages, convertV1ToV09 (a) preserves every A2-UI Data_Binding object `{ "path": ... }` in each
+// node's props byte-for-byte on the flattened v0.9 node; (b) preserves the single `id`/`component`
+// identity and introduces NO `componentId`/`componentType` anywhere; (c) rewrites the single node
+// matching a declared rootId (other than "root") — and every children[]/child reference to it — to
+// "root", performing no rewrite when rootId is absent/duplicate/none, without throwing; and (d)
+// passes each updateDataModel op through carrying `{ surfaceId, path, value }` unchanged (version
+// bumped to v0.9).
+describe('convertV1ToV09 preserves {path} bindings and single identity (Property 7)', () => {
   const RENDERER_ROOT_ID = 'root';
 
   interface GeneratedNode {
     id: string;
-    componentId: string;
-    componentType: string;
+    // A map of prop name -> JSON Pointer path, expressed as `{ path }` bindings.
+    boundProps: Record<string, string>;
     children?: string[];
     child?: string;
   }
 
   type RootIdKind = 'matching' | 'absent' | 'duplicate' | 'none';
 
-  /** Extracts the flattened v0.9 component nodes from a converted createSurface message. */
   function extractV09Components(
     converted: Array<Record<string, unknown>>
   ): Array<Record<string, unknown>> {
@@ -123,18 +131,17 @@ describe('convertV1ToV09 root mapping (Property 1)', () => {
     return (updateComponents['components'] as Array<Record<string, unknown>>) ?? [];
   }
 
-  /** Builds the v1.0 createSurface message from generated nodes and a root id. */
   function buildMessage(
     nodes: GeneratedNode[],
     rootId: string | undefined
   ): Record<string, unknown> {
     const components = nodes.map((node) => {
-      const {id, componentId, componentType, children, child} = node;
-      const comp: Record<string, unknown> = {
-        id,
-        component: 'SomeComponent',
-        props: {componentId, componentType},
-      };
+      const {id, boundProps, children, child} = node;
+      const props: Record<string, unknown> = {};
+      for (const [key, path] of Object.entries(boundProps)) {
+        props[key] = {path};
+      }
+      const comp: Record<string, unknown> = {id, component: 'SomeComponent', props};
       if (children !== undefined) {
         comp['children'] = [...children];
       }
@@ -154,9 +161,6 @@ describe('convertV1ToV09 root mapping (Property 1)', () => {
     };
   }
 
-  // Generates 1..6 nodes with unique ids never equal to "root", each with optional
-  // children (drawn from the node ids) and an optional child, plus a root-id selection
-  // mode covering the matching, absent, duplicate, and no-rootId cases.
   const scenarioArb = fc
     .uniqueArray(
       fc.string({minLength: 1, maxLength: 6}).filter((s) => s !== RENDERER_ROOT_ID),
@@ -165,6 +169,14 @@ describe('convertV1ToV09 root mapping (Property 1)', () => {
     .chain((ids) =>
       fc.record({
         ids: fc.constant(ids),
+        boundPropsPerNode: fc.array(
+          fc.dictionary(
+            fc.string({minLength: 1, maxLength: 6}),
+            fc.string({minLength: 1, maxLength: 8}).map((seg) => `/state/${seg}`),
+            {maxKeys: 4}
+          ),
+          {minLength: ids.length, maxLength: ids.length}
+        ),
         childrenPerNode: fc.array(fc.option(fc.subarray(ids), {nil: undefined}), {
           minLength: ids.length,
           maxLength: ids.length,
@@ -176,11 +188,10 @@ describe('convertV1ToV09 root mapping (Property 1)', () => {
         rootKind: fc.constantFrom<RootIdKind>('matching', 'absent', 'duplicate', 'none'),
       })
     )
-    .map(({ids, childrenPerNode, childPerNode, rootKind}) => {
+    .map(({ids, boundPropsPerNode, childrenPerNode, childPerNode, rootKind}) => {
       const baseNodes: GeneratedNode[] = ids.map((id, index) => ({
         id,
-        componentId: `cid-${id}`,
-        componentType: `type-${id}`,
+        boundProps: boundPropsPerNode[index],
         children: childrenPerNode[index],
         child: childPerNode[index],
       }));
@@ -193,18 +204,11 @@ describe('convertV1ToV09 root mapping (Property 1)', () => {
           rootId = ids[0];
           break;
         case 'absent':
-          // A root id that cannot match any node id (all ids are <= 6 chars).
           rootId = 'absent-root-id-that-matches-nothing';
           break;
         case 'duplicate': {
-          // Duplicate the first node so its id matches two nodes.
           rootId = ids[0];
-          const dup: GeneratedNode = {
-            id: ids[0],
-            componentId: `cid-dup-${ids[0]}`,
-            componentType: `type-dup-${ids[0]}`,
-          };
-          nodes = [...baseNodes, dup];
+          nodes = [...baseNodes, {id: ids[0], boundProps: {}}];
           break;
         }
         case 'none':
@@ -215,44 +219,35 @@ describe('convertV1ToV09 root mapping (Property 1)', () => {
       return {nodes, rootId, rootKind};
     });
 
-  it('resolves, preserves identity, and tolerates the no-match cases', () => {
+  it('preserves {path} bindings and identity, rewrites only the declared root', () => {
     fc.assert(
       fc.property(scenarioArb, ({nodes, rootId, rootKind}) => {
         const message = buildMessage(nodes, rootId);
 
-        // (b) conversion never throws.
+        // (c) conversion never throws.
         const converted = convertV1ToV09(message);
         const output = extractV09Components(converted);
 
         expect(output).toHaveLength(nodes.length);
 
         const shouldResolve = rootKind === 'matching';
-        const rootNodes = output.filter((node) => node['id'] === RENDERER_ROOT_ID);
 
-        if (shouldResolve) {
-          // (a) exactly one node has id "root", and it is the node that had rootId.
-          expect(rootNodes).toHaveLength(1);
-          const originalRootIndex = nodes.findIndex((node) => node.id === rootId);
-          expect(output[originalRootIndex]['id']).toBe(RENDERER_ROOT_ID);
-        } else {
-          // (b) no rewrite, no synthesized "root" node.
-          const originalRootCount = nodes.filter((node) => node.id === RENDERER_ROOT_ID).length;
-          expect(rootNodes).toHaveLength(originalRootCount);
-        }
-
-        // (a)/(c) per-node assertions.
         output.forEach((outNode, index) => {
           const source = nodes[index];
 
-          // (c) props survive unchanged.
-          expect(outNode['componentId']).toBe(source.componentId);
-          expect(outNode['componentType']).toBe(source.componentType);
+          // (a) every `{ path }` binding survives byte-for-byte on the flattened node.
+          for (const [key, path] of Object.entries(source.boundProps)) {
+            expect(outNode[key]).toEqual({path});
+          }
+
+          // (b) single identity preserved; no identity correlation introduced anywhere.
+          expect(outNode['component']).toBe('SomeComponent');
+          expect('componentId' in outNode).toBe(false);
+          expect('componentType' in outNode).toBe(false);
 
           const idWasRewritten = shouldResolve && source.id === rootId;
           expect(outNode['id']).toBe(idWasRewritten ? RENDERER_ROOT_ID : source.id);
 
-          // (c) children absence is preserved; presence is preserved with only the
-          // root-id references rewritten.
           if (source.children === undefined) {
             expect('children' in outNode).toBe(false);
           } else {
@@ -262,7 +257,6 @@ describe('convertV1ToV09 root mapping (Property 1)', () => {
             expect(outNode['children']).toEqual(expectedChildren);
           }
 
-          // (c) child absence/presence preserved with only the root-id reference rewritten.
           if (source.child === undefined) {
             expect('child' in outNode).toBe(false);
           } else {
@@ -271,8 +265,101 @@ describe('convertV1ToV09 root mapping (Property 1)', () => {
             expect(outNode['child']).toBe(expectedChild);
           }
         });
+
+        // Whole-output guard: no identity-correlation key leaks anywhere in the conversion.
+        expect(JSON.stringify(converted)).not.toContain('componentId');
+        expect(JSON.stringify(converted)).not.toContain('componentType');
       }),
       {numRuns: 200}
+    );
+  });
+
+  // Feature: a2ui-inline-state-data-model, Property 7 (updateDataModel pass-through): every
+  // v1.0 updateDataModel op is passed through as a v0.9 op carrying its { surfaceId, path,
+  // value } unchanged.
+  it('passes updateDataModel ops through unchanged (version bumped to v0.9)', () => {
+    const opArb = fc.record({
+      surfaceId: fc.string({minLength: 1, maxLength: 12}),
+      path: fc.string({minLength: 1, maxLength: 8}).map((seg) => `/state/${seg}`),
+      value: fc.oneof(
+        fc.integer(),
+        fc.string(),
+        fc.boolean(),
+        fc.record({page: fc.integer()}, {requiredKeys: ['page']})
+      ),
+    });
+
+    fc.assert(
+      fc.property(opArb, ({surfaceId, path, value}) => {
+        const message = {version: 'v1.0', updateDataModel: {surfaceId, path, value}};
+        const converted = convertV1ToV09(message);
+
+        expect(converted).toHaveLength(1);
+        expect(converted[0]).toEqual({version: 'v0.9', updateDataModel: {surfaceId, path, value}});
+      }),
+      {numRuns: 150}
+    );
+  });
+});
+
+// Feature: a2ui-inline-state-data-model, Property 13: an unconvertible v1.0 message (one that
+// carries no recognized operation) leaves the renderer state unchanged — getA2UIMessages emits
+// no v0.9 message for it, so the surface stream (and thus rendered state) is unaffected.
+describe('unconvertible messages are rejected, leaving renderer state unchanged (Property 13)', () => {
+  const KNOWN_OPS = ['createSurface', 'updateDataModel', 'updateComponents', 'deleteSurface'];
+
+  // A v1.0 message whose single top-level key is NOT a recognized operation. Object
+  // prototype keys (e.g. `toString`) are excluded so `Object.hasOwn` checks stay meaningful.
+  const RESERVED = new Set([
+    ...KNOWN_OPS,
+    'version',
+    ...Object.getOwnPropertyNames(Object.prototype),
+  ]);
+  const unconvertibleArb = fc
+    .string({minLength: 1, maxLength: 12})
+    .filter((key) => !RESERVED.has(key))
+    .chain((key) =>
+      fc.record({
+        key: fc.constant(key),
+        payload: fc.oneof(fc.record({}), fc.record({foo: fc.string()}), fc.string(), fc.integer()),
+      })
+    );
+
+  it('emits nothing for an unconvertible v1.0 message so prior renderer state is retained', () => {
+    fc.assert(
+      fc.property(unconvertibleArb, ({key, payload}) => {
+        const message = {version: 'v1.0', [key]: payload};
+
+        // Feed a valid createSurface first (the "prior state"), then the unconvertible one:
+        // only the valid message reaches the renderer stream; the unconvertible one adds
+        // nothing, so it cannot mutate the previously rendered surface.
+        const validCreate = {
+          version: 'v1.0',
+          createSurface: {surfaceId: 'surface-prior', components: [{id: 'root', component: 'X'}]},
+        };
+
+        const result = getA2UIMessages([
+          {
+            id: 'activity-1',
+            kind: 'a2ui-surface',
+            replace: false,
+            payload: {messages: [validCreate, message]},
+          },
+        ]);
+
+        // The unconvertible message contributes no createSurface/updateComponents/etc.
+        const emittedFromUnconvertible = result.filter((m) =>
+          Object.hasOwn(m as Record<string, unknown>, key)
+        );
+        expect(emittedFromUnconvertible).toHaveLength(0);
+
+        // The prior valid surface is still present and unchanged.
+        const createSurfaces = result.filter((m) =>
+          Object.hasOwn(m as Record<string, unknown>, 'createSurface')
+        );
+        expect(createSurfaces).toHaveLength(1);
+      }),
+      {numRuns: 150}
     );
   });
 });
