@@ -68,7 +68,11 @@ export default async function ProductListing({request}: {request: Request}) {
     controllers: {/* ... */},
   });
 
-  return <ListingProvider staticState={staticState}>{/* Other components */}</ListingProvider>;
+  return (
+    <ListingProvider staticState={staticState} accessToken={userToken}>
+      {/* Other components */}
+    </ListingProvider>
+  );
 }
 ```
 
@@ -80,6 +84,7 @@ When you omit `accessToken`, the request uses the token configured in the defini
 > [!IMPORTANT]
 >
 > Pass the same token to `hydrateStaticState()` on the client that you passed to `fetchStaticState()` on the server, so the hydrated engine continues using the token the page was rendered with.
+> With the React wrapper, you do this by passing `accessToken` to the provider (as shown above): the provider forwards it to `hydrateStaticState()` for you, so you don't call `hydrateStaticState()` yourself.
 
 > [!NOTE]
 >
