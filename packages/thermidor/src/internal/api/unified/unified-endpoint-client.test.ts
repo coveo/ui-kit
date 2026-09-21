@@ -147,6 +147,28 @@ describe('UnifiedEndpointClient', () => {
     );
   });
 
+  it('uses converseUrl as a full override, bypassing endpoint/path composition', async () => {
+    const stream = new ReadableStream<Uint8Array>();
+    mockedFetch.mockResolvedValue(new Response(null, {status: 200}));
+
+    Object.defineProperty(Response.prototype, 'body', {
+      configurable: true,
+      get: () => stream,
+    });
+
+    await client.call(request, {
+      organizationId: 'test-org-id',
+      accessToken: 'test-token',
+      endpoint: 'https://ignored.example.com',
+      converseUrl: 'http://localhost:3456/my/custom/converse',
+    });
+
+    expect(mockedFetch).toHaveBeenCalledWith(
+      'http://localhost:3456/my/custom/converse',
+      expect.objectContaining({method: 'POST'})
+    );
+  });
+
   it('returns success with stream on 2xx response', async () => {
     const stream = new ReadableStream<Uint8Array>();
     mockedFetch.mockResolvedValue(

@@ -9,7 +9,7 @@ const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
     options?: UnifiedEndpointCallOptions
   ): Promise<UnifiedEndpointClientResult> => {
     try {
-      const {organizationId, accessToken, endpoint} = configuration;
+      const {organizationId, accessToken, endpoint, converseUrl} = configuration;
 
       if (!organizationId) {
         return {
@@ -31,10 +31,11 @@ const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
         endpoint,
       });
       const url =
+        converseUrl ??
         organizationEndpoint +
-        '/api/preview/organizations/' +
-        organizationId +
-        '/agents/commerce/agui/converse';
+          '/api/preview/organizations/' +
+          organizationId +
+          '/agents/commerce/agui/converse';
 
       const response = await fetch(url, {
         method: 'POST',
@@ -86,6 +87,14 @@ interface UnifiedEndpointClientConfiguration {
   organizationId?: string;
   accessToken?: string;
   endpoint?: string;
+  /**
+   * Full override for the converse request URL. When set, the request is sent
+   * to this exact URL, bypassing organization endpoint resolution and path
+   * composition entirely.
+   *
+   * @internal
+   */
+  converseUrl?: string;
 }
 
 interface UnifiedEndpointCallOptions {
