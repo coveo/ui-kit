@@ -154,15 +154,31 @@ export function foldActivity(previousTurn: Turn, activity: NormalizedStreamEvent
     case 'ACTIVITY_SNAPSHOT': {
       const content = (activity as {content: unknown}).content as Record<string, unknown>;
       const metadata = getActivityMetadata(activity);
-      response.activities = [
-        ...response.activities,
-        {
-          id: (activity as {messageId?: string}).messageId ?? '',
-          kind: (activity as {activityType?: string}).activityType ?? '',
-          payload: content,
-          replace: metadata.replace ?? false,
-        },
-      ];
+      const nextActivity: Activity = {
+        id: (activity as {messageId?: string}).messageId ?? '',
+        kind: (activity as {activityType?: string}).activityType ?? '',
+        payload: content,
+        replace: metadata.replace ?? false,
+      };
+
+      // A snapshot is the latest full version of the content for its
+      // `messageId`. When `replace` is set and an activity with the same
+      // (non-empty) `messageId` already exists, supersede it in place —
+      // preserving its position — rather than appending a second entry.
+      // Otherwise append. This keeps a re-emitted surface from leaving a stale
+      // duplicate in `activities` (and thus in the derived `surfaces`).
+      const existingIndex =
+        nextActivity.replace && nextActivity.id
+          ? response.activities.findIndex((existing) => existing.id === nextActivity.id)
+          : -1;
+      if (existingIndex === -1) {
+        response.activities = [...response.activities, nextActivity];
+      } else {
+        response.activities = response.activities.map((existing, index) =>
+          index === existingIndex ? nextActivity : existing
+        );
+      }
+
       // Surfaces are a derived projection of `activities`: re-derive from the
       // full activity list so `response.surfaces` always agrees with a fresh
       // derivation off `response.activities`.

@@ -133,8 +133,10 @@ export interface TurnResponse {
   state: A2uiState;
 
   /**
-   * Ordered raw event log for the turn. Always present, preserving arrival
-   * order.
+   * The turn's snapshot activities in first-seen order. Always present. A
+   * `replace` snapshot supersedes the earlier activity with the same
+   * `messageId` in place rather than appending a duplicate, so this holds the
+   * latest snapshot per `messageId`.
    */
   activities: Activity[];
 
