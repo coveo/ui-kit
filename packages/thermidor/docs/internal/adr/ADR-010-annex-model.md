@@ -52,8 +52,11 @@ interface TurnResponse {
   // turns alike — it is not agent-specific.
   state: A2uiState;
 
-  // Ordered raw event log for the turn. Always present. Surface discovery and
-  // navigation read this. Not agent-specific.
+  // The turn's snapshot activities in first-seen order. Always present. A
+  // `replace` snapshot supersedes the earlier activity with the same messageId
+  // in place (rather than appending a duplicate), so this holds the latest
+  // snapshot per messageId. Surface discovery and navigation read this. Not
+  // agent-specific.
   activities: Activity[];
 
   // Agent-specific content. Present ONLY when the router invoked an agent.
