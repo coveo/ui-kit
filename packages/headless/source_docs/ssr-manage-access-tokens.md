@@ -36,7 +36,7 @@ export const engineDefinition = defineCommerceEngine({
   controllers: {/* ... */},
 });
 
-export const {fetchStaticState, hydrateStaticState, setAccessToken} = engineDefinition;
+export const {fetchStaticState, hydrateStaticState} = engineDefinition;
 ```
 
 ## Use one token for the whole application
@@ -113,23 +113,37 @@ export default async function ProductListing({request}: {request: Request}) {
 >
 > On the client, after hydration, `setNavigatorContextProvider()` is still the right tool: a single engine runs for the session, so there are no concurrent requests sharing the definition.
 
-## Update the token on the client
+## Rotate the token on the client
 
-After hydration, an engine keeps running in the browser for the rest of the session.
-If you need to change its token while it’s running — for example, after refreshing the user’s session — call `setAccessToken()` on the engine definition on the client.
-The new token is propagated to the live engine, and the requests it issues afterward use it.
+After hydration, an engine keeps running in the browser for the rest of the session, so its token eventually expires.
+Configure `renewAccessToken` on the engine configuration and the engine renews the token on its own: it checks the current token before each request and renews it when it is expired or about to expire, and it also retries once with a fresh token if a request is rejected as unauthorized.
 
-```tsx
-// component/rotate-token.tsx
+```ts
+// engine.ts
 
-'use client';
-
-import {setAccessToken} from '../path/to/engine.ts';
-
-export function onSessionRefreshed(newToken: string) {
-  setAccessToken(newToken);
-}
+export const engineDefinition = defineCommerceEngine({
+  configuration: {
+    organizationId: '<ORGANIZATION_ID>',
+    accessToken: '<DEFAULT_ACCESS_TOKEN>',
+    renewAccessToken: async () => {
+      const response = await fetch('/api/coveo-token');
+      const {token} = await response.json();
+      return token;
+    },
+    // ...
+  },
+  controllers: {/* ... */},
+});
 ```
+
+Because `renewAccessToken` is part of the engine configuration, it applies to every engine the definition builds, on the server and on the client, and it does not mutate anything shared between requests.
+
+> [!WARNING]
+>
+> `setAccessToken()` on the engine definition is deprecated and will be removed in a future major version.
+> It writes to the shared engine definition, which is unsafe on a server handling concurrent requests.
+> Use the per-request `accessToken` to choose the token for a request, and `renewAccessToken` to rotate an expiring one.
+> On the `@coveo/headless/ssr-commerce-next` sub-package, `setAccessToken()` and `getAccessToken()` have already been removed.
 
 ## Don’t use `setAccessToken()` to change the token per request on the server
 
@@ -137,7 +151,6 @@ export function onSessionRefreshed(newToken: string) {
 On the server, where many requests are handled concurrently, calling it for one request changes the token for the others in flight at the same time — one user could end up issuing requests with another user’s token.
 
 To use a different token per request on the server, use the per-request `accessToken` shown above instead.
-`setAccessToken()` is safe on the client, where a single hydrated engine runs for the session and no concurrent requests share the definition.
 
 ## Summary
 
@@ -145,7 +158,7 @@ To use a different token per request on the server, use the per-request `accessT
 | --------------------------------------------------- | -------------------------------------------------------------------------------------------- |
 | Use one token for all users                         | Set `accessToken` in the engine definition `configuration`                                   |
 | Use a different token per user                      | Pass `accessToken` to `fetchStaticState()` and `hydrateStaticState()`                        |
-| Update the token on the client                      | Call `setAccessToken()` on the engine definition                                             |
+| Rotate an expiring token                            | Configure `renewAccessToken` on the engine `configuration`                                   |
 | Use a different token per request on the server     | Use the per-request `accessToken` — don’t call `setAccessToken()`                            |
 | Set the navigator context per request on the server | Pass `navigatorContext` to `fetchStaticState()` — don’t call `setNavigatorContextProvider()` |
 | Set the navigator context on the client             | Call `setNavigatorContextProvider()` on the engine definition                                |
