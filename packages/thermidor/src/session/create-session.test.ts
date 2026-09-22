@@ -198,6 +198,68 @@ describe('createSession lifecycle', () => {
     });
   });
 
+  describe('Gateway session continuity', () => {
+    it('reuses RUN_STARTED session metadata for the next action request', async () => {
+      const session = createSession(baseConfig);
+
+      const first = queueStream();
+      const firstTurn = session.submit({prompt: 'find shoes'});
+      await first.opened;
+      first.emit({
+        type: 'RUN_STARTED',
+        threadId: 'gateway-session-123',
+        runId: 'gateway-run-123',
+        conversationSessionId: 'gateway-session-123',
+        conversationToken: 'gateway-token-abc',
+      });
+      first.emit({
+        type: 'ACTIVITY_SNAPSHOT',
+        messageId: 'surface-activity',
+        activityType: 'a2ui-surface',
+        content: {
+          messages: [
+            {
+              version: 'v1.0',
+              createSurface: {
+                surfaceId: 'commerce-search-surface',
+                rootId: 'commerce-search-root',
+                components: [
+                  {
+                    id: 'commerce-search-root',
+                    props: {componentType: 'commerce-search'},
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      });
+      first.emit({type: 'RUN_FINISHED', threadId: 'gateway-session-123', runId: 'gateway-run-123'});
+      first.close();
+      await firstTurn;
+
+      const actionStream = queueStream();
+      const actionTurn = session.dispatchAction({
+        componentId: 'pagination-1',
+        componentType: 'pagination',
+        action: 'selectPage',
+        payload: {page: 2},
+      });
+      await flush();
+      await actionStream.opened;
+
+      expect(callMock).toHaveBeenCalledTimes(2);
+      expect(callMock.mock.calls[1][0]).toMatchObject({
+        conversationSessionId: 'gateway-session-123',
+        conversationToken: 'gateway-token-abc',
+      });
+
+      actionStream.emit({type: 'RUN_FINISHED'});
+      actionStream.close();
+      await actionTurn;
+    });
+  });
+
   describe('cancel during an in-flight stream', () => {
     it('stops the stream, retains the partial response, and sets the active turn to error', async () => {
       const session = createSession(baseConfig);
