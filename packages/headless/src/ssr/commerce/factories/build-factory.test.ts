@@ -363,4 +363,114 @@ describe('buildFactory', () => {
       ).toBe('extend-token');
     });
   });
+
+  describe('per-request navigator context', () => {
+    const navigatorContext = {
+      clientId: 'per-request-client-id',
+      referrer: null,
+      userAgent: 'per-request-ua',
+      location: 'http://per-request/',
+      forwardedFor: '9.9.9.9',
+    };
+
+    it('should build the engine with the per-request navigator context when provided', async () => {
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+      const build = factory(SolutionType.listing);
+
+      await build({navigatorContext});
+
+      const usedProvider = (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0]
+        .navigatorContextProvider;
+      expect(usedProvider()).toEqual(navigatorContext);
+    });
+
+    it('should not mutate the shared definition navigator context provider', async () => {
+      const sharedProvider = mockEngineOptions.navigatorContextProvider;
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+      const build = factory(SolutionType.listing);
+
+      await build({navigatorContext});
+
+      expect(mockEngineOptions.navigatorContextProvider).toBe(sharedProvider);
+    });
+
+    it('should fall back to the definition provider when none is provided', async () => {
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+      const build = factory(SolutionType.listing);
+
+      await build();
+
+      expect(
+        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0].navigatorContextProvider
+      ).toBe(mockEngineOptions.navigatorContextProvider);
+    });
+
+    it('should give each request a preprocessRequest bound to its own navigator context', async () => {
+      // The augmentation reads its navigator context from the options object it captured, and it
+      // short-circuits on an already-augmented function. Sharing one wrapper across requests would
+      // therefore pin every x-forwarded-for to whichever request created it first, so each request
+      // must get its own wrapper.
+      const contextA = {...navigatorContext, clientId: 'client-A', forwardedFor: '1.1.1.1'};
+      const contextB = {...navigatorContext, clientId: 'client-B', forwardedFor: '2.2.2.2'};
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+      const build = factory(SolutionType.listing);
+
+      await build({navigatorContext: contextA});
+      await build({navigatorContext: contextB});
+
+      const forwardedForOf = async (callIndex: number) => {
+        const {preprocessRequest} = (commerceEngine.buildCommerceEngine as Mock).mock.calls[
+          callIndex
+        ][0].configuration;
+        const request = {headers: {}} as never;
+        await preprocessRequest(request, 'searchApiFetch', undefined);
+        return new Headers((request as {headers: HeadersInit}).headers).get('x-forwarded-for');
+      };
+
+      expect(await forwardedForOf(0)).toBe('1.1.1.1');
+      expect(await forwardedForOf(1)).toBe('2.2.2.2');
+    });
+
+    it('should isolate the navigator context across concurrent builds', async () => {
+      const contextA = {...navigatorContext, clientId: 'client-A', forwardedFor: '1.1.1.1'};
+      const contextB = {...navigatorContext, clientId: 'client-B', forwardedFor: '2.2.2.2'};
+      const sharedProvider = mockEngineOptions.navigatorContextProvider;
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+      const build = factory(SolutionType.listing);
+
+      await Promise.all([build({navigatorContext: contextA}), build({navigatorContext: contextB})]);
+
+      const providers = (commerceEngine.buildCommerceEngine as Mock).mock.calls.map(
+        (call) => call[0].navigatorContextProvider
+      );
+      const resolved = providers.map((p) => p());
+      expect(resolved).toContainEqual(contextA);
+      expect(resolved).toContainEqual(contextB);
+      expect(mockEngineOptions.navigatorContextProvider).toBe(sharedProvider);
+    });
+
+    it('should NOT warn when only a per-request navigator context is provided (no definition provider)', async () => {
+      const optionsWithoutProvider: CommerceEngineOptions = {
+        configuration: getSampleCommerceEngineConfiguration(),
+      };
+      const factory = buildFactory(mockEmptyDefinition, optionsWithoutProvider);
+      const build = factory(SolutionType.listing);
+
+      await build({navigatorContext});
+
+      expect(mockLogger.warn).not.toHaveBeenCalled();
+    });
+
+    it('should warn when neither a definition provider nor a per-request navigator context is available', async () => {
+      const optionsWithoutProvider: CommerceEngineOptions = {
+        configuration: getSampleCommerceEngineConfiguration(),
+      };
+      const factory = buildFactory(mockEmptyDefinition, optionsWithoutProvider);
+      const build = factory(SolutionType.listing);
+
+      await build();
+
+      expect(mockLogger.warn).toHaveBeenCalled();
+    });
+  });
 });

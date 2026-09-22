@@ -1,4 +1,5 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
+import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {ControllersMap, ControllersPropsMap} from '../../common/types/controllers.js';
 import type {HydratedState} from '../../common/types/hydrate-static-state.js';
@@ -32,6 +33,15 @@ export interface HydrateStaticStateOptions<TSearchAction> {
    * permissions.
    */
   accessToken?: string;
+  /**
+   * The navigator context to use for this `hydrateStaticState()` call only.
+   *
+   * When provided, it is applied to this call's engine without mutating the shared definition.
+   * Pass the same navigator context that was used to fetch the static state so the hydrated engine
+   * reports the same client ID and keeps the analytics session continuous. When omitted, the provider
+   * set with `setNavigatorContextProvider` is used.
+   */
+  navigatorContext?: NavigatorContext;
 }
 
 export type HydrateStaticState<
@@ -62,10 +72,10 @@ export type HydrateStaticState<
    */
   fromBuildResult: FromBuildResult<
     TControllers,
-    // `accessToken` is a per-request option of `hydrateStaticState()` only; `fromBuildResult`
-    // replays search actions on an already-built engine and never reads it, so it is excluded here
-    // to avoid silently accepting a token that would have no effect.
-    Omit<HydrateStaticStateOptions<TSearchAction>, 'accessToken'>,
+    // `accessToken` and `navigatorContext` are per-request options of `hydrateStaticState()` only;
+    // `fromBuildResult` replays search actions on an already-built engine and never reads them, so
+    // they are excluded here to avoid silently accepting a token/context that would have no effect.
+    Omit<HydrateStaticStateOptions<TSearchAction>, 'accessToken' | 'navigatorContext'>,
     HydratedState<SSRCommerceEngine, TControllers>
   >;
 };

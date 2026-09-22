@@ -12,6 +12,7 @@ import {
   createWaitForActionMiddleware,
   createWaitForActionMiddlewareForRecommendation,
 } from '../../../utils/utils.js';
+import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
 import type {ControllersPropsMap} from '../../common/types/controllers.js';
 import {buildControllerDefinitions} from '../controller-utils.js';
 import {SolutionType} from '../types/controller-constants.js';
@@ -174,7 +175,18 @@ export const buildFactory =
   <T extends SolutionType>(solutionType: T) =>
   async (...[buildOptions]: BuildParameters<TControllerDefinitions>) => {
     const logger = buildLogger(options.loggerOptions);
-    if (!options.navigatorContextProvider) {
+
+    const perRequestAccessToken =
+      buildOptions && 'accessToken' in buildOptions ? buildOptions.accessToken : undefined;
+    const perRequestNavigatorContext =
+      buildOptions && 'navigatorContext' in buildOptions
+        ? buildOptions.navigatorContext
+        : undefined;
+
+    // Warn only when NO navigator context is available for this request — neither a definition-level
+    // provider nor a per-request `navigatorContext`. The per-request-only path (build({navigatorContext})
+    // without setNavigatorContextProvider) is supported and must not log a false "missing" warning.
+    if (!options.navigatorContextProvider && perRequestNavigatorContext === undefined) {
       logger.warn(
         '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
       );
@@ -190,13 +202,11 @@ export const buildFactory =
       solutionType
     );
 
-    const perRequestAccessToken =
-      buildOptions && 'accessToken' in buildOptions ? buildOptions.accessToken : undefined;
-
     // Apply the per-request access token BEFORE running `extend`, on a non-mutating copy of the
-    // shared definition options. This keeps the documented precedence correct: the deprecated
-    // `extend` hook sees the per-request token and its return value wins, so an extender can
-    // deliberately override it. Without `extend`, the per-request token simply carries through.
+    // shared definition options, so the deprecated `extend` hook sees it and its return value wins
+    // (documented precedence for the token). Without `extend`, the per-request token carries through.
+    // Note: the per-request `navigatorContext` is applied AFTER `extend` (below), so `extend` does
+    // not override it — this matches the intent that a request's own navigator context is authoritative.
     const optionsForRequest =
       perRequestAccessToken !== undefined
         ? {
@@ -208,10 +218,31 @@ export const buildFactory =
           }
         : options;
 
-    const engineOptions =
+    const baseOptions =
       buildOptions && 'extend' in buildOptions && buildOptions?.extend
         ? await buildOptions.extend(optionsForRequest)
         : optionsForRequest;
+
+    const navigatorContextProvider = perRequestNavigatorContext
+      ? () => perRequestNavigatorContext
+      : baseOptions.navigatorContextProvider;
+
+    // Always build a per-request copy (never mutate the shared definition options). The
+    // forwarded-for augmentation of preprocessRequest is applied per request, and the optional
+    // per-request navigator context is layered on top. The per-request access token is already
+    // present in `baseOptions.configuration` (applied before `extend` above).
+    const engineOptions = {
+      ...baseOptions,
+      navigatorContextProvider,
+      configuration: {
+        ...baseOptions.configuration,
+        preprocessRequest: augmentPreprocessRequestWithForwardedFor({
+          preprocessRequest: baseOptions.configuration.preprocessRequest,
+          navigatorContextProvider,
+          loggerOptions: baseOptions.loggerOptions,
+        }),
+      },
+    };
 
     const engine = buildSSRCommerceEngine(
       solutionType,

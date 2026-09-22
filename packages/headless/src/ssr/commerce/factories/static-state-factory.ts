@@ -1,7 +1,6 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import {buildProductListing} from '../../../controllers/commerce/product-listing/headless-product-listing.js';
 import {buildSearch} from '../../../controllers/commerce/search/headless-search.js';
-import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
 import {composeFunction} from '../../common/controller-utils.js';
 import {createStaticState} from '../controller-utils.js';
 import {SolutionType} from '../types/controller-constants.js';
@@ -66,12 +65,6 @@ export const fetchStaticStateFactory: <
           ...options,
         })(solutionType);
         const buildResult = await solutionTypeBuild(...params);
-
-        options.configuration.preprocessRequest = augmentPreprocessRequestWithForwardedFor({
-          preprocessRequest: options.configuration.preprocessRequest,
-          navigatorContextProvider: options.navigatorContextProvider,
-          loggerOptions: options.loggerOptions,
-        });
 
         const staticStateBuild = await fetchStaticStateFactory(
           controllerDefinitions,
