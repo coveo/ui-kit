@@ -66,11 +66,10 @@ describe('buildFactory', () => {
 
   it('should register the engine for token updates with the engine as owner', async () => {
     const onAccessTokenUpdate = vi.fn();
-    const factory = buildFactory(
-      mockEmptyDefinition,
-      {...mockEngineOptions, onAccessTokenUpdate},
-      true
-    );
+    const factory = buildFactory(mockEmptyDefinition, {
+      ...mockEngineOptions,
+      onAccessTokenUpdate,
+    });
 
     const {engine} = await factory(SolutionType.listing)();
 
@@ -249,6 +248,119 @@ describe('buildFactory', () => {
       expect(
         (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0].middlewares
       ).toHaveLength(0);
+    });
+  });
+
+  describe('per-request access token', () => {
+    it('should build the engine with the per-request access token when provided', async () => {
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+      const build = factory(SolutionType.listing);
+
+      await build({accessToken: 'per-request-token'});
+
+      expect(
+        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0].configuration.accessToken
+      ).toBe('per-request-token');
+    });
+
+    it('should fall back to the definition access token when none is provided', async () => {
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+      const build = factory(SolutionType.listing);
+
+      await build();
+
+      expect(
+        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0].configuration.accessToken
+      ).toBe(mockEngineOptions.configuration.accessToken);
+    });
+
+    it('should not mutate the shared definition configuration', async () => {
+      // Use a fresh options object with a known token (not the shared fixture) so the assertion
+      // genuinely verifies non-mutation: reusing the shared fixture could capture an already-leaked
+      // value and pass even if the shared configuration were mutated.
+      const definitionToken = 'definition-token';
+      const freshOptions: CommerceEngineOptions = {
+        configuration: {...getSampleCommerceEngineConfiguration(), accessToken: definitionToken},
+        navigatorContextProvider: buildMockNavigatorContextProvider(),
+      };
+      const factory = buildFactory(mockEmptyDefinition, freshOptions);
+      const build = factory(SolutionType.listing);
+
+      await build({accessToken: 'per-request-token'});
+
+      expect(freshOptions.configuration.accessToken).toBe(definitionToken);
+    });
+
+    it('should isolate the token across concurrent builds', async () => {
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+      const build = factory(SolutionType.listing);
+
+      await Promise.all([build({accessToken: 'token-A'}), build({accessToken: 'token-B'})]);
+
+      const tokensUsed = (commerceEngine.buildCommerceEngine as Mock).mock.calls.map(
+        (call) => call[0].configuration.accessToken
+      );
+      expect(tokensUsed).toContain('token-A');
+      expect(tokensUsed).toContain('token-B');
+    });
+
+    it('should NOT subscribe a request-scoped per-request-token engine to shared token updates', async () => {
+      const onAccessTokenUpdate = vi.fn();
+      const factory = buildFactory(mockEmptyDefinition, {
+        ...mockEngineOptions,
+        onAccessTokenUpdate,
+      });
+      const build = factory(SolutionType.listing);
+
+      await build({accessToken: 'per-request-token'});
+
+      expect(onAccessTokenUpdate).not.toHaveBeenCalled();
+    });
+
+    it('should subscribe a per-request-token engine that outlives the request to shared token updates', async () => {
+      const onAccessTokenUpdate = vi.fn();
+      const factory = buildFactory(
+        mockEmptyDefinition,
+        {...mockEngineOptions, onAccessTokenUpdate},
+        {engineOutlivesRequest: true}
+      );
+      const build = factory(SolutionType.listing);
+
+      const {engine} = await build({accessToken: 'per-request-token'});
+
+      expect(onAccessTokenUpdate).toHaveBeenCalledExactlyOnceWith(expect.any(Function), engine);
+    });
+
+    it('should still subscribe to shared token updates when no per-request token is provided', async () => {
+      const onAccessTokenUpdate = vi.fn();
+      const factory = buildFactory(mockEmptyDefinition, {
+        ...mockEngineOptions,
+        onAccessTokenUpdate,
+      });
+      const build = factory(SolutionType.listing);
+
+      const {engine} = await build();
+
+      expect(onAccessTokenUpdate).toHaveBeenCalledExactlyOnceWith(expect.any(Function), engine);
+    });
+
+    it('should let the deprecated extend hook override the per-request token', async () => {
+      // The per-request token is applied before `extend` runs, so an extender that returns a
+      // different access token wins — matching the documented "extend takes precedence".
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+      const build = factory(SolutionType.listing);
+
+      await build({
+        accessToken: 'per-request-token',
+        extend: async (options) => ({
+          ...options,
+          configuration: {...options.configuration, accessToken: 'extend-token'},
+        }),
+      });
+
+      expect(
+        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0].configuration.accessToken
+      ).toBe('extend-token');
     });
   });
 });

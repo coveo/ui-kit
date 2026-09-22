@@ -17,6 +17,10 @@ export interface BuildOptions<TEngineOptions> {
    * @deprecated This option will be removed in the next major version.
    */
   extend?: OptionsExtender<TEngineOptions>;
+  /**
+   * A per-request access token applied to this call only, without mutating the shared definition.
+   */
+  accessToken?: string;
 }
 
 /**

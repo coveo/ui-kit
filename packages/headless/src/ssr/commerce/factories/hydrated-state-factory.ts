@@ -22,9 +22,11 @@ export const hydratedStaticStateFactory: <
   (solutionType: SolutionType) =>
     composeFunction(
       async (...params: HydrateStaticStateParameters<TControllerDefinitions>) => {
-        const solutionTypeBuild = await buildFactory(controllerDefinitions, {
-          ...options,
-        })(solutionType);
+        const solutionTypeBuild = await buildFactory(
+          controllerDefinitions,
+          {...options},
+          {engineOutlivesRequest: true}
+        )(solutionType);
         const buildResult = await solutionTypeBuild(
           ...(params as BuildParameters<TControllerDefinitions>)
         );
