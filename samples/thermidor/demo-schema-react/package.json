@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:agent-gateway": "VITE_COVEO_ENDPOINT=http://localhost:8980 VITE_COVEO_USE_VITE_PROXY=true vite",
+    "dev:agent-gateway": "VITE_COVEO_ENDPOINT=http://localhost:8990 VITE_COVEO_USE_VITE_PROXY=true vite",
     "dev:mock": "bash scripts/dev-mock.sh",
     "build": "vite build",
     "preview": "vite preview",
