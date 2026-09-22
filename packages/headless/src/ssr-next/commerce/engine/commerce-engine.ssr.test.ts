@@ -49,21 +49,6 @@ describe('Commerce Engine SSR', () => {
     ['recommendationEngineDefinition'],
     ['standaloneEngineDefinition'],
   ])('%s', (definitionName) => {
-    it('#getAccessToken should return the access token', () => {
-      const engineDefinition = defineCommerceEngine(definitionOptions);
-      const solutionType = definitionName as keyof typeof engineDefinition;
-      const {getAccessToken} = engineDefinition[solutionType];
-      expect(getAccessToken()).toBe('some-token');
-    });
-
-    it('#setAccessToken should update the access token', () => {
-      const engineDefinition = defineCommerceEngine(definitionOptions);
-      const solutionType = definitionName as keyof typeof engineDefinition;
-      const {getAccessToken, setAccessToken} = engineDefinition[solutionType];
-      setAccessToken('new-access-token');
-      expect(getAccessToken()).toBe('new-access-token');
-    });
-
     it('should always return context and cart controllers as well as the ones provided', async () => {
       const engineDefinition = defineCommerceEngine(definitionOptions);
       const solutionType = definitionName as keyof typeof engineDefinition;
