@@ -2,53 +2,22 @@
   "extends": ["../../.oxlintrc.json"],
   "overrides": [
     {
-      "files": ["src/index.ts", "src/public/**"],
+      "files": ["src/**"],
+      "excludeFiles": ["**/*.test.ts", "**/*.test-d.ts", "**/*.test.tsx"],
       "rules": {
         "no-restricted-imports": [
           "error",
           {
-            "patterns": [
+            "paths": [
               {
-                "group": [
-                  "@ag-ui/core",
-                  "@ag-ui/core/*",
-                  "@reduxjs/toolkit",
-                  "@reduxjs/toolkit/*",
-                  "immer",
-                  "redux-thunk",
-                  "reselect"
-                ],
-                "message": "Public surface must not depend on Redux, Immer, AG-UI, or related ecosystem packages directly."
+                "name": "zod",
+                "allowTypeImports": true,
+                "message": "zod is a peer-only dependency of @coveo/thermidor: import types only (import type). A value import would make zod a runtime dependency and risk a second zod instance (dual-instance parsing hazard). Validate against the consumer-supplied schema instance instead. See ADR-014."
               },
               {
-                "group": [
-                  "@/src/internal/features/*/*",
-                  "!@/src/internal/features/*/index.js",
-                  "@/src/internal/api/*/*",
-                  "!@/src/internal/api/*/index.js",
-                  "@/src/internal/engine/*",
-                  "!@/src/internal/engine/index.js",
-                  "@/src/internal/utils/*",
-                  "!@/src/internal/utils/index.js"
-                ],
-                "message": "Import from the barrel (index.ts), not deep paths. Use @/src/internal/features/<name> or @/src/internal/api/<name>."
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "files": ["src/internal/**"],
-      "excludeFiles": ["**/*.test.ts", "**/*.test-d.ts"],
-      "rules": {
-        "no-restricted-imports": [
-          "error",
-          {
-            "patterns": [
-              {
-                "group": ["@/src/public/**"],
-                "message": "Internal modules must not import from the public surface. Move the shared code into src/internal/."
+                "name": "zod/v4",
+                "allowTypeImports": true,
+                "message": "zod is a peer-only dependency of @coveo/thermidor: import types only (import type). See ADR-014."
               }
             ]
           }

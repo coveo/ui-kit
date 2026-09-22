@@ -1,10 +1,8 @@
-import {Fragment, useState} from 'react';
+import {Fragment, useCallback, useState, useSyncExternalStore} from 'react';
 import type {ReactNode} from 'react';
 
-import {selectRemoteControllerState} from '@coveo/thermidor';
 import {useRemoteController} from '../controllers.js';
-import {useStateSource} from '../state-source-context.js';
-import type {EngineStateSource} from '../controllers.js';
+import {useSession} from '../../context/session.js';
 import type {BundleDisplayProps, BundleSlot, BundleTier, Product} from '@coveo/thermidor-schema';
 import styles from './BundleDisplay.module.css';
 
@@ -20,15 +18,41 @@ function formatPrice(value: number): string {
   return `$${value.toFixed(2)}`;
 }
 
-function slotUnitPrice(stateSource: EngineStateSource, childId: string): number {
-  const slotState = selectRemoteControllerState(stateSource.state, childId) as {
-    product?: Product | null;
-  };
-  const product = slotState.product;
+function productUnitPrice(product: Product | null | undefined): number {
   if (!product) {
     return 0;
   }
   return product.ec_promo_price ?? product.ec_price ?? 0;
+}
+
+/**
+ * Sums the unit price of each slot's product-summary child by reading that
+ * child's server-owned state from the session. Each child's state is obtained
+ * through a vended `product-summary` remote controller keyed by the slot's
+ * `childId`; the sum is recomputed whenever the session's active turn state
+ * changes.
+ */
+function usePackageTotal(slots: BundleSlot[]): number {
+  const session = useSession();
+
+  const subscribe = useCallback(
+    (onStoreChange: () => void) => session.subscribe(onStoreChange),
+    [session]
+  );
+
+  const childKey = slots.map((slot) => slot.childId).join('|');
+
+  const getSnapshot = useCallback(() => {
+    return slots.reduce((sum, slot) => {
+      const childState = session.remoteController(slot.childId, 'product-summary').state;
+      return sum + productUnitPrice(childState?.product);
+    }, 0);
+    // `childKey` captures the slot identity set so the snapshot recomputes when
+    // the active tier's slots change.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session, childKey]);
+
+  return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
 }
 
 export function BundleDisplayRenderer({
@@ -38,18 +62,14 @@ export function BundleDisplayRenderer({
   props: BundleDisplayProps;
   children: (id: string) => ReactNode;
 }) {
-  const stateSource = useStateSource();
-  const controller = useRemoteController(stateSource, props.componentId, props.componentType);
+  const controller = useRemoteController(props.componentId, props.componentType);
   const tiers = controller.state?.tiers ?? [];
   const [activeTierIndex, setActiveTierIndex] = useState(0);
 
   const activeTier = tiers[activeTierIndex] ?? tiers[0];
   const activeSlots = activeTier?.slots ?? [];
 
-  const packageTotal = activeSlots.reduce(
-    (sum: number, slot: BundleSlot) => sum + slotUnitPrice(stateSource, slot.childId),
-    0
-  );
+  const packageTotal = usePackageTotal(activeSlots);
 
   return (
     <section className={styles.container}>

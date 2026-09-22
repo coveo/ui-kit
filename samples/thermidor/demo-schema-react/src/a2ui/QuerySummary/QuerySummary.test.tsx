@@ -13,10 +13,6 @@ vi.mock('../controllers.js', () => ({
   }),
 }));
 
-vi.mock('../state-source-context.js', () => ({
-  useStateSource: () => ({}),
-}));
-
 const props = {componentId: 'query-summary-2', componentType: 'query-summary' as const};
 
 beforeEach(() => {
