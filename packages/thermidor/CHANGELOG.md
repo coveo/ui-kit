@@ -1,5 +1,19 @@
 # @coveo/thermidor
 
+## 0.2.0
+
+### Minor Changes
+
+- [#8501](https://github.com/coveo/ui-kit/pull/8501) [`58a1787`](https://github.com/coveo/ui-kit/commit/58a1787b66b78d0033232f4a378e3e6dab2c40aa) - Rework `@coveo/thermidor` into a lean session client for the unified converse endpoint.
+
+  The engine/interface/Redux/facade stack is removed and replaced by a single `createSession(config)` factory returning a `Session` that exposes an observable list of `Turn`s folded from the SSE stream, plus a generic, schema-validated remote controller vended from the session. The contracts schema, endpoint URL, and context are consumer-injected, and `zod` is now a peer dependency. This is a breaking change to the entire public surface.
+
+### Patch Changes
+
+- [#8512](https://github.com/coveo/ui-kit/pull/8512) [`667f3e6`](https://github.com/coveo/ui-kit/commit/667f3e6cf552758340f7f15f9aad33fd232935e3) - Persist Gateway session metadata from AG-UI run events so remote actions stay in the active conversation.
+
+- [#8503](https://github.com/coveo/ui-kit/pull/8503) [`1dbe710`](https://github.com/coveo/ui-kit/commit/1dbe710536179c7f2dbfe1a6cfd342372ce67721) - Use Thermidor Schema beta.5 so the session client exposes the canonical commerce action contracts.
+
 ## 0.1.0
 
 ### Minor Changes
