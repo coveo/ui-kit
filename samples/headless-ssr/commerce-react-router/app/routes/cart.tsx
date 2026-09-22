@@ -27,23 +27,20 @@ export const loader = async ({request, url}: Route.LoaderArgs) => {
     url.pathname
   );
 
-  const standaloneEngineDefinition = await getEngineDefinition(
-    navigatorContext,
-    request,
-    SolutionType.standalone
-  );
+  const standaloneEngineDefinition = await getEngineDefinition(request, SolutionType.standalone);
 
   const staticState = await standaloneEngineDefinition.fetchStaticState({
+    navigatorContext,
     ...baseFetchStaticStateConfiguration,
   });
 
   const recommendationEngineDefinition = await getEngineDefinition(
-    navigatorContext,
     request,
     SolutionType.recommendation
   );
 
   const recsStaticState = await recommendationEngineDefinition.fetchStaticState({
+    navigatorContext,
     controllers: {
       ...baseFetchStaticStateConfiguration.controllers,
       popularViewedRecs: {enabled: true},
