@@ -1,6 +1,5 @@
 type RequiredEnvKey =
   | 'VITE_COVEO_ORGANIZATION_ID'
-  | 'VITE_COVEO_ACCESS_TOKEN'
   | 'VITE_COVEO_TRACKING_ID'
   | 'VITE_COVEO_LANGUAGE'
   | 'VITE_COVEO_COUNTRY'
@@ -82,7 +81,8 @@ export function getSampleConfiguration() {
 
   return {
     organizationId,
-    accessToken: getRequiredEnvValue('VITE_COVEO_ACCESS_TOKEN'),
+    // Optional: mock mode does not use it. For a live backend, set VITE_COVEO_ACCESS_TOKEN.
+    accessToken: getOptionalEnvValue('VITE_COVEO_ACCESS_TOKEN') ?? '',
     trackingId: getRequiredEnvValue('VITE_COVEO_TRACKING_ID'),
     language: getRequiredEnvValue('VITE_COVEO_LANGUAGE'),
     country: getRequiredEnvValue('VITE_COVEO_COUNTRY'),
