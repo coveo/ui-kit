@@ -12,6 +12,19 @@ export function registerAutoloader(
 
   // Track visited nodes to prevent infinite recursion
   const visitedNodes = new WeakSet<Element | ShadowRoot | DocumentFragment>();
+
+  /**
+   * Surfaces a component registration failure that would otherwise be silent.
+   * Registration relies on dynamic imports, which can fail for reasons unrelated
+   * to the browser (CDN transient failures, corporate proxies, CSP rules, ad
+   * blockers). Without this, a missing component leaves no diagnostic behind.
+   */
+  const reportRegistrationError = (tagName: string, error: unknown) => {
+    console.error(
+      `[Atomic] Failed to register the "${tagName}" component. The component will not be displayed. This can happen when its code fails to load (e.g. network error, CDN issue, content security policy, proxy, or ad blocker).`,
+      error
+    );
+  };
   /**
    * Observes a stencil element for hydration and discovers its shadowRoot when hydrated.
    */
@@ -24,7 +37,11 @@ export function registerAutoloader(
         !visitedNodes.has(atomicElement.shadowRoot)
       ) {
         attributeObserver.disconnect();
-        await discover(atomicElement.shadowRoot);
+        try {
+          await discover(atomicElement.shadowRoot);
+        } catch (error) {
+          reportRegistrationError(atomicElement.tagName.toLowerCase(), error);
+        }
         observer.observe(atomicElement.shadowRoot, {
           subtree: true,
           childList: true,
@@ -106,20 +123,28 @@ export function registerAutoloader(
   /**
    * Registers an element by tag name.
    */
-  const register = (tagName: string) => {
+  const register = async (tagName: string) => {
     // If the element is already defined, there's nothing more to do
     if (customElements.get(tagName)) {
-      return Promise.resolve();
+      return;
     }
 
-    return elementMap[tagName]?.();
+    try {
+      await elementMap[tagName]?.();
+    } catch (error) {
+      reportRegistrationError(tagName, error);
+    }
   };
 
   const observer = new MutationObserver(async (mutations) => {
     for (const {addedNodes} of mutations) {
       for (const node of addedNodes) {
         if (node.nodeType === Node.ELEMENT_NODE) {
-          await discover(node as Element);
+          try {
+            await discover(node as Element);
+          } catch (error) {
+            reportRegistrationError((node as Element).tagName.toLowerCase(), error);
+          }
         }
       }
     }
@@ -127,7 +152,10 @@ export function registerAutoloader(
 
   const initializeDiscovery = () => {
     for (const root of roots) {
-      discover(root);
+      discover(root).catch((error) => {
+        const tagName = root instanceof Element ? root.tagName.toLowerCase() : 'root';
+        reportRegistrationError(tagName, error);
+      });
       observer.observe(root, {
         subtree: true,
         childList: true,
