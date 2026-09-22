@@ -94,7 +94,7 @@ When you omit `accessToken`, the request uses the token configured in the defini
 
 The navigator context carries per-request signals used for analytics and personalization — the client ID, user agent, referrer, and forwarded-for address. Like the access token, it varies from one request to the next, so it must not be written onto the shared engine definition on the server.
 
-The traditional way to set it, `setNavigatorContextProvider()`, writes into the shared definition. On the server, where requests are handled concurrently, that is racy: one request can read another request's navigator context. Instead, pass a `navigatorContext` when you fetch the static state to use it for that request only:
+`setNavigatorContextProvider()` sets the navigator context on the shared definition. That works on the client, where a single engine serves one user, but on the server — where requests are handled concurrently — it is racy: one request can read another request's navigator context. Instead, pass a `navigatorContext` when you fetch the static state to use it for that request only:
 
 ```tsx
 // server.ts
