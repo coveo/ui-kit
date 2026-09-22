@@ -1,9 +1,16 @@
 import {
+  bindStateFields,
   buildConversationResponse,
   buildValidatedSurface,
+  statePath,
   type A2uiComponentNode,
 } from './shared.js';
-import {ActivitySnapshot, StateSnapshot, type ConverseEvent} from '../events.js';
+import {
+  ActivitySnapshot,
+  UpdateDataModelActivity,
+  type ConverseEvent,
+  type UpdateDataModelOp,
+} from '../events.js';
 
 const runId = 'b41e5d90-2f8c-4c1e-9b7a-3d6f0a1c8e42';
 
@@ -1054,9 +1061,59 @@ function computeComponentsState(view: SearchViewState): Record<string, unknown> 
     'facet-brand-2': deriveRegularFacetValues(view, FACET_COMPONENT_IDS.regular),
     'facet-price-2': deriveNumericFacetValues(view),
     'facet-category-2': deriveCategoryFacetValues(view, FACET_COMPONENT_IDS.category),
-    // Facet ordering lives on the facet-manager node's `children` (A2-UI plane), not here.
-    'facet-manager-2': {},
+    // FacetManager has NO Component_State: facet ordering lives on its `children` (A2-UI
+    // composition plane), so it emits no `/state` op.
   };
+}
+
+// The set of state field names each stateful node binds and re-emits. These mirror the keys of
+// each entry `computeComponentsState` produces, so a node's `{ path }` bindings resolve to the
+// fields of the whole-component value written at `statePath(id)`.
+const STATE_FIELDS_BY_NODE: Record<string, readonly string[]> = {
+  'query-summary-2': ['query', 'firstIndex', 'lastIndex', 'totalEntries'],
+  'product-list-2': ['products'],
+  'pagination-2': ['page', 'pageSize', 'totalEntries', 'totalPages'],
+  'page-size-2': ['pageSize'],
+  'sort-2': ['appliedSort', 'availableSorts'],
+  'facet-brand-2': [
+    'field',
+    'displayName',
+    'values',
+    'hasActiveValues',
+    'canShowMoreValues',
+    'canShowLessValues',
+    'facetSearch',
+  ],
+  'facet-price-2': [
+    'field',
+    'displayName',
+    'values',
+    'customRange',
+    'domain',
+    'hasActiveValues',
+    'canShowMoreValues',
+    'canShowLessValues',
+  ],
+  'facet-category-2': [
+    'field',
+    'displayName',
+    'values',
+    'canShowMoreValues',
+    'canShowLessValues',
+    'facetSearch',
+  ],
+};
+
+// Builds the whole-component `/state/<id>` updateDataModel ops for the surface from a view's
+// computed component state: each `(nodeId, stateObject)` entry becomes one op writing the whole
+// state object at `statePath(nodeId)`. Nodes with no state produce no op.
+function buildStateOps(view: SearchViewState): UpdateDataModelOp[] {
+  const components = computeComponentsState(view);
+  return Object.entries(components).map(([nodeId, value]) => ({
+    surfaceId: SEARCH_SURFACE_ID,
+    path: statePath(nodeId),
+    value,
+  }));
 }
 
 const COMMERCE_SEARCH_ROOT_ID = 'commerce-search-2';
@@ -1079,89 +1136,92 @@ const TOP_ROW_CHILD_IDS = ['query-summary-2', 'sort-2'];
 // The bottom row places pagination on the left and the page-size selector on the right.
 const BOTTOM_ROW_CHILD_IDS = ['pagination-2', 'page-size-2'];
 
-// One node per mount target. The two-column layout is composed from generic layout-stack nodes
-// (search-sidebar/search-main and the top/bottom rows), keeping placement on the A2-UI plane.
-// The search box is intentionally absent: the surface's query input is the app-level search bar
-// above this surface, so the two-column layout starts at the query-summary row. Each node's
-// `componentId` equals its own `id` so AG-UI state (keyed by componentId) correlates to the
-// node; layout-stack nodes carry their `direction` as a presentation node prop and have no
-// AG-UI state entry.
+const SEARCH_SURFACE_ID = 'ui-commerce-water-sports';
+
+// One node per mount target. Each node carries a SINGLE identity (top-level `id` + `component`);
+// `props` holds only presentation values, `{ path }` state bindings, and static container
+// composition. The two-column layout is composed from generic layout-stack nodes
+// (search-sidebar/search-main and the top/bottom rows), keeping placement on the A2-UI plane. The
+// search box is intentionally absent: the surface's query input is the app-level search bar above
+// this surface, so the two-column layout starts at the query-summary row.
+//
+// Composition follows the A2-UI convention (task 4): the heterogeneous CommerceSearch container
+// uses named `sidebarChild`/`mainChild` child-ref slots (matching CommerceSearchPropsSchema);
+// homogeneous ordered lists (LayoutStack, FacetManager) use a `children` child-ref array in
+// `props` (matching LayoutStackPropsSchema / FacetManagerPropsSchema). Layout-stack nodes carry
+// their `direction` presentation prop and have no Component_State; FacetManager has no state
+// either (ordering lives on `children`). Every stateful node binds its state-bound props to
+// `{ path: "/state/<id>/<field>" }` Data_Binding objects via `bindStateFields`.
 const SEARCH_SURFACE_NODES: A2uiComponentNode[] = [
   {
     id: COMMERCE_SEARCH_ROOT_ID,
     component: 'CommerceSearch',
-    props: {componentId: COMMERCE_SEARCH_ROOT_ID, componentType: 'commerce-search'},
-    children: ROOT_CHILD_IDS,
+    props: {sidebarChild: ROOT_CHILD_IDS[0], mainChild: ROOT_CHILD_IDS[1]},
   },
   {
     id: 'search-sidebar',
     component: 'LayoutStack',
-    props: {componentId: 'search-sidebar', componentType: 'layout-stack', direction: 'column'},
-    children: ['facet-manager-2'],
+    props: {direction: 'column', children: ['facet-manager-2']},
   },
   {
     id: 'search-main',
     component: 'LayoutStack',
-    props: {componentId: 'search-main', componentType: 'layout-stack', direction: 'column'},
-    children: MAIN_CHILD_IDS,
+    props: {direction: 'column', children: MAIN_CHILD_IDS},
   },
   {
     id: 'search-top',
     component: 'LayoutStack',
-    props: {componentId: 'search-top', componentType: 'layout-stack', direction: 'row'},
-    children: TOP_ROW_CHILD_IDS,
+    props: {direction: 'row', children: TOP_ROW_CHILD_IDS},
   },
   {
     id: 'search-bottom',
     component: 'LayoutStack',
-    props: {componentId: 'search-bottom', componentType: 'layout-stack', direction: 'row'},
-    children: BOTTOM_ROW_CHILD_IDS,
+    props: {direction: 'row', children: BOTTOM_ROW_CHILD_IDS},
   },
   {
     id: 'facet-manager-2',
     component: 'FacetManager',
-    props: {componentId: 'facet-manager-2', componentType: 'facet-manager'},
-    children: FACET_NODE_IDS,
+    props: {children: FACET_NODE_IDS},
   },
   {
     id: 'facet-brand-2',
     component: 'RegularFacet',
-    props: {componentId: 'facet-brand-2', componentType: 'regular-facet'},
+    props: bindStateFields('facet-brand-2', STATE_FIELDS_BY_NODE['facet-brand-2']),
   },
   {
     id: 'facet-price-2',
     component: 'NumericFacet',
-    props: {componentId: 'facet-price-2', componentType: 'numeric-facet'},
+    props: bindStateFields('facet-price-2', STATE_FIELDS_BY_NODE['facet-price-2']),
   },
   {
     id: 'facet-category-2',
     component: 'CategoryFacet',
-    props: {componentId: 'facet-category-2', componentType: 'category-facet'},
+    props: bindStateFields('facet-category-2', STATE_FIELDS_BY_NODE['facet-category-2']),
   },
   {
     id: 'query-summary-2',
     component: 'QuerySummary',
-    props: {componentId: 'query-summary-2', componentType: 'query-summary'},
+    props: bindStateFields('query-summary-2', STATE_FIELDS_BY_NODE['query-summary-2']),
   },
   {
     id: 'sort-2',
     component: 'Sort',
-    props: {componentId: 'sort-2', componentType: 'sort'},
+    props: bindStateFields('sort-2', STATE_FIELDS_BY_NODE['sort-2']),
   },
   {
     id: 'pagination-2',
     component: 'Pagination',
-    props: {componentId: 'pagination-2', componentType: 'pagination'},
+    props: bindStateFields('pagination-2', STATE_FIELDS_BY_NODE['pagination-2']),
   },
   {
     id: 'page-size-2',
     component: 'PageSize',
-    props: {componentId: 'page-size-2', componentType: 'page-size'},
+    props: bindStateFields('page-size-2', STATE_FIELDS_BY_NODE['page-size-2']),
   },
   {
     id: 'product-list-2',
     component: 'ProductList',
-    props: {componentId: 'product-list-2', componentType: 'product-list'},
+    props: bindStateFields('product-list-2', STATE_FIELDS_BY_NODE['product-list-2']),
   },
 ];
 
@@ -1174,7 +1234,7 @@ function buildValidatedSearchSurface(
 ): Record<string, unknown> {
   return buildValidatedSurface({
     templateName: 'Mock_Search_Template',
-    surfaceId: 'ui-commerce-water-sports',
+    surfaceId: SEARCH_SURFACE_ID,
     rootId,
     nodes,
     extra: {surfaceProperties: {placement: 'main'}},
@@ -1199,13 +1259,16 @@ const surfaceActivitySnapshot: ConverseEvent = ActivitySnapshot({
 // each call resets the in-memory view to defaults and recomputes the initial state snapshot.
 function buildWaterSportsInitialEvents(): ConverseEvent[] {
   currentView = {...DEFAULT_VIEW};
-  const initialStateSnapshot: ConverseEvent = StateSnapshot({
-    components: computeComponentsState(currentView),
+  // Component_State is transported inline as `/state/<id>` updateDataModel ops on an
+  // `a2ui-surface` activity, replacing the removed component STATE_SNAPSHOT.
+  const initialStateActivity: ConverseEvent = UpdateDataModelActivity({
+    messageId: 'activity-commerce-water-sports-state',
+    ops: buildStateOps(currentView),
   });
 
   return buildConversationResponse({
     runId,
-    middleEvents: [surfaceActivitySnapshot, {...initialStateSnapshot, delayMs: 50}],
+    middleEvents: [surfaceActivitySnapshot, {...initialStateActivity, delayMs: 50}],
     includeInitialStateSnapshot: false,
     includeFinalStateSnapshot: false,
   });
@@ -1502,15 +1565,18 @@ function buildWaterSportsActionEvents(
   sourceComponentId?: string
 ): ConverseEvent[] {
   const view = deriveViewState(action, sourceComponentId);
-  const stateSnapshot: ConverseEvent = StateSnapshot({
-    components: computeComponentsState(view),
+  // Re-emit the changed Component_State as whole-component `/state/<id>` updateDataModel ops on an
+  // `a2ui-surface` activity. Only server-owned `/state/*` paths are ever written.
+  const stateActivity: ConverseEvent = UpdateDataModelActivity({
+    messageId: 'activity-commerce-water-sports-state',
+    ops: buildStateOps(view),
   });
 
-  // Action responses update the existing surface: only the STATE_SNAPSHOT changes, so we
-  // intentionally omit the ACTIVITY_SNAPSHOT/createSurface that the initial response emits.
+  // Action responses update the existing surface: only the state ops change, so we intentionally
+  // omit the createSurface activity that the initial response emits.
   return buildConversationResponse({
     runId,
-    middleEvents: [stateSnapshot],
+    middleEvents: [stateActivity],
     includeInitialStateSnapshot: false,
     includeFinalStateSnapshot: false,
   });

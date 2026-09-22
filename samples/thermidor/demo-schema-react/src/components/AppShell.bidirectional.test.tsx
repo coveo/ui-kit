@@ -18,7 +18,8 @@ vi.mock('../context/session.js', () => ({
       },
       subscribe: () => () => undefined,
       submit: mockSubmit,
-    }) as unknown as Session<never>,
+      dispatchAction: vi.fn(),
+    }) as unknown as Session,
 }));
 
 vi.mock('./LandingPage/LandingPage.js', () => ({
@@ -71,7 +72,7 @@ describe('AppShell bidirectional navigation', () => {
       makeTurn({
         id: 'turn-1',
         prompt: 'surfboards',
-        response: {surfaces: [makeSurface('s1', 'commerce-search')]},
+        response: {surfaces: [makeSurface('s1', 'CommerceSearch')]},
       }),
     ];
     rerender(<AppShell />);
@@ -91,7 +92,7 @@ describe('AppShell bidirectional navigation', () => {
       makeTurn({
         id: 'turn-1',
         prompt: 'surfboards',
-        response: {surfaces: [makeSurface('s1', 'commerce-search')]},
+        response: {surfaces: [makeSurface('s1', 'CommerceSearch')]},
       }),
     ];
 
@@ -107,7 +108,7 @@ describe('AppShell bidirectional navigation', () => {
       makeTurn({
         id: 'turn-1',
         prompt: 'surfboards',
-        response: {surfaces: [makeSurface('s1', 'commerce-search')]},
+        response: {surfaces: [makeSurface('s1', 'CommerceSearch')]},
       }),
       makeTurn({
         id: 'turn-2',
@@ -147,7 +148,7 @@ describe('AppShell bidirectional navigation', () => {
         id: 'turn-1',
         prompt: 'surfboards',
         response: {
-          surfaces: [makeSurface('s1', 'commerce-search')],
+          surfaces: [makeSurface('s1', 'CommerceSearch')],
           agent: {
             messages: [],
             reasoningSteps: [{type: 'reasoning', content: 'let me search for surfboards'}],

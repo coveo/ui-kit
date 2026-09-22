@@ -1,10 +1,12 @@
-import {useRemoteController} from '../controllers.js';
-import type {ActionItem, NextActionsBarProps} from '@coveo/thermidor-schema';
+import type {ActionItem, NextActionsBarProps, NextActionsBarAction} from '@coveo/thermidor-schema';
+import type {TypedRendererProps} from '../renderer-props.js';
 import styles from './NextActionsBar.module.css';
 
-export function NextActionsBarRenderer({props}: {props: NextActionsBarProps}) {
-  const controller = useRemoteController(props.componentId, props.componentType);
-  const actions = controller.state?.actions ?? [];
+export function NextActionsBarRenderer({
+  props,
+  dispatch,
+}: TypedRendererProps<NextActionsBarProps, NextActionsBarAction>) {
+  const actions = props.actions ?? [];
 
   if (actions.length === 0) {
     return null;
@@ -17,7 +19,9 @@ export function NextActionsBarRenderer({props}: {props: NextActionsBarProps}) {
           key={i}
           className={styles.actionButton}
           onClick={() =>
-            controller.dispatch('selectAction', {text: action.text, type: action.type})
+            dispatch?.({
+              event: {name: 'selectAction', context: {text: action.text, type: action.type}},
+            })
           }
           type="button"
         >

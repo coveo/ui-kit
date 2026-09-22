@@ -27,7 +27,10 @@ export type A2uiState = Record<string, unknown>;
  */
 export interface DiscoveredSurface {
   surfaceId: string;
-  /** Interim: compared against `'commerce-search'` by consumers/nav (ADR-015). */
+  /**
+   * The root node's PascalCase `component` discriminant; interim: compared
+   * against `'CommerceSearch'` by consumers/nav (ADR-015).
+   */
   rootComponentType: string;
 }
 

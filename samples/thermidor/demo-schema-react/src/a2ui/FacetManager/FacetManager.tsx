@@ -1,19 +1,22 @@
-import type {ReactNode} from 'react';
 import type {FacetManagerProps} from '@coveo/thermidor-schema';
-import {readChildIds} from '../read-child-ids.js';
+import type {TypedRendererProps} from '../renderer-props.js';
 import styles from './FacetManager.module.css';
 
+/**
+ * A2-UI renderer for the `facet-manager` container.
+ *
+ * Mounts its ordered facet children first-to-last. Composition arrives as the resolved
+ * `children` `child-ref[]` (the binder passes the static id list through untouched); each id
+ * is mounted by name via the renderer's `children(id)` function — no positional read.
+ */
 export function FacetManagerRenderer({
   props,
   children,
-}: {
-  props: FacetManagerProps;
-  children: (id: string) => ReactNode;
-}) {
-  const childIds = readChildIds(props);
+}: TypedRendererProps<FacetManagerProps, never>) {
+  const childIds = props.children ?? [];
 
   return (
-    <div className={styles.container} data-testid={props.componentId}>
+    <div className={styles.container} data-testid="facet-manager">
       {childIds.map((childId) => (
         <div key={childId}>{children(childId)}</div>
       ))}

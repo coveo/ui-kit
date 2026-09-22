@@ -1,5 +1,4 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import {z} from 'zod/v4';
 
 /**
  * Unit tests for the session lifecycle.
@@ -38,7 +37,38 @@ vi.mock('@/src/internal/api/unified/unified-endpoint-client.js', () => ({
   createUnifiedEndpointClient: () => ({call: callMock}),
 }));
 
+import {z} from 'zod/v4';
+import type {ContractsSchema} from './contracts.js';
 import {createSession, type SessionConfig} from './create-session.js';
+
+/**
+ * A locally-built A2-UI contract, INJECTED as test data exactly as a real
+ * consumer would inject it. Built with this package's own Zod so the test is
+ * independent of any concrete contract package. Mirrors the generated Coveo
+ * shape: a discriminated union on `component` whose Pagination member carries
+ * an optional strict `state` and `actions`.
+ */
+const PaginationSchema = z.strictObject({
+  component: z.literal('Pagination'),
+  state: z
+    .strictObject({
+      page: z.number().int().min(0),
+      pageSize: z.number().int().min(1),
+      totalEntries: z.number().int().min(0),
+      totalPages: z.number().int().min(0),
+    })
+    .optional(),
+  actions: z
+    .strictObject({
+      selectPage: z.strictObject({payload: z.strictObject({page: z.number().int().min(0)})}),
+      setPageSize: z.strictObject({payload: z.strictObject({pageSize: z.number().int().min(1)})}),
+    })
+    .optional(),
+});
+
+const contracts = z.discriminatedUnion('component', [
+  PaginationSchema,
+]) as unknown as ContractsSchema;
 
 /**
  * A ReadableStream a test can feed SSE activities into and close on demand,
@@ -110,27 +140,10 @@ function queueStream(): ControllableStream {
   return controllable;
 }
 
-/**
- * A minimal contracts schema for the lifecycle tests: a Zod v4 discriminated
- * union of `z.strictObject` component contracts (matching the
- * `z.core.$strict` object config the `ContractsSchema` type requires). These
- * lifecycle tests don't exercise remote-controller typing — they just need a
- * concrete schema to satisfy the generic `createSession` signature.
- */
-const contracts = z.discriminatedUnion('componentType', [
-  z.strictObject({
-    componentType: z.literal('pagination'),
-    state: z.strictObject({page: z.number()}),
-    actions: z.strictObject({
-      selectPage: z.strictObject({payload: z.strictObject({page: z.number()})}),
-    }),
-  }),
-]);
-
-const baseConfig: SessionConfig<typeof contracts> = {
+const baseConfig: SessionConfig = {
+  contracts,
   organizationId: 'org-1',
   accessToken: 'token-1',
-  contracts,
 };
 
 /** Waits for pending microtasks so folded state settles before assertions. */
@@ -176,18 +189,47 @@ describe('createSession lifecycle', () => {
       const submitPromise = session.submit({prompt: 'first'});
       await first.opened;
 
+      // Seed the active (still-streaming) turn with a commerce-search surface
+      // carrying a Pagination node so `dispatchAction` can recover the component
+      // discriminant and reach the private execute path — where the streaming
+      // guard must then withhold the POST.
+      first.emit({
+        type: 'ACTIVITY_SNAPSHOT',
+        activityType: 'a2ui-surface',
+        messageId: 'surface-1',
+        content: {
+          messages: [
+            {
+              version: 'v1.0',
+              createSurface: {
+                surfaceId: 'ui-1',
+                rootId: 'root',
+                components: [
+                  {id: 'root', component: 'CommerceSearch'},
+                  {id: 'pagination-1', component: 'Pagination'},
+                ],
+              },
+            },
+          ],
+        },
+      });
+      await flush();
+
       const turnsBefore = session.turns;
       expect(turnsBefore).toHaveLength(1);
       expect(turnsBefore[0].status).toBe('streaming');
 
       await session.dispatchAction({
-        componentId: 'pagination-1',
-        componentType: 'pagination',
-        action: 'selectPage',
-        payload: {page: 2},
+        userAction: {
+          name: 'selectPage',
+          surfaceId: 'ui-1',
+          sourceComponentId: 'pagination-1',
+          context: {page: 2},
+        },
       });
 
-      // Only the original submit call reached the endpoint.
+      // Only the original submit call reached the endpoint; the streaming guard
+      // withheld the action dispatch and left the turn list unchanged.
       expect(callMock).toHaveBeenCalledTimes(1);
       expect(session.turns).toHaveLength(1);
       expect(session.turns[0]).toBe(turnsBefore[0]);

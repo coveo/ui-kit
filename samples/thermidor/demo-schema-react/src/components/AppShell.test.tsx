@@ -19,7 +19,8 @@ vi.mock('../context/session.js', () => ({
       },
       subscribe: () => () => undefined,
       submit: mockSubmit,
-    }) as unknown as Session<never>,
+      dispatchAction: vi.fn(),
+    }) as unknown as Session,
 }));
 
 vi.mock('./LandingPage/LandingPage.js', () => ({
@@ -67,7 +68,7 @@ describe('AppShell', () => {
     mockTurns = [
       makeTurn({
         id: 'turn-1',
-        response: {surfaces: [makeSurface('wetsuits-surface', 'commerce-search')]},
+        response: {surfaces: [makeSurface('wetsuits-surface', 'CommerceSearch')]},
       }),
     ];
 
@@ -125,7 +126,7 @@ describe('AppShell', () => {
     mockTurns = [
       makeTurn({
         id: 'turn-1',
-        response: {surfaces: [makeSurface('commerce-surface-1', 'commerce-search')]},
+        response: {surfaces: [makeSurface('commerce-surface-1', 'CommerceSearch')]},
       }),
     ];
 
@@ -139,7 +140,7 @@ describe('AppShell', () => {
     mockTurns = [
       makeTurn({
         id: 'turn-1',
-        response: {surfaces: [makeSurface('commerce-surface-1', 'commerce-search')]},
+        response: {surfaces: [makeSurface('commerce-surface-1', 'CommerceSearch')]},
       }),
       makeTurn({
         id: 'turn-2',
