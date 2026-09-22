@@ -16,9 +16,9 @@ import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
 
 export default async function Search({searchParams}: {searchParams: Promise<URLSearchParams>}) {
-  // Set the navigator context provider before fetching the app static state.
+  // Build the per-request navigator context and pass it to fetchStaticState,
+  // so concurrent requests never share a navigator context on the definition.
   const navigatorContext = new NextJsNavigatorContext(await headers());
-  searchEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
   const {deserialize} = buildParameterSerializer();
   const parameters = deserialize(await searchParams);
@@ -28,6 +28,7 @@ export default async function Search({searchParams}: {searchParams: Promise<URLS
 
   // Fetch the static state of the app with its initial state.
   const staticState = await searchEngineDefinition.fetchStaticState({
+    navigatorContext: navigatorContext.marshal,
     controllers: {
       cart: {initialState: {items}},
       context: {

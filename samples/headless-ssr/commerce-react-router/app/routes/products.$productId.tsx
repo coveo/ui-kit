@@ -30,19 +30,16 @@ export const loader = async ({params, request, url}: Route.LoaderArgs) => {
 
   const navigatorContext = await getNavigatorContext(request, url);
 
-  const standaloneEngineDefinition = await getEngineDefinition(
-    navigatorContext,
-    request,
-    SolutionType.standalone
-  );
+  const standaloneEngineDefinition = await getEngineDefinition(request, SolutionType.standalone);
 
   const baseFetchStaticStateConfiguration = await getBaseFetchStaticStateConfiguration(
     url.pathname
   );
 
-  const staticState = await standaloneEngineDefinition.fetchStaticState(
-    baseFetchStaticStateConfiguration
-  );
+  const staticState = await standaloneEngineDefinition.fetchStaticState({
+    navigatorContext,
+    ...baseFetchStaticStateConfiguration,
+  });
 
   const cartItem = await externalCartService.getItem(productId);
 

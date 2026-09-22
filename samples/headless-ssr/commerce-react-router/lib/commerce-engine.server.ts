@@ -1,4 +1,4 @@
-import {type NavigatorContext, SolutionType} from '@coveo/headless-react/ssr-commerce';
+import {SolutionType} from '@coveo/headless-react/ssr-commerce';
 import {coveo_accessToken} from '@/app/cookies.server';
 import externalCartService from '@/external-services/external-cart-service';
 import externalContextService from '@/external-services/external-context-service';
@@ -27,7 +27,6 @@ type MappedEngineDefinition<T extends SolutionType> = T extends SolutionType.lis
         : never;
 
 export async function getEngineDefinition<T extends SolutionType>(
-  navigatorContext: NavigatorContext,
   request: Request,
   solutionType: T
 ): Promise<MappedEngineDefinition<T>> {
@@ -62,8 +61,9 @@ export async function getEngineDefinition<T extends SolutionType>(
     engineDefinition.setAccessToken(accessToken);
   }
 
-  engineDefinition.setNavigatorContextProvider(() => navigatorContext);
-
+  // The navigator context is no longer set on the shared definition here; it is
+  // passed per request to fetchStaticState() by each caller (see the routes), so
+  // concurrent requests never share a navigator context.
   return engineDefinition as MappedEngineDefinition<T>;
 }
 

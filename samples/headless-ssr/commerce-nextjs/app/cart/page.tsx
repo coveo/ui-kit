@@ -9,14 +9,15 @@ import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
 
 export default async function CartPage() {
-  // Set the navigator context provider before fetching the app static state.
+  // Build the per-request navigator context and pass it to fetchStaticState,
+  // so concurrent requests never share a navigator context on the definition.
   const navigatorContext = new NextJsNavigatorContext(await headers());
-  standaloneEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
   // Fetch the cart items from the external service.
   const items = await externalCartAPI.getCart();
 
   const staticState = await standaloneEngineDefinition.fetchStaticState({
+    navigatorContext: navigatorContext.marshal,
     controllers: {
       cart: {initialState: {items}},
       context: {
@@ -31,6 +32,7 @@ export default async function CartPage() {
   });
 
   const recsStaticState = await recommendationEngineDefinition.fetchStaticState({
+    navigatorContext: navigatorContext.marshal,
     controllers: {
       popularBought: {enabled: true},
       cart: {initialState: {items}},
