@@ -72,7 +72,7 @@ Cinq questions posées, cinq réponses vérifiées contre le **standard A2-UI of
 
 - **Q1 — Les écritures d'état s'appliquent-elles correctement ?** — **Oui** : une op complète à `/state/<id>` remplace l'objet d'état entier du nœud, et le composant lié se re-rend.
 - **Q2 — Les mises à jour partielles préservent-elles les voisins ?** — **Oui** : une op à `/state/<id>/<field>` fusionne ce seul champ sans écraser les autres.
-- **Q3 — Le typage state/action survit-il au retrait du `RemoteController` ?** — **Préservé** : c'est la validation qui est relocalisée, pas le typage.
+- **Q3 — Le typage state/action survit-il au retrait du `RemoteController` ?** — **Préservé** : les types (`XxxState` / `XxxAction`) restent, et c'est la validation qui est relocalisée. Nuance : le typage de l'action, jadis **imposé** au dispatch par le `RemoteController`, devient **appliqué volontairement** par le consommateur (le renderer livre un `dispatch` en `any`).
 - **Q4 — La composition standard A2-UI tient-elle avec le renderer figé ?** — **Oui** : slots `child-ref` nommés (`sidebarChild`/`mainChild`), jamais un tableau indexé par position (constat Y2).
 - **Q5 — Les cas de rejet et le pont v1.0→v0.9 tiennent-ils ?** — **Oui** pour les deux.
 
@@ -86,7 +86,7 @@ Le `RemoteController` (base KIT-6193) portait quatre responsabilités par nœud.
 
 **3. Valider le payload d'action sortant (Zod).** Avant : `actionEntry.shape.payload.safeParse(payload)` avant l'envoi. Maintenant : `validateActionPayload` dans le chemin de dispatch privé (`executeAction`), avant le POST. Code : `action-payload-validation.ts`, appelé depuis `create-session.ts`.
 
-**4. Dispatcher l'action.** Avant : chaque contrôleur exposait `dispatch(action, payload)` par nœud. Maintenant : un point d'entrée public unique, `Session.dispatchAction`, câblé sur le `onAction` du renderer, qui délègue au privé `executeAction`.
+**4. Dispatcher l'action.** Avant : chaque contrôleur exposait un `dispatch(action, payload)` par nœud, **typé par le contrat** (nom d'action et payload contraints par les contrats injectés). Maintenant : un point d'entrée public unique, `Session.dispatchAction`, câblé sur le `onAction` du renderer, qui délègue au privé `executeAction`. La validation du payload reste (en interne, `executeAction`), mais le **typage à la frontière** n'est plus imposé : le renderer livre un `dispatch` en `any`, et le consommateur applique nos `XxxAction` volontairement.
 
 Deux propriétés sont **préservées, pas déplacées** : le **typage par composant** (contrats injectés via `createSession({ contracts })`, types `XxxState` / `XxxAction` générés — la validation a bougé, pas le typage) et la **réactivité** (le binder re-résout la liaison quand l'op arrive). Le `RemoteController` mélangeait quatre préoccupations par nœud ; le nouveau modèle les sépare et place chacune là où elle est naturelle. Ce n'est pas une suppression, c'est une consolidation.
 
@@ -132,7 +132,7 @@ Positives (P1–P5) :
 
 - **Typage strict préservé, duplication d'identité supprimée** — les props sont le `XxxState` résolu ; plus de `componentId`/`componentType` en props.
 - **Une couche entière supprimée** — la machinerie `RemoteController` (API publique + jointure interne + hook de l'échantillon).
-- **Le dispatch tient en un prop** — `onAction={session.dispatchAction}`, aucun adaptateur.
+- **Le dispatch tient en un prop** — `onAction={session.dispatchAction}`, aucun adaptateur. Deux réserves distinctes : (1) le `dispatch` que le renderer livre au **composant** est typé `any` (le payload d'action n'est pas contraint) ; (2) ce modèle suppose que le renderer expose un **point de branchement** vers le cœur — les trois l'exposent (`onAction` en React, `actionHandler` en Angular, le handler du `MessageProcessor` monté via `A2uiSurface` en Vue), mais de façon plus ou moins déclarative. Le typage de l'action, jadis **imposé** par le `RemoteController` (agnostic, exposé par Thermidor : `dispatch<A>(action, payload)` typé par contrat), devient désormais **appliqué volontairement** par le consommateur.
 - **Le cœur est découplé** (acquis de la base KIT-6193, pas un gain de ce travail) — `@coveo/thermidor` n'importe pas `@coveo/thermidor-schema` ; les contrats sont injectés via `createSession({ contracts })`, donc n'importe quel contrat A2-UI de la bonne forme pilote le même moteur.
 
 Négatives / à gérer (S1–S6) :
@@ -144,29 +144,29 @@ Négatives / à gérer (S1–S6) :
 
 ### Bilan
 
-Le transport inline via `updateDataModel` est **faisable et dé-risqué** — le spike l'a prouvé end-to-end. Les gains sont nets, les frictions connues et gérables. Reste alors une question que le transport ne règle pas à lui seul : comment livrer cette projection résolue de façon agnostic du framework ? C'est la partie 2.
+Le transport inline via `updateDataModel` est **faisable et dé-risqué** — le spike l'a prouvé end-to-end. Les gains sont nets, les frictions connues et gérables. Reste alors une question que le transport ne règle pas à lui seul : comment livrer la structure et l'état de façon agnostic du framework ? C'est la partie 2.
 
 ## Partie 2 — Rendre la consommation de Thermidor agnostic (l'annexe)
 
 ### Le problème
 
-Un composant du consommateur a deux besoins face à Thermidor. **Recevoir** (l'entrant) : sa **composition** (l'arbre, les slots) et son **état** (les valeurs résolues à afficher). **Renvoyer** (le sortant) : ses **actions**, jusqu'au cœur. Le sortant a déjà un point d'ancrage agnostic — `Session.dispatchAction`, dans le cœur. Le vrai sujet est la forme de l'entrant et du sortant à la frontière du composant, car aujourd'hui elle est déléguée au renderer tiers (`@copilotkit/a2ui-renderer` en React, `@a2ui/angular` en Angular), et cette forme change selon le framework. C'est là qu'on perd l'agnosticisme — le « dernier mètre ».
+Un composant du consommateur a deux besoins face à Thermidor. **Recevoir** (l'entrant) : sa **composition** (l'arbre, les slots) et son **état** (les valeurs résolues à afficher). **Renvoyer** (le sortant) : ses **actions**, jusqu'au cœur. Le sortant a déjà un point d'ancrage agnostic — `Session.dispatchAction`, dans le cœur. Le vrai sujet est la forme de l'entrant et du sortant à la frontière du composant, car aujourd'hui elle est déléguée au renderer tiers (`@copilotkit/a2ui-renderer` en React, `@a2ui/angular` en Angular, `@copilotkit/vue` en Vue), et cette forme change selon le framework. C'est là qu'on perd l'agnosticisme — le « dernier mètre ».
 
 ### Ce qu'on observe — l'entrant
 
 Le wire A2-UI est standard et agnostic. Mais chaque renderer dicte ensuite la forme livrée au composant : comment l'état, la composition et le moyen d'agir lui parviennent. Et ces formes divergent :
 
-| Ce que le composant reçoit | React (`@copilotkit/a2ui-renderer`)                                                | Angular (`@a2ui/angular`)                                                                       |
-| -------------------------- | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| **État**                   | `props: T` — plat, typé par le générique (`RendererProps<PaginationState>`)        | chaque champ en `BoundProperty<T>`, lu via `props()['page']?.value()`                           |
-| **Composition**            | child refs **dans les props** ; montées via `children(id)`, fourni par le renderer | child refs **dans les props** ; montées via `<a2ui-v09-component-host>`, fourni par le renderer |
-| **Moyen d'agir**           | reçu **en prop** : `dispatch?: (action: any) => void`                              | **pas** en prop — le composant injecte `A2uiRendererService` pour atteindre la surface          |
+| Ce que le composant reçoit | React (`@copilotkit/a2ui-renderer`)                                                | Angular (`@a2ui/angular`)                                                                                   | Vue (`@copilotkit/vue`)                                                                                        |
+| -------------------------- | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| **État**                   | `props: T` — plat, typé par le générique (`RendererProps<PaginationState>`)        | chaque champ en `BoundProperty<T>`, lu via `props()['page']?.value()`                                       | `props` plates et résolues (`ResolveA2uiProps<...>`, via `GenericBinder`)                                      |
+| **Composition**            | child refs **dans les props** ; montées via `children(id)`, fourni par le renderer | child refs **dans les props** ; montées via `<a2ui-v09-component-host>`, fourni par le renderer             | child refs **dans les props** ; montées via `buildChild(id)`, fourni par le renderer                           |
+| **Moyen d'agir**           | reçu **en prop** — `dispatch?: (action: any) => void`                              | **pas** en prop — via `A2uiRendererService`, envoie l'action sur la surface : `surface.dispatchAction(...)` | reçu **en prop** — `context: ComponentContext`, envoie l'action sur la surface : `context.dispatchAction(...)` |
 
-Constat : le générique type **l'état**, mais aucun renderer ne type **le payload de l'action** (`any` en React, non typé en Angular), et la composition est figée au framework. Nos `XxxState` peuvent typer l'état ; nos `XxxAction` sont un surcroît de typage que **nous** apportons — aucun renderer ne l'exige. Nos types sont donc utiles même sans générique renderer.
+Constat : le générique type **l'état**, mais aucun renderer ne type **le payload de l'action** (`any` en React et en Vue via `context.dispatchAction`, non typé en Angular), et la composition est figée au framework. Nos `XxxState` peuvent typer l'état ; nos `XxxAction` sont un surcroît de typage que **nous** apportons — aucun renderer ne l'exige. Nos types sont donc utiles même sans générique renderer.
 
 ### Le chemin d'action — le sortant
 
-L'entrant diverge en forme, mais le sortant **converge** : dans les deux frameworks, le composant fabrique un payload `{ name, context }` et le pousse jusqu'à `session.dispatchAction`, le même pont agnostic vers le cœur. Ce payload est libre (`any` au niveau renderer), donc nos `XxxAction` le typent côté consommateur. On a tracé ce chemin dans le vrai code des deux.
+Le point d'arrivée est le même partout : `session.dispatchAction`, le pont agnostic vers le cœur. Ce qui diffère, c'est la **façon d'y brancher ce pont** : un _hook_ déclaratif en React (`onAction`) et en Angular (`actionHandler`), un handler de `MessageProcessor` monté via `A2uiSurface` en Vue (un cran plus explicite). Dans tous les cas le payload est libre (`any` au niveau renderer), donc nos `XxxAction` le typent côté consommateur. On a tracé ce chemin dans le vrai code des trois.
 
 En React, le composant reçoit `dispatch` en prop et fabrique l'action ; le renderer relaie via le `onAction` du provider :
 
@@ -198,11 +198,31 @@ provideA2Ui({
 
 La chaîne Angular complète : `composant → SurfaceModel.dispatchAction → actionHandler de provideA2Ui → session.dispatchAction`, exactement là où React met `onAction`. L'asymétrie réelle se réduit à peu de chose : React reçoit `dispatch` en prop (rien à injecter) ; Angular injecte le service et passe `componentId` explicitement. Du boilerplate léger, pas de la résolution de bindings.
 
+En Vue, le composant dispatche via le `ComponentContext` reçu en prop (`context.dispatchAction`). Le pont vers le cœur est le **handler du `MessageProcessor`** — l'équivalent bas niveau de `onAction` / `actionHandler` : on construit le processor avec notre handler, puis on monte sa surface via le composant `<A2uiSurface>` exporté par `@copilotkit/vue`.
+
+```ts
+// Équivalent Pagination Vue (@copilotkit/vue) — dans createVueComponent(PaginationApi, ({props, context}) => ...)
+selectPage(next: number) {
+  context.dispatchAction({event: {name: 'selectPage', context: {page: next}}});
+}
+
+// Le pont vers le cœur — le handler du MessageProcessor relaie l'action vers la session,
+// exactement comme onAction (React) / actionHandler (Angular).
+const processor = new MessageProcessor([thermidorCatalog], (action) =>
+  session.dispatchAction({userAction: action})
+);
+
+// La surface est ensuite montée par le composant A2uiSurface exporté par @copilotkit/vue :
+<A2uiSurface :surface="processor.model.getSurface(surfaceId)" />
+```
+
+Les trois renderers convergent vers le même `session.dispatchAction` ; seul le mode de branchement diffère : `onAction` déclaratif en React, `actionHandler` de `provideA2Ui` en Angular, handler du `MessageProcessor` monté via `A2uiSurface` en Vue. Vue est un cran plus verbeux — on construit le processor explicitement — sans que ce soit un obstacle.
+
 ### La réponse : des types qui satisfont les deux directions — l'option C
 
-L'entrant a des formes différentes, le sortant converge, et aucun renderer ne type l'action. La réponse directe : **Thermidor fournit les types** — `XxxState` (l'état résolu), `XxxAction` (le payload), `XxxProps` — dérivés de nos schémas. Le consommateur garde son renderer A2-UI et type son intégration contre nos types, sur les deux frameworks. C'est **l'option C**, celle qu'on a implémentée et prouvée cross-framework.
+L'entrant a des formes différentes, le sortant converge, et aucun renderer ne type l'action. La réponse directe : **Thermidor fournit les types** — `XxxState` (l'état résolu), `XxxAction` (le payload), `XxxProps` — dérivés de nos schémas. Le consommateur garde son renderer A2-UI et type son intégration contre nos types, sur les trois frameworks. C'est **l'option C**, celle qu'on a implémentée et prouvée cross-framework.
 
-Le même composant `Pagination`, avec les mêmes types Thermidor, en React puis en Angular. En React, on affine `RendererProps` une fois pour typer l'action :
+Le même composant `Pagination`, avec les mêmes types Thermidor, en React, Angular, puis Vue. En React, on affine `RendererProps` une fois pour typer l'action :
 
 ```tsx
 import type {PaginationState, PaginationAction} from '@coveo/thermidor-schema';
@@ -263,13 +283,48 @@ class PaginationComponent extends CatalogComponent<typeof PaginationApi> {
 }
 ```
 
-Mêmes types (`PaginationState`, `PaginationAction`) des deux côtés ; seule la mécanique du framework diffère. C'est proche de l'état actuel : le schéma n'exporte que les données (`XxxState` / `XxxAction` / `XxxProps`), nul besoin d'exposer des helpers taillés sur le renderer React. Sa limite : C rend le typage **disponible et correct, mais ne l'impose pas** — le dispatch reste `any` au niveau renderer, donc le consommateur applique nos types volontairement. Et il garde un renderer tiers, donc la friction Zod 3/4 (S1) demeure, gérable mais présente.
+En Vue (`@copilotkit/vue`), le composant s'enregistre via `createVueComponent` ; ses `props` sont résolues, et l'action est typée par `PaginationAction` — typage que **nous** appliquons, le renderer ne l'impose pas. Le pont vers le cœur est le handler du `MessageProcessor`, monté via `<A2uiSurface>` :
 
-### Aller plus loin : l'option A
+```tsx
+<script setup lang="ts">
+import {PaginationStateSchema} from '@coveo/thermidor-schema';
+import type {PaginationAction} from '@coveo/thermidor-schema';
+import {ComponentApi, MessageProcessor} from '@a2ui/web_core/v0_9';
+import {createVueComponent, A2uiSurface} from '@copilotkit/vue';
+import {h} from 'vue';
 
-C découple les types, pas le renderer. Pour retirer la dépendance au renderer tiers lui-même — et la classe entière de frictions qui vient avec (Zod aujourd'hui, autre chose demain) — il faut que Thermidor possède la résolution et **expose l'arbre déjà résolu**. C'est l'option A.
+const PaginationApi = {name: 'Pagination', schema: PaginationStateSchema} satisfies ComponentApi;
 
-L'insight : Thermidor possède déjà, en interne, la projection résolue. Le fold du cœur produit `response.surfaces` (la composition typée) et `response.state` (l'état validé en transit). Le renderer tiers ne fait, pour l'essentiel, que **re-dériver** ce que le cœur connaît déjà. A expose donc un arbre où chaque nœud est une variante typée d'une union discriminée sur `component` — `state` typé, composition typée par sa forme, une feuille ne portant ni `slots` ni `children` :
+// props expose les champs de PaginationState déjà résolus (via le GenericBinder) ; on les lit directement.
+const Pagination = createVueComponent(PaginationApi, ({props, context}) => {
+  const page = props.page ?? 0;
+  const selectPage = (next: number) => {
+    // Le renderer livre un dispatch en `any` ; on applique NOTRE type volontairement (rien ne l'impose).
+    const action: PaginationAction = {event: {name: 'selectPage', context: {page: next}}};
+    context.dispatchAction(action);
+  };
+  return h('pagination', {page, onSelect: (e: number) => selectPage(e)});
+});
+
+// Le pont vers le cœur, une fois : le handler du MessageProcessor relaie vers la session.
+const processor = new MessageProcessor([thermidorCatalog], (action) =>
+  session.dispatchAction({userAction: action})
+);
+</script>
+
+// La surface est ensuite montée par le composant A2uiSurface exporté par @copilotkit/vue.
+<template>
+  <A2uiSurface :surface="processor.model.getSurface(surfaceId)" />
+</template>
+```
+
+Mêmes types (`PaginationState`, `PaginationAction`) sur les trois frameworks ; seule la mécanique diffère (props plates + `dispatch` en React ; `BoundProperty.value()` + service en Angular ; `props` résolues + `ComponentContext` en Vue, monté via `A2uiSurface`). C'est proche de l'état actuel : le schéma n'exporte que les données (`XxxState` / `XxxAction` / `XxxProps`), nul besoin d'exposer des helpers taillés sur le renderer React. Sa limite : C rend le typage **disponible et correct, mais ne l'impose pas** — le dispatch reste `any` au niveau renderer, donc le consommateur applique nos types volontairement. Et il garde un renderer tiers, donc la friction Zod 3/4 (S1) demeure, gérable mais présente.
+
+### Aller plus loin — l'option A
+
+C découple les types, pas le renderer. Pour retirer la dépendance au renderer tiers lui-même — et la classe entière de frictions qui vient avec (Zod aujourd'hui, autre chose demain) — il faut que Thermidor possède la résolution et **expose un arbre résolu**. C'est l'option A.
+
+Aujourd'hui, la résolution est partagée : le fold du cœur produit `response.state` (l'état des composants, déjà plat sur AG-UI) et `response.surfaces` (la **découverte** des surfaces, `{ surfaceId, rootComponentType }` — pas l'arbre de composition). C'est le renderer tiers qui résout l'arbre de composition. A porterait cette résolution dans le cœur et exposerait un arbre où chaque nœud est une variante typée d'une union discriminée sur `component` — `state` typé, composition typée par sa forme, une feuille ne portant ni `slots` ni `children` :
 
 ```tsx
 // Généré depuis le catalogue Thermidor fermé — une variante par composant.
@@ -320,7 +375,7 @@ function renderNode(
 }
 ```
 
-L'arbre `ResolvedNode` est agnostic — aucun type React/Angular, aucune fonction `children(id)` imposée. Le consommateur parcourt l'arbre et monte avec les primitives natives de son framework, dans son idiome : React `map`, Angular `@for` / `ngComponentOutlet`, Vue `<component :is>`. Plus de renderer tiers, donc plus aucune dépendance à ses choix de librairies : la friction Zod (S1) ne disparaît pas par contournement, elle **disparaît**. Le prix : posséder le moteur de résolution (maison ou sur `@a2ui/web_core`, à cadrer dans un spike dédié).
+L'arbre `ResolvedNode` est agnostic — aucun type React/Angular/Vue, aucune fonction `children(id)` imposée. Le consommateur parcourt l'arbre et monte avec les primitives natives de son framework, dans son idiome : React `map`, Angular `@for` / `ngComponentOutlet`, Vue `<component :is>`. Plus de renderer tiers, donc plus aucune dépendance à ses choix de librairies : la friction Zod 3/4 (S1) ne disparaît pas par contournement, elle **disparaît**. Et comme Thermidor possède alors le pont d'action, il peut **réexposer un `dispatch` typé et agnostic** — la garantie que le `RemoteController` offrait (typage d'action imposé), mais sans le couplage AG-UI ni la limite React-only du hook. Le prix : posséder le moteur de résolution (maison ou sur `@a2ui/web_core`, à cadrer dans un spike dédié).
 
 ### Récapitulatif des voies
 
@@ -338,11 +393,11 @@ C est la solution en place ; A est l'extension qui pousse le découplage jusqu'a
 
 ### `updateDataModel` : oui ou non ?
 
-**Recommandation : oui.** Les arguments décisifs sont d'abord stratégiques : on s'aligne sur le **standard A2-UI**, et Thermidor n'est **pas** le seul consommateur du backend agentique de Coveo — un contrat de données standard évite à chaque consommateur de réimplémenter un modèle sur mesure. Le spike vient **prouver la faisabilité et dé-risquer** la solution : les écritures complètes/granulaires fonctionnent, le typage est préservé, la composition standard tient, les cas de rejet sont couverts. Les frictions (S1/S3) sont connues et gérables.
+**Recommandation : oui.** Deux arguments. **Alignement standard** : on adopte le mécanisme d'état standard A2-UI (`updateDataModel`) plutôt qu'un canal AG-UI ad-hoc propre à Thermidor. **Corrélation native** : `updateDataModel` relie l'état au composant dans le même protocole (`/state/<id>` + liaisons `{ path }`), là où le modèle AG-UI ad-hoc imposait un pont `componentId` à maintenir — une couche en moins (analyse détaillée dans le document `-04-`). Le spike vient **prouver la faisabilité et dé-risquer** la solution : les écritures complètes/granulaires fonctionnent, le typage est préservé, la composition standard tient, les cas de rejet sont couverts. Les frictions (S1/S3) sont connues et gérables.
 
 ### Si oui : option A ou C pour se rendre agnostic ?
 
-**Recommandation de départ : C.** C'est simple, déjà en place et prouvé cross-framework (React + Angular) : le schéma fournit des types purs (`XxxProps` / `XxxAction`), le consommateur type son intégration contre eux, et le découplage du schéma vis-à-vis du renderer est fait. C'est le pas pragmatique qui livre l'essentiel du typage agnostic sans chantier.
+**Recommandation de départ : C.** C'est simple, déjà en place et prouvé cross-framework (React, Angular, Vue) : le schéma fournit des types purs (`XxxProps` / `XxxAction`), le consommateur type son intégration contre eux, et le découplage du schéma vis-à-vis du renderer est fait. C'est le pas pragmatique qui livre l'essentiel du typage agnostic sans chantier.
 
 Mais C et A ne suppriment pas les mêmes frictions, et c'est là qu'est l'arbitrage :
 
@@ -356,4 +411,5 @@ Objection anticipée : « et si `@copilotkit/a2ui-renderer` passe à Zod 4 ? » 
 ## Documents de référence
 
 - **Spike** — `KIT-6179-inline-state-updatedatamodel-02-spike.md` : le transport inline `updateDataModel` en détail, les constats Q1–Q5 / P1–P5 / S1–S6 vérifiés, l'analyse d'options. Le spike décrit l'état à l'époque de son investigation (base KIT-6193) ; l'option C expose désormais `XxxProps` côté consommateur.
-- **Annexe** — `KIT-6179-inline-state-updatedatamodel-03-agnostic-consumption.md` : le contrat de consommation agnostic, les options A/B/C détaillées, les snippets React + Angular, l'arbre `ResolvedNode`.
+- **Annexe** — `KIT-6179-inline-state-updatedatamodel-03-agnostic-consumption.md` : le contrat de consommation agnostic, les options A/B/C détaillées, les snippets React, Angular et Vue, l'arbre `ResolvedNode`.
+- **Aide à la décision (transport de l'état)** — `KIT-6179-inline-state-updatedatamodel-04-agui-vs-a2ui-decision.md` : pourquoi `updateDataModel` (A2-UI) plutôt qu'AG-UI pour les données de composant — l'interop écartée, le vrai critère (corrélation native vs pont `componentId`), et la question ouverte de la forme du data model (par composant vs métier).
