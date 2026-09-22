@@ -61,9 +61,8 @@ export async function getEngineDefinition<T extends SolutionType>(
     engineDefinition.setAccessToken(accessToken);
   }
 
-  // The navigator context is no longer set on the shared definition here; it is
-  // passed per request to fetchStaticState() by each caller (see the routes), so
-  // concurrent requests never share a navigator context.
+  // The navigator context is passed per request to fetchStaticState() by each
+  // caller, not set on the shared definition here.
   return engineDefinition as MappedEngineDefinition<T>;
 }
 

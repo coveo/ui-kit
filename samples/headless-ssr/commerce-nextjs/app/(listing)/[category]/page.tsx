@@ -34,8 +34,6 @@ export default async function Listing({
     notFound();
   }
 
-  // Build the per-request navigator context and pass it to fetchStaticState,
-  // so concurrent requests never share a navigator context on the definition.
   const navigatorContext = new NextJsNavigatorContext(await headers());
 
   const {deserialize} = buildParameterSerializer();

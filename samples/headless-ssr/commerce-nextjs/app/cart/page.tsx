@@ -9,8 +9,6 @@ import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
 
 export default async function CartPage() {
-  // Build the per-request navigator context and pass it to fetchStaticState,
-  // so concurrent requests never share a navigator context on the definition.
   const navigatorContext = new NextJsNavigatorContext(await headers());
 
   // Fetch the cart items from the external service.
