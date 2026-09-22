@@ -46,21 +46,12 @@ describe('Search Engine SSR', () => {
       const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
       expect(searchEngineDefinition).toHaveProperty('fetchStaticState');
       expect(searchEngineDefinition).toHaveProperty('hydrateStaticState');
-      expect(searchEngineDefinition).toHaveProperty('getAccessToken');
-      expect(searchEngineDefinition).toHaveProperty('setAccessToken');
     });
 
-    it('#getAccessToken should return the access token', () => {
+    it('should not expose an access token getter or setter', () => {
       const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
-      const {getAccessToken} = searchEngineDefinition;
-      expect(getAccessToken()).toBe('some-token');
-    });
-
-    it('#setAccessToken should update the access token', () => {
-      const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
-      const {getAccessToken, setAccessToken} = searchEngineDefinition;
-      setAccessToken('new-access-token');
-      expect(getAccessToken()).toBe('new-access-token');
+      expect(searchEngineDefinition).not.toHaveProperty('getAccessToken');
+      expect(searchEngineDefinition).not.toHaveProperty('setAccessToken');
     });
 
     it('should always return parameter manager controller as well as the ones provided', async () => {
@@ -104,21 +95,12 @@ describe('Search Engine SSR', () => {
       const {standaloneEngineDefinition} = defineSearchEngine(definitionOptions);
       expect(standaloneEngineDefinition).toHaveProperty('fetchStaticState');
       expect(standaloneEngineDefinition).toHaveProperty('hydrateStaticState');
-      expect(standaloneEngineDefinition).toHaveProperty('getAccessToken');
-      expect(standaloneEngineDefinition).toHaveProperty('setAccessToken');
     });
 
-    it('#getAccessToken should return the access token', () => {
+    it('should not expose an access token getter or setter', () => {
       const {standaloneEngineDefinition} = defineSearchEngine(definitionOptions);
-      const {getAccessToken} = standaloneEngineDefinition;
-      expect(getAccessToken()).toBe('some-token');
-    });
-
-    it('#setAccessToken should update the access token', () => {
-      const {standaloneEngineDefinition} = defineSearchEngine(definitionOptions);
-      const {getAccessToken, setAccessToken} = standaloneEngineDefinition;
-      setAccessToken('new-standalone-token');
-      expect(getAccessToken()).toBe('new-standalone-token');
+      expect(standaloneEngineDefinition).not.toHaveProperty('getAccessToken');
+      expect(standaloneEngineDefinition).not.toHaveProperty('setAccessToken');
     });
 
     it('should always return parameter manager controller as well as the ones provided', async () => {
@@ -151,6 +133,71 @@ describe('Search Engine SSR', () => {
       expect(hydratedState.engine).toBeDefined();
       expect(hydratedState.controllers).toBeDefined();
       expect(hydratedState.engine.state.configuration.organizationId).toBe('some-org-id');
+    });
+  });
+
+  describe('per-request access token', () => {
+    it('should return the per-request token alongside the static state', async () => {
+      const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
+
+      const staticState = await searchEngineDefinition.fetchStaticState({
+        navigatorContext: mockNavigatorContext,
+        accessToken: 'per-request-token',
+      });
+
+      expect(staticState.accessToken).toBe('per-request-token');
+    });
+
+    it('should carry the per-request token into the hydrated engine', async () => {
+      const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
+
+      const staticState = await searchEngineDefinition.fetchStaticState({
+        navigatorContext: mockNavigatorContext,
+        accessToken: 'per-request-token',
+      });
+      const hydratedState = await searchEngineDefinition.hydrateStaticState(staticState);
+
+      expect(hydratedState.engine.state.configuration.accessToken).toBe('per-request-token');
+    });
+
+    it('should fall back to the definition token when none is provided', async () => {
+      const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
+
+      const staticState = await searchEngineDefinition.fetchStaticState({
+        navigatorContext: mockNavigatorContext,
+      });
+      const hydratedState = await searchEngineDefinition.hydrateStaticState(staticState);
+
+      expect(hydratedState.engine.state.configuration.accessToken).toBe('some-token');
+    });
+
+    it('should not mutate the shared definition configuration', async () => {
+      const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
+
+      await searchEngineDefinition.fetchStaticState({
+        navigatorContext: mockNavigatorContext,
+        accessToken: 'per-request-token',
+      });
+
+      expect(definitionOptions.configuration.accessToken).toBe('some-token');
+    });
+
+    it('should isolate the token across concurrent requests', async () => {
+      const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
+
+      const [stateA, stateB] = await Promise.all([
+        searchEngineDefinition.fetchStaticState({
+          navigatorContext: mockNavigatorContext,
+          accessToken: 'token-user-A',
+        }),
+        searchEngineDefinition.fetchStaticState({
+          navigatorContext: mockNavigatorContext,
+          accessToken: 'token-user-B',
+        }),
+      ]);
+
+      expect(stateA.accessToken).toBe('token-user-A');
+      expect(stateB.accessToken).toBe('token-user-B');
     });
   });
 

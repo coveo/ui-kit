@@ -1,7 +1,6 @@
 /**
  * Utility functions to be used for Server Side Rendering.
  */
-import {createAccessTokenManager} from '../../common/access-token-manager.js';
 import {defineSearchParameterManager} from '../controllers/search-parameter-manager/headless-search-parameter-manager.ssr.js';
 import {hydratedStaticStateFactory} from '../factories/hydrated-state-factory.js';
 import {fetchStandaloneStaticStateFactory} from '../factories/standalone-static-state-factory.js';
@@ -57,20 +56,7 @@ export function defineSearchEngine<
 } {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
 
-  const tokenManager = createAccessTokenManager(engineOptions.configuration.accessToken);
-
-  const onAccessTokenUpdate = (updateCallback: (accessToken: string) => void, owner: object) => {
-    tokenManager.registerCallback(updateCallback, owner);
-  };
-
-  const definitionOptions = {...engineOptions, onAccessTokenUpdate};
-
-  const getAccessToken = () => tokenManager.getAccessToken();
-
-  const setAccessToken = (accessToken: string) => {
-    engineOptions.configuration.accessToken = accessToken;
-    tokenManager.setAccessToken(accessToken);
-  };
+  const definitionOptions = {...engineOptions};
 
   const augmentedControllerDefinition = {
     ...controllerDefinitions,
@@ -92,21 +78,14 @@ export function defineSearchEngine<
     definitionOptions
   );
 
-  const commonMethods = {
-    getAccessToken,
-    setAccessToken,
-  };
-
   return {
     searchEngineDefinition: {
       fetchStaticState,
       hydrateStaticState,
-      ...commonMethods,
     },
     standaloneEngineDefinition: {
       fetchStaticState: fetchStandaloneStaticState,
       hydrateStaticState,
-      ...commonMethods,
     },
   };
 }
