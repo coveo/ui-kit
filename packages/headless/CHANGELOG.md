@@ -1,3 +1,80 @@
+## 3.57.0
+
+### Minor Changes
+
+- [#8494](https://github.com/coveo/ui-kit/pull/8494) [`3ed8932`](https://github.com/coveo/ui-kit/commit/3ed89324378ac78465eccd7c377dc304e5fd8dcf) - feat(headless): support a per-request access token in SSR commerce `fetchStaticState()` and `hydrateStaticState()`
+
+  The `@coveo/headless/ssr-commerce` engine definition now accepts an optional `accessToken` when
+  fetching the static state, hydrating it, or calling `build()`. It overrides the definition's
+  configured token for that call only, without mutating the shared definition — the supported way to
+  use per-user search tokens in a multi-tenant server process. When omitted, the definition's
+  configured token is used.
+
+  Pass the same token to `hydrateStaticState()` that was used for `fetchStaticState()` so the hydrated
+  engine keeps querying with the same permissions. The hydrated engine outlives the call, so it stays
+  subscribed to `setAccessToken()` updates; the request-scoped engine built by `fetchStaticState()`
+  does not, which keeps a per-request token safe from concurrent updates on the shared definition.
+
+- [#8495](https://github.com/coveo/ui-kit/pull/8495) [`a01e1f3`](https://github.com/coveo/ui-kit/commit/a01e1f3e38255bbc42ebaf0604977f5576d6bb74) - feat(headless): support a per-request navigator context in SSR commerce `fetchStaticState()` and `hydrateStaticState()`
+
+  The `@coveo/headless/ssr-commerce` engine definition now accepts an optional `navigatorContext` when
+  fetching the static state, hydrating it, or calling `build()`. It is applied to that call only,
+  without mutating the shared definition. When omitted, the provider set with
+  `setNavigatorContextProvider` is used.
+
+  This also removes the shared-options mutation on the static-state path, which caused a more serious
+  problem than a race. `fetchStaticState()` used to assign the forwarded-for wrapper onto the shared
+  `configuration.preprocessRequest`, and that wrapper resolves its navigator context from the options
+  object it captured. Because the augmentation short-circuits on an already-wrapped function, the
+  wrapper created by the first request was reused for the lifetime of the process — so every subsequent
+  request sent the **first** request's `x-forwarded-for` value, regardless of any later
+  `setNavigatorContextProvider()` call. The augmentation now happens per request, on a copy, so each
+  request forwards its own address.
+
+- [#8504](https://github.com/coveo/ui-kit/pull/8504) [`9e88f88`](https://github.com/coveo/ui-kit/commit/9e88f885cf4f126f405d4248073544cedbd0f404) - **BREAKING (open alpha)** `@coveo/headless/ssr-commerce-next`: removed `getAccessToken()` and
+  `setAccessToken()` from the commerce engine definitions, along with the shared access-token manager
+  behind them.
+
+  The access token is now configured the same way as `navigatorContext`: per request, through the build
+  config, with no setter on the shared definition. This removes a class of concurrency bug — the shared
+  token manager pushed updates into engines that had already been built with their own per-request
+  token, so a queued or concurrent `setAccessToken()` could silently replace one request's token.
+
+  Migrate as follows:
+
+  - To choose the token for a request, pass `accessToken` to `fetchStaticState()`. It is returned with
+    the static state, so passing that static state to `hydrateStaticState()` carries the token to the
+    client automatically.
+  - To rotate an expiring token on an engine that is already running, configure `renewAccessToken` on
+    the engine configuration. The engine renews proactively before a request and reactively on an
+    unauthorized response.
+
+  `@coveo/headless/ssr-commerce` is unchanged: `getAccessToken()` and `setAccessToken()` still work
+  there but are now deprecated, with the same migration path.
+
+- [#8505](https://github.com/coveo/ui-kit/pull/8505) [`c3d3669`](https://github.com/coveo/ui-kit/commit/c3d36693a342c9467b4e65e3f1773b894821f7a8) - `@coveo/headless/ssr-next`: added an optional per-request `accessToken` to the search `BuildConfig`,
+  so `fetchStaticState()` and `hydrateStaticState()` can use a per-user search token without mutating
+  the shared engine definition. When omitted, the definition's configured token is used.
+
+  **BREAKING (open alpha)** removed `getAccessToken()` and `setAccessToken()` from the search engine
+  definitions, along with the shared access-token manager behind them.
+
+  The access token is now configured like `navigatorContext`: per request, through the build config,
+  with no setter on the shared definition. `setAccessToken()` wrote to the module-level definition that
+  every request reads, so two overlapping requests could cross tokens and one user could issue requests
+  under another user's permissions.
+
+  Migrate as follows:
+
+  - To choose the token for a request, pass `accessToken` to `fetchStaticState()`. It is returned with
+    the static state, so passing that static state to `hydrateStaticState()` carries the token to the
+    client automatically.
+  - To rotate an expiring token on an engine that is already running, configure `renewAccessToken` on
+    the engine configuration. The engine renews proactively before a request and reactively on an
+    unauthorized response.
+
+  This brings the search engine definition in line with the commerce one.
+
 ## 3.56.0
 
 ### Minor Changes

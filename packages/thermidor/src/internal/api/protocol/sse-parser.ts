@@ -65,7 +65,19 @@ export function parseSSEEvent(raw: RawSSEEvent): NormalizedStreamEvent {
     if (typeof record.type === 'string') {
       const result = EventSchemas.safeParse(parsedPayload);
       if (result.success) {
-        return result.data as NormalizedStreamEvent;
+        const event = result.data as NormalizedStreamEvent;
+        if (record.type !== 'RUN_STARTED' && record.type !== 'RUN_FINISHED') {
+          return event;
+        }
+        return {
+          ...event,
+          ...(typeof record.conversationSessionId === 'string'
+            ? {conversationSessionId: record.conversationSessionId}
+            : {}),
+          ...(typeof record.conversationToken === 'string'
+            ? {conversationToken: record.conversationToken}
+            : {}),
+        } as NormalizedStreamEvent;
       }
 
       // CUSTOM events that failed Zod validation — handle gracefully

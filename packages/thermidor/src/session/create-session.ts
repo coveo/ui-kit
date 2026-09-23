@@ -191,7 +191,12 @@ function getErrorMessage(error: unknown): string {
 function readSessionKeys(
   event: NormalizedStreamEvent
 ): {sessionId?: string; sessionToken?: string} | undefined {
-  if (event.type !== 'turn_started' && event.type !== 'turn_complete') {
+  if (
+    event.type !== 'RUN_STARTED' &&
+    event.type !== 'RUN_FINISHED' &&
+    event.type !== 'turn_started' &&
+    event.type !== 'turn_complete'
+  ) {
     const raw = event as unknown as Record<string, unknown>;
     if (raw.type !== 'error') {
       return undefined;
