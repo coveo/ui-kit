@@ -1,3 +1,4 @@
+import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {ControllersMap, ControllersPropsMap} from '../../common/types/controllers.js';
 import type {OptionsExtender, OptionsTuple} from '../../common/types/utilities.js';
@@ -17,6 +18,14 @@ export interface BuildOptions<TEngineOptions> {
    * @deprecated This option will be removed in the next major version.
    */
   extend?: OptionsExtender<TEngineOptions>;
+  /**
+   * A per-request access token applied to this call only, without mutating the shared definition.
+   */
+  accessToken?: string;
+  /**
+   * A per-request navigator context applied to this call only, without mutating the shared definition.
+   */
+  navigatorContext?: NavigatorContext;
 }
 
 /**

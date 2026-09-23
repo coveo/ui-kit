@@ -1,11 +1,9 @@
 import {useRemoteController} from '../controllers.js';
-import {useStateSource} from '../state-source-context.js';
 import type {PaginationProps} from '@coveo/thermidor-schema';
 import styles from './Pagination.module.css';
 
 export function PaginationRenderer({props}: {props: PaginationProps}) {
-  const stateSource = useStateSource();
-  const controller = useRemoteController(stateSource, props.componentId, props.componentType);
+  const controller = useRemoteController(props.componentId, props.componentType);
 
   if (!controller.state) {
     return null;

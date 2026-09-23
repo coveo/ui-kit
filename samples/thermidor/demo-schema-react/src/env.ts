@@ -1,6 +1,5 @@
 type RequiredEnvKey =
   | 'VITE_COVEO_ORGANIZATION_ID'
-  | 'VITE_COVEO_ACCESS_TOKEN'
   | 'VITE_COVEO_TRACKING_ID'
   | 'VITE_COVEO_LANGUAGE'
   | 'VITE_COVEO_COUNTRY'
@@ -60,6 +59,17 @@ function getOrganizationPlatformEndpoint(
   return `https://${organizationId}.org${environmentSuffix}.coveo.com`;
 }
 
+/**
+ * The fixed converse path the unified endpoint serves. Since the rework, the
+ * Thermidor client POSTs to `endpoint` verbatim (it no longer appends this
+ * path), so the sample builds the full URL itself for every flow (proxy,
+ * explicit override, or derived platform host).
+ */
+function getConverseUrl(baseUrl: string, organizationId: string): string {
+  const normalizedBase = baseUrl.replace(/\/+$/, '');
+  return `${normalizedBase}/api/preview/organizations/${organizationId}/agents/commerce/agui/converse`;
+}
+
 function shouldUseViteProxy() {
   const configured = parseBoolean(getOptionalEnvValue('VITE_COVEO_USE_VITE_PROXY'));
 
@@ -76,13 +86,15 @@ export function getSampleConfiguration() {
   const environment = resolvePlatformEnvironment();
   const endpointFromEnvironment = getOrganizationPlatformEndpoint(organizationId, environment);
 
-  const endpoint = shouldUseViteProxy()
+  const baseUrl = shouldUseViteProxy()
     ? window.location.origin
     : (endpointOverride ?? endpointFromEnvironment);
+  const endpoint = getConverseUrl(baseUrl, organizationId);
 
   return {
     organizationId,
-    accessToken: getRequiredEnvValue('VITE_COVEO_ACCESS_TOKEN'),
+    // Optional: mock mode does not use it. For a live backend, set VITE_COVEO_ACCESS_TOKEN.
+    accessToken: getOptionalEnvValue('VITE_COVEO_ACCESS_TOKEN') ?? '',
     trackingId: getRequiredEnvValue('VITE_COVEO_TRACKING_ID'),
     language: getRequiredEnvValue('VITE_COVEO_LANGUAGE'),
     country: getRequiredEnvValue('VITE_COVEO_COUNTRY'),

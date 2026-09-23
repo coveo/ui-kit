@@ -11,14 +11,6 @@ const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
     try {
       const {organizationId, accessToken, endpoint} = configuration;
 
-      if (!organizationId) {
-        return {
-          success: false,
-          error:
-            'Configuration error: Organization ID is not set. Please configure your organization ID.',
-        };
-      }
-
       if (!accessToken) {
         return {
           success: false,
@@ -27,14 +19,28 @@ const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
         };
       }
 
-      const organizationEndpoint = getOrganizationEndpoint(organizationId, {
-        endpoint,
-      });
-      const url =
-        organizationEndpoint +
-        '/api/preview/organizations/' +
-        organizationId +
-        '/agents/commerce/agui/converse';
+      // When `endpoint` is provided it is the exact URL to POST to (append
+      // nothing). When absent, derive the org host and append the fixed
+      // converse path — which requires a non-empty org id.
+      let url: string;
+      if (endpoint) {
+        url = endpoint;
+      } else {
+        if (!organizationId) {
+          return {
+            success: false,
+            error:
+              'Configuration error: Organization ID is not set. Please configure your organization ID.',
+          };
+        }
+
+        const organizationEndpoint = getOrganizationEndpoint(organizationId);
+        url =
+          organizationEndpoint +
+          '/api/preview/organizations/' +
+          organizationId +
+          '/agents/commerce/agui/converse';
+      }
 
       const response = await fetch(url, {
         method: 'POST',

@@ -1,30 +1,30 @@
-import {describe, expect, it, afterEach} from 'vitest';
+import {describe, expect, it, afterEach, vi, beforeEach} from 'vitest';
 import {render, screen, cleanup} from '@testing-library/react';
-import type {RemoteControllerSource} from '@coveo/thermidor';
-import {StateSourceProvider} from '../state-source-context.js';
 import {ProductSummaryRenderer} from './ProductSummary.js';
 
-/**
- * Builds a RemoteControllerSource whose active turn carries the given per-componentId
- * state map. Correlation happens solely by componentId, matching the real AG-UI path.
- */
-function buildStateSource(components: Record<string, unknown>): RemoteControllerSource {
-  return {
-    state: {activeTurn: {agentResponse: {state: {components}}}},
+// The renderer resolves its state through `useRemoteController`, which binds to
+// the active turn's `components[componentId]` entry. The mock reproduces that
+// correlation: the controller state is looked up by the requested componentId.
+let mockComponents: Record<string, unknown> = {};
+
+vi.mock('../controllers.js', () => ({
+  useRemoteController: (componentId: string) => ({
+    componentId,
+    state: mockComponents[componentId],
+    dispatch: vi.fn(),
     subscribe: () => () => undefined,
-    dispatchAction: () => undefined,
-  } as unknown as RemoteControllerSource;
-}
+  }),
+}));
 
 function renderSummary(componentId: string, components: Record<string, unknown>) {
-  return render(
-    <StateSourceProvider stateSource={buildStateSource(components)}>
-      <ProductSummaryRenderer props={{componentId, componentType: 'product-summary'}} />
-    </StateSourceProvider>
-  );
+  mockComponents = components;
+  return render(<ProductSummaryRenderer props={{componentId, componentType: 'product-summary'}} />);
 }
 
 describe('ProductSummaryRenderer', () => {
+  beforeEach(() => {
+    mockComponents = {};
+  });
   afterEach(() => cleanup());
 
   it('renders the product name, description and price from its AG-UI state', () => {

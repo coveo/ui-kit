@@ -22,8 +22,19 @@ vi.mock('./controllers.js', () => ({
   }),
 }));
 
-vi.mock('./state-source-context.js', () => ({
-  useStateSource: () => ({state: {activeTurn: {agentResponse: {state: {components: {}}}}}}),
+// BundleDisplay computes its package total by reading each slot child's
+// product-summary state from the session. The mount-order property is about
+// composition only, so the session's per-child state is stubbed empty.
+vi.mock('../context/session.js', () => ({
+  useSession: () => ({
+    subscribe: () => () => undefined,
+    remoteController: () => ({
+      componentId: '',
+      state: undefined,
+      dispatch: vi.fn().mockResolvedValue(undefined),
+      subscribe: () => () => undefined,
+    }),
+  }),
 }));
 
 /**

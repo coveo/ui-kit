@@ -1,7 +1,8 @@
 import {render, screen} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
-import type {AgentResponse, ReasoningStep} from '@coveo/thermidor';
+import type {Activity, ReasoningStep, TurnResponse} from '@coveo/thermidor';
 import {AgentResponseBlock} from './AgentResponseBlock.js';
+import {makeResponse} from '../../test/turn-fixtures.js';
 
 vi.mock('./ThinkingBlock.js', () => ({
   ThinkingBlock: ({
@@ -37,46 +38,54 @@ vi.mock('../../a2ui/surfaces.js', () => ({
 }));
 
 /**
- * Helper to build a surface snapshot that parseSurfaceSnapshots understands.
- * It expects `{messages: [{version: 'v1.0', createSurface: {...}}]}`.
+ * Builds an `a2ui-surface` activity whose payload is a v1.0 createSurface
+ * snapshot that `parseSurfaceSnapshots` understands. Skeleton derivation reads
+ * these raw snapshots off `response.activities`.
  */
-function makeSurfaceSnapshot(
+function makeSurfaceActivity(
   surfaceId: string,
   componentType: string,
   componentProps: Record<string, unknown> = {}
-): Record<string, unknown> {
+): Activity {
   return {
-    messages: [
-      {
-        version: 'v1.0',
-        createSurface: {
-          surfaceId,
-          components: [{id: 'root', component: componentType, props: componentProps}],
+    id: `activity-${surfaceId}`,
+    kind: 'a2ui-surface',
+    replace: true,
+    payload: {
+      messages: [
+        {
+          version: 'v1.0',
+          createSurface: {
+            surfaceId,
+            components: [{id: 'root', component: componentType, props: componentProps}],
+          },
         },
-      },
-    ],
+      ],
+    },
   };
 }
 
-function createAgentResponse(overrides: Partial<AgentResponse> = {}): AgentResponse {
-  return {
-    messages: [],
-    surfaces: [],
-    activities: [],
-    state: {},
-    reasoningSteps: [],
-    ...overrides,
-  };
+interface AgentContent {
+  messages?: {content: string; role: string}[];
+  reasoningSteps?: ReasoningStep[];
+}
+
+function makeAgentResponse(overrides: {activities?: Activity[]} & AgentContent = {}): TurnResponse {
+  const {activities = [], messages = [], reasoningSteps = []} = overrides;
+  return makeResponse({
+    activities,
+    agent: {messages, reasoningSteps},
+  });
 }
 
 function renderBlock(
-  agentResponse: AgentResponse = createAgentResponse(),
+  response: TurnResponse = makeAgentResponse(),
   overrides: Partial<{
     isStreaming: boolean;
   }> = {}
 ) {
   const defaultProps = {
-    agentResponse,
+    response,
     isStreaming: false,
     ...overrides,
   };
@@ -87,7 +96,7 @@ function renderBlock(
 describe('AgentResponseBlock', () => {
   describe('render order (ThinkingBlock → StreamingMessage → Skeletons)', () => {
     it('renders ThinkingBlock, StreamingMessage, and skeletons in DOM order', () => {
-      const agentResponse = createAgentResponse({
+      const response = makeAgentResponse({
         reasoningSteps: [
           {type: 'reasoning', content: 'Thinking...'},
           {
@@ -101,7 +110,7 @@ describe('AgentResponseBlock', () => {
         messages: [{content: 'Hello world', role: 'assistant'}],
       });
 
-      const {container} = renderBlock(agentResponse, {isStreaming: true});
+      const {container} = renderBlock(response, {isStreaming: true});
 
       const allElements = container.querySelectorAll('[data-testid]');
       expect(allElements[0].getAttribute('data-testid')).toBe('thinking-block');
@@ -113,46 +122,46 @@ describe('AgentResponseBlock', () => {
 
   describe('components are omitted when their data is empty', () => {
     it('omits ThinkingBlock when reasoningSteps is empty and not streaming', () => {
-      const agentResponse = createAgentResponse({
+      const response = makeAgentResponse({
         messages: [{content: 'Hello', role: 'assistant'}],
       });
 
-      renderBlock(agentResponse, {isStreaming: false});
+      renderBlock(response, {isStreaming: false});
 
       expect(screen.queryByTestId('thinking-block')).toBeNull();
       expect(screen.queryByTestId('streaming-message')).not.toBeNull();
     });
 
     it('shows ThinkingBlock when isStreaming is true even with no reasoning steps', () => {
-      renderBlock(createAgentResponse(), {isStreaming: true});
+      renderBlock(makeAgentResponse(), {isStreaming: true});
       expect(screen.queryByTestId('thinking-block')).not.toBeNull();
     });
 
     it('shows ThinkingBlock when reasoningSteps is non-empty even if not streaming', () => {
-      const agentResponse = createAgentResponse({
+      const response = makeAgentResponse({
         reasoningSteps: [{type: 'reasoning', content: 'done'}],
       });
 
-      renderBlock(agentResponse, {isStreaming: false});
+      renderBlock(response, {isStreaming: false});
       expect(screen.queryByTestId('thinking-block')).not.toBeNull();
     });
 
     it('omits StreamingMessage when messages all have empty content', () => {
-      const agentResponse = createAgentResponse({
+      const response = makeAgentResponse({
         messages: [{content: '', role: 'assistant'}],
       });
 
-      renderBlock(agentResponse, {isStreaming: false});
+      renderBlock(response, {isStreaming: false});
       expect(screen.queryByTestId('streaming-message')).toBeNull();
     });
 
     it('omits StreamingMessage when messages array is empty', () => {
-      renderBlock(createAgentResponse(), {isStreaming: false});
+      renderBlock(makeAgentResponse(), {isStreaming: false});
       expect(screen.queryByTestId('streaming-message')).toBeNull();
     });
 
     it('does not show skeletons when not streaming', () => {
-      const agentResponse = createAgentResponse({
+      const response = makeAgentResponse({
         reasoningSteps: [
           {
             type: 'tool-call',
@@ -164,12 +173,12 @@ describe('AgentResponseBlock', () => {
         ],
       });
 
-      renderBlock(agentResponse, {isStreaming: false});
+      renderBlock(response, {isStreaming: false});
       expect(screen.queryByTestId('skeleton')).toBeNull();
     });
 
     it('renders nothing except the container when all data is empty and not streaming', () => {
-      renderBlock(createAgentResponse(), {isStreaming: false});
+      renderBlock(makeAgentResponse(), {isStreaming: false});
 
       expect(screen.queryByTestId('thinking-block')).toBeNull();
       expect(screen.queryByTestId('streaming-message')).toBeNull();
@@ -179,7 +188,7 @@ describe('AgentResponseBlock', () => {
 
   describe('skeleton sources', () => {
     it('shows skeletons from store_render_plan tool calls during streaming', () => {
-      const agentResponse = createAgentResponse({
+      const response = makeAgentResponse({
         reasoningSteps: [
           {
             type: 'tool-call',
@@ -191,43 +200,37 @@ describe('AgentResponseBlock', () => {
         ],
       });
 
-      renderBlock(agentResponse, {isStreaming: true});
+      renderBlock(response, {isStreaming: true});
 
       const skeleton = screen.getByTestId('skeleton');
       expect(skeleton.getAttribute('data-component-type')).toBe('BundleDisplay');
     });
 
-    it('shows skeletons from surfaces with skeleton- prefix (speculative backend support)', () => {
-      const agentResponse = createAgentResponse({
-        surfaces: [
-          makeSurfaceSnapshot('skeleton-comparison', 'ComparisonTable'),
-        ] as AgentResponse['surfaces'],
+    it('shows skeletons from surface activities with skeleton- prefix (speculative backend support)', () => {
+      const response = makeAgentResponse({
+        activities: [makeSurfaceActivity('skeleton-comparison', 'ComparisonTable')],
       });
 
-      renderBlock(agentResponse, {isStreaming: true});
+      renderBlock(response, {isStreaming: true});
 
       const skeleton = screen.getByTestId('skeleton');
       expect(skeleton.getAttribute('data-component-type')).toBe('ComparisonTable');
     });
 
-    it('shows skeletons from surfaces with isLoading prop (speculative backend support)', () => {
-      const agentResponse = createAgentResponse({
-        surfaces: [
-          makeSurfaceSnapshot('bundle-1', 'BundleDisplay', {isLoading: true}),
-        ] as AgentResponse['surfaces'],
+    it('shows skeletons from surface activities with isLoading prop (speculative backend support)', () => {
+      const response = makeAgentResponse({
+        activities: [makeSurfaceActivity('bundle-1', 'BundleDisplay', {isLoading: true})],
       });
 
-      renderBlock(agentResponse, {isStreaming: true});
+      renderBlock(response, {isStreaming: true});
 
       const skeleton = screen.getByTestId('skeleton');
       expect(skeleton.getAttribute('data-component-type')).toBe('BundleDisplay');
     });
 
     it('does not show skeleton when a real surface of same type exists', () => {
-      const agentResponse = createAgentResponse({
-        surfaces: [
-          makeSurfaceSnapshot('carousel-1', 'ProductCarousel'),
-        ] as AgentResponse['surfaces'],
+      const response = makeAgentResponse({
+        activities: [makeSurfaceActivity('carousel-1', 'ProductCarousel')],
         reasoningSteps: [
           {
             type: 'tool-call',
@@ -239,7 +242,7 @@ describe('AgentResponseBlock', () => {
         ],
       });
 
-      renderBlock(agentResponse, {isStreaming: true});
+      renderBlock(response, {isStreaming: true});
       expect(screen.queryByTestId('skeleton')).toBeNull();
     });
   });

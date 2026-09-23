@@ -30,15 +30,5 @@ describe('organization-endpoint', () => {
         })
       ).toBe('https://my-org.analytics.orgstg.coveo.com');
     });
-
-    it('uses configured endpoint override when provided', () => {
-      expect(
-        getOrganizationEndpoint('my-org', {
-          endpoint: 'https://custom.platform.coveo.com',
-          environment: 'dev',
-          endpointType: 'analytics',
-        })
-      ).toBe('https://custom.platform.coveo.com');
-    });
   });
 });

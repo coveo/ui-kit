@@ -12,6 +12,7 @@ import {
   createWaitForActionMiddleware,
   createWaitForActionMiddlewareForRecommendation,
 } from '../../../utils/utils.js';
+import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
 import type {ControllersPropsMap} from '../../common/types/controllers.js';
 import {buildControllerDefinitions} from '../controller-utils.js';
 import {SolutionType} from '../types/controller-constants.js';
@@ -63,6 +64,19 @@ export type CommerceEngineDefinitionOptions<
    */
   onAccessTokenUpdate?: (updateCallback: (token: string) => void, owner: object) => void;
 };
+
+/**
+ * Internal options describing the lifecycle of the engines a factory produces.
+ * @internal
+ */
+export interface BuildFactoryOptions {
+  /**
+   * Set by paths that produce an engine outliving the call that created it, namely client-side
+   * hydration. Such an engine keeps its subscription to the definition's shared access token even
+   * when a per-request token is supplied, so a later `setAccessToken()` still reaches it.
+   */
+  engineOutlivesRequest?: boolean;
+}
 
 function isListingFetchCompletedAction(action: unknown): action is Action {
   return /^commerce\/productListing\/fetch\/(fulfilled|rejected)$/.test(
@@ -155,12 +169,24 @@ function fetchActiveRecommendationControllers(
 export const buildFactory =
   <TControllerDefinitions extends CommerceControllerDefinitionsMap>(
     controllerDefinitions: TControllerDefinitions | undefined,
-    options: CommerceEngineDefinitionOptions<TControllerDefinitions>
+    options: CommerceEngineDefinitionOptions<TControllerDefinitions>,
+    factoryOptions: BuildFactoryOptions = {}
   ) =>
   <T extends SolutionType>(solutionType: T) =>
   async (...[buildOptions]: BuildParameters<TControllerDefinitions>) => {
     const logger = buildLogger(options.loggerOptions);
-    if (!options.navigatorContextProvider) {
+
+    const perRequestAccessToken =
+      buildOptions && 'accessToken' in buildOptions ? buildOptions.accessToken : undefined;
+    const perRequestNavigatorContext =
+      buildOptions && 'navigatorContext' in buildOptions
+        ? buildOptions.navigatorContext
+        : undefined;
+
+    // Warn only when NO navigator context is available for this request — neither a definition-level
+    // provider nor a per-request `navigatorContext`. The per-request-only path (build({navigatorContext})
+    // without setNavigatorContextProvider) is supported and must not log a false "missing" warning.
+    if (!options.navigatorContextProvider && perRequestNavigatorContext === undefined) {
       logger.warn(
         '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
       );
@@ -176,11 +202,51 @@ export const buildFactory =
       solutionType
     );
 
+    // Apply the per-request access token BEFORE running `extend`, on a non-mutating copy of the
+    // shared definition options, so the deprecated `extend` hook sees it and its return value wins
+    // (documented precedence for the token). Without `extend`, the per-request token carries through.
+    // Note: the per-request `navigatorContext` is applied AFTER `extend` (below), so `extend` does
+    // not override it — this matches the intent that a request's own navigator context is authoritative.
+    const optionsForRequest =
+      perRequestAccessToken !== undefined
+        ? {
+            ...options,
+            configuration: {
+              ...options.configuration,
+              accessToken: perRequestAccessToken,
+            },
+          }
+        : options;
+
+    const baseOptions =
+      buildOptions && 'extend' in buildOptions && buildOptions?.extend
+        ? await buildOptions.extend(optionsForRequest)
+        : optionsForRequest;
+
+    const navigatorContextProvider = perRequestNavigatorContext
+      ? () => perRequestNavigatorContext
+      : baseOptions.navigatorContextProvider;
+
+    // Always build a per-request copy (never mutate the shared definition options). The
+    // forwarded-for augmentation of preprocessRequest is applied per request, and the optional
+    // per-request navigator context is layered on top. The per-request access token is already
+    // present in `baseOptions.configuration` (applied before `extend` above).
+    const engineOptions = {
+      ...baseOptions,
+      navigatorContextProvider,
+      configuration: {
+        ...baseOptions.configuration,
+        preprocessRequest: augmentPreprocessRequestWithForwardedFor({
+          preprocessRequest: baseOptions.configuration.preprocessRequest,
+          navigatorContextProvider,
+          loggerOptions: baseOptions.loggerOptions,
+        }),
+      },
+    };
+
     const engine = buildSSRCommerceEngine(
       solutionType,
-      buildOptions && 'extend' in buildOptions && buildOptions?.extend
-        ? await buildOptions.extend(options)
-        : options,
+      engineOptions,
       enabledRecommendationControllers
     );
 
@@ -193,8 +259,19 @@ export const buildFactory =
       );
     };
 
-    if (options.onAccessTokenUpdate) {
+    // A per-request token must stay authoritative for the request that supplied it, so a
+    // request-scoped engine skips the shared subscription: staying subscribed would let a queued or
+    // concurrent `setAccessToken()` from another request overwrite it. An engine that outlives the
+    // request (client-side hydration) faces no such concurrency and must keep receiving
+    // `setAccessToken()` updates, otherwise it would be stuck with the token it was hydrated with.
+    const subscribeToSharedAccessToken =
+      perRequestAccessToken === undefined || factoryOptions.engineOutlivesRequest === true;
+
+    if (options.onAccessTokenUpdate && subscribeToSharedAccessToken) {
       options.onAccessTokenUpdate(updateEngineConfiguration, engine);
+      if (perRequestAccessToken !== undefined && factoryOptions.engineOutlivesRequest === true) {
+        updateEngineConfiguration(perRequestAccessToken);
+      }
     }
 
     const controllers = buildControllerDefinitions({

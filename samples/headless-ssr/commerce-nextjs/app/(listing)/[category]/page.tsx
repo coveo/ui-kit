@@ -34,9 +34,7 @@ export default async function Listing({
     notFound();
   }
 
-  // Set the navigator context provider before fetching the app static state.
   const navigatorContext = new NextJsNavigatorContext(await headers());
-  listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
   const {deserialize} = buildParameterSerializer();
   const parameters = deserialize(await searchParams);
@@ -45,6 +43,7 @@ export default async function Listing({
   const items = await externalCartAPI.getCart();
 
   const staticState = await listingEngineDefinition.fetchStaticState({
+    navigatorContext: navigatorContext.marshal,
     controllers: {
       cart: {initialState: {items}},
       context: {
@@ -60,6 +59,7 @@ export default async function Listing({
   });
 
   const recsStaticState = await recommendationEngineDefinition.fetchStaticState({
+    navigatorContext: navigatorContext.marshal,
     controllers: {
       popularBought: {enabled: true},
       popularViewed: {enabled: true},

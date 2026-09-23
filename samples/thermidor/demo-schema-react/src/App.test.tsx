@@ -2,14 +2,9 @@ import {render, screen} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
 import App from './App.js';
 
-vi.mock('./context/engine.js', () => ({
-  EngineProvider: ({children}: {children: React.ReactNode}) => <>{children}</>,
-  useEngine: () => ({}),
-}));
-
-vi.mock('./context/generative-interface.js', () => ({
-  GenerativeInterfaceProvider: ({children}: {children: React.ReactNode}) => <>{children}</>,
-  useGenerativeInterface: () => ({}),
+vi.mock('./context/session.js', () => ({
+  SessionProvider: ({children}: {children: React.ReactNode}) => <>{children}</>,
+  useSession: () => ({}),
 }));
 
 vi.mock('./components/AppShell.js', () => ({

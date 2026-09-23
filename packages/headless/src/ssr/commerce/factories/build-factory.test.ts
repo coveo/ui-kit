@@ -66,11 +66,10 @@ describe('buildFactory', () => {
 
   it('should register the engine for token updates with the engine as owner', async () => {
     const onAccessTokenUpdate = vi.fn();
-    const factory = buildFactory(
-      mockEmptyDefinition,
-      {...mockEngineOptions, onAccessTokenUpdate},
-      true
-    );
+    const factory = buildFactory(mockEmptyDefinition, {
+      ...mockEngineOptions,
+      onAccessTokenUpdate,
+    });
 
     const {engine} = await factory(SolutionType.listing)();
 
@@ -249,6 +248,229 @@ describe('buildFactory', () => {
       expect(
         (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0].middlewares
       ).toHaveLength(0);
+    });
+  });
+
+  describe('per-request access token', () => {
+    it('should build the engine with the per-request access token when provided', async () => {
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+      const build = factory(SolutionType.listing);
+
+      await build({accessToken: 'per-request-token'});
+
+      expect(
+        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0].configuration.accessToken
+      ).toBe('per-request-token');
+    });
+
+    it('should fall back to the definition access token when none is provided', async () => {
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+      const build = factory(SolutionType.listing);
+
+      await build();
+
+      expect(
+        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0].configuration.accessToken
+      ).toBe(mockEngineOptions.configuration.accessToken);
+    });
+
+    it('should not mutate the shared definition configuration', async () => {
+      // Use a fresh options object with a known token (not the shared fixture) so the assertion
+      // genuinely verifies non-mutation: reusing the shared fixture could capture an already-leaked
+      // value and pass even if the shared configuration were mutated.
+      const definitionToken = 'definition-token';
+      const freshOptions: CommerceEngineOptions = {
+        configuration: {...getSampleCommerceEngineConfiguration(), accessToken: definitionToken},
+        navigatorContextProvider: buildMockNavigatorContextProvider(),
+      };
+      const factory = buildFactory(mockEmptyDefinition, freshOptions);
+      const build = factory(SolutionType.listing);
+
+      await build({accessToken: 'per-request-token'});
+
+      expect(freshOptions.configuration.accessToken).toBe(definitionToken);
+    });
+
+    it('should isolate the token across concurrent builds', async () => {
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+      const build = factory(SolutionType.listing);
+
+      await Promise.all([build({accessToken: 'token-A'}), build({accessToken: 'token-B'})]);
+
+      const tokensUsed = (commerceEngine.buildCommerceEngine as Mock).mock.calls.map(
+        (call) => call[0].configuration.accessToken
+      );
+      expect(tokensUsed).toContain('token-A');
+      expect(tokensUsed).toContain('token-B');
+    });
+
+    it('should NOT subscribe a request-scoped per-request-token engine to shared token updates', async () => {
+      const onAccessTokenUpdate = vi.fn();
+      const factory = buildFactory(mockEmptyDefinition, {
+        ...mockEngineOptions,
+        onAccessTokenUpdate,
+      });
+      const build = factory(SolutionType.listing);
+
+      await build({accessToken: 'per-request-token'});
+
+      expect(onAccessTokenUpdate).not.toHaveBeenCalled();
+    });
+
+    it('should subscribe a per-request-token engine that outlives the request to shared token updates', async () => {
+      const onAccessTokenUpdate = vi.fn();
+      const factory = buildFactory(
+        mockEmptyDefinition,
+        {...mockEngineOptions, onAccessTokenUpdate},
+        {engineOutlivesRequest: true}
+      );
+      const build = factory(SolutionType.listing);
+
+      const {engine} = await build({accessToken: 'per-request-token'});
+
+      expect(onAccessTokenUpdate).toHaveBeenCalledExactlyOnceWith(expect.any(Function), engine);
+    });
+
+    it('should still subscribe to shared token updates when no per-request token is provided', async () => {
+      const onAccessTokenUpdate = vi.fn();
+      const factory = buildFactory(mockEmptyDefinition, {
+        ...mockEngineOptions,
+        onAccessTokenUpdate,
+      });
+      const build = factory(SolutionType.listing);
+
+      const {engine} = await build();
+
+      expect(onAccessTokenUpdate).toHaveBeenCalledExactlyOnceWith(expect.any(Function), engine);
+    });
+
+    it('should let the deprecated extend hook override the per-request token', async () => {
+      // The per-request token is applied before `extend` runs, so an extender that returns a
+      // different access token wins — matching the documented "extend takes precedence".
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+      const build = factory(SolutionType.listing);
+
+      await build({
+        accessToken: 'per-request-token',
+        extend: async (options) => ({
+          ...options,
+          configuration: {...options.configuration, accessToken: 'extend-token'},
+        }),
+      });
+
+      expect(
+        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0].configuration.accessToken
+      ).toBe('extend-token');
+    });
+  });
+
+  describe('per-request navigator context', () => {
+    const navigatorContext = {
+      clientId: 'per-request-client-id',
+      referrer: null,
+      userAgent: 'per-request-ua',
+      location: 'http://per-request/',
+      forwardedFor: '9.9.9.9',
+    };
+
+    it('should build the engine with the per-request navigator context when provided', async () => {
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+      const build = factory(SolutionType.listing);
+
+      await build({navigatorContext});
+
+      const usedProvider = (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0]
+        .navigatorContextProvider;
+      expect(usedProvider()).toEqual(navigatorContext);
+    });
+
+    it('should not mutate the shared definition navigator context provider', async () => {
+      const sharedProvider = mockEngineOptions.navigatorContextProvider;
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+      const build = factory(SolutionType.listing);
+
+      await build({navigatorContext});
+
+      expect(mockEngineOptions.navigatorContextProvider).toBe(sharedProvider);
+    });
+
+    it('should fall back to the definition provider when none is provided', async () => {
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+      const build = factory(SolutionType.listing);
+
+      await build();
+
+      expect(
+        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0].navigatorContextProvider
+      ).toBe(mockEngineOptions.navigatorContextProvider);
+    });
+
+    it('should give each request a preprocessRequest bound to its own navigator context', async () => {
+      // The augmentation reads its navigator context from the options object it captured, and it
+      // short-circuits on an already-augmented function. Sharing one wrapper across requests would
+      // therefore pin every x-forwarded-for to whichever request created it first, so each request
+      // must get its own wrapper.
+      const contextA = {...navigatorContext, clientId: 'client-A', forwardedFor: '1.1.1.1'};
+      const contextB = {...navigatorContext, clientId: 'client-B', forwardedFor: '2.2.2.2'};
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+      const build = factory(SolutionType.listing);
+
+      await build({navigatorContext: contextA});
+      await build({navigatorContext: contextB});
+
+      const forwardedForOf = async (callIndex: number) => {
+        const {preprocessRequest} = (commerceEngine.buildCommerceEngine as Mock).mock.calls[
+          callIndex
+        ][0].configuration;
+        const request = {headers: {}} as never;
+        await preprocessRequest(request, 'searchApiFetch', undefined);
+        return new Headers((request as {headers: HeadersInit}).headers).get('x-forwarded-for');
+      };
+
+      expect(await forwardedForOf(0)).toBe('1.1.1.1');
+      expect(await forwardedForOf(1)).toBe('2.2.2.2');
+    });
+
+    it('should isolate the navigator context across concurrent builds', async () => {
+      const contextA = {...navigatorContext, clientId: 'client-A', forwardedFor: '1.1.1.1'};
+      const contextB = {...navigatorContext, clientId: 'client-B', forwardedFor: '2.2.2.2'};
+      const sharedProvider = mockEngineOptions.navigatorContextProvider;
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+      const build = factory(SolutionType.listing);
+
+      await Promise.all([build({navigatorContext: contextA}), build({navigatorContext: contextB})]);
+
+      const providers = (commerceEngine.buildCommerceEngine as Mock).mock.calls.map(
+        (call) => call[0].navigatorContextProvider
+      );
+      const resolved = providers.map((p) => p());
+      expect(resolved).toContainEqual(contextA);
+      expect(resolved).toContainEqual(contextB);
+      expect(mockEngineOptions.navigatorContextProvider).toBe(sharedProvider);
+    });
+
+    it('should NOT warn when only a per-request navigator context is provided (no definition provider)', async () => {
+      const optionsWithoutProvider: CommerceEngineOptions = {
+        configuration: getSampleCommerceEngineConfiguration(),
+      };
+      const factory = buildFactory(mockEmptyDefinition, optionsWithoutProvider);
+      const build = factory(SolutionType.listing);
+
+      await build({navigatorContext});
+
+      expect(mockLogger.warn).not.toHaveBeenCalled();
+    });
+
+    it('should warn when neither a definition provider nor a per-request navigator context is available', async () => {
+      const optionsWithoutProvider: CommerceEngineOptions = {
+        configuration: getSampleCommerceEngineConfiguration(),
+      };
+      const factory = buildFactory(mockEmptyDefinition, optionsWithoutProvider);
+      const build = factory(SolutionType.listing);
+
+      await build();
+
+      expect(mockLogger.warn).toHaveBeenCalled();
     });
   });
 });

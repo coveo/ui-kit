@@ -43,8 +43,8 @@ export const loader = async ({request, url}: Route.LoaderArgs) => {
   const isSearchPage = url.pathname === '/search';
 
   const engineDefinition = isSearchPage
-    ? await getEngineDefinition(navigatorContext, request, SolutionType.search)
-    : await getEngineDefinition(navigatorContext, request, SolutionType.standalone);
+    ? await getEngineDefinition(request, SolutionType.search)
+    : await getEngineDefinition(request, SolutionType.standalone);
 
   let staticState: SearchStaticState | StandaloneStaticState;
 
@@ -57,6 +57,7 @@ export const loader = async ({request, url}: Route.LoaderArgs) => {
     const parameters = deserialize(url.searchParams);
 
     staticState = await (engineDefinition as SearchEngineDefinition).fetchStaticState({
+      navigatorContext,
       controllers: {
         ...baseFetchStaticStateConfiguration.controllers,
         parameterManager: {
@@ -68,6 +69,7 @@ export const loader = async ({request, url}: Route.LoaderArgs) => {
     });
   } else {
     staticState = await (engineDefinition as StandaloneEngineDefinition).fetchStaticState({
+      navigatorContext,
       ...baseFetchStaticStateConfiguration,
     });
   }

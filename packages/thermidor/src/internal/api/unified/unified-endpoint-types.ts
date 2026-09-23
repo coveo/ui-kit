@@ -1,3 +1,5 @@
+import type {CommerceCartItem} from '@/src/internal/context/commerce-context.js';
+
 // ─── Commerce agent input ──────────────────────────────────────────────────
 
 export interface CommerceRequestModel {
@@ -11,22 +13,28 @@ export interface CommerceRequestModel {
   conversationSessionId?: string;
   conversationToken?: string;
   context: CommerceRequestContext;
-  pinnedProducts: string[];
+  /**
+   * Present only when the consumer supplies a `commerceContextProvider`.
+   * Omitted entirely under the "absent" encoding so the router can distinguish
+   * "no commerce context" from a present-but-empty context.
+   */
+  pinnedProducts?: string[];
 }
 
 interface CommerceRequestContext {
   view: {url: string | null; referrer: string | null};
   user: Record<string, unknown>;
   cart: CommerceCartItem[];
-  source: string[];
-  custom: Record<string, unknown>;
-}
-
-interface CommerceCartItem {
-  productId: string;
-  name: string;
-  price: number;
-  quantity: number;
+  /**
+   * Present only under the "present" commerce-context encoding; omitted under
+   * the "absent" encoding.
+   */
+  source?: string[];
+  /**
+   * Present only under the "present" commerce-context encoding; omitted under
+   * the "absent" encoding.
+   */
+  custom?: Record<string, unknown>;
 }
 
 // ─── Action envelope ───────────────────────────────────────────────────────

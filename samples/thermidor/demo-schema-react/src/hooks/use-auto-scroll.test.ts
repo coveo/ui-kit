@@ -1,6 +1,7 @@
 import {describe, it, expect, vi, beforeEach} from 'vitest';
 import {renderHook} from '@testing-library/react';
 import {useAutoScroll} from './use-auto-scroll.js';
+import {makeTurn} from '../test/turn-fixtures.js';
 
 beforeEach(() => {
   vi.stubGlobal(
@@ -44,7 +45,7 @@ describe('useAutoScroll', () => {
       useAutoScroll({
         containerRef,
         turnRefs,
-        turns: [{id: 'turn-1', prompt: 'hello', status: 'complete'}],
+        turns: [makeTurn({id: 'turn-1', prompt: 'hello'})],
         isStreaming: false,
       })
     );
@@ -83,7 +84,7 @@ describe('useAutoScroll', () => {
       useAutoScroll({
         containerRef,
         turnRefs,
-        turns: [{id: 'turn-1', prompt: 'hello', status: 'complete'}],
+        turns: [makeTurn({id: 'turn-1', prompt: 'hello'})],
         isStreaming: false,
       })
     );
@@ -101,7 +102,7 @@ describe('useAutoScroll', () => {
       useAutoScroll({
         containerRef,
         turnRefs,
-        turns: [{id: 'turn-1', prompt: 'hello', status: 'complete'}],
+        turns: [makeTurn({id: 'turn-1', prompt: 'hello'})],
         isStreaming: false,
       })
     );

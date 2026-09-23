@@ -86,6 +86,40 @@ describe('#augmentSearchEngineOptions', () => {
     });
   });
 
+  describe('when an access token is provided', () => {
+    it('should override the definition access token for that request', () => {
+      const engineOptions = augmentSearchEngineOptions(sampleSearchConfig, {
+        navigatorContext: createNavigatorContext(),
+        accessToken: 'per-request-token',
+      });
+
+      expect(engineOptions.configuration.accessToken).toBe('per-request-token');
+    });
+
+    it('should not mutate the shared definition configuration', () => {
+      const definitionToken = sampleSearchConfig.configuration.accessToken;
+
+      augmentSearchEngineOptions(sampleSearchConfig, {
+        navigatorContext: createNavigatorContext(),
+        accessToken: 'per-request-token',
+      });
+
+      expect(sampleSearchConfig.configuration.accessToken).toBe(definitionToken);
+    });
+  });
+
+  describe('when no access token is provided', () => {
+    it('should keep the definition access token', () => {
+      const engineOptions = augmentSearchEngineOptions(sampleSearchConfig, {
+        navigatorContext: createNavigatorContext(),
+      });
+
+      expect(engineOptions.configuration.accessToken).toBe(
+        sampleSearchConfig.configuration.accessToken
+      );
+    });
+  });
+
   describe('when navigatorContext is not provided', () => {
     it('should log an error and set navigatorContext to undefined', () => {
       const buildConfigWithout: BuildConfigWithout = {};

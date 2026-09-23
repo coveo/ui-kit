@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useReducer, useRef, useState} from 'react';
-import type {Turn, Activity} from '@coveo/thermidor';
+import type {DiscoveredSurface, Turn} from '@coveo/thermidor';
 import type {TargetedProduct} from '../context/targeting.js';
-import {isRecord} from '../utils.js';
 
 type ViewState = 'landing' | 'search' | 'conversation';
 
@@ -52,80 +51,31 @@ function navReducer(state: NavState, action: NavAction): NavState {
 
 const COMMERCE_SEARCH_ROOT_TYPE = 'commerce-search';
 
-interface DerivedSurface {
-  rootComponentType: string;
-  surfaceId: string;
-}
-
 /**
- * Scans a turn's activities for the first A2-UI createSurface message and
- * returns the surface's root componentType alongside its surfaceId. The root
- * is resolved from `createSurface.rootId` against the raw v1.0 payload (as
- * authored by the producer, before the Surface_Bridge id-rewrite): the node
- * whose `id` equals `rootId` supplies `props.componentType`. Returns null when
- * no such surface exists (e.g. a plain-text conversational response) or when
- * the declared root cannot be resolved to a component with a componentType.
+ * Reads the typed `response.surfaces` projection to find the turn's
+ * commerce-search surface, returning its `surfaceId` or null. Surface discovery
+ * is done by the client fold; consumers never walk `response.activities`.
  */
-function findSurface(activities: Activity[] | undefined): DerivedSurface | null {
-  if (!activities) return null;
-
-  for (const activity of activities) {
-    if (activity.kind !== 'a2ui-surface') continue;
-
-    const messages = activity.payload['messages'];
-    if (!Array.isArray(messages)) continue;
-
-    for (const msg of messages) {
-      if (!isRecord(msg)) continue;
-      const createSurface = msg['createSurface'];
-      if (!isRecord(createSurface)) continue;
-
-      const surfaceId = createSurface['surfaceId'];
-      const rootId = createSurface['rootId'];
-      if (typeof surfaceId !== 'string' || typeof rootId !== 'string') continue;
-
-      const components = createSurface['components'];
-      if (!Array.isArray(components)) continue;
-
-      const rootComponent = components.find((comp) => isRecord(comp) && comp['id'] === rootId);
-      if (!isRecord(rootComponent)) continue;
-
-      const props = rootComponent['props'];
-      if (!isRecord(props) || typeof props['componentType'] !== 'string') continue;
-
-      return {
-        rootComponentType: props['componentType'],
-        surfaceId,
-      };
-    }
-  }
-
-  return null;
-}
-
-/**
- * Returns the surfaceId of a turn's commerce-search surface, or null.
- */
-export function findCommerceSurfaceId(activities: Activity[] | undefined): string | null {
-  const surface = findSurface(activities);
-  return surface?.rootComponentType === COMMERCE_SEARCH_ROOT_TYPE ? surface.surfaceId : null;
+function findCommerceSurfaceId(surfaces: DiscoveredSurface[] | undefined): string | null {
+  const surface = surfaces?.find((s) => s.rootComponentType === COMMERCE_SEARCH_ROOT_TYPE);
+  return surface?.surfaceId ?? null;
 }
 
 export function deriveTransitionAction(turn: Turn): NavAction | null {
   if (turn.status !== 'complete') return null;
 
-  const surface = findSurface(turn.agentResponse?.activities);
+  const surfaces = turn.response.surfaces;
+  const hasSurface = surfaces.length > 0;
 
   // A commerce-search root navigates to the dedicated results page.
-  if (surface?.rootComponentType === COMMERCE_SEARCH_ROOT_TYPE) return {type: 'NAVIGATE_SEARCH'};
+  if (surfaces.some((s) => s.rootComponentType === COMMERCE_SEARCH_ROOT_TYPE))
+    return {type: 'NAVIGATE_SEARCH'};
 
   // Any other root componentType renders inline in the conversation flow.
-  if (surface) return {type: 'NAVIGATE_CONVERSATION'};
+  if (hasSurface) return {type: 'NAVIGATE_CONVERSATION'};
 
-  // A plain-text response without any surface also routes to the conversation.
-  if (turn.agentResponse) return {type: 'NAVIGATE_CONVERSATION'};
-
-  return null;
+  // A plain-text response also routes to the conversation.
+  return {type: 'NAVIGATE_CONVERSATION'};
 }
 
 export function useNavigation(controller: Controller, converseState: ConverseState): Navigation {
@@ -140,9 +90,9 @@ export function useNavigation(controller: Controller, converseState: ConverseSta
 
   const persistAndNavigateToSearch = useCallback(
     (turn: Turn) => {
-      const surfaceId = findCommerceSurfaceId(turn.agentResponse?.activities);
+      const surfaceId = findCommerceSurfaceId(turn.response.surfaces);
       commerceSurfaceIdRef.current = surfaceId;
-      persistedQueryRef.current = turn.prompt;
+      persistedQueryRef.current = turn.input.prompt ?? '';
       lastObservedTurnIdRef.current = turn.id;
 
       setCanGoBackToSearch(true);
@@ -158,14 +108,14 @@ export function useNavigation(controller: Controller, converseState: ConverseSta
     if (pendingNavigationRef.current && turns.length > 0) {
       const latestTurn = turns[turns.length - 1];
 
-      const surfaceId = findCommerceSurfaceId(latestTurn.agentResponse?.activities);
+      const surfaceId = findCommerceSurfaceId(latestTurn.response.surfaces);
       if (surfaceId) {
         pendingNavigationRef.current = false;
         persistAndNavigateToSearch(latestTurn);
         return;
       }
 
-      if (latestTurn.agentResponse && latestTurn.agentResponse.reasoningSteps?.length > 0) {
+      if ((latestTurn.response.agent?.reasoningSteps.length ?? 0) > 0) {
         pendingNavigationRef.current = false;
         dispatch({type: 'NAVIGATE_CONVERSATION'});
       }
