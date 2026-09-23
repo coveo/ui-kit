@@ -1,3 +1,15 @@
+## 3.61.4
+
+### Patch Changes
+
+- [#8517](https://github.com/coveo/ui-kit/pull/8517) [`333623e`](https://github.com/coveo/ui-kit/commit/333623e941868ef7b220f2d32efab8113aa4b369) - Surface a console error in the autoloader when a component fails to register (e.g. a lazy-loaded chunk blocked by a network error, CDN issue, content security policy, proxy, or ad blocker) instead of failing silently.
+
+- [#8497](https://github.com/coveo/ui-kit/pull/8497) [`0912501`](https://github.com/coveo/ui-kit/commit/0912501c34bb3fa388b87fc8d1eb4cbe6eda73b0) - Fix `atomic-sort-dropdown` to render nothing when all `atomic-sort-expression` children are filtered out by tab conditions, instead of rendering an empty `select`. The misconfiguration case (no `atomic-sort-expression` children at all) still renders an `atomic-error` and logs the error.
+
+- Updated dependencies [[`3ed8932`](https://github.com/coveo/ui-kit/commit/3ed89324378ac78465eccd7c377dc304e5fd8dcf), [`a01e1f3`](https://github.com/coveo/ui-kit/commit/a01e1f3e38255bbc42ebaf0604977f5576d6bb74), [`9e88f88`](https://github.com/coveo/ui-kit/commit/9e88f885cf4f126f405d4248073544cedbd0f404), [`c3d3669`](https://github.com/coveo/ui-kit/commit/c3d36693a342c9467b4e65e3f1773b894821f7a8)]:
+  - @coveo/headless@3.57.0
+  - @coveo/atomic-legacy@0.1.5
+
 ## 3.61.3
 
 ### Patch Changes

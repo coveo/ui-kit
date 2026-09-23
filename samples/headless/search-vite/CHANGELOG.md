@@ -1,5 +1,12 @@
 # @coveo/ui-kit-sample-headless-search-vite
 
+## 3.57.0
+
+### Patch Changes
+
+- Updated dependencies [[`3ed8932`](https://github.com/coveo/ui-kit/commit/3ed89324378ac78465eccd7c377dc304e5fd8dcf), [`a01e1f3`](https://github.com/coveo/ui-kit/commit/a01e1f3e38255bbc42ebaf0604977f5576d6bb74), [`9e88f88`](https://github.com/coveo/ui-kit/commit/9e88f885cf4f126f405d4248073544cedbd0f404), [`c3d3669`](https://github.com/coveo/ui-kit/commit/c3d36693a342c9467b4e65e3f1773b894821f7a8)]:
+  - @coveo/headless@3.57.0
+
 ## 3.56.0
 
 ### Patch Changes
