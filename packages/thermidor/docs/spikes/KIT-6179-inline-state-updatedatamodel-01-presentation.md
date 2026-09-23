@@ -13,31 +13,30 @@ L'état d'un composant transite aujourd'hui par le modèle AG-UI ad-hoc (`StateS
 
 ### Comment fonctionne le modèle
 
-On aligne l'état sur le **standard A2-UI** : le backend décrit une surface, puis pousse l'état sous `/state/<id>` via des opérations `updateDataModel` ; les `props` d'un nœud référencent cet état par des liaisons `{ path }`. Trois plans restent séparés :
+On aligne l'état sur le **standard A2-UI** : le backend décrit une surface, puis pousse l'état sous `/state/<id>` via des opérations `updateDataModel` ; les propriétés d'un nœud référencent cet état par des liaisons `{ path }`. Suivant le modèle **adjacency list A2-UI v1.0**, un nœud est **plat** : identité, valeurs, liaisons et liens de composition sont portés directement au niveau supérieur du nœud (pas de wrapper `props`). Trois plans restent séparés :
 
-- **Composition** — déclarée sur les `props` sous forme de `child-ref` (slots nommés ou liste `children`), montée par `children(id)`.
-- **Identité** — `id` + le discriminant `component`, au niveau supérieur du nœud (jamais dans `props`).
-- **État** — poussé sous `/state/<id>`, référencé depuis `props` par `{ path }`.
+- **Composition** — déclarée au niveau supérieur du nœud, typée : un slot nommé est un `ComponentId` (ex. `sidebarChild`/`mainChild`), une liste ordonnée est un `ChildList` (`children`), montée par `children(id)`.
+- **Identité** — `id` + le discriminant `component`, au niveau supérieur du nœud (jamais de seconde identité `componentId`/`componentType`).
+- **État** — poussé sous `/state/<id>`, référencé depuis les propriétés du nœud par `{ path }`.
 
 Le renderer lit l'état en résolvant les `{ path }` contre le data model que `updateDataModel` peuple. La forme concrète, sur le fil :
 
 ```jsonc
-// 1. createSurface — le nœud déclare son identité + une liaison { path } dans props (aucun état inline)
+// 1. createSurface — le nœud plat déclare son identité + ses liaisons { path } au top-level (aucun état inline).
+//    L'enveloppe ne porte pas de `rootId` : le nœud racine est le nœud canonique `id: "root"`.
 {
   "version": "v1.0",
   "createSurface": {
     "surfaceId": "ui-commerce-water-sports",
-    "rootId": "commerce-search-2",
+    "catalogId": "https://schema.thermidor.coveo.com/a2-ui/catalog.json",
     "components": [
       {
         "id": "pagination-2",
         "component": "Pagination",
-        "props": {
-          "page": { "path": "/state/pagination-2/page" },
-          "pageSize": { "path": "/state/pagination-2/pageSize" },
-          "totalEntries": { "path": "/state/pagination-2/totalEntries" },
-          "totalPages": { "path": "/state/pagination-2/totalPages" }
-        }
+        "page": { "path": "/state/pagination-2/page" },
+        "pageSize": { "path": "/state/pagination-2/pageSize" },
+        "totalEntries": { "path": "/state/pagination-2/totalEntries" },
+        "totalPages": { "path": "/state/pagination-2/totalPages" }
       }
     ]
   }
@@ -64,7 +63,7 @@ Le renderer lit l'état en résolvant les `{ path }` contre le data model que `u
 }
 ```
 
-Le backend est l'unique source de vérité : une action utilisateur part en HTTP, la réponse rediffuse l'état recalculé en ops `updateDataModel` que le cœur réapplique. Les `props` liés sont en lecture seule côté renderer.
+Le backend est l'unique source de vérité : une action utilisateur part en HTTP, la réponse rediffuse l'état recalculé en ops `updateDataModel` que le cœur réapplique. Les propriétés liées sont en lecture seule côté renderer.
 
 ### Questions à traiter
 
@@ -73,7 +72,7 @@ Cinq questions posées, cinq réponses vérifiées contre le **standard A2-UI of
 - **Q1 — Les écritures d'état s'appliquent-elles correctement ?** — **Oui** : une op complète à `/state/<id>` remplace l'objet d'état entier du nœud, et le composant lié se re-rend.
 - **Q2 — Les mises à jour partielles préservent-elles les voisins ?** — **Oui** : une op à `/state/<id>/<field>` fusionne ce seul champ sans écraser les autres.
 - **Q3 — Le typage state/action survit-il au retrait du `RemoteController` ?** — **Préservé** : les types (`XxxState` / `XxxAction`) restent, et c'est la validation qui est relocalisée. Nuance : le typage de l'action, jadis **imposé** au dispatch par le `RemoteController`, devient **appliqué volontairement** par le consommateur (le renderer livre un `dispatch` en `any`).
-- **Q4 — La composition standard A2-UI tient-elle avec le renderer figé ?** — **Oui** : slots `child-ref` nommés (`sidebarChild`/`mainChild`), jamais un tableau indexé par position (constat Y2).
+- **Q4 — La composition standard A2-UI tient-elle avec le renderer figé ?** — **Oui** : slots `ComponentId` nommés au top-level du nœud (`sidebarChild`/`mainChild`), jamais un tableau indexé par position (constat Y2).
 - **Q5 — Les cas de rejet et le pont v1.0→v0.9 tiennent-ils ?** — **Oui** pour les deux.
 
 ### Le retrait de `RemoteController` — déplacer les responsabilités
