@@ -8,7 +8,7 @@ import styles from './LayoutStack.module.css';
  * Stacks its children along a single axis (column or row), mounting each declared child id
  * exactly once, first to last. Composition (`children`) and presentation (`direction`) are
  * read directly from the resolved props (the `layout-stack` holds no business state, so its
- * `XxxState` is empty; the `children` `child-ref[]` and the `direction` presentation prop
+ * `XxxState` is empty; the `children` `ChildList` and the `direction` presentation prop
  * arrive as static values the binder passes through). Children are mounted by id via the
  * renderer's `children(id)` function — no positional destructuring, no defensive read.
  *

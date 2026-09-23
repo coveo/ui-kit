@@ -264,12 +264,9 @@ describe('createSession lifecycle', () => {
               version: 'v1.0',
               createSurface: {
                 surfaceId: 'commerce-search-surface',
-                rootId: 'commerce-search-root',
                 components: [
-                  {
-                    id: 'commerce-search-root',
-                    props: {componentType: 'commerce-search'},
-                  },
+                  {id: 'root', component: 'CommerceSearch'},
+                  {id: 'pagination-1', component: 'Pagination'},
                 ],
               },
             },
@@ -282,10 +279,12 @@ describe('createSession lifecycle', () => {
 
       const actionStream = queueStream();
       const actionTurn = session.dispatchAction({
-        componentId: 'pagination-1',
-        componentType: 'pagination',
-        action: 'selectPage',
-        payload: {page: 2},
+        userAction: {
+          name: 'selectPage',
+          surfaceId: 'commerce-search-surface',
+          sourceComponentId: 'pagination-1',
+          context: {page: 2},
+        },
       });
       await flush();
       await actionStream.opened;

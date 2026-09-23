@@ -5,13 +5,13 @@ import {z} from 'zod';
 import {A2UIProvider, A2UIRenderer, createCatalog, useA2UI} from '@copilotkit/a2ui-renderer';
 
 /**
- * Task 4.1 — Y2 gate: does the frozen `@copilotkit/a2ui-renderer` (v1.61) deliver
- * declared STATIC `child-ref` slot fields on the resolved `props` UNTOUCHED, so a
+ * Named-slot delivery: does the frozen `@copilotkit/a2ui-renderer` (v1.61) deliver
+ * declared STATIC child-reference slot fields on the resolved `props` UNTOUCHED, so a
  * renderer can do `children(props.sidebarChild)` — with no defensive read, no
  * positional array destructuring, and no leak/corruption from the binder?
  *
  * The experiment registers a tiny container in a catalog whose props schema declares
- * composition as static child-ref fields:
+ * composition as static child-reference fields:
  *   - `sidebarChild: z.string()`   (named single-child slot)
  *   - `mainChild:    z.string()`   (named single-child slot)
  *   - `children:     z.array(z.string())` (homogeneous ordered list — plain string[],
@@ -122,7 +122,7 @@ function MessagePump({onDone}: {onDone: () => void}) {
   return null;
 }
 
-describe('Y2 gate — frozen renderer delivers static child-ref slot fields untouched (Task 4.1)', () => {
+describe('frozen renderer delivers static child-reference slot fields untouched', () => {
   it('delivers props.sidebarChild / props.mainChild / props.children byte-identical, and children(props.<slot>) mounts each child', async () => {
     const catalog = buildCatalog();
     const onDone = vi.fn();

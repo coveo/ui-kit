@@ -38,15 +38,14 @@ import type {z as z4} from 'zod';
  * We reproduce only the *shape* the binder classifies, not full validation: the binder classifies
  * and resolves, it does not validate.
  *
- * ADJUSTED FROM ITERATION-1
- * -------------------------
- * Iteration-1's `migrateField` mapped every bare (non-union) `string`/`array` field to a *dynamic*
- * Zod 3 union. The CURRENT generated schemas declare composition child-refs as
- * `z.string().optional()` / `z.array(z.string()).optional()` (STATIC), distinct from the bindable
- * `Dynamic*Schema` unions. Mapping those to a dynamic union would let the binder rewrite the child
- * ids and break named-slot delivery. `migrateField` now unwraps `optional`/`nullable`/`default`
- * and maps a non-union field to a plain Zod 3 STATIC schema, reserving the dynamic unions for Zod 4
- * union fields that actually carry a DataBinding.
+ * STATIC vs DYNAMIC field mapping
+ * -------------------------------
+ * The generated schemas declare composition child-refs as `z.string().optional()` /
+ * `z.array(z.string()).optional()` (STATIC), distinct from the bindable `Dynamic*Schema` unions.
+ * Mapping those to a dynamic union would let the binder rewrite the child ids and break named-slot
+ * delivery. `migrateField` unwraps `optional`/`nullable`/`default` and maps a non-union field to a
+ * plain Zod 3 STATIC schema, reserving the dynamic unions for Zod 4 union fields that actually carry
+ * a DataBinding.
  *
  * @deprecated Remove this file and pass the generated `XxxPropsSchema` directly to `createCatalog`
  * once `@copilotkit/a2ui-renderer` upgrades its binder to Zod 4.

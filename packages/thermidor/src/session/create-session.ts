@@ -467,7 +467,7 @@ export function createSession<TContracts extends ContractsSchema>(
    * closure, never exposed on the returned {@link Session} object; the public
    * entry is now `dispatchAction`. It validates the recovered action's payload
    * against the dispatching component's generated Zod action schema BEFORE the
-   * HTTP POST; on a validation failure it REJECTS and sends nothing (Req 8.8).
+   * HTTP POST; on a validation failure it REJECTS and sends nothing.
    *
    * The streaming guard and the surface-target resolution via
    * {@link resolveTargetSurfaceId} are preserved: while a turn is streaming, or

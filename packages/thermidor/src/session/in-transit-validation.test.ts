@@ -61,7 +61,7 @@ const contracts = z.discriminatedUnion('component', [
 
 /**
  * Unit tests for the in-transit `updateDataModel` validation on the session
- * fold (Req 8.1–8.6, 2.8): the node-identity registry, the discriminant→`*State`
+ * fold: the node-identity registry, the discriminant→`*State`
  * contract resolution, whole vs partial validation, and drop-on-invalid /
  * drop-on-missing-schema. Also asserts the fold uses the validator, forwarding
  * conforming ops into `response.state` and dropping the rest.

@@ -9,7 +9,6 @@
  */
 export function devWarn(message: string): void {
   if (process.env.NODE_ENV !== 'production') {
-    // eslint-disable-next-line no-console
     console.warn(`[thermidor] ${message}`);
   }
 }

@@ -7,7 +7,7 @@ import {BundleDisplayRenderer} from './BundleDisplay/BundleDisplay.js';
 
 /**
  * The ordered-list container renderers are now DUMB: they read their composition directly
- * from the resolved props (`children` `child-ref[]`), with no controller hydration. The
+ * from the resolved props (`children` `ChildList`), with no controller hydration. The
  * mount-order property exercises that a container invokes the Children_Mount_Function once
  * per declared id, in order, tolerating declared-but-absent ids and empty/unavailable lists.
  */

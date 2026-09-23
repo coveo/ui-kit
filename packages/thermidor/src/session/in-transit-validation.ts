@@ -1,11 +1,10 @@
 /**
  * In-transit validation of inbound `updateDataModel` operations — INTERNAL.
  *
- * This module is the successor of iteration-1's `surface-validation.ts`
- * `createSurfaceValidator`. It is the single place `Thermidor_Core` validates an
- * inbound `updateDataModel` op against the per-component contract before the op
- * is forwarded to the renderer. It is entirely internal to the core: the
- * Consumer never invokes, imports, or becomes aware of it (Req 8.6).
+ * It is the single place `Thermidor_Core` validates an inbound `updateDataModel`
+ * op against the per-component contract before the op is forwarded to the
+ * renderer. It is entirely internal to the core: the Consumer never invokes,
+ * imports, or becomes aware of it.
  *
  * Two responsibilities, both pure:
  *
@@ -14,19 +13,19 @@
  *    from the folded activity list. This registry holds ONLY id→component-type
  *    identity used to ROUTE an op to the owning component's contract. It is NOT
  *    a `Component_State` store and never holds state values — `Thermidor_Core`
- *    keeps no state store (Req 8.1, 8.4).
+ *    keeps no state store.
  *
  * 2. {@link validateInboundOp} resolves an op via the core's local
  *    `resolveOperation`, resolves the owning component's `*State` Zod schema via
  *    {@link findComponentContract} from the INJECTED `contracts`, and validates
  *    the op value:
  *    - whole-component op (path === `statePath(id)`) → the whole `*State`
- *      schema (Req 8.2);
+ *      schema;
  *    - partial op (sub-path) → the `State_Field_Schema`, the sub-schema of the
  *      `*State` object at the target sub-path, WITHOUT reconstructing a merged
- *      whole state (Req 8.3).
+ *      whole state.
  *    A conforming op is FORWARDED; a non-conforming op, a REJECTED op, and an op
- *    whose component has no `*State` schema are DROPPED (Req 8.4, 8.5).
+ *    whose component has no `*State` schema are DROPPED.
  *
  * Because both functions are pure and derive the registry from the activity
  * list (never from module-level mutable state), folding the same activity
@@ -77,9 +76,9 @@ export type InTransitDropReason =
   | 'unresolved-path'
   /** No node-identity entry for the resolved node id (surface not yet folded). */
   | 'unknown-node-identity'
-  /** No generated `*State` schema for the resolved component (Req 8.5). */
+  /** No generated `*State` schema for the resolved component. */
   | 'no-state-schema'
-  /** The op value failed validation against the contract (Req 8.4). */
+  /** The op value failed validation against the contract. */
   | 'invalid-value';
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -172,7 +171,7 @@ type StateObjectSchema = ObjectSchema;
  *
  * Returns `undefined` when no contract declares that discriminant OR when the
  * matching contract declares no `state` object — the "no `*State` schema"
- * case (Req 8.5), for which the caller drops the op.
+ * case, for which the caller drops the op.
  *
  * The contract is INJECTED (never imported), so the core stays decoupled from
  * any concrete contract package (the design's `findComponentContract`).
@@ -211,7 +210,7 @@ function isObjectSchema(schema: ParsableSchema): schema is StateObjectSchema {
  * address a declared field (an unknown field, or a descent through a non-object
  * field), for which the caller drops the op.
  *
- * No merged whole state is ever reconstructed (Req 8.3).
+ * No merged whole state is ever reconstructed.
  */
 function stateFieldSchema(
   stateSchema: StateObjectSchema,
@@ -237,14 +236,14 @@ function stateFieldSchema(
  * FORWARD/DROP decision. Pure with respect to `(op, registry, contracts)`.
  *
  * - Resolves the op via `resolveOperation` against the ids present in the op's
- *   surface. A REJECTED op is dropped (Req 2.7 / 8, `unresolved-path`).
+ *   surface. A REJECTED op is dropped (`unresolved-path`).
  * - Looks up the resolved node's `component` discriminant in the registry and
  *   resolves its `*State` schema via {@link findComponentContract} from the
  *   INJECTED `contracts`. A missing identity or a component with no `*State`
- *   schema drops the op (Req 8.5).
- * - Validates the value: whole-component op against the whole `*State` schema
- *   (Req 8.2), partial op against the `State_Field_Schema` at the sub-path
- *   (Req 8.3). A non-conforming value drops the op (Req 8.4).
+ *   schema drops the op.
+ * - Validates the value: whole-component op against the whole `*State` schema,
+ *   partial op against the `State_Field_Schema` at the sub-path. A non-conforming
+ *   value drops the op.
  *
  * The `contracts` are threaded in (never imported), so the validator stays
  * decoupled from any concrete contract package.

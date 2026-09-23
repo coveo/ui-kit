@@ -88,7 +88,7 @@ import {buildGenerativeUnifiedInterface} from '@/src/index.js';
 // @ts-expect-error `AgentResponse` (pre-reshape DTO) must not be exported.
 import type {AgentResponse} from '@/src/index.js';
 
-// Removed RemoteController public API (task 10.1). None of these names may be
+// Removed RemoteController public API. None of these names may be
 // reachable from the entry.
 // @ts-expect-error `RemoteController` must not be exported.
 import type {RemoteController} from '@/src/index.js';

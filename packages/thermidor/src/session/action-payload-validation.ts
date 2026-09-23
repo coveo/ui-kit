@@ -5,7 +5,7 @@
  * component FROM THE INJECTED `contracts`, so the core can gate an outbound
  * action on payload conformance BEFORE the HTTP POST without importing any
  * concrete contract package. It is entirely internal to `Thermidor_Core`: the
- * Consumer never invokes, imports, or becomes aware of it (Req 8.6).
+ * Consumer never invokes, imports, or becomes aware of it.
  *
  * Resolution walks the injected contract member for the dispatching component:
  * `member.shape.actions` is that component's `XxxActionsSchema`
@@ -25,7 +25,7 @@ import type {ContractsSchema, ObjectSchema, ParsableSchema, ParseIssue} from './
  * The outcome of {@link validateActionPayload}: either the action `name`+
  * `context` conform to the component's declared action contract (`valid`), or
  * they do not (`invalid`), carrying a human-readable `reason` naming the
- * failing field/constraint for a dev-only diagnostic (Req 8.8).
+ * failing field/constraint for a dev-only diagnostic.
  */
 export type ActionPayloadValidation =
   | {readonly valid: true}
@@ -103,7 +103,7 @@ export function validateActionPayload(
 
 /**
  * Renders the Zod issues into a compact `path: message` list identifying the
- * failing field(s)/constraint(s), for the dev-only warning (Req 8.8). Never
+ * failing field(s)/constraint(s), for the dev-only warning. Never
  * thrown; only surfaced in a non-production diagnostic.
  */
 function formatIssues(issues: readonly ParseIssue[]): string {

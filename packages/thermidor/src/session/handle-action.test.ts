@@ -3,7 +3,7 @@ import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 
 /**
  * Tests for the single consumer-facing action-dispatch entry point
- * `Session.dispatchAction` (Req 7.2, 7.6, 8.6, 8.7, 8.8, 8.9, 8.12, 8.13).
+ * `Session.dispatchAction`.
  *
  * The session POSTs through `createUnifiedEndpointClient()`. The client's
  * `call` is mocked so the test can assert whether an action request reached the

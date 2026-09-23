@@ -11,7 +11,7 @@ import styles from './CommerceSearch.module.css';
  * passes through untouched. The sidebar cell mounts `children(props.sidebarChild)` and the
  * main cell mounts `children(props.mainChild)`, each itself typically a `layout-stack` that
  * owns its column's internal layout. Slots are addressed by name, never by array position:
- * there is no positional read of a `child-ref[]`.
+ * there is no positional read of a child id list.
  *
  * A slot whose value is absent renders an empty cell; a slot referencing an id with no
  * corresponding component is skipped by the mount function returning nothing renderable.

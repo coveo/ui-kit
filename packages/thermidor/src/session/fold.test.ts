@@ -285,22 +285,22 @@ const surfaceSnapshotWith = (
 describe('fold ACTIVITY_SNAPSHOT replace semantics', () => {
   it('supersedes the activity with the same messageId when replace is true', () => {
     const turn = foldActivities(createTurn('t1', {}), [
-      surfaceSnapshotWith('activity-1', false, [surfaceMessage('ui-old', 'commerce-search')]),
-      surfaceSnapshotWith('activity-1', true, [surfaceMessage('ui-new', 'commerce-search')]),
+      surfaceSnapshotWith('activity-1', false, [surfaceMessage('ui-old', 'CommerceSearch')]),
+      surfaceSnapshotWith('activity-1', true, [surfaceMessage('ui-new', 'CommerceSearch')]),
     ]);
 
     // One activity (replaced in place), carrying the latest payload.
     expect(turn.response.activities).toHaveLength(1);
     expect(turn.response.activities[0].id).toBe('activity-1');
     expect(turn.response.surfaces).toEqual([
-      {surfaceId: 'ui-new', rootComponentType: 'commerce-search'},
+      {surfaceId: 'ui-new', rootComponentType: 'CommerceSearch'},
     ]);
   });
 
   it('routes to the replacement surface, not the stale one', () => {
     const turn = foldActivities(createTurn('t1', {}), [
-      surfaceSnapshotWith('activity-1', false, [surfaceMessage('stale', 'commerce-search')]),
-      surfaceSnapshotWith('activity-1', true, [surfaceMessage('fresh', 'commerce-search')]),
+      surfaceSnapshotWith('activity-1', false, [surfaceMessage('stale', 'CommerceSearch')]),
+      surfaceSnapshotWith('activity-1', true, [surfaceMessage('fresh', 'CommerceSearch')]),
     ]);
 
     expect(resolveTargetSurfaceId(turn.response.surfaces)).toBe('fresh');
@@ -309,27 +309,27 @@ describe('fold ACTIVITY_SNAPSHOT replace semantics', () => {
   it('preserves the original position when superseding in place', () => {
     const turn = foldActivities(createTurn('t1', {}), [
       surfaceSnapshotWith('activity-1', false, [surfaceMessage('a-old', 'converse')]),
-      surfaceSnapshotWith('activity-2', false, [surfaceMessage('b', 'commerce-search')]),
+      surfaceSnapshotWith('activity-2', false, [surfaceMessage('b', 'CommerceSearch')]),
       surfaceSnapshotWith('activity-1', true, [surfaceMessage('a-new', 'converse')]),
     ]);
 
     expect(turn.response.activities.map((a) => a.id)).toEqual(['activity-1', 'activity-2']);
     expect(turn.response.surfaces).toEqual([
       {surfaceId: 'a-new', rootComponentType: 'converse'},
-      {surfaceId: 'b', rootComponentType: 'commerce-search'},
+      {surfaceId: 'b', rootComponentType: 'CommerceSearch'},
     ]);
   });
 
   it('appends distinct messageIds even when replace is true (no false match)', () => {
     const turn = foldActivities(createTurn('t1', {}), [
-      surfaceSnapshotWith('activity-1', true, [surfaceMessage('s-1', 'commerce-search')]),
-      surfaceSnapshotWith('activity-2', true, [surfaceMessage('s-2', 'commerce-search')]),
+      surfaceSnapshotWith('activity-1', true, [surfaceMessage('s-1', 'CommerceSearch')]),
+      surfaceSnapshotWith('activity-2', true, [surfaceMessage('s-2', 'CommerceSearch')]),
     ]);
 
     expect(turn.response.activities).toHaveLength(2);
     expect(turn.response.surfaces).toEqual([
-      {surfaceId: 's-1', rootComponentType: 'commerce-search'},
-      {surfaceId: 's-2', rootComponentType: 'commerce-search'},
+      {surfaceId: 's-1', rootComponentType: 'CommerceSearch'},
+      {surfaceId: 's-2', rootComponentType: 'CommerceSearch'},
     ]);
   });
 
@@ -348,8 +348,8 @@ describe('fold ACTIVITY_SNAPSHOT replace semantics', () => {
 
   it('re-derives an identical surfaces list from activities after a replacement', () => {
     const turn = foldActivities(createTurn('t1', {}), [
-      surfaceSnapshotWith('activity-1', false, [surfaceMessage('ui-old', 'commerce-search')]),
-      surfaceSnapshotWith('activity-1', true, [surfaceMessage('ui-new', 'commerce-search')]),
+      surfaceSnapshotWith('activity-1', false, [surfaceMessage('ui-old', 'CommerceSearch')]),
+      surfaceSnapshotWith('activity-1', true, [surfaceMessage('ui-new', 'CommerceSearch')]),
     ]);
 
     expect(deriveSurfaces(turn.response.activities)).toEqual(turn.response.surfaces);

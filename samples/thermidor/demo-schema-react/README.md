@@ -90,7 +90,7 @@ ConversationPage
 
 **ConversationThread** iterates over turns and delegates rendering to the appropriate block based on turn status. The key path is through **AgentResponseBlock**, which orchestrates the streaming experience: first showing a thinking indicator, then streaming text, then skeleton placeholders (inferred from `store_render_plan` tool calls), and finally the resolved A2-UI catalog components once component state arrives via `/state/<id>` `updateDataModel` operations resolved into the renderer's data model.
 
-The catalog renderers (ProductCarousel, BundleDisplay, ComparisonTable, NextActionsBar) are **dumb**: each reads its resolved values directly from `props` (the renderer resolves each `{ "path": ... }` binding against its A2-UI data model), with no identity join and no controller hydration. Actions surface through the renderer's `onAction` handler, wired to `session.handleAction`.
+The catalog renderers (ProductCarousel, BundleDisplay, ComparisonTable, NextActionsBar) are **dumb**: each reads its resolved values directly from `props` (the renderer resolves each `{ "path": ... }` binding against its A2-UI data model), with no identity join and no controller hydration. Actions surface through the renderer's `onAction` handler, wired to `session.dispatchAction`.
 
 ### SearchResultsPage (decomposed commerce)
 
@@ -107,11 +107,11 @@ commerce-search (root)
     └── search-bottom (layout-stack, row) → pagination, page-size
 ```
 
-Each mounted node is a dumb catalog renderer (`CommerceSearchRenderer`, `LayoutStackRenderer`, `FacetManagerRenderer`, the facet renderers, `QuerySummaryRenderer`, `SortRenderer`, `ProductListRenderer`, `PaginationRenderer`, `PageSizeRenderer`) that reads its resolved component state from `props` (the renderer resolves the node's `{ "path": ... }` bindings against its A2-UI data model). Container renderers mount their children by name following the standard A2-UI composition convention: `CommerceSearch` mounts `children(props.sidebarChild)` and `children(props.mainChild)`; `LayoutStack` and `FacetManager` mount an ordered `children` `child-ref[]` in declared order. There is no positional read of a `child-ref[]`. Absent components render as empty slots without error.
+Each mounted node is a dumb catalog renderer (`CommerceSearchRenderer`, `LayoutStackRenderer`, `FacetManagerRenderer`, the facet renderers, `QuerySummaryRenderer`, `SortRenderer`, `ProductListRenderer`, `PaginationRenderer`, `PageSizeRenderer`) that reads its resolved component state from `props` (the renderer resolves the node's `{ "path": ... }` bindings against its A2-UI data model). Container renderers mount their children by name following the standard A2-UI composition convention: `CommerceSearch` mounts `children(props.sidebarChild)` and `children(props.mainChild)`; `LayoutStack` and `FacetManager` mount their ordered `children` `ChildList` in declared order. There is no positional read of the child list. Absent components render as empty slots without error.
 
 There is no `search-box` on this surface: the query input is the app-level search bar above the surface, so the composition starts at the `query-summary` row.
 
-These controls dispatch component actions: an interaction (sort, page, page-size, facet search) surfaces through the renderer's `onAction` handler, which is wired to `session.handleAction`. `session.handleAction` recovers the dispatching component from the active turn's surfaces, validates the action payload against the component's Zod action schema, and POSTs it over the HTTP Action_Channel; the producer replies with `/state/<id>` `updateDataModel` operations. In-progress facet-search input is held in local React state and is never written to the shared A2-UI data model.
+These controls dispatch component actions: an interaction (sort, page, page-size, facet search) surfaces through the renderer's `onAction` handler, which is wired to `session.dispatchAction`. `session.dispatchAction` recovers the dispatching component from the active turn's surfaces, validates the action payload against the component's Zod action schema, and POSTs it over the HTTP Action_Channel; the producer replies with `/state/<id>` `updateDataModel` operations. In-progress facet-search input is held in local React state and is never written to the shared A2-UI data model.
 
 ### Key modules
 
@@ -147,7 +147,7 @@ AgentResponseBlock
           Rendered component
 
 Action dispatch (consumer → producer):
-  renderer onAction → session.handleAction → validate payload (Zod) → HTTP POST (Action_Channel)
+  renderer onAction → session.dispatchAction → validate payload (Zod) → HTTP POST (Action_Channel)
   ↓
   producer replies with /state/<id> updateDataModel ops (re-resolved into the renderer)
 ```
@@ -159,7 +159,7 @@ Action dispatch (consumer → producer):
 - Component state is delivered inline through the A2-UI data model via `/state/<id>` `updateDataModel` operations (not AG-UI `StateSnapshot`); renderers read resolved values from `{ "path": ... }` bindings
 - Dumb renderers read resolved props directly — no `buildRemoteController` / `selectRemoteControllerState` identity join; BundleDisplay reads its resolved tiers and per-slot child ids from its own props
 - Container composition uses the standard A2-UI named-slot convention (`sidebarChild`/`mainChild`; ordered `children`), mounted by name via the renderer's `children(id)` function
-- Actions are dispatched through a single entry point, `session.handleAction` wired as the renderer's `onAction`, over the HTTP Action_Channel
+- Actions are dispatched through a single entry point, `session.dispatchAction` wired as the renderer's `onAction`, over the HTTP Action_Channel
 - Props schemas for catalog components are generated by `@coveo/thermidor-schema` and imported directly
 
 ### State and validation model
