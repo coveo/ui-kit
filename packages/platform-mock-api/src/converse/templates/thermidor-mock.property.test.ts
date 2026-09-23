@@ -11,9 +11,8 @@ import type {ConverseEvent} from '../events.js';
 
 const NUM_RUNS = 200;
 
-// Identity keys that must never appear inside a node's `props`; the two Thermidor contract keys
-// (`componentId`/`componentType`) must never appear anywhere on a mock-emitted node.
-const IDENTITY_KEYS = ['id', 'component', 'componentId', 'componentType'] as const;
+// The two removed dual-identity keys (`componentId`/`componentType`) must never appear anywhere on
+// a mock-emitted flat node.
 const FORBIDDEN_TOP_LEVEL_KEYS = ['componentId', 'componentType'] as const;
 
 // The migrated prompts whose templates emit component-node surfaces, plus a no-match prompt that
@@ -29,7 +28,7 @@ const TEMPLATE_PROMPTS = [
 interface EmittedNode {
   id?: unknown;
   component?: unknown;
-  props?: Record<string, unknown>;
+  [key: string]: unknown;
 }
 
 // Pulls every `createSurface.components[]` node out of an emitted ConverseEvent stream. The mock
@@ -105,19 +104,16 @@ function containsKeyDeep(value: unknown, key: string): boolean {
   return false;
 }
 
-// Asserts the single-identity invariant on one emitted node: exactly `id`/`component` identity at
-// the top level, no `componentId`/`componentType` anywhere on the node, and none of the four
-// identity keys inside `props`.
+// Asserts the single-identity invariant on one emitted flat node: exactly `id`/`component`
+// identity at the top level and no `componentId`/`componentType` anywhere on the node. In the flat
+// A2-UI node model there is no `props` wrapper, so the node's own props live at the top level; the
+// contract's identity guard only forbids the two removed dual-identity keys.
 function assertSingleIdentity(node: EmittedNode): void {
   expect(typeof node.id).toBe('string');
   expect(typeof node.component).toBe('string');
   for (const key of FORBIDDEN_TOP_LEVEL_KEYS) {
     expect(Object.prototype.hasOwnProperty.call(node, key)).toBe(false);
     expect(containsKeyDeep(node, key)).toBe(false);
-  }
-  const props = node.props ?? {};
-  for (const key of IDENTITY_KEYS) {
-    expect(Object.prototype.hasOwnProperty.call(props, key)).toBe(false);
   }
 }
 
@@ -148,7 +144,7 @@ const nodeArbitrary = fc
   .map(({id, component, fields}) => ({
     id,
     component,
-    props: bindStateFields(id, fields),
+    ...bindStateFields(id, fields),
   }));
 
 describe('Feature: a2ui-inline-state-data-model, Property 8: Mock-emitted nodes carry a single identity with no identity keys in props', () => {

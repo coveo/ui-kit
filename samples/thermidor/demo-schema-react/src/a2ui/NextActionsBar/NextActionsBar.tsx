@@ -6,7 +6,7 @@ export function NextActionsBarRenderer({
   props,
   dispatch,
 }: TypedRendererProps<NextActionsBarProps, NextActionsBarAction>) {
-  const actions = props.actions ?? [];
+  const actions = props.suggestedActions ?? [];
 
   if (actions.length === 0) {
     return null;

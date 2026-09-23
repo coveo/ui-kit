@@ -128,13 +128,13 @@ describe('fold Turn/TurnResponse shape', () => {
  * (`a2ui-surface`) activities, and target resolution reads that projection.
  */
 const surfaceMessage = (surfaceId: string, rootComponentType: string) => {
-  const rootId = `${surfaceId}-root`;
+  // A2-UI v1.0: the surface root is the canonical node with `id: "root"`; the envelope carries
+  // no `rootId`.
   return {
     version: 'v1.0',
     createSurface: {
       surfaceId,
-      rootId,
-      components: [{id: rootId, component: rootComponentType}],
+      components: [{id: 'root', component: rootComponentType}],
     },
   };
 };
@@ -215,12 +215,12 @@ describe('fold surface derivation', () => {
       version: 'v1.0',
       createSurface: {
         surfaceId: 'commerce-search-2',
-        rootId: 'commerce-search-2-root',
         components: [
           {
-            id: 'commerce-search-2-root',
+            id: 'root',
             component: 'CommerceSearch',
-            props: {sidebarChild: 'facets-1', mainChild: 'products-1'},
+            sidebarChild: 'facets-1',
+            mainChild: 'products-1',
           },
         ],
       },

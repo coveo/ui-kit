@@ -1,4 +1,5 @@
 import {
+  RENDERER_ROOT_ID,
   bindStateFields,
   buildConversationResponse,
   buildValidatedSurface,
@@ -1116,7 +1117,10 @@ function buildStateOps(view: SearchViewState): UpdateDataModelOp[] {
   }));
 }
 
-const COMMERCE_SEARCH_ROOT_ID = 'commerce-search-2';
+// The A2-UI canonical surface root: exactly one node carries `id: "root"` and mounts under the
+// implicit `Surface` container. The CommerceSearch surface root owns no Component_State, so this
+// id never appears in a `/state/<id>` binding.
+const COMMERCE_SEARCH_ROOT_ID = RENDERER_ROOT_ID;
 
 // Facet ids in emission order; the facet-manager node's `children` expresses facet ordering.
 const FACET_NODE_IDS = ['facet-brand-2', 'facet-price-2', 'facet-category-2'];
@@ -1139,105 +1143,106 @@ const BOTTOM_ROW_CHILD_IDS = ['pagination-2', 'page-size-2'];
 const SEARCH_SURFACE_ID = 'ui-commerce-water-sports';
 
 // One node per mount target. Each node carries a SINGLE identity (top-level `id` + `component`);
-// `props` holds only presentation values, `{ path }` state bindings, and static container
-// composition. The two-column layout is composed from generic layout-stack nodes
+// Following the A2-UI v1.0 flat node shape, each node carries its presentation values,
+// `{ path }` state bindings, and static composition links directly at the top level (no `props`
+// wrapper). The two-column layout is composed from generic layout-stack nodes
 // (search-sidebar/search-main and the top/bottom rows), keeping placement on the A2-UI plane. The
 // search box is intentionally absent: the surface's query input is the app-level search bar above
 // this surface, so the two-column layout starts at the query-summary row.
 //
-// Composition follows the A2-UI convention (task 4): the heterogeneous CommerceSearch container
-// uses named `sidebarChild`/`mainChild` child-ref slots (matching CommerceSearchPropsSchema);
-// homogeneous ordered lists (LayoutStack, FacetManager) use a `children` child-ref array in
-// `props` (matching LayoutStackPropsSchema / FacetManagerPropsSchema). Layout-stack nodes carry
-// their `direction` presentation prop and have no Component_State; FacetManager has no state
-// either (ordering lives on `children`). Every stateful node binds its state-bound props to
+// Composition follows the A2-UI convention: the heterogeneous CommerceSearch container uses named
+// `sidebarChild`/`mainChild` ComponentId slots (matching CommerceSearchPropsSchema); homogeneous
+// ordered lists (LayoutStack, FacetManager) use a top-level `children` ChildList array (matching
+// LayoutStackPropsSchema / FacetManagerPropsSchema). Layout-stack nodes carry their `direction`
+// presentation prop and have no Component_State; FacetManager has no state either (ordering lives
+// on `children`). Every stateful node spreads its state-bound props onto the node top level as
 // `{ path: "/state/<id>/<field>" }` Data_Binding objects via `bindStateFields`.
 const SEARCH_SURFACE_NODES: A2uiComponentNode[] = [
   {
     id: COMMERCE_SEARCH_ROOT_ID,
     component: 'CommerceSearch',
-    props: {sidebarChild: ROOT_CHILD_IDS[0], mainChild: ROOT_CHILD_IDS[1]},
+    sidebarChild: ROOT_CHILD_IDS[0],
+    mainChild: ROOT_CHILD_IDS[1],
   },
   {
     id: 'search-sidebar',
     component: 'LayoutStack',
-    props: {direction: 'column', children: ['facet-manager-2']},
+    direction: 'column',
+    children: ['facet-manager-2'],
   },
   {
     id: 'search-main',
     component: 'LayoutStack',
-    props: {direction: 'column', children: MAIN_CHILD_IDS},
+    direction: 'column',
+    children: MAIN_CHILD_IDS,
   },
   {
     id: 'search-top',
     component: 'LayoutStack',
-    props: {direction: 'row', children: TOP_ROW_CHILD_IDS},
+    direction: 'row',
+    children: TOP_ROW_CHILD_IDS,
   },
   {
     id: 'search-bottom',
     component: 'LayoutStack',
-    props: {direction: 'row', children: BOTTOM_ROW_CHILD_IDS},
+    direction: 'row',
+    children: BOTTOM_ROW_CHILD_IDS,
   },
   {
     id: 'facet-manager-2',
     component: 'FacetManager',
-    props: {children: FACET_NODE_IDS},
+    children: FACET_NODE_IDS,
   },
   {
     id: 'facet-brand-2',
     component: 'RegularFacet',
-    props: bindStateFields('facet-brand-2', STATE_FIELDS_BY_NODE['facet-brand-2']),
+    ...bindStateFields('facet-brand-2', STATE_FIELDS_BY_NODE['facet-brand-2']),
   },
   {
     id: 'facet-price-2',
     component: 'NumericFacet',
-    props: bindStateFields('facet-price-2', STATE_FIELDS_BY_NODE['facet-price-2']),
+    ...bindStateFields('facet-price-2', STATE_FIELDS_BY_NODE['facet-price-2']),
   },
   {
     id: 'facet-category-2',
     component: 'CategoryFacet',
-    props: bindStateFields('facet-category-2', STATE_FIELDS_BY_NODE['facet-category-2']),
+    ...bindStateFields('facet-category-2', STATE_FIELDS_BY_NODE['facet-category-2']),
   },
   {
     id: 'query-summary-2',
     component: 'QuerySummary',
-    props: bindStateFields('query-summary-2', STATE_FIELDS_BY_NODE['query-summary-2']),
+    ...bindStateFields('query-summary-2', STATE_FIELDS_BY_NODE['query-summary-2']),
   },
   {
     id: 'sort-2',
     component: 'Sort',
-    props: bindStateFields('sort-2', STATE_FIELDS_BY_NODE['sort-2']),
+    ...bindStateFields('sort-2', STATE_FIELDS_BY_NODE['sort-2']),
   },
   {
     id: 'pagination-2',
     component: 'Pagination',
-    props: bindStateFields('pagination-2', STATE_FIELDS_BY_NODE['pagination-2']),
+    ...bindStateFields('pagination-2', STATE_FIELDS_BY_NODE['pagination-2']),
   },
   {
     id: 'page-size-2',
     component: 'PageSize',
-    props: bindStateFields('page-size-2', STATE_FIELDS_BY_NODE['page-size-2']),
+    ...bindStateFields('page-size-2', STATE_FIELDS_BY_NODE['page-size-2']),
   },
   {
     id: 'product-list-2',
     component: 'ProductList',
-    props: bindStateFields('product-list-2', STATE_FIELDS_BY_NODE['product-list-2']),
+    ...bindStateFields('product-list-2', STATE_FIELDS_BY_NODE['product-list-2']),
   },
 ];
 
-// Validates that the declared root and every referenced child resolve to an emitted node,
-// then assembles the createSurface. A missing root or child throws an error naming the missing
-// node so no partial tree is ever emitted.
-function buildValidatedSearchSurface(
-  rootId: string,
-  nodes: A2uiComponentNode[]
-): Record<string, unknown> {
+// Validates that the canonical `root` node and every referenced child resolve to an emitted node,
+// then assembles the A2-UI v1.0 createSurface. A missing root or child throws an error naming the
+// missing node so no partial tree is ever emitted.
+function buildValidatedSearchSurface(nodes: A2uiComponentNode[]): Record<string, unknown> {
   return buildValidatedSurface({
     templateName: 'Mock_Search_Template',
     surfaceId: SEARCH_SURFACE_ID,
-    rootId,
     nodes,
-    extra: {surfaceProperties: {placement: 'main'}},
   });
 }
 
@@ -1249,7 +1254,7 @@ const surfaceActivitySnapshot: ConverseEvent = ActivitySnapshot({
     messages: [
       {
         version: 'v1.0',
-        createSurface: buildValidatedSearchSurface(COMMERCE_SEARCH_ROOT_ID, SEARCH_SURFACE_NODES),
+        createSurface: buildValidatedSearchSurface(SEARCH_SURFACE_NODES),
       },
     ],
   },

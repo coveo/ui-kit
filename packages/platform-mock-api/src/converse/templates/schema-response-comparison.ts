@@ -1,5 +1,6 @@
 import {
   CATALOG_ID,
+  RENDERER_ROOT_ID,
   bindStateFields,
   buildConversationResponse,
   buildValidatedSurface,
@@ -17,29 +18,26 @@ import {
 const runId = 'schema-comparison-462287cc';
 
 const COMPARISON_SURFACE_ID = 'comparison-surface';
-const COMPARISON_ROOT_ID = 'comparison-root';
+// Each surface mounts its root as the A2-UI canonical `root` node (id: "root").
+const COMPARISON_ROOT_ID = RENDERER_ROOT_ID;
 const NEXT_ACTIONS_SURFACE_ID = 'next-actions-surface';
-const NEXT_ACTIONS_ROOT_ID = 'root';
+const NEXT_ACTIONS_ROOT_ID = RENDERER_ROOT_ID;
 
 // The comparison surface is a single leaf node: the comparison-table owns its heading, AI summary,
 // compared products, and attribute descriptors as Component_State, bound to `{ path }` objects at
-// `/state/comparison-root/<field>`.
+// `/state/root/<field>`.
 const COMPARISON_SURFACE_NODES: A2uiComponentNode[] = [
   {
     id: COMPARISON_ROOT_ID,
     component: 'ComparisonTable',
-    props: bindStateFields(COMPARISON_ROOT_ID, ['heading', 'summary', 'products', 'attributes']),
+    ...bindStateFields(COMPARISON_ROOT_ID, ['heading', 'summary', 'products', 'attributes']),
   },
 ];
 
-function buildValidatedComparisonSurface(
-  rootId: string,
-  nodes: A2uiComponentNode[]
-): Record<string, unknown> {
+function buildValidatedComparisonSurface(nodes: A2uiComponentNode[]): Record<string, unknown> {
   return buildValidatedSurface({
     templateName: 'Mock_Comparison_Template',
     surfaceId: COMPARISON_SURFACE_ID,
-    rootId,
     nodes,
   });
 }
@@ -52,10 +50,7 @@ const comparisonSurfaceActivity: ConverseEvent = ActivitySnapshot({
     messages: [
       {
         version: 'v1.0',
-        createSurface: buildValidatedComparisonSurface(
-          COMPARISON_ROOT_ID,
-          COMPARISON_SURFACE_NODES
-        ),
+        createSurface: buildValidatedComparisonSurface(COMPARISON_SURFACE_NODES),
       },
     ],
   },
@@ -71,13 +66,12 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
         version: 'v1.0',
         createSurface: {
           surfaceId: NEXT_ACTIONS_SURFACE_ID,
-          rootId: NEXT_ACTIONS_ROOT_ID,
           catalogId: CATALOG_ID,
           components: [
             {
               id: NEXT_ACTIONS_ROOT_ID,
               component: 'NextActionsBar',
-              props: bindStateFields(NEXT_ACTIONS_ROOT_ID, ['actions']),
+              ...bindStateFields(NEXT_ACTIONS_ROOT_ID, ['suggestedActions']),
             },
           ],
         },
@@ -144,16 +138,16 @@ const comparisonTableState = {
 };
 
 const nextActionsState = {
-  actions: [
+  suggestedActions: [
     {text: 'Add ThermoFlex Winter Wetsuit to cart', type: 'followup'},
     {text: 'View more cold-water wetsuits', type: 'followup'},
     {text: 'Compare sizing guides', type: 'followup'},
   ],
 };
 
-// The comparison-table state is written whole at `statePath('comparison-root')` on the comparison
-// surface; the next-actions state at `statePath('root')` on the next-actions surface. Each op is
-// emitted right after its surface is created.
+// The comparison-table state is written whole at `statePath('root')` on the comparison surface;
+// the next-actions state at `statePath('root')` on the next-actions surface. Each op is emitted
+// right after its surface is created.
 const comparisonStateActivity: ConverseEvent = UpdateDataModelActivity({
   messageId: 'activity-comparison-table-state',
   ops: [

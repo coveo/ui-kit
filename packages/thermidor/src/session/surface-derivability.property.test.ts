@@ -24,10 +24,11 @@ const shortText = fc.string({maxLength: 20});
 
 /**
  * A well-formed `a2ui-surface` `createSurface` activity payload, mirroring the
- * shape `readSurface` walks: `messages[].createSurface` with a `surfaceId`, a
- * `rootId`, and a `components` entry whose `id` matches `rootId` and whose
- * top-level `component` discriminant is the (non-empty) root component type.
- * Yields exactly one `DiscoveredSurface` per message when folded.
+ * shape `readSurface` walks: `messages[].createSurface` with a `surfaceId` and a
+ * `components` entry carrying the canonical `root` node (id: "root") whose top-level
+ * `component` discriminant is the (non-empty) root component type. The A2-UI v1.0
+ * envelope carries no `rootId`. Yields exactly one `DiscoveredSurface` per message
+ * when folded.
  */
 const surfaceMessageArbitrary = fc
   .record({
@@ -35,13 +36,12 @@ const surfaceMessageArbitrary = fc
     rootComponentType: fc.string({minLength: 1, maxLength: 12}),
   })
   .map(({surfaceId, rootComponentType}) => {
-    const rootId = `${surfaceId}-root`;
+    // A2-UI v1.0: the surface root is the canonical node with `id: "root"`; no `rootId` envelope.
     return {
       version: 'v1.0',
       createSurface: {
         surfaceId,
-        rootId,
-        components: [{id: rootId, component: rootComponentType}],
+        components: [{id: 'root', component: rootComponentType}],
       },
     };
   });

@@ -70,43 +70,46 @@ interface DataBinding {
   path: string;
 }
 
-// Builds the `{ path }` bindings for a stateful node's props: each state field name maps to a
-// Data_Binding object pointing at its `/state/<id>/<field>` sub-path. The renderer resolves these
-// bindings against the A2-UI data model, so identity is never needed to hydrate state.
+// Builds the `{ path }` bindings for a stateful node's state-bound props: each state field name maps
+// to a Data_Binding object pointing at its `/state/<id>/<field>` sub-path. In the flat A2-UI node
+// model these bindings are spread directly onto the node top level (there is no `props` wrapper).
+// The renderer resolves them against the A2-UI data model, so identity is never needed to hydrate
+// state.
 function bindStateFields(id: string, fields: readonly string[]): Record<string, DataBinding> {
-  const props: Record<string, DataBinding> = {};
+  const bindings: Record<string, DataBinding> = {};
   for (const field of fields) {
-    props[field] = {path: stateFieldPath(id, field)};
+    bindings[field] = {path: stateFieldPath(id, field)};
   }
-  return props;
+  return bindings;
 }
 
-// A2-UI component node on the composition plane. Each node carries a SINGLE identity: a top-level
-// `id` and `component` discriminant. `props` (optional) carries ONLY presentation values,
-// Data_Binding objects (`{ path }`) for state-bound props, and static container-composition
-// child-ref fields (named slots such as `sidebarChild`/`mainChild`, and homogeneous `children`
-// lists); it NEVER carries the identity keys `id`/`component`/`componentId`/`componentType`.
+// A2-UI component node on the composition plane, following the A2-UI v1.0 FLAT adjacency-list shape.
+// Each node carries a SINGLE identity (`id` + PascalCase `component` discriminant) and its own
+// properties directly at the top level: presentation values, Data_Binding objects (`{ path }`) for
+// state-bound props, and static composition links (named ComponentId slots such as
+// `sidebarChild`/`mainChild`, and homogeneous `children` ChildList arrays). There is no `props`
+// wrapper, and a node NEVER carries the removed dual-identity keys `componentId`/`componentType`.
 interface A2uiComponentNode {
   id: string;
   component: string;
-  props?: Record<string, unknown>;
+  [key: string]: unknown;
 }
 
-// Reads a node's composition children regardless of whether they are declared as a `children`
-// array (homogeneous lists: LayoutStack, FacetManager) or named child-ref slots (heterogeneous
-// containers: CommerceSearch → sidebarChild/mainChild). Used only by surface validation.
+// Reads a node's composition children from its top-level properties, whether declared as a
+// `children` array (homogeneous lists: LayoutStack, FacetManager) or named ComponentId slots
+// (heterogeneous containers: CommerceSearch → sidebarChild/mainChild). Used only by surface
+// validation.
 function childRefsOf(node: A2uiComponentNode): string[] {
-  const props = node.props ?? {};
   const refs: string[] = [];
-  const namedSlots = props['sidebarChild'];
-  if (typeof namedSlots === 'string') {
-    refs.push(namedSlots);
+  const sidebarChild = node['sidebarChild'];
+  if (typeof sidebarChild === 'string') {
+    refs.push(sidebarChild);
   }
-  const mainChild = props['mainChild'];
+  const mainChild = node['mainChild'];
   if (typeof mainChild === 'string') {
     refs.push(mainChild);
   }
-  const children = props['children'];
+  const children = node['children'];
   if (Array.isArray(children)) {
     for (const child of children) {
       if (typeof child === 'string') {
@@ -117,31 +120,34 @@ function childRefsOf(node: A2uiComponentNode): string[] {
   return refs;
 }
 
+// The canonical A2-UI v1.0 root node id. `createSurface` implicitly instantiates the reserved
+// `Surface` container with `child: "root"`, so exactly one emitted node must carry `id: "root"`;
+// it mounts as the surface's root. The envelope therefore carries NO `rootId` (that field is not
+// part of the A2-UI v1.0 createSurface contract).
+const RENDERER_ROOT_ID = 'root';
+
 interface BuildValidatedSurfaceOptions {
   // Prefix used in thrown error messages so a failure names the offending template.
   templateName: string;
   surfaceId: string;
-  rootId: string;
   nodes: A2uiComponentNode[];
-  // Extra surface-level properties merged into the createSurface (e.g. `surfaceProperties`).
-  extra?: Record<string, unknown>;
 }
 
-// Validates that the declared root and every referenced child resolve to an emitted node, then
-// assembles the createSurface. A missing root or child throws an error naming the missing node
-// so no partial tree is ever emitted.
+// Validates that a single canonical `root` node and every referenced child resolve to an emitted
+// node, then assembles the A2-UI v1.0 createSurface. A missing root or child throws an error naming
+// the offending node so no partial tree is ever emitted. The envelope follows the v1.0 contract:
+// { surfaceId, catalogId, components } — no `rootId` (the root is the node with `id: "root"`), and
+// no non-standard surface properties.
 function buildValidatedSurface({
   templateName,
   surfaceId,
-  rootId,
   nodes,
-  extra,
 }: BuildValidatedSurfaceOptions): Record<string, unknown> {
   const ids = new Set(nodes.map((node) => node.id));
 
-  if (!ids.has(rootId)) {
+  if (!ids.has(RENDERER_ROOT_ID)) {
     throw new Error(
-      `${templateName}: declared root node "${rootId}" is absent from createSurface.components[].`
+      `${templateName}: createSurface.components[] must contain exactly one node with id "${RENDERER_ROOT_ID}" (the A2-UI canonical surface root); none was found.`
     );
   }
 
@@ -157,15 +163,14 @@ function buildValidatedSurface({
 
   return {
     surfaceId,
-    rootId,
     catalogId: CATALOG_ID,
-    ...(extra ?? {}),
     components: nodes,
   };
 }
 
 export {
   CATALOG_ID,
+  RENDERER_ROOT_ID,
   STATE_NAMESPACE,
   jsonPointerEscape,
   statePath,

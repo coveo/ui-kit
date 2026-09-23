@@ -6,23 +6,23 @@
  *
  * ## Why the conversion exists
  *
- * The backend emits v1.0 messages (`createSurface` with inline `components[].props`),
- * but `@copilotkit/a2ui-renderer` (v1.61) only understands v0.9 messages
- * (`createSurface` + separate `updateComponents` with props flattened on component nodes).
+ * The backend emits v1.0 messages: a single `createSurface` carrying its `components[]` inline.
+ * `@copilotkit/a2ui-renderer` (v1.61) only understands v0.9 messages (`createSurface` for the
+ * surface lifecycle + a separate `updateComponents` carrying the component nodes).
  *
  * The `convertV1ToV09` adapter translates each v1.0 message into the equivalent v0.9
  * messages so the MessageProcessor can create surfaces and resolve catalog renderers.
  *
  * ## What the conversion preserves
  *
- * Under the inline-state model a node carries a single `id`/`component` identity and its
- * `props` hold presentation values and A2-UI Data_Binding objects of the form
- * `{ "path": <JSON Pointer> }`. The conversion:
+ * Under the flat A2-UI v1.0 node model a node carries a single `id`/`component` identity plus its
+ * presentation values, A2-UI Data_Binding objects (`{ "path": <JSON Pointer> }`), and composition
+ * links directly at the top level — there is no `props` wrapper, which is already the shape the
+ * v0.9 renderer mounts. The conversion:
  *
- * - flattens `components[].props` onto each v0.9 node so the binder can resolve the
- *   `{ "path": ... }` bindings against the A2-UI data model — every binding is carried
- *   through byte-for-byte and no identity correlation (`componentId`/`componentType`) is
- *   ever synthesized;
+ * - forwards each flat node as-is (only remapping the declared root id to `"root"`), carrying every
+ *   `{ "path": ... }` binding through byte-for-byte so the binder can resolve it against the A2-UI
+ *   data model, and never synthesizing an identity correlation (`componentId`/`componentType`);
  * - passes `updateDataModel` ops through unchanged (only the version is bumped to v0.9), so
  *   the renderer applies each `{ surfaceId, path, value }` op to its own data model and
  *   re-resolves the affected `{ path }` bindings;
@@ -38,7 +38,7 @@
  *    ```
  *    converted.push(...v1Messages.filter(isRecord));
  *    ```
- * 3. Verify that `processMessages` handles `createSurface` with `components[].props`
+ * 3. Verify that `processMessages` handles `createSurface` with inline flat `components[]`
  *    and resolves each node's `{ path }` bindings against the data model correctly
  * 4. Everything else (dumb renderers, catalog definitions) stays unchanged
  */
@@ -50,52 +50,17 @@ import {isRecord} from '../utils.js';
 type A2UIMessage = Record<string, unknown>;
 
 /**
- * The literal component id at which `@copilotkit/a2ui-renderer` begins mounting a
- * surface's component tree. A surface whose declared root id differs from this value
- * must be remapped to it so the renderer can locate the root.
- */
-const RENDERER_ROOT_ID = 'root';
-
-/**
- * Rewrites a component node so that any reference to `declaredRootId` becomes the
- * Renderer_Root_Id (`"root"`): the node's own `id`, every matching entry in its
- * `children[]`, and a matching `child`. `props` is intentionally left untouched — the
- * node's `{ "path": ... }` Data_Binding objects live there and must survive the rename
- * byte-for-byte.
- */
-function remapId(node: Record<string, unknown>, declaredRootId: string): Record<string, unknown> {
-  const remapped: Record<string, unknown> = {...node};
-
-  if (remapped['id'] === declaredRootId) {
-    remapped['id'] = RENDERER_ROOT_ID;
-  }
-
-  const children = remapped['children'];
-  if (Array.isArray(children)) {
-    remapped['children'] = children.map((childId) =>
-      childId === declaredRootId ? RENDERER_ROOT_ID : childId
-    );
-  }
-
-  if (remapped['child'] === declaredRootId) {
-    remapped['child'] = RENDERER_ROOT_ID;
-  }
-
-  return remapped;
-}
-
-/**
  * Converts a single v1.0 A2-UI message into one or more v0.9 messages
  * that the @copilotkit/a2ui-renderer MessageProcessor can understand.
  *
  * Conversion rules:
  * - `createSurface` (v1.0) → `createSurface` + `updateComponents` (v0.9)
- *   - `components[].props` are flattened onto the component node directly, carrying every
- *     `{ "path": ... }` Data_Binding object through byte-for-byte and preserving the single
- *     `id`/`component` identity (no `componentId`/`componentType` is ever introduced)
- *   - when `createSurface.rootId` names exactly one component whose id is not already
- *     `"root"`, that node's id (and every reference to it) is remapped to `"root"` so
- *     the renderer can mount a surface whose declared root differs from `"root"`
+ *   - v1.0 nodes are already FLAT (each node carries its presentation values, `{ "path": ... }`
+ *     Data_Binding objects, and composition links directly at the top level — there is no
+ *     `props` wrapper) AND already mount the canonical `root` node (id: "root"), which is exactly
+ *     the shape the v0.9 renderer expects. Nodes are therefore forwarded as-is, preserving the
+ *     single `id`/`component` identity byte-for-byte (no `componentId`/`componentType` is ever
+ *     introduced). The v1.0 envelope carries no `rootId`, so no root remap is performed.
  * - `updateDataModel` passes through carrying its `{ surfaceId, path, value }` unchanged
  *   (only the version is bumped to v0.9); the renderer applies it to its data model
  * - `updateComponents` / `deleteSurface` → same shape, version changed to v0.9
@@ -120,22 +85,10 @@ export function convertV1ToV09(message: Record<string, unknown>): A2UIMessage[] 
     ];
 
     if (components && components.length > 0) {
-      const rootId = createSurface['rootId'];
-      const declaredRootId =
-        typeof rootId === 'string' && rootId !== RENDERER_ROOT_ID ? rootId : undefined;
-      const resolveRoot =
-        declaredRootId !== undefined &&
-        components.filter((comp) => comp['id'] === declaredRootId).length === 1;
-
-      const v09Components = components.map((comp) => {
-        const {props, ...rest} = comp;
-        const remapped = resolveRoot ? remapId(rest, declaredRootId!) : rest;
-        if (isRecord(props)) {
-          return {...remapped, ...props};
-        }
-        return remapped;
-      });
-      results.push({version: 'v0.9', updateComponents: {surfaceId, components: v09Components}});
+      // A2-UI v1.0 nodes are already flat AND already mount the canonical `root` node (id: "root"),
+      // which is exactly what the v0.9 renderer expects — so each node is forwarded as-is. No
+      // `rootId` remap is needed (the v1.0 envelope carries no `rootId`).
+      results.push({version: 'v0.9', updateComponents: {surfaceId, components}});
     }
 
     return results;

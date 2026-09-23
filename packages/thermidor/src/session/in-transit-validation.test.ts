@@ -83,7 +83,7 @@ const surfaceActivity = (components: unknown[]): Activity => ({
 const paginationNode = {
   id: 'pagination-2',
   component: 'Pagination',
-  props: {page: {path: statePath('pagination-2') + '/page'}},
+  page: {path: statePath('pagination-2') + '/page'},
 };
 
 const validWholePagination = {page: 0, pageSize: 12, totalEntries: 43, totalPages: 4};

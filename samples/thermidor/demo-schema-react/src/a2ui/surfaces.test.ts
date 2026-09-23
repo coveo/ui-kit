@@ -63,7 +63,7 @@ describe('getA2UIMessages', () => {
                   {
                     id: 'root',
                     component: 'ProductCarousel',
-                    props: {heading: {path: '/state/root/heading'}},
+                    heading: {path: '/state/root/heading'},
                   },
                 ],
               },
@@ -99,17 +99,15 @@ describe('getA2UIMessages', () => {
   });
 });
 
-// Feature: a2ui-inline-state-data-model, Property 7: For any v1.0 createSurface + updateDataModel
-// messages, convertV1ToV09 (a) preserves every A2-UI Data_Binding object `{ "path": ... }` in each
-// node's props byte-for-byte on the flattened v0.9 node; (b) preserves the single `id`/`component`
-// identity and introduces NO `componentId`/`componentType` anywhere; (c) rewrites the single node
-// matching a declared rootId (other than "root") — and every children[]/child reference to it — to
-// "root", performing no rewrite when rootId is absent/duplicate/none, without throwing; and (d)
-// passes each updateDataModel op through carrying `{ surfaceId, path, value }` unchanged (version
-// bumped to v0.9).
+// Feature: a2ui-inline-state-data-model, Property 7: For any A2-UI v1.0 createSurface +
+// updateDataModel messages, convertV1ToV09 (a) forwards each already-flat node byte-for-byte,
+// preserving every A2-UI Data_Binding object `{ "path": ... }` carried at the node top level and
+// its composition links (children[]/child); (b) preserves the single `id`/`component` identity and
+// introduces NO `componentId`/`componentType` anywhere; (c) never throws and performs no root
+// rewrite (v1.0 nodes already mount the canonical `root` node; the envelope carries no `rootId`);
+// and (d) passes each updateDataModel op through carrying `{ surfaceId, path, value }` unchanged
+// (version bumped to v0.9).
 describe('convertV1ToV09 preserves {path} bindings and single identity (Property 7)', () => {
-  const RENDERER_ROOT_ID = 'root';
-
   interface GeneratedNode {
     id: string;
     // A map of prop name -> JSON Pointer path, expressed as `{ path }` bindings.
@@ -117,8 +115,6 @@ describe('convertV1ToV09 preserves {path} bindings and single identity (Property
     children?: string[];
     child?: string;
   }
-
-  type RootIdKind = 'matching' | 'absent' | 'duplicate' | 'none';
 
   function extractV09Components(
     converted: Array<Record<string, unknown>>
@@ -131,17 +127,14 @@ describe('convertV1ToV09 preserves {path} bindings and single identity (Property
     return (updateComponents['components'] as Array<Record<string, unknown>>) ?? [];
   }
 
-  function buildMessage(
-    nodes: GeneratedNode[],
-    rootId: string | undefined
-  ): Record<string, unknown> {
+  function buildMessage(nodes: GeneratedNode[]): Record<string, unknown> {
     const components = nodes.map((node) => {
       const {id, boundProps, children, child} = node;
-      const props: Record<string, unknown> = {};
+      // Flat A2-UI v1.0 node: `{ path }` bindings live directly at the node top level.
+      const comp: Record<string, unknown> = {id, component: 'SomeComponent'};
       for (const [key, path] of Object.entries(boundProps)) {
-        props[key] = {path};
+        comp[key] = {path};
       }
-      const comp: Record<string, unknown> = {id, component: 'SomeComponent', props};
       if (children !== undefined) {
         comp['children'] = [...children];
       }
@@ -151,21 +144,18 @@ describe('convertV1ToV09 preserves {path} bindings and single identity (Property
       return comp;
     });
 
+    // The A2-UI v1.0 envelope carries no `rootId`; exactly one node is the canonical `root`.
     return {
       version: 'v1.0',
       createSurface: {
         surfaceId: 'surface-under-test',
-        ...(rootId !== undefined ? {rootId} : {}),
         components,
       },
     };
   }
 
   const scenarioArb = fc
-    .uniqueArray(
-      fc.string({minLength: 1, maxLength: 6}).filter((s) => s !== RENDERER_ROOT_ID),
-      {minLength: 1, maxLength: 6}
-    )
+    .uniqueArray(fc.string({minLength: 1, maxLength: 6}), {minLength: 1, maxLength: 6})
     .chain((ids) =>
       fc.record({
         ids: fc.constant(ids),
@@ -185,44 +175,23 @@ describe('convertV1ToV09 preserves {path} bindings and single identity (Property
           minLength: ids.length,
           maxLength: ids.length,
         }),
-        rootKind: fc.constantFrom<RootIdKind>('matching', 'absent', 'duplicate', 'none'),
       })
     )
-    .map(({ids, boundPropsPerNode, childrenPerNode, childPerNode, rootKind}) => {
-      const baseNodes: GeneratedNode[] = ids.map((id, index) => ({
+    .map(({ids, boundPropsPerNode, childrenPerNode, childPerNode}) => {
+      const nodes: GeneratedNode[] = ids.map((id, index) => ({
         id,
         boundProps: boundPropsPerNode[index],
         children: childrenPerNode[index],
         child: childPerNode[index],
       }));
 
-      let nodes = baseNodes;
-      let rootId: string | undefined;
-
-      switch (rootKind) {
-        case 'matching':
-          rootId = ids[0];
-          break;
-        case 'absent':
-          rootId = 'absent-root-id-that-matches-nothing';
-          break;
-        case 'duplicate': {
-          rootId = ids[0];
-          nodes = [...baseNodes, {id: ids[0], boundProps: {}}];
-          break;
-        }
-        case 'none':
-          rootId = undefined;
-          break;
-      }
-
-      return {nodes, rootId, rootKind};
+      return {nodes};
     });
 
-  it('preserves {path} bindings and identity, rewrites only the declared root', () => {
+  it('forwards each flat node byte-for-byte, preserving bindings and identity', () => {
     fc.assert(
-      fc.property(scenarioArb, ({nodes, rootId, rootKind}) => {
-        const message = buildMessage(nodes, rootId);
+      fc.property(scenarioArb, ({nodes}) => {
+        const message = buildMessage(nodes);
 
         // (c) conversion never throws.
         const converted = convertV1ToV09(message);
@@ -230,12 +199,10 @@ describe('convertV1ToV09 preserves {path} bindings and single identity (Property
 
         expect(output).toHaveLength(nodes.length);
 
-        const shouldResolve = rootKind === 'matching';
-
         output.forEach((outNode, index) => {
           const source = nodes[index];
 
-          // (a) every `{ path }` binding survives byte-for-byte on the flattened node.
+          // (a) every `{ path }` binding survives byte-for-byte on the flat node.
           for (const [key, path] of Object.entries(source.boundProps)) {
             expect(outNode[key]).toEqual({path});
           }
@@ -245,24 +212,19 @@ describe('convertV1ToV09 preserves {path} bindings and single identity (Property
           expect('componentId' in outNode).toBe(false);
           expect('componentType' in outNode).toBe(false);
 
-          const idWasRewritten = shouldResolve && source.id === rootId;
-          expect(outNode['id']).toBe(idWasRewritten ? RENDERER_ROOT_ID : source.id);
+          // (c) the node id and composition links are forwarded unchanged (no root rewrite).
+          expect(outNode['id']).toBe(source.id);
 
           if (source.children === undefined) {
             expect('children' in outNode).toBe(false);
           } else {
-            const expectedChildren = shouldResolve
-              ? source.children.map((c) => (c === rootId ? RENDERER_ROOT_ID : c))
-              : source.children;
-            expect(outNode['children']).toEqual(expectedChildren);
+            expect(outNode['children']).toEqual(source.children);
           }
 
           if (source.child === undefined) {
             expect('child' in outNode).toBe(false);
           } else {
-            const expectedChild =
-              shouldResolve && source.child === rootId ? RENDERER_ROOT_ID : source.child;
-            expect(outNode['child']).toBe(expectedChild);
+            expect(outNode['child']).toBe(source.child);
           }
         });
 

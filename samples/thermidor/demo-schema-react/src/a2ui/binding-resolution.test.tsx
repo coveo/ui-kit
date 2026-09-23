@@ -48,7 +48,7 @@ const messages: Array<Record<string, unknown>> = [
         {
           id: ACTIONS_ID,
           component: 'NextActionsBar',
-          actions: {path: `/state/${ACTIONS_ID}/actions`},
+          suggestedActions: {path: `/state/${ACTIONS_ID}/suggestedActions`},
         },
         // Scalar `{ path }` bindings.
         {
@@ -67,7 +67,7 @@ const messages: Array<Record<string, unknown>> = [
     version: 'v0.9',
     updateDataModel: {
       surfaceId: SURFACE_ID,
-      path: `/state/${ACTIONS_ID}/actions`,
+      path: `/state/${ACTIONS_ID}/suggestedActions`,
       value: [
         {text: 'Add fins', type: 'followup'},
         {text: 'Compare boards', type: 'search'},

@@ -25,13 +25,12 @@ const carousel1SurfaceActivity: ConverseEvent = ActivitySnapshot({
         version: 'v1.0',
         createSurface: {
           surfaceId: LIFE_JACKETS_SURFACE_ID,
-          rootId: ROOT_ID,
           catalogId: CATALOG_ID,
           components: [
             {
               id: ROOT_ID,
               component: 'ProductCarousel',
-              props: bindStateFields(ROOT_ID, ['heading', 'products']),
+              ...bindStateFields(ROOT_ID, ['heading', 'products']),
             },
           ],
         },
@@ -50,13 +49,12 @@ const carousel2SurfaceActivity: ConverseEvent = ActivitySnapshot({
         version: 'v1.0',
         createSurface: {
           surfaceId: SAFETY_GEAR_SURFACE_ID,
-          rootId: ROOT_ID,
           catalogId: CATALOG_ID,
           components: [
             {
               id: ROOT_ID,
               component: 'ProductCarousel',
-              props: bindStateFields(ROOT_ID, ['heading', 'products']),
+              ...bindStateFields(ROOT_ID, ['heading', 'products']),
             },
           ],
         },
@@ -75,13 +73,12 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
         version: 'v1.0',
         createSurface: {
           surfaceId: NEXT_ACTIONS_SURFACE_ID,
-          rootId: ROOT_ID,
           catalogId: CATALOG_ID,
           components: [
             {
               id: ROOT_ID,
               component: 'NextActionsBar',
-              props: bindStateFields(ROOT_ID, ['actions']),
+              ...bindStateFields(ROOT_ID, ['suggestedActions']),
             },
           ],
         },
@@ -380,7 +377,7 @@ const safetyGearState = {
 };
 
 const nextActionsState = {
-  actions: [
+  suggestedActions: [
     {text: 'Compare life jackets by size', type: 'followup'},
     {text: 'Show safety vests under $100', type: 'followup'},
     {text: 'View boating helmets and buoys', type: 'followup'},

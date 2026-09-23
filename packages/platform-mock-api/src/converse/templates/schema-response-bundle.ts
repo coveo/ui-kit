@@ -1,5 +1,6 @@
 import {
   CATALOG_ID,
+  RENDERER_ROOT_ID,
   bindStateFields,
   buildConversationResponse,
   buildValidatedSurface,
@@ -18,9 +19,10 @@ import {
 const runId = 'schema-bundle-4957b383';
 
 const BUNDLE_SURFACE_ID = 'bundle-surface';
-const BUNDLE_ROOT_ID = 'bundle-root';
+// Each surface mounts its root as the A2-UI canonical `root` node (id: "root").
+const BUNDLE_ROOT_ID = RENDERER_ROOT_ID;
 const NEXT_ACTIONS_SURFACE_ID = 'next-actions-surface';
-const NEXT_ACTIONS_ROOT_ID = 'root';
+const NEXT_ACTIONS_ROOT_ID = RENDERER_ROOT_ID;
 
 // One product-summary node per (tier, slot) pair, in slot-enumeration order (tier order,
 // then slot order within each tier). Each id is also the AG-UI state key holding that slot's
@@ -41,31 +43,29 @@ const SLOT_PRODUCT_SUMMARY_IDS = [
 ];
 
 // The bundle-display root composes one product-summary node per slot; each slot summary is
-// emitted as its own node. Each node carries a single identity (`id` + `component`). BundleDisplay
-// is a homogeneous container: its ordered `children` list (in `props`) mounts the product-summary
-// slots. BundleDisplay binds its `tiers` state and each ProductSummary binds its
-// `categoryLabel`/`product` state to `{ path }` objects beneath `statePath(id)`.
+// emitted as its own node. Following the A2-UI v1.0 flat node shape, each node carries its
+// composition links and `{ path }` state bindings directly at the top level (no `props` wrapper).
+// BundleDisplay is a homogeneous container: its ordered top-level `children` ChildList mounts the
+// product-summary slots, alongside its `tiers` state binding. Each ProductSummary spreads its
+// `categoryLabel`/`product` state bindings onto the node top level.
 const BUNDLE_SURFACE_NODES: A2uiComponentNode[] = [
   {
     id: BUNDLE_ROOT_ID,
     component: 'BundleDisplay',
-    props: {...bindStateFields(BUNDLE_ROOT_ID, ['tiers']), children: SLOT_PRODUCT_SUMMARY_IDS},
+    ...bindStateFields(BUNDLE_ROOT_ID, ['tiers']),
+    children: SLOT_PRODUCT_SUMMARY_IDS,
   },
   ...SLOT_PRODUCT_SUMMARY_IDS.map<A2uiComponentNode>((id) => ({
     id,
     component: 'ProductSummary',
-    props: bindStateFields(id, ['categoryLabel', 'product']),
+    ...bindStateFields(id, ['categoryLabel', 'product']),
   })),
 ];
 
-function buildValidatedBundleSurface(
-  rootId: string,
-  nodes: A2uiComponentNode[]
-): Record<string, unknown> {
+function buildValidatedBundleSurface(nodes: A2uiComponentNode[]): Record<string, unknown> {
   return buildValidatedSurface({
     templateName: 'Mock_Bundle_Template',
     surfaceId: BUNDLE_SURFACE_ID,
-    rootId,
     nodes,
   });
 }
@@ -78,7 +78,7 @@ const bundleSurfaceActivity: ConverseEvent = ActivitySnapshot({
     messages: [
       {
         version: 'v1.0',
-        createSurface: buildValidatedBundleSurface(BUNDLE_ROOT_ID, BUNDLE_SURFACE_NODES),
+        createSurface: buildValidatedBundleSurface(BUNDLE_SURFACE_NODES),
       },
     ],
   },
@@ -94,13 +94,12 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
         version: 'v1.0',
         createSurface: {
           surfaceId: NEXT_ACTIONS_SURFACE_ID,
-          rootId: NEXT_ACTIONS_ROOT_ID,
           catalogId: CATALOG_ID,
           components: [
             {
               id: NEXT_ACTIONS_ROOT_ID,
               component: 'NextActionsBar',
-              props: bindStateFields(NEXT_ACTIONS_ROOT_ID, ['actions']),
+              ...bindStateFields(NEXT_ACTIONS_ROOT_ID, ['suggestedActions']),
             },
           ],
         },
@@ -112,7 +111,7 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
 // Whole-component Component_State for every node on the bundle surface, keyed by node id. Each
 // entry is written whole at `statePath(id)` on `bundle-surface`.
 const bundleComponentState: Record<string, unknown> = {
-  'bundle-root': {
+  [BUNDLE_ROOT_ID]: {
     tiers: [
       {
         label: 'Budget',
@@ -366,7 +365,7 @@ const bundleComponentState: Record<string, unknown> = {
 };
 
 const nextActionsState = {
-  actions: [
+  suggestedActions: [
     {text: 'Explore Budget tier ($315 total)', type: 'followup'},
     {text: 'Explore Mid-Range tier ($1,065 total)', type: 'followup'},
     {text: 'Explore Premium tier ($735 total)', type: 'followup'},

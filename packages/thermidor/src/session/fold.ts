@@ -370,9 +370,9 @@ function setAtPointer(state: A2uiState, path: string, value: unknown): A2uiState
  *
  * This block is the SINGLE location in the
  * package that walks a raw A2-UI activity payload (`activity.payload.messages`
- * → `createSurface` → resolve `rootId` against `components` → read the root
- * node's top-level `component` discriminant) and the SINGLE location that knows
- * the `'CommerceSearch'` root-component-type magic string. Both persist until
+ * → `createSurface` → find the canonical `root` node in `components` → read the
+ * root node's top-level `component` discriminant) and the SINGLE location that
+ * knows the `'CommerceSearch'` root-component-type magic string. Both persist until
  * server-surfaced typed routing lands (ADR-015 Option C, a separate future
  * ADR). No consumer — sample or internal `dispatchAction` — may walk activities
  * or re-spell this literal; they read the typed `response.surfaces` projection
@@ -386,6 +386,13 @@ function setAtPointer(state: A2uiState, path: string, value: unknown): A2uiState
 
 /** ADR-015 interim: the root component type consumers/nav treat as commerce. */
 const COMMERCE_SEARCH_ROOT_TYPE = 'CommerceSearch';
+
+/**
+ * The A2-UI v1.0 canonical surface root node id. `createSurface` implicitly mounts the reserved
+ * `Surface` container with `child: "root"`, so the surface's root is the node whose `id` is this
+ * value. The envelope carries no `rootId`.
+ */
+const ROOT_COMPONENT_ID = 'root';
 
 /** Activity kind carrying A2-UI surface `createSurface` messages. */
 const SURFACE_ACTIVITY_KIND = 'a2ui-surface';
@@ -425,11 +432,11 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 /**
  * Reads a single `createSurface` message into a {@link DiscoveredSurface},
- * resolving the root component type from `createSurface.rootId` against
- * `createSurface.components` and reading the resolved root node's top-level
- * `component` discriminant (PascalCase). Returns null when the message is not a
- * well-formed surface (missing surfaceId/rootId, no matching root component, or
- * no root `component` discriminant).
+ * resolving the root component type from the canonical `root` node in
+ * `createSurface.components` (the A2-UI v1.0 node with `id: "root"`) and reading its
+ * top-level `component` discriminant (PascalCase). Returns null when the message is not
+ * a well-formed surface (missing surfaceId, no `root` component, or no root `component`
+ * discriminant).
  */
 function readSurface(message: unknown): DiscoveredSurface | null {
   if (!isRecord(message)) {
@@ -442,8 +449,7 @@ function readSurface(message: unknown): DiscoveredSurface | null {
   }
 
   const surfaceId = createSurface['surfaceId'];
-  const rootId = createSurface['rootId'];
-  if (typeof surfaceId !== 'string' || surfaceId.length === 0 || typeof rootId !== 'string') {
+  if (typeof surfaceId !== 'string' || surfaceId.length === 0) {
     return null;
   }
 
@@ -452,7 +458,11 @@ function readSurface(message: unknown): DiscoveredSurface | null {
     return null;
   }
 
-  const rootComponent = components.find((comp) => isRecord(comp) && comp['id'] === rootId);
+  // A2-UI v1.0: the surface's root is the canonical node with `id: "root"` mounted under the
+  // implicit `Surface` container. The `createSurface` envelope carries no `rootId`.
+  const rootComponent = components.find(
+    (comp) => isRecord(comp) && comp['id'] === ROOT_COMPONENT_ID
+  );
   if (!isRecord(rootComponent)) {
     return null;
   }

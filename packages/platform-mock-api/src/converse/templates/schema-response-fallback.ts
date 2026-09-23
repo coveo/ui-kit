@@ -22,13 +22,12 @@ const surfaceActivitySnapshot: ConverseEvent = ActivitySnapshot({
         version: 'v1.0',
         createSurface: {
           surfaceId: NEXT_ACTIONS_SURFACE_ID,
-          rootId: NEXT_ACTIONS_ROOT_ID,
           catalogId: CATALOG_ID,
           components: [
             {
               id: NEXT_ACTIONS_ROOT_ID,
               component: 'NextActionsBar',
-              props: bindStateFields(NEXT_ACTIONS_ROOT_ID, ['actions']),
+              ...bindStateFields(NEXT_ACTIONS_ROOT_ID, ['suggestedActions']),
             },
           ],
         },
@@ -44,7 +43,7 @@ const stateActivity: ConverseEvent = UpdateDataModelActivity({
       surfaceId: NEXT_ACTIONS_SURFACE_ID,
       path: statePath(NEXT_ACTIONS_ROOT_ID),
       value: {
-        actions: [
+        suggestedActions: [
           {text: 'Show me popular products', type: 'followup'},
           {text: 'sports equipment', type: 'search'},
           {text: 'outdoor gear', type: 'search'},
