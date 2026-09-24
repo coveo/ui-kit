@@ -117,6 +117,7 @@ const bundleComponentState: Record<string, unknown> = {
         label: 'Budget',
         description:
           'Soft-top boards and essential gear perfect for learning to surf without breaking the bank.',
+        total: 484.97,
         slots: [
           {categoryLabel: 'Surfboard', childId: 'ps-budget-surfboard'},
           {categoryLabel: 'Wetsuit', childId: 'ps-budget-wetsuit'},
@@ -128,6 +129,7 @@ const bundleComponentState: Record<string, unknown> = {
         label: 'Mid-Range',
         description:
           'Hybrid boards with improved performance and quality apparel for progressing surfers.',
+        total: 794.97,
         slots: [
           {categoryLabel: 'Surfboard', childId: 'ps-midrange-surfboard'},
           {categoryLabel: 'Wetsuit', childId: 'ps-midrange-wetsuit'},
@@ -139,6 +141,7 @@ const bundleComponentState: Record<string, unknown> = {
         label: 'Premium',
         description:
           'High-performance boards and professional-grade gear for serious beginners ready to advance.',
+        total: 1164.97,
         slots: [
           {categoryLabel: 'Surfboard', childId: 'ps-premium-surfboard'},
           {categoryLabel: 'Wetsuit', childId: 'ps-premium-wetsuit'},

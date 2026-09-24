@@ -4,6 +4,10 @@ import type {BundleDisplayProps, BundleSlot, BundleTier} from '@coveo/thermidor-
 import type {TypedRendererProps} from '../renderer-props.js';
 import styles from './BundleDisplay.module.css';
 
+function formatPrice(value: number): string {
+  return `$${value.toFixed(2)}`;
+}
+
 /**
  * A2-UI renderer for the `bundle-display` container.
  *
@@ -15,7 +19,8 @@ import styles from './BundleDisplay.module.css';
  *
  * Each mounted product-summary child owns its own state (its price included) resolved from
  * the data model, so the bundle renderer does not aggregate sibling state or read any
- * cross-component join.
+ * cross-component join. The per-tier package total is a backend-computed value carried on
+ * the tier itself (`tier.total`), rendered as-is rather than summed from the children.
  */
 export function BundleDisplayRenderer({
   props,
@@ -57,11 +62,12 @@ export function BundleDisplayRenderer({
           {activeSlots.length > 0 && (
             <div className={styles.footer}>
               <div className={styles.footerLabel}>
-                <span className={styles.footerTitle}>Package</span>
+                <span className={styles.footerTitle}>Package Total</span>
                 <span className={styles.footerCount}>
                   {activeSlots.length} {activeSlots.length === 1 ? 'item' : 'items'}
                 </span>
               </div>
+              <span className={styles.footerPrice}>{formatPrice(activeTier.total)}</span>
             </div>
           )}
         </div>
