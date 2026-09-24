@@ -51,6 +51,30 @@ describe('#renderGeneratedContentContainer', () => {
     expect(container).toHaveAttribute('part', 'generated-container');
   });
 
+  it('should mark the container as busy while streaming', async () => {
+    const element = await renderComponent({isStreaming: true});
+
+    expect(locators(element).container).toHaveAttribute('aria-busy', 'true');
+  });
+
+  it('should mark the container as not busy when streaming completes', async () => {
+    const element = await renderComponent({isStreaming: false});
+
+    expect(locators(element).container).toHaveAttribute('aria-busy', 'false');
+  });
+
+  it('should set the container id when provided', async () => {
+    const element = await renderComponent({id: 'generated-answer-content'});
+
+    expect(locators(element).container).toHaveAttribute('id', 'generated-answer-content');
+  });
+
+  it('should omit the container id when not provided', async () => {
+    const element = await renderComponent();
+
+    expect(locators(element).container).not.toHaveAttribute('id');
+  });
+
   it('should render text content by default', async () => {
     const element = await renderComponent({
       answer: 'Plain text answer',
