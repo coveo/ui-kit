@@ -1,10 +1,13 @@
-import {useCallback, useMemo, useSyncExternalStore} from 'react';
-import type {Activity} from '@coveo/thermidor';
+import {useCallback, useSyncExternalStore} from 'react';
+import type {A2uiV09Message} from '@coveo/thermidor';
 import {ProductTargeting} from '../ProductTargeting/ProductTargeting.js';
 import {type TargetedProduct} from '../../context/targeting.js';
-import {getA2UIMessages, ThermidorA2UISurfaces} from '../../a2ui/surfaces.js';
+import {ThermidorA2UISurfaces} from '../../a2ui/surfaces.js';
 import {useSession} from '../../context/session.js';
 import styles from './SearchResultsPage.module.css';
+
+/** Stable empty snapshot: `useSyncExternalStore` requires a referentially stable read. */
+const EMPTY_MESSAGES: A2uiV09Message[] = [];
 
 interface SearchResultsPageProps {
   surfaceId: string;
@@ -24,7 +27,7 @@ interface SearchResultsPageProps {
  * mounted through the A2-UI renderer pipeline, exactly like every other surface. The
  * `commerce-search` root renderer owns the sidebar/main layout and mounts its children
  * by id from the composition on the A2-UI plane; this page only reads the active turn's
- * A2-UI activities and hands them to `ThermidorA2UISurfaces`.
+ * renderer-ready A2-UI message stream and hands it to `ThermidorA2UISurfaces`.
  *
  * Navigation to this page is derived directly from the A2-UI activities
  * (a createSurface whose root node's `component` discriminant is 'CommerceSearch').
@@ -35,13 +38,11 @@ export function SearchResultsPage(props: SearchResultsPageProps) {
     (onStoreChange: () => void) => session.subscribe(onStoreChange),
     [session]
   );
-  const getActivities = useCallback((): Activity[] | undefined => {
+  const getA2uiMessages = useCallback((): A2uiV09Message[] => {
     const turns = session.turns;
-    return turns[turns.length - 1]?.response.activities;
+    return turns[turns.length - 1]?.response.a2uiMessages ?? EMPTY_MESSAGES;
   }, [session]);
-  const activities = useSyncExternalStore(subscribe, getActivities, getActivities);
-
-  const a2uiMessages = useMemo(() => getA2UIMessages(activities), [activities]);
+  const a2uiMessages = useSyncExternalStore(subscribe, getA2uiMessages, getA2uiMessages);
 
   return (
     <div className={styles.searchLayout}>

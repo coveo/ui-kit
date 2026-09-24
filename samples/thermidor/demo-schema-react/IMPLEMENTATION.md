@@ -11,31 +11,25 @@ This sample implements the inline component-state model recorded in ADR-011 of `
 - **A2-UI is the only supported source of component state.** The sample obtains component state solely through A2-UI (the `/state` data-model bindings); component state obtained through any non-A2-UI source is unsupported.
 - **Intentional divergence from A2-UI bidirectional input binding.** The sample deliberately does not use A2-UI standard bidirectional input components. In-progress user input (for example a facet search box being typed) is held in the sample's local React state and is never written to the shared A2-UI data model, and component actions are dispatched over the non-bidirectional HTTP Action_Channel.
 
-## v1.0 → v0.9 adapter (`surfaces.tsx`)
+## v1.0 → v0.9 downgrade (owned by `@coveo/thermidor`)
 
-The backend and mock API emit A2-UI messages in **v1.0** format (`createSurface` with `components[].props`). However, `@copilotkit/a2ui-renderer` (v1.61) only understands the **v0.9** format (`createSurface` + `updateComponents` with props flattened on component nodes).
+Agent Gateway emits A2-UI **v1.0** exclusively. Every available renderer consumes **v0.9**:
+`@copilotkit/a2ui-renderer` builds its `MessageProcessor` from `@a2ui/web_core/v0_9`, and
+`@a2ui/web_core@0.9.0` publishes no `v1_0` subpath.
 
-The `convertV1ToV09` function in `src/a2ui/surfaces.tsx` bridges this gap by converting each v1.0 message into equivalent v0.9 messages before passing them to the renderer's `processMessages`.
+**The sample no longer performs this conversion.** `@coveo/thermidor` derives a
+renderer-ready v0.9 stream in the fold and exposes it as `response.a2uiMessages`; the sample
+reads that field and hands it to `ThermidorA2UISurfaces`. Consumers write no version-aware
+code of their own.
 
-### Conversion rules
-
-| v1.0 message                              | v0.9 output                                                                                     |
-| ----------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| `createSurface` with `components[].props` | `createSurface` (surface lifecycle) + `updateComponents` (props flattened onto component nodes) |
-| `updateDataModel`                         | Same shape, version changed to `v0.9`                                                           |
-| `updateComponents`                        | Same shape, version changed to `v0.9`                                                           |
-| `deleteSurface`                           | Same shape, version changed to `v0.9`                                                           |
-
-The key transformation: v1.0 puts component props in `components[].props`, while v0.9 expects them flattened directly on the component node. The adapter spreads `props` onto the node, carrying every A2-UI Data_Binding object `{ "path": <JSON Pointer> }` through byte-for-byte and preserving the single `id`/`component` identity; it never synthesizes `componentId`/`componentType`.
-
-### When `@copilotkit/a2ui-renderer` supports v1.0
-
-Once the renderer natively handles v1.0 messages:
-
-1. Delete the `convertV1ToV09` function in `src/a2ui/surfaces.tsx`
-2. Pass v1.0 messages directly to `processMessages` without conversion
-3. Verify that `processMessages` passes `components[].props` — including each `{ "path": ... }` binding — to catalog renderers correctly, so the binder can resolve them against the A2-UI data model
-4. Everything else (catalog definitions, dumb renderers reading resolved `props`, `/state` `updateDataModel` handling, `session.dispatchAction` dispatch) remains unchanged
+The conversion, its rationale, and its retirement condition live in the package:
+`packages/thermidor/src/session/a2ui-v09-projection.ts`, recorded as interim debt in the
+ADR-015 addendum. In short: splitting v1.0's single `createSurface` into `createSurface` +
+`updateComponents` is the only load-bearing transformation, because the v0.9
+`processCreateSurfaceMessage` reads only `{ surfaceId, catalogId, theme, sendDataModel }` and
+silently discards inline `components[]`. Flat v1.0 nodes are forwarded byte-for-byte, so every
+`{ "path": ... }` binding and composition link survives; `updateDataModel` and `deleteSurface`
+pass through.
 
 ## Single identity on component nodes (`id`/`component`)
 
@@ -85,7 +79,7 @@ The speculative sources are kept to stay aligned with `demo-react` but may be re
 
 `@coveo/thermidor-schema` and this sample use **Zod 4**, but `@copilotkit/a2ui-renderer` types are built against **Zod 3**. The `ZodObject` generics are structurally incompatible at the type level (`$strip` vs `UnknownKeysParam`) even though they are runtime-compatible.
 
-This is handled via two bridge helpers in `components.tsx` (same pattern as `convertV1ToV09`):
+This is handled via two bridge helpers in `components.tsx`:
 
 - `asCatalogDefinitions(definitions)` — validates the input is `Record<string, {props: ZodObject<any>}>`, then casts to `CatalogDefinitions`
 - `asCatalogRenderers(renderers)` — validates the input is `Record<string, React.FC<any>>`, then casts to `CatalogRenderers`
@@ -169,30 +163,30 @@ Composition is emitted **once** in the initial `createSurface` and never changed
 
 A real backend can reorder facets (relevance-driven) or add/remove them dynamically. Before that is supported, note the following:
 
-- **The bridge's `updateComponents` handling is incomplete.** In `convertV1ToV09` (`surfaces.tsx`), the `createSurface` branch applies the root-id remap (`remapId`) **and** flattens `components[].props` onto each node, but the `updateComponents` branch is a bare passthrough — it does neither. A dynamic `updateComponents` whose nodes carry `props` would reach the renderer without its `{ "path": ... }` bindings (and `direction`) flattened. Making `updateComponents` symmetric with `createSurface` (remap + prop flatten) is the prerequisite for any dynamic composition update.
+- **`updateComponents` is a bare pass-through.** In the projection (`packages/thermidor/src/session/a2ui-v09-projection.ts`), `createSurface` splits into `createSurface` + `updateComponents`, while an inbound `updateComponents` is forwarded as-is. Under the flat v1.0 node model that is correct — nodes carry their bindings at the top level with no `props` wrapper — but it has never been exercised by a real dynamic composition update, so treat it as unverified rather than known-good.
 - **Reorder / add are supported by the protocol; remove is not, directly.** A2UI v0.9 defines `updateComponents` as _adding to or updating_ components in a surface (adjacency list via `children`); reordering the facet-manager `children` and adding a new facet node fit that contract, and `FacetManagerRenderer` already re-renders from its resolved `children` `ChildList`. There is no component-removal primitive: dropping a facet means emitting a `children` list without its id (the orphaned node lingers in the surface) or recreating the surface via `deleteSurface` + `createSurface`.
 
 This is out of scope for the static switchover; capture it before wiring dynamic facet composition.
 
 ### Temporary workarounds (to remove when upstream dependencies evolve)
 
-| Item                    | Description                                                                                                                            | Remove when                                                |
-| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| **v1.0 → v0.9 adapter** | The `convertV1ToV09` shim in `surfaces.tsx` can be deleted once the renderer supports v1.0 natively.                                   | `@copilotkit/a2ui-renderer` supports v1.0 MessageProcessor |
-| **Zod 4 type casts**    | `asCatalogDefinitions` / `asCatalogRenderers` bridge helpers in `components.tsx` due to Zod version mismatch.                          | `@copilotkit/a2ui-renderer` upgrades to Zod 4              |
-| **Skeleton detection**  | Three detection mechanisms coexist (see section above). Only `store_render_plan` tool calls are active; the other two are speculative. | Backend team standardizes skeleton contract                |
+| Item                      | Description                                                                                                                               | Remove when                                                         |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| **v1.0 → v0.9 downgrade** | Now owned by `@coveo/thermidor` (`response.a2uiMessages`); removable there once a v1.0-capable renderer exists. See the ADR-015 addendum. | `@a2ui/web_core` ships a `v1_0` subpath AND the renderer imports it |
+| **Zod 4 type casts**      | `asCatalogDefinitions` / `asCatalogRenderers` bridge helpers in `components.tsx` due to Zod version mismatch.                             | `@copilotkit/a2ui-renderer` upgrades to Zod 4                       |
+| **Skeleton detection**    | Three detection mechanisms coexist (see section above). Only `store_render_plan` tool calls are active; the other two are speculative.    | Backend team standardizes skeleton contract                         |
 
 ### Consumer DX improvements (simplify what the consumer must implement)
 
-| Item                                                          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Owner                |
-| ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
-| **Extract surface parsing into thermidor**                    | `src/a2ui/types.ts` contains raw A2-UI surface parsing logic (with `as unknown as` casts) that should live in `@coveo/thermidor` rather than in the sample. Consumers should not need to parse surfaces manually — the lib should expose typed utilities.                                                                                                                                                                                                         | `packages/thermidor` |
-| **Provide a high-level surface extraction utility**           | The consumer must replicate the logic in `src/a2ui/surfaces.tsx` (`getA2UIMessages`): filter activities by kind, handle per-activity-id replacement, and extract A2-UI operations. A framework-agnostic utility (e.g. `extractA2UISurfaces(activities)`) exported by thermidor would encapsulate this. The React rendering component (`ThermidorA2UISurfaces`) would remain in the consumer application.                                                          | `packages/thermidor` |
-| **Extract surface-derivation helpers into thermidor**         | `findSurface` / `findCommerceSurfaceId` (scan a turn's activities for the first A2-UI `createSurface` and return its `surfaceType` / `surfaceId`) live in `src/hooks/use-navigation.ts`. A framework-agnostic utility (e.g. `findSurface(activities)` / `findCommerceSurfaceId(activities)`) exported by thermidor would let the consumer reuse the scan; the consumer's navigation logic (`deriveTransitionAction`, `useNavigation`) would remain in the sample. | `packages/thermidor` |
-| **Export skeleton detection logic**                           | The consumer must parse reasoning steps, map `store_render_plan` routes to component types, and manage skeleton/real-surface subtraction. A framework-agnostic utility (e.g. `computeSkeletons(reasoningSteps, surfaces)`) exported by thermidor would encapsulate this. The React hook wrapper would remain in the consumer application.                                                                                                                         | `packages/thermidor` |
-| **~~Simplify component subscription ergonomics~~ (obsolete)** | Superseded by the inline-state model. The `StateSourceProvider` / `useRemoteController(stateSource, componentId, componentType)` subscription path was removed; renderers are dumb and read resolved values from `props`, so there is no subscription boilerplate left to simplify.                                                                                                                                                                               | —                    |
-| **~~Friendlier type aliases for consumers~~ (obsolete)**      | Superseded by the inline-state model. The `RemoteController`, `RemoteControllerSource`, and `RemoteControllerStateForSchema` exports were removed from `@coveo/thermidor`; consumers type renderers with the per-component `XxxProps` / `XxxAction` contract from `@coveo/thermidor-schema` (bridged locally via `TypedRendererProps`).                                                                                                                           | —                    |
-| **Inline nested state in BundleDisplay contract**             | Resolved: `BundleDisplay` no longer reads other components' state via a cross-component identity join. Each tier slot carries its mounted child id (`childId`) and the renderer mounts the child via `children(slot.childId)`, so BundleDisplay reads only its own resolved `props`. Kept here to note the design intent that each component is self-contained.                                                                                                   | Backend              |
+| Item                                                           | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Owner                |
+| -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
+| **Extract surface parsing into thermidor**                     | `src/a2ui/types.ts` contains raw A2-UI surface parsing logic (with `as unknown as` casts) that should live in `@coveo/thermidor` rather than in the sample. Consumers should not need to parse surfaces manually — the lib should expose typed utilities.                                                                                                                                                                                                         | `packages/thermidor` |
+| ~~**Provide a high-level surface extraction utility**~~ (done) | Delivered as `response.a2uiMessages`: thermidor filters activities by kind, applies per-activity-id replacement, and emits a renderer-ready v0.9 stream. The React rendering component (`ThermidorA2UISurfaces`) remains in the consumer application.                                                                                                                                                                                                             | `packages/thermidor` |
+| **Extract surface-derivation helpers into thermidor**          | `findSurface` / `findCommerceSurfaceId` (scan a turn's activities for the first A2-UI `createSurface` and return its `surfaceType` / `surfaceId`) live in `src/hooks/use-navigation.ts`. A framework-agnostic utility (e.g. `findSurface(activities)` / `findCommerceSurfaceId(activities)`) exported by thermidor would let the consumer reuse the scan; the consumer's navigation logic (`deriveTransitionAction`, `useNavigation`) would remain in the sample. | `packages/thermidor` |
+| **Export skeleton detection logic**                            | The consumer must parse reasoning steps, map `store_render_plan` routes to component types, and manage skeleton/real-surface subtraction. A framework-agnostic utility (e.g. `computeSkeletons(reasoningSteps, surfaces)`) exported by thermidor would encapsulate this. The React hook wrapper would remain in the consumer application.                                                                                                                         | `packages/thermidor` |
+| **~~Simplify component subscription ergonomics~~ (obsolete)**  | Superseded by the inline-state model. The `StateSourceProvider` / `useRemoteController(stateSource, componentId, componentType)` subscription path was removed; renderers are dumb and read resolved values from `props`, so there is no subscription boilerplate left to simplify.                                                                                                                                                                               | —                    |
+| **~~Friendlier type aliases for consumers~~ (obsolete)**       | Superseded by the inline-state model. The `RemoteController`, `RemoteControllerSource`, and `RemoteControllerStateForSchema` exports were removed from `@coveo/thermidor`; consumers type renderers with the per-component `XxxProps` / `XxxAction` contract from `@coveo/thermidor-schema` (bridged locally via `TypedRendererProps`).                                                                                                                           | —                    |
+| **Inline nested state in BundleDisplay contract**              | Resolved: `BundleDisplay` no longer reads other components' state via a cross-component identity join. Each tier slot carries its mounted child id (`childId`) and the renderer mounts the child via `children(slot.childId)`, so BundleDisplay reads only its own resolved `props`. Kept here to note the design intent that each component is self-contained.                                                                                                   | Backend              |
 
 ### Nice-to-have (non-blocking improvements)
 

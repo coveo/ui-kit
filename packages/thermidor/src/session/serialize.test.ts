@@ -8,9 +8,11 @@ import {
   type SerializedSession,
 } from './serialize.js';
 import type {SessionStoreState} from './store.js';
-import type {Turn} from './types.js';
+import type {Turn, TurnResponse} from './types.js';
 
-function turn(overrides: Partial<Turn> & Pick<Turn, 'id'>): Turn {
+function turn(
+  overrides: Omit<Partial<Turn>, 'response'> & Pick<Turn, 'id'> & {response?: Partial<TurnResponse>}
+): Turn {
   return {
     id: overrides.id,
     input: overrides.input ?? {},
@@ -19,6 +21,7 @@ function turn(overrides: Partial<Turn> & Pick<Turn, 'id'>): Turn {
       state: {},
       activities: [],
       surfaces: [],
+      a2uiMessages: [],
       ...overrides.response,
     },
     ...(overrides.error !== undefined ? {error: overrides.error} : {}),
