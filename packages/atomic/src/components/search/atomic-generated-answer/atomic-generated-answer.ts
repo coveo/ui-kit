@@ -499,6 +499,10 @@ export class AtomicGeneratedAnswer extends LitElement implements InitializableCo
       this.controller.writeStoredData(this.controller.data);
     }
 
+    if (!this.shouldAnnounceAnswerStatus) {
+      return;
+    }
+
     const status = this.controller.getGeneratedAnswerStatus();
     if (this.controller.isStatusAssertive()) {
       this.ariaMessage.message = '';
@@ -508,6 +512,13 @@ export class AtomicGeneratedAnswer extends LitElement implements InitializableCo
       this.ariaMessage.message = status;
     }
   };
+
+  private get shouldAnnounceAnswerStatus() {
+    // In conversational mode each turn is rendered by atomic-generated-answer-content, which
+    // announces its own state. Announcing here as well would repeat the first answer and still
+    // leave every follow-up silent, since this state only ever describes the first answer.
+    return !this.areFollowUpsEnabled;
+  }
 
   private get hasNoAnswerGenerated() {
     return this.controller.hasNoAnswerGenerated;
