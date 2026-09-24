@@ -1,3 +1,9 @@
+## 3.57.1
+
+### Patch Changes
+
+- [#8516](https://github.com/coveo/ui-kit/pull/8516) [`3c4e3d2`](https://github.com/coveo/ui-kit/commit/3c4e3d2567eb327d3a79caf2e10b915a5a2a6a46) - Fix an issue in commerce where a manually set numeric facet range persisted and was still sent in subsequent queries after clearing filters (e.g. via a search box submission), even though it had been removed from the URL parameters.
+
 ## 3.57.0
 
 ### Minor Changes
