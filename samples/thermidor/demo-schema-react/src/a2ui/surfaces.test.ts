@@ -47,7 +47,7 @@ describe('getA2UIMessages', () => {
     ).toEqual([updatedVersion]);
   });
 
-  it('converts v1.0 messages to v0.9 format', () => {
+  it('converts Agent Smith v1.0 composition without embedding component state', () => {
     const result = getA2UIMessages([
       {
         id: 'activity-1',
@@ -59,7 +59,17 @@ describe('getA2UIMessages', () => {
               version: 'v1.0',
               createSurface: {
                 surfaceId: 'my-surface',
-                components: [{id: 'root', component: 'ProductCarousel', props: {controllers: {}}}],
+                catalogId: 'https://agent-gateway.coveo.com/a2ui/commerce/v1/catalog.json',
+                components: [
+                  {
+                    id: 'root',
+                    component: 'ProductCarousel',
+                    props: {
+                      componentId: 'my-surface:product-carousel',
+                      componentType: 'product-carousel',
+                    },
+                  },
+                ],
               },
             },
           ],
@@ -67,12 +77,25 @@ describe('getA2UIMessages', () => {
       },
     ]);
 
-    expect(result[0]).toEqual({version: 'v0.9', createSurface: {surfaceId: 'my-surface'}});
+    expect(result[0]).toEqual({
+      version: 'v0.9',
+      createSurface: {
+        surfaceId: 'my-surface',
+        catalogId: 'https://agent-gateway.coveo.com/a2ui/commerce/v1/catalog.json',
+      },
+    });
     expect(result[1]).toEqual({
       version: 'v0.9',
       updateComponents: {
         surfaceId: 'my-surface',
-        components: [{id: 'root', component: 'ProductCarousel', controllers: {}}],
+        components: [
+          {
+            id: 'root',
+            component: 'ProductCarousel',
+            componentId: 'my-surface:product-carousel',
+            componentType: 'product-carousel',
+          },
+        ],
       },
     });
   });
