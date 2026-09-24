@@ -29,7 +29,7 @@ export interface UpdateDataModelOperation {
  * Reason an operation could not be resolved to a present component's state
  * subtree.
  */
-export type OperationRejectionReason =
+type OperationRejectionReason =
   /** The path does not lie within the server-owned `/state` namespace. */
   | 'outside-state-namespace'
   /** The path is the bare `/state` root with no component id segment. */
@@ -43,7 +43,7 @@ export type OperationRejectionReason =
 /**
  * Successful resolution: the op targets a present component's state subtree.
  */
-export interface ResolvedOperation {
+interface ResolvedOperation {
   readonly resolved: true;
   /** The present node id whose state subtree the op targets. */
   readonly nodeId: string;
@@ -59,7 +59,7 @@ export interface ResolvedOperation {
  * Failed resolution: the op does not target any present component's state
  * subtree. The caller leaves the data model unchanged.
  */
-export interface RejectedOperation {
+interface RejectedOperation {
   readonly resolved: false;
   /** The op path that could not be resolved. */
   readonly unresolvedPath: string;

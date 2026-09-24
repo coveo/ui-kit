@@ -71,7 +71,7 @@ export type InTransitDecision =
   | {readonly kind: 'drop'; readonly reason: InTransitDropReason};
 
 /** Why an op was dropped, for a dev-only diagnostic. */
-export type InTransitDropReason =
+type InTransitDropReason =
   /** `resolveOperation` rejected the path (outside `/state`, unknown/absent id). */
   | 'unresolved-path'
   /** No node-identity entry for the resolved node id (surface not yet folded). */

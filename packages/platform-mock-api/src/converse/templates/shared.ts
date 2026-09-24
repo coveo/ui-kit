@@ -171,13 +171,10 @@ function buildValidatedSurface({
 export {
   CATALOG_ID,
   RENDERER_ROOT_ID,
-  STATE_NAMESPACE,
-  jsonPointerEscape,
   statePath,
-  stateFieldPath,
   bindStateFields,
   buildConversationResponse,
   buildRoutedResponse,
   buildValidatedSurface,
 };
-export type {A2uiComponentNode, DataBinding};
+export type {A2uiComponentNode};

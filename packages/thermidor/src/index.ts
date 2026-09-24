@@ -20,7 +20,13 @@ export {createSession} from '@/src/session/create-session.js';
 export type {Session, SessionConfig, A2uiClientMessage} from '@/src/session/create-session.js';
 
 // ── Injected-contract type (the runtime's decoupling seam) ───────────────────
-export type {ContractsSchema, ComponentContractSchema} from '@/src/session/contracts.js';
+export type {
+  ContractsSchema,
+  ComponentContractSchema,
+  ParsableSchema,
+  SafeParseResult,
+  ParseIssue,
+} from '@/src/session/contracts.js';
 
 // ── Client-owned context config types ───────────────────────────────────────
 export type {
