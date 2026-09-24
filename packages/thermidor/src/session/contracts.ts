@@ -17,6 +17,28 @@
  * `z.object({ component: z.literal(...), state?, actions? })`, and every field
  * the seam reads (`options`, `shape.component.value`, `shape.state`,
  * `shape.actions`, `safeParse`) is present on it.
+ *
+ * ## Zod-major independence
+ *
+ * Every member this seam reads is part of Zod's STABLE PUBLIC API and behaves
+ * identically in Zod 3 and Zod 4:
+ *
+ *   - `.options` on a discriminated union,
+ *   - `.shape` on an object schema,
+ *   - `.value` on a literal,
+ *   - `.unwrap()` on an optional,
+ *   - `.safeParse(value)` and its `{success, data} | {success, error.issues}` result.
+ *
+ * No Zod internal (`_def`, `typeName`, ...) is ever touched. That is why the
+ * `zod` peerDependency spans both majors (`^3.25 || ^4`): a consumer may inject
+ * a contract built from a Zod-3 schema build (`@coveo/thermidor-schema/zod3`)
+ * or the default Zod-4 build and the core behaves the same. `zod-major-compat.test.ts`
+ * pins this by running one logical contract, built in both dialects, through the
+ * inbound and outbound validators.
+ *
+ * (Precedent in this package: `@ag-ui/core` ships its own Zod 3 and the
+ * `EventSchemas.safeParse` call in `sse-parser.ts` already crosses that major
+ * boundary unchanged.)
  */
 
 /**
