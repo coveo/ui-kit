@@ -3,7 +3,7 @@ import {describe, expect, it} from 'vitest';
 import {convertV1ToV09, getA2UIMessages} from './surfaces.js';
 
 describe('getA2UIMessages', () => {
-  it('passes raw A2-UI operations through from multiple activities', () => {
+  it('passes already-v0.9 messages through from multiple activities', () => {
     const operation1 = {version: 'v0.9', createSurface: {surfaceId: 'surface-1'}};
     const operation2 = {version: 'v0.9', createSurface: {surfaceId: 'surface-2'}};
 
@@ -13,13 +13,13 @@ describe('getA2UIMessages', () => {
           id: 'activity-1',
           kind: 'a2ui-surface',
           replace: false,
-          payload: {a2ui_operations: [operation1]},
+          payload: {messages: [operation1]},
         },
         {
           id: 'activity-2',
           kind: 'a2ui-surface',
           replace: false,
-          payload: {a2ui_operations: [operation2]},
+          payload: {messages: [operation2]},
         },
       ])
     ).toEqual([operation1, operation2]);
@@ -35,13 +35,13 @@ describe('getA2UIMessages', () => {
           id: 'activity-1',
           kind: 'a2ui-surface',
           replace: false,
-          payload: {a2ui_operations: [firstVersion]},
+          payload: {messages: [firstVersion]},
         },
         {
           id: 'activity-1',
           kind: 'a2ui-surface',
           replace: true,
-          payload: {a2ui_operations: [updatedVersion]},
+          payload: {messages: [updatedVersion]},
         },
       ])
     ).toEqual([updatedVersion]);

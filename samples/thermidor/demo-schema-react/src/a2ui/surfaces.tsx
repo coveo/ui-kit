@@ -6,32 +6,39 @@
  *
  * ## Why the conversion exists
  *
- * The backend emits v1.0 messages: a single `createSurface` carrying its `components[]` inline.
- * `@copilotkit/a2ui-renderer` (v1.61) only understands v0.9 messages (`createSurface` for the
- * surface lifecycle + a separate `updateComponents` carrying the component nodes).
+ * Agent Gateway emits A2-UI v1.0 exclusively: a single `createSurface` carrying its
+ * `components[]` inline. Every renderer available to us is v0.9 —
+ * `@copilotkit/a2ui-renderer`'s React path builds its `MessageProcessor` from
+ * `@a2ui/web_core/v0_9`, and `@a2ui/web_core@0.9.0` publishes no `v1_0` subpath. So a
+ * downgrade has to happen somewhere on the client, and today it happens here.
  *
- * The `convertV1ToV09` adapter translates each v1.0 message into the equivalent v0.9
- * messages so the MessageProcessor can create surfaces and resolve catalog renderers.
+ * ## What is load-bearing, and what is cosmetic
  *
- * ## What the conversion preserves
+ * Exactly one transformation makes rendering work: **splitting v1.0's single
+ * `createSurface` into `createSurface` + `updateComponents`**. The v0.9
+ * `processCreateSurfaceMessage` destructures only
+ * `{ surfaceId, catalogId, theme, sendDataModel }` from the operation, so a surface's
+ * inline `components[]` are silently discarded unless they are re-delivered under a
+ * separate `updateComponents` operation.
  *
- * Under the flat A2-UI v1.0 node model a node carries a single `id`/`component` identity plus its
- * presentation values, A2-UI Data_Binding objects (`{ "path": <JSON Pointer> }`), and composition
- * links directly at the top level — there is no `props` wrapper, which is already the shape the
- * v0.9 renderer mounts. The conversion:
+ * The `version` string rewriting is **cosmetic**. `processMessage` dispatches purely on
+ * which operation key is present — it never reads `version`, and stamps `version: 'v0.9'`
+ * onto its own normalized output regardless of what arrived. The rewrite is kept only so
+ * the message stream is legible as v0.9 when inspected in devtools or test fixtures.
  *
- * - forwards each flat node as-is (only remapping the declared root id to `"root"`), carrying every
- *   `{ "path": ... }` binding through byte-for-byte so the binder can resolve it against the A2-UI
- *   data model, and never synthesizing an identity correlation (`componentId`/`componentType`);
- * - passes `updateDataModel` ops through unchanged (only the version is bumped to v0.9), so
- *   the renderer applies each `{ surfaceId, path, value }` op to its own data model and
- *   re-resolves the affected `{ path }` bindings;
- * - rejects any message it cannot convert by leaving it out of the v0.9 stream (renderer
- *   state stays unchanged) so a malformed message never corrupts a surface.
+ * Everything else is pass-through. Under the flat A2-UI v1.0 node model a node carries a
+ * single `id`/`component` identity plus its presentation values, A2-UI Data_Binding objects
+ * (`{ "path": <JSON Pointer> }`), and composition links directly at the top level — there is
+ * no `props` wrapper, which is already the shape the v0.9 renderer mounts. So nodes are
+ * forwarded byte-for-byte, `updateDataModel` ops pass through for the renderer to apply to
+ * its own data model, and a message carrying no recognized operation is dropped rather than
+ * forwarded, so a malformed message can never corrupt a surface.
  *
- * ## When @copilotkit/a2ui-renderer supports v1.0
+ * ## When the renderer supports v1.0
  *
- * Once the renderer natively understands v1.0, remove the conversion:
+ * The removal trigger is specific: `@a2ui/web_core` publishes a `./v1_0` subpath (or its
+ * `v0_9` `MessageProcessor` learns to read inline `components[]`) **and**
+ * `@copilotkit/a2ui-renderer` imports it. Neither is true today. Once both are:
  *
  * 1. Delete the `convertV1ToV09` function
  * 2. In `getA2UIMessages`, pass v1.0 messages directly (remove the conversion loop):
@@ -54,20 +61,27 @@ type A2UIMessage = Record<string, unknown>;
  * that the @copilotkit/a2ui-renderer MessageProcessor can understand.
  *
  * Conversion rules:
- * - `createSurface` (v1.0) → `createSurface` + `updateComponents` (v0.9)
- *   - v1.0 nodes are already FLAT (each node carries its presentation values, `{ "path": ... }`
- *     Data_Binding objects, and composition links directly at the top level — there is no
- *     `props` wrapper) AND already mount the canonical `root` node (id: "root"), which is exactly
- *     the shape the v0.9 renderer expects. Nodes are therefore forwarded as-is, preserving the
- *     single `id`/`component` identity byte-for-byte (no `componentId`/`componentType` is ever
- *     introduced). The v1.0 envelope carries no `rootId`, so no root remap is performed.
- * - `updateDataModel` passes through carrying its `{ surfaceId, path, value }` unchanged
- *   (only the version is bumped to v0.9); the renderer applies it to its data model
- * - `updateComponents` / `deleteSurface` → same shape, version changed to v0.9
+ * - `createSurface` (v1.0) → `createSurface` + `updateComponents` (v0.9). This split is the
+ *   only load-bearing part of the conversion: the v0.9 `processCreateSurfaceMessage` reads
+ *   only `{ surfaceId, catalogId, theme, sendDataModel }`, so inline `components[]` must be
+ *   re-delivered under a separate `updateComponents` or they are silently dropped.
+ *   v1.0 nodes are already FLAT (each node carries its presentation values, `{ "path": ... }`
+ *   Data_Binding objects, and composition links directly at the top level — there is no
+ *   `props` wrapper) AND already mount the canonical `root` node (id: "root"), which is exactly
+ *   the shape the v0.9 renderer expects. Nodes are therefore forwarded as-is, preserving the
+ *   single `id`/`component` identity byte-for-byte (no `componentId`/`componentType` is ever
+ *   introduced). The v1.0 envelope carries no `rootId`, so no root remap is performed.
+ * - `updateDataModel` passes through carrying its `{ surfaceId, path, value }` unchanged;
+ *   the renderer applies it to its data model
+ * - `updateComponents` / `deleteSurface` → same shape
  * - a v1.0 message carrying no recognized operation is unconvertible and is REJECTED
  *   (dropped), so it never reaches the renderer and cannot mutate its state
  *
- * @deprecated Remove when @copilotkit/a2ui-renderer supports v1.0 natively.
+ * The emitted `version: 'v0.9'` is cosmetic — `processMessage` dispatches on the operation key
+ * alone and stamps its own version — and is kept only for legibility of the message stream.
+ *
+ * @deprecated Remove when a v1.0-capable renderer is available; see the module doc for the
+ * precise removal trigger.
  */
 export function convertV1ToV09(message: Record<string, unknown>): A2UIMessage[] {
   if (message['version'] !== 'v1.0') {
@@ -118,7 +132,13 @@ export function convertV1ToV09(message: Record<string, unknown>): A2UIMessage[] 
   return [];
 }
 
-/** Extracts A2-UI messages from activities, converting v1.0 to v0.9 for the renderer. */
+/**
+ * Extracts A2-UI messages from activities, converting v1.0 to v0.9 for the renderer.
+ *
+ * Surface-bearing activities carry their A2-UI sequence under `payload.messages`. Messages that
+ * do not declare `version: 'v1.0'` are forwarded verbatim by {@link convertV1ToV09}, so an
+ * already-v0.9 stream needs no special handling here.
+ */
 export function getA2UIMessages(activities: Activity[] | undefined): A2UIMessage[] {
   if (!activities) {
     return [];
@@ -134,22 +154,6 @@ export function getA2UIMessages(activities: Activity[] | undefined): A2UIMessage
     }
 
     const activityId = activity.id;
-
-    // v0.9 format: a2ui_operations array (pass through as-is)
-    const operations = activity.payload['a2ui_operations'];
-    if (Array.isArray(operations)) {
-      if (activity.replace) {
-        messagesByActivityId.set(activityId, operations.filter(isRecord));
-      } else {
-        const existing = messagesByActivityId.get(activityId) ?? [];
-        existing.push(...operations.filter(isRecord));
-        messagesByActivityId.set(activityId, existing);
-      }
-      if (!activityOrder.includes(activityId)) {
-        activityOrder.push(activityId);
-      }
-      continue;
-    }
 
     // v1.0 format: messages array — convert to v0.9 before passing to renderer
     const v1Messages = activity.payload['messages'];
