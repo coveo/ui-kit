@@ -99,6 +99,7 @@ describe('BundleDisplayRenderer mounts only the active tier slot childIds in ord
   const tierArb = fc.record({
     label: fc.string({minLength: 1, maxLength: 12}),
     description: fc.string({maxLength: 20}),
+    total: fc.float({min: 0, max: 10000, noNaN: true}),
     slots: fc.uniqueArray(
       fc.record({
         categoryLabel: fc.string({minLength: 1, maxLength: 12}),
