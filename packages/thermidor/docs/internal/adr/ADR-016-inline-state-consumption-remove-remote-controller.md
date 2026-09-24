@@ -43,7 +43,7 @@ rather than let an accepted decision silently drift from the code (charter, ADR-
 
 ## Decision Drivers
 
-- **Do not let an Accepted ADR misdescribe the code (charter MUST):** ADR-013's subject
+- **Do not let an Accepted ADR misrepresent the code (charter MUST):** ADR-013's subject
   (`session.remoteController`, `buildRemoteController`, `RemoteControllerSource`) was removed; the
   record must be superseded, not left standing.
 - **Standard alignment:** component data now travels through the A2-UI data model, so the client
