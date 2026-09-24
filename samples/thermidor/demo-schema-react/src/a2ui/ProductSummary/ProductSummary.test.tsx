@@ -1,6 +1,6 @@
 import {describe, expect, it, afterEach} from 'vitest';
 import {render, screen, cleanup} from '@testing-library/react';
-import type {ProductSummaryProps} from '@coveo/thermidor-schema';
+import type {ProductSummaryProps} from '@coveo/thermidor-schema/zod3';
 import {ProductSummaryRenderer} from './ProductSummary.js';
 
 function renderSummary(props: ProductSummaryProps) {

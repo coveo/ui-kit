@@ -1,6 +1,6 @@
 import {describe, it, expect} from 'vitest';
 import {render, screen} from '@testing-library/react';
-import type {QuerySummaryProps} from '@coveo/thermidor-schema';
+import type {QuerySummaryProps} from '@coveo/thermidor-schema/zod3';
 import {QuerySummaryRenderer} from './QuerySummary.js';
 
 function renderSummary(props: QuerySummaryProps) {

@@ -1,7 +1,7 @@
 import fc from 'fast-check';
 import {describe, expect, it} from 'vitest';
 import {render, screen, cleanup} from '@testing-library/react';
-import type {ProductListProps, ProductSummaryProps} from '@coveo/thermidor-schema';
+import type {ProductListProps, ProductSummaryProps} from '@coveo/thermidor-schema/zod3';
 import {TargetingProvider, type TargetingContext} from '../context/targeting.js';
 import {ProductListRenderer} from './ProductList/ProductList.js';
 import {ProductSummaryRenderer} from './ProductSummary/ProductSummary.js';

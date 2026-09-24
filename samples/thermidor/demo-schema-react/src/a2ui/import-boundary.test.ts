@@ -1,7 +1,7 @@
 import {readdirSync, readFileSync, statSync} from 'node:fs';
 import {join, resolve} from 'node:path';
 import {describe, expect, it} from 'vitest';
-import * as thermidorSchema from '@coveo/thermidor-schema';
+import * as thermidorSchema from '@coveo/thermidor-schema/zod3';
 import * as thermidor from '@coveo/thermidor';
 
 const srcRoot = resolve(process.cwd(), 'src');

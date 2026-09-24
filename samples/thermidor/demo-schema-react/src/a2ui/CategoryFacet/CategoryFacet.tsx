@@ -1,5 +1,5 @@
 import {useCallback, useId} from 'react';
-import type {CategoryFacetProps, CategoryFacetAction} from '@coveo/thermidor-schema';
+import type {CategoryFacetProps, CategoryFacetAction} from '@coveo/thermidor-schema/zod3';
 import type {TypedRendererProps} from '../renderer-props.js';
 import {ChevronLeftIcon, SearchIcon} from '../icons/index.js';
 import {useOptimisticFacetSearch} from '../use-optimistic-facet-search.js';

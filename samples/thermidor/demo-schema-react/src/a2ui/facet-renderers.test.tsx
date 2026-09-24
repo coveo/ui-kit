@@ -5,7 +5,7 @@ import type {
   NumericFacetProps,
   CategoryFacetProps,
   FacetManagerProps,
-} from '@coveo/thermidor-schema';
+} from '@coveo/thermidor-schema/zod3';
 import {RegularFacetRenderer} from './RegularFacet/RegularFacet.js';
 import {NumericFacetRenderer} from './NumericFacet/NumericFacet.js';
 import {CategoryFacetRenderer} from './CategoryFacet/CategoryFacet.js';

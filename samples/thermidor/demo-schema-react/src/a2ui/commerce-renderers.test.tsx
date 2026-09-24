@@ -1,6 +1,6 @@
 import {describe, it, expect, vi, afterEach} from 'vitest';
 import {render, screen, fireEvent, cleanup} from '@testing-library/react';
-import type {PaginationProps, SortProps, ProductListProps} from '@coveo/thermidor-schema';
+import type {PaginationProps, SortProps, ProductListProps} from '@coveo/thermidor-schema/zod3';
 import {PaginationRenderer} from './Pagination/Pagination.js';
 import {SortRenderer} from './Sort/Sort.js';
 import {ProductListRenderer} from './ProductList/ProductList.js';

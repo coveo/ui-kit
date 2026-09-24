@@ -1,5 +1,5 @@
 import {useId} from 'react';
-import type {PageSizeProps, PageSizeAction} from '@coveo/thermidor-schema';
+import type {PageSizeProps, PageSizeAction} from '@coveo/thermidor-schema/zod3';
 import type {TypedRendererProps} from '../renderer-props.js';
 import styles from './PageSize.module.css';
 

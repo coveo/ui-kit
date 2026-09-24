@@ -1,4 +1,4 @@
-import type {Product, ProductListProps} from '@coveo/thermidor-schema';
+import type {Product, ProductListProps} from '@coveo/thermidor-schema/zod3';
 import type {TypedRendererProps} from '../renderer-props.js';
 import styles from './ProductList.module.css';
 

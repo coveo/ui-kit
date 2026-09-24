@@ -1,6 +1,6 @@
 import {useState, useRef, useEffect, useCallback} from 'react';
 
-import type {Product, ProductCarouselProps} from '@coveo/thermidor-schema';
+import type {Product, ProductCarouselProps} from '@coveo/thermidor-schema/zod3';
 import type {TypedRendererProps} from '../renderer-props.js';
 import {A2UIProductCard} from '../ProductCard/ProductCard.js';
 import styles from './ProductCarousel.module.css';

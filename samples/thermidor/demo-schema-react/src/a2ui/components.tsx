@@ -41,19 +41,24 @@ import {QuerySummaryRenderer} from './QuerySummary/QuerySummary.js';
 import {PageSizeRenderer} from './PageSize/PageSize.js';
 
 /**
- * Reconciles the Zod type IDENTITY between the two Zod 3 installs.
+ * Reconciles the Zod type IDENTITY between two Zod 3 installs.
  *
- * The prop schemas now arrive already in the dialect the binder reads, from
- * `@coveo/thermidor-schema/zod3` — no runtime rebuild happens here anymore. What
- * remains is purely a compile-time concern: the schema package builds its Zod 3
- * schemas with its own Zod install, while `@copilotkit/a2ui-renderer` types
- * `CatalogDefinitions` against the copy in its own dependency subtree. The two are
- * structurally identical but nominally distinct to the compiler.
+ * Every schema import in this sample comes from `@coveo/thermidor-schema/zod3`, so
+ * there is no Zod 3-vs-Zod 4 conversion left anywhere — the prop schemas arrive in
+ * the dialect the binder reads and no runtime rebuild happens.
+ *
+ * What remains is purely nominal. The schema package builds with its own Zod, while
+ * `@copilotkit/a2ui-renderer` types `CatalogDefinitions` against the copy in its own
+ * dependency subtree. Zod 3's `ZodObject` declares a PRIVATE member (`_cached`), and
+ * TypeScript only considers types with private members assignable when those members
+ * originate from the same declaration. Two structurally identical `ZodObject` types
+ * from two installs are therefore never assignable, no matter how the schemas are
+ * written.
  *
  * The binder itself matches structurally (on `_def.typeName`) precisely to avoid
  * dual-module identity problems, so this is a types-only bridge with no runtime
- * behaviour. It disappears once the renderer and the schema resolve a single shared
- * Zod install.
+ * behaviour. It can only disappear once the renderer and the schema resolve a single
+ * shared Zod install.
  */
 function asCatalogDefinitions<
   T extends Record<string, {description?: string; props: unknown}>,
@@ -62,10 +67,10 @@ function asCatalogDefinitions<
 }
 
 /**
- * Converts Zod 4 catalog renderers to the Zod 3 CatalogRenderers type
- * expected by @copilotkit/a2ui-renderer. Validates structure at compile time.
+ * Bridges the catalog renderers to the renderer package's `CatalogRenderers` type.
  *
- * @deprecated Remove when @copilotkit/a2ui-renderer upgrades to Zod 4.
+ * Same nominal cause as {@link asCatalogDefinitions}: the renderer type is derived
+ * from definitions typed against a different Zod install.
  */
 function asCatalogRenderers<T extends Record<string, React.FC<any>>>(
   renderers: T

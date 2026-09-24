@@ -1,6 +1,6 @@
 import {describe, it, expect, vi} from 'vitest';
 import {render, screen, fireEvent} from '@testing-library/react';
-import type {PageSizeProps} from '@coveo/thermidor-schema';
+import type {PageSizeProps} from '@coveo/thermidor-schema/zod3';
 import {PageSizeRenderer} from './PageSize.js';
 
 type ResolvedProps = PageSizeProps;
