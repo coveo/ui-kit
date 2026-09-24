@@ -1,6 +1,6 @@
 {
   "name": "@coveo/headless-react",
-  "version": "2.10.0",
+  "version": "2.10.1",
   "description": "React utilities for SSR (Server Side Rendering) with headless",
   "keywords": [
     "headless",
