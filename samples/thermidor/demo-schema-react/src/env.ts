@@ -1,3 +1,5 @@
+import {PUBLIC_SAMPLE_CONFIGURATION} from './public-sample-configuration.js';
+
 type RequiredEnvKey =
   | 'VITE_COVEO_ORGANIZATION_ID'
   | 'VITE_COVEO_TRACKING_ID'
@@ -23,9 +25,21 @@ function parseBoolean(value: string | undefined): boolean | undefined {
   return undefined;
 }
 
+/**
+ * True when nothing is configured, in which case the sample falls back to
+ * {@link PUBLIC_SAMPLE_CONFIGURATION} wholesale.
+ */
+function isUsingPublicSampleConfiguration(): boolean {
+  return getOptionalEnvValue('VITE_COVEO_ORGANIZATION_ID') === undefined;
+}
+
 function getRequiredEnvValue(key: RequiredEnvKey): string {
   const value = import.meta.env[key];
   if (!value) {
+    if (isUsingPublicSampleConfiguration()) {
+      return PUBLIC_SAMPLE_CONFIGURATION[key];
+    }
+
     throw new Error(`Missing required environment variable: ${key}`);
   }
 
@@ -46,6 +60,10 @@ function resolvePlatformEnvironment(): PlatformEnvironment {
   const candidate = getOptionalEnvValue('VITE_COVEO_PLATFORM_ENVIRONMENT');
   if (candidate === 'prod' || candidate === 'dev' || candidate === 'stg' || candidate === 'hipaa') {
     return candidate;
+  }
+
+  if (isUsingPublicSampleConfiguration()) {
+    return PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_PLATFORM_ENVIRONMENT;
   }
 
   return 'dev';
@@ -94,7 +112,11 @@ export function getSampleConfiguration() {
   return {
     organizationId,
     // Optional: mock mode does not use it. For a live backend, set VITE_COVEO_ACCESS_TOKEN.
-    accessToken: getOptionalEnvValue('VITE_COVEO_ACCESS_TOKEN') ?? '',
+    accessToken:
+      getOptionalEnvValue('VITE_COVEO_ACCESS_TOKEN') ??
+      (isUsingPublicSampleConfiguration()
+        ? PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_ACCESS_TOKEN
+        : ''),
     trackingId: getRequiredEnvValue('VITE_COVEO_TRACKING_ID'),
     language: getRequiredEnvValue('VITE_COVEO_LANGUAGE'),
     country: getRequiredEnvValue('VITE_COVEO_COUNTRY'),

@@ -7,6 +7,21 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Resolve preview templates
+      shell: bash
+      run: |
+        # The directories published as StackBlitz templates, so a reviewer gets a
+        # live app per preview. Declared once here and consumed by both the
+        # catalog-flattening step and the publish step, so the two cannot disagree
+        # about what counts as a template.
+        #
+        # A single brace pattern rather than repeated `--template` flags:
+        # pkg-pr-new declares `--template` as a string and expands it with glob, so
+        # one value is unambiguously correct, whereas repeating the flag would rely
+        # on the CLI collapsing duplicates into an array.
+        {
+          echo 'PREVIEW_TEMPLATE_PATTERN={packages/pkg-new-template,samples/thermidor/demo-schema-react}'
+        } >> "$GITHUB_ENV"
     - name: Resolve preview package paths
       id: resolve
       shell: bash
@@ -31,10 +46,10 @@ runs:
         done <<< "$PACKAGE_PATHS"
 
         pnpm exec turbo run build "${filters[@]}"
-    - name: Resolve catalog references in pkg.pr.new templates
+    - name: Prepare pkg.pr.new templates
       if: ${{ steps.resolve.outputs.packages != '' }}
       shell: bash
-      run: node packages/pkg-new-template/scripts/flatten-catalog.mjs
+      run: node packages/pkg-new-template/scripts/prepare-templates.mjs "$PREVIEW_TEMPLATE_PATTERN"
     - name: Publish to pkg.pr.new
       if: ${{ steps.resolve.outputs.packages != '' }}
       shell: bash
@@ -47,5 +62,5 @@ runs:
         done <<< "$PACKAGE_PATHS"
 
         pnpm dlx pkg-pr-new publish --pnpm \
-          --template './packages/pkg-new-template' \
+          --template "$PREVIEW_TEMPLATE_PATTERN" \
           "${package_paths[@]}"
