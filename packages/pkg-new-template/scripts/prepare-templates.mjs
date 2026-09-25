@@ -23,6 +23,7 @@
  */
 
 import {execFileSync} from 'node:child_process';
+import {createRequire} from 'node:module';
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -40,6 +41,71 @@ const TEST_TOOLING_PREFIXES = ['@testing-library/', '@vitest/'];
 
 function isTestTooling(name) {
   return TEST_TOOLING.has(name) || TEST_TOOLING_PREFIXES.some((p) => name.startsWith(p));
+}
+
+/** Strips comments and trailing commas so a tsconfig can be parsed as JSON. */
+function parseJsonc(source) {
+  const withoutComments = source
+    .replace(/\\"|"(?:\\"|[^"])*"|(\/\/.*|\/\*[\s\S]*?\*\/)/g, (match, comment) =>
+      comment ? ' ' : match
+    )
+    .replace(/,(\s*[}\]])/g, '$1');
+  return JSON.parse(withoutComments);
+}
+
+/**
+ * Collapses a tsconfig's `extends` chain into one self-contained file.
+ *
+ * Templates are published as a standalone directory, so a config that reaches
+ * outside it — this sample extends the monorepo root, which in turn extends the
+ * `@tsconfig/node22` package — resolves to nothing once published, and Vite fails
+ * every transform with `Failed to load tsconfig: Tsconfig not found`.
+ *
+ * `compilerOptions` are merged with the extending config winning, matching
+ * TypeScript. Other keys are taken from the extending config only, since `include`
+ * and `exclude` are relative to the file that declares them.
+ */
+function flattenTsconfig(templateDirectory, removedDependencies) {
+  const tsconfigPath = path.join(templateDirectory, 'tsconfig.json');
+  if (!fs.existsSync(tsconfigPath)) {
+    return;
+  }
+
+  const require = createRequire(path.join(templateDirectory, 'noop.js'));
+  const resolveExtends = (specifier, fromDirectory) =>
+    specifier.startsWith('.') ? path.resolve(fromDirectory, specifier) : require.resolve(specifier);
+
+  const read = (configPath) => {
+    const config = parseJsonc(fs.readFileSync(configPath, 'utf8'));
+    if (!config.extends) {
+      return config;
+    }
+
+    const parent = read(resolveExtends(config.extends, path.dirname(configPath)));
+    return {
+      ...config,
+      compilerOptions: {...parent.compilerOptions, ...config.compilerOptions},
+    };
+  };
+
+  const flattened = read(tsconfigPath);
+  if (!flattened.extends) {
+    return;
+  }
+
+  delete flattened.extends;
+  delete flattened.$schema;
+
+  // `types` may name packages that were just removed (e.g. `vitest/globals`).
+  const types = flattened.compilerOptions?.types;
+  if (Array.isArray(types)) {
+    flattened.compilerOptions.types = types.filter(
+      (entry) => !removedDependencies.some((name) => entry === name || entry.startsWith(`${name}/`))
+    );
+  }
+
+  fs.writeFileSync(tsconfigPath, `${JSON.stringify(flattened, null, 2)}\n`);
+  console.log(`${path.basename(templateDirectory)}: inlined tsconfig "extends" chain`);
 }
 
 /** Removes test tooling from a dependency map, returning the names removed. */
@@ -82,8 +148,13 @@ function resolveCatalogEntries(configuration, resolved, packageName) {
 
     const resolvedVersion = resolved[name]?.version;
     if (resolvedVersion) {
-      configuration[name] = `^${resolvedVersion}`;
-      console.log(`${packageName}: resolved ${name} "catalog:" → "^${resolvedVersion}"`);
+      // Pinned exactly, not as a `^` range: the workspace catalog pins exact
+      // versions, so a range would let the template install a version the
+      // workspace never tested. That is not hypothetical — `^1.0.0-beta.5` let npm
+      // take `@coveo/thermidor-schema@1.0.0-beta.6`, whose contracts schema the
+      // sample does not match, and every surface failed to resolve.
+      configuration[name] = resolvedVersion;
+      console.log(`${packageName}: resolved ${name} "catalog:" → "${resolvedVersion}"`);
       resolvedCount += 1;
     } else {
       // A `catalog:` reference we cannot resolve would be published verbatim and
@@ -126,8 +197,10 @@ function flattenTemplate(templateDirectory) {
     delete packageJson.scripts?.[script];
   }
 
+  flattenTsconfig(templateDirectory, removed);
+
   if (resolvedCount === 0 && removed.length === 0) {
-    console.log(`${packageName}: nothing to prepare.`);
+    console.log(`${packageName}: no manifest changes needed.`);
     return;
   }
 
