@@ -135,7 +135,11 @@ themselves.
 ### Why it exists
 
 The two ends of the protocol are pinned one minor version apart with nothing in
-between:
+between — and note the upstream statuses: **v1.0 is a spec Candidate while v0.9.1 is
+Current** ([version index](https://a2ui.org/), [v1.0](https://a2ui.org/specification/v1.0-a2ui/),
+[v0.9.1](https://a2ui.org/specification/v0.9.1-a2ui/)). We generate against the candidate
+while every available renderer implements the current one, which is precisely why this
+compensation is temporary rather than architectural:
 
 - **Agent Gateway emits A2-UI v1.0 exclusively.** `A2uiMessage.VERSION` is `"v1.0"`
   and it throws on any other version, on both construct and parse; its snapshot and
@@ -161,6 +165,20 @@ Something must bridge that gap before a consumer can render anything.
   Unified-API clients.
 - **Selected: derive it once in the fold and expose it on `TurnResponse`.** One
   auditable site, no server change, removable in a package version.
+
+### What the split actually reverses
+
+Inline `components` on `createSurface` is a v1.0 addition. Per the
+[evolution guide](https://a2ui.org/specification/v1.0-evolution-guide/) (§1, §2.3), v1.0
+"allowed passing initial `components` and `dataModel` directly inside the payload", enabling
+"the creation of entire UIs in a single message, rather than a create followed by separate
+updates". v0.9 _is_ that create-then-update shape — its `CreateSurfaceMessageSchema` is
+`.strict()` with no `components` property, so inline nodes are a schema violation there, and
+its runtime handler reads only `{surfaceId, catalogId, theme, sendDataModel}`.
+
+So the projection's one load-bearing transformation is the precise inverse of a documented
+v1.0 change, not an ad-hoc reshuffle. That is what makes the retirement condition below
+mechanical rather than a judgement call.
 
 ### Charter exception (ADR-009)
 

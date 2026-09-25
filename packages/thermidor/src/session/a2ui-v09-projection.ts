@@ -6,10 +6,12 @@
  * exists because the two ends of the protocol are pinned one minor version
  * apart with nothing in between:
  *
- * - Agent Gateway emits A2-UI **v1.0** exclusively. `A2uiMessage.VERSION` is
+ * - Agent Gateway emits A2-UI **v1.0** exclusively — a spec Candidate
+ *   (https://a2ui.org/specification/v1.0-a2ui/). `A2uiMessage.VERSION` is
  *   `"v1.0"` and it throws on any other version, on both construct and parse,
  *   and its snapshot/state path is v1.0-only by construction.
- * - Every renderer available to a consumer is **v0.9**.
+ * - Every renderer available to a consumer is **v0.9**, the Current spec
+ *   (https://a2ui.org/specification/v0.9.1-a2ui/).
  *   `@copilotkit/a2ui-renderer` builds its `MessageProcessor` from
  *   `@a2ui/web_core/v0_9`, and `@a2ui/web_core@0.9.0` publishes no `v1_0`
  *   subpath. There is, today, zero renderer that consumes v1.0.
@@ -30,20 +32,31 @@
  * so nothing downstream of the fold (surface derivation, in-transit
  * `updateDataModel` validation) observes the downgrade.
  *
- * ## What is load-bearing, and what is cosmetic
+ * ## What is load-bearing, and what is not
  *
  * Exactly one transformation makes rendering work: **splitting v1.0's single
- * `createSurface` into `createSurface` + `updateComponents`**. The v0.9
- * `processCreateSurfaceMessage` destructures only
- * `{ surfaceId, catalogId, theme, sendDataModel }` from the operation, so a
- * surface's inline `components[]` are silently discarded unless re-delivered
- * under a separate `updateComponents` operation.
+ * `createSurface` into `createSurface` + `updateComponents`**.
  *
- * The emitted `version: 'v0.9'` is **cosmetic**. `processMessage` dispatches
- * purely on which operation key is present — it never reads `version`, and
- * stamps `version: 'v0.9'` onto its own normalized output regardless of what
- * arrived. It is emitted only so the message stream is legible as v0.9 when
- * inspected in devtools or test fixtures.
+ * This is not an arbitrary reshuffle — it is the exact reversal of the change
+ * v1.0 introduced. The spec's evolution guide
+ * (https://a2ui.org/specification/v1.0-evolution-guide/) lists, for v0.9.1 → v1.0:
+ * "Components and initial data model states can be defined directly within the
+ * `createSurface` parameters. This allows for the creation of entire UIs in a
+ * single message, rather than a create followed by separate updates." v0.9 is
+ * that earlier create-then-update shape: its `CreateSurfaceMessageSchema` is
+ * `.strict()` with no `components` property at all, so inline nodes are a schema
+ * violation there rather than merely ignored — and at runtime
+ * `processCreateSurfaceMessage` destructures only
+ * `{ surfaceId, catalogId, theme, sendDataModel }`, silently dropping them.
+ *
+ * The emitted `version: 'v0.9'` is **not** what makes the renderer work:
+ * `processMessage` dispatches purely on which operation key is present, never
+ * reads `version`, and stamps its own version onto normalized output regardless
+ * of what arrived. It is still emitted rather than dropped, because the v0.9
+ * schema declares `version: z.literal('v0.9')` and the spec directs renderers to
+ * inspect `version` to "route payloads to version-specific controllers" — this
+ * processor simply does not, because its subpath fixed the version at import
+ * time.
  *
  * Everything else is pass-through. Under the flat A2-UI v1.0 node model a node
  * carries a single `id`/`component` identity plus its presentation values, A2-UI

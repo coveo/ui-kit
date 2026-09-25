@@ -228,6 +228,17 @@ describe('flat v1.0 nodes are forwarded byte-for-byte', () => {
     };
   }
 
+  // A generated prop name must not collide with a node's structural fields: the fixture
+  // builder writes bound props onto the node with `comp[key] = {path}`, so a prop named
+  // `id` would overwrite the node id and make the fixture contradict its own assertions.
+  // The projection forwards nodes byte-for-byte either way — this constraint keeps the
+  // generated fixture self-consistent, it is not a limitation of the code under test.
+  const STRUCTURAL_NODE_KEYS = new Set(['id', 'component', 'children', 'child']);
+
+  const boundPropKeyArb = fc
+    .string({minLength: 1, maxLength: 6})
+    .filter((key) => !STRUCTURAL_NODE_KEYS.has(key));
+
   const scenarioArb = fc
     .uniqueArray(fc.string({minLength: 1, maxLength: 6}), {minLength: 1, maxLength: 6})
     .chain((ids) =>
@@ -235,7 +246,7 @@ describe('flat v1.0 nodes are forwarded byte-for-byte', () => {
         ids: fc.constant(ids),
         boundPropsPerNode: fc.array(
           fc.dictionary(
-            fc.string({minLength: 1, maxLength: 6}),
+            boundPropKeyArb,
             fc.string({minLength: 1, maxLength: 8}).map((seg) => `/state/${seg}`),
             {maxKeys: 4}
           ),
