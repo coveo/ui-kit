@@ -55,40 +55,45 @@ so the fixes can be proven with numbers, and so a colleague can replay the befor
 node --expose-gc utils/cms443-memory-repro/repro.mjs \
   packages/headless/dist/esm
 
-# Full before/after across the two comparison SHAs (checks out, builds, runs, tabulates):
+# Full before/after across the five comparison SHAs (checks out, builds, runs, tabulates):
 utils/cms443-memory-repro/compare.sh
 ```
 
 `compare.sh` creates isolated git worktrees under the session scratch dir (`TMPDIR`), builds
-`@coveo/headless` in each, runs `repro.mjs`, and prints a before/after table. The two refs are
-bare commit SHAs on `main`:
+`@coveo/headless` in each, runs `repro.mjs`, and prints a before/after table. The refs are five
+commit SHAs on `main` (the per-finding branches were deleted after merge). The chain is strictly
+linear, so each column is **cumulative** — it contains every fix to its left plus its own:
 
-- **`before-f3`** = `3d05459` — `main` just before #8494 merged (already contains the F1/F2 fixes
-  from 3.56.0, but not F3).
-- **`after-f3`** = `4f82bb4` — the last stack merge (#8506); equivalent to the
-  `@coveo/headless@3.57.0` release.
+- **`before`** = `612cd2b` — `main` just before #8479; none of the three findings fixed.
+- **`after-f1`** = `fa2e9de` — #8479 merged (F1).
+- **`after-f2`** = `818bdf0` — #8480 merged (F1 + F2).
+- **`after-f3-ssrnext`** = `01434bc` — #8481 merged (F1 + F2 + F3a, per-request token on `ssr-commerce-next`).
+- **`after-f3`** = `4f82bb4` — #8506 merged = `@coveo/headless@3.57.0` (adds F3b on `ssr-commerce` and F3c on `ssr-next` search).
 
 Raw per-ref JSON is left under `<scratch>/cms443-compare/results/`.
 
 ## Expected before/after
 
-| Finding                                                                                 | before-f3                         | after-f3                                                                      |
-| --------------------------------------------------------------------------------------- | --------------------------------- | ----------------------------------------------------------------------------- |
-| F1 `fetchStaticState` retained KB/call                                                  | ~4 KB (already fixed in 3.56.0)   | ~4 KB                                                                         |
-| F1 `build()` engines still alive (/500)                                                 | ~1 (already fixed)                | ~1                                                                            |
-| F1 `hydrateStaticState` live engine gets rotated token                                  | `true`                            | `true` (no regression)                                                        |
-| F2 oldest token still cached after flood                                                | `false` (already fixed in 3.56.0) | `false`                                                                       |
-| F3a `ssr-next` commerce per-request token applied                                       | `true` (already in #8481)         | `true`                                                                        |
-| F3b `ssr-commerce` per-request token isolated                                           | `false`                           | `true` (#8494)                                                                |
-| F3b `ssr-commerce` per-request navigator context                                        | `false`                           | `true` (#8495)                                                                |
-| F3b `ssr-commerce` per-request token stays authoritative after a later `setAccessToken` | `false`                           | `true` (per-request engine not subscribed to the shared token manager, #8494) |
-| F3b `ssr-commerce` shared definition mutated                                            | `true`                            | `false` (per-request options copy)                                            |
-| F3c `ssr-next` search per-request token applied                                         | `false`                           | `true` (#8505)                                                                |
-| F3c `ssr-next` search shared definition not mutated                                     | n/a                               | `true` (per-request options copy, #8505)                                      |
+Each finding flips FIXED only in **its own** column and stays fixed thereafter — the independence
+diagonal: every fix corrects its finding and no other.
 
-> **Note:** because `before-f3` already contains F1/F2 (shipped in 3.56.0 before the F3 stack),
-> only the F3 rows flip between the two columns. F1/F2 are green in both — the harness proved them
-> against 3.56.0 during that release; kept here for completeness.
+| Metric                                                                            | before  | after-f1  | after-f2       | after-f3-ssrnext | after-f3              |
+| --------------------------------------------------------------------------------- | ------- | --------- | -------------- | ---------------- | --------------------- |
+| F1 `fetchStaticState` retained KB/call                                            | ~37 KB  | **~4** ✅ | ~4             | ~4               | ~4                    |
+| F1 `build()` engines still alive (/500)                                           | 500     | **~1** ✅ | ~1             | ~1               | ~1                    |
+| F1 `hydrateStaticState` live engine gets rotated token                            | `true`  | `true`    | `true`         | `true`           | `true`                |
+| F2 oldest token still cached after flood                                          | `true`  | `true`    | **`false`** ✅ | `false`          | `false`               |
+| F3a `ssr-next` commerce per-request token applied                                 | `false` | `false`   | `false`        | **`true`** ✅    | `true`                |
+| F3b `ssr-commerce` per-request token isolated                                     | `false` | `false`   | `false`        | `false`          | **`true`** ✅ (#8494) |
+| F3b `ssr-commerce` per-request navigator context applied                          | `false` | `false`   | `false`        | `false`          | **`true`** ✅ (#8495) |
+| F3b `ssr-commerce` per-request token authoritative after a later `setAccessToken` | `false` | `false`   | `false`        | `false`          | **`true`** ✅ (#8494) |
+| F3c `ssr-next` search per-request token applied                                   | `false` | `false`   | `false`        | `false`          | **`true`** ✅ (#8505) |
+
+> **How to read it:** the FIXED flip walks down the diagonal — F1 in `after-f1`, F2 in `after-f2`,
+> F3a in `after-f3-ssrnext`, and F3b + F3c together in `after-f3` (they shipped in the same 3.57.0
+> stack). Each fix leaves the other findings' verdicts unchanged, which is the empirical proof that
+> the fixes are independent. `#8506` (React provider) is verified by the package's own unit tests,
+> not here (see _Not covered_ above).
 
 > **Note on requirements:** run Node with `--expose-gc`. The measurement performs **no network
 > I/O** — `fetchStaticState`'s network call is expected to reject and is swallowed; retention
