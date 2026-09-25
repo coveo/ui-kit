@@ -1,5 +1,6 @@
 import type {NormalizedStreamEvent} from '@/src/internal/api/protocol/stream-types.js';
 import {getActivityMetadata} from '@/src/internal/api/protocol/activity-metadata.js';
+import {deriveA2uiV09Messages} from './a2ui-v09-projection.js';
 import type {ContractsSchema} from './contracts.js';
 import {
   deriveNodeIdentityRegistry,
@@ -19,7 +20,7 @@ import type {
 } from './types.js';
 
 function emptyResponse(): TurnResponse {
-  return {state: {}, activities: [], surfaces: []};
+  return {state: {}, activities: [], surfaces: [], a2uiMessages: []};
 }
 
 function cloneResponse(response: TurnResponse): TurnResponse {
@@ -27,6 +28,7 @@ function cloneResponse(response: TurnResponse): TurnResponse {
     state: response.state,
     activities: [...response.activities],
     surfaces: [...response.surfaces],
+    a2uiMessages: [...response.a2uiMessages],
   };
   if (response.agent) {
     next.agent = {
@@ -200,6 +202,9 @@ export function foldActivity(
       // full activity list so `response.surfaces` always agrees with a fresh
       // derivation off `response.activities`.
       response.surfaces = deriveSurfaces(response.activities);
+      // The renderer-facing v0.9 message stream is likewise a derived projection
+      // of `activities`, re-derived from the full list for the same reason.
+      response.a2uiMessages = deriveA2uiV09Messages(response.activities);
       // In-transit validation of the just-arrived activity's `updateDataModel`
       // ops. A conforming op is forwarded (applied into `response.state` at its
       // op path); a non-conforming, unresolved, or no-`*State`-schema op is

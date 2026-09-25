@@ -33,7 +33,6 @@ vi.mock('../../a2ui/Skeleton/Skeleton.js', () => ({
 }));
 
 vi.mock('../../a2ui/surfaces.js', () => ({
-  getA2UIMessages: () => [],
   ThermidorA2UISurfaces: () => null,
 }));
 

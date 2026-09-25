@@ -120,3 +120,97 @@ successor) is populated from the server's typed data instead of derived from
   consistent with the "derive, don't duplicate" stance ADR-011 takes on `surfaces`.
 - **Coupling to SSR:** Option C is the same decision as SSR route-determination;
   they should be designed together.
+
+---
+
+## Addendum (2026-09-24): the A2-UI v0.9 renderer projection
+
+A second derived projection of the same class now lives beside `response.surfaces`:
+**`response.a2uiMessages`**, the turn's A2-UI message stream downgraded to the v0.9
+shape a renderer consumes. It is recorded here rather than in its own ADR because it
+is the same debt, in the same function, with the same retirement shape: an interim
+client-side compensation for something the protocol ends should settle between
+themselves.
+
+### Why it exists
+
+The two ends of the protocol are pinned one minor version apart with nothing in
+between — and note the upstream statuses: **v1.0 is a spec Candidate while v0.9.1 is
+Current** ([version index](https://a2ui.org/), [v1.0](https://a2ui.org/specification/v1.0-a2ui/),
+[v0.9.1](https://a2ui.org/specification/v0.9.1-a2ui/)). We generate against the candidate
+while every available renderer implements the current one, which is precisely why this
+compensation is temporary rather than architectural:
+
+- **Agent Gateway emits A2-UI v1.0 exclusively.** `A2uiMessage.VERSION` is `"v1.0"`
+  and it throws on any other version, on both construct and parse; its snapshot and
+  state paths are v1.0-only by construction.
+- **Every available renderer consumes v0.9.** `@copilotkit/a2ui-renderer` builds its
+  `MessageProcessor` from `@a2ui/web_core/v0_9`, and `@a2ui/web_core@0.9.0` publishes
+  no `v1_0` subpath. There is, at time of writing, zero renderer that consumes v1.0.
+
+Something must bridge that gap before a consumer can render anything.
+
+### Options considered
+
+- **Revert the server to an older A2-UI version.** Rejected: Gateway is v1.0-only by
+  construction, and the older AgentSmith encoder emits `beginRendering`/`surfaceUpdate`,
+  which the v0.9 processor does not recognize — so this is two wire generations away
+  from the renderer, not one, and it would cost the inline-`dataModel` state path.
+- **Downgrade in Agent Gateway.** Rejected: a server breaking change is worse than a
+  package one. Gateway would emit a shape its own model refuses to parse, breaking its
+  round-trip invariant and the snapshot processor; it is a cross-team change; and
+  rolling it back is a deploy rather than a package bump.
+- **Leave it in each consumer's frontend (status quo).** Rejected: it asks every
+  consumer to reimplement the conversion, which is not a shipping story for the first
+  Unified-API clients.
+- **Selected: derive it once in the fold and expose it on `TurnResponse`.** One
+  auditable site, no server change, removable in a package version.
+
+### What the split actually reverses
+
+Inline `components` on `createSurface` is a v1.0 addition. Per the
+[evolution guide](https://a2ui.org/specification/v1.0-evolution-guide/) (§1, §2.3), v1.0
+"allowed passing initial `components` and `dataModel` directly inside the payload", enabling
+"the creation of entire UIs in a single message, rather than a create followed by separate
+updates". v0.9 _is_ that create-then-update shape — its `CreateSurfaceMessageSchema` is
+`.strict()` with no `components` property, so inline nodes are a schema violation there, and
+its runtime handler reads only `{surfaceId, catalogId, theme, sendDataModel}`.
+
+So the projection's one load-bearing transformation is the precise inverse of a documented
+v1.0 change, not an ad-hoc reshuffle. That is what makes the retirement condition below
+mechanical rather than a judgement call.
+
+### Charter exception (ADR-009)
+
+This knowingly takes an exception to two charter requirements, for a bounded period:
+
+- **§4 MUST — faithful transmission and rendering.** Thermidor rewrites the message
+  envelope rather than exposing the server's stream verbatim. Mitigation: `activities`
+  remain raw v1.0 and are the only source of truth; `a2uiMessages` is derived, so
+  nothing downstream of the fold — surface derivation, in-transit `updateDataModel`
+  validation, serialization — observes the downgrade.
+- **§5 / leakage gate — no transport DTO shapes in the public API.** A renderer's wire
+  shape now reaches the public surface. Mitigation: it is typed as
+  `A2uiV09Message = Record<string, unknown>` rather than a structural type, so the
+  coupling stays contained and is not deepened by per-operation types.
+- **§6 tradeoff gate:** recorded here, with the retirement condition below.
+
+### Retirement condition
+
+Remove the projection when BOTH hold:
+
+1. `@a2ui/web_core` publishes a `./v1_0` subpath, or its `v0_9` `MessageProcessor`
+   learns to read inline `components[]`; and
+2. the renderer consumers use (today `@copilotkit/a2ui-renderer`) imports it.
+
+Then delete `session/a2ui-v09-projection.ts`, drop `a2uiMessages` from `TurnResponse`
+and from the fold, and let consumers read `response.activities` directly. That is a
+breaking change to `@coveo/thermidor`, which is intended and acceptable while the
+package is `0.x` — and is precisely why this compensation belongs in the package
+rather than in the server.
+
+### Coupling to serialization ([ADR-011](./ADR-011-session-serialization.md))
+
+`a2uiMessages` follows the same rule as `surfaces`: never persisted, re-derived from
+persisted `activities` on restore. A property test asserts the projection is a pure,
+re-derivable function of the activity list.
