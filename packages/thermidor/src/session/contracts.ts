@@ -17,6 +17,12 @@
  * `z.object({ component: z.literal(...), state?, actions? })`, and every field
  * the seam reads (`options`, `shape.component.value`, `shape.state`,
  * `shape.actions`, `safeParse`) is present on it.
+ *
+ * Those members are all stable public Zod API that behaves identically in Zod 3
+ * and Zod 4, and no Zod internal (`_def`, `typeName`, ...) is read anywhere in
+ * this package — which is what lets the `zod` peerDependency span both majors
+ * (`^3.25 || ^4`). Keep it that way: reaching for an internal here would
+ * silently break consumers on the other major. See `zod-major-compat.test.ts`.
  */
 
 /**
@@ -38,8 +44,8 @@ export interface ParseIssue {
  * The minimal structural shape the core needs from any Zod schema: a
  * `safeParse` returning a discriminated success/failure result. Declared
  * locally (rather than importing `z.ZodType`) to sidestep the cross-package Zod
- * version-identity mismatch — both are Zod v4 and structurally compatible for
- * the `safeParse` seam consumed here.
+ * version-identity mismatch — the injected schema may even come from a
+ * different Zod major, and `safeParse` is structurally compatible across both.
  */
 export interface ParsableSchema {
   safeParse(value: unknown): SafeParseResult;
