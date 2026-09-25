@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "@microsoft/api-extractor": "7.59.1",
-    "fast-check": "4.9.0",
+    "fast-check": "4.10.1",
     "publint": "catalog:",
     "tsdown": "0.23.0",
     "typescript": "catalog:",
