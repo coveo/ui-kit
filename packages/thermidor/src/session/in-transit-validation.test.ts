@@ -124,6 +124,53 @@ describe('deriveNodeIdentityRegistry', () => {
 
     expect(registry.get(SURFACE_ID)?.has('pagination-2')).toBe(false);
   });
+
+  it('removes a surface on deleteSurface so its identities no longer resolve', () => {
+    const del: Activity = {
+      id: 'a2',
+      kind: 'a2ui-surface',
+      replace: false,
+      payload: {messages: [{deleteSurface: {surfaceId: SURFACE_ID}}]},
+    };
+
+    const registry = deriveNodeIdentityRegistry([surfaceActivity([paginationNode]), del]);
+
+    expect(registry.has(SURFACE_ID)).toBe(false);
+  });
+
+  it('replaces (not merges) a surface identities on a createSurface recreate', () => {
+    // Recreate the same surfaceId with a DIFFERENT node set: the stale node from
+    // the first createSurface must not survive.
+    const recreate = surfaceActivity([{id: 'sort-1', component: 'Sort'}]);
+
+    const registry = deriveNodeIdentityRegistry([surfaceActivity([paginationNode]), recreate]);
+
+    expect(registry.get(SURFACE_ID)?.has('pagination-2')).toBe(false);
+    expect(registry.get(SURFACE_ID)?.get('sort-1')).toBe('Sort');
+  });
+
+  it('merges incremental identities on updateComponents (keeps prior nodes)', () => {
+    const update: Activity = {
+      id: 'a3',
+      kind: 'a2ui-surface',
+      replace: false,
+      payload: {
+        messages: [
+          {
+            updateComponents: {
+              surfaceId: SURFACE_ID,
+              components: [{id: 'sort-1', component: 'Sort'}],
+            },
+          },
+        ],
+      },
+    };
+
+    const registry = deriveNodeIdentityRegistry([surfaceActivity([paginationNode]), update]);
+
+    expect(registry.get(SURFACE_ID)?.get('pagination-2')).toBe('Pagination');
+    expect(registry.get(SURFACE_ID)?.get('sort-1')).toBe('Sort');
+  });
 });
 
 describe('findComponentContract', () => {

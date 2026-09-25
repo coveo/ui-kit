@@ -87,11 +87,12 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 /**
  * Re-derives the per-surface node-identity registry from a turn's folded
- * activity list. Walks each `a2ui-surface` activity's `messages[]`, collecting
- * `id -> component` from every `createSurface` (its `components[]`) and every
- * `updateComponents` (its `components[]`) message. Later messages for the same
- * `(surfaceId, id)` overwrite earlier identity, mirroring the renderer's
- * last-write-wins composition.
+ * activity list. Walks each `a2ui-surface` activity's `messages[]`, mirroring
+ * the surface lifecycle: `createSurface` (re)creates a surface and REPLACES its
+ * identities, `updateComponents` MERGES incrementally, and `deleteSurface`
+ * REMOVES the surface so a later stale action or `/state` update no longer
+ * resolves. Within a surface, later messages for the same `id` overwrite earlier
+ * identity, mirroring the renderer's last-write-wins composition.
  *
  * Pure: same activities in, deeply-equal registry out; no module-level state.
  */
@@ -118,9 +119,24 @@ function registerMessage(registry: NodeIdentityRegistry, message: unknown): void
   if (!isRecord(message)) {
     return;
   }
-  // `createSurface` and `updateComponents` both carry a `surfaceId` and a
-  // `components[]` list of nodes whose identity we record.
-  const envelope = message['createSurface'] ?? message['updateComponents'];
+
+  // `deleteSurface` removes the surface's identities: a later stale action or
+  // `/state` update for a deleted surface must no longer resolve.
+  const deleteSurface = message['deleteSurface'];
+  if (isRecord(deleteSurface)) {
+    const surfaceId = deleteSurface['surfaceId'];
+    if (typeof surfaceId === 'string' && surfaceId.length > 0) {
+      registry.delete(surfaceId);
+    }
+    return;
+  }
+
+  // `createSurface` (re)creates the surface — its identities REPLACE any prior
+  // ones for that surfaceId. `updateComponents` is incremental — it MERGES into
+  // the existing identities. Both carry a `surfaceId` and a `components[]` list.
+  const createSurface = message['createSurface'];
+  const updateComponents = message['updateComponents'];
+  const envelope = createSurface ?? updateComponents;
   if (!isRecord(envelope)) {
     return;
   }
@@ -131,7 +147,8 @@ function registerMessage(registry: NodeIdentityRegistry, message: unknown): void
   }
 
   let nodes = registry.get(surfaceId);
-  if (!nodes) {
+  if (!nodes || isRecord(createSurface)) {
+    // Fresh map on createSurface (replace); reuse on updateComponents (merge).
     nodes = new Map();
     registry.set(surfaceId, nodes);
   }
