@@ -17,16 +17,24 @@ OUT="$WORK/results"
 mkdir -p "$OUT"
 
 # ref label -> git ref
+# The fix is merged and released (@coveo/headless 3.57.0); the per-finding fix branches were
+# deleted after merge. The before/after is now a single pair of SHAs on main:
+#   before-f3 = main just BEFORE #8494 merged (contains F1+F2, not F3)
+#   after-f3  = the last stack merge (#8506); equivalently the @coveo/headless@3.57.0 tag.
 REFS=(
-  "before:origin/main"
-  "after-f1:origin/fix/CMS-443-finding-1-engine-retention"
-  "after-f2:origin/fix/CMS-443-finding-2-relay-selector-cache"
-  "after-f3:origin/feat/CMS-443-finding-3-per-request-token"
-  "after-f3-ssr-commerce:origin/feat/CMS-443-ssr-per-request-navigator-context"
+  "before-f3:3d054594d9d9d1df8137dff94c74c658e0e9dcc1"
+  "after-f3:4f82bb4f0d26c87c02494156109709e68905ad5f"
 )
 
-echo "==> Fetching latest refs"
+echo "==> Fetching refs + the two comparison SHAs"
 git -C "$REPO" fetch --quiet origin
+# The comparison points are bare commit SHAs, not branch tips, so fetch each explicitly —
+# a generic `git fetch origin` does not guarantee an unreferenced commit is present locally.
+for entry in "${REFS[@]}"; do
+  sha="${entry#*:}"
+  git -C "$REPO" cat-file -e "$sha^{commit}" 2>/dev/null || \
+    git -C "$REPO" fetch --quiet origin "$sha" 2>/dev/null || true
+done
 
 build_ref() {
   local label="$1" ref="$2"
@@ -62,7 +70,7 @@ node - "$OUT" <<'NODE'
 import {readFileSync, readdirSync} from 'node:fs';
 const dir = process.argv[2];
 const load = (f) => { try { return JSON.parse(readFileSync(`${dir}/${f}`,'utf8')); } catch { return null; } };
-const labels = ['before','after-f1','after-f2','after-f3','after-f3-ssr-commerce'];
+const labels = ['before-f3','after-f3'];
 const data = Object.fromEntries(labels.map(l => [l, load(`${l}.json`)]));
 
 const row = (name, fn) => {
@@ -81,11 +89,14 @@ row('F2 memoizationWorks',  d => d.f2.memoizationWorks);
 row('F2 verdict',           d => d.f2.verdict.split(' ')[0]);
 row('F3a perReqApplied',    d => d.f3_ssrNext.available ? d.f3_ssrNext.perRequestTokenApplied : 'n/a');
 row('F3a sharedNotMutated', d => d.f3_ssrNext.available ? d.f3_ssrNext.sharedDefinitionNotMutated : 'n/a');
-row('F3a verdict (ssr-next)', d => d.f3_ssrNext.verdict.split(' ')[0]);
+row('F3a verdict (ssr-next commerce)', d => d.f3_ssrNext.verdict.split(' ')[0]);
 row('F3b perReqApplied',    d => d.f3_ssrCommerce.perRequestTokenApplied);
 row('F3b navCtxApplied',    d => d.f3_ssrCommerce.perRequestNavigatorContextApplied);
 row('F3b sharedNotMutated', d => d.f3_ssrCommerce.sharedDefinitionNotMutated);
 row('F3b verdict (ssr-commerce)', d => d.f3_ssrCommerce.verdict.split(' ')[0]);
+row('F3c perReqApplied',    d => d.f3_ssrNextSearch.available ? d.f3_ssrNextSearch.perRequestTokenApplied : 'n/a');
+row('F3c sharedNotMutated', d => d.f3_ssrNextSearch.available ? d.f3_ssrNextSearch.sharedDefinitionNotMutated : 'n/a');
+row('F3c verdict (ssr-next search)', d => d.f3_ssrNextSearch.verdict.split(' ')[0]);
 NODE
 echo "================================================================"
 echo "Raw JSON per ref under: $OUT"

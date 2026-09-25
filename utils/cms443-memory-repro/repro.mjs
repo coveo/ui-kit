@@ -362,21 +362,98 @@ async function finding3SsrCommerce() {
   };
 }
 
+// ---------------------------------------------------------------------------
+// F3c — per-request access token on the ssr-next SEARCH path (#8505, merged & released in
+// @coveo/headless 3.57.0). Mirror of F3a but for search, not commerce. The fix lives in
+// augmentSearchEngineOptions (pure, synchronous, network-free): when buildConfig.accessToken is
+// provided it overrides configuration.accessToken for THAT call, on a copy, so the shared
+// definition is NOT mutated. #8505 also removed the shared setAccessToken()/access-token manager
+// from the search engine definition — the class of bug where an overlapping request could cross
+// tokens. We test the pure function directly (the exact code the fix changes).
+//   BEFORE (pre-#8505): BuildConfig had no accessToken field -> override ignored -> engine keeps
+//          the definition token, and setAccessToken() mutated a module-level definition every
+//          request reads (cross-request token bleed).
+//   AFTER  : override applied for the request, definition left untouched, fallback when omitted.
+// ---------------------------------------------------------------------------
+async function finding3SsrNextSearch() {
+  let augment;
+  try {
+    ({augmentSearchEngineOptions: augment} = await import(
+      `${distEsm}/ssr-next/search/utils/engine-wiring.js`
+    ));
+  } catch {
+    return {
+      available: false,
+      note: 'augmentSearchEngineOptions not found in this build (ssr-next search path absent)',
+      verdict: 'N/A',
+    };
+  }
+
+  const DEFINITION_TOKEN = 'search-definition-token';
+  const PER_REQUEST_TOKEN = 'search-per-request-user-token';
+
+  const makeEngineOptions = () => ({
+    configuration: {
+      ...getSampleCommerceEngineConfiguration(),
+      accessToken: DEFINITION_TOKEN,
+    },
+  });
+  const buildConfigBase = {navigatorContext: navigatorContextProvider()};
+
+  // 1) Per-request override applied to the engine options for this call.
+  const sharedOptions = makeEngineOptions();
+  const withPerRequest = augment(sharedOptions, {
+    ...buildConfigBase,
+    accessToken: PER_REQUEST_TOKEN,
+  });
+  const perRequestApplied = withPerRequest.configuration.accessToken === PER_REQUEST_TOKEN;
+
+  // 2) Shared definition options NOT mutated by that call.
+  const sharedNotMutated = sharedOptions.configuration.accessToken === DEFINITION_TOKEN;
+
+  // 3) Omitting accessToken falls back to the definition's token.
+  const withoutPerRequest = augment(makeEngineOptions(), {...buildConfigBase});
+  const fallbackToDefinition = withoutPerRequest.configuration.accessToken === DEFINITION_TOKEN;
+
+  const fixed = perRequestApplied && sharedNotMutated && fallbackToDefinition;
+
+  return {
+    available: true,
+    perRequestTokenApplied: perRequestApplied,
+    sharedDefinitionNotMutated: sharedNotMutated,
+    fallbackToDefinitionWhenOmitted: fallbackToDefinition,
+    verdict: fixed
+      ? 'FIXED — per-request token applied without mutating the shared definition'
+      : 'LEAK — no per-request token on the ssr-next search tree (override ignored)',
+  };
+}
+
 const r1 = await finding1();
 const r2 = await finding2();
 const r3a = await finding3SsrNext();
 const r3b = await finding3SsrCommerce();
+const r3c = await finding3SsrNextSearch();
 
 if (asJson) {
-  console.log(JSON.stringify({f1: r1, f2: r2, f3_ssrNext: r3a, f3_ssrCommerce: r3b}, null, 2));
+  console.log(
+    JSON.stringify(
+      {f1: r1, f2: r2, f3_ssrNext: r3a, f3_ssrCommerce: r3b, f3_ssrNextSearch: r3c},
+      null,
+      2
+    )
+  );
 } else {
   console.log('\n===== CMS-443 hardened repro =====\n');
   console.log('Finding 1 — engine retention (WeakRef + FinalizationRegistry):');
   console.table(r1);
   console.log('Finding 2 — relay selector cache (direct eviction probe):');
   console.table(r2);
-  console.log('Finding 3a — request-scoped token on ssr-next (ssr-commerce-next, #8481):');
+  console.log('Finding 3a — request-scoped token on ssr-next commerce (ssr-commerce-next, #8481):');
   console.table(r3a);
-  console.log('Finding 3b — request-scoped token + navigator context on ssr-commerce (supported, #8494/#8495):');
+  console.log(
+    'Finding 3b — request-scoped token + navigator context on ssr-commerce (supported, #8494/#8495):'
+  );
   console.table(r3b);
+  console.log('Finding 3c — request-scoped token on ssr-next search (#8505):');
+  console.table(r3c);
 }
