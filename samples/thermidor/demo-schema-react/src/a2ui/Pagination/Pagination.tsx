@@ -8,6 +8,13 @@ export function PaginationRenderer({
 }: TypedRendererProps<PaginationProps, PaginationAction>) {
   const {page, totalPages} = props;
 
+  // The `{ path }` bindings resolve progressively; until both are numbers the
+  // pagination shell must not render (an unresolved `totalPages` would otherwise
+  // slip past the `<= 1` guard and dispatch a NaN `selectPage`).
+  if (page === undefined || totalPages === undefined) {
+    return null;
+  }
+
   if (totalPages <= 1) {
     return null;
   }

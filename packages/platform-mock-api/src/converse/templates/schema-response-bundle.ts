@@ -369,9 +369,9 @@ const bundleComponentState: Record<string, unknown> = {
 
 const nextActionsState = {
   suggestedActions: [
-    {text: 'Explore Budget tier ($315 total)', type: 'followup'},
-    {text: 'Explore Mid-Range tier ($1,065 total)', type: 'followup'},
-    {text: 'Explore Premium tier ($735 total)', type: 'followup'},
+    {text: 'Explore Budget tier ($484.97 total)', type: 'followup'},
+    {text: 'Explore Mid-Range tier ($794.97 total)', type: 'followup'},
+    {text: 'Explore Premium tier ($1,164.97 total)', type: 'followup'},
     {text: 'Browse all surfboards', type: 'followup'},
   ],
 };
