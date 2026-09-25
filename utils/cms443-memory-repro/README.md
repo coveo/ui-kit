@@ -81,7 +81,7 @@ diagonal: every fix corrects its finding and no other.
 | --------------------------------------------------------------------------------- | ------- | --------- | -------------- | ---------------- | --------------------- |
 | F1 `fetchStaticState` retained KB/call                                            | ~37 KB  | **~4** ✅ | ~4             | ~4               | ~4                    |
 | F1 `build()` engines still alive (/500)                                           | 500     | **~1** ✅ | ~1             | ~1               | ~1                    |
-| F1 `hydrateStaticState` live engine gets rotated token                            | `true`  | `true`    | `true`         | `true`           | `true`                |
+| F1 `hydrateStaticState` live engine gets rotated token 🛡️                         | `true`  | `true`    | `true`         | `true`           | `true`                |
 | F2 oldest token still cached after flood                                          | `true`  | `true`    | **`false`** ✅ | `false`          | `false`               |
 | F3a `ssr-next` commerce per-request token applied                                 | `false` | `false`   | `false`        | **`true`** ✅    | `true`                |
 | F3b `ssr-commerce` per-request token isolated                                     | `false` | `false`   | `false`        | `false`          | **`true`** ✅ (#8494) |
@@ -94,6 +94,17 @@ diagonal: every fix corrects its finding and no other.
 > stack). Each fix leaves the other findings' verdicts unchanged, which is the empirical proof that
 > the fixes are independent. `#8506` (React provider) is verified by the package's own unit tests,
 > not here (see _Not covered_ above).
+
+> 🛡️ **Non-regression guard, not a flip.** The `hydrateStaticState live engine gets rotated token`
+> row is `true` in every column on purpose — it is a guard, not a bug probe. It asserts that fixing
+> F1 does **not** break a legitimate behavior: a _live_ hydrated engine (the one the browser keeps
+> in `useState` for the whole session) must keep receiving `setAccessToken()` updates. It reads
+> `true` before the fix (the behavior already worked) and must stay `true` after. The first F1
+> attempt — "option A / skip registration" — flipped this to `false` (it dropped the retention but
+> left the live engine on a stale token), which is exactly why it was rejected in favor of the weak
+> registry (WeakRef + FinalizationRegistry) that frees memory **without** cutting updates to live
+> engines. That discriminating flip happened during F1's development (option A vs weak registry),
+> not across these merged commits, so it stays `true` throughout this diagonal.
 
 > **Note on requirements:** run Node with `--expose-gc`. The measurement performs **no network
 > I/O** — `fetchStaticState`'s network call is expected to reject and is swallowed; retention
