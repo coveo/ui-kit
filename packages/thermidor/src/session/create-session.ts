@@ -30,7 +30,7 @@ import {devWarn} from '@/src/internal/utils/dev-warn.js';
 import {generateId} from '@/src/internal/utils/id-generator.js';
 import {validateActionPayload} from './action-payload-validation.js';
 import type {ContractsSchema} from './contracts.js';
-import {createTurn, foldActivity, resolveTargetSurfaceId} from './fold.js';
+import {createTurn, foldActivity} from './fold.js';
 import {deriveNodeIdentityRegistry} from './in-transit-validation.js';
 import {restoreSession, serializeSession, type SerializedSession} from './serialize.js';
 import {createSessionStore, type SessionStore, type SessionStoreState} from './store.js';
@@ -464,14 +464,14 @@ export function createSession<TContracts extends ContractsSchema>(
 
   /**
    * The PRIVATE validate-and-execute path (`executeAction`). It is a local
-   * closure, never exposed on the returned {@link Session} object; the public
-   * entry is now `dispatchAction`. It validates the recovered action's payload
+   * closure, never exposed on the returned {@link Session} object (the public
+   * entry is `dispatchAction`). It validates the recovered action's payload
    * against the dispatching component's generated Zod action schema BEFORE the
    * HTTP POST; on a validation failure it REJECTS and sends nothing.
    *
-   * The streaming guard and the surface-target resolution via
-   * {@link resolveTargetSurfaceId} are preserved: while a turn is streaming, or
-   * when there is no active turn / target surface, the dispatch is a no-op.
+   * While a turn is streaming, or when there is no active turn, the dispatch is
+   * a no-op. The target surface is the action's OWN originating surface
+   * (`recovered.surfaceId`), already validated upstream by `recoverDiscriminant`.
    */
   async function executeAction(recovered: {
     discriminant: string;
@@ -486,20 +486,16 @@ export function createSession<TContracts extends ContractsSchema>(
       return;
     }
 
-    const {turns, activeTurnId} = store.getState();
+    const {activeTurnId} = store.getState();
     if (!activeTurnId) {
       return;
     }
 
-    // Resolve the target surface from the active turn's typed `surfaces`
-    // projection rather than walking raw activities. Without a target surface
-    // the action has nowhere to go; skip dispatching an untargeted action
-    // rather than sending one with a null surfaceId.
-    const activeTurn = turns.find((turn) => turn.id === activeTurnId);
-    const surfaceId = resolveTargetSurfaceId(activeTurn?.response.surfaces ?? []);
-    if (surfaceId === null) {
-      return;
-    }
+    // `recovered.surfaceId` is already validated upstream by `recoverDiscriminant`
+    // (it resolves a discriminant only for a `(surfaceId, sourceComponentId)` in
+    // the active turn's registry), so the origin surface is used as-is — no
+    // re-check, and a conversation-only surface reaches itself, not a commerce one.
+    const surfaceId = recovered.surfaceId;
 
     // Validate the action payload against the component's generated Zod action
     // schema BEFORE the POST. A non-conforming payload rejects (nothing sent).

@@ -13,9 +13,12 @@
 export type TurnStatus = 'streaming' | 'complete' | 'error';
 
 /**
- * The server-authoritative UI state snapshot for a turn. Always present on a
- * {@link TurnResponse}, defaulting to `{}`. Remote controllers read this; it is
- * present for commerce-routed and agent-routed turns alike (it is NOT
+ * The server-authoritative UI state for a turn, keyed BY SURFACE: each surface
+ * owns its own data model at `state[surfaceId]`, into which inline
+ * `updateDataModel` ops are applied at their `/state/<nodeId>` pointer. Always
+ * present on a {@link TurnResponse}, defaulting to `{}`. Keying by surface keeps
+ * two surfaces that share a node id (every surface has a `root`) from colliding.
+ * Present for commerce-routed and agent-routed turns alike (it is NOT
  * agent-specific).
  */
 export type A2uiState = Record<string, unknown>;

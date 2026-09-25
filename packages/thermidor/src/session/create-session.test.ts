@@ -66,8 +66,18 @@ const PaginationSchema = z.strictObject({
     .optional(),
 });
 
+const NextActionsBarSchema = z.strictObject({
+  component: z.literal('NextActionsBar'),
+  actions: z
+    .strictObject({
+      selectAction: z.strictObject({payload: z.strictObject({actionId: z.string()})}),
+    })
+    .optional(),
+});
+
 const contracts = z.discriminatedUnion('component', [
   PaginationSchema,
+  NextActionsBarSchema,
 ]) as unknown as ContractsSchema;
 
 /**
@@ -301,6 +311,160 @@ describe('createSession lifecycle', () => {
     });
   });
 
+  describe('dispatchAction preserves the originating surfaceId', () => {
+    /**
+     * An action must POST to ITS OWN originating surface
+     * (`userAction.surfaceId`), not to whichever surface happens to be
+     * CommerceSearch. Actions from conversation-only surfaces must reach their
+     * own surface rather than being dropped or misrouted.
+     */
+    async function seedCompletedTurn(
+      session: ReturnType<typeof createSession>,
+      createSurface: Record<string, unknown>
+    ) {
+      const first = queueStream();
+      const firstTurn = session.submit({prompt: 'go'});
+      await first.opened;
+      first.emit({
+        type: 'ACTIVITY_SNAPSHOT',
+        messageId: 'surface-activity',
+        activityType: 'a2ui-surface',
+        content: {messages: [{version: 'v1.0', createSurface}]},
+      });
+      first.emit({type: 'RUN_FINISHED'});
+      first.close();
+      await firstTurn;
+    }
+
+    it('routes an action from a conversation-only surface to that surface (was dropped)', async () => {
+      const session = createSession(baseConfig);
+      await seedCompletedTurn(session, {
+        surfaceId: 'next-actions-surface',
+        components: [
+          {id: 'root', component: 'NextActionsBar'},
+          {id: 'next-1', component: 'NextActionsBar'},
+        ],
+      });
+
+      const actionStream = queueStream();
+      const actionTurn = session.dispatchAction({
+        userAction: {
+          name: 'selectAction',
+          surfaceId: 'next-actions-surface',
+          sourceComponentId: 'next-1',
+          context: {actionId: 'a-42'},
+        },
+      });
+      await flush();
+      await actionStream.opened;
+
+      // The action reaches the endpoint even when no CommerceSearch surface
+      // exists on the active turn.
+      expect(callMock).toHaveBeenCalledTimes(2);
+      expect(callMock.mock.calls[1][0]).toMatchObject({
+        action: {surfaceId: 'next-actions-surface', name: 'selectAction'},
+      });
+
+      actionStream.emit({type: 'RUN_FINISHED'});
+      actionStream.close();
+      await actionTurn;
+    });
+
+    it('routes a conversation-only action to its own surface, not the commerce one', async () => {
+      const session = createSession(baseConfig);
+      // A turn with BOTH a CommerceSearch surface and a conversation-only one.
+      const first = queueStream();
+      const firstTurn = session.submit({prompt: 'go'});
+      await first.opened;
+      first.emit({
+        type: 'ACTIVITY_SNAPSHOT',
+        messageId: 'surface-commerce',
+        activityType: 'a2ui-surface',
+        content: {
+          messages: [
+            {
+              version: 'v1.0',
+              createSurface: {
+                surfaceId: 'commerce-search-surface',
+                components: [
+                  {id: 'root', component: 'CommerceSearch'},
+                  {id: 'pagination-1', component: 'Pagination'},
+                ],
+              },
+            },
+          ],
+        },
+      });
+      first.emit({
+        type: 'ACTIVITY_SNAPSHOT',
+        messageId: 'surface-next',
+        activityType: 'a2ui-surface',
+        content: {
+          messages: [
+            {
+              version: 'v1.0',
+              createSurface: {
+                surfaceId: 'next-actions-surface',
+                components: [{id: 'root', component: 'NextActionsBar'}],
+              },
+            },
+          ],
+        },
+      });
+      first.emit({type: 'RUN_FINISHED'});
+      first.close();
+      await firstTurn;
+
+      const actionStream = queueStream();
+      const actionTurn = session.dispatchAction({
+        userAction: {
+          name: 'selectAction',
+          surfaceId: 'next-actions-surface',
+          sourceComponentId: 'root',
+          context: {actionId: 'a-7'},
+        },
+      });
+      await flush();
+      await actionStream.opened;
+
+      // Routed to its OWN surface, not the CommerceSearch one.
+      expect(callMock.mock.calls[1][0]).toMatchObject({
+        action: {surfaceId: 'next-actions-surface'},
+      });
+
+      actionStream.emit({type: 'RUN_FINISHED'});
+      actionStream.close();
+      await actionTurn;
+    });
+
+    it('drops an action whose (surfaceId, node) is absent from the active turn', async () => {
+      const session = createSession(baseConfig);
+      await seedCompletedTurn(session, {
+        surfaceId: 'commerce-search-surface',
+        components: [
+          {id: 'root', component: 'CommerceSearch'},
+          {id: 'pagination-1', component: 'Pagination'},
+        ],
+      });
+
+      // A surfaceId that does not exist on the active turn: recoverDiscriminant
+      // finds no registry entry → nothing sent (drop upstream of executeAction).
+      const dispatched = session.dispatchAction({
+        userAction: {
+          name: 'selectPage',
+          surfaceId: 'ghost-surface',
+          sourceComponentId: 'pagination-1',
+          context: {page: 2},
+        },
+      });
+      await flush();
+      await dispatched;
+
+      // Only the initial submit reached the endpoint; the action was dropped.
+      expect(callMock).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('cancel during an in-flight stream', () => {
     it('stops the stream, retains the partial response, and sets the active turn to error', async () => {
       const session = createSession(baseConfig);
@@ -310,10 +474,13 @@ describe('createSession lifecycle', () => {
       await first.opened;
 
       // Fold a partial response before cancelling.
-      first.emit({type: 'STATE_SNAPSHOT', snapshot: {theme: 'dark'}});
+      first.emit({type: 'TEXT_MESSAGE_START', messageId: 'm1', role: 'assistant'});
+      first.emit({type: 'TEXT_MESSAGE_CONTENT', messageId: 'm1', delta: 'partial'});
       await flush();
 
-      expect(session.turns[0].response.state).toEqual({theme: 'dark'});
+      expect(session.turns[0].response.agent?.messages).toEqual([
+        {content: 'partial', role: 'assistant'},
+      ]);
       expect(session.turns[0].status).toBe('streaming');
 
       session.cancel();
@@ -323,7 +490,7 @@ describe('createSession lifecycle', () => {
       expect(turn.status).toBe('error');
       expect(turn.error).toBeDefined();
       // Partial response already folded is retained.
-      expect(turn.response.state).toEqual({theme: 'dark'});
+      expect(turn.response.agent?.messages).toEqual([{content: 'partial', role: 'assistant'}]);
     });
   });
 

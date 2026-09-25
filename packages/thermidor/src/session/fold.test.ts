@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import type {NormalizedStreamEvent} from '@/src/internal/api/protocol/stream-types.js';
-import {createTurn, deriveSurfaces, foldActivities, resolveTargetSurfaceId} from './fold.js';
+import {createTurn, deriveSurfaces, foldActivities} from './fold.js';
 
 /**
  * Unit tests for the Turn/TurnResponse shape produced by the fold.
@@ -16,7 +16,6 @@ const activity = (event: Record<string, unknown>): NormalizedStreamEvent =>
 const runFinished = activity({type: 'RUN_FINISHED'});
 const runError = activity({type: 'RUN_ERROR', message: 'boom'});
 const textMessageStart = activity({type: 'TEXT_MESSAGE_START', role: 'assistant'});
-const stateSnapshot = activity({type: 'STATE_SNAPSHOT', snapshot: {theme: 'dark'}});
 const activitySnapshot = activity({
   type: 'ACTIVITY_SNAPSHOT',
   messageId: 'm1',
@@ -68,25 +67,19 @@ describe('fold Turn/TurnResponse shape', () => {
   });
 
   describe('response.state default', () => {
-    it('defaults state to {} before any STATE_SNAPSHOT is folded', () => {
+    it('defaults state to {} on a fresh turn', () => {
       const turn = createTurn('t1', {prompt: 'hi'});
 
       expect(turn.response.state).toEqual({});
     });
 
-    it('keeps state at {} for a turn with no STATE_SNAPSHOT', () => {
+    it('keeps state at {} for a turn with no data-model ops', () => {
       const turn = foldActivities(createTurn('t1', {prompt: 'hi'}), [
         textMessageStart,
         runFinished,
       ]);
 
       expect(turn.response.state).toEqual({});
-    });
-
-    it('initializes state from the first STATE_SNAPSHOT', () => {
-      const turn = foldActivities(createTurn('t1', {prompt: 'hi'}), [stateSnapshot]);
-
-      expect(turn.response.state).toEqual({theme: 'dark'});
     });
   });
 
@@ -103,17 +96,13 @@ describe('fold Turn/TurnResponse shape', () => {
       expect(Array.isArray(turn.response.agent?.reasoningSteps)).toBe(true);
     });
 
-    // The fold's ACTIVITY_SNAPSHOT and STATE_SNAPSHOT cases must not
-    // materialize an empty `response.agent` facet. `response.agent` is created
-    // only by genuinely agent-invoking events (TEXT_MESSAGE_*,
-    // REASONING_MESSAGE_*, TOOL_CALL_*), so a turn the router never routed to an
-    // agent has `response.agent` omitted entirely.
+    // The fold's ACTIVITY_SNAPSHOT case must not materialize an empty
+    // `response.agent` facet. `response.agent` is created only by genuinely
+    // agent-invoking events (TEXT_MESSAGE_*, REASONING_MESSAGE_*, TOOL_CALL_*),
+    // so a turn the router never routed to an agent has `response.agent`
+    // omitted entirely.
     it('omits response.agent for a turn the router did not route to an agent', () => {
-      const turn = foldActivities(createTurn('t1', {}), [
-        activitySnapshot,
-        stateSnapshot,
-        runFinished,
-      ]);
+      const turn = foldActivities(createTurn('t1', {}), [activitySnapshot, runFinished]);
 
       expect(turn.response.agent).toBeUndefined();
       expect('agent' in turn.response).toBe(false);
@@ -207,7 +196,7 @@ describe('fold surface derivation', () => {
   // `createSurface` message whose root node carries its identity as a top-level
   // PascalCase `component` discriminant (NO `props.componentType`), exactly as
   // the platform mock emits it. `readSurface`/`deriveSurfaces` must discover the
-  // surface and `resolveTargetSurfaceId` must find it — the path the prior
+  // surface as a commerce-search root — the path the prior
   // fixtures (which put the discriminant under `props.componentType`) bypassed,
   // letting a commerce-search surface silently fail discovery and mis-route.
   it('discovers a single-identity commerce-search root by its top-level component discriminant', () => {
@@ -235,27 +224,11 @@ describe('fold surface derivation', () => {
       {surfaceId: 'commerce-search-2', rootComponentType: 'CommerceSearch'},
     ]);
     expect(deriveSurfaces(turn.response.activities)).toEqual(turn.response.surfaces);
-    expect(resolveTargetSurfaceId(turn.response.surfaces)).toBe('commerce-search-2');
-  });
-});
-
-describe('resolveTargetSurfaceId', () => {
-  it('returns the first commerce-search surfaceId', () => {
     expect(
-      resolveTargetSurfaceId([
-        {surfaceId: 'c-1', rootComponentType: 'Converse'},
-        {surfaceId: 'ui-2', rootComponentType: 'CommerceSearch'},
-        {surfaceId: 'ui-3', rootComponentType: 'CommerceSearch'},
-      ])
-    ).toBe('ui-2');
-  });
-
-  it('returns null when no commerce-search surface exists', () => {
-    expect(resolveTargetSurfaceId([{surfaceId: 'c-1', rootComponentType: 'Converse'}])).toBeNull();
-  });
-
-  it('returns null for an empty surfaces list', () => {
-    expect(resolveTargetSurfaceId([])).toBeNull();
+      turn.response.surfaces.some(
+        (s) => s.surfaceId === 'commerce-search-2' && s.rootComponentType === 'CommerceSearch'
+      )
+    ).toBe(true);
   });
 });
 
@@ -303,7 +276,9 @@ describe('fold ACTIVITY_SNAPSHOT replace semantics', () => {
       surfaceSnapshotWith('activity-1', true, [surfaceMessage('fresh', 'CommerceSearch')]),
     ]);
 
-    expect(resolveTargetSurfaceId(turn.response.surfaces)).toBe('fresh');
+    expect(turn.response.surfaces).toEqual([
+      {surfaceId: 'fresh', rootComponentType: 'CommerceSearch'},
+    ]);
   });
 
   it('preserves the original position when superseding in place', () => {

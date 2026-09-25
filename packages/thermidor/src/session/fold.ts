@@ -209,14 +209,6 @@ export function foldActivity(
       return turn;
     }
 
-    case 'STATE_SNAPSHOT': {
-      const snapshot = (activity as unknown as {snapshot?: unknown}).snapshot;
-      if (snapshot && typeof snapshot === 'object' && !Array.isArray(snapshot)) {
-        response.state = snapshot as A2uiState;
-      }
-      return turn;
-    }
-
     case 'RUN_FINISHED': {
       turn.status = 'complete';
       return turn;
@@ -297,9 +289,10 @@ export function foldActivities(
  * The node-identity registry is re-derived from the full folded activity list
  * so the fold stays pure and deterministic. Each op is routed through
  * {@link validateInboundOp}: a FORWARD decision writes the (validated) value at
- * the op's JSON Pointer into a shallow copy of the state; a DROP decision leaves
- * the state untouched, so the renderer keeps its prior data-model value and the
- * previously rendered UI for that component remains displayed.
+ * the op's JSON Pointer WITHIN its surface's data model (`state[surfaceId]`) in
+ * a shallow copy of the state; a DROP decision leaves the state untouched, so
+ * the renderer keeps its prior data-model value and the previously rendered UI
+ * for that component remains displayed.
  *
  * `Thermidor_Core` keeps no state store: `state` here is the turn's forwarded
  * projection, not a merged component-state store. Returns the input state
@@ -331,7 +324,13 @@ function applyInboundOps(
   for (const op of ops) {
     const decision = validateInboundOp(op, registry, contracts);
     if (decision.kind === 'forward') {
-      next = setAtPointer(next, decision.path, decision.value);
+      // Per surface: every surface has a `root` node, so a shared node id would
+      // collide at one top-level pointer without scoping the write by surface.
+      const surfaceState = isRecord(next[op.surfaceId]) ? (next[op.surfaceId] as A2uiState) : {};
+      next = {
+        ...next,
+        [op.surfaceId]: setAtPointer(surfaceState, decision.path, decision.value),
+      };
     }
   }
   return next;
@@ -371,21 +370,16 @@ function setAtPointer(state: A2uiState, path: string, value: unknown): A2uiState
  * This block is the SINGLE location in the
  * package that walks a raw A2-UI activity payload (`activity.payload.messages`
  * → `createSurface` → find the canonical `root` node in `components` → read the
- * root node's top-level `component` discriminant) and the SINGLE location that
- * knows the `'CommerceSearch'` root-component-type magic string. Both persist until
+ * root node's top-level `component` discriminant). It persists until
  * server-surfaced typed routing lands (ADR-015 Option C, a separate future
- * ADR). No consumer — sample or internal `dispatchAction` — may walk activities
- * or re-spell this literal; they read the typed `response.surfaces` projection
- * and, for target resolution, {@link resolveTargetSurfaceId}.
+ * ADR). No consumer — sample or internal `dispatchAction` — may walk activities;
+ * they read the typed `response.surfaces` projection.
  *
  * `surfaces` is a derived projection of `activities`, never an independent
  * source of truth: it is re-derived here from the full activity list so
  * dropping it and recomputing from `response.activities` yields a deeply-equal
  * list.
  */
-
-/** ADR-015 interim: the root component type consumers/nav treat as commerce. */
-const COMMERCE_SEARCH_ROOT_TYPE = 'CommerceSearch';
 
 /**
  * The A2-UI v1.0 canonical surface root node id. `createSurface` implicitly mounts the reserved
@@ -473,17 +467,4 @@ function readSurface(message: unknown): DiscoveredSurface | null {
   }
 
   return {surfaceId, rootComponentType};
-}
-
-/**
- * Resolves the target `surfaceId` for the internal `dispatchAction` from a
- * turn's already-derived `response.surfaces`: the first surface whose root is a
- * commerce-search surface, or null when none exists. Consumers read
- * the typed projection here rather than walking activities.
- */
-export function resolveTargetSurfaceId(surfaces: DiscoveredSurface[]): string | null {
-  const target = surfaces.find(
-    (surface) => surface.rootComponentType === COMMERCE_SEARCH_ROOT_TYPE
-  );
-  return target ? target.surfaceId : null;
 }

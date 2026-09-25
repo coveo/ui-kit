@@ -134,7 +134,7 @@ describe('Feature: a2ui-inline-state-data-model, Property 11: Whole-component in
           contracts
         );
         // The bad op is dropped: state still reflects the last VALID whole op.
-        expect(turn.response.state).toEqual({state: {[NODE_ID]: good}});
+        expect(turn.response.state).toEqual({[SURFACE_ID]: {state: {[NODE_ID]: good}}});
       }),
       {numRuns: NUM_RUNS}
     );
@@ -189,7 +189,7 @@ describe("Feature: a2ui-inline-state-data-model, Property 14: Partial-update val
             contracts
           );
           expect(conformingTurn.response.state).toEqual({
-            state: {[NODE_ID]: {...whole, [field]: goodValue}},
+            [SURFACE_ID]: {state: {[NODE_ID]: {...whole, [field]: goodValue}}},
           });
 
           const droppedTurn = foldActivities(
@@ -201,7 +201,7 @@ describe("Feature: a2ui-inline-state-data-model, Property 14: Partial-update val
             ],
             contracts
           );
-          expect(droppedTurn.response.state).toEqual({state: {[NODE_ID]: whole}});
+          expect(droppedTurn.response.state).toEqual({[SURFACE_ID]: {state: {[NODE_ID]: whole}}});
         }
       ),
       {numRuns: NUM_RUNS}

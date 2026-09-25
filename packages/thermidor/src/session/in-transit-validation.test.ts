@@ -299,7 +299,7 @@ describe('fold integration', () => {
       contracts
     );
 
-    expect(turn.response.state).toEqual({state: {'pagination-2': validWholePagination}});
+    expect(turn.response.state).toEqual({'ui-1': {state: {'pagination-2': validWholePagination}}});
   });
 
   it('leaves response.state unchanged when an invalid op is dropped', () => {
@@ -351,7 +351,7 @@ describe('fold integration', () => {
     );
 
     expect(turn.response.state).toEqual({
-      state: {'pagination-2': {...validWholePagination, page: 2}},
+      'ui-1': {state: {'pagination-2': {...validWholePagination, page: 2}}},
     });
   });
 
@@ -382,6 +382,59 @@ describe('fold integration', () => {
       contracts
     );
 
-    expect(turn.response.state).toEqual({state: {'pagination-2': validWholePagination}});
+    expect(turn.response.state).toEqual({'ui-1': {state: {'pagination-2': validWholePagination}}});
+  });
+
+  it('keeps two surfaces that share a node id from colliding in response.state', () => {
+    // Both surfaces carry a node with the SAME id (`pagination-2`). Under a flat
+    // projection they would overwrite each other at `/state/pagination-2`; the
+    // per-surface data model keeps them under distinct `state[surfaceId]` keys.
+    const otherSurfaceMessage = {
+      version: 'v1.0',
+      createSurface: {
+        surfaceId: 'ui-2',
+        rootId: 'root',
+        components: [paginationNode],
+      },
+    };
+    const firstValue = validWholePagination;
+    const secondValue = {page: 3, pageSize: 24, totalEntries: 99, totalPages: 5};
+
+    const turn = foldActivities(
+      createTurn('t1', {}),
+      [
+        snapshot([createSurfaceMessage, otherSurfaceMessage], 'surfaces'),
+        snapshot(
+          [
+            {
+              updateDataModel: {
+                surfaceId: SURFACE_ID,
+                path: statePath('pagination-2'),
+                value: firstValue,
+              },
+            },
+          ],
+          'op-1'
+        ),
+        snapshot(
+          [
+            {
+              updateDataModel: {
+                surfaceId: 'ui-2',
+                path: statePath('pagination-2'),
+                value: secondValue,
+              },
+            },
+          ],
+          'op-2'
+        ),
+      ],
+      contracts
+    );
+
+    expect(turn.response.state).toEqual({
+      'ui-1': {state: {'pagination-2': firstValue}},
+      'ui-2': {state: {'pagination-2': secondValue}},
+    });
   });
 });
