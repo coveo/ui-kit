@@ -39,4 +39,23 @@ describe('QuerySummaryRenderer', () => {
     expect(screen.getByText(/Products/)).toBeDefined();
     expect(screen.queryByText(/for/)).toBeNull();
   });
+
+  it('renders nothing while bindings resolve progressively (indices not yet defined)', () => {
+    // `totalEntries` has arrived but `firstIndex`/`lastIndex` have not: must not
+    // render "Products undefined-undefined of 43".
+    const {container} = renderSummary({
+      query: 'Water Sports',
+      totalEntries: 43,
+    } as unknown as QuerySummaryProps);
+    expect(container.innerHTML).toBe('');
+  });
+
+  it('renders nothing while totalEntries is still unresolved', () => {
+    const {container} = renderSummary({
+      query: 'Water Sports',
+      firstIndex: 1,
+      lastIndex: 12,
+    } as unknown as QuerySummaryProps);
+    expect(container.innerHTML).toBe('');
+  });
 });

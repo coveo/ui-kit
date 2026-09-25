@@ -16,19 +16,26 @@ import styles from './QuerySummary.module.css';
  *   " for {query}" only when a query is present.
  */
 export function QuerySummaryRenderer({props}: TypedRendererProps<QuerySummaryProps, never>) {
-  const {query, firstIndex, lastIndex} = props;
-  const totalEntries = props.totalEntries ?? 0;
+  const {query, firstIndex, lastIndex, totalEntries} = props;
 
-  if (totalEntries === 0 && !query) {
+  // Bindings resolve progressively: any of the four fields may still be
+  // undefined on an early render. Treat a partially-resolved summary as
+  // not-yet-loaded (render nothing) rather than showing "undefined-undefined"
+  // or a premature "No results".
+  if (totalEntries === undefined) {
     return null;
   }
 
-  if (totalEntries === 0 && query) {
-    return (
+  if (totalEntries === 0) {
+    return query ? (
       <p className={styles.summary}>
         No results for <strong>{query}</strong>
       </p>
-    );
+    ) : null;
+  }
+
+  if (firstIndex === undefined || lastIndex === undefined) {
+    return null;
   }
 
   return (
