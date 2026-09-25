@@ -4,7 +4,7 @@ import type {DiscoveredSurface, Turn} from '@coveo/thermidor';
 import {deriveTransitionAction} from './use-navigation.js';
 import {makeTurn} from '../test/turn-fixtures.js';
 
-const COMMERCE_SEARCH_ROOT_TYPE = 'commerce-search';
+const COMMERCE_SEARCH_ROOT_TYPE = 'CommerceSearch';
 
 /**
  * Builds a completed turn whose typed `response.surfaces` projection carries the

@@ -1,6 +1,6 @@
 # Coveo Thermidor
 
-`@coveo/thermidor` is an experimental, framework-agnostic client for a single, stateful, intent-routing **unified converse endpoint**. It exposes one factory — `createSession(config)` — that returns a `Session`: a plain observable list of `Turn`s folded from a server-sent-event (SSE) stream, plus a generic, schema-validated remote controller vended from the session.
+`@coveo/thermidor` is an experimental, framework-agnostic client for a single, stateful, intent-routing **unified converse endpoint**. It exposes one factory — `createSession(config)` — that returns a `Session`: a plain observable list of `Turn`s folded from a server-sent-event (SSE) stream, plus a single action-dispatch entry point wired straight to the renderer.
 
 The package is private, experimental, and consumed only inside this monorepo (by `samples/thermidor/demo-schema-react`).
 
@@ -9,6 +9,8 @@ The package is private, experimental, and consumed only inside this monorepo (by
 ## The idea
 
 The server streams schema-defined [A2UI](https://github.com/google/A2UI) components; the client renders what the server sends. Thermidor's job is to transmit consumer input to the endpoint and fold the streamed result into an observable list of turns — it derives no use-case behavior beyond that fold. The contracts schema, the endpoint URL, and the ambient context are all consumer-injected, so a single package build serves public, internal (private-registry schema), and proxied deployments.
+
+Component state travels **inline** through the A2-UI data model: the server sends `updateDataModel` operations under `/state/<id>`, and the frozen renderer resolves each prop through an A2-UI Data_Binding (`{ path: <JSON Pointer> }`) against that data model. Renderers are "dumb": they receive resolved state in their `props` and never hydrate a controller or join a snapshot themselves. A2-UI is the only supported state source. This inline model superseded the earlier remote-controller / AG-UI `StateSnapshot` design per [ADR-016](./docs/internal/adr/ADR-016-inline-state-consumption-remove-remote-controller.md).
 
 ## Public surface
 
@@ -31,18 +33,30 @@ await session.submit({prompt: 'show me running shoes'});
 
 `createSession(config)` returns a `Session` exposing exactly:
 
-| Member                                                   | Purpose                                                                            |
-| -------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `turns`                                                  | Readonly observable list of `Turn`s folded from the stream (empty initially).      |
-| `subscribe(listener)`                                    | Registers a listener called once per turn-list change; returns an unsubscribe.     |
-| `submit({prompt})`                                       | Opens a new streaming turn, POSTs the request, folds the response.                 |
-| `dispatchAction(action)`                                 | Dispatches a schema-validated remote action against the active turn.               |
-| `cancel()`                                               | Stops consuming the active stream, retains the partial response, marks it `error`. |
-| `retry(turnId)`                                          | Re-submits an errored turn's input.                                                |
-| `serialize()`                                            | Serializes the transcript into a versioned `SerializedSession`.                    |
-| `remoteController(componentId, componentType, options?)` | Vends a generic, schema-validated controller bound to the active turn.             |
+| Member                    | Purpose                                                                            |
+| ------------------------- | ---------------------------------------------------------------------------------- |
+| `contracts`               | The injected contracts schema this session validates against (readonly).           |
+| `turns`                   | Readonly observable list of `Turn`s folded from the stream (empty initially).      |
+| `subscribe(listener)`     | Registers a listener called once per turn-list change; returns an unsubscribe.     |
+| `submit({prompt})`        | Opens a new streaming turn, POSTs the request, folds the response.                 |
+| `dispatchAction(message)` | The single action entry point, wired directly as the renderer's `onAction`.        |
+| `cancel()`                | Stops consuming the active stream, retains the partial response, marks it `error`. |
+| `retry(turnId)`           | Re-submits an errored turn's input.                                                |
+| `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                    |
 
-The concrete `contracts` type pinned at the `createSession` call site threads unbroken through `Session` into `remoteController`, so component types, action names, payloads, and state are all fully typed at the call site (no `string`, no `never`, no `unknown`).
+The concrete `contracts` type pinned at the `createSession` call site threads unbroken through `Session`, so component types, action names, and payloads stay fully typed at the call site (no `string`, no `never`, no `unknown`).
+
+## Dispatching actions
+
+`session.dispatchAction` is the single consumer-facing action entry point. It accepts the standard A2-UI client-to-server message (`A2uiClientMessage`) that the frozen renderer hands to its `onAction` handler, so it wires with no adapter:
+
+```typescript
+<A2UIRenderer onAction={session.dispatchAction} /* … */ />
+```
+
+Given a message, `dispatchAction` unwraps its `userAction`, recovers the dispatching component's discriminant from the active turn's surfaces, validates the action payload against the component's injected contract internally, and — on success — POSTs the action to the converse endpoint.
+
+It is **fire-and-forget**: the returned Promise always resolves and never rejects, so the consumer needs no `.catch`. A message with no `userAction`, no `sourceComponentId`, a node that resolves to no component, or an internal validation failure is dropped with a dev-only warning and nothing is sent.
 
 ## The Turn / TurnResponse model
 
@@ -67,17 +81,14 @@ interface TurnResponse {
 
 `state` and `activities` are routing-neutral and always present. `agent` appears only when the router invoked an agent for the turn. Consumers read `turn.input.prompt`, `turn.response.state`, `turn.response.activities`, `turn.response.surfaces`, and `turn.response.agent?.messages` / `turn.response.agent?.reasoningSteps`.
 
-## Remote controller
+## Validation and displayed values
 
-`session.remoteController(componentId, componentType)` returns a controller bound to the active turn's `response.state.components[componentId]`, validated against the injected contract for `componentType`:
-
-- `state` — the validated component state, or `undefined` when the snapshot is missing or empty.
-- `dispatch(action, payload)` — validates the action name and payload against the contract, then forwards to `session.dispatchAction`. Unknown actions and invalid payloads reject before any network call.
-- `subscribe(listener)` — re-derives on snapshot change and re-points when the active turn changes.
+- **Client-side validation is retained, transparently.** The injected `contracts` schema stays the sole validation source, but the consumer never runs Zod and writes no adapter glue. Inbound `updateDataModel` state is validated on the fold; outbound action payloads are validated in the private dispatch path before the POST. Both boundaries live inside the core.
+- **Displayed-value formatting is agent-produced.** The renderer shows the state it receives through its `{ path }` bindings; Thermidor does not reformat displayed values.
 
 ## Injected schema, endpoint, and context
 
-- **Contracts schema** — a consumer-injected Zod v4 discriminated union (`contracts`) is the sole source for component-state and action-payload validation. Thermidor declares `zod` as a peer dependency so validation runs through the single shared `zod` instance resolved by the injected schema; it declares no dependency on any specific schema package.
+- **Contracts schema** — a consumer-injected Zod v4 discriminated union (`contracts`) is the sole source for component-state and action-payload validation. Thermidor accepts it through a structural typing seam (`ContractsSchema` / `ComponentContractSchema` / `ParsableSchema`), so it declares no dependency on any specific schema package. It declares `zod` as a peer dependency so validation runs through the single shared `zod` instance resolved by the injected schema.
 - **Endpoint** — when `endpoint` is provided, the client POSTs to it verbatim. When absent, it resolves `https://{orgId}.org.coveo.com` and appends the fixed converse path `/api/preview/organizations/{orgId}/agents/commerce/agui/converse`.
 - **Context providers** — `navigatorContextProvider` and `commerceContextProvider` are synchronous functions read fresh per request. Context is never stored on the session and never serialized.
 
@@ -89,8 +100,8 @@ interface TurnResponse {
 
 The following are intentionally **not yet implemented** and are recorded as debt or deferred work:
 
-- **Interim `response.surfaces` derivation** — surface derivation still hardcodes the `'commerce-search'` root-component-type literal, confined to a single location in the fold and annotated as interim per [ADR-015](./docs/internal/adr/ADR-015-surface-and-route-derivation.md). It is retired by a future server-surfaced typed-routing ADR (ADR-015 Option C).
-- **Reserved `{ turnId }` historical-turn selector** — `remoteController(id, type, {turnId})` accepts the options bag without error but always binds to the active turn; the historical-turn selector is reserved and unimplemented per [ADR-013](./docs/internal/adr/ADR-013-remote-controller-vending.md).
+- **Interim `response.surfaces` derivation** — `surfaces` is a typed projection derived from `activities` in the fold, annotated as interim per [ADR-015](./docs/internal/adr/ADR-015-surface-and-route-derivation.md); each entry's `rootComponentType` is compared against the `'CommerceSearch'` literal by consumers/nav rather than by the core. It is retired by a future server-surfaced typed-routing ADR (ADR-015 Option C).
+- **Enforced action-payload typing at the renderer boundary** — the renderer hands `dispatchAction` a loosely typed action message, so per-component action typing is applied by convention (the consumer opts into the generated `XxxAction` types) rather than enforced at the boundary, per [ADR-016](./docs/internal/adr/ADR-016-inline-state-consumption-remove-remote-controller.md). Recoverable later if the package owns binding resolution.
 - **Package rename** — deferred as low-stakes; the package remains `@coveo/thermidor`.
 
 ## Development
@@ -103,4 +114,4 @@ pnpm --filter @coveo/thermidor test:dts   # validate public API surface (incl. D
 
 ## Architecture
 
-See the [Architecture Guide](./docs/architecture.md) for the internal structure, and the accepted decisions of record in [`docs/internal/adr`](./docs/internal/adr) (ADR-009 charter v2 through ADR-015).
+See the [Architecture Guide](./docs/architecture.md) for the internal structure, and the accepted decisions of record in [`docs/internal/adr`](./docs/internal/adr).

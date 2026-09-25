@@ -1,5 +1,4 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import {z} from 'zod/v4';
 
 /**
  * Unit tests for the session lifecycle.
@@ -38,7 +37,48 @@ vi.mock('@/src/internal/api/unified/unified-endpoint-client.js', () => ({
   createUnifiedEndpointClient: () => ({call: callMock}),
 }));
 
+import {z} from 'zod/v4';
+import type {ContractsSchema} from './contracts.js';
 import {createSession, type SessionConfig} from './create-session.js';
+
+/**
+ * A locally-built A2-UI contract, INJECTED as test data exactly as a real
+ * consumer would inject it. Built with this package's own Zod so the test is
+ * independent of any concrete contract package. Mirrors the generated Coveo
+ * shape: a discriminated union on `component` whose Pagination member carries
+ * an optional strict `state` and `actions`.
+ */
+const PaginationSchema = z.strictObject({
+  component: z.literal('Pagination'),
+  state: z
+    .strictObject({
+      page: z.number().int().min(0),
+      pageSize: z.number().int().min(1),
+      totalEntries: z.number().int().min(0),
+      totalPages: z.number().int().min(0),
+    })
+    .optional(),
+  actions: z
+    .strictObject({
+      selectPage: z.strictObject({payload: z.strictObject({page: z.number().int().min(0)})}),
+      setPageSize: z.strictObject({payload: z.strictObject({pageSize: z.number().int().min(1)})}),
+    })
+    .optional(),
+});
+
+const NextActionsBarSchema = z.strictObject({
+  component: z.literal('NextActionsBar'),
+  actions: z
+    .strictObject({
+      selectAction: z.strictObject({payload: z.strictObject({actionId: z.string()})}),
+    })
+    .optional(),
+});
+
+const contracts = z.discriminatedUnion('component', [
+  PaginationSchema,
+  NextActionsBarSchema,
+]) as unknown as ContractsSchema;
 
 /**
  * A ReadableStream a test can feed SSE activities into and close on demand,
@@ -110,27 +150,10 @@ function queueStream(): ControllableStream {
   return controllable;
 }
 
-/**
- * A minimal contracts schema for the lifecycle tests: a Zod v4 discriminated
- * union of `z.strictObject` component contracts (matching the
- * `z.core.$strict` object config the `ContractsSchema` type requires). These
- * lifecycle tests don't exercise remote-controller typing — they just need a
- * concrete schema to satisfy the generic `createSession` signature.
- */
-const contracts = z.discriminatedUnion('componentType', [
-  z.strictObject({
-    componentType: z.literal('pagination'),
-    state: z.strictObject({page: z.number()}),
-    actions: z.strictObject({
-      selectPage: z.strictObject({payload: z.strictObject({page: z.number()})}),
-    }),
-  }),
-]);
-
-const baseConfig: SessionConfig<typeof contracts> = {
+const baseConfig: SessionConfig = {
+  contracts,
   organizationId: 'org-1',
   accessToken: 'token-1',
-  contracts,
 };
 
 /** Waits for pending microtasks so folded state settles before assertions. */
@@ -176,18 +199,47 @@ describe('createSession lifecycle', () => {
       const submitPromise = session.submit({prompt: 'first'});
       await first.opened;
 
+      // Seed the active (still-streaming) turn with a commerce-search surface
+      // carrying a Pagination node so `dispatchAction` can recover the component
+      // discriminant and reach the private execute path — where the streaming
+      // guard must then withhold the POST.
+      first.emit({
+        type: 'ACTIVITY_SNAPSHOT',
+        activityType: 'a2ui-surface',
+        messageId: 'surface-1',
+        content: {
+          messages: [
+            {
+              version: 'v1.0',
+              createSurface: {
+                surfaceId: 'ui-1',
+                rootId: 'root',
+                components: [
+                  {id: 'root', component: 'CommerceSearch'},
+                  {id: 'pagination-1', component: 'Pagination'},
+                ],
+              },
+            },
+          ],
+        },
+      });
+      await flush();
+
       const turnsBefore = session.turns;
       expect(turnsBefore).toHaveLength(1);
       expect(turnsBefore[0].status).toBe('streaming');
 
       await session.dispatchAction({
-        componentId: 'pagination-1',
-        componentType: 'pagination',
-        action: 'selectPage',
-        payload: {page: 2},
+        userAction: {
+          name: 'selectPage',
+          surfaceId: 'ui-1',
+          sourceComponentId: 'pagination-1',
+          context: {page: 2},
+        },
       });
 
-      // Only the original submit call reached the endpoint.
+      // Only the original submit call reached the endpoint; the streaming guard
+      // withheld the action dispatch and left the turn list unchanged.
       expect(callMock).toHaveBeenCalledTimes(1);
       expect(session.turns).toHaveLength(1);
       expect(session.turns[0]).toBe(turnsBefore[0]);
@@ -222,12 +274,9 @@ describe('createSession lifecycle', () => {
               version: 'v1.0',
               createSurface: {
                 surfaceId: 'commerce-search-surface',
-                rootId: 'commerce-search-root',
                 components: [
-                  {
-                    id: 'commerce-search-root',
-                    props: {componentType: 'commerce-search'},
-                  },
+                  {id: 'root', component: 'CommerceSearch'},
+                  {id: 'pagination-1', component: 'Pagination'},
                 ],
               },
             },
@@ -240,10 +289,12 @@ describe('createSession lifecycle', () => {
 
       const actionStream = queueStream();
       const actionTurn = session.dispatchAction({
-        componentId: 'pagination-1',
-        componentType: 'pagination',
-        action: 'selectPage',
-        payload: {page: 2},
+        userAction: {
+          name: 'selectPage',
+          surfaceId: 'commerce-search-surface',
+          sourceComponentId: 'pagination-1',
+          context: {page: 2},
+        },
       });
       await flush();
       await actionStream.opened;
@@ -260,6 +311,160 @@ describe('createSession lifecycle', () => {
     });
   });
 
+  describe('dispatchAction preserves the originating surfaceId', () => {
+    /**
+     * An action must POST to ITS OWN originating surface
+     * (`userAction.surfaceId`), not to whichever surface happens to be
+     * CommerceSearch. Actions from conversation-only surfaces must reach their
+     * own surface rather than being dropped or misrouted.
+     */
+    async function seedCompletedTurn(
+      session: ReturnType<typeof createSession>,
+      createSurface: Record<string, unknown>
+    ) {
+      const first = queueStream();
+      const firstTurn = session.submit({prompt: 'go'});
+      await first.opened;
+      first.emit({
+        type: 'ACTIVITY_SNAPSHOT',
+        messageId: 'surface-activity',
+        activityType: 'a2ui-surface',
+        content: {messages: [{version: 'v1.0', createSurface}]},
+      });
+      first.emit({type: 'RUN_FINISHED'});
+      first.close();
+      await firstTurn;
+    }
+
+    it('routes an action from a conversation-only surface to that surface (was dropped)', async () => {
+      const session = createSession(baseConfig);
+      await seedCompletedTurn(session, {
+        surfaceId: 'next-actions-surface',
+        components: [
+          {id: 'root', component: 'NextActionsBar'},
+          {id: 'next-1', component: 'NextActionsBar'},
+        ],
+      });
+
+      const actionStream = queueStream();
+      const actionTurn = session.dispatchAction({
+        userAction: {
+          name: 'selectAction',
+          surfaceId: 'next-actions-surface',
+          sourceComponentId: 'next-1',
+          context: {actionId: 'a-42'},
+        },
+      });
+      await flush();
+      await actionStream.opened;
+
+      // The action reaches the endpoint even when no CommerceSearch surface
+      // exists on the active turn.
+      expect(callMock).toHaveBeenCalledTimes(2);
+      expect(callMock.mock.calls[1][0]).toMatchObject({
+        action: {surfaceId: 'next-actions-surface', name: 'selectAction'},
+      });
+
+      actionStream.emit({type: 'RUN_FINISHED'});
+      actionStream.close();
+      await actionTurn;
+    });
+
+    it('routes a conversation-only action to its own surface, not the commerce one', async () => {
+      const session = createSession(baseConfig);
+      // A turn with BOTH a CommerceSearch surface and a conversation-only one.
+      const first = queueStream();
+      const firstTurn = session.submit({prompt: 'go'});
+      await first.opened;
+      first.emit({
+        type: 'ACTIVITY_SNAPSHOT',
+        messageId: 'surface-commerce',
+        activityType: 'a2ui-surface',
+        content: {
+          messages: [
+            {
+              version: 'v1.0',
+              createSurface: {
+                surfaceId: 'commerce-search-surface',
+                components: [
+                  {id: 'root', component: 'CommerceSearch'},
+                  {id: 'pagination-1', component: 'Pagination'},
+                ],
+              },
+            },
+          ],
+        },
+      });
+      first.emit({
+        type: 'ACTIVITY_SNAPSHOT',
+        messageId: 'surface-next',
+        activityType: 'a2ui-surface',
+        content: {
+          messages: [
+            {
+              version: 'v1.0',
+              createSurface: {
+                surfaceId: 'next-actions-surface',
+                components: [{id: 'root', component: 'NextActionsBar'}],
+              },
+            },
+          ],
+        },
+      });
+      first.emit({type: 'RUN_FINISHED'});
+      first.close();
+      await firstTurn;
+
+      const actionStream = queueStream();
+      const actionTurn = session.dispatchAction({
+        userAction: {
+          name: 'selectAction',
+          surfaceId: 'next-actions-surface',
+          sourceComponentId: 'root',
+          context: {actionId: 'a-7'},
+        },
+      });
+      await flush();
+      await actionStream.opened;
+
+      // Routed to its OWN surface, not the CommerceSearch one.
+      expect(callMock.mock.calls[1][0]).toMatchObject({
+        action: {surfaceId: 'next-actions-surface'},
+      });
+
+      actionStream.emit({type: 'RUN_FINISHED'});
+      actionStream.close();
+      await actionTurn;
+    });
+
+    it('drops an action whose (surfaceId, node) is absent from the active turn', async () => {
+      const session = createSession(baseConfig);
+      await seedCompletedTurn(session, {
+        surfaceId: 'commerce-search-surface',
+        components: [
+          {id: 'root', component: 'CommerceSearch'},
+          {id: 'pagination-1', component: 'Pagination'},
+        ],
+      });
+
+      // A surfaceId that does not exist on the active turn: recoverDiscriminant
+      // finds no registry entry → nothing sent (drop upstream of executeAction).
+      const dispatched = session.dispatchAction({
+        userAction: {
+          name: 'selectPage',
+          surfaceId: 'ghost-surface',
+          sourceComponentId: 'pagination-1',
+          context: {page: 2},
+        },
+      });
+      await flush();
+      await dispatched;
+
+      // Only the initial submit reached the endpoint; the action was dropped.
+      expect(callMock).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('cancel during an in-flight stream', () => {
     it('stops the stream, retains the partial response, and sets the active turn to error', async () => {
       const session = createSession(baseConfig);
@@ -269,10 +474,13 @@ describe('createSession lifecycle', () => {
       await first.opened;
 
       // Fold a partial response before cancelling.
-      first.emit({type: 'STATE_SNAPSHOT', snapshot: {theme: 'dark'}});
+      first.emit({type: 'TEXT_MESSAGE_START', messageId: 'm1', role: 'assistant'});
+      first.emit({type: 'TEXT_MESSAGE_CONTENT', messageId: 'm1', delta: 'partial'});
       await flush();
 
-      expect(session.turns[0].response.state).toEqual({theme: 'dark'});
+      expect(session.turns[0].response.agent?.messages).toEqual([
+        {content: 'partial', role: 'assistant'},
+      ]);
       expect(session.turns[0].status).toBe('streaming');
 
       session.cancel();
@@ -282,7 +490,7 @@ describe('createSession lifecycle', () => {
       expect(turn.status).toBe('error');
       expect(turn.error).toBeDefined();
       // Partial response already folded is retained.
-      expect(turn.response.state).toEqual({theme: 'dark'});
+      expect(turn.response.agent?.messages).toEqual([{content: 'partial', role: 'assistant'}]);
     });
   });
 

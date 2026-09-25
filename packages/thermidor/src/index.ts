@@ -3,24 +3,30 @@
  *
  * The package exposes exactly the session-client surface: the `createSession`
  * factory, the `Session` handle, the `Turn` / `TurnResponse` domain model, the
- * session configuration, the versioned serialization shape, and the generic,
- * schema-validated `RemoteController` type.
+ * session configuration, and the versioned serialization shape.
+ *
+ * Outbound actions reach the core through the single consumer-facing entry
+ * point {@link Session.dispatchAction}, wired directly as the renderer's
+ * `onAction` handler; the action-payload validation happens internally, so the
+ * consumer never runs Zod and writes no adapter glue.
  *
  * The entry is intentionally free of state-library concepts (no store, slice,
  * selector, thunk, or reducer) and free of raw transport DTO shapes
- * (`CommerceRequestModel`, `A2uiAction`, etc.). The internal remote-controller
- * seam (`buildRemoteController`, `RemoteControllerSource`,
- * `selectRemoteControllerState`) is likewise kept out of the public exports.
+ * (`CommerceRequestModel`, `A2uiAction`, etc.).
  */
 
 // ── Session factory + handle ────────────────────────────────────────────────
 export {createSession} from '@/src/session/create-session.js';
+export type {Session, SessionConfig, A2uiClientMessage} from '@/src/session/create-session.js';
+
+// ── Injected-contract type (the runtime's decoupling seam) ───────────────────
 export type {
-  Session,
-  SessionConfig,
-  RemoteAction,
-  RemoteControllerOptions,
-} from '@/src/session/create-session.js';
+  ContractsSchema,
+  ComponentContractSchema,
+  ParsableSchema,
+  SafeParseResult,
+  ParseIssue,
+} from '@/src/session/contracts.js';
 
 // ── Client-owned context config types ───────────────────────────────────────
 export type {
@@ -55,17 +61,3 @@ export type {
   SerializedTurnResponse,
   SerializedTurnAgent,
 } from '@/src/session/serialize.js';
-
-// ── Generic, schema-validated remote controller ─────────────────────────────
-export type {Unsubscribe} from '@/src/session/store.js';
-export type {
-  Controller,
-  RemoteController,
-  ContractsSchema,
-  ComponentContractSchema,
-  ComponentTypeOf,
-  ContractFor,
-  StateFor,
-  ActionNameFor,
-  ActionPayloadFor,
-} from '@/src/remote-controller/types.js';

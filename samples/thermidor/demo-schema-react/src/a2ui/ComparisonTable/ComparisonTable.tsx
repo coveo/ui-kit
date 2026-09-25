@@ -1,9 +1,9 @@
-import {useRemoteController} from '../controllers.js';
 import type {
   ComparisonTableProps,
   ComparisonAttribute,
   ComparisonProduct,
 } from '@coveo/thermidor-schema';
+import type {TypedRendererProps} from '../renderer-props.js';
 import styles from './ComparisonTable.module.css';
 
 function formatPrice(price: number): string {
@@ -12,17 +12,17 @@ function formatPrice(price: number): string {
 
 /**
  * A2-UI leaf renderer for the `comparison-table` component. It reads its heading, AI
- * summary, compared products, and attribute descriptors from its own AG-UI state and
- * renders the aligned comparison grid: a header row with each product's image and name,
- * a price row, and one row per attribute (excluding `brand`). Read-only: the framing,
- * products, and attributes are owned by the backend and correlated solely by componentId.
+ * summary, compared products, and attribute descriptors directly from its resolved props
+ * (bound to the A2-UI data model) and renders the aligned comparison grid: a header row
+ * with each product's image and name, a price row, and one row per attribute (excluding
+ * `brand`). Read-only: the framing, products, and attributes are owned by the backend and
+ * delivered through the component's `{ path }` bindings.
  */
-export function ComparisonTableRenderer({props}: {props: ComparisonTableProps}) {
-  const controller = useRemoteController(props.componentId, props.componentType);
-  const heading = controller.state?.heading ?? '';
-  const summary = controller.state?.summary ?? '';
-  const products = controller.state?.products ?? [];
-  const attributes = controller.state?.attributes ?? [];
+export function ComparisonTableRenderer({props}: TypedRendererProps<ComparisonTableProps, never>) {
+  const heading = props.heading ?? '';
+  const summary = props.summary ?? '';
+  const products = props.products ?? [];
+  const attributes = props.attributes ?? [];
 
   if (products.length === 0) {
     return null;

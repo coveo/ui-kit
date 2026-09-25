@@ -4,15 +4,12 @@ import {render, screen} from '@testing-library/react';
 import type {LayoutStackProps} from '@coveo/thermidor-schema';
 import {LayoutStackRenderer} from './LayoutStack.js';
 
-const baseProps: LayoutStackProps = {
-  componentId: 'search-main',
-  componentType: 'layout-stack',
-};
+type ResolvedProps = LayoutStackProps & {direction?: 'column' | 'row'};
 
-// The renderer receives its ordered child ids and its `direction` on the resolved props
-// (spread from the A2-UI node), neither of which the schema type surfaces.
-function withProps(childIds: string[], direction?: string): LayoutStackProps {
-  return {...baseProps, children: childIds, ...(direction ? {direction} : {})} as LayoutStackProps;
+// The renderer reads its ordered child ids and its `direction` presentation prop directly
+// from the resolved props (the binder passes the static composition + presentation through).
+function withProps(childIds: string[], direction?: 'column' | 'row'): ResolvedProps {
+  return {children: childIds, ...(direction ? {direction} : {})} as ResolvedProps;
 }
 
 let mountFn: Mock<(id: string) => ReactNode>;
@@ -26,7 +23,7 @@ describe('LayoutStackRenderer', () => {
     mountFn.mockReturnValue(null);
     render(<LayoutStackRenderer props={withProps([])} children={mountFn} />);
 
-    expect(screen.getByTestId('search-main')).toBeDefined();
+    expect(screen.getByTestId('layout-stack')).toBeDefined();
     expect(mountFn).not.toHaveBeenCalled();
   });
 
@@ -45,20 +42,15 @@ describe('LayoutStackRenderer', () => {
 
   it('defaults to column direction when direction is absent', () => {
     render(<LayoutStackRenderer props={withProps([])} children={mountFn} />);
-    expect(screen.getByTestId('search-main').getAttribute('data-direction')).toBe('column');
+    expect(screen.getByTestId('layout-stack').getAttribute('data-direction')).toBe('column');
   });
 
   it('applies row direction when declared', () => {
     render(<LayoutStackRenderer props={withProps([], 'row')} children={mountFn} />);
-    expect(screen.getByTestId('search-main').getAttribute('data-direction')).toBe('row');
+    expect(screen.getByTestId('layout-stack').getAttribute('data-direction')).toBe('row');
   });
 
-  it('falls back to column for an unknown direction value', () => {
-    render(<LayoutStackRenderer props={withProps([], 'diagonal')} children={mountFn} />);
-    expect(screen.getByTestId('search-main').getAttribute('data-direction')).toBe('column');
-  });
-
-  it('mounts solely from renderer inputs, not AG-UI state', () => {
+  it('mounts solely from the resolved props composition', () => {
     const childIds = ['facet-manager-2'];
     mountFn.mockImplementation((id: string) => <span data-testid={`child-${id}`}>{id}</span>);
     render(<LayoutStackRenderer props={withProps(childIds)} children={mountFn} />);
