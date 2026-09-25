@@ -58,7 +58,7 @@ AppShell (providers + navigation)
 
 Navigation is determined by what the backend returns:
 
-- Turn whose discovered surface has a `rootComponentType` of `commerce-search` → SearchResultsPage mounting the surface via `ThermidorA2UISurfaces`
+- Turn whose discovered surface has a `rootComponentType` of `CommerceSearch` → SearchResultsPage mounting the surface via `ThermidorA2UISurfaces`
 - Turn with `agentResponse` (reasoning steps / surfaces) → ConversationPage (A2-UI catalog renderers)
 
 ### ConversationPage component tree
