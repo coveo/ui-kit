@@ -1,13 +1,25 @@
 /**
- * Resolves `catalog:` protocol references in pkg.pr.new template package.json
- * files before publishing. The `catalog:` protocol is a pnpm workspace feature
- * that does not resolve outside the workspace (e.g. in StackBlitz).
+ * Prepares pkg.pr.new template package.json files for publishing, so they install
+ * with npm in StackBlitz rather than only with pnpm inside this workspace.
+ *
+ * Two transformations:
+ *
+ * 1. Resolve `catalog:` references. The `catalog:` protocol is a pnpm workspace
+ *    feature that does not resolve outside the workspace.
+ *    See: https://github.com/stackblitz-labs/pkg.pr.new/issues/204
+ *
+ * 2. Drop test tooling. A template only ever runs its `dev` script in StackBlitz,
+ *    so test runners are dead weight — and `vitest` is worse than dead weight: it
+ *    declares a dozen optional peers (`jsdom`, `happy-dom`, `@vitest/ui`, …) and
+ *    npm's dependency resolver crashes on that shape with
+ *    `Cannot read properties of null (reading 'edgesOut')`, which takes the whole
+ *    preview down. pnpm resolves it fine, which is why this only bites in
+ *    StackBlitz. Removing test tooling also cuts the install to a fraction of its
+ *    size.
  *
  * Accepts the same glob pattern that `.github/actions/publish-preview` hands to
  * `pkg-pr-new --template`, so there is a single source of truth for which
- * directories are templates and every published template gets flattened.
- *
- * See: https://github.com/stackblitz-labs/pkg.pr.new/issues/204
+ * directories are templates and every published template gets the same treatment.
  */
 
 import {execFileSync} from 'node:child_process';
@@ -17,6 +29,32 @@ import {fileURLToPath} from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const defaultTemplateDirectory = path.resolve(__dirname, '..');
+
+/**
+ * Test tooling, removed from published templates. Exact names plus scope prefixes.
+ * Anything needed to actually serve the app (`vite`, framework plugins, `typescript`,
+ * `@types/*`) is deliberately absent from this list.
+ */
+const TEST_TOOLING = new Set(['vitest', 'playwright', '@playwright/test', 'fast-check']);
+const TEST_TOOLING_PREFIXES = ['@testing-library/', '@vitest/'];
+
+function isTestTooling(name) {
+  return TEST_TOOLING.has(name) || TEST_TOOLING_PREFIXES.some((p) => name.startsWith(p));
+}
+
+/** Removes test tooling from a dependency map, returning the names removed. */
+function removeTestTooling(configuration) {
+  if (!configuration) {
+    return [];
+  }
+
+  const removed = Object.keys(configuration).filter(isTestTooling);
+  for (const name of removed) {
+    delete configuration[name];
+  }
+
+  return removed;
+}
 
 function listDependencies(packageDirectory) {
   const output = execFileSync('pnpm', ['ls', '--filter', '.', '--json', '--depth', '0'], {
@@ -74,8 +112,22 @@ function flattenTemplate(templateDirectory) {
     resolveCatalogEntries(packageJson.dependencies, dependencies, packageName) +
     resolveCatalogEntries(packageJson.devDependencies, devDependencies, packageName);
 
-  if (resolvedCount === 0) {
-    console.log(`${packageName}: no "catalog:" references to resolve.`);
+  const removed = [
+    ...removeTestTooling(packageJson.dependencies),
+    ...removeTestTooling(packageJson.devDependencies),
+  ];
+  if (removed.length > 0) {
+    console.log(`${packageName}: removed test tooling — ${removed.sort().join(', ')}`);
+  }
+
+  // Scripts that cannot run in a published template: their tooling is gone, or they
+  // shell out to the monorepo (`dev:mock` builds sibling workspace packages).
+  for (const script of ['test', 'e2e', 'e2e:watch', 'dev:mock']) {
+    delete packageJson.scripts?.[script];
+  }
+
+  if (resolvedCount === 0 && removed.length === 0) {
+    console.log(`${packageName}: nothing to prepare.`);
     return;
   }
 
