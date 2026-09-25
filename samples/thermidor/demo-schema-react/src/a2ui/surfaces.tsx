@@ -12,19 +12,26 @@
  * `@a2ui/web_core/v0_9`, and `@a2ui/web_core@0.9.0` publishes no `v1_0` subpath. So a
  * downgrade has to happen somewhere on the client, and today it happens here.
  *
- * ## What is load-bearing, and what is cosmetic
+ * ## What is load-bearing, and what is not
  *
  * Exactly one transformation makes rendering work: **splitting v1.0's single
- * `createSurface` into `createSurface` + `updateComponents`**. The v0.9
- * `processCreateSurfaceMessage` destructures only
- * `{ surfaceId, catalogId, theme, sendDataModel }` from the operation, so a surface's
- * inline `components[]` are silently discarded unless they are re-delivered under a
- * separate `updateComponents` operation.
+ * `createSurface` into `createSurface` + `updateComponents`**. Inline `components` are a
+ * v1.0 addition — the spec's evolution guide describes v1.0 as allowing "the creation of
+ * entire UIs in a single message, rather than a create followed by separate updates"
+ * (https://a2ui.org/specification/v1.0-evolution-guide/). v0.9 is that earlier
+ * create-then-update shape: its `CreateSurfaceMessageSchema` is `.strict()` with no
+ * `components` property, and `processCreateSurfaceMessage` destructures only
+ * `{ surfaceId, catalogId, theme, sendDataModel }`, so inline nodes are silently discarded
+ * unless re-delivered under a separate `updateComponents`. The split reverses exactly the
+ * change v1.0 introduced.
  *
- * The `version` string rewriting is **cosmetic**. `processMessage` dispatches purely on
- * which operation key is present — it never reads `version`, and stamps `version: 'v0.9'`
- * onto its own normalized output regardless of what arrived. The rewrite is kept only so
- * the message stream is legible as v0.9 when inspected in devtools or test fixtures.
+ * The `version` string rewriting is **not** what makes the renderer work: `processMessage`
+ * dispatches purely on which operation key is present, never reads `version`, and stamps
+ * `version: 'v0.9'` onto its own normalized output regardless of what arrived. It is still
+ * emitted rather than dropped, for two reasons: the v0.9 schema declares
+ * `version: z.literal('v0.9')`, and the spec directs renderers to inspect `version` to
+ * "route payloads to version-specific controllers" — this processor simply does not,
+ * because its subpath already fixed the version at import time.
  *
  * Everything else is pass-through. Under the flat A2-UI v1.0 node model a node carries a
  * single `id`/`component` identity plus its presentation values, A2-UI Data_Binding objects
@@ -77,8 +84,9 @@ type A2UIMessage = Record<string, unknown>;
  * - a v1.0 message carrying no recognized operation is unconvertible and is REJECTED
  *   (dropped), so it never reaches the renderer and cannot mutate its state
  *
- * The emitted `version: 'v0.9'` is cosmetic — `processMessage` dispatches on the operation key
- * alone and stamps its own version — and is kept only for legibility of the message stream.
+ * The emitted `version: 'v0.9'` is not what makes the renderer work — `processMessage`
+ * dispatches on the operation key alone and stamps its own version — but it is what the v0.9
+ * schema declares and what the spec tells renderers to route on, so it is emitted, not dropped.
  *
  * @deprecated Remove when a v1.0-capable renderer is available; see the module doc for the
  * precise removal trigger.
