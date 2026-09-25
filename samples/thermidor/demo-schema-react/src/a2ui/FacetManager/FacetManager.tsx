@@ -1,4 +1,4 @@
-import type {FacetManagerProps} from '@coveo/thermidor-schema';
+import type {FacetManagerProps} from '@coveo/thermidor-schema/zod3';
 import type {TypedRendererProps} from '../renderer-props.js';
 import styles from './FacetManager.module.css';
 

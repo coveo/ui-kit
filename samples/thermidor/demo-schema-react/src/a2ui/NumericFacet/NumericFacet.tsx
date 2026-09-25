@@ -1,5 +1,5 @@
 import {useId, useState} from 'react';
-import type {NumericFacetProps, NumericFacetAction} from '@coveo/thermidor-schema';
+import type {NumericFacetProps, NumericFacetAction} from '@coveo/thermidor-schema/zod3';
 import type {TypedRendererProps} from '../renderer-props.js';
 import styles from './NumericFacet.module.css';
 

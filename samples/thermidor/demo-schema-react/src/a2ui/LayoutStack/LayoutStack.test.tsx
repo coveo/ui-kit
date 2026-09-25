@@ -1,7 +1,7 @@
 import {describe, it, expect, vi, beforeEach, type Mock} from 'vitest';
 import type {ReactNode} from 'react';
 import {render, screen} from '@testing-library/react';
-import type {LayoutStackProps} from '@coveo/thermidor-schema';
+import type {LayoutStackProps} from '@coveo/thermidor-schema/zod3';
 import {LayoutStackRenderer} from './LayoutStack.js';
 
 type ResolvedProps = LayoutStackProps & {direction?: 'column' | 'row'};

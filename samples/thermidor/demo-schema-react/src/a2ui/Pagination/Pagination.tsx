@@ -1,4 +1,4 @@
-import type {PaginationProps, PaginationAction} from '@coveo/thermidor-schema';
+import type {PaginationProps, PaginationAction} from '@coveo/thermidor-schema/zod3';
 import type {TypedRendererProps} from '../renderer-props.js';
 import styles from './Pagination.module.css';
 

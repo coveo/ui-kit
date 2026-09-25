@@ -13,7 +13,7 @@ import {
   LayoutStackSchema,
   QuerySummarySchema,
   PageSizeSchema,
-} from '@coveo/thermidor-schema';
+} from '@coveo/thermidor-schema/zod3';
 
 const EXPECTED_COMPONENTS = [
   'ProductCarousel',

@@ -2,7 +2,7 @@ import type {
   ComparisonTableProps,
   ComparisonAttribute,
   ComparisonProduct,
-} from '@coveo/thermidor-schema';
+} from '@coveo/thermidor-schema/zod3';
 import type {TypedRendererProps} from '../renderer-props.js';
 import styles from './ComparisonTable.module.css';
 

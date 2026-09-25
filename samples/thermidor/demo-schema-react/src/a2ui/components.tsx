@@ -21,9 +21,8 @@ import {
   QuerySummaryPropsSchema,
   PageSizePropsSchema,
   THERMIDOR_CATALOG_ID,
-} from '@coveo/thermidor-schema';
+} from '@coveo/thermidor-schema/zod3';
 export {THERMIDOR_CATALOG_ID};
-import {toBinderProps} from './catalog-props-migration.js';
 import {ProductCarouselRenderer} from './ProductCarousel/ProductCarousel.js';
 import {NextActionsBarRenderer} from './NextActionsBar/NextActionsBar.js';
 import {BundleDisplayRenderer} from './BundleDisplay/BundleDisplay.js';
@@ -42,39 +41,36 @@ import {QuerySummaryRenderer} from './QuerySummary/QuerySummary.js';
 import {PageSizeRenderer} from './PageSize/PageSize.js';
 
 /**
- * The single Zod-3-vs-Zod-4 shim at the catalog boundary.
+ * Reconciles the Zod type IDENTITY between two Zod 3 installs.
  *
- * The frozen renderer's binder (`@a2ui/web_core@0.9.0`) resolves `{ "path": ... }` bindings by
- * introspecting each prop schema's **Zod 3** runtime internals. The generated `XxxPropsSchema`
- * (`@coveo/thermidor-schema`) are **Zod 4**, whose internals the binder cannot read — so every
- * field would be classified STATIC and a binding would leak to the renderer unresolved.
+ * Every schema import in this sample comes from `@coveo/thermidor-schema/zod3`, so
+ * there is no Zod 3-vs-Zod 4 conversion left anywhere — the prop schemas arrive in
+ * the dialect the binder reads and no runtime rebuild happens.
  *
- * This function is the ONE place the whole workaround lives:
- *   - RUNTIME: it rebuilds each definition's `props` through {@link toBinderProps}, producing a
- *     real Zod 3 `ZodObject` whose fields are the A2-UI Dynamic_Value unions the binder classifies
- *     as DYNAMIC (bindable props) or plain Zod 3 static string/array child-refs it passes through
- *     untouched (composition props). Callers therefore pass the RAW generated `XxxPropsSchema`.
- *   - TYPES: it reconciles the two Zod packages' `ZodObject` type identities into the renderer's
- *     `CatalogDefinitions` (a cast the runtime rebuild alone cannot express to the compiler).
+ * What remains is purely nominal. The schema package builds with its own Zod, while
+ * `@copilotkit/a2ui-renderer` types `CatalogDefinitions` against the copy in its own
+ * dependency subtree. Zod 3's `ZodObject` declares a PRIVATE member (`_cached`), and
+ * TypeScript only considers types with private members assignable when those members
+ * originate from the same declaration. Two structurally identical `ZodObject` types
+ * from two installs are therefore never assignable, no matter how the schemas are
+ * written.
  *
- * @deprecated Remove this function (and {@link toBinderProps}) and pass each `XxxPropsSchema`
- * directly to `createCatalog` once `@copilotkit/a2ui-renderer` upgrades its binder to Zod 4.
+ * The binder itself matches structurally (on `_def.typeName`) precisely to avoid
+ * dual-module identity problems, so this is a types-only bridge with no runtime
+ * behaviour. It can only disappear once the renderer and the schema resolve a single
+ * shared Zod install.
  */
 function asCatalogDefinitions<
-  T extends Record<string, {description?: string; props: {shape: Record<string, unknown>}}>,
+  T extends Record<string, {description?: string; props: unknown}>,
 >(definitions: T): CatalogDefinitions {
-  const migrated: Record<string, {description?: string; props: unknown}> = {};
-  for (const [name, definition] of Object.entries(definitions)) {
-    migrated[name] = {...definition, props: toBinderProps(definition.props)};
-  }
-  return migrated as unknown as CatalogDefinitions;
+  return definitions as unknown as CatalogDefinitions;
 }
 
 /**
- * Converts Zod 4 catalog renderers to the Zod 3 CatalogRenderers type
- * expected by @copilotkit/a2ui-renderer. Validates structure at compile time.
+ * Bridges the catalog renderers to the renderer package's `CatalogRenderers` type.
  *
- * @deprecated Remove when @copilotkit/a2ui-renderer upgrades to Zod 4.
+ * Same nominal cause as {@link asCatalogDefinitions}: the renderer type is derived
+ * from definitions typed against a different Zod install.
  */
 function asCatalogRenderers<T extends Record<string, React.FC<any>>>(
   renderers: T

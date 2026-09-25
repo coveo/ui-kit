@@ -1,6 +1,6 @@
 import {Fragment, useState} from 'react';
 
-import type {BundleDisplayProps, BundleSlot, BundleTier} from '@coveo/thermidor-schema';
+import type {BundleDisplayProps, BundleSlot, BundleTier} from '@coveo/thermidor-schema/zod3';
 import type {TypedRendererProps} from '../renderer-props.js';
 import styles from './BundleDisplay.module.css';
 
