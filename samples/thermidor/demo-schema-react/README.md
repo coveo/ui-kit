@@ -37,13 +37,38 @@ This sample uses the `/converse-schema` route on the mock server (via `VITE_COVE
 
 ## Available scripts
 
-| Command         | Description                                                     |
-| --------------- | --------------------------------------------------------------- |
-| `pnpm dev`      | Start dev server (requires backend credentials in `.env.local`) |
-| `pnpm dev:mock` | Build deps, start mock API, and open dev server                 |
-| `pnpm build`    | Production build                                                |
-| `pnpm test`     | Run Vitest unit tests                                           |
-| `pnpm preview`  | Preview production build                                        |
+| Command         | Description                                                       |
+| --------------- | ----------------------------------------------------------------- |
+| `pnpm dev`      | Start dev server against a live backend (no configuration needed) |
+| `pnpm dev:mock` | Build deps, start mock API, and open dev server                   |
+| `pnpm build`    | Production build                                                  |
+| `pnpm test`     | Run Vitest unit tests                                             |
+| `pnpm preview`  | Preview production build                                          |
+
+## Configuration
+
+`pnpm dev` needs no configuration. With no `VITE_COVEO_ORGANIZATION_ID` set, the
+sample falls back to the public `searchuisamples` organization — the same org and
+intentionally-public API key the other samples use through
+`getSampleSearchEngineConfiguration()` — which has the commerce agent enabled.
+
+To point it at your own organization, copy `.env.example` to `.env.local` and set
+`VITE_COVEO_ORGANIZATION_ID`. Doing so opts out of the sample defaults **as a
+bundle**: the tracking id, locale, and platform environment all belong to
+`searchuisamples`, so they are not mixed into another organization's
+configuration. Set the ones you need alongside it.
+
+See [`src/public-sample-configuration.ts`](src/public-sample-configuration.ts).
+
+## Pull-request previews
+
+This sample is published as a [pkg.pr.new](https://pkg.pr.new) StackBlitz template,
+so every PR that affects `@coveo/thermidor` gets a link that boots this app against
+that PR's build of the package. Because it needs no configuration, the link is
+runnable as-is — it is the quickest way to try a Thermidor change end to end.
+
+The template set lives in
+[`.github/actions/publish-preview/action.yml`](../../../.github/actions/publish-preview/action.yml).
 
 ## Architecture
 
