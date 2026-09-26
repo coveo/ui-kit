@@ -63,23 +63,49 @@ Adopting the inline-state model removes the join at its root, and with it the se
 
 This aligns the sample with the standard A2-UI data-binding and component model rather than a Thermidor-specific identity bridge.
 
-## Skeleton detection (⚠️ needs clarification)
+## Skeleton detection (⚠️ partially standardized)
 
-Skeletons are shown during streaming to indicate which components are loading. The current implementation supports **two detection sources**, but only one is actively used:
+Skeletons are shown during streaming to indicate which components are loading. Detection has several sources, and the **observed backend behavior** (captured from a live `commerce_discovery` run) is now the reference:
 
-| Source                        | Trigger                                                                                     | Origin             | Status         |
-| ----------------------------- | ------------------------------------------------------------------------------------------- | ------------------ | -------------- |
-| `store_render_plan` tool call | Reasoning step with `name: "store_render_plan"` and `args.route` mapped to a component type | Mock API templates | ✅ Active      |
-| `skeleton-` surfaceId prefix  | Backend sends a surface with `surfaceId.startsWith("skeleton-")`                            | PoC (PR #8088)     | ⚠️ Speculative |
-| `isLoading` prop              | Backend sends a surface with `componentProps.isLoading === true`                            | PoC (PR #8088)     | ⚠️ Speculative |
+| Source                        | Trigger                                                               | Status                                 |
+| ----------------------------- | --------------------------------------------------------------------- | -------------------------------------- |
+| `isLoading` in the data model | `createSurface.dataModel.isLoading === true`                          | ✅ Backend-emitted, A2UI-aligned       |
+| `skeleton-` surfaceId prefix  | `surfaceId.startsWith("skeleton-")` (e.g. `skeleton-surface-default`) | ⚠️ Backend-emitted, non-standard       |
+| `store_render_plan` tool call | Reasoning step `name: "store_render_plan"` mapped to a component type | ⚠️ Mock-only (not skeleton in backend) |
 
-**Open questions:**
+### What the live backend actually emits
 
-- Neither `skeleton-` prefix nor `isLoading` prop are documented in ADR-001 or ADR-002. Should we standardize one of these as the official skeleton contract?
-- The real backend does not currently emit skeleton surfaces. When it does, which mechanism will it use?
-- Should `store_render_plan` tool calls remain the primary skeleton trigger, or should the backend own skeleton lifecycle via explicit surface messages?
+On a loading surface, the backend emits a single `createSurface` message carrying **both** signals at once:
 
-The speculative sources are kept to stay aligned with `demo-react` but may be removed if the backend standardizes on a different mechanism.
+```
+createSurface: {
+  surfaceId: "…:skeleton-surface-default",   // skeleton- prefix
+  components: [{ id: "root", component: "ProductCarousel" }],  // ← selects WHICH skeleton
+  dataModel: { isLoading: true, products: { items: [] }, heading: { value: "" } }  // isLoading
+}
+```
+
+It is then **replaced in place** (same `messageId`, `replace: true`) by the real content — a new `createSurface` whose `surfaceId` no longer carries the `skeleton-` prefix and whose `dataModel` omits `isLoading` and holds the real data.
+
+- **Whether** to show a skeleton: `dataModel.isLoading === true` (data-model state — A2UI-aligned). The consumer reads `ParsedSurface.data.isLoading`.
+- **Which** skeleton to show: the root node's `component` discriminant (`ProductCarousel`, `NextActionsBar`, …), mapped by `A2UISkeleton`. The skeleton is the same component type as the real content that replaces it.
+- The `skeleton-` surfaceId prefix is redundant with `isLoading` for detection (kept as a fallback in `useSkeletonItems`), and `store_render_plan` is NOT the backend's skeleton trigger — it is the product render plan; the mock templates still (incorrectly) use it to simulate skeletons.
+
+### What is A2UI-standard vs. Coveo convention
+
+- ✅ **Standard-aligned**: loading state carried in the surface **data model** (`isLoading`), skeleton variant chosen by the component **type** (structure), skeleton→content swap via a replacing `createSurface`.
+- ⚠️ **Non-standard Coveo conventions** (semantics encoded in the opaque `surfaceId`):
+  - the `skeleton-` **prefix** (detection hint, redundant with `isLoading`);
+  - the `-default` **suffix**, which `useSkeletonItems` reads to deduplicate generic vs specific skeletons (a generic `…-default` skeleton is dropped once a specific one for the same component type arrives), and the derived `-remaining-N` ids. This is a real behavior, not just a fallback.
+
+### Deferred migration (separate PR)
+
+To make skeleton handling fully data-model-driven and drop the `surfaceId` semantics, a follow-up should:
+
+1. Move the `-default` / specific priority off the `surfaceId` suffix and into the data model (e.g. a `skeletonKind`/priority field), so `useSkeletonItems` no longer parses `surfaceId`.
+2. Once detection and dedupe both read the data model, retire the `skeleton-` prefix and the `store_render_plan`-based skeleton path in the mock templates, and align the mocks to emit the backend's real skeleton shape (`createSurface` + `dataModel.isLoading`, replaced in place).
+
+Until then, the consumer reads `dataModel.isLoading` (applied) and keeps the `skeleton-`/`-default` surfaceId logic for backward compatibility.
 
 ## Zod version mismatch
 
@@ -176,11 +202,11 @@ This is out of scope for the static switchover; capture it before wiring dynamic
 
 ### Temporary workarounds (to remove when upstream dependencies evolve)
 
-| Item                    | Description                                                                                                                            | Remove when                                                |
-| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| **v1.0 → v0.9 adapter** | The `convertV1ToV09` shim in `surfaces.tsx` can be deleted once the renderer supports v1.0 natively.                                   | `@copilotkit/a2ui-renderer` supports v1.0 MessageProcessor |
-| **Zod 4 type casts**    | `asCatalogDefinitions` / `asCatalogRenderers` bridge helpers in `components.tsx` due to Zod version mismatch.                          | `@copilotkit/a2ui-renderer` upgrades to Zod 4              |
-| **Skeleton detection**  | Three detection mechanisms coexist (see section above). Only `store_render_plan` tool calls are active; the other two are speculative. | Backend team standardizes skeleton contract                |
+| Item                    | Description                                                                                                                                                                      | Remove when                                                                                                                      |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| **v1.0 → v0.9 adapter** | The `convertV1ToV09` shim in `surfaces.tsx` can be deleted once the renderer supports v1.0 natively.                                                                             | `@copilotkit/a2ui-renderer` supports v1.0 MessageProcessor                                                                       |
+| **Zod 4 type casts**    | `asCatalogDefinitions` / `asCatalogRenderers` bridge helpers in `components.tsx` due to Zod version mismatch.                                                                    | `@copilotkit/a2ui-renderer` upgrades to Zod 4                                                                                    |
+| **Skeleton detection**  | Detection reads `dataModel.isLoading` (A2UI-aligned, applied); the `surfaceId` still carries non-standard `skeleton-` / `-default` semantics used for dedupe (see section above). | Migrate `-default`/`-remaining` off the `surfaceId` into the data model; align mocks to the backend skeleton shape (separate PR) |
 
 ### Consumer DX improvements (simplify what the consumer must implement)
 

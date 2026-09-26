@@ -91,8 +91,7 @@ function useSkeletonItems(
     const skeletonIdsByType = new Map<string, Set<string>>();
 
     for (const s of known) {
-      const props = s.componentProps;
-      const isSkeleton = s.surfaceId.startsWith('skeleton-') || props.isLoading === true;
+      const isSkeleton = s.surfaceId.startsWith('skeleton-') || s.data.isLoading === true;
 
       if (isSkeleton) {
         const ids = skeletonIdsByType.get(s.componentType) ?? new Set();
