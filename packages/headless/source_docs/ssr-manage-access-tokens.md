@@ -8,19 +8,19 @@ slug: usage/server-side-rendering/manage-access-tokens
 # Manage access tokens
 
 When you render a Coveo experience server-side, you decide which access token each request uses.
-This article shows how to set a token for your whole application, how to use a different token per user in a multi-tenant application, how to set the navigator context per request, and how to update the token on the client after hydration.
+This article explains how to set a token for your whole application, how to use a different token per user in a multi-tenant application, how to set the navigator context per request, and how to update the token on the client after hydration.
 
 > [!NOTE]
 >
 > Use a [search token](https://docs.coveo.com/en/56/build-a-search-ui/search-token-authentication) rather than an API key in a server-side rendered application.
-> A search token is scoped and short-lived, so it is safe to send to the browser during hydration, whereas an API key must never reach the client.
+> Search tokens are scoped and short-lived, so you can send them to the browser during hydration. Never send an API key to the client.
 
 > [!NOTE]
 >
-> The per-request `accessToken` and `navigatorContext` options shown in this article are available on the `@coveo/headless/ssr-commerce` sub-package (and its `@coveo/headless-react/ssr-commerce` React wrapper).
-> They are applied to a single request without mutating the shared engine definition, which is what makes them safe to use under server concurrency.
+> The per-request `accessToken` and `navigatorContext` options in this article are available on the `@coveo/headless/ssr-commerce` sub-package (and its `@coveo/headless-react/ssr-commerce` React wrapper).
+> They're applied to a single request without mutating the shared engine definition, so they're safe to use under server concurrency.
 
-For the following examples, assume a shared configuration file (`engine.ts`) that defines the commerce engine:
+For the code examples in the following sections, assume a shared configuration file (`engine.ts`) that defines the commerce engine:
 
 ```ts
 // engine.ts
@@ -46,12 +46,12 @@ Every request uses this token, and you don’t need to do anything else.
 
 This is the default: the token you configure in `engine.ts` is the one used unless you override it for a specific request.
 
-For more details about the `accessToken` configuration and about `renewAccessToken` (the callback the engine runs to obtain a new token when the current one expires), see [Configure a Headless Engine](../../index.html#configure-a-headless-engine).
+For details about the `accessToken` configuration and the `renewAccessToken` callback that the engine runs to obtain a new token when the current one expires, see [Configure a Headless Engine](../../index.html#configure-a-headless-engine).
 
 ## Use a different token per user
 
 In a multi-tenant application, each request may need its own token — for example, a search token minted for the currently authenticated user.
-Pass an `accessToken` when you fetch the static state to use it for that request only:
+Pass an `accessToken` when you fetch the static state to use it only for that request:
 
 ```tsx
 // server.ts
@@ -83,8 +83,8 @@ When you omit `accessToken`, the request uses the token configured in the defini
 
 > [!IMPORTANT]
 >
-> Pass the same token to `hydrateStaticState()` on the client that you passed to `fetchStaticState()` on the server, so the hydrated engine continues using the token the page was rendered with.
-> With the React wrapper, you do this by passing `accessToken` to the provider (as shown above): the provider forwards it to `hydrateStaticState()` for you, so you don't call `hydrateStaticState()` yourself.
+> Pass the same token to `hydrateStaticState()` on the client that you passed to `fetchStaticState()` on the server, so the hydrated engine continues using the token used to render the page.
+> With the React wrapper, you passed `accessToken` to the provider (as shown above). The provider forwards it to `hydrateStaticState()` for you, so you don't need to call `hydrateStaticState()` yourself.
 
 > [!NOTE]
 >
@@ -92,9 +92,9 @@ When you omit `accessToken`, the request uses the token configured in the defini
 
 ## Set the navigator context per request
 
-The navigator context carries per-request signals used for analytics and personalization — the client ID, user agent, referrer, and forwarded-for address. Like the access token, it varies from one request to the next, so it must not be written onto the shared engine definition on the server.
+The navigator context carries per-request signals used for analytics and personalization: the client ID, user agent, referrer, and forwarded-for address. Like the access token, it varies from one request to the next, so it must not be written onto the shared engine definition on the server.
 
-`setNavigatorContextProvider()` sets the navigator context on the shared definition. That works on the client, where a single engine serves one user, but on the server — where requests are handled concurrently — it is racy: one request can read another request's navigator context. Instead, pass a `navigatorContext` when you fetch the static state to use it for that request only:
+`setNavigatorContextProvider()` sets the navigator context on the shared definition. That works on the client, where a single engine serves one user. On the server, however, requests are handled concurrently, so using it can cause one request to read another request's navigator context. Instead, pass a `navigatorContext` when you fetch the static state to use it for that request only:
 
 ```tsx
 // server.ts
@@ -116,12 +116,12 @@ export default async function ProductListing({request}: {request: Request}) {
 
 > [!NOTE]
 >
-> On the client, after hydration, `setNavigatorContextProvider()` is still the right tool: a single engine runs for the session, so there are no concurrent requests sharing the definition.
+> After hydration on the client, `setNavigatorContextProvider()` is still the right tool: a single engine runs for the session, so there are no concurrent requests sharing the definition.
 
 ## Rotate the token on the client
 
 After hydration, an engine keeps running in the browser for the rest of the session, so its token eventually expires.
-Configure `renewAccessToken` on the engine configuration and the engine renews the token on its own: it checks the current token before each request and renews it when it is expired or about to expire, and it also retries once with a fresh token if a request is rejected as unauthorized.
+Configure `renewAccessToken` on the engine configuration and the engine renews the token on its own: it checks the current token before each request and renews it when it is expired or about to expire. It also retries a request once with a fresh token if the request is rejected as unauthorized.
 
 ```ts
 // engine.ts
@@ -141,7 +141,7 @@ export const engineDefinition = defineCommerceEngine({
 });
 ```
 
-Because `renewAccessToken` is part of the engine configuration, it applies to every engine the definition builds, on the server and on the client, and it does not mutate anything shared between requests.
+Because `renewAccessToken` is part of the engine configuration, it applies to every engine built from the definition, on both the server and the client, and doesn't mutate anything shared between requests.
 
 > [!WARNING]
 >
@@ -159,11 +159,11 @@ To use a different token per request on the server, use the per-request `accessT
 
 ## Summary
 
-| What you want to do                                 | How                                                                                          |
-| --------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| Use one token for all users                         | Set `accessToken` in the engine definition `configuration`                                   |
-| Use a different token per user                      | Pass `accessToken` to `fetchStaticState()` and `hydrateStaticState()`                        |
-| Rotate an expiring token                            | Configure `renewAccessToken` on the engine `configuration`                                   |
-| Use a different token per request on the server     | Use the per-request `accessToken` — don’t call `setAccessToken()`                            |
-| Set the navigator context per request on the server | Pass `navigatorContext` to `fetchStaticState()` — don’t call `setNavigatorContextProvider()` |
-| Set the navigator context on the client             | Call `setNavigatorContextProvider()` on the engine definition                                |
+| What you want to do                                 | How                                                                                           |
+| --------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| Use one token for all users                         | Set `accessToken` in the engine definition `configuration`.                                   |
+| Use a different token per user                      | Pass `accessToken` to `fetchStaticState()` and `hydrateStaticState()`.                        |
+| Rotate an expiring token                            | Configure `renewAccessToken` on the engine `configuration`.                                   |
+| Use a different token per request on the server     | Use the per-request `accessToken` — don’t call `setAccessToken()`.                            |
+| Set the navigator context per request on the server | Pass `navigatorContext` to `fetchStaticState()` — don’t call `setNavigatorContextProvider()`. |
+| Set the navigator context on the client             | Call `setNavigatorContextProvider()` on the engine definition.                                |
