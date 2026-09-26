@@ -60,12 +60,10 @@ function statePath(id: string): string {
   return `${STATE_NAMESPACE}/${jsonPointerEscape(id)}`;
 }
 
-// The sub-path beneath `statePath(id)` addressing a single Component_State field.
 function stateFieldPath(id: string, field: string): string {
   return `${statePath(id)}/${jsonPointerEscape(field)}`;
 }
 
-// An A2-UI Data_Binding object: `{ path }` referencing a value in the A2-UI data model.
 interface DataBinding {
   path: string;
 }

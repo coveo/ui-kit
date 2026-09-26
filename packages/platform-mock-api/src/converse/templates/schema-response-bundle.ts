@@ -376,7 +376,6 @@ const nextActionsState = {
   ],
 };
 
-// Each bundle-surface node's whole state becomes one `updateDataModel` op at `statePath(id)`.
 const bundleStateOps: UpdateDataModelOp[] = Object.entries(bundleComponentState).map(
   ([nodeId, value]) => ({surfaceId: BUNDLE_SURFACE_ID, path: statePath(nodeId), value})
 );

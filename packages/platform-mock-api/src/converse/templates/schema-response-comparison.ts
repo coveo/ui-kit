@@ -18,7 +18,6 @@ import {
 const runId = 'schema-comparison-462287cc';
 
 const COMPARISON_SURFACE_ID = 'comparison-surface';
-// Each surface mounts its root as the A2-UI canonical `root` node (id: "root").
 const COMPARISON_ROOT_ID = RENDERER_ROOT_ID;
 const NEXT_ACTIONS_SURFACE_ID = 'next-actions-surface';
 const NEXT_ACTIONS_ROOT_ID = RENDERER_ROOT_ID;

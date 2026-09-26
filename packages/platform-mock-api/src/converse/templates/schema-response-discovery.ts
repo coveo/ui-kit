@@ -12,7 +12,6 @@ const runId = 'schema-discovery-d8d8e15c';
 const LIFE_JACKETS_SURFACE_ID = 'product-surface-life-jackets';
 const SAFETY_GEAR_SURFACE_ID = 'product-surface-safety-gear';
 const NEXT_ACTIONS_SURFACE_ID = 'next-actions-surface';
-// Every surface in this template mounts a single leaf node whose id is `root`.
 const ROOT_ID = 'root';
 
 const carousel1SurfaceActivity: ConverseEvent = ActivitySnapshot({
