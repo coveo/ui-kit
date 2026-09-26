@@ -58,6 +58,8 @@ The following interactive code sample uses Coveo Headless alongside the [Materia
 
 If you're new to Headless, check out the [Getting Started](./getting-started/getting-started-search.html) guides to install the library and verify a minimal setup for your use case.
 
+To create a starter Headless project, use the [`npm create @coveo/ui`](https://docs.coveo.com/en/q8qh2338/) command line tool.
+
 Once you're up and running, see the [Usage](./usage/index.html) section to learn about engines, controllers, and state management.
 
 To create a starter Angular, React, or Vue.js project with a Coveo Headless-powered search page, check out the [Coveo CLI](https://github.com/coveo/cli#readme).
