@@ -38,7 +38,7 @@ describe('ConversationPage integration', () => {
         makeTurn({
           id: 'turn-2',
           prompt: 'Show me results',
-          response: {surfaces: [makeSurface('s1', 'commerce-search')]},
+          response: {surfaces: [makeSurface('s1', 'CommerceSearch')]},
         }),
         makeTurn({
           id: 'turn-3',

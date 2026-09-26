@@ -1,5 +1,11 @@
 import type {NormalizedStreamEvent} from '@/src/internal/api/protocol/stream-types.js';
 import {getActivityMetadata} from '@/src/internal/api/protocol/activity-metadata.js';
+import type {ContractsSchema} from './contracts.js';
+import {
+  deriveNodeIdentityRegistry,
+  readUpdateDataModelOps,
+  validateInboundOp,
+} from './in-transit-validation.js';
 import type {
   A2uiState,
   Activity,
@@ -58,10 +64,21 @@ function ensureAgent(response: TurnResponse): TurnAgent {
  * This is the single place a {@link TurnResponse} is constructed from the
  * stream.
  *
- * The fold is pure: `(previousTurn, activity) → nextTurn`. Folding the same
- * activity sequence twice yields deeply-equal turns.
+ * The fold is pure: `(previousTurn, activity, contracts) → nextTurn`. The
+ * injected `contracts` is a BOUND DEPENDENCY (never part of turn state) that
+ * threads to in-transit validation; folding the same activity sequence twice
+ * with the same contracts yields deeply-equal turns.
+ *
+ * `contracts` is optional: when absent (activity sequences that carry no
+ * `updateDataModel` state ops), no inbound op is validated or applied, so
+ * `response.state` is left as it would be with an empty contract. The session
+ * runtime always threads `config.contracts`.
  */
-export function foldActivity(previousTurn: Turn, activity: NormalizedStreamEvent): Turn {
+export function foldActivity(
+  previousTurn: Turn,
+  activity: NormalizedStreamEvent,
+  contracts?: ContractsSchema
+): Turn {
   const turn = cloneTurn(previousTurn);
   const response = turn.response;
 
@@ -183,14 +200,12 @@ export function foldActivity(previousTurn: Turn, activity: NormalizedStreamEvent
       // full activity list so `response.surfaces` always agrees with a fresh
       // derivation off `response.activities`.
       response.surfaces = deriveSurfaces(response.activities);
-      return turn;
-    }
-
-    case 'STATE_SNAPSHOT': {
-      const snapshot = (activity as unknown as {snapshot?: unknown}).snapshot;
-      if (snapshot && typeof snapshot === 'object' && !Array.isArray(snapshot)) {
-        response.state = snapshot as A2uiState;
-      }
+      // In-transit validation of the just-arrived activity's `updateDataModel`
+      // ops. A conforming op is forwarded (applied into `response.state` at its
+      // op path); a non-conforming, unresolved, or no-`*State`-schema op is
+      // dropped, leaving `response.state` unchanged. The node-identity registry
+      // is re-derived from the full activity list so the fold stays pure.
+      response.state = applyInboundOps(response.state, response.activities, content, contracts);
       return turn;
     }
 
@@ -256,8 +271,97 @@ export function createTurn(id: string, input: TurnInput): Turn {
  * Folds an entire activity sequence over an initial turn. Convenience wrapper
  * used by determinism checks and the session runtime.
  */
-export function foldActivities(initialTurn: Turn, activities: NormalizedStreamEvent[]): Turn {
-  return activities.reduce(foldActivity, initialTurn);
+export function foldActivities(
+  initialTurn: Turn,
+  activities: NormalizedStreamEvent[],
+  contracts?: ContractsSchema
+): Turn {
+  return activities.reduce(
+    (turn, activity) => foldActivity(turn, activity, contracts),
+    initialTurn
+  );
+}
+
+/**
+ * Applies the `updateDataModel` ops carried by the just-arrived activity's
+ * `content.messages[]` to the turn's `A2uiState`, after In_Transit_Validation.
+ *
+ * The node-identity registry is re-derived from the full folded activity list
+ * so the fold stays pure and deterministic. Each op is routed through
+ * {@link validateInboundOp}: a FORWARD decision writes the (validated) value at
+ * the op's JSON Pointer WITHIN its surface's data model (`state[surfaceId]`) in
+ * a shallow copy of the state; a DROP decision leaves the state untouched, so
+ * the renderer keeps its prior data-model value and the previously rendered UI
+ * for that component remains displayed.
+ *
+ * `Thermidor_Core` keeps no state store: `state` here is the turn's forwarded
+ * projection, not a merged component-state store. Returns the input state
+ * reference unchanged when no op is forwarded, so an activity that forwards
+ * nothing does not perturb `response.state`.
+ */
+function applyInboundOps(
+  state: A2uiState,
+  activities: Activity[],
+  content: Record<string, unknown>,
+  contracts: ContractsSchema | undefined
+): A2uiState {
+  // Without an injected contract there is nothing to validate ops against, so
+  // no op is forwarded and the state is left unchanged.
+  if (!contracts) {
+    return state;
+  }
+  const messages = content['messages'];
+  if (!Array.isArray(messages)) {
+    return state;
+  }
+  const ops = readUpdateDataModelOps(messages);
+  if (ops.length === 0) {
+    return state;
+  }
+
+  const registry = deriveNodeIdentityRegistry(activities);
+  let next = state;
+  for (const op of ops) {
+    const decision = validateInboundOp(op, registry, contracts);
+    if (decision.kind === 'forward') {
+      // Per surface: every surface has a `root` node, so a shared node id would
+      // collide at one top-level pointer without scoping the write by surface.
+      const surfaceState = isRecord(next[op.surfaceId]) ? (next[op.surfaceId] as A2uiState) : {};
+      next = {
+        ...next,
+        [op.surfaceId]: setAtPointer(surfaceState, decision.path, decision.value),
+      };
+    }
+  }
+  return next;
+}
+
+/**
+ * Writes `value` at the RFC 6901 JSON Pointer `path` in a structurally shared
+ * copy of `state`, creating intermediate objects as needed and leaving sibling
+ * values untouched — the same leaf-write, sibling-preserving semantics the
+ * frozen renderer's data model applies. Never mutates the input `state`.
+ */
+function setAtPointer(state: A2uiState, path: string, value: unknown): A2uiState {
+  const segments = path
+    .split('/')
+    .filter((segment) => segment.length > 0)
+    .map((segment) => segment.replace(/~1/g, '/').replace(/~0/g, '~'));
+  if (segments.length === 0) {
+    return isRecord(value) ? (value as A2uiState) : state;
+  }
+
+  const root: Record<string, unknown> = {...state};
+  let cursor = root;
+  for (let index = 0; index < segments.length - 1; index += 1) {
+    const segment = segments[index];
+    const existing = cursor[segment];
+    const clone: Record<string, unknown> = isRecord(existing) ? {...existing} : {};
+    cursor[segment] = clone;
+    cursor = clone;
+  }
+  cursor[segments[segments.length - 1]] = value;
+  return root;
 }
 
 /**
@@ -265,13 +369,11 @@ export function foldActivities(initialTurn: Turn, activities: NormalizedStreamEv
  *
  * This block is the SINGLE location in the
  * package that walks a raw A2-UI activity payload (`activity.payload.messages`
- * → `createSurface` → resolve `rootId` against `components` → read
- * `props.componentType`) and the SINGLE location that knows the
- * `'commerce-search'` root-component-type magic string. Both persist until
+ * → `createSurface` → find the canonical `root` node in `components` → read the
+ * root node's top-level `component` discriminant). It persists until
  * server-surfaced typed routing lands (ADR-015 Option C, a separate future
- * ADR). No consumer — sample or internal `dispatchAction` — may walk activities
- * or re-spell this literal; they read the typed `response.surfaces` projection
- * and, for target resolution, {@link resolveTargetSurfaceId}.
+ * ADR). No consumer — sample or internal `dispatchAction` — may walk activities;
+ * they read the typed `response.surfaces` projection.
  *
  * `surfaces` is a derived projection of `activities`, never an independent
  * source of truth: it is re-derived here from the full activity list so
@@ -279,8 +381,12 @@ export function foldActivities(initialTurn: Turn, activities: NormalizedStreamEv
  * list.
  */
 
-/** ADR-015 interim: the root component type consumers/nav treat as commerce. */
-const COMMERCE_SEARCH_ROOT_TYPE = 'commerce-search';
+/**
+ * The A2-UI v1.0 canonical surface root node id. `createSurface` implicitly mounts the reserved
+ * `Surface` container with `child: "root"`, so the surface's root is the node whose `id` is this
+ * value. The envelope carries no `rootId`.
+ */
+const ROOT_COMPONENT_ID = 'root';
 
 /** Activity kind carrying A2-UI surface `createSurface` messages. */
 const SURFACE_ACTIVITY_KIND = 'a2ui-surface';
@@ -320,10 +426,11 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 /**
  * Reads a single `createSurface` message into a {@link DiscoveredSurface},
- * resolving the root component type from `createSurface.rootId` against
- * `createSurface.components`. Returns null when the message is not a well-formed
- * surface (missing surfaceId/rootId, no matching root component, or no root
- * `props.componentType`).
+ * resolving the root component type from the canonical `root` node in
+ * `createSurface.components` (the A2-UI v1.0 node with `id: "root"`) and reading its
+ * top-level `component` discriminant (PascalCase). Returns null when the message is not
+ * a well-formed surface (missing surfaceId, no `root` component, or no root `component`
+ * discriminant).
  */
 function readSurface(message: unknown): DiscoveredSurface | null {
   if (!isRecord(message)) {
@@ -336,8 +443,7 @@ function readSurface(message: unknown): DiscoveredSurface | null {
   }
 
   const surfaceId = createSurface['surfaceId'];
-  const rootId = createSurface['rootId'];
-  if (typeof surfaceId !== 'string' || surfaceId.length === 0 || typeof rootId !== 'string') {
+  if (typeof surfaceId !== 'string' || surfaceId.length === 0) {
     return null;
   }
 
@@ -346,33 +452,19 @@ function readSurface(message: unknown): DiscoveredSurface | null {
     return null;
   }
 
-  const rootComponent = components.find((comp) => isRecord(comp) && comp['id'] === rootId);
+  // A2-UI v1.0: the surface's root is the canonical node with `id: "root"` mounted under the
+  // implicit `Surface` container. The `createSurface` envelope carries no `rootId`.
+  const rootComponent = components.find(
+    (comp) => isRecord(comp) && comp['id'] === ROOT_COMPONENT_ID
+  );
   if (!isRecord(rootComponent)) {
     return null;
   }
 
-  const props = rootComponent['props'];
-  if (!isRecord(props)) {
-    return null;
-  }
-
-  const rootComponentType = props['componentType'];
+  const rootComponentType = rootComponent['component'];
   if (typeof rootComponentType !== 'string' || rootComponentType.length === 0) {
     return null;
   }
 
   return {surfaceId, rootComponentType};
-}
-
-/**
- * Resolves the target `surfaceId` for the internal `dispatchAction` from a
- * turn's already-derived `response.surfaces`: the first surface whose root is a
- * commerce-search surface, or null when none exists. Consumers read
- * the typed projection here rather than walking activities.
- */
-export function resolveTargetSurfaceId(surfaces: DiscoveredSurface[]): string | null {
-  const target = surfaces.find(
-    (surface) => surface.rootComponentType === COMMERCE_SEARCH_ROOT_TYPE
-  );
-  return target ? target.surfaceId : null;
 }

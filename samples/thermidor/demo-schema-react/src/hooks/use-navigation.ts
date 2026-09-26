@@ -49,7 +49,7 @@ function navReducer(state: NavState, action: NavAction): NavState {
   }
 }
 
-const COMMERCE_SEARCH_ROOT_TYPE = 'commerce-search';
+const COMMERCE_SEARCH_ROOT_TYPE = 'CommerceSearch';
 
 /**
  * Reads the typed `response.surfaces` projection to find the turn's

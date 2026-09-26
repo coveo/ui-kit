@@ -1,53 +1,49 @@
 import {useCallback} from 'react';
-import {useRemoteController} from '../controllers.js';
+import type {RegularFacetProps, RegularFacetAction} from '@coveo/thermidor-schema';
+import type {TypedRendererProps} from '../renderer-props.js';
 import {SearchIcon} from '../icons/index.js';
 import {useOptimisticFacetSearch} from '../use-optimistic-facet-search.js';
-import type {RegularFacetProps} from '@coveo/thermidor-schema';
 import styles from './RegularFacet.module.css';
 
-export function RegularFacetRenderer({props}: {props: RegularFacetProps}) {
-  const controller = useRemoteController(props.componentId, props.componentType);
-
+export function RegularFacetRenderer({
+  props,
+  dispatch,
+}: TypedRendererProps<RegularFacetProps, RegularFacetAction>) {
   const dispatchSearch = useCallback(
-    (query: string) => controller.dispatch('search', {query}),
-    [controller]
+    (query: string) => dispatch?.({event: {name: 'search', context: {query}}}),
+    [dispatch]
   );
-  const search = useOptimisticFacetSearch(
-    controller.state?.facetSearch.query ?? '',
-    dispatchSearch
-  );
+  const search = useOptimisticFacetSearch(props.facetSearch?.query ?? '', dispatchSearch);
 
-  if (!controller.state) {
-    return null;
-  }
-
-  const {displayName, values, hasActiveValues, canShowMoreValues, canShowLessValues, facetSearch} =
-    controller.state;
-  const showResults = facetSearch.query.length > 0 || facetSearch.results.length > 0;
+  const {displayName, hasActiveValues, canShowMoreValues, canShowLessValues} = props;
+  const values = props.values ?? [];
+  const facetSearch = props.facetSearch ?? {query: '', results: [], canShowMoreResults: false};
+  const searchResults = facetSearch.results ?? [];
+  const showResults = (facetSearch.query ?? '').length > 0 || searchResults.length > 0;
 
   const handleToggleSelect = (value: string) => {
-    controller.dispatch('toggleSelect', {value});
+    dispatch?.({event: {name: 'toggleSelect', context: {value}}});
   };
 
   const handleClearSearch = () => {
     search.reset();
-    controller.dispatch('clearSearch', {});
+    dispatch?.({event: {name: 'clearSearch', context: {}}});
   };
 
   const handleShowMoreSearchResults = () => {
-    controller.dispatch('showMoreSearchResults', {});
+    dispatch?.({event: {name: 'showMoreSearchResults', context: {}}});
   };
 
   const handleShowMoreValues = () => {
-    controller.dispatch('showMoreValues', {});
+    dispatch?.({event: {name: 'showMoreValues', context: {}}});
   };
 
   const handleShowLessValues = () => {
-    controller.dispatch('showLessValues', {});
+    dispatch?.({event: {name: 'showLessValues', context: {}}});
   };
 
   const handleClearAll = () => {
-    controller.dispatch('clearAllActiveValues', {});
+    dispatch?.({event: {name: 'clearAllActiveValues', context: {}}});
   };
 
   const renderCheckbox = (
@@ -72,7 +68,11 @@ export function RegularFacetRenderer({props}: {props: RegularFacetProps}) {
   );
 
   return (
-    <section className={styles.container} data-testid={props.componentId} aria-label={displayName}>
+    <section
+      className={styles.container}
+      data-testid={`facet-${props.field}`}
+      aria-label={displayName}
+    >
       <header className={styles.header}>
         <h3 className={styles.title}>{displayName}</h3>
         {hasActiveValues && (
@@ -93,7 +93,7 @@ export function RegularFacetRenderer({props}: {props: RegularFacetProps}) {
           <input
             type="text"
             className={styles.searchInput}
-            data-testid={`facet-search-input-${props.componentId}`}
+            data-testid={`facet-search-input-${props.field}`}
             value={search.query}
             placeholder="Search"
             aria-label={`Search ${displayName}`}
@@ -115,7 +115,7 @@ export function RegularFacetRenderer({props}: {props: RegularFacetProps}) {
       {showResults ? (
         <>
           <ul className={styles.valueList}>
-            {facetSearch.results.map((result) =>
+            {searchResults.map((result) =>
               renderCheckbox(
                 result.value,
                 result.numberOfResults,
@@ -151,7 +151,7 @@ export function RegularFacetRenderer({props}: {props: RegularFacetProps}) {
             <button
               type="button"
               className={styles.showValuesButton}
-              data-testid={`facet-show-less-${props.componentId}`}
+              data-testid={`facet-show-less-${props.field}`}
               onClick={handleShowLessValues}
             >
               - Show less
@@ -161,7 +161,7 @@ export function RegularFacetRenderer({props}: {props: RegularFacetProps}) {
             <button
               type="button"
               className={styles.showValuesButton}
-              data-testid={`facet-show-more-${props.componentId}`}
+              data-testid={`facet-show-more-${props.field}`}
               onClick={handleShowMoreValues}
             >
               + Show more

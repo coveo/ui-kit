@@ -26,56 +26,69 @@ import type {
   CommerceContextProvider,
   NavigatorContextProvider,
 } from '@/src/internal/context/index.js';
+import {devWarn} from '@/src/internal/utils/dev-warn.js';
 import {generateId} from '@/src/internal/utils/id-generator.js';
-import {
-  buildRemoteController,
-  type RemoteControllerSource,
-} from '@/src/remote-controller/remote-controller.js';
-import type {
-  ComponentTypeOf,
-  ContractsSchema,
-  RemoteController,
-} from '@/src/remote-controller/types.js';
-import {createTurn, foldActivity, resolveTargetSurfaceId} from './fold.js';
+import {validateActionPayload} from './action-payload-validation.js';
+import type {ContractsSchema} from './contracts.js';
+import {createTurn, foldActivity} from './fold.js';
+import {deriveNodeIdentityRegistry} from './in-transit-validation.js';
 import {restoreSession, serializeSession, type SerializedSession} from './serialize.js';
 import {createSessionStore, type SessionStore, type SessionStoreState} from './store.js';
 import type {Turn, TurnInput} from './types.js';
 
 /**
- * A remote-controller action forwarded to {@link Session.dispatchAction}.
+ * The standard A2-UI client-to-server message the frozen renderer delivers to
+ * its `onAction` handler. {@link Session.dispatchAction} accepts this shape so it
+ * is assignable to the renderer's `OnActionCallback` with no adapter.
  *
- * The generic, schema-validated remote controller narrows the action name and
- * payload types; the session runtime treats the payload as opaque `context` on
- * the wire.
+ * Declared structurally (not imported) so `@coveo/thermidor` stays
+ * framework-agnostic: it depends on neither React nor the renderer package,
+ * yet `onAction={session.dispatchAction}` type-checks against the renderer's
+ * `(message: A2UIClientEventMessage) => void | Promise<void>` callback.
  */
-export interface RemoteAction<TPayload = unknown> {
-  componentId: string;
-  componentType: string;
-  action: string;
-  payload: TPayload;
+export interface A2uiClientMessage {
+  /**
+   * The user interaction, when the message carries one. A message with no
+   * `userAction` is dropped (nothing sent).
+   */
+  userAction?: {
+    /** The action name declared by the dispatching component's contract. */
+    name: string;
+    /** The A2-UI surface the interaction originated on. */
+    surfaceId: string;
+    /** The id of the node that dispatched the action. Absent → dropped. */
+    sourceComponentId?: string;
+    /** The action payload, validated against the action's contract in transit. */
+    context?: Record<string, unknown>;
+    /** Optional client-provided timestamp (unused; the core stamps its own). */
+    timestamp?: string;
+    /** Optional data-context pointer (unused by the core dispatch path). */
+    dataContextPath?: string;
+  };
 }
 
 /**
  * The configuration accepted by {@link createSession}.
  *
- * Generic over the injected contracts schema `TContracts`: the concrete schema
- * pinned here threads unbroken through the returned {@link Session} into the
- * vended {@link RemoteController}, so component-type, state, and action-name
- * typings resolve at the call site. The context providers are pull-based and
- * synchronous: the request builder calls `navigatorContextProvider` and
- * `commerceContextProvider` fresh per request so the app's current context is
- * always sent without thermidor-side context state.
+ * The context providers are pull-based and synchronous: the request builder
+ * calls `navigatorContextProvider` and `commerceContextProvider` fresh per
+ * request so the app's current context is always sent without thermidor-side
+ * context state.
  */
-export interface SessionConfig<TContracts extends ContractsSchema> {
-  organizationId: string;
-  accessToken: string;
+export interface SessionConfig<TContracts extends ContractsSchema = ContractsSchema> {
   /**
-   * The injected component contracts schema. Remote-controller vending
-   * validates component state and action payloads against it. It is the sole
-   * validation source; the field must exist here to thread the concrete
-   * `TContracts` type through the session.
+   * The injected component contracts schema (a discriminated union on `component`,
+   * each member carrying that component's `state` and `actions`). It is the SOLE
+   * validation source for the session: inbound `updateDataModel` ops are validated
+   * against the member's `state` (whole) / its sub-schema (partial sub-path), and
+   * outbound action payloads against the member's `actions` for the dispatched
+   * action name, before the POST. Injecting it here keeps `@coveo/thermidor`
+   * decoupled from any concrete contract package, so the runtime works with any
+   * A2-UI contract schema, not only `@coveo/thermidor-schema`.
    */
   contracts: TContracts;
+  organizationId: string;
+  accessToken: string;
   /**
    * Full converse URL override. When provided the client POSTs to it verbatim
    * (appending nothing); when absent the Coveo converse URL is derived from
@@ -107,44 +120,44 @@ export interface SessionConfig<TContracts extends ContractsSchema> {
 }
 
 /**
- * Reserved options bag for {@link Session.remoteController}. The `turnId`
- * historical-turn selector is reserved and unimplemented (ADR-013); binding
- * always targets the active turn.
- */
-export interface RemoteControllerOptions {
-  turnId?: string;
-}
-
-/**
  * The client-side handle for one continuous interaction with the unified
  * converse endpoint. No engine, interface, or state-library object is reachable
  * from it.
- *
- * Generic over the injected contracts schema `TContracts` so
- * {@link Session.remoteController} vends controllers typed against the concrete
- * schema pinned at the `createSession` call site.
  */
-export interface Session<TContracts extends ContractsSchema> {
+export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
+  /**
+   * The injected contracts schema this session validates against. Retained on
+   * the handle so the generic parameter is observable and the runtime threads
+   * the exact contract that was injected.
+   */
+  readonly contracts: TContracts;
   /** Readonly observable list of turns folded from the streamed response. */
   readonly turns: readonly Turn[];
   /** Registers a listener invoked once per change to the turn list. */
   subscribe(listener: () => void): () => void;
   /** Submits a prompt, opening a new streaming turn. */
   submit(input: {prompt?: string}): Promise<void>;
-  /** Dispatches a schema-validated remote action against the active turn. */
-  dispatchAction(action: RemoteAction): Promise<void>;
+  /**
+   * The single consumer-facing action-dispatch entry point, wired directly as
+   * the renderer's `onAction` handler (`onAction={session.dispatchAction}`). It
+   * unwraps the message's `userAction`, recovers the dispatching component's
+   * discriminant from the active turn's surfaces, validates the action payload
+   * against the component's contract internally, and — on success — POSTs the
+   * action to the converse endpoint.
+   *
+   * FIRE-AND-FORGET: the returned Promise ALWAYS resolves and NEVER rejects, so
+   * the consumer needs no `.catch`. A message with no `userAction`, no
+   * `sourceComponentId`, a node that resolves to no component, and an internal
+   * dispatch rejection (for example an invalid payload) are all dropped with a
+   * dev-only warning and nothing is sent.
+   */
+  dispatchAction: (message: A2uiClientMessage) => Promise<void>;
   /** Stops consuming the active turn's stream. */
   cancel(): void;
   /** Re-submits an errored turn's input. */
   retry(turnId: string): void;
   /** Serializes the session transcript for persistence. */
   serialize(): SerializedSession;
-  /** Vends a generic, schema-validated remote controller bound to the active turn. */
-  remoteController<T extends ComponentTypeOf<TContracts>>(
-    componentId: string,
-    componentType: T,
-    options?: RemoteControllerOptions
-  ): RemoteController<TContracts, T>;
 }
 
 function isAbortError(error: unknown): boolean {
@@ -200,7 +213,11 @@ function readSessionKeys(
 }
 
 /**
- * Creates a {@link Session} over a fresh observable store + fold.
+ * Creates a {@link Session} over a fresh observable store + fold, bound to the
+ * INJECTED `config.contracts`. The contract threads to both validation
+ * boundaries (in-transit `updateDataModel` state and outbound action payloads)
+ * as a bound dependency, keeping `@coveo/thermidor` decoupled from any concrete
+ * contract package.
  */
 export function createSession<TContracts extends ContractsSchema>(
   config: SessionConfig<TContracts>
@@ -239,17 +256,17 @@ export function createSession<TContracts extends ContractsSchema>(
   }
 
   /**
-   * True while any turn is still streaming. Guards `submit` and
-   * `dispatchAction`: while a turn is in flight the
-   * session ignores new work and leaves the turn list untouched.
+   * True while any turn is still streaming. Guards `submit` and the private
+   * dispatch path: while a turn is in flight the session ignores new work and
+   * leaves the turn list untouched.
    */
   function hasStreamingTurn(): boolean {
     return store.getState().turns.some((turn) => turn.status === 'streaming');
   }
 
   /**
-   * Builds the request fields shared by `submit` and `dispatchAction`, invoking
-   * BOTH context providers fresh at request-build time. Because the providers
+   * Builds the request fields shared by `submit` and the private dispatch path,
+   * invoking BOTH context providers fresh at request-build time. Because the providers
    * are functions, context is never stored on the session and is never
    * serialized; a restored session therefore reads today's context from the
    * providers rather than any persisted value.
@@ -332,7 +349,7 @@ export function createSession<TContracts extends ContractsSchema>(
           }));
         }
 
-        replaceTurn(turnId, (turn) => foldActivity(turn, event));
+        replaceTurn(turnId, (turn) => foldActivity(turn, event, config.contracts));
 
         const foldedStatus = store.getState().turns.find((turn) => turn.id === turnId)?.status;
         if (foldedStatus === 'complete' || foldedStatus === 'error') {
@@ -445,40 +462,124 @@ export function createSession<TContracts extends ContractsSchema>(
     await executeStream(turnId, buildConversationRequest(prompt));
   }
 
-  async function dispatchAction(action: RemoteAction): Promise<void> {
+  /**
+   * The PRIVATE validate-and-execute path (`executeAction`). It is a local
+   * closure, never exposed on the returned {@link Session} object (the public
+   * entry is `dispatchAction`). It validates the recovered action's payload
+   * against the dispatching component's generated Zod action schema BEFORE the
+   * HTTP POST; on a validation failure it REJECTS and sends nothing.
+   *
+   * While a turn is streaming, or when there is no active turn, the dispatch is
+   * a no-op. The target surface is the action's OWN originating surface
+   * (`recovered.surfaceId`), already validated upstream by `recoverDiscriminant`.
+   */
+  async function executeAction(recovered: {
+    discriminant: string;
+    name: string;
+    sourceComponentId: string;
+    surfaceId: string;
+    context: unknown;
+  }): Promise<void> {
     // While a turn is streaming, ignore the dispatch and leave turns unchanged,
     // avoiding a replay onto an uncommitted turn.
     if (hasStreamingTurn()) {
       return;
     }
 
-    const {turns, activeTurnId} = store.getState();
+    const {activeTurnId} = store.getState();
     if (!activeTurnId) {
       return;
     }
 
-    // Resolve the target surface from the active turn's typed `surfaces`
-    // projection rather than walking raw activities. Without a target surface
-    // the action has nowhere to go; skip dispatching an untargeted action
-    // rather than sending one with a null surfaceId.
-    const activeTurn = turns.find((turn) => turn.id === activeTurnId);
-    const surfaceId = resolveTargetSurfaceId(activeTurn?.response.surfaces ?? []);
-    if (surfaceId === null) {
-      return;
+    // `recovered.surfaceId` is already validated upstream by `recoverDiscriminant`
+    // (it resolves a discriminant only for a `(surfaceId, sourceComponentId)` in
+    // the active turn's registry), so the origin surface is used as-is — no
+    // re-check, and a conversation-only surface reaches itself, not a commerce one.
+    const surfaceId = recovered.surfaceId;
+
+    // Validate the action payload against the component's generated Zod action
+    // schema BEFORE the POST. A non-conforming payload rejects (nothing sent).
+    const validation = validateActionPayload(
+      recovered.discriminant,
+      recovered.name,
+      recovered.context,
+      config.contracts
+    );
+    if (!validation.valid) {
+      throw new Error(
+        `Invalid payload for action "${recovered.name}" on component "${recovered.discriminant}": ${validation.reason}`
+      );
     }
 
     const a2uiAction: A2uiAction = {
       surfaceId,
-      name: action.action,
-      sourceComponentId: action.componentId,
+      name: recovered.name,
+      sourceComponentId: recovered.sourceComponentId,
       timestamp: new Date().toISOString(),
       actionId: null,
       wantResponse: false,
-      context: action.payload,
+      context: recovered.context,
     };
 
     await executeStream(activeTurnId, buildActionRequest(a2uiAction));
   }
+
+  /**
+   * Recovers the PascalCase `component` discriminant of the dispatching node by
+   * routing `(surfaceId, sourceComponentId)` through the active turn's
+   * node-identity registry (derived from its surfaces). Returns `undefined`
+   * when there is no active turn or the node resolves to no component.
+   */
+  function recoverDiscriminant(surfaceId: string, sourceComponentId: string): string | undefined {
+    const {turns, activeTurnId} = store.getState();
+    if (!activeTurnId) {
+      return undefined;
+    }
+    const activeTurn = turns.find((turn) => turn.id === activeTurnId);
+    if (!activeTurn) {
+      return undefined;
+    }
+    const registry = deriveNodeIdentityRegistry(activeTurn.response.activities);
+    return registry.get(surfaceId)?.get(sourceComponentId);
+  }
+
+  /**
+   * The single consumer-facing action-dispatch entry point. See
+   * {@link Session.dispatchAction}. Pre-bound arrow field so
+   * `onAction={session.dispatchAction}` works when passed by reference.
+   *
+   * FIRE-AND-FORGET: every drop reason and every internal dispatch rejection is
+   * swallowed into a dev-only warning; the returned Promise always resolves.
+   */
+  const dispatchAction = async (message: A2uiClientMessage): Promise<void> => {
+    const userAction = message.userAction;
+    if (!userAction) {
+      devWarn('dispatchAction: message carries no userAction; nothing sent.');
+      return;
+    }
+
+    const {name, surfaceId, sourceComponentId, context} = userAction;
+    if (!sourceComponentId) {
+      devWarn('dispatchAction: userAction has no sourceComponentId; nothing sent.');
+      return;
+    }
+
+    const discriminant = recoverDiscriminant(surfaceId, sourceComponentId);
+    if (discriminant === undefined) {
+      devWarn(
+        `dispatchAction: node "${sourceComponentId}" on surface "${surfaceId}" resolves to no component; nothing sent.`
+      );
+      return;
+    }
+
+    try {
+      await executeAction({discriminant, name, sourceComponentId, surfaceId, context});
+    } catch (error) {
+      // Fire-and-forget: never reject to the caller. A withheld POST (invalid
+      // payload) or any internal rejection surfaces only as a dev-only warning.
+      devWarn(`dispatchAction: dispatch withheld: ${getErrorMessage(error)}`);
+    }
+  };
 
   function retry(turnId: string): void {
     // Re-submit only an `error` turn; any other turnId (unknown or non-error)
@@ -502,39 +603,8 @@ export function createSession<TContracts extends ContractsSchema>(
     return serializeSession(store.getState());
   }
 
-  /**
-   * The narrow session-internal seam the vended controllers read from
-   * (`state` / `subscribe` / `dispatchAction`). It adapts the observable store:
-   * `state()` projects the turn list plus the active turn id, `subscribe`
-   * forwards to the store, and `dispatchAction` forwards a validated remote
-   * action to the session runtime.
-   */
-  const remoteControllerSource: RemoteControllerSource = {
-    state: () => {
-      const current = store.getState();
-      return {turns: current.turns, activeTurnId: current.activeTurnId};
-    },
-    subscribe: (listener) => store.subscribe(listener),
-    dispatchAction: (action) => dispatchAction(action),
-  };
-
-  function remoteController<T extends ComponentTypeOf<TContracts>>(
-    componentId: string,
-    componentType: T,
-    // The reserved `turnId` selector (ADR-013) is accepted without error
-    // but not yet honored: binding always targets the active turn. The bag is
-    // reserved so historical-turn binding can be added additively later.
-    _options?: RemoteControllerOptions
-  ): RemoteController<TContracts, T> {
-    return buildRemoteController({
-      source: remoteControllerSource,
-      componentId,
-      componentType,
-      contracts: config.contracts,
-    });
-  }
-
   return {
+    contracts: config.contracts,
     get turns() {
       return store.getState().turns;
     },
@@ -546,6 +616,5 @@ export function createSession<TContracts extends ContractsSchema>(
     cancel,
     retry,
     serialize,
-    remoteController,
   };
 }
