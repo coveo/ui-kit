@@ -3,18 +3,11 @@ import type {TypedRendererProps} from '../renderer-props.js';
 import styles from './CommerceSearch.module.css';
 
 /**
- * A2-UI renderer for the `commerce-search` surface-root component.
+ * A2-UI renderer for the `commerce-search` surface root.
  *
- * Owns the surface's two-column grid: a narrow left sidebar and a flexible right main area.
- * Composition follows the standard A2-UI named-slot convention: the container's resolved
- * props carry two typed `child-ref` slots — `sidebarChild` and `mainChild` — that the binder
- * passes through untouched. The sidebar cell mounts `children(props.sidebarChild)` and the
- * main cell mounts `children(props.mainChild)`, each itself typically a `layout-stack` that
- * owns its column's internal layout. Slots are addressed by name, never by array position:
- * there is no positional read of a child id list.
- *
- * A slot whose value is absent renders an empty cell; a slot referencing an id with no
- * corresponding component is skipped by the mount function returning nothing renderable.
+ * A two-column grid whose named `sidebarChild` / `mainChild` slots are mounted
+ * via `children(...)` (addressed by name, not position). An absent slot renders
+ * an empty cell.
  */
 export function CommerceSearchRenderer({
   props,

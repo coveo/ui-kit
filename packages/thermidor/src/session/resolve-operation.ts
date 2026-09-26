@@ -1,17 +1,10 @@
 /**
- * Operation resolver for Thermidor inline Component_State transport.
- *
- * Hand-written inline-TRANSPORT convention OWNED BY THE RUNTIME (moved out of
- * `@coveo/thermidor-schema` into `@coveo/thermidor` alongside {@link statePath}
- * so the runtime is decoupled from any concrete contract package). Given an
- * `updateDataModel` operation targeting a JSON Pointer `path` and the set of
- * node ids present in the surface, it decides whether the op resolves to a
- * present component's state subtree and, if so, whether it targets the whole
- * component state or a field beneath it.
- *
- * This is the pure mapping + resolver only. It performs NO value validation
- * (that is done by the core against the INJECTED per-component contract). On a
- * REJECTED result the caller leaves the data model unchanged.
+ * Operation resolver for the inline Component_State transport, owned by the
+ * runtime (moved from `@coveo/thermidor-schema` beside {@link statePath}).
+ * Given an `updateDataModel` path and the surface's present node ids, it decides
+ * whether the op targets a present component's state subtree and, if so, whether
+ * it targets the whole state or a field beneath it. Pure mapping only — no value
+ * validation (done by the core against the injected contract).
  */
 
 import {statePath} from './state-path.js';
@@ -70,17 +63,10 @@ interface RejectedOperation {
 export type OperationResolution = ResolvedOperation | RejectedOperation;
 
 /**
- * Resolve an `updateDataModel` operation against the ids present in the
- * surface.
- *
- * Resolvable iff `path === statePath(id)` (whole-component) OR `path` starts
- * with `statePath(id) + "/"` (a sub-path beneath the state root) for some `id`
- * in `presentNodeIds`. Everything else is rejected:
- * - a path outside the `/state` namespace,
- * - the bare `/state` root with no id,
- * - a `/state/<id>...` path whose `<id>` is not a present node id,
- * - any other path that is neither `statePath(id)` nor beneath it for any
- *   present id.
+ * Resolve an `updateDataModel` op against the surface's present node ids.
+ * Resolvable iff `path === statePath(id)` (whole-component) or starts with
+ * `statePath(id) + "/"` (a field beneath it) for some present `id`; otherwise
+ * rejected with a classified reason.
  */
 export function resolveOperation(
   op: UpdateDataModelOperation,

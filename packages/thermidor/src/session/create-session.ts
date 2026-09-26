@@ -213,11 +213,7 @@ function readSessionKeys(
 }
 
 /**
- * Creates a {@link Session} over a fresh observable store + fold, bound to the
- * INJECTED `config.contracts`. The contract threads to both validation
- * boundaries (in-transit `updateDataModel` state and outbound action payloads)
- * as a bound dependency, keeping `@coveo/thermidor` decoupled from any concrete
- * contract package.
+ * Creates a {@link Session} over a fresh observable store + fold.
  */
 export function createSession<TContracts extends ContractsSchema>(
   config: SessionConfig<TContracts>
@@ -463,15 +459,10 @@ export function createSession<TContracts extends ContractsSchema>(
   }
 
   /**
-   * The PRIVATE validate-and-execute path (`executeAction`). It is a local
-   * closure, never exposed on the returned {@link Session} object (the public
-   * entry is `dispatchAction`). It validates the recovered action's payload
-   * against the dispatching component's generated Zod action schema BEFORE the
-   * HTTP POST; on a validation failure it REJECTS and sends nothing.
-   *
-   * While a turn is streaming, or when there is no active turn, the dispatch is
-   * a no-op. The target surface is the action's OWN originating surface
-   * (`recovered.surfaceId`), already validated upstream by `recoverDiscriminant`.
+   * Private validate-and-execute path. Validates the recovered action's payload
+   * against the component's generated Zod action schema before the POST and
+   * rejects (sends nothing) on failure; targets the action's own originating
+   * surface. No-op while a turn is streaming or when there is no active turn.
    */
   async function executeAction(recovered: {
     discriminant: string;

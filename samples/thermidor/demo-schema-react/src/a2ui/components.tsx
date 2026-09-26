@@ -44,21 +44,16 @@ import {PageSizeRenderer} from './PageSize/PageSize.js';
 /**
  * The single Zod-3-vs-Zod-4 shim at the catalog boundary.
  *
- * The frozen renderer's binder (`@a2ui/web_core@0.9.0`) resolves `{ "path": ... }` bindings by
- * introspecting each prop schema's **Zod 3** runtime internals. The generated `XxxPropsSchema`
- * (`@coveo/thermidor-schema`) are **Zod 4**, whose internals the binder cannot read — so every
- * field would be classified STATIC and a binding would leak to the renderer unresolved.
+ * The renderer's binder (`@a2ui/web_core`, still Zod 3) resolves `{ "path": ... }`
+ * bindings by introspecting each prop schema's Zod 3 internals, but the generated
+ * `XxxPropsSchema` are Zod 4 — unreadable to the binder, so every field would be
+ * classified STATIC and bindings would leak unresolved. This is the one place the
+ * workaround lives: at RUNTIME it rebuilds each definition's `props` via
+ * {@link toBinderProps} into a real Zod 3 `ZodObject`; for TYPES it reconciles the
+ * two packages' `ZodObject` identities into the renderer's `CatalogDefinitions`.
  *
- * This function is the ONE place the whole workaround lives:
- *   - RUNTIME: it rebuilds each definition's `props` through {@link toBinderProps}, producing a
- *     real Zod 3 `ZodObject` whose fields are the A2-UI Dynamic_Value unions the binder classifies
- *     as DYNAMIC (bindable props) or plain Zod 3 static string/array child-refs it passes through
- *     untouched (composition props). Callers therefore pass the RAW generated `XxxPropsSchema`.
- *   - TYPES: it reconciles the two Zod packages' `ZodObject` type identities into the renderer's
- *     `CatalogDefinitions` (a cast the runtime rebuild alone cannot express to the compiler).
- *
- * @deprecated Remove this function (and {@link toBinderProps}) and pass each `XxxPropsSchema`
- * directly to `createCatalog` once `@copilotkit/a2ui-renderer` upgrades its binder to Zod 4.
+ * @deprecated Remove this (and {@link toBinderProps}) and pass each `XxxPropsSchema`
+ * directly to `createCatalog` once `@copilotkit/a2ui-renderer` moves its binder to Zod 4.
  */
 function asCatalogDefinitions<
   T extends Record<string, {description?: string; props: {shape: Record<string, unknown>}}>,

@@ -200,11 +200,8 @@ export function foldActivity(
       // full activity list so `response.surfaces` always agrees with a fresh
       // derivation off `response.activities`.
       response.surfaces = deriveSurfaces(response.activities);
-      // In-transit validation of the just-arrived activity's `updateDataModel`
-      // ops. A conforming op is forwarded (applied into `response.state` at its
-      // op path); a non-conforming, unresolved, or no-`*State`-schema op is
-      // dropped, leaving `response.state` unchanged. The node-identity registry
-      // is re-derived from the full activity list so the fold stays pure.
+      // Validate the activity's `updateDataModel` ops in transit: conforming ops
+      // are applied into `response.state`, others dropped. Details in applyInboundOps.
       response.state = applyInboundOps(response.state, response.activities, content, contracts);
       return turn;
     }
@@ -283,21 +280,13 @@ export function foldActivities(
 }
 
 /**
- * Applies the `updateDataModel` ops carried by the just-arrived activity's
- * `content.messages[]` to the turn's `A2uiState`, after In_Transit_Validation.
- *
- * The node-identity registry is re-derived from the full folded activity list
- * so the fold stays pure and deterministic. Each op is routed through
- * {@link validateInboundOp}: a FORWARD decision writes the (validated) value at
- * the op's JSON Pointer WITHIN its surface's data model (`state[surfaceId]`) in
- * a shallow copy of the state; a DROP decision leaves the state untouched, so
- * the renderer keeps its prior data-model value and the previously rendered UI
- * for that component remains displayed.
- *
- * `Thermidor_Core` keeps no state store: `state` here is the turn's forwarded
- * projection, not a merged component-state store. Returns the input state
- * reference unchanged when no op is forwarded, so an activity that forwards
- * nothing does not perturb `response.state`.
+ * Applies the just-arrived activity's `updateDataModel` ops to the turn's
+ * `A2uiState` after in-transit validation. The node-identity registry is
+ * re-derived from the folded activity list so the fold stays pure. Each op runs
+ * through {@link validateInboundOp}: FORWARD writes the validated value at its
+ * JSON Pointer within `state[surfaceId]` (shallow copy); DROP leaves state
+ * untouched, so the prior rendered value stays. Returns the input reference
+ * unchanged when nothing is forwarded.
  */
 function applyInboundOps(
   state: A2uiState,

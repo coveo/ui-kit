@@ -1,36 +1,19 @@
 /**
- * In-transit validation of inbound `updateDataModel` operations — INTERNAL.
+ * In-transit validation of inbound `updateDataModel` ops — the single place the
+ * core validates an op against its per-component contract before forwarding it.
+ * Two pure functions:
  *
- * It is the single place `Thermidor_Core` validates an inbound `updateDataModel`
- * op against the per-component contract before the op is forwarded to the
- * renderer. It is entirely internal to the core: the Consumer never invokes,
- * imports, or becomes aware of it.
+ * 1. {@link deriveNodeIdentityRegistry} re-derives, from the folded activity
+ *    list, a per-surface `surfaceId -> (nodeId -> component discriminant)` map
+ *    used only to ROUTE an op to its component's contract (no state values).
+ * 2. {@link validateInboundOp} resolves the op, finds the owning component's
+ *    `*State` schema in the INJECTED `contracts`, and validates the value
+ *    against the whole `*State` (whole-component op) or its field sub-schema
+ *    (partial op). Conforming ops are FORWARDED; non-conforming, rejected, and
+ *    no-`*State`-schema ops are DROPPED.
  *
- * Two responsibilities, both pure:
- *
- * 1. {@link deriveNodeIdentityRegistry} re-derives a per-surface
- *    NODE-IDENTITY REGISTRY (`surfaceId -> (nodeId -> component discriminant)`)
- *    from the folded activity list. This registry holds ONLY id→component-type
- *    identity used to ROUTE an op to the owning component's contract. It is NOT
- *    a `Component_State` store and never holds state values — `Thermidor_Core`
- *    keeps no state store.
- *
- * 2. {@link validateInboundOp} resolves an op via the core's local
- *    `resolveOperation`, resolves the owning component's `*State` Zod schema via
- *    {@link findComponentContract} from the INJECTED `contracts`, and validates
- *    the op value:
- *    - whole-component op (path === `statePath(id)`) → the whole `*State`
- *      schema;
- *    - partial op (sub-path) → the `State_Field_Schema`, the sub-schema of the
- *      `*State` object at the target sub-path, WITHOUT reconstructing a merged
- *      whole state.
- *    A conforming op is FORWARDED; a non-conforming op, a REJECTED op, and an op
- *    whose component has no `*State` schema are DROPPED.
- *
- * Because both functions are pure and derive the registry from the activity
- * list (never from module-level mutable state), folding the same activity
- * sequence twice yields deeply-equal turns — the fold's determinism guarantee
- * is preserved.
+ * Both derive from the activity list rather than mutable state, so folding the
+ * same sequence twice yields deeply-equal turns.
  */
 
 import type {ContractsSchema, ObjectSchema, ParsableSchema} from './contracts.js';

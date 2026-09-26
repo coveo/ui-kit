@@ -11,16 +11,10 @@ function formatPrice(value: number): string {
 /**
  * A2-UI renderer for the `bundle-display` container.
  *
- * Reads its tier structure directly from its resolved props (bound to the A2-UI data model)
- * and, for the ACTIVE tier only, mounts each slot's product-summary child through the
- * `children(id)` mount function keyed by the slot's `childId`. Unlike the ordered-list
- * containers, the tier/slot grouping is itself business state, so the renderer iterates the
- * active tier's slots rather than a flat `children` list.
- *
- * Each mounted product-summary child owns its own state (its price included) resolved from
- * the data model, so the bundle renderer does not aggregate sibling state or read any
- * cross-component join. The per-tier package total is a backend-computed value carried on
- * the tier itself (`tier.total`), rendered as-is rather than summed from the children.
+ * Reads its tiers from resolved props and, for the active tier only, mounts each
+ * slot's product-summary child via `children(slot.childId)`. Each child owns its
+ * own resolved state (price included); the per-tier total is the backend-computed
+ * `tier.total`, rendered as-is.
  */
 export function BundleDisplayRenderer({
   props,

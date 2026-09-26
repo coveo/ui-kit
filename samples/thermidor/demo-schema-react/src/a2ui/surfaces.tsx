@@ -1,46 +1,14 @@
 /**
  * A2-UI Surface Bridge
  *
- * This module bridges between the v1.0 A2-UI surface format (used by the mock API
- * and the real backend) and the v0.9 format consumed by `@copilotkit/a2ui-renderer`.
+ * Bridges the v1.0 A2-UI surface format (mock API + real backend) to the v0.9
+ * format `@copilotkit/a2ui-renderer` consumes. The backend emits a v1.0
+ * `createSurface` with inline flat `components[]`; the renderer expects v0.9
+ * (`createSurface` + a separate `updateComponents`). `convertV1ToV09` translates
+ * each message, forwarding flat nodes as-is (bindings byte-for-byte) and passing
+ * `updateDataModel` ops through; unconvertible messages are dropped.
  *
- * ## Why the conversion exists
- *
- * The backend emits v1.0 messages: a single `createSurface` carrying its `components[]` inline.
- * `@copilotkit/a2ui-renderer` (v1.61) only understands v0.9 messages (`createSurface` for the
- * surface lifecycle + a separate `updateComponents` carrying the component nodes).
- *
- * The `convertV1ToV09` adapter translates each v1.0 message into the equivalent v0.9
- * messages so the MessageProcessor can create surfaces and resolve catalog renderers.
- *
- * ## What the conversion preserves
- *
- * Under the flat A2-UI v1.0 node model a node carries a single `id`/`component` identity plus its
- * presentation values, A2-UI Data_Binding objects (`{ "path": <JSON Pointer> }`), and composition
- * links directly at the top level — there is no `props` wrapper, which is already the shape the
- * v0.9 renderer mounts. The conversion:
- *
- * - forwards each flat node as-is (only remapping the declared root id to `"root"`), carrying every
- *   `{ "path": ... }` binding through byte-for-byte so the binder can resolve it against the A2-UI
- *   data model, and never synthesizing an identity correlation (`componentId`/`componentType`);
- * - passes `updateDataModel` ops through unchanged (only the version is bumped to v0.9), so
- *   the renderer applies each `{ surfaceId, path, value }` op to its own data model and
- *   re-resolves the affected `{ path }` bindings;
- * - rejects any message it cannot convert by leaving it out of the v0.9 stream (renderer
- *   state stays unchanged) so a malformed message never corrupts a surface.
- *
- * ## When @copilotkit/a2ui-renderer supports v1.0
- *
- * Once the renderer natively understands v1.0, remove the conversion:
- *
- * 1. Delete the `convertV1ToV09` function
- * 2. In `getA2UIMessages`, pass v1.0 messages directly (remove the conversion loop):
- *    ```
- *    converted.push(...v1Messages.filter(isRecord));
- *    ```
- * 3. Verify that `processMessages` handles `createSurface` with inline flat `components[]`
- *    and resolves each node's `{ path }` bindings against the data model correctly
- * 4. Everything else (dumb renderers, catalog definitions) stays unchanged
+ * @deprecated Remove the conversion once the renderer understands v1.0 natively.
  */
 import {useEffect, useMemo, useRef} from 'react';
 import {A2UIRenderer, useA2UI} from '@copilotkit/a2ui-renderer';
@@ -50,22 +18,12 @@ import {isRecord} from '../utils.js';
 type A2UIMessage = Record<string, unknown>;
 
 /**
- * Converts a single v1.0 A2-UI message into one or more v0.9 messages
- * that the @copilotkit/a2ui-renderer MessageProcessor can understand.
- *
- * Conversion rules:
- * - `createSurface` (v1.0) → `createSurface` + `updateComponents` (v0.9)
- *   - v1.0 nodes are already FLAT (each node carries its presentation values, `{ "path": ... }`
- *     Data_Binding objects, and composition links directly at the top level — there is no
- *     `props` wrapper) AND already mount the canonical `root` node (id: "root"), which is exactly
- *     the shape the v0.9 renderer expects. Nodes are therefore forwarded as-is, preserving the
- *     single `id`/`component` identity byte-for-byte (no `componentId`/`componentType` is ever
- *     introduced). The v1.0 envelope carries no `rootId`, so no root remap is performed.
- * - `updateDataModel` passes through carrying its `{ surfaceId, path, value }` unchanged
- *   (only the version is bumped to v0.9); the renderer applies it to its data model
- * - `updateComponents` / `deleteSurface` → same shape, version changed to v0.9
- * - a v1.0 message carrying no recognized operation is unconvertible and is REJECTED
- *   (dropped), so it never reaches the renderer and cannot mutate its state
+ * Converts a single v1.0 A2-UI message into one or more v0.9 messages for the
+ * renderer's MessageProcessor:
+ * - `createSurface` -> `createSurface` + `updateComponents` (flat nodes forwarded
+ *   as-is, bindings preserved byte-for-byte)
+ * - `updateDataModel` / `updateComponents` / `deleteSurface` -> same shape, v0.9
+ * - a message with no recognized operation is dropped (never reaches the renderer)
  *
  * @deprecated Remove when @copilotkit/a2ui-renderer supports v1.0 natively.
  */
@@ -85,9 +43,8 @@ export function convertV1ToV09(message: Record<string, unknown>): A2UIMessage[] 
     ];
 
     if (components && components.length > 0) {
-      // A2-UI v1.0 nodes are already flat AND already mount the canonical `root` node (id: "root"),
-      // which is exactly what the v0.9 renderer expects — so each node is forwarded as-is. No
-      // `rootId` remap is needed (the v1.0 envelope carries no `rootId`).
+      // v1.0 nodes are already flat and mount the canonical `root` — the exact
+      // shape the v0.9 renderer expects, so forward them as-is (no `rootId` remap).
       results.push({version: 'v0.9', updateComponents: {surfaceId, components}});
     }
 
@@ -109,9 +66,8 @@ export function convertV1ToV09(message: Record<string, unknown>): A2UIMessage[] 
     return [{version: 'v0.9', deleteSurface}];
   }
 
-  // A v1.0 message carrying no recognized operation is unconvertible: it is REJECTED
-  // (dropped from the v0.9 stream) so it can never mutate the renderer's state. The failure
-  // is reported as a dev-only warning; the previously rendered UI stays displayed.
+  // An unconvertible v1.0 message is dropped (never reaches the renderer); the
+  // drop is reported as a dev-only warning.
   if (import.meta.env?.DEV) {
     console.warn('[A2UI bridge] Dropped unconvertible v1.0 message', message);
   }

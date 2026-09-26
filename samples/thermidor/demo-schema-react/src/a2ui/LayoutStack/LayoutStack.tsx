@@ -3,18 +3,12 @@ import type {TypedRendererProps} from '../renderer-props.js';
 import styles from './LayoutStack.module.css';
 
 /**
- * A2-UI renderer for the generic `layout-stack` container component.
+ * A2-UI renderer for the generic `layout-stack` container.
  *
- * Stacks its children along a single axis (column or row), mounting each declared child id
- * exactly once, first to last. Composition (`children`) and presentation (`direction`) are
- * read directly from the resolved props (the `layout-stack` holds no business state, so its
- * `XxxState` is empty; the `children` `ChildList` and the `direction` presentation prop
- * arrive as static values the binder passes through). Children are mounted by id via the
- * renderer's `children(id)` function — no positional destructuring, no defensive read.
- *
- * `direction` is a presentation prop declared on the container's Props_Schema but not part of
- * the (empty) resolved state, so it is read through this widened view. An unknown or missing
- * `direction` falls back to 'column'.
+ * Stacks its children along one axis, mounting each child id once via
+ * `children(id)`. `children` and `direction` come from resolved props (the
+ * container holds no state). `direction` is a presentation prop read through a
+ * widened view; unknown/missing falls back to 'column'.
  */
 type LayoutStackResolvedProps = LayoutStackProps & {
   direction?: 'column' | 'row';
