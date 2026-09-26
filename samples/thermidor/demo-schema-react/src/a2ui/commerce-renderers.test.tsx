@@ -1,20 +1,10 @@
-import {describe, it, expect, vi, beforeEach} from 'vitest';
-import {render, screen, fireEvent} from '@testing-library/react';
+import {describe, it, expect, vi, afterEach} from 'vitest';
+import {render, screen, fireEvent, cleanup} from '@testing-library/react';
+import type {PaginationProps, SortProps, ProductListProps} from '@coveo/thermidor-schema';
 import {PaginationRenderer} from './Pagination/Pagination.js';
 import {SortRenderer} from './Sort/Sort.js';
 import {ProductListRenderer} from './ProductList/ProductList.js';
 import {TargetingProvider, type TargetingContext} from '../context/targeting.js';
-
-const mockDispatch = vi.fn().mockResolvedValue(undefined);
-let mockControllerState: unknown = undefined;
-
-vi.mock('./controllers.js', () => ({
-  useRemoteController: () => ({
-    state: mockControllerState,
-    dispatch: mockDispatch,
-    subscribe: () => () => undefined,
-  }),
-}));
 
 const defaultTargeting: TargetingContext = {
   isTargeting: false,
@@ -26,23 +16,15 @@ function renderWithTargeting(ui: React.ReactElement) {
   return render(<TargetingProvider value={defaultTargeting}>{ui}</TargetingProvider>);
 }
 
-beforeEach(() => {
-  mockControllerState = undefined;
-  mockDispatch.mockClear();
-});
+afterEach(() => cleanup());
 
 describe('PaginationRenderer', () => {
-  const props = {componentId: 'test-pagination', componentType: 'pagination' as const};
+  function renderPagination(props: PaginationProps, dispatch = vi.fn()) {
+    return {dispatch, ...render(<PaginationRenderer props={props} dispatch={dispatch} />)};
+  }
 
-  it('renders nothing when state is undefined (loading)', () => {
-    mockControllerState = undefined;
-    const {container} = render(<PaginationRenderer props={props} />);
-    expect(container.innerHTML).toBe('');
-  });
-
-  it('renders page buttons from state', () => {
-    mockControllerState = {page: 1, pageSize: 10, totalEntries: 30, totalPages: 3};
-    render(<PaginationRenderer props={props} />);
+  it('renders page buttons from resolved props', () => {
+    renderPagination({page: 1, pageSize: 10, totalEntries: 30, totalPages: 3});
 
     expect(screen.getByLabelText('Pagination')).toBeDefined();
     expect(screen.getByLabelText('Page 1')).toBeDefined();
@@ -51,48 +33,42 @@ describe('PaginationRenderer', () => {
   });
 
   it('marks the current page as active', () => {
-    mockControllerState = {page: 1, pageSize: 10, totalEntries: 30, totalPages: 3};
-    render(<PaginationRenderer props={props} />);
+    renderPagination({page: 1, pageSize: 10, totalEntries: 30, totalPages: 3});
 
     expect(screen.getByLabelText('Page 2').getAttribute('aria-current')).toBe('page');
     expect(screen.getByLabelText('Page 1').getAttribute('aria-current')).toBeNull();
   });
 
-  it('dispatches selectPage when a page button is clicked', () => {
-    mockControllerState = {page: 0, pageSize: 10, totalEntries: 30, totalPages: 3};
-    render(<PaginationRenderer props={props} />);
+  it('dispatches a selectPage action when a page button is clicked', () => {
+    const {dispatch} = renderPagination({page: 0, pageSize: 10, totalEntries: 30, totalPages: 3});
 
     fireEvent.click(screen.getByLabelText('Page 3'));
-    expect(mockDispatch).toHaveBeenCalledWith('selectPage', {page: 2});
+    expect(dispatch).toHaveBeenCalledWith({event: {name: 'selectPage', context: {page: 2}}});
   });
 
   it('dispatches selectPage with next page on next button click', () => {
-    mockControllerState = {page: 0, pageSize: 10, totalEntries: 30, totalPages: 3};
-    render(<PaginationRenderer props={props} />);
+    const {dispatch} = renderPagination({page: 0, pageSize: 10, totalEntries: 30, totalPages: 3});
 
     fireEvent.click(screen.getByLabelText('Next page'));
-    expect(mockDispatch).toHaveBeenCalledWith('selectPage', {page: 1});
+    expect(dispatch).toHaveBeenCalledWith({event: {name: 'selectPage', context: {page: 1}}});
   });
 
   it('dispatches selectPage with previous page on previous button click', () => {
-    mockControllerState = {page: 2, pageSize: 10, totalEntries: 30, totalPages: 3};
-    render(<PaginationRenderer props={props} />);
+    const {dispatch} = renderPagination({page: 2, pageSize: 10, totalEntries: 30, totalPages: 3});
 
     fireEvent.click(screen.getByLabelText('Previous page'));
-    expect(mockDispatch).toHaveBeenCalledWith('selectPage', {page: 1});
+    expect(dispatch).toHaveBeenCalledWith({event: {name: 'selectPage', context: {page: 1}}});
   });
 
   it('disables previous button on first page', () => {
-    mockControllerState = {page: 0, pageSize: 10, totalEntries: 30, totalPages: 3};
-    render(<PaginationRenderer props={props} />);
+    renderPagination({page: 0, pageSize: 10, totalEntries: 30, totalPages: 3});
 
     const prevButton = screen.getByLabelText('Previous page') as HTMLButtonElement;
     expect(prevButton.disabled).toBe(true);
   });
 
   it('disables next button on last page', () => {
-    mockControllerState = {page: 2, pageSize: 10, totalEntries: 30, totalPages: 3};
-    render(<PaginationRenderer props={props} />);
+    renderPagination({page: 2, pageSize: 10, totalEntries: 30, totalPages: 3});
 
     const nextButton = screen.getByLabelText('Next page') as HTMLButtonElement;
     expect(nextButton.disabled).toBe(true);
@@ -100,24 +76,19 @@ describe('PaginationRenderer', () => {
 });
 
 describe('SortRenderer', () => {
-  const props = {componentId: 'test-sort', componentType: 'sort' as const};
-
-  it('renders nothing when state is undefined (loading)', () => {
-    mockControllerState = undefined;
-    const {container} = render(<SortRenderer props={props} />);
-    expect(container.innerHTML).toBe('');
-  });
+  function renderSort(props: SortProps, dispatch = vi.fn()) {
+    return {dispatch, ...render(<SortRenderer props={props} dispatch={dispatch} />)};
+  }
 
   it('renders a select with available sort options', () => {
-    mockControllerState = {
+    renderSort({
       appliedSort: {sortCriteria: 'relevance', fields: []},
       availableSorts: [
         {sortCriteria: 'relevance', fields: []},
         {sortCriteria: 'price_asc', fields: [{field: 'ec_price', direction: 'asc'}]},
         {sortCriteria: 'price_desc', fields: [{field: 'ec_price', direction: 'desc'}]},
       ],
-    };
-    render(<SortRenderer props={props} />);
+    });
 
     expect(screen.getByLabelText('Sort by:')).toBeDefined();
     expect(screen.getByText('Relevance')).toBeDefined();
@@ -126,75 +97,74 @@ describe('SortRenderer', () => {
   });
 
   it('selects the applied sort option', () => {
-    mockControllerState = {
+    renderSort({
       appliedSort: {sortCriteria: 'price_asc', fields: [{field: 'ec_price', direction: 'asc'}]},
       availableSorts: [
         {sortCriteria: 'relevance', fields: []},
         {sortCriteria: 'price_asc', fields: [{field: 'ec_price', direction: 'asc'}]},
       ],
-    };
-    render(<SortRenderer props={props} />);
+    });
 
     const select = screen.getByLabelText('Sort by:') as HTMLSelectElement;
     expect(select.value).toBe('1');
   });
 
-  it('dispatches selectSort when a different sort is selected', () => {
-    mockControllerState = {
+  it('dispatches a selectSort action when a different sort is selected', () => {
+    const {dispatch} = renderSort({
       appliedSort: {sortCriteria: 'relevance', fields: []},
       availableSorts: [
         {sortCriteria: 'relevance', fields: []},
         {sortCriteria: 'price_asc', fields: [{field: 'ec_price', direction: 'asc'}]},
       ],
-    };
-    render(<SortRenderer props={props} />);
+    });
 
     const select = screen.getByLabelText('Sort by:');
     fireEvent.change(select, {target: {value: '1'}});
 
-    expect(mockDispatch).toHaveBeenCalledWith('selectSort', {
-      sortCriteria: 'price_asc',
-      fields: [{field: 'ec_price', direction: 'asc'}],
+    expect(dispatch).toHaveBeenCalledWith({
+      event: {
+        name: 'selectSort',
+        context: {sortCriteria: 'price_asc', fields: [{field: 'ec_price', direction: 'asc'}]},
+      },
     });
   });
 });
 
 describe('ProductListRenderer', () => {
-  const props = {componentId: 'test-product-list', componentType: 'product-list' as const};
-
-  it('renders loading state when state is undefined', () => {
-    mockControllerState = undefined;
-    renderWithTargeting(<ProductListRenderer props={props} />);
+  it('renders loading state when products are unresolved', () => {
+    renderWithTargeting(<ProductListRenderer props={{} as ProductListProps} />);
 
     expect(screen.getByLabelText('Loading product list')).toBeDefined();
   });
 
   it('renders nothing when products array is empty', () => {
-    mockControllerState = {products: []};
-    const {container} = renderWithTargeting(<ProductListRenderer props={props} />);
+    const {container} = renderWithTargeting(<ProductListRenderer props={{products: []}} />);
     expect(container.querySelector('[role="list"]')).toBeNull();
   });
 
   it('renders a product grid with product cards', () => {
-    mockControllerState = {
-      products: [
-        {
-          permanentid: 'p1',
-          ec_name: 'Trail Shoes',
-          ec_brand: 'Nike',
-          ec_price: 99.99,
-          additionalFields: {},
-        },
-        {
-          permanentid: 'p2',
-          ec_name: 'Running Shoes',
-          ec_brand: 'Adidas',
-          ec_price: 79.99,
-          additionalFields: {},
-        },
-      ],
-    };
-    renderWithTargeting(<ProductListRenderer props={props} />);
+    renderWithTargeting(
+      <ProductListRenderer
+        props={{
+          products: [
+            {
+              permanentid: 'p1',
+              ec_name: 'Trail Shoes',
+              ec_brand: 'Nike',
+              ec_price: 99.99,
+              additionalFields: {},
+            },
+            {
+              permanentid: 'p2',
+              ec_name: 'Running Shoes',
+              ec_brand: 'Adidas',
+              ec_price: 79.99,
+              additionalFields: {},
+            },
+          ],
+        }}
+      />
+    );
 
     const list = screen.getByRole('list', {name: 'Product list'});
     expect(list).toBeDefined();

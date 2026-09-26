@@ -53,6 +53,16 @@ describe('import boundary', () => {
   it('does not export removed controller symbols from @coveo/thermidor', () => {
     expect('AdvertisedRemoteController' in thermidor).toBe(false);
     expect('RemoteControllerSchemaId' in thermidor).toBe(false);
+    // The RemoteController public API is removed under the inline-state model.
+    expect('RemoteController' in thermidor).toBe(false);
+    expect('RemoteAction' in thermidor).toBe(false);
+    expect('RemoteControllerOptions' in thermidor).toBe(false);
+  });
+
+  it('exposes dispatchAction as the single action-dispatch entry on the session', () => {
+    // The session factory is the only public action-dispatch surface; `dispatchAction`
+    // (on the returned Session) replaces the removed RemoteController dispatch.
+    expect('createSession' in thermidor).toBe(true);
   });
 
   it('does not reference removed controller symbols in source files', () => {
@@ -69,6 +79,43 @@ describe('import boundary', () => {
       for (const pattern of removedSymbols) {
         expect(content, `Reference to removed symbol ${pattern} in ${file}`).not.toMatch(pattern);
       }
+    }
+  });
+
+  it('no source file imports a RemoteController symbol or a controller hook', () => {
+    const forbidden = [
+      /\bRemoteController\b/,
+      /\buseRemoteController\b/,
+      /\bsession\.remoteController\b/,
+      /\.remoteController\(/,
+      /from\s+['"]\.\.?\/(?:.*\/)?controllers\.js['"]/,
+      /from\s+['"]\.\.?\/(?:.*\/)?read-child-ids\.js['"]/,
+      /\breadChildIds\b/,
+    ];
+    for (const file of sourceFiles) {
+      const content = readFileSync(file, 'utf-8');
+      for (const pattern of forbidden) {
+        expect(content, `Forbidden RemoteController/controller reference in ${file}`).not.toMatch(
+          pattern
+        );
+      }
+    }
+  });
+
+  it('the removed controllers.tsx and read-child-ids.ts source files are gone', () => {
+    const forbiddenBasenames = ['controllers.tsx', 'controllers.ts', 'read-child-ids.ts'];
+    for (const file of sourceFiles) {
+      const base = file.split('/').pop();
+      expect(forbiddenBasenames, `Removed file still present: ${file}`).not.toContain(base);
+    }
+  });
+
+  it('no renderer reads props.componentId or props.componentType', () => {
+    for (const file of sourceFiles) {
+      if (!/\/a2ui\/.+\.tsx$/.test(file)) continue;
+      const content = readFileSync(file, 'utf-8');
+      expect(content, `props.componentId read in ${file}`).not.toMatch(/props\.componentId\b/);
+      expect(content, `props.componentType read in ${file}`).not.toMatch(/props\.componentType\b/);
     }
   });
 });

@@ -1,5 +1,5 @@
-import {useRemoteController} from '../controllers.js';
 import type {Product, ProductSummaryProps} from '@coveo/thermidor-schema';
+import type {TypedRendererProps} from '../renderer-props.js';
 import styles from './ProductSummary.module.css';
 
 function formatPrice(value: number): string {
@@ -18,11 +18,8 @@ function resolvePrice(product: Product): number | undefined {
   return product.ec_promo_price ?? product.ec_price;
 }
 
-export function ProductSummaryRenderer({props}: {props: ProductSummaryProps}) {
-  const controller = useRemoteController(props.componentId, props.componentType);
-  const state = controller.state;
-
-  if (!state) {
+export function ProductSummaryRenderer({props}: TypedRendererProps<ProductSummaryProps, never>) {
+  if (props.categoryLabel === undefined) {
     return (
       <div className={styles.loading} aria-label="Loading product summary">
         Loading…
@@ -30,7 +27,7 @@ export function ProductSummaryRenderer({props}: {props: ProductSummaryProps}) {
     );
   }
 
-  const {categoryLabel, product} = state;
+  const {categoryLabel, product} = props;
   const name = product?.ec_name ?? categoryLabel;
   const imageUrl = product ? resolveProductImage(product) : null;
   const price = product ? resolvePrice(product) : undefined;
