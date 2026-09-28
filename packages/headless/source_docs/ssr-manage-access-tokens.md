@@ -39,7 +39,7 @@ export const engineDefinition = defineCommerceEngine({
 export const {fetchStaticState, hydrateStaticState} = engineDefinition;
 ```
 
-## Use one token for the whole application
+## Case 1: Every user can use the same token
 
 If a single token is valid for every user — for example, a public search token — set it once in the engine definition’s `configuration`.
 Every request uses this token, and you don’t need to do anything else.
@@ -48,7 +48,7 @@ This is the default: the token you configure in `engine.ts` is the one used unle
 
 For details about the `accessToken` configuration and the `renewAccessToken` callback that the engine runs to obtain a new token when the current one expires, see [Configure a Headless Engine](../../index.html#configure-a-headless-engine).
 
-## Use a different token per user
+## Case 2: Each request needs its own token
 
 In a multi-tenant application, each request may need its own token — for example, a search token minted for the currently authenticated user.
 Pass an `accessToken` when you fetch the static state to use it only for that request:
@@ -78,7 +78,7 @@ export default async function ProductListing({request}: {request: Request}) {
 
 `ListingProvider` here is a provider you build once from your engine definition with `buildProviderWithDefinition` (from `@coveo/headless-react/ssr-commerce`), as shown in the [SSR commerce providers documentation](https://docs.coveo.com/en/obif0156/#create-providers).
 
-The token you pass applies to that request only; it doesn’t affect the shared definition or any other request.
+Pass the same `userToken` in both places: the `accessToken` you pass to `fetchStaticState()` is used to render the page on the server, and the `accessToken` you pass to `ListingProvider` is forwarded to `hydrateStaticState()` so the hydrated engine keeps using that same token on the client. The token you pass applies to that request only; it doesn’t affect the shared definition or any other request.
 When you omit `accessToken`, the request uses the token configured in the definition.
 
 > [!IMPORTANT]
@@ -112,7 +112,7 @@ export default async function ProductListing({request}: {request: Request}) {
 }
 ```
 
-`getNavigatorContext(request)` is your own function that reads the request headers and returns a `NavigatorContext` (client ID, user agent, referrer, `x-forwarded-for`). The context you pass applies to that request only; it doesn't affect the shared definition or any other request. When you omit `navigatorContext`, the request uses the provider set with `setNavigatorContextProvider()`, if any.
+`getNavigatorContext(request)` is a function you provide that reads the request headers and returns a `NavigatorContext` (client ID, user agent, referrer, `x-forwarded-for`). The context you pass applies to that request only; it doesn't affect the shared definition or any other request. When you omit `navigatorContext`, the request falls back to the context returned by the provider set with `setNavigatorContextProvider()`, if any.
 
 > [!NOTE]
 >
