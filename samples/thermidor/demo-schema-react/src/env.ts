@@ -25,21 +25,9 @@ function parseBoolean(value: string | undefined): boolean | undefined {
   return undefined;
 }
 
-/**
- * True when nothing is configured, in which case the sample falls back to
- * {@link PUBLIC_SAMPLE_CONFIGURATION} wholesale.
- */
-function isUsingPublicSampleConfiguration(): boolean {
-  return getOptionalEnvValue('VITE_COVEO_ORGANIZATION_ID') === undefined;
-}
-
 function getRequiredEnvValue(key: RequiredEnvKey): string {
   const value = import.meta.env[key];
   if (!value) {
-    if (isUsingPublicSampleConfiguration()) {
-      return PUBLIC_SAMPLE_CONFIGURATION[key];
-    }
-
     throw new Error(`Missing required environment variable: ${key}`);
   }
 
@@ -62,11 +50,48 @@ function resolvePlatformEnvironment(): PlatformEnvironment {
     return candidate;
   }
 
-  if (isUsingPublicSampleConfiguration()) {
-    return PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_PLATFORM_ENVIRONMENT;
+  return 'dev';
+}
+
+/**
+ * The organization and everything bound to it: credentials, tracking id, locale and
+ * platform environment.
+ *
+ * With no `VITE_COVEO_ORGANIZATION_ID`, {@link PUBLIC_SAMPLE_CONFIGURATION} is applied
+ * as a bundle and partial overrides of these keys are ignored. They are not
+ * independent: the token and tracking id belong to that organization, and it exists
+ * only in production — honouring a stray `VITE_COVEO_PLATFORM_ENVIRONMENT=dev` would
+ * point the app at `searchuisamples.orgdev.coveo.com`, which does not exist.
+ *
+ * Transport settings (`VITE_COVEO_ENDPOINT`, `VITE_COVEO_USE_VITE_PROXY`) are not part
+ * of the bundle and are always honoured, since `dev:mock` and `dev:agent-gateway` set
+ * them without an organization.
+ */
+function resolveOrganizationConfiguration() {
+  const organizationId = getOptionalEnvValue('VITE_COVEO_ORGANIZATION_ID');
+
+  if (organizationId === undefined) {
+    return {
+      organizationId: PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_ORGANIZATION_ID,
+      accessToken: PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_ACCESS_TOKEN,
+      trackingId: PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_TRACKING_ID,
+      language: PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_LANGUAGE,
+      country: PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_COUNTRY,
+      currency: PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_CURRENCY,
+      environment: PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_PLATFORM_ENVIRONMENT,
+    };
   }
 
-  return 'dev';
+  return {
+    organizationId,
+    // Optional: mock mode does not use it. For a live backend, set VITE_COVEO_ACCESS_TOKEN.
+    accessToken: getOptionalEnvValue('VITE_COVEO_ACCESS_TOKEN') ?? '',
+    trackingId: getRequiredEnvValue('VITE_COVEO_TRACKING_ID'),
+    language: getRequiredEnvValue('VITE_COVEO_LANGUAGE'),
+    country: getRequiredEnvValue('VITE_COVEO_COUNTRY'),
+    currency: getRequiredEnvValue('VITE_COVEO_CURRENCY'),
+    environment: resolvePlatformEnvironment(),
+  };
 }
 
 function getOrganizationPlatformEndpoint(
@@ -99,28 +124,19 @@ function shouldUseViteProxy() {
 }
 
 export function getSampleConfiguration() {
-  const organizationId = getRequiredEnvValue('VITE_COVEO_ORGANIZATION_ID');
+  const {environment, ...organization} = resolveOrganizationConfiguration();
   const endpointOverride = getOptionalEnvValue('VITE_COVEO_ENDPOINT');
-  const environment = resolvePlatformEnvironment();
-  const endpointFromEnvironment = getOrganizationPlatformEndpoint(organizationId, environment);
+  const endpointFromEnvironment = getOrganizationPlatformEndpoint(
+    organization.organizationId,
+    environment
+  );
 
   const baseUrl = shouldUseViteProxy()
     ? window.location.origin
     : (endpointOverride ?? endpointFromEnvironment);
-  const endpoint = getConverseUrl(baseUrl, organizationId);
 
   return {
-    organizationId,
-    // Optional: mock mode does not use it. For a live backend, set VITE_COVEO_ACCESS_TOKEN.
-    accessToken:
-      getOptionalEnvValue('VITE_COVEO_ACCESS_TOKEN') ??
-      (isUsingPublicSampleConfiguration()
-        ? PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_ACCESS_TOKEN
-        : ''),
-    trackingId: getRequiredEnvValue('VITE_COVEO_TRACKING_ID'),
-    language: getRequiredEnvValue('VITE_COVEO_LANGUAGE'),
-    country: getRequiredEnvValue('VITE_COVEO_COUNTRY'),
-    currency: getRequiredEnvValue('VITE_COVEO_CURRENCY'),
-    endpoint,
+    ...organization,
+    endpoint: getConverseUrl(baseUrl, organization.organizationId),
   };
 }

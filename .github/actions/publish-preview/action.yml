@@ -10,15 +10,9 @@ runs:
     - name: Resolve preview templates
       shell: bash
       run: |
-        # The directories published as StackBlitz templates, so a reviewer gets a
-        # live app per preview. Declared once here and consumed by both the
-        # catalog-flattening step and the publish step, so the two cannot disagree
-        # about what counts as a template.
-        #
-        # A single brace pattern rather than repeated `--template` flags:
-        # pkg-pr-new declares `--template` as a string and expands it with glob, so
-        # one value is unambiguously correct, whereas repeating the flag would rely
-        # on the CLI collapsing duplicates into an array.
+        # Consumed by the prepare and publish steps below, so they cannot disagree.
+        # One brace pattern rather than repeated `--template` flags: pkg-pr-new takes
+        # `--template` as a single string and expands it with glob.
         {
           echo 'PREVIEW_TEMPLATE_PATTERN={packages/pkg-new-template,samples/thermidor/demo-schema-react}'
         } >> "$GITHUB_ENV"

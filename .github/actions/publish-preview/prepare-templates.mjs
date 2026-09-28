@@ -1,30 +1,9 @@
 /**
- * Prepares pkg.pr.new template package.json files for publishing, so they install
- * with npm in StackBlitz rather than only with pnpm inside this workspace.
+ * Rewrites pkg.pr.new templates in the CI checkout so they install with npm in
+ * StackBlitz, not just with pnpm in this workspace: resolves `catalog:` versions,
+ * inlines the tsconfig `extends` chain, and drops test tooling.
  *
- * Three transformations, all applied to the checkout in CI only:
- *
- * 1. Resolve `catalog:` references. The `catalog:` protocol is a pnpm workspace
- *    feature that does not resolve outside the workspace.
- *    See: https://github.com/stackblitz-labs/pkg.pr.new/issues/204
- *
- * 2. Inline the `tsconfig.json` `extends` chain. A template is published as a
- *    standalone directory, so a config that reaches outside it does not resolve
- *    and Vite fails every transform with `Tsconfig not found`.
- *
- * 3. Drop test tooling. A template only ever runs its `dev` script in StackBlitz,
- *    so test runners are dead weight — and `vitest` is worse than dead weight: it
- *    declares a dozen optional peers (`jsdom`, `happy-dom`, `@vitest/ui`, …) and
- *    npm's dependency resolver crashes on that shape with
- *    `Cannot read properties of null (reading 'edgesOut')`, which takes the whole
- *    preview down. pnpm resolves it fine, which is why this only bites in
- *    StackBlitz. Removing test tooling also cuts the install to a fraction of its
- *    size.
- *
- * Takes the same glob pattern that `action.yml` hands to `pkg-pr-new --template`,
- * so both steps agree on which directories are templates and every published
- * template gets the same treatment. Lives beside `resolve-packages.mjs`, its
- * counterpart for the published *package* set, rather than inside any one template.
+ * Takes the same glob `action.yml` hands to `pkg-pr-new --template`.
  */
 
 import {execFileSync} from 'node:child_process';
@@ -32,11 +11,10 @@ import {createRequire} from 'node:module';
 import fs from 'node:fs';
 import path from 'node:path';
 
-/**
- * Test tooling, removed from published templates. Exact names plus scope prefixes.
- * Anything needed to actually serve the app (`vite`, framework plugins, `typescript`,
- * `@types/*`) is deliberately absent from this list.
- */
+// A template only runs `dev`, so test tooling is unused. `vitest` also breaks the
+// install outright: npm cannot resolve its dozen optional peers and fails with
+// `Cannot read properties of null (reading 'edgesOut')`. pnpm handles it, so this
+// only shows up in StackBlitz.
 const TEST_TOOLING = new Set(['vitest', 'playwright', '@playwright/test', 'fast-check']);
 const TEST_TOOLING_PREFIXES = ['@testing-library/', '@vitest/'];
 
@@ -55,16 +33,11 @@ function parseJsonc(source) {
 }
 
 /**
- * Collapses a tsconfig's `extends` chain into one self-contained file.
- *
- * Templates are published as a standalone directory, so a config that reaches
- * outside it — this sample extends the monorepo root, which in turn extends the
- * `@tsconfig/node22` package — resolves to nothing once published, and Vite fails
- * every transform with `Failed to load tsconfig: Tsconfig not found`.
- *
- * `compilerOptions` are merged with the extending config winning, matching
- * TypeScript. Other keys are taken from the extending config only, since `include`
- * and `exclude` are relative to the file that declares them.
+ * Collapses the `extends` chain into one self-contained file. A template is published
+ * standalone, so extending the monorepo root resolves to nothing and Vite fails every
+ * transform with `Tsconfig not found`. `compilerOptions` merge with the extending
+ * config winning, as TypeScript does; other keys are not inherited, since `include`
+ * and `exclude` are relative to the file declaring them.
  */
 function flattenTsconfig(templateDirectory, removedDependencies) {
   const tsconfigPath = path.join(templateDirectory, 'tsconfig.json');
@@ -97,7 +70,7 @@ function flattenTsconfig(templateDirectory, removedDependencies) {
   delete flattened.extends;
   delete flattened.$schema;
 
-  // `types` may name packages that were just removed (e.g. `vitest/globals`).
+  // `types` may name a package just removed (e.g. `vitest/globals`).
   const types = flattened.compilerOptions?.types;
   if (Array.isArray(types)) {
     flattened.compilerOptions.types = types.filter(
@@ -149,17 +122,13 @@ function resolveCatalogEntries(configuration, resolved, packageName) {
 
     const resolvedVersion = resolved[name]?.version;
     if (resolvedVersion) {
-      // Pinned exactly, not as a `^` range: the workspace catalog pins exact
-      // versions, so a range would let the template install a version the
-      // workspace never tested. That is not hypothetical — `^1.0.0-beta.5` let npm
-      // take `@coveo/thermidor-schema@1.0.0-beta.6`, whose contracts schema the
-      // sample does not match, and every surface failed to resolve.
+      // Exact, not `^`: the catalog pins exact versions, and a range let npm install
+      // a schema prerelease the sample did not match, breaking every surface.
       configuration[name] = resolvedVersion;
       console.log(`${packageName}: resolved ${name} "catalog:" → "${resolvedVersion}"`);
       resolvedCount += 1;
     } else {
-      // A `catalog:` reference we cannot resolve would be published verbatim and
-      // fail to install in StackBlitz, so fail loudly here instead.
+      // Publishing it verbatim would fail to install, so fail here instead.
       throw new Error(
         `${packageName}: unable to resolve the "catalog:" version of ${name}. ` +
           'Run `pnpm install` so the workspace catalog is resolvable, then retry.'
@@ -192,8 +161,7 @@ function flattenTemplate(templateDirectory) {
     console.log(`${packageName}: removed test tooling — ${removed.sort().join(', ')}`);
   }
 
-  // Scripts that cannot run in a published template: their tooling is gone, or they
-  // shell out to the monorepo (`dev:mock` builds sibling workspace packages).
+  // Their tooling is gone, or they build sibling workspace packages (`dev:mock`).
   for (const script of ['test', 'e2e', 'e2e:watch', 'dev:mock']) {
     delete packageJson.scripts?.[script];
   }
@@ -208,10 +176,7 @@ function flattenTemplate(templateDirectory) {
   fs.writeFileSync(packagePath, `${JSON.stringify(packageJson, null, 2)}\n`);
 }
 
-/**
- * Expands the template glob the workflow passes. Mirrors how `pkg-pr-new`
- * expands its own `--template` value, so both steps agree on the resulting set.
- */
+/** Expands the glob the same way `pkg-pr-new` expands its own `--template`. */
 function resolveTemplateDirectories(patterns) {
   if (patterns.length === 0) {
     throw new Error(

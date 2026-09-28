@@ -65,7 +65,7 @@ See [`src/public-sample-configuration.ts`](src/public-sample-configuration.ts).
 This sample is published as a [pkg.pr.new](https://pkg.pr.new) StackBlitz template,
 so every PR that affects `@coveo/thermidor` gets a link that boots this app against
 that PR's build of the package. Because it needs no configuration, the link is
-runnable as-is — it is the quickest way to try a Thermidor change end to end.
+runnable as-is.
 
 The template set lives in
 [`.github/actions/publish-preview/action.yml`](../../../.github/actions/publish-preview/action.yml).
