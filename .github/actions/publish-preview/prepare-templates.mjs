@@ -2,13 +2,17 @@
  * Prepares pkg.pr.new template package.json files for publishing, so they install
  * with npm in StackBlitz rather than only with pnpm inside this workspace.
  *
- * Two transformations:
+ * Three transformations, all applied to the checkout in CI only:
  *
  * 1. Resolve `catalog:` references. The `catalog:` protocol is a pnpm workspace
  *    feature that does not resolve outside the workspace.
  *    See: https://github.com/stackblitz-labs/pkg.pr.new/issues/204
  *
- * 2. Drop test tooling. A template only ever runs its `dev` script in StackBlitz,
+ * 2. Inline the `tsconfig.json` `extends` chain. A template is published as a
+ *    standalone directory, so a config that reaches outside it does not resolve
+ *    and Vite fails every transform with `Tsconfig not found`.
+ *
+ * 3. Drop test tooling. A template only ever runs its `dev` script in StackBlitz,
  *    so test runners are dead weight — and `vitest` is worse than dead weight: it
  *    declares a dozen optional peers (`jsdom`, `happy-dom`, `@vitest/ui`, …) and
  *    npm's dependency resolver crashes on that shape with
@@ -17,19 +21,16 @@
  *    StackBlitz. Removing test tooling also cuts the install to a fraction of its
  *    size.
  *
- * Accepts the same glob pattern that `.github/actions/publish-preview` hands to
- * `pkg-pr-new --template`, so there is a single source of truth for which
- * directories are templates and every published template gets the same treatment.
+ * Takes the same glob pattern that `action.yml` hands to `pkg-pr-new --template`,
+ * so both steps agree on which directories are templates and every published
+ * template gets the same treatment. Lives beside `resolve-packages.mjs`, its
+ * counterpart for the published *package* set, rather than inside any one template.
  */
 
 import {execFileSync} from 'node:child_process';
 import {createRequire} from 'node:module';
 import fs from 'node:fs';
 import path from 'node:path';
-import {fileURLToPath} from 'node:url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const defaultTemplateDirectory = path.resolve(__dirname, '..');
 
 /**
  * Test tooling, removed from published templates. Exact names plus scope prefixes.
@@ -213,7 +214,9 @@ function flattenTemplate(templateDirectory) {
  */
 function resolveTemplateDirectories(patterns) {
   if (patterns.length === 0) {
-    return [defaultTemplateDirectory];
+    throw new Error(
+      'No template pattern given. Pass the same value the workflow hands to `pkg-pr-new --template`.'
+    );
   }
 
   const matches = patterns.flatMap((pattern) => fs.globSync(pattern, {cwd: process.cwd()}));

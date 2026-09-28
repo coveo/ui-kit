@@ -49,7 +49,7 @@ runs:
     - name: Prepare pkg.pr.new templates
       if: ${{ steps.resolve.outputs.packages != '' }}
       shell: bash
-      run: node packages/pkg-new-template/scripts/prepare-templates.mjs "$PREVIEW_TEMPLATE_PATTERN"
+      run: node "$GITHUB_ACTION_PATH/prepare-templates.mjs" "$PREVIEW_TEMPLATE_PATTERN"
     - name: Publish to pkg.pr.new
       if: ${{ steps.resolve.outputs.packages != '' }}
       shell: bash
