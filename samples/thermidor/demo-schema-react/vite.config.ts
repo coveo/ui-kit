@@ -1,5 +1,6 @@
 import react from '@vitejs/plugin-react';
 import {defineConfig, loadEnv} from 'vite';
+import {PUBLIC_SAMPLE_CONFIGURATION} from './src/public-sample-configuration.js';
 
 type PlatformEnvironment = 'prod' | 'dev' | 'stg' | 'hipaa';
 
@@ -70,21 +71,43 @@ export function resolveAgentRuntimeHeaders(
   };
 }
 
+/**
+ * Resolves the organization the dev server should proxy to, falling back to the
+ * public sample organization when nothing is configured. Applied here rather
+ * than inside {@link resolveProxyTargets} so that function keeps its pure
+ * "no organization means no proxy" contract.
+ *
+ * This must agree with `src/env.ts`: the browser routes through the proxy in dev
+ * mode, so a proxy that is absent (or points elsewhere) turns every agent call
+ * into a 404 against the dev server.
+ */
+function resolveConfiguredOrganization(env: Record<string, string>) {
+  const organizationId = env.VITE_COVEO_ORGANIZATION_ID?.trim();
+  if (organizationId) {
+    return {
+      organizationId,
+      environment: resolveEnvironment(env.VITE_COVEO_PLATFORM_ENVIRONMENT),
+    };
+  }
+
+  return {
+    organizationId: PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_ORGANIZATION_ID,
+    environment: resolveEnvironment(PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_PLATFORM_ENVIRONMENT),
+  };
+}
+
 function getProxyTargets(mode: string) {
   const env = loadEnv(mode, process.cwd(), '');
+  const {organizationId, environment} = resolveConfiguredOrganization(env);
 
-  return resolveProxyTargets(
-    env.VITE_COVEO_ORGANIZATION_ID?.trim(),
-    env.VITE_COVEO_ENDPOINT?.trim(),
-    resolveEnvironment(env.VITE_COVEO_PLATFORM_ENVIRONMENT)
-  );
+  return resolveProxyTargets(organizationId, env.VITE_COVEO_ENDPOINT?.trim(), environment);
 }
 
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, process.cwd(), '');
   const useProxy = parseBoolean(env.VITE_COVEO_USE_VITE_PROXY) ?? true;
   const targets = getProxyTargets(mode);
-  const orgId = env.VITE_COVEO_ORGANIZATION_ID?.trim();
+  const {organizationId: orgId} = resolveConfiguredOrganization(env);
   const agentRuntimeHeaders = resolveAgentRuntimeHeaders(
     env.VITE_COVEO_AGENT_RUNTIME_NAME,
     env.VITE_COVEO_AGENT_RUNTIME_QUALIFIER

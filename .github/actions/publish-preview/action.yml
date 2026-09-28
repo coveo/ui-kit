@@ -7,6 +7,15 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Resolve preview templates
+      shell: bash
+      run: |
+        # Consumed by the prepare and publish steps below, so they cannot disagree.
+        # One brace pattern rather than repeated `--template` flags: pkg-pr-new takes
+        # `--template` as a single string and expands it with glob.
+        {
+          echo 'PREVIEW_TEMPLATE_PATTERN={packages/pkg-new-template,samples/thermidor/demo-schema-react}'
+        } >> "$GITHUB_ENV"
     - name: Resolve preview package paths
       id: resolve
       shell: bash
@@ -31,10 +40,10 @@ runs:
         done <<< "$PACKAGE_PATHS"
 
         pnpm exec turbo run build "${filters[@]}"
-    - name: Resolve catalog references in pkg.pr.new templates
+    - name: Prepare pkg.pr.new templates
       if: ${{ steps.resolve.outputs.packages != '' }}
       shell: bash
-      run: node packages/pkg-new-template/scripts/flatten-catalog.mjs
+      run: node "$GITHUB_ACTION_PATH/prepare-templates.mjs" "$PREVIEW_TEMPLATE_PATTERN"
     - name: Publish to pkg.pr.new
       if: ${{ steps.resolve.outputs.packages != '' }}
       shell: bash
@@ -47,5 +56,5 @@ runs:
         done <<< "$PACKAGE_PATHS"
 
         pnpm dlx pkg-pr-new publish --pnpm \
-          --template './packages/pkg-new-template' \
+          --template "$PREVIEW_TEMPLATE_PATTERN" \
           "${package_paths[@]}"

@@ -55,6 +55,11 @@ Samples using `@coveo/thermidor` for upcoming conversational and search experien
 | --------------------------------------------------- | --------------------------------------------------------------------------------------------- | ------------ | ------------ |
 | [demo-schema-react](./thermidor/demo-schema-react/) | React + Vite conversational commerce demo driven by `@coveo/thermidor-schema` A2-UI contracts | React + Vite | Conversation |
 
+`demo-schema-react` is also published as a [pkg.pr.new](https://pkg.pr.new) StackBlitz
+template, so every pull request affecting `@coveo/thermidor` gets a link that boots it
+against that PR's build. It runs with no configuration against the public
+`searchuisamples` organization.
+
 ## 🚀 Quick Start
 
 Every sample can be run standalone:
