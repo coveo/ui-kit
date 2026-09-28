@@ -143,19 +143,12 @@ export const engineDefinition = defineCommerceEngine({
 
 Because `renewAccessToken` is part of the engine configuration, it applies to every engine built from the definition, on both the server and the client, and doesn't mutate anything shared between requests.
 
-> [!WARNING]
->
-> `setAccessToken()` on the engine definition is deprecated and will be removed in a future major version.
-> It writes to the shared engine definition, which is unsafe on a server handling concurrent requests.
-> Use the per-request `accessToken` to choose the token for a request, and `renewAccessToken` to rotate an expiring one.
-> On the `@coveo/headless/ssr-commerce-next` sub-package, `setAccessToken()` and `getAccessToken()` have already been removed.
-
 ## Don’t use `setAccessToken()` to change the token per request on the server
 
-`setAccessToken()` updates the token on the shared engine definition, which every request uses.
-On the server, where many requests are handled concurrently, calling it for one request changes the token for the others in flight at the same time — one user could end up issuing requests with another user’s token.
-
-To use a different token per request on the server, use the per-request `accessToken` shown above instead.
+`setAccessToken()` on the engine definition is deprecated and will be removed in a future major version.
+It writes to the shared engine definition, which is unsafe on a server handling concurrent requests: calling it for one request changes the token for the others in flight at the same time — one user could end up issuing requests with another user’s token.
+Use the per-request `accessToken` to choose the token for a request, and `renewAccessToken` to rotate an expiring one.
+On the `@coveo/headless/ssr-commerce-next` sub-package, `setAccessToken()` and `getAccessToken()` have already been removed.
 
 ## Summary
 
