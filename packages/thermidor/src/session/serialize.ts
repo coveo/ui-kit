@@ -18,10 +18,11 @@
  *   | response.agent.{messages,reasoningSteps}    | yes     | all turns        |
  *   | response.state                              | yes     | active turn ONLY |
  *   | response.surfaces                           | no      | derived          |
+ *   | response.a2uiMessages                       | no      | derived          |
  *
  * On restore:
- *   - `surfaces` is re-derived from each turn's persisted `activities` (never
- *     persisted, never an independent source of truth).
+ *   - `surfaces` and `a2uiMessages` are re-derived from each turn's persisted
+ *     `activities` (never persisted, never an independent source of truth).
  *   - a turn persisted mid-stream (`status: 'streaming'`) is downgraded to
  *     `status: 'error'` (`'Stream was interrupted'`), preserving whatever
  *     partial `response` had streamed in.
@@ -31,6 +32,7 @@
  *     session.
  */
 
+import {deriveA2uiV09Messages} from './a2ui-v09-projection.js';
 import {deriveSurfaces} from './fold.js';
 import type {SessionStoreState} from './store.js';
 import type {Activity, AgentMessage, ReasoningStep, Turn, TurnInput, TurnStatus} from './types.js';
@@ -56,9 +58,9 @@ export interface SerializedTurnAgent {
 }
 
 /**
- * The persisted response of a {@link SerializedTurn}. `surfaces` is
- * intentionally absent — it is re-derived from `activities` on restore.
- * `state` is present only for the active turn.
+ * The persisted response of a {@link SerializedTurn}. `surfaces` and
+ * `a2uiMessages` are intentionally absent — both are re-derived from
+ * `activities` on restore. `state` is present only for the active turn.
  */
 export interface SerializedTurnResponse {
   /** Persisted for ALL turns; the transcript source. */
@@ -122,7 +124,8 @@ export class UnsupportedSerializedSessionVersionError extends Error {
  * Persists `id`/`input`/`status`/`error` and `response.activities` for every
  * turn, `response.agent.{messages,reasoningSteps}` for turns that have an
  * agent, `response.state` for the active turn only, and session-level
- * `sessionId`/`sessionToken`/`activeTurnId`. Never persists `response.surfaces`.
+ * `sessionId`/`sessionToken`/`activeTurnId`. Never persists the derived
+ * `response.surfaces` / `response.a2uiMessages`.
  */
 export function serializeSession(state: SessionStoreState<Turn>): SerializedSession {
   const {turns, activeTurnId, sessionId, sessionToken} = state;
@@ -177,7 +180,8 @@ export function serializeSession(state: SessionStoreState<Turn>): SerializedSess
  * Rejects an unsupported `version` (throwing
  * {@link UnsupportedSerializedSessionVersionError}) before building any turns,
  * so no session is partially populated. Otherwise reproduces every persisted
- * turn, re-derives `surfaces` from persisted `activities`, downgrades any
+ * turn, re-derives `surfaces` and `a2uiMessages` from persisted `activities`,
+ * downgrades any
  * mid-stream turn to `error` while preserving its partial response, and yields
  * an empty `{}` state for every non-active turn.
  */
@@ -196,6 +200,7 @@ export function restoreSession(serialized: SerializedSession): SessionStoreState
       state: isActive && turn.response.state ? {...turn.response.state} : {},
       activities: [...turn.response.activities],
       surfaces: deriveSurfaces(turn.response.activities),
+      a2uiMessages: deriveA2uiV09Messages(turn.response.activities),
     };
     if (turn.response.agent) {
       response.agent = {

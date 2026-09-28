@@ -90,6 +90,7 @@ function turnArbitrary(id: string): fc.Arbitrary<Turn> {
           state,
           activities,
           surfaces: [],
+          a2uiMessages: [],
           ...(agent ? {agent} : {}),
         },
       };

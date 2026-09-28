@@ -4,7 +4,7 @@ import {ThinkingBlock} from './ThinkingBlock.js';
 import {StreamingMessage} from './StreamingMessage.js';
 import {A2UISkeleton} from '../../a2ui/Skeleton/Skeleton.js';
 import {parseSurfaceSnapshots} from '../../a2ui/types.js';
-import {getA2UIMessages, ThermidorA2UISurfaces} from '../../a2ui/surfaces.js';
+import {ThermidorA2UISurfaces} from '../../a2ui/surfaces.js';
 import styles from './AgentResponseBlock.module.css';
 
 const KNOWN_COMPONENTS = new Set([
@@ -26,7 +26,7 @@ export interface AgentResponseBlockProps {
 }
 
 export function AgentResponseBlock({response, isStreaming}: AgentResponseBlockProps) {
-  const {activities, agent} = response;
+  const {activities, agent, a2uiMessages} = response;
   const messages = agent?.messages ?? [];
   const reasoningSteps = agent?.reasoningSteps ?? [];
 
@@ -38,8 +38,6 @@ export function AgentResponseBlock({response, isStreaming}: AgentResponseBlockPr
   // `isLoading`), which live in the `a2ui-surface` activity payloads.
   const surfaceSnapshots = useMemo(() => toSurfaceSnapshots(activities), [activities]);
   const skeletonItems = useSkeletonItems(surfaceSnapshots, reasoningSteps, isStreaming);
-
-  const a2uiMessages = useMemo(() => getA2UIMessages(activities), [activities]);
 
   return (
     <div className={styles.container}>
