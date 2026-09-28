@@ -1,5 +1,6 @@
 import {
   createCatalog,
+  Catalog,
   type CatalogDefinitions,
   type CatalogRenderers,
 } from '@copilotkit/a2ui-renderer';
@@ -33,6 +34,7 @@ import {ProductSummaryRenderer} from './ProductSummary/ProductSummary.js';
 import {PaginationRenderer} from './Pagination/Pagination.js';
 import {SortRenderer} from './Sort/Sort.js';
 import {RegularFacetRenderer} from './RegularFacet/RegularFacet.js';
+import {RegularFacetValueImpl} from './RegularFacetValue/RegularFacetValue.js';
 import {NumericFacetRenderer} from './NumericFacet/NumericFacet.js';
 import {CategoryFacetRenderer} from './CategoryFacet/CategoryFacet.js';
 import {FacetManagerRenderer} from './FacetManager/FacetManager.js';
@@ -166,8 +168,19 @@ const thermidorCatalogRenderers = asCatalogRenderers({
 });
 
 export function createThermidorCatalog() {
-  return createCatalog(thermidorCatalogDefinitions, thermidorCatalogRenderers, {
+  const base = createCatalog(thermidorCatalogDefinitions, thermidorCatalogRenderers, {
     catalogId: THERMIDOR_CATALOG_ID,
     includeBasicCatalog: true,
   });
+  // RegularFacetValue is mounted via `createReactComponent` DIRECTLY (not through createCatalog's
+  // renderer map) so the generic binder exposes its synthesized setters (setSelectionState) to the
+  // child renderer. createCatalog's RendererProps deliberately hides setters; only this path surfaces
+  // them. We reconstruct the Catalog with the base components plus our impl — the Catalog is
+  // immutable, so extension is by re-construction.
+  return new Catalog(
+    base.id,
+    [...base.components.values(), RegularFacetValueImpl],
+    [...base.functions.values()],
+    base.themeSchema
+  );
 }

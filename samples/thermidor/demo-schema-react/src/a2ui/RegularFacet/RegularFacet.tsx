@@ -7,8 +7,14 @@ import styles from './RegularFacet.module.css';
 
 export function RegularFacetRenderer({
   props,
+  children,
   dispatch,
 }: TypedRendererProps<RegularFacetProps, RegularFacetAction>) {
+  // `children` mounts a child by id; for a TEMPLATE ChildList child it also takes the resolved
+  // `basePath` so the mounted instance binds under that data-model node. `createCatalog` wires
+  // `children` to the binder's `buildChild(id, basePath?)` at runtime, but its public `RendererProps`
+  // type declares only `(id)`; we widen it here to the real runtime signature.
+  const mountChild = children as (id: string, basePath?: string) => React.ReactNode;
   const dispatchSearch = useCallback(
     (query: string) => dispatch?.({event: {name: 'search', context: {query}}}),
     [dispatch]
@@ -16,14 +22,19 @@ export function RegularFacetRenderer({
   const search = useOptimisticFacetSearch(props.facetSearch?.query ?? '', dispatchSearch);
 
   const {displayName, hasActiveValues, canShowMoreValues, canShowLessValues} = props;
-  const values = props.values ?? [];
+  // `values` is a ChildList TEMPLATE: the binder resolves it to an array of mounted-child
+  // descriptors `{id, basePath}` (STRUCTURAL), one per data-model entry under
+  // `/state/<facet>/values`. Each child (RegularFacetValue) is mounted at its basePath so its
+  // optimistic `setSelectionState` writes `<basePath>/selectionState`, touching only that value.
+  // The generated composition type widens this to `string[]`; the runtime shape is the descriptor
+  // list, so we read it through the ChildList descriptor view (the single type/runtime seam here).
+  const valueChildren = (props.values ?? []) as unknown as ReadonlyArray<{
+    id: string;
+    basePath: string;
+  }>;
   const facetSearch = props.facetSearch ?? {query: '', results: [], canShowMoreResults: false};
   const searchResults = facetSearch.results ?? [];
   const showResults = (facetSearch.query ?? '').length > 0 || searchResults.length > 0;
-
-  const handleToggleSelect = (value: string) => {
-    dispatch?.({event: {name: 'toggleSelect', context: {value}}});
-  };
 
   const handleClearSearch = () => {
     search.reset();
@@ -44,6 +55,13 @@ export function RegularFacetRenderer({
 
   const handleClearAll = () => {
     dispatch?.({event: {name: 'clearAllActiveValues', context: {}}});
+  };
+
+  // Search results are transient (not part of the facet's value list), so selecting one dispatches
+  // toggleSelect directly — the optimistic setSelectionState path applies only to the ChildList
+  // value children (RegularFacetValue), not to search-result rows.
+  const handleToggleSelect = (value: string) => {
+    dispatch?.({event: {name: 'toggleSelect', context: {value}}});
   };
 
   const renderCheckbox = (
@@ -137,14 +155,9 @@ export function RegularFacetRenderer({
       ) : (
         <>
           <ul className={styles.valueList}>
-            {values.map((facetValue) =>
-              renderCheckbox(
-                facetValue.value,
-                facetValue.numberOfResults,
-                facetValue.state === 'selected',
-                `facet-value-${facetValue.value}`
-              )
-            )}
+            {valueChildren.map((child) => (
+              <div key={child.basePath}>{mountChild(child.id, child.basePath)}</div>
+            ))}
           </ul>
 
           {canShowLessValues && (

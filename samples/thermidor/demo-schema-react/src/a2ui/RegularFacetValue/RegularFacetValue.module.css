@@ -1,0 +1,35 @@
+.valueItem {
+  display: flex;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-1) 0;
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.checkboxLabel:hover {
+  background: var(--color-surface-hover);
+}
+
+.checkbox {
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.valueLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.valueCount {
+  color: var(--color-text-muted);
+}

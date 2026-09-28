@@ -720,6 +720,7 @@ let currentView: SearchViewState = {...DEFAULT_VIEW};
 
 const FACET_COMPONENT_IDS = {
   regular: 'facet-brand-2',
+  regularValue: 'RegularFacetValue',
   numeric: 'facet-price-2',
   category: 'facet-category-2',
 } as const;
@@ -811,13 +812,13 @@ function deriveRegularFacetValues(view: SearchViewState, componentId: string) {
   const displayedBrands = [...pinnedBrands, ...displayedPage];
   const values = displayedBrands.map((brand) => {
     const numberOfResults = countFor(brand);
-    let state: 'idle' | 'selected' | 'excluded' = 'idle';
+    let selectionState: 'idle' | 'selected' | 'excluded' = 'idle';
     if (view.selectedBrands.includes(brand)) {
-      state = 'selected';
+      selectionState = 'selected';
     } else if (view.excludedBrands.includes(brand)) {
-      state = 'excluded';
+      selectionState = 'excluded';
     }
-    return {value: brand, numberOfResults, state};
+    return {value: brand, numberOfResults, selectionState};
   });
 
   return {
@@ -1079,7 +1080,6 @@ const STATE_FIELDS_BY_NODE: Record<string, readonly string[]> = {
   'facet-brand-2': [
     'field',
     'displayName',
-    'values',
     'hasActiveValues',
     'canShowMoreValues',
     'canShowLessValues',
@@ -1197,6 +1197,25 @@ const SEARCH_SURFACE_NODES: A2uiComponentNode[] = [
     id: 'facet-brand-2',
     component: 'RegularFacet',
     ...bindStateFields('facet-brand-2', STATE_FIELDS_BY_NODE['facet-brand-2']),
+    // `values` is a ChildList TEMPLATE (not a block binding): the binder mounts one
+    // RegularFacetValue child per element of the data-model list at /state/facet-brand-2/values,
+    // scoped to basePath = <path>/<i>. Each child binds its fields RELATIVE to that basePath.
+    values: {
+      componentId: 'RegularFacetValue',
+      path: `${statePath('facet-brand-2')}/values`,
+    },
+  },
+  {
+    // The ChildList template child node. The binder mounts it once per list element with
+    // basePath = /state/facet-brand-2/values/<i>, so its props bind RELATIVE (a bare segment,
+    // resolved against basePath): value -> <basePath>/value, selectionState -> <basePath>/selectionState.
+    // selectionState is bindable, so the binder synthesizes setSelectionState for the optimistic
+    // per-value toggle; the child dispatches toggleSelect/toggleExclude itself.
+    id: 'RegularFacetValue',
+    component: 'RegularFacetValue',
+    value: {path: 'value'},
+    numberOfResults: {path: 'numberOfResults'},
+    selectionState: {path: 'selectionState'},
   },
   {
     id: 'facet-price-2',
@@ -1547,6 +1566,10 @@ function deriveViewState(
   // category facets), so branch on sourceComponentId first, then on action.name.
   switch (sourceComponentId) {
     case FACET_COMPONENT_IDS.regular:
+    // Value clicks now originate from the RegularFacetValue ChildList children (the facet delegates
+    // its value list to them), so their dispatched toggleSelect/toggleExclude carry the child node
+    // id, not the facet's. Route both to the regular-facet handler.
+    case FACET_COMPONENT_IDS.regularValue:
       deriveRegularFacetState(action, FACET_COMPONENT_IDS.regular);
       break;
     case FACET_COMPONENT_IDS.numeric:
@@ -1579,9 +1602,14 @@ function buildWaterSportsActionEvents(
 
   // Action responses update the existing surface: only the state ops change, so we intentionally
   // omit the createSurface activity that the initial response emits.
+  //
+  // Deliberate 1500 ms latency on the server-confirmation state op: it makes the optimistic
+  // client-side write (setSelectionState, applied immediately on click) observable as a distinct
+  // phase before the mock "backend" echoes the authoritative state. Without it the confirmation
+  // lands ~25 ms later (DEFAULT_DELAY_MS) and visually merges with the optimistic flip.
   return buildConversationResponse({
     runId,
-    middleEvents: [stateActivity],
+    middleEvents: [{...stateActivity, delayMs: 1500}],
     includeInitialStateSnapshot: false,
     includeFinalStateSnapshot: false,
   });

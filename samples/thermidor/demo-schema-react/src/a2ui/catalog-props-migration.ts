@@ -1,5 +1,11 @@
 import {basicCatalog} from '@copilotkit/a2ui-renderer';
 import type {z as z4} from 'zod';
+import {
+  DataBindingSchema,
+  DynamicStringSchema,
+  DynamicNumberSchema,
+  DynamicBooleanSchema,
+} from '@copilotkit/a2ui-renderer';
 /**
  * Runtime Zod 4 → Zod 3 migration for the catalog props schemas.
  *
@@ -153,6 +159,7 @@ function harvestZod3Primitives() {
     dynamicStringList,
     dynamicValue,
     action,
+    childList,
     staticString,
     staticStringArray,
   };
@@ -199,6 +206,19 @@ function migrateField(field: unknown): Zod3Schema {
     });
     if (hasEvent) {
       return zod3.action;
+    }
+    // A ChildList is a union carrying a `{ componentId, path }` template member (alongside the
+    // `string[]` static-slot branch). It must map to the harvested Zod 3 ChildList so the binder
+    // classifies it STRUCTURAL and resolves a TEMPLATE `{ componentId, path }` into per-item mounted
+    // children `{ id, basePath }`. Detected BEFORE the DataBinding test (whose `!('componentId')`
+    // guard deliberately excludes this), else a ChildList would fall through to STATIC and leak the
+    // raw `{ componentId, path }` object to the renderer (values.map is not a function).
+    const isChildList = options.some((option) => {
+      const shape = (option as {shape?: Record<string, unknown>}).shape;
+      return !!shape && 'componentId' in shape && 'path' in shape;
+    });
+    if (isChildList) {
+      return zod3.childList;
     }
     const hasDataBinding = options.some((option) => {
       const shape = (option as {shape?: Record<string, unknown>}).shape;
@@ -261,4 +281,82 @@ export function toBinderProps(propsSchema: {
     migratedShape[key] = migrateField(field);
   }
   return zod3.zodObject.create(migratedShape) as unknown as z4.ZodObject<z4.ZodRawShape>;
+}
+
+/**
+ * TYPE-PRESERVING variant of {@link toBinderProps} for a component mounted via `createReactComponent`.
+ *
+ * WHY A SECOND FUNCTION
+ * ---------------------
+ * `toBinderProps` erases its shape (`ZodObject<ZodRawShape>`) on purpose — it feeds
+ * `createCatalog`'s `asCatalogDefinitions` cast, which does not need the field types. But
+ * `createReactComponent<Api>` derives its render-callback props from the schema TYPE:
+ * `props: ResolveA2uiProps<z.infer<Api['schema']>>` — so to get typed props AND the synthesized
+ * `set<Field>` setters WITHOUT hand-annotating the callback, the schema's TYPE must carry the shape.
+ *
+ * THE THREE-ZOD PROBLEM (why a plain cast cannot work — proven empirically with tsc probes)
+ * ----------------------------------------------------------------------------------------
+ * `ComponentApi.schema` is typed `z.ZodTypeAny` in the binder's OWN `zod@3.25.76`. Three distinct
+ * Zod instances are in play: the generated schema (Zod 4), the binder (zod@3.25.76), and the
+ * sample's `zod` (Zod 4). None unify at the type level (TS2740 `_type, _parse... missing`), so:
+ *   - casting `schema` to `typeof XxxPropsSchema` (Zod 4) is rejected;
+ *   - passing `toBinderProps(...)` (Zod 4 return) is rejected;
+ *   - building a mirror `z.ZodObject` from the sample's `zod` is rejected.
+ * The ONLY type accepted by `ComponentApi.schema` is one built from the binder's OWN exported Zod 3
+ * schemas. We take `typeof DataBindingSchema` (a real binder Zod 3 `ZodObject`) as the base and
+ * substitute its `_output`/`shape` with OUR shape, mapping each field to the binder's dynamic-value
+ * UNION (`string | {path} | call`, from `DynamicStringSchema._output` etc.). That union is what
+ * `ResolveA2uiProps`/`GenerateSetters` inspects for `DataBinding` to synthesize the `set<Field>`.
+ *
+ * Runtime is unchanged: the value returned is exactly `toBinderProps(schema)` (the Zod 3 shim the
+ * frozen binder classifies). Only the declared TYPE differs, enabling inference.
+ *
+ * @deprecated Remove this (with `toBinderProps`) once `@copilotkit/a2ui-renderer` moves its binder
+ * to Zod 4 and `createReactComponent` can infer directly from the generated `XxxPropsSchema`.
+ */
+
+/**
+ * The binder Zod 3 `ZodObject` type re-shaped to OUR fields.
+ *
+ * Base = `typeof DataBindingSchema` (a real binder Zod 3 `ZodObject`) so the result satisfies
+ * `ComponentApi.schema`. Each field's `_output` is mapped to the BINDER's dynamic-value union
+ * (`typeof Dynamic*Schema._output` = `T | DataBinding | FunctionCall`), whose `DataBinding`/
+ * `FunctionCall` are the NOMINAL types `ResolveA2uiProps` inspects: it detects `DataBinding` to
+ * synthesize each `set<Field>`, and `ResolveA2uiProp` then excludes both to leave a clean resolved
+ * value (`string`/`number`/…). Using the generated schema's own Zod 4 union here would leave its
+ * `{ functionName }` branch un-excluded (different nominal type) and pollute the resolved value.
+ */
+type DynamicFieldOf<V> = [NonNullable<V>] extends [string]
+  ? typeof DynamicStringSchema._output
+  : [NonNullable<V>] extends [number]
+    ? typeof DynamicNumberSchema._output
+    : [NonNullable<V>] extends [boolean]
+      ? typeof DynamicBooleanSchema._output
+      : typeof DynamicStringSchema._output;
+
+type InferableBinderSchema<Output> = Omit<typeof DataBindingSchema, '_output' | 'shape'> & {
+  _output: {[K in keyof Output]?: DynamicFieldOf<ResolvedFieldValue<Output[K]>>};
+  shape: {[K in keyof Output]: typeof DataBindingSchema};
+};
+
+/** The plain literal value of a generated field (its union minus the {path}/{functionName} branches). */
+type ResolvedFieldValue<F> = F extends string
+  ? string
+  : F extends number
+    ? number
+    : F extends boolean
+      ? boolean
+      : Exclude<F, object>;
+
+/**
+ * Runtime: the Zod 3 shim (identical to {@link toBinderProps}). Type: a binder-Zod-3 `ZodObject`
+ * whose `z.infer` is the generated component's own field shape (each field a dynamic-value union) —
+ * so `createReactComponent(schema)` infers `props` (with `set<Field>` setters) and the render
+ * callback needs NO manual props annotation.
+ */
+export function toInferableBinderSchema<Output>(propsSchema: {
+  shape: Record<string, unknown>;
+  _output?: Output;
+}): InferableBinderSchema<Output> {
+  return toBinderProps(propsSchema) as unknown as InferableBinderSchema<Output>;
 }

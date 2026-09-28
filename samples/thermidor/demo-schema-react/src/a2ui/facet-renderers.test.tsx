@@ -14,40 +14,50 @@ import {FacetManagerRenderer} from './FacetManager/FacetManager.js';
 afterEach(() => cleanup());
 
 describe('RegularFacetRenderer', () => {
-  const stateWithValues: RegularFacetProps = {
+  // `values` is a ChildList template: the binder resolves it to mounted-child descriptors
+  // `{id, basePath}` (one per data-model value entry), NOT the raw value objects. The parent's job
+  // is to MOUNT one RegularFacetValue child per descriptor; the per-value checkbox + its
+  // toggleSelect/optimistic-setSelectionState behavior now lives in the child and is covered by
+  // RegularFacetValue's runtime test.
+  const valueChildren = [
+    {id: 'RegularFacetValue', basePath: '/state/facet-brand/values/0'},
+    {id: 'RegularFacetValue', basePath: '/state/facet-brand/values/1'},
+  ];
+  const stateWithValues = {
     field: 'ec_brand',
     displayName: 'Brand',
     hasActiveValues: true,
     canShowMoreValues: true,
     canShowLessValues: false,
-    values: [
-      {value: 'Billabong', numberOfResults: 4, state: 'idle'},
-      {value: 'Quiksilver', numberOfResults: 2, state: 'selected'},
-    ],
+    values: valueChildren,
     facetSearch: {query: '', canShowMoreResults: false, results: []},
-  };
+  } as unknown as RegularFacetProps;
 
-  function renderFacet(props: RegularFacetProps, dispatch = vi.fn()) {
-    return {dispatch, ...render(<RegularFacetRenderer props={props} dispatch={dispatch} />)};
+  // Mount mock mirrors the binder's `children(id, basePath?)`; renders a marker per mounted child.
+  function makeMountFn() {
+    return vi.fn((id: string, basePath?: string) => (
+      <span data-testid={`child-${basePath ?? id}`}>{id}</span>
+    ));
   }
 
-  it('dispatches toggleSelect when a value control is clicked', () => {
-    const {dispatch} = renderFacet(stateWithValues);
+  function renderFacet(props: RegularFacetProps, dispatch = vi.fn(), mount = makeMountFn()) {
+    return {
+      dispatch,
+      mount,
+      ...render(<RegularFacetRenderer props={props} children={mount} dispatch={dispatch} />),
+    };
+  }
 
-    fireEvent.click(screen.getByTestId('facet-value-Billabong'));
-    expect(dispatch).toHaveBeenCalledWith({
-      event: {name: 'toggleSelect', context: {value: 'Billabong'}},
-    });
-  });
+  it('mounts one RegularFacetValue child per resolved value descriptor, at its basePath', () => {
+    const {mount} = renderFacet(stateWithValues);
 
-  it('renders values as checkboxes reflecting selection state', () => {
-    renderFacet(stateWithValues);
-
-    const billabong = screen.getByTestId('facet-value-Billabong') as HTMLInputElement;
-    const quiksilver = screen.getByTestId('facet-value-Quiksilver') as HTMLInputElement;
-    expect(billabong.type).toBe('checkbox');
-    expect(billabong.checked).toBe(false);
-    expect(quiksilver.checked).toBe(true);
+    // Each value is mounted via children(id, basePath) — the child owns the checkbox + toggle.
+    expect(mount.mock.calls).toEqual([
+      ['RegularFacetValue', '/state/facet-brand/values/0'],
+      ['RegularFacetValue', '/state/facet-brand/values/1'],
+    ]);
+    expect(screen.getByTestId('child-/state/facet-brand/values/0')).toBeDefined();
+    expect(screen.getByTestId('child-/state/facet-brand/values/1')).toBeDefined();
   });
 
   it('dispatches clearAllActiveValues when the clear control is activated', () => {
@@ -57,21 +67,6 @@ describe('RegularFacetRenderer', () => {
     expect(dispatch).toHaveBeenCalledWith({
       event: {name: 'clearAllActiveValues', context: {}},
     });
-  });
-
-  it('renders a pinned selected value (from search) as a checked checkbox at the top', () => {
-    renderFacet({
-      ...stateWithValues,
-      values: [
-        {value: 'Cressi', numberOfResults: 1, state: 'selected'},
-        {value: 'Billabong', numberOfResults: 4, state: 'idle'},
-        {value: 'Quiksilver', numberOfResults: 2, state: 'idle'},
-      ],
-    });
-
-    const checkboxes = screen.getAllByRole('checkbox') as HTMLInputElement[];
-    expect(checkboxes[0].getAttribute('data-testid')).toBe('facet-value-Cressi');
-    expect(checkboxes[0].checked).toBe(true);
   });
 
   it('dispatches search on each change and keeps the input responsive', () => {
@@ -102,7 +97,8 @@ describe('RegularFacetRenderer', () => {
       },
     });
 
-    expect(screen.queryByTestId('facet-value-Billabong')).toBeNull();
+    // With a search active, the value children are not mounted; search results replace them.
+    expect(screen.queryByTestId('child-/state/facet-brand/values/0')).toBeNull();
     expect(screen.getByTestId('facet-search-result-Rip Curl')).toBeDefined();
 
     fireEvent.click(screen.getByTestId('facet-search-result-Rip Curl'));
