@@ -1,6 +1,6 @@
 import {createContext, useContext, useRef, type PropsWithChildren} from 'react';
 import {createSession, type NavigatorContext, type Session} from '@coveo/thermidor';
-import {ComponentContractsSchema} from '@coveo/thermidor-schema';
+import {ComponentContractsSchema} from '@coveo/thermidor-schema/zod3';
 import {getSampleConfiguration} from '../env.js';
 
 /**

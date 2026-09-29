@@ -1,7 +1,7 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {ActionItem, NextActionsBarAction, NextActionsBarProps} from '@coveo/thermidor-schema';
-import {NextActionsBarPropsSchema} from '@coveo/thermidor-schema';
-import {toInferableBinderSchema} from '../catalog-props-migration.js';
+import {NextActionsBarPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {toInferableBinderSchema} from '../inferable-binder-schema.js';
 import styles from './NextActionsBar.module.css';
 
 /**

@@ -1,5 +1,5 @@
 import {Catalog} from '@copilotkit/a2ui-renderer';
-import {THERMIDOR_CATALOG_ID} from '@coveo/thermidor-schema';
+import {THERMIDOR_CATALOG_ID} from '@coveo/thermidor-schema/zod3';
 export {THERMIDOR_CATALOG_ID};
 import {ProductCarousel} from './ProductCarousel/ProductCarousel.js';
 import {NextActionsBar} from './NextActionsBar/NextActionsBar.js';

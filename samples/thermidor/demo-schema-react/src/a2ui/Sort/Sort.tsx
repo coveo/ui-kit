@@ -1,8 +1,8 @@
 import {useId} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {SortAction, SortProps} from '@coveo/thermidor-schema';
-import {SortPropsSchema} from '@coveo/thermidor-schema';
-import {toInferableBinderSchema} from '../catalog-props-migration.js';
+import {SortPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {toInferableBinderSchema} from '../inferable-binder-schema.js';
 import styles from './Sort.module.css';
 
 const SORT_LABELS: Record<string, string> = {

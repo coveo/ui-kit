@@ -1,8 +1,8 @@
 import {useCallback} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {RegularFacetAction, RegularFacetProps} from '@coveo/thermidor-schema';
-import {RegularFacetPropsSchema} from '@coveo/thermidor-schema';
-import {toInferableBinderSchema} from '../catalog-props-migration.js';
+import {RegularFacetPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {toInferableBinderSchema} from '../inferable-binder-schema.js';
 import {SearchIcon} from '../icons/index.js';
 import {useOptimisticFacetSearch} from '../use-optimistic-facet-search.js';
 import styles from './RegularFacet.module.css';

@@ -1,8 +1,8 @@
 import {useId} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {PageSizeAction, PageSizeProps} from '@coveo/thermidor-schema';
-import {PageSizePropsSchema} from '@coveo/thermidor-schema';
-import {toInferableBinderSchema} from '../catalog-props-migration.js';
+import {PageSizePropsSchema} from '@coveo/thermidor-schema/zod3';
+import {toInferableBinderSchema} from '../inferable-binder-schema.js';
 import styles from './PageSize.module.css';
 
 const DEFAULT_PAGE_SIZE_OPTIONS = [12, 24, 48];
