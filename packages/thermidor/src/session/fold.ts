@@ -180,12 +180,17 @@ export function foldActivity(
         replace: metadata.replace ?? false,
       };
 
-      // A snapshot is the latest full version of the content for its
-      // `messageId`. When `replace` is set and an activity with the same
-      // (non-empty) `messageId` already exists, supersede it in place —
-      // preserving its position — rather than appending a second entry.
-      // Otherwise append. This keeps a re-emitted surface from leaving a stale
-      // duplicate in `activities` (and thus in the derived `surfaces`).
+      // A replace snapshot supersedes the same-`messageId` activity in place,
+      // preserving its position; a distinct or non-replace snapshot appends.
+      //
+      // The producer streams a surface's data model as incremental
+      // `updateDataModel` deltas under one stable update `messageId`: a snapshot
+      // carries only the slices that changed that turn. A wholesale replace would
+      // drop any `/state/<id>` slice written by an earlier snapshot but absent
+      // from this one (e.g. paginate, then expand a facet: the facet turn omits
+      // the unchanged product-list slice, erasing the current page). So the
+      // payload is MERGED by slice path — same-path ops override, omitted paths
+      // carry forward — mirroring the leaf-write semantics `response.state` uses.
       const existingIndex =
         nextActivity.replace && nextActivity.id
           ? response.activities.findIndex((existing) => existing.id === nextActivity.id)
@@ -193,8 +198,15 @@ export function foldActivity(
       if (existingIndex === -1) {
         response.activities = [...response.activities, nextActivity];
       } else {
+        const merged: Activity = {
+          ...nextActivity,
+          payload: mergeActivityPayload(
+            response.activities[existingIndex].payload,
+            nextActivity.payload
+          ),
+        };
         response.activities = response.activities.map((existing, index) =>
-          index === existingIndex ? nextActivity : existing
+          index === existingIndex ? merged : existing
         );
       }
 
@@ -236,6 +248,76 @@ export function foldActivity(
     default:
       return foldUnknown(turn, activity);
   }
+}
+
+/**
+ * Merges a superseding activity payload onto the one it replaces, so an incremental
+ * snapshot does not drop `/state/<id>` slices written by an earlier same-`messageId`
+ * snapshot. Keeps every `next` message, then carries forward the `previous` payload's
+ * `updateDataModel` ops whose slice path `next` does not write, plus the prior
+ * `updateComponents` when `next` has none (so a node added by an earlier topology turn
+ * keeps its identity; a fresh `updateComponents` supersedes it). Returns `next`
+ * unchanged when either payload has no `messages` array.
+ */
+function mergeActivityPayload(
+  previous: Record<string, unknown>,
+  next: Record<string, unknown>
+): Record<string, unknown> {
+  const nextMessages = next['messages'];
+  const previousMessages = previous['messages'];
+  if (!Array.isArray(nextMessages) || !Array.isArray(previousMessages)) {
+    return next;
+  }
+
+  const nextPaths = new Set<string>();
+  let nextHasComponents = false;
+  for (const message of nextMessages) {
+    const path = updateDataModelPath(message);
+    if (path !== null) {
+      nextPaths.add(path);
+    }
+    if (isUpdateComponents(message)) {
+      nextHasComponents = true;
+    }
+  }
+
+  const priorComponents = latestUpdateComponents(previousMessages);
+  const carriedComponents = nextHasComponents || priorComponents === null ? [] : [priorComponents];
+
+  const carriedForward = previousMessages.filter((message) => {
+    const path = updateDataModelPath(message);
+    return path !== null && !nextPaths.has(path);
+  });
+
+  return {...next, messages: [...carriedComponents, ...nextMessages, ...carriedForward]};
+}
+
+/** Whether the message is an A2-UI updateComponents op. */
+function isUpdateComponents(message: unknown): boolean {
+  return isRecord(message) && isRecord(message['updateComponents']);
+}
+
+/** The last updateComponents message in a payload's message list, or null when there is none. */
+function latestUpdateComponents(messages: readonly unknown[]): unknown {
+  for (let index = messages.length - 1; index >= 0; index -= 1) {
+    if (isUpdateComponents(messages[index])) {
+      return messages[index];
+    }
+  }
+  return null;
+}
+
+/** The `updateDataModel.path` of an A2-UI message, or null when it is not an updateDataModel op. */
+function updateDataModelPath(message: unknown): string | null {
+  if (!isRecord(message)) {
+    return null;
+  }
+  const updateDataModel = message['updateDataModel'];
+  if (!isRecord(updateDataModel)) {
+    return null;
+  }
+  const path = updateDataModel['path'];
+  return typeof path === 'string' ? path : null;
 }
 
 function mapToolCall(
