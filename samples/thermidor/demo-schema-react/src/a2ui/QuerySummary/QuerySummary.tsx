@@ -1,7 +1,6 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
-import type {QuerySummaryProps} from '@coveo/thermidor-schema';
+
 import {QuerySummaryPropsSchema} from '@coveo/thermidor-schema/zod3';
-import {toInferableBinderSchema} from '../inferable-binder-schema.js';
 import styles from './QuerySummary.module.css';
 
 /**
@@ -21,7 +20,7 @@ import styles from './QuerySummary.module.css';
 export const QuerySummary = createReactComponent(
   {
     name: 'QuerySummary',
-    schema: toInferableBinderSchema<QuerySummaryProps>(QuerySummaryPropsSchema),
+    schema: QuerySummaryPropsSchema,
   },
   ({props}) => {
     const {query, firstIndex, lastIndex, totalEntries} = props;

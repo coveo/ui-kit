@@ -1,7 +1,6 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
-import type {ActionItem, NextActionsBarAction, NextActionsBarProps} from '@coveo/thermidor-schema';
+import type {ActionItem, NextActionsBarAction} from '@coveo/thermidor-schema';
 import {NextActionsBarPropsSchema} from '@coveo/thermidor-schema/zod3';
-import {toInferableBinderSchema} from '../inferable-binder-schema.js';
 import styles from './NextActionsBar.module.css';
 
 /**
@@ -12,7 +11,7 @@ import styles from './NextActionsBar.module.css';
 export const NextActionsBar = createReactComponent(
   {
     name: 'NextActionsBar',
-    schema: toInferableBinderSchema<NextActionsBarProps>(NextActionsBarPropsSchema),
+    schema: NextActionsBarPropsSchema,
   },
   ({props, context}) => {
     const actions = props.suggestedActions ?? [];

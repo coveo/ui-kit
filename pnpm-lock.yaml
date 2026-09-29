@@ -2237,7 +2237,7 @@ importers:
         version: link:../../../packages/thermidor
       '@coveo/thermidor-schema':
         specifier: 'catalog:'
-        version: 1.0.0-beta.8(zod@4.6.5)
+        version: 1.0.0-beta.8(zod@3.25.76)
       dompurify:
         specifier: 'catalog:'
         version: 3.4.15
@@ -2251,8 +2251,8 @@ importers:
         specifier: 19.2.8
         version: 19.2.8(react@19.2.8)
       zod:
-        specifier: 'catalog:'
-        version: 4.6.5
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@playwright/test':
         specifier: 'catalog:'
@@ -18551,9 +18551,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@coveo/thermidor-schema@1.0.0-beta.8(zod@4.6.5)':
+  '@coveo/thermidor-schema@1.0.0-beta.8(zod@3.25.76)':
     dependencies:
-      zod: 4.6.5
+      zod: 3.25.76
 
   '@cspell/cspell-bundled-dicts@9.8.0':
     dependencies:

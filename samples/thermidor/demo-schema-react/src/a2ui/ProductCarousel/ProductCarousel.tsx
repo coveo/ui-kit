@@ -1,9 +1,8 @@
 import {useState, useRef, useEffect, useCallback} from 'react';
 
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
-import type {Product, ProductCarouselProps} from '@coveo/thermidor-schema';
+import type {Product} from '@coveo/thermidor-schema';
 import {ProductCarouselPropsSchema} from '@coveo/thermidor-schema/zod3';
-import {toInferableBinderSchema} from '../inferable-binder-schema.js';
 import {A2UIProductCard} from '../ProductCard/ProductCard.js';
 import styles from './ProductCarousel.module.css';
 
@@ -15,7 +14,7 @@ import styles from './ProductCarousel.module.css';
 export const ProductCarousel = createReactComponent(
   {
     name: 'ProductCarousel',
-    schema: toInferableBinderSchema<ProductCarouselProps>(ProductCarouselPropsSchema),
+    schema: ProductCarouselPropsSchema,
   },
   ({props}) => {
     const products = props.products ?? [];

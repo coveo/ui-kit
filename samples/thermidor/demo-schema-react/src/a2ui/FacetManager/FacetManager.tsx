@@ -1,7 +1,6 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
-import type {FacetManagerProps} from '@coveo/thermidor-schema';
+
 import {FacetManagerPropsSchema} from '@coveo/thermidor-schema/zod3';
-import {toInferableBinderSchema} from '../inferable-binder-schema.js';
 import styles from './FacetManager.module.css';
 
 /**
@@ -14,7 +13,7 @@ import styles from './FacetManager.module.css';
 export const FacetManager = createReactComponent(
   {
     name: 'FacetManager',
-    schema: toInferableBinderSchema<FacetManagerProps>(FacetManagerPropsSchema),
+    schema: FacetManagerPropsSchema,
   },
   ({props, buildChild}) => {
     const childIds = props.children ?? [];
