@@ -59,9 +59,9 @@ const customRenderer = {
   },
 
   heading(text: string, level: number) {
-    const plainText = toInlinePlainText(text);
-
-    return `<div part="answer-heading-${level}" aria-label="${plainText}">${text}</div>`;
+    // A generic element cannot be named by aria-label, so the level is exposed through
+    // role/aria-level instead and the accessible name comes from the heading content.
+    return `<div part="answer-heading-${level}" role="heading" aria-level="${level}">${text}</div>`;
   },
 
   html(text: string) {
