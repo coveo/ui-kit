@@ -91,22 +91,6 @@ export function getA2UIMessages(activities: Activity[] | undefined): A2UIMessage
 
     const activityId = activity.id;
 
-    // v0.9 format: a2ui_operations array (pass through as-is)
-    const operations = activity.payload['a2ui_operations'];
-    if (Array.isArray(operations)) {
-      if (activity.replace) {
-        messagesByActivityId.set(activityId, operations.filter(isRecord));
-      } else {
-        const existing = messagesByActivityId.get(activityId) ?? [];
-        existing.push(...operations.filter(isRecord));
-        messagesByActivityId.set(activityId, existing);
-      }
-      if (!activityOrder.includes(activityId)) {
-        activityOrder.push(activityId);
-      }
-      continue;
-    }
-
     // v1.0 format: messages array — convert to v0.9 before passing to renderer
     const v1Messages = activity.payload['messages'];
     if (Array.isArray(v1Messages)) {
