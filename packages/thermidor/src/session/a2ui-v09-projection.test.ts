@@ -58,6 +58,7 @@ describe('deriveA2uiV09Messages', () => {
         version: 'v1.0',
         createSurface: {
           surfaceId: 'my-surface',
+          catalogId: 'commerce',
           components: [
             {id: 'root', component: 'ProductCarousel', heading: {path: '/state/root/heading'}},
           ],
@@ -65,7 +66,10 @@ describe('deriveA2uiV09Messages', () => {
       },
     ]);
 
-    expect(result[0]).toEqual({version: 'v0.9', createSurface: {surfaceId: 'my-surface'}});
+    expect(result[0]).toEqual({
+      version: 'v0.9',
+      createSurface: {surfaceId: 'my-surface', catalogId: 'commerce'},
+    });
     expect(result[1]).toEqual({
       version: 'v0.9',
       updateComponents: {
@@ -148,9 +152,13 @@ describe('deriveA2uiV09Messages', () => {
   });
 
   it('emits no updateComponents for a surface with no components', () => {
-    const result = project([{version: 'v1.0', createSurface: {surfaceId: 's', components: []}}]);
+    const result = project([
+      {version: 'v1.0', createSurface: {surfaceId: 's', catalogId: 'commerce', components: []}},
+    ]);
 
-    expect(result).toEqual([{version: 'v0.9', createSurface: {surfaceId: 's'}}]);
+    expect(result).toEqual([
+      {version: 'v0.9', createSurface: {surfaceId: 's', catalogId: 'commerce'}},
+    ]);
   });
 
   it('drops a v1.0 createSurface with no usable surfaceId', () => {
@@ -158,6 +166,18 @@ describe('deriveA2uiV09Messages', () => {
     expect(project([{version: 'v1.0', createSurface: {surfaceId: '', components: []}}])).toEqual(
       []
     );
+  });
+
+  it('drops a v1.0 createSurface with no catalogId (required by the v0.9 schema)', () => {
+    // The v0.9 CreateSurfaceMessageSchema requires catalogId, and the renderer
+    // throws `A2uiStateError: Catalog not found` without it, so an unconvertible
+    // catalog-less surface is dropped rather than emitted as an invalid message.
+    expect(project([{version: 'v1.0', createSurface: {surfaceId: 's', components: []}}])).toEqual(
+      []
+    );
+    expect(
+      project([{version: 'v1.0', createSurface: {surfaceId: 's', catalogId: '', components: []}}])
+    ).toEqual([]);
   });
 
   it('ignores activities that are not a2ui-surface', () => {
@@ -194,6 +214,7 @@ describe('deriveA2uiV09Messages is a pure re-derivable projection of activities'
       version: fc.constant('v1.0'),
       createSurface: fc.record({
         surfaceId: fc.string({minLength: 1, maxLength: 8}),
+        catalogId: fc.string({minLength: 1, maxLength: 8}),
         components: fc.array(nodeArb, {maxLength: 4}),
       }),
     }),
@@ -281,7 +302,7 @@ describe('flat v1.0 nodes are forwarded byte-for-byte', () => {
 
     return {
       version: 'v1.0',
-      createSurface: {surfaceId: 'surface-under-test', components},
+      createSurface: {surfaceId: 'surface-under-test', catalogId: 'commerce', components},
     };
   }
 
@@ -418,7 +439,11 @@ describe('unconvertible v1.0 messages are dropped, leaving prior state intact', 
       fc.property(unconvertibleArb, ({key, payload}) => {
         const validCreate = {
           version: 'v1.0',
-          createSurface: {surfaceId: 'surface-prior', components: [{id: 'root', component: 'X'}]},
+          createSurface: {
+            surfaceId: 'surface-prior',
+            catalogId: 'commerce',
+            components: [{id: 'root', component: 'X'}],
+          },
         };
 
         const result = project([validCreate, {version: 'v1.0', [key]: payload}]);

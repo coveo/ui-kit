@@ -115,6 +115,9 @@ function convertMessage(message: Record<string, unknown>): A2uiV09Message[] {
       return [];
     }
     const catalogId = createSurface['catalogId'];
+    if (typeof catalogId !== 'string' || catalogId.length === 0) {
+      return [];
+    }
     const components = createSurface['components'];
     const sendDataModel = createSurface['sendDataModel'];
     const dataModel = createSurface['dataModel'];
@@ -124,7 +127,7 @@ function convertMessage(message: Record<string, unknown>): A2uiV09Message[] {
         version: RENDERER_PROTOCOL_VERSION,
         createSurface: {
           surfaceId,
-          ...(typeof catalogId === 'string' ? {catalogId} : {}),
+          catalogId,
           ...(typeof sendDataModel === 'boolean' ? {sendDataModel} : {}),
         },
       },
@@ -137,12 +140,6 @@ function convertMessage(message: Record<string, unknown>): A2uiV09Message[] {
       });
     }
 
-    // v1.0 carries the surface's initial state inline via `createSurface.dataModel`,
-    // an object keyed by ABSOLUTE state paths (`/state/<componentId>`) whose values
-    // are each component's full initial state. The v0.9 renderer has no dataModel
-    // field on createSurface and hydrates state solely through `updateDataModel` ops,
-    // so we seed each entry as its own op — passing the key through UNCHANGED as
-    // `path`, never re-prefixing `/state/` — otherwise data-bound nodes stay isLoading.
     if (isRecord(dataModel)) {
       for (const [path, value] of Object.entries(dataModel)) {
         converted.push({
