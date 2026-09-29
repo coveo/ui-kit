@@ -63,7 +63,10 @@ function buildZod3Contracts(): ContractsSchema {
           .strict()
           .optional(),
         component: z3.literal('Pagination'),
-        state: z3.object({page: z3.number().int().min(0)}).strict().optional(),
+        state: z3
+          .object({page: z3.number().int().min(0)})
+          .strict()
+          .optional(),
       })
       .passthrough(),
     z3.object({component: z3.literal('LayoutStack')}).passthrough(),
@@ -102,9 +105,9 @@ describe.each(dialects)('injected contract built with %s', (_label, build) => {
   // .shape traversal into a sub-path, then .safeParse on the field schema
   it('resolves a declared sub-path and rejects an undeclared one', () => {
     const path = `${statePath(PAGINATION_ID)}/page`;
-    expect(
-      validateInboundOp({surfaceId: SURFACE_ID, path, value: 3}, registry, contracts)
-    ).toEqual({kind: 'forward', path, value: 3});
+    expect(validateInboundOp({surfaceId: SURFACE_ID, path, value: 3}, registry, contracts)).toEqual(
+      {kind: 'forward', path, value: 3}
+    );
     expect(
       validateInboundOp(
         {surfaceId: SURFACE_ID, path: `${statePath(PAGINATION_ID)}/nope`, value: 1},

@@ -21,8 +21,13 @@
  * Those members are all stable public Zod API that behaves identically in Zod 3
  * and Zod 4, and no Zod internal (`_def`, `typeName`, ...) is read anywhere in
  * this package — which is what lets the `zod` peerDependency span both majors
- * (`^3.25 || ^4`). Keep it that way: reaching for an internal here would
- * silently break consumers on the other major. See `zod-major-compat.test.ts`.
+ * (`3.25.76 || ^4`). Zod 4 is accepted as a range; the Zod 3 side is pinned to the
+ * exact version the A2-UI renderer's binder resolves (`@a2ui/web_core` depends on
+ * `^3.25.76`), because a Zod 3 consumer has to share that one install — two copies
+ * of Zod 3 are structurally identical but nominally distinct, so schemas built
+ * against a different copy are not assignable. Keep it that way: reaching for an
+ * internal here would silently break consumers on the other major. See
+ * `zod-major-compat.test.ts`.
  */
 
 /**
