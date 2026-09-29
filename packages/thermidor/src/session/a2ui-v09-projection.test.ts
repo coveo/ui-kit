@@ -90,6 +90,63 @@ describe('deriveA2uiV09Messages', () => {
     ]);
   });
 
+  it('seeds inline dataModel state as ordered updateDataModel ops after updateComponents', () => {
+    const components = [
+      {id: 'ui-24622445-pagination', component: 'Pagination'},
+      {id: 'ui-24622445-sort', component: 'Sort'},
+    ];
+    const result = project([
+      {
+        version: 'v1.0',
+        createSurface: {
+          surfaceId: 'my-surface',
+          catalogId: 'commerce',
+          sendDataModel: true,
+          components,
+          dataModel: {
+            '/state/ui-24622445-pagination': {
+              page: 0,
+              pageSize: 20,
+              totalEntries: 253,
+              totalPages: 13,
+            },
+            '/state/ui-24622445-sort': {
+              appliedSort: {sortCriteria: 'relevancy'},
+              availableSorts: [{sortCriteria: 'relevancy'}, {sortCriteria: 'fields'}],
+            },
+          },
+        },
+      },
+    ]);
+
+    expect(result).toEqual([
+      {
+        version: 'v0.9',
+        createSurface: {surfaceId: 'my-surface', catalogId: 'commerce', sendDataModel: true},
+      },
+      {version: 'v0.9', updateComponents: {surfaceId: 'my-surface', components}},
+      {
+        version: 'v0.9',
+        updateDataModel: {
+          surfaceId: 'my-surface',
+          path: '/state/ui-24622445-pagination',
+          value: {page: 0, pageSize: 20, totalEntries: 253, totalPages: 13},
+        },
+      },
+      {
+        version: 'v0.9',
+        updateDataModel: {
+          surfaceId: 'my-surface',
+          path: '/state/ui-24622445-sort',
+          value: {
+            appliedSort: {sortCriteria: 'relevancy'},
+            availableSorts: [{sortCriteria: 'relevancy'}, {sortCriteria: 'fields'}],
+          },
+        },
+      },
+    ]);
+  });
+
   it('emits no updateComponents for a surface with no components', () => {
     const result = project([{version: 'v1.0', createSurface: {surfaceId: 's', components: []}}]);
 
