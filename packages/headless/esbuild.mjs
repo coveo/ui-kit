@@ -24,6 +24,12 @@ const devMode = process.argv[2] === 'dev';
 
 const isNightly = process.env.IS_NIGHTLY === 'true';
 const commitSha = process.env.CDN_COMMIT_SHA;
+// Source maps and esbuild metafiles are only needed for the CDN bundles. Emitting
+// them for regular (non-CDN) builds inflates the Turborepo cache artifact past the
+// remote cache's upload limit (see coveo/ui-kit#8541). DEPLOYMENT_ENVIRONMENT is in
+// turbo.json globalEnv, so CDN and non-CDN builds hash to distinct cache entries and
+// a CDN deploy never restores a map-less artifact.
+const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 
 const buenoVersion = isNightly
   ? `v${buenoJson.version.split('.').shift()}-nightly`
@@ -259,8 +265,8 @@ async function buildBrowserConfig(options, outDir) {
     ...base,
     platform: 'browser',
     minify: true,
-    sourcemap: true,
-    metafile: true,
+    sourcemap: isCDN,
+    metafile: isCDN,
     ...options,
     external: ['crypto', ...(options.external || [])],
     plugins: [
@@ -271,7 +277,9 @@ async function buildBrowserConfig(options, outDir) {
       ...(options.plugins || []),
     ],
   });
-  outputMetafile(`browser.${options.format}`, outDir, out.metafile);
+  if (out.metafile) {
+    outputMetafile(`browser.${options.format}`, outDir, out.metafile);
+  }
   return out;
 }
 
@@ -296,7 +304,7 @@ const nodeCjs = Object.entries(useCaseEntries).map((entry) => {
 async function buildNodeConfig(options, outDir) {
   const out = await build({
     ...base,
-    metafile: true,
+    metafile: isCDN,
     platform: 'node',
     packages: 'external',
     treeShaking: true,
@@ -308,7 +316,9 @@ async function buildNodeConfig(options, outDir) {
     ...options,
   });
 
-  outputMetafile(`node.${options.format}`, outDir, out.metafile);
+  if (out.metafile) {
+    outputMetafile(`node.${options.format}`, outDir, out.metafile);
+  }
 
   return out;
 }
