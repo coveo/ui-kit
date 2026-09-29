@@ -1,23 +1,25 @@
-import {useState} from 'react';
-import {useRemoteController} from '../controllers.js';
-import type {NumericFacetProps} from '@coveo/thermidor-schema';
+import {useId, useState} from 'react';
+import type {NumericFacetProps, NumericFacetAction} from '@coveo/thermidor-schema';
+import type {TypedRendererProps} from '../renderer-props.js';
 import styles from './NumericFacet.module.css';
 
 function formatRange(start: number, end: number): string {
   return `$${start} - $${end}`;
 }
 
-export function NumericFacetRenderer({props}: {props: NumericFacetProps}) {
-  const controller = useRemoteController(props.componentId, props.componentType);
+export function NumericFacetRenderer({
+  props,
+  dispatch,
+}: TypedRendererProps<NumericFacetProps, NumericFacetAction>) {
+  const labelId = useId();
+  const startId = useId();
+  const endId = useId();
 
   const [customStart, setCustomStart] = useState('');
   const [customEnd, setCustomEnd] = useState('');
 
-  if (!controller.state) {
-    return null;
-  }
-
-  const {displayName, values, customRange, hasActiveValues, domain} = controller.state;
+  const {displayName, customRange, hasActiveValues, domain} = props;
+  const values = props.values ?? [];
 
   const resetCustomInputs = () => {
     setCustomStart('');
@@ -26,12 +28,12 @@ export function NumericFacetRenderer({props}: {props: NumericFacetProps}) {
 
   const handleToggleSingleSelect = (start: number, end: number) => {
     resetCustomInputs();
-    controller.dispatch('toggleSingleSelect', {start, end});
+    dispatch?.({event: {name: 'toggleSingleSelect', context: {start, end}}});
   };
 
   const handleClear = () => {
     resetCustomInputs();
-    controller.dispatch('clearAllActiveValues', {});
+    dispatch?.({event: {name: 'clearAllActiveValues', context: {}}});
   };
 
   const domainMin = domain?.min;
@@ -62,19 +64,17 @@ export function NumericFacetRenderer({props}: {props: NumericFacetProps}) {
     }
     const start = clampToDomain(Math.min(parsedStart, parsedEnd));
     const end = clampToDomain(Math.max(parsedStart, parsedEnd));
-    controller.dispatch('applyCustomRange', {start, end});
+    dispatch?.({event: {name: 'applyCustomRange', context: {start, end}}});
   };
-
-  const groupLabelId = `numeric-facet-label-${props.componentId}`;
 
   return (
     <section
       className={styles.container}
-      data-testid={props.componentId}
-      aria-labelledby={groupLabelId}
+      data-testid={`facet-${props.field}`}
+      aria-labelledby={labelId}
     >
       <div className={styles.header}>
-        <h3 id={groupLabelId} className={styles.title}>
+        <h3 id={labelId} className={styles.title}>
           {displayName}
         </h3>
         {hasActiveValues && (
@@ -107,7 +107,7 @@ export function NumericFacetRenderer({props}: {props: NumericFacetProps}) {
               className={`${styles.value} ${styles.selected}`}
               type="button"
               aria-pressed={true}
-              data-testid={`facet-custom-range-${props.componentId}`}
+              data-testid={`facet-custom-range-${props.field}`}
               onClick={() => handleToggleSingleSelect(customRange.start, customRange.end)}
             >
               <span className={styles.valueLabel}>
@@ -120,10 +120,10 @@ export function NumericFacetRenderer({props}: {props: NumericFacetProps}) {
       </ul>
 
       <form className={styles.customForm} onSubmit={handleApplyCustomRange}>
-        <label className={styles.customLabel} htmlFor={`numeric-facet-start-${props.componentId}`}>
+        <label className={styles.customLabel} htmlFor={startId}>
           <span className={styles.labelText}>Min</span>
           <input
-            id={`numeric-facet-start-${props.componentId}`}
+            id={startId}
             className={styles.customInput}
             type="number"
             inputMode="decimal"
@@ -135,10 +135,10 @@ export function NumericFacetRenderer({props}: {props: NumericFacetProps}) {
             onChange={(event) => setCustomStart(event.target.value)}
           />
         </label>
-        <label className={styles.customLabel} htmlFor={`numeric-facet-end-${props.componentId}`}>
+        <label className={styles.customLabel} htmlFor={endId}>
           <span className={styles.labelText}>Max</span>
           <input
-            id={`numeric-facet-end-${props.componentId}`}
+            id={endId}
             className={styles.customInput}
             type="number"
             inputMode="decimal"

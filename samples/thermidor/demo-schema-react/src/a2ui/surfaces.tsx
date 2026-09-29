@@ -1,30 +1,14 @@
 /**
  * A2-UI Surface Bridge
  *
- * This module bridges between the v1.0 A2-UI surface format (used by the mock API
- * and the real backend) and the v0.9 format consumed by `@copilotkit/a2ui-renderer`.
+ * Bridges the v1.0 A2-UI surface format (mock API + real backend) to the v0.9
+ * format `@copilotkit/a2ui-renderer` consumes. The backend emits a v1.0
+ * `createSurface` with inline flat `components[]`; the renderer expects v0.9
+ * (`createSurface` + a separate `updateComponents`). `convertV1ToV09` translates
+ * each message, forwarding flat nodes as-is (bindings byte-for-byte) and passing
+ * `updateDataModel` ops through; unconvertible messages are dropped.
  *
- * ## Why the conversion exists
- *
- * The backend emits v1.0 messages (`createSurface` with inline `components[].props`),
- * but `@copilotkit/a2ui-renderer` (v1.61) only understands v0.9 messages
- * (`createSurface` + separate `updateComponents` with props flattened on component nodes).
- *
- * The `convertV1ToV09` adapter translates each v1.0 message into the equivalent v0.9
- * messages so the MessageProcessor can create surfaces and resolve catalog renderers.
- *
- * ## When @copilotkit/a2ui-renderer supports v1.0
- *
- * Once the renderer natively understands v1.0, remove the conversion:
- *
- * 1. Delete the `convertV1ToV09` function
- * 2. In `getA2UIMessages`, pass v1.0 messages directly (remove the conversion loop):
- *    ```
- *    converted.push(...v1Messages.filter(isRecord));
- *    ```
- * 3. Verify that `processMessages` handles `createSurface` with `components[].props`
- *    and passes `props` (including `componentId` and `componentType`) to catalog renderers correctly
- * 4. Everything else (renderers, catalog definitions, useRemoteController) stays unchanged
+ * @deprecated Remove the conversion once the renderer understands v1.0 natively.
  */
 import {useEffect, useMemo, useRef} from 'react';
 import {A2UIRenderer, useA2UI} from '@copilotkit/a2ui-renderer';
@@ -34,50 +18,12 @@ import {isRecord} from '../utils.js';
 type A2UIMessage = Record<string, unknown>;
 
 /**
- * The literal component id at which `@copilotkit/a2ui-renderer` begins mounting a
- * surface's component tree. A surface whose declared root id differs from this value
- * must be remapped to it so the renderer can locate the root.
- */
-const RENDERER_ROOT_ID = 'root';
-
-/**
- * Rewrites a component node so that any reference to `declaredRootId` becomes the
- * Renderer_Root_Id (`"root"`): the node's own `id`, every matching entry in its
- * `children[]`, and a matching `child`. `props` is intentionally left untouched — the
- * `componentId`/`componentType` correlation lives there and must survive the rename.
- */
-function remapId(node: Record<string, unknown>, declaredRootId: string): Record<string, unknown> {
-  const remapped: Record<string, unknown> = {...node};
-
-  if (remapped['id'] === declaredRootId) {
-    remapped['id'] = RENDERER_ROOT_ID;
-  }
-
-  const children = remapped['children'];
-  if (Array.isArray(children)) {
-    remapped['children'] = children.map((childId) =>
-      childId === declaredRootId ? RENDERER_ROOT_ID : childId
-    );
-  }
-
-  if (remapped['child'] === declaredRootId) {
-    remapped['child'] = RENDERER_ROOT_ID;
-  }
-
-  return remapped;
-}
-
-/**
- * Converts a single v1.0 A2-UI message into one or more v0.9 messages
- * that the @copilotkit/a2ui-renderer MessageProcessor can understand.
- *
- * Conversion rules:
- * - `createSurface` (v1.0) → `createSurface` + `updateComponents` (v0.9)
- *   - `components[].props` are flattened onto the component node directly
- *   - when `createSurface.rootId` names exactly one component whose id is not already
- *     `"root"`, that node's id (and every reference to it) is remapped to `"root"` so
- *     the renderer can mount a surface whose declared root differs from `"root"`
- * - `updateDataModel` / `updateComponents` / `deleteSurface` → same shape, version changed to v0.9
+ * Converts a single v1.0 A2-UI message into one or more v0.9 messages for the
+ * renderer's MessageProcessor:
+ * - `createSurface` -> `createSurface` + `updateComponents` (flat nodes forwarded
+ *   as-is, bindings preserved byte-for-byte)
+ * - `updateDataModel` / `updateComponents` / `deleteSurface` -> same shape, v0.9
+ * - a message with no recognized operation is dropped (never reaches the renderer)
  *
  * @deprecated Remove when @copilotkit/a2ui-renderer supports v1.0 natively.
  */
@@ -97,22 +43,9 @@ export function convertV1ToV09(message: Record<string, unknown>): A2UIMessage[] 
     ];
 
     if (components && components.length > 0) {
-      const rootId = createSurface['rootId'];
-      const declaredRootId =
-        typeof rootId === 'string' && rootId !== RENDERER_ROOT_ID ? rootId : undefined;
-      const resolveRoot =
-        declaredRootId !== undefined &&
-        components.filter((comp) => comp['id'] === declaredRootId).length === 1;
-
-      const v09Components = components.map((comp) => {
-        const {props, ...rest} = comp;
-        const remapped = resolveRoot ? remapId(rest, declaredRootId!) : rest;
-        if (isRecord(props)) {
-          return {...remapped, ...props};
-        }
-        return remapped;
-      });
-      results.push({version: 'v0.9', updateComponents: {surfaceId, components: v09Components}});
+      // v1.0 nodes are already flat and mount the canonical `root` — the exact
+      // shape the v0.9 renderer expects, so forward them as-is (no `rootId` remap).
+      results.push({version: 'v0.9', updateComponents: {surfaceId, components}});
     }
 
     return results;
@@ -133,7 +66,12 @@ export function convertV1ToV09(message: Record<string, unknown>): A2UIMessage[] 
     return [{version: 'v0.9', deleteSurface}];
   }
 
-  return [message];
+  // An unconvertible v1.0 message is dropped (never reaches the renderer); the
+  // drop is reported as a dev-only warning.
+  if (import.meta.env?.DEV) {
+    console.warn('[A2UI bridge] Dropped unconvertible v1.0 message', message);
+  }
+  return [];
 }
 
 /** Extracts A2-UI messages from activities, converting v1.0 to v0.9 for the renderer. */

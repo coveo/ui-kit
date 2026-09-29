@@ -14,7 +14,8 @@
 import {expectTypeOf, test} from 'vitest';
 import {createSession} from '@/src/index.js';
 import type {
-  RemoteController,
+  ComponentContractSchema,
+  ContractsSchema,
   SerializedSession,
   Session,
   SessionConfig,
@@ -27,14 +28,46 @@ test('exposes the createSession session-client surface', () => {
   // `createSession` is exported as a callable value.
   expectTypeOf(createSession).toBeFunction();
 
-  // Key domain / config / serialization / controller types are importable and
-  // usable as types from the package entry.
-  expectTypeOf<Session<never>>().not.toBeAny();
+  // Key domain / config / serialization types are importable and usable as
+  // types from the package entry. `Session<TContracts>` and
+  // `SessionConfig<TContracts>` are generic over the INJECTED contract (with a
+  // default), so the bare `Session` / `SessionConfig` remain usable as types.
+  expectTypeOf<Session>().not.toBeAny();
   expectTypeOf<Turn>().not.toBeAny();
   expectTypeOf<TurnResponse>().not.toBeAny();
-  expectTypeOf<SessionConfig<never>>().not.toBeAny();
-  expectTypeOf<RemoteController<never, never>>().not.toBeAny();
+  expectTypeOf<SessionConfig>().not.toBeAny();
   expectTypeOf<SerializedSession>().not.toBeAny();
+});
+
+// ── POSITIVE: the injected-contract seam is exported ────────────────────────
+test('exposes the injected ContractsSchema / ComponentContractSchema seam', () => {
+  // The runtime is decoupled from any concrete contract package: the structural
+  // contract type it accepts through `createSession({ contracts })` is part of
+  // the public surface so consumers can type their injected contract.
+  expectTypeOf<ContractsSchema>().not.toBeAny();
+  expectTypeOf<ComponentContractSchema>().not.toBeAny();
+});
+
+// ── POSITIVE: `dispatchAction` is the single action-dispatch entry point ─────
+test('exposes Session.dispatchAction assignable to the renderer onAction shape', () => {
+  // `dispatchAction` exists on `Session` as a function accepting the standard
+  // A2-UI client message.
+  expectTypeOf<Session>().toHaveProperty('dispatchAction');
+
+  // It is assignable to the renderer's `OnActionCallback` shape with no
+  // adapter: `(message: A2UIClientEventMessage) => void | Promise<void>`.
+  type OnActionCallback = (message: {
+    userAction?: {
+      name: string;
+      surfaceId: string;
+      sourceComponentId?: string;
+      context?: Record<string, unknown>;
+      timestamp?: string;
+      dataContextPath?: string;
+    };
+  }) => void | Promise<void>;
+
+  expectTypeOf<Session['dispatchAction']>().toMatchTypeOf<OnActionCallback>();
 });
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -55,7 +88,31 @@ import {buildGenerativeUnifiedInterface} from '@/src/index.js';
 // @ts-expect-error `AgentResponse` (pre-reshape DTO) must not be exported.
 import type {AgentResponse} from '@/src/index.js';
 
-// Internal remote-controller seam.
+// Removed RemoteController public API. None of these names may be
+// reachable from the entry.
+// @ts-expect-error `RemoteController` must not be exported.
+import type {RemoteController} from '@/src/index.js';
+// @ts-expect-error `RemoteAction` must not be exported.
+import type {RemoteAction} from '@/src/index.js';
+// @ts-expect-error `RemoteControllerOptions` must not be exported.
+import type {RemoteControllerOptions} from '@/src/index.js';
+// @ts-expect-error `ComponentTypeOf` must not be exported.
+import type {ComponentTypeOf} from '@/src/index.js';
+// @ts-expect-error `ContractFor` must not be exported.
+import type {ContractFor} from '@/src/index.js';
+// @ts-expect-error `StateFor` must not be exported.
+import type {StateFor} from '@/src/index.js';
+// @ts-expect-error `ActionNameFor` must not be exported.
+import type {ActionNameFor} from '@/src/index.js';
+// @ts-expect-error `ActionPayloadFor` must not be exported.
+import type {ActionPayloadFor} from '@/src/index.js';
+// @ts-expect-error `Controller` must not be exported.
+import type {Controller} from '@/src/index.js';
+// @ts-expect-error `Unsubscribe` must not be exported (no retained export uses it).
+import type {Unsubscribe} from '@/src/index.js';
+
+// Internal remote-controller seam (its module is deleted, so these names are
+// definitely absent from the entry).
 // @ts-expect-error `buildRemoteController` (legacy value) must not be exported.
 import {buildRemoteController} from '@/src/index.js';
 // @ts-expect-error `selectRemoteControllerState` must not be exported.

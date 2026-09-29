@@ -1,24 +1,14 @@
 import fc from 'fast-check';
-import {describe, expect, it, vi} from 'vitest';
+import {describe, expect, it} from 'vitest';
 import {render, screen, cleanup} from '@testing-library/react';
+import type {ProductListProps, ProductSummaryProps} from '@coveo/thermidor-schema';
 import {TargetingProvider, type TargetingContext} from '../context/targeting.js';
 import {ProductListRenderer} from './ProductList/ProductList.js';
 import {ProductSummaryRenderer} from './ProductSummary/ProductSummary.js';
 
-// The renderers resolve their state through `useRemoteController`, which binds to
-// the active turn's `components[componentId]` entry. The mock reproduces that
-// correlation path: the controller's `state` is looked up solely by componentId.
-let mockComponents: Record<string, unknown> = {};
-
-vi.mock('./controllers.js', () => ({
-  useRemoteController: (componentId: string) => ({
-    componentId,
-    state: mockComponents[componentId],
-    dispatch: vi.fn(),
-    subscribe: () => () => undefined,
-  }),
-}));
-
+// Under the inline-state model each renderer receives its OWN resolved state on `props`
+// (bound from the A2-UI data model by the renderer), with no identity join. The property
+// below exercises that a dumb renderer renders exactly the data on its resolved props.
 const targeting: TargetingContext = {
   isTargeting: false,
   onProductTargeted: () => undefined,
@@ -31,84 +21,56 @@ interface GeneratedProduct {
   additionalFields: Record<string, unknown>;
 }
 
-// A generated AG-UI state: a map of componentId → product data, plus an ordered set of
-// mounted slot child ids. The mounted ids may or may not have a matching state entry,
-// exercising both the correlated and the missing-entry cases.
-const scenarioArb = fc
-  .uniqueArray(
-    fc.string({minLength: 1, maxLength: 8}).filter((s) => !s.startsWith('absent-')),
-    {minLength: 0, maxLength: 6}
-  )
-  .chain((stateIds) =>
-    fc.record({
-      // Products keyed by componentId.
-      productsById: fc.constant<Record<string, GeneratedProduct[]>>(
-        Object.fromEntries(
-          stateIds.map((id, index) => [
-            id,
-            [
-              {permanentid: `${id}-p0`, ec_name: `${id} product ${index}`, additionalFields: {}},
-              {
-                permanentid: `${id}-p1`,
-                ec_name: `${id} product ${index} b`,
-                additionalFields: {},
-              },
-            ],
-          ])
-        )
-      ),
-      stateIds: fc.constant(stateIds),
-      // Mounted slot child ids: a mix of ids that exist in state and ids that do not.
-      mountedIds: fc.uniqueArray(
-        fc.oneof(
-          stateIds.length > 0 ? fc.constantFrom(...stateIds) : fc.constant('missing-only'),
-          fc.string({minLength: 1, maxLength: 8}).map((s) => `absent-${s}`)
-        ),
-        {minLength: 1, maxLength: 6}
-      ),
-    })
-  );
+// Each mounted slot carries its own resolved product list (possibly empty, or unresolved).
+const scenarioArb = fc.array(
+  fc.record({
+    resolved: fc.boolean(),
+    products: fc.uniqueArray(
+      fc.string({minLength: 1, maxLength: 8}).map<GeneratedProduct>((name) => ({
+        permanentid: `${name}-id`,
+        ec_name: name,
+        additionalFields: {},
+      })),
+      {minLength: 0, maxLength: 4, selector: (p) => p.permanentid}
+    ),
+  }),
+  {minLength: 1, maxLength: 6}
+);
 
-describe('slot product data correlates to AG-UI state solely by componentId (Property 5)', () => {
-  // Feature: thermidor-commerce-search-composition, Property 5: For any mapping of
-  // componentId to product data and any set of mounted slot product-list child ids, each
-  // mounted child renders exactly the product data found at the AG-UI state entry whose key
-  // equals that child's componentId, and renders an empty product set (without error) when
-  // no such entry exists.
-  it('renders each mounted slot from the state keyed by its componentId, empty when absent', () => {
+describe('product-list slot renders exactly its resolved props.products (Property 5)', () => {
+  // Feature: a2ui-inline-state-data-model, Property 5: For any set of mounted product-list
+  // slots each carrying its own resolved product state, each slot renders exactly the
+  // products on its resolved props, renders an empty product set (no error) when the list is
+  // empty, and renders a loading placeholder when the state is unresolved.
+  it('renders each slot from its own resolved props, empty/loading otherwise', () => {
     fc.assert(
-      fc.property(scenarioArb, ({productsById, mountedIds}) => {
-        const components: Record<string, unknown> = {};
-        for (const [id, products] of Object.entries(productsById)) {
-          components[id] = {products};
-        }
-        mockComponents = components;
-
+      fc.property(scenarioArb, (slots) => {
         expect(() =>
           render(
             <TargetingProvider value={targeting}>
-              {mountedIds.map((id, index) => (
-                <div key={id} data-testid={`slot-${index}`}>
-                  <ProductListRenderer props={{componentId: id, componentType: 'product-list'}} />
+              {slots.map((slot, index) => (
+                <div key={index} data-testid={`slot-${index}`}>
+                  <ProductListRenderer
+                    props={(slot.resolved ? {products: slot.products} : {}) as ProductListProps}
+                  />
                 </div>
               ))}
             </TargetingProvider>
           )
         ).not.toThrow();
 
-        mountedIds.forEach((id, index) => {
-          const expectedProducts = productsById[id];
-          const slot = screen.getByTestId(`slot-${index}`);
-          const renderedNames = Array.from(slot.querySelectorAll('h3')).map(
+        slots.forEach((slot, index) => {
+          const container = screen.getByTestId(`slot-${index}`);
+          const renderedNames = Array.from(container.querySelectorAll('h3')).map(
             (node) => node.textContent
           );
 
-          if (expectedProducts && expectedProducts.length > 0) {
-            // Correlated: renders exactly the products at components[componentId].
-            expect(renderedNames).toEqual(expectedProducts.map((product) => product.ec_name));
-          } else {
-            // No matching AG-UI state entry → empty product set, no error.
+          if (!slot.resolved) {
+            // Unresolved → loading placeholder, no product headings.
+            expect(container.querySelector('[aria-label="Loading product list"]')).not.toBeNull();
             expect(renderedNames).toEqual([]);
+          } else {
+            expect(renderedNames).toEqual(slot.products.map((product) => product.ec_name));
           }
         });
 
@@ -119,77 +81,41 @@ describe('slot product data correlates to AG-UI state solely by componentId (Pro
   });
 });
 
-// A generated AG-UI state for product-summary bundle slots: a map of componentId →
-// {categoryLabel, product}, plus an ordered set of mounted slot child ids. Mounted ids may or
-// may not have a matching state entry, exercising both the correlated and missing-entry cases.
-const summaryScenarioArb = fc
-  .uniqueArray(
-    fc.string({minLength: 1, maxLength: 8}).filter((s) => !s.startsWith('absent-')),
-    {minLength: 0, maxLength: 6}
-  )
-  .chain((stateIds) =>
-    fc.record({
-      // A summary entry per componentId, each with a single product carrying a unique name.
-      summariesById: fc.constant<
-        Record<
-          string,
-          {
-            categoryLabel: string;
-            product: {
-              permanentid: string;
-              ec_name: string;
-              additionalFields: Record<string, unknown>;
-            };
-          }
-        >
-      >(
-        Object.fromEntries(
-          stateIds.map((id, index) => [
-            id,
-            {
-              categoryLabel: `Category ${index}`,
-              product: {
-                permanentid: `${id}-p0`,
-                ec_name: `${id} summary ${index}`,
-                additionalFields: {},
-              },
-            },
-          ])
-        )
-      ),
-      stateIds: fc.constant(stateIds),
-      mountedIds: fc.uniqueArray(
-        fc.oneof(
-          stateIds.length > 0 ? fc.constantFrom(...stateIds) : fc.constant('missing-only'),
-          fc.string({minLength: 1, maxLength: 8}).map((s) => `absent-${s}`)
-        ),
-        {minLength: 1, maxLength: 6}
-      ),
-    })
-  );
+// A generated resolved product-summary state per mounted slot.
+const summaryScenarioArb = fc.array(
+  fc.record({
+    resolved: fc.boolean(),
+    categoryLabel: fc.string({minLength: 1, maxLength: 12}),
+    productName: fc.string({minLength: 1, maxLength: 12}),
+  }),
+  {minLength: 1, maxLength: 6}
+);
 
-describe('summary slot data correlates to AG-UI state solely by componentId (Property 5)', () => {
-  // Feature: thermidor-commerce-search-composition, Property 5 (product-summary variant): For any
-  // mapping of componentId to product-summary state ({categoryLabel, product}) and any set of
-  // mounted slot product-summary child ids, each mounted child renders exactly the product name
-  // found at the AG-UI state entry whose key equals that child's componentId, and renders the
-  // categoryLabel fallback (without error) when no such entry exists.
-  it('renders each mounted summary from the state keyed by its componentId, fallback when absent', () => {
+describe('product-summary slot renders from its own resolved props (Property 5)', () => {
+  // Feature: a2ui-inline-state-data-model, Property 5 (product-summary variant): For any set
+  // of mounted product-summary slots, each renders the product name on its resolved props and
+  // renders the loading placeholder (no error) when the state is unresolved.
+  it('renders each summary from its own resolved props, loading when unresolved', () => {
     fc.assert(
-      fc.property(summaryScenarioArb, ({summariesById, mountedIds}) => {
-        const components: Record<string, unknown> = {};
-        for (const [id, summary] of Object.entries(summariesById)) {
-          components[id] = summary;
-        }
-        mockComponents = components;
-
+      fc.property(summaryScenarioArb, (slots) => {
         expect(() =>
           render(
             <TargetingProvider value={targeting}>
-              {mountedIds.map((id, index) => (
-                <div key={id} data-testid={`summary-slot-${index}`}>
+              {slots.map((slot, index) => (
+                <div key={index} data-testid={`summary-slot-${index}`}>
                   <ProductSummaryRenderer
-                    props={{componentId: id, componentType: 'product-summary'}}
+                    props={
+                      (slot.resolved
+                        ? {
+                            categoryLabel: slot.categoryLabel,
+                            product: {
+                              permanentid: `${slot.productName}-id`,
+                              ec_name: slot.productName,
+                              additionalFields: {},
+                            },
+                          }
+                        : {}) as ProductSummaryProps
+                    }
                   />
                 </div>
               ))}
@@ -197,16 +123,15 @@ describe('summary slot data correlates to AG-UI state solely by componentId (Pro
           )
         ).not.toThrow();
 
-        mountedIds.forEach((id, index) => {
-          const expected = summariesById[id];
-          const slot = screen.getByTestId(`summary-slot-${index}`);
+        slots.forEach((slot, index) => {
+          const container = screen.getByTestId(`summary-slot-${index}`);
 
-          if (expected) {
-            // Correlated: renders exactly the product name at components[componentId].
-            expect(slot.textContent).toContain(expected.product.ec_name);
+          if (slot.resolved) {
+            expect(container.textContent).toContain(slot.productName);
           } else {
-            // No matching AG-UI state entry → loading placeholder, no error, no product name.
-            expect(slot.querySelector('[aria-label="Loading product summary"]')).not.toBeNull();
+            expect(
+              container.querySelector('[aria-label="Loading product summary"]')
+            ).not.toBeNull();
           }
         });
 

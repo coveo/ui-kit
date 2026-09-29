@@ -39,7 +39,7 @@ export function AppShell() {
   const nav = useNavigation(controller, converseState);
 
   return (
-    <A2UIProvider catalog={catalog}>
+    <A2UIProvider catalog={catalog} onAction={session.dispatchAction}>
       <div className="view-shell">
         {nav.commerceSurfaceId && (
           <div className={`view-panel ${nav.view === 'search' ? 'view-panel--active' : ''}`}>

@@ -1,6 +1,5 @@
 import fc from 'fast-check';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import {z} from 'zod/v4';
 
 /**
  * Absent vs. empty context.
@@ -39,8 +38,39 @@ vi.mock('@/src/internal/api/unified/unified-endpoint-client.js', () => ({
   createUnifiedEndpointClient: () => ({call: callMock}),
 }));
 
+import {z} from 'zod/v4';
 import type {CommerceContext} from '@/src/internal/context/index.js';
+import type {ContractsSchema} from './contracts.js';
 import {createSession, type SessionConfig} from './create-session.js';
+
+/**
+ * A locally-built A2-UI contract, INJECTED as test data exactly as a real
+ * consumer would inject it. Built with this package's own Zod so the test is
+ * independent of any concrete contract package. Mirrors the generated Coveo
+ * shape: a discriminated union on `component` whose Pagination member carries
+ * an optional strict `state` and `actions`.
+ */
+const PaginationSchema = z.strictObject({
+  component: z.literal('Pagination'),
+  state: z
+    .strictObject({
+      page: z.number().int().min(0),
+      pageSize: z.number().int().min(1),
+      totalEntries: z.number().int().min(0),
+      totalPages: z.number().int().min(0),
+    })
+    .optional(),
+  actions: z
+    .strictObject({
+      selectPage: z.strictObject({payload: z.strictObject({page: z.number().int().min(0)})}),
+      setPageSize: z.strictObject({payload: z.strictObject({pageSize: z.number().int().min(1)})}),
+    })
+    .optional(),
+});
+
+const contracts = z.discriminatedUnion('component', [
+  PaginationSchema,
+]) as unknown as ContractsSchema;
 
 const encoder = new TextEncoder();
 
@@ -67,25 +97,10 @@ function queueCompletingStream(): void {
   }));
 }
 
-/**
- * Minimal contracts schema satisfying the generic `createSession` signature.
- * These tests don't exercise remote-controller typing — only the request the
- * session builds — so a single trivial component contract suffices.
- */
-const contracts = z.discriminatedUnion('componentType', [
-  z.strictObject({
-    componentType: z.literal('pagination'),
-    state: z.strictObject({page: z.number()}),
-    actions: z.strictObject({
-      selectPage: z.strictObject({payload: z.strictObject({page: z.number()})}),
-    }),
-  }),
-]);
-
-const baseConfig: SessionConfig<typeof contracts> = {
+const baseConfig: SessionConfig = {
+  contracts,
   organizationId: 'org-1',
   accessToken: 'token-1',
-  contracts,
 };
 
 /** The commerce-context shape captured off the wire. */
@@ -106,9 +121,7 @@ interface CapturedRequest {
  * Drives one `submit` through a mocked stream and returns the request object
  * the session passed to the endpoint client's `call`.
  */
-async function captureSubmitRequest(
-  config: SessionConfig<typeof contracts>
-): Promise<CapturedRequest> {
+async function captureSubmitRequest(config: SessionConfig): Promise<CapturedRequest> {
   queueCompletingStream();
   const session = createSession(config);
   await session.submit({prompt: 'find shoes'});

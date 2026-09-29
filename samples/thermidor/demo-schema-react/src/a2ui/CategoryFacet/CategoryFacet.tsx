@@ -1,59 +1,54 @@
-import {useCallback} from 'react';
-import {useRemoteController} from '../controllers.js';
+import {useCallback, useId} from 'react';
+import type {CategoryFacetProps, CategoryFacetAction} from '@coveo/thermidor-schema';
+import type {TypedRendererProps} from '../renderer-props.js';
 import {ChevronLeftIcon, SearchIcon} from '../icons/index.js';
 import {useOptimisticFacetSearch} from '../use-optimistic-facet-search.js';
-import type {CategoryFacetProps} from '@coveo/thermidor-schema';
 import styles from './CategoryFacet.module.css';
 
-export function CategoryFacetRenderer({props}: {props: CategoryFacetProps}) {
-  const controller = useRemoteController(props.componentId, props.componentType);
+export function CategoryFacetRenderer({
+  props,
+  dispatch,
+}: TypedRendererProps<CategoryFacetProps, CategoryFacetAction>) {
+  const labelId = useId();
+  const searchInputId = useId();
 
   const dispatchSearch = useCallback(
-    (query: string) => controller.dispatch('search', {query}),
-    [controller]
+    (query: string) => dispatch?.({event: {name: 'search', context: {query}}}),
+    [dispatch]
   );
-  const search = useOptimisticFacetSearch(
-    controller.state?.facetSearch?.query ?? '',
-    dispatchSearch
-  );
+  const search = useOptimisticFacetSearch(props.facetSearch?.query ?? '', dispatchSearch);
 
-  if (!controller.state) {
-    return null;
-  }
-
-  const {displayName, values, facetSearch, canShowMoreValues, canShowLessValues} = controller.state;
-  const {ancestry, selected, children} = values;
+  const {displayName, values, facetSearch, canShowMoreValues, canShowLessValues} = props;
+  const {ancestry = [], selected, children = []} = values ?? {};
 
   const handleSelectPath = (path: string[]) => {
-    controller.dispatch('selectPath', {path});
+    dispatch?.({event: {name: 'selectPath', context: {path}}});
   };
 
   const handleClearSelectedPath = () => {
-    controller.dispatch('clearSelectedPath', {});
+    dispatch?.({event: {name: 'clearSelectedPath', context: {}}});
   };
 
   const handleShowMoreValues = () => {
-    controller.dispatch('showMoreValues', {});
+    dispatch?.({event: {name: 'showMoreValues', context: {}}});
   };
 
   const handleShowLessValues = () => {
-    controller.dispatch('showLessValues', {});
+    dispatch?.({event: {name: 'showLessValues', context: {}}});
   };
 
   const handleShowMoreSearchResults = () => {
-    controller.dispatch('showMoreSearchResults', {});
+    dispatch?.({event: {name: 'showMoreSearchResults', context: {}}});
   };
 
   const handleClearSearch = () => {
     search.reset();
-    controller.dispatch('clearSearch', {});
+    dispatch?.({event: {name: 'clearSearch', context: {}}});
   };
 
-  const groupLabelId = `category-facet-label-${props.componentId}`;
   const searchQuery = facetSearch?.query ?? '';
   const searchResults = facetSearch?.results ?? [];
   const isSearchActive = searchQuery.length > 0 || searchResults.length > 0;
-  const searchInputId = `category-facet-search-${props.componentId}`;
 
   const parents = selected ? ancestry.slice(0, -1) : [];
 
@@ -62,11 +57,11 @@ export function CategoryFacetRenderer({props}: {props: CategoryFacetProps}) {
   return (
     <section
       className={styles.container}
-      data-testid={props.componentId}
-      aria-labelledby={groupLabelId}
+      data-testid={`facet-${props.field}`}
+      aria-labelledby={labelId}
     >
       <div className={styles.header}>
-        <h3 id={groupLabelId} className={styles.title}>
+        <h3 id={labelId} className={styles.title}>
           {displayName}
         </h3>
       </div>
@@ -77,7 +72,7 @@ export function CategoryFacetRenderer({props}: {props: CategoryFacetProps}) {
           id={searchInputId}
           type="text"
           className={styles.searchInput}
-          data-testid={`facet-search-input-${props.componentId}`}
+          data-testid={`facet-search-input-${props.field}`}
           value={search.query}
           onChange={(event) => search.onQueryChange(event.target.value)}
           placeholder="Search"
@@ -155,7 +150,7 @@ export function CategoryFacetRenderer({props}: {props: CategoryFacetProps}) {
                   className={styles.selected}
                   style={indentStyle(1)}
                   aria-current="true"
-                  data-testid={`facet-category-selected-${props.componentId}`}
+                  data-testid={`facet-category-selected-${props.field}`}
                 >
                   <span className={styles.valueLabel}>{selected.value}</span>
                   <span className={styles.count}>({selected.numberOfResults})</span>
@@ -182,7 +177,7 @@ export function CategoryFacetRenderer({props}: {props: CategoryFacetProps}) {
             <button
               type="button"
               className={styles.showValuesButton}
-              data-testid={`facet-show-less-${props.componentId}`}
+              data-testid={`facet-show-less-${props.field}`}
               onClick={handleShowLessValues}
             >
               - Show less
@@ -192,7 +187,7 @@ export function CategoryFacetRenderer({props}: {props: CategoryFacetProps}) {
             <button
               type="button"
               className={styles.showValuesButton}
-              data-testid={`facet-show-more-${props.componentId}`}
+              data-testid={`facet-show-more-${props.field}`}
               onClick={handleShowMoreValues}
             >
               + Show more

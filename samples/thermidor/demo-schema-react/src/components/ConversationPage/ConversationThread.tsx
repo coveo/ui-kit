@@ -36,7 +36,7 @@ export function ConversationThread({turns, turnRefs}: ConversationThreadProps) {
   );
 }
 
-const COMMERCE_SEARCH_ROOT_TYPE = 'commerce-search';
+const COMMERCE_SEARCH_ROOT_TYPE = 'CommerceSearch';
 
 function renderTurnContent(turn: Turn) {
   if (turn.status === 'error') {

@@ -3,18 +3,23 @@ import {createSession, type NavigatorContext, type Session} from '@coveo/thermid
 import {ComponentContractsSchema} from '@coveo/thermidor-schema';
 import {getSampleConfiguration} from '../env.js';
 
-type ThermidorSession = Session<typeof ComponentContractsSchema>;
+/**
+ * The concrete contract this sample injects into the runtime. `@coveo/thermidor`
+ * is decoupled from any specific contract package; the sample supplies the Coveo
+ * `ComponentContractsSchema` so the session validates against it.
+ */
+type DemoSession = Session<typeof ComponentContractsSchema>;
 
-const SessionContext = createContext<ThermidorSession | null>(null);
+const SessionContext = createContext<DemoSession | null>(null);
 
 export function SessionProvider({children}: PropsWithChildren) {
-  const sessionRef = useRef<ThermidorSession | null>(null);
+  const sessionRef = useRef<DemoSession | null>(null);
   sessionRef.current ??= createThermidorSession();
 
   return <SessionContext.Provider value={sessionRef.current}>{children}</SessionContext.Provider>;
 }
 
-export function useSession(): ThermidorSession {
+export function useSession(): DemoSession {
   const session = useContext(SessionContext);
   if (!session) {
     throw new Error('useSession must be used within a SessionProvider');
@@ -22,7 +27,7 @@ export function useSession(): ThermidorSession {
   return session;
 }
 
-function createThermidorSession(): ThermidorSession {
+function createThermidorSession(): DemoSession {
   const {organizationId, accessToken, endpoint, trackingId, language, country, currency} =
     getSampleConfiguration();
 

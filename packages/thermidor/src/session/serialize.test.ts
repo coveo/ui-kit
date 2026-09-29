@@ -105,7 +105,7 @@ describe('serializeSession', () => {
       response: {
         state: {},
         activities: [],
-        surfaces: [{surfaceId: 's', rootComponentType: 'commerce-search'}],
+        surfaces: [{surfaceId: 's', rootComponentType: 'CommerceSearch'}],
       },
     });
 
@@ -194,7 +194,7 @@ describe('restoreSession', () => {
       response: {
         state: {},
         activities: [],
-        surfaces: [{surfaceId: 's', rootComponentType: 'commerce-search'}],
+        surfaces: [{surfaceId: 's', rootComponentType: 'CommerceSearch'}],
       },
     });
 

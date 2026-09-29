@@ -8,7 +8,7 @@
  *
  * Persistence scope — note `response.state` is persisted for the ACTIVE turn
  * only, an invariant coupled to the reserved historical-turn selector (ADR-011
- * + ADR-013):
+ * + ADR-016, superseding ADR-013):
  *
  *   | Field                                       | Persist | Scope            |
  *   | ------------------------------------------- | ------- | ---------------- |

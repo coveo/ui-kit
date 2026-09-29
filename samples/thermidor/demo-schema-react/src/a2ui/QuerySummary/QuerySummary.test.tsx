@@ -1,52 +1,26 @@
-import {describe, it, expect, beforeEach} from 'vitest';
+import {describe, it, expect} from 'vitest';
 import {render, screen} from '@testing-library/react';
-import {vi} from 'vitest';
+import type {QuerySummaryProps} from '@coveo/thermidor-schema';
 import {QuerySummaryRenderer} from './QuerySummary.js';
 
-let mockControllerState: unknown = undefined;
-
-vi.mock('../controllers.js', () => ({
-  useRemoteController: () => ({
-    state: mockControllerState,
-    dispatch: vi.fn(),
-    subscribe: () => () => undefined,
-  }),
-}));
-
-const props = {componentId: 'query-summary-2', componentType: 'query-summary' as const};
-
-beforeEach(() => {
-  mockControllerState = undefined;
-});
+function renderSummary(props: QuerySummaryProps) {
+  return render(<QuerySummaryRenderer props={props} />);
+}
 
 describe('QuerySummaryRenderer', () => {
-  it('renders nothing when state is undefined (loading)', () => {
-    mockControllerState = undefined;
-    const {container} = render(<QuerySummaryRenderer props={props} />);
-    expect(container.innerHTML).toBe('');
-  });
-
   it('renders nothing when there are no results and no query', () => {
-    mockControllerState = {query: '', firstIndex: 0, lastIndex: 0, totalEntries: 0};
-    const {container} = render(<QuerySummaryRenderer props={props} />);
+    const {container} = renderSummary({query: '', firstIndex: 0, lastIndex: 0, totalEntries: 0});
     expect(container.innerHTML).toBe('');
   });
 
   it('renders a no-results message when there are no results but a query is present', () => {
-    mockControllerState = {query: 'Kayaks', firstIndex: 0, lastIndex: 0, totalEntries: 0};
-    render(<QuerySummaryRenderer props={props} />);
+    renderSummary({query: 'Kayaks', firstIndex: 0, lastIndex: 0, totalEntries: 0});
     expect(screen.getByText(/No results for/)).toBeDefined();
     expect(screen.getByText('Kayaks')).toBeDefined();
   });
 
   it('renders the result window with the query when results exist', () => {
-    mockControllerState = {
-      query: 'Water Sports',
-      firstIndex: 1,
-      lastIndex: 12,
-      totalEntries: 43,
-    };
-    render(<QuerySummaryRenderer props={props} />);
+    renderSummary({query: 'Water Sports', firstIndex: 1, lastIndex: 12, totalEntries: 43});
     expect(screen.getByText(/Products/)).toBeDefined();
     expect(screen.getByText('1')).toBeDefined();
     expect(screen.getByText('12')).toBeDefined();
@@ -56,20 +30,32 @@ describe('QuerySummaryRenderer', () => {
   });
 
   it('formats a large totalEntries with locale separators', () => {
-    mockControllerState = {
-      query: 'Gear',
-      firstIndex: 1,
-      lastIndex: 12,
-      totalEntries: 1234,
-    };
-    render(<QuerySummaryRenderer props={props} />);
+    renderSummary({query: 'Gear', firstIndex: 1, lastIndex: 12, totalEntries: 1234});
     expect(screen.getByText('1,234')).toBeDefined();
   });
 
   it('drops the trailing "for {query}" tail when the query is empty', () => {
-    mockControllerState = {query: '', firstIndex: 1, lastIndex: 12, totalEntries: 43};
-    render(<QuerySummaryRenderer props={props} />);
+    renderSummary({query: '', firstIndex: 1, lastIndex: 12, totalEntries: 43});
     expect(screen.getByText(/Products/)).toBeDefined();
     expect(screen.queryByText(/for/)).toBeNull();
+  });
+
+  it('renders nothing while bindings resolve progressively (indices not yet defined)', () => {
+    // `totalEntries` has arrived but `firstIndex`/`lastIndex` have not: must not
+    // render "Products undefined-undefined of 43".
+    const {container} = renderSummary({
+      query: 'Water Sports',
+      totalEntries: 43,
+    } as unknown as QuerySummaryProps);
+    expect(container.innerHTML).toBe('');
+  });
+
+  it('renders nothing while totalEntries is still unresolved', () => {
+    const {container} = renderSummary({
+      query: 'Water Sports',
+      firstIndex: 1,
+      lastIndex: 12,
+    } as unknown as QuerySummaryProps);
+    expect(container.innerHTML).toBe('');
   });
 });

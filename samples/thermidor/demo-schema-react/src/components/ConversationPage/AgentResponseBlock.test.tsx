@@ -45,7 +45,8 @@ vi.mock('../../a2ui/surfaces.js', () => ({
 function makeSurfaceActivity(
   surfaceId: string,
   componentType: string,
-  componentProps: Record<string, unknown> = {}
+  componentProps: Record<string, unknown> = {},
+  dataModel?: Record<string, unknown>
 ): Activity {
   return {
     id: `activity-${surfaceId}`,
@@ -58,6 +59,7 @@ function makeSurfaceActivity(
           createSurface: {
             surfaceId,
             components: [{id: 'root', component: componentType, props: componentProps}],
+            ...(dataModel ? {dataModel} : {}),
           },
         },
       ],
@@ -217,9 +219,9 @@ describe('AgentResponseBlock', () => {
       expect(skeleton.getAttribute('data-component-type')).toBe('ComparisonTable');
     });
 
-    it('shows skeletons from surface activities with isLoading prop (speculative backend support)', () => {
+    it('shows skeletons from surface activities with isLoading in the data model (backend support)', () => {
       const response = makeAgentResponse({
-        activities: [makeSurfaceActivity('bundle-1', 'BundleDisplay', {isLoading: true})],
+        activities: [makeSurfaceActivity('bundle-1', 'BundleDisplay', {}, {isLoading: true})],
       });
 
       renderBlock(response, {isStreaming: true});

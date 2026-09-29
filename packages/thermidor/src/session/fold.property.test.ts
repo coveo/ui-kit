@@ -45,10 +45,6 @@ const activityArbitrary: fc.Arbitrary<NormalizedStreamEvent> = fc.oneof(
     content: fc.dictionary(fc.string({minLength: 1, maxLength: 8}), fc.jsonValue({maxDepth: 2})),
     replace: fc.boolean(),
   }),
-  fc.record({
-    type: fc.constant('STATE_SNAPSHOT'),
-    snapshot: fc.dictionary(fc.string({minLength: 1, maxLength: 8}), fc.jsonValue({maxDepth: 2})),
-  }),
   fc.record({type: fc.constant('CUSTOM')}),
   fc.record({type: fc.constant('RUN_FINISHED')}),
   fc.record({type: fc.constant('turn_complete')}),
