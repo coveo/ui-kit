@@ -373,6 +373,25 @@ describe('fold ACTIVITY_SNAPSHOT replace semantics', () => {
     ]);
   });
 
+  it('does not let a same-path write on one surface suppress the carry-forward of another surface', () => {
+    // Both surfaces write the same path (/state/root) under one messageId. The replace snapshot
+    // only re-writes surface ui-2's slice; surface ui-1's same-path slice must still carry forward.
+    const turn = foldActivities(createTurn('t1', {}), [
+      surfaceSnapshotWith('update:multi', true, [
+        dataModelMessage('ui-1', '/state/root', {value: 1}),
+        dataModelMessage('ui-2', '/state/root', {value: 2}),
+      ]),
+      surfaceSnapshotWith('update:multi', true, [
+        dataModelMessage('ui-2', '/state/root', {value: 22}),
+      ]),
+    ]);
+
+    expect(activityPayloadMessages(turn)).toEqual([
+      dataModelMessage('ui-2', '/state/root', {value: 22}),
+      dataModelMessage('ui-1', '/state/root', {value: 1}),
+    ]);
+  });
+
   it('carries forward the prior updateComponents when a later snapshot omits it', () => {
     const updateComponents = {
       version: 'v1.0',

@@ -252,12 +252,13 @@ export function foldActivity(
 
 /**
  * Merges a superseding activity payload onto the one it replaces, so an incremental
- * snapshot does not drop `/state/<id>` slices written by an earlier same-`messageId`
+ * snapshot does not drop data-model slices written by an earlier same-`messageId`
  * snapshot. Keeps every `next` message, then carries forward the `previous` payload's
- * `updateDataModel` ops whose slice path `next` does not write, plus the prior
+ * `updateDataModel` ops whose slice `next` does not write, plus the prior
  * `updateComponents` when `next` has none (so a node added by an earlier topology turn
- * keeps its identity; a fresh `updateComponents` supersedes it). Returns `next`
- * unchanged when either payload has no `messages` array.
+ * keeps its identity; a fresh `updateComponents` supersedes it). Slices are keyed by
+ * `(surfaceId, path)` since state is scoped per surface. Returns `next` unchanged when
+ * either payload has no `messages` array.
  */
 function mergeActivityPayload(
   previous: Record<string, unknown>,
@@ -269,24 +270,26 @@ function mergeActivityPayload(
     return next;
   }
 
-  const nextPaths = new Set<string>();
+  const nextSlices = new Set<string>();
   let nextHasComponents = false;
   for (const message of nextMessages) {
-    const path = updateDataModelPath(message);
-    if (path !== null) {
-      nextPaths.add(path);
+    const slice = updateDataModelSlice(message);
+    if (slice !== null) {
+      nextSlices.add(slice);
     }
     if (isUpdateComponents(message)) {
       nextHasComponents = true;
     }
   }
 
+  // updateComponents is a whole-surface topology re-projection from the gateway (never a per-node
+  // delta), so the latest prior one is authoritative and a fresh one supersedes it.
   const priorComponents = latestUpdateComponents(previousMessages);
   const carriedComponents = nextHasComponents || priorComponents === null ? [] : [priorComponents];
 
   const carriedForward = previousMessages.filter((message) => {
-    const path = updateDataModelPath(message);
-    return path !== null && !nextPaths.has(path);
+    const slice = updateDataModelSlice(message);
+    return slice !== null && !nextSlices.has(slice);
   });
 
   return {...next, messages: [...carriedComponents, ...nextMessages, ...carriedForward]};
@@ -307,8 +310,13 @@ function latestUpdateComponents(messages: readonly unknown[]): unknown {
   return null;
 }
 
-/** The `updateDataModel.path` of an A2-UI message, or null when it is not an updateDataModel op. */
-function updateDataModelPath(message: unknown): string | null {
+/**
+ * A stable key identifying the data-model slice an A2-UI message writes, or null when it is not an
+ * updateDataModel op. State is scoped per surface, so the key includes both `surfaceId` and `path`:
+ * two surfaces may write the same path (e.g. `/state/root`) without one suppressing the other's
+ * carry-forward.
+ */
+function updateDataModelSlice(message: unknown): string | null {
   if (!isRecord(message)) {
     return null;
   }
@@ -316,8 +324,12 @@ function updateDataModelPath(message: unknown): string | null {
   if (!isRecord(updateDataModel)) {
     return null;
   }
+  const surfaceId = updateDataModel['surfaceId'];
   const path = updateDataModel['path'];
-  return typeof path === 'string' ? path : null;
+  if (typeof surfaceId !== 'string' || typeof path !== 'string') {
+    return null;
+  }
+  return `${surfaceId}\u0000${path}`;
 }
 
 function mapToolCall(
