@@ -1,9 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {
-  createThermidorCatalog,
-  thermidorCatalogDefinitions,
-  THERMIDOR_CATALOG_ID,
-} from './components.js';
+import {createThermidorCatalog, THERMIDOR_CATALOG_ID} from './components.js';
 import {
   ProductCarouselSchema,
   ProductCarouselPropsSchema,
@@ -39,9 +35,10 @@ describe('createThermidorCatalog (catalog build smoke)', () => {
     expect(() => createThermidorCatalog()).not.toThrow();
   });
 
-  it('registers every Thermidor component in the catalog definitions', () => {
+  it('registers every Thermidor component in the built catalog', () => {
+    const {components} = createThermidorCatalog();
     for (const name of EXPECTED_COMPONENTS) {
-      expect(thermidorCatalogDefinitions, `missing ${name}`).toHaveProperty(name);
+      expect(components.has(name), `missing ${name}`).toBe(true);
     }
   });
 

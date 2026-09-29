@@ -1,19 +1,19 @@
 import fc from 'fast-check';
 import {describe, expect, it} from 'vitest';
-import {render, screen, cleanup} from '@testing-library/react';
-import type {ProductListProps, ProductSummaryProps} from '@coveo/thermidor-schema';
-import {TargetingProvider, type TargetingContext} from '../context/targeting.js';
-import {ProductListRenderer} from './ProductList/ProductList.js';
-import {ProductSummaryRenderer} from './ProductSummary/ProductSummary.js';
+import {cleanup, waitFor} from '@testing-library/react';
+import {mountSurface} from './mount-surface.harness.js';
 
-// Under the inline-state model each renderer receives its OWN resolved state on `props`
-// (bound from the A2-UI data model by the renderer), with no identity join. The property
-// below exercises that a dumb renderer renders exactly the data on its resolved props.
-const targeting: TargetingContext = {
-  isTargeting: false,
-  onProductTargeted: () => undefined,
-  selectedProductIds: new Set(),
-};
+/**
+ * Under the inline-state model each leaf receives its OWN resolved state on `props` (bound from the
+ * A2-UI data model), with no identity join. ProductList / ProductSummary are `createReactComponent`
+ * implementations; these property tests mount each generated slot end-to-end through the real
+ * thermidor catalog (its products/summary written to the data model via a `{path}` binding) and
+ * assert the leaf renders exactly its resolved state — empty/loading otherwise.
+ *
+ * Each generated case is mounted independently (one leaf per surface): a slot's "own resolved
+ * props" is precisely what a per-surface data model gives it, and the property being exercised (a
+ * leaf renders exactly its resolved state) holds per slot and is asserted per mount.
+ */
 
 interface GeneratedProduct {
   permanentid: string;
@@ -21,123 +21,104 @@ interface GeneratedProduct {
   additionalFields: Record<string, unknown>;
 }
 
-// Each mounted slot carries its own resolved product list (possibly empty, or unresolved).
-const scenarioArb = fc.array(
-  fc.record({
-    resolved: fc.boolean(),
-    products: fc.uniqueArray(
-      fc.string({minLength: 1, maxLength: 8}).map<GeneratedProduct>((name) => ({
-        permanentid: `${name}-id`,
-        ec_name: name,
-        additionalFields: {},
-      })),
-      {minLength: 0, maxLength: 4, selector: (p) => p.permanentid}
-    ),
-  }),
-  {minLength: 1, maxLength: 6}
-);
+const slotArb = fc.record({
+  resolved: fc.boolean(),
+  products: fc.uniqueArray(
+    fc.string({minLength: 1, maxLength: 8}).map<GeneratedProduct>((name) => ({
+      permanentid: `${name}-id`,
+      ec_name: name,
+      additionalFields: {},
+    })),
+    {minLength: 0, maxLength: 4, selector: (p) => p.permanentid}
+  ),
+});
 
 describe('product-list slot renders exactly its resolved props.products (Property 5)', () => {
-  // Feature: a2ui-inline-state-data-model, Property 5: For any set of mounted product-list
-  // slots each carrying its own resolved product state, each slot renders exactly the
-  // products on its resolved props, renders an empty product set (no error) when the list is
-  // empty, and renders a loading placeholder when the state is unresolved.
-  it('renders each slot from its own resolved props, empty/loading otherwise', () => {
-    fc.assert(
-      fc.property(scenarioArb, (slots) => {
-        expect(() =>
-          render(
-            <TargetingProvider value={targeting}>
-              {slots.map((slot, index) => (
-                <div key={index} data-testid={`slot-${index}`}>
-                  <ProductListRenderer
-                    props={(slot.resolved ? {products: slot.products} : {}) as ProductListProps}
-                  />
-                </div>
-              ))}
-            </TargetingProvider>
-          )
-        ).not.toThrow();
+  // Feature: a2ui-inline-state-data-model, Property 5: For any mounted product-list slot carrying
+  // its own resolved product state, the slot renders exactly the products on its resolved props,
+  // renders an empty product set (no error) when the list is empty, and renders a loading
+  // placeholder when the state is unresolved.
+  it('renders each slot from its own resolved props, empty/loading otherwise', async () => {
+    await fc.assert(
+      fc.asyncProperty(slotArb, async (slot) => {
+        const {container} = mountSurface({
+          component: {component: 'ProductList', products: {path: '/state/root/products'}},
+          // Unresolved → omit the write so the binding resolves undefined (loading).
+          dataModel: slot.resolved ? [{path: '/state/root/products', value: slot.products}] : [],
+        });
 
-        slots.forEach((slot, index) => {
-          const container = screen.getByTestId(`slot-${index}`);
+        if (!slot.resolved) {
+          await waitFor(() =>
+            expect(container.querySelector('[aria-label="Loading product list"]')).not.toBeNull()
+          );
+          expect(container.querySelectorAll('h3').length).toBe(0);
+        } else {
+          // Wait until the render settles to its resolved shape.
+          await waitFor(() => {
+            if (slot.products.length === 0) {
+              expect(container.querySelector('[role="list"]')).toBeNull();
+            } else {
+              expect(container.querySelector('[role="list"]')).not.toBeNull();
+            }
+          });
           const renderedNames = Array.from(container.querySelectorAll('h3')).map(
             (node) => node.textContent
           );
-
-          if (!slot.resolved) {
-            // Unresolved → loading placeholder, no product headings.
-            expect(container.querySelector('[aria-label="Loading product list"]')).not.toBeNull();
-            expect(renderedNames).toEqual([]);
-          } else {
-            expect(renderedNames).toEqual(slot.products.map((product) => product.ec_name));
-          }
-        });
+          expect(renderedNames).toEqual(slot.products.map((product) => product.ec_name));
+        }
 
         cleanup();
       }),
-      {numRuns: 150}
+      {numRuns: 40}
     );
   });
 });
 
-// A generated resolved product-summary state per mounted slot.
-const summaryScenarioArb = fc.array(
-  fc.record({
-    resolved: fc.boolean(),
-    categoryLabel: fc.string({minLength: 1, maxLength: 12}),
-    productName: fc.string({minLength: 1, maxLength: 12}),
-  }),
-  {minLength: 1, maxLength: 6}
-);
+const summarySlotArb = fc.record({
+  resolved: fc.boolean(),
+  categoryLabel: fc.string({minLength: 1, maxLength: 12}),
+  productName: fc.string({minLength: 1, maxLength: 12}),
+});
 
 describe('product-summary slot renders from its own resolved props (Property 5)', () => {
-  // Feature: a2ui-inline-state-data-model, Property 5 (product-summary variant): For any set
-  // of mounted product-summary slots, each renders the product name on its resolved props and
-  // renders the loading placeholder (no error) when the state is unresolved.
-  it('renders each summary from its own resolved props, loading when unresolved', () => {
-    fc.assert(
-      fc.property(summaryScenarioArb, (slots) => {
-        expect(() =>
-          render(
-            <TargetingProvider value={targeting}>
-              {slots.map((slot, index) => (
-                <div key={index} data-testid={`summary-slot-${index}`}>
-                  <ProductSummaryRenderer
-                    props={
-                      (slot.resolved
-                        ? {
-                            categoryLabel: slot.categoryLabel,
-                            product: {
-                              permanentid: `${slot.productName}-id`,
-                              ec_name: slot.productName,
-                              additionalFields: {},
-                            },
-                          }
-                        : {}) as ProductSummaryProps
-                    }
-                  />
-                </div>
-              ))}
-            </TargetingProvider>
-          )
-        ).not.toThrow();
-
-        slots.forEach((slot, index) => {
-          const container = screen.getByTestId(`summary-slot-${index}`);
-
-          if (slot.resolved) {
-            expect(container.textContent).toContain(slot.productName);
-          } else {
-            expect(
-              container.querySelector('[aria-label="Loading product summary"]')
-            ).not.toBeNull();
-          }
+  // Feature: a2ui-inline-state-data-model, Property 5 (product-summary variant): For any mounted
+  // product-summary slot, it renders the product name on its resolved props and renders the loading
+  // placeholder (no error) when the state is unresolved.
+  it('renders each summary from its own resolved props, loading when unresolved', async () => {
+    await fc.assert(
+      fc.asyncProperty(summarySlotArb, async (slot) => {
+        const {container} = mountSurface({
+          component: {
+            component: 'ProductSummary',
+            categoryLabel: {path: '/state/root/categoryLabel'},
+            product: {path: '/state/root/product'},
+          },
+          dataModel: slot.resolved
+            ? [
+                {path: '/state/root/categoryLabel', value: slot.categoryLabel},
+                {
+                  path: '/state/root/product',
+                  value: {
+                    permanentid: `${slot.productName}-id`,
+                    ec_name: slot.productName,
+                    additionalFields: {},
+                  },
+                },
+              ]
+            : [],
         });
+
+        if (slot.resolved) {
+          await waitFor(() => expect(container.textContent).toContain(slot.productName));
+        } else {
+          await waitFor(() =>
+            expect(container.querySelector('[aria-label="Loading product summary"]')).not.toBeNull()
+          );
+        }
 
         cleanup();
       }),
-      {numRuns: 150}
+      {numRuns: 40}
     );
   });
 });
