@@ -1,7 +1,7 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {PaginationAction, PaginationProps} from '@coveo/thermidor-schema';
-import {PaginationPropsSchema} from '@coveo/thermidor-schema';
-import {toInferableBinderSchema} from '../catalog-props-migration.js';
+import {PaginationPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {toInferableBinderSchema} from '../inferable-binder-schema.js';
 import styles from './Pagination.module.css';
 
 /**

@@ -1,7 +1,7 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {QuerySummaryProps} from '@coveo/thermidor-schema';
-import {QuerySummaryPropsSchema} from '@coveo/thermidor-schema';
-import {toInferableBinderSchema} from '../catalog-props-migration.js';
+import {QuerySummaryPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {toInferableBinderSchema} from '../inferable-binder-schema.js';
 import styles from './QuerySummary.module.css';
 
 /**

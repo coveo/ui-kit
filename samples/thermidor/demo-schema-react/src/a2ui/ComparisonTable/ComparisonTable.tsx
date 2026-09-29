@@ -4,8 +4,8 @@ import type {
   ComparisonProduct,
   ComparisonTableProps,
 } from '@coveo/thermidor-schema';
-import {ComparisonTablePropsSchema} from '@coveo/thermidor-schema';
-import {toInferableBinderSchema} from '../catalog-props-migration.js';
+import {ComparisonTablePropsSchema} from '@coveo/thermidor-schema/zod3';
+import {toInferableBinderSchema} from '../inferable-binder-schema.js';
 import styles from './ComparisonTable.module.css';
 
 function formatPrice(price: number): string {

@@ -1,7 +1,7 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {LayoutStackProps} from '@coveo/thermidor-schema';
-import {LayoutStackPropsSchema} from '@coveo/thermidor-schema';
-import {toInferableBinderSchema} from '../catalog-props-migration.js';
+import {LayoutStackPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {toInferableBinderSchema} from '../inferable-binder-schema.js';
 import styles from './LayoutStack.module.css';
 
 /**

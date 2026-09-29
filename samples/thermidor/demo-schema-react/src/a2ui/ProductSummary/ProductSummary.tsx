@@ -1,7 +1,7 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {Product, ProductSummaryProps} from '@coveo/thermidor-schema';
-import {ProductSummaryPropsSchema} from '@coveo/thermidor-schema';
-import {toInferableBinderSchema} from '../catalog-props-migration.js';
+import {ProductSummaryPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {toInferableBinderSchema} from '../inferable-binder-schema.js';
 import styles from './ProductSummary.module.css';
 
 function formatPrice(value: number): string {
