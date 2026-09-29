@@ -1,7 +1,6 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
-import type {Product, ProductSummaryProps} from '@coveo/thermidor-schema';
+import type {Product} from '@coveo/thermidor-schema';
 import {ProductSummaryPropsSchema} from '@coveo/thermidor-schema/zod3';
-import {toInferableBinderSchema} from '../inferable-binder-schema.js';
 import styles from './ProductSummary.module.css';
 
 function formatPrice(value: number): string {
@@ -29,7 +28,7 @@ function resolvePrice(product: Product): number | undefined {
 export const ProductSummary = createReactComponent(
   {
     name: 'ProductSummary',
-    schema: toInferableBinderSchema<ProductSummaryProps>(ProductSummaryPropsSchema),
+    schema: ProductSummaryPropsSchema,
   },
   ({props}) => {
     if (props.categoryLabel === undefined) {

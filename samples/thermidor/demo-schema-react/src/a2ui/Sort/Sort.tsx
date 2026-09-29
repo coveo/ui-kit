@@ -1,8 +1,7 @@
 import {useId} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
-import type {SortAction, SortProps} from '@coveo/thermidor-schema';
+import type {SortAction} from '@coveo/thermidor-schema';
 import {SortPropsSchema} from '@coveo/thermidor-schema/zod3';
-import {toInferableBinderSchema} from '../inferable-binder-schema.js';
 import styles from './Sort.module.css';
 
 const SORT_LABELS: Record<string, string> = {
@@ -17,7 +16,7 @@ const SORT_LABELS: Record<string, string> = {
  * through `context.dispatchAction`.
  */
 export const Sort = createReactComponent(
-  {name: 'Sort', schema: toInferableBinderSchema<SortProps>(SortPropsSchema)},
+  {name: 'Sort', schema: SortPropsSchema},
   ({props, context}) => {
     const selectId = useId();
     const availableSorts = props.availableSorts ?? [];

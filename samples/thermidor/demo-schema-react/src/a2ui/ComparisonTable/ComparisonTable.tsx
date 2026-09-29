@@ -1,11 +1,6 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
-import type {
-  ComparisonAttribute,
-  ComparisonProduct,
-  ComparisonTableProps,
-} from '@coveo/thermidor-schema';
+import type {ComparisonAttribute, ComparisonProduct} from '@coveo/thermidor-schema';
 import {ComparisonTablePropsSchema} from '@coveo/thermidor-schema/zod3';
-import {toInferableBinderSchema} from '../inferable-binder-schema.js';
 import styles from './ComparisonTable.module.css';
 
 function formatPrice(price: number): string {
@@ -23,7 +18,7 @@ function formatPrice(price: number): string {
 export const ComparisonTable = createReactComponent(
   {
     name: 'ComparisonTable',
-    schema: toInferableBinderSchema<ComparisonTableProps>(ComparisonTablePropsSchema),
+    schema: ComparisonTablePropsSchema,
   },
   ({props}) => {
     const heading = props.heading ?? '';
