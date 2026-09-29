@@ -45,6 +45,7 @@ export type {
   TurnStatus,
   TurnAgent,
   A2uiState,
+  A2uiV09Message,
   Activity,
   AgentMessage,
   ReasoningStep,

@@ -17,14 +17,15 @@ interface MakeTurnOptions {
 
 /**
  * Builds a {@link TurnResponse} with the non-optional fields defaulted
- * (`state: {}`, `activities: []`, `surfaces: []`) and any provided overrides
- * merged on top. `agent` is included only when supplied.
+ * (`state: {}`, `activities: []`, `surfaces: []`, `a2uiMessages: []`) and any
+ * provided overrides merged on top. `agent` is included only when supplied.
  */
 export function makeResponse(overrides: Partial<TurnResponse> = {}): TurnResponse {
   return {
     state: {},
     activities: [],
     surfaces: [],
+    a2uiMessages: [],
     ...overrides,
   };
 }

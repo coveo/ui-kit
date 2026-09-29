@@ -3,15 +3,18 @@ import {describe, it, expect, vi} from 'vitest';
 import {SearchResultsPage} from './SearchResultsPage.js';
 
 vi.mock('../../a2ui/surfaces.js', () => ({
-  getA2UIMessages: () => [{createSurface: {surfaceId: 'ui-commerce-search'}}],
   ThermidorA2UISurfaces: ({messages}: {messages: unknown[]}) => (
     <div data-testid="a2ui-surfaces">{messages.length}</div>
   ),
 }));
 
+// The page reads the renderer-ready v0.9 stream off the active turn's
+// `response.a2uiMessages`; thermidor derives it, so the fixture supplies it directly.
+const a2uiMessages = [{version: 'v0.9', createSurface: {surfaceId: 'ui-commerce-search'}}];
+
 vi.mock('../../context/session.js', () => ({
   useSession: () => ({
-    turns: [],
+    turns: [{response: {a2uiMessages}}],
     subscribe: () => () => undefined,
   }),
 }));
