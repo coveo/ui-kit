@@ -3,7 +3,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "!.next/**/*.map"]
+      "outputs": [".next/**", "!.next/cache/**"]
     },
     "publint": {
       "outputs": ["publish/**"]
