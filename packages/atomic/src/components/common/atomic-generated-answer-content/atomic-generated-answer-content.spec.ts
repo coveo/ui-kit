@@ -492,5 +492,32 @@ describe('atomic-generated-answer-content', () => {
         {region: 'generated-answer', message: 'Generating answer', assertive: false},
       ]);
     });
+
+    it('should announce a successful copy', async () => {
+      const {element, getFeedbackProps} = await renderComponent();
+
+      await getFeedbackProps()?.onCopyToClipboard('example answer');
+      await element.updateComplete;
+
+      expect(updateMessageSpy).toHaveBeenCalledWith('generated-answer-copy', 'Copied!', true);
+    });
+
+    it('should announce a failed copy', async () => {
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      writeTextMock.mockRejectedValueOnce(new Error('copy failed'));
+
+      const {element, getFeedbackProps} = await renderComponent();
+
+      await getFeedbackProps()?.onCopyToClipboard('example answer');
+      await element.updateComplete;
+
+      expect(updateMessageSpy).toHaveBeenCalledWith(
+        'generated-answer-copy',
+        'Failed to copy the answer',
+        true
+      );
+
+      consoleErrorSpy.mockRestore();
+    });
   });
 });

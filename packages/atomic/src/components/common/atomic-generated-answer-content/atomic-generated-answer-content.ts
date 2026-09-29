@@ -82,6 +82,7 @@ export class AtomicGeneratedAnswerContent extends LitElement {
 
   private ariaMessage = new AriaLiveRegionController(this, 'generated-answer', false, true);
   private ariaErrorMessage = new AriaLiveRegionController(this, 'generated-answer-error', true);
+  private ariaCopyMessage = new AriaLiveRegionController(this, 'generated-answer-copy', true);
   private lastAnnouncedMessage?: string;
   private hasObservedAnswer = false;
 
@@ -216,9 +217,11 @@ export class AtomicGeneratedAnswerContent extends LitElement {
     try {
       await navigator.clipboard.writeText(answer);
       this.copyState = 'success';
+      this.ariaCopyMessage.message = this.i18n.t('generated-answer-copied');
       this.onCopyToClipboard(answerId);
     } catch (error) {
       this.copyState = 'error';
+      this.ariaCopyMessage.message = this.i18n.t('failed-to-copy-generated-answer');
       console.error(`Failed to copy to clipboard: ${error}`);
     }
 

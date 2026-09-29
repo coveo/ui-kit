@@ -21,7 +21,11 @@ export const renderGeneratedContentContainer: FunctionalComponentWithChildren<
   GeneratedContentContainerProps
 > = ({props}) => {
   return (children) => html`
-    <div part="generated-container" id=${ifDefined(props.id)}>
+    <div
+      part="generated-container"
+      id=${ifDefined(props.id)}
+      aria-busy=${props.isStreaming ? 'true' : 'false'}
+    >
       ${
         props.answerContentFormat === 'text/markdown'
           ? renderGeneratedMarkdownContent({
