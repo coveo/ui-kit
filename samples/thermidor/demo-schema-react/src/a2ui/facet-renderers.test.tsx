@@ -1,19 +1,23 @@
-import {describe, it, expect, vi, afterEach} from 'vitest';
-import {render, screen, fireEvent, cleanup} from '@testing-library/react';
+import {describe, it, expect, afterEach} from 'vitest';
+import {screen, fireEvent, cleanup, waitFor} from '@testing-library/react';
 import type {
   RegularFacetProps,
   NumericFacetProps,
   CategoryFacetProps,
-  FacetManagerProps,
 } from '@coveo/thermidor-schema';
-import {RegularFacetRenderer} from './RegularFacet/RegularFacet.js';
-import {NumericFacetRenderer} from './NumericFacet/NumericFacet.js';
-import {CategoryFacetRenderer} from './CategoryFacet/CategoryFacet.js';
-import {FacetManagerRenderer} from './FacetManager/FacetManager.js';
+import {mountSurface} from './mount-surface.harness.js';
+
+/**
+ * The facet components are `createReactComponent` implementations driven by the generic binder,
+ * mounted end-to-end through the real thermidor catalog: resolved state is written to the surface
+ * data model via `{path}` bindings, and every gesture dispatches an action that surfaces
+ * (unwrapped) on `lastAction()` as `{name, context}`. FacetManager mounts its ordered children by
+ * id via `buildChild`; the tests assert the observable mounted DOM order.
+ */
 
 afterEach(() => cleanup());
 
-describe('RegularFacetRenderer', () => {
+describe('RegularFacet', () => {
   const stateWithValues: RegularFacetProps = {
     field: 'ec_brand',
     displayName: 'Brand',
@@ -27,22 +31,40 @@ describe('RegularFacetRenderer', () => {
     facetSearch: {query: '', canShowMoreResults: false, results: []},
   };
 
-  function renderFacet(props: RegularFacetProps, dispatch = vi.fn()) {
-    return {dispatch, ...render(<RegularFacetRenderer props={props} dispatch={dispatch} />)};
+  const BINDINGS = {
+    field: {path: '/state/root/field'},
+    displayName: {path: '/state/root/displayName'},
+    hasActiveValues: {path: '/state/root/hasActiveValues'},
+    canShowMoreValues: {path: '/state/root/canShowMoreValues'},
+    canShowLessValues: {path: '/state/root/canShowLessValues'},
+    values: {path: '/state/root/values'},
+    facetSearch: {path: '/state/root/facetSearch'},
+  };
+
+  function mountFacet(state: RegularFacetProps) {
+    return mountSurface({
+      component: {component: 'RegularFacet', ...BINDINGS},
+      dataModel: (Object.keys(state) as Array<keyof RegularFacetProps>).map((key) => ({
+        path: `/state/root/${key}`,
+        value: state[key],
+      })),
+    });
   }
 
-  it('dispatches toggleSelect when a value control is clicked', () => {
-    const {dispatch} = renderFacet(stateWithValues);
+  it('dispatches toggleSelect when a value control is clicked', async () => {
+    const {lastAction} = mountFacet(stateWithValues);
 
+    await waitFor(() => expect(screen.getByTestId('facet-value-Billabong')).toBeDefined());
     fireEvent.click(screen.getByTestId('facet-value-Billabong'));
-    expect(dispatch).toHaveBeenCalledWith({
-      event: {name: 'toggleSelect', context: {value: 'Billabong'}},
-    });
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({name: 'toggleSelect', context: {value: 'Billabong'}})
+    );
   });
 
-  it('renders values as checkboxes reflecting selection state', () => {
-    renderFacet(stateWithValues);
+  it('renders values as checkboxes reflecting selection state', async () => {
+    mountFacet(stateWithValues);
 
+    await waitFor(() => expect(screen.getByTestId('facet-value-Billabong')).toBeDefined());
     const billabong = screen.getByTestId('facet-value-Billabong') as HTMLInputElement;
     const quiksilver = screen.getByTestId('facet-value-Quiksilver') as HTMLInputElement;
     expect(billabong.type).toBe('checkbox');
@@ -50,17 +72,18 @@ describe('RegularFacetRenderer', () => {
     expect(quiksilver.checked).toBe(true);
   });
 
-  it('dispatches clearAllActiveValues when the clear control is activated', () => {
-    const {dispatch} = renderFacet(stateWithValues);
+  it('dispatches clearAllActiveValues when the clear control is activated', async () => {
+    const {lastAction} = mountFacet(stateWithValues);
 
+    await waitFor(() => expect(screen.getByLabelText('Clear Brand selections')).toBeDefined());
     fireEvent.click(screen.getByLabelText('Clear Brand selections'));
-    expect(dispatch).toHaveBeenCalledWith({
-      event: {name: 'clearAllActiveValues', context: {}},
-    });
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({name: 'clearAllActiveValues', context: {}})
+    );
   });
 
-  it('renders a pinned selected value (from search) as a checked checkbox at the top', () => {
-    renderFacet({
+  it('renders a pinned selected value (from search) as a checked checkbox at the top', async () => {
+    mountFacet({
       ...stateWithValues,
       values: [
         {value: 'Cressi', numberOfResults: 1, state: 'selected'},
@@ -69,28 +92,29 @@ describe('RegularFacetRenderer', () => {
       ],
     });
 
+    await waitFor(() => expect(screen.getByTestId('facet-value-Cressi')).toBeDefined());
     const checkboxes = screen.getAllByRole('checkbox') as HTMLInputElement[];
     expect(checkboxes[0].getAttribute('data-testid')).toBe('facet-value-Cressi');
     expect(checkboxes[0].checked).toBe(true);
   });
 
-  it('dispatches search on each change and keeps the input responsive', () => {
-    const {dispatch} = renderFacet(stateWithValues);
+  it('dispatches search on each change and keeps the input responsive', async () => {
+    const {actions} = mountFacet(stateWithValues);
 
+    await waitFor(() => expect(screen.getByTestId('facet-search-input-ec_brand')).toBeDefined());
     const input = screen.getByTestId('facet-search-input-ec_brand') as HTMLInputElement;
     fireEvent.change(input, {target: {value: 'ri'}});
     fireEvent.change(input, {target: {value: 'rip'}});
 
-    // The input reflects the typed value immediately (kept in local state).
     expect(input.value).toBe('rip');
-
-    // A search action is dispatched for each change through the action seam.
-    expect(dispatch).toHaveBeenNthCalledWith(1, {event: {name: 'search', context: {query: 'ri'}}});
-    expect(dispatch).toHaveBeenNthCalledWith(2, {event: {name: 'search', context: {query: 'rip'}}});
+    await waitFor(() => {
+      const searches = actions.filter((a) => a.name === 'search');
+      expect(searches.map((a) => a.context)).toEqual([{query: 'ri'}, {query: 'rip'}]);
+    });
   });
 
-  it('renders search results in place of the value list and dispatches toggleSelect on result click', () => {
-    const {dispatch} = renderFacet({
+  it('renders search results in place of the value list and dispatches toggleSelect on result click', async () => {
+    const {lastAction} = mountFacet({
       ...stateWithValues,
       facetSearch: {
         query: 'rip',
@@ -102,17 +126,17 @@ describe('RegularFacetRenderer', () => {
       },
     });
 
+    await waitFor(() => expect(screen.getByTestId('facet-search-result-Rip Curl')).toBeDefined());
     expect(screen.queryByTestId('facet-value-Billabong')).toBeNull();
-    expect(screen.getByTestId('facet-search-result-Rip Curl')).toBeDefined();
 
     fireEvent.click(screen.getByTestId('facet-search-result-Rip Curl'));
-    expect(dispatch).toHaveBeenCalledWith({
-      event: {name: 'toggleSelect', context: {value: 'Rip Curl'}},
-    });
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({name: 'toggleSelect', context: {value: 'Rip Curl'}})
+    );
   });
 
-  it('dispatches showMoreSearchResults when the show-more control is activated', () => {
-    const {dispatch} = renderFacet({
+  it('dispatches showMoreSearchResults when the show-more control is activated', async () => {
+    const {lastAction} = mountFacet({
       ...stateWithValues,
       facetSearch: {
         query: 'i',
@@ -121,14 +145,15 @@ describe('RegularFacetRenderer', () => {
       },
     });
 
+    await waitFor(() => expect(screen.getByText('Show more')).toBeDefined());
     fireEvent.click(screen.getByText('Show more'));
-    expect(dispatch).toHaveBeenCalledWith({
-      event: {name: 'showMoreSearchResults', context: {}},
-    });
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({name: 'showMoreSearchResults', context: {}})
+    );
   });
 
-  it('dispatches clearSearch when the clear-search affordance is activated', () => {
-    const {dispatch} = renderFacet({
+  it('dispatches clearSearch when the clear-search affordance is activated', async () => {
+    const {lastAction} = mountFacet({
       ...stateWithValues,
       facetSearch: {
         query: 'rip',
@@ -137,40 +162,44 @@ describe('RegularFacetRenderer', () => {
       },
     });
 
+    await waitFor(() => expect(screen.getByLabelText('Clear Brand search')).toBeDefined());
     fireEvent.click(screen.getByLabelText('Clear Brand search'));
-    expect(dispatch).toHaveBeenCalledWith({event: {name: 'clearSearch', context: {}}});
+    await waitFor(() => expect(lastAction()).toMatchObject({name: 'clearSearch', context: {}}));
   });
 
-  it('shows a "+ Show more" button that dispatches showMoreValues when canShowMoreValues', () => {
-    const {dispatch} = renderFacet({
+  it('shows a "+ Show more" button that dispatches showMoreValues when canShowMoreValues', async () => {
+    const {lastAction} = mountFacet({
       ...stateWithValues,
       canShowMoreValues: true,
       canShowLessValues: false,
     });
 
+    await waitFor(() => expect(screen.getByTestId('facet-show-more-ec_brand')).toBeDefined());
     expect(screen.queryByTestId('facet-show-less-ec_brand')).toBeNull();
     fireEvent.click(screen.getByTestId('facet-show-more-ec_brand'));
-    expect(dispatch).toHaveBeenCalledWith({event: {name: 'showMoreValues', context: {}}});
+    await waitFor(() => expect(lastAction()).toMatchObject({name: 'showMoreValues', context: {}}));
   });
 
-  it('shows a "- Show less" button that dispatches showLessValues when canShowLessValues', () => {
-    const {dispatch} = renderFacet({
+  it('shows a "- Show less" button that dispatches showLessValues when canShowLessValues', async () => {
+    const {lastAction} = mountFacet({
       ...stateWithValues,
       canShowMoreValues: true,
       canShowLessValues: true,
     });
 
+    await waitFor(() => expect(screen.getByTestId('facet-show-less-ec_brand')).toBeDefined());
     fireEvent.click(screen.getByTestId('facet-show-less-ec_brand'));
-    expect(dispatch).toHaveBeenCalledWith({event: {name: 'showLessValues', context: {}}});
+    await waitFor(() => expect(lastAction()).toMatchObject({name: 'showLessValues', context: {}}));
   });
 
-  it('renders "- Show less" above "+ Show more" when both are available', () => {
-    const {container} = renderFacet({
+  it('renders "- Show less" above "+ Show more" when both are available', async () => {
+    const {container} = mountFacet({
       ...stateWithValues,
       canShowMoreValues: true,
       canShowLessValues: true,
     });
 
+    await waitFor(() => expect(screen.getByTestId('facet-show-less-ec_brand')).toBeDefined());
     const buttons = Array.from(
       container.querySelectorAll(
         '[data-testid="facet-show-less-ec_brand"], [data-testid="facet-show-more-ec_brand"]'
@@ -182,15 +211,16 @@ describe('RegularFacetRenderer', () => {
     ]);
   });
 
-  it('shows neither show-more nor show-less when both flags are false', () => {
-    renderFacet({...stateWithValues, canShowMoreValues: false, canShowLessValues: false});
+  it('shows neither show-more nor show-less when both flags are false', async () => {
+    mountFacet({...stateWithValues, canShowMoreValues: false, canShowLessValues: false});
 
+    await waitFor(() => expect(screen.getByTestId('facet-value-Billabong')).toBeDefined());
     expect(screen.queryByTestId('facet-show-more-ec_brand')).toBeNull();
     expect(screen.queryByTestId('facet-show-less-ec_brand')).toBeNull();
   });
 });
 
-describe('NumericFacetRenderer', () => {
+describe('NumericFacet', () => {
   const stateWithRanges: NumericFacetProps = {
     field: 'ec_price',
     displayName: 'Price',
@@ -204,61 +234,74 @@ describe('NumericFacetRenderer', () => {
     ],
   };
 
-  function renderFacet(props: NumericFacetProps, dispatch = vi.fn()) {
-    return {dispatch, ...render(<NumericFacetRenderer props={props} dispatch={dispatch} />)};
+  function mountFacet(state: NumericFacetProps) {
+    return mountSurface({
+      component: {
+        component: 'NumericFacet',
+        ...Object.fromEntries(Object.keys(state).map((key) => [key, {path: `/state/root/${key}`}])),
+      },
+      dataModel: (Object.keys(state) as Array<keyof NumericFacetProps>).map((key) => ({
+        path: `/state/root/${key}`,
+        value: state[key],
+      })),
+    });
   }
 
-  it('dispatches toggleSingleSelect with the range start/end when a listed range is clicked', () => {
-    const {dispatch} = renderFacet(stateWithRanges);
+  it('dispatches toggleSingleSelect with the range start/end when a listed range is clicked', async () => {
+    const {lastAction} = mountFacet(stateWithRanges);
 
+    await waitFor(() => expect(screen.getByText('$100 - $200')).toBeDefined());
     fireEvent.click(screen.getByText('$100 - $200'));
-    expect(dispatch).toHaveBeenCalledWith({
-      event: {name: 'toggleSingleSelect', context: {start: 100, end: 200}},
-    });
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({
+        name: 'toggleSingleSelect',
+        context: {start: 100, end: 200},
+      })
+    );
   });
 
-  it('dispatches applyCustomRange with the entered numeric start/end on submit', () => {
-    const {dispatch} = renderFacet(stateWithRanges);
+  it('dispatches applyCustomRange with the entered numeric start/end on submit', async () => {
+    const {lastAction} = mountFacet(stateWithRanges);
 
+    await waitFor(() => expect(screen.getByLabelText('Min')).toBeDefined());
     fireEvent.change(screen.getByLabelText('Min'), {target: {value: '50'}});
     fireEvent.change(screen.getByLabelText('Max'), {target: {value: '150'}});
     fireEvent.click(screen.getByText('Apply'));
 
-    expect(dispatch).toHaveBeenCalledWith({
-      event: {name: 'applyCustomRange', context: {start: 50, end: 150}},
-    });
-  });
-
-  it('does not dispatch applyCustomRange when either custom-range input is empty', () => {
-    const {dispatch} = renderFacet(stateWithRanges);
-
-    fireEvent.change(screen.getByLabelText('Min'), {target: {value: '50'}});
-    fireEvent.click(screen.getByText('Apply'));
-
-    expect(dispatch).not.toHaveBeenCalledWith(
-      expect.objectContaining({event: expect.objectContaining({name: 'applyCustomRange'})})
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({name: 'applyCustomRange', context: {start: 50, end: 150}})
     );
   });
 
-  it('does not dispatch applyCustomRange when an input is not a number', () => {
-    const {dispatch} = renderFacet(stateWithRanges);
+  it('does not dispatch applyCustomRange when either custom-range input is empty', async () => {
+    const {actions} = mountFacet(stateWithRanges);
 
+    await waitFor(() => expect(screen.getByLabelText('Min')).toBeDefined());
+    fireEvent.change(screen.getByLabelText('Min'), {target: {value: '50'}});
+    fireEvent.click(screen.getByText('Apply'));
+
+    expect(actions.some((a) => a.name === 'applyCustomRange')).toBe(false);
+  });
+
+  it('does not dispatch applyCustomRange when an input is not a number', async () => {
+    const {actions} = mountFacet(stateWithRanges);
+
+    await waitFor(() => expect(screen.getByLabelText('Min')).toBeDefined());
     fireEvent.change(screen.getByLabelText('Min'), {target: {value: 'abc'}});
     fireEvent.change(screen.getByLabelText('Max'), {target: {value: '150'}});
     fireEvent.click(screen.getByText('Apply'));
 
-    expect(dispatch).not.toHaveBeenCalledWith(
-      expect.objectContaining({event: expect.objectContaining({name: 'applyCustomRange'})})
-    );
+    expect(actions.some((a) => a.name === 'applyCustomRange')).toBe(false);
   });
 
-  it('renders an applied custom range as the last, selected value item', () => {
-    renderFacet({
+  it('renders an applied custom range as the last, selected value item', async () => {
+    mountFacet({
       ...stateWithRanges,
       hasActiveValues: true,
       customRange: {start: 25, end: 175, numberOfResults: 6},
     });
 
+    await waitFor(() => expect(screen.getByTestId('facet-custom-range-ec_price')).toBeDefined());
     const items = screen.getAllByRole('button', {pressed: true});
     const customItem = screen.getByTestId('facet-custom-range-ec_price');
     expect(customItem.textContent).toContain('$25 - $175');
@@ -269,55 +312,64 @@ describe('NumericFacetRenderer', () => {
     expect(items).toContain(customItem);
   });
 
-  it('clears the min/max inputs when clearing the facet', () => {
-    const {dispatch} = renderFacet({...stateWithRanges, hasActiveValues: true});
+  it('clears the min/max inputs when clearing the facet', async () => {
+    const {lastAction} = mountFacet({...stateWithRanges, hasActiveValues: true});
 
+    await waitFor(() => expect(screen.getByLabelText('Min')).toBeDefined());
     fireEvent.change(screen.getByLabelText('Min'), {target: {value: '25'}});
     fireEvent.change(screen.getByLabelText('Max'), {target: {value: '175'}});
     fireEvent.click(screen.getByText('Clear'));
 
-    expect(dispatch).toHaveBeenCalledWith({event: {name: 'clearAllActiveValues', context: {}}});
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({name: 'clearAllActiveValues', context: {}})
+    );
     expect((screen.getByLabelText('Min') as HTMLInputElement).value).toBe('');
     expect((screen.getByLabelText('Max') as HTMLInputElement).value).toBe('');
   });
 
-  it('clears the min/max inputs when selecting a different listed value', () => {
-    const {dispatch} = renderFacet({...stateWithRanges, hasActiveValues: true});
+  it('clears the min/max inputs when selecting a different listed value', async () => {
+    const {lastAction} = mountFacet({...stateWithRanges, hasActiveValues: true});
 
+    await waitFor(() => expect(screen.getByLabelText('Min')).toBeDefined());
     fireEvent.change(screen.getByLabelText('Min'), {target: {value: '25'}});
     fireEvent.change(screen.getByLabelText('Max'), {target: {value: '175'}});
     fireEvent.click(screen.getByText('$0 - $100'));
 
-    expect(dispatch).toHaveBeenCalledWith({
-      event: {name: 'toggleSingleSelect', context: {start: 0, end: 100}},
-    });
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({
+        name: 'toggleSingleSelect',
+        context: {start: 0, end: 100},
+      })
+    );
     expect((screen.getByLabelText('Min') as HTMLInputElement).value).toBe('');
     expect((screen.getByLabelText('Max') as HTMLInputElement).value).toBe('');
   });
 
-  it('applies the domain bounds as min/max attributes on the range inputs', () => {
-    renderFacet({...stateWithRanges, domain: {min: 20, max: 300}});
+  it('applies the domain bounds as min/max attributes on the range inputs', async () => {
+    mountFacet({...stateWithRanges, domain: {min: 20, max: 300}});
 
+    await waitFor(() => expect(screen.getByLabelText('Min')).toBeDefined());
     expect((screen.getByLabelText('Min') as HTMLInputElement).min).toBe('20');
     expect((screen.getByLabelText('Min') as HTMLInputElement).max).toBe('300');
     expect((screen.getByLabelText('Max') as HTMLInputElement).min).toBe('20');
     expect((screen.getByLabelText('Max') as HTMLInputElement).max).toBe('300');
   });
 
-  it('normalizes a reversed custom range (min > max) before applying', () => {
-    const {dispatch} = renderFacet({...stateWithRanges, domain: {min: 0, max: 500}});
+  it('normalizes a reversed custom range (min > max) before applying', async () => {
+    const {lastAction} = mountFacet({...stateWithRanges, domain: {min: 0, max: 500}});
 
+    await waitFor(() => expect(screen.getByLabelText('Min')).toBeDefined());
     fireEvent.change(screen.getByLabelText('Min'), {target: {value: '150'}});
     fireEvent.change(screen.getByLabelText('Max'), {target: {value: '50'}});
     fireEvent.click(screen.getByText('Apply'));
 
-    expect(dispatch).toHaveBeenCalledWith({
-      event: {name: 'applyCustomRange', context: {start: 50, end: 150}},
-    });
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({name: 'applyCustomRange', context: {start: 50, end: 150}})
+    );
   });
 });
 
-describe('CategoryFacetRenderer', () => {
+describe('CategoryFacet', () => {
   const stateWithChildren: CategoryFacetProps = {
     field: 'ec_category',
     displayName: 'Category',
@@ -333,28 +385,44 @@ describe('CategoryFacetRenderer', () => {
     facetSearch: {query: '', canShowMoreResults: false, results: []},
   };
 
-  function renderFacet(props: CategoryFacetProps, dispatch = vi.fn()) {
-    return {dispatch, ...render(<CategoryFacetRenderer props={props} dispatch={dispatch} />)};
+  function mountFacet(state: CategoryFacetProps) {
+    return mountSurface({
+      component: {
+        component: 'CategoryFacet',
+        ...Object.fromEntries(Object.keys(state).map((key) => [key, {path: `/state/root/${key}`}])),
+      },
+      dataModel: (Object.keys(state) as Array<keyof CategoryFacetProps>).map((key) => ({
+        path: `/state/root/${key}`,
+        value: state[key],
+      })),
+    });
   }
 
-  it('dispatches selectPath with the child path when a child is clicked', () => {
-    const {dispatch} = renderFacet(stateWithChildren);
+  it('dispatches selectPath with the child path when a child is clicked', async () => {
+    const {lastAction} = mountFacet(stateWithChildren);
 
+    await waitFor(() => expect(screen.getByText('Water Sports')).toBeDefined());
     fireEvent.click(screen.getByText('Water Sports'));
-    expect(dispatch).toHaveBeenCalledWith({
-      event: {name: 'selectPath', context: {path: ['Sporting Goods', 'Water Sports']}},
-    });
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({
+        name: 'selectPath',
+        context: {path: ['Sporting Goods', 'Water Sports']},
+      })
+    );
   });
 
-  it('dispatches clearSelectedPath when the "All Categories" back link is clicked', () => {
-    const {dispatch} = renderFacet(stateWithChildren);
+  it('dispatches clearSelectedPath when the "All Categories" back link is clicked', async () => {
+    const {lastAction} = mountFacet(stateWithChildren);
 
+    await waitFor(() => expect(screen.getByText('All Categories')).toBeDefined());
     fireEvent.click(screen.getByText('All Categories'));
-    expect(dispatch).toHaveBeenCalledWith({event: {name: 'clearSelectedPath', context: {}}});
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({name: 'clearSelectedPath', context: {}})
+    );
   });
 
-  it('renders ancestry parents as back links, the selected node highlighted, and children below', () => {
-    const {dispatch} = renderFacet({
+  it('renders ancestry parents as back links, the selected node highlighted, and children below', async () => {
+    const {lastAction} = mountFacet({
       field: 'ec_category',
       displayName: 'Category',
       canShowMoreValues: false,
@@ -385,29 +453,35 @@ describe('CategoryFacetRenderer', () => {
       facetSearch: {query: '', canShowMoreResults: false, results: []},
     });
 
+    await waitFor(() => expect(screen.getByText('All Categories')).toBeDefined());
     fireEvent.click(screen.getByText('All Categories'));
-    expect(dispatch).toHaveBeenCalledWith({event: {name: 'clearSelectedPath', context: {}}});
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({name: 'clearSelectedPath', context: {}})
+    );
 
     fireEvent.click(screen.getByText('Accessories'));
-    expect(dispatch).toHaveBeenCalledWith({
-      event: {name: 'selectPath', context: {path: ['Sporting Goods', 'Accessories']}},
-    });
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({
+        name: 'selectPath',
+        context: {path: ['Sporting Goods', 'Accessories']},
+      })
+    );
 
     const selectedRow = screen.getByTestId('facet-category-selected-ec_category');
     expect(selectedRow.textContent).toContain('Surf Accessories');
     expect(selectedRow.textContent).toContain('(12)');
 
     fireEvent.click(screen.getByText('Surf Wax'));
-    expect(dispatch).toHaveBeenCalledWith({
-      event: {
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({
         name: 'selectPath',
         context: {path: ['Sporting Goods', 'Accessories', 'Surf Accessories', 'Surf Wax']},
-      },
-    });
+      })
+    );
   });
 
-  it('renders search results and dispatches selectPath with the result path on click', () => {
-    const {dispatch} = renderFacet({
+  it('renders search results and dispatches selectPath with the result path on click', async () => {
+    const {lastAction} = mountFacet({
       ...stateWithChildren,
       facetSearch: {
         query: 'wet',
@@ -422,44 +496,49 @@ describe('CategoryFacetRenderer', () => {
       },
     });
 
-    expect(screen.getByTestId('facet-search-result-Wetsuits')).toBeDefined();
-
+    await waitFor(() => expect(screen.getByTestId('facet-search-result-Wetsuits')).toBeDefined());
     fireEvent.click(screen.getByTestId('facet-search-result-Wetsuits'));
-    expect(dispatch).toHaveBeenCalledWith({
-      event: {name: 'selectPath', context: {path: ['Sporting Goods', 'Water Sports', 'Wetsuits']}},
-    });
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({
+        name: 'selectPath',
+        context: {path: ['Sporting Goods', 'Water Sports', 'Wetsuits']},
+      })
+    );
   });
 
-  it('shows a "+ Show more" button that dispatches showMoreValues when canShowMoreValues', () => {
-    const {dispatch} = renderFacet({
+  it('shows a "+ Show more" button that dispatches showMoreValues when canShowMoreValues', async () => {
+    const {lastAction} = mountFacet({
       ...stateWithChildren,
       canShowMoreValues: true,
       canShowLessValues: false,
     });
 
+    await waitFor(() => expect(screen.getByTestId('facet-show-more-ec_category')).toBeDefined());
     expect(screen.queryByTestId('facet-show-less-ec_category')).toBeNull();
     fireEvent.click(screen.getByTestId('facet-show-more-ec_category'));
-    expect(dispatch).toHaveBeenCalledWith({event: {name: 'showMoreValues', context: {}}});
+    await waitFor(() => expect(lastAction()).toMatchObject({name: 'showMoreValues', context: {}}));
   });
 
-  it('shows a "- Show less" button that dispatches showLessValues when canShowLessValues', () => {
-    const {dispatch} = renderFacet({
+  it('shows a "- Show less" button that dispatches showLessValues when canShowLessValues', async () => {
+    const {lastAction} = mountFacet({
       ...stateWithChildren,
       canShowMoreValues: true,
       canShowLessValues: true,
     });
 
+    await waitFor(() => expect(screen.getByTestId('facet-show-less-ec_category')).toBeDefined());
     fireEvent.click(screen.getByTestId('facet-show-less-ec_category'));
-    expect(dispatch).toHaveBeenCalledWith({event: {name: 'showLessValues', context: {}}});
+    await waitFor(() => expect(lastAction()).toMatchObject({name: 'showLessValues', context: {}}));
   });
 
-  it('renders "- Show less" above "+ Show more" when both are available', () => {
-    const {container} = renderFacet({
+  it('renders "- Show less" above "+ Show more" when both are available', async () => {
+    const {container} = mountFacet({
       ...stateWithChildren,
       canShowMoreValues: true,
       canShowLessValues: true,
     });
 
+    await waitFor(() => expect(screen.getByTestId('facet-show-less-ec_category')).toBeDefined());
     const buttons = Array.from(
       container.querySelectorAll(
         '[data-testid="facet-show-less-ec_category"], [data-testid="facet-show-more-ec_category"]'
@@ -471,8 +550,8 @@ describe('CategoryFacetRenderer', () => {
     ]);
   });
 
-  it('does not show value show-more/less controls while a facet search is active', () => {
-    renderFacet({
+  it('does not show value show-more/less controls while a facet search is active', async () => {
+    mountFacet({
       ...stateWithChildren,
       canShowMoreValues: true,
       canShowLessValues: true,
@@ -489,34 +568,65 @@ describe('CategoryFacetRenderer', () => {
       },
     });
 
+    await waitFor(() => expect(screen.getByTestId('facet-search-result-Wetsuits')).toBeDefined());
     expect(screen.queryByTestId('facet-show-more-ec_category')).toBeNull();
     expect(screen.queryByTestId('facet-show-less-ec_category')).toBeNull();
   });
 });
 
-describe('FacetManagerRenderer', () => {
-  const presentIds = new Set(['facet-brand-1', 'facet-price-1', 'facet-category-1']);
-
-  function makeMountFn() {
-    return vi.fn((id: string) => (presentIds.has(id) ? <span data-testid={id}>{id}</span> : null));
+describe('FacetManager', () => {
+  // FacetManager mounts its ordered `children` id list via `buildChild`. Each child id names a
+  // real catalog component declared as a sibling node; the test asserts the mounted DOM
+  // order (the observable effect of the ordered `buildChild` calls). Children are RegularFacet
+  // nodes keyed by a distinguishing `data-testid` (the facet's `field`).
+  function facetChild(id: string, field: string): Record<string, unknown> {
+    return {
+      id,
+      component: 'RegularFacet',
+      field,
+      displayName: field,
+      hasActiveValues: false,
+      canShowMoreValues: false,
+      canShowLessValues: false,
+      values: [],
+      facetSearch: {query: '', canShowMoreResults: false, results: []},
+    };
   }
 
-  // A FacetManager renderer receives its ordered child ids on the resolved `children` prop.
-  function propsWithChildren(children?: string[]): FacetManagerProps {
-    return (children === undefined ? {} : {children}) as FacetManagerProps;
+  const CHILD_FIELDS: Record<string, string> = {
+    'facet-brand-1': 'brand',
+    'facet-price-1': 'price',
+    'facet-category-1': 'category',
+  };
+
+  function mountManager(childIds: string[]) {
+    return mountSurface({
+      component: {component: 'FacetManager', children: childIds},
+      children: childIds
+        .filter((id) => CHILD_FIELDS[id] !== undefined)
+        .map((id) => facetChild(id, CHILD_FIELDS[id])),
+    });
   }
 
-  it('mounts each facet child id in declared order via the children mount function', () => {
+  function renderedFields(container: HTMLElement): string[] {
+    // Match only the RegularFacet SECTION roots (`facet-<field>`), not nested testids such as
+    // `facet-search-input-<field>`. The manager container itself is `facet-manager`.
+    const fieldTestIds = /^facet-(brand|price|category)$/;
+    return Array.from(container.querySelectorAll('[data-testid]'))
+      .map((node) => node.getAttribute('data-testid'))
+      .filter((id): id is string => id !== null && fieldTestIds.test(id))
+      .map((id) => id.replace('facet-', ''));
+  }
+
+  it('mounts each facet child id in declared order via buildChild', async () => {
     const childIds = ['facet-category-1', 'facet-brand-1', 'facet-price-1'];
-    const mount = makeMountFn();
+    const {container} = mountManager(childIds);
 
-    render(<FacetManagerRenderer props={propsWithChildren(childIds)} children={mount} />);
-
-    expect(mount.mock.calls.map((call) => call[0])).toEqual(childIds);
-    const renderedOrder = screen
-      .getAllByTestId(/^facet-(brand|price|category)-1$/)
-      .map((node) => node.getAttribute('data-testid'));
-    expect(renderedOrder).toEqual(childIds);
+    await waitFor(() => expect(screen.getByTestId('facet-manager')).toBeDefined());
+    await waitFor(() =>
+      expect(container.querySelectorAll('[data-testid="facet-category"]').length).toBe(1)
+    );
+    expect(renderedFields(container)).toEqual(['category', 'brand', 'price']);
   });
 
   it.each([
@@ -524,47 +634,36 @@ describe('FacetManagerRenderer', () => {
     ['facet-price-1', 'facet-category-1', 'facet-brand-1'],
     ['facet-category-1', 'facet-brand-1', 'facet-price-1'],
     ['facet-price-1', 'facet-brand-1', 'facet-category-1'],
-  ])('mounts DOM order equal to the children list for permutation %#', (...childIds) => {
-    const mount = makeMountFn();
+  ])('mounts DOM order equal to the children list for permutation %#', async (...childIds) => {
+    const {container} = mountManager(childIds);
 
-    render(<FacetManagerRenderer props={propsWithChildren(childIds)} children={mount} />);
-
-    expect(mount.mock.calls.map((call) => call[0])).toEqual(childIds);
-    const renderedOrder = screen
-      .getAllByTestId(/^facet-(brand|price|category)-1$/)
-      .map((node) => node.getAttribute('data-testid'));
-    expect(renderedOrder).toEqual([...childIds]);
+    await waitFor(() => expect(screen.getByTestId('facet-manager')).toBeDefined());
+    const expected = childIds.map((id) => CHILD_FIELDS[id]);
+    await waitFor(() => expect(renderedFields(container)).toEqual(expected));
   });
 
-  it('skips a declared child id with no corresponding component, keeping the rest in order', () => {
+  it('skips a declared child id with no corresponding component, keeping the rest in order', async () => {
     const childIds = ['facet-brand-1', 'facet-unknown-1', 'facet-price-1'];
-    const mount = makeMountFn();
+    const {container} = mountManager(childIds);
 
-    render(<FacetManagerRenderer props={propsWithChildren(childIds)} children={mount} />);
-
-    expect(mount.mock.calls.map((call) => call[0])).toEqual(childIds);
-    const renderedOrder = screen
-      .getAllByTestId(/^facet-(brand|price|category)-1$/)
-      .map((node) => node.getAttribute('data-testid'));
-    expect(renderedOrder).toEqual(['facet-brand-1', 'facet-price-1']);
-    expect(screen.queryByTestId('facet-unknown-1')).toBeNull();
+    await waitFor(() => expect(screen.getByTestId('facet-manager')).toBeDefined());
+    await waitFor(() =>
+      expect(container.querySelectorAll('[data-testid="facet-price"]').length).toBe(1)
+    );
+    expect(renderedFields(container)).toEqual(['brand', 'price']);
   });
 
-  it('mounts no facets and renders without error when the children list is empty', () => {
-    const mount = makeMountFn();
+  it('mounts no facets and renders without error when the children list is empty', async () => {
+    const {container} = mountManager([]);
 
-    render(<FacetManagerRenderer props={propsWithChildren([])} children={mount} />);
-
-    expect(mount).not.toHaveBeenCalled();
-    expect(screen.getByTestId('facet-manager')).toBeDefined();
+    await waitFor(() => expect(screen.getByTestId('facet-manager')).toBeDefined());
+    expect(renderedFields(container)).toEqual([]);
   });
 
-  it('mounts no facets and renders without error when composition is unavailable', () => {
-    const mount = makeMountFn();
+  it('mounts no facets and renders without error when composition is unavailable', async () => {
+    // No `children` prop at all → props.children resolves undefined → nothing mounted.
+    mountSurface({component: {component: 'FacetManager'}});
 
-    render(<FacetManagerRenderer props={propsWithChildren(undefined)} children={mount} />);
-
-    expect(mount).not.toHaveBeenCalled();
-    expect(screen.getByTestId('facet-manager')).toBeDefined();
+    await waitFor(() => expect(screen.getByTestId('facet-manager')).toBeDefined());
   });
 });

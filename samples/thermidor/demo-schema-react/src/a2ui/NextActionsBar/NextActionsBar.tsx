@@ -1,33 +1,46 @@
-import type {ActionItem, NextActionsBarProps, NextActionsBarAction} from '@coveo/thermidor-schema';
-import type {TypedRendererProps} from '../renderer-props.js';
+import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import type {ActionItem, NextActionsBarAction, NextActionsBarProps} from '@coveo/thermidor-schema';
+import {NextActionsBarPropsSchema} from '@coveo/thermidor-schema';
+import {toInferableBinderSchema} from '../catalog-props-migration.js';
 import styles from './NextActionsBar.module.css';
 
-export function NextActionsBarRenderer({
-  props,
-  dispatch,
-}: TypedRendererProps<NextActionsBarProps, NextActionsBarAction>) {
-  const actions = props.suggestedActions ?? [];
+/**
+ * A2-UI component for the `next-actions-bar`. The generic binder resolves `suggestedActions` from
+ * `NextActionsBarPropsSchema`; selecting one dispatches a `selectAction` through
+ * `context.dispatchAction`.
+ */
+export const NextActionsBar = createReactComponent(
+  {
+    name: 'NextActionsBar',
+    schema: toInferableBinderSchema<NextActionsBarProps>(NextActionsBarPropsSchema),
+  },
+  ({props, context}) => {
+    const actions = props.suggestedActions ?? [];
 
-  if (actions.length === 0) {
-    return null;
+    if (actions.length === 0) {
+      return null;
+    }
+
+    const handleSelectAction = (action: ActionItem) => {
+      const selectActionAction: NextActionsBarAction = {
+        event: {name: 'selectAction', context: {text: action.text, type: action.type}},
+      };
+      context.dispatchAction(selectActionAction);
+    };
+
+    return (
+      <div className={styles.container} role="group" aria-label="Follow-up actions">
+        {actions.map((action: ActionItem, i: number) => (
+          <button
+            key={i}
+            className={styles.actionButton}
+            onClick={() => handleSelectAction(action)}
+            type="button"
+          >
+            {action.text}
+          </button>
+        ))}
+      </div>
+    );
   }
-
-  return (
-    <div className={styles.container} role="group" aria-label="Follow-up actions">
-      {actions.map((action: ActionItem, i: number) => (
-        <button
-          key={i}
-          className={styles.actionButton}
-          onClick={() =>
-            dispatch?.({
-              event: {name: 'selectAction', context: {text: action.text, type: action.type}},
-            })
-          }
-          type="button"
-        >
-          {action.text}
-        </button>
-      ))}
-    </div>
-  );
-}
+);

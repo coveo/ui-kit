@@ -1,5 +1,11 @@
 import {basicCatalog} from '@copilotkit/a2ui-renderer';
 import type {z as z4} from 'zod';
+import {
+  DataBindingSchema,
+  DynamicStringSchema,
+  DynamicNumberSchema,
+  DynamicBooleanSchema,
+} from '@copilotkit/a2ui-renderer';
 /**
  * Runtime Zod 4 → Zod 3 migration for the catalog props schemas.
  *
@@ -248,11 +254,10 @@ function migrateField(field: unknown): Zod3Schema {
  * classifies and resolves. Empty-shape props become an empty Zod 3 object — an OBJECT node with
  * nothing to resolve, which is correct.
  *
- * The return type is annotated with the sample's Zod 4 `ZodObject` so the existing
- * `asCatalogDefinitions` cast stays a legitimate Zod-3-vs-Zod-4 type bridge; the runtime value is a
- * real Zod 3 object.
+ * The return type is annotated with the sample's Zod 4 `ZodObject` so the caller's cast stays a
+ * legitimate Zod-3-vs-Zod-4 type bridge; the runtime value is a real Zod 3 object.
  */
-export function toBinderProps(propsSchema: {
+function toBinderProps(propsSchema: {
   shape: Record<string, unknown>;
 }): z4.ZodObject<z4.ZodRawShape> {
   const sourceShape = propsSchema.shape;
@@ -261,4 +266,71 @@ export function toBinderProps(propsSchema: {
     migratedShape[key] = migrateField(field);
   }
   return zod3.zodObject.create(migratedShape) as unknown as z4.ZodObject<z4.ZodRawShape>;
+}
+
+/**
+ * The binder Zod 3 `ZodObject` type re-shaped to OUR fields.
+ *
+ * Base = `typeof DataBindingSchema` (a real binder Zod 3 `ZodObject`) so the result satisfies
+ * `ComponentApi.schema`. Each field's `_output` is mapped per {@link DynamicFieldOf}: a SCALAR
+ * (`string`/`number`/`boolean`) field maps to the BINDER's dynamic-value union
+ * (`typeof Dynamic*Schema._output` = `T | DataBinding | FunctionCall`), whose `DataBinding`/
+ * `FunctionCall` are the NOMINAL types `ResolveA2uiProps` inspects: it detects `DataBinding` to
+ * synthesize each `set<Field>`, and `ResolveA2uiProp` then excludes both to leave a clean resolved
+ * value (`string`/`number`/…). A COMPOSITE field (array / object / child-ref) is passed through
+ * unchanged as a STATIC field: it carries no `DataBinding`, so `ResolveA2uiProp` returns it
+ * verbatim (`RegularFacetValue[]`, `RegularFacetSearch`, `string[]`, …) and no setter is generated
+ * — which is correct, since composite state is backend-owned and never two-way bound.
+ *
+ * WHY THE DOMAIN TYPE, NOT `z.infer<XxxPropsSchema>`
+ * -------------------------------------------------
+ * The generated Zod 4 schemas type every array/object prop as `unknown` (only scalars survive
+ * `z.infer` with a usable type). So the schema's OWN static type cannot drive `createReactComponent`
+ * inference for composite fields — it would collapse `values`/`products`/`tiers`/… to `unknown`.
+ * The domain `XxxProps` type is the only carrier of those shapes, so callers pass it as the
+ * `Output` type argument (`toInferableBinderSchema<RegularFacetProps>(RegularFacetPropsSchema)`).
+ * The runtime value is still exactly `toBinderProps(schema)`; only the DECLARED type carries the
+ * shape, so the render callback infers fully-typed `props` with NO body cast.
+ */
+type DynamicFieldOf<V> = [NonNullable<V>] extends [string]
+  ? typeof DynamicStringSchema._output
+  : [NonNullable<V>] extends [number]
+    ? typeof DynamicNumberSchema._output
+    : [NonNullable<V>] extends [boolean]
+      ? typeof DynamicBooleanSchema._output
+      : V;
+
+type InferableBinderSchema<Output> = Omit<typeof DataBindingSchema, '_output' | 'shape'> & {
+  _output: {[K in keyof Output]?: DynamicFieldOf<ResolvedFieldValue<Output[K]>>};
+  shape: {[K in keyof Output]: typeof DataBindingSchema};
+};
+
+/**
+ * The resolved value of a domain field. A SCALAR union (its literal branch plus the generated
+ * `{path}`/`{functionName}` dynamic branches) reduces to the plain scalar so {@link DynamicFieldOf}
+ * re-maps it to the binder dynamic-value union. A COMPOSITE field (array / object / child-ref) has
+ * no dynamic branch to strip, so it is kept intact and flows through as STATIC.
+ */
+type ResolvedFieldValue<F> = [NonNullable<F>] extends [string]
+  ? string
+  : [NonNullable<F>] extends [number]
+    ? number
+    : [NonNullable<F>] extends [boolean]
+      ? boolean
+      : F;
+
+/**
+ * Runtime: the Zod 3 shim (identical to {@link toBinderProps}). Type: a binder-Zod-3 `ZodObject`
+ * whose `z.infer` is the component's own domain field shape — scalars as dynamic-value unions,
+ * composites passed through — so `createReactComponent(schema)` infers `props` (with `set<Field>`
+ * setters for the scalars) and the render callback needs NO manual props annotation or body cast.
+ *
+ * `Output` is the domain `XxxProps` type, supplied by the caller as an explicit type argument
+ * (see {@link InferableBinderSchema}): the generated schema's own `z.infer` types composite fields
+ * as `unknown`, so it cannot carry those shapes into inference on its own.
+ */
+export function toInferableBinderSchema<Output>(propsSchema: {
+  shape: Record<string, unknown>;
+}): InferableBinderSchema<Output> {
+  return toBinderProps(propsSchema) as unknown as InferableBinderSchema<Output>;
 }

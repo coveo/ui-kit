@@ -1,25 +1,30 @@
+import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {FacetManagerProps} from '@coveo/thermidor-schema';
-import type {TypedRendererProps} from '../renderer-props.js';
+import {FacetManagerPropsSchema} from '@coveo/thermidor-schema';
+import {toInferableBinderSchema} from '../catalog-props-migration.js';
 import styles from './FacetManager.module.css';
 
 /**
- * A2-UI renderer for the `facet-manager` container.
+ * A2-UI component for the `facet-manager` container.
  *
- * Mounts its ordered facet children first-to-last. Composition arrives as the resolved
- * `children` `ChildList` (a `string[]` of ids the binder passes through untouched); each id
- * is mounted by name via the renderer's `children(id)` function — no positional read.
+ * Mounts its ordered facet children first-to-last. The generic binder resolves the `children`
+ * `ChildList` (a `string[]` of ids passed through untouched) from `FacetManagerPropsSchema`; each
+ * id is mounted by name via `buildChild(id)` — no positional read.
  */
-export function FacetManagerRenderer({
-  props,
-  children,
-}: TypedRendererProps<FacetManagerProps, never>) {
-  const childIds = props.children ?? [];
+export const FacetManager = createReactComponent(
+  {
+    name: 'FacetManager',
+    schema: toInferableBinderSchema<FacetManagerProps>(FacetManagerPropsSchema),
+  },
+  ({props, buildChild}) => {
+    const childIds = props.children ?? [];
 
-  return (
-    <div className={styles.container} data-testid="facet-manager">
-      {childIds.map((childId) => (
-        <div key={childId}>{children(childId)}</div>
-      ))}
-    </div>
-  );
-}
+    return (
+      <div className={styles.container} data-testid="facet-manager">
+        {childIds.map((childId: string) => (
+          <div key={childId}>{buildChild(childId)}</div>
+        ))}
+      </div>
+    );
+  }
+);
