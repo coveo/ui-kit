@@ -71,15 +71,13 @@ function buildCatalog() {
     {
       NamedSlotContainer: {
         description: 'Test container declaring static child-ref slots.',
-        // The sample's Zod (v4) differs from the renderer's bundled Zod (v3); the schema
-        // object is bridged at this boundary exactly as the real catalog shim does.
-        props: NamedSlotContainerProps as never,
+        props: NamedSlotContainerProps,
       },
-      Leaf: {description: 'Test leaf.', props: LeafProps as never},
+      Leaf: {description: 'Test leaf.', props: LeafProps},
     },
     {
-      NamedSlotContainer: NamedSlotContainerRenderer as never,
-      Leaf: LeafRenderer as never,
+      NamedSlotContainer: NamedSlotContainerRenderer,
+      Leaf: LeafRenderer,
     },
     {catalogId: CONTAINER_CATALOG_ID, includeBasicCatalog: false}
   );
