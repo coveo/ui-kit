@@ -180,17 +180,8 @@ export function foldActivity(
         replace: metadata.replace ?? false,
       };
 
-      // A replace snapshot supersedes the same-`messageId` activity in place,
-      // preserving its position; a distinct or non-replace snapshot appends.
-      //
-      // The producer streams a surface's data model as incremental
-      // `updateDataModel` deltas under one stable update `messageId`: a snapshot
-      // carries only the slices that changed that turn. A wholesale replace would
-      // drop any `/state/<id>` slice written by an earlier snapshot but absent
-      // from this one (e.g. paginate, then expand a facet: the facet turn omits
-      // the unchanged product-list slice, erasing the current page). So the
-      // payload is MERGED by slice path — same-path ops override, omitted paths
-      // carry forward — mirroring the leaf-write semantics `response.state` uses.
+      // A replace snapshot merges onto the same-`messageId` activity in place (see
+      // mergeActivityPayload); a distinct or non-replace snapshot appends.
       const existingIndex =
         nextActivity.replace && nextActivity.id
           ? response.activities.findIndex((existing) => existing.id === nextActivity.id)
@@ -251,14 +242,9 @@ export function foldActivity(
 }
 
 /**
- * Merges a superseding activity payload onto the one it replaces, so an incremental
- * snapshot does not drop data-model slices written by an earlier same-`messageId`
- * snapshot. Keeps every `next` message, then carries forward the `previous` payload's
- * `updateDataModel` ops whose slice `next` does not write, plus the prior
- * `updateComponents` when `next` has none (so a node added by an earlier topology turn
- * keeps its identity; a fresh `updateComponents` supersedes it). Slices are keyed by
- * `(surfaceId, path)` since state is scoped per surface. Returns `next` unchanged when
- * either payload has no `messages` array.
+ * Merges a superseding snapshot onto the one it replaces so an incremental snapshot (only the
+ * slices that changed that turn) does not drop slices an earlier same-`messageId` snapshot wrote.
+ * `next` wins per slice; unmentioned prior slices carry forward.
  */
 function mergeActivityPayload(
   previous: Record<string, unknown>,
@@ -282,8 +268,7 @@ function mergeActivityPayload(
     }
   }
 
-  // updateComponents is a whole-surface topology re-projection from the gateway (never a per-node
-  // delta), so the latest prior one is authoritative and a fresh one supersedes it.
+  // Gateway topology is a whole-surface re-projection (never a per-node delta), so last one wins.
   const priorComponents = latestUpdateComponents(previousMessages);
   const carriedComponents = nextHasComponents || priorComponents === null ? [] : [priorComponents];
 
@@ -295,12 +280,10 @@ function mergeActivityPayload(
   return {...next, messages: [...carriedComponents, ...nextMessages, ...carriedForward]};
 }
 
-/** Whether the message is an A2-UI updateComponents op. */
 function isUpdateComponents(message: unknown): boolean {
   return isRecord(message) && isRecord(message['updateComponents']);
 }
 
-/** The last updateComponents message in a payload's message list, or null when there is none. */
 function latestUpdateComponents(messages: readonly unknown[]): unknown {
   for (let index = messages.length - 1; index >= 0; index -= 1) {
     if (isUpdateComponents(messages[index])) {
@@ -311,10 +294,8 @@ function latestUpdateComponents(messages: readonly unknown[]): unknown {
 }
 
 /**
- * A stable key identifying the data-model slice an A2-UI message writes, or null when it is not an
- * updateDataModel op. State is scoped per surface, so the key includes both `surfaceId` and `path`:
- * two surfaces may write the same path (e.g. `/state/root`) without one suppressing the other's
- * carry-forward.
+ * A slice key for an updateDataModel op, or null when the message isn't one. Keyed by
+ * `(surfaceId, path)`, not path alone: state is per-surface, so two surfaces can share a path.
  */
 function updateDataModelSlice(message: unknown): string | null {
   if (!isRecord(message)) {
