@@ -48,9 +48,6 @@ import facetSearchStyles from '../../common/facets/facet-search/facet-search.tw.
  * A facet is a list of values for a certain field occurring in the products.
  * An `atomic-commerce-category-facet` displays a facet of values in a browsable, hierarchical fashion.
  *
- * The label of the "All Categories" button comes from the `all-categories` localization key. To override it for a
- * single facet, add an `all-categories-{facetId}` key.
- *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
  *
