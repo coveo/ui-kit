@@ -1,30 +1,24 @@
-// Matches the at-rules that pull one stylesheet into another, while skipping
-// over quoted strings and comments so their contents can't produce matches.
-// Knip's built-in Tailwind compiler handles @import/@config/@plugin but not
-// @reference, a Tailwind v4 directive we rely on heavily; without it every
-// stylesheet reachable only through @reference is reported as unused.
-const cssDirective =
-  /"(?:\\(?:\r\n|[\s\S]|$)|[^"\\\r\n\f])*(?:"|[\r\n\f]|$)|'(?:\\(?:\r\n|[\s\S]|$)|[^'\\\r\n\f])*(?:'|[\r\n\f]|$)|\/\*[\s\S]*?(?:\*\/|$)|@(?:(?:import|config|plugin|reference)\s+['"]([^'"]+)['"]|import\s+url\(\s*(?:['"]([^'"]+)['"]|([^'")\s]+))\s*\))[^;]*;/g;
-const hasUrlScheme = /^[a-z][a-z\d+.-]*:/i;
-const hasCssDirective = /@(?:import|config|plugin|reference)/;
+// The at-rules that pull one stylesheet into another. @reference is Tailwind
+// v4 and is the reason these compilers exist: Knip's built-in Tailwind
+// compiler understands @import/@config/@plugin only, so any stylesheet
+// reachable solely through @reference gets reported as unused.
+const CSS_IMPORT_AT_RULE = /@(?:import|config|plugin|reference)\s+['"]([^'"]+)['"]/g;
+const CSS_COMMENT = /\/\*[\s\S]*?(?:\*\/|$)/g;
+const LIT_STYLE_BLOCK = /css\s?`([\s\S]*?)`/g;
+// Protocol-relative (//host) or scheme-prefixed (https:) targets are fetched at
+// runtime rather than bundled, so there is nothing for Knip to resolve.
+const EXTERNAL_TARGET = /^(?:\/\/|[a-z][a-z\d+.-]*:)/i;
 
-const cssSpecifiers = (text) => {
-  const specifiers = [];
-  cssDirective.lastIndex = 0;
-  let match;
-  while ((match = cssDirective.exec(text))) {
-    const url = match[2] ?? match[3];
-    const specifier = match[1] ?? url;
-    if (!specifier || (url && (url.startsWith('//') || hasUrlScheme.test(url)))) {
-      continue;
-    }
-    specifiers.push(specifier);
-  }
-  return specifiers;
-};
+// The stylesheets a chunk of CSS pulls in. Comments are stripped first so a
+// commented-out directive isn't mistaken for a live one.
+const cssImportsIn = (css) =>
+  [...css.replace(CSS_COMMENT, '').matchAll(CSS_IMPORT_AT_RULE)]
+    .map(([, target]) => target)
+    .filter((target) => !EXTERNAL_TARGET.test(target));
 
-const asImports = (specifiers) =>
-  specifiers.map((specifier) => `import '${specifier}';`).join('\n');
+const asImportStatements = (targets) => targets.map((target) => `import '${target}';`).join('\n');
+
+const containsImportAtRule = (text) => /@(?:import|config|plugin|reference)/.test(text);
 
 // Turns a stylesheet into the import statements it implies, so Knip can trace
 // CSS as part of the module graph.
@@ -32,7 +26,8 @@ const asImports = (specifiers) =>
 // When editing either compiler, run `pnpm knip` locally: the Knip CI job only
 // runs when a package is rebuilt, so a change to this file alone is not
 // exercised by affected-based CI.
-const cssCompiler = (text) => (hasCssDirective.test(text) ? asImports(cssSpecifiers(text)) : '');
+const cssCompiler = (text) =>
+  containsImportAtRule(text) ? asImportStatements(cssImportsIn(text)) : '';
 
 // Lit components declare styles in `css` tagged template literals, and the
 // Atomic build resolves the at-rules inside them through PostCSS (see
@@ -41,16 +36,13 @@ const cssCompiler = (text) => (hasCssDirective.test(text) ? asImports(cssSpecifi
 // The extracted imports are appended, leaving every original line number
 // untouched so reported issues keep pointing at the right place.
 const litStyleCompiler = (text) => {
-  if (!text.includes('css`') || !hasCssDirective.test(text)) {
+  if (!text.includes('css`') || !containsImportAtRule(text)) {
     return text;
   }
 
-  const specifiers = [];
-  for (const [, block] of text.matchAll(/css\s?`([\s\S]*?)`/g)) {
-    specifiers.push(...cssSpecifiers(block));
-  }
+  const targets = [...text.matchAll(LIT_STYLE_BLOCK)].flatMap(([, block]) => cssImportsIn(block));
 
-  return specifiers.length > 0 ? `${text}\n${asImports(specifiers)}\n` : text;
+  return targets.length > 0 ? `${text}\n${asImportStatements(targets)}\n` : text;
 };
 
 export default {
