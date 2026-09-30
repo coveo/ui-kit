@@ -1,7 +1,6 @@
 import {useCallback} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
-import type {RegularFacetAction} from '@coveo/thermidor-schema';
-import {RegularFacetPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {type RegularFacetAction, RegularFacetPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {SearchIcon} from '../icons/index.js';
 import {useOptimisticFacetSearch} from '../use-optimistic-facet-search.js';
 import styles from './RegularFacet.module.css';
@@ -34,6 +33,13 @@ export const RegularFacet = createReactComponent(
     const showResults = (facetSearch.query ?? '').length > 0 || searchResults.length > 0;
 
     const handleToggleSelect = (value: string) => {
+      props.setValues(
+        values.map((facetValue) =>
+          facetValue.value === value
+            ? {...facetValue, state: facetValue.state === 'selected' ? 'idle' : 'selected'}
+            : facetValue
+        )
+      );
       const toggleSelectAction: RegularFacetAction = {
         event: {name: 'toggleSelect', context: {value}},
       };

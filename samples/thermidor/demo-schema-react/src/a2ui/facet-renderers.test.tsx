@@ -4,7 +4,7 @@ import type {
   RegularFacetProps,
   NumericFacetProps,
   CategoryFacetProps,
-} from '@coveo/thermidor-schema';
+} from '@coveo/thermidor-schema/zod3';
 import {mountSurface} from './mount-surface.harness.js';
 
 /**
@@ -58,6 +58,18 @@ describe('RegularFacet', () => {
     fireEvent.click(screen.getByTestId('facet-value-Billabong'));
     await waitFor(() =>
       expect(lastAction()).toMatchObject({name: 'toggleSelect', context: {value: 'Billabong'}})
+    );
+  });
+
+  it('optimistically checks the clicked value before the backend reconciles', async () => {
+    mountFacet(stateWithValues);
+
+    await waitFor(() => expect(screen.getByTestId('facet-value-Billabong')).toBeDefined());
+    const billabong = screen.getByTestId('facet-value-Billabong') as HTMLInputElement;
+    expect(billabong.checked).toBe(false);
+    fireEvent.click(billabong);
+    await waitFor(() =>
+      expect((screen.getByTestId('facet-value-Billabong') as HTMLInputElement).checked).toBe(true)
     );
   });
 
@@ -260,6 +272,22 @@ describe('NumericFacet', () => {
     );
   });
 
+  it('optimistically marks only the clicked range selected before the backend reconciles', async () => {
+    mountFacet(stateWithRanges);
+
+    await waitFor(() => expect(screen.getByText('$100 - $200')).toBeDefined());
+    const clicked = screen.getByText('$100 - $200').closest('button')!;
+    const other = screen.getByText('$0 - $100').closest('button')!;
+    expect(clicked.getAttribute('aria-pressed')).toBe('false');
+    fireEvent.click(clicked);
+    await waitFor(() =>
+      expect(screen.getByText('$100 - $200').closest('button')!.getAttribute('aria-pressed')).toBe(
+        'true'
+      )
+    );
+    expect(other.getAttribute('aria-pressed')).toBe('false');
+  });
+
   it('dispatches applyCustomRange with the entered numeric start/end on submit', async () => {
     const {lastAction} = mountFacet(stateWithRanges);
 
@@ -408,6 +436,18 @@ describe('CategoryFacet', () => {
         name: 'selectPath',
         context: {path: ['Sporting Goods', 'Water Sports']},
       })
+    );
+  });
+
+  it('optimistically promotes the clicked child to the selected node before the backend reconciles', async () => {
+    mountFacet(stateWithChildren);
+
+    await waitFor(() => expect(screen.getByText('Water Sports')).toBeDefined());
+    fireEvent.click(screen.getByText('Water Sports'));
+    await waitFor(() =>
+      expect(screen.getByTestId('facet-category-selected-ec_category').textContent).toContain(
+        'Water Sports'
+      )
     );
   });
 

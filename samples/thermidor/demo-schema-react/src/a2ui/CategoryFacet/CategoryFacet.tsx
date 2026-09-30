@@ -1,7 +1,6 @@
 import {useCallback, useId} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
-import type {CategoryFacetAction} from '@coveo/thermidor-schema';
-import {CategoryFacetPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {type CategoryFacetAction, CategoryFacetPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {ChevronLeftIcon, SearchIcon} from '../icons/index.js';
 import {useOptimisticFacetSearch} from '../use-optimistic-facet-search.js';
 import styles from './CategoryFacet.module.css';
@@ -35,6 +34,17 @@ export const CategoryFacet = createReactComponent(
     const handleSelectPath = (path: string[]) => {
       const selectPathAction: CategoryFacetAction = {event: {name: 'selectPath', context: {path}}};
       context.dispatchAction(selectPathAction);
+    };
+
+    const handleDescendInto = (node: {value: string; path: string[]; numberOfResults: number}) => {
+      const currentValues = props.values ?? {ancestry: [], children: [], selected: null};
+      props.setValues({
+        ...currentValues,
+        ancestry: [...(currentValues.ancestry ?? []), node],
+        selected: node,
+        children: [],
+      });
+      handleSelectPath(node.path);
     };
 
     const handleClearSelectedPath = () => {
@@ -124,7 +134,7 @@ export const CategoryFacet = createReactComponent(
                     type="button"
                     className={styles.value}
                     data-testid={`facet-search-result-${result.value}`}
-                    onClick={() => handleSelectPath(result.path)}
+                    onClick={() => handleDescendInto(result)}
                   >
                     <span className={styles.valueLabel}>{result.value}</span>
                     <span className={styles.count}>({result.numberOfResults})</span>
@@ -193,7 +203,7 @@ export const CategoryFacet = createReactComponent(
                     type="button"
                     className={styles.value}
                     style={indentStyle(selected ? 2 : 0)}
-                    onClick={() => handleSelectPath(child.path)}
+                    onClick={() => handleDescendInto(child)}
                   >
                     <span className={styles.valueLabel}>{child.value}</span>
                     <span className={styles.count}>({child.numberOfResults})</span>

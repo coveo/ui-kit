@@ -1,7 +1,6 @@
 import {useId, useState} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
-import type {NumericFacetAction} from '@coveo/thermidor-schema';
-import {NumericFacetPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {type NumericFacetAction, NumericFacetPropsSchema} from '@coveo/thermidor-schema/zod3';
 import styles from './NumericFacet.module.css';
 
 function formatRange(start: number, end: number): string {
@@ -36,6 +35,15 @@ export const NumericFacet = createReactComponent(
 
     const handleToggleSingleSelect = (start: number, end: number) => {
       resetCustomInputs();
+      const wasSelected = values.some(
+        (value) => value.start === start && value.end === end && value.state === 'selected'
+      );
+      props.setValues(
+        values.map((value) => ({
+          ...value,
+          state: !wasSelected && value.start === start && value.end === end ? 'selected' : 'idle',
+        }))
+      );
       const toggleSingleSelectAction: NumericFacetAction = {
         event: {name: 'toggleSingleSelect', context: {start, end}},
       };
