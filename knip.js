@@ -1,3 +1,58 @@
+// Matches the at-rules that pull one stylesheet into another, while skipping
+// over quoted strings and comments so their contents can't produce matches.
+// Knip's built-in Tailwind compiler handles @import/@config/@plugin but not
+// @reference, a Tailwind v4 directive we rely on heavily; without it every
+// stylesheet reachable only through @reference is reported as unused.
+const cssDirective =
+  /"(?:\\(?:\r\n|[\s\S]|$)|[^"\\\r\n\f])*(?:"|[\r\n\f]|$)|'(?:\\(?:\r\n|[\s\S]|$)|[^'\\\r\n\f])*(?:'|[\r\n\f]|$)|\/\*[\s\S]*?(?:\*\/|$)|@(?:(?:import|config|plugin|reference)\s+['"]([^'"]+)['"]|import\s+url\(\s*(?:['"]([^'"]+)['"]|([^'")\s]+))\s*\))[^;]*;/g;
+const hasUrlScheme = /^[a-z][a-z\d+.-]*:/i;
+const hasCssDirective = /@(?:import|config|plugin|reference)/;
+
+const cssSpecifiers = (text) => {
+  const specifiers = [];
+  cssDirective.lastIndex = 0;
+  let match;
+  while ((match = cssDirective.exec(text))) {
+    const url = match[2] ?? match[3];
+    const specifier = match[1] ?? url;
+    if (!specifier || (url && (url.startsWith('//') || hasUrlScheme.test(url)))) {
+      continue;
+    }
+    specifiers.push(specifier);
+  }
+  return specifiers;
+};
+
+const asImports = (specifiers) =>
+  specifiers.map((specifier) => `import '${specifier}';`).join('\n');
+
+// Turns a stylesheet into the import statements it implies, so Knip can trace
+// CSS as part of the module graph.
+//
+// When editing either compiler, run `pnpm knip` locally: the Knip CI job only
+// runs when a package is rebuilt, so a change to this file alone is not
+// exercised by affected-based CI.
+const cssCompiler = (text) => (hasCssDirective.test(text) ? asImports(cssSpecifiers(text)) : '');
+
+// Lit components declare styles in `css` tagged template literals, and the
+// Atomic build resolves the at-rules inside them through PostCSS (see
+// packages/atomic/scripts/lit-css-plugin.mjs). Knip runs the CSS compiler on
+// `.css` files only, so those references would otherwise be invisible.
+// The extracted imports are appended, leaving every original line number
+// untouched so reported issues keep pointing at the right place.
+const litStyleCompiler = (text) => {
+  if (!text.includes('css`') || !hasCssDirective.test(text)) {
+    return text;
+  }
+
+  const specifiers = [];
+  for (const [, block] of text.matchAll(/css\s?`([\s\S]*?)`/g)) {
+    specifiers.push(...cssSpecifiers(block));
+  }
+
+  return specifiers.length > 0 ? `${text}\n${asImports(specifiers)}\n` : text;
+};
+
 export default {
   $schema: 'https://unpkg.com/knip@6/schema.json',
   // Always ignoring quantic since it throws errors. Adding those two lines is necessary for 100% of quantic to be ignored.
@@ -11,11 +66,21 @@ export default {
     'samples/headless/rga-react/src/components/Citation.tsx',
     'samples/headless/rga-react/src/components/CitationsList.tsx',
     'packages/pkg-new-template/**',
+    // Registering a CSS compiler makes .css a project extension in every
+    // workspace. These samples reference their stylesheets in ways Knip cannot
+    // follow — an absolute `<link href="/src/style.css">`, an `@import` inside
+    // a Vue `<style>` block, and Angular `styleUrls` — so they would all be
+    // reported as unused.
+    'samples/atomic/**/*.css',
   ],
   compilers: {
     // Enable the built-in MDX compiler so Knip can trace imports inside .mdx
     // Storybook docs pages (e.g. storybook-utils helpers).
     mdx: true,
+    // Overrides the Tailwind plugin's CSS compiler to also follow @reference.
+    css: cssCompiler,
+    // Surfaces the stylesheets referenced from Lit `css` template literals.
+    ts: litStyleCompiler,
   },
   workspaces: {
     '.': {
@@ -154,13 +219,14 @@ export default {
         // Interactive a11y Storybook helpers — will be consumed by stories
         // in an upcoming PR. Knip cannot trace them yet.
         'storybook-utils/a11y/**/*.ts',
+        // Published as `@coveo/atomic/themes/*` and copied to dist by
+        // scripts/build-themes.mjs, so they are entry points rather than
+        // stylesheets imported from source.
+        'src/themes/*.css',
       ],
       ignore: [
         // Static file loaded via HTML <script> tag in manager-head.html
         '.storybook/public/cookieManager.js',
-        // CSS files referenced via @import/@reference inside CSS tagged template literals.
-        // Knip cannot trace CSS imports inside template literal strings.
-        'src/**/*.css',
       ],
     },
     'packages/atomic-legacy': {},
