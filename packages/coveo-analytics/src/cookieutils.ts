@@ -52,10 +52,16 @@ function getCookieDomain(host: string) {
 
 function supportsCookieDomain(domain: string) {
   const name = `__coveo_cookie_domain_test_${Math.random().toString(36).substring(2)}`;
-  writeCookie(name, '1', undefined, domain);
-  const isSupported = Cookie.get(name) === '1';
-  writeCookie(name, '', new Date(0), domain);
-  return isSupported;
+  try {
+    writeCookie(name, '1', undefined, domain);
+    return Cookie.get(name) === '1';
+  } catch {
+    return false;
+  } finally {
+    try {
+      writeCookie(name, '', new Date(0), domain);
+    } catch {}
+  }
 }
 
 function writeCookie(name: string, value: string, expirationDate?: Date, domain?: string) {

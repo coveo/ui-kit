@@ -7,7 +7,8 @@ describe('Cookie', () => {
   const captureCookieWrite = (
     protocol: string,
     hostname: string,
-    validDomains = ['example.com']
+    validDomains = ['example.com'],
+    throwingDomains: string[] = []
   ) => {
     Object.defineProperty(window, 'location', {
       configurable: true,
@@ -26,6 +27,10 @@ describe('Cookie', () => {
         .map((attribute) => attribute.trim())
         .find((attribute) => attribute.startsWith('domain='))
         ?.substring('domain='.length);
+
+      if (domain && throwingDomains.includes(domain)) {
+        throw new DOMException('Cookie domain is forbidden', 'SecurityError');
+      }
 
       if (!domain || validDomains.includes(domain)) {
         if (value) {
@@ -83,6 +88,15 @@ describe('Cookie', () => {
     Cookie.set('testCookie', 'testValue');
 
     expect(writes).toEqual(expect.arrayContaining([expect.stringContaining('domain=co.uk')]));
+    expect(getCookieWrite(writes, 'testCookie')).toBe(
+      'testCookie=testValue;domain=example.co.uk;path=/;SameSite=Lax;Secure'
+    );
+  });
+
+  it('continues after a public-suffix cookie write throws', () => {
+    const writes = captureCookieWrite('https:', 'www.example.co.uk', ['example.co.uk'], ['co.uk']);
+
+    expect(() => Cookie.set('testCookie', 'testValue')).not.toThrow();
     expect(getCookieWrite(writes, 'testCookie')).toBe(
       'testCookie=testValue;domain=example.co.uk;path=/;SameSite=Lax;Secure'
     );
