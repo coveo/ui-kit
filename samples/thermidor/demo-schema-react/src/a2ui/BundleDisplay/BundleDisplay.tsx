@@ -1,9 +1,8 @@
 import {Fragment, useState} from 'react';
 
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
-import type {BundleDisplayProps, BundleSlot, BundleTier} from '@coveo/thermidor-schema';
-import {BundleDisplayPropsSchema} from '@coveo/thermidor-schema';
-import {toInferableBinderSchema} from '../catalog-props-migration.js';
+import type {BundleSlot, BundleTier} from '@coveo/thermidor-schema';
+import {BundleDisplayPropsSchema} from '@coveo/thermidor-schema/zod3';
 import styles from './BundleDisplay.module.css';
 
 function formatPrice(value: number): string {
@@ -21,7 +20,7 @@ function formatPrice(value: number): string {
 export const BundleDisplay = createReactComponent(
   {
     name: 'BundleDisplay',
-    schema: toInferableBinderSchema<BundleDisplayProps>(BundleDisplayPropsSchema),
+    schema: BundleDisplayPropsSchema,
   },
   ({props, buildChild}) => {
     const tiers = props.tiers ?? [];

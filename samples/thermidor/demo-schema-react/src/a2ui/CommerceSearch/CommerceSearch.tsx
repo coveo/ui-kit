@@ -1,7 +1,6 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
-import type {CommerceSearchProps} from '@coveo/thermidor-schema';
-import {CommerceSearchPropsSchema} from '@coveo/thermidor-schema';
-import {toInferableBinderSchema} from '../catalog-props-migration.js';
+
+import {CommerceSearchPropsSchema} from '@coveo/thermidor-schema/zod3';
 import styles from './CommerceSearch.module.css';
 
 /**
@@ -14,7 +13,7 @@ import styles from './CommerceSearch.module.css';
 export const CommerceSearch = createReactComponent(
   {
     name: 'CommerceSearch',
-    schema: toInferableBinderSchema<CommerceSearchProps>(CommerceSearchPropsSchema),
+    schema: CommerceSearchPropsSchema,
   },
   ({props, buildChild}) => {
     const {sidebarChild, mainChild} = props;

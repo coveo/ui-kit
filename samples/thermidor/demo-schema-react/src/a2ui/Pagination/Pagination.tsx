@@ -1,7 +1,6 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
-import type {PaginationAction, PaginationProps} from '@coveo/thermidor-schema';
-import {PaginationPropsSchema} from '@coveo/thermidor-schema';
-import {toInferableBinderSchema} from '../catalog-props-migration.js';
+import type {PaginationAction} from '@coveo/thermidor-schema';
+import {PaginationPropsSchema} from '@coveo/thermidor-schema/zod3';
 import styles from './Pagination.module.css';
 
 /**
@@ -10,7 +9,7 @@ import styles from './Pagination.module.css';
  * navigating dispatches `selectPage` through `context.dispatchAction`.
  */
 export const Pagination = createReactComponent(
-  {name: 'Pagination', schema: toInferableBinderSchema<PaginationProps>(PaginationPropsSchema)},
+  {name: 'Pagination', schema: PaginationPropsSchema},
   ({props, context}) => {
     const {page, totalPages} = props;
 

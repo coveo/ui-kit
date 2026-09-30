@@ -1,7 +1,6 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
-import type {Product, ProductListProps} from '@coveo/thermidor-schema';
-import {ProductListPropsSchema} from '@coveo/thermidor-schema';
-import {toInferableBinderSchema} from '../catalog-props-migration.js';
+import type {Product} from '@coveo/thermidor-schema';
+import {ProductListPropsSchema} from '@coveo/thermidor-schema/zod3';
 import styles from './ProductList.module.css';
 
 function formatPrice(value: number): string {
@@ -59,7 +58,7 @@ function ProductCard({product}: {product: Product}) {
  * loading state; an empty list renders nothing.
  */
 export const ProductList = createReactComponent(
-  {name: 'ProductList', schema: toInferableBinderSchema<ProductListProps>(ProductListPropsSchema)},
+  {name: 'ProductList', schema: ProductListPropsSchema},
   ({props}) => {
     const products = props.products;
 

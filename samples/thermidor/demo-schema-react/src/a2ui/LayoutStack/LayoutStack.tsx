@@ -1,7 +1,6 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
-import type {LayoutStackProps} from '@coveo/thermidor-schema';
-import {LayoutStackPropsSchema} from '@coveo/thermidor-schema';
-import {toInferableBinderSchema} from '../catalog-props-migration.js';
+
+import {LayoutStackPropsSchema} from '@coveo/thermidor-schema/zod3';
 import styles from './LayoutStack.module.css';
 
 /**
@@ -13,7 +12,7 @@ import styles from './LayoutStack.module.css';
  * back to 'column'.
  */
 export const LayoutStack = createReactComponent(
-  {name: 'LayoutStack', schema: toInferableBinderSchema<LayoutStackProps>(LayoutStackPropsSchema)},
+  {name: 'LayoutStack', schema: LayoutStackPropsSchema},
   ({props, buildChild}) => {
     const childIds = props.children ?? [];
     const direction = props.direction === 'row' ? 'row' : 'column';

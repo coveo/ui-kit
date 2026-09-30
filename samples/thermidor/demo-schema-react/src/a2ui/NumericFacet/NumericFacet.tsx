@@ -1,8 +1,7 @@
 import {useId, useState} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
-import type {NumericFacetAction, NumericFacetProps} from '@coveo/thermidor-schema';
-import {NumericFacetPropsSchema} from '@coveo/thermidor-schema';
-import {toInferableBinderSchema} from '../catalog-props-migration.js';
+import type {NumericFacetAction} from '@coveo/thermidor-schema';
+import {NumericFacetPropsSchema} from '@coveo/thermidor-schema/zod3';
 import styles from './NumericFacet.module.css';
 
 function formatRange(start: number, end: number): string {
@@ -17,7 +16,7 @@ function formatRange(start: number, end: number): string {
 export const NumericFacet = createReactComponent(
   {
     name: 'NumericFacet',
-    schema: toInferableBinderSchema<NumericFacetProps>(NumericFacetPropsSchema),
+    schema: NumericFacetPropsSchema,
   },
   ({props, context}) => {
     const labelId = useId();

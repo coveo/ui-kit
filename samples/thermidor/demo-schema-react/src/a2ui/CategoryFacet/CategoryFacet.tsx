@@ -1,8 +1,7 @@
 import {useCallback, useId} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
-import type {CategoryFacetAction, CategoryFacetProps} from '@coveo/thermidor-schema';
-import {CategoryFacetPropsSchema} from '@coveo/thermidor-schema';
-import {toInferableBinderSchema} from '../catalog-props-migration.js';
+import type {CategoryFacetAction} from '@coveo/thermidor-schema';
+import {CategoryFacetPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {ChevronLeftIcon, SearchIcon} from '../icons/index.js';
 import {useOptimisticFacetSearch} from '../use-optimistic-facet-search.js';
 import styles from './CategoryFacet.module.css';
@@ -15,7 +14,7 @@ import styles from './CategoryFacet.module.css';
 export const CategoryFacet = createReactComponent(
   {
     name: 'CategoryFacet',
-    schema: toInferableBinderSchema<CategoryFacetProps>(CategoryFacetPropsSchema),
+    schema: CategoryFacetPropsSchema,
   },
   ({props, context}) => {
     const labelId = useId();

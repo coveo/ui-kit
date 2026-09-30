@@ -14,9 +14,11 @@ import {createThermidorCatalog, THERMIDOR_CATALOG_ID} from './components.js';
  * `updateDataModel` (writing `/state/<id>/...`) → the binder classifies each catalog prop field
  * and resolves the binding before the renderer runs.
  *
- * WITHOUT the `toBinderProps` shim the generated Zod 4 `XxxPropsSchema` classify every field as
- * STATIC, the raw `{ path }` object leaks to the renderer, and `NextActionsBar` throws
- * `actions.map is not a function`. WITH the shim, the array/scalar bindings resolve.
+ * WITHOUT a Zod 3 prop schema the binder classifies every field as STATIC, the raw `{ path }`
+ * object leaks to the renderer, and `NextActionsBar` throws `actions.map is not a function`.
+ * The catalog now takes its `XxxPropsSchema` from `@coveo/thermidor-schema/zod3`, the schema
+ * package's pre-built Zod 3 dialect, so the binder reads the internals it expects and the
+ * array/scalar bindings resolve — with no runtime schema rebuild in the consumer.
  *
  * Covered:
  *  - array `{ path }` binding: NextActionsBar `actions` resolves to an action array (the crash);
