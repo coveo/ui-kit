@@ -5,20 +5,40 @@ test.describe('atomic-commerce-category-facet', () => {
     await categoryFacet.load();
   });
 
-  test('should allow to filter by selecting and deselecting a value', async ({categoryFacet}) => {
+  test('should allow to filter by selecting a value', async ({categoryFacet}) => {
     await categoryFacet.searchInput.fill('Canoes & Kayaks');
     await categoryFacet.getSearchResult('Canoes & Kayaks').click();
     await expect(categoryFacet.getFacetValue('Canoes & Kayaks')).toBeVisible();
-    const categoryFacetValueLabel = categoryFacet.getFacetValue('Canoes & Kayaks');
 
-    await categoryFacetValueLabel.click();
+    await categoryFacet.getFacetValue('Canoes & Kayaks').click();
 
     await expect(categoryFacet.allCategoryButton).toBeVisible();
-    await expect(categoryFacetValueLabel).toHaveAttribute('aria-pressed', 'true');
+    await expect(categoryFacet.activeParent).toContainText('Canoes & Kayaks');
     await expect(categoryFacet.getFacetValue('Canoes')).toBeVisible();
     await expect(categoryFacet.getFacetValue('Kayaks')).toBeVisible();
+  });
 
-    await categoryFacetValueLabel.click();
+  test('should not allow to interact with the selected value', async ({categoryFacet}) => {
+    await categoryFacet.searchInput.fill('Canoes & Kayaks');
+    await categoryFacet.getSearchResult('Canoes & Kayaks').click();
+    await categoryFacet.getFacetValue('Canoes & Kayaks').click();
+
+    await expect(categoryFacet.activeParent).toContainText('Canoes & Kayaks');
+    await expect(categoryFacet.activeParent).toHaveAttribute('aria-current', 'true');
+    await expect(categoryFacet.activeParent.locator('button')).toHaveCount(0);
+  });
+
+  test('should display the selected value in a pill and allow clearing it', async ({
+    categoryFacet,
+  }) => {
+    await categoryFacet.searchInput.fill('Canoes & Kayaks');
+    await categoryFacet.getSearchResult('Canoes & Kayaks').click();
+    await categoryFacet.getFacetValue('Canoes & Kayaks').click();
+    await expect(categoryFacet.selectedValuePill).toHaveText('Canoes & Kayaks');
+
+    await categoryFacet.selectedValueClearButton.click();
+
+    await expect(categoryFacet.selectedValue).not.toBeVisible();
     await expect(categoryFacet.allCategoryButton).not.toBeVisible();
   });
 
@@ -27,9 +47,11 @@ test.describe('atomic-commerce-category-facet', () => {
     await categoryFacet.getSearchResult('Canoes & Kayaks').click();
     await expect(categoryFacet.getFacetValue('Canoes & Kayaks')).toBeVisible();
     await categoryFacet.getFacetValue('Canoes').click();
-    const classicCanoes = categoryFacet.getFacetValue('Classic');
-    await classicCanoes.click();
-    await expect(classicCanoes).toHaveAttribute('aria-pressed', 'true');
+
+    await categoryFacet.getFacetValue('Classic').click();
+
+    await expect(categoryFacet.activeParent).toContainText('Classic');
+    await expect(categoryFacet.selectedValuePill).toHaveText('Classic');
   });
 
   test('should allow to deselect a filter with the all category button', async ({
@@ -59,9 +81,8 @@ test.describe('atomic-commerce-category-facet', () => {
 
     await foundValue.click();
 
-    const classicCanoes = categoryFacet.getFacetValue('accessories');
-    await expect(classicCanoes).toBeVisible();
-    await expect(classicCanoes).toHaveAttribute('aria-pressed', 'true');
+    await expect(categoryFacet.activeParent).toContainText(/accessories/i);
+    await expect(categoryFacet.selectedValuePill).toHaveText(/accessories/i);
   });
 
   test('allow to clear the search input', async ({categoryFacet}) => {

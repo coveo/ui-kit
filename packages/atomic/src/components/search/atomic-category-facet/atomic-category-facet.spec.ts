@@ -151,6 +151,17 @@ describe('atomic-category-facet', () => {
       get activeParent() {
         return element.shadowRoot?.querySelector('[part~=active-parent]');
       },
+      get selectedValue() {
+        return element.shadowRoot?.querySelector('[part="selected-value"]');
+      },
+      get selectedValuePill() {
+        return element.shadowRoot?.querySelector('[part="selected-value-pill"]');
+      },
+      get selectedValueClearButton() {
+        return element.shadowRoot?.querySelector<HTMLButtonElement>(
+          '[part="selected-value-clear-button"]'
+        );
+      },
     };
   };
 
@@ -296,56 +307,48 @@ describe('atomic-category-facet', () => {
       });
       expect(parents).toBeInTheDocument();
     });
+
+    it('should render the active value as non-interactive', async () => {
+      const {activeParent} = await renderCategoryFacet(undefined, {
+        facetState: {
+          selectedValueAncestry: selectedAncestry,
+          hasActiveValues: true,
+        },
+      });
+
+      expect(activeParent?.tagName).toBe('SPAN');
+      expect(activeParent).toHaveAttribute('aria-current', 'true');
+    });
+
+    it('should render the selected value in a pill', async () => {
+      const {selectedValuePill} = await renderCategoryFacet(undefined, {
+        facetState: {
+          selectedValueAncestry: selectedAncestry,
+          hasActiveValues: true,
+        },
+      });
+
+      expect(selectedValuePill).toHaveTextContent('Electronics');
+    });
+
+    it('should deselect all when the clear button next to the pill is clicked', async () => {
+      const {element, selectedValueClearButton} = await renderCategoryFacet(undefined, {
+        facetState: {
+          selectedValueAncestry: selectedAncestry,
+          hasActiveValues: true,
+        },
+      });
+
+      selectedValueClearButton?.click();
+
+      expect(element.facet.deselectAll).toHaveBeenCalledOnce();
+    });
   });
 
-  describe('when clicking the active parent', () => {
-    const rootValue = {
-      value: 'Electronics',
-      numberOfResults: 25,
-      moreValuesAvailable: true,
-      state: 'idle' as const,
-      path: ['Electronics'],
-      children: [],
-      isLeafValue: false,
-    };
+  it('should not render the selected value pill when no value is selected', async () => {
+    const {selectedValue} = await renderCategoryFacet();
 
-    const leafValue = {
-      value: 'Laptops',
-      numberOfResults: 12,
-      moreValuesAvailable: false,
-      state: 'selected' as const,
-      path: ['Electronics', 'Laptops'],
-      children: [],
-      isLeafValue: true,
-    };
-
-    it('should select the parent value to move back up one level', async () => {
-      const {element, activeParent} = await renderCategoryFacet(undefined, {
-        facetState: {
-          selectedValueAncestry: [rootValue, leafValue],
-          hasActiveValues: true,
-        },
-      });
-
-      (activeParent as HTMLElement).click();
-
-      expect(element.facet.toggleSelect).toHaveBeenCalledWith(rootValue);
-      expect(element.facet.deselectAll).not.toHaveBeenCalled();
-    });
-
-    it('should deselect all when the active value is at the root level', async () => {
-      const {element, activeParent} = await renderCategoryFacet(undefined, {
-        facetState: {
-          selectedValueAncestry: [{...rootValue, state: 'selected' as const}],
-          hasActiveValues: true,
-        },
-      });
-
-      (activeParent as HTMLElement).click();
-
-      expect(element.facet.deselectAll).toHaveBeenCalled();
-      expect(element.facet.toggleSelect).not.toHaveBeenCalled();
-    });
+    expect(selectedValue).not.toBeInTheDocument();
   });
 
   describe('#initialize', () => {

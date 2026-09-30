@@ -1,4 +1,4 @@
-import type {CategoryFacet, CategoryFacetValue, Summary} from '@coveo/headless/commerce';
+import type {CategoryFacet, Summary} from '@coveo/headless/commerce';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import {page, userEvent} from 'vitest/browser';
@@ -147,6 +147,17 @@ describe('atomic-commerce-category-facet', () => {
       },
       get activeParent() {
         return element.shadowRoot!.querySelector('[part~=active-parent]')!;
+      },
+      get selectedValue() {
+        return element.shadowRoot!.querySelector('[part="selected-value"]');
+      },
+      get selectedValuePill() {
+        return element.shadowRoot!.querySelector('[part="selected-value-pill"]');
+      },
+      get selectedValueClearButton() {
+        return element.shadowRoot!.querySelector<HTMLButtonElement>(
+          '[part="selected-value-clear-button"]'
+        );
       },
       get backArrow() {
         return element.shadowRoot!.querySelector('[part=back-arrow]')!;
@@ -505,58 +516,32 @@ describe('atomic-commerce-category-facet', () => {
 
       expect(mockedDeselectAll).toHaveBeenCalled();
     });
+
+    it('should render the active value as non-interactive', async () => {
+      const {activeParent} = await setupElement();
+
+      expect(activeParent.tagName).toBe('SPAN');
+      expect(activeParent).toHaveAttribute('aria-current', 'true');
+    });
+
+    it('should render the selected value in a pill', async () => {
+      const {selectedValuePill} = await setupElement();
+
+      expect(selectedValuePill).toHaveTextContent('Electronics');
+    });
+
+    it('should #deselectAll when the clear button next to the pill is clicked', async () => {
+      const {selectedValueClearButton} = await setupElement();
+
+      await userEvent.click(selectedValueClearButton!);
+
+      expect(mockedDeselectAll).toHaveBeenCalled();
+    });
   });
 
-  describe('when clicking the active parent', () => {
-    const rootValue = {
-      value: 'Electronics',
-      numberOfResults: 25,
-      moreValuesAvailable: true,
-      state: 'idle' as const,
-      path: ['Electronics'],
-      children: [],
-      isLeafValue: false,
-      isAutoSelected: false,
-      isSuggested: false,
-    };
+  it('should not render the selected value pill when no value is selected', async () => {
+    const {selectedValue} = await setupElement();
 
-    const leafValue = {
-      value: 'Laptops',
-      numberOfResults: 10,
-      moreValuesAvailable: false,
-      state: 'selected' as const,
-      path: ['Electronics', 'Laptops'],
-      children: [],
-      isLeafValue: true,
-      isAutoSelected: false,
-      isSuggested: false,
-    };
-
-    const mockFacetWithAncestry = (selectedValueAncestry: CategoryFacetValue[]) => {
-      mockedFacet = buildFakeCategoryFacet({
-        implementation: {deselectAll: vi.fn(), toggleSelect: vi.fn()},
-        state: {hasActiveValues: true, selectedValueAncestry},
-      });
-    };
-
-    it('should select the parent value to move back up one level', async () => {
-      mockFacetWithAncestry([rootValue, leafValue]);
-      const {activeParent} = await setupElement();
-
-      await userEvent.click(activeParent);
-
-      expect(mockedFacet.toggleSelect).toHaveBeenCalledWith(rootValue);
-      expect(mockedFacet.deselectAll).not.toHaveBeenCalled();
-    });
-
-    it('should #deselectAll when the active value is at the root level', async () => {
-      mockFacetWithAncestry([{...rootValue, state: 'selected'}]);
-      const {activeParent} = await setupElement();
-
-      await userEvent.click(activeParent);
-
-      expect(mockedFacet.deselectAll).toHaveBeenCalled();
-      expect(mockedFacet.toggleSelect).not.toHaveBeenCalled();
-    });
+    expect(selectedValue).not.toBeInTheDocument();
   });
 });

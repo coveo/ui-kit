@@ -20,7 +20,6 @@ describe('#renderCategoryFacetValueLink', () => {
       numberOfResults: 42,
       i18n,
       onClick: vi.fn(),
-      isParent: false,
       isSelected: false,
       searchQuery: '',
       isLeafValue: false,
@@ -47,13 +46,8 @@ describe('#renderCategoryFacetValueLink', () => {
     expect(button).toBeInTheDocument();
   });
 
-  it('should render the "active-parent" when isParent is true', async () => {
-    const {button} = await renderComponent({isParent: true});
-    expect(button).toHaveAttribute('part', expect.stringContaining('active-parent'));
-  });
-
-  it('should not render the "active-parent" when isParent is false', async () => {
-    const {button} = await renderComponent({isParent: false});
+  it('should never render the "active-parent" part', async () => {
+    const {button} = await renderComponent();
     expect(button).not.toHaveAttribute('part', expect.stringContaining('active-parent'));
   });
 
