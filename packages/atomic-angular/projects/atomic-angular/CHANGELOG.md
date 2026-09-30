@@ -1,3 +1,10 @@
+## 3.11.28
+
+### Patch Changes
+
+- Updated dependencies [[`bd72c3d`](https://github.com/coveo/ui-kit/commit/bd72c3da937e89ff56e48bd372e4def491df647c), [`1e3bb2c`](https://github.com/coveo/ui-kit/commit/1e3bb2cf9cc872ea6048a00a1f0afd98d89c3868), [`979d6e7`](https://github.com/coveo/ui-kit/commit/979d6e7d283375aadf74cfb01cb21381da6cf031), [`e06bfe4`](https://github.com/coveo/ui-kit/commit/e06bfe46fdc76de9a3ae52ece377d1d21ff4ecd5)]:
+  - @coveo/atomic@3.61.5
+
 ## 3.11.27
 
 ### Patch Changes
