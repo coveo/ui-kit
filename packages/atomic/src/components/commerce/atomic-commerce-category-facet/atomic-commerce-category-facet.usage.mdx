@@ -15,8 +15,7 @@ This component is not meant to be used directly in the layout. You should use th
 By default, every category facet in an interface shares the same "All Categories" label, which comes from the `all-categories` translation key. Because commerce facets are generated from the Commerce API response, you customize the label through i18n rather than through an attribute. The label is resolved in this order, and the first key that exists wins:
 
 1. `all-categories-{facetId}` — applies to the single facet with that ID
-2. `all-categories-{field}` — applies to every facet on that field
-3. `all-categories` — the default, applied to all remaining category facets
+2. `all-categories` — the default, applied to all remaining category facets
 
 ```javascript
 const commerceInterface = document.querySelector('atomic-commerce-interface');
@@ -34,7 +33,5 @@ commerceInterface.i18n.addResourceBundle('en', 'translation', {
 ```
 
 Add one bundle per locale you support to translate the label along with the rest of the interface. See [Localize Atomic](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/) for the general localization workflow.
-
-The facet ID and field of a commerce facet are both dictated by the API response and are often identical, so either key works. Use the facet ID variant when several category facets are built on the same field.
 
 The resolved label is also used in the facet search results, where it represents the root of the hierarchy for values that have no parent.

@@ -66,8 +66,7 @@ import {mapProperty} from '@/src/utils/props-utils';
  * The `atomic-category-facet` component displays a facet of values in a browsable, hierarchical fashion.
  *
  * The label of the "All Categories" button comes from the `all-categories` localization key. To override it for a
- * single facet, add an `all-categories-{facetId}` key, or an `all-categories-{field}` key to override it for every
- * facet on a given field.
+ * single facet, add an `all-categories-{facetId}` key.
  *
  * @cssState hidden - Applied when the facet is hidden.
  *
