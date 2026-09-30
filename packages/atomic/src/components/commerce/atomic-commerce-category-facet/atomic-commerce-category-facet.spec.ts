@@ -1,4 +1,4 @@
-import type {CategoryFacet, Summary} from '@coveo/headless/commerce';
+import type {CategoryFacet, CategoryFacetValue, Summary} from '@coveo/headless/commerce';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import {page, userEvent} from 'vitest/browser';
@@ -504,6 +504,59 @@ describe('atomic-commerce-category-facet', () => {
       await userEvent.click(allCategoryButton);
 
       expect(mockedDeselectAll).toHaveBeenCalled();
+    });
+  });
+
+  describe('when clicking the active parent', () => {
+    const rootValue = {
+      value: 'Electronics',
+      numberOfResults: 25,
+      moreValuesAvailable: true,
+      state: 'idle' as const,
+      path: ['Electronics'],
+      children: [],
+      isLeafValue: false,
+      isAutoSelected: false,
+      isSuggested: false,
+    };
+
+    const leafValue = {
+      value: 'Laptops',
+      numberOfResults: 10,
+      moreValuesAvailable: false,
+      state: 'selected' as const,
+      path: ['Electronics', 'Laptops'],
+      children: [],
+      isLeafValue: true,
+      isAutoSelected: false,
+      isSuggested: false,
+    };
+
+    const mockFacetWithAncestry = (selectedValueAncestry: CategoryFacetValue[]) => {
+      mockedFacet = buildFakeCategoryFacet({
+        implementation: {deselectAll: vi.fn(), toggleSelect: vi.fn()},
+        state: {hasActiveValues: true, selectedValueAncestry},
+      });
+    };
+
+    it('should select the parent value to move back up one level', async () => {
+      mockFacetWithAncestry([rootValue, leafValue]);
+      const {activeParent} = await setupElement();
+
+      await userEvent.click(activeParent);
+
+      expect(mockedFacet.toggleSelect).toHaveBeenCalledWith(rootValue);
+      expect(mockedFacet.deselectAll).not.toHaveBeenCalled();
+    });
+
+    it('should #deselectAll when the active value is at the root level', async () => {
+      mockFacetWithAncestry([{...rootValue, state: 'selected'}]);
+      const {activeParent} = await setupElement();
+
+      await userEvent.click(activeParent);
+
+      expect(mockedFacet.deselectAll).toHaveBeenCalled();
+      expect(mockedFacet.toggleSelect).not.toHaveBeenCalled();
     });
   });
 });

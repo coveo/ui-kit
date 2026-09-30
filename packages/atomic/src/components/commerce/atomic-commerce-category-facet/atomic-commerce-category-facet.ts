@@ -308,7 +308,7 @@ export class AtomicCommerceCategoryFacet
           isLeafValue: activeParent.isLeafValue,
           onClick: () => {
             this.focusTargets.activeValueFocus.focusAfterSearch();
-            this.facet.deselectAll();
+            this.deselectActiveValue();
           },
           searchQuery: this.facetState.facetSearch.query,
           setRef: (el) => {
@@ -319,6 +319,22 @@ export class AtomicCommerceCategoryFacet
         ${renderCategoryFacetChildrenAsTreeContainer({props: {}})(html` ${this.renderChildren()}`)}
       `)}
     `;
+  }
+
+  /**
+   * Deselects the deepest selected value by selecting its parent, which moves the facet
+   * back up one level instead of discarding the whole path the end user drilled into.
+   * A value at the root has no parent level to return to, so the facet is cleared.
+   */
+  private deselectActiveValue() {
+    const parentOfActiveValue = this.facetState.selectedValueAncestry?.at(-2);
+
+    if (parentOfActiveValue) {
+      this.facet.toggleSelect(parentOfActiveValue);
+      return;
+    }
+
+    this.facet.deselectAll();
   }
 
   private renderChild(

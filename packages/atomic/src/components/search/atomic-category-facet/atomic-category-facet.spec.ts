@@ -298,6 +298,56 @@ describe('atomic-category-facet', () => {
     });
   });
 
+  describe('when clicking the active parent', () => {
+    const rootValue = {
+      value: 'Electronics',
+      numberOfResults: 25,
+      moreValuesAvailable: true,
+      state: 'idle' as const,
+      path: ['Electronics'],
+      children: [],
+      isLeafValue: false,
+    };
+
+    const leafValue = {
+      value: 'Laptops',
+      numberOfResults: 12,
+      moreValuesAvailable: false,
+      state: 'selected' as const,
+      path: ['Electronics', 'Laptops'],
+      children: [],
+      isLeafValue: true,
+    };
+
+    it('should select the parent value to move back up one level', async () => {
+      const {element, activeParent} = await renderCategoryFacet(undefined, {
+        facetState: {
+          selectedValueAncestry: [rootValue, leafValue],
+          hasActiveValues: true,
+        },
+      });
+
+      (activeParent as HTMLElement).click();
+
+      expect(element.facet.toggleSelect).toHaveBeenCalledWith(rootValue);
+      expect(element.facet.deselectAll).not.toHaveBeenCalled();
+    });
+
+    it('should deselect all when the active value is at the root level', async () => {
+      const {element, activeParent} = await renderCategoryFacet(undefined, {
+        facetState: {
+          selectedValueAncestry: [{...rootValue, state: 'selected' as const}],
+          hasActiveValues: true,
+        },
+      });
+
+      (activeParent as HTMLElement).click();
+
+      expect(element.facet.deselectAll).toHaveBeenCalled();
+      expect(element.facet.toggleSelect).not.toHaveBeenCalled();
+    });
+  });
+
   describe('#initialize', () => {
     it('should call buildCategoryFacet with correct options', async () => {
       const customId = 'my-custom-facet-id';
