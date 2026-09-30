@@ -8,21 +8,12 @@ interface CookieDetails {
 // Code originally modified from : https://developers.livechatinc.com/blog/setting-cookies-to-subdomains-in-javascript/
 export class Cookie {
   static set(name: string, value: string, expire?: number) {
-    var domain: string, expirationDate: Date | undefined, domainParts: string[], host: string;
+    let expirationDate: Date | undefined;
     if (expire) {
       expirationDate = new Date();
       expirationDate.setTime(expirationDate.getTime() + expire);
     }
-    host = window.location.hostname;
-    if (host.indexOf('.') === -1) {
-      // no "." in a domain - single domain name, it's localhost or something similar
-      writeCookie(name, value, expirationDate);
-    } else {
-      domainParts = host.split('.');
-      // we always have at least 2 domain parts
-      domain = domainParts[domainParts.length - 2] + '.' + domainParts[domainParts.length - 1];
-      writeCookie(name, value, expirationDate, domain);
-    }
+    writeCookie(name, value, expirationDate, getCookieDomain(window.location.hostname));
   }
 
   static get(name: string) {
@@ -41,6 +32,30 @@ export class Cookie {
   static erase(name: string) {
     Cookie.set(name, '', -1);
   }
+}
+
+function getCookieDomain(host: string) {
+  if (host.indexOf('.') === -1) {
+    return undefined;
+  }
+
+  const domainParts = host.split('.');
+  for (let domainLength = 2; domainLength <= domainParts.length; domainLength++) {
+    const domain = domainParts.slice(-domainLength).join('.');
+    if (supportsCookieDomain(domain)) {
+      return domain;
+    }
+  }
+
+  return undefined;
+}
+
+function supportsCookieDomain(domain: string) {
+  const name = `__coveo_cookie_domain_test_${Math.random().toString(36).substring(2)}`;
+  writeCookie(name, '1', undefined, domain);
+  const isSupported = Cookie.get(name) === '1';
+  writeCookie(name, '', new Date(0), domain);
+  return isSupported;
 }
 
 function writeCookie(name: string, value: string, expirationDate?: Date, domain?: string) {
