@@ -36,7 +36,7 @@ const cssCompiler = (text) =>
 // The extracted imports are appended, leaving every original line number
 // untouched so reported issues keep pointing at the right place.
 const litStyleCompiler = (text) => {
-  if (!text.includes('css`') || !containsImportAtRule(text)) {
+  if (!/css\s?`/.test(text) || !containsImportAtRule(text)) {
     return text;
   }
 
