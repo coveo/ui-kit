@@ -45,6 +45,11 @@ const LANDING_SECTIONS: SuggestionSection[] = [
         subtitle:
           'Shopping / Side-by-side evaluation layout for a small, agent-curated set of products.',
       },
+      {
+        id: 'c4',
+        label: 'Tell me more about the ThermoFlex Winter Wetsuit',
+        subtitle: 'Shopping / Single-product research card with a summary and key product facts.',
+      },
     ],
   },
 ];

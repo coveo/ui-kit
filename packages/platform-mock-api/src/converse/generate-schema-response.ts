@@ -3,6 +3,7 @@ import {schemaBundleEvents} from './templates/schema-response-bundle.js';
 import {schemaDiscoveryEvents} from './templates/schema-response-discovery.js';
 import {schemaFallbackEvents} from './templates/schema-response-fallback.js';
 import {schemaComparisonEvents} from './templates/schema-response-comparison.js';
+import {schemaResearchEvents} from './templates/schema-response-research.js';
 import {
   buildWaterSportsInitialEvents,
   buildWaterSportsActionEvents,
@@ -29,6 +30,10 @@ const SCHEMA_PROMPT_TEMPLATE_MAP: ReadonlyArray<SchemaPromptMapping> = [
     buildEvents: () => schemaComparisonEvents,
   },
   {prompt: 'boating safety', buildEvents: () => schemaDiscoveryEvents},
+  {
+    prompt: 'tell me more about the thermoflex winter wetsuit',
+    buildEvents: () => schemaResearchEvents,
+  },
 ];
 
 function matchSchemaPrompt(message: string): ConverseEvent[] {
