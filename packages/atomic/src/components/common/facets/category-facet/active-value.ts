@@ -5,7 +5,7 @@ import {ref} from 'lit/directives/ref.js';
 import {renderFacetValueLabelHighlight} from '@/src/components/common/facets/facet-value-label-highlight/facet-value-label-highlight';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 
-interface CategoryFacetParentValueLinkProps {
+interface CategoryFacetActiveValueProps {
   displayValue: string;
   numberOfResults: number;
   i18n: i18n;
@@ -21,8 +21,8 @@ interface CategoryFacetParentValueLinkProps {
  * removed from the facet's clear button rather than by clicking it again. `tabindex="-1"`
  * keeps it a valid target for the focus moved here once the query resolves.
  */
-export const renderCategoryFacetParentValueLink: FunctionalComponentWithChildren<
-  CategoryFacetParentValueLinkProps
+export const renderCategoryFacetActiveValue: FunctionalComponentWithChildren<
+  CategoryFacetActiveValueProps
 > =
   ({props: {displayValue, numberOfResults, i18n, searchQuery, isLeafValue, setRef}}) =>
   (children) => {
@@ -36,7 +36,7 @@ export const renderCategoryFacetParentValueLink: FunctionalComponentWithChildren
           class="text-primary flex w-full items-center truncate px-2 py-2.5 text-left"
           aria-current="true"
           tabindex="-1"
-          ${ref((element) => setRef(element ?? undefined))}
+          ${ref(setRef)}
         >
           ${renderFacetValueLabelHighlight({
             props: {displayValue, searchQuery, isSelected: true},
@@ -50,4 +50,4 @@ export const renderCategoryFacetParentValueLink: FunctionalComponentWithChildren
     )}`;
   };
 
-export type {CategoryFacetParentValueLinkProps};
+export type {CategoryFacetActiveValueProps};

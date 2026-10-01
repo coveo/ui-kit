@@ -11,7 +11,7 @@ interface CategoryFacetSelectedValueProps {
    */
   displayValue: string;
   /**
-   * The localized label of the facet, used to describe the clear button.
+   * The label of the facet, used to describe the clear button. It is localized by the component.
    */
   label: string;
   i18n: i18n;
@@ -38,7 +38,7 @@ export const renderCategoryFacetSelectedValue: FunctionalComponent<
         part: 'selected-value-clear-button',
         style: 'text-primary',
         class: 'flex shrink-0 items-center p-1 text-sm',
-        ariaLabel: i18n.t('clear-filters-for-facet', {count: 1, label}),
+        ariaLabel: i18n.t('clear-filters-for-facet', {count: 1, label: i18n.t(label)}),
         onClick: onClearFilters,
       },
     })(

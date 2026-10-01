@@ -3,11 +3,11 @@ import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {
-  type CategoryFacetParentValueLinkProps,
-  renderCategoryFacetParentValueLink,
-} from './parent-value-link';
+  type CategoryFacetActiveValueProps,
+  renderCategoryFacetActiveValue,
+} from './active-value';
 
-describe('#renderCategoryFacetParentValueLink', () => {
+describe('#renderCategoryFacetActiveValue', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
 
   beforeAll(async () => {
@@ -15,10 +15,10 @@ describe('#renderCategoryFacetParentValueLink', () => {
   });
 
   const renderComponent = async (
-    props: Partial<CategoryFacetParentValueLinkProps> = {},
+    props: Partial<CategoryFacetActiveValueProps> = {},
     children = html`<span class="child-span">Parent content</span>`
   ) => {
-    const defaultProps: CategoryFacetParentValueLinkProps = {
+    const defaultProps: CategoryFacetActiveValueProps = {
       displayValue: 'Electronics',
       numberOfResults: 156,
       i18n,
@@ -27,7 +27,7 @@ describe('#renderCategoryFacetParentValueLink', () => {
       setRef: vi.fn(),
     };
     const container = await renderFunctionFixture(
-      html`${renderCategoryFacetParentValueLink({props: {...defaultProps, ...props}})(children)}`
+      html`${renderCategoryFacetActiveValue({props: {...defaultProps, ...props}})(children)}`
     );
 
     return {

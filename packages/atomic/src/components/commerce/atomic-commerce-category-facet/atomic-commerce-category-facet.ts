@@ -32,11 +32,11 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {AriaLiveRegionController, FocusTargetController} from '@/src/utils/accessibility-utils';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
+import {renderCategoryFacetActiveValue} from '../../common/facets/category-facet/active-value';
 import {renderCategoryFacetAllCategoryButton} from '../../common/facets/category-facet/all-categories-button';
 import {renderCategoryFacetChildrenAsTreeContainer} from '../../common/facets/category-facet/children-as-tree-container';
 import {renderCategoryFacetParentAsTreeContainer} from '../../common/facets/category-facet/parent-as-tree-container';
 import {renderCategoryFacetParentButton} from '../../common/facets/category-facet/parent-button';
-import {renderCategoryFacetParentValueLink} from '../../common/facets/category-facet/parent-value-link';
 import {renderCategoryFacetSearchResultsContainer} from '../../common/facets/category-facet/search-results-container';
 import {renderCategoryFacetSearchValue} from '../../common/facets/category-facet/search-value';
 import {renderCategoryFacetSelectedValue} from '../../common/facets/category-facet/selected-value';
@@ -263,7 +263,7 @@ export class AtomicCommerceCategoryFacet
           activeValue.value,
           this.bindings.i18n
         ),
-        label: this.bindings.i18n.t(this.displayName),
+        label: this.displayName,
         i18n: this.bindings.i18n,
         onClearFilters: () => {
           this.focusTargets.activeValueFocus.focusAfterSearch();
@@ -330,7 +330,7 @@ export class AtomicCommerceCategoryFacet
     );
 
     return html`
-      ${renderCategoryFacetParentValueLink({
+      ${renderCategoryFacetActiveValue({
         props: {
           displayValue: activeParentDisplayValue,
           numberOfResults: activeParent.numberOfResults,

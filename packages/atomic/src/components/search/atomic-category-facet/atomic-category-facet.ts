@@ -21,11 +21,11 @@ import {css, html, LitElement, nothing, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {map} from 'lit/directives/map.js';
 import {when} from 'lit/directives/when.js';
+import {renderCategoryFacetActiveValue} from '@/src/components/common/facets/category-facet/active-value';
 import {renderCategoryFacetAllCategoryButton} from '@/src/components/common/facets/category-facet/all-categories-button';
 import {renderCategoryFacetChildrenAsTreeContainer} from '@/src/components/common/facets/category-facet/children-as-tree-container';
 import {renderCategoryFacetParentAsTreeContainer} from '@/src/components/common/facets/category-facet/parent-as-tree-container';
 import {renderCategoryFacetParentButton} from '@/src/components/common/facets/category-facet/parent-button';
-import {renderCategoryFacetParentValueLink} from '@/src/components/common/facets/category-facet/parent-value-link';
 import {renderCategoryFacetSearchResultsContainer} from '@/src/components/common/facets/category-facet/search-results-container';
 import {renderCategoryFacetSearchValue} from '@/src/components/common/facets/category-facet/search-value';
 import {renderCategoryFacetSelectedValue} from '@/src/components/common/facets/category-facet/selected-value';
@@ -547,7 +547,7 @@ export class AtomicCategoryFacet extends LitElement implements InitializableComp
     return renderCategoryFacetSelectedValue({
       props: {
         displayValue: getFieldValueCaption(this.field, activeValue.value, this.bindings.i18n),
-        label: this.bindings.i18n.t(this.label),
+        label: this.label,
         i18n: this.bindings.i18n,
         onClearFilters: () => {
           this.focusTargets.activeValueFocus.focusAfterSearch();
@@ -614,7 +614,7 @@ export class AtomicCategoryFacet extends LitElement implements InitializableComp
     );
 
     return html`
-      ${renderCategoryFacetParentValueLink({
+      ${renderCategoryFacetActiveValue({
         props: {
           displayValue: activeParentDisplayValue,
           numberOfResults: activeParent.numberOfResults,
@@ -770,7 +770,8 @@ export class AtomicCategoryFacet extends LitElement implements InitializableComp
       ${when(
         !this.isCollapsed,
         () => html`
-          ${this.renderSearchInput()} ${this.renderSelectedValue()}
+          ${this.renderSearchInput()}
+          ${this.renderSelectedValue()}
           ${when(
             shouldDisplaySearchResults(facetSearch),
             () => html`
