@@ -1,4 +1,20 @@
+import type {CategoryFacetPageObject} from './page-object';
 import {expect, test} from './fixture';
+
+/**
+ * Selects a value from the facet search, then drills into it.
+ *
+ * Selecting from the facet search applies the parent category, so the value itself still has to
+ * be clicked in the resulting list. Waiting for it to disappear from the list is what tells us
+ * the second query has been applied: once selected, a value is rendered as the non-interactive
+ * selected value, which has no `Inclusion filter on` label.
+ */
+const drillIntoValue = async (categoryFacet: CategoryFacetPageObject, value: string) => {
+  await categoryFacet.searchInput.fill(value);
+  await categoryFacet.getSearchResult(value).click();
+  await categoryFacet.getFacetValue(value).click();
+  await expect(categoryFacet.getFacetValue(value)).toHaveCount(0);
+};
 
 test.describe('atomic-commerce-category-facet', () => {
   test.beforeEach(async ({categoryFacet}) => {
@@ -6,11 +22,7 @@ test.describe('atomic-commerce-category-facet', () => {
   });
 
   test('should allow to filter by selecting a value', async ({categoryFacet}) => {
-    await categoryFacet.searchInput.fill('Canoes & Kayaks');
-    await categoryFacet.getSearchResult('Canoes & Kayaks').click();
-    await expect(categoryFacet.getFacetValue('Canoes & Kayaks')).toBeVisible();
-
-    await categoryFacet.getFacetValue('Canoes & Kayaks').click();
+    await drillIntoValue(categoryFacet, 'Canoes & Kayaks');
 
     await expect(categoryFacet.allCategoryButton).toBeVisible();
     await expect(categoryFacet.activeParent).toContainText('Canoes & Kayaks');
@@ -19,9 +31,7 @@ test.describe('atomic-commerce-category-facet', () => {
   });
 
   test('should not allow to interact with the selected value', async ({categoryFacet}) => {
-    await categoryFacet.searchInput.fill('Canoes & Kayaks');
-    await categoryFacet.getSearchResult('Canoes & Kayaks').click();
-    await categoryFacet.getFacetValue('Canoes & Kayaks').click();
+    await drillIntoValue(categoryFacet, 'Canoes & Kayaks');
 
     await expect(categoryFacet.activeParent).toContainText('Canoes & Kayaks');
     await expect(categoryFacet.activeParent).toHaveAttribute('aria-current', 'true');
@@ -31,9 +41,7 @@ test.describe('atomic-commerce-category-facet', () => {
   test('should display the selected value in a pill and allow clearing it', async ({
     categoryFacet,
   }) => {
-    await categoryFacet.searchInput.fill('Canoes & Kayaks');
-    await categoryFacet.getSearchResult('Canoes & Kayaks').click();
-    await categoryFacet.getFacetValue('Canoes & Kayaks').click();
+    await drillIntoValue(categoryFacet, 'Canoes & Kayaks');
     await expect(categoryFacet.selectedValuePill).toHaveText('Canoes & Kayaks');
 
     await categoryFacet.selectedValueClearButton.click();
@@ -43,12 +51,12 @@ test.describe('atomic-commerce-category-facet', () => {
   });
 
   test('should allow to filter by more than one level deep', async ({categoryFacet}) => {
-    await categoryFacet.searchInput.fill('Canoes & Kayaks');
-    await categoryFacet.getSearchResult('Canoes & Kayaks').click();
-    await expect(categoryFacet.getFacetValue('Canoes & Kayaks')).toBeVisible();
+    await drillIntoValue(categoryFacet, 'Canoes & Kayaks');
     await categoryFacet.getFacetValue('Canoes').click();
+    await expect(categoryFacet.getFacetValue('Canoes')).toHaveCount(0);
 
     await categoryFacet.getFacetValue('Classic').click();
+    await expect(categoryFacet.getFacetValue('Classic')).toHaveCount(0);
 
     await expect(categoryFacet.activeParent).toContainText('Classic');
     await expect(categoryFacet.selectedValuePill).toHaveText('Classic');
