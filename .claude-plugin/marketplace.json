@@ -1,0 +1,14 @@
+{
+  "name": "ui-kit",
+  "description": "Claude Code plugins maintained in the coveo/ui-kit repository",
+  "owner": {
+    "name": "Coveo"
+  },
+  "plugins": [
+    {
+      "name": "kit",
+      "source": "./plugins/kit",
+      "description": "KIT team workflows: draft Jira issues and file them under the right KIT bucket epic"
+    }
+  ]
+}

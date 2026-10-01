@@ -1,0 +1,9 @@
+{
+  "name": "kit",
+  "description": "KIT team workflows: draft Jira issues and file them under the right KIT bucket epic",
+  "author": {
+    "name": "Coveo"
+  },
+  "repository": "https://github.com/coveo/ui-kit",
+  "license": "Apache-2.0"
+}
