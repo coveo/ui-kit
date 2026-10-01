@@ -15,11 +15,11 @@ import {convertToDateRangeRequests} from '../../../facets/range-facets/date-face
 import {findExactRangeValue} from '../../../facets/range-facets/generic/range-facet-reducers.js';
 import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice.js';
 import {setContext, setView} from '../../context/context-actions.js';
-import {fetchProductListing} from '../../product-listing/product-listing-actions.js';
 import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions.js';
+import {fetchProductListing} from '../../product-listing/product-listing-actions.js';
 import {fetchQuerySuggestions} from '../../query-suggest/query-suggest-actions.js';
-import {executeSearch} from '../../search/search-actions.js';
 import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions.js';
+import {executeSearch} from '../../search/search-actions.js';
 import {
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
@@ -575,7 +575,10 @@ function updateStateFromFacetResponse(
   facetRequest.type = facetResponse.type;
   facetRequest.values = getFacetRequestValuesFromFacetResponse(facetResponse) ?? [];
   facetRequest.freezeCurrentValues = false;
-  facetRequest.preventAutoSelect = false;
+  // Preserved across responses so a user-deselected value is not auto-selected
+  // again on the next request; reset by `updateAutoSelectionForAllCoreFacets`
+  // (e.g., on new query) or when the context/view changes.
+  facetRequest.preventAutoSelect ??= false;
   if (facetResponse.type === 'hierarchical' && ensureCategoryFacetRequest(facetRequest)) {
     facetRequest.delimitingCharacter = facetResponse.delimitingCharacter;
   } else if (facetResponse.type === 'numericalRange') {
@@ -648,6 +651,7 @@ function setAllFacetValuesToIdle(state: CommerceFacetSetState) {
 function clearAllFacetValues(state: CommerceFacetSetState) {
   Object.values(state).forEach((facet) => {
     facet.request.values = [];
+    facet.request.preventAutoSelect = false;
   });
 }
 
