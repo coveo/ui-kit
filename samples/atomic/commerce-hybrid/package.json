@@ -1,0 +1,35 @@
+{
+  "name": "@coveo/ui-kit-sample-atomic-commerce-hybrid",
+  "version": "3.61.5",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "samples/atomic/commerce-hybrid"
+  },
+  "type": "module",
+  "publishConfig": {
+    "access": "public",
+    "directory": "publish",
+    "linkDirectory": false
+  },
+  "scripts": {
+    "publint": "pnpm run prepack && publint publish --pack=false",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "e2e": "playwright test",
+    "prepack": "node ../../../scripts/build-sample-publish-dir.mjs"
+  },
+  "dependencies": {
+    "@coveo/atomic": "workspace:*",
+    "@coveo/headless": "workspace:*"
+  },
+  "devDependencies": {
+    "@coveo/platform-mock-api": "workspace:*",
+    "@msw/playwright": "catalog:",
+    "@playwright/test": "catalog:",
+    "msw": "catalog:",
+    "publint": "catalog:",
+    "vite": "catalog:"
+  }
+}
