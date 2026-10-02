@@ -12,12 +12,14 @@ const KNOWN_COMPONENTS = new Set([
   'BundleDisplay',
   'NextActionsBar',
   'ComparisonTable',
+  'ProductResearchCard',
 ]);
 
 const ROUTE_TO_COMPONENT: Record<string, string> = {
   discovery: 'ProductCarousel',
   comparison: 'ComparisonTable',
   bundle: 'BundleDisplay',
+  research: 'ProductResearchCard',
 };
 
 export interface AgentResponseBlockProps {

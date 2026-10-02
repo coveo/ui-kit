@@ -5,6 +5,7 @@ import {
   ProductCarouselPropsSchema,
   ProductSchema,
   ProductSummarySchema,
+  ProductResearchCardSchema,
   ComparisonTableSchema,
   LayoutStackSchema,
   QuerySummarySchema,
@@ -18,6 +19,7 @@ const EXPECTED_COMPONENTS = [
   'ComparisonTable',
   'ProductList',
   'ProductSummary',
+  'ProductResearchCard',
   'Pagination',
   'Sort',
   'RegularFacet',
@@ -101,6 +103,20 @@ describe('component state contracts', () => {
       ProductSummarySchema.shape.state.safeParse({categoryLabel: 'Surfboard', product: null})
         .success
     ).toBe(true);
+  });
+
+  it('validates product-research-card state with a product, summary and non-empty bullets', () => {
+    const validState = {
+      product: {permanentid: 'p1', ec_name: 'Board', additionalFields: {}},
+      summary: 'A short research summary.',
+      bullets: ['Durable epoxy shell.'],
+    };
+    const stateSchema = ProductResearchCardSchema.shape.state;
+    expect(stateSchema.safeParse(validState).success).toBe(true);
+    expect(stateSchema.safeParse({...validState, bullets: []}).success).toBe(false);
+    expect(stateSchema.safeParse({...validState, bullets: ['']}).success).toBe(false);
+    expect(stateSchema.safeParse({...validState, summary: ''}).success).toBe(false);
+    expect(stateSchema.safeParse({...validState, heading: 'Extra'}).success).toBe(false);
   });
 
   it('validates comparison-table state with heading, summary, products and attributes', () => {

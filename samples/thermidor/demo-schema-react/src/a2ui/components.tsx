@@ -7,6 +7,7 @@ import {BundleDisplay} from './BundleDisplay/BundleDisplay.js';
 import {ComparisonTable} from './ComparisonTable/ComparisonTable.js';
 import {ProductList} from './ProductList/ProductList.js';
 import {ProductSummary} from './ProductSummary/ProductSummary.js';
+import {ProductResearchCard} from './ProductResearchCard/ProductResearchCard.js';
 import {Pagination} from './Pagination/Pagination.js';
 import {Sort} from './Sort/Sort.js';
 import {RegularFacet} from './RegularFacet/RegularFacet.js';
@@ -25,6 +26,7 @@ const thermidorComponents = [
   ComparisonTable,
   ProductList,
   ProductSummary,
+  ProductResearchCard,
   Pagination,
   Sort,
   RegularFacet,
