@@ -138,7 +138,7 @@
     "puppeteer": "catalog:",
     "react": "catalog:",
     "remark-gfm": "4.0.1",
-    "shadow-dom-testing-library": "1.14.1",
+    "shadow-dom-testing-library": "1.14.2",
     "storybook": "10.6.0",
     "storybook-addon-pseudo-states": "10.6.0",
     "tailwindcss": "4.3.3",
