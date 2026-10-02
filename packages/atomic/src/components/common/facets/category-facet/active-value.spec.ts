@@ -2,10 +2,7 @@ import {html} from 'lit';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {
-  type CategoryFacetActiveValueProps,
-  renderCategoryFacetActiveValue,
-} from './active-value';
+import {type CategoryFacetActiveValueProps, renderCategoryFacetActiveValue} from './active-value';
 
 describe('#renderCategoryFacetActiveValue', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;

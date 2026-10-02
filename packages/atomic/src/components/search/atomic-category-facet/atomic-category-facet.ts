@@ -770,8 +770,7 @@ export class AtomicCategoryFacet extends LitElement implements InitializableComp
       ${when(
         !this.isCollapsed,
         () => html`
-          ${this.renderSearchInput()}
-          ${this.renderSelectedValue()}
+          ${this.renderSearchInput()} ${this.renderSelectedValue()}
           ${when(
             shouldDisplaySearchResults(facetSearch),
             () => html`
