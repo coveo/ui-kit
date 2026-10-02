@@ -151,6 +151,17 @@ describe('atomic-category-facet', () => {
       get activeParent() {
         return element.shadowRoot?.querySelector('[part~=active-parent]');
       },
+      get selectedValue() {
+        return element.shadowRoot?.querySelector('[part="selected-value"]');
+      },
+      get selectedValuePill() {
+        return element.shadowRoot?.querySelector('[part="selected-value-pill"]');
+      },
+      get selectedValueClearButton() {
+        return element.shadowRoot?.querySelector<HTMLButtonElement>(
+          '[part="selected-value-clear-button"]'
+        );
+      },
     };
   };
 
@@ -296,6 +307,48 @@ describe('atomic-category-facet', () => {
       });
       expect(parents).toBeInTheDocument();
     });
+
+    it('should render the active value as non-interactive', async () => {
+      const {activeParent} = await renderCategoryFacet(undefined, {
+        facetState: {
+          selectedValueAncestry: selectedAncestry,
+          hasActiveValues: true,
+        },
+      });
+
+      expect(activeParent?.tagName).toBe('SPAN');
+      expect(activeParent).toHaveAttribute('aria-current', 'true');
+    });
+
+    it('should render the selected value in a pill', async () => {
+      const {selectedValuePill} = await renderCategoryFacet(undefined, {
+        facetState: {
+          selectedValueAncestry: selectedAncestry,
+          hasActiveValues: true,
+        },
+      });
+
+      expect(selectedValuePill).toHaveTextContent('Electronics');
+    });
+
+    it('should deselect all when the clear button next to the pill is clicked', async () => {
+      const {element, selectedValueClearButton} = await renderCategoryFacet(undefined, {
+        facetState: {
+          selectedValueAncestry: selectedAncestry,
+          hasActiveValues: true,
+        },
+      });
+
+      selectedValueClearButton?.click();
+
+      expect(element.facet.deselectAll).toHaveBeenCalledOnce();
+    });
+  });
+
+  it('should not render the selected value pill when no value is selected', async () => {
+    const {selectedValue} = await renderCategoryFacet();
+
+    expect(selectedValue).not.toBeInTheDocument();
   });
 
   describe('#initialize', () => {
