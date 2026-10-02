@@ -1,6 +1,7 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import {ProductResearchCardPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {A2UIProductCard} from '../ProductCard/ProductCard.js';
+import {RichText} from '../RichText/RichText.js';
 import {A2UISkeleton} from '../Skeleton/Skeleton.js';
 import styles from './ProductResearchCard.module.css';
 
@@ -44,12 +45,16 @@ export const ProductResearchCard = createReactComponent(
           )}
         </div>
         <div className={styles.researchColumn}>
-          {summary && <p className={styles.summary}>{summary}</p>}
+          {summary && (
+            <p className={styles.summary}>
+              <RichText value={summary} />
+            </p>
+          )}
           {bullets.length > 0 && (
             <ul className={styles.bullets}>
               {bullets.map((bullet, index) => (
                 <li key={index} className={styles.bullet}>
-                  {bullet}
+                  <RichText value={bullet} />
                 </li>
               ))}
             </ul>
