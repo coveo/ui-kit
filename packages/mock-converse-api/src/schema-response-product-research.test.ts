@@ -72,7 +72,7 @@ function isNonEmptyString(value: unknown): boolean {
   return typeof value === 'string' && value.length > 0;
 }
 
-describe('schema-response-research single-product research scenario', () => {
+describe('schema-response-product-research single-product research scenario', () => {
   const events = matchSchemaPrompt(RESEARCH_PROMPT);
   const createSurfaces = findCreateSurfaces(events);
   const researchSurface = createSurfaces.find((s) => s.surfaceId === RESEARCH_SURFACE_ID);

@@ -42,7 +42,7 @@ const researchSurfaceActivity: ConverseEvent = ActivitySnapshot({
       {
         version: 'v1.0',
         createSurface: buildValidatedSurface({
-          templateName: 'Mock_Research_Template',
+          templateName: 'Mock_Product_Research_Template',
           surfaceId: RESEARCH_SURFACE_ID,
           nodes: RESEARCH_SURFACE_NODES,
         }),
@@ -171,11 +171,11 @@ const middleEvents: ConverseEvent[] = [
   {...nextActionsStateActivity, delayMs: 50},
 ];
 
-const schemaResearchEvents: ConverseEvent[] = buildConversationResponse({
+const schemaProductResearchEvents: ConverseEvent[] = buildConversationResponse({
   runId,
   middleEvents,
   includeInitialStateSnapshot: false,
   includeFinalStateSnapshot: false,
 });
 
-export {schemaResearchEvents};
+export {schemaProductResearchEvents};
