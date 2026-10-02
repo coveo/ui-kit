@@ -1,16 +1,11 @@
-// The at-rules that pull one stylesheet into another. @reference is Tailwind
-// v4 and is the reason these compilers exist: Knip's built-in Tailwind
-// compiler understands @import/@config/@plugin only, so any stylesheet
-// reachable solely through @reference gets reported as unused.
+// Knip's built-in Tailwind compiler only follows @import/@config/@plugin, so
+// @reference (Tailwind v4) is added here to avoid false "unused" reports.
 const CSS_IMPORT_AT_RULE = /@(?:import|config|plugin|reference)\s+['"]([^'"]+)['"]/g;
 const CSS_COMMENT = /\/\*[\s\S]*?(?:\*\/|$)/g;
 const LIT_STYLE_BLOCK = /css\s?`([\s\S]*?)`/g;
-// Protocol-relative (//host) or scheme-prefixed (https:) targets are fetched at
-// runtime rather than bundled, so there is nothing for Knip to resolve.
+// Protocol-relative or scheme-prefixed targets are fetched at runtime, not bundled.
 const EXTERNAL_TARGET = /^(?:\/\/|[a-z][a-z\d+.-]*:)/i;
 
-// The stylesheets a chunk of CSS pulls in. Comments are stripped first so a
-// commented-out directive isn't mistaken for a live one.
 const cssImportsIn = (css) =>
   [...css.replace(CSS_COMMENT, '').matchAll(CSS_IMPORT_AT_RULE)]
     .map(([, target]) => target)
@@ -20,21 +15,15 @@ const asImportStatements = (targets) => targets.map((target) => `import '${targe
 
 const containsImportAtRule = (text) => /@(?:import|config|plugin|reference)/.test(text);
 
-// Turns a stylesheet into the import statements it implies, so Knip can trace
-// CSS as part of the module graph.
-//
-// When editing either compiler, run `pnpm knip` locally: the Knip CI job only
-// runs when a package is rebuilt, so a change to this file alone is not
+// Run `pnpm knip` locally when editing either compiler: the Knip CI job only
+// runs when a package is rebuilt, so a change to this file alone isn't
 // exercised by affected-based CI.
 const cssCompiler = (text) =>
   containsImportAtRule(text) ? asImportStatements(cssImportsIn(text)) : '';
 
-// Lit components declare styles in `css` tagged template literals, and the
-// Atomic build resolves the at-rules inside them through PostCSS (see
-// packages/atomic/scripts/lit-css-plugin.mjs). Knip runs the CSS compiler on
-// `.css` files only, so those references would otherwise be invisible.
-// The extracted imports are appended, leaving every original line number
-// untouched so reported issues keep pointing at the right place.
+// Lit `css` template literals can also contain these at-rules (resolved at
+// build time by packages/atomic/scripts/lit-css-plugin.mjs), so their imports
+// are extracted and appended, leaving existing line numbers untouched.
 const litStyleCompiler = (text) => {
   if (!/css\s?`/.test(text) || !containsImportAtRule(text)) {
     return text;
@@ -66,12 +55,8 @@ export default {
     'samples/atomic/**/*.css',
   ],
   compilers: {
-    // Enable the built-in MDX compiler so Knip can trace imports inside .mdx
-    // Storybook docs pages (e.g. storybook-utils helpers).
-    mdx: true,
-    // Overrides the Tailwind plugin's CSS compiler to also follow @reference.
+    mdx: true, // Traces imports inside .mdx Storybook docs pages.
     css: cssCompiler,
-    // Surfaces the stylesheets referenced from Lit `css` template literals.
     ts: litStyleCompiler,
   },
   workspaces: {
