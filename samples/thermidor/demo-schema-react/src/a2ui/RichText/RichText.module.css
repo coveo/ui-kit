@@ -1,0 +1,16 @@
+.badges {
+  margin-left: 2px;
+  font-size: var(--font-size-xs);
+}
+
+.badge {
+  margin-right: 2px;
+}
+
+.badge::before {
+  content: '[';
+}
+
+.badge::after {
+  content: ']';
+}

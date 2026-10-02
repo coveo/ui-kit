@@ -78,6 +78,34 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
 const THERMOFLEX_IMAGE =
   'https://cdn.shopify.com/s/files/1/0910/6502/4786/files/8c6d80ac5b9b_bottom_left_852e0a5c-9b08-43bd-a6e5-67ec90d5d6f2.webp?v=1766164226';
 
+// Knowledge references for the RichText examples below.
+const careGuide = {
+  kind: 'knowledge',
+  permanentId: 'thermoflex-care-guide',
+  title: 'ThermoFlex Care & Fit Guide',
+  fileType: 'PDF',
+  type: 'care_guide',
+  size: 456123,
+  clickUri: 'https://example.com/docs/thermoflex-care-and-fit-guide.pdf',
+};
+
+const warrantyTerms = {
+  kind: 'knowledge',
+  permanentId: 'thermoflex-warranty',
+  title: 'Warranty Terms',
+  fileType: 'HTML',
+  type: 'warranty',
+  clickUri: 'https://example.com/docs/thermoflex-warranty',
+};
+
+const sizingChart = {
+  kind: 'knowledge',
+  permanentId: 'thermoflex-sizing-chart',
+  title: 'Wetsuit Sizing Chart',
+  fileType: 'PDF',
+  clickUri: 'https://example.com/docs/wetsuit-sizing-chart.pdf',
+};
+
 // Conforms to the thermidor-schema ProductResearchCardState: a schema `Product`, a non-empty
 // summary, and a non-empty list of non-empty bullets.
 const productResearchCardState = {
@@ -106,10 +134,32 @@ const productResearchCardState = {
   summary:
     'The ThermoFlex Winter Wetsuit is Rip Curl’s warmest option at Barca Sports. Its 7mm neoprene and sealed zip are made for extended sessions in water below 10°C. The extra thickness costs some flexibility, so it suits riders who put warmth ahead of freedom of movement.',
   bullets: [
+    // Plain string: an uncited claim.
     '7mm neoprene gives maximum insulation for water between 4°C and 10°C.',
-    'The sealed back zip and glued, blindstitched seams keep flushing to a minimum.',
-    'It is stiffer than 4/3mm and 5/4mm suits, so expect a short break-in period.',
-    'Covered by a 3-year warranty against seam and zip defects.',
+    // One reference: the cited text itself becomes the link.
+    {
+      content: [
+        {
+          value: 'The sealed back zip and glued, blindstitched seams keep flushing to a minimum.',
+          references: [careGuide],
+        },
+      ],
+    },
+    // Several references on one segment: plain text followed by numbered badges.
+    {
+      content: [
+        {value: 'It is stiffer than 4/3mm and 5/4mm suits, so expect a short break-in period.'},
+        {value: ' Size up if you are between sizes.', references: [careGuide, sizingChart]},
+      ],
+    },
+    {
+      content: [
+        {
+          value: 'Covered by a 3-year warranty against seam and zip defects.',
+          references: [warrantyTerms],
+        },
+      ],
+    },
   ],
 };
 
