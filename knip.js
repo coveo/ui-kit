@@ -1,3 +1,39 @@
+// Knip's built-in Tailwind compiler only follows @import/@config/@plugin, so
+// @reference (Tailwind v4) is added here to avoid false "unused" reports.
+const CSS_IMPORT_AT_RULE = /@(?:import|config|plugin|reference)\s+['"]([^'"]+)['"]/g;
+const CSS_COMMENT = /\/\*[\s\S]*?(?:\*\/|$)/g;
+const LIT_STYLE_BLOCK = /css\s?`([\s\S]*?)`/g;
+// Protocol-relative or scheme-prefixed targets are fetched at runtime, not bundled.
+const EXTERNAL_TARGET = /^(?:\/\/|[a-z][a-z\d+.-]*:)/i;
+
+const cssImportsIn = (css) =>
+  [...css.replace(CSS_COMMENT, '').matchAll(CSS_IMPORT_AT_RULE)]
+    .map(([, target]) => target)
+    .filter((target) => !EXTERNAL_TARGET.test(target));
+
+const asImportStatements = (targets) => targets.map((target) => `import '${target}';`).join('\n');
+
+const containsImportAtRule = (text) => /@(?:import|config|plugin|reference)/.test(text);
+
+// Run `pnpm knip` locally when editing either compiler: the Knip CI job only
+// runs when a package is rebuilt, so a change to this file alone isn't
+// exercised by affected-based CI.
+const cssCompiler = (text) =>
+  containsImportAtRule(text) ? asImportStatements(cssImportsIn(text)) : '';
+
+// Lit `css` template literals can also contain these at-rules (resolved at
+// build time by packages/atomic/scripts/lit-css-plugin.mjs), so their imports
+// are extracted and appended, leaving existing line numbers untouched.
+const litStyleCompiler = (text) => {
+  if (!/css\s?`/.test(text) || !containsImportAtRule(text)) {
+    return text;
+  }
+
+  const targets = [...text.matchAll(LIT_STYLE_BLOCK)].flatMap(([, block]) => cssImportsIn(block));
+
+  return targets.length > 0 ? `${text}\n${asImportStatements(targets)}\n` : text;
+};
+
 export default {
   $schema: 'https://unpkg.com/knip@6/schema.json',
   // Always ignoring quantic since it throws errors. Adding those two lines is necessary for 100% of quantic to be ignored.
@@ -11,11 +47,17 @@ export default {
     'samples/headless/rga-react/src/components/Citation.tsx',
     'samples/headless/rga-react/src/components/CitationsList.tsx',
     'packages/pkg-new-template/**',
+    // Registering a CSS compiler makes .css a project extension in every
+    // workspace. These samples reference their stylesheets in ways Knip cannot
+    // follow — an absolute `<link href="/src/style.css">`, an `@import` inside
+    // a Vue `<style>` block, and Angular `styleUrls` — so they would all be
+    // reported as unused.
+    'samples/atomic/**/*.css',
   ],
   compilers: {
-    // Enable the built-in MDX compiler so Knip can trace imports inside .mdx
-    // Storybook docs pages (e.g. storybook-utils helpers).
-    mdx: true,
+    mdx: true, // Traces imports inside .mdx Storybook docs pages.
+    css: cssCompiler,
+    ts: litStyleCompiler,
   },
   workspaces: {
     '.': {
@@ -154,13 +196,14 @@ export default {
         // Interactive a11y Storybook helpers — will be consumed by stories
         // in an upcoming PR. Knip cannot trace them yet.
         'storybook-utils/a11y/**/*.ts',
+        // Published as `@coveo/atomic/themes/*` and copied to dist by
+        // scripts/build-themes.mjs, so they are entry points rather than
+        // stylesheets imported from source.
+        'src/themes/*.css',
       ],
       ignore: [
         // Static file loaded via HTML <script> tag in manager-head.html
         '.storybook/public/cookieManager.js',
-        // CSS files referenced via @import/@reference inside CSS tagged template literals.
-        // Knip cannot trace CSS imports inside template literal strings.
-        'src/**/*.css',
       ],
     },
     'packages/atomic-legacy': {},
