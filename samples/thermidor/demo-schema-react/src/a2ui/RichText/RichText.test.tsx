@@ -35,11 +35,11 @@ describe('RichText', () => {
     expect(screen.queryByRole('link')).toBeNull();
   });
 
-  it('links the text itself when a segment has a single reference', () => {
+  it('links the text itself when a segment has a reference', () => {
     const value: RichTextValue = {
       content: [
         {value: 'Install '},
-        {value: 'under cover', references: [reference('guide')]},
+        {value: 'under cover', reference: reference('guide')},
         {value: '.'},
       ],
     };
@@ -54,46 +54,9 @@ describe('RichText', () => {
     expect(screen.getByTestId('out').textContent).toBe('Install under cover.');
   });
 
-  it('keeps the text plain and adds numbered badges when a segment has several references', () => {
-    const value: RichTextValue = {
-      content: [{value: 'Outdoor rated', references: [reference('guide'), reference('spec')]}],
-    };
-    render(
-      <p data-testid="out">
-        <RichText value={value} />
-      </p>
-    );
-    const links = screen.getAllByRole('link');
-    expect(links.map((link) => link.textContent)).toEqual(['1', '2']);
-    expect(links.map((link) => link.getAttribute('href'))).toEqual([
-      'https://example.com/guide.pdf',
-      'https://example.com/spec.pdf',
-    ]);
-    expect(screen.getByRole('link', {name: 'Doc spec'})).toBeDefined();
-    expect(screen.queryByRole('link', {name: 'Outdoor rated'})).toBeNull();
-  });
-
-  it('numbers badges per citation, restarting at 1', () => {
-    const value: RichTextValue = {
-      content: [
-        {value: 'A', references: [reference('a'), reference('b')]},
-        {value: ' and B', references: [reference('c'), reference('d')]},
-      ],
-    };
-    render(<RichText value={value} />);
-    expect(screen.getAllByRole('link').map((link) => link.textContent)).toEqual([
-      '1',
-      '2',
-      '1',
-      '2',
-    ]);
-  });
-
   it('falls back to plain text for a reference with an unsafe destination', () => {
     const value: RichTextValue = {
-      content: [
-        {value: 'claim', references: [reference('bad', {clickUri: 'javascript:alert(1)'})]},
-      ],
+      content: [{value: 'claim', reference: reference('bad', {clickUri: 'javascript:alert(1)'})}],
     };
     render(
       <p data-testid="out">
@@ -102,21 +65,5 @@ describe('RichText', () => {
     );
     expect(screen.getByTestId('out').textContent).toBe('claim');
     expect(screen.queryByRole('link')).toBeNull();
-  });
-
-  it('drops unsafe references but keeps the valid ones', () => {
-    const value: RichTextValue = {
-      content: [
-        {
-          value: 'claim',
-          references: [reference('bad', {clickUri: 'not a url'}), reference('good')],
-        },
-      ],
-    };
-    render(<RichText value={value} />);
-    // One valid reference left: the text itself becomes the link.
-    expect(screen.getByRole('link', {name: 'claim'}).getAttribute('href')).toBe(
-      'https://example.com/good.pdf'
-    );
   });
 });

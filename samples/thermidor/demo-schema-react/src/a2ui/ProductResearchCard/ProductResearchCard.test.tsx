@@ -67,7 +67,7 @@ describe('ProductResearchCard', () => {
     expect(screen.getAllByRole('listitem').map((item) => item.textContent)).toEqual(BULLETS);
   });
 
-  it('renders RichText summary and bullets with links and badges', async () => {
+  it('renders RichText summary and bullets as links', async () => {
     const guide = {
       kind: 'knowledge',
       permanentId: 'g1',
@@ -86,11 +86,11 @@ describe('ProductResearchCard', () => {
         {path: '/state/root/product', value: PRODUCT},
         {
           path: '/state/root/summary',
-          value: {content: [{value: 'Warm suit.', references: [guide]}]},
+          value: {content: [{value: 'Warm suit.', reference: guide}]},
         },
         {
           path: '/state/root/bullets',
-          value: [{content: [{value: 'Size up.', references: [guide, chart]}]}],
+          value: [{content: [{value: 'Size up.', reference: chart}]}],
         },
       ],
     });
@@ -99,8 +99,9 @@ describe('ProductResearchCard', () => {
     expect(screen.getByRole('link', {name: 'Warm suit.'}).getAttribute('href')).toBe(
       'https://example.com/care'
     );
-    expect(screen.getByRole('link', {name: 'Care Guide'}).textContent).toBe('1');
-    expect(screen.getByRole('link', {name: 'Sizing Chart'}).textContent).toBe('2');
+    expect(screen.getByRole('link', {name: 'Size up.'}).getAttribute('href')).toBe(
+      'https://example.com/sizing'
+    );
   });
 
   it('rounds the rating to one decimal and drops a trailing zero', async () => {

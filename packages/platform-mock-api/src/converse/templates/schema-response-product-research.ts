@@ -136,27 +136,27 @@ const productResearchCardState = {
   bullets: [
     // Plain string: an uncited claim.
     '7mm neoprene gives maximum insulation for water between 4°C and 10°C.',
-    // One reference: the cited text itself becomes the link.
+    // The cited text itself becomes the link.
     {
       content: [
         {
           value: 'The sealed back zip and glued, blindstitched seams keep flushing to a minimum.',
-          references: [careGuide],
+          reference: careGuide,
         },
       ],
     },
-    // Several references on one segment: plain text followed by numbered badges.
+    // Mixed segments: only the cited run is a link.
     {
       content: [
         {value: 'It is stiffer than 4/3mm and 5/4mm suits, so expect a short break-in period.'},
-        {value: ' Size up if you are between sizes.', references: [careGuide, sizingChart]},
+        {value: ' Size up if you are between sizes.', reference: sizingChart},
       ],
     },
     {
       content: [
         {
           value: 'Covered by a 3-year warranty against seam and zip defects.',
-          references: [warrantyTerms],
+          reference: warrantyTerms,
         },
       ],
     },
