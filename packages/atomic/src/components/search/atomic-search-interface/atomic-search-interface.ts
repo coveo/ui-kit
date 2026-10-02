@@ -170,6 +170,15 @@ export class AtomicSearchInterface
 
   /**
    * The search interface language.
+   *
+   * Accepts either a language code (`en`, `fr`) or a full [BCP 47](https://www.rfc-editor.org/info/bcp47)
+   * locale that includes a region (`en-CA`, `fr-CA`, `pt-BR`). Prefer a full locale: the region is
+   * what determines number grouping and decimal separators, currency symbol placement, and date
+   * ordering. For instance, `en-CA` formats a Canadian dollar amount as `$1,000.10`, whereas `en`
+   * alone yields `CA$1,000.10`.
+   *
+   * Translations are resolved from the language code, so a locale only needs a matching region
+   * bundle for its own strings; `en-CA` reuses the `en` translations.
    */
   @property({type: String, reflect: true}) public language = 'en';
 

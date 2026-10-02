@@ -7,6 +7,7 @@ import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicResult} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-result-fixture';
 import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
+import locales from '@/src/locales.json';
 import {AtomicResultDate} from './atomic-result-date';
 import './atomic-result-date';
 
@@ -107,6 +108,13 @@ describe('atomic-result-date', () => {
 
       expect(element).toBeDefined();
       expect(element.textContent?.trim()).toBe('2021-09-03');
+    });
+
+    it('should render the date with a localized format', async () => {
+      const element = await renderComponent({field: 'date', format: 'LL'});
+
+      expect(element).toBeDefined();
+      expect(element.textContent?.trim()).toBe('September 3, 2021');
     });
   });
 
@@ -249,6 +257,46 @@ describe('atomic-result-date', () => {
       // For dates older than a week, it falls back to sameElse format
       // The rendered date includes the date in some format
       expect(element.textContent?.trim()).toMatch(/2020|01|15/);
+    });
+
+    // The `calendar-*` translations are consumed as dayjs format strings, so any
+    // literal prose in them has to be wrapped in `[]`. An unescaped translation
+    // is silently mangled: "Volgende week" used to render as "Volgen3e week".
+    describe('calendar translations', () => {
+      const calendarKeys = [
+        'calendar-same-day',
+        'calendar-next-day',
+        'calendar-next-week',
+        'calendar-last-day',
+        'calendar-last-week',
+      ] as const;
+
+      const translations = calendarKeys.flatMap((key) =>
+        Object.entries(locales[key] as Record<string, string>).map(([language, value]) => ({
+          key,
+          language,
+          value,
+        }))
+      );
+
+      it.each(translations)(
+        'should render $key in $language without interpreting its literals as date tokens',
+        ({value}) => {
+          const outsideBrackets = value.replace(/\[[^\]]*\]/g, '');
+          const bracketedLiterals = [...value.matchAll(/\[([^\]]*)\]/g)].map(
+            ([, literal]) => literal
+          );
+
+          // Anything left outside brackets is handed to dayjs as a format
+          // string, so only weekday tokens and separators are safe there.
+          expect(outsideBrackets).toMatch(/^(d{3,4}|[\s,.'’-])*$/);
+
+          const rendered = dayjs('2026-09-30').format(value);
+          for (const literal of bracketedLiterals) {
+            expect(rendered).toContain(literal);
+          }
+        }
+      );
     });
   });
 });

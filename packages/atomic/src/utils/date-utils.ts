@@ -1,7 +1,12 @@
 import dayjs, {type ConfigType} from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
 
 dayjs.extend(customParseFormat);
+// Without this plugin the `L`/`LL`/`LT` tokens are emitted verbatim, so a
+// single format string cannot adapt to the active locale and consumers are
+// forced to hardcode a region-specific pattern such as `D/M/YYYY`.
+dayjs.extend(localizedFormat);
 
 export function parseDate(date: ConfigType) {
   return dayjs(date);
