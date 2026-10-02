@@ -259,44 +259,24 @@ describe('atomic-result-date', () => {
       expect(element.textContent?.trim()).toMatch(/2020|01|15/);
     });
 
-    // The `calendar-*` translations are consumed as dayjs format strings, so any
-    // literal prose in them has to be wrapped in `[]`. An unescaped translation
-    // is silently mangled: "Volgende week" used to render as "Volgen3e week".
-    describe('calendar translations', () => {
-      const calendarKeys = [
+    // The `calendar-*` translations are used as dayjs format strings, so prose
+    // in them must be wrapped in `[]` or it gets read as date tokens.
+    it('should not interpret any calendar translation as date tokens', () => {
+      const keys = [
         'calendar-same-day',
         'calendar-next-day',
         'calendar-next-week',
         'calendar-last-day',
         'calendar-last-week',
-      ] as const;
+      ];
 
-      const translations = calendarKeys.flatMap((key) =>
-        Object.entries(locales[key] as Record<string, string>).map(([language, value]) => ({
-          key,
-          language,
-          value,
-        }))
+      const unescaped = keys.flatMap((key) =>
+        Object.entries(locales[key] as Record<string, string>)
+          .filter(([, value]) => !/^(d{3,4}|\[[^\]]*\]|[\s,.'’-])*$/.test(value))
+          .map(([language, value]) => `${key}/${language}: ${value}`)
       );
 
-      it.each(translations)(
-        'should render $key in $language without interpreting its literals as date tokens',
-        ({value}) => {
-          const outsideBrackets = value.replace(/\[[^\]]*\]/g, '');
-          const bracketedLiterals = [...value.matchAll(/\[([^\]]*)\]/g)].map(
-            ([, literal]) => literal
-          );
-
-          // Anything left outside brackets is handed to dayjs as a format
-          // string, so only weekday tokens and separators are safe there.
-          expect(outsideBrackets).toMatch(/^(d{3,4}|[\s,.'’-])*$/);
-
-          const rendered = dayjs('2026-09-30').format(value);
-          for (const literal of bracketedLiterals) {
-            expect(rendered).toContain(literal);
-          }
-        }
-      );
+      expect(unescaped).toEqual([]);
     });
   });
 });

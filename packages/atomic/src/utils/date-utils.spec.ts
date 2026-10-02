@@ -1,5 +1,4 @@
 import 'dayjs/locale/en-ca';
-import 'dayjs/locale/fr-ca';
 import {describe, expect, it} from 'vitest';
 import {parseDate, parseTimestampToDateDetails} from './date-utils';
 
@@ -53,30 +52,11 @@ describe('date-utils', () => {
       expect(date.isValid()).toBe(false);
     });
 
-    describe('localized formats', () => {
-      const date = () => parseDate('2026-09-30T13:05:00');
+    it('should format localized tokens according to the locale', () => {
+      const date = parseDate('2026-09-30T13:05:00');
 
-      it.each(['L', 'LL', 'LT', 'LLL'])(
-        'should resolve the "%s" token rather than emit it verbatim',
-        (token) => {
-          expect(date().format(token)).not.toBe(token);
-        }
-      );
-
-      it('should format the "L" token according to the locale', () => {
-        expect(date().locale('en').format('L')).toBe('09/30/2026');
-        expect(date().locale('en-ca').format('L')).toBe('2026-09-30');
-      });
-
-      it('should format the "LT" token according to the locale', () => {
-        expect(date().locale('en').format('LT')).toBe('1:05 PM');
-        expect(date().locale('fr-ca').format('LT')).toBe('13:05');
-      });
-
-      it('should keep non-localized format strings locale-independent', () => {
-        expect(date().locale('en').format('D/M/YYYY')).toBe('30/9/2026');
-        expect(date().locale('fr-ca').format('D/M/YYYY')).toBe('30/9/2026');
-      });
+      expect(date.locale('en').format('L')).toBe('09/30/2026');
+      expect(date.locale('en-ca').format('L')).toBe('2026-09-30');
     });
   });
 

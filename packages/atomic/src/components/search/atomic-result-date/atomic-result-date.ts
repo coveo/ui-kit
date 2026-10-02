@@ -44,12 +44,9 @@ export class AtomicResultDate
    * The format of the date.
    * Available formats: https://day.js.org/docs/en/display/format
    *
-   * The default value is a fixed pattern that renders identically in every language. To let the
-   * format follow the locale set on the `atomic-search-interface` `language` property, use one of
-   * the [localized formats](https://day.js.org/docs/en/display/format#localized-formats) instead,
-   * such as `L` (date only), `LL` (date with the month spelled out), `LT` (time) or `LLL` (date and
-   * time). For example, with `format="L"`, a `language` of `en-US` renders `09/30/2026`, while
-   * `en-CA` renders `2026-09-30`.
+   * The default is a fixed pattern. Use a [localized format](https://day.js.org/docs/en/display/format#localized-formats)
+   * such as `L`, `LL` or `LLL` to follow the interface `language` instead: with `format="L"`,
+   * `en-US` renders `09/30/2026` and `en-CA` renders `2026-09-30`.
    */
   @property({type: String, reflect: true}) public format = 'D/M/YYYY';
 

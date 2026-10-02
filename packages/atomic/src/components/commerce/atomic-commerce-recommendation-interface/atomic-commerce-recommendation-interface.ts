@@ -182,12 +182,9 @@ export class AtomicCommerceRecommendationInterface
    * @param currency - (Optional) The ISO-4217 currency code (for example, `USD`).
    *
    * @remarks
-   * `language` selects the catalog configuration and sets the language used to localize the
-   * interface. Because the two are the same value, number, currency and date formatting follow the
-   * language code alone rather than the `language`-`country` pair: a `fr`/`CA` locale formats
-   * prices the way `fr` does (`1 000,10 $CA`) rather than the way `fr-CA` does (`1 000,10 $`).
-   * Passing a regional tag such as `fr-CA` as `language` to work around this also sends it to the
-   * Commerce API, where it will not match a catalog configuration.
+   * `language` both selects the catalog configuration and localizes the interface, so formatting
+   * follows the language code rather than the `language`-`country` pair. A regional tag such as
+   * `fr-CA` is not a workaround, as it would not match a catalog configuration.
    *
    * @example
    * ```typescript
