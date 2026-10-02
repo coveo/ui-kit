@@ -7,7 +7,7 @@ import styles from './ProductResearchCard.module.css';
  * A2-UI component for the `product-research-card`: a single researched product shown next to a short
  * research summary and a list of product-education bullets. The generic binder resolves `product`
  * / `summary` / `bullets` from `ProductResearchCardPropsSchema`. Presentational — no actions.
- * `product === undefined` (bindings not yet resolved) renders a loading state.
+ * The three bindings resolve independently, so any of them still `undefined` renders a loading state.
  */
 export const ProductResearchCard = createReactComponent(
   {
@@ -15,7 +15,8 @@ export const ProductResearchCard = createReactComponent(
     schema: ProductResearchCardPropsSchema,
   },
   ({props}) => {
-    if (props.product === undefined) {
+    const {product, summary, bullets} = props;
+    if (product === undefined || summary === undefined || bullets === undefined) {
       return (
         <div className={styles.loading} aria-label="Loading product research">
           Loading…
@@ -23,9 +24,6 @@ export const ProductResearchCard = createReactComponent(
       );
     }
 
-    const {product} = props;
-    const summary = props.summary ?? '';
-    const bullets = props.bullets ?? [];
     const rating = product.ec_rating;
 
     return (

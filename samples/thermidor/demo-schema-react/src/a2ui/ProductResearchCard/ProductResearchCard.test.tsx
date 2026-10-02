@@ -74,6 +74,16 @@ describe('ProductResearchCard', () => {
     expect(screen.queryByRole('img', {name: /^Rated/})).toBeNull();
   });
 
+  it('keeps the loading placeholder while only some bindings are resolved', async () => {
+    mountSurface({
+      component: {component: 'ProductResearchCard', ...BINDINGS},
+      dataModel: [{path: '/state/root/product', value: PRODUCT}],
+    });
+
+    await waitFor(() => expect(screen.queryByLabelText('Loading product research')).not.toBeNull());
+    expect(screen.queryByRole('article')).toBeNull();
+  });
+
   it('renders a loading placeholder without throwing when the state is unresolved', async () => {
     mountSurface({component: {component: 'ProductResearchCard', ...BINDINGS}});
 
