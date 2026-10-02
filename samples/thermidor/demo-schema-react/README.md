@@ -30,6 +30,7 @@ This sample uses the `/converse-schema` route on the mock server (via `VITE_COVE
 | `build a beginner surfing kit with budget, mid-range, and premium options` | BundleDisplay with 3 tiers (Budget/Mid-Range/Premium), product-list state per slot, and NextActionsBar                     | ✅ Fully functional    |
 | `i like cold-water surfing. compare wetsuits for it`                       | ComparisonTable with 3 wetsuits, images, prices, annotations (Standout/Trade-off/Best for), AI Summary, and NextActionsBar | ✅ Fully functional    |
 | `boating safety`                                                           | Discovery with 2 ProductCarousels (Life Jackets + Boating Safety Gear) and NextActionsBar                                  | ✅ Fully functional    |
+| `tell me more about the thermoflex winter wetsuit`                         | ProductResearchCard for the ThermoFlex Winter Wetsuit with a summary, 4 bullets, and NextActionsBar                        | ✅ Fully functional    |
 | Any other text (fallback)                                                  | NextActionsBar with suggested follow-up actions                                                                            | ✅ Fully functional    |
 | `what should i pack for a snorkeling trip?`                                | Conversational with surfaces (built for `demo-react`, legacy format)                                                       | ❌ Not supported       |
 | `kayaks`                                                                   | Routed commerce search (built for `demo-react`)                                                                            | ❌ Not supported       |
@@ -107,6 +108,7 @@ ConversationPage
 │                       ├── ProductCarousel (dumb: reads resolved props from {path} bindings)
 │                       ├── BundleDisplay (dumb: reads resolved tiers + slot child ids from props)
 │                       ├── ComparisonTable (dumb: reads resolved products + attributes from props)
+│                       ├── ProductResearchCard (dumb: reads resolved product, summary + bullets from props)
 │                       └── NextActionsBar (dumb: reads resolved action items; dispatch via onAction)
 └── "Back to search" floating button (if canGoBackToSearch)
 ```
@@ -115,7 +117,7 @@ ConversationPage
 
 **ConversationThread** iterates over turns and delegates rendering to the appropriate block based on turn status. The key path is through **AgentResponseBlock**, which orchestrates the streaming experience: first showing a thinking indicator, then streaming text, then skeleton placeholders (inferred from `store_render_plan` tool calls), and finally the resolved A2-UI catalog components once component state arrives via `/state/<id>` `updateDataModel` operations resolved into the renderer's data model.
 
-The catalog renderers (ProductCarousel, BundleDisplay, ComparisonTable, NextActionsBar) are **dumb**: each reads its resolved values directly from `props` (the renderer resolves each `{ "path": ... }` binding against its A2-UI data model), with no identity join and no controller hydration. Actions surface through the renderer's `onAction` handler, wired to `session.dispatchAction`.
+The catalog renderers (ProductCarousel, BundleDisplay, ComparisonTable, ProductResearchCard, NextActionsBar) are **dumb**: each reads its resolved values directly from `props` (the renderer resolves each `{ "path": ... }` binding against its A2-UI data model), with no identity join and no controller hydration. Actions surface through the renderer's `onAction` handler, wired to `session.dispatchAction`.
 
 ### SearchResultsPage (decomposed commerce)
 

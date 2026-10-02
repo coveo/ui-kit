@@ -227,7 +227,6 @@ interface WaterSportsProduct {
   ec_thumbnails: string[];
   ec_images: string[];
   ec_price: number;
-  ec_promo_price: number;
   ec_in_stock: boolean;
   ec_item_group_id: string;
   ec_rating: number;
@@ -647,7 +646,6 @@ const products: WaterSportsProduct[] = PRODUCT_SEEDS.map((seed, index) => {
     ec_thumbnails: [image],
     ec_images: [image],
     ec_price: seed.price,
-    ec_promo_price: seed.price,
     ec_in_stock: true,
     ec_item_group_id: String(id),
     ec_rating: seed.rating,

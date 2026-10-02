@@ -32,13 +32,14 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {AriaLiveRegionController, FocusTargetController} from '@/src/utils/accessibility-utils';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
+import {renderCategoryFacetActiveValue} from '../../common/facets/category-facet/active-value';
 import {renderCategoryFacetAllCategoryButton} from '../../common/facets/category-facet/all-categories-button';
 import {renderCategoryFacetChildrenAsTreeContainer} from '../../common/facets/category-facet/children-as-tree-container';
 import {renderCategoryFacetParentAsTreeContainer} from '../../common/facets/category-facet/parent-as-tree-container';
 import {renderCategoryFacetParentButton} from '../../common/facets/category-facet/parent-button';
-import {renderCategoryFacetParentValueLink} from '../../common/facets/category-facet/parent-value-link';
 import {renderCategoryFacetSearchResultsContainer} from '../../common/facets/category-facet/search-results-container';
 import {renderCategoryFacetSearchValue} from '../../common/facets/category-facet/search-value';
+import {renderCategoryFacetSelectedValue} from '../../common/facets/category-facet/selected-value';
 import {renderCategoryFacetTreeValueContainer} from '../../common/facets/category-facet/value-as-tree-container';
 import {renderCategoryFacetValueLink} from '../../common/facets/category-facet/value-link';
 import facetCommonStyles from '../../common/facets/facet-common.tw.css';
@@ -66,12 +67,17 @@ import facetSearchStyles from '../../common/facets/facet-search/facet-search.tw.
  * @part search-result-path - The facet search result path.
  * @part search-highlight - The highlighted query inside the facet values.
  *
+ * @part selected-value - The row displaying the currently selected value and the button that clears the facet.
+ * @part selected-value-pill - The pill displaying the currently selected value.
+ * @part selected-value-clear-button - The button that clears the facet, displayed next to the selected value.
+ * @part selected-value-clear-button-icon - The icon of the button that clears the facet.
+ *
  * @part parents - The container surrounding the whole hierarchy of values.
  * @part sub-parents - The container surrounding a sub-hierarchy of values.
  * @part values - The container surrounding either the children of the active value or the values at the base.
  * @part all-categories-button - The "All categories" button displayed first within the parents.
  * @part parent-button - The clickable parent button displayed first within sub-parents.
- * @part active-parent - The clickable active parent displayed first within the last sub-parents.
+ * @part active-parent - The currently selected value, displayed last within the parents. Not interactive.
  * @part value-link - The clickable value displayed first within values.
  * @part back-arrow - The back arrow displayed before the clickable parents.
  * @part value-label - The facet value label within a value button.
@@ -243,6 +249,30 @@ export class AtomicCommerceCategoryFacet
     });
   }
 
+  private renderSelectedValue() {
+    const activeValue = this.facetState.selectedValueAncestry?.at(-1);
+
+    if (!activeValue) {
+      return nothing;
+    }
+
+    return renderCategoryFacetSelectedValue({
+      props: {
+        displayValue: getFieldValueCaption(
+          this.facetState.field,
+          activeValue.value,
+          this.bindings.i18n
+        ),
+        label: this.displayName,
+        i18n: this.bindings.i18n,
+        onClearFilters: () => {
+          this.focusTargets.activeValueFocus.focusAfterSearch();
+          this.facet.deselectAll();
+        },
+      },
+    });
+  }
+
   private renderValuesTree(parents: CategoryFacetValue[], isRoot: boolean): TemplateResult {
     if (!this.hasParents) {
       return this.renderChildren();
@@ -300,16 +330,12 @@ export class AtomicCommerceCategoryFacet
     );
 
     return html`
-      ${renderCategoryFacetParentValueLink({
+      ${renderCategoryFacetActiveValue({
         props: {
           displayValue: activeParentDisplayValue,
           numberOfResults: activeParent.numberOfResults,
           i18n: this.bindings.i18n,
           isLeafValue: activeParent.isLeafValue,
-          onClick: () => {
-            this.focusTargets.activeValueFocus.focusAfterSearch();
-            this.facet.deselectAll();
-          },
           searchQuery: this.facetState.facetSearch.query,
           setRef: (el) => {
             this.focusTargets.activeValueFocus.setTarget(el as HTMLElement);
@@ -342,7 +368,6 @@ export class AtomicCommerceCategoryFacet
           this.focusTargets.activeValueFocus.focusAfterSearch();
           this.facet.toggleSelect(facetValue);
         },
-        isParent: false,
         isSelected,
         searchQuery: this.facetState.facetSearch.query,
         isLeafValue: facetValue.isLeafValue,
@@ -448,6 +473,7 @@ export class AtomicCommerceCategoryFacet
               onClear: () => this.facet.facetSearch.clear(),
             },
           })}
+          ${this.renderSelectedValue()}
           ${when(
             shouldDisplaySearchResults(facetSearch),
             () => html`
