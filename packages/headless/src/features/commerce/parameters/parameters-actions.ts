@@ -14,11 +14,6 @@ export interface Parameters {
   fExcluded?: Record<string, string[]>;
 
   /**
-   * A record of the location facets, where the key is the facet id, and the value is an array containing the selected values.
-   */
-  lf?: Record<string, string[]>;
-
-  /**
    * A record of the category facets, where the key is the facet id, and the value is an array containing the parts of the selected path.
    */
   cf?: Record<string, string[]>;

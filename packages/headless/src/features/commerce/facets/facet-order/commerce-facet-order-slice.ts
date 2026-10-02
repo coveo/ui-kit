@@ -27,7 +27,6 @@ function handleQueryFulfilled(_: FacetOrderState, action: AnyAction) {
 function handleRestoreParameters(_: FacetOrderState, action: {payload: Parameters}) {
   return [
     ...Object.keys(action.payload.f ?? {}),
-    ...Object.keys(action.payload.lf ?? {}),
     ...Object.keys(action.payload.nf ?? {}),
     ...Object.keys(action.payload.df ?? {}),
     ...Object.keys(action.payload.cf ?? {}),
