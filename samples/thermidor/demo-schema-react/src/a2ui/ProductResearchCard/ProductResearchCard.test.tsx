@@ -1,4 +1,4 @@
-import {describe, expect, it, afterEach} from 'vitest';
+import {describe, expect, it, afterEach, vi} from 'vitest';
 import {screen, cleanup, waitFor} from '@testing-library/react';
 import {mountSurface} from '../mount-surface.harness.js';
 
@@ -65,6 +65,38 @@ describe('ProductResearchCard', () => {
     expect(screen.queryByRole('img', {name: 'Rated 3.6 out of 5'})).not.toBeNull();
     expect(screen.queryByText(SUMMARY)).not.toBeNull();
     expect(screen.getAllByRole('listitem').map((item) => item.textContent)).toEqual(BULLETS);
+  });
+
+  it('rounds the rating to one decimal and drops a trailing zero', async () => {
+    mountResearchCard({...PRODUCT, ec_rating: 4.333333});
+
+    await waitFor(() =>
+      expect(screen.queryByRole('img', {name: 'Rated 4.3 out of 5'})).not.toBeNull()
+    );
+    expect(screen.queryByText('★ 4.3 / 5')).not.toBeNull();
+    cleanup();
+
+    mountResearchCard({...PRODUCT, ec_rating: 4});
+    await waitFor(() =>
+      expect(screen.queryByRole('img', {name: 'Rated 4 out of 5'})).not.toBeNull()
+    );
+  });
+
+  it('renders duplicate bullets without a duplicate-key warning', async () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+    mountSurface({
+      component: {component: 'ProductResearchCard', ...BINDINGS},
+      dataModel: [
+        {path: '/state/root/product', value: PRODUCT},
+        {path: '/state/root/summary', value: SUMMARY},
+        {path: '/state/root/bullets', value: ['Same bullet.', 'Same bullet.']},
+      ],
+    });
+
+    await waitFor(() => expect(screen.getAllByRole('listitem')).toHaveLength(2));
+    const messages = consoleError.mock.calls.map((args) => args.join(' '));
+    expect(messages.filter((message) => message.includes('same key'))).toEqual([]);
+    consoleError.mockRestore();
   });
 
   it('omits the rating when the product has none', async () => {
