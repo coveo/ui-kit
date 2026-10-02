@@ -158,9 +158,9 @@ Below is a quick reference to the analytic tracking events provided by `buildInt
 
 | Method                                                                                           | Analytics                                                |
 | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------- |
-| [`beginDelayedSelect()`](../functions/Search.buildInteractiveCitation.html#begindelayedselect)   | ✅ Prepares to log selection event                       |
-| [`cancelPendingSelect()`](../functions/Search.buildInteractiveCitation.html#cancelpendingselect) | ✅ Cancels the pending selection of `beginDelayedSelect` |
-| [`select()`](../functions/Search.buildInteractiveCitation.html#select)                           | ✅ Logs the selection event                              |
+| [`beginDelayedSelect()`](../interfaces/Search.InteractiveCitation.html#begindelayedselect)   | ✅ Prepares to log selection event                       |
+| [`cancelPendingSelect()`](../interfaces/Search.InteractiveCitation.html#cancelpendingselect) | ✅ Cancels the pending selection of `beginDelayedSelect` |
+| [`select()`](../interfaces/Search.InteractiveCitation.html#select)                           | ✅ Logs the selection event                              |
 
 In order to track user interactions with results, you need to instantiate the [`InteractiveCitation`](../interfaces/Search.InteractiveCitation.html) with the specific [`GeneratedAnswerCitation`](../interfaces/Search.GeneratedAnswerCitation.html) being interacted with.
 Once these events have been integrated with your code, they can be accessed in your [Coveo RGA reports](https://docs.coveo.com/en/nb6a0210/).
