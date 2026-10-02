@@ -18,6 +18,7 @@ import {
   renderPagerPreviousButton,
 } from '@/src/components/common/pager/pager-buttons';
 import {renderPagerNavigation} from '@/src/components/common/pager/pager-navigation';
+import {PagerFitController} from '@/src/components/common/pager/pager-fit-controller';
 import {getCurrentPagesRange} from '@/src/components/common/pager/pager-utils';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
@@ -84,7 +85,7 @@ export class AtomicInsightPager
   public searchStatusState!: InsightSearchStatusState;
 
   /**
-   * The maximum number of page buttons to display in the pager.
+   * The maximum number of page buttons to display in the pager. Fewer page buttons are displayed when they don't fit in the available width.
    */
   @property({
     reflect: true,
@@ -94,6 +95,7 @@ export class AtomicInsightPager
   numberOfPages: number = 5;
 
   protected ariaMessage = new AriaLiveRegionController(this, 'atomic-insight-pager');
+  private pagerFit = new PagerFitController(this);
 
   private previousButton!: FocusTargetController;
   private nextButton!: FocusTargetController;
@@ -123,7 +125,7 @@ export class AtomicInsightPager
   render() {
     const pagesRange = getCurrentPagesRange(
       this.pagerState.currentPage - 1,
-      this.numberOfPages,
+      this.pagerFit.getNumberOfPagesToDisplay(this.numberOfPages),
       this.pagerState.maxPage
     );
 

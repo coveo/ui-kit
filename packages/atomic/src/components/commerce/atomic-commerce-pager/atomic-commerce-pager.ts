@@ -19,6 +19,7 @@ import {
   renderPagerPreviousButton,
 } from '@/src/components/common/pager/pager-buttons';
 import {renderPagerNavigation} from '@/src/components/common/pager/pager-navigation';
+import {PagerFitController} from '@/src/components/common/pager/pager-fit-controller';
 import {getCurrentPagesRange} from '@/src/components/common/pager/pager-utils';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import {bindStateToController} from '@/src/decorators/bind-state';
@@ -70,7 +71,7 @@ export class AtomicCommercePager
   public pagerState!: PaginationState;
 
   /**
-   * The maximum number of page buttons to display.
+   * The maximum number of page buttons to display. Fewer page buttons are displayed when they don't fit in the available width.
    */
   @property({reflect: true, attribute: 'number-of-pages', type: Number})
   numberOfPages: number = 5;
@@ -96,6 +97,7 @@ export class AtomicCommercePager
   nextButtonIcon: string = ArrowRightIcon;
 
   protected ariaMessage = new AriaLiveRegionController(this, 'atomic-pager');
+  private pagerFit = new PagerFitController(this);
 
   private previousButton!: FocusTargetController;
   private nextButton!: FocusTargetController;
@@ -130,7 +132,7 @@ export class AtomicCommercePager
   render() {
     const pagesRange = getCurrentPagesRange(
       this.pagerState.page,
-      this.numberOfPages,
+      this.pagerFit.getNumberOfPagesToDisplay(this.numberOfPages),
       this.pagerState.totalPages - 1
     );
 
