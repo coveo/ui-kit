@@ -148,6 +148,17 @@ describe('atomic-commerce-category-facet', () => {
       get activeParent() {
         return element.shadowRoot!.querySelector('[part~=active-parent]')!;
       },
+      get selectedValue() {
+        return element.shadowRoot!.querySelector('[part="selected-value"]');
+      },
+      get selectedValuePill() {
+        return element.shadowRoot!.querySelector('[part="selected-value-pill"]');
+      },
+      get selectedValueClearButton() {
+        return element.shadowRoot!.querySelector<HTMLButtonElement>(
+          '[part="selected-value-clear-button"]'
+        );
+      },
       get backArrow() {
         return element.shadowRoot!.querySelector('[part=back-arrow]')!;
       },
@@ -505,5 +516,32 @@ describe('atomic-commerce-category-facet', () => {
 
       expect(mockedDeselectAll).toHaveBeenCalled();
     });
+
+    it('should render the active value as non-interactive', async () => {
+      const {activeParent} = await setupElement();
+
+      expect(activeParent.tagName).toBe('SPAN');
+      expect(activeParent).toHaveAttribute('aria-current', 'true');
+    });
+
+    it('should render the selected value in a pill', async () => {
+      const {selectedValuePill} = await setupElement();
+
+      expect(selectedValuePill).toHaveTextContent('Electronics');
+    });
+
+    it('should #deselectAll when the clear button next to the pill is clicked', async () => {
+      const {selectedValueClearButton} = await setupElement();
+
+      await userEvent.click(selectedValueClearButton!);
+
+      expect(mockedDeselectAll).toHaveBeenCalled();
+    });
+  });
+
+  it('should not render the selected value pill when no value is selected', async () => {
+    const {selectedValue} = await setupElement();
+
+    expect(selectedValue).not.toBeInTheDocument();
   });
 });
