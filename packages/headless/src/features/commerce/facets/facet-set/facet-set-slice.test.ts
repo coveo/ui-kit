@@ -36,14 +36,14 @@ import {convertToDateRangeRequests} from '../../../facets/range-facets/date-face
 import {findExactRangeValue} from '../../../facets/range-facets/generic/range-facet-reducers.js';
 import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice.js';
 import {setContext, setView} from '../../context/context-actions.js';
-import {fetchProductListing} from '../../product-listing/product-listing-actions.js';
 import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions.js';
+import {fetchProductListing} from '../../product-listing/product-listing-actions.js';
 import {
   type FetchQuerySuggestionsThunkReturn,
   fetchQuerySuggestions,
 } from '../../query-suggest/query-suggest-actions.js';
-import {executeSearch} from '../../search/search-actions.js';
 import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions.js';
+import {executeSearch} from '../../search/search-actions.js';
 import {
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
@@ -534,14 +534,27 @@ describe('commerceFacetSetReducer', () => {
       ])(
         'for $type facets',
         ({type, facetResponseBuilder}: {type: FacetType; facetResponseBuilder: Function}) => {
-          it('sets #preventAutoSelect to false', () => {
-            state[facetId] = buildMockCommerceFacetSlice({
-              request: buildMockCommerceFacetRequest({
-                type,
-                preventAutoSelect: true,
-              }),
-            });
+          it.each([true, false])(
+            'preserves #preventAutoSelect (%s) of a registered facet',
+            (preventAutoSelect) => {
+              state[facetId] = buildMockCommerceFacetSlice({
+                request: buildMockCommerceFacetRequest({
+                  type,
+                  preventAutoSelect,
+                }),
+              });
 
+              const facet = facetResponseBuilder({
+                facetId,
+              });
+              const action = buildQueryAction([facet]);
+
+              const finalState = commerceFacetSetReducer(state, action);
+              expect(finalState[facetId]?.request.preventAutoSelect).toBe(preventAutoSelect);
+            }
+          );
+
+          it('sets #preventAutoSelect to false for a newly registered facet', () => {
             const facet = facetResponseBuilder({
               facetId,
             });
@@ -2591,6 +2604,43 @@ describe('commerceFacetSetReducer', () => {
     });
   });
 
+  it('keeps #preventAutoSelect after deselecting an auto-selected value across subsequent responses', () => {
+    const facetId = 'ec_category';
+    const autoSelectedValue = buildMockCommerceRegularFacetValue({
+      value: 'Bras',
+      state: 'selected',
+    });
+    state[facetId] = buildMockCommerceFacetSlice({
+      request: buildMockCommerceFacetRequest({
+        facetId,
+        type: 'regular',
+        values: [convertFacetValueToRequest(autoSelectedValue)],
+      }),
+    });
+
+    let finalState = commerceFacetSetReducer(
+      state,
+      toggleSelectFacetValue({facetId, selection: autoSelectedValue})
+    );
+
+    const response = buildSearchResponse();
+    response.response.facets = [
+      buildMockCommerceRegularFacetResponse({
+        facetId,
+        values: [{...autoSelectedValue, state: 'idle'}],
+      }),
+    ];
+    for (let i = 0; i < 2; i++) {
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
+      finalState = commerceFacetSetReducer(
+        finalState,
+        executeSearch.fulfilled(response as any, '', undefined)
+      );
+    }
+
+    expect(finalState[facetId]?.request.preventAutoSelect).toBe(true);
+  });
+
   it('#updateGlobalFacetAutoSelection updates autoSelection for all facets', () => {
     const facetId = '1';
     const anotherFacetId = '2';
@@ -2785,6 +2835,21 @@ describe('commerceFacetSetReducer', () => {
 
       for (const facetId in finalState) {
         expect(finalState[facetId].request.values.length).toBe(0);
+      }
+    });
+
+    it('sets #preventAutoSelect to false for all facets', () => {
+      const facetIds = ['1', '2'];
+      for (const facetId of facetIds) {
+        state[facetId] = buildMockCommerceFacetSlice({
+          request: buildMockCommerceFacetRequest({facetId, preventAutoSelect: true}),
+        });
+      }
+
+      const finalState = commerceFacetSetReducer(state, action({}));
+
+      for (const facetId of facetIds) {
+        expect(finalState[facetId]!.request.preventAutoSelect).toBe(false);
       }
     });
   });
