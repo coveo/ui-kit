@@ -181,6 +181,11 @@ export class AtomicCommerceRecommendationInterface
    * @param country - (Optional) The ISO-3166-1 country tag (for example, `US`).
    * @param currency - (Optional) The ISO-4217 currency code (for example, `USD`).
    *
+   * @remarks
+   * `language` both selects the catalog configuration and localizes the interface, so formatting
+   * follows the language code rather than the `language`-`country` pair. A regional tag such as
+   * `fr-CA` is not a workaround, as it would not match a catalog configuration.
+   *
    * @example
    * ```typescript
    * recommendationInterface.updateLocale('fr', 'CA', 'CAD');

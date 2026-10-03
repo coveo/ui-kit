@@ -131,6 +131,11 @@ export class AtomicRecsInterface
 
   /**
    * The recommendation interface language.
+   *
+   * Accepts a language code (`en`) or a full [BCP 47](https://www.rfc-editor.org/info/bcp47) locale
+   * (`en-CA`). Include the region when number, currency and date formatting should follow it:
+   * `en-CA` renders `$1,000.10` where `en` renders `CA$1,000.10`. Translations resolve from the
+   * language code either way.
    */
   @property({type: String, reflect: true}) public language = 'en';
 

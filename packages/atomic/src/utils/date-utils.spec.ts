@@ -1,3 +1,4 @@
+import 'dayjs/locale/en-ca';
 import {describe, expect, it} from 'vitest';
 import {parseDate, parseTimestampToDateDetails} from './date-utils';
 
@@ -49,6 +50,13 @@ describe('date-utils', () => {
     it('should handle empty string', () => {
       const date = parseDate('');
       expect(date.isValid()).toBe(false);
+    });
+
+    it('should format localized tokens according to the locale', () => {
+      const date = parseDate('2026-09-30T13:05:00');
+
+      expect(date.locale('en').format('L')).toBe('09/30/2026');
+      expect(date.locale('en-ca').format('L')).toBe('2026-09-30');
     });
   });
 
