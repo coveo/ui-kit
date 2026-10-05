@@ -328,4 +328,47 @@ describe('Session.dispatchAction', () => {
       expect(request.action?.name).toBe('setPageSize');
     });
   });
+
+  describe('concurrent dispatches are serialized', () => {
+    it('sends the second action only after the first action stream has completed', async () => {
+      const session = await sessionWithPaginationSurface();
+
+      // The first action's stream is held open until the test releases it, so the second
+      // dispatch is issued while the first is unambiguously still in flight.
+      let releaseFirstStream: (() => void) | undefined;
+      const firstStreamReleased = new Promise<void>((resolve) => {
+        releaseFirstStream = resolve;
+      });
+      callMock.mockImplementationOnce(async () => ({
+        success: true,
+        data: {
+          stream: new ReadableStream<Uint8Array>({
+            async start(controller) {
+              await firstStreamReleased;
+              controller.enqueue(sseFrame({type: 'RUN_FINISHED'}));
+              controller.close();
+            },
+          }),
+        },
+      }));
+      queueActionAck();
+
+      const first = session.dispatchAction(paginationMessage('selectPage', {page: 1}));
+      const second = session.dispatchAction(paginationMessage('selectPage', {page: 2}));
+
+      // Give the second dispatch every chance to reach the client: only the queue holds it back.
+      await Promise.resolve();
+      await Promise.resolve();
+      expect(callMock).toHaveBeenCalledTimes(1);
+
+      releaseFirstStream?.();
+      await Promise.all([first, second]);
+
+      expect(callMock).toHaveBeenCalledTimes(2);
+      const pages = callMock.mock.calls.map(
+        (call) => (call[0] as {action: {context: {page: number}}}).action.context.page
+      );
+      expect(pages).toEqual([1, 2]);
+    });
+  });
 });

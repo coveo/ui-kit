@@ -10,17 +10,23 @@ let mockTurns: Turn[] = [];
 let capturedOnAction: ((message: unknown) => unknown) | undefined;
 
 // AppShell reads turns through `useSession()`. The fake session exposes just the members the
-// shell touches: `turns`, `subscribe`, and `dispatchAction`.
-vi.mock('../context/session.js', () => ({
-  useSession: () =>
-    ({
-      get turns() {
-        return mockTurns;
-      },
-      subscribe: () => () => undefined,
-      dispatchAction: mockDispatchAction,
-    }) as unknown as Session,
-}));
+// shell touches: `turns`, `subscribe`, `dispatchAction` (prompts), and `actions` — a real
+// coordinator whose sends go to `mockDispatchAction`, so renderer actions land on the same spy.
+vi.mock('../context/session.js', async () => {
+  const {createDispatchCoordinator} = await import('@coveo/thermidor');
+  const actions = createDispatchCoordinator((message: unknown) => mockDispatchAction(message));
+  return {
+    useSession: () =>
+      ({
+        get turns() {
+          return mockTurns;
+        },
+        subscribe: () => () => undefined,
+        dispatchAction: mockDispatchAction,
+        actions,
+      }) as unknown as Session,
+  };
+});
 
 vi.mock('@copilotkit/a2ui-renderer', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@copilotkit/a2ui-renderer')>()),

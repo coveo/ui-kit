@@ -1,6 +1,7 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {ActionItem, NextActionsBarAction} from '@coveo/thermidor-schema';
 import {NextActionsBarPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {useOptimisticValue} from '../use-optimistic-value.js';
 import styles from './NextActionsBar.module.css';
 
 /**
@@ -17,6 +18,12 @@ export const NextActionsBar = createReactComponent(
     schema: NextActionsBarPropsSchema,
   },
   ({props, context}) => {
+    const dispatch = (action: NextActionsBarAction) => {
+      context.dispatchAction(action);
+    };
+    // Selecting a follow-up starts a whole turn and there is no local state to assert, so the
+    // optimistic value is the gesture itself: true while this bar's own dispatch is outstanding.
+    const {value: selecting, dispatchOptimistic} = useOptimisticValue(false, dispatch);
     const actions = props.suggestedActions ?? [];
 
     if (actions.length === 0) {
@@ -28,7 +35,7 @@ export const NextActionsBar = createReactComponent(
         action.type === 'searchOption'
           ? {event: {name: 'selectSearchOption', context: {optionId: action.optionId}}}
           : {event: {name: 'selectAction', context: {text: action.text, type: action.type}}};
-      context.dispatchAction(nextActionsBarAction);
+      dispatchOptimistic({action: nextActionsBarAction, next: true});
     };
 
     return (
@@ -38,6 +45,8 @@ export const NextActionsBar = createReactComponent(
             key={i}
             className={styles.actionButton}
             onClick={() => handleSelectAction(action)}
+            disabled={selecting}
+            aria-busy={selecting}
             type="button"
           >
             {action.text}

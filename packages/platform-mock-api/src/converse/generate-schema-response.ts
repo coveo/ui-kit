@@ -12,6 +12,10 @@ import type {ConverseEvent} from './events.js';
 
 const DEFAULT_DELAY_MS = 25;
 
+// Matches the round-trip a facet click takes against a local backend (~1s), so an optimistic
+// update is observable against the mock. Applied per message, and an action response carries five.
+const ACTION_DELAY_MS = 200;
+
 interface SchemaPromptMapping {
   prompt: string;
   // A factory so the stateful "water sports" search surface can reset and rebuild its events
@@ -73,7 +77,7 @@ function buildSchemaActionResponse(action: {
   sourceComponentId?: string;
 }) {
   const events = buildSearchActionEvents(action);
-  return buildStreamingResponse(events, {delayBetweenMessages: DEFAULT_DELAY_MS});
+  return buildStreamingResponse(events, {delayBetweenMessages: ACTION_DELAY_MS});
 }
 
 export {schemaBaseResponse, matchSchemaPrompt, buildSchemaActionResponse, buildSearchActionEvents};

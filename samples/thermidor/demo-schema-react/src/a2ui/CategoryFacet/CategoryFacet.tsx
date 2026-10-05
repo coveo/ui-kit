@@ -1,10 +1,10 @@
-import {useCallback, useId} from 'react';
+import {useId} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
-import type {CategoryFacetAction} from '@coveo/thermidor-schema';
-import {CategoryFacetPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {type CategoryFacetAction, CategoryFacetPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {FacetSearchMoreMatches} from '../FacetSearchMoreMatches/FacetSearchMoreMatches.js';
 import {ChevronLeftIcon, SearchIcon} from '../icons/index.js';
 import {useOptimisticFacetSearch} from '../use-optimistic-facet-search.js';
+import {useOptimisticCategoryFacet} from './use-optimistic-category-facet.js';
 import styles from './CategoryFacet.module.css';
 
 const ALL_CATEGORIES_LABEL = 'All Categories';
@@ -23,8 +23,10 @@ const ellipsePath = (path: string[]): string[] =>
 
 /**
  * A2-UI component for the `category-facet` (hierarchical). The generic binder resolves the facet
- * state from `CategoryFacetPropsSchema`; path selection / clear / show more / search dispatch
- * their actions through `context.dispatchAction`.
+ * state from `CategoryFacetPropsSchema`. The descent — the one gesture whose outcome is
+ * reconstructible here — lives in `useOptimisticCategoryFacet`, the search input in
+ * `useOptimisticFacetSearch`; going back up, clearing and the show-more pair have no client-side
+ * projection and are dispatched from here.
  */
 export const CategoryFacet = createReactComponent(
   {
@@ -35,56 +37,21 @@ export const CategoryFacet = createReactComponent(
     const labelId = useId();
     const searchInputId = useId();
 
-    const dispatchSearch = useCallback(
-      (query: string) => {
-        const searchAction: CategoryFacetAction = {event: {name: 'search', context: {query}}};
-        context.dispatchAction(searchAction);
-      },
-      [context]
-    );
+    const dispatch = (action: CategoryFacetAction) => {
+      context.dispatchAction(action);
+    };
+    const dispatchSearch = (query: string) => {
+      dispatch({event: {name: 'search', context: {query}}});
+    };
     const search = useOptimisticFacetSearch(props.facetSearch?.query ?? '', dispatchSearch);
-
-    const {displayName, values, facetSearch, canShowMoreValues, canShowLessValues} = props;
-    const {ancestry = [], selected, children = []} = values ?? {};
-
-    const handleSelectPath = (path: string[]) => {
-      const selectPathAction: CategoryFacetAction = {event: {name: 'selectPath', context: {path}}};
-      context.dispatchAction(selectPathAction);
-    };
-
-    const handleClearSelectedPath = () => {
-      const clearSelectedPathAction: CategoryFacetAction = {
-        event: {name: 'clearSelectedPath', context: {}},
-      };
-      context.dispatchAction(clearSelectedPathAction);
-    };
-
-    const handleShowMoreValues = () => {
-      const showMoreValuesAction: CategoryFacetAction = {
-        event: {name: 'showMoreValues', context: {}},
-      };
-      context.dispatchAction(showMoreValuesAction);
-    };
-
-    const handleShowLessValues = () => {
-      const showLessValuesAction: CategoryFacetAction = {
-        event: {name: 'showLessValues', context: {}},
-      };
-      context.dispatchAction(showLessValuesAction);
-    };
-
-    const handleShowMoreSearchResults = () => {
-      const showMoreSearchResultsAction: CategoryFacetAction = {
-        event: {name: 'showMoreSearchResults', context: {}},
-      };
-      context.dispatchAction(showMoreSearchResultsAction);
-    };
-
     const handleClearSearch = () => {
       search.reset();
-      const clearSearchAction: CategoryFacetAction = {event: {name: 'clearSearch', context: {}}};
-      context.dispatchAction(clearSearchAction);
+      dispatch({event: {name: 'clearSearch', context: {}}});
     };
+    const optimisticFacet = useOptimisticCategoryFacet(props, dispatch);
+
+    const {displayName, facetSearch, canShowMoreValues, canShowLessValues} = props;
+    const {ancestry = [], selected, children = []} = optimisticFacet.values;
 
     const searchQuery = facetSearch?.query ?? '';
     const searchResults = facetSearch?.results ?? [];
@@ -148,7 +115,7 @@ export const CategoryFacet = createReactComponent(
                       className={`${styles.value} ${styles.searchResult}`}
                       data-testid={`facet-search-result-${result.path.join('/')}`}
                       aria-label={`${result.value} (${result.numberOfResults}) under ${parentLabel}`}
-                      onClick={() => handleSelectPath(result.path)}
+                      onClick={() => optimisticFacet.descendInto(result)}
                     >
                       <span className={styles.searchResultValue}>
                         <span className={styles.valueLabel}>{result.value}</span>
@@ -178,7 +145,7 @@ export const CategoryFacet = createReactComponent(
               <FacetSearchMoreMatches
                 query={searchQuery}
                 testId={`facet-search-show-more-${props.field}`}
-                onShowMore={handleShowMoreSearchResults}
+                onShowMore={() => dispatch({event: {name: 'showMoreSearchResults', context: {}}})}
               />
             )}
           </>
@@ -191,7 +158,7 @@ export const CategoryFacet = createReactComponent(
                     type="button"
                     className={styles.backLink}
                     style={indentStyle(0)}
-                    onClick={handleClearSelectedPath}
+                    onClick={() => dispatch({event: {name: 'clearSelectedPath', context: {}}})}
                   >
                     <ChevronLeftIcon className={styles.chevron} />
                     <span className={styles.valueLabel}>{ALL_CATEGORIES_LABEL}</span>
@@ -205,7 +172,9 @@ export const CategoryFacet = createReactComponent(
                     type="button"
                     className={styles.backLink}
                     style={indentStyle(0)}
-                    onClick={() => handleSelectPath(parent.path)}
+                    onClick={() =>
+                      dispatch({event: {name: 'selectPath', context: {path: parent.path}}})
+                    }
                   >
                     <ChevronLeftIcon className={styles.chevron} />
                     <span className={styles.valueLabel}>{parent.value}</span>
@@ -233,7 +202,7 @@ export const CategoryFacet = createReactComponent(
                     type="button"
                     className={styles.value}
                     style={indentStyle(selected ? 2 : 0)}
-                    onClick={() => handleSelectPath(child.path)}
+                    onClick={() => optimisticFacet.descendInto(child)}
                   >
                     <span className={styles.valueLabel}>{child.value}</span>
                     <span className={styles.count}>({child.numberOfResults})</span>
@@ -247,7 +216,7 @@ export const CategoryFacet = createReactComponent(
                 type="button"
                 className={styles.showValuesButton}
                 data-testid={`facet-show-less-${props.field}`}
-                onClick={handleShowLessValues}
+                onClick={() => dispatch({event: {name: 'showLessValues', context: {}}})}
               >
                 - Show less
               </button>
@@ -257,7 +226,7 @@ export const CategoryFacet = createReactComponent(
                 type="button"
                 className={styles.showValuesButton}
                 data-testid={`facet-show-more-${props.field}`}
-                onClick={handleShowMoreValues}
+                onClick={() => dispatch({event: {name: 'showMoreValues', context: {}}})}
               >
                 + Show more
               </button>

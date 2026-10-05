@@ -1,0 +1,9 @@
+/*
+ * Shared by the components that render the result set, so the treatment is identical wherever it
+ * applies and tuning it is one edit. Paired with `useStale('results')`.
+ */
+
+.stale {
+  opacity: 0.55;
+  transition: opacity 120ms ease-out;
+}
