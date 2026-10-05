@@ -268,7 +268,9 @@ export function createDispatchCoordinator<TMessage>(
 
     // Only an UNSENT dispatch can be taken back: the one already on its way has left the queue.
     if (intent !== undefined && !satisfied && intent.policy === 'involutive') {
-      const undone = queue.findIndex((queued) => queued.gesture === intent.gesture);
+      const undone = queue.findIndex(
+        (queued) => queued.gesture === intent.gesture && queued.slot === intent.slot
+      );
       if (undone !== -1) {
         const [cancelled] = queue.splice(undone, 1);
         trace('cancelled', cancelled.id, '+', id, `(${intent.gesture})`);

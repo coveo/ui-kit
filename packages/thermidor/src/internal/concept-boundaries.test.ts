@@ -55,7 +55,7 @@ function specifiersOf(file: string): string[] {
 }
 
 /** This file names the directories in order to police them, so it never counts as an importer. */
-const SELF = 'internal/removable-boundaries.test.ts';
+const SELF = 'internal/concept-boundaries.test.ts';
 
 function importersOf(directory: string): string[] {
   return sourceFiles(SOURCE_ROOT)
