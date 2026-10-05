@@ -68,6 +68,14 @@ function collectSurfaceState(events: ConverseEvent[], surfaceId: string): Record
   return components;
 }
 
+function isNonEmptyRichText(value: unknown): boolean {
+  return isNonEmptyString((value as {markdown?: unknown} | null)?.markdown);
+}
+
+function isNonEmptyTextOrRichText(value: unknown): boolean {
+  return isNonEmptyString(value) || isNonEmptyRichText(value);
+}
+
 function isNonEmptyString(value: unknown): boolean {
   return typeof value === 'string' && value.length > 0;
 }
@@ -132,14 +140,14 @@ describe('schema-response-product-research single-product research scenario', ()
     });
 
     it('carries a non-empty summary', () => {
-      expect(isNonEmptyString(state.summary)).toBe(true);
+      expect(isNonEmptyTextOrRichText(state.summary)).toBe(true);
     });
 
     it('carries a non-empty list of non-empty bullets', () => {
       const bullets = state.bullets as unknown[];
       expect(Array.isArray(bullets)).toBe(true);
       expect(bullets.length).toBeGreaterThan(0);
-      expect(bullets.every(isNonEmptyString)).toBe(true);
+      expect(bullets.every(isNonEmptyTextOrRichText)).toBe(true);
     });
   });
 

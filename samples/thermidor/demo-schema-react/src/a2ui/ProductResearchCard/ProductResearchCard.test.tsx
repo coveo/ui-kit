@@ -67,6 +67,44 @@ describe('ProductResearchCard', () => {
     expect(screen.getAllByRole('listitem').map((item) => item.textContent)).toEqual(BULLETS);
   });
 
+  it('renders RichText summary and bullets with citation links', async () => {
+    const guide = {
+      kind: 'knowledge',
+      permanentId: 'g1',
+      title: 'Care Guide',
+      clickUri: 'https://example.com/care',
+    };
+    mountSurface({
+      component: {component: 'ProductResearchCard', ...BINDINGS},
+      dataModel: [
+        {path: '/state/root/product', value: PRODUCT},
+        {
+          path: '/state/root/summary',
+          value: {markdown: '[Warm suit.](ref:g1)', references: [guide]},
+        },
+        {
+          path: '/state/root/bullets',
+          value: [
+            'Plain bullet.',
+            {markdown: 'Rinse after [every use](ref:g1).', references: [guide]},
+          ],
+        },
+      ],
+    });
+
+    await waitFor(() => expect(screen.queryByRole('link', {name: 'Warm suit.'})).not.toBeNull());
+    expect(screen.getByRole('link', {name: 'Warm suit.'}).getAttribute('href')).toBe(
+      'https://example.com/care'
+    );
+    expect(screen.getByRole('link', {name: 'every use'}).getAttribute('href')).toBe(
+      'https://example.com/care'
+    );
+    expect(screen.getAllByRole('listitem').map((item) => item.textContent)).toEqual([
+      'Plain bullet.',
+      'Rinse after every use.',
+    ]);
+  });
+
   it('rounds the rating to one decimal and drops a trailing zero', async () => {
     mountResearchCard({...PRODUCT, ec_rating: 4.333333});
 
