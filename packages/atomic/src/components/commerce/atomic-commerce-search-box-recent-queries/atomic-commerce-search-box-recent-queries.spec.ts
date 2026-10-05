@@ -4,7 +4,6 @@ import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import {page} from 'vitest/browser';
 import type {
-  SearchBoxSuggestionAction,
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
 } from '@/src/components/common/suggestions/suggestions-types';
@@ -164,7 +163,8 @@ describe('atomic-commerce-search-box-recent-queries', () => {
             })
           );
 
-          expect(items.length).toBe(3);
+          // The first item is the query clear item, followed by the recent queries
+          expect(items.length).toBe(4);
         });
 
         it('should return the correct number of items when there is more suggestions that the maxWithQuery', async () => {
@@ -175,7 +175,7 @@ describe('atomic-commerce-search-box-recent-queries', () => {
             })
           );
 
-          expect(items.length).toBe(3);
+          expect(items.length).toBe(4);
         });
 
         it('should return the correct number of items when there is more suggestions that the maxWithoutQuery', async () => {
@@ -193,13 +193,21 @@ describe('atomic-commerce-search-box-recent-queries', () => {
             })
           );
 
-          expect(items.length).toBe(3);
+          expect(items.length).toBe(4);
         });
 
-        it('should have the correct properties on the recent query item', async () => {
-          await setupRenderItemsTest();
-
+        it('should have the correct properties on the query clear item', () => {
           expect(items[0]).toEqual(
+            expect.objectContaining({
+              part: 'recent-query-clear',
+              ariaLabel: 'Clear recent searches',
+              key: 'recent-query-clear',
+            })
+          );
+        });
+
+        it('should have the correct properties on the recent query item', () => {
+          expect(items[1]).toEqual(
             expect.objectContaining({
               part: 'recent-query-item',
               query: 'query1',
@@ -209,18 +217,24 @@ describe('atomic-commerce-search-box-recent-queries', () => {
           );
         });
 
-        it('should have the correct content for each item', async () => {
-          await setupRenderItemsTest();
+        it('should have the correct content for each item', () => {
+          expect(items[0].content).toBeDefined();
+          expect(items[0].content).toBeInstanceOf(HTMLElement);
+          expect(items[1].content).toBeDefined();
+          expect(items[1].content).toBeInstanceOf(HTMLElement);
+        });
 
-          for (const item of items) {
-            expect(item.content).toBeInstanceOf(HTMLElement);
-          }
+        it('should have the correct onSelect function for the query clear item', () => {
+          items[0].onSelect?.(new Event('click'));
+
+          expect(buildFakeRecentQueriesList().clear).toHaveBeenCalledWith();
+          expect(element.bindings.triggerSuggestions).toHaveBeenCalled();
         });
 
         it('should have the correct onSelect function for the recent query item when the search box is standalone', async () => {
           await setupRenderItemsTest({isStandalone: true});
 
-          items[0].onSelect?.(new Event('click'));
+          items[1].onSelect?.(new Event('click'));
 
           expect(element.bindings.searchBoxController.updateText).toHaveBeenCalledWith('query1');
           expect(element.bindings.searchBoxController.submit).toHaveBeenCalled();
@@ -229,7 +243,7 @@ describe('atomic-commerce-search-box-recent-queries', () => {
         it('should have the correct onSelect function for the recent query item when the search box is not standalone', async () => {
           await setupRenderItemsTest();
 
-          items[0].onSelect?.(new Event('click'));
+          items[1].onSelect?.(new Event('click'));
 
           expect(buildFakeRecentQueriesList().executeRecentQuery).toHaveBeenCalled();
         });
@@ -239,7 +253,7 @@ describe('atomic-commerce-search-box-recent-queries', () => {
             ({element} = await renderElements(bindings));
             object = element.initialize();
             items = object.renderItems();
-            return items[0].content as HTMLElement;
+            return items[1].content as HTMLElement;
           };
 
           it('should have the correct part on the container', async () => {
@@ -287,32 +301,6 @@ describe('atomic-commerce-search-box-recent-queries', () => {
             expect(span).toHaveAttribute('part', 'recent-query-text');
           });
         });
-      });
-    });
-
-    describe('when returning the renderActions function', () => {
-      let element: AtomicCommerceSearchBoxRecentQueries;
-      let actions: SearchBoxSuggestionAction[];
-
-      beforeEach(async () => {
-        ({element} = await renderElements());
-        actions = element.initialize().renderActions?.() ?? [];
-      });
-
-      it('should return the clear recent queries action', () => {
-        expect(actions).toEqual([
-          expect.objectContaining({
-            label: 'Clear recent searches',
-            part: 'recent-query-clear',
-          }),
-        ]);
-      });
-
-      it('should clear the recent queries and trigger suggestions when the action is selected', () => {
-        actions[0].onSelect(new Event('click'));
-
-        expect(buildFakeRecentQueriesList().clear).toHaveBeenCalledWith();
-        expect(element.bindings.triggerSuggestions).toHaveBeenCalled();
       });
     });
   });

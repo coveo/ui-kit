@@ -43,26 +43,6 @@ export interface SearchBoxSuggestionElement {
 }
 
 /**
- * Action which will be rendered as a button below the lists of suggestions.
- */
-export interface SearchBoxSuggestionAction {
-  /**
-   * The text of the button.
-   */
-  label: string;
-  /**
-   * Hook called when the button is clicked.
-   * @param e DOM event.
-   */
-  onSelect(e: Event): void;
-  /**
-   * Adds a specific shadow part attribute that can be selected with the CSS ::part pseudo-element.
-   * https://developer.mozilla.org/en-US/docs/Web/CSS/::part
-   */
-  part?: string;
-}
-
-/**
  * List of suggestions that will be displayed along other lists (for example, recent queries) when the search box's input is selected.
  */
 export interface SearchBoxSuggestions {
@@ -79,12 +59,6 @@ export interface SearchBoxSuggestions {
    * Method that returns the list of elements which will be rendered in the list of suggestions.
    */
   renderItems(): SearchBoxSuggestionElement[];
-  /**
-   * Method that returns the actions which will be rendered as buttons below the lists of suggestions.
-   * The actions are only rendered when at least one of the elements returned by `renderItems` is displayed.
-   * Unlike suggestions, actions are reached with the Tab key rather than the arrow keys.
-   */
-  renderActions?(): SearchBoxSuggestionAction[];
   /**
    * Hook called when the user changes the search box's input value. This can lead to all the query suggestions being updated.
    */

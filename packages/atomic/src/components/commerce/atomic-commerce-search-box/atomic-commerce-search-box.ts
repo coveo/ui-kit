@@ -8,7 +8,7 @@ import {
   type StandaloneSearchBox,
   type StandaloneSearchBoxState,
 } from '@coveo/headless/commerce';
-import {type CSSResultGroup, css, html, LitElement} from 'lit';
+import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {createRef, type RefOrCallback, ref} from 'lit/directives/ref.js';
@@ -31,14 +31,12 @@ import {
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {getDefaultSlotContent} from '@/src/utils/slot-utils';
 import {isFocusingOut, once, randomID, spreadProperties} from '../../../utils/utils';
+import {renderButton} from '../../common/button';
 import type {RedirectionPayload} from '../../common/search-box/redirection-payload';
 import {renderSearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {renderSearchBoxTextArea} from '../../common/search-box/search-text-area';
 import {renderSubmitButton} from '../../common/search-box/submit-button';
-import {
-  focusFirstSuggestionAction,
-  renderSuggestionActions,
-} from '../../common/suggestions/suggestion-actions';
+import {isRecentQueryClearElement} from '../../common/suggestions/recent-queries';
 import {SuggestionManager} from '../../common/suggestions/suggestion-manager';
 import type {
   SearchBoxSuggestionElement,
@@ -74,8 +72,6 @@ import '@coveo/atomic-legacy/atomic-suggestion-renderer';
  * @part suggestion - A suggested query correction.
  * @part active-suggestion - The currently active suggestion.
  * @part suggestion-divider - An item in the list that separates groups of suggestions.
- * @part suggestions-actions - The wrapper of the action buttons below the suggestion panels.
- * @part suggestions-action - An action button below the suggestion panels.
  * @part suggestion-with-query - An item in the list that will update the search box query.
  *
  * @part query-suggestion-item - A suggestion from the `atomic-commerce-search-box-query-suggestions` component.
@@ -88,7 +84,7 @@ import '@coveo/atomic-legacy/atomic-suggestion-renderer';
  * @part recent-query-icon - The icon of a suggestion from the `atomic-commerce-search-box-recent-queries` component.
  * @part recent-query-text - The text of a suggestion from the `atomic-commerce-search-box-recent-queries` component.
  * @part recent-query-text-highlight - The highlighted portion of the text of a suggestion from the `atomic-commerce-search-box-recent-queries` component.
- * @part recent-query-clear - The button below the suggestion panels that clears the recent queries from the `atomic-commerce-search-box-recent-queries` component.
+ * @part recent-query-clear - The clear button below suggestions from the `atomic-commerce-search-box-recent-queries` component.
  *
  * @part instant-results-item - An instant product rendered by an `atomic-commerce-search-box-instant-products` component.
  * @part instant-results-show-all - The clickable suggestion to show all items for the current instant product search rendered by an `atomic-commerce-search-box-instant-products` component.
@@ -119,7 +115,6 @@ export class AtomicCommerceSearchBox
   private searchBoxState!: SearchBoxState | StandaloneSearchBoxState;
 
   private textAreaRef = createRef<HTMLTextAreaElement>();
-  private suggestionActionsRef = createRef<HTMLElement>();
   private searchBoxSuggestionEventsQueue: CustomEvent<
     SearchBoxSuggestionsEvent<SearchBox | StandaloneSearchBox>
   >[] = [];
@@ -477,17 +472,9 @@ export class AtomicCommerceSearchBox
         }
         break;
       case 'Tab':
-        if (
-          !e.shiftKey &&
-          this.isExpanded &&
-          focusFirstSuggestionAction(this.suggestionActionsRef)
-        ) {
-          e.preventDefault();
-          this.suggestionManager.updateKeyboardActiveDescendant();
-          this.suggestionManager.updateActiveDescendant();
-          break;
+        if (!this.clearRecentQueriesElement) {
+          this.suggestionManager.clearSuggestions();
         }
-        this.suggestionManager.clearSuggestions();
         break;
       default:
         if (this.suggestionManager.keyboardActiveDescendant) {
@@ -573,6 +560,34 @@ export class AtomicCommerceSearchBox
     })}`;
   }
 
+  private get clearRecentQueriesElement() {
+    return this.suggestionManager.allSuggestionElements.find(isRecentQueryClearElement);
+  }
+
+  private renderClearRecentQueries() {
+    const element = this.clearRecentQueriesElement;
+    if (!element) {
+      return nothing;
+    }
+
+    return html`<div
+      class="border-neutral basis-full border-t px-2 py-1"
+      @mousedown=${(e: MouseEvent) => e.preventDefault()}
+    >
+      ${renderButton({
+        props: {
+          style: 'text-primary',
+          part: element.part,
+          class: 'focus-visible:ring-ring-primary px-2 py-1 focus-visible:ring-2',
+          onClick: (e) => {
+            element.onSelect?.(e!);
+            this.textAreaRef.value?.focus();
+          },
+        },
+      })(html`${element.content}`)}
+    </div>`;
+  }
+
   private renderSuggestions() {
     const part = `suggestions-wrapper ${
       this.suggestionManager.isDoubleList ? 'suggestions-double-list' : 'suggestions-single-list'
@@ -583,7 +598,7 @@ export class AtomicCommerceSearchBox
 
     const classes = {
       'bg-background border-neutral absolute top-full left-0 z-10 flex w-full rounded-md border': true,
-      'flex-wrap': this.suggestionManager.suggestionActions.length > 0,
+      'flex-wrap': !!this.clearRecentQueriesElement,
       hidden: !isVisible,
     };
 
@@ -615,31 +630,17 @@ export class AtomicCommerceSearchBox
         },
         () => this.suggestionManager.rightPanel
       )}
-      ${renderSuggestionActions({
-        props: {
-          actions: this.suggestionManager.suggestionActions,
-          actionsRef: this.suggestionActionsRef,
-          onSelect: (action, e) => {
-            action.onSelect(e);
-            this.textAreaRef.value?.focus();
-          },
-          onFocusTextArea: () => this.textAreaRef.value?.focus(),
-          onClose: () => {
-            this.textAreaRef.value?.focus();
-            this.isExpanded = false;
-            this.suggestionManager.clearSuggestions();
-          },
-        },
-      })}
+      ${this.renderClearRecentQueries()}
     </div>`;
   }
 
   private renderPanel(
     side: 'left' | 'right',
-    elements: SearchBoxSuggestionElement[],
+    panelElements: SearchBoxSuggestionElement[],
     setRef: (el: HTMLElement | undefined) => void,
     getRef: () => HTMLElement | undefined
   ) {
+    const elements = panelElements.filter((element) => !isRecentQueryClearElement(element));
     if (!elements.length) {
       return null;
     }

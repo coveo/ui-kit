@@ -3,7 +3,6 @@ import {isMacOS} from '@/src/utils/device-utils';
 import * as replaceBreakpoint from '@/src/utils/replace-breakpoint-utils';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/fake-atomic-commerce-search-box-suggestions-fixture';
-import type {FixtureFakeAtomicCommerceSearchBoxSuggestions} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/fake-atomic-commerce-search-box-suggestions-fixture';
 import {
   buildRecentQueriesList,
   buildSearchBox,
@@ -65,7 +64,6 @@ describe('atomic-commerce-search-box', () => {
     redirectTo = undefined,
     searchBoxValue = '',
     additionalChildren = html``,
-    suggestionActionLabel = undefined,
   }: {
     searchBoxProps?: {
       redirectionUrl?: string;
@@ -79,7 +77,6 @@ describe('atomic-commerce-search-box', () => {
     redirectTo?: string;
     searchBoxValue?: string;
     additionalChildren?: TemplateResult;
-    suggestionActionLabel?: string;
   } = {}) => {
     vi.mocked(buildRecentQueriesList).mockReturnValue(buildFakeRecentQueriesList());
     vi.mocked(loadQuerySuggestActions).mockReturnValue(buildFakeLoadQuerySuggestActions());
@@ -112,7 +109,6 @@ describe('atomic-commerce-search-box', () => {
       ? ''
       : html`<fake-atomic-commerce-search-box-suggestions
           suggestion-count=${suggestionCount}
-          action-label=${ifDefined(suggestionActionLabel)}
         ></fake-atomic-commerce-search-box-suggestions>`;
     const {redirectionUrl, disableSearch, minimumQueryLength, numberOfQueries, clearFilters} =
       searchBoxProps || {};
@@ -139,14 +135,6 @@ describe('atomic-commerce-search-box', () => {
       wrapper: element.shadowRoot!.querySelector('div[part="wrapper"]')!,
       textArea: element.shadowRoot!.querySelector('textarea[part="textarea"]')!,
       suggestions: () => element.shadowRoot!.querySelectorAll('atomic-suggestion-renderer'),
-      suggestionActions: () =>
-        element.shadowRoot!.querySelectorAll<HTMLButtonElement>(
-          'button[part~="suggestions-action"]'
-        ),
-      fakeSuggestions: () =>
-        element.querySelector<FixtureFakeAtomicCommerceSearchBoxSuggestions>(
-          'fake-atomic-commerce-search-box-suggestions'
-        )!,
       clearButton: element.shadowRoot!.querySelector('button[part="clear-button"]')!,
       submitButton: element.shadowRoot!.querySelector('button[part="submit-button"]')!,
       suggestionsContainer: element.shadowRoot!.querySelector(
@@ -460,75 +448,43 @@ describe('atomic-commerce-search-box', () => {
     });
   });
 
-  describe('when the suggestions have actions', () => {
-    const renderSearchBoxWithAction = () => renderSearchBox({suggestionActionLabel: 'Fake action'});
+  describe('when there are recent queries', () => {
+    const renderWithRecentQueries = async () => {
+      const searchBox = await renderSearchBox({noSuggestions: true});
+      await userEvent.click(searchBox.element);
 
-    it('should render the actions below the suggestion panels', async () => {
-      const {element, suggestionsContainer, suggestionActions} = await renderSearchBoxWithAction();
+      return {
+        ...searchBox,
+        clearRecentQueriesButton: () =>
+          searchBox.suggestionsContainer.querySelector<HTMLButtonElement>(
+            'button[part="recent-query-clear"]'
+          )!,
+      };
+    };
 
-      await userEvent.click(element);
+    it('should render the clear button below the suggestions', async () => {
+      const {suggestionsContainer, clearRecentQueriesButton} = await renderWithRecentQueries();
 
-      expect(suggestionActions()).toHaveLength(1);
-      expect(suggestionActions()[0]).toHaveTextContent('Fake action');
-      expect(suggestionActions()[0]).toHaveAttribute('part', 'suggestions-action fake-action');
-      expect(suggestionsContainer.lastElementChild).toHaveAttribute('part', 'suggestions-actions');
+      expect(clearRecentQueriesButton()).toHaveTextContent('Clear recent searches');
+      expect(suggestionsContainer.lastElementChild).toContainElement(clearRecentQueriesButton());
     });
 
-    it('should not render the actions when there are no suggestions', async () => {
-      const {element, suggestionActions} = await renderSearchBox({
-        suggestionCount: 0,
-        suggestionActionLabel: 'Fake action',
-      });
+    it('should clear the recent queries and focus the search box when the clear button is clicked', async () => {
+      const {element, textArea, clearRecentQueriesButton} = await renderWithRecentQueries();
 
-      await userEvent.click(element);
+      await userEvent.click(clearRecentQueriesButton());
 
-      expect(suggestionActions()).toHaveLength(0);
-    });
-
-    it('should call the action #onSelect and focus the text area when an action is clicked', async () => {
-      const {element, textArea, suggestionActions, fakeSuggestions} =
-        await renderSearchBoxWithAction();
-
-      await userEvent.click(element);
-      await userEvent.click(suggestionActions()[0]);
-
-      expect(fakeSuggestions().onActionSelect).toHaveBeenCalledOnce();
+      expect(buildFakeRecentQueriesList().clear).toHaveBeenCalledOnce();
       expect(element.shadowRoot!.activeElement).toBe(textArea);
     });
 
-    it('should focus the first action and keep the suggestions open when Tab is pressed in the text area', async () => {
-      const {element, suggestions, suggestionActions} = await renderSearchBoxWithAction();
+    it('should keep the suggestions when the Tab key is pressed', async () => {
+      const {suggestions} = await renderWithRecentQueries();
+      const suggestionCount = suggestions().length;
 
-      await userEvent.click(element);
       await userEvent.keyboard('{Tab}');
-      await element.updateComplete;
 
-      expect(element.shadowRoot!.activeElement).toBe(suggestionActions()[0]);
-      expect(suggestions()).toHaveLength(3);
-    });
-
-    it('should focus the text area and keep the suggestions open when Shift+Tab is pressed on the first action', async () => {
-      const {element, textArea, suggestions} = await renderSearchBoxWithAction();
-
-      await userEvent.click(element);
-      await userEvent.keyboard('{Tab}');
-      await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
-      await element.updateComplete;
-
-      expect(element.shadowRoot!.activeElement).toBe(textArea);
-      expect(suggestions()).toHaveLength(3);
-    });
-
-    it('should close the suggestions and focus the text area when Escape is pressed on an action', async () => {
-      const {element, textArea, suggestions} = await renderSearchBoxWithAction();
-
-      await userEvent.click(element);
-      await userEvent.keyboard('{Tab}');
-      await userEvent.keyboard('{Escape}');
-      await element.updateComplete;
-
-      expect(element.shadowRoot!.activeElement).toBe(textArea);
-      expect(suggestions()).toHaveLength(0);
+      expect(suggestions()).toHaveLength(suggestionCount);
     });
   });
 

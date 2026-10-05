@@ -3,7 +3,6 @@ import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import {page} from 'vitest/browser';
-import type {SearchBoxSuggestionAction} from '@/src/components/common/suggestions/suggestions-types';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {renderInAtomicSearchBox} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-box-fixture';
@@ -103,42 +102,6 @@ describe('atomic-search-box-recent-queries', () => {
         recentQueriesList: expect.any(Object),
       });
       expect(customEvent).toBeInstanceOf(CustomEvent);
-    });
-  });
-
-  describe('#initialize', () => {
-    it('should return only the recent queries from the renderItems function', async () => {
-      const {element} = await renderElements({searchBoxController: {state: {value: ''}}});
-
-      const items = element.initialize().renderItems();
-
-      expect(items.map((item) => item.query)).toEqual(['query1', 'query2', 'query3']);
-    });
-
-    describe('when returning the renderActions function', () => {
-      let element: AtomicSearchBoxRecentQueries;
-      let actions: SearchBoxSuggestionAction[];
-
-      beforeEach(async () => {
-        ({element} = await renderElements());
-        actions = element.initialize().renderActions?.() ?? [];
-      });
-
-      it('should return the clear recent queries action', () => {
-        expect(actions).toEqual([
-          expect.objectContaining({
-            label: 'Clear recent searches',
-            part: 'recent-query-clear',
-          }),
-        ]);
-      });
-
-      it('should clear the recent queries and trigger suggestions when the action is selected', () => {
-        actions[0].onSelect(new Event('click'));
-
-        expect(buildFakeRecentQueriesList().clear).toHaveBeenCalledWith();
-        expect(element.bindings.triggerSuggestions).toHaveBeenCalled();
-      });
     });
   });
 });
