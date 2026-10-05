@@ -1,6 +1,7 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {PaginationAction} from '@coveo/thermidor-schema';
 import {PaginationPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {useOptimisticValue} from '../use-optimistic-value.js';
 import styles from './Pagination.module.css';
 
 const NUMBER_OF_PAGES = 5;
@@ -8,12 +9,19 @@ const NUMBER_OF_PAGES = 5;
 /**
  * A2-UI component for the `pagination` controls. The generic binder resolves `page` / `totalPages`
  * from `PaginationPropsSchema` (progressively — either may be undefined on an early render);
- * navigating dispatches `selectPage` through `context.dispatchAction`.
+ * navigating dispatches `selectPage`. The target page is held on screen and the grid dims
+ * (`invalidates: ['results']`) until the producer answers.
  */
 export const Pagination = createReactComponent(
   {name: 'Pagination', schema: PaginationPropsSchema},
   ({props, context}) => {
-    const {page, totalPages} = props;
+    const {totalPages} = props;
+
+    // Called before the early returns below so the hook order stays stable across renders.
+    const {value: page, dispatchOptimistic} = useOptimisticValue(
+      props.page,
+      (action: PaginationAction) => context.dispatchAction(action)
+    );
 
     // The `{ path }` bindings resolve progressively; until both are numbers the
     // pagination shell must not render (an unresolved `totalPages` would otherwise
@@ -39,7 +47,12 @@ export const Pagination = createReactComponent(
       const selectPageAction: PaginationAction = {
         event: {name: 'selectPage', context: {page: newPage}},
       };
-      context.dispatchAction(selectPageAction);
+      dispatchOptimistic({
+        action: selectPageAction,
+        next: () => newPage,
+        coalesce: 'absolute',
+        invalidates: ['results'],
+      });
     };
 
     return (

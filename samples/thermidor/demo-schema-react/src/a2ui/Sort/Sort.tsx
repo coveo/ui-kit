@@ -2,6 +2,7 @@ import {useId} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {SortAction} from '@coveo/thermidor-schema';
 import {SortPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {useOptimisticValue} from '../use-optimistic-value.js';
 import styles from './Sort.module.css';
 
 const SORT_LABELS: Record<string, string> = {
@@ -12,15 +13,20 @@ const SORT_LABELS: Record<string, string> = {
 
 /**
  * A2-UI component for the `sort` selector. The generic binder resolves `availableSorts` /
- * `appliedSort` from `SortPropsSchema`; selecting an option dispatches a `selectSort` action
- * through `context.dispatchAction`.
+ * `appliedSort` from `SortPropsSchema`; selecting an option dispatches `selectSort`. The chosen
+ * criterion is held on screen and the grid dims (`invalidates: ['results']`) until the producer
+ * answers.
  */
 export const Sort = createReactComponent(
   {name: 'Sort', schema: SortPropsSchema},
   ({props, context}) => {
     const selectId = useId();
     const availableSorts = props.availableSorts ?? [];
-    const appliedSort = props.appliedSort;
+
+    const {value: appliedSort, dispatchOptimistic} = useOptimisticValue(
+      props.appliedSort,
+      (action: SortAction) => context.dispatchAction(action)
+    );
 
     const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
       const selectedIndex = Number(event.target.value);
@@ -32,7 +38,12 @@ export const Sort = createReactComponent(
             context: {sortCriteria: selected.sortCriteria, fields: selected.fields},
           },
         };
-        context.dispatchAction(selectSortAction);
+        dispatchOptimistic({
+          action: selectSortAction,
+          next: () => ({sortCriteria: selected.sortCriteria, fields: selected.fields}),
+          coalesce: 'absolute',
+          invalidates: ['results'],
+        });
       }
     };
 
