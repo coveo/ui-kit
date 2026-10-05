@@ -69,7 +69,7 @@ Click events are intended to record item view and preview actions, such as:
 > We strongly recommend using the [`InteractiveResult`](../../../interfaces/Search.InteractiveResult.html) controller when implementing your result components.
 > The controller can automatically extract relevant data from result items and log click events for you, as in this [`ResultLink` sample component](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/result-link.tsx).
 
-To learn more about using the `InteractiveResult` component in your result list implementation, see [Lesson 3](https://levelup.coveo.com/learn/courses/headless-commerce-tutorial/lessons/lesson-3-usage-analytics#_click_events) of the Coveo Headless Tutorial.
+To learn more about using the `InteractiveResult` controller in your result list implementation, see the [`InteractiveResult`](../../../interfaces/Search.InteractiveResult.html) reference documentation.
 
 ### Send your own click events
 
