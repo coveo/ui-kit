@@ -83,6 +83,11 @@ test('accepts a submitPrompt action on Session.dispatchAction', () => {
   });
 });
 
+// ── NEGATIVE: `submitPrompt` replaced `Session.submit` ──────────────────────
+test('does not expose Session.submit', () => {
+  expectTypeOf<Session>().not.toHaveProperty('submit');
+});
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 // ── NEGATIVE: state-library / engine-era concepts are NOT exported ──────────

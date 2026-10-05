@@ -78,8 +78,8 @@ function sseFrame(activity: Record<string, unknown>): Uint8Array {
 
 /**
  * Queues a completing stream that emits a single commerce-search surface (with
- * a Pagination node), then `RUN_FINISHED`, and closes. After the submit
- * resolves, the active turn is COMPLETE (not streaming), so the streaming guard
+ * a Pagination node), then `RUN_FINISHED`, and closes. After the prompt's
+ * turn resolves, the active turn is COMPLETE (not streaming), so the streaming guard
  * does not interfere and `dispatchAction` can reach the private execute path.
  */
 function queueSurfaceThenComplete(): void {

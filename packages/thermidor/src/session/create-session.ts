@@ -6,7 +6,7 @@
  * endpoint.
  *
  * The session owns a plain {@link SessionStore} and drives it with the pure
- * {@link foldActivity} reduction, plus the submit / dispatchAction / cancel /
+ * {@link foldActivity} reduction, plus the dispatchAction / cancel / retry /
  * stream-consume orchestration.
  *
  * There are no singletons and no module-level mutable state: every call to
@@ -150,8 +150,6 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
   readonly turns: readonly Turn[];
   /** Registers a listener invoked once per change to the turn list. */
   subscribe(listener: () => void): () => void;
-  /** Submits a prompt, opening a new streaming turn. */
-  submit(input: {prompt?: string}): Promise<void>;
   /**
    * The single consumer-facing action-dispatch entry point, wired directly as
    * the renderer's `onAction` handler (`onAction={session.dispatchAction}`).
@@ -278,8 +276,8 @@ export function createSession<TContracts extends ContractsSchema>(
   }
 
   /**
-   * True while any turn is still streaming. Guards `submit` and the private
-   * dispatch path: while a turn is in flight the session ignores new work and
+   * True while any turn is still streaming. Guards prompt submission and the
+   * private dispatch path: while a turn is in flight the session ignores new work and
    * leaves the turn list untouched.
    */
   function hasStreamingTurn(): boolean {
@@ -287,7 +285,7 @@ export function createSession<TContracts extends ContractsSchema>(
   }
 
   /**
-   * Builds the request fields shared by `submit` and the private dispatch path,
+   * Builds the request fields shared by prompt turns and the private dispatch path,
    * invoking BOTH context providers fresh at request-build time. Because the providers
    * are functions, context is never stored on the session and is never
    * serialized; a restored session therefore reads today's context from the
@@ -487,10 +485,6 @@ export function createSession<TContracts extends ContractsSchema>(
     await executeStream(turnId, buildConversationRequest(prompt ?? ''));
   }
 
-  async function submit(input: {prompt?: string}): Promise<void> {
-    await startPromptTurn(input.prompt);
-  }
-
   /**
    * Private validate-and-execute path. Validates the recovered action's payload
    * against the component's generated Zod action schema before the POST and
@@ -644,7 +638,6 @@ export function createSession<TContracts extends ContractsSchema>(
     subscribe(listener) {
       return store.subscribe(listener);
     },
-    submit,
     dispatchAction,
     cancel,
     retry,
