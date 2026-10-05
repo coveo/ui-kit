@@ -161,7 +161,7 @@ const flush = () => new Promise((resolve) => setTimeout(resolve, 0));
 
 /** Opens a new turn for `prompt`, resolving once its stream ends. */
 function startTurn(session: Session, prompt: string): Promise<void> {
-  return session.submit({prompt});
+  return session.dispatchAction({name: 'submitPrompt', payload: {prompt}});
 }
 
 describe('createSession lifecycle', () => {
@@ -193,6 +193,123 @@ describe('createSession lifecycle', () => {
       first.emit({type: 'RUN_FINISHED'});
       first.close();
       await submitPromise;
+    });
+  });
+
+  describe('submitPrompt action', () => {
+    type PromptSender = (session: Session, prompt: string) => Promise<void>;
+
+    const viaSubmit: PromptSender = (session, prompt) => session.submit({prompt});
+    const viaSubmitPrompt: PromptSender = (session, prompt) =>
+      session.dispatchAction({name: 'submitPrompt', payload: {prompt}});
+
+    /**
+     * Drives a first prompt that establishes Gateway session keys, then a
+     * follow-up, and returns every POSTed request plus the turns without their
+     * generated ids.
+     */
+    async function driveConversation(send: PromptSender) {
+      callMock.mockReset();
+      const session = createSession(baseConfig);
+
+      const first = queueStream();
+      const firstTurn = send(session, 'find shoes');
+      await first.opened;
+      first.emit({
+        type: 'RUN_STARTED',
+        threadId: 'gateway-session-123',
+        runId: 'gateway-run-123',
+        conversationSessionId: 'gateway-session-123',
+        conversationToken: 'gateway-token-abc',
+      });
+      first.emit({type: 'RUN_FINISHED'});
+      first.close();
+      await firstTurn;
+
+      const followUp = queueStream();
+      const followUpTurn = send(session, 'in red');
+      await followUp.opened;
+      followUp.emit({type: 'RUN_FINISHED'});
+      followUp.close();
+      await followUpTurn;
+
+      return {
+        requests: callMock.mock.calls.map(([request]) => request),
+        turns: session.turns.map(({id: _id, ...turn}) => turn),
+      };
+    }
+
+    it('opens the first turn with no active turn and sends the prompt as a message', async () => {
+      const session = createSession(baseConfig);
+
+      const first = queueStream();
+      const firstTurn = session.dispatchAction({
+        name: 'submitPrompt',
+        payload: {prompt: 'find shoes'},
+      });
+      await first.opened;
+
+      expect(session.turns).toHaveLength(1);
+      expect(session.turns[0].status).toBe('streaming');
+      expect(session.turns[0].input.prompt).toBe('find shoes');
+      expect(callMock.mock.calls[0][0]).toMatchObject({message: 'find shoes', action: null});
+
+      first.emit({type: 'RUN_FINISHED'});
+      first.close();
+      await firstTurn;
+      expect(session.turns[0].status).toBe('complete');
+    });
+
+    it('produces the same requests and turns as submit() for a first prompt and a follow-up', async () => {
+      const expected = await driveConversation(viaSubmit);
+      const actual = await driveConversation(viaSubmitPrompt);
+
+      expect(actual.requests).toHaveLength(2);
+      expect(actual).toEqual(expected);
+    });
+
+    it('is ignored while a turn is streaming and leaves turns unchanged', async () => {
+      const session = createSession(baseConfig);
+
+      const first = queueStream();
+      const firstTurn = viaSubmitPrompt(session, 'first');
+      await first.opened;
+
+      await viaSubmitPrompt(session, 'second');
+
+      expect(callMock).toHaveBeenCalledTimes(1);
+      expect(session.turns).toHaveLength(1);
+      expect(session.turns[0].input.prompt).toBe('first');
+
+      first.emit({type: 'RUN_FINISHED'});
+      first.close();
+      await firstTurn;
+    });
+
+    it('opens a turn that retry() re-drives with its original prompt', async () => {
+      const session = createSession(baseConfig);
+
+      const first = queueStream();
+      const firstTurn = viaSubmitPrompt(session, 'find shoes');
+      await first.opened;
+      session.cancel();
+      await firstTurn;
+
+      const turnId = session.turns[0].id;
+      expect(session.turns[0].status).toBe('error');
+
+      const retryStream = queueStream();
+      session.retry(turnId);
+      await retryStream.opened;
+
+      expect(session.turns).toHaveLength(1);
+      expect(session.turns[0].status).toBe('streaming');
+      expect(callMock.mock.calls[1][0]).toMatchObject({message: 'find shoes', action: null});
+
+      retryStream.emit({type: 'RUN_FINISHED'});
+      retryStream.close();
+      await flush();
+      expect(session.turns[0].status).toBe('complete');
     });
   });
 

@@ -119,7 +119,7 @@ interface CapturedRequest {
 
 /** Opens a new turn for `prompt`, resolving once its stream ends. */
 function startTurn(session: Session, prompt: string): Promise<void> {
-  return session.submit({prompt});
+  return session.dispatchAction({name: 'submitPrompt', payload: {prompt}});
 }
 
 /**

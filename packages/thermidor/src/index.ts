@@ -17,7 +17,12 @@
 
 // ── Session factory + handle ────────────────────────────────────────────────
 export {createSession} from '@/src/session/create-session.js';
-export type {Session, SessionConfig, A2uiClientMessage} from '@/src/session/create-session.js';
+export type {
+  Session,
+  SessionConfig,
+  A2uiClientMessage,
+  SubmitPromptAction,
+} from '@/src/session/create-session.js';
 
 // ── Injected-contract type (the runtime's decoupling seam) ───────────────────
 export type {
