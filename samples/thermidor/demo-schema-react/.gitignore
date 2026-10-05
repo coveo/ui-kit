@@ -3,5 +3,6 @@ dist
 
 .env
 .env.local
+.env.demo.local
 playwright-report
 test-results

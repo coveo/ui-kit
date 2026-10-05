@@ -48,16 +48,21 @@ This sample uses the `/converse-schema` route on the mock server (via `VITE_COVE
 
 ## Configuration
 
-`pnpm dev` needs no configuration. With no `VITE_COVEO_ORGANIZATION_ID` set, the
-sample falls back to the public `searchuisamples` organization — the same org and
-intentionally-public API key the other samples use through
+`pnpm dev` needs no configuration. It runs Vite in `demo` mode, which loads the
+committed [`.env.demo`](.env.demo): the public `searchuisamples` organization —
+the same org and intentionally-public API key the other samples use through
 `getSampleSearchEngineConfiguration()` — which has the commerce agent enabled.
 
-To point it at your own organization, copy `.env.example` to `.env.local` and set
-`VITE_COVEO_ORGANIZATION_ID`. Doing so opts out of the sample defaults **as a
-bundle**: the tracking id, locale, and platform environment all belong to
-`searchuisamples`, so they are not mixed into another organization's
-configuration. Set the ones you need alongside it.
+To point it at your own organization, copy `.env.example` to `.env.demo.local`
+(git-ignored) and fill it in. In `demo` mode, Vite gives `.env.demo` precedence
+over `.env.local`, so a plain `.env.local` is ignored by `pnpm dev`. Because
+`.env.demo` sets every variable, set all of them in `.env.demo.local` — the
+tracking id, locale, and platform environment belong to `searchuisamples` and
+should not be mixed into another organization's configuration.
+
+The other scripts (`dev:agent-gateway`, `dev:mock`, `build`) run in the default
+mode and keep reading `.env.local`. With no `VITE_COVEO_ORGANIZATION_ID` set,
+they fall back to the same `searchuisamples` defaults as a bundle.
 
 See [`src/public-sample-configuration.ts`](src/public-sample-configuration.ts).
 
