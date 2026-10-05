@@ -4,12 +4,12 @@ import type {Session, Turn} from '@coveo/thermidor';
 import {AppShell} from './AppShell.js';
 import {makeTurn, makeSurface} from '../test/turn-fixtures.js';
 
-const mockSubmit = vi.fn();
+const mockDispatchAction = vi.fn();
 
 let mockTurns: Turn[] = [];
 
 // AppShell reads turns through `useSession()`. The fake session exposes the
-// members the shell touches: an observable `turns` list and `submit`.
+// members the shell touches: an observable `turns` list and `dispatchAction`.
 vi.mock('../context/session.js', () => ({
   useSession: () =>
     ({
@@ -17,8 +17,7 @@ vi.mock('../context/session.js', () => ({
         return mockTurns;
       },
       subscribe: () => () => undefined,
-      submit: mockSubmit,
-      dispatchAction: vi.fn(),
+      dispatchAction: mockDispatchAction,
     }) as unknown as Session,
 }));
 
@@ -58,14 +57,17 @@ describe('AppShell bidirectional navigation', () => {
     mockTurns = [];
   });
 
-  it('session continuity: same session submit used across all transitions', () => {
+  it('session continuity: same session submitPrompt used across all transitions', () => {
     const {rerender} = render(<AppShell />);
 
     // Landing → submit
     act(() => {
       screen.getByTestId('submit-btn').click();
     });
-    expect(mockSubmit).toHaveBeenCalledWith({prompt: 'surfboards'});
+    expect(mockDispatchAction).toHaveBeenCalledWith({
+      name: 'submitPrompt',
+      payload: {prompt: 'surfboards'},
+    });
 
     // Turn completes with a commerce-search surface → navigate to search
     mockTurns = [
@@ -78,12 +80,15 @@ describe('AppShell bidirectional navigation', () => {
     rerender(<AppShell />);
     expect(screen.getByTestId('search-results-page')).toBeDefined();
 
-    // Submit from search → same session submit
-    mockSubmit.mockClear();
+    // Submit from search → same session submitPrompt
+    mockDispatchAction.mockClear();
     act(() => {
       screen.getByTestId('search-submit-btn').click();
     });
-    expect(mockSubmit).toHaveBeenCalledWith({prompt: 'kayaks'});
+    expect(mockDispatchAction).toHaveBeenCalledWith({
+      name: 'submitPrompt',
+      payload: {prompt: 'kayaks'},
+    });
   });
 
   it('"Back to conversation" navigates from search to conversation without submitting', () => {
@@ -129,7 +134,7 @@ describe('AppShell bidirectional navigation', () => {
       screen.getByTestId('back-to-search').click();
     });
     expect(screen.getByTestId('search-results-page')).toBeDefined();
-    expect(mockSubmit).toHaveBeenCalledTimes(1); // only the kayaks submit, no extra
+    expect(mockDispatchAction).toHaveBeenCalledTimes(1); // only the kayaks submit, no extra
   });
 
   it('navigates to search when a turn has both a commerce-search surface and reasoning steps (ordering invariant)', () => {
