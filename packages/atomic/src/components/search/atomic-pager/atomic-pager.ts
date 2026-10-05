@@ -76,7 +76,7 @@ export class AtomicPager
   public searchStatusState!: SearchStatusState;
 
   /**
-   * The maximum number of page buttons to display in the pager. Fewer page buttons are displayed when they don't fit in the available width.
+   * The maximum number of page buttons to display in the pager.
    */
   @property({
     reflect: true,

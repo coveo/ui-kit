@@ -71,7 +71,7 @@ export class AtomicCommercePager
   public pagerState!: PaginationState;
 
   /**
-   * The maximum number of page buttons to display. Fewer page buttons are displayed when they don't fit in the available width.
+   * The maximum number of page buttons to display.
    */
   @property({reflect: true, attribute: 'number-of-pages', type: Number})
   numberOfPages: number = 5;
