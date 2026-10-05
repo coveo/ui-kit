@@ -60,12 +60,21 @@ test.describe('atomic-search-box', () => {
         await expect(searchBox.recentQueries().first()).not.toBeVisible();
       });
 
-      test('should clear recent queries when pressing enter while the clear button is focused', async ({
+      test('should focus the clear button when pressing Tab in the search box', async ({
         searchBox,
       }) => {
-        await searchBox.clearRecentQueriesButton.hover();
-        await searchBox.searchInput.press('Enter');
+        await searchBox.searchInput.press('Tab');
+        await expect(searchBox.clearRecentQueriesButton).toBeFocused();
+        await expect(searchBox.recentQueries().first()).toBeVisible();
+      });
+
+      test('should clear recent queries and focus the search box when pressing Enter on the clear button', async ({
+        searchBox,
+      }) => {
+        await searchBox.searchInput.press('Tab');
+        await searchBox.clearRecentQueriesButton.press('Enter');
         await expect(searchBox.recentQueries().first()).not.toBeVisible();
+        await expect(searchBox.searchInput).toBeFocused();
       });
     });
 

@@ -10,6 +10,7 @@ export type {PopoverChildFacet} from './components/common/facets/popover/popover
 export type {RedirectionPayload} from './components/common/search-box/redirection-payload';
 export {dispatchSearchBoxSuggestionsEvent} from './components/common/suggestions/suggestions-events';
 export type {
+  SearchBoxSuggestionAction,
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,

@@ -1,8 +1,10 @@
 import type {SearchBox} from '@coveo/headless';
 import {LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {vi} from 'vitest';
 import {dispatchSearchBoxSuggestionsEvent} from '@/src/components/common/suggestions/suggestions-events';
 import type {
+  SearchBoxSuggestionAction,
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
@@ -21,6 +23,11 @@ export class FixtureFakeAtomicSearchBoxSuggestions
   @property({type: Number, attribute: 'suggestion-count'})
   suggestionCount = 3;
 
+  @property({attribute: 'action-label'})
+  actionLabel?: string;
+
+  onActionSelect = vi.fn();
+
   connectedCallback() {
     super.connectedCallback();
     dispatchSearchBoxSuggestionsEvent<SearchBox, Bindings>(
@@ -37,6 +44,7 @@ export class FixtureFakeAtomicSearchBoxSuggestions
     return {
       position: 0,
       renderItems: () => this.renderItems(),
+      renderActions: () => this.renderActions(),
     };
   }
 
@@ -51,5 +59,13 @@ export class FixtureFakeAtomicSearchBoxSuggestions
         query: `suggestion ${num}`,
       };
     });
+  }
+
+  private renderActions(): SearchBoxSuggestionAction[] {
+    if (!this.actionLabel) {
+      return [];
+    }
+
+    return [{label: this.actionLabel, part: 'fake-action', onSelect: this.onActionSelect}];
   }
 }

@@ -4,40 +4,13 @@ import type {LitElement} from 'lit';
 import {debounce} from '../../../utils/debounce-utils';
 import {promiseTimeout} from '../../../utils/promise-utils';
 import type {
+  SearchBoxSuggestionAction,
   SearchBoxSuggestionElement,
+  SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
 } from './suggestions-types';
 import {elementHasNoQuery, elementHasQuery} from './suggestions-utils';
-
-/**
- * List of suggestions that will be displayed along other lists (for example, recent queries) when the search box's input is selected.
- */
-interface SearchBoxSuggestions {
-  /**
-   * The search box will sort the position of suggestions using this value, the lowest value being first.
-   * By default, the DOM position will be used.
-   */
-  position: number;
-  /**
-   * Whether the suggestions should be listed in the right or left panel. By default, the suggestions are listed in the right panel.
-   */
-  panel?: 'left' | 'right';
-  /**
-   * Method that returns the list of elements which will be rendered in the list of suggestions.
-   */
-  renderItems(): SearchBoxSuggestionElement[];
-  /**
-   * Hook called when the user changes the search box's input value. This can lead to all the query suggestions being updated.
-   */
-  onInput?(): Promise<unknown>;
-  /**
-   * Hook called when the current suggested query changes as the user navigates the list of suggestions.
-   * This is used for instant results, which are rendered based on the current suggested query.
-   * @param q The new current suggested query.
-   */
-  onSuggestedQueryChange?(q: string): Promise<unknown>;
-}
 
 interface SearchBoxProps {
   getSearchBoxValue: () => string;
@@ -53,6 +26,7 @@ export class SuggestionManager<SearchBoxController> {
   public suggestions: SearchBoxSuggestions[] = [];
   public leftSuggestionElements: SearchBoxSuggestionElement[] = [];
   public rightSuggestionElements: SearchBoxSuggestionElement[] = [];
+  public suggestionActions: SearchBoxSuggestionAction[] = [];
   public leftPanel: HTMLElement | undefined = undefined;
   public rightPanel: HTMLElement | undefined = undefined;
   public triggerSuggestions: () => Promise<void>;
@@ -66,6 +40,7 @@ export class SuggestionManager<SearchBoxController> {
   private previousActiveDescendantElement: HTMLElement | null = null;
   private leftSuggestions: SearchBoxSuggestions[] = [];
   private rightSuggestions: SearchBoxSuggestions[] = [];
+  private suggestionsByElement = new WeakMap<SearchBoxSuggestionElement, SearchBoxSuggestions>();
 
   constructor(private ownerSearchBoxProps: SearchBoxProps) {
     this.triggerSuggestions = debounce(
@@ -274,6 +249,7 @@ export class SuggestionManager<SearchBoxController> {
 
     this.rightSuggestions = splitSuggestions('right');
     this.rightSuggestionElements = this.getSuggestionElements(this.rightSuggestions);
+    this.suggestionActions = this.getSuggestionActions();
 
     const defaultSuggestedQuery = this.allSuggestionElements.find(elementHasQuery)?.query || '';
 
@@ -365,6 +341,8 @@ export class SuggestionManager<SearchBoxController> {
     if (!this.isPanelInFocus(this.rightPanel, query)) {
       this.rightSuggestionElements = this.getSuggestionElements(this.rightSuggestions);
     }
+
+    this.suggestionActions = this.getSuggestionActions();
   }
 
   public forceUpdate() {
@@ -405,13 +383,27 @@ export class SuggestionManager<SearchBoxController> {
   }
 
   private getSuggestionElements(suggestions: SearchBoxSuggestions[]) {
-    const elements = suggestions.flatMap((suggestion) => suggestion.renderItems());
+    const elements = suggestions.flatMap((suggestion) => {
+      const suggestionElements = suggestion.renderItems();
+      suggestionElements.forEach((element) => this.suggestionsByElement.set(element, suggestion));
+      return suggestionElements;
+    });
 
     const max =
       this.ownerSearchBoxProps.getNumberOfSuggestionsToDisplay() +
       elements.filter(elementHasNoQuery).length;
 
     return elements.slice(0, max);
+  }
+
+  private getSuggestionActions() {
+    const displayedSuggestions = new Set(
+      this.allSuggestionElements.map((element) => this.suggestionsByElement.get(element))
+    );
+
+    return [...this.leftSuggestions, ...this.rightSuggestions]
+      .filter((suggestion) => displayedSuggestions.has(suggestion))
+      .flatMap((suggestion) => suggestion.renderActions?.() ?? []);
   }
 
   private updateDescendants(activeDescendant = '') {
@@ -423,5 +415,6 @@ export class SuggestionManager<SearchBoxController> {
   private clearSuggestionElements() {
     this.leftSuggestionElements = [];
     this.rightSuggestionElements = [];
+    this.suggestionActions = [];
   }
 }

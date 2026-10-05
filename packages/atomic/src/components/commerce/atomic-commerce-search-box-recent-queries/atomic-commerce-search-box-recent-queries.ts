@@ -12,13 +12,13 @@ import {SafeStorage, StorageItems} from '@/src/utils/local-storage-utils';
 import {once} from '@/src/utils/utils';
 import Clock from '../../../images/clock.svg';
 import {
-  getPartialRecentQueryClearElement,
+  getPartialRecentQueryClearAction,
   getPartialRecentQueryElement,
   renderRecentQuery,
-  renderRecentQueryClear,
 } from '../../common/suggestions/recent-queries';
 import {dispatchSearchBoxSuggestionsEvent} from '../../common/suggestions/suggestions-events';
 import type {
+  SearchBoxSuggestionAction,
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
@@ -89,6 +89,7 @@ export class AtomicCommerceSearchBoxRecentQueries
     return {
       position: Array.from(this.parentNode!.children).indexOf(this),
       renderItems: () => this.renderItems(),
+      renderActions: () => this.renderActions(),
     };
   }
 
@@ -127,28 +128,20 @@ export class AtomicCommerceSearchBoxRecentQueries
       .filter((recentQuery) => recentQuery.toLowerCase().startsWith(query.toLowerCase()))
       .slice(0, max);
 
-    const suggestionElements: SearchBoxSuggestionElement[] = filteredQueries.map((value) =>
-      this.renderItem(value)
-    );
-    if (suggestionElements.length) {
-      suggestionElements.unshift(this.renderClear());
-    }
-
-    return suggestionElements;
+    return filteredQueries.map((value) => this.renderItem(value));
   }
 
-  private renderClear(): SearchBoxSuggestionElement {
-    const partialItem = getPartialRecentQueryClearElement(this.bindings.i18n);
-
-    return {
-      ...partialItem,
-      content: renderRecentQueryClear({i18n: this.bindings.i18n}),
-      onSelect: () => {
-        this.recentQueriesList.clear();
-        this.bindings.triggerSuggestions();
-        this.searchBoxAriaMessage.message = this.bindings.i18n.t('recent-search-cleared');
+  private renderActions(): SearchBoxSuggestionAction[] {
+    return [
+      {
+        ...getPartialRecentQueryClearAction(this.bindings.i18n),
+        onSelect: () => {
+          this.recentQueriesList.clear();
+          this.bindings.triggerSuggestions();
+          this.searchBoxAriaMessage.message = this.bindings.i18n.t('recent-search-cleared');
+        },
       },
-    };
+    ];
   }
 
   private renderItem(value: string): SearchBoxSuggestionElement {

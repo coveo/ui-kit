@@ -4,7 +4,7 @@ import type {i18n} from 'i18next';
 import {html, render} from 'lit';
 import {when} from 'lit/directives/when.js';
 import {encodeForDomAttribute} from '../../../utils/string-utils';
-import type {SearchBoxSuggestionElement} from './suggestions-types';
+import type {SearchBoxSuggestionAction, SearchBoxSuggestionElement} from './suggestions-types';
 
 export const getPartialRecentQueryElement = (
   value: string,
@@ -21,16 +21,12 @@ export const getPartialRecentQueryElement = (
   };
 };
 
-export const getPartialRecentQueryClearElement = (
+export const getPartialRecentQueryClearAction = (
   i18n: i18n
-): Pick<SearchBoxSuggestionElement, 'ariaLabel' | 'key' | 'part' | 'hideIfLast'> => {
+): Pick<SearchBoxSuggestionAction, 'label' | 'part'> => {
   return {
-    key: 'recent-query-clear',
-    ariaLabel: i18n.t('clear-recent-searches', {
-      interpolation: {escapeValue: false},
-    }),
-    part: 'recent-query-title-item suggestion-divider',
-    hideIfLast: true,
+    label: i18n.t('clear-recent-searches'),
+    part: 'recent-query-clear',
   };
 };
 
@@ -73,20 +69,6 @@ export const renderRecentQuery = ({
         ></span>`,
       () => html`<span part="recent-query-text" class="line-clamp-2 break-all"> ${value} </span>`
     )}
-  </div>`;
-
-  const container = document.createElement('div');
-  render(template, container);
-  return container.firstElementChild as HTMLElement;
-};
-
-export const renderRecentQueryClear = ({i18n}: {i18n: i18n}): HTMLElement => {
-  const template = html` <div
-    part="recent-query-title-content"
-    class="pointer-events-none flex w-full justify-between"
-  >
-    <span class="font-bold" part="recent-query-title"> ${i18n.t('recent-searches')} </span>
-    <span part="recent-query-clear">${i18n.t('clear')}</span>
   </div>`;
 
   const container = document.createElement('div');

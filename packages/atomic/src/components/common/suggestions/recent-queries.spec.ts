@@ -3,11 +3,10 @@ import {beforeAll, describe, expect, it} from 'vitest';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {
-  getPartialRecentQueryClearElement,
+  getPartialRecentQueryClearAction,
   getPartialRecentQueryElement,
   type RecentQueriesContainerProps,
   renderRecentQuery,
-  renderRecentQueryClear,
 } from './recent-queries';
 
 describe('#getPartialRecentQueryElement', () => {
@@ -36,29 +35,23 @@ describe('#getPartialRecentQueryElement', () => {
   });
 });
 
-describe('#getPartialRecentQueryClearElement', () => {
+describe('#getPartialRecentQueryClearAction', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
 
   beforeAll(async () => {
     i18n = await createTestI18n();
   });
 
-  it('should return the "recent-query-title-item suggestion-divider" part', () => {
-    const result = getPartialRecentQueryClearElement(i18n);
+  it('should return the "recent-query-clear" part', () => {
+    const result = getPartialRecentQueryClearAction(i18n);
 
-    expect(result.part).toBe('recent-query-title-item suggestion-divider');
+    expect(result.part).toBe('recent-query-clear');
   });
 
-  it('should return the correct aria-label', () => {
-    const result = getPartialRecentQueryClearElement(i18n);
+  it('should return the "Clear recent searches" label', () => {
+    const result = getPartialRecentQueryClearAction(i18n);
 
-    expect(result.ariaLabel).toBe('Clear recent searches');
-  });
-
-  it('should return the "recent-query-clear" key', () => {
-    const result = getPartialRecentQueryClearElement(i18n);
-
-    expect(result.key).toBe('recent-query-clear');
+    expect(result.label).toBe('Clear recent searches');
   });
 });
 
@@ -122,53 +115,6 @@ describe('#renderRecentQuery', () => {
 
   it('container should have pointer-events-none class to allow clicks on parent', async () => {
     const element = await renderQuery();
-
-    expect(element).toHaveClass('pointer-events-none');
-  });
-});
-
-describe('#renderRecentQueryClear', () => {
-  let i18n: Awaited<ReturnType<typeof createTestI18n>>;
-
-  beforeAll(async () => {
-    i18n = await createTestI18n();
-  });
-
-  const renderQueryClear = async () => {
-    return await fixture(html`${renderRecentQueryClear({i18n})}`);
-  };
-
-  it('should have the "recent-query-title-content" part on the container', async () => {
-    const element = await renderQueryClear();
-    expect(element).toHaveAttribute('part', 'recent-query-title-content');
-  });
-
-  it('should have the "recent-query-title" part on the first span', async () => {
-    const element = await renderQueryClear();
-    const span = element.querySelector('span');
-    expect(span).toHaveAttribute('part', 'recent-query-title');
-  });
-
-  it('should have the proper content on the first span', async () => {
-    const element = await renderQueryClear();
-    const span = element.querySelector('span');
-    expect(span).toHaveTextContent('Recent searches');
-  });
-
-  it('should have the "recent-query-clear" part on the second span', async () => {
-    const element = await renderQueryClear();
-    const span = element.querySelector('span:nth-of-type(2)');
-    expect(span).toHaveAttribute('part', 'recent-query-clear');
-  });
-
-  it('should have the proper content on the second span', async () => {
-    const element = await renderQueryClear();
-    const span = element.querySelector('span:nth-of-type(2)');
-    expect(span).toHaveTextContent('Clear');
-  });
-
-  it('container should have pointer-events-none class to allow clicks on parent', async () => {
-    const element = await renderQueryClear();
 
     expect(element).toHaveClass('pointer-events-none');
   });

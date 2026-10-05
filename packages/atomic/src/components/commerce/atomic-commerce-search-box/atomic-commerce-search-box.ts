@@ -35,6 +35,10 @@ import type {RedirectionPayload} from '../../common/search-box/redirection-paylo
 import {renderSearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {renderSearchBoxTextArea} from '../../common/search-box/search-text-area';
 import {renderSubmitButton} from '../../common/search-box/submit-button';
+import {
+  focusFirstSuggestionAction,
+  renderSuggestionActions,
+} from '../../common/suggestions/suggestion-actions';
 import {SuggestionManager} from '../../common/suggestions/suggestion-manager';
 import type {
   SearchBoxSuggestionElement,
@@ -70,6 +74,8 @@ import '@coveo/atomic-legacy/atomic-suggestion-renderer';
  * @part suggestion - A suggested query correction.
  * @part active-suggestion - The currently active suggestion.
  * @part suggestion-divider - An item in the list that separates groups of suggestions.
+ * @part suggestions-actions - The wrapper of the action buttons below the suggestion panels.
+ * @part suggestions-action - An action button below the suggestion panels.
  * @part suggestion-with-query - An item in the list that will update the search box query.
  *
  * @part query-suggestion-item - A suggestion from the `atomic-commerce-search-box-query-suggestions` component.
@@ -82,10 +88,7 @@ import '@coveo/atomic-legacy/atomic-suggestion-renderer';
  * @part recent-query-icon - The icon of a suggestion from the `atomic-commerce-search-box-recent-queries` component.
  * @part recent-query-text - The text of a suggestion from the `atomic-commerce-search-box-recent-queries` component.
  * @part recent-query-text-highlight - The highlighted portion of the text of a suggestion from the `atomic-commerce-search-box-recent-queries` component.
- * @part recent-query-title-item - The clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component.
- * @part recent-query-title-content - The contents of the clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component.
- * @part recent-query-title - The "recent searches" text of the clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component.
- * @part recent-query-clear - The "clear" text of the clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component.
+ * @part recent-query-clear - The button below the suggestion panels that clears the recent queries from the `atomic-commerce-search-box-recent-queries` component.
  *
  * @part instant-results-item - An instant product rendered by an `atomic-commerce-search-box-instant-products` component.
  * @part instant-results-show-all - The clickable suggestion to show all items for the current instant product search rendered by an `atomic-commerce-search-box-instant-products` component.
@@ -116,6 +119,7 @@ export class AtomicCommerceSearchBox
   private searchBoxState!: SearchBoxState | StandaloneSearchBoxState;
 
   private textAreaRef = createRef<HTMLTextAreaElement>();
+  private suggestionActionsRef = createRef<HTMLElement>();
   private searchBoxSuggestionEventsQueue: CustomEvent<
     SearchBoxSuggestionsEvent<SearchBox | StandaloneSearchBox>
   >[] = [];
@@ -473,6 +477,16 @@ export class AtomicCommerceSearchBox
         }
         break;
       case 'Tab':
+        if (
+          !e.shiftKey &&
+          this.isExpanded &&
+          focusFirstSuggestionAction(this.suggestionActionsRef)
+        ) {
+          e.preventDefault();
+          this.suggestionManager.updateKeyboardActiveDescendant();
+          this.suggestionManager.updateActiveDescendant();
+          break;
+        }
         this.suggestionManager.clearSuggestions();
         break;
       default:
@@ -569,6 +583,7 @@ export class AtomicCommerceSearchBox
 
     const classes = {
       'bg-background border-neutral absolute top-full left-0 z-10 flex w-full rounded-md border': true,
+      'flex-wrap': this.suggestionManager.suggestionActions.length > 0,
       hidden: !isVisible,
     };
 
@@ -600,6 +615,22 @@ export class AtomicCommerceSearchBox
         },
         () => this.suggestionManager.rightPanel
       )}
+      ${renderSuggestionActions({
+        props: {
+          actions: this.suggestionManager.suggestionActions,
+          actionsRef: this.suggestionActionsRef,
+          onSelect: (action, e) => {
+            action.onSelect(e);
+            this.textAreaRef.value?.focus();
+          },
+          onFocusTextArea: () => this.textAreaRef.value?.focus(),
+          onClose: () => {
+            this.textAreaRef.value?.focus();
+            this.isExpanded = false;
+            this.suggestionManager.clearSuggestions();
+          },
+        },
+      })}
     </div>`;
   }
 
@@ -654,10 +685,6 @@ export class AtomicCommerceSearchBox
         .isDoubleList=${this.suggestionManager.isDoubleList}
         .onClick=${async (e: Event) => {
           await this.suggestionManager.onSuggestionClick(item, e);
-          if (item.key === 'recent-query-clear') {
-            return;
-          }
-
           this.isExpanded = false;
         }}
         .onMouseEnter=${async () => {

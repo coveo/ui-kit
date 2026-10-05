@@ -27,7 +27,7 @@ export class SearchBoxPageObject extends BasePageObject {
   }
 
   get clearRecentQueriesButton() {
-    return this.component.getByLabel('Clear recent searches.').first();
+    return this.component.getByRole('button', {name: 'Clear recent searches'}).first();
   }
 
   get numberOfQueries() {
