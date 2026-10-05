@@ -199,7 +199,8 @@ describe('atomic-commerce-search-box-recent-queries', () => {
         it('should have the correct properties on the query clear item', () => {
           expect(items[0]).toEqual(
             expect.objectContaining({
-              part: 'recent-query-clear',
+              part: 'recent-query-title-item suggestion-divider',
+              hideIfLast: true,
               ariaLabel: 'Clear recent searches',
               key: 'recent-query-clear',
             })
@@ -246,6 +247,41 @@ describe('atomic-commerce-search-box-recent-queries', () => {
           items[1].onSelect?.(new Event('click'));
 
           expect(buildFakeRecentQueriesList().executeRecentQuery).toHaveBeenCalled();
+        });
+
+        describe('when rendering the query clear item', () => {
+          const setupContent = () => {
+            return items[0].content as HTMLElement;
+          };
+
+          it('should have the correct part on the container', () => {
+            const content = setupContent();
+            expect(content).toHaveAttribute('part', 'recent-query-title-content');
+          });
+
+          it('should have the correct part on the recent searches span ', () => {
+            const content = setupContent();
+            const recentSearchesSpan = content.querySelector('span');
+            expect(recentSearchesSpan).toHaveAttribute('part', 'recent-query-title');
+          });
+
+          it('should have the correct text on the recent searches span', () => {
+            const content = setupContent();
+            const recentSearchesSpan = content.querySelector('span');
+            expect(recentSearchesSpan).toHaveTextContent('Recent searches');
+          });
+
+          it('should have the correct part on the recent query clear span', () => {
+            const content = setupContent();
+            const recentQueryClearSpan = content.querySelector('span[part="recent-query-clear"]');
+            expect(recentQueryClearSpan).toHaveAttribute('part', 'recent-query-clear');
+          });
+
+          it('should have the correct text on the recent query clear span', () => {
+            const content = setupContent();
+            const recentQueryClearSpan = content.querySelector('span[part="recent-query-clear"]');
+            expect(recentQueryClearSpan).toHaveTextContent('Clear');
+          });
         });
 
         describe('when rendering the recent query item', () => {

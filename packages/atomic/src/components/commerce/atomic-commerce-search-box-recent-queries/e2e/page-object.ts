@@ -11,6 +11,6 @@ export class AtomicCommerceSearchBoxRecentQueriesPageObject extends BasePageObje
   }
 
   get clearButton() {
-    return this.page.getByRole('button', {name: 'Clear recent searches'});
+    return this.page.getByLabel('Clear recent searches.');
   }
 }

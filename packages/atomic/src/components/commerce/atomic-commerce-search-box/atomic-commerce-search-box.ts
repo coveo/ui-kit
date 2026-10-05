@@ -36,7 +36,6 @@ import type {RedirectionPayload} from '../../common/search-box/redirection-paylo
 import {renderSearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {renderSearchBoxTextArea} from '../../common/search-box/search-text-area';
 import {renderSubmitButton} from '../../common/search-box/submit-button';
-import {isRecentQueryClearElement} from '../../common/suggestions/recent-queries';
 import {SuggestionManager} from '../../common/suggestions/suggestion-manager';
 import type {
   SearchBoxSuggestionElement,
@@ -84,7 +83,11 @@ import '@coveo/atomic-legacy/atomic-suggestion-renderer';
  * @part recent-query-icon - The icon of a suggestion from the `atomic-commerce-search-box-recent-queries` component.
  * @part recent-query-text - The text of a suggestion from the `atomic-commerce-search-box-recent-queries` component.
  * @part recent-query-text-highlight - The highlighted portion of the text of a suggestion from the `atomic-commerce-search-box-recent-queries` component.
- * @part recent-query-clear - The clear button below suggestions from the `atomic-commerce-search-box-recent-queries` component.
+ * @part recent-query-title-item - The clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component.
+ * @part recent-query-title-content - The contents of the clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component.
+ * @part recent-query-title - The "recent searches" text of the clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component.
+ * @part recent-query-clear - The "clear" text of the clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component.
+ * @part recent-query-clear-button - The button below suggestions to clear the recent queries from the `atomic-commerce-search-box-recent-queries` component, when `enable-clear-recent-queries-button` is set.
  *
  * @part instant-results-item - An instant product rendered by an `atomic-commerce-search-box-instant-products` component.
  * @part instant-results-show-all - The clickable suggestion to show all items for the current instant product search rendered by an `atomic-commerce-search-box-instant-products` component.
@@ -195,6 +198,19 @@ export class AtomicCommerceSearchBox
     converter: booleanConverter,
   })
   public clearFilters = true;
+
+  // TODO - (v4) KIT-4365: Remove and always render the clear recent queries button.
+  /**
+   * Whether to render the option to clear the recent queries as a button below the suggestions, rather than as the first suggestion.
+   * The button is reached with the Tab key, so the arrow keys only navigate through the suggestions.
+   */
+  @property({
+    type: Boolean,
+    attribute: 'enable-clear-recent-queries-button',
+    reflect: true,
+    converter: booleanConverter,
+  })
+  public enableClearRecentQueriesButton = false;
 
   connectedCallback() {
     super.connectedCallback();
@@ -561,10 +577,16 @@ export class AtomicCommerceSearchBox
   }
 
   private get clearRecentQueriesElement() {
-    return this.suggestionManager.allSuggestionElements.find(isRecentQueryClearElement);
+    if (!this.enableClearRecentQueriesButton) {
+      return undefined;
+    }
+
+    return this.suggestionManager.allSuggestionElements.find(
+      (element) => element.key === 'recent-query-clear'
+    );
   }
 
-  private renderClearRecentQueries() {
+  private renderClearRecentQueriesButton() {
     const element = this.clearRecentQueriesElement;
     if (!element) {
       return nothing;
@@ -577,14 +599,15 @@ export class AtomicCommerceSearchBox
       ${renderButton({
         props: {
           style: 'text-primary',
-          part: element.part,
+          text: this.bindings.i18n.t('clear-recent-searches'),
+          part: 'recent-query-clear-button',
           class: 'focus-visible:ring-ring-primary px-2 py-1 focus-visible:ring-2',
           onClick: (e) => {
             element.onSelect?.(e!);
             this.textAreaRef.value?.focus();
           },
         },
-      })(html`${element.content}`)}
+      })(nothing)}
     </div>`;
   }
 
@@ -630,7 +653,7 @@ export class AtomicCommerceSearchBox
         },
         () => this.suggestionManager.rightPanel
       )}
-      ${this.renderClearRecentQueries()}
+      ${this.renderClearRecentQueriesButton()}
     </div>`;
   }
 
@@ -640,7 +663,8 @@ export class AtomicCommerceSearchBox
     setRef: (el: HTMLElement | undefined) => void,
     getRef: () => HTMLElement | undefined
   ) {
-    const elements = panelElements.filter((element) => !isRecentQueryClearElement(element));
+    const clearRecentQueriesElement = this.clearRecentQueriesElement;
+    const elements = panelElements.filter((element) => element !== clearRecentQueriesElement);
     if (!elements.length) {
       return null;
     }
@@ -686,6 +710,10 @@ export class AtomicCommerceSearchBox
         .isDoubleList=${this.suggestionManager.isDoubleList}
         .onClick=${async (e: Event) => {
           await this.suggestionManager.onSuggestionClick(item, e);
+          if (item.key === 'recent-query-clear') {
+            return;
+          }
+
           this.isExpanded = false;
         }}
         .onMouseEnter=${async () => {

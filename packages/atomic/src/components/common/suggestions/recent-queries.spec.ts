@@ -5,7 +5,6 @@ import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {
   getPartialRecentQueryClearElement,
   getPartialRecentQueryElement,
-  isRecentQueryClearElement,
   type RecentQueriesContainerProps,
   renderRecentQuery,
   renderRecentQueryClear,
@@ -44,10 +43,10 @@ describe('#getPartialRecentQueryClearElement', () => {
     i18n = await createTestI18n();
   });
 
-  it('should return the "recent-query-clear" part', () => {
+  it('should return the "recent-query-title-item suggestion-divider" part', () => {
     const result = getPartialRecentQueryClearElement(i18n);
 
-    expect(result.part).toBe('recent-query-clear');
+    expect(result.part).toBe('recent-query-title-item suggestion-divider');
   });
 
   it('should return the correct aria-label', () => {
@@ -60,26 +59,6 @@ describe('#getPartialRecentQueryClearElement', () => {
     const result = getPartialRecentQueryClearElement(i18n);
 
     expect(result.key).toBe('recent-query-clear');
-  });
-});
-
-describe('#isRecentQueryClearElement', () => {
-  const content = document.createElement('div');
-
-  it('should return true for the recent query clear element', async () => {
-    const i18n = await createTestI18n();
-
-    expect(isRecentQueryClearElement({...getPartialRecentQueryClearElement(i18n), content})).toBe(
-      true
-    );
-  });
-
-  it('should return false for a recent query element', async () => {
-    const i18n = await createTestI18n();
-
-    expect(
-      isRecentQueryClearElement({...getPartialRecentQueryElement('test', i18n), content})
-    ).toBe(false);
   });
 });
 
@@ -159,8 +138,38 @@ describe('#renderRecentQueryClear', () => {
     return await fixture(html`${renderRecentQueryClear({i18n})}`);
   };
 
-  it('should have the "Clear recent searches" text', async () => {
+  it('should have the "recent-query-title-content" part on the container', async () => {
     const element = await renderQueryClear();
-    expect(element).toHaveTextContent('Clear recent searches');
+    expect(element).toHaveAttribute('part', 'recent-query-title-content');
+  });
+
+  it('should have the "recent-query-title" part on the first span', async () => {
+    const element = await renderQueryClear();
+    const span = element.querySelector('span');
+    expect(span).toHaveAttribute('part', 'recent-query-title');
+  });
+
+  it('should have the proper content on the first span', async () => {
+    const element = await renderQueryClear();
+    const span = element.querySelector('span');
+    expect(span).toHaveTextContent('Recent searches');
+  });
+
+  it('should have the "recent-query-clear" part on the second span', async () => {
+    const element = await renderQueryClear();
+    const span = element.querySelector('span:nth-of-type(2)');
+    expect(span).toHaveAttribute('part', 'recent-query-clear');
+  });
+
+  it('should have the proper content on the second span', async () => {
+    const element = await renderQueryClear();
+    const span = element.querySelector('span:nth-of-type(2)');
+    expect(span).toHaveTextContent('Clear');
+  });
+
+  it('container should have pointer-events-none class to allow clicks on parent', async () => {
+    const element = await renderQueryClear();
+
+    expect(element).toHaveClass('pointer-events-none');
   });
 });

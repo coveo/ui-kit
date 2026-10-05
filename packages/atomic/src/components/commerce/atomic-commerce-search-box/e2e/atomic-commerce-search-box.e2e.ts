@@ -190,8 +190,8 @@ test.describe('atomic-commerce-search-box', () => {
       test('should clear recent queries when pressing enter while the clear button is focused', async ({
         searchBox,
       }) => {
-        await searchBox.clearRecentQueriesButton.focus();
-        await searchBox.clearRecentQueriesButton.press('Enter');
+        await searchBox.clearRecentQueriesButton.hover();
+        await searchBox.searchInput.press('Enter');
         await expect(searchBox.recentQueries().first()).not.toBeVisible();
       });
     });

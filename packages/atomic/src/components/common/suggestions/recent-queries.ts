@@ -21,20 +21,16 @@ export const getPartialRecentQueryElement = (
   };
 };
 
-const recentQueryClearKey = 'recent-query-clear';
-
-export const isRecentQueryClearElement = (element: SearchBoxSuggestionElement) =>
-  element.key === recentQueryClearKey;
-
 export const getPartialRecentQueryClearElement = (
   i18n: i18n
-): Pick<SearchBoxSuggestionElement, 'ariaLabel' | 'key' | 'part'> => {
+): Pick<SearchBoxSuggestionElement, 'ariaLabel' | 'key' | 'part' | 'hideIfLast'> => {
   return {
-    key: recentQueryClearKey,
+    key: 'recent-query-clear',
     ariaLabel: i18n.t('clear-recent-searches', {
       interpolation: {escapeValue: false},
     }),
-    part: 'recent-query-clear',
+    part: 'recent-query-title-item suggestion-divider',
+    hideIfLast: true,
   };
 };
 
@@ -85,7 +81,13 @@ export const renderRecentQuery = ({
 };
 
 export const renderRecentQueryClear = ({i18n}: {i18n: i18n}): HTMLElement => {
-  const template = html`<span>${i18n.t('clear-recent-searches')}</span>`;
+  const template = html` <div
+    part="recent-query-title-content"
+    class="pointer-events-none flex w-full justify-between"
+  >
+    <span class="font-bold" part="recent-query-title"> ${i18n.t('recent-searches')} </span>
+    <span part="recent-query-clear">${i18n.t('clear')}</span>
+  </div>`;
 
   const container = document.createElement('div');
   render(template, container);

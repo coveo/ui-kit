@@ -71,6 +71,7 @@ describe('atomic-commerce-search-box', () => {
       minimumQueryLength?: number;
       numberOfQueries?: number;
       clearFilters?: boolean;
+      enableClearRecentQueriesButton?: boolean;
     };
     suggestionCount?: number;
     noSuggestions?: boolean;
@@ -110,8 +111,14 @@ describe('atomic-commerce-search-box', () => {
       : html`<fake-atomic-commerce-search-box-suggestions
           suggestion-count=${suggestionCount}
         ></fake-atomic-commerce-search-box-suggestions>`;
-    const {redirectionUrl, disableSearch, minimumQueryLength, numberOfQueries, clearFilters} =
-      searchBoxProps || {};
+    const {
+      redirectionUrl,
+      disableSearch,
+      minimumQueryLength,
+      numberOfQueries,
+      clearFilters,
+      enableClearRecentQueriesButton,
+    } = searchBoxProps || {};
     const {element} = await renderInAtomicCommerceInterface<AtomicCommerceSearchBox>({
       template: html`<atomic-commerce-search-box
         redirection-url=${ifDefined(redirectionUrl)}
@@ -119,6 +126,7 @@ describe('atomic-commerce-search-box', () => {
         minimum-query-length=${ifDefined(minimumQueryLength)}
         number-of-queries=${ifDefined(numberOfQueries)}
         clear-filters=${ifDefined(clearFilters)}
+        ?enable-clear-recent-queries-button=${enableClearRecentQueriesButton ?? false}
       >
         ${suggestions} ${additionalChildren}
       </atomic-commerce-search-box>`,
@@ -448,29 +456,41 @@ describe('atomic-commerce-search-box', () => {
     });
   });
 
-  describe('when there are recent queries', () => {
-    const renderWithRecentQueries = async () => {
-      const searchBox = await renderSearchBox({noSuggestions: true});
+  const suggestionKeys = (suggestions: NodeListOf<Element>) =>
+    Array.from(
+      suggestions,
+      (suggestion) => (suggestion as Element & {suggestion: {key: string}}).suggestion.key
+    );
+
+  describe('when enable-clear-recent-queries-button is set', () => {
+    const renderWithClearRecentQueriesButton = async () => {
+      const searchBox = await renderSearchBox({
+        noSuggestions: true,
+        searchBoxProps: {enableClearRecentQueriesButton: true},
+      });
       await userEvent.click(searchBox.element);
 
       return {
         ...searchBox,
         clearRecentQueriesButton: () =>
           searchBox.suggestionsContainer.querySelector<HTMLButtonElement>(
-            'button[part="recent-query-clear"]'
+            'button[part="recent-query-clear-button"]'
           )!,
       };
     };
 
-    it('should render the clear button below the suggestions', async () => {
-      const {suggestionsContainer, clearRecentQueriesButton} = await renderWithRecentQueries();
+    it('should render the clear recent queries button below the suggestions instead of in the list', async () => {
+      const {suggestions, suggestionsContainer, clearRecentQueriesButton} =
+        await renderWithClearRecentQueriesButton();
 
       expect(clearRecentQueriesButton()).toHaveTextContent('Clear recent searches');
       expect(suggestionsContainer.lastElementChild).toContainElement(clearRecentQueriesButton());
+      expect(suggestionKeys(suggestions())).not.toContain('recent-query-clear');
     });
 
-    it('should clear the recent queries and focus the search box when the clear button is clicked', async () => {
-      const {element, textArea, clearRecentQueriesButton} = await renderWithRecentQueries();
+    it('should clear the recent queries and focus the search box when the button is clicked', async () => {
+      const {element, textArea, clearRecentQueriesButton} =
+        await renderWithClearRecentQueriesButton();
 
       await userEvent.click(clearRecentQueriesButton());
 
@@ -479,13 +499,24 @@ describe('atomic-commerce-search-box', () => {
     });
 
     it('should keep the suggestions when the Tab key is pressed', async () => {
-      const {suggestions} = await renderWithRecentQueries();
+      const {suggestions} = await renderWithClearRecentQueriesButton();
       const suggestionCount = suggestions().length;
 
       await userEvent.keyboard('{Tab}');
 
       expect(suggestions()).toHaveLength(suggestionCount);
     });
+  });
+
+  it('should render the clear recent queries option in the list by default', async () => {
+    const {element, suggestions, suggestionsContainer} = await renderSearchBox({
+      noSuggestions: true,
+    });
+
+    await userEvent.click(element);
+
+    expect(suggestionKeys(suggestions())).toContain('recent-query-clear');
+    expect(suggestionsContainer.querySelector('[part="recent-query-clear-button"]')).toBeNull();
   });
 
   describe('when clicking the clear button', () => {
