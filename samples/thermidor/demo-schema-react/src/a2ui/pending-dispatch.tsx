@@ -8,14 +8,7 @@ import {
   type StaleScopes,
 } from '@coveo/thermidor';
 
-export type {
-  CoalesceIntent,
-  CoalescePolicy,
-  DispatchId,
-  DispatchOutcome,
-  GestureDeclaration,
-  IssuedDispatch,
-} from '@coveo/thermidor';
+export type {CoalesceIntent, DispatchId, DispatchOutcome, IssuedDispatch} from '@coveo/thermidor';
 
 /**
  * The regions this app names. A union rather than a bare string, because both failure modes of a

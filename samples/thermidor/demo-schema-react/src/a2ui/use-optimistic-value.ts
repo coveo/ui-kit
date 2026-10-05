@@ -7,13 +7,13 @@ import {
 import {devTrace} from './dev-trace.js';
 import {type AppStaleScope, useDispatchProgress} from './pending-dispatch.js';
 
-export type {CoalescePolicy, OptimisticNext, OptimisticTransform} from '@coveo/thermidor';
+export type {CoalescePolicy, OptimisticNext} from '@coveo/thermidor';
 
 /**
  * A gesture as this app writes one, pinned to the regions this app names so a misspelled one is
  * not expressible. This is the single door every gesture of the app goes through.
  */
-export type AppGesture<T, TAction> = OptimisticGesture<T, TAction, AppStaleScope>;
+type AppGesture<T, TAction> = OptimisticGesture<T, TAction, AppStaleScope>;
 
 export interface OptimisticValue<T, TAction> {
   /** What to render: this component's held intention while a gesture is outstanding, else the producer's. */

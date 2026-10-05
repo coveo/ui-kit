@@ -2,21 +2,21 @@ import {useState} from 'react';
 import type {NumericFacetAction, NumericFacetProps} from '@coveo/thermidor-schema/zod3';
 import {useOptimisticValue} from '../use-optimistic-value.js';
 
-export type NumericFacetValues = NonNullable<NumericFacetProps['values']>;
+type NumericFacetValues = NonNullable<NumericFacetProps['values']>;
 
 const NO_VALUES: NumericFacetValues = [];
 
 /** Two range lists cover the same ranges, whatever each one's state is. */
-export const sameRanges = (left: NumericFacetValues, right: NumericFacetValues): boolean =>
+const sameRanges = (left: NumericFacetValues, right: NumericFacetValues): boolean =>
   left.length === right.length &&
   left.every(
     (range, index) => range.start === right[index]?.start && range.end === right[index]?.end
   );
 
-export const stateOf = (ranges: NumericFacetValues, start: number, end: number) =>
+const stateOf = (ranges: NumericFacetValues, start: number, end: number) =>
   ranges.find((range) => range.start === start && range.end === end)?.state;
 
-export function clampToDomain(value: number, domain?: {min?: number; max?: number}): number {
+function clampToDomain(value: number, domain?: {min?: number; max?: number}): number {
   let clamped = value;
   if (domain?.min !== undefined) {
     clamped = Math.max(clamped, domain.min);

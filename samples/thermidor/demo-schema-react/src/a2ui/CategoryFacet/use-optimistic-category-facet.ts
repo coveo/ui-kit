@@ -3,7 +3,7 @@ import {useOptimisticValue} from '../use-optimistic-value.js';
 
 type CategoryFacetValues = NonNullable<CategoryFacetProps['values']>;
 
-export type CategoryNode = {value: string; path: string[]; numberOfResults: number};
+type CategoryNode = {value: string; path: string[]; numberOfResults: number};
 
 const NO_VALUES: CategoryFacetValues = {ancestry: [], children: [], selected: null};
 
