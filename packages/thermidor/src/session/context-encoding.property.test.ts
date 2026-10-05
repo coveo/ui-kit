@@ -41,7 +41,7 @@ vi.mock('@/src/internal/api/unified/unified-endpoint-client.js', () => ({
 import {z} from 'zod/v4';
 import type {CommerceContext} from '@/src/internal/context/index.js';
 import type {ContractsSchema} from './contracts.js';
-import {createSession, type SessionConfig} from './create-session.js';
+import {createSession, type Session, type SessionConfig} from './create-session.js';
 
 /**
  * A locally-built A2-UI contract, INJECTED as test data exactly as a real
@@ -117,6 +117,11 @@ interface CapturedRequest {
   pinnedProducts?: unknown;
 }
 
+/** Opens a new turn for `prompt`, resolving once its stream ends. */
+function startTurn(session: Session, prompt: string): Promise<void> {
+  return session.submit({prompt});
+}
+
 /**
  * Drives one `submit` through a mocked stream and returns the request object
  * the session passed to the endpoint client's `call`.
@@ -124,7 +129,7 @@ interface CapturedRequest {
 async function captureSubmitRequest(config: SessionConfig): Promise<CapturedRequest> {
   queueCompletingStream();
   const session = createSession(config);
-  await session.submit({prompt: 'find shoes'});
+  await startTurn(session, 'find shoes');
   expect(callMock).toHaveBeenCalledTimes(1);
   return callMock.mock.calls[0][0] as CapturedRequest;
 }

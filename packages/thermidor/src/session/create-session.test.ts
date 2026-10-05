@@ -39,7 +39,7 @@ vi.mock('@/src/internal/api/unified/unified-endpoint-client.js', () => ({
 
 import {z} from 'zod/v4';
 import type {ContractsSchema} from './contracts.js';
-import {createSession, type SessionConfig} from './create-session.js';
+import {createSession, type Session, type SessionConfig} from './create-session.js';
 
 /**
  * A locally-built A2-UI contract, INJECTED as test data exactly as a real
@@ -159,6 +159,11 @@ const baseConfig: SessionConfig = {
 /** Waits for pending microtasks so folded state settles before assertions. */
 const flush = () => new Promise((resolve) => setTimeout(resolve, 0));
 
+/** Opens a new turn for `prompt`, resolving once its stream ends. */
+function startTurn(session: Session, prompt: string): Promise<void> {
+  return session.submit({prompt});
+}
+
 describe('createSession lifecycle', () => {
   beforeEach(() => {
     callMock.mockReset();
@@ -196,7 +201,7 @@ describe('createSession lifecycle', () => {
       const session = createSession(baseConfig);
 
       const first = queueStream();
-      const submitPromise = session.submit({prompt: 'first'});
+      const submitPromise = startTurn(session, 'first');
       await first.opened;
 
       // Seed the active (still-streaming) turn with a commerce-search surface
@@ -255,7 +260,7 @@ describe('createSession lifecycle', () => {
       const session = createSession(baseConfig);
 
       const first = queueStream();
-      const firstTurn = session.submit({prompt: 'find shoes'});
+      const firstTurn = startTurn(session, 'find shoes');
       await first.opened;
       first.emit({
         type: 'RUN_STARTED',
@@ -323,7 +328,7 @@ describe('createSession lifecycle', () => {
       createSurface: Record<string, unknown>
     ) {
       const first = queueStream();
-      const firstTurn = session.submit({prompt: 'go'});
+      const firstTurn = startTurn(session, 'go');
       await first.opened;
       first.emit({
         type: 'ACTIVITY_SNAPSHOT',
@@ -374,7 +379,7 @@ describe('createSession lifecycle', () => {
       const session = createSession(baseConfig);
       // A turn with BOTH a CommerceSearch surface and a conversation-only one.
       const first = queueStream();
-      const firstTurn = session.submit({prompt: 'go'});
+      const firstTurn = startTurn(session, 'go');
       await first.opened;
       first.emit({
         type: 'ACTIVITY_SNAPSHOT',
@@ -470,7 +475,7 @@ describe('createSession lifecycle', () => {
       const session = createSession(baseConfig);
 
       const first = queueStream();
-      const submitPromise = session.submit({prompt: 'find shoes'});
+      const submitPromise = startTurn(session, 'find shoes');
       await first.opened;
 
       // Fold a partial response before cancelling.
@@ -508,7 +513,7 @@ describe('createSession lifecycle', () => {
       const session = createSession(baseConfig);
 
       const first = queueStream();
-      const submitPromise = session.submit({prompt: 'hi'});
+      const submitPromise = startTurn(session, 'hi');
       await first.opened;
       first.emit({type: 'RUN_FINISHED'});
       first.close();

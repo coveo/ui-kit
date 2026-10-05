@@ -31,7 +31,12 @@ vi.mock('@/src/internal/api/unified/unified-endpoint-client.js', () => ({
 
 import {z} from 'zod/v4';
 import type {ContractsSchema} from './contracts.js';
-import {createSession, type A2uiClientMessage, type SessionConfig} from './create-session.js';
+import {
+  createSession,
+  type A2uiClientMessage,
+  type Session,
+  type SessionConfig,
+} from './create-session.js';
 
 /**
  * A locally-built A2-UI contract, INJECTED as test data exactly as a real
@@ -142,6 +147,11 @@ const baseConfig: SessionConfig = {
   accessToken: 'token-1',
 };
 
+/** Opens a new turn for `prompt`, resolving once its stream ends. */
+function startTurn(session: Session, prompt: string): Promise<void> {
+  return session.submit({prompt});
+}
+
 /**
  * Builds a session whose active, COMPLETE turn carries a commerce-search
  * surface with a Pagination node, ready to receive an action.
@@ -149,7 +159,7 @@ const baseConfig: SessionConfig = {
 async function sessionWithPaginationSurface() {
   queueSurfaceThenComplete();
   const session = createSession(baseConfig);
-  await session.submit({prompt: 'find shoes'});
+  await startTurn(session, 'find shoes');
   callMock.mockClear();
   return session;
 }

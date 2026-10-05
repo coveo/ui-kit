@@ -445,17 +445,24 @@ export function createSession<TContracts extends ContractsSchema>(
     }
   }
 
-  async function submit(input: {prompt?: string}): Promise<void> {
-    // While a turn is streaming, ignore the submit and leave turns unchanged.
+  /**
+   * Opens a new turn for `prompt` and streams its response. Ignored while a
+   * turn is streaming, leaving turns unchanged. Needs no active turn, so it
+   * also opens the first turn of a session.
+   */
+  async function startPromptTurn(prompt: string | undefined): Promise<void> {
     if (hasStreamingTurn()) {
       return;
     }
 
-    const prompt = input.prompt ?? '';
     const turnId = generateId();
-    openTurn(turnId, {prompt: input.prompt});
+    openTurn(turnId, {prompt});
 
-    await executeStream(turnId, buildConversationRequest(prompt));
+    await executeStream(turnId, buildConversationRequest(prompt ?? ''));
+  }
+
+  async function submit(input: {prompt?: string}): Promise<void> {
+    await startPromptTurn(input.prompt);
   }
 
   /**
@@ -535,14 +542,11 @@ export function createSession<TContracts extends ContractsSchema>(
   }
 
   /**
-   * The single consumer-facing action-dispatch entry point. See
-   * {@link Session.dispatchAction}. Pre-bound arrow field so
-   * `onAction={session.dispatchAction}` works when passed by reference.
-   *
-   * FIRE-AND-FORGET: every drop reason and every internal dispatch rejection is
-   * swallowed into a dev-only warning; the returned Promise always resolves.
+   * Dispatches an A2-UI `userAction` raised by a rendered component. Every drop
+   * reason and every internal dispatch rejection is swallowed into a dev-only
+   * warning; the returned Promise always resolves.
    */
-  const dispatchAction = async (message: A2uiClientMessage): Promise<void> => {
+  async function dispatchUserAction(message: A2uiClientMessage): Promise<void> {
     const userAction = message.userAction;
     if (!userAction) {
       devWarn('dispatchAction: message carries no userAction; nothing sent.');
@@ -570,7 +574,14 @@ export function createSession<TContracts extends ContractsSchema>(
       // payload) or any internal rejection surfaces only as a dev-only warning.
       devWarn(`dispatchAction: dispatch withheld: ${getErrorMessage(error)}`);
     }
-  };
+  }
+
+  /**
+   * The single consumer-facing action-dispatch entry point. See
+   * {@link Session.dispatchAction}. Pre-bound arrow field so
+   * `onAction={session.dispatchAction}` works when passed by reference.
+   */
+  const dispatchAction = (message: A2uiClientMessage): Promise<void> => dispatchUserAction(message);
 
   function retry(turnId: string): void {
     // Re-submit only an `error` turn; any other turnId (unknown or non-error)
