@@ -1,44 +1,62 @@
-import {useCallback, useEffect, useRef, useState} from 'react';
+import {useCallback} from 'react';
+import {useOptimisticValue} from './use-optimistic-value.js';
 
-interface OptimisticFacetSearch {
+/**
+ * The two gestures the input needs, shaped as the A2-UI actions they are — a subset of every facet
+ * action union that carries a facet search, so a component passes its OWN typed dispatch and no
+ * mapper sits in between.
+ */
+export type FacetSearchAction =
+  | {event: {name: 'search'; context: {query: string}}}
+  | {event: {name: 'clearSearch'; context?: unknown}};
+
+export interface OptimisticFacetSearch {
   query: string;
   onQueryChange: (next: string) => void;
+  /** Empties the field at once, dispatching the clear whose answer releases it. */
   reset: () => void;
 }
 
 /**
- * `backendQuery` overwrites the local input only on an external change; echoes of our own queries
- * arrive lagging or out of order and must not clobber typing.
+ * Keeps the facet search input responsive by holding what the user typed until the backend has
+ * answered that keystroke's own dispatch, while dispatching a validated `search` action on every
+ * change. In-progress input never touches the shared A2-UI data model.
+ *
+ * Holding matters because every converse response carries the facet's whole node,
+ * `facetSearch.query` included: a response to an unrelated gesture reports the query the backend
+ * knew at the time, so adopting it verbatim empties the field mid-typing.
+ *
+ * Both gestures are absolute writes of the query — `search` and `clearSearch` SET it rather than
+ * amending it — so only the last one queued can still matter, which is what turns a burst of
+ * keystrokes into a single request. And both are answered from `platformClient.facetSearch`, facet
+ * values only with no product query, so a pending one leaves the results on screen accurate.
  */
 export function useOptimisticFacetSearch(
   backendQuery: string,
-  dispatchSearch: (query: string) => void
+  dispatch: (action: FacetSearchAction) => void
 ): OptimisticFacetSearch {
-  const [localQuery, setLocalQuery] = useState(backendQuery);
-  // An incoming `backendQuery` found here is our own echo.
-  const dispatchedRef = useRef<Set<string>>(new Set());
-
-  useEffect(() => {
-    if (dispatchedRef.current.has(backendQuery)) {
-      return;
-    }
-    setLocalQuery(backendQuery);
-    dispatchedRef.current.clear();
-  }, [backendQuery]);
+  const {value, dispatchOptimistic} = useOptimisticValue(backendQuery, dispatch);
 
   const onQueryChange = useCallback(
     (next: string) => {
-      dispatchedRef.current.add(next);
-      setLocalQuery(next);
-      dispatchSearch(next);
+      dispatchOptimistic({
+        action: {event: {name: 'search', context: {query: next}}},
+        next,
+        coalesce: 'absolute',
+        invalidates: [],
+      });
     },
-    [dispatchSearch]
+    [dispatchOptimistic]
   );
 
   const reset = useCallback(() => {
-    dispatchedRef.current.clear();
-    setLocalQuery('');
-  }, []);
+    dispatchOptimistic({
+      action: {event: {name: 'clearSearch', context: {}}},
+      next: '',
+      coalesce: 'absolute',
+      invalidates: [],
+    });
+  }, [dispatchOptimistic]);
 
-  return {query: localQuery, onQueryChange, reset};
+  return {query: value, onQueryChange, reset};
 }
