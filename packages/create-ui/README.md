@@ -8,8 +8,11 @@ credentials, API keys, or search tokens required.
 ## Usage
 
 ```sh
-npm create @coveo/ui@latest my-app --template headless-search-react
+npm create @coveo/ui@latest my-app -- --template headless-search-react
 ```
+
+With npm, put `--` before the CLI options: npm otherwise reads `--template` as
+its own configuration and doesn't pass it to the CLI.
 
 Or run without arguments for an interactive prompt:
 
@@ -17,10 +20,12 @@ Or run without arguments for an interactive prompt:
 npm create @coveo/ui@latest
 ```
 
-`pnpm` is also supported:
+`pnpm` and `yarn` are also supported. They pass options through as is, so don't
+add `--`:
 
 ```sh
 pnpm create @coveo/ui my-app --template headless-search-react
+yarn create @coveo/ui my-app --template headless-search-react
 ```
 
 ### Options
@@ -41,7 +46,7 @@ default the CLI scaffolds the `latest` published version. Pass
 version instead:
 
 ```sh
-npm create @coveo/ui@latest my-app --template headless-search-react --template-version 3.2.1
+npm create @coveo/ui@latest my-app -- --template headless-search-react --template-version 3.2.1
 ```
 
 The example above scaffolds the `headless-search-react` sample built against
@@ -54,7 +59,7 @@ package's version to `--template-version` for those templates.
 ## Templates
 
 Templates encode the library, use case, and framework (e.g.
-`headless-search-react`). Run `npm create @coveo/ui --help` for the list
+`headless-search-react`). Run `npm create @coveo/ui -- --help` for the list
 supported by your version of the CLI.
 
 | Template                        | Library      | Use case and framework                                     |
