@@ -136,7 +136,7 @@ describe('atomic-commerce-products-per-page', () => {
       interfaceElementType: 'search',
     });
 
-    expect(buildSearch).toHaveBeenCalledWith(mockedEngine);
+    expect(buildSearch).toHaveBeenCalledWith(mockedEngine, {enableResults: false});
   });
 
   it('should call buildProductListing when interfaceElement type is "product-listing"', async () => {
@@ -144,7 +144,7 @@ describe('atomic-commerce-products-per-page', () => {
       interfaceElementType: 'product-listing',
     });
 
-    expect(buildProductListing).toHaveBeenCalledWith(mockedEngine);
+    expect(buildProductListing).toHaveBeenCalledWith(mockedEngine, {enableResults: false});
   });
 
   it("should set this.summary to the product listing or search controller's summary", async () => {

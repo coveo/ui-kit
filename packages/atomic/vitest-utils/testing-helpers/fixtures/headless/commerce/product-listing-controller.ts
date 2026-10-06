@@ -6,6 +6,7 @@ import {buildFakeProduct} from './product';
 export const defaultState = {
   responseId: 'some-id',
   products: [buildFakeProduct()],
+  results: [],
   isLoading: false,
   error: null,
 } satisfies ProductListingState;
@@ -21,6 +22,7 @@ export const defaultImplementation = {
   urlManager: vi.fn(),
   parameterManager: vi.fn(),
   interactiveProduct: vi.fn(),
+  interactiveSpotlightContent: vi.fn(),
   pagination: vi.fn(),
   summary: vi.fn(),
 } satisfies ProductListing;

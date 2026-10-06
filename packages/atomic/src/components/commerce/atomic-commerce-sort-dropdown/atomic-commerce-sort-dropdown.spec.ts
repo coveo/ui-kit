@@ -164,7 +164,9 @@ describe('atomic-commerce-sort-dropdown', () => {
   it('should call buildProductListing when interfaceElement is product-listing', async () => {
     const element = await setupElement();
 
-    expect(buildProductListing).toHaveBeenCalledWith(element.bindings.engine);
+    expect(buildProductListing).toHaveBeenCalledWith(element.bindings.engine, {
+      enableResults: false,
+    });
   });
 
   it('should call buildSearch when interfaceElement is search', async () => {
@@ -172,6 +174,6 @@ describe('atomic-commerce-sort-dropdown', () => {
       interfaceType: 'search',
     });
 
-    expect(buildSearch).toHaveBeenCalledWith(element.bindings.engine);
+    expect(buildSearch).toHaveBeenCalledWith(element.bindings.engine, {enableResults: false});
   });
 });

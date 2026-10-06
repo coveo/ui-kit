@@ -90,7 +90,7 @@ describe('atomic-commerce-refine-toggle', () => {
       interfaceType: 'search',
     });
 
-    expect(buildSearch).toHaveBeenCalledWith(mockedEngine);
+    expect(buildSearch).toHaveBeenCalledWith(mockedEngine, {enableResults: false});
   });
 
   it('should call buildProductListing if interfaceType is "product-listing"', async () => {
@@ -98,7 +98,7 @@ describe('atomic-commerce-refine-toggle', () => {
       interfaceType: 'product-listing',
     });
 
-    expect(buildProductListing).toHaveBeenCalledWith(mockedEngine);
+    expect(buildProductListing).toHaveBeenCalledWith(mockedEngine, {enableResults: false});
   });
 
   it('should set this.summary to the summary of the search or product listing', async () => {

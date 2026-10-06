@@ -78,12 +78,12 @@ describe('atomic-commerce-no-products', () => {
 
   it('should call buildProductListing when interfaceElement.type is "product-listing"', async () => {
     await renderNoProducts({interfaceType: 'product-listing'});
-    expect(buildProductListing).toHaveBeenCalledWith(mockedEngine);
+    expect(buildProductListing).toHaveBeenCalledWith(mockedEngine, {enableResults: false});
   });
 
   it('should call buildSearch when interfaceElement.type is "search"', async () => {
     await renderNoProducts({interfaceType: 'search'});
-    expect(buildSearch).toHaveBeenCalledWith(mockedEngine);
+    expect(buildSearch).toHaveBeenCalledWith(mockedEngine, {enableResults: false});
   });
 
   it('should set summary to the summary sub-controller', async () => {
