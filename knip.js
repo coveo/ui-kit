@@ -191,6 +191,8 @@ export default {
         // Adding them as entry points lets knip trace the export chain
         // into section components and other web components naturally.
         'src/components/*/index.ts',
+        // Build-generated per-component entry points, published as `./components/*`.
+        'src/entry-points/*.ts',
         // Test fixture utilities consumed by spec files via @/ path alias.
         'vitest-utils/**/*.ts',
         // Interactive a11y Storybook helpers — will be consumed by stories

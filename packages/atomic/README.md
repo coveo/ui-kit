@@ -18,6 +18,32 @@ The `@coveo/atomic` package exposes the following entry points:
 - `@coveo/atomic/themes`: exports the sample Coveo Atomic themes.
 - `@coveo/atomic/assets`: exports the SVG icons used by Coveo Atomic.
 - `@coveo/atomic/lang`: exports the localization files used by Coveo Atomic.
+- `@coveo/atomic/components`: exports every Coveo Atomic component class.
+- `@coveo/atomic/components/<tag-name>`: exports a single Coveo Atomic component class (e.g., `@coveo/atomic/components/atomic-facet`).
+
+### Per-component entry points
+
+Use `@coveo/atomic/components/<tag-name>` to only bundle the components you use. Importing a component class this way registers that component, along with the components it renders internally:
+
+```ts
+import {AtomicFacet} from '@coveo/atomic/components/atomic-facet';
+import {AtomicSearchBox} from '@coveo/atomic/components/atomic-search-box';
+
+export const components = [AtomicFacet, AtomicSearchBox];
+```
+
+You must import a value (the component class) from the entry point, and use it. These entry points are pure re-exports, so bundlers drop them, along with the component they re-export, when none of their exports are used. A bare import therefore registers nothing once bundled:
+
+```ts
+// ❌ Registers nothing once bundled: the bundler removes this import.
+import '@coveo/atomic/components/atomic-facet';
+
+// ✅ Registers atomic-facet, because AtomicFacet is used.
+import {AtomicFacet} from '@coveo/atomic/components/atomic-facet';
+console.log(customElements.get('atomic-facet') === AtomicFacet); // true
+```
+
+If you don't otherwise use the class, keep a reference to it (e.g., export it or pass it to a function) so the bundler retains it.
 
 ## Getting Started
 

@@ -16,5 +16,6 @@
       "@/*": ["./*"]
     }
   },
-  "files": ["src/index.ts", "src/loader.ts", "src/components/index.ts", "src/icons.d.ts"]
+  "files": ["src/index.ts", "src/loader.ts", "src/components/index.ts", "src/icons.d.ts"],
+  "include": ["src/entry-points/*.ts"]
 }
