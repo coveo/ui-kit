@@ -1,6 +1,5 @@
-import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
+import type {Product} from '@coveo/headless/commerce';
 import type {LitElement} from 'lit';
-import type {InteractiveItemContextEvent} from '@/src/components/common/item-list/context/interactive-item-context-controller';
 import {
   ItemContextController,
   type ItemContextEvent,
@@ -39,5 +38,3 @@ export function createProductContextController<T = Product>(
 }
 
 export type ProductContextEvent<T = Product> = ItemContextEvent<T>;
-export type InteractiveProductContextEvent<T extends InteractiveProduct = InteractiveProduct> =
-  InteractiveItemContextEvent<T>;
