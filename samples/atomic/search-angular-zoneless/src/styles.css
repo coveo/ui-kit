@@ -1,0 +1,25 @@
+body {
+  margin: 0;
+  font-family: var(--atomic-font-family, sans-serif);
+}
+
+nav,
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.5rem 1rem;
+}
+
+.controls dl {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 0.25rem 1rem;
+  margin: 0;
+}
+
+.controls dd {
+  margin: 0;
+  font-weight: bold;
+}
