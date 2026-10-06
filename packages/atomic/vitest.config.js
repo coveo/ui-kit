@@ -175,6 +175,16 @@ const storybookPure = defineConfig({
   },
 });
 
+// Static analysis of the package sources (Node.js, no browser needed)
+const atomicNode = defineConfig({
+  name: 'atomic-node',
+  test: {
+    name: 'atomic-node',
+    include: ['scripts/element-dependencies.spec.mjs'],
+    environment: 'node',
+  },
+});
+
 export default mergeConfig(atomicDefault, {
   test: {
     reporters: [
@@ -184,6 +194,11 @@ export default mergeConfig(atomicDefault, {
         packageJsonPath: path.resolve(import.meta.dirname, 'package.json'),
       }),
     ],
-    projects: [atomicDefault, storybookPure, ...(!isVitestVscodeExt ? [storybook] : [])],
+    projects: [
+      atomicDefault,
+      atomicNode,
+      storybookPure,
+      ...(!isVitestVscodeExt ? [storybook] : []),
+    ],
   },
 });
