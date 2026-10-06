@@ -72,7 +72,7 @@ src/
 The runtime owns the submit / dispatch / cancel / retry orchestration and the SSE-consumption loop that folds each event into the active turn:
 
 - **`submit({prompt})`** — while any turn is `streaming`, the call is ignored. Otherwise it opens a new `streaming` turn, builds a request (invoking both context providers fresh), POSTs to the endpoint, and folds the streamed response into that turn.
-- **`dispatchAction(action)`** — ignored while a turn is streaming. It resolves the target surface from the active turn's typed `response.surfaces`, builds an action request, and drives the stream.
+- **`dispatchAction(action)`** — ignored while a turn is streaming. A `submitPrompt` action (`{name: 'submitPrompt', payload: {prompt}}`) opens a new turn exactly as `submit({prompt})` does and needs no active turn. Any other action resolves the target surface from the active turn's typed `response.surfaces`, builds an action request, and drives the stream.
 - **`cancel()`** — stops consuming the in-flight stream, retains the partial `response` already folded, and marks the active turn `error` with the message `'Cancelled'`. A no-op when nothing is in flight.
 - **`retry(turnId)`** — re-submits only an `error` turn's original input; any other `turnId` (unknown, or non-error) is a no-op.
 
@@ -180,7 +180,7 @@ sequenceDiagram
     participant API as Unified endpoint client
     participant Coveo as Converse endpoint
 
-    UI->>S: submit({ prompt: 'running shoes' })
+    UI->>S: dispatchAction({ name: 'submitPrompt', payload: { prompt: 'running shoes' } })
     S->>Store: openTurn(streaming)
     S->>API: POST request (context read fresh)
     API->>Coveo: POST .../agui/converse

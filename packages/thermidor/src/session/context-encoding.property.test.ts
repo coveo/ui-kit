@@ -124,7 +124,7 @@ interface CapturedRequest {
 async function captureSubmitRequest(config: SessionConfig): Promise<CapturedRequest> {
   queueCompletingStream();
   const session = createSession(config);
-  await session.submit({prompt: 'find shoes'});
+  await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
   expect(callMock).toHaveBeenCalledTimes(1);
   return callMock.mock.calls[0][0] as CapturedRequest;
 }

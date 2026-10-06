@@ -28,7 +28,7 @@ const session = createSession({
 
 session.subscribe(() => render(session.turns));
 
-await session.submit({prompt: 'show me running shoes'});
+await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me running shoes'}});
 ```
 
 `createSession(config)` returns a `Session` exposing exactly:
@@ -48,7 +48,21 @@ The concrete `contracts` type pinned at the `createSession` call site threads un
 
 ## Dispatching actions
 
-`session.dispatchAction` is the single consumer-facing action entry point. It accepts the standard A2-UI client-to-server message (`A2uiClientMessage`) that the frozen renderer hands to its `onAction` handler, so it wires with no adapter:
+`session.dispatchAction` is the single consumer-facing action entry point. It accepts two kinds of message.
+
+### Submitting a prompt
+
+A prompt typed outside A2-UI composition, such as in the integrator's search box, is a `SubmitPromptAction`:
+
+```typescript
+session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me running shoes'}});
+```
+
+It opens a new streaming turn, records the prompt as the turn's `input.prompt`, and POSTs it to the converse endpoint. It needs no rendered component or active turn, so it also opens the first turn of a session. It is ignored while a turn is streaming, and `retry(turnId)` re-drives a turn it opened.
+
+### Component actions
+
+A component action is the standard A2-UI client-to-server message (`A2uiClientMessage`) that the frozen renderer hands to its `onAction` handler, so it wires with no adapter:
 
 ```typescript
 <A2UIRenderer onAction={session.dispatchAction} /* … */ />
