@@ -1,5 +1,12 @@
 # @coveo/ui-kit-sample-headless-commerce-vite
 
+## 3.57.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @coveo/headless@3.57.2
+
 ## 3.57.1
 
 ### Patch Changes
