@@ -156,8 +156,8 @@ This allows for the gathering of analytics on which sources of information your 
 
 Below is a quick reference to the analytic tracking events provided by `buildInteractiveCitation`.
 
-| Method                                                                                           | Analytics                                                |
-| ------------------------------------------------------------------------------------------------ | -------------------------------------------------------- |
+| Method                                                                                       | Analytics                                                |
+| -------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
 | [`beginDelayedSelect()`](../interfaces/Search.InteractiveCitation.html#begindelayedselect)   | ✅ Prepares to log selection event                       |
 | [`cancelPendingSelect()`](../interfaces/Search.InteractiveCitation.html#cancelpendingselect) | ✅ Cancels the pending selection of `beginDelayedSelect` |
 | [`select()`](../interfaces/Search.InteractiveCitation.html#select)                           | ✅ Logs the selection event                              |
