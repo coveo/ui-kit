@@ -29,7 +29,9 @@ Use `@coveo/atomic/components/<tag-name>` to only bundle the components you use.
 import {AtomicFacet} from '@coveo/atomic/components/atomic-facet';
 import {AtomicSearchBox} from '@coveo/atomic/components/atomic-search-box';
 
-export const components = [AtomicFacet, AtomicSearchBox];
+customElements.get('atomic-facet') ?? customElements.define('atomic-facet', AtomicFacet);
+customElements.get('atomic-search-box') ??
+  customElements.define('atomic-search-box', AtomicSearchBox);
 ```
 
 You must import a value (the component class) from the entry point, and use it. These entry points are pure re-exports, so bundlers drop them, along with the component they re-export, when none of their exports are used. A bare import therefore registers nothing once bundled:
@@ -40,10 +42,10 @@ import '@coveo/atomic/components/atomic-facet';
 
 // ✅ Registers atomic-facet, because AtomicFacet is used.
 import {AtomicFacet} from '@coveo/atomic/components/atomic-facet';
-console.log(customElements.get('atomic-facet') === AtomicFacet); // true
+customElements.get('atomic-facet') ?? customElements.define('atomic-facet', AtomicFacet);
 ```
 
-If you don't otherwise use the class, keep a reference to it (e.g., export it or pass it to a function) so the bundler retains it.
+Importing the class registers the component. The `customElements.define` call never runs, because the component is already defined by then, but it is a use of the class that bundlers keep. Exporting the class instead is not enough: bundlers remove exports that nothing imports, along with the entry point.
 
 ## Getting Started
 
