@@ -53,19 +53,34 @@ function toPascalCase(name) {
     .join('');
 }
 
-async function generateLitExportsForDir(dir) {
+/**
+ * Lists the Lit components of each use-case folder, as `{dir, component}` pairs.
+ */
+export function listLitComponents() {
+  return directories.flatMap((dir) => {
+    const componentsDir = path.join(baseComponentsDir, dir);
+    return readdirSync(componentsDir, {withFileTypes: true})
+      .filter((file) => {
+        const componentPath = path.join(componentsDir, file.name, `${file.name}.ts`);
+        return file.isDirectory() && existsSync(componentPath) && isLitComponent(componentPath);
+      })
+      .map((file) => ({dir, component: file.name}))
+      .sort((a, b) => a.component.localeCompare(b.component));
+  });
+}
+
+export function entryPointSource(dir, component) {
+  return `// Auto-generated file\nexport * from '../components/${dir}/${component}/${component}.js';\n`;
+}
+
+async function generateLitExportsForDir(dir, components) {
   const componentsDir = path.join(baseComponentsDir, dir);
   const outputIndexFile = path.join(componentsDir, 'index.ts');
   const outputLazyIndexFile = path.join(componentsDir, 'lazy-index.ts');
 
-  const files = readdirSync(componentsDir, {withFileTypes: true});
-  const litComponents = files
-    .filter((file) => {
-      const componentPath = path.join(componentsDir, file.name, `${file.name}.ts`);
-      return file.isDirectory() && existsSync(componentPath) && isLitComponent(componentPath);
-    })
-    .map((file) => file.name)
-    .sort();
+  const litComponents = components
+    .filter((entry) => entry.dir === dir)
+    .map((entry) => entry.component);
 
   const indexFileContent = dedent`
   // Auto-generated file
@@ -95,24 +110,19 @@ async function generateLitExportsForDir(dir) {
 
   writeFileSync(outputIndexFile, indexFileContent);
   writeFileSync(outputLazyIndexFile, lazyIndexFileContent);
-
-  return litComponents;
 }
 
-function generateEntryPoint(dir, component) {
-  writeFileSync(
-    path.join(entryPointsDir, `${component}.ts`),
-    `// Auto-generated file\nexport * from '../components/${dir}/${component}/${component}.js';\n`
-  );
-}
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  const components = listLitComponents();
 
-rmSync(entryPointsDir, {recursive: true, force: true});
-mkdirSync(entryPointsDir, {recursive: true});
+  for (const dir of directories) {
+    console.log(colors.blue('Directory:'), colors.green(dir));
+    await generateLitExportsForDir(dir, components);
+  }
 
-for (const dir of directories) {
-  console.log(colors.blue('Directory:'), colors.green(dir));
-  const litComponents = await generateLitExportsForDir(dir);
-  for (const component of litComponents) {
-    generateEntryPoint(dir, component);
+  rmSync(entryPointsDir, {recursive: true, force: true});
+  mkdirSync(entryPointsDir, {recursive: true});
+  for (const {dir, component} of components) {
+    writeFileSync(path.join(entryPointsDir, `${component}.ts`), entryPointSource(dir, component));
   }
 }
