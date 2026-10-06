@@ -66,11 +66,11 @@ export const Default: Story = {
   name: 'atomic-spotlight-content-template',
   args: {
     'default-slot': `<template>
-  <atomic-spotlight-content-image></atomic-spotlight-content-image>
-  <atomic-spotlight-content-link>
-    <atomic-spotlight-content-text field="name"></atomic-spotlight-content-text>
-  </atomic-spotlight-content-link>
-  <atomic-spotlight-content-text field="description"></atomic-spotlight-content-text>
+  <atomic-product-image></atomic-product-image>
+  <atomic-product-link>
+    <atomic-product-text field="name"></atomic-product-text>
+  </atomic-product-link>
+  <atomic-product-text field="description"></atomic-product-text>
 </template>`,
   },
 };
@@ -80,9 +80,15 @@ export const WithConditions: Story = {
   render: () => html`
     <atomic-spotlight-content-template must-match-id="spotlight-summer-sale">
       <template>
-        <atomic-spotlight-content-link>
-          <atomic-spotlight-content-image></atomic-spotlight-content-image>
-        </atomic-spotlight-content-link>
+        <atomic-product-link>
+          <atomic-product-image></atomic-product-image>
+        </atomic-product-link>
+      </template>
+    </atomic-spotlight-content-template>
+    <atomic-spotlight-content-template>
+      <template>
+        <atomic-product-image></atomic-product-image>
+        <atomic-product-link class="font-bold"></atomic-product-link>
       </template>
     </atomic-spotlight-content-template>
   `,

@@ -28,11 +28,11 @@ import {
  * }
  * ```
  */
-export function createProductContextController(
+export function createProductContextController<T = Product>(
   host: LitElement & {error: Error | null},
   options: {folded?: boolean} = {}
-): ItemContextController<Product> {
-  return new ItemContextController<Product>(host, {
+): ItemContextController<T> {
+  return new ItemContextController<T>(host, {
     parentName: 'atomic-product',
     folded: options.folded ?? false,
   });

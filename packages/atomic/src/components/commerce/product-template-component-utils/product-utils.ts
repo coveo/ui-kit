@@ -1,10 +1,31 @@
-import {type Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
+import {
+  type Product,
+  ProductTemplatesHelpers,
+  ResultType,
+  type SpotlightContent,
+  SpotlightContentTemplatesHelpers,
+} from '@coveo/headless/commerce';
 import {readFromObject} from '@/src/utils/object-utils';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {FieldValueIsNaNError} from './error';
 
-export function parseValue(product: Product, field: string) {
-  const value = ProductTemplatesHelpers.getProductProperty(product, field);
+export type CommerceResult = Product | SpotlightContent;
+
+export function isSpotlightContent(result: CommerceResult): result is SpotlightContent {
+  return result.resultType === ResultType.SPOTLIGHT;
+}
+
+/**
+ * Reads a field from a product (including its `additionalFields`) or from a Spotlight Content item.
+ */
+export function getResultProperty(result: CommerceResult, field: string) {
+  return isSpotlightContent(result)
+    ? SpotlightContentTemplatesHelpers.getSpotlightContentProperty(result, field)
+    : ProductTemplatesHelpers.getProductProperty(result, field);
+}
+
+export function parseValue(product: CommerceResult, field: string) {
+  const value = getResultProperty(product, field);
   if (value === null) {
     return null;
   }
@@ -15,8 +36,8 @@ export function parseValue(product: Product, field: string) {
   return valueAsNumber;
 }
 
-export function getStringValueFromProductOrNull(product: Product, field: string) {
-  const value = ProductTemplatesHelpers.getProductProperty(product, field);
+export function getStringValueFromProductOrNull(product: CommerceResult, field: string) {
+  const value = getResultProperty(product, field);
 
   if (typeof value !== 'string' || value.trim() === '') {
     return null;
@@ -27,7 +48,7 @@ export function getStringValueFromProductOrNull(product: Product, field: string)
 
 export function buildStringTemplateFromProduct(
   template: string,
-  product: Product,
+  product: CommerceResult,
   bindings: CommerceBindings
 ) {
   return template.replace(/\${(.*?)}/g, (value: string) => {
@@ -39,7 +60,7 @@ export function buildStringTemplateFromProduct(
 
     if (!newValue) {
       bindings.engine.logger.warn(
-        `${key} used in the href template is undefined for this product: ${product.permanentid} and could not be found in the window object.`
+        `${key} used in the href template is undefined for this product: ${isSpotlightContent(product) ? product.id : product.permanentid} and could not be found in the window object.`
       );
       return '';
     }

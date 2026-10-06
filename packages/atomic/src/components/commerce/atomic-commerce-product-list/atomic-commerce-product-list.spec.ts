@@ -1317,12 +1317,8 @@ describe('atomic-commerce-product-list', () => {
 
           const spotlightElement = element.shadowRoot?.querySelector('atomic-spotlight-content');
 
-          expect(
-            spotlightElement?.content?.querySelector('atomic-spotlight-content-image')
-          ).not.toBeNull();
-          expect(
-            spotlightElement?.linkContent.querySelector('atomic-spotlight-content-link')
-          ).not.toBeNull();
+          expect(spotlightElement?.content?.querySelector('atomic-product-image')).not.toBeNull();
+          expect(spotlightElement?.linkContent.querySelector('atomic-product-link')).not.toBeNull();
         });
 
         it('should pass the spotlight content rendering function to atomic-spotlight-content', async () => {
