@@ -1,5 +1,6 @@
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
+import {userEvent} from 'vitest/browser';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import type {AtomicFocusTrap} from './atomic-focus-trap';
 import './atomic-focus-trap';
@@ -131,6 +132,33 @@ describe('atomic-focus-trap', () => {
       await vi.waitFor(() => {
         expect(sibling.hasAttribute('inert')).toBe(true);
       });
+
+      document.body.removeChild(container);
+    });
+
+    it('should keep elements inside the trap interactive while making siblings inert', async () => {
+      const container = document.createElement('div');
+      document.body.appendChild(container);
+
+      const sibling = document.createElement('button');
+      container.appendChild(sibling);
+
+      const element = await renderFocusTrap({active: false});
+      container.appendChild(element);
+      const backdrop = document.createElement('div');
+      backdrop.style.cssText = 'position:fixed;inset:0;';
+      const onClick = vi.fn();
+      backdrop.addEventListener('click', onClick);
+      element.appendChild(backdrop);
+
+      element.active = true;
+      await vi.waitFor(() => {
+        expect(sibling.hasAttribute('inert')).toBe(true);
+      });
+
+      expect(backdrop.closest('[inert]')).toBeNull();
+      await userEvent.click(backdrop);
+      expect(onClick).toHaveBeenCalledOnce();
 
       document.body.removeChild(container);
     });
