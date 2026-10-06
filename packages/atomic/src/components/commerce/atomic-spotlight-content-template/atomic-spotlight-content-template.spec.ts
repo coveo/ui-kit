@@ -1,7 +1,7 @@
 import type {SpotlightContent} from '@coveo/headless/commerce';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
-import {makeMatchConditions} from '@/src/components/common/template-controller/template-utils';
+import {makeFieldConditions} from '@/src/components/common/template-controller/template-utils';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeSpotlightContent} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/spotlight-content';
 import {AtomicSpotlightContentTemplate} from './atomic-spotlight-content-template';
@@ -26,7 +26,7 @@ describe('atomic-spotlight-content-template', () => {
       .mustMatch=${mustMatch}
       .mustNotMatch=${mustNotMatch}
     >
-      <template><atomic-spotlight-content-image></atomic-spotlight-content-image></template>
+      <template><atomic-product-image></atomic-product-image></template>
     </atomic-spotlight-content-template>`;
 
     const {element} = await renderInAtomicCommerceInterface<AtomicSpotlightContentTemplate>({
@@ -46,11 +46,13 @@ describe('atomic-spotlight-content-template', () => {
   });
 
   it('should build match conditions with the spotlight content template helpers', async () => {
-    await setupElement({mustMatch: {id: ['summer']}, mustNotMatch: {name: ['winter']}});
+    const element = await setupElement({
+      mustMatch: {id: ['summer']},
+      mustNotMatch: {name: ['winter']},
+    });
 
-    expect(makeMatchConditions).toHaveBeenCalledWith(
-      {id: ['summer']},
-      {name: ['winter']},
+    expect(makeFieldConditions).toHaveBeenCalledWith(
+      element,
       expect.objectContaining({getSpotlightContentProperty: expect.any(Function)})
     );
   });
@@ -60,15 +62,15 @@ describe('atomic-spotlight-content-template', () => {
 
     const template = await element.getTemplate();
 
-    expect(template?.content.querySelector('atomic-spotlight-content-image')).not.toBeNull();
+    expect(template?.content.querySelector('atomic-product-image')).not.toBeNull();
   });
 
-  it('should default the link content to an atomic-spotlight-content-link', async () => {
+  it('should default the link content to an atomic-product-link', async () => {
     const element = await setupElement();
 
     const template = await element.getTemplate();
 
-    expect(template?.linkContent?.querySelector('atomic-spotlight-content-link')).not.toBeNull();
+    expect(template?.linkContent?.querySelector('atomic-product-link')).not.toBeNull();
   });
 
   it('should include the conditions and the match conditions in the template', async () => {

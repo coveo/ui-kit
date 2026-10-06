@@ -22,10 +22,10 @@ export class SpotlightContentTemplateProvider extends TemplateProvider<Spotlight
     const content = document.createDocumentFragment();
     const template = document.createElement('template');
     template.innerHTML = `
-      <atomic-spotlight-content-image></atomic-spotlight-content-image>
+      <atomic-product-image></atomic-product-image>
       <div class="spotlight-content-body">
-        <atomic-spotlight-content-link class="font-bold"></atomic-spotlight-content-link>
-        <atomic-spotlight-content-text field="description"></atomic-spotlight-content-text>
+        <atomic-product-link class="font-bold"></atomic-product-link>
+        <atomic-product-text field="description"></atomic-product-text>
       </div>
     `.trim();
     content.appendChild(template.content);
@@ -33,9 +33,9 @@ export class SpotlightContentTemplateProvider extends TemplateProvider<Spotlight
     const linkContent = document.createDocumentFragment();
     const linkTemplate = document.createElement('template');
     linkTemplate.innerHTML = `
-      <atomic-spotlight-content-link>
+      <atomic-product-link>
       ${this.gridCellLinkTarget ? `<a slot="attributes" target="${this.gridCellLinkTarget}"></a>` : ''}
-      </atomic-spotlight-content-link>
+      </atomic-product-link>
     `.trim();
     linkContent.appendChild(linkTemplate.content);
 

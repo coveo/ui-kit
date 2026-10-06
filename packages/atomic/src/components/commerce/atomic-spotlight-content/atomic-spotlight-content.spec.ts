@@ -1,15 +1,14 @@
-import type {SpotlightContent} from '@coveo/headless/commerce';
+import type {InteractiveSpotlightContent, SpotlightContent} from '@coveo/headless/commerce';
+import type {AtomicProductLink} from '@/src/components/commerce/atomic-product-link/atomic-product-link';
+import type {AtomicProductText} from '@/src/components/commerce/atomic-product-text/atomic-product-text';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
-import type {AtomicProductText} from '@/src/components/commerce/atomic-product-text/atomic-product-text';
-import {MissingParentError} from '@/src/components/common/item-list/context/item-context-controller';
 import type {ItemDisplayLayout} from '@/src/components/common/layout/item-layout-utils';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeInteractiveSpotlightContent} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/interactive-spotlight-content';
 import {buildFakeSpotlightContent} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/spotlight-content';
 import {AtomicSpotlightContent} from './atomic-spotlight-content';
 import './atomic-spotlight-content';
-import '@/src/components/commerce/atomic-product-text/atomic-product-text';
 
 describe('atomic-spotlight-content', () => {
   const toFragment = (markup: string) => {
@@ -20,13 +19,12 @@ describe('atomic-spotlight-content', () => {
 
   const renderSpotlightContent = async ({
     spotlightContent = buildFakeSpotlightContent({name: 'Summer sale'}),
-    content = toFragment(
-      '<atomic-spotlight-content-text field="name"></atomic-spotlight-content-text>'
-    ),
-    linkContent = toFragment('<atomic-spotlight-content-link></atomic-spotlight-content-link>'),
+    content = toFragment('<atomic-product-text field="name"></atomic-product-text>'),
+    linkContent = toFragment('<atomic-product-link></atomic-product-link>'),
     display = 'grid',
     renderingFunction,
     loadingFlag,
+    interactiveSpotlightContent = buildFakeInteractiveSpotlightContent(),
   }: {
     spotlightContent?: SpotlightContent;
     content?: ParentNode;
@@ -34,12 +32,13 @@ describe('atomic-spotlight-content', () => {
     display?: ItemDisplayLayout;
     renderingFunction?: AtomicSpotlightContent['renderingFunction'];
     loadingFlag?: string;
+    interactiveSpotlightContent?: InteractiveSpotlightContent;
   } = {}) => {
     const unsetLoadingFlag = vi.fn();
     const {element} = await renderInAtomicCommerceInterface<AtomicSpotlightContent>({
       template: html`<atomic-spotlight-content
         .spotlightContent=${spotlightContent}
-        .interactiveSpotlightContent=${buildFakeInteractiveSpotlightContent()}
+        .interactiveSpotlightContent=${interactiveSpotlightContent}
         .content=${content}
         .linkContent=${linkContent}
         .display=${display}
@@ -66,38 +65,46 @@ describe('atomic-spotlight-content', () => {
   it('should render the template content', async () => {
     const {element} = await renderSpotlightContent();
 
-    expect(
-      element.shadowRoot!.querySelector('.result-root atomic-spotlight-content-text')
-    ).not.toBeNull();
+    expect(element.shadowRoot!.querySelector('.result-root atomic-product-text')).not.toBeNull();
   });
 
   it('should render the link content in the link container', async () => {
     const {element} = await renderSpotlightContent();
 
     expect(
-      element.shadowRoot!.querySelector('.link-container > atomic-spotlight-content-link')
+      element.shadowRoot!.querySelector('.link-container > atomic-product-link')
     ).not.toBeNull();
   });
 
-  it('should provide the spotlight content to spotlight content template components', async () => {
+  it('should provide the spotlight content to the template components', async () => {
     const {element} = await renderSpotlightContent();
-    const text = element.shadowRoot!.querySelector('.result-root atomic-spotlight-content-text')!;
-    await (text as unknown as {updateComplete: Promise<unknown>}).updateComplete;
-
-    expect(text.shadowRoot!.querySelector('[part="text"]')).toHaveTextContent('Summer sale');
-  });
-
-  it('should not provide the spotlight content to product template components', async () => {
-    vi.spyOn(console, 'error').mockImplementation(() => {});
-    const {element} = await renderSpotlightContent({
-      content: toFragment('<atomic-product-text field="ec_name"></atomic-product-text>'),
-    });
-    const productText = element.shadowRoot!.querySelector<AtomicProductText>(
+    const text = element.shadowRoot!.querySelector<AtomicProductText>(
       '.result-root atomic-product-text'
     )!;
-    await productText.updateComplete;
+    await text.updateComplete;
 
-    expect(productText.error).toBeInstanceOf(MissingParentError);
+    await expect
+      .poll(() => text.querySelector('atomic-commerce-text')?.getAttribute('value'))
+      .toBe('Summer sale');
+  });
+
+  it('should provide the interactive spotlight content to atomic-product-link', async () => {
+    const interactiveSpotlightContent = buildFakeInteractiveSpotlightContent();
+    const {element} = await renderSpotlightContent({
+      content: toFragment('<atomic-product-link></atomic-product-link>'),
+      interactiveSpotlightContent,
+    });
+    const link = element.shadowRoot!.querySelector<AtomicProductLink>(
+      '.result-root atomic-product-link'
+    )!;
+    await link.updateComplete;
+    const anchor = link.querySelector('a')!;
+    anchor.addEventListener('click', (event) => event.preventDefault());
+
+    anchor.click();
+
+    expect(anchor).toHaveAttribute('href', 'https://example.com/spotlight');
+    expect(interactiveSpotlightContent.select).toHaveBeenCalled();
   });
 
   it('should click the link container when the display is "grid"', async () => {
