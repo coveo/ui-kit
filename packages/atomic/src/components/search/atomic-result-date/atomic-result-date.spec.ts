@@ -103,6 +103,23 @@ describe('atomic-result-date', () => {
       expect(element).toBeDefined();
       expect(element.textContent?.trim()).toBe('2021-09-03');
     });
+
+    describe('when #format is a localized format', () => {
+      afterEach(() => {
+        dayjs.locale('en');
+      });
+
+      it.each([
+        {locale: 'en', expected: '09/03/2021'},
+        {locale: 'en-ca', expected: '2021-09-03'},
+      ])('should render the date for the $locale locale', async ({locale, expected}) => {
+        dayjs.locale(locale);
+
+        const element = await renderComponent({field: 'date', format: 'L'});
+
+        expect(element.textContent?.trim()).toBe(expected);
+      });
+    });
   });
 
   it('should not render the component when the field does not exist', async () => {

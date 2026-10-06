@@ -2,6 +2,7 @@ import {Schema, StringValue} from '@coveo/bueno';
 import {type Result, ResultTemplatesHelpers} from '@coveo/headless';
 import dayjs from 'dayjs';
 import calendar from 'dayjs/plugin/calendar';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
@@ -16,6 +17,7 @@ import {LightDomMixin} from '@/src/mixins/light-dom';
 import {parseDate} from '@/src/utils/date-utils';
 
 dayjs.extend(calendar);
+dayjs.extend(localizedFormat);
 
 /**
  * The `atomic-result-date` component renders the value of a date result field.
@@ -41,6 +43,9 @@ export class AtomicResultDate
   /**
    * The format of the date.
    * Available formats: https://day.js.org/docs/en/display/format
+   *
+   * [Localized formats](https://day.js.org/docs/en/display/format#localized-formats) such as `L`, `LL`, or `LLL`
+   * follow the interface `language`: with `format="L"`, `en-US` renders `09/30/2026` and `en-CA` renders `2026-09-30`.
    */
   @property({type: String, reflect: true}) public format = 'D/M/YYYY';
 
