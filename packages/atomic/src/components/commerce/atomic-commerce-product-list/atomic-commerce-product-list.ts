@@ -24,6 +24,7 @@ import {
 } from '@/src/components/commerce/atomic-commerce-interface/search-or-listing';
 import type {SelectChildProductEventArgs} from '@/src/components/commerce/atomic-product-children/select-child-product-event';
 import {ProductTemplateProvider} from '@/src/components/commerce/product-list/product-template-provider';
+import {SpotlightContentTemplateProvider} from '@/src/components/commerce/product-list/spotlight-content-template-provider';
 import {renderItemPlaceholders} from '@/src/components/common/atomic-result-placeholder/item-placeholders';
 import {createAppLoadedListener} from '@/src/components/common/interface/store';
 import {renderDisplayWrapper} from '@/src/components/common/item-list/display-wrapper';
@@ -59,15 +60,16 @@ import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {randomID} from '@/src/utils/utils';
 import '@/src/components/commerce/atomic-product/atomic-product';
 import '@/src/components/commerce/atomic-product-template/atomic-product-template';
-import '@/src/components/commerce/atomic-commerce-spotlight-content/atomic-commerce-spotlight-content';
+import '@/src/components/commerce/atomic-spotlight-content/atomic-spotlight-content';
+import '@/src/components/commerce/atomic-spotlight-content-template/atomic-spotlight-content-template';
 
 /**
  * The `atomic-commerce-product-list` component is responsible for displaying products.
  *
  * When the `enable-spotlight-content` property of the `atomic-commerce-interface` is set, the component also displays
  * the Spotlight Content returned by the Commerce API, at the position it was returned in, when the display prop is set
- * to "grid" or "list". Spotlight Content is not a product: it is not rendered with product templates and is not displayed
- * when the display prop is set to "table".
+ * to "grid" or "list". Spotlight Content is not a product: it is rendered with `atomic-spotlight-content-template`
+ * templates rather than product templates, and is not displayed when the display prop is set to "table".
  *
  * @part outline - The outline of each item (product or Spotlight Content) when the display prop is set to "grid" or "list".
  * @part result-list - The element containing all items (products and Spotlight Content) when the display prop is set to "grid" or "list".
@@ -81,14 +83,9 @@ import '@/src/components/commerce/atomic-commerce-spotlight-content/atomic-comme
  * @part result-table-row-even - The even tr elements nested under tbody when the display prop is set to "table".
  * @part result-table-row-odd - The odd tr elements nested under tbody when the display prop is set to "table".
  * @part result-table-cell - The `td` elements nested under each `tbody` > `tr` when the display prop is set to "table".
- * @part spotlight-content - Each Spotlight Content element. Use it to style Spotlight Content separately from products.
- * @part spotlight-content-link - The anchor element wrapping each Spotlight Content.
- * @part spotlight-content-image - The image of each Spotlight Content.
- * @part spotlight-content-body - The element containing the name and description of each Spotlight Content.
- * @part spotlight-content-name - The name of each Spotlight Content.
- * @part spotlight-content-description - The description of each Spotlight Content.
+ * @part spotlight-content - Each `atomic-spotlight-content` element. Use it to style Spotlight Content separately from products.
  *
- * @slot default - The default slot where the product templates are defined.
+ * @slot default - The default slot where the product templates and the Spotlight Content templates are defined.
  */
 @customElement('atomic-commerce-product-list')
 @bindings()
@@ -133,6 +130,10 @@ export class AtomicCommerceProductList
             }
           }
         }
+
+        .list-root atomic-spotlight-content[part~='outline']:not(:first-child)::before {
+          display: block;
+        }
       }
 
       @media (width >= theme(--breakpoint-desktop)) {
@@ -169,6 +170,8 @@ export class AtomicCommerceProductList
   private nextNewResultTarget?: FocusTargetController;
   private productListCommon!: ItemListCommon;
   private productTemplateProvider!: ProductTemplateProvider;
+  private spotlightContentRenderingFunction: ItemRenderingFunction;
+  private spotlightContentTemplateProvider!: SpotlightContentTemplateProvider;
   private unsubscribeSummary!: () => void;
 
   @state()
@@ -181,6 +184,8 @@ export class AtomicCommerceProductList
   private isEveryProductReady = false;
   @state()
   private resultTemplateRegistered = false;
+  @state()
+  private spotlightContentTemplateRegistered = false;
   @state()
   private templateHasError = false;
 
@@ -231,11 +236,27 @@ export class AtomicCommerceProductList
     this.itemRenderingFunction = productRenderingFunction;
   }
 
+  /**
+   * Sets a rendering function to bypass the standard HTML template mechanism for rendering Spotlight Content.
+   * You can use this function while working with web frameworks that don't use plain HTML syntax such as React, Angular,
+   * or Vue.
+   *
+   * Do not use this method if you integrate Atomic in a plain HTML deployment.
+   *
+   * @param spotlightContentRenderingFunction
+   */
+  public async setSpotlightContentRenderFunction(
+    spotlightContentRenderingFunction: ItemRenderingFunction
+  ) {
+    this.spotlightContentRenderingFunction = spotlightContentRenderingFunction;
+  }
+
   public initialize() {
     this.validateProps();
     this.initSearchOrListing();
     this.initSummary();
     this.initProductTemplateProvider();
+    this.initSpotlightContentTemplateProvider();
     this.initProductListCommon();
     this.createSelectChildProductListener();
     createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
@@ -375,6 +396,21 @@ export class AtomicCommerceProductList
     });
   }
 
+  private initSpotlightContentTemplateProvider() {
+    this.spotlightContentTemplateProvider = new SpotlightContentTemplateProvider({
+      includeDefaultTemplate: true,
+      templateElements: Array.from(this.querySelectorAll('atomic-spotlight-content-template')),
+      getResultTemplateRegistered: () => this.spotlightContentTemplateRegistered,
+      getTemplateHasError: () => this.templateHasError,
+      setResultTemplateRegistered: (value: boolean) => {
+        this.spotlightContentTemplateRegistered = value;
+      },
+      setTemplateHasError: (value: boolean) => {
+        this.templateHasError = value;
+      },
+    });
+  }
+
   private initProductListCommon() {
     this.productListCommon = new ItemListCommon({
       engineSubscribe: this.bindings.engine.subscribe,
@@ -439,7 +475,9 @@ export class AtomicCommerceProductList
   private renderGrid() {
     return html`${map(this.items, (item, index) =>
       isSpotlightContent(item)
-        ? this.renderSpotlightContentInGrid(item, index)
+        ? when(this.spotlightContentTemplateRegistered, () =>
+            this.renderSpotlightContentInGrid(item, index)
+          )
         : this.renderProductInGrid(item, index)
     )}`;
   }
@@ -447,7 +485,9 @@ export class AtomicCommerceProductList
   private renderList() {
     return html`${map(this.items, (item, index) =>
       isSpotlightContent(item)
-        ? this.renderSpotlightContentInList(item, index)
+        ? when(this.spotlightContentTemplateRegistered, () =>
+            this.renderSpotlightContentInList(item, index)
+          )
         : this.renderProductInList(item, index)
     )}`;
   }
@@ -512,13 +552,29 @@ export class AtomicCommerceProductList
           clickUri: spotlightContent.clickUri,
           title: spotlightContent.name ?? '',
         },
-        selectorForItem: 'atomic-commerce-spotlight-content',
+        selectorForItem: 'atomic-spotlight-content',
         setRef: (element) => this.setItemRef(element, index),
       },
     })(
       html`${keyed(
         this.getItemKey(spotlightContent),
-        this.renderSpotlightContent(spotlightContent)
+        html`<atomic-spotlight-content
+          part="spotlight-content"
+          .content=${this.spotlightContentTemplateProvider.getTemplateContent(spotlightContent)}
+          .density=${this.density}
+          .display=${this.display}
+          .imageSize=${this.imageSize}
+          .interactiveSpotlightContent=${this.searchOrListing.interactiveSpotlightContent({
+            options: {spotlightContent},
+          })}
+          .linkContent=${this.spotlightContentTemplateProvider.getLinkTemplateContent(
+            spotlightContent
+          )}
+          .loadingFlag=${this.loadingFlag}
+          .renderingFunction=${this.spotlightContentRenderingFunction}
+          .spotlightContent=${spotlightContent}
+          .store=${this.bindings.store}
+        ></atomic-spotlight-content>`
       )}`
     );
   }
@@ -526,28 +582,25 @@ export class AtomicCommerceProductList
   private renderSpotlightContentInList(spotlightContent: SpotlightContent, index: number) {
     return html`${keyed(
       this.getItemKey(spotlightContent),
-      html`<div
-        part="outline"
-        class="result-item"
+      html`<atomic-spotlight-content
+        part="outline spotlight-content"
         ${ref((element) => this.setItemRef(element, index))}
-      >
-        ${this.renderSpotlightContent(spotlightContent)}
-      </div>`
+        .content=${this.spotlightContentTemplateProvider.getTemplateContent(spotlightContent)}
+        .density=${this.density}
+        .display=${this.display}
+        .imageSize=${this.imageSize}
+        .interactiveSpotlightContent=${this.searchOrListing.interactiveSpotlightContent({
+          options: {spotlightContent},
+        })}
+        .linkContent=${this.spotlightContentTemplateProvider.getLinkTemplateContent(
+          spotlightContent
+        )}
+        .loadingFlag=${this.loadingFlag}
+        .renderingFunction=${this.spotlightContentRenderingFunction}
+        .spotlightContent=${spotlightContent}
+        .store=${this.bindings.store}
+      ></atomic-spotlight-content>`
     )}`;
-  }
-
-  private renderSpotlightContent(spotlightContent: SpotlightContent) {
-    return html`<atomic-commerce-spotlight-content
-      part="spotlight-content"
-      exportparts="link:spotlight-content-link,image:spotlight-content-image,body:spotlight-content-body,name:spotlight-content-name,description:spotlight-content-description"
-      .display=${this.display}
-      .interactiveSpotlightContent=${this.searchOrListing.interactiveSpotlightContent({
-        options: {spotlightContent},
-      })}
-      .logger=${this.bindings.engine.logger}
-      .mobileBreakpoint=${this.bindings.store.state.mobileBreakpoint}
-      .spotlightContent=${spotlightContent}
-    ></atomic-commerce-spotlight-content>`;
   }
 
   private renderTable() {

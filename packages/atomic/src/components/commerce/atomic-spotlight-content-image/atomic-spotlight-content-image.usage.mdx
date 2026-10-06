@@ -1,0 +1,11 @@
+Use this component inside an `atomic-spotlight-content-template` to render the image of the Spotlight Content.
+
+The component displays the `desktopImage`. When the Spotlight Content has a `mobileImage`, it's displayed instead on viewports narrower than the mobile breakpoint of the interface. The image uses the `altText` of the Spotlight Content as its alternative text, or its `name` when there's no `altText`.
+
+```html
+<atomic-spotlight-content-template>
+  <template>
+    <atomic-spotlight-content-image></atomic-spotlight-content-image>
+  </template>
+</atomic-spotlight-content-template>
+```

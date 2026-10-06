@@ -41,16 +41,18 @@ export class ItemContextController<T = Record<string, unknown>> implements React
   private host: ReactiveControllerHost & LitElementWithError;
   private parentName: string;
   private folded: boolean;
+  private eventName: string;
   private _item: T | null = null;
   private _error: MissingParentError | null = null;
 
   constructor(
     host: ReactiveControllerHost & LitElementWithError,
-    options: {parentName?: string; folded?: boolean} = {}
+    options: {parentName?: string; folded?: boolean; eventName?: string} = {}
   ) {
     this.host = host;
     this.parentName = options.parentName ?? 'atomic-result';
     this.folded = options.folded ?? false;
+    this.eventName = options.eventName ?? itemContextEventName;
     host.addController(this);
   }
 
@@ -71,7 +73,7 @@ export class ItemContextController<T = Record<string, unknown>> implements React
   }
 
   private _resolveItemContext(): void {
-    const event = buildCustomEvent(itemContextEventName, (item: Record<string, unknown>) => {
+    const event = buildCustomEvent(this.eventName, (item: Record<string, unknown>) => {
       this._item = extractFolded<T>(item, this.folded);
       this._error = null;
       this.host.error = null;

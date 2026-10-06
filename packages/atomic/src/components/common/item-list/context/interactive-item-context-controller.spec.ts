@@ -28,6 +28,19 @@ describe('#InteractiveItemContextController', () => {
     expect(mockElement.addController).toHaveBeenCalledWith(controller);
   });
 
+  it('should dispatch the custom event name when provided', () => {
+    const customController = new InteractiveItemContextController(mockElement, {
+      eventName: 'atomic/resolveCustomInteractive',
+    });
+    vi.mocked(mockElement.dispatchEvent).mockClear();
+
+    customController.hostConnected();
+
+    expect(vi.mocked(mockElement.dispatchEvent).mock.calls[0][0].type).toBe(
+      'atomic/resolveCustomInteractive'
+    );
+  });
+
   describe('#interactiveItem', () => {
     it('should return null initially', () => {
       expect(controller.interactiveItem).toBeNull();
