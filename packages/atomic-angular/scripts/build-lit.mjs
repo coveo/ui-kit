@@ -10,12 +10,12 @@ const atomicAngularComponentFilePath = join(generatedDir, 'components.ts');
 mkdirSync(generatedDir, {recursive: true});
 
 const litDeclarations = [];
-const litImports = new Set();
-const defineCustomElementImports = new Set();
+const litImports = [];
 
 const isLitDeclaration = (declaration) => declaration?.superclass?.name === 'LitElement';
 
-const declarationToLitImport = (declaration) => `${declaration.name} as Lit${declaration.name}`;
+const declarationToLitImport = (declaration) =>
+  `import {${declaration.name} as Lit${declaration.name}} from '@coveo/atomic/components/${declaration.tagName}';`;
 
 const declarationToProxyCmp = (declaration, defineCustomElementFn) =>
   `
@@ -77,7 +77,7 @@ function processLitDeclaration(declaration) {
     declaration,
     `() => {customElements.get('${declaration.tagName}') || customElements.define('${declaration.tagName}', Lit${declaration.name});}`
   );
-  litImports.add(declarationToLitImport(declaration));
+  litImports.push(declarationToLitImport(declaration));
   litDeclarations.push(`${declaration.name}`);
 }
 
@@ -97,18 +97,8 @@ for (const module of sortedModules) {
   }
 }
 
-if (litImports.size > 0) {
-  atomicAngularComponentFileContent += `\n
-import {
-  ${[...litImports].sort().join(',\n  ')}
-} from '@coveo/atomic/components';\n`;
-}
-
-if (defineCustomElementImports.size > 0) {
-  atomicAngularComponentFileContent += `
-import {
-  ${[...defineCustomElementImports].sort().join(',\n  ')}
-} from '@coveo/atomic/components';\n`;
+if (litImports.length > 0) {
+  atomicAngularComponentFileContent += `\n\n${litImports.sort().join('\n')}\n`;
 }
 
 if (litDeclarations.length > 0) {
