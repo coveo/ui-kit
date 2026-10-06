@@ -1,9 +1,10 @@
 import type {Result} from '@coveo/headless';
 import dayjs from 'dayjs';
+import 'dayjs/locale/en-ca';
 import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicResult} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-result-fixture';
 import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
@@ -70,12 +71,6 @@ describe('atomic-result-date', () => {
             loadingFlags: [],
           },
         };
-        // Mock interfaceElement with language property
-        bindings.interfaceElement = {
-          ...bindings.interfaceElement,
-          language: 'en',
-          // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- mock interface element
-        } as any;
         return bindings;
       },
     });
@@ -245,10 +240,52 @@ describe('atomic-result-date', () => {
         result: resultWithOldDate,
       });
 
-      expect(element).toBeDefined();
-      // For dates older than a week, it falls back to sameElse format
-      // The rendered date includes the date in some format
-      expect(element.textContent?.trim()).toMatch(/2020|01|15/);
+      expect(element.textContent?.trim()).toBe('15/1/2020');
+    });
+
+    describe('when the interface language has a region', () => {
+      beforeEach(() => {
+        dayjs.locale('en-ca');
+      });
+
+      afterEach(() => {
+        dayjs.locale('en');
+      });
+
+      it('should render the calendar translations', async () => {
+        const resultWithToday = buildFakeResult({
+          raw: {
+            customDate: dayjs().toISOString(),
+            urihash: '',
+          },
+        });
+
+        const element = await renderComponent({
+          field: 'customDate',
+          relativeTime: true,
+          result: resultWithToday,
+        });
+
+        expect(element.textContent?.trim()).toBe('Today');
+      });
+
+      it('should use format for older dates', async () => {
+        const resultWithOldDate = buildFakeResult({
+          raw: {
+            customDate: '2020/01/15@10:00:00',
+            urihash: '',
+          },
+        });
+
+        const element = await renderComponent({
+          field: 'customDate',
+          format: 'YYYY-MM-DD',
+          relativeTime: true,
+          result: resultWithOldDate,
+        });
+
+        expect(element.textContent?.trim()).toBe('2020-01-15');
+      });
     });
   });
 });

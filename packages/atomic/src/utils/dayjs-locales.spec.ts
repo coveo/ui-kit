@@ -6,7 +6,7 @@ vi.mock('@/src/generated/dayjs-locales-data', () => {
   const mockLocales = {
     en: vi.fn(() => Promise.resolve()),
     fr: vi.fn(() => Promise.resolve()),
-    'en-US': vi.fn(() => Promise.resolve()),
+    'en-CA': vi.fn(() => Promise.resolve()),
   };
   return {
     locales: mockLocales,
@@ -43,14 +43,21 @@ describe('#loadDayjsLocale', () => {
   });
 
   it('should load the exact locale when available', async () => {
-    loadDayjsLocale('en-US');
+    loadDayjsLocale('en-CA');
     await flushPromises();
 
-    expect(localeSpy).toHaveBeenCalledWith('en-US');
+    expect(localeSpy).toHaveBeenCalledWith('en-CA');
+  });
+
+  it('should load the exact locale regardless of case', async () => {
+    loadDayjsLocale('en-ca');
+    await flushPromises();
+
+    expect(localeSpy).toHaveBeenCalledWith('en-CA');
   });
 
   it('should fall back to regionless language when region is not available', async () => {
-    loadDayjsLocale('en-CA');
+    loadDayjsLocale('en-US');
     await flushPromises();
 
     expect(localeSpy).toHaveBeenCalledWith('en');

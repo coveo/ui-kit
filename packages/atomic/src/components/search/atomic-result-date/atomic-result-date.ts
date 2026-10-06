@@ -2,7 +2,6 @@ import {Schema, StringValue} from '@coveo/bueno';
 import {type Result, ResultTemplatesHelpers} from '@coveo/headless';
 import dayjs from 'dayjs';
 import calendar from 'dayjs/plugin/calendar';
-import updateLocale from 'dayjs/plugin/updateLocale';
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
@@ -17,7 +16,6 @@ import {LightDomMixin} from '@/src/mixins/light-dom';
 import {parseDate} from '@/src/utils/date-utils';
 
 dayjs.extend(calendar);
-dayjs.extend(updateLocale);
 
 /**
  * The `atomic-result-date` component renders the value of a date result field.
@@ -116,17 +114,14 @@ export class AtomicResultDate
     }
 
     if (this.relativeTime) {
-      dayjs.updateLocale(this.bindings.interfaceElement.language, {
-        calendar: {
-          sameDay: this.bindings.i18n.t('calendar-same-day'),
-          nextDay: this.bindings.i18n.t('calendar-next-day'),
-          nextWeek: this.bindings.i18n.t('calendar-next-week'),
-          lastDay: this.bindings.i18n.t('calendar-last-day'),
-          lastWeek: this.bindings.i18n.t('calendar-last-week'),
-          sameElse: this.format,
-        },
+      return parsedValue.calendar(null, {
+        sameDay: this.bindings.i18n.t('calendar-same-day'),
+        nextDay: this.bindings.i18n.t('calendar-next-day'),
+        nextWeek: this.bindings.i18n.t('calendar-next-week'),
+        lastDay: this.bindings.i18n.t('calendar-last-day'),
+        lastWeek: this.bindings.i18n.t('calendar-last-week'),
+        sameElse: this.format,
       });
-      return parsedValue.calendar();
     }
 
     return parsedValue.format(this.format);

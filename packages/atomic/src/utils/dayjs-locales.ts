@@ -3,20 +3,11 @@ import {locales} from '../generated/dayjs-locales-data';
 
 const warn = (language: string) => console.warn(`Cannot load dayjs locale file for "${language}"`);
 
-const resolveLanguage = (languageInput: string) => {
-  if (locales[languageInput]) {
-    return languageInput;
-  }
+const findLocale = (language: string) =>
+  Object.keys(locales).find((locale) => locale.toLowerCase() === language.toLowerCase());
 
-  if (languageInput.includes('-')) {
-    const regionlessLanguage = languageInput.split('-')[0];
-    if (locales[regionlessLanguage]) {
-      return regionlessLanguage;
-    }
-  }
-
-  return languageInput;
-};
+const resolveLanguage = (languageInput: string) =>
+  findLocale(languageInput) ?? findLocale(languageInput.split('-')[0]) ?? languageInput;
 
 export function loadDayjsLocale(languageInput: string) {
   const language = resolveLanguage(languageInput);
