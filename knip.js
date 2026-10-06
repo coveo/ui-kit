@@ -161,6 +161,15 @@ export default {
       vite: {config: []},
       entry: ['src/*-page.js'],
     },
+    'samples/atomic/commerce-angular': {
+      // Only referenced from angular.json (Atomic's assets, lang and theme),
+      // which Knip does not read.
+      ignoreDependencies: ['@coveo/atomic'],
+    },
+    'samples/atomic/search-angular': {
+      // Same as commerce-angular: only referenced from angular.json.
+      ignoreDependencies: ['@coveo/atomic'],
+    },
     'samples/atomic/search-vite': {
       // Same as commerce-vite: vite.config.js throws without build artifacts.
       vite: {config: []},
