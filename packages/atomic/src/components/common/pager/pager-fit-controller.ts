@@ -16,8 +16,10 @@ export class PagerFitController implements ReactiveController {
   hostConnected() {
     // Deferred to the next frame to avoid ResizeObserver loop errors.
     this.resizeObserver = new ResizeObserver(() => requestAnimationFrame(() => this.reset()));
-    const resizeTarget = this.host.parentElement ?? this.host;
-    this.resizeObserver.observe(resizeTarget);
+    this.resizeObserver.observe(document.documentElement);
+    if (this.host.parentElement) {
+      this.resizeObserver.observe(this.host.parentElement);
+    }
   }
 
   hostDisconnected() {
