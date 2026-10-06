@@ -15,6 +15,7 @@ import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {once, randomID} from '@/src/utils/utils.js';
 import type {AtomicFocusTrap} from '../atomic-focus-trap/atomic-focus-trap.js';
 import type {AnyBindings} from '../interface/bindings.js';
+import '@/src/components/common/atomic-focus-trap/atomic-focus-trap.js';
 
 /**
  * When the modal is opened, the class `atomic-modal-opened` is added to the `interfaceElement` and the body, allowing further customization.
