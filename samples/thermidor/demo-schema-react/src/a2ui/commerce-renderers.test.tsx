@@ -1,207 +1,216 @@
-import {describe, it, expect, vi, beforeEach} from 'vitest';
-import {render, screen, fireEvent} from '@testing-library/react';
-import {PaginationRenderer} from './Pagination/Pagination.js';
-import {SortRenderer} from './Sort/Sort.js';
-import {ProductListRenderer} from './ProductList/ProductList.js';
-import {TargetingProvider, type TargetingContext} from '../context/targeting.js';
+import {describe, it, expect, afterEach} from 'vitest';
+import {screen, fireEvent, cleanup, waitFor} from '@testing-library/react';
+import {mountSurface} from './mount-surface.harness.js';
 
-const mockDispatch = vi.fn().mockResolvedValue(undefined);
-let mockControllerState: unknown = undefined;
+/**
+ * Pagination / Sort / ProductList are `createReactComponent` implementations driven by the generic
+ * binder, mounted end-to-end through the real thermidor catalog: props are `{path}` bindings
+ * resolved from the surface data model, and user gestures dispatch actions that surface on
+ * `onAction` (flattened `{name, context, ...}`). See `./mount-surface.harness.tsx`.
+ */
 
-vi.mock('./controllers.js', () => ({
-  useRemoteController: () => ({
-    state: mockControllerState,
-    dispatch: mockDispatch,
-    subscribe: () => () => undefined,
-  }),
-}));
+afterEach(() => cleanup());
 
-const defaultTargeting: TargetingContext = {
-  isTargeting: false,
-  onProductTargeted: vi.fn(),
-  selectedProductIds: new Set(),
-};
+describe('Pagination', () => {
+  const bindings = {
+    page: {path: '/state/root/page'},
+    pageSize: {path: '/state/root/pageSize'},
+    totalEntries: {path: '/state/root/totalEntries'},
+    totalPages: {path: '/state/root/totalPages'},
+  };
 
-function renderWithTargeting(ui: React.ReactElement) {
-  return render(<TargetingProvider value={defaultTargeting}>{ui}</TargetingProvider>);
-}
+  function mountPagination(state: {
+    page: number;
+    pageSize: number;
+    totalEntries: number;
+    totalPages: number;
+  }) {
+    return mountSurface({
+      component: {component: 'Pagination', ...bindings},
+      dataModel: [
+        {path: '/state/root/page', value: state.page},
+        {path: '/state/root/pageSize', value: state.pageSize},
+        {path: '/state/root/totalEntries', value: state.totalEntries},
+        {path: '/state/root/totalPages', value: state.totalPages},
+      ],
+    });
+  }
 
-beforeEach(() => {
-  mockControllerState = undefined;
-  mockDispatch.mockClear();
-});
+  it('renders page buttons from resolved props', async () => {
+    mountPagination({page: 1, pageSize: 10, totalEntries: 30, totalPages: 3});
 
-describe('PaginationRenderer', () => {
-  const props = {componentId: 'test-pagination', componentType: 'pagination' as const};
-
-  it('renders nothing when state is undefined (loading)', () => {
-    mockControllerState = undefined;
-    const {container} = render(<PaginationRenderer props={props} />);
-    expect(container.innerHTML).toBe('');
-  });
-
-  it('renders page buttons from state', () => {
-    mockControllerState = {page: 1, pageSize: 10, totalEntries: 30, totalPages: 3};
-    render(<PaginationRenderer props={props} />);
-
-    expect(screen.getByLabelText('Pagination')).toBeDefined();
+    await waitFor(() => expect(screen.getByLabelText('Pagination')).toBeDefined());
     expect(screen.getByLabelText('Page 1')).toBeDefined();
     expect(screen.getByLabelText('Page 2')).toBeDefined();
     expect(screen.getByLabelText('Page 3')).toBeDefined();
   });
 
-  it('marks the current page as active', () => {
-    mockControllerState = {page: 1, pageSize: 10, totalEntries: 30, totalPages: 3};
-    render(<PaginationRenderer props={props} />);
+  it('marks the current page as active', async () => {
+    mountPagination({page: 1, pageSize: 10, totalEntries: 30, totalPages: 3});
 
+    await waitFor(() => expect(screen.getByLabelText('Page 2')).toBeDefined());
     expect(screen.getByLabelText('Page 2').getAttribute('aria-current')).toBe('page');
     expect(screen.getByLabelText('Page 1').getAttribute('aria-current')).toBeNull();
   });
 
-  it('dispatches selectPage when a page button is clicked', () => {
-    mockControllerState = {page: 0, pageSize: 10, totalEntries: 30, totalPages: 3};
-    render(<PaginationRenderer props={props} />);
+  it('dispatches a selectPage action when a page button is clicked', async () => {
+    const {lastAction} = mountPagination({page: 0, pageSize: 10, totalEntries: 30, totalPages: 3});
 
+    await waitFor(() => expect(screen.getByLabelText('Page 3')).toBeDefined());
     fireEvent.click(screen.getByLabelText('Page 3'));
-    expect(mockDispatch).toHaveBeenCalledWith('selectPage', {page: 2});
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({name: 'selectPage', context: {page: 2}})
+    );
   });
 
-  it('dispatches selectPage with next page on next button click', () => {
-    mockControllerState = {page: 0, pageSize: 10, totalEntries: 30, totalPages: 3};
-    render(<PaginationRenderer props={props} />);
+  it('dispatches selectPage with next page on next button click', async () => {
+    const {lastAction} = mountPagination({page: 0, pageSize: 10, totalEntries: 30, totalPages: 3});
 
+    await waitFor(() => expect(screen.getByLabelText('Next page')).toBeDefined());
     fireEvent.click(screen.getByLabelText('Next page'));
-    expect(mockDispatch).toHaveBeenCalledWith('selectPage', {page: 1});
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({name: 'selectPage', context: {page: 1}})
+    );
   });
 
-  it('dispatches selectPage with previous page on previous button click', () => {
-    mockControllerState = {page: 2, pageSize: 10, totalEntries: 30, totalPages: 3};
-    render(<PaginationRenderer props={props} />);
+  it('dispatches selectPage with previous page on previous button click', async () => {
+    const {lastAction} = mountPagination({page: 2, pageSize: 10, totalEntries: 30, totalPages: 3});
 
+    await waitFor(() => expect(screen.getByLabelText('Previous page')).toBeDefined());
     fireEvent.click(screen.getByLabelText('Previous page'));
-    expect(mockDispatch).toHaveBeenCalledWith('selectPage', {page: 1});
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({name: 'selectPage', context: {page: 1}})
+    );
   });
 
-  it('disables previous button on first page', () => {
-    mockControllerState = {page: 0, pageSize: 10, totalEntries: 30, totalPages: 3};
-    render(<PaginationRenderer props={props} />);
+  it('disables previous button on first page', async () => {
+    mountPagination({page: 0, pageSize: 10, totalEntries: 30, totalPages: 3});
 
-    const prevButton = screen.getByLabelText('Previous page') as HTMLButtonElement;
-    expect(prevButton.disabled).toBe(true);
+    await waitFor(() => expect(screen.getByLabelText('Previous page')).toBeDefined());
+    expect((screen.getByLabelText('Previous page') as HTMLButtonElement).disabled).toBe(true);
   });
 
-  it('disables next button on last page', () => {
-    mockControllerState = {page: 2, pageSize: 10, totalEntries: 30, totalPages: 3};
-    render(<PaginationRenderer props={props} />);
+  it('disables next button on last page', async () => {
+    mountPagination({page: 2, pageSize: 10, totalEntries: 30, totalPages: 3});
 
-    const nextButton = screen.getByLabelText('Next page') as HTMLButtonElement;
-    expect(nextButton.disabled).toBe(true);
+    await waitFor(() => expect(screen.getByLabelText('Next page')).toBeDefined());
+    expect((screen.getByLabelText('Next page') as HTMLButtonElement).disabled).toBe(true);
   });
 });
 
-describe('SortRenderer', () => {
-  const props = {componentId: 'test-sort', componentType: 'sort' as const};
+describe('Sort', () => {
+  const bindings = {
+    appliedSort: {path: '/state/root/appliedSort'},
+    availableSorts: {path: '/state/root/availableSorts'},
+  };
 
-  it('renders nothing when state is undefined (loading)', () => {
-    mockControllerState = undefined;
-    const {container} = render(<SortRenderer props={props} />);
-    expect(container.innerHTML).toBe('');
-  });
+  function mountSort(state: {appliedSort: unknown; availableSorts: unknown[]}) {
+    return mountSurface({
+      component: {component: 'Sort', ...bindings},
+      dataModel: [
+        {path: '/state/root/appliedSort', value: state.appliedSort},
+        {path: '/state/root/availableSorts', value: state.availableSorts},
+      ],
+    });
+  }
 
-  it('renders a select with available sort options', () => {
-    mockControllerState = {
+  it('renders a select with available sort options', async () => {
+    mountSort({
       appliedSort: {sortCriteria: 'relevance', fields: []},
       availableSorts: [
         {sortCriteria: 'relevance', fields: []},
         {sortCriteria: 'price_asc', fields: [{field: 'ec_price', direction: 'asc'}]},
         {sortCriteria: 'price_desc', fields: [{field: 'ec_price', direction: 'desc'}]},
       ],
-    };
-    render(<SortRenderer props={props} />);
+    });
 
-    expect(screen.getByLabelText('Sort by:')).toBeDefined();
+    await waitFor(() => expect(screen.getByLabelText('Sort by:')).toBeDefined());
     expect(screen.getByText('Relevance')).toBeDefined();
     expect(screen.getByText('Price (Low to High)')).toBeDefined();
     expect(screen.getByText('Price (High to Low)')).toBeDefined();
   });
 
-  it('selects the applied sort option', () => {
-    mockControllerState = {
+  it('selects the applied sort option', async () => {
+    mountSort({
       appliedSort: {sortCriteria: 'price_asc', fields: [{field: 'ec_price', direction: 'asc'}]},
       availableSorts: [
         {sortCriteria: 'relevance', fields: []},
         {sortCriteria: 'price_asc', fields: [{field: 'ec_price', direction: 'asc'}]},
       ],
-    };
-    render(<SortRenderer props={props} />);
+    });
 
-    const select = screen.getByLabelText('Sort by:') as HTMLSelectElement;
-    expect(select.value).toBe('1');
+    await waitFor(() => expect(screen.getByLabelText('Sort by:')).toBeDefined());
+    expect((screen.getByLabelText('Sort by:') as HTMLSelectElement).value).toBe('1');
   });
 
-  it('dispatches selectSort when a different sort is selected', () => {
-    mockControllerState = {
+  it('dispatches a selectSort action when a different sort is selected', async () => {
+    const {lastAction} = mountSort({
       appliedSort: {sortCriteria: 'relevance', fields: []},
       availableSorts: [
         {sortCriteria: 'relevance', fields: []},
         {sortCriteria: 'price_asc', fields: [{field: 'ec_price', direction: 'asc'}]},
       ],
-    };
-    render(<SortRenderer props={props} />);
-
-    const select = screen.getByLabelText('Sort by:');
-    fireEvent.change(select, {target: {value: '1'}});
-
-    expect(mockDispatch).toHaveBeenCalledWith('selectSort', {
-      sortCriteria: 'price_asc',
-      fields: [{field: 'ec_price', direction: 'asc'}],
     });
+
+    await waitFor(() => expect(screen.getByLabelText('Sort by:')).toBeDefined());
+    fireEvent.change(screen.getByLabelText('Sort by:'), {target: {value: '1'}});
+
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({
+        name: 'selectSort',
+        context: {sortCriteria: 'price_asc', fields: [{field: 'ec_price', direction: 'asc'}]},
+      })
+    );
   });
 });
 
-describe('ProductListRenderer', () => {
-  const props = {componentId: 'test-product-list', componentType: 'product-list' as const};
+describe('ProductList', () => {
+  it('renders loading state when products are unresolved', async () => {
+    // No data-model write for `products` → the `{path}` binding resolves to undefined → loading.
+    mountSurface({
+      component: {component: 'ProductList', products: {path: '/state/root/products'}},
+    });
 
-  it('renders loading state when state is undefined', () => {
-    mockControllerState = undefined;
-    renderWithTargeting(<ProductListRenderer props={props} />);
-
-    expect(screen.getByLabelText('Loading product list')).toBeDefined();
+    await waitFor(() => expect(screen.getByLabelText('Loading product list')).toBeDefined());
   });
 
-  it('renders nothing when products array is empty', () => {
-    mockControllerState = {products: []};
-    const {container} = renderWithTargeting(<ProductListRenderer props={props} />);
-    expect(container.querySelector('[role="list"]')).toBeNull();
+  it('renders nothing when products array is empty', async () => {
+    const {container} = mountSurface({
+      component: {component: 'ProductList', products: {path: '/state/root/products'}},
+      dataModel: [{path: '/state/root/products', value: []}],
+    });
+
+    await waitFor(() => expect(container.querySelector('[role="list"]')).toBeNull());
   });
 
-  it('renders a product grid with product cards', () => {
-    mockControllerState = {
-      products: [
+  it('renders a product grid with product cards', async () => {
+    mountSurface({
+      component: {component: 'ProductList', products: {path: '/state/root/products'}},
+      dataModel: [
         {
-          permanentid: 'p1',
-          ec_name: 'Trail Shoes',
-          ec_brand: 'Nike',
-          ec_price: 99.99,
-          additionalFields: {},
-        },
-        {
-          permanentid: 'p2',
-          ec_name: 'Running Shoes',
-          ec_brand: 'Adidas',
-          ec_price: 79.99,
-          additionalFields: {},
+          path: '/state/root/products',
+          value: [
+            {
+              permanentid: 'p1',
+              ec_name: 'Trail Shoes',
+              ec_brand: 'Nike',
+              ec_price: 99.99,
+              additionalFields: {},
+            },
+            {
+              permanentid: 'p2',
+              ec_name: 'Running Shoes',
+              ec_brand: 'Adidas',
+              ec_price: 79.99,
+              additionalFields: {},
+            },
+          ],
         },
       ],
-    };
-    renderWithTargeting(<ProductListRenderer props={props} />);
+    });
 
-    const list = screen.getByRole('list', {name: 'Product list'});
-    expect(list).toBeDefined();
-
-    const items = screen.getAllByRole('listitem');
-    expect(items).toHaveLength(2);
-
+    await waitFor(() => expect(screen.getByRole('list', {name: 'Product list'})).toBeDefined());
+    expect(screen.getAllByRole('listitem')).toHaveLength(2);
     expect(screen.getByText('Trail Shoes')).toBeDefined();
     expect(screen.getByText('Running Shoes')).toBeDefined();
   });

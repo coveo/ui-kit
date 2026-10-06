@@ -294,6 +294,7 @@ export class AtomicGeneratedAnswer extends LitElement implements InitializableCo
 
   private ariaMessage = new AriaLiveRegionController(this, 'generated-answer', false, true);
   private ariaErrorMessage = new AriaLiveRegionController(this, 'generated-answer-error', true);
+  private ariaCopyMessage = new AriaLiveRegionController(this, 'generated-answer-copy', true);
 
   constructor() {
     super();
@@ -463,6 +464,7 @@ export class AtomicGeneratedAnswer extends LitElement implements InitializableCo
                       'generated-answer-content-background': this.areFollowUpsEnabled,
                       'agent-scrollable': this.areFollowUpsEnabled,
                     })}
+                    tabindex=${this.areFollowUpsEnabled ? '0' : nothing}
                   >
                     <article>${this.renderAnswerContent()}</article>
                   </div>
@@ -499,6 +501,10 @@ export class AtomicGeneratedAnswer extends LitElement implements InitializableCo
       this.controller.writeStoredData(this.controller.data);
     }
 
+    if (!this.shouldAnnounceAnswerStatus) {
+      return;
+    }
+
     const status = this.controller.getGeneratedAnswerStatus();
     if (this.controller.isStatusAssertive()) {
       this.ariaMessage.message = '';
@@ -508,6 +514,13 @@ export class AtomicGeneratedAnswer extends LitElement implements InitializableCo
       this.ariaMessage.message = status;
     }
   };
+
+  private get shouldAnnounceAnswerStatus() {
+    // In conversational mode each turn is rendered by atomic-generated-answer-content, which
+    // announces its own state. Announcing here as well would repeat the first answer and still
+    // leave every follow-up silent, since this state only ever describes the first answer.
+    return !this.areFollowUpsEnabled;
+  }
 
   private get hasNoAnswerGenerated() {
     return this.controller.hasNoAnswerGenerated;
@@ -542,12 +555,14 @@ export class AtomicGeneratedAnswer extends LitElement implements InitializableCo
       answer,
       () => {
         this.copied = true;
+        this.ariaCopyMessage.message = this.bindings.i18n.t('generated-answer-copied');
         setTimeout(() => {
           this.copied = false;
         }, 2000);
       },
       () => {
         this.copyError = true;
+        this.ariaCopyMessage.message = this.bindings.i18n.t('failed-to-copy-generated-answer');
         setTimeout(() => {
           this.copyError = false;
         }, 2000);

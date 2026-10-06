@@ -1,5 +1,7 @@
-import {useRemoteController} from '../controllers.js';
-import type {SortProps} from '@coveo/thermidor-schema';
+import {useId} from 'react';
+import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import type {SortAction} from '@coveo/thermidor-schema';
+import {SortPropsSchema} from '@coveo/thermidor-schema/zod3';
 import styles from './Sort.module.css';
 
 const SORT_LABELS: Record<string, string> = {
@@ -8,49 +10,58 @@ const SORT_LABELS: Record<string, string> = {
   price_desc: 'Price (High to Low)',
 };
 
-export function SortRenderer({props}: {props: SortProps}) {
-  const controller = useRemoteController(props.componentId, props.componentType);
+/**
+ * A2-UI component for the `sort` selector. The generic binder resolves `availableSorts` /
+ * `appliedSort` from `SortPropsSchema`; selecting an option dispatches a `selectSort` action
+ * through `context.dispatchAction`.
+ */
+export const Sort = createReactComponent(
+  {name: 'Sort', schema: SortPropsSchema},
+  ({props, context}) => {
+    const selectId = useId();
+    const availableSorts = props.availableSorts ?? [];
+    const appliedSort = props.appliedSort;
 
-  if (!controller.state) {
-    return null;
+    const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+      const selectedIndex = Number(event.target.value);
+      const selected = availableSorts[selectedIndex];
+      if (selected) {
+        const selectSortAction: SortAction = {
+          event: {
+            name: 'selectSort',
+            context: {sortCriteria: selected.sortCriteria, fields: selected.fields},
+          },
+        };
+        context.dispatchAction(selectSortAction);
+      }
+    };
+
+    const selectedIndex = appliedSort
+      ? availableSorts.findIndex(
+          (sort) =>
+            sort.sortCriteria === appliedSort.sortCriteria &&
+            JSON.stringify(sort.fields) === JSON.stringify(appliedSort.fields)
+        )
+      : -1;
+
+    return (
+      <div className={styles.container}>
+        <label className={styles.label} htmlFor={selectId}>
+          <strong>Sort by:</strong>
+        </label>
+        <select
+          id={selectId}
+          className={styles.select}
+          value={selectedIndex >= 0 ? selectedIndex : 0}
+          onChange={handleSortChange}
+        >
+          {availableSorts.map((sort, index) => (
+            <option key={index} value={index}>
+              {SORT_LABELS[sort.sortCriteria] ?? sort.sortCriteria}
+            </option>
+          ))}
+        </select>
+      </div>
+    );
   }
-
-  const {appliedSort, availableSorts} = controller.state;
-
-  const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedIndex = Number(event.target.value);
-    const selected = availableSorts[selectedIndex];
-    if (selected) {
-      controller.dispatch('selectSort', {
-        sortCriteria: selected.sortCriteria,
-        fields: selected.fields,
-      });
-    }
-  };
-
-  const selectedIndex = availableSorts.findIndex(
-    (sort) =>
-      sort.sortCriteria === appliedSort.sortCriteria &&
-      JSON.stringify(sort.fields) === JSON.stringify(appliedSort.fields)
-  );
-
-  return (
-    <div className={styles.container}>
-      <label className={styles.label} htmlFor={`sort-select-${props.componentId}`}>
-        <strong>Sort by:</strong>
-      </label>
-      <select
-        id={`sort-select-${props.componentId}`}
-        className={styles.select}
-        value={selectedIndex >= 0 ? selectedIndex : 0}
-        onChange={handleSortChange}
-      >
-        {availableSorts.map((sort, index) => (
-          <option key={index} value={index}>
-            {SORT_LABELS[sort.sortCriteria] ?? sort.sortCriteria}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-}
+);

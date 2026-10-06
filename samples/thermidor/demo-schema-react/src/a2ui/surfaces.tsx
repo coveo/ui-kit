@@ -1,209 +1,18 @@
 /**
  * A2-UI Surface Bridge
  *
- * This module bridges between the v1.0 A2-UI surface format (used by the mock API
- * and the real backend) and the v0.9 format consumed by `@copilotkit/a2ui-renderer`.
+ * Mounts the A2-UI message stream carried by a turn into the renderer.
  *
- * ## Why the conversion exists
- *
- * The backend emits v1.0 messages (`createSurface` with inline `components[].props`),
- * but `@copilotkit/a2ui-renderer` (v1.61) only understands v0.9 messages
- * (`createSurface` + separate `updateComponents` with props flattened on component nodes).
- *
- * The `convertV1ToV09` adapter translates each v1.0 message into the equivalent v0.9
- * messages so the MessageProcessor can create surfaces and resolve catalog renderers.
- *
- * ## When @copilotkit/a2ui-renderer supports v1.0
- *
- * Once the renderer natively understands v1.0, remove the conversion:
- *
- * 1. Delete the `convertV1ToV09` function
- * 2. In `getA2UIMessages`, pass v1.0 messages directly (remove the conversion loop):
- *    ```
- *    converted.push(...v1Messages.filter(isRecord));
- *    ```
- * 3. Verify that `processMessages` handles `createSurface` with `components[].props`
- *    and passes `props` (including `componentId` and `componentType`) to catalog renderers correctly
- * 4. Everything else (renderers, catalog definitions, useRemoteController) stays unchanged
+ * The v1.0 → v0.9 downgrade the renderer needs no longer happens here: it is a derived
+ * projection inside `@coveo/thermidor`, read off `response.a2uiMessages`. See that package's
+ * `session/a2ui-v09-projection.ts` for the conversion and the recorded interim debt.
  */
 import {useEffect, useMemo, useRef} from 'react';
 import {A2UIRenderer, useA2UI} from '@copilotkit/a2ui-renderer';
-import type {Activity} from '@coveo/thermidor';
+import type {A2uiV09Message} from '@coveo/thermidor';
 import {isRecord} from '../utils.js';
 
-type A2UIMessage = Record<string, unknown>;
-
-/**
- * The literal component id at which `@copilotkit/a2ui-renderer` begins mounting a
- * surface's component tree. A surface whose declared root id differs from this value
- * must be remapped to it so the renderer can locate the root.
- */
-const RENDERER_ROOT_ID = 'root';
-
-/**
- * Rewrites a component node so that any reference to `declaredRootId` becomes the
- * Renderer_Root_Id (`"root"`): the node's own `id`, every matching entry in its
- * `children[]`, and a matching `child`. `props` is intentionally left untouched — the
- * `componentId`/`componentType` correlation lives there and must survive the rename.
- */
-function remapId(node: Record<string, unknown>, declaredRootId: string): Record<string, unknown> {
-  const remapped: Record<string, unknown> = {...node};
-
-  if (remapped['id'] === declaredRootId) {
-    remapped['id'] = RENDERER_ROOT_ID;
-  }
-
-  const children = remapped['children'];
-  if (Array.isArray(children)) {
-    remapped['children'] = children.map((childId) =>
-      childId === declaredRootId ? RENDERER_ROOT_ID : childId
-    );
-  }
-
-  if (remapped['child'] === declaredRootId) {
-    remapped['child'] = RENDERER_ROOT_ID;
-  }
-
-  return remapped;
-}
-
-/**
- * Converts a single v1.0 A2-UI message into one or more v0.9 messages
- * that the @copilotkit/a2ui-renderer MessageProcessor can understand.
- *
- * Conversion rules:
- * - `createSurface` (v1.0) → `createSurface` + `updateComponents` (v0.9)
- *   - `components[].props` are flattened onto the component node directly
- *   - when `createSurface.rootId` names exactly one component whose id is not already
- *     `"root"`, that node's id (and every reference to it) is remapped to `"root"` so
- *     the renderer can mount a surface whose declared root differs from `"root"`
- * - `updateDataModel` / `updateComponents` / `deleteSurface` → same shape, version changed to v0.9
- *
- * @deprecated Remove when @copilotkit/a2ui-renderer supports v1.0 natively.
- */
-export function convertV1ToV09(message: Record<string, unknown>): A2UIMessage[] {
-  if (message['version'] !== 'v1.0') {
-    return [message];
-  }
-
-  const createSurface = message['createSurface'];
-  if (isRecord(createSurface)) {
-    const surfaceId = createSurface['surfaceId'] as string;
-    const catalogId = createSurface['catalogId'] as string | undefined;
-    const components = createSurface['components'] as Array<Record<string, unknown>> | undefined;
-
-    const results: A2UIMessage[] = [
-      {version: 'v0.9', createSurface: {surfaceId, ...(catalogId ? {catalogId} : {})}},
-    ];
-
-    if (components && components.length > 0) {
-      const rootId = createSurface['rootId'];
-      const declaredRootId =
-        typeof rootId === 'string' && rootId !== RENDERER_ROOT_ID ? rootId : undefined;
-      const resolveRoot =
-        declaredRootId !== undefined &&
-        components.filter((comp) => comp['id'] === declaredRootId).length === 1;
-
-      const v09Components = components.map((comp) => {
-        const {props, ...rest} = comp;
-        const remapped = resolveRoot ? remapId(rest, declaredRootId!) : rest;
-        if (isRecord(props)) {
-          return {...remapped, ...props};
-        }
-        return remapped;
-      });
-      results.push({version: 'v0.9', updateComponents: {surfaceId, components: v09Components}});
-    }
-
-    return results;
-  }
-
-  const updateDataModel = message['updateDataModel'];
-  if (isRecord(updateDataModel)) {
-    return [{version: 'v0.9', updateDataModel}];
-  }
-
-  const updateComponents = message['updateComponents'];
-  if (isRecord(updateComponents)) {
-    return [{version: 'v0.9', updateComponents}];
-  }
-
-  const deleteSurface = message['deleteSurface'];
-  if (isRecord(deleteSurface)) {
-    return [{version: 'v0.9', deleteSurface}];
-  }
-
-  return [message];
-}
-
-/** Extracts A2-UI messages from activities, converting v1.0 to v0.9 for the renderer. */
-export function getA2UIMessages(activities: Activity[] | undefined): A2UIMessage[] {
-  if (!activities) {
-    return [];
-  }
-
-  // Track messages per activity ID to support replace semantics
-  const messagesByActivityId = new Map<string, A2UIMessage[]>();
-  const activityOrder: string[] = [];
-
-  for (const activity of activities) {
-    if (activity.kind !== 'a2ui-surface' || !isRecord(activity.payload)) {
-      continue;
-    }
-
-    const activityId = activity.id;
-
-    // v0.9 format: a2ui_operations array (pass through as-is)
-    const operations = activity.payload['a2ui_operations'];
-    if (Array.isArray(operations)) {
-      if (activity.replace) {
-        messagesByActivityId.set(activityId, operations.filter(isRecord));
-      } else {
-        const existing = messagesByActivityId.get(activityId) ?? [];
-        existing.push(...operations.filter(isRecord));
-        messagesByActivityId.set(activityId, existing);
-      }
-      if (!activityOrder.includes(activityId)) {
-        activityOrder.push(activityId);
-      }
-      continue;
-    }
-
-    // v1.0 format: messages array — convert to v0.9 before passing to renderer
-    const v1Messages = activity.payload['messages'];
-    if (Array.isArray(v1Messages)) {
-      const converted: A2UIMessage[] = [];
-      for (const msg of v1Messages) {
-        if (isRecord(msg)) {
-          converted.push(...convertV1ToV09(msg));
-        }
-      }
-      if (activity.replace) {
-        messagesByActivityId.set(activityId, converted);
-      } else {
-        const existing = messagesByActivityId.get(activityId) ?? [];
-        existing.push(...converted);
-        messagesByActivityId.set(activityId, existing);
-      }
-      if (!activityOrder.includes(activityId)) {
-        activityOrder.push(activityId);
-      }
-      continue;
-    }
-  }
-
-  // Flatten in order of first appearance
-  const result: A2UIMessage[] = [];
-  for (const id of activityOrder) {
-    const msgs = messagesByActivityId.get(id);
-    if (msgs) {
-      result.push(...msgs);
-    }
-  }
-  return result;
-}
-
-export function ThermidorA2UISurfaces({messages}: {messages: A2UIMessage[]}) {
+export function ThermidorA2UISurfaces({messages}: {messages: A2uiV09Message[]}) {
   const {clearSurfaces, processMessages} = useA2UI();
   const serializedMessages = useMemo(() => JSON.stringify(messages), [messages]);
   const surfaceIds = useMemo(() => getSurfaceIds(messages), [messages]);
@@ -214,7 +23,7 @@ export function ThermidorA2UISurfaces({messages}: {messages: A2UIMessage[]}) {
     const {clearSurfaces, processMessages} = actionsRef.current;
     clearSurfaces();
     if (serializedMessages !== '[]') {
-      processMessages(JSON.parse(serializedMessages) as A2UIMessage[]);
+      processMessages(JSON.parse(serializedMessages) as A2uiV09Message[]);
     }
   }, [serializedMessages]);
 
@@ -233,7 +42,7 @@ export function ThermidorA2UISurfaces({messages}: {messages: A2UIMessage[]}) {
   );
 }
 
-function getSurfaceIds(messages: A2UIMessage[]): string[] {
+function getSurfaceIds(messages: A2uiV09Message[]): string[] {
   const surfaceIds = new Set<string>();
   for (const message of messages) {
     const createSurface = message['createSurface'];

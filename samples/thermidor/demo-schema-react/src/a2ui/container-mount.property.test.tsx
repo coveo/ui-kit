@@ -1,206 +1,121 @@
-import {createElement, type FC, type ReactNode} from 'react';
 import fc from 'fast-check';
-import {describe, expect, it, vi} from 'vitest';
-import {render, cleanup} from '@testing-library/react';
-import {CommerceSearchRenderer} from './CommerceSearch/CommerceSearch.js';
-import {FacetManagerRenderer} from './FacetManager/FacetManager.js';
-import {BundleDisplayRenderer} from './BundleDisplay/BundleDisplay.js';
-
-// The container renderers read their per-component AG-UI state through these hooks.
-// The mount-order property is about composition only, so the AG-UI plane is stubbed to a
-// state that lets each container render its children region without real controller wiring.
-// CommerceSearch/FacetManager mount the flattened A2-UI `children` list directly, while
-// BundleDisplay mounts the active tier's slot `childId` values read from its own AG-UI
-// state; the stub returns that tier state (settable per test) for the BundleDisplay block.
-let mockControllerState: unknown = {tiers: []};
-
-vi.mock('./controllers.js', () => ({
-  useRemoteController: () => ({
-    state: mockControllerState,
-    dispatch: vi.fn().mockResolvedValue(undefined),
-    subscribe: () => () => undefined,
-  }),
-}));
-
-// BundleDisplay computes its package total by reading each slot child's
-// product-summary state from the session. The mount-order property is about
-// composition only, so the session's per-child state is stubbed empty.
-vi.mock('../context/session.js', () => ({
-  useSession: () => ({
-    subscribe: () => () => undefined,
-    remoteController: () => ({
-      componentId: '',
-      state: undefined,
-      dispatch: vi.fn().mockResolvedValue(undefined),
-      subscribe: () => () => undefined,
-    }),
-  }),
-}));
+import {describe, expect, it} from 'vitest';
+import {cleanup, waitFor} from '@testing-library/react';
+import {mountSurface} from './mount-surface.harness.js';
 
 /**
- * A container renderer conforming to the A2UI_Renderer custom-renderer contract:
- * it receives its resolved `props` (with the composition `children` list flattened on)
- * and the Children_Mount_Function.
+ * The ordered-list container components (FacetManager, BundleDisplay) are `createReactComponent`
+ * implementations driven by the generic binder: they mount their children by id via `buildChild`,
+ * reading composition from their resolved props. These property tests drive the whole pipeline
+ * through the real thermidor catalog, asserting the observable mounted-child DOM: each present
+ * child id mounts exactly once, in declared order, with absent ids skipped and empty/unavailable
+ * lists mounting nothing.
+ *
+ * Children are trivial `QuerySummary` leaf nodes whose query text encodes the child id, so the
+ * mounted order is read back directly from the DOM. Ids are constrained to the QuerySummary-safe
+ * subset (non-empty, no whitespace collisions) via a `child-<n>` labelling that keeps them unique.
  */
-type ContainerRenderer = FC<{
-  props: {componentId: string; componentType: string; children?: unknown};
-  children: (id: string) => ReactNode;
-}>;
 
-interface HarnessCase {
-  name: string;
-  render: ContainerRenderer;
-  props: {componentId: string; componentType: string; children?: unknown};
+// A distinguishable leaf node: renders its id as query text (inside a <strong>).
+function leafNode(id: string): Record<string, unknown> {
+  return {id, component: 'QuerySummary', query: id, firstIndex: 1, lastIndex: 12, totalEntries: 1};
 }
 
-// Each container is exercised through the identical harness. `props.componentType` is set
-// to the literal each renderer expects; only the composition (`children`) varies per run.
-const containers: HarnessCase[] = [
-  {
-    name: 'CommerceSearchRenderer',
-    render: CommerceSearchRenderer as unknown as ContainerRenderer,
-    props: {componentId: 'commerce-search-1', componentType: 'commerce-search'},
-  },
-  {
-    name: 'FacetManagerRenderer',
-    render: FacetManagerRenderer as unknown as ContainerRenderer,
-    props: {componentId: 'facet-manager-1', componentType: 'facet-manager'},
-  },
-];
+// Read mounted child ids in DOM order from the query <strong> text nodes.
+function mountedChildIds(container: HTMLElement, selector: string): string[] {
+  return Array.from(container.querySelectorAll(`${selector} p strong`))
+    .map((node) => node.textContent)
+    .filter((text): text is string => text !== null && text.startsWith('id-'));
+}
 
-// A generated composition: an ordered list of declared child ids plus the set of ids that
-// actually resolve to a component. Covers empty lists, lists with absent ids (declared but
-// not present), and the "unavailable composition" case (children omitted entirely).
-const compositionArb = fc
-  .uniqueArray(fc.string({minLength: 1, maxLength: 8}), {minLength: 0, maxLength: 8})
-  .chain((declaredIds) =>
-    fc.record({
-      declaredIds: fc.constant(declaredIds),
-      // Which of the declared ids have a corresponding component in the composition.
-      presentFlags: fc.array(fc.boolean(), {
-        minLength: declaredIds.length,
-        maxLength: declaredIds.length,
-      }),
-      // When true the composition is unavailable: no `children` field is provided at all.
-      unavailable: fc.boolean(),
-    })
-  );
+// Unique, QuerySummary-safe child ids (no whitespace; stable prefix).
+const childIdArb = fc.uniqueArray(
+  fc.integer({min: 0, max: 9999}).map((n) => `id-${n}`),
+  {minLength: 0, maxLength: 6}
+);
 
-describe.each(containers)(
-  '$name mounts each present child once, in declared order, tolerating gaps (Property 3)',
-  ({render: renderContainer, props}) => {
-    // Feature: thermidor-commerce-search-composition, Property 3: For any ordered list of
-    // child ids supplied to a container renderer (CommerceSearch or FacetManager) through
-    // its A2-UI renderer inputs, the renderer invokes the
-    // Children_Mount_Function exactly once for each id that has a corresponding component,
-    // in the exact order the ids appear, skips any id with no corresponding component while
-    // preserving the order of the remaining ids, makes zero calls when the list is empty or
-    // unavailable, and renders without raising an error in every case.
-    it('invokes children(id) as the present-id subsequence in declared order', () => {
-      fc.assert(
-        fc.property(compositionArb, ({declaredIds, presentFlags, unavailable}) => {
-          const presentIds = new Set(declaredIds.filter((_, index) => presentFlags[index]));
+describe('FacetManager mounts each present child once, in declared order, tolerating gaps (Property 3)', () => {
+  // Feature: a2ui-inline-state-data-model, Property 3: For any ordered list of child ids supplied to
+  // an ordered-list container through its resolved `children` prop, the container mounts each id that
+  // has a corresponding component exactly once, in the exact declared order, skips any id with no
+  // corresponding component while preserving the order of the rest, and mounts nothing when the list
+  // is empty or unavailable.
+  it('mounts the present-id subsequence in declared order', async () => {
+    await fc.assert(
+      fc.asyncProperty(
+        childIdArb,
+        fc.array(fc.boolean(), {minLength: 0, maxLength: 6}),
+        fc.boolean(),
+        async (declaredIds, presentFlagsRaw, unavailable) => {
+          const presentFlags = declaredIds.map((_, i) => presentFlagsRaw[i] ?? true);
+          const presentIds = new Set(declaredIds.filter((_, i) => presentFlags[i]));
           const expectedPresentSubsequence = declaredIds.filter((id) => presentIds.has(id));
 
-          // The mocked Children_Mount_Function mimics the renderer's mount behavior:
-          // present ids yield a renderable node, absent ids yield nothing renderable.
-          const mountedInOrder: string[] = [];
-          const children = vi.fn((id: string): ReactNode => {
-            if (presentIds.has(id)) {
-              mountedInOrder.push(id);
-              return <span data-mounted-id={id} key={id} />;
-            }
-            return null;
+          const {container} = mountSurface({
+            component: unavailable
+              ? {component: 'FacetManager'}
+              : {component: 'FacetManager', children: [...declaredIds]},
+            children: [...presentIds].map((id) => leafNode(id)),
           });
 
-          const childrenProp = unavailable ? undefined : [...declaredIds];
+          await waitFor(() =>
+            expect(container.querySelector('[data-testid="facet-manager"]')).not.toBeNull()
+          );
 
-          expect(() =>
-            render(
-              createElement(renderContainer, {
-                props: {...props, children: childrenProp},
-                children,
-              })
-            )
-          ).not.toThrow();
-
+          const mounted = mountedChildIds(container, '[data-testid="facet-manager"]');
           if (unavailable || declaredIds.length === 0) {
-            // Empty or unavailable composition → zero mount calls.
-            expect(children).not.toHaveBeenCalled();
-            expect(mountedInOrder).toEqual([]);
+            expect(mounted).toEqual([]);
           } else {
-            // Every declared id is offered to the mount function exactly once, in order.
-            const calledIds = children.mock.calls.map(([id]) => id);
-            expect(calledIds).toEqual(declaredIds);
-            // The mounted (present) ids form the present-id subsequence in declared order.
-            expect(mountedInOrder).toEqual(expectedPresentSubsequence);
+            expect(mounted).toEqual(expectedPresentSubsequence);
           }
 
           cleanup();
-        }),
-        {numRuns: 150}
-      );
-    });
-  }
-);
+        }
+      ),
+      {numRuns: 40}
+    );
+  });
+});
 
-// BundleDisplay composes differently from the other containers: it does not mount the
-// flattened A2-UI `children` list. It reads its tier state (owned on the AG-UI plane) and,
-// for the ACTIVE tier only, mounts that tier's slot `childId` values in slot-enumeration
-// order via the Children_Mount_Function. The bundle-root's `children` list still carries
-// every tier's slot id for composition closure, but only the active tier's subset mounts.
-describe('BundleDisplayRenderer mounts only the active tier slot childIds in order (Property 3)', () => {
-  // Feature: thermidor-commerce-search-composition, Property 3 (bundle-display variant):
-  // For any tier state, the renderer invokes the Children_Mount_Function exactly once for
-  // each slot childId of the active tier, in slot-enumeration order, mounts nothing when
-  // the active tier has no slots or no tier state exists, and renders without error.
+describe('BundleDisplay mounts only the active tier slot childIds in order (Property 3)', () => {
+  // Feature: a2ui-inline-state-data-model, Property 3 (bundle-display variant): For any tier state
+  // resolved on props, the container mounts the Children_Mount_Function exactly once for each slot
+  // childId of the ACTIVE (first) tier, in slot-enumeration order, mounts nothing when the active
+  // tier has no slots or no tier state exists, and renders without error.
   const tierArb = fc.record({
     label: fc.string({minLength: 1, maxLength: 12}),
     description: fc.string({maxLength: 20}),
+    total: fc.float({min: Math.fround(0), max: Math.fround(10000), noNaN: true}),
     slots: fc.uniqueArray(
-      fc.record({
-        categoryLabel: fc.string({minLength: 1, maxLength: 12}),
-        childId: fc.string({minLength: 1, maxLength: 10}),
-      }),
-      {minLength: 0, maxLength: 6, selector: (slot) => slot.childId}
+      fc.integer({min: 0, max: 9999}).map((n) => ({categoryLabel: `cat-${n}`, childId: `id-${n}`})),
+      {minLength: 0, maxLength: 5, selector: (slot) => slot.childId}
     ),
   });
 
-  it('mounts the first (active) tier slot childIds in declared order', () => {
-    fc.assert(
-      fc.property(fc.array(tierArb, {minLength: 0, maxLength: 4}), (tiers) => {
-        mockControllerState = {tiers};
+  it('mounts the first (active) tier slot childIds in declared order', async () => {
+    await fc.assert(
+      fc.asyncProperty(
+        fc.uniqueArray(tierArb, {minLength: 0, maxLength: 3, selector: (t) => t.label}),
+        async (tiers) => {
+          const activeTierSlotIds = (tiers[0]?.slots ?? []).map((slot) => slot.childId);
 
-        const mountedInOrder: string[] = [];
-        const children = vi.fn((id: string): ReactNode => {
-          mountedInOrder.push(id);
-          return <span data-mounted-id={id} key={id} />;
-        });
+          const {container} = mountSurface({
+            component: {component: 'BundleDisplay', tiers},
+            children: activeTierSlotIds.map((id) => leafNode(id)),
+          });
 
-        // bundle-root composition still declares every tier's slot id (closure), but the
-        // renderer decides which subset to mount based on the active tier.
-        const allSlotIds = tiers.flatMap((tier) => tier.slots.map((slot) => slot.childId));
+          // The bundle mounts children into its item list; read them in DOM order.
+          await waitFor(() => expect(container.querySelector('section')).not.toBeNull());
 
-        expect(() =>
-          render(
-            createElement(BundleDisplayRenderer as unknown as ContainerRenderer, {
-              props: {
-                componentId: 'bundle-root',
-                componentType: 'bundle-display',
-                children: allSlotIds,
-              },
-              children,
-            })
-          )
-        ).not.toThrow();
+          const mounted = Array.from(container.querySelectorAll('p strong'))
+            .map((node) => node.textContent)
+            .filter((text): text is string => text !== null && text.startsWith('id-'));
+          expect(mounted).toEqual(activeTierSlotIds);
 
-        const activeTierSlotIds = (tiers[0]?.slots ?? []).map((slot) => slot.childId);
-        expect(mountedInOrder).toEqual(activeTierSlotIds);
-
-        mockControllerState = {tiers: []};
-        cleanup();
-      }),
-      {numRuns: 150}
+          cleanup();
+        }
+      ),
+      {numRuns: 40}
     );
   });
 });

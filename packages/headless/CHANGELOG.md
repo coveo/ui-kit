@@ -1,3 +1,18 @@
+## 3.57.2
+
+### Patch Changes
+
+- Updated dependencies [[`2535634`](https://github.com/coveo/ui-kit/commit/25356348d331a6e123735a73df411589b2bc2a7f)]:
+  - coveo.analytics@2.33.1
+
+## 3.57.1
+
+### Patch Changes
+
+- [#8500](https://github.com/coveo/ui-kit/pull/8500) [`cf041b2`](https://github.com/coveo/ui-kit/commit/cf041b24270e676226781613a705d98042b4d728) - Clarify in the `setNavigatorContextProvider` deprecation notice that it mutates the shared engine definition and is therefore unsafe under server concurrency, and point to passing `navigatorContext` per request when fetching the static state.
+
+- [#8516](https://github.com/coveo/ui-kit/pull/8516) [`3c4e3d2`](https://github.com/coveo/ui-kit/commit/3c4e3d2567eb327d3a79caf2e10b915a5a2a6a46) - Fix an issue in commerce where a manually set numeric facet range persisted and was still sent in subsequent queries after clearing filters (e.g. via a search box submission), even though it had been removed from the URL parameters.
+
 ## 3.57.0
 
 ### Minor Changes

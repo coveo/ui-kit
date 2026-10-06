@@ -13,9 +13,12 @@
 export type TurnStatus = 'streaming' | 'complete' | 'error';
 
 /**
- * The server-authoritative UI state snapshot for a turn. Always present on a
- * {@link TurnResponse}, defaulting to `{}`. Remote controllers read this; it is
- * present for commerce-routed and agent-routed turns alike (it is NOT
+ * The server-authoritative UI state for a turn, keyed BY SURFACE: each surface
+ * owns its own data model at `state[surfaceId]`, into which inline
+ * `updateDataModel` ops are applied at their `/state/<nodeId>` pointer. Always
+ * present on a {@link TurnResponse}, defaulting to `{}`. Keying by surface keeps
+ * two surfaces that share a node id (every surface has a `root`) from colliding.
+ * Present for commerce-routed and agent-routed turns alike (it is NOT
  * agent-specific).
  */
 export type A2uiState = Record<string, unknown>;
@@ -27,9 +30,29 @@ export type A2uiState = Record<string, unknown>;
  */
 export interface DiscoveredSurface {
   surfaceId: string;
-  /** Interim: compared against `'commerce-search'` by consumers/nav (ADR-015). */
+  /**
+   * The root node's PascalCase `component` discriminant; interim: compared
+   * against `'CommerceSearch'` by consumers/nav (ADR-015).
+   */
   rootComponentType: string;
 }
+
+/**
+ * A single A2-UI message in the **v0.9** shape a renderer consumes, exposed as
+ * the {@link TurnResponse.a2uiMessages} projection.
+ *
+ * Agent Gateway emits A2-UI v1.0; every available renderer
+ * (`@copilotkit/a2ui-renderer`, via `@a2ui/web_core/v0_9`) consumes v0.9. This
+ * projection performs that downgrade so a consumer can hand the stream straight
+ * to a renderer without writing version-aware code of their own.
+ *
+ * INTERIM: this is recorded debt (ADR-015 addendum), removed in a breaking change
+ * once a v1.0-capable renderer exists. Kept deliberately untyped beyond
+ * "record" — the per-operation shapes belong to the renderer's protocol, not to
+ * thermidor's domain model, and pinning them here would deepen the coupling this
+ * projection is meant to contain.
+ */
+export type A2uiV09Message = Record<string, unknown>;
 
 /**
  * A single step in the agent's reasoning process — either a reasoning message
@@ -123,8 +146,8 @@ export interface TurnInput {
  * The streamed result of a {@link Turn}.
  *
  * `state` and `activities` are routing-neutral and always present. `surfaces`
- * is a derived projection of `activities` (ADR-015 interim). `agent` is present
- * only when the router invoked an agent.
+ * and `a2uiMessages` are derived projections of `activities` (ADR-015 interim).
+ * `agent` is present only when the router invoked an agent.
  */
 export interface TurnResponse {
   /**
@@ -145,6 +168,17 @@ export interface TurnResponse {
    * Consumers read this instead of walking `activities` themselves.
    */
   surfaces: DiscoveredSurface[];
+
+  /**
+   * The turn's A2-UI message stream, downgraded to the **v0.9** shape a renderer
+   * consumes. Derived from `activities` in the fold; pass it straight to a
+   * renderer.
+   *
+   * INTERIM (ADR-015 addendum): Gateway emits A2-UI v1.0 and no v1.0-capable
+   * renderer exists, so thermidor performs the downgrade on the consumer's
+   * behalf. Removed in a breaking change once one does.
+   */
+  a2uiMessages: A2uiV09Message[];
 
   /**
    * Agent-specific content. Present ONLY when the router invoked an agent.

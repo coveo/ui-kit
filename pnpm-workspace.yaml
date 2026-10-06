@@ -42,27 +42,27 @@ packages:
 
 catalog:
   '@ag-ui/client': 0.0.59
-  chromatic: 18.9.1
+  chromatic: 18.9.4
   '@msw/playwright': 0.6.7
   '@mswjs/http-middleware': ^0.10.3
   msw: 2.15.0
-  '@angular-devkit/build-angular': 22.1.8
-  '@angular/animations': 22.1.7
-  '@angular/build': 22.1.8
-  '@angular/cli': 22.1.8
-  '@angular/common': 22.1.7
-  '@angular/compiler': 22.1.7
-  '@angular/compiler-cli': 22.1.7
-  '@angular/core': 22.1.7
-  '@angular/forms': 22.1.7
-  '@angular/platform-browser': 22.1.7
-  '@angular/platform-browser-dynamic': 22.1.7
-  '@angular/platform-server': 22.1.7
-  '@angular/router': 22.1.7
+  '@angular-devkit/build-angular': 22.2.0
+  '@angular/animations': 22.2.0
+  '@angular/build': 22.2.0
+  '@angular/cli': 22.2.0
+  '@angular/common': 22.2.0
+  '@angular/compiler': 22.2.0
+  '@angular/compiler-cli': 22.2.0
+  '@angular/core': 22.2.0
+  '@angular/forms': 22.2.0
+  '@angular/platform-browser': 22.2.0
+  '@angular/platform-browser-dynamic': 22.2.0
+  '@angular/platform-server': 22.2.0
+  '@angular/router': 22.2.0
   '@coveo/atomic-component-health-check': 2.2.19
-  '@coveo/relay-event-types': 20.6.1
-  '@coveo/thermidor-schema': 1.0.0-beta.5
-  '@playwright/mcp': 0.0.81
+  '@coveo/relay-event-types': 20.7.1
+  '@coveo/thermidor-schema': 1.0.0-beta.9
+  '@playwright/mcp': 0.0.82
   '@playwright/test': 1.62.1
   '@react-router/dev': 8.3.0
   '@react-router/fs-routes': 8.3.0
@@ -82,7 +82,7 @@ catalog:
   '@tailwindcss/vite': 4.3.3
   '@testing-library/react': 16.3.3
   '@types/jest': 30.0.0
-  '@types/node': 24.13.3
+  '@types/node': 24.13.6
   '@types/react': 19.2.18
   '@types/react-dom': 19.2.5
   '@vitejs/plugin-react': 6.1.1
@@ -99,7 +99,7 @@ catalog:
   i18next: 26.4.2
   jest: 30.3.0
   jest-cli: 30.3.0
-  jsdom: 30.1.0
+  jsdom: 30.1.1
   lit: 3.3.3
   live-server: 1.2.2
   local-web-server: 5.4.0
@@ -108,14 +108,14 @@ catalog:
   next: 16.2.12
   node-fetch: 3.3.2
   postcss: 8.5.28
-  prettier: 3.9.7
+  prettier: 3.9.8
   publint: 0.3.24
   puppeteer: 25.9.0
   playwright: 1.62.1
   rxjs: 7.8.2
   react: 19.2.8
   react-dom: 19.2.8
-  rollup: 4.63.3
+  rollup: 4.63.4
   rollup-plugin-string: 3.0.0
   rollup-plugin-node-polyfills: 0.2.1
   ts-dedent: 2.3.0

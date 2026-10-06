@@ -8,7 +8,7 @@
 /**
  * A function that removes a previously-registered store listener.
  */
-export type Unsubscribe = () => void;
+type Unsubscribe = () => void;
 
 /**
  * The runtime state held by the observable store. The turn shape is a type

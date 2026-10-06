@@ -33,7 +33,6 @@ vi.mock('../../a2ui/Skeleton/Skeleton.js', () => ({
 }));
 
 vi.mock('../../a2ui/surfaces.js', () => ({
-  getA2UIMessages: () => [],
   ThermidorA2UISurfaces: () => null,
 }));
 
@@ -45,7 +44,8 @@ vi.mock('../../a2ui/surfaces.js', () => ({
 function makeSurfaceActivity(
   surfaceId: string,
   componentType: string,
-  componentProps: Record<string, unknown> = {}
+  componentProps: Record<string, unknown> = {},
+  dataModel?: Record<string, unknown>
 ): Activity {
   return {
     id: `activity-${surfaceId}`,
@@ -58,6 +58,7 @@ function makeSurfaceActivity(
           createSurface: {
             surfaceId,
             components: [{id: 'root', component: componentType, props: componentProps}],
+            ...(dataModel ? {dataModel} : {}),
           },
         },
       ],
@@ -206,6 +207,25 @@ describe('AgentResponseBlock', () => {
       expect(skeleton.getAttribute('data-component-type')).toBe('BundleDisplay');
     });
 
+    it('maps the research route to a ProductResearchCard skeleton during streaming', () => {
+      const response = makeAgentResponse({
+        reasoningSteps: [
+          {
+            type: 'tool-call',
+            id: 'tc1',
+            name: 'store_render_plan',
+            args: JSON.stringify({route: 'research'}),
+            status: 'calling',
+          },
+        ],
+      });
+
+      renderBlock(response, {isStreaming: true});
+
+      const skeleton = screen.getByTestId('skeleton');
+      expect(skeleton.getAttribute('data-component-type')).toBe('ProductResearchCard');
+    });
+
     it('shows skeletons from surface activities with skeleton- prefix (speculative backend support)', () => {
       const response = makeAgentResponse({
         activities: [makeSurfaceActivity('skeleton-comparison', 'ComparisonTable')],
@@ -217,9 +237,9 @@ describe('AgentResponseBlock', () => {
       expect(skeleton.getAttribute('data-component-type')).toBe('ComparisonTable');
     });
 
-    it('shows skeletons from surface activities with isLoading prop (speculative backend support)', () => {
+    it('shows skeletons from surface activities with isLoading in the data model (backend support)', () => {
       const response = makeAgentResponse({
-        activities: [makeSurfaceActivity('bundle-1', 'BundleDisplay', {isLoading: true})],
+        activities: [makeSurfaceActivity('bundle-1', 'BundleDisplay', {}, {isLoading: true})],
       });
 
       renderBlock(response, {isStreaming: true});

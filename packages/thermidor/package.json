@@ -1,6 +1,6 @@
 {
   "name": "@coveo/thermidor",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Experimental package for a unified, framework-agnostic headless engine for search and conversational experiences",
   "license": "Apache-2.0",
   "repository": {
@@ -47,7 +47,7 @@
     "zod": "catalog:"
   },
   "peerDependencies": {
-    "zod": "^4"
+    "zod": "3.25.76 || ^4"
   },
   "engines": {
     "node": "^22.11.0 || ^24.11.0"

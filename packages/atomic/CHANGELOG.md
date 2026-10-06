@@ -1,3 +1,33 @@
+## 3.62.0
+
+### Minor Changes
+
+- [#8552](https://github.com/coveo/ui-kit/pull/8552) [`8f80c6c`](https://github.com/coveo/ui-kit/commit/8f80c6cf0cea42e6a3c7c2d6601c6d70d68f7948) - Stop category facets from clearing every filter when the selected value is clicked. In `atomic-category-facet` and `atomic-commerce-category-facet`, the deepest selected value is no longer interactive: it shows which filter is applied instead of acting as a button that discarded the whole path. The applied value is now also displayed as a pill next to a `Clear` button, which is what removes the filter.
+
+  The `active-parent` part is now rendered on a non-interactive `span` instead of a `button`. Custom styles or scripts that targeted it as a button (e.g., hover or focus styles, or programmatic clicks) need to be updated. New parts are available to style the pill: `selected-value`, `selected-value-pill`, `selected-value-clear-button` and `selected-value-clear-button-icon`.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @coveo/headless@3.57.2
+  - @coveo/atomic-legacy@0.1.7
+
+## 3.61.5
+
+### Patch Changes
+
+- [#8507](https://github.com/coveo/ui-kit/pull/8507) [`bd72c3d`](https://github.com/coveo/ui-kit/commit/bd72c3da937e89ff56e48bd372e4def491df647c) - Announce conversational generated answers to screen readers. Each follow-up answer now reports its own generating, completed, error, and cannot-answer state through the ARIA live regions, instead of only the first answer of the conversation being announced.
+
+- [#8508](https://github.com/coveo/ui-kit/pull/8508) [`1e3bb2c`](https://github.com/coveo/ui-kit/commit/1e3bb2cf9cc872ea6048a00a1f0afd98d89c3868) - Expose headings inside a generated answer to assistive technology. Markdown headings now carry `role="heading"` and `aria-level`, so screen reader users can navigate an answer by heading. The `part` attributes and the rendered DOM structure are unchanged.
+
+- [#8509](https://github.com/coveo/ui-kit/pull/8509) [`979d6e7`](https://github.com/coveo/ui-kit/commit/979d6e7d283375aadf74cfb01cb21381da6cf031) - Improve keyboard and assistive technology access in the generated answer. The conversation scroll container is now keyboard focusable, the show more/less button references the content it controls, the thread item disclosure button points at the element that is actually hidden, and decorative timeline graphics are no longer exposed to screen readers.
+
+- [#8510](https://github.com/coveo/ui-kit/pull/8510) [`e06bfe4`](https://github.com/coveo/ui-kit/commit/e06bfe46fdc76de9a3ae52ece377d1d21ff4ecd5) - Expose generated answer streaming and copy state to assistive technology. The answer container now reports `aria-busy` while streaming, copy success and failure are announced through a live region, and the like, dislike, and copy buttons carry explicit accessible names instead of relying on `title` alone.
+
+- Updated dependencies [[`cf041b2`](https://github.com/coveo/ui-kit/commit/cf041b24270e676226781613a705d98042b4d728), [`3c4e3d2`](https://github.com/coveo/ui-kit/commit/3c4e3d2567eb327d3a79caf2e10b915a5a2a6a46)]:
+  - @coveo/headless@3.57.1
+  - @coveo/atomic-legacy@0.1.6
+
 ## 3.61.4
 
 ### Patch Changes

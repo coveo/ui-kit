@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import type {NormalizedStreamEvent} from '@/src/internal/api/protocol/stream-types.js';
-import {createTurn, deriveSurfaces, foldActivities, resolveTargetSurfaceId} from './fold.js';
+import {createTurn, deriveSurfaces, foldActivities} from './fold.js';
 
 /**
  * Unit tests for the Turn/TurnResponse shape produced by the fold.
@@ -16,7 +16,6 @@ const activity = (event: Record<string, unknown>): NormalizedStreamEvent =>
 const runFinished = activity({type: 'RUN_FINISHED'});
 const runError = activity({type: 'RUN_ERROR', message: 'boom'});
 const textMessageStart = activity({type: 'TEXT_MESSAGE_START', role: 'assistant'});
-const stateSnapshot = activity({type: 'STATE_SNAPSHOT', snapshot: {theme: 'dark'}});
 const activitySnapshot = activity({
   type: 'ACTIVITY_SNAPSHOT',
   messageId: 'm1',
@@ -68,25 +67,19 @@ describe('fold Turn/TurnResponse shape', () => {
   });
 
   describe('response.state default', () => {
-    it('defaults state to {} before any STATE_SNAPSHOT is folded', () => {
+    it('defaults state to {} on a fresh turn', () => {
       const turn = createTurn('t1', {prompt: 'hi'});
 
       expect(turn.response.state).toEqual({});
     });
 
-    it('keeps state at {} for a turn with no STATE_SNAPSHOT', () => {
+    it('keeps state at {} for a turn with no data-model ops', () => {
       const turn = foldActivities(createTurn('t1', {prompt: 'hi'}), [
         textMessageStart,
         runFinished,
       ]);
 
       expect(turn.response.state).toEqual({});
-    });
-
-    it('initializes state from the first STATE_SNAPSHOT', () => {
-      const turn = foldActivities(createTurn('t1', {prompt: 'hi'}), [stateSnapshot]);
-
-      expect(turn.response.state).toEqual({theme: 'dark'});
     });
   });
 
@@ -103,17 +96,13 @@ describe('fold Turn/TurnResponse shape', () => {
       expect(Array.isArray(turn.response.agent?.reasoningSteps)).toBe(true);
     });
 
-    // The fold's ACTIVITY_SNAPSHOT and STATE_SNAPSHOT cases must not
-    // materialize an empty `response.agent` facet. `response.agent` is created
-    // only by genuinely agent-invoking events (TEXT_MESSAGE_*,
-    // REASONING_MESSAGE_*, TOOL_CALL_*), so a turn the router never routed to an
-    // agent has `response.agent` omitted entirely.
+    // The fold's ACTIVITY_SNAPSHOT case must not materialize an empty
+    // `response.agent` facet. `response.agent` is created only by genuinely
+    // agent-invoking events (TEXT_MESSAGE_*, REASONING_MESSAGE_*, TOOL_CALL_*),
+    // so a turn the router never routed to an agent has `response.agent`
+    // omitted entirely.
     it('omits response.agent for a turn the router did not route to an agent', () => {
-      const turn = foldActivities(createTurn('t1', {}), [
-        activitySnapshot,
-        stateSnapshot,
-        runFinished,
-      ]);
+      const turn = foldActivities(createTurn('t1', {}), [activitySnapshot, runFinished]);
 
       expect(turn.response.agent).toBeUndefined();
       expect('agent' in turn.response).toBe(false);
@@ -128,13 +117,13 @@ describe('fold Turn/TurnResponse shape', () => {
  * (`a2ui-surface`) activities, and target resolution reads that projection.
  */
 const surfaceMessage = (surfaceId: string, rootComponentType: string) => {
-  const rootId = `${surfaceId}-root`;
+  // A2-UI v1.0: the surface root is the canonical node with `id: "root"`; the envelope carries
+  // no `rootId`.
   return {
     version: 'v1.0',
     createSurface: {
       surfaceId,
-      rootId,
-      components: [{id: rootId, props: {componentType: rootComponentType}}],
+      components: [{id: 'root', component: rootComponentType}],
     },
   };
 };
@@ -157,30 +146,30 @@ describe('fold surface derivation', () => {
 
   it('computes surfaceId and rootComponentType once while folding', () => {
     const turn = foldActivities(createTurn('t1', {}), [
-      surfaceSnapshot([surfaceMessage('ui-1', 'commerce-search')]),
+      surfaceSnapshot([surfaceMessage('ui-1', 'CommerceSearch')]),
       runFinished,
     ]);
 
     expect(turn.response.surfaces).toEqual([
-      {surfaceId: 'ui-1', rootComponentType: 'commerce-search'},
+      {surfaceId: 'ui-1', rootComponentType: 'CommerceSearch'},
     ]);
   });
 
   it('preserves activity order across multiple surfaces', () => {
     const turn = foldActivities(createTurn('t1', {}), [
-      surfaceSnapshot([surfaceMessage('c-1', 'converse')]),
-      surfaceSnapshot([surfaceMessage('ui-2', 'commerce-search')]),
+      surfaceSnapshot([surfaceMessage('c-1', 'Converse')]),
+      surfaceSnapshot([surfaceMessage('ui-2', 'CommerceSearch')]),
     ]);
 
     expect(turn.response.surfaces).toEqual([
-      {surfaceId: 'c-1', rootComponentType: 'converse'},
-      {surfaceId: 'ui-2', rootComponentType: 'commerce-search'},
+      {surfaceId: 'c-1', rootComponentType: 'Converse'},
+      {surfaceId: 'ui-2', rootComponentType: 'CommerceSearch'},
     ]);
   });
 
   it('re-derives an identical list from response.activities', () => {
     const turn = foldActivities(createTurn('t1', {}), [
-      surfaceSnapshot([surfaceMessage('ui-1', 'commerce-search')]),
+      surfaceSnapshot([surfaceMessage('ui-1', 'CommerceSearch')]),
     ]);
 
     expect(deriveSurfaces(turn.response.activities)).toEqual(turn.response.surfaces);
@@ -194,7 +183,7 @@ describe('fold surface derivation', () => {
           createSurface: {
             surfaceId: 'ui-1',
             rootId: 'missing',
-            components: [{id: 'other', props: {componentType: 'commerce-search'}}],
+            components: [{id: 'other', component: 'CommerceSearch'}],
           },
         },
       ]),
@@ -202,25 +191,44 @@ describe('fold surface derivation', () => {
 
     expect(turn.response.surfaces).toEqual([]);
   });
-});
 
-describe('resolveTargetSurfaceId', () => {
-  it('returns the first commerce-search surfaceId', () => {
+  // Regression (single-identity discovery): feed a REAL single-identity
+  // `createSurface` message whose root node carries its identity as a top-level
+  // PascalCase `component` discriminant (NO `props.componentType`), exactly as
+  // the platform mock emits it. `readSurface`/`deriveSurfaces` must discover the
+  // surface as a commerce-search root — the path the prior
+  // fixtures (which put the discriminant under `props.componentType`) bypassed,
+  // letting a commerce-search surface silently fail discovery and mis-route.
+  it('discovers a single-identity commerce-search root by its top-level component discriminant', () => {
+    const singleIdentitySurface = {
+      version: 'v1.0',
+      createSurface: {
+        surfaceId: 'commerce-search-2',
+        components: [
+          {
+            id: 'root',
+            component: 'CommerceSearch',
+            sidebarChild: 'facets-1',
+            mainChild: 'products-1',
+          },
+        ],
+      },
+    };
+
+    const turn = foldActivities(createTurn('t1', {}), [
+      surfaceSnapshot([singleIdentitySurface]),
+      runFinished,
+    ]);
+
+    expect(turn.response.surfaces).toEqual([
+      {surfaceId: 'commerce-search-2', rootComponentType: 'CommerceSearch'},
+    ]);
+    expect(deriveSurfaces(turn.response.activities)).toEqual(turn.response.surfaces);
     expect(
-      resolveTargetSurfaceId([
-        {surfaceId: 'c-1', rootComponentType: 'converse'},
-        {surfaceId: 'ui-2', rootComponentType: 'commerce-search'},
-        {surfaceId: 'ui-3', rootComponentType: 'commerce-search'},
-      ])
-    ).toBe('ui-2');
-  });
-
-  it('returns null when no commerce-search surface exists', () => {
-    expect(resolveTargetSurfaceId([{surfaceId: 'c-1', rootComponentType: 'converse'}])).toBeNull();
-  });
-
-  it('returns null for an empty surfaces list', () => {
-    expect(resolveTargetSurfaceId([])).toBeNull();
+      turn.response.surfaces.some(
+        (s) => s.surfaceId === 'commerce-search-2' && s.rootComponentType === 'CommerceSearch'
+      )
+    ).toBe(true);
   });
 });
 
@@ -250,51 +258,53 @@ const surfaceSnapshotWith = (
 describe('fold ACTIVITY_SNAPSHOT replace semantics', () => {
   it('supersedes the activity with the same messageId when replace is true', () => {
     const turn = foldActivities(createTurn('t1', {}), [
-      surfaceSnapshotWith('activity-1', false, [surfaceMessage('ui-old', 'commerce-search')]),
-      surfaceSnapshotWith('activity-1', true, [surfaceMessage('ui-new', 'commerce-search')]),
+      surfaceSnapshotWith('activity-1', false, [surfaceMessage('ui-old', 'CommerceSearch')]),
+      surfaceSnapshotWith('activity-1', true, [surfaceMessage('ui-new', 'CommerceSearch')]),
     ]);
 
     // One activity (replaced in place), carrying the latest payload.
     expect(turn.response.activities).toHaveLength(1);
     expect(turn.response.activities[0].id).toBe('activity-1');
     expect(turn.response.surfaces).toEqual([
-      {surfaceId: 'ui-new', rootComponentType: 'commerce-search'},
+      {surfaceId: 'ui-new', rootComponentType: 'CommerceSearch'},
     ]);
   });
 
   it('routes to the replacement surface, not the stale one', () => {
     const turn = foldActivities(createTurn('t1', {}), [
-      surfaceSnapshotWith('activity-1', false, [surfaceMessage('stale', 'commerce-search')]),
-      surfaceSnapshotWith('activity-1', true, [surfaceMessage('fresh', 'commerce-search')]),
+      surfaceSnapshotWith('activity-1', false, [surfaceMessage('stale', 'CommerceSearch')]),
+      surfaceSnapshotWith('activity-1', true, [surfaceMessage('fresh', 'CommerceSearch')]),
     ]);
 
-    expect(resolveTargetSurfaceId(turn.response.surfaces)).toBe('fresh');
+    expect(turn.response.surfaces).toEqual([
+      {surfaceId: 'fresh', rootComponentType: 'CommerceSearch'},
+    ]);
   });
 
   it('preserves the original position when superseding in place', () => {
     const turn = foldActivities(createTurn('t1', {}), [
       surfaceSnapshotWith('activity-1', false, [surfaceMessage('a-old', 'converse')]),
-      surfaceSnapshotWith('activity-2', false, [surfaceMessage('b', 'commerce-search')]),
+      surfaceSnapshotWith('activity-2', false, [surfaceMessage('b', 'CommerceSearch')]),
       surfaceSnapshotWith('activity-1', true, [surfaceMessage('a-new', 'converse')]),
     ]);
 
     expect(turn.response.activities.map((a) => a.id)).toEqual(['activity-1', 'activity-2']);
     expect(turn.response.surfaces).toEqual([
       {surfaceId: 'a-new', rootComponentType: 'converse'},
-      {surfaceId: 'b', rootComponentType: 'commerce-search'},
+      {surfaceId: 'b', rootComponentType: 'CommerceSearch'},
     ]);
   });
 
   it('appends distinct messageIds even when replace is true (no false match)', () => {
     const turn = foldActivities(createTurn('t1', {}), [
-      surfaceSnapshotWith('activity-1', true, [surfaceMessage('s-1', 'commerce-search')]),
-      surfaceSnapshotWith('activity-2', true, [surfaceMessage('s-2', 'commerce-search')]),
+      surfaceSnapshotWith('activity-1', true, [surfaceMessage('s-1', 'CommerceSearch')]),
+      surfaceSnapshotWith('activity-2', true, [surfaceMessage('s-2', 'CommerceSearch')]),
     ]);
 
     expect(turn.response.activities).toHaveLength(2);
     expect(turn.response.surfaces).toEqual([
-      {surfaceId: 's-1', rootComponentType: 'commerce-search'},
-      {surfaceId: 's-2', rootComponentType: 'commerce-search'},
+      {surfaceId: 's-1', rootComponentType: 'CommerceSearch'},
+      {surfaceId: 's-2', rootComponentType: 'CommerceSearch'},
     ]);
   });
 
@@ -313,10 +323,96 @@ describe('fold ACTIVITY_SNAPSHOT replace semantics', () => {
 
   it('re-derives an identical surfaces list from activities after a replacement', () => {
     const turn = foldActivities(createTurn('t1', {}), [
-      surfaceSnapshotWith('activity-1', false, [surfaceMessage('ui-old', 'commerce-search')]),
-      surfaceSnapshotWith('activity-1', true, [surfaceMessage('ui-new', 'commerce-search')]),
+      surfaceSnapshotWith('activity-1', false, [surfaceMessage('ui-old', 'CommerceSearch')]),
+      surfaceSnapshotWith('activity-1', true, [surfaceMessage('ui-new', 'CommerceSearch')]),
     ]);
 
     expect(deriveSurfaces(turn.response.activities)).toEqual(turn.response.surfaces);
+  });
+
+  const dataModelMessage = (surfaceId: string, path: string, value: unknown) => ({
+    version: 'v1.0',
+    updateDataModel: {surfaceId, path, value},
+  });
+
+  const activityPayloadMessages = (turn: ReturnType<typeof createTurn>) =>
+    turn.response.activities[0].payload['messages'] as unknown[];
+
+  it('carries forward a slice omitted by a later same-messageId replace snapshot', () => {
+    // Turn 1 writes product-list + facet; turn 2 (same messageId, replace) carries
+    // only the facet slice. The product-list slice must survive.
+    const turn = foldActivities(createTurn('t1', {}), [
+      surfaceSnapshotWith('update:ui-1', true, [
+        dataModelMessage('ui-1', '/state/ui-1-product-list', {products: ['a', 'b']}),
+        dataModelMessage('ui-1', '/state/ui-1-facet', {values: ['x']}),
+      ]),
+      surfaceSnapshotWith('update:ui-1', true, [
+        dataModelMessage('ui-1', '/state/ui-1-facet', {values: ['x', 'y', 'z']}),
+      ]),
+    ]);
+
+    expect(turn.response.activities).toHaveLength(1);
+    expect(activityPayloadMessages(turn)).toEqual([
+      dataModelMessage('ui-1', '/state/ui-1-facet', {values: ['x', 'y', 'z']}),
+      dataModelMessage('ui-1', '/state/ui-1-product-list', {products: ['a', 'b']}),
+    ]);
+  });
+
+  it('lets a later same-path op override the earlier one without duplicating the path', () => {
+    const turn = foldActivities(createTurn('t1', {}), [
+      surfaceSnapshotWith('update:ui-1', true, [
+        dataModelMessage('ui-1', '/state/ui-1-pagination', {page: 0}),
+      ]),
+      surfaceSnapshotWith('update:ui-1', true, [
+        dataModelMessage('ui-1', '/state/ui-1-pagination', {page: 1}),
+      ]),
+    ]);
+
+    expect(activityPayloadMessages(turn)).toEqual([
+      dataModelMessage('ui-1', '/state/ui-1-pagination', {page: 1}),
+    ]);
+  });
+
+  it('does not let a same-path write on one surface suppress the carry-forward of another surface', () => {
+    // Both surfaces write the same path (/state/root) under one messageId. The replace snapshot
+    // only re-writes surface ui-2's slice; surface ui-1's same-path slice must still carry forward.
+    const turn = foldActivities(createTurn('t1', {}), [
+      surfaceSnapshotWith('update:multi', true, [
+        dataModelMessage('ui-1', '/state/root', {value: 1}),
+        dataModelMessage('ui-2', '/state/root', {value: 2}),
+      ]),
+      surfaceSnapshotWith('update:multi', true, [
+        dataModelMessage('ui-2', '/state/root', {value: 22}),
+      ]),
+    ]);
+
+    expect(activityPayloadMessages(turn)).toEqual([
+      dataModelMessage('ui-2', '/state/root', {value: 22}),
+      dataModelMessage('ui-1', '/state/root', {value: 1}),
+    ]);
+  });
+
+  it('carries forward the prior updateComponents when a later snapshot omits it', () => {
+    const updateComponents = {
+      version: 'v1.0',
+      updateComponents: {
+        surfaceId: 'ui-1',
+        components: [{id: 'ui-1-facet', component: 'RegularFacet'}],
+      },
+    };
+    const turn = foldActivities(createTurn('t1', {}), [
+      surfaceSnapshotWith('update:ui-1', true, [
+        updateComponents,
+        dataModelMessage('ui-1', '/state/ui-1-facet', {values: ['x']}),
+      ]),
+      surfaceSnapshotWith('update:ui-1', true, [
+        dataModelMessage('ui-1', '/state/ui-1-facet', {values: ['x', 'y']}),
+      ]),
+    ]);
+
+    expect(activityPayloadMessages(turn)).toEqual([
+      updateComponents,
+      dataModelMessage('ui-1', '/state/ui-1-facet', {values: ['x', 'y']}),
+    ]);
   });
 });

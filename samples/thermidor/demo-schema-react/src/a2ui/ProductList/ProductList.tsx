@@ -1,5 +1,6 @@
-import {useRemoteController} from '../controllers.js';
-import type {Product, ProductListProps} from '@coveo/thermidor-schema';
+import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import type {Product} from '@coveo/thermidor-schema';
+import {ProductListPropsSchema} from '@coveo/thermidor-schema/zod3';
 import styles from './ProductList.module.css';
 
 function formatPrice(value: number): string {
@@ -12,33 +13,6 @@ function resolveProductImage(product: Product): string | null {
     return images[0];
   }
   return null;
-}
-
-export function ProductListRenderer({props}: {props: ProductListProps}) {
-  const controller = useRemoteController(props.componentId, props.componentType);
-  const products = controller.state?.products ?? [];
-
-  if (!controller.state) {
-    return (
-      <div className={styles.loading} aria-label="Loading product list">
-        Loading products…
-      </div>
-    );
-  }
-
-  if (products.length === 0) {
-    return null;
-  }
-
-  return (
-    <section>
-      <div className={styles.grid} role="list" aria-label="Product list">
-        {products.map((product: Product) => (
-          <ProductCard key={product.permanentid} product={product} />
-        ))}
-      </div>
-    </section>
-  );
 }
 
 function ProductCard({product}: {product: Product}) {
@@ -76,3 +50,38 @@ function ProductCard({product}: {product: Product}) {
     </article>
   );
 }
+
+/**
+ * A2-UI component for the `product-list`. The generic binder resolves `products` from
+ * `ProductListPropsSchema`; a grid of product cards for decomposed commerce search surfaces.
+ * Presentational — no actions. `products === undefined` (bindings not yet resolved) renders a
+ * loading state; an empty list renders nothing.
+ */
+export const ProductList = createReactComponent(
+  {name: 'ProductList', schema: ProductListPropsSchema},
+  ({props}) => {
+    const products = props.products;
+
+    if (products === undefined) {
+      return (
+        <div className={styles.loading} aria-label="Loading product list">
+          Loading products…
+        </div>
+      );
+    }
+
+    if (products.length === 0) {
+      return null;
+    }
+
+    return (
+      <section>
+        <div className={styles.grid} role="list" aria-label="Product list">
+          {products.map((product) => (
+            <ProductCard key={product.permanentid} product={product} />
+          ))}
+        </div>
+      </section>
+    );
+  }
+);

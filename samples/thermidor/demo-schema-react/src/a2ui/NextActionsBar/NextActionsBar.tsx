@@ -1,29 +1,45 @@
-import {useRemoteController} from '../controllers.js';
-import type {ActionItem, NextActionsBarProps} from '@coveo/thermidor-schema';
+import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import type {ActionItem, NextActionsBarAction} from '@coveo/thermidor-schema';
+import {NextActionsBarPropsSchema} from '@coveo/thermidor-schema/zod3';
 import styles from './NextActionsBar.module.css';
 
-export function NextActionsBarRenderer({props}: {props: NextActionsBarProps}) {
-  const controller = useRemoteController(props.componentId, props.componentType);
-  const actions = controller.state?.actions ?? [];
+/**
+ * A2-UI component for the `next-actions-bar`. The generic binder resolves `suggestedActions` from
+ * `NextActionsBarPropsSchema`; selecting one dispatches a `selectAction` through
+ * `context.dispatchAction`.
+ */
+export const NextActionsBar = createReactComponent(
+  {
+    name: 'NextActionsBar',
+    schema: NextActionsBarPropsSchema,
+  },
+  ({props, context}) => {
+    const actions = props.suggestedActions ?? [];
 
-  if (actions.length === 0) {
-    return null;
+    if (actions.length === 0) {
+      return null;
+    }
+
+    const handleSelectAction = (action: ActionItem) => {
+      const selectActionAction: NextActionsBarAction = {
+        event: {name: 'selectAction', context: {text: action.text, type: action.type}},
+      };
+      context.dispatchAction(selectActionAction);
+    };
+
+    return (
+      <div className={styles.container} role="group" aria-label="Follow-up actions">
+        {actions.map((action: ActionItem, i: number) => (
+          <button
+            key={i}
+            className={styles.actionButton}
+            onClick={() => handleSelectAction(action)}
+            type="button"
+          >
+            {action.text}
+          </button>
+        ))}
+      </div>
+    );
   }
-
-  return (
-    <div className={styles.container} role="group" aria-label="Follow-up actions">
-      {actions.map((action: ActionItem, i: number) => (
-        <button
-          key={i}
-          className={styles.actionButton}
-          onClick={() =>
-            controller.dispatch('selectAction', {text: action.text, type: action.type})
-          }
-          type="button"
-        >
-          {action.text}
-        </button>
-      ))}
-    </div>
-  );
-}
+);

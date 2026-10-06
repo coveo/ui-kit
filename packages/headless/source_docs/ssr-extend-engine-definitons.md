@@ -238,3 +238,24 @@ const hydratedState = await hydrateStaticState({
 >   searchAction: staticState.searchAction,
 > });
 > ```
+
+## Keep per-request data out of the shared definition (server)
+
+The engine definition is created once and shared across every request the server handles. Keeping the server and client aligned means applying the same _manipulations_ to the definition. Per-request data must not be stored in the shared definition.
+
+On the server, requests are handled concurrently. Data that varies between requests, such as a per-user access token or a per-request navigator context, must not be stored in the shared definition. Otherwise, a value set for one request can be visible to other concurrent requests. This principle applies to all SSR engines: mutating a shared definition for a request can leak state across requests.
+
+> [!NOTE]
+>
+> On the SSR commerce engine (`@coveo/headless/ssr-commerce`), pass per-request data through the `accessToken` and `navigatorContext` options of the `fetchStaticState()` method to apply it only to the current request without modifying the shared definition:
+>
+> ```ts
+> // server.ts (commerce)
+> const staticState = await engineDefinition.fetchStaticState({
+>   accessToken: getSearchTokenForUser(request), // per-user token
+>   navigatorContext: getNavigatorContext(request), // per-request client id, user agent, etc.
+>   controllers: {/* ... */},
+> });
+> ```
+>
+> See [Manage access tokens](./manage-access-tokens.html) for the full commerce token and navigator-context guidance. Conversely, `setAccessToken()` and `setNavigatorContextProvider()` write onto the shared definition — they are the right tools on the **client**, where a single hydrated engine runs for the session, but on the **server** prefer the per-request options above.

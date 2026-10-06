@@ -1,5 +1,12 @@
 import type {NormalizedStreamEvent} from '@/src/internal/api/protocol/stream-types.js';
 import {getActivityMetadata} from '@/src/internal/api/protocol/activity-metadata.js';
+import {deriveA2uiV09Messages} from './a2ui-v09-projection.js';
+import type {ContractsSchema} from './contracts.js';
+import {
+  deriveNodeIdentityRegistry,
+  readUpdateDataModelOps,
+  validateInboundOp,
+} from './in-transit-validation.js';
 import type {
   A2uiState,
   Activity,
@@ -13,7 +20,7 @@ import type {
 } from './types.js';
 
 function emptyResponse(): TurnResponse {
-  return {state: {}, activities: [], surfaces: []};
+  return {state: {}, activities: [], surfaces: [], a2uiMessages: []};
 }
 
 function cloneResponse(response: TurnResponse): TurnResponse {
@@ -21,6 +28,7 @@ function cloneResponse(response: TurnResponse): TurnResponse {
     state: response.state,
     activities: [...response.activities],
     surfaces: [...response.surfaces],
+    a2uiMessages: [...response.a2uiMessages],
   };
   if (response.agent) {
     next.agent = {
@@ -58,10 +66,21 @@ function ensureAgent(response: TurnResponse): TurnAgent {
  * This is the single place a {@link TurnResponse} is constructed from the
  * stream.
  *
- * The fold is pure: `(previousTurn, activity) → nextTurn`. Folding the same
- * activity sequence twice yields deeply-equal turns.
+ * The fold is pure: `(previousTurn, activity, contracts) → nextTurn`. The
+ * injected `contracts` is a BOUND DEPENDENCY (never part of turn state) that
+ * threads to in-transit validation; folding the same activity sequence twice
+ * with the same contracts yields deeply-equal turns.
+ *
+ * `contracts` is optional: when absent (activity sequences that carry no
+ * `updateDataModel` state ops), no inbound op is validated or applied, so
+ * `response.state` is left as it would be with an empty contract. The session
+ * runtime always threads `config.contracts`.
  */
-export function foldActivity(previousTurn: Turn, activity: NormalizedStreamEvent): Turn {
+export function foldActivity(
+  previousTurn: Turn,
+  activity: NormalizedStreamEvent,
+  contracts?: ContractsSchema
+): Turn {
   const turn = cloneTurn(previousTurn);
   const response = turn.response;
 
@@ -161,12 +180,8 @@ export function foldActivity(previousTurn: Turn, activity: NormalizedStreamEvent
         replace: metadata.replace ?? false,
       };
 
-      // A snapshot is the latest full version of the content for its
-      // `messageId`. When `replace` is set and an activity with the same
-      // (non-empty) `messageId` already exists, supersede it in place —
-      // preserving its position — rather than appending a second entry.
-      // Otherwise append. This keeps a re-emitted surface from leaving a stale
-      // duplicate in `activities` (and thus in the derived `surfaces`).
+      // A replace snapshot merges onto the same-`messageId` activity in place (see
+      // mergeActivityPayload); a distinct or non-replace snapshot appends.
       const existingIndex =
         nextActivity.replace && nextActivity.id
           ? response.activities.findIndex((existing) => existing.id === nextActivity.id)
@@ -174,8 +189,15 @@ export function foldActivity(previousTurn: Turn, activity: NormalizedStreamEvent
       if (existingIndex === -1) {
         response.activities = [...response.activities, nextActivity];
       } else {
+        const merged: Activity = {
+          ...nextActivity,
+          payload: mergeActivityPayload(
+            response.activities[existingIndex].payload,
+            nextActivity.payload
+          ),
+        };
         response.activities = response.activities.map((existing, index) =>
-          index === existingIndex ? nextActivity : existing
+          index === existingIndex ? merged : existing
         );
       }
 
@@ -183,14 +205,12 @@ export function foldActivity(previousTurn: Turn, activity: NormalizedStreamEvent
       // full activity list so `response.surfaces` always agrees with a fresh
       // derivation off `response.activities`.
       response.surfaces = deriveSurfaces(response.activities);
-      return turn;
-    }
-
-    case 'STATE_SNAPSHOT': {
-      const snapshot = (activity as unknown as {snapshot?: unknown}).snapshot;
-      if (snapshot && typeof snapshot === 'object' && !Array.isArray(snapshot)) {
-        response.state = snapshot as A2uiState;
-      }
+      // The renderer-facing v0.9 message stream is likewise a derived projection
+      // of `activities`, re-derived from the full list for the same reason.
+      response.a2uiMessages = deriveA2uiV09Messages(response.activities);
+      // Validate the activity's `updateDataModel` ops in transit: conforming ops
+      // are applied into `response.state`, others dropped. Details in applyInboundOps.
+      response.state = applyInboundOps(response.state, response.activities, content, contracts);
       return turn;
     }
 
@@ -219,6 +239,78 @@ export function foldActivity(previousTurn: Turn, activity: NormalizedStreamEvent
     default:
       return foldUnknown(turn, activity);
   }
+}
+
+/**
+ * Merges a superseding snapshot onto the one it replaces so an incremental snapshot (only the
+ * slices that changed that turn) does not drop slices an earlier same-`messageId` snapshot wrote.
+ * `next` wins per slice; unmentioned prior slices carry forward.
+ */
+function mergeActivityPayload(
+  previous: Record<string, unknown>,
+  next: Record<string, unknown>
+): Record<string, unknown> {
+  const nextMessages = next['messages'];
+  const previousMessages = previous['messages'];
+  if (!Array.isArray(nextMessages) || !Array.isArray(previousMessages)) {
+    return next;
+  }
+
+  const nextSlices = new Set<string>();
+  let nextHasComponents = false;
+  for (const message of nextMessages) {
+    const slice = updateDataModelSlice(message);
+    if (slice !== null) {
+      nextSlices.add(slice);
+    }
+    if (isUpdateComponents(message)) {
+      nextHasComponents = true;
+    }
+  }
+
+  // Gateway topology is a whole-surface re-projection (never a per-node delta), so last one wins.
+  const priorComponents = latestUpdateComponents(previousMessages);
+  const carriedComponents = nextHasComponents || priorComponents === null ? [] : [priorComponents];
+
+  const carriedForward = previousMessages.filter((message) => {
+    const slice = updateDataModelSlice(message);
+    return slice !== null && !nextSlices.has(slice);
+  });
+
+  return {...next, messages: [...carriedComponents, ...nextMessages, ...carriedForward]};
+}
+
+function isUpdateComponents(message: unknown): boolean {
+  return isRecord(message) && isRecord(message['updateComponents']);
+}
+
+function latestUpdateComponents(messages: readonly unknown[]): unknown {
+  for (let index = messages.length - 1; index >= 0; index -= 1) {
+    if (isUpdateComponents(messages[index])) {
+      return messages[index];
+    }
+  }
+  return null;
+}
+
+/**
+ * A slice key for an updateDataModel op, or null when the message isn't one. Keyed by
+ * `(surfaceId, path)`, not path alone: state is per-surface, so two surfaces can share a path.
+ */
+function updateDataModelSlice(message: unknown): string | null {
+  if (!isRecord(message)) {
+    return null;
+  }
+  const updateDataModel = message['updateDataModel'];
+  if (!isRecord(updateDataModel)) {
+    return null;
+  }
+  const surfaceId = updateDataModel['surfaceId'];
+  const path = updateDataModel['path'];
+  if (typeof surfaceId !== 'string' || typeof path !== 'string') {
+    return null;
+  }
+  return `${surfaceId}\u0000${path}`;
 }
 
 function mapToolCall(
@@ -256,8 +348,89 @@ export function createTurn(id: string, input: TurnInput): Turn {
  * Folds an entire activity sequence over an initial turn. Convenience wrapper
  * used by determinism checks and the session runtime.
  */
-export function foldActivities(initialTurn: Turn, activities: NormalizedStreamEvent[]): Turn {
-  return activities.reduce(foldActivity, initialTurn);
+export function foldActivities(
+  initialTurn: Turn,
+  activities: NormalizedStreamEvent[],
+  contracts?: ContractsSchema
+): Turn {
+  return activities.reduce(
+    (turn, activity) => foldActivity(turn, activity, contracts),
+    initialTurn
+  );
+}
+
+/**
+ * Applies the just-arrived activity's `updateDataModel` ops to the turn's
+ * `A2uiState` after in-transit validation. The node-identity registry is
+ * re-derived from the folded activity list so the fold stays pure. Each op runs
+ * through {@link validateInboundOp}: FORWARD writes the validated value at its
+ * JSON Pointer within `state[surfaceId]` (shallow copy); DROP leaves state
+ * untouched, so the prior rendered value stays. Returns the input reference
+ * unchanged when nothing is forwarded.
+ */
+function applyInboundOps(
+  state: A2uiState,
+  activities: Activity[],
+  content: Record<string, unknown>,
+  contracts: ContractsSchema | undefined
+): A2uiState {
+  // Without an injected contract there is nothing to validate ops against, so
+  // no op is forwarded and the state is left unchanged.
+  if (!contracts) {
+    return state;
+  }
+  const messages = content['messages'];
+  if (!Array.isArray(messages)) {
+    return state;
+  }
+  const ops = readUpdateDataModelOps(messages);
+  if (ops.length === 0) {
+    return state;
+  }
+
+  const registry = deriveNodeIdentityRegistry(activities);
+  let next = state;
+  for (const op of ops) {
+    const decision = validateInboundOp(op, registry, contracts);
+    if (decision.kind === 'forward') {
+      // Per surface: every surface has a `root` node, so a shared node id would
+      // collide at one top-level pointer without scoping the write by surface.
+      const surfaceState = isRecord(next[op.surfaceId]) ? (next[op.surfaceId] as A2uiState) : {};
+      next = {
+        ...next,
+        [op.surfaceId]: setAtPointer(surfaceState, decision.path, decision.value),
+      };
+    }
+  }
+  return next;
+}
+
+/**
+ * Writes `value` at the RFC 6901 JSON Pointer `path` in a structurally shared
+ * copy of `state`, creating intermediate objects as needed and leaving sibling
+ * values untouched — the same leaf-write, sibling-preserving semantics the
+ * frozen renderer's data model applies. Never mutates the input `state`.
+ */
+function setAtPointer(state: A2uiState, path: string, value: unknown): A2uiState {
+  const segments = path
+    .split('/')
+    .filter((segment) => segment.length > 0)
+    .map((segment) => segment.replace(/~1/g, '/').replace(/~0/g, '~'));
+  if (segments.length === 0) {
+    return isRecord(value) ? (value as A2uiState) : state;
+  }
+
+  const root: Record<string, unknown> = {...state};
+  let cursor = root;
+  for (let index = 0; index < segments.length - 1; index += 1) {
+    const segment = segments[index];
+    const existing = cursor[segment];
+    const clone: Record<string, unknown> = isRecord(existing) ? {...existing} : {};
+    cursor[segment] = clone;
+    cursor = clone;
+  }
+  cursor[segments[segments.length - 1]] = value;
+  return root;
 }
 
 /**
@@ -265,13 +438,11 @@ export function foldActivities(initialTurn: Turn, activities: NormalizedStreamEv
  *
  * This block is the SINGLE location in the
  * package that walks a raw A2-UI activity payload (`activity.payload.messages`
- * → `createSurface` → resolve `rootId` against `components` → read
- * `props.componentType`) and the SINGLE location that knows the
- * `'commerce-search'` root-component-type magic string. Both persist until
+ * → `createSurface` → find the canonical `root` node in `components` → read the
+ * root node's top-level `component` discriminant). It persists until
  * server-surfaced typed routing lands (ADR-015 Option C, a separate future
- * ADR). No consumer — sample or internal `dispatchAction` — may walk activities
- * or re-spell this literal; they read the typed `response.surfaces` projection
- * and, for target resolution, {@link resolveTargetSurfaceId}.
+ * ADR). No consumer — sample or internal `dispatchAction` — may walk activities;
+ * they read the typed `response.surfaces` projection.
  *
  * `surfaces` is a derived projection of `activities`, never an independent
  * source of truth: it is re-derived here from the full activity list so
@@ -279,8 +450,12 @@ export function foldActivities(initialTurn: Turn, activities: NormalizedStreamEv
  * list.
  */
 
-/** ADR-015 interim: the root component type consumers/nav treat as commerce. */
-const COMMERCE_SEARCH_ROOT_TYPE = 'commerce-search';
+/**
+ * The A2-UI v1.0 canonical surface root node id. `createSurface` implicitly mounts the reserved
+ * `Surface` container with `child: "root"`, so the surface's root is the node whose `id` is this
+ * value. The envelope carries no `rootId`.
+ */
+const ROOT_COMPONENT_ID = 'root';
 
 /** Activity kind carrying A2-UI surface `createSurface` messages. */
 const SURFACE_ACTIVITY_KIND = 'a2ui-surface';
@@ -320,10 +495,11 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 /**
  * Reads a single `createSurface` message into a {@link DiscoveredSurface},
- * resolving the root component type from `createSurface.rootId` against
- * `createSurface.components`. Returns null when the message is not a well-formed
- * surface (missing surfaceId/rootId, no matching root component, or no root
- * `props.componentType`).
+ * resolving the root component type from the canonical `root` node in
+ * `createSurface.components` (the A2-UI v1.0 node with `id: "root"`) and reading its
+ * top-level `component` discriminant (PascalCase). Returns null when the message is not
+ * a well-formed surface (missing surfaceId, no `root` component, or no root `component`
+ * discriminant).
  */
 function readSurface(message: unknown): DiscoveredSurface | null {
   if (!isRecord(message)) {
@@ -336,8 +512,7 @@ function readSurface(message: unknown): DiscoveredSurface | null {
   }
 
   const surfaceId = createSurface['surfaceId'];
-  const rootId = createSurface['rootId'];
-  if (typeof surfaceId !== 'string' || surfaceId.length === 0 || typeof rootId !== 'string') {
+  if (typeof surfaceId !== 'string' || surfaceId.length === 0) {
     return null;
   }
 
@@ -346,33 +521,19 @@ function readSurface(message: unknown): DiscoveredSurface | null {
     return null;
   }
 
-  const rootComponent = components.find((comp) => isRecord(comp) && comp['id'] === rootId);
+  // A2-UI v1.0: the surface's root is the canonical node with `id: "root"` mounted under the
+  // implicit `Surface` container. The `createSurface` envelope carries no `rootId`.
+  const rootComponent = components.find(
+    (comp) => isRecord(comp) && comp['id'] === ROOT_COMPONENT_ID
+  );
   if (!isRecord(rootComponent)) {
     return null;
   }
 
-  const props = rootComponent['props'];
-  if (!isRecord(props)) {
-    return null;
-  }
-
-  const rootComponentType = props['componentType'];
+  const rootComponentType = rootComponent['component'];
   if (typeof rootComponentType !== 'string' || rootComponentType.length === 0) {
     return null;
   }
 
   return {surfaceId, rootComponentType};
-}
-
-/**
- * Resolves the target `surfaceId` for the internal `dispatchAction` from a
- * turn's already-derived `response.surfaces`: the first surface whose root is a
- * commerce-search surface, or null when none exists. Consumers read
- * the typed projection here rather than walking activities.
- */
-export function resolveTargetSurfaceId(surfaces: DiscoveredSurface[]): string | null {
-  const target = surfaces.find(
-    (surface) => surface.rootComponentType === COMMERCE_SEARCH_ROOT_TYPE
-  );
-  return target ? target.surfaceId : null;
 }

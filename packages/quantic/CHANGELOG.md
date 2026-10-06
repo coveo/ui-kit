@@ -1,3 +1,20 @@
+## 3.45.3
+
+### Patch Changes
+
+- [#8558](https://github.com/coveo/ui-kit/pull/8558) [`aabf1fb`](https://github.com/coveo/ui-kit/commit/aabf1fbded35e4bb1f03ecc89e8a5834d12bf594) - Reduce the z-index of the expandable search box to prevent a conflict with a Salesforce component.
+
+- Updated dependencies [[`2535634`](https://github.com/coveo/ui-kit/commit/25356348d331a6e123735a73df411589b2bc2a7f)]:
+  - coveo.analytics@2.33.1
+  - @coveo/headless@3.57.2
+
+## 3.45.2
+
+### Patch Changes
+
+- Updated dependencies [[`cf041b2`](https://github.com/coveo/ui-kit/commit/cf041b24270e676226781613a705d98042b4d728), [`3c4e3d2`](https://github.com/coveo/ui-kit/commit/3c4e3d2567eb327d3a79caf2e10b915a5a2a6a46)]:
+  - @coveo/headless@3.57.1
+
 ## 3.45.1
 
 ### Patch Changes

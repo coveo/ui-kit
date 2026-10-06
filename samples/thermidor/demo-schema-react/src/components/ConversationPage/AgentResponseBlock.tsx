@@ -4,7 +4,7 @@ import {ThinkingBlock} from './ThinkingBlock.js';
 import {StreamingMessage} from './StreamingMessage.js';
 import {A2UISkeleton} from '../../a2ui/Skeleton/Skeleton.js';
 import {parseSurfaceSnapshots} from '../../a2ui/types.js';
-import {getA2UIMessages, ThermidorA2UISurfaces} from '../../a2ui/surfaces.js';
+import {ThermidorA2UISurfaces} from '../../a2ui/surfaces.js';
 import styles from './AgentResponseBlock.module.css';
 
 const KNOWN_COMPONENTS = new Set([
@@ -12,12 +12,14 @@ const KNOWN_COMPONENTS = new Set([
   'BundleDisplay',
   'NextActionsBar',
   'ComparisonTable',
+  'ProductResearchCard',
 ]);
 
 const ROUTE_TO_COMPONENT: Record<string, string> = {
   discovery: 'ProductCarousel',
   comparison: 'ComparisonTable',
   bundle: 'BundleDisplay',
+  research: 'ProductResearchCard',
 };
 
 export interface AgentResponseBlockProps {
@@ -26,7 +28,7 @@ export interface AgentResponseBlockProps {
 }
 
 export function AgentResponseBlock({response, isStreaming}: AgentResponseBlockProps) {
-  const {activities, agent} = response;
+  const {activities, agent, a2uiMessages} = response;
   const messages = agent?.messages ?? [];
   const reasoningSteps = agent?.reasoningSteps ?? [];
 
@@ -38,8 +40,6 @@ export function AgentResponseBlock({response, isStreaming}: AgentResponseBlockPr
   // `isLoading`), which live in the `a2ui-surface` activity payloads.
   const surfaceSnapshots = useMemo(() => toSurfaceSnapshots(activities), [activities]);
   const skeletonItems = useSkeletonItems(surfaceSnapshots, reasoningSteps, isStreaming);
-
-  const a2uiMessages = useMemo(() => getA2UIMessages(activities), [activities]);
 
   return (
     <div className={styles.container}>
@@ -60,7 +60,7 @@ export function AgentResponseBlock({response, isStreaming}: AgentResponseBlockPr
  *
  * Two sources feed into the skeleton list (aligned with demo-react):
  * 1. Tool calls: `store_render_plan` reasoning steps indicate which components are coming.
- * 2. Surface hints: surfaces with `skeleton-` prefix surfaceId or `isLoading: true` prop
+ * 2. Surface hints: surfaces with a `skeleton-` prefix surfaceId or `dataModel.isLoading: true`
  *    signal explicit skeleton requests from the backend.
  *
  * Real (non-skeleton) surfaces subtract from the count so skeletons disappear
@@ -91,8 +91,7 @@ function useSkeletonItems(
     const skeletonIdsByType = new Map<string, Set<string>>();
 
     for (const s of known) {
-      const props = s.componentProps;
-      const isSkeleton = s.surfaceId.startsWith('skeleton-') || props.isLoading === true;
+      const isSkeleton = s.surfaceId.startsWith('skeleton-') || s.data.isLoading === true;
 
       if (isSkeleton) {
         const ids = skeletonIdsByType.get(s.componentType) ?? new Set();

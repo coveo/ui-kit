@@ -21,7 +21,7 @@
     "marked": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "zod": "catalog:"
+    "zod": "3.25.76"
   },
   "devDependencies": {
     "@playwright/test": "catalog:",

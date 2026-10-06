@@ -12,7 +12,8 @@
         "@coveo/relay#build",
         "@coveo/shopify#build"
       ],
-      "outputs": ["dist"]
+      "outputs": ["dist"],
+      "cache": false
     },
     "start": {
       "dependsOn": ["build"],

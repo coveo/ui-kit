@@ -1,14 +1,22 @@
 ---
-status: Accepted
+status: Deprecated
 date: 2026-09-15
 related:
   - ./ADR-009-architecture-decision-charter-v2.md
   - ./ADR-010-unified-endpoint-session-client.md
   - ./ADR-011-session-serialization.md
   - ./ADR-014-consumer-supplied-endpoint-and-schema.md
+  - ./ADR-016-inline-state-consumption-remove-remote-controller.md
 ---
 
 # Remote controller vended from the session
+
+> **Superseded by [ADR-016](./ADR-016-inline-state-consumption-remove-remote-controller.md).**
+> KIT-6179 moved component state inline through the A2-UI data model: state now reaches the renderer
+> resolved via `{ path }` bindings and actions go through the single `Session.dispatchAction`, so the
+> vended remote controller described below (`session.remoteController`, `buildRemoteController`,
+> `RemoteControllerSource`) was removed from the package. This record is kept for the rationale and the
+> serialization coupling it documents; it no longer describes the code.
 
 > Part of the unified-endpoint session-client family (core:
 > [ADR-010](./ADR-010-unified-endpoint-session-client.md)), governed by the charter
