@@ -68,6 +68,21 @@ export interface A2uiClientMessage {
 }
 
 /**
+ * Submits a prompt from outside A2-UI composition (for example, the
+ * integrator's search box), opening a new streaming turn. Dispatched through
+ * {@link Session.dispatchAction} like any other interaction, but it needs no
+ * rendered component, surface, or active turn, so it also opens the first turn
+ * of a session.
+ */
+export interface SubmitPromptAction {
+  name: 'submitPrompt';
+  payload: {
+    /** The prompt recorded as the new turn's `input.prompt`. */
+    prompt: string;
+  };
+}
+
+/**
  * The configuration accepted by {@link createSession}.
  *
  * The context providers are pull-based and synchronous: the request builder
@@ -139,11 +154,16 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
   submit(input: {prompt?: string}): Promise<void>;
   /**
    * The single consumer-facing action-dispatch entry point, wired directly as
-   * the renderer's `onAction` handler (`onAction={session.dispatchAction}`). It
-   * unwraps the message's `userAction`, recovers the dispatching component's
-   * discriminant from the active turn's surfaces, validates the action payload
-   * against the component's contract internally, and — on success — POSTs the
-   * action to the converse endpoint.
+   * the renderer's `onAction` handler (`onAction={session.dispatchAction}`).
+   *
+   * A {@link SubmitPromptAction} opens a new streaming turn for its prompt and
+   * resolves once that turn's stream ends. It is ignored while a turn is
+   * streaming.
+   *
+   * An {@link A2uiClientMessage} is unwrapped to its `userAction`: the session
+   * recovers the dispatching component's discriminant from the active turn's
+   * surfaces, validates the action payload against the component's contract
+   * internally, and — on success — POSTs the action to the converse endpoint.
    *
    * FIRE-AND-FORGET: the returned Promise ALWAYS resolves and NEVER rejects, so
    * the consumer needs no `.catch`. A message with no `userAction`, no
@@ -151,13 +171,19 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * dispatch rejection (for example an invalid payload) are all dropped with a
    * dev-only warning and nothing is sent.
    */
-  dispatchAction: (message: A2uiClientMessage) => Promise<void>;
+  dispatchAction: (message: A2uiClientMessage | SubmitPromptAction) => Promise<void>;
   /** Stops consuming the active turn's stream. */
   cancel(): void;
   /** Re-submits an errored turn's input. */
   retry(turnId: string): void;
   /** Serializes the session transcript for persistence. */
   serialize(): SerializedSession;
+}
+
+function isSubmitPromptAction(
+  message: A2uiClientMessage | SubmitPromptAction
+): message is SubmitPromptAction {
+  return 'name' in message && message.name === 'submitPrompt';
 }
 
 function isAbortError(error: unknown): boolean {
@@ -445,17 +471,24 @@ export function createSession<TContracts extends ContractsSchema>(
     }
   }
 
-  async function submit(input: {prompt?: string}): Promise<void> {
-    // While a turn is streaming, ignore the submit and leave turns unchanged.
+  /**
+   * Opens a new turn for `prompt` and streams its response. Ignored while a
+   * turn is streaming, leaving turns unchanged. Needs no active turn, so it
+   * also opens the first turn of a session.
+   */
+  async function startPromptTurn(prompt: string | undefined): Promise<void> {
     if (hasStreamingTurn()) {
       return;
     }
 
-    const prompt = input.prompt ?? '';
     const turnId = generateId();
-    openTurn(turnId, {prompt: input.prompt});
+    openTurn(turnId, {prompt});
 
-    await executeStream(turnId, buildConversationRequest(prompt));
+    await executeStream(turnId, buildConversationRequest(prompt ?? ''));
+  }
+
+  async function submit(input: {prompt?: string}): Promise<void> {
+    await startPromptTurn(input.prompt);
   }
 
   /**
@@ -542,7 +575,16 @@ export function createSession<TContracts extends ContractsSchema>(
    * FIRE-AND-FORGET: every drop reason and every internal dispatch rejection is
    * swallowed into a dev-only warning; the returned Promise always resolves.
    */
-  const dispatchAction = async (message: A2uiClientMessage): Promise<void> => {
+  const dispatchAction = async (message: A2uiClientMessage | SubmitPromptAction): Promise<void> => {
+    if (isSubmitPromptAction(message)) {
+      try {
+        await startPromptTurn(message.payload.prompt);
+      } catch (error) {
+        devWarn(`dispatchAction: submitPrompt withheld: ${getErrorMessage(error)}`);
+      }
+      return;
+    }
+
     const userAction = message.userAction;
     if (!userAction) {
       devWarn('dispatchAction: message carries no userAction; nothing sent.');

@@ -149,7 +149,7 @@ const baseConfig: SessionConfig = {
 async function sessionWithPaginationSurface() {
   queueSurfaceThenComplete();
   const session = createSession(baseConfig);
-  await session.submit({prompt: 'find shoes'});
+  await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
   callMock.mockClear();
   return session;
 }
