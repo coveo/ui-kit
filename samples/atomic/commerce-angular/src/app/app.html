@@ -1,0 +1,23 @@
+<div class="app">
+  <header class="app-header">
+    <div class="brand">
+      <img src="/coveo-logo.svg" alt="Coveo" width="119" height="30" />
+      <h1>Atomic Commerce + Angular</h1>
+    </div>
+    <nav class="app-nav">
+      @for (item of nav; track item.path) {
+      <a
+        [routerLink]="item.path"
+        routerLinkActive
+        [routerLinkActiveOptions]="{exact: true}"
+        ariaCurrentWhenActive="page"
+        >{{ item.label }}</a
+      >
+      }
+    </nav>
+  </header>
+
+  <main class="page">
+    <router-outlet />
+  </main>
+</div>

@@ -54,7 +54,7 @@ Every sample **must** have:
 
 ```
 samples/
-├── atomic/           # @coveo/atomic and @coveo/atomic-react samples
+├── atomic/           # @coveo/atomic, @coveo/atomic-react, and @coveo/atomic-angular samples
 ├── headless/         # @coveo/headless client-side rendering samples
 └── headless-ssr/     # @coveo/headless server-side rendering samples
 ```
@@ -72,6 +72,7 @@ samples/
 - `headless/search-vite`: Vanilla headless search (JS + Vite)
 - `headless/commerce-react`: Headless commerce with React
 - `headless-ssr/commerce-nextjs`: Headless SSR commerce with Next.js
+- `atomic/search-angular`: Atomic search with Angular
 - `atomic/search-commerce-angular`: Combined search + commerce in Angular
 
 **Package name in `package.json`:**
@@ -94,7 +95,7 @@ Samples carry the `@coveo/ui-kit-sample-*` name from the start (matching the `--
 
 ### 1. Choose the correct category
 
-- **`atomic/`**: Uses `@coveo/atomic` or `@coveo/atomic-react` components
+- **`atomic/`**: Uses `@coveo/atomic`, `@coveo/atomic-react`, or `@coveo/atomic-angular` components
 - **`headless/`**: Uses `@coveo/headless` controllers with client-side rendering
 - **`headless-ssr/`**: Uses `@coveo/headless-react` or similar with server-side rendering
 
@@ -251,6 +252,7 @@ Rules:
 
 - Playwright tests go under the **`e2e`** script (never `test`). `test` is reserved for unit tests so the two CI lanes stay separate.
 - **Atomic-React exception:** samples that consume `@coveo/atomic-react` assets may add a `build:assets` step (copying `dist/assets`, `dist/lang`, `dist/themes`) and call it from a `predev`/`build` hook. This is the only permitted deviation from the standard scripts.
+- **pnpm settings for scaffolded projects:** a sample can't contain a `pnpm-workspace.yaml` (pnpm would treat it as its own workspace root inside the monorepo). Put the pnpm settings the scaffolded project needs (for example, `allowBuilds` for the Angular CLI toolchain) in `pnpm-workspace.sample.yaml`; it's published as `pnpm-workspace.yaml`.
 
 ## How Samples Are Tested in CI
 

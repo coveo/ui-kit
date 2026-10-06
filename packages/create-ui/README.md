@@ -47,11 +47,30 @@ npm create @coveo/ui@latest my-app --template headless-search-react --template-v
 The example above scaffolds the `headless-search-react` sample built against
 Headless `3.2.1`. Omitting `--template-version` keeps the default (`latest`).
 
+Atomic React and Atomic Angular samples are versioned with their wrapper
+package (`@coveo/atomic-react` or `@coveo/atomic-angular`), so pass that
+package's version to `--template-version` for those templates.
+
 ## Templates
 
-Run `npm create @coveo/ui --help` for the current list. Templates encode the
-library, use case, and framework (e.g. `headless-search-react`). Additional
-Atomic and vanilla templates are added as their samples become scaffold-ready.
+Templates encode the library, use case, and framework (e.g.
+`headless-search-react`). Run `npm create @coveo/ui --help` for the list
+supported by your version of the CLI.
+
+| Template                        | Library      | Use case and framework                                     |
+| ------------------------------- | ------------ | ---------------------------------------------------------- |
+| `atomic-search`                 | Atomic       | Search (Vite, `@coveo/atomic`)                             |
+| `atomic-commerce`               | Atomic       | Commerce (Vite, `@coveo/atomic`)                           |
+| `atomic-search-react`           | Atomic       | Search (React, `@coveo/atomic-react`)                      |
+| `atomic-commerce-react`         | Atomic       | Commerce (React, `@coveo/atomic-react`)                    |
+| `atomic-search-angular`         | Atomic       | Search (Angular, `@coveo/atomic-angular`)                  |
+| `atomic-commerce-angular`       | Atomic       | Commerce (Angular, `@coveo/atomic-angular`)                |
+| `headless-search`               | Headless     | Search (Vite, `@coveo/headless`)                           |
+| `headless-commerce`             | Headless     | Commerce (Vite, `@coveo/headless/commerce`)                |
+| `headless-search-react`         | Headless     | Search (React, `@coveo/headless`)                          |
+| `headless-commerce-react`       | Headless     | Commerce (React, `@coveo/headless/commerce`)               |
+| `headless-ssr-commerce-nextjs`  | Headless SSR | Commerce SSR (Next.js App Router, `@coveo/headless-react`) |
+| `headless-ssr-commerce-express` | Headless SSR | Commerce SSR (Express, `@coveo/headless/ssr`)              |
 
 ## How it works
 
