@@ -17,6 +17,7 @@
     "src/autoloader/**",
     "src/components/**/index.ts",
     "src/components/**/lazy-index.ts",
+    "src/entry-points/**",
     "src/utils/custom-element-tags.ts"
   ]
 }

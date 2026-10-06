@@ -34,6 +34,7 @@ src/generated
 
 src/components/*/lazy-index.ts
 src/components/*/index.ts
+src/entry-points/
 src/utils/custom-element-tags.ts
 
 /test-results/

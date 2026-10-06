@@ -1,11 +1,16 @@
-import {existsSync, readdirSync, readFileSync, writeFileSync} from 'node:fs';
+import {existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync} from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {dedent} from 'ts-dedent';
 import colors from '../../../utils/ci/colors.mjs';
 
 /**
- * Generates index.ts and lazy-index.ts exports for Lit components.
+ * Generates index.ts and lazy-index.ts exports for Lit components, as well as one entry point per
+ * component in src/entry-points/ (published as `@coveo/atomic/components/<component>`).
+ *
+ * The entry points are pure re-exports and are not covered by the package's `sideEffects` globs, so
+ * a bundler can drop the ones whose exports go unused. Importing one without using any of its
+ * exports therefore registers nothing.
  *
  * IMPORTANT: This script only scans FIRST-LEVEL directories under each use-case folder.
  *
@@ -31,6 +36,7 @@ const baseComponentsDir = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   '../src/components'
 );
+const entryPointsDir = path.resolve(baseComponentsDir, '../entry-points');
 
 function isLitComponent(filePath) {
   if (!existsSync(filePath)) {
@@ -89,9 +95,24 @@ async function generateLitExportsForDir(dir) {
 
   writeFileSync(outputIndexFile, indexFileContent);
   writeFileSync(outputLazyIndexFile, lazyIndexFileContent);
+
+  return litComponents;
 }
+
+function generateEntryPoint(dir, component) {
+  writeFileSync(
+    path.join(entryPointsDir, `${component}.ts`),
+    `// Auto-generated file\nexport * from '../components/${dir}/${component}/${component}.js';\n`
+  );
+}
+
+rmSync(entryPointsDir, {recursive: true, force: true});
+mkdirSync(entryPointsDir, {recursive: true});
 
 for (const dir of directories) {
   console.log(colors.blue('Directory:'), colors.green(dir));
-  await generateLitExportsForDir(dir);
+  const litComponents = await generateLitExportsForDir(dir);
+  for (const component of litComponents) {
+    generateEntryPoint(dir, component);
+  }
 }

@@ -52,6 +52,10 @@
       "types": "./dist/types/components/index.d.ts",
       "import": "./dist/esm/components/index.js"
     },
+    "./components/*": {
+      "types": "./dist/types/entry-points/*.d.ts",
+      "import": "./dist/esm/entry-points/*.js"
+    },
     "./custom-elements-manifest": "./custom-elements.json"
   },
   "scripts": {
