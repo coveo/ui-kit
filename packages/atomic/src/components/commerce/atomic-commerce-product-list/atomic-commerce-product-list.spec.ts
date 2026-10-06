@@ -1258,10 +1258,43 @@ describe('atomic-commerce-product-list', () => {
           ]);
         });
 
-        it('should render 1 outline part per product and spotlight content', async () => {
+        it('should render 1 outline part per item', async () => {
           const element = await setupElement({display, enableSpotlightContent: true});
 
           expect(getParts(element).gridOrList.outline).toHaveLength(3);
+        });
+
+        it('should render 1 spotlight-content part per spotlight content', async () => {
+          const element = await setupElement({display, enableSpotlightContent: true});
+
+          const spotlightParts = element.shadowRoot?.querySelectorAll('[part="spotlight-content"]');
+
+          expect(spotlightParts).toHaveLength(1);
+          expect(spotlightParts?.item(0).tagName.toLowerCase()).toBe(
+            'atomic-commerce-spotlight-content'
+          );
+        });
+
+        it('should not treat spotlight content as a product', async () => {
+          const element = await setupElement({display, enableSpotlightContent: true});
+          const getTemplateContentSpy = vi.spyOn(
+            // @ts-expect-error - spying on private property
+            element.productTemplateProvider,
+            'getTemplateContent'
+          );
+          element.requestUpdate();
+          await element.updateComplete;
+
+          const productElements = element.shadowRoot?.querySelectorAll('atomic-product');
+
+          expect(Array.from(productElements!).map((el) => el.product.permanentid)).toEqual([
+            'first-product',
+            'second-product',
+          ]);
+          expect(interactiveProduct).not.toHaveBeenCalledWith({
+            options: {product: spotlightContent},
+          });
+          expect(getTemplateContentSpy).not.toHaveBeenCalledWith(spotlightContent);
         });
 
         it('should pass the spotlight content and its interactive sub-controller to atomic-commerce-spotlight-content', async () => {

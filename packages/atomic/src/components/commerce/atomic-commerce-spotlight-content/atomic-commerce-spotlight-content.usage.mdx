@@ -16,15 +16,21 @@ Each Spotlight Content item renders as a link to its `clickUri`, with:
 - The `desktopImage`, replaced by the `mobileImage` (when provided) on viewports narrower than the interface mobile breakpoint.
 - The `name` and `description`, when provided, using the `nameFontColor` and `descriptionFontColor` values configured for the Spotlight Content.
 
-Selecting a Spotlight Content item logs the corresponding click analytics event.
+Selecting a Spotlight Content item logs a Spotlight Content click analytics event, not a product click.
+
+Spotlight Content isn't a product: `atomic-product-template` templates and product components (such as `atomic-product-link` or `atomic-product-price`) don't apply to it.
 
 Spotlight Content is displayed in the `grid` and `list` displays of `atomic-commerce-product-list`. It isn't displayed in the `table` display.
 
 ### Styling
 
-The product list exposes the parts of each Spotlight Content item with a `spotlight-content-` prefix:
+The product list exposes each Spotlight Content element as the `spotlight-content` part, and its inner parts with a `spotlight-content-` prefix. The `outline` and `result-list-grid-clickable-container` parts apply to every item in the list, products and Spotlight Content alike.
 
 ```css
+atomic-commerce-product-list::part(spotlight-content) {
+  background-color: var(--atomic-neutral-light);
+}
+
 atomic-commerce-product-list::part(spotlight-content-link) {
   border: 1px solid var(--atomic-neutral);
 }
