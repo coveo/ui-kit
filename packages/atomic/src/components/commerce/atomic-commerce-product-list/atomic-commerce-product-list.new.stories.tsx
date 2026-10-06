@@ -4,7 +4,10 @@ import {
   executeFirstRequestHook,
   wrapInCommerceInterface,
 } from '@/storybook-utils/commerce/commerce-interface-wrapper';
-import {spotlightContentTransformer} from '@/storybook-utils/commerce/spotlight-content';
+import {
+  enableSpotlightContent,
+  spotlightContentTransformer,
+} from '@/storybook-utils/commerce/spotlight-content';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-product-list/atomic-commerce-product-list.js';
 import '@/src/components/commerce/atomic-product-children/atomic-product-children.js';
@@ -62,10 +65,7 @@ const {play: playNoProducts} = wrapInCommerceInterface({
 });
 
 const playWithSpotlightContent = async (context: Parameters<typeof play>[0]) => {
-  await customElements.whenDefined('atomic-commerce-interface');
-  context.canvasElement
-    .querySelector('atomic-commerce-interface')!
-    .setAttribute('enable-spotlight-content', '');
+  await enableSpotlightContent(context);
   await play(context);
 };
 
@@ -147,6 +147,21 @@ export const GridDisplayWithTemplate: Story = {
 
 export const GridDisplayWithSpotlightContent: Story = {
   name: 'Using grid display with spotlight content',
+  play: playWithSpotlightContent,
+};
+
+export const GridDisplayWithSpotlightContentTemplate: Story = {
+  name: 'Using grid display with a spotlight content template',
+  args: {
+    'default-slot': `<atomic-spotlight-content-template>
+  <template>
+    <atomic-spotlight-content-image></atomic-spotlight-content-image>
+    <atomic-spotlight-content-link>
+      <atomic-spotlight-content-text field="name"></atomic-spotlight-content-text>
+    </atomic-spotlight-content-link>
+  </template>
+</atomic-spotlight-content-template>`,
+  },
   play: playWithSpotlightContent,
 };
 

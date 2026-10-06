@@ -1,0 +1,12 @@
+Use this component inside an `atomic-spotlight-content-template` to render a string field of the Spotlight Content, typically its `name` or `description`.
+
+When the Spotlight Content defines a font color for the field, such as `nameFontColor` for `name` or `descriptionFontColor` for `description`, the text uses that color. When the field has no value, the component is hidden, unless you set a `default` locale key.
+
+```html
+<atomic-spotlight-content-template>
+  <template>
+    <atomic-spotlight-content-text field="name"></atomic-spotlight-content-text>
+    <atomic-spotlight-content-text field="description"></atomic-spotlight-content-text>
+  </template>
+</atomic-spotlight-content-template>
+```

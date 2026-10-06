@@ -51,3 +51,17 @@ export const spotlightContentTransformer =
     });
     return {...response, results};
   };
+
+/**
+ * Story `play` helper that sets `enable-spotlight-content` on the `atomic-commerce-interface` before it initializes.
+ */
+export const enableSpotlightContent = async ({
+  canvasElement,
+}: {
+  canvasElement: HTMLElement;
+}): Promise<void> => {
+  await customElements.whenDefined('atomic-commerce-interface');
+  canvasElement
+    .querySelector('atomic-commerce-interface')!
+    .setAttribute('enable-spotlight-content', '');
+};

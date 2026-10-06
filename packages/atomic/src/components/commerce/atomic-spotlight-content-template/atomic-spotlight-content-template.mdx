@@ -1,0 +1,15 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import meta, { Default, WithConditions } from './atomic-spotlight-content-template.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+import UsageContent from './atomic-spotlight-content-template.usage.mdx';
+
+<Meta of={meta} />
+
+<AtomicDocTemplate
+  stories={{ Default, WithConditions }}
+  githubPath="commerce/atomic-spotlight-content-template/atomic-spotlight-content-template.ts"
+  tagName="atomic-spotlight-content-template"
+  className="AtomicSpotlightContentTemplate"
+>
+<UsageContent />
+</AtomicDocTemplate>

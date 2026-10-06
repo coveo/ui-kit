@@ -11,9 +11,14 @@ const interactiveItemContextEventName = 'atomic/resolveInteractiveResult';
 export class InteractiveItemContextController<T> implements ReactiveController {
   private host: ReactiveControllerHost & LitElementWithError;
   private _interactiveItem: T | null = null;
+  private eventName: string;
 
-  constructor(host: ReactiveControllerHost & LitElementWithError) {
+  constructor(
+    host: ReactiveControllerHost & LitElementWithError,
+    options: {eventName?: string} = {}
+  ) {
     this.host = host;
+    this.eventName = options.eventName ?? interactiveItemContextEventName;
     host.addController(this);
   }
 
@@ -26,7 +31,7 @@ export class InteractiveItemContextController<T> implements ReactiveController {
   }
 
   private _resolveInteractiveItemContext(): void {
-    const event = buildCustomEvent(interactiveItemContextEventName, (item: T) => {
+    const event = buildCustomEvent(this.eventName, (item: T) => {
       this._interactiveItem = item;
       this.host.requestUpdate();
     });
