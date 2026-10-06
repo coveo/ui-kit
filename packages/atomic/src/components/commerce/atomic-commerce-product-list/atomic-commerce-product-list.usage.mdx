@@ -55,6 +55,19 @@ When [displaying products as a table](https://docs.coveo.com/en/atomic/latest/us
 </atomic-commerce-product-list>
 ```
 
+### Displaying Spotlight Content
+
+When the `enable-spotlight-content` attribute is set on the `atomic-commerce-interface` component, the product list also displays the Spotlight Content returned by the Commerce API, at the position the API returned it.
+
+```html
+<atomic-commerce-interface enable-spotlight-content>
+  ...
+  <atomic-commerce-product-list></atomic-commerce-product-list>
+</atomic-commerce-interface>
+```
+
+Spotlight Content is displayed in the `grid` and `list` displays only. See [`atomic-commerce-spotlight-content`](/docs/atomic-commerce-spotlight-content--docs) for details and styling.
+
 ### Displaying a specific product listing
 If you want `atomic-commerce-product-list` to display a specific product listing, you will need to ensure that the `atomic-commerce-interface` at
 level component of the hierarchy for this interface has its type set to `product-listing`.
