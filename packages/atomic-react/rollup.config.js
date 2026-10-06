@@ -103,7 +103,11 @@ const commonExternal = [
   /@coveo\/headless\/.*/,
 ];
 
-const esmExternal = [...commonExternal, '@coveo/atomic/components'];
+const esmExternal = [
+  ...commonExternal,
+  '@coveo/atomic/components',
+  /^@coveo\/atomic\/components\/.*/,
+];
 
 /** @type {import('rollup').ExternalOption} */
 const cdnExternal = [

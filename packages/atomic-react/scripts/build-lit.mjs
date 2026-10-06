@@ -1,4 +1,5 @@
-import {writeFileSync} from 'node:fs';
+import {existsSync, writeFileSync} from 'node:fs';
+import {fileURLToPath} from 'node:url';
 import cem from '@coveo/atomic/custom-elements-manifest' with {type: 'json'};
 
 const isLitDeclaration = (declaration) => declaration?.superclass?.name === 'LitElement';
@@ -39,7 +40,20 @@ const entries = [
   },
 ];
 
-const declarationToLitImport = (declaration) => `${declaration.name} as Lit${declaration.name}`;
+// Each element is imported from its own `@coveo/atomic/components/<tag-name>` entry point rather
+// than from the barrel, so the wrapper only pulls in the elements a consumer uses, whatever the
+// bundler does with the barrel's side effects.
+const declarationToEntryPoint = (declaration) => `@coveo/atomic/components/${declaration.tagName}`;
+
+const declarationToLitImport = (declaration) => {
+  const entryPoint = declarationToEntryPoint(declaration);
+  if (!existsSync(fileURLToPath(import.meta.resolve(entryPoint)))) {
+    throw new Error(
+      `${declaration.tagName} has no ${entryPoint} entry point. Build @coveo/atomic first, or check that the element's directory sits directly under its use-case folder.`
+    );
+  }
+  return `import {${declaration.name} as Lit${declaration.name}} from '${entryPoint}';`;
+};
 
 const declarationToComponent = (declaration) =>
   `
@@ -88,17 +102,12 @@ for (const entry of entries) {
     continue;
   }
 
-  // Sort imports deterministically to ensure consistent output across environments
-  const sortedImports = entry.computedComponentImports.toSorted((a, b) =>
-    a.localeCompare(b, 'en-US', {sensitivity: 'base'})
-  );
-
   writeFileSync(
     entry.path,
     [
       `import {createComponent} from '@lit/react';`,
       `import React from 'react';`,
-      `import {${sortedImports.join(',')}} from '@coveo/atomic/components';`,
+      ...entry.computedComponentImports,
       entry.content,
     ].join('\n')
   );
