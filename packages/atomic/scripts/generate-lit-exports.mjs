@@ -37,7 +37,7 @@ function isLitComponent(filePath) {
     return false;
   }
   const content = readFileSync(filePath, 'utf-8');
-  return content.includes('LitElement');
+  return content.includes('@customElement(');
 }
 
 function toPascalCase(name) {
