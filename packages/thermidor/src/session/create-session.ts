@@ -396,12 +396,7 @@ export function createSession<TContracts extends ContractsSchema>(
     });
   }
 
-  /**
-   * Builds the request and streams its response into `turnId`. The request is
-   * built inside the `try` because building it calls the consumer's context
-   * providers: a provider that throws fails the turn rather than leaving it
-   * `streaming` with no stream behind it.
-   */
+  /** Takes a builder so a throwing context provider fails the turn inside the `try`. */
   async function executeStream(
     turnId: string,
     buildRequest: () => CommerceRequestModel
