@@ -211,15 +211,16 @@ Template event bindings already schedule change detection. See [Angular without 
 
 Importing `@coveo/atomic-angular` doesn't register every Atomic element: each wrapper component registers its own element, along with the elements it renders. An Atomic tag that doesn't appear in an Angular template, such as one inserted through `innerHTML` or created with `document.createElement`, is therefore not upgraded unless something else registers it.
 
-To use such a tag, import its class from its `@coveo/atomic` entry point and use the class, so your bundler keeps it:
+To use such a tag, import its class from its `@coveo/atomic` entry point and register it, for example in the component that inserts the markup:
 
 ```typescript
 import {AtomicResultBadge} from '@coveo/atomic/components/atomic-result-badge';
 
-export const lateElements = [AtomicResultBadge];
+customElements.get('atomic-result-badge') ??
+  customElements.define('atomic-result-badge', AtomicResultBadge);
 ```
 
-A bare `import '@coveo/atomic/components/atomic-result-badge';` registers nothing once bundled, because bundlers remove imports whose exports are unused.
+The call is what keeps the class in your bundle. A bare `import '@coveo/atomic/components/atomic-result-badge';`, or an exported reference that nothing uses, registers nothing once bundled, because bundlers remove imports whose exports are unused.
 
 ## Documentation
 
