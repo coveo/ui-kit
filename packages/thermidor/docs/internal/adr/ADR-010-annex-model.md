@@ -23,8 +23,9 @@ function createSession(config: SessionConfig): Session;
 interface Session {
   readonly turns: readonly Turn[];
   subscribe(listener: () => void): () => void;
-  submit(input: {prompt?: string}): Promise<void>;
-  dispatchAction(action: RemoteAction): Promise<void>;
+  // A prompt is submitted as `{name: 'submitPrompt', payload: {prompt}}`
+  // (KIT-6204); it replaced the former `submit({prompt})` method.
+  dispatchAction(action: RemoteAction | SubmitPromptAction): Promise<void>;
   cancel(): void;
   retry(turnId: string): void;
   serialize(): SerializedSession; // see ADR-011

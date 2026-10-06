@@ -33,16 +33,15 @@ await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me r
 
 `createSession(config)` returns a `Session` exposing exactly:
 
-| Member                    | Purpose                                                                            |
-| ------------------------- | ---------------------------------------------------------------------------------- |
-| `contracts`               | The injected contracts schema this session validates against (readonly).           |
-| `turns`                   | Readonly observable list of `Turn`s folded from the stream (empty initially).      |
-| `subscribe(listener)`     | Registers a listener called once per turn-list change; returns an unsubscribe.     |
-| `submit({prompt})`        | Opens a new streaming turn, POSTs the request, folds the response.                 |
-| `dispatchAction(message)` | The single action entry point, wired directly as the renderer's `onAction`.        |
-| `cancel()`                | Stops consuming the active stream, retains the partial response, marks it `error`. |
-| `retry(turnId)`           | Re-submits an errored turn's input.                                                |
-| `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                    |
+| Member                    | Purpose                                                                                                                 |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `contracts`               | The injected contracts schema this session validates against (readonly).                                                |
+| `turns`                   | Readonly observable list of `Turn`s folded from the stream (empty initially).                                           |
+| `subscribe(listener)`     | Registers a listener called once per turn-list change; returns an unsubscribe.                                          |
+| `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's `onAction`. |
+| `cancel()`                | Stops consuming the active stream, retains the partial response, marks it `error`.                                      |
+| `retry(turnId)`           | Re-submits an errored turn's input.                                                                                     |
+| `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                                                         |
 
 The concrete `contracts` type pinned at the `createSession` call site threads unbroken through `Session`, so component types, action names, and payloads stay fully typed at the call site (no `string`, no `never`, no `unknown`).
 
