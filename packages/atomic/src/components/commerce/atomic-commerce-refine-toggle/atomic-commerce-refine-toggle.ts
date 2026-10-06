@@ -1,10 +1,9 @@
 import {
-  buildProductListing,
-  buildSearch,
   type ProductListingSummaryState,
   type SearchSummaryState,
   type Summary,
 } from '@coveo/headless/commerce';
+import {buildSearchOrListing} from '@/src/components/commerce/atomic-commerce-interface/search-or-listing';
 import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {bindStateToController} from '@/src/decorators/bind-state';
@@ -50,10 +49,10 @@ export class AtomicCommerceRefineToggle
   private buttonRef?: HTMLButtonElement;
 
   public initialize() {
-    const searchOrListing =
-      this.bindings.interfaceElement.type === 'search'
-        ? buildSearch(this.bindings.engine)
-        : buildProductListing(this.bindings.engine);
+    const searchOrListing = buildSearchOrListing(
+      this.bindings.engine,
+      this.bindings.interfaceElement
+    );
 
     this.summary = searchOrListing.summary();
   }
