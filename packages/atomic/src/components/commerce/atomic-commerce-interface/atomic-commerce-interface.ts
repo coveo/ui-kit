@@ -49,6 +49,7 @@ import {
   type StandaloneSearchBoxData,
   StorageItems,
 } from '@/src/utils/local-storage-utils';
+import {withCountry} from '@/src/utils/locale-utils';
 import {getAnalyticsConfig} from './analytics-config';
 import {type CommerceStore, createCommerceStore} from './store';
 
@@ -154,6 +155,17 @@ export class AtomicCommerceInterface
    * update the language as needed using the `updateLocale` method.
    */
   @property({type: String, reflect: true}) public language?: string;
+
+  // TODO - (v4) KIT-6282: Make this the default behavior and remove the property.
+  /**
+   * Whether to localize the interface with the country of the commerce context as well as its
+   * language, for example `fr-CA` rather than `fr`.
+   *
+   * Number, currency, and date formatting then follow the country: with the `en` language and the
+   * `CA` country, a CAD price renders as `$1,000.10` rather than `CA$1,000.10`.
+   */
+  @property({type: Boolean, attribute: 'localize-with-country', reflect: true})
+  public localizeWithCountry = false;
 
   /**
    * The commerce interface headless engine.
@@ -328,7 +340,14 @@ export class AtomicCommerceInterface
       return;
     }
 
-    language && this.interfaceController.onLanguageChange(language);
+    if (language || (country && this.localizeWithCountry)) {
+      this.interfaceController.onLanguageChange(
+        this.getLocale(
+          language || this.context.state.language,
+          country || this.context.state.country
+        )
+      );
+    }
 
     if (this.isNewLocale(language, country, currency)) {
       const {setContext} = loadContextActions(this.engine);
@@ -364,7 +383,20 @@ export class AtomicCommerceInterface
 
     this.context.setLanguage(this.language);
 
-    return this.interfaceController.onLanguageChange();
+    return this.interfaceController.onLanguageChange(
+      this.getLocale(this.language, this.context.state.country)
+    );
+  }
+
+  @watch('localizeWithCountry')
+  public toggleLocalizeWithCountry() {
+    if (!this.context) {
+      return;
+    }
+
+    this.interfaceController.onLanguageChange(
+      this.getLocale(this.context.state.language, this.context.state.country)
+    );
   }
 
   @watch('iconAssetsPath')
@@ -421,7 +453,13 @@ export class AtomicCommerceInterface
       return;
     }
 
-    this.interfaceController.onLanguageChange(this.context.state.language);
+    this.interfaceController.onLanguageChange(
+      this.getLocale(this.context.state.language, this.context.state.country)
+    );
+  }
+
+  private getLocale(language: string, country?: string) {
+    return this.localizeWithCountry ? withCountry(language, country) : language;
   }
 
   private initRequestStatus() {

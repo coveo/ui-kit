@@ -18,6 +18,7 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin.js';
 import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
 import {waitForAtomicChildrenToBeDefined} from '@/src/utils/initialization-common-utils';
+import {withCountry} from '@/src/utils/locale-utils';
 import {bindingsContext} from '../../common/context/bindings-context.js';
 import {augmentAnalyticsConfigWithAtomicVersion} from '../../common/interface/analytics-config.js';
 import type {CommonBindings} from '../../common/interface/bindings.js';
@@ -121,6 +122,17 @@ export class AtomicCommerceRecommendationInterface
    */
   @property({type: String, reflect: true}) language?: string;
 
+  // TODO - (v4) KIT-6282: Make this the default behavior and remove the property.
+  /**
+   * Whether to localize the interface with the country of the commerce context as well as its
+   * language, for example `fr-CA` rather than `fr`.
+   *
+   * Number, currency, and date formatting then follow the country: with the `en` language and the
+   * `CA` country, a CAD price renders as `$1,000.10` rather than `CA$1,000.10`.
+   */
+  @property({type: Boolean, attribute: 'localize-with-country', reflect: true})
+  localizeWithCountry = false;
+
   // TODO - KIT-4994: Add disableAnalytics property that defaults to false.
 
   // TODO - KIT-4994: Deprecate in favor of disableAnalytics property.
@@ -191,7 +203,14 @@ export class AtomicCommerceRecommendationInterface
       return;
     }
 
-    language && this.interfaceController.onLanguageChange(language);
+    if (language || (country && this.localizeWithCountry)) {
+      this.interfaceController.onLanguageChange(
+        this.getLocale(
+          language || this.context.state.language,
+          country || this.context.state.country
+        )
+      );
+    }
 
     if (this.isNewLocale(language, country, currency)) {
       const {setContext} = loadContextActions(this.engine);
@@ -216,6 +235,17 @@ export class AtomicCommerceRecommendationInterface
     this.store.state.iconAssetsPath = this.iconAssetsPath;
   }
 
+  @watch('localizeWithCountry')
+  public toggleLocalizeWithCountry() {
+    if (!this.context) {
+      return;
+    }
+
+    this.interfaceController.onLanguageChange(
+      this.getLocale(this.context.state.language, this.context.state.country)
+    );
+  }
+
   // TODO - (v4) KIT-4365: Remove.
   @watch('language')
   public async updateLanguage() {
@@ -229,7 +259,9 @@ export class AtomicCommerceRecommendationInterface
 
     this.context.setLanguage(this.language);
 
-    return this.interfaceController.onLanguageChange();
+    return this.interfaceController.onLanguageChange(
+      this.getLocale(this.language, this.context.state.country)
+    );
   }
 
   public disconnectedCallback() {
@@ -291,7 +323,13 @@ export class AtomicCommerceRecommendationInterface
       return;
     }
 
-    this.interfaceController.onLanguageChange(this.context.state.language);
+    this.interfaceController.onLanguageChange(
+      this.getLocale(this.context.state.language, this.context.state.country)
+    );
+  }
+
+  private getLocale(language: string, country?: string) {
+    return this.localizeWithCountry ? withCountry(language, country) : language;
   }
 
   private isNewLocale(language?: string, country?: string, currency?: string) {
