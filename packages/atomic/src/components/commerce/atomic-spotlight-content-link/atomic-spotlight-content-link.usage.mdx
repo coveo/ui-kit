@@ -1,0 +1,21 @@
+Use this component inside an `atomic-spotlight-content-template` to render a link to the `clickUri` of the Spotlight Content. Selecting the link logs a Spotlight Content click analytics event.
+
+By default, the link displays the name of the Spotlight Content. You can pass your own content in the default slot:
+
+```html
+<atomic-spotlight-content-template>
+  <template>
+    <atomic-spotlight-content-link>
+      <atomic-spotlight-content-image></atomic-spotlight-content-image>
+    </atomic-spotlight-content-link>
+  </template>
+</atomic-spotlight-content-template>
+```
+
+To pass attributes to the generated `a` element, use the `attributes` slot:
+
+```html
+<atomic-spotlight-content-link>
+  <a slot="attributes" target="_blank" rel="noopener"></a>
+</atomic-spotlight-content-link>
+```

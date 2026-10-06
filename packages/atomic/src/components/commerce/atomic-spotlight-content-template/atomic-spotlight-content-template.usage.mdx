@@ -1,0 +1,89 @@
+This component defines how the `atomic-commerce-product-list` component displays Spotlight Content. It works like `atomic-product-template`, but for Spotlight Content.
+
+Spotlight Content is only requested and displayed when the `enable-spotlight-content` attribute is set on the `atomic-commerce-interface` component. It's displayed in the `grid` and `list` displays, not in the `table` display.
+
+A `template` element must be the child of an `atomic-spotlight-content-template`, and an `atomic-commerce-product-list` must be the parent of each `atomic-spotlight-content-template`.
+* **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the Spotlight Content is being rendered.
+
+```html
+<atomic-commerce-interface enable-spotlight-content>
+  ...
+  <atomic-commerce-product-list>
+    <atomic-product-template>
+      <template>
+        <!-- How products are displayed -->
+      </template>
+    </atomic-product-template>
+
+    <atomic-spotlight-content-template>
+      <template>
+        <atomic-spotlight-content-image></atomic-spotlight-content-image>
+        <atomic-spotlight-content-link class="font-bold"></atomic-spotlight-content-link>
+        <atomic-spotlight-content-text field="description"></atomic-spotlight-content-text>
+      </template>
+    </atomic-spotlight-content-template>
+  </atomic-commerce-product-list>
+</atomic-commerce-interface>
+```
+
+When no `atomic-spotlight-content-template` is defined, the product list uses a default template that displays the image, the name as a link, and the description.
+
+## Spotlight Content isn't a product
+
+Spotlight Content has its own fields (`id`, `clickUri`, `desktopImage`, `mobileImage`, `name`, `nameFontColor`, `description`, `descriptionFontColor` and `altText`), and its own template components:
+
+* [`atomic-spotlight-content-link`](/docs/atomic-spotlight-content-link--docs)
+* [`atomic-spotlight-content-image`](/docs/atomic-spotlight-content-image--docs)
+* [`atomic-spotlight-content-text`](/docs/atomic-spotlight-content-text--docs)
+
+Product template components, such as `atomic-product-link` or `atomic-product-price`, don't work inside an `atomic-spotlight-content-template`.
+
+## Template Conditions
+
+As with product templates, you can use `must-match-*` and `must-not-match-*` attributes to apply different templates to different Spotlight Content, based on their fields. The first template whose conditions are met is applied.
+
+```html
+<!-- Template for a specific Spotlight Content -->
+<atomic-spotlight-content-template must-match-id="summer-sale">
+  <template>
+    <atomic-spotlight-content-link>
+      <atomic-spotlight-content-image></atomic-spotlight-content-image>
+    </atomic-spotlight-content-link>
+  </template>
+</atomic-spotlight-content-template>
+
+<!-- Template for every other Spotlight Content -->
+<atomic-spotlight-content-template>
+  <template>
+    <atomic-spotlight-content-image></atomic-spotlight-content-image>
+    <atomic-spotlight-content-link></atomic-spotlight-content-link>
+  </template>
+</atomic-spotlight-content-template>
+```
+
+You can also set conditions programmatically with the `conditions` property:
+
+```js
+document.querySelector('#sale-template').conditions = [
+  (spotlightContent) => /sale/i.test(spotlightContent.name),
+];
+```
+
+## Grid link
+
+In the `grid` display, clicking anywhere on a Spotlight Content item opens its link. To customize that link, add a `template` with `slot="link"` that contains a single `atomic-spotlight-content-link`:
+
+```html
+<atomic-spotlight-content-template>
+  <template>...</template>
+  <template slot="link">
+    <atomic-spotlight-content-link>
+      <a slot="attributes" target="_blank"></a>
+    </atomic-spotlight-content-link>
+  </template>
+</atomic-spotlight-content-template>
+```
+
+## Custom rendering
+
+When using a framework that doesn't use plain HTML templates, use the `setSpotlightContentRenderFunction` method of `atomic-commerce-product-list`, the Spotlight Content equivalent of `setRenderFunction`.
