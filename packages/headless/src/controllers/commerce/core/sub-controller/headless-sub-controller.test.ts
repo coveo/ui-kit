@@ -36,7 +36,7 @@ describe('sub-controllers', () => {
   const mockErrorSelector = vi.fn();
   const mockPageSelector = vi.fn();
   const mockPerPageSelector = vi.fn();
-  const mockTotalEntriesSelector = vi.fn();
+  const mockTotalProductsSelector = vi.fn();
   const mockAugmentSummary = vi.fn();
   const mockFetchProductsActionCreator = vi.fn();
   const mockFetchMoreProductsActionCreator = vi.fn();
@@ -70,7 +70,7 @@ describe('sub-controllers', () => {
         errorSelector: mockErrorSelector,
         pageSelector: mockPageSelector,
         perPageSelector: mockPerPageSelector,
-        totalEntriesSelector: mockTotalEntriesSelector,
+        totalProductsSelector: mockTotalProductsSelector,
         enrichSummary: mockAugmentSummary,
         fetchProductsActionCreator: mockFetchProductsActionCreator,
         fetchMoreProductsActionCreator: mockFetchMoreProductsActionCreator,
@@ -150,7 +150,7 @@ describe('sub-controllers', () => {
         errorSelector: mockErrorSelector,
         pageSelector: mockPageSelector,
         perPageSelector: mockPerPageSelector,
-        totalEntriesSelector: mockTotalEntriesSelector,
+        totalProductsSelector: mockTotalProductsSelector,
         enrichSummary: mockAugmentSummary,
         fetchProductsActionCreator: mockFetchProductsActionCreator,
         fetchMoreProductsActionCreator: mockFetchMoreProductsActionCreator,
@@ -220,7 +220,7 @@ describe('sub-controllers', () => {
         errorSelector: mockErrorSelector,
         pageSelector: mockPageSelector,
         perPageSelector: mockPerPageSelector,
-        totalEntriesSelector: mockTotalEntriesSelector,
+        totalProductsSelector: mockTotalProductsSelector,
         enrichSummary: mockAugmentSummary,
         fetchProductsActionCreator: mockFetchProductsActionCreator,
         fetchMoreProductsActionCreator: mockFetchMoreProductsActionCreator,
@@ -318,7 +318,7 @@ describe('sub-controllers', () => {
         errorSelector: mockErrorSelector,
         pageSelector: mockPageSelector,
         perPageSelector: mockPerPageSelector,
-        totalEntriesSelector: mockTotalEntriesSelector,
+        totalProductsSelector: mockTotalProductsSelector,
         enrichSummary: mockAugmentSummary,
         fetchProductsActionCreator: mockFetchProductsActionCreator,
         fetchMoreProductsActionCreator: mockFetchMoreProductsActionCreator,

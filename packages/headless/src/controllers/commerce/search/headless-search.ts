@@ -8,7 +8,7 @@ import {contextReducer as commerceContext} from '../../../features/commerce/cont
 import {
   pagePrincipalSelector,
   perPagePrincipalSelector,
-  totalEntriesPrincipalSelector,
+  totalProductsPrincipalSelector,
 } from '../../../features/commerce/pagination/pagination-selectors.js';
 import {searchSerializer} from '../../../features/commerce/parameters/parameters-serializer.js';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice.js';
@@ -22,7 +22,7 @@ import {
   enrichedSummarySelector,
   errorSelector,
   isLoadingSelector,
-  numberOfProductsSelector,
+  numberOfProductsExcludingSpotlightsSelector,
   requestIdSelector,
   responseIdSelector,
 } from '../../../features/commerce/search/search-selectors.js';
@@ -140,8 +140,8 @@ export function buildSearch(
       errorSelector,
       pageSelector: pagePrincipalSelector,
       perPageSelector: perPagePrincipalSelector,
-      totalEntriesSelector: totalEntriesPrincipalSelector,
-      numberOfProductsSelector,
+      totalProductsSelector: totalProductsPrincipalSelector,
+      numberOfProductsSelector: numberOfProductsExcludingSpotlightsSelector,
       enrichSummary: enrichedSummarySelector,
     },
     {enableResults}
