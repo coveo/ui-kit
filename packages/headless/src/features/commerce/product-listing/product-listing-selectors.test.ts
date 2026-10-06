@@ -6,6 +6,7 @@ import {
   errorSelector,
   isLoadingSelector,
   moreProductsAvailableSelector,
+  numberOfProductsExcludingSpotlightsSelector,
   numberOfProductsSelector,
   requestIdSelector,
   responseIdSelector,
@@ -108,6 +109,41 @@ describe('commerce product listing selectors', () => {
   it('#numberOfProductsSelector should return 0 when both products and results are empty', () => {
     const state = buildMockCommerceState();
     expect(numberOfProductsSelector(state)).toEqual(0);
+  });
+
+  it('#numberOfProductsExcludingSpotlightsSelector should not count spotlight content in results', () => {
+    const state = buildMockCommerceState({
+      productListing: {
+        responseId: 'some-response-id',
+        products: [],
+        results: [buildMockProduct(), buildMockSpotlightContent(), buildMockProduct()],
+        isLoading: false,
+        error: null,
+        facets: [],
+        requestId: 'some-request-id',
+      },
+    });
+    expect(numberOfProductsExcludingSpotlightsSelector(state)).toEqual(2);
+  });
+
+  it('#numberOfProductsExcludingSpotlightsSelector should return the number of products when results is empty', () => {
+    const state = buildMockCommerceState({
+      productListing: {
+        responseId: 'some-response-id',
+        products: [buildMockProduct(), buildMockProduct()],
+        results: [],
+        isLoading: false,
+        error: null,
+        facets: [],
+        requestId: 'some-request-id',
+      },
+    });
+    expect(numberOfProductsExcludingSpotlightsSelector(state)).toEqual(2);
+  });
+
+  it('#numberOfProductsExcludingSpotlightsSelector should return 0 when both products and results are empty', () => {
+    const state = buildMockCommerceState();
+    expect(numberOfProductsExcludingSpotlightsSelector(state)).toEqual(0);
   });
 
   it('#moreProductsAvailableSelector should return true when the number of products is less than the total number of entries', () => {
