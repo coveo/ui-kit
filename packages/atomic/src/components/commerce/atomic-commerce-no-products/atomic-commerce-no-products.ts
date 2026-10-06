@@ -1,10 +1,9 @@
 import {
-  buildProductListing,
-  buildSearch,
   type ProductListingSummaryState,
   type SearchSummaryState,
   type Summary,
 } from '@coveo/headless/commerce';
+import {buildSearchOrListing} from '@/src/components/commerce/atomic-commerce-interface/search-or-listing';
 import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {bindStateToController} from '@/src/decorators/bind-state.js';
@@ -54,10 +53,7 @@ export class AtomicCommerceNoProducts
   protected ariaMessage = new AriaLiveRegionController(this, 'no-products');
 
   public initialize() {
-    const controller =
-      this.bindings.interfaceElement.type === 'search'
-        ? buildSearch(this.bindings.engine)
-        : buildProductListing(this.bindings.engine);
+    const controller = buildSearchOrListing(this.bindings.engine, this.bindings.interfaceElement);
     this.summary = controller.summary();
   }
 

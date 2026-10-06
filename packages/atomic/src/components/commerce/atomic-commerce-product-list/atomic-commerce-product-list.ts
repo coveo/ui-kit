@@ -1,13 +1,14 @@
 import {NumberValue, Schema, StringValue} from '@coveo/bueno';
 import {
-  buildProductListing,
-  buildSearch,
+  type Product,
   type ProductListing,
   type ProductListingState,
   type ProductListingSummaryState,
+  ResultType,
   type Search,
   type SearchState,
   type SearchSummaryState,
+  type SpotlightContent,
   type Summary,
 } from '@coveo/headless/commerce';
 import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
@@ -17,6 +18,10 @@ import {map} from 'lit/directives/map.js';
 import {ref} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
 import type {CommerceBindings} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
+import {
+  buildSearchOrListing,
+  shouldEnableResults,
+} from '@/src/components/commerce/atomic-commerce-interface/search-or-listing';
 import type {SelectChildProductEventArgs} from '@/src/components/commerce/atomic-product-children/select-child-product-event';
 import {ProductTemplateProvider} from '@/src/components/commerce/product-list/product-template-provider';
 import {renderItemPlaceholders} from '@/src/components/common/atomic-result-placeholder/item-placeholders';
@@ -54,9 +59,14 @@ import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {randomID} from '@/src/utils/utils';
 import '@/src/components/commerce/atomic-product/atomic-product';
 import '@/src/components/commerce/atomic-product-template/atomic-product-template';
+import '@/src/components/commerce/atomic-commerce-spotlight-content/atomic-commerce-spotlight-content';
 
 /**
  * The `atomic-commerce-product-list` component is responsible for displaying products.
+ *
+ * When the `enable-spotlight-content` property of the `atomic-commerce-interface` is set, the component also displays
+ * the Spotlight Content returned by the Commerce API, at the position it was returned in, when the display prop is set
+ * to "grid" or "list". Spotlight Content is not displayed when the display prop is set to "table".
  *
  * @part outline - The outline of each product when the display prop is set to "grid" or "list".
  * @part result-list - The element containing all products when the display prop is set to "grid" or "list".
@@ -70,6 +80,11 @@ import '@/src/components/commerce/atomic-product-template/atomic-product-templat
  * @part result-table-row-even - The even tr elements nested under tbody when the display prop is set to "table".
  * @part result-table-row-odd - The odd tr elements nested under tbody when the display prop is set to "table".
  * @part result-table-cell - The `td` elements nested under each `tbody` > `tr` when the display prop is set to "table".
+ * @part spotlight-content-link - The anchor element wrapping each Spotlight Content.
+ * @part spotlight-content-image - The image of each Spotlight Content.
+ * @part spotlight-content-body - The element containing the name and description of each Spotlight Content.
+ * @part spotlight-content-name - The name of each Spotlight Content.
+ * @part spotlight-content-description - The description of each Spotlight Content.
  *
  * @slot default - The default slot where the product templates are defined.
  */
@@ -250,7 +265,7 @@ export class AtomicCommerceProductList
       this.isAppLoaded &&
       !this.isEveryProductReady &&
       this.summaryState?.firstRequestExecuted &&
-      this.searchOrListingState?.products?.length > 0
+      this.items.length > 0
     ) {
       await this.getUpdateComplete();
       this.isEveryProductReady = true;
@@ -327,11 +342,10 @@ export class AtomicCommerceProductList
   }
 
   private initSearchOrListing() {
-    if (this.bindings.interfaceElement.type === 'product-listing') {
-      this.searchOrListing = buildProductListing(this.bindings.engine);
-    } else {
-      this.searchOrListing = buildSearch(this.bindings.engine);
-    }
+    this.searchOrListing = buildSearchOrListing(
+      this.bindings.engine,
+      this.bindings.interfaceElement
+    );
   }
 
   private initSummary() {
@@ -362,7 +376,7 @@ export class AtomicCommerceProductList
   private initProductListCommon() {
     this.productListCommon = new ItemListCommon({
       engineSubscribe: this.bindings.engine.subscribe,
-      getCurrentNumberOfItems: () => this.searchOrListingState.products.length,
+      getCurrentNumberOfItems: () => this.items.length,
       getIsLoading: () => this.searchOrListingState.isLoading,
       host: this,
       loadingFlag: this.loadingFlag,
@@ -393,17 +407,59 @@ export class AtomicCommerceProductList
     );
   }
 
-  private getProductId(product: ProductListingState['products'][number]) {
+  private get items(): (Product | SpotlightContent)[] {
+    if (!this.searchOrListingState) {
+      return [];
+    }
+    if (shouldEnableResults(this.bindings.interfaceElement)) {
+      return this.searchOrListingState.results ?? [];
+    }
+    return this.searchOrListingState.products ?? [];
+  }
+
+  private get products(): Product[] {
+    return this.items.filter((item): item is Product => !isSpotlightContent(item));
+  }
+
+  private getProductId(product: Product | SpotlightContent) {
     return this.productListCommon.getResultId(
-      product.permanentid,
+      isSpotlightContent(product) ? product.id : product.permanentid,
       product.responseId ?? this.searchOrListingState.responseId,
       this.density,
       this.imageSize
     );
   }
 
+  private renderSpotlightContent(spotlightContent: SpotlightContent) {
+    return html`<atomic-commerce-spotlight-content
+      exportparts="link:spotlight-content-link,image:spotlight-content-image,body:spotlight-content-body,name:spotlight-content-name,description:spotlight-content-description"
+      .display=${this.display}
+      .interactiveSpotlightContent=${this.searchOrListing.interactiveSpotlightContent({
+        options: {spotlightContent},
+      })}
+      .logger=${this.bindings.engine.logger}
+      .mobileBreakpoint=${this.bindings.store.state.mobileBreakpoint}
+      .spotlightContent=${spotlightContent}
+    ></atomic-commerce-spotlight-content>`;
+  }
+
   private renderGrid() {
-    return html`${map(this.searchOrListingState.products, (product, index) => {
+    return html`${map(this.items, (product, index) => {
+      if (isSpotlightContent(product)) {
+        return renderGridLayout({
+          props: {
+            item: {
+              clickUri: product.clickUri,
+              title: product.name ?? '',
+            },
+            selectorForItem: 'atomic-commerce-spotlight-content',
+            setRef: (element) => {
+              element instanceof HTMLElement &&
+                this.productListCommon.setNewResultRef(element, index);
+            },
+          },
+        })(html`${keyed(this.getProductId(product), this.renderSpotlightContent(product))}`);
+      }
       return renderGridLayout({
         props: {
           item: {
@@ -439,7 +495,23 @@ export class AtomicCommerceProductList
   }
 
   private renderList() {
-    return html`${map(this.searchOrListingState.products, (product, index) => {
+    return html`${map(this.items, (product, index) => {
+      if (isSpotlightContent(product)) {
+        return html`${keyed(
+          this.getProductId(product),
+          html`<div
+            part="outline"
+            class="result-item"
+            ${ref(
+              (element) =>
+                element instanceof HTMLElement &&
+                this.productListCommon.setNewResultRef(element, index)
+            )}
+          >
+            ${this.renderSpotlightContent(product)}
+          </div>`
+        )}`;
+      }
       return html`${keyed(
         this.getProductId(product),
         html`<atomic-product
@@ -467,10 +539,11 @@ export class AtomicCommerceProductList
   }
 
   private renderTable() {
+    const products = this.products;
     return html`${when(
-      this.summaryState.hasProducts,
+      this.summaryState.hasProducts && products.length > 0,
       () => {
-        const firstItem = this.searchOrListingState.products[0];
+        const firstItem = products[0];
         const listClasses = this.computeListDisplayClasses();
         const templateContentForFirstItem =
           this.productTemplateProvider.getTemplateContent(firstItem);
@@ -485,7 +558,7 @@ export class AtomicCommerceProductList
             templateContentForFirstItem,
           },
         })(
-          html`${map(this.searchOrListingState.products, (product, index) => {
+          html`${map(products, (product, index) => {
             const key = this.getProductId(product);
             return renderTableRow({
               props: {
@@ -536,6 +609,10 @@ export class AtomicCommerceProductList
     }
     return this.nextNewResultTarget;
   }
+}
+
+function isSpotlightContent(item: Product | SpotlightContent): item is SpotlightContent {
+  return item.resultType === ResultType.SPOTLIGHT;
 }
 
 declare global {

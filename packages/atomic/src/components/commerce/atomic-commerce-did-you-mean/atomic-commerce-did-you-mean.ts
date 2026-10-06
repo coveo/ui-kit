@@ -9,6 +9,7 @@ import {
 import {html, LitElement, nothing} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
+import {shouldEnableResults} from '@/src/components/commerce/atomic-commerce-interface/search-or-listing';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -61,8 +62,9 @@ export class AtomicCommerceDidYouMean
       );
     }
 
-    this.didYouMean = buildSearch(this.bindings.engine).didYouMean();
-    this.queryTrigger = buildQueryTrigger(this.bindings.engine);
+    const enableResults = shouldEnableResults(this.bindings.interfaceElement);
+    this.didYouMean = buildSearch(this.bindings.engine, {enableResults}).didYouMean();
+    this.queryTrigger = buildQueryTrigger(this.bindings.engine, {enableResults});
   }
 
   private get content() {

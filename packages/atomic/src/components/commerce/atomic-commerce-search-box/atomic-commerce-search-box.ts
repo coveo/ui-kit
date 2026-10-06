@@ -12,6 +12,7 @@ import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {createRef, type RefOrCallback, ref} from 'lit/directives/ref.js';
+import {shouldEnableResults} from '@/src/components/commerce/atomic-commerce-interface/search-or-listing';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -384,6 +385,7 @@ export class AtomicCommerceSearchBox
         },
       },
       clearFilters: this.clearFilters,
+      enableResults: shouldEnableResults(this.bindings.interfaceElement),
     };
   }
 

@@ -7,16 +7,12 @@ import type {
   RegularFacet,
   SearchSummaryState,
 } from '@coveo/headless/commerce';
-import {
-  buildProductListing,
-  buildSearch,
-  type FacetGenerator,
-  type Summary,
-} from '@coveo/headless/commerce';
+import type {FacetGenerator, Summary} from '@coveo/headless/commerce';
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {map} from 'lit/directives/map.js';
 import {when} from 'lit/directives/when.js';
+import {buildSearchOrListing} from '@/src/components/commerce/atomic-commerce-interface/search-or-listing';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
@@ -73,20 +69,12 @@ export class AtomicCommerceFacets
 
   public initialize() {
     this.validateProps();
-    const controller = this.controllerBuilder(this.bindings.engine);
+    const controller = buildSearchOrListing(this.bindings.engine, this.bindings.interfaceElement);
     this.facetGenerator = controller.facetGenerator();
     this.summary = controller.summary();
     createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
       this.isAppLoaded = isAppLoaded;
     });
-  }
-
-  private isProductListing() {
-    return this.bindings.interfaceElement.type === 'product-listing';
-  }
-
-  private get controllerBuilder() {
-    return this.isProductListing() ? buildProductListing : buildSearch;
   }
 
   private validateProps() {

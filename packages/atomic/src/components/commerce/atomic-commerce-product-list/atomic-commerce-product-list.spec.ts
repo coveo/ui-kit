@@ -14,9 +14,11 @@ import type {
   ItemDisplayLayout,
 } from '@/src/components/common/layout/item-layout-utils';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
+import {buildFakeInteractiveSpotlightContent} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/interactive-spotlight-content';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
+import {buildFakeSpotlightContent} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/spotlight-content';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
 import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common';
 import {AtomicCommerceProductList} from './atomic-commerce-product-list';
@@ -1207,6 +1209,123 @@ describe('atomic-commerce-product-list', () => {
     };
   };
 
+  describe('when spotlight content is enabled on the interface', () => {
+    const interactiveSpotlightContent = vi.fn();
+    const spotlightContent = buildFakeSpotlightContent({id: 'spotlight', position: 2});
+    const results = [
+      buildFakeProduct({permanentid: 'first-product', position: 1}),
+      spotlightContent,
+      buildFakeProduct({permanentid: 'second-product', position: 3}),
+    ];
+
+    beforeEach(() => {
+      interactiveSpotlightContent.mockReturnValue(buildFakeInteractiveSpotlightContent());
+      vi.mocked(buildProductListing).mockImplementation(() =>
+        buildFakeProductListing({
+          implementation: {
+            interactiveProduct,
+            interactiveSpotlightContent,
+            promoteChildToParent,
+            summary,
+          },
+          state: {products: [], results},
+        })
+      );
+    });
+
+    it('should build the controller with results enabled', async () => {
+      await setupElement({enableSpotlightContent: true});
+
+      expect(buildProductListing).toHaveBeenCalledWith(expect.anything(), {
+        enableResults: true,
+      });
+    });
+
+    describe.each<{display: ItemDisplayLayout}>([{display: 'grid'}, {display: 'list'}])(
+      'when #display is $display',
+      ({display}) => {
+        it('should render products and spotlight content in the order they were returned', async () => {
+          const element = await setupElement({display, enableSpotlightContent: true});
+
+          const renderedItems = element.shadowRoot?.querySelectorAll(
+            'atomic-product, atomic-commerce-spotlight-content'
+          );
+
+          expect(Array.from(renderedItems!).map((item) => item.tagName.toLowerCase())).toEqual([
+            'atomic-product',
+            'atomic-commerce-spotlight-content',
+            'atomic-product',
+          ]);
+        });
+
+        it('should render 1 outline part per product and spotlight content', async () => {
+          const element = await setupElement({display, enableSpotlightContent: true});
+
+          expect(getParts(element).gridOrList.outline).toHaveLength(3);
+        });
+
+        it('should pass the spotlight content and its interactive sub-controller to atomic-commerce-spotlight-content', async () => {
+          const element = await setupElement({display, enableSpotlightContent: true});
+
+          const spotlightElement = element.shadowRoot?.querySelector(
+            'atomic-commerce-spotlight-content'
+          );
+
+          expect(interactiveSpotlightContent).toHaveBeenCalledWith({
+            options: {spotlightContent},
+          });
+          expect(spotlightElement?.spotlightContent).toBe(spotlightContent);
+          expect(spotlightElement?.interactiveSpotlightContent).toBe(
+            interactiveSpotlightContent.mock.results[0].value
+          );
+          expect(spotlightElement?.display).toBe(display);
+        });
+      }
+    );
+
+    it("should not render spotlight content when #display is 'table'", async () => {
+      const element = await setupElement({display: 'table', enableSpotlightContent: true});
+
+      const mockTableTemplate = document.createDocumentFragment();
+      mockTableTemplate.appendChild(document.createElement('atomic-table-element'));
+      vi.spyOn(
+        // @ts-expect-error - mocking method on private property
+        element.productTemplateProvider,
+        'getTemplateContent'
+      ).mockReturnValue(mockTableTemplate);
+      element.requestUpdate();
+      await element.updateComplete;
+
+      expect(
+        element.shadowRoot?.querySelectorAll('atomic-commerce-spotlight-content')
+      ).toHaveLength(0);
+      expect(element.shadowRoot?.querySelectorAll('atomic-product')).toHaveLength(2);
+    });
+  });
+
+  it('should ignore results when spotlight content is disabled on the interface', async () => {
+    vi.mocked(buildProductListing).mockImplementation(() =>
+      buildFakeProductListing({
+        implementation: {
+          interactiveProduct,
+          promoteChildToParent,
+          summary,
+        },
+        state: {
+          products: [buildFakeProduct({permanentid: 'product'})],
+          results: [buildFakeSpotlightContent()],
+        },
+      })
+    );
+
+    const element = await setupElement({display: 'grid'});
+
+    expect(element.shadowRoot?.querySelectorAll('atomic-commerce-spotlight-content')).toHaveLength(
+      0
+    );
+    expect(element.shadowRoot?.querySelectorAll('atomic-product')).toHaveLength(1);
+  });
+
   const setupElement = async ({
     display = 'grid',
     density = 'normal',
@@ -1214,6 +1333,7 @@ describe('atomic-commerce-product-list', () => {
     numberOfPlaceholders = 24,
     isAppLoaded = true,
     interfaceType = 'product-listing',
+    enableSpotlightContent = false,
   }: {
     display?: ItemDisplayLayout;
     density?: ItemDisplayDensity;
@@ -1221,6 +1341,7 @@ describe('atomic-commerce-product-list', () => {
     numberOfPlaceholders?: number;
     isAppLoaded?: boolean;
     interfaceType?: 'product-listing' | 'search';
+    enableSpotlightContent?: boolean;
   } = {}) => {
     const {element} = await renderInAtomicCommerceInterface<AtomicCommerceProductList>({
       template: html`<atomic-commerce-product-list
@@ -1232,6 +1353,7 @@ describe('atomic-commerce-product-list', () => {
       selector: 'atomic-commerce-product-list',
       bindings: (bindings) => {
         bindings.interfaceElement.type = interfaceType;
+        bindings.interfaceElement.enableSpotlightContent = enableSpotlightContent;
         bindings.store.state.loadingFlags = isAppLoaded ? [] : ['loading-flag'];
         bindings.engine.logger = {error: vi.fn()} as never;
         return bindings;

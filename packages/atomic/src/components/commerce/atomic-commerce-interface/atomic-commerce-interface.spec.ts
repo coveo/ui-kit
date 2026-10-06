@@ -389,7 +389,9 @@ describe('atomic-commerce-interface', () => {
       });
 
       it('should set searchOrListing with #buildProductListing', async () => {
-        expect(buildProductListing).toHaveBeenCalledExactlyOnceWith(element.engine!);
+        expect(buildProductListing).toHaveBeenCalledExactlyOnceWith(element.engine!, {
+          enableResults: false,
+        });
         expect(element.searchOrListing).toBe(vi.mocked(buildProductListing).mock.results[0].value);
       });
 
@@ -414,7 +416,9 @@ describe('atomic-commerce-interface', () => {
       });
 
       it('should set searchOrListing with #buildSearch', async () => {
-        expect(buildSearch).toHaveBeenCalledExactlyOnceWith(element.engine!);
+        expect(buildSearch).toHaveBeenCalledExactlyOnceWith(element.engine!, {
+          enableResults: false,
+        });
         expect(element.searchOrListing).toBe(vi.mocked(buildSearch).mock.results[0].value);
       });
 

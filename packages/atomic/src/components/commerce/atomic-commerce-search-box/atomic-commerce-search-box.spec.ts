@@ -48,6 +48,7 @@ const commonSearchBoxOptions = {
     },
   },
   clearFilters: true,
+  enableResults: false,
 };
 
 describe('atomic-commerce-search-box', () => {
@@ -64,6 +65,7 @@ describe('atomic-commerce-search-box', () => {
     redirectTo = undefined,
     searchBoxValue = '',
     additionalChildren = html``,
+    enableSpotlightContent = false,
   }: {
     searchBoxProps?: {
       redirectionUrl?: string;
@@ -77,6 +79,7 @@ describe('atomic-commerce-search-box', () => {
     redirectTo?: string;
     searchBoxValue?: string;
     additionalChildren?: TemplateResult;
+    enableSpotlightContent?: boolean;
   } = {}) => {
     vi.mocked(buildRecentQueriesList).mockReturnValue(buildFakeRecentQueriesList());
     vi.mocked(loadQuerySuggestActions).mockReturnValue(buildFakeLoadQuerySuggestActions());
@@ -125,6 +128,7 @@ describe('atomic-commerce-search-box', () => {
       selector: 'atomic-commerce-search-box',
       bindings: (bindings) => {
         bindings.engine = mockedEngine;
+        bindings.interfaceElement.enableSpotlightContent = enableSpotlightContent;
         return bindings;
       },
     });
@@ -527,6 +531,17 @@ describe('atomic-commerce-search-box', () => {
       options: {
         ...commonSearchBoxOptions,
         clearFilters: false,
+      },
+    });
+  });
+
+  it('should call buildSearchBox with enableResults set to true when spotlight content is enabled on the interface', async () => {
+    await renderSearchBox({enableSpotlightContent: true});
+
+    expect(buildSearchBox).toHaveBeenCalledWith(mockedEngine, {
+      options: {
+        ...commonSearchBoxOptions,
+        enableResults: true,
       },
     });
   });

@@ -1,8 +1,6 @@
 import {
   buildCommerceEngine,
   buildContext,
-  buildProductListing,
-  buildSearch,
   type CommerceEngine,
   type CommerceEngineConfiguration,
   type Context,
@@ -50,6 +48,7 @@ import {
   StorageItems,
 } from '@/src/utils/local-storage-utils';
 import {getAnalyticsConfig} from './analytics-config';
+import {buildSearchOrListing} from './search-or-listing';
 import {type CommerceStore, createCommerceStore} from './store';
 
 type CommerceInitializationOptions = CommerceEngineConfiguration;
@@ -113,6 +112,19 @@ export class AtomicCommerceInterface
    * - 'product-listing': Indicates that the interface is used for Product listing.
    */
   @property({type: String, reflect: true}) public type: 'search' | 'product-listing' = 'search';
+
+  /**
+   * Whether to request Spotlight Content from the Commerce API and display it alongside products in the
+   * `atomic-commerce-product-list` component.
+   *
+   * This property is read when the interface and its child components initialize; changing it afterwards has no effect.
+   */
+  @property({
+    type: Boolean,
+    attribute: 'enable-spotlight-content',
+    reflect: true,
+  })
+  public enableSpotlightContent = false;
 
   // TODO - KIT-4994: Add disableAnalytics property that defaults to false.
 
@@ -425,10 +437,7 @@ export class AtomicCommerceInterface
   }
 
   private initRequestStatus() {
-    this.searchOrListing =
-      this.type === 'product-listing'
-        ? buildProductListing(this.engine!)
-        : buildSearch(this.engine!);
+    this.searchOrListing = buildSearchOrListing(this.engine!, this);
   }
 
   private initSummary() {

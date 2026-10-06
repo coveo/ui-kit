@@ -1,6 +1,4 @@
 import {
-  buildProductListing,
-  buildSearch,
   type Pagination,
   type PaginationState,
   type ProductListing,
@@ -8,6 +6,7 @@ import {
   type Search,
   type SearchState,
 } from '@coveo/headless/commerce';
+import {buildSearchOrListing} from '@/src/components/commerce/atomic-commerce-interface/search-or-listing';
 import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
@@ -64,11 +63,10 @@ export class AtomicCommerceLoadMoreProducts
   private productListingOrSearchState!: ProductListingState | SearchState;
 
   public initialize() {
-    if (this.bindings.interfaceElement.type === 'product-listing') {
-      this.listingOrSearch = buildProductListing(this.bindings.engine);
-    } else {
-      this.listingOrSearch = buildSearch(this.bindings.engine);
-    }
+    this.listingOrSearch = buildSearchOrListing(
+      this.bindings.engine,
+      this.bindings.interfaceElement
+    );
     this.pagination = this.listingOrSearch.pagination();
 
     createAppLoadedListener(this.bindings.store, (isAppLoaded) => {

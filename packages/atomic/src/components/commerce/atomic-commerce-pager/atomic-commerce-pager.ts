@@ -1,12 +1,11 @@
 import {NumberValue, Schema} from '@coveo/bueno';
 import {
-  buildProductListing,
-  buildSearch,
   type Pagination,
   type PaginationState,
   type ProductListing,
   type Search,
 } from '@coveo/headless/commerce';
+import {buildSearchOrListing} from '@/src/components/commerce/atomic-commerce-interface/search-or-listing';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
@@ -114,11 +113,10 @@ export class AtomicCommercePager
 
   public initialize() {
     this.initFocusTargets();
-    if (this.bindings.interfaceElement.type === 'product-listing') {
-      this.listingOrSearch = buildProductListing(this.bindings.engine);
-    } else {
-      this.listingOrSearch = buildSearch(this.bindings.engine);
-    }
+    this.listingOrSearch = buildSearchOrListing(
+      this.bindings.engine,
+      this.bindings.interfaceElement
+    );
     this.pager = this.listingOrSearch.pagination();
     createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
       this.isAppLoaded = isAppLoaded;
