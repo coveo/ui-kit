@@ -8,7 +8,9 @@ The integration of Angular-based projects with Web based components can be trick
 
 ## Installation
 
-`npm i @coveo/atomic-angular`
+`npm i @coveo/atomic-angular @coveo/headless`
+
+`@coveo/headless` is a peer dependency. Import Headless symbols, such as `buildSearchEngine` or the `Result` type, from `@coveo/headless` directly: `@coveo/atomic-angular` does not re-export them.
 
 ## Usage
 

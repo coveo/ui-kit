@@ -1,5 +1,6 @@
 import {type AfterViewInit, Component, ViewChild} from '@angular/core';
-import type {AtomicSearchInterface, Bindings, Result} from '@coveo/atomic-angular';
+import type {AtomicSearchInterface, Bindings} from '@coveo/atomic-angular';
+import type {Result} from '@coveo/headless';
 
 @Component({
   standalone: false,
