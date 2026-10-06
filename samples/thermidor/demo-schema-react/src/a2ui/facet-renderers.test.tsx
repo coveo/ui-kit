@@ -524,7 +524,11 @@ describe('NumericFacet', () => {
       await waitFor(() => expect(view.starts()).toEqual([0]));
     });
 
-    it('keeps a queued custom range, whose appended entry a replacement would lose', async () => {
+    it('lets a later range supersede a queued custom-range apply, like any slot gesture', async () => {
+      // The custom-range apply no longer reconstructs the list; it clears the selection and
+      // dispatches, so it is an absolute write of this slot just like `toggleSingleSelect`. A range
+      // clicked after it, landing on the same state, supersedes it — the apply never goes out, the
+      // same economy two chained toggles get.
       const view = mountHeld(fourRanges);
       await waitFor(() => expect(screen.getByLabelText('Min')).toBeDefined());
 
@@ -535,9 +539,9 @@ describe('NumericFacet', () => {
       clickRange('$300 - $400');
 
       await view.release();
-      await view.release();
 
-      await waitFor(() => expect(view.starts()).toEqual([0, 150, 300]));
+      // Only the first range (in flight) and the last click go out; the apply in between is dropped.
+      await waitFor(() => expect(view.starts()).toEqual([0, 300]));
     });
   });
 
@@ -575,26 +579,95 @@ describe('NumericFacet', () => {
     expect(actions.some((a) => a.name === 'applyCustomRange')).toBe(false);
   });
 
-  it('renders an applied custom range as the last, selected value item', async () => {
-    mountFacet({
-      ...stateWithRanges,
-      hasActiveValues: true,
-      customRange: {start: 25, end: 175, numberOfResults: 6},
-    });
+  it('does not optimistically place the entered range, leaving its slot to the backend', async () => {
+    // The backend returns a custom range as a listed value sorted into `values` — a placement the
+    // client cannot reconstruct without replaying the backend's sort. So the optimistic view does
+    // NOT add or select the range: it clears the selection and dispatches, and the dimmed inputs
+    // say the producer is working. No duplicate entry, no range appended out of order. Hold the
+    // round-trip open to observe the optimistic view.
+    const {lastAction} = mountFacet(
+      {
+        ...stateWithRanges,
+        values: [
+          {start: 0, end: 100, numberOfResults: 5, state: 'idle'},
+          {start: 100, end: 200, numberOfResults: 4, state: 'idle'},
+        ],
+      },
+      () => new Promise<void>(() => {})
+    );
 
-    await waitFor(() => expect(screen.getByTestId('facet-custom-range-ec_price')).toBeDefined());
-    const items = screen.getAllByRole('button', {pressed: true});
-    const customItem = screen.getByTestId('facet-custom-range-ec_price');
-    expect(customItem.textContent).toContain('$25 - $175');
-    expect(customItem.getAttribute('aria-pressed')).toBe('true');
+    await waitFor(() => expect(screen.getByLabelText('Min')).toBeDefined());
+    fireEvent.change(screen.getByLabelText('Min'), {target: {value: '150'}});
+    fireEvent.change(screen.getByLabelText('Max'), {target: {value: '250'}});
+    fireEvent.click(screen.getByText('Apply'));
 
-    const values = screen.getByRole('list').querySelectorAll('li button');
-    expect(values[values.length - 1]).toBe(customItem);
-    expect(items).toContain(customItem);
+    // The gesture goes out...
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({
+        name: 'applyCustomRange',
+        context: {start: 150, end: 250},
+      })
+    );
+    // ...the list is unchanged (no appended entry, no out-of-order range)...
+    const labels = Array.from(screen.getByRole('list').querySelectorAll('li button')).map(
+      (button) => button.querySelector('span')!.textContent
+    );
+    expect(labels).toEqual(['$0 - $100', '$100 - $200']);
+    // ...and nothing is optimistically marked selected: the backend owns the post-state.
+    expect(
+      Array.from(screen.getByRole('list').querySelectorAll('li button')).every(
+        (button) => button.getAttribute('aria-pressed') === 'false'
+      )
+    ).toBe(true);
+  });
+
+  it('dims the custom-range inputs while the apply is in flight', async () => {
+    // The apply-scoped signal disables the custom-range fieldset (greying its inputs and Apply)
+    // until the producer answers — the user sees their click was taken while the range is placed
+    // and sorted. Hold the round-trip open to keep the gesture outstanding.
+    const {container} = mountFacet(stateWithRanges, () => new Promise<void>(() => {}));
+
+    await waitFor(() => expect(screen.getByLabelText('Min')).toBeDefined());
+    expect(container.querySelector('fieldset')!.hasAttribute('disabled')).toBe(false);
+
+    fireEvent.change(screen.getByLabelText('Min'), {target: {value: '50'}});
+    fireEvent.change(screen.getByLabelText('Max'), {target: {value: '150'}});
+    fireEvent.click(screen.getByText('Apply'));
+
+    // The fieldset is disabled (greying inputs + Apply) while the gesture is outstanding.
+    await waitFor(() =>
+      expect(container.querySelector('fieldset')!.hasAttribute('disabled')).toBe(true)
+    );
+  });
+
+  it('does not dim the custom-range inputs when toggling a listed range', async () => {
+    // The dimming signal is specific to applyCustomRange, not any gesture of the slot: a range
+    // toggle (or a clear) leaves the custom inputs enabled, even while its own dispatch is in
+    // flight. Hold the round-trip open so a slot-wide pending signal would wrongly dim here.
+    const {container, lastAction} = mountFacet(stateWithRanges, () => new Promise<void>(() => {}));
+
+    await waitFor(() => expect(screen.getByText('$0 - $100')).toBeDefined());
+    fireEvent.click(screen.getByText('$0 - $100'));
+
+    // The toggle dispatched and is outstanding, yet the custom-range fieldset stays enabled.
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({
+        name: 'toggleSingleSelect',
+        context: {start: 0, end: 100},
+      })
+    );
+    expect(container.querySelector('fieldset')!.hasAttribute('disabled')).toBe(false);
   });
 
   it('clears the min/max inputs when clearing the facet', async () => {
-    const {lastAction} = mountFacet({...stateWithRanges, hasActiveValues: true});
+    const {lastAction} = mountFacet({
+      ...stateWithRanges,
+      hasActiveValues: true,
+      values: [
+        {start: 0, end: 100, numberOfResults: 5, state: 'selected'},
+        {start: 100, end: 200, numberOfResults: 2, state: 'idle'},
+      ],
+    });
 
     await waitFor(() => expect(screen.getByLabelText('Min')).toBeDefined());
     fireEvent.change(screen.getByLabelText('Min'), {target: {value: '25'}});

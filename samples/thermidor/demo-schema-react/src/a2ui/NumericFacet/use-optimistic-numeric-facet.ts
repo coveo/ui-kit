@@ -4,8 +4,6 @@ import {useOptimisticValue} from '../use-optimistic-value.js';
 
 type NumericFacetValues = NonNullable<NumericFacetProps['values']>;
 
-const NO_VALUES: NumericFacetValues = [];
-
 /** Two range lists cover the same ranges, whatever each one's state is. */
 const sameRanges = (left: NumericFacetValues, right: NumericFacetValues): boolean =>
   left.length === right.length &&
@@ -28,28 +26,27 @@ function clampToDomain(value: number, domain?: {min?: number; max?: number}): nu
 }
 
 export interface OptimisticNumericFacet {
-  /** The ranges to render: the producer's, with this facet's outstanding gestures applied. */
+  /** The producer's listed ranges, with this facet's outstanding gestures applied. */
   values: NumericFacetValues;
+  /** Whether anything is selected, optimistically. */
+  hasActiveValues: boolean;
   customStart: string;
   customEnd: string;
   setCustomStart: (next: string) => void;
   setCustomEnd: (next: string) => void;
+  /** True while an applyCustomRange dispatch is outstanding; drives dimming of the custom inputs. */
+  isApplyingCustomRange: boolean;
+  /** Reads the custom inputs, clamps them to the domain, and selects that range. */
+  applyCustomRange: () => void;
   toggleSingleSelect: (start: number, end: number) => void;
   clear: () => void;
-  /** Reads the custom inputs, clamps them to the domain, and appends the range. */
-  applyCustomRange: () => void;
 }
 
 /**
- * The numeric facet's ranges, and its three gestures — all of which carry one optimistically.
+ * The numeric facet's selection and its three gestures, each carried optimistically.
  *
- * The custom-range inputs live here too, although raw input text is not itself optimistic: both
- * `toggleSingleSelect` and `clear` have to empty them, so a renderer that owned them would have to
- * remember to do it after every other gesture.
- *
- * The producer's algebra for `toggleSingleSelect` (a FLIP, not a write), the exactness condition
- * under which superseding a queued gesture is sound, and the parsing and clamping of the custom
- * range are gesture definition rather than rendering. The renderer binds the inputs and draws.
+ * The custom-range input text is not itself optimistic, but it lives here because
+ * `toggleSingleSelect` and `clear` must empty it — a renderer owning it would have to remember to.
  */
 export function useOptimisticNumericFacet(
   props: NumericFacetProps,
@@ -57,11 +54,22 @@ export function useOptimisticNumericFacet(
 ): OptimisticNumericFacet {
   const [customStart, setCustomStart] = useState('');
   const [customEnd, setCustomEnd] = useState('');
+  const [applyInFlight, setApplyInFlight] = useState(false);
+  const backendValues: NumericFacetValues = props.values ?? [];
   const {
     value: values,
+    pending,
     landingValue,
     dispatchOptimistic,
-  } = useOptimisticValue(props.values ?? NO_VALUES, dispatch);
+  } = useOptimisticValue(backendValues, dispatch);
+
+  // The apply flag only means "dim the inputs" while a custom-range dispatch is still outstanding.
+  // Once this slot has no gesture in flight (`pending` false), the producer has answered, so clear
+  // it — and a plain toggle/clear, which also ends `pending`, never leaves the inputs dimmed.
+  const isApplyingCustomRange = applyInFlight && pending;
+  if (applyInFlight && !pending) {
+    setApplyInFlight(false);
+  }
 
   const resetCustomInputs = () => {
     setCustomStart('');
@@ -69,18 +77,10 @@ export function useOptimisticNumericFacet(
   };
 
   /**
-   * Superseding sends the newest gesture against the state it will actually land on — the backend
-   * plus the one dispatch already sent — instead of against the state the dropped gestures would
-   * have produced. Every action here rewrites the state of EVERY range, so the two paths can only
-   * differ in which ranges exist and in the target's own prior state, which `toggleSingleSelect`
-   * FLIPS rather than sets (`SearchActionHandler.handleNumericToggle`, `single=true`). Equal on
-   * both counts, dropping the queued gestures cannot change the outcome; otherwise they have to
-   * go out as they are — re-clicking the range the in-flight dispatch is selecting, or a queued
-   * custom range whose appended entry would be lost.
-   *
-   * An UNKNOWN landing state is not permission: the controller cannot always tell which of this
-   * facet's outstanding dispatches is on its way, and a gesture that drops on a guess would drop
-   * one the producer still needs.
+   * Safe to drop the queued gestures only when the newest lands on the same state they would have:
+   * every action rewrites EVERY range, so the paths differ only in which ranges exist and in the
+   * target's own prior state (a FLIP, not a write) — equal on both, the queue cannot change it.
+   * An unknown landing is not permission: dropping on a guess could drop a dispatch still needed.
    */
   const canSupersedeToggle = (start: number, end: number) => {
     const landing = landingValue();
@@ -113,8 +113,8 @@ export function useOptimisticNumericFacet(
     dispatchOptimistic({
       action: {event: {name: 'clearAllActiveValues', context: {}}},
       next: (current) => current.map((value) => ({...value, state: 'idle'})),
-      // Clearing sets every range to idle whatever was queued ahead of it, so only a queued
-      // custom range — which would lose its appended entry — stops it replacing them.
+      // Clearing sets everything idle whatever was queued ahead of it, so it can replace the queue
+      // only when it lands on the state it was computed against.
       coalesce: landing !== undefined && sameRanges(landing, values) ? 'absolute' : 'dependent',
     });
   };
@@ -132,28 +132,30 @@ export function useOptimisticNumericFacet(
     }
     const start = clampToDomain(Math.min(parsedStart, parsedEnd), props.domain);
     const end = clampToDomain(Math.max(parsedStart, parsedEnd), props.domain);
-    // The producer APPENDS the range as the only selected one, so the optimistic value appends
-    // too — with no count, which only the backend can supply. An append is not an absolute write:
-    // it never replaces what is queued, and the range it adds is what stops a later gesture
-    // replacing IT.
+    resetCustomInputs();
+    setApplyInFlight(true);
+    // Does not place the range: the backend sorts it into `values`, and replaying that sort here
+    // would be a hidden coupling that drifts if the backend reorders. Just clears the selection
+    // and dispatches; `isApplyingCustomRange` dims the inputs until the producer answers.
     dispatchOptimistic({
       action: {event: {name: 'applyCustomRange', context: {start, end}}},
-      next: (current) => [
-        ...current.map((value) => ({...value, state: 'idle' as const})),
-        {start, end, endInclusive: true, state: 'selected' as const, numberOfResults: 0},
-      ],
+      next: (current) => current.map((value) => ({...value, state: 'idle'})),
       coalesce: 'dependent',
     });
   };
 
+  const hasActiveValues = values.some((value) => value.state === 'selected');
+
   return {
     values,
+    hasActiveValues,
+    isApplyingCustomRange,
     customStart,
     customEnd,
     setCustomStart,
     setCustomEnd,
+    applyCustomRange,
     toggleSingleSelect,
     clear,
-    applyCustomRange,
   };
 }

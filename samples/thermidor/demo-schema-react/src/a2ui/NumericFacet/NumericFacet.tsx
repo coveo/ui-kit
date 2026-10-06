@@ -28,7 +28,8 @@ export const NumericFacet = createReactComponent(
     };
     const optimisticFacet = useOptimisticNumericFacet(props, dispatch);
 
-    const {displayName, customRange, hasActiveValues, domain} = props;
+    const {displayName, domain} = props;
+    const {hasActiveValues, isApplyingCustomRange} = optimisticFacet;
     const domainMin = domain?.min;
     const domainMax = domain?.max;
 
@@ -66,66 +67,53 @@ export const NumericFacet = createReactComponent(
               </li>
             );
           })}
-          {customRange && (
-            <li key="custom-range">
-              <button
-                className={`${styles.value} ${styles.selected}`}
-                type="button"
-                aria-pressed={true}
-                data-testid={`facet-custom-range-${props.field}`}
-                onClick={() =>
-                  optimisticFacet.toggleSingleSelect(customRange.start, customRange.end)
-                }
-              >
-                <span className={styles.valueLabel}>
-                  {formatRange(customRange.start, customRange.end)}
-                </span>
-                <span className={styles.count}>({customRange.numberOfResults})</span>
-              </button>
-            </li>
-          )}
         </ul>
 
         <form
-          className={styles.customForm}
           onSubmit={(event) => {
             event.preventDefault();
             optimisticFacet.applyCustomRange();
           }}
         >
-          <label className={styles.customLabel} htmlFor={startId}>
-            <span className={styles.labelText}>Min</span>
-            <input
-              id={startId}
-              className={styles.customInput}
-              type="number"
-              inputMode="decimal"
-              step="any"
-              placeholder="Min"
-              min={domainMin}
-              max={domainMax}
-              value={optimisticFacet.customStart}
-              onChange={(event) => optimisticFacet.setCustomStart(event.target.value)}
-            />
-          </label>
-          <label className={styles.customLabel} htmlFor={endId}>
-            <span className={styles.labelText}>Max</span>
-            <input
-              id={endId}
-              className={styles.customInput}
-              type="number"
-              inputMode="decimal"
-              step="any"
-              placeholder="Max"
-              min={domainMin}
-              max={domainMax}
-              value={optimisticFacet.customEnd}
-              onChange={(event) => optimisticFacet.setCustomEnd(event.target.value)}
-            />
-          </label>
-          <button className={styles.applyButton} type="submit">
-            Apply
-          </button>
+          <fieldset
+            className={`${styles.customFieldset} ${isApplyingCustomRange ? styles.pending : ''}`}
+            disabled={isApplyingCustomRange}
+            aria-busy={isApplyingCustomRange}
+          >
+            <label className={styles.customLabel} htmlFor={startId}>
+              <span className={styles.labelText}>Min</span>
+              <input
+                id={startId}
+                className={styles.customInput}
+                type="number"
+                inputMode="decimal"
+                step="any"
+                placeholder="Min"
+                min={domainMin}
+                max={domainMax}
+                value={optimisticFacet.customStart}
+                onChange={(event) => optimisticFacet.setCustomStart(event.target.value)}
+              />
+            </label>
+            <label className={styles.customLabel} htmlFor={endId}>
+              <span className={styles.labelText}>Max</span>
+              <input
+                id={endId}
+                className={styles.customInput}
+                type="number"
+                inputMode="decimal"
+                step="any"
+                placeholder="Max"
+                min={domainMin}
+                max={domainMax}
+                value={optimisticFacet.customEnd}
+                onChange={(event) => optimisticFacet.setCustomEnd(event.target.value)}
+              />
+            </label>
+            <button className={styles.applyButton} type="submit">
+              Apply
+            </button>
+          </fieldset>
         </form>
       </section>
     );

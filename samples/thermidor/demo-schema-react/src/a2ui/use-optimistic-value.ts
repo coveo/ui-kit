@@ -18,14 +18,12 @@ type AppGesture<T, TAction> = OptimisticGesture<T, TAction, AppStaleScope>;
 export interface OptimisticValue<T, TAction> {
   /** What to render: this component's held intention while a gesture is outstanding, else the producer's. */
   value: T;
+  /** True while a gesture of THIS value is outstanding; scoped to this instance, not the app. */
+  pending: boolean;
   /**
-   * The state a gesture issued now will be applied to: the producer value plus the single dispatch
-   * already sent, which cannot be taken back.
-   *
-   * A function rather than a value, because it depends on what is on its way RIGHT NOW. Read at
-   * the moment of the gesture it guards, it cannot be a render old.
-   *
-   * `undefined` means it cannot be told — a caller must then not drop anything.
+   * The state a gesture issued now will land on: the producer value plus the single dispatch
+   * already on its way. A function, not a value, so it is read at the gesture it guards rather than
+   * a render old. `undefined` means it cannot be told — the caller must then drop nothing.
    */
   landingValue: () => T | undefined;
   /** Dispatches the gesture's action and holds its outcome until the producer has answered it. */
@@ -33,13 +31,9 @@ export interface OptimisticValue<T, TAction> {
 }
 
 /**
- * Binds one `@coveo/thermidor` optimistic value to React.
- *
- * It supplies the three things only a React consumer can: an instance identity, a store
- * subscription, and the producer value, which arrives on every render and is the one thing the
- * controller cannot hold. Everything else — holding the gesture and releasing it, the gesture
- * identity, the coalescing declaration, the guard against the request already on its way, the
- * report of a lost action — is framework-agnostic and lives in the package.
+ * Binds one `@coveo/thermidor` optimistic value to React: it supplies the three things only a
+ * React consumer can — an instance identity, a store subscription, and the producer value, which
+ * arrives every render and is the one thing the controller cannot hold. The rest is in the package.
  *
  * The ports are read through a ref rather than captured, so the controller never answers with the
  * dispatch or the queue of the first render.
@@ -58,7 +52,6 @@ export function useOptimisticValue<T, TAction>(
       instanceId,
       dispatch: () => latest.current.dispatch,
       queue: () => latest.current.progress,
-      // Not devTrace: a lost action has to stay visible in production.
       onActionLost: (message) => console.error(message),
       trace: (...parts) => devTrace('[optimistic]', instanceId, ...parts),
     })
@@ -66,8 +59,11 @@ export function useOptimisticValue<T, TAction>(
 
   useSyncExternalStore(controller.subscribe, controller.getVersion, controller.getVersion);
 
+  const value = controller.value(backendValue);
+
   return {
-    value: controller.value(backendValue),
+    value,
+    pending: value !== backendValue,
     landingValue: () => controller.landingValue(backendValue),
     dispatchOptimistic: (gesture) => controller.dispatch(backendValue, gesture),
   };
