@@ -39,8 +39,22 @@ export class AtomicCommerceSpotlightContent extends LitElement {
       @apply rounded-lg focus-visible:outline-primary relative flex h-full w-full flex-col overflow-hidden no-underline outline-offset-2;
     }
 
+    picture {
+      @apply block;
+    }
+
     [part='image'] {
       @apply block h-full w-full object-cover;
+    }
+
+    :host([display='list']) {
+      [part='link'] {
+        @apply flex-row items-center;
+      }
+
+      picture {
+        @apply w-1/3 max-w-60 shrink-0;
+      }
     }
 
     [part='body'] {

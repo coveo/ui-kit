@@ -4,6 +4,7 @@ import {
   executeFirstRequestHook,
   wrapInCommerceInterface,
 } from '@/storybook-utils/commerce/commerce-interface-wrapper';
+import {spotlightContentTransformer} from '@/storybook-utils/commerce/spotlight-content';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-product-list/atomic-commerce-product-list.js';
 import '@/src/components/commerce/atomic-product-children/atomic-product-children.js';
@@ -26,6 +27,7 @@ import '@/src/components/search/atomic-table-element/atomic-table-element.js';
 import {MockCommerceApi} from '@coveo/platform-mock-api/commerce';
 
 const commerceApiHarness = new MockCommerceApi();
+commerceApiHarness.searchEndpoint.addRequestTransformer(spotlightContentTransformer());
 
 const {events, args, argTypes, template} = getStorybookHelpers('atomic-commerce-product-list', {
   excludeCategories: ['methods'],
@@ -58,6 +60,14 @@ const {play: playNoProducts} = wrapInCommerceInterface({
     },
   },
 });
+
+const playWithSpotlightContent = async (context: Parameters<typeof play>[0]) => {
+  await customElements.whenDefined('atomic-commerce-interface');
+  context.canvasElement
+    .querySelector('atomic-commerce-interface')!
+    .setAttribute('enable-spotlight-content', '');
+  await play(context);
+};
 
 const meta: Meta = {
   args: {
@@ -135,6 +145,11 @@ export const GridDisplayWithTemplate: Story = {
   },
 };
 
+export const GridDisplayWithSpotlightContent: Story = {
+  name: 'Using grid display with spotlight content',
+  play: playWithSpotlightContent,
+};
+
 export const GridDisplayBeforeQuery: Story = {
   name: 'Using grid display before query',
   play: async (context) => {
@@ -193,6 +208,14 @@ export const ListDisplayWithTemplate: Story = {
   </template>
 </atomic-product-template>`,
   },
+};
+
+export const ListDisplayWithSpotlightContent: Story = {
+  name: 'Using list display with spotlight content',
+  args: {
+    display: 'list',
+  },
+  play: playWithSpotlightContent,
 };
 
 export const ListDisplayBeforeQuery: Story = {
