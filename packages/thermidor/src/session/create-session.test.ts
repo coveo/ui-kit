@@ -664,4 +664,126 @@ describe('createSession lifecycle', () => {
       expect(session.turns[0].status).toBe('complete');
     });
   });
+
+  describe('a context provider that throws while the request is built', () => {
+    /** A session whose commerce context provider throws while `failing` is set. */
+    function createSessionWithFlakyProvider() {
+      const provider = {failing: true};
+      const session = createSession({
+        ...baseConfig,
+        commerceContextProvider: () => {
+          if (provider.failing) {
+            throw new Error('boom');
+          }
+          return {cart: []};
+        },
+      });
+      return {session, provider};
+    }
+
+    it('fails the prompt turn without sending, and the next prompt still goes through', async () => {
+      const {session, provider} = createSessionWithFlakyProvider();
+
+      await expect(
+        session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'first'}})
+      ).resolves.toBeUndefined();
+
+      expect(callMock).not.toHaveBeenCalled();
+      expect(session.turns).toHaveLength(1);
+      expect(session.turns[0].status).toBe('error');
+      expect(session.turns[0].error).toBe('boom');
+
+      provider.failing = false;
+      const next = queueStream();
+      const nextTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'second'}});
+      await next.opened;
+
+      expect(callMock).toHaveBeenCalledTimes(1);
+      expect(session.turns).toHaveLength(2);
+      expect(session.turns[1].status).toBe('streaming');
+
+      next.emit({type: 'RUN_FINISHED'});
+      next.close();
+      await nextTurn;
+    });
+
+    it('fails a retried turn again while the provider keeps throwing', async () => {
+      const {session} = createSessionWithFlakyProvider();
+      await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+      const turnId = session.turns[0].id;
+
+      session.retry(turnId);
+      await flush();
+
+      expect(callMock).not.toHaveBeenCalled();
+      expect(session.turns[0].status).toBe('error');
+      expect(session.turns[0].error).toBe('boom');
+    });
+
+    it('lets retry re-drive the failed turn once the provider recovers', async () => {
+      const {session, provider} = createSessionWithFlakyProvider();
+      await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+      const turnId = session.turns[0].id;
+
+      provider.failing = false;
+      const retryStream = queueStream();
+      session.retry(turnId);
+      await retryStream.opened;
+
+      expect(session.turns[0].status).toBe('streaming');
+      expect(callMock.mock.calls[0][0]).toMatchObject({message: 'find shoes', action: null});
+
+      retryStream.emit({type: 'RUN_FINISHED'});
+      retryStream.close();
+      await flush();
+      expect(session.turns[0].status).toBe('complete');
+    });
+
+    it('fails the active turn when building an action request throws, sending nothing', async () => {
+      const {session, provider} = createSessionWithFlakyProvider();
+      provider.failing = false;
+
+      const first = queueStream();
+      const firstTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'go'}});
+      await first.opened;
+      first.emit({
+        type: 'ACTIVITY_SNAPSHOT',
+        messageId: 'surface-activity',
+        activityType: 'a2ui-surface',
+        content: {
+          messages: [
+            {
+              version: 'v1.0',
+              createSurface: {
+                surfaceId: 'commerce-search-surface',
+                components: [
+                  {id: 'root', component: 'CommerceSearch'},
+                  {id: 'pagination-1', component: 'Pagination'},
+                ],
+              },
+            },
+          ],
+        },
+      });
+      first.emit({type: 'RUN_FINISHED'});
+      first.close();
+      await firstTurn;
+
+      provider.failing = true;
+      await expect(
+        session.dispatchAction({
+          userAction: {
+            name: 'selectPage',
+            surfaceId: 'commerce-search-surface',
+            sourceComponentId: 'pagination-1',
+            context: {page: 2},
+          },
+        })
+      ).resolves.toBeUndefined();
+
+      expect(callMock).toHaveBeenCalledTimes(1);
+      expect(session.turns[0].status).toBe('error');
+      expect(session.turns[0].error).toBe('boom');
+    });
+  });
 });
