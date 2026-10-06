@@ -17,3 +17,15 @@ When set to `product-listing` you need to ensure that the `view` url of the conf
 
 To see this failure state that will result of using the `product-listing` type without a correct `context` configuration,  change the `type` to
 `product-listing` in the [With Product List](/story/atomic-commerce-interface--with-product-list) story.
+
+### Enabling Spotlight Content
+
+Set the `enable-spotlight-content` attribute to request Spotlight Content from the Commerce API. The `atomic-commerce-product-list` component then displays it alongside products.
+
+```html
+<atomic-commerce-interface enable-spotlight-content>
+  ...
+</atomic-commerce-interface>
+```
+
+This attribute is read when the interface initializes; changing it afterwards has no effect.

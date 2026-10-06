@@ -1,5 +1,6 @@
 import type {InteractiveSpotlightContent, SpotlightContent} from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {sampleSpotlightContents} from '@/storybook-utils/commerce/spotlight-content';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -15,6 +16,10 @@ const buildSpotlightContent = (overrides: Partial<SpotlightContent> = {}): Spotl
   ...sampleSpotlightContents[0],
   position: 1,
   ...overrides,
+});
+
+const {argTypes} = getStorybookHelpers('atomic-commerce-spotlight-content', {
+  excludeCategories: ['methods'],
 });
 
 const meta: Meta = {
@@ -36,7 +41,8 @@ const meta: Meta = {
     display: 'grid',
   },
   argTypes: {
-    display: {control: 'radio', options: ['grid', 'list']},
+    ...argTypes,
+    display: {...argTypes.display, control: 'radio', options: ['grid', 'list']},
   },
   render: ({spotlightContent, display}) =>
     html`<div style="width: 300px">

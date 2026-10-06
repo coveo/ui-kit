@@ -1,0 +1,35 @@
+You don't add this component to your page directly. The `atomic-commerce-product-list` component renders one `atomic-commerce-spotlight-content` for each Spotlight Content item returned by the Commerce API, at the position the API returned it.
+
+To request and display Spotlight Content, set the `enable-spotlight-content` attribute on the `atomic-commerce-interface` component:
+
+```html
+<atomic-commerce-interface type="search" enable-spotlight-content>
+  ...
+  <atomic-layout-section section="products">
+    <atomic-commerce-product-list display="grid"></atomic-commerce-product-list>
+  </atomic-layout-section>
+</atomic-commerce-interface>
+```
+
+Each Spotlight Content item renders as a link to its `clickUri`, with:
+
+- The `desktopImage`, replaced by the `mobileImage` (when provided) on viewports narrower than the interface mobile breakpoint.
+- The `name` and `description`, when provided, using the `nameFontColor` and `descriptionFontColor` values configured for the Spotlight Content.
+
+Selecting a Spotlight Content item logs the corresponding click analytics event.
+
+Spotlight Content is displayed in the `grid` and `list` displays of `atomic-commerce-product-list`. It isn't displayed in the `table` display.
+
+### Styling
+
+The product list exposes the parts of each Spotlight Content item with a `spotlight-content-` prefix:
+
+```css
+atomic-commerce-product-list::part(spotlight-content-link) {
+  border: 1px solid var(--atomic-neutral);
+}
+
+atomic-commerce-product-list::part(spotlight-content-name) {
+  font-size: 1.25rem;
+}
+```
