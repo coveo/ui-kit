@@ -32,24 +32,79 @@ export const sampleSpotlightContents: SampleSpotlightContent[] = [
   },
 ];
 
+interface PaginatedRequest {
+  enableResults?: boolean;
+  page?: number;
+  perPage?: number;
+}
+
+interface PaginatedResponse {
+  results: unknown[];
+  pagination: {
+    page: number;
+    perPage: number;
+    totalEntries: number;
+    totalPages: number;
+  };
+}
+
 /**
  * Request transformer for the commerce search and listing mock endpoints that inserts sample
  * Spotlight Content in `results` when the request opts in with `enableResults`.
  *
+ * It follows the Commerce API contract: `perPage` and `totalEntries` count products and Spotlight
+ * Content together, so a Spotlight Content pushes the next product onto the following page.
+ * The mock products are treated as a catalog of `pagination.totalEntries` products, cycling
+ * through the products of the base response.
+ *
  * Requests that do not opt in are left untouched, so it is safe to register at module scope.
+ *
+ * @param positions - The 0-based indexes of the Spotlight Content across all pages.
  */
 export const spotlightContentTransformer =
   (positions: number[] = [1, 6]) =>
-  <T extends {results: unknown[]}>(body: unknown, response: T): T => {
-    if (!(body as {enableResults?: boolean} | null)?.enableResults) {
+  <T extends PaginatedResponse>(body: unknown, response: T): T => {
+    const request = (body ?? {}) as PaginatedRequest;
+    if (!request.enableResults || response.results.length === 0) {
       return response;
     }
-    const results = [...response.results];
-    positions.forEach((position, index) => {
-      const spotlightContent = sampleSpotlightContents[index % sampleSpotlightContents.length];
-      results.splice(Math.min(position, results.length), 0, spotlightContent);
-    });
-    return {...response, results};
+
+    const totalProducts = response.pagination.totalEntries;
+    const spotlightPositions = [...new Set(positions)]
+      .sort((a, b) => a - b)
+      .filter((position, index) => position <= totalProducts + index);
+    const totalSpotlightContent = spotlightPositions.length;
+    const totalEntries = totalProducts + totalSpotlightContent;
+    const page = request.page ?? response.pagination.page;
+    const perPage = request.perPage ?? response.pagination.perPage;
+    const pageStart = page * perPage;
+    const pageEnd = Math.min(pageStart + perPage, totalEntries);
+
+    const results: unknown[] = [];
+    for (let index = pageStart; index < pageEnd; index++) {
+      const spotlightIndex = spotlightPositions.indexOf(index);
+      if (spotlightIndex !== -1) {
+        results.push(sampleSpotlightContents[spotlightIndex % sampleSpotlightContents.length]);
+        continue;
+      }
+      const precedingSpotlights = spotlightPositions.filter((position) => position < index).length;
+      const productIndex = index - precedingSpotlights;
+      results.push(response.results[productIndex % response.results.length]);
+    }
+
+    return {
+      ...response,
+      results,
+      pagination: {
+        ...response.pagination,
+        page,
+        perPage,
+        totalEntries,
+        totalPages: Math.ceil(totalEntries / Math.max(perPage, 1)),
+        totalProducts,
+        totalSpotlightContent,
+      },
+    };
   };
 
 /**
