@@ -1,3 +1,10 @@
+## 3.57.2
+
+### Patch Changes
+
+- Updated dependencies [[`2535634`](https://github.com/coveo/ui-kit/commit/25356348d331a6e123735a73df411589b2bc2a7f)]:
+  - coveo.analytics@2.33.1
+
 ## 3.57.1
 
 ### Patch Changes

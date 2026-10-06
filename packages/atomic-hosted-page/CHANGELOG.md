@@ -1,3 +1,10 @@
+## 1.2.61
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @coveo/headless@3.57.2
+
 ## 1.2.60
 
 ### Patch Changes
