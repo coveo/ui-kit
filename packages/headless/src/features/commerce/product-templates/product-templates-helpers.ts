@@ -15,7 +15,7 @@ const getProductProperty = (product: Product | ChildProduct, property: string) =
     return anyProduct[property];
   }
 
-  if (!isNullOrUndefined(product.additionalFields[property])) {
+  if (!isNullOrUndefined(product.additionalFields?.[property])) {
     return product.additionalFields[property];
   }
 

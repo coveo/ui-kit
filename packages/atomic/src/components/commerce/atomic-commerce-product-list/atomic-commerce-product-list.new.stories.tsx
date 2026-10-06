@@ -155,10 +155,10 @@ export const GridDisplayWithSpotlightContentTemplate: Story = {
   args: {
     'default-slot': `<atomic-spotlight-content-template>
   <template>
-    <atomic-spotlight-content-image></atomic-spotlight-content-image>
-    <atomic-spotlight-content-link>
-      <atomic-spotlight-content-text field="name"></atomic-spotlight-content-text>
-    </atomic-spotlight-content-link>
+    <atomic-product-image></atomic-product-image>
+    <atomic-product-link>
+      <atomic-product-text field="name"></atomic-product-text>
+    </atomic-product-link>
   </template>
 </atomic-spotlight-content-template>`,
   },

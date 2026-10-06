@@ -26,7 +26,7 @@ describe('atomic-spotlight-content-template', () => {
       .mustMatch=${mustMatch}
       .mustNotMatch=${mustNotMatch}
     >
-      <template><atomic-spotlight-content-image></atomic-spotlight-content-image></template>
+      <template><atomic-product-image></atomic-product-image></template>
     </atomic-spotlight-content-template>`;
 
     const {element} = await renderInAtomicCommerceInterface<AtomicSpotlightContentTemplate>({
@@ -60,15 +60,15 @@ describe('atomic-spotlight-content-template', () => {
 
     const template = await element.getTemplate();
 
-    expect(template?.content.querySelector('atomic-spotlight-content-image')).not.toBeNull();
+    expect(template?.content.querySelector('atomic-product-image')).not.toBeNull();
   });
 
-  it('should default the link content to an atomic-spotlight-content-link', async () => {
+  it('should default the link content to an atomic-product-link', async () => {
     const element = await setupElement();
 
     const template = await element.getTemplate();
 
-    expect(template?.linkContent?.querySelector('atomic-spotlight-content-link')).not.toBeNull();
+    expect(template?.linkContent?.querySelector('atomic-product-link')).not.toBeNull();
   });
 
   it('should include the conditions and the match conditions in the template', async () => {

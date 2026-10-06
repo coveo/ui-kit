@@ -10,6 +10,8 @@ import {buildFakeInteractiveProduct} from '@/vitest-utils/testing-helpers/fixtur
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import {AtomicProductLink} from './atomic-product-link';
 import './atomic-product-link';
+import {buildFakeInteractiveSpotlightContent} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/interactive-spotlight-content';
+import {buildFakeSpotlightContent} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/spotlight-content';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
@@ -281,5 +283,49 @@ describe('atomic-product-link', () => {
     await element?.updateComplete;
     const errorComponent = element?.querySelector('atomic-component-error');
     expect(errorComponent).toBeTruthy();
+  });
+
+  describe('when rendering a spotlight content', () => {
+    const renderSpotlightContentLink = async () => {
+      const interactiveSpotlightContent = buildFakeInteractiveSpotlightContent();
+      const {element} = await renderInAtomicProduct<AtomicProductLink>({
+        template: html`<atomic-product-link></atomic-product-link>`,
+        selector: 'atomic-product-link',
+        product: buildFakeSpotlightContent({
+          clickUri: 'https://example.com/promo',
+          name: 'Summer sale',
+        }),
+        interactiveProduct: interactiveSpotlightContent,
+        bindings: (bindings) => {
+          bindings.store.onChange = vi.fn();
+          bindings.engine.logger = {warn: vi.fn()} as never;
+          return bindings;
+        },
+      });
+      await element.updateComplete;
+      const anchor = element.querySelector('a')!;
+      anchor.addEventListener('click', (event) => event.preventDefault());
+      return {element, anchor, interactiveSpotlightContent};
+    };
+
+    it('should link to the click URI of the spotlight content', async () => {
+      const {anchor} = await renderSpotlightContentLink();
+
+      expect(anchor).toHaveAttribute('href', 'https://example.com/promo');
+    });
+
+    it('should display the name of the spotlight content by default', async () => {
+      const {element} = await renderSpotlightContentLink();
+
+      expect(element.querySelector('atomic-product-text')).toHaveAttribute('field', 'name');
+    });
+
+    it('should call #select on the interactive spotlight content when clicked', async () => {
+      const {anchor, interactiveSpotlightContent} = await renderSpotlightContentLink();
+
+      anchor.click();
+
+      expect(interactiveSpotlightContent.select).toHaveBeenCalled();
+    });
   });
 });

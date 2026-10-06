@@ -1,9 +1,14 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import {type Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
+import type {SpotlightContent} from '@coveo/headless/commerce';
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {createProductContextController} from '@/src/components/commerce/product-template-component-utils/context/product-context-controller';
+import {
+  type CommerceResult,
+  getResultProperty,
+  isSpotlightContent,
+} from '@/src/components/commerce/product-template-component-utils/product-utils';
 import {renderImageCarousel} from '@/src/components/common/image-carousel/image-carousel';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -21,6 +26,9 @@ type Image = {
 /**
  * The `atomic-product-image` component renders an image from a product field. When the product has multiple images, it displays a carousel with navigation buttons and indicators.
  *
+ * Inside an `atomic-spotlight-content-template`, it renders the image of the Spotlight Content: its `mobileImage`, when
+ * available, on viewports narrower than the interface mobile breakpoint, and its `desktopImage` otherwise.
+ *
  * @part product-image - The image element that displays the product image.
  * @part previous-button - The container for the previous image button in the carousel.
  * @part next-button - The container for the next image button in the carousel.
@@ -36,9 +44,9 @@ type Image = {
 export class AtomicProductImage extends LitElement implements InitializableComponent<Bindings> {
   @state() public bindings!: Bindings;
 
-  public productController = createProductContextController(this);
+  public productController = createProductContextController<CommerceResult>(this);
 
-  @state() private product!: Product;
+  @state() private product!: CommerceResult;
 
   @state() public error!: Error;
   @state() private useFallback = false;
@@ -115,7 +123,7 @@ export class AtomicProductImage extends LitElement implements InitializableCompo
 
   private validateUrl(url: string | undefined) {
     if (!url) {
-      const message = `Image for ${this.product.ec_name} is missing. Please review your indexing. You might want to add a "fallback" property.`;
+      const message = `Image for ${this.itemName} is missing. Please review your indexing. You might want to add a "fallback" property.`;
       return this.handleMissingFallback(message);
     }
 
@@ -138,7 +146,7 @@ export class AtomicProductImage extends LitElement implements InitializableCompo
     return this.bindings.i18n.t('image-alt-fallback-multiple', {
       count: index + 1,
       max,
-      itemName: this.product.ec_name,
+      itemName: this.itemName,
     });
   }
 
@@ -159,7 +167,7 @@ export class AtomicProductImage extends LitElement implements InitializableCompo
 
   private get imageUrls() {
     try {
-      const value = ProductTemplatesHelpers.getProductProperty(this.product, this.field);
+      const value = getResultProperty(this.product, this.field);
 
       return Array.isArray(value) ? value : [value];
     } catch (error) {
@@ -172,7 +180,7 @@ export class AtomicProductImage extends LitElement implements InitializableCompo
     if (!this.imageAltField) {
       return null;
     }
-    const value = ProductTemplatesHelpers.getProductProperty(this.product, this.imageAltField);
+    const value = getResultProperty(this.product, this.imageAltField);
     if (isNullOrUndefined(value)) {
       return null;
     }
@@ -200,11 +208,41 @@ export class AtomicProductImage extends LitElement implements InitializableCompo
     `;
   }
 
+  private get itemName() {
+    return isSpotlightContent(this.product) ? this.product.name : this.product.ec_name;
+  }
+
+  private renderSpotlightContentImage(spotlightContent: SpotlightContent) {
+    const {desktopImage, mobileImage, altText, name} = spotlightContent;
+    const src = this.useFallback ? this.fallback : desktopImage;
+    return html`<picture>
+      ${when(
+        mobileImage && !this.useFallback,
+        () =>
+          html`<source
+            media="(width < ${this.bindings.store.state.mobileBreakpoint})"
+            srcset=${filterProtocol(mobileImage!)}
+          />`
+      )}
+      <img
+        part="product-image"
+        class="block h-full w-full rounded-lg object-cover"
+        alt=${altText ?? name ?? ''}
+        src=${filterProtocol(src)}
+        @error=${(event: Event) => this.handleImageError(event)}
+        loading="lazy"
+      />
+    </picture>`;
+  }
+
   @bindingGuard()
   @errorGuard()
   render() {
     if (this.product === null || this.product === undefined) {
       return nothing;
+    }
+    if (isSpotlightContent(this.product)) {
+      return this.renderSpotlightContentImage(this.product);
     }
     if (this.isFallbackMissing) {
       return nothing;
@@ -212,7 +250,7 @@ export class AtomicProductImage extends LitElement implements InitializableCompo
     const alt = this.imageAlt
       ? this.imageAlt
       : this.bindings.i18n.t('image-not-found-alt', {
-          itemName: this.product.ec_name,
+          itemName: this.itemName,
         });
 
     return html`
@@ -244,7 +282,7 @@ export class AtomicProductImage extends LitElement implements InitializableCompo
                   previousImage: () => this.previousImage(),
                   numberOfImages: this.numberOfImages,
                   label: this.bindings.i18n.t('image-gallery', {
-                    itemName: this.product.ec_name,
+                    itemName: this.itemName,
                   }),
                 },
               })(this.renderCurrentImage(this.images[this.currentImage]))

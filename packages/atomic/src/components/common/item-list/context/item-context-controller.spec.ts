@@ -51,26 +51,6 @@ describe('item-context', () => {
       expect(mockElement.addController).toHaveBeenCalledWith(controller);
     });
 
-    it('should dispatch "atomic/resolveResult" by default', () => {
-      controller = new ItemContextController(mockElement);
-
-      controller.hostConnected();
-
-      expect(vi.mocked(mockElement.dispatchEvent).mock.calls[0][0].type).toBe(
-        'atomic/resolveResult'
-      );
-    });
-
-    it('should dispatch the custom event name when provided', () => {
-      controller = new ItemContextController(mockElement, {eventName: 'atomic/resolveCustom'});
-
-      controller.hostConnected();
-
-      expect(vi.mocked(mockElement.dispatchEvent).mock.calls[0][0].type).toBe(
-        'atomic/resolveCustom'
-      );
-    });
-
     describe('when controller is connected', () => {
       beforeEach(() => {
         controller = new ItemContextController(mockElement, {

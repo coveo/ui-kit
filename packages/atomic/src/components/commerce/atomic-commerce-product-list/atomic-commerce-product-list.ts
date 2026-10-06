@@ -4,7 +4,6 @@ import {
   type ProductListing,
   type ProductListingState,
   type ProductListingSummaryState,
-  ResultType,
   type Search,
   type SearchState,
   type SearchSummaryState,
@@ -24,6 +23,7 @@ import {
 } from '@/src/components/commerce/atomic-commerce-interface/search-or-listing';
 import type {SelectChildProductEventArgs} from '@/src/components/commerce/atomic-product-children/select-child-product-event';
 import {ProductTemplateProvider} from '@/src/components/commerce/product-list/product-template-provider';
+import {isSpotlightContent} from '@/src/components/commerce/product-template-component-utils/product-utils';
 import {SpotlightContentTemplateProvider} from '@/src/components/commerce/product-list/spotlight-content-template-provider';
 import {renderItemPlaceholders} from '@/src/components/common/atomic-result-placeholder/item-placeholders';
 import {createAppLoadedListener} from '@/src/components/common/interface/store';
@@ -674,10 +674,6 @@ export class AtomicCommerceProductList
     }
     return this.nextNewResultTarget;
   }
-}
-
-function isSpotlightContent(item: Product | SpotlightContent): item is SpotlightContent {
-  return item.resultType === ResultType.SPOTLIGHT;
 }
 
 declare global {

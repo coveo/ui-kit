@@ -23,8 +23,8 @@ import {InteractiveItemContextController} from '@/src/components/common/item-lis
  * }
  * ```
  */
-export function createInteractiveProductContextController(
+export function createInteractiveProductContextController<T = InteractiveProduct>(
   host: LitElement & {error: Error}
-): InteractiveItemContextController<InteractiveProduct> {
-  return new InteractiveItemContextController<InteractiveProduct>(host);
+): InteractiveItemContextController<T> {
+  return new InteractiveItemContextController<T>(host);
 }
