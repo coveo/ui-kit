@@ -71,7 +71,7 @@ describe('atomic-commerce-search-box', () => {
       minimumQueryLength?: number;
       numberOfQueries?: number;
       clearFilters?: boolean;
-      enableClearRecentQueriesButton?: boolean;
+      withClearRecentButton?: boolean;
     };
     suggestionCount?: number;
     noSuggestions?: boolean;
@@ -117,7 +117,7 @@ describe('atomic-commerce-search-box', () => {
       minimumQueryLength,
       numberOfQueries,
       clearFilters,
-      enableClearRecentQueriesButton,
+      withClearRecentButton,
     } = searchBoxProps || {};
     const {element} = await renderInAtomicCommerceInterface<AtomicCommerceSearchBox>({
       template: html`<atomic-commerce-search-box
@@ -126,7 +126,7 @@ describe('atomic-commerce-search-box', () => {
         minimum-query-length=${ifDefined(minimumQueryLength)}
         number-of-queries=${ifDefined(numberOfQueries)}
         clear-filters=${ifDefined(clearFilters)}
-        ?enable-clear-recent-queries-button=${enableClearRecentQueriesButton ?? false}
+        ?with-clear-recent-button=${withClearRecentButton ?? false}
       >
         ${suggestions} ${additionalChildren}
       </atomic-commerce-search-box>`,
@@ -462,11 +462,11 @@ describe('atomic-commerce-search-box', () => {
       (suggestion) => (suggestion as Element & {suggestion: {key: string}}).suggestion.key
     );
 
-  describe('when enable-clear-recent-queries-button is set', () => {
+  describe('when with-clear-recent-button is set', () => {
     const renderWithClearRecentQueriesButton = async () => {
       const searchBox = await renderSearchBox({
         noSuggestions: true,
-        searchBoxProps: {enableClearRecentQueriesButton: true},
+        searchBoxProps: {withClearRecentButton: true},
       });
       await userEvent.click(searchBox.element);
 

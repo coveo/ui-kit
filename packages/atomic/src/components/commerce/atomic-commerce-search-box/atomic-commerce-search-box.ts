@@ -87,7 +87,7 @@ import '@coveo/atomic-legacy/atomic-suggestion-renderer';
  * @part recent-query-title-content - The contents of the clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component.
  * @part recent-query-title - The "recent searches" text of the clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component.
  * @part recent-query-clear - The "clear" text of the clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component.
- * @part recent-query-clear-button - The button below suggestions to clear the recent queries from the `atomic-commerce-search-box-recent-queries` component, when `enable-clear-recent-queries-button` is set.
+ * @part recent-query-clear-button - The button below suggestions to clear the recent queries from the `atomic-commerce-search-box-recent-queries` component, when `with-clear-recent-button` is set.
  *
  * @part instant-results-item - An instant product rendered by an `atomic-commerce-search-box-instant-products` component.
  * @part instant-results-show-all - The clickable suggestion to show all items for the current instant product search rendered by an `atomic-commerce-search-box-instant-products` component.
@@ -206,11 +206,11 @@ export class AtomicCommerceSearchBox
    */
   @property({
     type: Boolean,
-    attribute: 'enable-clear-recent-queries-button',
+    attribute: 'with-clear-recent-button',
     reflect: true,
     converter: booleanConverter,
   })
-  public enableClearRecentQueriesButton = false;
+  public withClearRecentButton = false;
 
   connectedCallback() {
     super.connectedCallback();
@@ -577,7 +577,7 @@ export class AtomicCommerceSearchBox
   }
 
   private get clearRecentQueriesElement() {
-    if (!this.enableClearRecentQueriesButton) {
+    if (!this.withClearRecentButton) {
       return undefined;
     }
 

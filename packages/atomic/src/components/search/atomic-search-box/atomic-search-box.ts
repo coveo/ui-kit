@@ -85,7 +85,7 @@ import '@coveo/atomic-legacy/atomic-suggestion-renderer';
  * @part recent-query-title-content - The contents of the clear button above suggestions from the `atomic-search-box-recent-queries` component.
  * @part recent-query-title - The "recent searches" text of the clear button above suggestions from the `atomic-search-box-recent-queries` component.
  * @part recent-query-clear - The "clear" text of the clear button above suggestions from the `atomic-search-box-recent-queries` component.
- * @part recent-query-clear-button - The button below suggestions to clear the recent queries from the `atomic-search-box-recent-queries` component, when `enable-clear-recent-queries-button` is set.
+ * @part recent-query-clear-button - The button below suggestions to clear the recent queries from the `atomic-search-box-recent-queries` component, when `with-clear-recent-button` is set.
  *
  * @part instant-results-item - An instant result rendered by an `atomic-search-box-instant-results` component.
  * @part instant-results-show-all - The clickable suggestion to show all items for the current instant results search rendered by an `atomic-search-box-instant-results` component.
@@ -218,11 +218,11 @@ export class AtomicSearchBox extends LitElement implements InitializableComponen
    */
   @property({
     type: Boolean,
-    attribute: 'enable-clear-recent-queries-button',
+    attribute: 'with-clear-recent-button',
     reflect: true,
     converter: booleanConverter,
   })
-  public enableClearRecentQueriesButton = false;
+  public withClearRecentButton = false;
 
   connectedCallback() {
     super.connectedCallback();
@@ -592,7 +592,7 @@ export class AtomicSearchBox extends LitElement implements InitializableComponen
   }
 
   private get clearRecentQueriesElement() {
-    if (!this.enableClearRecentQueriesButton) {
+    if (!this.withClearRecentButton) {
       return undefined;
     }
 
