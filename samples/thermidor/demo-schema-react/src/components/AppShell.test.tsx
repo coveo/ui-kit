@@ -4,13 +4,13 @@ import type {Session, Turn} from '@coveo/thermidor';
 import {AppShell} from './AppShell.js';
 import {makeTurn, makeSurface} from '../test/turn-fixtures.js';
 
-const mockSubmit = vi.fn();
+const mockDispatchAction = vi.fn();
 
 let mockTurns: Turn[] = [];
 
 // AppShell reads turns through `useSession()` and drives navigation off the
 // `response.surfaces` projection. The fake session exposes just the members the
-// shell touches: `turns`, `subscribe`, and `submit`.
+// shell touches: `turns`, `subscribe`, and `dispatchAction`.
 vi.mock('../context/session.js', () => ({
   useSession: () =>
     ({
@@ -18,8 +18,7 @@ vi.mock('../context/session.js', () => ({
         return mockTurns;
       },
       subscribe: () => () => undefined,
-      submit: mockSubmit,
-      dispatchAction: vi.fn(),
+      dispatchAction: mockDispatchAction,
     }) as unknown as Session,
 }));
 
@@ -119,7 +118,7 @@ describe('AppShell', () => {
       screen.getByTestId('submit-btn').click();
     });
 
-    expect(mockSubmit).not.toHaveBeenCalled();
+    expect(mockDispatchAction).not.toHaveBeenCalled();
   });
 
   it('"Back to search results" navigates from conversation to search view', () => {
