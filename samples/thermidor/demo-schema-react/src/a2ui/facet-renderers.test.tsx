@@ -541,7 +541,11 @@ describe('CategoryFacet', () => {
       },
     });
 
-    await waitFor(() => expect(screen.getByTestId('facet-search-result-Wetsuits')).toBeDefined());
+    await waitFor(() =>
+      expect(
+        screen.getByTestId('facet-search-result-Sporting Goods/Water Sports/Wetsuits')
+      ).toBeDefined()
+    );
     expect(screen.queryByTestId('facet-search-show-more-ec_category')).toBeNull();
   });
 
