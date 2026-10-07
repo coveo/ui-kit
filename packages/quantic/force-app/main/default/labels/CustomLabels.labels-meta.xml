@@ -1436,6 +1436,13 @@
     <shortDescription>Search field with suggestions.</shortDescription>
   </labels>
   <labels>
+    <fullName>quantic_SearchBoxPlaceholder</fullName>
+    <value>Search...</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Search box placeholder</shortDescription>
+  </labels>
+  <labels>
     <fullName>quantic_SuggestionFound</fullName>
     <value>{{0}} search suggestion found, to navigate use up and down arrows.</value>
     <language>en_US</language>

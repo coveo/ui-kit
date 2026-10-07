@@ -1,3 +1,4 @@
+import searchBoxPlaceholderLabel from '@salesforce/label/c.quantic_SearchBoxPlaceholder';
 import QuanticSearchBoxInput from '../quanticSearchBoxInput';
 import {buildCreateTestComponent, cleanup, flushPromises} from 'c/testUtils';
 
@@ -176,6 +177,47 @@ describe('c-quantic-search-box-input', () => {
           );
 
           expect(input.placeholder).toEqual(customPlaceholder);
+        });
+      });
+
+      describe.each([null, undefined])(
+        'when the placeholder property receives the value %p',
+        (emptyPlaceholder) => {
+          it('should display the default placeholder label as the searchbox placeholder', async () => {
+            const element = createTestComponent({
+              ...defaultOptions,
+              placeholder: emptyPlaceholder,
+              textarea: textareaValue,
+            });
+            await flushPromises();
+
+            const input = element.shadowRoot.querySelector(
+              textareaValue
+                ? selectors.searchBoxTextArea
+                : selectors.searchBoxInput
+            );
+
+            expect(input.placeholder).toEqual(searchBoxPlaceholderLabel);
+          });
+        }
+      );
+
+      describe('when the placeholder property receives an empty string', () => {
+        it('should display an empty searchbox placeholder', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            placeholder: '',
+            textarea: textareaValue,
+          });
+          await flushPromises();
+
+          const input = element.shadowRoot.querySelector(
+            textareaValue
+              ? selectors.searchBoxTextArea
+              : selectors.searchBoxInput
+          );
+
+          expect(input.placeholder).toEqual('');
         });
       });
 

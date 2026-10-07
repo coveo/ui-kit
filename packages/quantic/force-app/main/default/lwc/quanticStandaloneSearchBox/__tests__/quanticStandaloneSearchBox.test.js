@@ -2,6 +2,7 @@
 /* eslint-disable no-import-assign */
 // @ts-ignore
 import QuanticStandaloneSearchBox from 'c/quanticStandaloneSearchBox';
+import searchBoxPlaceholderLabel from '@salesforce/label/c.quantic_SearchBoxPlaceholder';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 import {CurrentPageReference} from 'lightning/navigation';
 import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
@@ -125,7 +126,7 @@ describe('c-quantic-standalone-search-box', () => {
       expect(input).not.toBeNull();
       expect(input.withoutSubmitButton).toBe(false);
       expect(input.textarea).toBe(false);
-      expect(input.placeholder).toBe(null);
+      expect(input.placeholder).toBe(searchBoxPlaceholderLabel);
       expect(input.inputValue).toBe('');
       expect(input.recentQueries).toBeUndefined();
       expect(input.maxNumberOfSuggestions).toBe(7);
