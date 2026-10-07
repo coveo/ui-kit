@@ -15,10 +15,14 @@
   transition: background-color var(--transition-fast);
 }
 
-.button:hover,
+.button:hover {
+  background: var(--color-surface-hover);
+}
+
 .button:focus-visible {
   background: var(--color-surface-hover);
-  outline: none;
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
 }
 
 .query {
