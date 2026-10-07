@@ -13,17 +13,17 @@ import {DataBindingSchema, FunctionCallSchema} from '@coveo/thermidor-schema/zod
  * Delete this file and use the generated schemas once the schema ships the component.
  */
 
-export const SearchOptionItemSchema = z.object({
+const SearchOptionItemSchema = z.object({
   optionId: z.string().min(1),
   label: z.string(),
 });
 export type SearchOptionItem = z.infer<typeof SearchOptionItemSchema>;
 
-export const SearchOptionsStateSchema = z.object({
+const SearchOptionsStateSchema = z.object({
   items: z.array(SearchOptionItemSchema),
 });
 
-export const SelectSearchOptionPayloadSchema = z
+const SelectSearchOptionPayloadSchema = z
   .object({
     optionId: z.string().min(1),
   })
