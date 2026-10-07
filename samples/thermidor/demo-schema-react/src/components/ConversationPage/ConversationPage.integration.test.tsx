@@ -60,6 +60,30 @@ describe('ConversationPage integration', () => {
       expect(screen.getByText('Service unavailable')).toBeDefined();
     });
 
+    it('keeps an agent answer whose search option opened a search block', () => {
+      const turns: Turn[] = [
+        makeTurn({
+          id: 'turn-1',
+          prompt: 'Recommend waterproof trail shoes',
+          response: {
+            agent: {
+              messages: [{content: 'Here are a few directions.', role: 'assistant'}],
+              reasoningSteps: [],
+            },
+            surfaces: [
+              makeSurface('agent-1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed', 'SearchOptions'),
+              makeSurface('ui-6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b', 'CommerceSearch'),
+            ],
+          },
+        }),
+      ];
+
+      renderPage({turns});
+
+      expect(screen.getByText('Here are a few directions.')).toBeDefined();
+      expect(screen.queryByText('Search results updated.')).toBeNull();
+    });
+
     it('renders separators between turns but not after the last turn', () => {
       const turns: Turn[] = [
         makeTurn({

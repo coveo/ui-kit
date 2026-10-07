@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useReducer, useRef, useState} from 'react';
-import type {DiscoveredSurface, Turn} from '@coveo/thermidor';
+import type {Turn} from '@coveo/thermidor';
 import type {TargetedProduct} from '../context/targeting.js';
+import {COMMERCE_SEARCH_ROOT_TYPE, latestCommerceSurfaceId} from '../a2ui/surface-messages.js';
 
 type ViewState = 'landing' | 'search' | 'conversation';
 
@@ -49,16 +50,10 @@ function navReducer(state: NavState, action: NavAction): NavState {
   }
 }
 
-const COMMERCE_SEARCH_ROOT_TYPE = 'CommerceSearch';
-
-/**
- * Reads the typed `response.surfaces` projection to find the turn's
- * commerce-search surface, returning its `surfaceId` or null. Surface discovery
- * is done by the client fold; consumers never walk `response.activities`.
- */
-function findCommerceSurfaceId(surfaces: DiscoveredSurface[] | undefined): string | null {
-  const surface = surfaces?.find((s) => s.rootComponentType === COMMERCE_SEARCH_ROOT_TYPE);
-  return surface?.surfaceId ?? null;
+/** The turn and commerce-search surface the navigation last acted on. */
+interface ObservedTurn {
+  turnId: string;
+  commerceSurfaceId: string | null;
 }
 
 export function deriveTransitionAction(turn: Turn): NavAction | null {
@@ -83,17 +78,17 @@ export function useNavigation(controller: Controller, converseState: ConverseSta
 
   const commerceSurfaceIdRef = useRef<string | null>(null);
   const persistedQueryRef = useRef<string>('');
-  const lastObservedTurnIdRef = useRef<string | null>(null);
+  const lastObservedRef = useRef<ObservedTurn | null>(null);
   const pendingNavigationRef = useRef(false);
   const [canGoBackToSearch, setCanGoBackToSearch] = useState(false);
   const [targetedProducts, setTargetedProducts] = useState<TargetedProduct[]>([]);
 
   const persistAndNavigateToSearch = useCallback(
-    (turn: Turn) => {
-      const surfaceId = findCommerceSurfaceId(turn.response.surfaces);
+    (turn: Turn, query: string = turn.input.prompt ?? '') => {
+      const surfaceId = latestCommerceSurfaceId(turn.response.surfaces);
       commerceSurfaceIdRef.current = surfaceId;
-      persistedQueryRef.current = turn.input.prompt ?? '';
-      lastObservedTurnIdRef.current = turn.id;
+      persistedQueryRef.current = query;
+      lastObservedRef.current = {turnId: turn.id, commerceSurfaceId: surfaceId};
 
       setCanGoBackToSearch(true);
 
@@ -108,7 +103,7 @@ export function useNavigation(controller: Controller, converseState: ConverseSta
     if (pendingNavigationRef.current && turns.length > 0) {
       const latestTurn = turns[turns.length - 1];
 
-      const surfaceId = findCommerceSurfaceId(latestTurn.response.surfaces);
+      const surfaceId = latestCommerceSurfaceId(latestTurn.response.surfaces);
       if (surfaceId) {
         pendingNavigationRef.current = false;
         persistAndNavigateToSearch(latestTurn);
@@ -130,9 +125,20 @@ export function useNavigation(controller: Controller, converseState: ConverseSta
     }
 
     if (!latestCompletedTurn) return;
-    if (latestCompletedTurn.id === lastObservedTurnIdRef.current) return;
 
-    lastObservedTurnIdRef.current = latestCompletedTurn.id;
+    const commerceSurfaceId = latestCommerceSurfaceId(latestCompletedTurn.response.surfaces);
+    const lastObserved = lastObservedRef.current;
+    if (latestCompletedTurn.id === lastObserved?.turnId) {
+      // An already observed turn moves the view only when it gains a new search block: a search
+      // option tapped in an agent answer opens one on the same turn. Its query is not sent to the
+      // browser, so the prompt input starts empty.
+      if (commerceSurfaceId && commerceSurfaceId !== lastObserved.commerceSurfaceId) {
+        persistAndNavigateToSearch(latestCompletedTurn, '');
+      }
+      return;
+    }
+
+    lastObservedRef.current = {turnId: latestCompletedTurn.id, commerceSurfaceId};
 
     const action = deriveTransitionAction(latestCompletedTurn);
 

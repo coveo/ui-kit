@@ -162,6 +162,36 @@ describe('AppShell', () => {
     expect(screen.getByTestId('search-results-page')).toBeDefined();
   });
 
+  it('navigates to the search block a search option opens on an agent turn', () => {
+    const agent = {
+      messages: [{content: 'Here are a few directions.', role: 'assistant'}],
+      reasoningSteps: [{type: 'reasoning' as const, content: 'thinking'}],
+    };
+    const agentSurface = makeSurface('agent-1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed', 'SearchOptions');
+
+    const {rerender} = render(<AppShell />);
+    act(() => {
+      screen.getByTestId('submit-btn').click();
+    });
+
+    mockTurns = [makeTurn({id: 'turn-1', response: {agent, surfaces: [agentSurface]}})];
+    rerender(<AppShell />);
+    expect(screen.getByTestId('conversation-page')).toBeDefined();
+
+    // Tapping an option streams a new commerce-search surface onto the same turn.
+    const searchSurfaceId = 'ui-6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b';
+    mockTurns = [
+      makeTurn({
+        id: 'turn-1',
+        response: {agent, surfaces: [agentSurface, makeSurface(searchSurfaceId, 'CommerceSearch')]},
+      }),
+    ];
+    rerender(<AppShell />);
+
+    expect(screen.getByTestId('search-results-page')).toBeDefined();
+    expect(screen.getByTestId('surface-id').textContent).toBe(searchSurfaceId);
+  });
+
   it('"Back to search results" is disabled when no commerce surface exists', () => {
     mockTurns = [];
 

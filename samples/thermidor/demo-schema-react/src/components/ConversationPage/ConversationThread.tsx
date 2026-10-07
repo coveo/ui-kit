@@ -4,6 +4,7 @@ import {ErrorTurnBlock} from './ErrorTurnBlock.js';
 import {RoutedTurnBlock} from './RoutedTurnBlock.js';
 import {UserPromptBubble} from './UserPromptBubble.js';
 import {TurnSeparator} from './TurnSeparator.js';
+import {commerceSurfaceIds} from '../../a2ui/surface-messages.js';
 import styles from './ConversationThread.module.css';
 
 interface ConversationThreadProps {
@@ -36,18 +37,15 @@ export function ConversationThread({turns, turnRefs}: ConversationThreadProps) {
   );
 }
 
-const COMMERCE_SEARCH_ROOT_TYPE = 'CommerceSearch';
-
 function renderTurnContent(turn: Turn) {
   if (turn.status === 'error') {
     return <ErrorTurnBlock error={turn.error} />;
   }
 
-  const hasCommerceSurface = turn.response.surfaces.some(
-    (s) => s.rootComponentType === COMMERCE_SEARCH_ROOT_TYPE
-  );
+  const hasCommerceSurface = commerceSurfaceIds(turn.response.surfaces).length > 0;
 
-  if (turn.status === 'complete' && hasCommerceSurface) {
+  // An agent answer keeps its place even after one of its search options opened a search block.
+  if (turn.status === 'complete' && hasCommerceSurface && !turn.response.agent) {
     return <RoutedTurnBlock />;
   }
 

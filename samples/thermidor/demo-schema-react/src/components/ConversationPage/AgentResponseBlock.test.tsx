@@ -32,8 +32,12 @@ vi.mock('../../a2ui/Skeleton/Skeleton.js', () => ({
   ),
 }));
 
+const {surfacesMock} = vi.hoisted(() => ({
+  surfacesMock: vi.fn((_props: {messages: Record<string, unknown>[]}) => null),
+}));
+
 vi.mock('../../a2ui/surfaces.js', () => ({
-  ThermidorA2UISurfaces: () => null,
+  ThermidorA2UISurfaces: surfacesMock,
 }));
 
 /**
@@ -264,6 +268,37 @@ describe('AgentResponseBlock', () => {
 
       renderBlock(response, {isStreaming: true});
       expect(screen.queryByTestId('skeleton')).toBeNull();
+    });
+  });
+
+  describe('search blocks opened from a search option', () => {
+    it('keeps the commerce-search surface out of the agent answer', () => {
+      const agentSurfaceId = 'agent-1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed';
+      const searchSurfaceId = 'ui-6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b';
+      surfacesMock.mockClear();
+
+      render(
+        <AgentResponseBlock
+          response={makeResponse({
+            agent: {messages: [{content: 'Answer', role: 'assistant'}], reasoningSteps: []},
+            surfaces: [
+              {surfaceId: agentSurfaceId, rootComponentType: 'SearchOptions'},
+              {surfaceId: searchSurfaceId, rootComponentType: 'CommerceSearch'},
+            ],
+            a2uiMessages: [
+              {version: 'v0.9', createSurface: {surfaceId: agentSurfaceId}},
+              {version: 'v0.9', createSurface: {surfaceId: searchSurfaceId}},
+              {version: 'v0.9', updateDataModel: {surfaceId: searchSurfaceId, value: {}}},
+            ],
+          })}
+          isStreaming={false}
+        />
+      );
+
+      expect(surfacesMock).toHaveBeenCalled();
+      expect(surfacesMock.mock.lastCall?.[0].messages).toEqual([
+        {version: 'v0.9', createSurface: {surfaceId: agentSurfaceId}},
+      ]);
     });
   });
 });

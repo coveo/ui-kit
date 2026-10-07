@@ -1,8 +1,9 @@
-import {useCallback, useSyncExternalStore} from 'react';
+import {useCallback, useMemo, useSyncExternalStore} from 'react';
 import type {A2uiV09Message} from '@coveo/thermidor';
 import {ProductTargeting} from '../ProductTargeting/ProductTargeting.js';
 import {type TargetedProduct} from '../../context/targeting.js';
 import {ThermidorA2UISurfaces} from '../../a2ui/surfaces.js';
+import {filterSurfaceMessages} from '../../a2ui/surface-messages.js';
 import {useSession} from '../../context/session.js';
 import styles from './SearchResultsPage.module.css';
 
@@ -40,9 +41,18 @@ export function SearchResultsPage(props: SearchResultsPageProps) {
   );
   const getA2uiMessages = useCallback((): A2uiV09Message[] => {
     const turns = session.turns;
-    return turns[turns.length - 1]?.response.a2uiMessages ?? EMPTY_MESSAGES;
-  }, [session]);
-  const a2uiMessages = useSyncExternalStore(subscribe, getA2uiMessages, getA2uiMessages);
+    const surfaceTurn =
+      turns.findLast((turn) =>
+        turn.response.surfaces?.some((surface) => surface.surfaceId === props.surfaceId)
+      ) ?? turns[turns.length - 1];
+    return surfaceTurn?.response.a2uiMessages ?? EMPTY_MESSAGES;
+  }, [session, props.surfaceId]);
+  const turnMessages = useSyncExternalStore(subscribe, getA2uiMessages, getA2uiMessages);
+  // The turn can also hold the agent answer whose search option opened this search block.
+  const a2uiMessages = useMemo(
+    () => filterSurfaceMessages(turnMessages, (surfaceId) => surfaceId === props.surfaceId),
+    [turnMessages, props.surfaceId]
+  );
 
   return (
     <div className={styles.searchLayout}>

@@ -109,6 +109,7 @@ ConversationPage
 │                       ├── BundleDisplay (dumb: reads resolved tiers + slot child ids from props)
 │                       ├── ComparisonTable (dumb: reads resolved products + attributes from props)
 │                       ├── ProductResearchCard (dumb: reads resolved product, summary + bullets from props)
+│                       ├── SearchOptions (dumb: reads resolved {optionId, label} items; dispatches selectSearchOption)
 │                       └── NextActionsBar (dumb: reads resolved action items; dispatch via onAction)
 └── "Back to search" floating button (if canGoBackToSearch)
 ```
@@ -118,6 +119,8 @@ ConversationPage
 **ConversationThread** iterates over turns and delegates rendering to the appropriate block based on turn status. The key path is through **AgentResponseBlock**, which orchestrates the streaming experience: first showing a thinking indicator, then streaming text, then skeleton placeholders (inferred from `store_render_plan` tool calls), and finally the resolved A2-UI catalog components once component state arrives via `/state/<id>` `updateDataModel` operations resolved into the renderer's data model.
 
 The catalog renderers (ProductCarousel, BundleDisplay, ComparisonTable, ProductResearchCard, NextActionsBar) are **dumb**: each reads its resolved values directly from `props` (the renderer resolves each `{ "path": ... }` binding against its A2-UI data model), with no identity join and no controller hydration. Actions surface through the renderer's `onAction` handler, wired to `session.dispatchAction`.
+
+**SearchOptions** (agent-gateway ADR-008) renders the search options of an agent answer. The gateway keeps each option's search and forwards only `{optionId, label}`; tapping one dispatches `selectSearchOption {optionId}`, and the gateway opens a new commerce-search surface on the same turn, which navigates to the SearchResultsPage. The agent answer stays in the conversation. `@coveo/thermidor-schema` does not publish the component yet, so its contract lives in `src/a2ui/SearchOptions/search-options-contract.ts` and is injected into the session beside `ComponentContractsSchema`.
 
 ### SearchResultsPage (decomposed commerce)
 

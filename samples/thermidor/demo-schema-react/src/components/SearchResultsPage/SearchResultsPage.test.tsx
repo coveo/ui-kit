@@ -1,23 +1,38 @@
 import {render, screen, fireEvent} from '@testing-library/react';
-import {describe, it, expect, vi} from 'vitest';
+import {beforeEach, describe, it, expect, vi} from 'vitest';
 import {SearchResultsPage} from './SearchResultsPage.js';
 
 vi.mock('../../a2ui/surfaces.js', () => ({
-  ThermidorA2UISurfaces: ({messages}: {messages: unknown[]}) => (
-    <div data-testid="a2ui-surfaces">{messages.length}</div>
+  ThermidorA2UISurfaces: ({messages}: {messages: Array<Record<string, any>>}) => (
+    <div data-testid="a2ui-surfaces">
+      {messages.map((message) => message.createSurface?.surfaceId).join(',')}
+    </div>
   ),
 }));
 
-// The page reads the renderer-ready v0.9 stream off the active turn's
-// `response.a2uiMessages`; thermidor derives it, so the fixture supplies it directly.
-const a2uiMessages = [{version: 'v0.9', createSurface: {surfaceId: 'ui-commerce-search'}}];
+// The page reads the renderer-ready v0.9 stream off the turn holding its surface
+// (`response.a2uiMessages`); thermidor derives it, so the fixture supplies it directly.
+let mockTurns: unknown[] = [];
 
 vi.mock('../../context/session.js', () => ({
   useSession: () => ({
-    turns: [{response: {a2uiMessages}}],
+    get turns() {
+      return mockTurns;
+    },
     subscribe: () => () => undefined,
   }),
 }));
+
+beforeEach(() => {
+  mockTurns = [
+    {
+      response: {
+        surfaces: [{surfaceId: 'ui-commerce-search', rootComponentType: 'CommerceSearch'}],
+        a2uiMessages: [{version: 'v0.9', createSurface: {surfaceId: 'ui-commerce-search'}}],
+      },
+    },
+  ];
+});
 
 vi.mock('../ProductTargeting/ProductTargeting.js', () => ({
   ProductTargeting: ({children}: {children: React.ReactNode}) => (
@@ -39,6 +54,33 @@ describe('SearchResultsPage', () => {
     render(<SearchResultsPage {...defaultProps} />);
 
     expect(screen.getByTestId('a2ui-surfaces')).toBeDefined();
+  });
+
+  it('mounts only its own surface from a turn that also holds an agent answer', () => {
+    mockTurns = [
+      {
+        response: {
+          surfaces: [
+            {surfaceId: 'agent-answer', rootComponentType: 'SearchOptions'},
+            {surfaceId: 'ui-commerce-search', rootComponentType: 'CommerceSearch'},
+          ],
+          a2uiMessages: [
+            {version: 'v0.9', createSurface: {surfaceId: 'agent-answer'}},
+            {version: 'v0.9', createSurface: {surfaceId: 'ui-commerce-search'}},
+          ],
+        },
+      },
+      {
+        response: {
+          surfaces: [{surfaceId: 'later-answer', rootComponentType: 'ProductCarousel'}],
+          a2uiMessages: [{version: 'v0.9', createSurface: {surfaceId: 'later-answer'}}],
+        },
+      },
+    ];
+
+    render(<SearchResultsPage {...defaultProps} />);
+
+    expect(screen.getByTestId('a2ui-surfaces').textContent).toBe('ui-commerce-search');
   });
 
   it('wraps the A2-UI surfaces in ProductTargeting', () => {
