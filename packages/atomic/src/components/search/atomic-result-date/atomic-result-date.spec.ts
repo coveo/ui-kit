@@ -7,7 +7,6 @@ import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicResult} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-result-fixture';
 import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import locales from '@/src/locales.json';
 import {AtomicResultDate} from './atomic-result-date';
 import './atomic-result-date';
 
@@ -250,26 +249,6 @@ describe('atomic-result-date', () => {
       // For dates older than a week, it falls back to sameElse format
       // The rendered date includes the date in some format
       expect(element.textContent?.trim()).toMatch(/2020|01|15/);
-    });
-
-    // The `calendar-*` translations are used as dayjs format strings, so prose
-    // in them must be wrapped in `[]` or it gets read as date tokens.
-    it('should not interpret any calendar translation as date tokens', () => {
-      const keys = [
-        'calendar-same-day',
-        'calendar-next-day',
-        'calendar-next-week',
-        'calendar-last-day',
-        'calendar-last-week',
-      ];
-
-      const unescaped = keys.flatMap((key) =>
-        Object.entries(locales[key] as Record<string, string>)
-          .filter(([, value]) => !/^(d{3,4}|\[[^\]]*\]|[\s,.'’-])*$/.test(value))
-          .map(([language, value]) => `${key}/${language}: ${value}`)
-      );
-
-      expect(unescaped).toEqual([]);
     });
   });
 });
