@@ -496,14 +496,100 @@ describe('CategoryFacet', () => {
       },
     });
 
-    await waitFor(() => expect(screen.getByTestId('facet-search-result-Wetsuits')).toBeDefined());
-    fireEvent.click(screen.getByTestId('facet-search-result-Wetsuits'));
+    await waitFor(() =>
+      expect(
+        screen.getByTestId('facet-search-result-Sporting Goods/Water Sports/Wetsuits')
+      ).toBeDefined()
+    );
+    fireEvent.click(screen.getByTestId('facet-search-result-Sporting Goods/Water Sports/Wetsuits'));
     await waitFor(() =>
       expect(lastAction()).toMatchObject({
         name: 'selectPath',
         context: {path: ['Sporting Goods', 'Water Sports', 'Wetsuits']},
       })
     );
+  });
+
+  it('shows the parent path of search results that share a leaf value and selects each one by its own path', async () => {
+    const {lastAction} = mountFacet({
+      ...stateWithChildren,
+      facetSearch: {
+        query: 'wet',
+        canShowMoreResults: false,
+        results: [
+          {
+            path: ['Sporting Goods', 'Water Sports', 'Wetsuits'],
+            value: 'Wetsuits',
+            numberOfResults: 4,
+          },
+          {path: ['Clothing', 'Wetsuits'], value: 'Wetsuits', numberOfResults: 2},
+        ],
+      },
+    });
+
+    const waterSportsTestId = 'facet-search-result-Sporting Goods/Water Sports/Wetsuits';
+    const clothingTestId = 'facet-search-result-Clothing/Wetsuits';
+    await waitFor(() => expect(screen.getByTestId(waterSportsTestId)).toBeDefined());
+
+    expect(
+      screen.getByTestId('facet-search-result-path-Sporting Goods/Water Sports/Wetsuits')
+        .textContent
+    ).toBe('inSporting Goods/Water Sports');
+    expect(screen.getByTestId('facet-search-result-path-Clothing/Wetsuits').textContent).toBe(
+      'inClothing'
+    );
+    expect(screen.getByTestId(waterSportsTestId).getAttribute('aria-label')).toBe(
+      'Wetsuits (4) under Sporting Goods, Water Sports'
+    );
+    expect(screen.getByTestId(clothingTestId).getAttribute('aria-label')).toBe(
+      'Wetsuits (2) under Clothing'
+    );
+
+    fireEvent.click(screen.getByTestId(waterSportsTestId));
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({
+        name: 'selectPath',
+        context: {path: ['Sporting Goods', 'Water Sports', 'Wetsuits']},
+      })
+    );
+
+    fireEvent.click(screen.getByTestId(clothingTestId));
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({
+        name: 'selectPath',
+        context: {path: ['Clothing', 'Wetsuits']},
+      })
+    );
+  });
+
+  it('shows "All Categories" for root search results and ellipses long parent paths', async () => {
+    mountFacet({
+      ...stateWithChildren,
+      facetSearch: {
+        query: 'wet',
+        canShowMoreResults: false,
+        results: [
+          {path: ['Wetsuits'], value: 'Wetsuits', numberOfResults: 1},
+          {
+            path: ['Sporting Goods', 'Water Sports', 'Surfing', 'Gear', 'Wetsuits'],
+            value: 'Wetsuits',
+            numberOfResults: 3,
+          },
+        ],
+      },
+    });
+
+    await waitFor(() =>
+      expect(screen.getByTestId('facet-search-result-path-Wetsuits')).toBeDefined()
+    );
+    expect(screen.getByTestId('facet-search-result-path-Wetsuits').textContent).toBe(
+      'inAll Categories'
+    );
+    expect(
+      screen.getByTestId(
+        'facet-search-result-path-Sporting Goods/Water Sports/Surfing/Gear/Wetsuits'
+      ).textContent
+    ).toBe('inSporting Goods/.../Surfing/Gear');
   });
 
   it('shows a "+ Show more" button that dispatches showMoreValues when canShowMoreValues', async () => {
@@ -568,7 +654,11 @@ describe('CategoryFacet', () => {
       },
     });
 
-    await waitFor(() => expect(screen.getByTestId('facet-search-result-Wetsuits')).toBeDefined());
+    await waitFor(() =>
+      expect(
+        screen.getByTestId('facet-search-result-Sporting Goods/Water Sports/Wetsuits')
+      ).toBeDefined()
+    );
     expect(screen.queryByTestId('facet-show-more-ec_category')).toBeNull();
     expect(screen.queryByTestId('facet-show-less-ec_category')).toBeNull();
   });
