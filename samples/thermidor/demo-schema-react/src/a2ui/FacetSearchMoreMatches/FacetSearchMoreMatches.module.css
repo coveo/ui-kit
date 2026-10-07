@@ -2,7 +2,7 @@
   align-self: flex-start;
   max-width: 100%;
   overflow: hidden;
-  padding: var(--space-2);
+  padding: var(--space-1) 0;
   border: none;
   border-radius: var(--radius-md);
   background: none;
