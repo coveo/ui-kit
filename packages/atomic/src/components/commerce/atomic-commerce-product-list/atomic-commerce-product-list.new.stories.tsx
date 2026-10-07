@@ -30,7 +30,7 @@ import '@/src/components/search/atomic-table-element/atomic-table-element.js';
 import {MockCommerceApi} from '@coveo/platform-mock-api/commerce';
 
 const commerceApiHarness = new MockCommerceApi();
-commerceApiHarness.searchEndpoint.addRequestTransformer(spotlightContentTransformer());
+commerceApiHarness.searchEndpoint.addRequestTransformer(spotlightContentTransformer([1, 2]));
 
 const {events, args, argTypes, template} = getStorybookHelpers('atomic-commerce-product-list', {
   excludeCategories: ['methods'],

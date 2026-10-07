@@ -134,6 +134,17 @@ export class AtomicCommerceProductList
         .list-root atomic-spotlight-content[part~='outline']:not(:first-child)::before {
           display: block;
         }
+
+        .list-root.display-grid
+          [part~='outline'][part~='result-list-grid-clickable-container']:has(
+            > atomic-spotlight-content
+          ) {
+          padding: 0;
+
+          &:not(:hover) {
+            border-color: transparent;
+          }
+        }
       }
 
       @media (width >= theme(--breakpoint-desktop)) {

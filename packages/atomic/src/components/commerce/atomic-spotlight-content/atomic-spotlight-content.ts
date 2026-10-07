@@ -21,20 +21,81 @@ export class AtomicSpotlightContent extends CommerceResultElement {
       @apply relative block h-full;
     }
 
+    .result-component,
     .result-root {
-      @apply flex h-full flex-col gap-2;
+      @apply h-full;
+    }
 
-      &.display-list {
-        @apply flex-row items-center gap-4;
+    .spotlight-content-card {
+      @apply rounded-xl flex h-full flex-col gap-4;
+      box-sizing: border-box;
+      padding: 3.125rem;
+      background-color: color-mix(in srgb, var(--atomic-primary) 10%, transparent);
+    }
 
-        atomic-product-image {
-          @apply w-1/3 max-w-60 shrink-0;
-        }
+    .spotlight-content-tag {
+      @apply text-primary border-primary text-sm inline-flex h-8 items-center gap-1 self-start rounded-full border px-3 py-2;
+      box-sizing: border-box;
+      line-height: 1rem;
+
+      .spotlight-content-icon {
+        @apply flex size-3 shrink-0;
+      }
+
+      atomic-commerce-text {
+        background-image: linear-gradient(
+          90deg,
+          var(--atomic-primary),
+          var(--atomic-primary-light)
+        );
+        background-clip: text;
+        color: transparent;
       }
     }
 
     .spotlight-content-body {
-      @apply flex flex-col gap-1;
+      @apply flex flex-1 flex-col justify-center gap-4;
+    }
+
+    atomic-product-image::part(product-image) {
+      @apply bg-neutral-lighter rounded-xl h-auto;
+      aspect-ratio: 379 / 443;
+      object-fit: contain;
+    }
+
+    .spotlight-content-details {
+      @apply flex flex-col gap-4;
+    }
+
+    .spotlight-content-name {
+      @apply text-on-background text-2xl font-bold;
+      line-height: 1.5rem;
+    }
+
+    .spotlight-content-call-to-action a {
+      @apply text-primary text-xl inline-flex items-center gap-2 font-bold no-underline hover:underline;
+      line-height: 1.5rem;
+
+      .spotlight-content-icon {
+        @apply flex size-6 shrink-0;
+      }
+    }
+
+    .spotlight-content-visually-hidden {
+      @apply sr-only;
+    }
+
+    .display-list .spotlight-content-body {
+      @apply flex-row items-center justify-start gap-0;
+
+      atomic-product-image {
+        @apply shrink-0;
+      }
+
+      atomic-product-image::part(product-image) {
+        @apply mr-4;
+        width: min(15rem, 33vw);
+      }
     }
 
     .link-container {

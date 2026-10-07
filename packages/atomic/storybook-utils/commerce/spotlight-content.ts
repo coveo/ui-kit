@@ -22,12 +22,11 @@ export const sampleSpotlightContents: SampleSpotlightContent[] = [
   {
     id: 'spotlight-new-arrivals',
     clickUri: 'https://example.com/new-arrivals',
-    desktopImage: bannerImage('New arrivals', '#0b8457', 600, 600),
+    desktopImage: '',
     name: 'New arrivals',
     nameFontColor: '#0b8457',
     description: 'Discover the latest gear for the season.',
     descriptionFontColor: '#4b5563',
-    altText: 'New arrivals banner',
     resultType: ResultType.SPOTLIGHT,
   },
 ];
