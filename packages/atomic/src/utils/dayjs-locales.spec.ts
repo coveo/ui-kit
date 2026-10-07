@@ -6,7 +6,9 @@ vi.mock('@/src/generated/dayjs-locales-data', () => {
   const mockLocales = {
     en: vi.fn(() => Promise.resolve()),
     fr: vi.fn(() => Promise.resolve()),
-    'en-CA': vi.fn(() => Promise.resolve()),
+    'en-ca': vi.fn(() => Promise.resolve()),
+    'sr-cyrl': vi.fn(() => Promise.resolve()),
+    'zh-tw': vi.fn(() => Promise.resolve()),
   };
   return {
     locales: mockLocales,
@@ -46,14 +48,28 @@ describe('#loadDayjsLocale', () => {
     loadDayjsLocale('en-CA');
     await flushPromises();
 
-    expect(localeSpy).toHaveBeenCalledWith('en-CA');
+    expect(localeSpy).toHaveBeenCalledWith('en-ca');
   });
 
   it('should load the exact locale regardless of case', async () => {
-    loadDayjsLocale('en-ca');
+    loadDayjsLocale('EN-ca');
     await flushPromises();
 
-    expect(localeSpy).toHaveBeenCalledWith('en-CA');
+    expect(localeSpy).toHaveBeenCalledWith('en-ca');
+  });
+
+  it('should load the regional locale when the language also has a script', async () => {
+    loadDayjsLocale('zh-Hant-TW');
+    await flushPromises();
+
+    expect(localeSpy).toHaveBeenCalledWith('zh-tw');
+  });
+
+  it('should load the script locale when the region is not available', async () => {
+    loadDayjsLocale('sr-Cyrl-RS');
+    await flushPromises();
+
+    expect(localeSpy).toHaveBeenCalledWith('sr-cyrl');
   });
 
   it('should fall back to regionless language when region is not available', async () => {
@@ -75,6 +91,15 @@ describe('#loadDayjsLocale', () => {
     });
     loadDayjsLocale('fr');
 
+    expect(console.warn).toHaveBeenCalledWith('Cannot load dayjs locale file for "fr"');
+  });
+
+  it('should warn when the locale loader rejects', async () => {
+    mockLocales.fr.mockImplementationOnce(() => Promise.reject(new Error('fail')));
+    loadDayjsLocale('fr');
+    await flushPromises();
+
+    expect(localeSpy).not.toHaveBeenCalled();
     expect(console.warn).toHaveBeenCalledWith('Cannot load dayjs locale file for "fr"');
   });
 });

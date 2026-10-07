@@ -183,8 +183,7 @@ describe('atomic-result-date', () => {
         result: resultWithYesterday,
       });
 
-      expect(element).toBeDefined();
-      expect(element.textContent?.trim()).toContain('Yesterday');
+      expect(element.textContent?.trim()).toBe('Yesterday');
     });
 
     it('should render relative time for today date', async () => {
@@ -202,8 +201,7 @@ describe('atomic-result-date', () => {
         result: resultWithToday,
       });
 
-      expect(element).toBeDefined();
-      expect(element.textContent?.trim()).toContain('Today');
+      expect(element.textContent?.trim()).toBe('Today');
     });
 
     it('should render relative time for tomorrow date', async () => {
@@ -221,8 +219,7 @@ describe('atomic-result-date', () => {
         result: resultWithTomorrow,
       });
 
-      expect(element).toBeDefined();
-      expect(element.textContent?.trim()).toContain('Tomorrow');
+      expect(element.textContent?.trim()).toBe('Tomorrow');
     });
 
     it('should use format for older dates', async () => {
@@ -243,7 +240,43 @@ describe('atomic-result-date', () => {
       expect(element.textContent?.trim()).toBe('15/1/2020');
     });
 
-    describe('when the interface language has a region', () => {
+    it('should render the weekday for a date in the next 2 to 6 days', async () => {
+      const date = dayjs().add(3, 'day');
+      const resultInThreeDays = buildFakeResult({
+        raw: {
+          customDate: date.toISOString(),
+          urihash: '',
+        },
+      });
+
+      const element = await renderComponent({
+        field: 'customDate',
+        relativeTime: true,
+        result: resultInThreeDays,
+      });
+
+      expect(element.textContent?.trim()).toBe(date.format('dddd'));
+    });
+
+    it('should render the weekday for a date in the last 2 to 6 days', async () => {
+      const date = dayjs().subtract(3, 'day');
+      const resultThreeDaysAgo = buildFakeResult({
+        raw: {
+          customDate: date.toISOString(),
+          urihash: '',
+        },
+      });
+
+      const element = await renderComponent({
+        field: 'customDate',
+        relativeTime: true,
+        result: resultThreeDaysAgo,
+      });
+
+      expect(element.textContent?.trim()).toBe(`Last ${date.format('dddd')}`);
+    });
+
+    describe('when the dayjs locale has a region', () => {
       beforeEach(() => {
         dayjs.locale('en-ca');
       });
