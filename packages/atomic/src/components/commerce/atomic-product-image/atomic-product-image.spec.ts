@@ -431,5 +431,13 @@ describe('atomic-product-image', () => {
       expect(withAltText).toHaveAttribute('alt', 'Summer sale banner');
       expect(withName).toHaveAttribute('alt', 'Summer sale');
     });
+
+    it('should render nothing when the spotlight content has no image', async () => {
+      const {image} = await renderSpotlightContentImage(
+        buildFakeSpotlightContent({desktopImage: '', mobileImage: undefined})
+      );
+
+      expect(image).toBeNull();
+    });
   });
 });

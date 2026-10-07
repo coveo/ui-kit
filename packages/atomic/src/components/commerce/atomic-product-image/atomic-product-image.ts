@@ -27,7 +27,8 @@ type Image = {
  * The `atomic-product-image` component renders an image from a product field. When the product has multiple images, it displays a carousel with navigation buttons and indicators.
  *
  * Inside an `atomic-spotlight-content-template`, it renders the image of the Spotlight Content: its `mobileImage`, when
- * available, on viewports narrower than the interface mobile breakpoint, and its `desktopImage` otherwise.
+ * available, on viewports narrower than the interface mobile breakpoint, and its `desktopImage` otherwise. It renders
+ * nothing when the Spotlight Content has no image.
  *
  * @part product-image - The image element that displays the product image.
  * @part previous-button - The container for the previous image button in the carousel.
@@ -242,6 +243,9 @@ export class AtomicProductImage extends LitElement implements InitializableCompo
       return nothing;
     }
     if (isSpotlightContent(this.product)) {
+      if (!this.product.desktopImage && !this.product.mobileImage) {
+        return nothing;
+      }
       return this.renderSpotlightContentImage(this.product);
     }
     if (this.isFallbackMissing) {

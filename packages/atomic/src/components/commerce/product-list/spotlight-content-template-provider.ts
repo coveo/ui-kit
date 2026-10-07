@@ -9,6 +9,9 @@ import {
   type TemplateProviderProps,
 } from '@/src/components/common/template-provider/template-provider';
 import '@/src/components/commerce/atomic-spotlight-content-template/atomic-spotlight-content-template';
+import '@/src/components/commerce/atomic-commerce-text/atomic-commerce-text';
+import ArrowLongRightIcon from '../../../images/arrow-long-right.svg';
+import StarOutlineIcon from '../../../images/star-outline.svg';
 
 export class SpotlightContentTemplateProvider extends TemplateProvider<SpotlightContent> {
   constructor(
@@ -22,10 +25,24 @@ export class SpotlightContentTemplateProvider extends TemplateProvider<Spotlight
     const content = document.createDocumentFragment();
     const template = document.createElement('template');
     template.innerHTML = `
-      <atomic-product-image></atomic-product-image>
-      <div class="spotlight-content-body">
-        <atomic-product-link class="font-bold"></atomic-product-link>
-        <atomic-product-text field="description"></atomic-product-text>
+      <div class="spotlight-content-card">
+        <div class="spotlight-content-tag">
+          <span class="spotlight-content-icon" aria-hidden="true">${StarOutlineIcon}</span>
+          <atomic-commerce-text value="spotlight"></atomic-commerce-text>
+        </div>
+        <div class="spotlight-content-body">
+          <atomic-product-image></atomic-product-image>
+          <div class="spotlight-content-details">
+            <atomic-product-text class="spotlight-content-name" field="name"></atomic-product-text>
+            <atomic-product-link class="spotlight-content-call-to-action">
+              <atomic-commerce-text value="see-more"></atomic-commerce-text>
+              <span class="spotlight-content-visually-hidden">
+                <atomic-product-text field="name"></atomic-product-text>
+              </span>
+              <span class="spotlight-content-icon" aria-hidden="true">${ArrowLongRightIcon}</span>
+            </atomic-product-link>
+          </div>
+        </div>
       </div>
     `.trim();
     content.appendChild(template.content);
