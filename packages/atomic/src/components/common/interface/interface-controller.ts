@@ -73,8 +73,7 @@ export class InterfaceController<EngineType extends AnyEngineType> implements Re
     if (this.host.registerFieldsToInclude) {
       this.host.registerFieldsToInclude();
     }
-    loadDayjsLocale(this.host.language || 'en');
-    await this.i18nPromise;
+    await Promise.all([this.i18nPromise, loadDayjsLocale(this.host.language || 'en')]);
     this.initComponents();
   }
 
@@ -97,8 +96,10 @@ export class InterfaceController<EngineType extends AnyEngineType> implements Re
     const languageWithFallback = language ?? 'en';
     const {i18n} = this.host;
 
-    loadDayjsLocale(languageWithFallback);
-    loadTranslations(this.host, languageWithFallback).then(() => {
+    Promise.all([
+      loadDayjsLocale(languageWithFallback),
+      loadTranslations(this.host, languageWithFallback),
+    ]).then(() => {
       i18n.changeLanguage(language);
     });
   }
