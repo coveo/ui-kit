@@ -153,6 +153,7 @@ const atomicDefault = defineConfig({
     browser: {
       provider: playwright(),
       enabled: true,
+      headless: true,
       instances: [
         {
           browser: 'chromium',
