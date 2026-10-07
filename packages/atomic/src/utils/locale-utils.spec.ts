@@ -17,6 +17,10 @@ describe('locale-utils', () => {
       expect(withCountry('fr-FR', 'CA')).toBe('fr-FR');
     });
 
+    it('should add the country to a language with a script', () => {
+      expect(withCountry('zh-Hant', 'TW')).toBe('zh-Hant-TW');
+    });
+
     it('should return the language when the combination is not a valid locale', () => {
       expect(withCountry('fr', 'not a country')).toBe('fr');
     });

@@ -5,12 +5,16 @@
  * region, or when the combination is not a valid locale.
  */
 export function withCountry(language: string, country?: string) {
-  if (!country || language.includes('-')) {
+  if (!country) {
     return language;
   }
 
   try {
-    return Intl.getCanonicalLocales(`${language}-${country}`)[0];
+    if (new Intl.Locale(language).region) {
+      return language;
+    }
+
+    return new Intl.Locale(language, {region: country}).toString();
   } catch {
     return language;
   }
