@@ -27,9 +27,10 @@ export interface OptimisticFacetSearch {
  * knew at the time, so adopting it verbatim empties the field mid-typing.
  *
  * Both gestures are absolute writes of the query — `search` and `clearSearch` SET it rather than
- * amending it — so only the last one queued can still matter, which is what turns a burst of
- * keystrokes into a single request. And both are answered from `platformClient.facetSearch`, facet
- * values only with no product query, so a pending one leaves the results on screen accurate.
+ * amending it — so the coordinator supersedes every queued write but the one in flight: a burst of
+ * keystrokes collapses to the request already dispatched plus the latest one still queued, not to a
+ * single request. And both are answered from `platformClient.facetSearch`, facet values only with no
+ * product query, so a pending one leaves the results on screen accurate.
  */
 export function useOptimisticFacetSearch(
   backendQuery: string,
