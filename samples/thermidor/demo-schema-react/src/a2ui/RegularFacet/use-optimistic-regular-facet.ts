@@ -46,6 +46,8 @@ export function useOptimisticRegularFacet(
       // (`SearchActionHandler.handleRegularFacetToggle` with `single=false`), so a queued pair on
       // the same value can go whole — but a queued toggle on ANOTHER value never can.
       coalesce: 'involutive',
+      // The producer rebuilds the result set for the new selection.
+      invalidates: ['results'],
     });
   };
 
@@ -56,6 +58,8 @@ export function useOptimisticRegularFacet(
       // Clearing sets every value to idle whatever was queued ahead of it, so the queued toggles
       // it replaces cannot change the outcome.
       coalesce: 'absolute',
+      // The producer rebuilds the result set for the cleared selection.
+      invalidates: ['results'],
     });
   };
 

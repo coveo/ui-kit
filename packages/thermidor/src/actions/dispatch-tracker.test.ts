@@ -5,8 +5,6 @@ import {
 } from '@/src/actions/dispatch-coordinator.js';
 import {createDispatchTracker, type DispatchSource} from '@/src/actions/dispatch-tracker.js';
 
-const DEFAULTS = {invalidatesByDefault: ['results'] as const};
-
 const PAGER = 'pager|page';
 const absolute = (value: string): CoalesceIntent => ({
   slot: PAGER,
@@ -55,7 +53,7 @@ function gesture(
 describe('createDispatchTracker', () => {
   it('reports the dispatch on its way through a getter, never a republished value', () => {
     const {source} = controllableSource();
-    const tracker = createDispatchTracker(source, DEFAULTS);
+    const tracker = createDispatchTracker(source);
     expect(tracker.inFlight()).toBeUndefined();
 
     void gesture(tracker, 'page 2', {coalesce: absolute('2')});
@@ -65,7 +63,7 @@ describe('createDispatchTracker', () => {
 
   it('reports the identity of the dispatch just issued', () => {
     const {source} = controllableSource();
-    const tracker = createDispatchTracker(source, DEFAULTS);
+    const tracker = createDispatchTracker(source);
     expect(tracker.lastIssued()).toBeUndefined();
 
     void gesture(tracker, 'A');
@@ -77,7 +75,7 @@ describe('createDispatchTracker', () => {
 
   it('hands the standing declaration to the dispatch it was declared for', () => {
     const {issue, source} = spySource();
-    const tracker = createDispatchTracker(source, DEFAULTS);
+    const tracker = createDispatchTracker(source);
 
     void gesture(tracker, 'page 2', {coalesce: absolute('2')});
 
@@ -86,7 +84,7 @@ describe('createDispatchTracker', () => {
 
   it('withdraws the declaration so a later dispatch cannot inherit it', () => {
     const {issue, source} = spySource();
-    const tracker = createDispatchTracker(source, DEFAULTS);
+    const tracker = createDispatchTracker(source);
 
     void gesture(tracker, 'page 2', {coalesce: absolute('2')});
     void gesture(tracker, 'untracked');
@@ -96,7 +94,7 @@ describe('createDispatchTracker', () => {
 
   it('resolves once the dispatch it issued has settled', async () => {
     const {source, answer} = controllableSource();
-    const tracker = createDispatchTracker(source, DEFAULTS);
+    const tracker = createDispatchTracker(source);
     const settled = gesture(tracker, 'A');
     const done = vi.fn();
     void settled.then(done);
@@ -111,7 +109,7 @@ describe('createDispatchTracker', () => {
 
   it('serializes through the one queue the source owns', async () => {
     const {source, sent, answer} = controllableSource();
-    const tracker = createDispatchTracker(source, DEFAULTS);
+    const tracker = createDispatchTracker(source);
 
     void gesture(tracker, 'A');
     void gesture(tracker, 'B');
@@ -123,14 +121,29 @@ describe('createDispatchTracker', () => {
   });
 
   describe('regions left behind', () => {
-    it('marks the default regions for a dispatch nobody declared anything for', async () => {
+    it('marks nothing for a dispatch nobody declared anything for', async () => {
       const {source, answer} = controllableSource();
-      const tracker = createDispatchTracker(source, DEFAULTS);
+      const tracker = createDispatchTracker(source);
       expect(tracker.stale.isStale('results')).toBe(false);
 
-      // A plain `showMoreValues` never reaches the optimistic controller, and it still has the
-      // producer rebuild the results — which is why tracking lives in the tracker.
-      void gesture(tracker, 'show more');
+      // Invalidation is explicit per gesture: a dispatch that declares nothing — a facet search, a
+      // `showMoreValues` — marks no region.
+      void gesture(tracker, 'facet search abc');
+      expect(tracker.stale.isStale('results')).toBe(false);
+
+      answer();
+      await Promise.resolve();
+      expect(tracker.stale.isStale('results')).toBe(false);
+    });
+
+    it('marks the declared region for a gesture that rebuilds it', async () => {
+      const {source, answer} = controllableSource();
+      const tracker = createDispatchTracker(source);
+      expect(tracker.stale.isStale('results')).toBe(false);
+
+      // A gesture the producer answers by rebuilding the result set says so with its own
+      // `invalidates`, and the region stays stale until that dispatch settles.
+      void gesture(tracker, 'select page 2', {invalidates: ['results']});
       expect(tracker.stale.isStale('results')).toBe(true);
 
       answer();
@@ -138,21 +151,12 @@ describe('createDispatchTracker', () => {
       expect(tracker.stale.isStale('results')).toBe(false);
     });
 
-    it('marks nothing for a gesture the producer answers without rebuilding them', () => {
-      const {source} = controllableSource();
-      const tracker = createDispatchTracker(source, DEFAULTS);
-
-      void gesture(tracker, 'facet search abc', {invalidates: []});
-
-      expect(tracker.stale.isStale('results')).toBe(false);
-    });
-
-    it('keeps the regions stale while any dispatch still holds them', async () => {
+    it('keeps the regions stale while any declaring dispatch still holds them', async () => {
       const {source, answer} = controllableSource();
-      const tracker = createDispatchTracker(source, DEFAULTS);
+      const tracker = createDispatchTracker(source);
 
-      void gesture(tracker, 'A');
-      void gesture(tracker, 'B');
+      void gesture(tracker, 'A', {invalidates: ['results']});
+      void gesture(tracker, 'B', {invalidates: ['results']});
       answer();
       await Promise.resolve();
 
@@ -166,7 +170,7 @@ describe('createDispatchTracker', () => {
 
     it('marks nothing for a dispatch that was over before it was issued', () => {
       const {source} = controllableSource();
-      const tracker = createDispatchTracker(source, DEFAULTS);
+      const tracker = createDispatchTracker(source);
 
       // Two halves of a pair cancel each other, so neither one awaits an answer and the results
       // are no more stale than the blocker alone makes them.
@@ -175,9 +179,9 @@ describe('createDispatchTracker', () => {
         gesture: 'facet|values|A',
         policy: 'involutive',
       };
-      void gesture(tracker, 'blocker');
-      void gesture(tracker, 'A', {coalesce: involutive});
-      void gesture(tracker, 'A again', {coalesce: involutive});
+      void gesture(tracker, 'blocker', {invalidates: ['results']});
+      void gesture(tracker, 'A', {coalesce: involutive, invalidates: ['results']});
+      void gesture(tracker, 'A again', {coalesce: involutive, invalidates: ['results']});
 
       // Only the blocker, on its way, holds the results.
       expect(tracker.stale.isStale('results')).toBe(true);

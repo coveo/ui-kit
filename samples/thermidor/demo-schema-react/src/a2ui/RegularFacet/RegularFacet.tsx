@@ -11,6 +11,10 @@ import styles from './RegularFacet.module.css';
  * state from `RegularFacetPropsSchema`. The two gestures that carry an optimistic value live in
  * `useOptimisticRegularFacet`, the search input in `useOptimisticFacetSearch`; the show-more pair
  * has no client-side projection and is dispatched from here.
+ *
+ * The facet-search gestures (search/clearSearch/showMoreSearchResults) and the show-more/less
+ * value pair declare NOTHING: the producer answers them by rebuilding the facet value list alone,
+ * not the result set the grid and summary read, so they dispatch plainly and mark no stale region.
  */
 export const RegularFacet = createReactComponent(
   {

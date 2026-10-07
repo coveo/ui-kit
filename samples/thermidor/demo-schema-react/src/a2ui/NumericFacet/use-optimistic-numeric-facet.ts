@@ -104,6 +104,8 @@ export function useOptimisticNumericFacet(
           state: !wasSelected && value.start === start && value.end === end ? 'selected' : 'idle',
         })),
       coalesce: canSupersedeToggle(start, end) ? 'absolute' : 'dependent',
+      // The producer rebuilds the result set for the new selection.
+      invalidates: ['results'],
     });
   };
 
@@ -116,6 +118,8 @@ export function useOptimisticNumericFacet(
       // Clearing sets everything idle whatever was queued ahead of it, so it can replace the queue
       // only when it lands on the state it was computed against.
       coalesce: landing !== undefined && sameRanges(landing, values) ? 'absolute' : 'dependent',
+      // The producer rebuilds the result set for the cleared selection.
+      invalidates: ['results'],
     });
   };
 
@@ -141,6 +145,8 @@ export function useOptimisticNumericFacet(
       action: {event: {name: 'applyCustomRange', context: {start, end}}},
       next: (current) => current.map((value) => ({...value, state: 'idle'})),
       coalesce: 'dependent',
+      // The producer rebuilds the result set for the applied range.
+      invalidates: ['results'],
     });
   };
 

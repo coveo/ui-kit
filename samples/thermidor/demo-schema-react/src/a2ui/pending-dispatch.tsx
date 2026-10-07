@@ -18,13 +18,6 @@ export type {CoalesceIntent, DispatchId, DispatchOutcome, IssuedDispatch} from '
 export type AppStaleScope = 'results';
 
 /**
- * The regions a gesture leaves behind unless it says otherwise. Named here rather than in the
- * package: what a region MEANS is this app's business, and the producer rebuilds the result set
- * for all but a handful of gestures, so the safe default is to say so.
- */
-const INVALIDATES_BY_DEFAULT: readonly AppStaleScope[] = ['results'];
-
-/**
  * What the app reads about dispatches in progress — the queue the optimistic controller reads,
  * plus the stale regions a view dims. It is {@link DispatchTracker} minus its one method, which no
  * reader of this context needs.
@@ -72,13 +65,11 @@ export interface TrackedDispatch<TMessage> {
  * Binds the package's dispatch tracker to React. The tracker owns everything stateful — the queue
  * ports, the stale store, the declaration forced onto the next dispatch; this hook only builds it
  * once and hands its `dispatch` to `A2UIProvider` as `onAction`, so there is exactly one queue for
- * the whole app and every dispatch marks the regions it leaves behind.
+ * the whole app and every dispatch marks only the regions the gesture that sent it declared.
  */
 export function useTrackedDispatch<TMessage>(
   source: DispatchSource<TMessage>
 ): TrackedDispatch<TMessage> {
-  const [tracker] = useState<DispatchTracker<TMessage>>(() =>
-    createDispatchTracker(source, {invalidatesByDefault: INVALIDATES_BY_DEFAULT})
-  );
+  const [tracker] = useState<DispatchTracker<TMessage>>(() => createDispatchTracker(source));
   return useMemo(() => ({onAction: tracker.dispatch, progress: tracker}), [tracker]);
 }

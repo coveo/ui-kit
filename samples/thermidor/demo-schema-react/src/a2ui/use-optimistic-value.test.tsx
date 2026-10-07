@@ -67,11 +67,17 @@ function createCoordinator() {
   let lastIssued: IssuedDispatch | undefined;
   const declared: CoalesceIntent[] = [];
   let standing: CoalesceIntent | undefined;
+  // One store for the coordinator's life, so what a dispatch marks is observable across renders.
+  const stale = createStaleScopes();
+  // Invalidation is explicit per gesture: a dispatch marks a region only if the gesture declared
+  // one. A dispatch that declares nothing marks nothing — the real tracker's `?? []`.
+  let standingInvalidates: readonly string[] | undefined;
 
   const settle = (id: DispatchId) => {
     const next = new Set(pending);
     next.delete(id);
     pending = next;
+    stale.settle(id);
     for (const listener of settlers.get(id) ?? []) {
       listener('answered');
     }
@@ -83,6 +89,8 @@ function createCoordinator() {
     declared,
     /** An intent still standing after its gesture returned would leak to an unrelated dispatch. */
     standing: () => standing,
+    /** The stale store the coordinator feeds, so a test can read what a dispatch marked behind. */
+    stale,
     progress: (): DispatchProgress => ({
       inFlight: () => [...pending][0],
       lastIssued: () => lastIssued,
@@ -91,17 +99,20 @@ function createCoordinator() {
           declared.push(declaration.coalesce);
         }
         standing = declaration.coalesce;
+        standingInvalidates = declaration.invalidates;
         return () => {
           standing = undefined;
+          standingInvalidates = undefined;
         };
       },
-      stale: createStaleScopes(),
+      stale,
     }),
     issue: () => {
       minted += 1;
       const id: DispatchId = `dispatch-${minted}`;
       settlers.set(id, []);
       pending = new Set(pending).add(id);
+      stale.track(id, standingInvalidates ?? []);
       lastIssued = {
         id,
         // Resolved by `settle` alongside the listeners: the resolver rides in the same list.
@@ -491,5 +502,64 @@ describe('useOptimisticValue', () => {
     view.gesture('Blue', select('Blue', 'selected'));
 
     expect(view.coordinator.declared).toEqual([]);
+  });
+});
+
+describe('the region a gesture invalidates', () => {
+  /**
+   * Fires one `useOptimisticValue` gesture against a fresh coordinator, carrying the given
+   * `invalidates`, and returns the coordinator so a test can read what the gesture marked. The
+   * controller runs declare -> dispatch -> withdraw around its hold, so the declaration is what
+   * reaches the stale store — the same path a region reader dims on.
+   */
+  function fireGesture(invalidates?: readonly 'results'[]) {
+    const coordinator = createCoordinator();
+    let current!: OptimisticValue<FacetValue[], TestAction>;
+    const backend = snapshot(['Blue', 'idle', 84]);
+
+    function Consumer() {
+      current = useOptimisticValue(backend, () => coordinator.issue());
+      return null;
+    }
+    render(
+      <DispatchProgressProvider value={coordinator.progress()}>
+        <Consumer />
+      </DispatchProgressProvider>
+    );
+
+    act(() =>
+      current.dispatchOptimistic({
+        action: toggleAction('Blue'),
+        next: select('Blue', 'selected'),
+        invalidates,
+      })
+    );
+    return coordinator;
+  }
+
+  it('marks nothing for a gesture that declares no region', () => {
+    // A facet-search gesture carries no `invalidates`, so it dims nothing while in flight.
+    const coordinator = fireGesture();
+
+    expect(coordinator.stale.isStale('results')).toBe(false);
+  });
+
+  it('marks the region a gesture declares', () => {
+    // A sort/pagination gesture carries `invalidates: ['results']`, so the grid dims until it
+    // settles.
+    const coordinator = fireGesture(['results']);
+
+    expect(coordinator.stale.isStale('results')).toBe(true);
+  });
+
+  it('withdraws the declaration so a later undeclared dispatch marks nothing', () => {
+    const coordinator = fireGesture(['results']);
+
+    act(() => coordinator.answer());
+    expect(coordinator.stale.isStale('results')).toBe(false);
+
+    // The declaration does not leak: a plain dispatch after it still marks nothing.
+    act(() => coordinator.issue());
+    expect(coordinator.stale.isStale('results')).toBe(false);
   });
 });

@@ -48,6 +48,29 @@ describe('useOptimisticFacetSearch', () => {
     expect(result.current.query).toBe('rip');
   });
 
+  it('does not let a lagging/out-of-order echo erase newer typed input', () => {
+    const dispatch = vi.fn();
+    const {result, rerender} = renderHook(
+      ({backend}) => useOptimisticFacetSearch(backend, dispatch),
+      {initialProps: {backend: ''}}
+    );
+
+    // User types two characters in quick succession; both are dispatched.
+    act(() => result.current.onQueryChange('r'));
+    act(() => result.current.onQueryChange('ri'));
+    expect(result.current.query).toBe('ri');
+
+    // The slower first request ('r') resolves AFTER the second: the backend query
+    // lands on 'r' while the user has already typed 'ri'. The stale echo must not
+    // overwrite the newer input.
+    rerender({backend: 'r'});
+    expect(result.current.query).toBe('ri');
+
+    // The up-to-date echo arrives: still no change to what the user sees.
+    rerender({backend: 'ri'});
+    expect(result.current.query).toBe('ri');
+  });
+
   it('reset clears the local value', () => {
     const dispatch = vi.fn();
     const {result} = renderHook(() => useOptimisticFacetSearch('rip', dispatch));

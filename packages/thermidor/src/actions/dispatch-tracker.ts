@@ -1,8 +1,4 @@
-import {
-  createStaleScopes,
-  type StaleScope,
-  type StaleScopes,
-} from '@/src/optimistic/stale-scope.js';
+import {createStaleScopes, type StaleScopes} from '@/src/optimistic/stale-scope.js';
 import type {DispatchQueue, GestureDeclaration} from '@/src/optimistic/optimistic-value.js';
 import type {IssuedDispatch} from '@/src/actions/dispatch-coordinator.js';
 
@@ -36,27 +32,22 @@ export interface DispatchTracker<TMessage> extends DispatchQueue {
   readonly stale: StaleScopes;
 }
 
-export interface DispatchTrackerOptions<TScope extends StaleScope = StaleScope> {
-  /**
-   * The regions a gesture leaves behind when it declares no `invalidates` of its own. The producer
-   * rebuilds the result set for all but a handful of gestures, so a consumer names the regions
-   * every undeclared dispatch should mark here; what a region MEANS is the consumer's business.
-   */
-  invalidatesByDefault: readonly TScope[];
-}
-
 /**
  * Binds the session's dispatch coordination into one place: it owns the stale-region store, holds
  * the declaration the renderer forces onto the NEXT dispatch, and remembers the last dispatch
  * issued — the three pieces the optimistic controller reads back through {@link DispatchQueue},
  * none of which a renderer `onAction` call can carry on its own.
  *
+ * Invalidation is EXPLICIT PER GESTURE: a dispatch marks a region stale only if the gesture that
+ * sent it declared `invalidates: ['results']`; a dispatch that declares nothing marks nothing. The
+ * facet-search and show-more/less gestures the producer answers without rebuilding the result set
+ * declare nothing, so they leave every region untouched.
+ *
  * Framework-agnostic: a view layer wraps this in whatever its store protocol is (React's
  * `useSyncExternalStore` over `stale.subscribe`), and injects nothing of itself here.
  */
-export function createDispatchTracker<TMessage, TScope extends StaleScope = StaleScope>(
-  source: DispatchSource<TMessage>,
-  options: DispatchTrackerOptions<TScope>
+export function createDispatchTracker<TMessage>(
+  source: DispatchSource<TMessage>
 ): DispatchTracker<TMessage> {
   const stale = createStaleScopes();
   let declared: GestureDeclaration | undefined;
@@ -79,7 +70,7 @@ export function createDispatchTracker<TMessage, TScope extends StaleScope = Stal
       stale.settle(issued.id);
     });
     if (!isSettled) {
-      stale.track(issued.id, declaration?.invalidates ?? options.invalidatesByDefault);
+      stale.track(issued.id, declaration?.invalidates ?? []);
     }
 
     await issued.settled;

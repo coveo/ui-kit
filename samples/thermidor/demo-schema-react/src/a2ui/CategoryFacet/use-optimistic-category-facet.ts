@@ -1,4 +1,5 @@
 import type {CategoryFacetAction, CategoryFacetProps} from '@coveo/thermidor-schema/zod3';
+import {useDispatchProgress} from '../pending-dispatch.js';
 import {useOptimisticValue} from '../use-optimistic-value.js';
 
 type CategoryFacetValues = NonNullable<CategoryFacetProps['values']>;
@@ -12,28 +13,29 @@ export interface OptimisticCategoryFacet {
   values: CategoryFacetValues;
   /** Moving DOWN into a node, the one direction this facet can show before the producer answers. */
   descendInto: (node: CategoryNode) => void;
+  /** Dropping the whole selection back to the root; the producer owns the resulting tree. */
+  clearPath: () => void;
+  /** Moving UP to an ancestor; the producer owns the sibling set revealed at that level. */
+  selectAncestor: (path: string[]) => void;
 }
 
 /**
- * The category facet's tree, and the one gesture that carries it optimistically.
- *
- * Only the descent. Going back up the ancestry, clearing the path, and the show-more pair all need
- * state no local value holds — the sibling set at that level, or a count — so they stay plain
- * dispatches at their call site, where the absence of an optimistic value is visible.
+ * The category facet's tree, and the gestures made against it. Descending holds the clicked node
+ * on screen; going up and clearing hold no value and only dim the result set. All three rebuild
+ * the result set, so each carries `invalidates: ['results']`.
  */
 export function useOptimisticCategoryFacet(
   props: CategoryFacetProps,
   dispatch: (action: CategoryFacetAction) => void
 ): OptimisticCategoryFacet {
+  const {declareGesture} = useDispatchProgress();
   const {value: values, dispatchOptimistic} = useOptimisticValue(
     props.values ?? NO_VALUES,
     dispatch
   );
 
   const descendInto = (node: CategoryNode) => {
-    // Only the DESCENT is reconstructible: the node becomes the selection and its own children
-    // are unknown until the backend answers. Going back up, and clearing, would need the sibling
-    // set at that level, which no local state holds — those stay backend-owned.
+    // The node becomes the selection and its own children are unknown until the backend answers.
     //
     // `selectPath` SETS the path, so a queued descent into a sibling cannot change where a later
     // one lands and may be replaced by it.
@@ -51,8 +53,27 @@ export function useOptimisticCategoryFacet(
         children: [],
       }),
       coalesce: 'absolute',
+      // Descending selects a new path, so the producer rebuilds the result set.
+      invalidates: ['results'],
     });
   };
 
-  return {values, descendInto};
+  // Clear and ancestor selection reveal a sibling set no local value can reconstruct, so they hold
+  // nothing: declaring the gesture onto the next dispatch dims the result set, the only feedback
+  // until the producer answers.
+  const dispatchDimmingResults = (action: CategoryFacetAction) => {
+    const withdraw = declareGesture({invalidates: ['results']});
+    dispatch(action);
+    withdraw();
+  };
+
+  const clearPath = () => {
+    dispatchDimmingResults({event: {name: 'clearSelectedPath', context: {}}});
+  };
+
+  const selectAncestor = (path: string[]) => {
+    dispatchDimmingResults({event: {name: 'selectPath', context: {path}}});
+  };
+
+  return {values, descendInto, clearPath, selectAncestor};
 }

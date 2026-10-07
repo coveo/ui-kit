@@ -23,10 +23,15 @@ const ellipsePath = (path: string[]): string[] =>
 
 /**
  * A2-UI component for the `category-facet` (hierarchical). The generic binder resolves the facet
- * state from `CategoryFacetPropsSchema`. The descent — the one gesture whose outcome is
- * reconstructible here — lives in `useOptimisticCategoryFacet`, the search input in
- * `useOptimisticFacetSearch`; going back up, clearing and the show-more pair have no client-side
- * projection and are dispatched from here.
+ * state from `CategoryFacetPropsSchema`. The gestures against the tree live in
+ * `useOptimisticCategoryFacet` — descending holds the clicked node on screen, going back up and
+ * clearing dim the result set without holding a value — and the search input in
+ * `useOptimisticFacetSearch`.
+ *
+ * Invalidation is explicit per gesture: the facet-search gestures (search/clearSearch/
+ * showMoreSearchResults) and the show-more/less value pair declare NOTHING (the producer rebuilds
+ * only the facet value list), while descending, clearing the selected path and selecting an
+ * ancestor rebuild the result set, so each carries `invalidates: ['results']`.
  */
 export const CategoryFacet = createReactComponent(
   {
@@ -158,7 +163,7 @@ export const CategoryFacet = createReactComponent(
                     type="button"
                     className={styles.backLink}
                     style={indentStyle(0)}
-                    onClick={() => dispatch({event: {name: 'clearSelectedPath', context: {}}})}
+                    onClick={() => optimisticFacet.clearPath()}
                   >
                     <ChevronLeftIcon className={styles.chevron} />
                     <span className={styles.valueLabel}>{ALL_CATEGORIES_LABEL}</span>
@@ -172,9 +177,7 @@ export const CategoryFacet = createReactComponent(
                     type="button"
                     className={styles.backLink}
                     style={indentStyle(0)}
-                    onClick={() =>
-                      dispatch({event: {name: 'selectPath', context: {path: parent.path}}})
-                    }
+                    onClick={() => optimisticFacet.selectAncestor(parent.path)}
                   >
                     <ChevronLeftIcon className={styles.chevron} />
                     <span className={styles.valueLabel}>{parent.value}</span>

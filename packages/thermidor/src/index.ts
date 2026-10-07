@@ -43,11 +43,7 @@ export type {
   IssuedDispatch,
 } from '@/src/actions/dispatch-coordinator.js';
 export {createDispatchTracker} from '@/src/actions/dispatch-tracker.js';
-export type {
-  DispatchSource,
-  DispatchTracker,
-  DispatchTrackerOptions,
-} from '@/src/actions/dispatch-tracker.js';
+export type {DispatchSource, DispatchTracker} from '@/src/actions/dispatch-tracker.js';
 
 // ── Stale regions (independent of the block above) ─────────────────────────
 // The other half of the latency problem, and it outlives the client-side queue: which regions of
