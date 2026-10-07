@@ -7,7 +7,7 @@ function getFieldCaptionNamespace(field: string) {
 export function getFieldCaptions(field: string, i18n: i18n) {
   const namespace = getFieldCaptionNamespace(field);
 
-  return i18n.languages.reduceRight<Record<string, string>>(
+  return (i18n.languages ?? []).reduceRight<Record<string, string>>(
     (captions, language) => ({...captions, ...i18n.getResourceBundle(language, namespace)}),
     {}
   );

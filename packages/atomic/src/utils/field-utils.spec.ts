@@ -23,6 +23,10 @@ describe('field-utils', () => {
       expect(result).toEqual({});
     });
 
+    it('returns an empty object if i18next is not initialized', () => {
+      expect(getFieldCaptions('author', createInstance())).toEqual({});
+    });
+
     describe('when the language has a region', () => {
       beforeEach(async () => {
         await i18n.changeLanguage('en-CA');

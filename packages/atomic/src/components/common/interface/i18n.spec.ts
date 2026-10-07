@@ -83,10 +83,12 @@ describe('i18n', () => {
 
   describe('#init18n', () => {
     it('should call i18n.init with correct options, without registering the backend', async () => {
+      const initialized = createInstance();
+      await initialized.init({resources: {}});
       const use = vi.fn().mockReturnThis();
       const init = vi.fn();
       const atomicInterface = {
-        i18n: {use, init},
+        i18n: {use, init, services: initialized.services},
         logLevel: 'debug',
         language: 'en',
         languageAssetsPath: '/foo',
@@ -228,11 +230,18 @@ describe('i18n', () => {
       return {i18n, fetchMock};
     };
 
-    it('should keep a language without a region as is', async () => {
+    it('should store the translations of a language without a region under its code as is', async () => {
       const {i18n} = await loadTranslationsFor('FR');
 
-      expect(i18n.getResourceBundle('FR', 'translation')).toEqual({search: 'FR.json'});
-      expect(i18n.t('search')).toBe('FR.json');
+      expect(i18n.hasResourceBundle('FR', 'translation')).toBe(true);
+    });
+
+    it('should load the base language when the region is separated by an underscore', async () => {
+      const {i18n, fetchMock} = await loadTranslationsFor('fr_CA');
+
+      expect(fetchMock).toHaveBeenCalledOnce();
+      expect(i18n.getResourceBundle('fr', 'translation')).toEqual({search: 'fr.json'});
+      expect(i18n.t('search')).toBe('fr.json');
     });
 
     it('should load the base language when the language is not a valid locale', async () => {
@@ -257,6 +266,16 @@ describe('i18n', () => {
 
         expect(i18n.getResourceBundle('pt-BR', 'translation')).toEqual({search: 'pt-BR.json'});
         expect(i18n.t('search')).toBe('pt-BR.json');
+      });
+    });
+
+    describe('when Atomic has no translations for the region', () => {
+      it('should only load the translations of the base language', async () => {
+        const {i18n, fetchMock} = await loadTranslationsFor('fr-CA');
+
+        expect(fetchMock).toHaveBeenCalledOnce();
+        expect(i18n.getResourceBundle('fr', 'translation')).toEqual({search: 'fr.json'});
+        expect(i18n.t('search')).toBe('fr.json');
       });
     });
   });
