@@ -116,6 +116,25 @@ describe('atomic-focus-trap', () => {
       document.body.removeChild(container);
     });
 
+    it('should make sibling elements inert', async () => {
+      const container = document.createElement('div');
+      document.body.appendChild(container);
+
+      const sibling = document.createElement('button');
+      container.appendChild(sibling);
+
+      const element = await renderFocusTrap({active: false});
+      container.appendChild(element);
+
+      element.active = true;
+
+      await vi.waitFor(() => {
+        expect(sibling.hasAttribute('inert')).toBe(true);
+      });
+
+      document.body.removeChild(container);
+    });
+
     it('should not hide elements with aria-live attribute', async () => {
       const container = document.createElement('div');
       document.body.appendChild(container);
@@ -188,6 +207,76 @@ describe('atomic-focus-trap', () => {
       await vi.waitFor(() => {
         expect(sibling.hasAttribute('aria-hidden')).toBe(false);
       });
+
+      document.body.removeChild(container);
+    });
+
+    it('should remove the inert attribute it added to siblings', async () => {
+      const container = document.createElement('div');
+      document.body.appendChild(container);
+
+      const sibling = document.createElement('button');
+      container.appendChild(sibling);
+
+      const element = await renderFocusTrap({active: false});
+      container.appendChild(element);
+
+      element.active = true;
+      await vi.waitFor(() => {
+        expect(sibling.hasAttribute('inert')).toBe(true);
+      });
+
+      element.active = false;
+      await vi.waitFor(() => {
+        expect(sibling.hasAttribute('inert')).toBe(false);
+      });
+
+      document.body.removeChild(container);
+    });
+
+    it('should keep the inert attribute on siblings that already had it', async () => {
+      const container = document.createElement('div');
+      document.body.appendChild(container);
+
+      const sibling = document.createElement('div');
+      sibling.setAttribute('inert', '');
+      container.appendChild(sibling);
+
+      const element = await renderFocusTrap({active: false});
+      container.appendChild(element);
+
+      element.active = true;
+      await vi.waitFor(() => {
+        expect(sibling.hasAttribute('aria-hidden')).toBe(true);
+      });
+
+      element.active = false;
+      await vi.waitFor(() => {
+        expect(sibling.hasAttribute('aria-hidden')).toBe(false);
+      });
+      expect(sibling.hasAttribute('inert')).toBe(true);
+
+      document.body.removeChild(container);
+    });
+
+    it('should not hide siblings when deactivated before the activation completes', async () => {
+      const container = document.createElement('div');
+      document.body.appendChild(container);
+
+      const sibling = document.createElement('button');
+      container.appendChild(sibling);
+
+      const element = await renderFocusTrap({active: false});
+      container.appendChild(element);
+
+      element.active = true;
+      await element.updateComplete;
+      element.active = false;
+      await element.updateComplete;
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      expect(sibling.hasAttribute('aria-hidden')).toBe(false);
+      expect(sibling.hasAttribute('inert')).toBe(false);
 
       document.body.removeChild(container);
     });
