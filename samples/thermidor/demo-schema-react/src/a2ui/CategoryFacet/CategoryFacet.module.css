@@ -90,6 +90,34 @@
   background: var(--color-surface-hover);
 }
 
+.searchResult {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.searchResultValue {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: 100%;
+}
+
+.searchResultPath {
+  display: flex;
+  gap: var(--space-1);
+  max-width: 100%;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.searchResultPathSegment {
+  display: flex;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
 .valueLabel {
   overflow: hidden;
   text-overflow: ellipsis;
