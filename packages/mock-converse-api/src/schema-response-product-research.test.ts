@@ -68,6 +68,19 @@ function collectSurfaceState(events: ConverseEvent[], surfaceId: string): Record
   return components;
 }
 
+function isNonEmptyRichText(value: unknown): boolean {
+  const content = (value as {content?: unknown} | null)?.content;
+  return (
+    Array.isArray(content) &&
+    content.length > 0 &&
+    content.every((segment) => isNonEmptyString((segment as {value?: unknown}).value))
+  );
+}
+
+function isNonEmptyTextOrRichText(value: unknown): boolean {
+  return isNonEmptyString(value) || isNonEmptyRichText(value);
+}
+
 function isNonEmptyString(value: unknown): boolean {
   return typeof value === 'string' && value.length > 0;
 }
@@ -131,15 +144,15 @@ describe('schema-response-product-research single-product research scenario', ()
       expect(() => new URL(product.clickUri as string)).not.toThrow();
     });
 
-    it('carries a non-empty summary', () => {
-      expect(isNonEmptyString(state.summary)).toBe(true);
+    it('carries a non-empty summary (string or RichText)', () => {
+      expect(isNonEmptyTextOrRichText(state.summary)).toBe(true);
     });
 
-    it('carries a non-empty list of non-empty bullets', () => {
+    it('carries a non-empty list of non-empty bullets (string or RichText)', () => {
       const bullets = state.bullets as unknown[];
       expect(Array.isArray(bullets)).toBe(true);
       expect(bullets.length).toBeGreaterThan(0);
-      expect(bullets.every(isNonEmptyString)).toBe(true);
+      expect(bullets.every(isNonEmptyTextOrRichText)).toBe(true);
     });
   });
 
