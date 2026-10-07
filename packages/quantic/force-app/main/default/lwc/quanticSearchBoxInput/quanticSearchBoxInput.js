@@ -1,6 +1,5 @@
 import clear from '@salesforce/label/c.quantic_Clear';
 import search from '@salesforce/label/c.quantic_Search';
-import searchBoxPlaceholder from '@salesforce/label/c.quantic_SearchBoxPlaceholder';
 import searchFieldWithSuggestions from '@salesforce/label/c.quantic_SearchFieldWithSuggestions';
 import {keys} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
@@ -36,7 +35,6 @@ import expandableSearchBoxInput from './templates/expandableSearchBoxInput.html'
 export default class QuanticSearchBoxInput extends LightningElement {
   labels = {
     search,
-    searchBoxPlaceholder,
     clear,
     searchFieldWithSuggestions,
   };
@@ -59,15 +57,8 @@ export default class QuanticSearchBoxInput extends LightningElement {
    * The placeholder text to display in the search box input area.
    * @api
    * @type {string}
-   * @defaultValue 'Search...'
    */
-  @api
-  get placeholder() {
-    return this._placeholder ?? this.labels.searchBoxPlaceholder;
-  }
-  set placeholder(value) {
-    this._placeholder = value;
-  }
+  @api placeholder;
   /**
    * The query suggestions to display.
    * @api
@@ -102,8 +93,6 @@ export default class QuanticSearchBoxInput extends LightningElement {
   inputIsFocused = false;
   /** @type {string} */
   _inputValue = '';
-  /** @type {string} */
-  _placeholder;
 
   connectedCallback() {
     this.addEventListener(

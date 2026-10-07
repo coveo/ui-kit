@@ -133,6 +133,37 @@ describe('c-quantic-standalone-search-box', () => {
     });
   });
 
+  describe.each([null, undefined])(
+    'when the placeholder property receives the value %p',
+    (emptyPlaceholder) => {
+      it('should pass the default placeholder label to the quantic-search-box-input component', async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          placeholder: emptyPlaceholder,
+        });
+        await flushPromises();
+
+        const input = element.shadowRoot.querySelector(
+          selectors.searchBoxInput
+        );
+        expect(input.placeholder).toBe(searchBoxPlaceholderLabel);
+      });
+    }
+  );
+
+  describe('when the placeholder property receives an empty string', () => {
+    it('should pass an empty placeholder to the quantic-search-box-input component', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        placeholder: '',
+      });
+      await flushPromises();
+
+      const input = element.shadowRoot.querySelector(selectors.searchBoxInput);
+      expect(input.placeholder).toBe('');
+    });
+  });
+
   describe('with custom options', () => {
     it('should properly render the quantic standalone search box component', async () => {
       const element = createTestComponent({
