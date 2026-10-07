@@ -2,6 +2,7 @@ import {useCallback, useId} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {CategoryFacetAction} from '@coveo/thermidor-schema';
 import {CategoryFacetPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {FacetSearchMoreMatches} from '../FacetSearchMoreMatches/FacetSearchMoreMatches.js';
 import {ChevronLeftIcon, SearchIcon} from '../icons/index.js';
 import {useOptimisticFacetSearch} from '../use-optimistic-facet-search.js';
 import styles from './CategoryFacet.module.css';
@@ -174,13 +175,11 @@ export const CategoryFacet = createReactComponent(
               })}
             </ul>
             {facetSearch?.canShowMoreResults && (
-              <button
-                type="button"
-                className={styles.showMore}
-                onClick={handleShowMoreSearchResults}
-              >
-                Show more
-              </button>
+              <FacetSearchMoreMatches
+                query={searchQuery}
+                testId={`facet-search-show-more-${props.field}`}
+                onShowMore={handleShowMoreSearchResults}
+              />
             )}
           </>
         ) : (

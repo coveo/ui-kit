@@ -135,7 +135,7 @@ describe('RegularFacet', () => {
     );
   });
 
-  it('dispatches showMoreSearchResults when the show-more control is activated', async () => {
+  it('renders a "More matches for" control that dispatches showMoreSearchResults', async () => {
     const {lastAction} = mountFacet({
       ...stateWithValues,
       facetSearch: {
@@ -145,11 +145,29 @@ describe('RegularFacet', () => {
       },
     });
 
-    await waitFor(() => expect(screen.getByText('Show more')).toBeDefined());
-    fireEvent.click(screen.getByText('Show more'));
+    await waitFor(() =>
+      expect(screen.getByTestId('facet-search-show-more-ec_brand')).toBeDefined()
+    );
+    const showMore = screen.getByTestId('facet-search-show-more-ec_brand');
+    expect(showMore.textContent).toBe('More matches for i');
+    fireEvent.click(showMore);
     await waitFor(() =>
       expect(lastAction()).toMatchObject({name: 'showMoreSearchResults', context: {}})
     );
+  });
+
+  it('hides the "More matches for" control when canShowMoreResults is false', async () => {
+    mountFacet({
+      ...stateWithValues,
+      facetSearch: {
+        query: 'i',
+        canShowMoreResults: false,
+        results: [{value: 'Rip Curl', numberOfResults: 3}],
+      },
+    });
+
+    await waitFor(() => expect(screen.getByTestId('facet-search-result-Rip Curl')).toBeDefined());
+    expect(screen.queryByTestId('facet-search-show-more-ec_brand')).toBeNull();
   });
 
   it('dispatches clearSearch when the clear-search affordance is activated', async () => {
@@ -478,6 +496,57 @@ describe('CategoryFacet', () => {
         context: {path: ['Sporting Goods', 'Accessories', 'Surf Accessories', 'Surf Wax']},
       })
     );
+  });
+
+  it('renders a "More matches for" control that dispatches showMoreSearchResults', async () => {
+    const {lastAction} = mountFacet({
+      ...stateWithChildren,
+      facetSearch: {
+        query: 'wet',
+        canShowMoreResults: true,
+        results: [
+          {
+            path: ['Sporting Goods', 'Water Sports', 'Wetsuits'],
+            value: 'Wetsuits',
+            numberOfResults: 4,
+          },
+        ],
+      },
+    });
+
+    await waitFor(() =>
+      expect(screen.getByTestId('facet-search-show-more-ec_category')).toBeDefined()
+    );
+    const showMore = screen.getByTestId('facet-search-show-more-ec_category');
+    expect(showMore.textContent).toBe('More matches for wet');
+    fireEvent.click(showMore);
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({name: 'showMoreSearchResults', context: {}})
+    );
+  });
+
+  it('hides the "More matches for" control when canShowMoreResults is false', async () => {
+    mountFacet({
+      ...stateWithChildren,
+      facetSearch: {
+        query: 'wet',
+        canShowMoreResults: false,
+        results: [
+          {
+            path: ['Sporting Goods', 'Water Sports', 'Wetsuits'],
+            value: 'Wetsuits',
+            numberOfResults: 4,
+          },
+        ],
+      },
+    });
+
+    await waitFor(() =>
+      expect(
+        screen.getByTestId('facet-search-result-Sporting Goods/Water Sports/Wetsuits')
+      ).toBeDefined()
+    );
+    expect(screen.queryByTestId('facet-search-show-more-ec_category')).toBeNull();
   });
 
   it('renders search results and dispatches selectPath with the result path on click', async () => {
