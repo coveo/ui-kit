@@ -14,7 +14,8 @@ export interface SummaryState {
   /**
    * The position of the last product on the current page.
    *
-   * Spotlight content is not counted.
+   * Spotlight content on the current page is not counted. With page-by-page navigation,
+   * spotlight content on earlier pages may offset this position.
    */
   lastProduct: number;
   /**
