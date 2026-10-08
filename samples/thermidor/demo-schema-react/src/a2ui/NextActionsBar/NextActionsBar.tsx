@@ -5,8 +5,11 @@ import styles from './NextActionsBar.module.css';
 
 /**
  * A2-UI component for the `next-actions-bar`. The generic binder resolves `suggestedActions` from
- * `NextActionsBarPropsSchema`; selecting one dispatches a `selectAction` through
- * `context.dispatchAction`.
+ * `NextActionsBarPropsSchema`; selecting one dispatches through `context.dispatchAction`:
+ *
+ * - a `followup` or `search` item dispatches `selectAction {text, type}`;
+ * - a `searchOption` item dispatches `selectSearchOption {optionId}`. The gateway keeps the search
+ *   saved under `optionId` and opens it as a new commerce-search surface.
  */
 export const NextActionsBar = createReactComponent(
   {
@@ -21,10 +24,11 @@ export const NextActionsBar = createReactComponent(
     }
 
     const handleSelectAction = (action: ActionItem) => {
-      const selectActionAction: NextActionsBarAction = {
-        event: {name: 'selectAction', context: {text: action.text, type: action.type}},
-      };
-      context.dispatchAction(selectActionAction);
+      const nextActionsBarAction: NextActionsBarAction =
+        action.type === 'searchOption'
+          ? {event: {name: 'selectSearchOption', context: {optionId: action.optionId}}}
+          : {event: {name: 'selectAction', context: {text: action.text, type: action.type}}};
+      context.dispatchAction(nextActionsBarAction);
     };
 
     return (

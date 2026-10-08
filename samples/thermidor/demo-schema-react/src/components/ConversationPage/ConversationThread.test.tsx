@@ -15,6 +15,7 @@ function renderThread(
   const defaultProps = {
     turns,
     turnRefs: {current: new Map<string, HTMLDivElement>()},
+    surfacesByTurn: new Map<string, readonly string[]>(),
   };
 
   return render(<ConversationThread {...defaultProps} {...overrides} />);
@@ -78,6 +79,45 @@ describe('ConversationThread', () => {
 
       const separators = container.querySelectorAll('hr');
       expect(separators.length).toBe(0);
+    });
+  });
+
+  describe('error rendering', () => {
+    function failedTurn(): Turn {
+      return makeTurn({
+        status: 'error',
+        error: 'Service unavailable',
+        response: {
+          agent: {
+            messages: [{content: 'Here are some kayaks', role: 'assistant'}],
+            reasoningSteps: [],
+          },
+        },
+      });
+    }
+
+    it('renders only the error when the turn failed before any follow-up', () => {
+      renderThread([failedTurn()]);
+
+      expect(screen.getByRole('alert').textContent).toBe('Service unavailable');
+      expect(screen.queryByText('Here are some kayaks')).toBeNull();
+    });
+
+    it('keeps the earlier answer and draws the error after a failed follow-up', () => {
+      const turn = failedTurn();
+      const followUp = {
+        prompt: 'Show more life jackets',
+        activityCount: 0,
+        messageCount: 1,
+        reasoningStepCount: 0,
+        surfaceCount: 0,
+      };
+
+      renderThread([turn], {followUps: new Map([[turn.id, [followUp]]])});
+
+      expect(screen.getByText('Here are some kayaks')).toBeTruthy();
+      expect(screen.getByText('Show more life jackets')).toBeTruthy();
+      expect(screen.getByRole('alert').textContent).toBe('Service unavailable');
     });
   });
 });
