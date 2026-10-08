@@ -1,8 +1,8 @@
 [
   {
-    "name": "ESM",
-    "path": "dist/index.js",
-    "ignore": ["@coveo/headless"],
-    "limit": "7.6 kB"
+    "name": "@coveo/atomic-hosted-page - CDN",
+    "path": "cdn/**/*.js",
+    "rolldown": false,
+    "limit": "9.3 kB"
   }
 ]
