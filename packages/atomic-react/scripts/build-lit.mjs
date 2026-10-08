@@ -1,7 +1,8 @@
 import {writeFileSync} from 'node:fs';
 import cem from '@coveo/atomic/custom-elements-manifest' with {type: 'json'};
 
-const isLitDeclaration = (declaration) => declaration?.superclass?.name === 'LitElement';
+const isLitDeclaration = (declaration) =>
+  declaration?.customElement === true && Boolean(declaration.tagName);
 
 const entries = [
   {
@@ -25,6 +26,7 @@ const entries = [
     content: '',
     excludedComponents: [
       'atomic-product-template',
+      'atomic-spotlight-content-template',
       'atomic-recs-result-template',
       'atomic-field-condition',
     ],

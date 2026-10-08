@@ -1,5 +1,5 @@
 import {isUndefined} from '@coveo/bueno';
-import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
+import type {InteractiveProduct, InteractiveSpotlightContent} from '@coveo/headless/commerce';
 import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
@@ -12,7 +12,11 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-import {buildStringTemplateFromProduct} from '../product-template-component-utils/product-utils';
+import {
+  buildStringTemplateFromProduct,
+  type CommerceResult,
+  isSpotlightContent,
+} from '../product-template-component-utils/product-utils';
 import '../atomic-product-text/atomic-product-text';
 import {createProductContextController} from '@/src/components/commerce/product-template-component-utils/context/product-context-controller';
 import {LightDomMixin} from '@/src/mixins/light-dom';
@@ -24,6 +28,9 @@ import styles from './atomic-product-link.tw.css';
 
 /**
  * The `atomic-product-link` component automatically transforms a product `ec_name` into a clickable link that points to the original item.
+ *
+ * Inside an `atomic-spotlight-content-template`, it links to the `clickUri` of the Spotlight Content, displays its `name` by
+ * default, and logs Spotlight Content click analytics.
  *
  * @slot default - The content to display inside the link.
  * @slot attributes - Use `<a slot="attributes" target="_blank"></a>` to pass custom attributes to the generated link.
@@ -50,11 +57,13 @@ export class AtomicProductLink
   @property({type: String, attribute: 'href-template', reflect: true})
   hrefTemplate?: string;
 
-  @state() public product?: Product;
-  @state() public interactiveProduct?: InteractiveProduct;
+  @state() public product?: CommerceResult;
+  @state() public interactiveProduct?: InteractiveProduct | InteractiveSpotlightContent;
 
-  public productController = createProductContextController(this);
-  public interactiveProductController = createInteractiveProductContextController(this);
+  public productController = createProductContextController<CommerceResult>(this);
+  public interactiveProductController = createInteractiveProductContextController<
+    InteractiveProduct | InteractiveSpotlightContent
+  >(this);
 
   @state() public bindings!: CommerceBindings;
   @state() public error!: Error;
@@ -136,7 +145,10 @@ export class AtomicProductLink
         },
       })(html`
         ${this.renderDefaultSlotContent(
-          html`<atomic-product-text field="ec_name" default="no-title"></atomic-product-text>`
+          html`<atomic-product-text
+            field=${isSpotlightContent(product) ? 'name' : 'ec_name'}
+            default="no-title"
+          ></atomic-product-text>`
         )}
       `);
     })}`;

@@ -48,6 +48,7 @@
     "build:indexes": {
       "outputs": ["src/components/*/index.ts", "src/components/*/lazy-index.ts"],
       "inputs": [
+        "./scripts/generate-lit-exports.mjs",
         "./src/**/*.ts",
         "!./src/components/*/index.ts",
         "!./src/components/*/lazy-index.ts",

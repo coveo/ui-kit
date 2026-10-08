@@ -1,12 +1,11 @@
 import {
-  buildProductListing,
-  buildSearch,
   type Pagination,
   type PaginationState,
   type ProductListingSummaryState,
   type SearchSummaryState,
   type Summary,
 } from '@coveo/headless/commerce';
+import {buildSearchOrListing} from '@/src/components/commerce/atomic-commerce-interface/search-or-listing';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
@@ -77,10 +76,7 @@ export class AtomicCommerceProductsPerPage
     this.initialChoice = this.initialChoice ?? this.choices[0];
     validateInitialChoice(this.initialChoice, this.choices);
 
-    const controller =
-      this.bindings.interfaceElement.type === 'search'
-        ? buildSearch(this.bindings.engine)
-        : buildProductListing(this.bindings.engine);
+    const controller = buildSearchOrListing(this.bindings.engine, this.bindings.interfaceElement);
 
     this.summary = controller.summary();
     this.pagination = controller.pagination(

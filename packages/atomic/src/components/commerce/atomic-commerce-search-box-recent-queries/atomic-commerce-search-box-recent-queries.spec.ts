@@ -106,9 +106,23 @@ describe('atomic-commerce-search-box-recent-queries', () => {
         },
         options: {
           clearFilters: element.bindings.clearFilters,
+          enableResults: false,
           maxLength: 1000,
         },
       });
+    });
+
+    it('should enable results on the recent queries list controller when spotlight content is enabled on the interface', async () => {
+      const {element} = await renderElements({
+        interfaceElement: {enableSpotlightContent: true},
+      });
+
+      expect(buildRecentQueriesList).toHaveBeenCalledWith(
+        element.bindings.engine,
+        expect.objectContaining({
+          options: expect.objectContaining({enableResults: true}),
+        })
+      );
     });
 
     it('should subscribe to the recent queries list', async () => {

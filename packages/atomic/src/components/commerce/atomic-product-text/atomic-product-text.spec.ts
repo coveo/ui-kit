@@ -8,6 +8,7 @@ import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {AtomicProductText} from './atomic-product-text';
 import './atomic-product-text';
+import {buildFakeSpotlightContent} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/spotlight-content';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
@@ -505,5 +506,51 @@ describe('atomic-product-text', () => {
 
     expect(element).toBeDefined();
     expect(element?.field).toBe('ec_name');
+  });
+
+  describe('when rendering a spotlight content', () => {
+    const renderSpotlightContentText = async (
+      field: string,
+      spotlightContent = buildFakeSpotlightContent()
+    ) => {
+      const {element} = await renderInAtomicProduct<AtomicProductText>({
+        template: html`<atomic-product-text field=${field}></atomic-product-text>`,
+        selector: 'atomic-product-text',
+        product: spotlightContent,
+        bindings: (bindings) => {
+          bindings.i18n = i18n;
+          return bindings;
+        },
+      });
+      await element.updateComplete;
+      return element;
+    };
+
+    it('should render the value of the spotlight content field', async () => {
+      const element = await renderSpotlightContentText(
+        'name',
+        buildFakeSpotlightContent({name: 'Summer sale'})
+      );
+
+      expect(locators.getCommerceText(element)).toHaveAttribute('value', 'Summer sale');
+    });
+
+    it('should apply the font color configured for the field', async () => {
+      const element = await renderSpotlightContentText(
+        'name',
+        buildFakeSpotlightContent({nameFontColor: '#ff0000'})
+      );
+
+      expect(element.querySelector('span')).toHaveStyle({color: 'rgb(255, 0, 0)'});
+    });
+
+    it('should not apply a font color when none is configured for the field', async () => {
+      const element = await renderSpotlightContentText(
+        'description',
+        buildFakeSpotlightContent({descriptionFontColor: undefined})
+      );
+
+      expect(element.querySelector('span[style]')).toBeNull();
+    });
   });
 });

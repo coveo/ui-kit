@@ -7,6 +7,7 @@ import {renderInAtomicProduct} from '@/vitest-utils/testing-helpers/fixtures/ato
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import type {AtomicProductImage} from './atomic-product-image';
 import './atomic-product-image';
+import {buildFakeSpotlightContent} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/spotlight-content';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 vi.mock('@/src/utils/xss-utils', () => ({
@@ -373,5 +374,70 @@ describe('atomic-product-image', () => {
 
     expect(indicator[0]).toBeInTheDocument();
     expect(activeIndicator).toBeInTheDocument();
+  });
+
+  describe('when rendering a spotlight content', () => {
+    const renderSpotlightContentImage = async (spotlightContent = buildFakeSpotlightContent()) => {
+      const {element} = await renderInAtomicProduct<AtomicProductImage>({
+        template: html`<atomic-product-image></atomic-product-image>`,
+        selector: 'atomic-product-image',
+        product: spotlightContent,
+        bindings: (bindings) => {
+          bindings.engine.logger = {warn: vi.fn()} as never;
+          bindings.store.state.mobileBreakpoint = '900px';
+          return bindings;
+        },
+      });
+      await element.updateComplete;
+      return {
+        image: element.shadowRoot!.querySelector('[part="product-image"]'),
+        source: element.shadowRoot!.querySelector('source'),
+      };
+    };
+
+    it('should render the desktop image', async () => {
+      const {image} = await renderSpotlightContentImage(
+        buildFakeSpotlightContent({desktopImage: 'https://example.com/d.jpg'})
+      );
+
+      expect(image).toHaveAttribute('src', 'https://example.com/d.jpg');
+    });
+
+    it('should render the mobile image below the interface mobile breakpoint', async () => {
+      const {source} = await renderSpotlightContentImage(
+        buildFakeSpotlightContent({mobileImage: 'https://example.com/m.jpg'})
+      );
+
+      expect(source).toHaveAttribute('srcset', 'https://example.com/m.jpg');
+      expect(source).toHaveAttribute('media', '(width < 900px)');
+    });
+
+    it('should not render a mobile source when there is no mobile image', async () => {
+      const {source} = await renderSpotlightContentImage(
+        buildFakeSpotlightContent({mobileImage: undefined})
+      );
+
+      expect(source).toBeNull();
+    });
+
+    it('should use the alt text, then the name, as the image alt', async () => {
+      const {image: withAltText} = await renderSpotlightContentImage(
+        buildFakeSpotlightContent({altText: 'Summer sale banner'})
+      );
+      const {image: withName} = await renderSpotlightContentImage(
+        buildFakeSpotlightContent({altText: undefined, name: 'Summer sale'})
+      );
+
+      expect(withAltText).toHaveAttribute('alt', 'Summer sale banner');
+      expect(withName).toHaveAttribute('alt', 'Summer sale');
+    });
+
+    it('should render nothing when the spotlight content has no image', async () => {
+      const {image} = await renderSpotlightContentImage(
+        buildFakeSpotlightContent({desktopImage: '', mobileImage: undefined})
+      );
+
+      expect(image).toBeNull();
+    });
   });
 });

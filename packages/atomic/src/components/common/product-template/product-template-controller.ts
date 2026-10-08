@@ -1,4 +1,4 @@
-import type {ProductTemplate, ProductTemplateCondition} from '@coveo/headless/commerce';
+import type {Product, Template} from '@coveo/headless/commerce';
 import type {ReactiveControllerHost} from 'lit';
 import {
   BaseTemplateController,
@@ -6,13 +6,18 @@ import {
 } from '@/src/components/common/template-controller/base-template-controller';
 
 type ProductTemplateHost = ReactiveControllerHost & HTMLElement & {error?: Error};
+type TemplateCondition<TItem> = (item: TItem) => boolean;
 
-export class ProductTemplateController extends BaseTemplateController<ProductTemplateCondition> {
+export class ProductTemplateController<TItem = Product> extends BaseTemplateController<
+  TemplateCondition<TItem>
+> {
   constructor(host: ProductTemplateHost, validParents: string[], allowEmpty: boolean = false) {
     super(host, validParents, allowEmpty);
   }
 
-  getTemplate(conditions: ProductTemplateCondition[]): ProductTemplate<TemplateContent> | null {
+  getTemplate(
+    conditions: TemplateCondition<TItem>[]
+  ): Template<TItem, TemplateContent, TemplateContent> | null {
     const baseTemplate = this.getBaseTemplate(conditions);
     if (!baseTemplate) {
       return null;

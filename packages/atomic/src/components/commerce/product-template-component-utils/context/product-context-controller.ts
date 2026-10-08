@@ -1,6 +1,5 @@
-import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
+import type {Product} from '@coveo/headless/commerce';
 import type {LitElement} from 'lit';
-import type {InteractiveItemContextEvent} from '@/src/components/common/item-list/context/interactive-item-context-controller';
 import {
   ItemContextController,
   type ItemContextEvent,
@@ -28,16 +27,14 @@ import {
  * }
  * ```
  */
-export function createProductContextController(
+export function createProductContextController<T = Product>(
   host: LitElement & {error: Error | null},
   options: {folded?: boolean} = {}
-): ItemContextController<Product> {
-  return new ItemContextController<Product>(host, {
+): ItemContextController<T> {
+  return new ItemContextController<T>(host, {
     parentName: 'atomic-product',
     folded: options.folded ?? false,
   });
 }
 
 export type ProductContextEvent<T = Product> = ItemContextEvent<T>;
-export type InteractiveProductContextEvent<T extends InteractiveProduct = InteractiveProduct> =
-  InteractiveItemContextEvent<T>;

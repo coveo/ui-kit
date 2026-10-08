@@ -95,7 +95,9 @@ describe('atomic-commerce-pager', () => {
       interfaceType: 'product-listing',
     });
 
-    expect(buildProductListing).toHaveBeenCalledWith(element.bindings.engine);
+    expect(buildProductListing).toHaveBeenCalledWith(element.bindings.engine, {
+      enableResults: false,
+    });
     expect(element.pager).toBeDefined();
   });
 
@@ -104,7 +106,7 @@ describe('atomic-commerce-pager', () => {
       interfaceType: 'search',
     });
 
-    expect(buildSearch).toHaveBeenCalledWith(element.bindings.engine);
+    expect(buildSearch).toHaveBeenCalledWith(element.bindings.engine, {enableResults: false});
     expect(element.pager).toBeDefined();
   });
 

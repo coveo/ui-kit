@@ -155,7 +155,9 @@ describe('atomic-commerce-load-more-products', () => {
     });
 
     it('should call #buildProductListing with engine', async () => {
-      expect(buildProductListing).toHaveBeenCalledExactlyOnceWith(mockedEngine);
+      expect(buildProductListing).toHaveBeenCalledExactlyOnceWith(mockedEngine, {
+        enableResults: false,
+      });
       expect(element.listingOrSearch.state.responseId).toBe('product-listing-response-id');
     });
 
@@ -178,7 +180,7 @@ describe('atomic-commerce-load-more-products', () => {
     });
 
     it('should call #buildSearch with engine', async () => {
-      expect(buildSearch).toHaveBeenCalledExactlyOnceWith(mockedEngine);
+      expect(buildSearch).toHaveBeenCalledExactlyOnceWith(mockedEngine, {enableResults: false});
       expect(element.listingOrSearch.state.responseId).toBe('search-response-id');
     });
 

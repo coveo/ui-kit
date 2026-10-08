@@ -1,4 +1,9 @@
-import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
+import type {
+  InteractiveProduct,
+  InteractiveSpotlightContent,
+  Product,
+  SpotlightContent,
+} from '@coveo/headless/commerce';
 import {html, LitElement, nothing, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
@@ -14,10 +19,10 @@ import {
 @withTailwindStyles
 export class FixtureAtomicProduct extends LitElement {
   @state() template!: TemplateResult;
-  @property({type: Object}) product?: Product;
+  @property({type: Object}) product?: Product | SpotlightContent;
   @property({type: Object}) content?: ParentNode;
   @property({type: Object, attribute: 'interactive-product'})
-  interactiveProduct?: InteractiveProduct;
+  interactiveProduct?: InteractiveProduct | InteractiveSpotlightContent;
 
   get ready() {
     return Boolean(this.template);
@@ -77,8 +82,8 @@ export function renderInAtomicProduct<T extends LitElement>({
   template: TemplateResult;
   selector?: string;
   bindings?: Partial<CommerceBindings> | ((bindings: MinimalBindings) => MinimalBindings);
-  product?: Product;
-  interactiveProduct?: InteractiveProduct;
+  product?: Product | SpotlightContent;
+  interactiveProduct?: InteractiveProduct | InteractiveSpotlightContent;
 }): Promise<{
   element: T;
   atomicProduct: FixtureAtomicProduct;
@@ -95,8 +100,8 @@ export async function renderInAtomicProduct<T extends LitElement>({
   template: TemplateResult;
   selector?: string | never;
   bindings?: Partial<CommerceBindings> | ((bindings: MinimalBindings) => MinimalBindings);
-  product?: Product;
-  interactiveProduct?: InteractiveProduct;
+  product?: Product | SpotlightContent;
+  interactiveProduct?: InteractiveProduct | InteractiveSpotlightContent;
 }): Promise<{
   element: null | T;
   atomicProduct: FixtureAtomicProduct;

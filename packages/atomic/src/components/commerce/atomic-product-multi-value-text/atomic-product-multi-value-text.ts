@@ -1,10 +1,9 @@
 import {
   type BreadcrumbManager,
-  buildProductListing,
-  buildSearch,
   ProductTemplatesHelpers,
   type RegularFacetValue,
 } from '@coveo/headless/commerce';
+import {buildSearchOrListing} from '@/src/components/commerce/atomic-commerce-interface/search-or-listing';
 import {html, LitElement, nothing, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {createProductContextController} from '@/src/components/commerce/product-template-component-utils/context/product-context-controller';
@@ -67,10 +66,10 @@ export class AtomicProductMultiValueText
   @state() private values: string[] = [];
 
   public initialize() {
-    const searchOrListing =
-      this.bindings.interfaceElement.type === 'product-listing'
-        ? buildProductListing(this.bindings.engine)
-        : buildSearch(this.bindings.engine);
+    const searchOrListing = buildSearchOrListing(
+      this.bindings.engine,
+      this.bindings.interfaceElement
+    );
 
     this.breadcrumbManager = searchOrListing.breadcrumbManager();
     this.values = this.initializeValues();
