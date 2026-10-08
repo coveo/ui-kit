@@ -163,6 +163,10 @@ export class AtomicCommerceInterface
    *
    * Number, currency, and date formatting then follow the country: with the `en` language and the
    * `CA` country, a CAD price renders as `$1,000.10` rather than `CA$1,000.10`.
+   *
+   * When Atomic has translations for the regional locale (for example `pt-BR` or `zh-TW`), the
+   * interface uses them instead of those of the language. To customize strings for such an
+   * interface, register them under the regional locale.
    */
   @property({type: Boolean, attribute: 'localize-with-country', reflect: true})
   public localizeWithCountry = false;
