@@ -31,11 +31,14 @@
     "build:definitions": "tsc -p tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "node ../../utils/ci/rm-rf.mjs dist/*",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "size": "size-limit"
   },
   "devDependencies": {
+    "@size-limit/preset-small-lib": "catalog:",
     "esbuild-plugin-umd-wrapper": "catalog:",
     "publint": "catalog:",
+    "size-limit": "catalog:",
     "vitest": "catalog:"
   },
   "engines": {

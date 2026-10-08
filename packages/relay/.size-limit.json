@@ -1,0 +1,7 @@
+[
+  {
+    "name": "ESM",
+    "path": "lib/npm/relay.mjs",
+    "limit": "2.4 kB"
+  }
+]
