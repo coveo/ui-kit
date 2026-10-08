@@ -2,9 +2,24 @@ import {useCallback, useId} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {CategoryFacetAction} from '@coveo/thermidor-schema';
 import {CategoryFacetPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {FacetSearchMoreMatches} from '../FacetSearchMoreMatches/FacetSearchMoreMatches.js';
 import {ChevronLeftIcon, SearchIcon} from '../icons/index.js';
 import {useOptimisticFacetSearch} from '../use-optimistic-facet-search.js';
 import styles from './CategoryFacet.module.css';
+
+const ALL_CATEGORIES_LABEL = 'All Categories';
+const PATH_SEPARATOR = '/';
+const PATH_ELLIPSIS = '...';
+const PATH_MAX_LENGTH = 3;
+
+/**
+ * Shortens a path to at most `PATH_MAX_LENGTH` segments by keeping the first segment and the last
+ * ones, with an ellipsis in between (mirrors Atomic's `hierarchicalPath` directive).
+ */
+const ellipsePath = (path: string[]): string[] =>
+  path.length <= PATH_MAX_LENGTH
+    ? path
+    : [path[0], PATH_ELLIPSIS, ...path.slice(-(PATH_MAX_LENGTH - 1))];
 
 /**
  * A2-UI component for the `category-facet` (hierarchical). The generic binder resolves the facet
@@ -118,28 +133,53 @@ export const CategoryFacet = createReactComponent(
         {isSearchActive ? (
           <>
             <ul className={styles.values}>
-              {searchResults.map((result) => (
-                <li key={result.path.join('/')}>
-                  <button
-                    type="button"
-                    className={styles.value}
-                    data-testid={`facet-search-result-${result.value}`}
-                    onClick={() => handleSelectPath(result.path)}
-                  >
-                    <span className={styles.valueLabel}>{result.value}</span>
-                    <span className={styles.count}>({result.numberOfResults})</span>
-                  </button>
-                </li>
-              ))}
+              {searchResults.map((result) => {
+                const parentPath = result.path.slice(0, -1);
+                const displayedPath = parentPath.length
+                  ? ellipsePath(parentPath)
+                  : [ALL_CATEGORIES_LABEL];
+                const parentLabel = parentPath.length
+                  ? parentPath.join(', ')
+                  : ALL_CATEGORIES_LABEL;
+                return (
+                  <li key={result.path.join('/')}>
+                    <button
+                      type="button"
+                      className={`${styles.value} ${styles.searchResult}`}
+                      data-testid={`facet-search-result-${result.path.join('/')}`}
+                      aria-label={`${result.value} (${result.numberOfResults}) under ${parentLabel}`}
+                      onClick={() => handleSelectPath(result.path)}
+                    >
+                      <span className={styles.searchResultValue}>
+                        <span className={styles.valueLabel}>{result.value}</span>
+                        <span className={styles.count}>({result.numberOfResults})</span>
+                      </span>
+                      <span
+                        className={styles.searchResultPath}
+                        data-testid={`facet-search-result-path-${result.path.join('/')}`}
+                      >
+                        <span>in</span>
+                        {displayedPath.map((segment, index) => (
+                          <span
+                            key={`${index}-${segment}`}
+                            className={styles.searchResultPathSegment}
+                          >
+                            {index > 0 && <span aria-hidden="true">{PATH_SEPARATOR}</span>}
+                            <span className={styles.valueLabel}>{segment}</span>
+                          </span>
+                        ))}
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
             {facetSearch?.canShowMoreResults && (
-              <button
-                type="button"
-                className={styles.showMore}
-                onClick={handleShowMoreSearchResults}
-              >
-                Show more
-              </button>
+              <FacetSearchMoreMatches
+                query={searchQuery}
+                testId={`facet-search-show-more-${props.field}`}
+                onShowMore={handleShowMoreSearchResults}
+              />
             )}
           </>
         ) : (
@@ -154,7 +194,7 @@ export const CategoryFacet = createReactComponent(
                     onClick={handleClearSelectedPath}
                   >
                     <ChevronLeftIcon className={styles.chevron} />
-                    <span className={styles.valueLabel}>All Categories</span>
+                    <span className={styles.valueLabel}>{ALL_CATEGORIES_LABEL}</span>
                   </button>
                 </li>
               )}

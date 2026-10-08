@@ -602,7 +602,7 @@
 - chore(atomic): migrate atomic-icon (#4998) ([cace446](https://github.com/coveo/ui-kit/commits/cace446)), closes [#4998](https://github.com/coveo/ui-kit/issues/4998)
 - chore(atomic): prettier generated lit files (#5168) ([827ab7a](https://github.com/coveo/ui-kit/commits/827ab7a)), closes [#5168](https://github.com/coveo/ui-kit/issues/5168)
 - chore(react19): allow react19 w/ `@coveo/headless-react`, bump to 19 everywhereish. (#5171) ([823974d](https://github.com/coveo/ui-kit/commits/823974d)), closes [#5171](https://github.com/coveo/ui-kit/issues/5171)
-- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [/github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com//github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json/issues/L48)
+- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48)
 
 ## 3.2.36
 
@@ -631,7 +631,7 @@
 - chore(atomic): add withTailwindStyles decorator (#5106) ([5d92351](https://github.com/coveo/ui-kit/commits/5d92351)), closes [#5106](https://github.com/coveo/ui-kit/issues/5106)
 - chore(atomic): fix initialization issues when combining Lit interfaces with Stencil components (#507 ([1190f8c](https://github.com/coveo/ui-kit/commits/1190f8c)), closes [#5070](https://github.com/coveo/ui-kit/issues/5070)
 - chore(atomic): migrate atomic-icon (#4998) ([cace446](https://github.com/coveo/ui-kit/commits/cace446)), closes [#4998](https://github.com/coveo/ui-kit/issues/4998)
-- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [/github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com//github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json/issues/L48)
+- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48)
 
 ## 3.2.25
 
@@ -657,7 +657,7 @@
 
 ## 3.2.16
 
-- chore: add tailwind styles support for lit components (#4862) ([6537c36](https://github.com/coveo/ui-kit/commits/6537c36)), closes [#4862](https://github.com/coveo/ui-kit/issues/4862) [/github.com/coveo/ui-kit/pull/4804#issue-2751560151](https://github.com//github.com/coveo/ui-kit/pull/4804/issues/issue-2751560151) [/github.com/coveo/ui-kit/pull/4804#discussion_r1894392106](https://github.com//github.com/coveo/ui-kit/pull/4804/issues/discussion_r1894392106) [#4804](https://github.com/coveo/ui-kit/issues/4804)
+- chore: add tailwind styles support for lit components (#4862) ([6537c36](https://github.com/coveo/ui-kit/commits/6537c36)), closes [#4862](https://github.com/coveo/ui-kit/issues/4862) [github.com/coveo/ui-kit/pull/4804#issue-2751560151](https://github.com/coveo/ui-kit/pull/4804#issue-2751560151) [github.com/coveo/ui-kit/pull/4804#discussion_r1894392106](https://github.com/coveo/ui-kit/pull/4804#discussion_r1894392106) [#4804](https://github.com/coveo/ui-kit/issues/4804)
 
 ## 3.2.15
 
@@ -706,7 +706,7 @@
 
 ## 3.2.0
 
-- fix(atomic-react): remove traces of npm imports (#4581) ([599b36f](https://github.com/coveo/ui-kit/commits/599b36f)), closes [#4581](https://github.com/coveo/ui-kit/issues/4581) [/github.com/coveo/ui-kit/pull/4581/files#r1812922022](https://github.com//github.com/coveo/ui-kit/pull/4581/files/issues/r1812922022)
+- fix(atomic-react): remove traces of npm imports (#4581) ([599b36f](https://github.com/coveo/ui-kit/commits/599b36f)), closes [#4581](https://github.com/coveo/ui-kit/issues/4581) [github.com/coveo/ui-kit/pull/4581/files#r1812922022](https://github.com/coveo/ui-kit/pull/4581/files#r1812922022)
 - fix(atomic-react): render empty link container when display is other than grid (#4604) ([91a2538](https://github.com/coveo/ui-kit/commits/91a2538)), closes [#4604](https://github.com/coveo/ui-kit/issues/4604)
 - fix(atomic): allow atomic loader to be deployed to the CDN (#4568) ([b579cb0](https://github.com/coveo/ui-kit/commits/b579cb0)), closes [#4568](https://github.com/coveo/ui-kit/issues/4568)
 - feat(atomic): support highlights in atomic-product-description (#4541) ([5c235a8](https://github.com/coveo/ui-kit/commits/5c235a8)), closes [#4541](https://github.com/coveo/ui-kit/issues/4541)
@@ -724,7 +724,7 @@
 ## 3.1.0
 
 - chore(atomic, headless): make bueno external (#4433) ([e1f7f2d](https://github.com/coveo/ui-kit/commits/e1f7f2d)), closes [#4433](https://github.com/coveo/ui-kit/issues/4433)
-- chore(headless,atomic): add type "module" to atomic, atomic-react and headless (#4442) ([21896c3](https://github.com/coveo/ui-kit/commits/21896c3)), closes [#4442](https://github.com/coveo/ui-kit/issues/4442) [/github.com/coveo/ui-kit/pull/4449/files#diff-75f80b97846615f5b074710648b8191f74aa4f00fd1536c45bc344b284ca8e87](https://github.com//github.com/coveo/ui-kit/pull/4449/files/issues/diff-75f80b97846615f5b074710648b8191f74aa4f00fd1536c45bc344b284ca8e87)
+- chore(headless,atomic): add type "module" to atomic, atomic-react and headless (#4442) ([21896c3](https://github.com/coveo/ui-kit/commits/21896c3)), closes [#4442](https://github.com/coveo/ui-kit/issues/4442) [github.com/coveo/ui-kit/pull/4449/files#diff-75f80b97846615f5b074710648b8191f74aa4f00fd1536c45bc344b284ca8e87](https://github.com/coveo/ui-kit/pull/4449/files#diff-75f80b97846615f5b074710648b8191f74aa4f00fd1536c45bc344b284ca8e87)
 - feat(atomic): atomic insight user actions toggle component created (#4298) ([bad4ff5](https://github.com/coveo/ui-kit/commits/bad4ff5)), closes [#4298](https://github.com/coveo/ui-kit/issues/4298)
 - docs(atomic-react): update examples in readme (#4432) ([037b2ca](https://github.com/coveo/ui-kit/commits/037b2ca)), closes [#4432](https://github.com/coveo/ui-kit/issues/4432)
 
@@ -1073,7 +1073,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
-- recommendations error component ([#2787](https://github.com/coveo/ui-kit/issues/2787)) ([2d88e87](https://github.com/coveo/ui-kit/commit/2d88e8743970a4585fac807986420bc2c90b89ea))
+- recommendations error component (#2787) ([2d88e87](https://github.com/coveo/ui-kit/commit/2d88e8743970a4585fac807986420bc2c90b89ea))
 
 ## [2.1.40](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@2.1.39...@coveo/atomic-react@2.1.40) (2023-03-15)
 
