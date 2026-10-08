@@ -1,0 +1,14 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "commerce-hybrid",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "cd /Users/ylakhdar/Repos/ui-kit/.claude/worktrees/kit-6214/samples/atomic/commerce-hybrid && BROWSER=none pnpm exec vite --port 5199 --strictPort"
+      ],
+      "port": 5199
+    }
+  ]
+}
