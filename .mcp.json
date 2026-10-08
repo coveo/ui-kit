@@ -1,9 +1,5 @@
 {
   "mcpServers": {
-    "storybook": {
-      "url": "http://localhost:4400/mcp",
-      "disabled": true
-    },
     "salesforce-lbc": {
       "command": "npx",
       "args": [
