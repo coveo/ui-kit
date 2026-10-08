@@ -13,6 +13,9 @@ export interface SummaryState {
   firstProduct: number;
   /**
    * The position of the last product on the current page.
+   *
+   * Spotlight content on the current page is not counted. With page-by-page navigation,
+   * spotlight content on earlier pages may offset this position.
    */
   lastProduct: number;
   /**
@@ -21,6 +24,8 @@ export interface SummaryState {
   firstRequestExecuted: boolean;
   /**
    * The total number of products available.
+   *
+   * Spotlight content is not counted.
    */
   totalNumberOfProducts: number;
   /**
@@ -54,7 +59,7 @@ export interface SummaryOptions<State extends SummaryState> {
   errorSelector: (state: CommerceEngineState) => CommerceAPIErrorStatusResponse | null | undefined;
   pageSelector: (state: CommerceEngineState) => number;
   perPageSelector: (state: CommerceEngineState) => number;
-  totalEntriesSelector: (state: CommerceEngineState) => number;
+  totalProductsSelector: (state: CommerceEngineState) => number;
   enrichSummary?: (state: CommerceEngineState) => Partial<State>;
 }
 
@@ -82,7 +87,7 @@ export const buildCoreSummary = <State extends SummaryState = SummaryState>(
       errorSelector,
       pageSelector,
       perPageSelector,
-      totalEntriesSelector,
+      totalProductsSelector,
       enrichSummary,
     },
   } = props;
@@ -90,7 +95,7 @@ export const buildCoreSummary = <State extends SummaryState = SummaryState>(
   const getState = () => engine[stateKey];
   const page = () => pageSelector(getState());
   const perPage = () => perPageSelector(getState());
-  const totalNumberOfProducts = () => totalEntriesSelector(getState());
+  const totalNumberOfProducts = () => totalProductsSelector(getState());
 
   const firstSearchExecuted = () => !!responseIdSelector(getState());
 

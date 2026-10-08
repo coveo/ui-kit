@@ -4,7 +4,7 @@ import {contextReducer as commerceContext} from '../../../features/commerce/cont
 import {
   pagePrincipalSelector,
   perPagePrincipalSelector,
-  totalEntriesPrincipalSelector,
+  totalProductsPrincipalSelector,
 } from '../../../features/commerce/pagination/pagination-selectors.js';
 import {searchSerializer} from '../../../features/commerce/parameters/parameters-serializer.js';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice.js';
@@ -14,7 +14,7 @@ import {
   enrichedSummarySelector,
   errorSelector,
   isLoadingSelector,
-  numberOfProductsSelector,
+  numberOfProductsExcludingSpotlightsSelector,
   requestIdSelector,
   responseIdSelector,
 } from '../../../features/commerce/search/search-selectors.js';
@@ -73,8 +73,8 @@ describe('headless search', () => {
     expect(options.errorSelector).toBe(errorSelector);
     expect(options.pageSelector).toBe(pagePrincipalSelector);
     expect(options.perPageSelector).toBe(perPagePrincipalSelector);
-    expect(options.totalEntriesSelector).toBe(totalEntriesPrincipalSelector);
-    expect(options.numberOfProductsSelector).toBe(numberOfProductsSelector);
+    expect(options.totalProductsSelector).toBe(totalProductsPrincipalSelector);
+    expect(options.numberOfProductsSelector).toBe(numberOfProductsExcludingSpotlightsSelector);
     expect(options.enrichSummary).toBe(enrichedSummarySelector);
 
     // Verify action creators are functions (wrapped with enableResults)
