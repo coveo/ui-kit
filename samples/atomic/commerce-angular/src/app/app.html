@@ -1,0 +1,27 @@
+<a class="skip-link" href="#maincontent" (click)="$event.preventDefault(); main.focus()">
+  Skip to main content
+</a>
+<header class="app-header">
+  <div class="brand">
+    <img src="coveo-logo.svg" alt="Coveo" width="119" height="30" />
+    <h1>Atomic Commerce + Angular</h1>
+  </div>
+  <nav class="app-nav" aria-label="Sample pages">
+    <a
+      routerLink="/"
+      routerLinkActive
+      [routerLinkActiveOptions]="{exact: true}"
+      ariaCurrentWhenActive="page"
+      >Home</a
+    >
+    <a routerLink="/search" routerLinkActive ariaCurrentWhenActive="page">Search</a>
+    <a routerLink="/listing/surf-accessories" routerLinkActive ariaCurrentWhenActive="page"
+      >Surf Accessories</a
+    >
+    <a routerLink="/listing/toys" routerLinkActive ariaCurrentWhenActive="page">Toys</a>
+  </nav>
+</header>
+
+<main #main id="maincontent" tabindex="-1">
+  <router-outlet />
+</main>

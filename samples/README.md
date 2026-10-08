@@ -15,10 +15,11 @@ Samples are organized by the Coveo library they use:
 
 ### [Atomic Samples](./atomic/)
 
-Pre-built, customizable search and commerce components from `@coveo/atomic` and `@coveo/atomic-react`.
+Pre-built, customizable search and commerce components from `@coveo/atomic`, `@coveo/atomic-react`, and `@coveo/atomic-angular`.
 
 | Sample                                                       | Description                          | Framework     | Use Case          |
 | ------------------------------------------------------------ | ------------------------------------ | ------------- | ----------------- |
+| [commerce-angular](./atomic/commerce-angular/)               | Atomic Commerce in Angular           | Angular       | Commerce          |
 | [search-commerce-angular](./atomic/search-commerce-angular/) | Atomic components in Angular         | Angular       | Search & Commerce |
 | [search-commerce-react](./atomic/search-commerce-react/)     | Atomic React components              | React (Vite)  | Search & Commerce |
 | [search-nextjs](./atomic/search-nextjs/)                     | Atomic React with Next.js App Router | Next.js       | Search            |

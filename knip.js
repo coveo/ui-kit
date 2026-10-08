@@ -165,6 +165,11 @@ export default {
       // Same as commerce-vite: vite.config.js throws without build artifacts.
       vite: {config: []},
     },
+    'samples/atomic/*-angular': {
+      // Only referenced from angular.json, which loads Atomic's theme
+      // stylesheet by path.
+      ignoreDependencies: ['@coveo/atomic'],
+    },
     'utils/ci': {},
     'utils/cdn': {},
 

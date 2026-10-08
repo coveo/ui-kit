@@ -1,0 +1,58 @@
+<div class="home">
+  <section class="home-hero">
+    <atomic-commerce-interface #searchInterface type="search">
+      <atomic-layout-section section="search">
+        <atomic-commerce-search-box redirection-url="/search">
+          <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+          <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
+        </atomic-commerce-search-box>
+      </atomic-layout-section>
+    </atomic-commerce-interface>
+  </section>
+
+  <section class="home-recs">
+    <atomic-commerce-recommendation-interface #recommendationInterface>
+      <atomic-commerce-recommendation-list
+        slot-id="af4fb7ba-6641-4b67-9cf9-be67e9f30174"
+        products-per-page="4"
+      >
+        <atomic-product-template>
+          <template>
+            <atomic-product-section-visual>
+              <atomic-product-field-condition if-defined="ec_thumbnails">
+                <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+              </atomic-product-field-condition>
+            </atomic-product-section-visual>
+            <atomic-product-section-name>
+              <atomic-product-link></atomic-product-link>
+            </atomic-product-section-name>
+            <atomic-product-section-emphasized>
+              <atomic-product-price currency="USD"></atomic-product-price>
+            </atomic-product-section-emphasized>
+          </template>
+        </atomic-product-template>
+      </atomic-commerce-recommendation-list>
+
+      <atomic-commerce-recommendation-list
+        slot-id="d73afbd2-8521-4ee6-a9b8-31f064721e73"
+        products-per-page="4"
+      >
+        <atomic-product-template>
+          <template>
+            <atomic-product-section-visual>
+              <atomic-product-field-condition if-defined="ec_thumbnails">
+                <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+              </atomic-product-field-condition>
+            </atomic-product-section-visual>
+            <atomic-product-section-name>
+              <atomic-product-link></atomic-product-link>
+            </atomic-product-section-name>
+            <atomic-product-section-emphasized>
+              <atomic-product-price currency="USD"></atomic-product-price>
+            </atomic-product-section-emphasized>
+          </template>
+        </atomic-product-template>
+      </atomic-commerce-recommendation-list>
+    </atomic-commerce-recommendation-interface>
+  </section>
+</div>

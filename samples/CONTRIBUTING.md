@@ -54,7 +54,7 @@ Every sample **must** have:
 
 ```
 samples/
-├── atomic/           # @coveo/atomic and @coveo/atomic-react samples
+├── atomic/           # @coveo/atomic, @coveo/atomic-react, and @coveo/atomic-angular samples
 ├── headless/         # @coveo/headless client-side rendering samples
 └── headless-ssr/     # @coveo/headless server-side rendering samples
 ```
@@ -94,7 +94,7 @@ Samples carry the `@coveo/ui-kit-sample-*` name from the start (matching the `--
 
 ### 1. Choose the correct category
 
-- **`atomic/`**: Uses `@coveo/atomic` or `@coveo/atomic-react` components
+- **`atomic/`**: Uses `@coveo/atomic`, `@coveo/atomic-react`, or `@coveo/atomic-angular` components
 - **`headless/`**: Uses `@coveo/headless` controllers with client-side rendering
 - **`headless-ssr/`**: Uses `@coveo/headless-react` or similar with server-side rendering
 
