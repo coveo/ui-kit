@@ -32,7 +32,6 @@ describe('createStaleScopes', () => {
     stale.track('d1', ['results']);
     stale.track('d2', ['results']);
 
-    // Three clicks in a row must not look caught up the moment the first answer lands.
     stale.settle('d1');
     expect(stale.isStale('results')).toBe(true);
 
@@ -77,7 +76,6 @@ describe('createStaleScopes', () => {
       const afterFirst = stale.getVersion();
       expect(afterFirst).not.toBe(0);
 
-      // Already behind: a second gesture against it costs no re-read.
       stale.track('d2', ['results']);
       expect(stale.getVersion()).toBe(afterFirst);
 

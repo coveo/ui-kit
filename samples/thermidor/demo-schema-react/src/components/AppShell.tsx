@@ -43,8 +43,7 @@ export function AppShell() {
   );
   const stream = useMemo(() => buildSurfaceStream(turns), [turns]);
 
-  // The renderer's onAction bridge drops the handler's promise, so dispatches are tracked here,
-  // against the session's own coordinator — one queue for the whole app.
+  // The renderer's onAction bridge drops the handler's promise, so dispatches are tracked here.
   const tracked = useTrackedDispatch(session.actions);
 
   const latestRef = useRef({turns, stream, isStreaming});

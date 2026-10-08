@@ -1,28 +1,10 @@
 /**
- * One producer value, with the gestures made against it held on screen until the producer has
- * answered them.
+ * While a gesture is outstanding the producer's value is not read at all, so a late answer has
+ * nothing to win against. Holding ONE value is sound because each gesture derives from what is
+ * displayed, so gestures form a chain.
  *
- * The whole invariant is one sentence: SHOW MY INTENTION WHILE I HAVE A GESTURE OUTSTANDING, THEN
- * SHOW THE PRODUCER. Nothing is composed and nothing is reconciled — while a gesture of this
- * value's is outstanding the producer's value is not read at all, which is what makes a late
- * answer harmless: there is no comparison for it to win.
- *
- * Holding ONE value is sound because each gesture derives its outcome from what is currently
- * DISPLAYED, so the value held already contains every gesture before it — they form a chain, not a
- * set. The cost is named on {@link OptimisticNext}: whatever the gesture did not claim is frozen
- * with it until the last answer arrives.
- *
- * The only module in here that reaches into `../actions`: deciding whether a gesture is already
- * produced by the request on its way takes the gesture's outcome and what that request is going to
- * land on, and the second of those is the queue's to know. Everything React-shaped stays out — a
- * view layer binds to `subscribe` / `getVersion` and passes the producer value in, which is the one
- * thing it owns and this controller cannot hold.
- *
- * It SHRINKS when the producer takes the queue over, and this is the checklist of what goes with
- * `../actions`: the `coalesce` field and the {@link CoalesceIntent} built from it, `landingValue`,
- * `satisfiedByFlight`, and the gesture identity only queue pairing needs (`gestureLabel`,
- * `stableJson`). What stays is holding a gesture until its answer — the held value, the counter,
- * the store, the stale scopes a gesture declares, and the report of a lost action.
+ * Shrinks when the producer owns the queue: `coalesce`, `landingValue`, `satisfiedByFlight`,
+ * `gestureLabel` and `stableJson` go with `../actions`.
  */
 import type {
   CoalesceIntent,
@@ -32,141 +14,66 @@ import type {
 } from '@/src/actions/dispatch-coordinator.js';
 import type {StaleScope} from '@/src/optimistic/stale-scope.js';
 
-/** Derives a gesture's outcome from the value currently on screen. */
 export type OptimisticTransform<T> = (current: T) => T;
 
 /**
- * What a gesture shows while it is outstanding: the next value outright, or how to derive it from
- * the one currently displayed.
- *
- * Applied ONCE, at the moment of the gesture, to what is on screen then — not re-applied against
- * later producer values. So a partial write freezes what it did not claim (facet counts, totals)
- * for as long as this value has a gesture outstanding, and those become current again with the
- * last answer. That is the price of holding one value; the region a gesture leaves behind is what
- * {@link OptimisticGesture.invalidates} is for.
- *
- * `T` is therefore never itself a function.
+ * Applied once, at gesture time — not re-applied to later producer values, so whatever it did not
+ * claim stays frozen until the last answer. `T` must therefore never be a function.
  */
 export type OptimisticNext<T> = T | OptimisticTransform<T>;
 
-/**
- * `TScope` is the region vocabulary of the app writing the gesture. Left out, any region name is
- * accepted — which is what a consumer that names none wants, and what one that names its own must
- * be able to narrow here rather than by patching this type from outside.
- */
 export interface OptimisticGesture<T, TAction, TScope extends StaleScope = StaleScope> {
-  /** What is asked of the producer. */
   action: TAction;
-  /** What to show until the producer has answered this value's outstanding gestures. */
   next: OptimisticNext<T>;
-  /** Omitted, nothing queued may be dropped on this gesture's behalf — always safe. */
+  /** Omitted, nothing queued may be dropped on this gesture's behalf. */
   coalesce?: CoalescePolicy;
-  /**
-   * The regions this gesture leaves behind until it is answered. Omitted, the caller's default
-   * applies; `[]` is how a gesture the producer answers without rebuilding anything says so.
-   */
+  /** Omitted, the caller's default applies; `[]` means the producer rebuilds nothing. */
   invalidates?: readonly TScope[];
 }
 
-/**
- * What the dispatch that goes out NEXT carries. Two declarations with opposite lifetimes, which is
- * why they are separate fields rather than one object: the coalescing goes away with the
- * client-side queue, the invalidation does not.
- */
+/** Separate fields: `coalesce` goes away with the client-side queue, `invalidates` does not. */
 export interface GestureDeclaration {
   coalesce?: CoalesceIntent;
   invalidates?: readonly StaleScope[];
 }
 
 /**
- * What this controller needs from the dispatch layer, read through getters so a view layer that
- * rebuilds its handlers on every render cannot freeze the first one.
- *
- * It exists in this shape because of a bridge in between: a component dispatches through a
- * renderer call that returns nothing, so there is no way to hand a declaration to that dispatch
- * nor to receive its identity back from it. Hence a declaration for the NEXT one, and a reading of
- * the last one issued before and after.
+ * The renderer's dispatch returns nothing, so a gesture declares itself for the NEXT dispatch and
+ * reads `lastIssued` before and after to learn its identity.
  */
 export interface DispatchQueue {
-  /** The dispatch issued most recently, by whichever gesture issued it. */
   lastIssued: () => IssuedDispatch | undefined;
-  /** The one dispatch already sent, which cannot be taken back. */
   inFlight: () => DispatchId | undefined;
-  /** Declares what the next dispatch carries, and returns the withdrawal of that declaration. */
+  /** Returns the withdrawal of the declaration. */
   declareGesture: (declaration: GestureDeclaration) => () => void;
 }
 
 export interface OptimisticValueController<T, TAction> {
-  /** What to render: this value's held intention while a gesture is outstanding, else the producer's. */
   value: (backendValue: T) => T;
   /**
-   * The state a gesture issued now will be applied to — the producer's value plus the one dispatch
-   * already sent, which cannot be taken back. Compare it with what the gesture would show to
-   * decide whether dropping the gestures queued in between changes the outcome.
-   *
-   * `undefined` means it cannot be told: this value has gestures outstanding whose oldest has
-   * already been answered, so which of the rest is on its way is not known here. A caller that
-   * reads `undefined` must NOT drop anything — not knowing is not permission.
+   * The state a gesture issued now will land on (producer value plus the in-flight dispatch).
+   * `undefined` means unknown, and the caller must then NOT drop anything.
    */
   landingValue: (backendValue: T) => T | undefined;
-  /**
-   * Dispatches `action` and holds `next` until every gesture of this value's has been answered.
-   *
-   * A gesture that issues no dispatch holds nothing: no answer would ever release it.
-   *
-   * The producer value is a parameter because the view owns it — it arrives on every render, and a
-   * controller that held a copy would be deciding against a stale one.
-   */
+  /** A gesture that issues no dispatch holds nothing: no answer would ever release it. */
   dispatch: (backendValue: T, gesture: OptimisticGesture<T, TAction>) => void;
-  /**
-   * Pairs with {@link OptimisticValueController.getVersion} as an external store: notified whenever
-   * that version moves. Returns the unsubscribe.
-   */
   subscribe: (listener: () => void) => () => void;
-  /**
-   * Changes whenever what to render changes, stable between changes. The held value mutates in
-   * place, so there is no new object identity to compare: this integer is the smallest thing that
-   * tells a view layer it has to re-read, and being a primitive it trivially satisfies a framework
-   * that demands a stable snapshot reference.
-   */
+  /** The held value has no stable identity to compare, so views re-read when this moves. */
   getVersion: () => number;
 }
 
 export interface OptimisticValueOptions<TAction> {
-  /** Identifies this value among the others — the slot gestures are dropped within. */
+  /** Also the coalescing slot gestures are dropped within. */
   instanceId: string;
-  /**
-   * Reads the bridge an action is handed to. A getter rather than the function itself, because the
-   * controller is built once and outlives the render that built it — a captured bridge would stay
-   * the first one forever.
-   */
+  /** A getter: the controller outlives its render, so a captured bridge would go stale. */
   dispatch: () => (action: TAction) => void;
-  /**
-   * Reads the queue a gesture declares itself to, and which answers what is currently in flight. A
-   * getter for the same reason as {@link OptimisticValueOptions.dispatch}.
-   */
   queue: () => DispatchQueue;
-  /**
-   * Reports a gesture whose dispatch never happened: the action was handed to the bridge and no
-   * dispatch came back from it.
-   *
-   * Deliberately NOT a development-only trace. The bridge swallows an action whose surface has
-   * been disposed without printing anything, so without this the loss is invisible exactly where
-   * it matters. Injected rather than written to a console here, because where a message goes is
-   * the consumer's decision.
-   */
+  /** Not dev-only: the bridge silently swallows actions for a disposed surface. */
   onActionLost?: (message: string) => void;
-  /** One line per `held` / `released` transition; omitted, nothing is traced. */
   trace?: (...parts: unknown[]) => void;
 }
 
-/**
- * Structural, because a gesture rebuilds the value rather than mutating it, so what it would show
- * and the landing state are never the same object even when they describe the same state.
- *
- * Not part of the package's public surface: it is the guard's own comparison, and a consumer
- * comparing two values has its own notion of what counts.
- */
+/** Structural: gestures rebuild values, so identity never matches. Not public API. */
 export function sameState(a: unknown, b: unknown): boolean {
   if (Object.is(a, b)) {
     return true;
@@ -186,11 +93,7 @@ export function sameState(a: unknown, b: unknown): boolean {
   );
 }
 
-/**
- * Key-order independent, because the identity below is compared as a string: the same context
- * written `{start, end}` at one call site and `{end, start}` at another has to produce one
- * identity, or a gesture would stop pairing with its own inverse.
- */
+/** Key-order independent, or a gesture would stop pairing with its own inverse. */
 function stableJson(value: unknown): string {
   if (Array.isArray(value)) {
     return `[${value.map(stableJson).join(',')}]`;
@@ -204,15 +107,7 @@ function stableJson(value: unknown): string {
   return JSON.stringify(value) ?? 'null';
 }
 
-/**
- * Names the gesture from the action itself — `toggleSelect{value:"Blue"}` — so nothing about a
- * gesture's identity is a string the call site had to invent and could misspell. Two gestures are
- * the same gesture exactly when they ask the producer for the same thing, which is the predicate
- * an involutive gesture pairs on.
- *
- * Structural: it reads the A2-UI user-action envelope, which is this package's own protocol, and
- * nothing of any component contract carried inside it.
- */
+/** E.g. `toggleSelect{value:"Blue"}`; equal labels iff the producer is asked the same thing. */
 export function gestureLabel(action: unknown): string {
   if (typeof action !== 'object' || action === null || !('event' in action)) {
     return 'gesture';
@@ -236,7 +131,6 @@ function apply<T>(next: OptimisticNext<T>, current: T): T {
   return typeof next === 'function' ? (next as OptimisticTransform<T>)(current) : next;
 }
 
-/** The oldest gesture of this value's that is still outstanding, and what it would land on. */
 interface Oldest<T> {
   id: DispatchId;
   value: T;
@@ -249,7 +143,6 @@ export function createOptimisticValue<T, TAction>(
   const trace = options.trace ?? (() => {});
   const listeners = new Set<() => void>();
   let version = 0;
-  /** Undefined exactly when nothing is outstanding. */
   let held: T | undefined;
   let outstanding = 0;
   let oldest: Oldest<T> | undefined;
@@ -267,25 +160,14 @@ export function createOptimisticValue<T, TAction>(
 
   function landingValue(backendValue: T): T | undefined {
     if (oldest !== undefined) {
-      // The oldest of mine is either the one sent, or still queued behind someone else's — and if
-      // it is queued then so is every newer one of mine, so nothing of mine has been sent.
+      // If my oldest is not in flight, it and every newer one of mine are still queued.
       return options.queue().inFlight() === oldest.id ? oldest.value : backendValue;
     }
-    // Nothing of this value's is outstanding, so a gesture issued now applies to the producer's
-    // value. A request on its way that belongs to another value is not the same answer: the
-    // producer's handlers rewrite only the node they target.
+    // Another value's in-flight request is irrelevant: the producer rewrites only its target node.
     return outstanding === 0 ? backendValue : undefined;
   }
 
-  /**
-   * True when the request ALREADY SENT is going to land exactly where this gesture wants, so
-   * asking the producer for it again would change nothing.
-   *
-   * Every condition is inside this one function on purpose. "Something of mine is on its way" is
-   * part of the guard, not its caller's business: with nothing sent there is no landing state to
-   * match, and a gesture that merely looks like a no-op against the producer's value still has to
-   * go out.
-   */
+  /** A gesture that only looks like a no-op against the producer's value must still go out. */
   function satisfiedByFlight(candidate: T): boolean {
     return (
       oldest !== undefined &&
@@ -331,10 +213,8 @@ export function createOptimisticValue<T, TAction>(
       return;
     }
 
-    // Held BEFORE the settlement is registered. A gesture that ends on the spot — paired off
-    // against its own inverse, or already produced by the request on its way — has an outcome
-    // the producer IS going to reach, so it belongs on screen; what must not survive is its
-    // HOLD, and the release below takes care of that in the same breath.
+    // Held before registering onSettled: a gesture may settle synchronously, and its outcome
+    // still belongs on screen — only its hold must not survive.
     held = candidate;
     if (outstanding === 0) {
       oldest = {id: issued.id, value: candidate};

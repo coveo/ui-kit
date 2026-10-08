@@ -55,18 +55,14 @@ describe('useOptimisticFacetSearch', () => {
       {initialProps: {backend: ''}}
     );
 
-    // User types two characters in quick succession; both are dispatched.
     act(() => result.current.onQueryChange('r'));
     act(() => result.current.onQueryChange('ri'));
     expect(result.current.query).toBe('ri');
 
-    // The slower first request ('r') resolves AFTER the second: the backend query
-    // lands on 'r' while the user has already typed 'ri'. The stale echo must not
-    // overwrite the newer input.
+    // The 'r' request resolves after 'ri'.
     rerender({backend: 'r'});
     expect(result.current.query).toBe('ri');
 
-    // The up-to-date echo arrives: still no change to what the user sees.
     rerender({backend: 'ri'});
     expect(result.current.query).toBe('ri');
   });

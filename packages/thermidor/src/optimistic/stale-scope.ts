@@ -1,47 +1,18 @@
 /**
- * Which regions of what is on screen the producer has not caught up with yet.
- *
- * The other half of showing a gesture before the producer has answered it, and it exists BECAUSE
- * of it: a gesture that writes its own control optimistically — a checked facet value, a selected
- * page — leaves the regions it cannot predict showing a state the user has already moved past.
- * The grid, the counts and the totals are rebuilt by the producer, so no client-side transform can
- * project them; all a view can honestly do is say so. Without the optimistic write the whole
- * screen would simply be late TOGETHER, and nothing would need marking.
- *
- * A region is named by the CONSUMER — this module compares scope strings and never interprets
- * one, so no vocabulary of any particular product reaches the package.
- *
- * A set rather than a flag, because several gestures can hold the same region: three clicks in a
- * row must not un-mark it when the first answer arrives.
- *
- * Framework-agnostic, same store protocol as its sibling (`subscribe` + `getVersion`), and
- * independent of `../actions`: what feeds it is a dispatch's lifetime today and a producer cursor
- * later, which is a change of caller rather than a change here.
+ * Regions an optimistic gesture cannot predict (grid, counts, totals) and the producer has not
+ * rebuilt yet. Region names belong to the consumer and are never interpreted here.
  */
 
-/** A region of displayed state, named by the consumer (`'results'`, `'cart'`, …). */
 export type StaleScope = string;
 
 export interface StaleScopes {
-  /**
-   * Records that this dispatch leaves `scopes` behind until it settles. An id already tracked is
-   * ignored, and an empty `scopes` marks nothing — that is how a gesture the producer answers
-   * without rebuilding anything declares itself.
-   */
+  /** An id already tracked is ignored. */
   track: (id: string, scopes: readonly StaleScope[]) => void;
-  /** The dispatch is over. Its regions come back up to date unless another dispatch still holds them. */
+  /** A region stays stale while any other dispatch still holds it. */
   settle: (id: string) => void;
-  /** The one thing a view asks: should this region be shown as behind? */
   isStale: (scope: StaleScope) => boolean;
-  /**
-   * Pairs with {@link StaleScopes.getVersion} as an external store: notified whenever that version
-   * moves. Returns the unsubscribe.
-   */
   subscribe: (listener: () => void) => () => void;
-  /**
-   * Changes only when the set of stale regions actually changes, so a second gesture against an
-   * already-behind region costs no re-read.
-   */
+  /** Moves only when the set of stale regions changes. */
   getVersion: () => number;
 }
 
@@ -51,9 +22,7 @@ export function createStaleScopes(): StaleScopes {
   const listeners = new Set<() => void>();
   let version = 0;
 
-  /**
-   * Over a copy, so a listener that unsubscribes while being notified cannot mutate the set mid-iteration.
-   */
+  // Over a copy: a listener may unsubscribe while being notified.
   function changed(): void {
     version += 1;
     for (const listener of [...listeners]) {
@@ -61,10 +30,7 @@ export function createStaleScopes(): StaleScopes {
     }
   }
 
-  /**
-   * Moves the holder count of every scope by `delta`, and answers whether the set of stale scopes
-   * crossed a boundary — a scope gaining its first holder, or losing its last.
-   */
+  /** True when some scope gained its first holder or lost its last. */
   function adjustHolders(scopes: readonly StaleScope[], delta: 1 | -1): boolean {
     let crossed = false;
     for (const scope of scopes) {

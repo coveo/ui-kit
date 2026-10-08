@@ -45,7 +45,7 @@ export interface MountSurfaceConfig {
   children?: Array<Record<string, unknown>>;
   /** Data-model writes that resolve the `{ path }` bindings on the nodes. */
   dataModel?: Array<{path: string; value: unknown}>;
-  /** Returned by the action handler, so a test can hold a dispatch in flight. */
+  /** Awaited by the action handler; lets a test hold a dispatch in flight. */
   dispatchGate?: () => Promise<void> | void;
 }
 
@@ -54,7 +54,6 @@ export interface MountSurfaceResult extends RenderResult {
   actions: DispatchedAction[];
   /** The most recent dispatched action, or undefined if none. */
   lastAction: () => DispatchedAction | undefined;
-  /** Applies further `updateDataModel` writes, as a later converse response would. */
   pushDataModel: (updates: Array<{path: string; value: unknown}>) => void;
 }
 

@@ -21,8 +21,7 @@ export const NextActionsBar = createReactComponent(
     const dispatch = (action: NextActionsBarAction) => {
       context.dispatchAction(action);
     };
-    // Selecting a follow-up starts a whole turn and there is no local state to assert, so the
-    // optimistic value is the gesture itself: true while this bar's own dispatch is outstanding.
+    // No local state to assert, so the optimistic value is just "this bar's dispatch is in flight".
     const {value: selecting, dispatchOptimistic} = useOptimisticValue(false, dispatch);
     const actions = props.suggestedActions ?? [];
 

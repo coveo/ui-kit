@@ -242,15 +242,11 @@ describe('createSession lifecycle', () => {
       await first.opened;
       expect(session.turns[0].status).toBe('streaming');
 
-      // A second prompt arrives while the first is still streaming. Under ③ a prompt is a new
-      // intention that preempts: `isStreaming()` is true → the first turn's stream is aborted
-      // (its turn goes 'error'/Cancelled) and a new turn opens for the second prompt.
       const second = queueStream();
       void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'second'}});
       await second.opened;
 
       expect(callMock).toHaveBeenCalledTimes(2);
-      // Two turns now exist: the preempted first (cancelled) and the streaming second.
       expect(session.turns.map((turn) => [turn.input.prompt, turn.status])).toEqual([
         ['first', 'error'],
         ['second', 'streaming'],
@@ -262,8 +258,7 @@ describe('createSession lifecycle', () => {
       await flush();
       expect(session.turns[1].status).toBe('complete');
 
-      // The first stream was aborted by the preemption; its controller is already closed. Closing
-      // again is a guarded no-op in the harness.
+      // Already aborted; closing again is a no-op in the harness.
       first.close();
       await flush();
     });
@@ -804,34 +799,11 @@ describe('createSession lifecycle', () => {
   });
 
   describe('prompt preempts an in-flight gesture (③)', () => {
-    /**
-     * The final behaviour (③): a prompt is a new intention that supersedes any gesture, so it
-     * PREEMPTS instead of waiting. When a prompt arrives while a gesture stream is physically in
-     * flight, `startPromptTurn`:
-     *   1. withholds the gestures still queued (`withholdQueued`);
-     *   2. aborts the in-flight gesture's stream (`cancel`) so its late response never touches the
-     *      surface, and settles its dispatch `'cancelled'` (`cancelInFlight`) so the overlay it
-     *      put on screen is released;
-     *   3. opens the prompt turn immediately.
-     *
-     * This is reachable because the serialization is guarded on `isStreaming()` (the abort
-     * controller — a stream physically in flight), NOT on `hasStreamingTurn()` (a streaming TURN).
-     * A gesture reuses an already-`complete` turn and never reopens a streaming turn, so it is
-     * invisible to the turn status; the abort controller is the signal both the prompt path and
-     * the gesture path share.
-     *
-     * Scenario, deterministic through the public surface:
-     *   1. a completed turn carries a Pagination surface, session idle;
-     *   2. gesture A is issued while idle → drains, its send held in flight (A reuses the COMPLETE
-     *      turn, so no turn is streaming, but `isStreaming()` is true);
-     *   3. a prompt is submitted while A is in flight → `isStreaming()` true → A is preempted
-     *      (settled `'cancelled'`), the prompt turn opens and streams;
-     *   4. A's (now superseded) stream closes → it must NOT touch the surface and sends nothing new.
-     */
+    // A gesture reuses a complete turn, so only `isStreaming()` sees it in flight.
     it('preempts the in-flight gesture (cancelled) and opens the prompt immediately', async () => {
       const session = createSession(baseConfig);
 
-      // (1) A completed turn carrying a Pagination surface so `selectPage` resolves a discriminant.
+      // A Pagination surface so `selectPage` resolves a discriminant.
       const seed = queueStream();
       const seedTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'go'}});
       await seed.opened;
@@ -869,8 +841,6 @@ describe('createSession lifecycle', () => {
         },
       });
 
-      // (2) Gesture A: issued while idle → drains, send held in flight. A reuses the COMPLETE turn,
-      // so no turn is streaming, but a stream is physically in flight (isStreaming() is true).
       const actionAStream = queueStream();
       const issuedA = session.actions.issue(actionMessage(2));
       const outcomeA: string[] = [];
@@ -880,29 +850,20 @@ describe('createSession lifecycle', () => {
       expect(session.turns.some((turn) => turn.status === 'streaming')).toBe(false);
       expect(outcomeA).toEqual([]);
 
-      // (3) A prompt is submitted while A is in flight. isStreaming() is true → A is preempted:
-      // its dispatch settles 'cancelled' synchronously, its stream is aborted, and the prompt turn
-      // opens and streams.
       const promptStream = queueStream();
       void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'next question'}});
       await promptStream.opened;
 
-      // The deliverable of ③: A is cancelled the instant the prompt arrives (not left waiting, not
-      // 'answered'), and the prompt turn is streaming.
       expect(outcomeA).toEqual(['cancelled']);
       expect(callMock).toHaveBeenCalledTimes(3);
       const streamingTurn = session.turns.find((turn) => turn.status === 'streaming');
       expect(streamingTurn?.input.prompt).toBe('next question');
 
-      // (4) A's stream was aborted by the preemption (`cancel`), so its controller is already
-      // closed. Closing again is a no-op (guarded in the harness). A's late close must send nothing
-      // new and must not re-settle A — the prompt owns the surface.
+      // Already aborted; closing again is a no-op in the harness.
       actionAStream.close();
       await flush();
       await flush();
 
-      // Still exactly three calls (seed prompt, gesture A, prompt). A's abort sent nothing and did
-      // not re-settle A.
       expect(callMock).toHaveBeenCalledTimes(3);
       expect(outcomeA).toEqual(['cancelled']);
       const lastRequest = callMock.mock.calls[callMock.mock.calls.length - 1][0] as {

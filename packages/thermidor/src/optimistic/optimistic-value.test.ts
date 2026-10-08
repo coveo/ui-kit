@@ -27,7 +27,6 @@ const backend = (...selected: string[]): FacetValue[] =>
     numberOfResults: 10,
   }));
 
-/** Single-select: the target becomes the only selection, so the LAST one applied wins. */
 const only =
   (target: string) =>
   (current: FacetValue[]): FacetValue[] =>
@@ -36,7 +35,6 @@ const only =
       state: candidate.value === target ? 'selected' : 'idle',
     }));
 
-/** Multi-select: a flip, so a gesture derived from the displayed value accumulates. */
 const flip =
   (target: string) =>
   (current: FacetValue[]): FacetValue[] =>
@@ -49,10 +47,6 @@ const flip =
 const selectionOf = (values: FacetValue[]): string[] =>
   values.filter((value) => value.state === 'selected').map((value) => value.value);
 
-/**
- * Stands in for the bridge the controller talks through: a dispatch that returns nothing, an
- * identity readable only from the outside, and a declaration for whatever goes out next.
- */
 function createFakeQueue() {
   const declared: GestureDeclaration[] = [];
   const settleListeners = new Map<DispatchId, Array<(outcome: DispatchOutcome) => void>>();
@@ -89,14 +83,10 @@ function createFakeQueue() {
     setInFlight: (id: DispatchId | undefined) => {
       inFlight = id;
     },
-    /** A surface that swallows the action without issuing anything. */
     stopIssuing: () => {
       issuesDispatches = false;
     },
-    /**
-     * The queue decides the next dispatch is over before handing it back — dropped against
-     * another gesture, or produced by the request already on its way.
-     */
+    /** The next dispatch settles before `dispatch` returns, as when the queue drops it. */
     settleNextOnTheSpot: (outcome: DispatchOutcome) => {
       settlesOnTheSpot = outcome;
     },
@@ -173,7 +163,6 @@ describe('createOptimisticValue', () => {
     controller.dispatch(backend(), flipOf('yellow'));
     controller.dispatch(backend(), flipOf('red'));
 
-    // No composition anywhere: the third gesture read the second one's outcome off the screen.
     expect(selectionOf(controller.value(backend()))).toEqual(['blue', 'yellow', 'red']);
   });
 
@@ -185,7 +174,6 @@ describe('createOptimisticValue', () => {
       next: flip(value),
     });
 
-    // The sequence that invalidated every reconciliation rule tried before: three on, three off.
     for (const value of ['blue', 'yellow', 'red', 'red', 'yellow', 'blue']) {
       controller.dispatch(backend(), flipOf(value));
     }
@@ -201,7 +189,6 @@ describe('createOptimisticValue', () => {
     controller.dispatch(backend(), toggleSingle('yellow'));
 
     fake.settle('dispatch-1');
-    // One answer is not the producer catching up: the second gesture is still on its way.
     expect(selectionOf(controller.value(backend()))).toEqual(['yellow']);
 
     fake.settle('dispatch-2');
@@ -214,8 +201,6 @@ describe('createOptimisticValue', () => {
 
     controller.dispatch(backend(), toggleSingle('blue'));
     fake.setInFlight('dispatch-1');
-    // Dropped against the request on its way, which IS going to reach this state — so it belongs
-    // on screen; what must not survive is a hold no answer would ever release.
     fake.settleNextOnTheSpot('satisfied');
     controller.dispatch(backend(), toggleSingle('yellow'));
 
@@ -232,7 +217,6 @@ describe('createOptimisticValue', () => {
     fake.settleNextOnTheSpot('cancelled');
     controller.dispatch(backend(), toggleSingle('blue'));
 
-    // Nothing was sent, so the producer's state never moved — and nothing will release a hold.
     expect(selectionOf(controller.value(backend()))).toEqual([]);
   });
 
@@ -280,8 +264,6 @@ describe('createOptimisticValue', () => {
       controller.dispatch(backend(), toggleSingle('blue'));
       const refreshedCounts = backend().map((value) => ({...value, numberOfResults: 3}));
 
-      // The documented price of holding one value: what the gesture did not claim is frozen with
-      // it. It is also what makes a late answer harmless — there is no comparison for it to win.
       expect(controller.value(refreshedCounts).map((value) => value.numberOfResults)).toEqual([
         10, 10, 10,
       ]);
@@ -308,7 +290,6 @@ describe('createOptimisticValue', () => {
 
       controller.dispatch(backend(), toggleSingle('blue'));
 
-      // Queued behind someone else's request, so it can still be dropped.
       expect(selectionOf(controller.landingValue(backend()) ?? [])).toEqual([]);
     });
 
@@ -320,7 +301,6 @@ describe('createOptimisticValue', () => {
       fake.setInFlight('dispatch-1');
       controller.dispatch(backend(), toggleSingle('yellow'));
 
-      // dispatch-1 has left; dispatch-2 is still queued and could still be dropped.
       expect(selectionOf(controller.landingValue(backend()) ?? [])).toEqual(['blue']);
     });
 
@@ -351,8 +331,6 @@ describe('createOptimisticValue', () => {
       fake.settle('dispatch-1');
       fake.setInFlight('dispatch-2');
 
-      // dispatch-2 is now the one sent, and what it lands on is not known here. Not knowing is
-      // not permission: a caller reading `undefined` must not drop anything.
       expect(controller.landingValue(backend())).toBeUndefined();
     });
   });
@@ -388,8 +366,6 @@ describe('createOptimisticValue', () => {
       const fake = createFakeQueue();
       const controller = createController(fake);
 
-      // A no-op against the producer value still has to go out: with nothing on its way there is
-      // no landing state to match. The condition belongs to the guard, not to its caller.
       controller.dispatch(backend('blue'), toggle('blue'));
 
       expect(fake.declared.at(-1)?.coalesce?.satisfiedByFlight).toBe(false);
@@ -404,9 +380,6 @@ describe('createOptimisticValue', () => {
       controller.dispatch(backend(), toggle('yellow'));
       fake.settle('dispatch-1');
       fake.setInFlight('dispatch-2');
-      // Asking again for what dispatch-2 is sending — but which state that is cannot be told from
-      // here, so the gesture goes out. Conservative by construction: a missed saving costs a
-      // request, a wrong one would cost the gesture.
       controller.dispatch(backend(), toggle('yellow'));
 
       expect(fake.declared.at(-1)?.coalesce?.satisfiedByFlight).toBe(false);
@@ -462,8 +435,6 @@ describe('createOptimisticValue', () => {
 
       controller.dispatch(producerValue, toggleSingle('blue'));
 
-      // A snapshot handed to a view layer has to be stable between changes, or it re-reads for
-      // ever. Holding one value satisfies this without a cache of any kind.
       expect(controller.value(producerValue)).toBe(controller.value(producerValue));
     });
 

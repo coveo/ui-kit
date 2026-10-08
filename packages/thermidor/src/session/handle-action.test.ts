@@ -333,8 +333,7 @@ describe('Session.dispatchAction', () => {
     it('sends the second action only after the first action stream has completed', async () => {
       const session = await sessionWithPaginationSurface();
 
-      // The first action's stream is held open until the test releases it, so the second
-      // dispatch is issued while the first is unambiguously still in flight.
+      // Held open so the second dispatch is issued while the first is in flight.
       let releaseFirstStream: (() => void) | undefined;
       const firstStreamReleased = new Promise<void>((resolve) => {
         releaseFirstStream = resolve;
@@ -356,7 +355,6 @@ describe('Session.dispatchAction', () => {
       const first = session.dispatchAction(paginationMessage('selectPage', {page: 1}));
       const second = session.dispatchAction(paginationMessage('selectPage', {page: 2}));
 
-      // Give the second dispatch every chance to reach the client: only the queue holds it back.
       await Promise.resolve();
       await Promise.resolve();
       expect(callMock).toHaveBeenCalledTimes(1);

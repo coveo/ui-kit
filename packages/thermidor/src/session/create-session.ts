@@ -162,10 +162,8 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * the renderer's `onAction` handler (`onAction={session.dispatchAction}`).
    *
    * A {@link SubmitPromptAction} opens a new streaming turn for its prompt and
-   * resolves once that turn's stream ends. As a new intention it PREEMPTS the
-   * gesture dispatches: any still queued are dropped ('withheld') and one in
-   * flight is cancelled (its response discarded), since the prompt rebuilds the
-   * state they were refining.
+   * resolves once that turn's stream ends. It preempts gesture dispatches:
+   * queued ones are withheld and one in flight is cancelled.
    *
    * An {@link A2uiClientMessage} is unwrapped to its `userAction`: the session
    * recovers the dispatching component's discriminant from the active turn's
@@ -179,14 +177,7 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * dev-only warning and nothing is sent.
    */
   dispatchAction: (message: A2uiClientMessage | SubmitPromptAction) => Promise<void>;
-  /**
-   * Dispatch coordination, for a consumer that keeps a gesture's outcome on screen before the
-   * producer has answered it. `dispatchAction` above is this same path with no declaration, so a
-   * consumer that wants none of it writes nothing and still gets the serialization.
-   *
-   * SCOPED FOR REMOVAL together with `src/actions`: the queue it exposes lives on the client only
-   * until the producer owns one. Nothing else on `Session` refers to these types.
-   */
+  /** Scoped for removal together with `src/actions` once the producer owns the queue. */
   actions: SessionActions;
   /** Stops consuming the active turn's stream. */
   cancel(): void;
@@ -202,26 +193,9 @@ function isSubmitPromptAction(
   return 'name' in message && message.name === 'submitPrompt';
 }
 
-/**
- * The action-coordination surface, published as a store so a view layer can bind to it without
- * this package knowing anything about that layer — in React, `useSyncExternalStore(subscribe,
- * getSnapshot)`, the same way the turn list is already read.
- */
 export interface SessionActions {
-  /**
-   * Queues one action and returns its identity before any send happens, so local state can be tied
-   * to it synchronously. `intent` declares what this dispatch may drop against the gestures still
-   * queued — whether dropping is exact follows from the producer's algebra for that action, and for
-   * a flip from state only the caller holds, which is why it is declared per gesture here rather
-   * than decided from the message.
-   */
+  /** Returns before any send, so local state can be tied to the id synchronously. */
   issue: (message: A2uiClientMessage, intent?: CoalesceIntent) => IssuedDispatch;
-  /**
-   * Drops every gesture still waiting in the queue (each settled 'withheld'), leaving the one in
-   * flight to report its own outcome. Called when a prompt turn opens: the prompt rebuilds the
-   * state those gestures were writing, so sending them would be moot and would also fold a second
-   * request into the prompt's stream.
-   */
   withholdQueued: () => void;
   subscribe: (listener: () => void) => () => void;
   getSnapshot: () => DispatchSnapshot;
@@ -302,22 +276,10 @@ export function createSession<TContracts extends ContractsSchema>(
   // per session instance — never module-level — so two sessions never contend.
   let activeAbortController: AbortController | null = null;
 
-  // Action streams are serialized per session. Overlapping ones fold into the same turn, and since
-  // every converse response carries a whole-node snapshot, the response that ARRIVES last wins even
-  // when it was SENT first — rolling the model back past a newer action. One out at a time removes
-  // that by construction: the order responses arrive in is the order the actions were sent in.
-  //
-  // The turn id and the request are read at EXECUTION time: a queued action belongs to whichever
-  // turn is active when it actually goes out, and its context providers run then.
-  //
-  // The streaming guard is RE-TESTED here, not only at queue time (`issueAction`): a dispatch that
-  // queued clean can reach the front of the queue AFTER a prompt turn opened and began streaming,
-  // and sending it then would fold a second request into that stream. It tests `hasStreamingTurn()`,
-  // NOT `isStreaming()`: this action is itself about to set `activeAbortController`, so
-  // `isStreaming()` would see its own stream and refuse it — only a concurrent streaming TURN is
-  // the overlap to catch. Returning leaves the coordinator to settle 'answered'; on the prompt path
-  // this is unreachable (queue purged, in-flight gesture cancelled), so it is a defence-in-depth
-  // backstop like the no-active-turn case.
+  // Serialized because each response is a whole-node snapshot: overlapping streams would let the
+  // last to ARRIVE win over a newer action sent later. Turn id and request are read at send time.
+  // `hasStreamingTurn()`, not `isStreaming()`: a prompt may have opened since this was queued, and
+  // `isStreaming()` would see this action's own stream.
   const actionCoordinator = createDispatchCoordinator<A2uiAction>((action) => {
     const turnId = store.getState().activeTurnId;
     if (!turnId || hasStreamingTurn()) {
@@ -342,22 +304,12 @@ export function createSession<TContracts extends ContractsSchema>(
     replaceTurn(turnId, (turn) => ({...turn, status: 'error', error}));
   }
 
-  /**
-   * True while any turn is still streaming. A derived view of turn state — a turn carries
-   * `status: 'streaming'` only between `openTurn`/`retry` (which create a streaming turn) and the
-   * fold of its terminal event.
-   */
+  /** True while any turn is streaming. Gesture streams reuse a complete turn, so don't count. */
   function hasStreamingTurn(): boolean {
     return store.getState().turns.some((turn) => turn.status === 'streaming');
   }
 
-  /**
-   * True while a stream is PHYSICALLY in flight — prompt OR gesture — since `activeAbortController`
-   * is held for exactly one `executeStream` and reset to `null` when it resolves. `startPromptTurn`
-   * preempts on this, not `hasStreamingTurn()`: a gesture reuses an already-`complete` turn without
-   * reopening a streaming one, so a gesture in flight is invisible to the turn status — guarding
-   * preemption on it would miss the in-flight-gesture case the preemption exists for.
-   */
+  /** True while any stream, prompt or gesture, is in flight. */
   function isStreaming(): boolean {
     return activeAbortController !== null;
   }
@@ -552,17 +504,11 @@ export function createSession<TContracts extends ContractsSchema>(
   }
 
   /**
-   * Opens a new turn for `prompt` and streams its response. Preempts any gesture in flight (see
-   * below). Needs no active turn, so it also opens the first turn of a session.
+   * Opens a new turn for `prompt` and streams its response, preempting any gestures. Needs no
+   * active turn, so it also opens the first turn of a session.
    */
   async function startPromptTurn(prompt: string | undefined): Promise<void> {
-    // A prompt is a new intention that supersedes any gesture: it rebuilds the whole state those
-    // gestures were refining, so it PREEMPTS rather than waiting behind them (ignoring it until the
-    // gesture finished was a dead keystroke). In order: (1) drop the gestures still WAITING, each
-    // settled 'withheld'; (2) if a gesture is streaming, abort it (`cancel`, so its superseded
-    // response never touches the surface) and settle its dispatch 'cancelled' (`cancelInFlight`, so
-    // its overlay is released); (3) open the prompt turn. The sent gesture cannot be unsent, but its
-    // response is discarded and its dispatch settled now.
+    // The prompt rebuilds the state the gestures were refining, so it preempts rather than waits.
     actionCoordinator.withholdQueued();
     if (isStreaming()) {
       cancel();
@@ -577,13 +523,8 @@ export function createSession<TContracts extends ContractsSchema>(
 
   /**
    * Private validate-and-queue path. Validates the recovered action's payload against the
-   * component's generated Zod action schema before anything is sent and withholds on failure;
-   * targets the action's own originating surface. Withholds while a turn is streaming or when there
-   * is no active turn.
-   *
-   * Returns the dispatch's identity SYNCHRONOUSLY, before any send, so a caller can tie local state
-   * to it on the spot. Every withholding path returns an already-settled dispatch rather than
-   * nothing, so a caller waiting on one is never left waiting.
+   * component's generated Zod action schema and withholds on failure; targets the action's own
+   * originating surface. Withholds while a turn is streaming or when there is no active turn.
    */
   function issueAction(
     recovered: {
@@ -595,12 +536,7 @@ export function createSession<TContracts extends ContractsSchema>(
     },
     intent?: CoalesceIntent
   ): IssuedDispatch {
-    // While a PROMPT turn is streaming, withhold this gesture: a prompt owns the session's single
-    // stream and a gesture must not fold a second request into it. Tests `hasStreamingTurn()`, NOT
-    // `isStreaming()`: a gesture already in flight sets the abort controller, so `isStreaming()`
-    // here would wrongly refuse a SECOND gesture the coordinator is meant to serialize behind it.
-    // Gesture-vs-gesture ordering is the coordinator's job; this only keeps gestures out of a
-    // prompt's stream.
+    // `hasStreamingTurn()`, not `isStreaming()`: an in-flight gesture must not block another.
     if (hasStreamingTurn()) {
       return createSettledDispatch('withheld');
     }
@@ -636,13 +572,8 @@ export function createSession<TContracts extends ContractsSchema>(
       name: recovered.name,
       sourceComponentId: recovered.sourceComponentId,
       timestamp: new Date().toISOString(),
-      // `actionId` is A2UI's RPC correlation key for the `actionResponse` operation —
-      // the agent's return value for an action sent with `wantResponse: true`. It is
-      // NOT a provenance marker: the gateway rejects it on any other operation, so a
-      // state emission can never echo it back. Neither leg is implemented (the gateway
-      // never builds an `actionResponse`, and nothing here handles one), hence the
-      // null/false pair. Knowing an action is done comes from the transport instead:
-      // the dispatch settles when the response body closes.
+      // `actionId` only correlates an `actionResponse`, which isn't implemented; completion comes
+      // from the response body closing instead.
       actionId: null,
       wantResponse: false,
       context: recovered.context,
@@ -670,16 +601,7 @@ export function createSession<TContracts extends ContractsSchema>(
     return registry.get(surfaceId)?.get(sourceComponentId);
   }
 
-  /**
-   * Queues one action and hands back its identity synchronously, before anything is sent.
-   * `intent` declares what this dispatch may drop against the gestures still queued; omitting it
-   * drops nothing.
-   *
-   * Every refusal — no `userAction`, no `sourceComponentId`, a node that resolves to no component,
-   * a non-conforming payload, a streaming or absent turn — returns an already-settled `withheld`
-   * dispatch with a dev-only warning, so a caller that tied local state to this dispatch is
-   * released rather than left holding it.
-   */
+  /** Every refusal returns an already-settled 'withheld' dispatch, so no caller is left waiting. */
   function issue(message: A2uiClientMessage, intent?: CoalesceIntent): IssuedDispatch {
     const userAction = message.userAction;
     if (!userAction) {
@@ -709,14 +631,8 @@ export function createSession<TContracts extends ContractsSchema>(
    * {@link Session.dispatchAction}. Pre-bound arrow field so
    * `onAction={session.dispatchAction}` works when passed by reference.
    *
-   * A {@link SubmitPromptAction} opens a new streaming turn for its prompt and
-   * preempts the gesture dispatches (queued ones withheld, one in flight
-   * cancelled); it needs no rendered component, so it does not go through the
-   * dispatch coordinator. Any other message is unwrapped and queued through
-   * {@link issue}.
-   *
-   * FIRE-AND-FORGET: every refusal is swallowed into a dev-only warning, and a
-   * dispatch's settlement never rejects, so the returned Promise always resolves.
+   * FIRE-AND-FORGET: every refusal is swallowed into a dev-only warning; the
+   * returned Promise always resolves.
    */
   const dispatchAction = async (message: A2uiClientMessage | SubmitPromptAction): Promise<void> => {
     if (isSubmitPromptAction(message)) {

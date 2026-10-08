@@ -6,22 +6,12 @@ type RegularFacetValues = NonNullable<RegularFacetProps['values']>;
 const NO_VALUES: RegularFacetValues = [];
 
 export interface OptimisticRegularFacet {
-  /** The values to render: the producer's, with this facet's outstanding gestures applied. */
   values: RegularFacetValues;
   toggleSelect: (value: string) => void;
   clearAll: () => void;
 }
 
-/**
- * The regular facet's values, and the two gestures that carry one optimistically.
- *
- * Only those two: `showMoreValues`, `showLessValues` and `showMoreSearchResults` have no
- * client-side projection — their outcome is a count only the producer knows — so they stay plain
- * dispatches at their call site, where the absence of an optimistic value is visible.
- *
- * What each gesture may drop is checked against the producer's handler rather than against
- * anything on screen, which is why the two declarations below live here and not in the renderer.
- */
+/** The show-more/less actions have no client-side projection, so they stay plain dispatches. */
 export function useOptimisticRegularFacet(
   props: RegularFacetProps,
   dispatch: (action: RegularFacetAction) => void
@@ -42,11 +32,8 @@ export function useOptimisticRegularFacet(
         current.map((candidate) =>
           candidate.value === value ? {...candidate, state: nextState} : candidate
         ),
-      // `toggleSelect` flips the targeted value and leaves every sibling untouched
-      // (`SearchActionHandler.handleRegularFacetToggle` with `single=false`), so a queued pair on
-      // the same value can go whole — but a queued toggle on ANOTHER value never can.
+      // Flips only the target (`SearchActionHandler.handleRegularFacetToggle`, `single=false`).
       coalesce: 'involutive',
-      // The producer rebuilds the result set for the new selection.
       invalidates: ['results'],
     });
   };
@@ -55,10 +42,7 @@ export function useOptimisticRegularFacet(
     dispatchOptimistic({
       action: {event: {name: 'clearAllActiveValues', context: {}}},
       next: (current) => current.map((candidate) => ({...candidate, state: 'idle' as const})),
-      // Clearing sets every value to idle whatever was queued ahead of it, so the queued toggles
-      // it replaces cannot change the outcome.
       coalesce: 'absolute',
-      // The producer rebuilds the result set for the cleared selection.
       invalidates: ['results'],
     });
   };

@@ -9,9 +9,7 @@ const mockDispatchAction = vi.fn();
 let mockTurns: Turn[] = [];
 let capturedOnAction: ((message: unknown) => unknown) | undefined;
 
-// AppShell reads turns through `useSession()`. The fake session exposes just the members the
-// shell touches: `turns`, `subscribe`, `dispatchAction` (prompts), and `actions` — a real
-// coordinator whose sends go to `mockDispatchAction`, so renderer actions land on the same spy.
+// `actions` is a real coordinator sending to `mockDispatchAction`, so renderer actions hit the spy.
 vi.mock('../context/session.js', async () => {
   const {createDispatchCoordinator} = await import('@coveo/thermidor');
   const actions = createDispatchCoordinator((message: unknown) => mockDispatchAction(message));

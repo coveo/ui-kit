@@ -12,8 +12,7 @@ import type {ConverseEvent} from './events.js';
 
 const DEFAULT_DELAY_MS = 25;
 
-// Matches the round-trip a facet click takes against a local backend (~1s), so an optimistic
-// update is observable against the mock. Applied per message, and an action response carries five.
+// Per message (five per action response): ~1s, like a local backend, so optimistic updates show.
 const ACTION_DELAY_MS = 200;
 
 interface SchemaPromptMapping {

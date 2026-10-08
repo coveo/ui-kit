@@ -9,32 +9,25 @@ import {
 const FACET = 'facet-brand|values';
 const PAGER = 'pager|page';
 
-/** A gesture that undoes exactly one other, matched on the value it targets. */
 const involutive = (value: string, slot = FACET): CoalesceIntent => ({
   slot,
   gesture: `${slot}|${value}`,
   policy: 'involutive',
 });
 
-/** An absolute write of a slot: whatever is still queued for it cannot change the outcome. */
 const absolute = (slot: string, value: string): CoalesceIntent => ({
   slot,
   gesture: `${slot}|${value}`,
   policy: 'absolute',
 });
 
-/** A gesture that may never drop anything — a delta, or one whose outcome depends on the queue. */
 const delta = (slot: string, value: string): CoalesceIntent => ({
   slot,
   gesture: `${slot}|${value}`,
   policy: 'dependent',
 });
 
-/**
- * The dispatch on its way already produces what this gesture wants. Declared here on a gesture
- * whose own policy drops nothing, because being satisfied is derived from the state the sent
- * request lands on and wins over whatever the gesture declared.
- */
+/** `satisfiedByFlight` wins over the declared policy. */
 const satisfied = (slot: string, value: string): CoalesceIntent => ({
   slot,
   gesture: `${slot}|${value}`,
@@ -42,10 +35,7 @@ const satisfied = (slot: string, value: string): CoalesceIntent => ({
   satisfiedByFlight: true,
 });
 
-/**
- * Drives the coordinator with a send whose round trip the test holds open, so gestures can be
- * issued while an earlier one is unambiguously still on its way.
- */
+/** Each send stays open until `answer()`, so later gestures queue behind it. */
 function coordinate() {
   const answers: Array<() => void> = [];
   const sent: string[] = [];
@@ -69,7 +59,6 @@ function coordinate() {
     },
     withholdQueued: () => coordinator.withholdQueued(),
     cancelInFlight: () => coordinator.cancelInFlight(),
-    /** Lets the dispatch currently on its way come back, and runs what its settlement triggers. */
     answer: async () => {
       answers.shift()?.();
       await new Promise((resolve) => {
@@ -117,7 +106,7 @@ describe('createDispatchCoordinator', () => {
     run.gesture('C', involutive('C'));
     run.gesture('C', involutive('C'));
 
-    // A is on its way and cannot be taken back; B is still queued; the C pair cancels out.
+    // A is already sent; the C pair cancels out.
     await run.answer();
     await run.answer();
 
@@ -130,7 +119,7 @@ describe('createDispatchCoordinator', () => {
     run.gesture('C', involutive('C'));
     run.gesture('C', involutive('C'));
 
-    // The first C left before the second arrived, so both have to go.
+    // The first C was already sent.
     expect(run.sent).toHaveLength(1);
     await run.answer();
     expect(run.sent).toEqual(['C', 'C']);
@@ -160,7 +149,7 @@ describe('createDispatchCoordinator', () => {
     await run.answer();
     await run.answer();
 
-    // Page 1 was already on its way; page 2 never goes out.
+    // Page 1 was already sent.
     expect(run.sent).toEqual(['page 1', 'page 3']);
   });
 
@@ -176,7 +165,6 @@ describe('createDispatchCoordinator', () => {
     await run.answer();
     await run.answer();
 
-    // Only the queued page 2 goes; the sort keeps its place in the order of the user's gestures.
     expect(run.sent).toEqual(['A', 'sort', 'page 3']);
   });
 
@@ -191,7 +179,7 @@ describe('createDispatchCoordinator', () => {
     await run.answer();
     await run.answer();
 
-    // Flipping one range twice does not restore what was selected before, so both have to go.
+    // Flipping a range twice doesn't restore the prior selection.
     expect(run.sent).toHaveLength(3);
   });
 
@@ -214,7 +202,7 @@ describe('createDispatchCoordinator', () => {
 
     run.gesture('A', absolute(FACET, 'A'));
     run.gesture('B', absolute(FACET, 'B'));
-    // Back to what A is already asking for: the queued B goes, and this one never leaves.
+    // Back to what the in-flight A produces.
     run.gesture('A again', satisfied(FACET, 'A'));
 
     await run.answer();
@@ -301,20 +289,18 @@ describe('createDispatchCoordinator', () => {
     it('settles every WAITING gesture withheld and empties the queue', async () => {
       const run = coordinate();
 
-      run.gesture('A'); // sent — in flight, held open
-      run.gesture('B'); // queued behind A
-      run.gesture('C'); // queued behind B
+      run.gesture('A');
+      run.gesture('B');
+      run.gesture('C');
 
       expect(run.sent).toEqual(['A']);
 
       run.withholdQueued();
 
-      // The two still-waiting gestures end withheld; A was already on its way.
       expect(run.outcomes).toEqual([
         ['B', 'withheld'],
         ['C', 'withheld'],
       ]);
-      // The queue is empty: letting A come back drains nothing more.
       await run.answer();
       expect(run.sent).toEqual(['A']);
       expect(run.outcomes).toContainEqual(['A', 'answered']);
@@ -323,13 +309,12 @@ describe('createDispatchCoordinator', () => {
     it('leaves the dispatch in flight untouched', () => {
       const run = coordinate();
 
-      run.gesture('A'); // in flight
-      run.gesture('B'); // queued
+      run.gesture('A');
+      run.gesture('B');
 
       expect(run.inFlight()).toBe('dispatch-1');
       run.withholdQueued();
 
-      // A is still the one on its way; only B was dropped.
       expect(run.inFlight()).toBe('dispatch-1');
       expect(run.outcomes).toEqual([['B', 'withheld']]);
     });
@@ -337,11 +322,10 @@ describe('createDispatchCoordinator', () => {
     it('is a no-op when nothing is queued', () => {
       const run = coordinate();
 
-      run.gesture('A'); // sent, nothing queued behind it
+      run.gesture('A');
       const before = run.snapshot();
       run.withholdQueued();
 
-      // Nothing dropped, and the snapshot identity is unchanged (no publish).
       expect(run.outcomes).toEqual([]);
       expect(run.snapshot()).toBe(before);
     });
@@ -351,9 +335,9 @@ describe('createDispatchCoordinator', () => {
       const coordinator = createDispatchCoordinator<string>(() => new Promise<void>(() => {}), {
         trace,
       });
-      coordinator.issue('A', absolute(PAGER, '1')); // in flight
-      coordinator.issue('B', delta(PAGER, '2')); // queued
-      coordinator.issue('C', delta('other', '3')); // queued
+      coordinator.issue('A', absolute(PAGER, '1'));
+      coordinator.issue('B', delta(PAGER, '2'));
+      coordinator.issue('C', delta('other', '3'));
       trace.mockClear();
 
       coordinator.withholdQueued();
@@ -366,16 +350,14 @@ describe('createDispatchCoordinator', () => {
     it('settles the in-flight dispatch cancelled, and that wins over the send resolving', async () => {
       const run = coordinate();
 
-      run.gesture('A'); // sent — in flight, held open
+      run.gesture('A');
       expect(run.inFlight()).toBe('dispatch-1');
 
       run.cancelInFlight();
 
-      // Settled 'cancelled' the moment it is preempted, before the send comes back.
       expect(run.outcomes).toEqual([['A', 'cancelled']]);
 
-      // When the send finally resolves, `drain`'s finally calls settle('answered') on the same
-      // entry; the settlement ignores that second settle, so 'cancelled' stands.
+      // `drain`'s later settle('answered') must be ignored.
       await run.answer();
       expect(run.outcomes).toEqual([['A', 'cancelled']]);
     });
@@ -383,15 +365,13 @@ describe('createDispatchCoordinator', () => {
     it('frees the queue to drain the next gesture once the cancelled send resolves', async () => {
       const run = coordinate();
 
-      run.gesture('A'); // in flight
-      run.gesture('B'); // queued behind A
+      run.gesture('A');
+      run.gesture('B');
 
       run.cancelInFlight();
       expect(run.outcomes).toEqual([['A', 'cancelled']]);
-      // B has not been sent — A's send is still open; cancelling the dispatch does not unsend it.
       expect(run.sent).toEqual(['A']);
 
-      // A's send resolves: `sending` clears and the queue drains B as normal.
       await run.answer();
       expect(run.sent).toEqual(['A', 'B']);
       expect(run.inFlight()).toBe('dispatch-2');
@@ -403,7 +383,6 @@ describe('createDispatchCoordinator', () => {
       const before = run.snapshot();
       run.cancelInFlight();
 
-      // Nothing settled, and the snapshot identity is unchanged (no publish).
       expect(run.outcomes).toEqual([]);
       expect(run.snapshot()).toBe(before);
     });
@@ -413,7 +392,7 @@ describe('createDispatchCoordinator', () => {
       const coordinator = createDispatchCoordinator<string>(() => new Promise<void>(() => {}), {
         trace,
       });
-      coordinator.issue('A', absolute(PAGER, '1')); // in flight
+      coordinator.issue('A', absolute(PAGER, '1'));
       trace.mockClear();
 
       coordinator.cancelInFlight();
@@ -484,8 +463,7 @@ describe('createSettledDispatch', () => {
   });
 
   it('mints a distinct id for every instance', () => {
-    // A caller that compares the last issued dispatch before and after a send, to tell "nothing
-    // went out" from "something did", reads two dispatches sharing an id as the same one.
+    // Callers compare ids before/after a send to detect whether anything went out.
     const first = createSettledDispatch('withheld');
     const second = createSettledDispatch('withheld');
 

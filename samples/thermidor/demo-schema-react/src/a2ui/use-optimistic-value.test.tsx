@@ -23,7 +23,6 @@ interface FacetValue {
   numberOfResults: number;
 }
 
-/** Stands in for a component's action union: the hook reads only `event.name`, for labelling. */
 interface TestAction {
   event: {name: string; context: Record<string, unknown>};
 }
@@ -40,7 +39,6 @@ const select =
   (values: FacetValue[]): FacetValue[] =>
     values.map((candidate) => (candidate.value === target ? {...candidate, state} : candidate));
 
-/** Single-select: the gesture claims the whole list, not just its own value. */
 const selectOnly =
   (target: string) =>
   (values: FacetValue[]): FacetValue[] =>
@@ -49,17 +47,13 @@ const selectOnly =
       state: candidate.value === target ? 'selected' : 'idle',
     }));
 
-/** `?` is how an unknowable landing value reads here — not an empty list, which is a real state. */
+/** `?` marks an unknowable landing; an empty list is a real state. */
 const shown = (values: readonly FacetValue[] | undefined) =>
   values === undefined
     ? '?'
     : values.map((v) => `${v.value}:${v.state === 'selected' ? 'S' : '.'}`).join(' ');
 
-/**
- * Stands in for the coordinator the app mounts: issuing a dispatch mints an identity, an answer
- * retires the oldest outstanding one — the serialized order the session guarantees — and the oldest
- * outstanding identity is therefore the one in flight.
- */
+/** An answer retires the oldest outstanding dispatch, mirroring the session's serialized order. */
 function createCoordinator() {
   let minted = 0;
   let pending: ReadonlySet<DispatchId> = new Set();
@@ -67,10 +61,7 @@ function createCoordinator() {
   let lastIssued: IssuedDispatch | undefined;
   const declared: CoalesceIntent[] = [];
   let standing: CoalesceIntent | undefined;
-  // One store for the coordinator's life, so what a dispatch marks is observable across renders.
   const stale = createStaleScopes();
-  // Invalidation is explicit per gesture: a dispatch marks a region only if the gesture declared
-  // one. A dispatch that declares nothing marks nothing — the real tracker's `?? []`.
   let standingInvalidates: readonly string[] | undefined;
 
   const settle = (id: DispatchId) => {
@@ -85,11 +76,8 @@ function createCoordinator() {
   };
 
   return {
-    /** Every intent declared, in order — one per gesture that declared any. */
     declared,
-    /** An intent still standing after its gesture returned would leak to an unrelated dispatch. */
     standing: () => standing,
-    /** The stale store the coordinator feeds, so a test can read what a dispatch marked behind. */
     stale,
     progress: (): DispatchProgress => ({
       inFlight: () => [...pending][0],
@@ -115,7 +103,6 @@ function createCoordinator() {
       stale.track(id, standingInvalidates ?? []);
       lastIssued = {
         id,
-        // Resolved by `settle` alongside the listeners: the resolver rides in the same list.
         settled: new Promise<DispatchOutcome>((resolve) => {
           settlers.get(id)?.push(resolve);
         }),
@@ -135,23 +122,14 @@ function createCoordinator() {
         settle(oldest);
       }
     },
-    /** Settles a specific dispatch, the way an out-of-order answer or a cancellation would. */
     retire: settle,
-    /**
-     * Publishes an outstanding set that has not caught up with the gestures just made — the window
-     * in which the provider's state has not yet reached the component.
-     */
     desync: () => {
       pending = new Set();
     },
   };
 }
 
-/**
- * Drives the hook the way a component does, against a coordinator a test can advance. `send` is
- * the component's own action seam; the default issues through the coordinator, and a test passes a
- * seam that issues nothing to exercise the lost-gesture path.
- */
+/** Pass a `send` that issues nothing to exercise the lost-gesture path. */
 function mount(initial: FacetValue[], send?: (action: TestAction) => void) {
   const coordinator = createCoordinator();
   let current!: OptimisticValue<FacetValue[], TestAction>;
@@ -184,43 +162,35 @@ function mount(initial: FacetValue[], send?: (action: TestAction) => void) {
 
   return {
     coordinator,
-    /** The component's action seam, so a test can assert what was dispatched. */
     dispatcher,
-    // A getter on `current` itself: destructuring `result` must not freeze the first render.
+    // Getter so destructuring `result` does not freeze the first render.
     result: {
       get current() {
         return current;
       },
     },
-    /** Publishes the coordinator's state to the component, as the provider's own render does. */
     flush,
-    /** A user gesture: dispatches its action and holds what it would show. */
     gesture: (target: string, next: OptimisticNext<FacetValue[]>, coalesce?: CoalescePolicy) => {
       act(() => current.dispatchOptimistic({action: toggleAction(target), next, coalesce}));
     },
-    /** A dispatch carrying nothing optimistic of its own — pagination, sort, show more. */
     dispatch: () => {
       act(() => coordinator.issue());
       flush();
     },
-    /** The next answer arrives, reporting `values`. */
     answer: (values: FacetValue[]) => {
       backend = values;
       act(() => coordinator.answer());
       flush();
     },
-    /** An answer for one specific dispatch, out of the order they were sent in. */
     answerOutOfOrder: (id: DispatchId, values: FacetValue[]) => {
       backend = values;
       act(() => coordinator.retire(id));
       flush();
     },
-    /** A new snapshot with no answer attached. */
     push: (values: FacetValue[]) => {
       backend = values;
       flush();
     },
-    /** A render in which the published outstanding set lags behind the gestures already made. */
     lagBehind: () => {
       act(() => coordinator.desync());
       flush();
@@ -269,9 +239,7 @@ describe('useOptimisticValue', () => {
     view.gesture('Blue', select('Blue', 'selected'));
     view.push(snapshot(['Blue', 'idle', 12]));
 
-    // The price of holding ONE value: the producer's count is not read at all while a gesture is
-    // outstanding. It is also what makes a late answer harmless — there is no comparison left for
-    // it to win. The region going stale meanwhile is what `invalidates` dims.
+    // The producer's count is not read at all while a gesture is outstanding.
     expect(view.result.current.value[0]).toEqual({
       value: 'Blue',
       state: 'selected',
@@ -292,7 +260,7 @@ describe('useOptimisticValue', () => {
 
     view.gesture('Black', select('Black', 'selected'));
     view.gesture('Blue', select('Blue', 'selected'));
-    // Answers the Black click: it never saw the Blue one.
+    // Answers the Black click, which never saw Blue.
     view.answer(snapshot(['Blue', 'idle', 84], ['Black', 'selected', 61]));
 
     expect(shown(view.result.current.value)).toBe('Blue:S Black:S');
@@ -303,7 +271,6 @@ describe('useOptimisticValue', () => {
 
     view.gesture('Blue', select('Blue', 'selected'));
     view.answer(snapshot(['Blue', 'selected', 84]));
-    // Released: the backend may now un-select on its own.
     view.push(snapshot(['Blue', 'idle', 84]));
 
     expect(shown(view.result.current.value)).toBe('Blue:.');
@@ -313,12 +280,9 @@ describe('useOptimisticValue', () => {
     const view = mount(snapshot(['Blue', 'idle', 84]));
 
     view.gesture('Blue', select('Blue', 'selected'));
-    // Pagination goes out behind the facet click and is nowhere near answered.
     view.dispatch();
     expect(shown(view.result.current.value)).toBe('Blue:S');
 
-    // The answer to the facet click refuses the selection. Waiting for every dispatch to settle
-    // would keep showing a selection the backend has already rejected.
     view.answer(snapshot(['Blue', 'idle', 84]));
 
     expect(shown(view.result.current.value)).toBe('Blue:.');
@@ -327,7 +291,7 @@ describe('useOptimisticValue', () => {
   it('keeps holding while only unrelated dispatches are answered', () => {
     const view = mount(snapshot(['Blue', 'idle', 84]));
 
-    // Pagination is issued first, so its answer comes first too.
+    // Issued first, so the next answer is this one's.
     view.dispatch();
     view.gesture('Blue', select('Blue', 'selected'));
     view.answer(snapshot(['Blue', 'idle', 84]));
@@ -336,9 +300,7 @@ describe('useOptimisticValue', () => {
   });
 
   it('holds the net intent through six interleaved gestures', () => {
-    // Check A, B, C then un-check C, B, A while every answer is still outstanding. Each response
-    // reports the state as of the gesture it answers, so any early release shows a value the user
-    // has already moved past.
+    // Each response reports the state as of the gesture it answers.
     const values = (a: State, b: State, c: State) =>
       snapshot(['A', a, 1], ['B', b, 1], ['C', c, 1]);
     const view = mount(values('idle', 'idle', 'idle'));
@@ -375,7 +337,7 @@ describe('useOptimisticValue', () => {
     view.gesture('Blue', select('Blue', 'selected'));
     expect(shown(view.result.current.value)).toBe('Blue:S');
 
-    // The un-select is answered while the re-select is still outstanding.
+    // Answers the un-select; the re-select is still outstanding.
     view.answer(snapshot(['Blue', 'idle', 90]));
     expect(shown(view.result.current.value)).toBe('Blue:S');
 
@@ -389,14 +351,11 @@ describe('useOptimisticValue', () => {
     view.gesture('Blue', select('Blue', 'selected'));
     view.gesture('Black', select('Black', 'selected'));
 
-    // The SECOND dispatch is answered first — and refused. One answer is not the producer having
-    // caught up: the Blue gesture is still on its way, so what is held stays whole rather than
-    // flickering to a state that is already out of date.
+    // One answer is not the producer catching up: Blue is still in flight.
     view.answerOutOfOrder('dispatch-2', snapshot(['Blue', 'idle', 84], ['Black', 'idle', 61]));
 
     expect(shown(view.result.current.value)).toBe('Blue:S Black:S');
 
-    // With the last one answered, the screen hands over to the producer — which refused Black.
     view.answer(snapshot(['Blue', 'selected', 84], ['Black', 'idle', 61]));
 
     expect(shown(view.result.current.value)).toBe('Blue:S Black:.');
@@ -404,8 +363,7 @@ describe('useOptimisticValue', () => {
 
   it('holds nothing when the dispatch issues nothing, and reports the lost action', () => {
     const reported = vi.spyOn(console, 'error').mockImplementation(() => {});
-    // A seam that reaches no coordinator: nothing would ever answer the gesture, so showing it
-    // would strand it on screen.
+    // Nothing would ever answer, so holding would strand the gesture on screen.
     const view = mount(snapshot(['Blue', 'idle', 84]), () => {});
 
     view.gesture('Blue', select('Blue', 'selected'));
@@ -420,8 +378,6 @@ describe('useOptimisticValue', () => {
 
     view.gesture('A', selectOnly('A'));
     view.gesture('B', selectOnly('B'));
-    // Back to A while both answers are outstanding: a re-click must not leave its intent applied
-    // in the position the first one took.
     view.gesture('A', selectOnly('A'));
 
     expect(shown(view.result.current.value)).toBe('A:S B:.');
@@ -445,7 +401,7 @@ describe('useOptimisticValue', () => {
   it('lands past the dispatch in flight but not past the ones still queued', () => {
     const view = mount(snapshot(['A', 'idle', 1], ['B', 'idle', 1]));
 
-    // A goes out at once; B is behind it and can still be dropped.
+    // A goes out at once; B is queued and can still be dropped.
     view.gesture('A', selectOnly('A'));
     view.gesture('B', selectOnly('B'));
     view.flush();
@@ -472,11 +428,9 @@ describe('useOptimisticValue', () => {
 
     const [declared] = view.coordinator.declared;
     expect(declared?.policy).toBe('involutive');
-    // The slot is the hook instance, so one component's gestures never drop another's; the gesture
-    // adds the action and its own context, which is what `involutive` pairs on — and neither is a
-    // string the call site had to invent.
+    // Slot is the hook instance; the gesture key adds action + context, which `involutive` pairs on.
     expect(declared?.gesture).toBe(`${declared?.slot}|toggle{target:"Blue"}`);
-    // Left standing, it would be picked up by the next, unrelated dispatch.
+    // Left standing, it would leak onto the next, unrelated dispatch.
     expect(view.coordinator.standing()).toBeUndefined();
   });
 
@@ -488,11 +442,8 @@ describe('useOptimisticValue', () => {
     view.gesture('Black', select('Black', 'selected'), 'involutive');
 
     const [first, second, third] = view.coordinator.declared;
-    // Same action, same context — the pair `involutive` may drop whole.
     expect(second?.gesture).toBe(first?.gesture);
-    // A different target is a different gesture, and dropping the pair would lose a selection.
     expect(third?.gesture).not.toBe(first?.gesture);
-    // Same slot throughout: they all write this instance's one value.
     expect(third?.slot).toBe(first?.slot);
   });
 
@@ -506,12 +457,6 @@ describe('useOptimisticValue', () => {
 });
 
 describe('the region a gesture invalidates', () => {
-  /**
-   * Fires one `useOptimisticValue` gesture against a fresh coordinator, carrying the given
-   * `invalidates`, and returns the coordinator so a test can read what the gesture marked. The
-   * controller runs declare -> dispatch -> withdraw around its hold, so the declaration is what
-   * reaches the stale store — the same path a region reader dims on.
-   */
   function fireGesture(invalidates?: readonly 'results'[]) {
     const coordinator = createCoordinator();
     let current!: OptimisticValue<FacetValue[], TestAction>;
@@ -538,15 +483,12 @@ describe('the region a gesture invalidates', () => {
   }
 
   it('marks nothing for a gesture that declares no region', () => {
-    // A facet-search gesture carries no `invalidates`, so it dims nothing while in flight.
     const coordinator = fireGesture();
 
     expect(coordinator.stale.isStale('results')).toBe(false);
   });
 
   it('marks the region a gesture declares', () => {
-    // A sort/pagination gesture carries `invalidates: ['results']`, so the grid dims until it
-    // settles.
     const coordinator = fireGesture(['results']);
 
     expect(coordinator.stale.isStale('results')).toBe(true);
@@ -558,7 +500,6 @@ describe('the region a gesture invalidates', () => {
     act(() => coordinator.answer());
     expect(coordinator.stale.isStale('results')).toBe(false);
 
-    // The declaration does not leak: a plain dispatch after it still marks nothing.
     act(() => coordinator.issue());
     expect(coordinator.stale.isStale('results')).toBe(false);
   });

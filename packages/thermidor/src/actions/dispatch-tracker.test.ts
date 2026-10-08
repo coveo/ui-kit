@@ -12,20 +12,13 @@ const absolute = (value: string): CoalesceIntent => ({
   policy: 'absolute',
 });
 
-/**
- * A source that only records what it was asked to issue. Its snapshot is a CONSTANT: the real
- * coordinator publishes a new one only when something changed, and the tracker reads it through a
- * getter, so a fresh object per call would be pointless here.
- */
 function spySource(): {issue: DispatchSource<string>['issue']; source: DispatchSource<string>} {
   const idle = {inFlight: undefined};
   const issue = vi.fn(createDispatchCoordinator<string>(() => undefined).issue);
   return {issue, source: {issue, getSnapshot: () => idle}};
 }
 
-/**
- * A real coordinator whose sends are answered on demand, so a test can hold a dispatch in flight.
- */
+/** Sends stay open until `answer()`, so a dispatch can be held in flight. */
 function controllableSource() {
   const sent: string[] = [];
   const answers: Array<() => void> = [];
@@ -36,7 +29,7 @@ function controllableSource() {
   return {source, sent, answer: () => answers.shift()?.()};
 }
 
-/** Issues the way the optimistic controller does: declare, dispatch, withdraw. */
+/** Mirrors the optimistic controller: declare, dispatch, withdraw. */
 function gesture(
   tracker: ReturnType<typeof createDispatchTracker<string>>,
   message: string,
@@ -126,8 +119,6 @@ describe('createDispatchTracker', () => {
       const tracker = createDispatchTracker(source);
       expect(tracker.stale.isStale('results')).toBe(false);
 
-      // Invalidation is explicit per gesture: a dispatch that declares nothing — a facet search, a
-      // `showMoreValues` — marks no region.
       void gesture(tracker, 'facet search abc');
       expect(tracker.stale.isStale('results')).toBe(false);
 
@@ -141,8 +132,6 @@ describe('createDispatchTracker', () => {
       const tracker = createDispatchTracker(source);
       expect(tracker.stale.isStale('results')).toBe(false);
 
-      // A gesture the producer answers by rebuilding the result set says so with its own
-      // `invalidates`, and the region stays stale until that dispatch settles.
       void gesture(tracker, 'select page 2', {invalidates: ['results']});
       expect(tracker.stale.isStale('results')).toBe(true);
 
@@ -160,7 +149,6 @@ describe('createDispatchTracker', () => {
       answer();
       await Promise.resolve();
 
-      // A answered; B is on its way, so the grid is still behind.
       expect(tracker.stale.isStale('results')).toBe(true);
 
       answer();
@@ -172,8 +160,7 @@ describe('createDispatchTracker', () => {
       const {source} = controllableSource();
       const tracker = createDispatchTracker(source);
 
-      // Two halves of a pair cancel each other, so neither one awaits an answer and the results
-      // are no more stale than the blocker alone makes them.
+      // The blocker stays in flight so the A pair is still queued and cancels out.
       const involutive: CoalesceIntent = {
         slot: 'facet|values',
         gesture: 'facet|values|A',
@@ -183,7 +170,6 @@ describe('createDispatchTracker', () => {
       void gesture(tracker, 'A', {coalesce: involutive, invalidates: ['results']});
       void gesture(tracker, 'A again', {coalesce: involutive, invalidates: ['results']});
 
-      // Only the blocker, on its way, holds the results.
       expect(tracker.stale.isStale('results')).toBe(true);
       expect(tracker.inFlight()).toBe('dispatch-1');
     });

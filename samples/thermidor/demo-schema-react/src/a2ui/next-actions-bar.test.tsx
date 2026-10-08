@@ -5,10 +5,6 @@ import {mountSurface} from './mount-surface.harness.js';
 
 afterEach(cleanup);
 
-/**
- * The follow-up bar holds a SCALAR: "my own gesture is in flight". It is asserted while its
- * dispatch is deliberately left outstanding, which is the only window in which an intent stands.
- */
 function mountControl<TProps extends object>(
   component: string,
   state: TProps,
@@ -56,7 +52,6 @@ describe('NextActionsBar', () => {
         true
       )
     );
-    // A second turn must not be startable from the same bar while the first is unanswered.
     expect(screen.getByText('Compare these').closest('button')!.hasAttribute('disabled')).toBe(
       true
     );

@@ -63,7 +63,7 @@ describe('RegularFacet', () => {
   });
 
   it('optimistically checks the clicked value before the backend reconciles', async () => {
-    // Hold the round-trip open: the intent stands only while its answer is outstanding.
+    // The intent only stands while its dispatch is outstanding.
     let answer!: () => void;
     const pending = new Promise<void>((resolve) => (answer = resolve));
     mountFacet(stateWithValues, () => pending);
@@ -96,14 +96,13 @@ describe('RegularFacet', () => {
     await waitFor(() => expect(screen.getByTestId('facet-value-Billabong')).toBeDefined());
     fireEvent.click(screen.getByTestId('facet-value-Billabong'));
     fireEvent.click(screen.getByTestId('facet-value-Quiksilver'));
-    // Only the first click is on the wire: the coordinator holds the second until it comes back.
+    // The coordinator holds the second click until the first is answered.
     await waitFor(() => expect(answers).toHaveLength(1));
     await waitFor(() =>
       expect((screen.getByTestId('facet-value-Quiksilver') as HTMLInputElement).checked).toBe(true)
     );
 
-    // The first click is answered by a whole-node snapshot that never saw the second click, which
-    // goes out as that answer lands.
+    // The first answer is a whole-node snapshot that never saw the second click.
     await act(async () => {
       answers[0]!();
       await Promise.resolve();
@@ -121,7 +120,6 @@ describe('RegularFacet', () => {
     expect((screen.getByTestId('facet-value-Billabong') as HTMLInputElement).checked).toBe(true);
     expect((screen.getByTestId('facet-value-Quiksilver') as HTMLInputElement).checked).toBe(true);
 
-    // Once the second click is answered too, the backend snapshot is current and wins.
     await waitFor(() => expect(answers).toHaveLength(2));
     await act(async () => {
       answers[1]!();
@@ -157,7 +155,6 @@ describe('RegularFacet', () => {
       expect((screen.getByTestId('facet-value-Billabong') as HTMLInputElement).checked).toBe(true)
     );
 
-    // The answer lands and refuses the selection; nothing else is outstanding.
     pushDataModel([
       {
         path: '/state/root/values',
@@ -396,7 +393,7 @@ describe('NumericFacet', () => {
   });
 
   it('optimistically marks only the clicked range selected before the backend reconciles', async () => {
-    // Hold the round-trip open: the intent stands only while its answer is outstanding.
+    // The intent only stands while its dispatch is outstanding.
     let answer!: () => void;
     const pending = new Promise<void>((resolve) => (answer = resolve));
     mountFacet(stateWithRanges, () => pending);
@@ -426,7 +423,6 @@ describe('NumericFacet', () => {
       ],
     };
 
-    /** Mounts with one answer held per dispatch, so a test releases them one at a time. */
     function mountHeld(state: NumericFacetProps) {
       const answers: Array<() => void> = [];
       const view = mountFacet(state, () => new Promise<void>((resolve) => answers.push(resolve)));
@@ -449,7 +445,6 @@ describe('NumericFacet', () => {
       const view = mountHeld(fourRanges);
       await waitFor(() => expect(screen.getByText('$0 - $100')).toBeDefined());
 
-      // Walk down the ranges faster than the backend answers.
       clickRange('$0 - $100');
       clickRange('$100 - $200');
       clickRange('$200 - $300');
@@ -458,7 +453,7 @@ describe('NumericFacet', () => {
       expect(view.starts()).toEqual([0]);
       await view.release();
 
-      // The two middle selections never go out: each is an absolute write of the same slot.
+      // Each queued selection is an absolute write of the same slot, so only the last survives.
       await waitFor(() => expect(view.starts()).toEqual([0, 300]));
     });
 
@@ -469,12 +464,10 @@ describe('NumericFacet', () => {
       clickRange('$0 - $100');
       clickRange('$100 - $200');
       clickRange('$200 - $300');
-      // Back onto the range the in-flight dispatch is selecting, from a view where it is NOT
-      // selected: the request already on its way produces exactly this, so neither this gesture nor
-      // the one queued behind it has to go out.
+      // The in-flight dispatch already produces this state, so neither queued gesture goes out.
       clickRange('$0 - $100');
 
-      // The gesture still shows: it is held until the dispatch that will deliver it is answered.
+      // Still shown: held until the in-flight dispatch is answered.
       await waitFor(() =>
         expect(screen.getByText('$0 - $100').closest('button')!.getAttribute('aria-pressed')).toBe(
           'true'
@@ -491,9 +484,7 @@ describe('NumericFacet', () => {
 
       clickRange('$0 - $100');
       clickRange('$100 - $200');
-      // `toggleSingleSelect` FLIPS its target, and this one is selected in the view while the
-      // in-flight dispatch leaves it idle: dropping the queued gesture would make it land on 'idle'
-      // and select instead of un-select, so the two paths disagree and both have to go.
+      // `toggleSingleSelect` flips: selected in the view but idle after the in-flight dispatch.
       clickRange('$100 - $200');
 
       await view.release();
@@ -507,9 +498,7 @@ describe('NumericFacet', () => {
       const view = mountHeld(fourRanges);
       await waitFor(() => expect(screen.getByText('$0 - $100')).toBeDefined());
 
-      // The third flip wants what the first one — still in flight — is already asking for, so it
-      // and the second cancel out. Reaching that verdict needs the FIRST gesture's intent to still
-      // be legible while it is in flight, even though the second claims the same range.
+      // The third flip matches the in-flight first, so the second and third cancel out.
       clickRange('$0 - $100');
       clickRange('$0 - $100');
       clickRange('$0 - $100');
@@ -525,10 +514,7 @@ describe('NumericFacet', () => {
     });
 
     it('lets a later range supersede a queued custom-range apply, like any slot gesture', async () => {
-      // The custom-range apply no longer reconstructs the list; it clears the selection and
-      // dispatches, so it is an absolute write of this slot just like `toggleSingleSelect`. A range
-      // clicked after it, landing on the same state, supersedes it — the apply never goes out, the
-      // same economy two chained toggles get.
+      // The apply is an absolute write of the slot, like `toggleSingleSelect`.
       const view = mountHeld(fourRanges);
       await waitFor(() => expect(screen.getByLabelText('Min')).toBeDefined());
 
@@ -540,7 +526,6 @@ describe('NumericFacet', () => {
 
       await view.release();
 
-      // Only the first range (in flight) and the last click go out; the apply in between is dropped.
       await waitFor(() => expect(view.starts()).toEqual([0, 300]));
     });
   });
@@ -580,11 +565,7 @@ describe('NumericFacet', () => {
   });
 
   it('does not optimistically place the entered range, leaving its slot to the backend', async () => {
-    // The backend returns a custom range as a listed value sorted into `values` — a placement the
-    // client cannot reconstruct without replaying the backend's sort. So the optimistic view does
-    // NOT add or select the range: it clears the selection and dispatches, and the dimmed inputs
-    // say the producer is working. No duplicate entry, no range appended out of order. Hold the
-    // round-trip open to observe the optimistic view.
+    // The backend sorts the custom range into `values`, which the client cannot replicate.
     const {lastAction} = mountFacet(
       {
         ...stateWithRanges,
@@ -601,19 +582,16 @@ describe('NumericFacet', () => {
     fireEvent.change(screen.getByLabelText('Max'), {target: {value: '250'}});
     fireEvent.click(screen.getByText('Apply'));
 
-    // The gesture goes out...
     await waitFor(() =>
       expect(lastAction()).toMatchObject({
         name: 'applyCustomRange',
         context: {start: 150, end: 250},
       })
     );
-    // ...the list is unchanged (no appended entry, no out-of-order range)...
     const labels = Array.from(screen.getByRole('list').querySelectorAll('li button')).map(
       (button) => button.querySelector('span')!.textContent
     );
     expect(labels).toEqual(['$0 - $100', '$100 - $200']);
-    // ...and nothing is optimistically marked selected: the backend owns the post-state.
     expect(
       Array.from(screen.getByRole('list').querySelectorAll('li button')).every(
         (button) => button.getAttribute('aria-pressed') === 'false'
@@ -622,9 +600,6 @@ describe('NumericFacet', () => {
   });
 
   it('dims the custom-range inputs while the apply is in flight', async () => {
-    // The apply-scoped signal disables the custom-range fieldset (greying its inputs and Apply)
-    // until the producer answers — the user sees their click was taken while the range is placed
-    // and sorted. Hold the round-trip open to keep the gesture outstanding.
     const {container} = mountFacet(stateWithRanges, () => new Promise<void>(() => {}));
 
     await waitFor(() => expect(screen.getByLabelText('Min')).toBeDefined());
@@ -634,22 +609,18 @@ describe('NumericFacet', () => {
     fireEvent.change(screen.getByLabelText('Max'), {target: {value: '150'}});
     fireEvent.click(screen.getByText('Apply'));
 
-    // The fieldset is disabled (greying inputs + Apply) while the gesture is outstanding.
     await waitFor(() =>
       expect(container.querySelector('fieldset')!.hasAttribute('disabled')).toBe(true)
     );
   });
 
   it('does not dim the custom-range inputs when toggling a listed range', async () => {
-    // The dimming signal is specific to applyCustomRange, not any gesture of the slot: a range
-    // toggle (or a clear) leaves the custom inputs enabled, even while its own dispatch is in
-    // flight. Hold the round-trip open so a slot-wide pending signal would wrongly dim here.
+    // Held open, so a slot-wide pending signal would wrongly dim here.
     const {container, lastAction} = mountFacet(stateWithRanges, () => new Promise<void>(() => {}));
 
     await waitFor(() => expect(screen.getByText('$0 - $100')).toBeDefined());
     fireEvent.click(screen.getByText('$0 - $100'));
 
-    // The toggle dispatched and is outstanding, yet the custom-range fieldset stays enabled.
     await waitFor(() =>
       expect(lastAction()).toMatchObject({
         name: 'toggleSingleSelect',
@@ -767,7 +738,7 @@ describe('CategoryFacet', () => {
   });
 
   it('optimistically promotes the clicked child to the selected node before the backend reconciles', async () => {
-    // Hold the round-trip open: the intent stands only while its answer is outstanding.
+    // The intent only stands while its dispatch is outstanding.
     let answer!: () => void;
     const pending = new Promise<void>((resolve) => (answer = resolve));
     mountFacet(stateWithChildren, () => pending);
