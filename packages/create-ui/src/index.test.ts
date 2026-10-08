@@ -33,6 +33,15 @@ describe('templates', () => {
     );
   });
 
+  it('identifies the package used by each Angular template', () => {
+    expect(describeTemplate(getTemplate('atomic-search-angular')!)).toBe(
+      'Atomic Search (Angular, @coveo/atomic-angular)'
+    );
+    expect(describeTemplate(getTemplate('atomic-commerce-angular')!)).toBe(
+      'Atomic Commerce (Angular, @coveo/atomic-angular)'
+    );
+  });
+
   it('describes a template with its library, without the "UI" suffix', () => {
     const template = getTemplate('atomic-search')!;
     expect(describeTemplate(template)).toBe('Atomic Search (Vite, @coveo/atomic)');

@@ -34,11 +34,11 @@ pnpm create @coveo/ui my-app --template headless-search-react
 
 ### Pinning a template version
 
-Samples are versioned in lockstep with the Coveo library they build on (Headless
-or Atomic), so a sample's version always matches its library's version. By
-default the CLI scaffolds the `latest` published version. Pass
-`--template-version` to scaffold the sample that matches a specific library
-version instead:
+Samples are versioned in lockstep with the Coveo package they are built on (see
+the **Built on** column under [Templates](#templates)), so a sample's version
+always matches that package's version. By default the CLI scaffolds the `latest`
+published version. Pass `--template-version` to scaffold the sample that matches
+a specific version of that package instead:
 
 ```sh
 npm create @coveo/ui@latest my-app --template headless-search-react --template-version 3.2.1
@@ -49,9 +49,27 @@ Headless `3.2.1`. Omitting `--template-version` keeps the default (`latest`).
 
 ## Templates
 
-Run `npm create @coveo/ui --help` for the current list. Templates encode the
-library, use case, and framework (e.g. `headless-search-react`). Additional
-Atomic and vanilla templates are added as their samples become scaffold-ready.
+Templates encode the library, use case, and framework (e.g.
+`headless-search-react`). Run `npm create @coveo/ui --help` for the list that
+your installed version supports.
+
+| Template                        | Use case       | Framework          | Built on                |
+| ------------------------------- | -------------- | ------------------ | ----------------------- |
+| `atomic-search`                 | Search         | Vite               | `@coveo/atomic`         |
+| `atomic-commerce`               | Commerce       | Vite               | `@coveo/atomic`         |
+| `atomic-search-react`           | Search         | React              | `@coveo/atomic-react`   |
+| `atomic-commerce-react`         | Commerce       | React              | `@coveo/atomic-react`   |
+| `atomic-search-angular`         | Search         | Angular            | `@coveo/atomic-angular` |
+| `atomic-commerce-angular`       | Commerce       | Angular            | `@coveo/atomic-angular` |
+| `headless-search`               | Search         | Vite               | `@coveo/headless`       |
+| `headless-commerce`             | Commerce       | Vite               | `@coveo/headless`       |
+| `headless-search-react`         | Search         | React              | `@coveo/headless`       |
+| `headless-commerce-react`       | Commerce       | React              | `@coveo/headless`       |
+| `headless-ssr-commerce-nextjs`  | Commerce (SSR) | Next.js App Router | `@coveo/headless-react` |
+| `headless-ssr-commerce-express` | Commerce (SSR) | Express            | `@coveo/headless`       |
+
+Additional Atomic and vanilla templates are added as their samples become
+scaffold-ready.
 
 ## How it works
 
