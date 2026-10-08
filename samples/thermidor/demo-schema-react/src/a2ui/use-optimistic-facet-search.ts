@@ -1,7 +1,8 @@
-import {useRef, useState} from 'react';
+import {useId, useLayoutEffect, useRef, useState} from 'react';
 import type {CategoryFacetAction, RegularFacetAction} from '@coveo/thermidor-schema/zod3';
+import {useDispatchProgress} from './pending-dispatch.js';
 
-/** The `search` / `clearSearch` members of the facet action unions, derived so the payload cannot drift from what the schema accepts. */
+/** Derived from the schema so the payload cannot drift from what it accepts. */
 export type FacetSearchAction = Extract<
   RegularFacetAction | CategoryFacetAction,
   {event: {name: 'search' | 'clearSearch'}}
@@ -14,34 +15,74 @@ export interface OptimisticFacetSearch {
 }
 
 /**
- * Facet search input as sovereign LOCAL state: the typed text is NOT the optimistic hold of the
- * `search` dispatch, so a withheld/cancelled/lost keystroke leaves the field untouched instead of
- * snapping back to the producer. A genuine external change still wins — see below.
+ * The typed text is local state, not an optimistic hold, so a keystroke that never reaches the
+ * producer leaves the field untouched. An external change of the query wins; our own echo does not.
  */
 export function useOptimisticFacetSearch(
   backendQuery: string,
   dispatch: (action: FacetSearchAction) => void
 ): OptimisticFacetSearch {
+  const slot = useId();
+  const {declareGesture, lastIssued} = useDispatchProgress();
   const [typed, setTyped] = useState(backendQuery);
   const lastBackend = useRef(backendQuery);
+  // Queries whose echo can still arrive, in send order (the queue serializes sends).
+  const pending = useRef<string[]>([]);
 
-  // A moved `backendQuery` is a real producer change (echo of our keystroke excepted) and wins;
-  // a dispatch that never answered leaves it put, so the local text survives. The move IS the signal.
-  if (backendQuery !== lastBackend.current) {
+  // Layout, so an adopted external change lands before paint.
+  useLayoutEffect(() => {
+    if (backendQuery === lastBackend.current) {
+      return;
+    }
     lastBackend.current = backendQuery;
-    if (backendQuery !== typed) {
+    const echo = pending.current.indexOf(backendQuery);
+    if (echo !== -1) {
+      // Our echo: everything older has been answered too.
+      pending.current = pending.current.slice(echo + 1);
+    } else {
+      // External change: the producer wins.
+      pending.current = [];
       setTyped(backendQuery);
     }
-  }
+  }, [backendQuery]);
+
+  const send = (action: FacetSearchAction, query: string) => {
+    const before = lastIssued()?.id;
+    const withdraw = declareGesture({
+      coalesce: {slot, gesture: `${slot}|${action.event.name}`, policy: 'absolute'},
+      invalidates: [],
+    });
+    try {
+      dispatch(action);
+    } finally {
+      withdraw();
+    }
+    const issued = lastIssued();
+    if (!issued || issued.id === before) {
+      return;
+    }
+    pending.current.push(query);
+    issued.onSettled((outcome) => {
+      // Never answered, so no echo will come: drop it, or it would swallow a later external
+      // change. An answer that didn't move the prop can stay: the prop must leave that value
+      // first, and whatever moves it clears the entry.
+      if (outcome !== 'answered') {
+        const i = pending.current.lastIndexOf(query);
+        if (i !== -1) {
+          pending.current.splice(i, 1);
+        }
+      }
+    });
+  };
 
   const onQueryChange = (next: string) => {
     setTyped(next);
-    dispatch({event: {name: 'search', context: {query: next}}});
+    send({event: {name: 'search', context: {query: next}}}, next);
   };
 
   const reset = () => {
     setTyped('');
-    dispatch({event: {name: 'clearSearch', context: {}}});
+    send({event: {name: 'clearSearch', context: {}}}, '');
   };
 
   return {query: typed, onQueryChange, reset};

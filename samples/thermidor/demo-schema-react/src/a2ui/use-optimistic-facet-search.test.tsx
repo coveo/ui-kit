@@ -1,28 +1,59 @@
 import fc from 'fast-check';
+import {
+  createDispatchCoordinator,
+  createDispatchTracker,
+  createSettledDispatch,
+  type DispatchSource,
+} from '@coveo/thermidor';
 import {describe, it, expect, vi} from 'vitest';
 import {act, render} from '@testing-library/react';
+import {DispatchProgressProvider} from './pending-dispatch.js';
 import {type FacetSearchAction, useOptimisticFacetSearch} from './use-optimistic-facet-search.js';
 
-/**
- * Mounts the hook against a backend query a test can move. The input is now pure LOCAL state, so no
- * dispatch coordinator is needed: the only producer-facing seam is the `dispatch` spy, and the only
- * thing that hands authority back is a change of the `query` prop.
- */
-function mount(initialBackend: string, send?: (action: FacetSearchAction) => void) {
-  let current!: ReturnType<typeof useOptimisticFacetSearch>;
-  const dispatch = vi.fn<(action: FacetSearchAction) => void>(send ?? (() => {}));
+type Seam = 'tracked' | 'withheld' | 'lost';
 
+/**
+ * Mounts the hook on the real tracker and coordinator, each `send` held open until `answer`. `sent`
+ * is what reached the producer. `withheld`: settled on the spot (prompt streaming); `lost`: never
+ * reaches the tracker (surface gone).
+ */
+function mount(initialBackend: string, seam: Seam = 'tracked') {
+  const sent: string[] = [];
+  const answers: Array<() => void> = [];
+  const coordinator = createDispatchCoordinator<FacetSearchAction>((action) => {
+    sent.push(action.event.name === 'search' ? action.event.context.query : '(clear)');
+    return new Promise<void>((resolve) => answers.push(resolve));
+  });
+  const source: DispatchSource<FacetSearchAction> =
+    seam === 'withheld'
+      ? {issue: () => createSettledDispatch('withheld'), getSnapshot: coordinator.getSnapshot}
+      : coordinator;
+  const tracker = createDispatchTracker(source);
+
+  const dispatch = vi.fn<(action: FacetSearchAction) => void>((action) => {
+    if (seam !== 'lost') {
+      void tracker.dispatch(action);
+    }
+  });
+
+  let current!: ReturnType<typeof useOptimisticFacetSearch>;
   function Consumer({query}: {query: string}) {
     current = useOptimisticFacetSearch(query, dispatch);
     return null;
   }
+  const tree = (query: string) => (
+    <DispatchProgressProvider value={tracker}>
+      <Consumer query={query} />
+    </DispatchProgressProvider>
+  );
 
-  const view = render(<Consumer query={initialBackend} />);
+  const view = render(tree(initialBackend));
+  const push = (query: string) => act(() => view.rerender(tree(query)));
 
   return {
     dispatch,
+    sent,
     unmount: () => view.unmount(),
-    // A getter so destructuring does not freeze the first render.
     result: {
       get current() {
         return current;
@@ -30,8 +61,16 @@ function mount(initialBackend: string, send?: (action: FacetSearchAction) => voi
     },
     type: (next: string) => act(() => current.onQueryChange(next)),
     reset: () => act(() => current.reset()),
-    /** The producer moves `facetSearch.query` — a new prop, with or without a reason of our own. */
-    push: (query: string) => act(() => view.rerender(<Consumer query={query} />)),
+    /** An external change of `facetSearch.query`. */
+    push,
+    /** Answers the dispatch in flight: snapshot first, then settlement, as the session does. */
+    answer: async (query: string) => {
+      push(query);
+      await act(async () => {
+        answers.shift()?.();
+        await new Promise((resolve) => setTimeout(resolve, 0));
+      });
+    },
   };
 }
 
@@ -52,45 +91,48 @@ describe('useOptimisticFacetSearch', () => {
     });
   });
 
-  it('keeps the typed query when a snapshot answering an unrelated gesture leaves the query unchanged', () => {
-    const view = mount('rip');
+  it('keeps the typed query when the keystroke is lost before reaching the queue', () => {
+    const view = mount('', 'lost');
 
     view.type('ripcurl');
-    expect(view.result.current.query).toBe('ripcurl');
 
-    // A converse response to an unrelated gesture carries the facet node, but `facetSearch.query`
-    // is the value the backend already knew ('rip' before our keystroke) — the prop does not move
-    // from what it was, so nothing overrides the typing.
-    view.push('rip');
+    expect(view.sent).toEqual([]);
     expect(view.result.current.query).toBe('ripcurl');
   });
 
-  it('keeps the typed query when the keystroke is withheld, cancelled, or lost (no dispatch succeeds)', () => {
-    // The seam issues no dispatch (withheld while a prompt streams, cancelled by preemption, or the
-    // surface is gone). The producer never answers, so `facetSearch.query` does not move — the field
-    // must stay exactly as typed, never snap back to the backend value.
-    const view = mount('', () => {});
+  it('keeps the typed query when the keystroke is withheld', () => {
+    const view = mount('', 'withheld');
 
     view.type('ripcurl');
 
-    expect(view.result.current.query).toBe('ripcurl');
-    // No producer answer ever arrives: `facetSearch.query` stays at '' (unchanged from the initial
-    // backend), so there is no real external change — the typed text survives untouched.
-    view.push('');
+    expect(view.sent).toEqual([]);
     expect(view.result.current.query).toBe('ripcurl');
   });
 
-  it('lets the backend query win when it changes for a reason other than our own dispatch', () => {
-    // The backend already had an active search ('rip'); the user keeps typing.
-    const view = mount('rip');
+  it('owes no echo for a withheld keystroke, so a later external change to that query still wins', () => {
+    const view = mount('', 'withheld');
 
+    view.type('ri');
+    view.type('rip');
+
+    // Neither keystroke went out, so this is not our echo.
+    view.push('ri');
+    expect(view.result.current.query).toBe('ri');
+  });
+
+  it('ignores the echo of a sent keystroke that is older than the current typing', async () => {
+    const view = mount('');
+
+    view.type('ri');
     view.type('ripcurl');
-    expect(view.result.current.query).toBe('ripcurl');
+    expect(view.sent).toEqual(['ri']);
 
-    // A value selected from the search results clears the search on the producer side: a GENUINE
-    // external change of `facetSearch.query` ('rip' -> ''). It wins and empties the local field.
-    view.push('');
-    expect(view.result.current.query).toBe('');
+    await view.answer('ri');
+    expect(view.result.current.query).toBe('ripcurl');
+    expect(view.sent).toEqual(['ri', 'ripcurl']);
+
+    await view.answer('ripcurl');
+    expect(view.result.current.query).toBe('ripcurl');
   });
 
   it('adopts a genuine external change even while text is typed', () => {
@@ -99,45 +141,68 @@ describe('useOptimisticFacetSearch', () => {
     view.type('sh');
     expect(view.result.current.query).toBe('sh');
 
-    // Producer sets the query to something neither the user typed nor the previous backend value.
     view.push('sandals');
     expect(view.result.current.query).toBe('sandals');
   });
 
-  it('does not clobber the local value with the echo of our own dispatch', () => {
+  it('does not mistake the echo of our own clear for an external clear (x -> "" -> y)', async () => {
     const view = mount('');
 
-    view.type('rip');
-    expect(view.dispatch).toHaveBeenCalledWith({
-      event: {name: 'search', context: {query: 'rip'}},
-    });
+    view.type('x');
+    await view.answer('x');
+    expect(view.result.current.query).toBe('x');
 
-    // Backend echoes back the query we just dispatched. The prop moves to 'rip', which equals the
-    // local value, so there is nothing to overwrite and no flicker.
-    view.push('rip');
-    expect(view.result.current.query).toBe('rip');
+    view.reset();
+    expect(view.result.current.query).toBe('');
+    view.type('y');
+    expect(view.result.current.query).toBe('y');
+
+    await view.answer('');
+    expect(view.result.current.query).toBe('y');
+    await view.answer('y');
+    expect(view.result.current.query).toBe('y');
+    expect(view.sent).toEqual(['x', '(clear)', 'y']);
+
+    // Nothing owed anymore: this clear is external.
+    view.push('');
+    expect(view.result.current.query).toBe('');
   });
 
   it('clears the local value immediately on reset, even if the dispatch is lost', () => {
-    const reported = vi.spyOn(console, 'error').mockImplementation(() => {});
-    // The seam issues no dispatch (surface gone), but clearing the field is LOCAL state — it must
-    // happen at once regardless of whether the clear reaches the producer.
-    const view = mount('rip', () => {});
+    const view = mount('rip', 'lost');
 
     view.reset();
 
     expect(view.result.current.query).toBe('');
     expect(view.dispatch).toHaveBeenCalledWith({event: {name: 'clearSearch', context: {}}});
-    reported.mockRestore();
   });
 
-  it('reset clears the local value and dispatches the clear', () => {
-    const view = mount('rip');
+  it('coalesces a burst: 4 fast keystrokes send only the request in flight plus the latest', async () => {
+    const view = mount('');
 
+    view.type('r');
+    view.type('ri');
+    view.type('rip');
+    view.type('ripc');
+
+    expect(view.result.current.query).toBe('ripc');
+    expect(view.sent).toEqual(['r']);
+
+    await view.answer('r');
+    expect(view.sent).toEqual(['r', 'ripc']);
+    expect(view.result.current.query).toBe('ripc');
+  });
+
+  it('writes the same slot for search and clear, so a clear supersedes a queued keystroke', async () => {
+    const view = mount('');
+
+    view.type('r');
+    view.type('ri');
     view.reset();
 
+    await view.answer('r');
+    expect(view.sent).toEqual(['r', '(clear)']);
     expect(view.result.current.query).toBe('');
-    expect(view.dispatch).toHaveBeenCalledWith({event: {name: 'clearSearch', context: {}}});
   });
 });
 
