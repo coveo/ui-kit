@@ -57,8 +57,9 @@ export default class QuanticSearchBoxInput extends LightningElement {
    * The placeholder text to display in the search box input area.
    * @api
    * @type {string}
+   * @defaultValue 'Search...'
    */
-  @api placeholder;
+  @api placeholder = this.labels.search;
   /**
    * The query suggestions to display.
    * @api
