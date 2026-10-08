@@ -1,5 +1,6 @@
 .readOnly {
-  opacity: 0.7;
+  padding-left: var(--space-3);
+  border-left: 3px solid var(--color-border);
 }
 
 .readOnlyNote {

@@ -65,6 +65,9 @@ export function ConversationThread({
  * A turn shows the agent's reasoning and text when an agent answered, then every block the
  * server produced for it, search blocks included. Each follow-up sent from the turn is drawn as
  * its own exchange after it. Only the latest turn's blocks are interactive.
+ *
+ * A failed follow-up fails the whole turn, so its error is drawn after the exchanges it follows
+ * rather than in their place.
  */
 function renderTurnContent(
   turn: Turn,
@@ -73,25 +76,30 @@ function renderTurnContent(
   isLatest: boolean,
   isPending: boolean
 ) {
-  if (turn.status === 'error') {
+  if (turn.status === 'error' && followUps.length === 0) {
     return <ErrorTurnBlock error={turn.error} />;
   }
 
   const segments = splitTurn(turn, surfaceIds, followUps);
-  return segments.map((segment, index) => {
-    const isLastSegment = index === segments.length - 1;
-    return (
-      <Fragment key={index}>
-        {segment.prompt !== undefined && <FollowUpPrompt prompt={segment.prompt} />}
-        <AgentResponseBlock
-          response={segment.response}
-          isStreaming={isLastSegment && (turn.status === 'streaming' || isPending)}
-        >
-          <TurnSurfaces surfaceIds={segment.surfaceIds} interactive={isLatest} />
-        </AgentResponseBlock>
-      </Fragment>
-    );
-  });
+  return (
+    <>
+      {segments.map((segment, index) => {
+        const isLastSegment = index === segments.length - 1;
+        return (
+          <Fragment key={index}>
+            {segment.prompt !== undefined && <FollowUpPrompt prompt={segment.prompt} />}
+            <AgentResponseBlock
+              response={segment.response}
+              isStreaming={isLastSegment && (turn.status === 'streaming' || isPending)}
+            >
+              <TurnSurfaces surfaceIds={segment.surfaceIds} interactive={isLatest} />
+            </AgentResponseBlock>
+          </Fragment>
+        );
+      })}
+      {turn.status === 'error' && <ErrorTurnBlock error={turn.error} />}
+    </>
+  );
 }
 
 /** The chip text of a follow-up, shown as the shopper's message and scrolled into view. */

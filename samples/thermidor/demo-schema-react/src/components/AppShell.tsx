@@ -48,6 +48,11 @@ export function AppShell() {
   const handleAction = useCallback(
     async (message: A2UIClientEventMessage) => {
       const {turns, stream, isStreaming} = latestRef.current;
+      // The session does not count an action's run as streaming, so an action sent while a
+      // follow-up is in flight would race it into the same turn.
+      if (isStreaming) {
+        return;
+      }
       const serverMessage = toServerAction(message, stream.serverSurfaceIds);
       const userAction = (
         message as {userAction?: {name?: unknown; context?: Record<string, unknown>}}
@@ -55,7 +60,6 @@ export function AppShell() {
       const turn = turns.at(-1);
       if (
         !turn ||
-        isStreaming ||
         typeof userAction?.name !== 'string' ||
         !FOLLOW_UP_ACTIONS.has(userAction.name)
       ) {

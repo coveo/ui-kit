@@ -208,6 +208,34 @@ describe('AppShell', () => {
       expect(screen.getByTestId('follow-ups').textContent).toBe('Show more life jackets');
     });
 
+    it('ignores actions while a follow-up is in flight', async () => {
+      mockTurns = [agentTurn('turn-1')];
+      let finishRun: () => void = () => undefined;
+      mockDispatchAction.mockReturnValueOnce(
+        new Promise<void>((resolve) => {
+          finishRun = resolve;
+        })
+      );
+
+      render(<AppShell />);
+      act(() => {
+        void capturedOnAction?.(
+          followUpAction('selectAction', {text: 'Show more life jackets', type: 'followup'})
+        );
+      });
+      act(() => {
+        void capturedOnAction?.(followUpAction('selectSearchOption', {optionId: 'opt-1'}));
+        void capturedOnAction?.(followUpAction('selectPage', {page: 1}));
+      });
+
+      expect(mockDispatchAction).toHaveBeenCalledTimes(1);
+      expect(screen.getByTestId('follow-ups').textContent).toBe('Show more life jackets');
+
+      await act(async () => {
+        finishRun();
+      });
+    });
+
     it('records a search option without a prompt', async () => {
       mockTurns = [agentTurn('turn-1')];
       mockDispatchAction.mockResolvedValueOnce(undefined);
