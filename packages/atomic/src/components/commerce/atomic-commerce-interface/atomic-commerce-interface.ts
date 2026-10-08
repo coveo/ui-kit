@@ -513,15 +513,18 @@ export class AtomicCommerceInterface
 
   private updateHash() {
     const newFragment = this.urlManager.state.fragment;
+    // A bare `#fragment` resolves against the document base URL, which drops the
+    // current path on pages that declare a `<base href>`, such as Angular apps.
+    const url = new URL(`#${newFragment}`, window.location.href).href;
 
     if (!this.summary.state.firstRequestExecuted) {
-      history.replaceState(null, document.title, `#${newFragment}`);
+      history.replaceState(null, document.title, url);
       this.bindings.engine.logger.info(`History replaceState #${newFragment}`);
 
       return;
     }
 
-    history.pushState(null, document.title, `#${newFragment}`);
+    history.pushState(null, document.title, url);
     this.bindings.engine.logger.info(`History pushState #${newFragment}`);
   }
 }

@@ -27,6 +27,7 @@ import {
   it,
   type MockedFunction,
   type MockInstance,
+  onTestFinished,
   vi,
 } from 'vitest';
 import {InterfaceController} from '@/src/components/common/interface/interface-controller';
@@ -651,10 +652,28 @@ describe('atomic-commerce-interface', () => {
             loggerSpy = vi.spyOn(element.bindings.engine.logger, 'info');
           });
 
-          it('should replace the history state with the #-prefixed new fragment', async () => {
+          it('should replace the history state with the new fragment on the current page', async () => {
+            const {origin, pathname, search} = window.location;
+
             urlManagerSubscribeCallback();
 
-            expect(replaceStateSpy).toHaveBeenCalledWith(null, document.title, '#test-fragment');
+            expect(replaceStateSpy).toHaveBeenCalledWith(
+              null,
+              document.title,
+              `${origin}${pathname}${search}#test-fragment`
+            );
+          });
+
+          it('should keep the current path when the page declares a base URL', async () => {
+            const {pathname} = window.location;
+            const base = document.createElement('base');
+            base.href = '/another-path/';
+            document.head.append(base);
+            onTestFinished(() => base.remove());
+
+            urlManagerSubscribeCallback();
+
+            expect(window.location.pathname).toBe(pathname);
           });
 
           it('should not call history.pushState', async () => {
@@ -686,10 +705,28 @@ describe('atomic-commerce-interface', () => {
             loggerSpy = vi.spyOn(element.bindings.engine.logger, 'info');
           });
 
-          it('should push the new fragment to the history state', async () => {
+          it('should push the new fragment on the current page to the history state', async () => {
+            const {origin, pathname, search} = window.location;
+
             urlManagerSubscribeCallback();
 
-            expect(pushStateSpy).toHaveBeenCalledWith(null, document.title, '#test-fragment');
+            expect(pushStateSpy).toHaveBeenCalledWith(
+              null,
+              document.title,
+              `${origin}${pathname}${search}#test-fragment`
+            );
+          });
+
+          it('should keep the current path when the page declares a base URL', async () => {
+            const {pathname} = window.location;
+            const base = document.createElement('base');
+            base.href = '/another-path/';
+            document.head.append(base);
+            onTestFinished(() => base.remove());
+
+            urlManagerSubscribeCallback();
+
+            expect(window.location.pathname).toBe(pathname);
           });
 
           it('should not call history.replaceState', async () => {
