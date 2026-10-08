@@ -5,7 +5,12 @@ function getFieldCaptionNamespace(field: string) {
 }
 
 export function getFieldCaptions(field: string, i18n: i18n) {
-  return i18n.getResourceBundle(i18n.language, getFieldCaptionNamespace(field)) || {};
+  const namespace = getFieldCaptionNamespace(field);
+
+  return (i18n.languages ?? []).reduceRight<Record<string, string>>(
+    (captions, language) => ({...captions, ...i18n.getResourceBundle(language, namespace)}),
+    {}
+  );
 }
 
 export function getFieldValueCaption(field: string, facetValue: string, i18n: i18n) {
