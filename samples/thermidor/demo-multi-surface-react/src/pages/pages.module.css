@@ -1,0 +1,35 @@
+.page {
+  box-sizing: border-box;
+  max-width: 1100px;
+  min-width: 0;
+  margin: 0 auto;
+  padding: var(--space-5);
+}
+
+.title {
+  font-size: var(--font-size-xl);
+  margin: var(--space-2) 0 var(--space-5);
+}
+
+.surfaces {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5);
+}
+
+.loading {
+  color: var(--color-text-muted);
+}
+
+.error {
+  color: var(--color-error);
+}
+
+.back {
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: var(--color-text-link);
+  cursor: pointer;
+}

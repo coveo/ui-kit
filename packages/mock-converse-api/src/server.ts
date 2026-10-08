@@ -1,5 +1,9 @@
 import {createServer as createHttpMiddlewareServer} from '@mswjs/http-middleware';
-import {converseResponses, converseSchemaResponses} from '@coveo/platform-mock-api/converse';
+import {
+  converseResponses,
+  converseSchemaResponses,
+  converseStorefrontResponses,
+} from '@coveo/platform-mock-api/converse';
 import {http, HttpResponse} from 'msw';
 
 export interface ServerOptions {
@@ -102,6 +106,12 @@ const handleSchemaConversePost = async ({request}: {request: Request}) => {
         {status: 400}
       )
     );
+  }
+
+  // A Storefront Preview request names its page area in `context.custom.surfaceId`; one session
+  // then hosts the surfaces of every area.
+  if (converseStorefrontResponses.readStorefrontContext(body)) {
+    return withCors(converseStorefrontResponses.storefrontResponse(body));
   }
 
   if (hasAction) {

@@ -328,4 +328,71 @@ describe('Session.dispatchAction', () => {
       expect(request.action?.name).toBe('setPageSize');
     });
   });
+
+  describe('surfaceScope', () => {
+    /** Queues a completing stream whose only A2-UI message is `messages`. */
+    function queueTurnWithMessages(messages: unknown[]): void {
+      callMock.mockImplementationOnce(async () => ({
+        success: true,
+        data: {
+          stream: new ReadableStream<Uint8Array>({
+            start(controller) {
+              controller.enqueue(
+                sseFrame({
+                  type: 'ACTIVITY_SNAPSHOT',
+                  activityType: 'a2ui-surface',
+                  messageId: 'later-turn',
+                  content: {messages},
+                })
+              );
+              controller.enqueue(sseFrame({type: 'RUN_FINISHED'}));
+              controller.close();
+            },
+          }),
+        },
+      }));
+    }
+
+    async function sessionWithLaterTurn(
+      surfaceScope: SessionConfig['surfaceScope'],
+      laterMessages: unknown[] = []
+    ) {
+      queueSurfaceThenComplete();
+      const session = createSession({...baseConfig, surfaceScope});
+      await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+      queueTurnWithMessages(laterMessages);
+      await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'something else'}});
+      callMock.mockClear();
+      return session;
+    }
+
+    it('drops an action on a surface of an earlier turn by default', async () => {
+      const session = await sessionWithLaterTurn(undefined);
+
+      await session.dispatchAction(paginationMessage('selectPage', {page: 2}));
+
+      expect(callMock).not.toHaveBeenCalled();
+    });
+
+    it("sends an action on a surface of an earlier turn under the 'session' scope", async () => {
+      const session = await sessionWithLaterTurn('session');
+      queueActionAck();
+
+      await session.dispatchAction(paginationMessage('selectPage', {page: 2}));
+
+      expect(callMock).toHaveBeenCalledTimes(1);
+      const request = callMock.mock.calls[0][0] as {action: {surfaceId: string} | null};
+      expect(request.action?.surfaceId).toBe(SURFACE_ID);
+    });
+
+    it("drops an action on a surface a later turn deleted under the 'session' scope", async () => {
+      const session = await sessionWithLaterTurn('session', [
+        {version: 'v1.0', deleteSurface: {surfaceId: SURFACE_ID}},
+      ]);
+
+      await session.dispatchAction(paginationMessage('selectPage', {page: 2}));
+
+      expect(callMock).not.toHaveBeenCalled();
+    });
+  });
 });

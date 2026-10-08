@@ -132,6 +132,17 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
    * so the restored session continues the same backend conversation.
    */
   sessionToRestore?: SerializedSession;
+  /**
+   * How long a surface stays interactive for {@link Session.dispatchAction}.
+   *
+   * - `'turn'` (default): only the surfaces of the active turn resolve; surfaces
+   *   of earlier turns are read-only.
+   * - `'session'`: a surface resolves from the turn that created it until a later
+   *   `deleteSurface` removes it, as in A2-UI v1.0, where a surface lives for the
+   *   renderer's lifetime. Use it when one session hosts several long-lived
+   *   surfaces, such as a header that stays while the page below it changes.
+   */
+  surfaceScope?: 'turn' | 'session';
 }
 
 /**
@@ -159,8 +170,8 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * streaming.
    *
    * An {@link A2uiClientMessage} is unwrapped to its `userAction`: the session
-   * recovers the dispatching component's discriminant from the active turn's
-   * surfaces, validates the action payload against the component's contract
+   * recovers the dispatching component's discriminant from the surfaces in
+   * {@link SessionConfig.surfaceScope} (the active turn's by default), validates the action payload against the component's contract
    * internally, and — on success — POSTs the action to the converse endpoint.
    *
    * FIRE-AND-FORGET: the returned Promise ALWAYS resolves and NEVER rejects, so
@@ -548,8 +559,9 @@ export function createSession<TContracts extends ContractsSchema>(
 
   /**
    * Recovers the PascalCase `component` discriminant of the dispatching node by
-   * routing `(surfaceId, sourceComponentId)` through the active turn's
-   * node-identity registry (derived from its surfaces). Returns `undefined`
+   * routing `(surfaceId, sourceComponentId)` through the node-identity registry
+   * of the active turn, or of the whole session under the `'session'`
+   * {@link SessionConfig.surfaceScope}. Returns `undefined`
    * when there is no active turn or the node resolves to no component.
    */
   function recoverDiscriminant(surfaceId: string, sourceComponentId: string): string | undefined {
@@ -561,7 +573,13 @@ export function createSession<TContracts extends ContractsSchema>(
     if (!activeTurn) {
       return undefined;
     }
-    const registry = deriveNodeIdentityRegistry(activeTurn.response.activities);
+    // Under the session scope, the registry replays every turn in order, so a
+    // later turn's `deleteSurface` removes a surface an earlier turn created.
+    const activities =
+      config.surfaceScope === 'session'
+        ? turns.flatMap((turn) => turn.response.activities)
+        : activeTurn.response.activities;
+    const registry = deriveNodeIdentityRegistry(activities);
     return registry.get(surfaceId)?.get(sourceComponentId);
   }
 
