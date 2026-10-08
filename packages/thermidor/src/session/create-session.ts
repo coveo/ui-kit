@@ -396,13 +396,17 @@ export function createSession<TContracts extends ContractsSchema>(
     });
   }
 
-  async function executeStream(turnId: string, request: CommerceRequestModel): Promise<void> {
+  /** Takes a builder so a throwing context provider fails the turn inside the `try`. */
+  async function executeStream(
+    turnId: string,
+    buildRequest: () => CommerceRequestModel
+  ): Promise<void> {
     const abortController = new AbortController();
     activeAbortController = abortController;
 
     try {
       const result = await client.call(
-        request,
+        buildRequest(),
         {
           organizationId: config.organizationId,
           accessToken: config.accessToken,
@@ -482,7 +486,7 @@ export function createSession<TContracts extends ContractsSchema>(
     const turnId = generateId();
     openTurn(turnId, {prompt});
 
-    await executeStream(turnId, buildConversationRequest(prompt ?? ''));
+    await executeStream(turnId, () => buildConversationRequest(prompt ?? ''));
   }
 
   /**
@@ -539,7 +543,7 @@ export function createSession<TContracts extends ContractsSchema>(
       context: recovered.context,
     };
 
-    await executeStream(activeTurnId, buildActionRequest(a2uiAction));
+    await executeStream(activeTurnId, () => buildActionRequest(a2uiAction));
   }
 
   /**
@@ -623,7 +627,7 @@ export function createSession<TContracts extends ContractsSchema>(
     }));
     store.setState((current) => ({...current, activeTurnId: turnId}));
 
-    void executeStream(turnId, buildConversationRequest(turn.input.prompt ?? ''));
+    void executeStream(turnId, () => buildConversationRequest(turn.input.prompt ?? ''));
   }
 
   function serialize(): SerializedSession {
