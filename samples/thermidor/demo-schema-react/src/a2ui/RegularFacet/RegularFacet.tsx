@@ -2,6 +2,7 @@ import {useCallback} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {RegularFacetAction} from '@coveo/thermidor-schema';
 import {RegularFacetPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {FacetSearchMoreMatches} from '../FacetSearchMoreMatches/FacetSearchMoreMatches.js';
 import {SearchIcon} from '../icons/index.js';
 import {useOptimisticFacetSearch} from '../use-optimistic-facet-search.js';
 import styles from './RegularFacet.module.css';
@@ -153,13 +154,11 @@ export const RegularFacet = createReactComponent(
               )}
             </ul>
             {facetSearch.canShowMoreResults && (
-              <button
-                type="button"
-                className={styles.clearButton}
-                onClick={handleShowMoreSearchResults}
-              >
-                Show more
-              </button>
+              <FacetSearchMoreMatches
+                query={facetSearch.query ?? ''}
+                testId={`facet-search-show-more-${props.field}`}
+                onShowMore={handleShowMoreSearchResults}
+              />
             )}
           </>
         ) : (
