@@ -61,7 +61,7 @@ describe('SearchResultsPage', () => {
       {
         response: {
           surfaces: [
-            {surfaceId: 'agent-answer', rootComponentType: 'SearchOptions'},
+            {surfaceId: 'agent-answer', rootComponentType: 'NextActionsBar'},
             {surfaceId: 'ui-commerce-search', rootComponentType: 'CommerceSearch'},
           ],
           a2uiMessages: [

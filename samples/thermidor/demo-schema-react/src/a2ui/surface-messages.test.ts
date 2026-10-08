@@ -10,7 +10,7 @@ const FIRST_SEARCH = 'ui-6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b';
 const SECOND_SEARCH = 'ui-9b2f1c3d-4e5f-4a6b-8c7d-0e1f2a3b4c5d';
 
 const SURFACES = [
-  {surfaceId: AGENT_SURFACE, rootComponentType: 'SearchOptions'},
+  {surfaceId: AGENT_SURFACE, rootComponentType: 'NextActionsBar'},
   {surfaceId: FIRST_SEARCH, rootComponentType: 'CommerceSearch'},
   {surfaceId: SECOND_SEARCH, rootComponentType: 'CommerceSearch'},
 ];

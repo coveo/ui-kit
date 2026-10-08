@@ -282,7 +282,7 @@ describe('AgentResponseBlock', () => {
           response={makeResponse({
             agent: {messages: [{content: 'Answer', role: 'assistant'}], reasoningSteps: []},
             surfaces: [
-              {surfaceId: agentSurfaceId, rootComponentType: 'SearchOptions'},
+              {surfaceId: agentSurfaceId, rootComponentType: 'NextActionsBar'},
               {surfaceId: searchSurfaceId, rootComponentType: 'CommerceSearch'},
             ],
             a2uiMessages: [

@@ -77,7 +77,7 @@ describe('component state contracts', () => {
       ProductSchema.safeParse({
         permanentid: 'p1',
         ec_name: 'Trail shoes',
-        ec_rating: 6,
+        ec_rating: -1,
         additionalFields: {},
       }).success
     ).toBe(false);

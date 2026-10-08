@@ -1,21 +1,14 @@
 import {createContext, useContext, useRef, type PropsWithChildren} from 'react';
 import {createSession, type NavigatorContext, type Session} from '@coveo/thermidor';
 import {ComponentContractsSchema} from '@coveo/thermidor-schema/zod3';
-import {SearchOptionsSchema} from '../a2ui/SearchOptions/search-options-contract.js';
 import {getSampleConfiguration} from '../env.js';
 
 /**
  * The concrete contract this sample injects into the runtime. `@coveo/thermidor`
  * is decoupled from any specific contract package; the sample supplies the Coveo
- * `ComponentContractsSchema` so the session validates against it, plus the
- * demo-local `SearchOptions` contract the schema does not publish yet (without it,
- * `selectSearchOption` would be withheld as an action of an unknown component).
+ * `ComponentContractsSchema` so the session validates against it.
  */
-export const demoContracts = {
-  options: [...ComponentContractsSchema.options, SearchOptionsSchema],
-};
-
-type DemoSession = Session<typeof demoContracts>;
+type DemoSession = Session<typeof ComponentContractsSchema>;
 
 const SessionContext = createContext<DemoSession | null>(null);
 
@@ -39,7 +32,7 @@ function createThermidorSession(): DemoSession {
     getSampleConfiguration();
 
   return createSession({
-    contracts: demoContracts,
+    contracts: ComponentContractsSchema,
     organizationId,
     accessToken,
     endpoint,

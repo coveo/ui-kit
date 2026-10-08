@@ -167,7 +167,10 @@ describe('AppShell', () => {
       messages: [{content: 'Here are a few directions.', role: 'assistant'}],
       reasoningSteps: [{type: 'reasoning' as const, content: 'thinking'}],
     };
-    const agentSurface = makeSurface('agent-1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed', 'SearchOptions');
+    const agentSurface = makeSurface(
+      'agent-1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed',
+      'NextActionsBar'
+    );
 
     const {rerender} = render(<AppShell />);
     act(() => {

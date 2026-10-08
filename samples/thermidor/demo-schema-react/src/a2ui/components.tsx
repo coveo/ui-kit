@@ -18,7 +18,6 @@ import {CommerceSearch} from './CommerceSearch/CommerceSearch.js';
 import {LayoutStack} from './LayoutStack/LayoutStack.js';
 import {QuerySummary} from './QuerySummary/QuerySummary.js';
 import {PageSize} from './PageSize/PageSize.js';
-import {SearchOptions} from './SearchOptions/SearchOptions.js';
 
 const thermidorComponents = [
   ProductCarousel,
@@ -38,7 +37,6 @@ const thermidorComponents = [
   LayoutStack,
   QuerySummary,
   PageSize,
-  SearchOptions,
 ];
 
 export function createThermidorCatalog() {
