@@ -2,6 +2,7 @@
 /* eslint-disable no-import-assign */
 // @ts-ignore
 import QuanticStandaloneSearchBox from 'c/quanticStandaloneSearchBox';
+import searchBoxPlaceholderLabel from '@salesforce/label/c.quantic_SearchBoxPlaceholder';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 import {CurrentPageReference} from 'lightning/navigation';
 import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
@@ -125,10 +126,41 @@ describe('c-quantic-standalone-search-box', () => {
       expect(input).not.toBeNull();
       expect(input.withoutSubmitButton).toBe(false);
       expect(input.textarea).toBe(false);
-      expect(input.placeholder).toBe(null);
+      expect(input.placeholder).toBe(searchBoxPlaceholderLabel);
       expect(input.inputValue).toBe('');
       expect(input.recentQueries).toBeUndefined();
       expect(input.maxNumberOfSuggestions).toBe(7);
+    });
+  });
+
+  describe.each([null, undefined])(
+    'when the placeholder property receives the value %p',
+    (emptyPlaceholder) => {
+      it('should pass the default placeholder label to the quantic-search-box-input component', async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          placeholder: emptyPlaceholder,
+        });
+        await flushPromises();
+
+        const input = element.shadowRoot.querySelector(
+          selectors.searchBoxInput
+        );
+        expect(input.placeholder).toBe(searchBoxPlaceholderLabel);
+      });
+    }
+  );
+
+  describe('when the placeholder property receives an empty string', () => {
+    it('should pass an empty placeholder to the quantic-search-box-input component', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        placeholder: '',
+      });
+      await flushPromises();
+
+      const input = element.shadowRoot.querySelector(selectors.searchBoxInput);
+      expect(input.placeholder).toBe('');
     });
   });
 
