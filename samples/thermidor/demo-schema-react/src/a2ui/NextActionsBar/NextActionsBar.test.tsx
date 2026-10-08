@@ -46,7 +46,10 @@ describe('NextActionsBar', () => {
 
     await waitFor(() => expect(screen.queryByText('trail running shoes')).not.toBeNull());
     fireEvent.click(screen.getByRole('button', {name: 'Compare the top two'}));
-    fireEvent.click(screen.getByRole('button', {name: 'trail running shoes'}));
+    // The bar is disabled while its own dispatch is outstanding.
+    const search = screen.getByRole('button', {name: 'trail running shoes'}) as HTMLButtonElement;
+    await waitFor(() => expect(search.disabled).toBe(false));
+    fireEvent.click(search);
 
     await waitFor(() => expect(actions).toHaveLength(2));
     expect(actions.map(({name, context}) => ({name, context}))).toEqual([
