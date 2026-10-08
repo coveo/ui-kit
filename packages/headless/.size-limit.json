@@ -1,65 +1,44 @@
 [
   {
-    "name": "search",
-    "path": "dist/esm/index.js",
-    "limit": "160 kB"
-  },
-  {
-    "name": "search: engine + search box",
+    "name": "@coveo/headless { buildSearchEngine, buildSearchBox }",
     "path": "dist/esm/index.js",
     "import": "{ buildSearchEngine, buildSearchBox }",
     "limit": "140 kB"
   },
   {
-    "name": "commerce",
-    "path": "dist/esm/commerce.index.js",
-    "limit": "150 kB"
-  },
-  {
-    "name": "commerce: engine + product listing",
+    "name": "@coveo/headless/commerce { buildCommerceEngine, buildProductListing }",
     "path": "dist/esm/commerce.index.js",
     "import": "{ buildCommerceEngine, buildProductListing }",
     "limit": "145 kB"
   },
   {
-    "name": "insight",
-    "path": "dist/esm/insight.index.js",
-    "limit": "155 kB"
-  },
-  {
-    "name": "case-assist",
-    "path": "dist/esm/case-assist.index.js",
-    "limit": "125 kB"
-  },
-  {
-    "name": "recommendation",
-    "path": "dist/esm/recommendation.index.js",
-    "limit": "125 kB"
-  },
-  {
-    "name": "ssr",
-    "path": "dist/esm/ssr.index.js",
-    "limit": "160 kB"
-  },
-  {
-    "name": "ssr-commerce",
-    "path": "dist/esm/ssr-commerce.index.js",
-    "limit": "155 kB"
-  },
-  {
-    "name": "ssr-next",
-    "path": "dist/esm/ssr-next.index.js",
-    "limit": "160 kB"
-  },
-  {
-    "name": "ssr-commerce-next",
-    "path": "dist/esm/ssr-commerce-next.index.js",
-    "limit": "155 kB"
-  },
-  {
-    "name": "CDN search bundle",
+    "name": "@coveo/headless - CDN",
     "path": "cdn/headless.esm.js",
     "rolldown": false,
     "limit": "170 kB"
+  },
+  {
+    "name": "@coveo/headless/commerce - CDN",
+    "path": "cdn/commerce/headless.esm.js",
+    "rolldown": false,
+    "limit": "160 kB"
+  },
+  {
+    "name": "@coveo/headless/insight - CDN",
+    "path": "cdn/insight/headless.esm.js",
+    "rolldown": false,
+    "limit": "165 kB"
+  },
+  {
+    "name": "@coveo/headless/case-assist - CDN",
+    "path": "cdn/case-assist/headless.esm.js",
+    "rolldown": false,
+    "limit": "130 kB"
+  },
+  {
+    "name": "@coveo/headless/recommendation - CDN",
+    "path": "cdn/recommendation/headless.esm.js",
+    "rolldown": false,
+    "limit": "135 kB"
   }
 ]

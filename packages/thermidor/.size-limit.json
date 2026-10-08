@@ -1,7 +1,7 @@
 [
   {
-    "name": "ESM",
+    "name": "@coveo/thermidor",
     "path": "dist/index.js",
-    "limit": "7.6 kB"
+    "limit": "11 kB"
   }
 ]

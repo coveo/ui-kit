@@ -1,6 +1,6 @@
 [
   {
-    "name": "ESM",
+    "name": "@coveo/auth",
     "path": "dist/auth.esm.js",
     "limit": "1.2 kB"
   }
