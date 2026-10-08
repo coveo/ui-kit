@@ -1,0 +1,13 @@
+[
+  {
+    "name": "ESM (browser)",
+    "path": "dist/browser.mjs",
+    "limit": "16 kB"
+  },
+  {
+    "name": "browser script (coveoua.browser.js)",
+    "path": "dist/coveoua.browser.js",
+    "rolldown": false,
+    "limit": "21 kB"
+  }
+]

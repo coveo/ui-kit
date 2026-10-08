@@ -195,6 +195,11 @@
       "dependsOn": ["^build"],
       "outputs": ["docs/**", "!docs/adr/**"]
     },
+    "size": {
+      "dependsOn": ["build"],
+      "inputs": [".size-limit.json", "package.json"],
+      "outputs": []
+    },
     "publint": {
       "dependsOn": ["build"],
       "outputs": []

@@ -95,7 +95,8 @@
     "build:typedoc:recommendation": "typedoc --json ./temp/recommendation.json --tsconfig tsconfig.typedoc.json --options typedoc-configs/recommendation.typedoc.json",
     "build:typedoc:ssr": "typedoc --json ./temp/ssr.json --tsconfig tsconfig.typedoc.json --options typedoc-configs/ssr.typedoc.json",
     "build:typedoc:ssr-commerce": "typedoc --json ./temp/ssr-commerce.json --tsconfig tsconfig.typedoc.json --options typedoc-configs/ssr-commerce.typedoc.json",
-    "serve:typedoc": "live-server ./docs"
+    "serve:typedoc": "live-server ./docs",
+    "size": "size-limit"
   },
   "dependencies": {
     "@ag-ui/client": "catalog:",
@@ -116,12 +117,14 @@
   },
   "devDependencies": {
     "@coveo/documentation": "workspace:*",
+    "@size-limit/preset-small-lib": "catalog:",
     "esbuild-plugin-alias": "0.2.1",
     "esbuild-plugin-umd-wrapper": "catalog:",
     "jsdom": "catalog:",
     "live-server": "catalog:",
     "node-fetch": "catalog:",
     "publint": "catalog:",
+    "size-limit": "catalog:",
     "typedoc": "catalog:",
     "vitest": "catalog:"
   },

@@ -364,6 +364,27 @@ jobs:
         with:
           affected-tasks: ${{ needs.affected.outputs.tasks }}
           tasks: publint
+  size-limit:
+    name: 'Check package size limits'
+    needs: [affected, build]
+    if: contains(needs.affected.outputs.tasks, '#size"')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 1
+          fetch-tags: false
+          filter: blob:none
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: size
   typedoc:
     name: 'Build typedoc'
     needs: [affected, build]

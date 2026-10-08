@@ -33,7 +33,8 @@
     "clean": "node ../../utils/ci/rm-rf.mjs dist/*",
     "build": "node ../../utils/ci/rm-rf.mjs dist cdn && tsc --outdir dist && tsc --outdir cdn --project tsconfig.cdn.json && node ./scripts/esbuild.js",
     "start": "node ./scripts/start.js",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "size": "size-limit"
   },
   "dependencies": {
     "@coveo/bueno": "workspace:*",
@@ -44,9 +45,11 @@
     "@coveo/platform-mock-api": "workspace:*",
     "@msw/playwright": "catalog:",
     "@playwright/test": "catalog:",
+    "@size-limit/preset-small-lib": "catalog:",
     "local-web-server": "catalog:",
     "msw": "catalog:",
     "publint": "catalog:",
+    "size-limit": "catalog:",
     "vite": "catalog:"
   },
   "engines": {
