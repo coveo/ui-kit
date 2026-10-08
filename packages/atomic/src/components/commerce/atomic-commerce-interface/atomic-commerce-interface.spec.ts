@@ -83,6 +83,7 @@ describe('atomic-commerce-interface', () => {
       iconAssetsPath?: string;
       language?: string; // TODO - (v4) KIT-4365: Remove.
       languageAssetsPath?: string;
+      localizeWithCountry?: boolean;
       logLevel?: LogLevel;
       mobileBreakpoint?: string;
       reflectStateInUrl?: boolean; // TODO - (v4) KIT-4823: Remove.
@@ -96,6 +97,7 @@ describe('atomic-commerce-interface', () => {
         icon-assets-path=${ifDefined(props.iconAssetsPath)}
         language=${ifDefined(props.language)}
         language-assets-path=${ifDefined(props.languageAssetsPath)}
+        ?localize-with-country=${props.localizeWithCountry}
         log-level=${ifDefined(props.logLevel)}
         reflect-state-in-url=${props.reflectStateInUrl}
         scroll-container=${ifDefined(props.scrollContainer)}
@@ -320,6 +322,18 @@ describe('atomic-commerce-interface', () => {
         await callTestedInitMethod(element);
 
         expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith('es');
+      });
+
+      it('should set the language and the country from the context state when #localizeWithCountry is true', async () => {
+        const onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
+        const element = await setupElement({localizeWithCountry: true});
+        vi.mocked(buildContext).mockReturnValue(
+          buildFakeContext({state: {language: 'fr', country: 'CA'}})
+        );
+
+        await callTestedInitMethod(element);
+
+        expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith('fr-CA');
       });
 
       // TODO - (v4) KIT-4365: Remove this test in v4
@@ -1054,6 +1068,26 @@ describe('atomic-commerce-interface', () => {
         expect(onLanguageChangeSpy).not.toHaveBeenCalled();
       });
 
+      describe('when #localizeWithCountry is true', () => {
+        beforeEach(async () => {
+          element.localizeWithCountry = true;
+          await element.updateComplete;
+          onLanguageChangeSpy.mockClear();
+        });
+
+        it('should call InterfaceController.onLanguageChange with the language and the country', () => {
+          element.updateLocale('fr', 'CA');
+
+          expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith('fr-CA');
+        });
+
+        it('should call InterfaceController.onLanguageChange with the context language when only the country is provided', () => {
+          element.updateLocale(undefined, 'CA');
+
+          expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith('en-CA');
+        });
+      });
+
       it('should dispatch a setContext action with the new language when it is defined and different from the language value in the context', async () => {
         element.updateLocale('fr');
 
@@ -1183,7 +1217,7 @@ describe('atomic-commerce-interface', () => {
         );
       });
 
-      it('should call InterfaceController.onLanguageChange with no argument', async () => {
+      it('should call InterfaceController.onLanguageChange with the new language', async () => {
         const onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
         const element = await setupElement({language: 'en'});
         await element.initialize(commerceEngineConfig);
@@ -1193,8 +1227,32 @@ describe('atomic-commerce-interface', () => {
         element.language = 'fr';
         await element.updateComplete;
 
-        expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith();
+        expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith('fr');
       });
+    });
+  });
+
+  describe('when the localize-with-country attribute changes', () => {
+    it('should do nothing when the context is not defined', async () => {
+      const onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
+      const element = await setupElement();
+
+      element.localizeWithCountry = true;
+      await element.updateComplete;
+
+      expect(onLanguageChangeSpy).not.toHaveBeenCalled();
+    });
+
+    it('should call InterfaceController.onLanguageChange with the context language and country', async () => {
+      const onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
+      const element = await setupElement();
+      await element.initializeWithEngine(buildFakeCommerceEngine());
+      onLanguageChangeSpy.mockClear();
+
+      element.localizeWithCountry = true;
+      await element.updateComplete;
+
+      expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith('en-US');
     });
   });
 
