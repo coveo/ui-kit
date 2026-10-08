@@ -111,6 +111,19 @@ describe('Pagination', () => {
     expect(screen.queryByLabelText('Page 1')).toBeNull();
     expect(screen.queryByLabelText('Page 41')).toBeNull();
   });
+
+  it('keeps five page buttons when the current page is the last page', async () => {
+    mountPagination({page: 40, pageSize: 20, totalEntries: 820, totalPages: 41});
+
+    await waitFor(() => expect(screen.getByLabelText('Page 41')).toBeDefined());
+    expect(screen.getAllByRole('button', {name: /^Page \d+$/}).map((b) => b.textContent)).toEqual([
+      '37',
+      '38',
+      '39',
+      '40',
+      '41',
+    ]);
+  });
 });
 
 describe('Sort', () => {

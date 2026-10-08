@@ -2,7 +2,6 @@ import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {PaginationAction} from '@coveo/thermidor-schema';
 import {PaginationPropsSchema} from '@coveo/thermidor-schema/zod3';
 import styles from './Pagination.module.css';
-import {getCurrentPagesRange} from './pager-utils.js';
 
 const NUMBER_OF_PAGES = 5;
 
@@ -27,6 +26,15 @@ export const Pagination = createReactComponent(
       return null;
     }
 
+    const firstPage = Math.max(
+      0,
+      Math.min(page - Math.floor(NUMBER_OF_PAGES / 2), totalPages - NUMBER_OF_PAGES)
+    );
+    const pages = Array.from(
+      {length: Math.min(NUMBER_OF_PAGES, totalPages)},
+      (_, i) => firstPage + i
+    );
+
     const handlePageChange = (newPage: number) => {
       const selectPageAction: PaginationAction = {
         event: {name: 'selectPage', context: {page: newPage}},
@@ -47,7 +55,7 @@ export const Pagination = createReactComponent(
         </button>
 
         <div className={styles.pages}>
-          {getCurrentPagesRange(page, NUMBER_OF_PAGES, totalPages - 1).map((i) => (
+          {pages.map((i) => (
             <button
               key={i}
               className={`${styles.pageButton} ${i === page ? styles.active : ''}`}
