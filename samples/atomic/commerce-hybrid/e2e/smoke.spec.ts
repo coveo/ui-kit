@@ -15,13 +15,63 @@ function isAnalyticsEvent(type: string) {
     request.url().includes('/events/v1') && (request.postData() ?? '').includes(`"${type}"`);
 }
 
-test('search page stays standard Atomic, extended with a Headless add-to-cart', async ({page}) => {
+test('search page keeps Atomic, except for the Headless search box', async ({page}) => {
   await page.goto('/search.html');
 
-  await expect(page.locator('atomic-commerce-search-box')).toBeVisible();
+  await expect(page.locator('headless-search-box input')).toBeEnabled();
+  await expect(page.locator('atomic-commerce-search-box')).toHaveCount(0);
   await expect(page.locator('atomic-commerce-facets')).toBeVisible();
   await expect(page.locator('atomic-commerce-product-list')).toBeVisible();
   await expect(page.locator('atomic-commerce-pager')).toBeVisible();
+});
+
+test('the Headless search box drives the Atomic components and the URL', async ({page}) => {
+  await page.goto('/search.html');
+
+  const input = page.locator('headless-search-box input');
+  await expect(input).toBeEnabled();
+  await input.fill('shoes');
+  await input.press('Enter');
+
+  // The engine is the only link between the two: the query reaches the Atomic
+  // query summary and the interface's URL manager.
+  await expect(page.locator('atomic-commerce-query-summary')).toContainText('shoes');
+  await expect(page).toHaveURL(/#.*q=shoes/);
+});
+
+test('selecting a suggestion runs that query', async ({page}) => {
+  await page.goto('/search.html');
+
+  const searchBox = page.locator('headless-search-box');
+  const input = searchBox.locator('input');
+  await expect(input).toBeEnabled();
+  await input.fill('co');
+
+  const suggestion = searchBox.getByRole('button', {name: 'coveo platform'});
+  await expect(suggestion).toBeVisible();
+  await suggestion.click();
+
+  await expect(input).toHaveValue('coveo platform');
+  await expect(suggestion).toBeHidden();
+  await expect(page).toHaveURL(/#.*q=coveo%20platform/);
+});
+
+test('the Atomic standalone search box hands off to the Headless one', async ({page}) => {
+  await page.goto('/index.html');
+
+  const standalone = page
+    .locator('atomic-commerce-search-box')
+    .getByRole('textbox', {name: 'Search field with suggestions'});
+  await standalone.fill('shoes');
+  await standalone.press('Enter');
+
+  await page.waitForURL(/search\.html/);
+  await expect(page.locator('headless-search-box input')).toHaveValue('shoes');
+  await expect(page.locator('atomic-commerce-query-summary')).toContainText('shoes');
+});
+
+test('the add-to-cart button inside Atomic cards fills the cart', async ({page}) => {
+  await page.goto('/search.html');
 
   const miniCart = page.getByRole('link', {name: /^Cart, /});
   await expect(miniCart).toHaveAccessibleName('Cart, 0 items');

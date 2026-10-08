@@ -174,11 +174,78 @@ body {
 }
 
 /*
- * Styles for the Headless pieces that live in the page's light DOM: the
- * mini-cart, the cart page, and the product page. (The add-to-cart button lives
- * inside Atomic product cards, in shadow DOM, so it carries its own styles.)
- * Atomic's theme variables are reused so they sit naturally next to Atomic.
+ * Styles for the Headless pieces that live in the page's light DOM: the search
+ * box, the mini-cart, the cart page, and the product page. (The add-to-cart
+ * button lives inside Atomic product cards, in shadow DOM, so it carries its own
+ * styles.) Atomic's theme variables are reused so they sit naturally next to
+ * Atomic.
  */
+headless-search-box {
+  position: relative;
+  display: block;
+  font-family: var(--atomic-font-family);
+}
+
+headless-search-box form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+headless-search-box input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--atomic-neutral);
+  border-radius: var(--atomic-border-radius-md);
+  font: inherit;
+}
+
+headless-search-box form button {
+  padding: 0 1.1rem;
+  border: none;
+  border-radius: var(--atomic-border-radius-md);
+  background: var(--atomic-primary);
+  color: var(--atomic-on-primary);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* The suggestions show only while the search box has focus and has some. */
+headless-search-box ul {
+  position: absolute;
+  z-index: 10;
+  inset-inline: 0;
+  top: calc(100% + 0.25rem);
+  display: none;
+  margin: 0;
+  padding: 0.25rem;
+  border: 1px solid var(--atomic-neutral);
+  border-radius: var(--atomic-border-radius-md);
+  background: var(--atomic-background);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
+  list-style: none;
+}
+
+headless-search-box:focus-within ul:not(:empty) {
+  display: block;
+}
+
+headless-search-box li button {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: none;
+  border-radius: var(--atomic-border-radius);
+  background: none;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+headless-search-box li button:hover {
+  background: var(--atomic-neutral-light);
+}
+
 .mini-cart__link {
   display: inline-flex;
   align-items: center;

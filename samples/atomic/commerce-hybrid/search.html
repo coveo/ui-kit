@@ -24,15 +24,16 @@
 
     <main id="maincontent">
       <p class="page-note">
-        A standard Atomic search page. The only Headless piece is the add-to-cart button inside each
-        product card: Atomic has no cart component, so the storefront is extended rather than
-        anything being replaced.
+        Everything on this page is Atomic except two Headless pieces: the search box, a minimal
+        replacement for <code>atomic-commerce-search-box</code>, and the add-to-cart button inside
+        each product card. All of them share one commerce engine.
       </p>
 
       <atomic-commerce-interface type="search">
         <atomic-commerce-layout>
           <atomic-layout-section section="search">
-            <atomic-commerce-search-box></atomic-commerce-search-box>
+            <!-- Headless: replaces atomic-commerce-search-box. -->
+            <headless-search-box></headless-search-box>
           </atomic-layout-section>
 
           <atomic-layout-section section="facets">

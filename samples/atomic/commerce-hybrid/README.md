@@ -1,13 +1,13 @@
 # Atomic + Headless Hybrid Commerce Sample (TypeScript + Vite)
 
-An [`@coveo/atomic`](https://docs.coveo.com/en/atomic/latest/) commerce storefront extended with a cart and a product page built with [`@coveo/headless/commerce`](https://docs.coveo.com/en/headless/latest/) controllers. It runs against the public `barca` sample commerce organization with no configuration required.
+An [`@coveo/atomic`](https://docs.coveo.com/en/atomic/latest/) commerce storefront in which the search box is replaced by a minimal one built with [`@coveo/headless/commerce`](https://docs.coveo.com/en/headless/latest/), and which is extended with a Headless cart and product page. It runs against the public `barca` sample commerce organization with no configuration required.
 
 Choosing Atomic is a two-way door. You do not have to pick Atomic **or** Headless: start with Atomic, and use Headless only for what Atomic does not cover, keeping everything else. This sample is the working proof of that.
 
 ## What it shows
 
-- **Search** (`search.html`): a standard Atomic search page. Each product card carries an add-to-cart button built with Headless, living _inside_ the Atomic card.
-- **Home** (`index.html`): a standalone Atomic search box and Atomic recommendation lists, with the same add-to-cart button in each card.
+- **Search** (`search.html`): a standard Atomic search page, except for the search box: a minimal custom element driven by the Headless `SearchBox` controller. Each product card also carries an add-to-cart button built with Headless, living _inside_ the Atomic card.
+- **Home** (`index.html`): a standalone **Atomic** search box that hands its query over to the Headless one on the search page, and Atomic recommendation lists with the same add-to-cart button in each card.
 - **Product page** (`product.html`): the product view event, badges, and add-to-cart are Headless; the "viewed together" recommendations are a standard Atomic list scoped to the product.
 - **Cart** (`cart.html`): the cart is Headless (quantities, removal, placing the order); the cart recommendations below it are a standard Atomic list that refreshes when the cart changes.
 - A **mini-cart** in every page header, showing the cart count from the same engine.
@@ -21,14 +21,16 @@ Work down this list and stop at the first option that solves the problem. Each s
 | Different look, wording, behavior, or layout of an Atomic component                   | **Customize it**: attributes, `::part()`, CSS custom properties, slots, product templates  | Product templates; `href-template` on `atomic-product-link` |
 | Custom UI _around_ an Atomic component: a modal, a drawer, a custom trigger           | **Compose around it**: wrap the component, leave it untouched                              | Not shown                                                   |
 | A capability Atomic has no component for                                              | **Extend with Headless**: build that piece on the same engine, keep every Atomic component | Cart, mini-cart, product view, badges                       |
-| An existing Atomic component that cannot express a behavior you need                  | **Replace that component** with Headless controllers, keep the rest of Atomic              | Not shown; see below                                        |
+| An existing Atomic component that cannot express a behavior you need                  | **Replace that component** with Headless controllers, keep the rest of Atomic              | The search box on the search page                           |
 | Full control of the entire experience, or an existing design system to integrate with | Use Headless for everything                                                                | See the [`headless/`](../../headless/) samples              |
 
 Abandoning Atomic because one piece fell short is the outcome this sample exists to prevent.
 
-### Before replacing a component
+### The replaced search box
 
-Most "Atomic can't do this" requests are customizations. For example, `atomic-commerce-search-box` accepts custom suggestion providers through the public `dispatchSearchBoxSuggestionsEvent`, so extra suggestion sources do not require replacing the box. Replacing a component is warranted when its structure or interaction model is the problem: a dropdown layout beyond its two panels, a different keyboard model, or different ARIA semantics. When you do replace one, the [`headless/commerce-vite`](../../headless/commerce-vite/) and [`headless/commerce-react`](../../headless/commerce-react/) samples show the controllers in use.
+The search page uses `headless-search-box` (`src/components/headless-search-box.ts`) instead of `atomic-commerce-search-box`. It is deliberately minimal: an input, a submit button, and query suggestions rendered in its own markup, in about 80 lines on top of the Headless `SearchBox` controller. Treat it as the starting point for the box your storefront needs (recent queries, instant products, your own dropdown layout), not as a finished component.
+
+Before replacing, check whether customizing is enough: `atomic-commerce-search-box` accepts custom suggestion providers through the public `dispatchSearchBoxSuggestionsEvent`, so an extra suggestion source alone does not require a replacement.
 
 ## Why the cart and the product page
 
@@ -41,8 +43,8 @@ Headless provides both through the `Cart`, `ProductView`, and `ProductEnrichment
 
 ## Technology stack
 
-- **@coveo/atomic**: Coveo's web-component library, for search and recommendations
-- **@coveo/headless/commerce**: the commerce engine, and the controllers behind the cart and product page
+- **@coveo/atomic**: Coveo's web-component library, for results, facets, and recommendations
+- **@coveo/headless/commerce**: the commerce engine, and the controllers behind the search box, cart, and product page
 - **TypeScript** and **Vite**: plain custom elements, no framework
 - **Playwright**: end-to-end tests
 
@@ -64,6 +66,7 @@ The engine is the entire integration surface. Every Atomic interface on a page i
 
 - `src/engine.ts` builds one engine per page, bound to the page's catalog `view.url`, with the cart restored from the store.
 - `src/page.ts` initializes every Atomic interface on the page with that engine and binds the mini-cart.
+- `src/components/headless-search-box.ts` replaces the Atomic search box; `src/search-page.ts` binds it.
 - `src/store-cart.ts` stands in for your platform's cart. `src/cart.ts` is the seam between it and Coveo.
 - `src/components/add-to-cart-button.ts` works inside Atomic product cards and on the product page.
 - `src/components/cart-view.ts`, `mini-cart.ts`, and `product-badges.ts` are the other Headless pieces.
@@ -71,7 +74,15 @@ The engine is the entire integration surface. Every Atomic interface on a page i
 
 ## Integration considerations
 
-The things that actually matter when extending Atomic with Headless, and what this sample does about each.
+The things that actually matter when mixing Atomic and Headless, and what this sample does about each.
+
+### Replacing the search box
+
+- **Order of initialization**: `atomic-commerce-interface` installs its URL manager as the last step of `initializeWithEngine()`. A query submitted before that promise resolves runs, but never reaches the address bar, so `src/search-page.ts` binds the box only afterwards. Its input stays disabled until then.
+- **The query changes without typing**: it is restored from the URL, changed by the back button, or handed over by the Atomic standalone search box on the home page. Rendering the input from the controller's `state.value` on every change covers all three.
+- **Analytics**: nothing to do. The box dispatches into the engine that `initializeWithEngine()` configured, so its searches are reported like Atomic's own.
+- **Styling**: the box lives in the page's light DOM and is styled by `src/style.css` with Atomic's theme variables. The `::part()` hooks of `atomic-commerce-search-box` no longer apply.
+- **Accessibility**: the box is minimal on purpose, with no keyboard navigation of the suggestions and no ARIA combobox semantics. Add them before using it in production.
 
 ### The store owns the cart
 
