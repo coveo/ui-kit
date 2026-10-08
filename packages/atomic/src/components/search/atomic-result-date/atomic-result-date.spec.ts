@@ -1,9 +1,10 @@
 import type {Result} from '@coveo/headless';
 import dayjs from 'dayjs';
+import 'dayjs/locale/en-ca';
 import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicResult} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-result-fixture';
 import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
@@ -70,12 +71,6 @@ describe('atomic-result-date', () => {
             loadingFlags: [],
           },
         };
-        // Mock interfaceElement with language property
-        bindings.interfaceElement = {
-          ...bindings.interfaceElement,
-          language: 'en',
-          // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- mock interface element
-        } as any;
         return bindings;
       },
     });
@@ -188,8 +183,7 @@ describe('atomic-result-date', () => {
         result: resultWithYesterday,
       });
 
-      expect(element).toBeDefined();
-      expect(element.textContent?.trim()).toContain('Yesterday');
+      expect(element.textContent?.trim()).toBe('Yesterday');
     });
 
     it('should render relative time for today date', async () => {
@@ -207,8 +201,7 @@ describe('atomic-result-date', () => {
         result: resultWithToday,
       });
 
-      expect(element).toBeDefined();
-      expect(element.textContent?.trim()).toContain('Today');
+      expect(element.textContent?.trim()).toBe('Today');
     });
 
     it('should render relative time for tomorrow date', async () => {
@@ -226,8 +219,7 @@ describe('atomic-result-date', () => {
         result: resultWithTomorrow,
       });
 
-      expect(element).toBeDefined();
-      expect(element.textContent?.trim()).toContain('Tomorrow');
+      expect(element.textContent?.trim()).toBe('Tomorrow');
     });
 
     it('should use format for older dates', async () => {
@@ -245,10 +237,88 @@ describe('atomic-result-date', () => {
         result: resultWithOldDate,
       });
 
-      expect(element).toBeDefined();
-      // For dates older than a week, it falls back to sameElse format
-      // The rendered date includes the date in some format
-      expect(element.textContent?.trim()).toMatch(/2020|01|15/);
+      expect(element.textContent?.trim()).toBe('15/1/2020');
+    });
+
+    it('should render the weekday for a date in the next 2 to 6 days', async () => {
+      const date = dayjs().add(3, 'day');
+      const resultInThreeDays = buildFakeResult({
+        raw: {
+          customDate: date.toISOString(),
+          urihash: '',
+        },
+      });
+
+      const element = await renderComponent({
+        field: 'customDate',
+        relativeTime: true,
+        result: resultInThreeDays,
+      });
+
+      expect(element.textContent?.trim()).toBe(date.format('dddd'));
+    });
+
+    it('should render the weekday for a date in the last 2 to 6 days', async () => {
+      const date = dayjs().subtract(3, 'day');
+      const resultThreeDaysAgo = buildFakeResult({
+        raw: {
+          customDate: date.toISOString(),
+          urihash: '',
+        },
+      });
+
+      const element = await renderComponent({
+        field: 'customDate',
+        relativeTime: true,
+        result: resultThreeDaysAgo,
+      });
+
+      expect(element.textContent?.trim()).toBe(`Last ${date.format('dddd')}`);
+    });
+
+    describe('when the dayjs locale has a region', () => {
+      beforeEach(() => {
+        dayjs.locale('en-ca');
+      });
+
+      afterEach(() => {
+        dayjs.locale('en');
+      });
+
+      it('should render the calendar translations', async () => {
+        const resultWithToday = buildFakeResult({
+          raw: {
+            customDate: dayjs().toISOString(),
+            urihash: '',
+          },
+        });
+
+        const element = await renderComponent({
+          field: 'customDate',
+          relativeTime: true,
+          result: resultWithToday,
+        });
+
+        expect(element.textContent?.trim()).toBe('Today');
+      });
+
+      it('should use format for older dates', async () => {
+        const resultWithOldDate = buildFakeResult({
+          raw: {
+            customDate: '2020/01/15@10:00:00',
+            urihash: '',
+          },
+        });
+
+        const element = await renderComponent({
+          field: 'customDate',
+          format: 'YYYY-MM-DD',
+          relativeTime: true,
+          result: resultWithOldDate,
+        });
+
+        expect(element.textContent?.trim()).toBe('2020-01-15');
+      });
     });
   });
 });

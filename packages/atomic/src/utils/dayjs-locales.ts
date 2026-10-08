@@ -3,22 +3,26 @@ import {locales} from '../generated/dayjs-locales-data';
 
 const warn = (language: string) => console.warn(`Cannot load dayjs locale file for "${language}"`);
 
-const resolveLanguage = (languageInput: string) => {
-  if (locales[languageInput]) {
-    return languageInput;
+const getCandidateLocales = (languageInput: string) => {
+  try {
+    const {language, script, region} = new Intl.Locale(languageInput);
+    return [
+      languageInput,
+      ...(region ? [`${language}-${region}`] : []),
+      ...(script ? [`${language}-${script}`] : []),
+      language,
+    ];
+  } catch {
+    return [languageInput, languageInput.split('-')[0]];
   }
-
-  if (languageInput.includes('-')) {
-    const regionlessLanguage = languageInput.split('-')[0];
-    if (locales[regionlessLanguage]) {
-      return regionlessLanguage;
-    }
-  }
-
-  return languageInput;
 };
 
-export function loadDayjsLocale(languageInput: string) {
+const resolveLanguage = (languageInput: string) =>
+  getCandidateLocales(languageInput)
+    .map((locale) => locale.toLowerCase())
+    .find((locale) => Object.hasOwn(locales, locale)) ?? languageInput;
+
+export async function loadDayjsLocale(languageInput: string) {
   const language = resolveLanguage(languageInput);
   if (!locales[language]) {
     warn(language);
@@ -26,8 +30,9 @@ export function loadDayjsLocale(languageInput: string) {
   }
 
   try {
-    locales[language]().then(() => dayjs.locale(language));
-  } catch (_) {
+    await locales[language]();
+    dayjs.locale(language);
+  } catch {
     warn(language);
   }
 }
