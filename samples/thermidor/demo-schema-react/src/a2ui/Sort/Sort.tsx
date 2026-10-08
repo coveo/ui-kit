@@ -11,12 +11,7 @@ const SORT_LABELS: Record<string, string> = {
   price_desc: 'Price (High to Low)',
 };
 
-/**
- * A2-UI component for the `sort` selector. The generic binder resolves `availableSorts` /
- * `appliedSort` from `SortPropsSchema`; selecting an option dispatches `selectSort`. The chosen
- * criterion is held on screen and the grid dims (`invalidates: ['results']`) until the producer
- * answers.
- */
+/** A2-UI component for the `sort` selector. */
 export const Sort = createReactComponent(
   {name: 'Sort', schema: SortPropsSchema},
   ({props, context}) => {

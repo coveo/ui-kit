@@ -7,12 +7,7 @@ import styles from './PageSize.module.css';
 
 const DEFAULT_PAGE_SIZE_OPTIONS = [12, 24, 48];
 
-/**
- * A2-UI component for the `page-size` selector: a "Products per page" dropdown. The generic binder
- * resolves `pageSize` from `PageSizePropsSchema`; the change handler dispatches `setPageSize`. The
- * chosen size is held on screen and the grid dims (`invalidates: ['results']`) until the producer
- * answers.
- */
+/** A2-UI component for the `page-size` selector. */
 export const PageSize = createReactComponent(
   {name: 'PageSize', schema: PageSizePropsSchema},
   ({props, context}) => {
@@ -25,9 +20,7 @@ export const PageSize = createReactComponent(
       }
     );
 
-    // Build the option set from both the producer's size (`props.pageSize`) and the held
-    // optimistic size: a non-default backend size (e.g. 96) must stay selectable while another
-    // size is in flight. `undefined` (first render, before the data model lands) is filtered out.
+    // The producer's size must stay selectable while another one is held.
     const currentPageSize = typeof pageSize === 'number' ? pageSize : undefined;
     const backendPageSize = typeof props.pageSize === 'number' ? props.pageSize : undefined;
     const options = [

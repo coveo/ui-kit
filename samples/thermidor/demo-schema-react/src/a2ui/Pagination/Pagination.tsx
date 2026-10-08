@@ -7,31 +7,22 @@ import styles from './Pagination.module.css';
 
 const NUMBER_OF_PAGES = 5;
 
-/**
- * A2-UI component for the `pagination` controls. The generic binder resolves `page` / `totalPages`
- * from `PaginationPropsSchema` (progressively — either may be undefined on an early render);
- * navigating dispatches `selectPage`. The target page is held on screen and the grid dims
- * (`invalidates: ['results']`) until the producer answers.
- */
+/** A2-UI component for the `pagination` controls. */
 export const Pagination = createReactComponent(
   {name: 'Pagination', schema: PaginationPropsSchema},
   ({props, context}) => {
     const {totalPages} = props;
 
-    // Before the early returns so hook order stays stable across renders.
     const {value: heldPage, dispatchOptimistic} = useOptimisticValue(
       props.page,
       (action: PaginationAction) => {
         context.dispatchAction(action);
       }
     );
-    // `results` is stale while any result-rebuilding gesture is outstanding — including a sibling
-    // `setPageSize` that changes `totalPages`. We freeze navigation then: the on-screen `totalPages`
-    // is already behind, so navigating against it would send an out-of-range `selectPage`.
+    // Frozen while stale: a sibling `setPageSize` may change `totalPages` under us.
     const resultsStale = useStale('results');
 
-    // Until both bindings resolve to numbers, don't render — an unresolved `totalPages` would slip
-    // past the `<= 1` guard and dispatch a NaN `selectPage`.
+    // An unresolved `totalPages` would slip past the `<= 1` guard and send a NaN `selectPage`.
     if (heldPage === undefined || totalPages === undefined) {
       return null;
     }
@@ -40,9 +31,7 @@ export const Pagination = createReactComponent(
       return null;
     }
 
-    // A concurrent gesture can shrink the producer's `totalPages` while `heldPage` is still held,
-    // leaving it outside `[0, totalPages)`. Clamp so no phantom "current" button or out-of-range
-    // `selectPage` appears.
+    // A concurrent gesture can shrink `totalPages` under the held page.
     const page = Math.min(Math.max(heldPage, 0), totalPages - 1);
 
     const firstPage = Math.max(

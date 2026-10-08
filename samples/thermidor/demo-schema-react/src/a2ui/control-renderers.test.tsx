@@ -5,11 +5,6 @@ import {mountSurface} from './mount-surface.harness.js';
 
 afterEach(cleanup);
 
-/**
- * The three paging/sorting controls each hold a SCALAR: the chosen option or the current page.
- * Each is asserted while its dispatch is deliberately left outstanding, which is the only window
- * in which the optimistic intent stands before the producer reconciles.
- */
 function mountControl<TProps extends object>(
   component: string,
   state: TProps,
@@ -28,10 +23,6 @@ function mountControl<TProps extends object>(
   });
 }
 
-/**
- * A dispatch held open until `answer()`, so a test can observe the optimistic intent while the
- * producer has not reconciled, then release it inside `act` and assert the producer value returns.
- */
 function heldOpen() {
   let answer!: () => void;
   const pending = new Promise<void>((resolve) => (answer = resolve));
@@ -46,11 +37,6 @@ function heldOpen() {
   };
 }
 
-/**
- * Mounts a control with one answer held per dispatch, so a burst of changes faster than the
- * backend reconciles leaves the first request in flight while the rest queue. `release` settles
- * one held dispatch at a time; `contexts` is the ordered context of every action actually sent.
- */
 function mountHeldControl<TProps extends object>(
   component: string,
   state: TProps,
@@ -90,7 +76,6 @@ describe('Pagination', () => {
     expect(screen.getByLabelText('Page 3').getAttribute('aria-current')).toBe('page');
     expect(screen.getByLabelText('Page 1').getAttribute('aria-current')).toBeNull();
 
-    // Releasing the producer answer brings the page controls back to live (no longer stale).
     await held.answer();
     await waitFor(() =>
       expect((screen.getByLabelText('Page 3') as HTMLButtonElement).disabled).toBe(false)
@@ -98,10 +83,7 @@ describe('Pagination', () => {
   });
 
   it('freezes navigation while a results-invalidating gesture is in flight', async () => {
-    // The first click leaves `selectPage` outstanding, which marks `results` stale: the pagination
-    // then describes a page count the producer has not caught up with, so every page button and
-    // both nav arrows are disabled until the answer lands. (This is why there is no mid-flight
-    // pagination burst: a second click cannot be issued against a stale page count.)
+    // Also why there is no pagination burst test: a second click can't be issued while stale.
     const held = heldOpen();
     mountControl('Pagination', state, held.gate);
 
@@ -124,16 +106,13 @@ describe('Pagination', () => {
     const held = heldOpen();
     const {lastAction, pushDataModel} = mountControl('Pagination', state, held.gate);
 
-    // Hold page 5 (index 4) optimistically on a 5-page producer.
     await waitFor(() => expect(screen.getByLabelText('Page 5')).toBeDefined());
     fireEvent.click(screen.getByLabelText('Page 5'));
     await waitFor(() =>
       expect(lastAction()).toMatchObject({name: 'selectPage', context: {page: 4}})
     );
 
-    // A concurrent gesture (e.g. a larger page size) shrinks the producer to 2 pages while page 4
-    // is still held. The held page is clamped into [0, totalPages): the last real page is current,
-    // no phantom button sits outside the range.
+    // A concurrent gesture (e.g. a larger page size) shrinks the producer while page 5 is held.
     pushDataModel([{path: '/state/root/totalPages', value: 2}]);
 
     await waitFor(() => expect(screen.queryByLabelText('Page 5')).toBeNull());
@@ -158,7 +137,6 @@ describe('PageSize', () => {
     );
     expect((screen.getByLabelText(/Products per page/) as HTMLSelectElement).value).toBe('48');
 
-    // After the producer answers, the held value is released and the producer value is read again.
     await held.answer();
     await waitFor(() =>
       expect((screen.getByLabelText(/Products per page/) as HTMLSelectElement).value).toBe('12')
@@ -166,7 +144,7 @@ describe('PageSize', () => {
   });
 
   it('keeps the backend size selectable while another size is in flight', async () => {
-    // Backend is on a non-default size 96; options are [12, 24, 48, 96].
+    // 96 is not a default option: it only exists because the producer applies it.
     const held = heldOpen();
     mountControl<PageSizeProps>('PageSize', {pageSize: 96}, held.gate);
 
@@ -174,8 +152,6 @@ describe('PageSize', () => {
     const select = screen.getByLabelText(/Products per page/) as HTMLSelectElement;
     fireEvent.change(select, {target: {value: '12'}});
 
-    // While 12 is held, 96 (the size still actually applied by the producer) must remain an option
-    // so the user can return to it; the option set is producer ∪ held, not held alone.
     await waitFor(() => expect(select.value).toBe('12'));
     const optionValues = Array.from(select.options).map((option) => option.value);
     expect(optionValues).toContain('96');
@@ -183,7 +159,7 @@ describe('PageSize', () => {
   });
 
   it('sends only the first and last size of a rapid burst, coalescing the queue', async () => {
-    // `pageSize: 96` folds a fourth option into the default [12, 24, 48] list.
+    // 96 adds the fourth option a three-change burst needs.
     const view = mountHeldControl<PageSizeProps>(
       'PageSize',
       {pageSize: 96},
@@ -192,16 +168,13 @@ describe('PageSize', () => {
 
     await waitFor(() => expect(screen.getByLabelText(/Products per page/)).toBeDefined());
     const select = screen.getByLabelText(/Products per page/) as HTMLSelectElement;
-    // Change through the sizes faster than the backend answers.
     fireEvent.change(select, {target: {value: '12'}});
     fireEvent.change(select, {target: {value: '24'}});
     fireEvent.change(select, {target: {value: '48'}});
 
-    // Only the first dispatch (12) is in flight; the rest queue on the one slot.
     await waitFor(() => expect(view.sent()).toEqual([12]));
     await view.release();
 
-    // The middle selection (24) never goes out: the queue coalesces to the latest (48).
     await waitFor(() => expect(view.sent()).toEqual([12, 48]));
   });
 });
@@ -231,7 +204,6 @@ describe('Sort', () => {
     );
     expect((screen.getByLabelText(/Sort by/) as HTMLSelectElement).value).toBe('1');
 
-    // After the producer answers, the held value is released and the producer value is read again.
     await held.answer();
     await waitFor(() =>
       expect((screen.getByLabelText(/Sort by/) as HTMLSelectElement).value).toBe('0')
@@ -252,16 +224,13 @@ describe('Sort', () => {
 
     await waitFor(() => expect(screen.getByLabelText(/Sort by/)).toBeDefined());
     const select = screen.getByLabelText(/Sort by/) as HTMLSelectElement;
-    // Change through the criteria faster than the backend answers (by option index).
     fireEvent.change(select, {target: {value: '1'}});
     fireEvent.change(select, {target: {value: '2'}});
     fireEvent.change(select, {target: {value: '3'}});
 
-    // Only the first dispatch (price_asc) is in flight; the rest queue on the one slot.
     await waitFor(() => expect(view.sent()).toEqual(['price_asc']));
     await view.release();
 
-    // The middle selection (price_desc) never goes out: the queue coalesces to the latest.
     await waitFor(() => expect(view.sent()).toEqual(['price_asc', 'name_asc']));
   });
 });
