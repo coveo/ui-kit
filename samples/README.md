@@ -17,21 +17,21 @@ Samples are organized by the Coveo library they use:
 
 Pre-built, customizable search and commerce components from `@coveo/atomic` and `@coveo/atomic-react`.
 
-| Sample                                                       | Description                                              | Framework     | Use Case          |
-| ------------------------------------------------------------ | -------------------------------------------------------- | ------------- | ----------------- |
-| [commerce-hybrid](./atomic/commerce-hybrid/)                 | Atomic Commerce with the search box replaced by Headless | Vanilla JS    | Commerce          |
-| [commerce-react](./atomic/commerce-react/)                   | Atomic React commerce experience                         | React (Vite)  | Commerce          |
-| [commerce-vite](./atomic/commerce-vite/)                     | Atomic commerce web components                           | Vanilla JS    | Commerce          |
-| [search-commerce-angular](./atomic/search-commerce-angular/) | Atomic components in Angular                             | Angular       | Search & Commerce |
-| [search-commerce-react](./atomic/search-commerce-react/)     | Atomic React components                                  | React (Vite)  | Search & Commerce |
-| [search-nextjs](./atomic/search-nextjs/)                     | Atomic React with Next.js App Router                     | Next.js       | Search            |
-| [search-react](./atomic/search-react/)                       | Atomic React search experience                           | React (Vite)  | Search            |
-| [search-vite](./atomic/search-vite/)                         | Atomic search web components                             | Vanilla JS    | Search            |
-| [search-vuejs](./atomic/search-vuejs/)                       | Atomic components with Vue.js                            | Vue.js (Vite) | Search            |
+| Sample                                                       | Description                                                    | Framework     | Use Case          |
+| ------------------------------------------------------------ | -------------------------------------------------------------- | ------------- | ----------------- |
+| [commerce-hybrid](./atomic/commerce-hybrid/)                 | Atomic Commerce extended with a Headless cart and product page | TypeScript    | Commerce          |
+| [commerce-react](./atomic/commerce-react/)                   | Atomic React commerce experience                               | React (Vite)  | Commerce          |
+| [commerce-vite](./atomic/commerce-vite/)                     | Atomic commerce web components                                 | Vanilla JS    | Commerce          |
+| [search-commerce-angular](./atomic/search-commerce-angular/) | Atomic components in Angular                                   | Angular       | Search & Commerce |
+| [search-commerce-react](./atomic/search-commerce-react/)     | Atomic React components                                        | React (Vite)  | Search & Commerce |
+| [search-nextjs](./atomic/search-nextjs/)                     | Atomic React with Next.js App Router                           | Next.js       | Search            |
+| [search-react](./atomic/search-react/)                       | Atomic React search experience                                 | React (Vite)  | Search            |
+| [search-vite](./atomic/search-vite/)                         | Atomic search web components                                   | Vanilla JS    | Search            |
+| [search-vuejs](./atomic/search-vuejs/)                       | Atomic components with Vue.js                                  | Vue.js (Vite) | Search            |
 
 `commerce-hybrid` is the canonical example of mixing the two libraries: Atomic for the
-standard experience, Headless for the one component that needed a capability Atomic
-does not provide. Choosing Atomic is a two-way door.
+standard experience, Headless for the pieces Atomic has no component for. Choosing Atomic
+is a two-way door.
 
 ### [Headless Samples](./headless/)
 
@@ -99,7 +99,7 @@ The embedded credentials are the **public** `searchuisamples` sample credentials
 
 **Headless SSR**: Use when SEO or initial page load performance is a priority.
 
-**Atomic and Headless together**: These are not mutually exclusive. Start with Atomic, and if a single component cannot do what you need, replace just that component with Headless while keeping the rest. See [atomic/commerce-hybrid](./atomic/commerce-hybrid/) for a working example and guidance on when to customize an Atomic component, compose custom UI around one, or replace it.
+**Atomic and Headless together**: These are not mutually exclusive. Start with Atomic, and use Headless only for what Atomic does not cover, keeping the rest. See [atomic/commerce-hybrid](./atomic/commerce-hybrid/) for a working example and guidance on when to customize an Atomic component, compose custom UI around one, extend Atomic with a Headless component, or replace one.
 
 ## 📖 Documentation
 

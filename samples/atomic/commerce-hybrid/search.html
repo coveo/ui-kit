@@ -14,38 +14,25 @@
         <img src="/coveo-logo.svg" alt="Coveo" width="119" height="30" />
         <h1>Atomic + Headless hybrid</h1>
       </div>
-      <nav class="app-nav">
+      <nav class="app-nav" aria-label="Main">
         <a href="/index.html">Home</a>
         <a href="/search.html" aria-current="page">Search</a>
-        <a href="/listing-pants.html">Pants</a>
-        <a href="/listing-toys.html">Toys</a>
+        <!-- Headless: Atomic has no cart component. -->
+        <mini-cart></mini-cart>
       </nav>
     </header>
 
     <main id="maincontent">
       <p class="page-note">
-        Everything on this page is a standard Atomic component except the search box, which is a
-        plain custom element driven by Headless commerce controllers. They share one commerce
-        engine, which is the only thing connecting them.
+        A standard Atomic search page. The only Headless piece is the add-to-cart button inside each
+        product card: Atomic has no cart component, so the storefront is extended rather than
+        anything being replaced.
       </p>
 
-      <atomic-commerce-interface
-        type="search"
-        data-view-url="https://sports.barca.group/commerce-search"
-      >
+      <atomic-commerce-interface type="search">
         <atomic-commerce-layout>
           <atomic-layout-section section="search">
-            <!--
-              Replaces <atomic-commerce-search-box>. Groups query suggestions,
-              recent searches, and per-facet filter suggestions in one dropdown,
-              with instant products alongside. The Atomic search box has no
-              filter-suggestion support and a fixed suggestion layout.
-            -->
-            <hybrid-search-box
-              id="hybrid-search-box"
-              label="Search products"
-              placeholder="Search products"
-            ></hybrid-search-box>
+            <atomic-commerce-search-box></atomic-commerce-search-box>
           </atomic-layout-section>
 
           <atomic-layout-section section="facets">
@@ -62,6 +49,12 @@
             <atomic-layout-section section="products">
               <atomic-commerce-product-list display="grid" density="compact" image-size="small">
                 <atomic-product-template>
+                  <!-- Customized: cards open this sample's product page instead of the catalog URL. -->
+                  <template slot="link">
+                    <atomic-product-link
+                      href-template="/product.html?id=${permanentid}"
+                    ></atomic-product-link>
+                  </template>
                   <template>
                     <atomic-product-section-visual>
                       <atomic-product-field-condition if-defined="ec_thumbnails">
@@ -69,7 +62,9 @@
                       </atomic-product-field-condition>
                     </atomic-product-section-visual>
                     <atomic-product-section-name>
-                      <atomic-product-link></atomic-product-link>
+                      <atomic-product-link
+                        href-template="/product.html?id=${permanentid}"
+                      ></atomic-product-link>
                     </atomic-product-section-name>
                     <atomic-product-section-metadata>
                       <atomic-product-field-condition if-defined="ec_brand">
@@ -80,6 +75,10 @@
                     <atomic-product-section-emphasized>
                       <atomic-product-price currency="USD"></atomic-product-price>
                     </atomic-product-section-emphasized>
+                    <atomic-product-section-actions>
+                      <!-- Headless, inside an Atomic card. -->
+                      <add-to-cart-button></add-to-cart-button>
+                    </atomic-product-section-actions>
                   </template>
                 </atomic-product-template>
               </atomic-commerce-product-list>
@@ -93,6 +92,6 @@
       </atomic-commerce-interface>
     </main>
 
-    <script type="module" src="/src/search-page.js"></script>
+    <script type="module" src="/src/search-page.ts"></script>
   </body>
 </html>

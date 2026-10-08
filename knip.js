@@ -119,6 +119,11 @@ export default {
       vite: {config: []},
       entry: ['src/*-page.js'],
     },
+    'samples/atomic/commerce-hybrid': {
+      // Same as commerce-vite: vite.config.js throws without build artifacts.
+      vite: {config: []},
+      entry: ['src/*-page.ts'],
+    },
     'samples/atomic/search-vite': {
       // Same as commerce-vite: vite.config.js throws without build artifacts.
       vite: {config: []},
