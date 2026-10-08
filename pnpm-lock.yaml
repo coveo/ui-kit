@@ -12,9 +12,6 @@ catalogs:
     '@angular-devkit/build-angular':
       specifier: 22.2.0
       version: 22.2.0
-    '@angular/animations':
-      specifier: 22.2.0
-      version: 22.2.0
     '@angular/build':
       specifier: 22.2.0
       version: 22.2.0
@@ -31,9 +28,6 @@ catalogs:
       specifier: 22.2.0
       version: 22.2.0
     '@angular/platform-browser':
-      specifier: 22.2.0
-      version: 22.2.0
-    '@angular/platform-browser-dynamic':
       specifier: 22.2.0
       version: 22.2.0
     '@angular/platform-server':
@@ -1659,11 +1653,8 @@ importers:
         version: 8.3.0(@types/node@24.13.6)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(sass-embedded@1.104.1)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1)
     publishDirectory: publish
 
-  samples/atomic/search-commerce-angular:
+  samples/atomic/search-angular:
     dependencies:
-      '@angular/animations':
-        specifier: 'catalog:'
-        version: 22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1))
       '@angular/common':
         specifier: 22.2.0
         version: 22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
@@ -1676,24 +1667,24 @@ importers:
       '@angular/platform-browser':
         specifier: 'catalog:'
         version: 22.2.0(@angular/animations@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1))
-      '@angular/platform-browser-dynamic':
-        specifier: 'catalog:'
-        version: 22.2.0(@angular/common@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/compiler@22.2.0)(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@22.2.0(@angular/animations@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1)))
       '@angular/router':
         specifier: 'catalog:'
         version: 22.2.0(@angular/common@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@22.2.0(@angular/animations@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
+      '@coveo/atomic':
+        specifier: workspace:*
+        version: link:../../../packages/atomic
       '@coveo/atomic-angular':
         specifier: workspace:*
         version: link:../../../packages/atomic-angular/projects/atomic-angular/dist
+      '@coveo/headless':
+        specifier: workspace:*
+        version: link:../../../packages/headless
       rxjs:
         specifier: 'catalog:'
         version: 7.8.2
       tslib:
         specifier: 'catalog:'
         version: 2.8.1
-      zone.js:
-        specifier: 'catalog:'
-        version: 0.15.1
     devDependencies:
       '@angular/build':
         specifier: 'catalog:'
@@ -1704,15 +1695,25 @@ importers:
       '@angular/compiler-cli':
         specifier: 'catalog:'
         version: 22.2.0(@angular/compiler@22.2.0)(typescript@6.0.3)
+      '@coveo/platform-mock-api':
+        specifier: workspace:*
+        version: link:../../../packages/platform-mock-api
+      '@msw/playwright':
+        specifier: 'catalog:'
+        version: 0.6.7(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
         version: 1.62.1
-      '@types/node':
+      msw:
         specifier: 'catalog:'
-        version: 24.13.6
+        version: 2.15.0(@types/node@24.13.6)(typescript@6.0.3)
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.24
       typescript:
         specifier: 6.0.3
         version: 6.0.3
+    publishDirectory: publish
 
   samples/atomic/search-commerce-react:
     dependencies:
@@ -2591,16 +2592,6 @@ packages:
       '@angular/core': 22.2.0
       '@angular/platform-browser': 22.2.0
       rxjs: ^6.5.3 || ^7.4.0
-
-  '@angular/platform-browser-dynamic@22.2.0':
-    resolution: {integrity: sha512-KG/m6Jz3tKAeXWFYFgEISiEsWSBQusemI+/uafmq2GYiI4cZneCeW35v7mHujgFzVH8jzyJwPyPQtpnKDdGg6g==}
-    engines: {node: ^22.22.3 || ^24.15.0 || >=26.0.0}
-    deprecated: '@angular/platform-browser-dynamic is deprecated. Use `@angular/platform-browser` instead.'
-    peerDependencies:
-      '@angular/common': 22.2.0
-      '@angular/compiler': 22.2.0
-      '@angular/core': 22.2.0
-      '@angular/platform-browser': 22.2.0
 
   '@angular/platform-browser@22.2.0':
     resolution: {integrity: sha512-XMUOyn8WARk9NdFGO3uRgdC3hPrp+2xsSYNeSkaEZ4jI3Pc23f22e4GI8Vayl/UOmShHVn/i+NWfTWh3SEbbSw==}
@@ -17057,6 +17048,7 @@ snapshots:
     dependencies:
       '@angular/core': 22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1)
       tslib: 2.8.1
+    optional: true
 
   '@angular/build@22.2.0(9cf7863f1cc0602bc0a8274ea353eab1)':
     dependencies:
@@ -17176,14 +17168,6 @@ snapshots:
       rxjs: 7.8.2
       tslib: 2.8.1
       zod: 4.6.5
-
-  '@angular/platform-browser-dynamic@22.2.0(@angular/common@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/compiler@22.2.0)(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@22.2.0(@angular/animations@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1)))':
-    dependencies:
-      '@angular/common': 22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
-      '@angular/compiler': 22.2.0
-      '@angular/core': 22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1)
-      '@angular/platform-browser': 22.2.0(@angular/animations@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1))
-      tslib: 2.8.1
 
   '@angular/platform-browser@22.2.0(@angular/animations@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1))':
     dependencies:

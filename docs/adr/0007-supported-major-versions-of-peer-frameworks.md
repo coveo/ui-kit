@@ -25,7 +25,7 @@ This monorepo publishes wrappers around third-party frameworks (`@coveo/atomic-a
 
 With no rule for choosing bounds, ranges drift in both directions unnoticed. The Angular range claims support for majors 14 and 15, which cannot resolve: `@coveo/atomic` and `@coveo/headless` declare a `typescript: '>=5.0.0'` peer, while Angular's `@angular/compiler-cli` caps TypeScript at `<4.9` for v14 and `<5.0` for v15. The same range excludes Angular 22, which is `latest` on npm.
 
-Both errors survived because nothing tests the bounds. A consumer sample exists at `samples/atomic/search-commerce-angular` and is built in CI, but it resolves `@angular/*` from `catalog:`, so exactly one Angular version is exercised — the single value pinned for the whole workspace.
+Both errors survived because nothing tests the bounds. Consumer samples exist at `samples/atomic/search-angular` and `samples/atomic/commerce-angular` and are built in CI, but they resolve `@angular/*` from `catalog:`, so exactly one Angular version is exercised — the single value pinned for the whole workspace.
 
 This ADR governs the range declared in `peerDependencies` for every framework peer, and when that range may be narrowed.
 

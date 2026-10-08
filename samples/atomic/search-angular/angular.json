@@ -1,0 +1,77 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "cli": {
+    "analytics": false
+  },
+  "newProjectRoot": "projects",
+  "projects": {
+    "search-angular": {
+      "projectType": "application",
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "src/main.ts",
+            "tsConfig": "tsconfig.app.json",
+            "assets": [
+              {"glob": "**/*", "input": "public"},
+              {
+                "glob": "**/*",
+                "input": "node_modules/@coveo/atomic-angular/assets",
+                "output": "assets"
+              },
+              {"glob": "**/*", "input": "node_modules/@coveo/atomic-angular/lang", "output": "lang"}
+            ],
+            "styles": ["node_modules/@coveo/atomic/dist/themes/coveo.css", "src/styles.css"],
+            "allowedCommonJsDependencies": [
+              "@salesforce-ux/design-system",
+              "dayjs",
+              "escape-html",
+              "exponential-backoff",
+              "pino"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2.5MB",
+                  "maximumError": "5MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "search-angular:build:production"
+            },
+            "development": {
+              "buildTarget": "search-angular:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        }
+      }
+    }
+  }
+}

@@ -72,7 +72,7 @@ samples/
 - `headless/search-vite`: Vanilla headless search (JS + Vite)
 - `headless/commerce-react`: Headless commerce with React
 - `headless-ssr/commerce-nextjs`: Headless SSR commerce with Next.js
-- `atomic/search-commerce-angular`: Combined search + commerce in Angular
+- `atomic/search-angular`: Atomic search in Angular
 
 **Package name in `package.json`:**
 
