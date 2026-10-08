@@ -116,6 +116,24 @@ export interface DispatchCoordinator<TMessage> {
    * queues the dispatch and drops nothing.
    */
   issue: (message: TMessage, intent?: CoalesceIntent) => IssuedDispatch;
+  /**
+   * Drops every dispatch still WAITING in the queue, settling each 'withheld', and leaves the
+   * dispatch already in flight untouched — it has been sent and cannot be taken back.
+   *
+   * For a consumer that opens a stream OUTSIDE this queue (a prompt turn), which both rebuilds the
+   * state the queued gestures were writing and must not have those gestures fold a second request
+   * into its stream. The caller withholds the now-moot queue before opening, so the gestures end
+   * on an honest 'withheld' rather than being left to drain into — or be silently dropped against —
+   * a stream they never belonged to.
+   */
+  withholdQueued: () => void;
+  /**
+   * Settles the dispatch already in flight as 'cancelled', for a caller that has superseded it
+   * with a newer intention and will discard its response. The request cannot be unsent — the
+   * caller aborts the stream separately — but the dispatch is settled now so the local state it
+   * put on screen is released rather than left waiting. A no-op when nothing is in flight.
+   */
+  cancelInFlight: () => void;
   subscribe: (listener: () => void) => () => void;
   getSnapshot: () => DispatchSnapshot;
 }
@@ -209,6 +227,11 @@ export function createDispatchCoordinator<TMessage>(
   const listeners = new Set<() => void>();
   let minted = 0;
   let inFlight: DispatchId | undefined;
+  // The entry whose send is on its way, held so a preempting caller can settle it 'cancelled'
+  // (see `cancelInFlight`). Distinct from `inFlight`, which publishes only the id: this keeps the
+  // entry's `settle` reachable. Cleared the instant the send resolves — a second settle from
+  // `drain`'s `finally` is then absorbed by the settlement, so the 'cancelled' it was given wins.
+  let inFlightEntry: QueuedDispatch<TMessage> | undefined;
   let sending = false;
   let queue: Array<QueuedDispatch<TMessage>> = [];
   let snapshot: DispatchSnapshot = {inFlight: undefined};
@@ -235,6 +258,7 @@ export function createDispatchCoordinator<TMessage>(
     }
     sending = true;
     inFlight = entry.id;
+    inFlightEntry = entry;
     publish();
     trace('send', entry.id);
     void (async () => {
@@ -251,9 +275,12 @@ export function createDispatchCoordinator<TMessage>(
       } finally {
         sending = false;
         inFlight = undefined;
+        inFlightEntry = undefined;
         // Published BEFORE the settlement fires, so a listener that reads the snapshot from inside
         // its own settlement sees this dispatch already gone.
         publish();
+        // A no-op when `cancelInFlight` already settled this entry 'cancelled' — the settlement
+        // ignores a second settle, so the earlier 'cancelled' stands over this 'answered'.
         entry.settle(outcome);
         drain();
       }
@@ -311,8 +338,41 @@ export function createDispatchCoordinator<TMessage>(
     return issued;
   }
 
+  // Drops the WAITING queue only. The in-flight dispatch has left the queue and cannot be taken
+  // back, so it is not touched — it still reports its own outcome when its send settles. No
+  // `publish()`: `inFlight` is unchanged, so the one observable fact is unchanged.
+  function withholdQueued(): void {
+    if (queue.length === 0) {
+      return;
+    }
+    const dropped = queue;
+    queue = [];
+    trace('withheld', dropped.map((entry) => entry.id).join(' + '));
+    for (const entry of dropped) {
+      entry.settle('withheld');
+    }
+  }
+
+  // Settles the dispatch ON ITS WAY as 'cancelled', for a caller that has superseded it with a
+  // newer intention (a prompt turn) and will not apply its response. The request itself cannot be
+  // unsent — the caller aborts its stream separately — but its dispatch is settled NOW so the
+  // local state it put on screen is released rather than left waiting for a response that will be
+  // discarded. `drain`'s `finally` later calls `settle('answered')` on the same entry; the
+  // settlement ignores that second settle, so 'cancelled' stands. A no-op when nothing is in
+  // flight. `inFlight` is unchanged (the send is still technically open until it resolves), so no
+  // `publish()`.
+  function cancelInFlight(): void {
+    if (inFlightEntry === undefined) {
+      return;
+    }
+    trace('cancelled-in-flight', inFlightEntry.id);
+    inFlightEntry.settle('cancelled');
+  }
+
   return {
     issue,
+    withholdQueued,
+    cancelInFlight,
     subscribe: (listener) => {
       listeners.add(listener);
       return () => {

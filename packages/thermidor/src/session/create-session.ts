@@ -162,8 +162,10 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * the renderer's `onAction` handler (`onAction={session.dispatchAction}`).
    *
    * A {@link SubmitPromptAction} opens a new streaming turn for its prompt and
-   * resolves once that turn's stream ends. It is ignored while a turn is
-   * streaming.
+   * resolves once that turn's stream ends. As a new intention it PREEMPTS the
+   * gesture dispatches: any still queued are dropped ('withheld') and one in
+   * flight is cancelled (its response discarded), since the prompt rebuilds the
+   * state they were refining.
    *
    * An {@link A2uiClientMessage} is unwrapped to its `userAction`: the session
    * recovers the dispatching component's discriminant from the active turn's
@@ -214,6 +216,13 @@ export interface SessionActions {
    * than decided from the message.
    */
   issue: (message: A2uiClientMessage, intent?: CoalesceIntent) => IssuedDispatch;
+  /**
+   * Drops every gesture still waiting in the queue (each settled 'withheld'), leaving the one in
+   * flight to report its own outcome. Called when a prompt turn opens: the prompt rebuilds the
+   * state those gestures were writing, so sending them would be moot and would also fold a second
+   * request into the prompt's stream.
+   */
+  withholdQueued: () => void;
   subscribe: (listener: () => void) => () => void;
   getSnapshot: () => DispatchSnapshot;
 }
@@ -300,9 +309,18 @@ export function createSession<TContracts extends ContractsSchema>(
   //
   // The turn id and the request are read at EXECUTION time: a queued action belongs to whichever
   // turn is active when it actually goes out, and its context providers run then.
+  //
+  // The streaming guard is RE-TESTED here, not only at queue time (`issueAction`): a dispatch that
+  // queued clean can reach the front of the queue AFTER a prompt turn opened and began streaming,
+  // and sending it then would fold a second request into that stream. It tests `hasStreamingTurn()`,
+  // NOT `isStreaming()`: this action is itself about to set `activeAbortController`, so
+  // `isStreaming()` would see its own stream and refuse it — only a concurrent streaming TURN is
+  // the overlap to catch. Returning leaves the coordinator to settle 'answered'; on the prompt path
+  // this is unreachable (queue purged, in-flight gesture cancelled), so it is a defence-in-depth
+  // backstop like the no-active-turn case.
   const actionCoordinator = createDispatchCoordinator<A2uiAction>((action) => {
     const turnId = store.getState().activeTurnId;
-    if (!turnId) {
+    if (!turnId || hasStreamingTurn()) {
       return;
     }
     return executeStream(turnId, () => buildActionRequest(action));
@@ -325,12 +343,23 @@ export function createSession<TContracts extends ContractsSchema>(
   }
 
   /**
-   * True while any turn is still streaming. Guards prompt submission and the
-   * private dispatch path: while a turn is in flight the session ignores new work and
-   * leaves the turn list untouched.
+   * True while any turn is still streaming. A derived view of turn state — a turn carries
+   * `status: 'streaming'` only between `openTurn`/`retry` (which create a streaming turn) and the
+   * fold of its terminal event.
    */
   function hasStreamingTurn(): boolean {
     return store.getState().turns.some((turn) => turn.status === 'streaming');
+  }
+
+  /**
+   * True while a stream is PHYSICALLY in flight — prompt OR gesture — since `activeAbortController`
+   * is held for exactly one `executeStream` and reset to `null` when it resolves. `startPromptTurn`
+   * preempts on this, not `hasStreamingTurn()`: a gesture reuses an already-`complete` turn without
+   * reopening a streaming one, so a gesture in flight is invisible to the turn status — guarding
+   * preemption on it would miss the in-flight-gesture case the preemption exists for.
+   */
+  function isStreaming(): boolean {
+    return activeAbortController !== null;
   }
 
   /**
@@ -523,13 +552,21 @@ export function createSession<TContracts extends ContractsSchema>(
   }
 
   /**
-   * Opens a new turn for `prompt` and streams its response. Ignored while a
-   * turn is streaming, leaving turns unchanged. Needs no active turn, so it
-   * also opens the first turn of a session.
+   * Opens a new turn for `prompt` and streams its response. Preempts any gesture in flight (see
+   * below). Needs no active turn, so it also opens the first turn of a session.
    */
   async function startPromptTurn(prompt: string | undefined): Promise<void> {
-    if (hasStreamingTurn()) {
-      return;
+    // A prompt is a new intention that supersedes any gesture: it rebuilds the whole state those
+    // gestures were refining, so it PREEMPTS rather than waiting behind them (ignoring it until the
+    // gesture finished was a dead keystroke). In order: (1) drop the gestures still WAITING, each
+    // settled 'withheld'; (2) if a gesture is streaming, abort it (`cancel`, so its superseded
+    // response never touches the surface) and settle its dispatch 'cancelled' (`cancelInFlight`, so
+    // its overlay is released); (3) open the prompt turn. The sent gesture cannot be unsent, but its
+    // response is discarded and its dispatch settled now.
+    actionCoordinator.withholdQueued();
+    if (isStreaming()) {
+      cancel();
+      actionCoordinator.cancelInFlight();
     }
 
     const turnId = generateId();
@@ -558,8 +595,12 @@ export function createSession<TContracts extends ContractsSchema>(
     },
     intent?: CoalesceIntent
   ): IssuedDispatch {
-    // While a turn is streaming, ignore the dispatch and leave turns unchanged,
-    // avoiding a replay onto an uncommitted turn.
+    // While a PROMPT turn is streaming, withhold this gesture: a prompt owns the session's single
+    // stream and a gesture must not fold a second request into it. Tests `hasStreamingTurn()`, NOT
+    // `isStreaming()`: a gesture already in flight sets the abort controller, so `isStreaming()`
+    // here would wrongly refuse a SECOND gesture the coordinator is meant to serialize behind it.
+    // Gesture-vs-gesture ordering is the coordinator's job; this only keeps gestures out of a
+    // prompt's stream.
     if (hasStreamingTurn()) {
       return createSettledDispatch('withheld');
     }
@@ -669,9 +710,10 @@ export function createSession<TContracts extends ContractsSchema>(
    * `onAction={session.dispatchAction}` works when passed by reference.
    *
    * A {@link SubmitPromptAction} opens a new streaming turn for its prompt and
-   * is ignored while a turn is streaming; it needs no rendered component, so it
-   * does not go through the dispatch coordinator. Any other message is unwrapped
-   * and queued through {@link issue}.
+   * preempts the gesture dispatches (queued ones withheld, one in flight
+   * cancelled); it needs no rendered component, so it does not go through the
+   * dispatch coordinator. Any other message is unwrapped and queued through
+   * {@link issue}.
    *
    * FIRE-AND-FORGET: every refusal is swallowed into a dev-only warning, and a
    * dispatch's settlement never rejects, so the returned Promise always resolves.
@@ -722,6 +764,7 @@ export function createSession<TContracts extends ContractsSchema>(
     dispatchAction,
     actions: {
       issue,
+      withholdQueued: actionCoordinator.withholdQueued,
       subscribe: actionCoordinator.subscribe,
       getSnapshot: actionCoordinator.getSnapshot,
     },

@@ -67,6 +67,8 @@ function coordinate() {
       issued.onSettled((outcome) => outcomes.push([message, outcome]));
       return issued;
     },
+    withholdQueued: () => coordinator.withholdQueued(),
+    cancelInFlight: () => coordinator.cancelInFlight(),
     /** Lets the dispatch currently on its way come back, and runs what its settlement triggers. */
     answer: async () => {
       answers.shift()?.();
@@ -292,6 +294,131 @@ describe('createDispatchCoordinator', () => {
 
       await expect(issued.settled).resolves.toBe('failed');
       expect(failing.getSnapshot().inFlight).toBeUndefined();
+    });
+  });
+
+  describe('withholdQueued', () => {
+    it('settles every WAITING gesture withheld and empties the queue', async () => {
+      const run = coordinate();
+
+      run.gesture('A'); // sent — in flight, held open
+      run.gesture('B'); // queued behind A
+      run.gesture('C'); // queued behind B
+
+      expect(run.sent).toEqual(['A']);
+
+      run.withholdQueued();
+
+      // The two still-waiting gestures end withheld; A was already on its way.
+      expect(run.outcomes).toEqual([
+        ['B', 'withheld'],
+        ['C', 'withheld'],
+      ]);
+      // The queue is empty: letting A come back drains nothing more.
+      await run.answer();
+      expect(run.sent).toEqual(['A']);
+      expect(run.outcomes).toContainEqual(['A', 'answered']);
+    });
+
+    it('leaves the dispatch in flight untouched', () => {
+      const run = coordinate();
+
+      run.gesture('A'); // in flight
+      run.gesture('B'); // queued
+
+      expect(run.inFlight()).toBe('dispatch-1');
+      run.withholdQueued();
+
+      // A is still the one on its way; only B was dropped.
+      expect(run.inFlight()).toBe('dispatch-1');
+      expect(run.outcomes).toEqual([['B', 'withheld']]);
+    });
+
+    it('is a no-op when nothing is queued', () => {
+      const run = coordinate();
+
+      run.gesture('A'); // sent, nothing queued behind it
+      const before = run.snapshot();
+      run.withholdQueued();
+
+      // Nothing dropped, and the snapshot identity is unchanged (no publish).
+      expect(run.outcomes).toEqual([]);
+      expect(run.snapshot()).toBe(before);
+    });
+
+    it('traces the gestures it drops', () => {
+      const trace = vi.fn();
+      const coordinator = createDispatchCoordinator<string>(() => new Promise<void>(() => {}), {
+        trace,
+      });
+      coordinator.issue('A', absolute(PAGER, '1')); // in flight
+      coordinator.issue('B', delta(PAGER, '2')); // queued
+      coordinator.issue('C', delta('other', '3')); // queued
+      trace.mockClear();
+
+      coordinator.withholdQueued();
+
+      expect(trace).toHaveBeenCalledWith('withheld', 'dispatch-2 + dispatch-3');
+    });
+  });
+
+  describe('cancelInFlight', () => {
+    it('settles the in-flight dispatch cancelled, and that wins over the send resolving', async () => {
+      const run = coordinate();
+
+      run.gesture('A'); // sent — in flight, held open
+      expect(run.inFlight()).toBe('dispatch-1');
+
+      run.cancelInFlight();
+
+      // Settled 'cancelled' the moment it is preempted, before the send comes back.
+      expect(run.outcomes).toEqual([['A', 'cancelled']]);
+
+      // When the send finally resolves, `drain`'s finally calls settle('answered') on the same
+      // entry; the settlement ignores that second settle, so 'cancelled' stands.
+      await run.answer();
+      expect(run.outcomes).toEqual([['A', 'cancelled']]);
+    });
+
+    it('frees the queue to drain the next gesture once the cancelled send resolves', async () => {
+      const run = coordinate();
+
+      run.gesture('A'); // in flight
+      run.gesture('B'); // queued behind A
+
+      run.cancelInFlight();
+      expect(run.outcomes).toEqual([['A', 'cancelled']]);
+      // B has not been sent — A's send is still open; cancelling the dispatch does not unsend it.
+      expect(run.sent).toEqual(['A']);
+
+      // A's send resolves: `sending` clears and the queue drains B as normal.
+      await run.answer();
+      expect(run.sent).toEqual(['A', 'B']);
+      expect(run.inFlight()).toBe('dispatch-2');
+    });
+
+    it('is a no-op when nothing is in flight', () => {
+      const run = coordinate();
+
+      const before = run.snapshot();
+      run.cancelInFlight();
+
+      // Nothing settled, and the snapshot identity is unchanged (no publish).
+      expect(run.outcomes).toEqual([]);
+      expect(run.snapshot()).toBe(before);
+    });
+
+    it('traces the cancelled in-flight dispatch', () => {
+      const trace = vi.fn();
+      const coordinator = createDispatchCoordinator<string>(() => new Promise<void>(() => {}), {
+        trace,
+      });
+      coordinator.issue('A', absolute(PAGER, '1')); // in flight
+      trace.mockClear();
+
+      coordinator.cancelInFlight();
+
+      expect(trace).toHaveBeenCalledWith('cancelled-in-flight', 'dispatch-1');
     });
   });
 
