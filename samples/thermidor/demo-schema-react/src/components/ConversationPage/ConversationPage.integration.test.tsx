@@ -111,6 +111,90 @@ describe('ConversationPage integration', () => {
       ).toEqual(['false', 'true']);
     });
 
+    it('draws a follow-up as its own exchange after the answer it follows', () => {
+      const turns: Turn[] = [
+        makeTurn({
+          id: 'turn-1',
+          prompt: 'boating safety',
+          response: {
+            agent: {
+              messages: [
+                {content: 'Here is the safety gear.', role: 'assistant'},
+                {content: 'Here are more Mustang Survival jackets.', role: 'assistant'},
+              ],
+              reasoningSteps: [],
+            },
+          },
+        }),
+      ];
+
+      renderPage({
+        turns,
+        surfacesByTurn: new Map([['turn-1', ['turn-1/agent-a', 'turn-1/agent-b']]]),
+        followUps: new Map([
+          [
+            'turn-1',
+            [
+              {
+                prompt: 'Show more Mustang Survival life jackets',
+                activityCount: 0,
+                messageCount: 1,
+                reasoningStepCount: 0,
+                surfaceCount: 1,
+              },
+            ],
+          ],
+        ]),
+      });
+
+      const article = screen.getByRole('article', {name: 'Turn 1'});
+      const order = [
+        'Here is the safety gear.',
+        'turn-1/agent-a',
+        'Show more Mustang Survival life jackets',
+        'Here are more Mustang Survival jackets.',
+        'turn-1/agent-b',
+      ].map((text) => article.textContent!.indexOf(text));
+      expect(order.every((position) => position >= 0)).toBe(true);
+      expect([...order].sort((x, y) => x - y)).toEqual(order);
+    });
+
+    it('shows the reasoning indicator while a follow-up is in flight', () => {
+      const turns: Turn[] = [
+        makeTurn({
+          id: 'turn-1',
+          prompt: 'boating safety',
+          response: {
+            agent: {
+              messages: [{content: 'Here is the safety gear.', role: 'assistant'}],
+              reasoningSteps: [],
+            },
+          },
+        }),
+      ];
+
+      renderPage({
+        turns,
+        followUps: new Map([
+          [
+            'turn-1',
+            [
+              {
+                prompt: 'Show more',
+                activityCount: 0,
+                messageCount: 1,
+                reasoningStepCount: 0,
+                surfaceCount: 0,
+              },
+            ],
+          ],
+        ]),
+        pendingTurnId: 'turn-1',
+      });
+
+      expect(screen.getByText('Working')).toBeDefined();
+    });
+
     it('renders separators between turns but not after the last turn', () => {
       const turns: Turn[] = [
         makeTurn({

@@ -54,6 +54,17 @@ vi.mock('./ConversationPage/index.js', () => ({
       <span data-testid="turn-surfaces">
         {props.turns.map((turn: Turn) => props.surfacesByTurn.get(turn.id).join(',')).join('|')}
       </span>
+      <span data-testid="follow-ups">
+        {props.turns
+          .map((turn: Turn) =>
+            (props.followUps.get(turn.id) ?? [])
+              .map((followUp: {prompt?: string}) => followUp.prompt ?? '(option)')
+              .join(',')
+          )
+          .join('|')}
+      </span>
+      <span data-testid="pending-turn">{props.pendingTurnId ?? ''}</span>
+      <span data-testid="streaming">{String(props.isStreaming)}</span>
       <button data-testid="conversation-submit" onClick={() => props.onSubmit('follow up')} />
     </div>
   ),
@@ -147,6 +158,81 @@ describe('AppShell', () => {
         sourceComponentId: `${SEARCH_SURFACE_ID}-facet-brand`,
         context: {value: 'Nike'},
       },
+    });
+  });
+
+  describe('follow-up actions', () => {
+    function agentTurn(id: string): Turn {
+      return makeTurn({
+        id,
+        response: {
+          agent: {messages: [{content: 'Answer', role: 'assistant'}], reasoningSteps: []},
+          a2uiMessages: [{version: 'v0.9', createSurface: {surfaceId: 'agent-answer'}}],
+        },
+      });
+    }
+
+    function followUpAction(name: string, context: Record<string, unknown>) {
+      return {
+        version: 'v0.9',
+        userAction: {name, surfaceId: 'turn-1/agent-answer', sourceComponentId: 'root', context},
+      };
+    }
+
+    it('shows a selected follow-up as its own exchange, streaming until its run ends', async () => {
+      mockTurns = [agentTurn('turn-1')];
+      let finishRun: () => void = () => undefined;
+      mockDispatchAction.mockReturnValueOnce(
+        new Promise<void>((resolve) => {
+          finishRun = resolve;
+        })
+      );
+
+      render(<AppShell />);
+      act(() => {
+        void capturedOnAction?.(
+          followUpAction('selectAction', {text: 'Show more life jackets', type: 'followup'})
+        );
+      });
+
+      expect(screen.getByTestId('follow-ups').textContent).toBe('Show more life jackets');
+      expect(screen.getByTestId('pending-turn').textContent).toBe('turn-1');
+      expect(screen.getByTestId('streaming').textContent).toBe('true');
+
+      await act(async () => {
+        finishRun();
+      });
+
+      expect(screen.getByTestId('pending-turn').textContent).toBe('');
+      expect(screen.getByTestId('streaming').textContent).toBe('false');
+      expect(screen.getByTestId('follow-ups').textContent).toBe('Show more life jackets');
+    });
+
+    it('records a search option without a prompt', async () => {
+      mockTurns = [agentTurn('turn-1')];
+      mockDispatchAction.mockResolvedValueOnce(undefined);
+
+      render(<AppShell />);
+      await act(async () => {
+        await capturedOnAction?.(followUpAction('selectSearchOption', {optionId: 'opt-1'}));
+      });
+
+      expect(screen.getByTestId('follow-ups').textContent).toBe('(option)');
+    });
+
+    it('does not record an action that updates a block', async () => {
+      mockTurns = [agentTurn('turn-1')];
+      mockDispatchAction.mockResolvedValueOnce(undefined);
+
+      render(<AppShell />);
+      await act(async () => {
+        await capturedOnAction?.(followUpAction('selectPage', {page: 1}));
+      });
+
+      expect(screen.getByTestId('follow-ups').textContent).toBe('');
+      expect(mockDispatchAction).toHaveBeenCalledWith(
+        expect.objectContaining({userAction: expect.objectContaining({surfaceId: 'agent-answer'})})
+      );
     });
   });
 });
