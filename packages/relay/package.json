@@ -41,7 +41,8 @@
     "test": "vitest run",
     "functional-test": "vitest run --config vitest.functional.config.ts",
     "test:watch": "vitest",
-    "typedoc": "typedoc"
+    "typedoc": "typedoc",
+    "size": "size-limit"
   },
   "dependencies": {
     "@coveo/explorer-messenger": "0.5.0",
@@ -52,11 +53,13 @@
     "@rollup/plugin-replace": "catalog:",
     "@rollup/plugin-terser": "catalog:",
     "@rollup/plugin-typescript": "catalog:",
+    "@size-limit/preset-small-lib": "catalog:",
     "@vitest/browser-playwright": "catalog:",
     "jsdom": "catalog:",
     "playwright": "catalog:",
     "publint": "catalog:",
     "rollup": "catalog:",
+    "size-limit": "catalog:",
     "typedoc": "catalog:",
     "vitest": "catalog:"
   },

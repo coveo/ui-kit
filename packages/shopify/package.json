@@ -53,7 +53,8 @@
     "build:bundles": "node esbuild.mjs",
     "build:definitions": "tsc -p src/tsconfig.build.json && node ./scripts/copy-types.mjs",
     "test": "vitest run",
-    "clean": "node ../../utils/ci/rm-rf.mjs dist/* cdn/"
+    "clean": "node ../../utils/ci/rm-rf.mjs dist/* cdn/",
+    "size": "size-limit"
   },
   "dependencies": {
     "@coveo/headless": "workspace:*",
@@ -61,8 +62,10 @@
     "uuid": "catalog:"
   },
   "devDependencies": {
+    "@size-limit/preset-small-lib": "catalog:",
     "@types/node": "catalog:",
     "publint": "catalog:",
+    "size-limit": "catalog:",
     "vitest": "catalog:"
   },
   "engines": {

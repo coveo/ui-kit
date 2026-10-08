@@ -1,0 +1,20 @@
+[
+  {
+    "name": "search",
+    "path": "dist/esm/atomic-react.mjs",
+    "ignore": ["@coveo/atomic"],
+    "limit": "3.4 kB"
+  },
+  {
+    "name": "commerce",
+    "path": "dist/esm/commerce/atomic-react.mjs",
+    "ignore": ["@coveo/atomic"],
+    "limit": "2.7 kB"
+  },
+  {
+    "name": "recommendation",
+    "path": "dist/esm/recommendation/atomic-react.mjs",
+    "ignore": ["@coveo/atomic"],
+    "limit": "3.2 kB"
+  }
+]

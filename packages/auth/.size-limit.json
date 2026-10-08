@@ -1,0 +1,7 @@
+[
+  {
+    "name": "ESM",
+    "path": "dist/auth.esm.js",
+    "limit": "1.2 kB"
+  }
+]

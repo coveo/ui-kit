@@ -1,0 +1,65 @@
+[
+  {
+    "name": "search",
+    "path": "dist/esm/index.js",
+    "limit": "160 kB"
+  },
+  {
+    "name": "search: engine + search box",
+    "path": "dist/esm/index.js",
+    "import": "{ buildSearchEngine, buildSearchBox }",
+    "limit": "140 kB"
+  },
+  {
+    "name": "commerce",
+    "path": "dist/esm/commerce.index.js",
+    "limit": "150 kB"
+  },
+  {
+    "name": "commerce: engine + product listing",
+    "path": "dist/esm/commerce.index.js",
+    "import": "{ buildCommerceEngine, buildProductListing }",
+    "limit": "145 kB"
+  },
+  {
+    "name": "insight",
+    "path": "dist/esm/insight.index.js",
+    "limit": "155 kB"
+  },
+  {
+    "name": "case-assist",
+    "path": "dist/esm/case-assist.index.js",
+    "limit": "125 kB"
+  },
+  {
+    "name": "recommendation",
+    "path": "dist/esm/recommendation.index.js",
+    "limit": "125 kB"
+  },
+  {
+    "name": "ssr",
+    "path": "dist/esm/ssr.index.js",
+    "limit": "160 kB"
+  },
+  {
+    "name": "ssr-commerce",
+    "path": "dist/esm/ssr-commerce.index.js",
+    "limit": "155 kB"
+  },
+  {
+    "name": "ssr-next",
+    "path": "dist/esm/ssr-next.index.js",
+    "limit": "160 kB"
+  },
+  {
+    "name": "ssr-commerce-next",
+    "path": "dist/esm/ssr-commerce-next.index.js",
+    "limit": "155 kB"
+  },
+  {
+    "name": "CDN search bundle",
+    "path": "cdn/headless.esm.js",
+    "rolldown": false,
+    "limit": "170 kB"
+  }
+]
