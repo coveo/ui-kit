@@ -32,14 +32,6 @@ vi.mock('../../a2ui/Skeleton/Skeleton.js', () => ({
   ),
 }));
 
-const {surfacesMock} = vi.hoisted(() => ({
-  surfacesMock: vi.fn((_props: {messages: Record<string, unknown>[]}) => null),
-}));
-
-vi.mock('../../a2ui/surfaces.js', () => ({
-  ThermidorA2UISurfaces: surfacesMock,
-}));
-
 /**
  * Builds an `a2ui-surface` activity whose payload is a v1.0 createSurface
  * snapshot that `parseSurfaceSnapshots` understands. Skeleton derivation reads
@@ -271,34 +263,24 @@ describe('AgentResponseBlock', () => {
     });
   });
 
-  describe('search blocks opened from a search option', () => {
-    it('keeps the commerce-search surface out of the agent answer', () => {
-      const agentSurfaceId = 'agent-1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed';
-      const searchSurfaceId = 'ui-6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b';
-      surfacesMock.mockClear();
-
+  describe('turn blocks', () => {
+    it('draws the turn blocks after the agent text', () => {
       render(
         <AgentResponseBlock
           response={makeResponse({
             agent: {messages: [{content: 'Answer', role: 'assistant'}], reasoningSteps: []},
-            surfaces: [
-              {surfaceId: agentSurfaceId, rootComponentType: 'NextActionsBar'},
-              {surfaceId: searchSurfaceId, rootComponentType: 'CommerceSearch'},
-            ],
-            a2uiMessages: [
-              {version: 'v0.9', createSurface: {surfaceId: agentSurfaceId}},
-              {version: 'v0.9', createSurface: {surfaceId: searchSurfaceId}},
-              {version: 'v0.9', updateDataModel: {surfaceId: searchSurfaceId, value: {}}},
-            ],
           })}
           isStreaming={false}
-        />
+        >
+          <div data-testid="turn-blocks" />
+        </AgentResponseBlock>
       );
 
-      expect(surfacesMock).toHaveBeenCalled();
-      expect(surfacesMock.mock.lastCall?.[0].messages).toEqual([
-        {version: 'v0.9', createSurface: {surfaceId: agentSurfaceId}},
-      ]);
+      const message = screen.getByTestId('streaming-message');
+      const blocks = screen.getByTestId('turn-blocks');
+      expect(
+        message.compareDocumentPosition(blocks) & Node.DOCUMENT_POSITION_FOLLOWING
+      ).toBeTruthy();
     });
   });
 });

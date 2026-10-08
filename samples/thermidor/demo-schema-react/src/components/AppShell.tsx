@@ -1,14 +1,18 @@
-import {useCallback, useMemo, useSyncExternalStore} from 'react';
-import {A2UIProvider} from '@copilotkit/a2ui-renderer';
+import {useCallback, useMemo, useRef, useSyncExternalStore} from 'react';
+import {A2UIProvider, type A2UIClientEventMessage} from '@copilotkit/a2ui-renderer';
 import {useSession} from '../context/session.js';
-import {useNavigation} from '../hooks/use-navigation.js';
 import {createThermidorCatalog} from '../a2ui/components.js';
+import {buildSurfaceStream, toServerAction} from '../a2ui/surface-stream.js';
+import {ThermidorA2UIStream} from '../a2ui/surfaces.js';
 import {LandingPage} from './LandingPage/LandingPage.js';
-import {SearchResultsPage} from './SearchResultsPage/SearchResultsPage.js';
 import {ConversationPage} from './ConversationPage/index.js';
 
 const catalog = createThermidorCatalog();
 
+/**
+ * A single page: the landing page until the first prompt, then one conversation feed where each
+ * turn shows the blocks the server produced, search blocks included.
+ */
 export function AppShell() {
   const session = useSession();
 
@@ -20,57 +24,41 @@ export function AppShell() {
   const turns = useSyncExternalStore(subscribe, getTurns, getTurns);
 
   const isStreaming = useMemo(() => turns.some((turn) => turn.status === 'streaming'), [turns]);
+  const stream = useMemo(() => buildSurfaceStream(turns), [turns]);
 
-  const controller = useMemo(
-    () => ({
-      submitPrompt: (prompt: string) => {
-        void session.dispatchAction({name: 'submitPrompt', payload: {prompt}});
-      },
-      clear: () => {
-        // The session client has no reset; a fresh conversation is started by
-        // submitting again. Kept as a no-op to satisfy the navigation contract.
-      },
-    }),
+  const serverSurfaceIdsRef = useRef(stream.serverSurfaceIds);
+  serverSurfaceIdsRef.current = stream.serverSurfaceIds;
+
+  const handleAction = useCallback(
+    (message: A2UIClientEventMessage) =>
+      session.dispatchAction(toServerAction(message, serverSurfaceIdsRef.current)),
     [session]
   );
 
-  const converseState = useMemo(() => ({turns: [...turns], isStreaming}), [turns, isStreaming]);
-
-  const nav = useNavigation(controller, converseState);
+  const handleSubmit = useCallback(
+    (prompt: string) => {
+      if (!prompt.trim() || isStreaming) return;
+      void session.dispatchAction({name: 'submitPrompt', payload: {prompt}});
+    },
+    [session, isStreaming]
+  );
 
   return (
-    <A2UIProvider catalog={catalog} onAction={session.dispatchAction}>
+    <A2UIProvider catalog={catalog} onAction={handleAction}>
+      <ThermidorA2UIStream messages={stream.messages} />
       <div className="view-shell">
-        {nav.commerceSurfaceId && (
-          <div className={`view-panel ${nav.view === 'search' ? 'view-panel--active' : ''}`}>
-            <SearchResultsPage
-              surfaceId={nav.commerceSurfaceId}
-              onSubmit={nav.handleSubmit}
+        <div className="view-panel view-panel--active">
+          {turns.length === 0 ? (
+            <LandingPage onSubmit={handleSubmit} isStreaming={isStreaming} />
+          ) : (
+            <ConversationPage
+              onSubmit={handleSubmit}
               isStreaming={isStreaming}
-              query={nav.persistedQuery}
-              onBackToConversation={nav.handleBackToConversation}
-              products={nav.targetedProducts}
-              onProductsChange={nav.setTargetedProducts}
+              turns={[...turns]}
+              surfacesByTurn={stream.surfacesByTurn}
             />
-          </div>
-        )}
-        {nav.view !== 'search' && (
-          <div className="view-panel view-panel--active">
-            {nav.view === 'conversation' ? (
-              <ConversationPage
-                onSubmit={nav.handleSubmit}
-                isStreaming={isStreaming}
-                turns={converseState.turns}
-                onBackToSearch={nav.handleBackToSearch}
-                canGoBackToSearch={nav.canGoBackToSearch}
-                products={nav.targetedProducts}
-                onProductsChange={nav.setTargetedProducts}
-              />
-            ) : (
-              <LandingPage onSubmit={nav.handleSubmit} isStreaming={isStreaming} />
-            )}
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </A2UIProvider>
   );

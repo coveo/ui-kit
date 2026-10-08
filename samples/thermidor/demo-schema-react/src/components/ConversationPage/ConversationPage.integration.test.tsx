@@ -1,18 +1,26 @@
-import {render, screen, fireEvent} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
 import type {Turn} from '@coveo/thermidor';
 import {ConversationPage} from './ConversationPage.js';
-import {makeTurn, makeSurface} from '../../test/turn-fixtures.js';
+import {makeTurn} from '../../test/turn-fixtures.js';
+
+// The blocks are drawn by the A2-UI renderer; the page only decides where each turn's blocks go
+// and whether they are interactive.
+vi.mock('../../a2ui/surfaces.js', () => ({
+  TurnSurfaces: ({surfaceIds, interactive}: {surfaceIds: string[]; interactive: boolean}) =>
+    surfaceIds.length === 0 ? null : (
+      <div data-testid="turn-surfaces" data-interactive={String(interactive)}>
+        {surfaceIds.join(',')}
+      </div>
+    ),
+}));
 
 function renderPage(overrides: Partial<Parameters<typeof ConversationPage>[0]> = {}) {
   const defaultProps = {
     onSubmit: vi.fn(),
     isStreaming: false,
     turns: [] as Turn[],
-    onBackToSearch: vi.fn(),
-    canGoBackToSearch: false,
-    products: [],
-    onProductsChange: vi.fn(),
+    surfacesByTurn: new Map<string, readonly string[]>(),
   };
 
   return {
@@ -23,7 +31,7 @@ function renderPage(overrides: Partial<Parameters<typeof ConversationPage>[0]> =
 
 describe('ConversationPage integration', () => {
   describe('multi-turn conversation rendering', () => {
-    it('renders a mix of agent turns, routed turns, and error turns', () => {
+    it('renders a mix of agent turns, search turns, and error turns', () => {
       const turns: Turn[] = [
         makeTurn({
           id: 'turn-1',
@@ -38,7 +46,6 @@ describe('ConversationPage integration', () => {
         makeTurn({
           id: 'turn-2',
           prompt: 'Show me results',
-          response: {surfaces: [makeSurface('s1', 'CommerceSearch')]},
         }),
         makeTurn({
           id: 'turn-3',
@@ -48,19 +55,19 @@ describe('ConversationPage integration', () => {
         }),
       ];
 
-      renderPage({turns});
+      renderPage({turns, surfacesByTurn: new Map([['turn-2', ['turn-2/ui-search']]])});
 
       expect(screen.getByText('Find me running shoes')).toBeDefined();
       expect(screen.getByText('Here are some running shoes.')).toBeDefined();
 
       expect(screen.getByText('Show me results')).toBeDefined();
-      expect(screen.getByText('Search results updated.')).toBeDefined();
+      expect(screen.getByTestId('turn-surfaces').textContent).toBe('turn-2/ui-search');
 
       expect(screen.getByText('What about hiking boots?')).toBeDefined();
       expect(screen.getByText('Service unavailable')).toBeDefined();
     });
 
-    it('keeps an agent answer whose search option opened a search block', () => {
+    it('draws an agent answer and the search block its option opened in the same turn', () => {
       const turns: Turn[] = [
         makeTurn({
           id: 'turn-1',
@@ -70,18 +77,38 @@ describe('ConversationPage integration', () => {
               messages: [{content: 'Here are a few directions.', role: 'assistant'}],
               reasoningSteps: [],
             },
-            surfaces: [
-              makeSurface('agent-1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed', 'NextActionsBar'),
-              makeSurface('ui-6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b', 'CommerceSearch'),
-            ],
           },
         }),
       ];
 
-      renderPage({turns});
+      renderPage({
+        turns,
+        surfacesByTurn: new Map([['turn-1', ['turn-1/agent-answer', 'turn-1/ui-search']]]),
+      });
 
       expect(screen.getByText('Here are a few directions.')).toBeDefined();
-      expect(screen.queryByText('Search results updated.')).toBeNull();
+      expect(screen.getByTestId('turn-surfaces').textContent).toBe(
+        'turn-1/agent-answer,turn-1/ui-search'
+      );
+    });
+
+    it('keeps only the latest turn interactive', () => {
+      const turns: Turn[] = [
+        makeTurn({id: 'turn-1', prompt: 'kayaks'}),
+        makeTurn({id: 'turn-2', prompt: 'which are best for rivers?'}),
+      ];
+
+      renderPage({
+        turns,
+        surfacesByTurn: new Map([
+          ['turn-1', ['turn-1/ui-search']],
+          ['turn-2', ['turn-2/agent-answer']],
+        ]),
+      });
+
+      expect(
+        screen.getAllByTestId('turn-surfaces').map((block) => block.dataset['interactive'])
+      ).toEqual(['false', 'true']);
     });
 
     it('renders separators between turns but not after the last turn', () => {
@@ -150,31 +177,6 @@ describe('ConversationPage integration', () => {
       renderPage({turns, isStreaming: true});
 
       expect(screen.getByText(/Calling tool:/)).toBeDefined();
-    });
-  });
-
-  describe('Back to search results visibility', () => {
-    it('shows "Back to search results" when canGoBackToSearch is true', () => {
-      const turns: Turn[] = [makeTurn({id: 'turn-1', prompt: 'Hello'})];
-
-      renderPage({turns, canGoBackToSearch: true});
-      expect(screen.getByRole('button', {name: /Back to search results/})).toBeDefined();
-    });
-
-    it('hides "Back to search results" when canGoBackToSearch is false', () => {
-      const turns: Turn[] = [makeTurn({id: 'turn-1', prompt: 'Hello'})];
-
-      renderPage({turns, canGoBackToSearch: false});
-      expect(screen.queryByRole('button', {name: /Back to search results/})).toBeNull();
-    });
-
-    it('calls onBackToSearch when the button is clicked', () => {
-      const onBackToSearch = vi.fn();
-      const turns: Turn[] = [makeTurn({id: 'turn-1', prompt: 'Hello'})];
-
-      renderPage({turns, canGoBackToSearch: true, onBackToSearch});
-      fireEvent.click(screen.getByRole('button', {name: /Back to search results/}));
-      expect(onBackToSearch).toHaveBeenCalledTimes(1);
     });
   });
 });

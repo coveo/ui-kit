@@ -1,11 +1,9 @@
-import {useMemo} from 'react';
+import {useMemo, type ReactNode} from 'react';
 import type {Activity, ReasoningStep, TurnResponse} from '@coveo/thermidor';
 import {ThinkingBlock} from './ThinkingBlock.js';
 import {StreamingMessage} from './StreamingMessage.js';
 import {A2UISkeleton} from '../../a2ui/Skeleton/Skeleton.js';
 import {parseSurfaceSnapshots} from '../../a2ui/types.js';
-import {ThermidorA2UISurfaces} from '../../a2ui/surfaces.js';
-import {commerceSurfaceIds, filterSurfaceMessages} from '../../a2ui/surface-messages.js';
 import styles from './AgentResponseBlock.module.css';
 
 const KNOWN_COMPONENTS = new Set([
@@ -26,29 +24,22 @@ const ROUTE_TO_COMPONENT: Record<string, string> = {
 export interface AgentResponseBlockProps {
   response: TurnResponse;
   isStreaming: boolean;
+  /** The turn's blocks, drawn after the agent's text and loading placeholders. */
+  children?: ReactNode;
 }
 
-export function AgentResponseBlock({response, isStreaming}: AgentResponseBlockProps) {
-  const {activities, agent, a2uiMessages, surfaces} = response;
+export function AgentResponseBlock({response, isStreaming, children}: AgentResponseBlockProps) {
+  const {activities, agent} = response;
   const messages = agent?.messages ?? [];
   const reasoningSteps = agent?.reasoningSteps ?? [];
 
   const showThinkingBlock = reasoningSteps.length > 0 || isStreaming;
   const showStreamingMessage = messages.some((m) => m.content.length > 0);
 
-  // `response.surfaces` (typed DiscoveredSurface[]) drives navigation only; the
-  // skeleton placeholders need the raw surface snapshots (component props,
+  // The skeleton placeholders need the raw surface snapshots (component props,
   // `isLoading`), which live in the `a2ui-surface` activity payloads.
   const surfaceSnapshots = useMemo(() => toSurfaceSnapshots(activities), [activities]);
   const skeletonItems = useSkeletonItems(surfaceSnapshots, reasoningSteps, isStreaming);
-
-  // A search block opened from one of the answer's search options belongs to the search page.
-  const answerMessages = useMemo(() => {
-    const searchSurfaceIds = new Set(commerceSurfaceIds(surfaces));
-    return searchSurfaceIds.size === 0
-      ? a2uiMessages
-      : filterSurfaceMessages(a2uiMessages, (surfaceId) => !searchSurfaceIds.has(surfaceId));
-  }, [a2uiMessages, surfaces]);
 
   return (
     <div className={styles.container}>
@@ -59,7 +50,7 @@ export function AgentResponseBlock({response, isStreaming}: AgentResponseBlockPr
       {skeletonItems.map((item) => (
         <A2UISkeleton key={item.surfaceId} componentType={item.componentType} />
       ))}
-      {answerMessages.length > 0 && <ThermidorA2UISurfaces messages={answerMessages} />}
+      {children}
     </div>
   );
 }

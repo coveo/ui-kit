@@ -15,6 +15,7 @@ function renderThread(
   const defaultProps = {
     turns,
     turnRefs: {current: new Map<string, HTMLDivElement>()},
+    surfacesByTurn: new Map<string, readonly string[]>(),
   };
 
   return render(<ConversationThread {...defaultProps} {...overrides} />);
