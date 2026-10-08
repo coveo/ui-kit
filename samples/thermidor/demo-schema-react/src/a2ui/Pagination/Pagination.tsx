@@ -2,6 +2,9 @@ import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {PaginationAction} from '@coveo/thermidor-schema';
 import {PaginationPropsSchema} from '@coveo/thermidor-schema/zod3';
 import styles from './Pagination.module.css';
+import {getCurrentPagesRange} from './pager-utils.js';
+
+const NUMBER_OF_PAGES = 5;
 
 /**
  * A2-UI component for the `pagination` controls. The generic binder resolves `page` / `totalPages`
@@ -44,7 +47,7 @@ export const Pagination = createReactComponent(
         </button>
 
         <div className={styles.pages}>
-          {Array.from({length: totalPages}, (_, i) => (
+          {getCurrentPagesRange(page, NUMBER_OF_PAGES, totalPages - 1).map((i) => (
             <button
               key={i}
               className={`${styles.pageButton} ${i === page ? styles.active : ''}`}

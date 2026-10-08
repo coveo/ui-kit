@@ -96,6 +96,21 @@ describe('Pagination', () => {
     await waitFor(() => expect(screen.getByLabelText('Next page')).toBeDefined());
     expect((screen.getByLabelText('Next page') as HTMLButtonElement).disabled).toBe(true);
   });
+
+  it('renders only five page buttons around the current page when there are many pages', async () => {
+    mountPagination({page: 20, pageSize: 20, totalEntries: 820, totalPages: 41});
+
+    await waitFor(() => expect(screen.getByLabelText('Page 21')).toBeDefined());
+    expect(screen.getAllByRole('button', {name: /^Page \d+$/}).map((b) => b.textContent)).toEqual([
+      '19',
+      '20',
+      '21',
+      '22',
+      '23',
+    ]);
+    expect(screen.queryByLabelText('Page 1')).toBeNull();
+    expect(screen.queryByLabelText('Page 41')).toBeNull();
+  });
 });
 
 describe('Sort', () => {

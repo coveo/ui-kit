@@ -1,7 +1,7 @@
 .page {
   display: grid;
   grid-template-rows: 1fr;
-  grid-template-columns: minmax(220px, 280px) 1fr;
+  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
   column-gap: var(--space-5);
   border-top: 1px solid var(--color-border);
   margin-top: var(--space-2);
@@ -24,7 +24,7 @@
 
 @media (max-width: 1023px) {
   .page {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     column-gap: 0;
   }
 
