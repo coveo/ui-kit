@@ -19,7 +19,8 @@ Try it:
 1. The home page loads two recommendation carousels.
 2. Type `life jack` in the header: after a 300 ms pause the suggestions popover shows completions and
    products. Keep typing and each new pause replaces the streaming turn.
-3. Click **Add** on a product: the cart in the header counts it.
+3. Click **Add to cart** on a product card, or **Add** on a product suggestion: the cart in the
+   header counts it, and the card says how many are in the cart.
 4. Press Enter, or pick a completion such as `boating safety`: the assistant page opens with the
    answer. The header and the cart stay; the home carousels are gone.
 5. Open **One session** at the bottom to see every turn, the area it came from, and the surfaces alive
@@ -67,9 +68,15 @@ lifetime, and the surface lives until a `deleteSurface` removes it. So:
   - A page turn deletes the previous page's surfaces and creates its own. The page also hides older
     `main` surfaces as soon as it is opened, so it never shows the previous page while the new one
     loads.
-- **Actions go to the surface they belong to.** Adding a product from the suggestions dispatches
-  `updateCart` on the surface rooted on `Cart`, found by its root component. The cart's contents are
+- **Actions go to the surface they belong to.** Adding a product, from a product card on the page
+  or from the suggestions, dispatches `updateCart` on the surface rooted on `Cart`, found by its root
+  component, even though the button is drawn on another surface. The cart's contents are
   client-owned and travel in `context.cart`.
+
+  The product cards come from `demo-schema-react`. Their `ProductCardActionsContext` lets this sample
+  add an **Add to cart** button to every card (carousels, research card) without touching the
+  renderers; `demo-schema-react` provides none, so its cards are unchanged. `ComparisonTable` and the
+  bundle's `ProductSummary` don't use the shared card, so they have no button yet.
 
 ### Why `context.custom` and not `supportedCatalogIds`
 
@@ -147,7 +154,8 @@ src/
 ├── a2ui/
 │   ├── catalog.ts             The renderers for the Storefront components
 │   ├── QuerySuggestions/      New: completions and product suggestions
-│   └── Cart/                  New: the cart, anchor of updateCart
+│   ├── Cart/                  New: the cart, anchor of updateCart
+│   └── AddToCartButton/       The button added to every product card
 ├── components/                Top bar, search box, session inspector
 └── pages/                     Home and assistant pages
 ```

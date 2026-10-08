@@ -1,9 +1,11 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {A2UIProvider, type A2UIClientEventMessage} from '@copilotkit/a2ui-renderer';
 import type {A2uiClientMessage} from '@coveo/thermidor';
-import type {Product, UpdateCartPayload} from '@coveo/thermidor-schema';
+import type {UpdateCartPayload} from '@coveo/thermidor-schema';
+import {ProductCardActionsContext} from '../../demo-schema-react/src/a2ui/ProductCard/product-card-actions.js';
 import {ThermidorA2UIStream} from '../../demo-schema-react/src/a2ui/surfaces.js';
 import {createStorefrontCatalog} from './a2ui/catalog.js';
+import {AddToCartButton} from './a2ui/AddToCartButton/AddToCartButton.js';
 import {StorefrontUiProvider, type StorefrontUi} from './a2ui/storefront-ui.js';
 import {SessionInspector} from './components/SessionInspector.js';
 import {TopBar} from './components/TopBar.js';
@@ -119,16 +121,16 @@ export function StorefrontApp() {
         scheduler.cancelSearch();
         openAssistant(expression);
       },
-      addToCart: (product: Product) => {
+      addToCart: ({productId, name, price}) => {
         const payload: UpdateCartPayload = {
-          productId: product.permanentid,
-          name: product.ec_name,
-          price: product.ec_promo_price ?? product.ec_price ?? null,
+          productId,
+          name,
+          price: price ?? null,
           quantity: 1,
           operation: 'add',
         };
-        // The product is on the suggestions surface, but the action belongs to the cart, so it
-        // is addressed to whichever surface the server rooted on a `Cart`.
+        // The product is on another surface, but the action belongs to the cart, so it is
+        // addressed to whichever surface the server rooted on a `Cart`.
         const cartSurface = findSurfaceByRoot(layoutRef.current, 'Cart');
         if (!cartSurface) {
           cart.apply(payload);
@@ -147,6 +149,13 @@ export function StorefrontApp() {
     [scheduler, openAssistant, cart, handleAction]
   );
 
+  const renderCardActions = useCallback(
+    (product: Parameters<StorefrontUi['addToCart']>[0]) => (
+      <AddToCartButton product={product} onAdd={ui.addToCart} />
+    ),
+    [ui]
+  );
+
   const currentPageTurn = pageTurn?.visitId === visit.id ? pageTurn : null;
   const sinceTurnIndex = currentPageTurn?.sinceTurnIndex ?? turns.length;
   const assistantTurn = turns.find((turn) => turn.id === currentPageTurn?.turnId);
@@ -154,25 +163,27 @@ export function StorefrontApp() {
   return (
     <A2UIProvider catalog={catalog} onAction={handleAction}>
       <StorefrontUiProvider value={ui}>
-        <ThermidorA2UIStream messages={layout.messages} />
-        <TopBar
-          onHome={() => setVisit(visitHome())}
-          onSearch={openAssistant}
-          suggestionsOpen={suggestionsOpen}
-          onSuggestionsOpenChange={setSuggestionsOpen}
-        />
-        {visit.page === 'home' ? (
-          <HomePage sinceTurnIndex={sinceTurnIndex} />
-        ) : (
-          <AssistantPage
-            key={visit.id}
-            prompt={visit.prompt}
-            sinceTurnIndex={sinceTurnIndex}
-            turn={assistantTurn}
-            onBack={() => setVisit(visitHome())}
+        <ProductCardActionsContext.Provider value={renderCardActions}>
+          <ThermidorA2UIStream messages={layout.messages} />
+          <TopBar
+            onHome={() => setVisit(visitHome())}
+            onSearch={openAssistant}
+            suggestionsOpen={suggestionsOpen}
+            onSuggestionsOpenChange={setSuggestionsOpen}
           />
-        )}
-        <SessionInspector />
+          {visit.page === 'home' ? (
+            <HomePage sinceTurnIndex={sinceTurnIndex} />
+          ) : (
+            <AssistantPage
+              key={visit.id}
+              prompt={visit.prompt}
+              sinceTurnIndex={sinceTurnIndex}
+              turn={assistantTurn}
+              onBack={() => setVisit(visitHome())}
+            />
+          )}
+          <SessionInspector />
+        </ProductCardActionsContext.Provider>
       </StorefrontUiProvider>
     </A2UIProvider>
   );

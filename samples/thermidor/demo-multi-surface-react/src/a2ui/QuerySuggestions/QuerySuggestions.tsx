@@ -74,7 +74,13 @@ export const QuerySuggestions = createReactComponent(
                 <button
                   type="button"
                   className={styles.add}
-                  onClick={() => ui.addToCart(product)}
+                  onClick={() =>
+                    ui.addToCart({
+                      productId: product.permanentid,
+                      name: product.ec_name,
+                      price: product.ec_promo_price ?? product.ec_price ?? undefined,
+                    })
+                  }
                   aria-label={`Add ${product.ec_name} to cart`}
                 >
                   Add

@@ -1,5 +1,5 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import type {Turn} from '@coveo/thermidor';
+import type {A2uiClientMessage, SubmitPromptAction, Turn} from '@coveo/thermidor';
 import {makeTurn} from '../../../demo-schema-react/src/test/turn-fixtures.js';
 import {
   ASSISTANT_CONTEXT,
@@ -23,13 +23,13 @@ function createFakeSession() {
     get turns() {
       return turns;
     },
-    dispatchAction: vi.fn((message: {name?: string; payload?: {prompt: string}}) => {
+    dispatchAction: vi.fn((message: A2uiClientMessage | SubmitPromptAction) => {
       contextsAtRequest.push(scheduler?.currentContext);
-      if (message.name === 'submitPrompt') {
+      if ('name' in message) {
         turns.push(
           makeTurn({
             id: `t${turns.length + 1}`,
-            prompt: message.payload!.prompt,
+            prompt: message.payload.prompt,
             status: 'streaming',
           })
         );
@@ -62,7 +62,9 @@ function createFakeSession() {
       await Promise.resolve();
     },
     prompts() {
-      return session.dispatchAction.mock.calls.map(([message]) => message.payload?.prompt);
+      return session.dispatchAction.mock.calls.map(([message]) =>
+        'name' in message ? message.payload.prompt : undefined
+      );
     },
   };
 }
