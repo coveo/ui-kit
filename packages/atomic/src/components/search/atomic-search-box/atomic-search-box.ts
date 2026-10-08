@@ -8,10 +8,11 @@ import {
   type StandaloneSearchBox,
   type StandaloneSearchBoxState,
 } from '@coveo/headless';
-import {type CSSResultGroup, css, html, LitElement} from 'lit';
+import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {createRef, type RefOrCallback, ref} from 'lit/directives/ref.js';
+import {renderButton} from '@/src/components/common/button';
 import type {RedirectionPayload} from '@/src/components/common/search-box/redirection-payload';
 import {renderSearchBoxWrapper} from '@/src/components/common/search-box/search-box-wrapper';
 import {renderSearchBoxTextArea} from '@/src/components/common/search-box/search-text-area';
@@ -84,6 +85,7 @@ import '@coveo/atomic-legacy/atomic-suggestion-renderer';
  * @part recent-query-title-content - The contents of the clear button above suggestions from the `atomic-search-box-recent-queries` component.
  * @part recent-query-title - The "recent searches" text of the clear button above suggestions from the `atomic-search-box-recent-queries` component.
  * @part recent-query-clear - The "clear" text of the clear button above suggestions from the `atomic-search-box-recent-queries` component.
+ * @part recent-query-clear-button - The button below suggestions to clear the recent queries from the `atomic-search-box-recent-queries` component, when `with-clear-recent-button` is set.
  *
  * @part instant-results-item - An instant result rendered by an `atomic-search-box-instant-results` component.
  * @part instant-results-show-all - The clickable suggestion to show all items for the current instant results search rendered by an `atomic-search-box-instant-results` component.
@@ -208,6 +210,19 @@ export class AtomicSearchBox extends LitElement implements InitializableComponen
     converter: booleanConverter,
   })
   public enableQuerySyntax = false;
+
+  // TODO - (v4) KIT-4365: Remove and always render the clear recent queries button.
+  /**
+   * Whether to render the option to clear the recent queries as a button below the suggestions, rather than as the first suggestion.
+   * The button is reached with the Tab key, so the arrow keys only navigate through the suggestions.
+   */
+  @property({
+    type: Boolean,
+    attribute: 'with-clear-recent-button',
+    reflect: true,
+    converter: booleanConverter,
+  })
+  public withClearRecentButton = false;
 
   connectedCallback() {
     super.connectedCallback();
@@ -494,7 +509,9 @@ export class AtomicSearchBox extends LitElement implements InitializableComponen
         }
         break;
       case 'Tab':
-        this.suggestionManager.clearSuggestions();
+        if (!this.clearRecentQueriesElement) {
+          this.suggestionManager.clearSuggestions();
+        }
         break;
       default:
         if (this.suggestionManager.keyboardActiveDescendant) {
@@ -574,6 +591,41 @@ export class AtomicSearchBox extends LitElement implements InitializableComponen
     })}`;
   }
 
+  private get clearRecentQueriesElement() {
+    if (!this.withClearRecentButton) {
+      return undefined;
+    }
+
+    return this.suggestionManager.allSuggestionElements.find(
+      (element) => element.key === 'recent-query-clear'
+    );
+  }
+
+  private renderClearRecentQueriesButton() {
+    const element = this.clearRecentQueriesElement;
+    if (!element) {
+      return nothing;
+    }
+
+    return html`<div
+      class="border-neutral basis-full border-t px-2 py-1"
+      @mousedown=${(e: MouseEvent) => e.preventDefault()}
+    >
+      ${renderButton({
+        props: {
+          style: 'text-primary',
+          text: this.bindings.i18n.t('clear-recent-searches'),
+          part: 'recent-query-clear-button',
+          class: 'focus-visible:ring-ring-primary px-2 py-1 focus-visible:ring-2',
+          onClick: (e) => {
+            element.onSelect?.(e!);
+            this.textAreaRef.value?.focus();
+          },
+        },
+      })(nothing)}
+    </div>`;
+  }
+
   private renderSuggestions() {
     const part = `suggestions-wrapper ${
       this.suggestionManager.isDoubleList ? 'suggestions-double-list' : 'suggestions-single-list'
@@ -584,6 +636,7 @@ export class AtomicSearchBox extends LitElement implements InitializableComponen
 
     const classes = {
       'bg-background border-neutral absolute top-full left-0 z-10 flex w-full rounded-md border': true,
+      'flex-wrap': !!this.clearRecentQueriesElement,
       hidden: !isVisible,
     };
 
@@ -615,15 +668,18 @@ export class AtomicSearchBox extends LitElement implements InitializableComponen
         },
         () => this.suggestionManager.rightPanel
       )}
+      ${this.renderClearRecentQueriesButton()}
     </div>`;
   }
 
   private renderPanel(
     side: 'left' | 'right',
-    elements: SearchBoxSuggestionElement[],
+    panelElements: SearchBoxSuggestionElement[],
     setRef: (el: HTMLElement | undefined) => void,
     getRef: () => HTMLElement | undefined
   ) {
+    const clearRecentQueriesElement = this.clearRecentQueriesElement;
+    const elements = panelElements.filter((element) => element !== clearRecentQueriesElement);
     if (!elements.length) {
       return null;
     }
