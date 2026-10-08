@@ -1,26 +1,8 @@
 [
   {
-    "name": "ssr",
-    "path": "dist/ssr/index.js",
-    "ignore": ["@coveo/headless"],
-    "limit": "1 kB"
-  },
-  {
-    "name": "ssr-commerce",
+    "name": "@coveo/headless-react/ssr-commerce",
     "path": "dist/ssr-commerce/index.js",
     "ignore": ["@coveo/headless"],
     "limit": "1.7 kB"
-  },
-  {
-    "name": "ssr-next",
-    "path": "dist/ssr-next/index.js",
-    "ignore": ["@coveo/headless"],
-    "limit": "1 kB"
-  },
-  {
-    "name": "ssr-commerce-next",
-    "path": "dist/ssr-commerce-next/index.js",
-    "ignore": ["@coveo/headless"],
-    "limit": "1.4 kB"
   }
 ]

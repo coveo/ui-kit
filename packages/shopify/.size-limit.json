@@ -1,26 +1,8 @@
 [
   {
-    "name": "headless",
+    "name": "@coveo/shopify",
     "path": "dist/headless.esm.js",
     "ignore": ["@coveo/headless"],
     "limit": "3.5 kB"
-  },
-  {
-    "name": "headless/commerce",
-    "path": "dist/headless/commerce.esm.js",
-    "ignore": ["@coveo/headless"],
-    "limit": "3.2 kB"
-  },
-  {
-    "name": "headless/search",
-    "path": "dist/headless/search.esm.js",
-    "ignore": ["@coveo/headless"],
-    "limit": "3.3 kB"
-  },
-  {
-    "name": "utilities",
-    "path": "dist/utilities.esm.js",
-    "ignore": ["@coveo/headless"],
-    "limit": "3.1 kB"
   }
 ]
