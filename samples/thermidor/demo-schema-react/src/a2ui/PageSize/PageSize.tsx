@@ -20,19 +20,21 @@ export const PageSize = createReactComponent(
 
     const {value: pageSize, dispatchOptimistic} = useOptimisticValue(
       props.pageSize,
-      (action: PageSizeAction) => context.dispatchAction(action)
+      (action: PageSizeAction) => {
+        context.dispatchAction(action);
+      }
     );
 
-    // `pageSize` is bound to the data model and is `undefined` on the first render, before
-    // its `/state/<id>` op lands (A2-UI progressive rendering). Only fold a real numeric page
-    // size into the option list, so the `<option>` keys stay unique (no `undefined`/`NaN` key)
-    // and the ordering is stable.
+    // Build the option set from both the producer's size (`props.pageSize`) and the held
+    // optimistic size: a non-default backend size (e.g. 96) must stay selectable while another
+    // size is in flight. `undefined` (first render, before the data model lands) is filtered out.
     const currentPageSize = typeof pageSize === 'number' ? pageSize : undefined;
+    const backendPageSize = typeof props.pageSize === 'number' ? props.pageSize : undefined;
     const options = [
       ...new Set(
-        currentPageSize === undefined
-          ? DEFAULT_PAGE_SIZE_OPTIONS
-          : [...DEFAULT_PAGE_SIZE_OPTIONS, currentPageSize]
+        [...DEFAULT_PAGE_SIZE_OPTIONS, backendPageSize, currentPageSize].filter(
+          (size): size is number => size !== undefined
+        )
       ),
     ].sort((a, b) => a - b);
 

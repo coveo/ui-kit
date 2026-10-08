@@ -28,10 +28,22 @@ function mountControl<TProps extends object>(
   });
 }
 
+/**
+ * A dispatch held open until `answer()`, so a test can observe the optimistic intent while the
+ * producer has not reconciled, then release it inside `act` and assert the producer value returns.
+ */
 function heldOpen() {
   let answer!: () => void;
   const pending = new Promise<void>((resolve) => (answer = resolve));
-  return {gate: () => pending, answer: () => answer()};
+  return {
+    gate: () => pending,
+    answer: async () => {
+      await act(async () => {
+        answer();
+        await Promise.resolve();
+      });
+    },
+  };
 }
 
 /**
@@ -77,25 +89,56 @@ describe('Pagination', () => {
     );
     expect(screen.getByLabelText('Page 3').getAttribute('aria-current')).toBe('page');
     expect(screen.getByLabelText('Page 1').getAttribute('aria-current')).toBeNull();
-    held.answer();
+
+    // Releasing the producer answer brings the page controls back to live (no longer stale).
+    await held.answer();
+    await waitFor(() =>
+      expect((screen.getByLabelText('Page 3') as HTMLButtonElement).disabled).toBe(false)
+    );
   });
 
-  it('sends only the first and last page of a rapid burst, coalescing the queue', async () => {
-    const view = mountHeldControl('Pagination', state, (context) => context?.['page']);
+  it('freezes navigation while a results-invalidating gesture is in flight', async () => {
+    // The first click leaves `selectPage` outstanding, which marks `results` stale: the pagination
+    // then describes a page count the producer has not caught up with, so every page button and
+    // both nav arrows are disabled until the answer lands. (This is why there is no mid-flight
+    // pagination burst: a second click cannot be issued against a stale page count.)
+    const held = heldOpen();
+    mountControl('Pagination', state, held.gate);
 
     await waitFor(() => expect(screen.getByLabelText('Page 2')).toBeDefined());
-    // Click through the pages faster than the backend answers.
     fireEvent.click(screen.getByLabelText('Page 2'));
-    fireEvent.click(screen.getByLabelText('Page 3'));
-    fireEvent.click(screen.getByLabelText('Page 4'));
+
+    await waitFor(() =>
+      expect((screen.getByLabelText('Page 3') as HTMLButtonElement).disabled).toBe(true)
+    );
+    expect((screen.getByLabelText('Previous page') as HTMLButtonElement).disabled).toBe(true);
+    expect((screen.getByLabelText('Next page') as HTMLButtonElement).disabled).toBe(true);
+
+    await held.answer();
+    await waitFor(() =>
+      expect((screen.getByLabelText('Page 3') as HTMLButtonElement).disabled).toBe(false)
+    );
+  });
+
+  it('clamps a held page that a shrinking producer totalPages would put out of range', async () => {
+    const held = heldOpen();
+    const {lastAction, pushDataModel} = mountControl('Pagination', state, held.gate);
+
+    // Hold page 5 (index 4) optimistically on a 5-page producer.
+    await waitFor(() => expect(screen.getByLabelText('Page 5')).toBeDefined());
     fireEvent.click(screen.getByLabelText('Page 5'));
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({name: 'selectPage', context: {page: 4}})
+    );
 
-    // Only the first dispatch (page 2 -> page:1) is in flight; the rest queue on the one slot.
-    await waitFor(() => expect(view.sent()).toEqual([1]));
-    await view.release();
+    // A concurrent gesture (e.g. a larger page size) shrinks the producer to 2 pages while page 4
+    // is still held. The held page is clamped into [0, totalPages): the last real page is current,
+    // no phantom button sits outside the range.
+    pushDataModel([{path: '/state/root/totalPages', value: 2}]);
 
-    // The middle selections never go out: the queue coalesces to the latest (page 5 -> page:4).
-    await waitFor(() => expect(view.sent()).toEqual([1, 4]));
+    await waitFor(() => expect(screen.queryByLabelText('Page 5')).toBeNull());
+    expect(screen.getByLabelText('Page 2').getAttribute('aria-current')).toBe('page');
+    held.answer();
   });
 });
 
@@ -114,6 +157,28 @@ describe('PageSize', () => {
       expect(lastAction()).toMatchObject({name: 'setPageSize', context: {pageSize: 48}})
     );
     expect((screen.getByLabelText(/Products per page/) as HTMLSelectElement).value).toBe('48');
+
+    // After the producer answers, the held value is released and the producer value is read again.
+    await held.answer();
+    await waitFor(() =>
+      expect((screen.getByLabelText(/Products per page/) as HTMLSelectElement).value).toBe('12')
+    );
+  });
+
+  it('keeps the backend size selectable while another size is in flight', async () => {
+    // Backend is on a non-default size 96; options are [12, 24, 48, 96].
+    const held = heldOpen();
+    mountControl<PageSizeProps>('PageSize', {pageSize: 96}, held.gate);
+
+    await waitFor(() => expect(screen.getByLabelText(/Products per page/)).toBeDefined());
+    const select = screen.getByLabelText(/Products per page/) as HTMLSelectElement;
+    fireEvent.change(select, {target: {value: '12'}});
+
+    // While 12 is held, 96 (the size still actually applied by the producer) must remain an option
+    // so the user can return to it; the option set is producer ∪ held, not held alone.
+    await waitFor(() => expect(select.value).toBe('12'));
+    const optionValues = Array.from(select.options).map((option) => option.value);
+    expect(optionValues).toContain('96');
     held.answer();
   });
 
@@ -165,7 +230,12 @@ describe('Sort', () => {
       })
     );
     expect((screen.getByLabelText(/Sort by/) as HTMLSelectElement).value).toBe('1');
-    held.answer();
+
+    // After the producer answers, the held value is released and the producer value is read again.
+    await held.answer();
+    await waitFor(() =>
+      expect((screen.getByLabelText(/Sort by/) as HTMLSelectElement).value).toBe('0')
+    );
   });
 
   it('sends only the first and last criterion of a rapid burst, coalescing the queue', async () => {

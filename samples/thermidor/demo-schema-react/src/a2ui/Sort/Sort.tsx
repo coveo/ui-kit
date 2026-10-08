@@ -25,7 +25,9 @@ export const Sort = createReactComponent(
 
     const {value: appliedSort, dispatchOptimistic} = useOptimisticValue(
       props.appliedSort,
-      (action: SortAction) => context.dispatchAction(action)
+      (action: SortAction) => {
+        context.dispatchAction(action);
+      }
     );
 
     const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
