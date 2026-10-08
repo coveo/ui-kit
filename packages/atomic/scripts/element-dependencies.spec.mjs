@@ -62,6 +62,19 @@ describe('element dependencies', () => {
       expect([...renders]).toEqual([]);
     });
 
+    it('should ignore dynamic imports', () => {
+      const {imports} = analyzeModule(
+        'a.ts',
+        [
+          "import './static.js';",
+          "export {B} from './re-export.js';",
+          "export const loadChild = () => import('./child.js');",
+        ].join('\n')
+      );
+
+      expect(imports).toEqual(['./static.js', './re-export.js']);
+    });
+
     it('should ignore type-only imports', () => {
       const {imports} = analyzeModule(
         'a.ts',
@@ -91,6 +104,28 @@ describe('element dependencies', () => {
 
       expect(findUnregisteredRenderedTags(modules, resolveImport)).toEqual([
         {element: 'atomic-parent', tag: 'atomic-child', renderedBy: 'render'},
+      ]);
+    });
+
+    it('should report a rendered tag whose element is only imported lazily', () => {
+      const parentCode = [
+        "export const loadChild = () => import('child');",
+        'html`<atomic-child></atomic-child>`;',
+        "@customElement('atomic-parent') class Parent extends LitElement {}",
+      ].join('\n');
+      const modules = new Map([
+        ['parent', analyzeModule('parent.ts', parentCode)],
+        [
+          'child',
+          analyzeModule(
+            'child.ts',
+            "@customElement('atomic-child') class Child extends LitElement {}"
+          ),
+        ],
+      ]);
+
+      expect(findUnregisteredRenderedTags(modules, resolveImport)).toEqual([
+        {element: 'atomic-parent', tag: 'atomic-child', renderedBy: 'parent'},
       ]);
     });
 

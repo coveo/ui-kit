@@ -9,8 +9,9 @@ import ts from 'typescript';
  * lazy loader), only the modules it transitively imports are evaluated. A tag rendered without
  * being imported somewhere in that graph never upgrades and stays an inert unknown element.
  *
- * Imports are read from the transpiled output, so imports that only bring in types (and are
- * therefore erased) do not count as registering anything.
+ * Only static imports and re-exports count as registering anything. They are read from the
+ * transpiled output, so imports that only bring in types (and are therefore erased) do not count.
+ * Dynamic `import()` calls do not count either: nothing guarantees they run before the tag renders.
  *
  * Rendered tags are collected from:
  * - `html` tagged templates;
@@ -121,13 +122,6 @@ function valueImports(fileName, code) {
       ts.isStringLiteral(node.moduleSpecifier)
     ) {
       specifiers.push(node.moduleSpecifier.text);
-    } else if (
-      ts.isCallExpression(node) &&
-      node.expression.kind === ts.SyntaxKind.ImportKeyword &&
-      node.arguments[0] &&
-      ts.isStringLiteral(node.arguments[0])
-    ) {
-      specifiers.push(node.arguments[0].text);
     }
     ts.forEachChild(node, visit);
   };
