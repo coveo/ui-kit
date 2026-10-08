@@ -1,0 +1,78 @@
+.container {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.empty {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.completions,
+.products {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-1);
+}
+
+.completion {
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: none;
+  padding: var(--space-2);
+  border-radius: 6px;
+  font: inherit;
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+.completion:hover,
+.completion:focus-visible {
+  background: var(--color-surface-hover);
+}
+
+.products {
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-3);
+}
+
+.product {
+  display: grid;
+  grid-template-columns: 40px 1fr auto auto;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--font-size-sm);
+}
+
+.image {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 6px;
+  grid-column: 1;
+}
+
+.name {
+  grid-column: 2;
+}
+
+.price {
+  color: var(--color-text-secondary);
+}
+
+.add {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  border-radius: 6px;
+  padding: var(--space-1) var(--space-2);
+  cursor: pointer;
+  font: inherit;
+}
+
+.add:hover {
+  border-color: var(--color-border-hover);
+}

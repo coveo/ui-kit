@@ -1,0 +1,45 @@
+.inspector {
+  position: fixed;
+  left: var(--space-4);
+  right: var(--space-4);
+  bottom: var(--space-4);
+  max-height: 45vh;
+  overflow: auto;
+  background: var(--color-neutral-dark);
+  color: var(--color-on-neutral-dark);
+  border-radius: 10px;
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  z-index: 30;
+}
+
+.inspector summary {
+  cursor: pointer;
+  padding: var(--space-1) 0;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--space-4);
+  padding: var(--space-2) 0;
+}
+
+.columns table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.columns caption {
+  text-align: left;
+  font-weight: 600;
+  padding-bottom: var(--space-1);
+}
+
+.columns th,
+.columns td {
+  text-align: left;
+  padding: 2px var(--space-2) 2px 0;
+  white-space: nowrap;
+}
