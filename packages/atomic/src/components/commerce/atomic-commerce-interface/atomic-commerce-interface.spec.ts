@@ -632,10 +632,16 @@ describe('atomic-commerce-interface', () => {
       describe('when the urlManager state changes', () => {
         let replaceStateSpy: MockInstance;
         let pushStateSpy: MockInstance;
+        let initialUrl: string;
 
         beforeEach(() => {
+          initialUrl = window.location.href;
           replaceStateSpy = vi.spyOn(history, 'replaceState');
           pushStateSpy = vi.spyOn(history, 'pushState');
+        });
+
+        afterEach(() => {
+          history.replaceState(null, document.title, initialUrl);
         });
 
         describe('when the first request has not been executed', () => {
@@ -664,17 +670,42 @@ describe('atomic-commerce-interface', () => {
             );
           });
 
-          it('should keep the current path when the page declares a base URL', async () => {
-            const {pathname} = window.location;
-            const base = document.createElement('base');
-            base.href = '/another-path/';
-            document.head.append(base);
-            onTestFinished(() => base.remove());
+          it.each([
+            '',
+            'q=kayak',
+            'q=a b&f-ec_brand=HO Sports',
+            'q=100%25 off',
+            'q=été 日本語 😀',
+            'q=<b>"x"`y`</b>',
+            'q=a#b',
+          ])(
+            'should write the same URL as a bare "#%s" when the page has no base URL',
+            async (fragment) => {
+              history.replaceState(null, document.title, `#${fragment}`);
+              const bareFragmentUrl = window.location.href;
+              history.replaceState(null, document.title, initialUrl);
+              element.urlManager!.state.fragment = fragment;
 
-            urlManagerSubscribeCallback();
+              urlManagerSubscribeCallback();
 
-            expect(window.location.pathname).toBe(pathname);
-          });
+              expect(window.location.href).toBe(bareFragmentUrl);
+            }
+          );
+
+          it.each(['/another-path/', 'https://cdn.example.com/assets/'])(
+            'should keep the current page URL when the page declares the "%s" base URL',
+            async (baseHref) => {
+              const [pageUrl] = initialUrl.split('#');
+              const base = document.createElement('base');
+              base.href = baseHref;
+              document.head.append(base);
+              onTestFinished(() => base.remove());
+
+              urlManagerSubscribeCallback();
+
+              expect(window.location.href).toBe(`${pageUrl}#test-fragment`);
+            }
+          );
 
           it('should not call history.pushState', async () => {
             urlManagerSubscribeCallback();
@@ -717,17 +748,42 @@ describe('atomic-commerce-interface', () => {
             );
           });
 
-          it('should keep the current path when the page declares a base URL', async () => {
-            const {pathname} = window.location;
-            const base = document.createElement('base');
-            base.href = '/another-path/';
-            document.head.append(base);
-            onTestFinished(() => base.remove());
+          it.each([
+            '',
+            'q=kayak',
+            'q=a b&f-ec_brand=HO Sports',
+            'q=100%25 off',
+            'q=été 日本語 😀',
+            'q=<b>"x"`y`</b>',
+            'q=a#b',
+          ])(
+            'should write the same URL as a bare "#%s" when the page has no base URL',
+            async (fragment) => {
+              history.replaceState(null, document.title, `#${fragment}`);
+              const bareFragmentUrl = window.location.href;
+              history.replaceState(null, document.title, initialUrl);
+              element.urlManager!.state.fragment = fragment;
 
-            urlManagerSubscribeCallback();
+              urlManagerSubscribeCallback();
 
-            expect(window.location.pathname).toBe(pathname);
-          });
+              expect(window.location.href).toBe(bareFragmentUrl);
+            }
+          );
+
+          it.each(['/another-path/', 'https://cdn.example.com/assets/'])(
+            'should keep the current page URL when the page declares the "%s" base URL',
+            async (baseHref) => {
+              const [pageUrl] = initialUrl.split('#');
+              const base = document.createElement('base');
+              base.href = baseHref;
+              document.head.append(base);
+              onTestFinished(() => base.remove());
+
+              urlManagerSubscribeCallback();
+
+              expect(window.location.href).toBe(`${pageUrl}#test-fragment`);
+            }
+          );
 
           it('should not call history.replaceState', async () => {
             urlManagerSubscribeCallback();
