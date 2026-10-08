@@ -329,4 +329,90 @@ describe('fold ACTIVITY_SNAPSHOT replace semantics', () => {
 
     expect(deriveSurfaces(turn.response.activities)).toEqual(turn.response.surfaces);
   });
+
+  const dataModelMessage = (surfaceId: string, path: string, value: unknown) => ({
+    version: 'v1.0',
+    updateDataModel: {surfaceId, path, value},
+  });
+
+  const activityPayloadMessages = (turn: ReturnType<typeof createTurn>) =>
+    turn.response.activities[0].payload['messages'] as unknown[];
+
+  it('carries forward a slice omitted by a later same-messageId replace snapshot', () => {
+    // Turn 1 writes product-list + facet; turn 2 (same messageId, replace) carries
+    // only the facet slice. The product-list slice must survive.
+    const turn = foldActivities(createTurn('t1', {}), [
+      surfaceSnapshotWith('update:ui-1', true, [
+        dataModelMessage('ui-1', '/state/ui-1-product-list', {products: ['a', 'b']}),
+        dataModelMessage('ui-1', '/state/ui-1-facet', {values: ['x']}),
+      ]),
+      surfaceSnapshotWith('update:ui-1', true, [
+        dataModelMessage('ui-1', '/state/ui-1-facet', {values: ['x', 'y', 'z']}),
+      ]),
+    ]);
+
+    expect(turn.response.activities).toHaveLength(1);
+    expect(activityPayloadMessages(turn)).toEqual([
+      dataModelMessage('ui-1', '/state/ui-1-facet', {values: ['x', 'y', 'z']}),
+      dataModelMessage('ui-1', '/state/ui-1-product-list', {products: ['a', 'b']}),
+    ]);
+  });
+
+  it('lets a later same-path op override the earlier one without duplicating the path', () => {
+    const turn = foldActivities(createTurn('t1', {}), [
+      surfaceSnapshotWith('update:ui-1', true, [
+        dataModelMessage('ui-1', '/state/ui-1-pagination', {page: 0}),
+      ]),
+      surfaceSnapshotWith('update:ui-1', true, [
+        dataModelMessage('ui-1', '/state/ui-1-pagination', {page: 1}),
+      ]),
+    ]);
+
+    expect(activityPayloadMessages(turn)).toEqual([
+      dataModelMessage('ui-1', '/state/ui-1-pagination', {page: 1}),
+    ]);
+  });
+
+  it('does not let a same-path write on one surface suppress the carry-forward of another surface', () => {
+    // Both surfaces write the same path (/state/root) under one messageId. The replace snapshot
+    // only re-writes surface ui-2's slice; surface ui-1's same-path slice must still carry forward.
+    const turn = foldActivities(createTurn('t1', {}), [
+      surfaceSnapshotWith('update:multi', true, [
+        dataModelMessage('ui-1', '/state/root', {value: 1}),
+        dataModelMessage('ui-2', '/state/root', {value: 2}),
+      ]),
+      surfaceSnapshotWith('update:multi', true, [
+        dataModelMessage('ui-2', '/state/root', {value: 22}),
+      ]),
+    ]);
+
+    expect(activityPayloadMessages(turn)).toEqual([
+      dataModelMessage('ui-2', '/state/root', {value: 22}),
+      dataModelMessage('ui-1', '/state/root', {value: 1}),
+    ]);
+  });
+
+  it('carries forward the prior updateComponents when a later snapshot omits it', () => {
+    const updateComponents = {
+      version: 'v1.0',
+      updateComponents: {
+        surfaceId: 'ui-1',
+        components: [{id: 'ui-1-facet', component: 'RegularFacet'}],
+      },
+    };
+    const turn = foldActivities(createTurn('t1', {}), [
+      surfaceSnapshotWith('update:ui-1', true, [
+        updateComponents,
+        dataModelMessage('ui-1', '/state/ui-1-facet', {values: ['x']}),
+      ]),
+      surfaceSnapshotWith('update:ui-1', true, [
+        dataModelMessage('ui-1', '/state/ui-1-facet', {values: ['x', 'y']}),
+      ]),
+    ]);
+
+    expect(activityPayloadMessages(turn)).toEqual([
+      updateComponents,
+      dataModelMessage('ui-1', '/state/ui-1-facet', {values: ['x', 'y']}),
+    ]);
+  });
 });

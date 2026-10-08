@@ -3,7 +3,7 @@
   "ui": "tui",
   "remoteCache": {
     "teamSlug": "ui-kit",
-    "apiUrl": "https://djcopdhbb4ijlio2hgabt64kjy0lxwet.lambda-url.us-east-1.on.aws"
+    "apiUrl": "https://47l7vyy7swvmkhlc6d3xmo5j2m0ihqkt.lambda-url.us-east-1.on.aws"
   },
   "futureFlags": {
     "affectedUsingTaskInputs": true

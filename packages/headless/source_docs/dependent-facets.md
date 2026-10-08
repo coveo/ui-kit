@@ -79,4 +79,4 @@ We don’t provide sample implementations for the `setFacetVisibility` and `addO
 ## React Example
 
 To better understand this explanation, you can refer to this example made with React:
-[Dependent Facet React Example](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/pages/DependentFacetPage.tsx).
+[Dependent Facet React Example](https://github.com/coveo/ui-kit/blob/c08f574e3fc43932b8401773a8348107a871eb1d/samples/headless/search-react/src/pages/DependentFacetPage.tsx).

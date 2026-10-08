@@ -6,7 +6,7 @@
  * endpoint.
  *
  * The session owns a plain {@link SessionStore} and drives it with the pure
- * {@link foldActivity} reduction, plus the submit / dispatchAction / cancel /
+ * {@link foldActivity} reduction, plus the dispatchAction / cancel / retry /
  * stream-consume orchestration.
  *
  * There are no singletons and no module-level mutable state: every call to
@@ -64,6 +64,21 @@ export interface A2uiClientMessage {
     timestamp?: string;
     /** Optional data-context pointer (unused by the core dispatch path). */
     dataContextPath?: string;
+  };
+}
+
+/**
+ * Submits a prompt from outside A2-UI composition (for example, the
+ * integrator's search box), opening a new streaming turn. Dispatched through
+ * {@link Session.dispatchAction} like any other interaction, but it needs no
+ * rendered component, surface, or active turn, so it also opens the first turn
+ * of a session.
+ */
+export interface SubmitPromptAction {
+  name: 'submitPrompt';
+  payload: {
+    /** The prompt recorded as the new turn's `input.prompt`. */
+    prompt: string;
   };
 }
 
@@ -135,15 +150,18 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
   readonly turns: readonly Turn[];
   /** Registers a listener invoked once per change to the turn list. */
   subscribe(listener: () => void): () => void;
-  /** Submits a prompt, opening a new streaming turn. */
-  submit(input: {prompt?: string}): Promise<void>;
   /**
    * The single consumer-facing action-dispatch entry point, wired directly as
-   * the renderer's `onAction` handler (`onAction={session.dispatchAction}`). It
-   * unwraps the message's `userAction`, recovers the dispatching component's
-   * discriminant from the active turn's surfaces, validates the action payload
-   * against the component's contract internally, and — on success — POSTs the
-   * action to the converse endpoint.
+   * the renderer's `onAction` handler (`onAction={session.dispatchAction}`).
+   *
+   * A {@link SubmitPromptAction} opens a new streaming turn for its prompt and
+   * resolves once that turn's stream ends. It is ignored while a turn is
+   * streaming.
+   *
+   * An {@link A2uiClientMessage} is unwrapped to its `userAction`: the session
+   * recovers the dispatching component's discriminant from the active turn's
+   * surfaces, validates the action payload against the component's contract
+   * internally, and — on success — POSTs the action to the converse endpoint.
    *
    * FIRE-AND-FORGET: the returned Promise ALWAYS resolves and NEVER rejects, so
    * the consumer needs no `.catch`. A message with no `userAction`, no
@@ -151,13 +169,19 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * dispatch rejection (for example an invalid payload) are all dropped with a
    * dev-only warning and nothing is sent.
    */
-  dispatchAction: (message: A2uiClientMessage) => Promise<void>;
+  dispatchAction: (message: A2uiClientMessage | SubmitPromptAction) => Promise<void>;
   /** Stops consuming the active turn's stream. */
   cancel(): void;
   /** Re-submits an errored turn's input. */
   retry(turnId: string): void;
   /** Serializes the session transcript for persistence. */
   serialize(): SerializedSession;
+}
+
+function isSubmitPromptAction(
+  message: A2uiClientMessage | SubmitPromptAction
+): message is SubmitPromptAction {
+  return 'name' in message && message.name === 'submitPrompt';
 }
 
 function isAbortError(error: unknown): boolean {
@@ -252,8 +276,8 @@ export function createSession<TContracts extends ContractsSchema>(
   }
 
   /**
-   * True while any turn is still streaming. Guards `submit` and the private
-   * dispatch path: while a turn is in flight the session ignores new work and
+   * True while any turn is still streaming. Guards prompt submission and the
+   * private dispatch path: while a turn is in flight the session ignores new work and
    * leaves the turn list untouched.
    */
   function hasStreamingTurn(): boolean {
@@ -261,7 +285,7 @@ export function createSession<TContracts extends ContractsSchema>(
   }
 
   /**
-   * Builds the request fields shared by `submit` and the private dispatch path,
+   * Builds the request fields shared by prompt turns and the private dispatch path,
    * invoking BOTH context providers fresh at request-build time. Because the providers
    * are functions, context is never stored on the session and is never
    * serialized; a restored session therefore reads today's context from the
@@ -372,13 +396,17 @@ export function createSession<TContracts extends ContractsSchema>(
     });
   }
 
-  async function executeStream(turnId: string, request: CommerceRequestModel): Promise<void> {
+  /** Takes a builder so a throwing context provider fails the turn inside the `try`. */
+  async function executeStream(
+    turnId: string,
+    buildRequest: () => CommerceRequestModel
+  ): Promise<void> {
     const abortController = new AbortController();
     activeAbortController = abortController;
 
     try {
       const result = await client.call(
-        request,
+        buildRequest(),
         {
           organizationId: config.organizationId,
           accessToken: config.accessToken,
@@ -445,17 +473,20 @@ export function createSession<TContracts extends ContractsSchema>(
     }
   }
 
-  async function submit(input: {prompt?: string}): Promise<void> {
-    // While a turn is streaming, ignore the submit and leave turns unchanged.
+  /**
+   * Opens a new turn for `prompt` and streams its response. Ignored while a
+   * turn is streaming, leaving turns unchanged. Needs no active turn, so it
+   * also opens the first turn of a session.
+   */
+  async function startPromptTurn(prompt: string | undefined): Promise<void> {
     if (hasStreamingTurn()) {
       return;
     }
 
-    const prompt = input.prompt ?? '';
     const turnId = generateId();
-    openTurn(turnId, {prompt: input.prompt});
+    openTurn(turnId, {prompt});
 
-    await executeStream(turnId, buildConversationRequest(prompt));
+    await executeStream(turnId, () => buildConversationRequest(prompt ?? ''));
   }
 
   /**
@@ -512,7 +543,7 @@ export function createSession<TContracts extends ContractsSchema>(
       context: recovered.context,
     };
 
-    await executeStream(activeTurnId, buildActionRequest(a2uiAction));
+    await executeStream(activeTurnId, () => buildActionRequest(a2uiAction));
   }
 
   /**
@@ -542,7 +573,16 @@ export function createSession<TContracts extends ContractsSchema>(
    * FIRE-AND-FORGET: every drop reason and every internal dispatch rejection is
    * swallowed into a dev-only warning; the returned Promise always resolves.
    */
-  const dispatchAction = async (message: A2uiClientMessage): Promise<void> => {
+  const dispatchAction = async (message: A2uiClientMessage | SubmitPromptAction): Promise<void> => {
+    if (isSubmitPromptAction(message)) {
+      try {
+        await startPromptTurn(message.payload.prompt);
+      } catch (error) {
+        devWarn(`dispatchAction: submitPrompt withheld: ${getErrorMessage(error)}`);
+      }
+      return;
+    }
+
     const userAction = message.userAction;
     if (!userAction) {
       devWarn('dispatchAction: message carries no userAction; nothing sent.');
@@ -587,7 +627,7 @@ export function createSession<TContracts extends ContractsSchema>(
     }));
     store.setState((current) => ({...current, activeTurnId: turnId}));
 
-    void executeStream(turnId, buildConversationRequest(turn.input.prompt ?? ''));
+    void executeStream(turnId, () => buildConversationRequest(turn.input.prompt ?? ''));
   }
 
   function serialize(): SerializedSession {
@@ -602,7 +642,6 @@ export function createSession<TContracts extends ContractsSchema>(
     subscribe(listener) {
       return store.subscribe(listener);
     },
-    submit,
     dispatchAction,
     cancel,
     retry,

@@ -1,5 +1,11 @@
 # coveo.analytics
 
+## 2.33.1
+
+### Patch Changes
+
+- [#8559](https://github.com/coveo/ui-kit/pull/8559) [`2535634`](https://github.com/coveo/ui-kit/commit/25356348d331a6e123735a73df411589b2bc2a7f) - Fix cookie domain discovery on multi-label public suffixes.
+
 ## 2.33.0
 
 ### Minor Changes

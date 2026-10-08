@@ -10,7 +10,6 @@ export interface CategoryFacetValueLinkProps {
   numberOfResults: number;
   i18n: i18n;
   onClick: () => void;
-  isParent: boolean;
   isSelected: boolean;
   searchQuery: string;
   isLeafValue: boolean;
@@ -26,7 +25,6 @@ export const renderCategoryFacetValueLink: FunctionalComponentWithOptionalChildr
       numberOfResults,
       i18n,
       onClick,
-      isParent,
       isSelected,
       searchQuery,
       isLeafValue,
@@ -34,17 +32,10 @@ export const renderCategoryFacetValueLink: FunctionalComponentWithOptionalChildr
     },
   }) =>
   (children?) => {
-    const partNames = [];
-    if (isParent) {
-      partNames.push('active-parent');
-    } else {
-      partNames.push(`value-link${isSelected ? ' value-link-selected' : ''}`);
-    }
-    if (isLeafValue) {
-      partNames.push('leaf-value');
-    } else {
-      partNames.push('node-value');
-    }
+    const partNames = [
+      `value-link${isSelected ? ' value-link-selected' : ''}`,
+      isLeafValue ? 'leaf-value' : 'node-value',
+    ];
 
     return html`${renderFacetValueLink({
       props: {

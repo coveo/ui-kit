@@ -8,7 +8,8 @@ import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
  *   - cancel() during an in-flight stream stops consuming, retains the
  *     partial response already folded, and sets the active turn to `error`.
  *   - cancel() with nothing in flight is a no-op; turns unchanged.
- *   - while a turn is streaming, submit() is ignored; turns unchanged.
+ *   - a submitPrompt action opens a new turn, needs no active turn, and is
+ *     ignored while a turn is streaming; turns unchanged.
  *   - while a turn is streaming, dispatchAction() is ignored; turns unchanged.
  *   - retry(turnId) on an `error` turn re-submits its input and sets the
  *     turn back to `streaming`.
@@ -168,18 +169,79 @@ describe('createSession lifecycle', () => {
     vi.clearAllMocks();
   });
 
-  describe('submit guard while streaming', () => {
-    it('ignores submit while a turn is streaming and leaves turns unchanged', async () => {
+  describe('submitPrompt action', () => {
+    it('opens the first turn with no active turn and sends the prompt as a message', async () => {
       const session = createSession(baseConfig);
 
       const first = queueStream();
-      const submitPromise = session.submit({prompt: 'first'});
+      const firstTurn = session.dispatchAction({
+        name: 'submitPrompt',
+        payload: {prompt: 'find shoes'},
+      });
       await first.opened;
 
       expect(session.turns).toHaveLength(1);
       expect(session.turns[0].status).toBe('streaming');
+      expect(session.turns[0].input.prompt).toBe('find shoes');
+      expect(callMock.mock.calls[0][0]).toMatchObject({message: 'find shoes', action: null});
 
-      await session.submit({prompt: 'second'});
+      first.emit({type: 'RUN_FINISHED'});
+      first.close();
+      await firstTurn;
+      expect(session.turns[0].status).toBe('complete');
+    });
+
+    it('opens a follow-up turn that carries the Gateway session keys', async () => {
+      const session = createSession(baseConfig);
+
+      const first = queueStream();
+      const firstTurn = session.dispatchAction({
+        name: 'submitPrompt',
+        payload: {prompt: 'find shoes'},
+      });
+      await first.opened;
+      first.emit({
+        type: 'RUN_STARTED',
+        threadId: 'gateway-session-123',
+        runId: 'gateway-run-123',
+        conversationSessionId: 'gateway-session-123',
+        conversationToken: 'gateway-token-abc',
+      });
+      first.emit({type: 'RUN_FINISHED'});
+      first.close();
+      await firstTurn;
+
+      const followUp = queueStream();
+      const followUpTurn = session.dispatchAction({
+        name: 'submitPrompt',
+        payload: {prompt: 'in red'},
+      });
+      await followUp.opened;
+      followUp.emit({type: 'RUN_FINISHED'});
+      followUp.close();
+      await followUpTurn;
+
+      expect(callMock).toHaveBeenCalledTimes(2);
+      expect(callMock.mock.calls[1][0]).toMatchObject({
+        message: 'in red',
+        action: null,
+        conversationSessionId: 'gateway-session-123',
+        conversationToken: 'gateway-token-abc',
+      });
+      expect(session.turns.map((turn) => [turn.input.prompt, turn.status])).toEqual([
+        ['find shoes', 'complete'],
+        ['in red', 'complete'],
+      ]);
+    });
+
+    it('is ignored while a turn is streaming and leaves turns unchanged', async () => {
+      const session = createSession(baseConfig);
+
+      const first = queueStream();
+      const firstTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'first'}});
+      await first.opened;
+
+      await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'second'}});
 
       expect(callMock).toHaveBeenCalledTimes(1);
       expect(session.turns).toHaveLength(1);
@@ -187,7 +249,7 @@ describe('createSession lifecycle', () => {
 
       first.emit({type: 'RUN_FINISHED'});
       first.close();
-      await submitPromise;
+      await firstTurn;
     });
   });
 
@@ -196,7 +258,10 @@ describe('createSession lifecycle', () => {
       const session = createSession(baseConfig);
 
       const first = queueStream();
-      const submitPromise = session.submit({prompt: 'first'});
+      const submitPromise = session.dispatchAction({
+        name: 'submitPrompt',
+        payload: {prompt: 'first'},
+      });
       await first.opened;
 
       // Seed the active (still-streaming) turn with a commerce-search surface
@@ -238,7 +303,7 @@ describe('createSession lifecycle', () => {
         },
       });
 
-      // Only the original submit call reached the endpoint; the streaming guard
+      // Only the original prompt reached the endpoint; the streaming guard
       // withheld the action dispatch and left the turn list unchanged.
       expect(callMock).toHaveBeenCalledTimes(1);
       expect(session.turns).toHaveLength(1);
@@ -255,7 +320,10 @@ describe('createSession lifecycle', () => {
       const session = createSession(baseConfig);
 
       const first = queueStream();
-      const firstTurn = session.submit({prompt: 'find shoes'});
+      const firstTurn = session.dispatchAction({
+        name: 'submitPrompt',
+        payload: {prompt: 'find shoes'},
+      });
       await first.opened;
       first.emit({
         type: 'RUN_STARTED',
@@ -323,7 +391,7 @@ describe('createSession lifecycle', () => {
       createSurface: Record<string, unknown>
     ) {
       const first = queueStream();
-      const firstTurn = session.submit({prompt: 'go'});
+      const firstTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'go'}});
       await first.opened;
       first.emit({
         type: 'ACTIVITY_SNAPSHOT',
@@ -374,7 +442,7 @@ describe('createSession lifecycle', () => {
       const session = createSession(baseConfig);
       // A turn with BOTH a CommerceSearch surface and a conversation-only one.
       const first = queueStream();
-      const firstTurn = session.submit({prompt: 'go'});
+      const firstTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'go'}});
       await first.opened;
       first.emit({
         type: 'ACTIVITY_SNAPSHOT',
@@ -460,7 +528,7 @@ describe('createSession lifecycle', () => {
       await flush();
       await dispatched;
 
-      // Only the initial submit reached the endpoint; the action was dropped.
+      // Only the initial prompt reached the endpoint; the action was dropped.
       expect(callMock).toHaveBeenCalledTimes(1);
     });
   });
@@ -470,7 +538,10 @@ describe('createSession lifecycle', () => {
       const session = createSession(baseConfig);
 
       const first = queueStream();
-      const submitPromise = session.submit({prompt: 'find shoes'});
+      const submitPromise = session.dispatchAction({
+        name: 'submitPrompt',
+        payload: {prompt: 'find shoes'},
+      });
       await first.opened;
 
       // Fold a partial response before cancelling.
@@ -508,7 +579,7 @@ describe('createSession lifecycle', () => {
       const session = createSession(baseConfig);
 
       const first = queueStream();
-      const submitPromise = session.submit({prompt: 'hi'});
+      const submitPromise = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'hi'}});
       await first.opened;
       first.emit({type: 'RUN_FINISHED'});
       first.close();
@@ -531,7 +602,10 @@ describe('createSession lifecycle', () => {
 
       // Drive the first turn to `error` via cancel.
       const first = queueStream();
-      const submitPromise = session.submit({prompt: 'find shoes'});
+      const submitPromise = session.dispatchAction({
+        name: 'submitPrompt',
+        payload: {prompt: 'find shoes'},
+      });
       await first.opened;
       session.cancel();
       await submitPromise;
@@ -573,7 +647,7 @@ describe('createSession lifecycle', () => {
       const session = createSession(baseConfig);
 
       const first = queueStream();
-      const submitPromise = session.submit({prompt: 'hi'});
+      const submitPromise = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'hi'}});
       await first.opened;
       first.emit({type: 'RUN_FINISHED'});
       first.close();
@@ -588,6 +662,128 @@ describe('createSession lifecycle', () => {
       expect(callMock).toHaveBeenCalledTimes(1);
       expect(session.turns).toHaveLength(1);
       expect(session.turns[0].status).toBe('complete');
+    });
+  });
+
+  describe('a context provider that throws while the request is built', () => {
+    /** A session whose commerce context provider throws while `failing` is set. */
+    function createSessionWithFlakyProvider() {
+      const provider = {failing: true};
+      const session = createSession({
+        ...baseConfig,
+        commerceContextProvider: () => {
+          if (provider.failing) {
+            throw new Error('boom');
+          }
+          return {cart: []};
+        },
+      });
+      return {session, provider};
+    }
+
+    it('fails the prompt turn without sending, and the next prompt still goes through', async () => {
+      const {session, provider} = createSessionWithFlakyProvider();
+
+      await expect(
+        session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'first'}})
+      ).resolves.toBeUndefined();
+
+      expect(callMock).not.toHaveBeenCalled();
+      expect(session.turns).toHaveLength(1);
+      expect(session.turns[0].status).toBe('error');
+      expect(session.turns[0].error).toBe('boom');
+
+      provider.failing = false;
+      const next = queueStream();
+      const nextTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'second'}});
+      await next.opened;
+
+      expect(callMock).toHaveBeenCalledTimes(1);
+      expect(session.turns).toHaveLength(2);
+      expect(session.turns[1].status).toBe('streaming');
+
+      next.emit({type: 'RUN_FINISHED'});
+      next.close();
+      await nextTurn;
+    });
+
+    it('fails a retried turn again while the provider keeps throwing', async () => {
+      const {session} = createSessionWithFlakyProvider();
+      await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+      const turnId = session.turns[0].id;
+
+      session.retry(turnId);
+      await flush();
+
+      expect(callMock).not.toHaveBeenCalled();
+      expect(session.turns[0].status).toBe('error');
+      expect(session.turns[0].error).toBe('boom');
+    });
+
+    it('lets retry re-drive the failed turn once the provider recovers', async () => {
+      const {session, provider} = createSessionWithFlakyProvider();
+      await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+      const turnId = session.turns[0].id;
+
+      provider.failing = false;
+      const retryStream = queueStream();
+      session.retry(turnId);
+      await retryStream.opened;
+
+      expect(session.turns[0].status).toBe('streaming');
+      expect(callMock.mock.calls[0][0]).toMatchObject({message: 'find shoes', action: null});
+
+      retryStream.emit({type: 'RUN_FINISHED'});
+      retryStream.close();
+      await flush();
+      expect(session.turns[0].status).toBe('complete');
+    });
+
+    it('fails the active turn when building an action request throws, sending nothing', async () => {
+      const {session, provider} = createSessionWithFlakyProvider();
+      provider.failing = false;
+
+      const first = queueStream();
+      const firstTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'go'}});
+      await first.opened;
+      first.emit({
+        type: 'ACTIVITY_SNAPSHOT',
+        messageId: 'surface-activity',
+        activityType: 'a2ui-surface',
+        content: {
+          messages: [
+            {
+              version: 'v1.0',
+              createSurface: {
+                surfaceId: 'commerce-search-surface',
+                components: [
+                  {id: 'root', component: 'CommerceSearch'},
+                  {id: 'pagination-1', component: 'Pagination'},
+                ],
+              },
+            },
+          ],
+        },
+      });
+      first.emit({type: 'RUN_FINISHED'});
+      first.close();
+      await firstTurn;
+
+      provider.failing = true;
+      await expect(
+        session.dispatchAction({
+          userAction: {
+            name: 'selectPage',
+            surfaceId: 'commerce-search-surface',
+            sourceComponentId: 'pagination-1',
+            context: {page: 2},
+          },
+        })
+      ).resolves.toBeUndefined();
+
+      expect(callMock).toHaveBeenCalledTimes(1);
+      expect(session.turns[0].status).toBe('error');
+      expect(session.turns[0].error).toBe('boom');
     });
   });
 });

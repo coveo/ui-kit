@@ -19,6 +19,7 @@ import type {
   SerializedSession,
   Session,
   SessionConfig,
+  SubmitPromptAction,
   Turn,
   TurnResponse,
 } from '@/src/index.js';
@@ -68,6 +69,23 @@ test('exposes Session.dispatchAction assignable to the renderer onAction shape',
   }) => void | Promise<void>;
 
   expectTypeOf<Session['dispatchAction']>().toMatchTypeOf<OnActionCallback>();
+});
+
+// ── POSITIVE: prompts are submitted through `dispatchAction` ────────────────
+test('accepts a submitPrompt action on Session.dispatchAction', () => {
+  expectTypeOf<SubmitPromptAction>().toEqualTypeOf<{
+    name: 'submitPrompt';
+    payload: {prompt: string};
+  }>();
+  expectTypeOf<Session['dispatchAction']>().toBeCallableWith({
+    name: 'submitPrompt',
+    payload: {prompt: 'running shoes'},
+  });
+});
+
+// ── NEGATIVE: `submitPrompt` replaced `Session.submit` ──────────────────────
+test('does not expose Session.submit', () => {
+  expectTypeOf<Session>().not.toHaveProperty('submit');
 });
 
 /* eslint-disable @typescript-eslint/no-unused-vars */

@@ -18,7 +18,7 @@ The package entry (`src/index.ts`) exports exactly the session-client surface �
 graph TB
     subgraph "Public surface (src/index.ts)"
         CS["createSession(config)"]
-        SESSION["Session&lt;TContracts&gt;<br/>turns · subscribe · submit<br/>dispatchAction · cancel · retry<br/>serialize · remoteController"]
+        SESSION["Session&lt;TContracts&gt;<br/>turns · subscribe<br/>dispatchAction · cancel · retry<br/>serialize · remoteController"]
         RC["RemoteController&lt;TContracts, T&gt;<br/>state · dispatch · subscribe"]
     end
 
@@ -52,7 +52,7 @@ graph TB
 src/
 ├── index.ts                       # Public surface (ADR-010 / ADR-014)
 ├── session/
-│   ├── create-session.ts          # createSession factory + runtime (submit/dispatch/cancel/retry)
+│   ├── create-session.ts          # createSession factory + runtime (dispatch/cancel/retry)
 │   ├── types.ts                   # Turn / TurnInput / TurnResponse domain model (ADR-010 model annex)
 │   ├── store.ts                   # Plain observable store + subscribe/notify
 │   ├── fold.ts                    # Pure fold + surface derivation (ADR-015 interim)
@@ -69,10 +69,11 @@ src/
 
 `createSession(config)` (`src/session/create-session.ts`) builds a fresh observable store and returns a `Session`. There are no singletons and no module-level mutable state: two sessions created from identical configuration share nothing mutable ([ADR-009](./internal/adr/ADR-009-architecture-decision-charter-v2.md), charter conformance).
 
-The runtime owns the submit / dispatch / cancel / retry orchestration and the SSE-consumption loop that folds each event into the active turn:
+The runtime owns the dispatch / cancel / retry orchestration and the SSE-consumption loop that folds each event into the active turn:
 
-- **`submit({prompt})`** — while any turn is `streaming`, the call is ignored. Otherwise it opens a new `streaming` turn, builds a request (invoking both context providers fresh), POSTs to the endpoint, and folds the streamed response into that turn.
-- **`dispatchAction(action)`** — ignored while a turn is streaming. It resolves the target surface from the active turn's typed `response.surfaces`, builds an action request, and drives the stream.
+- **`dispatchAction(action)`** — ignored while a turn is streaming.
+  - A `submitPrompt` action (`{name: 'submitPrompt', payload: {prompt}}`) needs no active turn. It opens a new `streaming` turn, builds a request (invoking both context providers fresh), POSTs to the endpoint, and folds the streamed response into that turn.
+  - Any other action resolves the target surface from the active turn's typed `response.surfaces`, builds an action request, and drives the stream.
 - **`cancel()`** — stops consuming the in-flight stream, retains the partial `response` already folded, and marks the active turn `error` with the message `'Cancelled'`. A no-op when nothing is in flight.
 - **`retry(turnId)`** — re-submits only an `error` turn's original input; any other `turnId` (unknown, or non-error) is a no-op.
 
@@ -180,7 +181,7 @@ sequenceDiagram
     participant API as Unified endpoint client
     participant Coveo as Converse endpoint
 
-    UI->>S: submit({ prompt: 'running shoes' })
+    UI->>S: dispatchAction({ name: 'submitPrompt', payload: { prompt: 'running shoes' } })
     S->>Store: openTurn(streaming)
     S->>API: POST request (context read fresh)
     API->>Coveo: POST .../agui/converse

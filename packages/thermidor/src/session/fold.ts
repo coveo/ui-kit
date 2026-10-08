@@ -180,12 +180,8 @@ export function foldActivity(
         replace: metadata.replace ?? false,
       };
 
-      // A snapshot is the latest full version of the content for its
-      // `messageId`. When `replace` is set and an activity with the same
-      // (non-empty) `messageId` already exists, supersede it in place —
-      // preserving its position — rather than appending a second entry.
-      // Otherwise append. This keeps a re-emitted surface from leaving a stale
-      // duplicate in `activities` (and thus in the derived `surfaces`).
+      // A replace snapshot merges onto the same-`messageId` activity in place (see
+      // mergeActivityPayload); a distinct or non-replace snapshot appends.
       const existingIndex =
         nextActivity.replace && nextActivity.id
           ? response.activities.findIndex((existing) => existing.id === nextActivity.id)
@@ -193,8 +189,15 @@ export function foldActivity(
       if (existingIndex === -1) {
         response.activities = [...response.activities, nextActivity];
       } else {
+        const merged: Activity = {
+          ...nextActivity,
+          payload: mergeActivityPayload(
+            response.activities[existingIndex].payload,
+            nextActivity.payload
+          ),
+        };
         response.activities = response.activities.map((existing, index) =>
-          index === existingIndex ? nextActivity : existing
+          index === existingIndex ? merged : existing
         );
       }
 
@@ -236,6 +239,78 @@ export function foldActivity(
     default:
       return foldUnknown(turn, activity);
   }
+}
+
+/**
+ * Merges a superseding snapshot onto the one it replaces so an incremental snapshot (only the
+ * slices that changed that turn) does not drop slices an earlier same-`messageId` snapshot wrote.
+ * `next` wins per slice; unmentioned prior slices carry forward.
+ */
+function mergeActivityPayload(
+  previous: Record<string, unknown>,
+  next: Record<string, unknown>
+): Record<string, unknown> {
+  const nextMessages = next['messages'];
+  const previousMessages = previous['messages'];
+  if (!Array.isArray(nextMessages) || !Array.isArray(previousMessages)) {
+    return next;
+  }
+
+  const nextSlices = new Set<string>();
+  let nextHasComponents = false;
+  for (const message of nextMessages) {
+    const slice = updateDataModelSlice(message);
+    if (slice !== null) {
+      nextSlices.add(slice);
+    }
+    if (isUpdateComponents(message)) {
+      nextHasComponents = true;
+    }
+  }
+
+  // Gateway topology is a whole-surface re-projection (never a per-node delta), so last one wins.
+  const priorComponents = latestUpdateComponents(previousMessages);
+  const carriedComponents = nextHasComponents || priorComponents === null ? [] : [priorComponents];
+
+  const carriedForward = previousMessages.filter((message) => {
+    const slice = updateDataModelSlice(message);
+    return slice !== null && !nextSlices.has(slice);
+  });
+
+  return {...next, messages: [...carriedComponents, ...nextMessages, ...carriedForward]};
+}
+
+function isUpdateComponents(message: unknown): boolean {
+  return isRecord(message) && isRecord(message['updateComponents']);
+}
+
+function latestUpdateComponents(messages: readonly unknown[]): unknown {
+  for (let index = messages.length - 1; index >= 0; index -= 1) {
+    if (isUpdateComponents(messages[index])) {
+      return messages[index];
+    }
+  }
+  return null;
+}
+
+/**
+ * A slice key for an updateDataModel op, or null when the message isn't one. Keyed by
+ * `(surfaceId, path)`, not path alone: state is per-surface, so two surfaces can share a path.
+ */
+function updateDataModelSlice(message: unknown): string | null {
+  if (!isRecord(message)) {
+    return null;
+  }
+  const updateDataModel = message['updateDataModel'];
+  if (!isRecord(updateDataModel)) {
+    return null;
+  }
+  const surfaceId = updateDataModel['surfaceId'];
+  const path = updateDataModel['path'];
+  if (typeof surfaceId !== 'string' || typeof path !== 'string') {
+    return null;
+  }
+  return `${surfaceId}\u0000${path}`;
 }
 
 function mapToolCall(

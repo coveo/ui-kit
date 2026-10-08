@@ -19,7 +19,7 @@ interface ConverseState {
 }
 
 interface Controller {
-  submit(options: {prompt: string}): void;
+  submitPrompt(prompt: string): void;
   clear(): void;
 }
 
@@ -149,7 +149,7 @@ export function useNavigation(controller: Controller, converseState: ConverseSta
   const handleSubmit = useCallback(
     (prompt: string) => {
       if (!prompt.trim() || converseState.isStreaming) return;
-      controller.submit({prompt});
+      controller.submitPrompt(prompt);
       if (view === 'landing' || view === 'search') {
         pendingNavigationRef.current = true;
       }

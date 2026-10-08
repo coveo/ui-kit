@@ -23,8 +23,8 @@ export function AppShell() {
 
   const controller = useMemo(
     () => ({
-      submit: (input: {prompt: string}) => {
-        void session.submit(input);
+      submitPrompt: (prompt: string) => {
+        void session.dispatchAction({name: 'submitPrompt', payload: {prompt}});
       },
       clear: () => {
         // The session client has no reset; a fresh conversation is started by
