@@ -46,7 +46,7 @@ You can use conditions to display different templates based on product propertie
 
 **Comma represents OR:** Within a single attribute, comma-separated values represent a logical OR. For example, `must-match-ec_brand="Nike,Adidas"` means the brand must be Nike OR Adidas.
 
-**Defined fields:** `if-defined` applies the template only to products that have every field it lists, and `if-not-defined` applies it only to products that have none of the fields it lists. Unlike the values of a `must-match-*` attribute, comma-separated field names in these two attributes represent a logical AND. For example, `if-defined="ec_brand,ec_rating"` means a product must have both an `ec_brand` and an `ec_rating`, while `if-not-defined="ec_brand,ec_rating"` means it must have neither.
+**Defined fields:** `if-defined` applies the template only to products that have every field it lists, and `if-not-defined` applies it only to products that have none of the fields it lists. Unlike the values of a `must-match-*` attribute, comma-separated field names in these two attributes represent a logical AND. For example, `if-defined="ec_brand,ec_rating"` means a product must have both an `ec_brand` and an `ec_rating`, while `if-not-defined="ec_brand,ec_rating"` means it must have neither. Field names are not trimmed, so don't put spaces after the commas: `if-defined="ec_brand, ec_rating"` looks for a field named `" ec_rating"`, with a leading space, and never matches.
 
 **Multiple attributes represent AND:** All conditions from different attributes must be met (logical AND) for the template to apply to a product.
 
