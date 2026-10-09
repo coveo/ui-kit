@@ -126,10 +126,15 @@ describe('schema-response-search decomposed surface structure', () => {
         expect(entry!.direction).toBe(direction);
       }
 
-      // The top row places the breadbox and summary before the sort; the bottom row pagination
-      // before page size.
-      expect(nodeMap.get('search-top')!.children as string[]).toEqual([
+      // The breadbox gets its own row above the top row; the top row places the summary before
+      // the sort, and the bottom row pagination before page size.
+      expect(nodeMap.get('search-main')!.children as string[]).toEqual([
         'breadbox-2',
+        'search-top',
+        'product-list-2',
+        'search-bottom',
+      ]);
+      expect(nodeMap.get('search-top')!.children as string[]).toEqual([
         'query-summary-2',
         'sort-2',
       ]);
