@@ -42,13 +42,15 @@ Example using the `atomic-commerce-product-list`:
 
 ## Template Conditions
 
-You can use conditions to display different templates based on product properties. You can specify as many `must-match-*` and `must-not-match-*` attributes as you want on a template, each targeting a different field. Each attribute can accept multiple comma-separated values.
+You can use conditions to display different templates based on product properties. You can specify as many `must-match-*` and `must-not-match-*` attributes as you want on a template, each targeting a different field. Each attribute can accept multiple comma-separated values. To apply a template depending on whether a product has certain fields at all, use the `if-defined` and `if-not-defined` attributes.
 
 **Comma represents OR:** Within a single attribute, comma-separated values represent a logical OR. For example, `must-match-ec_brand="Nike,Adidas"` means the brand must be Nike OR Adidas.
 
+**Defined fields:** `if-defined` applies the template only to products that have every field it lists, and `if-not-defined` applies it only to products that have none of the fields it lists. Unlike the values of a `must-match-*` attribute, comma-separated field names in these two attributes represent a logical AND. For example, `if-defined="ec_brand,ec_rating"` means a product must have both an `ec_brand` and an `ec_rating`, while `if-not-defined="ec_brand,ec_rating"` means it must have neither.
+
 **Multiple attributes represent AND:** All conditions from different attributes must be met (logical AND) for the template to apply to a product.
 
-If you set both `must-match-*` and `must-not-match-*` for the same field and there is any overlap in values, the template will be ignored (it will never match any product).
+If you set both `must-match-*` and `must-not-match-*` for the same field and there is any overlap in values, the template will be ignored (it will never match any product). The same applies if you set both `if-defined` and `if-not-defined` for the same field.
 
 **Order of declaration matters:** The first template whose conditions are met will be applied. If a default template (without conditions) is declared first, it will apply to all products, even if other templates with conditions are declared later.
 
@@ -69,6 +71,16 @@ If you set both `must-match-*` and `must-not-match-*` for the same field and the
 <atomic-product-template
   must-match-ec_brand="Nike"
   must-not-match-ec_brand="Nike"
+>
+  <template>
+    <!-- ... -->
+  </template>
+</atomic-product-template>
+
+<!-- Template applies if the product has a rating and has no promo price -->
+<atomic-product-template
+  if-defined="ec_rating"
+  if-not-defined="ec_promo_price"
 >
   <template>
     <!-- ... -->
