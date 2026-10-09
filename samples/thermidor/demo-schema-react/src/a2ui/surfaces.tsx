@@ -38,7 +38,8 @@ interface TurnSurfacesProps {
   surfaceIds: readonly string[];
   /**
    * Whether the shopper can act on these surfaces. The session only sends actions for the
-   * surfaces of its active turn, so blocks of earlier turns are shown read-only.
+   * surfaces of its active turn, so the controls of earlier turns' blocks are disabled while
+   * their content stays readable. A disabled `fieldset` disables every control inside it.
    */
   interactive: boolean;
 }
@@ -68,11 +69,17 @@ export function TurnSurfaces({surfaceIds, interactive}: TurnSurfacesProps) {
   }
 
   return (
-    <div className={interactive ? undefined : styles.readOnly} inert={!interactive}>
+    // Kept a fieldset in both states: swapping elements would remount the surfaces and drop their
+    // local state when the turn stops being the active one.
+    <fieldset
+      className={interactive ? styles.surfaces : `${styles.surfaces} ${styles.readOnly}`}
+      disabled={!interactive}
+      role={interactive ? 'none' : undefined}
+    >
       {!interactive && (
-        <p className={styles.readOnlyNote}>
+        <legend className={styles.readOnlyNote}>
           Earlier results. Ask a follow-up or search again to refine.
-        </p>
+        </legend>
       )}
       {surfaceIds.map((surfaceId) => (
         <section
@@ -90,6 +97,6 @@ export function TurnSurfaces({surfaceIds, interactive}: TurnSurfacesProps) {
           <A2UIRenderer surfaceId={surfaceId} />
         </section>
       ))}
-    </div>
+    </fieldset>
   );
 }
