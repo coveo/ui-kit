@@ -1,0 +1,18 @@
+export function CloseIcon({className}: {className?: string}) {
+  return (
+    <svg
+      className={className}
+      width="10"
+      height="10"
+      viewBox="0 0 22 22"
+      fill="currentColor"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <g transform="matrix(.7071 -.7071 .7071 .7071 -3.142 11)">
+        <path d="m9-3.4h2v26.9h-2z" />
+        <path d="m-3.4 9h26.9v2h-26.9z" />
+      </g>
+    </svg>
+  );
+}
