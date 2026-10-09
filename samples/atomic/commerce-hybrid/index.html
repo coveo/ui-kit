@@ -24,16 +24,12 @@
     <main id="maincontent" class="home">
       <section class="home-hero">
         <p class="page-note">
-          This search box and the recommendations are standard Atomic. The search page swaps in a
-          minimal Headless search box, and the cart and product page are Headless because Atomic has
+          The recommendations are standard Atomic. The search box is a minimal Headless one, the
+          same as on the search page, and the cart and product page are Headless because Atomic has
           no component for them. All of them share one commerce engine.
         </p>
-        <!-- Standalone search box: submitting a query redirects to the search page. -->
-        <atomic-commerce-interface type="search">
-          <atomic-layout-section section="search">
-            <atomic-commerce-search-box redirection-url="/search.html"></atomic-commerce-search-box>
-          </atomic-layout-section>
-        </atomic-commerce-interface>
+        <!-- Headless, standalone: submitting a query redirects to the search page. -->
+        <headless-search-box redirection-url="/search.html"></headless-search-box>
       </section>
 
       <section class="home-recs">

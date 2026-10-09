@@ -56,12 +56,11 @@ test('selecting a suggestion runs that query', async ({page}) => {
   await expect(page).toHaveURL(/#.*q=coveo%20platform/);
 });
 
-test('the Atomic standalone search box hands off to the Headless one', async ({page}) => {
+test('the standalone search box on the home page hands off to the search page', async ({page}) => {
   await page.goto('/index.html');
 
-  const standalone = page
-    .locator('atomic-commerce-search-box')
-    .getByRole('textbox', {name: 'Search field with suggestions'});
+  const standalone = page.locator('headless-search-box input');
+  await expect(standalone).toBeEnabled();
   await standalone.fill('shoes');
   await standalone.press('Enter');
 

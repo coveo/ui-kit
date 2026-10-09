@@ -131,7 +131,7 @@ body {
 }
 
 /* Center the standalone search box. */
-.home-hero atomic-commerce-interface {
+.home-hero headless-search-box {
   max-width: 680px;
   margin: 0 auto;
 }

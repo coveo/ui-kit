@@ -1,17 +1,25 @@
-import {buildSearchBox, type CommerceEngine, type SearchBox} from '@coveo/headless/commerce';
+import {
+  buildSearchBox,
+  buildStandaloneSearchBox,
+  type CommerceEngine,
+  type SearchBox,
+  type StandaloneSearchBox,
+} from '@coveo/headless/commerce';
 
 /**
- * A deliberately minimal search box built with the Headless `SearchBox`
- * controller, used in place of `atomic-commerce-search-box` on an otherwise
- * standard Atomic search page.
+ * A deliberately minimal search box built with Headless, used in place of
+ * `atomic-commerce-search-box` on otherwise standard Atomic pages.
  *
  * It submits queries and lists query suggestions in its own markup, and nothing
  * more. Everything else on the page (products, facets, sort, pager, URL)
  * reacts because the controller dispatches into the same engine the Atomic
  * components read from.
+ *
+ * Set `redirection-url` to make it standalone, like the Atomic search box:
+ * submitting navigates to the search page instead of searching in place.
  */
 export class HeadlessSearchBox extends HTMLElement {
-  #searchBox?: SearchBox;
+  #searchBox?: SearchBox | StandaloneSearchBox;
   #input = document.createElement('input');
   #suggestions = document.createElement('ul');
   #unsubscribe?: () => void;
@@ -41,13 +49,23 @@ export class HeadlessSearchBox extends HTMLElement {
   }
 
   initialize(engine: CommerceEngine) {
-    this.#searchBox = buildSearchBox(engine);
+    const redirectionUrl = this.getAttribute('redirection-url');
+    this.#searchBox = redirectionUrl
+      ? buildStandaloneSearchBox(engine, {options: {redirectionUrl}})
+      : buildSearchBox(engine);
     this.#unsubscribe = this.#searchBox.subscribe(() => this.#render());
     this.#input.disabled = false;
   }
 
   #render() {
-    const {value, suggestions} = this.#searchBox!.state;
+    const {state} = this.#searchBox!;
+
+    if ('redirectTo' in state && state.redirectTo) {
+      this.#redirect(this.#searchBox as StandaloneSearchBox);
+      return;
+    }
+
+    const {value, suggestions} = state;
 
     // The query also changes without typing: restored from the URL, by the back
     // button, or by a standalone search box on another page.
@@ -72,6 +90,18 @@ export class HeadlessSearchBox extends HTMLElement {
         return item;
       })
     );
+  }
+
+  /**
+   * The search page's `atomic-commerce-interface` reads this local storage entry
+   * in `executeFirstRequest()` and uses it as the first query. It is the same
+   * handoff `atomic-commerce-search-box` performs in standalone mode.
+   */
+  #redirect(searchBox: StandaloneSearchBox) {
+    const {redirectTo, value} = searchBox.state;
+    localStorage.setItem('coveo-standalone-search-box-data', JSON.stringify({value}));
+    searchBox.afterRedirection();
+    window.location.href = redirectTo;
   }
 }
 

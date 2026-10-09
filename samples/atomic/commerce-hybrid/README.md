@@ -7,7 +7,7 @@ Choosing Atomic is a two-way door. You do not have to pick Atomic **or** Headles
 ## What it shows
 
 - **Search** (`search.html`): a standard Atomic search page, except for the search box: a minimal custom element driven by the Headless `SearchBox` controller. Each product card also carries an add-to-cart button built with Headless, living _inside_ the Atomic card.
-- **Home** (`index.html`): a standalone **Atomic** search box that hands its query over to the Headless one on the search page, and Atomic recommendation lists with the same add-to-cart button in each card.
+- **Home** (`index.html`): the same Headless search box in standalone mode, redirecting to the search page, and Atomic recommendation lists with the same add-to-cart button in each card.
 - **Product page** (`product.html`): the product view event, badges, and add-to-cart are Headless; the "viewed together" recommendations are a standard Atomic list scoped to the product.
 - **Cart** (`cart.html`): the cart is Headless (quantities, removal, placing the order); the cart recommendations below it are a standard Atomic list that refreshes when the cart changes.
 - A **mini-cart** in every page header, showing the cart count from the same engine.
@@ -21,14 +21,14 @@ Work down this list and stop at the first option that solves the problem. Each s
 | Different look, wording, behavior, or layout of an Atomic component                   | **Customize it**: attributes, `::part()`, CSS custom properties, slots, product templates  | Product templates; `href-template` on `atomic-product-link` |
 | Custom UI _around_ an Atomic component: a modal, a drawer, a custom trigger           | **Compose around it**: wrap the component, leave it untouched                              | Not shown                                                   |
 | A capability Atomic has no component for                                              | **Extend with Headless**: build that piece on the same engine, keep every Atomic component | Cart, mini-cart, product view, badges                       |
-| An existing Atomic component that cannot express a behavior you need                  | **Replace that component** with Headless controllers, keep the rest of Atomic              | The search box on the search page                           |
+| An existing Atomic component that cannot express a behavior you need                  | **Replace that component** with Headless controllers, keep the rest of Atomic              | The search box on the home and search pages                 |
 | Full control of the entire experience, or an existing design system to integrate with | Use Headless for everything                                                                | See the [`headless/`](../../headless/) samples              |
 
 Abandoning Atomic because one piece fell short is the outcome this sample exists to prevent.
 
 ### The replaced search box
 
-The search page uses `headless-search-box` (`src/components/headless-search-box.ts`) instead of `atomic-commerce-search-box`. It is deliberately minimal: an input, a submit button, and query suggestions rendered in its own markup, in about 80 lines on top of the Headless `SearchBox` controller. Treat it as the starting point for the box your storefront needs (recent queries, instant products, your own dropdown layout), not as a finished component.
+The home and search pages use `headless-search-box` (`src/components/headless-search-box.ts`) instead of `atomic-commerce-search-box`: in place on the search page, standalone on the home page. It is deliberately minimal: an input, a submit button, and query suggestions rendered in its own markup, in about 110 lines on top of the Headless `SearchBox` and `StandaloneSearchBox` controllers. Treat it as the starting point for the box your storefront needs (recent queries, instant products, your own dropdown layout), not as a finished component.
 
 Before replacing, check whether customizing is enough: `atomic-commerce-search-box` accepts custom suggestion providers through the public `dispatchSearchBoxSuggestionsEvent`, so an extra suggestion source alone does not require a replacement.
 
@@ -79,8 +79,9 @@ The things that actually matter when mixing Atomic and Headless, and what this s
 ### Replacing the search box
 
 - **Order of initialization**: `atomic-commerce-interface` installs its URL manager as the last step of `initializeWithEngine()`. A query submitted before that promise resolves runs, but never reaches the address bar, so `src/search-page.ts` binds the box only afterwards. Its input stays disabled until then.
-- **The query changes without typing**: it is restored from the URL, changed by the back button, or handed over by the Atomic standalone search box on the home page. Rendering the input from the controller's `state.value` on every change covers all three.
+- **The query changes without typing**: it is restored from the URL, changed by the back button, or handed over by the standalone box on the home page. Rendering the input from the controller's `state.value` on every change covers all three.
 - **Analytics**: nothing to do. The box dispatches into the engine that `initializeWithEngine()` configured, so its searches are reported like Atomic's own.
+- **Standalone mode**: with `redirection-url`, the box uses `buildStandaloneSearchBox` and, before navigating, writes the `coveo-standalone-search-box-data` local storage entry that the search page's `atomic-commerce-interface` reads as its first query. That is the same handoff `atomic-commerce-search-box` performs; skip it and the search page loads empty.
 - **Styling**: the box lives in the page's light DOM and is styled by `src/style.css` with Atomic's theme variables. The `::part()` hooks of `atomic-commerce-search-box` no longer apply.
 - **Accessibility**: the box is minimal on purpose, with no keyboard navigation of the suggestions and no ARIA combobox semantics. Add them before using it in production.
 
