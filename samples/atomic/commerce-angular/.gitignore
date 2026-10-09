@@ -1,0 +1,6 @@
+node_modules
+dist
+publish
+.angular
+test-results
+playwright-report

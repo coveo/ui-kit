@@ -1,0 +1,8 @@
+# Published as `pnpm-workspace.yaml`. pnpm 11 fails the install when dependency
+# build scripts are neither allowed nor denied. The Angular CLI toolchain works
+# without these scripts, so they are denied, as in the ui-kit monorepo.
+allowBuilds:
+  '@parcel/watcher': false
+  esbuild: false
+  lmdb: false
+  msgpackr-extract: false
