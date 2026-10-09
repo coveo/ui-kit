@@ -1,4 +1,4 @@
-import {buildRecommendations} from '@coveo/headless/commerce';
+import {buildCart, buildRecommendations} from '@coveo/headless/commerce';
 import './components/cart-view.js';
 import {startPage} from './page.js';
 
@@ -17,7 +17,21 @@ const slotId = document
   .querySelector('atomic-commerce-recommendation-list')
   ?.getAttribute('slot-id');
 
+//
+// Subscribing to the cart, rather than to the cart view, also catches the
+// add-to-cart buttons inside the recommendation cards. `subscribe` calls back
+// right away, so the items are compared to skip that first call, which would
+// duplicate the list's own initial request.
 if (slotId) {
   const cartRecommendations = buildRecommendations(engine, {options: {slotId}});
-  cartView?.addEventListener('cart-change', () => cartRecommendations.refresh());
+  const cart = buildCart(engine);
+  let items = JSON.stringify(cart.state.items);
+
+  cart.subscribe(() => {
+    const nextItems = JSON.stringify(cart.state.items);
+    if (nextItems !== items) {
+      items = nextItems;
+      cartRecommendations.refresh();
+    }
+  });
 }

@@ -7,9 +7,6 @@ import {priceFormatter} from '../engine.js';
  * The cart page body: line items with quantity controls, the total, and a
  * "Place order" button. Built with the Headless `Cart` controller, since Atomic
  * has no cart component.
- *
- * Dispatches a bubbling `cart-change` event after every change, so the page can
- * refresh anything that depends on the cart.
  */
 export class CartView extends HTMLElement {
   #engine?: CommerceEngine;
@@ -115,7 +112,6 @@ export class CartView extends HTMLElement {
     announce(
       quantity === 0 ? `${item.name} removed from cart.` : `${item.name} quantity ${quantity}.`
     );
-    this.dispatchEvent(new Event('cart-change', {bubbles: true}));
   }
 
   async #placeOrder() {
@@ -123,7 +119,6 @@ export class CartView extends HTMLElement {
     this.#confirmation = 'Thank you, your order is placed.';
     await placeOrder(this.#engine!);
     announce(this.#confirmation);
-    this.dispatchEvent(new Event('cart-change', {bubbles: true}));
   }
 }
 

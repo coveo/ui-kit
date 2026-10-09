@@ -153,6 +153,28 @@ test('the cart page edits quantities and places the order', async ({page}) => {
   await purchase;
 });
 
+test('adding a recommended product refreshes the cart recommendations', async ({page}) => {
+  await seedCart(page);
+  await page.goto('/cart.html');
+
+  const addRecommended = page
+    .locator('atomic-commerce-recommendation-list')
+    .getByRole('button', {name: /^Add .+ to cart$/})
+    .first();
+  await expect(addRecommended).toBeVisible();
+
+  const recommendationsRefresh = page.waitForRequest(
+    (request) =>
+      request.url().includes('/commerce/v2/recommendations') &&
+      (request.postDataJSON().context.cart ?? []).reduce(
+        (total: number, {quantity}: {quantity: number}) => total + quantity,
+        0
+      ) === 2
+  );
+  await addRecommended.click();
+  await recommendationsRefresh;
+});
+
 test('home page recommendations carry the Headless add-to-cart', async ({page}) => {
   await page.goto('/index.html');
 
