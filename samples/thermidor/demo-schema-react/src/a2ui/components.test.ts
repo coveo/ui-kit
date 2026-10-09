@@ -10,6 +10,7 @@ import {
   LayoutStackSchema,
   QuerySummarySchema,
   PageSizeSchema,
+  BreadboxSchema,
 } from '@coveo/thermidor-schema/zod3';
 
 const EXPECTED_COMPONENTS = [
@@ -30,6 +31,7 @@ const EXPECTED_COMPONENTS = [
   'LayoutStack',
   'QuerySummary',
   'PageSize',
+  'Breadbox',
 ] as const;
 
 describe('createThermidorCatalog (catalog build smoke)', () => {
@@ -161,5 +163,26 @@ describe('component state contracts', () => {
         .unwrap()
         .shape.setPageSize.shape.payload.safeParse({pageSize: 48}).success
     ).toBe(true);
+  });
+
+  it('validates the breadbox state', () => {
+    expect(
+      BreadboxSchema.shape.state.safeParse({
+        facets: [
+          {
+            facetId: 'regular-facet-1',
+            field: 'ec_brand',
+            displayName: 'Brand',
+            type: 'regular',
+            values: [{value: 'Aqua Marina', state: 'excluded'}],
+          },
+        ],
+      }).success
+    ).toBe(true);
+    expect(
+      BreadboxSchema.shape.state.safeParse({
+        facets: [{facetId: 'regular-facet-1', type: 'regular', values: []}],
+      }).success
+    ).toBe(false);
   });
 });
