@@ -793,6 +793,10 @@
     <name>quantic_SearchFieldWithSuggestions</name>
   </customLabels>
   <customLabels>
+    <label>Recherche...</label>
+    <name>quantic_SearchBoxPlaceholder</name>
+  </customLabels>
+  <customLabels>
     <label>{{0}} suggestion de recherche a été trouvée, pour naviguer utilisez les flèches haut et bas.</label>
     <name>quantic_SuggestionFound</name>
   </customLabels>

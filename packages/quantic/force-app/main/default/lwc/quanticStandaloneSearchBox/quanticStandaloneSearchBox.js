@@ -1,3 +1,4 @@
+import searchBoxPlaceholder from '@salesforce/label/c.quantic_SearchBoxPlaceholder';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -37,10 +38,18 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   @api engineId;
   /**
    * The placeholder text to display in the search box input area.
+   * Defaults to the `quantic_SearchBoxPlaceholder` custom label.
    * @api
    * @type {string}
+   * @defaultValue 'Search...'
    */
-  @api placeholder = null;
+  @api
+  get placeholder() {
+    return this._placeholder ?? this.labels.searchBoxPlaceholder;
+  }
+  set placeholder(value) {
+    this._placeholder = value;
+  }
   /**
    * Whether not to render a submit button.
    * @api
@@ -113,6 +122,10 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     isLoadingSuggestions: false,
   };
 
+  labels = {
+    searchBoxPlaceholder,
+  };
+
   /** @type {StandaloneSearchBox} */
   standaloneSearchBox;
   /** @type {Function} */
@@ -123,6 +136,8 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   suggestions = [];
   /** @type {boolean} */
   hasInitializationError = false;
+  /** @type {string} */
+  _placeholder;
 
   /** @type {string} */
   get standaloneEngineId() {

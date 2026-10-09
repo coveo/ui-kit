@@ -294,6 +294,46 @@ describe('commerce api client', () => {
     });
   });
 
+  describe('#facetSearch #ignorePaths', () => {
+    const buildFacetSearchRequest = async (ignorePaths?: string[]) => ({
+      ...(await buildCommerceAPIRequest()),
+      facetId: 'some-facet-id',
+      facetQuery: 'some facet query',
+      query: 'some query',
+      numberOfValues: 5,
+      ...(ignorePaths && {ignorePaths}),
+    });
+
+    beforeEach(() => {
+      mockPlatformCall({
+        ok: true,
+        json: () => Promise.resolve('some content'),
+      });
+    });
+
+    it('when the request has a path, sends it as is', async () => {
+      const ignorePaths = ['Canoes & Kayaks', 'Kayaks'];
+
+      await client.facetSearch(await buildFacetSearchRequest(ignorePaths), 'SEARCH');
+
+      expect(platformCallMock.mock.calls[0][0].requestParams.ignorePaths).toStrictEqual(
+        ignorePaths
+      );
+    });
+
+    it('when the request has an empty path, does not send it', async () => {
+      await client.facetSearch(await buildFacetSearchRequest([]), 'SEARCH');
+
+      expect(platformCallMock.mock.calls[0][0].requestParams).not.toHaveProperty('ignorePaths');
+    });
+
+    it('when the request has no path, does not send it', async () => {
+      await client.facetSearch(await buildFacetSearchRequest(), 'SEARCH');
+
+      expect(platformCallMock.mock.calls[0][0].requestParams).not.toHaveProperty('ignorePaths');
+    });
+  });
+
   it('#getBadges should call the platform endpoint with the correct arguments', async () => {
     const request = {
       ...(await buildCommerceAPIRequest()),

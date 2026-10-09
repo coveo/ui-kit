@@ -1,6 +1,8 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {Product} from '@coveo/thermidor-schema';
 import {ProductListPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {useStale} from '../pending-dispatch.js';
+import freshness from '../result-freshness.module.css';
 import styles from './ProductList.module.css';
 
 function formatPrice(value: number): string {
@@ -56,11 +58,16 @@ function ProductCard({product}: {product: Product}) {
  * `ProductListPropsSchema`; a grid of product cards for decomposed commerce search surfaces.
  * Presentational — no actions. `products === undefined` (bindings not yet resolved) renders a
  * loading state; an empty list renders nothing.
+ *
+ * Optimistic highlighting on a facet, a sort or a page control would otherwise read as a lie here:
+ * the control says page 3 while this grid still holds page 2. Dimming says which of the two the
+ * backend has caught up with.
  */
 export const ProductList = createReactComponent(
   {name: 'ProductList', schema: ProductListPropsSchema},
   ({props}) => {
     const products = props.products;
+    const outstanding = useStale('results');
 
     if (products === undefined) {
       return (
@@ -75,7 +82,7 @@ export const ProductList = createReactComponent(
     }
 
     return (
-      <section>
+      <section className={outstanding ? freshness.stale : undefined} aria-busy={outstanding}>
         <div className={styles.grid} role="list" aria-label="Product list">
           {products.map((product) => (
             <ProductCard key={product.permanentid} product={product} />

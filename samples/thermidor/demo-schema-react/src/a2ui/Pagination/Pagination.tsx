@@ -3,6 +3,8 @@ import type {PaginationAction} from '@coveo/thermidor-schema';
 import {PaginationPropsSchema} from '@coveo/thermidor-schema/zod3';
 import styles from './Pagination.module.css';
 
+const NUMBER_OF_PAGES = 5;
+
 /**
  * A2-UI component for the `pagination` controls. The generic binder resolves `page` / `totalPages`
  * from `PaginationPropsSchema` (progressively — either may be undefined on an early render);
@@ -24,6 +26,15 @@ export const Pagination = createReactComponent(
       return null;
     }
 
+    const firstPage = Math.max(
+      0,
+      Math.min(page - Math.floor(NUMBER_OF_PAGES / 2), totalPages - NUMBER_OF_PAGES)
+    );
+    const pages = Array.from(
+      {length: Math.min(NUMBER_OF_PAGES, totalPages)},
+      (_, i) => firstPage + i
+    );
+
     const handlePageChange = (newPage: number) => {
       const selectPageAction: PaginationAction = {
         event: {name: 'selectPage', context: {page: newPage}},
@@ -44,7 +55,7 @@ export const Pagination = createReactComponent(
         </button>
 
         <div className={styles.pages}>
-          {Array.from({length: totalPages}, (_, i) => (
+          {pages.map((i) => (
             <button
               key={i}
               className={`${styles.pageButton} ${i === page ? styles.active : ''}`}

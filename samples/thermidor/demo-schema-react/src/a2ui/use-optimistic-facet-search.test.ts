@@ -48,6 +48,25 @@ describe('useOptimisticFacetSearch', () => {
     expect(result.current.query).toBe('rip');
   });
 
+  it('does not let a lagging/out-of-order echo erase newer typed input', () => {
+    const dispatch = vi.fn();
+    const {result, rerender} = renderHook(
+      ({backend}) => useOptimisticFacetSearch(backend, dispatch),
+      {initialProps: {backend: ''}}
+    );
+
+    act(() => result.current.onQueryChange('r'));
+    act(() => result.current.onQueryChange('ri'));
+    expect(result.current.query).toBe('ri');
+
+    // The 'r' request resolves after 'ri'.
+    rerender({backend: 'r'});
+    expect(result.current.query).toBe('ri');
+
+    rerender({backend: 'ri'});
+    expect(result.current.query).toBe('ri');
+  });
+
   it('reset clears the local value', () => {
     const dispatch = vi.fn();
     const {result} = renderHook(() => useOptimisticFacetSearch('rip', dispatch));

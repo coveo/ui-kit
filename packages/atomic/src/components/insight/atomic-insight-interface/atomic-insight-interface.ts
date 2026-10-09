@@ -102,6 +102,10 @@ export class AtomicInsightInterface
 
   /**
    * The service insight interface language.
+   *
+   * Accepts a language (`en`) or a [BCP 47](https://www.rfc-editor.org/info/bcp47) locale
+   * (`en-CA`). The region drives number, currency, and localized date formats, while
+   * translations use the closest available language.
    */
   @property({type: String, attribute: 'language', reflect: true})
   public language = 'en';
