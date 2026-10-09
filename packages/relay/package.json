@@ -42,7 +42,7 @@
     "functional-test": "vitest run --config vitest.functional.config.ts",
     "test:watch": "vitest",
     "typedoc": "typedoc",
-    "size": "size-limit"
+    "size": "node ../../scripts/size-limit.mjs run"
   },
   "dependencies": {
     "@coveo/explorer-messenger": "0.5.0",

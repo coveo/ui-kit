@@ -1,6 +1,6 @@
 [
   {
-    "name": "@coveo/headless-react/ssr-commerce",
+    "name": "@coveo/headless-react - ssr-commerce",
     "path": "dist/ssr-commerce/index.js",
     "ignore": ["@coveo/headless"],
     "limit": "1.7 kB"

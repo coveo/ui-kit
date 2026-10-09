@@ -84,7 +84,7 @@
     "chromatic": "chromatic",
     "validate:light-dom-styles": "node ./scripts/check-light-dom-host-selectors.mjs",
     "validate:no-new-light-dom": "node ./scripts/check-no-new-light-dom-components.mjs",
-    "size": "size-limit"
+    "size": "node ../../scripts/size-limit.mjs run"
   },
   "dependencies": {
     "@coveo/atomic-legacy": "workspace:*",
