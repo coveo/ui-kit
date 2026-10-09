@@ -24,4 +24,13 @@ test.describe('atomic-result-template', async () => {
 
     await expect(resultTemplate.result).toBeVisible();
   });
+
+  test('should apply to each result the template whose if-defined or if-not-defined condition it meets', async ({
+    resultTemplate,
+  }) => {
+    await resultTemplate.load({story: 'with-defined-conditions'});
+
+    await expect(resultTemplate.badge('Language defined')).toHaveCount(6);
+    await expect(resultTemplate.badge('Language not defined')).toHaveCount(4);
+  });
 });
