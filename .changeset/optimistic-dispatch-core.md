@@ -1,5 +1,0 @@
----
-'@coveo/thermidor': minor
----
-
-Add a framework-agnostic optimistic dispatch core so a consumer can reflect a user's intention on screen before the producer answers. New public exports: a dispatch coordinator that sees every dispatch and publishes a single in-flight fact, a dispatch tracker that counts outstanding dispatches per region, an optimistic-value controller that holds a gesture's intended value until its producer catches up, and a per-region stale-scope. The session now exposes an `actions` surface for issuing these dispatches, including a `withholdQueued` that drops the still-waiting gestures (each settled `withheld`) when a prompt turn opens, since the prompt rebuilds the state those gestures were writing. A submitted prompt now PREEMPTS instead of being ignored: it opens its turn immediately, dropping the queued gestures (`withholdQueued`) and cancelling the one in flight (`cancelInFlight`, settled `cancelled`) so its superseded response never touches the surface — a prompt is a new intention that outranks the gestures it makes moot.
