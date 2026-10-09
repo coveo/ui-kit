@@ -194,6 +194,15 @@ describe('facet-common', () => {
       expect(getFacetsInChildren(parent)).toEqual([facet1, facet2]);
     });
 
+    it('should not look for facets inside elements that are not popovers', () => {
+      const parent = document.createElement('div');
+      const wrapper = document.createElement('div');
+      wrapper.appendChild(buildMockFacetElement({facetId: 'f1'}));
+      parent.appendChild(wrapper);
+
+      expect(getFacetsInChildren(parent)).toEqual([]);
+    });
+
     it('should not return the content of a popover without a facet', () => {
       const parent = document.createElement('div');
       const popover = document.createElement('atomic-popover');

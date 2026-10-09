@@ -300,6 +300,24 @@ describe('atomic-facet-manager', () => {
       expect(popover.nextElementSibling).toBe(facet1);
     });
 
+    it('should place the popovers of hidden facets after the popovers of visible facets', async () => {
+      const hiddenFacet = createMockFacet('hidden');
+      const visibleFacet = createMockFacet('visible');
+      const hiddenPopover = createMockPopover(hiddenFacet);
+      const visiblePopover = createMockPopover(visibleFacet);
+
+      const {element} = await renderComponent();
+      vi.mocked(element!.bindings.store.getAllFacets).mockReturnValue({
+        hidden: {isHidden: () => true},
+      } as never);
+
+      element?.append(hiddenPopover, visiblePopover);
+
+      await element?.sortFacets();
+
+      expect(visiblePopover.nextElementSibling).toBe(hiddenPopover);
+    });
+
     it('should not collapse facets nested inside popovers', async () => {
       const facet = createMockFacet('facet1');
 
@@ -312,6 +330,24 @@ describe('atomic-facet-manager', () => {
       await element?.sortFacets();
 
       expect(facet.isCollapsed).toBe(false);
+    });
+
+    it('should not count facets nested inside popovers as expanded facets', async () => {
+      const facet1 = createMockFacet('facet1');
+      const nestedFacet = createMockFacet('nested');
+      const facet2 = createMockFacet('facet2');
+
+      const {element} = await renderComponent({
+        props: {collapseFacetsAfter: 1},
+      });
+
+      element?.append(facet1, createMockPopover(nestedFacet), facet2);
+
+      await element?.sortFacets();
+
+      expect(facet1.isCollapsed).toBe(false);
+      expect(nestedFacet.isCollapsed).toBe(false);
+      expect(facet2.isCollapsed).toBe(true);
     });
 
     it('should exclude facets nested inside popovers from the automatic facet generator collapse count', async () => {
