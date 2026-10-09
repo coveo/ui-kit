@@ -42,7 +42,8 @@ export async function addOne(engine: CommerceEngine, item: CartItem) {
   const existing = buildCart(engine).state.items.find(
     ({productId}) => productId === item.productId
   );
-  await setQuantity(engine, {...item, quantity: (existing?.quantity ?? 0) + 1});
+  const quantity = (existing?.quantity ?? 0) + 1;
+  await setQuantity(engine, {...(existing ?? item), quantity});
 }
 
 export async function placeOrder(engine: CommerceEngine) {
