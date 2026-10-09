@@ -3,7 +3,10 @@ import {ProductTemplatesHelpers} from '@coveo/headless/commerce';
 import {LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ProductTemplateController} from '@/src/components/common/product-template/product-template-controller';
-import {makeMatchConditions} from '@/src/components/common/template-controller/template-utils';
+import {
+  makeDefinedConditions,
+  makeMatchConditions,
+} from '@/src/components/common/template-controller/template-utils';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {LitElementWithError} from '@/src/decorators/types';
 import {mapProperty} from '@/src/utils/props-utils';
@@ -33,6 +36,20 @@ export class AtomicProductTemplate extends LitElement implements LitElementWithE
    */
   @property({attribute: false, type: Array, converter: arrayConverter})
   conditions: ProductTemplateCondition[] = [];
+
+  /**
+   * The comma-separated list of fields that must all be defined on a product for the template to apply.
+   * For example, a template with the following attribute only applies to products whose `ec_brand` and `ec_rating` fields are both defined:
+   * `if-defined="ec_brand,ec_rating"`
+   */
+  @property({type: String, attribute: 'if-defined'}) ifDefined?: string;
+
+  /**
+   * The comma-separated list of fields that must all be undefined on a product for the template to apply.
+   * For example, a template with the following attribute only applies to products that have neither an `ec_brand` nor an `ec_rating` field:
+   * `if-not-defined="ec_brand,ec_rating"`
+   */
+  @property({type: String, attribute: 'if-not-defined'}) ifNotDefined?: string;
 
   /**
    * The field and values that define which products the condition must be applied to.
@@ -67,11 +84,10 @@ export class AtomicProductTemplate extends LitElement implements LitElementWithE
 
   connectedCallback() {
     super.connectedCallback();
-    this.productTemplateController.matchConditions = makeMatchConditions(
-      this.mustMatch,
-      this.mustNotMatch,
-      ProductTemplatesHelpers
-    );
+    this.productTemplateController.matchConditions = [
+      ...makeDefinedConditions(this.ifDefined, this.ifNotDefined, ProductTemplatesHelpers),
+      ...makeMatchConditions(this.mustMatch, this.mustNotMatch, ProductTemplatesHelpers),
+    ];
   }
 
   /**
