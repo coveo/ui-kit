@@ -176,6 +176,14 @@ const meta: Meta = {
   },
   argTypes: {
     ...argTypes,
+    'if-defined': {
+      ...argTypes['if-defined'],
+      control: false,
+    },
+    'if-not-defined': {
+      ...argTypes['if-not-defined'],
+      control: false,
+    },
     'must-match': {
       ...argTypes['must-match'],
       control: false,
