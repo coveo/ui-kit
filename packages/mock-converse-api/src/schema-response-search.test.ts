@@ -126,7 +126,14 @@ describe('schema-response-search decomposed surface structure', () => {
         expect(entry!.direction).toBe(direction);
       }
 
-      // The top row places the summary before the sort; the bottom row pagination before page size.
+      // The breadbox gets its own row above the top row; the top row places the summary before
+      // the sort, and the bottom row pagination before page size.
+      expect(nodeMap.get('search-main')!.children as string[]).toEqual([
+        'breadbox-2',
+        'search-top',
+        'product-list-2',
+        'search-bottom',
+      ]);
       expect(nodeMap.get('search-top')!.children as string[]).toEqual([
         'query-summary-2',
         'sort-2',
@@ -397,5 +404,213 @@ describe('schema-response-search stateful surface across actions', () => {
     expect(pagination.pageSize).toBe(12);
     expect(pagination.totalEntries).toBe(43);
     expect((sort.appliedSort as Record<string, unknown>).sortCriteria).toBe('relevance');
+  });
+});
+
+const BREADBOX_ID = 'breadbox-2';
+
+// The closed property sets of the thermidor-schema Breadbox definitions
+// (`additionalProperties: false`), keyed by the BreadboxFacet `type` discriminator.
+const BREADBOX_FACET_PROPERTIES: Record<string, string[]> = {
+  regular: ['facetId', 'field', 'displayName', 'type', 'values'],
+  numericalRange: ['facetId', 'field', 'displayName', 'type', 'values'],
+  hierarchical: ['facetId', 'field', 'displayName', 'type', 'path'],
+};
+
+type BreadboxFacet = Record<string, unknown>;
+
+function breadboxFacets(components: Record<string, unknown>): BreadboxFacet[] {
+  const breadbox = components[BREADBOX_ID] as Record<string, unknown>;
+  expect(Object.keys(breadbox)).toEqual(['facets']);
+  const facets = breadbox.facets as BreadboxFacet[];
+  for (const facet of facets) {
+    const type = facet.type as string;
+    expect(Object.keys(facet).sort()).toEqual([...BREADBOX_FACET_PROPERTIES[type]].sort());
+    expect(typeof facet.facetId).toBe('string');
+    expect((facet.field as string).length).toBeGreaterThan(0);
+    expect(typeof facet.displayName).toBe('string');
+    if (type === 'regular') {
+      for (const value of facet.values as Array<Record<string, unknown>>) {
+        expect(Object.keys(value).sort()).toEqual(['state', 'value']);
+        expect((value.value as string).length).toBeGreaterThan(0);
+        expect(['selected', 'excluded']).toContain(value.state);
+      }
+    } else if (type === 'numericalRange') {
+      for (const value of facet.values as Array<Record<string, unknown>>) {
+        expect(Object.keys(value).sort()).toEqual(['end', 'start']);
+        expect(typeof value.start).toBe('number');
+        expect(typeof value.end).toBe('number');
+      }
+    } else {
+      for (const segment of facet.path as unknown[]) {
+        expect(typeof segment).toBe('string');
+      }
+    }
+  }
+  return facets;
+}
+
+function act(name: string, context: Record<string, unknown>, sourceComponentId?: string) {
+  return collectComponentState(buildSearchActionEvents({name, context, sourceComponentId}));
+}
+
+function brandState(components: Record<string, unknown>, brand: string): unknown {
+  const facet = components['facet-brand-2'] as Record<string, unknown>;
+  return (facet.values as Array<Record<string, unknown>>).find((v) => v.value === brand)?.state;
+}
+
+function totalEntries(components: Record<string, unknown>): number {
+  return (components['pagination-2'] as Record<string, unknown>).totalEntries as number;
+}
+
+describe('schema-response-search breadbox', () => {
+  beforeEach(() => {
+    resetSurface();
+  });
+
+  it('declares a Breadbox node bound to its own facets state', () => {
+    const nodes = findCreateSurface(resetSurface())!.components as Array<Record<string, unknown>>;
+    const node = nodes.find((c) => c.id === BREADBOX_ID);
+    expect(node).toEqual({
+      id: BREADBOX_ID,
+      component: 'Breadbox',
+      facets: {path: `/state/${BREADBOX_ID}/facets`},
+    });
+  });
+
+  it('starts with no active facets', () => {
+    expect(breadboxFacets(collectComponentState(resetSurface()))).toEqual([]);
+  });
+
+  it('lists selected and excluded brands in the facet order', () => {
+    act('toggleExclude', {value: 'Xcel'}, 'facet-brand-2');
+    const components = act('toggleSelect', {value: 'Billabong'}, 'facet-brand-2');
+    expect(breadboxFacets(components)).toEqual([
+      {
+        facetId: 'facet-brand-2',
+        field: 'ec_brand',
+        displayName: 'Brand',
+        type: 'regular',
+        values: [
+          {value: 'Billabong', state: 'selected'},
+          {value: 'Xcel', state: 'excluded'},
+        ],
+      },
+    ]);
+  });
+
+  it('lists a selected listed price range', () => {
+    const components = act('toggleSelect', {start: 0, end: 100}, 'facet-price-2');
+    expect(breadboxFacets(components)).toEqual([
+      {
+        facetId: 'facet-price-2',
+        field: 'ec_price',
+        displayName: 'Price',
+        type: 'numericalRange',
+        values: [{start: 0, end: 100}],
+      },
+    ]);
+  });
+
+  it('lists a custom price range', () => {
+    const components = act('applyCustomRange', {start: 50, end: 150}, 'facet-price-2');
+    expect(breadboxFacets(components)[0].values).toEqual([{start: 50, end: 150}]);
+  });
+
+  it('lists the selected category path', () => {
+    const components = act('selectPath', {path: ['Surfing', 'Surfboards']}, 'facet-category-2');
+    expect(breadboxFacets(components)).toEqual([
+      {
+        facetId: 'facet-category-2',
+        field: 'ec_category',
+        displayName: 'Category',
+        type: 'hierarchical',
+        path: ['Surfing', 'Surfboards'],
+      },
+    ]);
+  });
+
+  it('orders the entries as the facet manager orders the facets', () => {
+    act('selectPath', {path: ['Surfing']}, 'facet-category-2');
+    act('toggleSelect', {start: 0, end: 100}, 'facet-price-2');
+    const components = act('toggleSelect', {value: 'Hurley'}, 'facet-brand-2');
+    expect(breadboxFacets(components).map((facet) => facet.facetId)).toEqual([
+      'facet-brand-2',
+      'facet-price-2',
+      'facet-category-2',
+    ]);
+  });
+
+  it('deselects a selected brand', () => {
+    act('toggleSelect', {value: 'Billabong'}, 'facet-brand-2');
+    const components = act(
+      'deselect',
+      {facetId: 'facet-brand-2', type: 'regular', value: 'Billabong'},
+      BREADBOX_ID
+    );
+    expect(breadboxFacets(components)).toEqual([]);
+    expect(brandState(components, 'Billabong')).toBe('idle');
+    expect(totalEntries(components)).toBe(43);
+  });
+
+  it('deselects an excluded brand, keeping the other active brands', () => {
+    act('toggleExclude', {value: 'Billabong'}, 'facet-brand-2');
+    act('toggleSelect', {value: 'Xcel'}, 'facet-brand-2');
+    const components = act(
+      'deselect',
+      {facetId: 'facet-brand-2', type: 'regular', value: 'Billabong'},
+      BREADBOX_ID
+    );
+    expect(breadboxFacets(components)[0].values).toEqual([{value: 'Xcel', state: 'selected'}]);
+    expect(brandState(components, 'Billabong')).toBe('idle');
+    const products = (components['product-list-2'] as Record<string, unknown>).products as Array<
+      Record<string, unknown>
+    >;
+    expect(products.every((product) => product.ec_brand === 'Xcel')).toBe(true);
+  });
+
+  it('deselects a custom price range', () => {
+    act('applyCustomRange', {start: 50, end: 150}, 'facet-price-2');
+    const components = act(
+      'deselect',
+      {facetId: 'facet-price-2', type: 'numericalRange', start: 50, end: 150},
+      BREADBOX_ID
+    );
+    const priceFacet = components['facet-price-2'] as Record<string, unknown>;
+    expect(breadboxFacets(components)).toEqual([]);
+    expect(priceFacet.hasActiveValues).toBe(false);
+    expect(priceFacet.customRange).toBeNull();
+    expect(totalEntries(components)).toBe(43);
+  });
+
+  it('deselects the category path', () => {
+    act('selectPath', {path: ['Surfing', 'Surfboards']}, 'facet-category-2');
+    const components = act(
+      'deselect',
+      {facetId: 'facet-category-2', type: 'hierarchical', path: ['Surfing', 'Surfboards']},
+      BREADBOX_ID
+    );
+    const categoryFacet = components['facet-category-2'] as Record<string, unknown>;
+    expect(breadboxFacets(components)).toEqual([]);
+    expect((categoryFacet.values as Record<string, unknown>).selected).toBeNull();
+    expect(totalEntries(components)).toBe(43);
+  });
+
+  it('clears every facet, preserving the sort', () => {
+    act('selectSort', {sortCriteria: 'price_asc'});
+    act('toggleSelect', {value: 'Billabong'}, 'facet-brand-2');
+    act('toggleExclude', {value: 'Xcel'}, 'facet-brand-2');
+    act('toggleSelect', {start: 0, end: 100}, 'facet-price-2');
+    act('selectPath', {path: ['Surfing']}, 'facet-category-2');
+    const components = act('clearAll', {}, BREADBOX_ID);
+    expect(breadboxFacets(components)).toEqual([]);
+    expect((components['facet-brand-2'] as Record<string, unknown>).hasActiveValues).toBe(false);
+    expect((components['facet-price-2'] as Record<string, unknown>).hasActiveValues).toBe(false);
+    const categoryValues = (components['facet-category-2'] as Record<string, unknown>)
+      .values as Record<string, unknown>;
+    expect(categoryValues.selected).toBeNull();
+    expect(totalEntries(components)).toBe(43);
+    const sort = components['sort-2'] as Record<string, unknown>;
+    expect((sort.appliedSort as Record<string, unknown>).sortCriteria).toBe('price_asc');
   });
 });
