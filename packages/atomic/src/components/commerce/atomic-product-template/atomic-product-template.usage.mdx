@@ -54,6 +54,8 @@ If you set both `must-match-*` and `must-not-match-*` for the same field and the
 
 **Order of declaration matters:** The first template whose conditions are met will be applied. If a default template (without conditions) is declared first, it will apply to all products, even if other templates with conditions are declared later.
 
+**End with a fallback template:** Declare a template without conditions last. Atomic only uses its built-in template when you declare no template at all, so a product that matches none of your templates is displayed as an empty item.
+
 **Examples:**
 
 ```html
