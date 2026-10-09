@@ -1623,6 +1623,9 @@ importers:
       '@coveo/atomic-angular':
         specifier: workspace:*
         version: link:../../../packages/atomic-angular/projects/atomic-angular/dist
+      '@coveo/headless':
+        specifier: workspace:*
+        version: link:../../../packages/headless
       rxjs:
         specifier: 'catalog:'
         version: 7.8.2
