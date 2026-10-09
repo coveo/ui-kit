@@ -20,7 +20,7 @@ interface SearchBoxSuggestions {
    */
   position: number;
   /**
-   * Whether the suggestions should be listed in the right or left panel. By default, the suggestions are listed in the right panel.
+   * Whether the suggestions should be listed in the right or left panel. By default, the suggestions are listed in the left panel.
    */
   panel?: 'left' | 'right';
   /**
