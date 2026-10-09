@@ -197,8 +197,8 @@
     },
     "size": {
       "dependsOn": ["build"],
-      "inputs": [".size-limit.json", "package.json"],
-      "outputs": []
+      "inputs": [".size-limit.json", "package.json", "$TURBO_ROOT$/scripts/size-limit.mjs"],
+      "outputs": ["size-limit-report.json"]
     },
     "publint": {
       "dependsOn": ["build"],

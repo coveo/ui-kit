@@ -1,6 +1,6 @@
 [
   {
-    "name": "@coveo/shopify",
+    "name": "@coveo/shopify - main",
     "path": "dist/headless.esm.js",
     "ignore": ["@coveo/headless"],
     "limit": "3.5 kB"

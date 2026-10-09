@@ -35,7 +35,7 @@
     "test:watch": "vitest",
     "prepare-deploy": "mkdir -p deploy && cp dist/coveoua*.js dist/coveoua*.js.map deploy",
     "clean": "node ../../utils/ci/rm-rf.mjs dist coverage",
-    "size": "size-limit"
+    "size": "node ../../scripts/size-limit.mjs run"
   },
   "dependencies": {
     "cross-fetch": "4.1.0",

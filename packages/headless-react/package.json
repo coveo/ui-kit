@@ -37,7 +37,7 @@
     "build:typedoc:ssr-commerce": "typedoc --json ./temp/ssr-commerce.json --tsconfig tsconfig.json --options typedoc-configs/ssr-commerce.typedoc.json",
     "build:typedoc:merge": "typedoc --tsconfig tsconfig.typedoc.json",
     "serve:typedoc": "live-server ./docs",
-    "size": "size-limit"
+    "size": "node ../../scripts/size-limit.mjs run"
   },
   "dependencies": {
     "@coveo/headless": "workspace:*"

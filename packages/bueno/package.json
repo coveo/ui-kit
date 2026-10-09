@@ -32,7 +32,7 @@
     "clean": "node ../../utils/ci/rm-rf.mjs dist/*",
     "test": "vitest run",
     "test:watch": "vitest",
-    "size": "size-limit"
+    "size": "node ../../scripts/size-limit.mjs run"
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "catalog:",
