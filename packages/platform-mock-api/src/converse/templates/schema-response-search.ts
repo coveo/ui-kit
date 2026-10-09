@@ -1176,13 +1176,13 @@ const FACET_NODE_IDS = ['facet-brand-2', 'facet-price-2', 'facet-category-2'];
 // layout lives on the A2-UI composition plane rather than being hardcoded in the root renderer.
 const ROOT_CHILD_IDS = ['search-sidebar', 'search-main'];
 
-// The main column stacks a top row (summary + sort), the product grid, and a bottom row
-// (pagination + page size), top to bottom.
-const MAIN_CHILD_IDS = ['search-top', 'product-list-2', 'search-bottom'];
+// The main column stacks the breadbox, a top row (summary + sort), the product grid, and a bottom
+// row (pagination + page size), top to bottom. As in the Atomic commerce layout, the breadbox gets
+// a full-width row above the summary and sort.
+const MAIN_CHILD_IDS = [BREADBOX_ID, 'search-top', 'product-list-2', 'search-bottom'];
 
-// The top row places the breadbox and the query summary on the left and the sort selector on the
-// right.
-const TOP_ROW_CHILD_IDS = [BREADBOX_ID, 'query-summary-2', 'sort-2'];
+// The top row places the query summary on the left and the sort selector on the right.
+const TOP_ROW_CHILD_IDS = ['query-summary-2', 'sort-2'];
 
 // The bottom row places pagination on the left and the page-size selector on the right.
 const BOTTOM_ROW_CHILD_IDS = ['pagination-2', 'page-size-2'];
