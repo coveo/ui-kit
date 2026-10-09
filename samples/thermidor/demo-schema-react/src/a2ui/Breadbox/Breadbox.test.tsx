@@ -60,17 +60,29 @@ describe('Breadbox', () => {
     expect(container.querySelector('section')).toBeNull();
   });
 
-  it('renders one group per active facet with its display name and values', async () => {
+  it('renders a "Facet: value" button per active value', async () => {
     mountBreadbox([BRAND, PRICE, RELEASE_DATE, CATEGORY]);
 
     await waitFor(() => expect(screen.getByRole('region', {name: 'Active filters'})).toBeDefined());
-    expect(screen.getByTestId('breadbox-regular-facet-2').textContent).toContain('Brand:');
-    expect(removeButton(/inclusion filter on Brand: Billabong/)).toBeDefined();
+    expect(screen.getByText('Filters:')).toBeDefined();
+    expect(removeButton(/inclusion filter on Brand: Billabong/).textContent).toBe(
+      'Brand:Billabong'
+    );
     expect(removeButton(/inclusion filter on Price: \$0 – \$50/)).toBeDefined();
     expect(removeButton(/inclusion filter on Release date: 2026-01-01 – 2026-02-01/)).toBeDefined();
-    expect(
-      removeButton(/inclusion filter on Category: Water Sports \/ \.\.\. \/ Boards \/ Shortboards/)
-    ).toBeDefined();
+  });
+
+  it('truncates a long category path but names the full path', async () => {
+    mountBreadbox([CATEGORY]);
+
+    const name = /inclusion filter on Category: Water Sports \/ Surfing \/ Boards \/ Shortboards/;
+    await waitFor(() => expect(removeButton(name)).toBeDefined());
+    expect(removeButton(name).textContent).toBe(
+      'Category:Water Sports / ... / Boards / Shortboards'
+    );
+    expect(removeButton(name).title).toBe(
+      'Category: Water Sports / Surfing / Boards / Shortboards'
+    );
   });
 
   it('shows an excluded value distinctly', async () => {
@@ -107,8 +119,10 @@ describe('Breadbox', () => {
   it('dispatches clearAll', async () => {
     const {lastAction} = mountBreadbox([BRAND, PRICE]);
 
-    await waitFor(() => expect(screen.getByRole('button', {name: 'Clear all'})).toBeDefined());
-    fireEvent.click(screen.getByRole('button', {name: 'Clear all'}));
+    await waitFor(() =>
+      expect(screen.getByRole('button', {name: 'Clear all filters'})).toBeDefined()
+    );
+    fireEvent.click(screen.getByRole('button', {name: 'Clear all filters'}));
     await waitFor(() => expect(lastAction()).toMatchObject({name: 'clearAll'}));
   });
 
@@ -137,20 +151,22 @@ describe('Breadbox', () => {
     expect(removeButton(/Price: /)).toBeDefined();
   });
 
-  it('drops a facet whose last value is removed', async () => {
+  it('drops a facet once its last value is removed', async () => {
     mountBreadbox([PRICE, CATEGORY], () => new Promise<void>(() => {}));
 
     await waitFor(() => expect(removeButton(/Price: /)).toBeDefined());
     fireEvent.click(removeButton(/Price: /));
-    await waitFor(() => expect(screen.queryByTestId('breadbox-numeric-facet-2')).toBeNull());
-    expect(screen.getByTestId('breadbox-category-facet-2')).toBeDefined();
+    await waitFor(() => expect(screen.queryByRole('button', {name: /Price: /})).toBeNull());
+    expect(removeButton(/Category: /)).toBeDefined();
   });
 
   it('hides itself as soon as everything is cleared', async () => {
     const {container} = mountBreadbox([BRAND, PRICE], () => new Promise<void>(() => {}));
 
-    await waitFor(() => expect(screen.getByRole('button', {name: 'Clear all'})).toBeDefined());
-    fireEvent.click(screen.getByRole('button', {name: 'Clear all'}));
+    await waitFor(() =>
+      expect(screen.getByRole('button', {name: 'Clear all filters'})).toBeDefined()
+    );
+    fireEvent.click(screen.getByRole('button', {name: 'Clear all filters'}));
     await waitFor(() => expect(container.querySelector('section')).toBeNull());
   });
 });

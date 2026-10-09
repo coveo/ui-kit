@@ -3,6 +3,8 @@ import type {BreadboxDeselectPayload, BreadboxFacet} from '@coveo/thermidor-sche
 export interface BreadboxValue {
   key: string;
   label: string;
+  /** The untruncated value, for the tooltip and the accessible name. */
+  fullLabel: string;
   excluded: boolean;
   payload: BreadboxDeselectPayload;
 }
@@ -36,29 +38,39 @@ export function breadboxValues(facet: BreadboxFacet): BreadboxValue[] {
       return facet.values.map(({value, state}) => ({
         key: value,
         label: value,
+        fullLabel: value,
         excluded: state === 'excluded',
         payload: {facetId, type: 'regular', value},
       }));
     case 'numericalRange':
-      return facet.values.map(({start, end}) => ({
-        key: `${start}..${end}`,
-        label: `${formatNumber(facet.field, start)} – ${formatNumber(facet.field, end)}`,
-        excluded: false,
-        payload: {facetId, type: 'numericalRange', start, end},
-      }));
+      return facet.values.map(({start, end}) => {
+        const label = `${formatNumber(facet.field, start)} – ${formatNumber(facet.field, end)}`;
+        return {
+          key: `${start}..${end}`,
+          label,
+          fullLabel: label,
+          excluded: false,
+          payload: {facetId, type: 'numericalRange', start, end},
+        };
+      });
     case 'dateRange':
-      return facet.values.map(({start, end}) => ({
-        key: `${start}..${end}`,
-        label: `${formatDate(start)} – ${formatDate(end)}`,
-        excluded: false,
-        payload: {facetId, type: 'dateRange', start, end},
-      }));
+      return facet.values.map(({start, end}) => {
+        const label = `${formatDate(start)} – ${formatDate(end)}`;
+        return {
+          key: `${start}..${end}`,
+          label,
+          fullLabel: label,
+          excluded: false,
+          payload: {facetId, type: 'dateRange', start, end},
+        };
+      });
     case 'hierarchical':
       return facet.path.length > 0
         ? [
             {
               key: facet.path.join('/'),
               label: limitPath(facet.path),
+              fullLabel: facet.path.join(PATH_SEPARATOR),
               excluded: false,
               payload: {facetId, type: 'hierarchical', path: facet.path},
             },
