@@ -3,7 +3,10 @@ import {ResultTemplatesHelpers} from '@coveo/headless';
 import {LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ResultTemplateController} from '@/src/components/common/result-templates/result-template-controller';
-import {makeMatchConditions} from '@/src/components/common/template-controller/template-utils';
+import {
+  makeDefinedConditions,
+  makeMatchConditions,
+} from '@/src/components/common/template-controller/template-utils';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {mapProperty} from '@/src/utils/props-utils';
 import '@/src/components/common/atomic-component-error/atomic-component-error';
@@ -34,6 +37,20 @@ export class AtomicResultTemplate extends LitElement implements LitElementWithEr
    */
   @property({attribute: false, type: Array, converter: arrayConverter})
   conditions: ResultTemplateCondition[] = [];
+
+  /**
+   * The comma-separated list of fields that must all be defined on a result for the template to apply.
+   * For example, a template with the following attribute only applies to results whose `author` and `date` fields are both defined:
+   * `if-defined="author,date"`
+   */
+  @property({type: String, attribute: 'if-defined'}) ifDefined?: string;
+
+  /**
+   * The comma-separated list of fields that must all be undefined on a result for the template to apply.
+   * For example, a template with the following attribute only applies to results that have neither an `author` nor a `date` field:
+   * `if-not-defined="author,date"`
+   */
+  @property({type: String, attribute: 'if-not-defined'}) ifNotDefined?: string;
 
   /**
    * The field and values that define which results the condition must be applied to.
@@ -67,11 +84,10 @@ export class AtomicResultTemplate extends LitElement implements LitElementWithEr
 
   connectedCallback() {
     super.connectedCallback();
-    this.resultTemplateController.matchConditions = makeMatchConditions(
-      this.mustMatch,
-      this.mustNotMatch,
-      ResultTemplatesHelpers
-    );
+    this.resultTemplateController.matchConditions = [
+      ...makeDefinedConditions(this.ifDefined, this.ifNotDefined, ResultTemplatesHelpers),
+      ...makeMatchConditions(this.mustMatch, this.mustNotMatch, ResultTemplatesHelpers),
+    ];
   }
 
   @errorGuard()
