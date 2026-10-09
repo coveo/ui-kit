@@ -12,9 +12,10 @@ import {multiClassMap, tw} from '@/src/directives/multi-class-map.js';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {buildCustomEvent, listenOnce} from '@/src/utils/event-utils.js';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
-import {once, randomID} from '@/src/utils/utils.js';
+import {getFocusedElement, once, randomID} from '@/src/utils/utils.js';
 import type {AtomicFocusTrap} from '../atomic-focus-trap/atomic-focus-trap.js';
 import type {AnyBindings} from '../interface/bindings.js';
+import '@/src/components/common/atomic-focus-trap/atomic-focus-trap.js';
 
 /**
  * When the modal is opened, the class `atomic-modal-opened` is added to the `interfaceElement` and the body, allowing further customization.
@@ -124,7 +125,13 @@ export class AtomicModal
 
   @property({type: Object, attribute: false}) scope?: HTMLElement;
 
+  /**
+   * The element to focus when the modal closes. When not set, the element that had focus when the
+   * modal opened is focused instead.
+   */
   @property({type: Object, attribute: false}) source?: HTMLElement;
+
+  @state() private focusedElementBeforeOpen?: HTMLElement;
 
   private animatableContainer: Ref<HTMLElement> = createRef();
   private currentWatchToggleOpenExecution = 0;
@@ -174,7 +181,7 @@ export class AtomicModal
               role="dialog"
               aria-modal=${this.isOpen ? 'true' : 'false'}
               aria-labelledby=${this.headerId}
-              .source=${this.source}
+              .source=${this.source ?? this.focusedElementBeforeOpen}
               .container=${this.container ?? this}
               ${ref(this.focusTrap)}
               .scope=${this.scope ?? this.bindings?.interfaceElement ?? document.body}
@@ -248,6 +255,11 @@ export class AtomicModal
 
   private async handleModalOpen() {
     const executionId = this.createExecutionTracker();
+
+    const focusedElement = getFocusedElement();
+    if (focusedElement instanceof HTMLElement && !this.contains(focusedElement)) {
+      this.focusedElementBeforeOpen = focusedElement;
+    }
 
     if (!this.shouldRender) {
       this.shouldRender = true;
