@@ -1,11 +1,16 @@
-import {existsSync, readdirSync, readFileSync, writeFileSync} from 'node:fs';
+import {existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync} from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {dedent} from 'ts-dedent';
 import colors from '../../../utils/ci/colors.mjs';
 
 /**
- * Generates index.ts and lazy-index.ts exports for Lit components.
+ * Generates index.ts and lazy-index.ts exports for Lit components, as well as one entry point per
+ * component in src/entry-points/ (published as `@coveo/atomic/components/<component>`).
+ *
+ * The entry points are pure re-exports and are not covered by the package's `sideEffects` globs, so
+ * a bundler can drop the ones whose exports go unused. Importing one without using any of its
+ * exports therefore registers nothing.
  *
  * IMPORTANT: This script only scans FIRST-LEVEL directories under each use-case folder.
  *
@@ -31,6 +36,7 @@ const baseComponentsDir = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   '../src/components'
 );
+const entryPointsDir = path.resolve(baseComponentsDir, '../entry-points');
 
 function isLitComponent(filePath) {
   if (!existsSync(filePath)) {
@@ -47,19 +53,34 @@ function toPascalCase(name) {
     .join('');
 }
 
-async function generateLitExportsForDir(dir) {
+/**
+ * Lists the Lit components of each use-case folder, as `{dir, component}` pairs.
+ */
+export function listLitComponents() {
+  return directories.flatMap((dir) => {
+    const componentsDir = path.join(baseComponentsDir, dir);
+    return readdirSync(componentsDir, {withFileTypes: true})
+      .filter((file) => {
+        const componentPath = path.join(componentsDir, file.name, `${file.name}.ts`);
+        return file.isDirectory() && existsSync(componentPath) && isLitComponent(componentPath);
+      })
+      .map((file) => ({dir, component: file.name}))
+      .sort((a, b) => a.component.localeCompare(b.component));
+  });
+}
+
+export function entryPointSource(dir, component) {
+  return `// Auto-generated file\nexport * from '../components/${dir}/${component}/${component}.js';\n`;
+}
+
+async function generateLitExportsForDir(dir, components) {
   const componentsDir = path.join(baseComponentsDir, dir);
   const outputIndexFile = path.join(componentsDir, 'index.ts');
   const outputLazyIndexFile = path.join(componentsDir, 'lazy-index.ts');
 
-  const files = readdirSync(componentsDir, {withFileTypes: true});
-  const litComponents = files
-    .filter((file) => {
-      const componentPath = path.join(componentsDir, file.name, `${file.name}.ts`);
-      return file.isDirectory() && existsSync(componentPath) && isLitComponent(componentPath);
-    })
-    .map((file) => file.name)
-    .sort();
+  const litComponents = components
+    .filter((entry) => entry.dir === dir)
+    .map((entry) => entry.component);
 
   const indexFileContent = dedent`
   // Auto-generated file
@@ -91,7 +112,17 @@ async function generateLitExportsForDir(dir) {
   writeFileSync(outputLazyIndexFile, lazyIndexFileContent);
 }
 
-for (const dir of directories) {
-  console.log(colors.blue('Directory:'), colors.green(dir));
-  await generateLitExportsForDir(dir);
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  const components = listLitComponents();
+
+  for (const dir of directories) {
+    console.log(colors.blue('Directory:'), colors.green(dir));
+    await generateLitExportsForDir(dir, components);
+  }
+
+  rmSync(entryPointsDir, {recursive: true, force: true});
+  mkdirSync(entryPointsDir, {recursive: true});
+  for (const {dir, component} of components) {
+    writeFileSync(path.join(entryPointsDir, `${component}.ts`), entryPointSource(dir, component));
+  }
 }

@@ -18,6 +18,34 @@ The `@coveo/atomic` package exposes the following entry points:
 - `@coveo/atomic/themes`: exports the sample Coveo Atomic themes.
 - `@coveo/atomic/assets`: exports the SVG icons used by Coveo Atomic.
 - `@coveo/atomic/lang`: exports the localization files used by Coveo Atomic.
+- `@coveo/atomic/components`: exports every Coveo Atomic component class.
+- `@coveo/atomic/components/<tag-name>`: exports a single Coveo Atomic component class (e.g., `@coveo/atomic/components/atomic-facet`).
+
+### Per-component entry points
+
+Use `@coveo/atomic/components/<tag-name>` to only bundle the components you use. Importing a component class this way registers that component, along with the components it renders internally:
+
+```ts
+import {AtomicFacet} from '@coveo/atomic/components/atomic-facet';
+import {AtomicSearchBox} from '@coveo/atomic/components/atomic-search-box';
+
+customElements.get('atomic-facet') ?? customElements.define('atomic-facet', AtomicFacet);
+customElements.get('atomic-search-box') ??
+  customElements.define('atomic-search-box', AtomicSearchBox);
+```
+
+You must import a value (the component class) from the entry point, and use it. These entry points are pure re-exports, so bundlers drop them, along with the component they re-export, when none of their exports are used. A bare import therefore registers nothing once bundled:
+
+```ts
+// ❌ Registers nothing once bundled: the bundler removes this import.
+import '@coveo/atomic/components/atomic-facet';
+
+// ✅ Registers atomic-facet, because AtomicFacet is used.
+import {AtomicFacet} from '@coveo/atomic/components/atomic-facet';
+customElements.get('atomic-facet') ?? customElements.define('atomic-facet', AtomicFacet);
+```
+
+Importing the class registers the component. The `customElements.define` call never runs, because the component is already defined by then, but it is a use of the class that bundlers keep. Exporting the class instead is not enough: bundlers remove exports that nothing imports, along with the entry point.
 
 ## Getting Started
 
