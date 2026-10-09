@@ -6,7 +6,10 @@ import {ResultTemplatesHelpers as InsightResultTemplatesHelpers} from '@coveo/he
 import {LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ResultTemplateController} from '@/src/components/common/result-templates/result-template-controller';
-import {makeMatchConditions} from '@/src/components/common/template-controller/template-utils';
+import {
+  makeDefinedConditions,
+  makeMatchConditions,
+} from '@/src/components/common/template-controller/template-utils';
 import {arrayConverter} from '@/src/converters/array-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {LitElementWithError} from '@/src/decorators/types';
@@ -37,6 +40,20 @@ export class AtomicInsightResultTemplate extends LitElement implements LitElemen
   conditions: InsightResultTemplateCondition[] = [];
 
   /**
+   * The comma-separated list of fields that must all be defined on a result for the template to apply.
+   *
+   * For example, a template with the following attribute only applies to results whose `author` and `date` fields are both defined: `if-defined="author,date"`
+   */
+  @property({type: String, attribute: 'if-defined'}) ifDefined?: string;
+
+  /**
+   * The comma-separated list of fields that must all be undefined on a result for the template to apply.
+   *
+   * For example, a template with the following attribute only applies to results that have neither an `author` nor a `date` field: `if-not-defined="author,date"`
+   */
+  @property({type: String, attribute: 'if-not-defined'}) ifNotDefined?: string;
+
+  /**
    * The field and values that define which result items the condition must be applied to.
    *
    * For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
@@ -65,11 +82,10 @@ export class AtomicInsightResultTemplate extends LitElement implements LitElemen
 
   connectedCallback() {
     super.connectedCallback();
-    this.resultTemplateController.matchConditions = makeMatchConditions(
-      this.mustMatch,
-      this.mustNotMatch,
-      InsightResultTemplatesHelpers
-    );
+    this.resultTemplateController.matchConditions = [
+      ...makeDefinedConditions(this.ifDefined, this.ifNotDefined, InsightResultTemplatesHelpers),
+      ...makeMatchConditions(this.mustMatch, this.mustNotMatch, InsightResultTemplatesHelpers),
+    ];
   }
 
   @errorGuard()

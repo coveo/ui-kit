@@ -37,17 +37,17 @@ export class AtomicInsightResultChildrenTemplate extends LitElement implements L
   conditions: InsightResultTemplateCondition[] = [];
 
   /**
-   * The field that, when defined on a child result, allows this template to be applied.
+   * The comma-separated list of fields that must all be defined on a child result for the template to apply.
    *
-   * For example, a template with the following attribute only applies to child results whose `filetype` and `sourcetype` fields are defined:
+   * For example, a template with the following attribute only applies to child results whose `filetype` and `sourcetype` fields are both defined:
    * `if-defined="filetype,sourcetype"`
    */
   @property({type: String, attribute: 'if-defined'}) ifDefined?: string;
 
   /**
-   * The field that, when defined on a child result, prevents this template from being applied.
+   * The comma-separated list of fields that must all be undefined on a child result for the template to apply.
    *
-   * For example, a template with the following attribute only applies to child results whose `filetype` and `sourcetype` fields are NOT defined:
+   * For example, a template with the following attribute only applies to child results that have neither a `filetype` nor a `sourcetype` field:
    * `if-not-defined="filetype,sourcetype"`
    */
   @property({type: String, attribute: 'if-not-defined'}) ifNotDefined?: string;
@@ -82,15 +82,10 @@ export class AtomicInsightResultChildrenTemplate extends LitElement implements L
 
   connectedCallback() {
     super.connectedCallback();
-    this.conditions = [
-      ...this.conditions,
+    this.resultTemplateController.matchConditions = [
       ...makeDefinedConditions(this.ifDefined, this.ifNotDefined, InsightResultTemplatesHelpers),
+      ...makeMatchConditions(this.mustMatch, this.mustNotMatch, InsightResultTemplatesHelpers),
     ];
-    this.resultTemplateController.matchConditions = makeMatchConditions(
-      this.mustMatch,
-      this.mustNotMatch,
-      InsightResultTemplatesHelpers
-    );
   }
 
   @errorGuard()
