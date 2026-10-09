@@ -1,0 +1,8 @@
+[
+  {
+    "name": "@coveo/atomic-react - main",
+    "path": "dist/esm/atomic-react.mjs",
+    "ignore": ["@coveo/atomic"],
+    "limit": "3.4 kB"
+  }
+]

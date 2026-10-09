@@ -83,7 +83,8 @@
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
     "chromatic": "chromatic",
     "validate:light-dom-styles": "node ./scripts/check-light-dom-host-selectors.mjs",
-    "validate:no-new-light-dom": "node ./scripts/check-no-new-light-dom-components.mjs"
+    "validate:no-new-light-dom": "node ./scripts/check-no-new-light-dom-components.mjs",
+    "size": "node ../../scripts/size-limit.mjs run"
   },
   "dependencies": {
     "@coveo/atomic-legacy": "workspace:*",
@@ -111,6 +112,7 @@
     "@playwright/test": "catalog:",
     "@rollup/plugin-replace": "catalog:",
     "@rslib/core": "0.23.2",
+    "@size-limit/preset-small-lib": "catalog:",
     "@storybook/addon-a11y": "10.6.0",
     "@storybook/addon-docs": "10.6.0",
     "@storybook/addon-mcp": "0.7.0",
@@ -139,6 +141,7 @@
     "react": "catalog:",
     "remark-gfm": "4.0.1",
     "shadow-dom-testing-library": "1.14.1",
+    "size-limit": "catalog:",
     "storybook": "10.6.0",
     "storybook-addon-pseudo-states": "10.6.0",
     "tailwindcss": "4.3.3",

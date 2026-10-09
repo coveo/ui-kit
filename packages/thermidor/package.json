@@ -32,15 +32,18 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:dts": "api-extractor run --local",
-    "test:dts:ci": "api-extractor run"
+    "test:dts:ci": "api-extractor run",
+    "size": "node ../../scripts/size-limit.mjs run"
   },
   "dependencies": {
     "@ag-ui/core": "0.0.59"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "7.59.1",
+    "@size-limit/preset-small-lib": "catalog:",
     "fast-check": "4.9.0",
     "publint": "catalog:",
+    "size-limit": "catalog:",
     "tsdown": "0.23.0",
     "typescript": "catalog:",
     "vitest": "catalog:",

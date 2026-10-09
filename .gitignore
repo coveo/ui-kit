@@ -4,6 +4,7 @@ npm-debug.log
 .ds_store
 dist
 .size-snapshot.json
+size-limit-report.json
 reports/*.xml
 .dccache
 sarifs

@@ -13,6 +13,7 @@
     "build": "turbo build",
     "test": "turbo test",
     "e2e": "turbo e2e",
+    "size": "turbo run size",
     "lint:check:oxlint": "oxlint --deny-warnings .",
     "lint:check:oxfmt": "oxfmt --check .",
     "lint:check:cspell": "cspell '**/*.md' --no-progress --show-suggestions --show-context",

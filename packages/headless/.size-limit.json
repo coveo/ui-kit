@@ -1,0 +1,44 @@
+[
+  {
+    "name": "@coveo/headless - search { buildSearchEngine, buildSearchBox }",
+    "path": "dist/esm/index.js",
+    "import": "{ buildSearchEngine, buildSearchBox }",
+    "limit": "140 kB"
+  },
+  {
+    "name": "@coveo/headless - commerce { buildCommerceEngine, buildProductListing }",
+    "path": "dist/esm/commerce.index.js",
+    "import": "{ buildCommerceEngine, buildProductListing }",
+    "limit": "145 kB"
+  },
+  {
+    "name": "@coveo/headless - search - CDN",
+    "path": "cdn/headless.esm.js",
+    "rolldown": false,
+    "limit": "170 kB"
+  },
+  {
+    "name": "@coveo/headless - commerce - CDN",
+    "path": "cdn/commerce/headless.esm.js",
+    "rolldown": false,
+    "limit": "160 kB"
+  },
+  {
+    "name": "@coveo/headless - insight - CDN",
+    "path": "cdn/insight/headless.esm.js",
+    "rolldown": false,
+    "limit": "165 kB"
+  },
+  {
+    "name": "@coveo/headless - case-assist - CDN",
+    "path": "cdn/case-assist/headless.esm.js",
+    "rolldown": false,
+    "limit": "130 kB"
+  },
+  {
+    "name": "@coveo/headless - recommendation - CDN",
+    "path": "cdn/recommendation/headless.esm.js",
+    "rolldown": false,
+    "limit": "135 kB"
+  }
+]
