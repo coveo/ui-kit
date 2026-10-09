@@ -17,6 +17,21 @@ import {mountSurface} from './mount-surface.harness.js';
 
 afterEach(() => cleanup());
 
+function expectEveryControlDisabled(container: HTMLElement) {
+  const controls = [...container.querySelectorAll('button, input, select')];
+  expect(controls.length).toBeGreaterThan(0);
+  for (const control of controls) {
+    expect(control.matches(':disabled'), control.outerHTML).toBe(true);
+  }
+}
+
+// jsdom still toggles a disabled checkbox on a synthetic click, so only buttons are clicked.
+function clickEveryButton(container: HTMLElement) {
+  for (const button of container.querySelectorAll('button')) {
+    fireEvent.click(button);
+  }
+}
+
 describe('RegularFacet', () => {
   const stateWithValues: RegularFacetProps = {
     field: 'ec_brand',
@@ -41,10 +56,15 @@ describe('RegularFacet', () => {
     facetSearch: {path: '/state/root/facetSearch'},
   };
 
-  function mountFacet(state: RegularFacetProps, dispatchGate?: () => Promise<void> | void) {
+  function mountFacet(
+    state: RegularFacetProps,
+    dispatchGate?: () => Promise<void> | void,
+    readOnly?: boolean
+  ) {
     return mountSurface({
       component: {component: 'RegularFacet', ...BINDINGS},
       dispatchGate,
+      readOnly,
       dataModel: (Object.keys(state) as Array<keyof RegularFacetProps>).map((key) => ({
         path: `/state/root/${key}`,
         value: state[key],
@@ -349,6 +369,39 @@ describe('RegularFacet', () => {
     expect(screen.queryByTestId('facet-show-more-ec_brand')).toBeNull();
     expect(screen.queryByTestId('facet-show-less-ec_brand')).toBeNull();
   });
+
+  describe('in a read-only surface', () => {
+    it('disables the values, clear, search and show-more controls and dispatches nothing', async () => {
+      const {container, actions} = mountFacet(stateWithValues, undefined, true);
+
+      await waitFor(() => expect(screen.getByTestId('facet-value-Billabong')).toBeDefined());
+      expectEveryControlDisabled(container);
+      clickEveryButton(container);
+      expect(actions).toEqual([]);
+    });
+
+    it('disables the search results and "More matches for" control', async () => {
+      const {container, actions} = mountFacet(
+        {
+          ...stateWithValues,
+          facetSearch: {
+            query: 'rip',
+            canShowMoreResults: true,
+            results: [{value: 'Rip Curl', numberOfResults: 3}],
+          },
+        },
+        undefined,
+        true
+      );
+
+      await waitFor(() =>
+        expect(screen.getByTestId('facet-search-show-more-ec_brand')).toBeDefined()
+      );
+      expectEveryControlDisabled(container);
+      clickEveryButton(container);
+      expect(actions).toEqual([]);
+    });
+  });
 });
 
 describe('NumericFacet', () => {
@@ -365,13 +418,18 @@ describe('NumericFacet', () => {
     ],
   };
 
-  function mountFacet(state: NumericFacetProps, dispatchGate?: () => Promise<void> | void) {
+  function mountFacet(
+    state: NumericFacetProps,
+    dispatchGate?: () => Promise<void> | void,
+    readOnly?: boolean
+  ) {
     return mountSurface({
       component: {
         component: 'NumericFacet',
         ...Object.fromEntries(Object.keys(state).map((key) => [key, {path: `/state/root/${key}`}])),
       },
       dispatchGate,
+      readOnly,
       dataModel: (Object.keys(state) as Array<keyof NumericFacetProps>).map((key) => ({
         path: `/state/root/${key}`,
         value: state[key],
@@ -692,6 +750,27 @@ describe('NumericFacet', () => {
       expect(lastAction()).toMatchObject({name: 'applyCustomRange', context: {start: 50, end: 150}})
     );
   });
+
+  it('disables the ranges, clear and custom range controls in a read-only surface', async () => {
+    const {container, actions} = mountFacet(
+      {
+        ...stateWithRanges,
+        hasActiveValues: true,
+        values: [
+          {start: 0, end: 100, numberOfResults: 5, state: 'selected'},
+          {start: 100, end: 200, numberOfResults: 2, state: 'idle'},
+        ],
+      },
+      undefined,
+      true
+    );
+
+    await waitFor(() => expect(screen.getByText('Clear')).toBeDefined());
+    expectEveryControlDisabled(container);
+    clickEveryButton(container);
+    fireEvent.submit(container.querySelector('form')!);
+    expect(actions).toEqual([]);
+  });
 });
 
 describe('CategoryFacet', () => {
@@ -710,13 +789,18 @@ describe('CategoryFacet', () => {
     facetSearch: {query: '', canShowMoreResults: false, results: []},
   };
 
-  function mountFacet(state: CategoryFacetProps, dispatchGate?: () => Promise<void> | void) {
+  function mountFacet(
+    state: CategoryFacetProps,
+    dispatchGate?: () => Promise<void> | void,
+    readOnly?: boolean
+  ) {
     return mountSurface({
       component: {
         component: 'CategoryFacet',
         ...Object.fromEntries(Object.keys(state).map((key) => [key, {path: `/state/root/${key}`}])),
       },
       dispatchGate,
+      readOnly,
       dataModel: (Object.keys(state) as Array<keyof CategoryFacetProps>).map((key) => ({
         path: `/state/root/${key}`,
         value: state[key],
@@ -1054,6 +1138,76 @@ describe('CategoryFacet', () => {
     );
     expect(screen.queryByTestId('facet-show-more-ec_category')).toBeNull();
     expect(screen.queryByTestId('facet-show-less-ec_category')).toBeNull();
+  });
+
+  describe('in a read-only surface', () => {
+    it('disables the tree, search and show-more controls and dispatches nothing', async () => {
+      const {container, actions} = mountFacet(
+        {
+          ...stateWithChildren,
+          values: {
+            ...stateWithChildren.values,
+            ancestry: [
+              {path: ['Sporting Goods'], value: 'Sporting Goods', numberOfResults: 8},
+              {
+                path: ['Sporting Goods', 'Water Sports'],
+                value: 'Water Sports',
+                numberOfResults: 6,
+              },
+            ],
+            selected: {
+              path: ['Sporting Goods', 'Water Sports'],
+              value: 'Water Sports',
+              numberOfResults: 6,
+            },
+            children: [
+              {
+                path: ['Sporting Goods', 'Water Sports', 'Wetsuits'],
+                value: 'Wetsuits',
+                numberOfResults: 4,
+              },
+            ],
+          },
+          canShowMoreValues: true,
+          canShowLessValues: true,
+        },
+        undefined,
+        true
+      );
+
+      await waitFor(() => expect(screen.getByText('Wetsuits')).toBeDefined());
+      expectEveryControlDisabled(container);
+      clickEveryButton(container);
+      expect(actions).toEqual([]);
+    });
+
+    it('disables the search results and "More matches for" control', async () => {
+      const {container, actions} = mountFacet(
+        {
+          ...stateWithChildren,
+          facetSearch: {
+            query: 'wet',
+            canShowMoreResults: true,
+            results: [
+              {
+                path: ['Sporting Goods', 'Water Sports', 'Wetsuits'],
+                value: 'Wetsuits',
+                numberOfResults: 4,
+              },
+            ],
+          },
+        },
+        undefined,
+        true
+      );
+
+      await waitFor(() =>
+        expect(screen.getByTestId('facet-search-show-more-ec_category')).toBeDefined()
+      );
+      expectEveryControlDisabled(container);
+      clickEveryButton(container);
+      expect(actions).toEqual([]);
+    });
   });
 });
 

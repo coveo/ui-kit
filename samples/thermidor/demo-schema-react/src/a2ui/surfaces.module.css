@@ -8,3 +8,12 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
 }
+
+.readOnly :is(button, input, select):disabled,
+.readOnly label:has(:disabled) {
+  cursor: not-allowed;
+}
+
+.readOnly :is(button, input, select):disabled {
+  opacity: 0.55;
+}

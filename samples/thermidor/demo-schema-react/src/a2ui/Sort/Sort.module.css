@@ -22,6 +22,6 @@
   transition: border-color var(--transition-fast);
 }
 
-.select:hover {
+.select:hover:not(:disabled) {
   border-color: var(--color-border-hover);
 }

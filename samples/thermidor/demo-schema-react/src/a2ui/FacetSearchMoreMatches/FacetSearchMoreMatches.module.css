@@ -15,7 +15,7 @@
   transition: background-color var(--transition-fast);
 }
 
-.button:hover {
+.button:hover:not(:disabled) {
   background: var(--color-surface-hover);
 }
 

@@ -1,6 +1,7 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {PaginationAction} from '@coveo/thermidor-schema';
 import {PaginationPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {useSurfaceReadOnly} from '../surface-read-only.js';
 import styles from './Pagination.module.css';
 
 const NUMBER_OF_PAGES = 5;
@@ -14,6 +15,7 @@ export const Pagination = createReactComponent(
   {name: 'Pagination', schema: PaginationPropsSchema},
   ({props, context}) => {
     const {page, totalPages} = props;
+    const readOnly = useSurfaceReadOnly();
 
     // The `{ path }` bindings resolve progressively; until both are numbers the
     // pagination shell must not render (an unresolved `totalPages` would otherwise
@@ -47,7 +49,7 @@ export const Pagination = createReactComponent(
         <button
           className={styles.navButton}
           onClick={() => handlePageChange(page - 1)}
-          disabled={page <= 0}
+          disabled={readOnly || page <= 0}
           aria-label="Previous page"
           type="button"
         >
@@ -62,6 +64,7 @@ export const Pagination = createReactComponent(
               onClick={() => handlePageChange(i)}
               aria-label={`Page ${i + 1}`}
               aria-current={i === page ? 'page' : undefined}
+              disabled={readOnly}
               type="button"
             >
               {i + 1}
@@ -72,7 +75,7 @@ export const Pagination = createReactComponent(
         <button
           className={styles.navButton}
           onClick={() => handlePageChange(page + 1)}
-          disabled={page >= totalPages - 1}
+          disabled={readOnly || page >= totalPages - 1}
           aria-label="Next page"
           type="button"
         >

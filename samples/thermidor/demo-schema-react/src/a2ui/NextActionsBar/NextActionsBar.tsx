@@ -2,6 +2,7 @@ import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {ActionItem, NextActionsBarAction} from '@coveo/thermidor-schema';
 import {NextActionsBarPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {useOptimisticValue} from '../use-optimistic-value.js';
+import {useSurfaceReadOnly} from '../surface-read-only.js';
 import styles from './NextActionsBar.module.css';
 
 /**
@@ -24,6 +25,7 @@ export const NextActionsBar = createReactComponent(
     // No local state to assert, so the optimistic value is just "this bar's dispatch is in flight".
     const {value: selecting, dispatchOptimistic} = useOptimisticValue(false, dispatch);
     const actions = props.suggestedActions ?? [];
+    const readOnly = useSurfaceReadOnly();
 
     if (actions.length === 0) {
       return null;
@@ -44,7 +46,7 @@ export const NextActionsBar = createReactComponent(
             key={i}
             className={styles.actionButton}
             onClick={() => handleSelectAction(action)}
-            disabled={selecting}
+            disabled={readOnly || selecting}
             aria-busy={selecting}
             type="button"
           >

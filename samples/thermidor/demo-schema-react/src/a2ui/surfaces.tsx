@@ -11,6 +11,7 @@
 import {useEffect, useMemo, useRef} from 'react';
 import {A2UIRenderer, useA2UI} from '@copilotkit/a2ui-renderer';
 import type {A2uiV09Message} from '@coveo/thermidor';
+import {SurfaceReadOnlyProvider} from './surface-read-only.js';
 import styles from './surfaces.module.css';
 
 /**
@@ -38,7 +39,8 @@ interface TurnSurfacesProps {
   surfaceIds: readonly string[];
   /**
    * Whether the shopper can act on these surfaces. The session only sends actions for the
-   * surfaces of its active turn, so blocks of earlier turns are shown read-only.
+   * surfaces of its active turn, so the controls of earlier turns' blocks are disabled while
+   * their content stays readable.
    */
   interactive: boolean;
 }
@@ -68,28 +70,30 @@ export function TurnSurfaces({surfaceIds, interactive}: TurnSurfacesProps) {
   }
 
   return (
-    <div className={interactive ? undefined : styles.readOnly} inert={!interactive}>
-      {!interactive && (
-        <p className={styles.readOnlyNote}>
-          Earlier results. Ask a follow-up or search again to refine.
-        </p>
-      )}
-      {surfaceIds.map((surfaceId) => (
-        <section
-          className="catalog-surface"
-          aria-label={`A2-UI surface ${surfaceId}`}
-          key={surfaceId}
-          ref={(element) => {
-            if (element) {
-              sectionRefs.current.set(surfaceId, element);
-            } else {
-              sectionRefs.current.delete(surfaceId);
-            }
-          }}
-        >
-          <A2UIRenderer surfaceId={surfaceId} />
-        </section>
-      ))}
-    </div>
+    <SurfaceReadOnlyProvider value={!interactive}>
+      <div className={interactive ? undefined : styles.readOnly}>
+        {!interactive && (
+          <p className={styles.readOnlyNote}>
+            Earlier results. Ask a follow-up or search again to refine.
+          </p>
+        )}
+        {surfaceIds.map((surfaceId) => (
+          <section
+            className="catalog-surface"
+            aria-label={`A2-UI surface ${surfaceId}`}
+            key={surfaceId}
+            ref={(element) => {
+              if (element) {
+                sectionRefs.current.set(surfaceId, element);
+              } else {
+                sectionRefs.current.delete(surfaceId);
+              }
+            }}
+          >
+            <A2UIRenderer surfaceId={surfaceId} />
+          </section>
+        ))}
+      </div>
+    </SurfaceReadOnlyProvider>
   );
 }

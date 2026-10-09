@@ -5,6 +5,7 @@ import {FacetSearchMoreMatches} from '../FacetSearchMoreMatches/FacetSearchMoreM
 import {ChevronLeftIcon, SearchIcon} from '../icons/index.js';
 import {useOptimisticFacetSearch} from '../use-optimistic-facet-search.js';
 import {useOptimisticCategoryFacet} from './use-optimistic-category-facet.js';
+import {useSurfaceReadOnly} from '../surface-read-only.js';
 import styles from './CategoryFacet.module.css';
 
 const ALL_CATEGORIES_LABEL = 'All Categories';
@@ -54,6 +55,7 @@ export const CategoryFacet = createReactComponent(
       dispatch({event: {name: 'clearSearch', context: {}}});
     };
     const optimisticFacet = useOptimisticCategoryFacet(props, dispatch);
+    const readOnly = useSurfaceReadOnly();
 
     const {displayName, facetSearch, canShowMoreValues, canShowLessValues} = props;
     const {ancestry = [], selected, children = []} = optimisticFacet.values;
@@ -87,6 +89,7 @@ export const CategoryFacet = createReactComponent(
             data-testid={`facet-search-input-${props.field}`}
             value={search.query}
             onChange={(event) => search.onQueryChange(event.target.value)}
+            disabled={readOnly}
             placeholder="Search"
             aria-label={`Search ${displayName}`}
           />
@@ -95,6 +98,7 @@ export const CategoryFacet = createReactComponent(
               type="button"
               className={styles.searchClear}
               onClick={handleClearSearch}
+              disabled={readOnly}
               aria-label={`Clear ${displayName} search`}
             >
               <span aria-hidden="true">×</span>
@@ -121,6 +125,7 @@ export const CategoryFacet = createReactComponent(
                       data-testid={`facet-search-result-${result.path.join('/')}`}
                       aria-label={`${result.value} (${result.numberOfResults}) under ${parentLabel}`}
                       onClick={() => optimisticFacet.descendInto(result)}
+                      disabled={readOnly}
                     >
                       <span className={styles.searchResultValue}>
                         <span className={styles.valueLabel}>{result.value}</span>
@@ -164,6 +169,7 @@ export const CategoryFacet = createReactComponent(
                     className={styles.backLink}
                     style={indentStyle(0)}
                     onClick={() => optimisticFacet.clearPath()}
+                    disabled={readOnly}
                   >
                     <ChevronLeftIcon className={styles.chevron} />
                     <span className={styles.valueLabel}>{ALL_CATEGORIES_LABEL}</span>
@@ -178,6 +184,7 @@ export const CategoryFacet = createReactComponent(
                     className={styles.backLink}
                     style={indentStyle(0)}
                     onClick={() => optimisticFacet.selectAncestor(parent.path)}
+                    disabled={readOnly}
                   >
                     <ChevronLeftIcon className={styles.chevron} />
                     <span className={styles.valueLabel}>{parent.value}</span>
@@ -206,6 +213,7 @@ export const CategoryFacet = createReactComponent(
                     className={styles.value}
                     style={indentStyle(selected ? 2 : 0)}
                     onClick={() => optimisticFacet.descendInto(child)}
+                    disabled={readOnly}
                   >
                     <span className={styles.valueLabel}>{child.value}</span>
                     <span className={styles.count}>({child.numberOfResults})</span>
@@ -220,6 +228,7 @@ export const CategoryFacet = createReactComponent(
                 className={styles.showValuesButton}
                 data-testid={`facet-show-less-${props.field}`}
                 onClick={() => dispatch({event: {name: 'showLessValues', context: {}}})}
+                disabled={readOnly}
               >
                 - Show less
               </button>
@@ -230,6 +239,7 @@ export const CategoryFacet = createReactComponent(
                 className={styles.showValuesButton}
                 data-testid={`facet-show-more-${props.field}`}
                 onClick={() => dispatch({event: {name: 'showMoreValues', context: {}}})}
+                disabled={readOnly}
               >
                 + Show more
               </button>

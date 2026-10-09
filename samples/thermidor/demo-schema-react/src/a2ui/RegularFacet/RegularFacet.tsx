@@ -4,6 +4,7 @@ import {FacetSearchMoreMatches} from '../FacetSearchMoreMatches/FacetSearchMoreM
 import {SearchIcon} from '../icons/index.js';
 import {useOptimisticFacetSearch} from '../use-optimistic-facet-search.js';
 import {useOptimisticRegularFacet} from './use-optimistic-regular-facet.js';
+import {useSurfaceReadOnly} from '../surface-read-only.js';
 import styles from './RegularFacet.module.css';
 
 /**
@@ -34,6 +35,7 @@ export const RegularFacet = createReactComponent(
       dispatch({event: {name: 'clearSearch', context: {}}});
     };
     const optimisticFacet = useOptimisticRegularFacet(props, dispatch);
+    const readOnly = useSurfaceReadOnly();
 
     const {displayName, hasActiveValues, canShowMoreValues, canShowLessValues} = props;
     const facetSearch = props.facetSearch ?? {query: '', results: [], canShowMoreResults: false};
@@ -54,6 +56,7 @@ export const RegularFacet = createReactComponent(
             data-testid={testId}
             checked={isSelected}
             onChange={() => optimisticFacet.toggleSelect(value)}
+            disabled={readOnly}
           />
           <span className={styles.valueLabel}>{value}</span>
           <span className={styles.valueCount}>({numberOfResults})</span>
@@ -74,6 +77,7 @@ export const RegularFacet = createReactComponent(
               type="button"
               className={styles.clearButton}
               onClick={optimisticFacet.clearAll}
+              disabled={readOnly}
               aria-label={`Clear ${displayName} selections`}
             >
               Clear
@@ -92,12 +96,14 @@ export const RegularFacet = createReactComponent(
               placeholder="Search"
               aria-label={`Search ${displayName}`}
               onChange={(event) => search.onQueryChange(event.target.value)}
+              disabled={readOnly}
             />
             {showResults && (
               <button
                 type="button"
                 className={styles.searchClear}
                 onClick={handleClearSearch}
+                disabled={readOnly}
                 aria-label={`Clear ${displayName} search`}
               >
                 ×
@@ -145,6 +151,7 @@ export const RegularFacet = createReactComponent(
                 className={styles.showValuesButton}
                 data-testid={`facet-show-less-${props.field}`}
                 onClick={() => dispatch({event: {name: 'showLessValues', context: {}}})}
+                disabled={readOnly}
               >
                 - Show less
               </button>
@@ -155,6 +162,7 @@ export const RegularFacet = createReactComponent(
                 className={styles.showValuesButton}
                 data-testid={`facet-show-more-${props.field}`}
                 onClick={() => dispatch({event: {name: 'showMoreValues', context: {}}})}
+                disabled={readOnly}
               >
                 + Show more
               </button>

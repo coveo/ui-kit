@@ -2,6 +2,7 @@ import {useId} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import {type NumericFacetAction, NumericFacetPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {useOptimisticNumericFacet} from './use-optimistic-numeric-facet.js';
+import {useSurfaceReadOnly} from '../surface-read-only.js';
 import styles from './NumericFacet.module.css';
 
 function formatRange(start: number, end: number): string {
@@ -27,6 +28,7 @@ export const NumericFacet = createReactComponent(
       context.dispatchAction(action);
     };
     const optimisticFacet = useOptimisticNumericFacet(props, dispatch);
+    const readOnly = useSurfaceReadOnly();
 
     const {displayName, domain} = props;
     const {hasActiveValues, isApplyingCustomRange} = optimisticFacet;
@@ -44,7 +46,12 @@ export const NumericFacet = createReactComponent(
             {displayName}
           </h3>
           {hasActiveValues && (
-            <button className={styles.clearButton} type="button" onClick={optimisticFacet.clear}>
+            <button
+              className={styles.clearButton}
+              type="button"
+              onClick={optimisticFacet.clear}
+              disabled={readOnly}
+            >
               Clear
             </button>
           )}
@@ -60,6 +67,7 @@ export const NumericFacet = createReactComponent(
                   type="button"
                   aria-pressed={isSelected}
                   onClick={() => optimisticFacet.toggleSingleSelect(value.start, value.end)}
+                  disabled={readOnly}
                 >
                   <span className={styles.valueLabel}>{formatRange(value.start, value.end)}</span>
                   <span className={styles.count}>({value.numberOfResults})</span>
@@ -77,7 +85,7 @@ export const NumericFacet = createReactComponent(
         >
           <fieldset
             className={`${styles.customFieldset} ${isApplyingCustomRange ? styles.pending : ''}`}
-            disabled={isApplyingCustomRange}
+            disabled={readOnly || isApplyingCustomRange}
             aria-busy={isApplyingCustomRange}
           >
             <label className={styles.customLabel} htmlFor={startId}>

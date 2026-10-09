@@ -1,3 +1,4 @@
+import {useSurfaceReadOnly} from '../surface-read-only.js';
 import styles from './FacetSearchMoreMatches.module.css';
 
 /**
@@ -13,8 +14,15 @@ export function FacetSearchMoreMatches({
   testId: string;
   onShowMore: () => void;
 }) {
+  const readOnly = useSurfaceReadOnly();
   return (
-    <button type="button" className={styles.button} data-testid={testId} onClick={onShowMore}>
+    <button
+      type="button"
+      className={styles.button}
+      data-testid={testId}
+      onClick={onShowMore}
+      disabled={readOnly}
+    >
       More matches for <span className={styles.query}>{query}</span>
     </button>
   );

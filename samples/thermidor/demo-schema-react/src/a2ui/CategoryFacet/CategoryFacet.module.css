@@ -39,7 +39,7 @@
   transition: background-color var(--transition-fast);
 }
 
-.backLink:hover {
+.backLink:hover:not(:disabled) {
   background: var(--color-surface-hover);
   color: var(--color-text-primary);
 }
@@ -86,7 +86,7 @@
     color var(--transition-fast);
 }
 
-.value:hover {
+.value:hover:not(:disabled) {
   background: var(--color-surface-hover);
 }
 
@@ -177,7 +177,7 @@
   transition: color var(--transition-fast);
 }
 
-.searchClear:hover {
+.searchClear:hover:not(:disabled) {
   color: var(--color-text-primary);
 }
 
@@ -194,7 +194,7 @@
   transition: background-color var(--transition-fast);
 }
 
-.showValuesButton:hover,
+.showValuesButton:hover:not(:disabled),
 .showValuesButton:focus-visible {
   background: var(--color-surface-hover);
   outline: none;
