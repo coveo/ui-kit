@@ -8,7 +8,7 @@
  * projection inside `@coveo/thermidor`, read off `response.a2uiMessages`. See that package's
  * `session/a2ui-v09-projection.ts` for the conversion and the recorded interim debt.
  */
-import {useEffect, useId, useMemo, useRef} from 'react';
+import {useEffect, useMemo, useRef} from 'react';
 import {A2UIRenderer, useA2UI} from '@copilotkit/a2ui-renderer';
 import type {A2uiV09Message} from '@coveo/thermidor';
 import styles from './surfaces.module.css';
@@ -51,7 +51,6 @@ interface TurnSurfacesProps {
 export function TurnSurfaces({surfaceIds, interactive}: TurnSurfacesProps) {
   const sectionRefs = useRef(new Map<string, HTMLElement>());
   const drawnIdsRef = useRef<ReadonlySet<string> | null>(null);
-  const noteId = useId();
 
   useEffect(() => {
     const drawnIds = drawnIdsRef.current;
@@ -70,15 +69,17 @@ export function TurnSurfaces({surfaceIds, interactive}: TurnSurfacesProps) {
   }
 
   return (
+    // Kept a fieldset in both states: swapping elements would remount the surfaces and drop their
+    // local state when the turn stops being the active one.
     <fieldset
       className={interactive ? styles.surfaces : `${styles.surfaces} ${styles.readOnly}`}
       disabled={!interactive}
-      aria-describedby={interactive ? undefined : noteId}
+      role={interactive ? 'none' : undefined}
     >
       {!interactive && (
-        <p id={noteId} className={styles.readOnlyNote}>
+        <legend className={styles.readOnlyNote}>
           Earlier results. Ask a follow-up or search again to refine.
-        </p>
+        </legend>
       )}
       {surfaceIds.map((surfaceId) => (
         <section

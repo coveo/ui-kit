@@ -57,6 +57,7 @@ describe('TurnSurfaces', () => {
     await waitFor(() => expect(pageSizeSelect()).toBeDefined());
     expect(isDisabled(pageSizeSelect())).toBe(false);
     expect(screen.queryByText(NOTE)).toBeNull();
+    expect(screen.queryByRole('group')).toBeNull();
   });
 
   it('disables the controls of an earlier turn and explains why', async () => {
@@ -64,7 +65,7 @@ describe('TurnSurfaces', () => {
 
     await waitFor(() => expect(pageSizeSelect()).toBeDefined());
     expect(isDisabled(pageSizeSelect())).toBe(true);
-    expect(screen.getByRole('group', {description: NOTE})).toBeDefined();
+    expect(screen.getByRole('group', {name: NOTE})).toBeDefined();
   });
 
   it('keeps an earlier turn readable by assistive technology', async () => {
