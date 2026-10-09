@@ -3,7 +3,9 @@ Use this component within `atomic-result-template` to conditionally render conte
 
 You can specify multiple `must-match-*` and `must-not-match-*` attributes, each targeting a different field. Each attribute accepts multiple comma-separated values. The `if-defined` and `if-not-defined` attributes also support comma-separated field names.
 
-**Comma represents OR:** Within a single attribute, comma-separated values represent a logical OR. For example, `must-match-filetype="pdf,docx"` means the filetype must be pdf OR docx. Similarly, `if-defined="author,editor"` means author OR editor must be defined.
+**Comma represents OR:** Within a single `must-match-*` or `must-not-match-*` attribute, comma-separated values represent a logical OR. For example, `must-match-filetype="pdf,docx"` means the filetype must be pdf OR docx.
+
+**Defined fields:** `if-defined` renders the content only when the result has every field it lists, and `if-not-defined` renders it only when the result has none of the fields it lists. Unlike the values of a `must-match-*` attribute, comma-separated field names in these two attributes represent a logical AND. For example, `if-defined="author,editor"` means a result must have both an `author` and an `editor`, while `if-not-defined="author,editor"` means it must have neither. Field names are not trimmed, so don't put spaces after the commas: `if-defined="author, editor"` looks for a field named `" editor"`, with a leading space, and never matches.
 
 **Multiple attributes represent AND:** All conditions from different attributes must be met (logical AND) for content to render.
 
