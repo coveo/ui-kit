@@ -1,3 +1,12 @@
+## 3.45.4
+
+### Patch Changes
+
+- [#8618](https://github.com/coveo/ui-kit/pull/8618) [`f04803d`](https://github.com/coveo/ui-kit/commit/f04803da81c88186bf121e39a22cf5e4ff17eb17) - Fixed the `QuanticSearchBox` and `QuanticStandaloneSearchBox` placeholder being empty by default. When no `placeholder` is set, it now falls back to the new `quantic_SearchBoxPlaceholder` custom label, which can be overridden independently of the `quantic_Search` label used by facet search inputs.
+
+- Updated dependencies [[`ef62433`](https://github.com/coveo/ui-kit/commit/ef62433af99d60c4aac4edf94c273ceba9108e96)]:
+  - @coveo/headless@3.57.3
+
 ## 3.45.3
 
 ### Patch Changes
