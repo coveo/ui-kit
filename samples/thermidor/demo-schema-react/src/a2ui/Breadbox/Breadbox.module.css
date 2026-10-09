@@ -1,72 +1,94 @@
 .container {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
 }
 
-.facets {
+.heading {
+  padding: 10px var(--space-2) 10px 0;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.list {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
+  flex-grow: 1;
+  gap: var(--space-1);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.facet {
+.breadcrumb {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-1);
-}
-
-.label {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
-  white-space: nowrap;
-}
-
-.value {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  padding: var(--space-1) var(--space-2);
+  padding: var(--space-2) var(--space-3);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   background: var(--color-surface);
   color: var(--color-text-primary);
-  font-size: var(--font-size-sm);
+  font: inherit;
   cursor: pointer;
-  transition: border-color var(--transition-fast);
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast),
+    color var(--transition-fast);
 }
 
-.value:hover {
-  border-color: var(--color-border-hover);
+.breadcrumb:hover,
+.breadcrumb:focus-visible {
+  border-color: var(--color-primary);
+  background: var(--color-surface-hover);
+  color: var(--color-primary);
 }
 
-.valueLabel {
+.breadcrumb:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 1px;
+}
+
+.label,
+.value {
   max-width: 30ch;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.excluded .valueLabel {
+.value {
+  margin-left: var(--space-1);
+}
+
+.excluded .label,
+.excluded .value {
   color: var(--color-error);
   text-decoration: line-through;
 }
 
-.clearAll {
-  padding: 0;
-  border: none;
-  background: none;
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
-  cursor: pointer;
-  text-decoration: underline;
+.excluded:hover,
+.excluded:focus-visible {
+  border-color: var(--color-error);
+  background: var(--color-surface);
 }
 
-.clearAll:hover {
-  color: var(--color-text-primary);
+.clearIcon {
+  flex-shrink: 0;
+  margin-top: 1px;
+  margin-left: var(--space-2);
+}
+
+.clearAll {
+  padding: var(--space-2);
+  border: none;
+  border-radius: var(--radius-lg);
+  background: none;
+  color: var(--color-primary);
+  font: inherit;
+  cursor: pointer;
+}
+
+.clearAll:hover,
+.clearAll:focus-visible {
+  background: var(--color-surface-hover);
 }

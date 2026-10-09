@@ -1,13 +1,15 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import {type BreadboxAction, BreadboxPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {CloseIcon} from '../icons/index.js';
 import {breadboxValues} from './breadbox-values.js';
 import {useOptimisticBreadbox} from './use-optimistic-breadbox.js';
 import styles from './Breadbox.module.css';
 
 /**
- * A2-UI component for the `breadbox`. Renders the active values of every facet, one group per
- * facet, and hides itself when none is active. Removals are optimistic: the value leaves the
- * breadbox at once while the facets and the results catch up with the response.
+ * A2-UI component for the `breadbox`, laid out like the Atomic commerce breadbox: a "Filters:"
+ * label, one "Facet: value" button per active value, and a clear-all button. Hidden when no facet
+ * is active. Removals are optimistic: the value leaves the breadbox at once while the facets and
+ * the results catch up with the response.
  */
 export const Breadbox = createReactComponent(
   {
@@ -26,33 +28,41 @@ export const Breadbox = createReactComponent(
 
     return (
       <section className={styles.container} aria-label="Active filters">
-        <ul className={styles.facets}>
-          {facets.map((facet) => (
-            <li
-              key={facet.facetId}
-              className={styles.facet}
-              data-testid={`breadbox-${facet.facetId}`}
+        <span className={styles.heading}>Filters:</span>
+        <ul className={styles.list}>
+          {facets.flatMap((facet) =>
+            breadboxValues(facet).map((value) => {
+              const title = `${facet.displayName}: ${value.fullLabel}`;
+              return (
+                <li key={`${facet.facetId}/${value.key}`}>
+                  <button
+                    type="button"
+                    className={
+                      value.excluded ? `${styles.breadcrumb} ${styles.excluded}` : styles.breadcrumb
+                    }
+                    title={title}
+                    aria-label={`Remove ${value.excluded ? 'exclusion' : 'inclusion'} filter on ${title}`}
+                    onClick={() => deselect(value.payload)}
+                  >
+                    <span className={styles.label}>{facet.displayName}:</span>
+                    <span className={styles.value}>{value.label}</span>
+                    <CloseIcon className={styles.clearIcon} />
+                  </button>
+                </li>
+              );
+            })
+          )}
+          <li>
+            <button
+              type="button"
+              className={styles.clearAll}
+              aria-label="Clear all filters"
+              onClick={clearAll}
             >
-              <span className={styles.label}>{facet.displayName}:</span>
-              {breadboxValues(facet).map((value) => (
-                <button
-                  key={value.key}
-                  type="button"
-                  className={value.excluded ? `${styles.value} ${styles.excluded}` : styles.value}
-                  aria-label={`Remove ${value.excluded ? 'exclusion' : 'inclusion'} filter on ${facet.displayName}: ${value.label}`}
-                  data-testid={`breadbox-value-${value.key}`}
-                  onClick={() => deselect(value.payload)}
-                >
-                  <span className={styles.valueLabel}>{value.label}</span>
-                  <span aria-hidden="true">×</span>
-                </button>
-              ))}
-            </li>
-          ))}
+              Clear
+            </button>
+          </li>
         </ul>
-        <button type="button" className={styles.clearAll} onClick={clearAll}>
-          Clear all
-        </button>
       </section>
     );
   }
