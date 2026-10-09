@@ -51,6 +51,12 @@ Example using the `atomic-recs-list`:
 </atomic-recs-list>
 ```
 
+## Template Conditions
+
+You can declare several templates, each with its own `must-match-*`, `must-not-match-*`, `if-defined` and `if-not-defined` conditions. The first template whose conditions are all met applies to a result.
+
+**End with a fallback template:** Declare a template without conditions last. Atomic only uses its built-in template when you declare no template at all, so a result that matches none of your templates is displayed as an empty item.
+
 ## Link Slot
 
 You can use the `link` slot to customize how the entire result item behaves as a link. This is useful when you want the result to open in a new tab or have custom link attributes:
