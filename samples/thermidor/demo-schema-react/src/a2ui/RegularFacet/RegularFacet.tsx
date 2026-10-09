@@ -25,14 +25,7 @@ export const RegularFacet = createReactComponent(
     const dispatch = (action: RegularFacetAction) => {
       context.dispatchAction(action);
     };
-    const dispatchSearch = (query: string) => {
-      dispatch({event: {name: 'search', context: {query}}});
-    };
-    const search = useOptimisticFacetSearch(props.facetSearch?.query ?? '', dispatchSearch);
-    const handleClearSearch = () => {
-      search.reset();
-      dispatch({event: {name: 'clearSearch', context: {}}});
-    };
+    const search = useOptimisticFacetSearch(props.facetSearch?.query ?? '', dispatch);
     const optimisticFacet = useOptimisticRegularFacet(props, dispatch);
 
     const {displayName, hasActiveValues, canShowMoreValues, canShowLessValues} = props;
@@ -97,7 +90,7 @@ export const RegularFacet = createReactComponent(
               <button
                 type="button"
                 className={styles.searchClear}
-                onClick={handleClearSearch}
+                onClick={search.reset}
                 aria-label={`Clear ${displayName} search`}
               >
                 ×

@@ -45,14 +45,7 @@ export const CategoryFacet = createReactComponent(
     const dispatch = (action: CategoryFacetAction) => {
       context.dispatchAction(action);
     };
-    const dispatchSearch = (query: string) => {
-      dispatch({event: {name: 'search', context: {query}}});
-    };
-    const search = useOptimisticFacetSearch(props.facetSearch?.query ?? '', dispatchSearch);
-    const handleClearSearch = () => {
-      search.reset();
-      dispatch({event: {name: 'clearSearch', context: {}}});
-    };
+    const search = useOptimisticFacetSearch(props.facetSearch?.query ?? '', dispatch);
     const optimisticFacet = useOptimisticCategoryFacet(props, dispatch);
 
     const {displayName, facetSearch, canShowMoreValues, canShowLessValues} = props;
@@ -94,7 +87,7 @@ export const CategoryFacet = createReactComponent(
             <button
               type="button"
               className={styles.searchClear}
-              onClick={handleClearSearch}
+              onClick={search.reset}
               aria-label={`Clear ${displayName} search`}
             >
               <span aria-hidden="true">×</span>
