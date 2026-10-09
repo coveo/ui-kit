@@ -117,9 +117,12 @@ export class AddToCartButton extends HTMLElement {
 
     const item = toCartItem(this.#product);
     this.#button.disabled = true;
-    await addOne(this.#engine, item);
-    this.#button.disabled = false;
-    announce(`${item.name} added to cart.`);
+    try {
+      await addOne(this.#engine, item);
+      announce(`${item.name} added to cart.`);
+    } finally {
+      this.#button.disabled = false;
+    }
   }
 }
 
