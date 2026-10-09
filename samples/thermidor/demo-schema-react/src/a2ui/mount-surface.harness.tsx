@@ -11,7 +11,6 @@ import {
 import {createDispatchCoordinator} from '@coveo/thermidor';
 import {createThermidorCatalog, THERMIDOR_CATALOG_ID} from './components.js';
 import {DispatchProgressProvider, useTrackedDispatch} from './pending-dispatch.js';
-import {SurfaceReadOnlyProvider} from './surface-read-only.js';
 
 /**
  * Shared end-to-end mount for a component definition, through the real thermidor catalog and the
@@ -48,8 +47,6 @@ export interface MountSurfaceConfig {
   dataModel?: Array<{path: string; value: unknown}>;
   /** Awaited by the action handler; lets a test hold a dispatch in flight. */
   dispatchGate?: () => Promise<void> | void;
-  /** Draws the surface as a past turn's block, which cannot dispatch actions. */
-  readOnly?: boolean;
 }
 
 export interface MountSurfaceResult extends RenderResult {
@@ -83,12 +80,10 @@ function Surface({
   messages,
   processRef,
   dispatch,
-  readOnly,
 }: {
   messages: Array<Record<string, unknown>>;
   processRef: {current: ProcessMessages | null};
   dispatch: (message: A2UIClientEventMessage) => Promise<void> | void;
-  readOnly: boolean;
 }) {
   const actions = useMemo(
     () => createDispatchCoordinator<A2UIClientEventMessage>(dispatch),
@@ -99,9 +94,7 @@ function Surface({
     <DispatchProgressProvider value={tracked.progress}>
       <A2UIProvider catalog={createThermidorCatalog()} onAction={tracked.onAction}>
         <MessagePump messages={messages} processRef={processRef} />
-        <SurfaceReadOnlyProvider value={readOnly}>
-          <A2UIRenderer surfaceId={SURFACE_ID} />
-        </SurfaceReadOnlyProvider>
+        <A2UIRenderer surfaceId={SURFACE_ID} />
       </A2UIProvider>
     </DispatchProgressProvider>
   );
@@ -140,12 +133,7 @@ export function mountSurface(config: MountSurfaceConfig): MountSurfaceResult {
   ];
 
   const result = render(
-    <Surface
-      messages={messages}
-      processRef={processRef}
-      dispatch={onAction}
-      readOnly={config.readOnly ?? false}
-    />
+    <Surface messages={messages} processRef={processRef} dispatch={onAction} />
   );
 
   return {

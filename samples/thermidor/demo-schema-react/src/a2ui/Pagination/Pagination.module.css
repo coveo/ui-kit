@@ -55,7 +55,7 @@
     border-color var(--transition-fast);
 }
 
-.pageButton:hover:not(.active, :disabled) {
+.pageButton:hover:not(.active) {
   border-color: var(--color-border-active);
 }
 

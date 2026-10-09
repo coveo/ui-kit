@@ -11,10 +11,9 @@ import {mountSurface} from '../mount-surface.harness.js';
 
 afterEach(() => cleanup());
 
-function mountPageSize(pageSize: number, readOnly?: boolean) {
+function mountPageSize(pageSize: number) {
   return mountSurface({
     component: {component: 'PageSize', pageSize: {path: '/state/root/pageSize'}},
-    readOnly,
     dataModel: [{path: '/state/root/pageSize', value: pageSize}],
   });
 }
@@ -53,12 +52,5 @@ describe('PageSize', () => {
     await waitFor(() =>
       expect(lastAction()).toMatchObject({name: 'setPageSize', context: {pageSize: 48}})
     );
-  });
-
-  it('disables the select in a read-only surface', async () => {
-    mountPageSize(24, true);
-
-    await waitFor(() => expect(screen.getByLabelText('Products per page:')).toBeDefined());
-    expect((screen.getByLabelText('Products per page:') as HTMLSelectElement).disabled).toBe(true);
   });
 });

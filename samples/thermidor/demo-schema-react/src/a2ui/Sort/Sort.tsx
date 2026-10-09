@@ -2,7 +2,6 @@ import {useId} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {SortAction} from '@coveo/thermidor-schema';
 import {SortPropsSchema} from '@coveo/thermidor-schema/zod3';
-import {useSurfaceReadOnly} from '../surface-read-only.js';
 import styles from './Sort.module.css';
 
 const SORT_LABELS: Record<string, string> = {
@@ -20,7 +19,6 @@ export const Sort = createReactComponent(
   {name: 'Sort', schema: SortPropsSchema},
   ({props, context}) => {
     const selectId = useId();
-    const readOnly = useSurfaceReadOnly();
     const availableSorts = props.availableSorts ?? [];
     const appliedSort = props.appliedSort;
 
@@ -56,7 +54,6 @@ export const Sort = createReactComponent(
           className={styles.select}
           value={selectedIndex >= 0 ? selectedIndex : 0}
           onChange={handleSortChange}
-          disabled={readOnly}
         >
           {availableSorts.map((sort, index) => (
             <option key={index} value={index}>

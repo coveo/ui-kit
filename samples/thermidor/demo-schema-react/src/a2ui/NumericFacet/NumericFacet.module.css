@@ -33,7 +33,7 @@
   text-decoration: underline;
 }
 
-.clearButton:hover:not(:disabled) {
+.clearButton:hover {
   color: var(--color-text-primary);
 }
 
@@ -64,7 +64,7 @@
     color var(--transition-fast);
 }
 
-.value:hover:not(:disabled) {
+.value:hover {
   background: var(--color-surface-hover);
 }
 
@@ -117,7 +117,7 @@
   font-size: var(--font-size-sm);
 }
 
-.customInput:hover:not(:disabled) {
+.customInput:hover {
   border-color: var(--color-border-hover);
 }
 
@@ -132,7 +132,7 @@
   transition: border-color var(--transition-fast);
 }
 
-.applyButton:hover:not(:disabled) {
+.applyButton:hover {
   border-color: var(--color-border-hover);
 }
 

@@ -19,9 +19,8 @@ const ACTIONS = [
   {text: 'Salomon trail shoes', type: 'searchOption', optionId: OPTION_ID},
 ];
 
-function mountNextActionsBar(readOnly?: boolean) {
+function mountNextActionsBar() {
   return mountSurface({
-    readOnly,
     component: {
       component: 'NextActionsBar',
       suggestedActions: {path: '/state/root/suggestedActions'},
@@ -72,16 +71,5 @@ describe('NextActionsBar', () => {
         context: {optionId: OPTION_ID},
       })
     );
-  });
-
-  it('disables every action in a read-only surface and dispatches nothing', async () => {
-    const {actions} = mountNextActionsBar(true);
-
-    await waitFor(() => expect(screen.getAllByRole('button')).toHaveLength(3));
-    for (const button of screen.getAllByRole('button') as HTMLButtonElement[]) {
-      expect(button.disabled).toBe(true);
-      fireEvent.click(button);
-    }
-    expect(actions).toEqual([]);
   });
 });

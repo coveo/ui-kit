@@ -33,7 +33,7 @@
   text-decoration: underline;
 }
 
-.clearButton:hover:not(:disabled) {
+.clearButton:hover {
   color: var(--color-text-primary);
 }
 
@@ -90,7 +90,7 @@
   transition: color var(--transition-fast);
 }
 
-.searchClear:hover:not(:disabled) {
+.searchClear:hover {
   color: var(--color-text-primary);
 }
 
@@ -120,7 +120,7 @@
   transition: background-color var(--transition-fast);
 }
 
-.checkboxLabel:hover:not(:has(:disabled)) {
+.checkboxLabel:hover {
   background: var(--color-surface-hover);
 }
 
@@ -152,7 +152,7 @@
   transition: background-color var(--transition-fast);
 }
 
-.showValuesButton:hover:not(:disabled),
+.showValuesButton:hover,
 .showValuesButton:focus-visible {
   background: var(--color-surface-hover);
   outline: none;

@@ -1,3 +1,10 @@
+.surfaces {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
 .readOnly {
   padding-left: var(--space-3);
   border-left: 3px solid var(--color-border);
@@ -9,11 +16,11 @@
   color: var(--color-text-muted);
 }
 
-.readOnly :is(button, input, select):disabled,
-.readOnly label:has(:disabled) {
-  cursor: not-allowed;
-}
-
 .readOnly :is(button, input, select):disabled {
   opacity: 0.55;
+}
+
+.readOnly :is(button, input, select):disabled,
+.readOnly label:has(:disabled) {
+  pointer-events: none;
 }

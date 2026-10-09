@@ -25,7 +25,7 @@
     color var(--transition-fast);
 }
 
-.actionButton:hover:not(:disabled) {
+.actionButton:hover {
   background: var(--color-bg-active);
   color: var(--color-text-primary);
 }

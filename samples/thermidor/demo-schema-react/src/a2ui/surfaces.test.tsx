@@ -42,7 +42,12 @@ function renderTurnSurfaces(interactive: boolean) {
 }
 
 function pageSizeSelect() {
-  return screen.getByLabelText('Products per page:') as HTMLSelectElement;
+  return screen.getByLabelText('Products per page:');
+}
+
+// The select is disabled through its `fieldset`, which `disabled` does not reflect.
+function isDisabled(control: Element) {
+  return control.matches(':disabled');
 }
 
 describe('TurnSurfaces', () => {
@@ -50,7 +55,7 @@ describe('TurnSurfaces', () => {
     renderTurnSurfaces(true);
 
     await waitFor(() => expect(pageSizeSelect()).toBeDefined());
-    expect(pageSizeSelect().disabled).toBe(false);
+    expect(isDisabled(pageSizeSelect())).toBe(false);
     expect(screen.queryByText(NOTE)).toBeNull();
   });
 
@@ -58,8 +63,8 @@ describe('TurnSurfaces', () => {
     renderTurnSurfaces(false);
 
     await waitFor(() => expect(pageSizeSelect()).toBeDefined());
-    expect(pageSizeSelect().disabled).toBe(true);
-    expect(screen.getByText(NOTE)).toBeDefined();
+    expect(isDisabled(pageSizeSelect())).toBe(true);
+    expect(screen.getByRole('group', {description: NOTE})).toBeDefined();
   });
 
   it('keeps an earlier turn readable by assistive technology', async () => {
@@ -72,10 +77,10 @@ describe('TurnSurfaces', () => {
 
   it('disables the controls once a newer turn takes over', async () => {
     const {rerender} = renderTurnSurfaces(true);
-    await waitFor(() => expect(pageSizeSelect().disabled).toBe(false));
+    await waitFor(() => expect(isDisabled(pageSizeSelect())).toBe(false));
 
     rerender(<Turn interactive={false} />);
 
-    await waitFor(() => expect(pageSizeSelect().disabled).toBe(true));
+    await waitFor(() => expect(isDisabled(pageSizeSelect())).toBe(true));
   });
 });

@@ -8,10 +8,9 @@
  * projection inside `@coveo/thermidor`, read off `response.a2uiMessages`. See that package's
  * `session/a2ui-v09-projection.ts` for the conversion and the recorded interim debt.
  */
-import {useEffect, useMemo, useRef} from 'react';
+import {useEffect, useId, useMemo, useRef} from 'react';
 import {A2UIRenderer, useA2UI} from '@copilotkit/a2ui-renderer';
 import type {A2uiV09Message} from '@coveo/thermidor';
-import {SurfaceReadOnlyProvider} from './surface-read-only.js';
 import styles from './surfaces.module.css';
 
 /**
@@ -40,7 +39,7 @@ interface TurnSurfacesProps {
   /**
    * Whether the shopper can act on these surfaces. The session only sends actions for the
    * surfaces of its active turn, so the controls of earlier turns' blocks are disabled while
-   * their content stays readable.
+   * their content stays readable. A disabled `fieldset` disables every control inside it.
    */
   interactive: boolean;
 }
@@ -52,6 +51,7 @@ interface TurnSurfacesProps {
 export function TurnSurfaces({surfaceIds, interactive}: TurnSurfacesProps) {
   const sectionRefs = useRef(new Map<string, HTMLElement>());
   const drawnIdsRef = useRef<ReadonlySet<string> | null>(null);
+  const noteId = useId();
 
   useEffect(() => {
     const drawnIds = drawnIdsRef.current;
@@ -70,30 +70,32 @@ export function TurnSurfaces({surfaceIds, interactive}: TurnSurfacesProps) {
   }
 
   return (
-    <SurfaceReadOnlyProvider value={!interactive}>
-      <div className={interactive ? undefined : styles.readOnly}>
-        {!interactive && (
-          <p className={styles.readOnlyNote}>
-            Earlier results. Ask a follow-up or search again to refine.
-          </p>
-        )}
-        {surfaceIds.map((surfaceId) => (
-          <section
-            className="catalog-surface"
-            aria-label={`A2-UI surface ${surfaceId}`}
-            key={surfaceId}
-            ref={(element) => {
-              if (element) {
-                sectionRefs.current.set(surfaceId, element);
-              } else {
-                sectionRefs.current.delete(surfaceId);
-              }
-            }}
-          >
-            <A2UIRenderer surfaceId={surfaceId} />
-          </section>
-        ))}
-      </div>
-    </SurfaceReadOnlyProvider>
+    <fieldset
+      className={interactive ? styles.surfaces : `${styles.surfaces} ${styles.readOnly}`}
+      disabled={!interactive}
+      aria-describedby={interactive ? undefined : noteId}
+    >
+      {!interactive && (
+        <p id={noteId} className={styles.readOnlyNote}>
+          Earlier results. Ask a follow-up or search again to refine.
+        </p>
+      )}
+      {surfaceIds.map((surfaceId) => (
+        <section
+          className="catalog-surface"
+          aria-label={`A2-UI surface ${surfaceId}`}
+          key={surfaceId}
+          ref={(element) => {
+            if (element) {
+              sectionRefs.current.set(surfaceId, element);
+            } else {
+              sectionRefs.current.delete(surfaceId);
+            }
+          }}
+        >
+          <A2UIRenderer surfaceId={surfaceId} />
+        </section>
+      ))}
+    </fieldset>
   );
 }

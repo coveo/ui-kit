@@ -19,18 +19,14 @@ describe('Pagination', () => {
     totalPages: {path: '/state/root/totalPages'},
   };
 
-  function mountPagination(
-    state: {
-      page: number;
-      pageSize: number;
-      totalEntries: number;
-      totalPages: number;
-    },
-    readOnly?: boolean
-  ) {
+  function mountPagination(state: {
+    page: number;
+    pageSize: number;
+    totalEntries: number;
+    totalPages: number;
+  }) {
     return mountSurface({
       component: {component: 'Pagination', ...bindings},
-      readOnly,
       dataModel: [
         {path: '/state/root/page', value: state.page},
         {path: '/state/root/pageSize', value: state.pageSize},
@@ -128,21 +124,6 @@ describe('Pagination', () => {
       '41',
     ]);
   });
-
-  it('disables every page control in a read-only surface and dispatches nothing', async () => {
-    const {actions} = mountPagination(
-      {page: 1, pageSize: 10, totalEntries: 30, totalPages: 3},
-      true
-    );
-
-    await waitFor(() => expect(screen.getByLabelText('Pagination')).toBeDefined());
-    const buttons = screen.getAllByRole('button') as HTMLButtonElement[];
-    expect(buttons.map((button) => button.disabled)).toEqual([true, true, true, true, true]);
-    for (const button of buttons) {
-      fireEvent.click(button);
-    }
-    expect(actions).toEqual([]);
-  });
 });
 
 describe('Sort', () => {
@@ -151,10 +132,9 @@ describe('Sort', () => {
     availableSorts: {path: '/state/root/availableSorts'},
   };
 
-  function mountSort(state: {appliedSort: unknown; availableSorts: unknown[]}, readOnly?: boolean) {
+  function mountSort(state: {appliedSort: unknown; availableSorts: unknown[]}) {
     return mountSurface({
       component: {component: 'Sort', ...bindings},
-      readOnly,
       dataModel: [
         {path: '/state/root/appliedSort', value: state.appliedSort},
         {path: '/state/root/availableSorts', value: state.availableSorts},
@@ -209,19 +189,6 @@ describe('Sort', () => {
         context: {sortCriteria: 'price_asc', fields: [{field: 'ec_price', direction: 'asc'}]},
       })
     );
-  });
-
-  it('disables the select in a read-only surface', async () => {
-    mountSort(
-      {
-        appliedSort: {sortCriteria: 'relevance', fields: []},
-        availableSorts: [{sortCriteria: 'relevance', fields: []}],
-      },
-      true
-    );
-
-    await waitFor(() => expect(screen.getByLabelText('Sort by:')).toBeDefined());
-    expect((screen.getByLabelText('Sort by:') as HTMLSelectElement).disabled).toBe(true);
   });
 });
 
