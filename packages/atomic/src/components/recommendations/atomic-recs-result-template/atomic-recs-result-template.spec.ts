@@ -1,10 +1,12 @@
 import type {Result as RecsResult} from '@coveo/headless/recommendation';
 import {ResultTemplatesHelpers} from '@coveo/headless/recommendation';
 import {html} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined.js';
 import {describe, expect, it, vi} from 'vitest';
 import {RecsResultTemplateController} from '@/src/components/common/result-templates/recs-result-template-controller.js';
 import {makeMatchConditions} from '@/src/components/common/template-controller/template-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
+import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result';
 import {sanitizeHtml} from '@/vitest-utils/testing-helpers/testing-utils/sanitize-html';
 import {AtomicRecsResultTemplate} from './atomic-recs-result-template.js';
 
@@ -15,7 +17,7 @@ vi.mock('@/src/components/common/template-controller/template-utils', {
 describe('atomic-recs-result-template', () => {
   type AtomicRecsResultTemplateProps = Pick<
     AtomicRecsResultTemplate,
-    'conditions' | 'mustMatch' | 'mustNotMatch'
+    'conditions' | 'mustMatch' | 'mustNotMatch' | 'ifDefined' | 'ifNotDefined'
   >;
 
   const setupElement = async (options: Partial<AtomicRecsResultTemplateProps> = {}) => {
@@ -32,6 +34,8 @@ describe('atomic-recs-result-template', () => {
           .conditions=${options.conditions || defaultProps.conditions}
           .mustMatch=${options.mustMatch || defaultProps.mustMatch}
           .mustNotMatch=${options.mustNotMatch || defaultProps.mustNotMatch}
+          if-defined=${ifDefined(options.ifDefined)}
+          if-not-defined=${ifDefined(options.ifNotDefined)}
         >
           <template>
             <div>Result Template Content</div>
@@ -79,6 +83,73 @@ describe('atomic-recs-result-template', () => {
       const template = await element.getTemplate();
       expect(template).not.toBeNull();
       expect(template!.conditions).toHaveLength(expected.length);
+    });
+  });
+
+  describe('when #ifDefined or #ifNotDefined is set', () => {
+    const appliesTo = async (
+      element: AtomicRecsResultTemplate,
+      resultState: Parameters<typeof buildFakeResult>[0]
+    ) => {
+      const template = await element.getTemplate();
+      const result = buildFakeResult(resultState);
+      return template!.conditions.every((condition) => condition(result));
+    };
+
+    it('should map the if-defined and if-not-defined attributes to ifDefined and ifNotDefined', async () => {
+      const element = await setupElement({ifDefined: 'author,date', ifNotDefined: 'thumbnail'});
+      expect(element.ifDefined).toBe('author,date');
+      expect(element.ifNotDefined).toBe('thumbnail');
+    });
+
+    it('should apply only to results that define every field of if-defined', async () => {
+      const element = await setupElement({ifDefined: 'author,date'});
+      expect(await appliesTo(element, {raw: {author: 'Jane', date: 1}})).toBe(true);
+      expect(await appliesTo(element, {raw: {author: 'Jane'}})).toBe(false);
+    });
+
+    it('should apply only to results that define none of the fields of if-not-defined', async () => {
+      const element = await setupElement({ifNotDefined: 'author,date'});
+      expect(await appliesTo(element, {raw: {source: 'Coveo'}})).toBe(true);
+      expect(await appliesTo(element, {raw: {date: 1}})).toBe(false);
+    });
+
+    it('should apply only when the defined, must-match and custom conditions are all met', async () => {
+      const element = await setupElement({
+        ifDefined: 'author',
+        ifNotDefined: 'thumbnail',
+        mustMatch: {filetype: ['pdf']},
+        conditions: [(result: RecsResult) => result.title === 'Coveo'],
+      });
+      const raw = {author: 'Jane', filetype: 'pdf'};
+
+      expect(await appliesTo(element, {title: 'Coveo', raw})).toBe(true);
+      expect(await appliesTo(element, {title: 'Coveo', raw: {filetype: 'pdf'}})).toBe(false);
+      expect(await appliesTo(element, {title: 'Coveo', raw: {...raw, thumbnail: 'x.png'}})).toBe(
+        false
+      );
+      expect(await appliesTo(element, {title: 'Coveo', raw: {...raw, filetype: 'docx'}})).toBe(
+        false
+      );
+      expect(await appliesTo(element, {title: 'Other', raw})).toBe(false);
+    });
+
+    it('should leave the #conditions property untouched', async () => {
+      const customCondition = (result: RecsResult) => result.title === 'Coveo';
+      const element = await setupElement({conditions: [customCondition], ifDefined: 'author'});
+
+      expect(element.conditions).toEqual([customCondition]);
+    });
+
+    it('should not accumulate conditions when reconnected to the DOM', async () => {
+      const element = await setupElement({ifDefined: 'author', ifNotDefined: 'thumbnail'});
+      const parent = element.parentElement!;
+
+      element.remove();
+      parent.append(element);
+
+      const template = await element.getTemplate();
+      expect(template!.conditions).toHaveLength(2);
     });
   });
 
