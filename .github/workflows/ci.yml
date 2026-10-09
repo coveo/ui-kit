@@ -385,6 +385,9 @@ jobs:
         with:
           affected-tasks: ${{ needs.affected.outputs.tasks }}
           tasks: size
+      - name: Write size summary
+        if: ${{ !cancelled() }}
+        run: node ./scripts/size-limit.mjs summary >> "$GITHUB_STEP_SUMMARY"
   typedoc:
     name: 'Build typedoc'
     needs: [affected, build]

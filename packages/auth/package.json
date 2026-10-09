@@ -40,7 +40,7 @@
     "clean": "node ../../utils/ci/rm-rf.mjs dist/*",
     "e2e": "pnpm run e2e:saml",
     "e2e:saml": "vite manual-e2e/saml/",
-    "size": "size-limit"
+    "size": "node ../../scripts/size-limit.mjs run"
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "catalog:",

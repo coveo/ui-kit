@@ -33,7 +33,7 @@
     "test:watch": "vitest",
     "test:dts": "api-extractor run --local",
     "test:dts:ci": "api-extractor run",
-    "size": "size-limit"
+    "size": "node ../../scripts/size-limit.mjs run"
   },
   "dependencies": {
     "@ag-ui/core": "0.0.59"

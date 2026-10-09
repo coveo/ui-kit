@@ -40,7 +40,7 @@
     "build:bundles": "rollup --config rollup.config.js",
     "build:types": "tsc --project tsconfig.types.json",
     "build:assets": "node ../../utils/ci/copy-files.mjs ../atomic/dist/assets dist/assets ../atomic/dist/lang dist/lang",
-    "size": "size-limit"
+    "size": "node ../../scripts/size-limit.mjs run"
   },
   "dependencies": {
     "@coveo/atomic": "workspace:*",
