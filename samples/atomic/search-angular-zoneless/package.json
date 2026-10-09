@@ -1,0 +1,35 @@
+{
+  "name": "@samples/atomic-search-angular-zoneless",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Zoneless Angular application using Coveo Atomic, through @coveo/atomic-angular and as plain custom elements",
+  "scripts": {
+    "ng": "ng",
+    "build": "pnpm --filter @coveo/ci if-not-cdn -- \"pnpm run build:assets\" && pnpm --filter @coveo/ci if-not-cdn -- \"pnpm run build:angular\"",
+    "build:angular": "ng build",
+    "dev": "pnpm run build:assets && pnpm run dev:angular",
+    "dev:angular": "ng serve --host=0.0.0.0 --port=4300 --prebundle=false",
+    "build:assets": "node ../../../utils/ci/copy-files.mjs ../../../packages/atomic-angular/projects/atomic-angular/dist/assets src/assets ../../../packages/atomic-angular/projects/atomic-angular/dist/lang src/lang",
+    "e2e": "playwright test"
+  },
+  "dependencies": {
+    "@angular/common": "catalog:",
+    "@angular/compiler": "catalog:",
+    "@angular/core": "catalog:",
+    "@angular/platform-browser": "catalog:",
+    "@angular/router": "catalog:",
+    "@coveo/atomic": "workspace:*",
+    "@coveo/atomic-angular": "workspace:*",
+    "@coveo/headless": "workspace:*",
+    "rxjs": "catalog:",
+    "tslib": "catalog:"
+  },
+  "devDependencies": {
+    "@angular/build": "catalog:",
+    "@angular/cli": "catalog:",
+    "@angular/compiler-cli": "catalog:",
+    "@playwright/test": "catalog:",
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

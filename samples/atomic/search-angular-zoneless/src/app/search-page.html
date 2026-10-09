@@ -1,0 +1,62 @@
+<section class="controls">
+  <button type="button" data-testid="toggle-language" (click)="toggleLanguage()">
+    Language: {{ language() }}
+  </button>
+  <button type="button" data-testid="toggle-mobile-breakpoint" (click)="toggleMobileBreakpoint()">
+    Mobile breakpoint: {{ mobileBreakpoint() }}
+  </button>
+  <button type="button" data-testid="toggle-facet-label" (click)="toggleFacetLabel()">
+    Author facet label: {{ facetLabel() }}
+  </button>
+  <dl>
+    <dt>Total results (Headless subscription)</dt>
+    <dd data-testid="total-results">{{ totalResults() ?? 'pending' }}</dd>
+    <dt>Breakpoint event (template listener)</dt>
+    <dd data-testid="breakpoint-from-listener">{{ breakpointFromListener }}</dd>
+    <dt>Breakpoint event (observable)</dt>
+    <dd data-testid="breakpoint-from-observable">{{ breakpointFromObservable() }}</dd>
+  </dl>
+</section>
+
+<atomic-search-interface #searchInterface [language]="language()">
+  <atomic-search-layout
+    #searchLayout
+    [mobileBreakpoint]="mobileBreakpoint()"
+    (atomic-layout-breakpoint-change)="onBreakpointChange($event)"
+  >
+    <atomic-layout-section section="search">
+      <atomic-search-box></atomic-search-box>
+    </atomic-layout-section>
+    <atomic-layout-section section="facets">
+      <atomic-facet-manager>
+        <atomic-facet field="author" [label]="facetLabel()"></atomic-facet>
+        <atomic-facet field="source" label="Source"></atomic-facet>
+      </atomic-facet-manager>
+    </atomic-layout-section>
+    <atomic-layout-section section="main">
+      <atomic-layout-section section="status">
+        <atomic-breadbox></atomic-breadbox>
+        <atomic-query-summary></atomic-query-summary>
+      </atomic-layout-section>
+      <atomic-layout-section section="results">
+        <atomic-result-list>
+          <atomic-result-template>
+            <template>
+              <atomic-result-section-title>
+                <atomic-result-link></atomic-result-link>
+              </atomic-result-section-title>
+              <atomic-result-section-excerpt>
+                <atomic-result-text field="excerpt"></atomic-result-text>
+              </atomic-result-section-excerpt>
+            </template>
+          </atomic-result-template>
+        </atomic-result-list>
+        <atomic-query-error></atomic-query-error>
+        <atomic-no-results></atomic-no-results>
+      </atomic-layout-section>
+      <atomic-layout-section section="pagination">
+        <atomic-pager></atomic-pager>
+      </atomic-layout-section>
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>

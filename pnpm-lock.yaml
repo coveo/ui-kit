@@ -1597,6 +1597,58 @@ importers:
         version: 8.3.0(@types/node@24.13.6)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(sass-embedded@1.104.1)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1)
     publishDirectory: publish
 
+  samples/atomic/search-angular-zoneless:
+    dependencies:
+      '@angular/common':
+        specifier: 22.2.0
+        version: 22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
+      '@angular/compiler':
+        specifier: 'catalog:'
+        version: 22.2.0
+      '@angular/core':
+        specifier: 22.2.0
+        version: 22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1)
+      '@angular/platform-browser':
+        specifier: 'catalog:'
+        version: 22.2.0(@angular/animations@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1))
+      '@angular/router':
+        specifier: 'catalog:'
+        version: 22.2.0(@angular/common@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@22.2.0(@angular/animations@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
+      '@coveo/atomic':
+        specifier: workspace:*
+        version: link:../../../packages/atomic
+      '@coveo/atomic-angular':
+        specifier: workspace:*
+        version: link:../../../packages/atomic-angular/projects/atomic-angular/dist
+      '@coveo/headless':
+        specifier: workspace:*
+        version: link:../../../packages/headless
+      rxjs:
+        specifier: 'catalog:'
+        version: 7.8.2
+      tslib:
+        specifier: 'catalog:'
+        version: 2.8.1
+    devDependencies:
+      '@angular/build':
+        specifier: 'catalog:'
+        version: 22.2.0(9cf7863f1cc0602bc0a8274ea353eab1)
+      '@angular/cli':
+        specifier: 'catalog:'
+        version: 22.2.0(@types/node@24.13.6)(chokidar@5.0.0)
+      '@angular/compiler-cli':
+        specifier: 'catalog:'
+        version: 22.2.0(@angular/compiler@22.2.0)(typescript@6.0.3)
+      '@playwright/test':
+        specifier: 'catalog:'
+        version: 1.62.1
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.6
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+
   samples/atomic/search-commerce-angular:
     dependencies:
       '@angular/animations':

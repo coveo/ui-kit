@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {NgModule, provideZoneChangeDetection} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {AtomicAngularModule} from '@coveo/atomic-angular';
 import {AppComponent} from './app.component';
@@ -21,7 +21,7 @@ import {LabelAndFieldValueComponent} from './label-and-field-value/label-and-fie
     LabelAndFieldValueComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, AtomicAngularModule],
-  providers: [],
+  providers: [provideZoneChangeDetection()],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
