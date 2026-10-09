@@ -157,6 +157,24 @@ describe('atomic-insight-result-children-template', () => {
       // 1 custom + defined conditions from ifDefined + ifNotDefined
       expect(template!.conditions).toHaveLength(1 + definedConditions.length);
     });
+
+    it('should leave the #conditions property untouched', async () => {
+      const customCondition = (result: InsightResult) => result.title === 'Coveo';
+      const element = await setupElement({conditions: [customCondition], ifDefined: 'filetype'});
+
+      expect(element.conditions).toEqual([customCondition]);
+    });
+
+    it('should not accumulate conditions when reconnected to the DOM', async () => {
+      const element = await setupElement({ifDefined: 'filetype', ifNotDefined: 'author'});
+      const parent = element.parentElement!;
+
+      element.remove();
+      parent.append(element);
+
+      const template = await element.getTemplate();
+      expect(template!.conditions).toHaveLength(2);
+    });
   });
 
   describe('#getTemplate', () => {
