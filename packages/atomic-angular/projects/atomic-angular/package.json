@@ -6,6 +6,7 @@
   "repository": {
     "url": "https://github.com/coveo/ui-kit"
   },
+  "sideEffects": false,
   "publishConfig": {
     "directory": "dist"
   },
