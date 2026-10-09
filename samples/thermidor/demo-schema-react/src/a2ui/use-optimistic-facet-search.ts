@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 
 interface OptimisticFacetSearch {
   query: string;
@@ -7,33 +7,38 @@ interface OptimisticFacetSearch {
 }
 
 /**
- * Keeps the facet search input responsive by tracking its value in local state
- * while dispatching a validated `search` action on every change. In-progress
- * input never touches the shared A2-UI data model. The authoritative query comes
- * from `backendQuery` (resolved from `/state`); the local value is used unless the
- * backend value differs, in which case the backend wins. `dispatchSearch` emits a
- * standard A2-UI `search` action through the action seam, not bidirectional input
- * binding.
+ * `backendQuery` overwrites the local input only on an external change; echoes of our own queries
+ * arrive lagging or out of order and must not clobber typing.
  */
 export function useOptimisticFacetSearch(
   backendQuery: string,
   dispatchSearch: (query: string) => void
 ): OptimisticFacetSearch {
   const [localQuery, setLocalQuery] = useState(backendQuery);
+  // An incoming `backendQuery` found here is our own echo.
+  const dispatchedRef = useRef<Set<string>>(new Set());
 
   useEffect(() => {
-    setLocalQuery((current) => (current === backendQuery ? current : backendQuery));
+    if (dispatchedRef.current.has(backendQuery)) {
+      return;
+    }
+    setLocalQuery(backendQuery);
+    dispatchedRef.current.clear();
   }, [backendQuery]);
 
   const onQueryChange = useCallback(
     (next: string) => {
+      dispatchedRef.current.add(next);
       setLocalQuery(next);
       dispatchSearch(next);
     },
     [dispatchSearch]
   );
 
-  const reset = useCallback(() => setLocalQuery(''), []);
+  const reset = useCallback(() => {
+    dispatchedRef.current.clear();
+    setLocalQuery('');
+  }, []);
 
   return {query: localQuery, onQueryChange, reset};
 }

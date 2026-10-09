@@ -234,22 +234,33 @@ describe('createSession lifecycle', () => {
       ]);
     });
 
-    it('is ignored while a turn is streaming and leaves turns unchanged', async () => {
+    it('preempts a streaming prompt turn (a prompt is a prioritizing intention)', async () => {
       const session = createSession(baseConfig);
 
       const first = queueStream();
-      const firstTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'first'}});
+      void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'first'}});
       await first.opened;
+      expect(session.turns[0].status).toBe('streaming');
 
-      await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'second'}});
+      const second = queueStream();
+      void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'second'}});
+      await second.opened;
 
-      expect(callMock).toHaveBeenCalledTimes(1);
-      expect(session.turns).toHaveLength(1);
-      expect(session.turns[0].input.prompt).toBe('first');
+      expect(callMock).toHaveBeenCalledTimes(2);
+      expect(session.turns.map((turn) => [turn.input.prompt, turn.status])).toEqual([
+        ['first', 'error'],
+        ['second', 'streaming'],
+      ]);
+      expect(session.turns[0].error).toBe('Cancelled');
 
-      first.emit({type: 'RUN_FINISHED'});
+      second.emit({type: 'RUN_FINISHED'});
+      second.close();
+      await flush();
+      expect(session.turns[1].status).toBe('complete');
+
+      // Already aborted; closing again is a no-op in the harness.
       first.close();
-      await firstTurn;
+      await flush();
     });
   });
 
@@ -784,6 +795,86 @@ describe('createSession lifecycle', () => {
       expect(callMock).toHaveBeenCalledTimes(1);
       expect(session.turns[0].status).toBe('error');
       expect(session.turns[0].error).toBe('boom');
+    });
+  });
+
+  describe('prompt preempts an in-flight gesture (③)', () => {
+    // A gesture reuses a complete turn, so only `isStreaming()` sees it in flight.
+    it('preempts the in-flight gesture (cancelled) and opens the prompt immediately', async () => {
+      const session = createSession(baseConfig);
+
+      // A Pagination surface so `selectPage` resolves a discriminant.
+      const seed = queueStream();
+      const seedTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'go'}});
+      await seed.opened;
+      seed.emit({
+        type: 'ACTIVITY_SNAPSHOT',
+        messageId: 'surface-activity',
+        activityType: 'a2ui-surface',
+        content: {
+          messages: [
+            {
+              version: 'v1.0',
+              createSurface: {
+                surfaceId: 'commerce-search-surface',
+                components: [
+                  {id: 'root', component: 'CommerceSearch'},
+                  {id: 'pagination-1', component: 'Pagination'},
+                ],
+              },
+            },
+          ],
+        },
+      });
+      seed.emit({type: 'RUN_FINISHED'});
+      seed.close();
+      await seedTurn;
+      expect(session.turns[0].status).toBe('complete');
+      expect(callMock).toHaveBeenCalledTimes(1);
+
+      const actionMessage = (page: number) => ({
+        userAction: {
+          name: 'selectPage',
+          surfaceId: 'commerce-search-surface',
+          sourceComponentId: 'pagination-1',
+          context: {page},
+        },
+      });
+
+      const actionAStream = queueStream();
+      const issuedA = session.actions.issue(actionMessage(2));
+      const outcomeA: string[] = [];
+      issuedA.onSettled((o) => outcomeA.push(o));
+      await actionAStream.opened;
+      expect(callMock).toHaveBeenCalledTimes(2);
+      expect(session.turns.some((turn) => turn.status === 'streaming')).toBe(false);
+      expect(outcomeA).toEqual([]);
+
+      const promptStream = queueStream();
+      void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'next question'}});
+      await promptStream.opened;
+
+      expect(outcomeA).toEqual(['cancelled']);
+      expect(callMock).toHaveBeenCalledTimes(3);
+      const streamingTurn = session.turns.find((turn) => turn.status === 'streaming');
+      expect(streamingTurn?.input.prompt).toBe('next question');
+
+      // Already aborted; closing again is a no-op in the harness.
+      actionAStream.close();
+      await flush();
+      await flush();
+
+      expect(callMock).toHaveBeenCalledTimes(3);
+      expect(outcomeA).toEqual(['cancelled']);
+      const lastRequest = callMock.mock.calls[callMock.mock.calls.length - 1][0] as {
+        message: string | null;
+        action: unknown;
+      };
+      expect(lastRequest).toMatchObject({message: 'next question', action: null});
+
+      promptStream.emit({type: 'RUN_FINISHED'});
+      promptStream.close();
+      await flush();
     });
   });
 });
