@@ -50,7 +50,7 @@ You can use conditions to display different child result templates based on resu
 
 **Comma represents OR:** Within a single attribute, comma-separated values represent a logical OR. For example, `must-match-filetype="lithiummessage,YouTubePlaylist"` means the filetype must be lithiummessage OR YouTubePlaylist.
 
-**Defined fields:** `if-defined` applies the template only to child results that have every field it lists, and `if-not-defined` applies it only to child results that have none of the fields it lists. Unlike the values of a `must-match-*` attribute, comma-separated field names in these two attributes represent a logical AND. For example, `if-defined="author,date"` means a child result must have both an `author` and a `date`, while `if-not-defined="author,date"` means it must have neither.
+**Defined fields:** `if-defined` applies the template only to child results that have every field it lists, and `if-not-defined` applies it only to child results that have none of the fields it lists. Unlike the values of a `must-match-*` attribute, comma-separated field names in these two attributes represent a logical AND. For example, `if-defined="author,date"` means a child result must have both an `author` and a `date`, while `if-not-defined="author,date"` means it must have neither. Field names are not trimmed, so don't put spaces after the commas: `if-defined="author, date"` looks for a field named `" date"`, with a leading space, and never matches.
 
 **Multiple attributes represent AND:** All conditions from different attributes must be met (logical AND) for the template to apply to a child result.
 
