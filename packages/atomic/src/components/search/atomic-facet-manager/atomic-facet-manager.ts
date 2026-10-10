@@ -6,7 +6,9 @@ import {
   type BaseFacetElement,
   collapseFacetsAfter,
   getAutomaticFacetGenerator,
+  getFacetElementToReorder,
   getFacetsInChildren,
+  isFacetNestedInPopover,
   sortFacetVisibility,
 } from '@/src/components/common/facets/facet-common';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
@@ -26,7 +28,10 @@ import {LightDomMixin} from '@/src/mixins/light-dom';
  * 2. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
  * 3. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
  *
- * @slot default - Facet components are slotted within to leverage this functionality.
+ * A facet wrapped in an `atomic-popover` is managed like any other facet, and its popover moves along with it.
+ * Because a popover always displays its facet expanded, such a facet is never collapsed and does not count towards `collapse-facets-after`.
+ *
+ * @slot default - Facet components, or `atomic-popover` components wrapping a facet, are slotted within to leverage this functionality.
  */
 @customElement('atomic-facet-manager')
 @bindings()
@@ -54,6 +59,8 @@ export class AtomicFacetManager
    *
    * Using the value `0` collapses all facets.
    * Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
+   *
+   * Facets wrapped in an `atomic-popover` are always expanded and are not counted.
    */
   @property({type: Number, reflect: true, attribute: 'collapse-facets-after'})
   public collapseFacetsAfter = 4;
@@ -89,14 +96,19 @@ export class AtomicFacetManager
 
     const generator = getAutomaticFacetGenerator(this);
 
-    collapseFacetsAfter(visibleFacets, this.collapseFacetsAfter);
+    const collapsibleFacets = visibleFacets.filter((facet) => !isFacetNestedInPopover(facet));
+
+    collapseFacetsAfter(collapsibleFacets, this.collapseFacetsAfter);
 
     generator?.updateCollapseFacetsDependingOnFacetsVisibility?.(
       this.collapseFacetsAfter,
-      visibleFacets.length
+      collapsibleFacets.length
     );
 
-    this.append(...[...visibleFacets, ...invisibleFacets, ...(generator ? [generator] : [])]);
+    this.append(
+      ...[...visibleFacets, ...invisibleFacets].map((facet) => getFacetElementToReorder(facet)),
+      ...(generator ? [generator] : [])
+    );
   };
 
   private sortFacetsUsingManager(

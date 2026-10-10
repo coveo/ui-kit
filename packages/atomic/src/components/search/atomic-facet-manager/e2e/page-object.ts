@@ -28,4 +28,39 @@ export class FacetManagerPageObject extends BasePageObject {
   get expandedFacets() {
     return this.page.locator('atomic-facet:not([is-collapsed])');
   }
+
+  /**
+   * Get the popovers that are direct children of the manager
+   */
+  get popovers() {
+    return this.page.locator('atomic-facet-manager > atomic-popover');
+  }
+
+  /**
+   * Get the buttons that open the popovers, in the order the popovers appear in the manager
+   */
+  get popoverButtons() {
+    return this.popovers.locator('button[part="popover-button"]');
+  }
+
+  /**
+   * Get the labels of the popover buttons, in the order the popovers appear in the manager
+   */
+  get popoverLabels() {
+    return this.popoverButtons.locator('[part="value-label"]');
+  }
+
+  /**
+   * Get the facets that are slotted inside a popover of the manager
+   */
+  get facetsInPopovers() {
+    return this.page.locator('atomic-facet-manager > atomic-popover > atomic-facet');
+  }
+
+  /**
+   * Get the facets that are direct children of the manager
+   */
+  get facetsOutsidePopovers() {
+    return this.page.locator('atomic-facet-manager > atomic-facet');
+  }
 }
