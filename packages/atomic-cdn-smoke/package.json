@@ -9,7 +9,7 @@
     "chromatic": "chromatic --playwright"
   },
   "devDependencies": {
-    "@chromatic-com/playwright": "0.14.12",
+    "@chromatic-com/playwright": "0.15.0",
     "@coveo/platform-mock-api": "workspace:*",
     "@msw/playwright": "catalog:",
     "@playwright/test": "catalog:",
