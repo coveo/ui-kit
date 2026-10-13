@@ -229,7 +229,7 @@ function conflictDelay(retry: number, retryAfterMs: number | undefined): number 
   return Math.min(delay, MAX_CONFLICT_DELAY_MS);
 }
 
-/** Rejects with an `AbortError` on abort, so a wait is cancelled like the request it precedes. */
+// Rejects with an `AbortError`, so an aborted wait ends like an aborted request.
 function waitFor(ms: number, signal: AbortSignal): Promise<void> {
   return new Promise((resolve, reject) => {
     const abort = () => {
@@ -478,10 +478,7 @@ export function createSession<TContracts extends ContractsSchema>(
     });
   }
 
-  /**
-   * Sends the request again while the Gateway rejects it as concurrent, within a bounded budget.
-   * Rebuilds it on every attempt so context providers and session keys are read fresh.
-   */
+  // Rebuilds the request on every attempt, so context providers and session keys are read fresh.
   async function callWithConflictRetry(
     buildRequest: () => CommerceRequestModel,
     signal: AbortSignal
@@ -511,8 +508,7 @@ export function createSession<TContracts extends ContractsSchema>(
 
   /**
    * Takes a builder so a throwing context provider fails the turn inside the `try`. With
-   * `reportConflict`, a request the Gateway kept rejecting as concurrent leaves the turn untouched
-   * and its error is returned instead.
+   * `reportConflict`, an exhausted conflict returns its error instead of failing the turn.
    */
   async function executeStream(
     turnId: string,

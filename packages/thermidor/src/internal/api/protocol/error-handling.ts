@@ -81,28 +81,14 @@ export function isSuccessResponse(response: Response): boolean {
   return response.ok && response.status >= 200 && response.status < 300;
 }
 
-/**
- * The Agent Gateway's rejection of a state-changing request sent while another one is still being
- * processed for the same session.
- */
 export interface ActionInFlightConflict {
-  /** Sequence number of the action the Gateway is still processing, when it reports one. */
   inFlightSequence?: number;
-  /**
-   * Wait the Gateway asked for through `Retry-After`, in milliseconds. Usually absent in a browser:
-   * the header is not exposed to cross-origin scripts unless the edge lists it in
-   * `Access-Control-Expose-Headers`, and the caller then falls back to its own backoff.
-   */
+  // Usually absent in a browser: cross-origin scripts can't read `Retry-After` unless the edge
+  // lists it in `Access-Control-Expose-Headers`.
   retryAfterMs?: number;
 }
 
-/**
- * Reads an `AGENT:ACTION_IN_FLIGHT` conflict from a failed response's error envelope. Never
- * throws: a `409` with another `errorCode`, or with an unreadable body, is not a conflict.
- *
- * @param response - A non-2xx fetch Response whose body has not been read
- * @returns The conflict, or `undefined` when the response is not one
- */
+// Never throws: a 409 with another `errorCode`, or an unreadable body, is not a conflict.
 export async function readActionInFlightConflict(
   response: Response
 ): Promise<ActionInFlightConflict | undefined> {
@@ -137,7 +123,7 @@ export async function readActionInFlightConflict(
   return conflict;
 }
 
-/** Accepts both `Retry-After` forms: delta-seconds and an HTTP date. */
+// Accepts both `Retry-After` forms: delta-seconds and an HTTP date.
 function parseRetryAfter(header: string | null): number | undefined {
   const value = header?.trim();
   if (!value) {

@@ -117,7 +117,6 @@ type UnifiedEndpointClientResult =
   | {
       success: false;
       error: string;
-      /** Present when the Gateway rejected the request because another one is still in flight. */
       conflict?: ActionInFlightConflict;
     };
 
