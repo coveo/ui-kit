@@ -1,13 +1,13 @@
 import {describe, expect, it} from 'vitest';
-import {cemPlugin} from '../cem-plugin.mjs';
+import {keepCustomElementExportsPlugin} from './keep-custom-element-exports.mjs';
 import {analyze, findElement, findMember, findModule, litElement} from './testing/analyze.mjs';
 
-const plugins = () => [cemPlugin()];
+const plugins = () => [keepCustomElementExportsPlugin()];
 
 const exportsOf = (module) =>
   module.exports.map(({kind, name, declaration}) => `${kind}:${name}->${declaration.name}`).sort();
 
-describe('cemPlugin', () => {
+describe('keepCustomElementExportsPlugin', () => {
   it('should keep the class and definition exports of a custom element', () => {
     const manifest = analyze({'src/x-foo.ts': litElement('x-foo', 'XFoo', '')}, plugins());
 
