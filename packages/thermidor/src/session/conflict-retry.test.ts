@@ -98,6 +98,21 @@ describe('callWithConflictRetry', () => {
     await expect(result).resolves.toBe(success);
   });
 
+  it.each([0, -1000])(
+    'backs off instead when Retry-After asks for no wait (%i ms), so the budget still ends it',
+    async (retryAfterMs) => {
+      const conflicts = Array.from({length: 11}, () => conflict(retryAfterMs));
+      respondWith(...conflicts);
+
+      const result = callWithConflictRetry(attempt, controller.signal);
+      expect(await attemptsAfter(0, 249, 1)).toEqual([1, 1, 2]);
+      await vi.advanceTimersByTimeAsync(60_000);
+
+      await expect(result).resolves.toBe(conflicts[10]);
+      expect(attempt).toHaveBeenCalledTimes(11);
+    }
+  );
+
   it('rejects with an AbortError, without another attempt, when aborted during a wait', async () => {
     respondWith(conflict());
 

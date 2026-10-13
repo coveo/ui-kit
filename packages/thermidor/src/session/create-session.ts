@@ -321,6 +321,13 @@ export function createSession<TContracts extends ContractsSchema>(
     replaceTurn(turnId, (turn) => ({...turn, status: 'error', error}));
   }
 
+  // An action streams into a turn that is already complete; cancelling it must leave that turn be.
+  function cancelTurn(turnId: string): void {
+    replaceTurn(turnId, (turn) =>
+      turn.status === 'streaming' ? {...turn, status: 'error', error: 'Cancelled'} : turn
+    );
+  }
+
   /** True while any turn is streaming. Gesture streams reuse a complete turn, so don't count. */
   function hasStreamingTurn(): boolean {
     return store.getState().turns.some((turn) => turn.status === 'streaming');
@@ -435,7 +442,7 @@ export function createSession<TContracts extends ContractsSchema>(
           return;
         }
         if (isAbortError(error)) {
-          failTurn(turnId, 'Cancelled');
+          cancelTurn(turnId);
         } else {
           failTurn(turnId, getErrorMessage(error));
         }
@@ -492,7 +499,7 @@ export function createSession<TContracts extends ContractsSchema>(
         return;
       }
       if (isAbortError(error)) {
-        failTurn(turnId, 'Cancelled');
+        cancelTurn(turnId);
         return;
       }
       failTurn(turnId, getErrorMessage(error));
@@ -513,10 +520,11 @@ export function createSession<TContracts extends ContractsSchema>(
   }
 
   /**
-   * Stops consuming the in-flight stream, retaining whatever partial
-   * {@link TurnResponse} has already been folded, and marks the active turn
-   * `error`. When nothing is in flight, it is a no-op that
-   * leaves every turn unchanged.
+   * Stops consuming the in-flight stream. A streaming prompt turn is marked
+   * `error`, retaining whatever partial {@link TurnResponse} has already been
+   * folded; an action in flight settles 'cancelled' and leaves its turn
+   * unchanged. When nothing is in flight, it is a no-op that leaves every turn
+   * unchanged.
    */
   function cancel(): void {
     if (!activeAbortController) {
@@ -531,10 +539,9 @@ export function createSession<TContracts extends ContractsSchema>(
     // is committed here rather than relying on the reader's error path.
     const {activeTurnId} = store.getState();
     if (activeTurnId) {
-      replaceTurn(activeTurnId, (turn) =>
-        turn.status === 'streaming' ? {...turn, status: 'error', error: 'Cancelled'} : turn
-      );
+      cancelTurn(activeTurnId);
     }
+    actionCoordinator.cancelInFlight();
   }
 
   /**
@@ -546,7 +553,6 @@ export function createSession<TContracts extends ContractsSchema>(
     actionCoordinator.withholdQueued();
     if (isStreaming()) {
       cancel();
-      actionCoordinator.cancelInFlight();
     }
 
     const turnId = generateId();

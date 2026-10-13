@@ -302,7 +302,9 @@ describe('UnifiedEndpointClient', () => {
         new Response(conflictBody({...gatewayError, inFlightSequence: 7}), {status: 409})
       );
 
-      expect(result.error).toContain('Conflict');
+      expect(result.error).toBe(
+        'Conflict: Another action is still being processed for this session.'
+      );
       expect(result.conflict).toEqual({inFlightSequence: 7});
     });
 
@@ -348,7 +350,7 @@ describe('UnifiedEndpointClient', () => {
     ])('is not an in-flight conflict with %s', async (_label, body) => {
       const result = await callFailing(new Response(body, {status: 409}));
 
-      expect(result.error).toContain('Conflict');
+      expect(result.error).toBe('Conflict: The request conflicts with the current session state.');
       expect(result.conflict).toBeUndefined();
     });
 

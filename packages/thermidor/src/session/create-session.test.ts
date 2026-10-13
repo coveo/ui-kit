@@ -1073,6 +1073,34 @@ describe('createSession lifecycle', () => {
       promptStream.close();
     });
 
+    it('cancels the rejected action, leaving its turn complete, when cancel() lands during the wait', async () => {
+      const session = await seedSession();
+      queueConflict();
+      const issued = session.actions.issue(actionMessage(2));
+      await vi.advanceTimersByTimeAsync(100);
+
+      session.cancel();
+
+      expect(await issued.settled).toBe('cancelled');
+      await vi.advanceTimersByTimeAsync(30_000);
+      expect(callMock).toHaveBeenCalledTimes(2);
+      expect(session.turns[0].status).toBe('complete');
+      expect(session.turns[0].error).toBeUndefined();
+    });
+
+    it('marks a rejected prompt cancelled when cancel() lands during the wait', async () => {
+      const session = createSession(baseConfig);
+      queueConflict();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+      await vi.advanceTimersByTimeAsync(100);
+
+      session.cancel();
+      await turn;
+
+      expect(callMock).toHaveBeenCalledTimes(1);
+      expect(session.turns[0]).toMatchObject({status: 'error', error: 'Cancelled'});
+    });
+
     it('resends a rejected prompt while its turn keeps streaming', async () => {
       const session = createSession(baseConfig);
       queueConflict();

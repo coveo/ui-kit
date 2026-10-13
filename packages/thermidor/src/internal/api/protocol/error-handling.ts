@@ -55,7 +55,7 @@ function transformHttpError(status: number, statusText: string): string {
       return 'Not found: The requested resource does not exist. Please verify your organization ID.';
 
     case 409:
-      return 'Conflict: Another action is still being processed for this session.';
+      return 'Conflict: The request conflicts with the current session state.';
 
     case 429:
       return 'Rate limit exceeded: Too many requests. Please wait a moment and try again.';

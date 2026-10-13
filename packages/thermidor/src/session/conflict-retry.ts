@@ -39,7 +39,11 @@ export async function callWithConflictRetry<TResult extends AttemptResult>(
 // rather than backing off blind.
 function conflictDelay(retry: number, retryAfterMs: number | undefined): number {
   const jitter = 0.8 + Math.random() * 0.4;
-  const delay = retryAfterMs ?? CONFLICT_BASE_DELAY_MS * 2 ** retry * jitter;
+  // A zero wait would never use up the budget, so it falls back to the backoff.
+  const delay =
+    retryAfterMs !== undefined && retryAfterMs > 0
+      ? retryAfterMs
+      : CONFLICT_BASE_DELAY_MS * 2 ** retry * jitter;
   return Math.min(delay, MAX_CONFLICT_DELAY_MS);
 }
 

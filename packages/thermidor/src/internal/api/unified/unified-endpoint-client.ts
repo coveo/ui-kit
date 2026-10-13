@@ -7,6 +7,9 @@ import {
 } from '@/src/internal/api/protocol/error-handling.js';
 import {getOrganizationEndpoint} from '@/src/internal/api/organization-endpoint.js';
 
+const ACTION_IN_FLIGHT_ERROR =
+  'Conflict: Another action is still being processed for this session.';
+
 const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
   return async (
     agentInput: CommerceRequestModel,
@@ -60,11 +63,10 @@ const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
 
       if (!isSuccessResponse(response)) {
         const conflict = await readActionInFlightConflict(response);
-        return {
-          success: false,
-          error: transformError(response),
-          ...(conflict && {conflict}),
-        };
+        if (conflict) {
+          return {success: false, error: ACTION_IN_FLIGHT_ERROR, conflict};
+        }
+        return {success: false, error: transformError(response)};
       }
 
       if (!response.body) {

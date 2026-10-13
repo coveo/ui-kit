@@ -33,17 +33,17 @@ await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me r
 
 `createSession(config)` returns a `Session` exposing exactly:
 
-| Member                    | Purpose                                                                                                                 |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `contracts`               | The injected contracts schema this session validates against (readonly).                                                |
-| `turns`                   | Readonly observable list of `Turn`s folded from the stream (empty initially).                                           |
-| `actionError`             | Why the last component action was dropped after repeated concurrency conflicts, or `undefined`. See below.              |
-| `actions`                 | The action queue: `issue`, `withholdQueued`, `subscribe`, `getSnapshot`. See [The action queue](#the-action-queue).     |
-| `subscribe(listener)`     | Registers a listener called once per turn-list change; returns an unsubscribe.                                          |
-| `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's `onAction`. |
-| `cancel()`                | Stops consuming the active stream, retains the partial response, marks it `error`.                                      |
-| `retry(turnId)`           | Re-submits an errored turn's input.                                                                                     |
-| `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                                                         |
+| Member                    | Purpose                                                                                                                     |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `contracts`               | The injected contracts schema this session validates against (readonly).                                                    |
+| `turns`                   | Readonly observable list of `Turn`s folded from the stream (empty initially).                                               |
+| `actionError`             | Why the last component action was dropped after repeated concurrency conflicts, or `undefined`. See below.                  |
+| `actions`                 | The action queue: `issue`, `withholdQueued`, `subscribe`, `getSnapshot`. See [The action queue](#the-action-queue).         |
+| `subscribe(listener)`     | Registers a listener called once per change to the turn list or `actionError`; returns an unsubscribe.                      |
+| `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's `onAction`.     |
+| `cancel()`                | Stops the active stream: a prompt's turn keeps its partial response and is marked `error`; an action settles `'cancelled'`. |
+| `retry(turnId)`           | Re-submits an errored turn's input.                                                                                         |
+| `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                                                             |
 
 The concrete `contracts` type pinned at the `createSession` call site threads unbroken through `Session`, so component types, action names, and payloads stay fully typed at the call site (no `string`, no `never`, no `unknown`).
 
