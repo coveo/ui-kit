@@ -62,7 +62,6 @@
         "!**/packages/create-atomic-result-component/template/**",
         "!**/.deployment.config/**",
         "!**/packages/atomic/**/*.d.ts",
-        "!**/packages/atomic/stencil-proxy/**",
         "!**/packages/documentation/**/assets/**",
         "!**/packages/headless/**/coveo.analytics/**"
       ],
@@ -85,7 +84,6 @@
         "!**/.deployment.config/**/*",
         "!**/packages/atomic-legacy/**/*.tsx",
         "!**/packages/atomic/**/*.d.ts",
-        "!**/packages/atomic/stencil-proxy/**/*",
         "!**/packages/documentation/**/assets/**/*",
         "!**/packages/headless/**/coveo.analytics/**/*",
         "!**/samples/headless/rga-angular/**/*.html",
@@ -128,7 +126,6 @@
         "!**/packages/create-atomic-result-component/template/**",
         "!**/.deployment.config/**",
         "!**/packages/atomic/**/*.d.ts",
-        "!**/packages/atomic/stencil-proxy/**",
         "!**/packages/documentation/**/assets/**",
         "!**/packages/headless/**/coveo.analytics/**"
       ]
@@ -151,7 +148,6 @@
         "!**/.deployment.config/**/*",
         "!**/packages/atomic-legacy/**/*.tsx",
         "!**/packages/atomic/**/*.d.ts",
-        "!**/packages/atomic/stencil-proxy/**/*",
         "!**/packages/documentation/**/assets/**/*",
         "!**/packages/headless/**/coveo.analytics/**/*",
         "!**/samples/headless/rga-angular/**/*.html",
