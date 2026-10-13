@@ -88,4 +88,22 @@ describe('the custom elements manifest of Atomic', () => {
     expect(findAttribute(element, 'element')).toMatchObject({fieldName: 'element'});
     expect(findAttribute(element, 'error')).toMatchObject({fieldName: 'error'});
   });
+
+  it('should only export custom elements, each once', () => {
+    for (const module of manifest.modules) {
+      const keys = module.exports.map(
+        ({kind, name, declaration}) =>
+          `${kind}:${name}:${declaration.name}:${declaration.module ?? ''}`
+      );
+      expect(new Set(keys).size, module.path).toBe(keys.length);
+      const definedElements = module.exports
+        .filter((entry) => entry.kind === 'custom-element-definition')
+        .map((entry) => entry.declaration.name);
+      for (const entry of module.exports) {
+        expect(definedElements, `${module.path} exports ${entry.kind} ${entry.name}`).toContain(
+          entry.declaration.name
+        );
+      }
+    }
+  });
 });
