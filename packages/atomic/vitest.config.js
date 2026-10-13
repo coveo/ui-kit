@@ -176,6 +176,16 @@ const storybookPure = defineConfig({
   },
 });
 
+// Tests for the custom elements manifest plugins (Node.js, they run the analyzer in memory)
+const cemPlugins = defineConfig({
+  name: 'cem-plugins',
+  test: {
+    name: 'cem-plugins',
+    include: ['scripts/cem-plugins/**/*.spec.mjs'],
+    environment: 'node',
+  },
+});
+
 export default mergeConfig(atomicDefault, {
   test: {
     reporters: [
@@ -185,6 +195,11 @@ export default mergeConfig(atomicDefault, {
         packageJsonPath: path.resolve(import.meta.dirname, 'package.json'),
       }),
     ],
-    projects: [atomicDefault, storybookPure, ...(!isVitestVscodeExt ? [storybook] : [])],
+    projects: [
+      atomicDefault,
+      storybookPure,
+      cemPlugins,
+      ...(!isVitestVscodeExt ? [storybook] : []),
+    ],
   },
 });
