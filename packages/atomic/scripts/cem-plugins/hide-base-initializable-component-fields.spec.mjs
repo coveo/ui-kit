@@ -50,4 +50,24 @@ describe('hideBaseInitializableComponentFieldsPlugin', () => {
     expect(findMember(element, 'label').privacy).toBeUndefined();
     expect(findMember(element, 'summary').privacy).toBe('public');
   });
+
+  it('should leave a field backed by an attribute alone, since it is a public input', () => {
+    const manifest = analyze(
+      {
+        'src/x-error.ts': litElement(
+          'x-error',
+          'XError',
+          `
+  @property({type: Object}) element!: HTMLElement;
+  @property({type: Object}) error!: Error;
+`
+        ),
+      },
+      plugins()
+    );
+
+    const element = findElement(manifest, 'x-error');
+    expect(findMember(element, 'error').privacy).toBeUndefined();
+    expect(findAttribute(element, 'error')).toBeDefined();
+  });
 });

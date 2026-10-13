@@ -82,4 +82,10 @@ describe('the custom elements manifest of Atomic', () => {
     expect(findMember(element, 'resultsPerPage').privacy).not.toBe('private');
     expect(findAttribute(element, 'results-per-page')).toBeDefined();
   });
+
+  it('should expose both inputs of atomic-component-error', () => {
+    const element = findElement(manifest, 'atomic-component-error');
+    expect(findAttribute(element, 'element')).toBeDefined();
+    expect(findAttribute(element, 'error')).toBeDefined();
+  });
 });
