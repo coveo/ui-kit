@@ -4,7 +4,10 @@ import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {describe, expect, it, vi} from 'vitest';
 import {ResultTemplateController} from '@/src/components/common/result-templates/result-template-controller.js';
-import {makeMatchConditions} from '@/src/components/common/template-controller/template-utils';
+import {
+  makeFieldConditions,
+  makeMatchConditions,
+} from '@/src/components/common/template-controller/template-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {buildFakeInsightResult} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/result';
 import {sanitizeHtml} from '@/vitest-utils/testing-helpers/testing-utils/sanitize-html';
@@ -61,15 +64,13 @@ describe('atomic-insight-result-template', () => {
   });
 
   describe('when added to the DOM (#connectedCallback)', () => {
-    it('should call the #makeMatchConditions util function with the correct arguments', async () => {
-      const mockMakeMatchConditions = vi.mocked(makeMatchConditions);
-      await setupElement({
+    it('should build its conditions with #makeFieldConditions and its own helpers', async () => {
+      const element = await setupElement({
         mustMatch: {filetype: ['pdf']},
         mustNotMatch: {source: ['spam']},
       });
-      expect(mockMakeMatchConditions).toHaveBeenCalledExactlyOnceWith(
-        {filetype: ['pdf']},
-        {source: ['spam']},
+      expect(vi.mocked(makeFieldConditions)).toHaveBeenCalledExactlyOnceWith(
+        element,
         InsightResultTemplatesHelpers
       );
     });

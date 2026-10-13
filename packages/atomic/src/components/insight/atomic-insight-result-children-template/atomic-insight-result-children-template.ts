@@ -6,10 +6,7 @@ import {ResultTemplatesHelpers as InsightResultTemplatesHelpers} from '@coveo/he
 import {LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ResultTemplateController} from '@/src/components/common/result-templates/result-template-controller';
-import {
-  makeDefinedConditions,
-  makeMatchConditions,
-} from '@/src/components/common/template-controller/template-utils';
+import {makeFieldConditions} from '@/src/components/common/template-controller/template-utils';
 import {arrayConverter} from '@/src/converters/array-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {LitElementWithError} from '@/src/decorators/types';
@@ -82,10 +79,10 @@ export class AtomicInsightResultChildrenTemplate extends LitElement implements L
 
   connectedCallback() {
     super.connectedCallback();
-    this.resultTemplateController.matchConditions = [
-      ...makeDefinedConditions(this.ifDefined, this.ifNotDefined, InsightResultTemplatesHelpers),
-      ...makeMatchConditions(this.mustMatch, this.mustNotMatch, InsightResultTemplatesHelpers),
-    ];
+    this.resultTemplateController.matchConditions = makeFieldConditions(
+      this,
+      InsightResultTemplatesHelpers
+    );
   }
 
   @errorGuard()
