@@ -1,9 +1,10 @@
 import type {Product} from '@coveo/headless/commerce';
+import {ProductTemplatesHelpers} from '@coveo/headless/commerce';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {describe, expect, it, vi} from 'vitest';
 import {page} from 'vitest/browser';
-import {makeMatchConditions} from '@/src/components/common/template-controller/template-utils';
+import {makeFieldConditions} from '@/src/components/common/template-controller/template-utils';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import {sanitizeHtml} from '@/vitest-utils/testing-helpers/testing-utils/sanitize-html';
@@ -60,17 +61,12 @@ describe('atomic-product-template', () => {
   });
 
   describe('when must-match and must-not-match attributes are set', () => {
-    it('should call #makeMatchConditions on connectedCallback', async () => {
-      const mockMakeMatchConditions = vi.mocked(makeMatchConditions);
-      await setupElement({
-        mustMatch: {foo: ['bar']},
-        mustNotMatch: {baz: ['qux']},
+    it('should build its conditions with #makeFieldConditions and its own helpers', async () => {
+      const element = await setupElement({
+        mustMatch: {filetype: ['pdf']},
+        mustNotMatch: {source: ['spam']},
       });
-      expect(mockMakeMatchConditions).toHaveBeenCalledWith(
-        {foo: ['bar']},
-        {baz: ['qux']},
-        expect.any(Object)
-      );
+      expect(vi.mocked(makeFieldConditions)).toHaveBeenCalledWith(element, ProductTemplatesHelpers);
     });
   });
 

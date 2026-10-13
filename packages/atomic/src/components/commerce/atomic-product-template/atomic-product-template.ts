@@ -3,10 +3,7 @@ import {ProductTemplatesHelpers} from '@coveo/headless/commerce';
 import {LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ProductTemplateController} from '@/src/components/common/product-template/product-template-controller';
-import {
-  makeDefinedConditions,
-  makeMatchConditions,
-} from '@/src/components/common/template-controller/template-utils';
+import {makeFieldConditions} from '@/src/components/common/template-controller/template-utils';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {LitElementWithError} from '@/src/decorators/types';
 import {mapProperty} from '@/src/utils/props-utils';
@@ -84,10 +81,10 @@ export class AtomicProductTemplate extends LitElement implements LitElementWithE
 
   connectedCallback() {
     super.connectedCallback();
-    this.productTemplateController.matchConditions = [
-      ...makeDefinedConditions(this.ifDefined, this.ifNotDefined, ProductTemplatesHelpers),
-      ...makeMatchConditions(this.mustMatch, this.mustNotMatch, ProductTemplatesHelpers),
-    ];
+    this.productTemplateController.matchConditions = makeFieldConditions(
+      this,
+      ProductTemplatesHelpers
+    );
   }
 
   /**
