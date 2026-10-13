@@ -37,6 +37,7 @@ import {
 } from '@/src/actions/dispatch-coordinator.js';
 import {validateActionPayload} from './action-payload-validation.js';
 import type {ContractsSchema} from './contracts.js';
+import {callWithConflictRetry} from './conflict-retry.js';
 import {createTurn, foldActivity} from './fold.js';
 import {deriveNodeIdentityRegistry} from './in-transit-validation.js';
 import {restoreSession, serializeSession, type SerializedSession} from './serialize.js';
@@ -212,42 +213,6 @@ export interface SessionActions {
 
 function isAbortError(error: unknown): boolean {
   return error instanceof Error && error.name === 'AbortError';
-}
-
-// Long enough for an aborted agent run to wind down: the Gateway can't cancel it upstream, so it
-// keeps the session's slot until the run's next event or its end.
-// TODO(KIT-6261): lower once the Gateway aborts the run, and frees the slot, on client disconnect.
-const MAX_CONFLICT_WAIT_MS = 30_000;
-const MAX_CONFLICT_DELAY_MS = 4_000;
-const CONFLICT_BASE_DELAY_MS = 250;
-
-// TODO(KIT-6255): once actions carry a sequence number, wait for `inFlightSequence` to be answered
-// rather than backing off blind.
-function conflictDelay(retry: number, retryAfterMs: number | undefined): number {
-  const jitter = 0.8 + Math.random() * 0.4;
-  const delay = retryAfterMs ?? CONFLICT_BASE_DELAY_MS * 2 ** retry * jitter;
-  return Math.min(delay, MAX_CONFLICT_DELAY_MS);
-}
-
-// Rejects with an `AbortError`, so an aborted wait ends like an aborted request.
-function waitFor(ms: number, signal: AbortSignal): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const abort = () => {
-      clearTimeout(timer);
-      const error = new Error('Aborted');
-      error.name = 'AbortError';
-      reject(error);
-    };
-    const timer = setTimeout(() => {
-      signal.removeEventListener('abort', abort);
-      resolve();
-    }, ms);
-    if (signal.aborted) {
-      abort();
-      return;
-    }
-    signal.addEventListener('abort', abort, {once: true});
-  });
 }
 
 /**
@@ -478,34 +443,6 @@ export function createSession<TContracts extends ContractsSchema>(
     });
   }
 
-  // Rebuilds the request on every attempt, so context providers and session keys are read fresh.
-  async function callWithConflictRetry(
-    buildRequest: () => CommerceRequestModel,
-    signal: AbortSignal
-  ): ReturnType<typeof client.call> {
-    let waited = 0;
-    for (let retry = 0; ; retry++) {
-      const result = await client.call(
-        buildRequest(),
-        {
-          organizationId: config.organizationId,
-          accessToken: config.accessToken,
-          endpoint: config.endpoint,
-        },
-        {signal}
-      );
-      if (result.success || !result.conflict) {
-        return result;
-      }
-      const delay = conflictDelay(retry, result.conflict.retryAfterMs);
-      if (waited + delay > MAX_CONFLICT_WAIT_MS) {
-        return result;
-      }
-      waited += delay;
-      await waitFor(delay, signal);
-    }
-  }
-
   /**
    * Takes a builder so a throwing context provider fails the turn inside the `try`. With
    * `reportConflict`, an exhausted conflict returns its error instead of failing the turn.
@@ -519,7 +456,20 @@ export function createSession<TContracts extends ContractsSchema>(
     activeAbortController = abortController;
 
     try {
-      const result = await callWithConflictRetry(buildRequest, abortController.signal);
+      // Rebuilt on every attempt, so context providers and session keys are read fresh.
+      const result = await callWithConflictRetry(
+        () =>
+          client.call(
+            buildRequest(),
+            {
+              organizationId: config.organizationId,
+              accessToken: config.accessToken,
+              endpoint: config.endpoint,
+            },
+            {signal: abortController.signal}
+          ),
+        abortController.signal
+      );
 
       if (!result.success) {
         if (reportConflict && result.conflict) {

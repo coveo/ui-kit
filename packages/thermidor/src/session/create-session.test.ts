@@ -33,7 +33,7 @@ const callMock = vi.fn<
     | {
         success: false;
         error: string;
-        conflict?: {retryAfterMs?: number};
+        conflict?: Record<string, never>;
       }
   >
 >();
@@ -158,11 +158,11 @@ function queueStream(): ControllableStream {
 const conflictError = 'Conflict: Another action is still being processed for this session.';
 
 /** Queues an `AGENT:ACTION_IN_FLIGHT` rejection as the result of the next `call`. */
-function queueConflict(retryAfterMs?: number): void {
+function queueConflict(): void {
   callMock.mockImplementationOnce(async () => ({
     success: false,
     error: conflictError,
-    conflict: retryAfterMs === undefined ? {} : {retryAfterMs},
+    conflict: {},
   }));
 }
 
@@ -992,28 +992,6 @@ describe('createSession lifecycle', () => {
       expect(session.turns[0].error).toBeUndefined();
       expect(session.actionError).toBe(conflictError);
       expect(listener).toHaveBeenCalled();
-    });
-
-    it('waits as long as the Gateway asks, up to the longest single wait', async () => {
-      const session = await seedSession();
-      queueConflict(2000);
-      queueConflict(60_000);
-      const stream = queueStream();
-
-      const issued = session.actions.issue(actionMessage(2));
-      await vi.advanceTimersByTimeAsync(1999);
-      expect(callMock).toHaveBeenCalledTimes(2);
-      await vi.advanceTimersByTimeAsync(1);
-      expect(callMock).toHaveBeenCalledTimes(3);
-
-      await vi.advanceTimersByTimeAsync(3999);
-      expect(callMock).toHaveBeenCalledTimes(3);
-      await vi.advanceTimersByTimeAsync(1);
-      expect(callMock).toHaveBeenCalledTimes(4);
-
-      stream.emit({type: 'RUN_FINISHED'});
-      stream.close();
-      expect(await issued.settled).toBe('answered');
     });
 
     it('keeps queued actions behind the rejected one, in order', async () => {
