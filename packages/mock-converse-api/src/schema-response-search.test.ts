@@ -463,6 +463,10 @@ function totalEntries(components: Record<string, unknown>): number {
   return (components['pagination-2'] as Record<string, unknown>).totalEntries as number;
 }
 
+function page(components: Record<string, unknown>): number {
+  return (components['pagination-2'] as Record<string, unknown>).page as number;
+}
+
 describe('schema-response-search breadbox', () => {
   beforeEach(() => {
     resetSurface();
@@ -596,8 +600,18 @@ describe('schema-response-search breadbox', () => {
     expect(totalEntries(components)).toBe(43);
   });
 
-  it('clears every facet, preserving the sort', () => {
-    act('selectSort', {sortCriteria: 'price_asc'});
+  it('returns to the first page on deselect', () => {
+    act('toggleExclude', {value: 'Billabong'}, 'facet-brand-2');
+    expect(page(act('selectPage', {page: 2}))).toBe(2);
+    const components = act(
+      'deselect',
+      {facetId: 'facet-brand-2', type: 'regular', value: 'Billabong'},
+      BREADBOX_ID
+    );
+    expect(page(components)).toBe(0);
+  });
+
+  it('clears every facet', () => {
     act('toggleSelect', {value: 'Billabong'}, 'facet-brand-2');
     act('toggleExclude', {value: 'Xcel'}, 'facet-brand-2');
     act('toggleSelect', {start: 0, end: 100}, 'facet-price-2');
@@ -610,7 +624,18 @@ describe('schema-response-search breadbox', () => {
       .values as Record<string, unknown>;
     expect(categoryValues.selected).toBeNull();
     expect(totalEntries(components)).toBe(43);
+  });
+
+  it('returns to the first page on clearAll, preserving the sort and page size', () => {
+    act('selectSort', {sortCriteria: 'price_asc'});
+    act('setPageSize', {pageSize: 6});
+    act('toggleExclude', {value: 'Xcel'}, 'facet-brand-2');
+    expect(page(act('selectPage', {page: 2}))).toBe(2);
+    const components = act('clearAll', {}, BREADBOX_ID);
+    const pagination = components['pagination-2'] as Record<string, unknown>;
     const sort = components['sort-2'] as Record<string, unknown>;
+    expect(pagination.page).toBe(0);
+    expect(pagination.pageSize).toBe(6);
     expect((sort.appliedSort as Record<string, unknown>).sortCriteria).toBe('price_asc');
   });
 });
