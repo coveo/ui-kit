@@ -1,3 +1,9 @@
+## 3.57.3
+
+### Patch Changes
+
+- [#8627](https://github.com/coveo/ui-kit/pull/8627) [`ef62433`](https://github.com/coveo/ui-kit/commit/ef62433af99d60c4aac4edf94c273ceba9108e96) - Exclude the selected value from commerce category facet search results by sending its path in `ignorePaths`.
+
 ## 3.57.2
 
 ### Patch Changes
