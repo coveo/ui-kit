@@ -27,26 +27,27 @@ const moduleLinkPhase = ({moduleDoc}) => {
     declaration.members = declaration.members.filter((member) => member?.privacy !== 'private');
   }
 
-  moduleDoc.exports = cleanExports(moduleDoc.exports);
+  moduleDoc.exports = keepCustomElementExports(moduleDoc.exports);
 };
 
-function cleanExports(exports) {
-  const finalExports = [];
-  const exportCandidates = {};
-  for (const exportCandidate of exports) {
-    const exportName = exportCandidate.declaration.name;
-    if (!exportCandidates[exportName]) {
-      // First time we see this export, we add it to the final exports candidate map.
-      exportCandidates[exportName] = [];
-    } else if (exportCandidates[exportName] !== finalExports[exportName]) {
-      // Second time we see this export, we merge all the candidates into the final exports, and make the candidate map point to the final exports for this export name.
-      finalExports.push(...exportCandidates[exportName]);
-      exportCandidates[exportName] = finalExports;
-    }
-    // Add the export candidate to the candidate map, regardless of what array it points to.
-    exportCandidates[exportName].push(exportCandidate);
-  }
-  return finalExports;
+/**
+ * Keeps the exports of the public custom elements: the class export and its definition.
+ * The analyzer then drops every declaration that is no longer exported, which keeps utilities,
+ * mixins and `@internal` elements (they only have a definition export) out of the manifest.
+ */
+function keepCustomElementExports(exports) {
+  const definedElements = new Set(
+    exports
+      .filter((entry) => entry.kind === 'custom-element-definition')
+      .map((entry) => entry.declaration.name)
+  );
+  const exportedClasses = new Set(
+    exports.filter((entry) => entry.kind === 'js').map((entry) => entry.declaration.name)
+  );
+  return exports.filter(
+    (entry) =>
+      definedElements.has(entry.declaration.name) && exportedClasses.has(entry.declaration.name)
+  );
 }
 
 function findMember(declaration, attribute) {
