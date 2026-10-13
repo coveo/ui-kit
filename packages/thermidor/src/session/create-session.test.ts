@@ -155,7 +155,19 @@ function queueStream(): ControllableStream {
   return controllable;
 }
 
-const conflictError = 'Conflict: Another action is still being processed for this session.';
+const conflictError = 'Conflict: Another request is still being processed for this session.';
+
+/** Queues a call that stays pending until aborted, then fails the way the client reports an abort. */
+function queueAbortableCall(): void {
+  callMock.mockImplementationOnce(
+    (_request, _configuration, options) =>
+      new Promise((resolve) => {
+        options?.signal?.addEventListener('abort', () =>
+          resolve({success: false, error: 'This operation was aborted'})
+        );
+      })
+  );
+}
 
 /** Queues an `AGENT:ACTION_IN_FLIGHT` rejection as the result of the next `call`. */
 function queueConflict(): void {
@@ -934,14 +946,14 @@ describe('createSession lifecycle', () => {
       return session;
     }
 
-    // 10 retries fit the 30 s budget (27.75 s waited); an 11th wait would overrun it.
-    const exhaustingConflicts = 11;
+    // 10 waits take 27.75 s and an 11th is cut to the 2.25 s left: 12 attempts in 30 s.
+    const exhaustingConflicts = 12;
 
     const lastAction = () =>
       (callMock.mock.calls[callMock.mock.calls.length - 1][0] as {action: unknown}).action;
 
     beforeEach(() => {
-      vi.useFakeTimers({toFake: ['setTimeout', 'clearTimeout']});
+      vi.useFakeTimers({toFake: ['setTimeout', 'clearTimeout', 'Date']});
       // No jitter: retries wait exactly 250, 500, 1000, 2000, then 4000 ms each.
       vi.spyOn(Math, 'random').mockReturnValue(0.5);
     });
@@ -1019,7 +1031,7 @@ describe('createSession lifecycle', () => {
       expect(await issuedB.settled).toBe('answered');
     });
 
-    it('clears the action error once the next action is accepted', async () => {
+    it('clears the action error once the next action is sent', async () => {
       const session = await seedSession();
       for (let attempt = 0; attempt < exhaustingConflicts; attempt++) {
         queueConflict();
@@ -1098,6 +1110,41 @@ describe('createSession lifecycle', () => {
       await turn;
 
       expect(callMock).toHaveBeenCalledTimes(1);
+      expect(session.turns[0]).toMatchObject({status: 'error', error: 'Cancelled'});
+    });
+
+    it('leaves the turn complete when a prompt aborts an action while it is being resent', async () => {
+      const session = await seedSession();
+      queueConflict();
+      queueAbortableCall();
+      const issued = session.actions.issue(actionMessage(2));
+      await vi.advanceTimersByTimeAsync(250);
+      expect(callMock).toHaveBeenCalledTimes(3);
+
+      const promptStream = queueStream();
+      void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'next question'}});
+      await promptStream.opened;
+      await vi.advanceTimersByTimeAsync(0);
+
+      expect(await issued.settled).toBe('cancelled');
+      expect(session.turns[0]).toMatchObject({status: 'complete'});
+      expect(session.turns[0].error).toBeUndefined();
+
+      promptStream.emit({type: 'RUN_FINISHED'});
+      promptStream.close();
+    });
+
+    it('keeps a prompt cancelled when cancel() aborts it while it is being resent', async () => {
+      const session = createSession(baseConfig);
+      queueConflict();
+      queueAbortableCall();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+      await vi.advanceTimersByTimeAsync(250);
+      expect(callMock).toHaveBeenCalledTimes(2);
+
+      session.cancel();
+      await turn;
+
       expect(session.turns[0]).toMatchObject({status: 'error', error: 'Cancelled'});
     });
 

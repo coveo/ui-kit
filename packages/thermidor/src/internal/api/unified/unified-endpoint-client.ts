@@ -8,7 +8,7 @@ import {
 import {getOrganizationEndpoint} from '@/src/internal/api/organization-endpoint.js';
 
 const ACTION_IN_FLIGHT_ERROR =
-  'Conflict: Another action is still being processed for this session.';
+  'Conflict: Another request is still being processed for this session.';
 
 const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
   return async (

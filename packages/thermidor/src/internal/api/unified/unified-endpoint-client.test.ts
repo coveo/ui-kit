@@ -303,7 +303,7 @@ describe('UnifiedEndpointClient', () => {
       );
 
       expect(result.error).toBe(
-        'Conflict: Another action is still being processed for this session.'
+        'Conflict: Another request is still being processed for this session.'
       );
       expect(result.conflict).toEqual({inFlightSequence: 7});
     });

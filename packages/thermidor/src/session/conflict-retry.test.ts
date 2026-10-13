@@ -15,7 +15,7 @@ describe('callWithConflictRetry', () => {
   let controller: AbortController;
 
   beforeEach(() => {
-    vi.useFakeTimers({toFake: ['setTimeout', 'clearTimeout']});
+    vi.useFakeTimers({toFake: ['setTimeout', 'clearTimeout', 'Date']});
     vi.spyOn(Math, 'random').mockReturnValue(0.5);
     attempt = vi.fn<() => Promise<Result>>();
     controller = new AbortController();
@@ -77,16 +77,28 @@ describe('callWithConflictRetry', () => {
     await expect(result).resolves.toBe(success);
   });
 
-  it('returns the last conflict once the next wait would overrun 30 s', async () => {
-    // 10 waits fit the budget (27.75 s); an 11th would overrun it.
-    const conflicts = Array.from({length: 11}, () => conflict());
+  it('shortens the last wait to what is left of 30 s, then returns the last conflict', async () => {
+    // 10 waits take 27.75 s; the 11th is cut to the 2.25 s left.
+    const conflicts = Array.from({length: 12}, () => conflict());
     respondWith(...conflicts);
+
+    const result = callWithConflictRetry(attempt, controller.signal);
+
+    expect(await attemptsAfter(27_750, 2249, 1, 30_000)).toEqual([11, 11, 12, 12]);
+    await expect(result).resolves.toBe(conflicts[11]);
+  });
+
+  it('counts the time spent on each attempt against the budget', async () => {
+    attempt.mockImplementation(
+      () => new Promise((resolve) => setTimeout(() => resolve(conflict()), 2000))
+    );
 
     const result = callWithConflictRetry(attempt, controller.signal);
     await vi.advanceTimersByTimeAsync(60_000);
 
-    await expect(result).resolves.toBe(conflicts[10]);
-    expect(attempt).toHaveBeenCalledTimes(11);
+    await expect(result).resolves.toMatchObject({success: false});
+    // Attempts start at 0, 2.25, 4.75, 7.75, 11.75, 17.75, 23.75 and 29.75 s.
+    expect(attempt).toHaveBeenCalledTimes(8);
   });
 
   it('waits as long as Retry-After asks, up to 4 s', async () => {
@@ -101,15 +113,15 @@ describe('callWithConflictRetry', () => {
   it.each([0, -1000])(
     'backs off instead when Retry-After asks for no wait (%i ms), so the budget still ends it',
     async (retryAfterMs) => {
-      const conflicts = Array.from({length: 11}, () => conflict(retryAfterMs));
+      const conflicts = Array.from({length: 12}, () => conflict(retryAfterMs));
       respondWith(...conflicts);
 
       const result = callWithConflictRetry(attempt, controller.signal);
       expect(await attemptsAfter(0, 249, 1)).toEqual([1, 1, 2]);
       await vi.advanceTimersByTimeAsync(60_000);
 
-      await expect(result).resolves.toBe(conflicts[10]);
-      expect(attempt).toHaveBeenCalledTimes(11);
+      await expect(result).resolves.toBe(conflicts[11]);
+      expect(attempt).toHaveBeenCalledTimes(12);
     }
   );
 

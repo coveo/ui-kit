@@ -161,7 +161,7 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * rejecting the action because another one was still being processed for this session, after
    * the session's own bounded retries ran out. That action's dispatch settles `'failed'`, so any
    * optimistic state tied to it is released and the last authoritative state shows again.
-   * Cleared once the next action or prompt is accepted. Changes notify {@link Session.subscribe}
+   * Cleared once the next action or prompt is sent. Changes notify {@link Session.subscribe}
    * listeners. A conflict that recovers through retry never sets it.
    */
   readonly actionError: string | undefined;
@@ -209,6 +209,12 @@ export interface SessionActions {
   withholdQueued: () => void;
   subscribe: (listener: () => void) => () => void;
   getSnapshot: () => DispatchSnapshot;
+}
+
+interface RequestFailure {
+  error: string;
+  /** The endpoint kept rejecting it as concurrent, past the retry budget. */
+  conflict: boolean;
 }
 
 function isAbortError(error: unknown): boolean {
@@ -295,15 +301,23 @@ export function createSession<TContracts extends ContractsSchema>(
     if (!turnId || hasStreamingTurn()) {
       return;
     }
-    const conflict = await executeStream(turnId, () => buildActionRequest(action), {
-      reportConflict: true,
-    });
-    if (conflict !== undefined) {
-      store.setState((current) => ({...current, actionError: conflict}));
+    setActionError(undefined);
+    const failure = await executeStream(turnId, () => buildActionRequest(action));
+    if (failure?.conflict) {
+      setActionError(failure.error);
       // Thrown so the dispatch settles 'failed', releasing the optimistic state it holds.
-      throw new Error(conflict);
+      throw new Error(failure.error);
+    }
+    if (failure) {
+      failTurn(turnId, failure.error);
     }
   });
+
+  function setActionError(actionError: string | undefined): void {
+    if (store.getState().actionError !== actionError) {
+      store.setState((current) => ({...current, actionError}));
+    }
+  }
 
   function replaceTurn(turnId: string, update: (turn: Turn) => Turn): void {
     store.setState((current) => {
@@ -451,14 +465,14 @@ export function createSession<TContracts extends ContractsSchema>(
   }
 
   /**
-   * Takes a builder so a throwing context provider fails the turn inside the `try`. With
-   * `reportConflict`, an exhausted conflict returns its error instead of failing the turn.
+   * Takes a builder so a throwing context provider fails the turn inside the `try`. A request the
+   * endpoint rejected before streaming is returned for the caller to report; anything later is
+   * folded into the turn here.
    */
   async function executeStream(
     turnId: string,
-    buildRequest: () => CommerceRequestModel,
-    {reportConflict = false}: {reportConflict?: boolean} = {}
-  ): Promise<string | undefined> {
+    buildRequest: () => CommerceRequestModel
+  ): Promise<RequestFailure | undefined> {
     const abortController = new AbortController();
     activeAbortController = abortController;
 
@@ -479,15 +493,14 @@ export function createSession<TContracts extends ContractsSchema>(
       );
 
       if (!result.success) {
-        if (reportConflict && result.conflict) {
-          return result.error;
+        // The client reports an abort as a failed call rather than throwing it.
+        if (abortController.signal.aborted) {
+          if (!isSuperseded(activeAbortController, abortController)) {
+            cancelTurn(turnId);
+          }
+          return undefined;
         }
-        failTurn(turnId, result.error);
-        return;
-      }
-
-      if (store.getState().actionError !== undefined) {
-        store.setState((current) => ({...current, actionError: undefined}));
+        return {error: result.error, conflict: result.conflict !== undefined};
       }
 
       await consumeStream(turnId, result.data.stream, abortController);
@@ -509,6 +522,14 @@ export function createSession<TContracts extends ContractsSchema>(
       }
     }
     return undefined;
+  }
+
+  async function streamPrompt(turnId: string, prompt: string): Promise<void> {
+    setActionError(undefined);
+    const failure = await executeStream(turnId, () => buildConversationRequest(prompt));
+    if (failure) {
+      failTurn(turnId, failure.error);
+    }
   }
 
   function openTurn(turnId: string, input: TurnInput): void {
@@ -558,7 +579,7 @@ export function createSession<TContracts extends ContractsSchema>(
     const turnId = generateId();
     openTurn(turnId, {prompt});
 
-    await executeStream(turnId, () => buildConversationRequest(prompt ?? ''));
+    await streamPrompt(turnId, prompt ?? '');
   }
 
   /**
@@ -702,7 +723,7 @@ export function createSession<TContracts extends ContractsSchema>(
     }));
     store.setState((current) => ({...current, activeTurnId: turnId}));
 
-    void executeStream(turnId, () => buildConversationRequest(turn.input.prompt ?? ''));
+    void streamPrompt(turnId, turn.input.prompt ?? '');
   }
 
   function serialize(): SerializedSession {
