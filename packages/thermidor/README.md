@@ -37,6 +37,8 @@ await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me r
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | `contracts`               | The injected contracts schema this session validates against (readonly).                                                |
 | `turns`                   | Readonly observable list of `Turn`s folded from the stream (empty initially).                                           |
+| `actionError`             | Why the last component action was dropped after repeated concurrency conflicts, or `undefined`. See below.              |
+| `actions`                 | The action queue: `issue`, `withholdQueued`, `subscribe`, `getSnapshot`. See [The action queue](#the-action-queue).     |
 | `subscribe(listener)`     | Registers a listener called once per turn-list change; returns an unsubscribe.                                          |
 | `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's `onAction`. |
 | `cancel()`                | Stops consuming the active stream, retains the partial response, marks it `error`.                                      |
@@ -70,6 +72,27 @@ A component action is the standard A2-UI client-to-server message (`A2uiClientMe
 Given a message, `dispatchAction` unwraps its `userAction`, recovers the dispatching component's discriminant from the active turn's surfaces, validates the action payload against the component's injected contract internally, and — on success — POSTs the action to the converse endpoint.
 
 It is **fire-and-forget**: the returned Promise always resolves and never rejects, so the consumer needs no `.catch`. A message with no `userAction`, no `sourceComponentId`, a node that resolves to no component, or an internal validation failure is dropped with a dev-only warning and nothing is sent.
+
+### The action queue
+
+The Agent Gateway processes one state-changing request per session at a time, and each response carries whole-node snapshots, so overlapping requests would let the last one to arrive win. Thermidor therefore owns the queuing; integrators don't write any.
+
+- **What is queued**: every component action, whether sent through `dispatchAction` or `actions.issue`, goes through one per-session FIFO with at most one action in flight. The next action is sent only once the in-flight one's response has ended or it has failed. A purely local presentation change (expanding a panel, scrolling a carousel) never dispatches, so it never queues. Thermidor owns this rule; neither the schema nor the Gateway declares it.
+- **Optimistic updates**: `actions.issue(message, intent)` returns an `IssuedDispatch` synchronously, before anything is sent, so local state can be tied to its `id` at once. `createOptimisticValue` and `createStaleScopes` hold that state until the dispatch settles, and its `settled` / `onSettled` outcome tells why it ended.
+- **Coalescing**: an optional `CoalesceIntent` names the gesture's `slot` and `policy`. An `absolute` write (for example `selectPage`) supersedes queued entries in the same slot (`'superseded'`). An `involutive` gesture (for example `toggleSelect`) issued while its twin is still queued cancels both (`'cancelled'`). A `dependent` gesture drops nothing. A gesture whose state the in-flight action already produces is not sent (`'satisfied'`).
+- **Pending state**: `actions.getSnapshot().inFlight` is the id of the action in flight, and `actions.subscribe` notifies when it changes, for loading indicators. `createDispatchTracker` wraps the same source.
+- **Prompts preempt**: a `submitPrompt` withholds every queued action (`'withheld'`) and cancels the one in flight (`'cancelled'`), since the prompt rebuilds the state those actions were refining. While a prompt turn is streaming, new actions are withheld.
+- **Failure**: an action whose request could not be built or sent settles `'failed'` and the queue moves on. An HTTP error response currently fails the active turn instead. See [Concurrency conflicts](#concurrency-conflicts) for the Gateway's busy response.
+- **Persistence**: the queue is in memory only. Reloading the page drops queued actions; `serialize()` never includes them.
+
+### Concurrency conflicts
+
+The Gateway rejects a state-changing request (an action or a prompt) with `409 Conflict` and the code `ACTION_IN_FLIGHT` when it is still processing another one for the session, for example an action a prompt preempted on the client, or a request from another tab. Thermidor handles it:
+
+- The request is sent again after a backoff (250 ms doubling, with jitter), or after the delay the Gateway's `Retry-After` header asks for. It is rebuilt each time, so context providers are read fresh. It keeps its place at the head of the queue meanwhile, so later actions stay behind it in order.
+- A conflict that recovers within the budget shows nothing: the turn stays as it was and no error is set.
+- The budget is 5 retries or 10 seconds of waiting, whichever comes first. When it runs out on an **action**, the dispatch settles `'failed'`, which releases its optimistic state so the last authoritative state shows again, and `session.actionError` is set. It is cleared once the next action or prompt is accepted. When it runs out on a **prompt**, the prompt's turn becomes `error`, retryable with `retry(turnId)`.
+- A `submitPrompt` or `cancel()` during the backoff stops the wait.
 
 ## The Turn / TurnResponse model
 

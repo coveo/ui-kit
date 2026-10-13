@@ -1,5 +1,10 @@
 import type {CommerceRequestModel} from './unified-endpoint-types.js';
-import {isSuccessResponse, transformError} from '@/src/internal/api/protocol/error-handling.js';
+import {
+  isSuccessResponse,
+  readActionInFlightConflict,
+  transformError,
+  type ActionInFlightConflict,
+} from '@/src/internal/api/protocol/error-handling.js';
 import {getOrganizationEndpoint} from '@/src/internal/api/organization-endpoint.js';
 
 const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
@@ -54,9 +59,11 @@ const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
       });
 
       if (!isSuccessResponse(response)) {
+        const conflict = await readActionInFlightConflict(response);
         return {
           success: false,
           error: transformError(response),
+          ...(conflict && {conflict}),
         };
       }
 
@@ -110,6 +117,8 @@ type UnifiedEndpointClientResult =
   | {
       success: false;
       error: string;
+      /** Present when the Gateway rejected the request because another one is still in flight. */
+      conflict?: ActionInFlightConflict;
     };
 
 export interface UnifiedEndpointClient {

@@ -35,6 +35,12 @@ export interface SessionStoreState<TTurn> {
    * The server-assigned session token for request-authentication continuity.
    */
   sessionToken?: string;
+
+  /**
+   * Why the last action was dropped after the Gateway kept rejecting it as concurrent. Runtime
+   * only: never serialized.
+   */
+  actionError?: string;
 }
 
 /**

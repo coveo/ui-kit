@@ -274,6 +274,78 @@ describe('UnifiedEndpointClient', () => {
     expect(response.error).toContain('Authentication failed');
   });
 
+  describe('409 Conflict', () => {
+    const callFailing = async (response: Response) => {
+      mockedFetch.mockResolvedValue(response);
+      const result = await client.call(request, {
+        organizationId: 'test-org-id',
+        accessToken: 'test-token',
+      });
+      if (result.success) {
+        throw new Error('Expected unified endpoint call to fail');
+      }
+      return result;
+    };
+
+    const conflictBody = (body: unknown) =>
+      typeof body === 'string' ? body : JSON.stringify(body);
+
+    it('reads an ACTION_IN_FLIGHT conflict and its in-flight sequence', async () => {
+      const result = await callFailing(
+        new Response(conflictBody({code: 'ACTION_IN_FLIGHT', inFlightSequence: 7}), {status: 409})
+      );
+
+      expect(result.error).toContain('Conflict');
+      expect(result.conflict).toEqual({code: 'ACTION_IN_FLIGHT', inFlightSequence: 7});
+    });
+
+    it('reads Retry-After given in seconds', async () => {
+      const result = await callFailing(
+        new Response(conflictBody({code: 'ACTION_IN_FLIGHT'}), {
+          status: 409,
+          headers: {'Retry-After': '2'},
+        })
+      );
+
+      expect(result.conflict).toEqual({code: 'ACTION_IN_FLIGHT', retryAfterMs: 2000});
+    });
+
+    it('reads Retry-After given as an HTTP date', async () => {
+      vi.useFakeTimers({now: new Date('2026-10-13T12:00:00Z'), toFake: ['Date']});
+      try {
+        const result = await callFailing(
+          new Response(conflictBody({code: 'ACTION_IN_FLIGHT'}), {
+            status: 409,
+            headers: {'Retry-After': 'Tue, 13 Oct 2026 12:00:03 GMT'},
+          })
+        );
+
+        expect(result.conflict).toEqual({code: 'ACTION_IN_FLIGHT', retryAfterMs: 3000});
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it.each([
+      ['no body', null],
+      ['a non-JSON body', 'busy'],
+      ['another code', conflictBody({code: 'VERSION_MISMATCH'})],
+    ])('is not an in-flight conflict with %s', async (_label, body) => {
+      const result = await callFailing(new Response(body, {status: 409}));
+
+      expect(result.error).toContain('Conflict');
+      expect(result.conflict).toBeUndefined();
+    });
+
+    it('is never read from another status', async () => {
+      const result = await callFailing(
+        new Response(conflictBody({code: 'ACTION_IN_FLIGHT'}), {status: 503})
+      );
+
+      expect(result.conflict).toBeUndefined();
+    });
+  });
+
   it('transforms thrown errors into failures', async () => {
     mockedFetch.mockRejectedValue(new Error('network down'));
 

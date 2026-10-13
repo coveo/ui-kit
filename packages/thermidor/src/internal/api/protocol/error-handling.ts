@@ -54,6 +54,9 @@ function transformHttpError(status: number, statusText: string): string {
     case 404:
       return 'Not found: The requested resource does not exist. Please verify your organization ID.';
 
+    case 409:
+      return 'Conflict: Another action is still being processed for this session.';
+
     case 429:
       return 'Rate limit exceeded: Too many requests. Please wait a moment and try again.';
 
@@ -76,4 +79,73 @@ function transformHttpError(status: number, statusText: string): string {
  */
 export function isSuccessResponse(response: Response): boolean {
   return response.ok && response.status >= 200 && response.status < 300;
+}
+
+/**
+ * The Agent Gateway's rejection of a state-changing request sent while another one is still being
+ * processed for the same session.
+ */
+export interface ActionInFlightConflict {
+  code: 'ACTION_IN_FLIGHT';
+  /** Sequence number of the action the Gateway is still processing, when it reports one. */
+  inFlightSequence?: number;
+  /** Wait the Gateway asked for through `Retry-After`, in milliseconds. */
+  retryAfterMs?: number;
+}
+
+/**
+ * Reads an `ACTION_IN_FLIGHT` conflict from a failed response. Never throws: a `409` without that
+ * code, or with an unreadable body, is not a conflict.
+ *
+ * @param response - A non-2xx fetch Response whose body has not been read
+ * @returns The conflict, or `undefined` when the response is not one
+ */
+export async function readActionInFlightConflict(
+  response: Response
+): Promise<ActionInFlightConflict | undefined> {
+  if (response.status !== 409) {
+    return undefined;
+  }
+
+  let body: unknown;
+  try {
+    body = JSON.parse(await response.text());
+  } catch {
+    return undefined;
+  }
+  if (typeof body !== 'object' || body === null) {
+    return undefined;
+  }
+
+  // Field names are provisional until the Gateway contract (COMSHOPX-1552, KIT-6255) is settled.
+  const {code, inFlightSequence} = body as Record<string, unknown>;
+  if (code !== 'ACTION_IN_FLIGHT') {
+    return undefined;
+  }
+
+  const conflict: ActionInFlightConflict = {code};
+  if (typeof inFlightSequence === 'number' && Number.isFinite(inFlightSequence)) {
+    conflict.inFlightSequence = inFlightSequence;
+  }
+  const retryAfterMs = parseRetryAfter(response.headers.get('Retry-After'));
+  if (retryAfterMs !== undefined) {
+    conflict.retryAfterMs = retryAfterMs;
+  }
+  return conflict;
+}
+
+/** Accepts both `Retry-After` forms: delta-seconds and an HTTP date. */
+function parseRetryAfter(header: string | null): number | undefined {
+  const value = header?.trim();
+  if (!value) {
+    return undefined;
+  }
+  if (/^\d+$/.test(value)) {
+    return Number(value) * 1000;
+  }
+  const date = Date.parse(value);
+  if (Number.isNaN(date)) {
+    return undefined;
+  }
+  return Math.max(0, date - Date.now());
 }

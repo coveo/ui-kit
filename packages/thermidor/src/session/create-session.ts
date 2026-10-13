@@ -155,7 +155,16 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
   readonly contracts: TContracts;
   /** Readonly observable list of turns folded from the streamed response. */
   readonly turns: readonly Turn[];
-  /** Registers a listener invoked once per change to the turn list. */
+  /**
+   * Why the last component action was dropped, or `undefined`. Set when the endpoint kept
+   * rejecting the action because another one was still being processed for this session, after
+   * the session's own bounded retries ran out. That action's dispatch settles `'failed'`, so any
+   * optimistic state tied to it is released and the last authoritative state shows again.
+   * Cleared once the next action or prompt is accepted. Changes notify {@link Session.subscribe}
+   * listeners. A conflict that recovers through retry never sets it.
+   */
+  readonly actionError: string | undefined;
+  /** Registers a listener invoked once per change to the turn list or `actionError`. */
   subscribe(listener: () => void): () => void;
   /**
    * The single consumer-facing action-dispatch entry point, wired directly as
@@ -203,6 +212,41 @@ export interface SessionActions {
 
 function isAbortError(error: unknown): boolean {
   return error instanceof Error && error.name === 'AbortError';
+}
+
+const MAX_CONFLICT_RETRIES = 5;
+const MAX_CONFLICT_WAIT_MS = 10_000;
+const CONFLICT_BASE_DELAY_MS = 250;
+
+// TODO(KIT-6255): once actions carry a sequence number, wait for `inFlightSequence` to be answered
+// rather than backing off blind.
+function conflictDelay(retry: number, retryAfterMs: number | undefined): number {
+  if (retryAfterMs !== undefined) {
+    return retryAfterMs;
+  }
+  const jitter = 0.8 + Math.random() * 0.4;
+  return CONFLICT_BASE_DELAY_MS * 2 ** retry * jitter;
+}
+
+/** Rejects with an `AbortError` on abort, so a wait is cancelled like the request it precedes. */
+function waitFor(ms: number, signal: AbortSignal): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const abort = () => {
+      clearTimeout(timer);
+      const error = new Error('Aborted');
+      error.name = 'AbortError';
+      reject(error);
+    };
+    const timer = setTimeout(() => {
+      signal.removeEventListener('abort', abort);
+      resolve();
+    }, ms);
+    if (signal.aborted) {
+      abort();
+      return;
+    }
+    signal.addEventListener('abort', abort, {once: true});
+  });
 }
 
 /**
@@ -280,12 +324,19 @@ export function createSession<TContracts extends ContractsSchema>(
   // last to ARRIVE win over a newer action sent later. Turn id and request are read at send time.
   // `hasStreamingTurn()`, not `isStreaming()`: a prompt may have opened since this was queued, and
   // `isStreaming()` would see this action's own stream.
-  const actionCoordinator = createDispatchCoordinator<A2uiAction>((action) => {
+  const actionCoordinator = createDispatchCoordinator<A2uiAction>(async (action) => {
     const turnId = store.getState().activeTurnId;
     if (!turnId || hasStreamingTurn()) {
       return;
     }
-    return executeStream(turnId, () => buildActionRequest(action));
+    const conflict = await executeStream(turnId, () => buildActionRequest(action), {
+      reportConflict: true,
+    });
+    if (conflict !== undefined) {
+      store.setState((current) => ({...current, actionError: conflict}));
+      // Thrown so the dispatch settles 'failed', releasing the optimistic state it holds.
+      throw new Error(conflict);
+    }
   });
 
   function replaceTurn(turnId: string, update: (turn: Turn) => Turn): void {
@@ -426,15 +477,16 @@ export function createSession<TContracts extends ContractsSchema>(
     });
   }
 
-  /** Takes a builder so a throwing context provider fails the turn inside the `try`. */
-  async function executeStream(
-    turnId: string,
-    buildRequest: () => CommerceRequestModel
-  ): Promise<void> {
-    const abortController = new AbortController();
-    activeAbortController = abortController;
-
-    try {
+  /**
+   * Sends the request again while the Gateway rejects it as concurrent, within a bounded budget.
+   * Rebuilds it on every attempt so context providers and session keys are read fresh.
+   */
+  async function callWithConflictRetry(
+    buildRequest: () => CommerceRequestModel,
+    signal: AbortSignal
+  ): ReturnType<typeof client.call> {
+    let waited = 0;
+    for (let retry = 0; ; retry++) {
       const result = await client.call(
         buildRequest(),
         {
@@ -442,12 +494,46 @@ export function createSession<TContracts extends ContractsSchema>(
           accessToken: config.accessToken,
           endpoint: config.endpoint,
         },
-        {signal: abortController.signal}
+        {signal}
       );
+      if (result.success || !result.conflict || retry >= MAX_CONFLICT_RETRIES) {
+        return result;
+      }
+      const delay = conflictDelay(retry, result.conflict.retryAfterMs);
+      if (waited + delay > MAX_CONFLICT_WAIT_MS) {
+        return result;
+      }
+      waited += delay;
+      await waitFor(delay, signal);
+    }
+  }
+
+  /**
+   * Takes a builder so a throwing context provider fails the turn inside the `try`. With
+   * `reportConflict`, a request the Gateway kept rejecting as concurrent leaves the turn untouched
+   * and its error is returned instead.
+   */
+  async function executeStream(
+    turnId: string,
+    buildRequest: () => CommerceRequestModel,
+    {reportConflict = false}: {reportConflict?: boolean} = {}
+  ): Promise<string | undefined> {
+    const abortController = new AbortController();
+    activeAbortController = abortController;
+
+    try {
+      const result = await callWithConflictRetry(buildRequest, abortController.signal);
 
       if (!result.success) {
+        if (reportConflict && result.conflict) {
+          return result.error;
+        }
         failTurn(turnId, result.error);
         return;
+      }
+
+      if (store.getState().actionError !== undefined) {
+        store.setState((current) => ({...current, actionError: undefined}));
       }
 
       await consumeStream(turnId, result.data.stream, abortController);
@@ -468,6 +554,7 @@ export function createSession<TContracts extends ContractsSchema>(
         activeAbortController = null;
       }
     }
+    return undefined;
   }
 
   function openTurn(turnId: string, input: TurnInput): void {
@@ -673,6 +760,9 @@ export function createSession<TContracts extends ContractsSchema>(
     contracts: config.contracts,
     get turns() {
       return store.getState().turns;
+    },
+    get actionError() {
+      return store.getState().actionError;
     },
     subscribe(listener) {
       return store.subscribe(listener);

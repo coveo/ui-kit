@@ -23,16 +23,20 @@ import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
  * indefinitely to probe the guards.
  */
 
-const callMock =
-  vi.fn<
-    (
-      request: unknown,
-      configuration: unknown,
-      options?: {signal?: AbortSignal}
-    ) => Promise<
-      {success: true; data: {stream: ReadableStream<Uint8Array>}} | {success: false; error: string}
-    >
-  >();
+const callMock = vi.fn<
+  (
+    request: unknown,
+    configuration: unknown,
+    options?: {signal?: AbortSignal}
+  ) => Promise<
+    | {success: true; data: {stream: ReadableStream<Uint8Array>}}
+    | {
+        success: false;
+        error: string;
+        conflict?: {code: 'ACTION_IN_FLIGHT'; retryAfterMs?: number};
+      }
+  >
+>();
 
 vi.mock('@/src/internal/api/unified/unified-endpoint-client.js', () => ({
   createUnifiedEndpointClient: () => ({call: callMock}),
@@ -149,6 +153,17 @@ function queueStream(): ControllableStream {
     data: {stream: controllable.stream},
   }));
   return controllable;
+}
+
+const conflictError = 'Conflict: Another action is still being processed for this session.';
+
+/** Queues an `ACTION_IN_FLIGHT` rejection as the result of the next `call`. */
+function queueConflict(retryAfterMs?: number): void {
+  callMock.mockImplementationOnce(async () => ({
+    success: false,
+    error: conflictError,
+    conflict: {code: 'ACTION_IN_FLIGHT', ...(retryAfterMs !== undefined && {retryAfterMs})},
+  }));
 }
 
 const baseConfig: SessionConfig = {
@@ -875,6 +890,234 @@ describe('createSession lifecycle', () => {
       promptStream.emit({type: 'RUN_FINISHED'});
       promptStream.close();
       await flush();
+    });
+  });
+
+  describe('Gateway rejects a request as concurrent (409 ACTION_IN_FLIGHT)', () => {
+    const actionMessage = (page: number) => ({
+      userAction: {
+        name: 'selectPage',
+        surfaceId: 'commerce-search-surface',
+        sourceComponentId: 'pagination-1',
+        context: {page},
+      },
+    });
+
+    /** Completes a first turn carrying a Pagination surface, so `selectPage` can be issued. */
+    async function seedSession() {
+      const session = createSession(baseConfig);
+      const seed = queueStream();
+      const seedTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'go'}});
+      await seed.opened;
+      seed.emit({
+        type: 'ACTIVITY_SNAPSHOT',
+        messageId: 'surface-activity',
+        activityType: 'a2ui-surface',
+        content: {
+          messages: [
+            {
+              version: 'v1.0',
+              createSurface: {
+                surfaceId: 'commerce-search-surface',
+                components: [
+                  {id: 'root', component: 'CommerceSearch'},
+                  {id: 'pagination-1', component: 'Pagination'},
+                ],
+              },
+            },
+          ],
+        },
+      });
+      seed.emit({type: 'RUN_FINISHED'});
+      seed.close();
+      await seedTurn;
+      return session;
+    }
+
+    const lastAction = () =>
+      (callMock.mock.calls[callMock.mock.calls.length - 1][0] as {action: unknown}).action;
+
+    beforeEach(() => {
+      vi.useFakeTimers({toFake: ['setTimeout', 'clearTimeout']});
+      // No jitter: retries wait exactly 250, 500, 1000, 2000 and 4000 ms.
+      vi.spyOn(Math, 'random').mockReturnValue(0.5);
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+      vi.restoreAllMocks();
+    });
+
+    it('resends a rejected action after a backoff and shows no error once it lands', async () => {
+      const session = await seedSession();
+      queueConflict();
+      const stream = queueStream();
+
+      const issued = session.actions.issue(actionMessage(2));
+      await vi.advanceTimersByTimeAsync(249);
+      expect(callMock).toHaveBeenCalledTimes(2);
+      expect(session.actions.getSnapshot().inFlight).toBe(issued.id);
+
+      await vi.advanceTimersByTimeAsync(1);
+      await stream.opened;
+      expect(callMock).toHaveBeenCalledTimes(3);
+      expect(lastAction()).toMatchObject({name: 'selectPage', context: {page: 2}});
+
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+
+      expect(await issued.settled).toBe('answered');
+      expect(session.turns[0].status).toBe('complete');
+      expect(session.turns[0].error).toBeUndefined();
+      expect(session.actionError).toBeUndefined();
+    });
+
+    it('fails the action without failing the turn once the retries run out', async () => {
+      const session = await seedSession();
+      for (let attempt = 0; attempt < 6; attempt++) {
+        queueConflict();
+      }
+      const listener = vi.fn();
+      session.subscribe(listener);
+
+      const issued = session.actions.issue(actionMessage(2));
+      await vi.advanceTimersByTimeAsync(10_000);
+
+      expect(await issued.settled).toBe('failed');
+      expect(callMock).toHaveBeenCalledTimes(7);
+      expect(session.turns[0].status).toBe('complete');
+      expect(session.turns[0].error).toBeUndefined();
+      expect(session.actionError).toBe(conflictError);
+      expect(listener).toHaveBeenCalled();
+    });
+
+    it('waits as long as the Gateway asks, within the total wait budget', async () => {
+      const session = await seedSession();
+      queueConflict(6000);
+      queueConflict(6000);
+
+      const issued = session.actions.issue(actionMessage(2));
+      await vi.advanceTimersByTimeAsync(5999);
+      expect(callMock).toHaveBeenCalledTimes(2);
+
+      await vi.advanceTimersByTimeAsync(1);
+      expect(await issued.settled).toBe('failed');
+      expect(callMock).toHaveBeenCalledTimes(3);
+    });
+
+    it('keeps queued actions behind the rejected one, in order', async () => {
+      const session = await seedSession();
+      queueConflict();
+      const streamA = queueStream();
+      const streamB = queueStream();
+
+      const issuedA = session.actions.issue(actionMessage(2));
+      const issuedB = session.actions.issue(actionMessage(3));
+      await vi.advanceTimersByTimeAsync(250);
+      await streamA.opened;
+      expect(callMock).toHaveBeenCalledTimes(3);
+      expect(lastAction()).toMatchObject({context: {page: 2}});
+
+      streamA.emit({type: 'RUN_FINISHED'});
+      streamA.close();
+      expect(await issuedA.settled).toBe('answered');
+      await streamB.opened;
+      expect(callMock).toHaveBeenCalledTimes(4);
+      expect(lastAction()).toMatchObject({context: {page: 3}});
+
+      streamB.emit({type: 'RUN_FINISHED'});
+      streamB.close();
+      expect(await issuedB.settled).toBe('answered');
+    });
+
+    it('clears the action error once the next action is accepted', async () => {
+      const session = await seedSession();
+      for (let attempt = 0; attempt < 6; attempt++) {
+        queueConflict();
+      }
+      const failed = session.actions.issue(actionMessage(2));
+      await vi.advanceTimersByTimeAsync(10_000);
+      expect(await failed.settled).toBe('failed');
+      expect(session.actionError).toBe(conflictError);
+
+      const stream = queueStream();
+      const issued = session.actions.issue(actionMessage(3));
+      await vi.advanceTimersByTimeAsync(0);
+      expect(callMock).toHaveBeenCalledTimes(8);
+      expect(session.actionError).toBeUndefined();
+
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      expect(await issued.settled).toBe('answered');
+    });
+
+    it('does not retry a 409 that is not ACTION_IN_FLIGHT', async () => {
+      const session = await seedSession();
+      callMock.mockImplementationOnce(async () => ({success: false, error: 'HTTP 409: Conflict'}));
+
+      const issued = session.actions.issue(actionMessage(2));
+      await vi.advanceTimersByTimeAsync(10_000);
+
+      await issued.settled;
+      expect(callMock).toHaveBeenCalledTimes(2);
+      expect(session.turns[0]).toMatchObject({status: 'error', error: 'HTTP 409: Conflict'});
+    });
+
+    it('stops waiting when a prompt preempts the rejected action', async () => {
+      const session = await seedSession();
+      queueConflict();
+      const issued = session.actions.issue(actionMessage(2));
+      await vi.advanceTimersByTimeAsync(0);
+      expect(callMock).toHaveBeenCalledTimes(2);
+
+      const promptStream = queueStream();
+      void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'next question'}});
+      await promptStream.opened;
+      expect(await issued.settled).toBe('cancelled');
+
+      await vi.advanceTimersByTimeAsync(10_000);
+      expect(callMock).toHaveBeenCalledTimes(3);
+      expect(session.turns[0]).toMatchObject({status: 'complete'});
+      expect(session.turns[0].error).toBeUndefined();
+
+      promptStream.emit({type: 'RUN_FINISHED'});
+      promptStream.close();
+    });
+
+    it('resends a rejected prompt while its turn keeps streaming', async () => {
+      const session = createSession(baseConfig);
+      queueConflict();
+      const stream = queueStream();
+
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+      await vi.advanceTimersByTimeAsync(0);
+      expect(session.turns[0].status).toBe('streaming');
+      expect(session.turns[0].error).toBeUndefined();
+
+      await vi.advanceTimersByTimeAsync(250);
+      await stream.opened;
+      expect(callMock).toHaveBeenCalledTimes(2);
+      expect(callMock.mock.calls[1][0]).toMatchObject({message: 'find shoes', action: null});
+
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await turn;
+      expect(session.turns[0].status).toBe('complete');
+    });
+
+    it('fails the prompt turn once the retries run out', async () => {
+      const session = createSession(baseConfig);
+      for (let attempt = 0; attempt < 6; attempt++) {
+        queueConflict();
+      }
+
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+      await vi.advanceTimersByTimeAsync(10_000);
+      await turn;
+
+      expect(callMock).toHaveBeenCalledTimes(6);
+      expect(session.turns[0]).toMatchObject({status: 'error', error: conflictError});
+      expect(session.actionError).toBeUndefined();
     });
   });
 });
