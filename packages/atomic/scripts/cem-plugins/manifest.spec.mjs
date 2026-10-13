@@ -106,4 +106,24 @@ describe('the custom elements manifest of Atomic', () => {
       }
     }
   });
+
+  it('should type and document the @mapProperty attributes', () => {
+    const mapped = elements.flatMap((element) =>
+      (element.attributes ?? [])
+        .filter((attribute) =>
+          ['depends-on', 'must-match', 'must-not-match'].includes(attribute.name)
+        )
+        .map((attribute) => ({...attribute, tagName: element.tagName}))
+    );
+    mapped.push({
+      ...findAttribute(findElement(manifest, 'atomic-result-localized-text'), 'field'),
+      tagName: 'atomic-result-localized-text',
+    });
+
+    expect(mapped.length).toBeGreaterThan(20);
+    for (const attribute of mapped) {
+      expect(attribute.type?.text, `${attribute.tagName} ${attribute.name}`).toBeTruthy();
+      expect(attribute.description, `${attribute.tagName} ${attribute.name}`).toBeTruthy();
+    }
+  });
 });
