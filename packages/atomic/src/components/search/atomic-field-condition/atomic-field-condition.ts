@@ -2,10 +2,7 @@ import type {Result, ResultTemplateCondition} from '@coveo/headless';
 import {ResultTemplatesHelpers} from '@coveo/headless';
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {
-  makeDefinedConditions,
-  makeMatchConditions,
-} from '@/src/components/common/template-controller/template-utils';
+import {makeFieldConditions} from '@/src/components/common/template-controller/template-utils';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
 import {bindings} from '@/src/decorators/bindings';
@@ -58,10 +55,7 @@ export class AtomicFieldCondition
   initialize() {}
 
   private get conditions(): ResultTemplateCondition[] {
-    return [
-      ...makeDefinedConditions(this.ifDefined, this.ifNotDefined, ResultTemplatesHelpers),
-      ...makeMatchConditions(this.mustMatch, this.mustNotMatch, ResultTemplatesHelpers),
-    ];
+    return makeFieldConditions(this, ResultTemplatesHelpers);
   }
 
   private getResult(): Result | undefined {
