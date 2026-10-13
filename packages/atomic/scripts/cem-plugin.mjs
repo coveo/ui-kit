@@ -179,74 +179,35 @@ function removeUndefinedFromType(typeText) {
 }
 
 /**
- * CEM plugin to mark BaseInitializableComponent fields as private
- * for custom elements that extend LitElement and implement BaseInitializableComponent.
+ * CEM plugin to hide the fields that InitializableComponent declares (`bindings`, `initialized`,
+ * `unsubscribeLanguage` and `error`), since they are implementation details of every component.
+ * A field backed by an attribute is a public input and is left alone.
  */
 export function hideBaseInitializableComponentFieldsPlugin() {
+  const baseInitializableComponentFields = [
+    'bindings',
+    'initialized',
+    'unsubscribeLanguage',
+    'error',
+  ];
+
   return {
     name: 'hide-base-initializable-component-fields',
-    // Run in moduleLinkPhase to process after all analysis is complete
     moduleLinkPhase({moduleDoc}) {
-      // List of BaseInitializableComponent field names that should be marked as private
-      const baseInitializableComponentFields = [
-        'bindings',
-        'initialized',
-        'unsubscribeLanguage',
-        'error',
-      ];
-
       for (const declaration of moduleDoc.declarations) {
         if (declaration.kind !== 'class') {
           continue;
         }
 
-        // Check if this class extends LitElement
-        const extendsLitElement = declaration.superclass?.name === 'LitElement';
-
-        // Check if this class implements BaseInitializableComponent
-        // The CEM analyzer might not capture TypeScript implements directly,
-        // so we'll check for the presence of the BaseInitializableComponent fields instead
-        const implementsBaseInitializable = declaration.implements?.some(
-          (impl) =>
-            impl.name === 'BaseInitializableComponent' ||
-            impl.name === 'InitializableComponent' ||
-            impl.name === 'SearchBoxSuggestionsComponent'
+        const attributeFieldNames = new Set(
+          (declaration.attributes ?? []).map((attribute) => attribute.fieldName)
         );
-
-        // Alternative: check if the class has the BaseInitializableComponent fields
-        const hasBaseInitializableFields = declaration.members?.some((member) =>
-          baseInitializableComponentFields.includes(member.name)
-        );
-
-        // Use either explicit implements or presence of the fields
-        const shouldProcess =
-          extendsLitElement && (implementsBaseInitializable || hasBaseInitializableFields);
-
-        // If both conditions are met, mark the BaseInitializableComponent fields as private
-        if (shouldProcess && declaration.members) {
-          for (const member of declaration.members) {
-            if (baseInitializableComponentFields.includes(member.name)) {
-              member.privacy = 'private';
-            }
-          }
-
-          // Also handle attributes that might correspond to these fields
-          if (declaration.attributes) {
-            const attributesToRemove = [];
-            for (let i = 0; i < declaration.attributes.length; i++) {
-              const attribute = declaration.attributes[i];
-              if (baseInitializableComponentFields.includes(attribute.fieldName)) {
-                attributesToRemove.push(i);
-              }
-            }
-            // Remove attributes in reverse order to maintain indices
-            for (let i = attributesToRemove.length - 1; i >= 0; i--) {
-              declaration.attributes.splice(attributesToRemove[i], 1);
-            }
-            // Clean up empty attributes array
-            if (declaration.attributes.length === 0) {
-              declaration.attributes = undefined;
-            }
+        for (const member of declaration.members ?? []) {
+          if (
+            baseInitializableComponentFields.includes(member.name) &&
+            !attributeFieldNames.has(member.name)
+          ) {
+            member.privacy = 'private';
           }
         }
       }
@@ -256,88 +217,83 @@ export function hideBaseInitializableComponentFieldsPlugin() {
 
 /**
  * CEM plugin to mark properties decorated with @bindStateToController as private,
- * along with the property referenced in the decorator argument.
+ * along with the controller property referenced in the decorator argument.
+ *
+ * Both are implementation details of the component that declares them, so only that class
+ * (matched by name within its module) is affected: another component may expose a public
+ * property of the same name.
  */
 export function hideBindStateToControllerFieldsPlugin() {
-  // Store fields to hide globally across all modules
-  const globalFieldsToHide = new Set();
+  const fieldsToHideByModule = new WeakMap();
 
   return {
     name: 'hide-bind-state-to-controller-fields',
-    // Run in analyzePhase to capture decorator information during analysis
-    analyzePhase({ts, node}) {
-      if (ts.isPropertyDeclaration(node)) {
-        // Check for bindStateToController decorator directly
-        const decorators = ts.getDecorators?.(node) || [];
-        for (const decorator of decorators) {
-          const expr = decorator.expression;
+    analyzePhase({ts, node, moduleDoc}) {
+      if (
+        !ts.isPropertyDeclaration(node) ||
+        !ts.isClassDeclaration(node.parent) ||
+        !node.parent.name
+      ) {
+        return;
+      }
 
-          if (ts.isCallExpression(expr)) {
-            const decoratorName = expr.expression.getText();
-            if (decoratorName === 'bindStateToController') {
-              const propName = node.name.getText();
+      for (const decorator of ts.getDecorators?.(node) ?? []) {
+        const expression = decorator.expression;
+        if (
+          !ts.isCallExpression(expression) ||
+          expression.expression.getText() !== 'bindStateToController'
+        ) {
+          continue;
+        }
 
-              // Mark the decorated property itself
-              globalFieldsToHide.add(propName);
-
-              // Mark the property referenced in the decorator argument
-              if (expr.arguments.length > 0) {
-                const firstArg = expr.arguments[0];
-                if (ts.isStringLiteral(firstArg)) {
-                  const referencedPropertyName = firstArg.text;
-                  globalFieldsToHide.add(referencedPropertyName);
-                }
-              }
-            }
-          }
+        const fieldsToHide = getOrCreateFieldsToHide(
+          fieldsToHideByModule,
+          moduleDoc,
+          node.parent.name.text
+        );
+        fieldsToHide.add(node.name.getText());
+        const [controllerProperty] = expression.arguments;
+        if (controllerProperty && ts.isStringLiteralLike(controllerProperty)) {
+          fieldsToHide.add(controllerProperty.text);
         }
       }
     },
-    // Run in moduleLinkPhase to mark the identified fields as private
     moduleLinkPhase({moduleDoc}) {
-      if (globalFieldsToHide.size === 0) {
+      const fieldsToHideByClass = fieldsToHideByModule.get(moduleDoc);
+      if (!fieldsToHideByClass) {
         return;
       }
 
       for (const declaration of moduleDoc.declarations) {
-        if (declaration.kind !== 'class') {
+        const fieldsToHide = fieldsToHideByClass.get(declaration.name);
+        if (declaration.kind !== 'class' || !fieldsToHide) {
           continue;
         }
 
-        // Check if this class extends LitElement
-        const extendsLitElement = declaration.superclass?.name === 'LitElement';
-        if (!extendsLitElement) {
-          continue;
-        }
-
-        // Mark the identified fields as private
-        if (declaration.members) {
-          for (const member of declaration.members) {
-            if (globalFieldsToHide.has(member.name)) {
-              member.privacy = 'private';
-            }
+        for (const member of declaration.members ?? []) {
+          if (fieldsToHide.has(member.name)) {
+            member.privacy = 'private';
           }
         }
 
-        // Also handle attributes that might correspond to these fields
         if (declaration.attributes) {
-          const attributesToRemove = [];
-          for (let i = 0; i < declaration.attributes.length; i++) {
-            const attribute = declaration.attributes[i];
-            if (globalFieldsToHide.has(attribute.fieldName)) {
-              attributesToRemove.push(i);
-            }
-          }
-          // Remove attributes in reverse order to maintain indices
-          for (let i = attributesToRemove.length - 1; i >= 0; i--) {
-            declaration.attributes.splice(attributesToRemove[i], 1);
-          }
-          // Clean up empty attributes array
-          if (declaration.attributes.length === 0) {
-            declaration.attributes = undefined;
-          }
+          const attributes = declaration.attributes.filter(
+            (attribute) => !fieldsToHide.has(attribute.fieldName)
+          );
+          declaration.attributes = attributes.length > 0 ? attributes : undefined;
         }
       }
     },
   };
+}
+
+function getOrCreateFieldsToHide(fieldsToHideByModule, moduleDoc, className) {
+  if (!fieldsToHideByModule.has(moduleDoc)) {
+    fieldsToHideByModule.set(moduleDoc, new Map());
+  }
+  const fieldsToHideByClass = fieldsToHideByModule.get(moduleDoc);
+  if (!fieldsToHideByClass.has(className)) {
+    fieldsToHideByClass.set(className, new Set());
+  }
+  return fieldsToHideByClass.get(className);
 }
