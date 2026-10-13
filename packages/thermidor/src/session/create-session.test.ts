@@ -934,12 +934,15 @@ describe('createSession lifecycle', () => {
       return session;
     }
 
+    // 10 retries fit the 30 s budget (27.75 s waited); an 11th wait would overrun it.
+    const exhaustingConflicts = 11;
+
     const lastAction = () =>
       (callMock.mock.calls[callMock.mock.calls.length - 1][0] as {action: unknown}).action;
 
     beforeEach(() => {
       vi.useFakeTimers({toFake: ['setTimeout', 'clearTimeout']});
-      // No jitter: retries wait exactly 250, 500, 1000, 2000 and 4000 ms.
+      // No jitter: retries wait exactly 250, 500, 1000, 2000, then 4000 ms each.
       vi.spyOn(Math, 'random').mockReturnValue(0.5);
     });
 
@@ -974,35 +977,43 @@ describe('createSession lifecycle', () => {
 
     it('fails the action without failing the turn once the retries run out', async () => {
       const session = await seedSession();
-      for (let attempt = 0; attempt < 6; attempt++) {
+      for (let attempt = 0; attempt < exhaustingConflicts; attempt++) {
         queueConflict();
       }
       const listener = vi.fn();
       session.subscribe(listener);
 
       const issued = session.actions.issue(actionMessage(2));
-      await vi.advanceTimersByTimeAsync(10_000);
+      await vi.advanceTimersByTimeAsync(30_000);
 
       expect(await issued.settled).toBe('failed');
-      expect(callMock).toHaveBeenCalledTimes(7);
+      expect(callMock).toHaveBeenCalledTimes(1 + exhaustingConflicts);
       expect(session.turns[0].status).toBe('complete');
       expect(session.turns[0].error).toBeUndefined();
       expect(session.actionError).toBe(conflictError);
       expect(listener).toHaveBeenCalled();
     });
 
-    it('waits as long as the Gateway asks, within the total wait budget', async () => {
+    it('waits as long as the Gateway asks, up to the longest single wait', async () => {
       const session = await seedSession();
-      queueConflict(6000);
-      queueConflict(6000);
+      queueConflict(2000);
+      queueConflict(60_000);
+      const stream = queueStream();
 
       const issued = session.actions.issue(actionMessage(2));
-      await vi.advanceTimersByTimeAsync(5999);
+      await vi.advanceTimersByTimeAsync(1999);
       expect(callMock).toHaveBeenCalledTimes(2);
-
       await vi.advanceTimersByTimeAsync(1);
-      expect(await issued.settled).toBe('failed');
       expect(callMock).toHaveBeenCalledTimes(3);
+
+      await vi.advanceTimersByTimeAsync(3999);
+      expect(callMock).toHaveBeenCalledTimes(3);
+      await vi.advanceTimersByTimeAsync(1);
+      expect(callMock).toHaveBeenCalledTimes(4);
+
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      expect(await issued.settled).toBe('answered');
     });
 
     it('keeps queued actions behind the rejected one, in order', async () => {
@@ -1032,18 +1043,18 @@ describe('createSession lifecycle', () => {
 
     it('clears the action error once the next action is accepted', async () => {
       const session = await seedSession();
-      for (let attempt = 0; attempt < 6; attempt++) {
+      for (let attempt = 0; attempt < exhaustingConflicts; attempt++) {
         queueConflict();
       }
       const failed = session.actions.issue(actionMessage(2));
-      await vi.advanceTimersByTimeAsync(10_000);
+      await vi.advanceTimersByTimeAsync(30_000);
       expect(await failed.settled).toBe('failed');
       expect(session.actionError).toBe(conflictError);
 
       const stream = queueStream();
       const issued = session.actions.issue(actionMessage(3));
       await vi.advanceTimersByTimeAsync(0);
-      expect(callMock).toHaveBeenCalledTimes(8);
+      expect(callMock).toHaveBeenCalledTimes(2 + exhaustingConflicts);
       expect(session.actionError).toBeUndefined();
 
       stream.emit({type: 'RUN_FINISHED'});
@@ -1056,7 +1067,7 @@ describe('createSession lifecycle', () => {
       callMock.mockImplementationOnce(async () => ({success: false, error: 'HTTP 409: Conflict'}));
 
       const issued = session.actions.issue(actionMessage(2));
-      await vi.advanceTimersByTimeAsync(10_000);
+      await vi.advanceTimersByTimeAsync(30_000);
 
       await issued.settled;
       expect(callMock).toHaveBeenCalledTimes(2);
@@ -1075,7 +1086,7 @@ describe('createSession lifecycle', () => {
       await promptStream.opened;
       expect(await issued.settled).toBe('cancelled');
 
-      await vi.advanceTimersByTimeAsync(10_000);
+      await vi.advanceTimersByTimeAsync(30_000);
       expect(callMock).toHaveBeenCalledTimes(3);
       expect(session.turns[0]).toMatchObject({status: 'complete'});
       expect(session.turns[0].error).toBeUndefined();
@@ -1107,15 +1118,15 @@ describe('createSession lifecycle', () => {
 
     it('fails the prompt turn once the retries run out', async () => {
       const session = createSession(baseConfig);
-      for (let attempt = 0; attempt < 6; attempt++) {
+      for (let attempt = 0; attempt < exhaustingConflicts; attempt++) {
         queueConflict();
       }
 
       const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
-      await vi.advanceTimersByTimeAsync(10_000);
+      await vi.advanceTimersByTimeAsync(30_000);
       await turn;
 
-      expect(callMock).toHaveBeenCalledTimes(6);
+      expect(callMock).toHaveBeenCalledTimes(exhaustingConflicts);
       expect(session.turns[0]).toMatchObject({status: 'error', error: conflictError});
       expect(session.actionError).toBeUndefined();
     });

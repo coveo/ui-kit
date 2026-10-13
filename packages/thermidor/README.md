@@ -91,7 +91,7 @@ The Gateway rejects a state-changing request (an action or a prompt) with `409 C
 
 - The request is sent again after a backoff (250 ms doubling, with jitter), or after the delay the Gateway's `Retry-After` header asks for. Browsers hide that header from cross-origin scripts unless the platform edge exposes it, so the backoff is the usual path. It is rebuilt each time, so context providers are read fresh. It keeps its place at the head of the queue meanwhile, so later actions stay behind it in order.
 - A conflict that recovers within the budget shows nothing: the turn stays as it was and no error is set.
-- The budget is 5 retries or 10 seconds of waiting, whichever comes first. When it runs out on an **action**, the dispatch settles `'failed'`, which releases its optimistic state so the last authoritative state shows again, and `session.actionError` is set. It is cleared once the next action or prompt is accepted. When it runs out on a **prompt**, the prompt's turn becomes `error`, retryable with `retry(turnId)`.
+- The budget is 30 seconds of waiting, with no single wait longer than 4 seconds. It is that long because the Gateway can't yet cancel an agent run whose client went away: after `cancel()` or a preempting prompt, the old run keeps the session busy until its next event or its end. When the budget runs out on an **action**, the dispatch settles `'failed'`, which releases its optimistic state so the last authoritative state shows again, and `session.actionError` is set. It is cleared once the next action or prompt is accepted. When it runs out on a **prompt**, the prompt's turn becomes `error`, retryable with `retry(turnId)`.
 - A `submitPrompt` or `cancel()` during the backoff stops the wait.
 
 ## The Turn / TurnResponse model

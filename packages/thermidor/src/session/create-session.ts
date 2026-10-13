@@ -214,18 +214,19 @@ function isAbortError(error: unknown): boolean {
   return error instanceof Error && error.name === 'AbortError';
 }
 
-const MAX_CONFLICT_RETRIES = 5;
-const MAX_CONFLICT_WAIT_MS = 10_000;
+// Long enough for an aborted agent run to wind down: the Gateway can't cancel it upstream, so it
+// keeps the session's slot until the run's next event or its end.
+// TODO(KIT-6261): lower once the Gateway aborts the run, and frees the slot, on client disconnect.
+const MAX_CONFLICT_WAIT_MS = 30_000;
+const MAX_CONFLICT_DELAY_MS = 4_000;
 const CONFLICT_BASE_DELAY_MS = 250;
 
 // TODO(KIT-6255): once actions carry a sequence number, wait for `inFlightSequence` to be answered
 // rather than backing off blind.
 function conflictDelay(retry: number, retryAfterMs: number | undefined): number {
-  if (retryAfterMs !== undefined) {
-    return retryAfterMs;
-  }
   const jitter = 0.8 + Math.random() * 0.4;
-  return CONFLICT_BASE_DELAY_MS * 2 ** retry * jitter;
+  const delay = retryAfterMs ?? CONFLICT_BASE_DELAY_MS * 2 ** retry * jitter;
+  return Math.min(delay, MAX_CONFLICT_DELAY_MS);
 }
 
 /** Rejects with an `AbortError` on abort, so a wait is cancelled like the request it precedes. */
@@ -496,7 +497,7 @@ export function createSession<TContracts extends ContractsSchema>(
         },
         {signal}
       );
-      if (result.success || !result.conflict || retry >= MAX_CONFLICT_RETRIES) {
+      if (result.success || !result.conflict) {
         return result;
       }
       const delay = conflictDelay(retry, result.conflict.retryAfterMs);
