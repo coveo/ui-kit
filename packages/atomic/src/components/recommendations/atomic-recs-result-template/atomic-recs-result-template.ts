@@ -6,10 +6,7 @@ import {
 import {LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {RecsResultTemplateController} from '@/src/components/common/result-templates/recs-result-template-controller';
-import {
-  makeDefinedConditions,
-  makeMatchConditions,
-} from '@/src/components/common/template-controller/template-utils';
+import {makeFieldConditions} from '@/src/components/common/template-controller/template-utils';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {mapProperty} from '@/src/utils/props-utils';
 import '@/src/components/common/atomic-component-error/atomic-component-error';
@@ -92,10 +89,10 @@ export class AtomicRecsResultTemplate extends LitElement implements LitElementWi
 
   connectedCallback() {
     super.connectedCallback();
-    this.recsResultTemplateController.matchConditions = [
-      ...makeDefinedConditions(this.ifDefined, this.ifNotDefined, ResultTemplatesHelpers),
-      ...makeMatchConditions(this.mustMatch, this.mustNotMatch, ResultTemplatesHelpers),
-    ];
+    this.recsResultTemplateController.matchConditions = makeFieldConditions(
+      this,
+      ResultTemplatesHelpers
+    );
   }
 
   @errorGuard()
