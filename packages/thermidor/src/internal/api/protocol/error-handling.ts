@@ -86,16 +86,19 @@ export function isSuccessResponse(response: Response): boolean {
  * processed for the same session.
  */
 export interface ActionInFlightConflict {
-  code: 'ACTION_IN_FLIGHT';
   /** Sequence number of the action the Gateway is still processing, when it reports one. */
   inFlightSequence?: number;
-  /** Wait the Gateway asked for through `Retry-After`, in milliseconds. */
+  /**
+   * Wait the Gateway asked for through `Retry-After`, in milliseconds. Usually absent in a browser:
+   * the header is not exposed to cross-origin scripts unless the edge lists it in
+   * `Access-Control-Expose-Headers`, and the caller then falls back to its own backoff.
+   */
   retryAfterMs?: number;
 }
 
 /**
- * Reads an `ACTION_IN_FLIGHT` conflict from a failed response. Never throws: a `409` without that
- * code, or with an unreadable body, is not a conflict.
+ * Reads an `AGENT:ACTION_IN_FLIGHT` conflict from a failed response's error envelope. Never
+ * throws: a `409` with another `errorCode`, or with an unreadable body, is not a conflict.
  *
  * @param response - A non-2xx fetch Response whose body has not been read
  * @returns The conflict, or `undefined` when the response is not one
@@ -117,13 +120,13 @@ export async function readActionInFlightConflict(
     return undefined;
   }
 
-  // Field names are provisional until the Gateway contract (COMSHOPX-1552, KIT-6255) is settled.
-  const {code, inFlightSequence} = body as Record<string, unknown>;
-  if (code !== 'ACTION_IN_FLIGHT') {
+  // `inFlightSequence` is not sent yet: it is provisional until KIT-6255 lands.
+  const {errorCode, inFlightSequence} = body as Record<string, unknown>;
+  if (errorCode !== 'AGENT:ACTION_IN_FLIGHT') {
     return undefined;
   }
 
-  const conflict: ActionInFlightConflict = {code};
+  const conflict: ActionInFlightConflict = {};
   if (typeof inFlightSequence === 'number' && Number.isFinite(inFlightSequence)) {
     conflict.inFlightSequence = inFlightSequence;
   }

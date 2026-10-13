@@ -87,9 +87,9 @@ The Agent Gateway processes one state-changing request per session at a time, an
 
 ### Concurrency conflicts
 
-The Gateway rejects a state-changing request (an action or a prompt) with `409 Conflict` and the code `ACTION_IN_FLIGHT` when it is still processing another one for the session, for example an action a prompt preempted on the client, or a request from another tab. Thermidor handles it:
+The Gateway rejects a state-changing request (an action or a prompt) with `409 Conflict` and the `errorCode` `AGENT:ACTION_IN_FLIGHT` when it is still processing another one for the session, for example an action a prompt preempted on the client, or a request from another tab. A request sent the moment a turn's `RUN_FINISHED` arrives can also get one, because the Gateway commits the turn a few milliseconds later; the first retry absorbs it. Thermidor handles it:
 
-- The request is sent again after a backoff (250 ms doubling, with jitter), or after the delay the Gateway's `Retry-After` header asks for. It is rebuilt each time, so context providers are read fresh. It keeps its place at the head of the queue meanwhile, so later actions stay behind it in order.
+- The request is sent again after a backoff (250 ms doubling, with jitter), or after the delay the Gateway's `Retry-After` header asks for. Browsers hide that header from cross-origin scripts unless the platform edge exposes it, so the backoff is the usual path. It is rebuilt each time, so context providers are read fresh. It keeps its place at the head of the queue meanwhile, so later actions stay behind it in order.
 - A conflict that recovers within the budget shows nothing: the turn stays as it was and no error is set.
 - The budget is 5 retries or 10 seconds of waiting, whichever comes first. When it runs out on an **action**, the dispatch settles `'failed'`, which releases its optimistic state so the last authoritative state shows again, and `session.actionError` is set. It is cleared once the next action or prompt is accepted. When it runs out on a **prompt**, the prompt's turn becomes `error`, retryable with `retry(turnId)`.
 - A `submitPrompt` or `cancel()` during the backoff stops the wait.

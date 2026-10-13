@@ -33,7 +33,7 @@ const callMock = vi.fn<
     | {
         success: false;
         error: string;
-        conflict?: {code: 'ACTION_IN_FLIGHT'; retryAfterMs?: number};
+        conflict?: {retryAfterMs?: number};
       }
   >
 >();
@@ -157,12 +157,12 @@ function queueStream(): ControllableStream {
 
 const conflictError = 'Conflict: Another action is still being processed for this session.';
 
-/** Queues an `ACTION_IN_FLIGHT` rejection as the result of the next `call`. */
+/** Queues an `AGENT:ACTION_IN_FLIGHT` rejection as the result of the next `call`. */
 function queueConflict(retryAfterMs?: number): void {
   callMock.mockImplementationOnce(async () => ({
     success: false,
     error: conflictError,
-    conflict: {code: 'ACTION_IN_FLIGHT', ...(retryAfterMs !== undefined && {retryAfterMs})},
+    conflict: retryAfterMs === undefined ? {} : {retryAfterMs},
   }));
 }
 
@@ -893,7 +893,7 @@ describe('createSession lifecycle', () => {
     });
   });
 
-  describe('Gateway rejects a request as concurrent (409 ACTION_IN_FLIGHT)', () => {
+  describe('Gateway rejects a request as concurrent (409 AGENT:ACTION_IN_FLIGHT)', () => {
     const actionMessage = (page: number) => ({
       userAction: {
         name: 'selectPage',
@@ -1051,7 +1051,7 @@ describe('createSession lifecycle', () => {
       expect(await issued.settled).toBe('answered');
     });
 
-    it('does not retry a 409 that is not ACTION_IN_FLIGHT', async () => {
+    it('does not retry a 409 that is not AGENT:ACTION_IN_FLIGHT', async () => {
       const session = await seedSession();
       callMock.mockImplementationOnce(async () => ({success: false, error: 'HTTP 409: Conflict'}));
 

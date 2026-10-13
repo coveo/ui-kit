@@ -287,40 +287,54 @@ describe('UnifiedEndpointClient', () => {
       return result;
     };
 
+    const gatewayError = {
+      errorCode: 'AGENT:ACTION_IN_FLIGHT',
+      message: 'Another turn is in progress for this session.',
+      requestId: 'request-1',
+      documentationUrl: 'https://docs.coveo.com/en/errors/agent/action_in_flight',
+    };
+
     const conflictBody = (body: unknown) =>
       typeof body === 'string' ? body : JSON.stringify(body);
 
-    it('reads an ACTION_IN_FLIGHT conflict and its in-flight sequence', async () => {
+    it('reads an AGENT:ACTION_IN_FLIGHT conflict and its in-flight sequence', async () => {
       const result = await callFailing(
-        new Response(conflictBody({code: 'ACTION_IN_FLIGHT', inFlightSequence: 7}), {status: 409})
+        new Response(conflictBody({...gatewayError, inFlightSequence: 7}), {status: 409})
       );
 
       expect(result.error).toContain('Conflict');
-      expect(result.conflict).toEqual({code: 'ACTION_IN_FLIGHT', inFlightSequence: 7});
+      expect(result.conflict).toEqual({inFlightSequence: 7});
+    });
+
+    it('leaves the wait to the caller when Retry-After is not readable', async () => {
+      // Browsers hide Retry-After from cross-origin scripts unless the edge exposes it.
+      const result = await callFailing(new Response(conflictBody(gatewayError), {status: 409}));
+
+      expect(result.conflict).toEqual({});
     });
 
     it('reads Retry-After given in seconds', async () => {
       const result = await callFailing(
-        new Response(conflictBody({code: 'ACTION_IN_FLIGHT'}), {
+        new Response(conflictBody(gatewayError), {
           status: 409,
           headers: {'Retry-After': '2'},
         })
       );
 
-      expect(result.conflict).toEqual({code: 'ACTION_IN_FLIGHT', retryAfterMs: 2000});
+      expect(result.conflict).toEqual({retryAfterMs: 2000});
     });
 
     it('reads Retry-After given as an HTTP date', async () => {
       vi.useFakeTimers({now: new Date('2026-10-13T12:00:00Z'), toFake: ['Date']});
       try {
         const result = await callFailing(
-          new Response(conflictBody({code: 'ACTION_IN_FLIGHT'}), {
+          new Response(conflictBody(gatewayError), {
             status: 409,
             headers: {'Retry-After': 'Tue, 13 Oct 2026 12:00:03 GMT'},
           })
         );
 
-        expect(result.conflict).toEqual({code: 'ACTION_IN_FLIGHT', retryAfterMs: 3000});
+        expect(result.conflict).toEqual({retryAfterMs: 3000});
       } finally {
         vi.useRealTimers();
       }
@@ -329,7 +343,8 @@ describe('UnifiedEndpointClient', () => {
     it.each([
       ['no body', null],
       ['a non-JSON body', 'busy'],
-      ['another code', conflictBody({code: 'VERSION_MISMATCH'})],
+      ['another error code', conflictBody({...gatewayError, errorCode: 'AGENT:VERSION_MISMATCH'})],
+      ['the code in another field', conflictBody({code: 'AGENT:ACTION_IN_FLIGHT'})],
     ])('is not an in-flight conflict with %s', async (_label, body) => {
       const result = await callFailing(new Response(body, {status: 409}));
 
@@ -338,9 +353,7 @@ describe('UnifiedEndpointClient', () => {
     });
 
     it('is never read from another status', async () => {
-      const result = await callFailing(
-        new Response(conflictBody({code: 'ACTION_IN_FLIGHT'}), {status: 503})
-      );
+      const result = await callFailing(new Response(conflictBody(gatewayError), {status: 503}));
 
       expect(result.conflict).toBeUndefined();
     });
