@@ -2,6 +2,7 @@ import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {Product} from '@coveo/thermidor-schema';
 import {ProductListPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {useStale} from '../pending-dispatch.js';
+import {ProductBadges} from '../ProductBadges/ProductBadges.js';
 import freshness from '../result-freshness.module.css';
 import styles from './ProductList.module.css';
 
@@ -30,6 +31,9 @@ function ProductCard({product}: {product: Product}) {
         ) : (
           <div className={styles.imagePlaceholder} aria-label="No image available" />
         )}
+        <div className={styles.badges}>
+          <ProductBadges placements={product.badgePlacements} />
+        </div>
       </div>
       <div className={styles.content}>
         {brand && <span className={styles.brand}>{brand}</span>}
