@@ -72,7 +72,7 @@
     "web:cdn": "node ./scripts/start-cdn.mjs",
     "e2e": "playwright test",
     "e2e:csp": "node ./csp/test.mjs || exit 0",
-    "test": "pnpm run test:lit",
+    "test": "vitest run --project=atomic-default --project=storybookPure",
     "test:stencil": "stencil test --spec -- src/utils/initialization-utils.spec.ts",
     "test:lit": "vitest run --project=atomic-default",
     "test:watch": "vitest --project=atomic-default",
