@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {removeUndefinedTypePlugin} from '../cem-plugin.mjs';
+import {removeUndefinedTypePlugin} from './remove-undefined-type.mjs';
 import {analyze, findAttribute, findElement, findMember, litElement} from './testing/analyze.mjs';
 
 const plugins = () => [removeUndefinedTypePlugin()];

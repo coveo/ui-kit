@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {mapPropertyPlugin} from '../cem-plugin.mjs';
+import {mapPropertyPlugin} from './map-property.mjs';
 import {analyze, findAttribute, findElement, litElement} from './testing/analyze.mjs';
 
 const plugins = () => [mapPropertyPlugin()];
