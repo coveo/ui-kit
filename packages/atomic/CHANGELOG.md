@@ -1,3 +1,25 @@
+## 3.63.0
+
+### Minor Changes
+
+- [#8595](https://github.com/coveo/ui-kit/pull/8595) [`e9e18a0`](https://github.com/coveo/ui-kit/commit/e9e18a058514f4d4fb91838a4a82ff507026ad0c) - Add a `localize-with-country` property to `atomic-commerce-interface` and `atomic-commerce-recommendation-interface`. When set, the interface localizes with the country of the commerce context as well as its language, for example `fr-CA` rather than `fr`, so number, currency, and date formatting follow the country: with `en` and `CA`, a CAD price renders as `$1,000.10` rather than `CA$1,000.10`.
+
+- [#8566](https://github.com/coveo/ui-kit/pull/8566) [`289a799`](https://github.com/coveo/ui-kit/commit/289a7999ef3b6e80d414a7a420147b041d8b127b) - Support dayjs [localized formats](https://day.js.org/docs/en/display/format#localized-formats) such as `L`, `LL`, and `LLL` in `atomic-result-date`. They follow the interface `language`, so with `language="en-CA"`, `format="L"` renders `2026-09-30` where `en-US` renders `09/30/2026`. An unescaped `L`, `l`, or `LT` in a custom `format` is now read as a localized format, so wrap literal text in `[]`. Interfaces now also wait for the date locale of their `language` before rendering, so dates no longer render in the previous locale after a language change.
+
+### Patch Changes
+
+- [#8573](https://github.com/coveo/ui-kit/pull/8573) [`0a0513b`](https://github.com/coveo/ui-kit/commit/0a0513b18af91573e512c21f83080f6f9bb4238f) - Fix `atomic-result-date` with `relative-time` for dates 2 to 6 days ahead, which rendered a garbled "next week" label in 15 languages, such as `Näc81te Woc8e` in German. Like in English and French, they now render the weekday, such as `Freitag`.
+
+- [#8592](https://github.com/coveo/ui-kit/pull/8592) [`f2da474`](https://github.com/coveo/ui-kit/commit/f2da474307e14aa3637f2eeb9f2f4178f7558dcb) - Fix `atomic-result-date` when the interface `language` has a region. With `relative-time`, a regional language such as `fr-CA` or `pt-BR` rendered English labels such as `Today at 9:32 AM` and ignored `format`. A lowercase region such as `fr-ca`, or a locale with a script such as `zh-Hant-TW`, now also loads its regional date locale instead of falling back to the language.
+
+- [#8597](https://github.com/coveo/ui-kit/pull/8597) [`fd8290e`](https://github.com/coveo/ui-kit/commit/fd8290ec41cde88dab9fae4207c62fc37946cdf3) - Load Atomic's regional translations again when the interface `language` has a region, as before 3.61.0: `es-ES`, `pt-BR`, `zh-CN`, and `zh-TW` interfaces no longer fall back to the `es`, `pt`, and `zh` strings. Register customizations for a regional interface under its regional code (for example `pt-BR`), because it takes precedence over the base language. Facet search now also resolves field captions through the same language fallbacks as the displayed captions, so captions registered under `en` apply to an `en-CA` interface.
+
+- [#8567](https://github.com/coveo/ui-kit/pull/8567) [`d7e02f0`](https://github.com/coveo/ui-kit/commit/d7e02f0c6470e8c9997a36a22fe3524cb3410ba4) - Keep `atomic-pager`, `atomic-commerce-pager` and `atomic-insight-pager` on a single row on narrow viewports by showing fewer page buttons when they don't fit. Move the choices of `atomic-results-per-page` and `atomic-commerce-products-per-page` below their label when they don't fit on one line.
+
+- Updated dependencies [[`ef62433`](https://github.com/coveo/ui-kit/commit/ef62433af99d60c4aac4edf94c273ceba9108e96)]:
+  - @coveo/headless@3.57.3
+  - @coveo/atomic-legacy@0.1.8
+
 ## 3.62.0
 
 ### Minor Changes

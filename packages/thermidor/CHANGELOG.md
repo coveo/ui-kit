@@ -1,5 +1,17 @@
 # @coveo/thermidor
 
+## 0.4.0
+
+### Minor Changes
+
+- [#8550](https://github.com/coveo/ui-kit/pull/8550) [`dd504cb`](https://github.com/coveo/ui-kit/commit/dd504cb2eabb6f2124982599f6cc301833cdf016) - Add a framework-agnostic optimistic dispatch core so a consumer can reflect a user's intention on screen before the producer answers. New public exports: a dispatch coordinator that sees every dispatch and publishes a single in-flight fact, a dispatch tracker that counts outstanding dispatches per region, an optimistic-value controller that holds a gesture's intended value until its producer catches up, and a per-region stale-scope. The session now exposes an `actions` surface for issuing these dispatches, including a `withholdQueued` that drops the still-waiting gestures (each settled `withheld`) when a prompt turn opens, since the prompt rebuilds the state those gestures were writing. A submitted prompt now PREEMPTS instead of being ignored: it opens its turn immediately, dropping the queued gestures (`withholdQueued`) and cancelling the one in flight (`cancelInFlight`, settled `cancelled`) so its superseded response never touches the surface — a prompt is a new intention that outranks the gestures it makes moot.
+
+- [#8581](https://github.com/coveo/ui-kit/pull/8581) [`94b1cb4`](https://github.com/coveo/ui-kit/commit/94b1cb479df253289701d9168b05f3ab991bbb60) - **Breaking:** `Session.submit({prompt})` is removed. Use `session.dispatchAction({name: 'submitPrompt', payload: {prompt}})` instead.
+
+### Patch Changes
+
+- [#8604](https://github.com/coveo/ui-kit/pull/8604) [`90c45e6`](https://github.com/coveo/ui-kit/commit/90c45e69f2c9ad3dc9d848a74216e62eeb02e4c8) - A context provider that throws while a request is built now fails the turn instead of leaving the session stuck on a `streaming` turn that ignores every later prompt and action.
+
 ## 0.3.0
 
 ### Minor Changes
