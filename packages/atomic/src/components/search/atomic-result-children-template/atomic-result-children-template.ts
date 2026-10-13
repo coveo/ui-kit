@@ -3,10 +3,7 @@ import {ResultTemplatesHelpers} from '@coveo/headless';
 import {LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ResultTemplateController} from '@/src/components/common/result-templates/result-template-controller';
-import {
-  makeDefinedConditions,
-  makeMatchConditions,
-} from '@/src/components/common/template-controller/template-utils';
+import {makeFieldConditions} from '@/src/components/common/template-controller/template-utils';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {mapProperty} from '@/src/utils/props-utils';
 import '@/src/components/common/atomic-component-error/atomic-component-error';
@@ -81,10 +78,10 @@ export class AtomicResultChildrenTemplate extends LitElement implements LitEleme
 
   connectedCallback() {
     super.connectedCallback();
-    this.resultTemplateController.matchConditions = [
-      ...makeDefinedConditions(this.ifDefined, this.ifNotDefined, ResultTemplatesHelpers),
-      ...makeMatchConditions(this.mustMatch, this.mustNotMatch, ResultTemplatesHelpers),
-    ];
+    this.resultTemplateController.matchConditions = makeFieldConditions(
+      this,
+      ResultTemplatesHelpers
+    );
   }
 
   @errorGuard()
