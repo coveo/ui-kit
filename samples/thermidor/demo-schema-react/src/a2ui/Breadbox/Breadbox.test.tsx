@@ -171,6 +171,88 @@ describe('Breadbox', () => {
   });
 });
 
+describe('Breadbox focus', () => {
+  const PENDING = () => new Promise<void>(() => {});
+
+  function mountWithResults(facets: BreadboxFacet[]) {
+    return mountSurface({
+      component: {component: 'LayoutStack', direction: 'column', children: ['breadbox', 'list']},
+      children: [
+        {id: 'breadbox', component: 'Breadbox', facets: {path: '/state/breadbox/facets'}},
+        {id: 'list', component: 'ProductList', products: {path: '/state/list/products'}},
+      ],
+      dataModel: [
+        {path: '/state/breadbox/facets', value: facets},
+        {
+          path: '/state/list/products',
+          value: [
+            {
+              permanentid: 'p1',
+              ec_name: 'Trail Shoes',
+              ec_brand: 'Nike',
+              ec_price: 99.99,
+              additionalFields: {},
+            },
+          ],
+        },
+      ],
+      dispatchGate: PENDING,
+    });
+  }
+
+  async function clickWithFocus(name: RegExp) {
+    await waitFor(() => expect(removeButton(name)).toBeDefined());
+    const button = removeButton(name);
+    button.focus();
+    fireEvent.click(button);
+  }
+
+  it('moves focus to the next value when a focused value is removed', async () => {
+    mountBreadbox([BRAND, PRICE], PENDING);
+
+    await clickWithFocus(/Brand: Billabong/);
+    await waitFor(() => expect(document.activeElement).toBe(removeButton(/Brand: Aqua Marina/)));
+  });
+
+  it('moves focus to the clear-all button when the last value is removed', async () => {
+    mountBreadbox([BRAND, PRICE], PENDING);
+
+    await clickWithFocus(/Price: /);
+    await waitFor(() =>
+      expect(document.activeElement).toBe(screen.getByRole('button', {name: 'Clear all filters'}))
+    );
+  });
+
+  it('moves focus to the results when the breadbox empties', async () => {
+    mountWithResults([PRICE]);
+
+    await clickWithFocus(/Price: /);
+    await waitFor(() =>
+      expect(document.activeElement).toBe(screen.getByRole('list', {name: 'Product list'}))
+    );
+  });
+
+  it('moves focus to the results when everything is cleared', async () => {
+    mountWithResults([BRAND, PRICE]);
+
+    await clickWithFocus(/Clear all filters/);
+    await waitFor(() =>
+      expect(document.activeElement).toBe(screen.getByRole('list', {name: 'Product list'}))
+    );
+  });
+
+  it('leaves focus alone when the removed value did not have it', async () => {
+    mountBreadbox([BRAND, PRICE], PENDING);
+
+    await waitFor(() => expect(removeButton(/Brand: Billabong/)).toBeDefined());
+    fireEvent.click(removeButton(/Brand: Billabong/));
+    await waitFor(() =>
+      expect(screen.queryByRole('button', {name: /Brand: Billabong/})).toBeNull()
+    );
+    expect(document.activeElement).toBe(document.body);
+  });
+});
+
 describe('limitPath', () => {
   it('keeps a short path whole', () => {
     expect(limitPath(['Water Sports', 'Surfing'])).toBe('Water Sports / Surfing');

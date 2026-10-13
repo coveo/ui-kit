@@ -62,7 +62,7 @@
 
 .excluded .label,
 .excluded .value {
-  color: var(--color-error);
+  color: var(--color-error-text);
   text-decoration: line-through;
 }
 
