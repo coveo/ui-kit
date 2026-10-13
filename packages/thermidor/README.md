@@ -75,24 +75,18 @@ It is **fire-and-forget**: the returned Promise always resolves and never reject
 
 ### The action queue
 
-The Agent Gateway processes one state-changing request per session at a time, and each response carries whole-node snapshots, so overlapping requests would let the last one to arrive win. Thermidor therefore owns the queuing; integrators don't write any.
+Thermidor sends one component action at a time per session; later ones wait their turn in order, so integrators never queue anything themselves.
 
-- **What is queued**: every component action, whether sent through `dispatchAction` or `actions.issue`, goes through one per-session FIFO with at most one action in flight. The next action is sent only once the in-flight one's response has ended or it has failed. A purely local presentation change (expanding a panel, scrolling a carousel) never dispatches, so it never queues. Thermidor owns this rule; neither the schema nor the Gateway declares it.
-- **Optimistic updates**: `actions.issue(message, intent)` returns an `IssuedDispatch` synchronously, before anything is sent, so local state can be tied to its `id` at once. `createOptimisticValue` and `createStaleScopes` hold that state until the dispatch settles, and its `settled` / `onSettled` outcome tells why it ended.
-- **Coalescing**: an optional `CoalesceIntent` names the gesture's `slot` and `policy`. An `absolute` write (for example `selectPage`) supersedes queued entries in the same slot (`'superseded'`). An `involutive` gesture (for example `toggleSelect`) issued while its twin is still queued cancels both (`'cancelled'`). A `dependent` gesture drops nothing. A gesture whose state the in-flight action already produces is not sent (`'satisfied'`).
-- **Pending state**: `actions.getSnapshot().inFlight` is the id of the action in flight, and `actions.subscribe` notifies when it changes, for loading indicators. `createDispatchTracker` wraps the same source.
-- **Prompts preempt**: a `submitPrompt` withholds every queued action (`'withheld'`) and cancels the one in flight (`'cancelled'`), since the prompt rebuilds the state those actions were refining. While a prompt turn is streaming, new actions are withheld.
-- **Failure**: an action whose request could not be built or sent settles `'failed'` and the queue moves on. An HTTP error response currently fails the active turn instead. See [Concurrency conflicts](#concurrency-conflicts) for the Gateway's busy response.
-- **Persistence**: the queue is in memory only. Reloading the page drops queued actions; `serialize()` never includes them.
+- `actions.getSnapshot().inFlight` is the action being processed, and `actions.subscribe` notifies when it changes, for loading indicators.
+- A `submitPrompt` drops queued actions and cancels the one in flight. While a prompt turn is streaming, new actions are dropped.
+- The queue is in memory only: reloading the page drops queued actions.
 
 ### Concurrency conflicts
 
-The Gateway rejects a state-changing request (an action or a prompt) with `409 Conflict` and the `errorCode` `AGENT:ACTION_IN_FLIGHT` when it is still processing another one for the session, for example an action a prompt preempted on the client, or a request from another tab. A request sent the moment a turn's `RUN_FINISHED` arrives can also get one, because the Gateway commits the turn a few milliseconds later; the first retry absorbs it. Thermidor handles it:
+When the Gateway is still busy with another request for the session, it rejects the new one (`409`, `AGENT:ACTION_IN_FLIGHT`). Thermidor retries automatically for up to 30 seconds, and a conflict that recovers shows nothing. If it gives up:
 
-- The request is sent again after a backoff (250 ms doubling, with jitter), or after the delay the Gateway's `Retry-After` header asks for. Browsers hide that header from cross-origin scripts unless the platform edge exposes it, so the backoff is the usual path. It is rebuilt each time, so context providers are read fresh. It keeps its place at the head of the queue meanwhile, so later actions stay behind it in order.
-- A conflict that recovers within the budget shows nothing: the turn stays as it was and no error is set.
-- The budget is 30 seconds of waiting, with no single wait longer than 4 seconds. It is that long because the Gateway can't yet cancel an agent run whose client went away: after `cancel()` or a preempting prompt, the old run keeps the session busy until its next event or its end. When the budget runs out on an **action**, the dispatch settles `'failed'`, which releases its optimistic state so the last authoritative state shows again, and `session.actionError` is set. It is cleared once the next action or prompt is accepted. When it runs out on a **prompt**, the prompt's turn becomes `error`, retryable with `retry(turnId)`.
-- A `submitPrompt` or `cancel()` during the backoff stops the wait.
+- an **action**'s dispatch settles `'failed'`, which rolls its optimistic state back, and `session.actionError` is set until the next accepted request;
+- a **prompt**'s turn becomes `error`, retryable with `retry(turnId)`.
 
 ## The Turn / TurnResponse model
 
