@@ -66,57 +66,74 @@ export const cemPlugin = () => ({
   moduleLinkPhase,
 });
 
-function extractObjectLiteralOptions(arg, ts) {
-  const options = {};
-  if (arg && ts.isObjectLiteralExpression(arg)) {
-    for (const prop of arg.properties) {
-      if (ts.isPropertyAssignment(prop)) {
-        const key = prop.name.getText();
-        options[key] = prop.initializer.text ?? undefined;
-      }
-    }
-  }
-  return options;
-}
-
 /**
- * CEM plugin to recognize @mapProperty decorator and emit the property as an attribute.
+ * CEM plugin to expose a `@mapProperty` field as an attribute named after its prefix.
+ *
+ * At runtime the decorator maps every `<prefix>-*` attribute onto a key of the field, which the
+ * manifest cannot express. Listing the prefix as an attribute keeps the field in the Storybook
+ * controls and in the inputs of the Angular wrapper, which both read attributes.
  */
-function getDecoratorNameAndOptions(node, ts) {
-  let decoratorName = null;
-  let options = {};
-  if (ts.getDecorators) {
-    for (const decorator of ts.getDecorators(node) || []) {
-      const expr = decorator.expression;
-      if (ts.isCallExpression(expr)) {
-        decoratorName = expr.expression.getText();
-        options = extractObjectLiteralOptions(expr.arguments[0], ts);
-      } else {
-        decoratorName = expr.getText();
-      }
-    }
-  }
-  return {decoratorName, options};
-}
-
 export function mapPropertyPlugin() {
   return {
     name: 'map-property',
     analyzePhase({ts, node, moduleDoc}) {
-      if (ts.isPropertyDeclaration(node)) {
-        const {decoratorName, options} = getDecoratorNameAndOptions(node, ts);
-        if (decoratorName === 'mapProperty') {
-          const propName = node.name.getText();
-          const attributeName = options.attributePrefix || propName;
-
-          moduleDoc.declarations[0].attributes.push({
-            name: attributeName,
-            fieldName: propName,
-          });
-        }
+      if (
+        !ts.isPropertyDeclaration(node) ||
+        !ts.isClassDeclaration(node.parent) ||
+        !node.parent.name
+      ) {
+        return;
       }
+
+      const decorator = (ts.getDecorators?.(node) ?? []).find(
+        ({expression}) =>
+          ts.isCallExpression(expression) && expression.expression.getText() === 'mapProperty'
+      );
+      if (!decorator) {
+        return;
+      }
+
+      const fieldName = node.name.getText();
+      const declaration = moduleDoc.declarations.find(
+        (candidate) => candidate.kind === 'class' && candidate.name === node.parent.name.text
+      );
+      const field = declaration?.members?.find(
+        (member) => member.kind === 'field' && member.name === fieldName
+      );
+      if (!field) {
+        return;
+      }
+
+      const attributePrefix = stringOption(
+        decorator.expression.arguments[0],
+        'attributePrefix',
+        ts
+      );
+      const attribute = {...field, name: camelToKebab(attributePrefix ?? fieldName), fieldName};
+      for (const key of ['kind', 'static', 'privacy', 'reflects', 'resolveInitializer']) {
+        delete attribute[key];
+      }
+      declaration.attributes ??= [];
+      declaration.attributes.push(attribute);
     },
   };
+}
+
+function stringOption(objectLiteral, name, ts) {
+  if (!objectLiteral || !ts.isObjectLiteralExpression(objectLiteral)) {
+    return undefined;
+  }
+  const option = objectLiteral.properties.find(
+    (property) => ts.isPropertyAssignment(property) && property.name.getText() === name
+  );
+  return option && ts.isStringLiteral(option.initializer) ? option.initializer.text : undefined;
+}
+
+/**
+ * Same conversion as `camelToKebab` in `src/utils/utils.ts`, which the decorator uses at runtime.
+ */
+function camelToKebab(value) {
+  return value.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
 }
 
 /**
