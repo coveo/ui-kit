@@ -90,4 +90,55 @@ describe('hideBindStateToControllerFieldsPlugin', () => {
     expect(findMember(element, 'summary').privacy).toBe('public');
     expect(findAttribute(element, 'number-of-pages')).toBeDefined();
   });
+
+  it('should not hide fields of other classes that share a name with a bound controller', () => {
+    const manifest = analyze(
+      {
+        'src/x-list.ts': litElement(
+          'x-list',
+          'XList',
+          `
+  public resultsPerPage!: ResultsPerPage;
+  @bindStateToController('resultsPerPage') @state() public resultsPerPageState!: ResultsPerPageState;
+`
+        ),
+        'src/x-interface.ts': litElement(
+          'x-interface',
+          'XInterface',
+          `
+  @property({type: Number, attribute: 'results-per-page'}) resultsPerPage = 5;
+`
+        ),
+      },
+      plugins()
+    );
+
+    const element = findElement(manifest, 'x-interface');
+    expect(findMember(element, 'resultsPerPage').privacy).toBeUndefined();
+    expect(findAttribute(element, 'results-per-page')).toBeDefined();
+  });
+
+  it('should only hide the fields of the class that binds them when a module declares several classes', () => {
+    const manifest = analyze(
+      {
+        'src/x-foo.ts': `${litElement(
+          'x-foo',
+          'XFoo',
+          `
+  public pager!: Pager;
+  @bindStateToController('pager') @state() public pagerState!: PagerState;
+`
+        )}
+@customElement('x-bar')
+export class XBar extends LitElement {
+  public pager!: Pager;
+}
+`,
+      },
+      plugins()
+    );
+
+    expect(findMember(findElement(manifest, 'x-foo'), 'pager').privacy).toBe('private');
+    expect(findMember(findElement(manifest, 'x-bar'), 'pager').privacy).toBe('public');
+  });
 });

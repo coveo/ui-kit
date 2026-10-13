@@ -81,9 +81,18 @@ export class AtomicCommerceInterface
   public bindings: CommerceBindings = {} as CommerceBindings;
   @state() public error!: Error;
 
+  /**
+   * @internal
+   */
   public context!: Context;
+  /**
+   * @internal
+   */
   public summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   public urlManager!: UrlManager;
+  /**
+   * @internal
+   */
   public searchOrListing!: Search | ProductListing;
   private unsubscribeUrlManager: Unsubscribe = () => {};
   private unsubscribeSummary: Unsubscribe = () => {};

@@ -256,88 +256,78 @@ export function hideBaseInitializableComponentFieldsPlugin() {
 
 /**
  * CEM plugin to mark properties decorated with @bindStateToController as private,
- * along with the property referenced in the decorator argument.
+ * along with the controller property referenced in the decorator argument.
+ *
+ * Both are implementation details of the component that declares them, so only that
+ * class is affected: another component may expose a public property of the same name.
  */
 export function hideBindStateToControllerFieldsPlugin() {
-  // Store fields to hide globally across all modules
-  const globalFieldsToHide = new Set();
+  const fieldsToHideByModule = new WeakMap();
 
   return {
     name: 'hide-bind-state-to-controller-fields',
-    // Run in analyzePhase to capture decorator information during analysis
-    analyzePhase({ts, node}) {
-      if (ts.isPropertyDeclaration(node)) {
-        // Check for bindStateToController decorator directly
-        const decorators = ts.getDecorators?.(node) || [];
-        for (const decorator of decorators) {
-          const expr = decorator.expression;
+    analyzePhase({ts, node, moduleDoc}) {
+      if (
+        !ts.isPropertyDeclaration(node) ||
+        !ts.isClassDeclaration(node.parent) ||
+        !node.parent.name
+      ) {
+        return;
+      }
 
-          if (ts.isCallExpression(expr)) {
-            const decoratorName = expr.expression.getText();
-            if (decoratorName === 'bindStateToController') {
-              const propName = node.name.getText();
+      for (const decorator of ts.getDecorators?.(node) ?? []) {
+        const expression = decorator.expression;
+        if (
+          !ts.isCallExpression(expression) ||
+          expression.expression.getText() !== 'bindStateToController'
+        ) {
+          continue;
+        }
 
-              // Mark the decorated property itself
-              globalFieldsToHide.add(propName);
-
-              // Mark the property referenced in the decorator argument
-              if (expr.arguments.length > 0) {
-                const firstArg = expr.arguments[0];
-                if (ts.isStringLiteral(firstArg)) {
-                  const referencedPropertyName = firstArg.text;
-                  globalFieldsToHide.add(referencedPropertyName);
-                }
-              }
-            }
-          }
+        const fieldsToHide = fieldsToHideIn(fieldsToHideByModule, moduleDoc, node.parent.name.text);
+        fieldsToHide.add(node.name.getText());
+        const [controllerProperty] = expression.arguments;
+        if (controllerProperty && ts.isStringLiteral(controllerProperty)) {
+          fieldsToHide.add(controllerProperty.text);
         }
       }
     },
-    // Run in moduleLinkPhase to mark the identified fields as private
     moduleLinkPhase({moduleDoc}) {
-      if (globalFieldsToHide.size === 0) {
+      const fieldsToHideByClass = fieldsToHideByModule.get(moduleDoc);
+      if (!fieldsToHideByClass) {
         return;
       }
 
       for (const declaration of moduleDoc.declarations) {
-        if (declaration.kind !== 'class') {
+        const fieldsToHide = fieldsToHideByClass.get(declaration.name);
+        if (declaration.kind !== 'class' || !fieldsToHide) {
           continue;
         }
 
-        // Check if this class extends LitElement
-        const extendsLitElement = declaration.superclass?.name === 'LitElement';
-        if (!extendsLitElement) {
-          continue;
-        }
-
-        // Mark the identified fields as private
-        if (declaration.members) {
-          for (const member of declaration.members) {
-            if (globalFieldsToHide.has(member.name)) {
-              member.privacy = 'private';
-            }
+        for (const member of declaration.members ?? []) {
+          if (fieldsToHide.has(member.name)) {
+            member.privacy = 'private';
           }
         }
 
-        // Also handle attributes that might correspond to these fields
         if (declaration.attributes) {
-          const attributesToRemove = [];
-          for (let i = 0; i < declaration.attributes.length; i++) {
-            const attribute = declaration.attributes[i];
-            if (globalFieldsToHide.has(attribute.fieldName)) {
-              attributesToRemove.push(i);
-            }
-          }
-          // Remove attributes in reverse order to maintain indices
-          for (let i = attributesToRemove.length - 1; i >= 0; i--) {
-            declaration.attributes.splice(attributesToRemove[i], 1);
-          }
-          // Clean up empty attributes array
-          if (declaration.attributes.length === 0) {
-            declaration.attributes = undefined;
-          }
+          const attributes = declaration.attributes.filter(
+            (attribute) => !fieldsToHide.has(attribute.fieldName)
+          );
+          declaration.attributes = attributes.length > 0 ? attributes : undefined;
         }
       }
     },
   };
+}
+
+function fieldsToHideIn(fieldsToHideByModule, moduleDoc, className) {
+  if (!fieldsToHideByModule.has(moduleDoc)) {
+    fieldsToHideByModule.set(moduleDoc, new Map());
+  }
+  const fieldsToHideByClass = fieldsToHideByModule.get(moduleDoc);
+  if (!fieldsToHideByClass.has(className)) {
+    fieldsToHideByClass.set(className, new Set());
+  }
+  return fieldsToHideByClass.get(className);
 }

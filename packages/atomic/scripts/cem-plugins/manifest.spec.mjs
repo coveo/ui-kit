@@ -76,4 +76,10 @@ describe('the custom elements manifest of Atomic', () => {
     expect(findElement(manifest, 'atomic-modal')).toBeUndefined();
     expect(findElement(manifest, 'atomic-tab-bar')).toBeUndefined();
   });
+
+  it('should keep a property public when another component binds a controller of the same name', () => {
+    const element = findElement(manifest, 'atomic-insight-interface');
+    expect(findMember(element, 'resultsPerPage').privacy).not.toBe('private');
+    expect(findAttribute(element, 'results-per-page')).toBeDefined();
+  });
 });
