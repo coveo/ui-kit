@@ -76,6 +76,9 @@ export class AtomicSearchInterface
   @state() public error!: Error;
 
   public urlManager!: UrlManager;
+  /**
+   * @internal
+   */
   public searchStatus!: SearchStatus;
   private unsubscribeUrlManager: Unsubscribe = () => {};
   private unsubscribeSearchStatus: Unsubscribe = () => {};
