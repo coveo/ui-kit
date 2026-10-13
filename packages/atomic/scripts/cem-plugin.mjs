@@ -1,34 +1,12 @@
-const moduleLinkPhase = ({moduleDoc}) => {
-  for (const declaration of moduleDoc.declarations) {
-    if (declaration.kind !== 'class') {
-      continue;
-    }
-
-    // Skip processing if superClass is LitElement
-    if (declaration.superclass?.name === 'LitElement') {
-      continue;
-    }
-
-    const keptAttributes = [];
-    for (const attribute of declaration.attributes || []) {
-      const memberLike = findMember(declaration, attribute);
-      if (!memberLike || memberLike.privacy === 'private') {
-        continue;
-      }
-      keptAttributes.push(attribute);
-      copyAttributesFromMember(attribute, memberLike);
-    }
-    declaration.attributes = keptAttributes.length > 0 ? keptAttributes : undefined;
-
-    if (!declaration.members) {
-      continue;
-    }
-
-    declaration.members = declaration.members.filter((member) => member?.privacy !== 'private');
-  }
-
-  moduleDoc.exports = keepCustomElementExports(moduleDoc.exports);
-};
+/**
+ * CEM plugin to keep only the public custom elements in the manifest.
+ */
+export const cemPlugin = () => ({
+  name: 'keep-custom-element-exports',
+  moduleLinkPhase({moduleDoc}) {
+    moduleDoc.exports = keepCustomElementExports(moduleDoc.exports);
+  },
+});
 
 /**
  * Keeps the exports of the public custom elements: the class export and its definition.
@@ -49,22 +27,6 @@ function keepCustomElementExports(exports) {
       definedElements.has(entry.declaration.name) && exportedClasses.has(entry.declaration.name)
   );
 }
-
-function findMember(declaration, attribute) {
-  return declaration.members.find((member) => attribute.fieldName === member.name);
-}
-
-function copyAttributesFromMember(attribute, member) {
-  for (const fieldToCopy of ['type', 'default', 'description']) {
-    attribute[fieldToCopy] = member[fieldToCopy];
-  }
-}
-
-export const cemPlugin = () => ({
-  name: 'my-plugin',
-  // Runs for each module, after analyzing, all information about your module should now be available
-  moduleLinkPhase,
-});
 
 /**
  * CEM plugin to expose a `@mapProperty` field as an attribute named after its prefix.

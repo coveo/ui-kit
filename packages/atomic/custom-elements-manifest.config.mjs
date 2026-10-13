@@ -24,7 +24,6 @@ export default {
     'src/components/*/lazy-index.ts',
     'src/utils/custom-element-tags.ts',
   ],
-  stencil: true,
   litelement: true,
   /**
    * The analyzer visits files in the order the file system returns them, which is not stable.
