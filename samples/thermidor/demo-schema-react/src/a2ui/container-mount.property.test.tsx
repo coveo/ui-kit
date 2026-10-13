@@ -119,3 +119,27 @@ describe('BundleDisplay mounts only the active tier slot childIds in order (Prop
     );
   });
 });
+
+describe('BundleDisplay heading', () => {
+  it('renders the resolved heading', async () => {
+    const {container} = mountSurface({
+      component: {component: 'BundleDisplay', heading: 'Kitchen starter kit', tiers: []},
+      children: [],
+    });
+
+    await waitFor(() => expect(container.querySelector('section')).not.toBeNull());
+    expect(container.querySelector('h3')?.textContent).toBe('Kitchen starter kit');
+    cleanup();
+  });
+
+  it('leaves the heading out when none is resolved', async () => {
+    const {container} = mountSurface({
+      component: {component: 'BundleDisplay', tiers: []},
+      children: [],
+    });
+
+    await waitFor(() => expect(container.querySelector('section')).not.toBeNull());
+    expect(container.querySelector('h3')).toBeNull();
+    cleanup();
+  });
+});
