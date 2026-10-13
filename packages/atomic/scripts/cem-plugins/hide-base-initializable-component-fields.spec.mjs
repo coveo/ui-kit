@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {hideBaseInitializableComponentFieldsPlugin} from '../cem-plugin.mjs';
+import {hideBaseInitializableComponentFieldsPlugin} from './hide-base-initializable-component-fields.mjs';
 import {analyze, findAttribute, findElement, findMember, litElement} from './testing/analyze.mjs';
 
 const plugins = () => [hideBaseInitializableComponentFieldsPlugin()];

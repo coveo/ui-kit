@@ -1,12 +1,10 @@
 import {readFileSync} from 'node:fs';
 import {resolve} from 'node:path';
-import {
-  cemPlugin,
-  hideBaseInitializableComponentFieldsPlugin,
-  hideBindStateToControllerFieldsPlugin,
-  mapPropertyPlugin,
-  removeUndefinedTypePlugin,
-} from './scripts/cem-plugin.mjs';
+import {hideBaseInitializableComponentFieldsPlugin} from './scripts/cem-plugins/hide-base-initializable-component-fields.mjs';
+import {hideBindStateToControllerFieldsPlugin} from './scripts/cem-plugins/hide-bind-state-to-controller-fields.mjs';
+import {keepCustomElementExportsPlugin} from './scripts/cem-plugins/keep-custom-element-exports.mjs';
+import {mapPropertyPlugin} from './scripts/cem-plugins/map-property.mjs';
+import {removeUndefinedTypePlugin} from './scripts/cem-plugins/remove-undefined-type.mjs';
 
 /**
  * Keep `globs` and `exclude` in sync with the `build:cem` inputs in `turbo.json`,
@@ -36,7 +34,7 @@ export default {
         ts.createSourceFile(file, readFileSync(resolve(file), 'utf8'), ts.ScriptTarget.ES2015, true)
       ),
   plugins: [
-    cemPlugin(),
+    keepCustomElementExportsPlugin(),
     mapPropertyPlugin(),
     removeUndefinedTypePlugin(),
     hideBaseInitializableComponentFieldsPlugin(),

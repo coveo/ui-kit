@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {hideBindStateToControllerFieldsPlugin} from '../cem-plugin.mjs';
+import {hideBindStateToControllerFieldsPlugin} from './hide-bind-state-to-controller-fields.mjs';
 import {analyze, findAttribute, findElement, findMember, litElement} from './testing/analyze.mjs';
 
 const plugins = () => [hideBindStateToControllerFieldsPlugin()];
