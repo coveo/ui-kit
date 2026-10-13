@@ -65,16 +65,14 @@ export function breadboxValues(facet: BreadboxFacet): BreadboxValue[] {
         };
       });
     case 'hierarchical':
-      return facet.path.length > 0
-        ? [
-            {
-              key: facet.path.join('/'),
-              label: limitPath(facet.path),
-              fullLabel: facet.path.join(PATH_SEPARATOR),
-              excluded: false,
-              payload: {facetId, type: 'hierarchical', path: facet.path},
-            },
-          ]
-        : [];
+      return [
+        {
+          key: facet.path.join('/'),
+          label: limitPath(facet.path),
+          fullLabel: facet.path.join(PATH_SEPARATOR),
+          excluded: false,
+          payload: {facetId, type: 'hierarchical', path: facet.path},
+        },
+      ];
   }
 }
