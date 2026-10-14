@@ -1,6 +1,8 @@
 import {describe, expect, it, afterEach, vi} from 'vitest';
 import {screen, cleanup, waitFor} from '@testing-library/react';
 import {mountSurface} from '../mount-surface.harness.js';
+import type {ThermidorCatalogOptions} from '../components.js';
+import {formatDocumentSize} from './ProductResearchCard.js';
 
 /**
  * ProductResearchCard is a `createReactComponent` implementation driven by the generic binder,
@@ -16,6 +18,7 @@ const BINDINGS = {
   product: {path: '/state/root/product'},
   summary: {path: '/state/root/summary'},
   bullets: {path: '/state/root/bullets'},
+  relatedDocuments: {path: '/state/root/relatedDocuments'},
 };
 
 const PRODUCT = {
@@ -33,15 +36,47 @@ const PRODUCT = {
 const SUMMARY = 'The warmest suit in the range, built for very cold water.';
 const BULLETS = ['7mm neoprene for maximum insulation.', 'Sealed back zip limits flushing.'];
 
-function mountResearchCard(product: Record<string, unknown>) {
+function relatedDocument(index: number, overrides: Record<string, unknown> = {}) {
+  return {
+    permanentid: `doc-${index}`,
+    title: `Owner manual ${index}`,
+    clickUri: `https://example.com/manual-${index}.pdf`,
+    filetype: 'pdf',
+    size: 2048,
+    ...overrides,
+  };
+}
+
+function mountResearchCard(
+  product: Record<string, unknown>,
+  {
+    relatedDocuments,
+    catalogOptions,
+  }: {relatedDocuments?: unknown[]; catalogOptions?: ThermidorCatalogOptions} = {}
+) {
   mountSurface({
     component: {component: 'ProductResearchCard', ...BINDINGS},
     dataModel: [
       {path: '/state/root/product', value: product},
       {path: '/state/root/summary', value: SUMMARY},
       {path: '/state/root/bullets', value: BULLETS},
+      ...(relatedDocuments === undefined
+        ? []
+        : [{path: '/state/root/relatedDocuments', value: relatedDocuments}]),
     ],
+    catalogOptions,
   });
+}
+
+async function documentLinks() {
+  await waitFor(() => expect(screen.queryByText(SUMMARY)).not.toBeNull());
+  const section = screen.queryByRole('region', {name: 'Related documents'});
+  return section === null
+    ? []
+    : Array.from(section.querySelectorAll('a')).map((link) => ({
+        text: link.textContent,
+        href: link.getAttribute('href'),
+      }));
 }
 
 describe('ProductResearchCard', () => {
@@ -120,5 +155,76 @@ describe('ProductResearchCard', () => {
     mountSurface({component: {component: 'ProductResearchCard', ...BINDINGS}});
 
     await waitFor(() => expect(screen.queryByLabelText('Loading product research')).not.toBeNull());
+  });
+
+  it('lists the related documents with their file type and size', async () => {
+    mountResearchCard(PRODUCT, {relatedDocuments: [relatedDocument(1, {size: 1536000})]});
+
+    expect(await documentLinks()).toEqual([
+      {text: 'Owner manual 1', href: 'https://example.com/manual-1.pdf'},
+    ]);
+    expect(screen.queryByText('PDF · 1.5 MB')).not.toBeNull();
+  });
+
+  it('lists at most 10 related documents by default, in the order they were sent', async () => {
+    mountResearchCard(PRODUCT, {
+      relatedDocuments: Array.from({length: 12}, (_, index) => relatedDocument(index)),
+    });
+
+    const links = await documentLinks();
+    expect(links.map((link) => link.text)).toEqual(
+      Array.from({length: 10}, (_, index) => `Owner manual ${index}`)
+    );
+  });
+
+  it('lists at most maxLinks related documents', async () => {
+    mountResearchCard(PRODUCT, {
+      relatedDocuments: Array.from({length: 5}, (_, index) => relatedDocument(index)),
+      catalogOptions: {productResearchCard: {maxLinks: 2}},
+    });
+
+    expect((await documentLinks()).map((link) => link.text)).toEqual([
+      'Owner manual 0',
+      'Owner manual 1',
+    ]);
+  });
+
+  it('hides the related documents when maxLinks is 0', async () => {
+    mountResearchCard(PRODUCT, {
+      relatedDocuments: [relatedDocument(1)],
+      catalogOptions: {productResearchCard: {maxLinks: 0}},
+    });
+
+    expect(await documentLinks()).toEqual([]);
+  });
+
+  it('falls back to the link when a related document has no title', async () => {
+    mountResearchCard(PRODUCT, {relatedDocuments: [relatedDocument(1, {title: ''})]});
+
+    expect(await documentLinks()).toEqual([
+      {text: 'https://example.com/manual-1.pdf', href: 'https://example.com/manual-1.pdf'},
+    ]);
+  });
+
+  it('renders no related documents section when the agent sends none', async () => {
+    mountResearchCard(PRODUCT);
+
+    expect(await documentLinks()).toEqual([]);
+    cleanup();
+
+    mountResearchCard(PRODUCT, {relatedDocuments: []});
+    expect(await documentLinks()).toEqual([]);
+  });
+});
+
+describe('formatDocumentSize', () => {
+  it.each([
+    [0, '0 B'],
+    [512, '512 B'],
+    [2048, '2 KB'],
+    [1536000, '1.5 MB'],
+    [3 * 1024 ** 3, '3 GB'],
+  ])('formats %d bytes as %s', (bytes, expected) => {
+    expect(formatDocumentSize(bytes)).toBe(expected);
   });
 });
