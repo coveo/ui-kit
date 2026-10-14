@@ -6,7 +6,7 @@ import Indexing from '../../../images/indexing.svg';
 import NoConnection from '../../../images/no-connection.svg';
 import SearchInactive from '../../../images/search-inactive.svg';
 import SomethingWrong from '../../../images/something-wrong.svg';
-import {renderQueryErrorIcon} from './icon';
+import {loadQueryErrorIcon, renderQueryErrorIcon} from './icon';
 
 describe('#renderQueryErrorIcon', () => {
   const renderComponent = async (errorType?: string) => {
@@ -31,7 +31,7 @@ describe('#renderQueryErrorIcon', () => {
   it('should render NoConnection icon when errorType is Disconnected', async () => {
     const {atomicIcon} = await renderComponent('Disconnected');
 
-    await expectIcon(atomicIcon, NoConnection);
+    expect(atomicIcon).toHaveAttribute('icon', NoConnection);
   });
 
   it('should render Indexing icon when errorType is NoEndpointsException', async () => {
@@ -56,5 +56,22 @@ describe('#renderQueryErrorIcon', () => {
     const {atomicIcon} = await renderComponent('UnknownErrorType');
 
     await expectIcon(atomicIcon, SomethingWrong);
+  });
+});
+
+describe('#loadQueryErrorIcon', () => {
+  it('should return the NoConnection icon without loading the other illustrations', () => {
+    const loadIcons = vi.fn();
+
+    expect(loadQueryErrorIcon('Disconnected', loadIcons)).toBe(NoConnection);
+    expect(loadIcons).not.toHaveBeenCalled();
+  });
+
+  it('should resolve to no illustration when the illustrations fail to load', async () => {
+    const loadIcons = vi
+      .fn()
+      .mockRejectedValue(new Error('Failed to fetch dynamically imported module'));
+
+    await expect(loadQueryErrorIcon('NoEndpointsException', loadIcons)).resolves.toBe('');
   });
 });
