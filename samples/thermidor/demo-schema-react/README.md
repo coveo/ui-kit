@@ -38,13 +38,14 @@ This sample uses the `/converse-schema` route on the mock server (via `VITE_COVE
 
 ## Available scripts
 
-| Command         | Description                                                       |
-| --------------- | ----------------------------------------------------------------- |
-| `pnpm dev`      | Start dev server against a live backend (no configuration needed) |
-| `pnpm dev:mock` | Build deps, start mock API, and open dev server                   |
-| `pnpm build`    | Production build                                                  |
-| `pnpm test`     | Run Vitest unit tests                                             |
-| `pnpm preview`  | Preview production build                                          |
+| Command                  | Description                                                                      |
+| ------------------------ | -------------------------------------------------------------------------------- |
+| `pnpm dev`               | Start dev server against a live backend (no configuration needed)                |
+| `pnpm dev:mock`          | Build deps, start mock API, and open dev server                                  |
+| `pnpm dev:agent-gateway` | Start dev server against a local agent-gateway on port 8990 (needs `.env.local`) |
+| `pnpm build`             | Production build                                                                 |
+| `pnpm test`              | Run Vitest unit tests                                                            |
+| `pnpm preview`           | Preview production build                                                         |
 
 ## Configuration
 

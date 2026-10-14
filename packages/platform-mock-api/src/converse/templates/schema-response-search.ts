@@ -234,7 +234,23 @@ interface WaterSportsProduct {
   clickUri: string;
   permanentid: string;
   children: never[];
+  badgePlacements?: BadgePlacement[];
 }
+
+interface BadgePlacement {
+  placementId: string;
+  badges: {text: string; backgroundColor?: string; textColor?: string; iconUrl?: string}[];
+}
+
+const BADGES_BY_PRODUCT_INDEX: Record<number, BadgePlacement['badges']> = {
+  0: [{text: 'Bestseller!', backgroundColor: '#B42318', textColor: '#FFFFFF'}],
+  2: [{text: 'New', backgroundColor: '#1D4ED8', textColor: '#FFFFFF'}],
+  4: [
+    {text: 'Bestseller!', backgroundColor: '#B42318', textColor: '#FFFFFF'},
+    {text: 'Eco-friendly', backgroundColor: '#DCFCE7', textColor: '#166534'},
+  ],
+  7: [{text: 'Staff pick'}],
+};
 
 // Compact product definitions expanded into full product objects below. Brands are spread so
 // every candidate brand owns at least one product and several appear across multiple leaves.
@@ -653,6 +669,11 @@ const products: WaterSportsProduct[] = PRODUCT_SEEDS.map((seed, index) => {
     clickUri: `https://barca-sports.myshopify.com/products/ws_${index}`,
     permanentid: `gid://shopify/ProductVariant/${50680000000000 + index}`,
     children: [],
+    ...(BADGES_BY_PRODUCT_INDEX[index] && {
+      badgePlacements: [
+        {placementId: 'badge-placement-id', badges: BADGES_BY_PRODUCT_INDEX[index]},
+      ],
+    }),
   };
 });
 
