@@ -5,8 +5,8 @@ export type InitializeEvent = CustomEvent<InitializeEventHandler>;
 declare global {
   interface Window {
     initQueueNamespace: {
-      eventQueueMap: Map<Element, QueuedEvent[]>;
-      parentReadyMap: Map<Element, boolean>;
+      eventQueueMap: WeakMap<Element, QueuedEvent[]>;
+      parentReadyMap: WeakMap<Element, boolean>;
     };
   }
 }
@@ -23,18 +23,18 @@ function getWindow() {
 function getInitQueueNamespace() {
   if (!getWindow().initQueueNamespace) {
     getWindow().initQueueNamespace = {
-      eventQueueMap: new Map(),
-      parentReadyMap: new Map(),
+      eventQueueMap: new WeakMap(),
+      parentReadyMap: new WeakMap(),
     };
   }
   return getWindow().initQueueNamespace;
 }
 
-function getEventQueueMap(): Map<Element, QueuedEvent[]> {
+function getEventQueueMap(): WeakMap<Element, QueuedEvent[]> {
   return getInitQueueNamespace().eventQueueMap;
 }
 
-function getParentReadyMap(): Map<Element, boolean> {
+function getParentReadyMap(): WeakMap<Element, boolean> {
   return getInitQueueNamespace().parentReadyMap;
 }
 
