@@ -3,6 +3,7 @@ import type {Product} from '@coveo/thermidor-schema';
 import {ProductListPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {useStale} from '../pending-dispatch.js';
 import {ProductBadges} from '../ProductBadges/ProductBadges.js';
+import {resultsFocusTarget} from '../results-focus.js';
 import freshness from '../result-freshness.module.css';
 import styles from './ProductList.module.css';
 
@@ -87,7 +88,7 @@ export const ProductList = createReactComponent(
 
     return (
       <section className={outstanding ? freshness.stale : undefined} aria-busy={outstanding}>
-        <div className={styles.grid} role="list" aria-label="Product list">
+        <div className={styles.grid} role="list" aria-label="Product list" {...resultsFocusTarget}>
           {products.map((product) => (
             <ProductCard key={product.permanentid} product={product} />
           ))}

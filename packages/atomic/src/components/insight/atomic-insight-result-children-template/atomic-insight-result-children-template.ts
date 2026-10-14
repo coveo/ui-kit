@@ -6,10 +6,7 @@ import {ResultTemplatesHelpers as InsightResultTemplatesHelpers} from '@coveo/he
 import {LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ResultTemplateController} from '@/src/components/common/result-templates/result-template-controller';
-import {
-  makeDefinedConditions,
-  makeMatchConditions,
-} from '@/src/components/common/template-controller/template-utils';
+import {makeFieldConditions} from '@/src/components/common/template-controller/template-utils';
 import {arrayConverter} from '@/src/converters/array-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {LitElementWithError} from '@/src/decorators/types';
@@ -37,17 +34,17 @@ export class AtomicInsightResultChildrenTemplate extends LitElement implements L
   conditions: InsightResultTemplateCondition[] = [];
 
   /**
-   * The field that, when defined on a child result, allows this template to be applied.
+   * The comma-separated list of fields that must all be defined on a child result for the template to apply.
    *
-   * For example, a template with the following attribute only applies to child results whose `filetype` and `sourcetype` fields are defined:
+   * For example, a template with the following attribute only applies to child results whose `filetype` and `sourcetype` fields are both defined:
    * `if-defined="filetype,sourcetype"`
    */
   @property({type: String, attribute: 'if-defined'}) ifDefined?: string;
 
   /**
-   * The field that, when defined on a child result, prevents this template from being applied.
+   * The comma-separated list of fields that must all be undefined on a child result for the template to apply.
    *
-   * For example, a template with the following attribute only applies to child results whose `filetype` and `sourcetype` fields are NOT defined:
+   * For example, a template with the following attribute only applies to child results that have neither a `filetype` nor a `sourcetype` field:
    * `if-not-defined="filetype,sourcetype"`
    */
   @property({type: String, attribute: 'if-not-defined'}) ifNotDefined?: string;
@@ -82,13 +79,8 @@ export class AtomicInsightResultChildrenTemplate extends LitElement implements L
 
   connectedCallback() {
     super.connectedCallback();
-    this.conditions = [
-      ...this.conditions,
-      ...makeDefinedConditions(this.ifDefined, this.ifNotDefined, InsightResultTemplatesHelpers),
-    ];
-    this.resultTemplateController.matchConditions = makeMatchConditions(
-      this.mustMatch,
-      this.mustNotMatch,
+    this.resultTemplateController.matchConditions = makeFieldConditions(
+      this,
       InsightResultTemplatesHelpers
     );
   }
