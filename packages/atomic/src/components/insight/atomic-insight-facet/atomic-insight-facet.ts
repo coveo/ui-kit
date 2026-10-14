@@ -381,6 +381,7 @@ export class AtomicInsightFacet
   private initAriaLive() {
     this.facetSearchAriaLiveController = new AriaLiveRegionController(this, 'facet-search');
     announceFacetSearchResultsWithAriaLive(
+      this,
       this.facet,
       this.label,
       (msg) => {
