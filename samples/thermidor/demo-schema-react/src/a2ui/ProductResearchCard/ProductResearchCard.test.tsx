@@ -195,7 +195,8 @@ describe('ProductResearchCard', () => {
       catalogOptions: {productResearchCard: {maxLinks: 0}},
     });
 
-    expect(await documentLinks()).toEqual([]);
+    await waitFor(() => expect(screen.queryByText(SUMMARY)).not.toBeNull());
+    expect(screen.queryByRole('region', {name: 'Related documents'})).toBeNull();
   });
 
   it('falls back to the link when a related document has no title', async () => {
@@ -206,14 +207,23 @@ describe('ProductResearchCard', () => {
     ]);
   });
 
+  it('renders a document without a link as plain text', async () => {
+    mountResearchCard(PRODUCT, {relatedDocuments: [relatedDocument(1, {clickUri: ''})]});
+
+    expect(await documentLinks()).toEqual([]);
+    expect(screen.queryByText('Owner manual 1')).not.toBeNull();
+  });
+
   it('renders no related documents section when the agent sends none', async () => {
     mountResearchCard(PRODUCT);
 
-    expect(await documentLinks()).toEqual([]);
+    await waitFor(() => expect(screen.queryByText(SUMMARY)).not.toBeNull());
+    expect(screen.queryByRole('region', {name: 'Related documents'})).toBeNull();
     cleanup();
 
     mountResearchCard(PRODUCT, {relatedDocuments: []});
-    expect(await documentLinks()).toEqual([]);
+    await waitFor(() => expect(screen.queryByText(SUMMARY)).not.toBeNull());
+    expect(screen.queryByRole('region', {name: 'Related documents'})).toBeNull();
   });
 });
 
@@ -223,7 +233,10 @@ describe('formatDocumentSize', () => {
     [512, '512 B'],
     [2048, '2 KB'],
     [1536000, '1.5 MB'],
+    [1048575, '1 MB'],
     [3 * 1024 ** 3, '3 GB'],
+    [Number.NaN, ''],
+    [-1, ''],
   ])('formats %d bytes as %s', (bytes, expected) => {
     expect(formatDocumentSize(bytes)).toBe(expected);
   });

@@ -1,3 +1,4 @@
+import {useId} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import {ProductResearchCardPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {A2UIProductCard} from '../ProductCard/ProductCard.js';
@@ -7,16 +8,23 @@ import styles from './ProductResearchCard.module.css';
 export const DEFAULT_MAX_LINKS = 10;
 
 export interface ProductResearchCardOptions {
-  /** Most related documents the card lists, in the order the agent sent them. `0` hides the list. */
+  /**
+   * Most related documents the card lists, in the order the agent sent them. Fractions round down;
+   * `0`, a negative number or `NaN` hides the list, and `Infinity` lists every document.
+   */
   maxLinks?: number;
 }
 
 const SIZE_UNITS = ['B', 'KB', 'MB', 'GB'] as const;
 
+/** Formats a size in bytes with a binary unit and one decimal, e.g. `1.5 MB`; `''` when invalid. */
 export function formatDocumentSize(bytes: number): string {
+  if (!Number.isFinite(bytes) || bytes < 0) {
+    return '';
+  }
   let size = bytes;
   let unit = 0;
-  while (size >= 1024 && unit < SIZE_UNITS.length - 1) {
+  while (unit < SIZE_UNITS.length - 1 && Number(size.toFixed(1)) >= 1024) {
     size /= 1024;
     unit += 1;
   }
@@ -37,7 +45,7 @@ export function formatDocumentSize(bytes: number): string {
 export function createProductResearchCard({
   maxLinks = DEFAULT_MAX_LINKS,
 }: ProductResearchCardOptions = {}) {
-  const linkLimit = Math.max(0, Math.floor(maxLinks));
+  const linkLimit = Number.isNaN(maxLinks) ? 0 : Math.max(0, Math.floor(maxLinks));
 
   return createReactComponent(
     {
@@ -46,6 +54,7 @@ export function createProductResearchCard({
     },
     ({props}) => {
       const {product, summary, bullets, relatedDocuments} = props;
+      const documentsHeadingId = useId();
       if (product === undefined || summary === undefined || bullets === undefined) {
         return <A2UISkeleton componentType="ProductResearchCard" />;
       }
@@ -83,19 +92,32 @@ export function createProductResearchCard({
               </ul>
             )}
             {documents.length > 0 && (
-              <section className={styles.relatedDocuments} aria-label="Related documents">
-                <h3 className={styles.relatedDocumentsHeading}>Related documents</h3>
+              <section className={styles.relatedDocuments} aria-labelledby={documentsHeadingId}>
+                <h3 id={documentsHeadingId} className={styles.relatedDocumentsHeading}>
+                  Related documents
+                </h3>
                 <ul className={styles.documentLinks}>
-                  {documents.map((document, index) => (
-                    <li key={`${index}-${document.permanentid}`} className={styles.documentLink}>
-                      <a href={document.clickUri} target="_blank" rel="noopener noreferrer">
-                        {document.title || document.clickUri}
-                      </a>
-                      <span className={styles.documentMeta}>
-                        {document.filetype.toUpperCase()} · {formatDocumentSize(document.size)}
-                      </span>
-                    </li>
-                  ))}
+                  {documents.map((document, index) => {
+                    const label = document.title || document.clickUri;
+                    const meta = [
+                      document.filetype.toUpperCase(),
+                      formatDocumentSize(document.size),
+                    ]
+                      .filter(Boolean)
+                      .join(' · ');
+                    return (
+                      <li key={`${index}-${document.permanentid}`} className={styles.documentLink}>
+                        {document.clickUri ? (
+                          <a href={document.clickUri} target="_blank" rel="noopener noreferrer">
+                            {label}
+                          </a>
+                        ) : (
+                          <span>{label}</span>
+                        )}
+                        {meta && <span className={styles.documentMeta}>{meta}</span>}
+                      </li>
+                    );
+                  })}
                 </ul>
               </section>
             )}
