@@ -1,4 +1,4 @@
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import * as domUtils from './dom-utils';
 import {DEFAULT_MOBILE_BREAKPOINT, updateBreakpoints} from './replace-breakpoint-utils';
 
@@ -9,8 +9,14 @@ describe('replace-breakpoint-utils', () => {
   let mockShadowRoot: ShadowRoot;
   let mockStyleSheet: CSSStyleSheet;
   let mockStyleTag: HTMLStyleElement;
+  let replaceSyncSpy: MockInstance<CSSStyleSheet['replaceSync']>;
+
+  afterEach(() => {
+    replaceSyncSpy.mockRestore();
+  });
 
   beforeEach(() => {
+    replaceSyncSpy = vi.spyOn(CSSStyleSheet.prototype, 'replaceSync');
     mockStyleSheet = {
       cssRules: [
         {
@@ -73,9 +79,36 @@ describe('replace-breakpoint-utils', () => {
 
       updateBreakpoints(mockElement);
 
-      expect(mockStyleSheet.replaceSync).toHaveBeenCalledWith(
+      expect(replaceSyncSpy).toHaveBeenCalledWith(
         `@media (width >= ${customBreakpoint}) { .test { color: red; } }.other { color: blue; }`
       );
+      expect(mockShadowRoot.adoptedStyleSheets[0]).toBe(replaceSyncSpy.mock.contexts[0]);
+    });
+
+    it('should not modify the original stylesheet, which other components share', () => {
+      const mockLayout = {
+        mobileBreakpoint: '768px',
+      } as HTMLElement & {mobileBreakpoint: string};
+      vi.mocked(domUtils.closest).mockReturnValue(mockLayout);
+
+      updateBreakpoints(mockElement);
+
+      expect(mockStyleSheet.replaceSync).not.toHaveBeenCalled();
+      expect(mockShadowRoot.adoptedStyleSheets[0]).not.toBe(mockStyleSheet);
+    });
+
+    it('should keep the other adopted stylesheets after the replaced one', () => {
+      const otherStyleSheet = new CSSStyleSheet();
+      mockShadowRoot.adoptedStyleSheets = [mockStyleSheet, otherStyleSheet];
+      const mockLayout = {
+        mobileBreakpoint: '768px',
+      } as HTMLElement & {mobileBreakpoint: string};
+      vi.mocked(domUtils.closest).mockReturnValue(mockLayout);
+
+      updateBreakpoints(mockElement);
+
+      expect(mockShadowRoot.adoptedStyleSheets).toHaveLength(2);
+      expect(mockShadowRoot.adoptedStyleSheets[1]).toBe(otherStyleSheet);
     });
 
     it('should replace breakpoints in style tag when different mobileBreakpoint is provided', () => {
@@ -137,7 +170,7 @@ describe('replace-breakpoint-utils', () => {
 
       updateBreakpoints(elementWithoutStyleTag);
 
-      expect(mockStyleSheet.replaceSync).toHaveBeenCalled();
+      expect(shadowWithoutStyleTag.adoptedStyleSheets[0]).not.toBe(mockStyleSheet);
     });
 
     it('should call closest with layout selectors', () => {
@@ -178,7 +211,7 @@ describe('replace-breakpoint-utils', () => {
 
       updateBreakpoints(mockElement);
 
-      expect(mockStyleSheetWithBothQueries.replaceSync).toHaveBeenCalledWith(
+      expect(replaceSyncSpy).toHaveBeenCalledWith(
         `@media (width >= ${customBreakpoint}) { .test1 { color: red; } }@media (width >= ${customBreakpoint}) { .test2 { color: blue; } }`
       );
     });
@@ -224,7 +257,7 @@ describe('replace-breakpoint-utils', () => {
 
       updateBreakpoints(mockElement);
 
-      expect(mockStyleSheetWithMixedQueries.replaceSync).toHaveBeenCalledWith(
+      expect(replaceSyncSpy).toHaveBeenCalledWith(
         `@media (max-width: 500px) { .small { display: none; } }@media (width >= ${customBreakpoint}) { .large { display: block; } }`
       );
     });
