@@ -58,6 +58,8 @@ If you set both `must-match-*` and `must-not-match-*` for the same field and the
 
 **Order of declaration matters:** The first template whose conditions are met will be applied. If a default template (without conditions) is declared first, it will apply to all child results, even if other templates with conditions are declared later.
 
+**End with a fallback template:** Declare a template without conditions last. A child result that matches none of your templates isn't displayed.
+
 **Examples:**
 
 ```html
