@@ -6,7 +6,7 @@ import {
 } from '@coveo/headless/insight';
 import {html, LitElement, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {keyed} from 'lit/directives/keyed.js';
+import {keyed} from '@/src/directives/keyed';
 import {createRef, type Ref} from 'lit/directives/ref.js';
 import {ATOMIC_MODAL_EXPORT_PARTS} from '@/src/components/common/atomic-modal/export-parts';
 import {feedbackOptions} from '@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/feedback-options';
