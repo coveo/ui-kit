@@ -38,8 +38,6 @@ export const Sort = createReactComponent(
         dispatchOptimistic({
           action: selectSortAction,
           next: () => ({sortCriteria: selected.sortCriteria, fields: selected.fields}),
-          coalesce: 'absolute',
-          invalidates: ['results'],
         });
       }
     };

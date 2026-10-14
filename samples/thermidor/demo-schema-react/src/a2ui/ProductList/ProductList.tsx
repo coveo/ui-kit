@@ -1,8 +1,8 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {Product} from '@coveo/thermidor-schema';
 import {ProductListPropsSchema} from '@coveo/thermidor-schema/zod3';
-import {useStale} from '../pending-dispatch.js';
 import {ProductBadges} from '../ProductBadges/ProductBadges.js';
+import {useRequestState} from '../request-state.js';
 import {resultsFocusTarget} from '../results-focus.js';
 import freshness from '../result-freshness.module.css';
 import styles from './ProductList.module.css';
@@ -72,7 +72,7 @@ export const ProductList = createReactComponent(
   {name: 'ProductList', schema: ProductListPropsSchema},
   ({props}) => {
     const products = props.products;
-    const outstanding = useStale('results');
+    const outstanding = useRequestState().actionInFlight;
 
     if (products === undefined) {
       return (

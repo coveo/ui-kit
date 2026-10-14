@@ -1,5 +1,4 @@
 import type {CategoryFacetAction, CategoryFacetProps} from '@coveo/thermidor-schema/zod3';
-import {useDispatchProgress} from '../pending-dispatch.js';
 import {useOptimisticValue} from '../use-optimistic-value.js';
 
 type CategoryFacetValues = NonNullable<CategoryFacetProps['values']>;
@@ -20,14 +19,12 @@ export function useOptimisticCategoryFacet(
   props: CategoryFacetProps,
   dispatch: (action: CategoryFacetAction) => void
 ): OptimisticCategoryFacet {
-  const {declareGesture} = useDispatchProgress();
   const {value: values, dispatchOptimistic} = useOptimisticValue(
     props.values ?? NO_VALUES,
     dispatch
   );
 
   const descendInto = (node: CategoryNode) => {
-    // `selectPath` SETS the path, so a later descent may replace a queued one.
     dispatchOptimistic({
       action: {event: {name: 'selectPath', context: {path: node.path}}},
       next: (current) => ({
@@ -40,24 +37,16 @@ export function useOptimisticCategoryFacet(
         selected: node,
         children: [],
       }),
-      coalesce: 'absolute',
-      invalidates: ['results'],
     });
   };
 
-  // Going up reveals siblings we can't reconstruct locally, so only dim the results.
-  const dispatchDimmingResults = (action: CategoryFacetAction) => {
-    const withdraw = declareGesture({invalidates: ['results']});
-    dispatch(action);
-    withdraw();
-  };
-
+  // Going up reveals siblings we can't reconstruct locally, so nothing is held.
   const clearPath = () => {
-    dispatchDimmingResults({event: {name: 'clearSelectedPath', context: {}}});
+    dispatch({event: {name: 'clearSelectedPath', context: {}}});
   };
 
   const selectAncestor = (path: string[]) => {
-    dispatchDimmingResults({event: {name: 'selectPath', context: {path}}});
+    dispatch({event: {name: 'selectPath', context: {path}}});
   };
 
   return {values, descendInto, clearPath, selectAncestor};

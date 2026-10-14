@@ -12,7 +12,7 @@ import {createContext, useContext, useEffect, useMemo, useRef, type ReactNode} f
 import {A2UIRenderer, useA2UI} from '@copilotkit/a2ui-renderer';
 import type {A2uiV09Message} from '@coveo/thermidor';
 import {A2UISkeleton} from './Skeleton/Skeleton.js';
-import {SurfaceLockContext} from './surface-lock.js';
+import {useRequestState} from './request-state.js';
 import styles from './surfaces.module.css';
 
 const NO_LOADING_SURFACES: ReadonlyMap<string, string> = new Map();
@@ -96,7 +96,7 @@ export function TurnSurfaces({
   );
   const sectionRefs = useRef(new Map<string, HTMLElement>());
   const drawnIdsRef = useRef<ReadonlySet<string> | null>(null);
-  const locked = useContext(SurfaceLockContext) && interactive;
+  const locked = useRequestState().locked && interactive;
   const lastFocusedRef = useRef<HTMLElement | null>(null);
 
   // Disabling the fieldset drops focus to the body, so the control the shopper used gets it back.

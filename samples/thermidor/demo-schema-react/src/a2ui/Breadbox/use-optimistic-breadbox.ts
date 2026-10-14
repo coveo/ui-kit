@@ -63,9 +63,6 @@ export function useOptimisticBreadbox(
     dispatchOptimistic({
       action: {event: {name: 'deselect', context: payload}},
       next: (current) => current.map((facet) => withoutValue(facet, payload)).filter(isActive),
-      // Removals of different values compose; a later clearAll still overrides them.
-      coalesce: 'dependent',
-      invalidates: ['results'],
     });
   };
 
@@ -73,8 +70,6 @@ export function useOptimisticBreadbox(
     dispatchOptimistic({
       action: {event: {name: 'clearAll', context: {}}},
       next: () => NO_FACETS,
-      coalesce: 'absolute',
-      invalidates: ['results'],
     });
   };
 

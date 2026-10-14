@@ -4,16 +4,6 @@ import {useOptimisticValue} from '../use-optimistic-value.js';
 
 type NumericFacetValues = NonNullable<NumericFacetProps['values']>;
 
-/** Compares ranges only, ignoring state. */
-const sameRanges = (left: NumericFacetValues, right: NumericFacetValues): boolean =>
-  left.length === right.length &&
-  left.every(
-    (range, index) => range.start === right[index]?.start && range.end === right[index]?.end
-  );
-
-const stateOf = (ranges: NumericFacetValues, start: number, end: number) =>
-  ranges.find((range) => range.start === start && range.end === end)?.state;
-
 function clampToDomain(value: number, domain?: {min?: number; max?: number}): number {
   let clamped = value;
   if (domain?.min !== undefined) {
@@ -47,12 +37,7 @@ export function useOptimisticNumericFacet(
   const [customEnd, setCustomEnd] = useState('');
   const [applyInFlight, setApplyInFlight] = useState(false);
   const backendValues: NumericFacetValues = props.values ?? [];
-  const {
-    value: values,
-    pending,
-    landingValue,
-    dispatchOptimistic,
-  } = useOptimisticValue(backendValues, dispatch);
+  const {value: values, pending, dispatchOptimistic} = useOptimisticValue(backendValues, dispatch);
 
   // Nothing pending means the producer answered, so a toggle/clear never leaves inputs dimmed.
   const isApplyingCustomRange = applyInFlight && pending;
@@ -63,17 +48,6 @@ export function useOptimisticNumericFacet(
   const resetCustomInputs = () => {
     setCustomStart('');
     setCustomEnd('');
-  };
-
-  // Every action rewrites every range, so the queue can only matter via which ranges exist or the
-  // target's prior state (a flip). An unknown landing is not permission to drop.
-  const canSupersedeToggle = (start: number, end: number) => {
-    const landing = landingValue();
-    return (
-      landing !== undefined &&
-      sameRanges(landing, values) &&
-      stateOf(landing, start, end) === stateOf(values, start, end)
-    );
   };
 
   const toggleSingleSelect = (start: number, end: number) => {
@@ -88,20 +62,14 @@ export function useOptimisticNumericFacet(
           ...value,
           state: !wasSelected && value.start === start && value.end === end ? 'selected' : 'idle',
         })),
-      coalesce: canSupersedeToggle(start, end) ? 'absolute' : 'dependent',
-      invalidates: ['results'],
     });
   };
 
   const clear = () => {
     resetCustomInputs();
-    const landing = landingValue();
     dispatchOptimistic({
       action: {event: {name: 'clearAllActiveValues', context: {}}},
       next: (current) => current.map((value) => ({...value, state: 'idle'})),
-      // Only safe to replace the queue when it lands on the ranges it was computed against.
-      coalesce: landing !== undefined && sameRanges(landing, values) ? 'absolute' : 'dependent',
-      invalidates: ['results'],
     });
   };
 
@@ -124,8 +92,6 @@ export function useOptimisticNumericFacet(
     dispatchOptimistic({
       action: {event: {name: 'applyCustomRange', context: {start, end}}},
       next: (current) => current.map((value) => ({...value, state: 'idle'})),
-      coalesce: 'dependent',
-      invalidates: ['results'],
     });
   };
 

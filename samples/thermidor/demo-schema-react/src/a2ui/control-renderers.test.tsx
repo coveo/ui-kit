@@ -157,26 +157,6 @@ describe('PageSize', () => {
     expect(optionValues).toContain('96');
     held.answer();
   });
-
-  it('sends only the first and last size of a rapid burst, coalescing the queue', async () => {
-    // 96 adds the fourth option a three-change burst needs.
-    const view = mountHeldControl<PageSizeProps>(
-      'PageSize',
-      {pageSize: 96},
-      (context) => context?.['pageSize']
-    );
-
-    await waitFor(() => expect(screen.getByLabelText(/Products per page/)).toBeDefined());
-    const select = screen.getByLabelText(/Products per page/) as HTMLSelectElement;
-    fireEvent.change(select, {target: {value: '12'}});
-    fireEvent.change(select, {target: {value: '24'}});
-    fireEvent.change(select, {target: {value: '48'}});
-
-    await waitFor(() => expect(view.sent()).toEqual([12]));
-    await view.release();
-
-    await waitFor(() => expect(view.sent()).toEqual([12, 48]));
-  });
 });
 
 describe('Sort', () => {
@@ -208,29 +188,5 @@ describe('Sort', () => {
     await waitFor(() =>
       expect((screen.getByLabelText(/Sort by/) as HTMLSelectElement).value).toBe('0')
     );
-  });
-
-  it('sends only the first and last criterion of a rapid burst, coalescing the queue', async () => {
-    const fourSorts: SortProps = {
-      appliedSort: {sortCriteria: 'relevance', fields: []},
-      availableSorts: [
-        {sortCriteria: 'relevance', fields: []},
-        {sortCriteria: 'price_asc', fields: []},
-        {sortCriteria: 'price_desc', fields: []},
-        {sortCriteria: 'name_asc', fields: []},
-      ],
-    };
-    const view = mountHeldControl('Sort', fourSorts, (context) => context?.['sortCriteria']);
-
-    await waitFor(() => expect(screen.getByLabelText(/Sort by/)).toBeDefined());
-    const select = screen.getByLabelText(/Sort by/) as HTMLSelectElement;
-    fireEvent.change(select, {target: {value: '1'}});
-    fireEvent.change(select, {target: {value: '2'}});
-    fireEvent.change(select, {target: {value: '3'}});
-
-    await waitFor(() => expect(view.sent()).toEqual(['price_asc']));
-    await view.release();
-
-    await waitFor(() => expect(view.sent()).toEqual(['price_asc', 'name_asc']));
   });
 });

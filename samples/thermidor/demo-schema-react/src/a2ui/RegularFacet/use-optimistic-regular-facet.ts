@@ -32,9 +32,6 @@ export function useOptimisticRegularFacet(
         current.map((candidate) =>
           candidate.value === value ? {...candidate, state: nextState} : candidate
         ),
-      // Flips only the target (`SearchActionHandler.handleRegularFacetToggle`, `single=false`).
-      coalesce: 'involutive',
-      invalidates: ['results'],
     });
   };
 
@@ -42,8 +39,6 @@ export function useOptimisticRegularFacet(
     dispatchOptimistic({
       action: {event: {name: 'clearAllActiveValues', context: {}}},
       next: (current) => current.map((candidate) => ({...candidate, state: 'idle' as const})),
-      coalesce: 'absolute',
-      invalidates: ['results'],
     });
   };
 

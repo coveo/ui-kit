@@ -39,8 +39,6 @@ export const PageSize = createReactComponent(
       dispatchOptimistic({
         action: setPageSizeAction,
         next: () => newSize,
-        coalesce: 'absolute',
-        invalidates: ['results'],
       });
     };
 
