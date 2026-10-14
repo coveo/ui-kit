@@ -47,7 +47,8 @@ describe('replace-breakpoint-utils', () => {
 
       updateBreakpoints(mockElement);
 
-      expect(mockStyleSheet.replaceSync).not.toHaveBeenCalled();
+      expect(replaceSyncSpy).not.toHaveBeenCalled();
+      expect(mockShadowRoot.adoptedStyleSheets[0]).toBe(mockStyleSheet);
     });
 
     it('should do nothing when layout element has no mobileBreakpoint', () => {
@@ -56,7 +57,8 @@ describe('replace-breakpoint-utils', () => {
 
       updateBreakpoints(mockElement);
 
-      expect(mockStyleSheet.replaceSync).not.toHaveBeenCalled();
+      expect(replaceSyncSpy).not.toHaveBeenCalled();
+      expect(mockShadowRoot.adoptedStyleSheets[0]).toBe(mockStyleSheet);
     });
 
     it('should do nothing when mobileBreakpoint equals DEFAULT_MOBILE_BREAKPOINT', () => {
@@ -67,7 +69,8 @@ describe('replace-breakpoint-utils', () => {
 
       updateBreakpoints(mockElement);
 
-      expect(mockStyleSheet.replaceSync).not.toHaveBeenCalled();
+      expect(replaceSyncSpy).not.toHaveBeenCalled();
+      expect(mockShadowRoot.adoptedStyleSheets[0]).toBe(mockStyleSheet);
     });
 
     it('should replace breakpoints in stylesheet when different mobileBreakpoint is provided', () => {
