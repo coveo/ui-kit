@@ -244,7 +244,8 @@ export function foldActivity(
 /**
  * Merges a superseding snapshot onto the one it replaces so an incremental snapshot (only the
  * slices that changed that turn) does not drop slices an earlier same-`messageId` snapshot wrote.
- * `next` wins per slice; unmentioned prior slices carry forward.
+ * `next` wins per slice; unmentioned prior slices carry forward, except those of a surface `next`
+ * creates or deletes, whose earlier topology and data model it ends.
  */
 function mergeActivityPayload(
   previous: Record<string, unknown>,
@@ -257,8 +258,13 @@ function mergeActivityPayload(
   }
 
   const nextSlices = new Set<string>();
+  const restartedSurfaceIds = new Set<string>();
   let nextHasComponents = false;
   for (const message of nextMessages) {
+    const lifecycleSurfaceId = surfaceLifecycleId(message);
+    if (lifecycleSurfaceId !== null) {
+      restartedSurfaceIds.add(lifecycleSurfaceId);
+    }
     const slice = updateDataModelSlice(message);
     if (slice !== null) {
       nextSlices.add(slice);
@@ -270,14 +276,39 @@ function mergeActivityPayload(
 
   // Gateway topology is a whole-surface re-projection (never a per-node delta), so last one wins.
   const priorComponents = latestUpdateComponents(previousMessages);
-  const carriedComponents = nextHasComponents || priorComponents === null ? [] : [priorComponents];
+  const carriedComponents =
+    nextHasComponents ||
+    priorComponents === null ||
+    restartedSurfaceIds.has(operationSurfaceId(priorComponents, 'updateComponents') ?? '')
+      ? []
+      : [priorComponents];
 
   const carriedForward = previousMessages.filter((message) => {
     const slice = updateDataModelSlice(message);
-    return slice !== null && !nextSlices.has(slice);
+    return (
+      slice !== null &&
+      !nextSlices.has(slice) &&
+      !restartedSurfaceIds.has(operationSurfaceId(message, 'updateDataModel') ?? '')
+    );
   });
 
   return {...next, messages: [...carriedComponents, ...nextMessages, ...carriedForward]};
+}
+
+/** The surface id an operation of `message` targets, or null when it is not that operation. */
+function operationSurfaceId(message: unknown, operation: string): string | null {
+  if (!isRecord(message)) {
+    return null;
+  }
+  const body = message[operation];
+  return isRecord(body) && typeof body['surfaceId'] === 'string' ? body['surfaceId'] : null;
+}
+
+/** The surface a `createSurface` or `deleteSurface` message starts or ends, or null. */
+function surfaceLifecycleId(message: unknown): string | null {
+  return (
+    operationSurfaceId(message, 'createSurface') ?? operationSurfaceId(message, 'deleteSurface')
+  );
 }
 
 function isUpdateComponents(message: unknown): boolean {
@@ -439,7 +470,8 @@ function setAtPointer(state: A2uiState, path: string, value: unknown): A2uiState
  * This block is the SINGLE location in the
  * package that walks a raw A2-UI activity payload (`activity.payload.messages`
  * → `createSurface` → find the canonical `root` node in `components` → read the
- * root node's top-level `component` discriminant). It persists until
+ * root node's top-level `component` discriminant; `deleteSurface` and the
+ * `isLoading` data-model flag drive the surface lifecycle). It persists until
  * server-surfaced typed routing lands (ADR-015 Option C, a separate future
  * ADR). No consumer — sample or internal `dispatchAction` — may walk activities;
  * they read the typed `response.surfaces` projection.
@@ -460,13 +492,22 @@ const ROOT_COMPONENT_ID = 'root';
 /** Activity kind carrying A2-UI surface `createSurface` messages. */
 const SURFACE_ACTIVITY_KIND = 'a2ui-surface';
 
+/** The catalog-declared data-model flag marking a surface as a loading placeholder. */
+const LOADING_FLAG = 'isLoading';
+
 /**
  * Derives the ordered list of surfaces borne by a turn's activities. Every
  * entry carries a non-empty `surfaceId` and a non-empty `rootComponentType`;
  * turns with no surface-bearing activities yield an empty list.
+ *
+ * Messages are applied in stream order, following the A2-UI surface lifecycle:
+ * `deleteSurface` removes a surface, and `isLoading` tracks the surface's
+ * effective data model — its `createSurface.dataModel`, then any
+ * `updateDataModel` written at `/` (or with no or an empty path) or at `/isLoading`. A data model may key the flag plainly
+ * (`isLoading`) or as its JSON Pointer (`/isLoading`).
  */
 export function deriveSurfaces(activities: Activity[]): DiscoveredSurface[] {
-  const surfaces: DiscoveredSurface[] = [];
+  const surfaces = new Map<string, DiscoveredSurface>();
 
   for (const activity of activities) {
     if (activity.kind !== SURFACE_ACTIVITY_KIND) {
@@ -479,14 +520,56 @@ export function deriveSurfaces(activities: Activity[]): DiscoveredSurface[] {
     }
 
     for (const message of messages) {
-      const surface = readSurface(message);
-      if (surface !== null) {
-        surfaces.push(surface);
-      }
+      applySurfaceMessage(surfaces, message);
     }
   }
 
-  return surfaces;
+  return [...surfaces.values()];
+}
+
+function applySurfaceMessage(surfaces: Map<string, DiscoveredSurface>, message: unknown): void {
+  if (!isRecord(message)) {
+    return;
+  }
+
+  const surface = readSurface(message);
+  if (surface !== null) {
+    // A (re-)created surface is the newest one the agent drew, so it moves to the end rather than
+    // keeping the position of the surface it replaces.
+    surfaces.delete(surface.surfaceId);
+    surfaces.set(surface.surfaceId, surface);
+    return;
+  }
+
+  const deleteSurface = message['deleteSurface'];
+  if (isRecord(deleteSurface) && typeof deleteSurface['surfaceId'] === 'string') {
+    surfaces.delete(deleteSurface['surfaceId']);
+    return;
+  }
+
+  const updateDataModel = message['updateDataModel'];
+  if (!isRecord(updateDataModel) || typeof updateDataModel['surfaceId'] !== 'string') {
+    return;
+  }
+  const existing = surfaces.get(updateDataModel['surfaceId']);
+  const isLoading = readLoadingUpdate(updateDataModel['path'], updateDataModel['value']);
+  if (existing !== undefined && isLoading !== undefined) {
+    surfaces.set(existing.surfaceId, {...existing, isLoading});
+  }
+}
+
+/**
+ * Reads the loading flag an `updateDataModel` writes, or `undefined` when the write leaves it
+ * untouched. Only a whole-model write (`/` or no path) and a direct `/isLoading` write reach it.
+ */
+function readLoadingUpdate(path: unknown, value: unknown): boolean | undefined {
+  if (path === undefined || path === '' || path === '/') {
+    return isRecord(value) && value[LOADING_FLAG] === true;
+  }
+  if (path === `/${LOADING_FLAG}`) {
+    return value === true;
+  }
+  return undefined;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -535,5 +618,23 @@ function readSurface(message: unknown): DiscoveredSurface | null {
     return null;
   }
 
-  return {surfaceId, rootComponentType};
+  const dataModel = createSurface['dataModel'];
+  const isLoading = isRecord(dataModel) && readInlineLoadingFlag(dataModel);
+
+  return {surfaceId, rootComponentType, isLoading};
+}
+
+/**
+ * Reads the loading flag an inline `createSurface.dataModel` seeds. The flag may be keyed plainly
+ * (`isLoading`) or as its JSON Pointer (`/isLoading`); as in the v0.9 projection, the last of the
+ * two wins.
+ */
+function readInlineLoadingFlag(dataModel: Record<string, unknown>): boolean {
+  let isLoading = false;
+  for (const [key, value] of Object.entries(dataModel)) {
+    if (key === LOADING_FLAG || key === `/${LOADING_FLAG}`) {
+      isLoading = value === true;
+    }
+  }
+  return isLoading;
 }

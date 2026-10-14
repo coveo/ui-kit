@@ -151,7 +151,7 @@ describe('fold surface derivation', () => {
     ]);
 
     expect(turn.response.surfaces).toEqual([
-      {surfaceId: 'ui-1', rootComponentType: 'CommerceSearch'},
+      {surfaceId: 'ui-1', rootComponentType: 'CommerceSearch', isLoading: false},
     ]);
   });
 
@@ -162,8 +162,8 @@ describe('fold surface derivation', () => {
     ]);
 
     expect(turn.response.surfaces).toEqual([
-      {surfaceId: 'c-1', rootComponentType: 'Converse'},
-      {surfaceId: 'ui-2', rootComponentType: 'CommerceSearch'},
+      {surfaceId: 'c-1', rootComponentType: 'Converse', isLoading: false},
+      {surfaceId: 'ui-2', rootComponentType: 'CommerceSearch', isLoading: false},
     ]);
   });
 
@@ -221,7 +221,7 @@ describe('fold surface derivation', () => {
     ]);
 
     expect(turn.response.surfaces).toEqual([
-      {surfaceId: 'commerce-search-2', rootComponentType: 'CommerceSearch'},
+      {surfaceId: 'commerce-search-2', rootComponentType: 'CommerceSearch', isLoading: false},
     ]);
     expect(deriveSurfaces(turn.response.activities)).toEqual(turn.response.surfaces);
     expect(
@@ -266,7 +266,7 @@ describe('fold ACTIVITY_SNAPSHOT replace semantics', () => {
     expect(turn.response.activities).toHaveLength(1);
     expect(turn.response.activities[0].id).toBe('activity-1');
     expect(turn.response.surfaces).toEqual([
-      {surfaceId: 'ui-new', rootComponentType: 'CommerceSearch'},
+      {surfaceId: 'ui-new', rootComponentType: 'CommerceSearch', isLoading: false},
     ]);
   });
 
@@ -277,7 +277,7 @@ describe('fold ACTIVITY_SNAPSHOT replace semantics', () => {
     ]);
 
     expect(turn.response.surfaces).toEqual([
-      {surfaceId: 'fresh', rootComponentType: 'CommerceSearch'},
+      {surfaceId: 'fresh', rootComponentType: 'CommerceSearch', isLoading: false},
     ]);
   });
 
@@ -290,8 +290,8 @@ describe('fold ACTIVITY_SNAPSHOT replace semantics', () => {
 
     expect(turn.response.activities.map((a) => a.id)).toEqual(['activity-1', 'activity-2']);
     expect(turn.response.surfaces).toEqual([
-      {surfaceId: 'a-new', rootComponentType: 'converse'},
-      {surfaceId: 'b', rootComponentType: 'CommerceSearch'},
+      {surfaceId: 'a-new', rootComponentType: 'converse', isLoading: false},
+      {surfaceId: 'b', rootComponentType: 'CommerceSearch', isLoading: false},
     ]);
   });
 
@@ -303,8 +303,8 @@ describe('fold ACTIVITY_SNAPSHOT replace semantics', () => {
 
     expect(turn.response.activities).toHaveLength(2);
     expect(turn.response.surfaces).toEqual([
-      {surfaceId: 's-1', rootComponentType: 'CommerceSearch'},
-      {surfaceId: 's-2', rootComponentType: 'CommerceSearch'},
+      {surfaceId: 's-1', rootComponentType: 'CommerceSearch', isLoading: false},
+      {surfaceId: 's-2', rootComponentType: 'CommerceSearch', isLoading: false},
     ]);
   });
 
@@ -316,8 +316,8 @@ describe('fold ACTIVITY_SNAPSHOT replace semantics', () => {
 
     expect(turn.response.activities).toHaveLength(2);
     expect(turn.response.surfaces).toEqual([
-      {surfaceId: 's-1', rootComponentType: 'converse'},
-      {surfaceId: 's-2', rootComponentType: 'converse'},
+      {surfaceId: 's-1', rootComponentType: 'converse', isLoading: false},
+      {surfaceId: 's-2', rootComponentType: 'converse', isLoading: false},
     ]);
   });
 
@@ -413,6 +413,246 @@ describe('fold ACTIVITY_SNAPSHOT replace semantics', () => {
     expect(activityPayloadMessages(turn)).toEqual([
       updateComponents,
       dataModelMessage('ui-1', '/state/ui-1-facet', {values: ['x', 'y']}),
+    ]);
+  });
+});
+
+/**
+ * Loading placeholder lifecycle.
+ *
+ * A placeholder is a `createSurface` whose data model declares `isLoading: true`. It ends when the
+ * agent deletes the surface, supersedes its activity, or writes `isLoading: false`.
+ */
+describe('fold loading placeholder lifecycle', () => {
+  const loadingSurfaceMessage = (surfaceId: string, rootComponentType: string) => ({
+    version: 'v1.0',
+    createSurface: {
+      surfaceId,
+      components: [{id: 'root', component: rootComponentType}],
+      dataModel: {heading: {value: ''}, products: {items: []}, isLoading: true},
+    },
+  });
+
+  const deleteSurfaceMessage = (surfaceId: string) => ({
+    version: 'v1.0',
+    deleteSurface: {surfaceId},
+  });
+
+  const dataModelMessage = (surfaceId: string, path: string, value: unknown) => ({
+    version: 'v1.0',
+    updateDataModel: {surfaceId, path, value},
+  });
+
+  it('flags a surface whose data model declares isLoading', () => {
+    const turn = foldActivities(createTurn('t1', {}), [
+      surfaceSnapshotWith('activity-1', true, [loadingSurfaceMessage('skel', 'ProductCarousel')]),
+    ]);
+
+    expect(turn.response.surfaces).toEqual([
+      {surfaceId: 'skel', rootComponentType: 'ProductCarousel', isLoading: true},
+    ]);
+  });
+
+  it('removes a placeholder deleted in the snapshot that creates its content', () => {
+    const turn = foldActivities(createTurn('t1', {}), [
+      surfaceSnapshotWith('activity-1', true, [loadingSurfaceMessage('skel', 'ProductCarousel')]),
+      surfaceSnapshotWith('activity-2', true, [
+        deleteSurfaceMessage('skel'),
+        surfaceMessage('content', 'ProductCarousel'),
+      ]),
+    ]);
+
+    expect(turn.response.surfaces).toEqual([
+      {surfaceId: 'content', rootComponentType: 'ProductCarousel', isLoading: false},
+    ]);
+    expect(deriveSurfaces(turn.response.activities)).toEqual(turn.response.surfaces);
+  });
+
+  it('keeps the content in place when it supersedes the placeholder activity', () => {
+    const turn = foldActivities(createTurn('t1', {}), [
+      surfaceSnapshotWith('activity-1', true, [loadingSurfaceMessage('skel', 'ProductCarousel')]),
+      surfaceSnapshotWith('activity-2', true, [loadingSurfaceMessage('actions', 'NextActionsBar')]),
+      surfaceSnapshotWith('activity-1', true, [
+        deleteSurfaceMessage('skel'),
+        surfaceMessage('content', 'ProductCarousel'),
+      ]),
+    ]);
+
+    expect(turn.response.surfaces).toEqual([
+      {surfaceId: 'content', rootComponentType: 'ProductCarousel', isLoading: false},
+      {surfaceId: 'actions', rootComponentType: 'NextActionsBar', isLoading: true},
+    ]);
+  });
+
+  it('removes an abandoned placeholder', () => {
+    const turn = foldActivities(createTurn('t1', {}), [
+      surfaceSnapshotWith('activity-1', true, [loadingSurfaceMessage('skel', 'BundleDisplay')]),
+      surfaceSnapshotWith('activity-1', true, [deleteSurfaceMessage('skel')]),
+    ]);
+
+    expect(turn.response.surfaces).toEqual([]);
+  });
+
+  it('ends loading when the data model is rewritten without the flag', () => {
+    const turn = foldActivities(createTurn('t1', {}), [
+      surfaceSnapshotWith('create:skel', true, [loadingSurfaceMessage('skel', 'ProductCarousel')]),
+      surfaceSnapshotWith('update:skel', true, [
+        dataModelMessage('skel', '/', {heading: {value: 'Surfboards'}, products: {items: []}}),
+      ]),
+    ]);
+
+    expect(turn.response.surfaces).toEqual([
+      {surfaceId: 'skel', rootComponentType: 'ProductCarousel', isLoading: false},
+    ]);
+  });
+
+  it('follows a direct /isLoading write', () => {
+    const turn = foldActivities(createTurn('t1', {}), [
+      surfaceSnapshotWith('create:skel', true, [loadingSurfaceMessage('skel', 'ProductCarousel')]),
+      surfaceSnapshotWith('update:skel', true, [dataModelMessage('skel', '/isLoading', false)]),
+    ]);
+
+    expect(turn.response.surfaces).toEqual([
+      {surfaceId: 'skel', rootComponentType: 'ProductCarousel', isLoading: false},
+    ]);
+  });
+
+  it.each([
+    ['no path', undefined],
+    ['an empty path', ''],
+  ])('ends loading when the whole data model is rewritten with %s', (_, path) => {
+    const turn = foldActivities(createTurn('t1', {}), [
+      surfaceSnapshotWith('create:skel', true, [loadingSurfaceMessage('skel', 'ProductCarousel')]),
+      surfaceSnapshotWith('update:skel', true, [
+        {version: 'v1.0', updateDataModel: {surfaceId: 'skel', path, value: {products: {}}}},
+      ]),
+    ]);
+
+    expect(turn.response.surfaces).toEqual([
+      {surfaceId: 'skel', rootComponentType: 'ProductCarousel', isLoading: false},
+    ]);
+  });
+
+  it('flags a surface whose inline data model keys the flag as a JSON Pointer', () => {
+    const turn = foldActivities(createTurn('t1', {}), [
+      surfaceSnapshotWith('activity-1', true, [
+        {
+          version: 'v1.0',
+          createSurface: {
+            surfaceId: 'skel',
+            components: [{id: 'root', component: 'ProductCarousel'}],
+            dataModel: {'/isLoading': true},
+          },
+        },
+      ]),
+    ]);
+
+    expect(turn.response.surfaces).toEqual([
+      {surfaceId: 'skel', rootComponentType: 'ProductCarousel', isLoading: true},
+    ]);
+  });
+
+  it('ignores a data-model write on a surface the turn has not created', () => {
+    const turn = foldActivities(createTurn('t1', {}), [
+      surfaceSnapshotWith('create:skel', true, [loadingSurfaceMessage('skel', 'ProductCarousel')]),
+      surfaceSnapshotWith('update:other', true, [dataModelMessage('other', '/isLoading', true)]),
+    ]);
+
+    expect(turn.response.surfaces).toEqual([
+      {surfaceId: 'skel', rootComponentType: 'ProductCarousel', isLoading: true},
+    ]);
+  });
+
+  it('moves a surface re-created after its deletion to the end', () => {
+    const turn = foldActivities(createTurn('t1', {}), [
+      surfaceSnapshotWith('activity-1', true, [loadingSurfaceMessage('skel', 'ProductCarousel')]),
+      surfaceSnapshotWith('activity-2', true, [surfaceMessage('actions', 'NextActionsBar')]),
+      surfaceSnapshotWith('activity-3', true, [
+        deleteSurfaceMessage('skel'),
+        surfaceMessage('skel', 'ProductCarousel'),
+      ]),
+    ]);
+
+    expect(turn.response.surfaces).toEqual([
+      {surfaceId: 'actions', rootComponentType: 'NextActionsBar', isLoading: false},
+      {surfaceId: 'skel', rootComponentType: 'ProductCarousel', isLoading: false},
+    ]);
+  });
+
+  it('collapses a surface created twice into its latest creation, at the end', () => {
+    const turn = foldActivities(createTurn('t1', {}), [
+      surfaceSnapshotWith('activity-1', true, [loadingSurfaceMessage('skel', 'ProductCarousel')]),
+      surfaceSnapshotWith('activity-2', true, [surfaceMessage('actions', 'NextActionsBar')]),
+      surfaceSnapshotWith('activity-3', true, [surfaceMessage('skel', 'ProductCarousel')]),
+    ]);
+
+    expect(turn.response.surfaces).toEqual([
+      {surfaceId: 'actions', rootComponentType: 'NextActionsBar', isLoading: false},
+      {surfaceId: 'skel', rootComponentType: 'ProductCarousel', isLoading: false},
+    ]);
+  });
+
+  it('ends the data model of a surface the superseding snapshot re-creates', () => {
+    const turn = foldActivities(createTurn('t1', {}), [
+      surfaceSnapshotWith('activity-1', true, [
+        surfaceMessage('s', 'ProductCarousel'),
+        dataModelMessage('s', '/isLoading', true),
+      ]),
+      surfaceSnapshotWith('activity-1', true, [
+        deleteSurfaceMessage('s'),
+        surfaceMessage('s', 'ProductCarousel'),
+      ]),
+    ]);
+
+    expect(turn.response.surfaces).toEqual([
+      {surfaceId: 's', rootComponentType: 'ProductCarousel', isLoading: false},
+    ]);
+    expect(turn.response.a2uiMessages.some((message) => 'updateDataModel' in message)).toBe(false);
+  });
+
+  it('carries no write for a surface the superseding snapshot deletes', () => {
+    const turn = foldActivities(createTurn('t1', {}), [
+      surfaceSnapshotWith('activity-1', true, [
+        surfaceMessage('s', 'ProductCarousel'),
+        dataModelMessage('s', '/heading', {value: 'Surfboards'}),
+      ]),
+      surfaceSnapshotWith('activity-1', true, [
+        deleteSurfaceMessage('s'),
+        surfaceMessage('c', 'ProductCarousel'),
+      ]),
+    ]);
+
+    expect(turn.response.surfaces).toEqual([
+      {surfaceId: 'c', rootComponentType: 'ProductCarousel', isLoading: false},
+    ]);
+    expect(
+      turn.response.a2uiMessages.filter(
+        (message) => (message['updateDataModel'] as {surfaceId?: string})?.surfaceId === 's'
+      )
+    ).toEqual([]);
+  });
+
+  it('forwards to the renderer a delete for a surface an earlier turn created', () => {
+    const turn = foldActivities(createTurn('t2', {}), [
+      surfaceSnapshotWith('activity-1', true, [deleteSurfaceMessage('earlier')]),
+    ]);
+
+    expect(turn.response.surfaces).toEqual([]);
+    expect(turn.response.a2uiMessages).toEqual([
+      {version: 'v0.9', deleteSurface: {surfaceId: 'earlier'}},
+    ]);
+  });
+
+  it('ignores data-model writes that do not reach the flag', () => {
+    const turn = foldActivities(createTurn('t1', {}), [
+      surfaceSnapshotWith('create:skel', true, [loadingSurfaceMessage('skel', 'ProductCarousel')]),
+      surfaceSnapshotWith('update:skel', true, [
+        dataModelMessage('skel', '/heading', {value: 'Surfboards'}),
+      ]),
+    ]);
+
+    expect(turn.response.surfaces).toEqual([
+      {surfaceId: 'skel', rootComponentType: 'ProductCarousel', isLoading: true},
     ]);
   });
 });
