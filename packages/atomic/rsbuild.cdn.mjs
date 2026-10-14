@@ -142,6 +142,20 @@ const rsbuild = await rsbuildApi.createRsbuild({
         strategy: 'split-by-module',
         override: {
           cacheGroups: {
+            // Modules used by many components go in one chunk instead of one chunk each:
+            // a typical page then fetches about half as many files, and a single chunk
+            // also compresses better than a hundred tiny ones.
+            shared: {
+              test: (module) =>
+                (module.resource ?? '').startsWith(join(__dirname, 'src')) ||
+                /node_modules[\\/](?:lit|lit-html|lit-element|@lit[\\/](?:reactive-element|context)|tslib)[\\/]/.test(
+                  module.resource ?? ''
+                ),
+              minChunks: 10,
+              name: 'atomic-shared',
+              priority: 0,
+              reuseExistingChunk: true,
+            },
             // Keep each lazily imported dayjs locale in its own chunk; otherwise
             // split-by-module folds all 140+ of them into the dayjs chunk every page loads.
             dayjsLocales: {
