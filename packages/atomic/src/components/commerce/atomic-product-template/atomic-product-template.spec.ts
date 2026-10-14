@@ -73,7 +73,7 @@ describe('atomic-product-template', () => {
   it('should call #getTemplate on the controller', async () => {
     const brandConditions = (item: Product) => item.ec_brand === 'Coveo';
     const element = await setupElement({conditions: [brandConditions]});
-    const ctrl = element.productTemplateController;
+    const ctrl = element['templateController'];
     //@ts-expect-error: we don't really care about the return template here
     const spy = vi.spyOn(ctrl, 'getTemplate').mockResolvedValue('🍰');
     const result = await element.getTemplate();

@@ -74,12 +74,12 @@ describe('atomic-commerce-query-summary', () => {
 
   it('should call buildProductListing when interfaceElement.type is "product-listing"', async () => {
     await renderQuerySummary({interfaceElementType: 'product-listing'});
-    expect(buildProductListing).toHaveBeenCalledWith(mockedEngine);
+    expect(buildProductListing).toHaveBeenCalledWith(mockedEngine, {enableResults: false});
   });
 
   it('should call buildSearch when interfaceElement.type is "search"', async () => {
     await renderQuerySummary({interfaceElementType: 'search'});
-    expect(buildSearch).toHaveBeenCalledWith(mockedEngine);
+    expect(buildSearch).toHaveBeenCalledWith(mockedEngine, {enableResults: false});
   });
 
   it('should call summary on this.listingOrSearchSummary', async () => {
@@ -137,7 +137,7 @@ describe('atomic-commerce-query-summary', () => {
           hasError: false,
         },
       });
-      expect(buildProductListing).toHaveBeenCalledWith(mockedEngine);
+      expect(buildProductListing).toHaveBeenCalledWith(mockedEngine, {enableResults: false});
     });
 
     it('should call buildSearch when interfaceElement.type is "search"', async () => {
@@ -149,7 +149,7 @@ describe('atomic-commerce-query-summary', () => {
           hasError: false,
         },
       });
-      expect(buildSearch).toHaveBeenCalledWith(mockedEngine);
+      expect(buildSearch).toHaveBeenCalledWith(mockedEngine, {enableResults: false});
     });
 
     it('should bind to the query summary controller', async () => {

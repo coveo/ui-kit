@@ -5,6 +5,7 @@ import {
 } from '@coveo/headless/commerce';
 import {LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {shouldEnableResults} from '@/src/components/commerce/atomic-commerce-interface/search-or-listing';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
 import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
@@ -81,7 +82,11 @@ export class AtomicCommerceSearchBoxRecentQueries
     this.storage = new SafeStorage();
     this.recentQueriesList = buildRecentQueriesList(this.bindings.engine, {
       initialState: {queries: this.retrieveLocalStorage()},
-      options: {maxLength: 1000, clearFilters: this.bindings.clearFilters},
+      options: {
+        maxLength: 1000,
+        clearFilters: this.bindings.clearFilters,
+        enableResults: shouldEnableResults(this.bindings.interfaceElement),
+      },
     });
 
     this.recentQueriesList.subscribe(() => this.updateLocalStorage());

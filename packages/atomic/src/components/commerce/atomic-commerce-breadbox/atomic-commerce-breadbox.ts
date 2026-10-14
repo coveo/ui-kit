@@ -5,8 +5,6 @@ import {
   type BreadcrumbManagerState,
   type BreadcrumbValue,
   buildContext,
-  buildProductListing,
-  buildSearch,
   type CategoryFacetValue,
   type Context,
   type ContextState,
@@ -17,6 +15,7 @@ import {
   type RegularFacetValue,
   type Search,
 } from '@coveo/headless/commerce';
+import {buildSearchOrListing} from '@/src/components/commerce/atomic-commerce-interface/search-or-listing';
 import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import type {CommerceBindings} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
@@ -160,11 +159,10 @@ export class AtomicCommerceBreadbox
   }
 
   public initialize() {
-    if (this.bindings.interfaceElement.type === 'product-listing') {
-      this.searchOrListing = buildProductListing(this.bindings.engine);
-    } else {
-      this.searchOrListing = buildSearch(this.bindings.engine);
-    }
+    this.searchOrListing = buildSearchOrListing(
+      this.bindings.engine,
+      this.bindings.interfaceElement
+    );
     this.context = buildContext(this.bindings.engine);
     this.breadcrumbManager = this.searchOrListing.breadcrumbManager();
 

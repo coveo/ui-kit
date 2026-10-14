@@ -1,6 +1,4 @@
 import {
-  buildProductListing,
-  buildSearch,
   type ProductListing,
   type ProductListingState,
   type Search,
@@ -8,6 +6,7 @@ import {
   type Sort,
   type SortState,
 } from '@coveo/headless/commerce';
+import {buildSearchOrListing} from '@/src/components/commerce/atomic-commerce-interface/search-or-listing';
 import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {guard} from 'lit/directives/guard.js';
@@ -58,11 +57,10 @@ export class AtomicCommerceSortDropdown
   @state() error!: Error;
 
   public initialize() {
-    if (this.bindings.interfaceElement.type === 'product-listing') {
-      this.searchOrListing = buildProductListing(this.bindings.engine);
-    } else {
-      this.searchOrListing = buildSearch(this.bindings.engine);
-    }
+    this.searchOrListing = buildSearchOrListing(
+      this.bindings.engine,
+      this.bindings.interfaceElement
+    );
     this.sort = this.searchOrListing.sort();
   }
 

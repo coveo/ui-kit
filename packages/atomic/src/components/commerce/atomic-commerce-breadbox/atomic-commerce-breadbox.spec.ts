@@ -122,12 +122,12 @@ describe('atomic-commerce-breadbox', () => {
 
   it('should call buildProductListing when interfaceElement.type is "product-listing"', async () => {
     await renderBreadbox({interfaceElementType: 'product-listing'});
-    expect(buildProductListing).toHaveBeenCalledWith(mockedEngine);
+    expect(buildProductListing).toHaveBeenCalledWith(mockedEngine, {enableResults: false});
   });
 
   it('should call buildSearch when interfaceElement.type is "search"', async () => {
     await renderBreadbox({interfaceElementType: 'search'});
-    expect(buildSearch).toHaveBeenCalledWith(mockedEngine);
+    expect(buildSearch).toHaveBeenCalledWith(mockedEngine, {enableResults: false});
   });
 
   it('should call buildContext', async () => {
