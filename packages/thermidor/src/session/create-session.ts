@@ -37,6 +37,7 @@ import {
 } from '@/src/actions/dispatch-coordinator.js';
 import {validateActionPayload} from './action-payload-validation.js';
 import type {ContractsSchema} from './contracts.js';
+import {callWithConflictRetry} from './conflict-retry.js';
 import {createTurn, foldActivity} from './fold.js';
 import {deriveNodeIdentityRegistry} from './in-transit-validation.js';
 import {restoreSession, serializeSession, type SerializedSession} from './serialize.js';
@@ -155,7 +156,16 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
   readonly contracts: TContracts;
   /** Readonly observable list of turns folded from the streamed response. */
   readonly turns: readonly Turn[];
-  /** Registers a listener invoked once per change to the turn list. */
+  /**
+   * Why the last component action was dropped, or `undefined`. Set when the endpoint kept
+   * rejecting the action because another one was still being processed for this session, after
+   * the session's own bounded retries ran out. That action's dispatch settles `'failed'`, so any
+   * optimistic state tied to it is released and the last authoritative state shows again.
+   * Cleared once the next action or prompt is sent. Changes notify {@link Session.subscribe}
+   * listeners. A conflict that recovers through retry never sets it.
+   */
+  readonly actionError: string | undefined;
+  /** Registers a listener invoked once per change to the turn list or `actionError`. */
   subscribe(listener: () => void): () => void;
   /**
    * The single consumer-facing action-dispatch entry point, wired directly as
@@ -199,6 +209,12 @@ export interface SessionActions {
   withholdQueued: () => void;
   subscribe: (listener: () => void) => () => void;
   getSnapshot: () => DispatchSnapshot;
+}
+
+interface RequestFailure {
+  error: string;
+  /** The endpoint kept rejecting it as concurrent, past the retry budget. */
+  conflict: boolean;
 }
 
 function isAbortError(error: unknown): boolean {
@@ -280,13 +296,28 @@ export function createSession<TContracts extends ContractsSchema>(
   // last to ARRIVE win over a newer action sent later. Turn id and request are read at send time.
   // `hasStreamingTurn()`, not `isStreaming()`: a prompt may have opened since this was queued, and
   // `isStreaming()` would see this action's own stream.
-  const actionCoordinator = createDispatchCoordinator<A2uiAction>((action) => {
+  const actionCoordinator = createDispatchCoordinator<A2uiAction>(async (action) => {
     const turnId = store.getState().activeTurnId;
     if (!turnId || hasStreamingTurn()) {
       return;
     }
-    return executeStream(turnId, () => buildActionRequest(action));
+    setActionError(undefined);
+    const failure = await executeStream(turnId, () => buildActionRequest(action));
+    if (failure?.conflict) {
+      setActionError(failure.error);
+      // Thrown so the dispatch settles 'failed', releasing the optimistic state it holds.
+      throw new Error(failure.error);
+    }
+    if (failure) {
+      failTurn(turnId, failure.error);
+    }
   });
+
+  function setActionError(actionError: string | undefined): void {
+    if (store.getState().actionError !== actionError) {
+      store.setState((current) => ({...current, actionError}));
+    }
+  }
 
   function replaceTurn(turnId: string, update: (turn: Turn) => Turn): void {
     store.setState((current) => {
@@ -302,6 +333,13 @@ export function createSession<TContracts extends ContractsSchema>(
 
   function failTurn(turnId: string, error: string): void {
     replaceTurn(turnId, (turn) => ({...turn, status: 'error', error}));
+  }
+
+  // An action streams into a turn that is already complete; cancelling it must leave that turn be.
+  function cancelTurn(turnId: string): void {
+    replaceTurn(turnId, (turn) =>
+      turn.status === 'streaming' ? {...turn, status: 'error', error: 'Cancelled'} : turn
+    );
   }
 
   /** True while any turn is streaming. Gesture streams reuse a complete turn, so don't count. */
@@ -418,7 +456,7 @@ export function createSession<TContracts extends ContractsSchema>(
           return;
         }
         if (isAbortError(error)) {
-          failTurn(turnId, 'Cancelled');
+          cancelTurn(turnId);
         } else {
           failTurn(turnId, getErrorMessage(error));
         }
@@ -426,28 +464,43 @@ export function createSession<TContracts extends ContractsSchema>(
     });
   }
 
-  /** Takes a builder so a throwing context provider fails the turn inside the `try`. */
+  /**
+   * Takes a builder so a throwing context provider fails the turn inside the `try`. A request the
+   * endpoint rejected before streaming is returned for the caller to report; anything later is
+   * folded into the turn here.
+   */
   async function executeStream(
     turnId: string,
     buildRequest: () => CommerceRequestModel
-  ): Promise<void> {
+  ): Promise<RequestFailure | undefined> {
     const abortController = new AbortController();
     activeAbortController = abortController;
 
     try {
-      const result = await client.call(
-        buildRequest(),
-        {
-          organizationId: config.organizationId,
-          accessToken: config.accessToken,
-          endpoint: config.endpoint,
-        },
-        {signal: abortController.signal}
+      // Rebuilt on every attempt, so context providers and session keys are read fresh.
+      const result = await callWithConflictRetry(
+        () =>
+          client.call(
+            buildRequest(),
+            {
+              organizationId: config.organizationId,
+              accessToken: config.accessToken,
+              endpoint: config.endpoint,
+            },
+            {signal: abortController.signal}
+          ),
+        abortController.signal
       );
 
       if (!result.success) {
-        failTurn(turnId, result.error);
-        return;
+        // The client reports an abort as a failed call rather than throwing it.
+        if (abortController.signal.aborted) {
+          if (!isSuperseded(activeAbortController, abortController)) {
+            cancelTurn(turnId);
+          }
+          return undefined;
+        }
+        return {error: result.error, conflict: result.conflict !== undefined};
       }
 
       await consumeStream(turnId, result.data.stream, abortController);
@@ -459,7 +512,7 @@ export function createSession<TContracts extends ContractsSchema>(
         return;
       }
       if (isAbortError(error)) {
-        failTurn(turnId, 'Cancelled');
+        cancelTurn(turnId);
         return;
       }
       failTurn(turnId, getErrorMessage(error));
@@ -467,6 +520,15 @@ export function createSession<TContracts extends ContractsSchema>(
       if (activeAbortController === abortController) {
         activeAbortController = null;
       }
+    }
+    return undefined;
+  }
+
+  async function streamPrompt(turnId: string, prompt: string): Promise<void> {
+    setActionError(undefined);
+    const failure = await executeStream(turnId, () => buildConversationRequest(prompt));
+    if (failure) {
+      failTurn(turnId, failure.error);
     }
   }
 
@@ -479,10 +541,11 @@ export function createSession<TContracts extends ContractsSchema>(
   }
 
   /**
-   * Stops consuming the in-flight stream, retaining whatever partial
-   * {@link TurnResponse} has already been folded, and marks the active turn
-   * `error`. When nothing is in flight, it is a no-op that
-   * leaves every turn unchanged.
+   * Stops consuming the in-flight stream. A streaming prompt turn is marked
+   * `error`, retaining whatever partial {@link TurnResponse} has already been
+   * folded; an action in flight settles 'cancelled' and leaves its turn
+   * unchanged. When nothing is in flight, it is a no-op that leaves every turn
+   * unchanged.
    */
   function cancel(): void {
     if (!activeAbortController) {
@@ -497,10 +560,9 @@ export function createSession<TContracts extends ContractsSchema>(
     // is committed here rather than relying on the reader's error path.
     const {activeTurnId} = store.getState();
     if (activeTurnId) {
-      replaceTurn(activeTurnId, (turn) =>
-        turn.status === 'streaming' ? {...turn, status: 'error', error: 'Cancelled'} : turn
-      );
+      cancelTurn(activeTurnId);
     }
+    actionCoordinator.cancelInFlight();
   }
 
   /**
@@ -512,13 +574,12 @@ export function createSession<TContracts extends ContractsSchema>(
     actionCoordinator.withholdQueued();
     if (isStreaming()) {
       cancel();
-      actionCoordinator.cancelInFlight();
     }
 
     const turnId = generateId();
     openTurn(turnId, {prompt});
 
-    await executeStream(turnId, () => buildConversationRequest(prompt ?? ''));
+    await streamPrompt(turnId, prompt ?? '');
   }
 
   /**
@@ -662,7 +723,7 @@ export function createSession<TContracts extends ContractsSchema>(
     }));
     store.setState((current) => ({...current, activeTurnId: turnId}));
 
-    void executeStream(turnId, () => buildConversationRequest(turn.input.prompt ?? ''));
+    void streamPrompt(turnId, turn.input.prompt ?? '');
   }
 
   function serialize(): SerializedSession {
@@ -673,6 +734,9 @@ export function createSession<TContracts extends ContractsSchema>(
     contracts: config.contracts,
     get turns() {
       return store.getState().turns;
+    },
+    get actionError() {
+      return store.getState().actionError;
     },
     subscribe(listener) {
       return store.subscribe(listener);
