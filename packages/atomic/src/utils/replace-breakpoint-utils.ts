@@ -10,17 +10,25 @@ function replaceMediaQuery(style: string, mobileBreakpoint: string) {
   return style.replace(regex, `(width >= ${mobileBreakpoint})`);
 }
 
+/**
+ * Replaces the first adopted stylesheet of the element's shadow root with a copy that uses the
+ * layout's breakpoint. The copy is adopted by this shadow root only: the original stylesheet is the
+ * global Tailwind stylesheet that every component shares, so modifying it in place would change the
+ * breakpoint of every component on the page.
+ */
 function replaceStyleSheet(element: HTMLElement, mobileBreakpoint: string) {
-  const stylesheets = element.shadowRoot?.adoptedStyleSheets;
-  if (!stylesheets || !stylesheets.length) {
+  const shadowRoot = element.shadowRoot;
+  const [stylesheet, ...otherStylesheets] = shadowRoot?.adoptedStyleSheets ?? [];
+  if (!shadowRoot || !stylesheet) {
     return;
   }
 
-  const stylesheet = stylesheets[0];
   const style = Object.values(stylesheet.cssRules)
     .map((rule) => rule.cssText)
     .join('');
-  stylesheet.replaceSync(replaceMediaQuery(style, mobileBreakpoint));
+  const replacedStylesheet = new CSSStyleSheet();
+  replacedStylesheet.replaceSync(replaceMediaQuery(style, mobileBreakpoint));
+  shadowRoot.adoptedStyleSheets = [replacedStylesheet, ...otherStylesheets];
 }
 
 function replateStyleContent(element: HTMLElement, breakpoint: string) {
