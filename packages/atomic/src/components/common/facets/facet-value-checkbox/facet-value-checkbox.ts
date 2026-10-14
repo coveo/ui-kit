@@ -1,6 +1,6 @@
 import {html} from 'lit';
-import {keyed} from 'lit/directives/keyed.js';
 import {ref} from 'lit/directives/ref.js';
+import {keyed} from '@/src/directives/keyed';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {createRipple} from '../../../../utils/ripple-utils';
 import {randomID} from '../../../../utils/utils';

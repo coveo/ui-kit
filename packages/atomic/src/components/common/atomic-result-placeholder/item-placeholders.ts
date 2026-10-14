@@ -1,5 +1,5 @@
 import {html} from 'lit';
-import {keyed} from 'lit/directives/keyed.js';
+import {keyed} from '@/src/directives/keyed';
 import {map} from 'lit/directives/map.js';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import './atomic-result-placeholder';
