@@ -138,6 +138,7 @@
 
 .searchIcon {
   position: absolute;
+  z-index: 1;
   left: var(--space-2);
   color: var(--color-text-muted);
   pointer-events: none;
