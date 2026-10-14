@@ -19,7 +19,7 @@ Agent Gateway emits A2-UI **v1.0** exclusively. Every available renderer consume
 
 **The sample no longer performs this conversion.** `@coveo/thermidor` derives a
 renderer-ready v0.9 stream in the fold and exposes it as `response.a2uiMessages`; the sample
-reads that field and hands it to `ThermidorA2UISurfaces`. Consumers write no version-aware
+reads that field and hands it to `ThermidorA2UIStream`. Consumers write no version-aware
 code of their own.
 
 The conversion, its rationale, and its retirement condition live in the package:
@@ -57,49 +57,43 @@ Adopting the inline-state model removes the join at its root, and with it the se
 
 This aligns the sample with the standard A2-UI data-binding and component model rather than a Thermidor-specific identity bridge.
 
-## Skeleton detection (⚠️ partially standardized)
+## Loading placeholders (✅ data-model driven)
 
-Skeletons are shown during streaming to indicate which components are loading. Detection has several sources, and the **observed backend behavior** (captured from a live `commerce_discovery` run) is now the reference:
+While an exchange streams, a skeleton marks each block that is still loading. A2-UI defines no skeleton: a loading placeholder is an ordinary surface whose **data model** declares `isLoading: true`, and it follows the A2-UI surface lifecycle. The sample infers nothing from `surfaceId`s, which the spec treats as opaque, nor from reasoning steps.
 
-| Source                        | Trigger                                                               | Status                                 |
-| ----------------------------- | --------------------------------------------------------------------- | -------------------------------------- |
-| `isLoading` in the data model | `createSurface.dataModel.isLoading === true`                          | ✅ Backend-emitted, A2UI-aligned       |
-| `skeleton-` surfaceId prefix  | `surfaceId.startsWith("skeleton-")` (e.g. `skeleton-surface-default`) | ⚠️ Backend-emitted, non-standard       |
-| `store_render_plan` tool call | Reasoning step `name: "store_render_plan"` mapped to a component type | ⚠️ Mock-only (not skeleton in backend) |
+| Question                   | Answer                                                                                         |
+| -------------------------- | ---------------------------------------------------------------------------------------------- |
+| **Whether** to show one    | The surface's data model has `isLoading: true`                                                 |
+| **Which** skeleton to show | The root node's `component` (`ProductCarousel`, `NextActionsBar`, …), mapped by `A2UISkeleton` |
+| **When** it ends           | The agent deletes the surface (`deleteSurface`), or writes `isLoading: false`                  |
+| **While** it is drawn      | Its exchange streams: the turn is `streaming`, or its follow-up is in flight                   |
 
-### What the live backend actually emits
+### What the agent emits
 
-On a loading surface, the backend emits a single `createSurface` message carrying **both** signals at once:
+In Thermidor mode, the agent announces a block with a placeholder (a bare root with no bindings), then streams the content in a snapshot that **replaces the placeholder's activity in place** (same `messageId`, `replace: true`), so the block keeps its position:
 
 ```
+// placeholder
 createSurface: {
-  surfaceId: "…:skeleton-surface-default",   // skeleton- prefix
-  components: [{ id: "root", component: "ProductCarousel" }],  // ← selects WHICH skeleton
-  dataModel: { isLoading: true, products: { items: [] }, heading: { value: "" } }  // isLoading
+  surfaceId: "<opaque>",
+  components: [{ id: "root", component: "ProductCarousel" }],
+  dataModel: { isLoading: true }
 }
+
+// content, in the same activity
+deleteSurface: { surfaceId: "<placeholder id>" }
+createSurface: { surfaceId: "<content id>", components: [...] }
 ```
 
-It is then **replaced in place** (same `messageId`, `replace: true`) by the real content — a new `createSurface` whose `surfaceId` no longer carries the `skeleton-` prefix and whose `dataModel` omits `isLoading` and holds the real data.
+A placeholder the agent abandons is deleted the same way. The mock templates emit this shape, with placeholder ids derived from each template's `runId`. Each one announces its main block (`ProductCarousel`, `BundleDisplay`, `ComparisonTable`, `ProductResearchCard`) right after routing, before the content streams; the `NextActionsBar` placeholder comes only after the main block's content and state, shortly before the actions themselves.
 
-- **Whether** to show a skeleton: `dataModel.isLoading === true` (data-model state — A2UI-aligned). The consumer reads `ParsedSurface.data.isLoading`.
-- **Which** skeleton to show: the root node's `component` discriminant (`ProductCarousel`, `NextActionsBar`, …), mapped by `A2UISkeleton`. The skeleton is the same component type as the real content that replaces it.
-- The `skeleton-` surfaceId prefix is redundant with `isLoading` for detection (kept as a fallback in `useSkeletonItems`), and `store_render_plan` is NOT the backend's skeleton trigger — it is the product render plan; the mock templates still (incorrectly) use it to simulate skeletons.
+### How the sample draws it
 
-### What is A2UI-standard vs. Coveo convention
-
-- ✅ **Standard-aligned**: loading state carried in the surface **data model** (`isLoading`), skeleton variant chosen by the component **type** (structure), skeleton→content swap via a replacing `createSurface`.
-- ⚠️ **Non-standard Coveo conventions** (semantics encoded in the opaque `surfaceId`):
-  - the `skeleton-` **prefix** (detection hint, redundant with `isLoading`);
-  - the `-default` **suffix**, which `useSkeletonItems` reads to deduplicate generic vs specific skeletons (a generic `…-default` skeleton is dropped once a specific one for the same component type arrives), and the derived `-remaining-N` ids. This is a real behavior, not just a fallback.
-
-### Deferred migration (separate PR)
-
-To make skeleton handling fully data-model-driven and drop the `surfaceId` semantics, a follow-up should:
-
-1. Move the `-default` / specific priority off the `surfaceId` suffix and into the data model (e.g. a `skeletonKind`/priority field), so `useSkeletonItems` no longer parses `surfaceId`.
-2. Once detection and dedupe both read the data model, retire the `skeleton-` prefix and the `store_render_plan`-based skeleton path in the mock templates, and align the mocks to emit the backend's real skeleton shape (`createSurface` + `dataModel.isLoading`, replaced in place).
-
-Until then, the consumer reads `dataModel.isLoading` (applied) and keeps the `skeleton-`/`-default` surfaceId logic for backward compatibility.
+- `@coveo/thermidor` derives `response.surfaces` from the stream: each `DiscoveredSurface` carries `rootComponentType` and `isLoading`, and a deleted surface leaves the list.
+- `buildSurfaceStream` (`src/a2ui/surface-stream.ts`) maps each loading surface's render id to its root component type (`loadingSurfaces`). `ThermidorA2UIStream` feeds the renderer and shares that map with the page it wraps.
+- `buildSurfaceStream` resolves a loading surface by the render id its own turn gives it (`<turn id>/<surface id>`), so an earlier turn's block that shares the server id is never marked as loading.
+- `TurnSurfaces` draws `A2UISkeleton` for a loading surface in the place its content takes, and the `A2UIRenderer` otherwise.
+- A placeholder is drawn only while its exchange streams (`TurnSurfaces`' `isStreaming`: the last exchange of a `streaming` turn, or of the turn whose follow-up is in flight). A placeholder the agent never deletes (a cancelled run, an error, a restored session) is abandoned once the exchange ends, and nothing is drawn for it. It stays in `surfacesByTurn`, so the split of a turn into follow-up exchanges is unchanged.
 
 ## Zod version mismatch
 
@@ -196,20 +190,19 @@ This is out of scope for the static switchover; capture it before wiring dynamic
 
 ### Temporary workarounds (to remove when upstream dependencies evolve)
 
-| Item                      | Description                                                                                                                                                                       | Remove when                                                                                                                      |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| **v1.0 → v0.9 downgrade** | Now owned by `@coveo/thermidor` (`response.a2uiMessages`); removable there once a v1.0-capable renderer exists. See the ADR-015 addendum.                                         | `@a2ui/web_core` ships a `v1_0` subpath AND the renderer imports it                                                              |
-| **Zod 4 type casts**      | `asCatalogDefinitions` / `asCatalogRenderers` bridge helpers in `components.tsx` due to Zod version mismatch.                                                                     | `@copilotkit/a2ui-renderer` upgrades to Zod 4                                                                                    |
-| **Skeleton detection**    | Detection reads `dataModel.isLoading` (A2UI-aligned, applied); the `surfaceId` still carries non-standard `skeleton-` / `-default` semantics used for dedupe (see section above). | Migrate `-default`/`-remaining` off the `surfaceId` into the data model; align mocks to the backend skeleton shape (separate PR) |
+| Item                      | Description                                                                                                                               | Remove when                                                         |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| **v1.0 → v0.9 downgrade** | Now owned by `@coveo/thermidor` (`response.a2uiMessages`); removable there once a v1.0-capable renderer exists. See the ADR-015 addendum. | `@a2ui/web_core` ships a `v1_0` subpath AND the renderer imports it |
+| **Zod 4 type casts**      | `asCatalogDefinitions` / `asCatalogRenderers` bridge helpers in `components.tsx` due to Zod version mismatch.                             | `@copilotkit/a2ui-renderer` upgrades to Zod 4                       |
 
 ### Consumer DX improvements (simplify what the consumer must implement)
 
 | Item                                                           | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Owner                |
 | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
-| **Extract surface parsing into thermidor**                     | `src/a2ui/types.ts` contains raw A2-UI surface parsing logic (with `as unknown as` casts) that should live in `@coveo/thermidor` rather than in the sample. Consumers should not need to parse surfaces manually — the lib should expose typed utilities.                                                                                                                                                                                                         | `packages/thermidor` |
-| ~~**Provide a high-level surface extraction utility**~~ (done) | Delivered as `response.a2uiMessages`: thermidor filters activities by kind, applies per-activity-id replacement, and emits a renderer-ready v0.9 stream. The React rendering component (`ThermidorA2UISurfaces`) remains in the consumer application.                                                                                                                                                                                                             | `packages/thermidor` |
+| ~~**Extract surface parsing into thermidor**~~ (done)          | The sample-local surface parser (`src/a2ui/types.ts`) was removed: loading placeholders are read from the typed `response.surfaces`, and the renderer stream from `response.a2uiMessages`.                                                                                                                                                                                                                                                                        | `packages/thermidor` |
+| ~~**Provide a high-level surface extraction utility**~~ (done) | Delivered as `response.a2uiMessages`: thermidor filters activities by kind, applies per-activity-id replacement, and emits a renderer-ready v0.9 stream. The React rendering component (`ThermidorA2UIStream`) remains in the consumer application.                                                                                                                                                                                                               | `packages/thermidor` |
 | **Extract surface-derivation helpers into thermidor**          | `findSurface` / `findCommerceSurfaceId` (scan a turn's activities for the first A2-UI `createSurface` and return its `surfaceType` / `surfaceId`) live in `src/hooks/use-navigation.ts`. A framework-agnostic utility (e.g. `findSurface(activities)` / `findCommerceSurfaceId(activities)`) exported by thermidor would let the consumer reuse the scan; the consumer's navigation logic (`deriveTransitionAction`, `useNavigation`) would remain in the sample. | `packages/thermidor` |
-| **Export skeleton detection logic**                            | The consumer must parse reasoning steps, map `store_render_plan` routes to component types, and manage skeleton/real-surface subtraction. A framework-agnostic utility (e.g. `computeSkeletons(reasoningSteps, surfaces)`) exported by thermidor would encapsulate this. The React hook wrapper would remain in the consumer application.                                                                                                                         | `packages/thermidor` |
+| ~~**Export skeleton detection logic**~~ (done)                 | Delivered as `DiscoveredSurface.isLoading` on `response.surfaces`: a placeholder is a surface whose data model declares `isLoading`, and it leaves the list once deleted. No reasoning-step parsing or skeleton/real-surface subtraction remains in the consumer.                                                                                                                                                                                                 | `packages/thermidor` |
 | **~~Simplify component subscription ergonomics~~ (obsolete)**  | Superseded by the inline-state model. The `StateSourceProvider` / `useRemoteController(stateSource, componentId, componentType)` subscription path was removed; renderers are dumb and read resolved values from `props`, so there is no subscription boilerplate left to simplify.                                                                                                                                                                               | —                    |
 | **~~Friendlier type aliases for consumers~~ (obsolete)**       | Superseded by the inline-state model. The `RemoteController`, `RemoteControllerSource`, and `RemoteControllerStateForSchema` exports were removed from `@coveo/thermidor`; consumers type renderers with the per-component `XxxProps` / `XxxAction` contract from `@coveo/thermidor-schema` (bridged locally via `TypedRendererProps`).                                                                                                                           | —                    |
 | **Inline nested state in BundleDisplay contract**              | Resolved: `BundleDisplay` no longer reads other components' state via a cross-component identity join. Each tier slot carries its mounted child id (`childId`) and the renderer mounts the child via `children(slot.childId)`, so BundleDisplay reads only its own resolved `props`. Kept here to note the design intent that each component is self-contained.                                                                                                   | Backend              |

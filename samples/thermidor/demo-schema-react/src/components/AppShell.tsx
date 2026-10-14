@@ -100,23 +100,24 @@ export function AppShell() {
   return (
     <DispatchProgressProvider value={tracked.progress}>
       <A2UIProvider catalog={catalog} onAction={handleAction}>
-        <ThermidorA2UIStream messages={stream.messages} />
-        <div className="view-shell">
-          <div className="view-panel view-panel--active">
-            {turns.length === 0 ? (
-              <LandingPage onSubmit={handleSubmit} isStreaming={isStreaming} />
-            ) : (
-              <ConversationPage
-                onSubmit={handleSubmit}
-                isStreaming={isStreaming}
-                turns={[...turns]}
-                surfacesByTurn={stream.surfacesByTurn}
-                followUps={followUps}
-                pendingTurnId={pendingTurnId}
-              />
-            )}
+        <ThermidorA2UIStream loadingSurfaces={stream.loadingSurfaces} messages={stream.messages}>
+          <div className="view-shell">
+            <div className="view-panel view-panel--active">
+              {turns.length === 0 ? (
+                <LandingPage onSubmit={handleSubmit} isStreaming={isStreaming} />
+              ) : (
+                <ConversationPage
+                  onSubmit={handleSubmit}
+                  isStreaming={isStreaming}
+                  turns={[...turns]}
+                  surfacesByTurn={stream.surfacesByTurn}
+                  followUps={followUps}
+                  pendingTurnId={pendingTurnId}
+                />
+              )}
+            </div>
           </div>
-        </div>
+        </ThermidorA2UIStream>
       </A2UIProvider>
     </DispatchProgressProvider>
   );

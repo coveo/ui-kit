@@ -24,6 +24,12 @@ export interface SurfaceStream {
   surfacesByTurn: ReadonlyMap<string, readonly string[]>;
   /** The server surface id behind each render surface id. */
   serverSurfaceIds: ReadonlyMap<string, string>;
+  /**
+   * The root component type of each render surface that is a loading placeholder, read from the
+   * session's typed `response.surfaces`. A placeholder is the surface its own turn created under
+   * that server id, never an earlier turn's block that reuses the id.
+   */
+  loadingSurfaces: ReadonlyMap<string, string>;
 }
 
 export function buildSurfaceStream(turns: readonly Turn[]): SurfaceStream {
@@ -32,9 +38,11 @@ export function buildSurfaceStream(turns: readonly Turn[]): SurfaceStream {
   const serverSurfaceIds = new Map<string, string>();
   const renderIdByServerId = new Map<string, string>();
   const ownerTurnByRenderId = new Map<string, string>();
+  const loadingSurfaces = new Map<string, string>();
 
   for (const turn of turns) {
-    surfacesByTurn.set(turn.id, []);
+    const turnSurfaces: string[] = [];
+    surfacesByTurn.set(turn.id, turnSurfaces);
     for (const message of turn.response.a2uiMessages) {
       const operation = SURFACE_OPERATIONS.find((name) => isRecord(message[name]));
       const body = operation ? (message[operation] as Record<string, unknown>) : undefined;
@@ -49,7 +57,6 @@ export function buildSurfaceStream(turns: readonly Turn[]): SurfaceStream {
         renderIdByServerId.set(serverId, renderId);
         serverSurfaceIds.set(renderId, serverId);
         ownerTurnByRenderId.set(renderId, turn.id);
-        const turnSurfaces = surfacesByTurn.get(turn.id)!;
         if (!turnSurfaces.includes(renderId)) {
           turnSurfaces.push(renderId);
         }
@@ -64,13 +71,21 @@ export function buildSurfaceStream(turns: readonly Turn[]): SurfaceStream {
 
       if (operation === 'deleteSurface') {
         renderIdByServerId.delete(serverId);
+        loadingSurfaces.delete(renderId);
         const owner = surfacesByTurn.get(ownerTurnByRenderId.get(renderId)!)!;
         owner.splice(owner.indexOf(renderId), 1);
       }
     }
+
+    for (const surface of turn.response.surfaces) {
+      const renderId = `${turn.id}/${surface.surfaceId}`;
+      if (surface.isLoading && turnSurfaces.includes(renderId)) {
+        loadingSurfaces.set(renderId, surface.rootComponentType);
+      }
+    }
   }
 
-  return {messages, surfacesByTurn, serverSurfaceIds};
+  return {messages, surfacesByTurn, serverSurfaceIds, loadingSurfaces};
 }
 
 /**

@@ -98,8 +98,8 @@ ConversationPage
 │       └── AgentResponseBlock
 │           ├── ThinkingBlock (reasoning steps + spinner)
 │           ├── StreamingMessage (streamed text)
-│           ├── A2UISkeleton[] (placeholders during streaming)
 │           └── TurnSurfaces (the turn's blocks; read-only unless it is the latest turn)
+│               ├── A2UISkeleton (in place of a loading surface)
 │               ├── ProductCarousel (dumb: reads resolved props from {path} bindings)
 │               ├── BundleDisplay (dumb: reads resolved tiers + slot child ids from props)
 │               ├── ComparisonTable (dumb: reads resolved products + attributes from props)
@@ -109,7 +109,7 @@ ConversationPage
 └── PromptInput (pinned below the feed)
 ```
 
-**ConversationThread** iterates over turns and delegates rendering to the appropriate block based on turn status. The key path is through **AgentResponseBlock**, which orchestrates the streaming experience: first showing a thinking indicator, then streaming text, then skeleton placeholders (inferred from `store_render_plan` tool calls), and finally the resolved A2-UI catalog components once component state arrives via `/state/<id>` `updateDataModel` operations resolved into the renderer's data model.
+**ConversationThread** iterates over turns and delegates rendering to the appropriate block based on turn status. The key path is through **AgentResponseBlock**, which orchestrates the streaming experience: first showing a thinking indicator, then streaming text, then the turn's blocks: a skeleton in place of each surface whose data model declares `isLoading` while the exchange streams, and finally the resolved A2-UI catalog components once component state arrives via `/state/<id>` `updateDataModel` operations resolved into the renderer's data model.
 
 The catalog renderers (ProductCarousel, BundleDisplay, ComparisonTable, ProductResearchCard, NextActionsBar) are **dumb**: each reads its resolved values directly from `props` (the renderer resolves each `{ "path": ... }` binding against its A2-UI data model), with no identity join and no controller hydration. Actions surface through the renderer's `onAction` handler, wired to `session.dispatchAction`.
 
@@ -146,8 +146,8 @@ These controls dispatch component actions: an interaction (sort, page, page-size
 | `src/a2ui/LayoutStack/`                                  | Generic layout container renderer — stacks its declared children in a column or row (direction is a presentation node prop); reused for the sidebar, main, and top/bottom rows                                                                                                                                                                      |
 | `src/a2ui/surfaces.tsx`                                  | Feeds the session's renderer stream to the renderer and draws each turn's surfaces (thermidor owns the v1.0 → v0.9 downgrade)                                                                                                                                                                                                                       |
 | `src/a2ui/use-optimistic-facet-search.ts`                | Keeps in-progress facet-search input in local React state ("backend wins" reconcile) and dispatches a validated `search` action over the HTTP Action_Channel; never writes in-progress input to the shared data model                                                                                                                               |
-| `src/a2ui/Skeleton/`                                     | Skeleton placeholders during streaming                                                                                                                                                                                                                                                                                                              |
-| `src/components/ConversationPage/AgentResponseBlock.tsx` | Orchestrates streaming display: ThinkingBlock → StreamingMessage → Skeletons → A2UI Surfaces                                                                                                                                                                                                                                                        |
+| `src/a2ui/Skeleton/`                                     | Skeletons drawn in place of loading surfaces                                                                                                                                                                                                                                                                                                        |
+| `src/components/ConversationPage/AgentResponseBlock.tsx` | Orchestrates streaming display: ThinkingBlock → StreamingMessage → A2UI Surfaces                                                                                                                                                                                                                                                                    |
 
 ### Data flow (conversational turn)
 
@@ -159,8 +159,8 @@ Session (thermidor, via createSession) — validates inbound updateDataModel ops
   ↓ state.activeTurn.agentResponse
   ↓
 AgentResponseBlock
-  ├── Skeletons (from store_render_plan tool calls)
   └── TurnSurfaces (fed by the session-wide stream built in surface-stream.ts)
+        ├── A2UISkeleton for each loading surface (response.surfaces isLoading)
         ↓ thermidor response.a2uiMessages (v1.0 → v0.9, {path} bindings byte-for-byte)
         ↓ processMessages (catalog resolution + updateDataModel ops → renderer data model)
         ↓

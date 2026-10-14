@@ -1,11 +1,16 @@
-import {afterEach, describe, expect, it} from 'vitest';
+import {afterEach, describe, expect, it, vi} from 'vitest';
 import {cleanup, render, screen, waitFor} from '@testing-library/react';
 import {A2UIProvider, ROOT_COMPONENT_ID} from '@copilotkit/a2ui-renderer';
 import type {A2uiV09Message} from '@coveo/thermidor';
 import {createThermidorCatalog, THERMIDOR_CATALOG_ID} from './components.js';
 import {ThermidorA2UIStream, TurnSurfaces} from './surfaces.js';
 
-afterEach(() => cleanup());
+const originalScrollIntoView = Element.prototype.scrollIntoView;
+
+afterEach(() => {
+  cleanup();
+  Element.prototype.scrollIntoView = originalScrollIntoView;
+});
 
 const CATALOG = createThermidorCatalog();
 const SURFACE_ID = 'turn-surface';
@@ -31,8 +36,8 @@ const MESSAGES = [
 function Turn({interactive}: {interactive: boolean}) {
   return (
     <A2UIProvider catalog={CATALOG} onAction={() => {}}>
-      <ThermidorA2UIStream messages={MESSAGES} />
-      <TurnSurfaces surfaceIds={[SURFACE_ID]} interactive={interactive} />
+      <ThermidorA2UIStream messages={MESSAGES} loadingSurfaces={new Map()} />
+      <TurnSurfaces surfaceIds={[SURFACE_ID]} interactive={interactive} isStreaming={false} />
     </A2UIProvider>
   );
 }
@@ -83,5 +88,71 @@ describe('TurnSurfaces', () => {
     rerender(<Turn interactive={false} />);
 
     await waitFor(() => expect(isDisabled(pageSizeSelect())).toBe(true));
+  });
+});
+
+describe('TurnSurfaces loading placeholders', () => {
+  function renderPlaceholder(isStreaming: boolean) {
+    return render(
+      <A2UIProvider catalog={CATALOG} onAction={() => {}}>
+        <ThermidorA2UIStream
+          messages={MESSAGES}
+          loadingSurfaces={new Map([[SURFACE_ID, 'ProductCarousel']])}
+        >
+          <TurnSurfaces surfaceIds={[SURFACE_ID]} interactive isStreaming={isStreaming} />
+        </ThermidorA2UIStream>
+      </A2UIProvider>
+    );
+  }
+
+  it('draws the skeleton of a loading surface in its place while its exchange streams', () => {
+    renderPlaceholder(true);
+
+    const section = screen.getByRole('region', {name: `A2-UI surface ${SURFACE_ID}`});
+    expect(section.querySelector('[aria-label="Loading product carousel"]')).not.toBeNull();
+    expect(screen.queryByLabelText('Products per page:')).toBeNull();
+  });
+
+  it('draws nothing for a placeholder left behind once its exchange ended', () => {
+    const {container} = renderPlaceholder(false);
+
+    expect(screen.queryByRole('region', {name: `A2-UI surface ${SURFACE_ID}`})).toBeNull();
+    expect(container.querySelector('fieldset')).toBeNull();
+  });
+
+  it('does not scroll to the content that replaces a drawn placeholder', () => {
+    const scrollIntoView = vi.fn();
+    Element.prototype.scrollIntoView = scrollIntoView;
+    const loadingSurfaces = new Map([['placeholder', 'ProductCarousel']]);
+    const page = (surfaceIds: string[]) => (
+      <A2UIProvider catalog={CATALOG} onAction={() => {}}>
+        <ThermidorA2UIStream messages={MESSAGES} loadingSurfaces={loadingSurfaces}>
+          <TurnSurfaces surfaceIds={surfaceIds} interactive isStreaming />
+        </ThermidorA2UIStream>
+      </A2UIProvider>
+    );
+    const {rerender} = render(page(['placeholder']));
+
+    rerender(page([SURFACE_ID]));
+
+    expect(screen.getByRole('region', {name: `A2-UI surface ${SURFACE_ID}`})).toBeDefined();
+    expect(scrollIntoView).not.toHaveBeenCalled();
+  });
+
+  it('scrolls to a surface added after the drawn ones', () => {
+    const scrollIntoView = vi.fn();
+    Element.prototype.scrollIntoView = scrollIntoView;
+    const page = (surfaceIds: string[]) => (
+      <A2UIProvider catalog={CATALOG} onAction={() => {}}>
+        <ThermidorA2UIStream messages={MESSAGES} loadingSurfaces={new Map()}>
+          <TurnSurfaces surfaceIds={surfaceIds} interactive isStreaming />
+        </ThermidorA2UIStream>
+      </A2UIProvider>
+    );
+    const {rerender} = render(page([SURFACE_ID]));
+
+    rerender(page([SURFACE_ID, 'added']));
+
+    expect(scrollIntoView).toHaveBeenCalledOnce();
   });
 });

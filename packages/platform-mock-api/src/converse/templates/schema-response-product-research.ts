@@ -6,6 +6,8 @@ import {
   buildValidatedSurface,
   statePath,
   type A2uiComponentNode,
+  deleteSurfaceMessage,
+  loadingSurfaceMessage,
 } from './shared.js';
 import {
   ActivitySnapshot,
@@ -20,6 +22,8 @@ const runId = 'schema-research-7f3a91c2';
 const RESEARCH_SURFACE_ID = 'product-research-surface';
 const RESEARCH_ROOT_ID = RENDERER_ROOT_ID;
 const NEXT_ACTIONS_SURFACE_ID = 'next-actions-surface';
+const PLACEHOLDER_RESEARCH_SURFACE_ID = `placeholder-${runId}-product-research`;
+const PLACEHOLDER_NEXT_ACTIONS_SURFACE_ID = `placeholder-${runId}-next-actions`;
 const NEXT_ACTIONS_ROOT_ID = RENDERER_ROOT_ID;
 
 // The research surface is a single read-only leaf node: the product-research-card owns its product,
@@ -39,6 +43,7 @@ const researchSurfaceActivity: ConverseEvent = ActivitySnapshot({
   replace: true,
   content: {
     messages: [
+      deleteSurfaceMessage(PLACEHOLDER_RESEARCH_SURFACE_ID),
       {
         version: 'v1.0',
         createSurface: buildValidatedSurface({
@@ -57,6 +62,7 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
   replace: true,
   content: {
     messages: [
+      deleteSurfaceMessage(PLACEHOLDER_NEXT_ACTIONS_SURFACE_ID),
       {
         version: 'v1.0',
         createSurface: {
@@ -143,6 +149,24 @@ const nextActionsStateActivity: ConverseEvent = UpdateDataModelActivity({
   ],
 });
 
+const researchPlaceholderActivity: ConverseEvent = ActivitySnapshot({
+  messageId: 'activity-product-research-card',
+  activityType: 'a2ui-surface',
+  replace: true,
+  content: {
+    messages: [loadingSurfaceMessage(PLACEHOLDER_RESEARCH_SURFACE_ID, 'ProductResearchCard')],
+  },
+});
+
+const nextActionsPlaceholderActivity: ConverseEvent = ActivitySnapshot({
+  messageId: 'activity-next-actions',
+  activityType: 'a2ui-surface',
+  replace: true,
+  content: {
+    messages: [loadingSurfaceMessage(PLACEHOLDER_NEXT_ACTIONS_SURFACE_ID, 'NextActionsBar')],
+  },
+});
+
 const middleEvents: ConverseEvent[] = [
   ...toolCall({
     toolCallId: 'tc-route-research',
@@ -152,6 +176,7 @@ const middleEvents: ConverseEvent[] = [
     resultMessageId: 'tc-route-research-result',
     resultContent: '"Routed to single-product research flow."',
   }),
+  {...researchPlaceholderActivity, delayMs: 300},
   ...toolCall({
     toolCallId: 'tc-store-render-plan',
     toolCallName: 'store_render_plan',
@@ -166,6 +191,7 @@ const middleEvents: ConverseEvent[] = [
   ),
   {...researchSurfaceActivity, delayMs: 2500},
   {...researchStateActivity, delayMs: 50},
+  {...nextActionsPlaceholderActivity, delayMs: 100},
   {...nextActionsSurfaceActivity, delayMs: 800},
   {...nextActionsStateActivity, delayMs: 50},
 ];
