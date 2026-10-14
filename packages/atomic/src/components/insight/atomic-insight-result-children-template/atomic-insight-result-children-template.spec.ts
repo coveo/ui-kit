@@ -5,6 +5,7 @@ import {describe, expect, it, vi} from 'vitest';
 import {ResultTemplateController} from '@/src/components/common/result-templates/result-template-controller.js';
 import {
   makeDefinedConditions,
+  makeFieldConditions,
   makeMatchConditions,
 } from '@/src/components/common/template-controller/template-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
@@ -67,28 +68,13 @@ describe('atomic-insight-result-children-template', () => {
   });
 
   describe('when added to the DOM (#connectedCallback)', () => {
-    it('should call #makeMatchConditions with the correct arguments', async () => {
-      const mockMakeMatchConditions = vi.mocked(makeMatchConditions);
-      await setupElement({
+    it('should build its conditions with #makeFieldConditions and its own helpers', async () => {
+      const element = await setupElement({
         mustMatch: {filetype: ['pdf']},
         mustNotMatch: {source: ['spam']},
       });
-      expect(mockMakeMatchConditions).toHaveBeenCalledExactlyOnceWith(
-        {filetype: ['pdf']},
-        {source: ['spam']},
-        InsightResultTemplatesHelpers
-      );
-    });
-
-    it('should call #makeDefinedConditions with the correct arguments', async () => {
-      const mockMakeDefinedConditions = vi.mocked(makeDefinedConditions);
-      await setupElement({
-        ifDefined: 'filetype,sourcetype',
-        ifNotDefined: 'author',
-      });
-      expect(mockMakeDefinedConditions).toHaveBeenCalledExactlyOnceWith(
-        'filetype,sourcetype',
-        'author',
+      expect(vi.mocked(makeFieldConditions)).toHaveBeenCalledExactlyOnceWith(
+        element,
         InsightResultTemplatesHelpers
       );
     });
@@ -156,6 +142,24 @@ describe('atomic-insight-result-children-template', () => {
       );
       // 1 custom + defined conditions from ifDefined + ifNotDefined
       expect(template!.conditions).toHaveLength(1 + definedConditions.length);
+    });
+
+    it('should leave the #conditions property untouched', async () => {
+      const customCondition = (result: InsightResult) => result.title === 'Coveo';
+      const element = await setupElement({conditions: [customCondition], ifDefined: 'filetype'});
+
+      expect(element.conditions).toEqual([customCondition]);
+    });
+
+    it('should not accumulate conditions when reconnected to the DOM', async () => {
+      const element = await setupElement({ifDefined: 'filetype', ifNotDefined: 'author'});
+      const parent = element.parentElement!;
+
+      element.remove();
+      parent.append(element);
+
+      const template = await element.getTemplate();
+      expect(template!.conditions).toHaveLength(2);
     });
   });
 
