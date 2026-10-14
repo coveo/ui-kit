@@ -1,4 +1,4 @@
-import type {DiscoveredSurface, Turn, TurnResponse} from '@coveo/thermidor';
+import type {Turn, TurnResponse} from '@coveo/thermidor';
 
 /**
  * Shared builders for the reshaped {@link Turn} model (ADR-010). Tests construct
@@ -45,11 +45,4 @@ export function makeTurn(options: MakeTurnOptions = {}): Turn {
     status,
     ...(error !== undefined ? {error} : {}),
   };
-}
-
-/**
- * Builds a typed {@link DiscoveredSurface} projection entry.
- */
-export function makeSurface(surfaceId: string, rootComponentType: string): DiscoveredSurface {
-  return {surfaceId, rootComponentType};
 }

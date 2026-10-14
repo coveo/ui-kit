@@ -32,10 +32,6 @@ vi.mock('../../a2ui/Skeleton/Skeleton.js', () => ({
   ),
 }));
 
-vi.mock('../../a2ui/surfaces.js', () => ({
-  ThermidorA2UISurfaces: () => null,
-}));
-
 /**
  * Builds an `a2ui-surface` activity whose payload is a v1.0 createSurface
  * snapshot that `parseSurfaceSnapshots` understands. Skeleton derivation reads
@@ -264,6 +260,27 @@ describe('AgentResponseBlock', () => {
 
       renderBlock(response, {isStreaming: true});
       expect(screen.queryByTestId('skeleton')).toBeNull();
+    });
+  });
+
+  describe('turn blocks', () => {
+    it('draws the turn blocks after the agent text', () => {
+      render(
+        <AgentResponseBlock
+          response={makeResponse({
+            agent: {messages: [{content: 'Answer', role: 'assistant'}], reasoningSteps: []},
+          })}
+          isStreaming={false}
+        >
+          <div data-testid="turn-blocks" />
+        </AgentResponseBlock>
+      );
+
+      const message = screen.getByTestId('streaming-message');
+      const blocks = screen.getByTestId('turn-blocks');
+      expect(
+        message.compareDocumentPosition(blocks) & Node.DOCUMENT_POSITION_FOLLOWING
+      ).toBeTruthy();
     });
   });
 });

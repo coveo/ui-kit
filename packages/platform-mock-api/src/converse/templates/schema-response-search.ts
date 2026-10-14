@@ -722,6 +722,14 @@ const FACET_COMPONENT_IDS = {
   category: 'facet-category-2',
 } as const;
 
+const FACET_FIELDS = {
+  regular: {field: 'ec_brand', displayName: 'Brand'},
+  numeric: {field: 'ec_price', displayName: 'Price'},
+  category: {field: 'ec_category', displayName: 'Category'},
+} as const;
+
+const BREADBOX_ID = 'breadbox-2';
+
 function sortProducts(input: WaterSportsProduct[], sortCriteria: string): WaterSportsProduct[] {
   if (sortCriteria === 'price_asc') {
     return [...input].sort((a, b) => a.ec_price - b.ec_price);
@@ -819,8 +827,7 @@ function deriveRegularFacetValues(view: SearchViewState, componentId: string) {
   });
 
   return {
-    field: 'ec_brand',
-    displayName: 'Brand',
+    ...FACET_FIELDS.regular,
     values,
     hasActiveValues: view.selectedBrands.length > 0 || view.excludedBrands.length > 0,
     canShowMoreValues: displayCount < eligibleBrands.length,
@@ -877,8 +884,7 @@ function deriveNumericFacetValues(view: SearchViewState) {
       : undefined;
 
   return {
-    field: 'ec_price',
-    displayName: 'Price',
+    ...FACET_FIELDS.numeric,
     values,
     customRange,
     domain,
@@ -1002,8 +1008,7 @@ function deriveCategoryFacetValues(view: SearchViewState, componentId: string) {
   const children = sortedChildren.slice(0, displayCount);
 
   return {
-    field: 'ec_category',
-    displayName: 'Category',
+    ...FACET_FIELDS.category,
     values: {ancestry, selected, children},
     canShowMoreValues: sortedChildren.length > displayCount,
     // Gate on the actual displayed count (bounded by the available children), so a cross-facet
@@ -1011,6 +1016,47 @@ function deriveCategoryFacetValues(view: SearchViewState, componentId: string) {
     canShowLessValues: displayCount > CATEGORY_FACET_DISPLAY_LIMIT,
     facetSearch: deriveCategoryFacetSearch(view, componentId),
   };
+}
+
+// Lists the active facets in the facet-manager order, from the same view the facets derive from.
+function deriveBreadboxState(view: SearchViewState) {
+  const facets: Record<string, unknown>[] = [];
+
+  const activeBrands = BRAND_CANDIDATES.filter(
+    (brand) => view.selectedBrands.includes(brand) || view.excludedBrands.includes(brand)
+  );
+  if (activeBrands.length > 0) {
+    facets.push({
+      facetId: FACET_COMPONENT_IDS.regular,
+      ...FACET_FIELDS.regular,
+      type: 'regular',
+      values: activeBrands.map((brand) => ({
+        value: brand,
+        state: view.selectedBrands.includes(brand) ? 'selected' : 'excluded',
+      })),
+    });
+  }
+
+  if (view.selectedPriceRange) {
+    const {start, end} = view.selectedPriceRange;
+    facets.push({
+      facetId: FACET_COMPONENT_IDS.numeric,
+      ...FACET_FIELDS.numeric,
+      type: 'numericalRange',
+      values: [{start, end}],
+    });
+  }
+
+  if (view.selectedCategoryPath.length > 0) {
+    facets.push({
+      facetId: FACET_COMPONENT_IDS.category,
+      ...FACET_FIELDS.category,
+      type: 'hierarchical',
+      path: view.selectedCategoryPath,
+    });
+  }
+
+  return {facets};
 }
 
 function computeComponentsState(view: SearchViewState): Record<string, unknown> {
@@ -1060,6 +1106,7 @@ function computeComponentsState(view: SearchViewState): Record<string, unknown> 
     'facet-brand-2': deriveRegularFacetValues(view, FACET_COMPONENT_IDS.regular),
     'facet-price-2': deriveNumericFacetValues(view),
     'facet-category-2': deriveCategoryFacetValues(view, FACET_COMPONENT_IDS.category),
+    [BREADBOX_ID]: deriveBreadboxState(view),
     // FacetManager has NO Component_State: facet ordering lives on its `children` (A2-UI
     // composition plane), so it emits no `/state` op.
   };
@@ -1101,6 +1148,7 @@ const STATE_FIELDS_BY_NODE: Record<string, readonly string[]> = {
     'canShowLessValues',
     'facetSearch',
   ],
+  [BREADBOX_ID]: ['facets'],
 };
 
 // Builds the whole-component `/state/<id>` updateDataModel ops for the surface from a view's
@@ -1128,9 +1176,10 @@ const FACET_NODE_IDS = ['facet-brand-2', 'facet-price-2', 'facet-category-2'];
 // layout lives on the A2-UI composition plane rather than being hardcoded in the root renderer.
 const ROOT_CHILD_IDS = ['search-sidebar', 'search-main'];
 
-// The main column stacks a top row (summary + sort), the product grid, and a bottom row
-// (pagination + page size), top to bottom.
-const MAIN_CHILD_IDS = ['search-top', 'product-list-2', 'search-bottom'];
+// The main column stacks the breadbox, a top row (summary + sort), the product grid, and a bottom
+// row (pagination + page size), top to bottom. As in the Atomic commerce layout, the breadbox gets
+// a full-width row above the summary and sort.
+const MAIN_CHILD_IDS = [BREADBOX_ID, 'search-top', 'product-list-2', 'search-bottom'];
 
 // The top row places the query summary on the left and the sort selector on the right.
 const TOP_ROW_CHILD_IDS = ['query-summary-2', 'sort-2'];
@@ -1205,6 +1254,11 @@ const SEARCH_SURFACE_NODES: A2uiComponentNode[] = [
     id: 'facet-category-2',
     component: 'CategoryFacet',
     ...bindStateFields('facet-category-2', STATE_FIELDS_BY_NODE['facet-category-2']),
+  },
+  {
+    id: BREADBOX_ID,
+    component: 'Breadbox',
+    ...bindStateFields(BREADBOX_ID, STATE_FIELDS_BY_NODE[BREADBOX_ID]),
   },
   {
     id: 'query-summary-2',
@@ -1506,6 +1560,59 @@ function deriveCategoryFacetState(
   }
 }
 
+function deselectBreadboxValue(context: Record<string, unknown>): void {
+  switch (context.facetId) {
+    case FACET_COMPONENT_IDS.regular: {
+      const value = String(context.value ?? '');
+      currentView = {
+        ...currentView,
+        selectedBrands: currentView.selectedBrands.filter((brand) => brand !== value),
+        excludedBrands: currentView.excludedBrands.filter((brand) => brand !== value),
+        page: 0,
+      };
+      break;
+    }
+    case FACET_COMPONENT_IDS.numeric: {
+      const range: PriceRange = {start: Number(context.start), end: Number(context.end)};
+      if (currentView.selectedPriceRange && rangesEqual(currentView.selectedPriceRange, range)) {
+        currentView = {...currentView, selectedPriceRange: null, page: 0};
+      }
+      break;
+    }
+    case FACET_COMPONENT_IDS.category:
+      currentView = {
+        ...currentView,
+        selectedCategoryPath: [],
+        categoryFacetDisplayCount: CATEGORY_FACET_DISPLAY_LIMIT,
+        page: 0,
+      };
+      break;
+    default:
+      break;
+  }
+}
+
+function deriveBreadboxViewState(action: {name: string; context: Record<string, unknown>}): void {
+  switch (action.name) {
+    case 'deselect':
+      deselectBreadboxValue(action.context);
+      break;
+    case 'clearAll':
+      currentView = {
+        ...currentView,
+        selectedBrands: [],
+        excludedBrands: [],
+        selectedPriceRange: null,
+        selectedCategoryPath: [],
+        categoryFacetDisplayCount: CATEGORY_FACET_DISPLAY_LIMIT,
+        page: 0,
+      };
+      break;
+    default:
+      break;
+  }
+}
+
 function deriveNonFacetState(action: {name: string; context: Record<string, unknown>}): void {
   switch (action.name) {
     case 'selectPage':
@@ -1552,6 +1659,9 @@ function deriveViewState(
       break;
     case FACET_COMPONENT_IDS.category:
       deriveCategoryFacetState(action, FACET_COMPONENT_IDS.category);
+      break;
+    case BREADBOX_ID:
+      deriveBreadboxViewState(action);
       break;
     default:
       deriveNonFacetState(action);

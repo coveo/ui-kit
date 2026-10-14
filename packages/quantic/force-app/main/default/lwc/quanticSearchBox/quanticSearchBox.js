@@ -1,3 +1,4 @@
+import searchBoxPlaceholder from '@salesforce/label/c.quantic_SearchBoxPlaceholder';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -29,10 +30,18 @@ export default class QuanticSearchBox extends LightningElement {
   @api engineId;
   /**
    * The placeholder text to display in the search box input area.
+   * Defaults to the `quantic_SearchBoxPlaceholder` custom label.
    * @api
    * @type {string}
+   * @defaultValue 'Search...'
    */
-  @api placeholder = null;
+  @api
+  get placeholder() {
+    return this._placeholder ?? this.labels.searchBoxPlaceholder;
+  }
+  set placeholder(value) {
+    this._placeholder = value;
+  }
   /**
    * Whether not to render a submit button.
    * @api
@@ -73,6 +82,10 @@ export default class QuanticSearchBox extends LightningElement {
   /** @type {SearchBoxState} */
   @track state;
 
+  labels = {
+    searchBoxPlaceholder,
+  };
+
   /** @type {SearchBox} */
   searchBox;
   /** @type {Function} */
@@ -87,6 +100,8 @@ export default class QuanticSearchBox extends LightningElement {
   recentQueriesList;
   /** @type {String[]} */
   recentQueries;
+  /** @type {string} */
+  _placeholder;
 
   /**
    * @param {SearchEngine} engine
