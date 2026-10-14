@@ -22,6 +22,10 @@ const lwsDisabledConfiguration: ScratchOrgConfiguration = {
   environmentVariable: 'Quantic__LWS_disabled_URL',
 };
 
+const recoveryHint = process.env.CI
+  ? 'In CI, the setup job provides it as an artifact that expires after one day. Use "Re-run all jobs" to create new scratch orgs.'
+  : 'Run "pnpm run setup:examples" to create the Quantic scratch-org communities.';
+
 export function loadScratchOrgEnvironment(
   projectDirectory: string
 ): ScratchOrgEnvironment {
@@ -54,7 +58,7 @@ function loadScratchOrgUrl(
         ? 'is missing'
         : 'cannot be read';
     throw new Error(
-      `Cannot run Quantic Playwright tests because .env/${environmentFile} ${reason}. Run "pnpm run setup:examples" to create the Quantic scratch-org communities.`
+      `Cannot run Quantic Playwright tests because .env/${environmentFile} ${reason}. ${recoveryHint}`
     );
   }
 
@@ -62,7 +66,7 @@ function loadScratchOrgUrl(
   const url = environment[environmentVariable]?.trim();
   if (!url) {
     throw new Error(
-      `Cannot run Quantic Playwright tests because .env/${environmentFile} must define ${environmentVariable} with an URL. Run "pnpm run setup:examples" to create the Quantic scratch-org communities.`
+      `Cannot run Quantic Playwright tests because .env/${environmentFile} must define ${environmentVariable} with an URL. ${recoveryHint}`
     );
   }
 

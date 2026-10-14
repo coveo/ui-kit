@@ -79,5 +79,6 @@ Work down this table before editing test code.
 | Was green, now fails after editing another file | Targeted deploy covered one path but not another you touched |
 | Passes on one project, fails on the other | A real LWS difference, not flakiness |
 | `setup:examples` fails outright | Dev Hub auth expired (`sf org login web`), or the scratch org limit is reached |
+| Run stops before any test with "scratch-org sites are unreachable" | The org was deleted or expired. Locally, re-run the setup script. In CI, a PR run whose tests failed keeps its orgs for a day so "Re-run failed jobs" works; after a green, cancelled or setup-failed attempt they are deleted, so use "Re-run all jobs" |
 
 A failure that turns out to be environmental is not a test bug. Fix the environment and re-run before concluding anything about the code.
