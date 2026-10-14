@@ -30,18 +30,13 @@ export async function callWithConflictRetry<TResult extends AttemptResult>(
     if (remaining <= 0) {
       return result;
     }
-    await waitFor(Math.min(conflictDelay(retry, result.conflict.retryAfterMs), remaining), signal);
+    await waitFor(Math.min(conflictDelay(retry), remaining), signal);
   }
 }
 
-function conflictDelay(retry: number, retryAfterMs: number | undefined): number {
+function conflictDelay(retry: number): number {
   const jitter = 0.8 + Math.random() * 0.4;
-  // A zero wait would never use up the budget, so it falls back to the backoff.
-  const delay =
-    retryAfterMs !== undefined && retryAfterMs > 0
-      ? retryAfterMs
-      : CONFLICT_BASE_DELAY_MS * 2 ** retry * jitter;
-  return Math.min(delay, MAX_CONFLICT_DELAY_MS);
+  return Math.min(CONFLICT_BASE_DELAY_MS * 2 ** retry * jitter, MAX_CONFLICT_DELAY_MS);
 }
 
 // Rejects with an `AbortError`, so an aborted wait ends like an aborted request.

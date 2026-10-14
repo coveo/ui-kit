@@ -308,38 +308,10 @@ describe('UnifiedEndpointClient', () => {
       expect(result.conflict).toEqual({inFlightSequence: 7});
     });
 
-    it('leaves the wait to the caller when Retry-After is not readable', async () => {
-      // Browsers hide Retry-After from cross-origin scripts unless the edge exposes it.
+    it('reads a conflict without an in-flight sequence', async () => {
       const result = await callFailing(new Response(conflictBody(gatewayError), {status: 409}));
 
       expect(result.conflict).toEqual({});
-    });
-
-    it('reads Retry-After given in seconds', async () => {
-      const result = await callFailing(
-        new Response(conflictBody(gatewayError), {
-          status: 409,
-          headers: {'Retry-After': '2'},
-        })
-      );
-
-      expect(result.conflict).toEqual({retryAfterMs: 2000});
-    });
-
-    it('reads Retry-After given as an HTTP date', async () => {
-      vi.useFakeTimers({now: new Date('2026-10-13T12:00:00Z'), toFake: ['Date']});
-      try {
-        const result = await callFailing(
-          new Response(conflictBody(gatewayError), {
-            status: 409,
-            headers: {'Retry-After': 'Tue, 13 Oct 2026 12:00:03 GMT'},
-          })
-        );
-
-        expect(result.conflict).toEqual({retryAfterMs: 3000});
-      } finally {
-        vi.useRealTimers();
-      }
     });
 
     it.each([
