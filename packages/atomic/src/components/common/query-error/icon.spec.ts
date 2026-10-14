@@ -1,5 +1,5 @@
 import {html} from 'lit';
-import {describe, expect, it} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import CannotAccess from '../../../images/cannot-access.svg';
 import Indexing from '../../../images/indexing.svg';
@@ -19,6 +19,9 @@ describe('#renderQueryErrorIcon', () => {
     };
   };
 
+  const expectIcon = (atomicIcon: Element | null, icon: string) =>
+    vi.waitFor(() => expect(atomicIcon).toHaveAttribute('icon', icon));
+
   it('should render atomic-icon with correct attributes', async () => {
     const {atomicIcon} = await renderComponent();
 
@@ -28,30 +31,30 @@ describe('#renderQueryErrorIcon', () => {
   it('should render NoConnection icon when errorType is Disconnected', async () => {
     const {atomicIcon} = await renderComponent('Disconnected');
 
-    expect(atomicIcon).toHaveAttribute('icon', NoConnection);
+    await expectIcon(atomicIcon, NoConnection);
   });
 
   it('should render Indexing icon when errorType is NoEndpointsException', async () => {
     const {atomicIcon} = await renderComponent('NoEndpointsException');
 
-    expect(atomicIcon).toHaveAttribute('icon', Indexing);
+    await expectIcon(atomicIcon, Indexing);
   });
 
   it('should render CannotAccess icon when errorType is InvalidTokenException', async () => {
     const {atomicIcon} = await renderComponent('InvalidTokenException');
 
-    expect(atomicIcon).toHaveAttribute('icon', CannotAccess);
+    await expectIcon(atomicIcon, CannotAccess);
   });
 
   it('should render SearchInactive icon when errorType is OrganizationIsPausedException', async () => {
     const {atomicIcon} = await renderComponent('OrganizationIsPausedException');
 
-    expect(atomicIcon).toHaveAttribute('icon', SearchInactive);
+    await expectIcon(atomicIcon, SearchInactive);
   });
 
   it('should render default icon when errorType is unknown', async () => {
     const {atomicIcon} = await renderComponent('UnknownErrorType');
 
-    expect(atomicIcon).toHaveAttribute('icon', SomethingWrong);
+    await expectIcon(atomicIcon, SomethingWrong);
   });
 });
