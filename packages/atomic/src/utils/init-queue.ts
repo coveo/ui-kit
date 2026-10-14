@@ -2,11 +2,13 @@ import type {InitializeEventHandler} from './initialization-common-utils';
 
 export type InitializeEvent = CustomEvent<InitializeEventHandler>;
 
+type ElementMap<V> = Map<Element, V> | WeakMap<Element, V>;
+
 declare global {
   interface Window {
     initQueueNamespace: {
-      eventQueueMap: WeakMap<Element, QueuedEvent[]>;
-      parentReadyMap: WeakMap<Element, boolean>;
+      eventQueueMap: ElementMap<QueuedEvent[]>;
+      parentReadyMap: ElementMap<boolean>;
     };
   }
 }
@@ -20,21 +22,30 @@ function getWindow() {
   return window;
 }
 
+/**
+ * Every Atomic copy on the page shares this namespace, and older versions create it with `Map`s,
+ * which keep removed interfaces in memory. All versions read the maps from `window` on each call
+ * and only use `get`, `set`, `has` and `delete`, so converting them to `WeakMap`s is safe.
+ */
 function getInitQueueNamespace() {
-  if (!getWindow().initQueueNamespace) {
-    getWindow().initQueueNamespace = {
-      eventQueueMap: new WeakMap(),
-      parentReadyMap: new WeakMap(),
-    };
+  const namespace = (getWindow().initQueueNamespace ??= {
+    eventQueueMap: new WeakMap(),
+    parentReadyMap: new WeakMap(),
+  });
+  if (namespace.eventQueueMap instanceof Map) {
+    namespace.eventQueueMap = new WeakMap(namespace.eventQueueMap);
   }
-  return getWindow().initQueueNamespace;
+  if (namespace.parentReadyMap instanceof Map) {
+    namespace.parentReadyMap = new WeakMap(namespace.parentReadyMap);
+  }
+  return namespace;
 }
 
-function getEventQueueMap(): WeakMap<Element, QueuedEvent[]> {
+function getEventQueueMap(): ElementMap<QueuedEvent[]> {
   return getInitQueueNamespace().eventQueueMap;
 }
 
-function getParentReadyMap(): WeakMap<Element, boolean> {
+function getParentReadyMap(): ElementMap<boolean> {
   return getInitQueueNamespace().parentReadyMap;
 }
 
