@@ -106,7 +106,6 @@ export async function readActionInFlightConflict(
     return undefined;
   }
 
-  // `inFlightSequence` is not sent yet: it is provisional until KIT-6255 lands.
   const {errorCode, inFlightSequence} = body as Record<string, unknown>;
   if (errorCode !== 'AGENT:ACTION_IN_FLIGHT') {
     return undefined;

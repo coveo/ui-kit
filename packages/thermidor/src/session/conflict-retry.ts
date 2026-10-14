@@ -2,7 +2,6 @@ import type {ActionInFlightConflict} from '@/src/internal/api/protocol/error-han
 
 // Long enough for an aborted agent run to wind down: the Gateway can't cancel it upstream, so it
 // keeps the session's slot until the run's next event or its end.
-// TODO(KIT-6261): lower once the Gateway aborts the run, and frees the slot, on client disconnect.
 const CONFLICT_RETRY_BUDGET_MS = 30_000;
 const MAX_CONFLICT_DELAY_MS = 4_000;
 const CONFLICT_BASE_DELAY_MS = 250;
@@ -35,8 +34,6 @@ export async function callWithConflictRetry<TResult extends AttemptResult>(
   }
 }
 
-// TODO(KIT-6255): once actions carry a sequence number, wait for `inFlightSequence` to be answered
-// rather than backing off blind.
 function conflictDelay(retry: number, retryAfterMs: number | undefined): number {
   const jitter = 0.8 + Math.random() * 0.4;
   // A zero wait would never use up the budget, so it falls back to the backoff.
