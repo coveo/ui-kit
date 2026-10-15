@@ -233,8 +233,12 @@ consumer needs:
 Surface derivation follows the stream in order rather than collecting every `createSurface`:
 
 - `deleteSurface` removes a surface, and a later `createSurface` with the same id re-adds it at
-  the end. A duplicate `createSurface` without a delete (a spec error) is collapsed into its
-  latest creation at the end of `surfaces`, while the v0.9 projection forwards both;
+  the end. A `createSurface` without a `catalogId` (a spec error) is ignored, as the v0.9
+  projection drops it, so no consumer draws a placeholder the renderer never receives. A
+  duplicate `createSurface` without a delete (a spec error) is collapsed into its
+  latest creation at the end of `surfaces`, while the v0.9 projection forwards both. Both errors
+  log a development-only warning (`devWarn`) once, when the snapshot carrying them is folded, not
+  on every re-derivation;
 - `isLoading` reads the effective data model: `createSurface.dataModel`, then any
   `updateDataModel` written at `/` (or with no or an empty path) or at `/isLoading`. Today the
   agent ends a placeholder with `deleteSurface` and creates the content as a new surface. Reading

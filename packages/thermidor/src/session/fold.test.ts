@@ -1,4 +1,4 @@
-import {describe, expect, it} from 'vitest';
+import {afterEach, describe, expect, it, vi} from 'vitest';
 import type {NormalizedStreamEvent} from '@/src/internal/api/protocol/stream-types.js';
 import {createTurn, deriveSurfaces, foldActivities} from './fold.js';
 
@@ -122,6 +122,7 @@ const surfaceMessage = (surfaceId: string, rootComponentType: string) => {
   return {
     version: 'v1.0',
     createSurface: {
+      catalogId: 'commerce',
       surfaceId,
       components: [{id: 'root', component: rootComponentType}],
     },
@@ -181,6 +182,7 @@ describe('fold surface derivation', () => {
         {
           version: 'v1.0',
           createSurface: {
+            catalogId: 'commerce',
             surfaceId: 'ui-1',
             rootId: 'missing',
             components: [{id: 'other', component: 'CommerceSearch'}],
@@ -203,6 +205,7 @@ describe('fold surface derivation', () => {
     const singleIdentitySurface = {
       version: 'v1.0',
       createSurface: {
+        catalogId: 'commerce',
         surfaceId: 'commerce-search-2',
         components: [
           {
@@ -397,7 +400,11 @@ describe('fold ACTIVITY_SNAPSHOT replace semantics', () => {
   const createElsewhere = surfaceSnapshotWith('create:ui-1', true, [
     {
       version: 'v1.0',
-      createSurface: {surfaceId: 'ui-1', components: [{id: 'root', component: 'ProductCarousel'}]},
+      createSurface: {
+        catalogId: 'commerce',
+        surfaceId: 'ui-1',
+        components: [{id: 'root', component: 'ProductCarousel'}],
+      },
     },
   ]);
 
@@ -464,6 +471,7 @@ describe('fold loading placeholder lifecycle', () => {
   const loadingSurfaceMessage = (surfaceId: string, rootComponentType: string) => ({
     version: 'v1.0',
     createSurface: {
+      catalogId: 'commerce',
       surfaceId,
       components: [{id: 'root', component: rootComponentType}],
       dataModel: {heading: {value: ''}, products: {items: []}, isLoading: true},
@@ -576,6 +584,7 @@ describe('fold loading placeholder lifecycle', () => {
         {
           version: 'v1.0',
           createSurface: {
+            catalogId: 'commerce',
             surfaceId: 'skel',
             components: [{id: 'root', component: 'ProductCarousel'}],
             dataModel: {'/isLoading': true},
@@ -691,5 +700,61 @@ describe('fold loading placeholder lifecycle', () => {
     expect(turn.response.surfaces).toEqual([
       {surfaceId: 'skel', rootComponentType: 'ProductCarousel', isLoading: true},
     ]);
+  });
+});
+
+/**
+ * A2-UI spec errors in surface snapshots: both projections ignore a surface without a catalog,
+ * and each error is warned about once, when its snapshot arrives.
+ */
+describe('fold surface spec errors', () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  const createSurface = (surfaceId: string, extra: Record<string, unknown> = {}) => ({
+    version: 'v1.0',
+    createSurface: {surfaceId, components: [{id: 'root', component: 'ProductCarousel'}], ...extra},
+  });
+
+  it('ignores a surface without a catalog and warns once', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    const turn = foldActivities(createTurn('t1', {}), [
+      surfaceSnapshotWith('activity-1', true, [
+        createSurface('skel', {dataModel: {isLoading: true}}),
+      ]),
+      surfaceSnapshotWith('activity-2', true, [createSurface('other', {catalogId: 'commerce'})]),
+    ]);
+
+    expect(turn.response.surfaces.map((surface) => surface.surfaceId)).toEqual(['other']);
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(warn.mock.calls[0][0]).toContain('"skel" has no catalogId');
+  });
+
+  it('warns once about a surface created again while it still exists', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    foldActivities(createTurn('t1', {}), [
+      surfaceSnapshotWith('activity-1', true, [createSurface('s', {catalogId: 'commerce'})]),
+      surfaceSnapshotWith('activity-2', true, [createSurface('s', {catalogId: 'commerce'})]),
+      surfaceSnapshotWith('activity-3', true, [createSurface('t', {catalogId: 'commerce'})]),
+    ]);
+
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(warn.mock.calls[0][0]).toContain('"s" re-creates a surface that still exists');
+  });
+
+  it('does not warn when a surface is deleted first or its activity is replaced', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    foldActivities(createTurn('t1', {}), [
+      surfaceSnapshotWith('activity-1', true, [createSurface('s', {catalogId: 'commerce'})]),
+      surfaceSnapshotWith('activity-1', true, [createSurface('s', {catalogId: 'commerce'})]),
+      surfaceSnapshotWith('activity-2', true, [
+        {version: 'v1.0', deleteSurface: {surfaceId: 's'}},
+        createSurface('s', {catalogId: 'commerce'}),
+      ]),
+    ]);
+
+    expect(warn).not.toHaveBeenCalled();
   });
 });

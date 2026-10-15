@@ -1,5 +1,6 @@
 import type {NormalizedStreamEvent} from '@/src/internal/api/protocol/stream-types.js';
 import {getActivityMetadata} from '@/src/internal/api/protocol/activity-metadata.js';
+import {devWarn} from '@/src/internal/utils/dev-warn.js';
 import {deriveA2uiV09Messages} from './a2ui-v09-projection.js';
 import type {ContractsSchema} from './contracts.js';
 import {
@@ -186,6 +187,13 @@ export function foldActivity(
         nextActivity.replace && nextActivity.id
           ? response.activities.findIndex((existing) => existing.id === nextActivity.id)
           : -1;
+      if (nextActivity.kind === SURFACE_ACTIVITY_KIND) {
+        warnSurfaceSpecErrors(
+          response.surfaces,
+          existingIndex === -1 ? undefined : response.activities[existingIndex].payload,
+          content
+        );
+      }
       if (existingIndex === -1) {
         response.activities = [...response.activities, nextActivity];
       } else {
@@ -500,7 +508,8 @@ const LOADING_FLAG = 'isLoading';
 /**
  * Derives the ordered list of surfaces borne by a turn's activities. Every
  * entry carries a non-empty `surfaceId` and a non-empty `rootComponentType`;
- * turns with no surface-bearing activities yield an empty list.
+ * turns with no surface-bearing activities yield an empty list. A `createSurface`
+ * without a `catalogId` is ignored, as the v0.9 projection drops it.
  *
  * Messages are applied in stream order, following the A2-UI surface lifecycle:
  * `deleteSurface` removes a surface, and `isLoading` tracks the surface's
@@ -601,6 +610,13 @@ function readSurface(message: unknown): DiscoveredSurface | null {
     return null;
   }
 
+  // The v0.9 projection drops a surface without a catalog, so the renderer never draws it; a
+  // consumer must not draw a placeholder for it either.
+  const catalogId = createSurface['catalogId'];
+  if (typeof catalogId !== 'string' || catalogId.length === 0) {
+    return null;
+  }
+
   const components = createSurface['components'];
   if (!Array.isArray(components)) {
     return null;
@@ -624,6 +640,60 @@ function readSurface(message: unknown): DiscoveredSurface | null {
   const isLoading = isRecord(dataModel) && readInlineLoadingFlag(dataModel);
 
   return {surfaceId, rootComponentType, isLoading};
+}
+
+/**
+ * Warns, during development, about A2-UI spec errors in the `createSurface` messages of an incoming
+ * surface snapshot: a surface without a catalog, which both projections ignore, and a surface
+ * created again while it still exists, which `surfaces` collapses. Only the incoming snapshot is
+ * checked, so each error is reported once rather than on every re-derivation. A replace snapshot
+ * may re-send the `createSurface` of the activity it supersedes.
+ */
+function warnSurfaceSpecErrors(
+  liveSurfaces: readonly DiscoveredSurface[],
+  supersededPayload: Record<string, unknown> | undefined,
+  payload: Record<string, unknown>
+): void {
+  const messages = payload['messages'];
+  if (!Array.isArray(messages)) {
+    return;
+  }
+  const liveIds = new Set(liveSurfaces.map((surface) => surface.surfaceId));
+  const supersededMessages = supersededPayload?.['messages'];
+  if (Array.isArray(supersededMessages)) {
+    for (const message of supersededMessages) {
+      const surfaceId = operationSurfaceId(message, 'createSurface');
+      if (surfaceId !== null) {
+        liveIds.delete(surfaceId);
+      }
+    }
+  }
+  for (const message of messages) {
+    const deletedId = operationSurfaceId(message, 'deleteSurface');
+    if (deletedId !== null) {
+      liveIds.delete(deletedId);
+      continue;
+    }
+    const surfaceId = operationSurfaceId(message, 'createSurface');
+    if (surfaceId === null) {
+      continue;
+    }
+    const catalogId = (message as {createSurface: Record<string, unknown>}).createSurface[
+      'catalogId'
+    ];
+    if (typeof catalogId !== 'string' || catalogId.length === 0) {
+      devWarn(
+        `createSurface "${surfaceId}" has no catalogId (an A2-UI spec error); it is ignored.`
+      );
+      continue;
+    }
+    if (liveIds.has(surfaceId)) {
+      devWarn(
+        `createSurface "${surfaceId}" re-creates a surface that still exists without a deleteSurface (an A2-UI spec error).`
+      );
+    }
+    liveIds.add(surfaceId);
+  }
 }
 
 /**
