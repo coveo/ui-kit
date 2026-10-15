@@ -35,15 +35,17 @@ test.describe('Example Insight Panel E2E Tests', () => {
       insightPanel,
       search,
     }) => {
+      test.slow();
       await expect(insightPanel.errorComponent).not.toBeVisible();
       // Trigger a search
       const exampleQuery = 'Test';
       const searchRequestPromise = search.waitForSearchRequest();
+      const searchResponsePromise = search.waitForSearchResponse();
       await insightPanel.searchboxInput.fill(exampleQuery);
       await insightPanel.searchboxInput.press('Enter');
-      await searchRequestPromise;
       const searchRequestBody = (await searchRequestPromise).postDataJSON();
       expect(searchRequestBody?.q).toBe(exampleQuery);
+      await searchResponsePromise;
 
       await expect(insightPanel.insightSummary).toContainText(exampleQuery);
 
@@ -51,23 +53,27 @@ test.describe('Example Insight Panel E2E Tests', () => {
       const secondTab = await insightPanel.getTabByIndex(1);
       const expectedTabName = await secondTab.textContent();
       const tabClickSearchRequestPromise = search.waitForSearchRequest();
+      const tabClickSearchResponsePromise = search.waitForSearchResponse();
       await secondTab.click();
       const searchRequestBodyAfterTabClick = (
         await tabClickSearchRequestPromise
       ).postDataJSON();
       expect(searchRequestBodyAfterTabClick?.tab).toBe(expectedTabName);
-      await search.waitForSearchResponse();
+      await tabClickSearchResponsePromise;
 
       // Change the page
       const pagerClickSearchRequestPromise = search.waitForSearchRequest();
+      const pagerClickSearchResponsePromise = search.waitForSearchResponse();
       await insightPanel.clickOnPagerButtonByIndex(2);
       const searchRequestBodyAfterPagerClick = (
         await pagerClickSearchRequestPromise
       ).postDataJSON();
       expect(searchRequestBodyAfterPagerClick?.firstResult).toBe(5);
+      await pagerClickSearchResponsePromise;
 
       // Select a facet value
       const facetSelectSearchRequestPromise = search.waitForSearchRequest();
+      const facetSelectSearchResponsePromise = search.waitForSearchResponse();
       await insightPanel.clickOnRefineToggleButton();
       await insightPanel.clickOnFirstFacetsContainer();
       const firstFacetValue = await insightPanel.getFacetValueByIndex(0);
@@ -77,6 +83,7 @@ test.describe('Example Insight Panel E2E Tests', () => {
       const searchRequestBodyAfterFacetSelect = (
         await facetSelectSearchRequestPromise
       ).postDataJSON();
+      await facetSelectSearchResponsePromise;
 
       const selectedFacet =
         searchRequestBodyAfterFacetSelect?.facets?.[0]?.currentValues.find(
