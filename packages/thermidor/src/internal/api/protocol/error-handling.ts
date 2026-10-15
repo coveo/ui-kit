@@ -83,9 +83,6 @@ export function isSuccessResponse(response: Response): boolean {
 
 export interface ActionInFlightConflict {
   inFlightSequence?: number;
-  // Usually absent in a browser: cross-origin scripts can't read `Retry-After` unless the edge
-  // lists it in `Access-Control-Expose-Headers`.
-  retryAfterMs?: number;
 }
 
 // Never throws: a 409 with another `errorCode`, or an unreadable body, is not a conflict.
@@ -115,25 +112,5 @@ export async function readActionInFlightConflict(
   if (typeof inFlightSequence === 'number' && Number.isFinite(inFlightSequence)) {
     conflict.inFlightSequence = inFlightSequence;
   }
-  const retryAfterMs = parseRetryAfter(response.headers.get('Retry-After'));
-  if (retryAfterMs !== undefined) {
-    conflict.retryAfterMs = retryAfterMs;
-  }
   return conflict;
-}
-
-// Accepts both `Retry-After` forms: delta-seconds and an HTTP date.
-function parseRetryAfter(header: string | null): number | undefined {
-  const value = header?.trim();
-  if (!value) {
-    return undefined;
-  }
-  if (/^\d+$/.test(value)) {
-    return Number(value) * 1000;
-  }
-  const date = Date.parse(value);
-  if (Number.isNaN(date)) {
-    return undefined;
-  }
-  return Math.max(0, date - Date.now());
 }

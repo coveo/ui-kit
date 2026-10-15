@@ -1,14 +1,11 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {callWithConflictRetry} from './conflict-retry.js';
 
-type Result = {success: true} | {success: false; conflict?: {retryAfterMs?: number}};
+type Result = {success: true} | {success: false; conflict?: object};
 
 const success: Result = {success: true};
 const failure: Result = {success: false};
-const conflict = (retryAfterMs?: number): Result => ({
-  success: false,
-  conflict: retryAfterMs === undefined ? {} : {retryAfterMs},
-});
+const conflict = (): Result => ({success: false, conflict: {}});
 
 describe('callWithConflictRetry', () => {
   let attempt: ReturnType<typeof vi.fn<() => Promise<Result>>>;
@@ -100,30 +97,6 @@ describe('callWithConflictRetry', () => {
     // Attempts start at 0, 2.25, 4.75, 7.75, 11.75, 17.75, 23.75 and 29.75 s.
     expect(attempt).toHaveBeenCalledTimes(8);
   });
-
-  it('waits as long as Retry-After asks, up to 4 s', async () => {
-    respondWith(conflict(2000), conflict(60_000), success);
-
-    const result = callWithConflictRetry(attempt, controller.signal);
-
-    expect(await attemptsAfter(1999, 1, 3999, 1)).toEqual([1, 2, 2, 3]);
-    await expect(result).resolves.toBe(success);
-  });
-
-  it.each([0, -1000])(
-    'backs off instead when Retry-After asks for no wait (%i ms), so the budget still ends it',
-    async (retryAfterMs) => {
-      const conflicts = Array.from({length: 12}, () => conflict(retryAfterMs));
-      respondWith(...conflicts);
-
-      const result = callWithConflictRetry(attempt, controller.signal);
-      expect(await attemptsAfter(0, 249, 1)).toEqual([1, 1, 2]);
-      await vi.advanceTimersByTimeAsync(60_000);
-
-      await expect(result).resolves.toBe(conflicts[11]);
-      expect(attempt).toHaveBeenCalledTimes(12);
-    }
-  );
 
   it('rejects with an AbortError, without another attempt, when aborted during a wait', async () => {
     respondWith(conflict());
