@@ -11,6 +11,7 @@ import {loadPaginationActions} from '../../../features/pagination/pagination-act
 import type {executeSearch} from '../../../features/search/search-actions.js';
 import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
 import {buildMockResult} from '../../../test/mock-result.js';
+import {buildMockSearchResponse} from '../../../test/mock-search-response.js';
 import * as augmentModule from '../../common/augment-preprocess-request.js';
 import type {ControllerDefinitionWithoutProps} from '../../common/types/controllers.js';
 import type {
@@ -208,6 +209,43 @@ describe('SSR', () => {
         expect(mockedLoggerWarn).not.toHaveBeenCalled();
 
         mockedLoggerWarn.mockRestore();
+      });
+    });
+
+    describe('when fetching the static state for several requests', () => {
+      let forwardedForPerSearchRequest: (string | null)[];
+
+      beforeEach(() => {
+        forwardedForPerSearchRequest = [];
+        vi.stubGlobal(
+          'fetch',
+          vi.fn(async (url: string, init: RequestInit) => {
+            if (url.includes('/rest/search/v2')) {
+              forwardedForPerSearchRequest.push(new Headers(init.headers).get('x-forwarded-for'));
+            }
+            return new Response(JSON.stringify(buildMockSearchResponse()), {
+              headers: {'Content-Type': 'application/json'},
+            });
+          })
+        );
+      });
+
+      afterEach(() => {
+        vi.unstubAllGlobals();
+      });
+
+      it('should send the x-forwarded-for header of each request', async () => {
+        engineDefinition.setNavigatorContextProvider(
+          buildMockNavigatorContextProvider({forwardedFor: '1.1.1.1'})
+        );
+        await engineDefinition.fetchStaticState();
+
+        engineDefinition.setNavigatorContextProvider(
+          buildMockNavigatorContextProvider({forwardedFor: '2.2.2.2'})
+        );
+        await engineDefinition.fetchStaticState();
+
+        expect(forwardedForPerSearchRequest).toEqual(['1.1.1.1', '2.2.2.2']);
       });
     });
 

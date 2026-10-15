@@ -132,9 +132,20 @@ export function defineSearchEngine<
         '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
       );
     }
-    const engine = buildSSRSearchEngine(
-      buildOptions?.extend ? await buildOptions.extend(getOptions()) : getOptions()
-    );
+    const baseOptions = buildOptions?.extend
+      ? await buildOptions.extend(getOptions())
+      : getOptions();
+    const engine = buildSSRSearchEngine({
+      ...baseOptions,
+      configuration: {
+        ...baseOptions.configuration,
+        preprocessRequest: augmentPreprocessRequestWithForwardedFor({
+          preprocessRequest: baseOptions.configuration.preprocessRequest,
+          navigatorContextProvider: baseOptions.navigatorContextProvider,
+          loggerOptions: baseOptions.loggerOptions,
+        }),
+      },
+    });
 
     const updateEngineConfiguration = (accessToken: string) => {
       const {updateBasicConfiguration} = loadConfigurationActions(engine);
@@ -162,12 +173,6 @@ export function defineSearchEngine<
 
   const fetchStaticState: FetchStaticStateFunction = composeFunction(
     async (...params: FetchStaticStateParameters) => {
-      engineOptions.configuration.preprocessRequest = augmentPreprocessRequestWithForwardedFor({
-        preprocessRequest: engineOptions.configuration.preprocessRequest,
-        navigatorContextProvider: engineOptions.navigatorContextProvider,
-        loggerOptions: engineOptions.loggerOptions,
-      });
-
       const buildResult = await build(...params);
       const staticState = await fetchStaticState.fromBuildResult({
         buildResult,
