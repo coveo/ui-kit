@@ -2,10 +2,13 @@ import {expect} from '@playwright/test';
 import {DocumentSuggestionObject} from './pageObject';
 import {quanticBase} from '../../../../../../playwright/fixtures/baseFixture';
 import {SearchObject} from '../../../../../../playwright/page-object/searchObject';
-import {CaseAssistObject} from '../../../../../../playwright/page-object/caseAssistObject';
+import {
+  CaseAssistObject,
+  caseAssistConfigurationsTimeoutMs,
+} from '../../../../../../playwright/page-object/caseAssistObject';
 
 const pageUrl = 's/quantic-document-suggestion';
-const readinessTimeoutMs = 15_000;
+const readinessTimeoutMs = caseAssistConfigurationsTimeoutMs + 5_000;
 
 interface DocumentSuggestionOptions {
   engineId: string;

@@ -1,6 +1,9 @@
 import {CaseClassificationObject} from './pageObject';
 import {quanticBase} from '../../../../../../playwright/fixtures/baseFixture';
-import {CaseAssistObject} from '../../../../../../playwright/page-object/caseAssistObject';
+import {
+  CaseAssistObject,
+  caseAssistConfigurationsTimeoutMs,
+} from '../../../../../../playwright/page-object/caseAssistObject';
 import {
   allOptions,
   caseClassificationSuggestions,
@@ -9,7 +12,7 @@ import {
 } from './data';
 
 const pageUrl = 's/quantic-case-classification';
-const readinessTimeoutMs = 15_000;
+const readinessTimeoutMs = caseAssistConfigurationsTimeoutMs + 5_000;
 
 interface CaseClassificationOptions {
   fetchOnInit: boolean;

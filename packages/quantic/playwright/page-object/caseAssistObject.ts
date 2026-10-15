@@ -6,7 +6,13 @@ import {
 } from '../utils/requests';
 
 const maxConfigurationAttempts = 3;
-const configurationRequestTimeoutMs = 8_000;
+
+/**
+ * The longest the Case Assist configurations lookup can take, retries
+ * included. Each attempt gets the time left, so only quick failures are
+ * retried. The fixtures derive their readiness timeouts from it.
+ */
+export const caseAssistConfigurationsTimeoutMs = 10_000;
 
 /**
  * The Case Assist configurations returned by the Coveo platform, shared by the
@@ -15,12 +21,15 @@ const configurationRequestTimeoutMs = 8_000;
 let caseAssistConfigurations: Promise<unknown> | undefined;
 
 async function fetchCaseAssistConfigurations(route: Route): Promise<unknown> {
+  const deadline = Date.now() + caseAssistConfigurationsTimeoutMs;
   let lastError: unknown;
   for (let attempt = 1; attempt <= maxConfigurationAttempts; attempt++) {
+    const timeout = deadline - Date.now();
+    if (timeout <= 0) {
+      break;
+    }
     try {
-      const response = await route.fetch({
-        timeout: configurationRequestTimeoutMs,
-      });
+      const response = await route.fetch({timeout});
       if (response.ok()) {
         return await response.json();
       }
