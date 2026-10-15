@@ -86,12 +86,22 @@ const styles = css`
         max-width: 100%;
       }
 
+      & > atomic-facet-manager {
+        display: contents;
+
+        & > * {
+          max-width: 100%;
+        }
+      }
+
       & > atomic-segmented-facet,
-      & > atomic-popover {
+      & > atomic-popover,
+      & > atomic-facet-manager > atomic-popover {
         margin-right: 0.5rem;
       }
 
-      & > atomic-popover {
+      & > atomic-popover,
+      & > atomic-facet-manager > atomic-popover {
         display: none;
       }
     }

@@ -25,16 +25,22 @@ It also automatically selects facets to improve the user experience.
 A facet wrapped in an [`atomic-popover`](?path=/docs/atomic-popover--docs) is managed like any other facet. The popover moves along with its facet, so the facet always stays inside it.
 
 ```html
-<atomic-layout-section section="horizontal-facets">
-  <atomic-facet-manager>
-    <atomic-popover>
-      <atomic-facet field="author" label="Authors"></atomic-facet>
-    </atomic-popover>
-    <atomic-popover>
-      <atomic-facet field="source" label="Source"></atomic-facet>
-    </atomic-popover>
-  </atomic-facet-manager>
-</atomic-layout-section>
+<atomic-search-layout>
+  <atomic-layout-section section="main">
+    <atomic-layout-section section="horizontal-facets">
+      <atomic-facet-manager>
+        <atomic-popover>
+          <atomic-facet field="author" label="Authors"></atomic-facet>
+        </atomic-popover>
+        <atomic-popover>
+          <atomic-facet field="source" label="Source"></atomic-facet>
+        </atomic-popover>
+      </atomic-facet-manager>
+    </atomic-layout-section>
+  </atomic-layout-section>
+</atomic-search-layout>
 ```
+
+In the [`atomic-search-layout`](?path=/docs/atomic-search-layout--docs), the popovers of a facet manager follow the same responsive rules as popovers placed directly in the `horizontal-facets` section: they sit in a single row on desktop and are hidden on mobile, where the refine modal displays the facets.
 
 A popover always displays its facet expanded. For this reason, a facet inside a popover is never collapsed and does not count towards `collapse-facets-after`.

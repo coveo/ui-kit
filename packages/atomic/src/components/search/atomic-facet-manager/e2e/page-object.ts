@@ -37,6 +37,13 @@ export class FacetManagerPageObject extends BasePageObject {
   }
 
   /**
+   * Get the popovers of the manager that are displayed
+   */
+  get visiblePopovers() {
+    return this.popovers.filter({visible: true});
+  }
+
+  /**
    * Get the buttons that open the popovers, in the order the popovers appear in the manager
    */
   get popoverButtons() {

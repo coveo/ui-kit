@@ -100,6 +100,49 @@ test.describe('atomic-facet-manager', () => {
       });
     });
 
+    test('should lay the popovers out in a single row on desktop', async ({component}) => {
+      await component.load({story: 'with-popovers'});
+      await expect(component.popoverLabels).toHaveText(orderOfFirstResponse);
+
+      await expect
+        .poll(() =>
+          component.popovers.evaluateAll((popovers) => {
+            const boxes = popovers.map((popover) => popover.getBoundingClientRect());
+            const isSingleRow = new Set(boxes.map(({top}) => top)).size === 1;
+            const areSpaced = boxes.slice(1).every(({left}, index) => left > boxes[index].right);
+            return isSingleRow && areSpaced;
+          })
+        )
+        .toBe(true);
+    });
+
+    test('should hide the popovers on mobile', async ({component}) => {
+      await component.page.setViewportSize({width: 600, height: 800});
+      await component.load({story: 'with-popovers'});
+      await expect(component.popoverButtons).toHaveCount(4);
+
+      await expect(component.visiblePopovers).toHaveCount(0);
+    });
+
+    test('should refresh the popovers when the language changes after they are sorted', async ({
+      component,
+    }) => {
+      const yearPopoverButton = component.popoverButtons.filter({hasText: 'Year'});
+      await component.load({story: 'with-popovers'});
+      await expect(component.popoverLabels).toHaveText(orderOfFirstResponse);
+      await expect(yearPopoverButton).toHaveAccessibleName('Popover menu for the Year facet');
+
+      await component.page.locator('atomic-search-interface').evaluate((searchInterface) => {
+        searchInterface.setAttribute('language', 'fr');
+      });
+
+      await expect(yearPopoverButton).toHaveAccessibleName('Menu contextuel de la facette Year');
+      await yearPopoverButton.click();
+      await expect(
+        component.page.getByRole('button', {name: /Filtre d.inclusion sur 2024/})
+      ).toBeVisible();
+    });
+
     test('should never collapse the facets of the popovers', async ({component}) => {
       await component.load({story: 'with-popovers', args: {'collapse-facets-after': 1}});
       await expect(component.popoverLabels).toHaveText(orderOfFirstResponse);

@@ -4,9 +4,11 @@ import {html} from 'lit/static-html.js';
 import {MockSearchApi, type SearchResponse} from '@coveo/platform-mock-api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/common/atomic-layout-section/atomic-layout-section.js';
 import '@/src/components/search/atomic-facet/atomic-facet.js';
 import '@/src/components/search/atomic-facet-manager/atomic-facet-manager.js';
 import '@/src/components/search/atomic-popover/atomic-popover.js';
+import '@/src/components/search/atomic-search-layout/atomic-search-layout.js';
 
 const searchApiHarness = new MockSearchApi();
 
@@ -140,16 +142,11 @@ export const WithPopovers: Story = {
   name: 'With facets inside atomic-popover',
   decorators: [
     (story) => html`
-      <style>
-        atomic-facet-manager {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 0.5rem;
-          margin: auto;
-          width: 800px;
-        }
-      </style>
-      ${story()}
+      <atomic-search-layout>
+        <atomic-layout-section section="main">
+          <atomic-layout-section section="horizontal-facets">${story()}</atomic-layout-section>
+        </atomic-layout-section>
+      </atomic-search-layout>
     `,
   ],
   args: {
