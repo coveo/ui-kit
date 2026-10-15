@@ -77,11 +77,22 @@ export interface EngineDefinition<
   >;
 
   /**
+   * @deprecated This method will be removed in a future major version, and
+   * `@coveo/headless/ssr-next` no longer has it. Keep track of the token you configure instead of
+   * reading it back from the shared engine definition.
+   *
    * Returns the access token.
    */
   getAccessToken: () => string;
 
   /**
+   * @deprecated This method will be removed in a future major version, and
+   * `@coveo/headless/ssr-next` no longer has it. It mutates the shared engine definition, so on a
+   * server handling concurrent requests one request can overwrite another request's token. To
+   * rotate the token of an engine that is already running, configure `renewAccessToken` on the
+   * engine configuration. To use a different token per request, use `@coveo/headless/ssr-next`,
+   * whose `fetchStaticState()` and `hydrateStaticState()` take an `accessToken`.
+   *
    * Updates the access token.
    * @param accessToken - The access token to update.
    */
