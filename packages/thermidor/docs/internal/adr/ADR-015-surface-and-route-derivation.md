@@ -220,8 +220,9 @@ re-derivable function of the activity list.
 A2-UI v1.0 defines no skeleton. The commerce catalog declares an optional `isLoading` flag on
 each display component's data model, and the agent streams a loading placeholder as a
 `createSurface` whose `dataModel.isLoading` is `true`. Consumers used to tell placeholders apart
-by `surfaceId` conventions (`skeleton-` prefix, `-default` suffix) and by reasoning steps, which
-the spec treats as opaque.
+by `surfaceId` conventions (`skeleton-` prefix, `-default` suffix), which A2-UI treats as opaque,
+and by the name of an AG-UI tool call (`store_render_plan`), which describes the agent's render
+plan rather than a placeholder.
 
 `DiscoveredSurface` now carries `isLoading`, so the typed `response.surfaces` projection is all a
 consumer needs:
