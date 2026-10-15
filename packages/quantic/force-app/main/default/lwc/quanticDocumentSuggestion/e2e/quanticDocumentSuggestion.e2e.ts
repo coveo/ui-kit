@@ -1,35 +1,18 @@
 /* eslint-disable no-await-in-loop */
 import {test, expect} from './fixture';
+import {
+  AnalyticsModeEnum,
+  analyticsModeTest,
+} from '../../../../../../playwright/utils/analyticsMode';
+import {exampleTrackingId} from '../../../../../../playwright/page-object/analytics';
 
-const fakeTrackingId = 'tracking_id_123';
-
-['legacy', 'next'].forEach((mode) => {
-  test.describe(`quantic document suggestion with analytics mode: ${mode}`, () => {
-    let analyticsMode = 'legacy';
-    test.beforeEach(async ({documentSuggestion, page}) => {
-      analyticsMode = mode;
-      if (analyticsMode === 'next') {
-        await page.context().addCookies([
-          {
-            name: 'Coveo-Pendragon',
-            value: fakeTrackingId,
-            domain: '.my.site.com',
-            path: '/',
-          },
-          {
-            name: 'LSKey-c$Coveo-Pendragon',
-            value: fakeTrackingId,
-            domain: '.my.site.com',
-            path: '/',
-          },
-        ]);
-      }
-
-      await expect(documentSuggestion.noSuggestionsMessage).toBeVisible();
+analyticsModeTest.forEach((analytics) => {
+  test.describe(`quantic document suggestion ${analytics.label}`, () => {
+    test.use({
+      analyticsMode: analytics.mode,
     });
 
     test('should handle clicking on a document suggestion', async ({
-      page,
       documentSuggestion,
       caseAssist,
     }) => {
@@ -39,18 +22,12 @@ const fakeTrackingId = 'tracking_id_123';
       const suggestions = await response.json();
       const clickedPosition = 2;
 
-      // Hack(?) to have the request payload in the analytics request next.
-      await page.route('*analytics*', (route) => {
-        route.continue();
-      });
-
-      const analyticsPromise =
-        documentSuggestion.waitForSuggestionClickEvent(analyticsMode);
+      const analyticsPromise = documentSuggestion.waitForSuggestionClickEvent();
       await documentSuggestion.clickSuggestion(clickedPosition);
       const analyticsRequest = await analyticsPromise;
       const payload = analyticsRequest.postDataJSON?.();
 
-      if (analyticsMode === 'legacy') {
+      if (analytics.mode === AnalyticsModeEnum.legacy) {
         expect(payload).toBeDefined();
         const event = JSON.parse(payload.clickEvent);
         expect(event.actionCause).toBe('documentSuggestionClick');
@@ -64,7 +41,7 @@ const fakeTrackingId = 'tracking_id_123';
       } else {
         expect(payload).toBeDefined();
         expect(payload.length).toBe(1);
-        expect(payload[0].meta.config.trackingId).toBe(fakeTrackingId);
+        expect(payload[0].meta.config.trackingId).toBe(exampleTrackingId);
         expect(payload[0].meta.type).toBe('CaseAssist.DocumentSuggestionClick');
         expect(payload[0].responseId).toBeDefined();
         expect(payload[0].position).toBe(clickedPosition + 1);
@@ -79,10 +56,11 @@ const fakeTrackingId = 'tracking_id_123';
     });
 
     test.describe('when numberOfAutoOpenedDocuments is set to the same as maxDocument', () => {
+      const maxDocuments = 6;
       test.use({
         options: {
-          maxDocuments: 6,
-          numberOfAutoOpenedDocuments: 6,
+          maxDocuments,
+          numberOfAutoOpenedDocuments: maxDocuments,
         },
       });
 
@@ -90,10 +68,16 @@ const fakeTrackingId = 'tracking_id_123';
         documentSuggestion,
         caseAssist,
       }) => {
+        const responsePromise = caseAssist.waitForDocumentSuggestionResponse();
         await caseAssist.fetchSuggestions();
+        const {documents} = await (await responsePromise).json();
+        const expectedSections = Math.min(documents.length, maxDocuments);
+
         await expect(documentSuggestion.accordion).toBeVisible();
-        const sections = await documentSuggestion.sections.count();
-        for (let index = 0; index < sections; index++) {
+        await expect(documentSuggestion.sections).toHaveCount(
+          expectedSections
+        );
+        for (let index = 0; index < expectedSections; index++) {
           await expect(documentSuggestion.sectionContent(index)).toBeVisible();
         }
       });
