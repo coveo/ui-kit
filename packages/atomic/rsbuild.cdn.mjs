@@ -12,6 +12,9 @@ import {generateExternalPackageMappings} from './scripts/externalPackageMappings
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const {version} = JSON.parse(readFileSync(join(__dirname, 'package.json'), 'utf8'));
 const packageMappings = generateExternalPackageMappings(__dirname);
+const sourceDir = join(__dirname, 'src');
+const litRuntime =
+  /node_modules[\\/](?:lit|lit-html|lit-element|@lit[\\/](?:reactive-element|context)|tslib)[\\/]/;
 
 const rsbuild = await rsbuildApi.createRsbuild({
   cwd: __dirname,
@@ -142,15 +145,14 @@ const rsbuild = await rsbuildApi.createRsbuild({
         strategy: 'split-by-module',
         override: {
           cacheGroups: {
-            // Modules used by many components go in one chunk instead of one chunk each:
-            // a typical page then fetches about half as many files, and a single chunk
-            // also compresses better than a hundred tiny ones.
+            // One chunk for the code most components share, instead of hundreds of tiny ones.
+            // Why only Atomic's source and the Lit runtime, and why 10:
+            // docs/adr/0001-group-shared-modules-in-one-cdn-chunk.md
             shared: {
-              test: (module) =>
-                (module.resource ?? '').startsWith(join(__dirname, 'src')) ||
-                /node_modules[\\/](?:lit|lit-html|lit-element|@lit[\\/](?:reactive-element|context)|tslib)[\\/]/.test(
-                  module.resource ?? ''
-                ),
+              test: (module) => {
+                const resource = module.resource ?? '';
+                return resource.startsWith(sourceDir) || litRuntime.test(resource);
+              },
               minChunks: 10,
               name: 'atomic-shared',
               priority: 0,
