@@ -129,7 +129,7 @@ export function defineSearchEngine<
     const logger = buildLogger(options.loggerOptions);
     if (!getOptions().navigatorContextProvider) {
       logger.warn(
-        '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
+        '[WARNING] Missing navigator context in server-side code. To pass a per-request `navigatorContext` to fetchStaticState() and hydrateStaticState(), use `@coveo/headless/ssr-next`.'
       );
     }
     const engine = buildSSRSearchEngine(
