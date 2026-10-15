@@ -31,7 +31,8 @@ const surfaceIdArbitrary = fc.constantFrom('s-1', 's-2', 's-3');
 
 /**
  * A well-formed `a2ui-surface` `createSurface` message, mirroring the shape `readSurface` walks:
- * `createSurface` with a `surfaceId` and a `components` entry carrying the canonical `root` node
+ * `createSurface` with a `surfaceId`, a `catalogId` (without one the renderer projection drops it),
+ * and a `components` entry carrying the canonical `root` node
  * (id: "root") whose top-level `component` discriminant is the (non-empty) root component type,
  * and optionally an inline data model declaring the loading flag. The A2-UI v1.0 envelope carries
  * no `rootId`.
@@ -46,6 +47,7 @@ const createSurfaceArbitrary = fc
     version: 'v1.0',
     createSurface: {
       surfaceId,
+      catalogId: 'commerce',
       components: [{id: 'root', component: rootComponentType}],
       ...(isLoading === undefined ? {} : {dataModel: {isLoading}}),
     },

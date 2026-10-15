@@ -353,8 +353,8 @@ describe('fold ACTIVITY_SNAPSHOT replace semantics', () => {
 
     expect(turn.response.activities).toHaveLength(1);
     expect(activityPayloadMessages(turn)).toEqual([
-      dataModelMessage('ui-1', '/state/ui-1-facet', {values: ['x', 'y', 'z']}),
       dataModelMessage('ui-1', '/state/ui-1-product-list', {products: ['a', 'b']}),
+      dataModelMessage('ui-1', '/state/ui-1-facet', {values: ['x', 'y', 'z']}),
     ]);
   });
 
@@ -387,8 +387,45 @@ describe('fold ACTIVITY_SNAPSHOT replace semantics', () => {
     ]);
 
     expect(activityPayloadMessages(turn)).toEqual([
-      dataModelMessage('ui-2', '/state/root', {value: 22}),
       dataModelMessage('ui-1', '/state/root', {value: 1}),
+      dataModelMessage('ui-2', '/state/root', {value: 22}),
+    ]);
+  });
+
+  // A surface created by another activity, updated by this one at overlapping paths: the
+  // carried write replays first, so the superseding snapshot's newer write decides the state.
+  const createElsewhere = surfaceSnapshotWith('create:ui-1', true, [
+    {
+      version: 'v1.0',
+      createSurface: {surfaceId: 'ui-1', components: [{id: 'root', component: 'ProductCarousel'}]},
+    },
+  ]);
+
+  it('lets a newer whole-model write override a carried /isLoading write', () => {
+    const turn = foldActivities(createTurn('t1', {}), [
+      createElsewhere,
+      surfaceSnapshotWith('update:ui-1', true, [dataModelMessage('ui-1', '/isLoading', true)]),
+      surfaceSnapshotWith('update:ui-1', true, [
+        dataModelMessage('ui-1', '/', {heading: 'Surfboards'}),
+      ]),
+    ]);
+
+    expect(turn.response.surfaces).toEqual([
+      {surfaceId: 'ui-1', rootComponentType: 'ProductCarousel', isLoading: false},
+    ]);
+  });
+
+  it('lets a newer /isLoading write override a carried whole-model write', () => {
+    const turn = foldActivities(createTurn('t1', {}), [
+      createElsewhere,
+      surfaceSnapshotWith('update:ui-1', true, [
+        dataModelMessage('ui-1', '/', {heading: 'Surfboards', isLoading: true}),
+      ]),
+      surfaceSnapshotWith('update:ui-1', true, [dataModelMessage('ui-1', '/isLoading', false)]),
+    ]);
+
+    expect(turn.response.surfaces).toEqual([
+      {surfaceId: 'ui-1', rootComponentType: 'ProductCarousel', isLoading: false},
     ]);
   });
 

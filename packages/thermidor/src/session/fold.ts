@@ -245,7 +245,9 @@ export function foldActivity(
  * Merges a superseding snapshot onto the one it replaces so an incremental snapshot (only the
  * slices that changed that turn) does not drop slices an earlier same-`messageId` snapshot wrote.
  * `next` wins per slice; unmentioned prior slices carry forward, except those of a surface `next`
- * creates or deletes, whose earlier topology and data model it ends.
+ * creates or deletes, whose earlier topology and data model it ends. Carried writes replay before
+ * `next`'s messages, so a newer write that overlaps an older one at another path (a whole-model
+ * write over a carried `/isLoading`, or the reverse) still wins.
  */
 function mergeActivityPayload(
   previous: Record<string, unknown>,
@@ -292,7 +294,7 @@ function mergeActivityPayload(
     );
   });
 
-  return {...next, messages: [...carriedComponents, ...nextMessages, ...carriedForward]};
+  return {...next, messages: [...carriedComponents, ...carriedForward, ...nextMessages]};
 }
 
 /** The surface id an operation of `message` targets, or null when it is not that operation. */
