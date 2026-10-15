@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="/src/style.css" />
+    <title>Atomic + Headless Hybrid Sample — Home</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#maincontent">Skip to main content</a>
+    <header class="app-header">
+      <div class="brand">
+        <img src="/coveo-logo.svg" alt="Coveo" width="119" height="30" />
+        <h1>Atomic + Headless hybrid</h1>
+      </div>
+      <nav class="app-nav" aria-label="Main">
+        <a href="/index.html" aria-current="page">Home</a>
+        <a href="/search.html">Search</a>
+        <mini-cart></mini-cart>
+      </nav>
+    </header>
+
+    <main id="maincontent" class="home">
+      <section class="home-hero">
+        <p class="page-note">
+          The recommendations are standard Atomic. The search box is a minimal Headless one, the
+          same as on the search page, and the cart and product page are Headless because Atomic has
+          no component for them. All of them share one commerce engine.
+        </p>
+        <!-- Headless, standalone: submitting a query redirects to the search page. -->
+        <headless-search-box redirection-url="/search.html"></headless-search-box>
+      </section>
+
+      <section class="home-recs">
+        <h2 class="page-title">Recommended for you</h2>
+        <atomic-commerce-recommendation-interface>
+          <atomic-commerce-recommendation-list
+            slot-id="af4fb7ba-6641-4b67-9cf9-be67e9f30174"
+            products-per-page="4"
+            display="grid"
+          >
+            <atomic-product-template>
+              <!-- Customized: cards open this sample's product page instead of the catalog URL. -->
+              <template slot="link">
+                <atomic-product-link
+                  href-template="/product.html?id=${permanentid}"
+                ></atomic-product-link>
+              </template>
+              <template>
+                <atomic-product-section-visual>
+                  <atomic-product-field-condition if-defined="ec_thumbnails">
+                    <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+                  </atomic-product-field-condition>
+                </atomic-product-section-visual>
+                <atomic-product-section-name>
+                  <atomic-product-link
+                    href-template="/product.html?id=${permanentid}"
+                  ></atomic-product-link>
+                </atomic-product-section-name>
+                <atomic-product-section-emphasized>
+                  <atomic-product-price currency="USD"></atomic-product-price>
+                </atomic-product-section-emphasized>
+                <atomic-product-section-actions>
+                  <add-to-cart-button></add-to-cart-button>
+                </atomic-product-section-actions>
+              </template>
+            </atomic-product-template>
+          </atomic-commerce-recommendation-list>
+
+          <atomic-commerce-recommendation-list
+            slot-id="d73afbd2-8521-4ee6-a9b8-31f064721e73"
+            products-per-page="4"
+            display="grid"
+          >
+            <atomic-product-template>
+              <!-- Customized: cards open this sample's product page instead of the catalog URL. -->
+              <template slot="link">
+                <atomic-product-link
+                  href-template="/product.html?id=${permanentid}"
+                ></atomic-product-link>
+              </template>
+              <template>
+                <atomic-product-section-visual>
+                  <atomic-product-field-condition if-defined="ec_thumbnails">
+                    <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+                  </atomic-product-field-condition>
+                </atomic-product-section-visual>
+                <atomic-product-section-name>
+                  <atomic-product-link
+                    href-template="/product.html?id=${permanentid}"
+                  ></atomic-product-link>
+                </atomic-product-section-name>
+                <atomic-product-section-emphasized>
+                  <atomic-product-price currency="USD"></atomic-product-price>
+                </atomic-product-section-emphasized>
+                <atomic-product-section-actions>
+                  <add-to-cart-button></add-to-cart-button>
+                </atomic-product-section-actions>
+              </template>
+            </atomic-product-template>
+          </atomic-commerce-recommendation-list>
+        </atomic-commerce-recommendation-interface>
+      </section>
+    </main>
+
+    <script type="module" src="/src/home-page.ts"></script>
+  </body>
+</html>
