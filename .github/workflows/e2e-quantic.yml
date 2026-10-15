@@ -164,8 +164,19 @@ jobs:
           artifact-pattern: quantic-blob-report-*
           upload-artifact-name: quantic-playwright-report
   e2e-quantic-cleanup:
-    if: cancelled() || failure() || success()
+    # When tests fail on a pull request, keep the scratch orgs so "Re-run failed jobs" can reuse them. They expire after one day.
+    if: >-
+      ${{
+        cancelled() ||
+        github.event_name != 'pull_request' ||
+        needs.e2e-quantic-setup.result != 'success' ||
+        (
+          needs.e2e-quantic-playwright-test.result != 'failure' &&
+          needs.apex-quantic-tests.result != 'failure'
+        )
+      }}
     needs:
+      - e2e-quantic-setup
       - e2e-quantic-playwright-test
       - apex-quantic-tests
     runs-on: ubuntu-latest
