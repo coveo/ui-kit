@@ -1,12 +1,12 @@
 import {html} from 'lit';
-import {describe, expect, it} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import CannotAccess from '../../../images/cannot-access.svg';
 import Indexing from '../../../images/indexing.svg';
 import NoConnection from '../../../images/no-connection.svg';
 import SearchInactive from '../../../images/search-inactive.svg';
 import SomethingWrong from '../../../images/something-wrong.svg';
-import {renderQueryErrorIcon} from './icon';
+import {loadQueryErrorIcon, renderQueryErrorIcon} from './icon';
 
 describe('#renderQueryErrorIcon', () => {
   const renderComponent = async (errorType?: string) => {
@@ -18,6 +18,9 @@ describe('#renderQueryErrorIcon', () => {
       atomicIcon: element.querySelector('atomic-icon'),
     };
   };
+
+  const expectIcon = (atomicIcon: Element | null, icon: string) =>
+    vi.waitFor(() => expect(atomicIcon).toHaveAttribute('icon', icon));
 
   it('should render atomic-icon with correct attributes', async () => {
     const {atomicIcon} = await renderComponent();
@@ -34,24 +37,41 @@ describe('#renderQueryErrorIcon', () => {
   it('should render Indexing icon when errorType is NoEndpointsException', async () => {
     const {atomicIcon} = await renderComponent('NoEndpointsException');
 
-    expect(atomicIcon).toHaveAttribute('icon', Indexing);
+    await expectIcon(atomicIcon, Indexing);
   });
 
   it('should render CannotAccess icon when errorType is InvalidTokenException', async () => {
     const {atomicIcon} = await renderComponent('InvalidTokenException');
 
-    expect(atomicIcon).toHaveAttribute('icon', CannotAccess);
+    await expectIcon(atomicIcon, CannotAccess);
   });
 
   it('should render SearchInactive icon when errorType is OrganizationIsPausedException', async () => {
     const {atomicIcon} = await renderComponent('OrganizationIsPausedException');
 
-    expect(atomicIcon).toHaveAttribute('icon', SearchInactive);
+    await expectIcon(atomicIcon, SearchInactive);
   });
 
   it('should render default icon when errorType is unknown', async () => {
     const {atomicIcon} = await renderComponent('UnknownErrorType');
 
-    expect(atomicIcon).toHaveAttribute('icon', SomethingWrong);
+    await expectIcon(atomicIcon, SomethingWrong);
+  });
+});
+
+describe('#loadQueryErrorIcon', () => {
+  it('should return the NoConnection icon without loading the other illustrations', () => {
+    const loadIcons = vi.fn();
+
+    expect(loadQueryErrorIcon('Disconnected', loadIcons)).toBe(NoConnection);
+    expect(loadIcons).not.toHaveBeenCalled();
+  });
+
+  it('should resolve to no illustration when the illustrations fail to load', async () => {
+    const loadIcons = vi
+      .fn()
+      .mockRejectedValue(new Error('Failed to fetch dynamically imported module'));
+
+    await expect(loadQueryErrorIcon('NoEndpointsException', loadIcons)).resolves.toBe('');
   });
 });
