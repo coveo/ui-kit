@@ -1,10 +1,6 @@
-import type {ProductResearchCardState} from '@coveo/thermidor-schema';
+import type {ProductResearchRelatedDocument} from '@coveo/thermidor-schema';
 import {FileIcon} from '../icons/index.js';
 import styles from './RelatedDocumentList.module.css';
-
-// The package root does not export `ProductResearchRelatedDocument`, so derive it from the state
-// that carries it. `ComparisonProduct.relatedDocuments` reuses the same definition.
-type RelatedDocument = NonNullable<ProductResearchCardState['relatedDocuments']>[number];
 
 export const DEFAULT_MAX_LINKS = 10;
 
@@ -40,9 +36,9 @@ export function toLinkLimit(maxLinks: number): number {
  * a link has nothing to show, so it takes no slot.
  */
 export function visibleDocuments(
-  documents: readonly RelatedDocument[] | undefined,
+  documents: readonly ProductResearchRelatedDocument[] | undefined,
   linkLimit: number
-): RelatedDocument[] {
+): ProductResearchRelatedDocument[] {
   return (documents ?? [])
     .filter((document) => document.title || document.clickUri)
     .slice(0, linkLimit);
@@ -57,7 +53,7 @@ function safeHref(clickUri: string | undefined): string | undefined {
  * Lists related documents one row each: a file icon, the title linking to the document, and the
  * file type and size. Pass the documents through `visibleDocuments` first.
  */
-export function RelatedDocumentList({documents}: {documents: RelatedDocument[]}) {
+export function RelatedDocumentList({documents}: {documents: ProductResearchRelatedDocument[]}) {
   return (
     <ul className={styles.documentRows}>
       {documents.map((document, index) => {
