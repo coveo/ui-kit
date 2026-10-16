@@ -610,6 +610,14 @@ export class AtomicSearchBox extends LitElement implements InitializableComponen
     return html`<div
       class="border-neutral basis-full border-t px-2 py-1"
       @mousedown=${(e: MouseEvent) => e.preventDefault()}
+      @keydown=${(e: KeyboardEvent) => {
+        if (e.key !== 'Escape') {
+          return;
+        }
+        this.textAreaRef.value?.focus();
+        this.isExpanded = false;
+        this.suggestionManager.clearSuggestions();
+      }}
     >
       ${renderButton({
         props: {

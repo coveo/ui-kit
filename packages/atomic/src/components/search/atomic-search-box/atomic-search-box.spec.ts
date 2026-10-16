@@ -390,6 +390,18 @@ describe('atomic-search-box', () => {
 
       expect(suggestions()).toHaveLength(suggestionCount);
     });
+
+    it('should close the suggestions and focus the search box when Escape is pressed on the button', async () => {
+      const {element, textArea, suggestions, clearRecentQueriesButton} =
+        await renderWithClearRecentQueriesButton();
+
+      clearRecentQueriesButton().focus();
+      await userEvent.keyboard('{Escape}');
+      await element.updateComplete;
+
+      expect(element.shadowRoot!.activeElement).toBe(textArea);
+      expect(suggestions()).toHaveLength(0);
+    });
   });
 
   it('should render the clear recent queries option in the list by default', async () => {

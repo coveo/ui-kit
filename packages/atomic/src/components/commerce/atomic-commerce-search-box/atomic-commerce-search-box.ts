@@ -31,7 +31,7 @@ import {
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {getDefaultSlotContent} from '@/src/utils/slot-utils';
 import {isFocusingOut, once, randomID, spreadProperties} from '../../../utils/utils';
-import {renderButton} from '../../common/button';
+import {renderButton} from '@/src/components/common/button';
 import type {RedirectionPayload} from '../../common/search-box/redirection-payload';
 import {renderSearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {renderSearchBoxTextArea} from '../../common/search-box/search-text-area';
@@ -595,6 +595,14 @@ export class AtomicCommerceSearchBox
     return html`<div
       class="border-neutral basis-full border-t px-2 py-1"
       @mousedown=${(e: MouseEvent) => e.preventDefault()}
+      @keydown=${(e: KeyboardEvent) => {
+        if (e.key !== 'Escape') {
+          return;
+        }
+        this.textAreaRef.value?.focus();
+        this.isExpanded = false;
+        this.suggestionManager.clearSuggestions();
+      }}
     >
       ${renderButton({
         props: {
