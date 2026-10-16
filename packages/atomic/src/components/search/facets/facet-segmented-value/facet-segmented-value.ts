@@ -1,5 +1,5 @@
 import {html} from 'lit';
-import {keyed} from 'lit/directives/keyed.js';
+import {keyed} from '@/src/directives/keyed';
 import {renderButton} from '@/src/components/common/button';
 import type {FacetValuePropsBase} from '@/src/components/common/facets/facet-common';
 import {multiClassMap, tw} from '@/src/directives/multi-class-map';

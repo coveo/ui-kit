@@ -1,5 +1,5 @@
 import {html} from 'lit';
-import {keyed} from 'lit/directives/keyed.js';
+import {keyed} from '@/src/directives/keyed';
 import {ref} from 'lit/directives/ref.js';
 import type {FacetValuePropsBase} from '@/src/components/common/facets/facet-common';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
