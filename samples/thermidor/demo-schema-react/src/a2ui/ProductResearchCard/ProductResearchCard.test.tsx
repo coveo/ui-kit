@@ -38,7 +38,6 @@ const BULLETS = ['7mm neoprene for maximum insulation.', 'Sealed back zip limits
 
 function relatedDocument(index: number, overrides: Record<string, unknown> = {}) {
   return {
-    permanentid: `doc-${index}`,
     title: `Owner manual ${index}`,
     clickUri: `https://example.com/manual-${index}.pdf`,
     filetype: 'pdf',
@@ -212,6 +211,17 @@ describe('ProductResearchCard', () => {
 
     expect(await documentLinks()).toEqual([]);
     expect(screen.queryByText('Owner manual 1')).not.toBeNull();
+  });
+
+  it('omits the file type and size a related document lacks', async () => {
+    mountResearchCard(PRODUCT, {
+      relatedDocuments: [{title: 'Owner manual 1', clickUri: 'https://example.com/manual-1.pdf'}],
+    });
+
+    expect(await documentLinks()).toEqual([
+      {text: 'Owner manual 1', href: 'https://example.com/manual-1.pdf'},
+    ]);
+    expect(screen.queryByText(/PDF|KB/)).toBeNull();
   });
 
   it('renders no related documents section when the agent sends none', async () => {

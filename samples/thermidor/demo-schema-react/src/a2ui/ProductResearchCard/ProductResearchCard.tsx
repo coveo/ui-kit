@@ -100,13 +100,13 @@ export function createProductResearchCard({
                   {documents.map((document, index) => {
                     const label = document.title || document.clickUri;
                     const meta = [
-                      document.filetype.toUpperCase(),
-                      formatDocumentSize(document.size),
+                      document.filetype?.toUpperCase(),
+                      document.size === undefined ? '' : formatDocumentSize(document.size),
                     ]
                       .filter(Boolean)
                       .join(' · ');
                     return (
-                      <li key={`${index}-${document.permanentid}`} className={styles.documentLink}>
+                      <li key={index} className={styles.documentLink}>
                         {document.clickUri ? (
                           <a href={document.clickUri} target="_blank" rel="noopener noreferrer">
                             {label}
