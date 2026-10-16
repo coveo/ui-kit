@@ -69,3 +69,30 @@
   font-size: var(--font-size-xs);
   color: var(--color-text-secondary);
 }
+
+/* Compact rows fit a table cell: no card, a smaller icon and smaller text. */
+.compact {
+  gap: var(--space-1);
+  /* Line the icons up with the text of the other cells; the row padding keeps the hover area. */
+  margin-inline: calc(-1 * var(--space-2));
+}
+
+.compact .documentRow {
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  background: transparent;
+  border-color: transparent;
+  border-radius: var(--radius-sm);
+}
+
+.compact .documentIcon {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+}
+
+.compact .documentLink,
+.compact .documentTitle {
+  font-size: var(--font-size-sm);
+}

@@ -51,11 +51,18 @@ function safeHref(clickUri: string | undefined): string | undefined {
 
 /**
  * Lists related documents one row each: a file icon, the title linking to the document, and the
- * file type and size. Pass the documents through `visibleDocuments` first.
+ * file type and size. Pass the documents through `visibleDocuments` first. `compact` drops the row
+ * card and shrinks the row to fit a table cell.
  */
-export function RelatedDocumentList({documents}: {documents: ProductResearchRelatedDocument[]}) {
+export function RelatedDocumentList({
+  documents,
+  compact = false,
+}: {
+  documents: ProductResearchRelatedDocument[];
+  compact?: boolean;
+}) {
   return (
-    <ul className={styles.documentRows}>
+    <ul className={compact ? `${styles.documentRows} ${styles.compact}` : styles.documentRows}>
       {documents.map((document, index) => {
         const label = document.title || document.clickUri;
         const href = safeHref(document.clickUri);
