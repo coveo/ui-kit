@@ -60,16 +60,21 @@ import {fetchStaticState} from './engine.ts';
 
 export default async function ProductListing({request}: {request: Request}) {
   const userToken = await getSearchTokenForUser(request); // your token-minting logic
+  const navigatorContext = getNavigatorContext(request); // per-request context — see below
 
   const staticState = await fetchStaticState({
     accessToken: userToken,
-    navigatorContext: getNavigatorContext(request), // per-request context — see below
+    navigatorContext,
     context: {currency: 'USD', language: 'en', country: 'US'},
     controllers: {/* ... */},
   });
 
   return (
-    <ListingProvider staticState={staticState} accessToken={userToken}>
+    <ListingProvider
+      staticState={staticState}
+      navigatorContext={navigatorContext}
+      accessToken={userToken}
+    >
       {/* Other components */}
     </ListingProvider>
   );
@@ -94,7 +99,7 @@ When you omit `accessToken`, the request uses the token configured in the defini
 
 The navigator context carries per-request signals used for analytics and personalization: the client ID, user agent, referrer, and forwarded-for address. Like the access token, it varies from one request to the next, so it must not be written onto the shared engine definition on the server.
 
-`setNavigatorContextProvider()` sets the navigator context on the shared definition. That works on the client, where a single engine serves one user. On the server, however, requests are handled concurrently, so using it can cause one request to read another request's navigator context. Instead, pass a `navigatorContext` when you fetch the static state to use it for that request only:
+`setNavigatorContextProvider()` on the engine definition is deprecated and will be removed in a future major version. It sets the navigator context on the shared definition, which is unsafe on a server handling concurrent requests: one request can read another request's navigator context. Instead, pass a `navigatorContext` when you fetch the static state to use it for that request only:
 
 ```tsx
 // server.ts
@@ -114,9 +119,10 @@ export default async function ProductListing({request}: {request: Request}) {
 
 `getNavigatorContext(request)` is a function you provide that reads the request headers and returns a `NavigatorContext` (client ID, user agent, referrer, `x-forwarded-for`). The context you pass applies to that request only; it doesn't affect the shared definition or any other request. When you omit `navigatorContext`, the request falls back to the context returned by the provider set with `setNavigatorContextProvider()`, if any.
 
-> [!NOTE]
+> [!IMPORTANT]
 >
-> After hydration on the client, `setNavigatorContextProvider()` is still the right tool: a single engine runs for the session, so there are no concurrent requests sharing the definition.
+> Pass the same navigator context to `hydrateStaticState()` on the client that you passed to `fetchStaticState()` on the server, so the hydrated engine reports the same client ID and the analytics session stays continuous.
+> With the React wrapper, pass it to the provider's `navigatorContext` prop (as shown in the Case 2 example). The provider applies it for you, so you don't need to call `hydrateStaticState()` yourself.
 
 ## Rotate the token on the client
 
@@ -143,7 +149,7 @@ export const engineDefinition = defineCommerceEngine({
 
 Because `renewAccessToken` is part of the engine configuration, it applies to every engine built from the definition, on both the server and the client, and doesn't mutate anything shared between requests.
 
-## Don’t use `setAccessToken()` to change the token per request on the server
+## Don’t use `setAccessToken()`
 
 `setAccessToken()` on the engine definition is deprecated and will be removed in a future major version.
 It writes to the shared engine definition, which is unsafe on a server handling concurrent requests: calling it for one request changes the token for the others in flight at the same time — one user could end up issuing requests with another user’s token.
@@ -159,4 +165,4 @@ On the `@coveo/headless/ssr-commerce-next` sub-package, `setAccessToken()` and `
 | Rotate an expiring token                            | Configure `renewAccessToken` on the engine `configuration`.                                   |
 | Use a different token per request on the server     | Use the per-request `accessToken` — don’t call `setAccessToken()`.                            |
 | Set the navigator context per request on the server | Pass `navigatorContext` to `fetchStaticState()` — don’t call `setNavigatorContextProvider()`. |
-| Set the navigator context on the client             | Call `setNavigatorContextProvider()` on the engine definition.                                |
+| Set the navigator context on the client             | Pass the same `navigatorContext` to `hydrateStaticState()` (with React, to the provider).     |

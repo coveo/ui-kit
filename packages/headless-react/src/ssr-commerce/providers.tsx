@@ -59,7 +59,14 @@ export function buildProviderWithDefinition<
       InferControllerStaticStateMapFromDefinitionsWithSolutionType<TControllers, TSolutionType>
     >;
     /**
-     * @deprecated will be removed in the next major release. The navigator context provider can now be set when fetching the static state
+     * The navigator context the static state was fetched with.
+     *
+     * Pass the same navigator context you passed to `fetchStaticState()`, so the hydrated engine
+     * reports the same client ID and the analytics session stays continuous.
+     *
+     * @deprecated This prop will be removed in the next major version. On
+     * `@coveo/headless-react/ssr-commerce-next`, the static state carries the navigator context, so
+     * providers don't take it. On `@coveo/headless-react/ssr-commerce`, keep passing it.
      */
     navigatorContext: NavigatorContext;
     /**

@@ -16,8 +16,9 @@ import type {EngineStaticState} from './engine.js';
 import type {FromBuildResult} from './from-build-result.js';
 
 /**
- * @deprecated This interface will be remove on the next major version.
- * Use BuildConfig interface instead
+ * @deprecated This type will be removed in the next major version, but its `accessToken` and
+ * `navigatorContext` options stay supported: keep passing them to `fetchStaticState()`. On
+ * `@coveo/headless/ssr-commerce-next`, these options are part of the `BuildConfig` type.
  */
 export type FetchStaticStateOptions = {
   /**
