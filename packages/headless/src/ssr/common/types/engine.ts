@@ -56,9 +56,7 @@ export interface EngineDefinition<
   /**
    * @deprecated This method will be removed in a future major version. It mutates the shared engine
    * definition, so on a server handling concurrent requests one request can overwrite another
-   * request's navigator context. Instead, pass a `navigatorContextProvider` to
-   * `defineSearchEngine()`, or use `@coveo/headless/ssr-next`, whose
-   * `fetchStaticState({navigatorContext})` applies the navigator context to that request only.
+   * request's navigator context. Pass a `navigatorContextProvider` to `defineSearchEngine()` instead.
    *
    * Sets the navigator context provider.
    * This provider is essential for retrieving navigation-related data such as referrer, userAgent, location, and clientId, which are crucial for handling both server-side and client-side API requests effectively.

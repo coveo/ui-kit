@@ -224,7 +224,7 @@ describe('SSR', () => {
         await definitionWithoutProvider.build();
 
         expect(mockedLoggerWarn).toHaveBeenCalledWith(
-          '[WARNING] Missing navigator context in server-side code. Pass a `navigatorContextProvider` to defineSearchEngine(), or use `@coveo/headless/ssr-next` to pass a per-request `navigatorContext` to fetchStaticState() and hydrateStaticState().'
+          '[WARNING] Missing navigator context in server-side code. Pass a `navigatorContextProvider` to defineSearchEngine().'
         );
       });
     });
