@@ -1,3 +1,17 @@
+## 3.57.4
+
+### Patch Changes
+
+- [#8669](https://github.com/coveo/ui-kit/pull/8669) [`5d3b308`](https://github.com/coveo/ui-kit/commit/5d3b308072ac7b92324e50acb68e34088ce05f18) - Remove a controller's listener from the engine when its last subscriber unsubscribes, whatever the order in which its subscribers unsubscribe. Before, the listener was only removed when the first subscriber was also the last to unsubscribe. Otherwise it stayed registered, and the controller kept comparing its state on every state change for the rest of the session.
+
+- [#8693](https://github.com/coveo/ui-kit/pull/8693) [`8af7566`](https://github.com/coveo/ui-kit/commit/8af7566cac333724f18d96d4a7d27ac09f415d5f) - Fix `@coveo/headless/ssr` sending the first request's `x-forwarded-for` header on every later request. `fetchStaticState()` stored its forwarded-for wrapper on the shared engine definition, and that wrapper kept reading the navigator context of the request that created it, so later `setNavigatorContextProvider()` calls no longer changed the header. Each engine now gets its own wrapper, on a copy of the definition options, so each request forwards its own address.
+
+- [#8698](https://github.com/coveo/ui-kit/pull/8698) [`0a95379`](https://github.com/coveo/ui-kit/commit/0a953790155e0411965e315e6232d1a46e8e5084) - Deprecate `getAccessToken()` and `setAccessToken()` on the `@coveo/headless/ssr` engine definition, as on `@coveo/headless/ssr-commerce`. To renew an expiring token, configure `renewAccessToken`; to change the token of an engine you already have, dispatch `updateBasicConfiguration({accessToken})` from `loadConfigurationActions(engine)`.
+
+- [#8695](https://github.com/coveo/ui-kit/pull/8695) [`480c745`](https://github.com/coveo/ui-kit/commit/480c745440f52308eaf97f139d0220939d809525) - Correct the deprecation notice of `ControllerDefinitionOption`, which types the `listing` and `search` options of seven `@coveo/headless/ssr-commerce` definers such as `definePagination`. It said the interface was no longer used; it now says these options will be removed in the next major version, and to omit them so the controller is built for both search and product listing pages. The documentation of the seven definers now says the same, because editors don't show the interface's notice where these options are passed.
+
+- [#8694](https://github.com/coveo/ui-kit/pull/8694) [`2f1cde8`](https://github.com/coveo/ui-kit/commit/2f1cde8075b46addfa1d9ae4489227022829920f) - Stop the SSR "Missing navigator context" warning from recommending the deprecated `setNavigatorContextProvider`. On `@coveo/headless/ssr-commerce`, it now says to pass `navigatorContext` to `fetchStaticState()` and `hydrateStaticState()`. On `@coveo/headless/ssr`, it says to pass a `navigatorContextProvider` to `defineSearchEngine()`, which the `setNavigatorContextProvider` deprecation notice now recommends too, instead of a `navigatorContext` option that `fetchStaticState()` doesn't accept.
+
 ## 3.57.3
 
 ### Patch Changes

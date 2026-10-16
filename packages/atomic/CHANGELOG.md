@@ -1,3 +1,29 @@
+## 3.64.0
+
+### Minor Changes
+
+- [#8632](https://github.com/coveo/ui-kit/pull/8632) [`c9eaa17`](https://github.com/coveo/ui-kit/commit/c9eaa17313f48c9141a8a9779fee718908f93694) - Add the `if-defined` and `if-not-defined` attributes to `atomic-result-template`, `atomic-result-children-template` and `atomic-product-template`, and restore them on `atomic-recs-result-template` and `atomic-insight-result-template`, which have ignored them since moving to Lit. A template can now apply only to items that have, or lack, specific fields (for example, `<atomic-result-template if-defined="author">`), and `atomic-insight-result-children-template` evaluates these attributes the same way without adding them to its `conditions` property.
+
+### Patch Changes
+
+- [#8650](https://github.com/coveo/ui-kit/pull/8650) [`2e5778e`](https://github.com/coveo/ui-kit/commit/2e5778e3633f8b4da495c7f00b9b692a728aa6cd) - Build the conditions of `atomic-field-condition` and `atomic-product-field-condition` with a shared helper, so every component that supports `if-defined`, `if-not-defined`, `must-match-*` and `must-not-match-*` combines them the same way. No behavior change.
+
+- [#8670](https://github.com/coveo/ui-kit/pull/8670) [`12a1c1d`](https://github.com/coveo/ui-kit/commit/12a1c1d752525f35e257ec7463239ace5f782bbd) - Stop keeping an interface in memory after it is removed from the page, for example on a route change in a single-page application. The component initialization queue kept every interface it had seen, with its engine and everything it rendered.
+
+- [#8701](https://github.com/coveo/ui-kit/pull/8701) [`0becccd`](https://github.com/coveo/ui-kit/commit/0becccd543fa9c6d2f1da75e0b1ffb3f2ab983d3) - Make `atomic-insight-smart-snippet` listen to the `select-source`, `begin-delayed-select-source` and `cancel-pending-select-source` events of `atomic-smart-snippet-source`, instead of setting its deprecated callback properties. Selecting the source still logs the same analytics, once.
+
+- [#8671](https://github.com/coveo/ui-kit/pull/8671) [`8302f5e`](https://github.com/coveo/ui-kit/commit/8302f5e71b34bceb47d63a3f927d6a508fcb7681) - Load the illustrations of `atomic-query-error`, `atomic-commerce-query-error`, `atomic-insight-query-error` and `atomic-recs-error` only when an error is displayed, so pages that never display an error download about 63 KB less. The illustration for a lost connection still comes with the components, since the network may be down when it shows, and the error still displays if an illustration fails to load.
+
+- [#8668](https://github.com/coveo/ui-kit/pull/8668) [`c402e28`](https://github.com/coveo/ui-kit/commit/c402e28ed0a1698c051687fbcaad359136d950a1) - Stop embedding a second copy of the global Tailwind stylesheet in `atomic-search-box`, `atomic-commerce-search-box` and `atomic-insight-result-children`. Each of them is about 46 KB smaller, and the page has one less large stylesheet to parse for each of them.
+
+- [#8667](https://github.com/coveo/ui-kit/pull/8667) [`0e14b23`](https://github.com/coveo/ui-kit/commit/0e14b23c4f2bde3ac65b09ebbd7860de6d529c44) - Parse the global Tailwind stylesheet once per page instead of once per component type. Every component now adopts the same `CSSStyleSheet`, which saves about 0.2 MB of memory and 0.4 ms of style parsing for each component type on the page. When a layout sets `mobile-breakpoint`, the components that follow it adopt their own copy with that breakpoint, so the other components keep theirs as before.
+
+- [#8696](https://github.com/coveo/ui-kit/pull/8696) [`5cfce3d`](https://github.com/coveo/ui-kit/commit/5cfce3dc91eb9ccd7c1e1886c692ffda494bd403) - Fix the event names in the documentation of `atomic-smart-snippet-source`. The deprecation notices of its `onSelectSource`, `onBeginDelayedSelectSource` and `onCancelPendingSelectSource` callbacks now point to the `select-source`, `begin-delayed-select-source` and `cancel-pending-select-source` events that it dispatches, and the cancel event is no longer documented as `cancel-delayed-select-source`.
+
+- Updated dependencies [[`5d3b308`](https://github.com/coveo/ui-kit/commit/5d3b308072ac7b92324e50acb68e34088ce05f18), [`8af7566`](https://github.com/coveo/ui-kit/commit/8af7566cac333724f18d96d4a7d27ac09f415d5f), [`0a95379`](https://github.com/coveo/ui-kit/commit/0a953790155e0411965e315e6232d1a46e8e5084), [`480c745`](https://github.com/coveo/ui-kit/commit/480c745440f52308eaf97f139d0220939d809525), [`2f1cde8`](https://github.com/coveo/ui-kit/commit/2f1cde8075b46addfa1d9ae4489227022829920f)]:
+  - @coveo/headless@3.57.4
+  - @coveo/atomic-legacy@0.1.9
+
 ## 3.63.0
 
 ### Minor Changes
