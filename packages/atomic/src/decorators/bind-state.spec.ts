@@ -8,9 +8,10 @@ import type {InitializableComponent} from './types';
 
 class MockController implements Controller {
   state = {};
+  unsubscribe = vi.fn();
   subscribe = vi.fn((callback) => {
     this.callback = callback;
-    return () => {};
+    return this.unsubscribe;
   });
 
   callback?: () => void;
@@ -26,6 +27,7 @@ describe('@bindStateToController decorator', () => {
   let element: InitializableComponent<Bindings> & LitElement;
   let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
   let controller: MockController;
+  let otherController: MockController;
 
   @customElement('missing-initialize')
   class MissingInitialize extends LitElement {
@@ -65,6 +67,20 @@ describe('@bindStateToController decorator', () => {
     }
   }
 
+  @customElement('test-element-two-controllers')
+  class TestElementTwoControllers extends LitElement {
+    controller!: MockController;
+    otherController!: MockController;
+    @bindStateToController('controller')
+    controllerState!: MockController['state'];
+    @bindStateToController('otherController')
+    otherControllerState!: MockController['state'];
+    initialize() {
+      this.controller = controller;
+      this.otherController = otherController;
+    }
+  }
+
   @customElement('test-element-no-callback')
   class TestElementNoCallback extends LitElement {
     controller!: MockController;
@@ -91,6 +107,7 @@ describe('@bindStateToController decorator', () => {
   beforeEach(async () => {
     consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     controller = new MockController();
+    otherController = new MockController();
     await setupElement<TestElement>();
   });
 
@@ -130,6 +147,37 @@ describe('@bindStateToController decorator', () => {
   it('should subscribe to the controller', async () => {
     element.initialize!();
     expect(controller.subscribe).toHaveBeenCalledTimes(1);
+  });
+
+  it('should unsubscribe from the controller when the element is removed from the DOM', () => {
+    element.initialize!();
+    element.remove();
+    expect(controller.unsubscribe).toHaveBeenCalledTimes(1);
+    document.body.appendChild(element);
+  });
+
+  it('should subscribe to the controller again when the element is added back to the DOM', () => {
+    element.initialize!();
+    element.remove();
+    document.body.appendChild(element);
+    expect(controller.subscribe).toHaveBeenCalledTimes(2);
+    expect(controller.unsubscribe).toHaveBeenCalledTimes(1);
+  });
+
+  it('should unsubscribe from every bound controller when the element is removed from the DOM', async () => {
+    await setupElement<TestElementTwoControllers>('test-element-two-controllers');
+    element.initialize!();
+    element.remove();
+    expect(controller.unsubscribe).toHaveBeenCalledTimes(1);
+    expect(otherController.unsubscribe).toHaveBeenCalledTimes(1);
+    document.body.appendChild(element);
+  });
+
+  it('should release the previous subscription when "initialize" is called again', () => {
+    element.initialize!();
+    element.initialize!();
+    expect(controller.unsubscribe).toHaveBeenCalledTimes(1);
+    expect(controller.subscribe).toHaveBeenCalledTimes(2);
   });
 
   it('should call the onUpdateCallbackMethod if specified', async () => {
