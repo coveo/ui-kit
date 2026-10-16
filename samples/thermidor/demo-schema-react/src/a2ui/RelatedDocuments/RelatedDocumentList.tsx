@@ -69,6 +69,7 @@ export function RelatedDocumentList({documents}: {documents: RelatedDocument[]})
         ]
           .filter(Boolean)
           .join(' - ');
+        // Documents carry no client-facing id, and the list is static per render.
         return (
           <li key={index} className={styles.documentRow}>
             <FileIcon className={styles.documentIcon} />

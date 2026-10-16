@@ -212,6 +212,7 @@ describe('ProductResearchCard', () => {
     {maxLinks: -1, expected: 0},
     {maxLinks: 2.9, expected: 2},
     {maxLinks: Infinity, expected: 12},
+    {maxLinks: NaN, expected: 0},
   ])(
     'lists $expected related documents when maxLinks is $maxLinks',
     async ({maxLinks, expected}) => {
