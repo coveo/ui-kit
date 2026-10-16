@@ -198,6 +198,31 @@ describe('ProductResearchCard', () => {
     expect(screen.queryByRole('region', {name: 'Related documents'})).toBeNull();
   });
 
+  it.each([
+    {maxLinks: -1, expected: 0},
+    {maxLinks: 2.9, expected: 2},
+    {maxLinks: Infinity, expected: 12},
+  ])(
+    'lists $expected related documents when maxLinks is $maxLinks',
+    async ({maxLinks, expected}) => {
+      mountResearchCard(PRODUCT, {
+        relatedDocuments: Array.from({length: 12}, (_, index) => relatedDocument(index)),
+        catalogOptions: {productResearchCard: {maxLinks}},
+      });
+
+      expect(await documentLinks()).toHaveLength(expected);
+    }
+  );
+
+  it('skips a related document with neither a title nor a link', async () => {
+    mountResearchCard(PRODUCT, {
+      relatedDocuments: [relatedDocument(1, {title: '', clickUri: ''}), relatedDocument(2)],
+      catalogOptions: {productResearchCard: {maxLinks: 1}},
+    });
+
+    expect((await documentLinks()).map((link) => link.text)).toEqual(['Owner manual 2']);
+  });
+
   it('falls back to the link when a related document has no title', async () => {
     mountResearchCard(PRODUCT, {relatedDocuments: [relatedDocument(1, {title: ''})]});
 

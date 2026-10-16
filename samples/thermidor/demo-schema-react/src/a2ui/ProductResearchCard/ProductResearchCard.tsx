@@ -61,7 +61,10 @@ export function createProductResearchCard({
 
       const rating =
         typeof product.ec_rating === 'number' ? Number(product.ec_rating.toFixed(1)) : null;
-      const documents = (relatedDocuments ?? []).slice(0, linkLimit);
+      // A document with neither a title nor a link has nothing to show, so it takes no slot.
+      const documents = (relatedDocuments ?? [])
+        .filter((document) => document.title || document.clickUri)
+        .slice(0, linkLimit);
 
       return (
         <article className={styles.container} aria-label={`Product research: ${product.ec_name}`}>
