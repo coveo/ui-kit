@@ -5,7 +5,7 @@ import {A2UIProductCard} from '../ProductCard/ProductCard.js';
 import {A2UISkeleton} from '../Skeleton/Skeleton.js';
 import styles from './ProductResearchCard.module.css';
 
-export const DEFAULT_MAX_LINKS = 10;
+const DEFAULT_MAX_LINKS = 10;
 
 export interface ProductResearchCardOptions {
   /**
@@ -127,5 +127,3 @@ export function createProductResearchCard({
     }
   );
 }
-
-export const ProductResearchCard = createProductResearchCard();
