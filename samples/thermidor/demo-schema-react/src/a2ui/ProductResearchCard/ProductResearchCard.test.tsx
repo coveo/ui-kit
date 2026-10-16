@@ -2,7 +2,7 @@ import {describe, expect, it, afterEach, vi} from 'vitest';
 import {screen, cleanup, waitFor} from '@testing-library/react';
 import {mountSurface} from '../mount-surface.harness.js';
 import type {ThermidorCatalogOptions} from '../components.js';
-import {formatDocumentSize} from './ProductResearchCard.js';
+import {formatDocumentSize} from '../RelatedDocuments/RelatedDocumentList.js';
 
 /**
  * ProductResearchCard is a `createReactComponent` implementation driven by the generic binder,
@@ -243,6 +243,15 @@ describe('ProductResearchCard', () => {
 
   it('renders a document without a link as plain text', async () => {
     mountResearchCard(PRODUCT, {relatedDocuments: [relatedDocument(1, {clickUri: ''})]});
+
+    expect(await documentLinks()).toEqual([]);
+    expect(screen.queryByText('Owner manual 1')).not.toBeNull();
+  });
+
+  it('renders a document with a non-http(s) link as plain text', async () => {
+    mountResearchCard(PRODUCT, {
+      relatedDocuments: [relatedDocument(1, {clickUri: 'javascript:alert(1)'})],
+    });
 
     expect(await documentLinks()).toEqual([]);
     expect(screen.queryByText('Owner manual 1')).not.toBeNull();
