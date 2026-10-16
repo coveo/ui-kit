@@ -59,6 +59,11 @@
   border-color: var(--color-border-active);
 }
 
+.pageButton:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
 .active {
   background: var(--color-primary);
   border-color: var(--color-primary);

@@ -28,27 +28,42 @@ const session = createSession({
 
 session.subscribe(() => render(session.turns));
 
-await session.submit({prompt: 'show me running shoes'});
+await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me running shoes'}});
 ```
 
 `createSession(config)` returns a `Session` exposing exactly:
 
-| Member                    | Purpose                                                                            |
-| ------------------------- | ---------------------------------------------------------------------------------- |
-| `contracts`               | The injected contracts schema this session validates against (readonly).           |
-| `turns`                   | Readonly observable list of `Turn`s folded from the stream (empty initially).      |
-| `subscribe(listener)`     | Registers a listener called once per turn-list change; returns an unsubscribe.     |
-| `submit({prompt})`        | Opens a new streaming turn, POSTs the request, folds the response.                 |
-| `dispatchAction(message)` | The single action entry point, wired directly as the renderer's `onAction`.        |
-| `cancel()`                | Stops consuming the active stream, retains the partial response, marks it `error`. |
-| `retry(turnId)`           | Re-submits an errored turn's input.                                                |
-| `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                    |
+| Member                    | Purpose                                                                                                                     |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `contracts`               | The injected contracts schema this session validates against (readonly).                                                    |
+| `turns`                   | Readonly observable list of `Turn`s folded from the stream (empty initially).                                               |
+| `actionError`             | Why the last component action was dropped after repeated concurrency conflicts, or `undefined`. See below.                  |
+| `actions`                 | The action queue: `issue`, `withholdQueued`, `subscribe`, `getSnapshot`. See [The action queue](#the-action-queue).         |
+| `subscribe(listener)`     | Registers a listener called once per change to the turn list or `actionError`; returns an unsubscribe.                      |
+| `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's `onAction`.     |
+| `cancel()`                | Stops the active stream: a prompt's turn keeps its partial response and is marked `error`; an action settles `'cancelled'`. |
+| `retry(turnId)`           | Re-submits an errored turn's input.                                                                                         |
+| `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                                                             |
 
 The concrete `contracts` type pinned at the `createSession` call site threads unbroken through `Session`, so component types, action names, and payloads stay fully typed at the call site (no `string`, no `never`, no `unknown`).
 
 ## Dispatching actions
 
-`session.dispatchAction` is the single consumer-facing action entry point. It accepts the standard A2-UI client-to-server message (`A2uiClientMessage`) that the frozen renderer hands to its `onAction` handler, so it wires with no adapter:
+`session.dispatchAction` is the single consumer-facing action entry point. It accepts two kinds of message.
+
+### Submitting a prompt
+
+A prompt typed outside A2-UI composition, such as in the integrator's search box, is a `SubmitPromptAction`:
+
+```typescript
+session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me running shoes'}});
+```
+
+It opens a new streaming turn, records the prompt as the turn's `input.prompt`, and POSTs it to the converse endpoint. It needs no rendered component or active turn, so it also opens the first turn of a session. It is ignored while a turn is streaming, and `retry(turnId)` re-drives a turn it opened.
+
+### Component actions
+
+A component action is the standard A2-UI client-to-server message (`A2uiClientMessage`) that the frozen renderer hands to its `onAction` handler, so it wires with no adapter:
 
 ```typescript
 <A2UIRenderer onAction={session.dispatchAction} /* … */ />
@@ -57,6 +72,21 @@ The concrete `contracts` type pinned at the `createSession` call site threads un
 Given a message, `dispatchAction` unwraps its `userAction`, recovers the dispatching component's discriminant from the active turn's surfaces, validates the action payload against the component's injected contract internally, and — on success — POSTs the action to the converse endpoint.
 
 It is **fire-and-forget**: the returned Promise always resolves and never rejects, so the consumer needs no `.catch`. A message with no `userAction`, no `sourceComponentId`, a node that resolves to no component, or an internal validation failure is dropped with a dev-only warning and nothing is sent.
+
+### The action queue
+
+Thermidor sends one component action at a time per session; later ones wait their turn in order, so integrators never queue anything themselves.
+
+- `actions.getSnapshot().inFlight` is the action being processed, and `actions.subscribe` notifies when it changes, for loading indicators.
+- A `submitPrompt` drops queued actions and cancels the one in flight. While a prompt turn is streaming, new actions are dropped.
+- The queue is in memory only: reloading the page drops queued actions.
+
+### Concurrency conflicts
+
+When the Gateway is still busy with another request for the session, it rejects the new one (`409`, `AGENT:ACTION_IN_FLIGHT`). Thermidor retries automatically for up to 30 seconds, and a conflict that recovers shows nothing. If it gives up:
+
+- an **action**'s dispatch settles `'failed'`, which rolls its optimistic state back, and `session.actionError` is set until the next action or prompt is sent;
+- a **prompt**'s turn becomes `error`, retryable with `retry(turnId)`.
 
 ## The Turn / TurnResponse model
 
@@ -80,6 +110,8 @@ interface TurnResponse {
 ```
 
 `state` and `activities` are routing-neutral and always present. `agent` appears only when the router invoked an agent for the turn. Consumers read `turn.input.prompt`, `turn.response.state`, `turn.response.activities`, `turn.response.surfaces`, and `turn.response.agent?.messages` / `turn.response.agent?.reasoningSteps`.
+
+`surfaces` lists the turn's live surfaces in creation order: a surface the agent deletes (`deleteSurface`) leaves the list, and one it re-creates moves to the end. Each `DiscoveredSurface` carries `surfaceId`, `rootComponentType`, and `isLoading`, which is `true` while the surface's data model declares `isLoading: true` (a loading placeholder for `rootComponentType`).
 
 ## Validation and displayed values
 

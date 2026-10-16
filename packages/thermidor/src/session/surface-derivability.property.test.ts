@@ -1,6 +1,7 @@
 import fc from 'fast-check';
 import {describe, expect, it} from 'vitest';
 import type {NormalizedStreamEvent} from '@/src/internal/api/protocol/stream-types.js';
+import {deriveA2uiV09Messages} from './a2ui-v09-projection.js';
 import {createTurn, deriveSurfaces, foldActivities} from './fold.js';
 import {restoreSession, serializeSession} from './serialize.js';
 import type {SessionStoreState} from './store.js';
@@ -23,41 +24,94 @@ const NUM_RUNS = 200;
 const shortText = fc.string({maxLength: 20});
 
 /**
- * A well-formed `a2ui-surface` `createSurface` activity payload, mirroring the
- * shape `readSurface` walks: `messages[].createSurface` with a `surfaceId` and a
- * `components` entry carrying the canonical `root` node (id: "root") whose top-level
- * `component` discriminant is the (non-empty) root component type. The A2-UI v1.0
- * envelope carries no `rootId`. Yields exactly one `DiscoveredSurface` per message
- * when folded.
+ * Surface ids drawn from a small pool, so lifecycle messages in a sequence target surfaces an
+ * earlier message created.
  */
-const surfaceMessageArbitrary = fc
-  .record({
-    surfaceId: fc.string({minLength: 1, maxLength: 12}),
-    rootComponentType: fc.string({minLength: 1, maxLength: 12}),
-  })
-  .map(({surfaceId, rootComponentType}) => {
-    // A2-UI v1.0: the surface root is the canonical node with `id: "root"`; no `rootId` envelope.
-    return {
-      version: 'v1.0',
-      createSurface: {
-        surfaceId,
-        components: [{id: 'root', component: rootComponentType}],
-      },
-    };
-  });
+const surfaceIdArbitrary = fc.constantFrom('s-1', 's-2', 's-3');
 
+/**
+ * A well-formed `a2ui-surface` `createSurface` message, mirroring the shape `readSurface` walks:
+ * `createSurface` with a `surfaceId`, a `catalogId` (without one the renderer projection drops it),
+ * and a `components` entry carrying the canonical `root` node
+ * (id: "root") whose top-level `component` discriminant is the (non-empty) root component type,
+ * and optionally an inline data model declaring the loading flag. The A2-UI v1.0 envelope carries
+ * no `rootId`.
+ */
+const createSurfaceArbitrary = fc
+  .record({
+    surfaceId: surfaceIdArbitrary,
+    rootComponentType: fc.string({minLength: 1, maxLength: 12}),
+    isLoading: fc.option(fc.boolean(), {nil: undefined}),
+  })
+  .map(({surfaceId, rootComponentType, isLoading}) => ({
+    version: 'v1.0',
+    createSurface: {
+      surfaceId,
+      catalogId: 'commerce',
+      components: [{id: 'root', component: rootComponentType}],
+      ...(isLoading === undefined ? {} : {dataModel: {isLoading}}),
+    },
+  }));
+
+const deleteSurfaceArbitrary = surfaceIdArbitrary.map((surfaceId) => ({
+  version: 'v1.0',
+  deleteSurface: {surfaceId},
+}));
+
+/** An `updateDataModel` at a path that reaches the loading flag: the whole model or the flag. */
+const updateDataModelArbitrary = fc
+  .record({
+    surfaceId: surfaceIdArbitrary,
+    path: fc.constantFrom<string | undefined>('/', '', undefined, '/isLoading'),
+    isLoading: fc.boolean(),
+  })
+  .map(({surfaceId, path, isLoading}) => ({
+    version: 'v1.0',
+    updateDataModel: {
+      surfaceId,
+      ...(path === undefined ? {} : {path}),
+      value: path === '/isLoading' ? isLoading : {isLoading},
+    },
+  }));
+
+const lifecycleMessageArbitrary = fc.oneof(
+  createSurfaceArbitrary,
+  deleteSurfaceArbitrary,
+  updateDataModelArbitrary
+);
+
+const surfaceSnapshot = (
+  messageId: string,
+  replace: boolean,
+  messages: unknown[]
+): NormalizedStreamEvent =>
+  ({
+    type: 'ACTIVITY_SNAPSHOT',
+    messageId,
+    activityType: 'a2ui-surface',
+    content: {messages},
+    replace,
+  }) as NormalizedStreamEvent;
+
+/**
+ * A surface activity following the A2-UI surface lifecycle: creates, deletes, and data-model
+ * writes, under a `messageId` shared with other activities so `replace` snapshots supersede them.
+ */
 const surfaceActivityArbitrary: fc.Arbitrary<NormalizedStreamEvent> = fc
-  .array(surfaceMessageArbitrary, {minLength: 1, maxLength: 3})
-  .map(
-    (messages) =>
-      ({
-        type: 'ACTIVITY_SNAPSHOT',
-        messageId: 'surface-activity',
-        activityType: 'a2ui-surface',
-        content: {messages},
-        replace: false,
-      }) as NormalizedStreamEvent
-  );
+  .record({
+    messageId: fc.constantFrom('activity-1', 'activity-2'),
+    replace: fc.boolean(),
+    messages: fc.array(lifecycleMessageArbitrary, {minLength: 1, maxLength: 3}),
+  })
+  .map(({messageId, replace, messages}) => surfaceSnapshot(messageId, replace, messages));
+
+/**
+ * A closing activity that only creates surfaces, under its own `messageId`, so the turn ends
+ * with at least one live surface.
+ */
+const closingSurfaceActivityArbitrary: fc.Arbitrary<NormalizedStreamEvent> = fc
+  .array(createSurfaceArbitrary, {minLength: 1, maxLength: 3})
+  .map((messages) => surfaceSnapshot('closing-activity', false, messages));
 
 /**
  * Non-surface activities the fold handles, mixed in so surfaces are discovered
@@ -77,8 +131,8 @@ const otherActivityArbitrary: fc.Arbitrary<NormalizedStreamEvent> = fc.oneof(
 ) as fc.Arbitrary<NormalizedStreamEvent>;
 
 /**
- * A sequence guaranteed to contain at least one surface-bearing activity (so
- * surfaces are actually produced), interleaved with other activities.
+ * A sequence of surface lifecycle activities interleaved with other activities,
+ * closed by surface-creating activities so surfaces are actually produced.
  */
 const activitySequenceArbitrary: fc.Arbitrary<NormalizedStreamEvent[]> = fc
   .tuple(
@@ -87,7 +141,7 @@ const activitySequenceArbitrary: fc.Arbitrary<NormalizedStreamEvent[]> = fc
       minLength: 1,
       maxLength: 8,
     }),
-    fc.array(surfaceActivityArbitrary, {minLength: 1, maxLength: 3})
+    fc.array(closingSurfaceActivityArbitrary, {minLength: 1, maxLength: 3})
   )
   .map(([prefix, middle, surfaces]) => [...prefix, ...middle, ...surfaces]);
 
@@ -101,6 +155,10 @@ describe('surfaces are derivable', () => {
           const turn = foldActivities(createTurn(id, {prompt: 'hi'}), activities);
 
           expect(turn.response.surfaces).toEqual(deriveSurfaces(turn.response.activities));
+          expect(turn.response.a2uiMessages).toEqual(
+            deriveA2uiV09Messages(turn.response.activities)
+          );
+          expect(foldActivities(createTurn(id, {prompt: 'hi'}), activities)).toEqual(turn);
           // The generators guarantee at least one well-formed surface, so this
           // is not the trivially-empty case.
           expect(turn.response.surfaces.length).toBeGreaterThan(0);
@@ -139,6 +197,7 @@ describe('surfaces are derivable', () => {
               deriveSurfaces(restoredTurn.response.activities)
             );
             expect(restoredTurn.response.surfaces).toEqual(originalTurn.response.surfaces);
+            expect(restoredTurn.response.a2uiMessages).toEqual(originalTurn.response.a2uiMessages);
           });
         }
       ),

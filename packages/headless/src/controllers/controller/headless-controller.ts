@@ -21,6 +21,7 @@ export function buildController<T extends object>(
   let prevState: string;
   const listeners: Map<symbol, () => void> = new Map();
   const hasNoListeners = () => listeners.size === 0;
+  let unsubscribeFromEngine: (() => void) | undefined;
 
   const hasStateChanged = (currentState: Record<string, unknown>): boolean => {
     try {
@@ -41,11 +42,10 @@ export function buildController<T extends object>(
     subscribe(listener: () => void) {
       listener();
       const symbol = Symbol();
-      let unsubscribe: () => void;
 
       if (hasNoListeners()) {
         prevState = JSON.stringify(this.state);
-        unsubscribe = engine.subscribe(() => {
+        unsubscribeFromEngine = engine.subscribe(() => {
           if (hasStateChanged(this.state)) {
             listeners.forEach((listener) => listener());
           }
@@ -56,7 +56,8 @@ export function buildController<T extends object>(
       return () => {
         listeners.delete(symbol);
         if (hasNoListeners()) {
-          unsubscribe?.();
+          unsubscribeFromEngine?.();
+          unsubscribeFromEngine = undefined;
         }
       };
     },

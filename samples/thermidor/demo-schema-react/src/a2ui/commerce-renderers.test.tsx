@@ -96,6 +96,34 @@ describe('Pagination', () => {
     await waitFor(() => expect(screen.getByLabelText('Next page')).toBeDefined());
     expect((screen.getByLabelText('Next page') as HTMLButtonElement).disabled).toBe(true);
   });
+
+  it('renders only five page buttons around the current page when there are many pages', async () => {
+    mountPagination({page: 20, pageSize: 20, totalEntries: 820, totalPages: 41});
+
+    await waitFor(() => expect(screen.getByLabelText('Page 21')).toBeDefined());
+    expect(screen.getAllByRole('button', {name: /^Page \d+$/}).map((b) => b.textContent)).toEqual([
+      '19',
+      '20',
+      '21',
+      '22',
+      '23',
+    ]);
+    expect(screen.queryByLabelText('Page 1')).toBeNull();
+    expect(screen.queryByLabelText('Page 41')).toBeNull();
+  });
+
+  it('keeps five page buttons when the current page is the last page', async () => {
+    mountPagination({page: 40, pageSize: 20, totalEntries: 820, totalPages: 41});
+
+    await waitFor(() => expect(screen.getByLabelText('Page 41')).toBeDefined());
+    expect(screen.getAllByRole('button', {name: /^Page \d+$/}).map((b) => b.textContent)).toEqual([
+      '37',
+      '38',
+      '39',
+      '40',
+      '41',
+    ]);
+  });
 });
 
 describe('Sort', () => {
@@ -213,5 +241,33 @@ describe('ProductList', () => {
     expect(screen.getAllByRole('listitem')).toHaveLength(2);
     expect(screen.getByText('Trail Shoes')).toBeDefined();
     expect(screen.getByText('Running Shoes')).toBeDefined();
+    expect(screen.queryByRole('list', {name: 'Product badges'})).toBeNull();
+  });
+
+  it('renders the badges a product has on its card', async () => {
+    mountSurface({
+      component: {component: 'ProductList', products: {path: '/state/root/products'}},
+      dataModel: [
+        {
+          path: '/state/root/products',
+          value: [
+            {
+              permanentid: 'p1',
+              ec_name: 'Trail Shoes',
+              additionalFields: {},
+              badgePlacements: [
+                {
+                  placementId: '36164bca-b489-4c42-8574-e1325d56d0be',
+                  badges: [{text: 'Bestseller!', backgroundColor: '#ff0000', textColor: '#ffffff'}],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
+    const badges = await screen.findByRole('list', {name: 'Product badges'});
+    expect(badges.textContent).toBe('Bestseller!');
   });
 });

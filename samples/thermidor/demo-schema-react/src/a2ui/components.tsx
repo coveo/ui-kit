@@ -7,6 +7,7 @@ import {BundleDisplay} from './BundleDisplay/BundleDisplay.js';
 import {ComparisonTable} from './ComparisonTable/ComparisonTable.js';
 import {ProductList} from './ProductList/ProductList.js';
 import {ProductSummary} from './ProductSummary/ProductSummary.js';
+import {ProductResearchCard} from './ProductResearchCard/ProductResearchCard.js';
 import {Pagination} from './Pagination/Pagination.js';
 import {Sort} from './Sort/Sort.js';
 import {RegularFacet} from './RegularFacet/RegularFacet.js';
@@ -17,6 +18,7 @@ import {CommerceSearch} from './CommerceSearch/CommerceSearch.js';
 import {LayoutStack} from './LayoutStack/LayoutStack.js';
 import {QuerySummary} from './QuerySummary/QuerySummary.js';
 import {PageSize} from './PageSize/PageSize.js';
+import {Breadbox} from './Breadbox/Breadbox.js';
 
 const thermidorComponents = [
   ProductCarousel,
@@ -25,6 +27,7 @@ const thermidorComponents = [
   ComparisonTable,
   ProductList,
   ProductSummary,
+  ProductResearchCard,
   Pagination,
   Sort,
   RegularFacet,
@@ -35,6 +38,7 @@ const thermidorComponents = [
   LayoutStack,
   QuerySummary,
   PageSize,
+  Breadbox,
 ];
 
 export function createThermidorCatalog() {

@@ -2,18 +2,13 @@ import type {CategoryFacetPageObject} from './page-object';
 import {expect, test} from './fixture';
 
 /**
- * Selects a value from the facet search, then drills into it.
- *
- * Selecting from the facet search applies the parent category, so the value itself still has to
- * be clicked in the resulting list. Waiting for it to disappear from the list is what tells us
- * the second query has been applied: once selected, a value is rendered as the non-interactive
- * selected value, which has no `Inclusion filter on` label.
+ * Selects a value from the facet search. The search results stay rendered until the resulting
+ * query is applied, so the active parent is what tells us the facet has drilled into the value.
  */
 const drillIntoValue = async (categoryFacet: CategoryFacetPageObject, value: string) => {
   await categoryFacet.searchInput.fill(value);
   await categoryFacet.getSearchResult(value).click();
-  await categoryFacet.getFacetValue(value).click();
-  await expect(categoryFacet.getFacetValue(value)).toHaveCount(0);
+  await expect(categoryFacet.activeParent).toContainText(value);
 };
 
 test.describe('atomic-commerce-category-facet', () => {
@@ -65,9 +60,7 @@ test.describe('atomic-commerce-category-facet', () => {
   test('should allow to deselect a filter with the all category button', async ({
     categoryFacet,
   }) => {
-    await categoryFacet.searchInput.fill('Canoes & Kayaks');
-    await categoryFacet.getSearchResult('Canoes & Kayaks').click();
-    await expect(categoryFacet.getFacetValue('Canoes & Kayaks')).toBeVisible();
+    await drillIntoValue(categoryFacet, 'Canoes & Kayaks');
     await expect(categoryFacet.getFacetValue('Canoes')).toBeVisible();
     await expect(categoryFacet.getFacetValue('Kayaks')).toBeVisible();
 

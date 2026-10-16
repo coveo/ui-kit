@@ -274,6 +274,65 @@ describe('UnifiedEndpointClient', () => {
     expect(response.error).toContain('Authentication failed');
   });
 
+  describe('409 Conflict', () => {
+    const callFailing = async (response: Response) => {
+      mockedFetch.mockResolvedValue(response);
+      const result = await client.call(request, {
+        organizationId: 'test-org-id',
+        accessToken: 'test-token',
+      });
+      if (result.success) {
+        throw new Error('Expected unified endpoint call to fail');
+      }
+      return result;
+    };
+
+    const gatewayError = {
+      errorCode: 'AGENT:ACTION_IN_FLIGHT',
+      message: 'Another turn is in progress for this session.',
+      requestId: 'request-1',
+      documentationUrl: 'https://docs.coveo.com/en/errors/agent/action_in_flight',
+    };
+
+    const conflictBody = (body: unknown) =>
+      typeof body === 'string' ? body : JSON.stringify(body);
+
+    it('reads an AGENT:ACTION_IN_FLIGHT conflict and its in-flight sequence', async () => {
+      const result = await callFailing(
+        new Response(conflictBody({...gatewayError, inFlightSequence: 7}), {status: 409})
+      );
+
+      expect(result.error).toBe(
+        'Conflict: Another request is still being processed for this session.'
+      );
+      expect(result.conflict).toEqual({inFlightSequence: 7});
+    });
+
+    it('reads a conflict without an in-flight sequence', async () => {
+      const result = await callFailing(new Response(conflictBody(gatewayError), {status: 409}));
+
+      expect(result.conflict).toEqual({});
+    });
+
+    it.each([
+      ['no body', null],
+      ['a non-JSON body', 'busy'],
+      ['another error code', conflictBody({...gatewayError, errorCode: 'AGENT:VERSION_MISMATCH'})],
+      ['the code in another field', conflictBody({code: 'AGENT:ACTION_IN_FLIGHT'})],
+    ])('is not an in-flight conflict with %s', async (_label, body) => {
+      const result = await callFailing(new Response(body, {status: 409}));
+
+      expect(result.error).toBe('Conflict: The request conflicts with the current session state.');
+      expect(result.conflict).toBeUndefined();
+    });
+
+    it('is never read from another status', async () => {
+      const result = await callFailing(new Response(conflictBody(gatewayError), {status: 503}));
+
+      expect(result.conflict).toBeUndefined();
+    });
+  });
+
   it('transforms thrown errors into failures', async () => {
     mockedFetch.mockRejectedValue(new Error('network down'));
 

@@ -5,10 +5,12 @@ import {
   ProductCarouselPropsSchema,
   ProductSchema,
   ProductSummarySchema,
+  ProductResearchCardSchema,
   ComparisonTableSchema,
   LayoutStackSchema,
   QuerySummarySchema,
   PageSizeSchema,
+  BreadboxSchema,
 } from '@coveo/thermidor-schema/zod3';
 
 const EXPECTED_COMPONENTS = [
@@ -18,6 +20,7 @@ const EXPECTED_COMPONENTS = [
   'ComparisonTable',
   'ProductList',
   'ProductSummary',
+  'ProductResearchCard',
   'Pagination',
   'Sort',
   'RegularFacet',
@@ -28,6 +31,7 @@ const EXPECTED_COMPONENTS = [
   'LayoutStack',
   'QuerySummary',
   'PageSize',
+  'Breadbox',
 ] as const;
 
 describe('createThermidorCatalog (catalog build smoke)', () => {
@@ -75,7 +79,7 @@ describe('component state contracts', () => {
       ProductSchema.safeParse({
         permanentid: 'p1',
         ec_name: 'Trail shoes',
-        ec_rating: 6,
+        ec_rating: -1,
         additionalFields: {},
       }).success
     ).toBe(false);
@@ -101,6 +105,20 @@ describe('component state contracts', () => {
       ProductSummarySchema.shape.state.safeParse({categoryLabel: 'Surfboard', product: null})
         .success
     ).toBe(true);
+  });
+
+  it('validates product-research-card state with a product, summary and non-empty bullets', () => {
+    const validState = {
+      product: {permanentid: 'p1', ec_name: 'Board', additionalFields: {}},
+      summary: 'A short research summary.',
+      bullets: ['Durable epoxy shell.'],
+    };
+    const stateSchema = ProductResearchCardSchema.shape.state;
+    expect(stateSchema.safeParse(validState).success).toBe(true);
+    expect(stateSchema.safeParse({...validState, bullets: []}).success).toBe(false);
+    expect(stateSchema.safeParse({...validState, bullets: ['']}).success).toBe(false);
+    expect(stateSchema.safeParse({...validState, summary: ''}).success).toBe(false);
+    expect(stateSchema.safeParse({...validState, heading: 'Extra'}).success).toBe(false);
   });
 
   it('validates comparison-table state with heading, summary, products and attributes', () => {
@@ -145,5 +163,26 @@ describe('component state contracts', () => {
         .unwrap()
         .shape.setPageSize.shape.payload.safeParse({pageSize: 48}).success
     ).toBe(true);
+  });
+
+  it('validates the breadbox state', () => {
+    expect(
+      BreadboxSchema.shape.state.safeParse({
+        facets: [
+          {
+            facetId: 'regular-facet-1',
+            field: 'ec_brand',
+            displayName: 'Brand',
+            type: 'regular',
+            values: [{value: 'Aqua Marina', state: 'excluded'}],
+          },
+        ],
+      }).success
+    ).toBe(true);
+    expect(
+      BreadboxSchema.shape.state.safeParse({
+        facets: [{facetId: 'regular-facet-1', type: 'regular', values: []}],
+      }).success
+    ).toBe(false);
   });
 });

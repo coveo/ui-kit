@@ -17,6 +17,8 @@ export type {BreadcrumbManager, BreadcrumbManagerState};
  * Defines a `BreadcrumbManager` controller instance.
  * @group Definers
  *
+ * @param options - Deprecated `listing` and `search` options, which will be removed in the next
+ * major version: omit them to build the controller for both search and product listing pages.
  * @returns The `BreadcrumbManager` controller definition.
  */
 export function defineBreadcrumbManager<TOptions extends ControllerDefinitionOption | undefined>(

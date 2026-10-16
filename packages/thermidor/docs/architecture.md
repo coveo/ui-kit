@@ -18,7 +18,7 @@ The package entry (`src/index.ts`) exports exactly the session-client surface �
 graph TB
     subgraph "Public surface (src/index.ts)"
         CS["createSession(config)"]
-        SESSION["Session&lt;TContracts&gt;<br/>turns · subscribe · submit<br/>dispatchAction · cancel · retry<br/>serialize · remoteController"]
+        SESSION["Session&lt;TContracts&gt;<br/>turns · subscribe<br/>dispatchAction · cancel · retry<br/>serialize · remoteController"]
         RC["RemoteController&lt;TContracts, T&gt;<br/>state · dispatch · subscribe"]
     end
 
@@ -52,7 +52,8 @@ graph TB
 src/
 ├── index.ts                       # Public surface (ADR-010 / ADR-014)
 ├── session/
-│   ├── create-session.ts          # createSession factory + runtime (submit/dispatch/cancel/retry)
+│   ├── create-session.ts          # createSession factory + runtime (dispatch/cancel/retry)
+│   ├── conflict-retry.ts          # Bounded retry of 409 AGENT:ACTION_IN_FLIGHT rejections
 │   ├── types.ts                   # Turn / TurnInput / TurnResponse domain model (ADR-010 model annex)
 │   ├── store.ts                   # Plain observable store + subscribe/notify
 │   ├── fold.ts                    # Pure fold + surface derivation (ADR-015 interim)
@@ -69,12 +70,17 @@ src/
 
 `createSession(config)` (`src/session/create-session.ts`) builds a fresh observable store and returns a `Session`. There are no singletons and no module-level mutable state: two sessions created from identical configuration share nothing mutable ([ADR-009](./internal/adr/ADR-009-architecture-decision-charter-v2.md), charter conformance).
 
-The runtime owns the submit / dispatch / cancel / retry orchestration and the SSE-consumption loop that folds each event into the active turn:
+The runtime owns the dispatch / cancel / retry orchestration and the SSE-consumption loop that folds each event into the active turn:
 
-- **`submit({prompt})`** — while any turn is `streaming`, the call is ignored. Otherwise it opens a new `streaming` turn, builds a request (invoking both context providers fresh), POSTs to the endpoint, and folds the streamed response into that turn.
-- **`dispatchAction(action)`** — ignored while a turn is streaming. It resolves the target surface from the active turn's typed `response.surfaces`, builds an action request, and drives the stream.
+- **`dispatchAction(action)`** — ignored while a turn is streaming.
+  - A `submitPrompt` action (`{name: 'submitPrompt', payload: {prompt}}`) needs no active turn. It opens a new `streaming` turn, builds a request (invoking both context providers fresh), POSTs to the endpoint, and folds the streamed response into that turn.
+  - Any other action resolves the target surface from the active turn's typed `response.surfaces`, builds an action request, and drives the stream.
 - **`cancel()`** — stops consuming the in-flight stream, retains the partial `response` already folded, and marks the active turn `error` with the message `'Cancelled'`. A no-op when nothing is in flight.
 - **`retry(turnId)`** — re-submits only an `error` turn's original input; any other `turnId` (unknown, or non-error) is a no-op.
+
+Component actions reach the endpoint through one per-session dispatch coordinator (`src/actions/dispatch-coordinator.ts`): a FIFO with at most one action in flight, which coalesces queued gestures by their declared `CoalesceIntent`, and which a prompt preempts (queued entries `withheld`, the in-flight one `cancelled`). It is in memory only and never serialized. See the README's "The action queue" for the integrator-facing rules.
+
+Every request, prompt or action, is sent through a bounded retry loop (`src/session/conflict-retry.ts`, called from `executeStream`): while the Gateway answers `409` with the `errorCode` `AGENT:ACTION_IN_FLIGHT` (parsed in `src/internal/api/protocol/error-handling.ts`), the request is rebuilt and resent after a doubling backoff, for up to 30 s in total (the time spent on each rejected request included), each wait capped at 4 s and the last one cut to what is left. The budget covers an aborted agent run winding down on the Gateway, which can't cancel it upstream yet (KIT-6261). A request sent the moment `RUN_FINISHED` arrives can get a 409 too, because the Gateway commits the turn a few milliseconds later; the first retry absorbs it. The retrying action stays in flight in the coordinator, so the queue behind it keeps its order and nothing touches the turn. When the budget runs out, a prompt fails its turn; an action sets the session-level `actionError` and settles `'failed'`, which releases its optimistic hold. The wait is abortable, so a preempting prompt or `cancel()` ends it like a stream; an abort during a resent request is handled the same way, since the client reports it as a failed call rather than throwing it. `executeStream` returns a request rejected before streaming to its caller, so the prompt path fails its turn while the action path sets `actionError` (cleared when the next action or prompt is sent).
 
 The runtime holds the in-flight stream's `AbortController` per session instance — never module-level — so two sessions never contend, and a stream superseded by a newer one never touches the turn.
 
@@ -161,6 +167,8 @@ Persisting `response.state` for the active turn only is a deliberate coupling wi
 
 `response.surfaces` is a typed projection of `activities`, so no consumer walks raw activities to discover surfaces. Derivation is confined to a single location in `fold.ts`, and that location is the **only** place that knows the `'commerce-search'` root-component-type magic string. Both the raw-activity traversal and the literal are recorded interim debt per [ADR-015](./internal/adr/ADR-015-surface-and-route-derivation.md); they persist until server-surfaced typed routing lands (ADR-015 Option C, a separate future ADR). Because `surfaces` is derived (never persisted), dropping it and recomputing from `activities` reproduces a deeply-equal list.
 
+Derivation follows the A2-UI surface lifecycle in stream order: `deleteSurface` removes a surface from the list, and a re-created surface moves to the end. Each `DiscoveredSurface` also carries `isLoading`, read from the surface's effective data model (`createSurface.dataModel`, then any `updateDataModel` at `/`, with no path, or at `/isLoading`), so a consumer can draw a loading placeholder for its `rootComponentType` until the agent deletes the surface or clears the flag.
+
 ## Recorded interim debt and out-of-scope items
 
 These are intentionally **not yet implemented**:
@@ -180,7 +188,7 @@ sequenceDiagram
     participant API as Unified endpoint client
     participant Coveo as Converse endpoint
 
-    UI->>S: submit({ prompt: 'running shoes' })
+    UI->>S: dispatchAction({ name: 'submitPrompt', payload: { prompt: 'running shoes' } })
     S->>Store: openTurn(streaming)
     S->>API: POST request (context read fresh)
     API->>Coveo: POST .../agui/converse

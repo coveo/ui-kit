@@ -95,6 +95,65 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 /**
+ * Maps a `createSurface.dataModel` key to the JSON Pointer it seeds, or null for an empty key. The
+ * spec's inline data model is the surface's root object, so a plain key such as `isLoading` seeds
+ * `/isLoading`. A key that is already a pointer (`/state/<nodeId>`) is kept as is. An empty key
+ * names no property, and mapping it to `/` would overwrite the whole data model.
+ */
+function toDataModelPath(key: string): string | null {
+  if (key.length === 0) {
+    return null;
+  }
+  if (key.startsWith('/')) {
+    return key;
+  }
+  return `/${key.replace(/~/g, '~0').replace(/\//g, '~1')}`;
+}
+
+/**
+ * Tracks the surfaces created along the projected stream to decide whether a `deleteSurface` is
+ * forwarded. A delete for a surface created earlier in the stream (or by an earlier, superseded
+ * version of an activity) that is no longer live is an orphan and is dropped: the consumer that
+ * merges turns into one renderer stream would otherwise re-address it to an earlier turn's surface
+ * that shares the id. Any other delete is forwarded, since it targets a surface an earlier turn
+ * created.
+ */
+class OrphanDeleteFilter {
+  private readonly createdSurfaceIds = new Set<string>();
+  private readonly liveSurfaceIds = new Set<string>();
+
+  /** Records surfaces a superseded activity version created at this point of the stream. */
+  recordSuperseded(surfaceIds: Iterable<string>): void {
+    for (const surfaceId of surfaceIds) {
+      this.createdSurfaceIds.add(surfaceId);
+    }
+  }
+
+  /** Whether `message`, the next message of the stream, is forwarded. */
+  keeps(message: A2uiV09Message): boolean {
+    const createdId = createdSurfaceId(message);
+    if (createdId !== null) {
+      this.createdSurfaceIds.add(createdId);
+      this.liveSurfaceIds.add(createdId);
+      return true;
+    }
+    const deleteSurface = message['deleteSurface'];
+    if (!isRecord(deleteSurface)) {
+      return true;
+    }
+    const surfaceId = String(deleteSurface['surfaceId']);
+    return this.liveSurfaceIds.delete(surfaceId) || !this.createdSurfaceIds.has(surfaceId);
+  }
+}
+
+function createdSurfaceId(message: A2uiV09Message): string | null {
+  const createSurface = message['createSurface'];
+  return isRecord(createSurface) && typeof createSurface['surfaceId'] === 'string'
+    ? createSurface['surfaceId']
+    : null;
+}
+
+/**
  * Converts a single A2-UI v1.0 message into the equivalent v0.9 message(s).
  *
  * A message that does not declare `version: 'v1.0'` is forwarded verbatim, so an
@@ -141,11 +200,14 @@ function convertMessage(message: Record<string, unknown>): A2uiV09Message[] {
     }
 
     if (isRecord(dataModel)) {
-      for (const [path, value] of Object.entries(dataModel)) {
-        converted.push({
-          version: RENDERER_PROTOCOL_VERSION,
-          updateDataModel: {surfaceId, path, value},
-        });
+      for (const [key, value] of Object.entries(dataModel)) {
+        const path = toDataModelPath(key);
+        if (path !== null) {
+          converted.push({
+            version: RENDERER_PROTOCOL_VERSION,
+            updateDataModel: {surfaceId, path, value},
+          });
+        }
       }
     }
 
@@ -171,12 +233,19 @@ function convertMessage(message: Record<string, unknown>): A2uiV09Message[] {
  * appending duplicates, and the result is flattened in order of each activity's
  * first appearance.
  *
+ * Each v1.0 `createSurface` is split into `createSurface`, `updateComponents`, and
+ * one `updateDataModel` per inline data-model key, a plain key seeding its root
+ * JSON Pointer (`isLoading` → `/isLoading`). A `deleteSurface` for a surface the
+ * stream already created and deleted, or that a superseded activity version
+ * created, is dropped (see {@link OrphanDeleteFilter}).
+ *
  * This is a pure derivation of `activities`: dropping the result and recomputing
  * it from the same activity list yields a deeply-equal stream.
  */
 export function deriveA2uiV09Messages(activities: Activity[]): A2uiV09Message[] {
   const messagesByActivityId = new Map<string, A2uiV09Message[]>();
   const activityOrder: string[] = [];
+  const supersededSurfaceIds = new Map<string, string[]>();
 
   for (const activity of activities) {
     if (activity.kind !== SURFACE_ACTIVITY_KIND || !isRecord(activity.payload)) {
@@ -194,8 +263,14 @@ export function deriveA2uiV09Messages(activities: Activity[]): A2uiV09Message[] 
         converted.push(...convertMessage(message));
       }
     }
-
     if (activity.replace) {
+      const superseded = (messagesByActivityId.get(activity.id) ?? [])
+        .map(createdSurfaceId)
+        .filter((surfaceId) => surfaceId !== null);
+      supersededSurfaceIds.set(activity.id, [
+        ...(supersededSurfaceIds.get(activity.id) ?? []),
+        ...superseded,
+      ]);
       messagesByActivityId.set(activity.id, converted);
     } else {
       const existing = messagesByActivityId.get(activity.id) ?? [];
@@ -209,10 +284,13 @@ export function deriveA2uiV09Messages(activities: Activity[]): A2uiV09Message[] 
   }
 
   const stream: A2uiV09Message[] = [];
+  const deleteFilter = new OrphanDeleteFilter();
   for (const activityId of activityOrder) {
-    const messages = messagesByActivityId.get(activityId);
-    if (messages) {
-      stream.push(...messages);
+    deleteFilter.recordSuperseded(supersededSurfaceIds.get(activityId) ?? []);
+    for (const message of messagesByActivityId.get(activityId) ?? []) {
+      if (deleteFilter.keeps(message)) {
+        stream.push(message);
+      }
     }
   }
   return stream;

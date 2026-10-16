@@ -8,7 +8,8 @@ import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
  *   - cancel() during an in-flight stream stops consuming, retains the
  *     partial response already folded, and sets the active turn to `error`.
  *   - cancel() with nothing in flight is a no-op; turns unchanged.
- *   - while a turn is streaming, submit() is ignored; turns unchanged.
+ *   - a submitPrompt action opens a new turn, needs no active turn, and is
+ *     ignored while a turn is streaming; turns unchanged.
  *   - while a turn is streaming, dispatchAction() is ignored; turns unchanged.
  *   - retry(turnId) on an `error` turn re-submits its input and sets the
  *     turn back to `streaming`.
@@ -22,16 +23,20 @@ import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
  * indefinitely to probe the guards.
  */
 
-const callMock =
-  vi.fn<
-    (
-      request: unknown,
-      configuration: unknown,
-      options?: {signal?: AbortSignal}
-    ) => Promise<
-      {success: true; data: {stream: ReadableStream<Uint8Array>}} | {success: false; error: string}
-    >
-  >();
+const callMock = vi.fn<
+  (
+    request: unknown,
+    configuration: unknown,
+    options?: {signal?: AbortSignal}
+  ) => Promise<
+    | {success: true; data: {stream: ReadableStream<Uint8Array>}}
+    | {
+        success: false;
+        error: string;
+        conflict?: Record<string, never>;
+      }
+  >
+>();
 
 vi.mock('@/src/internal/api/unified/unified-endpoint-client.js', () => ({
   createUnifiedEndpointClient: () => ({call: callMock}),
@@ -150,6 +155,29 @@ function queueStream(): ControllableStream {
   return controllable;
 }
 
+const conflictError = 'Conflict: Another request is still being processed for this session.';
+
+/** Queues a call that stays pending until aborted, then fails the way the client reports an abort. */
+function queueAbortableCall(): void {
+  callMock.mockImplementationOnce(
+    (_request, _configuration, options) =>
+      new Promise((resolve) => {
+        options?.signal?.addEventListener('abort', () =>
+          resolve({success: false, error: 'This operation was aborted'})
+        );
+      })
+  );
+}
+
+/** Queues an `AGENT:ACTION_IN_FLIGHT` rejection as the result of the next `call`. */
+function queueConflict(): void {
+  callMock.mockImplementationOnce(async () => ({
+    success: false,
+    error: conflictError,
+    conflict: {},
+  }));
+}
+
 const baseConfig: SessionConfig = {
   contracts,
   organizationId: 'org-1',
@@ -168,26 +196,98 @@ describe('createSession lifecycle', () => {
     vi.clearAllMocks();
   });
 
-  describe('submit guard while streaming', () => {
-    it('ignores submit while a turn is streaming and leaves turns unchanged', async () => {
+  describe('submitPrompt action', () => {
+    it('opens the first turn with no active turn and sends the prompt as a message', async () => {
       const session = createSession(baseConfig);
 
       const first = queueStream();
-      const submitPromise = session.submit({prompt: 'first'});
+      const firstTurn = session.dispatchAction({
+        name: 'submitPrompt',
+        payload: {prompt: 'find shoes'},
+      });
       await first.opened;
 
       expect(session.turns).toHaveLength(1);
       expect(session.turns[0].status).toBe('streaming');
-
-      await session.submit({prompt: 'second'});
-
-      expect(callMock).toHaveBeenCalledTimes(1);
-      expect(session.turns).toHaveLength(1);
-      expect(session.turns[0].input.prompt).toBe('first');
+      expect(session.turns[0].input.prompt).toBe('find shoes');
+      expect(callMock.mock.calls[0][0]).toMatchObject({message: 'find shoes', action: null});
 
       first.emit({type: 'RUN_FINISHED'});
       first.close();
-      await submitPromise;
+      await firstTurn;
+      expect(session.turns[0].status).toBe('complete');
+    });
+
+    it('opens a follow-up turn that carries the Gateway session keys', async () => {
+      const session = createSession(baseConfig);
+
+      const first = queueStream();
+      const firstTurn = session.dispatchAction({
+        name: 'submitPrompt',
+        payload: {prompt: 'find shoes'},
+      });
+      await first.opened;
+      first.emit({
+        type: 'RUN_STARTED',
+        threadId: 'gateway-session-123',
+        runId: 'gateway-run-123',
+        conversationSessionId: 'gateway-session-123',
+        conversationToken: 'gateway-token-abc',
+      });
+      first.emit({type: 'RUN_FINISHED'});
+      first.close();
+      await firstTurn;
+
+      const followUp = queueStream();
+      const followUpTurn = session.dispatchAction({
+        name: 'submitPrompt',
+        payload: {prompt: 'in red'},
+      });
+      await followUp.opened;
+      followUp.emit({type: 'RUN_FINISHED'});
+      followUp.close();
+      await followUpTurn;
+
+      expect(callMock).toHaveBeenCalledTimes(2);
+      expect(callMock.mock.calls[1][0]).toMatchObject({
+        message: 'in red',
+        action: null,
+        conversationSessionId: 'gateway-session-123',
+        conversationToken: 'gateway-token-abc',
+      });
+      expect(session.turns.map((turn) => [turn.input.prompt, turn.status])).toEqual([
+        ['find shoes', 'complete'],
+        ['in red', 'complete'],
+      ]);
+    });
+
+    it('preempts a streaming prompt turn (a prompt is a prioritizing intention)', async () => {
+      const session = createSession(baseConfig);
+
+      const first = queueStream();
+      void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'first'}});
+      await first.opened;
+      expect(session.turns[0].status).toBe('streaming');
+
+      const second = queueStream();
+      void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'second'}});
+      await second.opened;
+
+      expect(callMock).toHaveBeenCalledTimes(2);
+      expect(session.turns.map((turn) => [turn.input.prompt, turn.status])).toEqual([
+        ['first', 'error'],
+        ['second', 'streaming'],
+      ]);
+      expect(session.turns[0].error).toBe('Cancelled');
+
+      second.emit({type: 'RUN_FINISHED'});
+      second.close();
+      await flush();
+      expect(session.turns[1].status).toBe('complete');
+
+      // Already aborted; closing again is a no-op in the harness.
+      first.close();
+      await flush();
     });
   });
 
@@ -196,7 +296,10 @@ describe('createSession lifecycle', () => {
       const session = createSession(baseConfig);
 
       const first = queueStream();
-      const submitPromise = session.submit({prompt: 'first'});
+      const submitPromise = session.dispatchAction({
+        name: 'submitPrompt',
+        payload: {prompt: 'first'},
+      });
       await first.opened;
 
       // Seed the active (still-streaming) turn with a commerce-search surface
@@ -238,7 +341,7 @@ describe('createSession lifecycle', () => {
         },
       });
 
-      // Only the original submit call reached the endpoint; the streaming guard
+      // Only the original prompt reached the endpoint; the streaming guard
       // withheld the action dispatch and left the turn list unchanged.
       expect(callMock).toHaveBeenCalledTimes(1);
       expect(session.turns).toHaveLength(1);
@@ -255,7 +358,10 @@ describe('createSession lifecycle', () => {
       const session = createSession(baseConfig);
 
       const first = queueStream();
-      const firstTurn = session.submit({prompt: 'find shoes'});
+      const firstTurn = session.dispatchAction({
+        name: 'submitPrompt',
+        payload: {prompt: 'find shoes'},
+      });
       await first.opened;
       first.emit({
         type: 'RUN_STARTED',
@@ -323,7 +429,7 @@ describe('createSession lifecycle', () => {
       createSurface: Record<string, unknown>
     ) {
       const first = queueStream();
-      const firstTurn = session.submit({prompt: 'go'});
+      const firstTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'go'}});
       await first.opened;
       first.emit({
         type: 'ACTIVITY_SNAPSHOT',
@@ -374,7 +480,7 @@ describe('createSession lifecycle', () => {
       const session = createSession(baseConfig);
       // A turn with BOTH a CommerceSearch surface and a conversation-only one.
       const first = queueStream();
-      const firstTurn = session.submit({prompt: 'go'});
+      const firstTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'go'}});
       await first.opened;
       first.emit({
         type: 'ACTIVITY_SNAPSHOT',
@@ -460,7 +566,7 @@ describe('createSession lifecycle', () => {
       await flush();
       await dispatched;
 
-      // Only the initial submit reached the endpoint; the action was dropped.
+      // Only the initial prompt reached the endpoint; the action was dropped.
       expect(callMock).toHaveBeenCalledTimes(1);
     });
   });
@@ -470,7 +576,10 @@ describe('createSession lifecycle', () => {
       const session = createSession(baseConfig);
 
       const first = queueStream();
-      const submitPromise = session.submit({prompt: 'find shoes'});
+      const submitPromise = session.dispatchAction({
+        name: 'submitPrompt',
+        payload: {prompt: 'find shoes'},
+      });
       await first.opened;
 
       // Fold a partial response before cancelling.
@@ -508,7 +617,7 @@ describe('createSession lifecycle', () => {
       const session = createSession(baseConfig);
 
       const first = queueStream();
-      const submitPromise = session.submit({prompt: 'hi'});
+      const submitPromise = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'hi'}});
       await first.opened;
       first.emit({type: 'RUN_FINISHED'});
       first.close();
@@ -531,7 +640,10 @@ describe('createSession lifecycle', () => {
 
       // Drive the first turn to `error` via cancel.
       const first = queueStream();
-      const submitPromise = session.submit({prompt: 'find shoes'});
+      const submitPromise = session.dispatchAction({
+        name: 'submitPrompt',
+        payload: {prompt: 'find shoes'},
+      });
       await first.opened;
       session.cancel();
       await submitPromise;
@@ -573,7 +685,7 @@ describe('createSession lifecycle', () => {
       const session = createSession(baseConfig);
 
       const first = queueStream();
-      const submitPromise = session.submit({prompt: 'hi'});
+      const submitPromise = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'hi'}});
       await first.opened;
       first.emit({type: 'RUN_FINISHED'});
       first.close();
@@ -588,6 +700,488 @@ describe('createSession lifecycle', () => {
       expect(callMock).toHaveBeenCalledTimes(1);
       expect(session.turns).toHaveLength(1);
       expect(session.turns[0].status).toBe('complete');
+    });
+  });
+
+  describe('a context provider that throws while the request is built', () => {
+    /** A session whose commerce context provider throws while `failing` is set. */
+    function createSessionWithFlakyProvider() {
+      const provider = {failing: true};
+      const session = createSession({
+        ...baseConfig,
+        commerceContextProvider: () => {
+          if (provider.failing) {
+            throw new Error('boom');
+          }
+          return {cart: []};
+        },
+      });
+      return {session, provider};
+    }
+
+    it('fails the prompt turn without sending, and the next prompt still goes through', async () => {
+      const {session, provider} = createSessionWithFlakyProvider();
+
+      await expect(
+        session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'first'}})
+      ).resolves.toBeUndefined();
+
+      expect(callMock).not.toHaveBeenCalled();
+      expect(session.turns).toHaveLength(1);
+      expect(session.turns[0].status).toBe('error');
+      expect(session.turns[0].error).toBe('boom');
+
+      provider.failing = false;
+      const next = queueStream();
+      const nextTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'second'}});
+      await next.opened;
+
+      expect(callMock).toHaveBeenCalledTimes(1);
+      expect(session.turns).toHaveLength(2);
+      expect(session.turns[1].status).toBe('streaming');
+
+      next.emit({type: 'RUN_FINISHED'});
+      next.close();
+      await nextTurn;
+    });
+
+    it('fails a retried turn again while the provider keeps throwing', async () => {
+      const {session} = createSessionWithFlakyProvider();
+      await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+      const turnId = session.turns[0].id;
+
+      session.retry(turnId);
+      await flush();
+
+      expect(callMock).not.toHaveBeenCalled();
+      expect(session.turns[0].status).toBe('error');
+      expect(session.turns[0].error).toBe('boom');
+    });
+
+    it('lets retry re-drive the failed turn once the provider recovers', async () => {
+      const {session, provider} = createSessionWithFlakyProvider();
+      await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+      const turnId = session.turns[0].id;
+
+      provider.failing = false;
+      const retryStream = queueStream();
+      session.retry(turnId);
+      await retryStream.opened;
+
+      expect(session.turns[0].status).toBe('streaming');
+      expect(callMock.mock.calls[0][0]).toMatchObject({message: 'find shoes', action: null});
+
+      retryStream.emit({type: 'RUN_FINISHED'});
+      retryStream.close();
+      await flush();
+      expect(session.turns[0].status).toBe('complete');
+    });
+
+    it('fails the active turn when building an action request throws, sending nothing', async () => {
+      const {session, provider} = createSessionWithFlakyProvider();
+      provider.failing = false;
+
+      const first = queueStream();
+      const firstTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'go'}});
+      await first.opened;
+      first.emit({
+        type: 'ACTIVITY_SNAPSHOT',
+        messageId: 'surface-activity',
+        activityType: 'a2ui-surface',
+        content: {
+          messages: [
+            {
+              version: 'v1.0',
+              createSurface: {
+                surfaceId: 'commerce-search-surface',
+                components: [
+                  {id: 'root', component: 'CommerceSearch'},
+                  {id: 'pagination-1', component: 'Pagination'},
+                ],
+              },
+            },
+          ],
+        },
+      });
+      first.emit({type: 'RUN_FINISHED'});
+      first.close();
+      await firstTurn;
+
+      provider.failing = true;
+      await expect(
+        session.dispatchAction({
+          userAction: {
+            name: 'selectPage',
+            surfaceId: 'commerce-search-surface',
+            sourceComponentId: 'pagination-1',
+            context: {page: 2},
+          },
+        })
+      ).resolves.toBeUndefined();
+
+      expect(callMock).toHaveBeenCalledTimes(1);
+      expect(session.turns[0].status).toBe('error');
+      expect(session.turns[0].error).toBe('boom');
+    });
+  });
+
+  describe('prompt preempts an in-flight gesture (③)', () => {
+    // A gesture reuses a complete turn, so only `isStreaming()` sees it in flight.
+    it('preempts the in-flight gesture (cancelled) and opens the prompt immediately', async () => {
+      const session = createSession(baseConfig);
+
+      // A Pagination surface so `selectPage` resolves a discriminant.
+      const seed = queueStream();
+      const seedTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'go'}});
+      await seed.opened;
+      seed.emit({
+        type: 'ACTIVITY_SNAPSHOT',
+        messageId: 'surface-activity',
+        activityType: 'a2ui-surface',
+        content: {
+          messages: [
+            {
+              version: 'v1.0',
+              createSurface: {
+                surfaceId: 'commerce-search-surface',
+                components: [
+                  {id: 'root', component: 'CommerceSearch'},
+                  {id: 'pagination-1', component: 'Pagination'},
+                ],
+              },
+            },
+          ],
+        },
+      });
+      seed.emit({type: 'RUN_FINISHED'});
+      seed.close();
+      await seedTurn;
+      expect(session.turns[0].status).toBe('complete');
+      expect(callMock).toHaveBeenCalledTimes(1);
+
+      const actionMessage = (page: number) => ({
+        userAction: {
+          name: 'selectPage',
+          surfaceId: 'commerce-search-surface',
+          sourceComponentId: 'pagination-1',
+          context: {page},
+        },
+      });
+
+      const actionAStream = queueStream();
+      const issuedA = session.actions.issue(actionMessage(2));
+      const outcomeA: string[] = [];
+      issuedA.onSettled((o) => outcomeA.push(o));
+      await actionAStream.opened;
+      expect(callMock).toHaveBeenCalledTimes(2);
+      expect(session.turns.some((turn) => turn.status === 'streaming')).toBe(false);
+      expect(outcomeA).toEqual([]);
+
+      const promptStream = queueStream();
+      void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'next question'}});
+      await promptStream.opened;
+
+      expect(outcomeA).toEqual(['cancelled']);
+      expect(callMock).toHaveBeenCalledTimes(3);
+      const streamingTurn = session.turns.find((turn) => turn.status === 'streaming');
+      expect(streamingTurn?.input.prompt).toBe('next question');
+
+      // Already aborted; closing again is a no-op in the harness.
+      actionAStream.close();
+      await flush();
+      await flush();
+
+      expect(callMock).toHaveBeenCalledTimes(3);
+      expect(outcomeA).toEqual(['cancelled']);
+      const lastRequest = callMock.mock.calls[callMock.mock.calls.length - 1][0] as {
+        message: string | null;
+        action: unknown;
+      };
+      expect(lastRequest).toMatchObject({message: 'next question', action: null});
+
+      promptStream.emit({type: 'RUN_FINISHED'});
+      promptStream.close();
+      await flush();
+    });
+  });
+
+  describe('Gateway rejects a request as concurrent (409 AGENT:ACTION_IN_FLIGHT)', () => {
+    const actionMessage = (page: number) => ({
+      userAction: {
+        name: 'selectPage',
+        surfaceId: 'commerce-search-surface',
+        sourceComponentId: 'pagination-1',
+        context: {page},
+      },
+    });
+
+    /** Completes a first turn carrying a Pagination surface, so `selectPage` can be issued. */
+    async function seedSession() {
+      const session = createSession(baseConfig);
+      const seed = queueStream();
+      const seedTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'go'}});
+      await seed.opened;
+      seed.emit({
+        type: 'ACTIVITY_SNAPSHOT',
+        messageId: 'surface-activity',
+        activityType: 'a2ui-surface',
+        content: {
+          messages: [
+            {
+              version: 'v1.0',
+              createSurface: {
+                surfaceId: 'commerce-search-surface',
+                components: [
+                  {id: 'root', component: 'CommerceSearch'},
+                  {id: 'pagination-1', component: 'Pagination'},
+                ],
+              },
+            },
+          ],
+        },
+      });
+      seed.emit({type: 'RUN_FINISHED'});
+      seed.close();
+      await seedTurn;
+      return session;
+    }
+
+    // 10 waits take 27.75 s and an 11th is cut to the 2.25 s left: 12 attempts in 30 s.
+    const exhaustingConflicts = 12;
+
+    const lastAction = () =>
+      (callMock.mock.calls[callMock.mock.calls.length - 1][0] as {action: unknown}).action;
+
+    beforeEach(() => {
+      vi.useFakeTimers({toFake: ['setTimeout', 'clearTimeout', 'Date']});
+      // No jitter: retries wait exactly 250, 500, 1000, 2000, then 4000 ms each.
+      vi.spyOn(Math, 'random').mockReturnValue(0.5);
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+      vi.restoreAllMocks();
+    });
+
+    it('resends a rejected action after a backoff and shows no error once it lands', async () => {
+      const session = await seedSession();
+      queueConflict();
+      const stream = queueStream();
+
+      const issued = session.actions.issue(actionMessage(2));
+      await vi.advanceTimersByTimeAsync(249);
+      expect(callMock).toHaveBeenCalledTimes(2);
+      expect(session.actions.getSnapshot().inFlight).toBe(issued.id);
+
+      await vi.advanceTimersByTimeAsync(1);
+      await stream.opened;
+      expect(callMock).toHaveBeenCalledTimes(3);
+      expect(lastAction()).toMatchObject({name: 'selectPage', context: {page: 2}});
+
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+
+      expect(await issued.settled).toBe('answered');
+      expect(session.turns[0].status).toBe('complete');
+      expect(session.turns[0].error).toBeUndefined();
+      expect(session.actionError).toBeUndefined();
+    });
+
+    it('fails the action without failing the turn once the retries run out', async () => {
+      const session = await seedSession();
+      for (let attempt = 0; attempt < exhaustingConflicts; attempt++) {
+        queueConflict();
+      }
+      const listener = vi.fn();
+      session.subscribe(listener);
+
+      const issued = session.actions.issue(actionMessage(2));
+      await vi.advanceTimersByTimeAsync(30_000);
+
+      expect(await issued.settled).toBe('failed');
+      expect(callMock).toHaveBeenCalledTimes(1 + exhaustingConflicts);
+      expect(session.turns[0].status).toBe('complete');
+      expect(session.turns[0].error).toBeUndefined();
+      expect(session.actionError).toBe(conflictError);
+      expect(listener).toHaveBeenCalled();
+    });
+
+    it('keeps queued actions behind the rejected one, in order', async () => {
+      const session = await seedSession();
+      queueConflict();
+      const streamA = queueStream();
+      const streamB = queueStream();
+
+      const issuedA = session.actions.issue(actionMessage(2));
+      const issuedB = session.actions.issue(actionMessage(3));
+      await vi.advanceTimersByTimeAsync(250);
+      await streamA.opened;
+      expect(callMock).toHaveBeenCalledTimes(3);
+      expect(lastAction()).toMatchObject({context: {page: 2}});
+
+      streamA.emit({type: 'RUN_FINISHED'});
+      streamA.close();
+      expect(await issuedA.settled).toBe('answered');
+      await streamB.opened;
+      expect(callMock).toHaveBeenCalledTimes(4);
+      expect(lastAction()).toMatchObject({context: {page: 3}});
+
+      streamB.emit({type: 'RUN_FINISHED'});
+      streamB.close();
+      expect(await issuedB.settled).toBe('answered');
+    });
+
+    it('clears the action error once the next action is sent', async () => {
+      const session = await seedSession();
+      for (let attempt = 0; attempt < exhaustingConflicts; attempt++) {
+        queueConflict();
+      }
+      const failed = session.actions.issue(actionMessage(2));
+      await vi.advanceTimersByTimeAsync(30_000);
+      expect(await failed.settled).toBe('failed');
+      expect(session.actionError).toBe(conflictError);
+
+      const stream = queueStream();
+      const issued = session.actions.issue(actionMessage(3));
+      await vi.advanceTimersByTimeAsync(0);
+      expect(callMock).toHaveBeenCalledTimes(2 + exhaustingConflicts);
+      expect(session.actionError).toBeUndefined();
+
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      expect(await issued.settled).toBe('answered');
+    });
+
+    it('does not retry a 409 that is not AGENT:ACTION_IN_FLIGHT', async () => {
+      const session = await seedSession();
+      callMock.mockImplementationOnce(async () => ({success: false, error: 'HTTP 409: Conflict'}));
+
+      const issued = session.actions.issue(actionMessage(2));
+      await vi.advanceTimersByTimeAsync(30_000);
+
+      await issued.settled;
+      expect(callMock).toHaveBeenCalledTimes(2);
+      expect(session.turns[0]).toMatchObject({status: 'error', error: 'HTTP 409: Conflict'});
+    });
+
+    it('stops waiting when a prompt preempts the rejected action', async () => {
+      const session = await seedSession();
+      queueConflict();
+      const issued = session.actions.issue(actionMessage(2));
+      await vi.advanceTimersByTimeAsync(0);
+      expect(callMock).toHaveBeenCalledTimes(2);
+
+      const promptStream = queueStream();
+      void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'next question'}});
+      await promptStream.opened;
+      expect(await issued.settled).toBe('cancelled');
+
+      await vi.advanceTimersByTimeAsync(30_000);
+      expect(callMock).toHaveBeenCalledTimes(3);
+      expect(session.turns[0]).toMatchObject({status: 'complete'});
+      expect(session.turns[0].error).toBeUndefined();
+
+      promptStream.emit({type: 'RUN_FINISHED'});
+      promptStream.close();
+    });
+
+    it('cancels the rejected action, leaving its turn complete, when cancel() lands during the wait', async () => {
+      const session = await seedSession();
+      queueConflict();
+      const issued = session.actions.issue(actionMessage(2));
+      await vi.advanceTimersByTimeAsync(100);
+
+      session.cancel();
+
+      expect(await issued.settled).toBe('cancelled');
+      await vi.advanceTimersByTimeAsync(30_000);
+      expect(callMock).toHaveBeenCalledTimes(2);
+      expect(session.turns[0].status).toBe('complete');
+      expect(session.turns[0].error).toBeUndefined();
+    });
+
+    it('marks a rejected prompt cancelled when cancel() lands during the wait', async () => {
+      const session = createSession(baseConfig);
+      queueConflict();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+      await vi.advanceTimersByTimeAsync(100);
+
+      session.cancel();
+      await turn;
+
+      expect(callMock).toHaveBeenCalledTimes(1);
+      expect(session.turns[0]).toMatchObject({status: 'error', error: 'Cancelled'});
+    });
+
+    it('leaves the turn complete when a prompt aborts an action while it is being resent', async () => {
+      const session = await seedSession();
+      queueConflict();
+      queueAbortableCall();
+      const issued = session.actions.issue(actionMessage(2));
+      await vi.advanceTimersByTimeAsync(250);
+      expect(callMock).toHaveBeenCalledTimes(3);
+
+      const promptStream = queueStream();
+      void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'next question'}});
+      await promptStream.opened;
+      await vi.advanceTimersByTimeAsync(0);
+
+      expect(await issued.settled).toBe('cancelled');
+      expect(session.turns[0]).toMatchObject({status: 'complete'});
+      expect(session.turns[0].error).toBeUndefined();
+
+      promptStream.emit({type: 'RUN_FINISHED'});
+      promptStream.close();
+    });
+
+    it('keeps a prompt cancelled when cancel() aborts it while it is being resent', async () => {
+      const session = createSession(baseConfig);
+      queueConflict();
+      queueAbortableCall();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+      await vi.advanceTimersByTimeAsync(250);
+      expect(callMock).toHaveBeenCalledTimes(2);
+
+      session.cancel();
+      await turn;
+
+      expect(session.turns[0]).toMatchObject({status: 'error', error: 'Cancelled'});
+    });
+
+    it('resends a rejected prompt while its turn keeps streaming', async () => {
+      const session = createSession(baseConfig);
+      queueConflict();
+      const stream = queueStream();
+
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+      await vi.advanceTimersByTimeAsync(0);
+      expect(session.turns[0].status).toBe('streaming');
+      expect(session.turns[0].error).toBeUndefined();
+
+      await vi.advanceTimersByTimeAsync(250);
+      await stream.opened;
+      expect(callMock).toHaveBeenCalledTimes(2);
+      expect(callMock.mock.calls[1][0]).toMatchObject({message: 'find shoes', action: null});
+
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await turn;
+      expect(session.turns[0].status).toBe('complete');
+    });
+
+    it('fails the prompt turn once the retries run out', async () => {
+      const session = createSession(baseConfig);
+      for (let attempt = 0; attempt < exhaustingConflicts; attempt++) {
+        queueConflict();
+      }
+
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+      await vi.advanceTimersByTimeAsync(30_000);
+      await turn;
+
+      expect(callMock).toHaveBeenCalledTimes(exhaustingConflicts);
+      expect(session.turns[0]).toMatchObject({status: 'error', error: conflictError});
+      expect(session.actionError).toBeUndefined();
     });
   });
 });

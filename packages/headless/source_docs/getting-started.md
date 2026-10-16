@@ -10,7 +10,7 @@ This guide walks you through installing the Coveo Headless library and running a
 
 ## Prerequisites
 
-Headless requires Node.js version 20.9.0 or later when used in a Node.js environment.
+When used in a Node.js environment, Headless requires Node.js 20 (20.9.0 or later), 22 (22.11.0 or later), or 24 (24.11.0 or later).
 
 > [!NOTE]
 >

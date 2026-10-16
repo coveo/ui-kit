@@ -30,7 +30,7 @@ This sample uses the `/converse-schema` route on the mock server (via `VITE_COVE
 | `build a beginner surfing kit with budget, mid-range, and premium options` | BundleDisplay with 3 tiers (Budget/Mid-Range/Premium), product-list state per slot, and NextActionsBar                     | ✅ Fully functional    |
 | `i like cold-water surfing. compare wetsuits for it`                       | ComparisonTable with 3 wetsuits, images, prices, annotations (Standout/Trade-off/Best for), AI Summary, and NextActionsBar | ✅ Fully functional    |
 | `boating safety`                                                           | Discovery with 2 ProductCarousels (Life Jackets + Boating Safety Gear) and NextActionsBar                                  | ✅ Fully functional    |
-| `tell me more about the thermoflex winter wetsuit`                         | ProductResearchCard for the ThermoFlex Winter Wetsuit with a summary, 4 bullets, and NextActionsBar                        | ⏳ Needs KIT-6251      |
+| `tell me more about the thermoflex winter wetsuit`                         | ProductResearchCard for the ThermoFlex Winter Wetsuit with a summary, 4 bullets, and NextActionsBar                        | ✅ Fully functional    |
 | Any other text (fallback)                                                  | NextActionsBar with suggested follow-up actions                                                                            | ✅ Fully functional    |
 | `what should i pack for a snorkeling trip?`                                | Conversational with surfaces (built for `demo-react`, legacy format)                                                       | ❌ Not supported       |
 | `kayaks`                                                                   | Routed commerce search (built for `demo-react`)                                                                            | ❌ Not supported       |
@@ -38,13 +38,14 @@ This sample uses the `/converse-schema` route on the mock server (via `VITE_COVE
 
 ## Available scripts
 
-| Command         | Description                                                       |
-| --------------- | ----------------------------------------------------------------- |
-| `pnpm dev`      | Start dev server against a live backend (no configuration needed) |
-| `pnpm dev:mock` | Build deps, start mock API, and open dev server                   |
-| `pnpm build`    | Production build                                                  |
-| `pnpm test`     | Run Vitest unit tests                                             |
-| `pnpm preview`  | Preview production build                                          |
+| Command                  | Description                                                                      |
+| ------------------------ | -------------------------------------------------------------------------------- |
+| `pnpm dev`               | Start dev server against a live backend (no configuration needed)                |
+| `pnpm dev:mock`          | Build deps, start mock API, and open dev server                                  |
+| `pnpm dev:agent-gateway` | Start dev server against a local agent-gateway on port 8990 (needs `.env.local`) |
+| `pnpm build`             | Production build                                                                 |
+| `pnpm test`              | Run Vitest unit tests                                                            |
+| `pnpm preview`           | Preview production build                                                         |
 
 ## Configuration
 
@@ -73,54 +74,50 @@ The template set lives in
 
 ## Architecture
 
-The app is structured around three views managed by `AppShell`:
+The app is a single page managed by `AppShell`:
 
 ```
-AppShell (providers + navigation)
-├── LandingPage        — Prompt input with suggestion pills
-├── ConversationPage   — Chat with A2-UI rendering (catalog-driven)
-└── SearchResultsPage  — Mounts the decomposed commerce-search surface through the A2-UI renderer pipeline (the `commerce-search` root composes two `layout-stack` columns that mount the rest of the surface by id)
+AppShell (A2-UI provider + the session's renderer stream)
+├── LandingPage        — Prompt input with suggestion pills, until the first prompt
+└── ConversationPage   — One feed of every turn, search and conversation alike, with the prompt pinned below
 ```
 
-Navigation is determined by what the backend returns:
+Every turn shows the blocks the server produced for it, in order: the agent's text and display surfaces, and the gateway's search blocks. A search, a facet selection and a question to the agent all stay on the same page.
 
-- Turn whose discovered surface has a `rootComponentType` of `CommerceSearch` → SearchResultsPage mounting the surface via `ThermidorA2UISurfaces`
-- Turn with `agentResponse` (reasoning steps / surfaces) → ConversationPage (A2-UI catalog renderers)
+- `src/a2ui/surface-stream.ts` turns every turn's `response.a2uiMessages` into one renderer stream, so an update lands on its block wherever that block is in the feed. Each surface is drawn under a render id scoped to the turn that created it (servers may reuse a surface id across turns), and actions are sent back with the server surface id.
+- Only the latest turn's blocks are interactive. `session.dispatchAction` only sends actions for the surfaces of the active turn, so blocks of earlier turns stay visible, selected facets included, but read-only (`inert`).
 
 ### ConversationPage component tree
 
 ```
 ConversationPage
-├── ProductTargeting (layout: prompt input + product targeting pills)
-│   ├── PromptInput (text field + submit)
-│   ├── Targeting toolbar (attach button, product pills, clear)
-│   └── TargetingProvider (context for targeting mode)
-│       └── ConversationThread (renders the list of turns)
-│           └── per Turn:
-│               ├── UserPromptBubble
-│               ├── ErrorTurnBlock (if error)
-│               ├── RoutedTurnBlock (if routed to search)
-│               └── AgentResponseBlock (if agentResponse)
-│                   ├── ThinkingBlock (reasoning steps + spinner)
-│                   ├── StreamingMessage (streamed text)
-│                   ├── A2UISkeleton[] (placeholders during streaming)
-│                   └── ThermidorA2UISurfaces (catalog resolution)
-│                       ├── ProductCarousel (dumb: reads resolved props from {path} bindings)
-│                       ├── BundleDisplay (dumb: reads resolved tiers + slot child ids from props)
-│                       ├── ComparisonTable (dumb: reads resolved products + attributes from props)
-│                       └── NextActionsBar (dumb: reads resolved action items; dispatch via onAction)
-└── "Back to search" floating button (if canGoBackToSearch)
+├── ConversationThread (renders the list of turns)
+│   └── per Turn:
+│       ├── UserPromptBubble
+│       ├── ErrorTurnBlock (if error)
+│       └── AgentResponseBlock
+│           ├── ThinkingBlock (reasoning steps + spinner)
+│           ├── StreamingMessage (streamed text)
+│           └── TurnSurfaces (the turn's blocks; read-only unless it is the latest turn)
+│               ├── A2UISkeleton (in place of a loading surface)
+│               ├── ProductCarousel (dumb: reads resolved props from {path} bindings)
+│               ├── BundleDisplay (dumb: reads resolved tiers + slot child ids from props)
+│               ├── ComparisonTable (dumb: reads resolved products + attributes from props)
+│               ├── ProductResearchCard (dumb: reads resolved product, summary + bullets from props)
+│               ├── NextActionsBar (dumb: reads resolved action items; dispatch via onAction)
+│               └── CommerceSearch (a gateway search block, see below)
+└── PromptInput (pinned below the feed)
 ```
 
-**ProductTargeting** wraps the entire conversation view. It provides the prompt input, a toolbar for attaching product context (users can click products in the conversation to pin them), and injects selected product names into the prompt on submit.
+**ConversationThread** iterates over turns and delegates rendering to the appropriate block based on turn status. The key path is through **AgentResponseBlock**, which orchestrates the streaming experience: first showing a thinking indicator, then streaming text, then the turn's blocks: a skeleton in place of each surface whose data model declares `isLoading` while the exchange streams, and finally the resolved A2-UI catalog components once component state arrives via `/state/<id>` `updateDataModel` operations resolved into the renderer's data model.
 
-**ConversationThread** iterates over turns and delegates rendering to the appropriate block based on turn status. The key path is through **AgentResponseBlock**, which orchestrates the streaming experience: first showing a thinking indicator, then streaming text, then skeleton placeholders (inferred from `store_render_plan` tool calls), and finally the resolved A2-UI catalog components once component state arrives via `/state/<id>` `updateDataModel` operations resolved into the renderer's data model.
+The catalog renderers (ProductCarousel, BundleDisplay, ComparisonTable, ProductResearchCard, NextActionsBar) are **dumb**: each reads its resolved values directly from `props` (the renderer resolves each `{ "path": ... }` binding against its A2-UI data model), with no identity join and no controller hydration. Actions surface through the renderer's `onAction` handler, wired to `session.dispatchAction`.
 
-The catalog renderers (ProductCarousel, BundleDisplay, ComparisonTable, NextActionsBar) are **dumb**: each reads its resolved values directly from `props` (the renderer resolves each `{ "path": ... }` binding against its A2-UI data model), with no identity join and no controller hydration. Actions surface through the renderer's `onAction` handler, wired to `session.dispatchAction`.
+**Search options** (agent-gateway ADR-008) are `NextActionsBar` items of type `searchOption`. The gateway keeps the search behind each one and forwards only `{text, type, optionId}`; tapping one dispatches `selectSearchOption {optionId}`, and the gateway opens a new commerce-search surface on the same turn. It is drawn below the answer and scrolled into view.
 
-### SearchResultsPage (decomposed commerce)
+### Search blocks (decomposed commerce)
 
-SearchResultsPage reads the active turn's A2-UI activities and hands them to `ThermidorA2UISurfaces`, mounting the decomposed commerce-search surface through the same renderer pipeline every other surface uses. The layout lives entirely on the A2-UI composition plane: the `commerce-search` root composes two `layout-stack` columns, and each generic `layout-stack` mounts its own children (in a column or row) by id.
+A gateway search block is a decomposed commerce-search surface, drawn in the feed through the same renderer pipeline every other surface uses. The layout lives entirely on the A2-UI composition plane: the `commerce-search` root composes two `layout-stack` columns, and each generic `layout-stack` mounts its own children (in a column or row) by id.
 
 The composition tree the mock emits is:
 
@@ -135,7 +132,7 @@ commerce-search (root)
 
 Each mounted node is a dumb catalog renderer (`CommerceSearchRenderer`, `LayoutStackRenderer`, `FacetManagerRenderer`, the facet renderers, `QuerySummaryRenderer`, `SortRenderer`, `ProductListRenderer`, `PaginationRenderer`, `PageSizeRenderer`) that reads its resolved component state from `props` (the renderer resolves the node's `{ "path": ... }` bindings against its A2-UI data model). Container renderers mount their children by name following the standard A2-UI composition convention: `CommerceSearch` mounts `children(props.sidebarChild)` and `children(props.mainChild)`; `LayoutStack` and `FacetManager` mount their ordered `children` `ChildList` in declared order. There is no positional read of the child list. Absent components render as empty slots without error.
 
-There is no `search-box` on this surface: the query input is the app-level search bar above the surface, so the composition starts at the `query-summary` row.
+There is no `search-box` on this surface: the query input is the prompt pinned below the feed, so the composition starts at the `query-summary` row.
 
 These controls dispatch component actions: an interaction (sort, page, page-size, facet search) surfaces through the renderer's `onAction` handler, which is wired to `session.dispatchAction`. `session.dispatchAction` recovers the dispatching component from the active turn's surfaces, validates the action payload against the component's Zod action schema, and POSTs it over the HTTP Action_Channel; the producer replies with `/state/<id>` `updateDataModel` operations. In-progress facet-search input is held in local React state and is never written to the shared A2-UI data model.
 
@@ -143,14 +140,14 @@ These controls dispatch component actions: an interaction (sort, page, page-size
 
 | Module                                                   | Role                                                                                                                                                                                                                                                                                                                                                |
 | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `src/hooks/use-navigation.ts`                            | Navigation state machine (view transitions, persisted RoutedInterface, submit handling)                                                                                                                                                                                                                                                             |
+| `src/a2ui/surface-stream.ts`                             | Builds the session's renderer stream from every turn's `response.a2uiMessages`, places each surface under the turn that created it, and maps renderer actions back to server surface ids                                                                                                                                                            |
 | `src/a2ui/components.tsx`                                | Catalog definitions and renderers registered via `createCatalog`: conversational (ProductCarousel, BundleDisplay, ComparisonTable, NextActionsBar, ProductSummary) and decomposed commerce (CommerceSearch, LayoutStack, FacetManager, RegularFacet, NumericFacet, CategoryFacet, QuerySummary, Sort, ProductList, Pagination, PageSize, SearchBox) |
 | `src/a2ui/CommerceSearch/`                               | `commerce-search` root renderer — composes the sidebar and main columns and mounts them by id via the A2-UI `children(id)` function                                                                                                                                                                                                                 |
 | `src/a2ui/LayoutStack/`                                  | Generic layout container renderer — stacks its declared children in a column or row (direction is a presentation node prop); reused for the sidebar, main, and top/bottom rows                                                                                                                                                                      |
-| `src/a2ui/surfaces.tsx`                                  | Mounts the renderer-ready v0.9 stream read off `response.a2uiMessages` (thermidor owns the v1.0 → v0.9 downgrade)                                                                                                                                                                                                                                   |
+| `src/a2ui/surfaces.tsx`                                  | Feeds the session's renderer stream to the renderer and draws each turn's surfaces (thermidor owns the v1.0 → v0.9 downgrade)                                                                                                                                                                                                                       |
 | `src/a2ui/use-optimistic-facet-search.ts`                | Keeps in-progress facet-search input in local React state ("backend wins" reconcile) and dispatches a validated `search` action over the HTTP Action_Channel; never writes in-progress input to the shared data model                                                                                                                               |
-| `src/a2ui/Skeleton/`                                     | Skeleton placeholders during streaming                                                                                                                                                                                                                                                                                                              |
-| `src/components/ConversationPage/AgentResponseBlock.tsx` | Orchestrates streaming display: ThinkingBlock → StreamingMessage → Skeletons → A2UI Surfaces                                                                                                                                                                                                                                                        |
+| `src/a2ui/Skeleton/`                                     | Skeletons drawn in place of loading surfaces                                                                                                                                                                                                                                                                                                        |
+| `src/components/ConversationPage/AgentResponseBlock.tsx` | Orchestrates streaming display: ThinkingBlock → StreamingMessage → A2UI Surfaces                                                                                                                                                                                                                                                                    |
 
 ### Data flow (conversational turn)
 
@@ -162,8 +159,8 @@ Session (thermidor, via createSession) — validates inbound updateDataModel ops
   ↓ state.activeTurn.agentResponse
   ↓
 AgentResponseBlock
-  ├── Skeletons (from store_render_plan tool calls)
-  └── ThermidorA2UISurfaces
+  └── TurnSurfaces (fed by the session-wide stream built in surface-stream.ts)
+        ├── A2UISkeleton for each loading surface (response.surfaces isLoading)
         ↓ thermidor response.a2uiMessages (v1.0 → v0.9, {path} bindings byte-for-byte)
         ↓ processMessages (catalog resolution + updateDataModel ops → renderer data model)
         ↓

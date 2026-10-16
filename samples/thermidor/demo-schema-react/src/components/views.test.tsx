@@ -53,10 +53,7 @@ describe('ConversationPage', () => {
         onSubmit={vi.fn()}
         isStreaming={false}
         turns={[baseTurn]}
-        onBackToSearch={vi.fn()}
-        canGoBackToSearch={true}
-        products={[]}
-        onProductsChange={vi.fn()}
+        surfacesByTurn={new Map()}
       />
     );
     expect(screen.getByLabelText('Prompt')).toBeDefined();
@@ -69,10 +66,7 @@ describe('ConversationPage', () => {
         onSubmit={onSubmit}
         isStreaming={false}
         turns={[baseTurn]}
-        onBackToSearch={vi.fn()}
-        canGoBackToSearch={true}
-        products={[]}
-        onProductsChange={vi.fn()}
+        surfacesByTurn={new Map()}
       />
     );
 
@@ -89,46 +83,9 @@ describe('ConversationPage', () => {
         onSubmit={vi.fn()}
         isStreaming={true}
         turns={[baseTurn]}
-        onBackToSearch={vi.fn()}
-        canGoBackToSearch={true}
-        products={[]}
-        onProductsChange={vi.fn()}
+        surfacesByTurn={new Map()}
       />
     );
     expect((screen.getByLabelText('Prompt') as HTMLTextAreaElement).disabled).toBe(true);
-  });
-
-  it('renders "← Back to search results" button when canGoBackToSearch is true', () => {
-    const onBackToSearch = vi.fn();
-    render(
-      <ConversationPage
-        onSubmit={vi.fn()}
-        isStreaming={false}
-        turns={[baseTurn]}
-        onBackToSearch={onBackToSearch}
-        canGoBackToSearch={true}
-        products={[]}
-        onProductsChange={vi.fn()}
-      />
-    );
-
-    const btn = screen.getByRole('button', {name: /Back to search results/});
-    fireEvent.click(btn);
-    expect(onBackToSearch).toHaveBeenCalled();
-  });
-
-  it('does not render "Back to search results" button when canGoBackToSearch is false', () => {
-    render(
-      <ConversationPage
-        onSubmit={vi.fn()}
-        isStreaming={false}
-        turns={[baseTurn]}
-        onBackToSearch={vi.fn()}
-        canGoBackToSearch={false}
-        products={[]}
-        onProductsChange={vi.fn()}
-      />
-    );
-    expect(screen.queryByRole('button', {name: /Back to search results/})).toBeNull();
   });
 });

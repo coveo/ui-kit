@@ -18,7 +18,9 @@ export type {Sort, SortProps, SortState};
  * Defines a `Sort` controller instance.
  * @group Definers
  *
- * @param props - The configurable `Sort` properties.
+ * @param props - The configurable `Sort` properties. The `listing` and `search` options are
+ * deprecated and will be removed in the next major version: omit them to build the controller for
+ * both search and product listing pages.
  * @returns The `Sort` controller definition.
  */
 export function defineSort<TOptions extends ControllerDefinitionOption | undefined>(

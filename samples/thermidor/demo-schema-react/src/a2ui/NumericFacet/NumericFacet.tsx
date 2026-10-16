@@ -1,7 +1,7 @@
-import {useId, useState} from 'react';
+import {useId} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
-import type {NumericFacetAction} from '@coveo/thermidor-schema';
-import {NumericFacetPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {type NumericFacetAction, NumericFacetPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {useOptimisticNumericFacet} from './use-optimistic-numeric-facet.js';
 import styles from './NumericFacet.module.css';
 
 function formatRange(start: number, end: number): string {
@@ -10,8 +10,8 @@ function formatRange(start: number, end: number): string {
 
 /**
  * A2-UI component for the `numeric-facet`. The generic binder resolves the facet state from
- * `NumericFacetPropsSchema`; range selection / custom-range apply / clear dispatch their
- * respective actions through `context.dispatchAction`.
+ * `NumericFacetPropsSchema`; its three gestures all carry an optimistic value, so they live in
+ * `useOptimisticNumericFacet` and what is left here is the rendering.
  */
 export const NumericFacet = createReactComponent(
   {
@@ -23,66 +23,15 @@ export const NumericFacet = createReactComponent(
     const startId = useId();
     const endId = useId();
 
-    const [customStart, setCustomStart] = useState('');
-    const [customEnd, setCustomEnd] = useState('');
-
-    const {displayName, customRange, hasActiveValues, domain} = props;
-    const values = props.values ?? [];
-
-    const resetCustomInputs = () => {
-      setCustomStart('');
-      setCustomEnd('');
+    const dispatch = (action: NumericFacetAction) => {
+      context.dispatchAction(action);
     };
+    const optimisticFacet = useOptimisticNumericFacet(props, dispatch);
 
-    const handleToggleSingleSelect = (start: number, end: number) => {
-      resetCustomInputs();
-      const toggleSingleSelectAction: NumericFacetAction = {
-        event: {name: 'toggleSingleSelect', context: {start, end}},
-      };
-      context.dispatchAction(toggleSingleSelectAction);
-    };
-
-    const handleClear = () => {
-      resetCustomInputs();
-      const clearAllAction: NumericFacetAction = {
-        event: {name: 'clearAllActiveValues', context: {}},
-      };
-      context.dispatchAction(clearAllAction);
-    };
-
+    const {displayName, domain} = props;
+    const {hasActiveValues, isApplyingCustomRange} = optimisticFacet;
     const domainMin = domain?.min;
     const domainMax = domain?.max;
-
-    const clampToDomain = (value: number): number => {
-      let clamped = value;
-      if (domainMin !== undefined) {
-        clamped = Math.max(clamped, domainMin);
-      }
-      if (domainMax !== undefined) {
-        clamped = Math.min(clamped, domainMax);
-      }
-      return clamped;
-    };
-
-    const handleApplyCustomRange = (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      const parsedStart = Number(customStart);
-      const parsedEnd = Number(customEnd);
-      if (
-        customStart === '' ||
-        customEnd === '' ||
-        !Number.isFinite(parsedStart) ||
-        !Number.isFinite(parsedEnd)
-      ) {
-        return;
-      }
-      const start = clampToDomain(Math.min(parsedStart, parsedEnd));
-      const end = clampToDomain(Math.max(parsedStart, parsedEnd));
-      const applyCustomRangeAction: NumericFacetAction = {
-        event: {name: 'applyCustomRange', context: {start, end}},
-      };
-      context.dispatchAction(applyCustomRangeAction);
-    };
 
     return (
       <section
@@ -95,14 +44,14 @@ export const NumericFacet = createReactComponent(
             {displayName}
           </h3>
           {hasActiveValues && (
-            <button className={styles.clearButton} type="button" onClick={handleClear}>
+            <button className={styles.clearButton} type="button" onClick={optimisticFacet.clear}>
               Clear
             </button>
           )}
         </div>
 
         <ul className={styles.values}>
-          {values.map((value) => {
+          {optimisticFacet.values.map((value) => {
             const isSelected = value.state === 'selected';
             return (
               <li key={`${value.start}-${value.end}`}>
@@ -110,7 +59,7 @@ export const NumericFacet = createReactComponent(
                   className={`${styles.value} ${isSelected ? styles.selected : ''}`}
                   type="button"
                   aria-pressed={isSelected}
-                  onClick={() => handleToggleSingleSelect(value.start, value.end)}
+                  onClick={() => optimisticFacet.toggleSingleSelect(value.start, value.end)}
                 >
                   <span className={styles.valueLabel}>{formatRange(value.start, value.end)}</span>
                   <span className={styles.count}>({value.numberOfResults})</span>
@@ -118,58 +67,53 @@ export const NumericFacet = createReactComponent(
               </li>
             );
           })}
-          {customRange && (
-            <li key="custom-range">
-              <button
-                className={`${styles.value} ${styles.selected}`}
-                type="button"
-                aria-pressed={true}
-                data-testid={`facet-custom-range-${props.field}`}
-                onClick={() => handleToggleSingleSelect(customRange.start, customRange.end)}
-              >
-                <span className={styles.valueLabel}>
-                  {formatRange(customRange.start, customRange.end)}
-                </span>
-                <span className={styles.count}>({customRange.numberOfResults})</span>
-              </button>
-            </li>
-          )}
         </ul>
 
-        <form className={styles.customForm} onSubmit={handleApplyCustomRange}>
-          <label className={styles.customLabel} htmlFor={startId}>
-            <span className={styles.labelText}>Min</span>
-            <input
-              id={startId}
-              className={styles.customInput}
-              type="number"
-              inputMode="decimal"
-              step="any"
-              placeholder="Min"
-              min={domainMin}
-              max={domainMax}
-              value={customStart}
-              onChange={(event) => setCustomStart(event.target.value)}
-            />
-          </label>
-          <label className={styles.customLabel} htmlFor={endId}>
-            <span className={styles.labelText}>Max</span>
-            <input
-              id={endId}
-              className={styles.customInput}
-              type="number"
-              inputMode="decimal"
-              step="any"
-              placeholder="Max"
-              min={domainMin}
-              max={domainMax}
-              value={customEnd}
-              onChange={(event) => setCustomEnd(event.target.value)}
-            />
-          </label>
-          <button className={styles.applyButton} type="submit">
-            Apply
-          </button>
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            optimisticFacet.applyCustomRange();
+          }}
+        >
+          <fieldset
+            className={`${styles.customFieldset} ${isApplyingCustomRange ? styles.pending : ''}`}
+            disabled={isApplyingCustomRange}
+            aria-busy={isApplyingCustomRange}
+          >
+            <label className={styles.customLabel} htmlFor={startId}>
+              <span className={styles.labelText}>Min</span>
+              <input
+                id={startId}
+                className={styles.customInput}
+                type="number"
+                inputMode="decimal"
+                step="any"
+                placeholder="Min"
+                min={domainMin}
+                max={domainMax}
+                value={optimisticFacet.customStart}
+                onChange={(event) => optimisticFacet.setCustomStart(event.target.value)}
+              />
+            </label>
+            <label className={styles.customLabel} htmlFor={endId}>
+              <span className={styles.labelText}>Max</span>
+              <input
+                id={endId}
+                className={styles.customInput}
+                type="number"
+                inputMode="decimal"
+                step="any"
+                placeholder="Max"
+                min={domainMin}
+                max={domainMax}
+                value={optimisticFacet.customEnd}
+                onChange={(event) => optimisticFacet.setCustomEnd(event.target.value)}
+              />
+            </label>
+            <button className={styles.applyButton} type="submit">
+              Apply
+            </button>
+          </fieldset>
         </form>
       </section>
     );

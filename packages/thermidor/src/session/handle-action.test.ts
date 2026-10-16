@@ -78,8 +78,8 @@ function sseFrame(activity: Record<string, unknown>): Uint8Array {
 
 /**
  * Queues a completing stream that emits a single commerce-search surface (with
- * a Pagination node), then `RUN_FINISHED`, and closes. After the submit
- * resolves, the active turn is COMPLETE (not streaming), so the streaming guard
+ * a Pagination node), then `RUN_FINISHED`, and closes. After the prompt's
+ * turn resolves, the active turn is COMPLETE (not streaming), so the streaming guard
  * does not interfere and `dispatchAction` can reach the private execute path.
  */
 function queueSurfaceThenComplete(): void {
@@ -149,7 +149,7 @@ const baseConfig: SessionConfig = {
 async function sessionWithPaginationSurface() {
   queueSurfaceThenComplete();
   const session = createSession(baseConfig);
-  await session.submit({prompt: 'find shoes'});
+  await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
   callMock.mockClear();
   return session;
 }
@@ -326,6 +326,47 @@ describe('Session.dispatchAction', () => {
       expect(callMock).toHaveBeenCalledTimes(1);
       const request = callMock.mock.calls[0][0] as {action: {name: string} | null};
       expect(request.action?.name).toBe('setPageSize');
+    });
+  });
+
+  describe('concurrent dispatches are serialized', () => {
+    it('sends the second action only after the first action stream has completed', async () => {
+      const session = await sessionWithPaginationSurface();
+
+      // Held open so the second dispatch is issued while the first is in flight.
+      let releaseFirstStream: (() => void) | undefined;
+      const firstStreamReleased = new Promise<void>((resolve) => {
+        releaseFirstStream = resolve;
+      });
+      callMock.mockImplementationOnce(async () => ({
+        success: true,
+        data: {
+          stream: new ReadableStream<Uint8Array>({
+            async start(controller) {
+              await firstStreamReleased;
+              controller.enqueue(sseFrame({type: 'RUN_FINISHED'}));
+              controller.close();
+            },
+          }),
+        },
+      }));
+      queueActionAck();
+
+      const first = session.dispatchAction(paginationMessage('selectPage', {page: 1}));
+      const second = session.dispatchAction(paginationMessage('selectPage', {page: 2}));
+
+      await Promise.resolve();
+      await Promise.resolve();
+      expect(callMock).toHaveBeenCalledTimes(1);
+
+      releaseFirstStream?.();
+      await Promise.all([first, second]);
+
+      expect(callMock).toHaveBeenCalledTimes(2);
+      const pages = callMock.mock.calls.map(
+        (call) => (call[0] as {action: {context: {page: number}}}).action.context.page
+      );
+      expect(pages).toEqual([1, 2]);
     });
   });
 });

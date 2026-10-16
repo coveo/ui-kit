@@ -1,6 +1,8 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 
 import {QuerySummaryPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {useStale} from '../pending-dispatch.js';
+import freshness from '../result-freshness.module.css';
 import styles from './QuerySummary.module.css';
 
 /**
@@ -24,6 +26,7 @@ export const QuerySummary = createReactComponent(
   },
   ({props}) => {
     const {query, firstIndex, lastIndex, totalEntries} = props;
+    const outstanding = useStale('results');
 
     // Bindings resolve progressively: any of the four fields may still be
     // undefined on an early render. Treat a partially-resolved summary as
@@ -46,7 +49,10 @@ export const QuerySummary = createReactComponent(
     }
 
     return (
-      <p className={styles.summary}>
+      <p
+        className={outstanding ? `${styles.summary} ${freshness.stale}` : styles.summary}
+        aria-busy={outstanding}
+      >
         Products <strong>{firstIndex}</strong>-<strong>{lastIndex}</strong> of{' '}
         <strong>{totalEntries.toLocaleString()}</strong>
         {query && (

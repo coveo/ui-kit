@@ -1,6 +1,14 @@
 import type {CommerceRequestModel} from './unified-endpoint-types.js';
-import {isSuccessResponse, transformError} from '@/src/internal/api/protocol/error-handling.js';
+import {
+  isSuccessResponse,
+  readActionInFlightConflict,
+  transformError,
+  type ActionInFlightConflict,
+} from '@/src/internal/api/protocol/error-handling.js';
 import {getOrganizationEndpoint} from '@/src/internal/api/organization-endpoint.js';
+
+const ACTION_IN_FLIGHT_ERROR =
+  'Conflict: Another request is still being processed for this session.';
 
 const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
   return async (
@@ -54,10 +62,11 @@ const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
       });
 
       if (!isSuccessResponse(response)) {
-        return {
-          success: false,
-          error: transformError(response),
-        };
+        const conflict = await readActionInFlightConflict(response);
+        if (conflict) {
+          return {success: false, error: ACTION_IN_FLIGHT_ERROR, conflict};
+        }
+        return {success: false, error: transformError(response)};
       }
 
       if (!response.body) {
@@ -110,6 +119,7 @@ type UnifiedEndpointClientResult =
   | {
       success: false;
       error: string;
+      conflict?: ActionInFlightConflict;
     };
 
 export interface UnifiedEndpointClient {

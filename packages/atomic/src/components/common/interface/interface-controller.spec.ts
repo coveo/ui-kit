@@ -15,6 +15,8 @@ vi.mock('./i18n.js', () => ({
 }));
 vi.mock('@/src/utils/dayjs-locales.js', {spy: true});
 
+const flushPromises = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
+
 describe('InterfaceController', () => {
   const setupElement = async () => {
     const {atomicInterface} = await renderInAtomicCommerceInterface({
@@ -205,6 +207,29 @@ describe('InterfaceController', () => {
         expect(hangingEvent1.detail).toHaveBeenCalledWith(atomicInterface.bindings);
         expect(hangingEvent2.detail).toHaveBeenCalledWith(atomicInterface.bindings);
       });
+
+      it('should process hanging initialize events once the dayjs locale has loaded', async () => {
+        const atomicInterface = await setupElement();
+        const helper = new InterfaceController(atomicInterface, 'CoveoAtomic', VERSION);
+        const hangingEvent = {
+          preventDefault: vi.fn(),
+          stopPropagation: vi.fn(),
+          detail: vi.fn(),
+        };
+        helper.onComponentInitializing(hangingEvent as never);
+        const dayjsLocale = Promise.withResolvers<void>();
+        vi.mocked(loadDayjsLocale).mockReturnValueOnce(dayjsLocale.promise);
+
+        const initialization = helper.onInitialization(vi.fn());
+        await flushPromises();
+
+        expect(hangingEvent.detail).not.toHaveBeenCalled();
+
+        dayjsLocale.resolve();
+        await initialization;
+
+        expect(hangingEvent.detail).toHaveBeenCalledWith(atomicInterface.bindings);
+      });
     });
   });
 
@@ -314,7 +339,7 @@ describe('InterfaceController', () => {
       expect(loadDayjsLocaleSpy).toHaveBeenCalledExactlyOnceWith('en');
     });
 
-    describe('once the translations have loaded', () => {
+    describe('once the translations and the dayjs locale have loaded', () => {
       it('should call #i18n.changeLanguage with the full language code', async () => {
         const atomicInterface = await setupElement();
         (atomicInterface as BaseAtomicInterface<CommerceEngine>).language = 'pt-BR';
@@ -325,6 +350,23 @@ describe('InterfaceController', () => {
         await vi.waitFor(() => expect(changeLanguageSpy).toHaveBeenCalled());
 
         expect(changeLanguageSpy).toHaveBeenCalledExactlyOnceWith('pt-BR');
+      });
+
+      it('should wait for the dayjs locale before calling #i18n.changeLanguage', async () => {
+        const atomicInterface = await setupElement();
+        (atomicInterface as BaseAtomicInterface<CommerceEngine>).language = 'fr';
+        const changeLanguageSpy = vi.spyOn(atomicInterface.i18n, 'changeLanguage');
+        const helper = new InterfaceController(atomicInterface, 'CoveoAtomic', VERSION);
+        const dayjsLocale = Promise.withResolvers<void>();
+        vi.mocked(loadDayjsLocale).mockReturnValueOnce(dayjsLocale.promise);
+
+        helper.onLanguageChange();
+        await flushPromises();
+
+        expect(changeLanguageSpy).not.toHaveBeenCalled();
+
+        dayjsLocale.resolve();
+        await vi.waitFor(() => expect(changeLanguageSpy).toHaveBeenCalledExactlyOnceWith('fr'));
       });
     });
   });

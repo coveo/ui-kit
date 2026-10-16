@@ -6,6 +6,8 @@ import {
   buildValidatedSurface,
   statePath,
   type A2uiComponentNode,
+  deleteSurfaceMessage,
+  loadingSurfaceMessage,
 } from './shared.js';
 import {
   ActivitySnapshot,
@@ -20,6 +22,8 @@ const runId = 'schema-comparison-462287cc';
 const COMPARISON_SURFACE_ID = 'comparison-surface';
 const COMPARISON_ROOT_ID = RENDERER_ROOT_ID;
 const NEXT_ACTIONS_SURFACE_ID = 'next-actions-surface';
+const PLACEHOLDER_COMPARISON_SURFACE_ID = `placeholder-${runId}-comparison`;
+const PLACEHOLDER_NEXT_ACTIONS_SURFACE_ID = `placeholder-${runId}-next-actions`;
 const NEXT_ACTIONS_ROOT_ID = RENDERER_ROOT_ID;
 
 // The comparison surface is a single leaf node: the comparison-table owns its heading, AI summary,
@@ -47,6 +51,7 @@ const comparisonSurfaceActivity: ConverseEvent = ActivitySnapshot({
   replace: true,
   content: {
     messages: [
+      deleteSurfaceMessage(PLACEHOLDER_COMPARISON_SURFACE_ID),
       {
         version: 'v1.0',
         createSurface: buildValidatedComparisonSurface(COMPARISON_SURFACE_NODES),
@@ -61,6 +66,7 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
   replace: true,
   content: {
     messages: [
+      deleteSurfaceMessage(PLACEHOLDER_NEXT_ACTIONS_SURFACE_ID),
       {
         version: 'v1.0',
         createSurface: {
@@ -169,6 +175,24 @@ const nextActionsStateActivity: ConverseEvent = UpdateDataModelActivity({
   ],
 });
 
+const comparisonPlaceholderActivity: ConverseEvent = ActivitySnapshot({
+  messageId: 'activity-comparison-table',
+  activityType: 'a2ui-surface',
+  replace: true,
+  content: {
+    messages: [loadingSurfaceMessage(PLACEHOLDER_COMPARISON_SURFACE_ID, 'ComparisonTable')],
+  },
+});
+
+const nextActionsPlaceholderActivity: ConverseEvent = ActivitySnapshot({
+  messageId: 'activity-next-actions',
+  activityType: 'a2ui-surface',
+  replace: true,
+  content: {
+    messages: [loadingSurfaceMessage(PLACEHOLDER_NEXT_ACTIONS_SURFACE_ID, 'NextActionsBar')],
+  },
+});
+
 const middleEvents: ConverseEvent[] = [
   ...toolCall({
     toolCallId: 'tc-route-comparison',
@@ -178,6 +202,7 @@ const middleEvents: ConverseEvent[] = [
     resultMessageId: 'tc-route-comparison-result',
     resultContent: '"Routed to comparison flow."',
   }),
+  {...comparisonPlaceholderActivity, delayMs: 300},
   ...toolCall({
     toolCallId: 'tc-store-render-plan',
     toolCallName: 'store_render_plan',
@@ -192,6 +217,7 @@ const middleEvents: ConverseEvent[] = [
   ),
   {...comparisonSurfaceActivity, delayMs: 2500},
   {...comparisonStateActivity, delayMs: 50},
+  {...nextActionsPlaceholderActivity, delayMs: 100},
   {...nextActionsSurfaceActivity, delayMs: 800},
   {...nextActionsStateActivity, delayMs: 50},
 ];

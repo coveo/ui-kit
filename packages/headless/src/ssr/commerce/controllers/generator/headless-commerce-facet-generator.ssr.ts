@@ -113,6 +113,9 @@ export type MappedFacetState = {
 
 /**
  * @group Definers
+ *
+ * @param options - Deprecated `listing` and `search` options, which will be removed in the next
+ * major version: omit them to build the controller for both search and product listing pages.
  */
 export function defineFacetGenerator<TOptions extends ControllerDefinitionOption | undefined>(
   options?: TOptions

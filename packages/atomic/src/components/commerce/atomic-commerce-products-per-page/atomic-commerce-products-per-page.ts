@@ -106,7 +106,7 @@ export class AtomicCommerceProductsPerPage
       ${when(
         !this.summaryState.hasError && this.summaryState.hasProducts && this.isAppLoaded,
         () => html`
-          <div class="flex items-center">
+          <div class="flex flex-wrap items-center">
             ${renderLabel()(html`${this.label}`)}
             ${renderFieldsetGroup({
               props: {
