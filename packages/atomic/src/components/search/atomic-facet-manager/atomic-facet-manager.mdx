@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import meta, { Default } from './atomic-facet-manager.new.stories';
+import meta, { Default, WithPopovers } from './atomic-facet-manager.new.stories';
 import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 import UsageContent from './atomic-facet-manager.usage.mdx';
 
 <Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={{ Default }}
+  stories={{ Default, WithPopovers }}
   githubPath="search/atomic-facet-manager/atomic-facet-manager.ts"
   tagName="atomic-facet-manager"
   className="AtomicFacetManager"
