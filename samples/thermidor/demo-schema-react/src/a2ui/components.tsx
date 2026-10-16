@@ -4,7 +4,10 @@ export {THERMIDOR_CATALOG_ID};
 import {ProductCarousel} from './ProductCarousel/ProductCarousel.js';
 import {NextActionsBar} from './NextActionsBar/NextActionsBar.js';
 import {BundleDisplay} from './BundleDisplay/BundleDisplay.js';
-import {ComparisonTable} from './ComparisonTable/ComparisonTable.js';
+import {
+  createComparisonTable,
+  type ComparisonTableOptions,
+} from './ComparisonTable/ComparisonTable.js';
 import {ProductList} from './ProductList/ProductList.js';
 import {ProductSummary} from './ProductSummary/ProductSummary.js';
 import {
@@ -24,6 +27,7 @@ import {PageSize} from './PageSize/PageSize.js';
 import {Breadbox} from './Breadbox/Breadbox.js';
 
 export interface ThermidorCatalogOptions {
+  comparisonTable?: ComparisonTableOptions;
   productResearchCard?: ProductResearchCardOptions;
 }
 
@@ -32,7 +36,7 @@ export function createThermidorCatalog(options: ThermidorCatalogOptions = {}) {
     ProductCarousel,
     NextActionsBar,
     BundleDisplay,
-    ComparisonTable,
+    createComparisonTable(options.comparisonTable),
     ProductList,
     ProductSummary,
     createProductResearchCard(options.productResearchCard),
