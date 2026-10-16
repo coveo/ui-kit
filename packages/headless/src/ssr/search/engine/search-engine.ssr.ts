@@ -130,18 +130,23 @@ export function defineSearchEngine<
     const baseOptions = buildOptions?.extend
       ? await buildOptions.extend(getOptions())
       : getOptions();
-    if (!baseOptions.navigatorContextProvider) {
+    const perRequestNavigatorContext = buildOptions?.navigatorContext;
+    const navigatorContextProvider = perRequestNavigatorContext
+      ? () => perRequestNavigatorContext
+      : baseOptions.navigatorContextProvider;
+    if (!navigatorContextProvider) {
       logger.warn(
-        '[WARNING] Missing navigator context in server-side code. Pass a `navigatorContextProvider` to defineSearchEngine().'
+        '[WARNING] Missing navigator context in server-side code. Pass a per-request `navigatorContext` to fetchStaticState() and hydrateStaticState(), or a `navigatorContextProvider` to defineSearchEngine().'
       );
     }
     const engine = buildSSRSearchEngine({
       ...baseOptions,
+      navigatorContextProvider,
       configuration: {
         ...baseOptions.configuration,
         preprocessRequest: augmentPreprocessRequestWithForwardedFor({
           preprocessRequest: baseOptions.configuration.preprocessRequest,
-          navigatorContextProvider: baseOptions.navigatorContextProvider,
+          navigatorContextProvider,
           loggerOptions: baseOptions.loggerOptions,
         }),
       },
