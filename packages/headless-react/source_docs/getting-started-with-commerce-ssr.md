@@ -19,7 +19,7 @@ Before getting started, make sure that:
 - You have a working knowledge of [React](https://react.dev/) and a React-based framework such as [Next.js](https://nextjs.org/).
 - You're familiar with Coveo Headless engines and controllers.
   You can refer to the [Headless usage documentation](https://docs.coveo.com/en/headless/latest/reference/documents/usage/index.html) for an introduction.
-- You have Node.js version 20 or later installed.
+- You have Node.js 20 (20.9.0 or later), 22 (22.11.0 or later), or 24 (24.11.0 or later) installed.
 
 ## Install
 
