@@ -211,6 +211,32 @@ describe('SSR', () => {
       });
     });
 
+    describe('when the definition has no navigator context provider', () => {
+      it('should log a warning that names the supported options', async () => {
+        const definitionWithoutProvider = defineSearchEngine({
+          configuration: {
+            ...getSampleSearchEngineConfiguration(),
+            analytics: {enabled: false},
+          },
+          loggerOptions: {level: 'warn'} as LoggerOptions,
+        });
+
+        await definitionWithoutProvider.build();
+
+        expect(mockedLoggerWarn).toHaveBeenCalledWith(
+          '[WARNING] Missing navigator context in server-side code. Pass a `navigatorContextProvider` to defineSearchEngine(), or use `@coveo/headless/ssr-next` to pass a per-request `navigatorContext` to fetchStaticState() and hydrateStaticState().'
+        );
+      });
+    });
+
+    it('should not warn about a missing navigator context when the definition has a navigatorContextProvider', async () => {
+      await engineDefinition.build();
+
+      expect(mockedLoggerWarn).not.toHaveBeenCalledWith(
+        expect.stringContaining('Missing navigator context')
+      );
+    });
+
     describe('with a static state', () => {
       let staticState: StaticState;
       beforeEach(async () => {
