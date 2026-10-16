@@ -144,6 +144,21 @@ Adopt **Option B**.
 The schema's lookup marker decides which lane a component action takes. Nothing in this package
 hard-codes action names.
 
+The split between lookups and everything else is permanent. The prompt and gesture behaviors are
+not. They mirror the producer's current concurrency rule: one request at a time per session, with
+a second request refused as `409 ACTION_IN_FLIGHT`. The producer may later queue prompts, and
+possibly gestures, and resolve the queue itself. When it does:
+
+- the session sends prompts and gestures at once, each with its per-session action sequence
+  number, instead of holding them back or chaining them;
+- a prompt stops preempting in-flight gestures. A gesture the producer has accepted is applied
+  whether or not the client still listens, so aborting its stream only loses the result;
+- each response still applies to the surfaces it targets, whenever it arrives, which session-scoped
+  surfaces already guarantee.
+
+Lookups need no change: they stay outside the turn slot, outside any queue, and take no sequence
+number.
+
 ### Serialization
 
 `serialize` persists the session's live surfaces and their state, replacing the active-turn-only
