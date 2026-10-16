@@ -6,7 +6,7 @@ Technical decisions, workarounds, and known limitations for `demo-schema-react`.
 
 This sample implements the inline component-state model recorded in [ADR-012](https://github.com/coveo-platform/thermidor-schema/blob/beta/docs/ADR-012-inline-component-state-a2-ui-data-model.md) of `@coveo/thermidor-schema` (which supersedes ADR-002's AG-UI state transport). Component state travels inline through the A2-UI data model via `/state/<id>` `updateDataModel` operations, and node props resolve from it through A2-UI Data_Binding objects `{ "path": <JSON Pointer> }`. Four points define the model:
 
-- **Validation runs inside `@coveo/thermidor`.** The sample injects the contract once (`ComponentContractsSchema`, passed as `contracts` to `createSession` in `src/context/session.tsx`) and never calls a validator itself. The session validates outbound action payloads before it sends them, and inbound `updateDataModel` ops before it applies them to `response.state`. The renderer is fed from `response.a2uiMessages` instead, which is not filtered; see [Known limitations](#inbound-updatedatamodel-ops-reach-the-renderer-without-validation).
+- **Validation runs inside `@coveo/thermidor`.** The sample injects the contract once (`ComponentContractsSchema`, passed as `contracts` to `createSession` in `src/context/session.tsx`) and never calls a validator itself. The session validates outbound action payloads before it sends them, and inbound `updateDataModel` ops before it applies them to `response.state`. The renderer is fed from `response.a2uiMessages` instead, which is not filtered; see [Known limitations](#inbound-component-state-reaches-the-renderer-without-validation).
 - **Display text comes from the agent; prices and counts are formatted locally.** Labels, headings, and summaries are rendered as the agent wrote them. Prices are formatted by `formatPrice` (`$12.34`) and result counts by `toLocaleString()`.
 - **A2-UI is the only supported source of component state.** The sample obtains component state solely through A2-UI (the `/state` data-model bindings); component state obtained through any non-A2-UI source is unsupported.
 - **Intentional divergence from A2-UI bidirectional input binding.** The sample deliberately does not use A2-UI standard bidirectional input components. In-progress user input (for example a facet search box being typed) is held in the sample's local React state and is never written to the shared A2-UI data model, and component actions are dispatched over the non-bidirectional HTTP Action_Channel.
@@ -64,7 +64,7 @@ When the renderer moves to Zod 4, switch every `@coveo/thermidor-schema/zod3` im
 The conversation is a single feed: every turn keeps its blocks on the page, and a search, a facet selection, and a question to the agent all stay in place.
 
 - **One renderer stream for the session.** `buildSurfaceStream` (`src/a2ui/surface-stream.ts`) concatenates every turn's `response.a2uiMessages`. Servers may reuse a surface id across turns (the mock does), and a later `createSurface` would then replace an earlier turn's block. Each surface is therefore drawn under a render id scoped to the turn that created it (`<turn id>/<surface id>`), and later operations on that server id are re-addressed to it. `toServerAction` maps a renderer action back to the server surface id before it is sent.
-- **Only the latest turn is interactive.** `@coveo/thermidor` resolves an action's component from the active turn's surfaces only. `TurnSurfaces` wraps earlier turns' blocks in a disabled `fieldset`, so they stay readable, selected facets included, but cannot be used.
+- **Only the latest turn is interactive.** `@coveo/thermidor` resolves an action's component from the active turn's surfaces only. `TurnSurfaces` wraps every turn but the latest in a disabled `fieldset`, so earlier blocks stay readable, selected facets included, but cannot be used. The sample treats the latest turn as the active one, which holds because it never calls `retry(turnId)`: retrying an earlier errored turn makes that turn active again while a later one is still the latest.
 - **Follow-up exchanges.** `@coveo/thermidor` streams an action's response into the turn that is already shown. For `NextActionsBar` actions (`selectAction`, `selectSearchOption`), `AppShell` records how much the turn held when the action was sent (`startFollowUp`), and `splitTurn` (`src/components/ConversationPage/turn-segments.ts`) draws the answer as its own exchange after the one it follows.
 
 ## Loading placeholders (✅ data-model driven)
@@ -109,7 +109,7 @@ A placeholder the agent abandons is deleted the same way. The mock templates emi
 
 A catalog component sends an action with the renderer's `context.dispatchAction(action)`. The renderer surfaces it as an A2-UI client-to-server message through the `onAction` handler of `A2UIProvider`, which `AppShell` wires to its own `handleAction`:
 
-- While an exchange streams (a prompt or a follow-up in flight), the action is dropped: `@coveo/thermidor` does not count an action's run as streaming, so a second action would race the first into the same turn.
+- While an exchange streams (a prompt or a follow-up in flight), the action is dropped. The session sends one action at a time, but an action's response streams into the turn already shown, and the session does not count that run as streaming: a second action's response would land in the same turn and be attributed to the follow-up exchange in progress, which breaks how `splitTurn` divides the turn.
 - The message is re-addressed to its server surface id (`toServerAction`).
 - `NextActionsBar` actions (`selectAction`, `selectSearchOption`) start a [follow-up exchange](#rendering-every-turn-on-one-page) before they are sent.
 - Every action goes through `useTrackedDispatch(session.actions)` (`src/a2ui/pending-dispatch.tsx`), a dispatch tracker over the session's client-side queue that coalesces repeated gestures and tracks which regions they make stale (see [Optimistic updates](#optimistic-updates)).
@@ -124,14 +124,14 @@ For a component action, `@coveo/thermidor`:
 The producer replies by writing updated component state inline through the A2-UI data model as `/state/<id>` `updateDataModel` operations:
 
 - A whole-component op targets the component's state root (`/state/<id>`); a partial op targets a sub-path beneath it and updates only the addressed fields (the incremental semantics of the A2-UI data model). The renderer owns the data model and re-resolves the affected `{ "path": ... }` bindings.
-- `@coveo/thermidor` validates each inbound op in transit (a whole-component op against the `*State` schema, a partial op against the sub-schema at its path) before applying it to `response.state`. The renderer stream is not filtered by that validation; see [Known limitations](#inbound-updatedatamodel-ops-reach-the-renderer-without-validation).
+- `@coveo/thermidor` validates each inbound op in transit (a whole-component op against the `*State` schema, a partial op against the sub-schema at its path) before applying it to `response.state`. The renderer stream is not filtered by that validation; see [Known limitations](#inbound-component-state-reaches-the-renderer-without-validation).
 
 ## Optimistic updates
 
 Search controls show the shopper's choice right away instead of waiting for the producer's reply:
 
-- `useOptimisticValue` (`src/a2ui/use-optimistic-value.ts`, over `createOptimisticValue` from `@coveo/thermidor`) holds the intended value while a gesture is outstanding, then lets the producer's value win. Sort, pagination, page size, and the facets and breadbox (`use-optimistic-*.ts` next to each component) build on it.
-- A gesture declares the regions it invalidates (`invalidates: ['results']`). While it is outstanding, `useStale('results')` dims the product list, query summary, and pagination (`result-freshness.module.css`).
+- `useOptimisticValue` (`src/a2ui/use-optimistic-value.ts`, over `createOptimisticValue` from `@coveo/thermidor`) holds the intended value while a gesture is outstanding, then lets the producer's value win. Sort, pagination, page size, and `NextActionsBar` call it directly in their component; the facets and the breadbox go through a `use-optimistic-*.ts` hook next to their component.
+- A gesture declares the regions it invalidates (`invalidates: ['results']`). While it is outstanding, `useStale('results')` dims the product list and query summary (`result-freshness.module.css`), and pagination freezes its page; all three set `aria-busy`.
 - Facet search keeps the typed text in local state (`use-optimistic-facet-search.ts`) rather than as an optimistic hold, so a keystroke that never reaches the producer leaves the field untouched. It is never written to the shared data model.
 
 ## Related decisions
@@ -160,9 +160,14 @@ How the sample follows them:
 
 ## Known limitations / Next steps
 
-### Inbound `updateDataModel` ops reach the renderer without validation
+### Inbound component state reaches the renderer without validation
 
-`@coveo/thermidor` validates inbound ops only on their way into `response.state`. `response.a2uiMessages` is derived from the raw activities, so the renderer applies every op, conforming or not, and the sample never reads `response.state`. A non-conforming op from the producer therefore still changes what the sample renders. Closing this gap belongs in `@coveo/thermidor` (filter the projected `updateDataModel` ops with the same decision), not in the sample.
+`@coveo/thermidor` validates inbound `updateDataModel` ops only on their way into `response.state`, and the sample never reads `response.state`. `response.a2uiMessages` is derived from the raw activities, so the renderer receives:
+
+- every `updateDataModel` op, conforming or not;
+- the state seeded inline by `createSurface.dataModel` (keys such as `/state/<nodeId>`), which the projection turns into `updateDataModel` ops and which `response.state` never reads at all.
+
+Non-conforming component state from the producer therefore still changes what the sample renders. Closing this gap belongs in `@coveo/thermidor`, not in the sample, and must cover both paths: filtering only the projected `updateDataModel` ops would still let the `createSurface.dataModel` seed through.
 
 ### Dynamic composition updates not exercised (facet reorder / add / remove)
 

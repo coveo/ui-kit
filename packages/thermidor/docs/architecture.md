@@ -125,7 +125,7 @@ interface Turn {
 }
 
 interface TurnResponse {
-  state: A2uiState; // validated A2-UI data model per surface, defaults to {}
+  state: A2uiState; // validated component state (/state/<id> ops) per surface, defaults to {}
   activities: Activity[]; // raw snapshot log, latest snapshot per messageId, defaults to []
   surfaces: DiscoveredSurface[]; // typed projection derived from activities
   a2uiMessages: A2uiV09Message[]; // renderer-ready v0.9 stream derived from activities
@@ -139,10 +139,10 @@ interface TurnResponse {
 
 The injected contracts schema is validated against at two boundaries, both inside the core, so a consumer never runs Zod ([ADR-016](./internal/adr/ADR-016-inline-state-consumption-remove-remote-controller.md)):
 
-- **Inbound state** (`src/session/in-transit-validation.ts`) — each `updateDataModel` op is resolved to its component through the node-identity registry and validated in transit: a whole-component op (`/state/<id>`) against the component's `*State` schema, a partial op against the sub-schema at its path. A conforming op is applied to `response.state`; a non-conforming one is dropped, so the previous value stays.
+- **Inbound state** (`src/session/in-transit-validation.ts`) — each `updateDataModel` op is resolved to its component through the node-identity registry and validated in transit: a whole-component op (`/state/<id>`) against the component's `*State` schema, a partial op against the sub-schema at its path. A conforming op is applied to `response.state`. An op whose path is outside `/state/<id>` of a present component (for example `/isLoading` or `/`) is dropped as `unresolved-path`, and a non-conforming one is dropped too, so the previous value stays. `createSurface.dataModel` is never read into `response.state`.
 - **Outbound actions** (`src/session/action-payload-validation.ts`) — an action's payload is validated against the component's action schema before the POST; a non-conforming one is withheld.
 
-`response.a2uiMessages` is derived from the raw activities, not from `response.state`, so a renderer fed from it receives every inbound op, including those in-transit validation drops (see [Recorded interim debt](#recorded-interim-debt-and-out-of-scope-items)).
+`response.a2uiMessages` is derived from the raw activities, not from `response.state`, so a renderer fed from it receives every inbound op, including those in-transit validation drops, and the component state seeded by `createSurface.dataModel`, which is never validated (see [Recorded interim debt](#recorded-interim-debt-and-out-of-scope-items)).
 
 ## Action queue and optimistic updates
 
@@ -150,7 +150,7 @@ Component actions go through one per-session dispatch coordinator (`src/actions/
 
 `createOptimisticValue` (`src/optimistic/optimistic-value.ts`) holds a control's intended value while its gesture is outstanding and ignores the producer's value meanwhile, then lets the producer win once the last gesture settles. A gesture declares its action, the value it expects (`next`), its `coalesce` policy, and the regions it `invalidates`.
 
-The coordinator, `session.actions`, and the coalescing part of the optimistic controller are scoped for removal once the producer owns the action queue; stale scopes are not.
+The coordinator, the dispatch tracker, `session.actions`, and the coalescing part of the optimistic controller are scoped for removal once the producer owns the action queue; stale scopes are not.
 
 ## Injected schema, endpoint, and context
 
@@ -201,7 +201,7 @@ These are intentionally **not yet implemented**:
 - **Interim `response.surfaces` derivation** from raw activities (ADR-015 interim) — see above.
 - **The v0.9 renderer projection** (ADR-015 addendum) — removed in a breaking change once a v1.0-capable renderer exists.
 - **The client-side action queue** (`src/actions`, `session.actions`) — removed once the producer owns the queue.
-- **Renderer stream bypasses validation** — `response.a2uiMessages` is projected from raw activities, so inbound ops that in-transit validation drops from `response.state` still reach the renderer.
+- **Renderer stream bypasses validation** — `response.a2uiMessages` is projected from raw activities, so inbound ops that in-transit validation drops from `response.state` still reach the renderer, and so does the component state seeded by `createSurface.dataModel`, which is never validated. A fix must cover both: filtering only the projected `updateDataModel` ops still lets the seed through without validation.
 - **Enforced action-payload typing at the renderer boundary** — per-component action typing is applied by convention rather than at the `dispatchAction` boundary ([ADR-016](./internal/adr/ADR-016-inline-state-consumption-remove-remote-controller.md)).
 - **The package rename** — deferred as low-stakes; the package remains `@coveo/thermidor`.
 

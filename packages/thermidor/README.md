@@ -102,7 +102,7 @@ interface Turn {
 }
 
 interface TurnResponse {
-  state: A2uiState; // validated A2-UI data model per surface, defaults to {}
+  state: A2uiState; // validated component state (/state/<id> ops) per surface, defaults to {}
   activities: Activity[]; // raw snapshot log, latest snapshot per messageId, defaults to []
   surfaces: DiscoveredSurface[]; // typed projection derived from activities
   a2uiMessages: A2uiV09Message[]; // renderer-ready A2-UI v0.9 stream derived from activities
@@ -118,7 +118,7 @@ interface TurnResponse {
 
 ## Validation and displayed values
 
-- **Client-side validation is retained, transparently.** The injected `contracts` schema stays the sole validation source, but the consumer never runs Zod and writes no adapter glue. Inbound `updateDataModel` ops are validated on the fold before they are applied to `response.state`; outbound action payloads are validated in the private dispatch path before the POST. Both boundaries live inside the core. `response.a2uiMessages` is derived from the raw stream, so the renderer still receives an op that validation drops from `response.state`.
+- **Client-side validation is retained, transparently.** The injected `contracts` schema stays the sole validation source, but the consumer never runs Zod and writes no adapter glue. Inbound `updateDataModel` ops are validated on the fold before they are applied to `response.state`; outbound action payloads are validated in the private dispatch path before the POST. Both boundaries live inside the core. `response.a2uiMessages` is derived from the raw stream, so the renderer still receives an op that validation drops from `response.state`, and the component state seeded by `createSurface.dataModel`, which is never validated.
 - **Displayed-value formatting is agent-produced.** The renderer shows the state it receives through its `{ path }` bindings; Thermidor does not reformat displayed values.
 
 ## Injected schema, endpoint, and context
@@ -138,7 +138,7 @@ The following are intentionally **not yet implemented** and are recorded as debt
 - **Interim `response.surfaces` derivation** — `surfaces` is a typed projection derived from `activities` in the fold, annotated as interim per [ADR-015](./docs/internal/adr/ADR-015-surface-and-route-derivation.md); the core interprets no `rootComponentType`; consumers read it. It is retired by a future server-surfaced typed-routing ADR (ADR-015 Option C).
 - **The A2-UI v0.9 renderer projection** — `response.a2uiMessages` downgrades Agent Gateway's v1.0 stream for today's v0.9 renderers, per the [ADR-015](./docs/internal/adr/ADR-015-surface-and-route-derivation.md) addendum. Removed in a breaking change once a v1.0-capable renderer exists.
 - **The client-side action queue** — `session.actions` and the dispatch coordinator are removed once the producer owns the queue.
-- **Renderer stream bypasses validation** — inbound ops that in-transit validation drops from `response.state` still reach the renderer through `response.a2uiMessages`.
+- **Renderer stream bypasses validation** — inbound ops that in-transit validation drops from `response.state` still reach the renderer through `response.a2uiMessages`, and so does the component state seeded by `createSurface.dataModel`, which is never validated. A fix must cover both paths.
 - **Enforced action-payload typing at the renderer boundary** — the renderer hands `dispatchAction` a loosely typed action message, so per-component action typing is applied by convention (the consumer opts into the generated `XxxAction` types) rather than enforced at the boundary, per [ADR-016](./docs/internal/adr/ADR-016-inline-state-consumption-remove-remote-controller.md). Recoverable later if the package owns binding resolution.
 - **Package rename** — deferred as low-stakes; the package remains `@coveo/thermidor`.
 
