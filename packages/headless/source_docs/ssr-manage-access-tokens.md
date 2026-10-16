@@ -154,7 +154,6 @@ Because `renewAccessToken` is part of the engine configuration, it applies to ev
 `setAccessToken()` on the engine definition is deprecated and will be removed in a future major version.
 It writes to the shared engine definition, which is unsafe on a server handling concurrent requests: calling it for one request changes the token for the others in flight at the same time — one user could end up issuing requests with another user’s token.
 Use the per-request `accessToken` to choose the token for a request, and `renewAccessToken` to rotate an expiring one.
-On the `@coveo/headless/ssr-commerce-next` sub-package, `setAccessToken()` and `getAccessToken()` have already been removed.
 
 ## Summary
 
