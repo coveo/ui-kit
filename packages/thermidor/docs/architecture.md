@@ -167,6 +167,8 @@ Persisting `response.state` for the active turn only is a deliberate coupling wi
 
 `response.surfaces` is a typed projection of `activities`, so no consumer walks raw activities to discover surfaces. Derivation is confined to a single location in `fold.ts`, and that location is the **only** place that knows the `'commerce-search'` root-component-type magic string. Both the raw-activity traversal and the literal are recorded interim debt per [ADR-015](./internal/adr/ADR-015-surface-and-route-derivation.md); they persist until server-surfaced typed routing lands (ADR-015 Option C, a separate future ADR). Because `surfaces` is derived (never persisted), dropping it and recomputing from `activities` reproduces a deeply-equal list.
 
+Derivation follows the A2-UI surface lifecycle in stream order: `deleteSurface` removes a surface from the list, and a re-created surface moves to the end. Each `DiscoveredSurface` also carries `isLoading`, read from the surface's effective data model (`createSurface.dataModel`, then any `updateDataModel` at `/`, with no path, or at `/isLoading`), so a consumer can draw a loading placeholder for its `rootComponentType` until the agent deletes the surface or clears the flag.
+
 ## Recorded interim debt and out-of-scope items
 
 These are intentionally **not yet implemented**:

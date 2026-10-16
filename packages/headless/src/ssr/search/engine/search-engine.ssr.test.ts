@@ -220,11 +220,11 @@ describe('SSR', () => {
         });
       }
 
-      it('should warn about the missing navigator context', async () => {
+      it('should log a warning that names the supported options', async () => {
         await defineSearchEngineWithoutNavigatorContext().build();
 
         expect(mockedLoggerWarn).toHaveBeenCalledWith(
-          expect.stringContaining('Missing navigator context')
+          '[WARNING] Missing navigator context in server-side code. Pass a `navigatorContextProvider` to defineSearchEngine().'
         );
       });
 
@@ -240,6 +240,14 @@ describe('SSR', () => {
           expect.stringContaining('Missing navigator context')
         );
       });
+    });
+
+    it('should not warn about a missing navigator context when the definition has a navigatorContextProvider', async () => {
+      await engineDefinition.build();
+
+      expect(mockedLoggerWarn).not.toHaveBeenCalledWith(
+        expect.stringContaining('Missing navigator context')
+      );
     });
 
     describe('x-forwarded-for header', () => {

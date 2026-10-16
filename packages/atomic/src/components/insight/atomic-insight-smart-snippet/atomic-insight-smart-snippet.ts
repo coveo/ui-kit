@@ -141,10 +141,10 @@ export class AtomicInsightSmartSnippet
 
     return html`<atomic-smart-snippet-source
       .anchorAttributes=${getAttributesFromLinkSlotContent(this, 'source-anchor-attributes')}
-      .onBeginDelayedSelectSource=${this.smartSnippet.beginDelayedSelectSource}
-      .onCancelPendingSelectSource=${this.smartSnippet.cancelPendingSelectSource}
-      .onSelectSource=${this.smartSnippet.selectSource}
       .source=${source}
+      @select-source=${() => this.smartSnippet.selectSource()}
+      @begin-delayed-select-source=${() => this.smartSnippet.beginDelayedSelectSource()}
+      @cancel-pending-select-source=${() => this.smartSnippet.cancelPendingSelectSource()}
     ></atomic-smart-snippet-source>`;
   }
 

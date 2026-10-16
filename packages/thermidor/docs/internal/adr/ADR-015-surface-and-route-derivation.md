@@ -214,3 +214,60 @@ rather than in the server.
 `a2uiMessages` follows the same rule as `surfaces`: never persisted, re-derived from
 persisted `activities` on restore. A property test asserts the projection is a pure,
 re-derivable function of the activity list.
+
+## Addendum (2026-10-13): loading placeholders follow the A2-UI surface lifecycle
+
+A2-UI v1.0 defines no skeleton. The commerce catalog declares an optional `isLoading` flag on
+each display component's data model, and the agent streams a loading placeholder as a
+`createSurface` whose `dataModel.isLoading` is `true`. Consumers used to tell placeholders apart
+by `surfaceId` conventions (`skeleton-` prefix, `-default` suffix) and by reasoning steps, which
+the spec treats as opaque.
+
+`DiscoveredSurface` now carries `isLoading`, so the typed `response.surfaces` projection is all a
+consumer needs:
+
+- **whether** to draw a placeholder: `isLoading`;
+- **which** placeholder: `rootComponentType`;
+- **when it ends**: the surface leaves `response.surfaces`.
+
+Surface derivation follows the stream in order rather than collecting every `createSurface`:
+
+- `deleteSurface` removes a surface, and a later `createSurface` with the same id re-adds it at
+  the end. A `createSurface` without a `catalogId` (a spec error) is ignored, as the v0.9
+  projection drops it, so no consumer draws a placeholder the renderer never receives. A
+  duplicate `createSurface` without a delete (a spec error) is collapsed into its
+  latest creation at the end of `surfaces`, while the v0.9 projection forwards both. Both errors
+  log a development-only warning (`devWarn`) once, when the snapshot carrying them is folded, not
+  on every re-derivation;
+- `isLoading` reads the effective data model: `createSurface.dataModel`, then any
+  `updateDataModel` written at `/` (or with no or an empty path) or at `/isLoading`. Today the
+  agent ends a placeholder with `deleteSurface` and creates the content as a new surface. Reading
+  the effective data model keeps the projection correct if it later fills the placeholder in
+  place. It reads the raw `updateDataModel` ops, whereas `response.state` applies only the ops
+  that pass in-transit validation.
+
+A `replace` snapshot is merged onto the activity it supersedes, carrying forward the earlier
+data-model slices and topology it does not rewrite, except for a surface it creates or deletes:
+that surface's earlier slices and components end with it.
+
+The v0.9 projection follows the same lifecycle:
+
+- a plain inline data-model key seeds its root JSON Pointer (`isLoading` → `/isLoading`), since
+  the spec's inline data model is the surface's root object; keys already written as pointers
+  (`/state/<nodeId>`) are kept, and an empty key, which names no property, seeds nothing;
+- a `deleteSurface` is dropped when its surface was created earlier in the turn's stream (or by
+  a superseded version of one of its activities) and is no longer live. Any other delete is
+  forwarded, since the projection is derived per turn and a later turn may delete a surface an
+  earlier turn created.
+
+The renderer itself ignores a delete for a surface it does not hold. The hazard is in the
+consumer that merges every turn into one renderer stream: it re-addresses a delete to the
+surface that holds that id, which can be an earlier turn's surface with the same id. Dropping a
+delete whose surface this turn already created and deleted keeps it from removing that earlier
+surface.
+
+Inside the live fold, the superseded-version case almost never applies: the fold merges a
+`replace` snapshot into the activity it supersedes, so the superseded `createSurface` is no
+longer among the turn's activities, and a delete for it is forwarded. A consumer that merges turns
+would then apply it to an earlier turn's surface only if a placeholder reused the id of a surface
+an earlier turn still shows; placeholder ids are expected to be fresh.

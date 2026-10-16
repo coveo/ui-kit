@@ -458,3 +458,105 @@ describe('unconvertible v1.0 messages are dropped, leaving prior state intact', 
     );
   });
 });
+
+describe('deriveA2uiV09Messages loading placeholders', () => {
+  const loadingSurface = (surfaceId: string) => ({
+    version: 'v1.0',
+    createSurface: {
+      surfaceId,
+      catalogId: 'commerce',
+      components: [{id: 'root', component: 'ProductCarousel'}],
+      dataModel: {isLoading: true},
+    },
+  });
+
+  const deleteSurface = (surfaceId: string) => ({version: 'v1.0', deleteSurface: {surfaceId}});
+
+  it('seeds a plain inline data-model key at its root JSON Pointer', () => {
+    expect(project([loadingSurface('skel')])).toContainEqual({
+      version: 'v0.9',
+      updateDataModel: {surfaceId: 'skel', path: '/isLoading', value: true},
+    });
+  });
+
+  it('escapes a plain key that contains pointer delimiters', () => {
+    const result = project([
+      {
+        version: 'v1.0',
+        createSurface: {surfaceId: 's', catalogId: 'commerce', dataModel: {'a/b~c': 1}},
+      },
+    ]);
+
+    expect(result).toContainEqual({
+      version: 'v0.9',
+      updateDataModel: {surfaceId: 's', path: '/a~1b~0c', value: 1},
+    });
+  });
+
+  it('forwards a deleteSurface for a surface created earlier in the stream', () => {
+    const result = deriveA2uiV09Messages([
+      surfaceActivity([loadingSurface('skel')], {id: 'activity-1'}),
+      surfaceActivity([deleteSurface('skel')], {id: 'activity-2'}),
+    ]);
+
+    expect(result.at(-1)).toEqual({version: 'v0.9', deleteSurface: {surfaceId: 'skel'}});
+  });
+
+  // The fold merges a replace snapshot into the activity it supersedes, so it never hands the
+  // projection both versions; this feeds the raw activity list directly.
+  it('drops a deleteSurface whose createSurface a replace snapshot superseded', () => {
+    const result = deriveA2uiV09Messages([
+      surfaceActivity([loadingSurface('skel')], {id: 'activity-1'}),
+      surfaceActivity([deleteSurface('skel')], {id: 'activity-1', replace: true}),
+    ]);
+
+    expect(result).toEqual([]);
+  });
+
+  it('drops a second deleteSurface for the same surface', () => {
+    const result = deriveA2uiV09Messages([
+      surfaceActivity([loadingSurface('skel')], {id: 'activity-1'}),
+      surfaceActivity([deleteSurface('skel'), deleteSurface('skel')], {id: 'activity-2'}),
+    ]);
+
+    expect(result.filter((message) => 'deleteSurface' in message)).toHaveLength(1);
+  });
+
+  it('drops a deleteSurface for a surface a superseded version of another activity created', () => {
+    const result = deriveA2uiV09Messages([
+      surfaceActivity([loadingSurface('skel')], {id: 'activity-1'}),
+      surfaceActivity([], {id: 'activity-1', replace: true}),
+      surfaceActivity([deleteSurface('skel')], {id: 'activity-2'}),
+    ]);
+
+    expect(result).toEqual([]);
+  });
+
+  it('forwards a deleteSurface for a surface an earlier turn created', () => {
+    const result = deriveA2uiV09Messages([
+      surfaceActivity([deleteSurface('earlier-turn-surface')], {id: 'activity-1'}),
+    ]);
+
+    expect(result).toEqual([{version: 'v0.9', deleteSurface: {surfaceId: 'earlier-turn-surface'}}]);
+  });
+
+  it('forwards a deleteSurface that precedes the creation of the same surface id', () => {
+    const result = deriveA2uiV09Messages([
+      surfaceActivity([deleteSurface('content')], {id: 'activity-1'}),
+      surfaceActivity([loadingSurface('content')], {id: 'activity-2'}),
+    ]);
+
+    expect(result[0]).toEqual({version: 'v0.9', deleteSurface: {surfaceId: 'content'}});
+  });
+
+  it('seeds no data-model write for an empty inline key', () => {
+    const result = project([
+      {
+        version: 'v1.0',
+        createSurface: {surfaceId: 's', catalogId: 'commerce', dataModel: {'': {wiped: true}}},
+      },
+    ]);
+
+    expect(result.some((message) => 'updateDataModel' in message)).toBe(false);
+  });
+});

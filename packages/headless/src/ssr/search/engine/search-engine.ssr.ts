@@ -132,7 +132,7 @@ export function defineSearchEngine<
       : getOptions();
     if (!baseOptions.navigatorContextProvider) {
       logger.warn(
-        '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
+        '[WARNING] Missing navigator context in server-side code. Pass a `navigatorContextProvider` to defineSearchEngine().'
       );
     }
     const engine = buildSSRSearchEngine({
