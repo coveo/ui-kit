@@ -127,14 +127,14 @@ export function defineSearchEngine<
 
   const build: BuildFunction = async (...[buildOptions]: BuildParameters) => {
     const logger = buildLogger(options.loggerOptions);
-    if (!getOptions().navigatorContextProvider) {
+    const baseOptions = buildOptions?.extend
+      ? await buildOptions.extend(getOptions())
+      : getOptions();
+    if (!baseOptions.navigatorContextProvider) {
       logger.warn(
         '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
       );
     }
-    const baseOptions = buildOptions?.extend
-      ? await buildOptions.extend(getOptions())
-      : getOptions();
     const engine = buildSSRSearchEngine({
       ...baseOptions,
       configuration: {

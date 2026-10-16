@@ -212,7 +212,36 @@ describe('SSR', () => {
       });
     });
 
-    describe('when fetching the static state for several requests', () => {
+    describe('when the definition has no navigator context provider', () => {
+      function defineSearchEngineWithoutNavigatorContext() {
+        return defineSearchEngine({
+          configuration: {...getSampleSearchEngineConfiguration(), analytics: {enabled: false}},
+        });
+      }
+
+      it('should warn about the missing navigator context', async () => {
+        await defineSearchEngineWithoutNavigatorContext().build();
+
+        expect(mockedLoggerWarn).toHaveBeenCalledWith(
+          expect.stringContaining('Missing navigator context')
+        );
+      });
+
+      it('should not warn when extend sets a navigator context provider', async () => {
+        await defineSearchEngineWithoutNavigatorContext().build({
+          extend: (options) => ({
+            ...options,
+            navigatorContextProvider: buildMockNavigatorContextProvider(),
+          }),
+        });
+
+        expect(mockedLoggerWarn).not.toHaveBeenCalledWith(
+          expect.stringContaining('Missing navigator context')
+        );
+      });
+    });
+
+    describe('x-forwarded-for header', () => {
       let forwardedForPerSearchRequest: (string | null)[];
 
       beforeEach(() => {
@@ -246,6 +275,21 @@ describe('SSR', () => {
         await engineDefinition.fetchStaticState();
 
         expect(forwardedForPerSearchRequest).toEqual(['1.1.1.1', '2.2.2.2']);
+      });
+
+      it('should send the x-forwarded-for header of the navigator context set through extend', async () => {
+        engineDefinition.setNavigatorContextProvider(
+          buildMockNavigatorContextProvider({forwardedFor: '1.1.1.1'})
+        );
+        const buildResult = await engineDefinition.build({
+          extend: (options) => ({
+            ...options,
+            navigatorContextProvider: buildMockNavigatorContextProvider({forwardedFor: '3.3.3.3'}),
+          }),
+        });
+        await engineDefinition.fetchStaticState.fromBuildResult({buildResult});
+
+        expect(forwardedForPerSearchRequest).toEqual(['3.3.3.3']);
       });
     });
 
