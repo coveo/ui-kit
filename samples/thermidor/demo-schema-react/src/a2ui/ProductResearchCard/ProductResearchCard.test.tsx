@@ -69,7 +69,7 @@ function mountResearchCard(
 
 async function documentLinks() {
   await waitFor(() => expect(screen.queryByText(SUMMARY)).not.toBeNull());
-  const section = screen.queryByRole('region', {name: 'Related documents'});
+  const section = screen.queryByRole('region', {name: 'Documentation & manuals'});
   return section === null
     ? []
     : Array.from(section.querySelectorAll('a')).map((link) => ({
@@ -162,7 +162,17 @@ describe('ProductResearchCard', () => {
     expect(await documentLinks()).toEqual([
       {text: 'Owner manual 1', href: 'https://example.com/manual-1.pdf'},
     ]);
-    expect(screen.queryByText('PDF · 1.5 MB')).not.toBeNull();
+    expect(screen.queryByText('PDF - 1.5 MB')).not.toBeNull();
+  });
+
+  it('lists the related documents under the card, outside its panel', async () => {
+    mountResearchCard(PRODUCT, {relatedDocuments: [relatedDocument(1)]});
+
+    await waitFor(() => expect(screen.queryByText(SUMMARY)).not.toBeNull());
+    const card = screen.getByRole('article', {name: /^Product research: /});
+    const documents = screen.getByRole('region', {name: 'Documentation & manuals'});
+    expect(card.contains(documents)).toBe(false);
+    expect(card.compareDocumentPosition(documents) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   it('lists at most 10 related documents by default, in the order they were sent', async () => {
@@ -195,7 +205,7 @@ describe('ProductResearchCard', () => {
     });
 
     await waitFor(() => expect(screen.queryByText(SUMMARY)).not.toBeNull());
-    expect(screen.queryByRole('region', {name: 'Related documents'})).toBeNull();
+    expect(screen.queryByRole('region', {name: 'Documentation & manuals'})).toBeNull();
   });
 
   it.each([
@@ -246,19 +256,19 @@ describe('ProductResearchCard', () => {
     expect(await documentLinks()).toEqual([
       {text: 'Owner manual 1', href: 'https://example.com/manual-1.pdf'},
     ]);
-    expect(screen.queryByText(/PDF|KB/)).toBeNull();
+    expect(screen.queryByText(/PDF|kB/)).toBeNull();
   });
 
   it('renders no related documents section when the agent sends none', async () => {
     mountResearchCard(PRODUCT);
 
     await waitFor(() => expect(screen.queryByText(SUMMARY)).not.toBeNull());
-    expect(screen.queryByRole('region', {name: 'Related documents'})).toBeNull();
+    expect(screen.queryByRole('region', {name: 'Documentation & manuals'})).toBeNull();
     cleanup();
 
     mountResearchCard(PRODUCT, {relatedDocuments: []});
     await waitFor(() => expect(screen.queryByText(SUMMARY)).not.toBeNull());
-    expect(screen.queryByRole('region', {name: 'Related documents'})).toBeNull();
+    expect(screen.queryByRole('region', {name: 'Documentation & manuals'})).toBeNull();
   });
 });
 
@@ -266,10 +276,11 @@ describe('formatDocumentSize', () => {
   it.each([
     [0, '0 B'],
     [512, '512 B'],
-    [2048, '2 KB'],
+    [2048, '2 kB'],
+    [333200, '333.2 kB'],
     [1536000, '1.5 MB'],
-    [1048575, '1 MB'],
-    [3 * 1024 ** 3, '3 GB'],
+    [999950, '1 MB'],
+    [3 * 1000 ** 3, '3 GB'],
     [Number.NaN, ''],
     [-1, ''],
   ])('formats %d bytes as %s', (bytes, expected) => {
