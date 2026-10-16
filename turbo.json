@@ -179,7 +179,6 @@
       "outputs": [
         "dist/**",
         "cdn/**",
-        "docs/**",
         "temp/**",
         "coverage/**",
         ".next/**",
