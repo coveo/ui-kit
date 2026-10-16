@@ -291,10 +291,7 @@ type ConditionalControllerProps<
 
 /**
  * @deprecated The `listing` and `search` options will be removed in the next major version. Omit
- * them: the definers that accept them (`defineBreadcrumbManager`, `defineFacetGenerator`,
- * `defineParameterManager`, `definePagination`, `defineProductList`, `defineSort` and
- * `defineSummary`) then build the controller for both search and product listing pages, which is
- * what the same definers on `@coveo/headless/ssr-commerce-next` always do.
+ * them to build the controller for both search and product listing pages.
  */
 export interface ControllerDefinitionOption {
   /**
