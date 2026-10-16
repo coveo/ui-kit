@@ -1,6 +1,6 @@
 import type {i18n} from 'i18next';
 import {html, nothing} from 'lit';
-import {keyed} from 'lit/directives/keyed.js';
+import {keyed} from '@/src/directives/keyed';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {renderButton} from '../button';
 
