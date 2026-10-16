@@ -29,7 +29,7 @@ import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerc
 import '../atomic-commerce-numeric-facet/atomic-commerce-numeric-facet';
 import '../atomic-commerce-timeframe-facet/atomic-commerce-timeframe-facet';
 import type {FacetType, MappedGeneratedFacetController} from '@coveo/headless/commerce';
-import {keyed} from 'lit/directives/keyed.js';
+import {keyed} from '@/src/directives/keyed';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 

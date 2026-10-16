@@ -6,7 +6,7 @@ import {
 } from '@coveo/headless/commerce';
 import {html, LitElement, nothing, render} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {keyed} from 'lit/directives/keyed.js';
+import {keyed} from '@/src/directives/keyed';
 import type {ItemRenderingFunction} from '@/src/components/common/item-list/item-list-common';
 import type {
   ItemDisplayDensity,

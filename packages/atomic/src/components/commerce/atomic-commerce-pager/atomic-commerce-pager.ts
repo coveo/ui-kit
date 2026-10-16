@@ -9,7 +9,7 @@ import {
 } from '@coveo/headless/commerce';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {keyed} from 'lit/directives/keyed.js';
+import {keyed} from '@/src/directives/keyed';
 import {when} from 'lit/directives/when.js';
 import {createAppLoadedListener} from '@/src/components/common/interface/store';
 import {

@@ -9,7 +9,7 @@ import {
 } from '@coveo/headless/commerce';
 import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {keyed} from 'lit/directives/keyed.js';
+import {keyed} from '@/src/directives/keyed';
 import {map} from 'lit/directives/map.js';
 import {when} from 'lit/directives/when.js';
 import {ProductTemplateProvider} from '@/src/components/commerce/product-list/product-template-provider';
