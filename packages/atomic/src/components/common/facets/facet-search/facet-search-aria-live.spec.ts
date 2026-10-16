@@ -1,5 +1,6 @@
 import type {Facet, FacetSearchState} from '@coveo/headless';
 import type {i18n} from 'i18next';
+import type {ReactiveController, ReactiveControllerHost} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
 import {announceFacetSearchResultsWithAriaLive} from './facet-search-aria-live';
 
@@ -13,7 +14,9 @@ function createFacet(initial: Partial<FacetSearchState>) {
     state: {facetSearch: initial as FacetSearchState},
     subscribe(cb: () => void) {
       listener = cb;
-      return () => {};
+      return () => {
+        listener = () => {};
+      };
     },
     emit(next: Partial<FacetSearchState>) {
       facet.state.facetSearch = next as FacetSearchState;
@@ -31,13 +34,21 @@ describe('#announceFacetSearchResultsWithAriaLive', () => {
   const setup = (initial: Partial<FacetSearchState>) => {
     const facet = createFacet(initial);
     const setAriaLive = vi.fn();
+    const controllers: ReactiveController[] = [];
+    const host = {
+      addController(controller: ReactiveController) {
+        controllers.push(controller);
+        controller.hostConnected?.();
+      },
+    } as unknown as ReactiveControllerHost;
     announceFacetSearchResultsWithAriaLive(
+      host,
       facet as unknown as FacetSearch,
       'My Facet',
       setAriaLive,
       i18n
     );
-    return {facet, setAriaLive};
+    return {facet, setAriaLive, controllers};
   };
 
   it('announces the count when a search finishes with results', () => {
@@ -80,5 +91,22 @@ describe('#announceFacetSearchResultsWithAriaLive', () => {
     });
     facet.emit({query: '', values: [], isLoading: false});
     expect(setAriaLive).not.toHaveBeenCalled();
+  });
+
+  it('stops announcing once the host is disconnected and resumes when it reconnects', () => {
+    const {facet, setAriaLive, controllers} = setup({
+      query: '',
+      values: [],
+      isLoading: false,
+    });
+    controllers[0].hostDisconnected?.();
+    facet.emit({query: 'co', values: [], isLoading: true});
+    facet.emit({query: 'co', values: [{}, {}] as never, isLoading: false});
+    expect(setAriaLive).not.toHaveBeenCalled();
+
+    controllers[0].hostConnected?.();
+    facet.emit({query: 'cov', values: [], isLoading: true});
+    facet.emit({query: 'cov', values: [{}] as never, isLoading: false});
+    expect(setAriaLive).toHaveBeenCalledExactlyOnceWith('1 in My Facet');
   });
 });
