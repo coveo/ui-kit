@@ -216,6 +216,7 @@ describe('SSR', () => {
       function defineSearchEngineWithoutNavigatorContext() {
         return defineSearchEngine({
           configuration: {...getSampleSearchEngineConfiguration(), analytics: {enabled: false}},
+          controllers: {},
         });
       }
 
