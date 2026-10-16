@@ -140,6 +140,18 @@ const rsbuild = await rsbuildApi.createRsbuild({
     performance: {
       chunkSplit: {
         strategy: 'split-by-module',
+        override: {
+          cacheGroups: {
+            // Keep each lazily imported dayjs locale in its own chunk; otherwise
+            // split-by-module folds all 140+ of them into the dayjs chunk every page loads.
+            dayjsLocales: {
+              test: /node_modules[\\/]dayjs[\\/]locale[\\/]/,
+              priority: 0,
+              name: false,
+              reuseExistingChunk: true,
+            },
+          },
+        },
       },
     },
   },
