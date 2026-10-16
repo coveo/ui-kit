@@ -27,3 +27,22 @@
 .readOnly label:has(:disabled) {
   pointer-events: none;
 }
+
+/* Dimmed only after a short delay, so a fast response never flashes the controls. */
+.surfaces :is(button, input, select) {
+  transition: opacity 0s;
+}
+
+.locked :is(button, input, select):disabled {
+  opacity: 0.55;
+  transition: opacity 120ms ease-in 150ms;
+}
+
+.locked {
+  cursor: progress;
+}
+
+.locked :is(button, input, select):disabled,
+.locked label:has(:disabled) {
+  pointer-events: none;
+}

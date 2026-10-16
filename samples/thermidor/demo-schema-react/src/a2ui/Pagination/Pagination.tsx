@@ -2,7 +2,7 @@ import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {PaginationAction} from '@coveo/thermidor-schema';
 import {PaginationPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {useOptimisticValue} from '../use-optimistic-value.js';
-import {useStale} from '../pending-dispatch.js';
+import {useRequestState} from '../request-state.js';
 import styles from './Pagination.module.css';
 
 const NUMBER_OF_PAGES = 5;
@@ -20,7 +20,7 @@ export const Pagination = createReactComponent(
       }
     );
     // Frozen while stale: a sibling `setPageSize` may change `totalPages` under us.
-    const resultsStale = useStale('results');
+    const resultsStale = useRequestState().actionInFlight;
 
     // An unresolved `totalPages` would slip past the `<= 1` guard and send a NaN `selectPage`.
     if (heldPage === undefined || totalPages === undefined) {
@@ -50,8 +50,6 @@ export const Pagination = createReactComponent(
       dispatchOptimistic({
         action: selectPageAction,
         next: () => newPage,
-        coalesce: 'absolute',
-        invalidates: ['results'],
       });
     };
 

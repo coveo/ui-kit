@@ -27,11 +27,6 @@ const ellipsePath = (path: string[]): string[] =>
  * `useOptimisticCategoryFacet` — descending holds the clicked node on screen, going back up and
  * clearing dim the result set without holding a value — and the search input in
  * `useOptimisticFacetSearch`.
- *
- * Invalidation is explicit per gesture: the facet-search gestures (search/clearSearch/
- * showMoreSearchResults) and the show-more/less value pair declare NOTHING (the producer rebuilds
- * only the facet value list), while descending, clearing the selected path and selecting an
- * ancestor rebuild the result set, so each carries `invalidates: ['results']`.
  */
 export const CategoryFacet = createReactComponent(
   {

@@ -827,7 +827,7 @@ describe('createSession lifecycle', () => {
 
   describe('prompt preempts an in-flight gesture (③)', () => {
     // A gesture reuses a complete turn, so only `isStreaming()` sees it in flight.
-    it('preempts the in-flight gesture (cancelled) and opens the prompt immediately', async () => {
+    it('preempts the in-flight gesture and opens the prompt immediately', async () => {
       const session = createSession(baseConfig);
 
       // A Pagination surface so `selectPage` resolves a discriminant.
@@ -869,19 +869,19 @@ describe('createSession lifecycle', () => {
       });
 
       const actionAStream = queueStream();
-      const issuedA = session.actions.issue(actionMessage(2));
-      const outcomeA: string[] = [];
-      issuedA.onSettled((o) => outcomeA.push(o));
+      let actionASettled = false;
+      void session.dispatchAction(actionMessage(2)).then(() => {
+        actionASettled = true;
+      });
       await actionAStream.opened;
       expect(callMock).toHaveBeenCalledTimes(2);
       expect(session.turns.some((turn) => turn.status === 'streaming')).toBe(false);
-      expect(outcomeA).toEqual([]);
+      expect(actionASettled).toBe(false);
 
       const promptStream = queueStream();
       void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'next question'}});
       await promptStream.opened;
 
-      expect(outcomeA).toEqual(['cancelled']);
       expect(callMock).toHaveBeenCalledTimes(3);
       const streamingTurn = session.turns.find((turn) => turn.status === 'streaming');
       expect(streamingTurn?.input.prompt).toBe('next question');
@@ -892,7 +892,7 @@ describe('createSession lifecycle', () => {
       await flush();
 
       expect(callMock).toHaveBeenCalledTimes(3);
-      expect(outcomeA).toEqual(['cancelled']);
+      expect(actionASettled).toBe(true);
       const lastRequest = callMock.mock.calls[callMock.mock.calls.length - 1][0] as {
         message: string | null;
         action: unknown;
@@ -968,10 +968,9 @@ describe('createSession lifecycle', () => {
       queueConflict();
       const stream = queueStream();
 
-      const issued = session.actions.issue(actionMessage(2));
+      const issued = session.dispatchAction(actionMessage(2));
       await vi.advanceTimersByTimeAsync(249);
       expect(callMock).toHaveBeenCalledTimes(2);
-      expect(session.actions.getSnapshot().inFlight).toBe(issued.id);
 
       await vi.advanceTimersByTimeAsync(1);
       await stream.opened;
@@ -981,7 +980,7 @@ describe('createSession lifecycle', () => {
       stream.emit({type: 'RUN_FINISHED'});
       stream.close();
 
-      expect(await issued.settled).toBe('answered');
+      await issued;
       expect(session.turns[0].status).toBe('complete');
       expect(session.turns[0].error).toBeUndefined();
       expect(session.actionError).toBeUndefined();
@@ -995,10 +994,10 @@ describe('createSession lifecycle', () => {
       const listener = vi.fn();
       session.subscribe(listener);
 
-      const issued = session.actions.issue(actionMessage(2));
+      const issued = session.dispatchAction(actionMessage(2));
       await vi.advanceTimersByTimeAsync(30_000);
 
-      expect(await issued.settled).toBe('failed');
+      await issued;
       expect(callMock).toHaveBeenCalledTimes(1 + exhaustingConflicts);
       expect(session.turns[0].status).toBe('complete');
       expect(session.turns[0].error).toBeUndefined();
@@ -1012,8 +1011,8 @@ describe('createSession lifecycle', () => {
       const streamA = queueStream();
       const streamB = queueStream();
 
-      const issuedA = session.actions.issue(actionMessage(2));
-      const issuedB = session.actions.issue(actionMessage(3));
+      const issuedA = session.dispatchAction(actionMessage(2));
+      const issuedB = session.dispatchAction(actionMessage(3));
       await vi.advanceTimersByTimeAsync(250);
       await streamA.opened;
       expect(callMock).toHaveBeenCalledTimes(3);
@@ -1021,14 +1020,14 @@ describe('createSession lifecycle', () => {
 
       streamA.emit({type: 'RUN_FINISHED'});
       streamA.close();
-      expect(await issuedA.settled).toBe('answered');
+      await issuedA;
       await streamB.opened;
       expect(callMock).toHaveBeenCalledTimes(4);
       expect(lastAction()).toMatchObject({context: {page: 3}});
 
       streamB.emit({type: 'RUN_FINISHED'});
       streamB.close();
-      expect(await issuedB.settled).toBe('answered');
+      await issuedB;
     });
 
     it('clears the action error once the next action is sent', async () => {
@@ -1036,30 +1035,30 @@ describe('createSession lifecycle', () => {
       for (let attempt = 0; attempt < exhaustingConflicts; attempt++) {
         queueConflict();
       }
-      const failed = session.actions.issue(actionMessage(2));
+      const failed = session.dispatchAction(actionMessage(2));
       await vi.advanceTimersByTimeAsync(30_000);
-      expect(await failed.settled).toBe('failed');
+      await failed;
       expect(session.actionError).toBe(conflictError);
 
       const stream = queueStream();
-      const issued = session.actions.issue(actionMessage(3));
+      const issued = session.dispatchAction(actionMessage(3));
       await vi.advanceTimersByTimeAsync(0);
       expect(callMock).toHaveBeenCalledTimes(2 + exhaustingConflicts);
       expect(session.actionError).toBeUndefined();
 
       stream.emit({type: 'RUN_FINISHED'});
       stream.close();
-      expect(await issued.settled).toBe('answered');
+      await issued;
     });
 
     it('does not retry a 409 that is not AGENT:ACTION_IN_FLIGHT', async () => {
       const session = await seedSession();
       callMock.mockImplementationOnce(async () => ({success: false, error: 'HTTP 409: Conflict'}));
 
-      const issued = session.actions.issue(actionMessage(2));
+      const issued = session.dispatchAction(actionMessage(2));
       await vi.advanceTimersByTimeAsync(30_000);
 
-      await issued.settled;
+      await issued;
       expect(callMock).toHaveBeenCalledTimes(2);
       expect(session.turns[0]).toMatchObject({status: 'error', error: 'HTTP 409: Conflict'});
     });
@@ -1067,14 +1066,14 @@ describe('createSession lifecycle', () => {
     it('stops waiting when a prompt preempts the rejected action', async () => {
       const session = await seedSession();
       queueConflict();
-      const issued = session.actions.issue(actionMessage(2));
+      const issued = session.dispatchAction(actionMessage(2));
       await vi.advanceTimersByTimeAsync(0);
       expect(callMock).toHaveBeenCalledTimes(2);
 
       const promptStream = queueStream();
       void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'next question'}});
       await promptStream.opened;
-      expect(await issued.settled).toBe('cancelled');
+      await issued;
 
       await vi.advanceTimersByTimeAsync(30_000);
       expect(callMock).toHaveBeenCalledTimes(3);
@@ -1088,12 +1087,12 @@ describe('createSession lifecycle', () => {
     it('cancels the rejected action, leaving its turn complete, when cancel() lands during the wait', async () => {
       const session = await seedSession();
       queueConflict();
-      const issued = session.actions.issue(actionMessage(2));
+      const issued = session.dispatchAction(actionMessage(2));
       await vi.advanceTimersByTimeAsync(100);
 
       session.cancel();
 
-      expect(await issued.settled).toBe('cancelled');
+      await issued;
       await vi.advanceTimersByTimeAsync(30_000);
       expect(callMock).toHaveBeenCalledTimes(2);
       expect(session.turns[0].status).toBe('complete');
@@ -1117,7 +1116,7 @@ describe('createSession lifecycle', () => {
       const session = await seedSession();
       queueConflict();
       queueAbortableCall();
-      const issued = session.actions.issue(actionMessage(2));
+      const issued = session.dispatchAction(actionMessage(2));
       await vi.advanceTimersByTimeAsync(250);
       expect(callMock).toHaveBeenCalledTimes(3);
 
@@ -1126,7 +1125,7 @@ describe('createSession lifecycle', () => {
       await promptStream.opened;
       await vi.advanceTimersByTimeAsync(0);
 
-      expect(await issued.settled).toBe('cancelled');
+      await issued;
       expect(session.turns[0]).toMatchObject({status: 'complete'});
       expect(session.turns[0].error).toBeUndefined();
 

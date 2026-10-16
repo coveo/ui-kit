@@ -28,13 +28,6 @@ import type {
 } from '@/src/internal/context/index.js';
 import {devWarn} from '@/src/internal/utils/dev-warn.js';
 import {generateId} from '@/src/internal/utils/id-generator.js';
-import {
-  type CoalesceIntent,
-  createDispatchCoordinator,
-  createSettledDispatch,
-  type DispatchSnapshot,
-  type IssuedDispatch,
-} from '@/src/actions/dispatch-coordinator.js';
 import {validateActionPayload} from './action-payload-validation.js';
 import type {ContractsSchema} from './contracts.js';
 import {callWithConflictRetry} from './conflict-retry.js';
@@ -159,8 +152,8 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
   /**
    * Why the last component action was dropped, or `undefined`. Set when the endpoint kept
    * rejecting the action because another one was still being processed for this session, after
-   * the session's own bounded retries ran out. That action's dispatch settles `'failed'`, so any
-   * optimistic state tied to it is released and the last authoritative state shows again.
+   * the session's own bounded retries ran out. Its `dispatchAction` resolves, so a consumer holding
+   * optimistic state for it shows the last authoritative state again.
    * Cleared once the next action or prompt is sent. Changes notify {@link Session.subscribe}
    * listeners. A conflict that recovers through retry never sets it.
    */
@@ -172,8 +165,8 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * the renderer's `onAction` handler (`onAction={session.dispatchAction}`).
    *
    * A {@link SubmitPromptAction} opens a new streaming turn for its prompt and
-   * resolves once that turn's stream ends. It preempts gesture dispatches:
-   * queued ones are withheld and one in flight is cancelled.
+   * resolves once that turn's stream ends. It preempts gesture dispatches: one
+   * in flight is cancelled and one still waiting to be sent is dropped.
    *
    * An {@link A2uiClientMessage} is unwrapped to its `userAction`: the session
    * recovers the dispatching component's discriminant from the active turn's
@@ -187,8 +180,6 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * dev-only warning and nothing is sent.
    */
   dispatchAction: (message: A2uiClientMessage | SubmitPromptAction) => Promise<void>;
-  /** Scoped for removal together with `src/actions` once the producer owns the queue. */
-  actions: SessionActions;
   /** Stops consuming the active turn's stream. */
   cancel(): void;
   /** Re-submits an errored turn's input. */
@@ -201,14 +192,6 @@ function isSubmitPromptAction(
   message: A2uiClientMessage | SubmitPromptAction
 ): message is SubmitPromptAction {
   return 'name' in message && message.name === 'submitPrompt';
-}
-
-export interface SessionActions {
-  /** Returns before any send, so local state can be tied to the id synchronously. */
-  issue: (message: A2uiClientMessage, intent?: CoalesceIntent) => IssuedDispatch;
-  withholdQueued: () => void;
-  subscribe: (listener: () => void) => () => void;
-  getSnapshot: () => DispatchSnapshot;
 }
 
 interface RequestFailure {
@@ -292,26 +275,30 @@ export function createSession<TContracts extends ContractsSchema>(
   // per session instance — never module-level — so two sessions never contend.
   let activeAbortController: AbortController | null = null;
 
-  // Serialized because each response is a whole-node snapshot: overlapping streams would let the
-  // last to ARRIVE win over a newer action sent later. Turn id and request are read at send time.
-  // `hasStreamingTurn()`, not `isStreaming()`: a prompt may have opened since this was queued, and
-  // `isStreaming()` would see this action's own stream.
-  const actionCoordinator = createDispatchCoordinator<A2uiAction>(async (action) => {
-    const turnId = store.getState().activeTurnId;
-    if (!turnId || hasStreamingTurn()) {
-      return;
-    }
-    setActionError(undefined);
-    const failure = await executeStream(turnId, () => buildActionRequest(action));
-    if (failure?.conflict) {
-      setActionError(failure.error);
-      // Thrown so the dispatch settles 'failed', releasing the optimistic state it holds.
-      throw new Error(failure.error);
-    }
-    if (failure) {
-      failTurn(turnId, failure.error);
-    }
-  });
+  // Chained because each response is a whole-node snapshot: overlapping streams would let the
+  // last to ARRIVE win over a newer action sent later. The consumer disables its controls while an
+  // action is in flight, so the chain holds at most an action sent alongside a lookup.
+  let actionChain: Promise<void> = Promise.resolve();
+
+  function sendAction(action: A2uiAction): Promise<void> {
+    const sent = actionChain.then(async () => {
+      // Read at send time: a prompt may have opened a turn while this action waited.
+      const turnId = store.getState().activeTurnId;
+      if (!turnId || hasStreamingTurn()) {
+        return;
+      }
+      setActionError(undefined);
+      const failure = await executeStream(turnId, () => buildActionRequest(action));
+      if (failure?.conflict) {
+        setActionError(failure.error);
+      } else if (failure) {
+        failTurn(turnId, failure.error);
+      }
+    });
+    // Swallowed: `dispatchAction` never rejects, and the next action must still go.
+    actionChain = sent.catch(() => {});
+    return actionChain;
+  }
 
   function setActionError(actionError: string | undefined): void {
     if (store.getState().actionError !== actionError) {
@@ -543,8 +530,7 @@ export function createSession<TContracts extends ContractsSchema>(
   /**
    * Stops consuming the in-flight stream. A streaming prompt turn is marked
    * `error`, retaining whatever partial {@link TurnResponse} has already been
-   * folded; an action in flight settles 'cancelled' and leaves its turn
-   * unchanged. When nothing is in flight, it is a no-op that leaves every turn
+   * folded; an action in flight ends and leaves its turn unchanged. When nothing is in flight, it is a no-op that leaves every turn
    * unchanged.
    */
   function cancel(): void {
@@ -562,7 +548,6 @@ export function createSession<TContracts extends ContractsSchema>(
     if (activeTurnId) {
       cancelTurn(activeTurnId);
     }
-    actionCoordinator.cancelInFlight();
   }
 
   /**
@@ -571,7 +556,6 @@ export function createSession<TContracts extends ContractsSchema>(
    */
   async function startPromptTurn(prompt: string | undefined): Promise<void> {
     // The prompt rebuilds the state the gestures were refining, so it preempts rather than waits.
-    actionCoordinator.withholdQueued();
     if (isStreaming()) {
       cancel();
     }
@@ -583,28 +567,25 @@ export function createSession<TContracts extends ContractsSchema>(
   }
 
   /**
-   * Private validate-and-queue path. Validates the recovered action's payload against the
+   * Private validate-and-send path. Validates the recovered action's payload against the
    * component's generated Zod action schema and withholds on failure; targets the action's own
    * originating surface. Withholds while a turn is streaming or when there is no active turn.
    */
-  function issueAction(
-    recovered: {
-      discriminant: string;
-      name: string;
-      sourceComponentId: string;
-      surfaceId: string;
-      context: unknown;
-    },
-    intent?: CoalesceIntent
-  ): IssuedDispatch {
+  function issueAction(recovered: {
+    discriminant: string;
+    name: string;
+    sourceComponentId: string;
+    surfaceId: string;
+    context: unknown;
+  }): Promise<void> {
     // `hasStreamingTurn()`, not `isStreaming()`: an in-flight gesture must not block another.
     if (hasStreamingTurn()) {
-      return createSettledDispatch('withheld');
+      return Promise.resolve();
     }
 
     const {activeTurnId} = store.getState();
     if (!activeTurnId) {
-      return createSettledDispatch('withheld');
+      return Promise.resolve();
     }
 
     // `recovered.surfaceId` is already validated upstream by `recoverDiscriminant`
@@ -625,7 +606,7 @@ export function createSession<TContracts extends ContractsSchema>(
       devWarn(
         `dispatchAction: dispatch withheld: Invalid payload for action "${recovered.name}" on component "${recovered.discriminant}": ${validation.reason}`
       );
-      return createSettledDispatch('withheld');
+      return Promise.resolve();
     }
 
     const a2uiAction: A2uiAction = {
@@ -640,7 +621,7 @@ export function createSession<TContracts extends ContractsSchema>(
       context: recovered.context,
     };
 
-    return actionCoordinator.issue(a2uiAction, intent);
+    return sendAction(a2uiAction);
   }
 
   /**
@@ -662,18 +643,18 @@ export function createSession<TContracts extends ContractsSchema>(
     return registry.get(surfaceId)?.get(sourceComponentId);
   }
 
-  /** Every refusal returns an already-settled 'withheld' dispatch, so no caller is left waiting. */
-  function issue(message: A2uiClientMessage, intent?: CoalesceIntent): IssuedDispatch {
+  /** Every refusal resolves at once, so no caller is left waiting. */
+  function issue(message: A2uiClientMessage): Promise<void> {
     const userAction = message.userAction;
     if (!userAction) {
       devWarn('dispatchAction: message carries no userAction; nothing sent.');
-      return createSettledDispatch('withheld');
+      return Promise.resolve();
     }
 
     const {name, surfaceId, sourceComponentId, context} = userAction;
     if (!sourceComponentId) {
       devWarn('dispatchAction: userAction has no sourceComponentId; nothing sent.');
-      return createSettledDispatch('withheld');
+      return Promise.resolve();
     }
 
     const discriminant = recoverDiscriminant(surfaceId, sourceComponentId);
@@ -681,10 +662,10 @@ export function createSession<TContracts extends ContractsSchema>(
       devWarn(
         `dispatchAction: node "${sourceComponentId}" on surface "${surfaceId}" resolves to no component; nothing sent.`
       );
-      return createSettledDispatch('withheld');
+      return Promise.resolve();
     }
 
-    return issueAction({discriminant, name, sourceComponentId, surfaceId, context}, intent);
+    return issueAction({discriminant, name, sourceComponentId, surfaceId, context});
   }
 
   /**
@@ -705,7 +686,7 @@ export function createSession<TContracts extends ContractsSchema>(
       return;
     }
 
-    await issue(message).settled;
+    await issue(message);
   };
 
   function retry(turnId: string): void {
@@ -742,12 +723,6 @@ export function createSession<TContracts extends ContractsSchema>(
       return store.subscribe(listener);
     },
     dispatchAction,
-    actions: {
-      issue,
-      withholdQueued: actionCoordinator.withholdQueued,
-      subscribe: actionCoordinator.subscribe,
-      getSnapshot: actionCoordinator.getSnapshot,
-    },
     cancel,
     retry,
     serialize,

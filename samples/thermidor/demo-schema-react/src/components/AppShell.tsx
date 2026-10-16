@@ -4,10 +4,11 @@ import {useSession} from '../context/session.js';
 import {createThermidorCatalog} from '../a2ui/components.js';
 import {buildSurfaceStream, toServerAction} from '../a2ui/surface-stream.js';
 import {ThermidorA2UIStream} from '../a2ui/surfaces.js';
-import {DispatchProgressProvider, useTrackedDispatch} from '../a2ui/pending-dispatch.js';
+import {isLookup, RequestStateProvider, useRequestTracker} from '../a2ui/request-state.js';
 import {LandingPage} from './LandingPage/LandingPage.js';
 import {ConversationPage} from './ConversationPage/index.js';
 import {startFollowUp, type FollowUp} from './ConversationPage/turn-segments.js';
+import {SurfaceLockToggle, useSurfaceLockSetting} from './SurfaceLockToggle/SurfaceLockToggle.js';
 
 const catalog = createThermidorCatalog();
 
@@ -34,6 +35,9 @@ export function AppShell() {
     () => new Map()
   );
   const [pendingTurnId, setPendingTurnId] = useState<string | null>(null);
+  const requests = useRequestTracker();
+  const {track} = requests;
+  const [lockSetting, setLockSetting] = useSurfaceLockSetting();
 
   // An action's run streams into the turn already shown without marking it as streaming, so a
   // follow-up in flight counts as streaming here.
@@ -42,9 +46,15 @@ export function AppShell() {
     [turns, pendingTurnId]
   );
   const stream = useMemo(() => buildSurfaceStream(turns), [turns]);
-
-  // The renderer's onAction bridge drops the handler's promise, so dispatches are tracked here.
-  const tracked = useTrackedDispatch(session.actions);
+  const surfacesLocked = lockSetting && (isStreaming || requests.inFlight > 0);
+  const requestState = useMemo(
+    () => ({
+      actionInFlight: pendingTurnId === null && requests.inFlight > 0,
+      locked: surfacesLocked,
+      settledRequests: requests.settled,
+    }),
+    [pendingTurnId, requests, surfacesLocked]
+  );
 
   const latestRef = useRef({turns, stream, isStreaming});
   latestRef.current = {turns, stream, isStreaming};
@@ -67,7 +77,10 @@ export function AppShell() {
         typeof userAction?.name !== 'string' ||
         !FOLLOW_UP_ACTIONS.has(userAction.name)
       ) {
-        return tracked.onAction(serverMessage);
+        if (isLookup(message)) {
+          return session.dispatchAction(serverMessage);
+        }
+        return track(() => session.dispatchAction(serverMessage));
       }
 
       const text = userAction.context?.['text'];
@@ -81,12 +94,12 @@ export function AppShell() {
       );
       setPendingTurnId(turn.id);
       try {
-        await tracked.onAction(serverMessage);
+        await track(() => session.dispatchAction(serverMessage));
       } finally {
         setPendingTurnId(null);
       }
     },
-    [tracked]
+    [session, track]
   );
 
   const handleSubmit = useCallback(
@@ -98,27 +111,30 @@ export function AppShell() {
   );
 
   return (
-    <DispatchProgressProvider value={tracked.progress}>
-      <A2UIProvider catalog={catalog} onAction={handleAction}>
-        <ThermidorA2UIStream loadingSurfaces={stream.loadingSurfaces} messages={stream.messages}>
-          <div className="view-shell">
-            <div className="view-panel view-panel--active">
-              {turns.length === 0 ? (
-                <LandingPage onSubmit={handleSubmit} isStreaming={isStreaming} />
-              ) : (
-                <ConversationPage
-                  onSubmit={handleSubmit}
-                  isStreaming={isStreaming}
-                  turns={[...turns]}
-                  surfacesByTurn={stream.surfacesByTurn}
-                  followUps={followUps}
-                  pendingTurnId={pendingTurnId}
-                />
-              )}
+    <>
+      <RequestStateProvider value={requestState}>
+        <A2UIProvider catalog={catalog} onAction={handleAction}>
+          <ThermidorA2UIStream loadingSurfaces={stream.loadingSurfaces} messages={stream.messages}>
+            <div className="view-shell">
+              <div className="view-panel view-panel--active">
+                {turns.length === 0 ? (
+                  <LandingPage onSubmit={handleSubmit} isStreaming={isStreaming} />
+                ) : (
+                  <ConversationPage
+                    onSubmit={handleSubmit}
+                    isStreaming={isStreaming}
+                    turns={[...turns]}
+                    surfacesByTurn={stream.surfacesByTurn}
+                    followUps={followUps}
+                    pendingTurnId={pendingTurnId}
+                  />
+                )}
+              </div>
             </div>
-          </div>
-        </ThermidorA2UIStream>
-      </A2UIProvider>
-    </DispatchProgressProvider>
+          </ThermidorA2UIStream>
+        </A2UIProvider>
+      </RequestStateProvider>
+      <SurfaceLockToggle checked={lockSetting} onChange={setLockSetting} locked={surfacesLocked} />
+    </>
   );
 }

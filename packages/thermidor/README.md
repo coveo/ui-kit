@@ -33,17 +33,16 @@ await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me r
 
 `createSession(config)` returns a `Session` exposing exactly:
 
-| Member                    | Purpose                                                                                                                     |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `contracts`               | The injected contracts schema this session validates against (readonly).                                                    |
-| `turns`                   | Readonly observable list of `Turn`s folded from the stream (empty initially).                                               |
-| `actionError`             | Why the last component action was dropped after repeated concurrency conflicts, or `undefined`. See below.                  |
-| `actions`                 | The action queue: `issue`, `withholdQueued`, `subscribe`, `getSnapshot`. See [The action queue](#the-action-queue).         |
-| `subscribe(listener)`     | Registers a listener called once per change to the turn list or `actionError`; returns an unsubscribe.                      |
-| `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's `onAction`.     |
-| `cancel()`                | Stops the active stream: a prompt's turn keeps its partial response and is marked `error`; an action settles `'cancelled'`. |
-| `retry(turnId)`           | Re-submits an errored turn's input.                                                                                         |
-| `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                                                             |
+| Member                    | Purpose                                                                                                                    |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `contracts`               | The injected contracts schema this session validates against (readonly).                                                   |
+| `turns`                   | Readonly observable list of `Turn`s folded from the stream (empty initially).                                              |
+| `actionError`             | Why the last component action was dropped after repeated concurrency conflicts, or `undefined`. See below.                 |
+| `subscribe(listener)`     | Registers a listener called once per change to the turn list or `actionError`; returns an unsubscribe.                     |
+| `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's `onAction`.    |
+| `cancel()`                | Stops the active stream: a prompt's turn keeps its partial response and is marked `error`; an action's request is aborted. |
+| `retry(turnId)`           | Re-submits an errored turn's input.                                                                                        |
+| `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                                                            |
 
 The concrete `contracts` type pinned at the `createSession` call site threads unbroken through `Session`, so component types, action names, and payloads stay fully typed at the call site (no `string`, no `never`, no `unknown`).
 
@@ -73,19 +72,18 @@ Given a message, `dispatchAction` unwraps its `userAction`, recovers the dispatc
 
 It is **fire-and-forget**: the returned Promise always resolves and never rejects, so the consumer needs no `.catch`. A message with no `userAction`, no `sourceComponentId`, a node that resolves to no component, or an internal validation failure is dropped with a dev-only warning and nothing is sent.
 
-### The action queue
+### One action at a time
 
-Thermidor sends one component action at a time per session; later ones wait their turn in order, so integrators never queue anything themselves.
+Thermidor sends one component action at a time per session. The promise `dispatchAction` returns resolves when the action's stream ends, so disable the surface's controls until then: gestures then never pile up behind each other.
 
-- `actions.getSnapshot().inFlight` is the action being processed, and `actions.subscribe` notifies when it changes, for loading indicators.
-- A `submitPrompt` drops queued actions and cancels the one in flight. While a prompt turn is streaming, new actions are dropped.
-- The queue is in memory only: reloading the page drops queued actions.
+- An action dispatched while another is in flight, such as a facet click during a facet search, waits behind it and goes out in order.
+- A `submitPrompt` cancels the action in flight and drops one still waiting. While a prompt turn is streaming, new actions are dropped.
 
 ### Concurrency conflicts
 
 When the Gateway is still busy with another request for the session, it rejects the new one (`409`, `AGENT:ACTION_IN_FLIGHT`). Thermidor retries automatically for up to 30 seconds, and a conflict that recovers shows nothing. If it gives up:
 
-- an **action**'s dispatch settles `'failed'`, which rolls its optimistic state back, and `session.actionError` is set until the next action or prompt is sent;
+- an **action**'s `dispatchAction` resolves, and `session.actionError` is set until the next action or prompt is sent;
 - a **prompt**'s turn becomes `error`, retryable with `retry(turnId)`.
 
 ## The Turn / TurnResponse model

@@ -1,6 +1,5 @@
-import {useId, useLayoutEffect, useRef, useState} from 'react';
+import {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import type {CategoryFacetAction, RegularFacetAction} from '@coveo/thermidor-schema/zod3';
-import {useDispatchProgress} from './pending-dispatch.js';
 
 /** Derived from the schema so the payload cannot drift from what it accepts. */
 export type FacetSearchAction = Extract<
@@ -14,6 +13,9 @@ export interface OptimisticFacetSearch {
   reset: () => void;
 }
 
+/** Typing sends one search per pause instead of one per keystroke. */
+const SEARCH_DEBOUNCE_MS = 200;
+
 /**
  * The typed text is local state, not an optimistic hold, so a keystroke that never reaches the
  * producer leaves the field untouched. An external change of the query wins; our own echo does not.
@@ -22,12 +24,13 @@ export function useOptimisticFacetSearch(
   backendQuery: string,
   dispatch: (action: FacetSearchAction) => void
 ): OptimisticFacetSearch {
-  const slot = useId();
-  const {declareGesture, lastIssued} = useDispatchProgress();
   const [typed, setTyped] = useState(backendQuery);
   const lastBackend = useRef(backendQuery);
-  // Queries whose echo can still arrive, in send order (the queue serializes sends).
+  // Queries whose echo can still arrive, in send order (the session serializes sends).
   const pending = useRef<string[]>([]);
+  const debounce = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  useEffect(() => () => clearTimeout(debounce.current), []);
 
   // Layout, so an adopted external change lands before paint.
   useLayoutEffect(() => {
@@ -47,37 +50,18 @@ export function useOptimisticFacetSearch(
   }, [backendQuery]);
 
   const send = (action: FacetSearchAction, query: string) => {
-    const before = lastIssued()?.id;
-    const withdraw = declareGesture({
-      coalesce: {slot, gesture: `${slot}|${action.event.name}`, policy: 'absolute'},
-      invalidates: [],
-    });
-    try {
-      dispatch(action);
-    } finally {
-      withdraw();
-    }
-    const issued = lastIssued();
-    if (!issued || issued.id === before) {
-      return;
-    }
+    clearTimeout(debounce.current);
     pending.current.push(query);
-    issued.onSettled((outcome) => {
-      // Never answered, so no echo will come: drop it, or it would swallow a later external
-      // change. An answer that didn't move the prop can stay: the prop must leave that value
-      // first, and whatever moves it clears the entry.
-      if (outcome !== 'answered') {
-        const i = pending.current.lastIndexOf(query);
-        if (i !== -1) {
-          pending.current.splice(i, 1);
-        }
-      }
-    });
+    dispatch(action);
   };
 
   const onQueryChange = (next: string) => {
     setTyped(next);
-    send({event: {name: 'search', context: {query: next}}}, next);
+    clearTimeout(debounce.current);
+    debounce.current = setTimeout(
+      () => send({event: {name: 'search', context: {query: next}}}, next),
+      SEARCH_DEBOUNCE_MS
+    );
   };
 
   const reset = () => {

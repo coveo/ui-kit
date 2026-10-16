@@ -1,4 +1,4 @@
-import {useEffect, useMemo} from 'react';
+import {useCallback, useEffect, useMemo} from 'react';
 import {vi} from 'vitest';
 import {render, act, type RenderResult} from '@testing-library/react';
 import {
@@ -8,9 +8,8 @@ import {
   useA2UI,
   type A2UIClientEventMessage,
 } from '@copilotkit/a2ui-renderer';
-import {createDispatchCoordinator} from '@coveo/thermidor';
 import {createThermidorCatalog, THERMIDOR_CATALOG_ID} from './components.js';
-import {DispatchProgressProvider, useTrackedDispatch} from './pending-dispatch.js';
+import {isLookup, RequestStateProvider, useRequestTracker} from './request-state.js';
 
 /**
  * Shared end-to-end mount for a component definition, through the real thermidor catalog and the
@@ -85,18 +84,28 @@ function Surface({
   processRef: {current: ProcessMessages | null};
   dispatch: (message: A2UIClientEventMessage) => Promise<void> | void;
 }) {
-  const actions = useMemo(
-    () => createDispatchCoordinator<A2UIClientEventMessage>(dispatch),
-    [dispatch]
+  const requests = useRequestTracker();
+  const {track} = requests;
+  const onAction = useCallback(
+    (message: A2UIClientEventMessage) =>
+      isLookup(message) ? dispatch(message) : track(() => dispatch(message)),
+    [dispatch, track]
   );
-  const tracked = useTrackedDispatch(actions);
+  const requestState = useMemo(
+    () => ({
+      actionInFlight: requests.inFlight > 0,
+      locked: false,
+      settledRequests: requests.settled,
+    }),
+    [requests]
+  );
   return (
-    <DispatchProgressProvider value={tracked.progress}>
-      <A2UIProvider catalog={createThermidorCatalog()} onAction={tracked.onAction}>
+    <RequestStateProvider value={requestState}>
+      <A2UIProvider catalog={createThermidorCatalog()} onAction={onAction}>
         <MessagePump messages={messages} processRef={processRef} />
         <A2UIRenderer surfaceId={SURFACE_ID} />
       </A2UIProvider>
-    </DispatchProgressProvider>
+    </RequestStateProvider>
   );
 }
 
