@@ -10,7 +10,7 @@ import {
 } from '@coveo/headless/recommendation';
 import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {keyed} from 'lit/directives/keyed.js';
+import {keyed} from '@/src/directives/keyed';
 import {map} from 'lit/directives/map.js';
 import {when} from 'lit/directives/when.js';
 import {renderItemPlaceholders} from '@/src/components/common/atomic-result-placeholder/item-placeholders';
