@@ -60,8 +60,9 @@ turn 1.
 - **Lookups.** A lookup never waits for, blocks or fails another action or turn. A newer lookup from
   the same component replaces the previous one.
 - **Best-in-class DX (charter MUST).** Typed component state and typed actions are preserved.
-- **Breaking changes are acceptable.** The package is private, and the only consumers are the
-  in-repo samples.
+- **Breaking changes are acceptable.** The package is experimental and published as `0.x`, where a
+  minor release may break its API. Its only known consumers are internal: the in-repo samples. Each
+  breaking change ships with a changeset that describes the migration.
 
 ## Considered Options
 
@@ -134,15 +135,21 @@ Adopt **Option B**.
 
 ### Request lanes
 
-| Lane     | Members                                       | Behavior                                                                                                                                                 |
-| -------- | --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Prompts  | `submitPrompt`                                | One at a time. A prompt opens a turn and preempts any in-flight gesture.                                                                                 |
-| Gestures | component actions that are not lookups        | Run in dispatch order. They are held back while a prompt streams.                                                                                        |
-| Lookups  | component actions the schema marks as lookups | Sent at once, alongside any prompt or gesture. A new lookup from the same source component aborts the previous one. A lookup's error never fails a turn. |
-| Session  | `initialize`                                  | Sent at once. It is expected before any other request.                                                                                                   |
+| Lane                 | Members                                                    | Behavior                                                                                                                                                                                                                                                      |
+| -------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Prompts and gestures | `submitPrompt`, and component actions that are not lookups | One ordered queue. Each request waits for the one dispatched before it, so a prompt waits for in-flight gestures, and a gesture dispatched while a prompt streams waits for it. Nothing in it is aborted, except a prompt's stream by an explicit `cancel()`. |
+| Lookups              | component actions the schema marks as lookups              | Sent at once, alongside any prompt or gesture. A new lookup from the same source component aborts the previous one. A lookup's error never fails a turn.                                                                                                      |
+| Session              | `initialize`                                               | Sent at once. It is expected before any other request.                                                                                                                                                                                                        |
 
 The schema's lookup marker decides which lane a component action takes. Nothing in this package
 hard-codes action names.
+
+A prompt no longer preempts gestures. Today a prompt aborts in-flight gestures, because it rebuilds
+the state they were refining. That held while earlier turns' surfaces became inert history. With
+session-scoped surfaces, they stay live and actionable. A gesture aborted after the producer has
+applied it would leave its surface showing stale state: for example, page 1 while the producer is on
+page 2. Aborting never spared the producer any work either, since a request it has accepted runs to
+its end. Gestures are short, gateway-local turns, so a prompt waits little behind them.
 
 The split between lookups and everything else is permanent. The prompt and gesture behaviors are
 not. They mirror the producer's current concurrency rule: one request at a time per session, with
@@ -150,9 +157,7 @@ a second request refused as `409 ACTION_IN_FLIGHT`. The producer may later queue
 possibly gestures, and resolve the queue itself. When it does:
 
 - the session sends prompts and gestures at once, each with its per-session action sequence
-  number, instead of holding them back or chaining them;
-- a prompt stops preempting in-flight gestures. A gesture the producer has accepted is applied
-  whether or not the client still listens, so aborting its stream only loses the result;
+  number, instead of queueing them itself;
 - each response still applies to the surfaces it targets, whenever it arrives, which session-scoped
   surfaces already guarantee.
 
@@ -195,7 +200,9 @@ decision.
   - Lookups no longer contend with prompts or gestures.
   - The client model matches the producer's.
 - **Negative:**
-  - Breaking changes to `Turn`, `TurnResponse`, `serialize` and the sample's surface stream.
+  - Breaking changes to `Turn`, `TurnResponse`, `serialize` and the sample's surface stream. They
+    ship in a minor `0.x` release with a changeset. The serialized format gets a new version, and
+    a session serialized by an earlier version is migrated or cleanly refused on restore.
   - The mock converse service sends `createSurface` with the same search surface id every time a
     prompt hits its search template, and never deletes the earlier surface. That is invalid in A2-UI,
     where a live surface id cannot be created again. Today only per-turn scoping hides it, because
