@@ -208,9 +208,16 @@ decision.
 
 ## Implementation and Follow-up
 
-- **Overlapping runs.** A lookup's run can overlap a prompt's run on the same thread. AG-UI validates
-  event order per stream, and this package parses each stream on its own. Confirm that the producer
-  and AG-UI tooling accept the overlap.
+- **Overlapping runs are allowed.** A lookup's run can overlap a prompt's run on the same thread.
+  - AG-UI only requires a run id that is unique within the thread, and validates event order per
+    stream.
+  - This package parses each stream on its own, so concurrent streams only need the request lanes
+    above.
+  - A lookup's run applies to the surfaces it targets, and never enters a turn's transcript.
+  - The producer echoes the session token unchanged on follow-up requests, so concurrent streams
+    never disagree on the session id and token.
+  - The producer refuses a lookup that carries no session token. That is no constraint in practice:
+    lookups target the shell surface, which only exists once `initialize` has created the session.
 - **Surface retention.** Decide with the producer whether superseded search surfaces are deleted, or
   capped, as a session grows.
 - **Rendering earlier turns.** With every surface actionable, decide in the sample whether earlier
