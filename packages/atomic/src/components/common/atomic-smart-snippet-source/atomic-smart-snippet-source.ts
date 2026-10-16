@@ -18,7 +18,7 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
  * @part source-title - The clickable title of the source.
  * @event select-source - Emitted when the source link is selected.
  * @event begin-delayed-select-source - Emitted when a delayed source selection begins.
- * @event cancel-delayed-select-source - Emitted when a pending source selection is cancelled.
+ * @event cancel-pending-select-source - Emitted when a pending source selection is cancelled.
  * @internal
  */
 @customElement('atomic-smart-snippet-source')
@@ -40,21 +40,21 @@ export class AtomicSmartSnippetSource
   public anchorAttributes?: Attr[];
 
   /**
-   * @deprecated Only here to support backward compatibility with Stencil components. Lit components should listen to the event using the `@on-select-source` expression instead.
+   * @deprecated Only here to support backward compatibility with Stencil components. Lit components should listen to the `select-source` event instead, using the `@select-source` expression.
    * Callback function for when the source is selected (backward compatibility).
    */
   @property({attribute: 'onSelectSource'})
   public onSelectSource?: () => void;
 
   /**
-   * @deprecated Only here to support backward compatibility with Stencil components. Lit components should listen to the event using the `@on-begin-delayed-select-source` expression instead.
+   * @deprecated Only here to support backward compatibility with Stencil components. Lit components should listen to the `begin-delayed-select-source` event instead, using the `@begin-delayed-select-source` expression.
    * Callback function for when a delayed source selection begins (backward compatibility).
    */
   @property({attribute: 'onBeginDelayedSelectSource'})
   public onBeginDelayedSelectSource?: () => void;
 
   /**
-   * @deprecated Only here to support backward compatibility with Stencil components. Lit components should listen to the event using the `@on-cancel-pending-select-source` expression instead.
+   * @deprecated Only here to support backward compatibility with Stencil components. Lit components should listen to the `cancel-pending-select-source` event instead, using the `@cancel-pending-select-source` expression.
    * Callback function for when a pending source selection is cancelled (backward compatibility).
    */
   @property({attribute: 'onCancelPendingSelectSource'})
