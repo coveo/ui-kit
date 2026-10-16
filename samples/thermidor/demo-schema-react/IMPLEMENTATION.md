@@ -53,11 +53,11 @@ Renderers read resolved values from `props` (the renderer resolves each `{ "path
 
 ## Catalog and Zod version
 
-`@copilotkit/a2ui-renderer` is built against **Zod 3**. The sample therefore pins `zod@3` and imports every runtime schema from the Zod 3 projection, `@coveo/thermidor-schema/zod3`: the per-component `*PropsSchema`, `ComponentContractsSchema`, and `THERMIDOR_CATALOG_ID`. Types (`Product`, `SortAction`, …) come from the package root.
+`@copilotkit/a2ui-renderer` is built against **Zod 3**. The sample therefore pins `zod@3` and imports every runtime schema from the Zod 3 projection, `@coveo/thermidor-schema/zod3`: the per-component `*PropsSchema`, `ComponentContractsSchema`, and `THERMIDOR_CATALOG_ID`. Types come from either entry point: some files import them from the package root (`Product`, `SortAction`), while the facets and the breadbox import theirs (`RegularFacetAction`, `RegularFacetProps`, `BreadboxFacet`, …) from `@coveo/thermidor-schema/zod3`.
 
 Each catalog component is declared with the renderer's `createReactComponent({name, schema}, render)`, where `name` is the node's `component` and `schema` its `*PropsSchema`. `createThermidorCatalog()` (`src/a2ui/components.tsx`) registers them as `new Catalog(THERMIDOR_CATALOG_ID, components)`. No type casts or bridge helpers are needed.
 
-When the renderer moves to Zod 4, switch the imports from `@coveo/thermidor-schema/zod3` to the package root and drop the `zod@3` pin.
+When the renderer moves to Zod 4, switch every `@coveo/thermidor-schema/zod3` import, schemas and types alike, to the package root and drop the `zod@3` pin.
 
 ## Rendering every turn on one page
 

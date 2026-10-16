@@ -12,13 +12,13 @@ Everything the previous revision described (an `Engine` class, a library-agnosti
 
 ## Public surface
 
-The package entry (`src/index.ts`) exports the session-client surface — `createSession`, the `Session` handle, the `Turn` / `TurnResponse` domain model (including `A2uiV09Message` and `DiscoveredSurface`), `SessionConfig`, the injected-contract types (`ContractsSchema`, `ComponentContractSchema`, `ParsableSchema`), the client-owned context types, and the versioned `SerializedSession` shape. It also exports the client-side dispatch helpers (`createDispatchCoordinator`, `createDispatchTracker`, `SessionActions`), which are scoped for removal once the producer owns the action queue, and the optimistic-update helpers (`createOptimisticValue`, `createStaleScopes`). It is intentionally free of state-library concepts (no store, slice, selector, thunk, or reducer types) and free of raw transport DTO shapes; `src/index.test-d.ts` fails the typecheck if one leaks into the entry.
+The package entry (`src/index.ts`) exports the session-client surface — `createSession`, the `Session` handle, the `Turn` / `TurnResponse` domain model (including `A2uiV09Message` and `DiscoveredSurface`), `SessionConfig`, the injected-contract types (`ContractsSchema`, `ComponentContractSchema`, `ParsableSchema`), the client-owned context types, and the versioned `SerializedSession` shape. It also exports the client-side dispatch helpers (`createDispatchCoordinator`, `createSettledDispatch`, `createDispatchTracker`, `SessionActions`), which are scoped for removal once the producer owns the action queue, and the optimistic-update helpers (`createOptimisticValue`, `createStaleScopes`). It is intentionally free of state-library concepts (no store, slice, selector, thunk, or reducer types) and free of raw transport DTO shapes; `src/index.test-d.ts` fails the typecheck if one leaks into the entry.
 
 ```mermaid
 graph TB
     subgraph "Public surface (src/index.ts)"
         CS["createSession(config)"]
-        SESSION["Session&lt;TContracts&gt;<br/>turns · actionError · subscribe<br/>dispatchAction · actions<br/>cancel · retry · serialize"]
+        SESSION["Session&lt;TContracts&gt;<br/>contracts · turns · actionError · subscribe<br/>dispatchAction · actions<br/>cancel · retry · serialize"]
         HELPERS["Dispatch &amp; optimistic helpers<br/>createDispatchTracker · createOptimisticValue<br/>createStaleScopes"]
     end
 
@@ -36,7 +36,8 @@ graph TB
     FOLD -->|validates inbound ops| VALID
     SESSION -->|validates payloads| VALID
     SESSION -->|queues actions| QUEUE
-    QUEUE -->|POST + stream| API
+    QUEUE -->|action POST + stream| API
+    SESSION -->|prompt POST + stream| API
     HELPERS -->|wrap| SESSION
 
     style CS fill:#28a745,color:#fff
@@ -63,6 +64,7 @@ src/
 │   ├── a2ui-v09-projection.ts     # A2-UI v1.0 → v0.9 renderer projection (ADR-015 addendum)
 │   ├── contracts.ts               # Structural type of the injected contracts schema (ADR-014)
 │   ├── in-transit-validation.ts   # Validates inbound updateDataModel ops against *State schemas
+│   ├── resolve-operation.ts       # Maps an op path to a component's whole state or a field beneath it
 │   ├── action-payload-validation.ts # Validates outbound action payloads before the POST
 │   ├── state-path.ts              # /state/<id> JSON Pointer helpers
 │   └── serialize.ts               # Versioned serialize / restore (ADR-011)
@@ -184,7 +186,13 @@ Derivation follows the A2-UI surface lifecycle in stream order: `deleteSurface` 
 
 ### The v0.9 renderer projection
 
-Agent Gateway emits A2-UI v1.0, and every available renderer consumes v0.9. `src/session/a2ui-v09-projection.ts` derives `response.a2uiMessages` from `activities`: it splits each v1.0 `createSurface` into v0.9 `createSurface` + `updateComponents`, forwards flat nodes byte-for-byte (so every `{ path }` binding survives), and passes `updateDataModel` and `deleteSurface` through. It is the single place that rewrites a message envelope, recorded as a charter exception with a retirement condition in the [ADR-015 addendum](./internal/adr/ADR-015-surface-and-route-derivation.md).
+Agent Gateway emits A2-UI v1.0, and every available renderer consumes v0.9. `src/session/a2ui-v09-projection.ts` (`deriveA2uiV09Messages`) derives `response.a2uiMessages` from `activities`:
+
+- it splits each v1.0 `createSurface` into v0.9 `createSurface` + `updateComponents`, forwarding flat nodes byte-for-byte so every `{ path }` binding survives, and drops a `createSurface` without a `catalogId`;
+- it emits one `updateDataModel` per key of the inline `dataModel`, at that key's root JSON Pointer (`isLoading` → `/isLoading`; a key already written as a pointer, such as `/state/<nodeId>`, is kept);
+- it passes `updateDataModel` and `updateComponents` through, and `deleteSurface` too, except an orphan (`OrphanDeleteFilter`): a delete for a surface created earlier in the turn's stream, or by a superseded version of one of its activities, that is no longer live. A consumer merging turns into one renderer stream would otherwise apply it to an earlier turn's surface with the same id.
+
+It is the single place that rewrites a message envelope, recorded as a charter exception with a retirement condition in the [ADR-015 addendum](./internal/adr/ADR-015-surface-and-route-derivation.md).
 
 ## Recorded interim debt and out-of-scope items
 
@@ -215,7 +223,7 @@ sequenceDiagram
     Coveo-->>API: SSE stream
     loop per activity
         API-->>S: activity
-        S->>Fold: foldActivity(turn, activity)
+        S->>Fold: foldActivity(turn, activity, contracts)
         Fold-->>S: nextTurn (state / activities / surfaces / a2uiMessages / agent?)
         S->>Store: replace active turn
         Store-->>UI: subscriber notified → re-render

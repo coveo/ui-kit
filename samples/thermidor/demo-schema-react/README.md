@@ -19,7 +19,7 @@ This single command:
 
 The mock API is automatically stopped when you close Vite (Ctrl+C).
 
-With `VITE_COVEO_ENDPOINT=http://localhost:3456/schema`, the sample posts to the mock's `/schema/api/preview/organizations/:orgId/agents/commerce/agui/converse` route, which serves the schema-driven templates (`schema-response-*.ts` in `@coveo/platform-mock-api`). The mock's routes without the `/schema` prefix serve older templates this sample does not support.
+With `VITE_COVEO_ENDPOINT=http://localhost:3456/schema`, the sample posts to the mock's `/schema/api/preview/organizations/:orgId/agents/commerce/agui/converse` route, which serves the schema-driven templates (`schema-response-*.ts` in `@coveo/platform-mock-api`). The short `/converse-schema` route serves the same templates. The `/converse`, `/rest/...` and `/api/preview/...` routes, without the `/schema` prefix, serve older templates this sample does not support.
 
 ### Mock scenarios
 
