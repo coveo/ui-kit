@@ -196,8 +196,11 @@ decision.
   - The client model matches the producer's.
 - **Negative:**
   - Breaking changes to `Turn`, `TurnResponse`, `serialize` and the sample's surface stream.
-  - A producer that reuses a live surface id across turns without deleting it breaks A2-UI. The mock
-    converse service does this today and must change.
+  - The mock converse service sends `createSurface` with the same search surface id every time a
+    prompt hits its search template, and never deletes the earlier surface. That is invalid in A2-UI,
+    where a live surface id cannot be created again. Today only per-turn scoping hides it, because
+    each turn keeps its own copy. Session-scoped surfaces make the second `createSurface` collide
+    with the first, so the mock must mint a new surface id per prompt, as the gateway does.
   - The session holds every live surface until it is deleted, and the producer does not delete
     search surfaces today. Memory grows with long sessions.
 - **Neutral:** ADR-015's typed `surfaces` projection moves from the turn to the session. Its
