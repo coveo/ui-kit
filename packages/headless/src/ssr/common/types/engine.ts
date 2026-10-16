@@ -77,23 +77,17 @@ export interface EngineDefinition<
   >;
 
   /**
-   * @deprecated This method will be removed in a future major version, and
-   * `@coveo/headless/ssr-next` no longer has it. Keep track of the token you configure instead of
-   * reading it back from the shared engine definition.
+   * @deprecated This method will be removed in the next major version. Use the access token from
+   * your engine configuration instead.
    *
    * Returns the access token.
    */
   getAccessToken: () => string;
 
   /**
-   * @deprecated This method will be removed in a future major version, and
-   * `@coveo/headless/ssr-next` no longer has it. It mutates the shared engine definition, so on a
-   * server handling concurrent requests one request can overwrite another request's token. To
-   * renew an expiring token, configure `renewAccessToken` on the engine configuration. To switch the
-   * token of an engine you already hold, such as a hydrated engine after the user signs in, dispatch
-   * `loadConfigurationActions(engine).updateBasicConfiguration({accessToken})` on that engine. To
-   * use a different token per request, use `@coveo/headless/ssr-next`, whose `fetchStaticState()`
-   * and `hydrateStaticState()` take an `accessToken`.
+   * @deprecated This method will be removed in the next major version. To renew an expiring token,
+   * configure `renewAccessToken`; to change the token of an engine you already have, dispatch
+   * `loadConfigurationActions(engine).updateBasicConfiguration({accessToken})` on it.
    *
    * Updates the access token.
    * @param accessToken - The access token to update.
