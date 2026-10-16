@@ -77,11 +77,18 @@ export interface EngineDefinition<
   >;
 
   /**
+   * @deprecated This method will be removed in the next major version. Use the access token from
+   * your engine configuration instead.
+   *
    * Returns the access token.
    */
   getAccessToken: () => string;
 
   /**
+   * @deprecated This method will be removed in the next major version. To renew an expiring token,
+   * configure `renewAccessToken`; to change the token of an engine you already have, dispatch
+   * `loadConfigurationActions(engine).updateBasicConfiguration({accessToken})` on it.
+   *
    * Updates the access token.
    * @param accessToken - The access token to update.
    */
