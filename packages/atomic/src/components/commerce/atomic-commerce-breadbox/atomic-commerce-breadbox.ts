@@ -185,6 +185,7 @@ export class AtomicCommerceBreadbox
   }
 
   public disconnectedCallback() {
+    super.disconnectedCallback();
     this.resizeObserver?.disconnect();
   }
 

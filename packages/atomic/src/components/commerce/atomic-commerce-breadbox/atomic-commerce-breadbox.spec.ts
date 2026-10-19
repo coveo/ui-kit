@@ -46,6 +46,7 @@ describe('atomic-commerce-breadbox', () => {
     pathLimit?: number;
     disableCollapse?: boolean;
     state?: Partial<BreadcrumbManagerState>;
+    subscribe?: BreadcrumbManager['subscribe'];
   }
 
   const renderBreadbox = async ({
@@ -53,11 +54,13 @@ describe('atomic-commerce-breadbox', () => {
     pathLimit = 3,
     disableCollapse,
     state = {},
+    subscribe,
   }: RenderBreadboxOptions = {}) => {
     mockedBreadcrumbManager = buildFakeBreadcrumbManager({
       state,
       implementation: {
         deselectAll: mockedDeselectAll,
+        ...(subscribe && {subscribe}),
       },
     });
     vi.mocked(buildProductListing).mockReturnValue(
@@ -133,6 +136,20 @@ describe('atomic-commerce-breadbox', () => {
   it('should call buildContext', async () => {
     await renderBreadbox();
     expect(buildContext).toHaveBeenCalledWith(mockedEngine);
+  });
+
+  it('should unsubscribe from the breadcrumb manager when removed from the DOM', async () => {
+    const unsubscribe = vi.fn();
+    const {element} = await renderBreadbox({
+      subscribe: vi.fn((listener: () => void) => {
+        listener();
+        return unsubscribe;
+      }),
+    });
+
+    element.remove();
+
+    expect(unsubscribe).toHaveBeenCalledOnce();
   });
 
   it('should call breadcrumbManager on this.breadcrumbManager', async () => {

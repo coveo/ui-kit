@@ -16,7 +16,7 @@ interface ControllerSubscription {
 const subscriptionsByComponent = new WeakMap<ReactiveElement, Set<ControllerSubscription>>();
 
 /**
- * Returns the controller subscriptions of a component.
+ * Tracks the controller subscriptions of a component, so that they follow its lifecycle.
  *
  * The first call attaches a reactive controller that releases the subscriptions when the component
  * leaves the DOM and restores them when it comes back. Overriding `disconnectedCallback` on the
@@ -35,6 +35,11 @@ function getSubscriptions(component: ReactiveElement) {
         });
       },
       hostDisconnected() {
+        // A move within the DOM, such as `atomic-facet-manager` reordering its facets, reaches
+        // this callback once the element is already back in place: keep the subscriptions.
+        if (component.isConnected) {
+          return;
+        }
         newSubscriptions.forEach((subscription) => {
           subscription.unsubscribe?.();
           subscription.unsubscribe = undefined;

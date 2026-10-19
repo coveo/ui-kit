@@ -101,7 +101,7 @@ describe('@bindStateToController decorator', () => {
   };
 
   const teardownElement = () => {
-    document.body.removeChild(element);
+    element.remove();
   };
 
   beforeEach(async () => {
@@ -153,7 +153,6 @@ describe('@bindStateToController decorator', () => {
     element.initialize!();
     element.remove();
     expect(controller.unsubscribe).toHaveBeenCalledTimes(1);
-    document.body.appendChild(element);
   });
 
   it('should subscribe to the controller again when the element is added back to the DOM', () => {
@@ -170,7 +169,13 @@ describe('@bindStateToController decorator', () => {
     element.remove();
     expect(controller.unsubscribe).toHaveBeenCalledTimes(1);
     expect(otherController.unsubscribe).toHaveBeenCalledTimes(1);
-    document.body.appendChild(element);
+  });
+
+  it('should keep its subscription when the element is moved within the DOM', () => {
+    element.initialize!();
+    document.body.prepend(element);
+    expect(controller.unsubscribe).not.toHaveBeenCalled();
+    expect(controller.subscribe).toHaveBeenCalledTimes(1);
   });
 
   it('should release the previous subscription when "initialize" is called again', () => {
