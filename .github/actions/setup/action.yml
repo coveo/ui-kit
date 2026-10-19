@@ -4,9 +4,9 @@ description: 'Setup node and install dependencies'
 inputs:
   save-cache:
     description: >-
-      Save the pnpm store and mise caches when they were not restored. Only the cache warm-up
-      workflow on main enables this; CI jobs stay read-only so the repository keeps a single
-      copy of each cache instead of one per PR ref.
+      Save the pnpm store and mise caches when they were not restored. Only cache-warmup.yml
+      enables this; every other job is read-only, so caches are written once on main instead of
+      once per PR ref.
     required: false
     default: 'false'
 #endregion
@@ -25,6 +25,7 @@ runs:
       id: pnpm-store
       run: echo "path=$(pnpm store path)" >> "$GITHUB_OUTPUT"
       shell: bash
+    # cache-warmup.yml re-saves when this key changes, so its push paths list the key's inputs.
     - name: Restore pnpm store
       id: pnpm-cache
       uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6

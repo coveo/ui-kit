@@ -1,11 +1,14 @@
 name: Warm dependency caches
-# Dependency caches are saved here only. CI jobs restore them read-only, so each cache flavour
-# (runner, Playwright container, Windows) exists once, on main, instead of once per PR ref.
-# The container flavour needs its own job: it runs as user 1001 with a different HOME and
+# Dependency caches are saved here only. Every other job restores them read-only, so each cache
+# flavour (Ubuntu runner, Playwright container, Windows) is written on main instead of once per
+# PR ref. The container flavour needs its own job: it runs as user 1001 with a different HOME and
 # without zstd, which gives it a cache version that runner jobs can neither read nor write.
+# Pull requests that change the setup action warm their own ref to validate it. The schedule
+# re-saves anything evicted or invalidated by a runner image update; a full hit saves nothing.
 on:
   push:
     branches: [main]
+    # The inputs of the cache keys in .github/actions/setup/action.yml.
     paths:
       - pnpm-lock.yaml
       - mise.toml
@@ -15,13 +18,15 @@ on:
     paths:
       - .github/actions/setup/**
       - .github/workflows/cache-warmup.yml
+  schedule:
+    - cron: '17 5 * * 1-5'
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  runner:
+  ubuntu:
     name: 'Warm caches (Ubuntu runner)'
     runs-on: ubuntu-latest
     steps:
