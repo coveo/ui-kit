@@ -1,0 +1,181 @@
+/* Storefront Preview layout: a top bar over the page, as in Commerce Hub. */
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: auto minmax(0, 640px) auto;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-5);
+  padding: var(--space-3) var(--space-5);
+  background: var(--color-bg-primary);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.home {
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  padding: var(--space-2);
+  color: var(--color-text-primary);
+}
+
+.listingMenu {
+  position: relative;
+}
+
+.navButton {
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-md);
+  font: inherit;
+  color: var(--color-text-primary);
+  background: none;
+  cursor: pointer;
+}
+
+.navButton:hover,
+.navButtonActive {
+  background: var(--color-bg-active);
+}
+
+.listingPopover {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  left: 0;
+  z-index: 20;
+  width: 280px;
+  padding: var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-primary);
+  box-shadow: var(--shadow-md);
+}
+
+.listingPopover > input {
+  box-sizing: border-box;
+  width: 100%;
+  margin-bottom: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font: inherit;
+}
+
+.listingPopover ul {
+  max-height: 320px;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.listingItem {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-md);
+  text-align: left;
+  font: inherit;
+  background: none;
+  cursor: pointer;
+}
+
+.listingItem:hover,
+.listingItemCurrent {
+  background: var(--color-bg-active);
+}
+
+.listingPath {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.listingEmpty {
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-text-muted);
+}
+
+.search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-2) 0 var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-bg-primary);
+}
+
+.search:focus-within {
+  border-color: var(--color-text-link);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-2) 0;
+  border: 0;
+  outline: none;
+  font: inherit;
+  background: transparent;
+}
+
+.spinner {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.aiToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px var(--space-2);
+  border-radius: 999px;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-tertiary);
+  cursor: pointer;
+}
+
+.aiToggleOn {
+  color: #fff;
+  background: #6d28d9;
+}
+
+.popover {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  left: 0;
+  right: 0;
+  z-index: 20;
+  min-width: min(640px, 92vw);
+  padding: var(--space-2) 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-primary);
+  box-shadow: var(--shadow-md);
+}
