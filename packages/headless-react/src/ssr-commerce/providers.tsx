@@ -59,7 +59,9 @@ export function buildProviderWithDefinition<
       InferControllerStaticStateMapFromDefinitionsWithSolutionType<TControllers, TSolutionType>
     >;
     /**
-     * @deprecated will be removed in the next major release. The navigator context provider can now be set when fetching the static state
+     * The navigator context you passed to `fetchStaticState()`.
+     *
+     * @deprecated This prop will be removed in the next major version.
      */
     navigatorContext: NavigatorContext;
     /**

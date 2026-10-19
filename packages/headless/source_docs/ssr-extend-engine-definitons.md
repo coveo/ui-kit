@@ -258,4 +258,4 @@ On the server, requests are handled concurrently. Data that varies between reque
 > });
 > ```
 >
-> See [Manage access tokens](./manage-access-tokens.html) for the full commerce token and navigator-context guidance. Conversely, `setAccessToken()` and `setNavigatorContextProvider()` write onto the shared definition — they are the right tools on the **client**, where a single hydrated engine runs for the session, but on the **server** prefer the per-request options above.
+> On the client, pass the same `accessToken` and `navigatorContext` to `hydrateStaticState()` (with React, to the provider). Don’t call `setAccessToken()` or `setNavigatorContextProvider()`: both are deprecated and write onto the shared definition. See [Manage access tokens](./manage-access-tokens.html) for the full commerce token and navigator-context guidance.
