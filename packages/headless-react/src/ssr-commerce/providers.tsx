@@ -80,7 +80,6 @@ export function buildProviderWithDefinition<
     const [hydratedState, setHydratedState] = useState<
       InferHydratedState<typeof definition> | undefined
     >(undefined);
-    definition.setNavigatorContextProvider(() => navigatorContext);
 
     useEffect(() => {
       const {searchActions, controllers} = staticState;
@@ -138,6 +137,7 @@ export function buildProviderWithDefinition<
 
       const args: HydrateStaticStateOptions<UnknownAction> & ControllerPropsMap = {
         searchActions,
+        navigatorContext,
       };
 
       if (accessToken !== undefined) {
