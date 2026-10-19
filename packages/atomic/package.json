@@ -56,8 +56,9 @@
   },
   "scripts": {
     "publint": "publint",
-    "clean": "node ../../utils/ci/rm-rf.mjs dist/* dist-storybook/* www/* docs/* playwright-report/*",
+    "clean": "node ../../utils/ci/rm-rf.mjs dist/* dist-storybook/* dist-storybook-e2e/* www/* docs/* playwright-report/*",
     "build:storybook": "storybook build -o dist-storybook",
+    "build:storybook:e2e": "STORYBOOK_INVOKED_BY=playwright storybook build -o dist-storybook-e2e --quiet",
     "build:cem": "cem analyze",
     "build:locales": "node scripts/build-locales.mjs",
     "build:assets": "node scripts/build-assets.mjs",
