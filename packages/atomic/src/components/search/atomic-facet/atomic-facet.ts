@@ -705,6 +705,7 @@ export class AtomicFacet extends LitElement implements InitializableComponent<Bi
   private initAriaLive() {
     this.facetSearchAriaLive = new AriaLiveRegionController(this, 'facet-search');
     announceFacetSearchResultsWithAriaLive(
+      this,
       this.facet,
       this.label,
       (msg) => {
