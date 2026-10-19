@@ -762,6 +762,14 @@ function sortProducts(input: WaterSportsProduct[], sortCriteria: string): WaterS
   return [...input];
 }
 
+function isUnderCategory(product: WaterSportsProduct, relativePath: string[]): boolean {
+  const selected = [...ROOT_CHAIN, ...relativePath].join('|');
+  const categories = Array.isArray(product.ec_category)
+    ? product.ec_category
+    : [product.ec_category];
+  return categories.some((c) => c === selected || c.startsWith(`${selected}|`));
+}
+
 function filterProducts(view: SearchViewState): WaterSportsProduct[] {
   return products.filter((p) => {
     if (view.excludedBrands.includes(p.ec_brand)) {
@@ -776,12 +784,8 @@ function filterProducts(view: SearchViewState): WaterSportsProduct[] {
         return false;
       }
     }
-    if (view.selectedCategoryPath.length > 0) {
-      const selected = [...ROOT_CHAIN, ...view.selectedCategoryPath].join('|');
-      const categories = Array.isArray(p.ec_category) ? p.ec_category : [p.ec_category];
-      if (!categories.some((c) => c === selected || c.startsWith(`${selected}|`))) {
-        return false;
-      }
+    if (view.selectedCategoryPath.length > 0 && !isUnderCategory(p, view.selectedCategoryPath)) {
+      return false;
     }
     return true;
   });
@@ -1716,4 +1720,10 @@ function buildWaterSportsActionEvents(
   });
 }
 
-export {buildWaterSportsInitialEvents, buildWaterSportsActionEvents};
+/** The catalog's products under a category below the root chain, in catalog order. */
+function waterSportsProductsUnder(...relativePath: string[]): WaterSportsProduct[] {
+  return products.filter((product) => isUnderCategory(product, relativePath));
+}
+
+export {buildWaterSportsInitialEvents, buildWaterSportsActionEvents, waterSportsProductsUnder};
+export type {WaterSportsProduct};
