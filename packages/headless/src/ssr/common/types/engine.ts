@@ -56,7 +56,8 @@ export interface EngineDefinition<
   /**
    * @deprecated This method will be removed in a future major version. It mutates the shared engine
    * definition, so on a server handling concurrent requests one request can overwrite another
-   * request's navigator context. Pass a `navigatorContextProvider` to `defineSearchEngine()` instead.
+   * request's navigator context. Pass a per-request `navigatorContext` to `fetchStaticState()` and
+   * `hydrateStaticState()` instead, or a `navigatorContextProvider` to `defineSearchEngine()`.
    *
    * Sets the navigator context provider.
    * This provider is essential for retrieving navigation-related data such as referrer, userAgent, location, and clientId, which are crucial for handling both server-side and client-side API requests effectively.
