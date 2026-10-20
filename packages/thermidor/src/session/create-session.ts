@@ -42,7 +42,8 @@ import {createTurn, foldActivity} from './fold.js';
 import {deriveNodeIdentityRegistry} from './in-transit-validation.js';
 import {restoreSession, serializeSession, type SerializedSession} from './serialize.js';
 import {createSessionStore, type SessionStore, type SessionStoreState} from './store.js';
-import type {Turn, TurnInput} from './types.js';
+import type {A2uiV09Message, Turn, TurnInput} from './types.js';
+import {createWellKnownSurfaces} from './well-known-surfaces.js';
 
 /**
  * The standard A2-UI client-to-server message the frozen renderer delivers to
@@ -140,6 +141,17 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
    * so the restored session continues the same backend conversation.
    */
   sessionToRestore?: SerializedSession;
+  /**
+   * PROTOTYPE (KIT-6367): the A2-UI v1.0 `createSurface` messages of the surfaces the contract
+   * declares well-known. The session creates them itself, before any request, and they outlive
+   * every turn. Stands in for a schema export.
+   */
+  wellKnownSurfaces?: readonly Record<string, unknown>[];
+  /**
+   * PROTOTYPE (KIT-6367): the action names the contract marks as lookups. Stands in for the
+   * schema's lookup marker.
+   */
+  lookupActions?: readonly string[];
 }
 
 /**
@@ -165,7 +177,13 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * listeners. A conflict that recovers through retry never sets it.
    */
   readonly actionError: string | undefined;
-  /** Registers a listener invoked once per change to the turn list or `actionError`. */
+  /**
+   * PROTOTYPE (KIT-6367): the renderer messages of the well-known surfaces, in the v0.9 shape,
+   * append-only. Their `createSurface` is there from construction; each lookup result appends
+   * its `updateDataModel` messages. Feed new messages to the renderer as they arrive.
+   */
+  readonly wellKnownSurfaceMessages: readonly A2uiV09Message[];
+  /** Registers a listener invoked once per change to the turn list, `actionError`, or `wellKnownSurfaceMessages`. */
   subscribe(listener: () => void): () => void;
   /**
    * The single consumer-facing action-dispatch entry point, wired directly as
@@ -287,6 +305,15 @@ export function createSession<TContracts extends ContractsSchema>(
   const store: SessionStore<Turn> = createSessionStore<Turn>(initialState);
 
   const client = createUnifiedEndpointClient();
+
+  const wellKnownSurfaces = createWellKnownSurfaces(
+    config.wellKnownSurfaces ?? [],
+    config.contracts,
+    () => store.setState((current) => ({...current}))
+  );
+  const lookupActions = new Set(config.lookupActions ?? []);
+  // One in-flight lookup per source component and action; a newer one aborts it.
+  const lookupControllers = new Map<string, AbortController>();
 
   // The currently in-flight stream's abort controller, or null when idle. Held
   // per session instance — never module-level — so two sessions never contend.
@@ -688,6 +715,92 @@ export function createSession<TContracts extends ContractsSchema>(
   }
 
   /**
+   * PROTOTYPE (KIT-6367): sends a lookup at once, beside any prompt or gesture, with the session
+   * token when there is one. Its run applies only to the well-known surfaces: it never opens a
+   * turn, and its session keys are never adopted, so a lookup sent before the first prompt opens
+   * no session.
+   */
+  async function runLookup(action: A2uiAction): Promise<void> {
+    const key = `${action.surfaceId}/${action.sourceComponentId}/${action.name}`;
+    lookupControllers.get(key)?.abort();
+    const controller = new AbortController();
+    lookupControllers.set(key, controller);
+
+    const reportFailure = (error: unknown) => {
+      if (!isAbortError(error) && !controller.signal.aborted) {
+        devWarn(`dispatchAction: lookup "${action.name}" failed: ${getErrorMessage(error)}`);
+      }
+    };
+
+    try {
+      const result = await client.call(
+        buildActionRequest(action),
+        {
+          organizationId: config.organizationId,
+          accessToken: config.accessToken,
+          endpoint: config.endpoint,
+        },
+        {signal: controller.signal}
+      );
+      if (!result.success) {
+        reportFailure(result.error);
+        return;
+      }
+      await readEventStream({
+        stream: result.data.stream,
+        signal: controller.signal,
+        onEvent: (rawEvent) => {
+          const event = parseSSEEvent(rawEvent) as unknown as Record<string, unknown>;
+          const content = event['content'] as {messages?: unknown} | undefined;
+          if (event['type'] === 'ACTIVITY_SNAPSHOT' && Array.isArray(content?.messages)) {
+            wellKnownSurfaces.apply(content.messages);
+          }
+        },
+        onError: reportFailure,
+      });
+    } catch (error) {
+      reportFailure(error);
+    } finally {
+      if (lookupControllers.get(key) === controller) {
+        lookupControllers.delete(key);
+      }
+    }
+  }
+
+  async function dispatchToWellKnownSurface(
+    userAction: NonNullable<A2uiClientMessage['userAction']>
+  ): Promise<void> {
+    const {name, surfaceId, sourceComponentId, context} = userAction;
+    const discriminant = sourceComponentId
+      ? wellKnownSurfaces.resolve(surfaceId, sourceComponentId)
+      : undefined;
+    if (!sourceComponentId || discriminant === undefined) {
+      devWarn(
+        `dispatchAction: no component "${sourceComponentId}" on "${surfaceId}"; nothing sent.`
+      );
+      return;
+    }
+    if (!lookupActions.has(name)) {
+      devWarn(`dispatchAction: "${name}" is not a lookup; well-known surfaces only send lookups.`);
+      return;
+    }
+    const validation = validateActionPayload(discriminant, name, context, config.contracts);
+    if (!validation.valid) {
+      devWarn(`dispatchAction: lookup "${name}" withheld: ${validation.reason}`);
+      return;
+    }
+    await runLookup({
+      surfaceId,
+      name,
+      sourceComponentId,
+      timestamp: new Date().toISOString(),
+      actionId: null,
+      wantResponse: false,
+      context,
+    });
+  }
+
+  /**
    * The single consumer-facing action-dispatch entry point. See
    * {@link Session.dispatchAction}. Pre-bound arrow field so
    * `onAction={session.dispatchAction}` works when passed by reference.
@@ -702,6 +815,11 @@ export function createSession<TContracts extends ContractsSchema>(
       } catch (error) {
         devWarn(`dispatchAction: submitPrompt withheld: ${getErrorMessage(error)}`);
       }
+      return;
+    }
+
+    if (message.userAction && wellKnownSurfaces.has(message.userAction.surfaceId)) {
+      await dispatchToWellKnownSurface(message.userAction);
       return;
     }
 
@@ -737,6 +855,9 @@ export function createSession<TContracts extends ContractsSchema>(
     },
     get actionError() {
       return store.getState().actionError;
+    },
+    get wellKnownSurfaceMessages() {
+      return wellKnownSurfaces.messages;
     },
     subscribe(listener) {
       return store.subscribe(listener);

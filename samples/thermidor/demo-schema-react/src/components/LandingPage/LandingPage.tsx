@@ -1,5 +1,4 @@
-import {SECTION_ACTIONS, type SuggestionItem} from '../SuggestionsDropdown/index.js';
-import {PromptInput} from '../PromptInput/PromptInput.js';
+import {SearchBox} from '../SearchBox/SearchBox.js';
 import {SuggestionPills} from '../SuggestionPills/SuggestionPills.js';
 import {useSuggestions} from '../../hooks/use-suggestions.js';
 import styles from './LandingPage.module.css';
@@ -11,25 +10,18 @@ interface LandingPageProps {
 
 export function LandingPage({onSubmit, isStreaming}: LandingPageProps) {
   const {sections} = useSuggestions({inputValue: '', context: 'landing'});
-
-  const handleSuggestionSelect = (item: SuggestionItem, sectionId: string) => {
-    const action = SECTION_ACTIONS[sectionId];
-    if (action === 'submit') {
-      onSubmit(item.label);
-    }
-  };
+  const conversationalSections = sections.filter((section) => section.id === 'conversational');
 
   return (
     <section className={styles.page}>
       <div className={styles.content}>
         <h1 className={styles.title}>What can I help you find?</h1>
         <div className={styles.inputWrapper}>
-          <PromptInput
+          <SearchBox
             onSubmit={onSubmit}
-            disabled={isStreaming}
+            isStreaming={isStreaming}
             placeholder="Ask anything..."
-            suggestions={sections}
-            onSuggestionSelect={handleSuggestionSelect}
+            extraSections={conversationalSections}
           />
         </div>
         <div className={styles.pillsWrapper}>

@@ -2,6 +2,7 @@ import {createContext, useContext, useRef, type PropsWithChildren} from 'react';
 import {createSession, type NavigatorContext, type Session} from '@coveo/thermidor';
 import {ComponentContractsSchema} from '@coveo/thermidor-schema/zod3';
 import {getSampleConfiguration} from '../env.js';
+import {LOOKUP_ACTIONS, SEARCH_BOX_SURFACE} from '../a2ui/well-known-surfaces.js';
 
 /**
  * The concrete contract this sample injects into the runtime. `@coveo/thermidor`
@@ -41,6 +42,8 @@ function createThermidorSession(): DemoSession {
     country,
     currency,
     navigatorContextProvider: getNavigatorContext,
+    wellKnownSurfaces: [SEARCH_BOX_SURFACE],
+    lookupActions: LOOKUP_ACTIONS,
   });
 }
 

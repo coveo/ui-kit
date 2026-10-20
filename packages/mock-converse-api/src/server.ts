@@ -107,7 +107,12 @@ const handleSchemaConversePost = async ({request}: {request: Request}) => {
   if (hasAction) {
     return withCors(
       converseSchemaResponses.buildSchemaActionResponse(
-        action as {name: string; context: Record<string, unknown>; sourceComponentId?: string}
+        action as {
+          name: string;
+          context: Record<string, unknown>;
+          surfaceId?: string;
+          sourceComponentId?: string;
+        }
       )
     );
   }

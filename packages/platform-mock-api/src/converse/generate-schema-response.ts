@@ -4,6 +4,7 @@ import {schemaDiscoveryEvents} from './templates/schema-response-discovery.js';
 import {schemaFallbackEvents} from './templates/schema-response-fallback.js';
 import {schemaComparisonEvents} from './templates/schema-response-comparison.js';
 import {schemaProductResearchEvents} from './templates/schema-response-product-research.js';
+import {buildQuerySuggestionsLookupEvents} from './templates/schema-response-query-suggestions.js';
 import {
   buildWaterSportsInitialEvents,
   buildWaterSportsActionEvents,
@@ -70,11 +71,20 @@ function buildSearchActionEvents(action: {
   return buildWaterSportsActionEvents(action, action.sourceComponentId);
 }
 
+// Per message (three per lookup): ~150ms, about a real querySuggest round trip.
+const LOOKUP_DELAY_MS = 50;
+
 function buildSchemaActionResponse(action: {
   name: string;
   context: Record<string, unknown>;
+  surfaceId?: string;
   sourceComponentId?: string;
 }) {
+  if (action.name === 'fetchSuggestions') {
+    return buildStreamingResponse(buildQuerySuggestionsLookupEvents(action), {
+      delayBetweenMessages: LOOKUP_DELAY_MS,
+    });
+  }
   const events = buildSearchActionEvents(action);
   return buildStreamingResponse(events, {delayBetweenMessages: ACTION_DELAY_MS});
 }

@@ -24,6 +24,10 @@ interface PromptInputProps {
   autoFocus?: boolean;
   suggestions?: SuggestionSection[];
   onSuggestionSelect?: (item: SuggestionItem, sectionId: string) => void;
+  /** Called with what the shopper types, not with a selected suggestion. */
+  onValueChange?: (value: string) => void;
+  /** Blocks submitting, but keeps the input usable, for example while an answer streams. */
+  busy?: boolean;
 }
 
 export function PromptInput({
@@ -35,7 +39,10 @@ export function PromptInput({
   autoFocus = false,
   suggestions,
   onSuggestionSelect,
+  onValueChange,
+  busy = false,
 }: PromptInputProps) {
+  const submitBlocked = disabled || busy;
   const [value, setValue] = useState(initialValue);
   const [showDropdown, setShowDropdown] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -62,6 +69,10 @@ export function PromptInput({
 
   useEffect(() => {
     setActiveIndex(-1);
+    // Suggestions that arrive while the shopper types open the dropdown.
+    if (suggestions?.length && document.activeElement === textareaRef.current) {
+      setShowDropdown(true);
+    }
   }, [suggestions]);
 
   useEffect(() => {
@@ -82,17 +93,18 @@ export function PromptInput({
 
   const submit = useCallback(() => {
     const trimmed = value.trim();
-    if (!trimmed || disabled) return;
+    if (!trimmed || submitBlocked) return;
     setShowDropdown(false);
     onSubmit(trimmed);
     if (clearOnSubmit) {
       setValue('');
+      onValueChange?.('');
       if (textareaRef.current) {
         textareaRef.current.style.height = 'auto';
         textareaRef.current.style.overflowY = 'hidden';
       }
     }
-  }, [value, disabled, onSubmit, clearOnSubmit]);
+  }, [value, submitBlocked, onSubmit, clearOnSubmit, onValueChange]);
 
   function handleFocus() {
     if (disabled) {
@@ -175,6 +187,7 @@ export function PromptInput({
 
   function handleInput(e: ChangeEvent<HTMLTextAreaElement>) {
     setValue(e.target.value);
+    onValueChange?.(e.target.value);
     const el = e.target;
     const computed = getComputedStyle(el);
     const maxHeight = parseInt(computed.maxHeight, 10);
@@ -228,6 +241,7 @@ export function PromptInput({
           className={`${styles.iconButton} ${styles.clearButton}`}
           onClick={() => {
             setValue('');
+            onValueChange?.('');
             setShowDropdown(false);
             suppressNextFocusRef.current = true;
             if (textareaRef.current) {
@@ -257,11 +271,11 @@ export function PromptInput({
           type="button"
           className={`${styles.iconButton} ${styles.submitButton}`}
           onClick={submit}
-          disabled={disabled || !value.trim()}
+          disabled={submitBlocked || !value.trim()}
           aria-label="Submit"
-          tabIndex={!disabled && value.trim() ? 0 : -1}
+          tabIndex={!submitBlocked && value.trim() ? 0 : -1}
         >
-          {disabled ? (
+          {submitBlocked ? (
             <svg
               viewBox="0 0 24 24"
               fill="none"
