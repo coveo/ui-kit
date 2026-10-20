@@ -1,0 +1,208 @@
+---
+status: Proposed
+date: 2026-10-20
+related:
+  - ./ADR-009-architecture-decision-charter-v2.md
+  - ./ADR-010-unified-endpoint-session-client.md
+  - ./ADR-011-session-serialization.md
+  - ./ADR-014-consumer-supplied-endpoint-and-schema.md
+  - ./ADR-015-surface-and-route-derivation.md
+  - ./ADR-016-inline-state-consumption-remove-remote-controller.md
+  - thermidor-schema ADR-020 (well-known surfaces and lookup actions)
+---
+
+# Well-known surfaces and lookup actions
+
+> Part of the unified-endpoint session-client family (core:
+> [ADR-010](./ADR-010-unified-endpoint-session-client.md)), governed by the charter
+> [ADR-009](./ADR-009-architecture-decision-charter-v2.md). This ADR **amends**
+> [ADR-014](./ADR-014-consumer-supplied-endpoint-and-schema.md) (the injected contract),
+> [ADR-015](./ADR-015-surface-and-route-derivation.md) (surfaces derived from turns) and
+> [ADR-016](./ADR-016-inline-state-consumption-remove-remote-controller.md) (dispatch from the
+> active turn).
+
+## Context and Problem Statement
+
+`thermidor-schema` ADR-020 decides how query suggestions work:
+
+- The contract declares **well-known surfaces**: surfaces whose id, composition and initial state
+  it fixes. Every consumer creates them itself, before its first request, and the producer only
+  writes their state. The first is the search box, whose root is a `QuerySuggestions` component.
+- Some actions are **lookups**, marked in the contract. A lookup is answered outside the line,
+  with or without a session, and writes only its source component's state. `fetchSuggestions` is
+  one.
+
+The point is the user experience: the search box is usable on first paint, before the producer
+has answered anything, and is never swapped while the shopper types.
+
+The session cannot support this today:
+
+- **Surfaces come from turns.** A turn's surfaces and state are derived from that turn's own
+  `activities` (ADR-015). Nothing creates a surface before a request, or outside a turn.
+- **Dispatch needs the active turn.** `dispatchAction` resolves the source component only in the
+  active turn, and drops the action otherwise (ADR-016).
+- **Everything waits in line.** The session has one in-flight stream. Actions run one after
+  another, and are held back while a prompt streams.
+- **The contract is a component union.** The session receives the component contracts (ADR-014),
+  but nothing about surfaces or lookups.
+
+## Decision Drivers
+
+- **Faithful transmission and rendering (charter MUST).** A well-known surface is rendered exactly
+  as the contract declares it, with A2-UI's standard rendering.
+- **First paint.** The search box surface exists before any request, and its input is never
+  remounted.
+- **Lookups.** A lookup never waits for, blocks or fails another action or turn. A newer lookup
+  from the same component replaces the previous one.
+- **Best-in-class DX (charter MUST).** An application renders the search box with no code that
+  stitches its own input to an A2-UI component, and injects one contract.
+- **Breaking changes are acceptable.** The package is experimental and published as `0.x`, where a
+  minor release may break its API. Each breaking change ships with a changeset that describes the
+  migration.
+
+## Considered Options
+
+### Option A: create the well-known surfaces in a synthetic first turn
+
+- **Summary:** the session opens a turn at construction that carries the well-known surfaces'
+  `createSurface` messages.
+- **Pros:** surfaces stay derived from turns.
+- **Cons:**
+  - Turns are the transcript. A turn with no prompt and no response would appear in it and in
+    serialized sessions.
+  - The first prompt opens turn 1, so the search box would stop accepting actions (ADR-016).
+
+### Option B: the application creates the surface itself
+
+- **Summary:** the session knows nothing about well-known surfaces. The application feeds their
+  `createSurface` to its renderer and sends their lookups itself.
+- **Pros:** no change to the session.
+- **Cons:** every application rebuilds the same plumbing: creating the surface, routing its
+  actions outside `dispatchAction`, superseding lookups and applying their results. That is the
+  stitching the design exists to avoid.
+
+### Option C (selected): the session holds the well-known surfaces, and sends lookups in a lane of their own
+
+- **Summary:** the session creates the contract's well-known surfaces at construction, outside any
+  turn, and sends their lookups at once.
+- **Pros:** an application renders the search box like any surface, and its actions go through
+  `dispatchAction` like any other.
+- **Cons:** the session gains a small layer beside turns, and a second message stream for renderer
+  integrations to feed.
+
+## Decision Outcome
+
+Adopt **Option C**.
+
+### The injected contract
+
+The session reads the well-known surfaces and the lookup marks from the contract it is given.
+ADR-014's injected contracts schema becomes a contract with three parts: the component union, the
+well-known surfaces, and the lookup actions of each component. `@coveo/thermidor-schema` exports
+it as one value, so an application injects one contract, as it does today. Names are left to the
+implementation.
+
+### Well-known surfaces
+
+- **Created at construction.** The session turns each well-known surface's declaration into its
+  `createSurface` message before any request, so a renderer can draw the surface on first paint.
+- **Outside turns.** Well-known surfaces belong to no turn. The session exposes their renderer
+  messages as a stream of their own, beside the turns, and appends each lookup result to it. They
+  use the same v0.9 projection as turns (ADR-015 addendum).
+- **Fed once, never replayed.** A renderer integration feeds each new message to the renderer once.
+  Clearing and replaying the stream would recreate the surface and remount the input. It feeds the
+  creation before the first paint, for example from a React layout effect.
+- **Found by id.** An application renders a well-known surface by the id the contract exports:
+
+  ```tsx
+  <A2UIProvider catalog={catalog} onAction={session.dispatchAction}>
+    <A2UIRenderer surfaceId={SEARCH_BOX_SURFACE_ID} />
+  </A2UIProvider>
+  ```
+
+- **Validated like any surface.** An inbound `updateDataModel` for a well-known surface is validated
+  against its component's contract before it reaches the renderer.
+- **Not serialized.** A restored session creates its well-known surfaces again from the contract.
+  Their state is lookup results, which the next keystroke replaces. ADR-011 is unchanged.
+
+### Dispatch
+
+`dispatchAction` resolves an action whose source component is on a well-known surface against that
+surface's declaration, and sends it in the lookup lane. It needs no active turn, which amends
+ADR-016 for these surfaces. An action from a well-known surface that the contract does not mark as a
+lookup is dropped with a dev-only warning; the contract never places one there.
+
+### Request lanes
+
+| Lane                 | Members                                                    | Behavior                                                                                                                                                                                                        |
+| -------------------- | ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Prompts and gestures | `submitPrompt`, and component actions that are not lookups | Unchanged.                                                                                                                                                                                                      |
+| Lookups              | component actions the contract marks as lookups            | Sent at once, alongside any prompt or gesture, with the session token when there is one. A new lookup from the same source component and action aborts the previous one. A lookup's failure never fails a turn. |
+
+A lookup's run applies only to the well-known surfaces. It never opens a turn or folds into one,
+and the session never adopts session keys from it. So a shopper who only types opens no session,
+and the first prompt still opens it, as it does today.
+
+### The search box in the renderer
+
+The `QuerySuggestions` catalog component draws the whole search box: the input and the completions
+popover.
+
+- The input holds what is typed, on the renderer side.
+- An empty input sends no lookup and shows no completions.
+- A submit hides the completions until the next keystroke, so a lookup that answers after the
+  submit cannot reopen them.
+- What submitting does is the application's: the component receives it from the application, for
+  example through a React context. Whether `submitPrompt` becomes an action the component
+  dispatches is left to the prompt-submission ADR.
+
+demo-schema-react implements this as the reference.
+
+### Rationale
+
+Option A bends the transcript to hold something that is not part of it. Option B pushes the same
+plumbing into every application. Option C puts it once in the session, where `dispatchAction`,
+superseding and in-transit validation already live, and leaves applications rendering a surface
+and choosing what a submit does.
+
+## Impact on the Charter
+
+- **Faithful transmission and rendering (MUST):** preserved. A well-known surface is the contract's
+  `createSurface`, applied as declared, and its state is the producer's, validated in transit.
+- **Public API independence (MUST):** unchanged. Well-known surfaces are exposed as the same
+  renderer messages as turns.
+- **Best-in-class DX (MUST):** improved. The search box needs no stitching, and the application
+  injects one contract.
+- **Consumer-owned inputs (MUST):** unchanged. The input stays on the renderer side.
+- **Conditional SSR (SHOULD):** helped. The search box surface exists without any request, so a
+  server can render it.
+- **Simplicity (SHOULD):** mixed. The session gains a layer beside turns and a lane for lookups,
+  but applications lose all of their search box plumbing.
+
+## Consequences
+
+- **Positive:**
+  - The search box is drawn on first paint and never remounted while the shopper types.
+  - Suggestions work before the first prompt and while an answer streams.
+  - Instant products, or other well-known surfaces, reuse the same mechanism.
+- **Negative:**
+  - The injected contract changes shape. It ships in a minor `0.x` release with a changeset.
+  - Renderer integrations feed a second message stream, once per message.
+  - A new session handle creates its well-known surfaces anew, so an application that replaces its
+    session to start a new conversation remounts the search box.
+  - The mock converse service must answer lookups with or without a session.
+- **Neutral:** an earlier version of this ADR made every surface session-scoped. Query suggestions no
+  longer need that, so it is left to a decision of its own.
+
+## Implementation and Follow-up
+
+- **Overlapping runs are allowed.** A lookup's run can overlap a prompt's run on the same thread.
+  - AG-UI only requires a run id that is unique within the thread, and validates event order per
+    stream.
+  - This package parses each stream on its own, so concurrent streams only need the request lanes
+    above.
+- **Session-scoped surfaces.** Whether surfaces created by turns live for the whole session, as the
+  producer and A2-UI scope them, so that earlier turns' surfaces keep accepting actions.
+- **Starting a new conversation without remounting the search box.** For example by letting a
+  session handle start a new conversation.
+- **Instant products.** See `thermidor-schema` ADR-020's follow-up decisions.
