@@ -9,7 +9,7 @@ import {LandingPage} from './LandingPage/LandingPage.js';
 import {ConversationPage} from './ConversationPage/index.js';
 import {startFollowUp, type FollowUp} from './ConversationPage/turn-segments.js';
 
-const catalog = createThermidorCatalog();
+const catalog = createThermidorCatalog({productResearchCard: {maxLinks: 5}});
 
 /** `NextActionsBar` actions: each one asks for a new answer rather than updating a block. */
 const FOLLOW_UP_ACTIONS = new Set(['selectAction', 'selectSearchOption']);
