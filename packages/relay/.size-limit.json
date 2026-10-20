@@ -1,0 +1,8 @@
+[
+  {
+    "name": "@coveo/relay - CDN",
+    "path": "lib/cdn/relay.min.js",
+    "rolldown": false,
+    "limit": "2.3 kB"
+  }
+]
