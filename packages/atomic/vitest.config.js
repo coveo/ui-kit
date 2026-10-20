@@ -173,6 +173,7 @@ const storybookPure = defineConfig({
 
 export default mergeConfig(atomicDefault, {
   test: {
+    shard: process.env.TEST_SHARD,
     reporters: [
       'default',
       new VitestA11yReporter({

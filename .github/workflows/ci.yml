@@ -478,9 +478,14 @@ jobs:
           fetch-tags: false
           filter: blob:none
       - uses: ./.github/actions/setup
+      # The shard goes through TEST_SHARD, which only the test task hashes. Turbo hashes
+      # `turbo run … -- --shard=N/M` into every task of the run, so each shard would rebuild
+      # the upstream packages instead of replaying the Build job's cache.
       - name: Run Playwright tests
         id: playwright
-        run: pnpm exec turbo run '@coveo/atomic#e2e' -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+        run: pnpm exec turbo run '@coveo/atomic#e2e'
+        env:
+          TEST_SHARD: ${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
         continue-on-error: true
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         if: ${{ !cancelled() }}
@@ -574,7 +579,10 @@ jobs:
           filter: blob:none
       - run: git branch main origin/main
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo run test:storybook --filter=@coveo/atomic -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+      # TEST_SHARD instead of `-- --shard`, see the Playwright job.
+      - run: pnpm exec turbo run test:storybook --filter=@coveo/atomic
+        env:
+          TEST_SHARD: ${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
       - name: 'Upload a11y shard report'
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
