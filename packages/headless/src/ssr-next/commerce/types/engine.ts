@@ -90,8 +90,7 @@ export interface CommerceEngineDefinition<
    * - Replays search/listing/recommendation actions to synchronize the state
    * - Returns live, interactive controllers ready for user interaction
    *
-   * @param params - A configuration object containing the static state, navigation context,
-   *                 and any controller-specific props needed for hydration
+   * @param staticState - The static state returned by `fetchStaticState()`, passed as is.
    * @returns A Promise that resolves to the hydrated engine and interactive controllers
    *
    * @example
@@ -106,7 +105,7 @@ export interface CommerceEngineDefinition<
   hydrateStaticState: HydrateStaticState<
     InferControllersMapFromDefinition<TControllers, TSolutionType>,
     UnknownAction,
-    InferControllerPropsMapFromDefinitions<TControllers>,
+    InferControllerStaticStateMapFromDefinitionsWithSolutionType<TControllers, TSolutionType>,
     TControllers,
     TSolutionType
   >;

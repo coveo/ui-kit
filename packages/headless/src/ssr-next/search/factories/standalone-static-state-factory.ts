@@ -31,9 +31,14 @@ export function fetchStandaloneStaticStateFactory<
       controllers,
     });
 
+    const {controllers: controllerProps, ...restParams} = params as {
+      controllers?: Record<string, unknown>;
+    } & typeof params;
+
     return {
-      ...params,
+      ...restParams,
       ...staticState,
+      ...(controllerProps && {controllerProps}),
     };
   };
 }
