@@ -1,38 +1,37 @@
-import type {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {ControllersMap, ControllersPropsMap} from '../../common/types/controllers.js';
-import type {BuildConfig} from './build.js';
+import type {HasKey} from '../../common/types/utilities.js';
+import type {SSRCommerceEngine} from '../factories/build-factory.js';
 import type {SolutionType} from './controller-constants.js';
 import type {
-  CommerceEngineDefinitionControllersPropsOption,
+  AugmentedControllerDefinition,
   ControllerDefinitionsMap,
 } from './controller-definitions.js';
-import type {CommerceEngineDefinitionBuildResult} from './engine.js';
-
-export type HydratedState<TControllers extends ControllersMap> =
-  CommerceEngineDefinitionBuildResult<TControllers>;
-
-export interface HydrateStaticStateOptions<TSearchAction> {
-  searchActions: TSearchAction[];
-}
+import type {InferControllerFromDefinition} from './controller-inference.js';
 
 /**
- * Creates a new engine from the snapshot of the engine created in SSR with fetchStaticState.
+ * The engine and the live controllers returned by `hydrateStaticState()`.
  *
- * Useful when hydrating a server-side-rendered engine.
+ * @typeParam TControllers - The controllers of the engine definition.
+ * @typeParam TSolutionType - The kind of page the engine definition serves.
  */
-export type HydrateStaticState<
-  TControllers extends ControllersMap,
-  TSearchAction extends UnknownAction,
-  TControllersProps extends ControllersPropsMap,
-  TControllersDefinitionsMap extends ControllerDefinitionsMap<Controller>,
+export interface CommerceHydratedState<
+  TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
-> = (
-  params: HydrateStaticStateOptions<TSearchAction> &
-    BuildConfig<TControllersDefinitionsMap, TSolutionType> &
-    CommerceEngineDefinitionControllersPropsOption<
-      TControllersDefinitionsMap,
-      TControllersProps,
-      TSolutionType
-    >
-) => Promise<HydratedState<TControllers>>;
+> {
+  engine: SSRCommerceEngine;
+  /**
+   * The live controllers of the page, by name: the controllers of the engine definition that are
+   * available to the solution type, and the baked-in ones (`context` and `cart` everywhere,
+   * `parameterManager` for search and listing).
+   */
+  controllers: {
+    [
+      K in keyof AugmentedControllerDefinition<TControllers> as HasKey<
+        AugmentedControllerDefinition<TControllers>[K],
+        TSolutionType
+      > extends never
+        ? never
+        : K
+    ]: InferControllerFromDefinition<AugmentedControllerDefinition<TControllers>[K]>;
+  };
+}

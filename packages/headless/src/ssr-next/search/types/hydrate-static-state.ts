@@ -1,33 +1,22 @@
-import type {UnknownAction} from '@reduxjs/toolkit';
-import type {CoreEngine, CoreEngineNext} from '../../../app/engine.js';
-import type {ControllersMap, ControllersPropsMap} from '../../common/types/controllers.js';
-import type {BuildConfig} from './build.js';
-import type {
-  SearchEngineDefinitionBuildResult,
-  SearchEngineDefinitionControllersPropsOption,
-} from './engine.js';
-
-export type HydratedState<
-  TEngine extends CoreEngine | CoreEngineNext,
-  TControllers extends ControllersMap,
-> = SearchEngineDefinitionBuildResult<TEngine, TControllers>;
-
-interface HydrateStaticStateOptions<TSearchAction> {
-  searchActions: TSearchAction[];
-}
+import type {SSRSearchEngine} from './build.js';
+import type {AugmentedControllerDefinition} from './controller-definition.js';
+import type {InferControllerFromDefinition} from './controller-inference.js';
+import type {SearchControllerDefinitionsMap} from './engine.js';
 
 /**
- * Creates a new engine from the snapshot of the engine created in SSR with fetchStaticState.
+ * The engine and the live controllers returned by `hydrateStaticState()`.
  *
- * Useful when hydrating a server-side-rendered engine.
+ * @typeParam TControllers - The controllers of the engine definition.
  */
-export type HydrateStaticState<
-  TEngine extends CoreEngine | CoreEngineNext,
-  TControllers extends ControllersMap,
-  TSearchAction extends UnknownAction,
-  TControllersProps extends ControllersPropsMap,
-> = (
-  params: BuildConfig &
-    HydrateStaticStateOptions<TSearchAction> &
-    SearchEngineDefinitionControllersPropsOption<TControllersProps>
-) => Promise<HydratedState<TEngine, TControllers>>;
+export interface SearchHydratedState<TControllers extends SearchControllerDefinitionsMap> {
+  engine: SSRSearchEngine;
+  /**
+   * The live controllers of the page, by name: the controllers of the engine definition, and the
+   * baked-in `parameterManager`.
+   */
+  controllers: {
+    [K in keyof AugmentedControllerDefinition<TControllers>]: InferControllerFromDefinition<
+      AugmentedControllerDefinition<TControllers>[K]
+    >;
+  };
+}

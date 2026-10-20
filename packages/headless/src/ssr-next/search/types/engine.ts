@@ -1,18 +1,13 @@
-import type {UnknownAction} from '@reduxjs/toolkit';
-import type {CoreEngine, CoreEngineNext} from '../../../app/engine.js';
 import type {SearchEngineOptions} from '../../../app/search-engine/search-engine.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {ControllersMap, ControllersPropsMap} from '../../common/types/controllers.js';
+import type {ControllersPropsMap} from '../../common/types/controllers.js';
+import type {EngineDefinition} from '../../common/types/engine.js';
 import type {HasKeys} from '../../common/types/utilities.js';
-import type {SSRSearchEngine} from './build.js';
+import type {BuildConfig, SSRSearchEngine} from './build.js';
 import type {ControllerDefinitionsMap} from './controller-definition.js';
-import type {
-  InferControllerPropsMapFromDefinitions,
-  InferControllerStaticStateMapFromDefinitions,
-  InferControllersMapFromDefinition,
-} from './controller-inference.js';
-import type {FetchStaticState} from './fetch-static-state.js';
-import type {HydrateStaticState} from './hydrate-static-state.js';
+import type {InferControllerPropsMapFromDefinitions} from './controller-inference.js';
+import type {SearchStaticState} from './fetch-static-state.js';
+import type {SearchHydratedState} from './hydrate-static-state.js';
 
 type ReservedControllerNames = 'parameterManager';
 
@@ -25,44 +20,68 @@ type ValidateControllerNames<T extends SearchControllerDefinitionsMap> = {
 /**
  * The options to create a search engine definition in SSR.
  *
+ * The navigator context is per-request data: it is passed to `fetchStaticState()` rather than to the
+ * engine definition.
+ *
  * @group Engine
  */
 export type SearchEngineDefinitionOptions<
   TControllers extends SearchControllerDefinitionsMap = {},
-> = SearchEngineOptions & {
+> = Omit<SearchEngineOptions, 'navigatorContextProvider'> & {
   /**
    * The controllers to initialize with the search engine.
    */
   controllers?: ValidateControllerNames<TControllers>;
 };
 
+/**
+ * The options of `fetchStaticState()`: the build configuration, and the props of the controllers
+ * that take some.
+ */
+type FetchStaticStateOptions<TControllers extends SearchControllerDefinitionsMap> = BuildConfig &
+  SearchEngineDefinitionControllersPropsOption<
+    InferControllerPropsMapFromDefinitions<TControllers>
+  >;
+
+/**
+ * A search engine definition.
+ *
+ * @typeParam TControllers - The controllers passed to `defineSearchEngine()`.
+ *
+ * @group Engine
+ */
 export interface SearchEngineDefinition<
-  TEngine extends CoreEngine | CoreEngineNext,
-  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
+  TControllers extends SearchControllerDefinitionsMap,
+> extends EngineDefinition<
+  SearchStaticState<TControllers>,
+  SearchHydratedState<TControllers>,
+  FetchStaticStateOptions<TControllers>
 > {
   /**
    * Fetches the static state on the server side using your engine definition.
+   *
+   * @param params - The navigator context, the search parameters, the per-request access token, and
+   *  the props of the controllers that take some.
+   * @returns A Promise that resolves to the static state.
    */
-  fetchStaticState: FetchStaticState<
-    UnknownAction,
-    InferControllerStaticStateMapFromDefinitions<TControllers>,
-    InferControllerPropsMapFromDefinitions<TControllers>
-  >;
+  fetchStaticState: (
+    params: FetchStaticStateOptions<TControllers>
+  ) => Promise<SearchStaticState<TControllers>>;
   /**
-   * Fetches the hydrated state on the client side using your engine definition and the static state.
+   * Builds the engine and the live controllers on the client side from the static state.
+   *
+   * @param staticState - The static state returned by `fetchStaticState()`, passed as is.
+   * @returns A Promise that resolves to the hydrated engine and the live controllers.
    */
-  hydrateStaticState: HydrateStaticState<
-    TEngine,
-    InferControllersMapFromDefinition<TControllers>,
-    UnknownAction,
-    InferControllerPropsMapFromDefinitions<TControllers>
-  >;
+  hydrateStaticState: (
+    staticState: SearchStaticState<TControllers>
+  ) => Promise<SearchHydratedState<TControllers>>;
 }
 
 /**
  * This type defines the required and optional controller props for the search engine definition.
  */
-export type SearchEngineDefinitionControllersPropsOption<
+type SearchEngineDefinitionControllersPropsOption<
   TControllersPropsMap extends ControllersPropsMap,
 > =
   HasKeys<TControllersPropsMap> extends false
@@ -71,18 +90,10 @@ export type SearchEngineDefinitionControllersPropsOption<
         controllers: TControllersPropsMap;
       };
 
-export interface SearchEngineDefinitionBuildResult<
-  TEngine extends CoreEngine | CoreEngineNext,
-  TControllers extends ControllersMap,
-> {
-  engine: TEngine;
-  controllers: TControllers;
-}
-
 export type SearchControllerDefinitionsMap = ControllerDefinitionsMap<SSRSearchEngine, Controller>;
 
 type Definition<TControllerDefinitions extends SearchControllerDefinitionsMap> =
-  SearchEngineDefinition<SSRSearchEngine, TControllerDefinitions>;
+  SearchEngineDefinition<TControllerDefinitions>;
 
 export type FetchStaticStateFunction<
   TControllerDefinitions extends SearchControllerDefinitionsMap,
