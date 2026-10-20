@@ -1,6 +1,7 @@
 import type {CommerceEngineOptions} from '../../../app/commerce-engine/commerce-engine.js';
 import {buildLogger, type LoggerOptions} from '../../../app/logger.js';
 import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
+import type {ContextOptions} from '../controllers/context/headless-context.ssr.js';
 import type {CommonBuildConfig} from '../types/build.js';
 import type {
   CommerceControllerDefinitionsMap,
@@ -39,9 +40,8 @@ export function augmentCommerceEngineOptions<
         navigatorContext: buildConfig.navigatorContext,
         loggerOptions: engineOptions.loggerOptions,
       }),
-      context: {
-        ...context,
-      },
+      // The view URL is resolved by `withDefaultViewUrl()` before the engine options are built.
+      context: {...context} as ContextOptions,
       cart: cart ?? engineOptions.configuration.cart,
     },
   };

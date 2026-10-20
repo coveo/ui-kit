@@ -22,6 +22,7 @@ import type {
 } from '../types/engine.js';
 import {wireControllerParams} from '../utils/controller-wiring.js';
 import {augmentCommerceEngineOptions} from '../utils/engine-wiring.js';
+import {withDefaultViewUrl} from '../utils/view-url.js';
 
 /**
  * The SSR commerce engine.
@@ -115,10 +116,11 @@ export const buildFactory =
   ) =>
   <TSolutionType extends SolutionType>(solutionType: TSolutionType) =>
   async (
-    buildOptions:
+    rawBuildOptions:
       | FetchStaticStateParameters<TControllerDefinitions, TSolutionType>
       | HydrateStaticStateParameters<TControllerDefinitions, TSolutionType>
   ) => {
+    const buildOptions = withDefaultViewUrl(rawBuildOptions);
     const controllerProps = wireControllerParams(solutionType, controllerDefinitions, buildOptions);
 
     const enabledRecommendationControllers =

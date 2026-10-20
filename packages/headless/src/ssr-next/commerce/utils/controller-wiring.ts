@@ -3,6 +3,7 @@ import {contextDefinition} from '../../../features/commerce/context/context-vali
 import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema.js';
 import {nonEmptyString, nonRequiredEmptyAllowedString} from '../../../utils/validate-payload.js';
 import type {ControllersPropsMap} from '../../common/types/controllers.js';
+import type {ContextOptions} from '../controllers/context/headless-context.ssr.js';
 import type {Parameters} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 import type {BuildConfig} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
@@ -117,9 +118,8 @@ class ControllerWirer<
 
     const {context} = this.buildConfig;
     this.controllerProps.context = {
-      initialState: {
-        ...context,
-      },
+      // The view URL is resolved by `withDefaultViewUrl()` before the controllers are wired.
+      initialState: {...context} as ContextOptions,
     };
   }
 

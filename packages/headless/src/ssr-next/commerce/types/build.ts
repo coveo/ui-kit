@@ -30,6 +30,14 @@ export interface ListingBuildConfig extends CommonBuildConfig {}
 export interface StandaloneBuildConfig extends CommonBuildConfig {}
 
 /**
+ * The commerce context passed to `fetchStaticState()`. The URL of the page (`view.url`) is optional:
+ * it defaults to `navigatorContext.location`.
+ */
+export type SSRContextOptions = Omit<ContextOptions, 'view'> & {
+  view?: ContextOptions['view'];
+};
+
+/**
  * Commerce engine options for SSR scenarios.
  *
  * The context and the navigator context are per-request data: they are passed to `fetchStaticState()`
@@ -109,10 +117,12 @@ export interface CommonBuildConfig {
   navigatorContext: NavigatorContext;
 
   /**
-   * The initial context options passed to the engine when fetching the static state.
+   * The commerce context of the request: the language, country and currency of the storefront, and
+   * the URL of the page (`view.url`).
    *
-   * This property is used to configure the commerce context (e.g., currency, language, country)
-   * when calling `fetchStaticState()`.
+   * When `view.url` is omitted, the URL of the page is taken from `navigatorContext.location`, so the
+   * Commerce API and the analytics report the same page. Set it explicitly when the merchandising
+   * configuration targets another URL than the one being rendered.
    *
    * @remarks
    * To access the context after engine creation, use the context controller.
@@ -130,7 +140,7 @@ export interface CommonBuildConfig {
    * console.log(context.state.currency); // 'USD'
    * ```
    */
-  context: ContextOptions;
+  context: SSRContextOptions;
 
   /**
    * The initial search parameters to apply when fetching the static state.
