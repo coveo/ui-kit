@@ -104,6 +104,57 @@ describe('Commerce Engine SSR', () => {
     });
   });
 
+  describe('definition validation', () => {
+    it('should throw at definition time when two recommendation controllers share a slot ID', () => {
+      expect(() =>
+        defineCommerceEngine({
+          ...definitionOptions,
+          controllers: {
+            popularViewed: defineRecommendations({options: {slotId: 'same-slot-id'}}),
+            popularBought: defineRecommendations({options: {slotId: 'same-slot-id'}}),
+          },
+        })
+      ).toThrow('Multiple recommendation controllers found for the same slotId: same-slot-id');
+    });
+  });
+
+  describe('static state round trip', () => {
+    const context = {
+      view: {url: 'http://example.com'},
+      country: 'US',
+      currency: 'USD' as const,
+      language: 'en',
+    };
+
+    it('should refuse to hydrate a static state fetched by another engine definition', async () => {
+      const {listingEngineDefinition, searchEngineDefinition} =
+        defineCommerceEngine(definitionOptions);
+      const listingStaticState = await listingEngineDefinition.fetchStaticState({
+        navigatorContext: mockNavigatorContext,
+        context,
+      });
+
+      await expect(
+        // @ts-expect-error: a listing static state is not a search static state
+        searchEngineDefinition.hydrateStaticState(listingStaticState)
+      ).rejects.toThrow(
+        'This static state was fetched with the listing engine definition but is being hydrated with the search engine definition'
+      );
+    });
+
+    it('should not serialize the forwarded-for header into the static state', async () => {
+      const {listingEngineDefinition} = defineCommerceEngine(definitionOptions);
+
+      const staticState = await listingEngineDefinition.fetchStaticState({
+        navigatorContext: buildMockNavigatorContext({forwardedFor: '1.2.3.4'}),
+        context,
+      });
+
+      expect(staticState.navigatorContext).not.toHaveProperty('forwardedFor');
+      expect(staticState.navigatorContext.clientId).toBe(mockNavigatorContext.clientId);
+    });
+  });
+
   describe('requests sent to the Commerce API', () => {
     interface CapturedRequest {
       url: string;

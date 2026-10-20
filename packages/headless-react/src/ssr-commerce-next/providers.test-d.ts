@@ -10,7 +10,7 @@ import {describe, expectTypeOf, it} from 'vitest';
 import {defineCommerceEngine} from './commerce-engine.js';
 import {buildProviderWithDefinition} from './providers.js';
 
-const {listingEngineDefinition} = defineCommerceEngine({
+const {listingEngineDefinition, standaloneEngineDefinition} = defineCommerceEngine({
   configuration: getSampleCommerceEngineConfiguration(),
   controllers: {productList: defineProductList()},
 });
@@ -21,6 +21,12 @@ describe('buildProviderWithDefinition', () => {
   it('should take the static state of its definition, as fetchStaticState returns it', () => {
     expectTypeOf<ComponentProps<typeof ListingProvider>['staticState']>().toEqualTypeOf<
       InferStaticState<typeof listingEngineDefinition>
+    >();
+  });
+
+  it('should refuse the static state of another definition', () => {
+    expectTypeOf<InferStaticState<typeof standaloneEngineDefinition>>().not.toExtend<
+      ComponentProps<typeof ListingProvider>['staticState']
     >();
   });
 });

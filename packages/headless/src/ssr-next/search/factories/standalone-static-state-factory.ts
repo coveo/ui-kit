@@ -1,3 +1,4 @@
+import {toSerializableNavigatorContext} from '../../common/serializable-navigator-context.js';
 import {createStaticState} from '../controller-utils.js';
 import type {BuildParameters, SearchCompletedAction} from '../types/build.js';
 import type {AugmentedControllerDefinition} from '../types/controller-definition.js';
@@ -36,6 +37,7 @@ export function fetchStandaloneStaticStateFactory<
     return {
       ...restParams,
       ...staticState,
+      navigatorContext: toSerializableNavigatorContext(params.navigatorContext),
       ...(controllerProps && {controllerProps}),
     };
   };

@@ -107,7 +107,7 @@ describe('fetchStaticStateFactory', () => {
         context: mockContext,
       });
 
-      expect(staticState.navigatorContext).toBe(mockNavigatorContext);
+      expect(staticState.navigatorContext).toEqual(mockNavigatorContext);
     });
 
     it('should return the per-request access token alongside the static state', async () => {
