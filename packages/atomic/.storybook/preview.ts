@@ -11,7 +11,9 @@ import isChromatic from 'chromatic/isChromatic';
 
 // For CDN builds, we want to use the "true" lib hosted on our CDN instead of bundling it through
 // This allow us to have a more realistic test environment.
-if (!isChromatic() && import.meta.env.PROD) {
+// The Playwright e2e build bundles the components like Chromatic does, so it skips this import.
+const isPlaywrightBuild = import.meta.env.STORYBOOK_INVOKED_BY === 'playwright';
+if (!isChromatic() && import.meta.env.PROD && !isPlaywrightBuild) {
   const url = new URL(import.meta.url);
   url.pathname = `${url.pathname.split('/storybook/')[0]}/atomic.esm.js`;
   import(url.href);

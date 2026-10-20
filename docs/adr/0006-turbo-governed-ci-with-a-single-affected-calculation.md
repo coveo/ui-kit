@@ -81,7 +81,7 @@ The design has four parts:
 
 The action verifies both commits before querying and writes a Markdown table of package, task, reason, and description to the job summary. The query requests [reason variants](https://turborepo.dev/docs/reference/query#understanding-affected-package-reasons) such as `TaskFileChanged` and `TaskDependencyTaskChanged`, so each run explains why tasks were selected.
 
-**2. Setup no longer executes work.** The `setup` action installs mise-managed tooling, caches pnpm, and runs the frozen pnpm install. Its old `skip-build` and `build-command` inputs are gone. Build and test work is invoked by Turbo tasks or by an explicit specialized action after setup.
+**2. Setup no longer executes work.** The `setup` action installs mise-managed tooling, restores the pnpm store and mise caches, and runs the frozen pnpm install. Only `cache-warmup.yml` saves those caches, on `main`. Its old `skip-build` and `build-command` inputs are gone. Build and test work is invoked by Turbo tasks or by an explicit specialized action after setup.
 
 **3. Standardized jobs resolve task IDs without a Turbo dry run.** `.github/actions/run-affected` accepts:
 

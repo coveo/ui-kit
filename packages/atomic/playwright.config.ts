@@ -47,12 +47,13 @@ export default defineConfig({
   expect: {
     timeout: 7 * 1000,
   },
+  // CI serves the static e2e build (build:storybook:e2e). The dev server compiled every story on
+  // its first visit, and with one worker per shard that compilation dominated the shard time.
   webServer: process.env.CI
     ? {
-        command: isCDN ? 'pnpm --filter @coveo/cdn start' : 'pnpm run dev:storybook',
-        env: {
-          STORYBOOK_INVOKED_BY: 'playwright',
-        },
+        command: isCDN
+          ? 'pnpm --filter @coveo/cdn start'
+          : `pnpm exec ws --directory dist-storybook-e2e --port ${storybookPort}`,
         stdout: 'pipe',
         url: isCDN
           ? 'http://localhost:3000/atomic/v3/storybook/'

@@ -1,5 +1,12 @@
 # @coveo/ui-kit-sample-headless-ssr-commerce-nextjs
 
+## 2.10.4
+
+### Patch Changes
+
+- Updated dependencies [[`e056c30`](https://github.com/coveo/ui-kit/commit/e056c302347d5a0cc1cbbd98d9463a577a74871f), [`a292905`](https://github.com/coveo/ui-kit/commit/a2929053c49aa386ad4a2b0a8399ea1796bfefe8)]:
+  - @coveo/headless-react@2.10.4
+
 ## 2.10.3
 
 ### Patch Changes
