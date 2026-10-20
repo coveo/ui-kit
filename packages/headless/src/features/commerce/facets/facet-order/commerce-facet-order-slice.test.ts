@@ -82,10 +82,6 @@ describe('commerce facet-order slice', () => {
           regular_facet_1: [],
           regular_facet_2: [],
         },
-        lf: {
-          location_facet_1: [],
-          location_facet_2: [],
-        },
         nf: {
           numeric_facet_1: [],
           numeric_facet_2: [],
@@ -104,8 +100,6 @@ describe('commerce facet-order slice', () => {
       expect(state).toEqual([
         'regular_facet_1',
         'regular_facet_2',
-        'location_facet_1',
-        'location_facet_2',
         'numeric_facet_1',
         'numeric_facet_2',
         'date_facet_1',
