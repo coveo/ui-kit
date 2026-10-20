@@ -10,8 +10,8 @@ import {recommendationEngineDefinition, standaloneEngineDefinition} from '@/lib/
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
 
-export default async function Search() {
-  // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
+export default async function CartPage() {
+  // Builds the navigator context from the request headers. It is passed to every `fetchStaticState` call.
   const navigatorContext = new NextJsNavigatorContext(await headers());
 
   // Fetches the cart items from an external service

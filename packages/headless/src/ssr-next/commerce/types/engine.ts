@@ -90,17 +90,20 @@ export interface CommerceEngineDefinition<
    * - Replays search/listing/recommendation actions to synchronize the state
    * - Returns live, interactive controllers ready for user interaction
    *
-   * @param params - A configuration object containing the static state, navigation context,
-   *                 and any controller-specific props needed for hydration
+   * @param params - The static state returned by `fetchStaticState()`. It already carries the
+   *                 navigator context, the context, the cart, the search parameters, the per-request
+   *                 access token and the controller props, so it can be passed as is.
    * @returns A Promise that resolves to the hydrated engine and interactive controllers
    *
    * @example
    * ```typescript
-   * // Client-side hydration
-   * const result = await engineDefinition.hydrateStaticState(staticState);
+   * // In the browser, with `productList: defineProductList()` and `pagination: definePagination()`
+   * // in the engine definition
+   * const {engine, controllers} = await listingEngineDefinition.hydrateStaticState(staticState);
    *
    * // Controllers are now interactive
-   * result.controllers.productListing.sort({ criterion: 'price' });
+   * controllers.productList.state.products;
+   * controllers.pagination.nextPage();
    * ```
    */
   hydrateStaticState: HydrateStaticState<
