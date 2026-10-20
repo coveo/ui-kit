@@ -142,16 +142,16 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
    */
   sessionToRestore?: SerializedSession;
   /**
-   * PROTOTYPE (KIT-6367): the A2-UI v1.0 `createSurface` messages of the surfaces the contract
-   * declares well-known. The session creates them itself, before any request, and they outlive
-   * every turn. Stands in for a schema export.
+   * PROTOTYPE (KIT-6367): the A2-UI `createSurface` parameters of the contract's well-known
+   * surfaces (`WellKnownSurfaces` in `@coveo/thermidor-schema`). The session creates them itself,
+   * before any request, and they outlive every turn.
    */
-  wellKnownSurfaces?: readonly Record<string, unknown>[];
+  wellKnownSurfaces?: readonly object[];
   /**
-   * PROTOTYPE (KIT-6367): the action names the contract marks as lookups. Stands in for the
-   * schema's lookup marker.
+   * PROTOTYPE (KIT-6367): the actions the contract marks as lookups, keyed by component
+   * discriminator (`LookupActions` in `@coveo/thermidor-schema`).
    */
-  lookupActions?: readonly string[];
+  lookupActions?: Readonly<Record<string, readonly string[]>>;
 }
 
 /**
@@ -307,11 +307,11 @@ export function createSession<TContracts extends ContractsSchema>(
   const client = createUnifiedEndpointClient();
 
   const wellKnownSurfaces = createWellKnownSurfaces(
-    config.wellKnownSurfaces ?? [],
+    (config.wellKnownSurfaces ?? []).map((createSurface) => ({version: 'v1.0', createSurface})),
     config.contracts,
     () => store.setState((current) => ({...current}))
   );
-  const lookupActions = new Set(config.lookupActions ?? []);
+  const lookupActions = config.lookupActions ?? {};
   // One in-flight lookup per source component and action; a newer one aborts it.
   const lookupControllers = new Map<string, AbortController>();
 
@@ -780,7 +780,7 @@ export function createSession<TContracts extends ContractsSchema>(
       );
       return;
     }
-    if (!lookupActions.has(name)) {
+    if (!lookupActions[discriminant]?.includes(name)) {
       devWarn(`dispatchAction: "${name}" is not a lookup; well-known surfaces only send lookups.`);
       return;
     }

@@ -1,9 +1,8 @@
 import {useCallback, useLayoutEffect, useRef, useSyncExternalStore} from 'react';
 import {A2UIProvider, A2UIRenderer, Catalog, useA2UI} from '@copilotkit/a2ui-renderer';
-import {THERMIDOR_CATALOG_ID} from '@coveo/thermidor-schema/zod3';
+import {SEARCH_BOX_SURFACE_ID, THERMIDOR_CATALOG_ID} from '@coveo/thermidor-schema/zod3';
 import {useSession} from '../../context/session.js';
 import {QuerySuggestions} from '../../a2ui/QuerySuggestions/QuerySuggestions.js';
-import {SEARCH_BOX_SURFACE_ID} from '../../a2ui/well-known-surfaces.js';
 import {SearchBoxOptionsContext, type SearchBoxOptions} from './search-box-options.js';
 
 const catalog = new Catalog(THERMIDOR_CATALOG_ID, [QuerySuggestions]);

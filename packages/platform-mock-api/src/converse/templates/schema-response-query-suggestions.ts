@@ -66,7 +66,7 @@ export function buildQuerySuggestionsLookupEvents(action: {
         {
           surfaceId: action.surfaceId ?? '',
           path: `/state/${componentId}`,
-          value: {query, completions: completionsFor(query), products: []},
+          value: {query, completions: completionsFor(query)},
         },
       ],
     }),
