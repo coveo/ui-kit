@@ -30,7 +30,7 @@ import {augmentCommerceEngineOptions} from '../utils/engine-wiring.js';
  */
 export interface SSRCommerceEngine extends CommerceEngine {
   /**
-   * Waits for the request to be completed and returns a promise that resolves to an `Action`.
+   * Returns one promise per request that this engine waits for, each resolving to the action that completes the request.
    */
   waitForRequestCompletedAction(): Promise<Action>[];
 }
@@ -123,8 +123,9 @@ export const buildFactory =
 
     const enabledRecommendationControllers =
       buildOptions && 'recommendations' in buildOptions
-        ? (buildOptions as RecommendationBuildConfig<TControllerDefinitions>)?.recommendations
-            .length
+        ? new Set(
+            (buildOptions as RecommendationBuildConfig<TControllerDefinitions>)?.recommendations
+          ).size
         : 0;
 
     const engineOptions: CommerceEngineOptions = augmentCommerceEngineOptions(
