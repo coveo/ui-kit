@@ -25,11 +25,14 @@ type ValidateControllerNames<T extends SearchControllerDefinitionsMap> = {
 /**
  * The options to create a search engine definition in SSR.
  *
+ * The navigator context is per-request data: it is passed to `fetchStaticState()` rather than to the
+ * engine definition.
+ *
  * @group Engine
  */
 export type SearchEngineDefinitionOptions<
   TControllers extends SearchControllerDefinitionsMap = {},
-> = SearchEngineOptions & {
+> = Omit<SearchEngineOptions, 'navigatorContextProvider'> & {
   /**
    * The controllers to initialize with the search engine.
    */
@@ -55,7 +58,7 @@ export interface SearchEngineDefinition<
     TEngine,
     InferControllersMapFromDefinition<TControllers>,
     UnknownAction,
-    InferControllerPropsMapFromDefinitions<TControllers>
+    InferControllerStaticStateMapFromDefinitions<TControllers>
   >;
 }
 

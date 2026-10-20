@@ -5,6 +5,8 @@ import {defineContext} from '../controllers/context/headless-context.ssr.js';
 import {defineParameterManager} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
 import {SolutionType} from '../types/controller-constants.js';
+import type {HydrateStaticStateParameters} from '../types/engine.js';
+import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
 import {buildFactory} from './build-factory.js';
 import {hydratedRecommendationStaticStateFactory} from './recommendation-hydrated-state-factory.js';
 
@@ -46,6 +48,19 @@ describe('hydratedRecommendationStaticStateFactory', () => {
 
   const flushMicrotasks = () => new Promise((resolve) => setTimeout(resolve, 0));
 
+  type RecommendationStaticState = HydrateStaticStateParameters<
+    ReturnType<typeof createControllerDefinitions>,
+    SolutionType.recommendation
+  >;
+
+  const staticState = {
+    navigatorContext: buildMockNavigatorContext(),
+    context: {language: 'en', country: 'US', currency: 'USD', view: {url: 'https://example.com'}},
+    recommendations: ['popularViewed'],
+    searchActions: [],
+    controllers: {popularViewed: {state: {}}},
+  } as unknown as RecommendationStaticState;
+
   beforeEach(() => {
     vi.clearAllMocks();
     mockBuildResult.engine.waitForRequestCompletedAction.mockReturnValue([
@@ -62,11 +77,26 @@ describe('hydratedRecommendationStaticStateFactory', () => {
 
     const factory = hydratedRecommendationStaticStateFactory(controllerDefinitions, options);
 
-    // @ts-expect-error: do not care about hydration props here
-    await factory();
+    await factory(staticState);
 
     expect(buildFactory).toHaveBeenCalledWith(controllerDefinitions, options);
     expect(mockRecommendationState).toHaveBeenCalledWith(SolutionType.recommendation);
+  });
+
+  it('should hand the controller props carried by the static state back as the controllers option', async () => {
+    const mockSolutionTypeBuild = vi.fn().mockResolvedValue(mockBuildResult);
+    vi.mocked(buildFactory).mockReturnValue(() => mockSolutionTypeBuild);
+    const controllerProps = {productEnrichment: {options: {placementIds: ['placement']}}};
+
+    await hydratedRecommendationStaticStateFactory(
+      createControllerDefinitions(),
+      createEngineOptions()
+    )({...staticState, controllerProps} as RecommendationStaticState);
+
+    expect(mockSolutionTypeBuild).toHaveBeenCalledWith(
+      expect.objectContaining({controllers: controllerProps})
+    );
+    expect(mockSolutionTypeBuild.mock.calls[0][0]).not.toHaveProperty('controllerProps');
   });
 
   it('should wait for request completion', async () => {
@@ -78,11 +108,10 @@ describe('hydratedRecommendationStaticStateFactory', () => {
       createEngineOptions()
     );
 
-    // @ts-expect-error: do not care about hydration props here
-    const staticState = await factory();
+    const hydratedState = await factory(staticState);
 
     expect(mockBuildResult.engine.waitForRequestCompletedAction).toHaveBeenCalledOnce();
-    expect(staticState).toEqual(mockBuildResult);
+    expect(hydratedState).toEqual(mockBuildResult);
   });
 
   it('should resolve only once every replayed recommendation request has completed', async () => {
@@ -103,8 +132,7 @@ describe('hydratedRecommendationStaticStateFactory', () => {
     );
 
     let settled = false;
-    // @ts-expect-error: do not care about hydration props here
-    const hydration = factory().then(() => {
+    const hydration = factory(staticState).then(() => {
       settled = true;
     });
     await flushMicrotasks();
