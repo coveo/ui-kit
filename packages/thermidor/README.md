@@ -16,12 +16,12 @@ Component state travels **inline** through the A2-UI data model: the server send
 
 ```typescript
 import {createSession} from '@coveo/thermidor';
-import {ComponentContractsSchema} from '@coveo/thermidor-schema';
+import {ThermidorContract} from '@coveo/thermidor-schema';
 
 const session = createSession({
   organizationId: 'my-org',
   accessToken: 'xx-token',
-  contracts: ComponentContractsSchema, // injected Zod discriminated union (Zod 3 or 4)
+  contract: ThermidorContract, // components (Zod 3 or 4), well-known surface templates, lookups
   navigatorContextProvider: () => getNavigatorContext(),
   commerceContextProvider: () => ({cart: getCart()}),
 });
@@ -33,19 +33,20 @@ await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me r
 
 `createSession(config)` returns a `Session` exposing exactly:
 
-| Member                    | Purpose                                                                                                                     |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `contracts`               | The injected contracts schema this session validates against (readonly).                                                    |
-| `turns`                   | Readonly observable list of `Turn`s folded from the stream (empty initially).                                               |
-| `actionError`             | Why the last component action was dropped after repeated concurrency conflicts, or `undefined`. See below.                  |
-| `actions`                 | The action queue: `issue`, `withholdQueued`, `subscribe`, `getSnapshot`. See [The action queue](#the-action-queue).         |
-| `subscribe(listener)`     | Registers a listener called once per change to the turn list or `actionError`; returns an unsubscribe.                      |
-| `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's `onAction`.     |
-| `cancel()`                | Stops the active stream: a prompt's turn keeps its partial response and is marked `error`; an action settles `'cancelled'`. |
-| `retry(turnId)`           | Re-submits an errored turn's input.                                                                                         |
-| `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                                                             |
+| Member                    | Purpose                                                                                                                        |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `contract`                | The injected contract this session validates against and creates well-known surfaces from (readonly).                          |
+| `turns`                   | Readonly observable list of `Turn`s folded from the stream (empty initially).                                                  |
+| `createWellKnownSurface`  | Creates an instance of a well-known surface template. See [Well-known surfaces and lookups](#well-known-surfaces-and-lookups). |
+| `actionError`             | Why the last component action was dropped after repeated concurrency conflicts, or `undefined`. See below.                     |
+| `actions`                 | The action queue: `issue`, `withholdQueued`, `subscribe`, `getSnapshot`. See [The action queue](#the-action-queue).            |
+| `subscribe(listener)`     | Registers a listener called once per change to the turn list, `actionError` or an instance's messages; returns an unsubscribe. |
+| `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's `onAction`.        |
+| `cancel()`                | Stops the active stream: a prompt's turn keeps its partial response and is marked `error`; an action settles `'cancelled'`.    |
+| `retry(turnId)`           | Re-submits an errored turn's input.                                                                                            |
+| `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                                                                |
 
-The concrete `contracts` type pinned at the `createSession` call site threads unbroken through `Session`, so component types, action names, and payloads stay fully typed at the call site (no `string`, no `never`, no `unknown`).
+The concrete `contract` type pinned at the `createSession` call site threads unbroken through `Session`, so component types, action names, and payloads stay fully typed at the call site (no `string`, no `never`, no `unknown`).
 
 ## Dispatching actions
 
@@ -72,6 +73,22 @@ A component action is the standard A2-UI client-to-server message (`A2uiClientMe
 Given a message, `dispatchAction` unwraps its `userAction`, recovers the dispatching component's discriminant from the active turn's surfaces, validates the action payload against the component's injected contract internally, and — on success — POSTs the action to the converse endpoint.
 
 It is **fire-and-forget**: the returned Promise always resolves and never rejects, so the consumer needs no `.catch`. A message with no `userAction`, no `sourceComponentId`, a node that resolves to no component, or an internal validation failure is dropped with a dev-only warning and nothing is sent.
+
+### Well-known surfaces and lookups
+
+The contract declares well-known surface templates, such as the search box: surfaces whose composition and initial state it fixes, but not their surface id. The application creates an instance wherever it draws one, before any request, and disposes of it when it stops drawing it:
+
+```typescript
+const searchBox = session.createWellKnownSurface('search-box', {surfaceId: 'header-search'});
+searchBox.messages.forEach(feedRenderer); // its creation, ready before any request
+// …later, feed only the messages appended since, once each.
+searchBox.dispose();
+```
+
+- **Surface ids.** Without a `surfaceId`, the session mints one that no live instance holds. A server-rendered surface needs an id that is the same on server and client, such as one derived from React's `useId`. A template the contract doesn't declare, or an id a live instance holds, throws.
+- **Messages.** `messages` is append-only, in the same v0.9 shape as `a2uiMessages`: the instance's creation, then each lookup result, validated against its component's contract. Feed each message to the renderer once: replaying them recreates the surface.
+- **Lookups.** An instance's actions go through `dispatchAction`, and must be ones the contract marks as lookups; any other is dropped with a dev-only warning. A lookup needs no turn and is sent at once, beside any prompt or action, with the session token when there is one and the template name. A newer lookup from the same surface, component and action aborts the previous one, so instances never abort each other's lookups. A lookup's result applies only to its own live instance; it never opens a turn or a session, and its failure fails nothing.
+- **Disposing** of an instance aborts its lookups and drops their late results. Instances are not serialized: a restored session's application creates them again.
 
 ### The action queue
 
@@ -118,12 +135,12 @@ interface TurnResponse {
 
 ## Validation and displayed values
 
-- **Client-side validation is retained, transparently.** The injected `contracts` schema stays the sole validation source, but the consumer never runs Zod and writes no adapter glue. Inbound `updateDataModel` ops are validated on the fold before they are applied to `response.state`; outbound action payloads are validated in the private dispatch path before the POST. Both boundaries live inside the core. `response.a2uiMessages` is derived from the raw stream, so the renderer still receives an op that validation drops from `response.state`, and the component state seeded by `createSurface.dataModel`, which is never validated.
+- **Client-side validation is retained, transparently.** The injected contract's `components` stay the sole validation source, but the consumer never runs Zod and writes no adapter glue. Inbound `updateDataModel` ops are validated on the fold before they are applied to `response.state`; outbound action payloads are validated in the private dispatch path before the POST. Both boundaries live inside the core. `response.a2uiMessages` is derived from the raw stream, so the renderer still receives an op that validation drops from `response.state`, and the component state seeded by `createSurface.dataModel`, which is never validated.
 - **Displayed-value formatting is agent-produced.** The renderer shows the state it receives through its `{ path }` bindings; Thermidor does not reformat displayed values.
 
 ## Injected schema, endpoint, and context
 
-- **Contracts schema** — a consumer-injected Zod discriminated union (`contracts`) is the sole source for component-state and action-payload validation. Thermidor accepts it through a structural typing seam (`ContractsSchema` / `ComponentContractSchema` / `ParsableSchema`) that reads only public Zod API, so it declares no dependency on any specific schema package. It declares `zod` as a peer dependency spanning both majors (`3.25.76 || ^4`), so validation runs through the single shared `zod` instance resolved by the injected schema. A consumer whose renderer is built on Zod 3 injects a Zod 3 schema, such as `@coveo/thermidor-schema/zod3`.
+- **Contract** — a consumer-injected bundle (`contract`) of the component union (`components`), the well-known surface templates (`wellKnownSurfaces`) and the lookup actions of each component (`lookupActions`), typed by `SessionContract`. Its Zod discriminated union is the sole source for component-state and action-payload validation. Thermidor accepts it through a structural typing seam (`ContractsSchema` / `ComponentContractSchema` / `ParsableSchema`) that reads only public Zod API, so it declares no dependency on any specific schema package. It declares `zod` as a peer dependency spanning both majors (`3.25.76 || ^4`), so validation runs through the single shared `zod` instance resolved by the injected schema. A consumer whose renderer is built on Zod 3 injects a Zod 3 schema, such as `@coveo/thermidor-schema/zod3`.
 - **Endpoint** — when `endpoint` is provided, the client POSTs to it verbatim. When absent, it resolves `https://{orgId}.org.coveo.com` and appends the fixed converse path `/api/preview/organizations/{orgId}/agents/commerce/agui/converse`.
 - **Context providers** — `navigatorContextProvider` and `commerceContextProvider` are synchronous functions read fresh per request. Context is never stored on the session and never serialized.
 

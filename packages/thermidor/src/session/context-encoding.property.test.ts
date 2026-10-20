@@ -98,7 +98,7 @@ function queueCompletingStream(): void {
 }
 
 const baseConfig: SessionConfig = {
-  contracts,
+  contract: {components: contracts, wellKnownSurfaces: [], lookupActions: {}},
   organizationId: 'org-1',
   accessToken: 'token-1',
 };

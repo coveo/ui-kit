@@ -44,7 +44,7 @@ vi.mock('@/src/internal/api/unified/unified-endpoint-client.js', () => ({
 
 import {z} from 'zod/v4';
 import type {ContractsSchema} from './contracts.js';
-import {createSession, type SessionConfig} from './create-session.js';
+import {createSession, type Session, type SessionConfig} from './create-session.js';
 
 /**
  * A locally-built A2-UI contract, INJECTED as test data exactly as a real
@@ -80,10 +80,40 @@ const NextActionsBarSchema = z.strictObject({
     .optional(),
 });
 
+const QuerySuggestionsSchema = z.strictObject({
+  component: z.literal('QuerySuggestions'),
+  state: z
+    .strictObject({
+      query: z.string(),
+      completions: z.array(z.strictObject({expression: z.string()})),
+    })
+    .optional(),
+  actions: z
+    .strictObject({
+      fetchSuggestions: z.strictObject({payload: z.strictObject({query: z.string()})}),
+      selectSuggestion: z.strictObject({payload: z.strictObject({expression: z.string()})}),
+    })
+    .optional(),
+});
+
 const contracts = z.discriminatedUnion('component', [
   PaginationSchema,
   NextActionsBarSchema,
+  QuerySuggestionsSchema,
 ]) as unknown as ContractsSchema;
+
+const SearchBoxSurface = {
+  template: 'search-box',
+  catalogId: 'catalog',
+  components: [{id: 'root', component: 'QuerySuggestions'}],
+  dataModel: {'/state/root': {query: '', completions: []}},
+} as const;
+
+const contract = {
+  components: contracts,
+  wellKnownSurfaces: [SearchBoxSurface],
+  lookupActions: {QuerySuggestions: ['fetchSuggestions']},
+} as const;
 
 /**
  * A ReadableStream a test can feed SSE activities into and close on demand,
@@ -178,8 +208,8 @@ function queueConflict(): void {
   }));
 }
 
-const baseConfig: SessionConfig = {
-  contracts,
+const baseConfig: SessionConfig<typeof contract> = {
+  contract,
   organizationId: 'org-1',
   accessToken: 'token-1',
 };
@@ -1182,6 +1212,502 @@ describe('createSession lifecycle', () => {
       expect(callMock).toHaveBeenCalledTimes(exhaustingConflicts);
       expect(session.turns[0]).toMatchObject({status: 'error', error: conflictError});
       expect(session.actionError).toBeUndefined();
+    });
+  });
+
+  describe('well-known surfaces and lookups', () => {
+    const fetchSuggestions = (surfaceId: string, query: string) => ({
+      userAction: {
+        name: 'fetchSuggestions',
+        surfaceId,
+        sourceComponentId: 'root',
+        context: {query},
+      },
+    });
+
+    const suggestionsSnapshot = (surfaceId: string, query: string) => ({
+      type: 'ACTIVITY_SNAPSHOT',
+      messageId: 'lookup-suggestions',
+      activityType: 'a2ui-surface',
+      content: {
+        messages: [
+          {
+            version: 'v1.0',
+            updateDataModel: {
+              surfaceId,
+              path: '/state/root',
+              value: {query, completions: [{expression: `${query} shoes`}]},
+            },
+          },
+        ],
+      },
+    });
+
+    /** Answers a lookup's stream with its suggestions, and ends it like a lookup run. */
+    function answer(stream: ControllableStream, surfaceId: string, query: string): void {
+      stream.emit({
+        type: 'RUN_STARTED',
+        conversationSessionId: 'lookup-session',
+        conversationToken: 'lookup-token',
+      });
+      stream.emit(suggestionsSnapshot(surfaceId, query));
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+    }
+
+    const requestAt = (index: number) =>
+      callMock.mock.calls[index][0] as {
+        surfaceTemplate?: string;
+        conversationToken?: string;
+        message: string | null;
+        action: Record<string, unknown> | null;
+      };
+
+    /** Completes a first turn carrying a Pagination surface, so `selectPage` can be issued. */
+    async function seedSession() {
+      const session = createSession(baseConfig);
+      const seed = queueStream();
+      const seedTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'go'}});
+      await seed.opened;
+      seed.emit({type: 'RUN_STARTED', conversationToken: 'session-token'});
+      seed.emit({
+        type: 'ACTIVITY_SNAPSHOT',
+        messageId: 'surface-activity',
+        activityType: 'a2ui-surface',
+        content: {
+          messages: [
+            {
+              version: 'v1.0',
+              createSurface: {
+                surfaceId: 'commerce-search-surface',
+                components: [
+                  {id: 'root', component: 'CommerceSearch'},
+                  {id: 'pagination-1', component: 'Pagination'},
+                ],
+              },
+            },
+          ],
+        },
+      });
+      seed.emit({type: 'RUN_FINISHED'});
+      seed.close();
+      await seedTurn;
+      return session;
+    }
+
+    let warn: ReturnType<typeof vi.spyOn>;
+
+    beforeEach(() => {
+      warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    describe('creating instances', () => {
+      it("holds the instance's creation under the given surface id before any request", () => {
+        const session = createSession(baseConfig);
+
+        const searchBox = session.createWellKnownSurface('search-box', {surfaceId: 'header'});
+
+        expect(searchBox).toMatchObject({surfaceId: 'header', template: 'search-box'});
+        expect(searchBox.messages).toEqual([
+          {version: 'v0.9', createSurface: {surfaceId: 'header', catalogId: 'catalog'}},
+          {
+            version: 'v0.9',
+            updateComponents: {
+              surfaceId: 'header',
+              components: [{id: 'root', component: 'QuerySuggestions'}],
+            },
+          },
+          {
+            version: 'v0.9',
+            updateDataModel: {
+              surfaceId: 'header',
+              path: '/state/root',
+              value: {query: '', completions: []},
+            },
+          },
+        ]);
+        expect(callMock).not.toHaveBeenCalled();
+        expect(session.turns).toEqual([]);
+      });
+
+      it('mints a surface id that no live instance holds', () => {
+        const session = createSession(baseConfig);
+        session.createWellKnownSurface('search-box', {surfaceId: 'search-box-1'});
+
+        const first = session.createWellKnownSurface('search-box');
+        const second = session.createWellKnownSurface('search-box');
+
+        expect(new Set([first.surfaceId, second.surfaceId, 'search-box-1']).size).toBe(3);
+      });
+
+      it('refuses a template the contract does not declare', () => {
+        const session: Session = createSession(baseConfig);
+
+        expect(() => session.createWellKnownSurface('cart-badge')).toThrow(/cart-badge/);
+      });
+
+      it('refuses a surface id a live instance holds, and frees it once disposed of', () => {
+        const session = createSession(baseConfig);
+        const searchBox = session.createWellKnownSurface('search-box', {surfaceId: 'header'});
+
+        expect(() => session.createWellKnownSurface('search-box', {surfaceId: 'header'})).toThrow(
+          /header/
+        );
+
+        searchBox.dispose();
+        searchBox.dispose();
+
+        expect(session.createWellKnownSurface('search-box', {surfaceId: 'header'}).surfaceId).toBe(
+          'header'
+        );
+      });
+
+      it('leaves instances out of the serialized session', () => {
+        const session = createSession(baseConfig);
+        const serialized = JSON.stringify(session.serialize());
+
+        session.createWellKnownSurface('search-box', {surfaceId: 'header'});
+
+        expect(JSON.stringify(session.serialize())).toBe(serialized);
+      });
+    });
+
+    describe('sending lookups', () => {
+      it('sends a lookup before any prompt, without a token, and applies its result without opening a session', async () => {
+        const session = createSession(baseConfig);
+        const searchBox = session.createWellKnownSurface('search-box', {surfaceId: 'header'});
+        const listener = vi.fn();
+        session.subscribe(listener);
+        const stream = queueStream();
+
+        const lookup = session.dispatchAction(fetchSuggestions('header', 'red'));
+        await stream.opened;
+        answer(stream, 'header', 'red');
+        await lookup;
+
+        expect(requestAt(0)).toMatchObject({
+          surfaceTemplate: 'search-box',
+          message: null,
+          action: {
+            surfaceId: 'header',
+            sourceComponentId: 'root',
+            name: 'fetchSuggestions',
+            context: {query: 'red'},
+          },
+        });
+        expect(requestAt(0).conversationToken).toBeUndefined();
+        expect(searchBox.messages.at(-1)).toEqual({
+          version: 'v0.9',
+          updateDataModel: {
+            surfaceId: 'header',
+            path: '/state/root',
+            value: {query: 'red', completions: [{expression: 'red shoes'}]},
+          },
+        });
+        expect(listener).toHaveBeenCalled();
+        expect(session.turns).toEqual([]);
+
+        const promptStream = queueStream();
+        void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'red shoes'}});
+        await promptStream.opened;
+
+        expect(requestAt(1).conversationToken).toBeUndefined();
+        expect(requestAt(1).surfaceTemplate).toBeUndefined();
+        promptStream.emit({type: 'RUN_FINISHED'});
+        promptStream.close();
+      });
+
+      it("sends the session's token with a lookup once there is one", async () => {
+        const session = await seedSession();
+        session.createWellKnownSurface('search-box', {surfaceId: 'header'});
+        const stream = queueStream();
+
+        const lookup = session.dispatchAction(fetchSuggestions('header', 'red'));
+        await stream.opened;
+        answer(stream, 'header', 'red');
+        await lookup;
+
+        expect(requestAt(1)).toMatchObject({
+          surfaceTemplate: 'search-box',
+          conversationToken: 'session-token',
+        });
+      });
+
+      it('applies each result only to its own instance, and never lets one instance abort the other', async () => {
+        const session = createSession(baseConfig);
+        const header = session.createWellKnownSurface('search-box', {surfaceId: 'header'});
+        const drawer = session.createWellKnownSurface('search-box', {surfaceId: 'drawer'});
+        const headerStream = queueStream();
+        const drawerStream = queueStream();
+
+        const headerLookup = session.dispatchAction(fetchSuggestions('header', 'red'));
+        await headerStream.opened;
+        const drawerLookup = session.dispatchAction(fetchSuggestions('drawer', 'blue'));
+        await drawerStream.opened;
+        answer(headerStream, 'header', 'red');
+        answer(drawerStream, 'drawer', 'blue');
+        await Promise.all([headerLookup, drawerLookup]);
+
+        const lastValue = (messages: readonly Record<string, unknown>[]) =>
+          (messages.at(-1)?.['updateDataModel'] as {value: unknown}).value;
+        expect(lastValue(header.messages)).toMatchObject({query: 'red'});
+        expect(lastValue(drawer.messages)).toMatchObject({query: 'blue'});
+        expect(header.messages).toHaveLength(4);
+        expect(drawer.messages).toHaveLength(4);
+      });
+
+      it('aborts the previous lookup of the same component and action, and never applies its response', async () => {
+        const session = createSession(baseConfig);
+        const searchBox = session.createWellKnownSurface('search-box', {surfaceId: 'header'});
+        const stale = queueStream();
+        const fresh = queueStream();
+
+        const staleLookup = session.dispatchAction(fetchSuggestions('header', 'r'));
+        await stale.opened;
+        const freshLookup = session.dispatchAction(fetchSuggestions('header', 're'));
+        await fresh.opened;
+        answer(fresh, 'header', 're');
+        await Promise.all([staleLookup, freshLookup]);
+
+        expect(callMock.mock.calls[0][2]?.signal?.aborted).toBe(true);
+        expect(searchBox.messages).toHaveLength(4);
+        expect(searchBox.messages.at(-1)).toMatchObject({
+          updateDataModel: {value: {query: 're'}},
+        });
+        expect(warn).not.toHaveBeenCalled();
+      });
+
+      it("aborts a disposed instance's lookup and drops its late response, even under a reused surface id", async () => {
+        const session = createSession(baseConfig);
+        const disposed = session.createWellKnownSurface('search-box', {surfaceId: 'header'});
+        const stream = queueStream();
+        const lookup = session.dispatchAction(fetchSuggestions('header', 'red'));
+        await stream.opened;
+
+        disposed.dispose();
+        await lookup;
+
+        expect(callMock.mock.calls[0][2]?.signal?.aborted).toBe(true);
+        expect(
+          session.createWellKnownSurface('search-box', {surfaceId: 'header'}).messages
+        ).toEqual(disposed.messages);
+      });
+
+      it('drops the rest of a response already read once its instance is disposed of and created again', async () => {
+        const session = createSession(baseConfig);
+        let searchBox = session.createWellKnownSurface('search-box', {surfaceId: 'header'});
+        const recreateOnFirstResult = session.subscribe(() => {
+          recreateOnFirstResult();
+          searchBox.dispose();
+          searchBox = session.createWellKnownSurface('search-box', {surfaceId: 'header'});
+        });
+        const frames = [
+          suggestionsSnapshot('header', 'r'),
+          suggestionsSnapshot('header', 're'),
+          {type: 'RUN_FINISHED'},
+        ];
+        callMock.mockImplementationOnce(async () => ({
+          success: true,
+          data: {
+            stream: new ReadableStream<Uint8Array>({
+              start(controller) {
+                controller.enqueue(
+                  encoder.encode(
+                    frames.map((frame) => `data: ${JSON.stringify(frame)}\n\n`).join('')
+                  )
+                );
+                controller.close();
+              },
+            }),
+          },
+        }));
+
+        await session.dispatchAction(fetchSuggestions('header', 're'));
+
+        expect(searchBox.messages).toHaveLength(3);
+      });
+
+      it('sends a lookup at once while a prompt streams, and leaves the prompt be', async () => {
+        const session = createSession(baseConfig);
+        const searchBox = session.createWellKnownSurface('search-box', {surfaceId: 'header'});
+        const promptStream = queueStream();
+        const prompt = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'shoes'}});
+        await promptStream.opened;
+        const lookupStream = queueStream();
+
+        const lookup = session.dispatchAction(fetchSuggestions('header', 'red'));
+        await lookupStream.opened;
+        answer(lookupStream, 'header', 'red');
+        await lookup;
+
+        expect(callMock).toHaveBeenCalledTimes(2);
+        expect(callMock.mock.calls[0][2]?.signal?.aborted).toBe(false);
+        expect(session.turns).toHaveLength(1);
+        expect(session.turns[0].status).toBe('streaming');
+        expect(session.serialize().sessionToken).toBeUndefined();
+        expect(searchBox.messages).toHaveLength(4);
+
+        promptStream.emit({type: 'RUN_FINISHED'});
+        promptStream.close();
+        await prompt;
+        expect(session.turns[0].status).toBe('complete');
+      });
+
+      it('sends a lookup at once while a gesture is in flight, and leaves the gesture be', async () => {
+        const session = await seedSession();
+        session.createWellKnownSurface('search-box', {surfaceId: 'header'});
+        const gestureStream = queueStream();
+        const gesture = session.actions.issue({
+          userAction: {
+            name: 'selectPage',
+            surfaceId: 'commerce-search-surface',
+            sourceComponentId: 'pagination-1',
+            context: {page: 2},
+          },
+        });
+        await gestureStream.opened;
+        const lookupStream = queueStream();
+
+        const lookup = session.dispatchAction(fetchSuggestions('header', 'red'));
+        await lookupStream.opened;
+        answer(lookupStream, 'header', 'red');
+        await lookup;
+
+        expect(callMock).toHaveBeenCalledTimes(3);
+        expect(session.actions.getSnapshot().inFlight).toBe(gesture.id);
+
+        gestureStream.emit({type: 'RUN_FINISHED'});
+        gestureStream.close();
+        expect(await gesture.settled).toBe('answered');
+        expect(session.turns[0]).toMatchObject({status: 'complete'});
+        expect(session.serialize().sessionToken).toBe('session-token');
+      });
+
+      it('leaves turns and the action error untouched when a lookup fails', async () => {
+        const session = await seedSession();
+        session.createWellKnownSurface('search-box', {surfaceId: 'header'});
+        callMock.mockImplementationOnce(async () => ({success: false, error: 'HTTP 500'}));
+
+        await session.dispatchAction(fetchSuggestions('header', 'red'));
+
+        expect(session.turns[0]).toMatchObject({status: 'complete'});
+        expect(session.turns[0].error).toBeUndefined();
+        expect(session.actionError).toBeUndefined();
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('HTTP 500'));
+      });
+
+      it('leaves lookups running when the session is cancelled', async () => {
+        const session = createSession(baseConfig);
+        const searchBox = session.createWellKnownSurface('search-box', {surfaceId: 'header'});
+        const promptStream = queueStream();
+        void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'shoes'}});
+        await promptStream.opened;
+        const lookupStream = queueStream();
+        const lookup = session.dispatchAction(fetchSuggestions('header', 'red'));
+        await lookupStream.opened;
+
+        session.cancel();
+        answer(lookupStream, 'header', 'red');
+        await lookup;
+
+        expect(callMock.mock.calls[1][2]?.signal?.aborted).toBe(false);
+        expect(searchBox.messages).toHaveLength(4);
+      });
+    });
+
+    describe('refusing actions', () => {
+      it('drops an action the contract does not mark as a lookup', async () => {
+        const session = createSession(baseConfig);
+        session.createWellKnownSurface('search-box', {surfaceId: 'header'});
+
+        await session.dispatchAction({
+          userAction: {
+            name: 'selectSuggestion',
+            surfaceId: 'header',
+            sourceComponentId: 'root',
+            context: {expression: 'red shoes'},
+          },
+        });
+
+        expect(callMock).not.toHaveBeenCalled();
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('not a lookup'));
+      });
+
+      it('drops a lookup with an invalid payload', async () => {
+        const session = createSession(baseConfig);
+        session.createWellKnownSurface('search-box', {surfaceId: 'header'});
+
+        await session.dispatchAction({
+          userAction: {
+            name: 'fetchSuggestions',
+            surfaceId: 'header',
+            sourceComponentId: 'root',
+            context: {query: 42},
+          },
+        });
+
+        expect(callMock).not.toHaveBeenCalled();
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('Invalid payload'));
+      });
+
+      it('drops an action from a node the instance does not have', async () => {
+        const session = createSession(baseConfig);
+        session.createWellKnownSurface('search-box', {surfaceId: 'header'});
+
+        await session.dispatchAction({
+          userAction: {name: 'fetchSuggestions', surfaceId: 'header', sourceComponentId: 'nope'},
+        });
+
+        expect(callMock).not.toHaveBeenCalled();
+      });
+
+      it('sends nothing for an action from a disposed instance', async () => {
+        const session = createSession(baseConfig);
+        session.createWellKnownSurface('search-box', {surfaceId: 'header'}).dispose();
+
+        await session.dispatchAction(fetchSuggestions('header', 'red'));
+
+        expect(callMock).not.toHaveBeenCalled();
+      });
+
+      it('drops an inbound update that breaks the component contract, or targets another surface', async () => {
+        const session = createSession(baseConfig);
+        const searchBox = session.createWellKnownSurface('search-box', {surfaceId: 'header'});
+        const stream = queueStream();
+
+        const lookup = session.dispatchAction(fetchSuggestions('header', 'red'));
+        await stream.opened;
+        stream.emit({
+          type: 'ACTIVITY_SNAPSHOT',
+          messageId: 'lookup-suggestions',
+          activityType: 'a2ui-surface',
+          content: {
+            messages: [
+              {
+                version: 'v1.0',
+                updateDataModel: {surfaceId: 'header', path: '/state/root', value: {query: 1}},
+              },
+              {
+                version: 'v1.0',
+                updateDataModel: {
+                  surfaceId: 'drawer',
+                  path: '/state/root',
+                  value: {query: 'red', completions: []},
+                },
+              },
+            ],
+          },
+        });
+        stream.emit({type: 'RUN_FINISHED'});
+        stream.close();
+        await lookup;
+
+        expect(searchBox.messages).toHaveLength(3);
+      });
     });
   });
 });

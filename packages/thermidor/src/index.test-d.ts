@@ -19,9 +19,13 @@ import type {
   SerializedSession,
   Session,
   SessionConfig,
+  SessionContract,
   SubmitPromptAction,
   Turn,
   TurnResponse,
+  WellKnownSurface,
+  WellKnownSurfaceOptions,
+  WellKnownSurfaceTemplate,
 } from '@/src/index.js';
 
 // ── POSITIVE: the session-client surface is exported ────────────────────────
@@ -43,10 +47,47 @@ test('exposes the createSession session-client surface', () => {
 // ── POSITIVE: the injected-contract seam is exported ────────────────────────
 test('exposes the injected ContractsSchema / ComponentContractSchema seam', () => {
   // The runtime is decoupled from any concrete contract package: the structural
-  // contract type it accepts through `createSession({ contracts })` is part of
+  // contract type it accepts through `createSession({ contract })` is part of
   // the public surface so consumers can type their injected contract.
   expectTypeOf<ContractsSchema>().not.toBeAny();
   expectTypeOf<ComponentContractSchema>().not.toBeAny();
+});
+
+// ── POSITIVE: one contract bundle, threaded to the well-known surfaces ───────
+declare const components: ContractsSchema;
+const ThermidorContract = {
+  components,
+  wellKnownSurfaces: [
+    {template: 'search-box', catalogId: 'catalog', components: [{id: 'root'}], dataModel: {}},
+  ],
+  lookupActions: {QuerySuggestions: ['fetchSuggestions']},
+} as const;
+
+test('accepts one contract bundle and threads its type through Session', () => {
+  expectTypeOf<SessionContract>().toHaveProperty('components');
+  expectTypeOf<SessionContract>().toHaveProperty('wellKnownSurfaces');
+  expectTypeOf<SessionContract>().toHaveProperty('lookupActions');
+  expectTypeOf<SessionConfig>().toHaveProperty('contract');
+  expectTypeOf<SessionConfig>().not.toHaveProperty('contracts');
+  expectTypeOf<Session>().not.toHaveProperty('contracts');
+
+  const session = createSession({contract: ThermidorContract, organizationId: '', accessToken: ''});
+  expectTypeOf(session).toEqualTypeOf<Session<typeof ThermidorContract>>();
+  expectTypeOf(session.contract).toEqualTypeOf<typeof ThermidorContract>();
+});
+
+test('creates instances only of the templates the contract declares', () => {
+  const session = createSession({contract: ThermidorContract, organizationId: '', accessToken: ''});
+
+  expectTypeOf(session.createWellKnownSurface('search-box')).toEqualTypeOf<WellKnownSurface>();
+  expectTypeOf(session.createWellKnownSurface)
+    .parameter(1)
+    .toEqualTypeOf<WellKnownSurfaceOptions | undefined>();
+  // @ts-expect-error the contract declares no `cart-badge` template.
+  session.createWellKnownSurface('cart-badge');
+
+  expectTypeOf<WellKnownSurface['messages']>().toEqualTypeOf<readonly Record<string, unknown>[]>();
+  expectTypeOf<WellKnownSurfaceTemplate>().toHaveProperty('template').toEqualTypeOf<string>();
 });
 
 // ── POSITIVE: `dispatchAction` is the single action-dispatch entry point ─────

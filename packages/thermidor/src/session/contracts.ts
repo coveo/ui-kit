@@ -1,8 +1,10 @@
+import type {WellKnownSurfaceTemplate} from './well-known-surfaces.js';
+
 /**
  * The injected component-contracts type — the runtime's decoupling seam.
  *
  * `@coveo/thermidor` validates every session against a contract that is
- * INJECTED through {@link SessionConfig.contracts}, never imported from a
+ * INJECTED through {@link SessionConfig.contract}, never imported from a
  * concrete schema package. {@link ContractsSchema} is the STRUCTURAL type that
  * seam accepts: a Zod discriminated union on the `component` field whose every
  * member carries that component's optional `state` and `actions` sub-schemas.
@@ -85,4 +87,18 @@ export interface ComponentContractSchema {
  */
 export interface ContractsSchema {
   readonly options: readonly ComponentContractSchema[];
+}
+
+/**
+ * The contract a session is created with, injected as one value so its parts always come from the
+ * same schema version. `@coveo/thermidor-schema` exports it as `ThermidorContract`. The session
+ * accepts any contract of this shape, and never imports a schema package.
+ */
+export interface SessionContract<TComponents extends ContractsSchema = ContractsSchema> {
+  /** The component union every component state and action payload is validated against. */
+  readonly components: TComponents;
+  /** The well-known surface templates the application can create instances of. */
+  readonly wellKnownSurfaces: readonly WellKnownSurfaceTemplate[];
+  /** The actions each component marks as lookups, keyed by its `component` discriminant. */
+  readonly lookupActions: Readonly<Record<string, readonly string[]>>;
 }

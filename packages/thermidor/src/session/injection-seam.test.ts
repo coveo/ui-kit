@@ -16,7 +16,7 @@ import type {Activity} from './types.js';
  * minimal, hand-built discriminated union (a `Widget` component with `state`
  * and `actions`) constructed here with this package's own Zod, so the test is
  * independent of any concrete contract package. It mirrors how a consumer
- * injects a contract through `createSession({ contracts })`.
+ * injects a contract through `createSession({ contract: { components } })`.
  *
  * The generated Coveo shape this seam targets is:
  *   `XxxActionsSchema = z.strictObject({ <name>: z.strictObject({ payload }) })`

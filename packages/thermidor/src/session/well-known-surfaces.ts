@@ -1,0 +1,168 @@
+/**
+ * Well-known surfaces: instances of the surface templates the injected contract declares.
+ *
+ * A template fixes a surface's composition and initial state, but not its surface id. The
+ * application creates instances of it through the session wherever it draws one, so each
+ * instance exists before any request, and the producer's lookups only write its state.
+ */
+
+import {deriveA2uiV09Messages} from './a2ui-v09-projection.js';
+import type {ContractsSchema} from './contracts.js';
+import {
+  deriveNodeIdentityRegistry,
+  readUpdateDataModelOps,
+  validateInboundOp,
+  type NodeIdentityRegistry,
+} from './in-transit-validation.js';
+import type {A2uiV09Message} from './types.js';
+
+/**
+ * A well-known surface template, as the contract declares it: its name, and the A2-UI
+ * `createSurface` parameters every instance shares, all but its surface id.
+ */
+export interface WellKnownSurfaceTemplate {
+  /** The template name. Every lookup from an instance sends it as its `surfaceTemplate`. */
+  readonly template: string;
+  /** The catalog the template's components belong to. */
+  readonly catalogId: string;
+  /** The template's components, in A2-UI `createSurface` form. */
+  readonly components: readonly object[];
+  /** The template's initial data model, in A2-UI `createSurface` form. */
+  readonly dataModel: object;
+}
+
+/** One instance of a well-known surface template, created by the session's `createWellKnownSurface`. */
+export interface WellKnownSurface {
+  /** The surface id the instance was created under: the id its renderer draws. */
+  readonly surfaceId: string;
+  /** The name of the template it was created from. */
+  readonly template: string;
+  /**
+   * The instance's renderer messages, in the A2-UI v0.9 shape, append-only: its creation first,
+   * then the validated `updateDataModel` messages of each lookup result. Feed each message to the
+   * renderer once: replaying them recreates the surface.
+   */
+  readonly messages: readonly A2uiV09Message[];
+  /**
+   * Removes the instance: its in-flight lookups are aborted and their late results dropped, and
+   * its surface id becomes free again. The renderer is told nothing, so delete the surface there
+   * if it stays mounted. Disposing of an instance twice does nothing.
+   */
+  dispose(): void;
+}
+
+/** Options for creating a well-known surface instance with the session's `createWellKnownSurface`. */
+export interface WellKnownSurfaceOptions {
+  /**
+   * The instance's surface id. Defaults to an id derived from the template name that no live
+   * instance holds. Pass one that is the same on server and client, such as one derived from
+   * React's `useId`, when the surface is server-rendered.
+   */
+  surfaceId?: string;
+}
+
+export interface WellKnownSurfaces {
+  create(template: string, options?: WellKnownSurfaceOptions): WellKnownSurface;
+  /** The template name of a live instance, or `undefined`. */
+  templateOf(surfaceId: string): string | undefined;
+  /** The `component` discriminant of a node of a live instance, or `undefined`. */
+  resolve(surfaceId: string, nodeId: string): string | undefined;
+  /** Appends the valid `updateDataModel` ops of A2-UI messages to the live instances they target. */
+  apply(rawMessages: readonly unknown[]): void;
+}
+
+interface Instance {
+  readonly template: string;
+  messages: readonly A2uiV09Message[];
+}
+
+export function createWellKnownSurfaces(
+  templates: readonly WellKnownSurfaceTemplate[],
+  contracts: ContractsSchema,
+  callbacks: {onChange: () => void; onDispose: (surfaceId: string) => void}
+): WellKnownSurfaces {
+  const templatesByName = new Map(templates.map((template) => [template.template, template]));
+  const instances = new Map<string, Instance>();
+  const registry: NodeIdentityRegistry = new Map();
+
+  function mintSurfaceId(template: string): string {
+    let sequence = 1;
+    while (instances.has(`${template}-${sequence}`)) {
+      sequence++;
+    }
+    return `${template}-${sequence}`;
+  }
+
+  function create(name: string, options: WellKnownSurfaceOptions = {}): WellKnownSurface {
+    const declaration = templatesByName.get(name);
+    if (!declaration) {
+      throw new Error(`The session's contract declares no well-known surface "${name}".`);
+    }
+    const surfaceId = options.surfaceId ?? mintSurfaceId(name);
+    if (instances.has(surfaceId)) {
+      throw new Error(`A live well-known surface already holds the surface id "${surfaceId}".`);
+    }
+
+    const {template, ...createSurface} = declaration;
+    const activities = [
+      {
+        id: `well-known-surface:${surfaceId}`,
+        kind: 'a2ui-surface',
+        replace: false,
+        payload: {messages: [{version: 'v1.0', createSurface: {...createSurface, surfaceId}}]},
+      },
+    ];
+    const instance: Instance = {template, messages: deriveA2uiV09Messages(activities)};
+    instances.set(surfaceId, instance);
+    for (const [id, nodes] of deriveNodeIdentityRegistry(activities)) {
+      registry.set(id, nodes);
+    }
+
+    return {
+      surfaceId,
+      template,
+      get messages() {
+        return instance.messages;
+      },
+      dispose() {
+        if (instances.get(surfaceId) !== instance) {
+          return;
+        }
+        instances.delete(surfaceId);
+        registry.delete(surfaceId);
+        callbacks.onDispose(surfaceId);
+      },
+    };
+  }
+
+  function apply(rawMessages: readonly unknown[]): void {
+    const updates = new Map<Instance, A2uiV09Message[]>();
+    for (const op of readUpdateDataModelOps(rawMessages)) {
+      const instance = instances.get(op.surfaceId);
+      if (!instance) {
+        continue;
+      }
+      const decision = validateInboundOp(op, registry, contracts);
+      if (decision.kind === 'forward') {
+        const message: A2uiV09Message = {
+          version: 'v0.9',
+          updateDataModel: {surfaceId: op.surfaceId, path: decision.path, value: decision.value},
+        };
+        updates.set(instance, [...(updates.get(instance) ?? []), message]);
+      }
+    }
+    for (const [instance, messages] of updates) {
+      instance.messages = [...instance.messages, ...messages];
+    }
+    if (updates.size > 0) {
+      callbacks.onChange();
+    }
+  }
+
+  return {
+    create,
+    templateOf: (surfaceId) => instances.get(surfaceId)?.template,
+    resolve: (surfaceId, nodeId) => registry.get(surfaceId)?.get(nodeId),
+    apply,
+  };
+}

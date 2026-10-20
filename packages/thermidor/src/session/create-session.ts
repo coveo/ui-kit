@@ -36,13 +36,18 @@ import {
   type IssuedDispatch,
 } from '@/src/actions/dispatch-coordinator.js';
 import {validateActionPayload} from './action-payload-validation.js';
-import type {ContractsSchema} from './contracts.js';
+import type {SessionContract} from './contracts.js';
 import {callWithConflictRetry} from './conflict-retry.js';
 import {createTurn, foldActivity} from './fold.js';
 import {deriveNodeIdentityRegistry} from './in-transit-validation.js';
 import {restoreSession, serializeSession, type SerializedSession} from './serialize.js';
 import {createSessionStore, type SessionStore, type SessionStoreState} from './store.js';
 import type {Turn, TurnInput} from './types.js';
+import {
+  createWellKnownSurfaces,
+  type WellKnownSurface,
+  type WellKnownSurfaceOptions,
+} from './well-known-surfaces.js';
 
 /**
  * The standard A2-UI client-to-server message the frozen renderer delivers to
@@ -98,18 +103,24 @@ export interface SubmitPromptAction {
  * request so the app's current context is always sent without thermidor-side
  * context state.
  */
-export interface SessionConfig<TContracts extends ContractsSchema = ContractsSchema> {
+export interface SessionConfig<TContract extends SessionContract = SessionContract> {
   /**
-   * The injected component contracts schema (a discriminated union on `component`,
-   * each member carrying that component's `state` and `actions`). It is the SOLE
-   * validation source for the session: inbound `updateDataModel` ops are validated
-   * against the member's `state` (whole) / its sub-schema (partial sub-path), and
-   * outbound action payloads against the member's `actions` for the dispatched
-   * action name, before the POST. Injecting it here keeps `@coveo/thermidor`
-   * decoupled from any concrete contract package, so the runtime works with any
-   * A2-UI contract schema, not only `@coveo/thermidor-schema`.
+   * The injected contract, as one value, such as `ThermidorContract` from
+   * `@coveo/thermidor-schema`:
+   *
+   * - `components`: the component union (a discriminated union on `component`, each member
+   *   carrying that component's `state` and `actions`). It is the SOLE validation source for the
+   *   session: inbound `updateDataModel` ops are validated against the member's `state` (whole) /
+   *   its sub-schema (partial sub-path), and outbound action payloads against the member's
+   *   `actions` for the dispatched action name, before the POST.
+   * - `wellKnownSurfaces`: the templates {@link Session.createWellKnownSurface} creates instances
+   *   of.
+   * - `lookupActions`: the actions of each component that are lookups.
+   *
+   * Injecting it here keeps `@coveo/thermidor` decoupled from any concrete contract package, so
+   * the runtime works with any A2-UI contract of this shape.
    */
-  contracts: TContracts;
+  contract: TContract;
   organizationId: string;
   accessToken: string;
   /**
@@ -147,13 +158,13 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
  * converse endpoint. No engine, interface, or state-library object is reachable
  * from it.
  */
-export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
+export interface Session<TContract extends SessionContract = SessionContract> {
   /**
-   * The injected contracts schema this session validates against. Retained on
-   * the handle so the generic parameter is observable and the runtime threads
-   * the exact contract that was injected.
+   * The injected contract this session validates against and creates well-known surfaces from.
+   * Retained on the handle so the generic parameter is observable and the runtime threads the
+   * exact contract that was injected.
    */
-  readonly contracts: TContracts;
+  readonly contract: TContract;
   /** Readonly observable list of turns folded from the streamed response. */
   readonly turns: readonly Turn[];
   /**
@@ -165,7 +176,29 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * listeners. A conflict that recovers through retry never sets it.
    */
   readonly actionError: string | undefined;
-  /** Registers a listener invoked once per change to the turn list or `actionError`. */
+  /**
+   * Creates an instance of one of the contract's well-known surface templates, outside any turn,
+   * so a renderer can draw it before any request: its `messages` already hold its creation.
+   * Call it where the application draws the surface, and dispose of the instance when it stops
+   * drawing it.
+   *
+   * The instance's actions go through {@link Session.dispatchAction}. Each one the contract marks
+   * as a lookup is sent at once, alongside any prompt or gesture, with the template name, and its
+   * result is appended to the instance's `messages`.
+   *
+   * @param template - The name of a template the contract declares.
+   * @param options - The instance's surface id, if the application chooses it.
+   * @throws When the contract declares no such template, or when a live instance already holds
+   *   the surface id.
+   */
+  createWellKnownSurface(
+    template: TContract['wellKnownSurfaces'][number]['template'],
+    options?: WellKnownSurfaceOptions
+  ): WellKnownSurface;
+  /**
+   * Registers a listener invoked once per change to the turn list, `actionError`, or the
+   * `messages` of a well-known surface instance.
+   */
   subscribe(listener: () => void): () => void;
   /**
    * The single consumer-facing action-dispatch entry point, wired directly as
@@ -180,11 +213,20 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * surfaces, validates the action payload against the component's contract
    * internally, and — on success — POSTs the action to the converse endpoint.
    *
+   * An action from a live well-known surface instance (see
+   * {@link Session.createWellKnownSurface}) needs no active turn. It must be one the contract
+   * marks as a lookup, and is sent at once, alongside any prompt or gesture, with the session
+   * token when there is one and the instance's template name. A newer lookup from the same
+   * surface, component and action aborts the previous one. Its result is appended to that
+   * instance's `messages`: it never opens a turn or folds into one, no session keys are adopted
+   * from it, and its failure fails no turn. It resolves once the lookup's stream ends.
+   *
    * FIRE-AND-FORGET: the returned Promise ALWAYS resolves and NEVER rejects, so
    * the consumer needs no `.catch`. A message with no `userAction`, no
-   * `sourceComponentId`, a node that resolves to no component, and an internal
-   * dispatch rejection (for example an invalid payload) are all dropped with a
-   * dev-only warning and nothing is sent.
+   * `sourceComponentId`, a node that resolves to no component, an action from a
+   * well-known surface that is not a lookup, and an internal dispatch rejection
+   * (for example an invalid payload) are all dropped with a dev-only warning and
+   * nothing is sent.
    */
   dispatchAction: (message: A2uiClientMessage | SubmitPromptAction) => Promise<void>;
   /** Scoped for removal together with `src/actions` once the producer owns the queue. */
@@ -272,9 +314,9 @@ function readSessionKeys(
 /**
  * Creates a {@link Session} over a fresh observable store + fold.
  */
-export function createSession<TContracts extends ContractsSchema>(
-  config: SessionConfig<TContracts>
-): Session<TContracts> {
+export function createSession<TContract extends SessionContract>(
+  config: SessionConfig<TContract>
+): Session<TContract> {
   const initialState: SessionStoreState<Turn> = config.sessionToRestore
     ? restoreSession(config.sessionToRestore)
     : {
@@ -287,6 +329,21 @@ export function createSession<TContracts extends ContractsSchema>(
   const store: SessionStore<Turn> = createSessionStore<Turn>(initialState);
 
   const client = createUnifiedEndpointClient();
+
+  const contracts = config.contract.components;
+  const lookupActions = config.contract.lookupActions;
+
+  // Per surface, one in-flight lookup per source component and action; a newer one aborts it.
+  const lookupControllers = new Map<string, Map<string, AbortController>>();
+  const wellKnownSurfaces = createWellKnownSurfaces(config.contract.wellKnownSurfaces, contracts, {
+    onChange: () => store.setState((current) => ({...current})),
+    onDispose: (surfaceId) => {
+      for (const controller of lookupControllers.get(surfaceId)?.values() ?? []) {
+        controller.abort();
+      }
+      lookupControllers.delete(surfaceId);
+    },
+  });
 
   // The currently in-flight stream's abort controller, or null when idle. Held
   // per session instance — never module-level — so two sessions never contend.
@@ -437,7 +494,7 @@ export function createSession<TContracts extends ContractsSchema>(
           }));
         }
 
-        replaceTurn(turnId, (turn) => foldActivity(turn, event, config.contracts));
+        replaceTurn(turnId, (turn) => foldActivity(turn, event, contracts));
 
         const foldedStatus = store.getState().turns.find((turn) => turn.id === turnId)?.status;
         if (foldedStatus === 'complete' || foldedStatus === 'error') {
@@ -619,7 +676,7 @@ export function createSession<TContracts extends ContractsSchema>(
       recovered.discriminant,
       recovered.name,
       recovered.context,
-      config.contracts
+      contracts
     );
     if (!validation.valid) {
       devWarn(
@@ -688,6 +745,112 @@ export function createSession<TContracts extends ContractsSchema>(
   }
 
   /**
+   * Resolves an action from a well-known surface instance against its template, and sends it as
+   * a lookup. Anything else on the instance is dropped: the contract only places lookups there.
+   */
+  async function dispatchLookup(
+    userAction: NonNullable<A2uiClientMessage['userAction']>
+  ): Promise<void> {
+    const {name, surfaceId, sourceComponentId, context} = userAction;
+    const surfaceTemplate = wellKnownSurfaces.templateOf(surfaceId);
+    const discriminant =
+      sourceComponentId === undefined
+        ? undefined
+        : wellKnownSurfaces.resolve(surfaceId, sourceComponentId);
+    if (surfaceTemplate === undefined || sourceComponentId === undefined || !discriminant) {
+      devWarn(
+        `dispatchAction: node "${sourceComponentId}" on surface "${surfaceId}" resolves to no component; nothing sent.`
+      );
+      return;
+    }
+    if (!lookupActions[discriminant]?.includes(name)) {
+      devWarn(
+        `dispatchAction: "${name}" on component "${discriminant}" is not a lookup, and a well-known surface only sends lookups; nothing sent.`
+      );
+      return;
+    }
+    const validation = validateActionPayload(discriminant, name, context, contracts);
+    if (!validation.valid) {
+      devWarn(
+        `dispatchAction: lookup withheld: Invalid payload for action "${name}" on component "${discriminant}": ${validation.reason}`
+      );
+      return;
+    }
+
+    await runLookup(surfaceTemplate, {
+      surfaceId,
+      name,
+      sourceComponentId,
+      timestamp: new Date().toISOString(),
+      actionId: null,
+      wantResponse: false,
+      context,
+    });
+  }
+
+  /**
+   * Sends a lookup outside the prompt and gesture lane. Its run writes only to live well-known
+   * surface instances: it never touches a turn, and its session keys are never adopted, so a
+   * lookup sent before the first prompt opens no session.
+   */
+  async function runLookup(
+    surfaceTemplate: string,
+    action: A2uiAction & {surfaceId: string}
+  ): Promise<void> {
+    const key = `${action.sourceComponentId}\u0000${action.name}`;
+    const surfaceLookups =
+      lookupControllers.get(action.surfaceId) ?? new Map<string, AbortController>();
+    lookupControllers.set(action.surfaceId, surfaceLookups);
+    surfaceLookups.get(key)?.abort();
+    const controller = new AbortController();
+    surfaceLookups.set(key, controller);
+
+    const reportFailure = (error: unknown) => {
+      if (!controller.signal.aborted && !isAbortError(error)) {
+        devWarn(`dispatchAction: lookup "${action.name}" failed: ${getErrorMessage(error)}`);
+      }
+    };
+
+    try {
+      const result = await client.call(
+        {...buildActionRequest(action), surfaceTemplate},
+        {
+          organizationId: config.organizationId,
+          accessToken: config.accessToken,
+          endpoint: config.endpoint,
+        },
+        {signal: controller.signal}
+      );
+      if (!result.success) {
+        reportFailure(result.error);
+        return;
+      }
+      await readEventStream({
+        stream: result.data.stream,
+        signal: controller.signal,
+        onEvent: (rawEvent) => {
+          if (controller.signal.aborted) {
+            return;
+          }
+          const event = parseSSEEvent(rawEvent) as unknown as {
+            type: string;
+            content?: {messages?: unknown};
+          };
+          if (event.type === 'ACTIVITY_SNAPSHOT' && Array.isArray(event.content?.messages)) {
+            wellKnownSurfaces.apply(event.content.messages);
+          }
+        },
+      });
+    } catch (error) {
+      reportFailure(error);
+    } finally {
+      if (surfaceLookups.get(key) === controller) {
+        surfaceLookups.delete(key);
+      }
+    }
+  }
+
+  /**
    * The single consumer-facing action-dispatch entry point. See
    * {@link Session.dispatchAction}. Pre-bound arrow field so
    * `onAction={session.dispatchAction}` works when passed by reference.
@@ -702,6 +865,11 @@ export function createSession<TContracts extends ContractsSchema>(
       } catch (error) {
         devWarn(`dispatchAction: submitPrompt withheld: ${getErrorMessage(error)}`);
       }
+      return;
+    }
+
+    if (message.userAction && wellKnownSurfaces.templateOf(message.userAction.surfaceId)) {
+      await dispatchLookup(message.userAction);
       return;
     }
 
@@ -731,13 +899,14 @@ export function createSession<TContracts extends ContractsSchema>(
   }
 
   return {
-    contracts: config.contracts,
+    contract: config.contract,
     get turns() {
       return store.getState().turns;
     },
     get actionError() {
       return store.getState().actionError;
     },
+    createWellKnownSurface: wellKnownSurfaces.create,
     subscribe(listener) {
       return store.subscribe(listener);
     },

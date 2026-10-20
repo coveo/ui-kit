@@ -18,7 +18,7 @@ The package entry (`src/index.ts`) exports the session-client surface — `creat
 graph TB
     subgraph "Public surface (src/index.ts)"
         CS["createSession(config)"]
-        SESSION["Session&lt;TContracts&gt;<br/>contracts · turns · actionError · subscribe<br/>dispatchAction · actions<br/>cancel · retry · serialize"]
+        SESSION["Session&lt;TContract&gt;<br/>contract · turns · actionError · createWellKnownSurface · subscribe<br/>dispatchAction · actions<br/>cancel · retry · serialize"]
         HELPERS["Dispatch &amp; optimistic helpers<br/>createDispatchTracker · createOptimisticValue<br/>createStaleScopes"]
     end
 
@@ -62,11 +62,12 @@ src/
 │   ├── store.ts                   # Plain observable store + subscribe/notify
 │   ├── fold.ts                    # Pure fold + surface derivation (ADR-015 interim)
 │   ├── a2ui-v09-projection.ts     # A2-UI v1.0 → v0.9 renderer projection (ADR-015 addendum)
-│   ├── contracts.ts               # Structural type of the injected contracts schema (ADR-014)
+│   ├── contracts.ts               # Structural type of the injected contract bundle (ADR-014, ADR-017)
 │   ├── in-transit-validation.ts   # Validates inbound updateDataModel ops against *State schemas
 │   ├── resolve-operation.ts       # Maps an op path to a component's whole state or a field beneath it
 │   ├── action-payload-validation.ts # Validates outbound action payloads before the POST
 │   ├── state-path.ts              # /state/<id> JSON Pointer helpers
+│   ├── well-known-surfaces.ts     # Instances of the contract's well-known surface templates (ADR-017)
 │   └── serialize.ts               # Versioned serialize / restore (ADR-011)
 ├── actions/                       # Client-side dispatch coordinator + tracker (scoped for removal)
 ├── optimistic/                    # Optimistic value controller + stale scopes
@@ -85,6 +86,8 @@ The runtime owns the dispatch / cancel / retry orchestration and the SSE-consump
 - **`dispatchAction(message)`** — the single consumer-facing entry point, wired as the renderer's `onAction`. It never rejects: every refusal is a dev-only warning.
   - A `submitPrompt` action (`{name: 'submitPrompt', payload: {prompt}}`) needs no active turn. It withholds queued component actions, cancels a stream in flight, opens a new `streaming` turn, builds a request (invoking both context providers fresh), POSTs to the endpoint, and folds the streamed response into that turn.
   - An A2-UI client message is unwrapped to its `userAction`. The runtime recovers the dispatching component's `component` discriminant from the active turn's node-identity registry (derived from its activities), validates the payload against that component's action schema, and queues the action for its own originating surface. It is withheld while a turn is streaming, when there is no active turn, when the node resolves to no component, or when the payload fails validation. The action's response streams into the active turn.
+  - An A2-UI client message from a live well-known surface instance is resolved against the instance instead, and must be one the contract marks as a lookup. It is sent at once in a lane of its own, with the template name as `surfaceTemplate`, and a newer lookup from the same surface, component and action aborts it. Its run is applied to the live instances only: it never touches a turn or the session keys ([ADR-017](./internal/adr/ADR-017-well-known-surfaces-and-lookups.md)).
+- **`createWellKnownSurface(template, options?)`** — creates an instance of a template the contract declares, outside any turn, whose `messages` hold its creation at once and then each lookup result, validated in transit. Disposing of it aborts its lookups. Instances are never serialized.
 - **`cancel()`** — stops consuming the in-flight stream. A streaming prompt turn keeps the partial `response` already folded and is marked `error` with the message `'Cancelled'`; an action in flight settles `'cancelled'` and leaves its turn as it was. A no-op when nothing is in flight.
 - **`retry(turnId)`** — re-submits only an `error` turn's original input; any other `turnId` (unknown, or non-error) is a no-op.
 
@@ -154,7 +157,7 @@ The coordinator, the dispatch tracker, `session.actions`, and the coalescing par
 
 ## Injected schema, endpoint, and context
 
-- **Contracts schema** ([ADR-014](./internal/adr/ADR-014-consumer-supplied-endpoint-and-schema.md)) — `config.contracts` is the sole source for component-state and action-payload validation. The package declares no dependency on any specific schema package; it accepts any Zod discriminated union on `component` through a structural type (`src/session/contracts.ts`) that reads only public Zod API. `zod` is a peer dependency spanning both majors (`3.25.76 || ^4`), so validation runs through the single `zod` instance resolved by the injected schema. A consumer whose renderer is built on Zod 3 injects a Zod 3 schema.
+- **Contracts schema** ([ADR-014](./internal/adr/ADR-014-consumer-supplied-endpoint-and-schema.md)) — `config.contract.components` is the sole source for component-state and action-payload validation; the same bundle carries the well-known surface templates and the lookup actions (ADR-017). The package declares no dependency on any specific schema package; it accepts any Zod discriminated union on `component` through a structural type (`src/session/contracts.ts`) that reads only public Zod API. `zod` is a peer dependency spanning both majors (`3.25.76 || ^4`), so validation runs through the single `zod` instance resolved by the injected schema. A consumer whose renderer is built on Zod 3 injects a Zod 3 schema.
 - **Endpoint** — when `endpoint` is provided the client POSTs to it verbatim (nothing appended); when absent it resolves `https://{orgId}.org.coveo.com` and appends the fixed converse path `/api/preview/organizations/{orgId}/agents/commerce/agui/converse`. A missing/empty org fails before any network call.
 - **Context providers** ([ADR-012](./internal/adr/ADR-012-client-owned-context.md)) — `navigatorContextProvider` and `commerceContextProvider` are synchronous and read fresh per request in the request builder. An absent commerce provider sends the structural-empty "absent" encoding (`cart: []`, no `pinnedProducts`/`source`/`custom`); a present-but-empty provider sends `cart: []` distinguishably. Context is never serialized, so a restored session reads today's context from the providers.
 
@@ -245,4 +248,4 @@ For engineers who worked with the earlier engine-based package:
 | Per-endpoint facades / thunks                    | One unified endpoint client                                         |
 | Controllers built from an interface handle       | Resolved props from the A2-UI data model + `session.dispatchAction` |
 | `turn.prompt` / `turn.agentResponse.*`           | `turn.input.prompt` / `turn.response.*` (agent under `agent?`)      |
-| Bundled schema, layered exports                  | Consumer-injected `contracts`, endpoint, and context                |
+| Bundled schema, layered exports                  | Consumer-injected `contract`, endpoint, and context                 |
