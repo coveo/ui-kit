@@ -12,8 +12,14 @@ import {
 } from '@coveo/headless/ssr-commerce-next';
 // Workaround to prevent Next.js erroring about importing CSR only hooks
 import React from 'react';
+import type {Hydration} from '../ssr-common/types.js';
 import {type SingletonGetter, singleton} from '../utils.js';
-import {buildControllerHooks, buildEngineHook, buildStateProvider} from './common.js';
+import {
+  buildControllerHooks,
+  buildEngineHook,
+  buildHydrationHook,
+  buildStateProvider,
+} from './common.js';
 import type {
   ContextState,
   InferControllerHooksMapFromDefinition,
@@ -50,7 +56,14 @@ function createSingletonContext<
 export function defineCommerceEngine<TControllers extends ControllerDefinitionsMap<Controller>>(
   options: CommerceEngineDefinitionOptions<TControllers>
 ): {
+  /**
+   * Returns the engine once the static state is hydrated, and `undefined` before.
+   */
   useEngine: () => CommerceEngine | undefined;
+  /**
+   * Returns whether the components render the static state, the hydrated engine, or a hydration error.
+   */
+  useHydration: () => Hydration;
   controllers: InferControllerHooksMapFromDefinition<AugmentedControllerDefinition<TControllers>>;
   listingEngineDefinition: ReactCommerceEngineDefinition<TControllers, SolutionType.listing>;
   searchEngineDefinition: ReactCommerceEngineDefinition<TControllers, SolutionType.search>;
@@ -86,6 +99,7 @@ export function defineCommerceEngine<TControllers extends ControllerDefinitionsM
 
   return {
     useEngine: buildEngineHook(singletonContext),
+    useHydration: buildHydrationHook(singletonContext),
     controllers: buildControllerHooks(singletonContext, augmentedControllerDefinition),
     listingEngineDefinition: {
       ...listingEngineDefinition,

@@ -1,4 +1,3 @@
-import type {SolutionType} from '@coveo/headless/ssr-commerce';
 import {capitalize} from './utils.js';
 
 export class MissingEngineProviderError extends Error {
@@ -10,7 +9,7 @@ export class MissingEngineProviderError extends Error {
 }
 
 export class UndefinedControllerError extends Error {
-  static createEngineSupportMessage(solutionTypes: SolutionType[]) {
+  static createEngineSupportMessage(solutionTypes: string[]) {
     if (solutionTypes.length === 0) {
       return 'This controller is not part of the current engine definition.';
     }
@@ -20,7 +19,7 @@ export class UndefinedControllerError extends Error {
     return `This controller is only available in these engine definitions:\n${supportedEngineDefinitionList.map((def) => ` • ${def}`).join('\n')}`;
   }
 
-  constructor(controllerName: string, solutionTypes: SolutionType[]) {
+  constructor(controllerName: string, solutionTypes: string[]) {
     super(
       [
         `You're using a controller hook (use${capitalize(controllerName)}) whose controller is not available in the current engine definition.`,
