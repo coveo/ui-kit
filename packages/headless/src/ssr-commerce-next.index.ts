@@ -1,73 +1,58 @@
 /**
- * The Coveo Headless SSR Commerce sub-package exposes exposes the engine, definers, controllers, actions, and utility functions to build a server side rendered commerce experience.
+ * The Coveo Headless SSR Commerce sub-package exposes the engine definer, controller definers, actions, and utility functions to build a server-side rendered commerce experience.
  *
  * @example
  * ```typescript
  * import {
- *   Controller,
- *   ControllerDefinitionsMap,
- *   CommerceEngineDefinitionOptions,
- *   CommerceEngine,
  *   defineCommerceEngine,
- *   InferStaticState,
- *   InferHydratedState,
+ *   definePagination,
  *   defineProductList,
+ *   defineRecommendations,
  *   getSampleCommerceEngineConfiguration,
- * } from '@coveo/headless/ssr-commerce';
+ *   type InferHydratedState,
+ *   type InferStaticState,
+ * } from '@coveo/headless/ssr-commerce-next';
  *
- * type CommerceEngineConfig = CommerceEngineDefinitionOptions<
- *   ControllerDefinitionsMap<CommerceEngine, Controller>
- * >;
- *
- * const config = {
- *   configuration: {
- *     ...getSampleCommerceEngineConfiguration(),
- *     context: {
- *       language: 'en',
- *       country: 'US',
- *       currency: 'USD',
- *       view: {
- *         url: '...',
- *       },
- *     },
- *   },
- *   controllers: {
- *     productList: defineProductList(),
- *   },
- * } satisfies CommerceEngineConfig;
- *
- * const engineDefinition = defineCommerceEngine(engineConfig);
- *
+ * // Shared by the server and the browser. The context, the cart and the navigator context
+ * // are per-request data: they are passed to `fetchStaticState()`, not to the configuration.
  * export const {
  *   listingEngineDefinition,
  *   searchEngineDefinition,
  *   standaloneEngineDefinition,
- * } = engineDefinition;
- *
- * await listingEngineDefinition.fetchStaticState({
- *   navigatorContextProvider: () => {/*...* /},
- *   context: {/*...* /},
+ *   recommendationEngineDefinition,
+ * } = defineCommerceEngine({
+ *   configuration: {...getSampleCommerceEngineConfiguration()},
+ *   controllers: {
+ *     productList: defineProductList(),
+ *     pagination: definePagination(),
+ *     popularViewed: defineRecommendations({options: {slotId: '...'}}),
+ *   },
  * });
  *
- * export type ListingStaticState = InferStaticState<
- *   typeof listingEngineDefinition
- * >;
- * export type ListingHydratedState = InferHydratedState<
- *   typeof listingEngineDefinition
- * >;
+ * export type ListingStaticState = InferStaticState<typeof listingEngineDefinition>;
+ * export type ListingHydratedState = InferHydratedState<typeof listingEngineDefinition>;
  *
- * export type SearchStaticState = InferStaticState<typeof searchEngineDefinition>;
- * export type SearchHydratedState = InferHydratedState<
- *   typeof searchEngineDefinition
- * >;
+ * // On the server, once per request
+ * const staticState = await listingEngineDefinition.fetchStaticState({
+ *   navigatorContext: {
+ *     clientId: '...',
+ *     location: 'https://sports.barca.group/browse/promotions/toys',
+ *     referrer: null,
+ *     userAgent: '...',
+ *     forwardedFor: '...',
+ *   },
+ *   context: {
+ *     language: 'en',
+ *     country: 'US',
+ *     currency: 'USD',
+ *     view: {url: 'https://sports.barca.group/browse/promotions/toys'},
+ *   },
+ *   cart: {items: []},
+ * });
  *
- * export type StandaloneStaticState = InferStaticState<
- *   typeof standaloneEngineDefinition
- * >;
- * export type StandaloneHydratedState = InferHydratedState<
- *   typeof standaloneEngineDefinition
- * >;
- *
+ * // In the browser, from the serialized static state. It already carries the navigator context,
+ * // the context, the cart, the search parameters and the per-request access token.
+ * const {engine, controllers} = await listingEngineDefinition.hydrateStaticState(staticState);
  * ```
  * @module SSR Commerce
  */
@@ -78,7 +63,6 @@ export type {Middleware, Unsubscribe} from '@reduxjs/toolkit';
 export type {CommerceEngineConfiguration} from './app/commerce-engine/commerce-engine-configuration.js';
 export {getSampleCommerceEngineConfiguration} from './app/commerce-engine/commerce-engine-configuration.js';
 export type {CoreEngineNext, ExternalEngineOptions} from './app/engine.js';
-// export type
 export type {
   AnalyticsConfiguration,
   AnalyticsRuntimeEnvironment,
@@ -325,8 +309,6 @@ export type {
   CommerceSearchParametersState,
 } from './state/commerce-app-state.js';
 
-// TODO: KIT-3391 - export other SSR commerce controllers
-
 //#endregion
 
 export * from './features/commerce/configuration/configuration-actions-loader.js';
@@ -360,7 +342,6 @@ export {buildResultTemplatesManager} from './features/result-templates/result-te
 
 export {getCommerceApiBaseUrl} from './api/commerce/commerce-api-client.js';
 // Types & Helpers
-// TODO KIT-3462: add export commerce SSR parameter serializer
 export type {BaseProduct, ChildProduct, Product} from './api/commerce/common/product.js';
 export type {Result, SpotlightContent} from './api/commerce/common/result.js';
 export {ResultType} from './api/commerce/common/result.js';

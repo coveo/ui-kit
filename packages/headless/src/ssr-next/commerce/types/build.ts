@@ -95,10 +95,6 @@ export type RecommendationBuildConfig<TControllers extends ControllerDefinitions
     >;
   };
 
-export interface ListingBuildConfig extends CommonBuildConfig {}
-
-export interface StandaloneBuildConfig extends CommonBuildConfig {}
-
 export interface CommonBuildConfig {
   /**
    * The `NavigatorContext` interface represents the context of the browser client.

@@ -46,7 +46,7 @@ export default async function Listing({
     notFound();
   }
 
-  // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
+  // Builds the navigator context from the request headers. It is passed to every `fetchStaticState` call.
   const navigatorContext = new NextJsNavigatorContext(await headers());
 
   const {deserialize} = buildParameterSerializer();
@@ -96,14 +96,9 @@ export default async function Listing({
           <Summary />
           <Sort />
           <ProductList />
-          {/* The ShowMore and Pagination components showcase two frequent ways to implement pagination. */}
+          {/* The search page uses ShowMore instead: the two components showcase two frequent ways to implement pagination. */}
           <Pagination />
           <ProductsPerPage />
-          {/* <ShowMore
-            staticState={staticState.controllers.pagination.state}
-            controller={hydratedState?.controllers.pagination}
-            summaryController={hydratedState?.controllers.summary}
-          /> */}
         </div>
 
         <div style={{flex: 3}}>

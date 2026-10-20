@@ -21,7 +21,7 @@ import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
 
 export default async function Search({searchParams}: {searchParams: Promise<URLSearchParams>}) {
-  // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
+  // Builds the navigator context from the request headers. It is passed to every `fetchStaticState` call.
   const navigatorContext = new NextJsNavigatorContext(await headers());
 
   const {deserialize} = buildParameterSerializer();
@@ -67,11 +67,7 @@ export default async function Search({searchParams}: {searchParams: Promise<URLS
             <BreadcrumbManager />
             <Summary />
             <ProductList />
-            {/* The ShowMore and Pagination components showcase two frequent ways to implement pagination. */}
-            {/* <Pagination
-          staticState={staticState.controllers.pagination.state}
-          controller={hydratedState?.controllers.pagination}
-        ></Pagination> */}
+            {/* The listing pages use Pagination instead: the two components showcase two frequent ways to implement pagination. */}
             <ShowMore />
           </div>
         </div>

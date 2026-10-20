@@ -1,3 +1,4 @@
+import type {ContextOptions} from '@coveo/headless-react/ssr-commerce-next';
 import {headers} from 'next/headers';
 import * as externalCartAPI from '@/actions/external-cart-api';
 import ContextDropdown from '@/components/context-dropdown';
@@ -9,7 +10,6 @@ import StandaloneSearchBox from '@/components/standalone-search-box';
 import {recommendationEngineDefinition, standaloneEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
-import type {ContextOptions} from '../../../../../../packages/headless/dist/definitions/controllers/commerce/context/headless-context';
 
 export default async function ProductDescriptionPage({
   params,
@@ -18,7 +18,7 @@ export default async function ProductDescriptionPage({
   params: Promise<{productId: string}>;
   searchParams: Promise<{[key: string]: string | string[] | undefined}>;
 }) {
-  // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
+  // Builds the navigator context from the request headers. It is passed to every `fetchStaticState` call.
   const navigatorContext = new NextJsNavigatorContext(await headers());
 
   // Fetches the cart items from an external service
