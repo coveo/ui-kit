@@ -54,6 +54,19 @@ describe('defineCommerceEngine', () => {
     expectTypeOf<ListingStaticState['accessToken']>().toEqualTypeOf<string | undefined>();
   });
 
+  it('should stamp the static state with the solution type of its definition', () => {
+    expectTypeOf<ListingStaticState['solutionType']>().toEqualTypeOf<SolutionType.listing>();
+    expectTypeOf<
+      InferStaticState<typeof searchEngineDefinition>['solutionType']
+    >().toEqualTypeOf<SolutionType.search>();
+  });
+
+  it('should refuse the static state of another definition at compile time', () => {
+    expectTypeOf<
+      InferStaticState<typeof searchEngineDefinition>
+    >().not.toMatchTypeOf<ListingStaticState>();
+  });
+
   it('should list the controllers of each kind of page in its static state', () => {
     expectTypeOf<ListingStaticState['controllers']>().toHaveProperty('productList');
     expectTypeOf<ListingStaticState['controllers']>().toHaveProperty('cart');
@@ -156,6 +169,11 @@ describe('EngineDefinition', () => {
     expectTypeOf(
       fetchThenHydrate(listingEngineDefinition, {} as ListingFetchOptions)
     ).resolves.toEqualTypeOf<ListingHydratedState>();
+  });
+
+  it('should refuse the static state of another engine definition', () => {
+    // @ts-expect-error: a listing static state cannot hydrate the standalone engine definition.
+    hydrate(standaloneEngineDefinition, {} as ListingStaticState);
   });
 
   it('should refuse fetch options that the engine definition does not take', () => {
