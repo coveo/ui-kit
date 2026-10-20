@@ -101,10 +101,32 @@ Adopt **Option C**.
 ### The injected contract
 
 The session reads the well-known surface templates and the lookup marks from the contract it is
-given. ADR-014's injected contracts schema becomes a contract with three parts: the component
-union, the well-known surface templates, and the lookup actions of each component. `@coveo/thermidor-schema` exports
-it as one value, so an application injects one contract, as it does today. Names are left to the
-implementation.
+given. ADR-014's injected contracts schema becomes one contract bundle with three parts, which
+`@coveo/thermidor-schema` generates in both of its entry points:
+
+```ts
+export const ThermidorContract = {
+  components: ComponentContractsSchema,
+  wellKnownSurfaces: WellKnownSurfaces,
+  lookupActions: LookupActions,
+} as const;
+```
+
+- **One input.** `SessionConfig` replaces `contracts` with `contract`, and an application injects
+  the bundle: `createSession({contract: ThermidorContract, ...})`. Separate inputs would let the
+  pieces come from different schema versions, so that the session validates against one contract
+  and creates another one's surfaces, or let an application leave the lookup actions out, so that
+  every action on a well-known surface is dropped with only a dev-only warning. The rename keeps
+  no compatibility for `contracts`.
+- **Accepted by its shape.** The session accepts any contract with `components`,
+  `wellKnownSurfaces` and `lookupActions`, and never imports `@coveo/thermidor-schema`, as ADR-014
+  requires.
+- **Not inside the component union.** The templates describe surfaces, not components, so they do
+  not belong in `ComponentContractsSchema`. The lookup mark belongs to each action, but the Zod
+  projection has no place for it: Zod 3 has no metadata channel besides `.describe()`, and the
+  session reads no Zod internals. Encoding it in the union would add fields that carry data instead
+  of validating it.
+- **Future contract-level metadata** goes into the bundle, not into new session inputs.
 
 ### Well-known surfaces
 
