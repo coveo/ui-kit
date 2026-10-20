@@ -54,7 +54,7 @@ describe('hydratedStaticStateFactory', () => {
   it('should hand the controller props carried by the static state back as the controllers option', async () => {
     const controllerProps = {productEnrichment: {options: {placementIds: ['placement']}}};
 
-    await hydratedStaticStateFactory(controllerDefinitions, options)(SolutionType.standalone)({
+    await hydratedStaticStateFactory(controllerDefinitions, options)(SolutionType.listing)({
       ...params,
       controllerProps,
     });
@@ -98,6 +98,27 @@ describe('hydratedStaticStateFactory', () => {
     )(SolutionType.listing)({...params, searchActions: []});
 
     expect(hydratedState).toEqual(mockBuildResult);
+  });
+
+  it('should refuse a static state fetched by another engine definition', async () => {
+    const hydrateWithSearchDefinition = hydratedStaticStateFactory(
+      controllerDefinitions,
+      options
+    )(SolutionType.search);
+
+    await expect(
+      // @ts-expect-error: a listing static state, on purpose
+      hydrateWithSearchDefinition({...params, solutionType: SolutionType.listing})
+    ).rejects.toThrow(
+      'This static state was fetched with the listing engine definition but is being hydrated with the search engine definition'
+    );
+    expect(mockSolutionTypeBuild).not.toHaveBeenCalled();
+  });
+
+  it('should accept a static state built by hand without a solution type', async () => {
+    await expect(
+      hydratedStaticStateFactory(controllerDefinitions, options)(SolutionType.listing)(params)
+    ).resolves.toEqual(mockBuildResult);
   });
 
   it('should return the engine and the controllers', async () => {

@@ -209,6 +209,7 @@ export type {
   ProductList,
   ProductListDefinition,
   ProductListing,
+  ProductListOptions,
   ProductListState,
   Search,
 } from './ssr-next/commerce/controllers/product-list/headless-product-list.ssr.js';
@@ -284,6 +285,12 @@ export type {
   RedirectionTriggerState,
 } from './ssr-next/commerce/controllers/triggers/headless-redirection-trigger.ssr.js';
 export {defineRedirectionTrigger} from './ssr-next/commerce/controllers/triggers/headless-redirection-trigger.ssr.js';
+export {
+  MissingControllerProps,
+  MultipleRecommendationError,
+  SolutionTypeMismatchError,
+} from './ssr-next/common/errors.js';
+export type {ControllerStaticState} from './ssr-next/common/types/controllers.js';
 export {defineCommerceEngine} from './ssr-next/commerce/engine/commerce-engine.ssr.js';
 export type {SSRCommerceEngine as CommerceEngine} from './ssr-next/commerce/factories/build-factory.js';
 // Main App
