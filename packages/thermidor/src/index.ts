@@ -68,6 +68,7 @@ export type {
 
 // ── Injected-contract type (the runtime's decoupling seam) ───────────────────
 export type {
+  SessionContract,
   ContractsSchema,
   ComponentContractSchema,
   ParsableSchema,

@@ -1,18 +1,15 @@
 import {createContext, useContext, useRef, type PropsWithChildren} from 'react';
 import {createSession, type NavigatorContext, type Session} from '@coveo/thermidor';
-import {
-  ComponentContractsSchema,
-  LookupActions,
-  WellKnownSurfaces,
-} from '@coveo/thermidor-schema/zod3';
+import {ThermidorContract} from '@coveo/thermidor-schema/zod3';
 import {getSampleConfiguration} from '../env.js';
 
 /**
  * The concrete contract this sample injects into the runtime. `@coveo/thermidor`
  * is decoupled from any specific contract package; the sample supplies the Coveo
- * `ComponentContractsSchema` so the session validates against it.
+ * `ThermidorContract`, so the session validates against its components and instantiates its
+ * well-known surfaces.
  */
-type DemoSession = Session<typeof ComponentContractsSchema>;
+type DemoSession = Session<typeof ThermidorContract.components>;
 
 const SessionContext = createContext<DemoSession | null>(null);
 
@@ -36,7 +33,7 @@ function createThermidorSession(): DemoSession {
     getSampleConfiguration();
 
   return createSession({
-    contracts: ComponentContractsSchema,
+    contract: ThermidorContract,
     organizationId,
     accessToken,
     endpoint,
@@ -45,8 +42,6 @@ function createThermidorSession(): DemoSession {
     country,
     currency,
     navigatorContextProvider: getNavigatorContext,
-    wellKnownSurfaces: WellKnownSurfaces,
-    lookupActions: LookupActions,
   });
 }
 

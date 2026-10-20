@@ -45,11 +45,13 @@ const SearchBoxSurface: WellKnownSurfaceTemplate = {
 };
 
 const config: SessionConfig = {
-  contracts,
+  contract: {
+    components: contracts,
+    wellKnownSurfaces: [SearchBoxSurface],
+    lookupActions: {QuerySuggestions: ['fetchSuggestions']},
+  },
   organizationId: 'org-1',
   accessToken: 'token-1',
-  wellKnownSurfaces: [SearchBoxSurface],
-  lookupActions: {QuerySuggestions: ['fetchSuggestions']},
 };
 
 const encoder = new TextEncoder();

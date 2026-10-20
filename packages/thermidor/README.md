@@ -16,12 +16,12 @@ Component state travels **inline** through the A2-UI data model: the server send
 
 ```typescript
 import {createSession} from '@coveo/thermidor';
-import {ComponentContractsSchema} from '@coveo/thermidor-schema';
+import {ThermidorContract} from '@coveo/thermidor-schema';
 
 const session = createSession({
   organizationId: 'my-org',
   accessToken: 'xx-token',
-  contracts: ComponentContractsSchema, // injected Zod discriminated union (Zod 3 or 4)
+  contract: ThermidorContract, // components (Zod 3 or 4), well-known surface templates, lookups
   navigatorContextProvider: () => getNavigatorContext(),
   commerceContextProvider: () => ({cart: getCart()}),
 });
@@ -35,7 +35,7 @@ await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me r
 
 | Member                    | Purpose                                                                                                                     |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `contracts`               | The injected contracts schema this session validates against (readonly).                                                    |
+| `contract`                | The injected contract this session validates against (readonly).                                                            |
 | `turns`                   | Readonly observable list of `Turn`s folded from the stream (empty initially).                                               |
 | `actionError`             | Why the last component action was dropped after repeated concurrency conflicts, or `undefined`. See below.                  |
 | `actions`                 | The action queue: `issue`, `withholdQueued`, `subscribe`, `getSnapshot`. See [The action queue](#the-action-queue).         |
@@ -45,7 +45,7 @@ await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me r
 | `retry(turnId)`           | Re-submits an errored turn's input.                                                                                         |
 | `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                                                             |
 
-The concrete `contracts` type pinned at the `createSession` call site threads unbroken through `Session`, so component types, action names, and payloads stay fully typed at the call site (no `string`, no `never`, no `unknown`).
+The concrete `contract` type pinned at the `createSession` call site threads unbroken through `Session`, so component types, action names, and payloads stay fully typed at the call site (no `string`, no `never`, no `unknown`).
 
 ## Dispatching actions
 

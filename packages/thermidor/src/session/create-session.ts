@@ -36,7 +36,7 @@ import {
   type IssuedDispatch,
 } from '@/src/actions/dispatch-coordinator.js';
 import {validateActionPayload} from './action-payload-validation.js';
-import type {ContractsSchema} from './contracts.js';
+import type {ContractsSchema, SessionContract} from './contracts.js';
 import {callWithConflictRetry} from './conflict-retry.js';
 import {createTurn, foldActivity} from './fold.js';
 import {deriveNodeIdentityRegistry} from './in-transit-validation.js';
@@ -106,16 +106,16 @@ export interface SubmitPromptAction {
  */
 export interface SessionConfig<TContracts extends ContractsSchema = ContractsSchema> {
   /**
-   * The injected component contracts schema (a discriminated union on `component`,
-   * each member carrying that component's `state` and `actions`). It is the SOLE
-   * validation source for the session: inbound `updateDataModel` ops are validated
-   * against the member's `state` (whole) / its sub-schema (partial sub-path), and
-   * outbound action payloads against the member's `actions` for the dispatched
-   * action name, before the POST. Injecting it here keeps `@coveo/thermidor`
-   * decoupled from any concrete contract package, so the runtime works with any
-   * A2-UI contract schema, not only `@coveo/thermidor-schema`.
+   * The injected contract, as one value: its component union (a discriminated union on
+   * `component`, each member carrying that component's `state` and `actions`), its well-known
+   * surface templates, and its lookup actions. The component union is the SOLE validation source
+   * for the session: inbound `updateDataModel` ops are validated against the member's `state`
+   * (whole) / its sub-schema (partial sub-path), and outbound action payloads against the
+   * member's `actions` for the dispatched action name, before the POST. Injecting it here keeps
+   * `@coveo/thermidor` decoupled from any concrete contract package, so the runtime works with any
+   * A2-UI contract of this shape, not only `ThermidorContract` from `@coveo/thermidor-schema`.
    */
-  contracts: TContracts;
+  contract: SessionContract<TContracts>;
   organizationId: string;
   accessToken: string;
   /**
@@ -146,16 +146,6 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
    * so the restored session continues the same backend conversation.
    */
   sessionToRestore?: SerializedSession;
-  /**
-   * PROTOTYPE (KIT-6367): the contract's well-known surface templates (`WellKnownSurfaces` in
-   * `@coveo/thermidor-schema`), which {@link Session.createWellKnownSurface} instantiates.
-   */
-  wellKnownSurfaces?: readonly WellKnownSurfaceTemplate[];
-  /**
-   * PROTOTYPE (KIT-6367): the actions the contract marks as lookups, keyed by component
-   * discriminator (`LookupActions` in `@coveo/thermidor-schema`).
-   */
-  lookupActions?: Readonly<Record<string, readonly string[]>>;
 }
 
 /**
@@ -165,11 +155,11 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
  */
 export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
   /**
-   * The injected contracts schema this session validates against. Retained on
-   * the handle so the generic parameter is observable and the runtime threads
+   * The injected contract this session validates against and instantiates well-known surfaces
+   * from. Retained on the handle so the generic parameter is observable and the runtime threads
    * the exact contract that was injected.
    */
-  readonly contracts: TContracts;
+  readonly contract: SessionContract<TContracts>;
   /** Readonly observable list of turns folded from the streamed response. */
   readonly turns: readonly Turn[];
   /**
@@ -319,22 +309,19 @@ export function createSession<TContracts extends ContractsSchema>(
 
   // One in-flight lookup per surface, source component and action; a newer one aborts it.
   const lookupControllers = new Map<string, AbortController>();
-  const wellKnownSurfaces = createWellKnownSurfaces(
-    config.wellKnownSurfaces ?? [],
-    config.contracts,
-    {
-      onChange: () => store.setState((current) => ({...current})),
-      onDispose: (surfaceId) => {
-        for (const [key, controller] of lookupControllers) {
-          if (key.startsWith(`${surfaceId}/`)) {
-            controller.abort();
-            lookupControllers.delete(key);
-          }
+  const contracts = config.contract.components;
+  const wellKnownSurfaces = createWellKnownSurfaces(config.contract.wellKnownSurfaces, contracts, {
+    onChange: () => store.setState((current) => ({...current})),
+    onDispose: (surfaceId) => {
+      for (const [key, controller] of lookupControllers) {
+        if (key.startsWith(`${surfaceId}/`)) {
+          controller.abort();
+          lookupControllers.delete(key);
         }
-      },
-    }
-  );
-  const lookupActions = config.lookupActions ?? {};
+      }
+    },
+  });
+  const lookupActions = config.contract.lookupActions;
 
   // The currently in-flight stream's abort controller, or null when idle. Held
   // per session instance — never module-level — so two sessions never contend.
@@ -485,7 +472,7 @@ export function createSession<TContracts extends ContractsSchema>(
           }));
         }
 
-        replaceTurn(turnId, (turn) => foldActivity(turn, event, config.contracts));
+        replaceTurn(turnId, (turn) => foldActivity(turn, event, contracts));
 
         const foldedStatus = store.getState().turns.find((turn) => turn.id === turnId)?.status;
         if (foldedStatus === 'complete' || foldedStatus === 'error') {
@@ -667,7 +654,7 @@ export function createSession<TContracts extends ContractsSchema>(
       recovered.discriminant,
       recovered.name,
       recovered.context,
-      config.contracts
+      contracts
     );
     if (!validation.valid) {
       devWarn(
@@ -806,7 +793,7 @@ export function createSession<TContracts extends ContractsSchema>(
       devWarn(`dispatchAction: "${name}" is not a lookup; well-known surfaces only send lookups.`);
       return;
     }
-    const validation = validateActionPayload(discriminant, name, context, config.contracts);
+    const validation = validateActionPayload(discriminant, name, context, contracts);
     if (!validation.valid) {
       devWarn(`dispatchAction: lookup "${name}" withheld: ${validation.reason}`);
       return;
@@ -871,7 +858,7 @@ export function createSession<TContracts extends ContractsSchema>(
   }
 
   return {
-    contracts: config.contracts,
+    contract: config.contract,
     get turns() {
       return store.getState().turns;
     },
