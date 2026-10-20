@@ -52,11 +52,8 @@ function generateDayjsLocales() {
   const localesData = JSON.parse(readFileSync(dayJsPath, 'utf8'));
 
   let fileContent = 'export const locales: Record<string, () => Promise<unknown>> = {';
-  for (const locale of localesData) {
-    const key = locale.key;
-    const parts = key.split('-');
-    const i18nKey = parts.length > 1 ? `${parts[0]}-${parts[1].toUpperCase()}` : key;
-    const mapKey = i18nKey.includes('-') ? `'${i18nKey}'` : i18nKey;
+  for (const {key} of localesData) {
+    const mapKey = key.includes('-') ? `'${key}'` : key;
     fileContent += `\n  ${mapKey}: () => import('dayjs/locale/${key}'),`;
   }
   fileContent += '\n};\n';

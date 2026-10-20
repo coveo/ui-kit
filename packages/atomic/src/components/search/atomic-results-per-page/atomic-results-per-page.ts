@@ -115,7 +115,7 @@ export class AtomicResultsPerPage
       ${when(
         !this.searchStatusState.hasError && this.isAppLoaded && this.searchStatusState.hasResults,
         () => html`
-          <div class="flex items-center">
+          <div class="flex flex-wrap items-center">
             ${renderLabel()(html`${this.label}`)}
             ${renderFieldsetGroup({
               props: {

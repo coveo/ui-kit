@@ -1,3 +1,19 @@
+## 3.45.5
+
+### Patch Changes
+
+- Updated dependencies [[`5d3b308`](https://github.com/coveo/ui-kit/commit/5d3b308072ac7b92324e50acb68e34088ce05f18), [`8af7566`](https://github.com/coveo/ui-kit/commit/8af7566cac333724f18d96d4a7d27ac09f415d5f), [`a873e42`](https://github.com/coveo/ui-kit/commit/a873e42c94519da6e7545b4f63b8c1973b30b2ec), [`0a95379`](https://github.com/coveo/ui-kit/commit/0a953790155e0411965e315e6232d1a46e8e5084), [`480c745`](https://github.com/coveo/ui-kit/commit/480c745440f52308eaf97f139d0220939d809525), [`a292905`](https://github.com/coveo/ui-kit/commit/a2929053c49aa386ad4a2b0a8399ea1796bfefe8), [`2f1cde8`](https://github.com/coveo/ui-kit/commit/2f1cde8075b46addfa1d9ae4489227022829920f)]:
+  - @coveo/headless@3.58.0
+
+## 3.45.4
+
+### Patch Changes
+
+- [#8618](https://github.com/coveo/ui-kit/pull/8618) [`f04803d`](https://github.com/coveo/ui-kit/commit/f04803da81c88186bf121e39a22cf5e4ff17eb17) - Fixed the `QuanticSearchBox` and `QuanticStandaloneSearchBox` placeholder being empty by default. When no `placeholder` is set, it now falls back to the new `quantic_SearchBoxPlaceholder` custom label, which can be overridden independently of the `quantic_Search` label used by facet search inputs.
+
+- Updated dependencies [[`ef62433`](https://github.com/coveo/ui-kit/commit/ef62433af99d60c4aac4edf94c273ceba9108e96)]:
+  - @coveo/headless@3.57.3
+
 ## 3.45.3
 
 ### Patch Changes
@@ -585,12 +601,12 @@
 - feat(quantic): quantic insight summary component created (#5185) ([5c00d33](https://github.com/coveo/ui-kit/commits/5c00d33)), closes [#5185](https://github.com/coveo/ui-kit/issues/5185)
 - feat(quantic): added origin context to quantic insight interface (#5142) ([4cde171](https://github.com/coveo/ui-kit/commits/4cde171)), closes [#5142](https://github.com/coveo/ui-kit/issues/5142)
 - fix(quantic): added name attribute to the Quantic tab component (#5130) ([bbb3096](https://github.com/coveo/ui-kit/commits/bbb3096)), closes [#5130](https://github.com/coveo/ui-kit/issues/5130)
-- fix(quantic): breadcrumb value not displayed for date and numeric filters (#5145) ([dcaf869](https://github.com/coveo/ui-kit/commits/dcaf869)), closes [#5145](https://github.com/coveo/ui-kit/issues/5145) [/github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticNumericFacet/quanticNumericFacet.js#L340-L344](https://github.com//github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticNumericFacet/quanticNumericFacet.js/issues/L340-L344) [/github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticTimeframeFacet/quanticTimeframeFacet.js#L490-L492](https://github.com//github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticTimeframeFacet/quanticTimeframeFacet.js/issues/L490-L492)
+- fix(quantic): breadcrumb value not displayed for date and numeric filters (#5145) ([dcaf869](https://github.com/coveo/ui-kit/commits/dcaf869)), closes [#5145](https://github.com/coveo/ui-kit/issues/5145) [github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticNumericFacet/quanticNumericFacet.js#L340-L344](https://github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticNumericFacet/quanticNumericFacet.js#L340-L344) [github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticTimeframeFacet/quanticTimeframeFacet.js#L490-L492](https://github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticTimeframeFacet/quanticTimeframeFacet.js#L490-L492)
 - fix(quantic): handle corner-cases for ResultsPerPage (#5096) ([c006fbe](https://github.com/coveo/ui-kit/commits/c006fbe)), closes [#5096](https://github.com/coveo/ui-kit/issues/5096)
 - fix(quantic): improved condition that indicates when to display timeframe facet (#5143) ([591167c](https://github.com/coveo/ui-kit/commits/591167c)), closes [#5143](https://github.com/coveo/ui-kit/issues/5143)
 - fix(quantic): made sure test folders are excluded from quantic npm package (#5108) ([9c01cf6](https://github.com/coveo/ui-kit/commits/9c01cf6)), closes [#5108](https://github.com/coveo/ui-kit/issues/5108)
 - fix(quantic): unneeded key attribute removed from quantic number button element (#5107) ([980d6b5](https://github.com/coveo/ui-kit/commits/980d6b5)), closes [#5107](https://github.com/coveo/ui-kit/issues/5107)
-- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [/github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com//github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json/issues/L48)
+- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48)
 
 ## 3.19.0
 
@@ -631,7 +647,7 @@
 ## 3.16.5
 
 - fix(quantic): added name attribute to the Quantic tab component (#5130) ([bbb3096](https://github.com/coveo/ui-kit/commits/bbb3096)), closes [#5130](https://github.com/coveo/ui-kit/issues/5130)
-- fix(quantic): breadcrumb value not displayed for date and numeric filters (#5145) ([dcaf869](https://github.com/coveo/ui-kit/commits/dcaf869)), closes [#5145](https://github.com/coveo/ui-kit/issues/5145) [/github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticNumericFacet/quanticNumericFacet.js#L340-L344](https://github.com//github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticNumericFacet/quanticNumericFacet.js/issues/L340-L344) [/github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticTimeframeFacet/quanticTimeframeFacet.js#L490-L492](https://github.com//github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticTimeframeFacet/quanticTimeframeFacet.js/issues/L490-L492)
+- fix(quantic): breadcrumb value not displayed for date and numeric filters (#5145) ([dcaf869](https://github.com/coveo/ui-kit/commits/dcaf869)), closes [#5145](https://github.com/coveo/ui-kit/issues/5145) [github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticNumericFacet/quanticNumericFacet.js#L340-L344](https://github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticNumericFacet/quanticNumericFacet.js#L340-L344) [github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticTimeframeFacet/quanticTimeframeFacet.js#L490-L492](https://github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticTimeframeFacet/quanticTimeframeFacet.js#L490-L492)
 - fix(quantic): improved condition that indicates when to display timeframe facet (#5143) ([591167c](https://github.com/coveo/ui-kit/commits/591167c)), closes [#5143](https://github.com/coveo/ui-kit/issues/5143)
 
 ## 3.16.4
@@ -652,7 +668,7 @@
 ## 3.16.1
 
 - fix(headless, atomic): ensure components are enabled/disabled correctly when an invalid tab id is pr ([1a6fc46](https://github.com/coveo/ui-kit/commits/1a6fc46)), closes [#4944](https://github.com/coveo/ui-kit/issues/4944)
-- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [/github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com//github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json/issues/L48)
+- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48)
 - fix(quantic): handle corner-cases for ResultsPerPage (#5096) ([c006fbe](https://github.com/coveo/ui-kit/commits/c006fbe)), closes [#5096](https://github.com/coveo/ui-kit/issues/5096)
 - fix(quantic): made sure test folders are excluded from quantic npm package (#5108) ([9c01cf6](https://github.com/coveo/ui-kit/commits/9c01cf6)), closes [#5108](https://github.com/coveo/ui-kit/issues/5108)
 - fix(quantic): unneeded key attribute removed from quantic number button element (#5107) ([980d6b5](https://github.com/coveo/ui-kit/commits/980d6b5)), closes [#5107](https://github.com/coveo/ui-kit/issues/5107)
@@ -711,7 +727,7 @@
 - feat(quantic): add collapsible max height option to the quanticGeneratedAnswer component (#4871) ([a92f563](https://github.com/coveo/ui-kit/commits/a92f563)), closes [#4871](https://github.com/coveo/ui-kit/issues/4871)
 - feat(quantic): Migration of Quantic Smart Snippet suggestions to Playwright (#4888) ([7b277e1](https://github.com/coveo/ui-kit/commits/7b277e1)), closes [#4888](https://github.com/coveo/ui-kit/issues/4888)
 - feat(quantic): QuanticResultsPerPage fixes and refactor tests (#4889) ([0d63ca9](https://github.com/coveo/ui-kit/commits/0d63ca9)), closes [#4889](https://github.com/coveo/ui-kit/issues/4889)
-- chore(tests): fix flakiness issue (#4905) ([ab7f0d5](https://github.com/coveo/ui-kit/commits/ab7f0d5)), closes [#4905](https://github.com/coveo/ui-kit/issues/4905) [/github.com/cypress-io/cypress/issues/29085#issuecomment-2040258080](https://github.com//github.com/cypress-io/cypress/issues/29085/issues/issuecomment-2040258080) [/docs.cypress.io/app/references/changelog#13-7-3](https://github.com//docs.cypress.io/app/references/changelog/issues/13-7-3) [/github.com/coveo/ui-kit/pull/4905#discussion_r1933951647](https://github.com//github.com/coveo/ui-kit/pull/4905/issues/discussion_r1933951647)
+- chore(tests): fix flakiness issue (#4905) ([ab7f0d5](https://github.com/coveo/ui-kit/commits/ab7f0d5)), closes [#4905](https://github.com/coveo/ui-kit/issues/4905) [github.com/cypress-io/cypress/issues/29085#issuecomment-2040258080](https://github.com/cypress-io/cypress/issues/29085#issuecomment-2040258080) [docs.cypress.io/app/references/changelog#13-7-3](https://docs.cypress.io/app/references/changelog#13-7-3) [github.com/coveo/ui-kit/pull/4905#discussion_r1933951647](https://github.com/coveo/ui-kit/pull/4905#discussion_r1933951647)
 - fix(headless+atomic): make recent queries case insensitive + display recent query even if it fully m ([6ceebaa](https://github.com/coveo/ui-kit/commits/6ceebaa)), closes [#4854](https://github.com/coveo/ui-kit/issues/4854)
 
 ## 3.13.0
@@ -808,7 +824,7 @@
 
 ## 3.2.5
 
-- fix(atomic): broken HTML because of formatting in CRGA markdown heading (#4522) ([9e15c6c](https://github.com/coveo/ui-kit/commits/9e15c6c)), closes [#4522](https://github.com/coveo/ui-kit/issues/4522) [/github.com/coveo/ui-kit/blob/main/packages/atomic/src/components/common/generated-answer/generated-content/markdown-utils.ts#L50](https://github.com//github.com/coveo/ui-kit/blob/main/packages/atomic/src/components/common/generated-answer/generated-content/markdown-utils.ts/issues/L50)
+- fix(atomic): broken HTML because of formatting in CRGA markdown heading (#4522) ([9e15c6c](https://github.com/coveo/ui-kit/commits/9e15c6c)), closes [#4522](https://github.com/coveo/ui-kit/issues/4522) [github.com/coveo/ui-kit/blob/main/packages/atomic/src/components/common/generated-answer/generated-content/markdown-utils.ts#L50](https://github.com/coveo/ui-kit/blob/main/packages/atomic/src/components/common/generated-answer/generated-content/markdown-utils.ts#L50)
 
 ## 3.2.1
 

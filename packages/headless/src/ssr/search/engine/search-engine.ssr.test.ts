@@ -9,8 +9,10 @@ import {
 } from '../../../controllers/controller/headless-controller.js';
 import {loadPaginationActions} from '../../../features/pagination/pagination-actions-loader.js';
 import type {executeSearch} from '../../../features/search/search-actions.js';
+import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
 import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
 import {buildMockResult} from '../../../test/mock-result.js';
+import {buildMockSearchResponse} from '../../../test/mock-search-response.js';
 import * as augmentModule from '../../common/augment-preprocess-request.js';
 import type {ControllerDefinitionWithoutProps} from '../../common/types/controllers.js';
 import type {
@@ -211,6 +213,159 @@ describe('SSR', () => {
       });
     });
 
+    describe('when the definition has no navigator context provider', () => {
+      function defineSearchEngineWithoutNavigatorContext() {
+        return defineSearchEngine({
+          configuration: {...getSampleSearchEngineConfiguration(), analytics: {enabled: false}},
+          controllers: {},
+        });
+      }
+
+      it('should log a warning that names the supported options', async () => {
+        await defineSearchEngineWithoutNavigatorContext().build();
+
+        expect(mockedLoggerWarn).toHaveBeenCalledWith(
+          '[WARNING] Missing navigator context in server-side code. Pass a per-request `navigatorContext` to fetchStaticState() and hydrateStaticState(), or a `navigatorContextProvider` to defineSearchEngine().'
+        );
+      });
+
+      it('should not warn when extend sets a navigator context provider', async () => {
+        await defineSearchEngineWithoutNavigatorContext().build({
+          extend: (options) => ({
+            ...options,
+            navigatorContextProvider: buildMockNavigatorContextProvider(),
+          }),
+        });
+
+        expect(mockedLoggerWarn).not.toHaveBeenCalledWith(
+          expect.stringContaining('Missing navigator context')
+        );
+      });
+
+      it('should not warn when a per-request navigator context is passed', async () => {
+        await defineSearchEngineWithoutNavigatorContext().build({
+          navigatorContext: buildMockNavigatorContext(),
+        });
+
+        expect(mockedLoggerWarn).not.toHaveBeenCalledWith(
+          expect.stringContaining('Missing navigator context')
+        );
+      });
+    });
+
+    it('should not warn about a missing navigator context when the definition has a navigatorContextProvider', async () => {
+      await engineDefinition.build();
+
+      expect(mockedLoggerWarn).not.toHaveBeenCalledWith(
+        expect.stringContaining('Missing navigator context')
+      );
+    });
+
+    describe('x-forwarded-for header', () => {
+      let forwardedForPerSearchRequest: (string | null)[];
+
+      beforeEach(() => {
+        forwardedForPerSearchRequest = [];
+        vi.stubGlobal(
+          'fetch',
+          vi.fn(async (url: string, init: RequestInit) => {
+            if (url.includes('/rest/search/v2')) {
+              forwardedForPerSearchRequest.push(new Headers(init.headers).get('x-forwarded-for'));
+            }
+            return new Response(JSON.stringify(buildMockSearchResponse()), {
+              headers: {'Content-Type': 'application/json'},
+            });
+          })
+        );
+      });
+
+      afterEach(() => {
+        vi.unstubAllGlobals();
+      });
+
+      it('should send the x-forwarded-for header of each request', async () => {
+        engineDefinition.setNavigatorContextProvider(
+          buildMockNavigatorContextProvider({forwardedFor: '1.1.1.1'})
+        );
+        await engineDefinition.fetchStaticState();
+
+        engineDefinition.setNavigatorContextProvider(
+          buildMockNavigatorContextProvider({forwardedFor: '2.2.2.2'})
+        );
+        await engineDefinition.fetchStaticState();
+
+        expect(forwardedForPerSearchRequest).toEqual(['1.1.1.1', '2.2.2.2']);
+      });
+
+      it('should send the x-forwarded-for header of the navigator context set through extend', async () => {
+        engineDefinition.setNavigatorContextProvider(
+          buildMockNavigatorContextProvider({forwardedFor: '1.1.1.1'})
+        );
+        const buildResult = await engineDefinition.build({
+          extend: (options) => ({
+            ...options,
+            navigatorContextProvider: buildMockNavigatorContextProvider({forwardedFor: '3.3.3.3'}),
+          }),
+        });
+        await engineDefinition.fetchStaticState.fromBuildResult({buildResult});
+
+        expect(forwardedForPerSearchRequest).toEqual(['3.3.3.3']);
+      });
+
+      describe('with a per-request navigator context', () => {
+        beforeEach(() => {
+          engineDefinition.setNavigatorContextProvider(
+            buildMockNavigatorContextProvider({forwardedFor: '1.1.1.1'})
+          );
+        });
+
+        it('should send the x-forwarded-for header of the per-request navigator context', async () => {
+          await engineDefinition.fetchStaticState({
+            navigatorContext: buildMockNavigatorContext({forwardedFor: '4.4.4.4'}),
+          });
+
+          expect(forwardedForPerSearchRequest).toEqual(['4.4.4.4']);
+        });
+
+        it('should keep the definition navigator context provider for later requests', async () => {
+          await engineDefinition.fetchStaticState({
+            navigatorContext: buildMockNavigatorContext({forwardedFor: '4.4.4.4'}),
+          });
+          await engineDefinition.fetchStaticState();
+
+          expect(forwardedForPerSearchRequest).toEqual(['4.4.4.4', '1.1.1.1']);
+        });
+
+        it('should send each concurrent request its own x-forwarded-for header', async () => {
+          await Promise.all([
+            engineDefinition.fetchStaticState({
+              navigatorContext: buildMockNavigatorContext({forwardedFor: '5.5.5.5'}),
+            }),
+            engineDefinition.fetchStaticState({
+              navigatorContext: buildMockNavigatorContext({forwardedFor: '6.6.6.6'}),
+            }),
+          ]);
+
+          expect(forwardedForPerSearchRequest.toSorted()).toEqual(['5.5.5.5', '6.6.6.6']);
+        });
+
+        it('should prefer the per-request navigator context over the one set through extend', async () => {
+          const buildResult = await engineDefinition.build({
+            extend: (options) => ({
+              ...options,
+              navigatorContextProvider: buildMockNavigatorContextProvider({
+                forwardedFor: '3.3.3.3',
+              }),
+            }),
+            navigatorContext: buildMockNavigatorContext({forwardedFor: '4.4.4.4'}),
+          });
+          await engineDefinition.fetchStaticState.fromBuildResult({buildResult});
+
+          expect(forwardedForPerSearchRequest).toEqual(['4.4.4.4']);
+        });
+      });
+    });
+
     describe('with a static state', () => {
       let staticState: StaticState;
       beforeEach(async () => {
@@ -225,6 +380,15 @@ describe('SSR', () => {
           getSampleSearchEngineConfiguration().organizationId
         );
         expect(getResultsPerPage(hydratedState)).toBe(defaultNumberOfResults);
+      });
+
+      it('hydrates engine with the per-request navigator context', async () => {
+        const hydratedState = await engineDefinition.hydrateStaticState({
+          ...staticState,
+          navigatorContext: buildMockNavigatorContext({forwardedFor: '4.4.4.4'}),
+        });
+
+        expect(hydratedState.engine.navigatorContext.forwardedFor).toBe('4.4.4.4');
       });
     });
 

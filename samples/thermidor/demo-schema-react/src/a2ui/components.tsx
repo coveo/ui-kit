@@ -7,7 +7,10 @@ import {BundleDisplay} from './BundleDisplay/BundleDisplay.js';
 import {ComparisonTable} from './ComparisonTable/ComparisonTable.js';
 import {ProductList} from './ProductList/ProductList.js';
 import {ProductSummary} from './ProductSummary/ProductSummary.js';
-import {ProductResearchCard} from './ProductResearchCard/ProductResearchCard.js';
+import {
+  createProductResearchCard,
+  type ProductResearchCardOptions,
+} from './ProductResearchCard/ProductResearchCard.js';
 import {Pagination} from './Pagination/Pagination.js';
 import {Sort} from './Sort/Sort.js';
 import {RegularFacet} from './RegularFacet/RegularFacet.js';
@@ -18,27 +21,31 @@ import {CommerceSearch} from './CommerceSearch/CommerceSearch.js';
 import {LayoutStack} from './LayoutStack/LayoutStack.js';
 import {QuerySummary} from './QuerySummary/QuerySummary.js';
 import {PageSize} from './PageSize/PageSize.js';
+import {Breadbox} from './Breadbox/Breadbox.js';
 
-const thermidorComponents = [
-  ProductCarousel,
-  NextActionsBar,
-  BundleDisplay,
-  ComparisonTable,
-  ProductList,
-  ProductSummary,
-  ProductResearchCard,
-  Pagination,
-  Sort,
-  RegularFacet,
-  NumericFacet,
-  CategoryFacet,
-  FacetManager,
-  CommerceSearch,
-  LayoutStack,
-  QuerySummary,
-  PageSize,
-];
+export interface ThermidorCatalogOptions {
+  productResearchCard?: ProductResearchCardOptions;
+}
 
-export function createThermidorCatalog() {
-  return new Catalog(THERMIDOR_CATALOG_ID, thermidorComponents);
+export function createThermidorCatalog(options: ThermidorCatalogOptions = {}) {
+  return new Catalog(THERMIDOR_CATALOG_ID, [
+    ProductCarousel,
+    NextActionsBar,
+    BundleDisplay,
+    ComparisonTable,
+    ProductList,
+    ProductSummary,
+    createProductResearchCard(options.productResearchCard),
+    Pagination,
+    Sort,
+    RegularFacet,
+    NumericFacet,
+    CategoryFacet,
+    FacetManager,
+    CommerceSearch,
+    LayoutStack,
+    QuerySummary,
+    PageSize,
+    Breadbox,
+  ]);
 }

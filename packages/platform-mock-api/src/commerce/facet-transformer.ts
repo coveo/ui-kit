@@ -125,11 +125,7 @@ function applyFacetSelections(
     const updatedFacet = {...resFacet};
 
     if (reqFacet.type === 'hierarchical') {
-      updatedFacet.values = applyHierarchicalSelection(
-        resFacet,
-        reqFacet.values || [],
-        reqFacet.preventAutoSelect ?? false
-      );
+      updatedFacet.values = applyHierarchicalSelection(resFacet, reqFacet.values || []);
     } else if (reqFacet.type === 'regular') {
       updatedFacet.values = applyRegularSelection(
         resFacet,
@@ -213,29 +209,13 @@ function applyRangeSelection(
 
 function applyHierarchicalSelection(
   resFacet: ResponseFacet,
-  reqValues: FacetValueRequest[],
-  preventAutoSelect: boolean
+  reqValues: FacetValueRequest[]
 ): ResponseFacetValue[] {
   const selectedNodes = findAllSelectedNodes(reqValues);
   if (selectedNodes.length === 0) return resFacet.values;
 
   const deepest = selectedNodes.reduce((a, b) => (a.depth > b.depth ? a : b));
   const selectedValue = deepest.node.value!;
-
-  if (preventAutoSelect && deepest.parentValue) {
-    const knownSiblings = CATEGORY_CHILDREN[deepest.parentValue];
-    // Only navigate up if the selected value is a known child of its parent.
-    // Unknown values (e.g., from URL restoration) are kept as-is.
-    if (knownSiblings && knownSiblings.includes(selectedValue)) {
-      const parentNode: SelectedNodeInfo = {
-        node: {value: deepest.parentValue, state: 'selected', children: []},
-        depth: deepest.depth - 1,
-        parentValue: deepest.ancestorPath[deepest.ancestorPath.length - 2] ?? null,
-        ancestorPath: deepest.ancestorPath.slice(0, -1),
-      };
-      return buildHierarchicalTree(reqValues, parentNode, knownSiblings, resFacet);
-    }
-  }
 
   const children = CATEGORY_CHILDREN[selectedValue] || ['SubItem1', 'SubItem2'];
   return buildHierarchicalTree(reqValues, deepest, children, resFacet);
@@ -244,14 +224,12 @@ function applyHierarchicalSelection(
 interface SelectedNodeInfo {
   node: FacetValueRequest;
   depth: number;
-  parentValue: string | null;
   ancestorPath: string[];
 }
 
 function findAllSelectedNodes(
   values: FacetValueRequest[],
   depth = 0,
-  parentValue: string | null = null,
   ancestorPath: string[] = []
 ): SelectedNodeInfo[] {
   const results: SelectedNodeInfo[] = [];
@@ -260,14 +238,11 @@ function findAllSelectedNodes(
       results.push({
         node: v,
         depth,
-        parentValue,
         ancestorPath: [...ancestorPath],
       });
     }
     if (v.children && v.children.length > 0) {
-      results.push(
-        ...findAllSelectedNodes(v.children, depth + 1, v.value || null, [...ancestorPath, v.value!])
-      );
+      results.push(...findAllSelectedNodes(v.children, depth + 1, [...ancestorPath, v.value!]));
     }
   }
   return results;

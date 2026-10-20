@@ -1,3 +1,17 @@
+## 1.2.63
+
+### Patch Changes
+
+- Updated dependencies [[`5d3b308`](https://github.com/coveo/ui-kit/commit/5d3b308072ac7b92324e50acb68e34088ce05f18), [`8af7566`](https://github.com/coveo/ui-kit/commit/8af7566cac333724f18d96d4a7d27ac09f415d5f), [`a873e42`](https://github.com/coveo/ui-kit/commit/a873e42c94519da6e7545b4f63b8c1973b30b2ec), [`0a95379`](https://github.com/coveo/ui-kit/commit/0a953790155e0411965e315e6232d1a46e8e5084), [`480c745`](https://github.com/coveo/ui-kit/commit/480c745440f52308eaf97f139d0220939d809525), [`a292905`](https://github.com/coveo/ui-kit/commit/a2929053c49aa386ad4a2b0a8399ea1796bfefe8), [`2f1cde8`](https://github.com/coveo/ui-kit/commit/2f1cde8075b46addfa1d9ae4489227022829920f)]:
+  - @coveo/headless@3.58.0
+
+## 1.2.62
+
+### Patch Changes
+
+- Updated dependencies [[`ef62433`](https://github.com/coveo/ui-kit/commit/ef62433af99d60c4aac4edf94c273ceba9108e96)]:
+  - @coveo/headless@3.57.3
+
 ## 1.2.61
 
 ### Patch Changes
@@ -309,7 +323,7 @@
 - [Version Bump][skip ci]: ui-kit publish ([05f5f59](https://github.com/coveo/ui-kit/commits/05f5f59))
 - fix(autoloader): wrap initial discovery and observer setup in DOMContentLoaded event (#5180) ([58655b4](https://github.com/coveo/ui-kit/commits/58655b4)), closes [#5180](https://github.com/coveo/ui-kit/issues/5180)
 - chore: author & sign generated ci commit (#5149) ([1c22fb1](https://github.com/coveo/ui-kit/commits/1c22fb1)), closes [#5149](https://github.com/coveo/ui-kit/issues/5149)
-- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [/github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com//github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json/issues/L48)
+- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48)
 
 ## 1.1.16
 
@@ -325,7 +339,7 @@
 
 ## 1.1.10
 
-- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [/github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com//github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json/issues/L48)
+- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48)
 
 ## 1.1.8
 

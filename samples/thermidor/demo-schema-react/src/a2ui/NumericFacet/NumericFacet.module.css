@@ -83,10 +83,20 @@
   font-weight: 400;
 }
 
-.customForm {
+.customFieldset {
   display: flex;
   align-items: flex-end;
   gap: var(--space-2);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.pending {
+  opacity: 0.55;
+  transition: opacity 120ms ease-out;
 }
 
 .customLabel {

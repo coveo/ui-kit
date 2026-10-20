@@ -1,6 +1,15 @@
 import type {Locator, Page, Request} from '@playwright/test';
 import {isCollectEvent} from '../../../../../../playwright/utils/requests';
 
+const picklistValuesRequestRegex =
+  /\/aura\?.*aura\.RecordUi\.getPicklistValuesByRecordType=1/;
+
+interface AuraPicklistAction {
+  returnValue?: {
+    picklistFieldValues?: Record<string, {values: object[]}>;
+  };
+}
+
 const elementsSelectors = {
   component: 'c-quantic-case-classification',
   caseClassificationSuggestionTestId: 'case-classification-suggestion',
@@ -36,8 +45,8 @@ export class CaseClassificationObject {
     );
   }
 
-  get allOptionsSelectInputValue(): Promise<null | string> {
-    return this.allOptionsSelectInput.locator('button').textContent();
+  get allOptionsSelectInputButton(): Locator {
+    return this.allOptionsSelectInput.locator('button');
   }
 
   get selectInputOption(): Locator {
@@ -91,25 +100,36 @@ export class CaseClassificationObject {
   }
 
   async mockSfPicklistValues(field: string, values: Array<object>) {
-    await this.page.route(
-      '**/aura?*aura.RecordUi.getPicklistValuesByRecordType=1',
-      async (route) => {
-        const response = await route.fetch();
-        const responseBody = await response.json();
-
-        responseBody.actions[0].returnValue.picklistFieldValues[field].values =
-          values.map((value) => ({
-            ...value,
-            attributes: null,
-          }));
-
-        await route.fulfill({
-          status: response.status(),
-          headers: response.headers(),
-          body: JSON.stringify(responseBody),
-        });
+    await this.page.route(picklistValuesRequestRegex, async (route) => {
+      const response = await route.fetch();
+      const responseBody: {actions?: AuraPicklistAction[]} =
+        await response.json();
+      const picklistAction = responseBody.actions?.find(
+        (action) => action?.returnValue?.picklistFieldValues?.[field]
+      );
+      if (!picklistAction) {
+        await route.fulfill({response});
+        return;
       }
-    );
+
+      picklistAction.returnValue.picklistFieldValues[field].values = values.map(
+        (value) => ({
+          ...value,
+          attributes: null,
+        })
+      );
+      const headers = Object.fromEntries(
+        Object.entries(response.headers()).filter(
+          ([name]) => !['content-length', 'content-encoding'].includes(name)
+        )
+      );
+
+      await route.fulfill({
+        status: response.status(),
+        headers,
+        body: JSON.stringify(responseBody),
+      });
+    });
   }
 
   async waitForCollectAnalytics(

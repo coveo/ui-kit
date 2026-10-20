@@ -62,7 +62,8 @@ export default {
   workspaces: {
     '.': {
       entry: ['scripts/**/*.{js,mjs}'],
-      ignoreBinaries: ['ts-node'],
+      // scripts/size-limit.mjs runs from each package's `size` script, which provides the binary.
+      ignoreBinaries: ['ts-node', 'size-limit'],
       ignoreDependencies: ['@playwright/mcp'],
     },
     'packages/headless': {
@@ -169,6 +170,11 @@ export default {
     'samples/atomic/search-angular': {
       // Same as commerce-angular: only referenced from angular.json.
       ignoreDependencies: ['@coveo/atomic'],
+    },
+    'samples/atomic/commerce-hybrid': {
+      // Same as commerce-vite: vite.config.js throws without build artifacts.
+      vite: {config: []},
+      entry: ['src/*-page.ts'],
     },
     'samples/atomic/search-vite': {
       // Same as commerce-vite: vite.config.js throws without build artifacts.

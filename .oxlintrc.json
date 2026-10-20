@@ -24,7 +24,6 @@
     "**/packages/create-atomic-result-component/template/**",
     "**/.deployment.config/**",
     "**/packages/atomic/**/*.d.ts",
-    "**/packages/atomic/stencil-proxy/**",
     "**/packages/documentation/**/assets/**",
     "**/packages/headless/**/coveo.analytics/**"
   ],

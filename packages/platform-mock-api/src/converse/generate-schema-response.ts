@@ -12,6 +12,9 @@ import type {ConverseEvent} from './events.js';
 
 const DEFAULT_DELAY_MS = 25;
 
+// Per message (five per action response): ~1s, like a local backend, so optimistic updates show.
+const ACTION_DELAY_MS = 200;
+
 interface SchemaPromptMapping {
   prompt: string;
   // A factory so the stateful "water sports" search surface can reset and rebuild its events
@@ -73,7 +76,7 @@ function buildSchemaActionResponse(action: {
   sourceComponentId?: string;
 }) {
   const events = buildSearchActionEvents(action);
-  return buildStreamingResponse(events, {delayBetweenMessages: DEFAULT_DELAY_MS});
+  return buildStreamingResponse(events, {delayBetweenMessages: ACTION_DELAY_MS});
 }
 
 export {schemaBaseResponse, matchSchemaPrompt, buildSchemaActionResponse, buildSearchActionEvents};

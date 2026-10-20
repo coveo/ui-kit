@@ -12,10 +12,10 @@ function formatPrice(value: number): string {
 /**
  * A2-UI component for the `bundle-display` container.
  *
- * The generic binder resolves `tiers` from `BundleDisplayPropsSchema`; for the active tier only it
- * mounts each slot's product-summary child via `buildChild(slot.childId)`. Each child owns its own
- * resolved state (price included); the per-tier total is the backend-computed `tier.total`,
- * rendered as-is.
+ * The generic binder resolves `heading` and `tiers` from `BundleDisplayPropsSchema`; the heading is
+ * left out when the backend sends none. For the active tier only it mounts each slot's
+ * product-summary child via `buildChild(slot.childId)`. Each child owns its own resolved state
+ * (price included); the per-tier total is the backend-computed `tier.total`, rendered as-is.
  */
 export const BundleDisplay = createReactComponent(
   {
@@ -23,6 +23,7 @@ export const BundleDisplay = createReactComponent(
     schema: BundleDisplayPropsSchema,
   },
   ({props, buildChild}) => {
+    const heading = props.heading;
     const tiers = props.tiers ?? [];
     const [activeTierIndex, setActiveTierIndex] = useState(0);
 
@@ -31,9 +32,11 @@ export const BundleDisplay = createReactComponent(
 
     return (
       <section className={styles.container}>
-        <div className={styles.header}>
-          <h3 className={styles.title}>Beginner Surfing Kit</h3>
-        </div>
+        {heading && (
+          <div className={styles.header}>
+            <h3 className={styles.title}>{heading}</h3>
+          </div>
+        )}
         {tiers.length > 0 && (
           <div className={styles.tabs}>
             {tiers.map((tier: BundleTier, i: number) => (

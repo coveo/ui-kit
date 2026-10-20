@@ -1,6 +1,6 @@
-import {useEffect} from 'react';
+import {useEffect, useMemo} from 'react';
 import {vi} from 'vitest';
-import {render, type RenderResult} from '@testing-library/react';
+import {render, act, type RenderResult} from '@testing-library/react';
 import {
   A2UIProvider,
   A2UIRenderer,
@@ -8,7 +8,13 @@ import {
   useA2UI,
   type A2UIClientEventMessage,
 } from '@copilotkit/a2ui-renderer';
-import {createThermidorCatalog, THERMIDOR_CATALOG_ID} from './components.js';
+import {createDispatchCoordinator} from '@coveo/thermidor';
+import {
+  createThermidorCatalog,
+  THERMIDOR_CATALOG_ID,
+  type ThermidorCatalogOptions,
+} from './components.js';
+import {DispatchProgressProvider, useTrackedDispatch} from './pending-dispatch.js';
 
 /**
  * Shared end-to-end mount for a component definition, through the real thermidor catalog and the
@@ -43,6 +49,10 @@ export interface MountSurfaceConfig {
   children?: Array<Record<string, unknown>>;
   /** Data-model writes that resolve the `{ path }` bindings on the nodes. */
   dataModel?: Array<{path: string; value: unknown}>;
+  /** Awaited by the action handler; lets a test hold a dispatch in flight. */
+  dispatchGate?: () => Promise<void> | void;
+  /** Options for the thermidor catalog the surface renders with. */
+  catalogOptions?: ThermidorCatalogOptions;
 }
 
 export interface MountSurfaceResult extends RenderResult {
@@ -50,16 +60,53 @@ export interface MountSurfaceResult extends RenderResult {
   actions: DispatchedAction[];
   /** The most recent dispatched action, or undefined if none. */
   lastAction: () => DispatchedAction | undefined;
+  pushDataModel: (updates: Array<{path: string; value: unknown}>) => void;
 }
 
 const ROOT_ID = ROOT_COMPONENT_ID;
 
-function MessagePump({messages}: {messages: Array<Record<string, unknown>>}) {
+type ProcessMessages = (messages: Array<Record<string, unknown>>) => void;
+
+function MessagePump({
+  messages,
+  processRef,
+}: {
+  messages: Array<Record<string, unknown>>;
+  processRef: {current: ProcessMessages | null};
+}) {
   const {processMessages} = useA2UI();
+  processRef.current = processMessages as ProcessMessages;
   useEffect(() => {
     processMessages(messages);
   }, [processMessages, messages]);
   return null;
+}
+
+function Surface({
+  messages,
+  processRef,
+  dispatch,
+  catalogOptions,
+}: {
+  messages: Array<Record<string, unknown>>;
+  processRef: {current: ProcessMessages | null};
+  dispatch: (message: A2UIClientEventMessage) => Promise<void> | void;
+  catalogOptions?: ThermidorCatalogOptions;
+}) {
+  const catalog = useMemo(() => createThermidorCatalog(catalogOptions), [catalogOptions]);
+  const actions = useMemo(
+    () => createDispatchCoordinator<A2UIClientEventMessage>(dispatch),
+    [dispatch]
+  );
+  const tracked = useTrackedDispatch(actions);
+  return (
+    <DispatchProgressProvider value={tracked.progress}>
+      <A2UIProvider catalog={catalog} onAction={tracked.onAction}>
+        <MessagePump messages={messages} processRef={processRef} />
+        <A2UIRenderer surfaceId={SURFACE_ID} />
+      </A2UIProvider>
+    </DispatchProgressProvider>
+  );
 }
 
 /**
@@ -75,10 +122,12 @@ export function mountSurface(config: MountSurfaceConfig): MountSurfaceResult {
     if (userAction) {
       actions.push(userAction);
     }
+    return config.dispatchGate?.();
   });
 
   const rootNode = {...config.component, id: ROOT_ID};
   const childNodes = config.children ?? [];
+  const processRef: {current: ProcessMessages | null} = {current: null};
 
   const messages: Array<Record<string, unknown>> = [
     {version: 'v0.9', createSurface: {surfaceId: SURFACE_ID, catalogId: THERMIDOR_CATALOG_ID}},
@@ -92,17 +141,28 @@ export function mountSurface(config: MountSurfaceConfig): MountSurfaceResult {
     })),
   ];
 
-  const catalog = createThermidorCatalog();
   const result = render(
-    <A2UIProvider catalog={catalog} onAction={onAction}>
-      <MessagePump messages={messages} />
-      <A2UIRenderer surfaceId={SURFACE_ID} />
-    </A2UIProvider>
+    <Surface
+      messages={messages}
+      processRef={processRef}
+      dispatch={onAction}
+      catalogOptions={config.catalogOptions}
+    />
   );
 
   return {
     ...result,
     actions,
     lastAction: () => actions.at(-1),
+    pushDataModel: (updates) => {
+      act(() => {
+        processRef.current?.(
+          updates.map(({path, value}) => ({
+            version: 'v0.9',
+            updateDataModel: {surfaceId: SURFACE_ID, path, value},
+          }))
+        );
+      });
+    },
   };
 }
