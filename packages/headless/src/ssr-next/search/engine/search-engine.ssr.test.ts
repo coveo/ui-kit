@@ -203,6 +203,31 @@ describe('Search Engine SSR', () => {
     });
   });
 
+  describe('definition validation', () => {
+    it('should throw when a controller uses the reserved parameterManager name', () => {
+      expect(() =>
+        defineSearchEngine({
+          ...definitionOptions,
+          // @ts-expect-error: the reserved name is rejected at the type level too
+          controllers: {parameterManager: defineMockSearchController()},
+        })
+      ).toThrow('Reserved controller names found: parameterManager');
+    });
+  });
+
+  describe('static state round trip', () => {
+    it('should not serialize the forwarded-for header into the static state', async () => {
+      const {standaloneEngineDefinition} = defineSearchEngine(definitionOptions);
+
+      const staticState = await standaloneEngineDefinition.fetchStaticState({
+        navigatorContext: buildMockNavigatorContext({forwardedFor: '1.2.3.4'}),
+      });
+
+      expect(staticState.navigatorContext).not.toHaveProperty('forwardedFor');
+      expect(staticState.navigatorContext.clientId).toBe(mockNavigatorContext.clientId);
+    });
+  });
+
   describe('controller props', () => {
     it('should carry the controller props from the static state into the hydrated engine', async () => {
       const {searchEngineDefinition} = defineSearchEngine({

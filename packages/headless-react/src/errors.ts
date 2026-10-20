@@ -3,7 +3,7 @@ import {capitalize} from './utils.js';
 
 export class MissingEngineProviderError extends Error {
   static message =
-    'Unable to find Context. Make sure your component using a controller is wrapped in one of the following providers: `RecommendationProvider`, `ListingProvider`, `SearchProvider`, or `StandaloneProvider`';
+    'Unable to find the engine context. Make sure the component using a controller hook is rendered inside the provider of the engine definition that fetched the static state (the provider built with `buildProviderWithDefinition()`, or a `StateProvider`).';
   constructor() {
     super(MissingEngineProviderError.message);
   }
@@ -11,6 +11,9 @@ export class MissingEngineProviderError extends Error {
 
 export class UndefinedControllerError extends Error {
   static createEngineSupportMessage(solutionTypes: SolutionType[]) {
+    if (solutionTypes.length === 0) {
+      return 'This controller is not part of the current engine definition.';
+    }
     const supportedEngineDefinitionList = solutionTypes.map(
       (solutionType) => `${solutionType}EngineDefinition`
     );
@@ -20,11 +23,10 @@ export class UndefinedControllerError extends Error {
   constructor(controllerName: string, solutionTypes: SolutionType[]) {
     super(
       [
-        `You're importing a controller (use${capitalize(controllerName)}) that is not defined in the current engine definition`,
+        `You're using a controller hook (use${capitalize(controllerName)}) whose controller is not available in the current engine definition.`,
         UndefinedControllerError.createEngineSupportMessage(solutionTypes),
         '',
-        'Ensure that the component using the controller is wrapped in the appropriate State Provider.',
-        // 'Learn more: TODO: Add link to documentation on how to use hooks with providers',
+        'Ensure that the component using the hook is rendered inside the provider of an engine definition that includes this controller.',
       ].join('\n')
     );
   }
