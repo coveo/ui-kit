@@ -112,7 +112,8 @@ const handleSchemaConversePost = async ({request}: {request: Request}) => {
           context: Record<string, unknown>;
           surfaceId?: string;
           sourceComponentId?: string;
-        }
+        },
+        typeof bodyRecord?.surfaceTemplate === 'string' ? bodyRecord.surfaceTemplate : undefined
       )
     );
   }

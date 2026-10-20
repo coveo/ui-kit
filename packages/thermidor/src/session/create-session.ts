@@ -42,8 +42,13 @@ import {createTurn, foldActivity} from './fold.js';
 import {deriveNodeIdentityRegistry} from './in-transit-validation.js';
 import {restoreSession, serializeSession, type SerializedSession} from './serialize.js';
 import {createSessionStore, type SessionStore, type SessionStoreState} from './store.js';
-import type {A2uiV09Message, Turn, TurnInput} from './types.js';
-import {createWellKnownSurfaces} from './well-known-surfaces.js';
+import type {Turn, TurnInput} from './types.js';
+import {
+  createWellKnownSurfaces,
+  type WellKnownSurface,
+  type WellKnownSurfaceOptions,
+  type WellKnownSurfaceTemplate,
+} from './well-known-surfaces.js';
 
 /**
  * The standard A2-UI client-to-server message the frozen renderer delivers to
@@ -142,11 +147,10 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
    */
   sessionToRestore?: SerializedSession;
   /**
-   * PROTOTYPE (KIT-6367): the A2-UI `createSurface` parameters of the contract's well-known
-   * surfaces (`WellKnownSurfaces` in `@coveo/thermidor-schema`). The session creates them itself,
-   * before any request, and they outlive every turn.
+   * PROTOTYPE (KIT-6367): the contract's well-known surface templates (`WellKnownSurfaces` in
+   * `@coveo/thermidor-schema`), which {@link Session.createWellKnownSurface} instantiates.
    */
-  wellKnownSurfaces?: readonly object[];
+  wellKnownSurfaces?: readonly WellKnownSurfaceTemplate[];
   /**
    * PROTOTYPE (KIT-6367): the actions the contract marks as lookups, keyed by component
    * discriminator (`LookupActions` in `@coveo/thermidor-schema`).
@@ -178,12 +182,19 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    */
   readonly actionError: string | undefined;
   /**
-   * PROTOTYPE (KIT-6367): the renderer messages of the well-known surfaces, in the v0.9 shape,
-   * append-only. Their `createSurface` is there from construction; each lookup result appends
-   * its `updateDataModel` messages. Feed new messages to the renderer as they arrive.
+   * PROTOTYPE (KIT-6367): creates an instance of a well-known surface template, outside any turn
+   * and before any request, so a renderer can draw it on first paint. Its actions go through
+   * {@link Session.dispatchAction} as lookups, sent at once with the template name, and their
+   * results append to the instance's `messages`. Dispose of it when its renderer unmounts.
+   *
+   * @throws when the session's contract does not declare the template, or when an instance with
+   *   the same surface id is still live.
    */
-  readonly wellKnownSurfaceMessages: readonly A2uiV09Message[];
-  /** Registers a listener invoked once per change to the turn list, `actionError`, or `wellKnownSurfaceMessages`. */
+  createWellKnownSurface(
+    template: WellKnownSurfaceTemplate,
+    options?: WellKnownSurfaceOptions
+  ): WellKnownSurface;
+  /** Registers a listener invoked once per change to the turn list, `actionError`, or a well-known surface's `messages`. */
   subscribe(listener: () => void): () => void;
   /**
    * The single consumer-facing action-dispatch entry point, wired directly as
@@ -306,14 +317,24 @@ export function createSession<TContracts extends ContractsSchema>(
 
   const client = createUnifiedEndpointClient();
 
+  // One in-flight lookup per surface, source component and action; a newer one aborts it.
+  const lookupControllers = new Map<string, AbortController>();
   const wellKnownSurfaces = createWellKnownSurfaces(
-    (config.wellKnownSurfaces ?? []).map((createSurface) => ({version: 'v1.0', createSurface})),
+    config.wellKnownSurfaces ?? [],
     config.contracts,
-    () => store.setState((current) => ({...current}))
+    {
+      onChange: () => store.setState((current) => ({...current})),
+      onDispose: (surfaceId) => {
+        for (const [key, controller] of lookupControllers) {
+          if (key.startsWith(`${surfaceId}/`)) {
+            controller.abort();
+            lookupControllers.delete(key);
+          }
+        }
+      },
+    }
   );
   const lookupActions = config.lookupActions ?? {};
-  // One in-flight lookup per source component and action; a newer one aborts it.
-  const lookupControllers = new Map<string, AbortController>();
 
   // The currently in-flight stream's abort controller, or null when idle. Held
   // per session instance — never module-level — so two sessions never contend.
@@ -720,7 +741,7 @@ export function createSession<TContracts extends ContractsSchema>(
    * turn, and its session keys are never adopted, so a lookup sent before the first prompt opens
    * no session.
    */
-  async function runLookup(action: A2uiAction): Promise<void> {
+  async function runLookup(surfaceTemplate: string, action: A2uiAction): Promise<void> {
     const key = `${action.surfaceId}/${action.sourceComponentId}/${action.name}`;
     lookupControllers.get(key)?.abort();
     const controller = new AbortController();
@@ -734,7 +755,7 @@ export function createSession<TContracts extends ContractsSchema>(
 
     try {
       const result = await client.call(
-        buildActionRequest(action),
+        {...buildActionRequest(action), surfaceTemplate},
         {
           organizationId: config.organizationId,
           accessToken: config.accessToken,
@@ -771,10 +792,11 @@ export function createSession<TContracts extends ContractsSchema>(
     userAction: NonNullable<A2uiClientMessage['userAction']>
   ): Promise<void> {
     const {name, surfaceId, sourceComponentId, context} = userAction;
+    const template = wellKnownSurfaces.templateOf(surfaceId);
     const discriminant = sourceComponentId
       ? wellKnownSurfaces.resolve(surfaceId, sourceComponentId)
       : undefined;
-    if (!sourceComponentId || discriminant === undefined) {
+    if (template === undefined || !sourceComponentId || discriminant === undefined) {
       devWarn(
         `dispatchAction: no component "${sourceComponentId}" on "${surfaceId}"; nothing sent.`
       );
@@ -789,7 +811,7 @@ export function createSession<TContracts extends ContractsSchema>(
       devWarn(`dispatchAction: lookup "${name}" withheld: ${validation.reason}`);
       return;
     }
-    await runLookup({
+    await runLookup(template, {
       surfaceId,
       name,
       sourceComponentId,
@@ -818,7 +840,7 @@ export function createSession<TContracts extends ContractsSchema>(
       return;
     }
 
-    if (message.userAction && wellKnownSurfaces.has(message.userAction.surfaceId)) {
+    if (message.userAction && wellKnownSurfaces.templateOf(message.userAction.surfaceId)) {
       await dispatchToWellKnownSurface(message.userAction);
       return;
     }
@@ -856,9 +878,7 @@ export function createSession<TContracts extends ContractsSchema>(
     get actionError() {
       return store.getState().actionError;
     },
-    get wellKnownSurfaceMessages() {
-      return wellKnownSurfaces.messages;
-    },
+    createWellKnownSurface: wellKnownSurfaces.create,
     subscribe(listener) {
       return store.subscribe(listener);
     },

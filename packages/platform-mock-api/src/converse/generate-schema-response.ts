@@ -74,13 +74,16 @@ function buildSearchActionEvents(action: {
 // Per message (three per lookup): ~150ms, about a real querySuggest round trip.
 const LOOKUP_DELAY_MS = 50;
 
-function buildSchemaActionResponse(action: {
-  name: string;
-  context: Record<string, unknown>;
-  surfaceId?: string;
-  sourceComponentId?: string;
-}) {
-  if (action.name === 'fetchSuggestions') {
+function buildSchemaActionResponse(
+  action: {
+    name: string;
+    context: Record<string, unknown>;
+    surfaceId?: string;
+    sourceComponentId?: string;
+  },
+  surfaceTemplate?: string
+) {
+  if (surfaceTemplate === 'search-box' && action.name === 'fetchSuggestions') {
     return buildStreamingResponse(buildQuerySuggestionsLookupEvents(action), {
       delayBetweenMessages: LOOKUP_DELAY_MS,
     });

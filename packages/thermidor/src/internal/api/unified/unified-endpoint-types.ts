@@ -10,6 +10,11 @@ export interface CommerceRequestModel {
   clientId?: string;
   message: string | null;
   action: A2uiAction | null;
+  /**
+   * PROTOTYPE (KIT-6367): with a lookup, the name of the well-known surface template the action's
+   * surface was created from.
+   */
+  surfaceTemplate?: string;
   conversationSessionId?: string;
   conversationToken?: string;
   context: CommerceRequestContext;
