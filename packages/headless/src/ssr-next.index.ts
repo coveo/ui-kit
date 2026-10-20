@@ -419,6 +419,7 @@ export type {
 export {defineTab} from './ssr-next/search/controllers/tab/headless-tab.ssr.js';
 export type {
   TabManager,
+  TabManagerDefinition,
   TabManagerState,
 } from './ssr-next/search/controllers/tab-manager/headless-tab-manager.ssr.js';
 export {defineTabManager} from './ssr-next/search/controllers/tab-manager/headless-tab-manager.ssr.js';
@@ -454,12 +455,17 @@ export type {
   UrlManagerState,
 } from './ssr-next/search/controllers/url-manager/headless-url-manager.ssr.js';
 export {defineUrlManager} from './ssr-next/search/controllers/url-manager/headless-url-manager.ssr.js';
+export {MissingControllerProps} from './ssr-next/common/errors.js';
+export type {ControllerStaticState} from './ssr-next/common/types/controllers.js';
+export type {EngineStaticState} from './ssr-next/common/types/engine.js';
 export {defineSearchEngine} from './ssr-next/search/engine/search-engine.ssr.js';
 export type {
+  BuildConfig,
   SearchCompletedAction,
   SSRSearchEngine as SearchEngine,
 } from './ssr-next/search/types/build.js';
 export type {
+  AugmentedControllerDefinition,
   ControllerDefinitionsMap,
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
@@ -475,8 +481,10 @@ export type {
   SearchEngineDefinition,
   SearchEngineDefinitionOptions,
 } from './ssr-next/search/types/engine.js';
-export type {FetchStaticState} from './ssr-next/search/types/fetch-static-state.js';
-// export type
+export type {
+  FetchStaticState,
+  SearchStaticState,
+} from './ssr-next/search/types/fetch-static-state.js';
 export type {
   HydratedState,
   HydrateStaticState,

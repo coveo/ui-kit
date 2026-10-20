@@ -7,6 +7,7 @@ import type {
   HydrateStaticStateParameters,
 } from '../types/engine.js';
 import {buildFactory} from './build-factory.js';
+import {ensureSolutionType} from './hydrated-state-factory.js';
 
 export function hydratedRecommendationStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
@@ -17,6 +18,8 @@ export function hydratedRecommendationStaticStateFactory<
   return async (
     params: HydrateStaticStateParameters<TControllerDefinitions, SolutionType.recommendation>
   ) => {
+    ensureSolutionType(SolutionType.recommendation, params.solutionType);
+
     const solutionTypeBuild = await buildFactory(
       controllerDefinitions,
       options

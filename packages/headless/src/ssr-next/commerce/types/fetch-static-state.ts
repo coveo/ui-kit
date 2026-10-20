@@ -33,6 +33,11 @@ export type CommerceStaticState<
 > &
   BuildConfig<TControllersDefinitionsMap, TSolutionType> & {
     /**
+     * The solution type of the engine definition that fetched the static state. `hydrateStaticState()`
+     * refuses a static state fetched by another engine definition.
+     */
+    solutionType: TSolutionType;
+    /**
      * The controller props that were passed to `fetchStaticState()` through the `controllers` option.
      * `hydrateStaticState()` reuses them to rebuild the controllers with the same props.
      */

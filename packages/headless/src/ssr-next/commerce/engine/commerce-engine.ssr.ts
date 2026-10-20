@@ -16,7 +16,10 @@ import type {
   ControllerDefinitionsMap,
 } from '../types/controller-definitions.js';
 import type {CommerceEngineDefinition, CommerceEngineDefinitionOptions} from '../types/engine.js';
-import {validateControllerNames} from '../validation/controller-validation.js';
+import {
+  validateControllerNames,
+  validateRecommendationSlots,
+} from '../validation/controller-validation.js';
 
 /**
  * Initializes a Commerce engine definition in SSR with given controllers definitions and commerce engine config.
@@ -65,7 +68,10 @@ export function defineCommerceEngine<
 
   const definitionOptions = {...engineOptions};
 
-  controllerDefinitions && validateControllerNames(controllerDefinitions);
+  if (controllerDefinitions) {
+    validateControllerNames(controllerDefinitions);
+    validateRecommendationSlots(controllerDefinitions);
+  }
 
   const augmentedControllerDefinition = {
     ...controllerDefinitions,

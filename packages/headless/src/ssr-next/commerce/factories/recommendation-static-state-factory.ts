@@ -1,4 +1,5 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
+import {toSerializableNavigatorContext} from '../../common/serializable-navigator-context.js';
 import {createStaticState} from '../controller-utils.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {AugmentedControllerDefinition} from '../types/controller-definitions.js';
@@ -50,6 +51,8 @@ export function fetchRecommendationStaticStateFactory<
     return {
       ...restParams,
       ...staticState,
+      navigatorContext: toSerializableNavigatorContext(params.navigatorContext),
+      solutionType: SolutionType.recommendation as const,
       ...(controllerProps && {controllerProps}),
     };
   };

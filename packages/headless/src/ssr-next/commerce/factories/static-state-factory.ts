@@ -1,6 +1,7 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import {buildProductListing} from '../../../controllers/commerce/product-listing/headless-product-listing.js';
 import {buildSearch} from '../../../controllers/commerce/search/headless-search.js';
+import {toSerializableNavigatorContext} from '../../common/serializable-navigator-context.js';
 import {createStaticState} from '../controller-utils.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {AugmentedControllerDefinition} from '../types/controller-definitions.js';
@@ -75,6 +76,8 @@ export function fetchStaticStateFactory<
       return {
         ...restParams,
         ...staticState,
+        navigatorContext: toSerializableNavigatorContext(params.navigatorContext),
+        solutionType,
         ...(controllerProps && {controllerProps}),
       };
     };

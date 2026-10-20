@@ -89,6 +89,26 @@ describe('hydratedStaticStateFactory', () => {
     expect(settled).toBe(true);
   });
 
+  it('should refuse a static state fetched by another engine definition', async () => {
+    const hydrateWithSearchDefinition = hydratedStaticStateFactory(
+      controllerDefinitions,
+      options
+    )(SolutionType.search);
+
+    await expect(
+      hydrateWithSearchDefinition({...params, solutionType: SolutionType.listing})
+    ).rejects.toThrow(
+      'This static state was fetched with the listing engine definition but is being hydrated with the search engine definition'
+    );
+    expect(mockSolutionTypeBuild).not.toHaveBeenCalled();
+  });
+
+  it('should accept a static state built by hand without a solution type', async () => {
+    await expect(
+      hydratedStaticStateFactory(controllerDefinitions, options)(SolutionType.listing)(params)
+    ).resolves.toEqual(mockBuildResult);
+  });
+
   it('should return the engine and the controllers', async () => {
     const hydratedState = await hydratedStaticStateFactory(
       controllerDefinitions,

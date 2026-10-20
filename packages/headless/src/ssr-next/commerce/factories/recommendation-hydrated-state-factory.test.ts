@@ -63,7 +63,7 @@ describe('hydratedRecommendationStaticStateFactory', () => {
     const factory = hydratedRecommendationStaticStateFactory(controllerDefinitions, options);
 
     // @ts-expect-error: do not care about hydration props here
-    await factory();
+    await factory({});
 
     expect(buildFactory).toHaveBeenCalledWith(controllerDefinitions, options);
     expect(mockRecommendationState).toHaveBeenCalledWith(SolutionType.recommendation);
@@ -79,7 +79,7 @@ describe('hydratedRecommendationStaticStateFactory', () => {
     );
 
     // @ts-expect-error: do not care about hydration props here
-    const staticState = await factory();
+    const staticState = await factory({});
 
     expect(mockBuildResult.engine.waitForRequestCompletedAction).toHaveBeenCalledOnce();
     expect(staticState).toEqual(mockBuildResult);
@@ -104,7 +104,7 @@ describe('hydratedRecommendationStaticStateFactory', () => {
 
     let settled = false;
     // @ts-expect-error: do not care about hydration props here
-    const hydration = factory().then(() => {
+    const hydration = factory({}).then(() => {
       settled = true;
     });
     await flushMicrotasks();

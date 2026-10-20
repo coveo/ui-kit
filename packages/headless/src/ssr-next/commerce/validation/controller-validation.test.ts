@@ -19,7 +19,7 @@ describe('validateControllerNames', () => {
     };
 
     expect(() => validateControllerNames(controllersWithContext)).toThrow(
-      'Reserved controller names found: context. Please use different controller names than context, cart, parameterManager.'
+      'Reserved controller names found: context. The context, cart, parameterManager controllers are included automatically in every engine definition; use different names for your own controllers.'
     );
   });
 
@@ -30,7 +30,7 @@ describe('validateControllerNames', () => {
     };
 
     expect(() => validateControllerNames(controllersWithCart)).toThrow(
-      'Reserved controller names found: cart. Please use different controller names than context, cart, parameterManager.'
+      'Reserved controller names found: cart. The context, cart, parameterManager controllers are included automatically in every engine definition; use different names for your own controllers.'
     );
   });
 
@@ -41,7 +41,7 @@ describe('validateControllerNames', () => {
     };
 
     expect(() => validateControllerNames(controllersWithParameterManager)).toThrow(
-      'Reserved controller names found: parameterManager. Please use different controller names than context, cart, parameterManager.'
+      'Reserved controller names found: parameterManager. The context, cart, parameterManager controllers are included automatically in every engine definition; use different names for your own controllers.'
     );
   });
 

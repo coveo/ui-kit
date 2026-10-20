@@ -308,6 +308,18 @@ describe('controller-wiring', () => {
       expect(props.context).toBeDefined();
     });
 
+    it('should name the engine definition when the build config is invalid', () => {
+      const params = {navigatorContext: buildMockNavigatorContext()};
+
+      expect(() =>
+        wireControllerParams(
+          SolutionType.listing,
+          mockControllerDefinitions,
+          params as unknown as Parameters<typeof wireControllerParams>[2]
+        )
+      ).toThrow(/fetchStaticState\(\) of the listing engine definition/);
+    });
+
     it('should not mutate the controllers object received in the build config', () => {
       const controllers = {context: {initialState: {custom: 'value'}}};
       const params = {

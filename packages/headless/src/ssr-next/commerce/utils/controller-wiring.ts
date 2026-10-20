@@ -73,7 +73,10 @@ function validateBuildConfig<TControllerDefinitions extends CommerceControllerDe
   };
 
   const schema = validationMap[solutionType as SolutionType];
-  schema.validate(buildConfig);
+  schema.validate(
+    buildConfig,
+    `Check the options passed to fetchStaticState() of the ${solutionType} engine definition.`
+  );
 }
 
 /**

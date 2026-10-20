@@ -19,7 +19,10 @@ export const searchDefinitionSchema = new Schema(searchDefinition);
  * Validates the build configuration for search.
  */
 function validateBuildConfig(buildConfig: BuildConfig): void {
-  searchDefinitionSchema.validate(buildConfig);
+  searchDefinitionSchema.validate(
+    buildConfig,
+    'Check the options passed to fetchStaticState() of the search engine definition.'
+  );
 }
 
 /**
