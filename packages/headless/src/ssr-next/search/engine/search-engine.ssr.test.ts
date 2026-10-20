@@ -3,6 +3,7 @@ import type {SearchEngineConfiguration} from '../../../app/search-engine/search-
 import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
 import {buildMockSearchResponse} from '../../../test/mock-search-response.js';
 import {defineMockSearchController} from '../../../test/mock-ssr-controller-definitions.js';
+import {defineContext} from '../controllers/context/headless-context.ssr.js';
 import type {SearchEngineDefinitionOptions} from '../types/engine.js';
 import {defineSearchEngine} from './search-engine.ssr.js';
 
@@ -199,6 +200,26 @@ describe('Search Engine SSR', () => {
 
       expect(stateA.accessToken).toBe('token-user-A');
       expect(stateB.accessToken).toBe('token-user-B');
+    });
+  });
+
+  describe('controller props', () => {
+    it('should carry the controller props from the static state into the hydrated engine', async () => {
+      const {searchEngineDefinition} = defineSearchEngine({
+        ...definitionOptions,
+        controllers: {context: defineContext()},
+      });
+
+      const staticState = await searchEngineDefinition.fetchStaticState({
+        navigatorContext: mockNavigatorContext,
+        controllers: {context: {initialState: {values: {ageGroup: '30-45'}}}},
+      });
+      const hydratedState = await searchEngineDefinition.hydrateStaticState(staticState);
+
+      expect(staticState.controllerProps).toEqual({
+        context: {initialState: {values: {ageGroup: '30-45'}}},
+      });
+      expect(hydratedState.controllers.context.state.values).toEqual({ageGroup: '30-45'});
     });
   });
 

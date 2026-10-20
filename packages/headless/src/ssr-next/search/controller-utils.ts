@@ -4,6 +4,7 @@ import type {Controller} from '../../controllers/controller/headless-controller.
 import {clone, mapObject} from '../../utils/utils.js';
 import {ControllerBuilder} from '../common/builders/controller-builder.js';
 import {createStaticControllerBuilder} from '../common/builders/static-controller-builder.js';
+import type {InferControllerStaticStateMapFromControllers} from '../common/types/controller-inference.js';
 import type {
   BakedInSearchControllers,
   ControllerDefinitionsMap,
@@ -49,7 +50,7 @@ export function createStaticState<
     controllers: mapObject(controllers, (controller) =>
       createStaticControllerBuilder(controller).build()
     ) as InferControllerStaticStateMapFromDefinitions<TControllerDefinitions> &
-      BakedInSearchControllers,
+      InferControllerStaticStateMapFromControllers<BakedInSearchControllers>,
     searchActions: clone(searchActions),
   };
 }

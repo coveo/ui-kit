@@ -15,7 +15,7 @@ import type {
 } from './controller-definitions.js';
 
 export interface SearchBuildConfig extends CommonBuildConfig {
-  searchParams: ParameterManagerState<
+  searchParams?: ParameterManagerState<
     Parameters & {
       /**
        * The query.
@@ -30,9 +30,15 @@ export interface ListingBuildConfig extends CommonBuildConfig {}
 export interface StandaloneBuildConfig extends CommonBuildConfig {}
 
 /**
- * Commerce engine options for SSR scenarios where context is defined when fetching static state.
+ * Commerce engine options for SSR scenarios.
+ *
+ * The context and the navigator context are per-request data: they are passed to `fetchStaticState()`
+ * rather than to the engine definition.
  */
-export type SSRCommerceEngineOptions = Omit<CommerceEngineOptions, 'configuration'> & {
+export type SSRCommerceEngineOptions = Omit<
+  CommerceEngineOptions,
+  'configuration' | 'navigatorContextProvider'
+> & {
   configuration: Omit<CommerceEngineOptions['configuration'], 'context'>;
 };
 
@@ -74,9 +80,9 @@ export type RecommendationBuildConfig<TControllers extends ControllerDefinitions
      */
     productId?: string;
     /**
-     * An array of recommendation controller names from your engine definition to include in the SSR request.
-     * Each name corresponds to a key used when defining recommendation controllers in your engine definition.
-     * If not specified, no recommendation requests will be executed.
+     * The names of the recommendation controllers to request on the server, as declared in your engine
+     * definition. Only the listed controllers are refreshed; the others keep an empty state until they
+     * are refreshed in the browser.
      */
     recommendations: Array<
       Extract<

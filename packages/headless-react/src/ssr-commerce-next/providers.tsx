@@ -3,15 +3,12 @@
 import type {
   Controller,
   ControllerDefinitionsMap,
-  EngineStaticState,
-  InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferHydratedState,
+  InferStaticState,
   SolutionType,
 } from '@coveo/headless/ssr-commerce-next';
 import {type PropsWithChildren, useEffect, useState} from 'react';
 import type {ReactCommerceEngineDefinition} from './commerce-engine.js';
-
-type UnknownAction = {type: string};
 
 /**
  * Providers take care of displaying your page with the static
@@ -32,10 +29,10 @@ export function buildProviderWithDefinition<
     staticState,
     children,
   }: PropsWithChildren<{
-    staticState: EngineStaticState<
-      UnknownAction,
-      InferControllerStaticStateMapFromDefinitionsWithSolutionType<TControllers, TSolutionType>
-    >;
+    /**
+     * The static state returned by this definition's `fetchStaticState()`.
+     */
+    staticState: InferStaticState<typeof definition>;
   }>) {
     const [hydratedState, setHydratedState] = useState<
       InferHydratedState<typeof definition> | undefined
@@ -45,21 +42,18 @@ export function buildProviderWithDefinition<
     useEffect(() => {
       let superseded = false;
 
-      definition
-        // @ts-expect-error: TODO: KIT-4754: get rid of the OptionTuple type
-        .hydrateStaticState(staticState)
-        .then(
-          ({engine, controllers}) => {
-            if (!superseded) {
-              setHydratedState({engine, controllers});
-            }
-          },
-          (error: unknown) => {
-            if (!superseded) {
-              setHydrationError(error);
-            }
+      definition.hydrateStaticState(staticState).then(
+        ({engine, controllers}) => {
+          if (!superseded) {
+            setHydratedState({engine, controllers});
           }
-        );
+        },
+        (error: unknown) => {
+          if (!superseded) {
+            setHydrationError(error);
+          }
+        }
+      );
 
       return () => {
         superseded = true;
