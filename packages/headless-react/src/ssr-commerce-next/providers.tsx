@@ -7,7 +7,12 @@ import type {
   InferStaticState,
   SolutionType,
 } from '@coveo/headless/ssr-commerce-next';
-import {type PropsWithChildren, useEffect, useState} from 'react';
+import type {FunctionComponent, PropsWithChildren} from 'react';
+import {
+  buildProviderWithDefinition as buildSharedProviderWithDefinition,
+  type HydratableDefinition,
+  type ProviderProps,
+} from '../ssr-common/providers.js';
 import type {ReactCommerceEngineDefinition} from './commerce-engine.js';
 
 /**
@@ -15,7 +20,8 @@ import type {ReactCommerceEngineDefinition} from './commerce-engine.js';
  * state, and then hydrating the state and displaying the page
  * with the hydrated state. They are required for your controller hooks to function.
  *
- * A hydration failure is thrown during render, so the nearest React error boundary reports it.
+ * A hydration failure is thrown during render, so the nearest React error boundary reports it,
+ * unless the `onHydrationError` prop handles it.
  *
  * See [Create providers](https://docs.coveo.com/en/obif0156/#create-providers).
  *
@@ -24,53 +30,13 @@ import type {ReactCommerceEngineDefinition} from './commerce-engine.js';
 export function buildProviderWithDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
->(definition: ReactCommerceEngineDefinition<TControllers, TSolutionType>) {
-  return function WrappedProvider({
-    staticState,
-    children,
-  }: PropsWithChildren<{
-    /**
-     * The static state returned by this definition's `fetchStaticState()`.
-     */
-    staticState: InferStaticState<typeof definition>;
-  }>) {
-    const [hydratedState, setHydratedState] = useState<
-      InferHydratedState<typeof definition> | undefined
-    >(undefined);
-    const [hydrationError, setHydrationError] = useState<unknown>(undefined);
-
-    useEffect(() => {
-      let superseded = false;
-
-      definition.hydrateStaticState(staticState).then(
-        ({engine, controllers}) => {
-          if (!superseded) {
-            setHydratedState({engine, controllers});
-          }
-        },
-        (error: unknown) => {
-          if (!superseded) {
-            setHydrationError(error);
-          }
-        }
-      );
-
-      return () => {
-        superseded = true;
-      };
-    }, [staticState]);
-
-    if (hydrationError !== undefined) {
-      throw hydrationError;
-    }
-
-    return (
-      <definition.StateProvider
-        engine={hydratedState?.engine}
-        controllers={hydratedState?.controllers || staticState.controllers}
-      >
-        {children}
-      </definition.StateProvider>
-    );
-  };
+>(
+  definition: ReactCommerceEngineDefinition<TControllers, TSolutionType>
+): FunctionComponent<PropsWithChildren<ProviderProps<InferStaticState<typeof definition>>>> {
+  return buildSharedProviderWithDefinition(
+    definition as unknown as HydratableDefinition<
+      InferStaticState<typeof definition>,
+      InferHydratedState<typeof definition>
+    >
+  );
 }

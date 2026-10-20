@@ -8,7 +8,7 @@ title: Home
 
 - `@coveo/headless-react/ssr`: For general server-side rendering with headless controllers.
 - `@coveo/headless-react/ssr-commerce`: (Open Beta) For implementing a commerce storefront with server-side rendering.
-- `@coveo/headless-react/ssr-next`: For future breaking changes and the latest features related to SSR with React (experimental, subject to change).
+- `@coveo/headless-react/ssr-next`: The upcoming major version of the search SSR API (experimental, subject to change).
 - `@coveo/headless-react/ssr-commerce-next`: For future breaking changes and the latest features for SSR commerce storefronts (experimental, subject to change).
 
 ## Learn more
