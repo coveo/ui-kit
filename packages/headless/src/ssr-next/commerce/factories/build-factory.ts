@@ -20,6 +20,7 @@ import type {
 import type {CommerceHydratedState} from '../types/hydrate-static-state.js';
 import {wireControllerParams} from '../utils/controller-wiring.js';
 import {augmentCommerceEngineOptions} from '../utils/engine-wiring.js';
+import {withDefaultViewUrl} from '../utils/view-url.js';
 
 /**
  * The SSR commerce engine.
@@ -112,7 +113,8 @@ export const buildFactory =
     options: CommerceEngineDefinitionOptions<TControllerDefinitions>
   ) =>
   <TSolutionType extends SolutionType>(solutionType: TSolutionType) =>
-  async (buildOptions: BuildParameters<TControllerDefinitions>) => {
+  async (rawBuildOptions: BuildParameters<TControllerDefinitions>) => {
+    const buildOptions = withDefaultViewUrl(rawBuildOptions);
     const controllerProps = wireControllerParams(solutionType, controllerDefinitions, buildOptions);
 
     const enabledRecommendationControllers =

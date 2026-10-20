@@ -9,6 +9,7 @@ import {SolutionType} from '../types/controller-constants.js';
 import type {InferControllerPropsMapFromDefinitions} from '../types/controller-inference.js';
 import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
 import {getRecommendationDefinitions, isRecommendationDefinition} from './recommendation-filter.js';
+import type {WithViewUrl} from './view-url.js';
 
 const requiredDefinition = {
   context: new RecordValue({
@@ -88,7 +89,7 @@ class ControllerWirer<
   TSolutionType extends SolutionType,
 > {
   constructor(
-    private buildConfig: BuildConfig<TControllerDefinitions, TSolutionType>,
+    private buildConfig: WithViewUrl<BuildConfig<TControllerDefinitions, TSolutionType>>,
     private controllerDefinitions: CommerceControllerDefinitionsMap,
     private controllerProps: ControllersPropsMap
   ) {}
@@ -195,7 +196,7 @@ export function wireControllerParams<
 >(
   solutionType: SolutionType,
   controllerDefinitions: TControllerDefinitions,
-  buildConfig: BuildConfig<TControllerDefinitions, SolutionType> & {
+  buildConfig: WithViewUrl<BuildConfig<TControllerDefinitions, SolutionType>> & {
     controllers?: ControllersPropsMap;
   }
 ): InferControllerPropsMapFromDefinitions<TControllerDefinitions> {

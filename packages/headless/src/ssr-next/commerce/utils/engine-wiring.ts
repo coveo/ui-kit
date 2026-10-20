@@ -6,6 +6,7 @@ import type {
   CommerceControllerDefinitionsMap,
   CommerceEngineDefinitionOptions,
 } from '../types/engine.js';
+import type {WithViewUrl} from './view-url.js';
 
 const ensurenavigatorContext = (buildConfig: CommonBuildConfig, loggerOptions?: LoggerOptions) => {
   if (!buildConfig.navigatorContext) {
@@ -20,7 +21,7 @@ export function augmentCommerceEngineOptions<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 >(
   engineOptions: CommerceEngineDefinitionOptions<TControllerDefinitions>,
-  buildConfig: CommonBuildConfig
+  buildConfig: WithViewUrl<CommonBuildConfig>
 ): CommerceEngineOptions {
   const {cart, context} = buildConfig;
 

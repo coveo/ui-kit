@@ -31,7 +31,8 @@ export interface BuildNavigatorContextOptions {
    */
   headers: RequestHeaders;
   /**
-   * The URL of the page being rendered. Frameworks do not expose it through the headers.
+   * The URL of the page being rendered. Frameworks do not expose it through the headers. Commerce also
+   * uses it as the default `context.view.url`.
    */
   location?: string | null;
   /**
