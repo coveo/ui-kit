@@ -37,13 +37,20 @@ describe('hydratedRecommendationStaticStateFactory', () => {
   const mockBuildResult = {
     engine: {
       dispatch: vi.fn(),
-      waitForRequestCompletedAction: vi.fn().mockResolvedValue([{type: 'some-action'}]),
+      waitForRequestCompletedAction: vi
+        .fn()
+        .mockReturnValue([Promise.resolve({type: 'some-action'})]),
     },
     controllers: {},
   };
 
+  const flushMicrotasks = () => new Promise((resolve) => setTimeout(resolve, 0));
+
   beforeEach(() => {
     vi.clearAllMocks();
+    mockBuildResult.engine.waitForRequestCompletedAction.mockReturnValue([
+      Promise.resolve({type: 'some-action'}),
+    ]);
   });
 
   it('should call buildFactory with correct parameters', async () => {
@@ -76,5 +83,37 @@ describe('hydratedRecommendationStaticStateFactory', () => {
 
     expect(mockBuildResult.engine.waitForRequestCompletedAction).toHaveBeenCalledOnce();
     expect(staticState).toEqual(mockBuildResult);
+  });
+
+  it('should resolve only once every replayed recommendation request has completed', async () => {
+    let completeFirstRequest: (action: {type: string}) => void = () => {};
+    const firstRequest = new Promise<{type: string}>((resolve) => {
+      completeFirstRequest = resolve;
+    });
+    mockBuildResult.engine.waitForRequestCompletedAction.mockReturnValue([
+      firstRequest,
+      Promise.resolve({type: 'second-action'}),
+    ]);
+    const mockSolutionTypeBuild = vi.fn().mockResolvedValue(mockBuildResult);
+    vi.mocked(buildFactory).mockReturnValue(() => mockSolutionTypeBuild);
+
+    const factory = hydratedRecommendationStaticStateFactory(
+      createControllerDefinitions(),
+      createEngineOptions()
+    );
+
+    let settled = false;
+    // @ts-expect-error: do not care about hydration props here
+    const hydration = factory().then(() => {
+      settled = true;
+    });
+    await flushMicrotasks();
+
+    expect(settled).toBe(false);
+
+    completeFirstRequest({type: 'first-action'});
+    await hydration;
+
+    expect(settled).toBe(true);
   });
 });

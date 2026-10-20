@@ -308,6 +308,25 @@ describe('controller-wiring', () => {
       expect(props.context).toBeDefined();
     });
 
+    it('should not mutate the controllers object received in the build config', () => {
+      const controllers = {context: {initialState: {custom: 'value'}}};
+      const params = {
+        navigatorContext: buildMockNavigatorContext(),
+        context: {
+          language: 'en',
+          country: 'US',
+          currency: 'USD' as const,
+          view: {url: 'https://example.com'},
+        },
+        controllers,
+      };
+
+      const props = wireControllerParams(SolutionType.listing, mockControllerDefinitions, params);
+
+      expect(props).not.toBe(controllers);
+      expect(controllers).toEqual({context: {initialState: {custom: 'value'}}});
+    });
+
     describe('recommendation wiring', () => {
       it('should wire each recommendation controller with the provided productId', () => {
         const definitionsWithRecommendation = {
@@ -336,16 +355,8 @@ describe('controller-wiring', () => {
           params
         );
 
-        expect(props.rec1).toEqual({
-          initialState: {
-            productId: 'product-123',
-          },
-        });
-        expect(props.rec2).toEqual({
-          initialState: {
-            productId: 'product-123',
-          },
-        });
+        expect(props.rec1).toEqual({productId: 'product-123'});
+        expect(props.rec2).toEqual({productId: 'product-123'});
       });
 
       it('should wire recommendation controllers without productId when not provided', () => {
@@ -371,9 +382,7 @@ describe('controller-wiring', () => {
           params
         );
 
-        expect(props.rec1).toEqual({
-          initialState: {},
-        });
+        expect(props.rec1).toEqual({});
       });
 
       it('should not wire non-recommendation controllers in recommendation solution type', () => {
@@ -401,11 +410,7 @@ describe('controller-wiring', () => {
           params
         );
 
-        expect(props.rec1).toEqual({
-          initialState: {
-            productId: 'product-123',
-          },
-        });
+        expect(props.rec1).toEqual({productId: 'product-123'});
         expect(props.nonRec).toBeUndefined();
       });
     });

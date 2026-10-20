@@ -42,7 +42,7 @@ export function augmentCommerceEngineOptions<
       context: {
         ...context,
       },
-      cart,
+      cart: cart ?? engineOptions.configuration.cart,
     },
   };
 }

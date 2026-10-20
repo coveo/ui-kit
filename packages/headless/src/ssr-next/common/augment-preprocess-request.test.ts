@@ -86,6 +86,26 @@ describe('#augmentPreprocessRequestWithForwardedFor', () => {
     expect(headers.get('x-forwarded-for')).toBe('9.9.9.9');
   });
 
+  it('should still call the original preprocessRequest when the navigator context is missing', async () => {
+    const loggerWarn = vi.fn();
+    vi.spyOn(loggerModule, 'buildLogger').mockReturnValue({
+      warn: loggerWarn,
+    } as unknown as Logger);
+    const original: PreprocessRequest = vi.fn(async (req) => req);
+    const augmented = augmentPreprocessRequestWithForwardedFor({
+      preprocessRequest: original,
+      navigatorContext: undefined as unknown as NavigatorContext,
+    });
+    const request = buildMockRequest();
+
+    await expect(augmented(request, 'searchApiFetch')).resolves.toBe(request);
+
+    expect(original).toHaveBeenCalledWith(request, 'searchApiFetch', undefined);
+    expect(loggerWarn).toHaveBeenCalledWith(
+      expect.stringContaining('Unable to set x-forwarded-for header')
+    );
+  });
+
   describe('augmentation prevention', () => {
     it('should not augment an already augmented function', () => {
       const options: AugmentPreprocessRequestOptions = {

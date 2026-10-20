@@ -18,6 +18,8 @@ type UnknownAction = {type: string};
  * state, and then hydrating the state and displaying the page
  * with the hydrated state. They are required for your controller hooks to function.
  *
+ * A hydration failure is thrown during render, so the nearest React error boundary reports it.
+ *
  * See [Create providers](https://docs.coveo.com/en/obif0156/#create-providers).
  *
  * @group Providers
@@ -38,18 +40,35 @@ export function buildProviderWithDefinition<
     const [hydratedState, setHydratedState] = useState<
       InferHydratedState<typeof definition> | undefined
     >(undefined);
+    const [hydrationError, setHydrationError] = useState<unknown>(undefined);
 
     useEffect(() => {
+      let superseded = false;
+
       definition
         // @ts-expect-error: TODO: KIT-4754: get rid of the OptionTuple type
         .hydrateStaticState(staticState)
-        .then(({engine, controllers}) => {
-          setHydratedState({
-            engine,
-            controllers,
-          });
-        });
+        .then(
+          ({engine, controllers}) => {
+            if (!superseded) {
+              setHydratedState({engine, controllers});
+            }
+          },
+          (error: unknown) => {
+            if (!superseded) {
+              setHydrationError(error);
+            }
+          }
+        );
+
+      return () => {
+        superseded = true;
+      };
     }, [staticState]);
+
+    if (hydrationError !== undefined) {
+      throw hydrationError;
+    }
 
     return (
       <definition.StateProvider

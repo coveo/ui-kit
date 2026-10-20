@@ -174,6 +174,20 @@ describe('controller-wiring', () => {
       });
     });
 
+    it('should not mutate the controllers object received in the build config', () => {
+      const controllers = {customController: {initialState: {foo: 'bar'}}};
+      const params = {
+        navigatorContext: buildMockNavigatorContext(),
+        searchParams: {q: 'test'},
+        controllers,
+      };
+
+      const props = wireControllerParams(mockControllerDefinitions, params);
+
+      expect(props).not.toBe(controllers);
+      expect(controllers).toEqual({customController: {initialState: {foo: 'bar'}}});
+    });
+
     it('should wire multiple search parameters', () => {
       const params = {
         navigatorContext: buildMockNavigatorContext(),

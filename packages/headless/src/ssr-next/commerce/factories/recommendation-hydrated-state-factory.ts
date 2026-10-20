@@ -24,7 +24,7 @@ export function hydratedRecommendationStaticStateFactory<
 
     const {engine, controllers} = await solutionTypeBuild(params);
 
-    await engine.waitForRequestCompletedAction();
+    await Promise.all(engine.waitForRequestCompletedAction());
 
     return {engine, controllers};
   };

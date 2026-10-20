@@ -167,6 +167,22 @@ describe('#augmentCommerceEngineOptions', () => {
         ],
       });
     });
+
+    it('should keep the cart of the definition configuration when buildConfig has no cart', () => {
+      const definitionCart = {
+        items: [{name: 'bar', price: 5, productId: 'bar_id', quantity: 2}],
+      };
+
+      const engineOptions = augmentCommerceEngineOptions(
+        {configuration: {...sampleCommerceConfig.configuration, cart: definitionCart}},
+        {
+          navigatorContext: createNavigatorContext(),
+          context: buildMockCommerceContext(),
+        }
+      );
+
+      expect(engineOptions.configuration.cart).toEqual(definitionCart);
+    });
   });
 
   describe('access token configuration', () => {
