@@ -25,8 +25,8 @@ Try it:
    counts it. Open the cart to change it.
 4. Press Enter, or pick a completion: with the **AI** toggle on (the default), the assistant page
    opens with the answer, its reasoning steps and its surfaces. The home carousels are gone; the
-   header stays. Try `boating safety`, `which kayak should I get?`, `what do I need to go
-snorkeling?`, `gift ideas under $50`, or a follow-up from the next actions.
+   header stays. Try `boating safety`, `which kayak should I get?`,
+   `what do I need to go snorkeling?`, `gift ideas under $50`, or a follow-up from the next actions.
 5. Turn **AI** off and search, or open a **Listing pages** entry: these pages show an _In progress_
    placeholder and send no request (see below).
 6. Open **One session** at the bottom: every turn, the view that sent it, and the surfaces it
@@ -136,6 +136,8 @@ expose `ProductCardActionsContext`, which this sample uses to add **Add to cart*
 `demo-schema-react` provides none, so its cards are unchanged.
 
 The mock lives in `@coveo/platform-mock-api` (`src/converse/generate-storefront-response.ts`, with
-`templates/schema-response-storefront.ts` and `templates/storefront-conversations.ts`). The `/schema`
-routes of `@coveo/mock-converse-api` hand it every request whose `context.custom.surfaceId` names a
-Storefront view, so `demo-schema-react` is unaffected.
+`templates/schema-response-storefront.ts` and `templates/storefront-conversations.ts`). The schema
+routes of `@coveo/mock-converse-api` (`/converse-schema`, which the sample uses by default, and the
+`/schema/...` routes `demo-schema-react` uses) hand it every request whose `context.custom.surfaceId`
+names a Storefront view. Every other request gets the usual schema scenarios, so `demo-schema-react`
+is unaffected.
