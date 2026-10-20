@@ -1,5 +1,4 @@
 import type {ContextOptions} from '@coveo/headless-react/ssr-commerce-next';
-import {headers} from 'next/headers';
 import * as externalCartAPI from '@/actions/external-cart-api';
 import ContextDropdown from '@/components/context-dropdown';
 import ProductBadges from '@/components/product-badges';
@@ -8,7 +7,7 @@ import {RecommendationProvider, StandaloneProvider} from '@/components/providers
 import ViewedTogether from '@/components/recommendations/viewed-together';
 import StandaloneSearchBox from '@/components/standalone-search-box';
 import {recommendationEngineDefinition, standaloneEngineDefinition} from '@/lib/commerce-engine';
-import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
+import {getNavigatorContext} from '@/lib/navigator-context';
 import {defaultContext} from '@/utils/context';
 
 export default async function ProductDescriptionPage({
@@ -18,8 +17,8 @@ export default async function ProductDescriptionPage({
   params: Promise<{productId: string}>;
   searchParams: Promise<{[key: string]: string | string[] | undefined}>;
 }) {
-  // Builds the navigator context from the request headers. It is passed to every `fetchStaticState` call.
-  const navigatorContext = new NextJsNavigatorContext(await headers());
+  // The navigator context describes the visitor's browser. It is passed to every `fetchStaticState` call.
+  const navigatorContext = await getNavigatorContext();
 
   // Fetches the cart items from an external service
   const items = await externalCartAPI.getCart();
@@ -39,7 +38,7 @@ export default async function ProductDescriptionPage({
   const staticState = await standaloneEngineDefinition.fetchStaticState({
     cart: {items},
     context,
-    navigatorContext: navigatorContext.marshal,
+    navigatorContext,
     controllers: {
       productEnrichment: {
         options: {
@@ -54,7 +53,7 @@ export default async function ProductDescriptionPage({
   const recsStaticState = await recommendationEngineDefinition.fetchStaticState({
     cart: {items},
     context,
-    navigatorContext: navigatorContext.marshal,
+    navigatorContext,
     recommendations: ['viewedTogether'],
     productId,
   });

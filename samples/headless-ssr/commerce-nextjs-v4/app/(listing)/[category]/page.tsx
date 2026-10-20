@@ -2,7 +2,6 @@ import {
   buildParameterSerializer,
   type ContextOptions,
 } from '@coveo/headless-react/ssr-commerce-next';
-import {headers} from 'next/headers';
 import {notFound} from 'next/navigation';
 import * as externalCartAPI from '@/actions/external-cart-api';
 import BreadcrumbManager from '@/components/breadcrumb-manager';
@@ -21,7 +20,7 @@ import StandaloneSearchBox from '@/components/standalone-search-box';
 import Summary from '@/components/summary';
 import NotifyTrigger from '@/components/triggers/notify-trigger';
 import {listingEngineDefinition, recommendationEngineDefinition} from '@/lib/commerce-engine';
-import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
+import {getNavigatorContext} from '@/lib/navigator-context';
 import {defaultContext} from '@/utils/context';
 
 // This is a hardcoded list of categories that are available in my coveo merchandising hub.
@@ -46,8 +45,8 @@ export default async function Listing({
     notFound();
   }
 
-  // Builds the navigator context from the request headers. It is passed to every `fetchStaticState` call.
-  const navigatorContext = new NextJsNavigatorContext(await headers());
+  // The navigator context describes the visitor's browser. It is passed to every `fetchStaticState` call.
+  const navigatorContext = await getNavigatorContext();
 
   const {deserialize} = buildParameterSerializer();
   const parameters = deserialize(await searchParams);
@@ -69,14 +68,14 @@ export default async function Listing({
   const staticState = await listingEngineDefinition.fetchStaticState({
     cart: {items},
     context,
-    navigatorContext: navigatorContext.marshal,
+    navigatorContext,
     searchParams: parameters,
   });
 
   const recsStaticState = await recommendationEngineDefinition.fetchStaticState({
     cart: {items},
     context,
-    navigatorContext: navigatorContext.marshal,
+    navigatorContext,
     recommendations: ['popularBought', 'popularViewed'],
   });
 

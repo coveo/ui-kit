@@ -274,6 +274,11 @@ export {
   MultipleRecommendationError,
   SolutionTypeMismatchError,
 } from './ssr-next/common/errors.js';
+export type {
+  BuildNavigatorContextOptions,
+  RequestHeaders,
+} from './ssr-next/common/navigator-context.js';
+export {buildNavigatorContext, CLIENT_ID_COOKIE_NAME} from './ssr-next/common/navigator-context.js';
 export type {ControllerStaticState} from './ssr-next/common/types/controllers.js';
 export {defineCommerceEngine} from './ssr-next/commerce/engine/commerce-engine.ssr.js';
 export type {SSRCommerceEngine as CommerceEngine} from './ssr-next/commerce/factories/build-factory.js';

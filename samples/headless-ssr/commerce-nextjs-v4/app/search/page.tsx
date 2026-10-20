@@ -2,7 +2,6 @@ import {
   buildParameterSerializer,
   type ContextOptions,
 } from '@coveo/headless-react/ssr-commerce-next';
-import {headers} from 'next/headers';
 import * as externalCartAPI from '@/actions/external-cart-api';
 import BreadcrumbManager from '@/components/breadcrumb-manager';
 import ContextDropdown from '@/components/context-dropdown';
@@ -17,12 +16,12 @@ import Summary from '@/components/summary';
 import NotifyTrigger from '@/components/triggers/notify-trigger';
 import QueryTrigger from '@/components/triggers/query-trigger';
 import {searchEngineDefinition} from '@/lib/commerce-engine';
-import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
+import {getNavigatorContext} from '@/lib/navigator-context';
 import {defaultContext} from '@/utils/context';
 
 export default async function Search({searchParams}: {searchParams: Promise<URLSearchParams>}) {
-  // Builds the navigator context from the request headers. It is passed to every `fetchStaticState` call.
-  const navigatorContext = new NextJsNavigatorContext(await headers());
+  // The navigator context describes the visitor's browser. It is passed to every `fetchStaticState` call.
+  const navigatorContext = await getNavigatorContext();
 
   const {deserialize} = buildParameterSerializer();
   const parameters = deserialize(await searchParams);
@@ -44,7 +43,7 @@ export default async function Search({searchParams}: {searchParams: Promise<URLS
   const staticState = await searchEngineDefinition.fetchStaticState({
     cart: {items},
     context,
-    navigatorContext: navigatorContext.marshal,
+    navigatorContext,
     searchParams: parameters,
   });
 

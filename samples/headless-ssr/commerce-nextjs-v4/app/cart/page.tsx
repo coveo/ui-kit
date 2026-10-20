@@ -1,5 +1,4 @@
 import type {ContextOptions} from '@coveo/headless-react/ssr-commerce-next';
-import {headers} from 'next/headers';
 import * as externalCartAPI from '@/actions/external-cart-api';
 import Cart from '@/components/cart';
 import ContextDropdown from '@/components/context-dropdown';
@@ -7,12 +6,12 @@ import {RecommendationProvider, StandaloneProvider} from '@/components/providers
 import PopularBought from '@/components/recommendations/popular-bought';
 import StandaloneSearchBox from '@/components/standalone-search-box';
 import {recommendationEngineDefinition, standaloneEngineDefinition} from '@/lib/commerce-engine';
-import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
+import {getNavigatorContext} from '@/lib/navigator-context';
 import {defaultContext} from '@/utils/context';
 
 export default async function CartPage() {
-  // Builds the navigator context from the request headers. It is passed to every `fetchStaticState` call.
-  const navigatorContext = new NextJsNavigatorContext(await headers());
+  // The navigator context describes the visitor's browser. It is passed to every `fetchStaticState` call.
+  const navigatorContext = await getNavigatorContext();
 
   // Fetches the cart items from an external service
   const items = await externalCartAPI.getCart();
@@ -31,7 +30,7 @@ export default async function CartPage() {
   const staticState = await standaloneEngineDefinition.fetchStaticState({
     cart: {items},
     context,
-    navigatorContext: navigatorContext.marshal,
+    navigatorContext,
     controllers: {
       productEnrichment: {
         options: {
@@ -44,7 +43,7 @@ export default async function CartPage() {
   const recsStaticState = await recommendationEngineDefinition.fetchStaticState({
     cart: {items},
     context,
-    navigatorContext: navigatorContext.marshal,
+    navigatorContext,
     recommendations: ['popularBought', 'popularViewed'],
   });
   return (

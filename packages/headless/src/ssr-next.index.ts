@@ -456,6 +456,11 @@ export type {
 } from './ssr-next/search/controllers/url-manager/headless-url-manager.ssr.js';
 export {defineUrlManager} from './ssr-next/search/controllers/url-manager/headless-url-manager.ssr.js';
 export {MissingControllerProps} from './ssr-next/common/errors.js';
+export type {
+  BuildNavigatorContextOptions,
+  RequestHeaders,
+} from './ssr-next/common/navigator-context.js';
+export {buildNavigatorContext, CLIENT_ID_COOKIE_NAME} from './ssr-next/common/navigator-context.js';
 export type {ControllerStaticState} from './ssr-next/common/types/controllers.js';
 export type {EngineStaticState} from './ssr-next/common/types/engine.js';
 export {defineSearchEngine} from './ssr-next/search/engine/search-engine.ssr.js';
