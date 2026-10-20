@@ -40,6 +40,11 @@ export type CommerceStaticState<
 > &
   BuildConfig<TControllers, TSolutionType> & {
     /**
+     * The solution type of the engine definition that fetched the static state. `hydrateStaticState()`
+     * refuses a static state fetched by another engine definition.
+     */
+    solutionType: TSolutionType;
+    /**
      * The controller props that were passed to `fetchStaticState()` through the `controllers` option.
      * `hydrateStaticState()` reuses them to rebuild the controllers with the same props. They are sent
      * to the browser with the static state, so they must be serializable and must not hold secrets.
