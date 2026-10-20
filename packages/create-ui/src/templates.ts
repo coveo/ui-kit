@@ -83,14 +83,14 @@ const templates: Template[] = [
     library: 'atomic',
     label: 'Search (Angular, @coveo/atomic-angular)',
     packageName: '@coveo/ui-kit-sample-atomic-search-angular',
-    firstSupportedVersion: '3.11.30',
+    firstSupportedVersion: '3.11.32',
   },
   {
     name: 'atomic-commerce-angular',
     library: 'atomic',
     label: 'Commerce (Angular, @coveo/atomic-angular)',
     packageName: '@coveo/ui-kit-sample-atomic-commerce-angular',
-    firstSupportedVersion: '3.11.30',
+    firstSupportedVersion: '3.11.32',
   },
   {
     name: 'headless-search',
