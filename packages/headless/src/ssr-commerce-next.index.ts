@@ -303,6 +303,7 @@ export type {CommerceStaticState} from './ssr-next/commerce/types/fetch-static-s
 export type {
   BuildConfig,
   SSRCommerceEngineOptions as CommerceEngineOptions,
+  SSRContextOptions,
 } from './ssr-next/commerce/types/build.js';
 export {SolutionType} from './ssr-next/commerce/types/controller-constants.js';
 export type {

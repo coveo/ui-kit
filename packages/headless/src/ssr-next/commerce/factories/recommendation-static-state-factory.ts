@@ -9,6 +9,7 @@ import type {
   FetchStaticStateParameters,
 } from '../types/engine.js';
 import {filterRecommendationControllers} from '../utils/recommendation-filter.js';
+import {withDefaultViewUrl} from '../utils/view-url.js';
 import {buildFactory} from './build-factory.js';
 
 export function fetchRecommendationStaticStateFactory<
@@ -18,8 +19,9 @@ export function fetchRecommendationStaticStateFactory<
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ) {
   return async (
-    params: FetchStaticStateParameters<TControllerDefinitions, SolutionType.recommendation>
+    rawParams: FetchStaticStateParameters<TControllerDefinitions, SolutionType.recommendation>
   ) => {
+    const params = withDefaultViewUrl(rawParams);
     const allowedRecommendationKeys = params.recommendations;
 
     const solutionTypeBuild = await buildFactory(
