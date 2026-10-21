@@ -1,8 +1,8 @@
 import type {GeneratedAnswerCitation, InteractiveCitation} from '@coveo/headless';
 import type {i18n} from 'i18next';
 import {html} from 'lit';
-import {keyed} from '@/src/directives/keyed';
 import {when} from 'lit-html/directives/when.js';
+import {keyed} from '@/src/directives/keyed';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {getCitationWithTitle} from './generated-answer-utils';
 import '@/src/components/common/atomic-citation/atomic-citation';

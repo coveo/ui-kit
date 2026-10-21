@@ -6,7 +6,6 @@ import {
 } from '@coveo/headless/insight';
 import {html, LitElement, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {keyed} from '@/src/directives/keyed';
 import {createRef, type Ref} from 'lit/directives/ref.js';
 import {ATOMIC_MODAL_EXPORT_PARTS} from '@/src/components/common/atomic-modal/export-parts';
 import {feedbackOptions} from '@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/feedback-options';
@@ -23,6 +22,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {keyed} from '@/src/directives/keyed';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {randomID} from '@/src/utils/utils';
 import styles from './atomic-insight-smart-snippet-feedback-modal.tw.css';

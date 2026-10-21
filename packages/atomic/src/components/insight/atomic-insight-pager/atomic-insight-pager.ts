@@ -9,7 +9,6 @@ import {
 } from '@coveo/headless/insight';
 import {css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {keyed} from '@/src/directives/keyed';
 import {when} from 'lit/directives/when.js';
 import {
   renderPageButtons,
@@ -28,6 +27,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {keyed} from '@/src/directives/keyed';
 import {AriaLiveRegionController, FocusTargetController} from '@/src/utils/accessibility-utils';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';

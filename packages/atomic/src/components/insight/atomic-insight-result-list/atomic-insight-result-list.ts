@@ -11,7 +11,6 @@ import {
 } from '@coveo/headless/insight';
 import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {keyed} from '@/src/directives/keyed';
 import {map} from 'lit/directives/map.js';
 import {ref} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
@@ -39,6 +38,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {keyed} from '@/src/directives/keyed';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {randomID} from '@/src/utils/utils';
