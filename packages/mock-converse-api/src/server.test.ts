@@ -201,6 +201,76 @@ describe('createMockConverseServer', () => {
     expect(res.headers['access-control-allow-origin']).toBe('*');
   });
 
+  describe('fetchSuggestions lookup', () => {
+    const lookupBody = (extra: Record<string, unknown> = {}) =>
+      JSON.stringify({
+        message: null,
+        surfaceTemplate: 'search-box',
+        action: {
+          name: 'fetchSuggestions',
+          surfaceId: 'header-search-box',
+          sourceComponentId: 'root',
+          context: {query: 'surf'},
+        },
+        ...extra,
+      });
+
+    const postSchema = (body: string) =>
+      makeRequest(
+        server,
+        {method: 'POST', path: '/converse-schema', headers: {'Content-Type': 'application/json'}},
+        body
+      );
+
+    const eventNames = (body: string) =>
+      [...body.matchAll(/^event:(.+)$/gm)].map((match) => match[1]);
+
+    it('answers without a session, with no session keys', async () => {
+      await startServer();
+      const res = await postSchema(lookupBody());
+
+      expect(res.statusCode).toBe(200);
+      expect(res.headers['content-type']).toBe('text/event-stream');
+      expect(eventNames(res.body)).toEqual(['RUN_STARTED', 'ACTIVITY_SNAPSHOT', 'RUN_FINISHED']);
+      expect(res.body).toContain('"surfaceId":"header-search-box"');
+      expect(res.body).toContain('"expression":"surfboards"');
+      expect(res.body).not.toContain('conversationToken');
+    });
+
+    it("answers with a session on the session's thread, with no session keys", async () => {
+      await startServer();
+      const res = await postSchema(
+        lookupBody({conversationSessionId: 'session-1', conversationToken: 'token-1'})
+      );
+
+      expect(eventNames(res.body)).toEqual(['RUN_STARTED', 'ACTIVITY_SNAPSHOT', 'RUN_FINISHED']);
+      expect(res.body).toContain('"threadId":"session-1"');
+      expect(res.body).not.toContain('conversationToken');
+    });
+
+    it('answers while a prompt streams, and leaves the prompt to complete', async () => {
+      await startServer();
+      const finished: string[] = [];
+      const prompt = postSchema(JSON.stringify({message: 'hello'})).then((res) => {
+        finished.push('prompt');
+        return res;
+      });
+      const lookupRes = await postSchema(lookupBody()).then((res) => {
+        finished.push('lookup');
+        return res;
+      });
+      const promptRes = await prompt;
+
+      expect(finished).toEqual(['lookup', 'prompt']);
+      expect(eventNames(lookupRes.body)).toEqual([
+        'RUN_STARTED',
+        'ACTIVITY_SNAPSHOT',
+        'RUN_FINISHED',
+      ]);
+      expect(eventNames(promptRes.body)).toContain('turn_complete');
+    });
+  });
+
   it('returns 400 on schema route when both message and action are absent', async () => {
     await startServer();
     const res = await makeRequest(

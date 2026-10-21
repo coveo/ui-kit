@@ -5,6 +5,10 @@ import {schemaFallbackEvents} from './templates/schema-response-fallback.js';
 import {schemaComparisonEvents} from './templates/schema-response-comparison.js';
 import {schemaProductResearchEvents} from './templates/schema-response-product-research.js';
 import {
+  buildQuerySuggestionsLookupEvents,
+  isSuggestionsLookup,
+} from './templates/schema-response-query-suggestions.js';
+import {
   buildWaterSportsInitialEvents,
   buildWaterSportsActionEvents,
 } from './templates/schema-response-search.js';
@@ -14,6 +18,9 @@ const DEFAULT_DELAY_MS = 25;
 
 // Per message (five per action response): ~1s, like a local backend, so optimistic updates show.
 const ACTION_DELAY_MS = 200;
+
+// Per message (three per lookup): ~150ms, about a real querySuggest round trip.
+const LOOKUP_DELAY_MS = 50;
 
 interface SchemaPromptMapping {
   prompt: string;
@@ -70,13 +77,37 @@ function buildSearchActionEvents(action: {
   return buildWaterSportsActionEvents(action, action.sourceComponentId);
 }
 
-function buildSchemaActionResponse(action: {
-  name: string;
-  context: Record<string, unknown>;
-  sourceComponentId?: string;
-}) {
+interface SchemaActionRequest {
+  // Present only on a lookup: the well-known surface template the action's surface was created from.
+  surfaceTemplate?: string;
+  conversationSessionId?: string;
+}
+
+function buildSchemaActionResponse(
+  action: {
+    name: string;
+    context: Record<string, unknown>;
+    surfaceId?: string | null;
+    sourceComponentId?: string;
+  },
+  {surfaceTemplate, conversationSessionId}: SchemaActionRequest = {}
+) {
+  if (isSuggestionsLookup(surfaceTemplate, action)) {
+    return buildStreamingResponse(
+      buildQuerySuggestionsLookupEvents(action, {conversationSessionId}),
+      {delayBetweenMessages: LOOKUP_DELAY_MS}
+    );
+  }
   const events = buildSearchActionEvents(action);
   return buildStreamingResponse(events, {delayBetweenMessages: ACTION_DELAY_MS});
 }
 
-export {schemaBaseResponse, matchSchemaPrompt, buildSchemaActionResponse, buildSearchActionEvents};
+export {
+  schemaBaseResponse,
+  matchSchemaPrompt,
+  buildSchemaActionResponse,
+  buildSearchActionEvents,
+  buildQuerySuggestionsLookupEvents,
+  isSuggestionsLookup,
+};
+export type {SchemaActionRequest};

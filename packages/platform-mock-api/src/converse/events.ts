@@ -298,6 +298,7 @@ function simpleConversation(options: {
 }
 
 export {
+  generateRunId,
   TurnStarted,
   TurnComplete,
   RunStarted,

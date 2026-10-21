@@ -28,6 +28,11 @@ const withCors = <T extends Response>(response: T): T => {
   return response;
 };
 
+const stringField = (record: Record<string, unknown> | undefined, field: string) => {
+  const value = record?.[field];
+  return typeof value === 'string' ? value : undefined;
+};
+
 const handleConversePost = async ({request}: {request: Request}) => {
   const rawBody = await request.text();
 
@@ -107,7 +112,16 @@ const handleSchemaConversePost = async ({request}: {request: Request}) => {
   if (hasAction) {
     return withCors(
       converseSchemaResponses.buildSchemaActionResponse(
-        action as {name: string; context: Record<string, unknown>; sourceComponentId?: string}
+        action as {
+          name: string;
+          context: Record<string, unknown>;
+          surfaceId?: string | null;
+          sourceComponentId?: string;
+        },
+        {
+          surfaceTemplate: stringField(bodyRecord, 'surfaceTemplate'),
+          conversationSessionId: stringField(bodyRecord, 'conversationSessionId'),
+        }
       )
     );
   }
