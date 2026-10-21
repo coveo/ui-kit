@@ -7,7 +7,6 @@ import {
 } from '@coveo/headless';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {keyed} from '@/src/directives/keyed';
 import {when} from 'lit/directives/when.js';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
@@ -17,6 +16,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {keyed} from '@/src/directives/keyed';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
 import {titleToKebab} from '@/src/utils/utils';
 
