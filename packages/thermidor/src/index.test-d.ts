@@ -16,6 +16,7 @@ import {createSession} from '@/src/index.js';
 import type {
   ComponentContractSchema,
   ContractsSchema,
+  SessionRequest,
   SerializedSession,
   Session,
   SessionConfig,
@@ -38,6 +39,13 @@ test('exposes the createSession session-client surface', () => {
   expectTypeOf<TurnResponse>().not.toBeAny();
   expectTypeOf<SessionConfig>().not.toBeAny();
   expectTypeOf<SerializedSession>().not.toBeAny();
+});
+
+// ── POSITIVE: the session exposes its request state ────────────────────────
+test('exposes the request in flight and its settlement on Session', () => {
+  expectTypeOf<Session['request']>().toEqualTypeOf<SessionRequest | undefined>();
+  expectTypeOf<SessionRequest['kind']>().toEqualTypeOf<'prompt' | 'action'>();
+  expectTypeOf<Session['whenSettled']>().toEqualTypeOf<() => Promise<void>>();
 });
 
 // ── POSITIVE: the injected-contract seam is exported ────────────────────────
@@ -141,6 +149,16 @@ import {buildRemoteController} from '@/src/index.js';
 import {selectRemoteControllerState} from '@/src/index.js';
 // @ts-expect-error `RemoteControllerSource` must not be exported.
 import type {RemoteControllerSource} from '@/src/index.js';
+
+// The client-side action queue and its optimistic controller are gone.
+// @ts-expect-error `createDispatchCoordinator` must not be exported.
+import {createDispatchCoordinator} from '@/src/index.js';
+// @ts-expect-error `createOptimisticValue` must not be exported.
+import {createOptimisticValue} from '@/src/index.js';
+// @ts-expect-error `createStaleScopes` must not be exported.
+import {createStaleScopes} from '@/src/index.js';
+// @ts-expect-error `SessionActions` must not be exported.
+import type {SessionActions} from '@/src/index.js';
 
 // Redux / state-library concepts (no store, slice, selector, thunk, reducer).
 // @ts-expect-error no store type on the public surface.

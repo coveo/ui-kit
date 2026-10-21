@@ -12,21 +12,20 @@ Everything the previous revision described (an `Engine` class, a library-agnosti
 
 ## Public surface
 
-The package entry (`src/index.ts`) exports the session-client surface — `createSession`, the `Session` handle, the `Turn` / `TurnResponse` domain model (including `A2uiV09Message` and `DiscoveredSurface`), `SessionConfig`, the injected-contract types (`ContractsSchema`, `ComponentContractSchema`, `ParsableSchema`), the client-owned context types, and the versioned `SerializedSession` shape. It also exports the client-side dispatch helpers (`createDispatchCoordinator`, `createSettledDispatch`, `createDispatchTracker`, `SessionActions`), which are scoped for removal once the producer owns the action queue, and the optimistic-update helpers (`createOptimisticValue`, `createStaleScopes`). It is intentionally free of state-library concepts (no store, slice, selector, thunk, or reducer types) and free of raw transport DTO shapes; `src/index.test-d.ts` fails the typecheck if one leaks into the entry.
+The package entry (`src/index.ts`) exports the session-client surface — `createSession`, the `Session` handle, the `Turn` / `TurnResponse` domain model (including `A2uiV09Message` and `DiscoveredSurface`), `SessionConfig`, the injected-contract types (`ContractsSchema`, `ComponentContractSchema`, `ParsableSchema`), the client-owned context types, and the versioned `SerializedSession` shape. It also exports the request types (`SessionRequest`, `PromptRequest`, `ActionRequest`). It is intentionally free of state-library concepts (no store, slice, selector, thunk, or reducer types) and free of raw transport DTO shapes; `src/index.test-d.ts` fails the typecheck if one leaks into the entry.
 
 ```mermaid
 graph TB
     subgraph "Public surface (src/index.ts)"
         CS["createSession(config)"]
-        SESSION["Session&lt;TContracts&gt;<br/>contracts · turns · actionError · subscribe<br/>dispatchAction · actions<br/>cancel · retry · serialize"]
-        HELPERS["Dispatch &amp; optimistic helpers<br/>createDispatchTracker · createOptimisticValue<br/>createStaleScopes"]
+        SESSION["Session&lt;TContracts&gt;<br/>contracts · turns · actionError · request<br/>whenSettled · subscribe · dispatchAction<br/>cancel · retry · serialize"]
     end
 
     subgraph "Internal (not exported)"
-        STORE["Observable store<br/>{ turns, activeTurnId,<br/>sessionId, sessionToken }"]
+        STORE["Observable store<br/>{ turns, activeTurnId,<br/>sessionId, sessionToken,<br/>request, settledRequests }"]
         FOLD["Pure fold<br/>foldActivity(turn, activity, contracts) → turn"]
         VALID["In-transit validation<br/>action-payload validation"]
-        QUEUE["Dispatch coordinator<br/>(client-side action queue)"]
+        QUEUE["Request chain<br/>(one request at a time)"]
         API["Unified endpoint client<br/>request builder · SSE parser"]
     end
 
@@ -35,14 +34,11 @@ graph TB
     SESSION -->|folds stream via| FOLD
     FOLD -->|validates inbound ops| VALID
     SESSION -->|validates payloads| VALID
-    SESSION -->|queues actions| QUEUE
-    QUEUE -->|action POST + stream| API
-    SESSION -->|prompt POST + stream| API
-    HELPERS -->|wrap| SESSION
+    SESSION -->|queues prompts and actions| QUEUE
+    QUEUE -->|POST + stream| API
 
     style CS fill:#28a745,color:#fff
     style SESSION fill:#28a745,color:#fff
-    style HELPERS fill:#28a745,color:#fff
     style STORE fill:#4a9eff,color:#fff
     style FOLD fill:#4a9eff,color:#fff
     style VALID fill:#4a9eff,color:#fff
@@ -68,8 +64,6 @@ src/
 │   ├── action-payload-validation.ts # Validates outbound action payloads before the POST
 │   ├── state-path.ts              # /state/<id> JSON Pointer helpers
 │   └── serialize.ts               # Versioned serialize / restore (ADR-011)
-├── actions/                       # Client-side dispatch coordinator + tracker (scoped for removal)
-├── optimistic/                    # Optimistic value controller + stale scopes
 └── internal/
     ├── api/                       # Unified endpoint client, request builder, SSE parser
     ├── context/                   # Navigator / commerce context types
@@ -83,14 +77,16 @@ src/
 The runtime owns the dispatch / cancel / retry orchestration and the SSE-consumption loop that folds each event into the active turn:
 
 - **`dispatchAction(message)`** — the single consumer-facing entry point, wired as the renderer's `onAction`. It never rejects: every refusal is a dev-only warning.
-  - A `submitPrompt` action (`{name: 'submitPrompt', payload: {prompt}}`) needs no active turn. It withholds queued component actions, cancels a stream in flight, opens a new `streaming` turn, builds a request (invoking both context providers fresh), POSTs to the endpoint, and folds the streamed response into that turn.
-  - An A2-UI client message is unwrapped to its `userAction`. The runtime recovers the dispatching component's `component` discriminant from the active turn's node-identity registry (derived from its activities), validates the payload against that component's action schema, and queues the action for its own originating surface. It is withheld while a turn is streaming, when there is no active turn, when the node resolves to no component, or when the payload fails validation. The action's response streams into the active turn.
-- **`cancel()`** — stops consuming the in-flight stream. A streaming prompt turn keeps the partial `response` already folded and is marked `error` with the message `'Cancelled'`; an action in flight settles `'cancelled'` and leaves its turn as it was. A no-op when nothing is in flight.
-- **`retry(turnId)`** — re-submits only an `error` turn's original input; any other `turnId` (unknown, or non-error) is a no-op.
+  - A `submitPrompt` action (`{name: 'submitPrompt', payload: {prompt}}`) needs no active turn. When its turn to be sent comes, it opens a new `streaming` turn, builds a request (invoking both context providers fresh), POSTs to the endpoint, and folds the streamed response into that turn.
+  - An A2-UI client message is unwrapped to its `userAction`. The runtime recovers the dispatching component's `component` discriminant from the active turn's node-identity registry (derived from its activities), validates the payload against that component's action schema, and queues the action for its own originating surface. It is withheld when there is no active turn, when the node resolves to no component, when the payload fails validation, or when the turn it was dispatched on is no longer the active one by the time it would be sent. The action's response streams into the active turn.
+- **`cancel()`** — stops consuming the in-flight stream and withholds the dispatches waiting behind it. A streaming prompt turn keeps the partial `response` already folded and is marked `error` with the message `'Cancelled'`; an action in flight leaves its turn as it was. A no-op when nothing is in flight.
+- **`retry(turnId)`** — re-submits only an `error` turn's original input, in turn with the other requests; any other `turnId` (unknown, or non-error) is a no-op.
 
-Component actions reach the endpoint through one per-session dispatch coordinator (`src/actions/dispatch-coordinator.ts`): a FIFO with at most one action in flight, which coalesces queued gestures by their declared `CoalesceIntent`, and which a prompt preempts (queued entries `withheld`, the in-flight one `cancelled`). It is in memory only and never serialized. See the README's "The action queue" for the integrator-facing rules.
+Prompts and actions reach the endpoint one at a time, in dispatch order, through one per-session request chain in `create-session.ts`: the Gateway processes a single request per session, and each response is a whole-node snapshot, so overlapping streams would let the last to arrive win over a newer action. Nothing is coalesced or preempted. The chain is in memory only and never serialized.
 
-Every request, prompt or action, is sent through a bounded retry loop (`src/session/conflict-retry.ts`, called from `executeStream`): while the Gateway answers `409` with the `errorCode` `AGENT:ACTION_IN_FLIGHT` (parsed in `src/internal/api/protocol/error-handling.ts`), the request is rebuilt and resent after a doubling backoff, for up to 30 s in total (the time spent on each rejected request included), each wait capped at 4 s and the last one cut to what is left. The budget covers an aborted agent run winding down on the Gateway, which can't cancel it upstream yet (KIT-6261). A request sent the moment `RUN_FINISHED` arrives can get a 409 too, because the Gateway commits the turn a few milliseconds later; the first retry absorbs it. The retrying action stays in flight in the coordinator, so the queue behind it keeps its order and nothing touches the turn. When the budget runs out, a prompt fails its turn; an action sets the session-level `actionError` and settles `'failed'`, which releases its optimistic hold. The wait is abortable, so a preempting prompt or `cancel()` ends it like a stream; an abort during a resent request is handled the same way, since the client reports it as a failed call rather than throwing it. `executeStream` returns a request rejected before streaming to its caller, so the prompt path fails its turn while the action path sets `actionError` (cleared when the next action or prompt is sent).
+The session publishes the chain's state in its store: `request` is the request being sent (`{kind: 'prompt', turnId}` or `{kind: 'action', name, surfaceId, sourceComponentId, turnId}`), or `undefined` when idle; the runtime-only `settledRequests` counts every dispatch that has ended, whatever its outcome, a withheld one included. When a request ends and another one waits, both move in a single store update, so the session never looks idle between two requests. `whenSettled()` resolves once `settledRequests` has moved past its value at the call and `request` is `undefined`: called right before a dispatch, it waits for that dispatch's answer, even when it waited behind another request or was withheld at once, which is what an optimistic update needs to end.
+
+Every request, prompt or action, is sent through a bounded retry loop (`src/session/conflict-retry.ts`, called from `executeStream`): while the Gateway answers `409` with the `errorCode` `AGENT:ACTION_IN_FLIGHT` (parsed in `src/internal/api/protocol/error-handling.ts`), the request is rebuilt and resent after a doubling backoff, for up to 30 s in total (the time spent on each rejected request included), each wait capped at 4 s and the last one cut to what is left. The budget covers an aborted agent run winding down on the Gateway, which can't cancel it upstream yet (KIT-6261). A request sent the moment `RUN_FINISHED` arrives can get a 409 too, because the Gateway commits the turn a few milliseconds later; the first retry absorbs it. The retrying request stays at the head of the chain, so the requests behind it keep their order and nothing touches the turn. When the budget runs out, a prompt fails its turn; an action sets the session-level `actionError` and its dispatch ends. The wait is abortable, so `cancel()` ends it like a stream; an abort during a resent request is handled the same way, since the client reports it as a failed call rather than throwing it. `executeStream` returns a request rejected before streaming to its caller, so the prompt path fails its turn while the action path sets `actionError` (cleared when the next action or prompt is sent).
 
 The runtime holds the in-flight stream's `AbortController` per session instance — never module-level — so two sessions never contend, and a stream superseded by a newer one never touches the turn.
 
@@ -98,7 +94,7 @@ Cancellation is modeled as a terminal `error` turn (message `'Cancelled'`), not 
 
 ## The observable store
 
-`src/session/store.ts` holds `{ turns, activeTurnId?, sessionId?, sessionToken? }`. It exposes `getState`, an internal setter that notifies on change, and `subscribe(listener) → unsubscribe`. Every registered subscriber is notified exactly once per change. This plain store replaces the former RTK slice plus state port ([ADR-010](./internal/adr/ADR-010-unified-endpoint-session-client.md) structure annex); there is no Redux state library anywhere in the package.
+`src/session/store.ts` holds `{ turns, activeTurnId?, sessionId?, sessionToken? }`, plus the runtime-only `actionError`, `request` and `settledRequests`, which are never serialized. It exposes `getState`, an internal setter that notifies on change, and `subscribe(listener) → unsubscribe`. Every registered subscriber is notified exactly once per change. This plain store replaces the former RTK slice plus state port ([ADR-010](./internal/adr/ADR-010-unified-endpoint-session-client.md) structure annex); there is no Redux state library anywhere in the package.
 
 ## The pure fold
 
@@ -143,14 +139,6 @@ The injected contracts schema is validated against at two boundaries, both insid
 - **Outbound actions** (`src/session/action-payload-validation.ts`) — an action's payload is validated against the component's action schema before the POST; a non-conforming one is withheld.
 
 `response.a2uiMessages` is derived from the raw activities, not from `response.state`, so a renderer fed from it receives every inbound op, including those in-transit validation drops, and the component state seeded by `createSurface.dataModel`, which is never validated (see [Recorded interim debt](#recorded-interim-debt-and-out-of-scope-items)).
-
-## Action queue and optimistic updates
-
-Component actions go through one per-session dispatch coordinator (`src/actions/`, exposed as `session.actions`), described in [The session factory and runtime](#the-session-factory-and-runtime). `createDispatchTracker(session.actions)` wraps it for a renderer: it issues each dispatch with the coalescing intent its gesture declared and tracks which consumer-named regions the gesture makes stale until it settles (`src/optimistic/stale-scope.ts`).
-
-`createOptimisticValue` (`src/optimistic/optimistic-value.ts`) holds a control's intended value while its gesture is outstanding and ignores the producer's value meanwhile, then lets the producer win once the last gesture settles. A gesture declares its action, the value it expects (`next`), its `coalesce` policy, and the regions it `invalidates`.
-
-The coordinator, the dispatch tracker, `session.actions`, and the coalescing part of the optimistic controller are scoped for removal once the producer owns the action queue; stale scopes are not.
 
 ## Injected schema, endpoint, and context
 
@@ -200,7 +188,6 @@ These are intentionally **not yet implemented**:
 
 - **Interim `response.surfaces` derivation** from raw activities (ADR-015 interim) — see above.
 - **The v0.9 renderer projection** (ADR-015 addendum) — removed in a breaking change once a v1.0-capable renderer exists.
-- **The client-side action queue** (`src/actions`, `session.actions`) — removed once the producer owns the queue.
 - **Renderer stream bypasses validation** — `response.a2uiMessages` is projected from raw activities, so inbound ops that in-transit validation drops from `response.state` still reach the renderer, and so does the component state seeded by `createSurface.dataModel`, which is never validated. A fix must cover both: filtering only the projected `updateDataModel` ops still lets the seed through without validation.
 - **Enforced action-payload typing at the renderer boundary** — per-component action typing is applied by convention rather than at the `dispatchAction` boundary ([ADR-016](./internal/adr/ADR-016-inline-state-consumption-remove-remote-controller.md)).
 - **The package rename** — deferred as low-stakes; the package remains `@coveo/thermidor`.

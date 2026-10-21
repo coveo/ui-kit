@@ -5,6 +5,8 @@
  * subscriber exactly once per change.
  */
 
+import type {SessionRequest} from './types.js';
+
 /**
  * A function that removes a previously-registered store listener.
  */
@@ -41,6 +43,12 @@ export interface SessionStoreState<TTurn> {
    * only: never serialized.
    */
   actionError?: string;
+
+  /** The request the session is sending, or `undefined` when idle. Runtime only: never serialized. */
+  request?: SessionRequest;
+
+  /** How many dispatches have ended, whatever their outcome. Runtime only: never serialized. */
+  settledRequests?: number;
 }
 
 /**

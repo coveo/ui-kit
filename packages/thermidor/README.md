@@ -33,17 +33,18 @@ await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me r
 
 `createSession(config)` returns a `Session` exposing exactly:
 
-| Member                    | Purpose                                                                                                                     |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `contracts`               | The injected contracts schema this session validates against (readonly).                                                    |
-| `turns`                   | Readonly observable list of `Turn`s folded from the stream (empty initially).                                               |
-| `actionError`             | Why the last component action was dropped after repeated concurrency conflicts, or `undefined`. See below.                  |
-| `actions`                 | The action queue: `issue`, `withholdQueued`, `subscribe`, `getSnapshot`. See [The action queue](#the-action-queue).         |
-| `subscribe(listener)`     | Registers a listener called once per change to the turn list or `actionError`; returns an unsubscribe.                      |
-| `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's `onAction`.     |
-| `cancel()`                | Stops the active stream: a prompt's turn keeps its partial response and is marked `error`; an action settles `'cancelled'`. |
-| `retry(turnId)`           | Re-submits an errored turn's input.                                                                                         |
-| `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                                                             |
+| Member                    | Purpose                                                                                                                 |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `contracts`               | The injected contracts schema this session validates against (readonly).                                                |
+| `turns`                   | Readonly observable list of `Turn`s folded from the stream (empty initially).                                           |
+| `actionError`             | Why the last component action was dropped after repeated concurrency conflicts, or `undefined`. See below.              |
+| `request`                 | The request being sent, or `undefined` when idle. See [One request at a time](#one-request-at-a-time).                  |
+| `whenSettled()`           | Resolves once a dispatch made after the call has ended and the session is idle, whatever the outcome.                   |
+| `subscribe(listener)`     | Registers a listener called once per change to the turn list, `actionError` or `request`.                               |
+| `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's `onAction`. |
+| `cancel()`                | Stops the active stream and withholds the dispatches waiting behind it.                                                 |
+| `retry(turnId)`           | Re-submits an errored turn's input.                                                                                     |
+| `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                                                         |
 
 The concrete `contracts` type pinned at the `createSession` call site threads unbroken through `Session`, so component types, action names, and payloads stay fully typed at the call site (no `string`, no `never`, no `unknown`).
 
@@ -59,7 +60,7 @@ A prompt typed outside A2-UI composition, such as in the integrator's search box
 session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me running shoes'}});
 ```
 
-It opens a new streaming turn, records the prompt as the turn's `input.prompt`, and POSTs it to the converse endpoint. It needs no rendered component or active turn, so it also opens the first turn of a session. Sent while a stream is in flight, it cancels that stream first (see [The action queue](#the-action-queue)), and `retry(turnId)` re-drives a turn it opened.
+It opens a new streaming turn, records the prompt as the turn's `input.prompt`, and POSTs it to the converse endpoint. It needs no rendered component or active turn, so it also opens the first turn of a session. Sent while another request is in flight, it waits for it (see [One request at a time](#one-request-at-a-time)), and `retry(turnId)` re-drives a turn it opened.
 
 ### Component actions
 
@@ -73,19 +74,38 @@ Given a message, `dispatchAction` unwraps its `userAction`, recovers the dispatc
 
 It is **fire-and-forget**: the returned Promise always resolves and never rejects, so the consumer needs no `.catch`. A message with no `userAction`, no `sourceComponentId`, a node that resolves to no component, or an internal validation failure is dropped with a dev-only warning and nothing is sent.
 
-### The action queue
+### One request at a time
 
-Thermidor sends one component action at a time per session; later ones wait their turn in order, so integrators never queue anything themselves.
+Thermidor sends one request at a time per session, prompts and component actions alike; later ones wait their turn in dispatch order, so integrators never queue anything themselves. Each `dispatchAction` promise resolves once its own request ends.
 
-- `actions.getSnapshot().inFlight` is the action being processed, and `actions.subscribe` notifies when it changes, for loading indicators.
-- A `submitPrompt` drops queued actions and cancels the one in flight. While a prompt turn is streaming, new actions are dropped.
-- The queue is in memory only: reloading the page drops queued actions.
+- `session.request` is the request being sent (`{kind: 'prompt', turnId}` or `{kind: 'action', name, surfaceId, sourceComponentId, turnId}`), or `undefined` when idle. An action's run counts, a follow-up included. Read it synchronously, or through `subscribe`, to lock or dim the interface; which requests lock is the integrator's call.
+- `session.whenSettled()` resolves once a dispatch made after the call has ended and the session is idle, whatever its outcome, a withheld one included.
+- An action that waited behind a prompt is dropped if its turn is no longer the active one by the time it would be sent.
+- `cancel()` withholds the dispatches waiting behind the stopped request.
+- Waiting requests are in memory only: reloading the page drops them.
+
+### Optimistic values
+
+To show a gesture's expected value until the session has answered it, wait on `whenSettled()`, called right before the dispatch. With React's `useOptimistic`, the transition lasts exactly that long:
+
+```tsx
+const [values, addOptimisticValues] = useOptimistic(producerValues);
+
+startTransition(async () => {
+  addOptimisticValues(values.map((v) => (v.value === 'Nike' ? {...v, state: 'selected'} : v)));
+  const answered = session.whenSettled();
+  renderer.dispatchAction({event: {name: 'toggleSelect', context: {value: 'Nike'}}});
+  await answered;
+});
+```
+
+The optimistic value gives way to the producer's once the gesture is over, whatever the outcome, so a failed or withheld gesture needs no rollback. Thermidor never computes the expected value: the integrator does.
 
 ### Concurrency conflicts
 
 When the Gateway is still busy with another request for the session, it rejects the new one (`409`, `AGENT:ACTION_IN_FLIGHT`). Thermidor retries automatically for up to 30 seconds, and a conflict that recovers shows nothing. If it gives up:
 
-- an **action**'s dispatch settles `'failed'`, which rolls its optimistic state back, and `session.actionError` is set until the next action or prompt is sent;
+- an **action**'s dispatch ends without changing the turn, which releases its optimistic hold, and `session.actionError` is set until the next action or prompt is sent;
 - a **prompt**'s turn becomes `error`, retryable with `retry(turnId)`.
 
 ## The Turn / TurnResponse model
@@ -137,7 +157,6 @@ The following are intentionally **not yet implemented** and are recorded as debt
 
 - **Interim `response.surfaces` derivation** — `surfaces` is a typed projection derived from `activities` in the fold, annotated as interim per [ADR-015](./docs/internal/adr/ADR-015-surface-and-route-derivation.md); the core interprets no `rootComponentType`; consumers read it. It is retired by a future server-surfaced typed-routing ADR (ADR-015 Option C).
 - **The A2-UI v0.9 renderer projection** — `response.a2uiMessages` downgrades Agent Gateway's v1.0 stream for today's v0.9 renderers, per the [ADR-015](./docs/internal/adr/ADR-015-surface-and-route-derivation.md) addendum. Removed in a breaking change once a v1.0-capable renderer exists.
-- **The client-side action queue** — `session.actions` and the dispatch coordinator are removed once the producer owns the queue.
 - **Renderer stream bypasses validation** — inbound ops that in-transit validation drops from `response.state` still reach the renderer through `response.a2uiMessages`, and so does the component state seeded by `createSurface.dataModel`, which is never validated. A fix must cover both paths.
 - **Enforced action-payload typing at the renderer boundary** — the renderer hands `dispatchAction` a loosely typed action message, so per-component action typing is applied by convention (the consumer opts into the generated `XxxAction` types) rather than enforced at the boundary, per [ADR-016](./docs/internal/adr/ADR-016-inline-state-consumption-remove-remote-controller.md). Recoverable later if the package owns binding resolution.
 - **Package rename** — deferred as low-stakes; the package remains `@coveo/thermidor`.
