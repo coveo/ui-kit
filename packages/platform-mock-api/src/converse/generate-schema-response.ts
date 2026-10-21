@@ -78,7 +78,7 @@ function buildSearchActionEvents(action: {
 }
 
 interface SchemaActionRequest {
-  // Present only on a lookup: the well-known surface template the action's surface was created from.
+  // Present only on a lookup: the surface template the action's surface was created from.
   surfaceTemplate?: string;
   conversationSessionId?: string;
 }

@@ -6,7 +6,7 @@ import {
   type ConverseEvent,
 } from '../events.js';
 
-// `fetchSuggestions` is a lookup from the `search-box` well-known surface template. The client
+// `fetchSuggestions` is a lookup from the `search-box` surface template. The client
 // creates each instance under a surface id of its choosing, so a lookup is recognized from the
 // template and the template's component, never from the surface id. A lookup opens no session: its
 // run carries no session keys and emits no turn_started/turn_complete.
