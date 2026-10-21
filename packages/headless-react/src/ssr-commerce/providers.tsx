@@ -59,7 +59,9 @@ export function buildProviderWithDefinition<
       InferControllerStaticStateMapFromDefinitionsWithSolutionType<TControllers, TSolutionType>
     >;
     /**
-     * @deprecated will be removed in the next major release. The navigator context provider can now be set when fetching the static state
+     * The navigator context you passed to `fetchStaticState()`.
+     *
+     * @deprecated This prop will be removed in the next major version.
      */
     navigatorContext: NavigatorContext;
     /**
@@ -78,7 +80,6 @@ export function buildProviderWithDefinition<
     const [hydratedState, setHydratedState] = useState<
       InferHydratedState<typeof definition> | undefined
     >(undefined);
-    definition.setNavigatorContextProvider(() => navigatorContext);
 
     useEffect(() => {
       const {searchActions, controllers} = staticState;
@@ -136,6 +137,7 @@ export function buildProviderWithDefinition<
 
       const args: HydrateStaticStateOptions<UnknownAction> & ControllerPropsMap = {
         searchActions,
+        navigatorContext,
       };
 
       if (accessToken !== undefined) {

@@ -9,7 +9,11 @@ import {
   type A2UIClientEventMessage,
 } from '@copilotkit/a2ui-renderer';
 import {createDispatchCoordinator} from '@coveo/thermidor';
-import {createThermidorCatalog, THERMIDOR_CATALOG_ID} from './components.js';
+import {
+  createThermidorCatalog,
+  THERMIDOR_CATALOG_ID,
+  type ThermidorCatalogOptions,
+} from './components.js';
 import {DispatchProgressProvider, useTrackedDispatch} from './pending-dispatch.js';
 
 /**
@@ -47,6 +51,8 @@ export interface MountSurfaceConfig {
   dataModel?: Array<{path: string; value: unknown}>;
   /** Awaited by the action handler; lets a test hold a dispatch in flight. */
   dispatchGate?: () => Promise<void> | void;
+  /** Options for the thermidor catalog the surface renders with. */
+  catalogOptions?: ThermidorCatalogOptions;
 }
 
 export interface MountSurfaceResult extends RenderResult {
@@ -80,11 +86,14 @@ function Surface({
   messages,
   processRef,
   dispatch,
+  catalogOptions,
 }: {
   messages: Array<Record<string, unknown>>;
   processRef: {current: ProcessMessages | null};
   dispatch: (message: A2UIClientEventMessage) => Promise<void> | void;
+  catalogOptions?: ThermidorCatalogOptions;
 }) {
+  const catalog = useMemo(() => createThermidorCatalog(catalogOptions), [catalogOptions]);
   const actions = useMemo(
     () => createDispatchCoordinator<A2UIClientEventMessage>(dispatch),
     [dispatch]
@@ -92,7 +101,7 @@ function Surface({
   const tracked = useTrackedDispatch(actions);
   return (
     <DispatchProgressProvider value={tracked.progress}>
-      <A2UIProvider catalog={createThermidorCatalog()} onAction={tracked.onAction}>
+      <A2UIProvider catalog={catalog} onAction={tracked.onAction}>
         <MessagePump messages={messages} processRef={processRef} />
         <A2UIRenderer surfaceId={SURFACE_ID} />
       </A2UIProvider>
@@ -133,7 +142,12 @@ export function mountSurface(config: MountSurfaceConfig): MountSurfaceResult {
   ];
 
   const result = render(
-    <Surface messages={messages} processRef={processRef} dispatch={onAction} />
+    <Surface
+      messages={messages}
+      processRef={processRef}
+      dispatch={onAction}
+      catalogOptions={config.catalogOptions}
+    />
   );
 
   return {

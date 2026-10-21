@@ -39,10 +39,13 @@
     "build:definitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "node ../../utils/ci/rm-rf.mjs dist/*",
     "e2e": "pnpm run e2e:saml",
-    "e2e:saml": "vite manual-e2e/saml/"
+    "e2e:saml": "vite manual-e2e/saml/",
+    "size": "node ../../scripts/size-limit.mjs run"
   },
   "devDependencies": {
+    "@size-limit/preset-small-lib": "catalog:",
     "publint": "catalog:",
+    "size-limit": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:"
   },

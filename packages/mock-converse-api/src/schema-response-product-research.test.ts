@@ -31,6 +31,10 @@ const PRODUCT_PROPERTIES = new Set([
   'children',
 ]);
 
+// The property set of the thermidor-schema `ProductResearchRelatedDocument` definition, which is
+// closed (`additionalProperties: false`).
+const RELATED_DOCUMENT_PROPERTIES = ['clickUri', 'filetype', 'size', 'title'];
+
 function eventData(event: ConverseEvent): Record<string, unknown> {
   return event.data as Record<string, unknown>;
 }
@@ -108,6 +112,7 @@ describe('schema-response-product-research single-product research scenario', ()
         product: {path: '/state/root/product'},
         summary: {path: '/state/root/summary'},
         bullets: {path: '/state/root/bullets'},
+        relatedDocuments: {path: '/state/root/relatedDocuments'},
       },
     ]);
   });
@@ -117,7 +122,12 @@ describe('schema-response-product-research single-product research scenario', ()
 
     it('is written whole at /state/root with exactly the schema fields', () => {
       expect(state).toBeDefined();
-      expect(Object.keys(state).sort()).toEqual(['bullets', 'product', 'summary']);
+      expect(Object.keys(state).sort()).toEqual([
+        'bullets',
+        'product',
+        'relatedDocuments',
+        'summary',
+      ]);
     });
 
     it('carries a product that conforms to the closed schema Product', () => {
@@ -140,6 +150,20 @@ describe('schema-response-product-research single-product research scenario', ()
       expect(Array.isArray(bullets)).toBe(true);
       expect(bullets.length).toBeGreaterThan(0);
       expect(bullets.every(isNonEmptyString)).toBe(true);
+    });
+
+    it('carries more related documents than the demo shows, each with the closed schema fields', () => {
+      const documents = state.relatedDocuments as Array<Record<string, unknown>>;
+      expect(documents.length).toBeGreaterThan(5);
+      expect(documents.length).toBeLessThanOrEqual(10);
+      for (const document of documents) {
+        expect(Object.keys(document).sort()).toEqual(RELATED_DOCUMENT_PROPERTIES);
+        expect(isNonEmptyString(document.title)).toBe(true);
+        expect(() => new URL(document.clickUri as string)).not.toThrow();
+        expect(isNonEmptyString(document.filetype)).toBe(true);
+        expect(Number.isInteger(document.size)).toBe(true);
+        expect(document.size as number).toBeGreaterThanOrEqual(0);
+      }
     });
   });
 
