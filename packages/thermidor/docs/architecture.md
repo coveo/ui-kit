@@ -25,7 +25,7 @@ graph TB
         STORE["Observable store<br/>{ turns, activeTurnId,<br/>sessionId, sessionToken,<br/>request, settledRequests }"]
         FOLD["Pure fold<br/>foldActivity(turn, activity, contracts) → turn"]
         VALID["In-transit validation<br/>action-payload validation"]
-        QUEUE["Request chain<br/>(one request at a time)"]
+        GATE["Request gate<br/>(one request at a time)"]
         API["Unified endpoint client<br/>request builder · SSE parser"]
     end
 
@@ -34,15 +34,15 @@ graph TB
     SESSION -->|folds stream via| FOLD
     FOLD -->|validates inbound ops| VALID
     SESSION -->|validates payloads| VALID
-    SESSION -->|queues prompts and actions| QUEUE
-    QUEUE -->|POST + stream| API
+    SESSION -->|sends prompts and actions| GATE
+    GATE -->|POST + stream| API
 
     style CS fill:#28a745,color:#fff
     style SESSION fill:#28a745,color:#fff
     style STORE fill:#4a9eff,color:#fff
     style FOLD fill:#4a9eff,color:#fff
     style VALID fill:#4a9eff,color:#fff
-    style QUEUE fill:#4a9eff,color:#fff
+    style GATE fill:#4a9eff,color:#fff
     style API fill:#6c757d,color:#fff
 ```
 
@@ -76,17 +76,17 @@ src/
 
 The runtime owns the dispatch / cancel / retry orchestration and the SSE-consumption loop that folds each event into the active turn:
 
-- **`dispatchAction(message)`** — the single consumer-facing entry point, wired as the renderer's `onAction`. It never rejects: every refusal is a dev-only warning.
-  - A `submitPrompt` action (`{name: 'submitPrompt', payload: {prompt}}`) needs no active turn. When its turn to be sent comes, it opens a new `streaming` turn, builds a request (invoking both context providers fresh), POSTs to the endpoint, and folds the streamed response into that turn.
-  - An A2-UI client message is unwrapped to its `userAction`. The runtime recovers the dispatching component's `component` discriminant from the active turn's node-identity registry (derived from its activities), validates the payload against that component's action schema, and queues the action for its own originating surface. It is withheld when there is no active turn, when the node resolves to no component, when the payload fails validation, or when the turn it was dispatched on is no longer the active one by the time it would be sent. The action's response streams into the active turn.
-- **`cancel()`** — stops consuming the in-flight stream and withholds the dispatches waiting behind it. A streaming prompt turn keeps the partial `response` already folded and is marked `error` with the message `'Cancelled'`; an action in flight leaves its turn as it was. A no-op when nothing is in flight.
-- **`retry(turnId)`** — re-submits only an `error` turn's original input, in turn with the other requests; any other `turnId` (unknown, or non-error) is a no-op.
+- **`dispatchAction(message)`** — the single consumer-facing entry point, wired as the renderer's `onAction`. It never rejects: every refusal is a dev-only warning. A dispatch made while a request is in flight is withheld.
+  - A `submitPrompt` action (`{name: 'submitPrompt', payload: {prompt}}`) needs no active turn. It opens a new `streaming` turn, builds a request (invoking both context providers fresh), POSTs to the endpoint, and folds the streamed response into that turn.
+  - An A2-UI client message is unwrapped to its `userAction`. The runtime recovers the dispatching component's `component` discriminant from the active turn's node-identity registry (derived from its activities), validates the payload against that component's action schema, and sends the action to its own originating surface. It is withheld when there is no active turn, when the node resolves to no component, or when the payload fails validation. The action's response streams into the active turn.
+- **`cancel()`** — stops consuming the in-flight stream. A streaming prompt turn keeps the partial `response` already folded and is marked `error` with the message `'Cancelled'`; an action in flight leaves its turn as it was. A no-op when nothing is in flight.
+- **`retry(turnId)`** — re-submits only an `error` turn's original input, withheld like any dispatch while a request is in flight; any other `turnId` (unknown, or non-error) is a no-op.
 
-Prompts and actions reach the endpoint one at a time, in dispatch order, through one per-session request chain in `create-session.ts`: the Gateway processes a single request per session, and each response is a whole-node snapshot, so overlapping streams would let the last to arrive win over a newer action. Nothing is coalesced or preempted. The chain is in memory only and never serialized.
+Prompts and actions reach the endpoint one at a time, through `sendRequest` in `create-session.ts`: the Gateway processes a single request per session, and each response is a whole-node snapshot, so overlapping streams would let the last to arrive win over a newer action. A dispatch made while a request is in flight is withheld rather than queued or preempted: the integrator holds it back until the session is free, reading `request`.
 
-The session publishes the chain's state in its store: `request` is the request being sent (`{kind: 'prompt', turnId}` or `{kind: 'action', name, surfaceId, sourceComponentId, turnId}`), or `undefined` when idle; the runtime-only `settledRequests` counts every dispatch that has ended, whatever its outcome, a withheld one included. When a request ends and another one waits, both move in a single store update, so the session never looks idle between two requests. `whenSettled()` resolves once `settledRequests` has moved past its value at the call and `request` is `undefined`: called right before a dispatch, it waits for that dispatch's answer, even when it waited behind another request or was withheld at once, which is what an optimistic update needs to end.
+The session publishes its request state in its store: `request` is the request being sent (`{kind: 'prompt', turnId}` or `{kind: 'action', name, surfaceId, sourceComponentId, turnId}`), or `undefined` when idle; the runtime-only `settledRequests` counts every dispatch that has ended, whatever its outcome, a withheld one included. `whenSettled()` resolves once `settledRequests` has moved past its value at the call and `request` is `undefined`: called right before a dispatch, it waits for that dispatch's answer, even when it was withheld at once, which is what an optimistic update needs to end.
 
-Every request, prompt or action, is sent through a bounded retry loop (`src/session/conflict-retry.ts`, called from `executeStream`): while the Gateway answers `409` with the `errorCode` `AGENT:ACTION_IN_FLIGHT` (parsed in `src/internal/api/protocol/error-handling.ts`), the request is rebuilt and resent after a doubling backoff, for up to 30 s in total (the time spent on each rejected request included), each wait capped at 4 s and the last one cut to what is left. The budget covers an aborted agent run winding down on the Gateway, which can't cancel it upstream yet (KIT-6261). A request sent the moment `RUN_FINISHED` arrives can get a 409 too, because the Gateway commits the turn a few milliseconds later; the first retry absorbs it. The retrying request stays at the head of the chain, so the requests behind it keep their order and nothing touches the turn. When the budget runs out, a prompt fails its turn; an action sets the session-level `actionError` and its dispatch ends. The wait is abortable, so `cancel()` ends it like a stream; an abort during a resent request is handled the same way, since the client reports it as a failed call rather than throwing it. `executeStream` returns a request rejected before streaming to its caller, so the prompt path fails its turn while the action path sets `actionError` (cleared when the next action or prompt is sent).
+Every request, prompt or action, is sent through a bounded retry loop (`src/session/conflict-retry.ts`, called from `executeStream`): while the Gateway answers `409` with the `errorCode` `AGENT:ACTION_IN_FLIGHT` (parsed in `src/internal/api/protocol/error-handling.ts`), the request is rebuilt and resent after a doubling backoff, for up to 30 s in total (the time spent on each rejected request included), each wait capped at 4 s and the last one cut to what is left. The budget covers an aborted agent run winding down on the Gateway, which can't cancel it upstream yet (KIT-6261). A request sent the moment `RUN_FINISHED` arrives can get a 409 too, because the Gateway commits the turn a few milliseconds later; the first retry absorbs it. The retrying request stays the one in flight, so nothing touches the turn. When the budget runs out, a prompt fails its turn; an action sets the session-level `actionError` and its dispatch ends. The wait is abortable, so `cancel()` ends it like a stream; an abort during a resent request is handled the same way, since the client reports it as a failed call rather than throwing it. `executeStream` returns a request rejected before streaming to its caller, so the prompt path fails its turn while the action path sets `actionError` (cleared when the next action or prompt is sent).
 
 The runtime holds the in-flight stream's `AbortController` per session instance — never module-level — so two sessions never contend, and a stream superseded by a newer one never touches the turn.
 

@@ -169,27 +169,24 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
   /**
    * Resolves once a dispatch made after this call has ended and the session is idle, whatever the
    * outcome: answered, failed, cancelled, or withheld without being sent. Call it right before
-   * dispatching a gesture to wait for its answer, for example to end an optimistic update; a
-   * gesture that waited behind another request resolves after its own request.
+   * dispatching a gesture to wait for its answer, for example to end an optimistic update.
    */
   whenSettled(): Promise<void>;
   /**
    * The single consumer-facing action-dispatch entry point, wired directly as
    * the renderer's `onAction` handler (`onAction={session.dispatchAction}`).
    *
-   * The session sends one request at a time, in dispatch order: a dispatch made while another
-   * request is in flight waits for it, a prompt included. The returned Promise resolves once the
-   * dispatch's own request ends.
+   * The session sends one request at a time: a dispatch made while another request is in flight
+   * is withheld, a prompt included. The returned Promise resolves once the dispatch's own request
+   * ends.
    *
-   * A {@link SubmitPromptAction} opens a new streaming turn for its prompt when its turn to be
-   * sent comes, and resolves once that turn's stream ends.
+   * A {@link SubmitPromptAction} opens a new streaming turn for its prompt, and resolves once that
+   * turn's stream ends.
    *
    * An {@link A2uiClientMessage} is unwrapped to its `userAction`: the session
    * recovers the dispatching component's discriminant from the active turn's
    * surfaces, validates the action payload against the component's contract
-   * internally, and — on success — POSTs the action to the converse endpoint. An action that
-   * waited behind a prompt is withheld if its turn is no longer the active one when it would be
-   * sent.
+   * internally, and — on success — POSTs the action to the converse endpoint.
    *
    * FIRE-AND-FORGET: the returned Promise ALWAYS resolves and NEVER rejects, so
    * the consumer needs no `.catch`. A message with no `userAction`, no
@@ -198,7 +195,7 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * dev-only warning and nothing is sent.
    */
   dispatchAction: (message: A2uiClientMessage | SubmitPromptAction) => Promise<void>;
-  /** Stops the request in flight and withholds the dispatches waiting behind it. */
+  /** Stops the request in flight. */
   cancel(): void;
   /** Re-submits an errored turn's input, in turn with the other requests. */
   retry(turnId: string): void;
@@ -210,14 +207,6 @@ function isSubmitPromptAction(
   message: A2uiClientMessage | SubmitPromptAction
 ): message is SubmitPromptAction {
   return 'name' in message && message.name === 'submitPrompt';
-}
-
-/** A dispatch waiting for its turn to be sent. */
-interface QueuedRequest {
-  request: SessionRequest;
-  send: (abortController: AbortController) => Promise<void>;
-  /** Resolves the dispatch's promise. */
-  settle: () => void;
 }
 
 interface RequestFailure {
@@ -306,88 +295,45 @@ export function createSession<TContracts extends ContractsSchema>(
   // per session instance — never module-level — so two sessions never contend.
   let activeAbortController: AbortController | null = null;
 
-  // One request at a time, in dispatch order: the endpoint handles a single request per session,
-  // and each response is a whole-node snapshot, so overlapping streams would let the last to
-  // ARRIVE win over a newer action sent later.
-  let waiting: QueuedRequest[] = [];
-  let sending = false;
-
-  function enqueue(
+  // One request at a time: the endpoint handles a single request per session, and each response
+  // is a whole-node snapshot, so overlapping streams would let the last to ARRIVE win over a newer
+  // action sent later. A dispatch made while a request is in flight is withheld.
+  async function sendRequest(
     request: SessionRequest,
     send: (abortController: AbortController) => Promise<void>
   ): Promise<void> {
-    return new Promise((settle) => {
-      waiting.push({request, send, settle});
-      void sendWaiting();
-    });
-  }
-
-  /**
-   * Publishes the next waiting request, or that the session is idle, in the same update that
-   * counts the requests just settled, so the session never looks idle between two requests.
-   */
-  function publishNext(
-    settled: number
-  ): {queued: QueuedRequest; abortController: AbortController} | undefined {
-    const queued = waiting.shift();
+    if (store.getState().request) {
+      devWarn('dispatchAction: withheld: another request is in flight.');
+      return withhold();
+    }
     // Armed before it is published, so a listener's `cancel()` stops the request it was told about.
-    const abortController = queued ? new AbortController() : null;
+    const abortController = new AbortController();
     activeAbortController = abortController;
+    store.setState((current) => ({...current, request}));
+    if (!abortController.signal.aborted) {
+      try {
+        await send(abortController);
+      } catch (error) {
+        devWarn(`dispatchAction: request failed: ${getErrorMessage(error)}`);
+      }
+    }
+    if (activeAbortController === abortController) {
+      activeAbortController = null;
+    }
     store.setState((current) => ({
       ...current,
-      request: queued?.request,
-      settledRequests: settledOf(current) + settled,
+      request: undefined,
+      settledRequests: settledOf(current) + 1,
     }));
-    return queued && abortController ? {queued, abortController} : undefined;
   }
 
-  async function sendWaiting(): Promise<void> {
-    if (sending) {
-      return;
-    }
-    sending = true;
-    let next = publishNext(0);
-    while (next) {
-      const {queued, abortController} = next;
-      if (!abortController.signal.aborted) {
-        try {
-          await queued.send(abortController);
-        } catch (error) {
-          devWarn(`dispatchAction: request failed: ${getErrorMessage(error)}`);
-        }
-      }
-      next = publishNext(1);
-      // A listener told the session is idle may dispatch at once; nothing else would send it.
-      if (!next && waiting.length > 0) {
-        next = publishNext(0);
-      }
-      queued.settle();
-    }
-    sending = false;
-  }
-
-  /** A dispatch refused before it was queued still counts as settled. */
+  /** A dispatch refused before it was sent still counts as settled. */
   function withhold(): Promise<void> {
     store.setState((current) => ({
       ...current,
       settledRequests: settledOf(current) + 1,
     }));
     return Promise.resolve();
-  }
-
-  function withholdWaiting(): void {
-    const withheld = waiting;
-    waiting = [];
-    if (withheld.length === 0) {
-      return;
-    }
-    store.setState((current) => ({
-      ...current,
-      settledRequests: settledOf(current) + withheld.length,
-    }));
-    for (const queued of withheld) {
-      queued.settle();
-    }
   }
 
   function whenSettled(): Promise<void> {
@@ -627,13 +573,12 @@ export function createSession<TContracts extends ContractsSchema>(
   }
 
   /**
-   * Stops consuming the in-flight stream and withholds the dispatches waiting behind it. A
+   * Stops consuming the in-flight stream. A
    * streaming prompt turn is marked `error`, retaining whatever partial {@link TurnResponse} has
    * already been folded; an action in flight leaves its turn unchanged. When nothing is in
    * flight, it is a no-op that leaves every turn unchanged.
    */
   function cancel(): void {
-    withholdWaiting();
     if (!activeAbortController) {
       return;
     }
@@ -651,22 +596,21 @@ export function createSession<TContracts extends ContractsSchema>(
   }
 
   /**
-   * Opens a new turn for `prompt` once the requests dispatched before it have ended, and streams
-   * its response. Needs no active turn, so it also opens the first turn of a session.
+   * Opens a new turn for `prompt` and streams its response. Needs no active turn, so it also
+   * opens the first turn of a session.
    */
   function startPromptTurn(prompt: string | undefined): Promise<void> {
     const turnId = generateId();
-    return enqueue({kind: 'prompt', turnId}, async (abortController) => {
+    return sendRequest({kind: 'prompt', turnId}, async (abortController) => {
       openTurn(turnId, {prompt});
       await streamPrompt(turnId, prompt ?? '', abortController);
     });
   }
 
   /**
-   * Private validate-and-queue path. Validates the recovered action's payload against the
+   * Private validate-and-send path. Validates the recovered action's payload against the
    * component's generated Zod action schema and withholds on failure; targets the action's own
-   * originating surface. Withholds when there is no active turn, or when the turn the action was
-   * dispatched on is no longer the active one by the time it would be sent.
+   * originating surface. Withholds when there is no active turn.
    */
   function issueAction(recovered: {
     discriminant: string;
@@ -720,13 +664,7 @@ export function createSession<TContracts extends ContractsSchema>(
       sourceComponentId: recovered.sourceComponentId,
       turnId: activeTurnId,
     };
-    return enqueue(request, async (abortController) => {
-      if (store.getState().activeTurnId !== activeTurnId) {
-        devWarn(
-          `dispatchAction: "${recovered.name}" withheld: its turn is no longer the active one.`
-        );
-        return;
-      }
+    return sendRequest(request, async (abortController) => {
       setActionError(undefined);
       const failure = await executeStream(
         activeTurnId,
@@ -817,12 +755,8 @@ export function createSession<TContracts extends ContractsSchema>(
     }
 
     // Reset the turn to a fresh streaming turn carrying its original input,
-    // then re-drive the stream once the requests dispatched before it have ended.
-    void enqueue({kind: 'prompt', turnId}, async (abortController) => {
-      // A retry queued twice for the same turn sends it once: the first one moved it out of `error`.
-      if (store.getState().turns.find((candidate) => candidate.id === turnId)?.status !== 'error') {
-        return;
-      }
+    // then re-drive the stream.
+    void sendRequest({kind: 'prompt', turnId}, async (abortController) => {
       replaceTurn(turnId, (previous) => ({
         ...createTurn(previous.id, previous.input),
       }));

@@ -6,45 +6,20 @@ interface UserActionMessage {
 }
 
 /**
- * A stand-in for the session's request chain: sends one message at a time through `send`, in
- * order, and exposes `request` and `whenSettled()` like `Session` does.
+ * A stand-in for the session's request handling: sends one message at a time through `send`,
+ * withholds a message dispatched while another is in flight, and exposes `request` and
+ * `whenSettled()` like `Session` does.
  */
 export function createFakeSessionRequests(send: (message: never) => Promise<void> | void) {
   const listeners = new Set<() => void>();
-  const waiting: Array<{request: SessionRequest; message: unknown; settle: () => void}> = [];
   let request: SessionRequest | undefined;
   let settledRequests = 0;
-  let sending = false;
 
   const notify = () => {
     for (const listener of listeners) {
       listener();
     }
   };
-
-  async function sendWaiting() {
-    if (sending) {
-      return;
-    }
-    sending = true;
-    let next = waiting.shift();
-    request = next?.request;
-    notify();
-    while (next) {
-      try {
-        await (send as (message: unknown) => Promise<void> | void)(next.message);
-      } catch {
-        // Like the session's dispatch, a failed send still ends the request.
-      }
-      const following = waiting.shift();
-      request = following?.request;
-      settledRequests += 1;
-      notify();
-      next.settle();
-      next = following;
-    }
-    sending = false;
-  }
 
   const source: SessionRequestSource = {
     get request() {
@@ -68,9 +43,14 @@ export function createFakeSessionRequests(send: (message: never) => Promise<void
     },
   };
 
-  const dispatch = (message: unknown): Promise<void> => {
+  const dispatch = async (message: unknown): Promise<void> => {
+    if (request) {
+      settledRequests += 1;
+      notify();
+      return;
+    }
     const userAction = (message as UserActionMessage).userAction;
-    const nextRequest: SessionRequest =
+    request =
       (message as {name?: unknown}).name === 'submitPrompt'
         ? {kind: 'prompt', turnId: 'turn'}
         : {
@@ -80,10 +60,15 @@ export function createFakeSessionRequests(send: (message: never) => Promise<void
             sourceComponentId: String(userAction?.sourceComponentId),
             turnId: 'turn',
           };
-    return new Promise((settle) => {
-      waiting.push({request: nextRequest, message, settle});
-      void sendWaiting();
-    });
+    notify();
+    try {
+      await (send as (message: unknown) => Promise<void> | void)(message);
+    } catch {
+      // Like the session's dispatch, a failed send still ends the request.
+    }
+    request = undefined;
+    settledRequests += 1;
+    notify();
   };
 
   return {source, dispatch};

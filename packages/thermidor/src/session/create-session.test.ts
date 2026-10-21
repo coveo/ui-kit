@@ -292,108 +292,42 @@ describe('createSession lifecycle', () => {
         ['in red', 'complete'],
       ]);
     });
-
-    it('sends a prompt dispatched while another one streams once that one ends', async () => {
-      const session = createSession(baseConfig);
-
-      const first = queueStream();
-      const firstTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'first'}});
-      await first.opened;
-
-      const second = queueStream();
-      const secondTurn = session.dispatchAction({
-        name: 'submitPrompt',
-        payload: {prompt: 'second'},
-      });
-      await flush();
-      expect(callMock).toHaveBeenCalledTimes(1);
-      expect(session.turns.map((turn) => turn.input.prompt)).toEqual(['first']);
-
-      first.emit({type: 'RUN_FINISHED'});
-      first.close();
-      await firstTurn;
-      await second.opened;
-      expect(callMock).toHaveBeenCalledTimes(2);
-      expect(session.turns.map((turn) => [turn.input.prompt, turn.status])).toEqual([
-        ['first', 'complete'],
-        ['second', 'streaming'],
-      ]);
-
-      second.emit({type: 'RUN_FINISHED'});
-      second.close();
-      await secondTurn;
-      expect(session.turns[1].status).toBe('complete');
-    });
   });
 
-  describe('an action dispatched while its turn streams', () => {
-    it('is sent once the stream ends', async () => {
+  describe('a dispatch made while a request is in flight', () => {
+    async function streamingPrompt(session: ReturnType<typeof createSession>) {
+      const stream = queueStream();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'first'}});
+      await stream.opened;
+      stream.emit(PAGINATION_SURFACE);
+      await flush();
+      return {stream, turn};
+    }
+
+    it('withholds a prompt, sending nothing and settling at once', async () => {
       const session = createSession(baseConfig);
+      const {stream, turn} = await streamingPrompt(session);
 
-      const first = queueStream();
-      const submitPromise = session.dispatchAction({
-        name: 'submitPrompt',
-        payload: {prompt: 'first'},
-      });
-      await first.opened;
+      await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'second'}});
 
-      // Seed the active (still-streaming) turn with a commerce-search surface
-      // carrying a Pagination node so `dispatchAction` can recover the component
-      // discriminant and reach the private execute path — where the streaming
-      // guard must then withhold the POST.
-      first.emit({
-        type: 'ACTIVITY_SNAPSHOT',
-        activityType: 'a2ui-surface',
-        messageId: 'surface-1',
-        content: {
-          messages: [
-            {
-              version: 'v1.0',
-              createSurface: {
-                surfaceId: 'ui-1',
-                rootId: 'root',
-                components: [
-                  {id: 'root', component: 'CommerceSearch'},
-                  {id: 'pagination-1', component: 'Pagination'},
-                ],
-              },
-            },
-          ],
-        },
-      });
-      await flush();
-
-      const turnsBefore = session.turns;
-      expect(turnsBefore).toHaveLength(1);
-      expect(turnsBefore[0].status).toBe('streaming');
-
-      const actionStream = queueStream();
-      const action = session.dispatchAction({
-        userAction: {
-          name: 'selectPage',
-          surfaceId: 'ui-1',
-          sourceComponentId: 'pagination-1',
-          context: {page: 2},
-        },
-      });
-      await flush();
-
-      // The action waits for the prompt: only the prompt reached the endpoint so far.
       expect(callMock).toHaveBeenCalledTimes(1);
-      expect(session.turns).toHaveLength(1);
+      expect(session.turns.map((candidate) => candidate.input.prompt)).toEqual(['first']);
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await turn;
+    });
+
+    it('withholds an action, sending nothing and settling at once', async () => {
+      const session = createSession(baseConfig);
+      const {stream, turn} = await streamingPrompt(session);
+
+      await session.dispatchAction(selectPageMessage(2));
+
+      expect(callMock).toHaveBeenCalledTimes(1);
       expect(session.request).toMatchObject({kind: 'prompt'});
-
-      first.emit({type: 'RUN_FINISHED'});
-      first.close();
-      await submitPromise;
-      await actionStream.opened;
-      expect(callMock).toHaveBeenCalledTimes(2);
-      expect(session.request).toMatchObject({kind: 'action', name: 'selectPage'});
-
-      actionStream.emit({type: 'RUN_FINISHED'});
-      actionStream.close();
-      await action;
-      expect(session.request).toBeUndefined();
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await turn;
     });
   });
 
@@ -743,34 +677,6 @@ describe('createSession lifecycle', () => {
       expect(session.turns[0].status).toBe('complete');
       expect(session.request).toBeUndefined();
     });
-
-    it('waits for the request in flight before re-sending the turn', async () => {
-      const session = createSession(baseConfig);
-      const turnId = await erroredTurnId(session);
-
-      const promptStream = queueStream();
-      const prompt = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'other'}});
-      await promptStream.opened;
-
-      const retryStream = queueStream();
-      session.retry(turnId);
-      await flush();
-      expect(callMock).toHaveBeenCalledTimes(2);
-      expect(session.turns[0].status).toBe('error');
-
-      promptStream.emit({type: 'RUN_FINISHED'});
-      promptStream.close();
-      await prompt;
-      await retryStream.opened;
-
-      expect(callMock).toHaveBeenCalledTimes(3);
-      expect(session.request).toEqual({kind: 'prompt', turnId});
-      expect(session.turns[0].status).toBe('streaming');
-
-      retryStream.emit({type: 'RUN_FINISHED'});
-      retryStream.close();
-      await flush();
-    });
   });
 
   describe('retry no-op cases', () => {
@@ -927,102 +833,6 @@ describe('createSession lifecycle', () => {
     });
   });
 
-  describe('a prompt dispatched during a gesture', () => {
-    it('waits for the gesture, then opens its turn', async () => {
-      const session = createSession(baseConfig);
-
-      // A Pagination surface so `selectPage` resolves a discriminant.
-      const seed = queueStream();
-      const seedTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'go'}});
-      await seed.opened;
-      seed.emit({
-        type: 'ACTIVITY_SNAPSHOT',
-        messageId: 'surface-activity',
-        activityType: 'a2ui-surface',
-        content: {
-          messages: [
-            {
-              version: 'v1.0',
-              createSurface: {
-                surfaceId: 'commerce-search-surface',
-                components: [
-                  {id: 'root', component: 'CommerceSearch'},
-                  {id: 'pagination-1', component: 'Pagination'},
-                ],
-              },
-            },
-          ],
-        },
-      });
-      seed.emit({type: 'RUN_FINISHED'});
-      seed.close();
-      await seedTurn;
-      expect(session.turns[0].status).toBe('complete');
-      expect(callMock).toHaveBeenCalledTimes(1);
-
-      const actionMessage = (page: number) => ({
-        userAction: {
-          name: 'selectPage',
-          surfaceId: 'commerce-search-surface',
-          sourceComponentId: 'pagination-1',
-          context: {page},
-        },
-      });
-
-      const actionStream = queueStream();
-      const action = session.dispatchAction(actionMessage(2));
-      await actionStream.opened;
-      expect(callMock).toHaveBeenCalledTimes(2);
-
-      const promptStream = queueStream();
-      const prompt = session.dispatchAction({
-        name: 'submitPrompt',
-        payload: {prompt: 'next question'},
-      });
-      await flush();
-      expect(callMock).toHaveBeenCalledTimes(2);
-      expect(session.turns).toHaveLength(1);
-
-      actionStream.emit({type: 'RUN_FINISHED'});
-      actionStream.close();
-      await action;
-      await promptStream.opened;
-      expect(callMock).toHaveBeenCalledTimes(3);
-      expect(session.turns.map((turn) => [turn.input.prompt, turn.status])).toEqual([
-        ['go', 'complete'],
-        ['next question', 'streaming'],
-      ]);
-
-      promptStream.emit({type: 'RUN_FINISHED'});
-      promptStream.close();
-      await prompt;
-    });
-
-    it('withholds an action that waited behind a prompt once its turn is no longer active', async () => {
-      const session = createSession(baseConfig);
-      const seed = queueStream();
-      const seedTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'go'}});
-      await seed.opened;
-      seed.emit(PAGINATION_SURFACE);
-      seed.emit({type: 'RUN_FINISHED'});
-      seed.close();
-      await seedTurn;
-
-      const promptStream = queueStream();
-      const prompt = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'next'}});
-      await promptStream.opened;
-      const action = session.dispatchAction(selectPageMessage(2));
-
-      promptStream.emit({type: 'RUN_FINISHED'});
-      promptStream.close();
-      await prompt;
-      await action;
-
-      expect(callMock).toHaveBeenCalledTimes(2);
-      expect(session.request).toBeUndefined();
-    });
-  });
-
   describe('request state', () => {
     async function seededSession() {
       const session = createSession(baseConfig);
@@ -1064,27 +874,6 @@ describe('createSession lifecycle', () => {
       expect(seen).toEqual([undefined]);
     });
 
-    it('never looks idle between two requests that follow each other', async () => {
-      const session = await seededSession();
-      const first = queueStream();
-      const second = queueStream();
-      const seen: unknown[] = [];
-      session.subscribe(() => seen.push(session.request?.kind ?? 'idle'));
-
-      const a = session.dispatchAction(selectPageMessage(2));
-      const b = session.dispatchAction(selectPageMessage(3));
-      await first.opened;
-      first.emit({type: 'RUN_FINISHED'});
-      first.close();
-      await a;
-      await second.opened;
-      second.emit({type: 'RUN_FINISHED'});
-      second.close();
-      await b;
-
-      expect(seen.indexOf('idle')).toBe(seen.length - 1);
-    });
-
     it('settles whenSettled() once the dispatch made after it is answered', async () => {
       const session = await seededSession();
       const stream = queueStream();
@@ -1114,45 +903,6 @@ describe('createSession lifecycle', () => {
       await expect(answered).resolves.toBeUndefined();
     });
 
-    it('keeps whenSettled() pending while its dispatch waits behind another request', async () => {
-      const session = await seededSession();
-      const first = queueStream();
-      const second = queueStream();
-      const firstAction = session.dispatchAction(selectPageMessage(2));
-      await first.opened;
-      let settled = false;
-
-      const answered = session.whenSettled().then(() => (settled = true));
-      const secondAction = session.dispatchAction(selectPageMessage(3));
-      first.emit({type: 'RUN_FINISHED'});
-      first.close();
-      await firstAction;
-      await second.opened;
-      expect(settled).toBe(false);
-
-      second.emit({type: 'RUN_FINISHED'});
-      second.close();
-      await secondAction;
-      await answered;
-      expect(settled).toBe(true);
-    });
-
-    it('withholds the dispatches waiting behind a cancelled request', async () => {
-      const session = await seededSession();
-      queueAbortableCall();
-      const inFlight = session.dispatchAction(selectPageMessage(2));
-      const waiting = session.dispatchAction(selectPageMessage(3));
-      await flush();
-
-      session.cancel();
-      await waiting;
-      await inFlight;
-
-      expect(callMock).toHaveBeenCalledTimes(2);
-      expect(session.request).toBeUndefined();
-      expect(session.turns[0].status).toBe('complete');
-    });
-
     it('does not send a request cancelled by a listener as it is published', async () => {
       const session = await seededSession();
       const unsubscribe = session.subscribe(() => {
@@ -1165,29 +915,6 @@ describe('createSession lifecycle', () => {
       unsubscribe();
 
       expect(callMock).toHaveBeenCalledTimes(1);
-      expect(session.request).toBeUndefined();
-    });
-
-    it('does not send the next request cancelled by a listener as it takes over', async () => {
-      const session = await seededSession();
-      const first = queueStream();
-      const firstAction = session.dispatchAction(selectPageMessage(2));
-      await first.opened;
-      const secondAction = session.dispatchAction(selectPageMessage(3));
-      const firstRequest = session.request;
-      const unsubscribe = session.subscribe(() => {
-        if (session.request && session.request !== firstRequest) {
-          session.cancel();
-        }
-      });
-
-      first.emit({type: 'RUN_FINISHED'});
-      first.close();
-      await firstAction;
-      await secondAction;
-      unsubscribe();
-
-      expect(callMock).toHaveBeenCalledTimes(2);
       expect(session.request).toBeUndefined();
     });
 
@@ -1321,31 +1048,6 @@ describe('createSession lifecycle', () => {
       expect(session.turns[0].error).toBeUndefined();
       expect(session.actionError).toBe(conflictError);
       expect(listener).toHaveBeenCalled();
-    });
-
-    it('keeps queued actions behind the rejected one, in order', async () => {
-      const session = await seedSession();
-      queueConflict();
-      const streamA = queueStream();
-      const streamB = queueStream();
-
-      const issuedA = session.dispatchAction(actionMessage(2));
-      const issuedB = session.dispatchAction(actionMessage(3));
-      await vi.advanceTimersByTimeAsync(250);
-      await streamA.opened;
-      expect(callMock).toHaveBeenCalledTimes(3);
-      expect(lastAction()).toMatchObject({context: {page: 2}});
-
-      streamA.emit({type: 'RUN_FINISHED'});
-      streamA.close();
-      await issuedA;
-      await streamB.opened;
-      expect(callMock).toHaveBeenCalledTimes(4);
-      expect(lastAction()).toMatchObject({context: {page: 3}});
-
-      streamB.emit({type: 'RUN_FINISHED'});
-      streamB.close();
-      await issuedB;
     });
 
     it('clears the action error once the next action is sent', async () => {

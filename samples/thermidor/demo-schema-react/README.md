@@ -174,7 +174,7 @@ TurnSurfaces (per exchange)
 
 Action dispatch (consumer → producer):
   context.dispatchAction → renderer onAction → AppShell (render id → server id)
-    → session request chain → validate payload (Zod) → HTTP POST (Action_Channel)
+    → one request at a time → validate payload (Zod) → HTTP POST (Action_Channel)
   ↓
   producer replies with /state/<id> updateDataModel ops (re-resolved into the renderer)
 ```

@@ -110,7 +110,7 @@ A placeholder the agent abandons is deleted the same way. The mock templates emi
 A catalog component sends an action with the renderer's `context.dispatchAction(action)`. The renderer surfaces it as an A2-UI client-to-server message through the `onAction` handler of `A2UIProvider`, which `AppShell` wires to its own `handleAction`:
 
 - While an exchange streams (a prompt or a follow-up in flight), the action is dropped. An action's response streams into the turn already shown, and the session does not count that run as streaming: a second action's response would land in the same turn and be attributed to the follow-up exchange in progress, which breaks how `splitTurn` divides the turn.
-- The session sends one request at a time, in dispatch order: a gesture dispatched while another request is in flight waits for it, and `session.request` is the request being sent.
+- The session sends one request at a time and withholds a dispatch made while another request is in flight; `session.request` is the request being sent. `useGesture` drops a gesture while a request is in flight, and a facet search that fires then waits until the session is free, sending the latest query.
 - The message is re-addressed to its server surface id (`toServerAction`).
 - `NextActionsBar` actions (`selectAction`, `selectSearchOption`) start a [follow-up exchange](#rendering-every-turn-on-one-page) before they are sent.
 

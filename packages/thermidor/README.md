@@ -42,7 +42,7 @@ await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me r
 | `whenSettled()`           | Resolves once a dispatch made after the call has ended and the session is idle, whatever the outcome.                   |
 | `subscribe(listener)`     | Registers a listener called once per change to the turn list, `actionError` or `request`.                               |
 | `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's `onAction`. |
-| `cancel()`                | Stops the active stream and withholds the dispatches waiting behind it.                                                 |
+| `cancel()`                | Stops the active stream.                                                                                                |
 | `retry(turnId)`           | Re-submits an errored turn's input.                                                                                     |
 | `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                                                         |
 
@@ -76,13 +76,10 @@ It is **fire-and-forget**: the returned Promise always resolves and never reject
 
 ### One request at a time
 
-Thermidor sends one request at a time per session, prompts and component actions alike; later ones wait their turn in dispatch order, so integrators never queue anything themselves. Each `dispatchAction` promise resolves once its own request ends.
+Thermidor sends one request at a time per session, prompts and component actions alike. A dispatch made while a request is in flight is withheld: nothing is sent, and its promise resolves at once with a dev-only warning. Each `dispatchAction` promise resolves once its own request ends.
 
-- `session.request` is the request being sent (`{kind: 'prompt', turnId}` or `{kind: 'action', name, surfaceId, sourceComponentId, turnId}`), or `undefined` when idle. An action's run counts, a follow-up included. Read it synchronously, or through `subscribe`, to lock or dim the interface; which requests lock is the integrator's call.
+- `session.request` is the request being sent (`{kind: 'prompt', turnId}` or `{kind: 'action', name, surfaceId, sourceComponentId, turnId}`), or `undefined` when idle. An action's run counts, a follow-up included. Read it synchronously, or through `subscribe`, to lock or dim the interface, and to hold back a dispatch until the session is free.
 - `session.whenSettled()` resolves once a dispatch made after the call has ended and the session is idle, whatever its outcome, a withheld one included.
-- An action that waited behind a prompt is dropped if its turn is no longer the active one by the time it would be sent.
-- `cancel()` withholds the dispatches waiting behind the stopped request.
-- Waiting requests are in memory only: reloading the page drops them.
 
 ### Optimistic values
 

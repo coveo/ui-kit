@@ -1,5 +1,6 @@
 import {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import type {CategoryFacetAction, RegularFacetAction} from '@coveo/thermidor-schema/zod3';
+import {useSessionBusy} from './session-request.js';
 
 /** Derived from the schema so the payload cannot drift from what it accepts. */
 export type FacetSearchAction = Extract<
@@ -26,6 +27,7 @@ export function useOptimisticFacetSearch(
 ): OptimisticFacetSearch {
   const [typed, setTyped] = useState(backendQuery);
   const lastBackend = useRef(backendQuery);
+  const isBusy = useSessionBusy();
 
   // Queries sent whose echo can still arrive, in send order.
   const sent = useRef<string[]>([]);
@@ -65,19 +67,29 @@ export function useOptimisticFacetSearch(
     latestDispatch.current(action);
   };
 
+  // The session withholds a request made while another is in flight, so the search waits.
+  const sendWhenFree = (action: FacetSearchAction, query: string) => {
+    if (isBusy()) {
+      debounce.current = setTimeout(() => sendWhenFree(action, query), SEARCH_DEBOUNCE_MS);
+      return;
+    }
+    debounce.current = undefined;
+    send(action, query);
+  };
+
   const onQueryChange = (next: string) => {
     setTyped(next);
     cancelDebounce();
-    debounce.current = setTimeout(() => {
-      debounce.current = undefined;
-      send({event: {name: 'search', context: {query: next}}}, next);
-    }, SEARCH_DEBOUNCE_MS);
+    debounce.current = setTimeout(
+      () => sendWhenFree({event: {name: 'search', context: {query: next}}}, next),
+      SEARCH_DEBOUNCE_MS
+    );
   };
 
   const reset = () => {
     setTyped('');
     cancelDebounce();
-    send({event: {name: 'clearSearch', context: {}}}, '');
+    sendWhenFree({event: {name: 'clearSearch', context: {}}}, '');
   };
 
   return {query: typed, onQueryChange, reset};

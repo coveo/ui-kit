@@ -6,9 +6,19 @@ import {
   SEARCH_DEBOUNCE_MS,
   useOptimisticFacetSearch,
 } from './use-optimistic-facet-search.js';
+import {SessionRequestProvider, type SessionRequestSource} from './session-request.js';
 
 function mount(initialBackend: string) {
   const dispatch = vi.fn<(action: FacetSearchAction) => void>();
+  // A session sending another request, until the test frees it.
+  const session: {busy: boolean} & SessionRequestSource = {
+    busy: false,
+    get request() {
+      return this.busy ? ({kind: 'prompt', turnId: 'turn'} as const) : undefined;
+    },
+    subscribe: () => () => {},
+    whenSettled: () => Promise.resolve(),
+  };
 
   let current!: ReturnType<typeof useOptimisticFacetSearch>;
   function Consumer({
@@ -22,7 +32,11 @@ function mount(initialBackend: string) {
     return null;
   }
 
-  const view = render(<Consumer query={initialBackend} />);
+  const view = render(<Consumer query={initialBackend} />, {
+    wrapper: ({children}) => (
+      <SessionRequestProvider value={session}>{children}</SessionRequestProvider>
+    ),
+  });
 
   return {
     dispatch,
@@ -37,6 +51,9 @@ function mount(initialBackend: string) {
     type: (next: string) => act(() => current.onQueryChange(next)),
     pause: () => act(() => vi.advanceTimersByTime(SEARCH_DEBOUNCE_MS)),
     reset: () => act(() => current.reset()),
+    setBusy: (busy: boolean) => {
+      session.busy = busy;
+    },
     /** A change of `facetSearch.query` from the producer: an echo or an external change. */
     push: (query: string) => act(() => view.rerender(<Consumer query={query} />)),
     /** A re-render with another dispatch, as when a reply rebuilds the surface. */
@@ -79,6 +96,22 @@ describe('useOptimisticFacetSearch', () => {
 
     expect(view.sent()).toEqual(['bl']);
     expect(rebuilt).toHaveBeenCalledWith({event: {name: 'search', context: {query: 'blue'}}});
+  });
+
+  it('holds a search back while the session is busy, then sends the latest query', () => {
+    const view = mount('');
+    view.setBusy(true);
+
+    view.type('ni');
+    view.pause();
+    view.type('nike');
+    view.pause();
+    view.pause();
+    expect(view.sent()).toEqual([]);
+
+    view.setBusy(false);
+    view.pause();
+    expect(view.sent()).toEqual(['nike']);
   });
 
   it('keeps the typed query when the search never reaches the producer', () => {
