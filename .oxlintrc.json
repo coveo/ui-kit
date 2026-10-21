@@ -60,6 +60,10 @@
               {
                 "name": "lit/directives/keyed.js",
                 "message": "Use keyed from '@/src/directives/keyed'. Lit's keyed() never disconnects the content it replaces, so a ref() inside it keeps every previous item in memory."
+              },
+              {
+                "name": "lit-html/directives/keyed.js",
+                "message": "Use keyed from '@/src/directives/keyed'. Lit's keyed() never disconnects the content it replaces, so a ref() inside it keeps every previous item in memory."
               }
             ]
           }
