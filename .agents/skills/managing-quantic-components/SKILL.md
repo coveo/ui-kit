@@ -150,16 +150,6 @@ Use `-o Quantic__LWS_disabled` to target the Locker org, and deploy to both befo
 8. Run targeted Quantic tests first, then broader checks only if needed.
 9. **Run the Definition of Done checklist below before marking the task complete.**
 
-
-
-3. Keep changes inside `packages/quantic/force-app/main/default/lwc` unless the request also needs examples, community pages, or tests.
-4. If the change needs E2E coverage, update or add the matching example-community component and route assets as needed. Then follow the `running-quantic-e2e-tests` skill to deploy and run it.
-5. **Before writing any CSS:** go through every style need and verify whether an SLDS utility class satisfies it. Only write custom CSS for styles that SLDS cannot achieve. When replicating a component from another library (e.g. Atomic), do not port its custom CSS directly — re-implement the layout and styling using SLDS classes.
-6. Update JSDoc and metadata consistently with the component's public surface.
-7. Run `pnpm run lint:fix` from `packages/quantic` before considering the work done.
-8. Run targeted Quantic tests first, then broader checks only if needed.
-9. **Run the Definition of Done checklist below before marking the task complete.**
-
 ---
 
 ## Definition of Done
