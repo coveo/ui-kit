@@ -36,7 +36,7 @@ export class XInternal extends LitElement {}
     );
 
     expect(findElement(manifest, 'x-internal')).toBeUndefined();
-    expect(findModule(manifest, 'src/x-internal.ts').exports).toEqual([]);
+    expect(findModule(manifest, 'src/x-internal.ts')).toBeUndefined();
   });
 
   it('should drop exports that are not custom elements', () => {
@@ -58,8 +58,7 @@ export * from './x-foo';
       'custom-element-definition:x-foo->XFoo',
       'js:XFoo->XFoo',
     ]);
-    expect(findModule(manifest, 'src/utils.ts').exports).toEqual([]);
-    expect(findModule(manifest, 'src/utils.ts').declarations).toEqual([]);
+    expect(findModule(manifest, 'src/utils.ts')).toBeUndefined();
   });
 
   it('should keep the members a custom element inherits from a mixin', () => {
@@ -103,8 +102,7 @@ export function closest(element: Node, selector: string) {
       plugins()
     );
 
-    expect(findModule(manifest, 'src/utils.ts').exports).toEqual([]);
-    expect(findModule(manifest, 'src/utils.ts').declarations).toEqual([]);
+    expect(findModule(manifest, 'src/utils.ts')).toBeUndefined();
   });
 
   it('should drop barrel re-exports instead of duplicating them', () => {
@@ -122,7 +120,7 @@ export * from './x-baz';
       plugins()
     );
 
-    expect(findModule(manifest, 'src/index.ts').exports).toEqual([]);
+    expect(findModule(manifest, 'src/index.ts')).toBeUndefined();
     expect(findElement(manifest, 'x-baz')).toBeDefined();
   });
 
@@ -137,6 +135,22 @@ export type {_Components as Components, _Components as JSX};
       plugins()
     );
 
-    expect(findModule(manifest, 'src/index.ts').exports).toEqual([]);
+    expect(findModule(manifest, 'src/index.ts')).toBeUndefined();
+  });
+
+  it('should drop a declaration that an object literal default names', () => {
+    const manifest = analyze(
+      {
+        'src/x-foo.ts': `${litElement('x-foo', 'XFoo', '')}
+const id = 'x-foo';
+export const options = {id};
+`,
+      },
+      plugins()
+    );
+
+    expect(findModule(manifest, 'src/x-foo.ts').declarations.map(({name}) => name)).toEqual([
+      'XFoo',
+    ]);
   });
 });
