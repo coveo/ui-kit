@@ -1,28 +1,29 @@
-const moduleLinkPhase = ({moduleDoc}) => {
-  moduleDoc.exports = cleanExports(moduleDoc.exports);
-};
-
-function cleanExports(exports) {
-  const finalExports = [];
-  const exportCandidates = {};
-  for (const exportCandidate of exports) {
-    const exportName = exportCandidate.declaration.name;
-    if (!exportCandidates[exportName]) {
-      // First time we see this export, we add it to the final exports candidate map.
-      exportCandidates[exportName] = [];
-    } else if (exportCandidates[exportName] !== finalExports[exportName]) {
-      // Second time we see this export, we merge all the candidates into the final exports, and make the candidate map point to the final exports for this export name.
-      finalExports.push(...exportCandidates[exportName]);
-      exportCandidates[exportName] = finalExports;
-    }
-    // Add the export candidate to the candidate map, regardless of what array it points to.
-    exportCandidates[exportName].push(exportCandidate);
-  }
-  return finalExports;
+/**
+ * Keeps only the exports of the public custom elements: the class export and the definition of each.
+ *
+ * The analyzer lists every export of every module, but the consumers of the manifest (Storybook, the
+ * Angular and React wrapper generators) only need the custom elements. Utilities, mixins, barrel
+ * re-exports and `@internal` elements, which only have a definition export, lose their exports, so the
+ * analyzer leaves out their declarations.
+ */
+export function keepCustomElementsPlugin() {
+  return {
+    name: 'keep-custom-elements',
+    moduleLinkPhase({moduleDoc}) {
+      const definedElements = new Set(
+        moduleDoc.exports
+          .filter((entry) => entry.kind === 'custom-element-definition')
+          .map((entry) => entry.declaration.name)
+      );
+      const exportedClasses = new Set(
+        moduleDoc.exports
+          .filter((entry) => entry.kind === 'js')
+          .map((entry) => entry.declaration.name)
+      );
+      moduleDoc.exports = moduleDoc.exports.filter(
+        (entry) =>
+          definedElements.has(entry.declaration.name) && exportedClasses.has(entry.declaration.name)
+      );
+    },
+  };
 }
-
-export const keepCustomElementsPlugin = () => ({
-  name: 'keep-custom-elements',
-  // Runs for each module, after analyzing, all information about your module should now be available
-  moduleLinkPhase,
-});
