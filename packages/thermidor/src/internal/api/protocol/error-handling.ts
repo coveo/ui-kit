@@ -54,6 +54,9 @@ function transformHttpError(status: number, statusText: string): string {
     case 404:
       return 'Not found: The requested resource does not exist. Please verify your organization ID.';
 
+    case 409:
+      return 'Conflict: The request conflicts with the current session state.';
+
     case 429:
       return 'Rate limit exceeded: Too many requests. Please wait a moment and try again.';
 
@@ -76,4 +79,38 @@ function transformHttpError(status: number, statusText: string): string {
  */
 export function isSuccessResponse(response: Response): boolean {
   return response.ok && response.status >= 200 && response.status < 300;
+}
+
+export interface ActionInFlightConflict {
+  inFlightSequence?: number;
+}
+
+// Never throws: a 409 with another `errorCode`, or an unreadable body, is not a conflict.
+export async function readActionInFlightConflict(
+  response: Response
+): Promise<ActionInFlightConflict | undefined> {
+  if (response.status !== 409) {
+    return undefined;
+  }
+
+  let body: unknown;
+  try {
+    body = JSON.parse(await response.text());
+  } catch {
+    return undefined;
+  }
+  if (typeof body !== 'object' || body === null) {
+    return undefined;
+  }
+
+  const {errorCode, inFlightSequence} = body as Record<string, unknown>;
+  if (errorCode !== 'AGENT:ACTION_IN_FLIGHT') {
+    return undefined;
+  }
+
+  const conflict: ActionInFlightConflict = {};
+  if (typeof inFlightSequence === 'number' && Number.isFinite(inFlightSequence)) {
+    conflict.inFlightSequence = inFlightSequence;
+  }
+  return conflict;
 }

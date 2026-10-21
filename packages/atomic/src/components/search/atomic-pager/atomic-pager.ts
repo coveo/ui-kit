@@ -19,6 +19,7 @@ import {
   renderPagerPreviousButton,
 } from '@/src/components/common/pager/pager-buttons';
 import {renderPagerNavigation} from '@/src/components/common/pager/pager-navigation';
+import {PagerFitController} from '@/src/components/common/pager/pager-fit-controller';
 import {getCurrentPagesRange} from '@/src/components/common/pager/pager-utils';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
@@ -106,6 +107,7 @@ export class AtomicPager
   nextButtonIcon: string = ArrowRightIcon;
 
   protected ariaMessage = new AriaLiveRegionController(this, 'atomic-pager');
+  private pagerFit = new PagerFitController(this);
 
   private previousButton!: FocusTargetController;
   private nextButton!: FocusTargetController;
@@ -138,7 +140,7 @@ export class AtomicPager
   render() {
     const pagesRange = getCurrentPagesRange(
       this.pagerState.currentPage - 1,
-      this.numberOfPages,
+      this.pagerFit.getNumberOfPagesToDisplay(this.numberOfPages),
       this.pagerState.maxPage - 1
     );
 

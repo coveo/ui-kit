@@ -19,8 +19,8 @@ import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
  *
  * The request never leaves the process: the endpoint client is mocked (as in
  * `create-session.test.ts`) so `call`'s first argument — the built request —
- * can be captured and inspected. A `submit({prompt})` drives one turn, and a
- * `RUN_FINISHED` frame closes the stream so the submit promise settles.
+ * can be captured and inspected. A `submitPrompt` action drives one turn, and a
+ * `RUN_FINISHED` frame closes the stream so the dispatch promise settles.
  */
 
 const callMock =
@@ -80,8 +80,8 @@ function sseFrame(activity: Record<string, unknown>): Uint8Array {
 
 /**
  * Queues a single-frame stream as the next `call` result: it emits a
- * `RUN_FINISHED` terminal event and closes, so the submitted turn completes and
- * the submit promise resolves without a real network.
+ * `RUN_FINISHED` terminal event and closes, so the prompt's turn completes and
+ * the dispatch promise resolves without a real network.
  */
 function queueCompletingStream(): void {
   callMock.mockImplementationOnce(async () => ({
@@ -118,13 +118,13 @@ interface CapturedRequest {
 }
 
 /**
- * Drives one `submit` through a mocked stream and returns the request object
+ * Drives one `submitPrompt` action through a mocked stream and returns the request object
  * the session passed to the endpoint client's `call`.
  */
 async function captureSubmitRequest(config: SessionConfig): Promise<CapturedRequest> {
   queueCompletingStream();
   const session = createSession(config);
-  await session.submit({prompt: 'find shoes'});
+  await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
   expect(callMock).toHaveBeenCalledTimes(1);
   return callMock.mock.calls[0][0] as CapturedRequest;
 }

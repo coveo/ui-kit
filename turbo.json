@@ -62,7 +62,6 @@
         "!**/packages/create-atomic-result-component/template/**",
         "!**/.deployment.config/**",
         "!**/packages/atomic/**/*.d.ts",
-        "!**/packages/atomic/stencil-proxy/**",
         "!**/packages/documentation/**/assets/**",
         "!**/packages/headless/**/coveo.analytics/**"
       ],
@@ -85,7 +84,6 @@
         "!**/.deployment.config/**/*",
         "!**/packages/atomic-legacy/**/*.tsx",
         "!**/packages/atomic/**/*.d.ts",
-        "!**/packages/atomic/stencil-proxy/**/*",
         "!**/packages/documentation/**/assets/**/*",
         "!**/packages/headless/**/coveo.analytics/**/*",
         "!**/samples/headless/rga-angular/**/*.html",
@@ -128,7 +126,6 @@
         "!**/packages/create-atomic-result-component/template/**",
         "!**/.deployment.config/**",
         "!**/packages/atomic/**/*.d.ts",
-        "!**/packages/atomic/stencil-proxy/**",
         "!**/packages/documentation/**/assets/**",
         "!**/packages/headless/**/coveo.analytics/**"
       ]
@@ -151,7 +148,6 @@
         "!**/.deployment.config/**/*",
         "!**/packages/atomic-legacy/**/*.tsx",
         "!**/packages/atomic/**/*.d.ts",
-        "!**/packages/atomic/stencil-proxy/**/*",
         "!**/packages/documentation/**/assets/**/*",
         "!**/packages/headless/**/coveo.analytics/**/*",
         "!**/samples/headless/rga-angular/**/*.html",
@@ -183,7 +179,6 @@
       "outputs": [
         "dist/**",
         "cdn/**",
-        "docs/**",
         "temp/**",
         "coverage/**",
         ".next/**",
@@ -194,6 +189,11 @@
     "build:typedoc": {
       "dependsOn": ["^build"],
       "outputs": ["docs/**", "!docs/adr/**"]
+    },
+    "size": {
+      "dependsOn": ["build"],
+      "inputs": [".size-limit.json", "package.json", "$TURBO_ROOT$/scripts/size-limit.mjs"],
+      "outputs": ["size-limit-report.json"]
     },
     "publint": {
       "dependsOn": ["build"],

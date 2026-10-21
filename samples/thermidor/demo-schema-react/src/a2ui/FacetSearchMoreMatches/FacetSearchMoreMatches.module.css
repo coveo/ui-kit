@@ -1,0 +1,31 @@
+.button {
+  align-self: flex-start;
+  max-width: 100%;
+  overflow: hidden;
+  padding: var(--space-1) 0;
+  border: none;
+  border-radius: var(--radius-md);
+  background: none;
+  color: var(--color-text-link);
+  font-size: var(--font-size-sm);
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.button:hover {
+  background: var(--color-surface-hover);
+}
+
+.button:focus-visible {
+  background: var(--color-surface-hover);
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.query {
+  font-weight: 700;
+  font-style: italic;
+}

@@ -24,7 +24,7 @@ You’ll need it when creating your Headless interface.
 
 ## Headless code sample
 
-The code example below is a sample [SAML page built with Headless](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/pages/SamlPage.tsx) and [React](https://react.dev/).
+The code example below is a sample [SAML page built with Headless](https://github.com/coveo/ui-kit/blob/c08f574e3fc43932b8401773a8348107a871eb1d/samples/headless/search-react/src/pages/SamlPage.tsx) and [React](https://react.dev/).
 
 ```tsx
 import {buildSamlClient, SamlClient, SamlClientOptions} from '@coveo/auth';

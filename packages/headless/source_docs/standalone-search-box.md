@@ -16,7 +16,7 @@ This article walks you through the implementation of such a search experience.
 
 If you’ve already worked with [Coveo Headless controllers](./index.html#use-headless-controllers), this step should already be familiar to you.
 You need to create a search engine, instantiate a standalone search box controller and connect it to the search box DOM element.
-A React example implementation is available [here](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/standalone-search-box/standalone-search-box.fn.tsx).
+A React example implementation is available [here](https://github.com/coveo/ui-kit/blob/c08f574e3fc43932b8401773a8348107a871eb1d/samples/headless/search-react/src/components/standalone-search-box/standalone-search-box.fn.tsx).
 
 ## Communicate between the two pages
 

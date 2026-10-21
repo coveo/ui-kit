@@ -27,6 +27,10 @@
       "outputs": ["./dist-storybook/**"],
       "env": ["STORYBOOK_INVOKED_BY"]
     },
+    "build:storybook:e2e": {
+      "dependsOn": ["^build", "pre:storybook"],
+      "outputs": ["./dist-storybook-e2e/**"]
+    },
     "chromatic": {
       "cache": false,
       "dependsOn": [],
@@ -124,7 +128,7 @@
       "persistent": true
     },
     "e2e": {
-      "dependsOn": ["build"],
+      "dependsOn": ["build", "build:storybook:e2e"],
       "inputs": ["$TURBO_DEFAULT$"],
       "outputs": ["playwright-report/**", "blob-report/**", "test-results/**"]
     },

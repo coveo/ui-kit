@@ -14,7 +14,6 @@ log.txt
 *.sublime-project
 *.sublime-workspace
 
-.stencil/
 .idea/
 .vscode/*
 !.vscode/settings.json
@@ -42,6 +41,7 @@ src/utils/custom-element-tags.ts
 /playwright/.cache/
 
 dist-storybook/
+dist-storybook-e2e/
 dist-chromatic/
 
 .storybook/static/

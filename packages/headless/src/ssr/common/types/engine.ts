@@ -56,8 +56,8 @@ export interface EngineDefinition<
   /**
    * @deprecated This method will be removed in a future major version. It mutates the shared engine
    * definition, so on a server handling concurrent requests one request can overwrite another
-   * request's navigator context. Provide the navigator context directly when fetching the static
-   * state (`fetchStaticState({navigatorContext})`) so it applies to that request only.
+   * request's navigator context. Pass a per-request `navigatorContext` to `fetchStaticState()` and
+   * `hydrateStaticState()` instead, or a `navigatorContextProvider` to `defineSearchEngine()`.
    *
    * Sets the navigator context provider.
    * This provider is essential for retrieving navigation-related data such as referrer, userAgent, location, and clientId, which are crucial for handling both server-side and client-side API requests effectively.
@@ -78,11 +78,18 @@ export interface EngineDefinition<
   >;
 
   /**
+   * @deprecated This method will be removed in the next major version. Use the access token from
+   * your engine configuration instead.
+   *
    * Returns the access token.
    */
   getAccessToken: () => string;
 
   /**
+   * @deprecated This method will be removed in the next major version. To renew an expiring token,
+   * configure `renewAccessToken`; to change the token of an engine you already have, dispatch
+   * `loadConfigurationActions(engine).updateBasicConfiguration({accessToken})` on it.
+   *
    * Updates the access token.
    * @param accessToken - The access token to update.
    */

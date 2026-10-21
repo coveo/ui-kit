@@ -173,6 +173,7 @@ export class AtomicCommerceCategoryFacet
     this.validateFacet();
     this.facet &&
       announceFacetSearchResultsWithAriaLive(
+        this,
         this.facet,
         this.displayName,
         (msg) => {

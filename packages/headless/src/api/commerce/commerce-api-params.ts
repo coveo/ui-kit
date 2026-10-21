@@ -99,7 +99,7 @@ export interface FacetIdParam {
 }
 
 export interface IgnorePathsParam {
-  ignorePaths: string[][];
+  ignorePaths: string[];
 }
 
 export interface SlotIdParam {

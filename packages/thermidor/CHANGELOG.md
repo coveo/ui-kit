@@ -1,5 +1,27 @@
 # @coveo/thermidor
 
+## 0.5.0
+
+### Minor Changes
+
+- [#8677](https://github.com/coveo/ui-kit/pull/8677) [`9376531`](https://github.com/coveo/ui-kit/commit/93765319deeee8fd6db2ece35ebc9f9e11a0fa17) - **Breaking:** `response.surfaces` now follows the A2-UI surface lifecycle: a surface the agent deletes (`deleteSurface`) leaves the list, one it re-creates moves to the end, and a `createSurface` without a `catalogId` is ignored, as the renderer projection already drops it. During development, a surface without a catalog or created again while it still exists logs a warning.
+
+  `DiscoveredSurface` has a new `isLoading` field, `true` while the surface's data model declares `isLoading: true`, so a consumer can draw a loading placeholder for its `rootComponentType` from `response.surfaces` alone.
+
+  In `response.a2uiMessages`, a plain inline `createSurface.dataModel` key is now projected as an `updateDataModel` at its root JSON Pointer (`isLoading` → `/isLoading`), and a `deleteSurface` for a surface the turn already created and deleted is dropped. A `replace` snapshot no longer carries forward the earlier data-model writes and components of a surface it creates or deletes.
+
+## 0.4.0
+
+### Minor Changes
+
+- [#8550](https://github.com/coveo/ui-kit/pull/8550) [`dd504cb`](https://github.com/coveo/ui-kit/commit/dd504cb2eabb6f2124982599f6cc301833cdf016) - Add a framework-agnostic optimistic dispatch core so a consumer can reflect a user's intention on screen before the producer answers. New public exports: a dispatch coordinator that sees every dispatch and publishes a single in-flight fact, a dispatch tracker that counts outstanding dispatches per region, an optimistic-value controller that holds a gesture's intended value until its producer catches up, and a per-region stale-scope. The session now exposes an `actions` surface for issuing these dispatches, including a `withholdQueued` that drops the still-waiting gestures (each settled `withheld`) when a prompt turn opens, since the prompt rebuilds the state those gestures were writing. A submitted prompt now PREEMPTS instead of being ignored: it opens its turn immediately, dropping the queued gestures (`withholdQueued`) and cancelling the one in flight (`cancelInFlight`, settled `cancelled`) so its superseded response never touches the surface — a prompt is a new intention that outranks the gestures it makes moot.
+
+- [#8581](https://github.com/coveo/ui-kit/pull/8581) [`94b1cb4`](https://github.com/coveo/ui-kit/commit/94b1cb479df253289701d9168b05f3ab991bbb60) - **Breaking:** `Session.submit({prompt})` is removed. Use `session.dispatchAction({name: 'submitPrompt', payload: {prompt}})` instead.
+
+### Patch Changes
+
+- [#8604](https://github.com/coveo/ui-kit/pull/8604) [`90c45e6`](https://github.com/coveo/ui-kit/commit/90c45e69f2c9ad3dc9d848a74216e62eeb02e4c8) - A context provider that throws while a request is built now fails the turn instead of leaving the session stuck on a `streaming` turn that ignores every later prompt and action.
+
 ## 0.3.0
 
 ### Minor Changes
