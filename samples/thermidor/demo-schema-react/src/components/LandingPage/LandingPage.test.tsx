@@ -1,45 +1,31 @@
-import {render, screen, fireEvent} from '@testing-library/react';
+import {screen, fireEvent} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
 import {LandingPage} from './LandingPage.js';
+import {answerLookups, createTestSession, renderWithSession} from '../../test/session.js';
 
-describe('LandingPage suggestions integration', () => {
-  it('passes 2 suggestion sections to PromptInput', () => {
-    render(<LandingPage onSubmit={vi.fn()} isStreaming={false} />);
+describe('LandingPage query suggestions', () => {
+  it('shows no completions before the shopper types', () => {
+    renderWithSession(<LandingPage onSubmit={vi.fn()} isStreaming={false} />);
 
-    const textarea = screen.getByLabelText('Prompt');
-    fireEvent.focus(textarea);
+    fireEvent.focus(screen.getByLabelText('Prompt'));
 
-    const listbox = screen.getByRole('listbox');
-    const groups = listbox.querySelectorAll('[role="group"]');
-
-    expect(groups).toHaveLength(2);
+    expect(screen.queryByRole('listbox')).toBeNull();
   });
 
-  it('calls onSubmit with the item label when a search suggestion is selected', () => {
+  it('opens the completions for what the shopper types below the input, and submits a selected one', async () => {
     const onSubmit = vi.fn();
-    render(<LandingPage onSubmit={onSubmit} isStreaming={false} />);
+    renderWithSession(
+      <LandingPage onSubmit={onSubmit} isStreaming={false} />,
+      createTestSession(answerLookups).session
+    );
 
     const textarea = screen.getByLabelText('Prompt');
-    fireEvent.focus(textarea);
+    textarea.focus();
+    fireEvent.change(textarea, {target: {value: 'surf'}});
+    const option = await screen.findByRole('option', {name: /surf boards/});
 
-    const surfboardsOption = screen.getByRole('option', {name: /Surfboards/});
-    fireEvent.mouseDown(surfboardsOption);
-
-    expect(onSubmit).toHaveBeenCalledWith('Surfboards');
-  });
-
-  it('calls onSubmit with the item label when a conversational suggestion is selected', () => {
-    const onSubmit = vi.fn();
-    render(<LandingPage onSubmit={onSubmit} isStreaming={false} />);
-
-    const textarea = screen.getByLabelText('Prompt');
-    fireEvent.focus(textarea);
-
-    const conversationalOption = screen.getByRole('option', {
-      name: /Build a beginner surfing kit/,
-    });
-    fireEvent.mouseDown(conversationalOption);
-
-    expect(onSubmit).toHaveBeenCalledWith('Build a beginner surfing kit');
+    expect(screen.getByRole('listbox').className).not.toMatch(/above/);
+    fireEvent.mouseDown(option);
+    expect(onSubmit).toHaveBeenCalledWith('surf boards');
   });
 });

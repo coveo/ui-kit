@@ -1,4 +1,4 @@
-import type {SuggestionSection, SuggestionItem} from './types.js';
+import type {SuggestionSection, SuggestionItem, SuggestionsPlacement} from './types.js';
 import {SuggestionSectionGroup} from './SuggestionSectionGroup.js';
 import styles from './SuggestionsDropdown.module.css';
 
@@ -9,6 +9,8 @@ interface SuggestionsDropdownProps {
   onSelect: (item: SuggestionItem, sectionId: string) => void;
   visible: boolean;
   activeIndex?: number;
+  /** Where the dropdown opens, relative to its input. Defaults to below. */
+  placement?: SuggestionsPlacement;
 }
 
 export function SuggestionsDropdown({
@@ -16,6 +18,7 @@ export function SuggestionsDropdown({
   onSelect,
   visible,
   activeIndex,
+  placement = 'below',
 }: SuggestionsDropdownProps) {
   if (!visible || sections.length === 0) {
     return null;
@@ -35,7 +38,7 @@ export function SuggestionsDropdown({
       id={SUGGESTIONS_LISTBOX_ID}
       role="listbox"
       aria-label="Query suggestions"
-      className={styles.dropdown}
+      className={`${styles.dropdown} ${placement === 'above' ? styles.above : ''}`}
     >
       <div className={styles.dropdownHeader}>
         <span className={styles.dropdownHeaderTitle}>Query suggestions</span>

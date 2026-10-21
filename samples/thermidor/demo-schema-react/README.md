@@ -78,8 +78,8 @@ The app is a single page managed by `AppShell`:
 
 ```
 AppShell (A2-UI provider + the session's renderer stream)
-├── LandingPage        — Prompt input with suggestion pills, until the first prompt
-└── ConversationPage   — One feed of every turn, search and conversation alike, with the prompt pinned below
+├── LandingPage        — Search box with suggestion pills, until the first prompt
+└── ConversationPage   — One feed of every turn, search and conversation alike, with the search box pinned below
 ```
 
 Every turn shows the blocks the server produced for it, in order: the agent's text and display surfaces, and the gateway's search blocks. A search, a facet selection and a question to the agent all stay on the same page.
@@ -107,7 +107,7 @@ ConversationPage
 │                   ├── ProductResearchCard (dumb: reads resolved product, summary, bullets + related documents from props)
 │                   ├── NextActionsBar (dumb: reads resolved action items; sends a follow-up action)
 │                   └── CommerceSearch (a gateway search block, see below)
-└── PromptInput (pinned below the feed)
+└── SearchBox (pinned below the feed, see below)
 ```
 
 **ConversationThread** iterates over turns and delegates rendering to the appropriate block based on turn status. The key path is through **AgentResponseBlock**, which orchestrates the streaming experience: first showing a thinking indicator, then streaming text, then the turn's blocks: a skeleton in place of each surface whose data model declares `isLoading` while the exchange streams, and finally the resolved A2-UI catalog components once component state arrives via `/state/<id>` `updateDataModel` operations resolved into the renderer's data model.
@@ -136,9 +136,19 @@ commerce-search (root)
 
 Each mounted node is a dumb catalog component (`CommerceSearch`, `LayoutStack`, `FacetManager`, the facets, `Breadbox`, `QuerySummary`, `Sort`, `ProductList`, `Pagination`, `PageSize`) that reads its resolved component state from `props` (the renderer resolves the node's `{ "path": ... }` bindings against its A2-UI data model). Container components mount their children by name following the standard A2-UI composition convention: `CommerceSearch` mounts `buildChild(props.sidebarChild)` and `buildChild(props.mainChild)`; `LayoutStack` and `FacetManager` mount their ordered `children` list in declared order. There is no positional read of the child list. Absent components render as empty slots without error.
 
-There is no `search-box` on this surface: the query input is the prompt pinned below the feed, so the composition starts at the `query-summary` row.
+There is no `search-box` on this surface: the query input is the search box pinned below the feed, so the composition starts at the `query-summary` row.
 
 These controls dispatch component actions: an interaction (sort, page, page size, facet selection or search, breadbox) surfaces through the renderer's `onAction` handler and is sent through the session, one request at a time. The session recovers the dispatching component from the active turn's surfaces, validates the action payload against the component's Zod action schema, and POSTs it over the HTTP Action_Channel; the producer replies with `/state/<id>` `updateDataModel` operations. Each control shows the shopper's choice optimistically until the reply lands, and the results dim meanwhile. In-progress facet-search input is held in local React state and is never written to the shared A2-UI data model.
+
+### Search box (query suggestions)
+
+Both pages draw a `SearchBox`: an instance of the contract's well-known `search-box` surface template, whose `QuerySuggestions` root is drawn as the whole search box, the input and its completions popover. The page creates the instance itself, so the search box is there in the first paint, before any request:
+
+- `useWellKnownSurface(SearchBoxSurface)` creates the instance with `session.createWellKnownSurface` in a layout effect, under a surface id derived from `useId`, and disposes of it on unmount.
+- Each `SearchBox` has an `A2UIProvider` of its own, fed only its instance's messages, each one once. The conversation's renderer stream is cleared and replayed on every change, which would remount the input and lose its focus and caret.
+- Each keystroke dispatches the `fetchSuggestions` lookup, except for an empty input. The session sends it at once, beside any prompt or gesture, and a newer one supersedes it; the producer answers with the completions at `/state/root`.
+- Completions show only while the input holds a query that has not been submitted. Selecting one submits it as a prompt, through the `onSubmit` the page passes to the `SearchBox`.
+- The input stays usable while an answer streams: only submitting waits.
 
 ### Key modules
 
@@ -149,6 +159,9 @@ These controls dispatch component actions: an interaction (sort, page, page size
 | `src/a2ui/surface-stream.ts`                             | Builds the session's renderer stream from every turn's `response.a2uiMessages`, places each surface under the turn that created it, marks loading placeholders, and maps renderer actions back to server surface ids                                                                                                                                             |
 | `src/a2ui/surfaces.tsx`                                  | `ThermidorA2UIStream` feeds the stream to the renderer; `TurnSurfaces` draws one exchange's surfaces, or a skeleton for a loading one (thermidor owns the v1.0 → v0.9 downgrade)                                                                                                                                                                                 |
 | `src/a2ui/components.tsx`                                | `createThermidorCatalog()`: registers every catalog component (conversational: ProductCarousel, BundleDisplay, ComparisonTable, ProductResearchCard, ProductSummary, NextActionsBar; decomposed commerce: CommerceSearch, LayoutStack, FacetManager, RegularFacet, NumericFacet, CategoryFacet, Breadbox, QuerySummary, Sort, ProductList, Pagination, PageSize) |
+| `src/components/SearchBox/`                              | Draws an instance of the well-known `search-box` surface with a renderer of its own, and passes the page's submit to it                                                                                                                                                                                                                                          |
+| `src/hooks/use-well-known-surface.ts`                    | Creates an instance of a well-known surface template for as long as its component is mounted, and feeds its messages to the enclosing renderer                                                                                                                                                                                                                   |
+| `src/a2ui/QuerySuggestions/`                             | `QuerySuggestions`, drawn as the search box: dispatches `fetchSuggestions` as the shopper types and shows the completions                                                                                                                                                                                                                                        |
 | `src/a2ui/CommerceSearch/`                               | `commerce-search` root — composes the sidebar and main columns and mounts them by id via `buildChild(id)`                                                                                                                                                                                                                                                        |
 | `src/a2ui/LayoutStack/`                                  | Generic layout container — stacks its declared children in a column or row (direction is a presentation node prop); reused for the sidebar, main, and top/bottom rows                                                                                                                                                                                            |
 | `src/a2ui/session-request.tsx`                           | Reads the session's request in flight: the surface lock rule (every request but a facet search) and `useGesture`, which runs a gesture's optimistic update in a transition that lasts until the session has answered it                                                                                                                                          |

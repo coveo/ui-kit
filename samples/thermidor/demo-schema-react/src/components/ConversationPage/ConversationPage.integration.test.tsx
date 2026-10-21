@@ -1,8 +1,9 @@
-import {render, screen} from '@testing-library/react';
+import {screen} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
 import type {Turn} from '@coveo/thermidor';
 import {ConversationPage} from './ConversationPage.js';
 import {makeTurn} from '../../test/turn-fixtures.js';
+import {renderWithSession} from '../../test/session.js';
 
 // The blocks are drawn by the A2-UI renderer; the page only decides where each turn's blocks go
 // and whether they are interactive.
@@ -25,7 +26,7 @@ function renderPage(overrides: Partial<Parameters<typeof ConversationPage>[0]> =
 
   return {
     props: {...defaultProps, ...overrides},
-    ...render(<ConversationPage {...defaultProps} {...overrides} />),
+    ...renderWithSession(<ConversationPage {...defaultProps} {...overrides} />),
   };
 }
 
@@ -221,7 +222,7 @@ describe('ConversationPage integration', () => {
   });
 
   describe('streaming state', () => {
-    it('disables prompt input and shows thinking dots when streaming with no response yet', () => {
+    it('keeps the prompt input usable and shows thinking dots when streaming with no response yet', () => {
       const turns: Turn[] = [
         makeTurn({id: 'turn-1', prompt: 'Tell me about shoes', status: 'streaming'}),
       ];
@@ -229,7 +230,8 @@ describe('ConversationPage integration', () => {
       renderPage({turns, isStreaming: true});
 
       const textarea = screen.getByLabelText('Prompt') as HTMLTextAreaElement;
-      expect(textarea.disabled).toBe(true);
+      expect(textarea.disabled).toBe(false);
+      expect((screen.getByLabelText('Submit') as HTMLButtonElement).disabled).toBe(true);
 
       expect(screen.getByText(/Working/)).toBeDefined();
     });

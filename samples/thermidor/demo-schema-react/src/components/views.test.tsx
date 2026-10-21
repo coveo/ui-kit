@@ -1,18 +1,19 @@
-import {render, screen, fireEvent} from '@testing-library/react';
+import {screen, fireEvent} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
 import {LandingPage} from './LandingPage/LandingPage.js';
 import {ConversationPage} from './ConversationPage/index.js';
 import {makeTurn} from '../test/turn-fixtures.js';
+import {renderWithSession} from '../test/session.js';
 
 describe('LandingPage', () => {
   it('renders the heading', () => {
-    render(<LandingPage onSubmit={vi.fn()} isStreaming={false} />);
+    renderWithSession(<LandingPage onSubmit={vi.fn()} isStreaming={false} />);
     expect(screen.getByRole('heading', {name: 'What can I help you find?'})).toBeDefined();
   });
 
   it('calls onSubmit with the textarea value when Enter is pressed', () => {
     const onSubmit = vi.fn();
-    render(<LandingPage onSubmit={onSubmit} isStreaming={false} />);
+    renderWithSession(<LandingPage onSubmit={onSubmit} isStreaming={false} />);
 
     const textarea = screen.getByLabelText('Prompt');
     fireEvent.change(textarea, {target: {value: 'hello world'}});
@@ -23,20 +24,20 @@ describe('LandingPage', () => {
 
   it('submits when a suggestion pill is clicked', () => {
     const onSubmit = vi.fn();
-    render(<LandingPage onSubmit={onSubmit} isStreaming={false} />);
+    renderWithSession(<LandingPage onSubmit={onSubmit} isStreaming={false} />);
 
     fireEvent.click(screen.getByRole('button', {name: 'kayaks'}));
 
     expect(onSubmit).toHaveBeenCalledWith('kayaks');
   });
 
-  it('disables the textarea when isStreaming is true', () => {
-    render(<LandingPage onSubmit={vi.fn()} isStreaming={true} />);
-    expect((screen.getByLabelText('Prompt') as HTMLTextAreaElement).disabled).toBe(true);
+  it('keeps the textarea usable when isStreaming is true', () => {
+    renderWithSession(<LandingPage onSubmit={vi.fn()} isStreaming={true} />);
+    expect((screen.getByLabelText('Prompt') as HTMLTextAreaElement).disabled).toBe(false);
   });
 
   it('disables suggestion pills when isStreaming is true', () => {
-    render(<LandingPage onSubmit={vi.fn()} isStreaming={true} />);
+    renderWithSession(<LandingPage onSubmit={vi.fn()} isStreaming={true} />);
     const pills = screen.getAllByRole('button');
     for (const pill of pills) {
       expect((pill as HTMLButtonElement).disabled).toBe(true);
@@ -48,7 +49,7 @@ describe('ConversationPage', () => {
   const baseTurn = makeTurn({id: 'turn-1', prompt: 'tell me about shoes'});
 
   it('renders the PromptInput', () => {
-    render(
+    renderWithSession(
       <ConversationPage
         onSubmit={vi.fn()}
         isStreaming={false}
@@ -61,7 +62,7 @@ describe('ConversationPage', () => {
 
   it('calls onSubmit with the input value when Enter is pressed', () => {
     const onSubmit = vi.fn();
-    render(
+    renderWithSession(
       <ConversationPage
         onSubmit={onSubmit}
         isStreaming={false}
@@ -77,8 +78,8 @@ describe('ConversationPage', () => {
     expect(onSubmit).toHaveBeenCalledWith('follow up');
   });
 
-  it('disables the input when isStreaming is true', () => {
-    render(
+  it('keeps the input usable when isStreaming is true', () => {
+    renderWithSession(
       <ConversationPage
         onSubmit={vi.fn()}
         isStreaming={true}
@@ -86,6 +87,6 @@ describe('ConversationPage', () => {
         surfacesByTurn={new Map()}
       />
     );
-    expect((screen.getByLabelText('Prompt') as HTMLTextAreaElement).disabled).toBe(true);
+    expect((screen.getByLabelText('Prompt') as HTMLTextAreaElement).disabled).toBe(false);
   });
 });
