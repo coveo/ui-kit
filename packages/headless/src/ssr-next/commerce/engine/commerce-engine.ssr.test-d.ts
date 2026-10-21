@@ -15,24 +15,29 @@ const controllers = {
   productList: defineProductList(),
   searchBox: defineSearchBox(),
   popularViewed: defineRecommendations({options: {slotId: 'slot-viewed'}}),
+  popularBought: defineRecommendations({options: {slotId: 'slot-bought'}}),
 };
 
 // Types the customer relies on for IntelliSense: everything below is inferred from the controllers
 // of the definition, with no annotation on the customer's side.
-const {
-  listingEngineDefinition,
-  searchEngineDefinition,
-  standaloneEngineDefinition,
-  recommendationEngineDefinition,
-} = defineCommerceEngine({
-  configuration: getSampleCommerceEngineConfiguration(),
-  controllers,
-});
+const {listingEngineDefinition, searchEngineDefinition, standaloneEngineDefinition, ...rest} =
+  defineCommerceEngine({
+    configuration: getSampleCommerceEngineConfiguration(),
+    controllers,
+  });
 
 type ListingStaticState = InferStaticState<typeof listingEngineDefinition>;
 type ListingHydratedState = InferHydratedState<typeof listingEngineDefinition>;
+type StandaloneHydratedState = InferHydratedState<typeof standaloneEngineDefinition>;
+type ListingFetchOptions = Parameters<typeof listingEngineDefinition.fetchStaticState>[0];
+type SearchFetchOptions = Parameters<typeof searchEngineDefinition.fetchStaticState>[0];
+type StandaloneFetchOptions = Parameters<typeof standaloneEngineDefinition.fetchStaticState>[0];
 
 describe('defineCommerceEngine', () => {
+  it('should return exactly three engine definitions', () => {
+    expectTypeOf(rest).toEqualTypeOf<{}>();
+  });
+
   it('should hydrate each definition with the static state it fetched, as is', () => {
     expectTypeOf<
       Parameters<typeof listingEngineDefinition.hydrateStaticState>[0]
@@ -43,9 +48,6 @@ describe('defineCommerceEngine', () => {
     expectTypeOf<
       Parameters<typeof standaloneEngineDefinition.hydrateStaticState>[0]
     >().toEqualTypeOf<InferStaticState<typeof standaloneEngineDefinition>>();
-    expectTypeOf<
-      Parameters<typeof recommendationEngineDefinition.hydrateStaticState>[0]
-    >().toEqualTypeOf<InferStaticState<typeof recommendationEngineDefinition>>();
   });
 
   it('should take the navigator context per request, not on the definition', () => {
@@ -78,22 +80,51 @@ describe('defineCommerceEngine', () => {
     expectTypeOf<ListingContext['view']>().toEqualTypeOf<{url: string} | undefined>();
   });
 
+  it('should type the recommendations option as the names of the defined slots', () => {
+    type SlotNames = Array<'popularViewed' | 'popularBought'> | undefined;
+    expectTypeOf<ListingFetchOptions['recommendations']>().toEqualTypeOf<SlotNames>();
+    expectTypeOf<SearchFetchOptions['recommendations']>().toEqualTypeOf<SlotNames>();
+    expectTypeOf<StandaloneFetchOptions['recommendations']>().toEqualTypeOf<SlotNames>();
+  });
+
+  it('should accept the product ID on every engine definition', () => {
+    expectTypeOf<ListingFetchOptions['productId']>().toEqualTypeOf<string | undefined>();
+    expectTypeOf<SearchFetchOptions['productId']>().toEqualTypeOf<string | undefined>();
+    expectTypeOf<StandaloneFetchOptions['productId']>().toEqualTypeOf<string | undefined>();
+  });
+
   it('should list the controllers of each kind of page in its static state', () => {
     expectTypeOf<ListingStaticState['controllers']>().toHaveProperty('productList');
     expectTypeOf<ListingStaticState['controllers']>().toHaveProperty('cart');
     expectTypeOf<ListingStaticState['controllers']>().toHaveProperty('context');
     expectTypeOf<ListingStaticState['controllers']>().toHaveProperty('parameterManager');
     expectTypeOf<ListingStaticState['controllers']>().not.toHaveProperty('searchBox');
-    expectTypeOf<ListingStaticState['controllers']>().not.toHaveProperty('popularViewed');
     expectTypeOf<InferStaticState<typeof searchEngineDefinition>['controllers']>().toHaveProperty(
       'searchBox'
     );
     expectTypeOf<
       InferStaticState<typeof standaloneEngineDefinition>['controllers']
-    >().not.toHaveProperty('parameterManager');
+    >().not.toHaveProperty('productList');
     expectTypeOf<
-      InferStaticState<typeof recommendationEngineDefinition>['controllers']
+      InferStaticState<typeof standaloneEngineDefinition>['controllers']
+    >().not.toHaveProperty('parameterManager');
+  });
+
+  it('should list the recommendation slots in the static state of every engine definition', () => {
+    expectTypeOf<ListingStaticState['controllers']>().toHaveProperty('popularViewed');
+    expectTypeOf<InferStaticState<typeof searchEngineDefinition>['controllers']>().toHaveProperty(
+      'popularBought'
+    );
+    expectTypeOf<
+      InferStaticState<typeof standaloneEngineDefinition>['controllers']
     >().toHaveProperty('popularViewed');
+  });
+
+  it('should carry the requested slots and the product ID in the static state', () => {
+    expectTypeOf<ListingStaticState['recommendations']>().toEqualTypeOf<
+      Array<'popularViewed' | 'popularBought'> | undefined
+    >();
+    expectTypeOf<ListingStaticState['productId']>().toEqualTypeOf<string | undefined>();
   });
 
   it('should type the controllers of the static state as state snapshots', () => {
@@ -105,12 +136,11 @@ describe('defineCommerceEngine', () => {
 
   it('should hydrate the controllers of the page as live controllers', () => {
     expectTypeOf<ListingHydratedState['controllers']['productList']>().toHaveProperty('subscribe');
+    expectTypeOf<ListingHydratedState['controllers']['popularViewed']>().toHaveProperty('refresh');
     expectTypeOf<ListingHydratedState['controllers']['parameterManager']>().toHaveProperty(
       'synchronize'
     );
-    expectTypeOf<
-      InferHydratedState<typeof standaloneEngineDefinition>['controllers']
-    >().not.toHaveProperty('parameterManager');
+    expectTypeOf<StandaloneHydratedState['controllers']>().not.toHaveProperty('parameterManager');
   });
 });
 
@@ -125,18 +155,18 @@ describe('the static and hydrated states of a commerce engine definition', () =>
   });
 
   it('should name exactly the controllers built for each kind of page', () => {
+    type RecommendationSlots = 'popularViewed' | 'popularBought';
     expectTypeOf<keyof ListingHydratedState['controllers']>().toEqualTypeOf<
-      'productList' | 'parameterManager' | 'context' | 'cart'
+      'productList' | RecommendationSlots | 'parameterManager' | 'context' | 'cart'
     >();
     expectTypeOf<
       keyof InferHydratedState<typeof searchEngineDefinition>['controllers']
-    >().toEqualTypeOf<'productList' | 'searchBox' | 'parameterManager' | 'context' | 'cart'>();
-    expectTypeOf<
-      keyof InferHydratedState<typeof standaloneEngineDefinition>['controllers']
-    >().toEqualTypeOf<'context' | 'cart'>();
-    expectTypeOf<
-      keyof InferHydratedState<typeof recommendationEngineDefinition>['controllers']
-    >().toEqualTypeOf<'popularViewed' | 'context' | 'cart'>();
+    >().toEqualTypeOf<
+      'productList' | 'searchBox' | RecommendationSlots | 'parameterManager' | 'context' | 'cart'
+    >();
+    expectTypeOf<keyof StandaloneHydratedState['controllers']>().toEqualTypeOf<
+      RecommendationSlots | 'context' | 'cart'
+    >();
     expectTypeOf<keyof ListingStaticState['controllers']>().toEqualTypeOf<
       keyof ListingHydratedState['controllers']
     >();
@@ -159,17 +189,12 @@ describe('EngineDefinition', () => {
     return definition.fetchStaticState(options).then(definition.hydrateStaticState);
   }
 
-  type ListingFetchOptions = Parameters<typeof listingEngineDefinition.fetchStaticState>[0];
-
   it('should describe every commerce engine definition', () => {
     expectTypeOf(listingEngineDefinition).toExtend<
       EngineDefinition<ListingStaticState, ListingHydratedState, ListingFetchOptions>
     >();
-    expectTypeOf(recommendationEngineDefinition).toExtend<
-      EngineDefinition<
-        InferStaticState<typeof recommendationEngineDefinition>,
-        InferHydratedState<typeof recommendationEngineDefinition>
-      >
+    expectTypeOf(standaloneEngineDefinition).toExtend<
+      EngineDefinition<InferStaticState<typeof standaloneEngineDefinition>, StandaloneHydratedState>
     >();
   });
 

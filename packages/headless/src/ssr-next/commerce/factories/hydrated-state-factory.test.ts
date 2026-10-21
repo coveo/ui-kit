@@ -70,7 +70,10 @@ describe('hydratedStaticStateFactory', () => {
     const pendingRequest = new Promise<{type: string}>((resolve) => {
       completeRequest = resolve;
     });
-    engine.waitForRequestCompletedAction.mockReturnValue([pendingRequest]);
+    engine.waitForRequestCompletedAction.mockReturnValue([
+      Promise.resolve({type: 'commerce/recommendations/fetch/fulfilled'}),
+      pendingRequest,
+    ]);
 
     let settled = false;
     const hydration = hydratedStaticStateFactory(

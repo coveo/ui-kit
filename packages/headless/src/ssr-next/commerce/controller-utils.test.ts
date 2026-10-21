@@ -87,7 +87,6 @@ describe('commerce controller-utils', () => {
           listing: true,
           search: true,
           standalone: true,
-          recommendation: true,
         },
         mockEngine,
         undefined
@@ -103,7 +102,6 @@ describe('commerce controller-utils', () => {
           listing: true,
           search: true,
           standalone: true,
-          recommendation: true,
         },
         mockEngine,
         {
@@ -122,11 +120,9 @@ describe('commerce controller-utils', () => {
       beforeEach(() => {
         controller1 = defineMockCommerceController({
           search: true,
-          recommendation: false,
         });
         controller2 = defineMockCommerceController({
           search: false,
-          recommendation: false,
         });
       });
 

@@ -59,15 +59,17 @@ export interface CommerceEngineDefinition<
   FetchStaticStateOptions<TControllers, TSolutionType>
 > {
   /**
-   * Executes a commerce search/listing/recommendation request on the server side and returns the static state.
+   * Executes the commerce request of the page (listing or search) and the requested recommendation
+   * slots on the server side, and returns the static state.
    *
-   * This method performs the initial commerce request based on the solution type, captures the response,
+   * This method performs the initial commerce requests based on the solution type, captures the responses,
    * and returns a serializable state snapshot that can be transferred to the client for hydration.
    *
    * The returned static state includes controller states (facets, products, pagination, etc.)
    *
    * @param params - A configuration object containing navigation context, search parameters,
-   *                 cart state, and controller-specific props
+   *                 cart state, the recommendation slots to request, the product being viewed and
+   *                 controller-specific props
    * @returns A Promise that resolves to the static state containing controller states
    *
    * @example
@@ -79,11 +81,11 @@ export interface CommerceEngineDefinition<
    *   searchParams: { q: 'running shoes' }
    * });
    *
-   * // For recommendations
-   * const staticState = await recommendationEngineDefinition.fetchStaticState({
+   * // For a product page with a seeded recommendation slot
+   * const staticState = await standaloneEngineDefinition.fetchStaticState({
    *   navigatorContext: { ... },
    *   context: { ... },
-   *   recommendations: ['popularProducts'],
+   *   recommendations: ['viewedTogether'],
    *   productId: 'abc123'
    * });
    * ```
@@ -133,7 +135,7 @@ type FetchStaticStateFunction<
   TSolutionType extends SolutionType,
 > = Definition<TControllerDefinitions, TSolutionType>['fetchStaticState'];
 
-export type HydrateStaticStateFunction<
+type HydrateStaticStateFunction<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
   TSolutionType extends SolutionType,
 > = Definition<TControllerDefinitions, TSolutionType>['hydrateStaticState'];
