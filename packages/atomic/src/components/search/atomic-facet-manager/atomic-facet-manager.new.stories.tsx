@@ -60,10 +60,6 @@ const facetResponses = {
   },
 } satisfies Record<string, SearchResponse['facets'][number]>;
 
-/**
- * The Search API returns the facets in the order decided by the Dynamic Navigation Experience (DNE),
- * which is the order the facet manager applies to its children.
- */
 const mockFacetsInOrder = (...fields: (keyof typeof facetResponses)[]) =>
   searchApiHarness.searchEndpoint.mockOnce((response) => ({
     ...response,
