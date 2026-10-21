@@ -25,6 +25,12 @@ function controlAt(target: EventTarget): HTMLElement | null {
   return control instanceof HTMLElement ? control : null;
 }
 
+/**
+ * The control the shopper last used, on any surface. The page has one focus, so it is shared by
+ * every exchange, and only the exchange that holds it gives it back.
+ */
+let lastUsedControl: HTMLElement | null = null;
+
 const NO_LOADING_SURFACES: ReadonlyMap<string, string> = new Map();
 
 /** The `loadingSurfaces` of the enclosing {@link ThermidorA2UIStream}. */
@@ -109,14 +115,19 @@ export function TurnSurfaces({
   const locked = useSurfaceLocked() && interactive;
   // The exchange that streams is disabled without dimming, so its content arrives at full strength.
   const dimmed = locked && !isStreaming;
-  const lastFocusedRef = useRef<HTMLElement | null>(null);
+  const fieldsetRef = useRef<HTMLFieldSetElement>(null);
 
   // Disabling the fieldset drops focus to the body, so the control the shopper used gets it back.
   useEffect(() => {
-    const lastFocused = lastFocusedRef.current;
-    if (!locked && lastFocused?.isConnected && document.activeElement === document.body) {
+    const control = lastUsedControl;
+    if (
+      !locked &&
+      control &&
+      fieldsetRef.current?.contains(control) &&
+      document.activeElement === document.body
+    ) {
       // Without `preventScroll`, the page would jump back to a follow-up chip once its answer ends.
-      lastFocused.focus({preventScroll: true});
+      control.focus({preventScroll: true});
     }
   }, [locked]);
 
@@ -143,6 +154,7 @@ export function TurnSurfaces({
     // Kept a fieldset in both states: swapping elements would remount the surfaces and drop their
     // local state when the turn stops being the active one.
     <fieldset
+      ref={fieldsetRef}
       className={[styles.surfaces, !interactive && styles.readOnly, dimmed && styles.locked]
         .filter(Boolean)
         .join(' ')}
@@ -150,11 +162,11 @@ export function TurnSurfaces({
       // Only set while locked: any global ARIA attribute makes browsers ignore `role="none"`.
       aria-busy={locked || undefined}
       onFocus={(event) => {
-        lastFocusedRef.current = event.target;
+        lastUsedControl = event.target;
       }}
       // Safari does not focus a button or a checkbox on click, so the press records the control.
       onPointerDown={(event) => {
-        lastFocusedRef.current = controlAt(event.target) ?? lastFocusedRef.current;
+        lastUsedControl = controlAt(event.target) ?? lastUsedControl;
       }}
       role={interactive ? 'none' : undefined}
     >

@@ -17,22 +17,27 @@ const CATALOG = createThermidorCatalog();
 const SURFACE_ID = 'turn-surface';
 const NOTE = 'Earlier results. Ask a follow-up or search again to refine.';
 
-const MESSAGES = [
-  {version: 'v0.9', createSurface: {surfaceId: SURFACE_ID, catalogId: THERMIDOR_CATALOG_ID}},
-  {
-    version: 'v0.9',
-    updateComponents: {
-      surfaceId: SURFACE_ID,
-      components: [
-        {id: ROOT_COMPONENT_ID, component: 'PageSize', pageSize: {path: '/state/root/pageSize'}},
-      ],
+/** A surface holding a page size select. */
+function surfaceMessages(surfaceId: string) {
+  return [
+    {version: 'v0.9', createSurface: {surfaceId, catalogId: THERMIDOR_CATALOG_ID}},
+    {
+      version: 'v0.9',
+      updateComponents: {
+        surfaceId,
+        components: [
+          {id: ROOT_COMPONENT_ID, component: 'PageSize', pageSize: {path: '/state/root/pageSize'}},
+        ],
+      },
     },
-  },
-  {
-    version: 'v0.9',
-    updateDataModel: {surfaceId: SURFACE_ID, path: '/state/root/pageSize', value: 24},
-  },
-] as unknown as A2uiV09Message[];
+    {
+      version: 'v0.9',
+      updateDataModel: {surfaceId, path: '/state/root/pageSize', value: 24},
+    },
+  ] as unknown as A2uiV09Message[];
+}
+
+const MESSAGES = surfaceMessages(SURFACE_ID);
 
 /** A session whose request in flight locks the surface, or that is idle. */
 function lockedSource(locked: boolean) {
@@ -205,6 +210,36 @@ describe('TurnSurfaces while a request is in flight', () => {
 
     expect(document.activeElement).toBe(elsewhere);
     elsewhere.remove();
+  });
+
+  it('gives focus back to the control used last when two exchanges are interactive', async () => {
+    const FOLLOW_UP_ID = 'follow-up-surface';
+    const messages = [...MESSAGES, ...surfaceMessages(FOLLOW_UP_ID)];
+    function Exchanges({locked}: {locked: boolean}) {
+      return (
+        <SessionRequestProvider value={lockedSource(locked)}>
+          <A2UIProvider catalog={CATALOG} onAction={() => {}}>
+            <ThermidorA2UIStream messages={messages} loadingSurfaces={new Map()} />
+            <TurnSurfaces surfaceIds={[SURFACE_ID]} interactive isStreaming={false} />
+            <TurnSurfaces surfaceIds={[FOLLOW_UP_ID]} interactive isStreaming={false} />
+          </A2UIProvider>
+        </SessionRequestProvider>
+      );
+    }
+    const {rerender} = render(<Exchanges locked={false} />);
+    await waitFor(() => expect(screen.getAllByLabelText('Products per page:')).toHaveLength(2));
+    const [first, second] = screen.getAllByLabelText('Products per page:') as HTMLSelectElement[];
+
+    first.focus();
+    first.blur();
+    rerender(<Exchanges locked />);
+    rerender(<Exchanges locked={false} />);
+    second.focus();
+    second.blur();
+    rerender(<Exchanges locked />);
+    rerender(<Exchanges locked={false} />);
+
+    expect(document.activeElement).toBe(second);
   });
 });
 
