@@ -49,6 +49,22 @@
       "rules": {
         "no-restricted-imports": "off"
       }
+    },
+    {
+      "files": ["**/packages/atomic/src/**/*.ts"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "lit/directives/keyed.js",
+                "message": "Use keyed from '@/src/directives/keyed'. Lit's keyed() never disconnects the content it replaces, so a ref() inside it keeps every previous item in memory."
+              }
+            ]
+          }
+        ]
+      }
     }
   ]
 }
