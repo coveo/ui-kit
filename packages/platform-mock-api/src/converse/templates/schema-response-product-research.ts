@@ -6,6 +6,8 @@ import {
   buildValidatedSurface,
   statePath,
   type A2uiComponentNode,
+  deleteSurfaceMessage,
+  loadingSurfaceMessage,
 } from './shared.js';
 import {
   ActivitySnapshot,
@@ -20,16 +22,18 @@ const runId = 'schema-research-7f3a91c2';
 const RESEARCH_SURFACE_ID = 'product-research-surface';
 const RESEARCH_ROOT_ID = RENDERER_ROOT_ID;
 const NEXT_ACTIONS_SURFACE_ID = 'next-actions-surface';
+const PLACEHOLDER_RESEARCH_SURFACE_ID = `placeholder-${runId}-product-research`;
+const PLACEHOLDER_NEXT_ACTIONS_SURFACE_ID = `placeholder-${runId}-next-actions`;
 const NEXT_ACTIONS_ROOT_ID = RENDERER_ROOT_ID;
 
 // The research surface is a single read-only leaf node: the product-research-card owns its product,
-// research summary, and product-education bullets as Component_State, bound to `{ path }` objects at
-// `/state/root/<field>`.
+// research summary, product-education bullets and related documents as Component_State, bound to
+// `{ path }` objects at `/state/root/<field>`.
 const RESEARCH_SURFACE_NODES: A2uiComponentNode[] = [
   {
     id: RESEARCH_ROOT_ID,
     component: 'ProductResearchCard',
-    ...bindStateFields(RESEARCH_ROOT_ID, ['product', 'summary', 'bullets']),
+    ...bindStateFields(RESEARCH_ROOT_ID, ['product', 'summary', 'bullets', 'relatedDocuments']),
   },
 ];
 
@@ -39,6 +43,7 @@ const researchSurfaceActivity: ConverseEvent = ActivitySnapshot({
   replace: true,
   content: {
     messages: [
+      deleteSurfaceMessage(PLACEHOLDER_RESEARCH_SURFACE_ID),
       {
         version: 'v1.0',
         createSurface: buildValidatedSurface({
@@ -57,6 +62,7 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
   replace: true,
   content: {
     messages: [
+      deleteSurfaceMessage(PLACEHOLDER_NEXT_ACTIONS_SURFACE_ID),
       {
         version: 'v1.0',
         createSurface: {
@@ -79,7 +85,8 @@ const THERMOFLEX_IMAGE =
   'https://cdn.shopify.com/s/files/1/0910/6502/4786/files/8c6d80ac5b9b_bottom_left_852e0a5c-9b08-43bd-a6e5-67ec90d5d6f2.webp?v=1766164226';
 
 // Conforms to the thermidor-schema ProductResearchCardState: a schema `Product`, a non-empty
-// summary, and a non-empty list of non-empty bullets.
+// summary, a non-empty list of non-empty bullets, and the product's related documents. The agent
+// sends each document with all four fields, in ranking order; clients choose how many to show.
 const productResearchCardState = {
   product: {
     permanentid: 'gid://shopify/ProductVariant/50674633900306',
@@ -110,6 +117,44 @@ const productResearchCardState = {
     'The sealed back zip and glued, blindstitched seams keep flushing to a minimum.',
     'It is stiffer than 4/3mm and 5/4mm suits, so expect a short break-in period.',
     'Covered by a 3-year warranty against seam and zip defects.',
+  ],
+  relatedDocuments: [
+    {
+      title: 'ThermoFlex Winter Wetsuit Owner Manual',
+      clickUri: 'https://barca-sports.myshopify.com/cdn/shop/files/thermoflex-owner-manual.pdf',
+      filetype: 'pdf',
+      size: 2480000,
+    },
+    {
+      title: 'ThermoFlex Sizing Guide',
+      clickUri: 'https://barca-sports.myshopify.com/cdn/shop/files/thermoflex-sizing-guide.pdf',
+      filetype: 'pdf',
+      size: 812300,
+    },
+    {
+      title: 'Wetsuit Care and Storage',
+      clickUri: 'https://barca-sports.myshopify.com/pages/wetsuit-care',
+      filetype: 'html',
+      size: 18400,
+    },
+    {
+      title: 'ThermoFlex Warranty Terms',
+      clickUri: 'https://barca-sports.myshopify.com/cdn/shop/files/thermoflex-warranty.pdf',
+      filetype: 'pdf',
+      size: 156900,
+    },
+    {
+      title: 'Cold-Water Surfing Safety Checklist',
+      clickUri: 'https://barca-sports.myshopify.com/pages/cold-water-safety',
+      filetype: 'html',
+      size: 9700,
+    },
+    {
+      title: 'ThermoFlex Seam Repair Instructions',
+      clickUri: 'https://barca-sports.myshopify.com/cdn/shop/files/thermoflex-seam-repair.pdf',
+      filetype: 'pdf',
+      size: 333200,
+    },
   ],
 };
 
@@ -143,6 +188,24 @@ const nextActionsStateActivity: ConverseEvent = UpdateDataModelActivity({
   ],
 });
 
+const researchPlaceholderActivity: ConverseEvent = ActivitySnapshot({
+  messageId: 'activity-product-research-card',
+  activityType: 'a2ui-surface',
+  replace: true,
+  content: {
+    messages: [loadingSurfaceMessage(PLACEHOLDER_RESEARCH_SURFACE_ID, 'ProductResearchCard')],
+  },
+});
+
+const nextActionsPlaceholderActivity: ConverseEvent = ActivitySnapshot({
+  messageId: 'activity-next-actions',
+  activityType: 'a2ui-surface',
+  replace: true,
+  content: {
+    messages: [loadingSurfaceMessage(PLACEHOLDER_NEXT_ACTIONS_SURFACE_ID, 'NextActionsBar')],
+  },
+});
+
 const middleEvents: ConverseEvent[] = [
   ...toolCall({
     toolCallId: 'tc-route-research',
@@ -152,6 +215,7 @@ const middleEvents: ConverseEvent[] = [
     resultMessageId: 'tc-route-research-result',
     resultContent: '"Routed to single-product research flow."',
   }),
+  {...researchPlaceholderActivity, delayMs: 300},
   ...toolCall({
     toolCallId: 'tc-store-render-plan',
     toolCallName: 'store_render_plan',
@@ -166,6 +230,7 @@ const middleEvents: ConverseEvent[] = [
   ),
   {...researchSurfaceActivity, delayMs: 2500},
   {...researchStateActivity, delayMs: 50},
+  {...nextActionsPlaceholderActivity, delayMs: 100},
   {...nextActionsSurfaceActivity, delayMs: 800},
   {...nextActionsStateActivity, delayMs: 50},
 ];

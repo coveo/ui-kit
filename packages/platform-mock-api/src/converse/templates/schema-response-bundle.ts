@@ -6,6 +6,8 @@ import {
   buildValidatedSurface,
   statePath,
   type A2uiComponentNode,
+  deleteSurfaceMessage,
+  loadingSurfaceMessage,
 } from './shared.js';
 import {
   ActivitySnapshot,
@@ -22,6 +24,8 @@ const BUNDLE_SURFACE_ID = 'bundle-surface';
 // Each surface mounts its root as the A2-UI canonical `root` node (id: "root").
 const BUNDLE_ROOT_ID = RENDERER_ROOT_ID;
 const NEXT_ACTIONS_SURFACE_ID = 'next-actions-surface';
+const PLACEHOLDER_BUNDLE_SURFACE_ID = `placeholder-${runId}-bundle`;
+const PLACEHOLDER_NEXT_ACTIONS_SURFACE_ID = `placeholder-${runId}-next-actions`;
 const NEXT_ACTIONS_ROOT_ID = RENDERER_ROOT_ID;
 
 // One product-summary node per (tier, slot) pair, in slot-enumeration order (tier order,
@@ -76,6 +80,7 @@ const bundleSurfaceActivity: ConverseEvent = ActivitySnapshot({
   replace: true,
   content: {
     messages: [
+      deleteSurfaceMessage(PLACEHOLDER_BUNDLE_SURFACE_ID),
       {
         version: 'v1.0',
         createSurface: buildValidatedBundleSurface(BUNDLE_SURFACE_NODES),
@@ -90,6 +95,7 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
   replace: true,
   content: {
     messages: [
+      deleteSurfaceMessage(PLACEHOLDER_NEXT_ACTIONS_SURFACE_ID),
       {
         version: 'v1.0',
         createSurface: {
@@ -384,6 +390,22 @@ const nextActionsStateActivity: ConverseEvent = UpdateDataModelActivity({
   ],
 });
 
+const bundlePlaceholderActivity: ConverseEvent = ActivitySnapshot({
+  messageId: 'activity-bundle-display',
+  activityType: 'a2ui-surface',
+  replace: true,
+  content: {messages: [loadingSurfaceMessage(PLACEHOLDER_BUNDLE_SURFACE_ID, 'BundleDisplay')]},
+});
+
+const nextActionsPlaceholderActivity: ConverseEvent = ActivitySnapshot({
+  messageId: 'activity-next-actions',
+  activityType: 'a2ui-surface',
+  replace: true,
+  content: {
+    messages: [loadingSurfaceMessage(PLACEHOLDER_NEXT_ACTIONS_SURFACE_ID, 'NextActionsBar')],
+  },
+});
+
 const middleEvents: ConverseEvent[] = [
   ...toolCall({
     toolCallId: 'tc-route-bundle',
@@ -393,6 +415,7 @@ const middleEvents: ConverseEvent[] = [
     resultMessageId: 'tc-route-bundle-result',
     resultContent: '"Routed to bundle flow."',
   }),
+  {...bundlePlaceholderActivity, delayMs: 300},
   ...toolCall({
     toolCallId: 'tc-store-render-plan',
     toolCallName: 'store_render_plan',
@@ -407,6 +430,7 @@ const middleEvents: ConverseEvent[] = [
   ),
   {...bundleSurfaceActivity, delayMs: 2500},
   {...bundleStateActivity, delayMs: 50},
+  {...nextActionsPlaceholderActivity, delayMs: 100},
   {...nextActionsSurfaceActivity, delayMs: 800},
   {...nextActionsStateActivity, delayMs: 50},
 ];

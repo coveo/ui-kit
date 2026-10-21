@@ -41,7 +41,7 @@ vi.mock('@copilotkit/a2ui-renderer', async (importOriginal) => ({
 }));
 
 vi.mock('../a2ui/surfaces.js', () => ({
-  ThermidorA2UIStream: () => null,
+  ThermidorA2UIStream: ({children}: {children?: React.ReactNode}) => <>{children}</>,
 }));
 
 vi.mock('./LandingPage/LandingPage.js', () => ({
