@@ -13,13 +13,11 @@ related:
 
 # Well-known surfaces and lookup actions
 
-> Part of the unified-endpoint session-client family (core:
-> [ADR-010](./ADR-010-unified-endpoint-session-client.md)), governed by the charter
-> [ADR-009](./ADR-009-architecture-decision-charter-v2.md). This ADR **amends**
-> [ADR-014](./ADR-014-consumer-supplied-endpoint-and-schema.md) (the injected contract),
-> [ADR-015](./ADR-015-surface-and-route-derivation.md) (surfaces derived from turns) and
-> [ADR-016](./ADR-016-inline-state-consumption-remove-remote-controller.md) (dispatch from the
-> active turn).
+This ADR amends [ADR-014](./ADR-014-consumer-supplied-endpoint-and-schema.md) (the session takes
+one contract bundle), [ADR-015](./ADR-015-surface-and-route-derivation.md) (well-known surfaces
+do not come from turns) and
+[ADR-016](./ADR-016-inline-state-consumption-remove-remote-controller.md) (lookups are dispatched
+without an active turn).
 
 ## Context and Problem Statement
 
