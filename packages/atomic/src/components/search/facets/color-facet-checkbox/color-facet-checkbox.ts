@@ -1,7 +1,7 @@
 import {html} from 'lit';
-import {keyed} from '@/src/directives/keyed';
 import {ref} from 'lit/directives/ref.js';
 import type {FacetValuePropsBase} from '@/src/components/common/facets/facet-common';
+import {keyed} from '@/src/directives/keyed';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {createRipple} from '@/src/utils/ripple-utils';
 import {randomID} from '@/src/utils/utils';

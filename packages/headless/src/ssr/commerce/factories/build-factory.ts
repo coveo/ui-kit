@@ -188,7 +188,7 @@ export const buildFactory =
     // without setNavigatorContextProvider) is supported and must not log a false "missing" warning.
     if (!options.navigatorContextProvider && perRequestNavigatorContext === undefined) {
       logger.warn(
-        '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
+        '[WARNING] Missing navigator context in server-side code. Pass a per-request `navigatorContext` to fetchStaticState() and hydrateStaticState().'
       );
     }
 

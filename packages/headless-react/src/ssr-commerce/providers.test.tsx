@@ -35,6 +35,34 @@ describe('buildProviderWithDefinition', () => {
     >;
   });
 
+  describe('per-request navigator context', () => {
+    it('should forward the navigator context to hydrateStaticState', async () => {
+      const Provider = buildProviderWithDefinition(definition);
+
+      render(
+        <Provider staticState={staticState} navigatorContext={navigatorContext}>
+          <div />
+        </Provider>
+      );
+      await waitForAsyncUpdates();
+
+      expect(hydrateArgs()).toEqual(expect.objectContaining({navigatorContext}));
+    });
+
+    it('should not set the navigator context provider on the shared definition', async () => {
+      const Provider = buildProviderWithDefinition(definition);
+
+      render(
+        <Provider staticState={staticState} navigatorContext={navigatorContext}>
+          <div />
+        </Provider>
+      );
+      await waitForAsyncUpdates();
+
+      expect(definition.setNavigatorContextProvider).not.toHaveBeenCalled();
+    });
+  });
+
   describe('per-request access token', () => {
     it('should forward the access token to hydrateStaticState when provided', async () => {
       const Provider = buildProviderWithDefinition(definition);

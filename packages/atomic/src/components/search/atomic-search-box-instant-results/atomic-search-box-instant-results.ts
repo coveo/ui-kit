@@ -7,7 +7,6 @@ import {
 } from '@coveo/headless';
 import {html, LitElement, nothing, render} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {keyed} from '@/src/directives/keyed';
 import type {ItemRenderingFunction} from '@/src/components/common/item-list/item-list-common';
 import {ResultTemplateProvider} from '@/src/components/common/item-list/result-template-provider';
 import type {
@@ -29,6 +28,7 @@ import type {
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
+import {keyed} from '@/src/directives/keyed';
 import {encodeForDomAttribute} from '@/src/utils/string-utils';
 
 type AriaLabelGenerator = (bindings: Bindings, result: Result) => string | undefined;

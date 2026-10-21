@@ -21,7 +21,7 @@ import {ComponentContractsSchema} from '@coveo/thermidor-schema';
 const session = createSession({
   organizationId: 'my-org',
   accessToken: 'xx-token',
-  contracts: ComponentContractsSchema, // injected Zod v4 discriminated union
+  contracts: ComponentContractsSchema, // injected Zod discriminated union (Zod 3 or 4)
   navigatorContextProvider: () => getNavigatorContext(),
   commerceContextProvider: () => ({cart: getCart()}),
 });
@@ -59,14 +59,14 @@ A prompt typed outside A2-UI composition, such as in the integrator's search box
 session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me running shoes'}});
 ```
 
-It opens a new streaming turn, records the prompt as the turn's `input.prompt`, and POSTs it to the converse endpoint. It needs no rendered component or active turn, so it also opens the first turn of a session. It is ignored while a turn is streaming, and `retry(turnId)` re-drives a turn it opened.
+It opens a new streaming turn, records the prompt as the turn's `input.prompt`, and POSTs it to the converse endpoint. It needs no rendered component or active turn, so it also opens the first turn of a session. Sent while a stream is in flight, it cancels that stream first (see [The action queue](#the-action-queue)), and `retry(turnId)` re-drives a turn it opened.
 
 ### Component actions
 
 A component action is the standard A2-UI client-to-server message (`A2uiClientMessage`) that the frozen renderer hands to its `onAction` handler, so it wires with no adapter:
 
 ```typescript
-<A2UIRenderer onAction={session.dispatchAction} /* … */ />
+<A2UIProvider catalog={catalog} onAction={session.dispatchAction}>{/* … */}</A2UIProvider>
 ```
 
 Given a message, `dispatchAction` unwraps its `userAction`, recovers the dispatching component's discriminant from the active turn's surfaces, validates the action payload against the component's injected contract internally, and — on success — POSTs the action to the converse endpoint.
@@ -102,35 +102,43 @@ interface Turn {
 }
 
 interface TurnResponse {
-  state: Record<string, unknown>; // routing-neutral, non-optional, defaults to {}
-  activities: Activity[]; // ordered raw event log, defaults to []
+  state: A2uiState; // validated component state (/state/<id> ops) per surface, defaults to {}
+  activities: Activity[]; // raw snapshot log, latest snapshot per messageId, defaults to []
   surfaces: DiscoveredSurface[]; // typed projection derived from activities
+  a2uiMessages: A2uiV09Message[]; // renderer-ready A2-UI v0.9 stream derived from activities
   agent?: {messages: AgentMessage[]; reasoningSteps: ReasoningStep[]}; // present only when the router invoked an agent
 }
 ```
 
-`state` and `activities` are routing-neutral and always present. `agent` appears only when the router invoked an agent for the turn. Consumers read `turn.input.prompt`, `turn.response.state`, `turn.response.activities`, `turn.response.surfaces`, and `turn.response.agent?.messages` / `turn.response.agent?.reasoningSteps`.
+`state` and `activities` are routing-neutral and always present. `agent` appears only when the router invoked an agent for the turn. Consumers feed `turn.response.a2uiMessages` to their renderer, and read `turn.input.prompt`, `turn.response.surfaces`, and `turn.response.agent?.messages` / `turn.response.agent?.reasoningSteps`; `state` and `activities` remain available.
+
+`a2uiMessages` exists because Agent Gateway emits A2-UI v1.0 while every available renderer consumes v0.9: Thermidor downgrades the stream on the consumer's behalf (recorded interim debt, see below).
+
+`surfaces` lists the turn's live surfaces in creation order: a surface the agent deletes (`deleteSurface`) leaves the list, and one it re-creates moves to the end. Each `DiscoveredSurface` carries `surfaceId`, `rootComponentType`, and `isLoading`, which is `true` while the surface's data model declares `isLoading: true` (a loading placeholder for `rootComponentType`).
 
 ## Validation and displayed values
 
-- **Client-side validation is retained, transparently.** The injected `contracts` schema stays the sole validation source, but the consumer never runs Zod and writes no adapter glue. Inbound `updateDataModel` state is validated on the fold; outbound action payloads are validated in the private dispatch path before the POST. Both boundaries live inside the core.
+- **Client-side validation is retained, transparently.** The injected `contracts` schema stays the sole validation source, but the consumer never runs Zod and writes no adapter glue. Inbound `updateDataModel` ops are validated on the fold before they are applied to `response.state`; outbound action payloads are validated in the private dispatch path before the POST. Both boundaries live inside the core. `response.a2uiMessages` is derived from the raw stream, so the renderer still receives an op that validation drops from `response.state`, and the component state seeded by `createSurface.dataModel`, which is never validated.
 - **Displayed-value formatting is agent-produced.** The renderer shows the state it receives through its `{ path }` bindings; Thermidor does not reformat displayed values.
 
 ## Injected schema, endpoint, and context
 
-- **Contracts schema** — a consumer-injected Zod v4 discriminated union (`contracts`) is the sole source for component-state and action-payload validation. Thermidor accepts it through a structural typing seam (`ContractsSchema` / `ComponentContractSchema` / `ParsableSchema`), so it declares no dependency on any specific schema package. It declares `zod` as a peer dependency so validation runs through the single shared `zod` instance resolved by the injected schema.
+- **Contracts schema** — a consumer-injected Zod discriminated union (`contracts`) is the sole source for component-state and action-payload validation. Thermidor accepts it through a structural typing seam (`ContractsSchema` / `ComponentContractSchema` / `ParsableSchema`) that reads only public Zod API, so it declares no dependency on any specific schema package. It declares `zod` as a peer dependency spanning both majors (`3.25.76 || ^4`), so validation runs through the single shared `zod` instance resolved by the injected schema. A consumer whose renderer is built on Zod 3 injects a Zod 3 schema, such as `@coveo/thermidor-schema/zod3`.
 - **Endpoint** — when `endpoint` is provided, the client POSTs to it verbatim. When absent, it resolves `https://{orgId}.org.coveo.com` and appends the fixed converse path `/api/preview/organizations/{orgId}/agents/commerce/agui/converse`.
 - **Context providers** — `navigatorContextProvider` and `commerceContextProvider` are synchronous functions read fresh per request. Context is never stored on the session and never serialized.
 
 ## Serialization
 
-`session.serialize()` produces a versioned `SerializedSession` (integer `version >= 1`), distinct from the runtime `Turn` type. Pass it back as `sessionToRestore` in `createSession` to continue a conversation. `response.state` is persisted for the active turn only; `response.surfaces` is never persisted (it is re-derived from `activities` on restore); a turn persisted mid-stream is downgraded to `error` with `'Stream was interrupted'`, preserving its partial response.
+`session.serialize()` produces a versioned `SerializedSession` (integer `version >= 1`), distinct from the runtime `Turn` type. Pass it back as `sessionToRestore` in `createSession` to continue a conversation. `response.state` is persisted for the active turn only; `response.surfaces` and `response.a2uiMessages` are never persisted (they are re-derived from `activities` on restore); a turn persisted mid-stream is downgraded to `error` with `'Stream was interrupted'`, preserving its partial response.
 
 ## Recorded interim debt and out-of-scope items
 
 The following are intentionally **not yet implemented** and are recorded as debt or deferred work:
 
-- **Interim `response.surfaces` derivation** — `surfaces` is a typed projection derived from `activities` in the fold, annotated as interim per [ADR-015](./docs/internal/adr/ADR-015-surface-and-route-derivation.md); each entry's `rootComponentType` is compared against the `'CommerceSearch'` literal by consumers/nav rather than by the core. It is retired by a future server-surfaced typed-routing ADR (ADR-015 Option C).
+- **Interim `response.surfaces` derivation** — `surfaces` is a typed projection derived from `activities` in the fold, annotated as interim per [ADR-015](./docs/internal/adr/ADR-015-surface-and-route-derivation.md); the core interprets no `rootComponentType`; consumers read it. It is retired by a future server-surfaced typed-routing ADR (ADR-015 Option C).
+- **The A2-UI v0.9 renderer projection** — `response.a2uiMessages` downgrades Agent Gateway's v1.0 stream for today's v0.9 renderers, per the [ADR-015](./docs/internal/adr/ADR-015-surface-and-route-derivation.md) addendum. Removed in a breaking change once a v1.0-capable renderer exists.
+- **The client-side action queue** — `session.actions` and the dispatch coordinator are removed once the producer owns the queue.
+- **Renderer stream bypasses validation** — inbound ops that in-transit validation drops from `response.state` still reach the renderer through `response.a2uiMessages`, and so does the component state seeded by `createSurface.dataModel`, which is never validated. A fix must cover both paths.
 - **Enforced action-payload typing at the renderer boundary** — the renderer hands `dispatchAction` a loosely typed action message, so per-component action typing is applied by convention (the consumer opts into the generated `XxxAction` types) rather than enforced at the boundary, per [ADR-016](./docs/internal/adr/ADR-016-inline-state-consumption-remove-remote-controller.md). Recoverable later if the package owns binding resolution.
 - **Package rename** — deferred as low-stakes; the package remains `@coveo/thermidor`.
 

@@ -1,8 +1,11 @@
 import {render, screen} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
 import type {Turn} from '@coveo/thermidor';
+import {A2UIProvider} from '@copilotkit/a2ui-renderer';
 import {ConversationThread} from './ConversationThread.js';
 import {makeTurn} from '../../test/turn-fixtures.js';
+import {createThermidorCatalog} from '../../a2ui/components.js';
+import {ThermidorA2UIStream} from '../../a2ui/surfaces.js';
 
 function createTurn(overrides: {id?: string; prompt?: string; status?: Turn['status']} = {}): Turn {
   return makeTurn({id: 'turn-1', prompt: 'Hello agent', ...overrides});
@@ -118,6 +121,68 @@ describe('ConversationThread', () => {
       expect(screen.getByText('Here are some kayaks')).toBeTruthy();
       expect(screen.getByText('Show more life jackets')).toBeTruthy();
       expect(screen.getByRole('alert').textContent).toBe('Service unavailable');
+    });
+  });
+
+  describe('loading placeholders', () => {
+    const placeholders = new Map([
+      ['turn-1/first', 'ProductCarousel'],
+      ['turn-1/second', 'ProductCarousel'],
+    ]);
+    const followUp = {
+      prompt: 'Show more',
+      activityCount: 0,
+      messageCount: 0,
+      reasoningStepCount: 0,
+      surfaceCount: 1,
+    };
+
+    function renderPlaceholders(
+      turn: Turn,
+      overrides: Partial<Omit<Parameters<typeof ConversationThread>[0], 'turns'>> = {}
+    ) {
+      return render(
+        <A2UIProvider catalog={createThermidorCatalog()} onAction={() => {}}>
+          <ThermidorA2UIStream messages={[]} loadingSurfaces={placeholders}>
+            <ConversationThread
+              turns={[turn]}
+              turnRefs={{current: new Map<string, HTMLDivElement>()}}
+              surfacesByTurn={new Map([[turn.id, ['turn-1/first', 'turn-1/second']]])}
+              {...overrides}
+            />
+          </ThermidorA2UIStream>
+        </A2UIProvider>
+      );
+    }
+
+    function placeholderRegion(surfaceId: string) {
+      return screen.queryByRole('region', {name: `A2-UI surface ${surfaceId}`});
+    }
+
+    it('draws the placeholders of a streaming turn', () => {
+      renderPlaceholders(createTurn({status: 'streaming'}));
+
+      expect(placeholderRegion('turn-1/first')).not.toBeNull();
+      expect(placeholderRegion('turn-1/second')).not.toBeNull();
+    });
+
+    it('draws nothing for the placeholders a completed turn left behind', () => {
+      renderPlaceholders(createTurn({status: 'complete'}));
+
+      expect(placeholderRegion('turn-1/first')).toBeNull();
+      expect(placeholderRegion('turn-1/second')).toBeNull();
+    });
+
+    it('draws only the placeholders of the follow-up in flight', () => {
+      const turn = createTurn({status: 'complete'});
+
+      renderPlaceholders(turn, {
+        followUps: new Map([[turn.id, [followUp]]]),
+        pendingTurnId: turn.id,
+      });
+
+      expect(placeholderRegion('turn-1/first')).toBeNull();
+      expect(placeholderRegion('turn-1/second')).not.toBeNull();
     });
   });
 });
