@@ -23,16 +23,20 @@ import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
  * indefinitely to probe the guards.
  */
 
-const callMock =
-  vi.fn<
-    (
-      request: unknown,
-      configuration: unknown,
-      options?: {signal?: AbortSignal}
-    ) => Promise<
-      {success: true; data: {stream: ReadableStream<Uint8Array>}} | {success: false; error: string}
-    >
-  >();
+const callMock = vi.fn<
+  (
+    request: unknown,
+    configuration: unknown,
+    options?: {signal?: AbortSignal}
+  ) => Promise<
+    | {success: true; data: {stream: ReadableStream<Uint8Array>}}
+    | {
+        success: false;
+        error: string;
+        conflict?: Record<string, never>;
+      }
+  >
+>();
 
 vi.mock('@/src/internal/api/unified/unified-endpoint-client.js', () => ({
   createUnifiedEndpointClient: () => ({call: callMock}),
@@ -149,6 +153,29 @@ function queueStream(): ControllableStream {
     data: {stream: controllable.stream},
   }));
   return controllable;
+}
+
+const conflictError = 'Conflict: Another request is still being processed for this session.';
+
+/** Queues a call that stays pending until aborted, then fails the way the client reports an abort. */
+function queueAbortableCall(): void {
+  callMock.mockImplementationOnce(
+    (_request, _configuration, options) =>
+      new Promise((resolve) => {
+        options?.signal?.addEventListener('abort', () =>
+          resolve({success: false, error: 'This operation was aborted'})
+        );
+      })
+  );
+}
+
+/** Queues an `AGENT:ACTION_IN_FLIGHT` rejection as the result of the next `call`. */
+function queueConflict(): void {
+  callMock.mockImplementationOnce(async () => ({
+    success: false,
+    error: conflictError,
+    conflict: {},
+  }));
 }
 
 const baseConfig: SessionConfig = {
@@ -875,6 +902,286 @@ describe('createSession lifecycle', () => {
       promptStream.emit({type: 'RUN_FINISHED'});
       promptStream.close();
       await flush();
+    });
+  });
+
+  describe('Gateway rejects a request as concurrent (409 AGENT:ACTION_IN_FLIGHT)', () => {
+    const actionMessage = (page: number) => ({
+      userAction: {
+        name: 'selectPage',
+        surfaceId: 'commerce-search-surface',
+        sourceComponentId: 'pagination-1',
+        context: {page},
+      },
+    });
+
+    /** Completes a first turn carrying a Pagination surface, so `selectPage` can be issued. */
+    async function seedSession() {
+      const session = createSession(baseConfig);
+      const seed = queueStream();
+      const seedTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'go'}});
+      await seed.opened;
+      seed.emit({
+        type: 'ACTIVITY_SNAPSHOT',
+        messageId: 'surface-activity',
+        activityType: 'a2ui-surface',
+        content: {
+          messages: [
+            {
+              version: 'v1.0',
+              createSurface: {
+                surfaceId: 'commerce-search-surface',
+                components: [
+                  {id: 'root', component: 'CommerceSearch'},
+                  {id: 'pagination-1', component: 'Pagination'},
+                ],
+              },
+            },
+          ],
+        },
+      });
+      seed.emit({type: 'RUN_FINISHED'});
+      seed.close();
+      await seedTurn;
+      return session;
+    }
+
+    // 10 waits take 27.75 s and an 11th is cut to the 2.25 s left: 12 attempts in 30 s.
+    const exhaustingConflicts = 12;
+
+    const lastAction = () =>
+      (callMock.mock.calls[callMock.mock.calls.length - 1][0] as {action: unknown}).action;
+
+    beforeEach(() => {
+      vi.useFakeTimers({toFake: ['setTimeout', 'clearTimeout', 'Date']});
+      // No jitter: retries wait exactly 250, 500, 1000, 2000, then 4000 ms each.
+      vi.spyOn(Math, 'random').mockReturnValue(0.5);
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+      vi.restoreAllMocks();
+    });
+
+    it('resends a rejected action after a backoff and shows no error once it lands', async () => {
+      const session = await seedSession();
+      queueConflict();
+      const stream = queueStream();
+
+      const issued = session.actions.issue(actionMessage(2));
+      await vi.advanceTimersByTimeAsync(249);
+      expect(callMock).toHaveBeenCalledTimes(2);
+      expect(session.actions.getSnapshot().inFlight).toBe(issued.id);
+
+      await vi.advanceTimersByTimeAsync(1);
+      await stream.opened;
+      expect(callMock).toHaveBeenCalledTimes(3);
+      expect(lastAction()).toMatchObject({name: 'selectPage', context: {page: 2}});
+
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+
+      expect(await issued.settled).toBe('answered');
+      expect(session.turns[0].status).toBe('complete');
+      expect(session.turns[0].error).toBeUndefined();
+      expect(session.actionError).toBeUndefined();
+    });
+
+    it('fails the action without failing the turn once the retries run out', async () => {
+      const session = await seedSession();
+      for (let attempt = 0; attempt < exhaustingConflicts; attempt++) {
+        queueConflict();
+      }
+      const listener = vi.fn();
+      session.subscribe(listener);
+
+      const issued = session.actions.issue(actionMessage(2));
+      await vi.advanceTimersByTimeAsync(30_000);
+
+      expect(await issued.settled).toBe('failed');
+      expect(callMock).toHaveBeenCalledTimes(1 + exhaustingConflicts);
+      expect(session.turns[0].status).toBe('complete');
+      expect(session.turns[0].error).toBeUndefined();
+      expect(session.actionError).toBe(conflictError);
+      expect(listener).toHaveBeenCalled();
+    });
+
+    it('keeps queued actions behind the rejected one, in order', async () => {
+      const session = await seedSession();
+      queueConflict();
+      const streamA = queueStream();
+      const streamB = queueStream();
+
+      const issuedA = session.actions.issue(actionMessage(2));
+      const issuedB = session.actions.issue(actionMessage(3));
+      await vi.advanceTimersByTimeAsync(250);
+      await streamA.opened;
+      expect(callMock).toHaveBeenCalledTimes(3);
+      expect(lastAction()).toMatchObject({context: {page: 2}});
+
+      streamA.emit({type: 'RUN_FINISHED'});
+      streamA.close();
+      expect(await issuedA.settled).toBe('answered');
+      await streamB.opened;
+      expect(callMock).toHaveBeenCalledTimes(4);
+      expect(lastAction()).toMatchObject({context: {page: 3}});
+
+      streamB.emit({type: 'RUN_FINISHED'});
+      streamB.close();
+      expect(await issuedB.settled).toBe('answered');
+    });
+
+    it('clears the action error once the next action is sent', async () => {
+      const session = await seedSession();
+      for (let attempt = 0; attempt < exhaustingConflicts; attempt++) {
+        queueConflict();
+      }
+      const failed = session.actions.issue(actionMessage(2));
+      await vi.advanceTimersByTimeAsync(30_000);
+      expect(await failed.settled).toBe('failed');
+      expect(session.actionError).toBe(conflictError);
+
+      const stream = queueStream();
+      const issued = session.actions.issue(actionMessage(3));
+      await vi.advanceTimersByTimeAsync(0);
+      expect(callMock).toHaveBeenCalledTimes(2 + exhaustingConflicts);
+      expect(session.actionError).toBeUndefined();
+
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      expect(await issued.settled).toBe('answered');
+    });
+
+    it('does not retry a 409 that is not AGENT:ACTION_IN_FLIGHT', async () => {
+      const session = await seedSession();
+      callMock.mockImplementationOnce(async () => ({success: false, error: 'HTTP 409: Conflict'}));
+
+      const issued = session.actions.issue(actionMessage(2));
+      await vi.advanceTimersByTimeAsync(30_000);
+
+      await issued.settled;
+      expect(callMock).toHaveBeenCalledTimes(2);
+      expect(session.turns[0]).toMatchObject({status: 'error', error: 'HTTP 409: Conflict'});
+    });
+
+    it('stops waiting when a prompt preempts the rejected action', async () => {
+      const session = await seedSession();
+      queueConflict();
+      const issued = session.actions.issue(actionMessage(2));
+      await vi.advanceTimersByTimeAsync(0);
+      expect(callMock).toHaveBeenCalledTimes(2);
+
+      const promptStream = queueStream();
+      void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'next question'}});
+      await promptStream.opened;
+      expect(await issued.settled).toBe('cancelled');
+
+      await vi.advanceTimersByTimeAsync(30_000);
+      expect(callMock).toHaveBeenCalledTimes(3);
+      expect(session.turns[0]).toMatchObject({status: 'complete'});
+      expect(session.turns[0].error).toBeUndefined();
+
+      promptStream.emit({type: 'RUN_FINISHED'});
+      promptStream.close();
+    });
+
+    it('cancels the rejected action, leaving its turn complete, when cancel() lands during the wait', async () => {
+      const session = await seedSession();
+      queueConflict();
+      const issued = session.actions.issue(actionMessage(2));
+      await vi.advanceTimersByTimeAsync(100);
+
+      session.cancel();
+
+      expect(await issued.settled).toBe('cancelled');
+      await vi.advanceTimersByTimeAsync(30_000);
+      expect(callMock).toHaveBeenCalledTimes(2);
+      expect(session.turns[0].status).toBe('complete');
+      expect(session.turns[0].error).toBeUndefined();
+    });
+
+    it('marks a rejected prompt cancelled when cancel() lands during the wait', async () => {
+      const session = createSession(baseConfig);
+      queueConflict();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+      await vi.advanceTimersByTimeAsync(100);
+
+      session.cancel();
+      await turn;
+
+      expect(callMock).toHaveBeenCalledTimes(1);
+      expect(session.turns[0]).toMatchObject({status: 'error', error: 'Cancelled'});
+    });
+
+    it('leaves the turn complete when a prompt aborts an action while it is being resent', async () => {
+      const session = await seedSession();
+      queueConflict();
+      queueAbortableCall();
+      const issued = session.actions.issue(actionMessage(2));
+      await vi.advanceTimersByTimeAsync(250);
+      expect(callMock).toHaveBeenCalledTimes(3);
+
+      const promptStream = queueStream();
+      void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'next question'}});
+      await promptStream.opened;
+      await vi.advanceTimersByTimeAsync(0);
+
+      expect(await issued.settled).toBe('cancelled');
+      expect(session.turns[0]).toMatchObject({status: 'complete'});
+      expect(session.turns[0].error).toBeUndefined();
+
+      promptStream.emit({type: 'RUN_FINISHED'});
+      promptStream.close();
+    });
+
+    it('keeps a prompt cancelled when cancel() aborts it while it is being resent', async () => {
+      const session = createSession(baseConfig);
+      queueConflict();
+      queueAbortableCall();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+      await vi.advanceTimersByTimeAsync(250);
+      expect(callMock).toHaveBeenCalledTimes(2);
+
+      session.cancel();
+      await turn;
+
+      expect(session.turns[0]).toMatchObject({status: 'error', error: 'Cancelled'});
+    });
+
+    it('resends a rejected prompt while its turn keeps streaming', async () => {
+      const session = createSession(baseConfig);
+      queueConflict();
+      const stream = queueStream();
+
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+      await vi.advanceTimersByTimeAsync(0);
+      expect(session.turns[0].status).toBe('streaming');
+      expect(session.turns[0].error).toBeUndefined();
+
+      await vi.advanceTimersByTimeAsync(250);
+      await stream.opened;
+      expect(callMock).toHaveBeenCalledTimes(2);
+      expect(callMock.mock.calls[1][0]).toMatchObject({message: 'find shoes', action: null});
+
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await turn;
+      expect(session.turns[0].status).toBe('complete');
+    });
+
+    it('fails the prompt turn once the retries run out', async () => {
+      const session = createSession(baseConfig);
+      for (let attempt = 0; attempt < exhaustingConflicts; attempt++) {
+        queueConflict();
+      }
+
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+      await vi.advanceTimersByTimeAsync(30_000);
+      await turn;
+
+      expect(callMock).toHaveBeenCalledTimes(exhaustingConflicts);
+      expect(session.turns[0]).toMatchObject({status: 'error', error: conflictError});
+      expect(session.actionError).toBeUndefined();
     });
   });
 });

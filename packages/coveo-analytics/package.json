@@ -34,7 +34,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "prepare-deploy": "mkdir -p deploy && cp dist/coveoua*.js dist/coveoua*.js.map deploy",
-    "clean": "node ../../utils/ci/rm-rf.mjs dist coverage"
+    "clean": "node ../../utils/ci/rm-rf.mjs dist coverage",
+    "size": "node ../../scripts/size-limit.mjs run"
   },
   "dependencies": {
     "cross-fetch": "4.1.0",
@@ -48,6 +49,7 @@
     "@rollup/plugin-replace": "catalog:",
     "@rollup/plugin-terser": "catalog:",
     "@rollup/plugin-typescript": "catalog:",
+    "@size-limit/preset-small-lib": "catalog:",
     "@types/node": "catalog:",
     "fetch-mock": "9.11.0",
     "jsdom": "catalog:",
@@ -57,6 +59,7 @@
     "rollup": "catalog:",
     "rollup-plugin-copy": "3.5.0",
     "rollup-plugin-serve": "1.1.1",
+    "size-limit": "catalog:",
     "tslib": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"

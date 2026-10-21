@@ -40,6 +40,8 @@ export type {
  * Defines a `ParameterManager` controller instance.
  * @group Definers
  *
+ * @param options - Deprecated `listing` and `search` options, which will be removed in the next
+ * major version: omit them to build the controller for both search and product listing pages.
  * @returns The `ParameterManager` controller definition.
  */
 export function defineParameterManager<TOptions extends ControllerDefinitionOption | undefined>(

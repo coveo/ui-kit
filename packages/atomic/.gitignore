@@ -41,6 +41,7 @@ src/utils/custom-element-tags.ts
 /playwright/.cache/
 
 dist-storybook/
+dist-storybook-e2e/
 dist-chromatic/
 
 .storybook/static/

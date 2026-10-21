@@ -83,6 +83,10 @@ test('accepts a submitPrompt action on Session.dispatchAction', () => {
   });
 });
 
+test('exposes Session.actionError as an optional string', () => {
+  expectTypeOf<Session['actionError']>().toEqualTypeOf<string | undefined>();
+});
+
 // ── NEGATIVE: `submitPrompt` replaced `Session.submit` ──────────────────────
 test('does not expose Session.submit', () => {
   expectTypeOf<Session>().not.toHaveProperty('submit');

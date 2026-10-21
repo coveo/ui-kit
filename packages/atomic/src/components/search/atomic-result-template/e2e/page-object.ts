@@ -13,4 +13,8 @@ export class ResultTemplateObject extends BasePageObject {
   get error() {
     return this.page.locator('atomic-component-error').first();
   }
+
+  badge(label: string) {
+    return this.page.locator(`atomic-result-badge[label="${label}"]`);
+  }
 }

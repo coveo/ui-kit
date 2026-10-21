@@ -241,5 +241,33 @@ describe('ProductList', () => {
     expect(screen.getAllByRole('listitem')).toHaveLength(2);
     expect(screen.getByText('Trail Shoes')).toBeDefined();
     expect(screen.getByText('Running Shoes')).toBeDefined();
+    expect(screen.queryByRole('list', {name: 'Product badges'})).toBeNull();
+  });
+
+  it('renders the badges a product has on its card', async () => {
+    mountSurface({
+      component: {component: 'ProductList', products: {path: '/state/root/products'}},
+      dataModel: [
+        {
+          path: '/state/root/products',
+          value: [
+            {
+              permanentid: 'p1',
+              ec_name: 'Trail Shoes',
+              additionalFields: {},
+              badgePlacements: [
+                {
+                  placementId: '36164bca-b489-4c42-8574-e1325d56d0be',
+                  badges: [{text: 'Bestseller!', backgroundColor: '#ff0000', textColor: '#ffffff'}],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
+    const badges = await screen.findByRole('list', {name: 'Product badges'});
+    expect(badges.textContent).toBe('Bestseller!');
   });
 });

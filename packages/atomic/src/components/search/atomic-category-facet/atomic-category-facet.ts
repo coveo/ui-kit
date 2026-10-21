@@ -407,6 +407,7 @@ export class AtomicCategoryFacet extends LitElement implements InitializableComp
     this.facetId = this.facet.state.facetId;
 
     announceFacetSearchResultsWithAriaLive(
+      this,
       this.facet,
       this.label,
       (msg) => {

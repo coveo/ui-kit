@@ -4,6 +4,7 @@
 
 - **Node.js**: Version pinned in `.nvmrc` (use `nvm use` or the devcontainer)
 - **pnpm**: Pinned in `package.json` `packageManager` field. Run `corepack enable` to activate it
+- **Windows**: The repo tracks symlinks (e.g. `.claude/skills`, `.kiro/skills`, `docs/adr/ADR-template.md` in packages). Enable Developer Mode and clone with `git clone -c core.symlinks=true <REPOSITORY_URL>`. For an existing clone, run `git config core.symlinks true` then `git checkout -- .` (discards uncommitted changes)
 
 ## Commands
 

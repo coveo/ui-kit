@@ -1,6 +1,8 @@
 import {type CSSResult, type CSSResultGroup, unsafeCSS} from 'lit';
 import styles from '@/src/utils/tailwind.global.tw.css';
 
+const tailwindStyles = unsafeCSS(styles);
+
 const tailwindPropertiesSheet: CSSStyleSheet | null =
   typeof window !== 'undefined'
     ? (() => {
@@ -53,7 +55,7 @@ export const withTailwindStyles = <
       injectTailwindProperties(this);
     }
     static get styles(): CSSResultGroup {
-      const baseStyles: Array<CSSStyleSheet | CSSResult> = [unsafeCSS(styles)];
+      const baseStyles: Array<CSSStyleSheet | CSSResult> = [tailwindStyles];
 
       const customStyles = Base.styles;
 
