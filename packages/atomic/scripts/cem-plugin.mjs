@@ -1,32 +1,4 @@
 const moduleLinkPhase = ({moduleDoc}) => {
-  for (const declaration of moduleDoc.declarations) {
-    if (declaration.kind !== 'class') {
-      continue;
-    }
-
-    // Skip processing if superClass is LitElement
-    if (declaration.superclass?.name === 'LitElement') {
-      continue;
-    }
-
-    const keptAttributes = [];
-    for (const attribute of declaration.attributes || []) {
-      const memberLike = findMember(declaration, attribute);
-      if (!memberLike || memberLike.privacy === 'private') {
-        continue;
-      }
-      keptAttributes.push(attribute);
-      copyAttributesFromMember(attribute, memberLike);
-    }
-    declaration.attributes = keptAttributes.length > 0 ? keptAttributes : undefined;
-
-    if (!declaration.members) {
-      continue;
-    }
-
-    declaration.members = declaration.members.filter((member) => member?.privacy !== 'private');
-  }
-
   moduleDoc.exports = cleanExports(moduleDoc.exports);
 };
 
@@ -47,16 +19,6 @@ function cleanExports(exports) {
     exportCandidates[exportName].push(exportCandidate);
   }
   return finalExports;
-}
-
-function findMember(declaration, attribute) {
-  return declaration.members.find((member) => attribute.fieldName === member.name);
-}
-
-function copyAttributesFromMember(attribute, member) {
-  for (const fieldToCopy of ['type', 'default', 'description']) {
-    attribute[fieldToCopy] = member[fieldToCopy];
-  }
 }
 
 export const cemPlugin = () => ({
