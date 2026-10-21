@@ -51,19 +51,31 @@ describe('keyed', () => {
     expect(container.textContent).toContain('second');
   });
 
+  const renderTracked = (key: string) =>
+    render(html`${keyed(key, html`<div>${tracking()}</div>`)}`, container);
+
+  const renderWithRef = (key: string, callback: (element?: Element) => void) =>
+    render(html`${keyed(key, html`<div ${ref(callback)}></div>`)}`, container);
+
   it('should disconnect the async directives of the previous value when the key changes', () => {
-    render(html`${keyed('a', html`<div>${tracking()}</div>`)}`, container);
-    render(html`${keyed('b', html`<div>${tracking()}</div>`)}`, container);
-    expect(disconnectedSpy).toHaveBeenCalledTimes(1);
+    renderTracked('a');
+    renderTracked('b');
+    expect(disconnectedSpy).toHaveBeenCalledOnce();
   });
 
-  it('should release the previous element from a ref() when the key changes', () => {
-    const refCallback = vi.fn();
-    render(html`${keyed('a', html`<div ${ref(refCallback)}></div>`)}`, container);
+  it('should not disconnect the async directives when the key does not change', () => {
+    renderTracked('a');
+    renderTracked('a');
+    expect(disconnectedSpy).not.toHaveBeenCalled();
+  });
+
+  it('should release the previous element from its ref() when the key changes', () => {
+    const previousRef = vi.fn();
+    const nextRef = vi.fn();
+    renderWithRef('a', previousRef);
     const element = container.querySelector('div');
-    expect(refCallback).toHaveBeenLastCalledWith(element);
-    render(html`${keyed('b', html`<div ${ref(refCallback)}></div>`)}`, container);
-    expect(refCallback).toHaveBeenCalledWith(undefined);
-    expect(refCallback).toHaveBeenLastCalledWith(container.querySelector('div'));
+    renderWithRef('b', nextRef);
+    expect(previousRef.mock.calls).toEqual([[element], [undefined]]);
+    expect(nextRef).toHaveBeenCalledExactlyOnceWith(container.querySelector('div'));
   });
 });
