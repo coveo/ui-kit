@@ -98,6 +98,9 @@ export class AtomicCommerceRecommendationList
   ];
 
   public recommendations!: Recommendations;
+  /**
+   * @internal
+   */
   public summary!: Summary<RecommendationsSummaryState>;
 
   private static readonly propsSchema = new Schema({
@@ -135,6 +138,9 @@ export class AtomicCommerceRecommendationList
   @bindStateToController('recommendations')
   @state()
   public recommendationsState!: RecommendationsState;
+  /**
+   * @internal
+   */
   @state()
   public summaryState!: RecommendationsSummaryState;
 
