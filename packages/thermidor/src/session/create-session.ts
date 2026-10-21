@@ -215,7 +215,7 @@ function isSubmitPromptAction(
 /** A dispatch waiting for its turn to be sent. */
 interface QueuedRequest {
   request: SessionRequest;
-  send: () => Promise<void>;
+  send: (abortController: AbortController) => Promise<void>;
   /** Resolves the dispatch's promise. */
   settle: () => void;
 }
@@ -312,11 +312,33 @@ export function createSession<TContracts extends ContractsSchema>(
   let waiting: QueuedRequest[] = [];
   let sending = false;
 
-  function enqueue(request: SessionRequest, send: () => Promise<void>): Promise<void> {
+  function enqueue(
+    request: SessionRequest,
+    send: (abortController: AbortController) => Promise<void>
+  ): Promise<void> {
     return new Promise((settle) => {
       waiting.push({request, send, settle});
       void sendWaiting();
     });
+  }
+
+  /**
+   * Publishes the next waiting request, or that the session is idle, in the same update that
+   * counts the requests just settled, so the session never looks idle between two requests.
+   */
+  function publishNext(
+    settled: number
+  ): {queued: QueuedRequest; abortController: AbortController} | undefined {
+    const queued = waiting.shift();
+    // Armed before it is published, so a listener's `cancel()` stops the request it was told about.
+    const abortController = queued ? new AbortController() : null;
+    activeAbortController = abortController;
+    store.setState((current) => ({
+      ...current,
+      request: queued?.request,
+      settledRequests: settledOf(current) + settled,
+    }));
+    return queued && abortController ? {queued, abortController} : undefined;
   }
 
   async function sendWaiting(): Promise<void> {
@@ -324,23 +346,22 @@ export function createSession<TContracts extends ContractsSchema>(
       return;
     }
     sending = true;
-    let next = waiting.shift();
-    store.setState((current) => ({...current, request: next?.request}));
+    let next = publishNext(0);
     while (next) {
-      try {
-        await next.send();
-      } catch (error) {
-        devWarn(`dispatchAction: request failed: ${getErrorMessage(error)}`);
+      const {queued, abortController} = next;
+      if (!abortController.signal.aborted) {
+        try {
+          await queued.send(abortController);
+        } catch (error) {
+          devWarn(`dispatchAction: request failed: ${getErrorMessage(error)}`);
+        }
       }
-      const following = waiting.shift();
-      // In one update, so the session never looks idle between two requests.
-      store.setState((current) => ({
-        ...current,
-        request: following?.request,
-        settledRequests: settledOf(current) + 1,
-      }));
-      next.settle();
-      next = following;
+      next = publishNext(1);
+      // A listener told the session is idle may dispatch at once; nothing else would send it.
+      if (!next && waiting.length > 0) {
+        next = publishNext(0);
+      }
+      queued.settle();
     }
     sending = false;
   }
@@ -530,11 +551,9 @@ export function createSession<TContracts extends ContractsSchema>(
    */
   async function executeStream(
     turnId: string,
-    buildRequest: () => CommerceRequestModel
+    buildRequest: () => CommerceRequestModel,
+    abortController: AbortController
   ): Promise<RequestFailure | undefined> {
-    const abortController = new AbortController();
-    activeAbortController = abortController;
-
     try {
       // Rebuilt on every attempt, so context providers and session keys are read fresh.
       const result = await callWithConflictRetry(
@@ -583,9 +602,17 @@ export function createSession<TContracts extends ContractsSchema>(
     return undefined;
   }
 
-  async function streamPrompt(turnId: string, prompt: string): Promise<void> {
+  async function streamPrompt(
+    turnId: string,
+    prompt: string,
+    abortController: AbortController
+  ): Promise<void> {
     setActionError(undefined);
-    const failure = await executeStream(turnId, () => buildConversationRequest(prompt));
+    const failure = await executeStream(
+      turnId,
+      () => buildConversationRequest(prompt),
+      abortController
+    );
     if (failure) {
       failTurn(turnId, failure.error);
     }
@@ -629,9 +656,9 @@ export function createSession<TContracts extends ContractsSchema>(
    */
   function startPromptTurn(prompt: string | undefined): Promise<void> {
     const turnId = generateId();
-    return enqueue({kind: 'prompt', turnId}, async () => {
+    return enqueue({kind: 'prompt', turnId}, async (abortController) => {
       openTurn(turnId, {prompt});
-      await streamPrompt(turnId, prompt ?? '');
+      await streamPrompt(turnId, prompt ?? '', abortController);
     });
   }
 
@@ -693,7 +720,7 @@ export function createSession<TContracts extends ContractsSchema>(
       sourceComponentId: recovered.sourceComponentId,
       turnId: activeTurnId,
     };
-    return enqueue(request, async () => {
+    return enqueue(request, async (abortController) => {
       if (store.getState().activeTurnId !== activeTurnId) {
         devWarn(
           `dispatchAction: "${recovered.name}" withheld: its turn is no longer the active one.`
@@ -701,7 +728,11 @@ export function createSession<TContracts extends ContractsSchema>(
         return;
       }
       setActionError(undefined);
-      const failure = await executeStream(activeTurnId, () => buildActionRequest(a2uiAction));
+      const failure = await executeStream(
+        activeTurnId,
+        () => buildActionRequest(a2uiAction),
+        abortController
+      );
       if (failure?.conflict) {
         setActionError(failure.error);
         return;
@@ -787,7 +818,7 @@ export function createSession<TContracts extends ContractsSchema>(
 
     // Reset the turn to a fresh streaming turn carrying its original input,
     // then re-drive the stream once the requests dispatched before it have ended.
-    void enqueue({kind: 'prompt', turnId}, async () => {
+    void enqueue({kind: 'prompt', turnId}, async (abortController) => {
       // A retry queued twice for the same turn sends it once: the first one moved it out of `error`.
       if (store.getState().turns.find((candidate) => candidate.id === turnId)?.status !== 'error') {
         return;
@@ -796,7 +827,7 @@ export function createSession<TContracts extends ContractsSchema>(
         ...createTurn(previous.id, previous.input),
       }));
       store.setState((current) => ({...current, activeTurnId: turnId}));
-      await streamPrompt(turnId, turn.input.prompt ?? '');
+      await streamPrompt(turnId, turn.input.prompt ?? '', abortController);
     });
   }
 

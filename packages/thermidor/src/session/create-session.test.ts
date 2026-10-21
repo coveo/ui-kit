@@ -1152,6 +1152,74 @@ describe('createSession lifecycle', () => {
       expect(session.request).toBeUndefined();
       expect(session.turns[0].status).toBe('complete');
     });
+
+    it('does not send a request cancelled by a listener as it is published', async () => {
+      const session = await seededSession();
+      const unsubscribe = session.subscribe(() => {
+        if (session.request) {
+          session.cancel();
+        }
+      });
+
+      await session.dispatchAction(selectPageMessage(2));
+      unsubscribe();
+
+      expect(callMock).toHaveBeenCalledTimes(1);
+      expect(session.request).toBeUndefined();
+    });
+
+    it('does not send the next request cancelled by a listener as it takes over', async () => {
+      const session = await seededSession();
+      const first = queueStream();
+      const firstAction = session.dispatchAction(selectPageMessage(2));
+      await first.opened;
+      const secondAction = session.dispatchAction(selectPageMessage(3));
+      const firstRequest = session.request;
+      const unsubscribe = session.subscribe(() => {
+        if (session.request && session.request !== firstRequest) {
+          session.cancel();
+        }
+      });
+
+      first.emit({type: 'RUN_FINISHED'});
+      first.close();
+      await firstAction;
+      await secondAction;
+      unsubscribe();
+
+      expect(callMock).toHaveBeenCalledTimes(2);
+      expect(session.request).toBeUndefined();
+    });
+
+    it('sends a dispatch made by a listener as the session goes idle', async () => {
+      const session = await seededSession();
+      const first = queueStream();
+      const second = queueStream();
+      let followUp: Promise<void> | undefined;
+      const unsubscribe = session.subscribe(() => {
+        if (!session.request && !followUp) {
+          followUp = session.dispatchAction(selectPageMessage(3));
+        }
+      });
+
+      const firstAction = session.dispatchAction(selectPageMessage(2));
+      await first.opened;
+      first.emit({type: 'RUN_FINISHED'});
+      first.close();
+      await firstAction;
+      unsubscribe();
+
+      expect(session.request).toEqual(
+        expect.objectContaining({kind: 'action', name: 'selectPage'})
+      );
+      await second.opened;
+      second.emit({type: 'RUN_FINISHED'});
+      second.close();
+      await followUp;
+
+      expect(callMock).toHaveBeenCalledTimes(3);
+      expect(session.request).toBeUndefined();
+    });
   });
 
   describe('Gateway rejects a request as concurrent (409 AGENT:ACTION_IN_FLIGHT)', () => {
