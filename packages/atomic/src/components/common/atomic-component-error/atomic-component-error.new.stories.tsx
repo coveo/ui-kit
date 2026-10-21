@@ -32,7 +32,11 @@ const meta: Meta = {
     },
   },
   args,
-  argTypes,
+  argTypes: {
+    ...argTypes,
+    element: {...argTypes.element, control: false},
+    error: {...argTypes.error, control: false},
+  },
 
   play,
 };
