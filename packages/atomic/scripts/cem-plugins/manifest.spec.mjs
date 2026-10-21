@@ -90,13 +90,21 @@ describe('the custom elements manifest of Atomic', () => {
     }
   });
 
-  it('should hide the fields every component gets from InitializableComponent', () => {
+  it('should hide the fields every component gets from InitializableComponent, unless they are inputs', () => {
     for (const element of elements) {
       for (const name of ['bindings', 'initialized', 'unsubscribeLanguage', 'error']) {
-        expect(isHidden(element, name), `${element.tagName} ${name}`).toBe(true);
-        expect(hasAttribute(element, name), `${element.tagName} ${name}`).toBe(false);
+        expect(
+          isHidden(element, name) || hasAttribute(element, name),
+          `${element.tagName} ${name}`
+        ).toBe(true);
       }
     }
+  });
+
+  it('should expose both inputs of atomic-component-error', () => {
+    const element = findElement(manifest, 'atomic-component-error');
+    expect(findAttribute(element, 'element')).toMatchObject({fieldName: 'element'});
+    expect(findAttribute(element, 'error')).toMatchObject({fieldName: 'error'});
   });
 
   it('should hide each @bindStateToController field and the controller it is bound to', () => {
