@@ -12,7 +12,7 @@ import {buildFactory} from './build-factory.js';
  * Refuses a static state fetched by another engine definition. A static state built by hand may
  * omit the solution type.
  */
-export function ensureSolutionType(expected: SolutionType, received: SolutionType | undefined) {
+function ensureSolutionType(expected: SolutionType, received: SolutionType | undefined) {
   if (received !== undefined && received !== expected) {
     throw new SolutionTypeMismatchError(expected, received);
   }

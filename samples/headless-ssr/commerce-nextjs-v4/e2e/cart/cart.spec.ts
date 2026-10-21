@@ -34,6 +34,12 @@ test.describe('default', () => {
     await page.goto('/cart');
   });
 
+  test('should render the popular bought slot from the cart static state', async ({
+    recommendations,
+  }) => {
+    await expect(recommendations.products('popularBought').first()).toBeVisible();
+  });
+
   let initialItemQuantity: number;
   let initialItemPrice: number;
   let initialCartTotal: number;

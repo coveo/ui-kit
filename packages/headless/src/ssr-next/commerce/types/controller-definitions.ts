@@ -12,8 +12,6 @@ import type {SSRCommerceEngine} from '../factories/build-factory.js';
 import {type recommendationInternalOptionKey, SolutionType} from './controller-constants.js';
 import type {
   ListingAndStandaloneController,
-  NonRecommendationController,
-  RecommendationOnlyController,
   SearchAndListingController,
   SearchOnlyController,
   StandaloneController,
@@ -59,7 +57,6 @@ interface SolutionTypeAvailability {
   [SolutionType.search]?: boolean;
   [SolutionType.listing]?: boolean;
   [SolutionType.standalone]?: boolean;
-  [SolutionType.recommendation]?: boolean;
 }
 
 export type ControllerDefinition<TController extends Controller> = SolutionTypeAvailability &
@@ -167,13 +164,8 @@ export type SearchOnlyControllerDefinitionWithoutProps<TController extends Contr
 export type ListingAndStandaloneControllerWithoutProps<TController extends Controller> =
   ControllerDefinitionWithoutProps<TController> & ListingAndStandaloneController;
 
-export type RecommendationOnlyControllerDefinitionWithProps<
-  TController extends Controller,
-  TProps,
-> = ControllerDefinitionWithProps<TController, TProps> & RecommendationOnlyController;
-
-export type NonRecommendationControllerDefinitionWithoutProps<TController extends Controller> =
-  ControllerDefinitionWithoutProps<TController> & NonRecommendationController;
+export type UniversalControllerDefinitionWithoutProps<TController extends Controller> =
+  ControllerDefinitionWithoutProps<TController> & UniversalController;
 
 export type UniversalControllerDefinitionWithProps<
   TController extends Controller,

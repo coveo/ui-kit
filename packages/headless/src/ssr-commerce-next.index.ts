@@ -302,6 +302,7 @@ export type {CommerceStaticState} from './ssr-next/commerce/types/fetch-static-s
 // Main App
 export type {
   BuildConfig,
+  RecommendationNames,
   SSRCommerceEngineOptions as CommerceEngineOptions,
   SSRContextOptions,
 } from './ssr-next/commerce/types/build.js';
