@@ -1,4 +1,4 @@
-import type {WellKnownSurfaceTemplate} from './well-known-surfaces.js';
+import type {SurfaceTemplate} from './surface-instances.js';
 
 /**
  * The injected component-contracts type — the runtime's decoupling seam.
@@ -97,8 +97,8 @@ export interface ContractsSchema {
 export interface SessionContract<TComponents extends ContractsSchema = ContractsSchema> {
   /** The component union every component state and action payload is validated against. */
   readonly components: TComponents;
-  /** The well-known surface templates the application can create instances of. */
-  readonly wellKnownSurfaces: readonly WellKnownSurfaceTemplate[];
+  /** The surface templates the application can create instances of. */
+  readonly surfaceTemplates: readonly SurfaceTemplate[];
   /** The actions each component marks as lookups, keyed by its `component` discriminant. */
   readonly lookupActions: Readonly<Record<string, readonly string[]>>;
 }

@@ -25,10 +25,10 @@ export type {
   SubmitPromptAction,
 } from '@/src/session/create-session.js';
 export type {
-  WellKnownSurface,
-  WellKnownSurfaceOptions,
-  WellKnownSurfaceTemplate,
-} from '@/src/session/well-known-surfaces.js';
+  SurfaceInstance,
+  SurfaceInstanceOptions,
+  SurfaceTemplate,
+} from '@/src/session/surface-instances.js';
 
 // ── Dispatch coordination (SCOPED FOR REMOVAL with `src/actions`) ────────────
 // Delete with `src/actions` and `Session.actions` once the producer owns the queue.

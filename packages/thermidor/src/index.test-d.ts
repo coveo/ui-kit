@@ -23,9 +23,9 @@ import type {
   SubmitPromptAction,
   Turn,
   TurnResponse,
-  WellKnownSurface,
-  WellKnownSurfaceOptions,
-  WellKnownSurfaceTemplate,
+  SurfaceInstance,
+  SurfaceInstanceOptions,
+  SurfaceTemplate,
 } from '@/src/index.js';
 
 // ── POSITIVE: the session-client surface is exported ────────────────────────
@@ -53,11 +53,11 @@ test('exposes the injected ContractsSchema / ComponentContractSchema seam', () =
   expectTypeOf<ComponentContractSchema>().not.toBeAny();
 });
 
-// ── POSITIVE: one contract bundle, threaded to the well-known surfaces ───────
+// ── POSITIVE: one contract bundle, threaded to the surface instances ─────────
 declare const components: ContractsSchema;
 const ThermidorContract = {
   components,
-  wellKnownSurfaces: [
+  surfaceTemplates: [
     {template: 'search-box', catalogId: 'catalog', components: [{id: 'root'}], dataModel: {}},
   ],
   lookupActions: {QuerySuggestions: ['fetchSuggestions']},
@@ -65,7 +65,7 @@ const ThermidorContract = {
 
 test('accepts one contract bundle and threads its type through Session', () => {
   expectTypeOf<SessionContract>().toHaveProperty('components');
-  expectTypeOf<SessionContract>().toHaveProperty('wellKnownSurfaces');
+  expectTypeOf<SessionContract>().toHaveProperty('surfaceTemplates');
   expectTypeOf<SessionContract>().toHaveProperty('lookupActions');
   expectTypeOf<SessionConfig>().toHaveProperty('contract');
   expectTypeOf<SessionConfig>().not.toHaveProperty('contracts');
@@ -79,15 +79,15 @@ test('accepts one contract bundle and threads its type through Session', () => {
 test('creates instances only of the templates the contract declares', () => {
   const session = createSession({contract: ThermidorContract, organizationId: '', accessToken: ''});
 
-  expectTypeOf(session.createWellKnownSurface('search-box')).toEqualTypeOf<WellKnownSurface>();
-  expectTypeOf(session.createWellKnownSurface)
+  expectTypeOf(session.instantiateSurface('search-box')).toEqualTypeOf<SurfaceInstance>();
+  expectTypeOf(session.instantiateSurface)
     .parameter(1)
-    .toEqualTypeOf<WellKnownSurfaceOptions | undefined>();
+    .toEqualTypeOf<SurfaceInstanceOptions | undefined>();
   // @ts-expect-error the contract declares no `cart-badge` template.
-  session.createWellKnownSurface('cart-badge');
+  session.instantiateSurface('cart-badge');
 
-  expectTypeOf<WellKnownSurface['messages']>().toEqualTypeOf<readonly Record<string, unknown>[]>();
-  expectTypeOf<WellKnownSurfaceTemplate>().toHaveProperty('template').toEqualTypeOf<string>();
+  expectTypeOf<SurfaceInstance['messages']>().toEqualTypeOf<readonly Record<string, unknown>[]>();
+  expectTypeOf<SurfaceTemplate>().toHaveProperty('template').toEqualTypeOf<string>();
 });
 
 // ── POSITIVE: `dispatchAction` is the single action-dispatch entry point ─────

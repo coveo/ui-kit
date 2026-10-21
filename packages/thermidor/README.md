@@ -21,7 +21,7 @@ import {ThermidorContract} from '@coveo/thermidor-schema';
 const session = createSession({
   organizationId: 'my-org',
   accessToken: 'xx-token',
-  contract: ThermidorContract, // components (Zod 3 or 4), well-known surface templates, lookups
+  contract: ThermidorContract, // components (Zod 3 or 4), surface templates, lookups
   navigatorContextProvider: () => getNavigatorContext(),
   commerceContextProvider: () => ({cart: getCart()}),
 });
@@ -35,9 +35,9 @@ await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me r
 
 | Member                    | Purpose                                                                                                                        |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `contract`                | The injected contract this session validates against and creates well-known surfaces from (readonly).                          |
+| `contract`                | The injected contract this session validates against and creates surface instances from (readonly).                            |
 | `turns`                   | Readonly observable list of `Turn`s folded from the stream (empty initially).                                                  |
-| `createWellKnownSurface`  | Creates an instance of a well-known surface template. See [Well-known surfaces and lookups](#well-known-surfaces-and-lookups). |
+| `instantiateSurface`      | Creates an instance of a surface template. See [Surface templates and lookups](#surface-templates-and-lookups).                |
 | `actionError`             | Why the last component action was dropped after repeated concurrency conflicts, or `undefined`. See below.                     |
 | `actions`                 | The action queue: `issue`, `withholdQueued`, `subscribe`, `getSnapshot`. See [The action queue](#the-action-queue).            |
 | `subscribe(listener)`     | Registers a listener called once per change to the turn list, `actionError` or an instance's messages; returns an unsubscribe. |
@@ -74,12 +74,12 @@ Given a message, `dispatchAction` unwraps its `userAction`, recovers the dispatc
 
 It is **fire-and-forget**: the returned Promise always resolves and never rejects, so the consumer needs no `.catch`. A message with no `userAction`, no `sourceComponentId`, a node that resolves to no component, or an internal validation failure is dropped with a dev-only warning and nothing is sent.
 
-### Well-known surfaces and lookups
+### Surface templates and lookups
 
-The contract declares well-known surface templates, such as the search box: surfaces whose composition and initial state it fixes, but not their surface id. The application creates an instance wherever it draws one, before any request, and disposes of it when it stops drawing it:
+The contract declares surface templates, such as the search box: surfaces whose composition and initial state it fixes, but not their surface id. The application creates an instance wherever it draws one, before any request, and disposes of it when it stops drawing it:
 
 ```typescript
-const searchBox = session.createWellKnownSurface('search-box', {surfaceId: 'header-search'});
+const searchBox = session.instantiateSurface('search-box', {surfaceId: 'header-search'});
 searchBox.messages.forEach(feedRenderer); // its creation, ready before any request
 // …later, feed only the messages appended since, once each.
 searchBox.dispose();
@@ -140,7 +140,7 @@ interface TurnResponse {
 
 ## Injected schema, endpoint, and context
 
-- **Contract** — a consumer-injected bundle (`contract`) of the component union (`components`), the well-known surface templates (`wellKnownSurfaces`) and the lookup actions of each component (`lookupActions`), typed by `SessionContract`. Its Zod discriminated union is the sole source for component-state and action-payload validation. Thermidor accepts it through a structural typing seam (`ContractsSchema` / `ComponentContractSchema` / `ParsableSchema`) that reads only public Zod API, so it declares no dependency on any specific schema package. It declares `zod` as a peer dependency spanning both majors (`3.25.76 || ^4`), so validation runs through the single shared `zod` instance resolved by the injected schema. A consumer whose renderer is built on Zod 3 injects a Zod 3 schema, such as `@coveo/thermidor-schema/zod3`.
+- **Contract** — a consumer-injected bundle (`contract`) of the component union (`components`), the surface templates (`surfaceTemplates`) and the lookup actions of each component (`lookupActions`), typed by `SessionContract`. Its Zod discriminated union is the sole source for component-state and action-payload validation. Thermidor accepts it through a structural typing seam (`ContractsSchema` / `ComponentContractSchema` / `ParsableSchema`) that reads only public Zod API, so it declares no dependency on any specific schema package. It declares `zod` as a peer dependency spanning both majors (`3.25.76 || ^4`), so validation runs through the single shared `zod` instance resolved by the injected schema. A consumer whose renderer is built on Zod 3 injects a Zod 3 schema, such as `@coveo/thermidor-schema/zod3`.
 - **Endpoint** — when `endpoint` is provided, the client POSTs to it verbatim. When absent, it resolves `https://{orgId}.org.coveo.com` and appends the fixed converse path `/api/preview/organizations/{orgId}/agents/commerce/agui/converse`.
 - **Context providers** — `navigatorContextProvider` and `commerceContextProvider` are synchronous functions read fresh per request. Context is never stored on the session and never serialized.
 

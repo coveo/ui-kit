@@ -44,10 +44,10 @@ import {restoreSession, serializeSession, type SerializedSession} from './serial
 import {createSessionStore, type SessionStore, type SessionStoreState} from './store.js';
 import type {Turn, TurnInput} from './types.js';
 import {
-  createWellKnownSurfaces,
-  type WellKnownSurface,
-  type WellKnownSurfaceOptions,
-} from './well-known-surfaces.js';
+  createSurfaceInstances,
+  type SurfaceInstance,
+  type SurfaceInstanceOptions,
+} from './surface-instances.js';
 
 /**
  * The standard A2-UI client-to-server message the frozen renderer delivers to
@@ -113,7 +113,7 @@ export interface SessionConfig<TContract extends SessionContract = SessionContra
    *   session: inbound `updateDataModel` ops are validated against the member's `state` (whole) /
    *   its sub-schema (partial sub-path), and outbound action payloads against the member's
    *   `actions` for the dispatched action name, before the POST.
-   * - `wellKnownSurfaces`: the templates {@link Session.createWellKnownSurface} creates instances
+   * - `surfaceTemplates`: the templates {@link Session.instantiateSurface} creates instances
    *   of.
    * - `lookupActions`: the actions of each component that are lookups.
    *
@@ -160,7 +160,7 @@ export interface SessionConfig<TContract extends SessionContract = SessionContra
  */
 export interface Session<TContract extends SessionContract = SessionContract> {
   /**
-   * The injected contract this session validates against and creates well-known surfaces from.
+   * The injected contract this session validates against and instantiates surface templates from.
    * Retained on the handle so the generic parameter is observable and the runtime threads the
    * exact contract that was injected.
    */
@@ -177,8 +177,8 @@ export interface Session<TContract extends SessionContract = SessionContract> {
    */
   readonly actionError: string | undefined;
   /**
-   * Creates an instance of one of the contract's well-known surface templates, outside any turn,
-   * so a renderer can draw it before any request: its `messages` already hold its creation.
+   * Creates an instance of one of the contract's surface templates, outside any turn, so a
+   * renderer can draw it before any request: its `messages` already hold its creation.
    * Call it where the application draws the surface, and dispose of the instance when it stops
    * drawing it.
    *
@@ -191,13 +191,13 @@ export interface Session<TContract extends SessionContract = SessionContract> {
    * @throws When the contract declares no such template, or when a live instance already holds
    *   the surface id.
    */
-  createWellKnownSurface(
-    template: TContract['wellKnownSurfaces'][number]['template'],
-    options?: WellKnownSurfaceOptions
-  ): WellKnownSurface;
+  instantiateSurface(
+    template: TContract['surfaceTemplates'][number]['template'],
+    options?: SurfaceInstanceOptions
+  ): SurfaceInstance;
   /**
    * Registers a listener invoked once per change to the turn list, `actionError`, or the
-   * `messages` of a well-known surface instance.
+   * `messages` of a surface instance.
    */
   subscribe(listener: () => void): () => void;
   /**
@@ -213,10 +213,10 @@ export interface Session<TContract extends SessionContract = SessionContract> {
    * surfaces, validates the action payload against the component's contract
    * internally, and — on success — POSTs the action to the converse endpoint.
    *
-   * An action from a live well-known surface instance (see
-   * {@link Session.createWellKnownSurface}) needs no active turn. It must be one the contract
-   * marks as a lookup, and is sent at once, alongside any prompt or gesture, with the session
-   * token when there is one and the instance's template name. A newer lookup from the same
+   * An action from a live surface instance (see {@link Session.instantiateSurface}) needs no
+   * active turn. It must be one the contract marks as a lookup, and is sent at once, alongside
+   * any prompt or gesture, with the session token when there is one and the instance's template
+   * name. A newer lookup from the same
    * surface, component and action aborts the previous one. Its result is appended to that
    * instance's `messages`: it never opens a turn or folds into one, no session keys are adopted
    * from it, and its failure fails no turn. It resolves once the lookup's stream ends.
@@ -224,7 +224,7 @@ export interface Session<TContract extends SessionContract = SessionContract> {
    * FIRE-AND-FORGET: the returned Promise ALWAYS resolves and NEVER rejects, so
    * the consumer needs no `.catch`. A message with no `userAction`, no
    * `sourceComponentId`, a node that resolves to no component, an action from a
-   * well-known surface that is not a lookup, and an internal dispatch rejection
+   * surface instance that is not a lookup, and an internal dispatch rejection
    * (for example an invalid payload) are all dropped with a dev-only warning and
    * nothing is sent.
    */
@@ -335,7 +335,7 @@ export function createSession<TContract extends SessionContract>(
 
   // Per surface, one in-flight lookup per source component and action; a newer one aborts it.
   const lookupControllers = new Map<string, Map<string, AbortController>>();
-  const wellKnownSurfaces = createWellKnownSurfaces(config.contract.wellKnownSurfaces, contracts, {
+  const surfaceInstances = createSurfaceInstances(config.contract.surfaceTemplates, contracts, {
     onChange: () => store.setState((current) => ({...current})),
     onDispose: (surfaceId) => {
       for (const controller of lookupControllers.get(surfaceId)?.values() ?? []) {
@@ -745,18 +745,18 @@ export function createSession<TContract extends SessionContract>(
   }
 
   /**
-   * Resolves an action from a well-known surface instance against its template, and sends it as
+   * Resolves an action from a surface instance against its template, and sends it as
    * a lookup. Anything else on the instance is dropped: the contract only places lookups there.
    */
   async function dispatchLookup(
     userAction: NonNullable<A2uiClientMessage['userAction']>
   ): Promise<void> {
     const {name, surfaceId, sourceComponentId, context} = userAction;
-    const surfaceTemplate = wellKnownSurfaces.templateOf(surfaceId);
+    const surfaceTemplate = surfaceInstances.templateOf(surfaceId);
     const discriminant =
       sourceComponentId === undefined
         ? undefined
-        : wellKnownSurfaces.resolve(surfaceId, sourceComponentId);
+        : surfaceInstances.resolve(surfaceId, sourceComponentId);
     if (surfaceTemplate === undefined || sourceComponentId === undefined || !discriminant) {
       devWarn(
         `dispatchAction: node "${sourceComponentId}" on surface "${surfaceId}" resolves to no component; nothing sent.`
@@ -765,7 +765,7 @@ export function createSession<TContract extends SessionContract>(
     }
     if (!lookupActions[discriminant]?.includes(name)) {
       devWarn(
-        `dispatchAction: "${name}" on component "${discriminant}" is not a lookup, and a well-known surface only sends lookups; nothing sent.`
+        `dispatchAction: "${name}" on component "${discriminant}" is not a lookup, and a surface instance only sends lookups; nothing sent.`
       );
       return;
     }
@@ -789,8 +789,8 @@ export function createSession<TContract extends SessionContract>(
   }
 
   /**
-   * Sends a lookup outside the prompt and gesture lane. Its run writes only to live well-known
-   * surface instances: it never touches a turn, and its session keys are never adopted, so a
+   * Sends a lookup outside the prompt and gesture lane. Its run writes only to live surface
+   * instances: it never touches a turn, and its session keys are never adopted, so a
    * lookup sent before the first prompt opens no session.
    */
   async function runLookup(
@@ -837,7 +837,7 @@ export function createSession<TContract extends SessionContract>(
             content?: {messages?: unknown};
           };
           if (event.type === 'ACTIVITY_SNAPSHOT' && Array.isArray(event.content?.messages)) {
-            wellKnownSurfaces.apply(event.content.messages);
+            surfaceInstances.apply(event.content.messages);
           }
         },
       });
@@ -868,7 +868,7 @@ export function createSession<TContract extends SessionContract>(
       return;
     }
 
-    if (message.userAction && wellKnownSurfaces.templateOf(message.userAction.surfaceId)) {
+    if (message.userAction && surfaceInstances.templateOf(message.userAction.surfaceId)) {
       await dispatchLookup(message.userAction);
       return;
     }
@@ -906,7 +906,7 @@ export function createSession<TContract extends SessionContract>(
     get actionError() {
       return store.getState().actionError;
     },
-    createWellKnownSurface: wellKnownSurfaces.create,
+    instantiateSurface: surfaceInstances.create,
     subscribe(listener) {
       return store.subscribe(listener);
     },

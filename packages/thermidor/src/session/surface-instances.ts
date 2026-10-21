@@ -1,5 +1,6 @@
 /**
- * Well-known surfaces: instances of the surface templates the injected contract declares.
+ * Surface instances: the surfaces an application creates from the templates the injected
+ * contract declares.
  *
  * A template fixes a surface's composition and initial state, but not its surface id. The
  * application creates instances of it through the session wherever it draws one, so each
@@ -17,10 +18,10 @@ import {
 import type {A2uiV09Message} from './types.js';
 
 /**
- * A well-known surface template, as the contract declares it: its name, and the A2-UI
+ * A surface template, as the contract declares it: its name, and the A2-UI
  * `createSurface` parameters every instance shares, all but its surface id.
  */
-export interface WellKnownSurfaceTemplate {
+export interface SurfaceTemplate {
   /** The template name. Every lookup from an instance sends it as its `surfaceTemplate`. */
   readonly template: string;
   /** The catalog the template's components belong to. */
@@ -31,8 +32,8 @@ export interface WellKnownSurfaceTemplate {
   readonly dataModel: object;
 }
 
-/** One instance of a well-known surface template, created by the session's `createWellKnownSurface`. */
-export interface WellKnownSurface {
+/** One instance of a surface template, created by the session's `instantiateSurface`. */
+export interface SurfaceInstance {
   /** The surface id the instance was created under: the id its renderer draws. */
   readonly surfaceId: string;
   /** The name of the template it was created from. */
@@ -51,8 +52,8 @@ export interface WellKnownSurface {
   dispose(): void;
 }
 
-/** Options for creating a well-known surface instance with the session's `createWellKnownSurface`. */
-export interface WellKnownSurfaceOptions {
+/** Options for creating a surface instance with the session's `instantiateSurface`. */
+export interface SurfaceInstanceOptions {
   /**
    * The instance's surface id. Defaults to an id derived from the template name that no live
    * instance holds. Pass one that is the same on server and client, such as one derived from
@@ -61,8 +62,8 @@ export interface WellKnownSurfaceOptions {
   surfaceId?: string;
 }
 
-export interface WellKnownSurfaces {
-  create(template: string, options?: WellKnownSurfaceOptions): WellKnownSurface;
+export interface SurfaceInstances {
+  create(template: string, options?: SurfaceInstanceOptions): SurfaceInstance;
   /** The template name of a live instance, or `undefined`. */
   templateOf(surfaceId: string): string | undefined;
   /** The `component` discriminant of a node of a live instance, or `undefined`. */
@@ -76,11 +77,11 @@ interface Instance {
   messages: readonly A2uiV09Message[];
 }
 
-export function createWellKnownSurfaces(
-  templates: readonly WellKnownSurfaceTemplate[],
+export function createSurfaceInstances(
+  templates: readonly SurfaceTemplate[],
   contracts: ContractsSchema,
   callbacks: {onChange: () => void; onDispose: (surfaceId: string) => void}
-): WellKnownSurfaces {
+): SurfaceInstances {
   const templatesByName = new Map(templates.map((template) => [template.template, template]));
   const instances = new Map<string, Instance>();
   const registry: NodeIdentityRegistry = new Map();
@@ -93,20 +94,20 @@ export function createWellKnownSurfaces(
     return `${template}-${sequence}`;
   }
 
-  function create(name: string, options: WellKnownSurfaceOptions = {}): WellKnownSurface {
+  function create(name: string, options: SurfaceInstanceOptions = {}): SurfaceInstance {
     const declaration = templatesByName.get(name);
     if (!declaration) {
-      throw new Error(`The session's contract declares no well-known surface "${name}".`);
+      throw new Error(`The session's contract declares no surface template "${name}".`);
     }
     const surfaceId = options.surfaceId ?? mintSurfaceId(name);
     if (instances.has(surfaceId)) {
-      throw new Error(`A live well-known surface already holds the surface id "${surfaceId}".`);
+      throw new Error(`A live surface instance already holds the surface id "${surfaceId}".`);
     }
 
     const {template, ...createSurface} = declaration;
     const activities = [
       {
-        id: `well-known-surface:${surfaceId}`,
+        id: `surface-instance:${surfaceId}`,
         kind: 'a2ui-surface',
         replace: false,
         payload: {messages: [{version: 'v1.0', createSurface: {...createSurface, surfaceId}}]},

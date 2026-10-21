@@ -11,8 +11,8 @@ export interface CommerceRequestModel {
   message: string | null;
   action: A2uiAction | null;
   /**
-   * Present only on a lookup: the name of the well-known surface template the action's surface
-   * was created from. A request without it is never a lookup.
+   * Present only on a lookup: the name of the surface template the action's surface was
+   * created from. A request without it is never a lookup.
    */
   surfaceTemplate?: string;
   conversationSessionId?: string;
