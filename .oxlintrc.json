@@ -51,7 +51,7 @@
       }
     },
     {
-      "files": ["**/packages/atomic/src/**/*.ts"],
+      "files": ["**/packages/atomic/**/*.ts", "**/packages/atomic/**/*.tsx"],
       "rules": {
         "no-restricted-imports": [
           "error",
