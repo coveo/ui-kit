@@ -52,42 +52,32 @@ function isRecommendationCompletedAction(action: unknown): action is Action {
   );
 }
 
-function noSearchActionRequired(_action: unknown): _action is Action {
-  return true;
-}
-
 function buildSSRCommerceEngine(
   solutionType: SolutionType,
   options: CommerceEngineOptions,
   recommendationCount: number
 ): SSRCommerceEngine {
-  let actionCompletionMiddleware: ReturnType<typeof createWaitForActionMiddleware>;
-
   const middlewares: ReturnType<typeof createWaitForActionMiddleware>[] = [];
   const memo: Set<string> = new Set();
 
   switch (solutionType) {
     case SolutionType.listing:
-      actionCompletionMiddleware = createWaitForActionMiddleware(isListingFetchCompletedAction);
-      middlewares.push(actionCompletionMiddleware);
+      middlewares.push(createWaitForActionMiddleware(isListingFetchCompletedAction));
       break;
     case SolutionType.search:
-      actionCompletionMiddleware = createWaitForActionMiddleware(isSearchCompletedAction);
-      middlewares.push(actionCompletionMiddleware);
-      break;
-    case SolutionType.recommendation:
-      middlewares.push(
-        ...Array.from({length: recommendationCount}, () =>
-          createWaitForActionMiddlewareForRecommendation(isRecommendationCompletedAction, memo)
-        )
-      );
+      middlewares.push(createWaitForActionMiddleware(isSearchCompletedAction));
       break;
     case SolutionType.standalone:
-      actionCompletionMiddleware = createWaitForActionMiddleware(noSearchActionRequired);
       break;
     default:
       throw new Error('Unsupported solution type', solutionType);
   }
+
+  middlewares.push(
+    ...Array.from({length: recommendationCount}, () =>
+      createWaitForActionMiddlewareForRecommendation(isRecommendationCompletedAction, memo)
+    )
+  );
 
   const commerceEngine = buildCommerceEngine({
     ...options,
@@ -117,8 +107,7 @@ export const buildFactory =
     const buildOptions = withDefaultViewUrl(rawBuildOptions);
     const controllerProps = wireControllerParams(solutionType, controllerDefinitions, buildOptions);
 
-    const enabledRecommendationControllers =
-      'recommendations' in buildOptions ? new Set(buildOptions.recommendations).size : 0;
+    const enabledRecommendationControllers = new Set(buildOptions.recommendations).size;
 
     const engineOptions: CommerceEngineOptions = augmentCommerceEngineOptions(
       options,
