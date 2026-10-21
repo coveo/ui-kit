@@ -1,5 +1,5 @@
 import {type ChildPart, nothing} from 'lit';
-import {setChildPartValue} from 'lit/directive-helpers.js';
+import {clearPart, setCommittedValue} from 'lit/directive-helpers.js';
 import {Directive, type DirectiveParameters, directive} from 'lit/directive.js';
 
 /**
@@ -8,8 +8,8 @@ import {Directive, type DirectiveParameters, directive} from 'lit/directive.js';
  * Lit's `keyed()` resets the part's committed value before the previous template instance is
  * cleared, so Lit never disconnects that instance. When the keyed template contains an async
  * directive such as `ref()`, the part keeps every previous instance, and the DOM subtree it
- * rendered, alive for its whole lifetime. This directive clears the part first, which disconnects
- * and releases the previous instance.
+ * rendered, alive for its whole lifetime. This directive is Lit's with one more step: it clears
+ * the part first, which disconnects and releases the previous instance.
  */
 class Keyed extends Directive {
   private key: unknown = nothing;
@@ -21,7 +21,8 @@ class Keyed extends Directive {
 
   override update(part: ChildPart, [key, value]: DirectiveParameters<this>) {
     if (key !== this.key) {
-      setChildPartValue(part, nothing, this);
+      clearPart(part);
+      setCommittedValue(part);
       this.key = key;
     }
     return value;
