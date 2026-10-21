@@ -29,7 +29,7 @@ export const NumericFacet = createReactComponent(
     const optimisticFacet = useOptimisticNumericFacet(props, dispatch);
 
     const {displayName, domain} = props;
-    const {hasActiveValues, isApplyingCustomRange} = optimisticFacet;
+    const {hasActiveValues} = optimisticFacet;
     const domainMin = domain?.min;
     const domainMax = domain?.max;
 
@@ -75,11 +75,7 @@ export const NumericFacet = createReactComponent(
             optimisticFacet.applyCustomRange();
           }}
         >
-          <fieldset
-            className={`${styles.customFieldset} ${isApplyingCustomRange ? styles.pending : ''}`}
-            disabled={isApplyingCustomRange}
-            aria-busy={isApplyingCustomRange}
-          >
+          <fieldset className={styles.customFieldset}>
             <label className={styles.customLabel} htmlFor={startId}>
               <span className={styles.labelText}>Min</span>
               <input

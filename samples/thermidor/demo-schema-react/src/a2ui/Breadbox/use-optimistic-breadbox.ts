@@ -1,10 +1,11 @@
+import {useOptimistic} from 'react';
 import type {
   BreadboxAction,
   BreadboxDeselectPayload,
   BreadboxFacet,
   BreadboxProps,
 } from '@coveo/thermidor-schema/zod3';
-import {useOptimisticValue} from '../use-optimistic-value.js';
+import {useGesture} from '../session-request.js';
 
 const NO_FACETS: BreadboxFacet[] = [];
 
@@ -54,28 +55,22 @@ export function useOptimisticBreadbox(
   props: BreadboxProps,
   dispatch: (action: BreadboxAction) => void
 ): OptimisticBreadbox {
-  const {value: facets, dispatchOptimistic} = useOptimisticValue(
-    props.facets ?? NO_FACETS,
-    dispatch
-  );
+  const [facets, addOptimisticFacets] = useOptimistic(props.facets ?? NO_FACETS);
+  const startGesture = useGesture();
 
   const deselect = (payload: BreadboxDeselectPayload) => {
-    dispatchOptimistic({
-      action: {event: {name: 'deselect', context: payload}},
-      next: (current) => current.map((facet) => withoutValue(facet, payload)).filter(isActive),
-      // Removals of different values compose; a later clearAll still overrides them.
-      coalesce: 'dependent',
-      invalidates: ['results'],
-    });
+    startGesture(
+      () =>
+        addOptimisticFacets(facets.map((facet) => withoutValue(facet, payload)).filter(isActive)),
+      () => dispatch({event: {name: 'deselect', context: payload}})
+    );
   };
 
   const clearAll = () => {
-    dispatchOptimistic({
-      action: {event: {name: 'clearAll', context: {}}},
-      next: () => NO_FACETS,
-      coalesce: 'absolute',
-      invalidates: ['results'],
-    });
+    startGesture(
+      () => addOptimisticFacets(NO_FACETS),
+      () => dispatch({event: {name: 'clearAll', context: {}}})
+    );
   };
 
   return {facets, deselect, clearAll};

@@ -46,7 +46,7 @@ export const RegularFacet = createReactComponent(
             className={styles.checkbox}
             data-testid={testId}
             checked={isSelected}
-            onChange={() => optimisticFacet.toggleSelect(value)}
+            onChange={() => optimisticFacet.toggleSelect(value, numberOfResults)}
           />
           <span className={styles.valueLabel}>{value}</span>
           <span className={styles.valueCount}>({numberOfResults})</span>
@@ -106,7 +106,10 @@ export const RegularFacet = createReactComponent(
                 renderCheckbox(
                   result.value,
                   result.numberOfResults,
-                  false,
+                  optimisticFacet.values.some(
+                    (candidate) =>
+                      candidate.value === result.value && candidate.state === 'selected'
+                  ),
                   `facet-search-result-${result.value}`
                 )
               )}

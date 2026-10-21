@@ -9,22 +9,25 @@ const mockDispatchAction = vi.fn();
 let mockTurns: Turn[] = [];
 let capturedOnAction: ((message: unknown) => unknown) | undefined;
 
-// `actions` is a real coordinator sending to `mockDispatchAction`, so renderer actions hit the spy.
-vi.mock('../context/session.js', async () => {
-  const {createDispatchCoordinator} = await import('@coveo/thermidor');
-  const actions = createDispatchCoordinator((message: unknown) => mockDispatchAction(message));
+// The session's request chain is faked, so every dispatch reaches the spy one at a time.
+let mockSession: Session;
+vi.mock('../context/session.js', () => ({useSession: () => mockSession}));
+
+async function createMockSession(): Promise<Session> {
+  const {createFakeSessionRequests} = await import('../test/fake-session-requests.js');
+  const requests = createFakeSessionRequests((message: never) => mockDispatchAction(message));
   return {
-    useSession: () =>
-      ({
-        get turns() {
-          return mockTurns;
-        },
-        subscribe: () => () => undefined,
-        dispatchAction: mockDispatchAction,
-        actions,
-      }) as unknown as Session,
-  };
-});
+    get turns() {
+      return mockTurns;
+    },
+    get request() {
+      return requests.source.request;
+    },
+    subscribe: requests.source.subscribe,
+    whenSettled: requests.source.whenSettled,
+    dispatchAction: requests.dispatch,
+  } as unknown as Session;
+}
 
 vi.mock('@copilotkit/a2ui-renderer', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@copilotkit/a2ui-renderer')>()),
@@ -86,8 +89,9 @@ function searchTurn(id: string): Turn {
 }
 
 describe('AppShell', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks();
+    mockSession = await createMockSession();
     mockTurns = [];
     capturedOnAction = undefined;
   });

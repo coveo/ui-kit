@@ -1,8 +1,8 @@
-import {useId} from 'react';
+import {useId, useOptimistic} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {PageSizeAction} from '@coveo/thermidor-schema';
 import {PageSizePropsSchema} from '@coveo/thermidor-schema/zod3';
-import {useOptimisticValue} from '../use-optimistic-value.js';
+import {useGesture} from '../session-request.js';
 import styles from './PageSize.module.css';
 
 const DEFAULT_PAGE_SIZE_OPTIONS = [12, 24, 48];
@@ -13,12 +13,8 @@ export const PageSize = createReactComponent(
   ({props, context}) => {
     const selectId = useId();
 
-    const {value: pageSize, dispatchOptimistic} = useOptimisticValue(
-      props.pageSize,
-      (action: PageSizeAction) => {
-        context.dispatchAction(action);
-      }
-    );
+    const [pageSize, addOptimisticPageSize] = useOptimistic(props.pageSize);
+    const startGesture = useGesture();
 
     // The producer's size must stay selectable while another one is held.
     const currentPageSize = typeof pageSize === 'number' ? pageSize : undefined;
@@ -36,12 +32,10 @@ export const PageSize = createReactComponent(
       const setPageSizeAction: PageSizeAction = {
         event: {name: 'setPageSize', context: {pageSize: newSize}},
       };
-      dispatchOptimistic({
-        action: setPageSizeAction,
-        next: () => newSize,
-        coalesce: 'absolute',
-        invalidates: ['results'],
-      });
+      startGesture(
+        () => addOptimisticPageSize(newSize),
+        () => context.dispatchAction(setPageSizeAction)
+      );
     };
 
     return (
