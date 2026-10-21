@@ -42,6 +42,7 @@
       "inputs": [
         "./custom-elements-manifest.config.mjs",
         "./scripts/cem-plugins/*.mjs",
+        "!./scripts/cem-plugins/*.spec.mjs",
         "./src/**/*.ts",
         "!./src/components/*/index.ts",
         "!./src/components/*/lazy-index.ts",

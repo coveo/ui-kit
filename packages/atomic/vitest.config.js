@@ -180,6 +180,11 @@ export default mergeConfig(atomicDefault, {
         packageJsonPath: path.resolve(import.meta.dirname, 'package.json'),
       }),
     ],
-    projects: [atomicDefault, storybookPure, ...(!isVitestVscodeExt ? [storybook] : [])],
+    projects: [
+      atomicDefault,
+      storybookPure,
+      './scripts/cem-plugins/testing/vitest.config.mjs',
+      ...(!isVitestVscodeExt ? [storybook] : []),
+    ],
   },
 });

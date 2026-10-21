@@ -24,6 +24,11 @@ export default {
   ],
   litelement: true,
   /**
+   * `customElements` is already set in `package.json`. Without this, the analyzer also writes it into
+   * the `package.json` of the working directory, which is the monorepo root's when the specs run there.
+   */
+  packagejson: false,
+  /**
    * The analyzer visits files in the order the file system returns them, which is not stable.
    * Sorting them makes the manifest byte-for-byte reproducible.
    */
