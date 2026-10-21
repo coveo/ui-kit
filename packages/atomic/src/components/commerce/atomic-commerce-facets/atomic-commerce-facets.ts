@@ -21,6 +21,7 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
+import {keyed} from '@/src/directives/keyed';
 import '../../common/atomic-facet-placeholder/atomic-facet-placeholder';
 import {createAppLoadedListener} from '../../common/interface/store';
 import '../atomic-commerce-category-facet/atomic-commerce-category-facet';
@@ -30,7 +31,6 @@ import '../atomic-commerce-numeric-facet/atomic-commerce-numeric-facet';
 import '../atomic-commerce-timeframe-facet/atomic-commerce-timeframe-facet';
 import type {FacetType, MappedGeneratedFacetController} from '@coveo/headless/commerce';
 import {bindStateToController} from '@/src/decorators/bind-state';
-import {keyed} from '@/src/directives/keyed';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 
 /**
