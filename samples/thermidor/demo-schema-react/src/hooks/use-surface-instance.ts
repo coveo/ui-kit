@@ -3,18 +3,18 @@ import {useA2UI} from '@copilotkit/a2ui-renderer';
 import type {ThermidorContract} from '@coveo/thermidor-schema/zod3';
 import {useSession} from '../context/session.js';
 
-type WellKnownSurfaceTemplate = (typeof ThermidorContract)['wellKnownSurfaces'][number];
+type SurfaceTemplate = (typeof ThermidorContract)['surfaceTemplates'][number];
 
 /**
- * Creates an instance of a well-known surface template for as long as the calling component is
- * mounted, and feeds its messages, each one once, to the enclosing `A2UIProvider`. Returns the
- * instance's surface id once the renderer has its surface, or `null` before that.
+ * Creates an instance of a surface template for as long as the calling component is mounted,
+ * and feeds its messages, each one once, to the enclosing `A2UIProvider`. Returns the instance's
+ * surface id once the renderer has its surface, or `null` before that.
  *
  * The instance is created in a layout effect, so the surface is drawn in the first paint. Its
  * renderer must be fed only this instance's messages: a renderer that clears and replays its
  * surfaces would remount the surface's components.
  */
-export function useWellKnownSurface(template: WellKnownSurfaceTemplate): string | null {
+export function useSurfaceInstance(template: SurfaceTemplate): string | null {
   const session = useSession();
   const {processMessages} = useA2UI();
   const processMessagesRef = useRef(processMessages);
@@ -23,7 +23,7 @@ export function useWellKnownSurface(template: WellKnownSurfaceTemplate): string 
   const [createdSurfaceId, setCreatedSurfaceId] = useState<string | null>(null);
 
   useLayoutEffect(() => {
-    const surface = session.createWellKnownSurface(template.template, {surfaceId});
+    const surface = session.instantiateSurface(template.template, {surfaceId});
     let fed = 0;
     const feed = () => {
       if (surface.messages.length > fed) {
