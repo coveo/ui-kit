@@ -25,17 +25,12 @@ related:
 
 `thermidor-schema` ADR-020 decides how query suggestions work:
 
-- The contract declares **well-known surface templates**: surfaces whose composition and initial
-  state it fixes, but not their id. A consumer creates an instance of one itself, under a surface
-  id of its choosing, before that instance's first request, and the producer only writes its
-  state. A lookup sends the template name with its action. The first template is the search box,
-  whose root is a `QuerySuggestions` component.
-- Some actions are **lookups**, marked in the contract. A lookup is answered outside the line,
-  with or without a session, and writes only its source component's state. `fetchSuggestions` is
-  one.
-
-The point is the user experience: the search box is usable on first paint, before the producer
-has answered anything, and is never swapped while the shopper types.
+- The contract declares **well-known surface templates**. A template fixes a surface's composition
+  and initial state, but not its id: the application creates instances of it, and the producer
+  only writes their state. The first template is the search box, whose root is a
+  `QuerySuggestions` component.
+- The contract marks some actions as **lookups**, such as `fetchSuggestions`. A lookup is answered
+  outside the session's request queue, with or without a session.
 
 The session cannot support this today:
 
@@ -43,7 +38,7 @@ The session cannot support this today:
   `activities` (ADR-015). Nothing creates a surface before a request, or outside a turn.
 - **Dispatch needs the active turn.** `dispatchAction` resolves the source component only in the
   active turn, and drops the action otherwise (ADR-016).
-- **Everything waits in line.** The session has one in-flight stream. Actions run one after
+- **Every request waits in one queue.** The session has one in-flight stream. Actions run one after
   another, and are held back while a prompt streams.
 - **The contract is a component union.** The session receives the component contracts (ADR-014),
   but nothing about surfaces or lookups.
@@ -52,12 +47,12 @@ The session cannot support this today:
 
 - **Faithful transmission and rendering (charter MUST).** A well-known surface is rendered exactly
   as the contract declares it, with A2-UI's standard rendering.
-- **First paint.** The search box surface exists before any request, and its input is never
-  remounted.
+- **First paint.** The search box is usable on first paint, before the producer has answered
+  anything, and its input is never remounted while the shopper types.
 - **Any number of instances.** A page can draw several search boxes, such as one in the header and
   one in a drawer, and they never interfere.
 - **Lookups.** A lookup never waits for, blocks or fails another action or turn. A newer lookup
-  from the same surface and component replaces the previous one.
+  from the same surface, source component and action replaces the previous one.
 - **Best-in-class DX (charter MUST).** An application renders the search box with no code that
   stitches its own input to an A2-UI component, and injects one contract.
 - **Breaking changes are acceptable.** The package is experimental and published as `0.x`, where a
@@ -91,8 +86,8 @@ The session cannot support this today:
   where it draws one. The session creates it outside any turn, and sends its lookups at once.
 - **Pros:** an application renders the search box like any surface, and its actions go through
   `dispatchAction` like any other.
-- **Cons:** the session gains a small layer beside turns, and a second message stream for renderer
-  integrations to feed.
+- **Cons:** the session gains a small layer beside turns, and renderer integrations feed one more
+  message stream per instance.
 
 ## Decision Outcome
 
@@ -101,8 +96,8 @@ Adopt **Option C**.
 ### The injected contract
 
 The session reads the well-known surface templates and the lookup marks from the contract it is
-given. ADR-014's injected contracts schema becomes one contract bundle with three parts, which
-`@coveo/thermidor-schema` generates in both of its entry points:
+given. ADR-014's injected contracts schema becomes one bundle with three parts, which
+`@coveo/thermidor-schema` generates in both its root and `zod3` entry points:
 
 ```ts
 export const ThermidorContract = {
@@ -113,11 +108,12 @@ export const ThermidorContract = {
 ```
 
 - **One input.** `SessionConfig` replaces `contracts` with `contract`, and an application injects
-  the bundle: `createSession({contract: ThermidorContract, ...})`. Separate inputs would let the
-  pieces come from different schema versions, so that the session validates against one contract
-  and creates another one's surfaces, or let an application leave the lookup actions out, so that
-  every action on a well-known surface is dropped with only a dev-only warning. The rename keeps
-  no compatibility for `contracts`.
+  the bundle: `createSession({contract: ThermidorContract, ...})`. The rename keeps no
+  compatibility for `contracts`. Separate inputs would allow two mistakes:
+  - pieces from different schema versions, so that the session validates against one contract and
+    creates another one's surfaces;
+  - leaving the lookup actions out, so that every action on a well-known surface is dropped with
+    only a warning in development.
 - **Accepted by its shape.** The session accepts any contract with `components`,
   `wellKnownSurfaces` and `lookupActions`, and never imports `@coveo/thermidor-schema`, as ADR-014
   requires.
@@ -130,19 +126,20 @@ export const ThermidorContract = {
 
 ### Well-known surfaces
 
-- **Created by the application, per placement.** The application asks the session for an
-  instance of a template where it draws one, and disposes of it when it stops drawing it. The
-  session turns the template into the instance's `createSurface` message at once, before any
-  request, so a renderer can draw it on first paint. It refuses a template the contract does not
-  declare, and a surface id that a live instance already holds.
+- **Created and disposed of by the application, per placement.** The application asks the session
+  for an instance of a template where it draws one, and disposes of it when it stops drawing it.
+  The session refuses a template the contract does not declare, and a surface id that a live
+  instance already holds. Disposing of an instance aborts its in-flight lookups and drops their
+  late results.
 - **Ids chosen by the application.** The application may pass the surface id. Otherwise the
   session mints one that is unique within the session. A server-rendered surface needs an id that
   is the same on server and client, such as one derived from React's `useId`.
 - **Outside turns.** Instances belong to no turn. Each one exposes its renderer messages as a
-  stream of its own, beside the turns, and appends each of its lookup results to it. They use the
-  same v0.9 projection as turns (ADR-015 addendum).
-- **Fed once, never replayed.** A renderer integration feeds each new message to the renderer once.
-  Clearing and replaying the stream would recreate the surface and remount the input. It feeds the
+  stream of its own, beside the turns, using the same v0.9 projection as turns (ADR-015 addendum).
+  The stream starts with the instance's `createSurface` message, produced from the template at
+  creation, before any request.
+- **Fed once, never replayed.** A renderer integration feeds each new message to the renderer once:
+  clearing and replaying the stream would recreate the surface and remount the input. It feeds the
   creation before the first paint, for example from a React layout effect, and deletes the surface
   from its renderer when it disposes of the instance.
 - **Rendered by the instance's id.** The integration renders the instance it created:
@@ -157,21 +154,18 @@ export const ThermidorContract = {
   The hook belongs to the renderer integration. demo-schema-react implements it on top of the
   session's instances.
 
-- **Disposed with their renderer.** Disposing of an instance aborts its in-flight lookups and drops
-  their late results.
-
 - **Validated like any surface.** An inbound `updateDataModel` for a well-known surface is validated
-  against its component's contract before it reaches the renderer.
-- **Not serialized.** A restored session's application creates its instances again.
-  Their state is lookup results, which the next keystroke replaces. ADR-011 is unchanged.
+  against the contract of the component it targets before it reaches the renderer.
+- **Not serialized.** A restored session's application creates its instances again. Their state is
+  lookup results, which the next keystroke replaces. ADR-011 is unchanged.
 
 ### Dispatch
 
-`dispatchAction` resolves an action whose source component is on a live instance against its
-template's declaration, and sends it in the lookup lane, with the template name as the request's
-`surfaceTemplate`. It needs no active turn, which amends
-ADR-016 for these surfaces. An action from a well-known surface that the contract does not mark as a
-lookup is dropped with a dev-only warning; the contract never places one there.
+When an action's source component is on a live instance, `dispatchAction` finds the component in
+the instance and sends the action in the lookup lane, with the template name as the request's
+`surfaceTemplate`. It needs no active turn, which amends ADR-016 for these surfaces. If the
+contract does not mark the action as a lookup, the template and the lookup marks disagree: the
+action is dropped with a warning in development.
 
 ### Request lanes
 
@@ -180,9 +174,14 @@ lookup is dropped with a dev-only warning; the contract never places one there.
 | Prompts and gestures | `submitPrompt`, and component actions that are not lookups | Unchanged.                                                                                                                                                                                                               |
 | Lookups              | component actions the contract marks as lookups            | Sent at once, alongside any prompt or gesture, with the session token when there is one. A new lookup from the same surface, source component and action aborts the previous one. A lookup's failure never fails a turn. |
 
-A lookup's run applies only to live instances. It never opens a turn or folds into one,
-and the session never adopts session keys from it. So a shopper who only types opens no session,
-and the first prompt still opens it, as it does today.
+A lookup's run only updates its source component's state, through the instance's stream. It never
+opens a turn or folds into one, and the session never adopts a `sessionId` or `sessionToken` from
+it. So a shopper who only types opens no session, and the first prompt still opens it, as it does
+today.
+
+A lookup's run can overlap a prompt's run on the same thread. AG-UI only requires a run id that is
+unique within the thread, and validates event order per stream. This package parses each stream
+on its own, so concurrent streams need nothing beyond these lanes.
 
 ### The search box in the renderer
 
@@ -193,20 +192,19 @@ popover.
 - An empty input sends no lookup and shows no completions.
 - A submit hides the completions until the next keystroke, so a lookup that answers after the
   submit cannot reopen them.
-- What submitting does is the application's: the component receives it from the application, for
-  example through a React context. Whether `submitPrompt` becomes an action the component
-  dispatches is left to the prompt-submission ADR.
+- What submitting does is the application's: the component receives a submit handler from the
+  application, for example through a React context. Whether `submitPrompt` becomes an action the
+  component dispatches is left to the prompt-submission ADR.
 
 demo-schema-react implements this as the reference.
 
 ### Rationale
 
-Option A bends the transcript to hold something that is not part of it. Option B pushes the same
-plumbing into every application. Option C puts it once in the session, where `dispatchAction`,
-superseding and in-transit validation already live, and leaves applications rendering a surface
-and choosing what a submit does.
+Option A puts in the transcript something that is not part of it, and Option B puts the same
+plumbing in every application. Option C puts it once in the session, where `dispatchAction`,
+superseding and in-transit validation already live.
 
-Instances are created by the application rather than at construction, because only the
+The application creates instances, rather than the session at construction, because only the
 application knows how many search boxes it draws and for how long. A fixed surface id per template
 would allow one per page: two search boxes would share a surface and a superseding key, so typing
 in one would abort the other's lookups.
@@ -214,7 +212,8 @@ in one would abort the other's lookups.
 ## Impact on the Charter
 
 - **Faithful transmission and rendering (MUST):** preserved. A well-known surface is the contract's
-  template, applied as declared under the application's surface id, and its state is the producer's, validated in transit.
+  template, applied as declared under the application's surface id. Its state is the producer's,
+  validated in transit.
 - **Public API independence (MUST):** unchanged. Well-known surfaces are exposed as the same
   renderer messages as turns.
 - **Best-in-class DX (MUST):** improved. The search box needs no stitching, and the application
@@ -233,24 +232,19 @@ in one would abort the other's lookups.
   - A page can draw any number of search boxes.
   - Instant products, or other well-known surfaces, reuse the same mechanism.
 - **Negative:**
-  - The injected contract changes shape. It ships in a minor `0.x` release with a changeset.
-  - Renderer integrations create and dispose of instances, and feed each one's message stream,
-    once per message.
+  - The injected contract changes shape, a breaking change for every application.
+  - Renderer integrations create and dispose of instances, and feed each instance's stream without
+    replaying it.
   - Instances belong to a session handle, so an application that replaces its session to start a
     new conversation remounts the search box.
   - The mock converse service must answer lookups with or without a session.
-- **Neutral:** an earlier version of this ADR made every surface session-scoped. Query suggestions no
-  longer need that, so it is left to a decision of its own.
 
 ## Implementation and Follow-up
 
-- **Overlapping runs are allowed.** A lookup's run can overlap a prompt's run on the same thread.
-  - AG-UI only requires a run id that is unique within the thread, and validates event order per
-    stream.
-  - This package parses each stream on its own, so concurrent streams only need the request lanes
-    above.
-- **Session-scoped surfaces.** Whether surfaces created by turns live for the whole session, as the
-  producer and A2-UI scope them, so that earlier turns' surfaces keep accepting actions.
-- **Starting a new conversation without remounting the search box.** For example by letting a
-  session handle start a new conversation.
+- **Session-scoped surfaces.** A separate decision settles whether surfaces created by turns live
+  for the whole session, as the producer and A2-UI scope them, so that earlier turns' surfaces keep
+  accepting actions.
+- **New conversations without remounting the search box.** A separate decision settles how an
+  application starts a new conversation without replacing its session handle, for example by
+  letting a session handle start one itself.
 - **Instant products.** See `thermidor-schema` ADR-020's follow-up decisions.
