@@ -237,6 +237,25 @@ describe('Breadbox focus', () => {
     await waitFor(() => expect(document.activeElement).toBe(removeButton(/Brand: Aqua Marina/)));
   });
 
+  it('leaves the focus where the shopper moved it while the removal was answered', async () => {
+    const request = answerable();
+    const {pushDataModel} = mountBreadbox([BRAND, PRICE], request.gate);
+    const elsewhere = document.createElement('a');
+    elsewhere.href = '#elsewhere';
+    document.body.append(elsewhere);
+
+    await clickWithFocus(/Brand: Billabong/);
+    elsewhere.focus();
+    pushDataModel([
+      {path: '/state/root/facets', value: [{...BRAND, values: [BRAND.values[1]]}, PRICE]},
+    ]);
+    await request.answer();
+
+    await waitFor(() => expect(removeButton(/Brand: Aqua Marina/)).toBeDefined());
+    expect(document.activeElement).toBe(elsewhere);
+    elsewhere.remove();
+  });
+
   it('moves focus to the clear-all button when the last value is removed', async () => {
     const request = answerable();
     const {pushDataModel} = mountBreadbox([BRAND, PRICE], request.gate);
