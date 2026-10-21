@@ -1,0 +1,73 @@
+name: Flaky test report
+
+on:
+  schedule:
+    # Mondays at 11:00 UTC, before the person on maintenance starts the release.
+    - cron: '0 11 * * 1'
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/actions/upload-playwright-record/**'
+      - '.github/workflows/flaky-report.yml'
+      - 'utils/ci/flaky-report/**'
+      - 'utils/ci/package.json'
+      - 'utils/ci/playwright-record-reporter.mjs'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # A cancelled publish could leave the issue without its weekly comment, so only dry runs cancel.
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  dry-run:
+    name: 'Flaky test report (dry run)'
+    if: github.ref != 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
+        with:
+          egress-policy: audit
+
+      # Full history, so git blame can date each skipped test.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          filter: blob:none
+      - uses: ./.github/actions/setup
+      # Without --publish, the report goes to this job's summary instead of the issue.
+      - run: pnpm --filter @coveo/ci run flaky-report
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+  publish:
+    name: 'Flaky test report'
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      actions: read
+      contents: read
+      issues: write
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
+        with:
+          egress-policy: audit
+
+      # Full history, so git blame can date each skipped test.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          filter: blob:none
+      - uses: ./.github/actions/setup
+      - run: pnpm --filter @coveo/ci run flaky-report --publish
+        env:
+          GITHUB_TOKEN: ${{ github.token }}

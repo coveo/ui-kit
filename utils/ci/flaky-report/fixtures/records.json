@@ -1,0 +1,346 @@
+{
+  "source": "Every Playwright record of ci.yml run 39610965567 (pull request #8733, Oct 21, 2026), trimmed to the fields the reporter writes now. The records without a retry keep only their suite, shard and counts.",
+  "runId": 39610965567,
+  "records": [
+    {
+      "suite": "atomic-commerce-hybrid",
+      "shard": "1-1",
+      "counts": {
+        "passed": 10,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "atomic-commerce-react",
+      "shard": "1-1",
+      "counts": {
+        "passed": 4,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "atomic-commerce-vite",
+      "shard": "1-1",
+      "counts": {
+        "passed": 7,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "atomic-hosted-page",
+      "shard": "1-1",
+      "counts": {
+        "passed": 9,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "atomic-search-commerce-angular",
+      "shard": "1-1",
+      "counts": {
+        "passed": 6,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "atomic-search-react",
+      "shard": "1-1",
+      "counts": {
+        "passed": 1,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "atomic-search-vite",
+      "shard": "1-1",
+      "counts": {
+        "passed": 1,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "atomic-search-vuejs",
+      "shard": "1-1",
+      "counts": {
+        "passed": 3,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "atomic-theming-e2e",
+      "shard": "1-1",
+      "counts": {
+        "passed": 39,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "atomic",
+      "shard": "1-12",
+      "counts": {
+        "passed": 45,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "atomic",
+      "shard": "10-12",
+      "counts": {
+        "passed": 39,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "atomic",
+      "shard": "11-12",
+      "counts": {
+        "passed": 44,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "atomic",
+      "shard": "12-12",
+      "counts": {
+        "passed": 44,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "atomic",
+      "shard": "2-12",
+      "counts": {
+        "passed": 45,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "atomic",
+      "shard": "3-12",
+      "counts": {
+        "passed": 45,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "atomic",
+      "shard": "4-12",
+      "counts": {
+        "passed": 44,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "atomic",
+      "shard": "5-12",
+      "counts": {
+        "passed": 44,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "atomic",
+      "shard": "6-12",
+      "counts": {
+        "passed": 44,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "atomic",
+      "shard": "7-12",
+      "counts": {
+        "passed": 44,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "atomic",
+      "shard": "8-12",
+      "counts": {
+        "passed": 44,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "atomic",
+      "shard": "9-12",
+      "counts": {
+        "passed": 44,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "headless-commerce-react",
+      "shard": "1-1",
+      "counts": {
+        "passed": 3,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "headless-commerce-vite",
+      "shard": "1-1",
+      "counts": {
+        "passed": 4,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "headless-search-react",
+      "shard": "1-1",
+      "counts": {
+        "passed": 3,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "headless-search-vite",
+      "shard": "1-1",
+      "counts": {
+        "passed": 1,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "headless-ssr-commerce-express",
+      "shard": "1-1",
+      "counts": {
+        "passed": 28,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "headless-ssr-commerce-nextjs",
+      "shard": "1-1",
+      "counts": {
+        "passed": 6,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "headless-ssr-search-nextjs",
+      "shard": "1-1",
+      "counts": {
+        "passed": 102,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "pkg-new-template",
+      "shard": "1-1",
+      "counts": {
+        "passed": 3,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "quantic",
+      "shard": "1-6",
+      "counts": {
+        "passed": 98,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "quantic",
+      "shard": "2-6",
+      "counts": {
+        "passed": 97,
+        "flaky": 1,
+        "failed": 0
+      },
+      "tests": [
+        {
+          "outcome": "flaky",
+          "file": "packages/quantic/force-app/main/default/lwc/quanticGeneratedAnswer/e2e/quanticGeneratedAnswerAgent.e2e.ts",
+          "line": 22,
+          "title": "quantic generated answer - agent - when legacy analytics are sent › should handle multiple answer generation, feedback, clipboard, citation, and follow-up interactions"
+        }
+      ]
+    },
+    {
+      "suite": "quantic",
+      "shard": "3-6",
+      "counts": {
+        "passed": 97,
+        "flaky": 1,
+        "failed": 0
+      },
+      "tests": [
+        {
+          "outcome": "flaky",
+          "file": "packages/quantic/force-app/main/default/lwc/quanticSort/e2e/quanticSort.e2e.ts",
+          "line": 31,
+          "title": "quantic sort in the search use case › when changing sort option to 2nd position › should trigger a new search and log analytics"
+        }
+      ]
+    },
+    {
+      "suite": "quantic",
+      "shard": "4-6",
+      "counts": {
+        "passed": 98,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "quantic",
+      "shard": "5-6",
+      "counts": {
+        "passed": 97,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "quantic",
+      "shard": "6-6",
+      "counts": {
+        "passed": 97,
+        "flaky": 0,
+        "failed": 0
+      }
+    },
+    {
+      "suite": "thermidor-demo-schema-react",
+      "shard": "1-1",
+      "counts": {
+        "passed": 0,
+        "flaky": 0,
+        "failed": 0
+      }
+    }
+  ]
+}
