@@ -24,7 +24,7 @@ async function createMockSession(): Promise<Session> {
       return requests.source.request;
     },
     subscribe: requests.source.subscribe,
-    whenSettled: requests.source.whenSettled,
+    sendAndWait: requests.source.sendAndWait,
     dispatchAction: requests.dispatch,
   } as unknown as Session;
 }

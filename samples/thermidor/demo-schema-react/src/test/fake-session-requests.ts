@@ -8,7 +8,7 @@ interface UserActionMessage {
 /**
  * A stand-in for the session's request handling: sends one message at a time through `send`,
  * withholds a message dispatched while another is in flight, and exposes `request` and
- * `whenSettled()` like `Session` does.
+ * `sendAndWait()` like `Session` does.
  */
 export function createFakeSessionRequests(send: (message: never) => Promise<void> | void) {
   const listeners = new Set<() => void>();
@@ -29,9 +29,9 @@ export function createFakeSessionRequests(send: (message: never) => Promise<void
       listeners.add(listener);
       return () => listeners.delete(listener);
     },
-    whenSettled() {
+    sendAndWait(sendGesture) {
       const settledAt = settledRequests;
-      return new Promise((resolve) => {
+      const answered = new Promise<void>((resolve) => {
         const listener = () => {
           if (settledRequests > settledAt && request === undefined) {
             listeners.delete(listener);
@@ -40,6 +40,8 @@ export function createFakeSessionRequests(send: (message: never) => Promise<void
         };
         listeners.add(listener);
       });
+      sendGesture();
+      return answered;
     },
   };
 

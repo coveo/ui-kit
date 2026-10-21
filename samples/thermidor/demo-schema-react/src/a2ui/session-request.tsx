@@ -2,12 +2,15 @@ import {createContext, startTransition, useContext} from 'react';
 import type {Session} from '@coveo/thermidor';
 
 /** What the surfaces read from the session: its request in flight, and when it has answered. */
-export type SessionRequestSource = Pick<Session, 'request' | 'subscribe' | 'whenSettled'>;
+export type SessionRequestSource = Pick<Session, 'request' | 'subscribe' | 'sendAndWait'>;
 
 const IDLE: SessionRequestSource = {
   request: undefined,
   subscribe: () => () => {},
-  whenSettled: () => Promise.resolve(),
+  sendAndWait: (send) => {
+    send();
+    return Promise.resolve();
+  },
 };
 
 const SessionRequestContext = createContext<SessionRequestSource>(IDLE);
@@ -34,9 +37,7 @@ export function useGesture(): (optimistic: () => void, send: () => void) => void
     }
     startTransition(async () => {
       optimistic();
-      const answered = source.whenSettled();
-      send();
-      await answered;
+      await source.sendAndWait(send);
     });
   };
 }

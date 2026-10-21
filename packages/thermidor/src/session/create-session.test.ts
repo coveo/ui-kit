@@ -874,13 +874,17 @@ describe('createSession lifecycle', () => {
       expect(seen).toEqual([undefined]);
     });
 
-    it('settles whenSettled() once the dispatch made after it is answered', async () => {
+    it('resolves sendAndWait() once the dispatch it sends is answered', async () => {
       const session = await seededSession();
       const stream = queueStream();
       let settled = false;
+      let action!: Promise<void>;
 
-      const answered = session.whenSettled().then(() => (settled = true));
-      const action = session.dispatchAction(selectPageMessage(2));
+      const answered = session
+        .sendAndWait(() => {
+          action = session.dispatchAction(selectPageMessage(2));
+        })
+        .then(() => (settled = true));
       await stream.opened;
       await flush();
       expect(settled).toBe(false);
@@ -892,13 +896,14 @@ describe('createSession lifecycle', () => {
       expect(settled).toBe(true);
     });
 
-    it('settles whenSettled() for a dispatch withheld without being sent', async () => {
+    it('resolves sendAndWait() for a dispatch withheld without being sent', async () => {
       const session = await seededSession();
 
-      const answered = session.whenSettled();
-      await session.dispatchAction({
-        userAction: {name: 'selectPage', surfaceId: 'commerce-search-surface', context: {}},
-      });
+      const answered = session.sendAndWait(() =>
+        session.dispatchAction({
+          userAction: {name: 'selectPage', surfaceId: 'commerce-search-surface', context: {}},
+        })
+      );
 
       await expect(answered).resolves.toBeUndefined();
     });

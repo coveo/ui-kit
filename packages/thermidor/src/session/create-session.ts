@@ -167,11 +167,13 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
   /** Registers a listener invoked once per change to the turn list, `actionError` or `request`. */
   subscribe(listener: () => void): () => void;
   /**
-   * Resolves once a dispatch made after this call has ended and the session is idle, whatever the
-   * outcome: answered, failed, cancelled, or withheld without being sent. Call it right before
-   * dispatching a gesture to wait for its answer, for example to end an optimistic update.
+   * Calls `send`, which dispatches through the renderer, and resolves once the session has answered
+   * that dispatch, whatever the outcome: answered, failed, cancelled, or withheld without being
+   * sent. For example, it ends an optimistic update. A renderer's own dispatch promise may resolve
+   * as soon as it has emitted the action, before the session has answered it; when the
+   * {@link Session.dispatchAction} promise is at hand, await it instead.
    */
-  whenSettled(): Promise<void>;
+  sendAndWait(send: () => unknown): Promise<void>;
   /**
    * The single consumer-facing action-dispatch entry point, wired directly as
    * the renderer's `onAction` handler (`onAction={session.dispatchAction}`).
@@ -336,9 +338,10 @@ export function createSession<TContracts extends ContractsSchema>(
     return Promise.resolve();
   }
 
-  function whenSettled(): Promise<void> {
+  function sendAndWait(send: () => unknown): Promise<void> {
+    // Read before sending: a withheld dispatch settles synchronously, inside `send`.
     const settledAt = settledOf(store.getState());
-    return new Promise((resolve) => {
+    const answered = new Promise<void>((resolve) => {
       const unsubscribe = store.subscribe(() => {
         const state = store.getState();
         if (settledOf(state) > settledAt && state.request === undefined) {
@@ -347,6 +350,8 @@ export function createSession<TContracts extends ContractsSchema>(
         }
       });
     });
+    send();
+    return answered;
   }
 
   function setActionError(actionError: string | undefined): void {
@@ -783,7 +788,7 @@ export function createSession<TContracts extends ContractsSchema>(
     subscribe(listener) {
       return store.subscribe(listener);
     },
-    whenSettled,
+    sendAndWait,
     dispatchAction,
     cancel,
     retry,

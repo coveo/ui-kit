@@ -33,18 +33,18 @@ await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me r
 
 `createSession(config)` returns a `Session` exposing exactly:
 
-| Member                    | Purpose                                                                                                                 |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `contracts`               | The injected contracts schema this session validates against (readonly).                                                |
-| `turns`                   | Readonly observable list of `Turn`s folded from the stream (empty initially).                                           |
-| `actionError`             | Why the last component action was dropped after repeated concurrency conflicts, or `undefined`. See below.              |
-| `request`                 | The request being sent, or `undefined` when idle. See [One request at a time](#one-request-at-a-time).                  |
-| `whenSettled()`           | Resolves once a dispatch made after the call has ended and the session is idle, whatever the outcome.                   |
-| `subscribe(listener)`     | Registers a listener called once per change to the turn list, `actionError` or `request`.                               |
-| `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's `onAction`. |
-| `cancel()`                | Stops the active stream.                                                                                                |
-| `retry(turnId)`           | Re-submits an errored turn's input.                                                                                     |
-| `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                                                         |
+| Member                    | Purpose                                                                                                                   |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `contracts`               | The injected contracts schema this session validates against (readonly).                                                  |
+| `turns`                   | Readonly observable list of `Turn`s folded from the stream (empty initially).                                             |
+| `actionError`             | Why the last component action was dropped after repeated concurrency conflicts, or `undefined`. See below.                |
+| `request`                 | The request being sent, or `undefined` when idle. See [One request at a time](#one-request-at-a-time).                    |
+| `sendAndWait(send)`       | Calls `send`, which dispatches through the renderer, and resolves once the session has answered it, whatever the outcome. |
+| `subscribe(listener)`     | Registers a listener called once per change to the turn list, `actionError` or `request`.                                 |
+| `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's `onAction`.   |
+| `cancel()`                | Stops the active stream.                                                                                                  |
+| `retry(turnId)`           | Re-submits an errored turn's input.                                                                                       |
+| `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                                                           |
 
 The concrete `contracts` type pinned at the `createSession` call site threads unbroken through `Session`, so component types, action names, and payloads stay fully typed at the call site (no `string`, no `never`, no `unknown`).
 
@@ -79,20 +79,20 @@ It is **fire-and-forget**: the returned Promise always resolves and never reject
 Thermidor sends one request at a time per session, prompts and component actions alike. A dispatch made while a request is in flight is withheld: nothing is sent, and its promise resolves at once with a dev-only warning. Each `dispatchAction` promise resolves once its own request ends.
 
 - `session.request` is the request being sent (`{kind: 'prompt', turnId}` or `{kind: 'action', name, surfaceId, sourceComponentId, turnId}`), or `undefined` when idle. An action's run counts, a follow-up included. Read it synchronously, or through `subscribe`, to lock or dim the interface, and to hold back a dispatch until the session is free.
-- `session.whenSettled()` resolves once a dispatch made after the call has ended and the session is idle, whatever its outcome, a withheld one included.
+- `session.sendAndWait(send)` calls `send`, which dispatches through the renderer, and resolves once the session has answered that dispatch, whatever its outcome, a withheld one included. A renderer's own dispatch promise may resolve as soon as it has emitted the action; when the `dispatchAction` promise is at hand, await it instead.
 
 ### Optimistic values
 
-To show a gesture's expected value until the session has answered it, wait on `whenSettled()`, called right before the dispatch. With React's `useOptimistic`, the transition lasts exactly that long:
+To show a gesture's expected value until the session has answered it, send the gesture through `sendAndWait()`. With React's `useOptimistic`, the transition lasts exactly that long:
 
 ```tsx
 const [values, addOptimisticValues] = useOptimistic(producerValues);
 
 startTransition(async () => {
   addOptimisticValues(values.map((v) => (v.value === 'Nike' ? {...v, state: 'selected'} : v)));
-  const answered = session.whenSettled();
-  renderer.dispatchAction({event: {name: 'toggleSelect', context: {value: 'Nike'}}});
-  await answered;
+  await session.sendAndWait(() =>
+    renderer.dispatchAction({event: {name: 'toggleSelect', context: {value: 'Nike'}}})
+  );
 });
 ```
 

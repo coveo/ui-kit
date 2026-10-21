@@ -17,7 +17,7 @@ function mount(initialBackend: string) {
       return this.busy ? ({kind: 'prompt', turnId: 'turn'} as const) : undefined;
     },
     subscribe: () => () => {},
-    whenSettled: () => Promise.resolve(),
+    sendAndWait: () => Promise.resolve(),
   };
 
   let current!: ReturnType<typeof useOptimisticFacetSearch>;

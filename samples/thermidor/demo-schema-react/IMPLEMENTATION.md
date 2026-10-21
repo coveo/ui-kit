@@ -130,7 +130,7 @@ The producer replies by writing updated component state inline through the A2-UI
 
 Search controls show the shopper's choice right away instead of waiting for the producer's reply:
 
-- Each control shows the value its gesture expects with React's `useOptimistic`. `useGesture` (`src/a2ui/session-request.tsx`) runs the gesture in a transition that applies the optimistic value, dispatches the action, and awaits `session.whenSettled()`, so the optimistic value shows until the session has answered the gesture, whatever the outcome, then gives way to the producer's. Sort, pagination and page size do it in their component; the facets and the breadbox go through a `use-optimistic-*.ts` hook next to their component, which computes the expected value.
+- Each control shows the value its gesture expects with React's `useOptimistic`. `useGesture` (`src/a2ui/session-request.tsx`) runs the gesture in a transition that applies the optimistic value, and sends the action through `session.sendAndWait()`, so the optimistic value shows until the session has answered the gesture, whatever the outcome, then gives way to the producer's. Sort, pagination and page size do it in their component; the facets and the breadbox go through a `use-optimistic-*.ts` hook next to their component, which computes the expected value.
 - Facet search keeps the typed text in local state (`use-optimistic-facet-search.ts`) rather than as an optimistic hold, and sends one search once typing pauses (200 ms). A keystroke that never reaches the producer leaves the field untouched, and the field is never written to the shared data model.
 
 ## Related decisions

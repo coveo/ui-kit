@@ -45,7 +45,7 @@ test('exposes the createSession session-client surface', () => {
 test('exposes the request in flight and its settlement on Session', () => {
   expectTypeOf<Session['request']>().toEqualTypeOf<SessionRequest | undefined>();
   expectTypeOf<SessionRequest['kind']>().toEqualTypeOf<'prompt' | 'action'>();
-  expectTypeOf<Session['whenSettled']>().toEqualTypeOf<() => Promise<void>>();
+  expectTypeOf<Session['sendAndWait']>().toEqualTypeOf<(send: () => unknown) => Promise<void>>();
 });
 
 // ── POSITIVE: the injected-contract seam is exported ────────────────────────
