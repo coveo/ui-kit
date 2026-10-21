@@ -2,6 +2,7 @@ import {StrictMode} from 'react';
 import {act, fireEvent, screen, waitFor} from '@testing-library/react';
 import {describe, expect, it, vi} from 'vitest';
 import {SearchBox} from './SearchBox.js';
+import {LOOKUP_DEBOUNCE_MS} from '../../a2ui/QuerySuggestions/QuerySuggestions.js';
 import {
   answerLookups,
   createTestSession,
@@ -22,6 +23,11 @@ function holdLookups() {
   );
   return {
     session,
+    /** Types `text` and waits until its lookup is sent. */
+    async typeAndLookUp(text: string) {
+      type(text);
+      await waitFor(() => expect(pending.has(text)).toBe(true));
+    },
     async answer(query: string) {
       await act(async () => {
         pending.get(query)!();
@@ -42,6 +48,10 @@ function type(text: string) {
 }
 
 const optionLabels = () => screen.queryAllByRole('option').map((option) => option.textContent);
+
+/** Waits long enough for any debounced lookup to have been sent. */
+const afterDebounce = () =>
+  act(() => new Promise((resolve) => setTimeout(resolve, LOOKUP_DEBOUNCE_MS * 2)));
 
 describe('SearchBox', () => {
   it('draws an enabled input in the first render, before any request', () => {
@@ -86,6 +96,34 @@ describe('SearchBox', () => {
     expect(lookups(requests)).toHaveLength(1);
   });
 
+  it('looks up only the query typing paused on', async () => {
+    const {session, requests} = createTestSession(answerLookups);
+    renderWithSession(<SearchBox onSubmit={vi.fn()} isStreaming={false} />, session);
+
+    for (const text of ['s', 'su', 'sur', 'surf']) {
+      type(text);
+    }
+    await waitFor(() => expect(optionLabels()).toEqual(['surf boards', 'surf wax']));
+    await afterDebounce();
+
+    expect(lookups(requests).map((request) => request.action!.context['query'])).toEqual(['surf']);
+  });
+
+  it('sends no pending lookup once the input is submitted or cleared', async () => {
+    const onSubmit = vi.fn();
+    const {session, requests} = createTestSession(answerLookups);
+    renderWithSession(<SearchBox onSubmit={onSubmit} isStreaming={false} />, session);
+
+    type('surf');
+    fireEvent.keyDown(screen.getByLabelText('Prompt'), {key: 'Enter'});
+    type('kayak');
+    type('');
+    await afterDebounce();
+
+    expect(onSubmit).toHaveBeenCalledWith('surf');
+    expect(lookups(requests)).toEqual([]);
+  });
+
   it('submits a selected completion', async () => {
     const onSubmit = vi.fn();
     const {session} = createTestSession(answerLookups);
@@ -103,12 +141,12 @@ describe('SearchBox', () => {
     const onSubmit = vi.fn();
     renderWithSession(<SearchBox onSubmit={onSubmit} isStreaming={false} />, lookup.session);
 
-    type('surf');
+    await lookup.typeAndLookUp('surf');
     fireEvent.keyDown(screen.getByLabelText('Prompt'), {key: 'Enter'});
     expect(onSubmit).toHaveBeenCalledWith('surf');
     await lookup.answer('surf');
 
-    type('kayak');
+    await lookup.typeAndLookUp('kayak');
     expect(optionLabels()).toEqual([]);
 
     await lookup.answer('kayak');
@@ -119,8 +157,8 @@ describe('SearchBox', () => {
     const lookup = holdLookups();
     renderWithSession(<SearchBox onSubmit={vi.fn()} isStreaming={false} />, lookup.session);
 
-    type('su');
-    type('surf');
+    await lookup.typeAndLookUp('su');
+    await lookup.typeAndLookUp('surf');
     await lookup.answer('surf');
     await lookup.answer('su');
 
