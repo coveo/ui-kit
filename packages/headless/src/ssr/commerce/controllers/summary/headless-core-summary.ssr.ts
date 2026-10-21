@@ -26,6 +26,8 @@ export type {
  * Defines a `Summary` controller instance.
  * @group Definers
  *
+ * @param options - Deprecated `listing` and `search` options, which will be removed in the next
+ * major version: omit them to build the controller for both search and product listing pages.
  * @returns The `Summary` controller definition.
  */
 export function defineSummary<TOptions extends ControllerDefinitionOption | undefined>(

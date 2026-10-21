@@ -84,15 +84,17 @@ function renderTurnContent(
   return (
     <>
       {segments.map((segment, index) => {
-        const isLastSegment = index === segments.length - 1;
+        const isStreaming =
+          index === segments.length - 1 && (turn.status === 'streaming' || isPending);
         return (
           <Fragment key={index}>
             {segment.prompt !== undefined && <FollowUpPrompt prompt={segment.prompt} />}
-            <AgentResponseBlock
-              response={segment.response}
-              isStreaming={isLastSegment && (turn.status === 'streaming' || isPending)}
-            >
-              <TurnSurfaces surfaceIds={segment.surfaceIds} interactive={isLatest} />
+            <AgentResponseBlock response={segment.response} isStreaming={isStreaming}>
+              <TurnSurfaces
+                surfaceIds={segment.surfaceIds}
+                interactive={isLatest}
+                isStreaming={isStreaming}
+              />
             </AgentResponseBlock>
           </Fragment>
         );

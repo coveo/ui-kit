@@ -179,7 +179,6 @@
       "outputs": [
         "dist/**",
         "cdn/**",
-        "docs/**",
         "temp/**",
         "coverage/**",
         ".next/**",
@@ -190,6 +189,11 @@
     "build:typedoc": {
       "dependsOn": ["^build"],
       "outputs": ["docs/**", "!docs/adr/**"]
+    },
+    "size": {
+      "dependsOn": ["build"],
+      "inputs": [".size-limit.json", "package.json", "$TURBO_ROOT$/scripts/size-limit.mjs"],
+      "outputs": ["size-limit-report.json"]
     },
     "publint": {
       "dependsOn": ["build"],

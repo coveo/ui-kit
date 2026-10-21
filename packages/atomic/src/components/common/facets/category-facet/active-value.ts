@@ -1,8 +1,8 @@
 import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {ref} from 'lit/directives/ref.js';
-import {keyed} from '@/src/directives/keyed';
 import {renderFacetValueLabelHighlight} from '@/src/components/common/facets/facet-value-label-highlight/facet-value-label-highlight';
+import {keyed} from '@/src/directives/keyed';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 
 interface CategoryFacetActiveValueProps {

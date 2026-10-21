@@ -8,16 +8,35 @@
  * projection inside `@coveo/thermidor`, read off `response.a2uiMessages`. See that package's
  * `session/a2ui-v09-projection.ts` for the conversion and the recorded interim debt.
  */
-import {useEffect, useMemo, useRef} from 'react';
+import {createContext, useContext, useEffect, useMemo, useRef, type ReactNode} from 'react';
 import {A2UIRenderer, useA2UI} from '@copilotkit/a2ui-renderer';
 import type {A2uiV09Message} from '@coveo/thermidor';
+import {A2UISkeleton} from './Skeleton/Skeleton.js';
 import styles from './surfaces.module.css';
 
+const NO_LOADING_SURFACES: ReadonlyMap<string, string> = new Map();
+
+/** The `loadingSurfaces` of the enclosing {@link ThermidorA2UIStream}. */
+const LoadingSurfacesContext = createContext(NO_LOADING_SURFACES);
+
+interface ThermidorA2UIStreamProps {
+  messages: A2uiV09Message[];
+  /** The stream's loading placeholders (`SurfaceStream.loadingSurfaces`). */
+  loadingSurfaces: ReadonlyMap<string, string>;
+  /** The page whose {@link TurnSurfaces} draw the stream's surfaces. */
+  children?: ReactNode;
+}
+
 /**
- * Feeds the whole session's message stream to the renderer. It draws nothing itself: each
- * surface is drawn by a {@link TurnSurfaces} placed under the turn that created it.
+ * Feeds the whole session's message stream to the renderer, and shares which of its surfaces are
+ * loading placeholders with the page it wraps. It draws nothing itself: each surface is drawn by
+ * a {@link TurnSurfaces} placed under the turn that created it.
  */
-export function ThermidorA2UIStream({messages}: {messages: A2uiV09Message[]}) {
+export function ThermidorA2UIStream({
+  messages,
+  loadingSurfaces,
+  children,
+}: ThermidorA2UIStreamProps) {
   const {clearSurfaces, processMessages} = useA2UI();
   const serializedMessages = useMemo(() => JSON.stringify(messages), [messages]);
   const actionsRef = useRef({clearSurfaces, processMessages});
@@ -31,7 +50,11 @@ export function ThermidorA2UIStream({messages}: {messages: A2uiV09Message[]}) {
     }
   }, [serializedMessages]);
 
-  return null;
+  return (
+    <LoadingSurfacesContext.Provider value={loadingSurfaces}>
+      {children}
+    </LoadingSurfacesContext.Provider>
+  );
 }
 
 interface TurnSurfacesProps {
@@ -42,13 +65,34 @@ interface TurnSurfacesProps {
    * their content stays readable. A disabled `fieldset` disables every control inside it.
    */
   interactive: boolean;
+  /**
+   * Whether the exchange these surfaces belong to is still streaming: its turn is streaming, or
+   * its follow-up is in flight. Loading placeholders are drawn only then; one the agent left
+   * behind once the exchange ended (a cancelled run, an error, a restored session) is abandoned
+   * and drawn as nothing.
+   */
+  isStreaming: boolean;
 }
 
 /**
  * Draws one turn's surfaces in order. A surface added to an already drawn turn, such as the
- * search block a search option opens, is scrolled into view.
+ * search block a search option opens, is scrolled into view. A loading placeholder is drawn as
+ * the skeleton of its root component type, in the place its content will take, while its
+ * exchange streams.
  */
-export function TurnSurfaces({surfaceIds, interactive}: TurnSurfacesProps) {
+export function TurnSurfaces({
+  surfaceIds: allSurfaceIds,
+  interactive,
+  isStreaming,
+}: TurnSurfacesProps) {
+  const loadingSurfaces = useContext(LoadingSurfacesContext);
+  const surfaceIds = useMemo(
+    () =>
+      isStreaming
+        ? allSurfaceIds
+        : allSurfaceIds.filter((surfaceId) => !loadingSurfaces.has(surfaceId)),
+    [allSurfaceIds, isStreaming, loadingSurfaces]
+  );
   const sectionRefs = useRef(new Map<string, HTMLElement>());
   const drawnIdsRef = useRef<ReadonlySet<string> | null>(null);
 
@@ -59,7 +103,10 @@ export function TurnSurfaces({surfaceIds, interactive}: TurnSurfacesProps) {
       return;
     }
     const added = surfaceIds.find((surfaceId) => !drawnIds.has(surfaceId));
-    if (added !== undefined) {
+    // Content replacing a drawn placeholder takes its place under a new id; scrolling to it would
+    // pull the page back up while the answer streams.
+    const replaced = [...drawnIds].some((surfaceId) => !surfaceIds.includes(surfaceId));
+    if (added !== undefined && !replaced) {
       sectionRefs.current.get(added)?.scrollIntoView?.({behavior: 'smooth', block: 'start'});
     }
   }, [surfaceIds]);
@@ -81,22 +128,29 @@ export function TurnSurfaces({surfaceIds, interactive}: TurnSurfacesProps) {
           Earlier results. Ask a follow-up or search again to refine.
         </legend>
       )}
-      {surfaceIds.map((surfaceId) => (
-        <section
-          className="catalog-surface"
-          aria-label={`A2-UI surface ${surfaceId}`}
-          key={surfaceId}
-          ref={(element) => {
-            if (element) {
-              sectionRefs.current.set(surfaceId, element);
-            } else {
-              sectionRefs.current.delete(surfaceId);
-            }
-          }}
-        >
-          <A2UIRenderer surfaceId={surfaceId} />
-        </section>
-      ))}
+      {surfaceIds.map((surfaceId) => {
+        const loadingComponentType = loadingSurfaces.get(surfaceId);
+        return (
+          <section
+            className="catalog-surface"
+            aria-label={`A2-UI surface ${surfaceId}`}
+            key={surfaceId}
+            ref={(element) => {
+              if (element) {
+                sectionRefs.current.set(surfaceId, element);
+              } else {
+                sectionRefs.current.delete(surfaceId);
+              }
+            }}
+          >
+            {loadingComponentType !== undefined ? (
+              <A2UISkeleton componentType={loadingComponentType} />
+            ) : (
+              <A2UIRenderer surfaceId={surfaceId} />
+            )}
+          </section>
+        );
+      })}
     </fieldset>
   );
 }

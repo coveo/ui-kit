@@ -8,6 +8,7 @@ function turn(id: string, a2uiMessages: A2uiV09Message[]) {
 }
 
 const create = (surfaceId: string) => ({version: 'v0.9', createSurface: {surfaceId}});
+const remove = (surfaceId: string) => ({version: 'v0.9', deleteSurface: {surfaceId}});
 const update = (surfaceId: string, value: unknown) => ({
   version: 'v0.9',
   updateDataModel: {surfaceId, path: '/state', value},
@@ -65,6 +66,103 @@ describe('buildSurfaceStream', () => {
     const stream = buildSurfaceStream([turn('t1', [update('unknown', {})])]);
 
     expect(stream.messages).toEqual([]);
+  });
+
+  it('maps each loading placeholder to its root component type by render id', () => {
+    const stream = buildSurfaceStream([
+      makeTurn({
+        id: 't1',
+        response: {
+          a2uiMessages: [create('skel'), create('content')],
+          surfaces: [
+            {surfaceId: 'skel', rootComponentType: 'ProductCarousel', isLoading: true},
+            {surfaceId: 'content', rootComponentType: 'NextActionsBar', isLoading: false},
+          ],
+        },
+      }),
+    ]);
+
+    expect([...stream.loadingSurfaces]).toEqual([['t1/skel', 'ProductCarousel']]);
+  });
+
+  it('forgets a placeholder once the agent deletes it', () => {
+    const placeholder = {surfaceId: 'skel', rootComponentType: 'ProductCarousel', isLoading: true};
+    const content = {surfaceId: 'content', rootComponentType: 'ProductCarousel', isLoading: false};
+    const loading = buildSurfaceStream([
+      makeTurn({id: 't1', response: {a2uiMessages: [create('skel')], surfaces: [placeholder]}}),
+    ]);
+    const loaded = buildSurfaceStream([
+      makeTurn({
+        id: 't1',
+        response: {
+          a2uiMessages: [create('skel'), remove('skel'), create('content')],
+          surfaces: [content],
+        },
+      }),
+    ]);
+
+    expect(loading.surfacesByTurn.get('t1')).toEqual(['t1/skel']);
+    expect([...loading.loadingSurfaces]).toEqual([['t1/skel', 'ProductCarousel']]);
+    expect(loaded.surfacesByTurn.get('t1')).toEqual(['t1/content']);
+    expect(loaded.loadingSurfaces.size).toBe(0);
+  });
+
+  it('forgets a placeholder that a later turn deletes', () => {
+    const stream = buildSurfaceStream([
+      makeTurn({
+        id: 't1',
+        response: {
+          a2uiMessages: [create('skel')],
+          surfaces: [{surfaceId: 'skel', rootComponentType: 'ProductCarousel', isLoading: true}],
+        },
+      }),
+      turn('t2', [remove('skel')]),
+    ]);
+
+    expect(stream.surfacesByTurn.get('t1')).toEqual([]);
+    expect(stream.loadingSurfaces.size).toBe(0);
+  });
+
+  it('marks only the placeholder of the turn that reuses a server surface id', () => {
+    const stream = buildSurfaceStream([
+      makeTurn({
+        id: 't1',
+        response: {
+          a2uiMessages: [create('carousel')],
+          surfaces: [
+            {surfaceId: 'carousel', rootComponentType: 'ProductCarousel', isLoading: false},
+          ],
+        },
+      }),
+      makeTurn({
+        id: 't2',
+        response: {
+          a2uiMessages: [create('carousel')],
+          surfaces: [
+            {surfaceId: 'carousel', rootComponentType: 'ProductCarousel', isLoading: true},
+          ],
+        },
+      }),
+    ]);
+
+    expect([...stream.loadingSurfaces]).toEqual([['t2/carousel', 'ProductCarousel']]);
+  });
+
+  it('never marks an earlier turn block as loading for a surface the turn did not create', () => {
+    const stream = buildSurfaceStream([
+      turn('t1', [create('carousel')]),
+      makeTurn({
+        id: 't2',
+        response: {
+          a2uiMessages: [],
+          surfaces: [
+            {surfaceId: 'carousel', rootComponentType: 'ProductCarousel', isLoading: true},
+          ],
+        },
+      }),
+    ]);
+
+    expect(stream.loadingSurfaces.size).toBe(0);
   });
 });
 

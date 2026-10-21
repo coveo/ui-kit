@@ -12,8 +12,7 @@
     [
       "@coveo/atomic",
       "@coveo/ui-kit-sample-atomic-search-vite",
-      "@coveo/ui-kit-sample-atomic-commerce-vite",
-      "@coveo/ui-kit-sample-atomic-commerce-hybrid"
+      "@coveo/ui-kit-sample-atomic-commerce-vite"
     ],
     [
       "@coveo/atomic-react",

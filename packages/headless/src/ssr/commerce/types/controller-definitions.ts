@@ -290,7 +290,8 @@ type ConditionalControllerProps<
   : DefaultControllerProps<TControllers, TControllersPropsMap, K>;
 
 /**
- * @deprecated This interface is no longer used and will be removed in next major version.
+ * @deprecated The `listing` and `search` options will be removed in the next major version. Omit
+ * them to build the controller for both search and product listing pages.
  */
 export interface ControllerDefinitionOption {
   /**

@@ -62,7 +62,8 @@ export default {
   workspaces: {
     '.': {
       entry: ['scripts/**/*.{js,mjs}'],
-      ignoreBinaries: ['ts-node'],
+      // scripts/size-limit.mjs runs from each package's `size` script, which provides the binary.
+      ignoreBinaries: ['ts-node', 'size-limit'],
       ignoreDependencies: ['@playwright/mcp'],
     },
     'packages/headless': {

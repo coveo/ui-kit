@@ -9,7 +9,7 @@ import {LandingPage} from './LandingPage/LandingPage.js';
 import {ConversationPage} from './ConversationPage/index.js';
 import {startFollowUp, type FollowUp} from './ConversationPage/turn-segments.js';
 
-const catalog = createThermidorCatalog();
+const catalog = createThermidorCatalog({productResearchCard: {maxLinks: 5}});
 
 /** `NextActionsBar` actions: each one asks for a new answer rather than updating a block. */
 const FOLLOW_UP_ACTIONS = new Set(['selectAction', 'selectSearchOption']);
@@ -100,23 +100,24 @@ export function AppShell() {
   return (
     <DispatchProgressProvider value={tracked.progress}>
       <A2UIProvider catalog={catalog} onAction={handleAction}>
-        <ThermidorA2UIStream messages={stream.messages} />
-        <div className="view-shell">
-          <div className="view-panel view-panel--active">
-            {turns.length === 0 ? (
-              <LandingPage onSubmit={handleSubmit} isStreaming={isStreaming} />
-            ) : (
-              <ConversationPage
-                onSubmit={handleSubmit}
-                isStreaming={isStreaming}
-                turns={[...turns]}
-                surfacesByTurn={stream.surfacesByTurn}
-                followUps={followUps}
-                pendingTurnId={pendingTurnId}
-              />
-            )}
+        <ThermidorA2UIStream loadingSurfaces={stream.loadingSurfaces} messages={stream.messages}>
+          <div className="view-shell">
+            <div className="view-panel view-panel--active">
+              {turns.length === 0 ? (
+                <LandingPage onSubmit={handleSubmit} isStreaming={isStreaming} />
+              ) : (
+                <ConversationPage
+                  onSubmit={handleSubmit}
+                  isStreaming={isStreaming}
+                  turns={[...turns]}
+                  surfacesByTurn={stream.surfacesByTurn}
+                  followUps={followUps}
+                  pendingTurnId={pendingTurnId}
+                />
+              )}
+            </div>
           </div>
-        </div>
+        </ThermidorA2UIStream>
       </A2UIProvider>
     </DispatchProgressProvider>
   );
