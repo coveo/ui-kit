@@ -118,6 +118,12 @@ describe('the custom elements manifest of Atomic', () => {
     }
   });
 
+  it('should keep a property public when another component binds a controller of the same name', () => {
+    const element = findElement(manifest, 'atomic-insight-interface');
+    expect(findMember(element, 'resultsPerPage').privacy).not.toBe('private');
+    expect(findAttribute(element, 'results-per-page')).toMatchObject({fieldName: 'resultsPerPage'});
+  });
+
   it('should expose each @mapProperty field as an attribute', () => {
     const mappedFields = decoratedElementFields('mapProperty');
     expect(mappedFields).not.toHaveLength(0);

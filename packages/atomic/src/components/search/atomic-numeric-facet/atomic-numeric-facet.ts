@@ -237,6 +237,9 @@ export class AtomicNumericFacet extends LitElement implements InitializableCompo
 
   @state() bindings!: Bindings;
 
+  /**
+   * @internal
+   */
   @state()
   public facetState?: NumericFacetState;
 
