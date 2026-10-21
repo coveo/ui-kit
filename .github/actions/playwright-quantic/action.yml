@@ -28,3 +28,6 @@ runs:
         name: quantic-blob-report-${{ matrix.shardIndex }}
         path: packages/quantic/blob-report
         retention-days: 5
+    - name: Upload the Playwright record
+      if: ${{ !cancelled() }}
+      uses: ./.github/actions/upload-playwright-record
