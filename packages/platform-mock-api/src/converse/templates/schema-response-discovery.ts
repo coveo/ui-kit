@@ -1,4 +1,11 @@
-import {CATALOG_ID, bindStateFields, buildConversationResponse, statePath} from './shared.js';
+import {
+  CATALOG_ID,
+  bindStateFields,
+  buildConversationResponse,
+  statePath,
+  deleteSurfaceMessage,
+  loadingSurfaceMessage,
+} from './shared.js';
 import {
   ActivitySnapshot,
   UpdateDataModelActivity,
@@ -12,6 +19,9 @@ const runId = 'schema-discovery-d8d8e15c';
 const LIFE_JACKETS_SURFACE_ID = 'product-surface-life-jackets';
 const SAFETY_GEAR_SURFACE_ID = 'product-surface-safety-gear';
 const NEXT_ACTIONS_SURFACE_ID = 'next-actions-surface';
+const PLACEHOLDER_LIFE_JACKETS_SURFACE_ID = `placeholder-${runId}-life-jackets`;
+const PLACEHOLDER_SAFETY_GEAR_SURFACE_ID = `placeholder-${runId}-safety-gear`;
+const PLACEHOLDER_NEXT_ACTIONS_SURFACE_ID = `placeholder-${runId}-next-actions`;
 const ROOT_ID = 'root';
 
 const carousel1SurfaceActivity: ConverseEvent = ActivitySnapshot({
@@ -20,6 +30,7 @@ const carousel1SurfaceActivity: ConverseEvent = ActivitySnapshot({
   replace: true,
   content: {
     messages: [
+      deleteSurfaceMessage(PLACEHOLDER_LIFE_JACKETS_SURFACE_ID),
       {
         version: 'v1.0',
         createSurface: {
@@ -44,6 +55,7 @@ const carousel2SurfaceActivity: ConverseEvent = ActivitySnapshot({
   replace: true,
   content: {
     messages: [
+      deleteSurfaceMessage(PLACEHOLDER_SAFETY_GEAR_SURFACE_ID),
       {
         version: 'v1.0',
         createSurface: {
@@ -68,6 +80,7 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
   replace: true,
   content: {
     messages: [
+      deleteSurfaceMessage(PLACEHOLDER_NEXT_ACTIONS_SURFACE_ID),
       {
         version: 'v1.0',
         createSurface: {
@@ -382,6 +395,33 @@ const nextActionsStateActivity: ConverseEvent = UpdateDataModelActivity({
   ops: [{surfaceId: NEXT_ACTIONS_SURFACE_ID, path: statePath(ROOT_ID), value: nextActionsState}],
 });
 
+const carousel1PlaceholderActivity: ConverseEvent = ActivitySnapshot({
+  messageId: 'activity-carousel-life-jackets',
+  activityType: 'a2ui-surface',
+  replace: true,
+  content: {
+    messages: [loadingSurfaceMessage(PLACEHOLDER_LIFE_JACKETS_SURFACE_ID, 'ProductCarousel')],
+  },
+});
+
+const carousel2PlaceholderActivity: ConverseEvent = ActivitySnapshot({
+  messageId: 'activity-carousel-safety-gear',
+  activityType: 'a2ui-surface',
+  replace: true,
+  content: {
+    messages: [loadingSurfaceMessage(PLACEHOLDER_SAFETY_GEAR_SURFACE_ID, 'ProductCarousel')],
+  },
+});
+
+const nextActionsPlaceholderActivity: ConverseEvent = ActivitySnapshot({
+  messageId: 'activity-next-actions',
+  activityType: 'a2ui-surface',
+  replace: true,
+  content: {
+    messages: [loadingSurfaceMessage(PLACEHOLDER_NEXT_ACTIONS_SURFACE_ID, 'NextActionsBar')],
+  },
+});
+
 const middleEvents: ConverseEvent[] = [
   ...toolCall({
     toolCallId: 'tc-route-discovery',
@@ -391,6 +431,8 @@ const middleEvents: ConverseEvent[] = [
     resultMessageId: 'tc-route-discovery-result',
     resultContent: '"Routed to discovery flow."',
   }),
+  {...carousel1PlaceholderActivity, delayMs: 300},
+  {...carousel2PlaceholderActivity, delayMs: 300},
   ...toolCall({
     toolCallId: 'tc-search-lifejackets',
     toolCallName: 'coveo_commerce_search',
@@ -423,6 +465,7 @@ const middleEvents: ConverseEvent[] = [
   {...lifeJacketsStateActivity, delayMs: 50},
   {...carousel2SurfaceActivity, delayMs: 300},
   {...safetyGearStateActivity, delayMs: 50},
+  {...nextActionsPlaceholderActivity, delayMs: 100},
   {...nextActionsSurfaceActivity, delayMs: 800},
   {...nextActionsStateActivity, delayMs: 50},
 ];

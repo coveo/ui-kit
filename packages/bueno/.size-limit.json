@@ -1,0 +1,8 @@
+[
+  {
+    "name": "@coveo/bueno - CDN",
+    "path": "cdn/bueno.esm.js",
+    "rolldown": false,
+    "limit": "2.2 kB"
+  }
+]

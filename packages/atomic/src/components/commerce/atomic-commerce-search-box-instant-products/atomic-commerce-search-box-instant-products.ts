@@ -6,7 +6,6 @@ import {
 } from '@coveo/headless/commerce';
 import {html, LitElement, nothing, render} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {keyed} from '@/src/directives/keyed';
 import type {ItemRenderingFunction} from '@/src/components/common/item-list/item-list-common';
 import type {
   ItemDisplayDensity,
@@ -27,6 +26,7 @@ import type {
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {keyed} from '@/src/directives/keyed';
 import {encodeForDomAttribute} from '@/src/utils/string-utils';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductTemplateProvider} from '../product-list/product-template-provider';

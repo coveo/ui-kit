@@ -1,6 +1,6 @@
 import {html} from 'lit';
-import {keyed} from '@/src/directives/keyed';
 import {map} from 'lit/directives/map.js';
+import {keyed} from '@/src/directives/keyed';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import './atomic-result-placeholder';
 import '../../search/atomic-result-table-placeholder/atomic-result-table-placeholder';

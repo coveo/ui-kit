@@ -2,4 +2,4 @@
 '@coveo/atomic': patch
 ---
 
-Stop keeping the previous results, products and facet values in memory. When the key of a rendered item changes, the result, product and recommendation lists, the table layout, the facet values, the breadcrumbs and the pagers now release what they rendered for the previous key. Before, Lit's `keyed()` directive never disconnected the previous content when it contained a `ref()`, so a result list kept every page of results it had displayed, about 1 MB per query on a search page.
+Stop keeping replaced results, products, facet values and breadcrumbs in memory. The result and product lists in the list and table displays, the facet values and the breadcrumbs re-create their items with Lit's `keyed()` directive, which never released the items it replaced because they contain a `ref()`. A search page kept every page of results it had displayed, about 1 MB per query. These components now release the items they replace.

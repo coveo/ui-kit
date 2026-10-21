@@ -35,10 +35,11 @@ export const testInsight = quanticBase.extend<InsightPanelE2EFixtures>({
     await use(new InsightSetupObject(page));
   },
   insightPanel: async ({page, insightSetup, search}, use) => {
+    const firstSearchResponsePromise = search.waitForSearchResponse();
     await page.goto(pageUrl);
 
     await insightSetup.waitForInsightInterfaceInitialization();
-    await search.waitForSearchResponse();
+    await firstSearchResponsePromise;
     // This is needed in order to ensure the console errors are properly captured.
     await page.waitForTimeout(100);
     await use(new InsightPanelObject(page));
