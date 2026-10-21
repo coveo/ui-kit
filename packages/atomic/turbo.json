@@ -41,7 +41,7 @@
       "outputs": ["./custom-elements.json"],
       "inputs": [
         "./custom-elements-manifest.config.mjs",
-        "./scripts/cem-plugin.mjs",
+        "./scripts/cem-plugins/*.mjs",
         "./src/**/*.ts",
         "!./src/components/*/index.ts",
         "!./src/components/*/lazy-index.ts",
