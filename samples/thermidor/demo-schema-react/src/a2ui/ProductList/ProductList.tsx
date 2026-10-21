@@ -61,6 +61,9 @@ function ProductCard({product}: {product: Product}) {
  * `ProductListPropsSchema`; a grid of product cards for decomposed commerce search surfaces.
  * Presentational — no actions. `products === undefined` (bindings not yet resolved) renders a
  * loading state; an empty list renders nothing.
+ *
+ * While a gesture is in flight, an optimistic control already shows the new choice (page 3) while
+ * this grid still holds the previous results (page 2); the surface lock dims the grid meanwhile.
  */
 export const ProductList = createReactComponent(
   {name: 'ProductList', schema: ProductListPropsSchema},

@@ -1,9 +1,10 @@
 import {afterEach, describe, expect, it, vi} from 'vitest';
-import {cleanup, render, screen, waitFor} from '@testing-library/react';
+import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
 import {A2UIProvider, ROOT_COMPONENT_ID} from '@copilotkit/a2ui-renderer';
 import type {A2uiV09Message} from '@coveo/thermidor';
 import {createThermidorCatalog, THERMIDOR_CATALOG_ID} from './components.js';
 import {ThermidorA2UIStream, TurnSurfaces} from './surfaces.js';
+import {SessionRequestProvider} from './session-request.js';
 
 const originalScrollIntoView = Element.prototype.scrollIntoView;
 
@@ -33,12 +34,35 @@ const MESSAGES = [
   },
 ] as unknown as A2uiV09Message[];
 
-function Turn({interactive}: {interactive: boolean}) {
+/** A session whose request in flight locks the surface, or that is idle. */
+function lockedSource(locked: boolean) {
+  return {
+    request: locked ? ({kind: 'prompt', turnId: 'turn'} as const) : undefined,
+    subscribe: () => () => {},
+    whenSettled: () => Promise.resolve(),
+  };
+}
+
+function Turn({
+  interactive,
+  locked = false,
+  isStreaming = false,
+}: {
+  interactive: boolean;
+  locked?: boolean;
+  isStreaming?: boolean;
+}) {
   return (
-    <A2UIProvider catalog={CATALOG} onAction={() => {}}>
-      <ThermidorA2UIStream messages={MESSAGES} loadingSurfaces={new Map()} />
-      <TurnSurfaces surfaceIds={[SURFACE_ID]} interactive={interactive} isStreaming={false} />
-    </A2UIProvider>
+    <SessionRequestProvider value={lockedSource(locked)}>
+      <A2UIProvider catalog={CATALOG} onAction={() => {}}>
+        <ThermidorA2UIStream messages={MESSAGES} loadingSurfaces={new Map()} />
+        <TurnSurfaces
+          surfaceIds={[SURFACE_ID]}
+          interactive={interactive}
+          isStreaming={isStreaming}
+        />
+      </A2UIProvider>
+    </SessionRequestProvider>
   );
 }
 
@@ -88,6 +112,99 @@ describe('TurnSurfaces', () => {
     rerender(<Turn interactive={false} />);
 
     await waitFor(() => expect(isDisabled(pageSizeSelect())).toBe(true));
+  });
+});
+
+describe('TurnSurfaces while a request is in flight', () => {
+  it('disables the active turn and marks it busy', async () => {
+    const {rerender} = renderTurnSurfaces(true);
+    await waitFor(() => expect(isDisabled(pageSizeSelect())).toBe(false));
+
+    rerender(<Turn interactive locked />);
+
+    expect(isDisabled(pageSizeSelect())).toBe(true);
+    expect(pageSizeSelect().closest('fieldset')?.getAttribute('aria-busy')).toBe('true');
+    expect(screen.queryByText(NOTE)).toBeNull();
+  });
+
+  it('leaves an earlier turn read-only without marking it busy', async () => {
+    render(<Turn interactive={false} locked />);
+
+    await waitFor(() => expect(pageSizeSelect()).toBeDefined());
+    expect(pageSizeSelect().closest('fieldset')?.hasAttribute('aria-busy')).toBe(false);
+  });
+
+  it('dims the surface it disables', async () => {
+    render(<Turn interactive locked />);
+
+    await waitFor(() => expect(pageSizeSelect()).toBeDefined());
+    expect(pageSizeSelect().closest('fieldset')?.className).toMatch(/locked/);
+  });
+
+  it('disables the exchange that streams without dimming it', async () => {
+    render(<Turn interactive locked isStreaming />);
+
+    await waitFor(() => expect(pageSizeSelect()).toBeDefined());
+    expect(isDisabled(pageSizeSelect())).toBe(true);
+    expect(pageSizeSelect().closest('fieldset')?.className).not.toMatch(/locked/);
+  });
+
+  it('enables the controls again once the request ends', async () => {
+    const {rerender} = render(<Turn interactive locked />);
+    await waitFor(() => expect(isDisabled(pageSizeSelect())).toBe(true));
+
+    rerender(<Turn interactive />);
+
+    expect(isDisabled(pageSizeSelect())).toBe(false);
+    expect(pageSizeSelect().closest('fieldset')?.hasAttribute('aria-busy')).toBe(false);
+  });
+
+  it('gives focus back to the control the shopper used, without scrolling to it', async () => {
+    const {rerender} = renderTurnSurfaces(true);
+    await waitFor(() => expect(isDisabled(pageSizeSelect())).toBe(false));
+    const select = pageSizeSelect() as HTMLSelectElement;
+    select.focus();
+    // A browser drops the focus of a control its fieldset disables; jsdom keeps it.
+    select.blur();
+
+    rerender(<Turn interactive locked />);
+    expect(document.activeElement).toBe(document.body);
+    const focus = vi.spyOn(select, 'focus');
+
+    rerender(<Turn interactive />);
+
+    expect(document.activeElement).toBe(select);
+    expect(focus).toHaveBeenCalledWith({preventScroll: true});
+  });
+
+  it('gives focus back to a control pressed without receiving focus', async () => {
+    const {rerender} = renderTurnSurfaces(true);
+    await waitFor(() => expect(isDisabled(pageSizeSelect())).toBe(false));
+    const select = pageSizeSelect();
+    fireEvent.pointerDown(select);
+    expect(document.activeElement).toBe(document.body);
+
+    rerender(<Turn interactive locked />);
+    rerender(<Turn interactive />);
+
+    expect(document.activeElement).toBe(select);
+  });
+
+  it('leaves the focus where the shopper moved it during the request', async () => {
+    const {rerender} = renderTurnSurfaces(true);
+    await waitFor(() => expect(isDisabled(pageSizeSelect())).toBe(false));
+    const select = pageSizeSelect() as HTMLSelectElement;
+    select.focus();
+    select.blur();
+    const elsewhere = document.createElement('input');
+    document.body.append(elsewhere);
+
+    rerender(<Turn interactive locked />);
+    elsewhere.focus();
+    rerender(<Turn interactive />);
+
+    expect(document.activeElement).toBe(elsewhere);
+    elsewhere.remove();
   });
 });
 

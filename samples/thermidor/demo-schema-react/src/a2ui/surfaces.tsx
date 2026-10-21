@@ -12,7 +12,18 @@ import {createContext, useContext, useEffect, useMemo, useRef, type ReactNode} f
 import {A2UIRenderer, useA2UI} from '@copilotkit/a2ui-renderer';
 import type {A2uiV09Message} from '@coveo/thermidor';
 import {A2UISkeleton} from './Skeleton/Skeleton.js';
+import {useSurfaceLocked} from './session-request.js';
 import styles from './surfaces.module.css';
+
+/** The control a pointer press lands on, through its label when the press is on one. */
+function controlAt(target: EventTarget): HTMLElement | null {
+  if (!(target instanceof Element)) {
+    return null;
+  }
+  const control =
+    target.closest('label')?.control ?? target.closest('button, input, select, textarea');
+  return control instanceof HTMLElement ? control : null;
+}
 
 const NO_LOADING_SURFACES: ReadonlyMap<string, string> = new Map();
 
@@ -95,6 +106,19 @@ export function TurnSurfaces({
   );
   const sectionRefs = useRef(new Map<string, HTMLElement>());
   const drawnIdsRef = useRef<ReadonlySet<string> | null>(null);
+  const locked = useSurfaceLocked() && interactive;
+  // The exchange that streams is disabled without dimming, so its content arrives at full strength.
+  const dimmed = locked && !isStreaming;
+  const lastFocusedRef = useRef<HTMLElement | null>(null);
+
+  // Disabling the fieldset drops focus to the body, so the control the shopper used gets it back.
+  useEffect(() => {
+    const lastFocused = lastFocusedRef.current;
+    if (!locked && lastFocused?.isConnected && document.activeElement === document.body) {
+      // Without `preventScroll`, the page would jump back to a follow-up chip once its answer ends.
+      lastFocused.focus({preventScroll: true});
+    }
+  }, [locked]);
 
   useEffect(() => {
     const drawnIds = drawnIdsRef.current;
@@ -119,8 +143,19 @@ export function TurnSurfaces({
     // Kept a fieldset in both states: swapping elements would remount the surfaces and drop their
     // local state when the turn stops being the active one.
     <fieldset
-      className={interactive ? styles.surfaces : `${styles.surfaces} ${styles.readOnly}`}
-      disabled={!interactive}
+      className={[styles.surfaces, !interactive && styles.readOnly, dimmed && styles.locked]
+        .filter(Boolean)
+        .join(' ')}
+      disabled={!interactive || locked}
+      // Only set while locked: any global ARIA attribute makes browsers ignore `role="none"`.
+      aria-busy={locked || undefined}
+      onFocus={(event) => {
+        lastFocusedRef.current = event.target;
+      }}
+      // Safari does not focus a button or a checkbox on click, so the press records the control.
+      onPointerDown={(event) => {
+        lastFocusedRef.current = controlAt(event.target) ?? lastFocusedRef.current;
+      }}
       role={interactive ? 'none' : undefined}
     >
       {!interactive && (
