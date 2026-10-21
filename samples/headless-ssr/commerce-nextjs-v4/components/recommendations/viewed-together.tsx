@@ -7,7 +7,7 @@ export default function ViewedTogether() {
   const {state, methods} = useViewedTogether();
 
   return (
-    <ul>
+    <ul data-testid="recommendations-viewedTogether">
       <h3>{state.headline}</h3>
       {state.products.map((product) => (
         <li key={product.ec_product_id}>

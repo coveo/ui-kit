@@ -46,7 +46,6 @@ describe('define commerce context', () => {
       listing: true,
       search: true,
       standalone: true,
-      recommendation: true,
     });
   });
 

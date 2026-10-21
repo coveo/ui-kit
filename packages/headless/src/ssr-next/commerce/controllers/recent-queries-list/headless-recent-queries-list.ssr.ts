@@ -6,7 +6,7 @@ import {
   type RecentQueriesListProps,
   type RecentQueriesState,
 } from '../../../../controllers/commerce/recent-queries-list/headless-recent-queries-list.js';
-import type {NonRecommendationControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
+import type {UniversalControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
 
 export type {
   RecentQueriesList,
@@ -17,7 +17,7 @@ export type {
 };
 
 export type RecentQueriesListDefinition =
-  NonRecommendationControllerDefinitionWithoutProps<RecentQueriesList>;
+  UniversalControllerDefinitionWithoutProps<RecentQueriesList>;
 
 /**
  * Defines the `RecentQueriesList` controller for the purpose of server-side rendering.

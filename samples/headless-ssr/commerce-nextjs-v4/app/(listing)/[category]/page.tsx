@@ -12,14 +12,14 @@ import Pagination from '@/components/pagination';
 import ParameterManager from '@/components/parameter-manager';
 import ProductList from '@/components/product-list';
 import ProductsPerPage from '@/components/products-per-page';
-import {ListingProvider, RecommendationProvider} from '@/components/providers/providers';
+import {ListingProvider} from '@/components/providers/providers';
 import PopularBought from '@/components/recommendations/popular-bought';
 import PopularViewed from '@/components/recommendations/popular-viewed';
 import Sort from '@/components/sort';
 import StandaloneSearchBox from '@/components/standalone-search-box';
 import Summary from '@/components/summary';
 import NotifyTrigger from '@/components/triggers/notify-trigger';
-import {listingEngineDefinition, recommendationEngineDefinition} from '@/lib/commerce-engine';
+import {listingEngineDefinition} from '@/lib/commerce-engine';
 import {getNavigatorContext} from '@/lib/navigator-context';
 import {defaultContext} from '@/utils/context';
 
@@ -64,18 +64,12 @@ export default async function Listing({
     },
   };
 
-  // Fetches the static state of the app with initial state (when applicable)
+  // One request fetches the listing and the recommendation slots the page shows.
   const staticState = await listingEngineDefinition.fetchStaticState({
     cart: {items},
     context,
     navigatorContext,
     searchParams: parameters,
-  });
-
-  const recsStaticState = await recommendationEngineDefinition.fetchStaticState({
-    cart: {items},
-    context,
-    navigatorContext,
     recommendations: ['popularBought', 'popularViewed'],
   });
 
@@ -106,10 +100,8 @@ export default async function Listing({
         </div>
 
         <div style={{flex: 4}}>
-          <RecommendationProvider staticState={recsStaticState}>
-            <PopularBought />
-            <PopularViewed />
-          </RecommendationProvider>
+          <PopularBought />
+          <PopularViewed />
         </div>
       </div>
     </ListingProvider>

@@ -1,7 +1,6 @@
 import type {CommerceEngineOptions} from '../../../app/commerce-engine/commerce-engine.js';
 import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {HasKey} from '../../common/types/utilities.js';
 import type {CartInitialState} from '../controllers/cart/headless-cart.ssr.js';
 import type {ContextOptions} from '../controllers/context/headless-context.ssr.js';
 import type {
@@ -14,7 +13,25 @@ import type {
   IsRecommendationController,
 } from './controller-definitions.js';
 
-export interface SearchBuildConfig extends CommonBuildConfig {
+/**
+ * The names of the recommendation controllers of an engine definition, as declared with
+ * `defineRecommendations()`.
+ */
+export type RecommendationNames<TControllers extends ControllerDefinitionsMap<Controller>> =
+  string extends keyof TControllers
+    ? string
+    : Extract<
+        keyof TControllers & string,
+        {
+          [K in keyof TControllers]: IsRecommendationController<TControllers[K]> extends never
+            ? never
+            : K;
+        }[keyof TControllers]
+      >;
+
+export interface SearchBuildConfig<
+  TControllers extends ControllerDefinitionsMap<Controller> = ControllerDefinitionsMap<Controller>,
+> extends CommonBuildConfig<TControllers> {
   searchParams?: ParameterManagerState<
     Parameters & {
       /**
@@ -25,9 +42,13 @@ export interface SearchBuildConfig extends CommonBuildConfig {
   >['parameters'];
 }
 
-export interface ListingBuildConfig extends CommonBuildConfig {}
+export interface ListingBuildConfig<
+  TControllers extends ControllerDefinitionsMap<Controller> = ControllerDefinitionsMap<Controller>,
+> extends CommonBuildConfig<TControllers> {}
 
-export interface StandaloneBuildConfig extends CommonBuildConfig {}
+export interface StandaloneBuildConfig<
+  TControllers extends ControllerDefinitionsMap<Controller> = ControllerDefinitionsMap<Controller>,
+> extends CommonBuildConfig<TControllers> {}
 
 /**
  * The commerce context passed to `fetchStaticState()`. The URL of the page (`view.url`) is optional:
@@ -51,65 +72,11 @@ export type SSRCommerceEngineOptions = Omit<
 };
 
 /**
- * The `RecommendationBuildConfig` type defines the shape of the configuration object required when fetching static state for recommendations.
- *
- * The `recommendations` property is a string array containing the names of the recommendation controllers
- * that were defined in your engine definition. This allows you to specify which recommendation controllers
- * should be included in the SSR request.
- *
- * For example, on a storefront homepage, it might make sense to display a carousel of popular products.
- * However, showing recommendations based on items frequently bought together may not be relevant in that context and should not be retrieved unnecessarily.
- *
- * @example
- * Given the following engine definition:
- *
- * ```ts
- * const {recommendationEngineDefinition} = defineCommerceEngine({
- *   controllers: {
- *     popularProducts: defineRecommendations({options: {slotId: '...'}}),
- *     frequentlyBought: defineRecommendations({options: {slotId: '...'}}),
- *     // ...other controllers
- *   },
- * });
- *
- * // When fetching static state for recommendations:
- * const staticState = await recommendationEngineDefinition.fetchStaticState({
- *   recommendations: ['popularProducts'],
- *   // ...other config
- * });
- * ```
- *
- * In this example, only the `popularProducts` recommendation controller will be included in the SSR request.
+ * The options shared by every `fetchStaticState()` call, whatever the engine definition.
  */
-export type RecommendationBuildConfig<TControllers extends ControllerDefinitionsMap<Controller>> =
-  CommonBuildConfig & {
-    /**
-     * The unique identifier of the product to use for seeded recommendations.
-     */
-    productId?: string;
-    /**
-     * The names of the recommendation controllers to request on the server, as declared in your engine
-     * definition. Only the listed controllers are refreshed; the others keep an empty state until they
-     * are refreshed in the browser.
-     */
-    recommendations: Array<
-      Extract<
-        keyof TControllers,
-        {
-          [K in keyof TControllers]: HasKey<
-            TControllers[K],
-            SolutionType.recommendation
-          > extends never
-            ? never
-            : IsRecommendationController<TControllers[K]> extends never
-              ? never
-              : K;
-        }[keyof TControllers]
-      >
-    >;
-  };
-
-export interface CommonBuildConfig {
+export interface CommonBuildConfig<
+  TControllers extends ControllerDefinitionsMap<Controller> = ControllerDefinitionsMap<Controller>,
+> {
   /**
    * The `NavigatorContext` interface represents the context of the browser client.
    * See {@link NavigatorContext}
@@ -196,6 +163,29 @@ export interface CommonBuildConfig {
   cart?: CartInitialState;
 
   /**
+   * The names of the recommendation controllers to request on the server, as declared in your engine
+   * definition with `defineRecommendations()`. Only the listed controllers are refreshed; the others
+   * keep an empty state until they are refreshed in the browser.
+   *
+   * The slots are requested alongside the listing or search request of the page, with the same engine,
+   * so one `fetchStaticState()` call and one provider serve a page and its recommendations.
+   *
+   * @example
+   * ```typescript
+   * const staticState = await listingEngineDefinition.fetchStaticState({
+   *   recommendations: ['popularViewed'],
+   *   // ...other config
+   * });
+   * ```
+   */
+  recommendations?: Array<RecommendationNames<TControllers>>;
+
+  /**
+   * The unique identifier of the product being viewed, used to seed the requested recommendation slots.
+   */
+  productId?: string;
+
+  /**
    * A per-request access token (for example, a per-user Coveo search token) to use for this
    * `fetchStaticState()` or `hydrateStaticState()` call only.
    *
@@ -220,11 +210,9 @@ export type BuildConfig<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 > = TSolutionType extends SolutionType.search
-  ? SearchBuildConfig
+  ? SearchBuildConfig<TControllers>
   : TSolutionType extends SolutionType.listing
-    ? ListingBuildConfig
-    : TSolutionType extends SolutionType.recommendation
-      ? RecommendationBuildConfig<TControllers>
-      : TSolutionType extends SolutionType.standalone
-        ? CommonBuildConfig
-        : never;
+    ? ListingBuildConfig<TControllers>
+    : TSolutionType extends SolutionType.standalone
+      ? StandaloneBuildConfig<TControllers>
+      : never;

@@ -3,10 +3,10 @@ import * as externalCartAPI from '@/actions/external-cart-api';
 import ContextDropdown from '@/components/context-dropdown';
 import ProductBadges from '@/components/product-badges';
 import ProductViewer from '@/components/product-viewer';
-import {RecommendationProvider, StandaloneProvider} from '@/components/providers/providers';
+import {StandaloneProvider} from '@/components/providers/providers';
 import ViewedTogether from '@/components/recommendations/viewed-together';
 import StandaloneSearchBox from '@/components/standalone-search-box';
-import {recommendationEngineDefinition, standaloneEngineDefinition} from '@/lib/commerce-engine';
+import {standaloneEngineDefinition} from '@/lib/commerce-engine';
 import {getNavigatorContext} from '@/lib/navigator-context';
 import {defaultContext} from '@/utils/context';
 
@@ -34,11 +34,13 @@ export default async function ProductDescriptionPage({
     },
   };
 
-  // Fetches the static state of the app with initial state (when applicable)
+  // The product ID seeds the "viewed together" slot with the product being viewed.
   const staticState = await standaloneEngineDefinition.fetchStaticState({
     cart: {items},
     context,
     navigatorContext,
+    recommendations: ['viewedTogether'],
+    productId,
     controllers: {
       productEnrichment: {
         options: {
@@ -47,15 +49,6 @@ export default async function ProductDescriptionPage({
         },
       },
     },
-  });
-
-  // The product ID seeds the "viewed together" slot with the product being viewed.
-  const recsStaticState = await recommendationEngineDefinition.fetchStaticState({
-    cart: {items},
-    context,
-    navigatorContext,
-    recommendations: ['viewedTogether'],
-    productId,
   });
 
   const resolvedSearchParams = await searchParams;
@@ -76,9 +69,7 @@ export default async function ProductDescriptionPage({
       <ProductBadges />
       <br />
 
-      <RecommendationProvider staticState={recsStaticState}>
-        <ViewedTogether />
-      </RecommendationProvider>
+      <ViewedTogether />
     </StandaloneProvider>
   );
 }

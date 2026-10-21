@@ -2,10 +2,10 @@ import type {ContextOptions} from '@coveo/headless-react/ssr-commerce-next';
 import * as externalCartAPI from '@/actions/external-cart-api';
 import Cart from '@/components/cart';
 import ContextDropdown from '@/components/context-dropdown';
-import {RecommendationProvider, StandaloneProvider} from '@/components/providers/providers';
+import {StandaloneProvider} from '@/components/providers/providers';
 import PopularBought from '@/components/recommendations/popular-bought';
 import StandaloneSearchBox from '@/components/standalone-search-box';
-import {recommendationEngineDefinition, standaloneEngineDefinition} from '@/lib/commerce-engine';
+import {standaloneEngineDefinition} from '@/lib/commerce-engine';
 import {getNavigatorContext} from '@/lib/navigator-context';
 import {defaultContext} from '@/utils/context';
 
@@ -26,11 +26,12 @@ export default async function CartPage() {
     },
   };
 
-  // Fetches the static state of the app with initial state (when applicable)
+  // One request fetches the badges and the recommendation slot the page shows.
   const staticState = await standaloneEngineDefinition.fetchStaticState({
     cart: {items},
     context,
     navigatorContext,
+    recommendations: ['popularBought'],
     controllers: {
       productEnrichment: {
         options: {
@@ -39,22 +40,13 @@ export default async function CartPage() {
       },
     },
   });
-
-  const recsStaticState = await recommendationEngineDefinition.fetchStaticState({
-    cart: {items},
-    context,
-    navigatorContext,
-    recommendations: ['popularBought', 'popularViewed'],
-  });
   return (
     <StandaloneProvider staticState={staticState}>
       <div style={{display: 'flex', flexDirection: 'column'}}>
         <ContextDropdown />
         <StandaloneSearchBox />
         <Cart />
-        <RecommendationProvider staticState={recsStaticState}>
-          <PopularBought />
-        </RecommendationProvider>
+        <PopularBought />
       </div>
     </StandaloneProvider>
   );

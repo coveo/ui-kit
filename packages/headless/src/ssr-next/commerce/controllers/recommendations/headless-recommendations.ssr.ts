@@ -6,7 +6,7 @@ import {
   type RecommendationsState,
 } from '../../../../controllers/commerce/recommendations/headless-recommendations.js';
 import {recommendationInternalOptionKey} from '../../types/controller-constants.js';
-import type {RecommendationOnlyControllerDefinitionWithProps} from '../../types/controller-definitions.js';
+import type {UniversalControllerDefinitionWithProps} from '../../types/controller-definitions.js';
 
 export type {Recommendations, RecommendationsState};
 
@@ -14,7 +14,7 @@ export type RecommendationsDefinitionMeta = {
   [recommendationInternalOptionKey]: {} & RecommendationsProps['options'];
 };
 
-export interface RecommendationsDefinition extends RecommendationOnlyControllerDefinitionWithProps<
+export interface RecommendationsDefinition extends UniversalControllerDefinitionWithProps<
   Recommendations,
   Partial<RecommendationsOptions>
 > {}
@@ -30,7 +30,9 @@ export function defineRecommendations(
   props: RecommendationsProps
 ): RecommendationsDefinition & RecommendationsDefinitionMeta {
   return {
-    recommendation: true,
+    search: true,
+    listing: true,
+    standalone: true,
     [recommendationInternalOptionKey]: {
       ...props.options,
     },

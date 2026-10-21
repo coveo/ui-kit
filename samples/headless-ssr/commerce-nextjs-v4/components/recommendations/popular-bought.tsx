@@ -7,7 +7,7 @@ export default function PopularBought() {
   const {state, methods} = usePopularBought();
 
   return (
-    <ul>
+    <ul data-testid="recommendations-popularBought">
       <h3>{state.headline}</h3>
       {state.products.map((product) => (
         <li key={product.ec_product_id}>

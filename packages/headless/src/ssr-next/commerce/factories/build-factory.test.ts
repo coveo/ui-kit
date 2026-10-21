@@ -17,7 +17,6 @@ import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr
 import type {
   CommonBuildConfig,
   ListingBuildConfig,
-  RecommendationBuildConfig,
   SearchBuildConfig,
   SSRCommerceEngineOptions,
   StandaloneBuildConfig,
@@ -306,51 +305,51 @@ describe('buildFactory', () => {
     });
   });
 
-  describe('when building for recommendations', () => {
+  describe('when building with recommendation slots', () => {
     const controllerDefinition = {
       rec1: defineMockRecommendationDefinition('slot_1'),
       rec2: defineMockRecommendationDefinition('slot_2'),
     };
 
     const factory = buildFactory(controllerDefinition, mockEngineOptions);
-    const build = factory(SolutionType.recommendation);
 
     beforeEach(() => {
-      const mockWiredRecommendations = {
-        rec1: {
-          state: {},
-          initialState: {},
-        },
-        rec2: {
-          state: {},
-          initialState: {},
-        },
-      };
-      mockWireControllerParams.mockReturnValueOnce(mockWiredRecommendations);
+      mockWireControllerParams.mockReturnValueOnce({rec1: {}, rec2: {}});
     });
 
-    it('should build an SSRCommerceEngine with recommendation solution type', async () => {
-      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
-      const build = factory(SolutionType.recommendation);
-      const result = await build(mockBuildOptions as RecommendationBuildConfig<{}>);
-
-      expect(result.engine).toBeDefined();
-      expect(result.controllers).toBeDefined();
-    });
-
-    it('should add no middleware if no recommendation was specified in the build props', async () => {
-      await build({
+    it('should add no recommendation middleware when no slot is requested', async () => {
+      await factory(SolutionType.standalone)({
         ...mockBuildOptions,
         recommendations: [],
-      } as RecommendationBuildConfig<{}>);
+      } as StandaloneBuildConfig<typeof controllerDefinition>);
+
       expect(mockBuildCommerceEngine.mock.calls[0][0].middlewares).toHaveLength(0);
     });
 
-    it('should add a middleware for each recommendation in the build props', async () => {
-      await build({
+    it('should wait for each requested slot on a standalone page', async () => {
+      await factory(SolutionType.standalone)({
         ...mockBuildOptions,
         recommendations: ['rec1', 'rec2'],
-      } as RecommendationBuildConfig<{}>);
+      } as StandaloneBuildConfig<typeof controllerDefinition>);
+
+      expect(mockBuildCommerceEngine.mock.calls[0][0].middlewares).toHaveLength(2);
+    });
+
+    it('should wait for the listing request and for each requested slot on a listing page', async () => {
+      await factory(SolutionType.listing)({
+        ...mockBuildOptions,
+        recommendations: ['rec1', 'rec2'],
+      } as ListingBuildConfig<typeof controllerDefinition>);
+
+      expect(mockBuildCommerceEngine.mock.calls[0][0].middlewares).toHaveLength(3);
+    });
+
+    it('should wait for the search request and for the requested slot on a search page', async () => {
+      await factory(SolutionType.search)({
+        ...mockBuildOptions,
+        recommendations: ['rec1'],
+      } as SearchBuildConfig<typeof controllerDefinition>);
+
       expect(mockBuildCommerceEngine.mock.calls[0][0].middlewares).toHaveLength(2);
     });
   });

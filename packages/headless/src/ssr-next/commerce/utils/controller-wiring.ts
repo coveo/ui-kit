@@ -11,50 +11,47 @@ import type {InferControllerPropsMapFromDefinitions} from '../types/controller-i
 import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
 import {getRecommendationDefinitions, isRecommendationDefinition} from './recommendation-filter.js';
 
-const requiredDefinition = {
+const commonDefinition = (recommendationNames: string[]) => ({
   context: new RecordValue({
     options: {required: true},
     values: contextDefinition,
   }),
-};
-
-const listingDefinition = {
-  ...requiredDefinition,
-  searchParams: new RecordValue({
-    values: parametersDefinition,
-  }),
-};
-
-const standaloneDefinition = {
-  ...requiredDefinition,
-};
-
-const searchDefinition = {
-  ...requiredDefinition,
-  searchParams: new RecordValue({
-    options: {required: false},
-    values: {q: nonRequiredEmptyAllowedString, ...parametersDefinition},
-  }),
-};
-
-const recommendationsDefinition = (recommendationName: string[]) => ({
-  ...requiredDefinition,
   recommendations: new ArrayValue({
     each: new StringValue({
       required: true,
-      constrainTo: recommendationName,
+      constrainTo: recommendationNames,
       emptyAllowed: false,
     }),
-    required: true,
+    required: false,
   }),
   productId: nonEmptyString,
 });
 
-export const listingDefinitionSchema = new Schema(listingDefinition);
-export const searchDefinitionSchema = new Schema(searchDefinition);
-export const standaloneDefinitionSchema = new Schema(standaloneDefinition);
-export const recommendationsDefinitionSchema = (recommendationName: string[]) =>
-  new Schema(recommendationsDefinition(recommendationName));
+const listingDefinition = (recommendationNames: string[]) => ({
+  ...commonDefinition(recommendationNames),
+  searchParams: new RecordValue({
+    values: parametersDefinition,
+  }),
+});
+
+const standaloneDefinition = (recommendationNames: string[]) => ({
+  ...commonDefinition(recommendationNames),
+});
+
+const searchDefinition = (recommendationNames: string[]) => ({
+  ...commonDefinition(recommendationNames),
+  searchParams: new RecordValue({
+    options: {required: false},
+    values: {q: nonRequiredEmptyAllowedString, ...parametersDefinition},
+  }),
+});
+
+export const listingDefinitionSchema = (recommendationNames: string[]) =>
+  new Schema(listingDefinition(recommendationNames));
+export const searchDefinitionSchema = (recommendationNames: string[]) =>
+  new Schema(searchDefinition(recommendationNames));
+export const standaloneDefinitionSchema = (recommendationNames: string[]) =>
+  new Schema(standaloneDefinition(recommendationNames));
 
 /**
  * Validates the build configuration based on the solution type.
@@ -64,13 +61,11 @@ function validateBuildConfig<TControllerDefinitions extends CommerceControllerDe
   controllerDefinitions: CommerceControllerDefinitionsMap,
   buildConfig: BuildConfig<TControllerDefinitions, SolutionType>
 ): void {
+  const recommendationNames = Object.keys(getRecommendationDefinitions(controllerDefinitions));
   const validationMap: Record<SolutionType, Schema<object>> = {
-    [SolutionType.listing]: listingDefinitionSchema,
-    [SolutionType.search]: searchDefinitionSchema,
-    [SolutionType.standalone]: standaloneDefinitionSchema,
-    [SolutionType.recommendation]: recommendationsDefinitionSchema(
-      Object.keys(getRecommendationDefinitions(controllerDefinitions))
-    ),
+    [SolutionType.listing]: listingDefinitionSchema(recommendationNames),
+    [SolutionType.search]: searchDefinitionSchema(recommendationNames),
+    [SolutionType.standalone]: standaloneDefinitionSchema(recommendationNames),
   };
 
   const schema = validationMap[solutionType as SolutionType];
@@ -131,11 +126,12 @@ class ControllerWirer<
     };
   }
 
+  /**
+   * Seeds every recommendation controller with the product being viewed. Which slots are requested is
+   * decided later, from the `recommendations` list, when the controllers are refreshed.
+   */
   private wireRecommendations(): void {
-    if (!('recommendations' in this.buildConfig)) {
-      return;
-    }
-    const productId = 'productId' in this.buildConfig ? this.buildConfig.productId : undefined;
+    const {productId} = this.buildConfig;
     for (const recController in this.controllerDefinitions) {
       if (isRecommendationDefinition(this.controllerDefinitions[recController])) {
         this.controllerProps[recController] = {
@@ -153,17 +149,13 @@ class ControllerWirer<
     // Wire common controllers that apply to all solution types
     this.wireCart();
     this.wireContext();
+    this.wireRecommendations();
 
     // Wire solution-specific controllers
     switch (solutionType) {
       case SolutionType.search:
       case SolutionType.listing: {
         this.wireParameterManager();
-        break;
-      }
-
-      case SolutionType.recommendation: {
-        this.wireRecommendations();
         break;
       }
 
@@ -185,7 +177,7 @@ class ControllerWirer<
  * nested structure required by the internal {@link Build} method. Automatically generates
  * appropriate controllers (context, cart, parameterManager) transparently.
  *
- * @param solutionType - The type of solution (search, listing, recommendation, standalone)
+ * @param solutionType - The type of solution (search, listing, standalone)
  * @param controllerDefinitions - Map of controller definitions to be initialized
  * @param buildConfig - Simple configuration object with simplified controller properties
  * @returns Formatted and validated controller properties map defined for the controller in the definition

@@ -19,7 +19,6 @@
  *   listingEngineDefinition,
  *   searchEngineDefinition,
  *   standaloneEngineDefinition,
- *   recommendationEngineDefinition,
  * } = defineCommerceEngine({
  *   configuration: {...getSampleCommerceEngineConfiguration()},
  *   controllers: {
@@ -48,6 +47,7 @@
  *     view: {url: 'https://sports.barca.group/browse/promotions/toys'},
  *   },
  *   cart: {items: []},
+ *   recommendations: ['popularViewed'],
  * });
  *
  * // In the browser, from the serialized static state. It already carries the navigator context,
@@ -286,6 +286,7 @@ export type {CommerceStaticState} from './ssr-next/commerce/types/fetch-static-s
 // Main App
 export type {
   BuildConfig,
+  RecommendationNames,
   SSRCommerceEngineOptions as CommerceEngineOptions,
 } from './ssr-next/commerce/types/build.js';
 export {SolutionType} from './ssr-next/commerce/types/controller-constants.js';

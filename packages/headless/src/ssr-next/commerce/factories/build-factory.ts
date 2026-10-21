@@ -10,7 +10,6 @@ import {
   createWaitForActionMiddlewareForRecommendation,
 } from '../../../utils/utils.js';
 import {buildControllerDefinitions} from '../controller-utils.js';
-import type {RecommendationBuildConfig} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {BakedInControllers} from '../types/controller-definitions.js';
 import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
@@ -54,42 +53,33 @@ function isRecommendationCompletedAction(action: unknown): action is Action {
   );
 }
 
-function noSearchActionRequired(_action: unknown): _action is Action {
-  return true;
-}
-
 function buildSSRCommerceEngine(
   solutionType: SolutionType,
   options: CommerceEngineOptions,
   recommendationCount: number
 ): SSRCommerceEngine {
-  let actionCompletionMiddleware: ReturnType<typeof createWaitForActionMiddleware>;
-
   const middlewares: ReturnType<typeof createWaitForActionMiddleware>[] = [];
   const memo: Set<string> = new Set();
 
   switch (solutionType) {
     case SolutionType.listing:
-      actionCompletionMiddleware = createWaitForActionMiddleware(isListingFetchCompletedAction);
-      middlewares.push(actionCompletionMiddleware);
+      middlewares.push(createWaitForActionMiddleware(isListingFetchCompletedAction));
       break;
     case SolutionType.search:
-      actionCompletionMiddleware = createWaitForActionMiddleware(isSearchCompletedAction);
-      middlewares.push(actionCompletionMiddleware);
-      break;
-    case SolutionType.recommendation:
-      middlewares.push(
-        ...Array.from({length: recommendationCount}, () =>
-          createWaitForActionMiddlewareForRecommendation(isRecommendationCompletedAction, memo)
-        )
-      );
+      middlewares.push(createWaitForActionMiddleware(isSearchCompletedAction));
       break;
     case SolutionType.standalone:
-      actionCompletionMiddleware = createWaitForActionMiddleware(noSearchActionRequired);
       break;
     default:
       throw new Error('Unsupported solution type', solutionType);
   }
+
+  // One request per requested recommendation slot, whatever the kind of page.
+  middlewares.push(
+    ...Array.from({length: recommendationCount}, () =>
+      createWaitForActionMiddlewareForRecommendation(isRecommendationCompletedAction, memo)
+    )
+  );
 
   const commerceEngine = buildCommerceEngine({
     ...options,
@@ -123,11 +113,7 @@ export const buildFactory =
     const buildOptions = withDefaultViewUrl(rawBuildOptions);
     const controllerProps = wireControllerParams(solutionType, controllerDefinitions, buildOptions);
 
-    const enabledRecommendationControllers =
-      buildOptions && 'recommendations' in buildOptions
-        ? (buildOptions as RecommendationBuildConfig<TControllerDefinitions>)?.recommendations
-            .length
-        : 0;
+    const enabledRecommendationControllers = buildOptions.recommendations?.length ?? 0;
 
     const engineOptions: CommerceEngineOptions = augmentCommerceEngineOptions(
       options,
