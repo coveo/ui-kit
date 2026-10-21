@@ -99,18 +99,10 @@ function isPopover(element: Element) {
   return element.tagName === 'ATOMIC-POPOVER';
 }
 
-/**
- * Whether the facet is slotted inside an `atomic-popover`.
- */
 export function isFacetNestedInPopover(facet: BaseFacetElement) {
   return !!facet.parentElement && isPopover(facet.parentElement);
 }
 
-/**
- * Returns the element to move when reordering the given facet inside its manager.
- *
- * A facet nested in an `atomic-popover` must stay slotted inside it, so its popover is moved instead.
- */
 export function getFacetElementToReorder(facet: BaseFacetElement): HTMLElement {
   return isFacetNestedInPopover(facet) ? facet.parentElement! : facet;
 }
