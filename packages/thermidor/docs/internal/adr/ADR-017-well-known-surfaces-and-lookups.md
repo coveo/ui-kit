@@ -230,12 +230,11 @@ in one would abort the other's lookups.
   - A page can draw any number of search boxes.
   - Instant products, or other well-known surfaces, reuse the same mechanism.
 - **Negative:**
-  - The injected contract changes shape, a breaking change for every application.
-  - Renderer integrations create and dispose of instances, and feed each instance's stream without
-    replaying it.
-  - Instances belong to a session handle, so an application that replaces its session to start a
-    new conversation remounts the search box.
-  - The mock converse service must answer lookups with or without a session.
+  - Renderer integrations gain work: they create and dispose of instances, and feed each
+    instance's stream without replaying it.
+  - The search box instances belong to the session. A session cannot start a new conversation, so
+    an application starts one by creating a new session, which recreates its search boxes: they
+    remount and lose what the shopper typed.
 
 ## Implementation and Follow-up
 
@@ -243,6 +242,6 @@ in one would abort the other's lookups.
   for the whole session, as the producer and A2-UI scope them, so that earlier turns' surfaces keep
   accepting actions.
 - **New conversations without remounting the search box.** A separate decision settles how an
-  application starts a new conversation without replacing its session handle, for example by
-  letting a session handle start one itself.
+  application starts a new conversation without creating a new session, for example by letting a
+  session start one itself.
 - **Instant products.** See `thermidor-schema` ADR-020's follow-up decisions.
