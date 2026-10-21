@@ -8,13 +8,13 @@ related:
   - ./ADR-014-consumer-supplied-endpoint-and-schema.md
   - ./ADR-015-surface-and-route-derivation.md
   - ./ADR-016-inline-state-consumption-remove-remote-controller.md
-  - thermidor-schema ADR-020 (well-known surfaces and lookup actions)
+  - thermidor-schema ADR-020 (surface templates and lookup actions)
 ---
 
-# Well-known surfaces and lookup actions
+# Surface templates and lookup actions
 
 This ADR amends [ADR-014](./ADR-014-consumer-supplied-endpoint-and-schema.md) (the session takes
-one contract bundle), [ADR-015](./ADR-015-surface-and-route-derivation.md) (well-known surfaces
+one contract bundle), [ADR-015](./ADR-015-surface-and-route-derivation.md) (surface instances
 do not come from turns) and
 [ADR-016](./ADR-016-inline-state-consumption-remove-remote-controller.md) (lookups are dispatched
 without an active turn).
@@ -23,7 +23,7 @@ without an active turn).
 
 `thermidor-schema` ADR-020 decides how query suggestions work:
 
-- The contract declares **well-known surface templates**. A template fixes a surface's composition
+- The contract declares **surface templates**. A template fixes a surface's composition
   and initial state, but not its id: the application creates instances of it, and the producer
   only writes their state. The first template is the search box, whose root is a
   `QuerySuggestions` component.
@@ -43,7 +43,7 @@ The session cannot support this today:
 
 ## Decision Drivers
 
-- **Faithful transmission and rendering (charter MUST).** A well-known surface is rendered exactly
+- **Faithful transmission and rendering (charter MUST).** A surface instance is rendered exactly
   as the contract declares it, with A2-UI's standard rendering.
 - **First paint.** The search box is usable on first paint, before the producer has answered
   anything, and its input is never remounted while the shopper types.
@@ -59,10 +59,10 @@ The session cannot support this today:
 
 ## Considered Options
 
-### Option A: create the well-known surfaces in a synthetic first turn
+### Option A: create the surface instances in a synthetic first turn
 
-- **Summary:** the session opens a turn at construction that carries the well-known surfaces'
-  `createSurface` messages.
+- **Summary:** the session opens a turn at construction that carries a `createSurface` message
+  for each surface template.
 - **Pros:** surfaces stay derived from turns.
 - **Cons:**
   - Turns are the transcript. A turn with no prompt and no response would appear in it and in
@@ -71,16 +71,16 @@ The session cannot support this today:
 
 ### Option B: the application creates the surface itself
 
-- **Summary:** the session knows nothing about well-known surfaces. The application feeds their
-  `createSurface` to its renderer and sends their lookups itself.
+- **Summary:** the session knows nothing about surface templates. The application feeds their
+  instances' `createSurface` to its renderer and sends their lookups itself.
 - **Pros:** no change to the session.
 - **Cons:** every application rebuilds the same plumbing: creating the surface, routing its
   actions outside `dispatchAction`, superseding lookups and applying their results. That is the
   stitching the design exists to avoid.
 
-### Option C (selected): the session holds the well-known surfaces, and sends lookups in a lane of their own
+### Option C (selected): the session holds the surface instances, and sends lookups in a lane of their own
 
-- **Summary:** the application asks the session for an instance of a well-known surface template
+- **Summary:** the application asks the session for an instance of a surface template
   where it draws one. The session creates it outside any turn, and sends its lookups at once.
 - **Pros:** an application renders the search box like any surface, and its actions go through
   `dispatchAction` like any other.
@@ -93,14 +93,14 @@ Adopt **Option C**.
 
 ### The injected contract
 
-The session reads the well-known surface templates and the lookup marks from the contract it is
+The session reads the surface templates and the lookup marks from the contract it is
 given. ADR-014's injected contracts schema becomes one bundle with three parts, which
 `@coveo/thermidor-schema` generates in both its root and `zod3` entry points:
 
 ```ts
 export const ThermidorContract = {
   components: ComponentContractsSchema,
-  wellKnownSurfaces: WellKnownSurfaces,
+  surfaceTemplates: SurfaceTemplates,
   lookupActions: LookupActions,
 } as const;
 ```
@@ -110,10 +110,10 @@ export const ThermidorContract = {
   compatibility for `contracts`. Separate inputs would allow two mistakes:
   - pieces from different schema versions, so that the session validates against one contract and
     creates another one's surfaces;
-  - leaving the lookup actions out, so that every action on a well-known surface is dropped with
+  - leaving the lookup actions out, so that every action on a surface instance is dropped with
     only a warning in development.
 - **Accepted by its shape.** The session accepts any contract with `components`,
-  `wellKnownSurfaces` and `lookupActions`, and never imports `@coveo/thermidor-schema`, as ADR-014
+  `surfaceTemplates` and `lookupActions`, and never imports `@coveo/thermidor-schema`, as ADR-014
   requires.
 - **Not inside the component union.** The templates describe surfaces, not components, so they do
   not belong in `ComponentContractsSchema`. The lookup mark belongs to each action, but the Zod
@@ -122,7 +122,7 @@ export const ThermidorContract = {
   of validating it.
 - **Future contract-level metadata** goes into the bundle, not into new session inputs.
 
-### Well-known surfaces
+### Surface instances
 
 - **Created and disposed of by the application, per placement.** The application asks the session
   for an instance of a template where it draws one, and disposes of it when it stops drawing it.
@@ -144,7 +144,7 @@ export const ThermidorContract = {
 
   ```tsx
   function SearchBox() {
-    const surface = useWellKnownSurface(SearchBoxSurface); // created in a layout effect
+    const surface = useSurfaceInstance(SearchBoxSurfaceTemplate); // instantiateSurface in a layout effect
     return surface ? <A2UIRenderer surfaceId={surface.surfaceId} /> : null;
   }
   ```
@@ -152,7 +152,7 @@ export const ThermidorContract = {
   The hook belongs to the renderer integration. demo-schema-react implements it on top of the
   session's instances.
 
-- **Validated like any surface.** An inbound `updateDataModel` for a well-known surface is validated
+- **Validated like any surface.** An inbound `updateDataModel` for a surface instance is validated
   against the contract of the component it targets before it reaches the renderer.
 - **Not serialized.** A restored session's application creates its instances again. Their state is
   lookup results, which the next keystroke replaces. ADR-011 is unchanged.
@@ -209,10 +209,10 @@ in one would abort the other's lookups.
 
 ## Impact on the Charter
 
-- **Faithful transmission and rendering (MUST):** preserved. A well-known surface is the contract's
+- **Faithful transmission and rendering (MUST):** preserved. A surface instance is the contract's
   template, applied as declared under the application's surface id. Its state is the producer's,
   validated in transit.
-- **Public API independence (MUST):** unchanged. Well-known surfaces are exposed as the same
+- **Public API independence (MUST):** unchanged. Surface instances are exposed as the same
   renderer messages as turns.
 - **Best-in-class DX (MUST):** improved. The search box needs no stitching, and the application
   injects one contract.
@@ -228,7 +228,7 @@ in one would abort the other's lookups.
   - The search box is drawn on first paint and never remounted while the shopper types.
   - Suggestions work before the first prompt and while an answer streams.
   - A page can draw any number of search boxes.
-  - Instant products, or other well-known surfaces, reuse the same mechanism.
+  - Instant products, or other surface templates, reuse the same mechanism.
 - **Negative:**
   - Renderer integrations gain work: they create and dispose of instances, and feed each
     instance's stream without replaying it.
