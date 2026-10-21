@@ -14,7 +14,7 @@ import {
   type ThermidorCatalogOptions,
 } from './components.js';
 import {createFakeSessionRequests} from '../test/fake-session-requests.js';
-import {isBlockedAction, SessionRequestProvider} from './session-request.js';
+import {SessionRequestProvider} from './session-request.js';
 
 /**
  * Shared end-to-end mount for a component definition, through the real thermidor catalog and the
@@ -95,14 +95,7 @@ function Surface({
 }) {
   const catalog = useMemo(() => createThermidorCatalog(catalogOptions), [catalogOptions]);
   const requests = useMemo(() => createFakeSessionRequests(dispatch), [dispatch]);
-  // Routed like `AppShell`: a gesture sent while the surface is locked is dropped.
-  const onAction = (message: A2UIClientEventMessage) => {
-    const name = (message as {userAction?: {name?: unknown}}).userAction?.name;
-    if (typeof name === 'string' && isBlockedAction(requests.source, name)) {
-      return;
-    }
-    return requests.dispatch(message);
-  };
+  const onAction = (message: A2UIClientEventMessage) => requests.dispatch(message);
   return (
     <SessionRequestProvider value={requests.source}>
       <A2UIProvider catalog={catalog} onAction={onAction}>

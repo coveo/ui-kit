@@ -32,11 +32,6 @@ export function isBlocking(request: SessionRequest | undefined): boolean {
   );
 }
 
-/** Whether an action, sent now, would wait behind a request that locks the surface. */
-export function isBlockedAction(source: SessionRequestSource, actionName: string): boolean {
-  return isBlocking(source.request) && !NON_BLOCKING_ACTIONS.has(actionName);
-}
-
 /** The request the session is sending, from `source` or the enclosing provider. */
 export function useSessionRequest(source?: SessionRequestSource): SessionRequest | undefined {
   const context = useContext(SessionRequestContext);
@@ -55,14 +50,14 @@ export function useSessionBusy(): () => boolean {
 }
 
 /**
- * Starts a gesture with React's `useOptimistic`: unless the surface is locked, applies the
+ * Starts a gesture with React's `useOptimistic`: unless a request is in flight, applies the
  * optimistic update and sends the gesture in a transition that lasts until the session has
  * answered it, so the optimistic value shows until then.
  */
 export function useGesture(): (optimistic: () => void, send: () => void) => void {
   const source = useContext(SessionRequestContext);
   return (optimistic, send) => {
-    if (isBlocking(source.request)) {
+    if (source.request !== undefined) {
       return;
     }
     startTransition(async () => {

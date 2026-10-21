@@ -238,10 +238,9 @@ describe('AppShell', () => {
       expect(mockDispatchAction).toHaveBeenCalledTimes(1);
     });
 
-    it('sends a gesture after a facet search in flight, in turn', async () => {
+    it('drops a gesture sent while a facet search is in flight', async () => {
       mockTurns = [searchTurn('turn-1')];
       const settle = deferredDispatch();
-      mockDispatchAction.mockResolvedValueOnce(undefined);
 
       render(<AppShell />);
       act(() => {
@@ -254,10 +253,7 @@ describe('AppShell', () => {
         settle();
       });
 
-      expect(mockDispatchAction).toHaveBeenCalledTimes(2);
-      expect(mockDispatchAction).toHaveBeenLastCalledWith(
-        expect.objectContaining({userAction: expect.objectContaining({name: 'toggleSelect'})})
-      );
+      expect(mockDispatchAction).toHaveBeenCalledTimes(1);
     });
 
     it('drops a follow-up while a facet search is in flight', async () => {
