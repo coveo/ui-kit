@@ -44,7 +44,7 @@ function lockedSource(locked: boolean) {
   return {
     request: locked ? ({kind: 'prompt', turnId: 'turn'} as const) : undefined,
     subscribe: () => () => {},
-    whenSettled: () => Promise.resolve(),
+    sendAndWait: () => Promise.resolve(),
   };
 }
 
