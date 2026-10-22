@@ -9,22 +9,25 @@ const mockDispatchAction = vi.fn();
 let mockTurns: Turn[] = [];
 let capturedOnAction: ((message: unknown) => unknown) | undefined;
 
-// `actions` is a real coordinator sending to `mockDispatchAction`, so renderer actions hit the spy.
-vi.mock('../context/session.js', async () => {
-  const {createDispatchCoordinator} = await import('@coveo/thermidor');
-  const actions = createDispatchCoordinator((message: unknown) => mockDispatchAction(message));
+// The session's request chain is faked, so every dispatch reaches the spy one at a time.
+let mockSession: Session;
+vi.mock('../context/session.js', () => ({useSession: () => mockSession}));
+
+async function createMockSession(): Promise<Session> {
+  const {createFakeSessionRequests} = await import('../test/fake-session-requests.js');
+  const requests = createFakeSessionRequests((message: never) => mockDispatchAction(message));
   return {
-    useSession: () =>
-      ({
-        get turns() {
-          return mockTurns;
-        },
-        subscribe: () => () => undefined,
-        dispatchAction: mockDispatchAction,
-        actions,
-      }) as unknown as Session,
-  };
-});
+    get turns() {
+      return mockTurns;
+    },
+    get request() {
+      return requests.source.request;
+    },
+    subscribe: requests.source.subscribe,
+    sendAndWait: requests.source.sendAndWait,
+    dispatchAction: requests.dispatch,
+  } as unknown as Session;
+}
 
 vi.mock('@copilotkit/a2ui-renderer', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@copilotkit/a2ui-renderer')>()),
@@ -55,6 +58,7 @@ vi.mock('./LandingPage/LandingPage.js', () => ({
 vi.mock('./ConversationPage/index.js', () => ({
   ConversationPage: (props: any) => (
     <div data-testid="conversation-page">
+      <span data-testid="locked">{String(props.promptDisabled)}</span>
       <span data-testid="turn-surfaces">
         {props.turns.map((turn: Turn) => props.surfacesByTurn.get(turn.id).join(',')).join('|')}
       </span>
@@ -86,8 +90,9 @@ function searchTurn(id: string): Turn {
 }
 
 describe('AppShell', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks();
+    mockSession = await createMockSession();
     mockTurns = [];
     capturedOnAction = undefined;
   });
@@ -127,17 +132,6 @@ describe('AppShell', () => {
     expect(screen.getByTestId('turn-surfaces').textContent).toBe(`turn-1/${SEARCH_SURFACE_ID}|`);
   });
 
-  it('withholds a prompt while a turn is streaming', () => {
-    mockTurns = [makeTurn({id: 'turn-1', status: 'streaming'})];
-
-    render(<AppShell />);
-    act(() => {
-      screen.getByTestId('conversation-submit').click();
-    });
-
-    expect(mockDispatchAction).not.toHaveBeenCalled();
-  });
-
   it('sends a renderer action with the server surface id', () => {
     mockTurns = [searchTurn('turn-1')];
 
@@ -162,6 +156,154 @@ describe('AppShell', () => {
         sourceComponentId: `${SEARCH_SURFACE_ID}-facet-brand`,
         context: {value: 'Nike'},
       },
+    });
+  });
+
+  describe('surface lock', () => {
+    function rendererAction(name: string, context: Record<string, unknown> = {}) {
+      return {
+        version: 'v0.9',
+        userAction: {
+          name,
+          surfaceId: `turn-1/${SEARCH_SURFACE_ID}`,
+          sourceComponentId: `${SEARCH_SURFACE_ID}-facet-brand`,
+          context,
+        },
+      };
+    }
+
+    function deferredDispatch() {
+      let settle: () => void = () => undefined;
+      mockDispatchAction.mockReturnValueOnce(
+        new Promise<void>((resolve) => {
+          settle = resolve;
+        })
+      );
+      return () => settle();
+    }
+
+    it('locks the surface and the prompt while a gesture is in flight', async () => {
+      mockTurns = [searchTurn('turn-1')];
+      const settle = deferredDispatch();
+
+      render(<AppShell />);
+      expect(screen.getByTestId('locked').textContent).toBe('false');
+
+      act(() => {
+        void capturedOnAction?.(rendererAction('toggleSelect', {value: 'Nike'}));
+      });
+      expect(screen.getByTestId('locked').textContent).toBe('true');
+
+      await act(async () => {
+        settle();
+      });
+      expect(screen.getByTestId('locked').textContent).toBe('false');
+    });
+
+    it.each(['search', 'clearSearch', 'showMoreSearchResults'])(
+      'keeps the surface usable during a facet %s',
+      async (name) => {
+        mockTurns = [searchTurn('turn-1')];
+        const settle = deferredDispatch();
+
+        render(<AppShell />);
+        act(() => {
+          void capturedOnAction?.(rendererAction(name, {query: 'ni'}));
+        });
+
+        expect(mockDispatchAction).toHaveBeenCalledTimes(1);
+        expect(screen.getByTestId('locked').textContent).toBe('false');
+
+        await act(async () => {
+          settle();
+        });
+      }
+    );
+
+    it('drops a second gesture sent before the lock renders', async () => {
+      mockTurns = [searchTurn('turn-1')];
+      const settle = deferredDispatch();
+
+      render(<AppShell />);
+      act(() => {
+        void capturedOnAction?.(rendererAction('toggleSelect', {value: 'Nike'}));
+        void capturedOnAction?.(rendererAction('toggleSelect', {value: 'Adidas'}));
+      });
+
+      expect(mockDispatchAction).toHaveBeenCalledTimes(1);
+
+      await act(async () => {
+        settle();
+      });
+      expect(mockDispatchAction).toHaveBeenCalledTimes(1);
+    });
+
+    it('drops a gesture sent while a facet search is in flight', async () => {
+      mockTurns = [searchTurn('turn-1')];
+      const settle = deferredDispatch();
+
+      render(<AppShell />);
+      act(() => {
+        void capturedOnAction?.(rendererAction('search', {query: 'ni'}));
+        void capturedOnAction?.(rendererAction('toggleSelect', {value: 'Nike'}));
+      });
+      expect(mockDispatchAction).toHaveBeenCalledTimes(1);
+
+      await act(async () => {
+        settle();
+      });
+
+      expect(mockDispatchAction).toHaveBeenCalledTimes(1);
+    });
+
+    it('drops a follow-up while a facet search is in flight', async () => {
+      mockTurns = [searchTurn('turn-1')];
+      const settle = deferredDispatch();
+
+      render(<AppShell />);
+      act(() => {
+        void capturedOnAction?.(rendererAction('search', {query: 'ni'}));
+        void capturedOnAction?.(rendererAction('selectAction', {text: 'More', type: 'followup'}));
+      });
+
+      expect(mockDispatchAction).toHaveBeenCalledTimes(1);
+      expect(screen.getByTestId('follow-ups').textContent).toBe('');
+
+      await act(async () => {
+        settle();
+      });
+      expect(mockDispatchAction).toHaveBeenCalledTimes(1);
+    });
+
+    it('withholds a prompt while a request is in flight', async () => {
+      mockTurns = [searchTurn('turn-1')];
+      const settle = deferredDispatch();
+
+      render(<AppShell />);
+      act(() => {
+        void capturedOnAction?.(rendererAction('selectPage', {page: 2}));
+      });
+      act(() => {
+        screen.getByTestId('conversation-submit').click();
+      });
+
+      expect(mockDispatchAction).toHaveBeenCalledTimes(1);
+
+      await act(async () => {
+        settle();
+      });
+    });
+
+    it('unlocks the surface when an action fails', async () => {
+      mockTurns = [searchTurn('turn-1')];
+      mockDispatchAction.mockRejectedValueOnce(new Error('network'));
+
+      render(<AppShell />);
+      await act(async () => {
+        await capturedOnAction?.(rendererAction('selectPage', {page: 2}));
+      });
+
+      expect(screen.getByTestId('locked').textContent).toBe('false');
     });
   });
 

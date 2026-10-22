@@ -1,6 +1,6 @@
-import {useId, useLayoutEffect, useRef, useState} from 'react';
+import {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import type {CategoryFacetAction, RegularFacetAction} from '@coveo/thermidor-schema/zod3';
-import {useDispatchProgress} from './pending-dispatch.js';
+import {useSessionBusy} from './session-request.js';
 
 /** Derived from the schema so the payload cannot drift from what it accepts. */
 export type FacetSearchAction = Extract<
@@ -14,6 +14,9 @@ export interface OptimisticFacetSearch {
   reset: () => void;
 }
 
+/** A search goes out once typing pauses, so a burst of keystrokes sends one request. */
+export const SEARCH_DEBOUNCE_MS = 200;
+
 /**
  * The typed text is local state, not an optimistic hold, so a keystroke that never reaches the
  * producer leaves the field untouched. An external change of the query wins; our own echo does not.
@@ -22,12 +25,24 @@ export function useOptimisticFacetSearch(
   backendQuery: string,
   dispatch: (action: FacetSearchAction) => void
 ): OptimisticFacetSearch {
-  const slot = useId();
-  const {declareGesture, lastIssued} = useDispatchProgress();
   const [typed, setTyped] = useState(backendQuery);
   const lastBackend = useRef(backendQuery);
-  // Queries whose echo can still arrive, in send order (the queue serializes sends).
-  const pending = useRef<string[]>([]);
+  const isBusy = useSessionBusy();
+
+  // Queries sent whose echo can still arrive, in send order.
+  const sent = useRef<string[]>([]);
+  const debounce = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  // The surface is rebuilt whenever a reply lands, which retires the previous render's dispatch,
+  // so a search that fires later must use the latest one.
+  const latestDispatch = useRef(dispatch);
+  latestDispatch.current = dispatch;
+
+  const cancelDebounce = () => {
+    clearTimeout(debounce.current);
+    debounce.current = undefined;
+  };
+
+  useEffect(() => cancelDebounce, []);
 
   // Layout, so an adopted external change lands before paint.
   useLayoutEffect(() => {
@@ -35,54 +50,46 @@ export function useOptimisticFacetSearch(
       return;
     }
     lastBackend.current = backendQuery;
-    const echo = pending.current.indexOf(backendQuery);
+    const echo = sent.current.indexOf(backendQuery);
     if (echo !== -1) {
-      // Our echo: everything older has been answered too.
-      pending.current = pending.current.slice(echo + 1);
+      // Our echo: everything sent before it has been answered too.
+      sent.current = sent.current.slice(echo + 1);
     } else {
-      // External change: the producer wins.
-      pending.current = [];
+      // External change: the producer wins over what is typed or waiting to be sent.
+      sent.current = [];
+      cancelDebounce();
       setTyped(backendQuery);
     }
   }, [backendQuery]);
 
   const send = (action: FacetSearchAction, query: string) => {
-    const before = lastIssued()?.id;
-    const withdraw = declareGesture({
-      coalesce: {slot, gesture: `${slot}|${action.event.name}`, policy: 'absolute'},
-      invalidates: [],
-    });
-    try {
-      dispatch(action);
-    } finally {
-      withdraw();
-    }
-    const issued = lastIssued();
-    if (!issued || issued.id === before) {
+    sent.current.push(query);
+    latestDispatch.current(action);
+  };
+
+  // The session withholds a request made while another is in flight, so the search waits.
+  const sendWhenFree = (action: FacetSearchAction, query: string) => {
+    if (isBusy()) {
+      debounce.current = setTimeout(() => sendWhenFree(action, query), SEARCH_DEBOUNCE_MS);
       return;
     }
-    pending.current.push(query);
-    issued.onSettled((outcome) => {
-      // Never answered, so no echo will come: drop it, or it would swallow a later external
-      // change. An answer that didn't move the prop can stay: the prop must leave that value
-      // first, and whatever moves it clears the entry.
-      if (outcome !== 'answered') {
-        const i = pending.current.lastIndexOf(query);
-        if (i !== -1) {
-          pending.current.splice(i, 1);
-        }
-      }
-    });
+    debounce.current = undefined;
+    send(action, query);
   };
 
   const onQueryChange = (next: string) => {
     setTyped(next);
-    send({event: {name: 'search', context: {query: next}}}, next);
+    cancelDebounce();
+    debounce.current = setTimeout(
+      () => sendWhenFree({event: {name: 'search', context: {query: next}}}, next),
+      SEARCH_DEBOUNCE_MS
+    );
   };
 
   const reset = () => {
     setTyped('');
-    send({event: {name: 'clearSearch', context: {}}}, '');
+    cancelDebounce();
+    sendWhenFree({event: {name: 'clearSearch', context: {}}}, '');
   };
 
   return {query: typed, onQueryChange, reset};

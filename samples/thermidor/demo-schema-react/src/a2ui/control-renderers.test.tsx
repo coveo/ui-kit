@@ -37,29 +37,6 @@ function heldOpen() {
   };
 }
 
-function mountHeldControl<TProps extends object>(
-  component: string,
-  state: TProps,
-  pick: (context: Record<string, unknown> | undefined) => unknown
-) {
-  const answers: Array<() => void> = [];
-  const view = mountControl(
-    component,
-    state,
-    () => new Promise<void>((resolve) => answers.push(resolve))
-  );
-  return {
-    ...view,
-    sent: () => view.actions.map((action) => pick(action.context)),
-    release: async () => {
-      await act(async () => {
-        answers.shift()?.();
-        await Promise.resolve();
-      });
-    },
-  };
-}
-
 describe('Pagination', () => {
   const state: PaginationProps = {page: 0, pageSize: 12, totalEntries: 60, totalPages: 5};
 
@@ -75,26 +52,6 @@ describe('Pagination', () => {
     );
     expect(screen.getByLabelText('Page 3').getAttribute('aria-current')).toBe('page');
     expect(screen.getByLabelText('Page 1').getAttribute('aria-current')).toBeNull();
-
-    await held.answer();
-    await waitFor(() =>
-      expect((screen.getByLabelText('Page 3') as HTMLButtonElement).disabled).toBe(false)
-    );
-  });
-
-  it('freezes navigation while a results-invalidating gesture is in flight', async () => {
-    // Also why there is no pagination burst test: a second click can't be issued while stale.
-    const held = heldOpen();
-    mountControl('Pagination', state, held.gate);
-
-    await waitFor(() => expect(screen.getByLabelText('Page 2')).toBeDefined());
-    fireEvent.click(screen.getByLabelText('Page 2'));
-
-    await waitFor(() =>
-      expect((screen.getByLabelText('Page 3') as HTMLButtonElement).disabled).toBe(true)
-    );
-    expect((screen.getByLabelText('Previous page') as HTMLButtonElement).disabled).toBe(true);
-    expect((screen.getByLabelText('Next page') as HTMLButtonElement).disabled).toBe(true);
 
     await held.answer();
     await waitFor(() =>
@@ -157,26 +114,6 @@ describe('PageSize', () => {
     expect(optionValues).toContain('96');
     held.answer();
   });
-
-  it('sends only the first and last size of a rapid burst, coalescing the queue', async () => {
-    // 96 adds the fourth option a three-change burst needs.
-    const view = mountHeldControl<PageSizeProps>(
-      'PageSize',
-      {pageSize: 96},
-      (context) => context?.['pageSize']
-    );
-
-    await waitFor(() => expect(screen.getByLabelText(/Products per page/)).toBeDefined());
-    const select = screen.getByLabelText(/Products per page/) as HTMLSelectElement;
-    fireEvent.change(select, {target: {value: '12'}});
-    fireEvent.change(select, {target: {value: '24'}});
-    fireEvent.change(select, {target: {value: '48'}});
-
-    await waitFor(() => expect(view.sent()).toEqual([12]));
-    await view.release();
-
-    await waitFor(() => expect(view.sent()).toEqual([12, 48]));
-  });
 });
 
 describe('Sort', () => {
@@ -208,29 +145,5 @@ describe('Sort', () => {
     await waitFor(() =>
       expect((screen.getByLabelText(/Sort by/) as HTMLSelectElement).value).toBe('0')
     );
-  });
-
-  it('sends only the first and last criterion of a rapid burst, coalescing the queue', async () => {
-    const fourSorts: SortProps = {
-      appliedSort: {sortCriteria: 'relevance', fields: []},
-      availableSorts: [
-        {sortCriteria: 'relevance', fields: []},
-        {sortCriteria: 'price_asc', fields: []},
-        {sortCriteria: 'price_desc', fields: []},
-        {sortCriteria: 'name_asc', fields: []},
-      ],
-    };
-    const view = mountHeldControl('Sort', fourSorts, (context) => context?.['sortCriteria']);
-
-    await waitFor(() => expect(screen.getByLabelText(/Sort by/)).toBeDefined());
-    const select = screen.getByLabelText(/Sort by/) as HTMLSelectElement;
-    fireEvent.change(select, {target: {value: '1'}});
-    fireEvent.change(select, {target: {value: '2'}});
-    fireEvent.change(select, {target: {value: '3'}});
-
-    await waitFor(() => expect(view.sent()).toEqual(['price_asc']));
-    await view.release();
-
-    await waitFor(() => expect(view.sent()).toEqual(['price_asc', 'name_asc']));
   });
 });
