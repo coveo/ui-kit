@@ -55,7 +55,7 @@ Renderers read resolved values from `props` (the renderer resolves each `{ "path
 
 `@copilotkit/a2ui-renderer` is built against **Zod 3**. The sample therefore pins `zod@3` and imports every runtime schema from the Zod 3 projection, `@coveo/thermidor-schema/zod3`: the per-component `*PropsSchema`, `ThermidorContract`, and `CONVERSATIONAL_CATALOG_ID`. Types come from either entry point: some files import them from the package root (`Product`, `SortAction`), while the facets and the breadbox import theirs (`RegularFacetAction`, `RegularFacetProps`, `BreadboxFacet`, …) from `@coveo/thermidor-schema/zod3`.
 
-Each catalog component is declared with the renderer's `createReactComponent({name, schema}, render)`, where `name` is the node's `component` and `schema` its `*PropsSchema`. `createThermidorCatalog()` (`src/a2ui/components.tsx`) registers them as `new Catalog(CONVERSATIONAL_CATALOG_ID, components)`. No type casts or bridge helpers are needed.
+Each catalog component is declared with the renderer's `createReactComponent({name, schema}, render)`, where `name` is the node's `component` and `schema` its `*PropsSchema`. `createThermidorCatalog()` (`src/a2ui/components.tsx`) registers them as `new Catalog(CONVERSATIONAL_CATALOG_ID, components)`. No type casts or bridge helpers are needed. `QuerySuggestions` is not among them: only the search box surface template places it, and `SearchBox` registers it in that template's own catalog, `new Catalog(SearchBoxSurfaceTemplate.catalogId, [QuerySuggestions])`.
 
 When the renderer moves to Zod 4, switch every `@coveo/thermidor-schema/zod3` import, schemas and types alike, to the package root and drop the `zod@3` pin.
 

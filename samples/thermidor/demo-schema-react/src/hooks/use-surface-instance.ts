@@ -7,8 +7,10 @@ type SurfaceTemplate = (typeof ThermidorContract)['surfaceTemplates'][number];
 
 /**
  * Creates an instance of a surface template for as long as the calling component is mounted,
- * and feeds its messages, each one once, to the enclosing `A2UIProvider`. Returns the instance's
- * surface id once the renderer has its surface, or `null` before that.
+ * under a surface id derived from `useId` and prefixed with the contract's
+ * `surfaceInstanceIdPrefix` (`template:`), and feeds its messages, each one once, to the
+ * enclosing `A2UIProvider`. Returns the instance's surface id once the renderer has its surface,
+ * or `null` before that.
  *
  * The instance is created in a layout effect, so the surface is drawn in the first paint. Its
  * renderer must be fed only this instance's messages: a renderer that clears and replays its
@@ -19,7 +21,7 @@ export function useSurfaceInstance(template: SurfaceTemplate): string | null {
   const {processMessages} = useA2UI();
   const processMessagesRef = useRef(processMessages);
   processMessagesRef.current = processMessages;
-  const surfaceId = `${template.template}-${useId()}`;
+  const surfaceId = `${session.contract.surfaceInstanceIdPrefix}${template.template}-${useId()}`;
   const [createdSurfaceId, setCreatedSurfaceId] = useState<string | null>(null);
 
   useLayoutEffect(() => {

@@ -178,7 +178,7 @@ describe('SearchBox', () => {
     expect((screen.getByLabelText('Submit') as HTMLButtonElement).disabled).toBe(true);
   });
 
-  it('gives each search box an instance of its own', async () => {
+  it('gives each search box an instance of its own, under a prefixed surface id', async () => {
     const {session, requests} = createTestSession(answerLookups);
     renderWithSession(
       <>
@@ -197,6 +197,8 @@ describe('SearchBox', () => {
     await waitFor(() => expect(lookups(requests)).toHaveLength(2));
     const [firstLookup, secondLookup] = lookups(requests);
     expect(firstLookup.action!.surfaceId).not.toBe(secondLookup.action!.surfaceId);
+    expect(firstLookup.action!.surfaceId).toMatch(/^template:search-box-/);
+    expect(secondLookup.action!.surfaceId).toMatch(/^template:search-box-/);
   });
 
   it('creates its instance again after an unmount, as StrictMode does', async () => {

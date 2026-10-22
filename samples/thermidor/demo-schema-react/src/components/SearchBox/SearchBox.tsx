@@ -1,11 +1,12 @@
 import {A2UIProvider, A2UIRenderer, Catalog} from '@copilotkit/a2ui-renderer';
-import {SearchBoxSurfaceTemplate, THERMIDOR_CATALOG_ID} from '@coveo/thermidor-schema/zod3';
+import {SearchBoxSurfaceTemplate} from '@coveo/thermidor-schema/zod3';
 import {useSession} from '../../context/session.js';
 import {useSurfaceInstance} from '../../hooks/use-surface-instance.js';
 import {QuerySuggestions} from '../../a2ui/QuerySuggestions/QuerySuggestions.js';
 import {SearchBoxOptionsContext, type SearchBoxOptions} from './search-box-options.js';
 
-const catalog = new Catalog(THERMIDOR_CATALOG_ID, [QuerySuggestions]);
+// The template's own catalog: exactly the components it places.
+const catalog = new Catalog(SearchBoxSurfaceTemplate.catalogId, [QuerySuggestions]);
 
 /**
  * Draws an instance of the search box surface template. It has a renderer of its own, so the

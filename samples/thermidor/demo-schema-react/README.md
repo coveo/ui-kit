@@ -144,10 +144,10 @@ These controls dispatch component actions: an interaction (sort, page, page size
 
 Both pages draw a `SearchBox`: an instance of the contract's `search-box` surface template, whose `QuerySuggestions` root is drawn as the whole search box, the input and its completions popover. The page creates the instance itself, so the search box is there in the first paint, before any request:
 
-- `useSurfaceInstance(SearchBoxSurfaceTemplate)` creates the instance with `session.instantiateSurface` in a layout effect, under a surface id derived from `useId`, and disposes of it on unmount.
-- Each `SearchBox` has an `A2UIProvider` of its own, fed only its instance's messages, each one once. The conversation's renderer stream is cleared and replayed on every change, which would remount the input and lose its focus and caret.
+- `useSurfaceInstance(SearchBoxSurfaceTemplate)` creates the instance with `session.instantiateSurface` in a layout effect, under a surface id derived from `useId` and prefixed with `template:`, as every instance id is, and disposes of it on unmount.
+- Each `SearchBox` has an `A2UIProvider` of its own, fed only its instance's messages, each one once. Its catalog is the template's own: `QuerySuggestions`, registered under `SearchBoxSurfaceTemplate.catalogId`, not the conversational `THERMIDOR_CATALOG_ID`. The conversation's renderer stream is cleared and replayed on every change, which would remount the input and lose its focus and caret.
 - Each keystroke dispatches the `fetchSuggestions` lookup, except for an empty input. The session sends it at once, beside any prompt or gesture, and a newer one supersedes it; the producer answers with the completions at `/state/root`.
-- Completions show only while the input holds a query that has not been submitted. Selecting one submits it as a prompt, through the `onSubmit` the page passes to the `SearchBox`.
+- Completions show only while the input holds a query that has not been submitted. Selecting one submits it as a prompt, through the `onSubmit` the page passes to the `SearchBox`: that submit handler is the page's only wiring, and no page code links an input of its own to the component's state.
 - The input stays usable while an answer streams: only submitting waits.
 
 ### Key modules
