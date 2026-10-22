@@ -150,16 +150,6 @@ import {selectRemoteControllerState} from '@/src/index.js';
 // @ts-expect-error `RemoteControllerSource` must not be exported.
 import type {RemoteControllerSource} from '@/src/index.js';
 
-// The client-side action queue and its optimistic controller are gone.
-// @ts-expect-error `createDispatchCoordinator` must not be exported.
-import {createDispatchCoordinator} from '@/src/index.js';
-// @ts-expect-error `createOptimisticValue` must not be exported.
-import {createOptimisticValue} from '@/src/index.js';
-// @ts-expect-error `createStaleScopes` must not be exported.
-import {createStaleScopes} from '@/src/index.js';
-// @ts-expect-error `SessionActions` must not be exported.
-import type {SessionActions} from '@/src/index.js';
-
 // Redux / state-library concepts (no store, slice, selector, thunk, reducer).
 // @ts-expect-error no store type on the public surface.
 import type {Store} from '@/src/index.js';
