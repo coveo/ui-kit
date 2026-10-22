@@ -683,6 +683,12 @@ export function createSession<TContracts extends ContractsSchema>(
    * routing `(surfaceId, sourceComponentId)` through the active turn's
    * node-identity registry (derived from its surfaces). Returns `undefined`
    * when there is no active turn or the node resolves to no component.
+   *
+   * PROTOTYPE (COMSHOPX-1470, persistent results panel): when the node is not on an
+   * active-turn surface, it is looked up across the whole session, so a search
+   * surface that stays on screen after later turns can still be acted on. The
+   * session-wide registry replays every turn's activities in order, so a later
+   * `createSurface` or `deleteSurface` still wins.
    */
   function recoverDiscriminant(surfaceId: string, sourceComponentId: string): string | undefined {
     const {turns, activeTurnId} = store.getState();
@@ -694,7 +700,14 @@ export function createSession<TContracts extends ContractsSchema>(
       return undefined;
     }
     const registry = deriveNodeIdentityRegistry(activeTurn.response.activities);
-    return registry.get(surfaceId)?.get(sourceComponentId);
+    const discriminant = registry.get(surfaceId)?.get(sourceComponentId);
+    if (discriminant !== undefined) {
+      return discriminant;
+    }
+    const sessionRegistry = deriveNodeIdentityRegistry(
+      turns.flatMap((turn) => turn.response.activities)
+    );
+    return sessionRegistry.get(surfaceId)?.get(sourceComponentId);
   }
 
   /** Every refusal settles at once, so no caller is left waiting. */
