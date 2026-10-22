@@ -169,9 +169,11 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
   /**
    * Calls `send`, which dispatches through the renderer, and resolves once the session has answered
    * that dispatch, whatever the outcome: answered, failed, cancelled, or withheld without being
-   * sent. For example, it ends an optimistic update. A renderer's own dispatch promise may resolve
-   * as soon as it has emitted the action, before the session has answered it; when the
-   * {@link Session.dispatchAction} promise is at hand, await it instead.
+   * sent: it waits for {@link Session.request} to be `undefined`, right away when the dispatch was
+   * withheld, otherwise once its request ends. For example, it ends an optimistic update. A
+   * renderer's own dispatch promise may resolve as soon as it has emitted the action, before the
+   * session has answered it; when the {@link Session.dispatchAction} promise is at hand, await it
+   * instead.
    */
   sendAndWait(send: () => unknown): Promise<void>;
   /**
@@ -273,11 +275,6 @@ function readSessionKeys(
   return undefined;
 }
 
-/** Runtime only, so neither a fresh nor a restored state carries it. */
-function settledOf(state: SessionStoreState<Turn>): number {
-  return state.settledRequests ?? 0;
-}
-
 /**
  * Creates a {@link Session} over a fresh observable store + fold.
  */
@@ -326,36 +323,27 @@ export function createSession<TContracts extends ContractsSchema>(
     if (activeAbortController === abortController) {
       activeAbortController = null;
     }
-    store.setState((current) => ({
-      ...current,
-      request: undefined,
-      settledRequests: settledOf(current) + 1,
-    }));
+    store.setState((current) => ({...current, request: undefined}));
   }
 
-  /** A dispatch refused before it was sent still counts as settled. */
+  /** A dispatch refused before it was sent settles at once. */
   function withhold(): Promise<void> {
-    store.setState((current) => ({
-      ...current,
-      settledRequests: settledOf(current) + 1,
-    }));
     return Promise.resolve();
   }
 
   function sendAndWait(send: () => unknown): Promise<void> {
-    // Read before sending: a withheld dispatch settles synchronously, inside `send`.
-    const settledAt = settledOf(store.getState());
-    const answered = new Promise<void>((resolve) => {
-      const unsubscribe = store.subscribe(() => {
-        const state = store.getState();
-        if (settledOf(state) > settledAt && state.request === undefined) {
+    // The dispatch publishes its request synchronously, inside `send`.
+    send();
+    return new Promise((resolve) => {
+      const settle = () => {
+        if (store.getState().request === undefined) {
           unsubscribe();
           resolve();
         }
-      });
+      };
+      const unsubscribe = store.subscribe(settle);
+      settle();
     });
-    send();
-    return answered;
   }
 
   function setActionError(actionError: string | undefined): void {

@@ -13,7 +13,6 @@ interface UserActionMessage {
 export function createFakeSessionRequests(send: (message: never) => Promise<void> | void) {
   const listeners = new Set<() => void>();
   let request: SessionRequest | undefined;
-  let settledRequests = 0;
 
   const notify = () => {
     for (const listener of listeners) {
@@ -30,25 +29,22 @@ export function createFakeSessionRequests(send: (message: never) => Promise<void
       return () => listeners.delete(listener);
     },
     sendAndWait(sendGesture) {
-      const settledAt = settledRequests;
-      const answered = new Promise<void>((resolve) => {
+      sendGesture();
+      return new Promise((resolve) => {
         const listener = () => {
-          if (settledRequests > settledAt && request === undefined) {
+          if (request === undefined) {
             listeners.delete(listener);
             resolve();
           }
         };
         listeners.add(listener);
+        listener();
       });
-      sendGesture();
-      return answered;
     },
   };
 
   const dispatch = async (message: unknown): Promise<void> => {
     if (request) {
-      settledRequests += 1;
-      notify();
       return;
     }
     const userAction = (message as UserActionMessage).userAction;
@@ -69,7 +65,6 @@ export function createFakeSessionRequests(send: (message: never) => Promise<void
       // Like the session's dispatch, a failed send still ends the request.
     }
     request = undefined;
-    settledRequests += 1;
     notify();
   };
 

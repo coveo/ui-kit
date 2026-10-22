@@ -46,9 +46,6 @@ export interface SessionStoreState<TTurn> {
 
   /** The request the session is sending, or `undefined` when idle. Runtime only: never serialized. */
   request?: SessionRequest;
-
-  /** How many dispatches have ended, whatever their outcome. Runtime only: never serialized. */
-  settledRequests?: number;
 }
 
 /**

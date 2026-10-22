@@ -871,7 +871,7 @@ describe('createSession lifecycle', () => {
         userAction: {name: 'selectPage', surfaceId: 'commerce-search-surface', context: {}},
       });
 
-      expect(seen).toEqual([undefined]);
+      expect(seen).toEqual([]);
     });
 
     it('resolves sendAndWait() once the dispatch it sends is answered', async () => {

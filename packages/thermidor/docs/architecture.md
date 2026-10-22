@@ -22,7 +22,7 @@ graph TB
     end
 
     subgraph "Internal (not exported)"
-        STORE["Observable store<br/>{ turns, activeTurnId,<br/>sessionId, sessionToken,<br/>request, settledRequests }"]
+        STORE["Observable store<br/>{ turns, activeTurnId,<br/>sessionId, sessionToken,<br/>request }"]
         FOLD["Pure fold<br/>foldActivity(turn, activity, contracts) → turn"]
         VALID["In-transit validation<br/>action-payload validation"]
         GATE["Request gate<br/>(one request at a time)"]
@@ -84,7 +84,7 @@ The runtime owns the dispatch / cancel / retry orchestration and the SSE-consump
 
 Prompts and actions reach the endpoint one at a time, through `sendRequest` in `create-session.ts`: the Gateway processes a single request per session, and each response is a whole-node snapshot, so overlapping streams would let the last to arrive win over a newer action. A dispatch made while a request is in flight is withheld rather than queued or preempted: the integrator holds it back until the session is free, reading `request`.
 
-The session publishes its request state in its store: `request` is the request being sent (`{kind: 'prompt', turnId}` or `{kind: 'action', name, surfaceId, sourceComponentId, turnId}`), or `undefined` when idle; the runtime-only `settledRequests` counts every dispatch that has ended, whatever its outcome, a withheld one included. `sendAndWait(send)` reads `settledRequests`, calls `send`, then resolves once `settledRequests` has moved past the value it read and `request` is `undefined`: it waits for that dispatch's answer, even when it was withheld at once, inside `send`, which is what an optimistic update needs to end. It takes the dispatch as an argument because a renderer's dispatch promise may resolve once the action is emitted, before the session has answered it.
+The session publishes its request state in its store: `request` is the request being sent (`{kind: 'prompt', turnId}` or `{kind: 'action', name, surfaceId, sourceComponentId, turnId}`), or `undefined` when idle. `sendRequest` publishes it before its first `await`, so it is set as soon as the dispatch returns. `sendAndWait(send)` calls `send`, then resolves once `request` is `undefined`: right away when the dispatch was withheld, otherwise once its request ends, whatever its outcome, which is what an optimistic update needs to end. It takes the dispatch as an argument because a renderer's dispatch promise may resolve once the action is emitted, before the session has answered it.
 
 Every request, prompt or action, is sent through a bounded retry loop (`src/session/conflict-retry.ts`, called from `executeStream`): while the Gateway answers `409` with the `errorCode` `AGENT:ACTION_IN_FLIGHT` (parsed in `src/internal/api/protocol/error-handling.ts`), the request is rebuilt and resent after a doubling backoff, for up to 30 s in total (the time spent on each rejected request included), each wait capped at 4 s and the last one cut to what is left. The budget covers an aborted agent run winding down on the Gateway, which can't cancel it upstream yet (KIT-6261). A request sent the moment `RUN_FINISHED` arrives can get a 409 too, because the Gateway commits the turn a few milliseconds later; the first retry absorbs it. The retrying request stays the one in flight, so nothing touches the turn. When the budget runs out, a prompt fails its turn; an action sets the session-level `actionError` and its dispatch ends. The wait is abortable, so `cancel()` ends it like a stream; an abort during a resent request is handled the same way, since the client reports it as a failed call rather than throwing it. `executeStream` returns a request rejected before streaming to its caller, so the prompt path fails its turn while the action path sets `actionError` (cleared when the next action or prompt is sent).
 
@@ -94,7 +94,7 @@ Cancellation is modeled as a terminal `error` turn (message `'Cancelled'`), not 
 
 ## The observable store
 
-`src/session/store.ts` holds `{ turns, activeTurnId?, sessionId?, sessionToken? }`, plus the runtime-only `actionError`, `request` and `settledRequests`, which are never serialized. It exposes `getState`, an internal setter that notifies on change, and `subscribe(listener) → unsubscribe`. Every registered subscriber is notified exactly once per change. This plain store replaces the former RTK slice plus state port ([ADR-010](./internal/adr/ADR-010-unified-endpoint-session-client.md) structure annex); there is no Redux state library anywhere in the package.
+`src/session/store.ts` holds `{ turns, activeTurnId?, sessionId?, sessionToken? }`, plus the runtime-only `actionError` and `request`, which are never serialized. It exposes `getState`, an internal setter that notifies on change, and `subscribe(listener) → unsubscribe`. Every registered subscriber is notified exactly once per change. This plain store replaces the former RTK slice plus state port ([ADR-010](./internal/adr/ADR-010-unified-endpoint-session-client.md) structure annex); there is no Redux state library anywhere in the package.
 
 ## The pure fold
 
