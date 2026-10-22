@@ -1,0 +1,71 @@
+.documentRows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* The row is the link's positioning box: `.documentLink::after` stretches over it. */
+.documentRow {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: background var(--transition-fast);
+}
+
+.documentRow:has(.documentLink):hover {
+  background: var(--color-surface-hover);
+}
+
+.documentRow:has(.documentLink:focus-visible) {
+  background: var(--color-surface-hover);
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.documentIcon {
+  flex-shrink: 0;
+  color: var(--color-primary);
+}
+
+.documentText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.documentLink,
+.documentTitle {
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  color: var(--color-text-primary);
+  overflow-wrap: anywhere;
+}
+
+.documentLink {
+  text-decoration: none;
+}
+
+.documentLink:focus-visible {
+  outline: none;
+}
+
+.documentLink::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.documentMeta {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
