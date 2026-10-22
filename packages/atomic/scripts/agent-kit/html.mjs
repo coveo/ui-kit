@@ -19,78 +19,102 @@ const RAW_TEXT_ELEMENTS = new Set(['script', 'style']);
 const ATTRIBUTE = /([^\s"'<>/=]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'<>`]+)))?/g;
 
 /**
- * @typedef {{tag: string, attributes: {name: string, value: string | null}[], children: Node[], parent: Node | null, line: number}} Node
+ * @typedef {object} Node
+ * @property {string} tag Lowercase tag name
+ * @property {{name: string, value: string | null}[]} attributes Names lowercased
+ * @property {Node[]} children
+ * @property {Node | null} parent Null for a top-level element
+ * @property {number} line 1-based line of the start tag
+ * @property {boolean} selfClosing Written as `<tag />`, which HTML ignores on a non-void element
+ * @property {boolean} empty No element, text or comment inside, like `innerHTML.trim() === ''`
  */
 
 /**
- * Parses snippet HTML into a tree. Text and comments are dropped. Unclosed tags are tolerated,
- * since docs often show fragments, and a stray closing tag closes the nearest open tag of its name.
+ * The 1-based line of an index in a text.
+ */
+export function lineOf(text, index) {
+  return text.slice(0, index).split('\n').length;
+}
+
+/**
+ * Parses snippet HTML into a tree of elements. Text and comments are dropped. Unclosed tags are
+ * tolerated, since docs often show fragments, and a stray closing tag closes the nearest open
+ * element of its name. As in HTML, `/>` does not close a non-void element.
  *
  * @param {string} source
- * @returns {Node} A root node whose children are the top-level elements.
+ * @returns {Node[]} The top-level elements
  */
 export function parseHtml(source) {
-  const root = {tag: '#root', attributes: [], children: [], parent: null, line: 1};
-  let current = root;
+  const topLevel = [];
+  const open = [];
   let position = 0;
-  const lineAt = (index) => source.slice(0, index).split('\n').length;
+  const fill = () => {
+    const parent = open.at(-1);
+    if (parent) {
+      parent.empty = false;
+    }
+  };
 
   while (position < source.length) {
-    const open = source.indexOf('<', position);
-    if (open === -1) {
+    const start = source.indexOf('<', position);
+    if (start === -1) {
       break;
     }
-    if (source.startsWith('<!--', open)) {
-      const end = source.indexOf('-->', open + 4);
+    if (source.slice(position, start).trim()) {
+      fill();
+    }
+    if (source.startsWith('<!--', start)) {
+      fill();
+      const end = source.indexOf('-->', start + 4);
       position = end === -1 ? source.length : end + 3;
       continue;
     }
-    if (source.startsWith('</', open)) {
-      const end = source.indexOf('>', open);
+    if (source.startsWith('</', start)) {
+      const end = source.indexOf('>', start);
       const tag = source
-        .slice(open + 2, end === -1 ? source.length : end)
+        .slice(start + 2, end === -1 ? source.length : end)
         .trim()
         .toLowerCase();
-      let node = current;
-      while (node !== root && node.tag !== tag) {
-        node = node.parent;
-      }
-      if (node !== root) {
-        current = node.parent;
+      const index = open.findLastIndex((node) => node.tag === tag);
+      if (index !== -1) {
+        open.length = index;
       }
       position = end === -1 ? source.length : end + 1;
       continue;
     }
-    const tagMatch = /^<([a-zA-Z][^\s/>]*)/.exec(source.slice(open));
+    const tagMatch = /^<([a-zA-Z][^\s/>]*)/.exec(source.slice(start));
     if (!tagMatch) {
-      position = open + 1;
+      position = start + 1;
       continue;
     }
     const tag = tagMatch[1].toLowerCase();
-    const end = findTagEnd(source, open + tagMatch[0].length);
-    const inside = source.slice(open + tagMatch[0].length, end);
+    const end = findTagEnd(source, start + tagMatch[0].length);
+    const inside = source.slice(start + tagMatch[0].length, end);
     const selfClosing = inside.trimEnd().endsWith('/');
+    const parent = open.at(-1) ?? null;
     const node = {
       tag,
       attributes: parseAttributes(selfClosing ? inside.trimEnd().slice(0, -1) : inside),
       children: [],
-      parent: current,
-      line: lineAt(open),
+      parent,
+      line: lineOf(source, start),
+      selfClosing,
+      empty: true,
     };
-    current.children.push(node);
+    fill();
+    (parent?.children ?? topLevel).push(node);
     position = end + 1;
 
     if (RAW_TEXT_ELEMENTS.has(tag)) {
       const close = source.toLowerCase().indexOf(`</${tag}`, position);
       const closeEnd = close === -1 ? -1 : source.indexOf('>', close);
+      node.empty = !source.slice(position, close === -1 ? source.length : close).trim();
       position = closeEnd === -1 ? source.length : closeEnd + 1;
-      continue;
-    }
-    if (!selfClosing && !VOID_ELEMENTS.has(tag)) {
-      current = node;
+    } else if (!VOID_ELEMENTS.has(tag)) {
+      open.push(node);
     }
   }
-  return root;
+  return topLevel;
 }
 
 function findTagEnd(source, from) {
@@ -123,11 +147,11 @@ function parseAttributes(inside) {
 }
 
 /**
- * Every element of a tree, depth first.
+ * The elements of a tree, depth first.
  *
- * @param {Node} root
+ * @param {Node[]} nodes
  * @returns {Node[]}
  */
-export function walk(root) {
-  return root.children.flatMap((child) => [child, ...walk(child)]);
+export function walk(nodes) {
+  return nodes.flatMap((node) => [node, ...walk(node.children)]);
 }

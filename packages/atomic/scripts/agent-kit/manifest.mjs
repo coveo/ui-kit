@@ -1,12 +1,11 @@
 import {readFileSync} from 'node:fs';
 import path from 'node:path';
-import {fileURLToPath} from 'node:url';
 
-export const packageRoot = fileURLToPath(new URL('../../', import.meta.url));
+export const packageRoot = path.resolve(import.meta.dirname, '../..');
 export const manifestPath = path.join(packageRoot, 'custom-elements.json');
 
-export function readManifest(file = manifestPath) {
-  return JSON.parse(readFileSync(file, 'utf8'));
+export function readManifest() {
+  return JSON.parse(readFileSync(manifestPath, 'utf8'));
 }
 
 /**
@@ -48,12 +47,7 @@ const isOwnApi = (member) =>
   Boolean(member.description) &&
   !member.name.startsWith('_');
 
-/**
- * The attributes an element accepts in HTML.
- */
-export function attributesOf(element) {
-  return element.attributes ?? [];
-}
+export const attributesOf = (element) => element.attributes ?? [];
 
 /**
  * Until the manifest types the `@mapProperty` attributes (KIT-4838), they reach it without a
@@ -62,14 +56,13 @@ export function attributesOf(element) {
 const BARE_PREFIX_ATTRIBUTES = new Set(['must-match', 'must-not-match', 'depends-on', 'field']);
 
 /**
- * The attributes whose name is a prefix: `must-match` accepts `must-match-<field>`.
- * The analyzer gives them a `Record<…>` type.
+ * Whether an attribute is a prefix: `must-match` accepts `must-match-<field>`, never the bare
+ * name. The analyzer gives such attributes a `Record<…>` type.
  */
-export function prefixAttributesOf(element) {
-  return attributesOf(element).filter(
-    (attribute) =>
-      (attribute.type?.text ?? '').startsWith('Record<') ||
-      (!attribute.type && BARE_PREFIX_ATTRIBUTES.has(attribute.name))
+export function isPrefixAttribute(attribute) {
+  return (
+    (attribute.type?.text ?? '').startsWith('Record<') ||
+    (!attribute.type && BARE_PREFIX_ATTRIBUTES.has(attribute.name))
   );
 }
 
@@ -91,16 +84,30 @@ export function methodsOf(element) {
 }
 
 /**
+ * Type aliases the analyzer leaves unexpanded, with the union they stand for in the sources.
+ */
+export const TYPE_ALIASES = {
+  Section:
+    "'search' | 'facets' | 'main' | 'status' | 'results' | 'horizontal-facets' | 'products' | 'pagination'",
+};
+
+/**
+ * The type text with its alias expanded, when it has one.
+ *
+ * @param {string | undefined} typeText
+ */
+export function resolveType(typeText) {
+  return typeText ? (TYPE_ALIASES[typeText] ?? typeText) : typeText;
+}
+
+/**
  * The literal values of a union type such as `'checkbox' | 'link' | 'box'`, or null when the
  * type is not a union of string literals.
  *
  * @param {string | undefined} typeText
  */
 export function literalValuesOf(typeText) {
-  if (!typeText) {
-    return null;
-  }
-  const parts = typeText.split('|').map((part) => part.trim());
+  const parts = (resolveType(typeText) ?? '').split('|').map((part) => part.trim());
   const literal = /^'([^']*)'$|^"([^"]*)"$/;
   if (parts.length < 2 || !parts.every((part) => literal.test(part))) {
     return null;

@@ -1,6 +1,5 @@
 import {mkdirSync, readFileSync, rmSync, writeFileSync} from 'node:fs';
 import path from 'node:path';
-import {fileURLToPath} from 'node:url';
 import {
   attributesOf,
   listElements,
@@ -8,33 +7,35 @@ import {
   packageRoot,
   propertiesOf,
   readManifest,
+  resolveType,
 } from './manifest.mjs';
 import {findUsageDocs} from './snippets.mjs';
 
-const scriptDir = path.dirname(fileURLToPath(import.meta.url));
-const contentDir = path.join(scriptDir, 'content');
+const contentDir = path.join(import.meta.dirname, 'content');
 
 export const skillName = 'coveo-atomic';
 export const kitDir = path.join(packageRoot, 'dist/skills', skillName);
 
 /**
- * The areas of the library, in the order the skill presents them. The key is the folder under
- * `src/components`.
+ * The areas of the library, keyed by their folder under `src/components`, in the order the
+ * skill presents them.
  */
 export const AREAS = {
-  search: 'Search',
-  commerce: 'Commerce',
-  recommendations: 'Recommendations',
-  insight: 'Insight panel',
-  ipx: 'In-product experience',
-  common: 'Shared',
+  search: {title: 'Search', prefix: 'atomic-*'},
+  commerce: {title: 'Commerce', prefix: 'atomic-commerce-*, atomic-product-*'},
+  recommendations: {title: 'Recommendations', prefix: 'atomic-recs-*'},
+  insight: {title: 'Insight panel', prefix: 'atomic-insight-*'},
+  ipx: {title: 'In-product experience', prefix: 'atomic-ipx-*'},
+  common: {title: 'Shared', prefix: 'atomic-*'},
 };
 
 /**
- * Reads what the generator needs from the package: the manifest, the usage docs by tag, the
+ * Reads what the generator needs: the manifest, the usage docs by tag, the shared notes, the
  * hand-written content and the version.
+ *
+ * @param {{manifest?: object}} [options] A manifest to use instead of `custom-elements.json`
  */
-export function readInputs() {
+export function readInputs({manifest = readManifest()} = {}) {
   const usageDocs = new Map(
     findUsageDocs().map((file) => [path.basename(file, '.usage.mdx'), readFileSync(file, 'utf8')])
   );
@@ -54,7 +55,7 @@ export function readInputs() {
     ),
   };
   const {version} = JSON.parse(readFileSync(path.join(packageRoot, 'package.json'), 'utf8'));
-  return {manifest: readManifest(), usageDocs, notes, content, version};
+  return {manifest, usageDocs, notes, content, version};
 }
 
 /**
@@ -85,21 +86,20 @@ export function generateKit({manifest, usageDocs, notes, content, version}) {
  * Writes the generated files, replacing the previous kit.
  *
  * @param {Map<string, string>} files
- * @param {string} dir
  */
-export function writeKit(files, dir = kitDir) {
-  rmSync(dir, {recursive: true, force: true});
+export function writeKit(files) {
+  rmSync(kitDir, {recursive: true, force: true});
   for (const [file, text] of files) {
-    const target = path.join(dir, file);
+    const target = path.join(kitDir, file);
     mkdirSync(path.dirname(target), {recursive: true});
     writeFileSync(target, text);
   }
 }
 
 function renderSkill(template, elements, version) {
-  const rows = Object.entries(AREAS).map(([area, title]) => {
+  const rows = Object.entries(AREAS).map(([area, {title, prefix}]) => {
     const count = elements.filter((element) => element.area === area).length;
-    return `| [${title}](references/${area}.md) | ${count} | \`${prefixOf(area)}\` |`;
+    return `| [${title}](references/${area}.md) | ${count} | \`${prefix}\` |`;
   });
   return template
     .replaceAll('{{version}}', version)
@@ -110,24 +110,13 @@ function renderSkill(template, elements, version) {
     );
 }
 
-function prefixOf(area) {
-  return {
-    search: 'atomic-*',
-    commerce: 'atomic-commerce-*, atomic-product-*',
-    recommendations: 'atomic-recs-*',
-    insight: 'atomic-insight-*',
-    ipx: 'atomic-ipx-*',
-    common: 'atomic-*',
-  }[area];
-}
-
 function renderArea(area, elements, intro) {
   const rows = elements.map(
     (element) =>
       `| [\`<${element.tagName}>\`](components/${element.tagName}.md) | ${cell(summaryOf(element))} |`
   );
   return [
-    `# ${AREAS[area]} components`,
+    `# ${AREAS[area].title} components`,
     '',
     intro.trim(),
     '',
@@ -146,19 +135,21 @@ function renderComponent(element, usageDoc, notes) {
     '',
     element.description?.trim() ?? '',
     '',
-    `Area: ${AREAS[element.area]} ([index](../${element.area}.md))`,
+    `Area: ${AREAS[element.area].title} ([index](../${element.area}.md))`,
   ];
   if (usageDoc) {
     sections.push('', '## Usage', '', convertUsageDoc(usageDoc, notes));
   }
-  sections.push(...renderAttributes(element));
-  sections.push(...renderProperties(element));
-  sections.push(...renderMethods(element));
-  sections.push(...renderSlots(element));
-  sections.push(...renderEvents(element));
-  sections.push(...renderCssParts(element));
-  sections.push(...renderCssProperties(element));
-  sections.push(...renderCssStates(element));
+  sections.push(
+    ...renderAttributes(element),
+    ...renderProperties(element),
+    ...renderMethods(element),
+    ...renderSlots(element),
+    ...renderEvents(element),
+    ...renderCssParts(element),
+    ...renderCssProperties(element),
+    ...renderCssStates(element)
+  );
   return `${sections
     .join('\n')
     .replace(/\n{3,}/g, '\n\n')
@@ -178,7 +169,7 @@ function renderAttributes(element) {
     '| --- | --- | --- | --- |',
     ...attributes.map(
       (attribute) =>
-        `| \`${attribute.name}\` | ${code(attribute.type?.text)} | ${code(attribute.default)} | ${cell(describe(attribute))} |`
+        `| \`${attribute.name}\` | ${code(resolveType(attribute.type?.text))} | ${code(attribute.default)} | ${cell(describe(attribute))} |`
     ),
   ];
 }
@@ -343,13 +334,13 @@ const inline = (text) => (text ?? '').replace(/\s*\n\s*/g, ' ').trim();
  */
 const cell = (text) =>
   inline(
-    (text ?? '').replace(/```\w*\n([\s\S]*?)```/g, (block, code) => `\`${code.trim()}\``)
+    (text ?? '').replace(/```\w*\n([\s\S]*?)```/g, (block, snippet) => `\`${snippet.trim()}\``)
   ).replaceAll('|', '\\|');
 
 const code = (text) =>
   text === undefined || text === '' ? '' : `\`${String(text).replaceAll('|', '\\|')}\``;
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (process.argv[1] === import.meta.filename) {
   const files = generateKit(readInputs());
   writeKit(files);
   console.log(`Wrote ${files.size} files to ${path.relative(packageRoot, kitDir)}`);

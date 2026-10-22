@@ -13,7 +13,7 @@ Atomic is a library of {{componentCount}} web components (`atomic-*` custom elem
 
 {{areas}}
 
-Each area page has the page skeleton and the list of its components. Each component page has the usage snippets, the attributes, the slots and the CSS parts. Read the area page before writing markup, and the component page before adding an attribute.
+Each area page, `references/<area>.md`, has the page skeleton and the list of its components. Each component page, `references/components/<tag>.md`, has the usage snippets, the attributes, the slots and the CSS parts. Read the area page before writing markup, and the component page before adding an attribute.
 
 ## Load the library
 
@@ -35,7 +35,7 @@ From the CDN:
 
 ## Initialize the interface, then run the first query
 
-Every page has exactly one interface element around all the other components: `atomic-search-interface`, `atomic-commerce-interface`, `atomic-commerce-recommendation-interface`, `atomic-recs-interface` or `atomic-insight-interface`. Nothing renders results until the interface is initialized with an organization id and an access token (an API key or a search token), and the first query runs.
+Every page has exactly one interface element around all the other components: `atomic-search-interface`, `atomic-commerce-interface`, `atomic-recs-interface`, `atomic-insight-interface`, or `atomic-commerce-recommendation-interface` for product recommendations. Nothing renders until the interface is initialized and the first query runs.
 
 ```js
 const searchInterface = document.querySelector('atomic-search-interface');
@@ -44,15 +44,17 @@ await searchInterface.initialize({organizationId: 'my-org-id', accessToken: 'my-
 searchInterface.executeFirstSearch();
 ```
 
-The commerce interface takes the same options plus a `context` (`language`, `country`, `currency` and `view.url`), and its first query is `executeFirstRequest()`. The recommendation interface runs `getRecommendations()`. The insight interface also needs an `insightId`. To share a Headless engine between interfaces, pass it to `initializeWithSearchEngine(engine)` or `initializeWithEngine(engine)` instead.
+`initialize` takes an organization id and an access token (an API key or a search token). The commerce interface also needs a `context` (`language`, `country`, `currency` and `view.url`), and its first query is `executeFirstRequest()`. `atomic-recs-interface` runs `getRecommendations()`, and `atomic-insight-interface` also needs an `insightId`.
+
+To share a Headless engine between interfaces, pass it to `initializeWithSearchEngine(engine)` (search), `initializeWithEngine(engine)` (commerce), `initializeWithRecommendationEngine(engine)` (recommendations) or `initializeWithInsightEngine(engine)` (insight) instead. `atomic-commerce-recommendation-interface` has no `initialize`: it only takes a commerce engine through `initializeWithEngine(engine)`.
 
 ## Rules the components enforce
 
-1. An item template (`atomic-result-template`, `atomic-product-template`, `atomic-recs-result-template`, `atomic-insight-result-template` and the children templates) must contain a `<template>` element, and the item markup goes inside it. The component renders an error without one.
+1. An item template (`atomic-result-template`, `atomic-product-template`, `atomic-recs-result-template`, `atomic-insight-result-template` and the children templates) must contain a `<template>` element, and the item markup goes inside it. The component renders an error without one, and the children templates also reject an empty `<template>`.
 2. An item template must be a direct child of its list: `atomic-result-template` goes in `atomic-result-list`, `atomic-folded-result-list` or `atomic-search-box-instant-results`; `atomic-product-template` goes in `atomic-commerce-product-list`, `atomic-commerce-recommendation-list` or `atomic-commerce-search-box-instant-products`.
-3. A `<template>` must not contain a `<script>`, and it should use either section components (`atomic-result-section-*`, `atomic-product-section-*`) or plain elements, not both.
-4. Result components (`atomic-result-*`, `atomic-field-condition`) only work inside a result template, and product components (`atomic-product-*`, `atomic-product-field-condition`) only inside a product template. Search components and commerce components never share an interface.
-5. Attribute names are kebab-case (`display-values-as`, not `displayValuesAs`). A boolean attribute is true when present (`is-collapsed`) and can be set explicitly (`is-collapsed="false"`). Only use the attributes listed on the component page; an unknown attribute is silently ignored.
+3. A `<template>` should use either section components (`atomic-result-section-*`, `atomic-product-section-*`) or plain elements, not both. A `<script>` inside it is ignored, with a console warning.
+4. The components that render one field of an item (`atomic-result-text`, `atomic-result-link`, `atomic-field-condition`, `atomic-product-price`, `atomic-product-field-condition`, ...) only work inside the `<template>` of an item template. Search components (`atomic-result-*`) and commerce components (`atomic-product-*`) never share an interface.
+5. Attribute names are kebab-case (`display-values-as`, not `displayValuesAs`). A boolean attribute is true when present (`is-collapsed`); omit it for false. Only use the attributes listed on the component page; an unknown attribute is silently ignored.
 6. `atomic-layout-section` takes one of these `section` values: `search`, `facets`, `main`, `status`, `results`, `horizontal-facets`, `products`, `pagination`. `main` contains `status`, `results` (or `products`) and `pagination`.
 
 ## Check the result
