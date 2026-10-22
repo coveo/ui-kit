@@ -33,3 +33,16 @@
     padding: var(--space-3) var(--space-4);
   }
 }
+
+/* PROTOTYPE (COMSHOPX-1470): results fill the page under a floating chat window. */
+.floatingLayout {
+  height: 100%;
+}
+
+.floatingLayout .scrollContainer {
+  padding: var(--space-4);
+}
+
+.floatingLayout .promptBar {
+  padding: var(--space-3) var(--space-4) var(--space-4);
+}

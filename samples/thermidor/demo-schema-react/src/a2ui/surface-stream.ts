@@ -30,6 +30,8 @@ export interface SurfaceStream {
    * that server id, never an earlier turn's block that reuses the id.
    */
   loadingSurfaces: ReadonlyMap<string, string>;
+  /** The `component` of each render surface's `root` node, e.g. `CommerceSearch`. */
+  rootComponents: ReadonlyMap<string, string>;
 }
 
 export function buildSurfaceStream(turns: readonly Turn[]): SurfaceStream {
@@ -39,6 +41,7 @@ export function buildSurfaceStream(turns: readonly Turn[]): SurfaceStream {
   const renderIdByServerId = new Map<string, string>();
   const ownerTurnByRenderId = new Map<string, string>();
   const loadingSurfaces = new Map<string, string>();
+  const rootComponents = new Map<string, string>();
 
   for (const turn of turns) {
     const turnSurfaces: string[] = [];
@@ -68,6 +71,10 @@ export function buildSurfaceStream(turns: readonly Turn[]): SurfaceStream {
         continue;
       }
       messages.push({...message, [operation]: {...body, surfaceId: renderId}});
+      const rootComponent = findRootComponent(body);
+      if (rootComponent !== undefined) {
+        rootComponents.set(renderId, rootComponent);
+      }
 
       if (operation === 'deleteSurface') {
         renderIdByServerId.delete(serverId);
@@ -85,7 +92,78 @@ export function buildSurfaceStream(turns: readonly Turn[]): SurfaceStream {
     }
   }
 
-  return {messages, surfacesByTurn, serverSurfaceIds, loadingSurfaces};
+  return {messages, surfacesByTurn, serverSurfaceIds, loadingSurfaces, rootComponents};
+}
+
+/** The root component kind of the gateway's search surface, which no agent may emit. */
+export const SEARCH_ROOT_COMPONENT = 'CommerceSearch';
+
+/** Whether a render surface is a gateway search surface rather than part of an answer. */
+export function isSearchSurface(stream: SurfaceStream, renderId: string): boolean {
+  return stream.rootComponents.get(renderId) === SEARCH_ROOT_COMPONENT;
+}
+
+/** The root component kind of an agent's suggested next actions. */
+export const ACTION_BAR_ROOT_COMPONENT = 'NextActionsBar';
+
+/** Whether a render surface is a bar of suggested next actions. */
+export function isActionBar(stream: SurfaceStream, renderId: string): boolean {
+  return stream.rootComponents.get(renderId) === ACTION_BAR_ROOT_COMPONENT;
+}
+
+/**
+ * Whether a render surface is a visual answer block (carousel, comparison, bundle, research), as
+ * opposed to a search surface or a bar of next actions.
+ */
+export function isAnswerBlock(stream: SurfaceStream, renderId: string): boolean {
+  const root = stream.rootComponents.get(renderId);
+  return root !== undefined && root !== SEARCH_ROOT_COMPONENT && root !== ACTION_BAR_ROOT_COMPONENT;
+}
+
+/**
+ * The bars of next actions created before a newer search surface. Their suggestions were made
+ * for results that are no longer shown, so the agent may no longer find what they name.
+ */
+export function actionBarsBeforeLatestSearch(
+  stream: SurfaceStream,
+  turns: readonly Turn[]
+): ReadonlySet<string> {
+  const stale = new Set<string>();
+  const seen: string[] = [];
+  for (const turn of turns) {
+    for (const renderId of stream.surfacesByTurn.get(turn.id) ?? []) {
+      if (isActionBar(stream, renderId)) {
+        seen.push(renderId);
+      } else if (isSearchSurface(stream, renderId)) {
+        for (const bar of seen) stale.add(bar);
+      }
+    }
+  }
+  return stale;
+}
+
+/** The most recently created search surface still on screen, if any. */
+export function latestSearchSurfaceId(
+  stream: SurfaceStream,
+  turns: readonly Turn[]
+): string | undefined {
+  for (const turn of [...turns].reverse()) {
+    const surfaceIds = stream.surfacesByTurn.get(turn.id) ?? [];
+    const search = surfaceIds.findLast((renderId) => isSearchSurface(stream, renderId));
+    if (search !== undefined) {
+      return search;
+    }
+  }
+  return undefined;
+}
+
+function findRootComponent(body: Record<string, unknown>): string | undefined {
+  const components = body['components'];
+  if (!Array.isArray(components)) {
+    return undefined;
+  }
+  const root = components.find((node) => isRecord(node) && node['id'] === 'root');
+  return isRecord(root) && typeof root['component'] === 'string' ? root['component'] : undefined;
 }
 
 /**

@@ -19,3 +19,29 @@
   display: flex;
   margin: var(--space-5) 0 var(--space-4);
 }
+
+/* PROTOTYPE (COMSHOPX-1470): traces of searches drawn in the results panel. */
+.searchTrace {
+  display: flex;
+  gap: var(--space-2);
+  align-items: baseline;
+  margin: 0 0 var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  background: var(--color-bg-tertiary);
+  border-radius: 8px;
+}
+
+.searchTraceShown {
+  color: var(--color-text-secondary);
+  background: var(--color-bg-active);
+}
+
+.searchTraceIcon {
+  flex: none;
+}
+
+.searchTraceStatus {
+  color: var(--color-text-muted);
+}

@@ -1,0 +1,135 @@
+.window {
+  position: fixed;
+  transition:
+    width var(--transition-slow),
+    height var(--transition-slow);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+}
+
+.window[hidden] {
+  display: none;
+}
+
+.floating {
+  right: var(--space-5);
+  bottom: var(--space-5);
+  width: min(420px, calc(100vw - 2 * var(--space-5)));
+  height: min(640px, calc(100vh - 2 * var(--space-5)));
+}
+
+.floating.wide {
+  width: min(760px, calc(100vw - 2 * var(--space-5)));
+  height: min(820px, calc(100vh - 2 * var(--space-5)));
+}
+
+.maximized {
+  inset: var(--space-5);
+  width: min(1120px, calc(100vw - 2 * var(--space-5)));
+  margin: 0 auto;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 19;
+  background: rgba(15, 23, 42, 0.35);
+}
+
+.header {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.title {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  font-weight: 600;
+  font-size: var(--font-size-md);
+}
+
+.controls {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.control {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  color: var(--color-text-secondary);
+  background: none;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.control:hover {
+  color: var(--color-text-primary);
+  background: var(--color-surface-hover);
+}
+
+.control:focus-visible,
+.launcher:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+}
+
+.launcher {
+  position: fixed;
+  right: var(--space-5);
+  bottom: var(--space-5);
+  z-index: 20;
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  font: inherit;
+  font-weight: 600;
+  color: var(--color-on-neutral-dark);
+  background: var(--color-neutral-dark);
+  border: 0;
+  border-radius: 999px;
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+}
+
+.busyDot {
+  width: 8px;
+  height: 8px;
+  background: var(--color-processing);
+  border-radius: 50%;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+@media (max-width: 639px) {
+  .floating,
+  .maximized {
+    inset: var(--space-2);
+    width: auto;
+    height: auto;
+  }
+}

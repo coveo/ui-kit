@@ -1,0 +1,37 @@
+.toggle {
+  position: fixed;
+  bottom: var(--space-4);
+  left: var(--space-4);
+  z-index: 10;
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  box-shadow: var(--shadow-md);
+}
+
+.option {
+  padding: var(--space-1) var(--space-3);
+  font: inherit;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  background: none;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.option:hover {
+  color: var(--color-text-primary);
+}
+
+.active {
+  color: var(--color-on-neutral-dark);
+  background: var(--color-neutral-dark);
+}
+
+.active:hover {
+  color: var(--color-on-neutral-dark);
+}
