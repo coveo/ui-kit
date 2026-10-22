@@ -8,7 +8,7 @@
 
 The kit is generated, never edited by hand: change the component's JSDoc, its usage doc or the files under `content/`.
 
-The task is not part of `build` yet, so the published package has no `dist/skills` folder. Once it is, a project installs the skill with `npx skills add ./node_modules/@coveo/atomic/dist/skills/coveo-atomic`, or points its agent at that directory.
+The task runs as part of `build`, so the published package ships the skill under `dist/skills/coveo-atomic`. A project installs it with `npx skills add ./node_modules/@coveo/atomic/dist/skills/coveo-atomic`, or points its agent at that directory.
 
 ## Usage snippets
 

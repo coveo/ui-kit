@@ -3,7 +3,7 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "dependsOn": ["tsc:check", "build:storybook", "build:lit", "build:cdn"],
+      "dependsOn": ["tsc:check", "build:storybook", "build:lit", "build:cdn", "build:agent-kit"],
       "outputs": []
     },
     "build:locales": {

@@ -76,6 +76,16 @@ pnpm turbo run test --filter=@coveo/atomic
 
 This Storybook instance is configured with the MCP addon, which enables AI agents to programmatically interact with component stories. When Storybook is running, the MCP server is accessible at `http://localhost:4400/mcp`.
 
+### Agent skill
+
+The package ships an [Agent Skill](https://agentskills.io) at `dist/skills/coveo-atomic`, generated at build time from the custom elements manifest and the usage docs, so coding agents write markup the components accept. In a project that depends on `@coveo/atomic`, install it with:
+
+```sh
+npx skills add ./node_modules/@coveo/atomic/dist/skills/coveo-atomic
+```
+
+Any agent that reads a directory of Markdown on demand can use it: point it at that directory. The generator lives in `scripts/agent-kit/`; see its README to change the content.
+
 ## Utilities
 
 ### Stencil decorators
