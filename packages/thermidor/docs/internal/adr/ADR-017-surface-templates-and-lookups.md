@@ -13,9 +13,10 @@ related:
 
 # Surface templates and lookup actions
 
-This ADR amends [ADR-014](./ADR-014-consumer-supplied-endpoint-and-schema.md) (the session takes
-one contract bundle), [ADR-015](./ADR-015-surface-and-route-derivation.md) (surface instances
-do not come from turns) and
+This ADR amends [ADR-010](./ADR-010-unified-endpoint-session-client.md) (a session can start a
+new conversation), [ADR-014](./ADR-014-consumer-supplied-endpoint-and-schema.md) (the session
+takes one contract bundle), [ADR-015](./ADR-015-surface-and-route-derivation.md) (surface
+instances do not come from turns) and
 [ADR-016](./ADR-016-inline-state-consumption-remove-remote-controller.md) (lookups are dispatched
 without an active turn).
 
@@ -32,7 +33,7 @@ without an active turn).
 - An instance's surface id starts with **`template:`**, and the id of a surface the producer
   creates never does.
 - The contract marks some actions as **lookups**, such as `fetchSuggestions`. A lookup is answered
-  outside the session's request queue, with or without a session.
+  outside the producer's turn slot, with or without a session.
 
 The session cannot support this today:
 
@@ -40,17 +41,21 @@ The session cannot support this today:
   `activities` (ADR-015). Nothing creates a surface before a request, or outside a turn.
 - **Dispatch needs the active turn.** `dispatchAction` resolves the source component only in the
   active turn, and drops the action otherwise (ADR-016).
-- **Every request waits in one queue.** The session has one in-flight stream. Actions run one after
-  another, and are held back while a prompt streams.
+- **One request at a time.** The session sends one request at a time and exposes it as
+  `session.request`. A dispatch made while a request is in flight is withheld: it is dropped with a
+  warning in development. So a keystroke made while an answer streams is dropped.
 - **The contract is a component union.** The session receives the component contracts (ADR-014),
   but nothing about surfaces or lookups.
+- **A session holds one conversation.** An application starts a new conversation by creating a new
+  session, so anything the session holds is recreated.
 
 ## Decision Drivers
 
 - **Faithful transmission and rendering (charter MUST).** A surface instance is rendered exactly
   as the contract declares it, with A2-UI's standard rendering.
 - **First paint.** The search box is usable on first paint, before the producer has answered
-  anything, and its input is never remounted while the shopper types.
+  anything, and its input is never remounted, neither while the shopper types nor when a new
+  conversation starts.
 - **Any number of instances.** A page can draw several search boxes, such as one in the header and
   one in a drawer, and they never interfere.
 - **Lookups.** A lookup never waits for, blocks or fails another action or turn. A newer lookup
@@ -122,8 +127,8 @@ template's name, its own `catalogId`, its `createSurface` components and data mo
   - leaving the lookup actions out, so that every action on a surface instance is dropped with
     only a warning in development.
 - **Accepted by its shape.** The session accepts any contract with `components`,
-  `surfaceTemplates`, `lookupActions` and `surfaceInstanceIdPrefix`, and never imports `@coveo/thermidor-schema`, as ADR-014
-  requires.
+  `surfaceTemplates`, `lookupActions` and `surfaceInstanceIdPrefix`, and never imports
+  `@coveo/thermidor-schema`, as ADR-014 requires.
 - **Not inside the component union.** The templates describe surfaces, not components, so they do
   not belong in `ComponentContractsSchema`. The lookup mark belongs to each action, but the Zod
   projection has no place for it: Zod 3 has no metadata channel besides `.describe()`, and the
@@ -156,7 +161,8 @@ template's name, its own `catalogId`, its `createSurface` components and data mo
 
   ```tsx
   function SearchBox() {
-    const surface = useSurfaceInstance(SearchBoxSurfaceTemplate); // instantiateSurface in a layout effect
+    // Calls session.instantiateSurface in a layout effect.
+    const surface = useSurfaceInstance(SearchBoxSurfaceTemplate);
     return surface ? <A2UIRenderer surfaceId={surface.surfaceId} /> : null;
   }
   ```
@@ -175,16 +181,21 @@ template's name, its own `catalogId`, its `createSurface` components and data mo
 
 When an action's source component is on a live instance, `dispatchAction` finds the component in
 the instance, validates its payload against the template's `componentContracts`, and sends it in
-the lookup lane, with the template name as the request's `surfaceTemplate`. It needs no active turn, which amends ADR-016 for these surfaces. If the
-contract does not mark the action as a lookup, the template and the lookup marks disagree: the
-action is dropped with a warning in development.
+the lookup lane, with the template name as the request's `surfaceTemplate`. It needs no active
+turn, which amends ADR-016 for these surfaces. ADR-020 allows only lookups on a template ("Lookups
+only"), so an action that the contract does not mark as a lookup means that the template and the
+lookup marks disagree: the action is dropped with a warning in development.
 
 ### Request lanes
 
-| Lane                 | Members                                                    | Behavior                                                                                                                                                                                                                 |
-| -------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Prompts and gestures | `submitPrompt`, and component actions that are not lookups | Unchanged.                                                                                                                                                                                                               |
-| Lookups              | component actions the contract marks as lookups            | Sent at once, alongside any prompt or gesture, with the session token when there is one. A new lookup from the same surface, source component and action aborts the previous one. A lookup's failure never fails a turn. |
+| Lane                 | Members                                                    | Behavior                                                                                                                                                                                                                                                                                                                                                 |
+| -------------------- | ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Prompts and gestures | `submitPrompt`, and component actions that are not lookups | One request in flight, exposed as `session.request`. A dispatch made while a request is in flight is withheld.                                                                                                                                                                                                                                           |
+| Lookups              | component actions the contract marks as lookups            | Exempt from the one-request rule: sent at once, alongside any prompt or gesture, never withheld, never withholding another dispatch, and never setting `session.request`. Sent with the session token when there is one. A new lookup from the same surface, source component and action aborts the previous one. A lookup's failure never fails a turn. |
+
+A lookup's `dispatchAction` promise resolves once its run ends: answered, failed, superseded by a
+newer lookup, or aborted with its instance. `sendAndWait` follows `session.request`, so it does
+not wait for lookups.
 
 A lookup's run only updates its source component's state, through the instance's stream. It never
 opens a turn or folds into one, and the session never adopts a `sessionId` or `sessionToken` from
@@ -194,6 +205,16 @@ today.
 A lookup's run can overlap a prompt's run on the same thread. AG-UI only requires a run id that is
 unique within the thread, and validates event order per stream. This package parses each stream
 on its own, so concurrent streams need nothing beyond these lanes.
+
+### New conversations
+
+`session.startNewConversation()` starts a new conversation on the same session. It stops the
+request in flight, as `cancel()` does, and clears the turns, the `sessionId` and the
+`sessionToken`, so the next prompt opens a new producer session, as the first one does. It keeps
+the surface instances and their lookups in flight, which depend on no session. An application
+never replaces its session to start over, so its search boxes are never remounted.
+
+A session that has started a new conversation serializes like a fresh one. ADR-011 is unchanged.
 
 ### The search box in the renderer
 
@@ -205,8 +226,9 @@ box: the input and the completions popover.
 - A submit hides the completions until the next keystroke, so a lookup that answers after the
   submit cannot reopen them.
 - What submitting does is the application's: the component receives a submit handler from the
-  application, for example through a React context. Whether `submitPrompt` becomes an action the
-  component dispatches is left to the prompt-submission ADR.
+  application, for example through a React context. That handler is application policy, not
+  stitching: no application code links its own input to the component's state (ADR-020). Whether
+  `submitPrompt` becomes an action the component dispatches is left to the prompt-submission ADR.
 
 demo-schema-react implements this as the reference.
 
@@ -220,6 +242,10 @@ The application creates instances, rather than the session at construction, beca
 application knows how many search boxes it draws and for how long. A fixed surface id per template
 would allow one per page: two search boxes would share a surface and a superseding key, so typing
 in one would abort the other's lookups.
+
+Instances stay on the `Session`, which starts new conversations itself, rather than on a client
+object that outlives sessions. Such an object would replace ADR-010's single `createSession`
+factory with two objects that share their configuration, to solve what one method solves.
 
 ## Impact on the Charter
 
@@ -239,23 +265,18 @@ in one would abort the other's lookups.
 ## Consequences
 
 - **Positive:**
-  - The search box is drawn on first paint and never remounted while the shopper types.
+  - The search box is drawn on first paint, and never remounted while the shopper types or when a
+    new conversation starts.
   - Suggestions work before the first prompt and while an answer streams.
   - A page can draw any number of search boxes.
   - Instant products, or other surface templates, reuse the same mechanism.
 - **Negative:**
   - Renderer integrations gain work: they create and dispose of instances, and feed each
     instance's stream without replaying it.
-  - The search box instances belong to the session. A session cannot start a new conversation, so
-    an application starts one by creating a new session, which recreates its search boxes: they
-    remount and lose what the shopper typed.
 
 ## Implementation and Follow-up
 
 - **Session-scoped surfaces.** A separate decision settles whether surfaces created by turns live
   for the whole session, as the producer and A2-UI scope them, so that earlier turns' surfaces keep
   accepting actions.
-- **New conversations without remounting the search box.** A separate decision settles how an
-  application starts a new conversation without creating a new session, for example by letting a
-  session start one itself.
 - **Instant products.** See `thermidor-schema` ADR-020's follow-up decisions.
