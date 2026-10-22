@@ -4,7 +4,7 @@ import type {ConverseEvent} from '@coveo/platform-mock-api/converse';
 
 const {buildQuerySuggestionsLookupEvents, isSuggestionsLookup} = converseSchemaResponses;
 
-function lookup(query: string, surfaceId = 'header-search-box') {
+function lookup(query: string, surfaceId = 'template:header-search-box') {
   return {name: 'fetchSuggestions', surfaceId, sourceComponentId: 'root', context: {query}};
 }
 
@@ -30,7 +30,9 @@ function expressions(query: string): string[] {
 describe('isSuggestionsLookup', () => {
   it('recognizes fetchSuggestions from the search box template, whatever the surface id', () => {
     expect(isSuggestionsLookup('search-box', lookup('surf'))).toBe(true);
-    expect(isSuggestionsLookup('search-box', lookup('surf', 'drawer-search-box'))).toBe(true);
+    expect(isSuggestionsLookup('search-box', lookup('surf', 'template:drawer-search-box'))).toBe(
+      true
+    );
   });
 
   it('rejects a request without a surface template', () => {
@@ -64,7 +66,7 @@ describe('buildQuerySuggestionsLookupEvents', () => {
     expect(eventData(events[1]).activityType).toBe('a2ui-surface');
     expect(updateDataModelOps(events)).toEqual([
       {
-        surfaceId: 'header-search-box',
+        surfaceId: 'template:header-search-box',
         path: '/state/root',
         value: {
           query: 'surf',
@@ -83,11 +85,11 @@ describe('buildQuerySuggestionsLookupEvents', () => {
   it('writes each instance at its own surface id', () => {
     const [header] = updateDataModelOps(buildQuerySuggestionsLookupEvents(lookup('kayak')));
     const [drawer] = updateDataModelOps(
-      buildQuerySuggestionsLookupEvents(lookup('kayak', 'drawer-search-box'))
+      buildQuerySuggestionsLookupEvents(lookup('kayak', 'template:drawer-search-box'))
     );
 
-    expect(header.surfaceId).toBe('header-search-box');
-    expect(drawer.surfaceId).toBe('drawer-search-box');
+    expect(header.surfaceId).toBe('template:header-search-box');
+    expect(drawer.surfaceId).toBe('template:drawer-search-box');
     expect(drawer.value).toEqual(header.value);
   });
 

@@ -208,7 +208,7 @@ describe('createMockConverseServer', () => {
         surfaceTemplate: 'search-box',
         action: {
           name: 'fetchSuggestions',
-          surfaceId: 'header-search-box',
+          surfaceId: 'template:header-search-box',
           sourceComponentId: 'root',
           context: {query: 'surf'},
         },
@@ -232,7 +232,7 @@ describe('createMockConverseServer', () => {
       expect(res.statusCode).toBe(200);
       expect(res.headers['content-type']).toBe('text/event-stream');
       expect(eventNames(res.body)).toEqual(['RUN_STARTED', 'ACTIVITY_SNAPSHOT', 'RUN_FINISHED']);
-      expect(res.body).toContain('"surfaceId":"header-search-box"');
+      expect(res.body).toContain('"surfaceId":"template:header-search-box"');
       expect(res.body).toContain('"expression":"surfboards"');
       expect(res.body).not.toContain('conversationToken');
     });

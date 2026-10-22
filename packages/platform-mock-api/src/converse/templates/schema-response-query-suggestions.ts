@@ -7,8 +7,9 @@ import {
 } from '../events.js';
 
 // `fetchSuggestions` is a lookup from the `search-box` surface template. The client
-// creates each instance under a surface id of its choosing, so a lookup is recognized from the
-// template and the template's component, never from the surface id. A lookup opens no session: its
+// creates each instance under a surface id of its choosing, prefixed with `template:` (which no
+// surface this mock creates starts with), so a lookup is recognized from the template and the
+// template's component, never from the surface id. A lookup opens no session: its
 // run carries no session keys and emits no turn_started/turn_complete.
 
 const SEARCH_BOX_SURFACE_TEMPLATE = 'search-box';
