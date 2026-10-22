@@ -1,37 +1,47 @@
 import {readdirSync, readFileSync} from 'node:fs';
 import path from 'node:path';
-import {parseHtml, walk} from './html.mjs';
+import {lineOf, parseHtml, walk} from './html.mjs';
 import {
   attributesOf,
   indexByTag,
+  isPrefixAttribute,
   listElements,
   literalValuesOf,
   packageRoot,
-  prefixAttributesOf,
+  resolveType,
 } from './manifest.mjs';
 
 /**
- * The item templates and the lists that may contain them, as `BaseTemplateController` checks
- * them at run time (`validParents` in each template component).
+ * The item templates: the lists that may contain each one and whether an empty `<template>`
+ * is accepted, as `BaseTemplateController` checks them at run time (`validParents` and
+ * `allowEmpty` in each template component).
  */
-export const TEMPLATE_HOSTS = {
-  'atomic-result-template': [
-    'atomic-result-list',
-    'atomic-folded-result-list',
-    'atomic-search-box-instant-results',
-  ],
-  'atomic-result-children-template': ['atomic-result-children'],
-  'atomic-product-template': [
-    'atomic-commerce-product-list',
-    'atomic-commerce-recommendation-list',
-    'atomic-commerce-search-box-instant-products',
-  ],
-  'atomic-recs-result-template': ['atomic-recs-list', 'atomic-ipx-recs-list'],
-  'atomic-insight-result-template': [
-    'atomic-insight-result-list',
-    'atomic-insight-folded-result-list',
-  ],
-  'atomic-insight-result-children-template': ['atomic-insight-result-children'],
+export const ITEM_TEMPLATES = {
+  'atomic-result-template': {
+    hosts: ['atomic-result-list', 'atomic-folded-result-list', 'atomic-search-box-instant-results'],
+    allowEmpty: true,
+  },
+  'atomic-result-children-template': {hosts: ['atomic-result-children'], allowEmpty: false},
+  'atomic-product-template': {
+    hosts: [
+      'atomic-commerce-product-list',
+      'atomic-commerce-recommendation-list',
+      'atomic-commerce-search-box-instant-products',
+    ],
+    allowEmpty: true,
+  },
+  'atomic-recs-result-template': {
+    hosts: ['atomic-recs-list', 'atomic-ipx-recs-list'],
+    allowEmpty: true,
+  },
+  'atomic-insight-result-template': {
+    hosts: ['atomic-insight-result-list', 'atomic-insight-folded-result-list'],
+    allowEmpty: true,
+  },
+  'atomic-insight-result-children-template': {
+    hosts: ['atomic-insight-result-children'],
+    allowEmpty: false,
+  },
 };
 
 const GLOBAL_ATTRIBUTES = new Set([
@@ -60,10 +70,7 @@ const GLOBAL_ATTRIBUTES = new Set([
 ]);
 
 const isGlobalAttribute = (name) =>
-  GLOBAL_ATTRIBUTES.has(name) ||
-  name.startsWith('aria-') ||
-  name.startsWith('data-') ||
-  name.startsWith('on');
+  GLOBAL_ATTRIBUTES.has(name) || name.startsWith('aria-') || name.startsWith('data-');
 
 const isPlaceholder = (value) =>
   value === null || /\.\.\.|[{}$<>]/.test(value) || value.trim() === '';
@@ -79,18 +86,18 @@ const listFiles = (dir, matches) =>
 /**
  * Every `*.usage.mdx` under `src/components`, sorted.
  */
-export function findUsageDocs(dir = componentsDir) {
-  return listFiles(dir, (name) => name.endsWith('.usage.mdx'));
+export function findUsageDocs() {
+  return listFiles(componentsDir, (name) => name.endsWith('.usage.mdx'));
 }
 
 /**
  * The tags the sources define with `@customElement`, including those of the `@internal`
  * components that the manifest leaves out.
  */
-export function findSourceTags(dir = componentsDir) {
+export function findSourceTags() {
   const tags = new Set();
   const sources = listFiles(
-    dir,
+    componentsDir,
     (name) => name.endsWith('.ts') && !/\.(spec|stories)\.|\.d\.ts$/.test(name)
   );
   for (const file of sources) {
@@ -108,12 +115,124 @@ export function findSourceTags(dir = componentsDir) {
  * of the internal components, which are accepted but not checked.
  *
  * @param {object} manifest
- * @param {Set<string>} [sourceTags]
+ * @param {Set<string>} [sourceTags] The tags defined in the sources
  */
 export function createCatalog(manifest, sourceTags = findSourceTags()) {
   const byTag = indexByTag(listElements(manifest));
-  const hiddenTags = new Set([...sourceTags].filter((tag) => !byTag.has(tag)));
-  return {byTag, hiddenTags};
+  const internalTags = new Set([...sourceTags].filter((tag) => !byTag.has(tag)));
+  return {byTag, internalTags};
+}
+
+/**
+ * Checks an HTML snippet against the manifest: every `atomic-*` element and attribute must
+ * exist, attribute values must be allowed, named slots must exist on the parent, and item
+ * templates must be built the way `BaseTemplateController` requires.
+ *
+ * @param {string} code
+ * @param {{byTag: Map<string, object>, internalTags: Set<string>}} catalog See `createCatalog`
+ * @returns {{line: number, message: string}[]}
+ */
+export function validateHtml(code, {byTag, internalTags}) {
+  const problems = [];
+  const report = (node, message) => problems.push({line: node.line, message});
+
+  for (const node of walk(parseHtml(code))) {
+    if (!node.tag.startsWith('atomic-')) {
+      continue;
+    }
+    if (node.selfClosing) {
+      report(node, `<${node.tag} /> does not close the element: write <${node.tag}></${node.tag}>`);
+    }
+    if (internalTags.has(node.tag)) {
+      continue;
+    }
+    const element = byTag.get(node.tag);
+    if (!element) {
+      report(node, `<${node.tag}> is not an Atomic component`);
+      continue;
+    }
+    checkAttributes(node, element, report);
+    checkSlots(node, element, report);
+    checkTemplate(node, report);
+  }
+  return problems;
+}
+
+function checkAttributes(node, element, report) {
+  const attributes = attributesOf(element);
+  const byName = new Map(attributes.map((attribute) => [attribute.name.toLowerCase(), attribute]));
+  const prefixes = attributes.filter(isPrefixAttribute).map((attribute) => `${attribute.name}-`);
+
+  for (const {name, value} of node.attributes) {
+    if (isGlobalAttribute(name) || prefixes.some((prefix) => name.startsWith(prefix))) {
+      continue;
+    }
+    const attribute = byName.get(name);
+    if (!attribute) {
+      report(node, `<${node.tag}> has no "${name}" attribute`);
+      continue;
+    }
+    if (isPrefixAttribute(attribute)) {
+      report(node, `"${name}" takes a field in its name: ${name}-<field>="…"`);
+      continue;
+    }
+    if (attribute.deprecated) {
+      report(node, `the "${name}" attribute of <${node.tag}> is deprecated`);
+    }
+    if (isPlaceholder(value)) {
+      continue;
+    }
+    const typeText = resolveType(attribute.type?.text);
+    const literals = literalValuesOf(typeText);
+    if (literals && !literals.includes(value)) {
+      report(
+        node,
+        `"${value}" is not a value of the "${name}" attribute of <${node.tag}> (${typeText})`
+      );
+    }
+    if (typeText === 'boolean' && !['true', 'false'].includes(value)) {
+      report(node, `the "${name}" attribute of <${node.tag}> is a boolean, not "${value}"`);
+    }
+  }
+}
+
+function checkSlots(node, element, report) {
+  const slots = (element.slots ?? []).map((slot) => slot.name);
+  for (const child of node.children) {
+    const slot = child.attributes.find((attribute) => attribute.name === 'slot');
+    if (slot && !slots.includes(slot.value ?? '')) {
+      report(child, `<${node.tag}> has no "${slot.value}" slot`);
+    }
+  }
+}
+
+function checkTemplate(node, report) {
+  const rule = ITEM_TEMPLATES[node.tag];
+  if (!rule) {
+    return;
+  }
+  if (node.parent && !rule.hosts.includes(node.parent.tag)) {
+    report(
+      node,
+      `<${node.tag}> must be a direct child of ${rule.hosts.map((host) => `<${host}>`).join(', ')}`
+    );
+  }
+  const template = node.children.find(
+    (child) => child.tag === 'template' && !child.attributes.some((a) => a.name === 'slot')
+  );
+  if (!template) {
+    report(node, `<${node.tag}> must contain a <template> element`);
+    return;
+  }
+  if (!rule.allowEmpty && template.empty) {
+    report(template, `the <template> of <${node.tag}> must not be empty`);
+  }
+  if (walk(template.children).some((child) => child.tag === 'script')) {
+    report(
+      template,
+      `the <template> of <${node.tag}> must not contain a <script>: Atomic ignores it`
+    );
+  }
 }
 
 /**
@@ -128,126 +247,40 @@ export function extractSnippets(markdown) {
     snippets.push({
       lang: match[1].toLowerCase(),
       code: match[2],
-      line: markdown.slice(0, match.index).split('\n').length,
+      line: lineOf(markdown, match.index),
     });
   }
   return snippets;
 }
 
 /**
- * Checks an HTML snippet against the manifest: every `atomic-*` element and attribute must
- * exist, attribute values must be allowed, named slots must exist on the parent, and item
- * templates must be built the way `BaseTemplateController` requires.
+ * Checks every HTML snippet of a Markdown document, reporting lines of the document.
  *
- * @param {string} code
- * @param {{byTag: Map<string, object>, hiddenTags: Set<string>}} catalog See `createCatalog`
+ * @param {string} markdown
+ * @param {{byTag: Map<string, object>, internalTags: Set<string>}} catalog
  * @returns {{line: number, message: string}[]}
  */
-export function validateHtml(code, {byTag, hiddenTags}) {
-  const problems = [];
-  const report = (node, message) => problems.push({line: node.line, message});
-  const root = parseHtml(code);
-
-  for (const node of walk(root)) {
-    if (!node.tag.startsWith('atomic-') || hiddenTags.has(node.tag)) {
-      continue;
-    }
-    const element = byTag.get(node.tag);
-    if (!element) {
-      report(node, `<${node.tag}> is not an Atomic component`);
-      continue;
-    }
-    checkAttributes(node, element, report);
-    checkSlots(node, byTag, report);
-    checkTemplate(node, report);
-  }
-  return problems;
-}
-
-function checkAttributes(node, element, report) {
-  const attributes = attributesOf(element);
-  const prefixes = prefixAttributesOf(element).map((attribute) => `${attribute.name}-`);
-
-  for (const {name, value} of node.attributes) {
-    if (isGlobalAttribute(name)) {
-      continue;
-    }
-    const attribute = attributes.find((candidate) => candidate.name === name);
-    if (!attribute) {
-      if (!prefixes.some((prefix) => name.startsWith(prefix))) {
-        report(node, `<${node.tag}> has no "${name}" attribute`);
-      }
-      continue;
-    }
-    if (attribute.deprecated) {
-      report(node, `the "${name}" attribute of <${node.tag}> is deprecated`);
-    }
-    if (isPlaceholder(value)) {
-      continue;
-    }
-    const typeText = attribute.type?.text;
-    const literals = literalValuesOf(typeText);
-    if (literals && !literals.includes(value)) {
-      report(
-        node,
-        `"${value}" is not a value of the "${name}" attribute of <${node.tag}> (${typeText})`
-      );
-    }
-    if (typeText === 'boolean' && !['true', 'false'].includes(value)) {
-      report(node, `the "${name}" attribute of <${node.tag}> is a boolean, not "${value}"`);
-    }
-  }
-}
-
-function checkSlots(node, byTag, report) {
-  const parent = node.parent;
-  const slot = node.attributes.find((attribute) => attribute.name === 'slot');
-  if (!slot || !parent || !byTag.has(parent.tag)) {
-    return;
-  }
-  const slots = (byTag.get(parent.tag).slots ?? []).map((candidate) => candidate.name);
-  if (!slots.includes(slot.value ?? '')) {
-    report(node, `<${parent.tag}> has no "${slot.value}" slot`);
-  }
-}
-
-function checkTemplate(node, report) {
-  const hosts = TEMPLATE_HOSTS[node.tag];
-  if (!hosts) {
-    return;
-  }
-  if (node.parent?.tag !== '#root' && !hosts.includes(node.parent?.tag)) {
-    report(
-      node,
-      `<${node.tag}> must be a direct child of ${hosts.map((h) => `<${h}>`).join(', ')}`
+export function validateMarkdown(markdown, catalog) {
+  return extractSnippets(markdown)
+    .filter((snippet) => snippet.lang === 'html')
+    .flatMap((snippet) =>
+      validateHtml(snippet.code, catalog).map(({line, message}) => ({
+        line: snippet.line + line,
+        message,
+      }))
     );
-  }
-  const template = node.children.find(
-    (child) => child.tag === 'template' && !child.attributes.some((a) => a.name === 'slot')
-  );
-  if (!template) {
-    report(node, `<${node.tag}> must contain a <template> element`);
-    return;
-  }
-  if (walk(template).some((child) => child.tag === 'script')) {
-    report(template, `the <template> of <${node.tag}> must not contain a <script>`);
-  }
 }
 
 /**
  * Checks every HTML snippet of a usage doc.
  *
  * @param {string} file Absolute path of the `*.usage.mdx`
- * @param {{byTag: Map<string, object>, hiddenTags: Set<string>}} catalog
+ * @param {{byTag: Map<string, object>, internalTags: Set<string>}} catalog
  * @returns {string[]} One `file:line message` per problem
  */
 export function validateUsageDoc(file, catalog) {
   const relativePath = path.relative(packageRoot, file);
-  return extractSnippets(readFileSync(file, 'utf8'))
-    .filter((snippet) => snippet.lang === 'html')
-    .flatMap((snippet) =>
-      validateHtml(snippet.code, catalog).map(
-        ({line, message}) => `${relativePath}:${snippet.line + line} ${message}`
-      )
-    );
+  return validateMarkdown(readFileSync(file, 'utf8'), catalog).map(
+    ({line, message}) => `${relativePath}:${line} ${message}`
+  );
 }
