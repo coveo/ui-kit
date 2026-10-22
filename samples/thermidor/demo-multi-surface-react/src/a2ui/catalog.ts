@@ -4,7 +4,7 @@ import {BundleDisplay} from '../../../demo-schema-react/src/a2ui/BundleDisplay/B
 import {ComparisonTable} from '../../../demo-schema-react/src/a2ui/ComparisonTable/ComparisonTable.js';
 import {NextActionsBar} from '../../../demo-schema-react/src/a2ui/NextActionsBar/NextActionsBar.js';
 import {ProductCarousel} from '../../../demo-schema-react/src/a2ui/ProductCarousel/ProductCarousel.js';
-import {ProductResearchCard} from '../../../demo-schema-react/src/a2ui/ProductResearchCard/ProductResearchCard.js';
+import {createProductResearchCard} from '../../../demo-schema-react/src/a2ui/ProductResearchCard/ProductResearchCard.js';
 import {ProductSummary} from '../../../demo-schema-react/src/a2ui/ProductSummary/ProductSummary.js';
 import {QuerySuggestions} from './QuerySuggestions/QuerySuggestions.js';
 
@@ -23,7 +23,7 @@ export function createStorefrontCatalog() {
     NextActionsBar,
     ComparisonTable,
     BundleDisplay,
-    ProductResearchCard,
+    createProductResearchCard(),
     ProductSummary,
   ]);
 }

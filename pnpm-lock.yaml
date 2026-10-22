@@ -2341,7 +2341,7 @@ importers:
         version: link:../../../packages/thermidor
       '@coveo/thermidor-schema':
         specifier: 'catalog:'
-        version: 1.0.0-beta.26(zod@3.25.76)
+        version: 1.0.0-beta.27(zod@3.25.76)
       react:
         specifier: 19.2.8
         version: 19.2.8
