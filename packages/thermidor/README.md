@@ -80,10 +80,11 @@ Thermidor sends one request at a time per session, prompts and component actions
 
 - `session.request` is the request being sent (`{kind: 'prompt', turnId}` or `{kind: 'action', name, surfaceId, sourceComponentId, turnId}`), or `undefined` when idle. An action's run counts, a follow-up included. Read it synchronously, or through `subscribe`, to lock or dim the interface, and to hold back a dispatch until the session is free.
 - `session.sendAndWait(send)` calls `send`, which dispatches through the renderer, and resolves once the session has answered that dispatch, whatever its outcome, a withheld one included. A renderer's own dispatch promise may resolve as soon as it has emitted the action; when the `dispatchAction` promise is at hand, await it instead.
+- `cancel()` stops the request in flight, but `session.request` stays set until it has unwound, a few microtasks later, so a dispatch made right after `cancel()` is withheld. Wait for `request` to become `undefined`, through `subscribe`, before sending the next one.
 
 ### Optimistic values
 
-To show a gesture's expected value until the session has answered it, send the gesture through `sendAndWait()`. With React's `useOptimistic`, the transition lasts exactly that long:
+To show a gesture's expected value until the session has answered it, show that value from the moment the gesture is sent until `sendAndWait()` resolves, then give way to the producer's value. Thermidor doesn't depend on a UI framework, so any state mechanism works. With React's `useOptimistic`, for example, a transition that awaits `sendAndWait()` lasts exactly that long:
 
 ```tsx
 const [values, addOptimisticValues] = useOptimistic(producerValues);

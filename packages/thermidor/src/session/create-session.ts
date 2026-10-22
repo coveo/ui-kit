@@ -197,9 +197,13 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * dev-only warning and nothing is sent.
    */
   dispatchAction: (message: A2uiClientMessage | SubmitPromptAction) => Promise<void>;
-  /** Stops the request in flight. */
+  /**
+   * Stops the request in flight. {@link Session.request} stays set until the stopped request has
+   * unwound, a few microtasks later, so a dispatch made right after `cancel()` is withheld: wait for
+   * `request` to become `undefined`, through {@link Session.subscribe}, before sending the next one.
+   */
   cancel(): void;
-  /** Re-submits an errored turn's input, in turn with the other requests. */
+  /** Re-submits an errored turn's input; withheld like any dispatch while a request is in flight. */
   retry(turnId: string): void;
   /** Serializes the session transcript for persistence. */
   serialize(): SerializedSession;
@@ -578,10 +582,10 @@ export function createSession<TContracts extends ContractsSchema>(
   }
 
   /**
-   * Stops consuming the in-flight stream. A
-   * streaming prompt turn is marked `error`, retaining whatever partial {@link TurnResponse} has
-   * already been folded; an action in flight leaves its turn unchanged. When nothing is in
-   * flight, it is a no-op that leaves every turn unchanged.
+   * Stops consuming the in-flight stream. A streaming prompt turn is marked `error`, retaining
+   * whatever partial {@link TurnResponse} has already been folded; an action in flight leaves its
+   * turn unchanged. `request` is cleared once the stopped request has unwound, not here. When
+   * nothing is in flight, it is a no-op that leaves every turn unchanged.
    */
   function cancel(): void {
     if (!activeAbortController) {
