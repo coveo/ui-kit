@@ -25,8 +25,12 @@ without an active turn).
 
 - The contract declares **surface templates**. A template fixes a surface's composition
   and initial state, but not its id: the application creates instances of it, and the producer
-  only writes their state. The first template is the search box, whose root is a
-  `QuerySuggestions` component.
+  only writes their state. It never creates, recomposes (`updateComponents`) or deletes an
+  instance. The first template is the search box, whose root is a `QuerySuggestions` component.
+- Each template has a **catalog of its own**, exactly the components it places. `QuerySuggestions`
+  is in the search box's catalog, and no longer in the conversational component union.
+- An instance's surface id starts with **`template:`**, and the id of a surface the producer
+  creates never does.
 - The contract marks some actions as **lookups**, such as `fetchSuggestions`. A lookup is answered
   outside the session's request queue, with or without a session.
 
@@ -94,16 +98,21 @@ Adopt **Option C**.
 ### The injected contract
 
 The session reads the surface templates and the lookup marks from the contract it is
-given. ADR-014's injected contracts schema becomes one bundle with three parts, which
-`@coveo/thermidor-schema` generates in both its root and `zod3` entry points:
+given. ADR-014's injected contracts schema becomes one bundle, which `@coveo/thermidor-schema`
+generates in both its root and `zod3` entry points:
 
 ```ts
 export const ThermidorContract = {
   components: ComponentContractsSchema,
   surfaceTemplates: SurfaceTemplates,
   lookupActions: LookupActions,
+  surfaceInstanceIdPrefix: SURFACE_INSTANCE_ID_PREFIX, // 'template:'
 } as const;
 ```
+
+`components` is the conversational component union. Each entry of `surfaceTemplates` carries the
+template's name, its own `catalogId`, its `createSurface` components and data model, and
+`componentContracts`, the component union of its catalog.
 
 - **One input.** `SessionConfig` replaces `contracts` with `contract`, and an application injects
   the bundle: `createSession({contract: ThermidorContract, ...})`. The rename keeps no
@@ -113,7 +122,7 @@ export const ThermidorContract = {
   - leaving the lookup actions out, so that every action on a surface instance is dropped with
     only a warning in development.
 - **Accepted by its shape.** The session accepts any contract with `components`,
-  `surfaceTemplates` and `lookupActions`, and never imports `@coveo/thermidor-schema`, as ADR-014
+  `surfaceTemplates`, `lookupActions` and `surfaceInstanceIdPrefix`, and never imports `@coveo/thermidor-schema`, as ADR-014
   requires.
 - **Not inside the component union.** The templates describe surfaces, not components, so they do
   not belong in `ComponentContractsSchema`. The lookup mark belongs to each action, but the Zod
@@ -129,13 +138,16 @@ export const ThermidorContract = {
   The session refuses a template the contract does not declare, and a surface id that a live
   instance already holds. Disposing of an instance aborts its in-flight lookups and drops their
   late results.
-- **Ids chosen by the application.** The application may pass the surface id. Otherwise the
-  session mints one that is unique within the session. A server-rendered surface needs an id that
-  is the same on server and client, such as one derived from React's `useId`.
+- **Ids chosen by the application, with the contract's prefix.** The application may pass the
+  surface id, and the session refuses one that does not start with `surfaceInstanceIdPrefix`, so an
+  instance never collides with a surface the producer creates. Otherwise the session mints one
+  that is unique within the session, such as `template:search-box-1`. A server-rendered surface
+  needs an id that is the same on server and client, such as the prefix followed by one derived
+  from React's `useId`.
 - **Outside turns.** Instances belong to no turn. Each one exposes its renderer messages as a
   stream of its own, beside the turns, using the same v0.9 projection as turns (ADR-015 addendum).
   The stream starts with the instance's `createSurface` message, produced from the template at
-  creation, before any request.
+  creation, before any request, and naming the template's own `catalogId`.
 - **Fed once, never replayed.** A renderer integration feeds each new message to the renderer once:
   clearing and replaying the stream would recreate the surface and remount the input. It feeds the
   creation before the first paint, for example from a React layout effect, and deletes the surface
@@ -150,18 +162,20 @@ export const ThermidorContract = {
   ```
 
   The hook belongs to the renderer integration. demo-schema-react implements it on top of the
-  session's instances.
+  session's instances. The renderer registers the template's catalog under its `catalogId`.
 
-- **Validated like any surface.** An inbound `updateDataModel` for a surface instance is validated
-  against the contract of the component it targets before it reaches the renderer.
+- **Validated against the template's catalog.** An inbound `updateDataModel` for a surface instance
+  is validated against the contract of the component it targets, in the template's
+  `componentContracts`, before it reaches the renderer. Only `updateDataModel` applies to an
+  instance: the producer never recomposes one.
 - **Not serialized.** A restored session's application creates its instances again. Their state is
   lookup results, which the next keystroke replaces. ADR-011 is unchanged.
 
 ### Dispatch
 
 When an action's source component is on a live instance, `dispatchAction` finds the component in
-the instance and sends the action in the lookup lane, with the template name as the request's
-`surfaceTemplate`. It needs no active turn, which amends ADR-016 for these surfaces. If the
+the instance, validates its payload against the template's `componentContracts`, and sends it in
+the lookup lane, with the template name as the request's `surfaceTemplate`. It needs no active turn, which amends ADR-016 for these surfaces. If the
 contract does not mark the action as a lookup, the template and the lookup marks disagree: the
 action is dropped with a warning in development.
 
@@ -183,8 +197,8 @@ on its own, so concurrent streams need nothing beyond these lanes.
 
 ### The search box in the renderer
 
-The `QuerySuggestions` catalog component draws the whole search box: the input and the completions
-popover.
+The `QuerySuggestions` component, in the search box template's catalog, draws the whole search
+box: the input and the completions popover.
 
 - The input holds what is typed, on the renderer side.
 - An empty input sends no lookup and shows no completions.
