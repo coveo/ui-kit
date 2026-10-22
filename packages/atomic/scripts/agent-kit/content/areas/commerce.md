@@ -51,4 +51,42 @@ A commerce page wraps everything in `atomic-commerce-interface`, with `type="sea
 </atomic-commerce-interface>
 ```
 
-Initialize it with `initialize({organizationId, accessToken, context: {language, country, currency, view: {url}}})` and run `executeFirstRequest()`. The `view.url` identifies the page to the platform: the commerce search page, or the listing to load. Product fields start with `ec_` (`ec_name`, `ec_brand`, `ec_price`, `ec_thumbnails`, `ec_rating`). Product recommendations go in a separate `atomic-commerce-recommendation-interface`, which has no `initialize`: pass it the same commerce engine with `initializeWithEngine(engine)`, and put one `atomic-commerce-recommendation-list` per slot inside it.
+Initialize it with `initialize({organizationId, accessToken, analytics: {trackingId}, context: {language, country, currency, view: {url}}})` and run `executeFirstRequest()`; `trackingId` is required, it names the commerce configuration that receives the analytics. The `view.url` identifies the page to the platform: the commerce search page, or the listing to load. Product fields start with `ec_` (`ec_name`, `ec_brand`, `ec_price`, `ec_thumbnails`, `ec_rating`). Product recommendations go in a separate `atomic-commerce-recommendation-interface`, which has no `initialize`: build a commerce engine with Headless and pass it to `initializeWithEngine(engine)`. Each `atomic-commerce-recommendation-list` inside it then fetches its slot.
+
+```html
+<atomic-commerce-recommendation-interface>
+  <atomic-commerce-recommendation-list
+    slot-id="af4fb7ba-6641-4b67-9cf9-be67e9f30174"
+    products-per-page="4"
+  >
+    <atomic-product-template>
+      <template>
+        <atomic-product-section-name>
+          <atomic-product-link></atomic-product-link>
+        </atomic-product-section-name>
+        <atomic-product-section-emphasized>
+          <atomic-product-price></atomic-product-price>
+        </atomic-product-section-emphasized>
+      </template>
+    </atomic-product-template>
+  </atomic-commerce-recommendation-list>
+</atomic-commerce-recommendation-interface>
+```
+
+```js
+// From npm: import {buildCommerceEngine} from '@coveo/headless/commerce';
+import {buildCommerceEngine} from 'https://static.cloud.coveo.com/headless/v3/commerce/headless.esm.js';
+
+const engine = buildCommerceEngine({
+  configuration: {
+    organizationId: 'my-org-id',
+    accessToken: 'my-access-token',
+    analytics: {trackingId: 'my-tracking-id'},
+    context: {language: 'en', country: 'US', currency: 'USD', view: {url: 'https://example.com/'}},
+  },
+});
+await customElements.whenDefined('atomic-commerce-recommendation-interface');
+await document
+  .querySelector('atomic-commerce-recommendation-interface')
+  .initializeWithEngine(engine);
+```

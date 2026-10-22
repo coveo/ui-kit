@@ -44,7 +44,7 @@ await searchInterface.initialize({organizationId: 'my-org-id', accessToken: 'my-
 searchInterface.executeFirstSearch();
 ```
 
-`initialize` takes an organization id and an access token (an API key or a search token). The commerce interface also needs a `context` (`language`, `country`, `currency` and `view.url`), and its first query is `executeFirstRequest()`. `atomic-recs-interface` runs `getRecommendations()`, and `atomic-insight-interface` also needs an `insightId`.
+`initialize` takes an organization id and an access token (an API key or a search token). The commerce interface also needs `analytics: {trackingId}` (the tracking id of the commerce configuration) and a `context` (`language`, `country`, `currency` and `view.url`), and its first query is `executeFirstRequest()`. `atomic-recs-interface` runs `getRecommendations()`, and `atomic-insight-interface` also needs an `insightId`.
 
 To share a Headless engine between interfaces, pass it to `initializeWithSearchEngine(engine)` (search), `initializeWithEngine(engine)` (commerce), `initializeWithRecommendationEngine(engine)` (recommendations) or `initializeWithInsightEngine(engine)` (insight) instead. `atomic-commerce-recommendation-interface` has no `initialize`: it only takes a commerce engine through `initializeWithEngine(engine)`.
 
