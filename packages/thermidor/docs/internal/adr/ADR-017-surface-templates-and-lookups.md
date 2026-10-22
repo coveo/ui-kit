@@ -13,10 +13,9 @@ related:
 
 # Surface templates and lookup actions
 
-This ADR amends [ADR-010](./ADR-010-unified-endpoint-session-client.md) (a session can start a
-new conversation), [ADR-014](./ADR-014-consumer-supplied-endpoint-and-schema.md) (the session
-takes one contract bundle), [ADR-015](./ADR-015-surface-and-route-derivation.md) (surface
-instances do not come from turns) and
+This ADR amends [ADR-014](./ADR-014-consumer-supplied-endpoint-and-schema.md) (the session takes
+one contract bundle), [ADR-015](./ADR-015-surface-and-route-derivation.md) (surface instances
+do not come from turns) and
 [ADR-016](./ADR-016-inline-state-consumption-remove-remote-controller.md) (lookups are dispatched
 without an active turn).
 
@@ -46,16 +45,13 @@ The session cannot support this today:
   warning in development. So a keystroke made while an answer streams is dropped.
 - **The contract is a component union.** The session receives the component contracts (ADR-014),
   but nothing about surfaces or lookups.
-- **A session holds one conversation.** An application starts a new conversation by creating a new
-  session, so anything the session holds is recreated.
 
 ## Decision Drivers
 
 - **Faithful transmission and rendering (charter MUST).** A surface instance is rendered exactly
   as the contract declares it, with A2-UI's standard rendering.
 - **First paint.** The search box is usable on first paint, before the producer has answered
-  anything, and its input is never remounted, neither while the shopper types nor when a new
-  conversation starts.
+  anything, and its input is never remounted while the shopper types.
 - **Any number of instances.** A page can draw several search boxes, such as one in the header and
   one in a drawer, and they never interfere.
 - **Lookups.** A lookup never waits for, blocks or fails another action or turn. A newer lookup
@@ -206,16 +202,6 @@ A lookup's run can overlap a prompt's run on the same thread. AG-UI only require
 unique within the thread, and validates event order per stream. This package parses each stream
 on its own, so concurrent streams need nothing beyond these lanes.
 
-### New conversations
-
-`session.startNewConversation()` starts a new conversation on the same session. It stops the
-request in flight, as `cancel()` does, and clears the turns, the `sessionId` and the
-`sessionToken`, so the next prompt opens a new producer session, as the first one does. It keeps
-the surface instances and their lookups in flight, which depend on no session. An application
-never replaces its session to start over, so its search boxes are never remounted.
-
-A session that has started a new conversation serializes like a fresh one. ADR-011 is unchanged.
-
 ### The search box in the renderer
 
 The `QuerySuggestions` component, in the search box template's catalog, draws the whole search
@@ -243,9 +229,10 @@ application knows how many search boxes it draws and for how long. A fixed surfa
 would allow one per page: two search boxes would share a surface and a superseding key, so typing
 in one would abort the other's lookups.
 
-Instances stay on the `Session`, which starts new conversations itself, rather than on a client
-object that outlives sessions. Such an object would replace ADR-010's single `createSession`
-factory with two objects that share their configuration, to solve what one method solves.
+Instances stay on the `Session` object, rather than on a client object that outlives sessions.
+Such an object would replace ADR-010's single `createSession` factory with two objects that share
+their configuration, only to keep search boxes mounted across conversations, which no application
+needs yet.
 
 ## Impact on the Charter
 
@@ -265,16 +252,21 @@ factory with two objects that share their configuration, to solve what one metho
 ## Consequences
 
 - **Positive:**
-  - The search box is drawn on first paint, and never remounted while the shopper types or when a
-    new conversation starts.
+  - The search box is drawn on first paint and never remounted while the shopper types.
   - Suggestions work before the first prompt and while an answer streams.
   - A page can draw any number of search boxes.
   - Instant products, or other surface templates, reuse the same mechanism.
 - **Negative:**
   - Renderer integrations gain work: they create and dispose of instances, and feed each
     instance's stream without replaying it.
+  - Surface instances belong to the `Session` object. An application that starts a new
+    conversation by creating a new session recreates its search boxes, which remount once.
 
 ## Implementation and Follow-up
+
+- **New conversations without remounting.** If an application needs to start a new conversation
+  while a search box stays mounted, a session method that clears the conversation and keeps the
+  surface instances would solve it. Adding one is not a breaking change.
 
 - **Session-scoped surfaces.** A separate decision settles whether surfaces created by turns live
   for the whole session, as the producer and A2-UI scope them, so that earlier turns' surfaces keep
