@@ -103,7 +103,7 @@ ConversationPage
 │                   ├── A2UISkeleton (in place of a loading surface)
 │                   ├── ProductCarousel (dumb: reads resolved props from {path} bindings)
 │                   ├── BundleDisplay (dumb: reads resolved tiers + slot child ids from props)
-│                   ├── ComparisonTable (dumb: reads resolved products + attributes from props)
+│                   ├── ComparisonTable (dumb: reads resolved products, attributes + related documents from props)
 │                   ├── ProductResearchCard (dumb: reads resolved product, summary, bullets + related documents from props)
 │                   ├── NextActionsBar (dumb: reads resolved action items; sends a follow-up action)
 │                   └── CommerceSearch (a gateway search block, see below)
