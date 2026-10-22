@@ -1,218 +1,185 @@
 import fc from 'fast-check';
-import {
-  createDispatchCoordinator,
-  createDispatchTracker,
-  createSettledDispatch,
-  type DispatchSource,
-} from '@coveo/thermidor';
-import {describe, it, expect, vi} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {act, render} from '@testing-library/react';
-import {DispatchProgressProvider} from './pending-dispatch.js';
-import {type FacetSearchAction, useOptimisticFacetSearch} from './use-optimistic-facet-search.js';
+import {
+  type FacetSearchAction,
+  SEARCH_DEBOUNCE_MS,
+  useOptimisticFacetSearch,
+} from './use-optimistic-facet-search.js';
+import {SessionRequestProvider, type SessionRequestSource} from './session-request.js';
 
-type Seam = 'tracked' | 'withheld' | 'lost';
-
-/**
- * Mounts the hook on the real tracker and coordinator, each `send` held open until `answer`. `sent`
- * is what reached the producer. `withheld`: settled on the spot (prompt streaming); `lost`: never
- * reaches the tracker (surface gone).
- */
-function mount(initialBackend: string, seam: Seam = 'tracked') {
-  const sent: string[] = [];
-  const answers: Array<() => void> = [];
-  const coordinator = createDispatchCoordinator<FacetSearchAction>((action) => {
-    sent.push(action.event.name === 'search' ? action.event.context.query : '(clear)');
-    return new Promise<void>((resolve) => answers.push(resolve));
-  });
-  const source: DispatchSource<FacetSearchAction> =
-    seam === 'withheld'
-      ? {issue: () => createSettledDispatch('withheld'), getSnapshot: coordinator.getSnapshot}
-      : coordinator;
-  const tracker = createDispatchTracker(source);
-
-  const dispatch = vi.fn<(action: FacetSearchAction) => void>((action) => {
-    if (seam !== 'lost') {
-      void tracker.dispatch(action);
-    }
-  });
+function mount(initialBackend: string) {
+  const dispatch = vi.fn<(action: FacetSearchAction) => void>();
+  // A session sending another request, until the test frees it.
+  const session: {busy: boolean} & SessionRequestSource = {
+    busy: false,
+    get request() {
+      return this.busy ? ({kind: 'prompt', turnId: 'turn'} as const) : undefined;
+    },
+    subscribe: () => () => {},
+    sendAndWait: () => Promise.resolve(),
+  };
 
   let current!: ReturnType<typeof useOptimisticFacetSearch>;
-  function Consumer({query}: {query: string}) {
-    current = useOptimisticFacetSearch(query, dispatch);
+  function Consumer({
+    query,
+    onDispatch = dispatch,
+  }: {
+    query: string;
+    onDispatch?: (action: FacetSearchAction) => void;
+  }) {
+    current = useOptimisticFacetSearch(query, onDispatch);
     return null;
   }
-  const tree = (query: string) => (
-    <DispatchProgressProvider value={tracker}>
-      <Consumer query={query} />
-    </DispatchProgressProvider>
-  );
 
-  const view = render(tree(initialBackend));
-  const push = (query: string) => act(() => view.rerender(tree(query)));
+  const view = render(<Consumer query={initialBackend} />, {
+    wrapper: ({children}) => (
+      <SessionRequestProvider value={session}>{children}</SessionRequestProvider>
+    ),
+  });
 
   return {
     dispatch,
-    sent,
+    sent: () =>
+      dispatch.mock.calls.map(([action]) =>
+        action.event.name === 'search' ? action.event.context.query : '(clear)'
+      ),
     unmount: () => view.unmount(),
-    result: {
-      get current() {
-        return current;
-      },
+    get query() {
+      return current.query;
     },
     type: (next: string) => act(() => current.onQueryChange(next)),
+    pause: () => act(() => vi.advanceTimersByTime(SEARCH_DEBOUNCE_MS)),
     reset: () => act(() => current.reset()),
-    /** An external change of `facetSearch.query`. */
-    push,
-    /** Answers the dispatch in flight: snapshot first, then settlement, as the session does. */
-    answer: async (query: string) => {
-      push(query);
-      await act(async () => {
-        answers.shift()?.();
-        await new Promise((resolve) => setTimeout(resolve, 0));
-      });
+    setBusy: (busy: boolean) => {
+      session.busy = busy;
     },
+    /** A change of `facetSearch.query` from the producer: an echo or an external change. */
+    push: (query: string) => act(() => view.rerender(<Consumer query={query} />)),
+    /** A re-render with another dispatch, as when a reply rebuilds the surface. */
+    rerenderWith: (query: string, onDispatch: (action: FacetSearchAction) => void) =>
+      act(() => view.rerender(<Consumer query={query} onDispatch={onDispatch} />)),
   };
 }
 
+beforeEach(() => {
+  vi.useFakeTimers();
+});
+
+afterEach(() => {
+  vi.useRealTimers();
+});
+
 describe('useOptimisticFacetSearch', () => {
-  it('updates the local query and dispatches on every change', () => {
+  it('shows each keystroke at once and sends one search once typing pauses', () => {
     const view = mount('');
 
-    view.type('ri');
-    view.type('rip');
+    view.type('n');
+    view.type('ni');
+    view.type('nik');
+    expect(view.query).toBe('nik');
+    expect(view.sent()).toEqual([]);
 
-    expect(view.result.current.query).toBe('rip');
-    expect(view.dispatch).toHaveBeenCalledTimes(2);
-    expect(view.dispatch).toHaveBeenNthCalledWith(1, {
-      event: {name: 'search', context: {query: 'ri'}},
-    });
-    expect(view.dispatch).toHaveBeenNthCalledWith(2, {
-      event: {name: 'search', context: {query: 'rip'}},
-    });
+    view.pause();
+    expect(view.sent()).toEqual(['nik']);
   });
 
-  it('keeps the typed query when the keystroke is lost before reaching the queue', () => {
-    const view = mount('', 'lost');
+  it('sends a search that fires after a re-render through the latest dispatch', () => {
+    const view = mount('');
+    view.type('bl');
+    view.pause();
+    view.type('blue');
 
-    view.type('ripcurl');
+    const rebuilt = vi.fn<(action: FacetSearchAction) => void>();
+    view.rerenderWith('bl', rebuilt);
+    view.pause();
 
-    expect(view.sent).toEqual([]);
-    expect(view.result.current.query).toBe('ripcurl');
+    expect(view.sent()).toEqual(['bl']);
+    expect(rebuilt).toHaveBeenCalledWith({event: {name: 'search', context: {query: 'blue'}}});
   });
 
-  it('keeps the typed query when the keystroke is withheld', () => {
-    const view = mount('', 'withheld');
+  it('holds a search back while the session is busy, then sends the latest query', () => {
+    const view = mount('');
+    view.setBusy(true);
 
-    view.type('ripcurl');
+    view.type('ni');
+    view.pause();
+    view.type('nike');
+    view.pause();
+    view.pause();
+    expect(view.sent()).toEqual([]);
 
-    expect(view.sent).toEqual([]);
-    expect(view.result.current.query).toBe('ripcurl');
+    view.setBusy(false);
+    view.pause();
+    expect(view.sent()).toEqual(['nike']);
   });
 
-  it('owes no echo for a withheld keystroke, so a later external change to that query still wins', () => {
-    const view = mount('', 'withheld');
-
-    view.type('ri');
-    view.type('rip');
-
-    // Neither keystroke went out, so this is not our echo.
-    view.push('ri');
-    expect(view.result.current.query).toBe('ri');
-  });
-
-  it('ignores the echo of a sent keystroke that is older than the current typing', async () => {
+  it('keeps the typed query when the search never reaches the producer', () => {
     const view = mount('');
 
-    view.type('ri');
-    view.type('ripcurl');
-    expect(view.sent).toEqual(['ri']);
+    view.type('nike');
+    view.pause();
 
-    await view.answer('ri');
-    expect(view.result.current.query).toBe('ripcurl');
-    expect(view.sent).toEqual(['ri', 'ripcurl']);
-
-    await view.answer('ripcurl');
-    expect(view.result.current.query).toBe('ripcurl');
+    expect(view.query).toBe('nike');
   });
 
-  it('adopts a genuine external change even while text is typed', () => {
-    const view = mount('shoes');
-
-    view.type('sh');
-    expect(view.result.current.query).toBe('sh');
-
-    view.push('sandals');
-    expect(view.result.current.query).toBe('sandals');
-  });
-
-  it('does not mistake the echo of our own clear for an external clear (x -> "" -> y)', async () => {
+  it('ignores the echo of a search older than the current typing', () => {
     const view = mount('');
+    view.type('ni');
+    view.pause();
+    view.type('nike');
 
-    view.type('x');
-    await view.answer('x');
-    expect(view.result.current.query).toBe('x');
+    view.push('ni');
 
+    expect(view.query).toBe('nike');
+  });
+
+  it('adopts an external change and drops the search waiting to be sent', () => {
+    const view = mount('');
+    view.type('nik');
+
+    view.push('adidas');
+    view.pause();
+
+    expect(view.query).toBe('adidas');
+    expect(view.sent()).toEqual([]);
+  });
+
+  it('does not mistake the echo of our own clear for an external clear (x -> "" -> y)', () => {
+    const view = mount('x');
     view.reset();
-    expect(view.result.current.query).toBe('');
     view.type('y');
-    expect(view.result.current.query).toBe('y');
 
-    await view.answer('');
-    expect(view.result.current.query).toBe('y');
-    await view.answer('y');
-    expect(view.result.current.query).toBe('y');
-    expect(view.sent).toEqual(['x', '(clear)', 'y']);
-
-    // Nothing owed anymore: this clear is external.
     view.push('');
-    expect(view.result.current.query).toBe('');
+
+    expect(view.query).toBe('y');
   });
 
-  it('clears the local value immediately on reset, even if the dispatch is lost', () => {
-    const view = mount('rip', 'lost');
+  it('clears at once on reset and sends clearSearch without waiting', () => {
+    const view = mount('nike');
+    view.type('nikes');
 
     view.reset();
 
-    expect(view.result.current.query).toBe('');
-    expect(view.dispatch).toHaveBeenCalledWith({event: {name: 'clearSearch', context: {}}});
+    expect(view.query).toBe('');
+    expect(view.sent()).toEqual(['(clear)']);
+    view.pause();
+    expect(view.sent()).toEqual(['(clear)']);
   });
 
-  it('coalesces a burst: 4 fast keystrokes send only the request in flight plus the latest', async () => {
+  it('sends nothing after unmounting', () => {
     const view = mount('');
+    view.type('nike');
 
-    view.type('r');
-    view.type('ri');
-    view.type('rip');
-    view.type('ripc');
+    view.unmount();
+    vi.advanceTimersByTime(SEARCH_DEBOUNCE_MS);
 
-    expect(view.result.current.query).toBe('ripc');
-    expect(view.sent).toEqual(['r']);
-
-    await view.answer('r');
-    expect(view.sent).toEqual(['r', 'ripc']);
-    expect(view.result.current.query).toBe('ripc');
-  });
-
-  it('writes the same slot for search and clear, so a clear supersedes a queued keystroke', async () => {
-    const view = mount('');
-
-    view.type('r');
-    view.type('ri');
-    view.reset();
-
-    await view.answer('r');
-    expect(view.sent).toEqual(['r', '(clear)']);
-    expect(view.result.current.query).toBe('');
+    expect(view.sent()).toEqual([]);
   });
 });
 
-// Feature: a2ui-inline-state-data-model, Property 10: in-progress facet search input stays in
-// LOCAL renderer state and is NEVER written to the shared A2-UI data model; for any sequence of
-// typed input values, the hook (a) reflects the latest typed value locally and (b) reaches the
-// producer only through the `dispatch` action seam (one dispatch per change, carrying the typed
-// query) — it performs no data-model write of its own.
 describe('optimistic facet input stays local; only a search action is dispatched (Property 10)', () => {
-  it('never writes input to a shared model and dispatches exactly one search per change', () => {
+  it('shows the latest typed value and sends it once typing pauses', () => {
     fc.assert(
       fc.property(
         fc.string({maxLength: 20}),
@@ -223,16 +190,11 @@ describe('optimistic facet input stays local; only a search action is dispatched
           for (const value of typedValues) {
             view.type(value);
           }
+          view.pause();
 
-          // (a) the local value reflects the latest typed value.
-          expect(view.result.current.query).toBe(typedValues[typedValues.length - 1]);
-
-          // (b) exactly one dispatch per change, each carrying the typed query verbatim.
-          expect(
-            view.dispatch.mock.calls.map(([action]) =>
-              action.event.name === 'search' ? action.event.context.query : '(clear)'
-            )
-          ).toEqual(typedValues);
+          const latest = typedValues[typedValues.length - 1];
+          expect(view.query).toBe(latest);
+          expect(view.sent()).toEqual([latest]);
 
           view.unmount();
           return true;

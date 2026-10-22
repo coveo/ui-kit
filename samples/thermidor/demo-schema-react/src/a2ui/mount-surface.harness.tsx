@@ -8,13 +8,13 @@ import {
   useA2UI,
   type A2UIClientEventMessage,
 } from '@copilotkit/a2ui-renderer';
-import {createDispatchCoordinator} from '@coveo/thermidor';
 import {
   createThermidorCatalog,
   THERMIDOR_CATALOG_ID,
   type ThermidorCatalogOptions,
 } from './components.js';
-import {DispatchProgressProvider, useTrackedDispatch} from './pending-dispatch.js';
+import {createFakeSessionRequests} from '../test/fake-session-requests.js';
+import {SessionRequestProvider} from './session-request.js';
 
 /**
  * Shared end-to-end mount for a component definition, through the real thermidor catalog and the
@@ -94,18 +94,15 @@ function Surface({
   catalogOptions?: ThermidorCatalogOptions;
 }) {
   const catalog = useMemo(() => createThermidorCatalog(catalogOptions), [catalogOptions]);
-  const actions = useMemo(
-    () => createDispatchCoordinator<A2UIClientEventMessage>(dispatch),
-    [dispatch]
-  );
-  const tracked = useTrackedDispatch(actions);
+  const requests = useMemo(() => createFakeSessionRequests(dispatch), [dispatch]);
+  const onAction = (message: A2UIClientEventMessage) => requests.dispatch(message);
   return (
-    <DispatchProgressProvider value={tracked.progress}>
-      <A2UIProvider catalog={catalog} onAction={tracked.onAction}>
+    <SessionRequestProvider value={requests.source}>
+      <A2UIProvider catalog={catalog} onAction={onAction}>
         <MessagePump messages={messages} processRef={processRef} />
         <A2UIRenderer surfaceId={SURFACE_ID} />
       </A2UIProvider>
-    </DispatchProgressProvider>
+    </SessionRequestProvider>
   );
 }
 

@@ -4,7 +4,7 @@ import {useSession} from '../context/session.js';
 import {createThermidorCatalog} from '../a2ui/components.js';
 import {buildSurfaceStream, toServerAction} from '../a2ui/surface-stream.js';
 import {ThermidorA2UIStream} from '../a2ui/surfaces.js';
-import {DispatchProgressProvider, useTrackedDispatch} from '../a2ui/pending-dispatch.js';
+import {SessionRequestProvider} from '../a2ui/session-request.js';
 import {LandingPage} from './LandingPage/LandingPage.js';
 import {ConversationPage} from './ConversationPage/index.js';
 import {startFollowUp, type FollowUp} from './ConversationPage/turn-segments.js';
@@ -43,9 +43,6 @@ export function AppShell() {
   );
   const stream = useMemo(() => buildSurfaceStream(turns), [turns]);
 
-  // The renderer's onAction bridge drops the handler's promise, so dispatches are tracked here.
-  const tracked = useTrackedDispatch(session.actions);
-
   const latestRef = useRef({turns, stream, isStreaming});
   latestRef.current = {turns, stream, isStreaming};
 
@@ -67,7 +64,7 @@ export function AppShell() {
         typeof userAction?.name !== 'string' ||
         !FOLLOW_UP_ACTIONS.has(userAction.name)
       ) {
-        return tracked.onAction(serverMessage);
+        return session.dispatchAction(serverMessage);
       }
 
       const text = userAction.context?.['text'];
@@ -81,12 +78,12 @@ export function AppShell() {
       );
       setPendingTurnId(turn.id);
       try {
-        await tracked.onAction(serverMessage);
+        await session.dispatchAction(serverMessage);
       } finally {
         setPendingTurnId(null);
       }
     },
-    [tracked]
+    [session]
   );
 
   const handleSubmit = useCallback(
@@ -98,7 +95,7 @@ export function AppShell() {
   );
 
   return (
-    <DispatchProgressProvider value={tracked.progress}>
+    <SessionRequestProvider value={session}>
       <A2UIProvider catalog={catalog} onAction={handleAction}>
         <ThermidorA2UIStream loadingSurfaces={stream.loadingSurfaces} messages={stream.messages}>
           <div className="view-shell">
@@ -119,6 +116,6 @@ export function AppShell() {
           </div>
         </ThermidorA2UIStream>
       </A2UIProvider>
-    </DispatchProgressProvider>
+    </SessionRequestProvider>
   );
 }

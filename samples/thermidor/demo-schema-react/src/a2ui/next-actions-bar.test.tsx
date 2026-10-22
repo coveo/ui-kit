@@ -5,17 +5,12 @@ import {mountSurface} from './mount-surface.harness.js';
 
 afterEach(cleanup);
 
-function mountControl<TProps extends object>(
-  component: string,
-  state: TProps,
-  dispatchGate?: () => Promise<void> | void
-) {
+function mountControl<TProps extends object>(component: string, state: TProps) {
   return mountSurface({
     component: {
       component,
       ...Object.fromEntries(Object.keys(state).map((key) => [key, {path: `/state/root/${key}`}])),
     },
-    dispatchGate,
     dataModel: (Object.keys(state) as Array<keyof TProps>).map((key) => ({
       path: `/state/root/${String(key)}`,
       value: state[key],
@@ -23,38 +18,37 @@ function mountControl<TProps extends object>(
   });
 }
 
-function heldOpen() {
-  let answer!: () => void;
-  const pending = new Promise<void>((resolve) => (answer = resolve));
-  return {gate: () => pending, answer: () => answer()};
-}
-
 describe('NextActionsBar', () => {
   const state: NextActionsBarProps = {
     suggestedActions: [
       {text: 'Show me wetsuits', type: 'search'},
       {text: 'Compare these', type: 'followup'},
+      {text: 'Saved search', type: 'searchOption', optionId: 'opt-1'},
     ],
   };
 
-  it('marks itself busy while its own selection is outstanding', async () => {
-    const held = heldOpen();
-    mountControl('NextActionsBar', state, held.gate);
+  it('dispatches selectAction for a follow-up or a search suggestion', async () => {
+    const {lastAction} = mountControl('NextActionsBar', state);
 
-    await waitFor(() => expect(screen.getByText('Show me wetsuits')).toBeDefined());
-    const chip = screen.getByText('Show me wetsuits').closest('button')!;
-    expect(chip.hasAttribute('disabled')).toBe(false);
-
-    fireEvent.click(chip);
+    await waitFor(() => expect(screen.getByText('Compare these')).toBeDefined());
+    fireEvent.click(screen.getByText('Compare these'));
 
     await waitFor(() =>
-      expect(screen.getByText('Show me wetsuits').closest('button')!.hasAttribute('disabled')).toBe(
-        true
-      )
+      expect(lastAction()).toMatchObject({
+        name: 'selectAction',
+        context: {text: 'Compare these', type: 'followup'},
+      })
     );
-    expect(screen.getByText('Compare these').closest('button')!.hasAttribute('disabled')).toBe(
-      true
+  });
+
+  it('dispatches selectSearchOption for a saved search option', async () => {
+    const {lastAction} = mountControl('NextActionsBar', state);
+
+    await waitFor(() => expect(screen.getByText('Saved search')).toBeDefined());
+    fireEvent.click(screen.getByText('Saved search'));
+
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({name: 'selectSearchOption', context: {optionId: 'opt-1'}})
     );
-    held.answer();
   });
 });
