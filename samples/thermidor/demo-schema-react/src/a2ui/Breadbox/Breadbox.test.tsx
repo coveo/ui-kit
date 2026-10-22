@@ -174,7 +174,23 @@ describe('Breadbox', () => {
 describe('Breadbox focus', () => {
   const PENDING = () => new Promise<void>(() => {});
 
-  function mountWithResults(facets: BreadboxFacet[]) {
+  /** Holds the removal in flight until `answer`: the surface stays locked meanwhile. */
+  function answerable() {
+    let answer: () => void = () => undefined;
+    return {
+      gate: () =>
+        new Promise<void>((resolve) => {
+          answer = resolve;
+        }),
+      answer: () =>
+        act(async () => {
+          answer();
+          await Promise.resolve();
+        }),
+    };
+  }
+
+  function mountWithResults(facets: BreadboxFacet[], dispatchGate: () => Promise<void>) {
     return mountSurface({
       component: {component: 'LayoutStack', direction: 'column', children: ['breadbox', 'list']},
       children: [
@@ -196,7 +212,7 @@ describe('Breadbox focus', () => {
           ],
         },
       ],
-      dispatchGate: PENDING,
+      dispatchGate,
     });
   }
 
@@ -207,35 +223,73 @@ describe('Breadbox focus', () => {
     fireEvent.click(button);
   }
 
-  it('moves focus to the next value when a focused value is removed', async () => {
-    mountBreadbox([BRAND, PRICE], PENDING);
+  it('moves focus to the next value once the removal is answered', async () => {
+    const request = answerable();
+    const {pushDataModel} = mountBreadbox([BRAND, PRICE], request.gate);
 
     await clickWithFocus(/Brand: Billabong/);
+    expect(document.activeElement).not.toBe(removeButton(/Brand: Aqua Marina/));
+    pushDataModel([
+      {path: '/state/root/facets', value: [{...BRAND, values: [BRAND.values[1]]}, PRICE]},
+    ]);
+    await request.answer();
+
     await waitFor(() => expect(document.activeElement).toBe(removeButton(/Brand: Aqua Marina/)));
   });
 
+  it('leaves the focus where the shopper moved it while the removal was answered', async () => {
+    const request = answerable();
+    const {pushDataModel} = mountBreadbox([BRAND, PRICE], request.gate);
+    const elsewhere = document.createElement('a');
+    elsewhere.href = '#elsewhere';
+    document.body.append(elsewhere);
+
+    await clickWithFocus(/Brand: Billabong/);
+    elsewhere.focus();
+    pushDataModel([
+      {path: '/state/root/facets', value: [{...BRAND, values: [BRAND.values[1]]}, PRICE]},
+    ]);
+    await request.answer();
+
+    await waitFor(() => expect(removeButton(/Brand: Aqua Marina/)).toBeDefined());
+    expect(document.activeElement).toBe(elsewhere);
+    elsewhere.remove();
+  });
+
   it('moves focus to the clear-all button when the last value is removed', async () => {
-    mountBreadbox([BRAND, PRICE], PENDING);
+    const request = answerable();
+    const {pushDataModel} = mountBreadbox([BRAND, PRICE], request.gate);
 
     await clickWithFocus(/Price: /);
+    pushDataModel([{path: '/state/root/facets', value: [BRAND]}]);
+    await request.answer();
+
     await waitFor(() =>
       expect(document.activeElement).toBe(screen.getByRole('button', {name: 'Clear all filters'}))
     );
   });
 
   it('moves focus to the results when the breadbox empties', async () => {
-    mountWithResults([PRICE]);
+    const request = answerable();
+    const {pushDataModel} = mountWithResults([PRICE], request.gate);
 
     await clickWithFocus(/Price: /);
+    pushDataModel([{path: '/state/breadbox/facets', value: []}]);
+    await request.answer();
+
     await waitFor(() =>
       expect(document.activeElement).toBe(screen.getByRole('list', {name: 'Product list'}))
     );
   });
 
   it('moves focus to the results when everything is cleared', async () => {
-    mountWithResults([BRAND, PRICE]);
+    const request = answerable();
+    const {pushDataModel} = mountWithResults([BRAND, PRICE], request.gate);
 
     await clickWithFocus(/Clear all filters/);
+    pushDataModel([{path: '/state/breadbox/facets', value: []}]);
+    await request.answer();
+
     await waitFor(() =>
       expect(document.activeElement).toBe(screen.getByRole('list', {name: 'Product list'}))
     );

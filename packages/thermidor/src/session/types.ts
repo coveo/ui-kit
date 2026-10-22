@@ -144,6 +144,32 @@ export interface TurnAgent {
 }
 
 /**
+ * A request the session is sending: a prompt that streams a turn, or a component action whose
+ * response streams into the active turn (a follow-up included).
+ */
+export type SessionRequest = PromptRequest | ActionRequest;
+
+/** A prompt the session is sending, streaming into a new turn or a retried one. */
+export interface PromptRequest {
+  kind: 'prompt';
+  /** The turn the prompt streams into. */
+  turnId: string;
+}
+
+/** A component action the session is sending. */
+export interface ActionRequest {
+  kind: 'action';
+  /** The action name declared by the dispatching component's contract. */
+  name: string;
+  /** The A2-UI surface the action originated on. */
+  surfaceId: string;
+  /** The id of the node that dispatched the action. */
+  sourceComponentId: string;
+  /** The turn the action's response streams into. */
+  turnId: string;
+}
+
+/**
  * The input paired with a turn's streamed response.
  *
  * A dispatched-action turn that carries no prompt omits `prompt`.

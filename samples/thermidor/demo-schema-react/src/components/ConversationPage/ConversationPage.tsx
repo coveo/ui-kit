@@ -9,6 +9,8 @@ import styles from './ConversationPage.module.css';
 interface ConversationPageProps {
   onSubmit: (prompt: string) => void;
   isStreaming: boolean;
+  /** The prompt waits while a request that locks the surface is in flight. */
+  promptDisabled?: boolean;
   turns: Turn[];
   /** The render surface ids each turn draws, keyed by turn id. */
   surfacesByTurn: ReadonlyMap<string, readonly string[]>;
@@ -25,6 +27,7 @@ interface ConversationPageProps {
 export function ConversationPage({
   onSubmit,
   isStreaming,
+  promptDisabled = isStreaming,
   turns,
   surfacesByTurn,
   followUps,
@@ -57,7 +60,7 @@ export function ConversationPage({
       <div className={styles.promptBar}>
         <PromptInput
           onSubmit={onSubmit}
-          disabled={isStreaming}
+          disabled={promptDisabled}
           clearOnSubmit
           placeholder="Search or ask anything..."
         />

@@ -335,7 +335,7 @@ describe('Session.dispatchAction', () => {
   });
 
   describe('concurrent dispatches are serialized', () => {
-    it('sends the second action only after the first action stream has completed', async () => {
+    it('withholds a second action dispatched while the first one streams', async () => {
       const session = await sessionWithPaginationSurface();
 
       // Held open so the second dispatch is issued while the first is in flight.
@@ -355,8 +355,6 @@ describe('Session.dispatchAction', () => {
           }),
         },
       }));
-      queueActionAck();
-
       const first = session.dispatchAction(paginationMessage('selectPage', {page: 1}));
       const second = session.dispatchAction(paginationMessage('selectPage', {page: 2}));
 
@@ -367,11 +365,7 @@ describe('Session.dispatchAction', () => {
       releaseFirstStream?.();
       await Promise.all([first, second]);
 
-      expect(callMock).toHaveBeenCalledTimes(2);
-      const pages = callMock.mock.calls.map(
-        (call) => (call[0] as {action: {context: {page: number}}}).action.context.page
-      );
-      expect(pages).toEqual([1, 2]);
+      expect(callMock).toHaveBeenCalledTimes(1);
     });
   });
 });

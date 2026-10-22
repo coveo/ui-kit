@@ -33,18 +33,19 @@ await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me r
 
 `createSession(config)` returns a `Session` exposing exactly:
 
-| Member                    | Purpose                                                                                                                        |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `contract`                | The injected contract this session validates against and creates surface instances from (readonly).                            |
-| `turns`                   | Readonly observable list of `Turn`s folded from the stream (empty initially).                                                  |
-| `instantiateSurface`      | Creates an instance of a surface template. See [Surface templates and lookups](#surface-templates-and-lookups).                |
-| `actionError`             | Why the last component action was dropped after repeated concurrency conflicts, or `undefined`. See below.                     |
-| `actions`                 | The action queue: `issue`, `withholdQueued`, `subscribe`, `getSnapshot`. See [The action queue](#the-action-queue).            |
-| `subscribe(listener)`     | Registers a listener called once per change to the turn list, `actionError` or an instance's messages; returns an unsubscribe. |
-| `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's `onAction`.        |
-| `cancel()`                | Stops the active stream: a prompt's turn keeps its partial response and is marked `error`; an action settles `'cancelled'`.    |
-| `retry(turnId)`           | Re-submits an errored turn's input.                                                                                            |
-| `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                                                                |
+| Member                    | Purpose                                                                                                                                   |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `contract`                | The injected contract this session validates against and creates surface instances from (readonly).                                       |
+| `turns`                   | Readonly observable list of `Turn`s folded from the stream (empty initially).                                                             |
+| `actionError`             | Why the last component action was dropped after repeated concurrency conflicts, or `undefined`. See below.                                |
+| `request`                 | The request being sent, or `undefined` when idle. See [One request at a time](#one-request-at-a-time).                                    |
+| `instantiateSurface`      | Creates an instance of a surface template. See [Surface templates and lookups](#surface-templates-and-lookups).                           |
+| `subscribe(listener)`     | Registers a listener called once per change to the turn list, `actionError`, `request` or an instance's messages; returns an unsubscribe. |
+| `sendAndWait(send)`       | Calls `send`, which dispatches through the renderer, and resolves once the session has answered it, whatever the outcome.                 |
+| `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's `onAction`.                   |
+| `cancel()`                | Stops the active stream.                                                                                                                  |
+| `retry(turnId)`           | Re-submits an errored turn's input.                                                                                                       |
+| `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                                                                           |
 
 The concrete `contract` type pinned at the `createSession` call site threads unbroken through `Session`, so component types, action names, and payloads stay fully typed at the call site (no `string`, no `never`, no `unknown`).
 
@@ -60,7 +61,7 @@ A prompt typed outside A2-UI composition, such as in the integrator's search box
 session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me running shoes'}});
 ```
 
-It opens a new streaming turn, records the prompt as the turn's `input.prompt`, and POSTs it to the converse endpoint. It needs no rendered component or active turn, so it also opens the first turn of a session. Sent while a stream is in flight, it cancels that stream first (see [The action queue](#the-action-queue)), and `retry(turnId)` re-drives a turn it opened.
+It opens a new streaming turn, records the prompt as the turn's `input.prompt`, and POSTs it to the converse endpoint. It needs no rendered component or active turn, so it also opens the first turn of a session. Sent while another request is in flight, it waits for it (see [One request at a time](#one-request-at-a-time)), and `retry(turnId)` re-drives a turn it opened.
 
 ### Component actions
 
@@ -88,22 +89,39 @@ searchBox.dispose();
 - **Surface ids.** An instance's surface id starts with the contract's `surfaceInstanceIdPrefix`, `template:`, and a surface the producer creates never does, so the two never collide in a renderer. Without a `surfaceId`, the session mints one that no live instance holds, such as `template:search-box-1`. A server-rendered surface needs an id that is the same on server and client: prefix one derived from React's `useId`, such as `` `template:${useId()}` ``. A template the contract doesn't declare, an id without the prefix, or an id a live instance holds, throws.
 - **Catalog.** An instance's `createSurface` names its template's own `catalogId`: register a catalog under that id, with the template's components, in the renderer that draws it.
 - **Messages.** `messages` is append-only, in the same v0.9 shape as `a2uiMessages`: the instance's creation, then each lookup result, validated against its template's `componentContracts`. Feed each message to the renderer once: replaying them recreates the surface.
-- **Lookups.** An instance's actions go through `dispatchAction`, and must be ones the contract marks as lookups; any other is dropped with a dev-only warning. Their payloads are validated against the template's `componentContracts`. A lookup needs no turn and is sent at once, beside any prompt or action, with the session token when there is one and the template name. A newer lookup from the same surface, component and action aborts the previous one, so instances never abort each other's lookups. A lookup's result applies only to its own live instance; it never opens a turn or a session, and its failure fails nothing.
+- **Lookups.** An instance's actions go through `dispatchAction`, and must be ones the contract marks as lookups; any other is dropped with a dev-only warning. Their payloads are validated against the template's `componentContracts`. A lookup needs no turn and is exempt from [one request at a time](#one-request-at-a-time): it is sent at once, even while a request is in flight, with the session token when there is one and the template name. It is never withheld, never withholds another dispatch, and never sets `session.request`, so `sendAndWait` does not wait for it. Its `dispatchAction` promise resolves once its run ends: answered, failed, superseded, or aborted when its instance is disposed of. A newer lookup from the same surface, component and action aborts the previous one, so instances never abort each other's lookups. A lookup's result applies only to its own live instance; it never opens a turn or a session, and its failure fails nothing.
 - **Disposing** of an instance aborts its lookups and drops their late results. Instances are not serialized: a restored session's application creates them again.
 
-### The action queue
+### One request at a time
 
-Thermidor sends one component action at a time per session; later ones wait their turn in order, so integrators never queue anything themselves.
+Thermidor sends one request at a time per session, prompts and component actions alike. A dispatch made while a request is in flight is withheld: nothing is sent, and its promise resolves at once with a dev-only warning. Each `dispatchAction` promise resolves once its own request ends. Lookups from surface instances are exempt: see [Surface templates and lookups](#surface-templates-and-lookups).
 
-- `actions.getSnapshot().inFlight` is the action being processed, and `actions.subscribe` notifies when it changes, for loading indicators.
-- A `submitPrompt` drops queued actions and cancels the one in flight. While a prompt turn is streaming, new actions are dropped.
-- The queue is in memory only: reloading the page drops queued actions.
+- `session.request` is the request being sent (`{kind: 'prompt', turnId}` or `{kind: 'action', name, surfaceId, sourceComponentId, turnId}`), or `undefined` when idle. An action's run counts, a follow-up included. Read it synchronously, or through `subscribe`, to lock or dim the interface, and to hold back a dispatch until the session is free.
+- `session.sendAndWait(send)` calls `send`, which dispatches through the renderer, and resolves once the session has answered that dispatch, whatever its outcome, a withheld one included. A renderer's own dispatch promise may resolve as soon as it has emitted the action; when the `dispatchAction` promise is at hand, await it instead.
+- `cancel()` stops the request in flight, but `session.request` stays set until it has unwound, a few microtasks later, so a dispatch made right after `cancel()` is withheld. Wait for `request` to become `undefined`, through `subscribe`, before sending the next one.
+
+### Optimistic values
+
+To show a gesture's expected value until the session has answered it, show that value from the moment the gesture is sent until `sendAndWait()` resolves, then give way to the producer's value. Thermidor doesn't depend on a UI framework, so any state mechanism works. With React's `useOptimistic`, for example, a transition that awaits `sendAndWait()` lasts exactly that long:
+
+```tsx
+const [values, addOptimisticValues] = useOptimistic(producerValues);
+
+startTransition(async () => {
+  addOptimisticValues(values.map((v) => (v.value === 'Nike' ? {...v, state: 'selected'} : v)));
+  await session.sendAndWait(() =>
+    renderer.dispatchAction({event: {name: 'toggleSelect', context: {value: 'Nike'}}})
+  );
+});
+```
+
+The optimistic value gives way to the producer's once the gesture is over, whatever the outcome, so a failed or withheld gesture needs no rollback. Thermidor never computes the expected value: the integrator does.
 
 ### Concurrency conflicts
 
 When the Gateway is still busy with another request for the session, it rejects the new one (`409`, `AGENT:ACTION_IN_FLIGHT`). Thermidor retries automatically for up to 30 seconds, and a conflict that recovers shows nothing. If it gives up:
 
-- an **action**'s dispatch settles `'failed'`, which rolls its optimistic state back, and `session.actionError` is set until the next action or prompt is sent;
+- an **action**'s dispatch ends without changing the turn, which releases its optimistic hold, and `session.actionError` is set until the next action or prompt is sent;
 - a **prompt**'s turn becomes `error`, retryable with `retry(turnId)`.
 
 ## The Turn / TurnResponse model
@@ -155,7 +173,6 @@ The following are intentionally **not yet implemented** and are recorded as debt
 
 - **Interim `response.surfaces` derivation** — `surfaces` is a typed projection derived from `activities` in the fold, annotated as interim per [ADR-015](./docs/internal/adr/ADR-015-surface-and-route-derivation.md); the core interprets no `rootComponentType`; consumers read it. It is retired by a future server-surfaced typed-routing ADR (ADR-015 Option C).
 - **The A2-UI v0.9 renderer projection** — `response.a2uiMessages` downgrades Agent Gateway's v1.0 stream for today's v0.9 renderers, per the [ADR-015](./docs/internal/adr/ADR-015-surface-and-route-derivation.md) addendum. Removed in a breaking change once a v1.0-capable renderer exists.
-- **The client-side action queue** — `session.actions` and the dispatch coordinator are removed once the producer owns the queue.
 - **Renderer stream bypasses validation** — inbound ops that in-transit validation drops from `response.state` still reach the renderer through `response.a2uiMessages`, and so does the component state seeded by `createSurface.dataModel`, which is never validated. A fix must cover both paths.
 - **Enforced action-payload typing at the renderer boundary** — the renderer hands `dispatchAction` a loosely typed action message, so per-component action typing is applied by convention (the consumer opts into the generated `XxxAction` types) rather than enforced at the boundary, per [ADR-016](./docs/internal/adr/ADR-016-inline-state-consumption-remove-remote-controller.md). Recoverable later if the package owns binding resolution.
 - **Package rename** — deferred as low-stakes; the package remains `@coveo/thermidor`.
