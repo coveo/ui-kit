@@ -109,8 +109,8 @@ A placeholder the agent abandons is deleted the same way. The mock templates emi
 
 A catalog component sends an action with the renderer's `context.dispatchAction(action)`. The renderer surfaces it as an A2-UI client-to-server message through the `onAction` handler of `A2UIProvider`, which `AppShell` wires to its own `handleAction`:
 
-- While an exchange streams (a prompt or a follow-up in flight), the action is dropped. An action's response streams into the turn already shown, and the session does not count that run as streaming: a second action's response would land in the same turn and be attributed to the follow-up exchange in progress, which breaks how `splitTurn` divides the turn.
-- The session sends one request at a time and withholds a dispatch made while another request is in flight; `session.request` is the request being sent. `useGesture` drops a gesture while a request is in flight, and a facet search that fires then waits until the session is free, sending the latest query.
+- The session sends one request at a time, withholds a dispatch made while another request is in flight, and exposes the one in flight (`session.request`). `src/a2ui/session-request.tsx` turns it into the sample's lock rule: every request locks the active surface except a facet search (`search`, `clearSearch`, `showMoreSearchResults`), so typing in a facet search keeps the surface usable. `useGesture` drops a gesture while any request is in flight, a facet search included, and reads `session.request` synchronously, so a double click never sends twice, even before the lock renders. A facet search that fires during a request waits until the session is free, sending the latest query.
+- While the surface is locked, `TurnSurfaces` disables the active turn's `fieldset` and sets `aria-busy`. The whole surface dims and ignores the pointer, only after 150 ms so a fast reply never flashes it; the exchange that streams is disabled without dimming, so its content arrives at full strength. Focus returns to the control the shopper used once the surface unlocks, without scrolling. The prompt input is disabled by the same rule.
 - The message is re-addressed to its server surface id (`toServerAction`).
 - `NextActionsBar` actions (`selectAction`, `selectSearchOption`) start a [follow-up exchange](#rendering-every-turn-on-one-page) before they are sent.
 
@@ -130,8 +130,10 @@ The producer replies by writing updated component state inline through the A2-UI
 
 Search controls show the shopper's choice right away instead of waiting for the producer's reply:
 
-- Each control shows the value its gesture expects with React's `useOptimistic`. `useGesture` (`src/a2ui/session-request.tsx`) runs the gesture in a transition that applies the optimistic value, and sends the action through `session.sendAndWait()`, so the optimistic value shows until the session has answered the gesture, whatever the outcome, then gives way to the producer's. Sort, pagination and page size do it in their component; the facets and the breadbox go through a `use-optimistic-*.ts` hook next to their component, which computes the expected value.
+- Each control shows the value its gesture expects with React's `useOptimistic`. `useGesture` (`src/a2ui/session-request.tsx`) runs the gesture in a transition that applies the optimistic value, and sends the action through `session.sendAndWait()`, so the optimistic value shows until the session has answered the gesture, whatever the outcome, then gives way to the producer's. Sort, pagination and page size do it in their component; the facets and the breadbox go through a `use-optimistic-*.ts` hook next to their component, which computes the expected value. A gesture sent while the surface is locked is dropped before it changes anything.
+- The surface lock dims the results while a gesture is in flight, so the product list and the query summary never read as current while a control already shows the new choice.
 - Facet search keeps the typed text in local state (`use-optimistic-facet-search.ts`) rather than as an optimistic hold, and sends one search once typing pauses (200 ms). A keystroke that never reaches the producer leaves the field untouched, and the field is never written to the shared data model.
+- The Breadbox moves focus after a removal once the surface unlocks: a locked surface's buttons are disabled and can't take focus.
 
 ## Related decisions
 

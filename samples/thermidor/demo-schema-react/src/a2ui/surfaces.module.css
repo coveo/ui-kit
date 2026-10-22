@@ -27,3 +27,18 @@
 .readOnly label:has(:disabled) {
   pointer-events: none;
 }
+
+/* The whole surface dims, only after a short delay so a fast response never flashes it. */
+.surfaces > * {
+  transition: opacity 0s;
+}
+
+.locked {
+  cursor: progress;
+}
+
+.locked > * {
+  opacity: 0.55;
+  pointer-events: none;
+  transition: opacity 120ms ease-in 150ms;
+}

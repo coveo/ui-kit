@@ -4,7 +4,7 @@ import {useSession} from '../context/session.js';
 import {createThermidorCatalog} from '../a2ui/components.js';
 import {buildSurfaceStream, toServerAction} from '../a2ui/surface-stream.js';
 import {ThermidorA2UIStream} from '../a2ui/surfaces.js';
-import {SessionRequestProvider} from '../a2ui/session-request.js';
+import {isBlocking, SessionRequestProvider, useSessionRequest} from '../a2ui/session-request.js';
 import {LandingPage} from './LandingPage/LandingPage.js';
 import {ConversationPage} from './ConversationPage/index.js';
 import {startFollowUp, type FollowUp} from './ConversationPage/turn-segments.js';
@@ -42,32 +42,29 @@ export function AppShell() {
     [turns, pendingTurnId]
   );
   const stream = useMemo(() => buildSurfaceStream(turns), [turns]);
+  const locked = isBlocking(useSessionRequest(session));
 
-  const latestRef = useRef({turns, stream, isStreaming});
-  latestRef.current = {turns, stream, isStreaming};
+  const latestRef = useRef({turns, stream});
+  latestRef.current = {turns, stream};
 
   const handleAction = useCallback(
     async (message: A2UIClientEventMessage) => {
-      const {turns, stream, isStreaming} = latestRef.current;
-      // The session does not count an action's run as streaming, so an action sent while a
-      // follow-up is in flight would race it into the same turn.
-      if (isStreaming) {
-        return;
-      }
-      const serverMessage = toServerAction(message, stream.serverSurfaceIds);
       const userAction = (
         message as {userAction?: {name?: unknown; context?: Record<string, unknown>}}
       ).userAction;
+      const name = typeof userAction?.name === 'string' ? userAction.name : undefined;
+      // A follow-up marks where its answer starts in the turn, so nothing may stream in before it.
+      if (name !== undefined && FOLLOW_UP_ACTIONS.has(name) && session.request !== undefined) {
+        return;
+      }
+      const {turns, stream} = latestRef.current;
+      const serverMessage = toServerAction(message, stream.serverSurfaceIds);
       const turn = turns.at(-1);
-      if (
-        !turn ||
-        typeof userAction?.name !== 'string' ||
-        !FOLLOW_UP_ACTIONS.has(userAction.name)
-      ) {
+      if (!turn || name === undefined || !FOLLOW_UP_ACTIONS.has(name)) {
         return session.dispatchAction(serverMessage);
       }
 
-      const text = userAction.context?.['text'];
+      const text = userAction?.context?.['text'];
       const followUp = startFollowUp(
         turn,
         stream.surfacesByTurn.get(turn.id) ?? NO_SURFACES,
@@ -88,10 +85,10 @@ export function AppShell() {
 
   const handleSubmit = useCallback(
     (prompt: string) => {
-      if (!prompt.trim() || isStreaming) return;
+      if (!prompt.trim() || session.request !== undefined) return;
       void session.dispatchAction({name: 'submitPrompt', payload: {prompt}});
     },
-    [session, isStreaming]
+    [session]
   );
 
   return (
@@ -101,11 +98,12 @@ export function AppShell() {
           <div className="view-shell">
             <div className="view-panel view-panel--active">
               {turns.length === 0 ? (
-                <LandingPage onSubmit={handleSubmit} isStreaming={isStreaming} />
+                <LandingPage onSubmit={handleSubmit} isStreaming={locked} />
               ) : (
                 <ConversationPage
                   onSubmit={handleSubmit}
                   isStreaming={isStreaming}
+                  promptDisabled={locked}
                   turns={[...turns]}
                   surfacesByTurn={stream.surfacesByTurn}
                   followUps={followUps}
