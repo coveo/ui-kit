@@ -49,6 +49,17 @@
         "!./src/**/e2e/**"
       ]
     },
+    "build:agent-kit": {
+      "dependsOn": ["build:cem"],
+      "outputs": ["dist/skills/**"],
+      "inputs": [
+        "./custom-elements.json",
+        "./src/**/*.usage.mdx",
+        "./storybook-utils/documentation/*.mdx",
+        "./scripts/agent-kit/**",
+        "!./scripts/agent-kit/**/*.spec.mjs"
+      ]
+    },
     "build:indexes": {
       "outputs": ["src/components/*/index.ts", "src/components/*/lazy-index.ts"],
       "inputs": [

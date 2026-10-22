@@ -171,6 +171,16 @@ const storybookPure = defineConfig({
   },
 });
 
+// Node specs of the agent kit generator and the usage-snippet lint (scripts/agent-kit)
+const agentKit = defineConfig({
+  name: 'agent-kit',
+  test: {
+    name: 'agent-kit',
+    include: ['scripts/agent-kit/*.spec.mjs'],
+    environment: 'node',
+  },
+});
+
 export default mergeConfig(atomicDefault, {
   test: {
     reporters: [
@@ -180,6 +190,6 @@ export default mergeConfig(atomicDefault, {
         packageJsonPath: path.resolve(import.meta.dirname, 'package.json'),
       }),
     ],
-    projects: [atomicDefault, storybookPure, ...(!isVitestVscodeExt ? [storybook] : [])],
+    projects: [atomicDefault, storybookPure, agentKit, ...(!isVitestVscodeExt ? [storybook] : [])],
   },
 });
