@@ -15,6 +15,7 @@ import {
   validateInboundOp,
   type NodeIdentityRegistry,
 } from './in-transit-validation.js';
+import {statePath} from './state-path.js';
 import type {A2uiV09Message} from './types.js';
 
 /**
@@ -81,8 +82,17 @@ export interface SurfaceInstances {
   resolve(surfaceId: string, nodeId: string): string | undefined;
   /** The component union of a live instance's template catalog, or `undefined`. */
   componentContractsOf(surfaceId: string): ContractsSchema | undefined;
-  /** Appends the valid `updateDataModel` ops of A2-UI messages to the live instances they target. */
-  apply(rawMessages: readonly unknown[]): void;
+  /**
+   * Appends to a live instance the valid `updateDataModel` ops of a lookup's A2-UI messages that
+   * write its source component's state. Ops for any other surface or component are dropped.
+   */
+  apply(rawMessages: readonly unknown[], source: LookupSource): void;
+}
+
+/** The node a lookup was dispatched from: the only state its run may write. */
+export interface LookupSource {
+  readonly surfaceId: string;
+  readonly sourceComponentId: string;
 }
 
 interface Instance {
@@ -159,26 +169,33 @@ export function createSurfaceInstances(
     };
   }
 
-  function apply(rawMessages: readonly unknown[]): void {
-    const updates = new Map<Instance, A2uiV09Message[]>();
+  function apply(
+    rawMessages: readonly unknown[],
+    {surfaceId, sourceComponentId}: LookupSource
+  ): void {
+    const instance = instances.get(surfaceId);
+    if (!instance) {
+      return;
+    }
+    const sourceStatePath = statePath(sourceComponentId);
+    const messages: A2uiV09Message[] = [];
     for (const op of readUpdateDataModelOps(rawMessages)) {
-      const instance = instances.get(op.surfaceId);
-      if (!instance) {
+      if (
+        op.surfaceId !== surfaceId ||
+        (op.path !== sourceStatePath && !op.path.startsWith(`${sourceStatePath}/`))
+      ) {
         continue;
       }
       const decision = validateInboundOp(op, registry, instance.componentContracts);
       if (decision.kind === 'forward') {
-        const message: A2uiV09Message = {
+        messages.push({
           version: 'v0.9',
-          updateDataModel: {surfaceId: op.surfaceId, path: decision.path, value: decision.value},
-        };
-        updates.set(instance, [...(updates.get(instance) ?? []), message]);
+          updateDataModel: {surfaceId, path: decision.path, value: decision.value},
+        });
       }
     }
-    for (const [instance, messages] of updates) {
+    if (messages.length > 0) {
       instance.messages = [...instance.messages, ...messages];
-    }
-    if (updates.size > 0) {
       callbacks.onChange();
     }
   }

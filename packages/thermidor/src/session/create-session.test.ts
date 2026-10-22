@@ -1766,6 +1766,50 @@ describe('createSession lifecycle', () => {
 
         expect(searchBox.messages).toHaveLength(3);
       });
+
+      it("drops an update a lookup's response makes to another live instance", async () => {
+        const session = createSession(baseConfig);
+        const header = session.instantiateSurface('search-box', {surfaceId: 'template:header'});
+        const drawer = session.instantiateSurface('search-box', {surfaceId: 'template:drawer'});
+        const stream = queueStream();
+
+        const lookup = session.dispatchAction(fetchSuggestions('template:header', 'red'));
+        await stream.opened;
+        stream.emit({
+          type: 'ACTIVITY_SNAPSHOT',
+          messageId: 'lookup-suggestions',
+          activityType: 'a2ui-surface',
+          content: {
+            messages: [
+              {
+                version: 'v1.0',
+                updateDataModel: {
+                  surfaceId: 'template:drawer',
+                  path: '/state/root',
+                  value: {query: 'red', completions: [{expression: 'red shoes'}]},
+                },
+              },
+              {
+                version: 'v1.0',
+                updateDataModel: {
+                  surfaceId: 'template:header',
+                  path: '/state/root',
+                  value: {query: 'red', completions: [{expression: 'red shoes'}]},
+                },
+              },
+            ],
+          },
+        });
+        stream.emit({type: 'RUN_FINISHED'});
+        stream.close();
+        await lookup;
+
+        expect(drawer.messages).toHaveLength(3);
+        expect(header.messages).toHaveLength(4);
+        expect(header.messages.at(-1)).toMatchObject({
+          updateDataModel: {surfaceId: 'template:header', value: {query: 'red'}},
+        });
+      });
     });
   });
 });

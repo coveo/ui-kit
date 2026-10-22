@@ -890,7 +890,7 @@ export function createSession<TContract extends SessionContract>(
             content?: {messages?: unknown};
           };
           if (event.type === 'ACTIVITY_SNAPSHOT' && Array.isArray(event.content?.messages)) {
-            surfaceInstances.apply(event.content.messages);
+            surfaceInstances.apply(event.content.messages, action);
           }
         },
       });
