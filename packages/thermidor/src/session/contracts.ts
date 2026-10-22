@@ -95,10 +95,19 @@ export interface ContractsSchema {
  * accepts any contract of this shape, and never imports a schema package.
  */
 export interface SessionContract<TComponents extends ContractsSchema = ContractsSchema> {
-  /** The component union every component state and action payload is validated against. */
+  /**
+   * The conversational component union: the state and action payloads of every component on a
+   * surface the producer creates are validated against it. A surface instance is validated against
+   * its template's own `componentContracts` instead.
+   */
   readonly components: TComponents;
-  /** The surface templates the application can create instances of. */
+  /** The surface templates the application can create instances of, each with its own catalog. */
   readonly surfaceTemplates: readonly SurfaceTemplate[];
   /** The actions each component marks as lookups, keyed by its `component` discriminant. */
   readonly lookupActions: Readonly<Record<string, readonly string[]>>;
+  /**
+   * The prefix every surface instance id starts with, `template:` in `@coveo/thermidor-schema`.
+   * A surface the producer creates never has an id that starts with it.
+   */
+  readonly surfaceInstanceIdPrefix: string;
 }

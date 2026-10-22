@@ -16,4 +16,4 @@ Instantiate surface templates, such as the search box, and send their lookups wi
 
 `session.contracts` is now `session.contract`.
 
-`session.instantiateSurface(template, {surfaceId})` creates an instance of one of the contract's surface templates before any request, and exposes its renderer messages. Its lookup actions go through `dispatchAction`, are sent at once, even before the first prompt or while an answer streams, and apply their results to that instance only.
+`session.instantiateSurface(template, {surfaceId})` creates an instance of one of the contract's surface templates before any request, under the template's own catalog, and exposes its renderer messages. Its surface id starts with the contract's `surfaceInstanceIdPrefix` (`template:`): a minted one is `template:search-box-1`, and a given one without the prefix throws. Its lookup actions go through `dispatchAction`, are sent at once, even before the first prompt or while an answer streams, and apply their results to that instance only. Their payloads and results are validated against the template's `componentContracts`.

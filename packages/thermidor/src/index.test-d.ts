@@ -55,18 +55,27 @@ test('exposes the injected ContractsSchema / ComponentContractSchema seam', () =
 
 // ── POSITIVE: one contract bundle, threaded to the surface instances ─────────
 declare const components: ContractsSchema;
+declare const searchBoxComponents: ContractsSchema;
 const ThermidorContract = {
   components,
   surfaceTemplates: [
-    {template: 'search-box', catalogId: 'catalog', components: [{id: 'root'}], dataModel: {}},
+    {
+      template: 'search-box',
+      catalogId: 'search-box-catalog',
+      components: [{id: 'root'}],
+      dataModel: {},
+      componentContracts: searchBoxComponents,
+    },
   ],
   lookupActions: {QuerySuggestions: ['fetchSuggestions']},
+  surfaceInstanceIdPrefix: 'template:',
 } as const;
 
 test('accepts one contract bundle and threads its type through Session', () => {
   expectTypeOf<SessionContract>().toHaveProperty('components');
   expectTypeOf<SessionContract>().toHaveProperty('surfaceTemplates');
   expectTypeOf<SessionContract>().toHaveProperty('lookupActions');
+  expectTypeOf<SessionContract>().toHaveProperty('surfaceInstanceIdPrefix').toEqualTypeOf<string>();
   expectTypeOf<SessionConfig>().toHaveProperty('contract');
   expectTypeOf<SessionConfig>().not.toHaveProperty('contracts');
   expectTypeOf<Session>().not.toHaveProperty('contracts');
@@ -88,6 +97,10 @@ test('creates instances only of the templates the contract declares', () => {
 
   expectTypeOf<SurfaceInstance['messages']>().toEqualTypeOf<readonly Record<string, unknown>[]>();
   expectTypeOf<SurfaceTemplate>().toHaveProperty('template').toEqualTypeOf<string>();
+  expectTypeOf<SurfaceTemplate>().toHaveProperty('catalogId').toEqualTypeOf<string>();
+  expectTypeOf<SurfaceTemplate>()
+    .toHaveProperty('componentContracts')
+    .toEqualTypeOf<ContractsSchema>();
 });
 
 // ── POSITIVE: `dispatchAction` is the single action-dispatch entry point ─────

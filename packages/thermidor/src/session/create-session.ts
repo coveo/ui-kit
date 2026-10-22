@@ -108,14 +108,17 @@ export interface SessionConfig<TContract extends SessionContract = SessionContra
    * The injected contract, as one value, such as `ThermidorContract` from
    * `@coveo/thermidor-schema`:
    *
-   * - `components`: the component union (a discriminated union on `component`, each member
-   *   carrying that component's `state` and `actions`). It is the SOLE validation source for the
-   *   session: inbound `updateDataModel` ops are validated against the member's `state` (whole) /
-   *   its sub-schema (partial sub-path), and outbound action payloads against the member's
-   *   `actions` for the dispatched action name, before the POST.
+   * - `components`: the conversational component union (a discriminated union on `component`,
+   *   each member carrying that component's `state` and `actions`). It is the SOLE validation
+   *   source for the surfaces the producer creates: inbound `updateDataModel` ops are validated
+   *   against the member's `state` (whole) / its sub-schema (partial sub-path), and outbound
+   *   action payloads against the member's `actions` for the dispatched action name, before the
+   *   POST.
    * - `surfaceTemplates`: the templates {@link Session.instantiateSurface} creates instances
-   *   of.
+   *   of, each with its own `catalogId` and `componentContracts`, the union an instance is
+   *   validated against.
    * - `lookupActions`: the actions of each component that are lookups.
+   * - `surfaceInstanceIdPrefix`: the prefix every instance's surface id starts with.
    *
    * Injecting it here keeps `@coveo/thermidor` decoupled from any concrete contract package, so
    * the runtime works with any A2-UI contract of this shape.
@@ -187,9 +190,10 @@ export interface Session<TContract extends SessionContract = SessionContract> {
    * result is appended to the instance's `messages`.
    *
    * @param template - The name of a template the contract declares.
-   * @param options - The instance's surface id, if the application chooses it.
-   * @throws When the contract declares no such template, or when a live instance already holds
-   *   the surface id.
+   * @param options - The instance's surface id, if the application chooses it. It must start with
+   *   the contract's `surfaceInstanceIdPrefix`; a minted one does, such as `template:search-box-1`.
+   * @throws When the contract declares no such template, when the surface id does not start with
+   *   the contract's `surfaceInstanceIdPrefix`, or when a live instance already holds it.
    */
   instantiateSurface(
     template: TContract['surfaceTemplates'][number]['template'],
@@ -335,15 +339,19 @@ export function createSession<TContract extends SessionContract>(
 
   // Per surface, one in-flight lookup per source component and action; a newer one aborts it.
   const lookupControllers = new Map<string, Map<string, AbortController>>();
-  const surfaceInstances = createSurfaceInstances(config.contract.surfaceTemplates, contracts, {
-    onChange: () => store.setState((current) => ({...current})),
-    onDispose: (surfaceId) => {
-      for (const controller of lookupControllers.get(surfaceId)?.values() ?? []) {
-        controller.abort();
-      }
-      lookupControllers.delete(surfaceId);
-    },
-  });
+  const surfaceInstances = createSurfaceInstances(
+    config.contract.surfaceTemplates,
+    config.contract.surfaceInstanceIdPrefix,
+    {
+      onChange: () => store.setState((current) => ({...current})),
+      onDispose: (surfaceId) => {
+        for (const controller of lookupControllers.get(surfaceId)?.values() ?? []) {
+          controller.abort();
+        }
+        lookupControllers.delete(surfaceId);
+      },
+    }
+  );
 
   // The currently in-flight stream's abort controller, or null when idle. Held
   // per session instance — never module-level — so two sessions never contend.
@@ -753,11 +761,17 @@ export function createSession<TContract extends SessionContract>(
   ): Promise<void> {
     const {name, surfaceId, sourceComponentId, context} = userAction;
     const surfaceTemplate = surfaceInstances.templateOf(surfaceId);
+    const componentContracts = surfaceInstances.componentContractsOf(surfaceId);
     const discriminant =
       sourceComponentId === undefined
         ? undefined
         : surfaceInstances.resolve(surfaceId, sourceComponentId);
-    if (surfaceTemplate === undefined || sourceComponentId === undefined || !discriminant) {
+    if (
+      surfaceTemplate === undefined ||
+      componentContracts === undefined ||
+      sourceComponentId === undefined ||
+      !discriminant
+    ) {
       devWarn(
         `dispatchAction: node "${sourceComponentId}" on surface "${surfaceId}" resolves to no component; nothing sent.`
       );
@@ -769,7 +783,7 @@ export function createSession<TContract extends SessionContract>(
       );
       return;
     }
-    const validation = validateActionPayload(discriminant, name, context, contracts);
+    const validation = validateActionPayload(discriminant, name, context, componentContracts);
     if (!validation.valid) {
       devWarn(
         `dispatchAction: lookup withheld: Invalid payload for action "${name}" on component "${discriminant}": ${validation.reason}`

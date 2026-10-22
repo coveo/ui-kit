@@ -99,20 +99,26 @@ const QuerySuggestionsSchema = z.strictObject({
 const contracts = z.discriminatedUnion('component', [
   PaginationSchema,
   NextActionsBarSchema,
+]) as unknown as ContractsSchema;
+
+/** The search box catalog: exactly the components its template places, none conversational. */
+const searchBoxContracts = z.discriminatedUnion('component', [
   QuerySuggestionsSchema,
 ]) as unknown as ContractsSchema;
 
 const SearchBoxSurfaceTemplate = {
   template: 'search-box',
-  catalogId: 'catalog',
+  catalogId: 'search-box-catalog',
   components: [{id: 'root', component: 'QuerySuggestions'}],
   dataModel: {'/state/root': {query: '', completions: []}},
+  componentContracts: searchBoxContracts,
 } as const;
 
 const contract = {
   components: contracts,
   surfaceTemplates: [SearchBoxSurfaceTemplate],
   lookupActions: {QuerySuggestions: ['fetchSuggestions']},
+  surfaceInstanceIdPrefix: 'template:',
 } as const;
 
 /**
@@ -1306,25 +1312,28 @@ describe('createSession lifecycle', () => {
     });
 
     describe('creating instances', () => {
-      it("holds the instance's creation under the given surface id before any request", () => {
+      it("holds the instance's creation under the given surface id and the template's own catalog before any request", () => {
         const session = createSession(baseConfig);
 
-        const searchBox = session.instantiateSurface('search-box', {surfaceId: 'header'});
+        const searchBox = session.instantiateSurface('search-box', {surfaceId: 'template:header'});
 
-        expect(searchBox).toMatchObject({surfaceId: 'header', template: 'search-box'});
+        expect(searchBox).toMatchObject({surfaceId: 'template:header', template: 'search-box'});
         expect(searchBox.messages).toEqual([
-          {version: 'v0.9', createSurface: {surfaceId: 'header', catalogId: 'catalog'}},
+          {
+            version: 'v0.9',
+            createSurface: {surfaceId: 'template:header', catalogId: 'search-box-catalog'},
+          },
           {
             version: 'v0.9',
             updateComponents: {
-              surfaceId: 'header',
+              surfaceId: 'template:header',
               components: [{id: 'root', component: 'QuerySuggestions'}],
             },
           },
           {
             version: 'v0.9',
             updateDataModel: {
-              surfaceId: 'header',
+              surfaceId: 'template:header',
               path: '/state/root',
               value: {query: '', completions: []},
             },
@@ -1334,14 +1343,25 @@ describe('createSession lifecycle', () => {
         expect(session.turns).toEqual([]);
       });
 
-      it('mints a surface id that no live instance holds', () => {
+      it('mints a prefixed surface id that no live instance holds', () => {
         const session = createSession(baseConfig);
-        session.instantiateSurface('search-box', {surfaceId: 'search-box-1'});
+        session.instantiateSurface('search-box', {surfaceId: 'template:search-box-1'});
 
         const first = session.instantiateSurface('search-box');
         const second = session.instantiateSurface('search-box');
 
-        expect(new Set([first.surfaceId, second.surfaceId, 'search-box-1']).size).toBe(3);
+        expect([first.surfaceId, second.surfaceId]).toEqual([
+          'template:search-box-2',
+          'template:search-box-3',
+        ]);
+      });
+
+      it("refuses a surface id that does not start with the contract's prefix", () => {
+        const session = createSession(baseConfig);
+
+        expect(() => session.instantiateSurface('search-box', {surfaceId: 'header'})).toThrow(
+          /template:/
+        );
       });
 
       it('refuses a template the contract does not declare', () => {
@@ -1352,25 +1372,25 @@ describe('createSession lifecycle', () => {
 
       it('refuses a surface id a live instance holds, and frees it once disposed of', () => {
         const session = createSession(baseConfig);
-        const searchBox = session.instantiateSurface('search-box', {surfaceId: 'header'});
+        const searchBox = session.instantiateSurface('search-box', {surfaceId: 'template:header'});
 
-        expect(() => session.instantiateSurface('search-box', {surfaceId: 'header'})).toThrow(
-          /header/
-        );
+        expect(() =>
+          session.instantiateSurface('search-box', {surfaceId: 'template:header'})
+        ).toThrow(/header/);
 
         searchBox.dispose();
         searchBox.dispose();
 
-        expect(session.instantiateSurface('search-box', {surfaceId: 'header'}).surfaceId).toBe(
-          'header'
-        );
+        expect(
+          session.instantiateSurface('search-box', {surfaceId: 'template:header'}).surfaceId
+        ).toBe('template:header');
       });
 
       it('leaves instances out of the serialized session', () => {
         const session = createSession(baseConfig);
         const serialized = JSON.stringify(session.serialize());
 
-        session.instantiateSurface('search-box', {surfaceId: 'header'});
+        session.instantiateSurface('search-box', {surfaceId: 'template:header'});
 
         expect(JSON.stringify(session.serialize())).toBe(serialized);
       });
@@ -1379,21 +1399,21 @@ describe('createSession lifecycle', () => {
     describe('sending lookups', () => {
       it('sends a lookup before any prompt, without a token, and applies its result without opening a session', async () => {
         const session = createSession(baseConfig);
-        const searchBox = session.instantiateSurface('search-box', {surfaceId: 'header'});
+        const searchBox = session.instantiateSurface('search-box', {surfaceId: 'template:header'});
         const listener = vi.fn();
         session.subscribe(listener);
         const stream = queueStream();
 
-        const lookup = session.dispatchAction(fetchSuggestions('header', 'red'));
+        const lookup = session.dispatchAction(fetchSuggestions('template:header', 'red'));
         await stream.opened;
-        answer(stream, 'header', 'red');
+        answer(stream, 'template:header', 'red');
         await lookup;
 
         expect(requestAt(0)).toMatchObject({
           surfaceTemplate: 'search-box',
           message: null,
           action: {
-            surfaceId: 'header',
+            surfaceId: 'template:header',
             sourceComponentId: 'root',
             name: 'fetchSuggestions',
             context: {query: 'red'},
@@ -1403,7 +1423,7 @@ describe('createSession lifecycle', () => {
         expect(searchBox.messages.at(-1)).toEqual({
           version: 'v0.9',
           updateDataModel: {
-            surfaceId: 'header',
+            surfaceId: 'template:header',
             path: '/state/root',
             value: {query: 'red', completions: [{expression: 'red shoes'}]},
           },
@@ -1423,12 +1443,12 @@ describe('createSession lifecycle', () => {
 
       it("sends the session's token with a lookup once there is one", async () => {
         const session = await seedSession();
-        session.instantiateSurface('search-box', {surfaceId: 'header'});
+        session.instantiateSurface('search-box', {surfaceId: 'template:header'});
         const stream = queueStream();
 
-        const lookup = session.dispatchAction(fetchSuggestions('header', 'red'));
+        const lookup = session.dispatchAction(fetchSuggestions('template:header', 'red'));
         await stream.opened;
-        answer(stream, 'header', 'red');
+        answer(stream, 'template:header', 'red');
         await lookup;
 
         expect(requestAt(1)).toMatchObject({
@@ -1439,17 +1459,17 @@ describe('createSession lifecycle', () => {
 
       it('applies each result only to its own instance, and never lets one instance abort the other', async () => {
         const session = createSession(baseConfig);
-        const header = session.instantiateSurface('search-box', {surfaceId: 'header'});
-        const drawer = session.instantiateSurface('search-box', {surfaceId: 'drawer'});
+        const header = session.instantiateSurface('search-box', {surfaceId: 'template:header'});
+        const drawer = session.instantiateSurface('search-box', {surfaceId: 'template:drawer'});
         const headerStream = queueStream();
         const drawerStream = queueStream();
 
-        const headerLookup = session.dispatchAction(fetchSuggestions('header', 'red'));
+        const headerLookup = session.dispatchAction(fetchSuggestions('template:header', 'red'));
         await headerStream.opened;
-        const drawerLookup = session.dispatchAction(fetchSuggestions('drawer', 'blue'));
+        const drawerLookup = session.dispatchAction(fetchSuggestions('template:drawer', 'blue'));
         await drawerStream.opened;
-        answer(headerStream, 'header', 'red');
-        answer(drawerStream, 'drawer', 'blue');
+        answer(headerStream, 'template:header', 'red');
+        answer(drawerStream, 'template:drawer', 'blue');
         await Promise.all([headerLookup, drawerLookup]);
 
         const lastValue = (messages: readonly Record<string, unknown>[]) =>
@@ -1462,15 +1482,15 @@ describe('createSession lifecycle', () => {
 
       it('aborts the previous lookup of the same component and action, and never applies its response', async () => {
         const session = createSession(baseConfig);
-        const searchBox = session.instantiateSurface('search-box', {surfaceId: 'header'});
+        const searchBox = session.instantiateSurface('search-box', {surfaceId: 'template:header'});
         const stale = queueStream();
         const fresh = queueStream();
 
-        const staleLookup = session.dispatchAction(fetchSuggestions('header', 'r'));
+        const staleLookup = session.dispatchAction(fetchSuggestions('template:header', 'r'));
         await stale.opened;
-        const freshLookup = session.dispatchAction(fetchSuggestions('header', 're'));
+        const freshLookup = session.dispatchAction(fetchSuggestions('template:header', 're'));
         await fresh.opened;
-        answer(fresh, 'header', 're');
+        answer(fresh, 'template:header', 're');
         await Promise.all([staleLookup, freshLookup]);
 
         expect(callMock.mock.calls[0][2]?.signal?.aborted).toBe(true);
@@ -1483,31 +1503,31 @@ describe('createSession lifecycle', () => {
 
       it("aborts a disposed instance's lookup and drops its late response, even under a reused surface id", async () => {
         const session = createSession(baseConfig);
-        const disposed = session.instantiateSurface('search-box', {surfaceId: 'header'});
+        const disposed = session.instantiateSurface('search-box', {surfaceId: 'template:header'});
         const stream = queueStream();
-        const lookup = session.dispatchAction(fetchSuggestions('header', 'red'));
+        const lookup = session.dispatchAction(fetchSuggestions('template:header', 'red'));
         await stream.opened;
 
         disposed.dispose();
         await lookup;
 
         expect(callMock.mock.calls[0][2]?.signal?.aborted).toBe(true);
-        expect(session.instantiateSurface('search-box', {surfaceId: 'header'}).messages).toEqual(
-          disposed.messages
-        );
+        expect(
+          session.instantiateSurface('search-box', {surfaceId: 'template:header'}).messages
+        ).toEqual(disposed.messages);
       });
 
       it('drops the rest of a response already read once its instance is disposed of and created again', async () => {
         const session = createSession(baseConfig);
-        let searchBox = session.instantiateSurface('search-box', {surfaceId: 'header'});
+        let searchBox = session.instantiateSurface('search-box', {surfaceId: 'template:header'});
         const recreateOnFirstResult = session.subscribe(() => {
           recreateOnFirstResult();
           searchBox.dispose();
-          searchBox = session.instantiateSurface('search-box', {surfaceId: 'header'});
+          searchBox = session.instantiateSurface('search-box', {surfaceId: 'template:header'});
         });
         const frames = [
-          suggestionsSnapshot('header', 'r'),
-          suggestionsSnapshot('header', 're'),
+          suggestionsSnapshot('template:header', 'r'),
+          suggestionsSnapshot('template:header', 're'),
           {type: 'RUN_FINISHED'},
         ];
         callMock.mockImplementationOnce(async () => ({
@@ -1526,22 +1546,22 @@ describe('createSession lifecycle', () => {
           },
         }));
 
-        await session.dispatchAction(fetchSuggestions('header', 're'));
+        await session.dispatchAction(fetchSuggestions('template:header', 're'));
 
         expect(searchBox.messages).toHaveLength(3);
       });
 
       it('sends a lookup at once while a prompt streams, and leaves the prompt be', async () => {
         const session = createSession(baseConfig);
-        const searchBox = session.instantiateSurface('search-box', {surfaceId: 'header'});
+        const searchBox = session.instantiateSurface('search-box', {surfaceId: 'template:header'});
         const promptStream = queueStream();
         const prompt = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'shoes'}});
         await promptStream.opened;
         const lookupStream = queueStream();
 
-        const lookup = session.dispatchAction(fetchSuggestions('header', 'red'));
+        const lookup = session.dispatchAction(fetchSuggestions('template:header', 'red'));
         await lookupStream.opened;
-        answer(lookupStream, 'header', 'red');
+        answer(lookupStream, 'template:header', 'red');
         await lookup;
 
         expect(callMock).toHaveBeenCalledTimes(2);
@@ -1559,7 +1579,7 @@ describe('createSession lifecycle', () => {
 
       it('sends a lookup at once while a gesture is in flight, and leaves the gesture be', async () => {
         const session = await seedSession();
-        session.instantiateSurface('search-box', {surfaceId: 'header'});
+        session.instantiateSurface('search-box', {surfaceId: 'template:header'});
         const gestureStream = queueStream();
         const gesture = session.actions.issue({
           userAction: {
@@ -1572,9 +1592,9 @@ describe('createSession lifecycle', () => {
         await gestureStream.opened;
         const lookupStream = queueStream();
 
-        const lookup = session.dispatchAction(fetchSuggestions('header', 'red'));
+        const lookup = session.dispatchAction(fetchSuggestions('template:header', 'red'));
         await lookupStream.opened;
-        answer(lookupStream, 'header', 'red');
+        answer(lookupStream, 'template:header', 'red');
         await lookup;
 
         expect(callMock).toHaveBeenCalledTimes(3);
@@ -1589,10 +1609,10 @@ describe('createSession lifecycle', () => {
 
       it('leaves turns and the action error untouched when a lookup fails', async () => {
         const session = await seedSession();
-        session.instantiateSurface('search-box', {surfaceId: 'header'});
+        session.instantiateSurface('search-box', {surfaceId: 'template:header'});
         callMock.mockImplementationOnce(async () => ({success: false, error: 'HTTP 500'}));
 
-        await session.dispatchAction(fetchSuggestions('header', 'red'));
+        await session.dispatchAction(fetchSuggestions('template:header', 'red'));
 
         expect(session.turns[0]).toMatchObject({status: 'complete'});
         expect(session.turns[0].error).toBeUndefined();
@@ -1602,16 +1622,16 @@ describe('createSession lifecycle', () => {
 
       it('leaves lookups running when the session is cancelled', async () => {
         const session = createSession(baseConfig);
-        const searchBox = session.instantiateSurface('search-box', {surfaceId: 'header'});
+        const searchBox = session.instantiateSurface('search-box', {surfaceId: 'template:header'});
         const promptStream = queueStream();
         void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'shoes'}});
         await promptStream.opened;
         const lookupStream = queueStream();
-        const lookup = session.dispatchAction(fetchSuggestions('header', 'red'));
+        const lookup = session.dispatchAction(fetchSuggestions('template:header', 'red'));
         await lookupStream.opened;
 
         session.cancel();
-        answer(lookupStream, 'header', 'red');
+        answer(lookupStream, 'template:header', 'red');
         await lookup;
 
         expect(callMock.mock.calls[1][2]?.signal?.aborted).toBe(false);
@@ -1622,12 +1642,12 @@ describe('createSession lifecycle', () => {
     describe('refusing actions', () => {
       it('drops an action the contract does not mark as a lookup', async () => {
         const session = createSession(baseConfig);
-        session.instantiateSurface('search-box', {surfaceId: 'header'});
+        session.instantiateSurface('search-box', {surfaceId: 'template:header'});
 
         await session.dispatchAction({
           userAction: {
             name: 'selectSuggestion',
-            surfaceId: 'header',
+            surfaceId: 'template:header',
             sourceComponentId: 'root',
             context: {expression: 'red shoes'},
           },
@@ -1639,12 +1659,12 @@ describe('createSession lifecycle', () => {
 
       it('drops a lookup with an invalid payload', async () => {
         const session = createSession(baseConfig);
-        session.instantiateSurface('search-box', {surfaceId: 'header'});
+        session.instantiateSurface('search-box', {surfaceId: 'template:header'});
 
         await session.dispatchAction({
           userAction: {
             name: 'fetchSuggestions',
-            surfaceId: 'header',
+            surfaceId: 'template:header',
             sourceComponentId: 'root',
             context: {query: 42},
           },
@@ -1656,10 +1676,14 @@ describe('createSession lifecycle', () => {
 
       it('drops an action from a node the instance does not have', async () => {
         const session = createSession(baseConfig);
-        session.instantiateSurface('search-box', {surfaceId: 'header'});
+        session.instantiateSurface('search-box', {surfaceId: 'template:header'});
 
         await session.dispatchAction({
-          userAction: {name: 'fetchSuggestions', surfaceId: 'header', sourceComponentId: 'nope'},
+          userAction: {
+            name: 'fetchSuggestions',
+            surfaceId: 'template:header',
+            sourceComponentId: 'nope',
+          },
         });
 
         expect(callMock).not.toHaveBeenCalled();
@@ -1667,19 +1691,19 @@ describe('createSession lifecycle', () => {
 
       it('sends nothing for an action from a disposed instance', async () => {
         const session = createSession(baseConfig);
-        session.instantiateSurface('search-box', {surfaceId: 'header'}).dispose();
+        session.instantiateSurface('search-box', {surfaceId: 'template:header'}).dispose();
 
-        await session.dispatchAction(fetchSuggestions('header', 'red'));
+        await session.dispatchAction(fetchSuggestions('template:header', 'red'));
 
         expect(callMock).not.toHaveBeenCalled();
       });
 
       it('drops an inbound update that breaks the component contract, or targets another surface', async () => {
         const session = createSession(baseConfig);
-        const searchBox = session.instantiateSurface('search-box', {surfaceId: 'header'});
+        const searchBox = session.instantiateSurface('search-box', {surfaceId: 'template:header'});
         const stream = queueStream();
 
-        const lookup = session.dispatchAction(fetchSuggestions('header', 'red'));
+        const lookup = session.dispatchAction(fetchSuggestions('template:header', 'red'));
         await stream.opened;
         stream.emit({
           type: 'ACTIVITY_SNAPSHOT',
@@ -1689,12 +1713,16 @@ describe('createSession lifecycle', () => {
             messages: [
               {
                 version: 'v1.0',
-                updateDataModel: {surfaceId: 'header', path: '/state/root', value: {query: 1}},
+                updateDataModel: {
+                  surfaceId: 'template:header',
+                  path: '/state/root',
+                  value: {query: 1},
+                },
               },
               {
                 version: 'v1.0',
                 updateDataModel: {
-                  surfaceId: 'drawer',
+                  surfaceId: 'template:drawer',
                   path: '/state/root',
                   value: {query: 'red', completions: []},
                 },

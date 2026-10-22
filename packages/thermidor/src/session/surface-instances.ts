@@ -18,18 +18,27 @@ import {
 import type {A2uiV09Message} from './types.js';
 
 /**
- * A surface template, as the contract declares it: its name, and the A2-UI
- * `createSurface` parameters every instance shares, all but its surface id.
+ * A surface template, as the contract declares it: its name, the A2-UI `createSurface` parameters
+ * every instance shares, all but its surface id, and the component union of its own catalog.
  */
 export interface SurfaceTemplate {
   /** The template name. Every lookup from an instance sends it as its `surfaceTemplate`. */
   readonly template: string;
-  /** The catalog the template's components belong to. */
+  /**
+   * The template's own catalog, which no other template and not the conversational catalog uses.
+   * Every instance's `createSurface` names it.
+   */
   readonly catalogId: string;
   /** The template's components, in A2-UI `createSurface` form. */
   readonly components: readonly object[];
   /** The template's initial data model, in A2-UI `createSurface` form. */
   readonly dataModel: object;
+  /**
+   * The component union of the template's catalog: exactly the components it places. An
+   * instance's lookup payloads and inbound state are validated against it, not against the
+   * contract's conversational `components`.
+   */
+  readonly componentContracts: ContractsSchema;
 }
 
 /** One instance of a surface template, created by the session's `instantiateSurface`. */
@@ -55,9 +64,11 @@ export interface SurfaceInstance {
 /** Options for creating a surface instance with the session's `instantiateSurface`. */
 export interface SurfaceInstanceOptions {
   /**
-   * The instance's surface id. Defaults to an id derived from the template name that no live
-   * instance holds. Pass one that is the same on server and client, such as one derived from
-   * React's `useId`, when the surface is server-rendered.
+   * The instance's surface id, which must start with the contract's `surfaceInstanceIdPrefix`
+   * (`template:`), so that it never collides with a surface the producer creates. Defaults to an
+   * id derived from the template name, such as `template:search-box-1`, that no live instance
+   * holds. Pass one that is the same on server and client, such as the prefix followed by React's
+   * `useId`, when the surface is server-rendered.
    */
   surfaceId?: string;
 }
@@ -68,18 +79,21 @@ export interface SurfaceInstances {
   templateOf(surfaceId: string): string | undefined;
   /** The `component` discriminant of a node of a live instance, or `undefined`. */
   resolve(surfaceId: string, nodeId: string): string | undefined;
+  /** The component union of a live instance's template catalog, or `undefined`. */
+  componentContractsOf(surfaceId: string): ContractsSchema | undefined;
   /** Appends the valid `updateDataModel` ops of A2-UI messages to the live instances they target. */
   apply(rawMessages: readonly unknown[]): void;
 }
 
 interface Instance {
   readonly template: string;
+  readonly componentContracts: ContractsSchema;
   messages: readonly A2uiV09Message[];
 }
 
 export function createSurfaceInstances(
   templates: readonly SurfaceTemplate[],
-  contracts: ContractsSchema,
+  surfaceIdPrefix: string,
   callbacks: {onChange: () => void; onDispose: (surfaceId: string) => void}
 ): SurfaceInstances {
   const templatesByName = new Map(templates.map((template) => [template.template, template]));
@@ -88,10 +102,10 @@ export function createSurfaceInstances(
 
   function mintSurfaceId(template: string): string {
     let sequence = 1;
-    while (instances.has(`${template}-${sequence}`)) {
+    while (instances.has(`${surfaceIdPrefix}${template}-${sequence}`)) {
       sequence++;
     }
-    return `${template}-${sequence}`;
+    return `${surfaceIdPrefix}${template}-${sequence}`;
   }
 
   function create(name: string, options: SurfaceInstanceOptions = {}): SurfaceInstance {
@@ -100,11 +114,16 @@ export function createSurfaceInstances(
       throw new Error(`The session's contract declares no surface template "${name}".`);
     }
     const surfaceId = options.surfaceId ?? mintSurfaceId(name);
+    if (!surfaceId.startsWith(surfaceIdPrefix)) {
+      throw new Error(
+        `The surface id "${surfaceId}" of a surface instance must start with "${surfaceIdPrefix}".`
+      );
+    }
     if (instances.has(surfaceId)) {
       throw new Error(`A live surface instance already holds the surface id "${surfaceId}".`);
     }
 
-    const {template, ...createSurface} = declaration;
+    const {template, componentContracts, ...createSurface} = declaration;
     const activities = [
       {
         id: `surface-instance:${surfaceId}`,
@@ -113,7 +132,11 @@ export function createSurfaceInstances(
         payload: {messages: [{version: 'v1.0', createSurface: {...createSurface, surfaceId}}]},
       },
     ];
-    const instance: Instance = {template, messages: deriveA2uiV09Messages(activities)};
+    const instance: Instance = {
+      template,
+      componentContracts,
+      messages: deriveA2uiV09Messages(activities),
+    };
     instances.set(surfaceId, instance);
     for (const [id, nodes] of deriveNodeIdentityRegistry(activities)) {
       registry.set(id, nodes);
@@ -143,7 +166,7 @@ export function createSurfaceInstances(
       if (!instance) {
         continue;
       }
-      const decision = validateInboundOp(op, registry, contracts);
+      const decision = validateInboundOp(op, registry, instance.componentContracts);
       if (decision.kind === 'forward') {
         const message: A2uiV09Message = {
           version: 'v0.9',
@@ -164,6 +187,7 @@ export function createSurfaceInstances(
     create,
     templateOf: (surfaceId) => instances.get(surfaceId)?.template,
     resolve: (surfaceId, nodeId) => registry.get(surfaceId)?.get(nodeId),
+    componentContractsOf: (surfaceId) => instances.get(surfaceId)?.componentContracts,
     apply,
   };
 }

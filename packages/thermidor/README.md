@@ -76,18 +76,19 @@ It is **fire-and-forget**: the returned Promise always resolves and never reject
 
 ### Surface templates and lookups
 
-The contract declares surface templates, such as the search box: surfaces whose composition and initial state it fixes, but not their surface id. The application creates an instance wherever it draws one, before any request, and disposes of it when it stops drawing it:
+The contract declares surface templates, such as the search box: surfaces whose composition and initial state it fixes, but not their surface id. Each template has a catalog of its own (`catalogId`), exactly the components it places, and the component union of that catalog (`componentContracts`); such components, like `QuerySuggestions`, are not in the conversational `components`. The application creates an instance wherever it draws one, before any request, and disposes of it when it stops drawing it:
 
 ```typescript
-const searchBox = session.instantiateSurface('search-box', {surfaceId: 'header-search'});
+const searchBox = session.instantiateSurface('search-box', {surfaceId: 'template:header-search'});
 searchBox.messages.forEach(feedRenderer); // its creation, ready before any request
 // …later, feed only the messages appended since, once each.
 searchBox.dispose();
 ```
 
-- **Surface ids.** Without a `surfaceId`, the session mints one that no live instance holds. A server-rendered surface needs an id that is the same on server and client, such as one derived from React's `useId`. A template the contract doesn't declare, or an id a live instance holds, throws.
-- **Messages.** `messages` is append-only, in the same v0.9 shape as `a2uiMessages`: the instance's creation, then each lookup result, validated against its component's contract. Feed each message to the renderer once: replaying them recreates the surface.
-- **Lookups.** An instance's actions go through `dispatchAction`, and must be ones the contract marks as lookups; any other is dropped with a dev-only warning. A lookup needs no turn and is sent at once, beside any prompt or action, with the session token when there is one and the template name. A newer lookup from the same surface, component and action aborts the previous one, so instances never abort each other's lookups. A lookup's result applies only to its own live instance; it never opens a turn or a session, and its failure fails nothing.
+- **Surface ids.** An instance's surface id starts with the contract's `surfaceInstanceIdPrefix`, `template:`, and a surface the producer creates never does, so the two never collide in a renderer. Without a `surfaceId`, the session mints one that no live instance holds, such as `template:search-box-1`. A server-rendered surface needs an id that is the same on server and client: prefix one derived from React's `useId`, such as `` `template:${useId()}` ``. A template the contract doesn't declare, an id without the prefix, or an id a live instance holds, throws.
+- **Catalog.** An instance's `createSurface` names its template's own `catalogId`: register a catalog under that id, with the template's components, in the renderer that draws it.
+- **Messages.** `messages` is append-only, in the same v0.9 shape as `a2uiMessages`: the instance's creation, then each lookup result, validated against its template's `componentContracts`. Feed each message to the renderer once: replaying them recreates the surface.
+- **Lookups.** An instance's actions go through `dispatchAction`, and must be ones the contract marks as lookups; any other is dropped with a dev-only warning. Their payloads are validated against the template's `componentContracts`. A lookup needs no turn and is sent at once, beside any prompt or action, with the session token when there is one and the template name. A newer lookup from the same surface, component and action aborts the previous one, so instances never abort each other's lookups. A lookup's result applies only to its own live instance; it never opens a turn or a session, and its failure fails nothing.
 - **Disposing** of an instance aborts its lookups and drops their late results. Instances are not serialized: a restored session's application creates them again.
 
 ### The action queue
@@ -140,7 +141,7 @@ interface TurnResponse {
 
 ## Injected schema, endpoint, and context
 
-- **Contract** — a consumer-injected bundle (`contract`) of the component union (`components`), the surface templates (`surfaceTemplates`) and the lookup actions of each component (`lookupActions`), typed by `SessionContract`. Its Zod discriminated union is the sole source for component-state and action-payload validation. Thermidor accepts it through a structural typing seam (`ContractsSchema` / `ComponentContractSchema` / `ParsableSchema`) that reads only public Zod API, so it declares no dependency on any specific schema package. It declares `zod` as a peer dependency spanning both majors (`3.25.76 || ^4`), so validation runs through the single shared `zod` instance resolved by the injected schema. A consumer whose renderer is built on Zod 3 injects a Zod 3 schema, such as `@coveo/thermidor-schema/zod3`.
+- **Contract** — a consumer-injected bundle (`contract`) of the conversational component union (`components`), the surface templates (`surfaceTemplates`, each with its own `catalogId` and `componentContracts`), the lookup actions of each component (`lookupActions`) and the instance id prefix (`surfaceInstanceIdPrefix`), typed by `SessionContract`. Its Zod discriminated unions are the sole source for component-state and action-payload validation: `components` for the surfaces the producer creates, a template's `componentContracts` for its instances. Thermidor accepts it through a structural typing seam (`ContractsSchema` / `ComponentContractSchema` / `ParsableSchema`) that reads only public Zod API, so it declares no dependency on any specific schema package. It declares `zod` as a peer dependency spanning both majors (`3.25.76 || ^4`), so validation runs through the single shared `zod` instance resolved by the injected schema. A consumer whose renderer is built on Zod 3 injects a Zod 3 schema, such as `@coveo/thermidor-schema/zod3`.
 - **Endpoint** — when `endpoint` is provided, the client POSTs to it verbatim. When absent, it resolves `https://{orgId}.org.coveo.com` and appends the fixed converse path `/api/preview/organizations/{orgId}/agents/commerce/agui/converse`.
 - **Context providers** — `navigatorContextProvider` and `commerceContextProvider` are synchronous functions read fresh per request. Context is never stored on the session and never serialized.
 
