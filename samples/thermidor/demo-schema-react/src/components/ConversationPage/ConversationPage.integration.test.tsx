@@ -38,7 +38,7 @@ describe('ConversationPage integration', () => {
           prompt: 'Find me running shoes',
           response: {
             agent: {
-              messages: [{content: 'Here are some running shoes.', role: 'assistant'}],
+              messages: [{id: 'm1', content: 'Here are some running shoes.', role: 'assistant'}],
               reasoningSteps: [{type: 'reasoning', content: 'Looking up running shoes'}],
             },
           },
@@ -74,7 +74,7 @@ describe('ConversationPage integration', () => {
           prompt: 'Recommend waterproof trail shoes',
           response: {
             agent: {
-              messages: [{content: 'Here are a few directions.', role: 'assistant'}],
+              messages: [{id: 'm2', content: 'Here are a few directions.', role: 'assistant'}],
               reasoningSteps: [],
             },
           },
@@ -119,8 +119,8 @@ describe('ConversationPage integration', () => {
           response: {
             agent: {
               messages: [
-                {content: 'Here is the safety gear.', role: 'assistant'},
-                {content: 'Here are more Mustang Survival jackets.', role: 'assistant'},
+                {id: 'm3', content: 'Here is the safety gear.', role: 'assistant'},
+                {id: 'm4', content: 'Here are more Mustang Survival jackets.', role: 'assistant'},
               ],
               reasoningSteps: [],
             },
@@ -166,7 +166,7 @@ describe('ConversationPage integration', () => {
           prompt: 'boating safety',
           response: {
             agent: {
-              messages: [{content: 'Here is the safety gear.', role: 'assistant'}],
+              messages: [{id: 'm5', content: 'Here is the safety gear.', role: 'assistant'}],
               reasoningSteps: [],
             },
           },
@@ -201,14 +201,20 @@ describe('ConversationPage integration', () => {
           id: 'turn-1',
           prompt: 'First question',
           response: {
-            agent: {messages: [{content: 'First answer', role: 'assistant'}], reasoningSteps: []},
+            agent: {
+              messages: [{id: 'm6', content: 'First answer', role: 'assistant'}],
+              reasoningSteps: [],
+            },
           },
         }),
         makeTurn({
           id: 'turn-2',
           prompt: 'Second question',
           response: {
-            agent: {messages: [{content: 'Second answer', role: 'assistant'}], reasoningSteps: []},
+            agent: {
+              messages: [{id: 'm7', content: 'Second answer', role: 'assistant'}],
+              reasoningSteps: [],
+            },
           },
         }),
       ];

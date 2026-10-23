@@ -92,7 +92,7 @@ describe('ConversationThread', () => {
         error: 'Service unavailable',
         response: {
           agent: {
-            messages: [{content: 'Here are some kayaks', role: 'assistant'}],
+            messages: [{id: 'm1', content: 'Here are some kayaks', role: 'assistant'}],
             reasoningSteps: [],
           },
         },

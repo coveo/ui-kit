@@ -1,5 +1,7 @@
 import type {ReactNode} from 'react';
 import type {TurnResponse} from '@coveo/thermidor';
+import {citationsIn, citedDocuments, withInlineCitations} from '../../citations/citations.js';
+import {CitedDocuments} from './CitedDocuments.js';
 import {ThinkingBlock} from './ThinkingBlock.js';
 import {StreamingMessage} from './StreamingMessage.js';
 import styles from './AgentResponseBlock.module.css';
@@ -13,7 +15,8 @@ export interface AgentResponseBlockProps {
 
 export function AgentResponseBlock({response, isStreaming, children}: AgentResponseBlockProps) {
   const {agent} = response;
-  const messages = agent?.messages ?? [];
+  const citations = citationsIn(response.activities);
+  const messages = withInlineCitations(agent?.messages ?? [], citations);
   const reasoningSteps = agent?.reasoningSteps ?? [];
 
   const showThinkingBlock = reasoningSteps.length > 0 || isStreaming;
@@ -25,6 +28,7 @@ export function AgentResponseBlock({response, isStreaming, children}: AgentRespo
         <ThinkingBlock reasoningSteps={reasoningSteps} isStreaming={isStreaming} />
       )}
       {showStreamingMessage && <StreamingMessage messages={messages} />}
+      <CitedDocuments documents={citedDocuments(citations)} />
       {children}
     </div>
   );
