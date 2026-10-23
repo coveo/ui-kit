@@ -9,7 +9,8 @@
     "if-not-cdn": "node ./if-not-cdn.mjs",
     "if-cdn": "node ./if-cdn.mjs",
     "if-ci": "node ./if-ci.mjs",
-    "test": "node --test"
+    "test": "node --test",
+    "flaky-report": "node ./flaky-report/index.mjs"
   },
   "dependencies": {
     "@coveo/semantic-monorepo-tools": "2.7.1",
