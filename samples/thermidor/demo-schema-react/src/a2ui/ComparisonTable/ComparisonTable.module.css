@@ -84,6 +84,12 @@
   word-break: break-word;
 }
 
+/* The Additional information cell stacks its document list to the cell's full width. */
+.documentsCell {
+  flex-direction: column;
+  align-items: stretch;
+}
+
 .priceValue {
   font-weight: 700;
 }

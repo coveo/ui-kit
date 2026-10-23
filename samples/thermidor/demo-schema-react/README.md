@@ -23,14 +23,14 @@ With `VITE_COVEO_ENDPOINT=http://localhost:3456/schema`, the sample posts to the
 
 ### Mock scenarios
 
-| Prompt                                                                     | Scenario                                                                                                                   |
-| -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `water sports`                                                             | Stateful decomposed commerce search with products, breadbox, pagination, sorting, and brand, price, and category facets    |
-| `build a beginner surfing kit with budget, mid-range, and premium options` | BundleDisplay with 3 tiers (Budget/Mid-Range/Premium), a ProductSummary per slot, and NextActionsBar                       |
-| `i like cold-water surfing. compare wetsuits for it`                       | ComparisonTable with 3 wetsuits, images, prices, annotations (Standout/Trade-off/Best for), AI Summary, and NextActionsBar |
-| `boating safety`                                                           | Discovery with 2 ProductCarousels (Life Jackets + Boating Safety Gear) and NextActionsBar                                  |
-| `tell me more about the thermoflex winter wetsuit`                         | ProductResearchCard for the ThermoFlex Winter Wetsuit with a summary, 4 bullets, 6 related documents, and NextActionsBar   |
-| Any other text (fallback)                                                  | NextActionsBar with suggested follow-up actions                                                                            |
+| Prompt                                                                     | Scenario                                                                                                                                                                                         |
+| -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `water sports`                                                             | Stateful decomposed commerce search with products, breadbox, pagination, sorting, and brand, price, and category facets                                                                          |
+| `build a beginner surfing kit with budget, mid-range, and premium options` | BundleDisplay with 3 tiers (Budget/Mid-Range/Premium), a ProductSummary per slot, and NextActionsBar                                                                                             |
+| `i like cold-water surfing. compare wetsuits for it`                       | ComparisonTable with 3 wetsuits, images, prices, annotations (Standout/Trade-off/Best for), an Additional information row with related documents (6, 2 and none), AI Summary, and NextActionsBar |
+| `boating safety`                                                           | Discovery with 2 ProductCarousels (Life Jackets + Boating Safety Gear) and NextActionsBar                                                                                                        |
+| `tell me more about the thermoflex winter wetsuit`                         | ProductResearchCard for the ThermoFlex Winter Wetsuit with a summary, 4 bullets, 6 related documents, and NextActionsBar                                                                         |
+| Any other text (fallback)                                                  | NextActionsBar with suggested follow-up actions                                                                                                                                                  |
 
 ## Available scripts
 
@@ -103,7 +103,7 @@ ConversationPage
 │                   ├── A2UISkeleton (in place of a loading surface)
 │                   ├── ProductCarousel (dumb: reads resolved props from {path} bindings)
 │                   ├── BundleDisplay (dumb: reads resolved tiers + slot child ids from props)
-│                   ├── ComparisonTable (dumb: reads resolved products + attributes from props)
+│                   ├── ComparisonTable (dumb: reads resolved products, attributes + related documents from props)
 │                   ├── ProductResearchCard (dumb: reads resolved product, summary, bullets + related documents from props)
 │                   ├── NextActionsBar (dumb: reads resolved action items; sends a follow-up action)
 │                   └── CommerceSearch (a gateway search block, see below)
