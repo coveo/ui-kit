@@ -236,8 +236,19 @@ export function foldActivity(
       return turn;
     }
 
+    case 'CUSTOM': {
+      const {name, value} = activity as {name?: unknown; value?: unknown};
+      if (typeof name !== 'string' || !name) {
+        return turn;
+      }
+      response.activities = [
+        ...response.activities,
+        {id: '', kind: name, payload: customPayload(value), replace: false},
+      ];
+      return turn;
+    }
+
     case 'RUN_STARTED':
-    case 'CUSTOM':
     case 'turn_started': {
       return turn;
     }
@@ -245,6 +256,16 @@ export function foldActivity(
     default:
       return foldUnknown(turn, activity);
   }
+}
+
+/**
+ * A `CUSTOM` event's value as an activity payload: an object value is the payload itself, and any
+ * other value is wrapped as `{value}`.
+ */
+function customPayload(value: unknown): Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : {value};
 }
 
 /**
