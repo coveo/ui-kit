@@ -1,13 +1,12 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {
-  buildProductListing,
-  buildSearch,
   getCommerceApiBaseUrl,
   type ProductListing,
   type ProductListingState,
   type Search,
   type SearchState,
 } from '@coveo/headless/commerce';
+import {buildSearchOrListing} from '@/src/components/commerce/atomic-commerce-interface/search-or-listing';
 import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
@@ -60,11 +59,10 @@ export class AtomicCommerceQueryError
   protected ariaMessage = new AriaLiveRegionController(this, 'commerce-query-error');
 
   public initialize() {
-    if (this.bindings.interfaceElement.type === 'product-listing') {
-      this.searchOrListing = buildProductListing(this.bindings.engine);
-    } else {
-      this.searchOrListing = buildSearch(this.bindings.engine);
-    }
+    this.searchOrListing = buildSearchOrListing(
+      this.bindings.engine,
+      this.bindings.interfaceElement
+    );
   }
 
   @errorGuard()

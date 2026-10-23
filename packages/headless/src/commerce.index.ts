@@ -322,6 +322,13 @@ export type {
   ProductTemplatesManager,
 } from './features/commerce/product-templates/product-templates-manager.js';
 export {buildProductTemplatesManager} from './features/commerce/product-templates/product-templates-manager.js';
+export {SpotlightContentTemplatesHelpers} from './features/commerce/spotlight-content-templates/spotlight-content-templates-helpers.js';
+export type {
+  SpotlightContentTemplate,
+  SpotlightContentTemplateCondition,
+  SpotlightContentTemplatesManager,
+} from './features/commerce/spotlight-content-templates/spotlight-content-templates-manager.js';
+export {buildSpotlightContentTemplatesManager} from './features/commerce/spotlight-content-templates/spotlight-content-templates-manager.js';
 export * from './features/commerce/query/query-actions-loader.js';
 export * from './features/commerce/query-set/query-set-actions-loader.js';
 export * from './features/commerce/query-suggest/query-suggest-actions-loader.js';
