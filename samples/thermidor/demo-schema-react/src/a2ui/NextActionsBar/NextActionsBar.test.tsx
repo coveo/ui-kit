@@ -58,7 +58,7 @@ describe('NextActionsBar', () => {
     ]);
   });
 
-  it('dispatches selectSearchOption with the option id for a searchOption item', async () => {
+  it('dispatches selectSearchOption with the option id and text for a searchOption item', async () => {
     const {lastAction} = mountNextActionsBar();
 
     await waitFor(() => expect(screen.queryByText('Salomon trail shoes')).not.toBeNull());
@@ -68,7 +68,7 @@ describe('NextActionsBar', () => {
       expect(lastAction()).toMatchObject({
         name: 'selectSearchOption',
         sourceComponentId: 'root',
-        context: {optionId: OPTION_ID},
+        context: {optionId: OPTION_ID, text: 'Salomon trail shoes'},
       })
     );
   });

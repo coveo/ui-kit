@@ -53,3 +53,25 @@ export function makeSurfaces(...surfaceIds: string[]): DiscoveredSurface[] {
     isLoading: false,
   }));
 }
+
+/**
+ * Builds a turn opened by a `NextActionsBar` chip with the text `text`: a follow-up, or a search
+ * option when `searchOption` is set.
+ */
+export function makeFollowUpTurn(
+  options: MakeTurnOptions & {text?: string; searchOption?: boolean} = {}
+): Turn {
+  const {text = 'Show more', searchOption = false, ...turnOptions} = options;
+  return {
+    ...makeTurn(turnOptions),
+    input: {
+      action: {
+        component: 'NextActionsBar',
+        name: searchOption ? 'selectSearchOption' : 'selectAction',
+        surfaceId: 'next-actions-surface',
+        sourceComponentId: 'root',
+        context: searchOption ? {optionId: 'option-1', text} : {text, type: 'followup'},
+      },
+    },
+  };
+}

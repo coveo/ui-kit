@@ -133,6 +133,58 @@ const surfaceSnapshot = (messages: unknown[]): NormalizedStreamEvent =>
     replace: false,
   });
 
+describe('fold event metadata', () => {
+  it('keeps the AG-UI metadata of a snapshot on its activity', () => {
+    const metadata = {turnOpeningActions: {bar: ['selectAction']}};
+    const turn = foldActivities(createTurn('t1', {}), [
+      activity({
+        type: 'ACTIVITY_SNAPSHOT',
+        messageId: 'bar-activity',
+        activityType: 'a2ui-surface',
+        content: {messages: []},
+        metadata,
+      }),
+    ]);
+
+    expect(turn.response.activities[0].metadata).toEqual(metadata);
+  });
+
+  it('adds no metadata to an activity whose event has none', () => {
+    const turn = foldActivities(createTurn('t1', {}), [surfaceSnapshot([])]);
+
+    expect(turn.response.activities[0]).not.toHaveProperty('metadata');
+  });
+
+  const barSnapshot = (metadata?: Record<string, unknown>): NormalizedStreamEvent =>
+    activity({
+      type: 'ACTIVITY_SNAPSHOT',
+      messageId: 'bar-activity',
+      activityType: 'a2ui-surface',
+      content: {messages: []},
+      replace: true,
+      ...(metadata && {metadata}),
+    });
+
+  it('keeps the metadata of a replaced snapshot when the replacing one has none', () => {
+    const metadata = {turnOpeningActions: {bar: ['selectAction']}};
+    const turn = foldActivities(createTurn('t1', {}), [barSnapshot(metadata), barSnapshot()]);
+
+    expect(turn.response.activities).toHaveLength(1);
+    expect(turn.response.activities[0].metadata).toEqual(metadata);
+  });
+
+  it('merges the metadata of a replacing snapshot onto the replaced one, by entry', () => {
+    const turn = foldActivities(createTurn('t1', {}), [
+      barSnapshot({turnOpeningActions: {bar: ['selectAction'], other: ['selectAction']}}),
+      barSnapshot({turnOpeningActions: {bar: []}}),
+    ]);
+
+    expect(turn.response.activities[0].metadata).toEqual({
+      turnOpeningActions: {bar: [], other: ['selectAction']},
+    });
+  });
+});
+
 describe('fold surface derivation', () => {
   it('exposes an empty surfaces list for a turn with no surface-bearing activities', () => {
     const turn = foldActivities(createTurn('t1', {prompt: 'hi'}), [textMessageStart, runFinished]);

@@ -27,7 +27,7 @@ function controlAt(target: EventTarget): HTMLElement | null {
 
 /**
  * The control the shopper last used, on any surface. The page has one focus, so it is shared by
- * every exchange, and only the exchange that holds it gives it back.
+ * every turn, and only the turn that holds it gives it back.
  */
 let lastUsedControl: HTMLElement | null = null;
 
@@ -92,10 +92,9 @@ interface TurnSurfacesProps {
    */
   interactive: boolean;
   /**
-   * Whether the exchange these surfaces belong to is still streaming: its turn is streaming, or
-   * its follow-up is in flight. Loading placeholders are drawn only then; one the agent left
-   * behind once the exchange ended (a cancelled run, an error, a restored session) is abandoned
-   * and drawn as nothing.
+   * Whether the turn these surfaces belong to is still streaming. Loading placeholders are drawn
+   * only then; one the agent left behind once the turn ended (a cancelled run, an error, a
+   * restored session) is abandoned and drawn as nothing.
    */
   isStreaming: boolean;
 }
@@ -104,7 +103,7 @@ interface TurnSurfacesProps {
  * Draws one turn's surfaces in order. A surface added to an already drawn turn, such as the
  * search block a search option opens, is scrolled into view. A loading placeholder is drawn as
  * the skeleton of its root component type, in the place its content will take, while its
- * exchange streams.
+ * turn streams.
  */
 export function TurnSurfaces({
   surfaceIds: allSurfaceIds,
@@ -122,7 +121,7 @@ export function TurnSurfaces({
   const sectionRefs = useRef(new Map<string, HTMLElement>());
   const drawnIdsRef = useRef<ReadonlySet<string> | null>(null);
   const locked = useSurfaceLocked() && interactive;
-  // The exchange that streams is disabled without dimming, so its content arrives at full strength.
+  // The turn that streams is disabled without dimming, so its content arrives at full strength.
   const dimmed = locked && !isStreaming;
   const fieldsetRef = useRef<HTMLFieldSetElement>(null);
 

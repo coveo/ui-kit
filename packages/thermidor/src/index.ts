@@ -48,6 +48,7 @@ export type {
 export type {
   Turn,
   TurnInput,
+  TurnAction,
   TurnResponse,
   TurnStatus,
   TurnAgent,

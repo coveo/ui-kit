@@ -47,7 +47,7 @@ await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me r
 | `getSnapshot()`           | `turns`, `surfaces`, `a2uiMessages`, `state`, `request` and `actionError` as one immutable `SessionSnapshot`, replaced only when one of them changes. |
 | `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's `onAction`.                               |
 | `cancel()`                | Stops the active stream.                                                                                                                              |
-| `retry(turnId)`           | Re-submits the last turn's input when it errored.                                                                                                     |
+| `retry(turnId)`           | Re-submits the last turn's input when it errored: its prompt, or the action that opened it.                                                           |
 | `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                                                                                       |
 
 `subscribe` and `getSnapshot` do not rely on `this`, so they can be handed by reference to any store that compares snapshots by reference, such as React's `useSyncExternalStore(session.subscribe, session.getSnapshot)`. The package itself depends on no framework.
@@ -77,6 +77,8 @@ A component action is the standard A2-UI client-to-server message (`A2uiClientMe
 ```
 
 Given a message, `dispatchAction` unwraps its `userAction`, recovers the dispatching component's discriminant from the session's live surfaces, whichever turn created them, validates the action payload against the component's injected contract internally, and — on success — POSTs the action to the converse endpoint.
+
+An action the producer announces as opening a turn, such as a follow-up chip or a search option, is answered as a new turn of the conversation, as a prompt is. The producer announces it with the surface, in the AG-UI `metadata` of its snapshot (`metadata.turnOpeningActions`, by surface id), so the consumer declares nothing and the turn opens as soon as the shopper picks the action ([ADR-019](./docs/internal/adr/ADR-019-turn-opening-actions.md)). Such an action opens a new streaming turn whose `input.action` records it (component, action name, surface id, source node and payload), and that turn becomes the active turn. The surfaces of the turn it was sent from keep accepting actions. Any other action streams its answer into the active turn.
 
 It is **fire-and-forget**: the returned Promise always resolves and never rejects, so the consumer needs no `.catch`. A message with no `userAction`, no `sourceComponentId`, a node that resolves to no component, or an internal validation failure is dropped with a dev-only warning and nothing is sent.
 
@@ -109,7 +111,8 @@ The optimistic value gives way to the producer's once the gesture is over, whate
 
 When the Gateway is still busy with another request for the session, it rejects the new one (`409`, `AGENT:ACTION_IN_FLIGHT`). Thermidor retries automatically for up to 30 seconds, and a conflict that recovers shows nothing. If it gives up:
 
-- an **action**'s dispatch ends without changing the turn, which releases its optimistic hold, and `session.actionError` reports it until the next action or prompt is sent;
+- an **action** that does not open a turn ends without changing any turn, which releases its optimistic hold, and `session.actionError` reports it until the next action or prompt is sent;
+- an **action that opens a turn** sets `session.actionError` too, and its turn becomes `error`, retryable with `retry(turnId)` while it is the last turn;
 - a **prompt**'s turn becomes `error`, retryable with `retry(turnId)` while it is the last turn.
 
 ## The Turn / TurnResponse model
@@ -119,7 +122,7 @@ Each turn pairs one `input` with its streamed `response`:
 ```typescript
 interface Turn {
   id: string;
-  input: {prompt?: string}; // prompt omitted for prompt-less action turns
+  input: {prompt?: string; action?: TurnAction}; // the prompt, or the action that opened the turn
   response: TurnResponse;
   status: 'streaming' | 'complete' | 'error';
   error?: string; // present iff status === 'error'

@@ -131,6 +131,11 @@ export interface Activity {
   kind: string;
   replace: boolean;
   payload: Record<string, unknown>;
+  /**
+   * The AG-UI `metadata` of the event that carried the activity, when it had one. A producer
+   * announces the turn-opening actions of a surface under its `turnOpeningActions` key (ADR-019).
+   */
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -190,10 +195,31 @@ export interface ActionError {
 /**
  * The input paired with a turn's streamed response.
  *
- * A dispatched-action turn that carries no prompt omits `prompt`.
+ * A prompt turn carries `prompt`. A turn opened by a component action the producer announces as
+ * opening a turn, such as a follow-up chip, carries `action` instead.
  */
 export interface TurnInput {
+  /** The prompt the turn answers, for a turn a prompt opened. */
   prompt?: string;
+  /** The component action the turn answers, for a turn an action opened. */
+  action?: TurnAction;
+}
+
+/** A component action that opened a turn, as it was dispatched. */
+export interface TurnAction {
+  /** The PascalCase `component` discriminant of the node that dispatched it. */
+  component: string;
+  /** The action name declared by that component's contract. */
+  name: string;
+  /**
+   * The id of the surface it was dispatched from, which an earlier turn or the initialization
+   * created.
+   */
+  surfaceId: string;
+  /** The id of the node that dispatched it. */
+  sourceComponentId: string;
+  /** Its payload, as validated against the action's contract. */
+  context?: unknown;
 }
 
 /**

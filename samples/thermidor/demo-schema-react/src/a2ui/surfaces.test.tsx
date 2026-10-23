@@ -150,7 +150,7 @@ describe('TurnSurfaces while a request is in flight', () => {
     expect(pageSizeSelect().closest('fieldset')?.className).toMatch(/locked/);
   });
 
-  it('disables the exchange that streams without dimming it', async () => {
+  it('disables the turn that streams without dimming it', async () => {
     render(<Turn interactive locked isStreaming />);
 
     await waitFor(() => expect(pageSizeSelect()).toBeDefined());
@@ -216,32 +216,32 @@ describe('TurnSurfaces while a request is in flight', () => {
     elsewhere.remove();
   });
 
-  it('gives focus back to the control used last when two exchanges are interactive', async () => {
-    const FOLLOW_UP_ID = 'follow-up-surface';
-    const messages = [...MESSAGES, ...surfaceMessages(FOLLOW_UP_ID)];
-    function Exchanges({locked}: {locked: boolean}) {
+  it('gives focus back to the control used last when two surface groups are interactive', async () => {
+    const OTHER_SURFACE_ID = 'other-surface';
+    const messages = [...MESSAGES, ...surfaceMessages(OTHER_SURFACE_ID)];
+    function TwoGroups({locked}: {locked: boolean}) {
       return (
         <SessionRequestProvider value={lockedSource(locked)}>
           <A2UIProvider catalog={CATALOG} onAction={() => {}}>
             <ThermidorA2UIStream messages={messages} loadingSurfaces={new Map()} />
             <TurnSurfaces surfaceIds={[SURFACE_ID]} interactive isStreaming={false} />
-            <TurnSurfaces surfaceIds={[FOLLOW_UP_ID]} interactive isStreaming={false} />
+            <TurnSurfaces surfaceIds={[OTHER_SURFACE_ID]} interactive isStreaming={false} />
           </A2UIProvider>
         </SessionRequestProvider>
       );
     }
-    const {rerender} = render(<Exchanges locked={false} />);
+    const {rerender} = render(<TwoGroups locked={false} />);
     await waitFor(() => expect(screen.getAllByLabelText('Products per page:')).toHaveLength(2));
     const [first, second] = screen.getAllByLabelText('Products per page:') as HTMLSelectElement[];
 
     first.focus();
     first.blur();
-    rerender(<Exchanges locked />);
-    rerender(<Exchanges locked={false} />);
+    rerender(<TwoGroups locked />);
+    rerender(<TwoGroups locked={false} />);
     second.focus();
     second.blur();
-    rerender(<Exchanges locked />);
-    rerender(<Exchanges locked={false} />);
+    rerender(<TwoGroups locked />);
+    rerender(<TwoGroups locked={false} />);
 
     expect(document.activeElement).toBe(second);
   });
@@ -261,7 +261,7 @@ describe('TurnSurfaces loading placeholders', () => {
     );
   }
 
-  it('draws the skeleton of a loading surface in its place while its exchange streams', () => {
+  it('draws the skeleton of a loading surface in its place while its turn streams', () => {
     renderPlaceholder(true);
 
     const section = screen.getByRole('region', {name: `A2-UI surface ${SURFACE_ID}`});
@@ -269,7 +269,7 @@ describe('TurnSurfaces loading placeholders', () => {
     expect(screen.queryByLabelText('Products per page:')).toBeNull();
   });
 
-  it('draws nothing for a placeholder left behind once its exchange ended', () => {
+  it('draws nothing for a placeholder left behind once its turn ended', () => {
     const {container} = renderPlaceholder(false);
 
     expect(screen.queryByRole('region', {name: `A2-UI surface ${SURFACE_ID}`})).toBeNull();

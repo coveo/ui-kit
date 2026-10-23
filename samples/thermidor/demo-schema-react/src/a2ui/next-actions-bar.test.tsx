@@ -48,7 +48,10 @@ describe('NextActionsBar', () => {
     fireEvent.click(screen.getByText('Saved search'));
 
     await waitFor(() =>
-      expect(lastAction()).toMatchObject({name: 'selectSearchOption', context: {optionId: 'opt-1'}})
+      expect(lastAction()).toMatchObject({
+        name: 'selectSearchOption',
+        context: {optionId: 'opt-1', text: 'Saved search'},
+      })
     );
   });
 });

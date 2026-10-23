@@ -155,11 +155,15 @@ export function foldActivity(previousTurn: Turn, activity: NormalizedStreamEvent
     case 'ACTIVITY_SNAPSHOT': {
       const content = (activity as {content: unknown}).content as Record<string, unknown>;
       const metadata = getActivityMetadata(activity);
+      const eventMetadata = (activity as {metadata?: unknown}).metadata;
       const nextActivity: Activity = {
         id: (activity as {messageId?: string}).messageId ?? '',
         kind: (activity as {activityType?: string}).activityType ?? '',
         payload: content,
         replace: metadata.replace ?? false,
+        ...(eventMetadata && typeof eventMetadata === 'object' && !Array.isArray(eventMetadata)
+          ? {metadata: eventMetadata as Record<string, unknown>}
+          : {}),
       };
 
       // A replace snapshot merges onto the same-`messageId` activity in place (see
@@ -178,12 +182,12 @@ export function foldActivity(previousTurn: Turn, activity: NormalizedStreamEvent
       if (existingIndex === -1) {
         response.activities = [...response.activities, nextActivity];
       } else {
+        const previous = response.activities[existingIndex];
+        const metadata = mergeActivityMetadata(previous.metadata, nextActivity.metadata);
         const merged: Activity = {
           ...nextActivity,
-          payload: mergeActivityPayload(
-            response.activities[existingIndex].payload,
-            nextActivity.payload
-          ),
+          payload: mergeActivityPayload(previous.payload, nextActivity.payload),
+          ...(metadata && {metadata}),
         };
         response.activities = response.activities.map((existing, index) =>
           index === existingIndex ? merged : existing
@@ -222,6 +226,27 @@ export function foldActivity(previousTurn: Turn, activity: NormalizedStreamEvent
     default:
       return foldUnknown(turn, activity);
   }
+}
+
+/**
+ * Merges a superseding snapshot's AG-UI `metadata` onto the one it replaces, as its payload is: an
+ * entry `next` sets wins, one level deep, and the entries it leaves out carry forward. An
+ * incremental snapshot that does not repeat a surface's turn-opening announcement keeps it
+ * (ADR-019).
+ */
+function mergeActivityMetadata(
+  previous: Record<string, unknown> | undefined,
+  next: Record<string, unknown> | undefined
+): Record<string, unknown> | undefined {
+  if (!previous || !next) {
+    return next ?? previous;
+  }
+  const merged: Record<string, unknown> = {...previous};
+  for (const [key, value] of Object.entries(next)) {
+    const prior = merged[key];
+    merged[key] = isRecord(prior) && isRecord(value) ? {...prior, ...value} : value;
+  }
+  return merged;
 }
 
 /**
