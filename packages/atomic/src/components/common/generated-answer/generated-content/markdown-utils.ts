@@ -1,5 +1,6 @@
 import {Marked, Renderer} from 'marked';
 import {parseHTML} from '@/src/utils/utils';
+import '@/src/components/common/atomic-generated-answer-inline-link/atomic-generated-answer-inline-link.js';
 
 const toInlinePlainText = (textWithHtml: string): string => {
   const withoutHtmlTags = textWithHtml.replace(/<[^>]*>/g, ' ');
