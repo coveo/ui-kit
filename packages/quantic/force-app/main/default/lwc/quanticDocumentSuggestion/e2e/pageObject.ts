@@ -3,12 +3,18 @@ import {
   isUaClickEvent,
   isEventProtocol,
 } from '../../../../../../playwright/utils/requests';
+import {
+  AnalyticsMode,
+  AnalyticsModeEnum,
+} from '../../../../../../playwright/utils/analyticsMode';
 
 export class DocumentSuggestionObject {
   private page: Page;
+  private analyticsMode: AnalyticsMode;
 
-  constructor(page: Page) {
+  constructor(page: Page, analyticsMode: AnalyticsMode) {
     this.page = page;
+    this.analyticsMode = analyticsMode;
   }
 
   get documentSuggestion() {
@@ -35,13 +41,14 @@ export class DocumentSuggestionObject {
     await this.sections.nth(index).click();
   }
 
-  async waitForSuggestionClickEvent(mode: string): Promise<Request> {
+  async waitForSuggestionClickEvent(): Promise<Request> {
+    const mode = this.analyticsMode;
     return this.page.waitForRequest((request) => {
-      if (mode === 'legacy' && isUaClickEvent(request)) {
+      if (mode === AnalyticsModeEnum.legacy && isUaClickEvent(request)) {
         const requestBody = request.postDataJSON?.();
         const event = JSON.parse(requestBody.clickEvent);
         return event.actionCause === 'documentSuggestionClick';
-      } else if (mode === 'next' && isEventProtocol(request)) {
+      } else if (mode === AnalyticsModeEnum.next && isEventProtocol(request)) {
         const requestBody = request.postDataJSON?.();
         const requestData = requestBody[0];
         return requestData.meta.type === 'CaseAssist.DocumentSuggestionClick';

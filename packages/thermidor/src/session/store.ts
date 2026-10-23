@@ -5,6 +5,8 @@
  * subscriber exactly once per change.
  */
 
+import type {SessionRequest} from './types.js';
+
 /**
  * A function that removes a previously-registered store listener.
  */
@@ -35,6 +37,15 @@ export interface SessionStoreState<TTurn> {
    * The server-assigned session token for request-authentication continuity.
    */
   sessionToken?: string;
+
+  /**
+   * Why the last action was dropped after the Gateway kept rejecting it as concurrent. Runtime
+   * only: never serialized.
+   */
+  actionError?: string;
+
+  /** The request the session is sending, or `undefined` when idle. Runtime only: never serialized. */
+  request?: SessionRequest;
 }
 
 /**

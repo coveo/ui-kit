@@ -26,7 +26,9 @@ export type A2uiState = Record<string, unknown>;
 /**
  * A discovered renderable region derived from `activities`, exposed as the
  * typed {@link TurnResponse.surfaces} projection (ADR-015 interim). Each entry
- * carries a non-empty `surfaceId` and a non-empty `rootComponentType`.
+ * carries a non-empty `surfaceId` and a non-empty `rootComponentType`. Only
+ * surfaces live at the end of the turn's stream are listed: a surface the agent
+ * deletes leaves the list.
  */
 export interface DiscoveredSurface {
   surfaceId: string;
@@ -35,6 +37,14 @@ export interface DiscoveredSurface {
    * against `'CommerceSearch'` by consumers/nav (ADR-015).
    */
   rootComponentType: string;
+  /**
+   * Whether the surface is a loading placeholder: its data model declares
+   * `isLoading: true` (the commerce catalog flag). A consumer renders a
+   * placeholder for `rootComponentType` while this holds. It ends when the
+   * agent deletes the surface (the surface leaves this list) or writes
+   * `isLoading: false` to its data model.
+   */
+  isLoading: boolean;
 }
 
 /**
@@ -134,6 +144,32 @@ export interface TurnAgent {
 }
 
 /**
+ * A request the session is sending: a prompt that streams a turn, or a component action whose
+ * response streams into the active turn (a follow-up included).
+ */
+export type SessionRequest = PromptRequest | ActionRequest;
+
+/** A prompt the session is sending, streaming into a new turn or a retried one. */
+export interface PromptRequest {
+  kind: 'prompt';
+  /** The turn the prompt streams into. */
+  turnId: string;
+}
+
+/** A component action the session is sending. */
+export interface ActionRequest {
+  kind: 'action';
+  /** The action name declared by the dispatching component's contract. */
+  name: string;
+  /** The A2-UI surface the action originated on. */
+  surfaceId: string;
+  /** The id of the node that dispatched the action. */
+  sourceComponentId: string;
+  /** The turn the action's response streams into. */
+  turnId: string;
+}
+
+/**
  * The input paired with a turn's streamed response.
  *
  * A dispatched-action turn that carries no prompt omits `prompt`.
@@ -165,7 +201,9 @@ export interface TurnResponse {
 
   /**
    * Typed projection derived from `activities` in the fold (ADR-015 interim).
-   * Consumers read this instead of walking `activities` themselves.
+   * Consumers read this instead of walking `activities` themselves. Lists the
+   * turn's live surfaces in creation order: a surface the agent deletes is
+   * excluded, and one it re-creates moves to the end.
    */
   surfaces: DiscoveredSurface[];
 

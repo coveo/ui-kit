@@ -328,4 +328,39 @@ describe('Session.dispatchAction', () => {
       expect(request.action?.name).toBe('setPageSize');
     });
   });
+
+  describe('concurrent dispatches are serialized', () => {
+    it('withholds a second action dispatched while the first one streams', async () => {
+      const session = await sessionWithPaginationSurface();
+
+      // Held open so the second dispatch is issued while the first is in flight.
+      let releaseFirstStream: (() => void) | undefined;
+      const firstStreamReleased = new Promise<void>((resolve) => {
+        releaseFirstStream = resolve;
+      });
+      callMock.mockImplementationOnce(async () => ({
+        success: true,
+        data: {
+          stream: new ReadableStream<Uint8Array>({
+            async start(controller) {
+              await firstStreamReleased;
+              controller.enqueue(sseFrame({type: 'RUN_FINISHED'}));
+              controller.close();
+            },
+          }),
+        },
+      }));
+      const first = session.dispatchAction(paginationMessage('selectPage', {page: 1}));
+      const second = session.dispatchAction(paginationMessage('selectPage', {page: 2}));
+
+      await Promise.resolve();
+      await Promise.resolve();
+      expect(callMock).toHaveBeenCalledTimes(1);
+
+      releaseFirstStream?.();
+      await Promise.all([first, second]);
+
+      expect(callMock).toHaveBeenCalledTimes(1);
+    });
+  });
 });

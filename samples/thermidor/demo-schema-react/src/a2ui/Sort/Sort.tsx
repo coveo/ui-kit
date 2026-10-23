@@ -1,7 +1,8 @@
-import {useId} from 'react';
+import {useId, useOptimistic} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {SortAction} from '@coveo/thermidor-schema';
 import {SortPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {useGesture} from '../session-request.js';
 import styles from './Sort.module.css';
 
 const SORT_LABELS: Record<string, string> = {
@@ -10,17 +11,15 @@ const SORT_LABELS: Record<string, string> = {
   price_desc: 'Price (High to Low)',
 };
 
-/**
- * A2-UI component for the `sort` selector. The generic binder resolves `availableSorts` /
- * `appliedSort` from `SortPropsSchema`; selecting an option dispatches a `selectSort` action
- * through `context.dispatchAction`.
- */
+/** A2-UI component for the `sort` selector. */
 export const Sort = createReactComponent(
   {name: 'Sort', schema: SortPropsSchema},
   ({props, context}) => {
     const selectId = useId();
     const availableSorts = props.availableSorts ?? [];
-    const appliedSort = props.appliedSort;
+
+    const [appliedSort, addOptimisticSort] = useOptimistic(props.appliedSort);
+    const startGesture = useGesture();
 
     const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
       const selectedIndex = Number(event.target.value);
@@ -32,7 +31,10 @@ export const Sort = createReactComponent(
             context: {sortCriteria: selected.sortCriteria, fields: selected.fields},
           },
         };
-        context.dispatchAction(selectSortAction);
+        startGesture(
+          () => addOptimisticSort({sortCriteria: selected.sortCriteria, fields: selected.fields}),
+          () => context.dispatchAction(selectSortAction)
+        );
       }
     };
 

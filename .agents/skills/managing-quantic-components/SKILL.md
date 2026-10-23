@@ -1,10 +1,10 @@
 ---
 name: managing-quantic-components
-description: Provides conventions, patterns, and workflow guidance for Quantic Salesforce Lightning Web Components and associated files within packages/quantic. Use when creating, modifying, analyzing, debugging, or reviewing Quantic components, or when the user mentions LWC, Lightning, Salesforce, Quantic components, SLDS, or headless integration in the Quantic package.
+description: Provides conventions, patterns, and workflow guidance for Quantic Salesforce Lightning Web Components and associated files within packages/quantic. Use when creating, modifying, analyzing, debugging, or reviewing Quantic components, or when the user mentions LWC, Lightning, Salesforce, Quantic components, SLDS, or headless integration in the Quantic package. Also use when modifying packages/headless source to support a Quantic component, or when a Headless change is not visible in a Salesforce org.
 license: Apache-2.0
 metadata:
   author: coveo
-  version: '1.0'
+  version: '1.1'
 ---
 
 # Managing Quantic Components
@@ -51,6 +51,7 @@ quantic{ComponentName}/
 ### Non-negotiable conventions
 
 | Concern | Rule |
+| --- | --- |
 | Class base | Always extends `LightningElement` |
 | Headless registration | `registerComponentForInit` in `connectedCallback`; `initializeWithHeadless` in `renderedCallback` |
 | `initialize` method | Always an **arrow function** field — preserves `this` for the headless callback |
@@ -63,6 +64,7 @@ quantic{ComponentName}/
 | Label translations | Every new label **must** have a translation entry added to both `force-app/main/translations/fr.translation-meta.xml` and `es.translation-meta.xml` |
 | Error handling | `hasInitializationError` flag + `<c-quantic-component-error>` in template |
 | CSS naming | BEM-like with component prefix: `.generated-answer__card-header--collapsed` |
+| Lightning base components | **Always prefer an existing `lightning-*` base component over custom markup or an SLDS blueprint.** Before building any UI element, discover candidates with the `salesforce-lbc` MCP tools (see Working Workflow step 2). Build custom markup only when no base component fits, and state why |
 | SLDS tokens | Use `var(--lwc-*)` design tokens; **always use SLDS utility classes first — for every style need, ask yourself whether an SLDS class covers it before writing a single line of custom CSS**. Custom CSS is only permitted when no SLDS class achieves the needed result |
 | Meta XML | `isExposed: false`; no `targets` or `targetConfigs`; **always generated via `sf lightning generate component`** — never created manually (manual creation risks using a stale `apiVersion`) |
 | `render()` | Only for multi-template components; always the **last method** in the class |
@@ -117,16 +119,36 @@ Do not duplicate upstream Headless coverage unless the Quantic component adds be
 
 Before or after any change to packages/quantic, use the `running-quantic-e2e-tests` skill to set up the scratch orgs, deploy, and run the Playwright specs — even when the change doesn't need a new E2E test, existing coverage for the touched component(s) should still be re-verified.
 
+### Propagating Headless Changes to a Salesforce Org
+
+A Salesforce org never reads `packages/headless` source. It loads the `coveoheadless` static resource, so a Headless change stays invisible in the org until all four steps run in order:
+
+1. Rebuild Headless, which regenerates the Quantic-targeted bundle in `packages/headless/dist/quantic`.
+2. `pnpm run babel:headless` in `packages/quantic` compiles that bundle into `.tmp/quantic-compiled`.
+3. `pnpm run build:staticresources` in `packages/quantic` rebuilds `force-app/main/default/staticresources/coveoheadless` from the compiled bundle.
+4. Deploy the static resources to the org.
+
+Skipping step 2 silently repackages the previous bundle. Turbo encodes steps 1–3 as dependencies of `build:staticresources`, so run the chain from the repository root:
+
+```bash
+pnpm turbo run build:staticresources --filter=@coveo/quantic
+cd packages/quantic && sf project deploy start -d ./force-app/main/default/staticresources -o Quantic__LWS_enabled --ignore-conflicts
+```
+
+Use `-o Quantic__LWS_disabled` to target the Locker org, and deploy to both before running the full E2E suite. Jest unit tests do not need this chain; only verification in an org does.
+
 ### Working Workflow
 
 1. Inspect the target component folder and a similar existing Quantic component before editing.
-2. Keep changes inside `packages/quantic/force-app/main/default/lwc` unless the request also needs examples, community pages, or tests.
-3. If the change needs E2E coverage, update or add the matching example-community component and route assets as needed. Then follow the `running-quantic-e2e-tests` skill to deploy and run it.
-4. **Before writing any CSS:** go through every style need and verify whether an SLDS utility class satisfies it. Only write custom CSS for styles that SLDS cannot achieve. When replicating a component from another library (e.g. Atomic), do not port its custom CSS directly — re-implement the layout and styling using SLDS classes.
-5. Update JSDoc and metadata consistently with the component's public surface.
-6. Run `pnpm run lint:fix` from `packages/quantic` before considering the work done.
-7. Run targeted Quantic tests first, then broader checks only if needed.
-8. **Run the Definition of Done checklist below before marking the task complete.**
+2. **Before writing any template markup:** for every UI element the change needs (e.g. progress indicator, tag, tooltip, toggle, collapsible section), call `guide_lbc_usage` from the `salesforce-lbc` MCP server to find matching Lightning base components, then call `explore_lbc_components` with the candidate names (without the `lightning-` prefix, e.g. `["progress-bar"]`) to get their API. Use the base component when it fits; otherwise state which candidates were rejected and why. If the `salesforce-lbc` tools are unavailable, say so explicitly instead of skipping this step.
+3. Keep changes inside `packages/quantic/force-app/main/default/lwc` unless the request also needs examples, community pages, or tests.
+4. If the change needs E2E coverage, update or add the matching example-community component and route assets as needed. Then follow the `running-quantic-e2e-tests` skill to deploy and run it.
+   If `packages/headless` was modified, first run the [Headless propagation chain](#propagating-headless-changes-to-a-salesforce-org) before verifying anything in an org.
+5. **Before writing any CSS:** go through every style need and verify whether an SLDS utility class satisfies it. Only write custom CSS for styles that SLDS cannot achieve. When replicating a component from another library (e.g. Atomic), do not port its custom CSS directly — re-implement the layout and styling using SLDS classes.
+6. Update JSDoc and metadata consistently with the component's public surface.
+7. Run `pnpm run lint:fix` from `packages/quantic` before considering the work done.
+8. Run targeted Quantic tests first, then broader checks only if needed.
+9. **Run the Definition of Done checklist below before marking the task complete.**
 
 ---
 
@@ -148,6 +170,7 @@ Before marking any task as complete, verify every applicable item and output thi
 | Headless lifecycle correct                                                                                                 | ✅/❌/N/A |
 | Error handling present                                                                                                     | ✅/❌/N/A |
 | No `if:true` / `if:false` directives used                                                                                  | ✅/❌/N/A |
+| Lightning base components checked via `salesforce-lbc` before building custom UI                                           | ✅/❌/N/A |
 
 **Result: PASS / FAIL** — Failing items: <list ❌ items with required fix>
 

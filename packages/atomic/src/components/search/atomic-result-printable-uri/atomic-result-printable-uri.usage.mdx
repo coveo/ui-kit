@@ -7,15 +7,17 @@ You can customize link attributes using the `attributes` slot to add properties 
 
 ```html
 <atomic-result-template>
-  <!-- Basic usage -->
-  <atomic-result-printable-uri></atomic-result-printable-uri>
+  <template>
+    <!-- Basic usage -->
+    <atomic-result-printable-uri></atomic-result-printable-uri>
 
-  <!-- Limit to 3 path segments before showing ellipsis -->
-  <atomic-result-printable-uri max-number-of-parts="3"></atomic-result-printable-uri>
+    <!-- Limit to 3 path segments before showing ellipsis -->
+    <atomic-result-printable-uri max-number-of-parts="3"></atomic-result-printable-uri>
 
-  <!-- Open links in new tab -->
-  <atomic-result-printable-uri>
-    <a slot="attributes" target="_blank"></a>
-  </atomic-result-printable-uri>
+    <!-- Open links in new tab -->
+    <atomic-result-printable-uri>
+      <a slot="attributes" target="_blank"></a>
+    </atomic-result-printable-uri>
+  </template>
 </atomic-result-template>
 ```

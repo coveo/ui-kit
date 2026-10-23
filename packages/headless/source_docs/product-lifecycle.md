@@ -42,10 +42,10 @@ After the support end date, [Coveo Support](https://connect.coveo.com/s/case/Cas
 
 ## 3rd-party support
 
-As of `@coveo/headless` v3.11.0, the following technologies versions are supported:
+As of `@coveo/headless` v3.38.0, the following technologies versions are supported:
 
-- TypeScript v4.9+
-- Node.js v20 and v22
+- TypeScript v5.0+
+- Node.js v20 (v20.9.0+), v22 (v22.11.0+), and v24 (v24.11.0+)
 
 Support for newer versions of these technologies may be added in either major or minor updates.
 Support for older versions may be removed in major updates.

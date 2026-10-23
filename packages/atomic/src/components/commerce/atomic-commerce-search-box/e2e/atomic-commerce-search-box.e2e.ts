@@ -12,7 +12,10 @@ test.describe('atomic-commerce-search-box', () => {
 
     test.describe('when suggestions are available', () => {
       test.beforeEach(async ({searchBox}) => {
-        await searchBox.load({story: 'with-suggestions'});
+        await searchBox.load({
+          args: {suggestionTimeout: 5000},
+          story: 'with-suggestions',
+        });
         await searchBox.searchInput.waitFor({state: 'visible'});
         await searchBox.searchInput.click();
       });
@@ -76,7 +79,10 @@ test.describe('atomic-commerce-search-box', () => {
 
     test.describe('when no suggestions are available', () => {
       test.beforeEach(async ({searchBox}) => {
-        await searchBox.load({story: 'with-no-suggestions'});
+        await searchBox.load({
+          args: {suggestionTimeout: 5000},
+          story: 'with-no-suggestions',
+        });
         await searchBox.searchInput.click();
       });
 
@@ -91,7 +97,10 @@ test.describe('atomic-commerce-search-box', () => {
 
     test.describe('when recent queries are available', () => {
       test.beforeEach(async ({searchBox}) => {
-        await searchBox.load({story: 'with-suggestions-and-recent-queries'});
+        await searchBox.load({
+          args: {suggestionTimeout: 5000},
+          story: 'with-suggestions-and-recent-queries',
+        });
         await searchBox.hydrated.waitFor();
         await searchBox.searchInput.waitFor({state: 'visible'});
         await searchBox.searchInput.click();

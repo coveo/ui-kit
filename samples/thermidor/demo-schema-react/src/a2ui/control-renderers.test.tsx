@@ -1,0 +1,149 @@
+import {describe, it, expect, afterEach} from 'vitest';
+import {screen, fireEvent, cleanup, waitFor, act} from '@testing-library/react';
+import type {PageSizeProps, PaginationProps, SortProps} from '@coveo/thermidor-schema';
+import {mountSurface} from './mount-surface.harness.js';
+
+afterEach(cleanup);
+
+function mountControl<TProps extends object>(
+  component: string,
+  state: TProps,
+  dispatchGate?: () => Promise<void> | void
+) {
+  return mountSurface({
+    component: {
+      component,
+      ...Object.fromEntries(Object.keys(state).map((key) => [key, {path: `/state/root/${key}`}])),
+    },
+    dispatchGate,
+    dataModel: (Object.keys(state) as Array<keyof TProps>).map((key) => ({
+      path: `/state/root/${String(key)}`,
+      value: state[key],
+    })),
+  });
+}
+
+function heldOpen() {
+  let answer!: () => void;
+  const pending = new Promise<void>((resolve) => (answer = resolve));
+  return {
+    gate: () => pending,
+    answer: async () => {
+      await act(async () => {
+        answer();
+        await Promise.resolve();
+      });
+    },
+  };
+}
+
+describe('Pagination', () => {
+  const state: PaginationProps = {page: 0, pageSize: 12, totalEntries: 60, totalPages: 5};
+
+  it('optimistically marks the clicked page current before the backend reconciles', async () => {
+    const held = heldOpen();
+    const {lastAction} = mountControl('Pagination', state, held.gate);
+
+    await waitFor(() => expect(screen.getByLabelText('Page 3')).toBeDefined());
+    fireEvent.click(screen.getByLabelText('Page 3'));
+
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({name: 'selectPage', context: {page: 2}})
+    );
+    expect(screen.getByLabelText('Page 3').getAttribute('aria-current')).toBe('page');
+    expect(screen.getByLabelText('Page 1').getAttribute('aria-current')).toBeNull();
+
+    await held.answer();
+    await waitFor(() =>
+      expect((screen.getByLabelText('Page 3') as HTMLButtonElement).disabled).toBe(false)
+    );
+  });
+
+  it('clamps a held page that a shrinking producer totalPages would put out of range', async () => {
+    const held = heldOpen();
+    const {lastAction, pushDataModel} = mountControl('Pagination', state, held.gate);
+
+    await waitFor(() => expect(screen.getByLabelText('Page 5')).toBeDefined());
+    fireEvent.click(screen.getByLabelText('Page 5'));
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({name: 'selectPage', context: {page: 4}})
+    );
+
+    // A concurrent gesture (e.g. a larger page size) shrinks the producer while page 5 is held.
+    pushDataModel([{path: '/state/root/totalPages', value: 2}]);
+
+    await waitFor(() => expect(screen.queryByLabelText('Page 5')).toBeNull());
+    expect(screen.getByLabelText('Page 2').getAttribute('aria-current')).toBe('page');
+    held.answer();
+  });
+});
+
+describe('PageSize', () => {
+  const state: PageSizeProps = {pageSize: 12};
+
+  it('optimistically shows the chosen size before the backend reconciles', async () => {
+    const held = heldOpen();
+    const {lastAction} = mountControl('PageSize', state, held.gate);
+
+    await waitFor(() => expect(screen.getByLabelText(/Products per page/)).toBeDefined());
+    const select = screen.getByLabelText(/Products per page/) as HTMLSelectElement;
+    fireEvent.change(select, {target: {value: '48'}});
+
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({name: 'setPageSize', context: {pageSize: 48}})
+    );
+    expect((screen.getByLabelText(/Products per page/) as HTMLSelectElement).value).toBe('48');
+
+    await held.answer();
+    await waitFor(() =>
+      expect((screen.getByLabelText(/Products per page/) as HTMLSelectElement).value).toBe('12')
+    );
+  });
+
+  it('keeps the backend size selectable while another size is in flight', async () => {
+    // 96 is not a default option: it only exists because the producer applies it.
+    const held = heldOpen();
+    mountControl<PageSizeProps>('PageSize', {pageSize: 96}, held.gate);
+
+    await waitFor(() => expect(screen.getByLabelText(/Products per page/)).toBeDefined());
+    const select = screen.getByLabelText(/Products per page/) as HTMLSelectElement;
+    fireEvent.change(select, {target: {value: '12'}});
+
+    await waitFor(() => expect(select.value).toBe('12'));
+    const optionValues = Array.from(select.options).map((option) => option.value);
+    expect(optionValues).toContain('96');
+    held.answer();
+  });
+});
+
+describe('Sort', () => {
+  const state: SortProps = {
+    appliedSort: {sortCriteria: 'relevance', fields: []},
+    availableSorts: [
+      {sortCriteria: 'relevance', fields: []},
+      {sortCriteria: 'price_asc', fields: []},
+    ],
+  };
+
+  it('optimistically shows the chosen criterion before the backend reconciles', async () => {
+    const held = heldOpen();
+    const {lastAction} = mountControl('Sort', state, held.gate);
+
+    await waitFor(() => expect(screen.getByLabelText(/Sort by/)).toBeDefined());
+    const select = screen.getByLabelText(/Sort by/) as HTMLSelectElement;
+    fireEvent.change(select, {target: {value: '1'}});
+
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({
+        name: 'selectSort',
+        context: {sortCriteria: 'price_asc'},
+      })
+    );
+    expect((screen.getByLabelText(/Sort by/) as HTMLSelectElement).value).toBe('1');
+
+    await held.answer();
+    await waitFor(() =>
+      expect((screen.getByLabelText(/Sort by/) as HTMLSelectElement).value).toBe('0')
+    );
+  });
+});

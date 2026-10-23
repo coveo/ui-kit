@@ -1,3 +1,29 @@
+## 3.58.0
+
+### Minor Changes
+
+- [#8704](https://github.com/coveo/ui-kit/pull/8704) [`a873e42`](https://github.com/coveo/ui-kit/commit/a873e42c94519da6e7545b4f63b8c1973b30b2ec) - Add an optional per-request `navigatorContext` to `fetchStaticState()`, `hydrateStaticState()` and `build()` in `@coveo/headless/ssr`. It applies to that call only, without mutating the shared engine definition, so concurrent requests no longer risk sending each other's client ID, user agent or `x-forwarded-for` address. When it is omitted, the provider set with `setNavigatorContextProvider()` is still used. The "Missing navigator context" warning and the `setNavigatorContextProvider()` deprecation notice now point to this option.
+
+### Patch Changes
+
+- [#8669](https://github.com/coveo/ui-kit/pull/8669) [`5d3b308`](https://github.com/coveo/ui-kit/commit/5d3b308072ac7b92324e50acb68e34088ce05f18) - Remove a controller's listener from the engine when its last subscriber unsubscribes, whatever the order in which its subscribers unsubscribe. Before, the listener was only removed when the first subscriber was also the last to unsubscribe. Otherwise it stayed registered, and the controller kept comparing its state on every state change for the rest of the session.
+
+- [#8693](https://github.com/coveo/ui-kit/pull/8693) [`8af7566`](https://github.com/coveo/ui-kit/commit/8af7566cac333724f18d96d4a7d27ac09f415d5f) - Fix `@coveo/headless/ssr` sending the first request's `x-forwarded-for` header on every later request. `fetchStaticState()` stored its forwarded-for wrapper on the shared engine definition, and that wrapper kept reading the navigator context of the request that created it, so later `setNavigatorContextProvider()` calls no longer changed the header. Each engine now gets its own wrapper, on a copy of the definition options, so each request forwards its own address.
+
+- [#8698](https://github.com/coveo/ui-kit/pull/8698) [`0a95379`](https://github.com/coveo/ui-kit/commit/0a953790155e0411965e315e6232d1a46e8e5084) - Deprecate `getAccessToken()` and `setAccessToken()` on the `@coveo/headless/ssr` engine definition, as on `@coveo/headless/ssr-commerce`. To renew an expiring token, configure `renewAccessToken`; to change the token of an engine you already have, dispatch `updateBasicConfiguration({accessToken})` from `loadConfigurationActions(engine)`.
+
+- [#8695](https://github.com/coveo/ui-kit/pull/8695) [`480c745`](https://github.com/coveo/ui-kit/commit/480c745440f52308eaf97f139d0220939d809525) - Correct the deprecation notice of `ControllerDefinitionOption`, which types the `listing` and `search` options of seven `@coveo/headless/ssr-commerce` definers such as `definePagination`. It said the interface was no longer used; it now says these options will be removed in the next major version, and to omit them so the controller is built for both search and product listing pages. The documentation of the seven definers now says the same, because editors don't show the interface's notice where these options are passed.
+
+- [#8702](https://github.com/coveo/ui-kit/pull/8702) [`a292905`](https://github.com/coveo/ui-kit/commit/a2929053c49aa386ad4a2b0a8399ea1796bfefe8) - Fix three misleading deprecation notices on the SSR commerce sub-packages. `FetchStaticStateOptions` no longer points to `BuildConfig`, which `@coveo/headless/ssr-commerce` doesn't export. `defineCart` now names the cart controller. The `navigatorContext` prop of the `@coveo/headless-react/ssr-commerce` providers no longer says to set the navigator context when fetching the static state.
+
+- [#8694](https://github.com/coveo/ui-kit/pull/8694) [`2f1cde8`](https://github.com/coveo/ui-kit/commit/2f1cde8075b46addfa1d9ae4489227022829920f) - Stop the SSR "Missing navigator context" warning from recommending the deprecated `setNavigatorContextProvider`. On `@coveo/headless/ssr-commerce`, it now says to pass `navigatorContext` to `fetchStaticState()` and `hydrateStaticState()`. On `@coveo/headless/ssr`, it says to pass a `navigatorContextProvider` to `defineSearchEngine()`, which the `setNavigatorContextProvider` deprecation notice now recommends too, instead of a `navigatorContext` option that `fetchStaticState()` doesn't accept.
+
+## 3.57.3
+
+### Patch Changes
+
+- [#8627](https://github.com/coveo/ui-kit/pull/8627) [`ef62433`](https://github.com/coveo/ui-kit/commit/ef62433af99d60c4aac4edf94c273ceba9108e96) - Exclude the selected value from commerce category facet search results by sending its path in `ignorePaths`.
+
 ## 3.57.2
 
 ### Patch Changes

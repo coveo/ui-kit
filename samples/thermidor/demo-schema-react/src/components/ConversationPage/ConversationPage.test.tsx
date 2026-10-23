@@ -10,10 +10,7 @@ function renderPage(overrides: Partial<Parameters<typeof ConversationPage>[0]> =
     onSubmit: vi.fn(),
     isStreaming: false,
     turns: [baseTurn],
-    onBackToSearch: vi.fn(),
-    canGoBackToSearch: false,
-    products: [],
-    onProductsChange: vi.fn(),
+    surfacesByTurn: new Map<string, readonly string[]>(),
   };
 
   return render(<ConversationPage {...defaultProps} {...overrides} />);
@@ -25,26 +22,6 @@ describe('ConversationPage shell', () => {
       renderPage();
       const prompt = screen.getByLabelText('Prompt');
       expect(prompt).toBeDefined();
-    });
-  });
-
-  describe('Back to search results navigation', () => {
-    it('shows "Back to search results" button when canGoBackToSearch is true', () => {
-      renderPage({canGoBackToSearch: true});
-      expect(screen.getByRole('button', {name: /Back to search results/})).toBeDefined();
-    });
-
-    it('hides "Back to search results" button when canGoBackToSearch is false', () => {
-      renderPage({canGoBackToSearch: false});
-      expect(screen.queryByRole('button', {name: /Back to search results/})).toBeNull();
-    });
-
-    it('calls onBackToSearch when "Back to search results" is clicked', () => {
-      const onBackToSearch = vi.fn();
-      renderPage({canGoBackToSearch: true, onBackToSearch});
-
-      fireEvent.click(screen.getByRole('button', {name: /Back to search results/}));
-      expect(onBackToSearch).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -72,18 +49,6 @@ describe('ConversationPage shell', () => {
       renderPage({isStreaming: false});
       const textarea = screen.getByLabelText('Prompt') as HTMLTextAreaElement;
       expect(textarea.disabled).toBe(false);
-    });
-  });
-
-  describe('ProductTargeting integration', () => {
-    it('renders the attach button from ProductTargeting', () => {
-      renderPage();
-      expect(screen.getByRole('button', {name: /Attach product context/})).toBeDefined();
-    });
-
-    it('shows hint text "Attach product context" by default', () => {
-      renderPage();
-      expect(screen.getByText('Attach product context')).toBeDefined();
     });
   });
 });

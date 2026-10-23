@@ -1,6 +1,8 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {Product} from '@coveo/thermidor-schema';
 import {ProductListPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {ProductBadges} from '../ProductBadges/ProductBadges.js';
+import {resultsFocusTarget} from '../results-focus.js';
 import styles from './ProductList.module.css';
 
 function formatPrice(value: number): string {
@@ -28,6 +30,9 @@ function ProductCard({product}: {product: Product}) {
         ) : (
           <div className={styles.imagePlaceholder} aria-label="No image available" />
         )}
+        <div className={styles.badges}>
+          <ProductBadges placements={product.badgePlacements} />
+        </div>
       </div>
       <div className={styles.content}>
         {brand && <span className={styles.brand}>{brand}</span>}
@@ -56,6 +61,9 @@ function ProductCard({product}: {product: Product}) {
  * `ProductListPropsSchema`; a grid of product cards for decomposed commerce search surfaces.
  * Presentational — no actions. `products === undefined` (bindings not yet resolved) renders a
  * loading state; an empty list renders nothing.
+ *
+ * While a gesture is in flight, an optimistic control already shows the new choice (page 3) while
+ * this grid still holds the previous results (page 2); the surface lock dims the grid meanwhile.
  */
 export const ProductList = createReactComponent(
   {name: 'ProductList', schema: ProductListPropsSchema},
@@ -76,7 +84,7 @@ export const ProductList = createReactComponent(
 
     return (
       <section>
-        <div className={styles.grid} role="list" aria-label="Product list">
+        <div className={styles.grid} role="list" aria-label="Product list" {...resultsFocusTarget}>
           {products.map((product) => (
             <ProductCard key={product.permanentid} product={product} />
           ))}

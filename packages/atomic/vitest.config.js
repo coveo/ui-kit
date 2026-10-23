@@ -5,7 +5,7 @@ import replacePlugin from '@rollup/plugin-replace';
 import {storybookTest} from '@storybook/addon-vitest/vitest-plugin';
 import tailwindcss from '@tailwindcss/vite';
 import {playwright} from '@vitest/browser-playwright';
-import {configDefaults, defineConfig, mergeConfig} from 'vitest/config';
+import {defineConfig, mergeConfig} from 'vitest/config';
 import packageJsonHeadless from '../headless/package.json' with {type: 'json'};
 import packageJson from './package.json' with {type: 'json'};
 
@@ -144,11 +144,6 @@ const atomicDefault = defineConfig({
     name: 'atomic-default',
     css: true,
     include: ['src/**/*.spec.ts', 'scripts/stencil-proxy.spec.mjs'],
-    exclude: [
-      ...configDefaults.exclude,
-      'src/**/initialization-utils.spec.ts',
-      'src/**/search-layout.spec.ts',
-    ],
     setupFiles: ['./vitest-utils/setup.ts'],
     browser: {
       provider: playwright(),

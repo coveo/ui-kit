@@ -1,39 +1,96 @@
-import {useCallback, useEffect, useState} from 'react';
+import {useEffect, useLayoutEffect, useRef, useState} from 'react';
+import type {CategoryFacetAction, RegularFacetAction} from '@coveo/thermidor-schema/zod3';
+import {useSessionBusy} from './session-request.js';
 
-interface OptimisticFacetSearch {
+/** Derived from the schema so the payload cannot drift from what it accepts. */
+export type FacetSearchAction = Extract<
+  RegularFacetAction | CategoryFacetAction,
+  {event: {name: 'search' | 'clearSearch'}}
+>;
+
+export interface OptimisticFacetSearch {
   query: string;
   onQueryChange: (next: string) => void;
   reset: () => void;
 }
 
+/** A search goes out once typing pauses, so a burst of keystrokes sends one request. */
+export const SEARCH_DEBOUNCE_MS = 200;
+
 /**
- * Keeps the facet search input responsive by tracking its value in local state
- * while dispatching a validated `search` action on every change. In-progress
- * input never touches the shared A2-UI data model. The authoritative query comes
- * from `backendQuery` (resolved from `/state`); the local value is used unless the
- * backend value differs, in which case the backend wins. `dispatchSearch` emits a
- * standard A2-UI `search` action through the action seam, not bidirectional input
- * binding.
+ * The typed text is local state, not an optimistic hold, so a keystroke that never reaches the
+ * producer leaves the field untouched. An external change of the query wins; our own echo does not.
  */
 export function useOptimisticFacetSearch(
   backendQuery: string,
-  dispatchSearch: (query: string) => void
+  dispatch: (action: FacetSearchAction) => void
 ): OptimisticFacetSearch {
-  const [localQuery, setLocalQuery] = useState(backendQuery);
+  const [typed, setTyped] = useState(backendQuery);
+  const lastBackend = useRef(backendQuery);
+  const isBusy = useSessionBusy();
 
-  useEffect(() => {
-    setLocalQuery((current) => (current === backendQuery ? current : backendQuery));
+  // Queries sent whose echo can still arrive, in send order.
+  const sent = useRef<string[]>([]);
+  const debounce = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  // The surface is rebuilt whenever a reply lands, which retires the previous render's dispatch,
+  // so a search that fires later must use the latest one.
+  const latestDispatch = useRef(dispatch);
+  latestDispatch.current = dispatch;
+
+  const cancelDebounce = () => {
+    clearTimeout(debounce.current);
+    debounce.current = undefined;
+  };
+
+  useEffect(() => cancelDebounce, []);
+
+  // Layout, so an adopted external change lands before paint.
+  useLayoutEffect(() => {
+    if (backendQuery === lastBackend.current) {
+      return;
+    }
+    lastBackend.current = backendQuery;
+    const echo = sent.current.indexOf(backendQuery);
+    if (echo !== -1) {
+      // Our echo: everything sent before it has been answered too.
+      sent.current = sent.current.slice(echo + 1);
+    } else {
+      // External change: the producer wins over what is typed or waiting to be sent.
+      sent.current = [];
+      cancelDebounce();
+      setTyped(backendQuery);
+    }
   }, [backendQuery]);
 
-  const onQueryChange = useCallback(
-    (next: string) => {
-      setLocalQuery(next);
-      dispatchSearch(next);
-    },
-    [dispatchSearch]
-  );
+  const send = (action: FacetSearchAction, query: string) => {
+    sent.current.push(query);
+    latestDispatch.current(action);
+  };
 
-  const reset = useCallback(() => setLocalQuery(''), []);
+  // The session withholds a request made while another is in flight, so the search waits.
+  const sendWhenFree = (action: FacetSearchAction, query: string) => {
+    if (isBusy()) {
+      debounce.current = setTimeout(() => sendWhenFree(action, query), SEARCH_DEBOUNCE_MS);
+      return;
+    }
+    debounce.current = undefined;
+    send(action, query);
+  };
 
-  return {query: localQuery, onQueryChange, reset};
+  const onQueryChange = (next: string) => {
+    setTyped(next);
+    cancelDebounce();
+    debounce.current = setTimeout(
+      () => sendWhenFree({event: {name: 'search', context: {query: next}}}, next),
+      SEARCH_DEBOUNCE_MS
+    );
+  };
+
+  const reset = () => {
+    setTyped('');
+    cancelDebounce();
+    sendWhenFree({event: {name: 'clearSearch', context: {}}}, '');
+  };
+
+  return {query: typed, onQueryChange, reset};
 }

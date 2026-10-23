@@ -1,22 +1,23 @@
+import {useOptimistic} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {PaginationAction} from '@coveo/thermidor-schema';
 import {PaginationPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {useGesture} from '../session-request.js';
 import styles from './Pagination.module.css';
 
-/**
- * A2-UI component for the `pagination` controls. The generic binder resolves `page` / `totalPages`
- * from `PaginationPropsSchema` (progressively — either may be undefined on an early render);
- * navigating dispatches `selectPage` through `context.dispatchAction`.
- */
+const NUMBER_OF_PAGES = 5;
+
+/** A2-UI component for the `pagination` controls. */
 export const Pagination = createReactComponent(
   {name: 'Pagination', schema: PaginationPropsSchema},
   ({props, context}) => {
-    const {page, totalPages} = props;
+    const {totalPages} = props;
 
-    // The `{ path }` bindings resolve progressively; until both are numbers the
-    // pagination shell must not render (an unresolved `totalPages` would otherwise
-    // slip past the `<= 1` guard and dispatch a NaN `selectPage`).
-    if (page === undefined || totalPages === undefined) {
+    const [heldPage, addOptimisticPage] = useOptimistic(props.page);
+    const startGesture = useGesture();
+
+    // An unresolved `totalPages` would slip past the `<= 1` guard and send a NaN `selectPage`.
+    if (heldPage === undefined || totalPages === undefined) {
       return null;
     }
 
@@ -24,11 +25,26 @@ export const Pagination = createReactComponent(
       return null;
     }
 
+    // The producer can answer with fewer pages than the held one (e.g. a larger page size).
+    const page = Math.min(Math.max(heldPage, 0), totalPages - 1);
+
+    const firstPage = Math.max(
+      0,
+      Math.min(page - Math.floor(NUMBER_OF_PAGES / 2), totalPages - NUMBER_OF_PAGES)
+    );
+    const pages = Array.from(
+      {length: Math.min(NUMBER_OF_PAGES, totalPages)},
+      (_, i) => firstPage + i
+    );
+
     const handlePageChange = (newPage: number) => {
       const selectPageAction: PaginationAction = {
         event: {name: 'selectPage', context: {page: newPage}},
       };
-      context.dispatchAction(selectPageAction);
+      startGesture(
+        () => addOptimisticPage(newPage),
+        () => context.dispatchAction(selectPageAction)
+      );
     };
 
     return (
@@ -44,7 +60,7 @@ export const Pagination = createReactComponent(
         </button>
 
         <div className={styles.pages}>
-          {Array.from({length: totalPages}, (_, i) => (
+          {pages.map((i) => (
             <button
               key={i}
               className={`${styles.pageButton} ${i === page ? styles.active : ''}`}

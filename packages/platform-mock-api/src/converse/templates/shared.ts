@@ -166,9 +166,31 @@ function buildValidatedSurface({
   };
 }
 
+// A loading placeholder, as the agent streams it in Thermidor mode before a block's content: a
+// `createSurface` with a bare root of the block's component type (no bindings) and a data model that
+// only sets `isLoading: true`. The surface id is opaque; the content later deletes this surface and
+// creates its own, in a snapshot that replaces the placeholder's activity in place.
+function loadingSurfaceMessage(surfaceId: string, component: string): Record<string, unknown> {
+  return {
+    version: 'v1.0',
+    createSurface: {
+      surfaceId,
+      catalogId: CATALOG_ID,
+      components: [{id: RENDERER_ROOT_ID, component}],
+      dataModel: {isLoading: true},
+    },
+  };
+}
+
+function deleteSurfaceMessage(surfaceId: string): Record<string, unknown> {
+  return {version: 'v1.0', deleteSurface: {surfaceId}};
+}
+
 export {
   CATALOG_ID,
   RENDERER_ROOT_ID,
+  deleteSurfaceMessage,
+  loadingSurfaceMessage,
   statePath,
   bindStateFields,
   buildConversationResponse,

@@ -1,3 +1,10 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+}
+
 .container {
   display: grid;
   grid-template-columns: 220px minmax(0, 1fr);
@@ -46,6 +53,18 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   line-height: 1.5;
+}
+
+.documents {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.documentsHeading {
+  margin: 0;
+  font-size: var(--font-size-md);
+  color: var(--color-text-primary);
 }
 
 @media (max-width: 639px) {

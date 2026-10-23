@@ -1,6 +1,8 @@
 import {describe, expect, it, afterEach, vi} from 'vitest';
 import {screen, cleanup, waitFor} from '@testing-library/react';
 import {mountSurface} from '../mount-surface.harness.js';
+import type {ThermidorCatalogOptions} from '../components.js';
+import {formatDocumentSize} from '../RelatedDocuments/RelatedDocumentList.js';
 
 /**
  * ProductResearchCard is a `createReactComponent` implementation driven by the generic binder,
@@ -16,6 +18,7 @@ const BINDINGS = {
   product: {path: '/state/root/product'},
   summary: {path: '/state/root/summary'},
   bullets: {path: '/state/root/bullets'},
+  relatedDocuments: {path: '/state/root/relatedDocuments'},
 };
 
 const PRODUCT = {
@@ -33,15 +36,46 @@ const PRODUCT = {
 const SUMMARY = 'The warmest suit in the range, built for very cold water.';
 const BULLETS = ['7mm neoprene for maximum insulation.', 'Sealed back zip limits flushing.'];
 
-function mountResearchCard(product: Record<string, unknown>) {
+function relatedDocument(index: number, overrides: Record<string, unknown> = {}) {
+  return {
+    title: `Owner manual ${index}`,
+    clickUri: `https://example.com/manual-${index}.pdf`,
+    filetype: 'pdf',
+    size: 2048,
+    ...overrides,
+  };
+}
+
+function mountResearchCard(
+  product: Record<string, unknown>,
+  {
+    relatedDocuments,
+    catalogOptions,
+  }: {relatedDocuments?: unknown[]; catalogOptions?: ThermidorCatalogOptions} = {}
+) {
   mountSurface({
     component: {component: 'ProductResearchCard', ...BINDINGS},
     dataModel: [
       {path: '/state/root/product', value: product},
       {path: '/state/root/summary', value: SUMMARY},
       {path: '/state/root/bullets', value: BULLETS},
+      ...(relatedDocuments === undefined
+        ? []
+        : [{path: '/state/root/relatedDocuments', value: relatedDocuments}]),
     ],
+    catalogOptions,
   });
+}
+
+async function documentLinks() {
+  await waitFor(() => expect(screen.queryByText(SUMMARY)).not.toBeNull());
+  const section = screen.queryByRole('region', {name: 'Documentation & manuals'});
+  return section === null
+    ? []
+    : Array.from(section.querySelectorAll('a')).map((link) => ({
+        text: link.textContent,
+        href: link.getAttribute('href'),
+      }));
 }
 
 describe('ProductResearchCard', () => {
@@ -120,5 +154,146 @@ describe('ProductResearchCard', () => {
     mountSurface({component: {component: 'ProductResearchCard', ...BINDINGS}});
 
     await waitFor(() => expect(screen.queryByLabelText('Loading product research')).not.toBeNull());
+  });
+
+  it('lists the related documents with their file type and size', async () => {
+    mountResearchCard(PRODUCT, {relatedDocuments: [relatedDocument(1, {size: 1536000})]});
+
+    expect(await documentLinks()).toEqual([
+      {text: 'Owner manual 1', href: 'https://example.com/manual-1.pdf'},
+    ]);
+    expect(screen.queryByText('PDF - 1.5 MB')).not.toBeNull();
+  });
+
+  it('lists the related documents under the card, outside its panel', async () => {
+    mountResearchCard(PRODUCT, {relatedDocuments: [relatedDocument(1)]});
+
+    await waitFor(() => expect(screen.queryByText(SUMMARY)).not.toBeNull());
+    const card = screen.getByRole('article', {name: /^Product research: /});
+    const documents = screen.getByRole('region', {name: 'Documentation & manuals'});
+    expect(card.contains(documents)).toBe(false);
+    expect(card.compareDocumentPosition(documents) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  it('lists at most 10 related documents by default, in the order they were sent', async () => {
+    mountResearchCard(PRODUCT, {
+      relatedDocuments: Array.from({length: 12}, (_, index) => relatedDocument(index)),
+    });
+
+    const links = await documentLinks();
+    expect(links.map((link) => link.text)).toEqual(
+      Array.from({length: 10}, (_, index) => `Owner manual ${index}`)
+    );
+  });
+
+  it('lists at most maxLinks related documents', async () => {
+    mountResearchCard(PRODUCT, {
+      relatedDocuments: Array.from({length: 5}, (_, index) => relatedDocument(index)),
+      catalogOptions: {productResearchCard: {maxLinks: 2}},
+    });
+
+    expect((await documentLinks()).map((link) => link.text)).toEqual([
+      'Owner manual 0',
+      'Owner manual 1',
+    ]);
+  });
+
+  it('hides the related documents when maxLinks is 0', async () => {
+    mountResearchCard(PRODUCT, {
+      relatedDocuments: [relatedDocument(1)],
+      catalogOptions: {productResearchCard: {maxLinks: 0}},
+    });
+
+    await waitFor(() => expect(screen.queryByText(SUMMARY)).not.toBeNull());
+    expect(screen.queryByRole('region', {name: 'Documentation & manuals'})).toBeNull();
+  });
+
+  it.each([
+    {maxLinks: -1, expected: 0},
+    {maxLinks: 2.9, expected: 2},
+    {maxLinks: Infinity, expected: 12},
+    {maxLinks: NaN, expected: 0},
+  ])(
+    'lists $expected related documents when maxLinks is $maxLinks',
+    async ({maxLinks, expected}) => {
+      mountResearchCard(PRODUCT, {
+        relatedDocuments: Array.from({length: 12}, (_, index) => relatedDocument(index)),
+        catalogOptions: {productResearchCard: {maxLinks}},
+      });
+
+      expect(await documentLinks()).toHaveLength(expected);
+    }
+  );
+
+  it('skips a related document with neither a title nor a link', async () => {
+    mountResearchCard(PRODUCT, {
+      relatedDocuments: [relatedDocument(1, {title: '', clickUri: ''}), relatedDocument(2)],
+      catalogOptions: {productResearchCard: {maxLinks: 1}},
+    });
+
+    expect((await documentLinks()).map((link) => link.text)).toEqual(['Owner manual 2']);
+  });
+
+  it('falls back to the link when a related document has no title', async () => {
+    mountResearchCard(PRODUCT, {relatedDocuments: [relatedDocument(1, {title: ''})]});
+
+    expect(await documentLinks()).toEqual([
+      {text: 'https://example.com/manual-1.pdf', href: 'https://example.com/manual-1.pdf'},
+    ]);
+  });
+
+  it('renders a document without a link as plain text', async () => {
+    mountResearchCard(PRODUCT, {relatedDocuments: [relatedDocument(1, {clickUri: ''})]});
+
+    expect(await documentLinks()).toEqual([]);
+    expect(screen.queryByText('Owner manual 1')).not.toBeNull();
+  });
+
+  it('renders a document with a non-http(s) link as plain text', async () => {
+    mountResearchCard(PRODUCT, {
+      relatedDocuments: [relatedDocument(1, {clickUri: 'javascript:alert(1)'})],
+    });
+
+    expect(await documentLinks()).toEqual([]);
+    expect(screen.queryByText('Owner manual 1')).not.toBeNull();
+  });
+
+  it('omits the file type and size a related document lacks', async () => {
+    mountResearchCard(PRODUCT, {
+      relatedDocuments: [{title: 'Owner manual 1', clickUri: 'https://example.com/manual-1.pdf'}],
+    });
+
+    expect(await documentLinks()).toEqual([
+      {text: 'Owner manual 1', href: 'https://example.com/manual-1.pdf'},
+    ]);
+    expect(screen.queryByText(/PDF|kB/)).toBeNull();
+  });
+
+  it('renders no related documents section when the agent sends none', async () => {
+    mountResearchCard(PRODUCT);
+
+    await waitFor(() => expect(screen.queryByText(SUMMARY)).not.toBeNull());
+    expect(screen.queryByRole('region', {name: 'Documentation & manuals'})).toBeNull();
+    cleanup();
+
+    mountResearchCard(PRODUCT, {relatedDocuments: []});
+    await waitFor(() => expect(screen.queryByText(SUMMARY)).not.toBeNull());
+    expect(screen.queryByRole('region', {name: 'Documentation & manuals'})).toBeNull();
+  });
+});
+
+describe('formatDocumentSize', () => {
+  it.each([
+    [0, '0 B'],
+    [512, '512 B'],
+    [2048, '2 kB'],
+    [333200, '333.2 kB'],
+    [1536000, '1.5 MB'],
+    [999950, '1 MB'],
+    [3 * 1000 ** 3, '3 GB'],
+    [Number.NaN, ''],
+    [-1, ''],
+  ])('formats %d bytes as %s', (bytes, expected) => {
+    expect(formatDocumentSize(bytes)).toBe(expected);
   });
 });

@@ -1,3 +1,59 @@
+## 3.64.0
+
+### Minor Changes
+
+- [#8632](https://github.com/coveo/ui-kit/pull/8632) [`c9eaa17`](https://github.com/coveo/ui-kit/commit/c9eaa17313f48c9141a8a9779fee718908f93694) - Add the `if-defined` and `if-not-defined` attributes to `atomic-result-template`, `atomic-result-children-template` and `atomic-product-template`, and restore them on `atomic-recs-result-template` and `atomic-insight-result-template`, which have ignored them since moving to Lit. A template can now apply only to items that have, or lack, specific fields (for example, `<atomic-result-template if-defined="author">`), and `atomic-insight-result-children-template` evaluates these attributes the same way without adding them to its `conditions` property.
+
+### Patch Changes
+
+- [#8681](https://github.com/coveo/ui-kit/pull/8681) [`963cf29`](https://github.com/coveo/ui-kit/commit/963cf291ccafe2540f84cc7517bc913b9f729534) - Load the dayjs locales from the CDN one at a time, for the page's language, instead of all 143 of them coming with the dayjs chunk that every page loads. Every CDN page downloads about 33 KB less, gzipped.
+
+- [#8682](https://github.com/coveo/ui-kit/pull/8682) [`de44173`](https://github.com/coveo/ui-kit/commit/de44173b789641667316a0b61fdf950c0f7b9c7b) - Group the code that many components share in one CDN chunk instead of many small ones, so a typical search page fetches about half as many files.
+
+- [#8685](https://github.com/coveo/ui-kit/pull/8685) [`abe2ba6`](https://github.com/coveo/ui-kit/commit/abe2ba647d91c03fafe680f899ae2c95fa9da071) - Stop the facet search announcements from keeping removed facets in memory. They now unsubscribe when their facet leaves the DOM, so the facets copied into the refine modal are released once it closes. A facet that comes back to the page, or is copied into the refine modal while a facet search shows results, no longer repeats the announcement.
+
+- [#8650](https://github.com/coveo/ui-kit/pull/8650) [`2e5778e`](https://github.com/coveo/ui-kit/commit/2e5778e3633f8b4da495c7f00b9b692a728aa6cd) - Build the conditions of `atomic-field-condition` and `atomic-product-field-condition` with a shared helper, so every component that supports `if-defined`, `if-not-defined`, `must-match-*` and `must-not-match-*` combines them the same way. No behavior change.
+
+- [#8670](https://github.com/coveo/ui-kit/pull/8670) [`12a1c1d`](https://github.com/coveo/ui-kit/commit/12a1c1d752525f35e257ec7463239ace5f782bbd) - Stop keeping an interface in memory after it is removed from the page, for example on a route change in a single-page application. The component initialization queue kept every interface it had seen, with its engine and everything it rendered.
+
+- [#8701](https://github.com/coveo/ui-kit/pull/8701) [`0becccd`](https://github.com/coveo/ui-kit/commit/0becccd543fa9c6d2f1da75e0b1ffb3f2ab983d3) - Make `atomic-insight-smart-snippet` listen to the `select-source`, `begin-delayed-select-source` and `cancel-pending-select-source` events of `atomic-smart-snippet-source`, instead of setting its deprecated callback properties. Selecting the source still logs the same analytics, once.
+
+- [#8671](https://github.com/coveo/ui-kit/pull/8671) [`8302f5e`](https://github.com/coveo/ui-kit/commit/8302f5e71b34bceb47d63a3f927d6a508fcb7681) - Load the illustrations of `atomic-query-error`, `atomic-commerce-query-error`, `atomic-insight-query-error` and `atomic-recs-error` only when an error is displayed, so pages that never display an error download about 63 KB less. The illustration for a lost connection still comes with the components, since the network may be down when it shows, and the error still displays if an illustration fails to load.
+
+- [#8668](https://github.com/coveo/ui-kit/pull/8668) [`c402e28`](https://github.com/coveo/ui-kit/commit/c402e28ed0a1698c051687fbcaad359136d950a1) - Stop embedding a second copy of the global Tailwind stylesheet in `atomic-search-box`, `atomic-commerce-search-box` and `atomic-insight-result-children`. Each of them is about 46 KB smaller, and the page has one less large stylesheet to parse for each of them.
+
+- [#8667](https://github.com/coveo/ui-kit/pull/8667) [`0e14b23`](https://github.com/coveo/ui-kit/commit/0e14b23c4f2bde3ac65b09ebbd7860de6d529c44) - Parse the global Tailwind stylesheet once per page instead of once per component type. Every component now adopts the same `CSSStyleSheet`, which saves about 0.2 MB of memory and 0.4 ms of style parsing for each component type on the page. When a layout sets `mobile-breakpoint`, the components that follow it adopt their own copy with that breakpoint, so the other components keep theirs as before.
+
+- [#8696](https://github.com/coveo/ui-kit/pull/8696) [`5cfce3d`](https://github.com/coveo/ui-kit/commit/5cfce3dc91eb9ccd7c1e1886c692ffda494bd403) - Fix the event names in the documentation of `atomic-smart-snippet-source`. The deprecation notices of its `onSelectSource`, `onBeginDelayedSelectSource` and `onCancelPendingSelectSource` callbacks now point to the `select-source`, `begin-delayed-select-source` and `cancel-pending-select-source` events that it dispatches, and the cancel event is no longer documented as `cancel-delayed-select-source`.
+
+- [#8684](https://github.com/coveo/ui-kit/pull/8684) [`6cb90bb`](https://github.com/coveo/ui-kit/commit/6cb90bb9fb2923ae6149897cee7279b89ae9fe3d) - Unsubscribe components from their Headless controller when they leave the DOM, and subscribe them again if they come back. Before, a removed component stayed subscribed and kept re-rendering for the rest of the session.
+
+- Updated dependencies [[`5d3b308`](https://github.com/coveo/ui-kit/commit/5d3b308072ac7b92324e50acb68e34088ce05f18), [`8af7566`](https://github.com/coveo/ui-kit/commit/8af7566cac333724f18d96d4a7d27ac09f415d5f), [`a873e42`](https://github.com/coveo/ui-kit/commit/a873e42c94519da6e7545b4f63b8c1973b30b2ec), [`0a95379`](https://github.com/coveo/ui-kit/commit/0a953790155e0411965e315e6232d1a46e8e5084), [`480c745`](https://github.com/coveo/ui-kit/commit/480c745440f52308eaf97f139d0220939d809525), [`a292905`](https://github.com/coveo/ui-kit/commit/a2929053c49aa386ad4a2b0a8399ea1796bfefe8), [`2f1cde8`](https://github.com/coveo/ui-kit/commit/2f1cde8075b46addfa1d9ae4489227022829920f)]:
+  - @coveo/headless@3.58.0
+  - @coveo/atomic-legacy@0.1.9
+
+## 3.63.0
+
+### Minor Changes
+
+- [#8595](https://github.com/coveo/ui-kit/pull/8595) [`e9e18a0`](https://github.com/coveo/ui-kit/commit/e9e18a058514f4d4fb91838a4a82ff507026ad0c) - Add a `localize-with-country` property to `atomic-commerce-interface` and `atomic-commerce-recommendation-interface`. When set, the interface localizes with the country of the commerce context as well as its language, for example `fr-CA` rather than `fr`, so number, currency, and date formatting follow the country: with `en` and `CA`, a CAD price renders as `$1,000.10` rather than `CA$1,000.10`.
+
+- [#8566](https://github.com/coveo/ui-kit/pull/8566) [`289a799`](https://github.com/coveo/ui-kit/commit/289a7999ef3b6e80d414a7a420147b041d8b127b) - Support dayjs [localized formats](https://day.js.org/docs/en/display/format#localized-formats) such as `L`, `LL`, and `LLL` in `atomic-result-date`. They follow the interface `language`, so with `language="en-CA"`, `format="L"` renders `2026-09-30` where `en-US` renders `09/30/2026`. An unescaped `L`, `l`, or `LT` in a custom `format` is now read as a localized format, so wrap literal text in `[]`. Interfaces now also wait for the date locale of their `language` before rendering, so dates no longer render in the previous locale after a language change.
+
+### Patch Changes
+
+- [#8573](https://github.com/coveo/ui-kit/pull/8573) [`0a0513b`](https://github.com/coveo/ui-kit/commit/0a0513b18af91573e512c21f83080f6f9bb4238f) - Fix `atomic-result-date` with `relative-time` for dates 2 to 6 days ahead, which rendered a garbled "next week" label in 15 languages, such as `Näc81te Woc8e` in German. Like in English and French, they now render the weekday, such as `Freitag`.
+
+- [#8592](https://github.com/coveo/ui-kit/pull/8592) [`f2da474`](https://github.com/coveo/ui-kit/commit/f2da474307e14aa3637f2eeb9f2f4178f7558dcb) - Fix `atomic-result-date` when the interface `language` has a region. With `relative-time`, a regional language such as `fr-CA` or `pt-BR` rendered English labels such as `Today at 9:32 AM` and ignored `format`. A lowercase region such as `fr-ca`, or a locale with a script such as `zh-Hant-TW`, now also loads its regional date locale instead of falling back to the language.
+
+- [#8597](https://github.com/coveo/ui-kit/pull/8597) [`fd8290e`](https://github.com/coveo/ui-kit/commit/fd8290ec41cde88dab9fae4207c62fc37946cdf3) - Load Atomic's regional translations again when the interface `language` has a region, as before 3.61.0: `es-ES`, `pt-BR`, `zh-CN`, and `zh-TW` interfaces no longer fall back to the `es`, `pt`, and `zh` strings. Register customizations for a regional interface under its regional code (for example `pt-BR`), because it takes precedence over the base language. Facet search now also resolves field captions through the same language fallbacks as the displayed captions, so captions registered under `en` apply to an `en-CA` interface.
+
+- [#8567](https://github.com/coveo/ui-kit/pull/8567) [`d7e02f0`](https://github.com/coveo/ui-kit/commit/d7e02f0c6470e8c9997a36a22fe3524cb3410ba4) - Keep `atomic-pager`, `atomic-commerce-pager` and `atomic-insight-pager` on a single row on narrow viewports by showing fewer page buttons when they don't fit. Move the choices of `atomic-results-per-page` and `atomic-commerce-products-per-page` below their label when they don't fit on one line.
+
+- Updated dependencies [[`ef62433`](https://github.com/coveo/ui-kit/commit/ef62433af99d60c4aac4edf94c273ceba9108e96)]:
+  - @coveo/headless@3.57.3
+  - @coveo/atomic-legacy@0.1.8
+
 ## 3.62.0
 
 ### Minor Changes

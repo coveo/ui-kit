@@ -16,8 +16,8 @@ import type {EngineStaticState} from './engine.js';
 import type {FromBuildResult} from './from-build-result.js';
 
 /**
- * @deprecated This interface will be remove on the next major version.
- * Use BuildConfig interface instead
+ * @deprecated This type will be removed in the next major version. The `accessToken` and
+ * `navigatorContext` options of `fetchStaticState()` aren't affected.
  */
 export type FetchStaticStateOptions = {
   /**

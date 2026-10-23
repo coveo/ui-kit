@@ -58,6 +58,9 @@ export type {
   ToolCallStep,
   ToolCallStatus,
   DiscoveredSurface,
+  SessionRequest,
+  PromptRequest,
+  ActionRequest,
 } from '@/src/session/types.js';
 
 // ── Serialization ───────────────────────────────────────────────────────────

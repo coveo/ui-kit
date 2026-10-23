@@ -1,0 +1,44 @@
+.surfaces {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.readOnly {
+  padding-left: var(--space-3);
+  border-left: 3px solid var(--color-border);
+}
+
+.readOnlyNote {
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.readOnly :is(button, input, select):disabled {
+  opacity: 0.55;
+}
+
+.readOnly :is(button, input, select):disabled,
+.readOnly label:has(:disabled) {
+  pointer-events: none;
+}
+
+/* The whole surface dims, only after a short delay so a fast response never flashes it. */
+.surfaces > * {
+  transition: opacity 0s;
+}
+
+.locked {
+  cursor: progress;
+}
+
+.locked > * {
+  opacity: 0.55;
+  pointer-events: none;
+  transition: opacity 120ms ease-in 150ms;
+}

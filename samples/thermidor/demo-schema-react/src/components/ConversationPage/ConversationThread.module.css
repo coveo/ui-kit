@@ -14,3 +14,8 @@
 .agentContent {
   width: 100%;
 }
+
+.followUp {
+  display: flex;
+  margin: var(--space-5) 0 var(--space-4);
+}
