@@ -96,3 +96,10 @@
 .compact .documentTitle {
   font-size: var(--font-size-sm);
 }
+
+.documentLead {
+  flex-shrink: 0;
+  font-size: var(--font-size-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-secondary);
+}

@@ -1,6 +1,5 @@
 import type {ProductResearchRelatedDocument} from '@coveo/thermidor-schema';
-import {FileIcon} from '../icons/index.js';
-import styles from './RelatedDocumentList.module.css';
+import {DocumentRows} from '../../components/DocumentRows/DocumentRows.js';
 
 export const DEFAULT_MAX_LINKS = 10;
 
@@ -44,11 +43,6 @@ export function visibleDocuments(
     .slice(0, linkLimit);
 }
 
-// Renderers navigate only to http(s); any other scheme renders the title as plain text.
-function safeHref(clickUri: string | undefined): string | undefined {
-  return clickUri && /^https?:\/\//i.test(clickUri) ? clickUri : undefined;
-}
-
 /**
  * Lists related documents one row each: a file icon, the title linking to the document, and the
  * file type and size. Pass the documents through `visibleDocuments` first. `compact` drops the row
@@ -61,39 +55,15 @@ export function RelatedDocumentList({
   documents: ProductResearchRelatedDocument[];
   compact?: boolean;
 }) {
-  return (
-    <ul className={compact ? `${styles.documentRows} ${styles.compact}` : styles.documentRows}>
-      {documents.map((document, index) => {
-        const label = document.title || document.clickUri;
-        const href = safeHref(document.clickUri);
-        const meta = [
-          document.filetype?.toUpperCase(),
-          document.size === undefined ? '' : formatDocumentSize(document.size),
-        ]
-          .filter(Boolean)
-          .join(' - ');
-        // Documents carry no client-facing id, and the list is static per render.
-        return (
-          <li key={index} className={styles.documentRow}>
-            <FileIcon className={styles.documentIcon} />
-            <div className={styles.documentText}>
-              {href ? (
-                <a
-                  className={styles.documentLink}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {label}
-                </a>
-              ) : (
-                <span className={styles.documentTitle}>{label}</span>
-              )}
-              {meta && <span className={styles.documentMeta}>{meta}</span>}
-            </div>
-          </li>
-        );
-      })}
-    </ul>
-  );
+  const rows = documents.map((document) => ({
+    title: document.title || document.clickUri || '',
+    href: document.clickUri,
+    meta: [
+      document.filetype?.toUpperCase(),
+      document.size === undefined ? '' : formatDocumentSize(document.size),
+    ]
+      .filter(Boolean)
+      .join(' - '),
+  }));
+  return <DocumentRows rows={rows} compact={compact} />;
 }
