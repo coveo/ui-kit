@@ -3,7 +3,7 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "dependsOn": ["tsc:check", "build:storybook", "build:lit", "build:cdn"],
+      "dependsOn": ["tsc:check", "build:storybook", "build:lit", "build:cdn", "build:agent-kit"],
       "outputs": []
     },
     "build:locales": {
@@ -47,6 +47,18 @@
         "!./src/**/*.spec.ts",
         "!./src/**/*.d.ts",
         "!./src/**/e2e/**"
+      ]
+    },
+    "build:agent-kit": {
+      "dependsOn": ["build:cem"],
+      "outputs": ["dist/skills/**"],
+      "inputs": [
+        "./custom-elements.json",
+        "./package.json",
+        "./src/**/*.usage.mdx",
+        "./storybook-utils/documentation/*.mdx",
+        "$TURBO_ROOT$/packages/atomic-agent-kit/src/**",
+        "$TURBO_ROOT$/packages/atomic-agent-kit/content/**"
       ]
     },
     "build:indexes": {

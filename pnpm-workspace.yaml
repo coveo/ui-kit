@@ -13,6 +13,7 @@ packages:
   - packages/atomic-angular/projects/*
   - packages/atomic
   - packages/atomic-a11y
+  - packages/atomic-agent-kit
   - packages/platform-mock-api
   - packages/atomic-cdn-smoke
   - packages/atomic-theming-e2e

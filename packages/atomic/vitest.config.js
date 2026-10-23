@@ -171,6 +171,19 @@ const storybookPure = defineConfig({
   },
 });
 
+// Checks every usage doc's HTML snippets against the manifest, in Node (scripts/usage-docs).
+// The analyzer's CLI changes the working directory while it runs, so the spec needs a process.
+const usageDocs = defineConfig({
+  name: 'usage-docs',
+  test: {
+    name: 'usage-docs',
+    include: ['scripts/usage-docs/*.spec.mjs'],
+    environment: 'node',
+    pool: 'forks',
+    hookTimeout: 120_000,
+  },
+});
+
 export default mergeConfig(atomicDefault, {
   test: {
     reporters: [
@@ -180,6 +193,6 @@ export default mergeConfig(atomicDefault, {
         packageJsonPath: path.resolve(import.meta.dirname, 'package.json'),
       }),
     ],
-    projects: [atomicDefault, storybookPure, ...(!isVitestVscodeExt ? [storybook] : [])],
+    projects: [atomicDefault, storybookPure, usageDocs, ...(!isVitestVscodeExt ? [storybook] : [])],
   },
 });

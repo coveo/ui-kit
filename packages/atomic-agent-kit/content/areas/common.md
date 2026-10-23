@@ -1,0 +1,1 @@
+Components shared by every area. Pages use `atomic-layout-section` to place components in a layout and `atomic-icon` to show an icon; the others are rendered by Atomic itself (error messages, screen-reader announcements, the focus trap of modals) and rarely appear in hand-written markup.
