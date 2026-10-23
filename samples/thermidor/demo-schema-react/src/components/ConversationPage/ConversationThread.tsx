@@ -20,6 +20,8 @@ interface ConversationThreadProps {
   followUps?: ReadonlyMap<string, readonly FollowUp[]>;
   /** The turn whose follow-up is in flight, if any. */
   pendingTurnId?: string | null;
+  /** Asks a question as the user's next message, from the latest answer's follow-up questions. */
+  onAskFollowUp?: (question: string) => void;
 }
 
 export function ConversationThread({
@@ -28,6 +30,7 @@ export function ConversationThread({
   surfacesByTurn,
   followUps,
   pendingTurnId = null,
+  onAskFollowUp,
 }: ConversationThreadProps) {
   return (
     <div className={styles.thread}>
@@ -50,7 +53,8 @@ export function ConversationThread({
                 surfacesByTurn.get(turn.id) ?? NO_SURFACES,
                 followUps?.get(turn.id) ?? NO_FOLLOW_UPS,
                 index === turns.length - 1,
-                turn.id === pendingTurnId
+                turn.id === pendingTurnId,
+                onAskFollowUp
               )}
             </div>
           </div>
@@ -64,7 +68,8 @@ export function ConversationThread({
 /**
  * A turn shows the agent's reasoning and text when an agent answered, then every block the
  * server produced for it, search blocks included. Each follow-up sent from the turn is drawn as
- * its own exchange after it. Only the latest turn's blocks are interactive.
+ * its own exchange after it. Only the latest turn's blocks are interactive, and only its last
+ * answer offers its follow-up questions.
  *
  * A failed follow-up fails the whole turn, so its error is drawn after the exchanges it follows
  * rather than in their place.
@@ -74,7 +79,8 @@ function renderTurnContent(
   surfaceIds: readonly string[],
   followUps: readonly FollowUp[],
   isLatest: boolean,
-  isPending: boolean
+  isPending: boolean,
+  onAskFollowUp?: (question: string) => void
 ) {
   if (turn.status === 'error' && followUps.length === 0) {
     return <ErrorTurnBlock error={turn.error} />;
@@ -89,7 +95,11 @@ function renderTurnContent(
         return (
           <Fragment key={index}>
             {segment.prompt !== undefined && <FollowUpPrompt prompt={segment.prompt} />}
-            <AgentResponseBlock response={segment.response} isStreaming={isStreaming}>
+            <AgentResponseBlock
+              response={segment.response}
+              isStreaming={isStreaming}
+              onAskFollowUp={isLatest && index === segments.length - 1 ? onAskFollowUp : undefined}
+            >
               <TurnSurfaces
                 surfaceIds={segment.surfaceIds}
                 interactive={isLatest}

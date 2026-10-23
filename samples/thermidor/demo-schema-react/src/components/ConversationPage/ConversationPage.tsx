@@ -54,6 +54,7 @@ export function ConversationPage({
             surfacesByTurn={surfacesByTurn}
             followUps={followUps}
             pendingTurnId={pendingTurnId}
+            onAskFollowUp={promptDisabled ? undefined : onSubmit}
           />
         </div>
       </div>
