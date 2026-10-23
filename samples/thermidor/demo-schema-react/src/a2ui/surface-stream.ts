@@ -104,12 +104,7 @@ export function isSearchSurface(stream: SurfaceStream, renderId: string): boolea
 }
 
 /** The root component kind of an agent's suggested next actions. */
-export const ACTION_BAR_ROOT_COMPONENT = 'NextActionsBar';
-
-/** Whether a render surface is a bar of suggested next actions. */
-export function isActionBar(stream: SurfaceStream, renderId: string): boolean {
-  return stream.rootComponents.get(renderId) === ACTION_BAR_ROOT_COMPONENT;
-}
+const ACTION_BAR_ROOT_COMPONENT = 'NextActionsBar';
 
 /**
  * Whether a render surface is a visual answer block (carousel, comparison, bundle, research), as
@@ -118,28 +113,6 @@ export function isActionBar(stream: SurfaceStream, renderId: string): boolean {
 export function isAnswerBlock(stream: SurfaceStream, renderId: string): boolean {
   const root = stream.rootComponents.get(renderId);
   return root !== undefined && root !== SEARCH_ROOT_COMPONENT && root !== ACTION_BAR_ROOT_COMPONENT;
-}
-
-/**
- * The bars of next actions created before a newer search surface. Their suggestions were made
- * for results that are no longer shown, so the agent may no longer find what they name.
- */
-export function actionBarsBeforeLatestSearch(
-  stream: SurfaceStream,
-  turns: readonly Turn[]
-): ReadonlySet<string> {
-  const stale = new Set<string>();
-  const seen: string[] = [];
-  for (const turn of turns) {
-    for (const renderId of stream.surfacesByTurn.get(turn.id) ?? []) {
-      if (isActionBar(stream, renderId)) {
-        seen.push(renderId);
-      } else if (isSearchSurface(stream, renderId)) {
-        for (const bar of seen) stale.add(bar);
-      }
-    }
-  }
-  return stale;
 }
 
 /** The most recently created search surface still on screen, if any. */

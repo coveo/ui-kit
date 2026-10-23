@@ -27,12 +27,12 @@ interface ConversationPageProps {
   isSearchSurface?: (surfaceId: string) => boolean;
   /** Results-panel layouts only: the search surface the results panel shows. */
   panelSurfaceId?: string;
-  /** Whether a render surface is a bar of suggested next actions. */
-  isActionBar?: (surfaceId: string) => boolean;
-  /** The bars of next actions withdrawn because the results changed since. */
-  expiredActionBars?: ReadonlySet<string>;
   /** Whether the conversation holds visual answer blocks, which need a wider chat window. */
   hasAnswerBlocks?: boolean;
+  /** Sends a prompt from the results panel's search box. Defaults to `onSubmit`. */
+  onPanelSubmit?: (prompt: string) => void;
+  /** The indexes of the turns started from the results panel's search box. */
+  panelTurnIndexes?: ReadonlySet<number>;
 }
 
 /**
@@ -51,9 +51,9 @@ export function ConversationPage({
   layout = 'stacked',
   isSearchSurface,
   panelSurfaceId,
-  isActionBar,
-  expiredActionBars,
   hasAnswerBlocks = false,
+  onPanelSubmit = onSubmit,
+  panelTurnIndexes,
 }: ConversationPageProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const turnRefs = useRef<Map<string, HTMLDivElement>>(new Map());
@@ -79,8 +79,7 @@ export function ConversationPage({
             layout={layout}
             isSearchSurface={isSearchSurface}
             panelSurfaceId={panelSurfaceId}
-            isActionBar={isActionBar}
-            expiredActionBars={expiredActionBars}
+            panelTurnIndexes={panelTurnIndexes}
           />
         </div>
       </div>
@@ -111,7 +110,7 @@ export function ConversationPage({
         surfaceId={panelSurfaceId}
         isStreaming={isStreaming}
         promptDisabled={promptDisabled}
-        onSubmit={onSubmit}
+        onSubmit={onPanelSubmit}
       />
       <ChatWindow isStreaming={isStreaming} answerKey={answerKey} wide={hasAnswerBlocks}>
         {conversation}

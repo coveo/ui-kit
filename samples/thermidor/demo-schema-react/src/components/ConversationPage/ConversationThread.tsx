@@ -1,5 +1,5 @@
 import {Fragment, useEffect, useRef} from 'react';
-import type {Turn} from '@coveo/thermidor';
+import type {Turn, TurnResponse} from '@coveo/thermidor';
 import {AgentResponseBlock} from './AgentResponseBlock.js';
 import {ErrorTurnBlock} from './ErrorTurnBlock.js';
 import {UserPromptBubble} from './UserPromptBubble.js';
@@ -27,20 +27,15 @@ interface ConversationThreadProps {
   isSearchSurface?: (surfaceId: string) => boolean;
   /** Results-panel layouts only: the search surface the results panel shows. */
   panelSurfaceId?: string;
-  /** Whether a render surface is a bar of suggested next actions. */
-  isActionBar?: (surfaceId: string) => boolean;
-  /** The bars of next actions withdrawn because the results changed since. */
-  expiredActionBars?: ReadonlySet<string>;
+  /**
+   * Results-panel layouts only: the indexes of the turns started from the panel's search box.
+   * Such a turn is drawn only once the agent answers it (or it fails): a search it runs already
+   * shows in the panel, so it leaves no trace in the conversation.
+   */
+  panelTurnIndexes?: ReadonlySet<number>;
 }
 
-/** Which next actions are still live, as {@link renderTurnContent} needs it. */
-interface ActionBarRule {
-  isActionBar: (surfaceId: string) => boolean;
-  expired: ReadonlySet<string>;
-}
-
-const NO_EXPIRED: ReadonlySet<string> = new Set();
-const NEVER = () => false;
+const NO_INDEXES: ReadonlySet<number> = new Set();
 
 /** Where a turn's search surfaces go, as {@link renderTurnContent} needs it. */
 interface SearchPlacement {
@@ -57,43 +52,66 @@ export function ConversationThread({
   layout = 'stacked',
   isSearchSurface,
   panelSurfaceId,
-  isActionBar = NEVER,
-  expiredActionBars = NO_EXPIRED,
+  panelTurnIndexes = NO_INDEXES,
 }: ConversationThreadProps) {
-  const actionBars: ActionBarRule = {isActionBar, expired: expiredActionBars};
   const placement: SearchPlacement | undefined =
     layout !== 'stacked' && isSearchSurface ? {isSearchSurface, panelSurfaceId} : undefined;
+  const shownTurns = turns
+    .map((turn, index) => ({turn, index}))
+    .filter(
+      ({turn, index}) =>
+        !placement ||
+        !panelTurnIndexes.has(index) ||
+        turn.status === 'error' ||
+        hasAgentAnswer(turn.response)
+    );
+  // With a results panel, the latest answer stays usable while the shopper searches and filters
+  // after it: its next actions and blocks keep accepting actions. Older answers are read-only.
+  const latestAnswerIndex = placement
+    ? turns.findLastIndex((turn) => hasAgentAnswer(turn.response))
+    : -1;
 
   return (
     <div className={styles.thread}>
-      {turns.map((turn, index) => (
-        <div key={turn.id}>
-          <div
-            className={styles.turnWrapper}
-            role="article"
-            aria-label={`Turn ${index + 1}`}
-            ref={(el) => {
-              if (el) {
-                turnRefs.current.set(turn.id, el);
-              }
-            }}
-          >
-            <UserPromptBubble prompt={turn.input.prompt ?? ''} />
-            <div className={styles.agentContent}>
-              {renderTurnContent(
-                turn,
-                surfacesByTurn.get(turn.id) ?? NO_SURFACES,
-                followUps?.get(turn.id) ?? NO_FOLLOW_UPS,
-                index === turns.length - 1,
-                turn.id === pendingTurnId,
-                placement,
-                actionBars
-              )}
+      {shownTurns.map(({turn, index}, position) => {
+        const surfaceIds = surfacesByTurn.get(turn.id) ?? NO_SURFACES;
+        const turnFollowUps = followUps?.get(turn.id) ?? NO_FOLLOW_UPS;
+        // A panel search shown only for the follow-ups answered in its turn (they stream into
+        // the latest turn) draws those follow-ups alone, not its own prompt and search.
+        const hidesOwnExchange =
+          placement !== undefined &&
+          panelTurnIndexes.has(index) &&
+          turn.status !== 'error' &&
+          !hasAgentAnswer(splitTurn(turn, surfaceIds, turnFollowUps)[0].response);
+        return (
+          <div key={turn.id}>
+            <div
+              className={styles.turnWrapper}
+              role="article"
+              aria-label={`Turn ${index + 1}`}
+              ref={(el) => {
+                if (el) {
+                  turnRefs.current.set(turn.id, el);
+                }
+              }}
+            >
+              {!hidesOwnExchange && <UserPromptBubble prompt={turn.input.prompt ?? ''} />}
+              <div className={styles.agentContent}>
+                {renderTurnContent(
+                  turn,
+                  surfaceIds,
+                  turnFollowUps,
+                  index === turns.length - 1 || index === latestAnswerIndex,
+                  turn.id === pendingTurnId,
+                  placement,
+                  hidesOwnExchange
+                )}
+              </div>
             </div>
+            {position < shownTurns.length - 1 && <TurnSeparator />}
           </div>
-          {index < turns.length - 1 && <TurnSeparator />}
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
@@ -101,16 +119,14 @@ export function ConversationThread({
 /**
  * A turn shows the agent's reasoning and text when an agent answered, then every block the
  * server produced for it, search blocks included. Each follow-up sent from the turn is drawn as
- * its own exchange after it. Only the latest turn's blocks are interactive.
+ * its own exchange after it. Only the latest turn's blocks are interactive (with a results panel,
+ * the latest answer's too).
  *
  * A failed follow-up fails the whole turn, so its error is drawn after the exchanges it follows
  * rather than in their place.
  *
  * With a results panel, a segment's search surfaces are drawn there instead, and the segment
  * keeps a trace of each search in their place.
- *
- * Next actions only show on the latest answer, and only until the results they were suggested
- * for change: an older suggestion may name a product the agent can no longer find.
  */
 function renderTurnContent(
   turn: Turn,
@@ -119,7 +135,7 @@ function renderTurnContent(
   isLatest: boolean,
   isPending: boolean,
   placement: SearchPlacement | undefined,
-  actionBars: ActionBarRule
+  hidesOwnExchange = false
 ) {
   if (turn.status === 'error' && followUps.length === 0) {
     return <ErrorTurnBlock error={turn.error} />;
@@ -129,19 +145,17 @@ function renderTurnContent(
   return (
     <>
       {segments.map((segment, index) => {
+        if (index === 0 && hidesOwnExchange) {
+          return null;
+        }
         const isLastSegment = index === segments.length - 1;
         const isStreaming = isLastSegment && (turn.status === 'streaming' || isPending);
         const searchIds = placement
           ? segment.surfaceIds.filter((surfaceId) => placement.isSearchSurface(surfaceId))
           : [];
-        const showsActions = isLatest && isLastSegment;
-        const blockIds = segment.surfaceIds.filter((surfaceId) => {
-          if (placement?.isSearchSurface(surfaceId)) return false;
-          if (actionBars.isActionBar(surfaceId)) {
-            return showsActions && !actionBars.expired.has(surfaceId);
-          }
-          return true;
-        });
+        const blockIds = placement
+          ? segment.surfaceIds.filter((surfaceId) => !placement.isSearchSurface(surfaceId))
+          : segment.surfaceIds;
         // The prompt that asked for this segment: the chip text of a follow-up, else the turn's.
         const query = index === 0 ? turn.input.prompt : segment.prompt;
         return (
@@ -206,5 +220,14 @@ function SearchTrace({query, isShown}: {query: string | undefined; isShown: bool
         </span>
       </span>
     </p>
+  );
+}
+
+/** Whether the agent answered, with text or reasoning, rather than a search alone. */
+function hasAgentAnswer(response: TurnResponse): boolean {
+  const agent = response.agent;
+  return (
+    agent !== undefined &&
+    (agent.reasoningSteps.length > 0 || agent.messages.some((message) => message.content))
   );
 }

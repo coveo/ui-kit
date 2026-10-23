@@ -3,9 +3,7 @@ import {A2UIProvider, type A2UIClientEventMessage} from '@copilotkit/a2ui-render
 import {useSession} from '../context/session.js';
 import {createThermidorCatalog} from '../a2ui/components.js';
 import {
-  actionBarsBeforeLatestSearch,
   buildSurfaceStream,
-  isActionBar,
   isAnswerBlock,
   isSearchSurface,
   latestSearchSurfaceId,
@@ -65,25 +63,12 @@ export function AppShell() {
     (surfaceId: string) => isSearchSurface(stream, surfaceId),
     [stream]
   );
-  const isNextActions = useCallback(
-    (surfaceId: string) => isActionBar(stream, surfaceId),
-    [stream]
-  );
   const hasAnswerBlocks = useMemo(
     () =>
       [...stream.surfacesByTurn.values()].some((surfaceIds) =>
         surfaceIds.some((surfaceId) => isAnswerBlock(stream, surfaceId))
       ),
     [stream]
-  );
-
-  // Next actions are suggested for the results shown when they were made. Once the shopper
-  // changes those results, through a newer search or a facet, sort or page on the search surface,
-  // the suggestions may name products that are gone, so they are withdrawn.
-  const [refinedBars, setRefinedBars] = useState<ReadonlySet<string>>(() => new Set());
-  const expiredActionBars = useMemo(
-    () => new Set([...actionBarsBeforeLatestSearch(stream, turns), ...refinedBars]),
-    [stream, turns, refinedBars]
   );
 
   const latestRef = useRef({turns, stream});
@@ -103,13 +88,6 @@ export function AppShell() {
       const serverMessage = toServerAction(message, stream.serverSurfaceIds);
       const turn = turns.at(-1);
       if (!turn || name === undefined || !FOLLOW_UP_ACTIONS.has(name)) {
-        const surfaceId = (message as {userAction?: {surfaceId?: unknown}}).userAction?.surfaceId;
-        if (typeof surfaceId === 'string' && isSearchSurface(stream, surfaceId)) {
-          const bars = [...stream.surfacesByTurn.values()]
-            .flat()
-            .filter((renderId) => isActionBar(stream, renderId));
-          setRefinedBars((current) => new Set([...current, ...bars]));
-        }
         return session.dispatchAction(serverMessage);
       }
 
@@ -132,12 +110,25 @@ export function AppShell() {
     [session]
   );
 
-  const handleSubmit = useCallback(
-    (prompt: string) => {
+  // The turns started from the results panel's search box, by index. A search they run only
+  // shows in the panel; the chat draws them only if the agent answers.
+  const [panelTurnIndexes, setPanelTurnIndexes] = useState<ReadonlySet<number>>(() => new Set());
+
+  const submitPrompt = useCallback(
+    (prompt: string, fromPanel: boolean) => {
       if (!prompt.trim() || session.request !== undefined) return;
+      if (fromPanel) {
+        const index = session.turns.length;
+        setPanelTurnIndexes((current) => new Set(current).add(index));
+      }
       void session.dispatchAction({name: 'submitPrompt', payload: {prompt}});
     },
     [session]
+  );
+  const handleSubmit = useCallback((prompt: string) => submitPrompt(prompt, false), [submitPrompt]);
+  const handlePanelSubmit = useCallback(
+    (prompt: string) => submitPrompt(prompt, true),
+    [submitPrompt]
   );
 
   return (
@@ -161,9 +152,9 @@ export function AppShell() {
                   layout={layout}
                   isSearchSurface={isPanelSurface}
                   panelSurfaceId={panelSurfaceId}
-                  isActionBar={isNextActions}
-                  expiredActionBars={expiredActionBars}
                   hasAnswerBlocks={hasAnswerBlocks}
+                  onPanelSubmit={handlePanelSubmit}
+                  panelTurnIndexes={panelTurnIndexes}
                 />
               )}
             </div>
