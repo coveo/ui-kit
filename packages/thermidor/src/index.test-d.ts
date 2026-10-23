@@ -62,10 +62,10 @@ test('exposes the injected ContractsSchema / ComponentContractSchema seam', () =
 });
 
 // ── POSITIVE: one contract bundle, threaded to the surface instances ─────────
-declare const components: ContractsSchema;
+declare const componentContracts: ContractsSchema;
 declare const searchBoxComponents: ContractsSchema;
 const ThermidorContract = {
-  components,
+  componentContracts,
   surfaceTemplates: [
     {
       template: 'search-box',
@@ -80,7 +80,7 @@ const ThermidorContract = {
 } as const;
 
 test('accepts one contract bundle and threads its type through Session', () => {
-  expectTypeOf<SessionContract>().toHaveProperty('components');
+  expectTypeOf<SessionContract>().toHaveProperty('componentContracts');
   expectTypeOf<SessionContract>().toHaveProperty('surfaceTemplates');
   expectTypeOf<SessionContract>().toHaveProperty('lookupActions');
   expectTypeOf<SessionContract>().toHaveProperty('surfaceInstanceIdPrefix').toEqualTypeOf<string>();

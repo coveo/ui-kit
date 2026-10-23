@@ -99,7 +99,7 @@ function queueCompletingStream(): void {
 
 const baseConfig: SessionConfig = {
   contract: {
-    components: contracts,
+    componentContracts: contracts,
     surfaceTemplates: [],
     lookupActions: {},
     surfaceInstanceIdPrefix: 'template:',

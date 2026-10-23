@@ -110,12 +110,12 @@ const SearchBoxSurfaceTemplate = {
   template: 'search-box',
   catalogId: 'search-box-catalog',
   components: [{id: 'root', component: 'QuerySuggestions'}],
-  dataModel: {'/state/root': {query: '', completions: []}},
+  dataModel: {state: {root: {query: '', completions: []}}},
   componentContracts: searchBoxContracts,
 } as const;
 
 const contract = {
-  components: contracts,
+  componentContracts: contracts,
   surfaceTemplates: [SearchBoxSurfaceTemplate],
   lookupActions: {QuerySuggestions: ['fetchSuggestions']},
   surfaceInstanceIdPrefix: 'template:',
@@ -1316,8 +1316,8 @@ describe('createSession lifecycle', () => {
             version: 'v0.9',
             updateDataModel: {
               surfaceId: 'template:header',
-              path: '/state/root',
-              value: {query: '', completions: []},
+              path: '/state',
+              value: {root: {query: '', completions: []}},
             },
           },
         ]);

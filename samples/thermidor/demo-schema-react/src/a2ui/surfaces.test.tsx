@@ -2,7 +2,7 @@ import {afterEach, describe, expect, it, vi} from 'vitest';
 import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
 import {A2UIProvider, ROOT_COMPONENT_ID} from '@copilotkit/a2ui-renderer';
 import type {A2uiV09Message} from '@coveo/thermidor';
-import {createThermidorCatalog, THERMIDOR_CATALOG_ID} from './components.js';
+import {createThermidorCatalog, CONVERSATIONAL_CATALOG_ID} from './components.js';
 import {ThermidorA2UIStream, TurnSurfaces} from './surfaces.js';
 import {SessionRequestProvider} from './session-request.js';
 
@@ -20,7 +20,7 @@ const NOTE = 'Earlier results. Ask a follow-up or search again to refine.';
 /** A surface holding a page size select. */
 function surfaceMessages(surfaceId: string) {
   return [
-    {version: 'v0.9', createSurface: {surfaceId, catalogId: THERMIDOR_CATALOG_ID}},
+    {version: 'v0.9', createSurface: {surfaceId, catalogId: CONVERSATIONAL_CATALOG_ID}},
     {
       version: 'v0.9',
       updateComponents: {

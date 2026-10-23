@@ -100,7 +100,7 @@ export interface SessionContract<TComponents extends ContractsSchema = Contracts
    * surface the producer creates are validated against it. A surface instance is validated against
    * its template's own `componentContracts` instead.
    */
-  readonly components: TComponents;
+  readonly componentContracts: TComponents;
   /** The surface templates the application can create instances of, each with its own catalog. */
   readonly surfaceTemplates: readonly SurfaceTemplate[];
   /** The actions each component marks as lookups, keyed by its `component` discriminant. */

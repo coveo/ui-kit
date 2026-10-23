@@ -1,6 +1,6 @@
 import {Catalog} from '@copilotkit/a2ui-renderer';
-import {THERMIDOR_CATALOG_ID} from '@coveo/thermidor-schema/zod3';
-export {THERMIDOR_CATALOG_ID};
+import {CONVERSATIONAL_CATALOG_ID} from '@coveo/thermidor-schema/zod3';
+export {CONVERSATIONAL_CATALOG_ID};
 import {ProductCarousel} from './ProductCarousel/ProductCarousel.js';
 import {NextActionsBar} from './NextActionsBar/NextActionsBar.js';
 import {BundleDisplay} from './BundleDisplay/BundleDisplay.js';
@@ -28,7 +28,7 @@ export interface ThermidorCatalogOptions {
 }
 
 export function createThermidorCatalog(options: ThermidorCatalogOptions = {}) {
-  return new Catalog(THERMIDOR_CATALOG_ID, [
+  return new Catalog(CONVERSATIONAL_CATALOG_ID, [
     ProductCarousel,
     NextActionsBar,
     BundleDisplay,

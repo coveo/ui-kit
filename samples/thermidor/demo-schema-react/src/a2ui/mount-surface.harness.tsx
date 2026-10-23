@@ -10,7 +10,7 @@ import {
 } from '@copilotkit/a2ui-renderer';
 import {
   createThermidorCatalog,
-  THERMIDOR_CATALOG_ID,
+  CONVERSATIONAL_CATALOG_ID,
   type ThermidorCatalogOptions,
 } from './components.js';
 import {createFakeSessionRequests} from '../test/fake-session-requests.js';
@@ -127,7 +127,7 @@ export function mountSurface(config: MountSurfaceConfig): MountSurfaceResult {
   const processRef: {current: ProcessMessages | null} = {current: null};
 
   const messages: Array<Record<string, unknown>> = [
-    {version: 'v0.9', createSurface: {surfaceId: SURFACE_ID, catalogId: THERMIDOR_CATALOG_ID}},
+    {version: 'v0.9', createSurface: {surfaceId: SURFACE_ID, catalogId: CONVERSATIONAL_CATALOG_ID}},
     {
       version: 'v0.9',
       updateComponents: {surfaceId: SURFACE_ID, components: [rootNode, ...childNodes]},

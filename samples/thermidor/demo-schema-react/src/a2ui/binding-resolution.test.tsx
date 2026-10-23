@@ -2,7 +2,7 @@ import {useEffect} from 'react';
 import {describe, expect, it, vi} from 'vitest';
 import {render, screen, waitFor, cleanup} from '@testing-library/react';
 import {A2UIProvider, A2UIRenderer, useA2UI} from '@copilotkit/a2ui-renderer';
-import {createThermidorCatalog, THERMIDOR_CATALOG_ID} from './components.js';
+import {createThermidorCatalog, CONVERSATIONAL_CATALOG_ID} from './components.js';
 
 /**
  * REGRESSION — runtime binding resolution through the FROZEN renderer/binder.
@@ -33,7 +33,7 @@ const ACTIONS_ID = 'next-actions';
 const SUMMARY_ID = 'query-summary';
 
 const messages: Array<Record<string, unknown>> = [
-  {version: 'v0.9', createSurface: {surfaceId: SURFACE_ID, catalogId: THERMIDOR_CATALOG_ID}},
+  {version: 'v0.9', createSurface: {surfaceId: SURFACE_ID, catalogId: CONVERSATIONAL_CATALOG_ID}},
   {
     version: 'v0.9',
     updateComponents: {

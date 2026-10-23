@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {createThermidorCatalog, THERMIDOR_CATALOG_ID} from './components.js';
+import {createThermidorCatalog, CONVERSATIONAL_CATALOG_ID} from './components.js';
 import {
   ProductCarouselSchema,
   ProductCarouselPropsSchema,
@@ -47,7 +47,7 @@ describe('createThermidorCatalog (catalog build smoke)', () => {
   });
 
   it('exports the correct catalog ID', () => {
-    expect(THERMIDOR_CATALOG_ID).toBe('https://schema.thermidor.coveo.com/a2-ui/catalog.json');
+    expect(CONVERSATIONAL_CATALOG_ID).toBe('https://schema.thermidor.coveo.com/a2-ui/catalog.json');
   });
 });
 

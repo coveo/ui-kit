@@ -344,7 +344,7 @@ export function createSession<TContract extends SessionContract>(
 
   const client = createUnifiedEndpointClient();
 
-  const contracts = config.contract.components;
+  const contracts = config.contract.componentContracts;
   const lookupActions = config.contract.lookupActions;
 
   // Per surface, one in-flight lookup per source component and action; a newer one aborts it.

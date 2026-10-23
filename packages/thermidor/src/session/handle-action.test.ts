@@ -138,7 +138,7 @@ const PAGINATION_ID = 'pagination-1';
 
 const baseConfig: SessionConfig = {
   contract: {
-    components: contracts,
+    componentContracts: contracts,
     surfaceTemplates: [],
     lookupActions: {},
     surfaceInstanceIdPrefix: 'template:',
