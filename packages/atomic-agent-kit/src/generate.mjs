@@ -339,7 +339,12 @@ function summaryOf(element) {
   return firstSentence.trim();
 }
 
-const inline = (text) => (text ?? '').replace(/\s*\n\s*/g, ' ').trim();
+const inline = (text) =>
+  (text ?? '')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .join(' ');
 
 /**
  * A table cell: one line, pipes escaped, and code blocks turned into inline code.

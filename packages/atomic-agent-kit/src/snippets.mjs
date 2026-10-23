@@ -1,6 +1,6 @@
 import {readdirSync, readFileSync} from 'node:fs';
 import path from 'node:path';
-import {lineOf, parseHtml, walk} from './html.mjs';
+import {parseHtml, walk} from './html.mjs';
 import {
   attributesOf,
   indexByTag,
@@ -244,12 +244,22 @@ function checkTemplate(node, report) {
  */
 export function extractSnippets(markdown) {
   const snippets = [];
-  for (const match of markdown.matchAll(/^```(\w*)[^\n]*\n([\s\S]*?)^```/gm)) {
-    snippets.push({
-      lang: match[1].toLowerCase(),
-      code: match[2],
-      line: lineOf(markdown, match.index),
-    });
+  let open = null;
+  for (const [index, line] of markdown.split('\n').entries()) {
+    if (!line.startsWith('```')) {
+      open?.lines.push(line);
+      continue;
+    }
+    if (open) {
+      snippets.push({
+        lang: open.lang,
+        code: open.lines.length ? `${open.lines.join('\n')}\n` : '',
+        line: open.line,
+      });
+      open = null;
+    } else {
+      open = {lang: /^\w*/.exec(line.slice(3))[0].toLowerCase(), lines: [], line: index + 1};
+    }
   }
   return snippets;
 }
