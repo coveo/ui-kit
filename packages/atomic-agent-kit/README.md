@@ -21,3 +21,22 @@ It runs over every page of the generated kit here (`src/generate.spec.mjs`), and
 ## Testing
 
 `pnpm test` runs the specs in Node. They analyze the Atomic sources in memory through `@coveo/atomic-agent-kit/testing`, so they need no build.
+
+## Eval
+
+`pnpm eval` (`evals/run.mjs`) measures what the kit changes for a coding agent. It gives `claude -p` ten page-building tasks (`evals/prompts.mjs`) in a fresh workspace with the file tools, under the contexts of `evals/arms.mjs`:
+
+| Arm             | Workspace                                                                | Prompt                                              |
+| --------------- | ------------------------------------------------------------------------ | --------------------------------------------------- |
+| `none`          | empty                                                                    | names Atomic and its CDN URLs                       |
+| `skill`         | the kit copied to `.claude/skills/coveo-atomic`                          | names Atomic                                        |
+| `index`         | the reference pages plus an `AGENTS.md` index of them                    | names Atomic                                        |
+| `web`           | empty, with web search and fetch allowed                                 | names Atomic                                        |
+| `project-today` | a project with `@coveo/atomic` installed from npm, as published          | only says to use the library the project depends on |
+| `project`       | the same, with the kit inside the installed package, as the POC ships it | the same                                            |
+| `pointer`       | the same, plus a short `AGENTS.md` block that points at the kit          | the same                                            |
+| `skill-cli`     | the same, with the kit installed by `npx skills add` from `node_modules` | the same                                            |
+
+The project arms install the real package from npm (`--atomic-version`, default latest) once per output folder. Each `index.html` then goes through the snippet lint and a render check (`evals/check.mjs`): Chromium loads the page with the platform API mocked by `@coveo/platform-mock-api`, and the run passes when items render without an `atomic-component-error`. Results are in `evals/RESULTS.md`.
+
+It needs a built kit, the `claude` CLI signed in, and the Chromium that Playwright installs. Options: `--atomic <dir> --atomic-version latest --runs 3 --arms <list> --prompts all --concurrency 3 --model claude-sonnet-5-5 --budget 1 --out <dir>`; `--report-only` rebuilds `report.md` from the results in `--out`. Keep `--out` outside any repository (the default is a temporary folder): Claude Code loads the `CLAUDE.md` and `AGENTS.md` of every parent folder, so the runner refuses a folder that has one above it. Every run costs a few cents and keeps its transcript and workspace under `--out`.
