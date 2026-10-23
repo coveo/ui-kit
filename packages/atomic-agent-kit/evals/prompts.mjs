@@ -67,6 +67,16 @@ export const PROMPTS = [
   },
 ];
 
-export function promptText(prompt) {
-  return `${PREAMBLE}\n\n${prompt.task}`;
+/**
+ * The same deliverable in a project that already depends on the library, without naming it or
+ * giving its CDN URLs: the agent has to find out what to use.
+ */
+const NEUTRAL_PREAMBLE = `Write \`index.html\` in the current folder: a standalone page built with the UI component library this project depends on. Load the library from its CDN rather than from \`node_modules\`, initialize it in an inline module script with ${CREDENTIALS}, and run the first query. Only write the file: don't run commands, servers or browsers, and don't ask questions.`;
+
+/**
+ * @param {{task: string}} prompt
+ * @param {'named' | 'neutral'} variant
+ */
+export function promptText(prompt, variant = 'named') {
+  return `${variant === 'neutral' ? NEUTRAL_PREAMBLE : PREAMBLE}\n\n${prompt.task}`;
 }
