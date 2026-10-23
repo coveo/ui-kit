@@ -758,3 +758,46 @@ describe('fold surface spec errors', () => {
     expect(warn).not.toHaveBeenCalled();
   });
 });
+
+describe('fold CUSTOM events', () => {
+  it('keeps a custom event as an activity named by the event', () => {
+    const turn = foldActivities(createTurn('t1', {prompt: 'hi'}), [
+      activity({type: 'CUSTOM', name: 'FollowUpQuestions', value: {questions: [{text: 'Why?'}]}}),
+    ]);
+
+    expect(turn.response.activities).toEqual([
+      {id: '', kind: 'FollowUpQuestions', replace: false, payload: {questions: [{text: 'Why?'}]}},
+    ]);
+  });
+
+  it('wraps a value that is not an object as the payload value', () => {
+    const turn = foldActivities(createTurn('t1', {prompt: 'hi'}), [
+      activity({type: 'CUSTOM', name: 'scalar', value: 42}),
+      activity({type: 'CUSTOM', name: 'list', value: [1]}),
+      activity({type: 'CUSTOM', name: 'nothing'}),
+    ]);
+
+    expect(turn.response.activities.map(({payload}) => payload)).toEqual([
+      {value: 42},
+      {value: [1]},
+      {value: undefined},
+    ]);
+  });
+
+  it('keeps events with the same name apart and in arrival order', () => {
+    const turn = foldActivities(createTurn('t1', {prompt: 'hi'}), [
+      activity({type: 'CUSTOM', name: 'a', value: {n: 1}}),
+      activity({type: 'CUSTOM', name: 'a', value: {n: 2}}),
+    ]);
+
+    expect(turn.response.activities.map(({payload}) => payload)).toEqual([{n: 1}, {n: 2}]);
+  });
+
+  it('ignores a custom event without a name', () => {
+    const turn = foldActivities(createTurn('t1', {prompt: 'hi'}), [
+      activity({type: 'CUSTOM', value: {n: 1}}),
+    ]);
+
+    expect(turn.response.activities).toEqual([]);
+  });
+});

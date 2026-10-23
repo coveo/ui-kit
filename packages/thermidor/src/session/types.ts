@@ -131,7 +131,9 @@ export interface AgentMessage {
 }
 
 /**
- * Represents a single activity emitted during a turn's streamed response.
+ * Represents a single activity emitted during a turn's streamed response: an `ACTIVITY_SNAPSHOT`,
+ * or a `CUSTOM` event, whose `name` is the activity's `kind`. A `CUSTOM` activity has no `id`, and
+ * its payload is the event's `value` when that is an object, or `{value}` otherwise.
  */
 export interface Activity {
   id: string;

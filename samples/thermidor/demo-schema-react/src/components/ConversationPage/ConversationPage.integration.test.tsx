@@ -1,4 +1,4 @@
-import {render, screen} from '@testing-library/react';
+import {fireEvent, render, screen} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
 import type {Turn} from '@coveo/thermidor';
 import {ConversationPage} from './ConversationPage.js';
@@ -267,6 +267,43 @@ describe('ConversationPage integration', () => {
       renderPage({turns, isStreaming: true});
 
       expect(screen.getByText(/Calling tool:/)).toBeDefined();
+    });
+  });
+
+  describe('follow-up questions', () => {
+    const answered = [
+      makeTurn({
+        id: 'turn-1',
+        prompt: 'What is the rate limit?',
+        response: {
+          agent: {
+            messages: [{id: 'm1', content: 'Fifty per second.', role: 'assistant'}],
+            reasoningSteps: [],
+          },
+          activities: [
+            {
+              id: '',
+              kind: 'FollowUpQuestions',
+              replace: false,
+              payload: {questions: [{text: 'Can I raise it?'}]},
+            },
+          ],
+        },
+      }),
+    ];
+
+    it('sends the question clicked as the next prompt', () => {
+      const {props} = renderPage({turns: answered});
+
+      fireEvent.click(screen.getByRole('button', {name: 'Can I raise it?'}));
+
+      expect(props.onSubmit).toHaveBeenCalledExactlyOnceWith('Can I raise it?');
+    });
+
+    it('holds the questions back while the prompt is disabled', () => {
+      renderPage({turns: answered, promptDisabled: true});
+
+      expect(screen.queryByRole('button', {name: 'Can I raise it?'})).toBeNull();
     });
   });
 });
