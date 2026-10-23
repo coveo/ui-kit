@@ -102,7 +102,7 @@ Cancellation is modeled as a terminal `error` turn (message `'Cancelled'`), not 
 
 The fold maps each SSE activity into the active turn's `response`:
 
-- Text-message events accumulate into `response.agent.messages` (the `agent` facet is created lazily, signaling the router invoked an agent).
+- Text-message events accumulate into `response.agent.messages` (the `agent` facet is created lazily, signaling the router invoked an agent). Each message keeps its `TEXT_MESSAGE_START` `messageId` as `id`, the key by which activities that belong to a message refer to it.
 - Reasoning and tool-call events accumulate into `response.agent.reasoningSteps`.
 - `ACTIVITY_SNAPSHOT` events append to `response.activities` (a `replace` snapshot merges onto the activity with the same `messageId`), re-derive `response.surfaces` and `response.a2uiMessages` from the full activity list, and apply the snapshot's `updateDataModel` ops to `response.state` after in-transit validation.
 - Terminal events (`RUN_FINISHED` / `turn_complete`, `RUN_ERROR`) set `status` to `complete` or `error`.

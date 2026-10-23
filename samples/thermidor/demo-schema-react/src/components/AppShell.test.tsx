@@ -122,7 +122,9 @@ describe('AppShell', () => {
       searchTurn('turn-1'),
       makeTurn({
         id: 'turn-2',
-        response: {agent: {messages: [{content: 'Answer', role: 'assistant'}], reasoningSteps: []}},
+        response: {
+          agent: {messages: [{id: 'm1', content: 'Answer', role: 'assistant'}], reasoningSteps: []},
+        },
       }),
     ];
 
@@ -312,7 +314,7 @@ describe('AppShell', () => {
       return makeTurn({
         id,
         response: {
-          agent: {messages: [{content: 'Answer', role: 'assistant'}], reasoningSteps: []},
+          agent: {messages: [{id: 'm2', content: 'Answer', role: 'assistant'}], reasoningSteps: []},
           a2uiMessages: [{version: 'v0.9', createSurface: {surfaceId: 'agent-answer'}}],
         },
       });

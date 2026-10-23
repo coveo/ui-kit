@@ -5,8 +5,8 @@ import {StreamingMessage} from './StreamingMessage.js';
 describe('StreamingMessage', () => {
   it('renders markdown content from messages', () => {
     const messages = [
-      {content: '**bold text**', role: 'assistant'},
-      {content: 'plain text', role: 'assistant'},
+      {id: 'm1', content: '**bold text**', role: 'assistant'},
+      {id: 'm2', content: 'plain text', role: 'assistant'},
     ];
 
     const {container} = render(<StreamingMessage messages={messages} />);
@@ -22,7 +22,7 @@ describe('StreamingMessage', () => {
   });
 
   it('returns null when there is a single message with empty content', () => {
-    const messages = [{content: '', role: 'assistant'}];
+    const messages = [{id: 'm3', content: '', role: 'assistant'}];
 
     const {container} = render(<StreamingMessage messages={messages} />);
 
@@ -30,7 +30,7 @@ describe('StreamingMessage', () => {
   });
 
   it('renders headings from markdown', () => {
-    const messages = [{content: '## Section Title', role: 'assistant'}];
+    const messages = [{id: 'm4', content: '## Section Title', role: 'assistant'}];
 
     const {container} = render(<StreamingMessage messages={messages} />);
 
@@ -39,7 +39,7 @@ describe('StreamingMessage', () => {
   });
 
   it('renders links from markdown', () => {
-    const messages = [{content: '[click here](https://example.com)', role: 'assistant'}];
+    const messages = [{id: 'm5', content: '[click here](https://example.com)', role: 'assistant'}];
 
     const {container} = render(<StreamingMessage messages={messages} />);
 

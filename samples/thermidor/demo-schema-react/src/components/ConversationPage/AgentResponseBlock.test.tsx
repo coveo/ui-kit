@@ -1,6 +1,6 @@
 import {render, screen} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
-import type {ReasoningStep, TurnResponse} from '@coveo/thermidor';
+import type {AgentMessage, ReasoningStep, TurnResponse} from '@coveo/thermidor';
 import {AgentResponseBlock} from './AgentResponseBlock.js';
 import {makeResponse} from '../../test/turn-fixtures.js';
 
@@ -21,13 +21,17 @@ vi.mock('./ThinkingBlock.js', () => ({
 }));
 
 vi.mock('./StreamingMessage.js', () => ({
-  StreamingMessage: ({messages}: {messages: {content: string; role: string}[]}) => (
-    <div data-testid="streaming-message" data-message-count={messages.length} />
+  StreamingMessage: ({messages}: {messages: AgentMessage[]}) => (
+    <div
+      data-testid="streaming-message"
+      data-message-count={messages.length}
+      data-content={messages.map((message) => message.content).join('|')}
+    />
   ),
 }));
 
 interface AgentContent {
-  messages?: {content: string; role: string}[];
+  messages?: AgentMessage[];
   reasoningSteps?: ReasoningStep[];
 }
 
@@ -56,7 +60,7 @@ describe('AgentResponseBlock', () => {
     it('renders ThinkingBlock, StreamingMessage, and the turn blocks in DOM order', () => {
       const response = makeAgentResponse({
         reasoningSteps: [{type: 'reasoning', content: 'Thinking...'}],
-        messages: [{content: 'Hello world', role: 'assistant'}],
+        messages: [{id: 'm1', content: 'Hello world', role: 'assistant'}],
       });
 
       const {container} = render(
@@ -77,7 +81,7 @@ describe('AgentResponseBlock', () => {
   describe('components are omitted when their data is empty', () => {
     it('omits ThinkingBlock when reasoningSteps is empty and not streaming', () => {
       const response = makeAgentResponse({
-        messages: [{content: 'Hello', role: 'assistant'}],
+        messages: [{id: 'm2', content: 'Hello', role: 'assistant'}],
       });
 
       renderBlock(response, {isStreaming: false});
@@ -102,7 +106,7 @@ describe('AgentResponseBlock', () => {
 
     it('omits StreamingMessage when messages all have empty content', () => {
       const response = makeAgentResponse({
-        messages: [{content: '', role: 'assistant'}],
+        messages: [{id: 'm3', content: '', role: 'assistant'}],
       });
 
       renderBlock(response, {isStreaming: false});
@@ -127,7 +131,10 @@ describe('AgentResponseBlock', () => {
       render(
         <AgentResponseBlock
           response={makeResponse({
-            agent: {messages: [{content: 'Answer', role: 'assistant'}], reasoningSteps: []},
+            agent: {
+              messages: [{id: 'm4', content: 'Answer', role: 'assistant'}],
+              reasoningSteps: [],
+            },
           })}
           isStreaming={false}
         >
@@ -140,6 +147,38 @@ describe('AgentResponseBlock', () => {
       expect(
         message.compareDocumentPosition(blocks) & Node.DOCUMENT_POSITION_FOLLOWING
       ).toBeTruthy();
+    });
+  });
+
+  describe('citations', () => {
+    it("puts the answer's citations into its text and lists the cited documents", () => {
+      const response = makeResponse({
+        agent: {
+          messages: [{id: 'answer', content: 'Fifty per second.', role: 'assistant'}],
+          reasoningSteps: [],
+        },
+        activities: [
+          {
+            id: 'citations-answer',
+            kind: 'citations',
+            replace: false,
+            payload: {
+              answerMessageId: 'answer',
+              citations: [{offset: 16, passage: 0}],
+              passages: [{document: 1, text: 'Fifty requests per second.'}],
+              documents: [{label: 1, title: 'Rate limits', link: null, details: null}],
+            },
+          },
+        ],
+      });
+
+      renderBlock(response);
+
+      expect(screen.getByTestId('streaming-message').getAttribute('data-content')).toBe(
+        'Fifty per second\\[1\\].'
+      );
+      expect(screen.getByRole('heading', {name: 'Sources'})).not.toBeNull();
+      expect(screen.getByText('Rate limits')).not.toBeNull();
     });
   });
 });

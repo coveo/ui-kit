@@ -41,7 +41,7 @@ import type {Activity, AgentMessage, ReasoningStep, Turn, TurnInput, TurnStatus}
  * The current serialized-session shape version. Bumped whenever the persisted
  * shape changes. Restoration rejects any `version` that is not this value.
  */
-export const SERIALIZED_SESSION_VERSION = 1;
+export const SERIALIZED_SESSION_VERSION = 2;
 
 /**
  * The error message used when a mid-stream turn is restored.

@@ -13,7 +13,7 @@ function turnWith(messages: string[], steps: number, activityIds: string[]): Tur
     response: {
       activities: activityIds.map(activity),
       agent: {
-        messages: messages.map((content) => ({content, role: 'assistant'})),
+        messages: messages.map((content, i) => ({id: `m${i}`, content, role: 'assistant'})),
         reasoningSteps: Array.from({length: steps}, (_, i) => ({
           type: 'reasoning' as const,
           content: `step ${i}`,
