@@ -84,7 +84,7 @@ The package ships an [Agent Skill](https://agentskills.io) at `dist/skills/coveo
 npx skills add ./node_modules/@coveo/atomic/dist/skills/coveo-atomic
 ```
 
-Any agent that reads a directory of Markdown on demand can use it: point it at that directory. The generator lives in `scripts/agent-kit/`; see its README to change the content.
+Any agent that reads a directory of Markdown on demand can use it: point it at that directory. The generator is the private `@coveo/atomic-agent-kit` package (`packages/atomic-agent-kit`); see its README to change the content.
 
 ## Utilities
 

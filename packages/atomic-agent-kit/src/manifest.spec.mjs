@@ -7,10 +7,10 @@ import {
   listElements,
   literalValuesOf,
   methodsOf,
-  packageRoot,
   propertiesOf,
   TYPE_ALIASES,
 } from './manifest.mjs';
+import {atomicRoot} from './testing/analyze.mjs';
 
 describe('manifest', () => {
   describe('#listElements', () => {
@@ -97,10 +97,10 @@ describe('manifest', () => {
   });
 
   describe('TYPE_ALIASES', () => {
-    it('should match the Section type of the sources', () => {
+    it('should match the Section type of the Atomic sources', () => {
       const source = readFileSync(
         path.join(
-          packageRoot,
+          atomicRoot,
           'src/components/common/atomic-layout-section/atomic-layout-section-utils.ts'
         ),
         'utf8'

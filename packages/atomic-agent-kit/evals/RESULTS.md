@@ -1,6 +1,6 @@
 # Eval results
 
-Run with `node scripts/agent-kit/evals/run.mjs`: ten page-building prompts, three contexts, three runs each, `claude-sonnet-5-5`. A run passes when the usage-snippet lint accepts the `index.html` the agent wrote and Chromium renders items from the mocked platform API without an `atomic-component-error`.
+Run with `pnpm eval` (`evals/run.mjs`): ten page-building prompts, three contexts, three runs each, `claude-sonnet-5-5`. A run passes when the usage-snippet lint accepts the `index.html` the agent wrote and Chromium renders items from the mocked platform API without an `atomic-component-error`.
 
 ## 2026-10-22
 

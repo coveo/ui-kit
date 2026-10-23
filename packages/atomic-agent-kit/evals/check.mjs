@@ -1,14 +1,10 @@
 import {existsSync, readFileSync} from 'node:fs';
 import http from 'node:http';
-import {createRequire} from 'node:module';
 import path from 'node:path';
-import {packageRoot} from '../manifest.mjs';
-import {validateHtml} from '../snippets.mjs';
-
-const require = createRequire(import.meta.url);
-const requireFromSample = createRequire(
-  path.join(packageRoot, '../../samples/atomic/search-vite/package.json')
-);
+import {MockCommerceApi, MockRecommendationApi, MockSearchApi} from '@coveo/platform-mock-api';
+import {defineNetworkFixture} from '@msw/playwright';
+import {chromium} from 'playwright';
+import {validateHtml} from '../src/snippets.mjs';
 
 const RENDER_TIMEOUT_MS = 25_000;
 
@@ -26,16 +22,11 @@ export function checkLint(workspace, catalog) {
   return {pass: problems.length === 0, problems};
 }
 
-async function mockHandlers(api) {
-  const {MockSearchApi, MockCommerceApi, MockRecommendationApi} =
-    await import('@coveo/platform-mock-api');
-  const mock = {
-    search: () => new MockSearchApi(),
-    commerce: () => new MockCommerceApi(),
-    recommendation: () => new MockRecommendationApi(),
-  }[api]();
-  return mock.handlers;
-}
+const mocks = {
+  search: () => new MockSearchApi(),
+  commerce: () => new MockCommerceApi(),
+  recommendation: () => new MockRecommendationApi(),
+};
 
 function serve(workspace) {
   const server = http.createServer((request, response) => {
@@ -97,8 +88,6 @@ export async function checkRender(workspace, api) {
   if (!existsSync(path.join(workspace, 'index.html'))) {
     return {pass: false, reason: 'index.html was not written'};
   }
-  const {chromium} = require('playwright');
-  const {defineNetworkFixture} = await import(requireFromSample.resolve('@msw/playwright'));
   const server = await serve(workspace);
   const browser = await chromium.launch();
   const context = await browser.newContext();
@@ -118,7 +107,7 @@ export async function checkRender(workspace, api) {
     }
   });
 
-  const network = defineNetworkFixture({context, handlers: await mockHandlers(api)});
+  const network = defineNetworkFixture({context, handlers: mocks[api]().handlers});
   await network.enable();
   await context.route(/analytics|\/rest\/ua\/|coveo\.analytics/, (route) => route.abort());
 

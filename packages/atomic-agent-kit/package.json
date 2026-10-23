@@ -1,0 +1,27 @@
+{
+  "name": "@coveo/atomic-agent-kit",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Generates the Agent Skill that @coveo/atomic ships from its custom elements manifest and usage docs, and checks HTML snippets against that manifest",
+  "bin": {
+    "atomic-agent-kit": "./src/cli.mjs"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./testing": "./src/testing/analyze.mjs"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "eval": "node evals/run.mjs"
+  },
+  "devDependencies": {
+    "@coveo/platform-mock-api": "workspace:*",
+    "@custom-elements-manifest/analyzer": "0.11.0",
+    "@msw/playwright": "catalog:",
+    "msw": "catalog:",
+    "playwright": "catalog:",
+    "vitest": "catalog:"
+  }
+}

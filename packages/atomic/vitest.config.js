@@ -171,13 +171,15 @@ const storybookPure = defineConfig({
   },
 });
 
-// Node specs of the agent kit generator and the usage-snippet lint (scripts/agent-kit)
-const agentKit = defineConfig({
-  name: 'agent-kit',
+// Checks every usage doc's HTML snippets against the manifest, in Node (scripts/usage-docs).
+// The analyzer's CLI changes the working directory while it runs, so the spec needs a process.
+const usageDocs = defineConfig({
+  name: 'usage-docs',
   test: {
-    name: 'agent-kit',
-    include: ['scripts/agent-kit/*.spec.mjs'],
+    name: 'usage-docs',
+    include: ['scripts/usage-docs/*.spec.mjs'],
     environment: 'node',
+    pool: 'forks',
   },
 });
 
@@ -190,6 +192,6 @@ export default mergeConfig(atomicDefault, {
         packageJsonPath: path.resolve(import.meta.dirname, 'package.json'),
       }),
     ],
-    projects: [atomicDefault, storybookPure, agentKit, ...(!isVitestVscodeExt ? [storybook] : [])],
+    projects: [atomicDefault, storybookPure, usageDocs, ...(!isVitestVscodeExt ? [storybook] : [])],
   },
 });

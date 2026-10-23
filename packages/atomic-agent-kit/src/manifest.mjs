@@ -1,11 +1,13 @@
 import {readFileSync} from 'node:fs';
 import path from 'node:path';
 
-export const packageRoot = path.resolve(import.meta.dirname, '../..');
-export const manifestPath = path.join(packageRoot, 'custom-elements.json');
-
-export function readManifest() {
-  return JSON.parse(readFileSync(manifestPath, 'utf8'));
+/**
+ * Reads the manifest of the Atomic package at `root`, as `build:cem` writes it.
+ *
+ * @param {string} root
+ */
+export function readManifest(root) {
+  return JSON.parse(readFileSync(path.join(root, 'custom-elements.json'), 'utf8'));
 }
 
 /**

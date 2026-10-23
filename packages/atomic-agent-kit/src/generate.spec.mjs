@@ -1,8 +1,8 @@
 import {beforeAll, describe, expect, it} from 'vitest';
 import {AREAS, convertUsageDoc, generateKit, readInputs} from './generate.mjs';
 import {attributesOf, listElements} from './manifest.mjs';
-import {createCatalog, extractSnippets, validateMarkdown} from './snippets.mjs';
-import {analyzeAtomic} from './testing/analyze.mjs';
+import {createCatalog, extractSnippets, findSourceTags, validateMarkdown} from './snippets.mjs';
+import {analyzeManifest, atomicRoot} from './testing/analyze.mjs';
 
 describe('generate', () => {
   describe('#generateKit', () => {
@@ -12,9 +12,9 @@ describe('generate', () => {
     let files;
 
     beforeAll(async () => {
-      manifest = await analyzeAtomic();
+      manifest = await analyzeManifest();
       elements = listElements(manifest);
-      inputs = readInputs({manifest});
+      inputs = readInputs({root: atomicRoot, manifest});
       files = generateKit(inputs);
     });
 
@@ -74,7 +74,7 @@ describe('generate', () => {
     });
 
     it('should only show markup that Atomic accepts, in every page', () => {
-      const catalog = createCatalog(manifest);
+      const catalog = createCatalog(manifest, findSourceTags(atomicRoot));
       const problems = [...files].flatMap(([file, text]) =>
         validateMarkdown(text, catalog).map(({line, message}) => `${file}:${line} ${message}`)
       );
