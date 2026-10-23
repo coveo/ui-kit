@@ -1,5 +1,5 @@
 import path from 'node:path';
-import {test as base} from '@chromatic-com/playwright';
+import {expect, test as base} from '@chromatic-com/playwright';
 import {defineNetworkFixture, type NetworkFixture} from '@msw/playwright';
 import {MockSearchApi, MockCommerceApi, MockInsightApi} from '@coveo/platform-mock-api';
 import type {HttpHandler} from 'msw';
@@ -15,10 +15,18 @@ export const searchApi = new MockSearchApi();
 export const commerceApi = new MockCommerceApi();
 export const insightApi = new MockInsightApi();
 
+interface RenderPageOptions {
+  page: string;
+  handlers: HttpHandler[];
+  interfaceTag: string;
+  initializeOptions: Record<string, unknown>;
+  firstRequest: 'executeFirstSearch' | 'executeFirstRequest';
+  itemSelector: string;
+}
+
 interface Fixtures {
   network: NetworkFixture;
-  useHandlers: (handlers: HttpHandler[]) => Promise<void>;
-  openPage: (name: string) => Promise<void>;
+  renderPage: (options: RenderPageOptions) => Promise<void>;
 }
 
 export const test = base.extend<Fixtures>({
@@ -34,17 +42,27 @@ export const test = base.extend<Fixtures>({
     },
     {auto: true},
   ],
-  useHandlers: async ({network}, use) => {
-    await use(async (handlers: HttpHandler[]) => {
-      network.use(...handlers);
-    });
-  },
-  openPage: async ({page}, use) => {
-    await use(async (name: string) => {
-      const filePath = path.resolve(import.meta.dirname, 'pages', name);
+  renderPage: async ({page, network}, use) => {
+    await use(async (options) => {
+      network.use(...options.handlers);
+
+      const filePath = path.resolve(import.meta.dirname, 'pages', options.page);
       await page.goto(`file://${filePath}`);
       await page.addStyleTag({url: THEME_URL});
       await page.addScriptTag({url: ATOMIC_URL, type: 'module'});
+
+      await page.waitForFunction((tag) => customElements.get(tag), options.interfaceTag);
+      const atomicInterface = page.locator(options.interfaceTag);
+      await atomicInterface.evaluate(
+        (el: any, initializeOptions) => el.initialize(initializeOptions),
+        options.initializeOptions
+      );
+      await atomicInterface.evaluate((el: any, method) => el[method](), options.firstRequest);
+
+      // The snapshot is taken when the test ends, so wait until nothing is still loading.
+      await expect(page.locator(options.itemSelector).first()).toBeVisible();
+      await expect(atomicInterface.locator('atomic-result-placeholder')).toHaveCount(0);
+      await expect(atomicInterface.locator(':not(:defined)')).toHaveCount(0);
     });
   },
 });
