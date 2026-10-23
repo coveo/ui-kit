@@ -21,3 +21,9 @@ It runs over every page of the generated kit here (`src/generate.spec.mjs`), and
 ## Testing
 
 `pnpm test` runs the specs in Node. They analyze the Atomic sources in memory through `@coveo/atomic-agent-kit/testing`, so they need no build.
+
+## Eval
+
+`pnpm eval` (`evals/run.mjs`) measures what the kit changes for a coding agent. It gives `claude -p` ten page-building tasks (`evals/prompts.mjs`) in a fresh workspace with only the file tools, under three contexts (`evals/arms.mjs`): nothing, the kit as a project skill, and an `AGENTS.md` docs index pointing at the reference pages. Each `index.html` then goes through the snippet lint and a render check (`evals/check.mjs`): Chromium loads the page with the platform API mocked by `@coveo/platform-mock-api`, and the run passes when items render without an `atomic-component-error`. Results are in `evals/RESULTS.md`.
+
+It needs a built kit, the `claude` CLI signed in, and the Chromium that Playwright installs. Options: `--atomic <dir> --runs 3 --arms none,skill,index --prompts all --concurrency 3 --model claude-sonnet-5-5 --budget 1 --out <dir>`; `--report-only` rebuilds `report.md` from the results in `--out`. Every run costs a few cents and keeps its transcript and workspace under `--out`.

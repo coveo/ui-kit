@@ -13,10 +13,15 @@
   },
   "scripts": {
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "eval": "node evals/run.mjs"
   },
   "devDependencies": {
+    "@coveo/platform-mock-api": "workspace:*",
     "@custom-elements-manifest/analyzer": "0.11.0",
+    "@msw/playwright": "catalog:",
+    "msw": "catalog:",
+    "playwright": "catalog:",
     "vitest": "catalog:"
   }
 }
