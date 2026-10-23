@@ -1,0 +1,36 @@
+import {defineConfig, devices} from '@playwright/test';
+
+export default defineConfig({
+  testDir: './tests',
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 1 : undefined,
+  reporter: 'html',
+  // The first page load compiles Atomic's lazy chunks on the dev server.
+  expect: {timeout: 10000},
+  use: {
+    baseURL: 'http://localhost:4300',
+    trace: 'on-first-retry',
+  },
+  projects: [
+    {
+      name: 'chromium',
+      use: {...devices['Desktop Chrome']},
+    },
+    {
+      name: 'firefox',
+      use: {...devices['Desktop Firefox']},
+    },
+    {
+      name: 'webkit',
+      use: {...devices['Desktop Safari']},
+    },
+  ],
+  webServer: {
+    command: 'pnpm run dev',
+    url: 'http://localhost:4300/',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120000,
+  },
+});
