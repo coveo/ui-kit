@@ -214,6 +214,26 @@ function textMessage(messageId: string, text: string, chunkSize = 4): ConverseEv
   return events;
 }
 
+/** The agent's reasoning, streamed a few words at a time like `textMessage`. */
+function reasoningMessage(messageId: string, text: string, chunkSize = 3): ConverseEvent[] {
+  const message = (data: Record<string, unknown>): ConverseEvent => ({event: 'message', data});
+  const words = text.split(' ');
+  const deltas: ConverseEvent[] = [];
+  for (let i = 0; i < words.length; i += chunkSize) {
+    const chunk = words.slice(i, i + chunkSize).join(' ');
+    deltas.push(
+      message({type: 'REASONING_MESSAGE_CONTENT', messageId, delta: i === 0 ? chunk : ` ${chunk}`})
+    );
+  }
+  return [
+    message({type: 'REASONING_START', messageId: `reasoning-${messageId}`}),
+    message({type: 'REASONING_MESSAGE_START', messageId, role: 'reasoning'}),
+    ...deltas,
+    message({type: 'REASONING_MESSAGE_END', messageId}),
+    message({type: 'REASONING_END', messageId: `reasoning-${messageId}`}),
+  ];
+}
+
 function toolCall(options: {
   toolCallId: string;
   toolCallName: string;
@@ -316,6 +336,7 @@ export {
   CommerceSearchApiResponse,
   SearchApiResponse,
   textMessage,
+  reasoningMessage,
   toolCall,
   simpleConversation,
   buildStreamingResponse,

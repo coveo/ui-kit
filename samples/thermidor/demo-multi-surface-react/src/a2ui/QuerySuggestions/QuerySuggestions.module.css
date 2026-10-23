@@ -1,0 +1,120 @@
+/* Completions and products side by side. */
+.panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.column {
+  display: grid;
+  align-content: start;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.products {
+  border-left: 1px solid var(--color-border);
+}
+
+.heading {
+  margin: 0;
+  padding: var(--space-1) var(--space-4);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.suggestion {
+  width: 100%;
+  padding: var(--space-2) var(--space-4);
+  border: 0;
+  text-align: left;
+  font: inherit;
+  color: var(--color-text-primary);
+  background: none;
+  cursor: pointer;
+}
+
+.suggestion:hover,
+.suggestion:focus-visible {
+  background: var(--color-bg-active);
+}
+
+.suggestion mark {
+  font-weight: 700;
+  color: inherit;
+  background: none;
+}
+
+.empty {
+  margin: 0;
+  padding: var(--space-2) var(--space-4);
+  color: var(--color-text-muted);
+}
+
+.product {
+  display: flex;
+  align-items: center;
+  padding-right: var(--space-3);
+}
+
+.productPick {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.image {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  object-fit: contain;
+  background: var(--color-bg-tertiary);
+}
+
+.name,
+.price {
+  display: block;
+}
+
+.name {
+  font-weight: 600;
+}
+
+.price {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.add {
+  flex: none;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  border-radius: 6px;
+  padding: var(--space-1) var(--space-2);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--font-size-sm);
+}
+
+.add:hover {
+  border-color: var(--color-border-hover);
+}
+
+@media (max-width: 720px) {
+  .panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .products {
+    border-left: 0;
+    border-top: 1px solid var(--color-border);
+  }
+}
