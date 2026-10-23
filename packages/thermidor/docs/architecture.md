@@ -18,7 +18,7 @@ The package entry (`src/index.ts`) exports the session-client surface — `creat
 graph TB
     subgraph "Public surface (src/index.ts)"
         CS["createSession(config)"]
-        SESSION["Session&lt;TContracts&gt;<br/>contracts · turns · actionError · request<br/>sendAndWait · subscribe · dispatchAction<br/>cancel · retry · serialize"]
+        SESSION["Session&lt;TContracts&gt;<br/>contracts · turns · surfaces · a2uiMessages · state · actionError · request<br/>sendAndWait · subscribe · getSnapshot · dispatchAction<br/>cancel · retry · serialize"]
     end
 
     subgraph "Internal (not exported)"
@@ -94,7 +94,7 @@ Cancellation is modeled as a terminal `error` turn (message `'Cancelled'`), not 
 
 ## The observable store
 
-`src/session/store.ts` holds `{ turns, activeTurnId?, sessionId?, sessionToken? }`, plus the runtime-only `actionError` and `request`, which are never serialized. It exposes `getState`, an internal setter that notifies on change, and `subscribe(listener) → unsubscribe`. Every registered subscriber is notified exactly once per change. This plain store replaces the former RTK slice plus state port ([ADR-010](./internal/adr/ADR-010-unified-endpoint-session-client.md) structure annex); there is no Redux state library anywhere in the package.
+`src/session/store.ts` holds `{ turns, activeTurnId?, sessionId?, sessionToken? }`, plus the runtime-only `actionError` and `request`, which are never serialized. It exposes `getState`, an internal setter that notifies on change, and `subscribe(listener) → unsubscribe`. Every registered subscriber is notified exactly once per change. `session.getSnapshot()` gathers the session's `turns`, `surfaces`, `a2uiMessages`, `state`, `request` and `actionError` into one frozen `SessionSnapshot`, and returns the same object until one of them changes, so a change to anything else, such as the session keys, keeps it. This plain store replaces the former RTK slice plus state port ([ADR-010](./internal/adr/ADR-010-unified-endpoint-session-client.md) structure annex); there is no Redux state library anywhere in the package.
 
 ## The pure fold
 

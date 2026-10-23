@@ -7,14 +7,15 @@ import {
   useOptimisticFacetSearch,
 } from './use-optimistic-facet-search.js';
 import {SessionRequestProvider, type SessionRequestSource} from './session-request.js';
+import {requestSnapshot} from '../test/fake-session-requests.js';
 
 function mount(initialBackend: string) {
   const dispatch = vi.fn<(action: FacetSearchAction) => void>();
   // A session sending another request, until the test frees it.
   const session: {busy: boolean} & SessionRequestSource = {
     busy: false,
-    get request() {
-      return this.busy ? ({kind: 'prompt', turnId: 'turn'} as const) : undefined;
+    getSnapshot() {
+      return requestSnapshot(this.busy ? {kind: 'prompt', turnId: 'turn'} : undefined);
     },
     subscribe: () => () => {},
     sendAndWait: () => Promise.resolve(),

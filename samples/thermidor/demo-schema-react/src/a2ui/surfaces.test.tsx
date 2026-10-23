@@ -5,6 +5,7 @@ import type {A2uiV09Message} from '@coveo/thermidor';
 import {createThermidorCatalog, THERMIDOR_CATALOG_ID} from './components.js';
 import {ThermidorA2UIStream, TurnSurfaces} from './surfaces.js';
 import {SessionRequestProvider} from './session-request.js';
+import {requestSnapshot} from '../test/fake-session-requests.js';
 
 const originalScrollIntoView = Element.prototype.scrollIntoView;
 
@@ -40,9 +41,12 @@ function surfaceMessages(surfaceId: string) {
 const MESSAGES = surfaceMessages(SURFACE_ID);
 
 /** A session whose request in flight locks the surface, or that is idle. */
+const LOCKED = requestSnapshot({kind: 'prompt', turnId: 'turn'});
+const UNLOCKED = requestSnapshot(undefined);
+
 function lockedSource(locked: boolean) {
   return {
-    request: locked ? ({kind: 'prompt', turnId: 'turn'} as const) : undefined,
+    getSnapshot: () => (locked ? LOCKED : UNLOCKED),
     subscribe: () => () => {},
     sendAndWait: () => Promise.resolve(),
   };
@@ -333,16 +337,20 @@ describe('ThermidorA2UIStream', () => {
 
 describe('the failure of an action', () => {
   function renderWithActionError(surfaceId: string) {
+    const snapshot = {
+      ...UNLOCKED,
+      actionError: {
+        message: 'Bad gateway',
+        name: 'setPageSize',
+        surfaceId,
+        sourceComponentId: ROOT_COMPONENT_ID,
+      },
+    };
     return render(
       <SessionRequestProvider
         value={{
           ...lockedSource(false),
-          actionError: {
-            message: 'Bad gateway',
-            name: 'setPageSize',
-            surfaceId,
-            sourceComponentId: ROOT_COMPONENT_ID,
-          },
+          getSnapshot: () => snapshot,
         }}
       >
         <A2UIProvider catalog={CATALOG} onAction={() => {}}>

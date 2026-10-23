@@ -26,28 +26,31 @@ const session = createSession({
   commerceContextProvider: () => ({cart: getCart()}),
 });
 
-session.subscribe(() => render(session.turns));
+session.subscribe(() => render(session.getSnapshot()));
 
 await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me running shoes'}});
 ```
 
 `createSession(config)` returns a `Session` exposing exactly:
 
-| Member                    | Purpose                                                                                                                     |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `contracts`               | The injected contracts schema this session validates against (readonly).                                                    |
-| `turns`                   | Readonly observable list of `Turn`s folded from the stream (empty initially).                                               |
-| `surfaces`                | Every live surface of the session, in creation order, whichever turn created it.                                            |
-| `a2uiMessages`            | The session's whole renderer stream, in the A2-UI v0.9 shape. It only grows: feed each new message to one renderer once.    |
-| `state`                   | The validated data model of every live surface, keyed by surface id.                                                        |
-| `actionError`             | The last component action that failed (`ActionError`: `message`, `name`, `surfaceId`, `sourceComponentId`), or `undefined`. |
-| `request`                 | The request being sent, or `undefined` when idle. See [One request at a time](#one-request-at-a-time).                      |
-| `sendAndWait(send)`       | Calls `send`, which dispatches through the renderer, and resolves once the session has answered it, whatever the outcome.   |
-| `subscribe(listener)`     | Registers a listener called once per change to the turn list, `actionError` or `request`.                                   |
-| `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's `onAction`.     |
-| `cancel()`                | Stops the active stream.                                                                                                    |
-| `retry(turnId)`           | Re-submits the last turn's input when it errored.                                                                           |
-| `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                                                             |
+| Member                    | Purpose                                                                                                                                               |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `contracts`               | The injected contracts schema this session validates against (readonly).                                                                              |
+| `turns`                   | Readonly observable list of `Turn`s folded from the stream (empty initially).                                                                         |
+| `surfaces`                | Every live surface of the session, in creation order, whichever turn created it.                                                                      |
+| `a2uiMessages`            | The session's whole renderer stream, in the A2-UI v0.9 shape. It only grows: feed each new message to one renderer once.                              |
+| `state`                   | The validated data model of every live surface, keyed by surface id.                                                                                  |
+| `actionError`             | The last component action that failed (`ActionError`: `message`, `name`, `surfaceId`, `sourceComponentId`), or `undefined`.                           |
+| `request`                 | The request being sent, or `undefined` when idle. See [One request at a time](#one-request-at-a-time).                                                |
+| `sendAndWait(send)`       | Calls `send`, which dispatches through the renderer, and resolves once the session has answered it, whatever the outcome.                             |
+| `subscribe(listener)`     | Registers a listener called once per change to the turn list, `actionError` or `request`.                                                             |
+| `getSnapshot()`           | `turns`, `surfaces`, `a2uiMessages`, `state`, `request` and `actionError` as one immutable `SessionSnapshot`, replaced only when one of them changes. |
+| `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's `onAction`.                               |
+| `cancel()`                | Stops the active stream.                                                                                                                              |
+| `retry(turnId)`           | Re-submits the last turn's input when it errored.                                                                                                     |
+| `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                                                                                       |
+
+`subscribe` and `getSnapshot` do not rely on `this`, so they can be handed by reference to any store that compares snapshots by reference, such as React's `useSyncExternalStore(session.subscribe, session.getSnapshot)`. The package itself depends on no framework.
 
 The concrete `contracts` type pinned at the `createSession` call site threads unbroken through `Session`, so component types, action names, and payloads stay fully typed at the call site (no `string`, no `never`, no `unknown`).
 

@@ -24,6 +24,7 @@ import type {
   SerializedSession,
   Session,
   SessionConfig,
+  SessionSnapshot,
   SubmitPromptAction,
   Turn,
   TurnResponse,
@@ -59,6 +60,17 @@ test('exposes session-scoped surfaces, renderer stream and state on Session', ()
   expectTypeOf<Session['state']>().toEqualTypeOf<A2uiState>();
   expectTypeOf<TurnResponse>().not.toHaveProperty('a2uiMessages');
   expectTypeOf<TurnResponse>().not.toHaveProperty('state');
+});
+
+// ── POSITIVE: the session exposes one snapshot of its state ────────────────
+test('exposes a snapshot of the session state for framework stores', () => {
+  expectTypeOf<Session['getSnapshot']>().toEqualTypeOf<() => SessionSnapshot>();
+  expectTypeOf<SessionSnapshot['turns']>().toEqualTypeOf<readonly Turn[]>();
+  expectTypeOf<SessionSnapshot['surfaces']>().toEqualTypeOf<readonly DiscoveredSurface[]>();
+  expectTypeOf<SessionSnapshot['state']>().toEqualTypeOf<A2uiState>();
+  expectTypeOf<SessionSnapshot['a2uiMessages']>().toEqualTypeOf<readonly A2uiV09Message[]>();
+  expectTypeOf<SessionSnapshot['request']>().toEqualTypeOf<SessionRequest | undefined>();
+  expectTypeOf<SessionSnapshot['actionError']>().toEqualTypeOf<ActionError | undefined>();
 });
 
 // ── POSITIVE: the injected-contract seam is exported ────────────────────────

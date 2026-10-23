@@ -876,6 +876,54 @@ describe('createSession lifecycle', () => {
     });
   });
 
+  describe('snapshot', () => {
+    it('returns the same frozen snapshot until the session state changes', () => {
+      const session = createSession(baseConfig);
+
+      const snapshot = session.getSnapshot();
+
+      expect(session.getSnapshot()).toBe(snapshot);
+      expect(Object.isFrozen(snapshot)).toBe(true);
+      expect(snapshot).toEqual({
+        turns: [],
+        surfaces: [],
+        a2uiMessages: [],
+        state: {},
+        request: undefined,
+        actionError: undefined,
+      });
+    });
+
+    it('holds what the session members hold, and is replaced as they change', async () => {
+      const session = createSession(baseConfig);
+      const {getSnapshot, subscribe} = session;
+      const snapshots: ReturnType<typeof getSnapshot>[] = [];
+      const unsubscribe = subscribe(() => {
+        const snapshot = getSnapshot();
+        if (snapshots.at(-1) !== snapshot) {
+          snapshots.push(snapshot);
+        }
+      });
+
+      const stream = queueStream();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'shoes'}});
+      await stream.opened;
+      const streaming = getSnapshot();
+      expect(streaming.turns).toBe(session.turns);
+      expect(streaming.a2uiMessages).toBe(session.a2uiMessages);
+      expect(streaming.request).toBe(session.request);
+
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await turn;
+      unsubscribe();
+
+      expect(getSnapshot().request).toBeUndefined();
+      expect(getSnapshot().turns[0].status).toBe('complete');
+      expect(new Set(snapshots).size).toBe(snapshots.length);
+    });
+  });
+
   describe('cancel during an in-flight stream', () => {
     it('stops the stream, retains the partial response, and sets the active turn to error', async () => {
       const session = createSession(baseConfig);

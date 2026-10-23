@@ -1,15 +1,23 @@
 import {createContext, startTransition, useContext, useSyncExternalStore} from 'react';
-import type {Session, SessionRequest} from '@coveo/thermidor';
+import type {Session, SessionRequest, SessionSnapshot} from '@coveo/thermidor';
 
 /**
- * What the surfaces read from the session: its request in flight, when it has answered, and why
- * the last action failed.
+ * What the surfaces read from the session: its request in flight, when it has answered, and why the
+ * last action failed.
  */
-export type SessionRequestSource = Pick<Session, 'request' | 'subscribe' | 'sendAndWait'> &
-  Partial<Pick<Session, 'actionError'>>;
+export type SessionRequestSource = Pick<Session, 'subscribe' | 'getSnapshot' | 'sendAndWait'>;
+
+const IDLE_SNAPSHOT: SessionSnapshot = {
+  turns: [],
+  surfaces: [],
+  a2uiMessages: [],
+  state: {},
+  request: undefined,
+  actionError: undefined,
+};
 
 const IDLE: SessionRequestSource = {
-  request: undefined,
+  getSnapshot: () => IDLE_SNAPSHOT,
   subscribe: () => () => {},
   sendAndWait: (send) => {
     send();
@@ -36,23 +44,25 @@ export function isBlocking(request: SessionRequest | undefined): boolean {
   );
 }
 
-/** The request the session is sending, from `source` or the enclosing provider. */
-export function useSessionRequest(source?: SessionRequestSource): SessionRequest | undefined {
-  const context = useContext(SessionRequestContext);
-  const session = source ?? context;
+/** The request the session is sending, from the enclosing provider. */
+function useSessionRequest(): SessionRequest | undefined {
+  const source = useContext(SessionRequestContext);
   return useSyncExternalStore(
-    session.subscribe,
-    () => session.request,
+    source.subscribe,
+    () => source.getSnapshot().request,
     () => undefined
   );
 }
 
 /** Why the last action dispatched from `surfaceId` failed, while the session still reports it. */
 export function useActionError(surfaceId: string): string | undefined {
-  const session = useContext(SessionRequestContext);
+  const source = useContext(SessionRequestContext);
   return useSyncExternalStore(
-    session.subscribe,
-    () => (session.actionError?.surfaceId === surfaceId ? session.actionError.message : undefined),
+    source.subscribe,
+    () => {
+      const {actionError} = source.getSnapshot();
+      return actionError?.surfaceId === surfaceId ? actionError.message : undefined;
+    },
     () => undefined
   );
 }
@@ -60,7 +70,7 @@ export function useActionError(surfaceId: string): string | undefined {
 /** Whether the session is sending a request: it takes one at a time and withholds the others. */
 export function useSessionBusy(): () => boolean {
   const source = useContext(SessionRequestContext);
-  return () => source.request !== undefined;
+  return () => source.getSnapshot().request !== undefined;
 }
 
 /**
@@ -71,7 +81,7 @@ export function useSessionBusy(): () => boolean {
 export function useGesture(): (optimistic: () => void, send: () => void) => void {
   const source = useContext(SessionRequestContext);
   return (optimistic, send) => {
-    if (source.request !== undefined) {
+    if (source.getSnapshot().request !== undefined) {
       return;
     }
     startTransition(async () => {

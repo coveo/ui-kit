@@ -20,6 +20,7 @@ export {createSession} from '@/src/session/create-session.js';
 export type {
   Session,
   SessionConfig,
+  SessionSnapshot,
   A2uiClientMessage,
   SubmitPromptAction,
 } from '@/src/session/create-session.js';

@@ -155,6 +155,26 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
 }
 
 /**
+ * The session's observable state as one immutable value, read through
+ * {@link Session.getSnapshot}. Each field is the value of the {@link Session} member of the same
+ * name at the time of the snapshot.
+ */
+export interface SessionSnapshot {
+  /** The turns, as {@link Session.turns}. */
+  readonly turns: readonly Turn[];
+  /** Every live surface, as {@link Session.surfaces}. */
+  readonly surfaces: readonly DiscoveredSurface[];
+  /** The whole session's renderer stream, as {@link Session.a2uiMessages}. */
+  readonly a2uiMessages: readonly A2uiV09Message[];
+  /** The validated data model of every live surface, as {@link Session.state}. */
+  readonly state: A2uiState;
+  /** The request in flight, as {@link Session.request}. */
+  readonly request: SessionRequest | undefined;
+  /** The last component action that failed, as {@link Session.actionError}. */
+  readonly actionError: ActionError | undefined;
+}
+
+/**
  * The client-side handle for one continuous interaction with the unified
  * converse endpoint. No engine, interface, or state-library object is reachable
  * from it.
@@ -206,8 +226,20 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * run counts, a follow-up included. Read it synchronously, or through {@link Session.subscribe}.
    */
   readonly request: SessionRequest | undefined;
-  /** Registers a listener invoked once per change to the turn list, `actionError` or `request`. */
+  /**
+   * Registers a listener invoked once per change to the turn list, `actionError` or `request`.
+   * Does not rely on `this`, so it can be passed by reference.
+   */
   subscribe(listener: () => void): () => void;
+  /**
+   * Returns the session's turns, surfaces, renderer stream, state, request in flight and action
+   * error as one immutable {@link SessionSnapshot}. The same object is returned until one of its fields
+   * changes, so it can back any store that subscribes through {@link Session.subscribe} and
+   * compares snapshots by reference, such as React's
+   * `useSyncExternalStore(session.subscribe, session.getSnapshot)`. Does not rely on `this`, so
+   * it can be passed by reference.
+   */
+  getSnapshot(): SessionSnapshot;
   /**
    * Calls `send`, which dispatches through the renderer, and resolves once the session has answered
    * that dispatch, whatever the outcome: answered, failed, cancelled, or withheld without being
@@ -902,6 +934,26 @@ export function createSession<TContracts extends ContractsSchema>(
     return serializeSession(store.getState());
   }
 
+  let snapshot: SessionSnapshot | undefined;
+  function getSnapshot(): SessionSnapshot {
+    const {turns, surfaces} = readSurfaceView();
+    const a2uiMessages = (store.getState().rendererStream ?? EMPTY_RENDERER_STREAM).messages;
+    const state = readLiveState();
+    const {request, actionError} = store.getState();
+    if (
+      snapshot === undefined ||
+      snapshot.turns !== turns ||
+      snapshot.surfaces !== surfaces ||
+      snapshot.a2uiMessages !== a2uiMessages ||
+      snapshot.state !== state ||
+      snapshot.request !== request ||
+      snapshot.actionError !== actionError
+    ) {
+      snapshot = Object.freeze({turns, surfaces, a2uiMessages, state, request, actionError});
+    }
+    return snapshot;
+  }
+
   return {
     contracts: config.contracts,
     get turns() {
@@ -925,6 +977,7 @@ export function createSession<TContracts extends ContractsSchema>(
     subscribe(listener) {
       return store.subscribe(listener);
     },
+    getSnapshot,
     sendAndWait,
     dispatchAction,
     cancel,

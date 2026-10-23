@@ -16,13 +16,23 @@ vi.mock('../context/session.js', () => ({useSession: () => mockSession}));
 async function createMockSession(): Promise<Session> {
   const {createFakeSessionRequests} = await import('../test/fake-session-requests.js');
   const requests = createFakeSessionRequests((message: never) => mockDispatchAction(message));
+  let snapshotSource: [Turn[], unknown] | undefined;
+  let snapshot: unknown;
   return {
-    get turns() {
-      return mockTurns;
-    },
-    a2uiMessages: [],
-    get request() {
-      return requests.source.request;
+    getSnapshot() {
+      const {request} = requests.source.getSnapshot();
+      if (snapshotSource?.[0] !== mockTurns || snapshotSource[1] !== request) {
+        snapshotSource = [mockTurns, request];
+        snapshot = {
+          turns: mockTurns,
+          surfaces: [],
+          a2uiMessages: [],
+          state: {},
+          request,
+          actionError: undefined,
+        };
+      }
+      return snapshot;
     },
     subscribe: requests.source.subscribe,
     sendAndWait: requests.source.sendAndWait,
