@@ -114,6 +114,12 @@ export interface ToolCallStep {
 
 export interface AgentMessage {
   /**
+   * The message's id, from its `TEXT_MESSAGE_START` event. Activities that belong to a message,
+   * such as the citations of an answer, refer to it by this id.
+   */
+  id: string;
+
+  /**
    * The text content of the message.
    */
   content: string;

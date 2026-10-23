@@ -29,6 +29,7 @@ const activityArbitrary: fc.Arbitrary<Activity> = fc.record({
 });
 
 const agentMessageArbitrary: fc.Arbitrary<AgentMessage> = fc.record({
+  id: shortText,
   content: shortText,
   role: fc.constantFrom('assistant', 'user', 'system'),
 });

@@ -566,7 +566,7 @@ describe('createSession lifecycle', () => {
       await flush();
 
       expect(session.turns[0].response.agent?.messages).toEqual([
-        {content: 'partial', role: 'assistant'},
+        {id: 'm1', content: 'partial', role: 'assistant'},
       ]);
       expect(session.turns[0].status).toBe('streaming');
 
@@ -577,7 +577,9 @@ describe('createSession lifecycle', () => {
       expect(turn.status).toBe('error');
       expect(turn.error).toBeDefined();
       // Partial response already folded is retained.
-      expect(turn.response.agent?.messages).toEqual([{content: 'partial', role: 'assistant'}]);
+      expect(turn.response.agent?.messages).toEqual([
+        {id: 'm1', content: 'partial', role: 'assistant'},
+      ]);
     });
   });
 

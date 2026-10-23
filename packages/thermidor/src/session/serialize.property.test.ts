@@ -33,6 +33,7 @@ const activityArbitrary: fc.Arbitrary<Activity> = fc.record({
 });
 
 const agentMessageArbitrary: fc.Arbitrary<AgentMessage> = fc.record({
+  id: fc.string({minLength: 1, maxLength: 12}),
   content: fc.string({maxLength: 20}),
   role: fc.string({minLength: 1, maxLength: 12}),
 });

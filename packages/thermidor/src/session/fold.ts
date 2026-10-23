@@ -88,10 +88,8 @@ export function foldActivity(
   switch (activity.type) {
     case 'TEXT_MESSAGE_START': {
       const agent = ensureAgent(response);
-      agent.messages = [
-        ...agent.messages,
-        {content: '', role: (activity as {role?: string}).role ?? 'assistant'},
-      ];
+      const {messageId, role} = activity as {messageId: string; role?: string};
+      agent.messages = [...agent.messages, {id: messageId, content: '', role: role ?? 'assistant'}];
       return turn;
     }
 

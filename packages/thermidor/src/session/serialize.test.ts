@@ -75,7 +75,7 @@ describe('serializeSession', () => {
         state: {},
         activities: [],
         surfaces: [],
-        agent: {messages: [{content: 'hi', role: 'assistant'}], reasoningSteps: []},
+        agent: {messages: [{id: 'm1', content: 'hi', role: 'assistant'}], reasoningSteps: []},
       },
     });
     const withoutAgent = turn({id: 't2'});
@@ -83,7 +83,7 @@ describe('serializeSession', () => {
     const result = serializeSession(state({turns: [withAgent, withoutAgent], activeTurnId: 't2'}));
 
     expect(result.turns[0].response.agent).toEqual({
-      messages: [{content: 'hi', role: 'assistant'}],
+      messages: [{id: 'm1', content: 'hi', role: 'assistant'}],
       reasoningSteps: [],
     });
     expect(result.turns[1].response.agent).toBeUndefined();
@@ -172,7 +172,7 @@ describe('restoreSession', () => {
         state: {a: 1},
         activities: [{id: 'a1', kind: 'k', replace: false, payload: {x: 1}}],
         surfaces: [],
-        agent: {messages: [{content: 'partial', role: 'assistant'}], reasoningSteps: []},
+        agent: {messages: [{id: 'm1', content: 'partial', role: 'assistant'}], reasoningSteps: []},
       },
     });
 
@@ -186,7 +186,7 @@ describe('restoreSession', () => {
       {id: 'a1', kind: 'k', replace: false, payload: {x: 1}},
     ]);
     expect(restored.turns[0].response.agent).toEqual({
-      messages: [{content: 'partial', role: 'assistant'}],
+      messages: [{id: 'm1', content: 'partial', role: 'assistant'}],
       reasoningSteps: [],
     });
   });
