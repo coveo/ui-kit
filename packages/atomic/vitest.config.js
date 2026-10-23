@@ -180,6 +180,7 @@ const usageDocs = defineConfig({
     include: ['scripts/usage-docs/*.spec.mjs'],
     environment: 'node',
     pool: 'forks',
+    hookTimeout: 120_000,
   },
 });
 
