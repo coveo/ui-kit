@@ -118,11 +118,14 @@ describe('the custom elements manifest of Atomic', () => {
     expect(findAttribute(element, 'results-per-page')).toMatchObject({fieldName: 'resultsPerPage'});
   });
 
-  it('should expose each @mapProperty field as an attribute', () => {
+  it('should expose each @mapProperty field as a typed and documented attribute', () => {
     const mappedFields = decoratedElementFields('mapProperty');
     expect(mappedFields).not.toHaveLength(0);
     for (const {element, fieldName} of mappedFields) {
-      expect(hasAttribute(element, fieldName), `${element.tagName} ${fieldName}`).toBe(true);
+      expect(
+        element.attributes?.find((attribute) => attribute.fieldName === fieldName),
+        `${element.tagName} ${fieldName}`
+      ).toMatchObject({type: {text: expect.any(String)}, description: expect.any(String)});
     }
   });
 
