@@ -61,7 +61,8 @@
       "dependsOn": ["@coveo/platform-mock-api#build"],
       "inputs": ["$TURBO_DEFAULT$"],
       "outputs": ["playwright-report/**", "blob-report/**", "test-results/**"],
-      "cache": false
+      "cache": false,
+      "env": ["TEST_SHARD"]
     },
     "validate:types": {
       "dependsOn": ["build"],
