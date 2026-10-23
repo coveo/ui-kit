@@ -28,16 +28,18 @@ const mocks = {
   recommendation: () => new MockRecommendationApi(),
 };
 
+/**
+ * Serves the agent's `index.html`, the only file the prompts ask for.
+ */
 function serve(workspace) {
+  const page = readFileSync(path.join(workspace, 'index.html'));
   const server = http.createServer((request, response) => {
-    const url = new URL(request.url, 'http://127.0.0.1');
-    const file = path.join(workspace, url.pathname === '/' ? 'index.html' : url.pathname);
-    if (!file.startsWith(workspace) || !existsSync(file)) {
+    const {pathname} = new URL(request.url, 'http://127.0.0.1');
+    if (pathname !== '/' && pathname !== '/index.html') {
       response.writeHead(404).end();
       return;
     }
-    const type = file.endsWith('.html') ? 'text/html' : 'application/octet-stream';
-    response.writeHead(200, {'Content-Type': type}).end(readFileSync(file));
+    response.writeHead(200, {'Content-Type': 'text/html'}).end(page);
   });
   return new Promise((resolve) => {
     server.listen(0, '127.0.0.1', () => resolve(server));
