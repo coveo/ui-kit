@@ -50,6 +50,7 @@
 ### Private
 
 - [`@coveo/atomic-a11y`](packages/atomic-a11y/): Accessibility utilities and tools for Coveo Atomic components
+- [`@coveo/atomic-agent-kit`](packages/atomic-agent-kit/): Generates the Agent Skill that @coveo/atomic ships from its custom elements manifest and usage docs, and checks HTML snippets against that manifest
 - [`@coveo/atomic-angular-builder`](packages/atomic-angular/): Angular workspace used to build and publish the @coveo/atomic-angular package
 - [`@coveo/atomic-cdn-smoke`](packages/atomic-cdn-smoke/): CDN visual smoke tests for Atomic components using Playwright + Chromatic
 - [`@coveo/atomic-playground`](packages/atomic-playground/): Local playground for developing Atomic components against a real interface, with hot reload for Atomic and Headless changes

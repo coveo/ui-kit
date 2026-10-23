@@ -4,17 +4,24 @@ import {
   attributesOf,
   listElements,
   methodsOf,
-  packageRoot,
   propertiesOf,
   readManifest,
   resolveType,
 } from './manifest.mjs';
 import {findUsageDocs} from './snippets.mjs';
 
-const contentDir = path.join(import.meta.dirname, 'content');
+const contentDir = path.resolve(import.meta.dirname, '../content');
 
 export const skillName = 'coveo-atomic';
-export const kitDir = path.join(packageRoot, 'dist/skills', skillName);
+
+/**
+ * Where the kit of the Atomic package at `root` is written, inside the files it publishes.
+ *
+ * @param {string} root
+ */
+export function kitDirOf(root) {
+  return path.join(root, 'dist/skills', skillName);
+}
 
 /**
  * The areas of the library, keyed by their folder under `src/components`, in the order the
@@ -30,18 +37,22 @@ export const AREAS = {
 };
 
 /**
- * Reads what the generator needs: the manifest, the usage docs by tag, the shared notes, the
- * hand-written content and the version.
+ * Reads what the generator needs from the Atomic package at `root`: the manifest, the usage
+ * docs by tag, the shared notes, the hand-written content and the version.
  *
- * @param {{manifest?: object}} [options] A manifest to use instead of `custom-elements.json`
+ * @param {{root: string, manifest?: object}} options A manifest to use instead of the
+ * package's `custom-elements.json`
  */
-export function readInputs({manifest = readManifest()} = {}) {
+export function readInputs({root, manifest = readManifest(root)}) {
   const usageDocs = new Map(
-    findUsageDocs().map((file) => [path.basename(file, '.usage.mdx'), readFileSync(file, 'utf8')])
+    findUsageDocs(root).map((file) => [
+      path.basename(file, '.usage.mdx'),
+      readFileSync(file, 'utf8'),
+    ])
   );
   const notes = {
     SetRenderFunctionNote: readFileSync(
-      path.join(packageRoot, 'storybook-utils/documentation/set-render-function-note.mdx'),
+      path.join(root, 'storybook-utils/documentation/set-render-function-note.mdx'),
       'utf8'
     ),
   };
@@ -54,7 +65,7 @@ export function readInputs({manifest = readManifest()} = {}) {
       ])
     ),
   };
-  const {version} = JSON.parse(readFileSync(path.join(packageRoot, 'package.json'), 'utf8'));
+  const {version} = JSON.parse(readFileSync(path.join(root, 'package.json'), 'utf8'));
   return {manifest, usageDocs, notes, content, version};
 }
 
@@ -86,11 +97,12 @@ export function generateKit({manifest, usageDocs, notes, content, version}) {
  * Writes the generated files, replacing the previous kit.
  *
  * @param {Map<string, string>} files
+ * @param {string} dir
  */
-export function writeKit(files) {
-  rmSync(kitDir, {recursive: true, force: true});
+export function writeKit(files, dir) {
+  rmSync(dir, {recursive: true, force: true});
   for (const [file, text] of files) {
-    const target = path.join(kitDir, file);
+    const target = path.join(dir, file);
     mkdirSync(path.dirname(target), {recursive: true});
     writeFileSync(target, text);
   }
@@ -339,9 +351,3 @@ const cell = (text) =>
 
 const code = (text) =>
   text === undefined || text === '' ? '' : `\`${String(text).replaceAll('|', '\\|')}\``;
-
-if (process.argv[1] === import.meta.filename) {
-  const files = generateKit(readInputs());
-  writeKit(files);
-  console.log(`Wrote ${files.size} files to ${path.relative(packageRoot, kitDir)}`);
-}

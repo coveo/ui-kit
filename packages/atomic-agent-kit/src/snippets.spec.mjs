@@ -1,15 +1,15 @@
 import {readFileSync} from 'node:fs';
 import path from 'node:path';
 import {beforeAll, describe, expect, it} from 'vitest';
-import {packageRoot} from './manifest.mjs';
 import {
   createCatalog,
   extractSnippets,
+  findSourceTags,
   ITEM_TEMPLATES,
   validateHtml,
   validateMarkdown,
 } from './snippets.mjs';
-import {analyzeAtomic} from './testing/analyze.mjs';
+import {analyzeManifest, atomicRoot} from './testing/analyze.mjs';
 
 const component = (area, tagName, declaration = {}) => ({
   path: `src/components/${area}/${tagName}/${tagName}.ts`,
@@ -209,7 +209,7 @@ describe('snippets', () => {
     let byTag;
 
     beforeAll(async () => {
-      byTag = createCatalog(await analyzeAtomic()).byTag;
+      byTag = createCatalog(await analyzeManifest(), findSourceTags(atomicRoot)).byTag;
     });
 
     it('should list every item template of the manifest and only existing hosts', () => {
@@ -224,7 +224,7 @@ describe('snippets', () => {
 
     it('should accept an empty template exactly where the component does', () => {
       for (const [tag, {allowEmpty}] of Object.entries(ITEM_TEMPLATES)) {
-        const source = readFileSync(path.join(packageRoot, byTag.get(tag).modulePath), 'utf8');
+        const source = readFileSync(path.join(atomicRoot, byTag.get(tag).modulePath), 'utf8');
         expect(source.includes('allowEmpty = true'), `${tag} allows an empty template`).toBe(
           allowEmpty
         );

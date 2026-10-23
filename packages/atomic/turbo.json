@@ -54,10 +54,11 @@
       "outputs": ["dist/skills/**"],
       "inputs": [
         "./custom-elements.json",
+        "./package.json",
         "./src/**/*.usage.mdx",
         "./storybook-utils/documentation/*.mdx",
-        "./scripts/agent-kit/**",
-        "!./scripts/agent-kit/**/*.spec.mjs"
+        "$TURBO_ROOT$/packages/atomic-agent-kit/src/**",
+        "$TURBO_ROOT$/packages/atomic-agent-kit/content/**"
       ]
     },
     "build:indexes": {

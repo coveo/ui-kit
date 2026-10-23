@@ -8,7 +8,7 @@ const commerceContext = (viewUrl) =>
  * What every prompt starts with: the deliverable, how to load the library, and the credentials
  * of the public sample organization.
  */
-export const PREAMBLE = `Write \`index.html\` in the current folder: a standalone page built with Coveo Atomic v3. Load Atomic from the CDN (the module script https://static.cloud.coveo.com/atomic/v3/atomic.esm.js and the stylesheet https://static.cloud.coveo.com/atomic/v3/themes/coveo.css), initialize it in an inline module script with ${CREDENTIALS}, and run the first query. Only write the file: don't run commands, servers or browsers, and don't ask questions.`;
+const PREAMBLE = `Write \`index.html\` in the current folder: a standalone page built with Coveo Atomic v3. Load Atomic from the CDN (the module script https://static.cloud.coveo.com/atomic/v3/atomic.esm.js and the stylesheet https://static.cloud.coveo.com/atomic/v3/themes/coveo.css), initialize it in an inline module script with ${CREDENTIALS}, and run the first query. Only write the file: don't run commands, servers or browsers, and don't ask questions.`;
 
 /**
  * The tasks, each with the API family its page talks to, which picks the mock for the render

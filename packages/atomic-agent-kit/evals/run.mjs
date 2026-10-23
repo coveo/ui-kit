@@ -3,15 +3,17 @@ import {existsSync, mkdirSync, readFileSync, rmSync, writeFileSync} from 'node:f
 import os from 'node:os';
 import path from 'node:path';
 import {parseArgs} from 'node:util';
-import {kitDir} from '../generate.mjs';
-import {packageRoot, readManifest} from '../manifest.mjs';
-import {createCatalog} from '../snippets.mjs';
+import {kitDirOf} from '../src/generate.mjs';
+import {readManifest} from '../src/manifest.mjs';
+import {createCatalog, findSourceTags} from '../src/snippets.mjs';
+import {atomicRoot} from '../src/testing/analyze.mjs';
 import {ARMS} from './arms.mjs';
 import {checkLint, checkRender} from './check.mjs';
 import {PROMPTS, promptText} from './prompts.mjs';
 
 const {values: options} = parseArgs({
   options: {
+    atomic: {type: 'string', default: atomicRoot},
     runs: {type: 'string', default: '3'},
     arms: {type: 'string', default: Object.keys(ARMS).join(',')},
     prompts: {type: 'string', default: 'all'},
@@ -30,6 +32,8 @@ const {values: options} = parseArgs({
   },
 });
 
+const root = path.resolve(options.atomic);
+const kitDir = kitDirOf(root);
 const outDir = path.resolve(options.out);
 const arms = options.arms.split(',');
 const prompts =
@@ -221,9 +225,11 @@ function renderReport(results) {
   return lines.join('\n');
 }
 
-const catalog = createCatalog(readManifest());
+const catalog = createCatalog(readManifest(root), findSourceTags(root));
 if (!existsSync(kitDir)) {
-  throw new Error(`Generate the kit first: pnpm run build:agent-kit (${kitDir} is missing)`);
+  throw new Error(
+    `Generate the kit first: pnpm --filter @coveo/atomic build:agent-kit (${kitDir} is missing)`
+  );
 }
 const jobs = arms.flatMap((arm) =>
   prompts.flatMap((prompt) =>

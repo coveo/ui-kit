@@ -11,7 +11,7 @@ const truncate = (text, length) =>
  * @param {string} kitDir The generated kit
  * @param {string} docsPath Where the pages live in the workspace
  */
-export function renderDocsIndex(kitDir, docsPath) {
+function renderDocsIndex(kitDir, docsPath) {
   const referencesDir = path.join(kitDir, 'references');
   const areas = readdirSync(referencesDir)
     .filter((name) => name.endsWith('.md'))

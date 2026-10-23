@@ -7,7 +7,6 @@ import {
   isPrefixAttribute,
   listElements,
   literalValuesOf,
-  packageRoot,
   resolveType,
 } from './manifest.mjs';
 
@@ -75,8 +74,6 @@ const isGlobalAttribute = (name) =>
 const isPlaceholder = (value) =>
   value === null || /\.\.\.|[{}$<>]/.test(value) || value.trim() === '';
 
-const componentsDir = path.join(packageRoot, 'src/components');
-
 const listFiles = (dir, matches) =>
   readdirSync(dir, {withFileTypes: true, recursive: true})
     .filter((entry) => entry.isFile() && matches(entry.name))
@@ -84,20 +81,24 @@ const listFiles = (dir, matches) =>
     .sort();
 
 /**
- * Every `*.usage.mdx` under `src/components`, sorted.
+ * Every `*.usage.mdx` under `src/components` of the Atomic package at `root`, sorted.
+ *
+ * @param {string} root
  */
-export function findUsageDocs() {
-  return listFiles(componentsDir, (name) => name.endsWith('.usage.mdx'));
+export function findUsageDocs(root) {
+  return listFiles(path.join(root, 'src/components'), (name) => name.endsWith('.usage.mdx'));
 }
 
 /**
- * The tags the sources define with `@customElement`, including those of the `@internal`
- * components that the manifest leaves out.
+ * The tags the sources of the Atomic package at `root` define with `@customElement`,
+ * including those of the `@internal` components that the manifest leaves out.
+ *
+ * @param {string} root
  */
-export function findSourceTags() {
+export function findSourceTags(root) {
   const tags = new Set();
   const sources = listFiles(
-    componentsDir,
+    path.join(root, 'src/components'),
     (name) => name.endsWith('.ts') && !/\.(spec|stories)\.|\.d\.ts$/.test(name)
   );
   for (const file of sources) {
@@ -115,9 +116,9 @@ export function findSourceTags() {
  * of the internal components, which are accepted but not checked.
  *
  * @param {object} manifest
- * @param {Set<string>} [sourceTags] The tags defined in the sources
+ * @param {Set<string>} sourceTags The tags defined in the sources, see `findSourceTags`
  */
-export function createCatalog(manifest, sourceTags = findSourceTags()) {
+export function createCatalog(manifest, sourceTags) {
   const byTag = indexByTag(listElements(manifest));
   const internalTags = new Set([...sourceTags].filter((tag) => !byTag.has(tag)));
   return {byTag, internalTags};
@@ -276,10 +277,11 @@ export function validateMarkdown(markdown, catalog) {
  *
  * @param {string} file Absolute path of the `*.usage.mdx`
  * @param {{byTag: Map<string, object>, internalTags: Set<string>}} catalog
+ * @param {string} root The Atomic package, so that problems name the file relative to it
  * @returns {string[]} One `file:line message` per problem
  */
-export function validateUsageDoc(file, catalog) {
-  const relativePath = path.relative(packageRoot, file);
+export function validateUsageDoc(file, catalog, root) {
+  const relativePath = path.relative(root, file);
   return validateMarkdown(readFileSync(file, 'utf8'), catalog).map(
     ({line, message}) => `${relativePath}:${line} ${message}`
   );
