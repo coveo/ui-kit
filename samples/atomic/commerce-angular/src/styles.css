@@ -1,0 +1,118 @@
+/*
+ * Minimal app chrome matching the other UI-Kit samples: a Coveo logo + title,
+ * pill-tab navigation with an active state, and a centered content column.
+ * Everything below is styled by Atomic's own theme.
+ */
+:root {
+  --sample-surface: #ffffff;
+  --sample-border: #e4e8ec;
+  --sample-text: #1c1c28;
+  --sample-text-muted: #6b7280;
+  --sample-accent: #1372ec;
+  --sample-accent-soft: #e8f1fd;
+  --sample-accent-contrast: #ffffff;
+  --sample-shadow: 0 1px 2px rgba(20, 30, 45, 0.06);
+  --sample-font: system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.app-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+  padding: 0.9rem 1.5rem;
+  background: var(--sample-surface);
+  border-bottom: 1px solid var(--sample-border);
+  box-shadow: var(--sample-shadow);
+  font-family: var(--sample-font);
+}
+
+.app-header .brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.app-header .brand img {
+  height: 30px;
+}
+
+.app-header .brand h1 {
+  margin: 0;
+  font-size: 1.35rem;
+  color: var(--sample-text);
+}
+
+.app-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.app-nav a {
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  color: var(--sample-text-muted);
+  text-decoration: none;
+  font-weight: 500;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.app-nav a:hover {
+  background: var(--sample-accent-soft);
+  color: var(--sample-accent);
+}
+
+.app-nav a[aria-current='page'] {
+  background: var(--sample-accent);
+  color: var(--sample-accent-contrast);
+  font-weight: 600;
+}
+
+.page-title {
+  margin: 1.5rem 1.5rem 0;
+  font-family: var(--sample-font);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--sample-text);
+}
+
+/* Home: centered column with a hero search box and the recommendation rows. */
+.home {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 3rem;
+}
+
+.home-hero {
+  padding: 1.5rem 0 2.5rem;
+}
+
+.home-hero atomic-commerce-interface {
+  display: block;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.home-recs {
+  border-top: 1px solid var(--sample-border);
+  padding-top: 2rem;
+}
+
+.home-recs atomic-commerce-recommendation-list {
+  --atomic-recs-number-of-columns: 4;
+}

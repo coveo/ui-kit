@@ -32,8 +32,10 @@ const SHIPPED_PATHS = [
   'utils',
   'public',
   '.gitignore',
+  'angular.json',
   'next.config.mjs',
   'vite.config.js',
+  'tsconfig.app.json',
   'tsconfig.build.json',
   'tsconfig.json',
   'README.md',
@@ -63,6 +65,13 @@ for (const path of SHIPPED_PATHS) {
     recursive: true,
     filter: (source) => !isTestFile(source),
   });
+}
+
+// A sample can't keep a real `pnpm-workspace.yaml` in the monorepo (pnpm would
+// treat the sample as its own workspace root), so pnpm settings the scaffolded
+// project needs, such as `allowBuilds`, live in `pnpm-workspace.sample.yaml`.
+if (existsSync('pnpm-workspace.sample.yaml')) {
+  cpSync('pnpm-workspace.sample.yaml', `${OUT_DIR}/pnpm-workspace.yaml`);
 }
 
 // Ship every top-level HTML entry point (single- and multi-page samples).

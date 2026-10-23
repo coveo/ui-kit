@@ -48,7 +48,7 @@ function buildProgram(): Command {
         .map((t) => `  ${t.name.padEnd(26)} ${describeTemplate(t)}`)
         .join(
           '\n'
-        )}\n\nExamples:\n  $ npm create @coveo/ui my-app --template headless-search-react\n  $ npm create @coveo/ui my-app --template headless-search-react --template-version 3.2.1`
+        )}\n\nExamples:\n  $ npm create @coveo/ui my-app -- --template headless-search-react\n  $ npm create @coveo/ui my-app -- --template headless-search-react --template-version 3.2.1\n  $ pnpm create @coveo/ui my-app --template headless-search-react`
     )
     .showHelpAfterError()
     .exitOverride();

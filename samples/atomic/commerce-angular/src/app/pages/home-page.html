@@ -1,0 +1,77 @@
+<div class="home">
+  <!-- Standalone search box: submitting a query redirects to the search page. -->
+  <section class="home-hero">
+    <atomic-commerce-interface
+      type="search"
+      language-assets-path="/lang"
+      icon-assets-path="/assets"
+    >
+      <atomic-layout-section section="search">
+        <atomic-commerce-search-box redirection-url="/search">
+          <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+          <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
+        </atomic-commerce-search-box>
+      </atomic-layout-section>
+    </atomic-commerce-interface>
+  </section>
+
+  <section class="home-recs">
+    <atomic-commerce-recommendation-interface
+      language-assets-path="/lang"
+      icon-assets-path="/assets"
+    >
+      <atomic-commerce-layout>
+        <atomic-layout-section section="main">
+          <atomic-commerce-recommendation-list
+            slot-id="af4fb7ba-6641-4b67-9cf9-be67e9f30174"
+            products-per-page="4"
+            display="grid"
+            image-size="small"
+          >
+            <atomic-product-template>
+              <template>
+                <atomic-product-section-visual>
+                  <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+                </atomic-product-section-visual>
+                <atomic-product-section-name>
+                  <atomic-product-link></atomic-product-link>
+                </atomic-product-section-name>
+                <atomic-product-section-metadata>
+                  <atomic-product-text field="ec_brand"></atomic-product-text>
+                  <atomic-product-rating field="ec_rating"></atomic-product-rating>
+                </atomic-product-section-metadata>
+                <atomic-product-section-emphasized>
+                  <atomic-product-price></atomic-product-price>
+                </atomic-product-section-emphasized>
+              </template>
+            </atomic-product-template>
+          </atomic-commerce-recommendation-list>
+          <atomic-commerce-recommendation-list
+            slot-id="d73afbd2-8521-4ee6-a9b8-31f064721e73"
+            products-per-page="4"
+            display="grid"
+            image-size="small"
+          >
+            <atomic-product-template>
+              <template>
+                <atomic-product-section-visual>
+                  <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+                </atomic-product-section-visual>
+                <atomic-product-section-name>
+                  <atomic-product-link></atomic-product-link>
+                </atomic-product-section-name>
+                <atomic-product-section-metadata>
+                  <atomic-product-text field="ec_brand"></atomic-product-text>
+                  <atomic-product-rating field="ec_rating"></atomic-product-rating>
+                </atomic-product-section-metadata>
+                <atomic-product-section-emphasized>
+                  <atomic-product-price></atomic-product-price>
+                </atomic-product-section-emphasized>
+              </template>
+            </atomic-product-template>
+          </atomic-commerce-recommendation-list>
+        </atomic-layout-section>
+      </atomic-commerce-layout>
+    </atomic-commerce-recommendation-interface>
+  </section>
+</div>

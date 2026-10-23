@@ -27,6 +27,11 @@
       "@coveo/ui-kit-sample-headless-commerce-react",
       "@coveo/ui-kit-sample-headless-ssr-commerce-express"
     ],
+    [
+      "@coveo/atomic-angular",
+      "@coveo/ui-kit-sample-atomic-search-angular",
+      "@coveo/ui-kit-sample-atomic-commerce-angular"
+    ],
     ["@coveo/headless-react", "@coveo/ui-kit-sample-headless-ssr-commerce-nextjs"]
   ],
   "linked": [],

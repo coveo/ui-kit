@@ -1,0 +1,47 @@
+{
+  "name": "@coveo/ui-kit-sample-atomic-search-angular",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "samples/atomic/search-angular"
+  },
+  "type": "module",
+  "publishConfig": {
+    "access": "public",
+    "directory": "publish",
+    "linkDirectory": false
+  },
+  "scripts": {
+    "publint": "pnpm run prepack && publint publish --pack=false",
+    "ng": "ng",
+    "dev": "ng serve --open",
+    "build": "ng build",
+    "preview": "ng serve --configuration production --port 4173",
+    "e2e": "playwright test",
+    "prepack": "node ../../../scripts/build-sample-publish-dir.mjs"
+  },
+  "dependencies": {
+    "@angular/common": "catalog:",
+    "@angular/compiler": "catalog:",
+    "@angular/core": "catalog:",
+    "@angular/platform-browser": "catalog:",
+    "@angular/router": "catalog:",
+    "@coveo/atomic": "workspace:*",
+    "@coveo/atomic-angular": "workspace:*",
+    "@coveo/headless": "workspace:*",
+    "rxjs": "catalog:",
+    "tslib": "catalog:"
+  },
+  "devDependencies": {
+    "@angular/build": "catalog:",
+    "@angular/cli": "catalog:",
+    "@angular/compiler-cli": "catalog:",
+    "@coveo/platform-mock-api": "workspace:*",
+    "@msw/playwright": "catalog:",
+    "@playwright/test": "catalog:",
+    "msw": "catalog:",
+    "publint": "catalog:",
+    "typescript": "catalog:"
+  }
+}
