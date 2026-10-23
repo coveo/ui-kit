@@ -4,8 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "bash scripts/dev-mock.sh",
     "dev:mock": "bash scripts/dev-mock.sh",
+    "dev:vite": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",

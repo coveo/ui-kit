@@ -8,12 +8,12 @@ renderer. It runs on `@coveo/thermidor` as it is, and on the published contract 
 ## Running it
 
 ```bash
-pnpm dev:mock
+pnpm dev
 ```
 
 This builds `@coveo/platform-mock-api`, `@coveo/mock-converse-api` and `@coveo/thermidor`, starts the
-mock Converse API on port 3456 and opens the sample at http://localhost:5174. If the mock is already
-running, `pnpm dev` only starts Vite.
+mock Converse API on port 3456 and opens the sample at http://localhost:5174 (`pnpm dev:mock` does
+the same). If the mock is already running, `pnpm dev:vite` only starts Vite.
 
 Try it:
 
@@ -32,7 +32,9 @@ Try it:
 6. Open **One session** at the bottom: every turn, the view that sent it, and the surfaces it
    created that are still alive.
 
-To run it against a real Agent Gateway, copy `.env.example` to `.env.local` and fill it in.
+To run it against a real Agent Gateway, copy `.env.example` to `.env.local`, fill it in and run
+`pnpm dev:vite`. The gateway's private route only answers `storefront-preview-assistant` today, so
+the home page says it got no recommendations and the header shows no suggestions.
 
 ## What it reproduces
 

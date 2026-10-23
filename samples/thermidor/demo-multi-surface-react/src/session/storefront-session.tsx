@@ -23,7 +23,7 @@ interface StorefrontValue {
 
 const StorefrontContext = createContext<StorefrontValue | null>(null);
 
-/** The mock's route (`pnpm dev:mock`), used when `VITE_COVEO_ENDPOINT` is unset. */
+/** The mock's route (`pnpm dev`), used when `VITE_COVEO_ENDPOINT` is unset. */
 const MOCK_ENDPOINT = 'http://localhost:3456/converse-schema';
 
 function envValue(name: string): string | undefined {

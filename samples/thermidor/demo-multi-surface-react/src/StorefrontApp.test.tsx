@@ -36,6 +36,14 @@ describe('StorefrontApp', () => {
     expect(sentViews(fetchMock)).toEqual(['storefront-preview-home']);
   });
 
+  it('says the home page got no recommendations once its turn ends with no surface', async () => {
+    render(<App />);
+    await act(async () => {});
+
+    expect(screen.queryByText('Loading recommendations…')).toBeNull();
+    expect(screen.getByText('The server sent no recommendations for this page.')).toBeTruthy();
+  });
+
   it('shows a listing page as in progress, and sends nothing for it', async () => {
     render(<App />);
     await act(async () => {});
