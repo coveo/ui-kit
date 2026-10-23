@@ -227,9 +227,13 @@ jobs:
           atomic-icon.e2e.ts
           atomic-commerce-text.e2e.ts
           atomic-commerce-query-summary.e2e.ts
+      - uses: ./.github/actions/upload-playwright-record
+        if: ${{ !cancelled() }}
       - name: 'Run Atomic Hosted Page CDN checks'
         if: contains(fromJSON(needs.affected.outputs.tasks), '@coveo/atomic-hosted-page#e2e')
         run: pnpm exec turbo run @coveo/atomic-hosted-page#e2e
+      - uses: ./.github/actions/upload-playwright-record
+        if: ${{ !cancelled() }}
   lint-check:
     name: 'Check with linter'
     # Best effort at short-circuiting
@@ -512,6 +516,8 @@ jobs:
           name: atomic-blob-report-${{ matrix.shardIndex }}
           path: packages/atomic/blob-report
           retention-days: 5
+      - uses: ./.github/actions/upload-playwright-record
+        if: ${{ !cancelled() }}
       - run: |
           if [[ ${STEPS_PLAYWRIGHT_OUTCOME} == 'failure' ]];
             then exit 1;
@@ -566,6 +572,8 @@ jobs:
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run '@coveo/atomic-theming-e2e#e2e'
+      - uses: ./.github/actions/upload-playwright-record
+        if: ${{ !cancelled() }}
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         if: ${{ !cancelled() }}
         with:
@@ -673,6 +681,8 @@ jobs:
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run "${{ matrix.sample }}" # Already filtered by affected
+      - uses: ./.github/actions/upload-playwright-record
+        if: ${{ !cancelled() }}
       - name: Upload Playwright report
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
@@ -702,6 +712,8 @@ jobs:
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run '@coveo/pkg-new-template#e2e'
+      - uses: ./.github/actions/upload-playwright-record
+        if: ${{ !cancelled() }}
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         if: failure()
         with:
@@ -728,6 +740,8 @@ jobs:
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run '@coveo/atomic-hosted-page#e2e'
+      - uses: ./.github/actions/upload-playwright-record
+        if: ${{ !cancelled() }}
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         if: ${{ !cancelled() }}
         with:
