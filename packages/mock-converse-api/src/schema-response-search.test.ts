@@ -639,3 +639,35 @@ describe('schema-response-search breadbox', () => {
     expect((sort.appliedSort as Record<string, unknown>).sortCriteria).toBe('price_asc');
   });
 });
+
+describe('schema-response-search state per surface', () => {
+  const brands = (events: ConverseEvent[]) =>
+    (
+      (collectComponentState(events)['product-list-2'] as Record<string, unknown>)
+        .products as Array<Record<string, unknown>>
+    ).map((product) => product.ec_brand);
+
+  it('keeps each surface its own search, across a new prompt', () => {
+    buildSearchActionEvents({
+      name: 'toggleSelect',
+      context: {value: 'Billabong'},
+      sourceComponentId: 'facet-brand-2',
+      surfaceId: 'ui-commerce-water-sports-1',
+    });
+    resetSurface();
+
+    const first = buildSearchActionEvents({
+      name: 'selectPage',
+      context: {page: 0},
+      surfaceId: 'ui-commerce-water-sports-1',
+    });
+    const second = buildSearchActionEvents({
+      name: 'selectPage',
+      context: {page: 0},
+      surfaceId: 'ui-commerce-water-sports-2',
+    });
+
+    expect(new Set(brands(first))).toEqual(new Set(['Billabong']));
+    expect(new Set(brands(second)).size).toBeGreaterThan(1);
+  });
+});

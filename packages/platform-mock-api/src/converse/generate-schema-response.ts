@@ -39,6 +39,39 @@ const SCHEMA_PROMPT_TEMPLATE_MAP: ReadonlyArray<SchemaPromptMapping> = [
   },
 ];
 
+// A surface lives for the whole session, from its creation to its deletion (Thermidor ADR-018), so
+// a producer mints a new surface id for each surface it creates. Each prompt answer suffixes its
+// template's surface ids with the prompt's sequence number, so asking twice draws two blocks.
+let promptSequence = 0;
+
+function renameSurfaceIds(value: unknown, rename: (surfaceId: string) => string): unknown {
+  if (Array.isArray(value)) {
+    return value.map((item) => renameSurfaceIds(item, rename));
+  }
+  if (!value || typeof value !== 'object') {
+    return value;
+  }
+  return Object.fromEntries(
+    Object.entries(value).map(([key, entry]) => [
+      key,
+      key === 'surfaceId' && typeof entry === 'string'
+        ? rename(entry)
+        : renameSurfaceIds(entry, rename),
+    ])
+  );
+}
+
+function withSurfaceIds(
+  events: ConverseEvent[],
+  rename: (surfaceId: string) => string
+): ConverseEvent[] {
+  return events.map((event) =>
+    event.event === 'ACTIVITY_SNAPSHOT'
+      ? {...event, data: renameSurfaceIds(event.data, rename) as ConverseEvent['data']}
+      : event
+  );
+}
+
 function matchSchemaPrompt(message: string): ConverseEvent[] {
   const normalized = message.trim().toLowerCase();
   const match = SCHEMA_PROMPT_TEMPLATE_MAP.find((entry) => entry.prompt === normalized);
@@ -55,6 +88,9 @@ const schemaBaseResponse = (body?: unknown) => {
   ) {
     events = matchSchemaPrompt((body as Record<string, unknown>).message as string);
   }
+  promptSequence += 1;
+  const suffix = promptSequence;
+  events = withSurfaceIds(events, (surfaceId) => `${surfaceId}-${suffix}`);
   return buildStreamingResponse(events, {delayBetweenMessages: DEFAULT_DELAY_MS});
 };
 
@@ -66,16 +102,23 @@ function buildSearchActionEvents(action: {
   name: string;
   context: Record<string, unknown>;
   sourceComponentId?: string;
+  surfaceId?: string;
 }): ConverseEvent[] {
-  return buildWaterSportsActionEvents(action, action.sourceComponentId);
+  return buildWaterSportsActionEvents(action, action.sourceComponentId, action.surfaceId);
 }
 
 function buildSchemaActionResponse(action: {
   name: string;
   context: Record<string, unknown>;
   sourceComponentId?: string;
+  surfaceId?: string;
 }) {
-  const events = buildSearchActionEvents(action);
+  // The search surface's answer targets the surface the action came from, under the id its prompt
+  // minted for it.
+  const sourceSurfaceId = action.surfaceId;
+  const events = withSurfaceIds(buildSearchActionEvents(action), (surfaceId) =>
+    sourceSurfaceId?.startsWith(`${surfaceId}-`) ? sourceSurfaceId : surfaceId
+  );
   return buildStreamingResponse(events, {delayBetweenMessages: ACTION_DELAY_MS});
 }
 

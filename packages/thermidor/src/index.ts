@@ -61,6 +61,7 @@ export type {
   SessionRequest,
   PromptRequest,
   ActionRequest,
+  ActionError,
 } from '@/src/session/types.js';
 
 // ── Serialization ───────────────────────────────────────────────────────────

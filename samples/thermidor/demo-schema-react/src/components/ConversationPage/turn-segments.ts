@@ -23,17 +23,13 @@ export interface TurnSegment {
   surfaceIds: readonly string[];
 }
 
-export function startFollowUp(
-  turn: Turn,
-  surfaceIds: readonly string[],
-  prompt: string | undefined
-): FollowUp {
+export function startFollowUp(turn: Turn, prompt: string | undefined): FollowUp {
   return {
     ...(prompt ? {prompt} : {}),
     activityCount: turn.response.activities.length,
     messageCount: turn.response.agent?.messages.length ?? 0,
     reasoningStepCount: turn.response.agent?.reasoningSteps.length ?? 0,
-    surfaceCount: surfaceIds.length,
+    surfaceCount: turn.response.surfaces.length,
   };
 }
 
@@ -45,13 +41,10 @@ const TURN_START: FollowUp = {
 };
 
 /** Splits a turn into its first answer, then one segment per follow-up sent from it. */
-export function splitTurn(
-  turn: Turn,
-  surfaceIds: readonly string[],
-  followUps: readonly FollowUp[]
-): TurnSegment[] {
+export function splitTurn(turn: Turn, followUps: readonly FollowUp[]): TurnSegment[] {
   const starts = [TURN_START, ...followUps];
   const {activities, agent} = turn.response;
+  const surfaceIds = turn.response.surfaces.map((surface) => surface.surfaceId);
 
   return starts.map((start, index) => {
     const end = starts[index + 1];

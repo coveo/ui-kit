@@ -3,7 +3,7 @@ import {describe, it, expect, vi} from 'vitest';
 import type {Turn} from '@coveo/thermidor';
 import {A2UIProvider} from '@copilotkit/a2ui-renderer';
 import {ConversationThread} from './ConversationThread.js';
-import {makeTurn} from '../../test/turn-fixtures.js';
+import {makeSurfaces, makeTurn} from '../../test/turn-fixtures.js';
 import {createThermidorCatalog} from '../../a2ui/components.js';
 import {ThermidorA2UIStream} from '../../a2ui/surfaces.js';
 
@@ -18,7 +18,6 @@ function renderThread(
   const defaultProps = {
     turns,
     turnRefs: {current: new Map<string, HTMLDivElement>()},
-    surfacesByTurn: new Map<string, readonly string[]>(),
   };
 
   return render(<ConversationThread {...defaultProps} {...overrides} />);
@@ -126,8 +125,8 @@ describe('ConversationThread', () => {
 
   describe('loading placeholders', () => {
     const placeholders = new Map([
-      ['turn-1/first', 'ProductCarousel'],
-      ['turn-1/second', 'ProductCarousel'],
+      ['first-1', 'ProductCarousel'],
+      ['second-1', 'ProductCarousel'],
     ]);
     const followUp = {
       prompt: 'Show more',
@@ -145,9 +144,16 @@ describe('ConversationThread', () => {
         <A2UIProvider catalog={createThermidorCatalog()} onAction={() => {}}>
           <ThermidorA2UIStream messages={[]} loadingSurfaces={placeholders}>
             <ConversationThread
-              turns={[turn]}
+              turns={[
+                {
+                  ...turn,
+                  response: {
+                    ...turn.response,
+                    surfaces: makeSurfaces('first-1', 'second-1'),
+                  },
+                },
+              ]}
               turnRefs={{current: new Map<string, HTMLDivElement>()}}
-              surfacesByTurn={new Map([[turn.id, ['turn-1/first', 'turn-1/second']]])}
               {...overrides}
             />
           </ThermidorA2UIStream>
@@ -162,15 +168,15 @@ describe('ConversationThread', () => {
     it('draws the placeholders of a streaming turn', () => {
       renderPlaceholders(createTurn({status: 'streaming'}));
 
-      expect(placeholderRegion('turn-1/first')).not.toBeNull();
-      expect(placeholderRegion('turn-1/second')).not.toBeNull();
+      expect(placeholderRegion('first-1')).not.toBeNull();
+      expect(placeholderRegion('second-1')).not.toBeNull();
     });
 
     it('draws nothing for the placeholders a completed turn left behind', () => {
       renderPlaceholders(createTurn({status: 'complete'}));
 
-      expect(placeholderRegion('turn-1/first')).toBeNull();
-      expect(placeholderRegion('turn-1/second')).toBeNull();
+      expect(placeholderRegion('first-1')).toBeNull();
+      expect(placeholderRegion('second-1')).toBeNull();
     });
 
     it('draws only the placeholders of the follow-up in flight', () => {
@@ -181,8 +187,8 @@ describe('ConversationThread', () => {
         pendingTurnId: turn.id,
       });
 
-      expect(placeholderRegion('turn-1/first')).toBeNull();
-      expect(placeholderRegion('turn-1/second')).not.toBeNull();
+      expect(placeholderRegion('first-1')).toBeNull();
+      expect(placeholderRegion('second-1')).not.toBeNull();
     });
   });
 });

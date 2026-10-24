@@ -308,3 +308,60 @@ describe('TurnSurfaces loading placeholders', () => {
     expect(scrollIntoView).toHaveBeenCalledOnce();
   });
 });
+
+describe('ThermidorA2UIStream', () => {
+  it('feeds only the new messages of a stream that grows, keeping the surfaces drawn', async () => {
+    const SECOND_ID = 'second-surface';
+    const page = (messages: A2uiV09Message[]) => (
+      <SessionRequestProvider value={lockedSource(false)}>
+        <A2UIProvider catalog={CATALOG} onAction={() => {}}>
+          <ThermidorA2UIStream messages={messages} loadingSurfaces={new Map()}>
+            <TurnSurfaces surfaceIds={[SURFACE_ID, SECOND_ID]} interactive isStreaming={false} />
+          </ThermidorA2UIStream>
+        </A2UIProvider>
+      </SessionRequestProvider>
+    );
+    const {rerender} = render(page(MESSAGES));
+    const first = await screen.findByLabelText('Products per page:');
+
+    rerender(page([...MESSAGES, ...surfaceMessages(SECOND_ID)]));
+
+    await waitFor(() => expect(screen.getAllByLabelText('Products per page:')).toHaveLength(2));
+    expect(screen.getAllByLabelText('Products per page:')[0]).toBe(first);
+  });
+});
+
+describe('the failure of an action', () => {
+  function renderWithActionError(surfaceId: string) {
+    return render(
+      <SessionRequestProvider
+        value={{
+          ...lockedSource(false),
+          actionError: {
+            message: 'Bad gateway',
+            name: 'setPageSize',
+            surfaceId,
+            sourceComponentId: ROOT_COMPONENT_ID,
+          },
+        }}
+      >
+        <A2UIProvider catalog={CATALOG} onAction={() => {}}>
+          <ThermidorA2UIStream messages={MESSAGES} loadingSurfaces={new Map()} />
+          <TurnSurfaces surfaceIds={[SURFACE_ID]} interactive isStreaming={false} />
+        </A2UIProvider>
+      </SessionRequestProvider>
+    );
+  }
+
+  it('shows under the block the action came from', () => {
+    renderWithActionError(SURFACE_ID);
+
+    expect(screen.getByRole('alert').textContent).toContain('Bad gateway');
+  });
+
+  it('does not show under another block', () => {
+    renderWithActionError('another-surface');
+
+    expect(screen.queryByRole('alert')).toBeNull();
+  });
+});

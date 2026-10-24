@@ -731,11 +731,13 @@ const DEFAULT_VIEW: SearchViewState = {
   categoryFacetDisplayCount: CATEGORY_FACET_DISPLAY_LIMIT,
 };
 
-// This mock keeps an in-memory view for the single decomposed search surface so it behaves
-// like a real (stateful) backend: dimensions not carried by an incoming action are preserved
-// rather than reset to defaults. This is a global, single-surface state, which is acceptable
-// for a local demo mock (no concurrent surfaces or per-session isolation needed).
+// This mock keeps an in-memory view of the decomposed search surface so it behaves like a real
+// (stateful) backend: dimensions not carried by an incoming action are preserved rather than reset
+// to defaults. Each prompt mints its own surface id, so an action on a surface reads and writes the
+// view kept for that id, and a surface no action has touched yet starts from the defaults.
+// `currentView` is the view being computed; an action without a surface id shares one view.
 let currentView: SearchViewState = {...DEFAULT_VIEW};
+const viewsBySurfaceId = new Map<string, SearchViewState>();
 
 const FACET_COMPONENT_IDS = {
   regular: 'facet-brand-2',
@@ -1696,9 +1698,16 @@ function buildWaterSportsActionEvents(
     name: string;
     context: Record<string, unknown>;
   },
-  sourceComponentId?: string
+  sourceComponentId?: string,
+  surfaceId?: string
 ): ConverseEvent[] {
+  if (surfaceId !== undefined) {
+    currentView = viewsBySurfaceId.get(surfaceId) ?? {...DEFAULT_VIEW};
+  }
   const view = deriveViewState(action, sourceComponentId);
+  if (surfaceId !== undefined) {
+    viewsBySurfaceId.set(surfaceId, view);
+  }
   // Re-emit the changed Component_State as whole-component `/state/<id>` updateDataModel ops on an
   // `a2ui-surface` activity. Only server-owned `/state/*` paths are ever written.
   const stateActivity: ConverseEvent = UpdateDataModelActivity({

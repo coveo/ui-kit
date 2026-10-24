@@ -1,55 +1,23 @@
 import fc from 'fast-check';
 import {describe, expect, it} from 'vitest';
-import {deriveA2uiV09Messages} from './a2ui-v09-projection.js';
-import type {Activity, A2uiV09Message} from './types.js';
+import {
+  EMPTY_RENDERER_STREAM,
+  appendToRendererStream,
+  convertA2uiMessages,
+} from './a2ui-v09-projection.js';
+import type {A2uiV09Message} from './types.js';
 
-function surfaceActivity(
-  messages: unknown[],
-  {id = 'activity-1', replace = false}: {id?: string; replace?: boolean} = {}
-): Activity {
-  return {id, kind: 'a2ui-surface', replace, payload: {messages}};
-}
-
-/** Runs the projection over a single surface activity carrying `messages`. */
+/** Converts the messages of one surface snapshot. */
 function project(messages: unknown[]): A2uiV09Message[] {
-  return deriveA2uiV09Messages([surfaceActivity(messages)]);
+  return convertA2uiMessages(messages);
 }
 
-describe('deriveA2uiV09Messages', () => {
-  it('passes already-v0.9 messages through from multiple activities', () => {
+describe('convertA2uiMessages', () => {
+  it('passes already-v0.9 messages through, in order', () => {
     const message1 = {version: 'v0.9', createSurface: {surfaceId: 'surface-1'}};
     const message2 = {version: 'v0.9', createSurface: {surfaceId: 'surface-2'}};
 
-    expect(
-      deriveA2uiV09Messages([
-        surfaceActivity([message1], {id: 'activity-1'}),
-        surfaceActivity([message2], {id: 'activity-2'}),
-      ])
-    ).toEqual([message1, message2]);
-  });
-
-  it('honors per-activity-id replacement semantics', () => {
-    const firstVersion = {version: 'v0.9', createSurface: {surfaceId: 'old'}};
-    const updatedVersion = {version: 'v0.9', createSurface: {surfaceId: 'updated'}};
-
-    expect(
-      deriveA2uiV09Messages([
-        surfaceActivity([firstVersion], {id: 'activity-1'}),
-        surfaceActivity([updatedVersion], {id: 'activity-1', replace: true}),
-      ])
-    ).toEqual([updatedVersion]);
-  });
-
-  it('appends to the same activity id when replace is not set', () => {
-    const first = {version: 'v0.9', createSurface: {surfaceId: 'a'}};
-    const second = {version: 'v0.9', createSurface: {surfaceId: 'b'}};
-
-    expect(
-      deriveA2uiV09Messages([
-        surfaceActivity([first], {id: 'activity-1'}),
-        surfaceActivity([second], {id: 'activity-1'}),
-      ])
-    ).toEqual([first, second]);
+    expect(project([message1, message2])).toEqual([message1, message2]);
   });
 
   it('splits a v1.0 createSurface into createSurface + updateComponents', () => {
@@ -180,30 +148,19 @@ describe('deriveA2uiV09Messages', () => {
     ).toEqual([]);
   });
 
-  it('ignores activities that are not a2ui-surface', () => {
-    expect(
-      deriveA2uiV09Messages([
-        {id: 'activity-1', kind: 'text', replace: false, payload: {content: 'hello'}},
-      ])
-    ).toEqual([]);
+  it('ignores a message that is not an object', () => {
+    expect(project(['text', null, ['a']])).toEqual([]);
   });
 
-  it('ignores surface activities whose payload carries no messages array', () => {
-    expect(
-      deriveA2uiV09Messages([{id: 'activity-1', kind: 'a2ui-surface', replace: false, payload: {}}])
-    ).toEqual([]);
-  });
-
-  it('yields an empty stream for no activities', () => {
-    expect(deriveA2uiV09Messages([])).toEqual([]);
+  it('yields nothing for no messages', () => {
+    expect(project([])).toEqual([]);
   });
 });
 
-// The projection is a derived view of `activities`, never an independent source of truth:
-// dropping it and recomputing from the same activity list must yield a deeply-equal stream.
-// This is the invariant ADR-011 already requires of `surfaces`, and it is what lets
-// serialization omit `a2uiMessages` and re-derive it on restore.
-describe('deriveA2uiV09Messages is a pure re-derivable projection of activities', () => {
+// The conversion is a pure function of the messages it reads: converting the same messages again
+// yields a deeply-equal result, which is what lets serialization omit the renderer stream and
+// rebuild it from the turns' activities on restore.
+describe('convertA2uiMessages is a pure function of its messages', () => {
   const nodeArb = fc.record({
     id: fc.string({minLength: 1, maxLength: 6}),
     component: fc.constantFrom('ProductList', 'RegularFacet', 'Sort', 'CommerceSearch'),
@@ -232,30 +189,23 @@ describe('deriveA2uiV09Messages is a pure re-derivable projection of activities'
     })
   );
 
-  const activityArb: fc.Arbitrary<Activity> = fc.record({
-    id: fc.string({minLength: 1, maxLength: 4}),
-    kind: fc.constantFrom('a2ui-surface', 'text'),
-    replace: fc.boolean(),
-    payload: fc
-      .array(v1MessageArb, {maxLength: 4})
-      .map((messages) => ({messages}) as Record<string, unknown>),
-  });
+  const messagesArb = fc.array(v1MessageArb, {maxLength: 6});
 
-  it('recomputes deeply-equal output for the same activity list', () => {
+  it('recomputes deeply-equal output for the same messages', () => {
     fc.assert(
-      fc.property(fc.array(activityArb, {maxLength: 8}), (activities) => {
-        expect(deriveA2uiV09Messages(activities)).toEqual(deriveA2uiV09Messages(activities));
+      fc.property(messagesArb, (messages) => {
+        expect(convertA2uiMessages(messages)).toEqual(convertA2uiMessages(messages));
       }),
       {numRuns: 200}
     );
   });
 
-  it('never mutates the activities it reads', () => {
+  it('never mutates the messages it reads', () => {
     fc.assert(
-      fc.property(fc.array(activityArb, {maxLength: 8}), (activities) => {
-        const before = JSON.stringify(activities);
-        deriveA2uiV09Messages(activities);
-        expect(JSON.stringify(activities)).toBe(before);
+      fc.property(messagesArb, (messages) => {
+        const before = JSON.stringify(messages);
+        convertA2uiMessages(messages);
+        expect(JSON.stringify(messages)).toBe(before);
       }),
       {numRuns: 200}
     );
@@ -459,7 +409,7 @@ describe('unconvertible v1.0 messages are dropped, leaving prior state intact', 
   });
 });
 
-describe('deriveA2uiV09Messages loading placeholders', () => {
+describe('convertA2uiMessages loading placeholders', () => {
   const loadingSurface = (surfaceId: string) => ({
     version: 'v1.0',
     createSurface: {
@@ -469,8 +419,6 @@ describe('deriveA2uiV09Messages loading placeholders', () => {
       dataModel: {isLoading: true},
     },
   });
-
-  const deleteSurface = (surfaceId: string) => ({version: 'v1.0', deleteSurface: {surfaceId}});
 
   it('seeds a plain inline data-model key at its root JSON Pointer', () => {
     expect(project([loadingSurface('skel')])).toContainEqual({
@@ -493,62 +441,6 @@ describe('deriveA2uiV09Messages loading placeholders', () => {
     });
   });
 
-  it('forwards a deleteSurface for a surface created earlier in the stream', () => {
-    const result = deriveA2uiV09Messages([
-      surfaceActivity([loadingSurface('skel')], {id: 'activity-1'}),
-      surfaceActivity([deleteSurface('skel')], {id: 'activity-2'}),
-    ]);
-
-    expect(result.at(-1)).toEqual({version: 'v0.9', deleteSurface: {surfaceId: 'skel'}});
-  });
-
-  // The fold merges a replace snapshot into the activity it supersedes, so it never hands the
-  // projection both versions; this feeds the raw activity list directly.
-  it('drops a deleteSurface whose createSurface a replace snapshot superseded', () => {
-    const result = deriveA2uiV09Messages([
-      surfaceActivity([loadingSurface('skel')], {id: 'activity-1'}),
-      surfaceActivity([deleteSurface('skel')], {id: 'activity-1', replace: true}),
-    ]);
-
-    expect(result).toEqual([]);
-  });
-
-  it('drops a second deleteSurface for the same surface', () => {
-    const result = deriveA2uiV09Messages([
-      surfaceActivity([loadingSurface('skel')], {id: 'activity-1'}),
-      surfaceActivity([deleteSurface('skel'), deleteSurface('skel')], {id: 'activity-2'}),
-    ]);
-
-    expect(result.filter((message) => 'deleteSurface' in message)).toHaveLength(1);
-  });
-
-  it('drops a deleteSurface for a surface a superseded version of another activity created', () => {
-    const result = deriveA2uiV09Messages([
-      surfaceActivity([loadingSurface('skel')], {id: 'activity-1'}),
-      surfaceActivity([], {id: 'activity-1', replace: true}),
-      surfaceActivity([deleteSurface('skel')], {id: 'activity-2'}),
-    ]);
-
-    expect(result).toEqual([]);
-  });
-
-  it('forwards a deleteSurface for a surface an earlier turn created', () => {
-    const result = deriveA2uiV09Messages([
-      surfaceActivity([deleteSurface('earlier-turn-surface')], {id: 'activity-1'}),
-    ]);
-
-    expect(result).toEqual([{version: 'v0.9', deleteSurface: {surfaceId: 'earlier-turn-surface'}}]);
-  });
-
-  it('forwards a deleteSurface that precedes the creation of the same surface id', () => {
-    const result = deriveA2uiV09Messages([
-      surfaceActivity([deleteSurface('content')], {id: 'activity-1'}),
-      surfaceActivity([loadingSurface('content')], {id: 'activity-2'}),
-    ]);
-
-    expect(result[0]).toEqual({version: 'v0.9', deleteSurface: {surfaceId: 'content'}});
-  });
-
   it('seeds no data-model write for an empty inline key', () => {
     const result = project([
       {
@@ -558,5 +450,56 @@ describe('deriveA2uiV09Messages loading placeholders', () => {
     ]);
 
     expect(result.some((message) => 'updateDataModel' in message)).toBe(false);
+  });
+});
+
+describe('appendToRendererStream', () => {
+  const create = (surfaceId: string) => ({version: 'v0.9', createSurface: {surfaceId}});
+  const remove = (surfaceId: string) => ({version: 'v0.9', deleteSurface: {surfaceId}});
+  const write = (surfaceId: string) => ({
+    version: 'v0.9',
+    updateDataModel: {surfaceId, path: '/state', value: {}},
+  });
+
+  it('only grows: earlier messages stay as they were', () => {
+    const first = appendToRendererStream(EMPTY_RENDERER_STREAM, [create('a')]);
+    const second = appendToRendererStream(first, [write('a'), create('b')]);
+
+    expect(second.messages.slice(0, first.messages.length)).toEqual(first.messages);
+    expect(second.messages).toEqual([create('a'), write('a'), create('b')]);
+  });
+
+  it('deletes a live surface before a createSurface replaces it', () => {
+    const stream = appendToRendererStream(EMPTY_RENDERER_STREAM, [create('a'), create('a')]);
+
+    expect(stream.messages).toEqual([create('a'), remove('a'), create('a')]);
+  });
+
+  it('drops an operation on a surface that is not live', () => {
+    const stream = appendToRendererStream(EMPTY_RENDERER_STREAM, [
+      write('unknown'),
+      remove('unknown'),
+      create('a'),
+      remove('a'),
+      write('a'),
+    ]);
+
+    expect(stream.messages).toEqual([create('a'), remove('a')]);
+  });
+
+  it('drops a second deleteSurface for the same surface', () => {
+    const stream = appendToRendererStream(EMPTY_RENDERER_STREAM, [
+      create('a'),
+      remove('a'),
+      remove('a'),
+    ]);
+
+    expect(stream.messages).toEqual([create('a'), remove('a')]);
+  });
+
+  it('keeps the same stream when nothing is appended', () => {
+    const stream = appendToRendererStream(EMPTY_RENDERER_STREAM, [create('a')]);
+
+    expect(appendToRendererStream(stream, [write('unknown')])).toBe(stream);
   });
 });

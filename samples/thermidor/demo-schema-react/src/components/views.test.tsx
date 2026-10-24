@@ -48,27 +48,13 @@ describe('ConversationPage', () => {
   const baseTurn = makeTurn({id: 'turn-1', prompt: 'tell me about shoes'});
 
   it('renders the PromptInput', () => {
-    render(
-      <ConversationPage
-        onSubmit={vi.fn()}
-        isStreaming={false}
-        turns={[baseTurn]}
-        surfacesByTurn={new Map()}
-      />
-    );
+    render(<ConversationPage onSubmit={vi.fn()} isStreaming={false} turns={[baseTurn]} />);
     expect(screen.getByLabelText('Prompt')).toBeDefined();
   });
 
   it('calls onSubmit with the input value when Enter is pressed', () => {
     const onSubmit = vi.fn();
-    render(
-      <ConversationPage
-        onSubmit={onSubmit}
-        isStreaming={false}
-        turns={[baseTurn]}
-        surfacesByTurn={new Map()}
-      />
-    );
+    render(<ConversationPage onSubmit={onSubmit} isStreaming={false} turns={[baseTurn]} />);
 
     const input = screen.getByLabelText('Prompt');
     fireEvent.change(input, {target: {value: 'follow up'}});
@@ -78,14 +64,7 @@ describe('ConversationPage', () => {
   });
 
   it('disables the input when isStreaming is true', () => {
-    render(
-      <ConversationPage
-        onSubmit={vi.fn()}
-        isStreaming={true}
-        turns={[baseTurn]}
-        surfacesByTurn={new Map()}
-      />
-    );
+    render(<ConversationPage onSubmit={vi.fn()} isStreaming={true} turns={[baseTurn]} />);
     expect((screen.getByLabelText('Prompt') as HTMLTextAreaElement).disabled).toBe(true);
   });
 });

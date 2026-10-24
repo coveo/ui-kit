@@ -5,14 +5,14 @@
  * page places it.
  *
  * The v1.0 → v0.9 downgrade the renderer needs no longer happens here: it is a derived
- * projection inside `@coveo/thermidor`, read off `response.a2uiMessages`. See that package's
+ * projection inside `@coveo/thermidor`, read off `session.a2uiMessages`. See that package's
  * `session/a2ui-v09-projection.ts` for the conversion and the recorded interim debt.
  */
 import {createContext, useContext, useEffect, useMemo, useRef, type ReactNode} from 'react';
 import {A2UIRenderer, useA2UI} from '@copilotkit/a2ui-renderer';
 import type {A2uiV09Message} from '@coveo/thermidor';
 import {A2UISkeleton} from './Skeleton/Skeleton.js';
-import {useSurfaceLocked} from './session-request.js';
+import {useActionError, useSurfaceLocked} from './session-request.js';
 import styles from './surfaces.module.css';
 
 /** The control a pointer press lands on, through its label when the press is on one. */
@@ -37,8 +37,9 @@ const NO_LOADING_SURFACES: ReadonlyMap<string, string> = new Map();
 const LoadingSurfacesContext = createContext(NO_LOADING_SURFACES);
 
 interface ThermidorA2UIStreamProps {
-  messages: A2uiV09Message[];
-  /** The stream's loading placeholders (`SurfaceStream.loadingSurfaces`). */
+  /** The session's whole renderer stream (`session.a2uiMessages`). */
+  messages: readonly A2uiV09Message[];
+  /** The root component type of each loading placeholder, by surface id. */
   loadingSurfaces: ReadonlyMap<string, string>;
   /** The page whose {@link TurnSurfaces} draw the stream's surfaces. */
   children?: ReactNode;
@@ -55,17 +56,25 @@ export function ThermidorA2UIStream({
   children,
 }: ThermidorA2UIStreamProps) {
   const {clearSurfaces, processMessages} = useA2UI();
-  const serializedMessages = useMemo(() => JSON.stringify(messages), [messages]);
   const actionsRef = useRef({clearSurfaces, processMessages});
   actionsRef.current = {clearSurfaces, processMessages};
+  const fedRef = useRef<readonly A2uiV09Message[]>([]);
 
+  // The session's stream only grows, so only its new messages are fed. A stream that does not
+  // extend the one already fed, such as another session's, is fed again from the start.
   useEffect(() => {
     const {clearSurfaces, processMessages} = actionsRef.current;
-    clearSurfaces();
-    if (serializedMessages !== '[]') {
-      processMessages(JSON.parse(serializedMessages) as A2uiV09Message[]);
+    const fed = fedRef.current;
+    const extendsFed = fed.length === 0 || messages[fed.length - 1] === fed[fed.length - 1];
+    const start = extendsFed ? fed.length : 0;
+    if (!extendsFed) {
+      clearSurfaces();
     }
-  }, [serializedMessages]);
+    fedRef.current = messages;
+    if (messages.length > start) {
+      processMessages(messages.slice(start) as A2uiV09Message[]);
+    }
+  }, [messages]);
 
   return (
     <LoadingSurfacesContext.Provider value={loadingSurfaces}>
@@ -195,9 +204,23 @@ export function TurnSurfaces({
             ) : (
               <A2UIRenderer surfaceId={surfaceId} />
             )}
+            <ActionErrorNote surfaceId={surfaceId} />
           </section>
         );
       })}
     </fieldset>
+  );
+}
+
+/** Says that the last action from this block failed, as the session's `actionError` reports it. */
+function ActionErrorNote({surfaceId}: {surfaceId: string}) {
+  const message = useActionError(surfaceId);
+  if (message === undefined) {
+    return null;
+  }
+  return (
+    <p role="alert" className={styles.actionError}>
+      This action could not be completed: {message}
+    </p>
   );
 }

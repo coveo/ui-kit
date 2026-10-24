@@ -116,6 +116,7 @@ is the order in which the operations arrived.
   to the session's surfaces.
 - **Failures.** A failed action on a surface that the active turn did not create sets
   `session.actionError`, and leaves the turn as it is. A failed suggestion never fails an answer.
+  [Amended](#amendment-an-action-never-changes-a-turns-status): this now holds for every action.
 
 ### What the session exposes
 
@@ -198,6 +199,24 @@ unsupported version already is.
   suggestions hurt, revisit Option A or a queue in the producer.
 - **Surface retention:** a long session accumulates live surfaces until the producer deletes them.
   How many to keep is a separate decision.
+
+## Amendment: an action never changes a turn's status
+
+Accepted on 2026-10-26, in review of its implementation (KIT-6430).
+
+The failure rule above left an action on a surface of the active turn to fail that turn, and its
+run to set the turn's status. A turn that failed after its blocks arrived then flipped back to
+`complete` on the next page change, losing its error and its retry, and a failed page change
+replaced the turn's own error.
+
+- **Rule.** Only the request that opened a turn changes its status: a prompt, or `retry`. Any
+  other action folds only its surface snapshots into the active turn, never its lifecycle events or
+  its text, whichever turn created its surface.
+- **Failures.** A failed action, rejected, ending in `RUN_ERROR` or without a terminal event, or
+  whose request cannot be built, sets `session.actionError` and leaves every turn as it is.
+- **`actionError`.** It identifies the action (`ActionError`: `message`, `name`, `surfaceId`,
+  `sourceComponentId`), so a consumer shows the failure next to the block it came from, and tells a
+  failed suggestion from a failed page change.
 
 ## Considered Options
 

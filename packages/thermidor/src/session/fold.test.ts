@@ -1,6 +1,18 @@
 import {afterEach, describe, expect, it, vi} from 'vitest';
 import type {NormalizedStreamEvent} from '@/src/internal/api/protocol/stream-types.js';
+import {convertA2uiMessages} from './a2ui-v09-projection.js';
 import {createTurn, deriveSurfaces, foldActivities} from './fold.js';
+import type {A2uiV09Message, Activity} from './types.js';
+
+/** The v0.9 messages a renderer receives for the surface activities of a folded turn. */
+function rendererMessages(activities: readonly Activity[]): A2uiV09Message[] {
+  return activities
+    .filter((activity) => activity.kind === 'a2ui-surface')
+    .flatMap((activity) => {
+      const messages = activity.payload['messages'];
+      return Array.isArray(messages) ? convertA2uiMessages(messages) : [];
+    });
+}
 
 /**
  * Unit tests for the Turn/TurnResponse shape produced by the fold.
@@ -63,23 +75,6 @@ describe('fold Turn/TurnResponse shape', () => {
 
       expect(turn.input.prompt).toBeUndefined();
       expect('prompt' in turn.input).toBe(false);
-    });
-  });
-
-  describe('response.state default', () => {
-    it('defaults state to {} on a fresh turn', () => {
-      const turn = createTurn('t1', {prompt: 'hi'});
-
-      expect(turn.response.state).toEqual({});
-    });
-
-    it('keeps state at {} for a turn with no data-model ops', () => {
-      const turn = foldActivities(createTurn('t1', {prompt: 'hi'}), [
-        textMessageStart,
-        runFinished,
-      ]);
-
-      expect(turn.response.state).toEqual({});
     });
   });
 
@@ -653,7 +648,9 @@ describe('fold loading placeholder lifecycle', () => {
     expect(turn.response.surfaces).toEqual([
       {surfaceId: 's', rootComponentType: 'ProductCarousel', isLoading: false},
     ]);
-    expect(turn.response.a2uiMessages.some((message) => 'updateDataModel' in message)).toBe(false);
+    expect(
+      rendererMessages(turn.response.activities).some((message) => 'updateDataModel' in message)
+    ).toBe(false);
   });
 
   it('carries no write for a surface the superseding snapshot deletes', () => {
@@ -672,7 +669,7 @@ describe('fold loading placeholder lifecycle', () => {
       {surfaceId: 'c', rootComponentType: 'ProductCarousel', isLoading: false},
     ]);
     expect(
-      turn.response.a2uiMessages.filter(
+      rendererMessages(turn.response.activities).filter(
         (message) => (message['updateDataModel'] as {surfaceId?: string})?.surfaceId === 's'
       )
     ).toEqual([]);
@@ -684,7 +681,7 @@ describe('fold loading placeholder lifecycle', () => {
     ]);
 
     expect(turn.response.surfaces).toEqual([]);
-    expect(turn.response.a2uiMessages).toEqual([
+    expect(rendererMessages(turn.response.activities)).toEqual([
       {version: 'v0.9', deleteSurface: {surfaceId: 'earlier'}},
     ]);
   });

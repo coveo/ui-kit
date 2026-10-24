@@ -5,13 +5,12 @@ import type {SessionStoreState} from './store.js';
 import type {Activity, AgentMessage, ReasoningStep, Turn, TurnStatus} from './types.js';
 
 /**
- * Serialize/restore round-trip (active turn).
+ * Serialize/restore round-trip.
  *
  * For any session store state, `restoreSession(serializeSession(s))` preserves:
  * every turn's `id`/`input`/`status`/`error`, every turn's `response.activities`
- * and `response.agent.{messages,reasoningSteps}`, the ACTIVE turn's
- * `response.state`, and session-level `sessionId`/`sessionToken`/`activeTurnId`.
- * Non-active turns' `state` is intentionally dropped (restored as `{}`).
+ * and `response.agent.{messages,reasoningSteps}`, the session's `state`, and
+ * session-level `sessionId`/`sessionToken`/`activeTurnId`.
  *
  * The `streaming` status is deliberately excluded from the generated turns: a
  * mid-stream turn is downgraded to `error` on restore, which is the concern of
@@ -70,7 +69,6 @@ function turnArbitrary(id: string): fc.Arbitrary<Turn> {
     .record({
       status: nonStreamingStatus,
       prompt: fc.option(fc.string({maxLength: 20}), {nil: undefined}),
-      state: jsonRecord,
       activities: fc.array(activityArbitrary, {maxLength: 8}),
       agent: fc.option(
         fc.record({
@@ -81,16 +79,14 @@ function turnArbitrary(id: string): fc.Arbitrary<Turn> {
       ),
       error: fc.string({maxLength: 20}),
     })
-    .map(({status, prompt, state, activities, agent, error}) => {
+    .map(({status, prompt, activities, agent, error}) => {
       const turn: Turn = {
         id,
         input: prompt === undefined ? {} : {prompt},
         status,
         response: {
-          state,
           activities,
           surfaces: [],
-          a2uiMessages: [],
           ...(agent ? {agent} : {}),
         },
       };
@@ -117,10 +113,11 @@ const sessionStateArbitrary: fc.Arbitrary<SessionStoreState<Turn>> = fc
           : fc.constantFrom<string | undefined>(...ids, undefined),
       sessionId: fc.option(fc.string({minLength: 1, maxLength: 12}), {nil: undefined}),
       sessionToken: fc.option(fc.string({minLength: 1, maxLength: 12}), {nil: undefined}),
+      sessionState: jsonRecord,
     })
   )
-  .map(({turns, activeTurnId, sessionId, sessionToken}) => {
-    const state: SessionStoreState<Turn> = {turns};
+  .map(({turns, activeTurnId, sessionId, sessionToken, sessionState}) => {
+    const state: SessionStoreState<Turn> = {turns, state: sessionState};
     if (activeTurnId !== undefined) {
       state.activeTurnId = activeTurnId;
     }
@@ -133,7 +130,7 @@ const sessionStateArbitrary: fc.Arbitrary<SessionStoreState<Turn>> = fc
     return state;
   });
 
-describe('serialize/restore round-trip (active turn)', () => {
+describe('serialize/restore round-trip', () => {
   it('preserves every turn id/input/status/error across a round-trip', () => {
     fc.assert(
       fc.property(sessionStateArbitrary, (original) => {
@@ -167,19 +164,12 @@ describe('serialize/restore round-trip (active turn)', () => {
     );
   });
 
-  it('reproduces the active turn state and drops non-active state to {}', () => {
+  it('reproduces the session state', () => {
     fc.assert(
       fc.property(sessionStateArbitrary, (original) => {
         const restored = restoreSession(serializeSession(original));
 
-        original.turns.forEach((turn, index) => {
-          const roundTripped = restored.turns[index];
-          if (turn.id === original.activeTurnId) {
-            expect(roundTripped.response.state).toEqual(turn.response.state);
-          } else {
-            expect(roundTripped.response.state).toEqual({});
-          }
-        });
+        expect(restored.state).toEqual(original.state);
       }),
       {numRuns: NUM_RUNS}
     );

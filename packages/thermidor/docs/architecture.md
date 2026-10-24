@@ -23,7 +23,7 @@ graph TB
 
     subgraph "Internal (not exported)"
         STORE["Observable store<br/>{ turns, activeTurnId,<br/>sessionId, sessionToken,<br/>request }"]
-        FOLD["Pure fold<br/>foldActivity(turn, activity, contracts) → turn"]
+        FOLD["Pure fold<br/>foldActivity(turn, activity) → turn"]
         VALID["In-transit validation<br/>action-payload validation"]
         GATE["Request gate<br/>(one request at a time)"]
         API["Unified endpoint client<br/>request builder · SSE parser"]
@@ -78,9 +78,9 @@ The runtime owns the dispatch / cancel / retry orchestration and the SSE-consump
 
 - **`dispatchAction(message)`** — the single consumer-facing entry point, wired as the renderer's `onAction`. It never rejects: every refusal is a dev-only warning. A dispatch made while a request is in flight is withheld.
   - A `submitPrompt` action (`{name: 'submitPrompt', payload: {prompt}}`) needs no active turn. It opens a new `streaming` turn, builds a request (invoking both context providers fresh), POSTs to the endpoint, and folds the streamed response into that turn.
-  - An A2-UI client message is unwrapped to its `userAction`. The runtime recovers the dispatching component's `component` discriminant from the active turn's node-identity registry (derived from its activities), validates the payload against that component's action schema, and sends the action to its own originating surface. It is withheld when there is no active turn, when the node resolves to no component, or when the payload fails validation. The action's response streams into the active turn.
+  - An A2-UI client message is unwrapped to its `userAction`. The runtime recovers the dispatching component's `component` discriminant from the session's node-identity registry (derived from every turn's activities), validates the payload against that component's action schema, and sends the action to its own originating surface. It is withheld when there is no active turn, when the node resolves to no component, or when the payload fails validation. The action's response streams into the active turn. Only its surface snapshots are folded: its run, its text and its failure leave the active turn's status and response as they are, and a failure sets `actionError`.
 - **`cancel()`** — stops consuming the in-flight stream. A streaming prompt turn keeps the partial `response` already folded and is marked `error` with the message `'Cancelled'`; an action in flight leaves its turn as it was. `request` stays set until the stopped request has unwound, so a dispatch made right after `cancel()` is withheld. A no-op when nothing is in flight.
-- **`retry(turnId)`** — re-submits only an `error` turn's original input, withheld like any dispatch while a request is in flight; any other `turnId` (unknown, or non-error) is a no-op.
+- **`retry(turnId)`** — re-submits the original input of the last turn, only when it is `error`, withheld like any dispatch while a request is in flight; any other `turnId` (unknown, non-error, or an earlier turn, whose answer would land before later turns' surfaces) is a no-op.
 
 Prompts and actions reach the endpoint one at a time, through `sendRequest` in `create-session.ts`: the Gateway processes a single request per session, and each response is a whole-node snapshot, so overlapping streams would let the last to arrive win over a newer action. A dispatch made while a request is in flight is withheld rather than queued or preempted: the integrator holds it back until the session is free, reading `request`.
 
@@ -98,14 +98,23 @@ Cancellation is modeled as a terminal `error` turn (message `'Cancelled'`), not 
 
 ## The pure fold
 
-`src/session/fold.ts` exposes `foldActivity(previousTurn, activity, contracts?) → nextTurn` — the single place a `TurnResponse` is constructed from the stream. It is a pure reduction: the injected `contracts` is a bound dependency, never turn state, and folding the same activity sequence twice with the same contracts yields deeply-equal turns.
+`src/session/fold.ts` exposes `foldActivity(previousTurn, activity) → nextTurn` — the single place a `TurnResponse` is constructed from the stream. It is a pure reduction: folding the same activity sequence twice yields deeply-equal turns.
 
 The fold maps each SSE activity into the active turn's `response`:
 
 - Text-message events accumulate into `response.agent.messages` (the `agent` facet is created lazily, signaling the router invoked an agent).
 - Reasoning and tool-call events accumulate into `response.agent.reasoningSteps`.
-- `ACTIVITY_SNAPSHOT` events append to `response.activities` (a `replace` snapshot merges onto the activity with the same `messageId`), re-derive `response.surfaces` and `response.a2uiMessages` from the full activity list, and apply the snapshot's `updateDataModel` ops to `response.state` after in-transit validation.
+- `ACTIVITY_SNAPSHOT` events append to `response.activities` (a `replace` snapshot merges onto the activity with the same `messageId`) and re-derive the turn's surfaces from its activity list.
 - Terminal events (`RUN_FINISHED` / `turn_complete`, `RUN_ERROR`) set `status` to `complete` or `error`.
+
+## Session-scoped surfaces
+
+Surfaces live in the session, not in the turn that created them ([ADR-018](./internal/adr/ADR-018-session-scoped-surfaces-and-initialize.md)). The session derives them from one ordered activity log, every turn's activities in order; since it sends one request at a time, that is the order in which the operations arrived. A surface lives from its `createSurface` until its `deleteSurface`, whichever runs carry them, and a `createSurface` for a live id replaces that surface.
+
+- **Surfaces.** `src/session/session-surfaces.ts` (`deriveSessionSurfaces`) derives `session.surfaces` from the activity log, and narrows each turn's `response.surfaces` to the live surfaces it created. It is recomputed only when the turns change.
+- **State.** In the same store change that folds a surface snapshot, `src/session/session-state.ts` (`applyInboundOps`) validates the snapshot's `updateDataModel` ops against the session's node-identity registry and applies the conforming ones to the session's `state`. `session.state` exposes the entries of the live surfaces.
+- **Renderer stream.** In that same change, the snapshot's messages are converted to v0.9 and appended to the session's renderer stream (`appendToRendererStream`), which only grows: a `deleteSurface` precedes a `createSurface` that replaces a live surface, and an operation on a surface that is not live is left out, since a renderer refuses both.
+- **Dispatch.** An action resolves its source component in the session's registry, so any live surface accepts actions. Its run only folds its surface snapshots into the active turn, never its lifecycle events or text, and its failure sets `actionError` (`ActionError`, which identifies the action) without changing any turn (ADR-018, as amended).
 
 ## The Turn / TurnResponse domain model
 
@@ -121,24 +130,22 @@ interface Turn {
 }
 
 interface TurnResponse {
-  state: A2uiState; // validated component state (/state/<id> ops) per surface, defaults to {}
   activities: Activity[]; // raw snapshot log, latest snapshot per messageId, defaults to []
-  surfaces: DiscoveredSurface[]; // typed projection derived from activities
-  a2uiMessages: A2uiV09Message[]; // renderer-ready v0.9 stream derived from activities
+  surfaces: DiscoveredSurface[]; // the live surfaces this turn created
   agent?: {messages: AgentMessage[]; reasoningSteps: ReasoningStep[]};
 }
 ```
 
-`state` and `activities` are routing-neutral and always present. Only `messages` and `reasoningSteps` are agent-specific; they live under the optional `agent` facet, whose presence signals "the router invoked an agent". Consumers read `turn.input.prompt`, `turn.response.a2uiMessages` (to feed a renderer), `turn.response.surfaces`, and `turn.response.agent?.*`; `state` and `activities` remain available.
+`activities` is routing-neutral and always present. Only `messages` and `reasoningSteps` are agent-specific; they live under the optional `agent` facet, whose presence signals "the router invoked an agent". Consumers read `turn.input.prompt`, `turn.response.surfaces` (where to draw the turn's blocks) and `turn.response.agent?.*`; the renderer stream and the component state live on the session.
 
 ## Validation
 
 The injected contracts schema is validated against at two boundaries, both inside the core, so a consumer never runs Zod ([ADR-016](./internal/adr/ADR-016-inline-state-consumption-remove-remote-controller.md)):
 
-- **Inbound state** (`src/session/in-transit-validation.ts`) — each `updateDataModel` op is resolved to its component through the node-identity registry and validated in transit: a whole-component op (`/state/<id>`) against the component's `*State` schema, a partial op against the sub-schema at its path. A conforming op is applied to `response.state`. An op whose path is outside `/state/<id>` of a present component (for example `/isLoading` or `/`) is dropped as `unresolved-path`, and a non-conforming one is dropped too, so the previous value stays. `createSurface.dataModel` is never read into `response.state`.
+- **Inbound state** (`src/session/in-transit-validation.ts`) — each `updateDataModel` op is resolved to its component through the node-identity registry and validated in transit: a whole-component op (`/state/<id>`) against the component's `*State` schema, a partial op against the sub-schema at its path. A conforming op is applied to the session's `state`. An op whose path is outside `/state/<id>` of a present component (for example `/isLoading` or `/`) is dropped as `unresolved-path`, and a non-conforming one is dropped too, so the previous value stays. `createSurface.dataModel` is never read into the session's `state`.
 - **Outbound actions** (`src/session/action-payload-validation.ts`) — an action's payload is validated against the component's action schema before the POST; a non-conforming one is withheld.
 
-`response.a2uiMessages` is derived from the raw activities, not from `response.state`, so a renderer fed from it receives every inbound op, including those in-transit validation drops, and the component state seeded by `createSurface.dataModel`, which is never validated (see [Recorded interim debt](#recorded-interim-debt-and-out-of-scope-items)).
+`session.a2uiMessages` is derived from the raw activities, not from `session.state`, so a renderer fed from it receives every inbound op, including those in-transit validation drops, and the component state seeded by `createSurface.dataModel`, which is never validated (see [Recorded interim debt](#recorded-interim-debt-and-out-of-scope-items)).
 
 ## Injected schema, endpoint, and context
 
@@ -156,29 +163,26 @@ The injected contracts schema is validated against at two boundaries, both insid
 | `sessionId`, `sessionToken`, `activeTurnId` | yes       | session-level    |
 | `response.activities`                       | yes       | all turns        |
 | `response.agent.{messages,reasoningSteps}`  | yes       | turns with agent |
-| `response.state`                            | yes       | active turn ONLY |
+| `state` (validated data model)              | yes       | session-level    |
 | `response.surfaces`                         | no        | derived          |
-| `response.a2uiMessages`                     | no        | derived          |
+| renderer stream (`a2uiMessages`)            | no        | derived          |
 
-On restore, `surfaces` and `a2uiMessages` are re-derived from each turn's persisted `activities`; a turn persisted mid-stream (`streaming`) is downgraded to `error` (`'Stream was interrupted'`) preserving its partial response; non-active turns yield an empty `{}` state; an unsupported `version` is rejected without partially populating a session. `sessionId` / `sessionToken` are used only as continuity keys to continue the same backend conversation.
-
-### Active-turn state scope
-
-`response.state` is persisted for the active turn only, because actions resolve against the active turn alone. A restored earlier turn still renders: its `a2uiMessages`, data model included, is re-derived from its persisted `activities`.
+On restore, the surfaces and the renderer stream are re-derived from the turns' persisted `activities`, in order; a turn persisted mid-stream (`streaming`) is downgraded to `error` (`'Stream was interrupted'`) preserving its partial response; an unsupported `version` is rejected without partially populating a session. `sessionId` / `sessionToken` are used only as continuity keys to continue the same backend conversation.
 
 ## Surface derivation (ADR-015 — recorded interim debt)
 
-`response.surfaces` is a typed projection of `activities`, so no consumer walks raw activities to discover surfaces. Derivation is confined to a single location in `fold.ts` (`deriveSurfaces`). The core interprets no root component type: a consumer reads `rootComponentType` (for example, to pick a loading placeholder). The raw-activity traversal is recorded interim debt per [ADR-015](./internal/adr/ADR-015-surface-and-route-derivation.md); it persists until server-surfaced typed routing lands (ADR-015 Option C, a separate future ADR). Because `surfaces` is derived (never persisted), dropping it and recomputing from `activities` reproduces a deeply-equal list.
+The surfaces are a typed projection of `activities`, so no consumer walks raw activities to discover surfaces. Derivation is confined to a single location in `fold.ts` (`deriveSurfaces`). The core interprets no root component type: a consumer reads `rootComponentType` (for example, to pick a loading placeholder). The raw-activity traversal is recorded interim debt per [ADR-015](./internal/adr/ADR-015-surface-and-route-derivation.md); it persists until server-surfaced typed routing lands (ADR-015 Option C, a separate future ADR). Because `surfaces` is derived (never persisted), dropping it and recomputing from `activities` reproduces a deeply-equal list.
 
 Derivation follows the A2-UI surface lifecycle in stream order: `deleteSurface` removes a surface from the list, and a re-created surface moves to the end. Each `DiscoveredSurface` also carries `isLoading`, read from the surface's effective data model (`createSurface.dataModel`, then any `updateDataModel` at `/`, with no path, or at `/isLoading`), so a consumer can draw a loading placeholder for its `rootComponentType` until the agent deletes the surface or clears the flag.
 
 ### The v0.9 renderer projection
 
-Agent Gateway emits A2-UI v1.0, and every available renderer consumes v0.9. `src/session/a2ui-v09-projection.ts` (`deriveA2uiV09Messages`) derives `response.a2uiMessages` from `activities`:
+Agent Gateway emits A2-UI v1.0, and every available renderer consumes v0.9. `src/session/a2ui-v09-projection.ts` converts each surface snapshot's messages (`convertA2uiMessages`), and `appendToRendererStream` adds them to the session's renderer stream:
 
 - it splits each v1.0 `createSurface` into v0.9 `createSurface` + `updateComponents`, forwarding flat nodes byte-for-byte so every `{ path }` binding survives, and drops a `createSurface` without a `catalogId`;
 - it emits one `updateDataModel` per key of the inline `dataModel`, at that key's root JSON Pointer (`isLoading` → `/isLoading`; a key already written as a pointer, such as `/state/<nodeId>`, is kept);
-- it passes `updateDataModel` and `updateComponents` through, and `deleteSurface` too, except an orphan (`OrphanDeleteFilter`): a delete for a surface created earlier in the turn's stream, or by a superseded version of one of its activities, that is no longer live. A consumer merging turns into one renderer stream would otherwise apply it to an earlier turn's surface with the same id.
+- it passes `updateDataModel`, `updateComponents` and `deleteSurface` through;
+- the stream follows the surface lifecycle across every run of the session: a `deleteSurface` is inserted before a `createSurface` that re-creates a live surface, since a renderer refuses to create a surface that exists, and an operation on a surface that is not live is dropped.
 
 It is the single place that rewrites a message envelope, recorded as a charter exception with a retirement condition in the [ADR-015 addendum](./internal/adr/ADR-015-surface-and-route-derivation.md).
 
@@ -186,9 +190,9 @@ It is the single place that rewrites a message envelope, recorded as a charter e
 
 These are intentionally **not yet implemented**:
 
-- **Interim `response.surfaces` derivation** from raw activities (ADR-015 interim) — see above.
+- **Interim surface derivation** from raw activities (ADR-015 interim) — see above.
 - **The v0.9 renderer projection** (ADR-015 addendum) — removed in a breaking change once a v1.0-capable renderer exists.
-- **Renderer stream bypasses validation** — `response.a2uiMessages` is projected from raw activities, so inbound ops that in-transit validation drops from `response.state` still reach the renderer, and so does the component state seeded by `createSurface.dataModel`, which is never validated. A fix must cover both: filtering only the projected `updateDataModel` ops still lets the seed through without validation.
+- **Renderer stream bypasses validation** — `session.a2uiMessages` is projected from raw activities, so inbound ops that in-transit validation drops from `session.state` still reach the renderer, and so does the component state seeded by `createSurface.dataModel`, which is never validated. A fix must cover both: filtering only the projected `updateDataModel` ops still lets the seed through without validation.
 - **Enforced action-payload typing at the renderer boundary** — per-component action typing is applied by convention rather than at the `dispatchAction` boundary ([ADR-016](./internal/adr/ADR-016-inline-state-consumption-remove-remote-controller.md)).
 - **The package rename** — deferred as low-stakes; the package remains `@coveo/thermidor`.
 
@@ -210,9 +214,9 @@ sequenceDiagram
     Coveo-->>API: SSE stream
     loop per activity
         API-->>S: activity
-        S->>Fold: foldActivity(turn, activity, contracts)
-        Fold-->>S: nextTurn (state / activities / surfaces / a2uiMessages / agent?)
-        S->>Store: replace active turn
+        S->>Fold: foldActivity(turn, activity)
+        Fold-->>S: nextTurn (activities / surfaces / agent?)
+        S->>Store: replace active turn, apply validated ops to state, append to renderer stream
         Store-->>UI: subscriber notified → re-render
     end
     Coveo-->>API: RUN_FINISHED

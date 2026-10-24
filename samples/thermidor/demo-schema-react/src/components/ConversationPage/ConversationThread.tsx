@@ -8,14 +8,11 @@ import {splitTurn, type FollowUp} from './turn-segments.js';
 import {TurnSurfaces} from '../../a2ui/surfaces.js';
 import styles from './ConversationThread.module.css';
 
-const NO_SURFACES: readonly string[] = [];
 const NO_FOLLOW_UPS: readonly FollowUp[] = [];
 
 interface ConversationThreadProps {
   turns: Turn[];
   turnRefs: React.RefObject<Map<string, HTMLDivElement>>;
-  /** The render surface ids each turn draws, keyed by turn id. */
-  surfacesByTurn: ReadonlyMap<string, readonly string[]>;
   /** The follow-up actions sent from each turn, keyed by turn id. */
   followUps?: ReadonlyMap<string, readonly FollowUp[]>;
   /** The turn whose follow-up is in flight, if any. */
@@ -25,7 +22,6 @@ interface ConversationThreadProps {
 export function ConversationThread({
   turns,
   turnRefs,
-  surfacesByTurn,
   followUps,
   pendingTurnId = null,
 }: ConversationThreadProps) {
@@ -47,7 +43,6 @@ export function ConversationThread({
             <div className={styles.agentContent}>
               {renderTurnContent(
                 turn,
-                surfacesByTurn.get(turn.id) ?? NO_SURFACES,
                 followUps?.get(turn.id) ?? NO_FOLLOW_UPS,
                 index === turns.length - 1,
                 turn.id === pendingTurnId
@@ -71,7 +66,6 @@ export function ConversationThread({
  */
 function renderTurnContent(
   turn: Turn,
-  surfaceIds: readonly string[],
   followUps: readonly FollowUp[],
   isLatest: boolean,
   isPending: boolean
@@ -80,7 +74,7 @@ function renderTurnContent(
     return <ErrorTurnBlock error={turn.error} />;
   }
 
-  const segments = splitTurn(turn, surfaceIds, followUps);
+  const segments = splitTurn(turn, followUps);
   return (
     <>
       {segments.map((segment, index) => {
