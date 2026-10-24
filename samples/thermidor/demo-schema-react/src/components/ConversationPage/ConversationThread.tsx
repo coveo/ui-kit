@@ -71,7 +71,7 @@ function renderTurnContent(turn: Turn, isLatest: boolean) {
   return (
     <AgentResponseBlock response={turn.response} isStreaming={isStreaming}>
       <TurnSurfaces
-        surfaceIds={turn.response.surfaces.map((surface) => surface.surfaceId)}
+        surfaces={turn.response.surfaces}
         interactive={isLatest}
         isStreaming={isStreaming}
       />

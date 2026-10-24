@@ -45,12 +45,12 @@ function surfaceLifecycle(message: unknown): {created?: string; deleted?: string
   return {};
 }
 
-/** Derives the session's live surfaces from `turns`, and narrows each turn's to its own. */
-export function deriveSessionSurfaces(turns: readonly Turn[]): SessionSurfaceView {
-  const surfaces = deriveSurfaces(sessionActivities(turns));
-
-  // Follows the surface lifecycle as the node registry does, so a surface the projection leaves
-  // out (no catalog, no root) still has the turn that created it.
+/**
+ * The turn that created each surface still alive, by surface id. Follows the surface lifecycle as
+ * the node registry does, so a surface the projection leaves out (no catalog, no root) still has
+ * the turn that created it.
+ */
+function deriveOwnerTurnIds(turns: readonly Turn[]): Map<string, string> {
   const ownerTurnIds = new Map<string, string>();
   for (const turn of turns) {
     for (const activity of turn.response.activities) {
@@ -66,6 +66,56 @@ export function deriveSessionSurfaces(turns: readonly Turn[]): SessionSurfaceVie
       }
     }
   }
+  return ownerTurnIds;
+}
+
+/**
+ * The loading placeholders `turnId` has already abandoned: those it created while it is not
+ * streaming. Read when a request starts streaming into that turn, so they stay out of the lists
+ * while it runs.
+ */
+export function abandonedPlaceholderIds(
+  turns: readonly Turn[],
+  turnId: string
+): ReadonlySet<string> {
+  const turn = turns.find((candidate) => candidate.id === turnId);
+  if (!turn || turn.status === 'streaming') {
+    return new Set();
+  }
+  const ownerTurnIds = deriveOwnerTurnIds(turns);
+  return new Set(
+    deriveSurfaces(sessionActivities(turns))
+      .filter((surface) => surface.isLoading && ownerTurnIds.get(surface.surfaceId) === turnId)
+      .map((surface) => surface.surfaceId)
+  );
+}
+
+/**
+ * Derives the session's live surfaces from `turns`, and narrows each turn's to its own. A loading
+ * placeholder is listed only while the run that created it streams: while its turn is
+ * `streaming`, or while the request in flight, `streamingTurnId`, streams into it, unless it was
+ * already abandoned when that request started (`abandonedIds`). One the agent left behind once
+ * its run ended (a cancelled run, an error, a restored session) is abandoned and leaves the lists.
+ */
+export function deriveSessionSurfaces(
+  turns: readonly Turn[],
+  streamingTurnId?: string,
+  abandonedIds: ReadonlySet<string> = new Set()
+): SessionSurfaceView {
+  const ownerTurnIds = deriveOwnerTurnIds(turns);
+
+  const streamingTurnIds = new Set(
+    turns.filter((turn) => turn.status === 'streaming').map((turn) => turn.id)
+  );
+  if (streamingTurnId !== undefined) {
+    streamingTurnIds.add(streamingTurnId);
+  }
+  const surfaces = deriveSurfaces(sessionActivities(turns)).filter(
+    (surface) =>
+      !surface.isLoading ||
+      (streamingTurnIds.has(ownerTurnIds.get(surface.surfaceId) ?? '') &&
+        !abandonedIds.has(surface.surfaceId))
+  );
 
   return {
     turns: turns.map((turn) => ({

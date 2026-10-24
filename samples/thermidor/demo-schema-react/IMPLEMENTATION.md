@@ -99,10 +99,8 @@ A placeholder the agent abandons is deleted the same way. The mock templates emi
 
 ### How the sample draws it
 
-- `@coveo/thermidor` derives `response.surfaces` from the stream: each `DiscoveredSurface` carries `rootComponentType` and `isLoading`, and a deleted surface leaves the list.
-- `AppShell` maps each loading surface's id to its root component type (`loadingSurfaces`). `ThermidorA2UIStream` feeds the renderer and shares that map with the page it wraps.
-- `TurnSurfaces` draws `A2UISkeleton` for a loading surface in the place its content takes, and the `A2UIRenderer` otherwise.
-- A placeholder is drawn only while its turn streams (`TurnSurfaces`' `isStreaming`). A placeholder the agent never deletes (a cancelled run, an error, a restored session) is abandoned once the turn ends, and nothing is drawn for it.
+- `@coveo/thermidor` derives `response.surfaces` from the stream: each `DiscoveredSurface` carries `rootComponentType` and `isLoading`, and a deleted surface leaves the list. A loading placeholder is listed only while its turn streams: one the agent never deletes (a cancelled run, an error, a restored session) leaves the list once the turn ends.
+- `TurnSurfaces` takes the turn's `response.surfaces` and draws `A2UISkeleton` for a loading surface in the place its content takes, and the `A2UIRenderer` otherwise. The sample holds no placeholder rule of its own.
 
 ## Action dispatch and inline state transport
 

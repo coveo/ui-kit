@@ -27,7 +27,8 @@ export type A2uiState = Record<string, unknown>;
  * (ADR-015 interim). Each entry carries a non-empty `surfaceId` and a non-empty
  * `rootComponentType`. A surface lives from its `createSurface` until its
  * `deleteSurface`, whichever runs carry them (ADR-018); a deleted surface leaves
- * the lists.
+ * the lists, and so does a loading placeholder its turn left behind once it
+ * stopped streaming.
  */
 export interface DiscoveredSurface {
   surfaceId: string;
@@ -41,7 +42,10 @@ export interface DiscoveredSurface {
    * `isLoading: true` (the commerce catalog flag). A consumer renders a
    * placeholder for `rootComponentType` while this holds. It ends when the
    * agent deletes the surface (the surface leaves this list) or writes
-   * `isLoading: false` to its data model.
+   * `isLoading: false` to its data model. A placeholder is listed only while the
+   * run that created it streams; one the agent left behind (a cancelled run, an
+   * error, a restored session) leaves the lists, and a later request streaming
+   * into its turn does not bring it back.
    */
   isLoading: boolean;
 }

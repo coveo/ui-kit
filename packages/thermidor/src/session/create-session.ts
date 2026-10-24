@@ -43,6 +43,7 @@ import {createSessionStore, type SessionStore, type SessionStoreState} from './s
 import {applyInboundOps} from './session-state.js';
 import {isTurnOpeningAction} from './turn-opening.js';
 import {
+  abandonedPlaceholderIds,
   deriveSessionSurfaces,
   sessionActivities,
   type SessionSurfaceView,
@@ -382,14 +383,23 @@ export function createSession<TContracts extends ContractsSchema>(
 
   const store: SessionStore<Turn> = createSessionStore<Turn>(initialState);
 
-  // Derived from the folded turns, and recomputed only when they change.
+  // Derived from the folded turns and the turn the request in flight streams into, and
+  // recomputed only when either changes.
   let surfaceView: SessionSurfaceView | undefined;
-  let surfaceViewSource: readonly Turn[] | undefined;
+  let surfaceViewSource: {turns: readonly Turn[]; request?: SessionRequest} | undefined;
+  // The placeholders the request's turn had abandoned when the request started.
+  let requestAbandoned: {request: SessionRequest; ids: ReadonlySet<string>} | undefined;
   function readSurfaceView(): SessionSurfaceView {
-    const {turns} = store.getState();
-    if (surfaceView === undefined || surfaceViewSource !== turns) {
-      surfaceView = deriveSessionSurfaces(turns);
-      surfaceViewSource = turns;
+    const {turns, request} = store.getState();
+    if (
+      surfaceView === undefined ||
+      surfaceViewSource?.turns !== turns ||
+      surfaceViewSource.request !== request
+    ) {
+      const abandoned =
+        request && requestAbandoned?.request === request ? requestAbandoned.ids : undefined;
+      surfaceView = deriveSessionSurfaces(turns, request?.turnId, abandoned);
+      surfaceViewSource = {turns, request};
     }
     return surfaceView;
   }
@@ -421,7 +431,8 @@ export function createSession<TContracts extends ContractsSchema>(
   // action sent later. A dispatch made while a request is in flight is withheld.
   async function sendRequest(
     request: SessionRequest,
-    send: (abortController: AbortController) => Promise<void>
+    send: (abortController: AbortController) => Promise<void>,
+    abandoned?: ReadonlySet<string>
   ): Promise<void> {
     if (store.getState().request) {
       devWarn('dispatchAction: withheld: another request is in flight.');
@@ -430,6 +441,7 @@ export function createSession<TContracts extends ContractsSchema>(
     // Armed before it is published, so a listener's `cancel()` stops the request it was told about.
     const abortController = new AbortController();
     activeAbortController = abortController;
+    requestAbandoned = abandoned && {request, ids: abandoned};
     store.setState((current) => ({...current, request}));
     if (!abortController.signal.aborted) {
       try {
@@ -849,31 +861,39 @@ export function createSession<TContracts extends ContractsSchema>(
       sourceComponentId: recovered.sourceComponentId,
       turnId,
     };
-    return sendRequest(request, async (abortController) => {
-      if (opensTurn) {
-        openTurn(turnId, {
-          action: {
+    // An answer streamed into an earlier run's turn must not bring back what that run left behind.
+    const abandoned = opensTurn
+      ? undefined
+      : abandonedPlaceholderIds(store.getState().turns, turnId);
+    return sendRequest(
+      request,
+      async (abortController) => {
+        if (opensTurn) {
+          openTurn(turnId, {
+            action: {
+              component: recovered.discriminant,
+              name: recovered.name,
+              surfaceId: recovered.surfaceId,
+              sourceComponentId: recovered.sourceComponentId,
+              ...(recovered.context === undefined ? {} : {context: recovered.context}),
+            },
+          });
+        }
+        await streamAction(
+          turnId,
+          a2uiAction,
+          {
             component: recovered.discriminant,
             name: recovered.name,
-            surfaceId: recovered.surfaceId,
+            surfaceId,
             sourceComponentId: recovered.sourceComponentId,
-            ...(recovered.context === undefined ? {} : {context: recovered.context}),
           },
-        });
-      }
-      await streamAction(
-        turnId,
-        a2uiAction,
-        {
-          component: recovered.discriminant,
-          name: recovered.name,
-          surfaceId,
-          sourceComponentId: recovered.sourceComponentId,
-        },
-        opensTurn,
-        abortController
-      );
-    });
+          opensTurn,
+          abortController
+        );
+      },
+      abandoned
+    );
   }
 
   /**

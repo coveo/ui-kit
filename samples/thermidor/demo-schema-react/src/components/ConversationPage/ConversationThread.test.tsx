@@ -156,15 +156,10 @@ describe('ConversationThread', () => {
   });
 
   describe('loading placeholders', () => {
-    const placeholders = new Map([
-      ['first-1', 'ProductCarousel'],
-      ['second-2', 'ProductCarousel'],
-    ]);
-
     function renderPlaceholders(turns: Turn[]) {
       return render(
         <A2UIProvider catalog={createThermidorCatalog()} onAction={() => {}}>
-          <ThermidorA2UIStream messages={[]} loadingSurfaces={placeholders}>
+          <ThermidorA2UIStream messages={[]}>
             <ConversationThread
               turns={turns}
               turnRefs={{current: new Map<string, HTMLDivElement>()}}
@@ -174,37 +169,29 @@ describe('ConversationThread', () => {
       );
     }
 
-    function withSurfaces(turn: Turn, ...surfaceIds: string[]): Turn {
-      return {...turn, response: {...turn.response, surfaces: makeSurfaces(...surfaceIds)}};
+    function withPlaceholder(turn: Turn, surfaceId: string): Turn {
+      return {
+        ...turn,
+        response: {
+          ...turn.response,
+          surfaces: [{surfaceId, rootComponentType: 'ProductCarousel', isLoading: true}],
+        },
+      };
     }
 
-    function placeholderRegion(surfaceId: string) {
-      return screen.queryByRole('region', {name: `A2-UI surface ${surfaceId}`});
-    }
-
-    it('draws the placeholders of a streaming turn', () => {
-      renderPlaceholders([withSurfaces(createTurn({status: 'streaming'}), 'first-1')]);
-
-      expect(placeholderRegion('first-1')).not.toBeNull();
-    });
-
-    it('draws nothing for the placeholders a completed turn left behind', () => {
-      renderPlaceholders([withSurfaces(createTurn({status: 'complete'}), 'first-1')]);
-
-      expect(placeholderRegion('first-1')).toBeNull();
-    });
-
-    it('draws only the placeholders of the follow-up in flight', () => {
+    it('draws the skeleton of each loading surface the turn lists', () => {
       renderPlaceholders([
-        withSurfaces(createTurn({status: 'complete'}), 'first-1'),
-        withSurfaces(
+        withPlaceholder(createTurn({status: 'complete'}), 'first-1'),
+        withPlaceholder(
           makeFollowUpTurn({id: 'turn-2', text: 'Show more', status: 'streaming'}),
           'second-2'
         ),
       ]);
 
-      expect(placeholderRegion('first-1')).toBeNull();
-      expect(placeholderRegion('second-2')).not.toBeNull();
+      for (const surfaceId of ['first-1', 'second-2']) {
+        const region = screen.getByRole('region', {name: `A2-UI surface ${surfaceId}`});
+        expect(region.querySelector('[aria-label="Loading product carousel"]')).not.toBeNull();
+      }
     });
   });
 });

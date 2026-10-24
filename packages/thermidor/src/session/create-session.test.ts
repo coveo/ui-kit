@@ -664,6 +664,38 @@ describe('createSession lifecycle', () => {
       },
     ]);
 
+    it('keeps a placeholder its turn left behind out while an action streams into that turn', async () => {
+      const session = createSession(baseConfig);
+      await prompt(
+        session,
+        searchSurface,
+        surfaceSnapshot('placeholder', [
+          {
+            version: 'v1.0',
+            createSurface: {
+              surfaceId: 'carousel-placeholder',
+              catalogId: 'catalog',
+              components: [{id: 'root', component: 'ProductCarousel'}],
+              dataModel: {isLoading: true},
+            },
+          },
+        ])
+      );
+
+      const stream = queueStream();
+      const action = session.dispatchAction(selectPageMessage(2));
+      await stream.opened;
+      const during = session.surfaces.map((surface) => surface.surfaceId);
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await action;
+
+      expect(during).toEqual(['commerce-search-surface']);
+      expect(session.surfaces.map((surface) => surface.surfaceId)).toEqual([
+        'commerce-search-surface',
+      ]);
+    });
+
     it('starts a surface re-created under a live id with an empty state', async () => {
       const session = createSession(baseConfig);
       await prompt(session, searchSurface, paginationWrite);

@@ -7,10 +7,16 @@ import {makeFollowUpTurn, makeSurfaces, makeTurn} from '../../test/turn-fixtures
 // The blocks are drawn by the A2-UI renderer; the page only decides where each turn's blocks go
 // and whether they are interactive.
 vi.mock('../../a2ui/surfaces.js', () => ({
-  TurnSurfaces: ({surfaceIds, interactive}: {surfaceIds: string[]; interactive: boolean}) =>
-    surfaceIds.length === 0 ? null : (
+  TurnSurfaces: ({
+    surfaces,
+    interactive,
+  }: {
+    surfaces: {surfaceId: string}[];
+    interactive: boolean;
+  }) =>
+    surfaces.length === 0 ? null : (
       <div data-testid="turn-surfaces" data-interactive={String(interactive)}>
-        {surfaceIds.join(',')}
+        {surfaces.map((surface) => surface.surfaceId).join(',')}
       </div>
     ),
 }));

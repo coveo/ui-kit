@@ -27,17 +27,6 @@ export function AppShell() {
   const locked = isBlocking(request);
 
   const isStreaming = useMemo(() => turns.some((turn) => turn.status === 'streaming'), [turns]);
-  const loadingSurfaces = useMemo(
-    () =>
-      new Map(
-        turns.flatMap((turn) =>
-          turn.response.surfaces
-            .filter((surface) => surface.isLoading)
-            .map((surface) => [surface.surfaceId, surface.rootComponentType] as const)
-        )
-      ),
-    [turns]
-  );
 
   const handleSubmit = useCallback(
     (prompt: string) => {
@@ -50,7 +39,7 @@ export function AppShell() {
   return (
     <SessionRequestProvider value={session}>
       <A2UIProvider catalog={catalog} onAction={session.dispatchAction}>
-        <ThermidorA2UIStream loadingSurfaces={loadingSurfaces} messages={a2uiMessages}>
+        <ThermidorA2UIStream messages={a2uiMessages}>
           <div className="view-shell">
             <div className="view-panel view-panel--active">
               {turns.length === 0 ? (
