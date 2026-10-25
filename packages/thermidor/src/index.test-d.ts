@@ -12,6 +12,7 @@
  * the entry.
  */
 import {expectTypeOf, test} from 'vitest';
+import {z} from 'zod/v4';
 import {createSession} from '@/src/index.js';
 import type {
   A2uiState,
@@ -19,6 +20,7 @@ import type {
   ActionError,
   DiscoveredSurface,
   ComponentContractSchema,
+  ComponentActionNames,
   ContractsSchema,
   SessionRequest,
   SerializedSession,
@@ -82,6 +84,29 @@ test('exposes the injected ContractsSchema / ComponentContractSchema seam', () =
   expectTypeOf<ComponentContractSchema>().not.toBeAny();
 });
 
+// ── POSITIVE: an action request names its component, typed lists key on it ──
+test('names the dispatching component, and types action lists by the contracts', () => {
+  expectTypeOf<Extract<SessionRequest, {kind: 'action'}>['component']>().toEqualTypeOf<string>();
+
+  const contracts = z.discriminatedUnion('component', [
+    z.strictObject({
+      component: z.literal('NextActionsBar'),
+      actions: z
+        .strictObject({selectAction: z.strictObject({payload: z.strictObject({})})})
+        .optional(),
+    }),
+    z.strictObject({
+      component: z.literal('RegularFacet'),
+      actions: z.strictObject({search: z.strictObject({payload: z.strictObject({})})}).optional(),
+    }),
+  ]);
+
+  expectTypeOf<ComponentActionNames<typeof contracts>>().toEqualTypeOf<{
+    readonly NextActionsBar?: readonly 'selectAction'[];
+    readonly RegularFacet?: readonly 'search'[];
+  }>();
+});
+
 // ── POSITIVE: `dispatchAction` is the single action-dispatch entry point ─────
 test('exposes Session.dispatchAction assignable to the renderer onAction shape', () => {
   // `dispatchAction` exists on `Session` as a function accepting the standard
@@ -120,6 +145,7 @@ test('exposes Session.actionError as the failed action, or undefined', () => {
   expectTypeOf<Session['actionError']>().toEqualTypeOf<ActionError | undefined>();
   expectTypeOf<ActionError>().toEqualTypeOf<{
     message: string;
+    component: string;
     name: string;
     surfaceId: string;
     sourceComponentId: string;

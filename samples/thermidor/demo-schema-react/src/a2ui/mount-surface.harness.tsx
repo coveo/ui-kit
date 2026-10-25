@@ -86,15 +86,20 @@ function Surface({
   messages,
   processRef,
   dispatch,
+  componentOf,
   catalogOptions,
 }: {
   messages: Array<Record<string, unknown>>;
   processRef: {current: ProcessMessages | null};
   dispatch: (message: A2UIClientEventMessage) => Promise<void> | void;
+  componentOf: (sourceComponentId: string) => string;
   catalogOptions?: ThermidorCatalogOptions;
 }) {
   const catalog = useMemo(() => createThermidorCatalog(catalogOptions), [catalogOptions]);
-  const requests = useMemo(() => createFakeSessionRequests(dispatch), [dispatch]);
+  const requests = useMemo(
+    () => createFakeSessionRequests(dispatch, componentOf),
+    [dispatch, componentOf]
+  );
   const onAction = (message: A2UIClientEventMessage) => requests.dispatch(message);
   return (
     <SessionRequestProvider value={requests.source}>
@@ -124,6 +129,9 @@ export function mountSurface(config: MountSurfaceConfig): MountSurfaceResult {
 
   const rootNode = {...config.component, id: ROOT_ID};
   const childNodes = config.children ?? [];
+  const nodes: Array<Record<string, unknown>> = [rootNode, ...childNodes];
+  const componentOf = (sourceComponentId: string) =>
+    String(nodes.find((node) => node.id === sourceComponentId)?.['component']);
   const processRef: {current: ProcessMessages | null} = {current: null};
 
   const messages: Array<Record<string, unknown>> = [
@@ -143,6 +151,7 @@ export function mountSurface(config: MountSurfaceConfig): MountSurfaceResult {
       messages={messages}
       processRef={processRef}
       dispatch={onAction}
+      componentOf={componentOf}
       catalogOptions={config.catalogOptions}
     />
   );

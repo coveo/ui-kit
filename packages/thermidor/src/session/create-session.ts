@@ -827,6 +827,7 @@ export function createSession<TContracts extends ContractsSchema>(
 
     const request: SessionRequest = {
       kind: 'action',
+      component: recovered.discriminant,
       name: recovered.name,
       surfaceId,
       sourceComponentId: recovered.sourceComponentId,
@@ -834,6 +835,7 @@ export function createSession<TContracts extends ContractsSchema>(
     };
     // An action only updates the surfaces: its failure is the action's, never the turn's.
     const action: ActionSource = {
+      component: recovered.discriminant,
       name: recovered.name,
       surfaceId,
       sourceComponentId: recovered.sourceComponentId,

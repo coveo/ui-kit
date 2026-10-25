@@ -29,6 +29,7 @@ export type {
 export type {
   ContractsSchema,
   ComponentContractSchema,
+  ComponentActionNames,
   ParsableSchema,
   SafeParseResult,
   ParseIssue,

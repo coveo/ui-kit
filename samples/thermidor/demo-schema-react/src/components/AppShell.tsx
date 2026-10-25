@@ -28,6 +28,7 @@ export function AppShell() {
     session.getSnapshot,
     session.getSnapshot
   );
+  const locked = isBlocking(request);
 
   const [followUps, setFollowUps] = useState<ReadonlyMap<string, readonly FollowUp[]>>(
     () => new Map()
@@ -51,7 +52,6 @@ export function AppShell() {
       ),
     [turns]
   );
-  const locked = isBlocking(request);
 
   const handleAction = useCallback(
     async (message: A2UIClientEventMessage) => {

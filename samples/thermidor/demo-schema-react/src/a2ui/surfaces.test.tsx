@@ -341,6 +341,7 @@ describe('the failure of an action', () => {
       ...UNLOCKED,
       actionError: {
         message: 'Bad gateway',
+        component: 'PageSize',
         name: 'setPageSize',
         surfaceId,
         sourceComponentId: ROOT_COMPONENT_ID,
