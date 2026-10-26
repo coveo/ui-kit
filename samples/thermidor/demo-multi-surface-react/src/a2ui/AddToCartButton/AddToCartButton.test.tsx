@@ -26,7 +26,7 @@ describe('AddToCartButton', () => {
       </StorefrontSessionProvider>
     );
 
-    fireEvent.click(screen.getByRole('button', {name: 'Add Life jacket to cart'}));
+    fireEvent.click(screen.getByRole('button', {name: 'Add to cart, Life jacket'}));
 
     expect(onAdd).toHaveBeenCalledWith(product);
   });
@@ -37,7 +37,7 @@ describe('AddToCartButton', () => {
         <AddOneThroughTheCart />
       </StorefrontSessionProvider>
     );
-    const button = screen.getByRole('button', {name: 'Add Life jacket to cart'});
+    const button = screen.getByRole('button', {name: 'Add to cart, Life jacket'});
     expect(button.textContent).toBe('Add to cart');
 
     act(() => {
@@ -46,5 +46,6 @@ describe('AddToCartButton', () => {
     });
 
     expect(button.textContent).toBe('Add · 2 in cart');
+    expect(button.getAttribute('aria-label')).toBe('Add · 2 in cart, Life jacket');
   });
 });

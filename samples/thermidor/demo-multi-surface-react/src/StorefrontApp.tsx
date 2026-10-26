@@ -62,6 +62,8 @@ export function StorefrontApp() {
       scheduler.submitPagePrompt(ASSISTANT_CONTEXT, visit.prompt, visit.id);
     } else if (visit.page === 'search') {
       scheduler.submitPagePrompt(SEARCH_CONTEXT, visit.query, visit.id);
+    } else {
+      scheduler.leavePage();
     }
   }, [visit, scheduler]);
 
