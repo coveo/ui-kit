@@ -1,0 +1,170 @@
+# Thermidor Demo Multi-Surface React
+
+The Storefront Preview layout on **one** Thermidor session: a header that stays (the search box and
+the cart) over a page that changes (home recommendations, the assistant's answer to a
+search, search results, listing pages). Each view draws its own A2-UI surfaces, all hosted by one
+renderer. It runs on the published contract only, and on `@coveo/thermidor` as of the session-scoped
+surfaces train (coveo/ui-kit#8750, #8751, #8752), which this branch is stacked on.
+
+## Running it
+
+```bash
+pnpm dev
+```
+
+This builds `@coveo/platform-mock-api`, `@coveo/mock-converse-api` and `@coveo/thermidor`, starts the
+mock Converse API on port 3456 and opens the sample at http://localhost:5174 (`pnpm dev:mock` does
+the same). If the mock is already running, `pnpm dev:vite` only starts Vite.
+
+Try it (the mock is described [below](#the-multi-surface-mock)):
+
+1. The home page says its answer stopped early: the server refuses its empty prompt with a 400.
+2. Type a search in the header and press Enter: with the **AI** toggle on (the default), the
+   assistant page opens with the answer, its reasoning steps and its surfaces; the header stays. Try
+   `boating safety`, `which kayak should I get?`, `what do I need to go snorkeling?`,
+   `gift ideas under $50`, or a follow-up from the next actions.
+3. On the kayak answer, pick **See all kayaks**: the server runs the search the agent saved behind
+   that option and opens it as a search surface (facets, sort, pagination). Change the sort or a
+   facet: the server answers from the search it keeps.
+4. Click **Add to cart** on a product card: the header's cart counts it. Open the cart to change it.
+5. Turn **AI** off and search: the server refuses `storefront-preview-search` with a 400.
+6. Open a **Listing pages** entry: it shows an _In progress_ placeholder and sends no request.
+7. Open **One session** at the bottom: every turn, the view that sent it, and the surfaces it
+   created that are still alive. `GET http://localhost:3456/multi-surface/sessions` shows what the
+   mock keeps for each session.
+
+To run it against a real Agent Gateway, copy `.env.example` to `.env.local`, fill it in and run
+`pnpm dev:vite`.
+
+## What it reproduces
+
+Storefront Preview (admin-ui) uses one Thermidor session per view today. This sample keeps the
+views and puts them on one session:
+
+| View                                             | `context.custom.surfaceId`     | Components                                                                                 |
+| ------------------------------------------------ | ------------------------------ | ------------------------------------------------------------------------------------------ |
+| Home page: recommendations                       | `storefront-preview-home`      | ProductCarousel                                                                            |
+| Assistant page: the answer to a committed search | `storefront-preview-assistant` | ProductCarousel, NextActionsBar, ComparisonTable, BundleDisplay, ProductResearchCard       |
+| Search page: results for a search with AI off    | `storefront-preview-search`    | CommerceSearch, LayoutStack, QuerySummary, Sort, ProductList, Pagination, PageSize, facets |
+
+The behaviour is kept:
+
+- typing in the search box sends nothing: a search is sent when it is committed;
+- the assistant and search pages send their prompt once per visit;
+- going Home ↔ Assistant gives the page fresh surfaces, while the header stays;
+- the cart is shared by the header and every page.
+
+## The model
+
+- **One `createSession` for the whole app.** Every view sends its requests through it.
+- **Each request declares its view** in `context.custom.surfaceId`, with the values of the
+  published contract above. The value names a view, not an A2-UI surface: the surfaces get
+  server-chosen `ui-<uuid>` ids.
+- **The app maps views to surfaces.** It remembers which view sent each turn (and, for a page, which
+  visit of it). A page draws the surfaces of its visit's turns. The server
+  sends no placement hint, and the app never hard-codes a surface id.
+  (`src/views/view-surfaces.ts`, from each turn's `response.surfaces`.)
+- **The cart is app state.** The app draws it in the header and sends it in `context.cart` on every
+  request, whichever view sends it. No surface owns it.
+- **Every surface uses the one public Thermidor catalog** (`createSurface.catalogId`). The views
+  differ in which of its components they use, not in which catalog.
+- **The server keeps every surface.** Each one gets a fresh `ui-<uuid>` id and stays in the
+  session's state until the agent deletes it; a new page does not delete the previous page's
+  surfaces. The app draws only the current visit's.
+- **Every live surface takes actions.** The session sends an action from any surface that is still
+  alive, whichever turn created it, so a page stays usable after another view has sent a turn.
+
+### One session, one request
+
+`@coveo/thermidor` sends one request at a time, prompts and actions alike, exposes it as
+`session.request`, and withholds any dispatch made while it is in flight. The sample builds on that
+rather than tracking requests itself:
+
+- **Surfaces lock from the request in flight.** Each view draws its surfaces with
+  `demo-schema-react`'s `TurnSurfaces`, which locks them while `session.request` is set
+  (`src/views/ViewSurfaces.tsx`). A view only sees the requests of its own turns.
+- **Loading placeholders come from the data model.** A surface whose data model declares
+  `isLoading: true` is drawn as its component's skeleton while its turn streams
+  (`DiscoveredSurface.isLoading`). The session drops a placeholder its turn left behind.
+- **The package keeps no queue,** so `src/session/turn-scheduler.ts` keeps the latest page prompt
+  and sends it once `session.request` clears:
+
+| A new…           | while a request is in flight                   |
+| ---------------- | ---------------------------------------------- |
+| page prompt      | cancels it, then is sent (the page is leaving) |
+| component action | withheld (the surface is locked)               |
+
+A cancelled request unwinds a few microtasks after `session.cancel()`, so the next prompt waits for
+`session.request` to clear instead of being withheld.
+
+## Known limits
+
+- **Requests are serialized.** One request is in flight at a time, for every view. With one
+  session per view, several stream at once. ADR-018 keeps this for the EAP.
+- **No query suggestions.** The search box sends nothing while typing; see below.
+- **Listing pages show a placeholder.** The published contract has no view id for them, so they show
+  _In progress_ and send nothing.
+- **Only the assistant is answered.** The server gives `storefront-preview-home` an empty run and
+  refuses `storefront-preview-search`; the home page's empty prompt is refused before that, since a
+  message or an action is required.
+
+## What changes once the open work lands
+
+- **`initialize`** (ADR-018; coveo/ui-kit#8756): the session opens itself, so the home page no
+  longer sends an empty prompt to open it.
+- **The session shell and query suggestions** (coveo/ui-kit#8757, #8758): the producer answers `initialize` with a long-lived `SessionShell`
+  holding a `SearchBox` and its `QuerySuggestions`, and a pause in typing dispatches
+  `fetchSuggestions`. The header can then draw that surface as its search box, with suggestions.
+- **The server:** a view id for listing pages, an answer for `storefront-preview-search`, and a
+  spike on what a view id should map to (today `custom.surfaceId` names a view, which reads oddly
+  next to A2-UI's `surfaceId`).
+
+## Structure
+
+```
+src/
+├── StorefrontApp.tsx           The header over the page, actions, page visits
+├── navigation.ts               Page visits and the listing pages
+├── session/
+│   ├── storefront-session.tsx  The ONE session, its configuration and context providers
+│   ├── turn-scheduler.ts       The latest prompt of each view, sent once the session is free
+│   └── cart-store.ts           The app's cart, sent in context.cart
+├── views/
+│   ├── view-surfaces.ts        View → surfaces: each view draws its own turns' surfaces
+│   └── ViewSurfaces.tsx        Draws them with TurnSurfaces, locked by the view's own request
+├── a2ui/
+│   ├── catalog.ts              The renderers for the Storefront components
+│   └── AddToCartButton/        The button added to every product card
+├── components/                 Top bar, search box, listing menu, cart, In progress, inspector
+└── pages/                      Home, assistant, search and listing pages
+```
+
+The renderers for ProductCarousel, NextActionsBar, ComparisonTable, BundleDisplay,
+ProductResearchCard, ProductSummary (which BundleDisplay mounts) and the commerce search layout, the
+agent answer block with its reasoning steps, `TurnSurfaces`, the session request
+helpers and the renderer bridge are imported from
+[`demo-schema-react`](../demo-schema-react) by relative path rather than copied. Its product cards
+expose `ProductCardActionsContext`, which this sample uses to add **Add to cart**;
+`demo-schema-react` provides none, so its cards are unchanged.
+
+## The multi-surface mock
+
+`@coveo/platform-mock-api` answers the sample from one file,
+`src/converse/generate-multi-surface-response.ts`. `@coveo/mock-converse-api` hands it every request
+on its schema routes (`/converse-schema`, which the sample uses by default) that names a view in
+`context.custom.surfaceId`. Every other request gets the usual schema scenarios, so
+`demo-schema-react` is unaffected.
+
+It keeps each session's state between requests:
+
+- **every surface** it sent, until the agent deletes it, so a new turn never drops another view's;
+- **search options:** the search behind a `searchOption` next action stays on the server, and the
+  client only gets its id. Picking it opens a search surface whose actions are answered from the
+  kept search (`templates/schema-response-search.ts`);
+- **the cart,** from `updateCart` actions;
+- **one assistant turn at a time:** another assistant request while one runs gets a 409.
+
+Only `storefront-preview-assistant` does any work: a message runs the agent (the storefront and
+schema scenarios), which is told what the shopper is looking at on the search surface; an action is
+answered by the server. `storefront-preview` and `storefront-preview-home` get an empty run, and any
+other view gets a 400.

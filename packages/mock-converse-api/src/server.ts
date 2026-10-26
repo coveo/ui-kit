@@ -1,5 +1,9 @@
 import {createServer as createHttpMiddlewareServer} from '@mswjs/http-middleware';
-import {converseResponses, converseSchemaResponses} from '@coveo/platform-mock-api/converse';
+import {
+  converseMultiSurfaceResponses,
+  converseResponses,
+  converseSchemaResponses,
+} from '@coveo/platform-mock-api/converse';
 import {http, HttpResponse} from 'msw';
 
 export interface ServerOptions {
@@ -20,6 +24,7 @@ const FULL_SCHEMA_CONVERSE_ROUTE =
   '/schema/rest/organizations/:orgId/commerce/unstable/agentic/converse';
 const PREVIEW_SCHEMA_CONVERSE_ROUTE =
   '/schema/api/preview/organizations/:orgId/agents/commerce/agui/converse';
+const MULTI_SURFACE_SESSIONS_ROUTE = '/multi-surface/sessions';
 
 const withCors = <T extends Response>(response: T): T => {
   for (const [headerName, headerValue] of Object.entries(CORS_HEADERS)) {
@@ -85,6 +90,11 @@ const handleSchemaConversePost = async ({request}: {request: Request}) => {
     );
   }
 
+  // A request naming its view in `context.custom.surfaceId` shares one session with every view.
+  if (converseMultiSurfaceResponses.isMultiSurfaceRequest(body)) {
+    return withCors(converseMultiSurfaceResponses.multiSurfaceResponse(body));
+  }
+
   const bodyRecord =
     typeof body === 'object' && body !== null ? (body as Record<string, unknown>) : undefined;
   const action = bodyRecord?.action;
@@ -119,6 +129,10 @@ const handleSchemaConversePost = async ({request}: {request: Request}) => {
 
   return withCors(converseSchemaResponses.schemaBaseResponse(body));
 };
+
+/** What the multi-surface mock keeps for each session. */
+const multiSurfaceSessionsResponse = () =>
+  withCors(HttpResponse.json(converseMultiSurfaceResponses.inspectSessions()));
 
 const preflightResponse = () => withCors(new HttpResponse(null, {status: 204}));
 
@@ -161,6 +175,7 @@ const handlers = [
   http.all(SHORT_SCHEMA_CONVERSE_ROUTE, methodNotAllowedResponse),
   http.all(FULL_SCHEMA_CONVERSE_ROUTE, methodNotAllowedResponse),
   http.all(PREVIEW_SCHEMA_CONVERSE_ROUTE, methodNotAllowedResponse),
+  http.get(MULTI_SURFACE_SESSIONS_ROUTE, multiSurfaceSessionsResponse),
   http.all(/.*/, notFoundResponse),
 ] as unknown as Parameters<typeof createHttpMiddlewareServer>;
 
