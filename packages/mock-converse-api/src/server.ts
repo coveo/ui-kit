@@ -1,3 +1,4 @@
+import {randomUUID} from 'node:crypto';
 import {createServer as createHttpMiddlewareServer} from '@mswjs/http-middleware';
 import {converseResponses, converseSchemaResponses} from '@coveo/platform-mock-api/converse';
 import {http, HttpResponse} from 'msw';
@@ -26,6 +27,73 @@ const withCors = <T extends Response>(response: T): T => {
     response.headers.set(headerName, headerValue);
   }
   return response;
+};
+
+const stringField = (record: Record<string, unknown> | undefined, field: string) => {
+  const value = record?.[field];
+  return typeof value === 'string' ? value : undefined;
+};
+
+const sessionsInFlight = new Map<string, symbol>();
+
+const actionInFlightResponse = () =>
+  HttpResponse.json(
+    {
+      errorCode: 'AGENT:ACTION_IN_FLIGHT',
+      message: 'Another turn is in progress for this session.',
+    },
+    {status: 409}
+  );
+
+// Holds the session's turn slot until the response stream ends, even when the client cancels it,
+// as Agent Gateway keeps the slot until the turn commits.
+const holdSessionUntilStreamEnds = (sessionId: string, response: Response): Response => {
+  const slot = Symbol(sessionId);
+  sessionsInFlight.set(sessionId, slot);
+  const release = () => {
+    if (sessionsInFlight.get(sessionId) === slot) {
+      sessionsInFlight.delete(sessionId);
+    }
+  };
+  const reader = response.body!.getReader();
+  let cancelled = false;
+  const drainThenRelease = async () => {
+    try {
+      while (!(await reader.read()).done) {
+        // The rest of the turn is read without being forwarded.
+      }
+    } catch {
+      // A source that fails has ended the turn too.
+    } finally {
+      release();
+    }
+  };
+  const body = new ReadableStream<Uint8Array>({
+    async pull(controller) {
+      try {
+        const {done, value} = await reader.read();
+        if (cancelled) {
+          return;
+        }
+        if (done) {
+          release();
+          controller.close();
+          return;
+        }
+        controller.enqueue(value);
+      } catch (error) {
+        release();
+        if (!cancelled) {
+          controller.error(error);
+        }
+      }
+    },
+    cancel() {
+      cancelled = true;
+      void drainThenRelease();
+    },
+  });
+  return new HttpResponse(body, {status: response.status, headers: response.headers});
 };
 
 const handleConversePost = async ({request}: {request: Request}) => {
@@ -104,20 +172,34 @@ const handleSchemaConversePost = async ({request}: {request: Request}) => {
     );
   }
 
-  if (hasAction) {
+  const schemaAction = hasAction ? (action as converseSchemaResponses.SchemaAction) : undefined;
+  const sessionId = stringField(bodyRecord, 'conversationSessionId');
+  const sessionToken = stringField(bodyRecord, 'conversationToken');
+
+  if (schemaAction && converseSchemaResponses.isInitialize(schemaAction) && sessionToken) {
     return withCors(
-      converseSchemaResponses.buildSchemaActionResponse(
-        action as {
-          name: string;
-          context: Record<string, unknown>;
-          sourceComponentId?: string;
-          surfaceId?: string;
-        }
+      HttpResponse.json(
+        {
+          error: 'initialize opens a session: send it without a session token',
+        },
+        {status: 400}
       )
     );
   }
 
-  return withCors(converseSchemaResponses.schemaBaseResponse(body));
+  if (sessionId && sessionsInFlight.has(sessionId)) {
+    return withCors(actionInFlightResponse());
+  }
+
+  const session = {
+    conversationSessionId: sessionId ?? randomUUID(),
+    conversationToken: sessionToken ?? randomUUID(),
+  };
+  const response = schemaAction
+    ? converseSchemaResponses.buildSchemaActionResponse(schemaAction, session)
+    : converseSchemaResponses.schemaBaseResponse(body, session);
+
+  return withCors(holdSessionUntilStreamEnds(session.conversationSessionId, response));
 };
 
 const preflightResponse = () => withCors(new HttpResponse(null, {status: 204}));

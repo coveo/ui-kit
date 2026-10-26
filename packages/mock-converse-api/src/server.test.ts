@@ -269,6 +269,188 @@ describe('createMockConverseServer', () => {
     );
   });
 
+  describe('schema sessions', () => {
+    interface SseEvent {
+      event: string;
+      data: Record<string, unknown>;
+    }
+
+    const postSchema = (body: Record<string, unknown>) =>
+      makeRequest(
+        server,
+        {method: 'POST', path: '/converse-schema', headers: {'Content-Type': 'application/json'}},
+        JSON.stringify(body)
+      );
+
+    const parseEvents = (body: string): SseEvent[] =>
+      body
+        .split('\n\n')
+        .filter((chunk) => chunk.trim().length > 0)
+        .map((chunk) => {
+          const [eventLine, dataLine] = chunk.split('\n');
+          return {
+            event: eventLine.slice('event:'.length),
+            data: JSON.parse(dataLine.slice('data:'.length)),
+          };
+        });
+
+    const surfaceMessages = (events: SseEvent[]) =>
+      events
+        .filter(({event}) => event === 'ACTIVITY_SNAPSHOT')
+        .flatMap(({data}) => (data.content as {messages: Array<Record<string, unknown>>}).messages);
+
+    const createdSurfaceIds = (events: SseEvent[]) =>
+      surfaceMessages(events)
+        .map((message) => message.createSurface as {surfaceId: string} | undefined)
+        .filter((createSurface) => createSurface !== undefined)
+        .map(({surfaceId}) => surfaceId);
+
+    const sessionKeys = (events: SseEvent[]) => {
+      const {conversationSessionId, conversationToken} = events.find(
+        ({event}) => event === 'turn_started'
+      )!.data as {conversationSessionId: string; conversationToken: string};
+      return {conversationSessionId, conversationToken};
+    };
+
+    const statesByNode = (events: SseEvent[]) =>
+      Object.fromEntries(
+        surfaceMessages(events)
+          .map(
+            (message) =>
+              message.updateDataModel as {surfaceId: string; path: string; value: unknown}
+          )
+          .filter((op) => op !== undefined)
+          .map((op) => [`${op.surfaceId} ${op.path}`, op.value])
+      );
+
+    const initialize = async () => {
+      const res = await postSchema({message: null, action: {name: 'initialize', context: {}}});
+      return parseEvents(res.body);
+    };
+
+    it('answers initialize with new session keys and the session shell', async () => {
+      await startServer();
+      const first = await initialize();
+      const second = await initialize();
+
+      expect(sessionKeys(first).conversationSessionId).toEqual(expect.any(String));
+      expect(sessionKeys(first).conversationToken).toEqual(expect.any(String));
+      expect(sessionKeys(second).conversationSessionId).not.toBe(
+        sessionKeys(first).conversationSessionId
+      );
+      const [createSurface] = surfaceMessages(first).map((message) => message.createSurface);
+      expect(createSurface).toMatchObject({
+        components: [
+          {id: 'root', component: 'SessionShell'},
+          {id: 'search-box', component: 'SearchBox'},
+          {id: 'query-suggestions', component: 'QuerySuggestions'},
+        ],
+      });
+      expect(createdSurfaceIds(second)[0]).not.toBe(createdSurfaceIds(first)[0]);
+    });
+
+    it('refuses initialize with a session token', async () => {
+      await startServer();
+      const res = await postSchema({
+        message: null,
+        conversationSessionId: 'session-1',
+        conversationToken: 'token-1',
+        action: {name: 'initialize', context: {}},
+      });
+
+      expect(res.statusCode).toBe(400);
+      expect(res.headers['access-control-allow-origin']).toBe('*');
+      expect(JSON.parse(res.body)).toEqual({
+        error: 'initialize opens a session: send it without a session token',
+      });
+    });
+
+    it("answers fetchSuggestions on the shell's surface, keeping the session", async () => {
+      await startServer();
+      const opened = await initialize();
+      const keys = sessionKeys(opened);
+      const [shellId] = createdSurfaceIds(opened);
+      const fetchSuggestions = (query: string) =>
+        postSchema({
+          message: null,
+          ...keys,
+          action: {
+            name: 'fetchSuggestions',
+            surfaceId: shellId,
+            sourceComponentId: 'query-suggestions',
+            context: {query},
+          },
+        }).then((res) => parseEvents(res.body));
+
+      const surf = await fetchSuggestions('surf');
+      const empty = await fetchSuggestions('');
+
+      expect(sessionKeys(surf)).toEqual(keys);
+      expect(statesByNode(surf)[`${shellId} /state/query-suggestions`]).toMatchObject({
+        query: 'surf',
+        completions: [{expression: 'surfboards'}, {}, {}, {}, {}],
+      });
+      expect(statesByNode(empty)[`${shellId} /state/query-suggestions`]).toEqual({
+        query: '',
+        completions: [],
+      });
+    });
+
+    it('frees the session once the stream of a disconnected client ends', async () => {
+      await startServer();
+      const keys = sessionKeys(await initialize());
+      await new Promise<void>((resolve) => {
+        const address = server.address() as {port: number};
+        const req = http.request(
+          {
+            hostname: '127.0.0.1',
+            port: address.port,
+            method: 'POST',
+            path: '/converse-schema',
+            headers: {'Content-Type': 'application/json'},
+          },
+          (res) =>
+            res.once('data', () => {
+              req.destroy();
+              resolve();
+            })
+        );
+        req.on('error', () => {});
+        req.on('close', resolve);
+        req.end(JSON.stringify({message: 'water sports', ...keys}));
+      });
+
+      await expect
+        .poll(async () => (await postSchema({message: 'water sports', ...keys})).statusCode, {
+          timeout: 5000,
+          interval: 200,
+        })
+        .toBe(200);
+    });
+
+    it('answers 409 to a request on a session with a request in flight', async () => {
+      await startServer();
+      const keys = sessionKeys(await initialize());
+      const prompt = postSchema({message: 'hello', ...keys});
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      const conflict = await postSchema({message: 'water sports', ...keys});
+      const otherSession = await postSchema({message: 'water sports'});
+
+      expect(conflict.statusCode).toBe(409);
+      expect(conflict.headers['access-control-allow-origin']).toBe('*');
+      expect(JSON.parse(conflict.body)).toEqual({
+        errorCode: 'AGENT:ACTION_IN_FLIGHT',
+        message: 'Another turn is in progress for this session.',
+      });
+      expect(otherSession.statusCode).toBe(200);
+      expect((await prompt).statusCode).toBe(200);
+
+      const afterwards = await postSchema({message: 'water sports', ...keys});
+      expect(afterwards.statusCode).toBe(200);
+    });
+  });
+
   it('returns 400 on schema route when both message and action are absent', async () => {
     await startServer();
     const res = await makeRequest(
