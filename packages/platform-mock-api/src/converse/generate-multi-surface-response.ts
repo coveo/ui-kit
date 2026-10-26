@@ -17,15 +17,17 @@ import {matchStorefrontConversation} from './templates/storefront-conversations.
  * - the search behind each `searchOption` next action, sent to the client as an id only, and the
  *   search surface that option opens, whose actions are answered from the stored search;
  * - the cart, from `updateCart` actions;
- * - one assistant turn at a time: another one while it runs gets a 409.
+ * - one turn at a time: another one while it runs gets a 409.
  *
- * Only `storefront-preview-assistant` does any work: a message runs the agent, which is told what the
- * shopper is looking at; an action is answered by the server. `storefront-preview` and
- * `storefront-preview-home` get an empty run, and any other view is refused with a 400.
+ * On `storefront-preview-assistant`, a message runs the agent, which is told what the shopper is
+ * looking at. On `storefront-preview-search`, a message opens a search surface for that query. On
+ * both, an action is answered by the server. `storefront-preview` and `storefront-preview-home` get
+ * an empty run, and any other view is refused with a 400.
  */
 
 const VIEWS = {
   assistant: 'storefront-preview-assistant',
+  search: 'storefront-preview-search',
   shell: 'storefront-preview',
   home: 'storefront-preview-home',
 } as const;
@@ -224,6 +226,12 @@ function agentTurnEvents(session: Session, prompt: string): ConverseEvent[] {
     : events;
 }
 
+/** A search surface for `query`, kept so the server answers its actions. */
+function searchEvents(session: Session, query: string): ConverseEvent[] {
+  session.surfaces.set(WATER_SPORTS_SURFACE_ID, 'search');
+  return buildWaterSportsInitialEvents(query);
+}
+
 /** The server's answer to an action. A refusal throws before anything is streamed. */
 function actionEvents(session: Session, action: Action): ConverseEvent[] {
   const context = action.context ?? {};
@@ -232,8 +240,7 @@ function actionEvents(session: Session, action: Action): ConverseEvent[] {
     if (query === undefined) {
       throw new HttpError(400, `No search option found: ${String(context.optionId)}`);
     }
-    session.surfaces.set(WATER_SPORTS_SURFACE_ID, 'search');
-    return buildWaterSportsInitialEvents(query);
+    return searchEvents(session, query);
   }
   if (action.name === 'updateCart') {
     const productId = String(context.productId);
@@ -377,7 +384,7 @@ function multiSurfaceResponse(body: unknown, {paced = true}: {paced?: boolean} =
     return jsonError(403, 'Invalid conversation token.');
   }
 
-  if (view !== VIEWS.assistant) {
+  if (view === VIEWS.home || view === VIEWS.shell) {
     return sseResponse(runEvents(sessionId, session, []), paced, () => {});
   }
   if (session.turnInProgress) {
@@ -385,7 +392,11 @@ function multiSurfaceResponse(body: unknown, {paced = true}: {paced?: boolean} =
   }
   let middle: ConverseEvent[];
   try {
-    middle = action ? actionEvents(session, action) : agentTurnEvents(session, message);
+    middle = action
+      ? actionEvents(session, action)
+      : view === VIEWS.search
+        ? searchEvents(session, message)
+        : agentTurnEvents(session, message);
   } catch (error) {
     return error instanceof HttpError
       ? jsonError(error.status, error.message)

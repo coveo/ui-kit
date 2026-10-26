@@ -5,6 +5,7 @@ const {inspectSessions, multiSurfaceResponse, resetMultiSurfaceSessions} =
   converseMultiSurfaceResponses;
 
 const ASSISTANT = 'storefront-preview-assistant';
+const SEARCH = 'storefront-preview-search';
 const HOME = 'storefront-preview-home';
 const SHELL = 'storefront-preview';
 
@@ -75,12 +76,9 @@ describe('multi-surface mock', () => {
     resetMultiSurfaceSessions();
   });
 
-  it.each(['storefront-preview-search', 'anything-else'])(
-    'refuses a view it does not answer (%s) with a 400',
-    (view) => {
-      expect(converse(view, {message: 'kayak'}).status).toBe(400);
-    }
-  );
+  it('refuses a view it does not answer with a 400', () => {
+    expect(converse('anything-else', {message: 'kayak'}).status).toBe(400);
+  });
 
   it('refuses a request with neither a message nor an action', () => {
     expect(converse(HOME, {message: ''}).status).toBe(400);
@@ -198,6 +196,33 @@ describe('multi-surface mock', () => {
 
       expect(reasoning).toContain('The shopper is looking at the results for "kayak"');
     });
+  });
+
+  it('opens a search surface for a search, and answers its actions on the search view', async () => {
+    const opened = await eventsOf(converse(SEARCH, {message: 'kayak'}));
+    const session = sessionOf(opened);
+    const [surfaceId] = alive(opened);
+
+    expect(inspectSessions()[session.id].surfaces[surfaceId]).toBe('search');
+    expect(opened.map((event) => event.type)).not.toContain('TEXT_MESSAGE_CONTENT');
+
+    const sorted = await eventsOf(
+      converse(
+        SEARCH,
+        {
+          action: {
+            name: 'selectSort',
+            surfaceId,
+            sourceComponentId: 'sort-2',
+            context: {sortCriteria: 'price_desc'},
+          },
+        },
+        session
+      )
+    );
+
+    expect(surfaceMessages(sorted).length).toBeGreaterThan(0);
+    expect(surfaceMessages(sorted).every((message) => message.updateDataModel)).toBe(true);
   });
 
   it('refuses an action on a surface it does not answer', async () => {
