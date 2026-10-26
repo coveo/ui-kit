@@ -11,15 +11,16 @@ interface AddToCartButtonProps {
 export function AddToCartButton({product, onAdd}: AddToCartButtonProps) {
   const {items} = useCart();
   const quantity = items.find((item) => item.productId === product.productId)?.quantity ?? 0;
+  const label = quantity > 0 ? `Add · ${quantity} in cart` : 'Add to cart';
 
   return (
     <button
       type="button"
       className={styles.button}
-      aria-label={`Add ${product.name} to cart`}
+      aria-label={`${label}, ${product.name}`}
       onClick={() => onAdd(product)}
     >
-      {quantity > 0 ? `Add · ${quantity} in cart` : 'Add to cart'}
+      {label}
     </button>
   );
 }

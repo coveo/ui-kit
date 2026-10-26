@@ -31,6 +31,8 @@ export interface TurnScheduler {
    * so it cancels it and is sent once the session is free.
    */
   submitPagePrompt(context: StorefrontContext, prompt: string, visitId: number): void;
+  /** The shopper opened a page with no prompt: the prompt of the page they left is not sent. */
+  leavePage(): void;
   /**
    * A component action. The surfaces are locked while a request is in flight, so one that
    * arrives anyway is withheld, as the session would.
@@ -94,6 +96,9 @@ export function createTurnScheduler(
         session.cancel();
       }
       flush();
+    },
+    leavePage() {
+      waitingPage = null;
     },
     dispatchAction(context, message) {
       if (!session.request) {
