@@ -158,6 +158,8 @@ export interface PromptRequest {
 /** A component action the session is sending. */
 export interface ActionRequest {
   kind: 'action';
+  /** The `component` discriminant of the dispatching node. */
+  component: string;
   /** The action name declared by the dispatching component's contract. */
   name: string;
   /** The A2-UI surface the action originated on. */
@@ -175,6 +177,8 @@ export interface ActionRequest {
 export interface ActionError {
   /** Why the action failed. */
   message: string;
+  /** The PascalCase `component` discriminant of the node that dispatched the action. */
+  component: string;
   /** The action name declared by the dispatching component's contract. */
   name: string;
   /** The A2-UI surface the action originated on. */

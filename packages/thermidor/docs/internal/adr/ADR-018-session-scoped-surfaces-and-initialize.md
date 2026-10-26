@@ -214,8 +214,8 @@ replaced the turn's own error.
   its text, whichever turn created its surface.
 - **Failures.** A failed action, rejected, ending in `RUN_ERROR` or without a terminal event, or
   whose request cannot be built, sets `session.actionError` and leaves every turn as it is.
-- **`actionError`.** It identifies the action (`ActionError`: `message`, `name`, `surfaceId`,
-  `sourceComponentId`), so a consumer shows the failure next to the block it came from, and tells a
+- **`actionError`.** It identifies the action (`ActionError`: `message`, `component`, `name`,
+  `surfaceId`, `sourceComponentId`), so a consumer shows the failure next to the block it came from, and tells a
   failed suggestion from a failed page change.
 
 ## Considered Options

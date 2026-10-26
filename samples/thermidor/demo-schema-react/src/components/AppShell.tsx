@@ -3,7 +3,7 @@ import {A2UIProvider, type A2UIClientEventMessage} from '@copilotkit/a2ui-render
 import {useSession} from '../context/session.js';
 import {createThermidorCatalog} from '../a2ui/components.js';
 import {ThermidorA2UIStream} from '../a2ui/surfaces.js';
-import {isBlocking, SessionRequestProvider, useSessionRequest} from '../a2ui/session-request.js';
+import {isBlocking, SessionRequestProvider} from '../a2ui/session-request.js';
 import {LandingPage} from './LandingPage/LandingPage.js';
 import {ConversationPage} from './ConversationPage/index.js';
 import {startFollowUp, type FollowUp} from './ConversationPage/turn-segments.js';
@@ -23,14 +23,12 @@ const FOLLOW_UP_ACTIONS = new Set(['selectAction', 'selectSearchOption']);
 export function AppShell() {
   const session = useSession();
 
-  const subscribe = useCallback(
-    (onStoreChange: () => void) => session.subscribe(onStoreChange),
-    [session]
+  const {turns, a2uiMessages, request} = useSyncExternalStore(
+    session.subscribe,
+    session.getSnapshot,
+    session.getSnapshot
   );
-  const getTurns = useCallback(() => session.turns, [session]);
-  const turns = useSyncExternalStore(subscribe, getTurns, getTurns);
-  const getMessages = useCallback(() => session.a2uiMessages, [session]);
-  const messages = useSyncExternalStore(subscribe, getMessages, getMessages);
+  const locked = isBlocking(request);
 
   const [followUps, setFollowUps] = useState<ReadonlyMap<string, readonly FollowUp[]>>(
     () => new Map()
@@ -54,7 +52,6 @@ export function AppShell() {
       ),
     [turns]
   );
-  const locked = isBlocking(useSessionRequest(session));
 
   const handleAction = useCallback(
     async (message: A2UIClientEventMessage) => {
@@ -63,10 +60,14 @@ export function AppShell() {
       ).userAction;
       const name = typeof userAction?.name === 'string' ? userAction.name : undefined;
       // A follow-up marks where its answer starts in the turn, so nothing may stream in before it.
-      if (name !== undefined && FOLLOW_UP_ACTIONS.has(name) && session.request !== undefined) {
+      if (
+        name !== undefined &&
+        FOLLOW_UP_ACTIONS.has(name) &&
+        session.getSnapshot().request !== undefined
+      ) {
         return;
       }
-      const turn = session.turns.at(-1);
+      const turn = session.getSnapshot().turns.at(-1);
       if (!turn || name === undefined || !FOLLOW_UP_ACTIONS.has(name)) {
         return session.dispatchAction(message);
       }
@@ -88,7 +89,7 @@ export function AppShell() {
 
   const handleSubmit = useCallback(
     (prompt: string) => {
-      if (!prompt.trim() || session.request !== undefined) return;
+      if (!prompt.trim() || session.getSnapshot().request !== undefined) return;
       void session.dispatchAction({name: 'submitPrompt', payload: {prompt}});
     },
     [session]
@@ -97,7 +98,7 @@ export function AppShell() {
   return (
     <SessionRequestProvider value={session}>
       <A2UIProvider catalog={catalog} onAction={handleAction}>
-        <ThermidorA2UIStream loadingSurfaces={loadingSurfaces} messages={messages}>
+        <ThermidorA2UIStream loadingSurfaces={loadingSurfaces} messages={a2uiMessages}>
           <div className="view-shell">
             <div className="view-panel view-panel--active">
               {turns.length === 0 ? (

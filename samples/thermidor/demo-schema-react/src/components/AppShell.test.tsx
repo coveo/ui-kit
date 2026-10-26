@@ -15,14 +15,27 @@ vi.mock('../context/session.js', () => ({useSession: () => mockSession}));
 
 async function createMockSession(): Promise<Session> {
   const {createFakeSessionRequests} = await import('../test/fake-session-requests.js');
-  const requests = createFakeSessionRequests((message: never) => mockDispatchAction(message));
+  // Every action of these tests comes from the brand facet.
+  const requests = createFakeSessionRequests(
+    (message: never) => mockDispatchAction(message),
+    () => 'RegularFacet'
+  );
+  let snapshotSource: [Turn[], unknown] | undefined;
+  let snapshot: unknown;
   return {
-    get turns() {
-      return mockTurns;
-    },
-    a2uiMessages: [],
-    get request() {
-      return requests.source.request;
+    getSnapshot() {
+      const requestState = requests.source.getSnapshot();
+      if (snapshotSource?.[0] !== mockTurns || snapshotSource[1] !== requestState) {
+        snapshotSource = [mockTurns, requestState];
+        snapshot = {
+          ...requestState,
+          turns: mockTurns,
+          surfaces: [],
+          a2uiMessages: [],
+          state: {},
+        };
+      }
+      return snapshot;
     },
     subscribe: requests.source.subscribe,
     sendAndWait: requests.source.sendAndWait,

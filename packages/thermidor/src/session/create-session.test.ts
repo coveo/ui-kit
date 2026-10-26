@@ -200,6 +200,7 @@ const PAGINATION_SURFACE = {
 };
 
 const PAGE_ACTION = {
+  component: 'Pagination',
   name: 'selectPage',
   surfaceId: 'commerce-search-surface',
   sourceComponentId: 'pagination-1',
@@ -873,6 +874,83 @@ describe('createSession lifecycle', () => {
 
       expect(session.turns[1].response.agent).toBeUndefined();
       expect(session.turns.map((turn) => turn.status)).toEqual(['complete', 'complete']);
+    });
+  });
+
+  describe('snapshot', () => {
+    it('returns the same frozen snapshot until the session state changes', () => {
+      const session = createSession(baseConfig);
+
+      const snapshot = session.getSnapshot();
+
+      expect(session.getSnapshot()).toBe(snapshot);
+      expect(Object.isFrozen(snapshot)).toBe(true);
+      expect(snapshot).toEqual({
+        turns: [],
+        surfaces: [],
+        a2uiMessages: [],
+        state: {},
+        request: undefined,
+        actionError: undefined,
+      });
+    });
+
+    it('holds what the session members hold, and is replaced as they change', async () => {
+      const session = createSession(baseConfig);
+      const {getSnapshot, subscribe} = session;
+      const snapshots: ReturnType<typeof getSnapshot>[] = [];
+      const unsubscribe = subscribe(() => {
+        const snapshot = getSnapshot();
+        if (snapshots.at(-1) !== snapshot) {
+          snapshots.push(snapshot);
+        }
+      });
+
+      const stream = queueStream();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'shoes'}});
+      await stream.opened;
+      const streaming = getSnapshot();
+      expect(streaming.turns).toBe(session.turns);
+      expect(streaming.a2uiMessages).toBe(session.a2uiMessages);
+      expect(streaming.request).toBe(session.request);
+
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await turn;
+      unsubscribe();
+
+      expect(getSnapshot().request).toBeUndefined();
+      expect(getSnapshot().turns[0].status).toBe('complete');
+      expect(new Set(snapshots).size).toBe(snapshots.length);
+    });
+  });
+
+  describe('action request', () => {
+    it('names the component that dispatched the action', async () => {
+      const session = createSession(baseConfig);
+      const search = queueStream();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'shoes'}});
+      await search.opened;
+      search.emit(PAGINATION_SURFACE);
+      search.emit({type: 'RUN_FINISHED'});
+      search.close();
+      await turn;
+
+      const stream = queueStream();
+      const action = session.dispatchAction(selectPageMessage(2));
+      await stream.opened;
+
+      expect(session.request).toEqual({
+        kind: 'action',
+        component: 'Pagination',
+        name: 'selectPage',
+        surfaceId: 'commerce-search-surface',
+        sourceComponentId: 'pagination-1',
+        turnId: session.turns[0].id,
+      });
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await action;
     });
   });
 
