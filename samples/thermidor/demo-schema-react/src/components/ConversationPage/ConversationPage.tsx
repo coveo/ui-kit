@@ -12,8 +12,6 @@ interface ConversationPageProps {
   /** The prompt waits while a request that locks the surface is in flight. */
   promptDisabled?: boolean;
   turns: Turn[];
-  /** The render surface ids each turn draws, keyed by turn id. */
-  surfacesByTurn: ReadonlyMap<string, readonly string[]>;
   /** The follow-up actions sent from each turn, keyed by turn id. */
   followUps?: ReadonlyMap<string, readonly FollowUp[]>;
   /** The turn whose follow-up is in flight, if any. */
@@ -29,7 +27,6 @@ export function ConversationPage({
   isStreaming,
   promptDisabled = isStreaming,
   turns,
-  surfacesByTurn,
   followUps,
   pendingTurnId,
 }: ConversationPageProps) {
@@ -51,7 +48,6 @@ export function ConversationPage({
           <ConversationThread
             turns={turns}
             turnRefs={turnRefs}
-            surfacesByTurn={surfacesByTurn}
             followUps={followUps}
             pendingTurnId={pendingTurnId}
           />

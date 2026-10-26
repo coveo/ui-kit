@@ -2,7 +2,7 @@ import {render, screen, act} from '@testing-library/react';
 import {describe, it, expect, vi, beforeEach} from 'vitest';
 import type {Session, Turn} from '@coveo/thermidor';
 import {AppShell} from './AppShell.js';
-import {makeTurn} from '../test/turn-fixtures.js';
+import {makeSurfaces, makeTurn} from '../test/turn-fixtures.js';
 
 const mockDispatchAction = vi.fn();
 
@@ -20,6 +20,7 @@ async function createMockSession(): Promise<Session> {
     get turns() {
       return mockTurns;
     },
+    a2uiMessages: [],
     get request() {
       return requests.source.request;
     },
@@ -60,7 +61,9 @@ vi.mock('./ConversationPage/index.js', () => ({
     <div data-testid="conversation-page">
       <span data-testid="locked">{String(props.promptDisabled)}</span>
       <span data-testid="turn-surfaces">
-        {props.turns.map((turn: Turn) => props.surfacesByTurn.get(turn.id).join(',')).join('|')}
+        {props.turns
+          .map((turn: Turn) => turn.response.surfaces.map((surface) => surface.surfaceId).join(','))
+          .join('|')}
       </span>
       <span data-testid="follow-ups">
         {props.turns
@@ -84,7 +87,7 @@ function searchTurn(id: string): Turn {
   return makeTurn({
     id,
     response: {
-      a2uiMessages: [{version: 'v0.9', createSurface: {surfaceId: SEARCH_SURFACE_ID}}],
+      surfaces: makeSurfaces(SEARCH_SURFACE_ID),
     },
   });
 }
@@ -129,10 +132,10 @@ describe('AppShell', () => {
     render(<AppShell />);
 
     expect(screen.queryByTestId('landing-page')).toBeNull();
-    expect(screen.getByTestId('turn-surfaces').textContent).toBe(`turn-1/${SEARCH_SURFACE_ID}|`);
+    expect(screen.getByTestId('turn-surfaces').textContent).toBe(`${SEARCH_SURFACE_ID}|`);
   });
 
-  it('sends a renderer action with the server surface id', () => {
+  it('passes a renderer action to the session as it is', () => {
     mockTurns = [searchTurn('turn-1')];
 
     render(<AppShell />);
@@ -141,7 +144,7 @@ describe('AppShell', () => {
         version: 'v0.9',
         userAction: {
           name: 'toggleSelect',
-          surfaceId: `turn-1/${SEARCH_SURFACE_ID}`,
+          surfaceId: SEARCH_SURFACE_ID,
           sourceComponentId: `${SEARCH_SURFACE_ID}-facet-brand`,
           context: {value: 'Nike'},
         },
@@ -165,7 +168,7 @@ describe('AppShell', () => {
         version: 'v0.9',
         userAction: {
           name,
-          surfaceId: `turn-1/${SEARCH_SURFACE_ID}`,
+          surfaceId: SEARCH_SURFACE_ID,
           sourceComponentId: `${SEARCH_SURFACE_ID}-facet-brand`,
           context,
         },
@@ -313,7 +316,7 @@ describe('AppShell', () => {
         id,
         response: {
           agent: {messages: [{content: 'Answer', role: 'assistant'}], reasoningSteps: []},
-          a2uiMessages: [{version: 'v0.9', createSurface: {surfaceId: 'agent-answer'}}],
+          surfaces: makeSurfaces('agent-answer'),
         },
       });
     }
@@ -321,7 +324,7 @@ describe('AppShell', () => {
     function followUpAction(name: string, context: Record<string, unknown>) {
       return {
         version: 'v0.9',
-        userAction: {name, surfaceId: 'turn-1/agent-answer', sourceComponentId: 'root', context},
+        userAction: {name, surfaceId: 'agent-answer', sourceComponentId: 'root', context},
       };
     }
 
@@ -405,7 +408,9 @@ describe('AppShell', () => {
 
       expect(screen.getByTestId('follow-ups').textContent).toBe('');
       expect(mockDispatchAction).toHaveBeenCalledWith(
-        expect.objectContaining({userAction: expect.objectContaining({surfaceId: 'agent-answer'})})
+        expect.objectContaining({
+          userAction: expect.objectContaining({surfaceId: 'agent-answer'}),
+        })
       );
     });
   });

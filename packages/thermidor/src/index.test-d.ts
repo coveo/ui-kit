@@ -14,6 +14,10 @@
 import {expectTypeOf, test} from 'vitest';
 import {createSession} from '@/src/index.js';
 import type {
+  A2uiState,
+  A2uiV09Message,
+  ActionError,
+  DiscoveredSurface,
   ComponentContractSchema,
   ContractsSchema,
   SessionRequest,
@@ -46,6 +50,15 @@ test('exposes the request in flight and its settlement on Session', () => {
   expectTypeOf<Session['request']>().toEqualTypeOf<SessionRequest | undefined>();
   expectTypeOf<SessionRequest['kind']>().toEqualTypeOf<'prompt' | 'action'>();
   expectTypeOf<Session['sendAndWait']>().toEqualTypeOf<(send: () => unknown) => Promise<void>>();
+});
+
+// ── POSITIVE: the session exposes its surfaces, renderer stream and state ──
+test('exposes session-scoped surfaces, renderer stream and state on Session', () => {
+  expectTypeOf<Session['surfaces']>().toEqualTypeOf<readonly DiscoveredSurface[]>();
+  expectTypeOf<Session['a2uiMessages']>().toEqualTypeOf<readonly A2uiV09Message[]>();
+  expectTypeOf<Session['state']>().toEqualTypeOf<A2uiState>();
+  expectTypeOf<TurnResponse>().not.toHaveProperty('a2uiMessages');
+  expectTypeOf<TurnResponse>().not.toHaveProperty('state');
 });
 
 // ── POSITIVE: the injected-contract seam is exported ────────────────────────
@@ -91,8 +104,14 @@ test('accepts a submitPrompt action on Session.dispatchAction', () => {
   });
 });
 
-test('exposes Session.actionError as an optional string', () => {
-  expectTypeOf<Session['actionError']>().toEqualTypeOf<string | undefined>();
+test('exposes Session.actionError as the failed action, or undefined', () => {
+  expectTypeOf<Session['actionError']>().toEqualTypeOf<ActionError | undefined>();
+  expectTypeOf<ActionError>().toEqualTypeOf<{
+    message: string;
+    name: string;
+    surfaceId: string;
+    sourceComponentId: string;
+  }>();
 });
 
 // ── NEGATIVE: `submitPrompt` replaced `Session.submit` ──────────────────────

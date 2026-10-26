@@ -10,7 +10,6 @@ function renderPage(overrides: Partial<Parameters<typeof ConversationPage>[0]> =
     onSubmit: vi.fn(),
     isStreaming: false,
     turns: [baseTurn],
-    surfacesByTurn: new Map<string, readonly string[]>(),
   };
 
   return render(<ConversationPage {...defaultProps} {...overrides} />);

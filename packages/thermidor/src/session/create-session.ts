@@ -31,11 +31,30 @@ import {generateId} from '@/src/internal/utils/id-generator.js';
 import {validateActionPayload} from './action-payload-validation.js';
 import type {ContractsSchema} from './contracts.js';
 import {callWithConflictRetry} from './conflict-retry.js';
-import {createTurn, foldActivity} from './fold.js';
+import {
+  EMPTY_RENDERER_STREAM,
+  appendToRendererStream,
+  convertA2uiMessages,
+} from './a2ui-v09-projection.js';
+import {createTurn, foldActivity, SURFACE_ACTIVITY_KIND} from './fold.js';
 import {deriveNodeIdentityRegistry} from './in-transit-validation.js';
 import {restoreSession, serializeSession, type SerializedSession} from './serialize.js';
 import {createSessionStore, type SessionStore, type SessionStoreState} from './store.js';
-import type {SessionRequest, Turn, TurnInput} from './types.js';
+import {applyInboundOps} from './session-state.js';
+import {
+  deriveSessionSurfaces,
+  sessionActivities,
+  type SessionSurfaceView,
+} from './session-surfaces.js';
+import type {
+  A2uiState,
+  A2uiV09Message,
+  ActionError,
+  DiscoveredSurface,
+  SessionRequest,
+  Turn,
+  TurnInput,
+} from './types.js';
 
 /**
  * The standard A2-UI client-to-server message the frozen renderer delivers to
@@ -147,17 +166,40 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * the exact contract that was injected.
    */
   readonly contracts: TContracts;
-  /** Readonly observable list of turns folded from the streamed response. */
+  /**
+   * Readonly observable list of turns folded from the streamed response. Each turn's `surfaces`
+   * are the live surfaces it created, so a transcript knows where to draw them.
+   */
   readonly turns: readonly Turn[];
   /**
-   * Why the last component action was dropped, or `undefined`. Set when the endpoint kept
-   * rejecting the action because another one was still being processed for this session, after
-   * the session's own bounded retries ran out. That action's dispatch settles `'failed'`, so any
-   * optimistic state tied to it is released and the last authoritative state shows again.
-   * Cleared once the next action or prompt is sent. Changes notify {@link Session.subscribe}
-   * listeners. A conflict that recovers through retry never sets it.
+   * Every live surface of the session, in creation order, whichever turn created it (ADR-018). A
+   * surface lives from its `createSurface` until its `deleteSurface`, and a `createSurface` for a
+   * live id replaces that surface.
    */
-  readonly actionError: string | undefined;
+  readonly surfaces: readonly DiscoveredSurface[];
+  /**
+   * The session's whole renderer stream, in the A2-UI v0.9 shape, in arrival order. It only
+   * grows: feed each new message to a single renderer once. It follows the surface lifecycle
+   * across runs: a `deleteSurface` precedes a `createSurface` that replaces a live surface, and an
+   * operation on a surface that is not live is left out.
+   */
+  readonly a2uiMessages: readonly A2uiV09Message[];
+  /**
+   * The validated data model of every live surface, keyed by surface id, whichever turn wrote it:
+   * inbound `updateDataModel` ops are validated against the injected contracts before they apply
+   * here.
+   */
+  readonly state: A2uiState;
+  /**
+   * Why the last component action failed, and which action it was, or `undefined`. An action never
+   * changes a turn's status: when it fails, whether the endpoint rejects it (after the session's
+   * own bounded retries for concurrency conflicts), it streams `RUN_ERROR`, its stream ends
+   * without a terminal event, or its request cannot be built, only this reports it, so a consumer
+   * can show it next to the block that dispatched it. Any optimistic state tied to the action is
+   * released and the last authoritative state shows again. Cleared once the next action or prompt
+   * is sent. Changes notify {@link Session.subscribe} listeners.
+   */
+  readonly actionError: ActionError | undefined;
   /**
    * The request the session is sending, or `undefined` when it is idle. The session sends one
    * request at a time, prompts and actions alike, in the order they were dispatched; an action's
@@ -188,8 +230,8 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * turn's stream ends.
    *
    * An {@link A2uiClientMessage} is unwrapped to its `userAction`: the session
-   * recovers the dispatching component's discriminant from the active turn's
-   * surfaces, validates the action payload against the component's contract
+   * recovers the dispatching component's discriminant from the session's live
+   * surfaces, whichever turn created them, validates the action payload against the component's contract
    * internally, and — on success — POSTs the action to the converse endpoint.
    *
    * FIRE-AND-FORGET: the returned Promise ALWAYS resolves and NEVER rejects, so
@@ -205,7 +247,10 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * `request` to become `undefined`, through {@link Session.subscribe}, before sending the next one.
    */
   cancel(): void;
-  /** Re-submits an errored turn's input; withheld like any dispatch while a request is in flight. */
+  /**
+   * Re-submits the input of the last turn when it errored; withheld like any dispatch while a
+   * request is in flight. An earlier turn is not retried: its answer would land before later turns.
+   */
   retry(turnId: string): void;
   /** Serializes the session transcript for persistence. */
   serialize(): SerializedSession;
@@ -216,6 +261,9 @@ function isSubmitPromptAction(
 ): message is SubmitPromptAction {
   return 'name' in message && message.name === 'submitPrompt';
 }
+
+/** The action a request sends, which its failures are reported against. */
+type ActionSource = Omit<ActionError, 'message'>;
 
 interface RequestFailure {
   error: string;
@@ -288,9 +336,39 @@ export function createSession<TContracts extends ContractsSchema>(
         activeTurnId: undefined,
         sessionId: undefined,
         sessionToken: undefined,
+        state: {},
+        rendererStream: EMPTY_RENDERER_STREAM,
       };
 
   const store: SessionStore<Turn> = createSessionStore<Turn>(initialState);
+
+  // Derived from the folded turns, and recomputed only when they change.
+  let surfaceView: SessionSurfaceView | undefined;
+  let surfaceViewSource: readonly Turn[] | undefined;
+  function readSurfaceView(): SessionSurfaceView {
+    const {turns} = store.getState();
+    if (surfaceView === undefined || surfaceViewSource !== turns) {
+      surfaceView = deriveSessionSurfaces(turns);
+      surfaceViewSource = turns;
+    }
+    return surfaceView;
+  }
+
+  // The state of the live surfaces only, recomputed when the state or the surfaces change.
+  let liveState: A2uiState = {};
+  let liveStateSource: {state?: A2uiState; view?: SessionSurfaceView} = {};
+  function readLiveState(): A2uiState {
+    const {state = {}} = store.getState();
+    const view = readSurfaceView();
+    if (liveStateSource.state !== state || liveStateSource.view !== view) {
+      const live = new Set(view.surfaces.map((surface) => surface.surfaceId));
+      liveState = Object.fromEntries(
+        Object.entries(state).filter(([surfaceId]) => live.has(surfaceId))
+      );
+      liveStateSource = {state, view};
+    }
+    return liveState;
+  }
 
   const client = createUnifiedEndpointClient();
 
@@ -346,7 +424,7 @@ export function createSession<TContracts extends ContractsSchema>(
     });
   }
 
-  function setActionError(actionError: string | undefined): void {
+  function setActionError(actionError: ActionError | undefined): void {
     if (store.getState().actionError !== actionError) {
       store.setState((current) => ({...current, actionError}));
     }
@@ -361,6 +439,42 @@ export function createSession<TContracts extends ContractsSchema>(
       const nextTurns = current.turns.slice();
       nextTurns[index] = update(nextTurns[index]);
       return {...current, turns: nextTurns};
+    });
+  }
+
+  /**
+   * Folds `event` into its turn and, for a surface snapshot, applies its validated ops to the
+   * session's state and appends its messages to the renderer stream, in one change.
+   */
+  function foldEvent(turnId: string, event: NormalizedStreamEvent): void {
+    store.setState((current) => {
+      const index = current.turns.findIndex((turn) => turn.id === turnId);
+      if (index === -1) {
+        return current;
+      }
+      const turns = current.turns.slice();
+      turns[index] = foldActivity(turns[index], event);
+      const next = {...current, turns};
+      const snapshot = event as unknown as {activityType?: string; content?: unknown};
+      const content = snapshot.content as Record<string, unknown> | undefined;
+      const messages = content?.['messages'];
+      if (
+        event.type === 'ACTIVITY_SNAPSHOT' &&
+        snapshot.activityType === SURFACE_ACTIVITY_KIND &&
+        Array.isArray(messages)
+      ) {
+        next.state = applyInboundOps(
+          current.state ?? {},
+          sessionActivities(turns),
+          content as Record<string, unknown>,
+          config.contracts
+        );
+        next.rendererStream = appendToRendererStream(
+          current.rendererStream ?? EMPTY_RENDERER_STREAM,
+          convertA2uiMessages(messages)
+        );
+      }
+      return next;
     });
   }
 
@@ -441,9 +555,12 @@ export function createSession<TContracts extends ContractsSchema>(
   async function consumeStream(
     turnId: string,
     stream: ReadableStream<Uint8Array>,
-    abortController: AbortController
+    abortController: AbortController,
+    action: ActionSource | undefined
   ): Promise<void> {
     let terminalEventReceived = false;
+    const fail = (message: string) =>
+      action ? setActionError({message, ...action}) : failTurn(turnId, message);
 
     await readEventStream({
       stream,
@@ -460,7 +577,21 @@ export function createSession<TContracts extends ContractsSchema>(
           }));
         }
 
-        replaceTurn(turnId, (turn) => foldActivity(turn, event, config.contracts));
+        // An action updates the surfaces only: its run, its text and its error are not the
+        // turn's, which keeps its status and response (ADR-018).
+        if (action) {
+          if (event.type === 'RUN_ERROR') {
+            terminalEventReceived = true;
+            fail((event as {message?: string}).message || 'An error occurred during the action.');
+          } else if (event.type === 'RUN_FINISHED' || event.type === 'turn_complete') {
+            terminalEventReceived = true;
+          } else if (event.type === 'ACTIVITY_SNAPSHOT') {
+            foldEvent(turnId, event);
+          }
+          return;
+        }
+
+        foldEvent(turnId, event);
 
         const foldedStatus = store.getState().turns.find((turn) => turn.id === turnId)?.status;
         if (foldedStatus === 'complete' || foldedStatus === 'error') {
@@ -471,7 +602,7 @@ export function createSession<TContracts extends ContractsSchema>(
         // A stream superseded by a newer one must not touch the turn; the newer
         // stream owns the outcome.
         if (!terminalEventReceived && !isSuperseded(activeAbortController, abortController)) {
-          failTurn(turnId, 'Stream ended without a terminal event.');
+          fail('Stream ended without a terminal event.');
         }
       },
       onError: (error) => {
@@ -481,7 +612,7 @@ export function createSession<TContracts extends ContractsSchema>(
         if (isAbortError(error)) {
           cancelTurn(turnId);
         } else {
-          failTurn(turnId, getErrorMessage(error));
+          fail(getErrorMessage(error));
         }
       },
     });
@@ -490,12 +621,14 @@ export function createSession<TContracts extends ContractsSchema>(
   /**
    * Takes a builder so a throwing context provider fails the turn inside the `try`. A request the
    * endpoint rejected before streaming is returned for the caller to report; anything later is
-   * folded into the turn here.
+   * folded into the turn here. An `action` reports every later failure in `actionError` instead
+   * and leaves the turn as it is (ADR-018, as amended).
    */
   async function executeStream(
     turnId: string,
     buildRequest: () => CommerceRequestModel,
-    abortController: AbortController
+    abortController: AbortController,
+    action?: ActionSource
   ): Promise<RequestFailure | undefined> {
     try {
       // Rebuilt on every attempt, so context providers and session keys are read fresh.
@@ -524,7 +657,7 @@ export function createSession<TContracts extends ContractsSchema>(
         return {error: result.error, conflict: result.conflict !== undefined};
       }
 
-      await consumeStream(turnId, result.data.stream, abortController);
+      await consumeStream(turnId, result.data.stream, abortController, action);
     } catch (error) {
       // A stream aborted because a NEWER stream superseded it must not touch the
       // turn: the newer stream owns the outcome. A plain cancel (controller reset
@@ -536,7 +669,11 @@ export function createSession<TContracts extends ContractsSchema>(
         cancelTurn(turnId);
         return;
       }
-      failTurn(turnId, getErrorMessage(error));
+      if (action) {
+        setActionError({message: getErrorMessage(error), ...action});
+      } else {
+        failTurn(turnId, getErrorMessage(error));
+      }
     } finally {
       if (activeAbortController === abortController) {
         activeAbortController = null;
@@ -607,7 +744,8 @@ export function createSession<TContracts extends ContractsSchema>(
   /**
    * Private validate-and-send path. Validates the recovered action's payload against the
    * component's generated Zod action schema and withholds on failure; targets the action's own
-   * originating surface. Withholds when there is no active turn.
+   * originating surface, any live surface of the session (ADR-018). Withholds when the session has
+   * no turn yet to stream the answer into.
    */
   function issueAction(recovered: {
     discriminant: string;
@@ -623,8 +761,9 @@ export function createSession<TContracts extends ContractsSchema>(
 
     // `recovered.surfaceId` is already validated upstream by `recoverDiscriminant`
     // (it resolves a discriminant only for a `(surfaceId, sourceComponentId)` in
-    // the active turn's registry), so the origin surface is used as-is — no
-    // re-check, and a conversation-only surface reaches itself, not a commerce one.
+    // the session's registry, built from every turn), so the origin surface is used
+    // as-is — no re-check, and a conversation-only surface reaches itself, not a
+    // commerce one.
     const surfaceId = recovered.surfaceId;
 
     // Validate the action payload against the component's generated Zod action
@@ -661,39 +800,35 @@ export function createSession<TContracts extends ContractsSchema>(
       sourceComponentId: recovered.sourceComponentId,
       turnId: activeTurnId,
     };
+    // An action only updates the surfaces: its failure is the action's, never the turn's.
+    const action: ActionSource = {
+      name: recovered.name,
+      surfaceId,
+      sourceComponentId: recovered.sourceComponentId,
+    };
     return sendRequest(request, async (abortController) => {
       setActionError(undefined);
       const failure = await executeStream(
         activeTurnId,
         () => buildActionRequest(a2uiAction),
-        abortController
+        abortController,
+        action
       );
-      if (failure?.conflict) {
-        setActionError(failure.error);
-        return;
-      }
       if (failure) {
-        failTurn(activeTurnId, failure.error);
+        setActionError({message: failure.error, ...action});
       }
     });
   }
 
   /**
    * Recovers the PascalCase `component` discriminant of the dispatching node by
-   * routing `(surfaceId, sourceComponentId)` through the active turn's
-   * node-identity registry (derived from its surfaces). Returns `undefined`
-   * when there is no active turn or the node resolves to no component.
+   * routing `(surfaceId, sourceComponentId)` through the session's node-identity
+   * registry, derived from every turn's activities (ADR-018): any live surface
+   * resolves, whichever turn created it. Returns `undefined` when the node
+   * resolves to no component.
    */
   function recoverDiscriminant(surfaceId: string, sourceComponentId: string): string | undefined {
-    const {turns, activeTurnId} = store.getState();
-    if (!activeTurnId) {
-      return undefined;
-    }
-    const activeTurn = turns.find((turn) => turn.id === activeTurnId);
-    if (!activeTurn) {
-      return undefined;
-    }
-    const registry = deriveNodeIdentityRegistry(activeTurn.response.activities);
+    const registry = deriveNodeIdentityRegistry(sessionActivities(store.getState().turns));
     return registry.get(surfaceId)?.get(sourceComponentId);
   }
 
@@ -744,10 +879,11 @@ export function createSession<TContracts extends ContractsSchema>(
   };
 
   function retry(turnId: string): void {
-    // Re-submit only an `error` turn; any other turnId (unknown or non-error)
-    // is a no-op that leaves all turns' statuses unchanged.
-    const turn = store.getState().turns.find((candidate) => candidate.id === turnId);
-    if (!turn || turn.status !== 'error') {
+    // Re-submit only the last turn, when it errored; any other turnId (unknown, non-error, or an
+    // earlier turn, whose answer would land before later turns' surfaces) is a no-op that leaves all
+    // turns' statuses unchanged.
+    const turn = store.getState().turns.at(-1);
+    if (!turn || turn.id !== turnId || turn.status !== 'error') {
       return;
     }
 
@@ -769,7 +905,16 @@ export function createSession<TContracts extends ContractsSchema>(
   return {
     contracts: config.contracts,
     get turns() {
-      return store.getState().turns;
+      return readSurfaceView().turns;
+    },
+    get surfaces() {
+      return readSurfaceView().surfaces;
+    },
+    get a2uiMessages() {
+      return (store.getState().rendererStream ?? EMPTY_RENDERER_STREAM).messages;
+    },
+    get state() {
+      return readLiveState();
     },
     get actionError() {
       return store.getState().actionError;

@@ -1,8 +1,12 @@
 import {createContext, startTransition, useContext, useSyncExternalStore} from 'react';
 import type {Session, SessionRequest} from '@coveo/thermidor';
 
-/** What the surfaces read from the session: its request in flight, and when it has answered. */
-export type SessionRequestSource = Pick<Session, 'request' | 'subscribe' | 'sendAndWait'>;
+/**
+ * What the surfaces read from the session: its request in flight, when it has answered, and why
+ * the last action failed.
+ */
+export type SessionRequestSource = Pick<Session, 'request' | 'subscribe' | 'sendAndWait'> &
+  Partial<Pick<Session, 'actionError'>>;
 
 const IDLE: SessionRequestSource = {
   request: undefined,
@@ -39,6 +43,16 @@ export function useSessionRequest(source?: SessionRequestSource): SessionRequest
   return useSyncExternalStore(
     session.subscribe,
     () => session.request,
+    () => undefined
+  );
+}
+
+/** Why the last action dispatched from `surfaceId` failed, while the session still reports it. */
+export function useActionError(surfaceId: string): string | undefined {
+  const session = useContext(SessionRequestContext);
+  return useSyncExternalStore(
+    session.subscribe,
+    () => (session.actionError?.surfaceId === surfaceId ? session.actionError.message : undefined),
     () => undefined
   );
 }

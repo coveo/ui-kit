@@ -58,19 +58,16 @@ const streamingTurnArbitrary = (id: string): fc.Arbitrary<Turn> =>
   fc
     .record({
       input: fc.record({prompt: fc.option(shortText, {nil: undefined})}),
-      state: jsonRecord as fc.Arbitrary<Record<string, unknown>>,
       activities: fc.array(activityArbitrary, {maxLength: 8}),
       agent: fc.option(agentArbitrary, {nil: undefined}),
     })
-    .map(({input, state, activities, agent}): Turn => ({
+    .map(({input, activities, agent}): Turn => ({
       id,
       input,
       status: 'streaming',
       response: {
-        state,
         activities,
         surfaces: [],
-        a2uiMessages: [],
         ...(agent ? {agent} : {}),
       },
     }));
@@ -99,7 +96,7 @@ const streamingSessionArbitrary: fc.Arbitrary<{
 describe('streaming→error downgrade preserves partial response', () => {
   it('downgrades every streaming turn to error while preserving its persisted partial response', () => {
     fc.assert(
-      fc.property(streamingSessionArbitrary, ({session, activeTurnId}) => {
+      fc.property(streamingSessionArbitrary, ({session}) => {
         const serialized = serializeSession(session);
         const restored = restoreSession(serialized);
 
@@ -116,15 +113,6 @@ describe('streaming→error downgrade preserves partial response', () => {
           // Partial response preserved unchanged from what was persisted.
           expect(restoredTurn.response.activities).toEqual(persistedTurn.response.activities);
           expect(restoredTurn.response.agent).toEqual(persistedTurn.response.agent);
-
-          // `state` is persisted for the active turn only; a non-active turn's
-          // persisted state is absent, so restore yields the empty snapshot.
-          if (restoredTurn.id === activeTurnId) {
-            expect(restoredTurn.response.state).toEqual(persistedTurn.response.state);
-          } else {
-            expect(persistedTurn.response.state).toBeUndefined();
-            expect(restoredTurn.response.state).toEqual({});
-          }
         }
       }),
       {numRuns: NUM_RUNS}

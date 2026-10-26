@@ -1,8 +1,7 @@
-import {useCallback, useMemo, useRef, useState, useSyncExternalStore} from 'react';
+import {useCallback, useMemo, useState, useSyncExternalStore} from 'react';
 import {A2UIProvider, type A2UIClientEventMessage} from '@copilotkit/a2ui-renderer';
 import {useSession} from '../context/session.js';
 import {createThermidorCatalog} from '../a2ui/components.js';
-import {buildSurfaceStream, toServerAction} from '../a2ui/surface-stream.js';
 import {ThermidorA2UIStream} from '../a2ui/surfaces.js';
 import {isBlocking, SessionRequestProvider, useSessionRequest} from '../a2ui/session-request.js';
 import {LandingPage} from './LandingPage/LandingPage.js';
@@ -17,8 +16,6 @@ const catalog = createThermidorCatalog({
 /** `NextActionsBar` actions: each one asks for a new answer rather than updating a block. */
 const FOLLOW_UP_ACTIONS = new Set(['selectAction', 'selectSearchOption']);
 
-const NO_SURFACES: readonly string[] = [];
-
 /**
  * A single page: the landing page until the first prompt, then one conversation feed where each
  * turn shows the blocks the server produced, search blocks included.
@@ -32,6 +29,8 @@ export function AppShell() {
   );
   const getTurns = useCallback(() => session.turns, [session]);
   const turns = useSyncExternalStore(subscribe, getTurns, getTurns);
+  const getMessages = useCallback(() => session.a2uiMessages, [session]);
+  const messages = useSyncExternalStore(subscribe, getMessages, getMessages);
 
   const [followUps, setFollowUps] = useState<ReadonlyMap<string, readonly FollowUp[]>>(
     () => new Map()
@@ -44,11 +43,18 @@ export function AppShell() {
     () => pendingTurnId !== null || turns.some((turn) => turn.status === 'streaming'),
     [turns, pendingTurnId]
   );
-  const stream = useMemo(() => buildSurfaceStream(turns), [turns]);
+  const loadingSurfaces = useMemo(
+    () =>
+      new Map(
+        turns.flatMap((turn) =>
+          turn.response.surfaces
+            .filter((surface) => surface.isLoading)
+            .map((surface) => [surface.surfaceId, surface.rootComponentType] as const)
+        )
+      ),
+    [turns]
+  );
   const locked = isBlocking(useSessionRequest(session));
-
-  const latestRef = useRef({turns, stream});
-  latestRef.current = {turns, stream};
 
   const handleAction = useCallback(
     async (message: A2UIClientEventMessage) => {
@@ -60,25 +66,19 @@ export function AppShell() {
       if (name !== undefined && FOLLOW_UP_ACTIONS.has(name) && session.request !== undefined) {
         return;
       }
-      const {turns, stream} = latestRef.current;
-      const serverMessage = toServerAction(message, stream.serverSurfaceIds);
-      const turn = turns.at(-1);
+      const turn = session.turns.at(-1);
       if (!turn || name === undefined || !FOLLOW_UP_ACTIONS.has(name)) {
-        return session.dispatchAction(serverMessage);
+        return session.dispatchAction(message);
       }
 
       const text = userAction?.context?.['text'];
-      const followUp = startFollowUp(
-        turn,
-        stream.surfacesByTurn.get(turn.id) ?? NO_SURFACES,
-        typeof text === 'string' ? text : undefined
-      );
+      const followUp = startFollowUp(turn, typeof text === 'string' ? text : undefined);
       setFollowUps((current) =>
         new Map(current).set(turn.id, [...(current.get(turn.id) ?? []), followUp])
       );
       setPendingTurnId(turn.id);
       try {
-        await session.dispatchAction(serverMessage);
+        await session.dispatchAction(message);
       } finally {
         setPendingTurnId(null);
       }
@@ -97,7 +97,7 @@ export function AppShell() {
   return (
     <SessionRequestProvider value={session}>
       <A2UIProvider catalog={catalog} onAction={handleAction}>
-        <ThermidorA2UIStream loadingSurfaces={stream.loadingSurfaces} messages={stream.messages}>
+        <ThermidorA2UIStream loadingSurfaces={loadingSurfaces} messages={messages}>
           <div className="view-shell">
             <div className="view-panel view-panel--active">
               {turns.length === 0 ? (
@@ -108,7 +108,6 @@ export function AppShell() {
                   isStreaming={isStreaming}
                   promptDisabled={locked}
                   turns={[...turns]}
-                  surfacesByTurn={stream.surfacesByTurn}
                   followUps={followUps}
                   pendingTurnId={pendingTurnId}
                 />

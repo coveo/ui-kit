@@ -1,4 +1,4 @@
-import type {Turn, TurnResponse} from '@coveo/thermidor';
+import type {DiscoveredSurface, Turn, TurnResponse} from '@coveo/thermidor';
 
 /**
  * Shared builders for the reshaped {@link Turn} model (ADR-010). Tests construct
@@ -17,15 +17,13 @@ interface MakeTurnOptions {
 
 /**
  * Builds a {@link TurnResponse} with the non-optional fields defaulted
- * (`state: {}`, `activities: []`, `surfaces: []`, `a2uiMessages: []`) and any
- * provided overrides merged on top. `agent` is included only when supplied.
+ * (`activities: []`, `surfaces: []`) and any provided overrides merged on top.
+ * `agent` is included only when supplied.
  */
 export function makeResponse(overrides: Partial<TurnResponse> = {}): TurnResponse {
   return {
-    state: {},
     activities: [],
     surfaces: [],
-    a2uiMessages: [],
     ...overrides,
   };
 }
@@ -45,4 +43,13 @@ export function makeTurn(options: MakeTurnOptions = {}): Turn {
     status,
     ...(error !== undefined ? {error} : {}),
   };
+}
+
+/** Builds the {@link DiscoveredSurface} entries of a turn's `response.surfaces` from their ids. */
+export function makeSurfaces(...surfaceIds: string[]): DiscoveredSurface[] {
+  return surfaceIds.map((surfaceId) => ({
+    surfaceId,
+    rootComponentType: 'CommerceSearch',
+    isLoading: false,
+  }));
 }
