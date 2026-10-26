@@ -138,6 +138,15 @@ describe('createTurnScheduler', () => {
     expect(scheduler.turnVisits.get('t2')).toBe(3);
   });
 
+  it('drops the waiting prompt of a page the shopper left for one with no prompt', async () => {
+    scheduler.submitPagePrompt(ASSISTANT_CONTEXT, 'boating safety', 1);
+    scheduler.submitPagePrompt(SEARCH_CONTEXT, 'kayak', 2);
+    scheduler.leavePage();
+    await unwind();
+
+    expect(fake.prompts()).toEqual(['boating safety']);
+  });
+
   it('sends an action when the session is free, on behalf of its view', () => {
     scheduler.submitPagePrompt(HOME_CONTEXT, '', 1);
     fake.finish();

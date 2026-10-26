@@ -1,5 +1,5 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import {act, cleanup, fireEvent, render, screen} from '@testing-library/react';
+import {act, cleanup, fireEvent, render, screen, within} from '@testing-library/react';
 import App from './App.js';
 
 /** A converse stream that completes its turn with no surface. */
@@ -43,7 +43,11 @@ describe('StorefrontApp', () => {
     fetchMock.mockClear();
 
     fireEvent.click(screen.getByRole('button', {name: /Listing pages/}));
-    fireEvent.click(screen.getByRole('menuitem', {name: /Surfing/}));
+    fireEvent.click(
+      within(screen.getByRole('list', {name: 'Listing pages'})).getByRole('button', {
+        name: /Surfing/,
+      })
+    );
     await act(async () => {});
 
     expect(screen.getByRole('status').textContent).toContain('In progress');

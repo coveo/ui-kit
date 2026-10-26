@@ -62,7 +62,7 @@ test.describe('Storefront Preview on one session', () => {
   test('adds a product to the cart', async ({page}) => {
     await page.goto('/');
     await search(page, 'which kayak should I get?', {ai: true});
-    const addToCart = page.getByRole('button', {name: 'Add RiverRun Sit-On Kayak to cart'});
+    const addToCart = page.getByRole('button', {name: 'Add to cart, RiverRun Sit-On Kayak'});
     await expect(addToCart).toBeVisible({timeout: 30000});
 
     await addToCart.click();
@@ -103,7 +103,10 @@ test.describe('Storefront Preview on one session', () => {
     await page.goto('/');
 
     await page.getByRole('button', {name: /Listing pages/}).click();
-    await page.getByRole('menuitem', {name: /Surfing/}).click();
+    await page
+      .getByRole('list', {name: 'Listing pages'})
+      .getByRole('button', {name: /Surfing/})
+      .click();
 
     await expect(page.getByRole('status')).toContainText('In progress');
     expect(views).toEqual([]);

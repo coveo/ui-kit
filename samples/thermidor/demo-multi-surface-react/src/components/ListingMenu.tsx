@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useId, useRef, useState} from 'react';
 import {LISTINGS} from '../navigation.js';
 import styles from './TopBar.module.css';
 
@@ -12,6 +12,8 @@ export function ListingMenu({current, onSelect}: ListingMenuProps) {
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState('');
   const menu = useRef<HTMLDivElement>(null);
+  const toggle = useRef<HTMLButtonElement>(null);
+  const popoverId = useId();
 
   useEffect(() => {
     if (!open) {
@@ -22,8 +24,18 @@ export function ListingMenu({current, onSelect}: ListingMenuProps) {
         setOpen(false);
       }
     };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setOpen(false);
+        toggle.current?.focus();
+      }
+    };
     document.addEventListener('mousedown', close);
-    return () => document.removeEventListener('mousedown', close);
+    document.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.removeEventListener('mousedown', close);
+      document.removeEventListener('keydown', closeOnEscape);
+    };
   }, [open]);
 
   const needle = filter.trim().toLowerCase();
@@ -34,16 +46,17 @@ export function ListingMenu({current, onSelect}: ListingMenuProps) {
   return (
     <div className={styles.listingMenu} ref={menu}>
       <button
+        ref={toggle}
         type="button"
         className={current ? `${styles.navButton} ${styles.navButtonActive}` : styles.navButton}
         aria-expanded={open}
-        aria-haspopup="menu"
+        aria-controls={popoverId}
         onClick={() => setOpen((value) => !value)}
       >
         Listing pages ▾
       </button>
       {open && (
-        <div className={styles.listingPopover}>
+        <div id={popoverId} className={styles.listingPopover}>
           <input
             aria-label="Filter listing pages"
             placeholder="Search"
@@ -51,12 +64,12 @@ export function ListingMenu({current, onSelect}: ListingMenuProps) {
             autoFocus
             onChange={(event) => setFilter(event.target.value)}
           />
-          <ul role="menu">
+          <ul aria-label="Listing pages">
             {listings.map(({slug, name}) => (
-              <li key={slug} role="none">
+              <li key={slug}>
                 <button
                   type="button"
-                  role="menuitem"
+                  aria-current={slug === current ? 'page' : undefined}
                   className={
                     slug === current
                       ? `${styles.listingItem} ${styles.listingItemCurrent}`
