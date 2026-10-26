@@ -1358,12 +1358,19 @@ function categoryPathForQuery(query: string): string[] {
 // A new "water sports" search resets the surface, so the initial events are built on demand:
 // each call resets the in-memory view to defaults and recomputes the initial state snapshot. A
 // query other than the default opens the category it names, when one does.
-function buildWaterSportsInitialEvents(query = DEFAULT_VIEW.query): ConverseEvent[] {
+// A `surfaceId` keeps that view for the surface's actions.
+function buildWaterSportsInitialEvents(
+  query = DEFAULT_VIEW.query,
+  surfaceId?: string
+): ConverseEvent[] {
   currentView = {
     ...DEFAULT_VIEW,
     query,
     selectedCategoryPath: query === DEFAULT_VIEW.query ? [] : categoryPathForQuery(query),
   };
+  if (surfaceId !== undefined) {
+    viewsBySurfaceId.set(surfaceId, currentView);
+  }
   // Component_State is transported inline as `/state/<id>` updateDataModel ops on an
   // `a2ui-surface` activity, replacing the removed component STATE_SNAPSHOT.
   const initialStateActivity: ConverseEvent = UpdateDataModelActivity({
@@ -1750,14 +1757,15 @@ function buildWaterSportsActionEvents(
   });
 }
 
-/** What the search surface shows now, in a sentence. */
-function describeWaterSportsView(): string {
-  const shown = sortProducts(filterProducts(currentView), currentView.sortCriteria).slice(
-    currentView.page * currentView.pageSize,
-    (currentView.page + 1) * currentView.pageSize
+/** What a search surface shows now, in a sentence. */
+function describeWaterSportsView(surfaceId: string): string {
+  const view = viewsBySurfaceId.get(surfaceId) ?? DEFAULT_VIEW;
+  const shown = sortProducts(filterProducts(view), view.sortCriteria).slice(
+    view.page * view.pageSize,
+    (view.page + 1) * view.pageSize
   );
-  const category = currentView.selectedCategoryPath.join(' > ');
-  return `the results for "${currentView.query}"${category ? ` in ${category}` : ''}, sorted by ${currentView.sortCriteria}, showing ${shown.map((product) => product.ec_name).join(', ')}`;
+  const category = view.selectedCategoryPath.join(' > ');
+  return `the results for "${view.query}"${category ? ` in ${category}` : ''}, sorted by ${view.sortCriteria}, showing ${shown.map((product) => product.ec_name).join(', ')}`;
 }
 
 /** The catalog's products under a category below the root chain, in catalog order. */
@@ -1766,7 +1774,6 @@ function waterSportsProductsUnder(...relativePath: string[]): WaterSportsProduct
 }
 
 export {
-  SEARCH_SURFACE_ID as WATER_SPORTS_SURFACE_ID,
   buildWaterSportsInitialEvents,
   buildWaterSportsActionEvents,
   describeWaterSportsView,

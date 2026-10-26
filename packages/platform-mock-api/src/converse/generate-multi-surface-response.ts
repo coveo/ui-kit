@@ -2,7 +2,6 @@ import {encodeSSEEvent, reasoningMessage, type ConverseEvent} from './events.js'
 import {matchSchemaPrompt} from './generate-schema-response.js';
 import {schemaFallbackEvents} from './templates/schema-response-fallback.js';
 import {
-  WATER_SPORTS_SURFACE_ID,
   buildWaterSportsActionEvents,
   buildWaterSportsInitialEvents,
   describeWaterSportsView,
@@ -14,9 +13,9 @@ import {matchStorefrontConversation} from './templates/storefront-conversations.
  * `context.custom.surfaceId`, and the server keeps the session's state between requests:
  *
  * - every surface it sent, until the agent deletes it, so a new turn never drops another view's;
- * - the search behind each `searchOption` next action, sent to the client as an id only, and the
- *   search surface that option opens, whose actions are answered from the stored search;
- * - the cart, from `updateCart` actions;
+ * - the search behind each `searchOption` next action, sent to the client as an id only, and each
+ *   search surface, whose actions are answered from the search it keeps for that surface;
+ * - the cart: the request's `context.cart` replaces it, then an `updateCart` action applies to it;
  * - one turn at a time: another one while it runs gets a 409.
  *
  * On `storefront-preview-assistant`, a message runs the agent, which is told what the shopper is
@@ -150,9 +149,9 @@ function agentScenario(prompt: string): ConverseEvent[] {
       return storefront;
     }
   }
-  const match = CONVERSATION_KEYWORDS.find(
-    ([pattern, canonical]) => canonical === normalized || pattern.test(normalized)
-  );
+  const match =
+    CONVERSATION_KEYWORDS.find(([, canonical]) => canonical === normalized) ??
+    CONVERSATION_KEYWORDS.find(([pattern]) => pattern.test(normalized));
   const events = match
     ? withReasoning(matchSchemaPrompt(match[1]), match[2])
     : withReasoning(schemaFallbackEvents, FALLBACK_REASONING);
@@ -164,6 +163,24 @@ function agentScenario(prompt: string): ConverseEvent[] {
   return roots.every((root) => AGENT_COMPONENTS.includes(root))
     ? events
     : withReasoning(schemaFallbackEvents, FALLBACK_REASONING);
+}
+
+/** Applies `rewrite` to every A2-UI message of the surface activities. */
+function mapSurfaceMessages(
+  events: ConverseEvent[],
+  rewrite: (message: Record<string, Record<string, unknown>>) => Record<string, unknown>
+): ConverseEvent[] {
+  return events.map((event) =>
+    isSurfaceActivity(event) ? withMessages(event, messagesOf(event).map(rewrite)) : event
+  );
+}
+
+/** Addresses every surface message to `surfaceId`. */
+function toSurface(events: ConverseEvent[], surfaceId: string): ConverseEvent[] {
+  return mapSurfaceMessages(events, (message) => {
+    const {name, body} = operationOf(message);
+    return {...message, [name]: {...body, surfaceId}};
+  });
 }
 
 /**
@@ -192,44 +209,53 @@ function agentTurnEvents(session: Session, prompt: string): ConverseEvent[] {
     return {...value, suggestedActions};
   };
 
-  const events = agentScenario(prompt)
-    .filter(
-      (event) =>
-        !LIFECYCLE_EVENTS.has(event.event) &&
-        !LIFECYCLE_EVENTS.has(String(dataOf(event).type)) &&
-        dataOf(event).type !== 'STATE_SNAPSHOT'
-    )
-    .map((event) => {
-      if (!isSurfaceActivity(event)) {
-        return event;
-      }
-      const messages = messagesOf(event).map((message) => {
-        const {name, body, surfaceId} = operationOf(message);
-        const id = freshId(surfaceId);
-        if (name === 'createSurface') {
-          session.surfaces.set(id, 'agent');
-        } else if (name === 'deleteSurface') {
-          session.surfaces.delete(id);
-        }
-        const forwarded: Record<string, unknown> = {...body, surfaceId: id};
-        if (name === 'updateDataModel') {
-          forwarded.value = stripSearchOptions(body.value);
-        }
-        return {...message, [name]: forwarded};
-      });
-      return withMessages(event, messages);
-    });
+  const scenario = agentScenario(prompt).filter(
+    (event) =>
+      !LIFECYCLE_EVENTS.has(event.event) &&
+      !LIFECYCLE_EVENTS.has(String(dataOf(event).type)) &&
+      dataOf(event).type !== 'STATE_SNAPSHOT'
+  );
+  const events = mapSurfaceMessages(scenario, (message) => {
+    const {name, body, surfaceId} = operationOf(message);
+    const id = freshId(surfaceId);
+    if (name === 'createSurface') {
+      session.surfaces.set(id, 'agent');
+    } else if (name === 'deleteSurface') {
+      session.surfaces.delete(id);
+    }
+    const forwarded: Record<string, unknown> = {...body, surfaceId: id};
+    if (name === 'updateDataModel') {
+      forwarded.value = stripSearchOptions(body.value);
+    }
+    return {...message, [name]: forwarded};
+  });
 
-  const searchSurface = [...session.surfaces].find(([, kind]) => kind === 'search');
-  return searchSurface
-    ? withReasoning(events, `The shopper is looking at ${describeWaterSportsView()}.`)
+  const latestSearch = [...session.surfaces].filter(([, kind]) => kind === 'search').at(-1);
+  return latestSearch
+    ? withReasoning(
+        events,
+        `The shopper is looking at ${describeWaterSportsView(latestSearch[0])}.`
+      )
     : events;
 }
 
-/** A search surface for `query`, kept so the server answers its actions. */
+/** A search surface for `query` under a fresh id, whose search is kept to answer its actions. */
 function searchEvents(session: Session, query: string): ConverseEvent[] {
-  session.surfaces.set(WATER_SPORTS_SURFACE_ID, 'search');
-  return buildWaterSportsInitialEvents(query);
+  const surfaceId = `ui-${crypto.randomUUID()}`;
+  session.surfaces.set(surfaceId, 'search');
+  return toSurface(buildWaterSportsInitialEvents(query, surfaceId), surfaceId);
+}
+
+/** Replaces the kept cart with the one the client sent in `context.cart`, when it sent one. */
+function syncCart(session: Session, cart: unknown): void {
+  if (!Array.isArray(cart)) {
+    return;
+  }
+  session.cart = new Map(
+    cart
+      .filter((item) => isRecord(item) && typeof item.productId === 'string')
+      .map((item) => [item.productId as string, Number(item.quantity ?? 1)])
+  );
 }
 
 /** The server's answer to an action. A refusal throws before anything is streamed. */
@@ -259,10 +285,14 @@ function actionEvents(session: Session, action: Action): ConverseEvent[] {
     }
     return [];
   }
-  if (session.surfaces.get(action.surfaceId ?? '') !== 'search') {
+  const surfaceId = action.surfaceId ?? '';
+  if (session.surfaces.get(surfaceId) !== 'search') {
     throw new HttpError(400, `No search surface found: ${action.surfaceId}`);
   }
-  return buildWaterSportsActionEvents({name: action.name, context}, action.sourceComponentId);
+  return toSurface(
+    buildWaterSportsActionEvents({name: action.name, context}, action.sourceComponentId, surfaceId),
+    surfaceId
+  );
 }
 
 function runEvents(sessionId: string, session: Session, middle: ConverseEvent[]): ConverseEvent[] {
@@ -384,6 +414,7 @@ function multiSurfaceResponse(body: unknown, {paced = true}: {paced?: boolean} =
     return jsonError(403, 'Invalid conversation token.');
   }
 
+  syncCart(session, body.context.cart);
   if (view === VIEWS.home || view === VIEWS.shell) {
     return sseResponse(runEvents(sessionId, session, []), paced, () => {});
   }

@@ -468,7 +468,8 @@ function buildScenarioEvents(scenario: Scenario, prompt: string): ConverseEvent[
   middleEvents.push(
     ...call(
       'render_next_actions',
-      {actions},
+      // The server keeps each option's search; the client never sees it, not even in tool calls.
+      {actions: actions.map(({search: _search, ...action}) => action)},
       `NextActionsBar rendered on surface '${NEXT_ACTIONS_SURFACE_ID}'.`
     ),
     {

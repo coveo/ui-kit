@@ -17,14 +17,18 @@ interface Session {
   token: string;
 }
 
-function converse(view: string, input: {message?: string; action?: Event}, session?: Session) {
+function converse(
+  view: string,
+  input: {message?: string; action?: Event; cart?: Event[]},
+  session?: Session
+) {
   return multiSurfaceResponse(
     {
       message: input.message ?? null,
       action: input.action ?? null,
       conversationSessionId: session?.id ?? null,
       conversationToken: session?.token ?? null,
-      context: {cart: [], custom: {surfaceId: view}},
+      context: {cart: input.cart ?? [], custom: {surfaceId: view}},
     },
     {paced: false}
   );
@@ -69,6 +73,18 @@ function searchOptionOf(events: Event[]): Event | undefined {
     .map((message) => message.updateDataModel?.value as {suggestedActions?: Event[]} | undefined)
     .flatMap((value) => value?.suggestedActions ?? [])
     .find((action) => action.type === 'searchOption');
+}
+
+/** The query the search surface's summary reports. */
+function summaryQueryOf(events: Event[]): unknown {
+  const op = surfaceMessages(events).find(
+    (message) => message.updateDataModel?.path === '/state/query-summary-2'
+  );
+  return (op?.updateDataModel.value as {query?: unknown} | undefined)?.query;
+}
+
+function sortBy(surfaceId: string, sortCriteria: string): Event {
+  return {name: 'selectSort', surfaceId, sourceComponentId: 'sort-2', context: {sortCriteria}};
 }
 
 describe('multi-surface mock', () => {
@@ -225,6 +241,41 @@ describe('multi-surface mock', () => {
     expect(surfaceMessages(sorted).every((message) => message.updateDataModel)).toBe(true);
   });
 
+  it('opens each search under its own surface id, and keeps both', async () => {
+    const first = await eventsOf(converse(SEARCH, {message: 'kayak'}));
+    const session = sessionOf(first);
+    const second = await eventsOf(converse(SEARCH, {message: 'wetsuit'}, session));
+    const stored = inspectSessions()[session.id].surfaces;
+
+    expect(alive(first)).toHaveLength(1);
+    expect(alive(second)).toHaveLength(1);
+    expect(alive(first)[0]).not.toBe(alive(second)[0]);
+    expect(stored[alive(first)[0]]).toBe('search');
+    expect(stored[alive(second)[0]]).toBe('search');
+    for (const message of surfaceMessages(second)) {
+      expect(Object.values(message).find((body) => body?.surfaceId)?.surfaceId).toBe(
+        alive(second)[0]
+      );
+    }
+  });
+
+  it("answers a search surface's actions from its own search, not another session's", async () => {
+    const kayaks = await eventsOf(converse(SEARCH, {message: 'kayak'}));
+    const sessionA = sessionOf(kayaks);
+    await eventsOf(converse(SEARCH, {message: 'wetsuit'}));
+
+    const sorted = await eventsOf(
+      converse(SEARCH, {action: sortBy(alive(kayaks)[0], 'price_desc')}, sessionA)
+    );
+
+    expect(summaryQueryOf(sorted)).toBe('kayak');
+    expect(
+      surfaceMessages(sorted).every(
+        (message) => message.updateDataModel?.surfaceId === alive(kayaks)[0]
+      )
+    ).toBe(true);
+  });
+
   it('refuses an action on a surface it does not answer', async () => {
     const session = sessionOf(await eventsOf(converse(HOME, {message: 'hello'})));
 
@@ -268,6 +319,60 @@ describe('multi-surface mock', () => {
 
     expect(surfaceMessages(events)).toEqual([]);
     expect(inspectSessions()[session.id].cart).toEqual({'p-1': 2});
+  });
+
+  it('keeps the cart the client sends in context.cart, and applies updateCart on top', async () => {
+    const session = sessionOf(
+      await eventsOf(
+        converse(HOME, {message: 'hello', cart: [{productId: 'p-1', name: 'Kayak', quantity: 2}]})
+      )
+    );
+
+    expect(inspectSessions()[session.id].cart).toEqual({'p-1': 2});
+
+    await eventsOf(
+      converse(
+        ASSISTANT,
+        {
+          cart: [{productId: 'p-2', quantity: 1}],
+          action: {
+            name: 'updateCart',
+            surfaceId: 'ui-cart',
+            context: {productId: 'p-2', quantity: 1, operation: 'add'},
+          },
+        },
+        session
+      )
+    );
+
+    expect(inspectSessions()[session.id].cart).toEqual({'p-2': 2});
+  });
+
+  it('prefers a scenario named exactly over an earlier keyword match', async () => {
+    const events = await eventsOf(
+      converse(ASSISTANT, {message: 'tell me more about the thermoflex winter wetsuit'})
+    );
+    const roots = surfaceMessages(events)
+      .filter((message) => message.createSurface)
+      .map(
+        (message) =>
+          (message.createSurface.components as Event[]).find((node) => node.id === 'root')
+            ?.component
+      );
+
+    expect(roots).toContain('ProductResearchCard');
+    expect(roots).not.toContain('ComparisonTable');
+  });
+
+  it("keeps a search option's search out of the streamed tool call arguments", async () => {
+    const events = await eventsOf(converse(ASSISTANT, {message: 'which kayak should I get?'}));
+    const args = events
+      .filter((event) => event.type === 'TOOL_CALL_ARGS')
+      .map((event) => String(event.delta))
+      .join('');
+
+    expect(args).toContain('searchOption');
+    expect(args).not.toContain('"search"');
   });
 
   it('answers a next-action chip with text as a message', async () => {
