@@ -175,7 +175,9 @@ It keeps each session's state between requests:
 - **search options:** the search behind a `searchOption` next action stays on the server, and the
   client only gets its id. Picking it opens a search surface whose actions are answered from the
   kept search (`templates/schema-response-search.ts`);
-- **the cart,** from `updateCart` actions;
+- **each search surface,** under its own `ui-<uuid>` id, with the search it shows, so a second
+  search never replaces the first and its actions answer from its own search;
+- **the cart:** the request's `context.cart` replaces it, then an `updateCart` action applies to it;
 - **one turn at a time:** another assistant or search request while one runs gets a 409.
 
 On `storefront-preview-assistant`, a message runs the agent (the storefront and schema scenarios),
