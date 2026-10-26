@@ -9,6 +9,8 @@ export interface ViewSurfaces {
   surfacesOfVisit(visitId: number): readonly DiscoveredSurface[];
   /** The turns of one page visit, oldest first. */
   turnsOfVisit(visitId: number): readonly Turn[];
+  /** The turn that created a live surface, which the surface belongs to. */
+  turnOfSurface(surfaceId: string): Turn | undefined;
 }
 
 interface TurnViews {
@@ -22,5 +24,9 @@ export function buildViewSurfaces(turns: readonly Turn[], {turnVisits}: TurnView
   return {
     surfacesOfVisit: (visitId) => turnsOfVisit(visitId).flatMap((turn) => turn.response.surfaces),
     turnsOfVisit,
+    turnOfSurface: (surfaceId) =>
+      turns.find((turn) =>
+        turn.response.surfaces.some((surface) => surface.surfaceId === surfaceId)
+      ),
   };
 }

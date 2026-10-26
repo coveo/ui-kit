@@ -1,5 +1,5 @@
-import {useMemo} from 'react';
-import type {DiscoveredSurface} from '@coveo/thermidor';
+import {useCallback, useMemo} from 'react';
+import type {DiscoveredSurface, SessionRequest} from '@coveo/thermidor';
 import {
   SessionRequestProvider,
   type SessionRequestSource,
@@ -25,17 +25,26 @@ interface ViewSurfacesProps {
  */
 export function ViewSurfaces({surfaces, ownsTurn, isStreaming}: ViewSurfacesProps) {
   const session = useSession();
+  // An action streams into the session's active turn, which belongs to another view once the
+  // shopper has gone back to an earlier page, so its surface tells whose it is.
+  const ownsRequest = useCallback(
+    (request: SessionRequest) =>
+      ownsTurn(request.turnId) ||
+      (request.kind === 'action' &&
+        surfaces.some(({surfaceId}) => surfaceId === request.surfaceId)),
+    [ownsTurn, surfaces]
+  );
   const source = useMemo<SessionRequestSource>(
     () => ({
       getSnapshot() {
         const snapshot = session.getSnapshot();
         const {request} = snapshot;
-        return request && !ownsTurn(request.turnId) ? {...snapshot, request: undefined} : snapshot;
+        return request && !ownsRequest(request) ? {...snapshot, request: undefined} : snapshot;
       },
       subscribe: session.subscribe,
       sendAndWait: session.sendAndWait,
     }),
-    [session, ownsTurn]
+    [session, ownsRequest]
   );
   return (
     <SessionRequestProvider value={source}>

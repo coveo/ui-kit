@@ -16,6 +16,21 @@ function sentViews(fetchMock: ReturnType<typeof vi.fn>): unknown[] {
   );
 }
 
+function sentPrompts(fetchMock: ReturnType<typeof vi.fn>): unknown[] {
+  return fetchMock.mock.calls.map(
+    ([, init]) => JSON.parse((init as RequestInit).body as string).message
+  );
+}
+
+function openListing(name: string) {
+  fireEvent.click(screen.getByRole('button', {name: /Listing pages/}));
+  fireEvent.click(
+    within(screen.getByRole('list', {name: 'Listing pages'})).getByRole('button', {
+      name: new RegExp(name),
+    })
+  );
+}
+
 describe('StorefrontApp', () => {
   let fetchMock: ReturnType<typeof vi.fn>;
 
@@ -37,20 +52,56 @@ describe('StorefrontApp', () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it('shows a listing page as in progress, and sends nothing for it', async () => {
+  it("searches a listing page's category on the search view", async () => {
     render(<App />);
     await act(async () => {});
     fetchMock.mockClear();
 
-    fireEvent.click(screen.getByRole('button', {name: /Listing pages/}));
-    fireEvent.click(
-      within(screen.getByRole('list', {name: 'Listing pages'})).getByRole('button', {
-        name: /Surfing/,
-      })
-    );
+    openListing('Surfing');
     await act(async () => {});
 
-    expect(screen.getByRole('status').textContent).toContain('In progress');
+    expect(screen.getByRole('heading', {name: 'Surfing'})).toBeTruthy();
+    expect(sentViews(fetchMock)).toEqual(['storefront-preview-search']);
+    expect(sentPrompts(fetchMock)).toEqual(['Surfing']);
+  });
+
+  it('goes back to the listing it left, and sends nothing for it', async () => {
+    render(<App />);
+    await act(async () => {});
+    openListing('Surfing');
+    await act(async () => {});
+    fireEvent.change(screen.getByRole('searchbox', {name: 'Search'}), {
+      target: {value: 'which wetsuit?'},
+    });
+    fireEvent.submit(screen.getByRole('search'));
+    await act(async () => {});
+    fetchMock.mockClear();
+
+    fireEvent.click(screen.getByRole('button', {name: '← Back to Surfing'}));
+    await act(async () => {});
+
+    expect(screen.getByRole('heading', {name: 'Surfing'})).toBeTruthy();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('goes back to the earlier answer from a new one', async () => {
+    render(<App />);
+    await act(async () => {});
+    fireEvent.change(screen.getByRole('searchbox', {name: 'Search'}), {
+      target: {value: 'boating safety'},
+    });
+    fireEvent.submit(screen.getByRole('search'));
+    await act(async () => {});
+    fireEvent.change(screen.getByRole('searchbox', {name: 'Search'}), {target: {value: 'kayak'}});
+    fireEvent.submit(screen.getByRole('search'));
+    await act(async () => {});
+    fetchMock.mockClear();
+
+    fireEvent.click(screen.getByRole('button', {name: '← Back to “boating safety”'}));
+    await act(async () => {});
+
+    expect(screen.getByRole('heading', {name: 'boating safety'})).toBeTruthy();
+    expect(screen.getByRole('button', {name: '← Back to home'})).toBeTruthy();
     expect(fetchMock).not.toHaveBeenCalled();
   });
 

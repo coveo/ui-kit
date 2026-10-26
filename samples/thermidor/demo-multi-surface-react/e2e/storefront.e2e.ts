@@ -17,6 +17,14 @@ async function search(page: Page, query: string, {ai}: {ai: boolean}) {
   await page.getByRole('searchbox', {name: 'Search'}).press('Enter');
 }
 
+async function openListing(page: Page, name: string) {
+  await page.getByRole('button', {name: /Listing pages/}).click();
+  await page
+    .getByRole('list', {name: 'Listing pages'})
+    .getByRole('button', {name: new RegExp(name)})
+    .click();
+}
+
 const page$ = (page: Page) => page.locator('main').first();
 
 test.describe('Storefront Preview on one session', () => {
@@ -98,18 +106,43 @@ test.describe('Storefront Preview on one session', () => {
     await expect(products.first().getByRole('heading')).toHaveText('RapidFin Whitewater Kayak');
   });
 
-  test('shows a listing page as in progress, without sending a request', async ({page}) => {
+  test("searches a listing page's category on the search view", async ({page}) => {
     const views = trackViews(page);
     await page.goto('/');
+    await openListing(page, 'Surfing');
 
-    await page.getByRole('button', {name: /Listing pages/}).click();
-    await page
-      .getByRole('list', {name: 'Listing pages'})
-      .getByRole('button', {name: /Surfing/})
-      .click();
+    await expect(page.getByRole('heading', {name: 'Surfing', level: 1})).toBeVisible();
+    await expect(page.getByRole('checkbox', {name: /Vissla/})).toBeVisible({timeout: 30000});
+    await expect(page.getByText(/stopped early/)).toHaveCount(0);
+    expect(views).toEqual(['storefront-preview-search']);
+  });
 
-    await expect(page.getByRole('status')).toContainText('In progress');
-    expect(views).toEqual([]);
+  test('goes back to a listing as the shopper left it, without sending a request', async ({
+    page,
+  }) => {
+    const views = trackViews(page);
+    await page.goto('/');
+    await openListing(page, 'Surfing');
+    // A product's badges are a nested list, so the products are counted by their names.
+    const products = page.getByRole('list', {name: 'Product list'}).getByRole('heading');
+    await page.getByRole('checkbox', {name: /Vissla/}).check({timeout: 30000});
+    await expect(products).toHaveCount(2);
+    await search(page, 'which kayak should I get?', {ai: true});
+    await expect(page.getByRole('button', {name: 'Kayaks under $600'})).toBeEnabled({
+      timeout: 30000,
+    });
+    const sentBeforeBack = views.length;
+
+    await page.getByRole('button', {name: '← Back to Surfing'}).click();
+
+    await expect(page.getByRole('heading', {name: 'Surfing', level: 1})).toBeVisible();
+    await expect(page.getByRole('checkbox', {name: /Vissla/})).toBeChecked();
+    await expect(products).toHaveCount(2);
+    expect(views).toHaveLength(sentBeforeBack);
+
+    await page.getByRole('checkbox', {name: /Dakine/}).check();
+    await expect(products).toHaveCount(4);
+    expect(views.at(-1)).toBe('storefront-preview-search');
   });
 
   test('opens the search behind a search option', async ({page}) => {

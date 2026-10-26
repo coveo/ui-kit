@@ -40,4 +40,11 @@ describe('buildViewSurfaces', () => {
   it('draws nothing for a turn no visit sent', () => {
     expect(views([turn('t1', 'ui-a')], {}).surfacesOfVisit(1)).toEqual([]);
   });
+
+  it('finds the turn that created a surface', () => {
+    const result = views([turn('t1', 'ui-a'), turn('t2', 'ui-b')], {t1: 1, t2: 2});
+
+    expect(result.turnOfSurface('ui-b')?.id).toBe('t2');
+    expect(result.turnOfSurface('ui-gone')).toBeUndefined();
+  });
 });
