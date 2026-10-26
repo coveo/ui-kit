@@ -18,18 +18,17 @@ the same). If the mock is already running, `pnpm dev:vite` only starts Vite.
 
 Try it (the mock is described [below](#the-multi-surface-mock)):
 
-1. The home page says its answer stopped early: the server refuses its empty prompt with a 400.
-2. Type a search in the header and press Enter: with the **AI** toggle on (the default), the
+1. Type a search in the header and press Enter: with the **AI** toggle on (the default), the
    assistant page opens with the answer, its reasoning steps and its surfaces; the header stays. Try
    `boating safety`, `which kayak should I get?`, `what do I need to go snorkeling?`,
    `gift ideas under $50`, or a follow-up from the next actions.
-3. On the kayak answer, pick **See all kayaks**: the server runs the search the agent saved behind
+2. On the kayak answer, pick **See all kayaks**: the server runs the search the agent saved behind
    that option and opens it as a search surface (facets, sort, pagination). Change the sort or a
    facet: the server answers from the search it keeps.
-4. Click **Add to cart** on a product card: the header's cart counts it. Open the cart to change it.
-5. Turn **AI** off and search: the server refuses `storefront-preview-search` with a 400.
-6. Open a **Listing pages** entry: it shows an _In progress_ placeholder and sends no request.
-7. Open **One session** at the bottom: every turn, the view that sent it, and the surfaces it
+3. Click **Add to cart** on a product card: the header's cart counts it. Open the cart to change it.
+4. Turn **AI** off and search: the server refuses `storefront-preview-search` with a 400.
+5. Open a **Listing pages** entry: it shows an _In progress_ placeholder and sends no request.
+6. Open **One session** at the bottom: every turn, the view that sent it, and the surfaces it
    created that are still alive. `GET http://localhost:3456/multi-surface/sessions` shows what the
    mock keeps for each session.
 
@@ -104,14 +103,15 @@ A cancelled request unwinds a few microtasks after `session.cancel()`, so the ne
 - **No query suggestions.** The search box sends nothing while typing; see below.
 - **Listing pages show a placeholder.** The published contract has no view id for them, so they show
   _In progress_ and send nothing.
-- **Only the assistant is answered.** The server gives `storefront-preview-home` an empty run and
-  refuses `storefront-preview-search`; the home page's empty prompt is refused before that, since a
-  message or an action is required.
+- **The home page sends nothing.** A request needs a message or an action, and the server gives
+  `storefront-preview-home` an empty run anyway, so the home page has nothing to ask until the
+  session can open itself. The session opens on the first search.
+- **Only the assistant is answered.** The server refuses `storefront-preview-search` with a 400.
 
 ## What changes once the open work lands
 
-- **`initialize`** (ADR-018; coveo/ui-kit#8756): the session opens itself, so the home page no
-  longer sends an empty prompt to open it.
+- **`initialize`** (ADR-018; coveo/ui-kit#8756): the session opens itself, so the home page can
+  open it and show what the server answers for `storefront-preview-home`.
 - **The session shell and query suggestions** (coveo/ui-kit#8757, #8758): the producer answers `initialize` with a long-lived `SessionShell`
   holding a `SearchBox` and its `QuerySuggestions`, and a pause in typing dispatches
   `fetchSuggestions`. The header can then draw that surface as its search box, with suggestions.

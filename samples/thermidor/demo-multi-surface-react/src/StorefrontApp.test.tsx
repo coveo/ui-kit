@@ -29,19 +29,12 @@ describe('StorefrontApp', () => {
     vi.unstubAllGlobals();
   });
 
-  it('opens on the home page, which sends its view id', async () => {
+  it('opens on the home page, which sends nothing', async () => {
     render(<App />);
     await act(async () => {});
 
-    expect(sentViews(fetchMock)).toEqual(['storefront-preview-home']);
-  });
-
-  it('says the home page got no recommendations once its turn ends with no surface', async () => {
-    render(<App />);
-    await act(async () => {});
-
-    expect(screen.queryByText('Loading recommendations…')).toBeNull();
-    expect(screen.getByText('The server sent no recommendations for this page.')).toBeTruthy();
+    expect(screen.getByRole('heading', {name: 'Home'})).toBeTruthy();
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it('shows a listing page as in progress, and sends nothing for it', async () => {
@@ -73,11 +66,11 @@ describe('StorefrontApp', () => {
   });
 
   it('sends a page prompt once the request it cancelled has unwound', async () => {
-    let finishHome: (() => void) | undefined;
+    let finishAnswer: (() => void) | undefined;
     fetchMock.mockImplementationOnce(
       () =>
-        new Promise<Response>((resolve, reject) => {
-          finishHome = () => reject(new DOMException('Aborted', 'AbortError'));
+        new Promise<Response>((_resolve, reject) => {
+          finishAnswer = () => reject(new DOMException('Aborted', 'AbortError'));
         })
     );
     render(<App />);
@@ -87,12 +80,16 @@ describe('StorefrontApp', () => {
       target: {value: 'boating safety'},
     });
     fireEvent.submit(screen.getByRole('search'));
-    finishHome?.();
+    await act(async () => {});
+    fireEvent.click(screen.getByRole('checkbox', {name: 'AI'}));
+    fireEvent.change(screen.getByRole('searchbox', {name: 'Search'}), {target: {value: 'kayak'}});
+    fireEvent.submit(screen.getByRole('search'));
+    finishAnswer?.();
     await act(async () => {});
 
     expect(sentViews(fetchMock)).toEqual([
-      'storefront-preview-home',
       'storefront-preview-assistant',
+      'storefront-preview-search',
     ]);
   });
 
