@@ -1,27 +1,16 @@
-import {ViewSurfaces} from '../views/ViewSurfaces.js';
-import {PageTurnStatus} from './PageTurnStatus.js';
-import {usePageView} from './use-page-view.js';
 import styles from './pages.module.css';
 
-/** The home page (`storefront-preview-home`): the surfaces its own turn created. */
-export function HomePage({visitId}: {visitId: number}) {
-  const {turn, surfaces, ownsTurn} = usePageView(visitId);
-  const isWaiting = !turn || turn.status === 'streaming';
+/**
+ * The home page (`storefront-preview-home`). The server has nothing to answer it with, and a
+ * request needs a message, so it sends nothing until the session can open itself (`initialize`).
+ */
+export function HomePage() {
   return (
     <main className={styles.page}>
       <h1 className={styles.title}>Home</h1>
-      <PageTurnStatus turn={turn} />
-      {surfaces.length === 0 && isWaiting ? (
-        <p className={styles.loading}>Loading recommendations…</p>
-      ) : surfaces.length === 0 && turn?.status === 'complete' ? (
-        <p className={styles.note}>The server sent no recommendations for this page.</p>
-      ) : (
-        <ViewSurfaces
-          surfaces={surfaces}
-          ownsTurn={ownsTurn}
-          isStreaming={turn?.status === 'streaming'}
-        />
-      )}
+      <p className={styles.note}>
+        Search the catalog, or turn on AI to ask the assistant. Every page shares one session.
+      </p>
     </main>
   );
 }
