@@ -62,6 +62,12 @@ configuration. Set the ones you need alongside it.
 
 See [`src/public-sample-configuration.ts`](src/public-sample-configuration.ts).
 
+The sample talks to the commerce agent. To talk to another agent the gateway
+serves, set `VITE_COVEO_AGENT` to its id, such as `question-answering`: the app
+and the dev-server proxy then use
+`/api/preview/organizations/{organizationId}/agents/{agent}/agui/converse`. It is
+honoured with or without an organization.
+
 ## Pull-request previews
 
 This sample is published as a [pkg.pr.new](https://pkg.pr.new) StackBlitz template,

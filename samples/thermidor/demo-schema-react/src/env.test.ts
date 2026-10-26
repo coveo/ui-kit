@@ -11,6 +11,14 @@ const load = async (env: Record<string, string | undefined>) => {
 
 afterEach(() => vi.unstubAllEnvs());
 
+const organizationSettings = {
+  VITE_COVEO_TRACKING_ID: 'mine',
+  VITE_COVEO_LANGUAGE: 'en',
+  VITE_COVEO_COUNTRY: 'US',
+  VITE_COVEO_CURRENCY: 'USD',
+  VITE_COVEO_PLATFORM_ENVIRONMENT: 'dev',
+};
+
 /**
  * The public sample configuration applies as a bundle, keyed on the organization being
  * absent. These values are not independent — the token and tracking id belong to
@@ -61,5 +69,35 @@ describe('public sample configuration is a bundle', () => {
     expect(c.trackingId).toBe('mine');
     expect(c.accessToken).toBe('');
     expect(c.endpoint).toContain('https://myorg.orgdev.coveo.com');
+  });
+});
+
+describe('the agent is a transport setting', () => {
+  it('addresses the commerce agent by default', async () => {
+    const c = await load({VITE_COVEO_ORGANIZATION_ID: 'myorg', ...organizationSettings});
+    expect(c.endpoint).toBe(
+      'https://myorg.orgdev.coveo.com/api/preview/organizations/myorg/agents/commerce/agui/converse'
+    );
+  });
+
+  it('addresses the configured agent through the dev-server proxy', async () => {
+    const c = await load({
+      VITE_COVEO_ORGANIZATION_ID: 'myorg',
+      ...organizationSettings,
+      VITE_COVEO_USE_VITE_PROXY: 'true',
+      VITE_COVEO_AGENT: 'question-answering',
+    });
+    expect(c.endpoint).toBe(
+      'http://localhost:5173/api/preview/organizations/myorg/agents/question-answering/agui/converse'
+    );
+  });
+
+  it('is honoured without an organization', async () => {
+    const c = await load({VITE_COVEO_AGENT: 'question-answering'});
+    expect(c.endpoint).toContain('/organizations/searchuisamples/agents/question-answering/');
+  });
+
+  it('refuses an agent that is not a path segment', async () => {
+    await expect(load({VITE_COVEO_AGENT: 'commerce/agui'})).rejects.toThrow(/VITE_COVEO_AGENT/);
   });
 });

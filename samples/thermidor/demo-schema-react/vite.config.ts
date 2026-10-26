@@ -1,5 +1,6 @@
 import react from '@vitejs/plugin-react';
 import {defineConfig, loadEnv} from 'vite';
+import {getAgUiPath, resolveConverseAgent} from './src/converse-path.js';
 import {PUBLIC_SAMPLE_CONFIGURATION} from './src/public-sample-configuration.js';
 
 type PlatformEnvironment = 'prod' | 'dev' | 'stg' | 'hipaa';
@@ -108,6 +109,7 @@ export default defineConfig(({mode}) => {
   const useProxy = parseBoolean(env.VITE_COVEO_USE_VITE_PROXY) ?? true;
   const targets = getProxyTargets(mode);
   const {organizationId: orgId} = resolveConfiguredOrganization(env);
+  const agent = resolveConverseAgent(env.VITE_COVEO_AGENT);
   const agentRuntimeHeaders = resolveAgentRuntimeHeaders(
     env.VITE_COVEO_AGENT_RUNTIME_NAME,
     env.VITE_COVEO_AGENT_RUNTIME_QUALIFIER
@@ -120,7 +122,7 @@ export default defineConfig(({mode}) => {
       ...(useProxy && targets
         ? {
             proxy: {
-              [`/api/preview/organizations/${orgId}/agents/commerce/agui`]: {
+              [getAgUiPath(orgId, agent)]: {
                 target: targets.agentGateway,
                 changeOrigin: true,
                 secure: true,

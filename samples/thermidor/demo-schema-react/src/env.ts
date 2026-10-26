@@ -1,3 +1,4 @@
+import {getAgUiPath, resolveConverseAgent} from './converse-path.js';
 import {PUBLIC_SAMPLE_CONFIGURATION} from './public-sample-configuration.js';
 
 type RequiredEnvKey =
@@ -65,7 +66,8 @@ function resolvePlatformEnvironment(): PlatformEnvironment {
  *
  * Transport settings (`VITE_COVEO_ENDPOINT`, `VITE_COVEO_USE_VITE_PROXY`) are not part
  * of the bundle and are always honoured, since `dev:mock` and `dev:agent-gateway` set
- * them without an organization.
+ * them without an organization. Neither is the agent (`VITE_COVEO_AGENT`), which
+ * selects a route rather than describing the organization.
  */
 function resolveOrganizationConfiguration() {
   const organizationId = getOptionalEnvValue('VITE_COVEO_ORGANIZATION_ID');
@@ -103,14 +105,15 @@ function getOrganizationPlatformEndpoint(
 }
 
 /**
- * The fixed converse path the unified endpoint serves. Since the rework, the
- * Thermidor client POSTs to `endpoint` verbatim (it no longer appends this
- * path), so the sample builds the full URL itself for every flow (proxy,
- * explicit override, or derived platform host).
+ * The converse path the unified endpoint serves for the configured agent. Since
+ * the rework, the Thermidor client POSTs to `endpoint` verbatim (it no longer
+ * appends this path), so the sample builds the full URL itself for every flow
+ * (proxy, explicit override, or derived platform host).
  */
 function getConverseUrl(baseUrl: string, organizationId: string): string {
   const normalizedBase = baseUrl.replace(/\/+$/, '');
-  return `${normalizedBase}/api/preview/organizations/${organizationId}/agents/commerce/agui/converse`;
+  const agent = resolveConverseAgent(getOptionalEnvValue('VITE_COVEO_AGENT'));
+  return `${normalizedBase}${getAgUiPath(organizationId, agent)}/converse`;
 }
 
 function shouldUseViteProxy() {
