@@ -28,7 +28,10 @@ Try it (the mock is described [below](#the-multi-surface-mock)):
 3. Click **Add to cart** on a product card: the header's cart counts it. Open the cart to change it.
 4. Turn **AI** off and search `kayak`: the search page shows the search surface the server opened
    for it (facets, sort, pagination), answered from the search it keeps.
-5. Open a **Listing pages** entry: it shows an _In progress_ placeholder and sends no request.
+5. Open a **Listing pages** entry, such as **Surfing**: it sends its category as a search and shows
+   the search surface the server opens for it. Check a facet, then ask the assistant something and
+   click **Back to Surfing**: the listing is as you left it, facet checked, and nothing is sent (see
+   [Going back](#going-back)).
 6. Open **One session** at the bottom: every turn, the view that sent it, and the surfaces it
    created that are still alive. `GET http://localhost:3456/multi-surface/sessions` shows what the
    mock keeps for each session.
@@ -60,8 +63,8 @@ views and puts them on one session:
 The behaviour is kept:
 
 - typing in the search box sends nothing: a search is sent when it is committed;
-- the assistant and search pages send their prompt once per visit;
-- going Home ↔ Assistant gives the page fresh surfaces, while the header stays;
+- the assistant, search and listing pages send their prompt once per visit;
+- opening a page gives it fresh surfaces, while the header stays;
 - the cart is shared by the header and every page.
 
 ## The model
@@ -107,13 +110,27 @@ rather than tracking requests itself:
 A cancelled request unwinds a few microtasks after `session.cancel()`, so the next prompt waits for
 `session.request` to clear instead of being withheld.
 
+### Going back
+
+The app keeps the tab's visits (`src/navigation.ts`). The assistant page's **Back to <page>**
+button shows the visit before it again, with the same visit id, instead of opening a new one:
+
+- **Nothing is sent.** A page sends its prompt the first time its visit is shown only. The session
+  keeps every surface and its data model, so the page draws its own turns' surfaces as they were:
+  the facets, sort and products of a listing or a search stay as the shopper left them.
+- **Actions go on the view of the surface's turn.** An action is sent with the view of the turn that
+  created its surface, which is the earlier page's once the shopper has gone back. Its response
+  streams into the session's latest turn, so a view also locks its surfaces while an action from one
+  of them is in flight.
+- **Opening a page after going back drops the visits ahead**, as a browser does.
+
 ## Known limits
 
 - **Requests are serialized.** One request is in flight at a time, for every view. With one
   session per view, several stream at once. ADR-018 keeps this for the EAP.
 - **No query suggestions.** The search box sends nothing while typing; see below.
-- **Listing pages show a placeholder.** The published contract has no view id for them, so they show
-  _In progress_ and send nothing.
+- **Listing pages are searches.** The published contract has no view id for them, so a listing sends
+  its category as a search on `storefront-preview-search`.
 - **The home page sends nothing.** A request needs a message or an action, and the server gives
   `storefront-preview-home` an empty run anyway, so the home page has nothing to ask until the
   session can open itself. The session opens on the first search.
@@ -137,7 +154,7 @@ e2e/
 └── storefront.e2e.ts           Playwright walk through every page, against the mock
 src/
 ├── StorefrontApp.tsx           The header over the page, actions, page visits
-├── navigation.ts               Page visits and the listing pages
+├── navigation.ts               Page visits, their history and the listing pages
 ├── session/
 │   ├── storefront-session.tsx  The ONE session, its configuration and context providers
 │   ├── turn-scheduler.ts       The latest prompt of each view, sent once the session is free
@@ -148,7 +165,7 @@ src/
 ├── a2ui/
 │   ├── catalog.ts              The renderers for the Storefront components
 │   └── AddToCartButton/        The button added to every product card
-├── components/                 Top bar, search box, listing menu, cart, In progress, inspector
+├── components/                 Top bar, search box, listing menu, cart, inspector
 └── pages/                      Home, assistant, search and listing pages
 ```
 
