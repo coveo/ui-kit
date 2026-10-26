@@ -49,18 +49,16 @@ export function StorefrontApp() {
   const visitRef = useRef(visit);
   visitRef.current = visit;
 
-  // A page with a view id sends its prompt once per visit. StrictMode runs this effect twice; the
-  // visit id keeps the second run from sending again. Listing pages have no view id in the
-  // published contract, so they send nothing.
+  // The assistant and search pages send their prompt once per visit. StrictMode runs this effect
+  // twice; the visit id keeps the second run from sending again. The home page has no prompt to
+  // send, and listing pages have no view id in the published contract, so they send nothing.
   const sentVisitRef = useRef<number | null>(null);
   useEffect(() => {
     if (sentVisitRef.current === visit.id) {
       return;
     }
     sentVisitRef.current = visit.id;
-    if (visit.page === 'home') {
-      scheduler.submitPagePrompt(HOME_CONTEXT, '', visit.id);
-    } else if (visit.page === 'assistant') {
+    if (visit.page === 'assistant') {
       scheduler.submitPagePrompt(ASSISTANT_CONTEXT, visit.prompt, visit.id);
     } else if (visit.page === 'search') {
       scheduler.submitPagePrompt(SEARCH_CONTEXT, visit.query, visit.id);
@@ -117,7 +115,7 @@ export function StorefrontApp() {
 function Page({visit, onHome}: {visit: Visit; onHome(): void}) {
   switch (visit.page) {
     case 'home':
-      return <HomePage visitId={visit.id} />;
+      return <HomePage />;
     case 'assistant':
       return (
         <AssistantPage key={visit.id} prompt={visit.prompt} visitId={visit.id} onBack={onHome} />
