@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {createTurn, deriveSurfaces} from './fold.js';
-import {deriveSessionSurfaces} from './session-surfaces.js';
+import {abandonedPlaceholderIds, deriveSessionSurfaces} from './session-surfaces.js';
 import type {Activity, Turn} from './types.js';
 
 const create = (surfaceId: string, component = 'ProductCarousel') => ({
@@ -80,5 +80,58 @@ describe('deriveSessionSurfaces', () => {
 
     expect(view.surfaces).toEqual([]);
     expect(view.ownerTurnIds.get('no-catalog')).toBe('t1');
+  });
+
+  describe('loading placeholders', () => {
+    const placeholder = (surfaceId: string) => ({
+      version: 'v1.0',
+      createSurface: {
+        surfaceId,
+        catalogId: 'catalog',
+        components: [{id: 'root', component: 'ProductCarousel'}],
+        dataModel: {isLoading: true},
+      },
+    });
+    const withStatus = (status: Turn['status']) => ({
+      ...turn('t1', [placeholder('skeleton'), create('content')]),
+      status,
+    });
+
+    it('lists the placeholders of a turn while it streams', () => {
+      const view = deriveSessionSurfaces([withStatus('streaming')]);
+
+      expect(ids(view.surfaces)).toEqual(['skeleton', 'content']);
+    });
+
+    it('lists the placeholders of a turn the request in flight streams into', () => {
+      const view = deriveSessionSurfaces([withStatus('complete')], 't1');
+
+      expect(ids(view.turns[0].response.surfaces)).toEqual(['skeleton', 'content']);
+    });
+
+    it.each(['complete', 'error'] as const)(
+      'drops the placeholders a %s turn left behind',
+      (status) => {
+        const view = deriveSessionSurfaces([withStatus(status)]);
+
+        expect(ids(view.surfaces)).toEqual(['content']);
+        expect(ids(view.turns[0].response.surfaces)).toEqual(['content']);
+      }
+    );
+
+    it('keeps a placeholder the turn had abandoned out while a later request streams into it', () => {
+      const turns = [withStatus('complete')];
+      const abandoned = abandonedPlaceholderIds(turns, 't1');
+
+      const view = deriveSessionSurfaces(turns, 't1', abandoned);
+
+      expect([...abandoned]).toEqual(['skeleton']);
+      expect(ids(view.surfaces)).toEqual(['content']);
+      expect(ids(view.turns[0].response.surfaces)).toEqual(['content']);
+    });
+
+    it('abandons nothing in a turn that is still streaming', () => {
+      expect([...abandonedPlaceholderIds([withStatus('streaming')], 't1')]).toEqual([]);
+    });
   });
 });

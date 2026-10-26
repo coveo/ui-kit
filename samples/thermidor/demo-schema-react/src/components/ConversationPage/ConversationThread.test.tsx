@@ -3,7 +3,7 @@ import {describe, it, expect, vi} from 'vitest';
 import type {Turn} from '@coveo/thermidor';
 import {A2UIProvider} from '@copilotkit/a2ui-renderer';
 import {ConversationThread} from './ConversationThread.js';
-import {makeSurfaces, makeTurn} from '../../test/turn-fixtures.js';
+import {makeFollowUpTurn, makeSurfaces, makeTurn} from '../../test/turn-fixtures.js';
 import {createThermidorCatalog} from '../../a2ui/components.js';
 import {ThermidorA2UIStream} from '../../a2ui/surfaces.js';
 
@@ -98,24 +98,23 @@ describe('ConversationThread', () => {
       });
     }
 
-    it('renders only the error when the turn failed before any follow-up', () => {
+    it('renders only the error of a failed turn', () => {
       renderThread([failedTurn()]);
 
       expect(screen.getByRole('alert').textContent).toBe('Service unavailable');
       expect(screen.queryByText('Here are some kayaks')).toBeNull();
     });
 
-    it('keeps the earlier answer and draws the error after a failed follow-up', () => {
-      const turn = failedTurn();
-      const followUp = {
-        prompt: 'Show more life jackets',
-        activityCount: 0,
-        messageCount: 1,
-        reasoningStepCount: 0,
-        surfaceCount: 0,
-      };
+    it('keeps the earlier answer and draws the error of a failed follow-up after it', () => {
+      const answered = {...failedTurn(), status: 'complete' as const, error: undefined};
+      const followUp = makeFollowUpTurn({
+        id: 'turn-2',
+        text: 'Show more life jackets',
+        status: 'error',
+        error: 'Service unavailable',
+      });
 
-      renderThread([turn], {followUps: new Map([[turn.id, [followUp]]])});
+      renderThread([answered, followUp]);
 
       expect(screen.getByText('Here are some kayaks')).toBeTruthy();
       expect(screen.getByText('Show more life jackets')).toBeTruthy();
@@ -123,72 +122,76 @@ describe('ConversationThread', () => {
     });
   });
 
-  describe('loading placeholders', () => {
-    const placeholders = new Map([
-      ['first-1', 'ProductCarousel'],
-      ['second-1', 'ProductCarousel'],
-    ]);
-    const followUp = {
-      prompt: 'Show more',
-      activityCount: 0,
-      messageCount: 0,
-      reasoningStepCount: 0,
-      surfaceCount: 1,
-    };
+  describe('turns opened by an action', () => {
+    it('shows the chip text of a follow-up as the shopper message', () => {
+      renderThread([
+        makeTurn({id: 'turn-1', prompt: 'kayaks'}),
+        makeFollowUpTurn({id: 'turn-2', text: 'Show more life jackets'}),
+      ]);
 
-    function renderPlaceholders(
-      turn: Turn,
-      overrides: Partial<Omit<Parameters<typeof ConversationThread>[0], 'turns'>> = {}
-    ) {
+      const followUp = screen.getByRole('article', {name: 'Turn 2'});
+      expect(followUp.textContent).toContain('Show more life jackets');
+    });
+
+    it('spaces a follow-up from the answer above it, without a separator', () => {
+      const {container} = renderThread([
+        makeTurn({id: 'turn-1', prompt: 'kayaks'}),
+        makeFollowUpTurn({id: 'turn-2', text: 'Show more life jackets'}),
+      ]);
+
+      const followUp = screen.getByRole('article', {name: 'Turn 2'});
+      expect(container.querySelectorAll('hr')).toHaveLength(0);
+      expect(followUp.parentElement?.className).toMatch(/followUp/);
+    });
+
+    it('shows the text of a search option as the shopper message', () => {
+      renderThread([
+        makeTurn({id: 'turn-1', prompt: 'kayaks'}),
+        makeFollowUpTurn({id: 'turn-2', text: 'Tandem kayaks', searchOption: true}),
+      ]);
+
+      const option = screen.getByRole('article', {name: 'Turn 2'});
+      expect(option.textContent).toContain('Tandem kayaks');
+    });
+  });
+
+  describe('loading placeholders', () => {
+    function renderPlaceholders(turns: Turn[]) {
       return render(
         <A2UIProvider catalog={createThermidorCatalog()} onAction={() => {}}>
-          <ThermidorA2UIStream messages={[]} loadingSurfaces={placeholders}>
+          <ThermidorA2UIStream messages={[]}>
             <ConversationThread
-              turns={[
-                {
-                  ...turn,
-                  response: {
-                    ...turn.response,
-                    surfaces: makeSurfaces('first-1', 'second-1'),
-                  },
-                },
-              ]}
+              turns={turns}
               turnRefs={{current: new Map<string, HTMLDivElement>()}}
-              {...overrides}
             />
           </ThermidorA2UIStream>
         </A2UIProvider>
       );
     }
 
-    function placeholderRegion(surfaceId: string) {
-      return screen.queryByRole('region', {name: `A2-UI surface ${surfaceId}`});
+    function withPlaceholder(turn: Turn, surfaceId: string): Turn {
+      return {
+        ...turn,
+        response: {
+          ...turn.response,
+          surfaces: [{surfaceId, rootComponentType: 'ProductCarousel', isLoading: true}],
+        },
+      };
     }
 
-    it('draws the placeholders of a streaming turn', () => {
-      renderPlaceholders(createTurn({status: 'streaming'}));
+    it('draws the skeleton of each loading surface the turn lists', () => {
+      renderPlaceholders([
+        withPlaceholder(createTurn({status: 'complete'}), 'first-1'),
+        withPlaceholder(
+          makeFollowUpTurn({id: 'turn-2', text: 'Show more', status: 'streaming'}),
+          'second-2'
+        ),
+      ]);
 
-      expect(placeholderRegion('first-1')).not.toBeNull();
-      expect(placeholderRegion('second-1')).not.toBeNull();
-    });
-
-    it('draws nothing for the placeholders a completed turn left behind', () => {
-      renderPlaceholders(createTurn({status: 'complete'}));
-
-      expect(placeholderRegion('first-1')).toBeNull();
-      expect(placeholderRegion('second-1')).toBeNull();
-    });
-
-    it('draws only the placeholders of the follow-up in flight', () => {
-      const turn = createTurn({status: 'complete'});
-
-      renderPlaceholders(turn, {
-        followUps: new Map([[turn.id, [followUp]]]),
-        pendingTurnId: turn.id,
-      });
-
-      expect(placeholderRegion('first-1')).toBeNull();
-      expect(placeholderRegion('second-1')).not.toBeNull();
+      for (const surfaceId of ['first-1', 'second-2']) {
+        const region = screen.getByRole('region', {name: `A2-UI surface ${surfaceId}`});
+        expect(region.querySelector('[aria-label="Loading product carousel"]')).not.toBeNull();
+      }
     });
   });
 });

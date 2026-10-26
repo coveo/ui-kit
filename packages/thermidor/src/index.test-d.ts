@@ -29,6 +29,7 @@ import type {
   SessionSnapshot,
   SubmitPromptAction,
   Turn,
+  TurnAction,
   TurnResponse,
 } from '@/src/index.js';
 
@@ -73,6 +74,8 @@ test('exposes a snapshot of the session state for framework stores', () => {
   expectTypeOf<SessionSnapshot['a2uiMessages']>().toEqualTypeOf<readonly A2uiV09Message[]>();
   expectTypeOf<SessionSnapshot['request']>().toEqualTypeOf<SessionRequest | undefined>();
   expectTypeOf<SessionSnapshot['actionError']>().toEqualTypeOf<ActionError | undefined>();
+  expectTypeOf<Turn['input']['action']>().toEqualTypeOf<TurnAction | undefined>();
+  expectTypeOf<TurnAction['component']>().toEqualTypeOf<string>();
 });
 
 // ── POSITIVE: the injected-contract seam is exported ────────────────────────
@@ -105,6 +108,7 @@ test('names the dispatching component, and types action lists by the contracts',
     readonly NextActionsBar?: readonly 'selectAction'[];
     readonly RegularFacet?: readonly 'search'[];
   }>();
+  expectTypeOf<SessionConfig>().not.toHaveProperty('turnOpeningActions');
 });
 
 // ── POSITIVE: `dispatchAction` is the single action-dispatch entry point ─────

@@ -72,6 +72,43 @@ function withSurfaceIds(
   );
 }
 
+// Agent Gateway announces, in the AG-UI metadata of a surface snapshot, the actions whose answer it
+// gives as a new turn of the conversation (Thermidor ADR-019): those of a NextActionsBar.
+const NEXT_ACTIONS_BAR_TURN_OPENING_ACTIONS = ['selectAction', 'selectSearchOption'];
+
+function nextActionsBarSurfaceIds(messages: unknown): string[] {
+  if (!Array.isArray(messages)) {
+    return [];
+  }
+  return messages.flatMap((message) => {
+    const operation = message?.createSurface ?? message?.updateComponents;
+    const components: unknown = operation?.components;
+    const hasNextActionsBar =
+      Array.isArray(components) && components.some((node) => node?.component === 'NextActionsBar');
+    return hasNextActionsBar && typeof operation.surfaceId === 'string'
+      ? [operation.surfaceId]
+      : [];
+  });
+}
+
+function withTurnOpeningAnnouncements(events: ConverseEvent[]): ConverseEvent[] {
+  return events.map((event) => {
+    if (event.event !== 'ACTIVITY_SNAPSHOT') {
+      return event;
+    }
+    const data = event.data as Record<string, unknown>;
+    const content = data['content'] as {messages?: unknown} | undefined;
+    const surfaceIds = nextActionsBarSurfaceIds(content?.messages);
+    if (surfaceIds.length === 0) {
+      return event;
+    }
+    const turnOpeningActions = Object.fromEntries(
+      surfaceIds.map((surfaceId) => [surfaceId, NEXT_ACTIONS_BAR_TURN_OPENING_ACTIONS])
+    );
+    return {...event, data: {...data, metadata: {turnOpeningActions}}};
+  });
+}
+
 function matchSchemaPrompt(message: string): ConverseEvent[] {
   const normalized = message.trim().toLowerCase();
   const match = SCHEMA_PROMPT_TEMPLATE_MAP.find((entry) => entry.prompt === normalized);
@@ -91,6 +128,7 @@ const schemaBaseResponse = (body?: unknown) => {
   promptSequence += 1;
   const suffix = promptSequence;
   events = withSurfaceIds(events, (surfaceId) => `${surfaceId}-${suffix}`);
+  events = withTurnOpeningAnnouncements(events);
   return buildStreamingResponse(events, {delayBetweenMessages: DEFAULT_DELAY_MS});
 };
 

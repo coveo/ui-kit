@@ -2,15 +2,21 @@ import {render, screen} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
 import type {Turn} from '@coveo/thermidor';
 import {ConversationPage} from './ConversationPage.js';
-import {makeSurfaces, makeTurn} from '../../test/turn-fixtures.js';
+import {makeFollowUpTurn, makeSurfaces, makeTurn} from '../../test/turn-fixtures.js';
 
 // The blocks are drawn by the A2-UI renderer; the page only decides where each turn's blocks go
 // and whether they are interactive.
 vi.mock('../../a2ui/surfaces.js', () => ({
-  TurnSurfaces: ({surfaceIds, interactive}: {surfaceIds: string[]; interactive: boolean}) =>
-    surfaceIds.length === 0 ? null : (
+  TurnSurfaces: ({
+    surfaces,
+    interactive,
+  }: {
+    surfaces: {surfaceId: string}[];
+    interactive: boolean;
+  }) =>
+    surfaces.length === 0 ? null : (
       <div data-testid="turn-surfaces" data-interactive={String(interactive)}>
-        {surfaceIds.join(',')}
+        {surfaces.map((surface) => surface.surfaceId).join(',')}
       </div>
     ),
 }));
@@ -109,55 +115,47 @@ describe('ConversationPage integration', () => {
       ).toEqual(['false', 'true']);
     });
 
-    it('draws a follow-up as its own exchange after the answer it follows', () => {
+    it('draws a follow-up as its own turn after the answer it follows', () => {
       const turns: Turn[] = [
         makeTurn({
           id: 'turn-1',
           prompt: 'boating safety',
           response: {
-            surfaces: makeSurfaces('agent-a-1', 'agent-b-1'),
+            surfaces: makeSurfaces('agent-a-1'),
             agent: {
-              messages: [
-                {content: 'Here is the safety gear.', role: 'assistant'},
-                {content: 'Here are more Mustang Survival jackets.', role: 'assistant'},
-              ],
+              messages: [{content: 'Here is the safety gear.', role: 'assistant'}],
+              reasoningSteps: [],
+            },
+          },
+        }),
+        makeFollowUpTurn({
+          id: 'turn-2',
+          text: 'Show more Mustang Survival life jackets',
+          response: {
+            surfaces: makeSurfaces('agent-b-2'),
+            agent: {
+              messages: [{content: 'Here are more Mustang Survival jackets.', role: 'assistant'}],
               reasoningSteps: [],
             },
           },
         }),
       ];
 
-      renderPage({
-        turns,
-        followUps: new Map([
-          [
-            'turn-1',
-            [
-              {
-                prompt: 'Show more Mustang Survival life jackets',
-                activityCount: 0,
-                messageCount: 1,
-                reasoningStepCount: 0,
-                surfaceCount: 1,
-              },
-            ],
-          ],
-        ]),
-      });
+      const {container} = renderPage({turns});
 
-      const article = screen.getByRole('article', {name: 'Turn 1'});
       const order = [
         'Here is the safety gear.',
         'agent-a-1',
         'Show more Mustang Survival life jackets',
         'Here are more Mustang Survival jackets.',
-        'agent-b-1',
-      ].map((text) => article.textContent!.indexOf(text));
+        'agent-b-2',
+      ].map((text) => container.textContent!.indexOf(text));
       expect(order.every((position) => position >= 0)).toBe(true);
       expect([...order].sort((x, y) => x - y)).toEqual(order);
+      expect(container.querySelectorAll('hr')).toHaveLength(0);
     });
 
-    it('shows the reasoning indicator while a follow-up is in flight', () => {
+    it('shows the reasoning indicator while a follow-up streams', () => {
       const turns: Turn[] = [
         makeTurn({
           id: 'turn-1',
@@ -169,26 +167,10 @@ describe('ConversationPage integration', () => {
             },
           },
         }),
+        makeFollowUpTurn({id: 'turn-2', text: 'Show more', status: 'streaming'}),
       ];
 
-      renderPage({
-        turns,
-        followUps: new Map([
-          [
-            'turn-1',
-            [
-              {
-                prompt: 'Show more',
-                activityCount: 0,
-                messageCount: 1,
-                reasoningStepCount: 0,
-                surfaceCount: 0,
-              },
-            ],
-          ],
-        ]),
-        pendingTurnId: 'turn-1',
-      });
+      renderPage({turns, isStreaming: true});
 
       expect(screen.getByText('Working')).toBeDefined();
     });

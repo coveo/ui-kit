@@ -664,6 +664,38 @@ describe('createSession lifecycle', () => {
       },
     ]);
 
+    it('keeps a placeholder its turn left behind out while an action streams into that turn', async () => {
+      const session = createSession(baseConfig);
+      await prompt(
+        session,
+        searchSurface,
+        surfaceSnapshot('placeholder', [
+          {
+            version: 'v1.0',
+            createSurface: {
+              surfaceId: 'carousel-placeholder',
+              catalogId: 'catalog',
+              components: [{id: 'root', component: 'ProductCarousel'}],
+              dataModel: {isLoading: true},
+            },
+          },
+        ])
+      );
+
+      const stream = queueStream();
+      const action = session.dispatchAction(selectPageMessage(2));
+      await stream.opened;
+      const during = session.surfaces.map((surface) => surface.surfaceId);
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await action;
+
+      expect(during).toEqual(['commerce-search-surface']);
+      expect(session.surfaces.map((surface) => surface.surfaceId)).toEqual([
+        'commerce-search-surface',
+      ]);
+    });
+
     it('starts a surface re-created under a live id with an empty state', async () => {
       const session = createSession(baseConfig);
       await prompt(session, searchSurface, paginationWrite);
@@ -951,6 +983,207 @@ describe('createSession lifecycle', () => {
       stream.emit({type: 'RUN_FINISHED'});
       stream.close();
       await action;
+    });
+  });
+
+  describe('actions that open a turn', () => {
+    // The producer announces the turn-opening actions of the bar in the event metadata (ADR-019).
+    const NEXT_ACTIONS_SURFACE = {
+      type: 'ACTIVITY_SNAPSHOT',
+      messageId: 'next-actions',
+      activityType: 'a2ui-surface',
+      metadata: {turnOpeningActions: {'next-actions-surface': ['selectAction']}},
+      content: {
+        messages: [
+          {
+            version: 'v1.0',
+            createSurface: {
+              surfaceId: 'next-actions-surface',
+              components: [{id: 'root', component: 'NextActionsBar'}],
+            },
+          },
+        ],
+      },
+    };
+
+    const followUp = {
+      userAction: {
+        name: 'selectAction',
+        surfaceId: 'next-actions-surface',
+        sourceComponentId: 'root',
+        context: {actionId: 'more-jackets'},
+      },
+    };
+
+    async function answeredPrompt(session: ReturnType<typeof createSession>) {
+      const stream = queueStream();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'jackets'}});
+      await stream.opened;
+      stream.emit(NEXT_ACTIONS_SURFACE);
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await turn;
+    }
+
+    it('keeps an action the producer does not announce in the active turn', async () => {
+      const session = createSession(baseConfig);
+      const prompt = queueStream();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'jackets'}});
+      await prompt.opened;
+      const {metadata: _, ...unannounced} = NEXT_ACTIONS_SURFACE;
+      prompt.emit(unannounced);
+      prompt.emit({type: 'RUN_FINISHED'});
+      prompt.close();
+      await turn;
+
+      const stream = queueStream();
+      const sent = session.dispatchAction(followUp);
+      await stream.opened;
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await sent;
+
+      expect(session.turns).toHaveLength(1);
+    });
+
+    it('opens a new streaming turn that records the action', async () => {
+      const session = createSession(baseConfig);
+      await answeredPrompt(session);
+
+      const stream = queueStream();
+      const sent = session.dispatchAction(followUp);
+      await stream.opened;
+
+      const [first, opened] = session.turns;
+      expect(session.turns).toHaveLength(2);
+      expect(first.status).toBe('complete');
+      expect(opened.status).toBe('streaming');
+      expect(opened.input).toEqual({
+        action: {
+          component: 'NextActionsBar',
+          name: 'selectAction',
+          surfaceId: 'next-actions-surface',
+          sourceComponentId: 'root',
+          context: {actionId: 'more-jackets'},
+        },
+      });
+      expect(session.request).toMatchObject({
+        kind: 'action',
+        component: 'NextActionsBar',
+        turnId: opened.id,
+      });
+      expect(callMock.mock.calls[1][0]).toMatchObject({
+        message: null,
+        action: {surfaceId: 'next-actions-surface', name: 'selectAction'},
+      });
+
+      stream.emit({type: 'TEXT_MESSAGE_START', messageId: 'm', role: 'assistant'});
+      stream.emit({type: 'TEXT_MESSAGE_CONTENT', messageId: 'm', delta: 'More jackets'});
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await sent;
+
+      expect(session.turns[1].status).toBe('complete');
+      expect(session.turns[1].response.agent?.messages[0].content).toBe('More jackets');
+      expect(session.turns[0].response.agent).toBeUndefined();
+    });
+
+    it('still sends an action from the turn the follow-up was sent from', async () => {
+      const session = createSession(baseConfig);
+      await answeredPrompt(session);
+      const stream = queueStream();
+      const sent = session.dispatchAction(followUp);
+      await stream.opened;
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await sent;
+
+      const again = queueStream();
+      const sentAgain = session.dispatchAction(followUp);
+      await again.opened;
+      again.emit({type: 'RUN_FINISHED'});
+      again.close();
+      await sentAgain;
+
+      expect(callMock).toHaveBeenCalledTimes(3);
+      expect(session.turns).toHaveLength(3);
+    });
+
+    it('fails only its own turn when the action fails', async () => {
+      const session = createSession(baseConfig);
+      await answeredPrompt(session);
+      callMock.mockImplementationOnce(async () => ({success: false, error: 'Bad gateway'}));
+
+      await session.dispatchAction(followUp);
+
+      expect(session.turns.map((turn) => [turn.status, turn.error])).toEqual([
+        ['complete', undefined],
+        ['error', 'Bad gateway'],
+      ]);
+    });
+
+    it('marks its own turn as cancelled when cancelled', async () => {
+      const session = createSession(baseConfig);
+      await answeredPrompt(session);
+      const stream = queueStream();
+      const sent = session.dispatchAction(followUp);
+      await stream.opened;
+
+      session.cancel();
+      stream.close();
+      await sent;
+
+      expect(session.turns.map((turn) => [turn.status, turn.error])).toEqual([
+        ['complete', undefined],
+        ['error', 'Cancelled'],
+      ]);
+    });
+
+    it('sends the action again from its surface on retry', async () => {
+      const session = createSession(baseConfig);
+      await answeredPrompt(session);
+      const failed = queueStream();
+      const sent = session.dispatchAction(followUp);
+      await failed.opened;
+      failed.emit({type: 'RUN_ERROR', message: 'agent failed'});
+      failed.close();
+      await sent;
+      const openedId = session.turns[1].id;
+      expect(session.turns[1].status).toBe('error');
+
+      const retried = queueStream();
+      session.retry(openedId);
+      await retried.opened;
+
+      expect(session.turns[1]).toMatchObject({id: openedId, status: 'streaming'});
+      expect(callMock.mock.calls.at(-1)?.[0]).toMatchObject({
+        message: null,
+        action: {
+          surfaceId: 'next-actions-surface',
+          name: 'selectAction',
+          sourceComponentId: 'root',
+          context: {actionId: 'more-jackets'},
+        },
+      });
+      retried.emit({type: 'RUN_FINISHED'});
+      retried.close();
+      await flush();
+      expect(session.turns[1].status).toBe('complete');
+    });
+
+    it('keeps the action that opened a turn through serialization', async () => {
+      const session = createSession(baseConfig);
+      await answeredPrompt(session);
+      const stream = queueStream();
+      const sent = session.dispatchAction(followUp);
+      await stream.opened;
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await sent;
+
+      const restored = createSession({...baseConfig, sessionToRestore: session.serialize()});
+
+      expect(restored.turns[1].input).toEqual(session.turns[1].input);
     });
   });
 

@@ -41,7 +41,9 @@ import {deriveNodeIdentityRegistry} from './in-transit-validation.js';
 import {restoreSession, serializeSession, type SerializedSession} from './serialize.js';
 import {createSessionStore, type SessionStore, type SessionStoreState} from './store.js';
 import {applyInboundOps} from './session-state.js';
+import {isTurnOpeningAction} from './turn-opening.js';
 import {
+  abandonedPlaceholderIds,
   deriveSessionSurfaces,
   sessionActivities,
   type SessionSurfaceView,
@@ -53,6 +55,7 @@ import type {
   DiscoveredSurface,
   SessionRequest,
   Turn,
+  TurnAction,
   TurnInput,
 } from './types.js';
 
@@ -266,6 +269,11 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * surfaces, whichever turn created them, validates the action payload against the component's contract
    * internally, and — on success — POSTs the action to the converse endpoint.
    *
+   * An action the producer announces as opening a turn (ADR-019), such as a follow-up
+   * chip, opens a new streaming turn whose `input.action` records it, as a prompt does, and its
+   * answer streams there; it resolves once that turn's stream ends. Any other action streams into
+   * the active turn.
+   *
    * FIRE-AND-FORGET: the returned Promise ALWAYS resolves and NEVER rejects, so
    * the consumer needs no `.catch`. A message with no `userAction`, no
    * `sourceComponentId`, a node that resolves to no component, and an internal
@@ -280,7 +288,8 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    */
   cancel(): void;
   /**
-   * Re-submits the input of the last turn when it errored; withheld like any dispatch while a
+   * Re-submits the input of the last turn when it errored: its prompt, or the action that opened
+   * it, sent again from the surface it was dispatched from. Withheld like any dispatch while a
    * request is in flight. An earlier turn is not retried: its answer would land before later turns.
    */
   retry(turnId: string): void;
@@ -374,14 +383,23 @@ export function createSession<TContracts extends ContractsSchema>(
 
   const store: SessionStore<Turn> = createSessionStore<Turn>(initialState);
 
-  // Derived from the folded turns, and recomputed only when they change.
+  // Derived from the folded turns and the turn the request in flight streams into, and
+  // recomputed only when either changes.
   let surfaceView: SessionSurfaceView | undefined;
-  let surfaceViewSource: readonly Turn[] | undefined;
+  let surfaceViewSource: {turns: readonly Turn[]; request?: SessionRequest} | undefined;
+  // The placeholders the request's turn had abandoned when the request started.
+  let requestAbandoned: {request: SessionRequest; ids: ReadonlySet<string>} | undefined;
   function readSurfaceView(): SessionSurfaceView {
-    const {turns} = store.getState();
-    if (surfaceView === undefined || surfaceViewSource !== turns) {
-      surfaceView = deriveSessionSurfaces(turns);
-      surfaceViewSource = turns;
+    const {turns, request} = store.getState();
+    if (
+      surfaceView === undefined ||
+      surfaceViewSource?.turns !== turns ||
+      surfaceViewSource.request !== request
+    ) {
+      const abandoned =
+        request && requestAbandoned?.request === request ? requestAbandoned.ids : undefined;
+      surfaceView = deriveSessionSurfaces(turns, request?.turnId, abandoned);
+      surfaceViewSource = {turns, request};
     }
     return surfaceView;
   }
@@ -413,7 +431,8 @@ export function createSession<TContracts extends ContractsSchema>(
   // action sent later. A dispatch made while a request is in flight is withheld.
   async function sendRequest(
     request: SessionRequest,
-    send: (abortController: AbortController) => Promise<void>
+    send: (abortController: AbortController) => Promise<void>,
+    abandoned?: ReadonlySet<string>
   ): Promise<void> {
     if (store.getState().request) {
       devWarn('dispatchAction: withheld: another request is in flight.');
@@ -422,6 +441,7 @@ export function createSession<TContracts extends ContractsSchema>(
     // Armed before it is published, so a listener's `cancel()` stops the request it was told about.
     const abortController = new AbortController();
     activeAbortController = abortController;
+    requestAbandoned = abandoned && {request, ids: abandoned};
     store.setState((current) => ({...current, request}));
     if (!abortController.signal.aborted) {
       try {
@@ -825,33 +845,86 @@ export function createSession<TContracts extends ContractsSchema>(
       context: recovered.context,
     };
 
+    // An action the producer announced as opening a turn opens a new turn of the conversation, as a
+    // prompt does; any other streams into the active turn.
+    const opensTurn = isTurnOpeningAction(
+      sessionActivities(store.getState().turns),
+      surfaceId,
+      recovered.name
+    );
+    const turnId = opensTurn ? generateId() : activeTurnId;
     const request: SessionRequest = {
       kind: 'action',
       component: recovered.discriminant,
       name: recovered.name,
       surfaceId,
       sourceComponentId: recovered.sourceComponentId,
-      turnId: activeTurnId,
+      turnId,
     };
-    // An action only updates the surfaces: its failure is the action's, never the turn's.
-    const action: ActionSource = {
-      component: recovered.discriminant,
-      name: recovered.name,
-      surfaceId,
-      sourceComponentId: recovered.sourceComponentId,
-    };
-    return sendRequest(request, async (abortController) => {
-      setActionError(undefined);
-      const failure = await executeStream(
-        activeTurnId,
-        () => buildActionRequest(a2uiAction),
-        abortController,
-        action
-      );
-      if (failure) {
-        setActionError({message: failure.error, ...action});
-      }
-    });
+    // An answer streamed into an earlier run's turn must not bring back what that run left behind.
+    const abandoned = opensTurn
+      ? undefined
+      : abandonedPlaceholderIds(store.getState().turns, turnId);
+    return sendRequest(
+      request,
+      async (abortController) => {
+        if (opensTurn) {
+          openTurn(turnId, {
+            action: {
+              component: recovered.discriminant,
+              name: recovered.name,
+              surfaceId: recovered.surfaceId,
+              sourceComponentId: recovered.sourceComponentId,
+              ...(recovered.context === undefined ? {} : {context: recovered.context}),
+            },
+          });
+        }
+        await streamAction(
+          turnId,
+          a2uiAction,
+          {
+            component: recovered.discriminant,
+            name: recovered.name,
+            surfaceId,
+            sourceComponentId: recovered.sourceComponentId,
+          },
+          opensTurn,
+          abortController
+        );
+      },
+      abandoned
+    );
+  }
+
+  /**
+   * Streams the answer to a component action into `turnId`. Only an action that opened that turn
+   * changes it: its failure fails the turn, and a concurrency conflict also sets `actionError`.
+   * Any other action only updates the surfaces, and `actionError` reports its failure (ADR-018, as
+   * amended).
+   */
+  async function streamAction(
+    turnId: string,
+    action: A2uiAction,
+    source: ActionSource,
+    ownsTurn: boolean,
+    abortController: AbortController
+  ): Promise<void> {
+    setActionError(undefined);
+    const failure = await executeStream(
+      turnId,
+      () => buildActionRequest(action),
+      abortController,
+      ownsTurn ? undefined : source
+    );
+    if (!failure) {
+      return;
+    }
+    if (!ownsTurn || failure.conflict) {
+      setActionError({message: failure.error, ...source});
+    }
+    if (ownsTurn) {
+      failTurn(turnId, failure.error);
+    }
   }
 
   /**
@@ -920,6 +993,10 @@ export function createSession<TContracts extends ContractsSchema>(
     if (!turn || turn.id !== turnId || turn.status !== 'error') {
       return;
     }
+    if (turn.input.action) {
+      retryAction(turnId, turn.input.action);
+      return;
+    }
 
     // Reset the turn to a fresh streaming turn carrying its original input,
     // then re-drive the stream.
@@ -929,6 +1006,49 @@ export function createSession<TContracts extends ContractsSchema>(
       }));
       store.setState((current) => ({...current, activeTurnId: turnId}));
       await streamPrompt(turnId, turn.input.prompt ?? '', abortController);
+    });
+  }
+
+  /**
+   * Re-sends the action that opened an errored turn, from the surface it was dispatched from in an
+   * earlier turn, and streams its answer into that turn again. The producer accepts an action on
+   * any surface of the session, so it is not resolved against the active turn.
+   */
+  function retryAction(turnId: string, action: TurnAction): void {
+    const a2uiAction: A2uiAction = {
+      surfaceId: action.surfaceId,
+      name: action.name,
+      sourceComponentId: action.sourceComponentId,
+      timestamp: new Date().toISOString(),
+      actionId: null,
+      wantResponse: false,
+      context: action.context,
+    };
+    const request: SessionRequest = {
+      kind: 'action',
+      component: action.component,
+      name: action.name,
+      surfaceId: action.surfaceId,
+      sourceComponentId: action.sourceComponentId,
+      turnId,
+    };
+    void sendRequest(request, async (abortController) => {
+      replaceTurn(turnId, (previous) => ({
+        ...createTurn(previous.id, previous.input),
+      }));
+      store.setState((current) => ({...current, activeTurnId: turnId}));
+      await streamAction(
+        turnId,
+        a2uiAction,
+        {
+          component: action.component,
+          name: action.name,
+          surfaceId: action.surfaceId,
+          sourceComponentId: action.sourceComponentId,
+        },
+        true,
+        abortController
+      );
     });
   }
 

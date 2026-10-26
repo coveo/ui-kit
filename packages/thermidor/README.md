@@ -47,7 +47,7 @@ await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me r
 | `getSnapshot()`           | `turns`, `surfaces`, `a2uiMessages`, `state`, `request` and `actionError` as one immutable `SessionSnapshot`, replaced only when one of them changes. |
 | `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's `onAction`.                               |
 | `cancel()`                | Stops the active stream.                                                                                                                              |
-| `retry(turnId)`           | Re-submits the last turn's input when it errored.                                                                                                     |
+| `retry(turnId)`           | Re-submits the last turn's input when it errored: its prompt, or the action that opened it.                                                           |
 | `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                                                                                       |
 
 `subscribe` and `getSnapshot` do not rely on `this`, so they can be handed by reference to any store that compares snapshots by reference, such as React's `useSyncExternalStore(session.subscribe, session.getSnapshot)`. The package itself depends on no framework.
@@ -77,6 +77,8 @@ A component action is the standard A2-UI client-to-server message (`A2uiClientMe
 ```
 
 Given a message, `dispatchAction` unwraps its `userAction`, recovers the dispatching component's discriminant from the session's live surfaces, whichever turn created them, validates the action payload against the component's injected contract internally, and — on success — POSTs the action to the converse endpoint.
+
+An action the producer announces as opening a turn, such as a follow-up chip or a search option, is answered as a new turn of the conversation, as a prompt is. The producer announces it with the surface, in the AG-UI `metadata` of its snapshot (`metadata.turnOpeningActions`, by surface id), so the consumer declares nothing and the turn opens as soon as the shopper picks the action ([ADR-019](./docs/internal/adr/ADR-019-turn-opening-actions.md)). Such an action opens a new streaming turn whose `input.action` records it (component, action name, surface id, source node and payload), and that turn becomes the active turn. The surfaces of the turn it was sent from keep accepting actions. Any other action streams its answer into the active turn.
 
 It is **fire-and-forget**: the returned Promise always resolves and never rejects, so the consumer needs no `.catch`. A message with no `userAction`, no `sourceComponentId`, a node that resolves to no component, or an internal validation failure is dropped with a dev-only warning and nothing is sent.
 
@@ -109,7 +111,8 @@ The optimistic value gives way to the producer's once the gesture is over, whate
 
 When the Gateway is still busy with another request for the session, it rejects the new one (`409`, `AGENT:ACTION_IN_FLIGHT`). Thermidor retries automatically for up to 30 seconds, and a conflict that recovers shows nothing. If it gives up:
 
-- an **action**'s dispatch ends without changing the turn, which releases its optimistic hold, and `session.actionError` reports it until the next action or prompt is sent;
+- an **action** that does not open a turn ends without changing any turn, which releases its optimistic hold, and `session.actionError` reports it until the next action or prompt is sent;
+- an **action that opens a turn** sets `session.actionError` too, and its turn becomes `error`, retryable with `retry(turnId)` while it is the last turn;
 - a **prompt**'s turn becomes `error`, retryable with `retry(turnId)` while it is the last turn.
 
 ## The Turn / TurnResponse model
@@ -119,7 +122,7 @@ Each turn pairs one `input` with its streamed `response`:
 ```typescript
 interface Turn {
   id: string;
-  input: {prompt?: string}; // prompt omitted for prompt-less action turns
+  input: {prompt?: string; action?: TurnAction}; // the prompt, or the action that opened the turn
   response: TurnResponse;
   status: 'streaming' | 'complete' | 'error';
   error?: string; // present iff status === 'error'
@@ -138,7 +141,7 @@ interface TurnResponse {
 
 Surfaces live in the session, not in the turn that created them ([ADR-018](./docs/internal/adr/ADR-018-session-scoped-surfaces-and-initialize.md)). A surface lives from its `createSurface` until its `deleteSurface`, whichever runs carry them, and a `createSurface` for a live id replaces that surface, so a producer mints a new id for each new surface.
 
-- `session.surfaces` lists every live surface in creation order; a surface the agent deletes leaves it, and one it re-creates moves to the end. Each turn's `response.surfaces` lists the live surfaces that turn created.
+- `session.surfaces` lists every live surface in creation order; a surface the agent deletes leaves it, and one it re-creates moves to the end. Each turn's `response.surfaces` lists the live surfaces that turn created. A loading placeholder is listed only while the run that created it streams: while its turn streams, or while the request in flight streams into that turn and had not found it already left behind; one the agent left behind (a cancelled run, an error, a restored session) leaves the lists, so a consumer draws a skeleton for every listed surface whose `isLoading` holds.
 - `session.a2uiMessages` is the whole session's renderer stream, in arrival order. It only grows, so a single renderer is fed each new message once. Before a `createSurface` that replaces a live surface, it carries a `deleteSurface` for it, and it leaves out an operation on a surface that is not live, since a renderer refuses both. It exists because Agent Gateway emits A2-UI v1.0 while every available renderer consumes v0.9: Thermidor downgrades the stream on the consumer's behalf (recorded interim debt, see below).
 - `session.state` is the validated data model of every live surface, keyed by surface id, whichever turn wrote it.
 - An action resolves its source component across the session's live surfaces, so the surfaces of earlier turns keep accepting actions. Its run only updates the surfaces: it never changes a turn's status or response. When it fails, whether the endpoint rejects it, it streams `RUN_ERROR`, its stream ends without a terminal event or its request cannot be built, `session.actionError` identifies the action (`message`, `component`, `name`, `surfaceId`, `sourceComponentId`), so a consumer can show the failure next to the block it came from.

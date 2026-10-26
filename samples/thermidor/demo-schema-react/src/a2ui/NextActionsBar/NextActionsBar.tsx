@@ -8,8 +8,9 @@ import styles from './NextActionsBar.module.css';
  * `NextActionsBarPropsSchema`; selecting one dispatches through `context.dispatchAction`:
  *
  * - a `followup` or `search` item dispatches `selectAction {text, type}`;
- * - a `searchOption` item dispatches `selectSearchOption {optionId}`. The gateway keeps the search
- *   saved under `optionId` and opens it as a new commerce-search surface.
+ * - a `searchOption` item dispatches `selectSearchOption {optionId, text}`. The gateway keeps the
+ *   search saved under `optionId` and opens it as a new commerce-search surface; the text is what
+ *   the shopper selected.
  */
 export const NextActionsBar = createReactComponent(
   {
@@ -26,7 +27,12 @@ export const NextActionsBar = createReactComponent(
     const handleSelectAction = (action: ActionItem) => {
       const nextActionsBarAction: NextActionsBarAction =
         action.type === 'searchOption'
-          ? {event: {name: 'selectSearchOption', context: {optionId: action.optionId}}}
+          ? {
+              event: {
+                name: 'selectSearchOption',
+                context: {optionId: action.optionId, text: action.text},
+              },
+            }
           : {event: {name: 'selectAction', context: {text: action.text, type: action.type}}};
       context.dispatchAction(nextActionsBarAction);
     };

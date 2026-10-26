@@ -65,18 +65,18 @@ The conversation is a single feed: every turn keeps its blocks on the page, and 
 
 - **One renderer stream for the session.** Surfaces live in the session (`@coveo/thermidor` ADR-018): a surface lives from its `createSurface` until its `deleteSurface`, whichever turn carries them. `AppShell` feeds `session.a2uiMessages`, which only grows, to one renderer; `ThermidorA2UIStream` feeds it only the messages it has not seen. Each turn's `response.surfaces` lists the live surfaces it created, so the page draws them under that turn. A producer mints a new surface id for each surface it creates; the mock does so for every prompt.
 - **Only the latest turn is interactive.** The session resolves an action's component across every live surface, so earlier blocks could take actions. The sample still keeps them read-only: `TurnSurfaces` wraps every turn but the latest in a disabled `fieldset`, so earlier blocks stay readable, selected facets included, but cannot be used.
-- **Follow-up exchanges.** `@coveo/thermidor` streams an action's response into the turn that is already shown. For `NextActionsBar` actions (`selectAction`, `selectSearchOption`), `AppShell` records how much the turn held when the action was sent (`startFollowUp`), and `splitTurn` (`src/components/ConversationPage/turn-segments.ts`) draws the answer as its own exchange after the one it follows.
+- **Follow-ups are turns.** Agent Gateway announces the `NextActionsBar` actions (`selectAction`, `selectSearchOption`) as turn-opening with the bar, so `@coveo/thermidor` answers each one in a new turn whose `input.action` records it, and the sample declares nothing. A turn here is a gesture of the shopper in the conversation, whoever answers it: the gateway answers a search option itself, without the agent, and does not count it as a turn. `ConversationThread` draws the chip's text as the shopper's message, and no separator before such a turn, so it reads as a continuation of the answer it follows. The follow-up's turn becomes the latest one, so the blocks it was sent from become read-only, as after a prompt.
 
 ## Loading placeholders (✅ data-model driven)
 
-While an exchange streams, a skeleton marks each block that is still loading. A2-UI defines no skeleton: a loading placeholder is an ordinary surface whose **data model** declares `isLoading: true`, and it follows the A2-UI surface lifecycle. The sample infers nothing from `surfaceId`s, which the spec treats as opaque, nor from reasoning steps.
+While a turn streams, a skeleton marks each block that is still loading. A2-UI defines no skeleton: a loading placeholder is an ordinary surface whose **data model** declares `isLoading: true`, and it follows the A2-UI surface lifecycle. The sample infers nothing from `surfaceId`s, which the spec treats as opaque, nor from reasoning steps.
 
 | Question                   | Answer                                                                                         |
 | -------------------------- | ---------------------------------------------------------------------------------------------- |
 | **Whether** to show one    | The surface's data model has `isLoading: true`                                                 |
 | **Which** skeleton to show | The root node's `component` (`ProductCarousel`, `NextActionsBar`, …), mapped by `A2UISkeleton` |
 | **When** it ends           | The agent deletes the surface (`deleteSurface`), or writes `isLoading: false`                  |
-| **While** it is drawn      | Its exchange streams: the turn is `streaming`, or its follow-up is in flight                   |
+| **While** it is drawn      | Its turn streams                                                                               |
 
 ### What the agent emits
 
@@ -99,19 +99,17 @@ A placeholder the agent abandons is deleted the same way. The mock templates emi
 
 ### How the sample draws it
 
-- `@coveo/thermidor` derives `response.surfaces` from the stream: each `DiscoveredSurface` carries `rootComponentType` and `isLoading`, and a deleted surface leaves the list.
-- `AppShell` maps each loading surface's id to its root component type (`loadingSurfaces`). `ThermidorA2UIStream` feeds the renderer and shares that map with the page it wraps.
-- `TurnSurfaces` draws `A2UISkeleton` for a loading surface in the place its content takes, and the `A2UIRenderer` otherwise.
-- A placeholder is drawn only while its exchange streams (`TurnSurfaces`' `isStreaming`: the last exchange of a `streaming` turn, or of the turn whose follow-up is in flight). A placeholder the agent never deletes (a cancelled run, an error, a restored session) is abandoned once the exchange ends, and nothing is drawn for it. It stays in `surfacesByTurn`, so the split of a turn into follow-up exchanges is unchanged.
+- `@coveo/thermidor` derives `response.surfaces` from the stream: each `DiscoveredSurface` carries `rootComponentType` and `isLoading`, and a deleted surface leaves the list. A loading placeholder is listed only while its turn streams: one the agent never deletes (a cancelled run, an error, a restored session) leaves the list once the turn ends.
+- `TurnSurfaces` takes the turn's `response.surfaces` and draws `A2UISkeleton` for a loading surface in the place its content takes, and the `A2UIRenderer` otherwise. The sample holds no placeholder rule of its own.
 
 ## Action dispatch and inline state transport
 
 A catalog component sends an action with the renderer's `context.dispatchAction(action)`. The renderer surfaces it as an A2-UI client-to-server message through the `onAction` handler of `A2UIProvider`, which `AppShell` wires to its own `handleAction`:
 
 - The session sends one request at a time, withholds a dispatch made while another request is in flight, and exposes the one in flight (`request` in `session.getSnapshot()`), with the component and the action it sends. `src/a2ui/session-request.tsx` turns it into the sample's lock rule (`isBlocking`): every request locks the active surface except the facet search actions (`search`, `clearSearch`, `showMoreSearchResults` of `RegularFacet` and `CategoryFacet`), which it lists in `NON_BLOCKING_ACTIONS`, typed by `ComponentActionNames`. Typing in a facet search keeps the surface usable. The lock is the sample's choice, next to what it does with a gesture made while the session is busy. `useGesture` drops a gesture while any request is in flight, a facet search included, and reads `request` synchronously, so a double click never sends twice, even before the lock renders. A facet search that fires during a request waits until the session is free, sending the latest query.
-- A failed action never fails a turn: `actionError` in `session.getSnapshot()` names it, and `TurnSurfaces` shows its message in an alert under the block it came from (matched on `surfaceId`), until the next action or prompt.
-- While the surface is locked, `TurnSurfaces` disables the active turn's `fieldset` and sets `aria-busy`. The whole surface dims and ignores the pointer, only after 150 ms so a fast reply never flashes it; the exchange that streams is disabled without dimming, so its content arrives at full strength. Focus returns to the control the shopper used once the surface unlocks, without scrolling. The prompt input is disabled by the same rule.
-- `NextActionsBar` actions (`selectAction`, `selectSearchOption`) start a [follow-up exchange](#rendering-every-turn-on-one-page) before they are sent.
+- A failed action that does not open a turn never fails one: `actionError` in `session.getSnapshot()` names it, and `TurnSurfaces` shows its message in an alert under the block it came from (matched on `surfaceId`), until the next action or prompt.
+- While the surface is locked, `TurnSurfaces` disables the active turn's `fieldset` and sets `aria-busy`. The whole surface dims and ignores the pointer, only after 150 ms so a fast reply never flashes it; the turn that streams is disabled without dimming, so its content arrives at full strength. Focus returns to the control the shopper used once the surface unlocks, without scrolling. The prompt input is disabled by the same rule.
+- `NextActionsBar` actions (`selectAction`, `selectSearchOption`) open a [turn of their own](#rendering-every-turn-on-one-page): Agent Gateway announces them as turn-opening with the bar, so the sample declares nothing.
 
 A prompt is sent with `session.dispatchAction({name: 'submitPrompt', payload: {prompt}})`, which opens a new turn.
 
@@ -182,14 +180,7 @@ Capture this before wiring dynamic facet composition.
 
 ### Temporary workarounds (to remove when upstream dependencies evolve)
 
-| Item                      | Description                                                                                                                                                           | Remove when                                                           |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| **v1.0 → v0.9 downgrade** | Owned by `@coveo/thermidor` (`session.a2uiMessages`); see the ADR-015 addendum.                                                                                       | `@a2ui/web_core` ships a `v1_0` subpath AND the renderer imports it   |
-| **Zod 3 projection**      | The sample pins `zod@3` and imports runtime schemas from `@coveo/thermidor-schema/zod3` to match the renderer.                                                        | `@copilotkit/a2ui-renderer` upgrades to Zod 4                         |
-| **Follow-up exchanges**   | `startFollowUp` / `splitTurn` split one turn into exchanges because an action's response streams into the turn already shown, which also does not count as streaming. | `@coveo/thermidor` models an action's run as its own exchange or turn |
-
-### Consumer DX improvements (simplify what the consumer must implement)
-
-| Item                        | Description                                                                                                                                 | Owner                |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
-| **Follow-ups as exchanges** | Consumers rebuild exchanges from activity and message counts (`turn-segments.ts`). Exposing them on the turn would remove that bookkeeping. | `packages/thermidor` |
+| Item                      | Description                                                                                                    | Remove when                                                         |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| **v1.0 → v0.9 downgrade** | Owned by `@coveo/thermidor` (`session.a2uiMessages`); see the ADR-015 addendum.                                | `@a2ui/web_core` ships a `v1_0` subpath AND the renderer imports it |
+| **Zod 3 projection**      | The sample pins `zod@3` and imports runtime schemas from `@coveo/thermidor-schema/zod3` to match the renderer. | `@copilotkit/a2ui-renderer` upgrades to Zod 4                       |

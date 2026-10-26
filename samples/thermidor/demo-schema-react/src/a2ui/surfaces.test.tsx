@@ -5,6 +5,7 @@ import type {A2uiV09Message} from '@coveo/thermidor';
 import {createThermidorCatalog, THERMIDOR_CATALOG_ID} from './components.js';
 import {ThermidorA2UIStream, TurnSurfaces} from './surfaces.js';
 import {SessionRequestProvider} from './session-request.js';
+import {makeSurfaces} from '../test/turn-fixtures.js';
 import {requestSnapshot} from '../test/fake-session-requests.js';
 
 const originalScrollIntoView = Element.prototype.scrollIntoView;
@@ -52,6 +53,10 @@ function lockedSource(locked: boolean) {
   };
 }
 
+const loading = (surfaceId: string) => [
+  {surfaceId, rootComponentType: 'ProductCarousel', isLoading: true},
+];
+
 function Turn({
   interactive,
   locked = false,
@@ -64,9 +69,9 @@ function Turn({
   return (
     <SessionRequestProvider value={lockedSource(locked)}>
       <A2UIProvider catalog={CATALOG} onAction={() => {}}>
-        <ThermidorA2UIStream messages={MESSAGES} loadingSurfaces={new Map()} />
+        <ThermidorA2UIStream messages={MESSAGES} />
         <TurnSurfaces
-          surfaceIds={[SURFACE_ID]}
+          surfaces={makeSurfaces(SURFACE_ID)}
           interactive={interactive}
           isStreaming={isStreaming}
         />
@@ -150,7 +155,7 @@ describe('TurnSurfaces while a request is in flight', () => {
     expect(pageSizeSelect().closest('fieldset')?.className).toMatch(/locked/);
   });
 
-  it('disables the exchange that streams without dimming it', async () => {
+  it('disables the turn that streams without dimming it', async () => {
     render(<Turn interactive locked isStreaming />);
 
     await waitFor(() => expect(pageSizeSelect()).toBeDefined());
@@ -216,80 +221,83 @@ describe('TurnSurfaces while a request is in flight', () => {
     elsewhere.remove();
   });
 
-  it('gives focus back to the control used last when two exchanges are interactive', async () => {
-    const FOLLOW_UP_ID = 'follow-up-surface';
-    const messages = [...MESSAGES, ...surfaceMessages(FOLLOW_UP_ID)];
-    function Exchanges({locked}: {locked: boolean}) {
+  it('gives focus back to the control used last when two surface groups are interactive', async () => {
+    const OTHER_SURFACE_ID = 'other-surface';
+    const messages = [...MESSAGES, ...surfaceMessages(OTHER_SURFACE_ID)];
+    function TwoGroups({locked}: {locked: boolean}) {
       return (
         <SessionRequestProvider value={lockedSource(locked)}>
           <A2UIProvider catalog={CATALOG} onAction={() => {}}>
-            <ThermidorA2UIStream messages={messages} loadingSurfaces={new Map()} />
-            <TurnSurfaces surfaceIds={[SURFACE_ID]} interactive isStreaming={false} />
-            <TurnSurfaces surfaceIds={[FOLLOW_UP_ID]} interactive isStreaming={false} />
+            <ThermidorA2UIStream messages={messages} />
+            <TurnSurfaces surfaces={makeSurfaces(SURFACE_ID)} interactive isStreaming={false} />
+            <TurnSurfaces
+              surfaces={makeSurfaces(OTHER_SURFACE_ID)}
+              interactive
+              isStreaming={false}
+            />
           </A2UIProvider>
         </SessionRequestProvider>
       );
     }
-    const {rerender} = render(<Exchanges locked={false} />);
+    const {rerender} = render(<TwoGroups locked={false} />);
     await waitFor(() => expect(screen.getAllByLabelText('Products per page:')).toHaveLength(2));
     const [first, second] = screen.getAllByLabelText('Products per page:') as HTMLSelectElement[];
 
     first.focus();
     first.blur();
-    rerender(<Exchanges locked />);
-    rerender(<Exchanges locked={false} />);
+    rerender(<TwoGroups locked />);
+    rerender(<TwoGroups locked={false} />);
     second.focus();
     second.blur();
-    rerender(<Exchanges locked />);
-    rerender(<Exchanges locked={false} />);
+    rerender(<TwoGroups locked />);
+    rerender(<TwoGroups locked={false} />);
 
     expect(document.activeElement).toBe(second);
   });
 });
 
 describe('TurnSurfaces loading placeholders', () => {
-  function renderPlaceholder(isStreaming: boolean) {
+  function renderPlaceholder() {
     return render(
       <A2UIProvider catalog={CATALOG} onAction={() => {}}>
-        <ThermidorA2UIStream
-          messages={MESSAGES}
-          loadingSurfaces={new Map([[SURFACE_ID, 'ProductCarousel']])}
-        >
-          <TurnSurfaces surfaceIds={[SURFACE_ID]} interactive isStreaming={isStreaming} />
+        <ThermidorA2UIStream messages={MESSAGES}>
+          <TurnSurfaces surfaces={loading(SURFACE_ID)} interactive isStreaming />
         </ThermidorA2UIStream>
       </A2UIProvider>
     );
   }
 
-  it('draws the skeleton of a loading surface in its place while its exchange streams', () => {
-    renderPlaceholder(true);
+  it('draws the skeleton of a loading surface in its place', () => {
+    renderPlaceholder();
 
     const section = screen.getByRole('region', {name: `A2-UI surface ${SURFACE_ID}`});
     expect(section.querySelector('[aria-label="Loading product carousel"]')).not.toBeNull();
     expect(screen.queryByLabelText('Products per page:')).toBeNull();
   });
 
-  it('draws nothing for a placeholder left behind once its exchange ended', () => {
-    const {container} = renderPlaceholder(false);
+  it('draws nothing when the turn lists no surface', () => {
+    const {container} = render(
+      <A2UIProvider catalog={CATALOG} onAction={() => {}}>
+        <TurnSurfaces surfaces={[]} interactive isStreaming={false} />
+      </A2UIProvider>
+    );
 
-    expect(screen.queryByRole('region', {name: `A2-UI surface ${SURFACE_ID}`})).toBeNull();
     expect(container.querySelector('fieldset')).toBeNull();
   });
 
   it('does not scroll to the content that replaces a drawn placeholder', () => {
     const scrollIntoView = vi.fn();
     Element.prototype.scrollIntoView = scrollIntoView;
-    const loadingSurfaces = new Map([['placeholder', 'ProductCarousel']]);
-    const page = (surfaceIds: string[]) => (
+    const page = (surfaces: ReturnType<typeof makeSurfaces>) => (
       <A2UIProvider catalog={CATALOG} onAction={() => {}}>
-        <ThermidorA2UIStream messages={MESSAGES} loadingSurfaces={loadingSurfaces}>
-          <TurnSurfaces surfaceIds={surfaceIds} interactive isStreaming />
+        <ThermidorA2UIStream messages={MESSAGES}>
+          <TurnSurfaces surfaces={surfaces} interactive isStreaming />
         </ThermidorA2UIStream>
       </A2UIProvider>
     );
-    const {rerender} = render(page(['placeholder']));
+    const {rerender} = render(page(loading('placeholder')));
 
-    rerender(page([SURFACE_ID]));
+    rerender(page(makeSurfaces(SURFACE_ID)));
 
     expect(screen.getByRole('region', {name: `A2-UI surface ${SURFACE_ID}`})).toBeDefined();
     expect(scrollIntoView).not.toHaveBeenCalled();
@@ -300,8 +308,8 @@ describe('TurnSurfaces loading placeholders', () => {
     Element.prototype.scrollIntoView = scrollIntoView;
     const page = (surfaceIds: string[]) => (
       <A2UIProvider catalog={CATALOG} onAction={() => {}}>
-        <ThermidorA2UIStream messages={MESSAGES} loadingSurfaces={new Map()}>
-          <TurnSurfaces surfaceIds={surfaceIds} interactive isStreaming />
+        <ThermidorA2UIStream messages={MESSAGES}>
+          <TurnSurfaces surfaces={makeSurfaces(...surfaceIds)} interactive isStreaming />
         </ThermidorA2UIStream>
       </A2UIProvider>
     );
@@ -319,8 +327,12 @@ describe('ThermidorA2UIStream', () => {
     const page = (messages: A2uiV09Message[]) => (
       <SessionRequestProvider value={lockedSource(false)}>
         <A2UIProvider catalog={CATALOG} onAction={() => {}}>
-          <ThermidorA2UIStream messages={messages} loadingSurfaces={new Map()}>
-            <TurnSurfaces surfaceIds={[SURFACE_ID, SECOND_ID]} interactive isStreaming={false} />
+          <ThermidorA2UIStream messages={messages}>
+            <TurnSurfaces
+              surfaces={makeSurfaces(SURFACE_ID, SECOND_ID)}
+              interactive
+              isStreaming={false}
+            />
           </ThermidorA2UIStream>
         </A2UIProvider>
       </SessionRequestProvider>
@@ -355,8 +367,8 @@ describe('the failure of an action', () => {
         }}
       >
         <A2UIProvider catalog={CATALOG} onAction={() => {}}>
-          <ThermidorA2UIStream messages={MESSAGES} loadingSurfaces={new Map()} />
-          <TurnSurfaces surfaceIds={[SURFACE_ID]} interactive isStreaming={false} />
+          <ThermidorA2UIStream messages={MESSAGES} />
+          <TurnSurfaces surfaces={makeSurfaces(SURFACE_ID)} interactive isStreaming={false} />
         </A2UIProvider>
       </SessionRequestProvider>
     );
