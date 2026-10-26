@@ -477,4 +477,4 @@ const schemaDiscoveryEvents: ConverseEvent[] = buildConversationResponse({
   includeFinalStateSnapshot: false,
 });
 
-export {schemaDiscoveryEvents, lifeJacketsState, safetyGearState};
+export {schemaDiscoveryEvents};
