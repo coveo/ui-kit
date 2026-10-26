@@ -12,9 +12,22 @@ const DEFAULT_DESKTOP_VIEWPORT = {
   height: 1080,
 };
 
+function shardFromEnv() {
+  const shard = process.env.TEST_SHARD;
+  if (!shard) {
+    return null;
+  }
+  const [current, total] = shard.split('/').map(Number);
+  if (!Number.isInteger(current) || !Number.isInteger(total)) {
+    throw new Error(`TEST_SHARD must be <current>/<total>, got "${shard}"`);
+  }
+  return {current, total};
+}
+
 export default defineConfig({
   testDir: './src',
   testMatch: '*.e2e.ts',
+  shard: shardFromEnv(),
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
