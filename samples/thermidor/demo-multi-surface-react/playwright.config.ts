@@ -22,7 +22,7 @@ export default defineConfig({
   ],
   webServer: [
     {
-      command: `node --experimental-strip-types ../../../packages/mock-converse-api/src/server.ts`,
+      command: 'pnpm --filter @coveo/mock-converse-api start',
       env: {PORT: String(MOCK_PORT)},
       url: `http://localhost:${MOCK_PORT}/multi-surface/sessions`,
       reuseExistingServer: !process.env.CI,

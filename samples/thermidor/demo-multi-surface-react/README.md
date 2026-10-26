@@ -12,9 +12,9 @@ surfaces train (coveo/ui-kit#8750, #8751, #8752), which this branch is stacked o
 pnpm dev
 ```
 
-This builds `@coveo/platform-mock-api`, `@coveo/mock-converse-api` and `@coveo/thermidor`, starts the
-mock Converse API on port 3456 and opens the sample at http://localhost:5174 (`pnpm dev:mock` does
-the same). If the mock is already running, `pnpm dev:vite` only starts Vite.
+This builds the sample's dependencies (`@coveo/thermidor` and the mock), then starts the mock
+Converse API on port 3456 and the sample at http://localhost:5174. If the mock is already running,
+`pnpm dev:vite` only starts Vite.
 
 Try it (the mock is described [below](#the-multi-surface-mock)):
 
@@ -43,8 +43,8 @@ pnpm e2e
 ```
 
 Playwright starts the mock on port 3466 and the sample on port 4175, then walks the pages above
-(`e2e/storefront.e2e.ts`). Build `@coveo/platform-mock-api` first; CI builds it before running
-the sample's `e2e` script. Opening the search behind **See all kayaks** is marked `fixme`: on the
+(`e2e/storefront.e2e.ts`). Build the sample's dependencies first (`pnpm dev` does); CI builds them before running the
+sample's `e2e` script. Opening the search behind **See all kayaks** is marked `fixme`: on the
 base branch, `NextActionsBar` sends a `text` that `@coveo/thermidor-schema` 1.0.0-beta.30 rejects.
 
 ## What it reproduces
