@@ -26,7 +26,8 @@ Try it (the mock is described [below](#the-multi-surface-mock)):
    that option and opens it as a search surface (facets, sort, pagination). Change the sort or a
    facet: the server answers from the search it keeps.
 3. Click **Add to cart** on a product card: the header's cart counts it. Open the cart to change it.
-4. Turn **AI** off and search: the server refuses `storefront-preview-search` with a 400.
+4. Turn **AI** off and search `kayak`: the search page shows the search surface the server opened
+   for it (facets, sort, pagination), answered from the search it keeps.
 5. Open a **Listing pages** entry: it shows an _In progress_ placeholder and sends no request.
 6. Open **One session** at the bottom: every turn, the view that sent it, and the surfaces it
    created that are still alive. `GET http://localhost:3456/multi-surface/sessions` shows what the
@@ -34,6 +35,17 @@ Try it (the mock is described [below](#the-multi-surface-mock)):
 
 To run it against a real Agent Gateway, copy `.env.example` to `.env.local`, fill it in and run
 `pnpm dev:vite`.
+
+### End-to-end tests
+
+```bash
+pnpm e2e
+```
+
+Playwright starts the mock on port 3466 and the sample on port 4175, then walks the pages above
+(`e2e/storefront.e2e.ts`). Build `@coveo/platform-mock-api` first; CI builds it before running
+the sample's `e2e` script. Opening the search behind **See all kayaks** is marked `fixme`: on the
+base branch, `NextActionsBar` sends a `text` that `@coveo/thermidor-schema` 1.0.0-beta.30 rejects.
 
 ## What it reproduces
 
@@ -106,7 +118,6 @@ A cancelled request unwinds a few microtasks after `session.cancel()`, so the ne
 - **The home page sends nothing.** A request needs a message or an action, and the server gives
   `storefront-preview-home` an empty run anyway, so the home page has nothing to ask until the
   session can open itself. The session opens on the first search.
-- **Only the assistant is answered.** The server refuses `storefront-preview-search` with a 400.
 
 ## What changes once the open work lands
 
@@ -115,13 +126,16 @@ A cancelled request unwinds a few microtasks after `session.cancel()`, so the ne
 - **The session shell and query suggestions** (coveo/ui-kit#8757, #8758): the producer answers `initialize` with a long-lived `SessionShell`
   holding a `SearchBox` and its `QuerySuggestions`, and a pause in typing dispatches
   `fetchSuggestions`. The header can then draw that surface as its search box, with suggestions.
-- **The server:** a view id for listing pages, an answer for `storefront-preview-search`, and a
+- **The server:** a view id for listing pages, an answer for `storefront-preview-search` (the mock
+  answers it; the real server does not yet), and a
   spike on what a view id should map to (today `custom.surfaceId` names a view, which reads oddly
   next to A2-UI's `surfaceId`).
 
 ## Structure
 
 ```
+e2e/
+└── storefront.e2e.ts           Playwright walk through every page, against the mock
 src/
 ├── StorefrontApp.tsx           The header over the page, actions, page visits
 ├── navigation.ts               Page visits and the listing pages
@@ -162,9 +176,9 @@ It keeps each session's state between requests:
   client only gets its id. Picking it opens a search surface whose actions are answered from the
   kept search (`templates/schema-response-search.ts`);
 - **the cart,** from `updateCart` actions;
-- **one assistant turn at a time:** another assistant request while one runs gets a 409.
+- **one turn at a time:** another assistant or search request while one runs gets a 409.
 
-Only `storefront-preview-assistant` does any work: a message runs the agent (the storefront and
-schema scenarios), which is told what the shopper is looking at on the search surface; an action is
-answered by the server. `storefront-preview` and `storefront-preview-home` get an empty run, and any
-other view gets a 400.
+On `storefront-preview-assistant`, a message runs the agent (the storefront and schema scenarios),
+which is told what the shopper is looking at on the search surface. On `storefront-preview-search`,
+a message opens a search surface for that query. On both, an action is answered by the server.
+`storefront-preview` and `storefront-preview-home` get an empty run, and any other view gets a 400.
