@@ -69,32 +69,32 @@ describe('StorefrontApp', () => {
     expect(screen.getByText('The server sent no results for this search.')).toBeTruthy();
   });
 
-  it('sends a page prompt once the request it cancelled has unwound', async () => {
+  it('disables the search box while a request is in flight, so no search races it', async () => {
     let finishAnswer: (() => void) | undefined;
     fetchMock.mockImplementationOnce(
       () =>
-        new Promise<Response>((_resolve, reject) => {
-          finishAnswer = () => reject(new DOMException('Aborted', 'AbortError'));
+        new Promise<Response>((resolve) => {
+          finishAnswer = () => resolve(emptyTurnResponse());
         })
     );
     render(<App />);
     await act(async () => {});
+    const searchBox = screen.getByRole('searchbox', {name: 'Search'}) as HTMLInputElement;
 
-    fireEvent.change(screen.getByRole('searchbox', {name: 'Search'}), {
-      target: {value: 'boating safety'},
-    });
+    fireEvent.change(searchBox, {target: {value: 'kayak'}});
     fireEvent.submit(screen.getByRole('search'));
     await act(async () => {});
+
+    expect(searchBox.disabled).toBe(true);
     fireEvent.click(screen.getByRole('checkbox', {name: 'AI'}));
-    fireEvent.change(screen.getByRole('searchbox', {name: 'Search'}), {target: {value: 'kayak'}});
+    fireEvent.change(searchBox, {target: {value: 'boots'}});
     fireEvent.submit(screen.getByRole('search'));
-    finishAnswer?.();
     await act(async () => {});
+    expect(sentViews(fetchMock)).toEqual(['storefront-preview-assistant']);
 
-    expect(sentViews(fetchMock)).toEqual([
-      'storefront-preview-assistant',
-      'storefront-preview-search',
-    ]);
+    await act(async () => finishAnswer?.());
+
+    expect(searchBox.disabled).toBe(false);
   });
 
   it('asks the assistant on its view with the AI toggle on', async () => {

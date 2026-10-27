@@ -59,6 +59,29 @@ test.describe('Storefront Preview on one session', () => {
     });
   });
 
+  test('keeps the search box disabled while an answer streams, so no search gets a conflict', async ({
+    page,
+  }) => {
+    const views = trackViews(page);
+    await page.goto('/');
+    await search(page, 'kayak', {ai: true});
+    const searchBox = page.getByRole('searchbox', {name: 'Search'});
+
+    await expect(searchBox).toBeDisabled();
+    await page.getByRole('checkbox', {name: 'AI'}).setChecked(false);
+    await page.getByRole('search').evaluate((form: HTMLFormElement) => form.requestSubmit());
+
+    await expect(searchBox).toBeEnabled({timeout: 30000});
+    await expect(page.getByText(/stopped early/)).toHaveCount(0);
+    expect(views).toEqual(['storefront-preview-assistant']);
+
+    await search(page, 'boots', {ai: false});
+    await expect(page.getByRole('heading', {name: 'Results for “boots”'})).toBeVisible();
+    await expect(page.getByRole('list', {name: 'Product list'})).toBeVisible({timeout: 30000});
+    await expect(page.getByText(/stopped early/)).toHaveCount(0);
+    expect(views).toEqual(['storefront-preview-assistant', 'storefront-preview-search']);
+  });
+
   test('adds a product to the cart', async ({page}) => {
     await page.goto('/');
     await search(page, 'which kayak should I get?', {ai: true});
