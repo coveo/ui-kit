@@ -4,3 +4,25 @@
   color: var(--color-text-muted);
   text-align: left;
 }
+
+.correction {
+  margin: 0 0 var(--space-1);
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  text-align: left;
+}
+
+.originalQuery {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-primary);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.originalQuery:hover,
+.originalQuery:focus-visible {
+  color: var(--color-text-primary);
+}

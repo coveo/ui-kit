@@ -1,12 +1,12 @@
 import {describe, it, expect, afterEach} from 'vitest';
-import {screen, cleanup, waitFor} from '@testing-library/react';
+import {screen, cleanup, waitFor, fireEvent} from '@testing-library/react';
 import {mountSurface} from '../mount-surface.harness.js';
 
 /**
  * QuerySummary is a `createReactComponent` implementation driven by the generic binder, mounted
  * end-to-end through the real thermidor catalog: `query` / `firstIndex` / `lastIndex` /
- * `totalEntries` are `{path}` bindings resolved from the surface data model. Presentational — no
- * actions.
+ * `totalEntries` / `correction` are `{path}` bindings resolved from the surface data model. Its one
+ * action, `overrideCorrection`, searches the shopper's query instead of the one that replaced it.
  *
  * Progressive-resolution cases (a field not yet arrived) are expressed by OMITTING that field's
  * data-model write, so the binding resolves `undefined` naturally.
@@ -19,6 +19,7 @@ const BINDINGS = {
   firstIndex: {path: '/state/root/firstIndex'},
   lastIndex: {path: '/state/root/lastIndex'},
   totalEntries: {path: '/state/root/totalEntries'},
+  correction: {path: '/state/root/correction'},
 };
 
 // Only writes the provided fields; an omitted field's binding resolves undefined (progressive).
@@ -80,5 +81,45 @@ describe('QuerySummary', () => {
     const {container} = mountSummary({query: 'Water Sports', firstIndex: 1, lastIndex: 12});
     await new Promise((r) => setTimeout(r, 50));
     expect(container.querySelector('p')).toBeNull();
+  });
+
+  it('shows no correction when the query was searched as typed', async () => {
+    mountSummary({query: 'Water Sports', firstIndex: 1, lastIndex: 12, totalEntries: 43});
+    await waitFor(() => expect(screen.getByText(/Products/)).toBeDefined());
+    expect(screen.queryByText(/Showing results for/)).toBeNull();
+  });
+
+  it.each(['correction', 'trigger'])(
+    "shows the query a %s searched instead of the shopper's",
+    async (cause) => {
+      mountSummary({
+        query: 'Water Sports',
+        firstIndex: 1,
+        lastIndex: 12,
+        totalEntries: 43,
+        correction: {originalQuery: 'water sprots', cause},
+      });
+      await waitFor(() => expect(screen.getByText(/Showing results for/)).toBeDefined());
+      expect(screen.getByText(/Search instead for/)).toBeDefined();
+      expect(screen.getByRole('button', {name: 'water sprots'})).toBeDefined();
+    }
+  );
+
+  it("dispatches overrideCorrection with the shopper's query", async () => {
+    const {lastAction} = mountSummary({
+      query: 'Water Sports',
+      firstIndex: 1,
+      lastIndex: 12,
+      totalEntries: 43,
+      correction: {originalQuery: 'water sprots', cause: 'correction'},
+    });
+    await waitFor(() => expect(screen.getByRole('button', {name: 'water sprots'})).toBeDefined());
+    fireEvent.click(screen.getByRole('button', {name: 'water sprots'}));
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({
+        name: 'overrideCorrection',
+        context: {originalQuery: 'water sprots'},
+      })
+    );
   });
 });
