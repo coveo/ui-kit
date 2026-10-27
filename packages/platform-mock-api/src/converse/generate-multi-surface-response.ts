@@ -429,9 +429,11 @@ function multiSurfaceResponse(body: unknown, {paced = true}: {paced?: boolean} =
         ? searchEvents(session, message)
         : agentTurnEvents(session, message);
   } catch (error) {
-    return error instanceof HttpError
-      ? jsonError(error.status, error.message)
-      : jsonError(500, String(error));
+    if (error instanceof HttpError) {
+      return jsonError(error.status, error.message);
+    }
+    console.error('[multi-surface mock] Failed to answer the request:', error);
+    return jsonError(500, 'Internal server error.');
   }
   session.turnInProgress = true;
   const current = session;
