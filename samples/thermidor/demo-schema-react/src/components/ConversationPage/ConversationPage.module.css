@@ -4,6 +4,39 @@
   height: 100%;
 }
 
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: var(--space-3) var(--space-6) 0;
+}
+
+.newConversation {
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.newConversation:hover {
+  border-color: var(--color-border-hover);
+  background: var(--color-surface-hover);
+}
+
+.newConversation:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
 .scrollContainer {
   flex: 1;
   min-height: 0;
@@ -27,6 +60,10 @@
 @media (max-width: 639px) {
   .scrollContainer {
     padding: var(--space-3) var(--space-4);
+  }
+
+  .toolbar {
+    padding: var(--space-3) var(--space-4) 0;
   }
 
   .promptBar {

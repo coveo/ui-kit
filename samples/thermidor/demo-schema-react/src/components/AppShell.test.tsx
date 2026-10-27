@@ -5,13 +5,17 @@ import {AppShell} from './AppShell.js';
 import {makeTurn} from '../test/turn-fixtures.js';
 
 const mockDispatchAction = vi.fn();
+const mockStartNewConversation = vi.fn();
 
 let mockTurns: Turn[] = [];
 let capturedOnAction: ((message: unknown) => unknown) | undefined;
 
 // The session's request chain is faked, so every dispatch reaches the spy one at a time.
 let mockSession: Session;
-vi.mock('../context/session.js', () => ({useSession: () => mockSession}));
+vi.mock('../context/session.js', () => ({
+  useSession: () => mockSession,
+  useConversations: () => ({open: vi.fn(), startNew: mockStartNewConversation}),
+}));
 
 async function createMockSession(): Promise<Session> {
   const {createFakeSessionRequests} = await import('../test/fake-session-requests.js');
@@ -74,6 +78,7 @@ vi.mock('./ConversationPage/index.js', () => ({
       <span data-testid="pending-turn">{props.pendingTurnId ?? ''}</span>
       <span data-testid="streaming">{String(props.isStreaming)}</span>
       <button data-testid="conversation-submit" onClick={() => props.onSubmit('follow up')} />
+      <button data-testid="new-conversation" onClick={props.onNewConversation} />
     </div>
   ),
 }));
@@ -115,6 +120,17 @@ describe('AppShell', () => {
       name: 'submitPrompt',
       payload: {prompt: 'kayaks'},
     });
+  });
+
+  it('starts a new conversation from the conversation page', () => {
+    mockTurns = [makeTurn({id: 'turn-1'})];
+
+    render(<AppShell />);
+    act(() => {
+      screen.getByTestId('new-conversation').click();
+    });
+
+    expect(mockStartNewConversation).toHaveBeenCalledOnce();
   });
 
   it('renders every turn on the same page, search turns included', () => {
