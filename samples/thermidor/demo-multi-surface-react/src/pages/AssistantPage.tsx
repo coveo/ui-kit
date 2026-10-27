@@ -27,7 +27,7 @@ interface AssistantPageProps {
  * an input that continues the conversation.
  */
 export function AssistantPage({prompt, visitId, busy, onSend, onBack}: AssistantPageProps) {
-  const {turns, ownsTurn} = usePageView(visitId);
+  const {turns, ownsTurn} = usePageView(visitId, 'storefront-preview-assistant');
   const turnRefs = useRef(new Map<string, HTMLElement>());
   const latestTurnId = turns.at(-1)?.id;
 

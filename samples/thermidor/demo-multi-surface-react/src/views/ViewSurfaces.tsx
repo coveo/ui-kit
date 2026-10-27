@@ -11,8 +11,10 @@ interface ViewSurfacesProps {
   /** The surfaces to draw, in order. */
   surfaces: readonly DiscoveredSurface[];
   /**
-   * Whether a turn belongs to this view. A request in flight on one of its turns locks the
-   * surfaces, as `demo-schema-react` locks the active surface; another view's request does not.
+   * Whether a turn belongs to this view. A prompt in flight on one of its turns, or an action from
+   * one of its surfaces, locks the surfaces, as `demo-schema-react` locks the active surface;
+   * another view's request does not. An action is told apart by its surface rather than its turn:
+   * one that opens no turn streams into the session's latest turn, which may be another view's.
    */
   ownsTurn(turnId: string): boolean;
   /** Whether the view's turn is streaming. */
@@ -37,14 +39,18 @@ export function ViewSurfaces({
       getSnapshot() {
         const snapshot = session.getSnapshot();
         const {request} = snapshot;
-        const turnId = request?.kind === 'initialize' ? undefined : request?.turnId;
-        return request && !(turnId && ownsTurn(turnId))
-          ? {...snapshot, request: undefined}
-          : snapshot;
+        if (!request) {
+          return snapshot;
+        }
+        const owned =
+          request.kind === 'action'
+            ? surfaces.some(({surfaceId}) => surfaceId === request.surfaceId)
+            : request.kind === 'prompt' && ownsTurn(request.turnId);
+        return owned ? snapshot : {...snapshot, request: undefined};
       },
       subscribe: session.subscribe,
     }),
-    [session, ownsTurn]
+    [session, ownsTurn, surfaces]
   );
   return (
     <SessionRequestProvider value={source}>
