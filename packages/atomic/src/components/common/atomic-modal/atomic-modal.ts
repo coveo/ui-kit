@@ -12,7 +12,7 @@ import {multiClassMap, tw} from '@/src/directives/multi-class-map.js';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {buildCustomEvent, listenOnce} from '@/src/utils/event-utils.js';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
-import {getFocusedElement, once, randomID} from '@/src/utils/utils.js';
+import {getFocusedElement, isAncestorOf, once, randomID} from '@/src/utils/utils.js';
 import type {AtomicFocusTrap} from '../atomic-focus-trap/atomic-focus-trap.js';
 import type {AnyBindings} from '../interface/bindings.js';
 import '@/src/components/common/atomic-focus-trap/atomic-focus-trap.js';
@@ -257,9 +257,10 @@ export class AtomicModal
     const executionId = this.createExecutionTracker();
 
     const focusedElement = getFocusedElement();
-    if (focusedElement instanceof HTMLElement && !this.contains(focusedElement)) {
-      this.focusedElementBeforeOpen = focusedElement;
-    }
+    this.focusedElementBeforeOpen =
+      focusedElement instanceof HTMLElement && !isAncestorOf(this, focusedElement)
+        ? focusedElement
+        : undefined;
 
     if (!this.shouldRender) {
       this.shouldRender = true;
