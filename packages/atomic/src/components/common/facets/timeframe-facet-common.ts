@@ -313,9 +313,11 @@ export class TimeframeFacetCommon {
         i18n: this.props.bindings.i18n,
         label: this.props.label,
       },
-    })(html`<ul class="mt-3" part="values">
-      ${children}
-    </ul>`);
+    })(
+      html`<ul class="mt-3" part="values">
+        ${children}
+      </ul>`
+    );
   }
 
   private renderHeader(
