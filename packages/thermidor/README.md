@@ -43,7 +43,6 @@ await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me r
 | `state`                   | The validated data model of every live surface, keyed by surface id.                                                                                |
 | `actionError`             | The last component action that failed (`ActionError`: `message`, `component`, `name`, `surfaceId`, `sourceComponentId`), or `undefined`.            |
 | `request`                 | The request being sent, or `undefined` when idle. See [One request at a time](#one-request-at-a-time).                                              |
-| `sendAndWait(send)`       | Calls `send`, which dispatches through the renderer, and resolves once the session has answered it, whatever the outcome.                           |
 | `subscribe(listener)`     | Registers a listener called once per change to the turn list, the initialization, `actionError` or `request`.                                       |
 | `getSnapshot()`           | `turns`, `initialization`, `surfaces`, `a2uiMessages`, `state`, `request` and `actionError` as one immutable `SessionSnapshot`, replaced on change. |
 | `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's `onAction`.                             |
@@ -94,21 +93,18 @@ It is **fire-and-forget**: the returned Promise always resolves and never reject
 Thermidor sends one request at a time per session, `initialize`, prompts and component actions alike. A dispatch made while a request is in flight is withheld: nothing is sent, and its promise resolves at once with a dev-only warning. Each `dispatchAction` promise resolves once its own request ends.
 
 - `session.request` is the request being sent (`{kind: 'initialize'}`, `{kind: 'prompt', turnId}` or `{kind: 'action', component, name, surfaceId, sourceComponentId, turnId?}`, with no `turnId` before the first turn), or `undefined` when idle. An action's run counts, a follow-up included. Read it synchronously, or through `subscribe`, to lock or dim the interface, and to hold back a dispatch until the session is free. `component` is the dispatching node's discriminant, so a consumer can key its own action lists, such as the actions that keep its surfaces usable, by component and action name, typed by the contracts with `ComponentActionNames`.
-- `session.sendAndWait(send)` calls `send`, which dispatches through the renderer, and resolves once the session has answered that dispatch, whatever its outcome, a withheld one included. A renderer's own dispatch promise may resolve as soon as it has emitted the action; when the `dispatchAction` promise is at hand, await it instead.
 - `cancel()` stops the request in flight, but `session.request` stays set until it has unwound, a few microtasks later, so a dispatch made right after `cancel()` is withheld. Wait for `request` to become `undefined`, through `subscribe`, before sending the next one.
 
 ### Optimistic values
 
-To show a gesture's expected value until the session has answered it, show that value from the moment the gesture is sent until `sendAndWait()` resolves, then give way to the producer's value. Thermidor doesn't depend on a UI framework, so any state mechanism works. With React's `useOptimistic`, for example, a transition that awaits `sendAndWait()` lasts exactly that long:
+To show a gesture's expected value until the session has answered it, show that value from the moment the gesture is sent until its dispatch promise resolves, then give way to the producer's value. A renderer that returns its `onAction` handler's promise from its own dispatch hands back the `session.dispatchAction` promise, so awaiting the renderer's dispatch is enough. Thermidor doesn't depend on a UI framework, so any state mechanism works. With React's `useOptimistic`, for example, a transition that awaits the dispatch lasts exactly that long:
 
 ```tsx
 const [values, addOptimisticValues] = useOptimistic(producerValues);
 
 startTransition(async () => {
   addOptimisticValues(values.map((v) => (v.value === 'Nike' ? {...v, state: 'selected'} : v)));
-  await session.sendAndWait(() =>
-    renderer.dispatchAction({event: {name: 'toggleSelect', context: {value: 'Nike'}}})
-  );
+  await renderer.dispatchAction({event: {name: 'toggleSelect', context: {value: 'Nike'}}});
 });
 ```
 

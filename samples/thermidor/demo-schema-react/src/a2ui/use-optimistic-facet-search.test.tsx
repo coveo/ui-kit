@@ -22,7 +22,6 @@ function mount(initialBackend: string) {
       listeners.add(listener);
       return () => listeners.delete(listener);
     },
-    sendAndWait: () => Promise.resolve(),
   };
 
   let current!: ReturnType<typeof useOptimisticFacetSearch>;

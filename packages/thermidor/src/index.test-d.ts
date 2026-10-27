@@ -53,10 +53,9 @@ test('exposes the createSession session-client surface', () => {
 });
 
 // ── POSITIVE: the session exposes its request state ────────────────────────
-test('exposes the request in flight and its settlement on Session', () => {
+test('exposes the request in flight on Session', () => {
   expectTypeOf<Session['request']>().toEqualTypeOf<SessionRequest | undefined>();
   expectTypeOf<SessionRequest['kind']>().toEqualTypeOf<'initialize' | 'prompt' | 'action'>();
-  expectTypeOf<Session['sendAndWait']>().toEqualTypeOf<(send: () => unknown) => Promise<void>>();
 });
 
 // ── POSITIVE: the session exposes its surfaces, renderer stream and state ──

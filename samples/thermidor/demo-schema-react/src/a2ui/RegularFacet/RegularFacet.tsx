@@ -23,9 +23,7 @@ export const RegularFacet = createReactComponent(
     schema: RegularFacetPropsSchema,
   },
   ({props, context}) => {
-    const dispatch = (action: RegularFacetAction) => {
-      context.dispatchAction(action);
-    };
+    const dispatch = (action: RegularFacetAction) => context.dispatchAction(action);
     const search = useOptimisticFacetSearch(props.facetSearch?.query ?? '', dispatch);
     const optimisticFacet = useOptimisticRegularFacet(props, dispatch);
 
