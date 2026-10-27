@@ -15,14 +15,15 @@ const meta: Meta = {
   component: 'atomic-insight-tab',
   title: 'Insight/Tab',
   id: 'atomic-insight-tab',
-  render: () => html`<atomic-insight-tabs>
-    <atomic-insight-tab label="All" expression="" active></atomic-insight-tab>
-    <atomic-insight-tab label="Videos" expression="@ytchanneltitle"></atomic-insight-tab>
-    <atomic-insight-tab
-      label="Articles"
-      expression='@documenttype==("WebPage")'
-    ></atomic-insight-tab>
-  </atomic-insight-tabs>`,
+  render: () =>
+    html`<atomic-insight-tabs>
+      <atomic-insight-tab label="All" expression="" active></atomic-insight-tab>
+      <atomic-insight-tab label="Videos" expression="@ytchanneltitle"></atomic-insight-tab>
+      <atomic-insight-tab
+        label="Articles"
+        expression='@documenttype==("WebPage")'
+      ></atomic-insight-tab>
+    </atomic-insight-tabs>`,
   decorators: [decorator],
   parameters: {
     ...parameters,
