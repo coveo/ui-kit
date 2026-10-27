@@ -74,7 +74,7 @@
     "lint:check:eslint": {
       "inputs": [
         "package.json",
-        "force-app/main/default/.eslintrc.json",
+        "eslint.config.js",
         "force-app/main/default/lwc/**",
         "force-app/playgroundComponents/main/lwc/**"
       ],
@@ -98,7 +98,7 @@
     "lint:fix:eslint": {
       "inputs": [
         "package.json",
-        "force-app/main/default/.eslintrc.json",
+        "eslint.config.js",
         "force-app/main/default/lwc/**",
         "force-app/playgroundComponents/main/lwc/**"
       ],
