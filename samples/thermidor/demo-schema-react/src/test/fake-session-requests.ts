@@ -3,7 +3,15 @@ import type {SessionRequestSource} from '../a2ui/session-request.js';
 
 /** A session snapshot holding only `request`, the one field the surfaces read. */
 export function requestSnapshot(request: SessionRequest | undefined): SessionSnapshot {
-  return {turns: [], surfaces: [], a2uiMessages: [], state: {}, request, actionError: undefined};
+  return {
+    turns: [],
+    initialization: undefined,
+    surfaces: [],
+    a2uiMessages: [],
+    state: {},
+    request,
+    actionError: undefined,
+  };
 }
 
 interface UserActionMessage {

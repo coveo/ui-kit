@@ -22,7 +22,10 @@ import type {
   ComponentContractSchema,
   ComponentActionNames,
   ContractsSchema,
+  InitializeRequest,
+  SessionInitialization,
   SessionRequest,
+  SerializedInitialization,
   SerializedSession,
   Session,
   SessionConfig,
@@ -52,7 +55,7 @@ test('exposes the createSession session-client surface', () => {
 // ── POSITIVE: the session exposes its request state ────────────────────────
 test('exposes the request in flight and its settlement on Session', () => {
   expectTypeOf<Session['request']>().toEqualTypeOf<SessionRequest | undefined>();
-  expectTypeOf<SessionRequest['kind']>().toEqualTypeOf<'prompt' | 'action'>();
+  expectTypeOf<SessionRequest['kind']>().toEqualTypeOf<'initialize' | 'prompt' | 'action'>();
   expectTypeOf<Session['sendAndWait']>().toEqualTypeOf<(send: () => unknown) => Promise<void>>();
 });
 
@@ -63,6 +66,22 @@ test('exposes session-scoped surfaces, renderer stream and state on Session', ()
   expectTypeOf<Session['state']>().toEqualTypeOf<A2uiState>();
   expectTypeOf<TurnResponse>().not.toHaveProperty('a2uiMessages');
   expectTypeOf<TurnResponse>().not.toHaveProperty('state');
+});
+
+// ── POSITIVE: the session opens itself with initialize, recorded as its initialization ──
+test('exposes the initialization of the session', () => {
+  expectTypeOf<SessionConfig['initialize']>().toEqualTypeOf<boolean | undefined>();
+  expectTypeOf<Session['initialization']>().toEqualTypeOf<SessionInitialization | undefined>();
+  expectTypeOf<SessionSnapshot['initialization']>().toEqualTypeOf<
+    SessionInitialization | undefined
+  >();
+  expectTypeOf<Extract<SessionRequest, {kind: 'initialize'}>>().toEqualTypeOf<InitializeRequest>();
+  expectTypeOf<Extract<SessionRequest, {kind: 'action'}>['turnId']>().toEqualTypeOf<
+    string | undefined
+  >();
+  expectTypeOf<SerializedSession['initialization']>().toEqualTypeOf<
+    SerializedInitialization | undefined
+  >();
 });
 
 // ── POSITIVE: the session exposes one snapshot of its state ────────────────

@@ -16,6 +16,7 @@ export type SessionRequestSource = Pick<Session, 'subscribe' | 'getSnapshot' | '
 
 const IDLE_SNAPSHOT: SessionSnapshot = {
   turns: [],
+  initialization: undefined,
   surfaces: [],
   a2uiMessages: [],
   state: {},

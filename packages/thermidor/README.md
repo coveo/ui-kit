@@ -4,13 +4,13 @@
 
 The package is private, experimental, and consumed only inside this monorepo (by `samples/thermidor/demo-schema-react`).
 
-> There is **no engine, no interface layer, no Redux/RTK, and no per-endpoint facades**. The package was collapsed into this lean session client per [ADR-010](./docs/internal/adr/ADR-010-unified-endpoint-session-client.md). References to those layers in older revisions are obsolete.
+> There is **no engine, no interface layer, no Redux/RTK, and no per-endpoint facades**. References to those layers in older revisions are obsolete.
 
 ## The idea
 
 The server streams schema-defined [A2UI](https://github.com/google/A2UI) components; the client renders what the server sends. Thermidor's job is to transmit consumer input to the endpoint and fold the streamed result into an observable list of turns — it derives no use-case behavior beyond that fold. The contracts schema, the endpoint URL, and the ambient context are all consumer-injected, so a single package build serves public, internal (private-registry schema), and proxied deployments.
 
-Component state travels **inline** through the A2-UI data model: the server sends `updateDataModel` operations under `/state/<id>`, and the frozen renderer resolves each prop through an A2-UI Data_Binding (`{ path: <JSON Pointer> }`) against that data model. Renderers are "dumb": they receive resolved state in their `props` and never hydrate a controller or join a snapshot themselves. A2-UI is the only supported state source. This inline model superseded the earlier remote-controller / AG-UI `StateSnapshot` design per [ADR-016](./docs/internal/adr/ADR-016-inline-state-consumption-remove-remote-controller.md).
+Component state travels **inline** through the A2-UI data model: the server sends `updateDataModel` operations under `/state/<id>`, and the frozen renderer resolves each prop through an A2-UI Data_Binding (`{ path: <JSON Pointer> }`) against that data model. Renderers are "dumb": they receive resolved state in their `props` and never hydrate a controller or join a snapshot themselves. A2-UI is the only supported state source. This inline model superseded the earlier remote-controller / AG-UI `StateSnapshot` design.
 
 ## Public surface
 
@@ -33,26 +33,33 @@ await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me r
 
 `createSession(config)` returns a `Session` exposing exactly:
 
-| Member                    | Purpose                                                                                                                                               |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `contracts`               | The injected contracts schema this session validates against (readonly).                                                                              |
-| `turns`                   | Readonly observable list of `Turn`s folded from the stream (empty initially).                                                                         |
-| `surfaces`                | Every live surface of the session, in creation order, whichever turn created it.                                                                      |
-| `a2uiMessages`            | The session's whole renderer stream, in the A2-UI v0.9 shape. It only grows: feed each new message to one renderer once.                              |
-| `state`                   | The validated data model of every live surface, keyed by surface id.                                                                                  |
-| `actionError`             | The last component action that failed (`ActionError`: `message`, `component`, `name`, `surfaceId`, `sourceComponentId`), or `undefined`.              |
-| `request`                 | The request being sent, or `undefined` when idle. See [One request at a time](#one-request-at-a-time).                                                |
-| `sendAndWait(send)`       | Calls `send`, which dispatches through the renderer, and resolves once the session has answered it, whatever the outcome.                             |
-| `subscribe(listener)`     | Registers a listener called once per change to the turn list, `actionError` or `request`.                                                             |
-| `getSnapshot()`           | `turns`, `surfaces`, `a2uiMessages`, `state`, `request` and `actionError` as one immutable `SessionSnapshot`, replaced only when one of them changes. |
-| `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's `onAction`.                               |
-| `cancel()`                | Stops the active stream.                                                                                                                              |
-| `retry(turnId)`           | Re-submits the last turn's input when it errored: its prompt, or the action that opened it.                                                           |
-| `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                                                                                       |
+| Member                    | Purpose                                                                                                                                             |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `contracts`               | The injected contracts schema this session validates against (readonly).                                                                            |
+| `turns`                   | Readonly observable list of `Turn`s folded from the stream (empty initially).                                                                       |
+| `initialization`          | The run of the `initialize` action that opened the session, or `undefined`. See [Opening the session](#opening-the-session).                        |
+| `surfaces`                | Every live surface of the session, in creation order, whichever run created it.                                                                     |
+| `a2uiMessages`            | The session's whole renderer stream, in the A2-UI v0.9 shape. It only grows: feed each new message to one renderer once.                            |
+| `state`                   | The validated data model of every live surface, keyed by surface id.                                                                                |
+| `actionError`             | The last component action that failed (`ActionError`: `message`, `component`, `name`, `surfaceId`, `sourceComponentId`), or `undefined`.            |
+| `request`                 | The request being sent, or `undefined` when idle. See [One request at a time](#one-request-at-a-time).                                              |
+| `sendAndWait(send)`       | Calls `send`, which dispatches through the renderer, and resolves once the session has answered it, whatever the outcome.                           |
+| `subscribe(listener)`     | Registers a listener called once per change to the turn list, the initialization, `actionError` or `request`.                                       |
+| `getSnapshot()`           | `turns`, `initialization`, `surfaces`, `a2uiMessages`, `state`, `request` and `actionError` as one immutable `SessionSnapshot`, replaced on change. |
+| `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's `onAction`.                             |
+| `cancel()`                | Stops the active stream.                                                                                                                            |
+| `retry(turnId)`           | Re-submits the last turn's input when it errored: its prompt, or the action that opened it.                                                         |
+| `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                                                                                     |
 
 `subscribe` and `getSnapshot` do not rely on `this`, so they can be handed by reference to any store that compares snapshots by reference, such as React's `useSyncExternalStore(session.subscribe, session.getSnapshot)`. The package itself depends on no framework.
 
 The concrete `contracts` type pinned at the `createSession` call site threads unbroken through `Session`, so component types, action names, and payloads stay fully typed at the call site (no `string`, no `never`, no `unknown`).
+
+## Opening the session
+
+The session opens itself: `createSession` sends an `initialize` action a microtask after it returns, so a listener subscribed in the same task sees it start. It carries no surface or source component, since no component exists yet. While it is in flight, `session.request` is `{kind: 'initialize'}`. It goes through the [one-request rule](#one-request-at-a-time) and the conflict retry, and adopts the session id and token from its run, like a prompt. The producer answers with the session's shell, such as its search box, as an ordinary surface.
+
+Its run is recorded as `session.initialization` (`activities`, `status`, `error`), never as a turn. A failed `initialize` is not retried: `initialization.status` becomes `'error'`, and the first prompt still opens the session. `cancel()` stops it like any request. A restored session never sends it, and neither does a session created with `initialize: false`, for tests or for a server that creates a session while rendering.
 
 ## Dispatching actions
 
@@ -76,17 +83,17 @@ A component action is the standard A2-UI client-to-server message (`A2uiClientMe
 <A2UIProvider catalog={catalog} onAction={session.dispatchAction}>{/* … */}</A2UIProvider>
 ```
 
-Given a message, `dispatchAction` unwraps its `userAction`, recovers the dispatching component's discriminant from the session's live surfaces, whichever turn created them, validates the action payload against the component's injected contract internally, and — on success — POSTs the action to the converse endpoint.
+Given a message, `dispatchAction` unwraps its `userAction`, recovers the dispatching component's discriminant from the session's live surfaces, whichever run created them, validates the action payload against the component's injected contract internally, and — on success — POSTs the action to the converse endpoint.
 
-An action the producer announces as opening a turn, such as a follow-up chip or a search option, is answered as a new turn of the conversation, as a prompt is. The producer announces it with the surface, in the AG-UI `metadata` of its snapshot (`metadata.turnOpeningActions`, by surface id), so the consumer declares nothing and the turn opens as soon as the shopper picks the action ([ADR-019](./docs/internal/adr/ADR-019-turn-opening-actions.md)). Such an action opens a new streaming turn whose `input.action` records it (component, action name, surface id, source node and payload), and that turn becomes the active turn. The surfaces of the turn it was sent from keep accepting actions. Any other action streams its answer into the active turn.
+An action the producer announces as opening a turn, such as a follow-up chip or a search option, is answered as a new turn of the conversation, as a prompt is. The producer announces it with the surface, in the AG-UI `metadata` of its snapshot (`metadata.turnOpeningActions`, by surface id), so the consumer declares nothing and the turn opens as soon as the shopper picks the action. Such an action opens a new streaming turn whose `input.action` records it (component, action name, surface id, source node and payload), and that turn becomes the active turn. The surfaces of the turn it was sent from keep accepting actions. It needs no active turn, so a turn-opening action on the shell opens the first turn of a session. Any other action only updates the surfaces: its surface snapshots are recorded with the active turn, or with `session.initialization` before the first turn.
 
 It is **fire-and-forget**: the returned Promise always resolves and never rejects, so the consumer needs no `.catch`. A message with no `userAction`, no `sourceComponentId`, a node that resolves to no component, or an internal validation failure is dropped with a dev-only warning and nothing is sent.
 
 ### One request at a time
 
-Thermidor sends one request at a time per session, prompts and component actions alike. A dispatch made while a request is in flight is withheld: nothing is sent, and its promise resolves at once with a dev-only warning. Each `dispatchAction` promise resolves once its own request ends.
+Thermidor sends one request at a time per session, `initialize`, prompts and component actions alike. A dispatch made while a request is in flight is withheld: nothing is sent, and its promise resolves at once with a dev-only warning. Each `dispatchAction` promise resolves once its own request ends.
 
-- `session.request` is the request being sent (`{kind: 'prompt', turnId}` or `{kind: 'action', component, name, surfaceId, sourceComponentId, turnId}`), or `undefined` when idle. An action's run counts, a follow-up included. Read it synchronously, or through `subscribe`, to lock or dim the interface, and to hold back a dispatch until the session is free. `component` is the dispatching node's discriminant, so a consumer can key its own action lists, such as the actions that keep its surfaces usable, by component and action name, typed by the contracts with `ComponentActionNames`.
+- `session.request` is the request being sent (`{kind: 'initialize'}`, `{kind: 'prompt', turnId}` or `{kind: 'action', component, name, surfaceId, sourceComponentId, turnId?}`, with no `turnId` before the first turn), or `undefined` when idle. An action's run counts, a follow-up included. Read it synchronously, or through `subscribe`, to lock or dim the interface, and to hold back a dispatch until the session is free. `component` is the dispatching node's discriminant, so a consumer can key its own action lists, such as the actions that keep its surfaces usable, by component and action name, typed by the contracts with `ComponentActionNames`.
 - `session.sendAndWait(send)` calls `send`, which dispatches through the renderer, and resolves once the session has answered that dispatch, whatever its outcome, a withheld one included. A renderer's own dispatch promise may resolve as soon as it has emitted the action; when the `dispatchAction` promise is at hand, await it instead.
 - `cancel()` stops the request in flight, but `session.request` stays set until it has unwound, a few microtasks later, so a dispatch made right after `cancel()` is withheld. Wait for `request` to become `undefined`, through `subscribe`, before sending the next one.
 
@@ -139,12 +146,12 @@ interface TurnResponse {
 
 ### Session-scoped surfaces
 
-Surfaces live in the session, not in the turn that created them ([ADR-018](./docs/internal/adr/ADR-018-session-scoped-surfaces-and-initialize.md)). A surface lives from its `createSurface` until its `deleteSurface`, whichever runs carry them, and a `createSurface` for a live id replaces that surface, so a producer mints a new id for each new surface.
+Surfaces live in the session, not in the turn that created them. The session derives them from one ordered activity log: the initialization's activities, then each turn's. A surface lives from its `createSurface` until its `deleteSurface`, whichever runs carry them, and a `createSurface` for a live id replaces that surface, so a producer mints a new id for each new surface.
 
-- `session.surfaces` lists every live surface in creation order; a surface the agent deletes leaves it, and one it re-creates moves to the end. Each turn's `response.surfaces` lists the live surfaces that turn created. A loading placeholder is listed only while the run that created it streams: while its turn streams, or while the request in flight streams into that turn and had not found it already left behind; one the agent left behind (a cancelled run, an error, a restored session) leaves the lists, so a consumer draws a skeleton for every listed surface whose `isLoading` holds.
+- `session.surfaces` lists every live surface in creation order; a surface the agent deletes leaves it, and one it re-creates moves to the end. Each turn's `response.surfaces` lists the live surfaces that turn created; find one no turn created, such as the shell, by its `rootComponentType`. A loading placeholder is listed only while the run that created it streams: while its turn or the initialization streams, or while the request in flight streams into that run and had not found it already left behind; one the agent left behind (a cancelled run, an error, a restored session) leaves the lists, so a consumer draws a skeleton for every listed surface whose `isLoading` holds.
 - `session.a2uiMessages` is the whole session's renderer stream, in arrival order. It only grows, so a single renderer is fed each new message once. Before a `createSurface` that replaces a live surface, it carries a `deleteSurface` for it, and it leaves out an operation on a surface that is not live, since a renderer refuses both. It exists because Agent Gateway emits A2-UI v1.0 while every available renderer consumes v0.9: Thermidor downgrades the stream on the consumer's behalf (recorded interim debt, see below).
-- `session.state` is the validated data model of every live surface, keyed by surface id, whichever turn wrote it.
-- An action resolves its source component across the session's live surfaces, so the surfaces of earlier turns keep accepting actions. Its run only updates the surfaces: it never changes a turn's status or response. When it fails, whether the endpoint rejects it, it streams `RUN_ERROR`, its stream ends without a terminal event or its request cannot be built, `session.actionError` identifies the action (`message`, `component`, `name`, `surfaceId`, `sourceComponentId`), so a consumer can show the failure next to the block it came from.
+- `session.state` is the validated data model of every live surface, keyed by surface id, whichever run wrote it.
+- An action resolves its source component across the session's live surfaces, so the surfaces of earlier runs keep accepting actions. Its run only updates the surfaces: its surface snapshots are recorded with the active turn, or with the initialization before the first turn, and it never changes the status or response of a turn or of the initialization. When it fails, whether the endpoint rejects it, it streams `RUN_ERROR`, its stream ends without a terminal event or its request cannot be built, `session.actionError` identifies the action (`message`, `component`, `name`, `surfaceId`, `sourceComponentId`), so a consumer can show the failure next to the block it came from.
 
 Each `DiscoveredSurface` carries `surfaceId`, `rootComponentType`, and `isLoading`, which is `true` while the surface's data model declares `isLoading: true` (a loading placeholder for `rootComponentType`).
 
@@ -161,16 +168,16 @@ Each `DiscoveredSurface` carries `surfaceId`, `rootComponentType`, and `isLoadin
 
 ## Serialization
 
-`session.serialize()` produces a versioned `SerializedSession` (integer `version >= 1`), distinct from the runtime `Turn` type. Pass it back as `sessionToRestore` in `createSession` to continue a conversation. The session's `state` is persisted; the surfaces and the renderer stream are never persisted (they are re-derived from the turns' `activities` on restore); a turn persisted mid-stream is downgraded to `error` with `'Stream was interrupted'`, preserving its partial response.
+`session.serialize()` produces a versioned `SerializedSession` (integer `version >= 1`), distinct from the runtime `Turn` type. Pass it back as `sessionToRestore` in `createSession` to continue a conversation. The initialization, the turns and the session's `state` are persisted; the surfaces and the renderer stream are never persisted (they are re-derived from the initialization's and the turns' `activities` on restore); a turn or initialization persisted mid-stream is downgraded to `error` with `'Stream was interrupted'`, preserving what it holds.
 
 ## Recorded interim debt and out-of-scope items
 
 The following are intentionally **not yet implemented** and are recorded as debt or deferred work:
 
-- **Interim surface derivation** — `surfaces` is a typed projection derived from `activities`, annotated as interim per [ADR-015](./docs/internal/adr/ADR-015-surface-and-route-derivation.md); the core interprets no `rootComponentType`; consumers read it. It is retired by a future server-surfaced typed-routing ADR (ADR-015 Option C).
-- **The A2-UI v0.9 renderer projection** — `session.a2uiMessages` downgrades Agent Gateway's v1.0 stream for today's v0.9 renderers, per the [ADR-015](./docs/internal/adr/ADR-015-surface-and-route-derivation.md) addendum. Removed in a breaking change once a v1.0-capable renderer exists.
+- **Interim surface derivation** — `surfaces` is a typed projection derived from `activities`, annotated as interim; the core interprets no `rootComponentType`; consumers read it. It is retired once the server sends typed routing.
+- **The A2-UI v0.9 renderer projection** — `session.a2uiMessages` downgrades Agent Gateway's v1.0 stream for today's v0.9 renderers. Removed in a breaking change once a v1.0-capable renderer exists.
 - **Renderer stream bypasses validation** — inbound ops that in-transit validation drops from `session.state` still reach the renderer through `session.a2uiMessages`, and so does the component state seeded by `createSurface.dataModel`, which is never validated. A fix must cover both paths.
-- **Enforced action-payload typing at the renderer boundary** — the renderer hands `dispatchAction` a loosely typed action message, so per-component action typing is applied by convention (the consumer opts into the generated `XxxAction` types) rather than enforced at the boundary, per [ADR-016](./docs/internal/adr/ADR-016-inline-state-consumption-remove-remote-controller.md). Recoverable later if the package owns binding resolution.
+- **Enforced action-payload typing at the renderer boundary** — the renderer hands `dispatchAction` a loosely typed action message, so per-component action typing is applied by convention (the consumer opts into the generated `XxxAction` types) rather than enforced at the boundary. Recoverable later if the package owns binding resolution.
 - **Package rename** — deferred as low-stakes; the package remains `@coveo/thermidor`.
 
 ## Development

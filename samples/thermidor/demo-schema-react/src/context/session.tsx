@@ -41,6 +41,7 @@ function createThermidorSession(): DemoSession {
     country,
     currency,
     navigatorContextProvider: getNavigatorContext,
+    initialize: false,
   });
 }
 

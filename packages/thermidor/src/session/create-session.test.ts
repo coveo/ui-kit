@@ -221,6 +221,7 @@ const baseConfig: SessionConfig = {
   contracts,
   organizationId: 'org-1',
   accessToken: 'token-1',
+  initialize: false,
 };
 
 /** Waits for pending microtasks so folded state settles before assertions. */
@@ -810,6 +811,20 @@ describe('createSession lifecycle', () => {
       await turn;
     }
 
+    it('keeps a prompt turn cancelled when cancelled while awaiting data', async () => {
+      const session = createSession(baseConfig);
+      const stream = queueStream();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'cut'}});
+      await stream.opened;
+      stream.emit({type: 'RUN_STARTED'});
+      await flush();
+
+      session.cancel();
+      await turn;
+
+      expect(session.turns[0]).toMatchObject({status: 'error', error: 'Cancelled'});
+    });
+
     it('leaves a failed active turn failed when an action on an earlier surface finishes', async () => {
       const session = createSession(baseConfig);
       await prompt(session, searchSurface);
@@ -919,6 +934,7 @@ describe('createSession lifecycle', () => {
       expect(Object.isFrozen(snapshot)).toBe(true);
       expect(snapshot).toEqual({
         turns: [],
+        initialization: undefined,
         surfaces: [],
         a2uiMessages: [],
         state: {},
@@ -1824,6 +1840,442 @@ describe('createSession lifecycle', () => {
       expect(callMock).toHaveBeenCalledTimes(exhaustingConflicts);
       expect(session.turns[0]).toMatchObject({status: 'error', error: conflictError});
       expect(session.actionError).toBeUndefined();
+    });
+  });
+
+  describe('initialization (ADR-018)', () => {
+    const shellConfig: SessionConfig = {...baseConfig, initialize: true};
+    const SHELL_ID = 'ui-shell';
+    const SHELL_PAGINATION_ID = 'shell-pagination';
+    const SHELL_CHIPS_ID = 'shell-chips';
+
+    const shellSurface = {
+      type: 'ACTIVITY_SNAPSHOT',
+      messageId: 'shell-activity',
+      activityType: 'a2ui-surface',
+      metadata: {turnOpeningActions: {[SHELL_ID]: ['selectAction']}},
+      content: {
+        messages: [
+          {
+            version: 'v1.0',
+            createSurface: {
+              surfaceId: SHELL_ID,
+              catalogId: 'commerce',
+              components: [
+                {id: 'root', component: 'CommerceSearch'},
+                {id: SHELL_PAGINATION_ID, component: 'Pagination'},
+                {id: SHELL_CHIPS_ID, component: 'NextActionsBar'},
+              ],
+            },
+          },
+        ],
+      },
+    };
+
+    const shellPage = {page: 1, pageSize: 24, totalEntries: 48, totalPages: 2};
+
+    function shellPageUpdate(messageId: string) {
+      return {
+        type: 'ACTIVITY_SNAPSHOT',
+        messageId,
+        activityType: 'a2ui-surface',
+        content: {
+          messages: [
+            {
+              version: 'v1.0',
+              updateDataModel: {
+                surfaceId: SHELL_ID,
+                path: `/state/${SHELL_PAGINATION_ID}`,
+                value: shellPage,
+              },
+            },
+          ],
+        },
+      };
+    }
+
+    function shellSelectPage(page: number) {
+      return {
+        userAction: {
+          name: 'selectPage',
+          surfaceId: SHELL_ID,
+          sourceComponentId: SHELL_PAGINATION_ID,
+          context: {page},
+        },
+      };
+    }
+
+    const shellChip = {
+      userAction: {
+        name: 'selectAction',
+        surfaceId: SHELL_ID,
+        sourceComponentId: SHELL_CHIPS_ID,
+        context: {actionId: 'trending'},
+      },
+    };
+
+    /** Creates a session whose `initialize` answers with the shell, and waits for it. */
+    async function initializedSession() {
+      const stream = queueStream();
+      const session = createSession(shellConfig);
+      await stream.opened;
+      stream.emit({
+        type: 'RUN_STARTED',
+        conversationSessionId: 'gateway-session',
+        conversationToken: 'gateway-token',
+      });
+      stream.emit(shellSurface);
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await vi.waitFor(() => expect(session.request).toBeUndefined());
+      return session;
+    }
+
+    async function completePrompt(
+      session: ReturnType<typeof createSession>,
+      prompt: string,
+      events: Record<string, unknown>[] = []
+    ) {
+      const stream = queueStream();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt}});
+      await stream.opened;
+      for (const event of events) {
+        stream.emit(event);
+      }
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await turn;
+    }
+
+    it('sends initialize before any prompt, with no surface or source component', async () => {
+      const stream = queueStream();
+      const session = createSession(shellConfig);
+      const requests: unknown[] = [];
+      session.subscribe(() => requests.push(session.request));
+
+      await stream.opened;
+
+      expect(requests[0]).toEqual({kind: 'initialize'});
+      const sent = callMock.mock.calls[0][0] as {message: unknown; action: Record<string, unknown>};
+      expect(sent.message).toBeNull();
+      expect(sent.action).toMatchObject({name: 'initialize', context: {}});
+      expect('surfaceId' in sent.action).toBe(false);
+      expect('sourceComponentId' in sent.action).toBe(false);
+      expect(session.initialization).toEqual({activities: [], status: 'streaming'});
+
+      stream.emit(shellSurface);
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await vi.waitFor(() => expect(session.request).toBeUndefined());
+
+      expect(session.turns).toEqual([]);
+      expect(session.initialization?.status).toBe('complete');
+      expect(session.getSnapshot().initialization).toBe(session.initialization);
+      expect(session.surfaces).toEqual([
+        {surfaceId: SHELL_ID, rootComponentType: 'CommerceSearch', isLoading: false},
+      ]);
+      expect(session.a2uiMessages[0]).toEqual({
+        version: 'v0.9',
+        createSurface: {surfaceId: SHELL_ID, catalogId: 'commerce'},
+      });
+    });
+
+    it('opens the next prompt with the session keys the initialization adopted', async () => {
+      const session = await initializedSession();
+
+      await completePrompt(session, 'find shoes');
+
+      expect(callMock.mock.calls[1][0]).toMatchObject({
+        message: 'find shoes',
+        conversationSessionId: 'gateway-session',
+        conversationToken: 'gateway-token',
+      });
+    });
+
+    it('never sends initialize with initialize: false', async () => {
+      const session = createSession(baseConfig);
+      await flush();
+
+      expect(callMock).not.toHaveBeenCalled();
+      expect(session.initialization).toBeUndefined();
+    });
+
+    it('never sends initialize for a session that has a token', async () => {
+      const initialized = await initializedSession();
+      callMock.mockReset();
+
+      const restored = createSession({...shellConfig, sessionToRestore: initialized.serialize()});
+      await flush();
+
+      expect(callMock).not.toHaveBeenCalled();
+      expect(restored.surfaces).toEqual(initialized.surfaces);
+    });
+
+    it('never sends initialize for a restored session, even without a token', async () => {
+      const initialized = await initializedSession();
+      callMock.mockReset();
+
+      const restored = createSession({
+        ...shellConfig,
+        sessionToRestore: {...initialized.serialize(), sessionToken: undefined},
+      });
+      await flush();
+
+      expect(callMock).not.toHaveBeenCalled();
+      expect(restored.surfaces).toEqual(initialized.surfaces);
+    });
+
+    it('does not send initialize after a prompt dispatched in the same task', async () => {
+      const stream = queueStream();
+      const session = createSession(shellConfig);
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'first'}});
+      await stream.opened;
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await turn;
+      await flush();
+
+      expect(callMock).toHaveBeenCalledTimes(1);
+      expect(session.initialization).toBeUndefined();
+    });
+
+    it('records a failed initialize without retrying, and the first prompt still opens the session', async () => {
+      callMock.mockImplementationOnce(async () => ({success: false, error: 'Unknown action'}));
+      const session = createSession(shellConfig);
+      await vi.waitFor(() => expect(session.initialization?.status).toBe('error'));
+
+      expect(session.initialization).toEqual({
+        activities: [],
+        status: 'error',
+        error: 'Unknown action',
+      });
+      expect(session.request).toBeUndefined();
+
+      await completePrompt(session, 'find shoes');
+
+      expect(callMock).toHaveBeenCalledTimes(2);
+      expect(session.turns[0].status).toBe('complete');
+    });
+
+    it('keeps the initialization cancelled when cancelled while awaiting data', async () => {
+      const stream = queueStream();
+      const session = createSession(shellConfig);
+      await stream.opened;
+      stream.emit({type: 'RUN_STARTED', conversationToken: 'gateway-token'});
+      await flush();
+
+      session.cancel();
+      await vi.waitFor(() => expect(session.request).toBeUndefined());
+
+      expect(session.initialization).toMatchObject({status: 'error', error: 'Cancelled'});
+    });
+
+    it('marks the initialization cancelled when cancelled in flight', async () => {
+      const stream = queueStream();
+      const session = createSession(shellConfig);
+      await stream.opened;
+
+      session.cancel();
+      stream.close();
+      await vi.waitFor(() => expect(session.request).toBeUndefined());
+
+      expect(session.initialization).toEqual({activities: [], status: 'error', error: 'Cancelled'});
+      expect(session.turns).toEqual([]);
+      expect(callMock).toHaveBeenCalledTimes(1);
+    });
+
+    it('records an action dispatched before the first turn with the initialization', async () => {
+      const session = await initializedSession();
+
+      const actionStream = queueStream();
+      const action = session.dispatchAction(shellSelectPage(1));
+      await actionStream.opened;
+
+      expect(session.request).toEqual({
+        kind: 'action',
+        component: 'Pagination',
+        name: 'selectPage',
+        surfaceId: SHELL_ID,
+        sourceComponentId: SHELL_PAGINATION_ID,
+      });
+
+      actionStream.emit({type: 'RUN_STARTED'});
+      actionStream.emit(shellPageUpdate('shell-page'));
+      actionStream.emit({type: 'RUN_FINISHED'});
+      actionStream.close();
+      await action;
+
+      expect(session.turns).toEqual([]);
+      expect(session.initialization?.activities.map((activity) => activity.id)).toEqual([
+        'shell-activity',
+        'shell-page',
+      ]);
+      expect(session.initialization?.status).toBe('complete');
+      expect(session.state[SHELL_ID]).toEqual({state: {[SHELL_PAGINATION_ID]: shellPage}});
+    });
+
+    it('leaves the initialization as it is and sets actionError when an action before the first turn fails', async () => {
+      const session = await initializedSession();
+      const actionStream = queueStream();
+      const action = session.dispatchAction(shellSelectPage(1));
+      await actionStream.opened;
+      actionStream.emit({type: 'RUN_ERROR', message: 'Suggestions unavailable'});
+      actionStream.close();
+      await action;
+
+      expect(session.initialization?.status).toBe('complete');
+      expect(session.actionError).toEqual({
+        message: 'Suggestions unavailable',
+        component: 'Pagination',
+        name: 'selectPage',
+        surfaceId: SHELL_ID,
+        sourceComponentId: SHELL_PAGINATION_ID,
+      });
+    });
+
+    it('sends an action on a surface the initialization created, several turns later', async () => {
+      const session = await initializedSession();
+      await completePrompt(session, 'first', [PAGINATION_SURFACE]);
+      await completePrompt(session, 'second');
+
+      const actionStream = queueStream();
+      const action = session.dispatchAction(shellSelectPage(1));
+      await actionStream.opened;
+
+      expect(session.request).toEqual({
+        kind: 'action',
+        component: 'Pagination',
+        name: 'selectPage',
+        surfaceId: SHELL_ID,
+        sourceComponentId: SHELL_PAGINATION_ID,
+        turnId: session.turns[1].id,
+      });
+      expect(callMock.mock.calls[3][0]).toMatchObject({
+        message: null,
+        action: {
+          name: 'selectPage',
+          surfaceId: SHELL_ID,
+          sourceComponentId: SHELL_PAGINATION_ID,
+          context: {page: 1},
+        },
+      });
+
+      actionStream.emit(shellPageUpdate('shell-page'));
+      actionStream.emit({type: 'RUN_FINISHED'});
+      actionStream.close();
+      await action;
+
+      expect(session.state[SHELL_ID]).toEqual({state: {[SHELL_PAGINATION_ID]: shellPage}});
+      expect(session.turns[1].response.activities.map((activity) => activity.id)).toEqual([
+        'shell-page',
+      ]);
+      expect(session.turns.map((turn) => turn.status)).toEqual(['complete', 'complete']);
+    });
+
+    it('validates and applies a later turn update to a surface the initialization created', async () => {
+      const session = await initializedSession();
+      await completePrompt(session, 'first');
+
+      await completePrompt(session, 'second', [shellPageUpdate('shell-page')]);
+
+      expect(session.state[SHELL_ID]).toEqual({state: {[SHELL_PAGINATION_ID]: shellPage}});
+      expect(session.surfaces.map((surface) => surface.surfaceId)).toEqual([SHELL_ID]);
+      expect(session.turns.map((turn) => turn.response.surfaces)).toEqual([[], []]);
+    });
+
+    it('leaves the active turn as it is and sets actionError when an action on the shell fails', async () => {
+      const session = await initializedSession();
+      await completePrompt(session, 'first');
+
+      callMock.mockImplementationOnce(async () => ({success: false, error: 'Bad gateway'}));
+      await session.dispatchAction(shellSelectPage(1));
+
+      expect(session.turns.map((turn) => turn.status)).toEqual(['complete']);
+      expect(session.actionError).toEqual({
+        message: 'Bad gateway',
+        component: 'Pagination',
+        name: 'selectPage',
+        surfaceId: SHELL_ID,
+        sourceComponentId: SHELL_PAGINATION_ID,
+      });
+    });
+
+    it('opens the first turn for an action the shell announces as turn-opening', async () => {
+      const session = await initializedSession();
+
+      const stream = queueStream();
+      const sent = session.dispatchAction(shellChip);
+      await stream.opened;
+
+      expect(session.turns).toHaveLength(1);
+      expect(session.turns[0].input.action).toMatchObject({
+        component: 'NextActionsBar',
+        surfaceId: SHELL_ID,
+      });
+      expect(session.request).toMatchObject({kind: 'action', turnId: session.turns[0].id});
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await sent;
+
+      expect(session.turns[0].status).toBe('complete');
+      expect(session.initialization?.activities).toHaveLength(1);
+    });
+
+    it('opens a new turn for an action the shell announces as turn-opening, several turns later', async () => {
+      const session = await initializedSession();
+      await completePrompt(session, 'first');
+      await completePrompt(session, 'second');
+
+      const stream = queueStream();
+      const sent = session.dispatchAction(shellChip);
+      await stream.opened;
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await sent;
+
+      expect(session.turns.map((turn) => turn.input.prompt ?? turn.input.action?.name)).toEqual([
+        'first',
+        'second',
+        'selectAction',
+      ]);
+    });
+
+    it('round-trips the initialization, the turns and the session state through serialized format 4', async () => {
+      const session = await initializedSession();
+      await completePrompt(session, 'first', [shellPageUpdate('shell-page')]);
+
+      const serialized = session.serialize();
+      const restored = createSession({...shellConfig, sessionToRestore: serialized});
+
+      expect(serialized.version).toBe(4);
+      expect(serialized.initialization).toEqual({
+        activities: session.initialization?.activities,
+        status: 'complete',
+      });
+      expect(restored.initialization).toEqual(session.initialization);
+      expect(restored.turns).toEqual(session.turns);
+      expect(restored.surfaces).toEqual(session.surfaces);
+      expect(restored.state).toEqual(session.state);
+      expect(restored.a2uiMessages).toEqual(session.a2uiMessages);
+    });
+
+    it('restores an initialization persisted mid-stream as interrupted', async () => {
+      const stream = queueStream();
+      const session = createSession(shellConfig);
+      await stream.opened;
+      stream.emit({type: 'RUN_STARTED', conversationToken: 'gateway-token'});
+      stream.emit(shellSurface);
+      await vi.waitFor(() => expect(session.initialization?.activities).toHaveLength(1));
+
+      const restored = createSession({...shellConfig, sessionToRestore: session.serialize()});
+
+      expect(restored.initialization).toMatchObject({
+        status: 'error',
+        error: 'Stream was interrupted',
+      });
+      expect(restored.a2uiMessages).toEqual(session.a2uiMessages);
+      session.cancel();
+      stream.close();
     });
   });
 });

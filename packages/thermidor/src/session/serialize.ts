@@ -11,6 +11,7 @@
  *   | Field                                       | Persist | Scope            |
  *   | ------------------------------------------- | ------- | ---------------- |
  *   | id, input, status, error                    | yes     | all turns        |
+ *   | initialization (activities, status, error)  | yes     | session-level    |
  *   | sessionId, sessionToken, activeTurnId       | yes     | session-level    |
  *   | response.activities                         | yes     | all turns        |
  *   | response.agent.{messages,reasoningSteps}    | yes     | all turns        |
@@ -19,12 +20,12 @@
  *   | renderer stream (`a2uiMessages`)            | no      | derived          |
  *
  * On restore:
- *   - `surfaces` and the renderer stream are re-derived from the turns'
- *     persisted `activities`, in order (never persisted, never an independent
- *     source of truth).
- *   - a turn persisted mid-stream (`status: 'streaming'`) is downgraded to
- *     `status: 'error'` (`'Stream was interrupted'`), preserving whatever
- *     partial `response` had streamed in.
+ *   - `surfaces` and the renderer stream are re-derived from the persisted
+ *     `activities` of the initialization, then of each turn, in order (never
+ *     persisted, never an independent source of truth).
+ *   - a turn or initialization persisted mid-stream (`status: 'streaming'`) is
+ *     downgraded to `status: 'error'` (`'Stream was interrupted'`), preserving
+ *     whatever partial `response` had streamed in.
  *   - an unsupported `version` is rejected without partially populating a
  *     session.
  */
@@ -36,14 +37,23 @@ import {
   type RendererStream,
 } from './a2ui-v09-projection.js';
 import {deriveSurfaces, SURFACE_ACTIVITY_KIND} from './fold.js';
+import {sessionActivities, type SessionRuns} from './session-surfaces.js';
 import type {SessionStoreState} from './store.js';
-import type {Activity, AgentMessage, ReasoningStep, Turn, TurnInput, TurnStatus} from './types.js';
+import type {
+  Activity,
+  AgentMessage,
+  ReasoningStep,
+  SessionInitialization,
+  Turn,
+  TurnInput,
+  TurnStatus,
+} from './types.js';
 
 /**
  * The current serialized-session shape version. Bumped whenever the persisted
  * shape changes. Restoration rejects any `version` that is not this value.
  */
-export const SERIALIZED_SESSION_VERSION = 3;
+export const SERIALIZED_SESSION_VERSION = 4;
 
 /**
  * The error message used when a mid-stream turn is restored.
@@ -83,6 +93,15 @@ export interface SerializedTurn {
   response: SerializedTurnResponse;
 }
 
+/** The persisted run of the session's `initialize` action. */
+export interface SerializedInitialization {
+  /** The run's activities, which hold the surfaces it created. */
+  activities: Activity[];
+  status: TurnStatus;
+  /** Present when `status === 'error'`, absent otherwise. */
+  error?: string;
+}
+
 /**
  * A versioned, persistable snapshot of a session. Distinct from the runtime
  * store state so the persisted shape never silently couples to the runtime
@@ -96,8 +115,10 @@ export interface SerializedSession {
   /** Continuity key for request-authentication continuity. */
   sessionToken?: string;
   activeTurnId?: string;
+  /** The run of the `initialize` action that opened the session, when it sent one. */
+  initialization?: SerializedInitialization;
   turns: SerializedTurn[];
-  /** The session's validated data model, keyed by surface id (ADR-018). */
+  /** The session's validated data model, keyed by surface id. */
   state?: Record<string, unknown>;
 }
 
@@ -123,11 +144,11 @@ export class UnsupportedSerializedSessionVersionError extends Error {
  *
  * Persists `id`/`input`/`status`/`error` and `response.activities` for every
  * turn, `response.agent.{messages,reasoningSteps}` for turns that have an
- * agent, and session-level `sessionId`/`sessionToken`/`activeTurnId` and
- * `state`. Never persists the derived `response.surfaces` or renderer stream.
+ * agent, and session-level `initialization`, `sessionId`/`sessionToken`/`activeTurnId`
+ * and `state`. Never persists the derived `response.surfaces` or renderer stream.
  */
 export function serializeSession(state: SessionStoreState<Turn>): SerializedSession {
-  const {turns, activeTurnId, sessionId, sessionToken, state: sessionState} = state;
+  const {turns, initialization, activeTurnId, sessionId, sessionToken, state: sessionState} = state;
 
   const serializedTurns: SerializedTurn[] = turns.map((turn) => {
     const response: SerializedTurnResponse = {
@@ -166,6 +187,13 @@ export function serializeSession(state: SessionStoreState<Turn>): SerializedSess
   if (activeTurnId !== undefined) {
     session.activeTurnId = activeTurnId;
   }
+  if (initialization !== undefined) {
+    session.initialization = {
+      activities: [...initialization.activities],
+      status: initialization.status,
+      ...(initialization.error === undefined ? {} : {error: initialization.error}),
+    };
+  }
   if (sessionState !== undefined && Object.keys(sessionState).length > 0) {
     session.state = {...sessionState};
   }
@@ -178,9 +206,9 @@ export function serializeSession(state: SessionStoreState<Turn>): SerializedSess
  * Rejects an unsupported `version` (throwing
  * {@link UnsupportedSerializedSessionVersionError}) before building any turns,
  * so no session is partially populated. Otherwise reproduces every persisted
- * turn and the session's `state`, re-derives `surfaces` and the renderer stream
- * from the persisted `activities`, and downgrades any mid-stream turn to `error`
- * while preserving its partial response.
+ * turn, the initialization and the session's `state`, re-derives `surfaces` and
+ * the renderer stream from the persisted `activities`, and downgrades any
+ * mid-stream turn or initialization to `error` while preserving what it holds.
  */
 export function restoreSession(serialized: SerializedSession): SessionStoreState<Turn> {
   if (serialized.version !== SERIALIZED_SESSION_VERSION) {
@@ -220,11 +248,17 @@ export function restoreSession(serialized: SerializedSession): SessionStoreState
     return restored;
   });
 
+  const initialization =
+    serialized.initialization && restoreInitialization(serialized.initialization);
+
   const state: SessionStoreState<Turn> = {
     turns: restoredTurns,
     state: serialized.state ? {...serialized.state} : {},
-    rendererStream: deriveRendererStream(restoredTurns),
+    rendererStream: deriveRendererStream({turns: restoredTurns, initialization}),
   };
+  if (initialization !== undefined) {
+    state.initialization = initialization;
+  }
   if (activeTurnId !== undefined) {
     state.activeTurnId = activeTurnId;
   }
@@ -237,16 +271,24 @@ export function restoreSession(serialized: SerializedSession): SessionStoreState
   return state;
 }
 
-/** Re-derives the session's renderer stream from the turns' activities, in order. */
-function deriveRendererStream(turns: readonly Turn[]): RendererStream {
+function restoreInitialization(initialization: SerializedInitialization): SessionInitialization {
+  const activities = [...initialization.activities];
+  if (initialization.status === 'streaming') {
+    return {activities, status: 'error', error: STREAM_INTERRUPTED_ERROR};
+  }
+  return {
+    activities,
+    status: initialization.status,
+    ...(initialization.error === undefined ? {} : {error: initialization.error}),
+  };
+}
+
+function deriveRendererStream(runs: SessionRuns): RendererStream {
   let stream = EMPTY_RENDERER_STREAM;
-  for (const turn of turns) {
-    for (const activity of turn.response.activities) {
-      const messages =
-        activity.kind === SURFACE_ACTIVITY_KIND ? activity.payload['messages'] : null;
-      if (Array.isArray(messages)) {
-        stream = appendToRendererStream(stream, convertA2uiMessages(messages));
-      }
+  for (const activity of sessionActivities(runs)) {
+    const messages = activity.kind === SURFACE_ACTIVITY_KIND ? activity.payload['messages'] : null;
+    if (Array.isArray(messages)) {
+      stream = appendToRendererStream(stream, convertA2uiMessages(messages));
     }
   }
   return stream;

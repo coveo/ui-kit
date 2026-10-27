@@ -9,7 +9,7 @@ export interface CommerceRequestModel {
   currency: string;
   clientId?: string;
   message: string | null;
-  action: A2uiAction | null;
+  action: A2uiAction | InitializeAction | null;
   conversationSessionId?: string;
   conversationToken?: string;
   context: CommerceRequestContext;
@@ -47,4 +47,13 @@ export interface A2uiAction<TContext = unknown> {
   actionId: string | null;
   wantResponse: boolean;
   context: TContext;
+}
+
+/** Opens the session. No component exists yet, so it names no surface or source component. */
+export interface InitializeAction {
+  name: 'initialize';
+  timestamp: string;
+  actionId: null;
+  wantResponse: false;
+  context: Record<string, never>;
 }
