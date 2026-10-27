@@ -4,6 +4,7 @@ import {schemaFallbackEvents} from './templates/schema-response-fallback.js';
 import {
   buildWaterSportsActionEvents,
   buildWaterSportsInitialEvents,
+  buildWaterSportsRestoreEvents,
   describeWaterSportsView,
 } from './templates/schema-response-search.js';
 import {matchStorefrontConversation} from './templates/storefront-conversations.js';
@@ -19,8 +20,10 @@ import {matchStorefrontConversation} from './templates/storefront-conversations.
  * - one turn at a time: another one while it runs gets a 409.
  *
  * On `storefront-preview-assistant`, a message runs the agent, which is told what the shopper is
- * looking at. On `storefront-preview-search`, a message opens a search surface for that query. On
- * both, an action is answered by the server. `storefront-preview` and `storefront-preview-home` get
+ * looking at. On `storefront-preview-search`, a message opens a search surface for that query. A
+ * page shown again names the surface it showed in `context.custom.restoreSurfaceId`: when the
+ * session still has that search surface, the server sends it again, same id, with the current state
+ * of its search, and does not run the query. On both views, an action is answered by the server. `storefront-preview` and `storefront-preview-home` get
  * an empty run, and any other view is refused with a 400.
  */
 
@@ -246,6 +249,24 @@ function searchEvents(session: Session, query: string): ConverseEvent[] {
   return toSurface(buildWaterSportsInitialEvents(query, surfaceId), surfaceId);
 }
 
+/**
+ * The search surface `restoreSurfaceId` again, with its current state, when the session still has
+ * it. Otherwise, a new search for `query`.
+ */
+function searchOrRestoreEvents(
+  session: Session,
+  query: string,
+  restoreSurfaceId: unknown
+): ConverseEvent[] {
+  if (typeof restoreSurfaceId === 'string' && session.surfaces.get(restoreSurfaceId) === 'search') {
+    const restored = buildWaterSportsRestoreEvents(restoreSurfaceId);
+    if (restored) {
+      return toSurface(restored, restoreSurfaceId);
+    }
+  }
+  return searchEvents(session, query);
+}
+
 /** Replaces the kept cart with the one the client sent in `context.cart`, when it sent one. */
 function syncCart(session: Session, cart: unknown): void {
   if (!Array.isArray(cart)) {
@@ -426,7 +447,7 @@ function multiSurfaceResponse(body: unknown, {paced = true}: {paced?: boolean} =
     middle = action
       ? actionEvents(session, action)
       : view === VIEWS.search
-        ? searchEvents(session, message)
+        ? searchOrRestoreEvents(session, message, body.context.custom.restoreSurfaceId)
         : agentTurnEvents(session, message);
   } catch (error) {
     if (error instanceof HttpError) {

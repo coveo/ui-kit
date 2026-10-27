@@ -19,7 +19,7 @@ interface Session {
 
 function converse(
   view: string,
-  input: {message?: string; action?: Event; cart?: Event[]},
+  input: {message?: string; action?: Event; cart?: Event[]; restoreSurfaceId?: string},
   session?: Session
 ) {
   return multiSurfaceResponse(
@@ -28,7 +28,10 @@ function converse(
       action: input.action ?? null,
       conversationSessionId: session?.id ?? null,
       conversationToken: session?.token ?? null,
-      context: {cart: input.cart ?? [], custom: {surfaceId: view}},
+      context: {
+        cart: input.cart ?? [],
+        custom: {surfaceId: view, restoreSurfaceId: input.restoreSurfaceId},
+      },
     },
     {paced: false}
   );
@@ -81,6 +84,14 @@ function summaryQueryOf(events: Event[]): unknown {
     (message) => message.updateDataModel?.path === '/state/query-summary-2'
   );
   return (op?.updateDataModel.value as {query?: unknown} | undefined)?.query;
+}
+
+/** The sort the search surface's sort component shows. */
+function appliedSortOf(events: Event[]): unknown {
+  const op = surfaceMessages(events).find(
+    (message) => message.updateDataModel?.path === '/state/sort-2'
+  );
+  return (op?.updateDataModel.value as {appliedSort?: unknown} | undefined)?.appliedSort;
 }
 
 function sortBy(surfaceId: string, sortCriteria: string): Event {
@@ -257,6 +268,63 @@ describe('multi-surface mock', () => {
         alive(second)[0]
       );
     }
+  });
+
+  describe('a search page shown again with context.custom.restoreSurfaceId', () => {
+    it('sends the kept surface again, same id, with its current state, and runs no search', async () => {
+      const opened = await eventsOf(converse(SEARCH, {message: 'surfing'}));
+      const session = sessionOf(opened);
+      const [surfaceId] = alive(opened);
+      const sorted = await eventsOf(
+        converse(SEARCH, {action: sortBy(surfaceId, 'price_desc')}, session)
+      );
+
+      const restored = await eventsOf(
+        converse(SEARCH, {message: 'surfing', restoreSurfaceId: surfaceId}, session)
+      );
+
+      expect(alive(restored)).toEqual([surfaceId]);
+      expect(appliedSortOf(restored)).toEqual(appliedSortOf(sorted));
+      expect(summaryQueryOf(restored)).toBe('surfing');
+      expect(Object.keys(inspectSessions()[session.id].surfaces)).toEqual([surfaceId]);
+    });
+
+    it('runs the search under a new id when the session does not have that surface', async () => {
+      const opened = await eventsOf(converse(SEARCH, {message: 'kayak'}));
+      const session = sessionOf(opened);
+
+      const searched = await eventsOf(
+        converse(SEARCH, {message: 'surfing', restoreSurfaceId: 'ui-gone'}, session)
+      );
+
+      expect(alive(searched)).toHaveLength(1);
+      expect(alive(searched)[0]).not.toBe('ui-gone');
+      expect(alive(searched)[0]).not.toBe(alive(opened)[0]);
+      expect(summaryQueryOf(searched)).toBe('surfing');
+    });
+
+    it("does not restore another session's surface", async () => {
+      const other = await eventsOf(converse(SEARCH, {message: 'surfing'}));
+
+      const searched = await eventsOf(
+        converse(SEARCH, {message: 'surfing', restoreSurfaceId: alive(other)[0]})
+      );
+
+      expect(alive(searched)[0]).not.toBe(alive(other)[0]);
+    });
+
+    it('ignores the hint on another view', async () => {
+      const opened = await eventsOf(converse(SEARCH, {message: 'surfing'}));
+      const session = sessionOf(opened);
+      const [surfaceId] = alive(opened);
+
+      const answered = await eventsOf(
+        converse(ASSISTANT, {message: 'boating safety', restoreSurfaceId: surfaceId}, session)
+      );
+
+      expect(alive(answered).length).toBeGreaterThan(0);
+      expect(alive(answered)).not.toContain(surfaceId);
+    });
   });
 
   it("answers a search surface's actions from its own search, not another session's", async () => {

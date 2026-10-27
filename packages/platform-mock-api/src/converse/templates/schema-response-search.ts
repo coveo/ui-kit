@@ -1371,11 +1371,30 @@ function buildWaterSportsInitialEvents(
   if (surfaceId !== undefined) {
     viewsBySurfaceId.set(surfaceId, currentView);
   }
+  return searchSurfaceEvents(currentView);
+}
+
+/**
+ * The search surface `surfaceId` again, as the server keeps it: its components and the current
+ * state of its search (facets, sort and page as last acted on). `undefined` when no search is kept
+ * for that surface.
+ */
+function buildWaterSportsRestoreEvents(surfaceId: string): ConverseEvent[] | undefined {
+  const view = viewsBySurfaceId.get(surfaceId);
+  if (!view) {
+    return undefined;
+  }
+  currentView = view;
+  return searchSurfaceEvents(view);
+}
+
+/** The search surface's `createSurface`, then its state for `view`. */
+function searchSurfaceEvents(view: SearchViewState): ConverseEvent[] {
   // Component_State is transported inline as `/state/<id>` updateDataModel ops on an
   // `a2ui-surface` activity, replacing the removed component STATE_SNAPSHOT.
   const initialStateActivity: ConverseEvent = UpdateDataModelActivity({
     messageId: 'activity-commerce-water-sports-state',
-    ops: buildStateOps(currentView),
+    ops: buildStateOps(view),
   });
 
   return buildConversationResponse({
@@ -1775,6 +1794,7 @@ function waterSportsProductsUnder(...relativePath: string[]): WaterSportsProduct
 
 export {
   buildWaterSportsInitialEvents,
+  buildWaterSportsRestoreEvents,
   buildWaterSportsActionEvents,
   describeWaterSportsView,
   waterSportsProductsUnder,
