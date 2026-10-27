@@ -26,9 +26,9 @@ async function askInPanel(page: Page, prompt: string) {
   await panel$(page).getByRole('button', {name: 'Send'}).click();
 }
 
-async function openDemoSearch(page: Page) {
+async function openKayakSearch(page: Page) {
   await page.goto('/');
-  await page.getByRole('button', {name: 'Search', exact: true}).click();
+  await search(page, 'kayak', {ai: false});
   await expect(page.getByRole('heading', {name: 'Results for “kayak”'})).toBeVisible();
   await expect(products(page)).toHaveCount(3, {timeout: 30000});
 }
@@ -169,19 +169,11 @@ test.describe('Storefront Preview on one session', () => {
     );
   });
 
-  test('opens the demo search from the header Search button', async ({page}) => {
-    const views = trackViews(page);
-    await openDemoSearch(page);
-
-    await expect(page.getByText(/stopped early/)).toHaveCount(0);
-    expect(views).toEqual(['storefront-preview-search']);
-  });
-
   test('answers in the chat panel from the search on screen, and keeps the results', async ({
     page,
   }) => {
     const views = trackViews(page);
-    await openDemoSearch(page);
+    await openKayakSearch(page);
     const input = panel$(page).getByRole('textbox', {name: 'Ask the shopping assistant'});
 
     await askInPanel(page, 'which one is the cheapest?');
@@ -220,7 +212,7 @@ test.describe('Storefront Preview on one session', () => {
   });
 
   test('keeps a follow-up of a panel answer in the panel', async ({page}) => {
-    await openDemoSearch(page);
+    await openKayakSearch(page);
     await askInPanel(page, 'which kayak should I get?');
     const followUp = panel$(page).getByRole('button', {name: 'Kayaks under $600'});
     await expect(followUp).toBeEnabled({timeout: 30000});

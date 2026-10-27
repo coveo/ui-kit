@@ -10,14 +10,7 @@ import {AddToCartButton} from './a2ui/AddToCartButton/AddToCartButton.js';
 import {createStorefrontCatalog} from './a2ui/catalog.js';
 import {SessionInspector} from './components/SessionInspector.js';
 import {TopBar} from './components/TopBar.js';
-import {
-  DEMO_SEARCH_QUERY,
-  visitAssistant,
-  visitHome,
-  visitListing,
-  visitSearch,
-  type Visit,
-} from './navigation.js';
+import {visitAssistant, visitHome, visitListing, visitSearch, type Visit} from './navigation.js';
 import {AssistantPage} from './pages/AssistantPage.js';
 import {HomePage} from './pages/HomePage.js';
 import {ListingPage} from './pages/ListingPage.js';
@@ -127,7 +120,6 @@ export function StorefrontApp() {
             currentListing={visit.page === 'listing' ? visit.slug : undefined}
             onHome={() => setVisit(visitHome())}
             onListing={(slug) => setVisit(visitListing(slug))}
-            onDemoSearch={() => setVisit(visitSearch(DEMO_SEARCH_QUERY))}
             onSearch={(query, ai) => setVisit(ai ? visitAssistant(query) : visitSearch(query))}
             searchDisabled={request !== undefined}
           />

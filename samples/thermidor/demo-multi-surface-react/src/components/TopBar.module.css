@@ -149,9 +149,3 @@
   color: #fff;
   background: #6d28d9;
 }
-
-.navButton:disabled {
-  color: var(--color-text-muted);
-  background: none;
-  cursor: not-allowed;
-}

@@ -28,11 +28,10 @@ Try it (the mock is described [below](#the-multi-surface-mock)):
 3. Click **Add to cart** on a product card: the header's cart counts it. Open the cart to change it.
 4. Turn **AI** off and search `kayak`: the search page shows the search surface the server opened
    for it (facets, sort, pagination), answered from the search it keeps.
-5. Click **Search** in the header: it opens the search page for `kayak` without typing. Ask
-   `which one is the cheapest?` in the chat panel on the right: the answer names the cheapest kayak,
-   and its reasoning says what the shopper is looking at. The results stay as they are and keep
-   working: pick a brand and ask again. A follow-up chip of a panel answer is sent in
-   the panel too.
+5. On that search page, ask `which one is the cheapest?` in the chat panel on the right: the answer
+   names the cheapest kayak, and its reasoning says what the shopper is looking at. The results stay
+   as they are and keep working: pick a brand and ask again. A follow-up chip of a panel answer is
+   sent in the panel too.
 6. Open a **Listing pages** entry: it shows an _In progress_ placeholder and sends no request.
 7. Open **One session** at the bottom: every turn, the view that sent it, and the surfaces it
    created that are still alive. `GET http://localhost:3456/multi-surface/sessions` shows what the
@@ -128,8 +127,8 @@ The views share the session's server state, as Agent Gateway does today:
 - **Nothing goes the other way.** The agent's answer never changes the search in the middle. A
   search the agent opens from a panel answer (**See all kayaks**) shows in the panel.
 - **A panel prompt does not leave the page.** It is sent on the assistant view and stays on the
-  search page's visit. The panel input, the search box and the **Search** button are disabled while
-  any request is in flight, so no prompt gets the server's 409.
+  search page's visit. The panel input and the search box are disabled while any request is in
+  flight, so no prompt gets the server's 409.
 - **An action that opens no turn streams into the session's latest turn,** which may be the
   panel's after a facet click in the middle. Its surfaces are told apart by surface rather than by
   turn, so the middle locks for its own actions.
