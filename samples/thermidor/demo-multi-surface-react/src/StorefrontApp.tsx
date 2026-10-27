@@ -42,7 +42,7 @@ const FOLLOW_UP_ACTION = 'selectAction';
  */
 export function StorefrontApp() {
   const scheduler = useScheduler();
-  const {a2uiMessages} = useSessionSnapshot();
+  const {a2uiMessages, request} = useSessionSnapshot();
   const {cart} = useCart();
   const [visit, setVisit] = useState<Visit>(visitHome);
 
@@ -105,6 +105,7 @@ export function StorefrontApp() {
             onHome={() => setVisit(visitHome())}
             onListing={(slug) => setVisit(visitListing(slug))}
             onSearch={(query, ai) => setVisit(ai ? visitAssistant(query) : visitSearch(query))}
+            searchDisabled={request !== undefined}
           />
           <Page visit={visit} onHome={() => setVisit(visitHome())} />
           <SessionInspector />

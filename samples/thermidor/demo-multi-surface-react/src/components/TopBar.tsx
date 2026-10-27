@@ -8,10 +8,11 @@ interface TopBarProps {
   onHome(): void;
   onListing(slug: string): void;
   onSearch(query: string, ai: boolean): void;
+  searchDisabled: boolean;
 }
 
 /** The shell: it stays while the page below it changes. */
-export function TopBar({currentListing, onHome, onListing, onSearch}: TopBarProps) {
+export function TopBar({currentListing, onHome, onListing, onSearch, searchDisabled}: TopBarProps) {
   return (
     <header className={styles.bar}>
       <nav className={styles.nav}>
@@ -20,7 +21,7 @@ export function TopBar({currentListing, onHome, onListing, onSearch}: TopBarProp
         </button>
         <ListingMenu current={currentListing} onSelect={onListing} />
       </nav>
-      <SearchBox onCommit={onSearch} />
+      <SearchBox onCommit={onSearch} disabled={searchDisabled} />
       <CartButton />
     </header>
   );

@@ -96,6 +96,8 @@ rather than tracking requests itself:
 - **Loading placeholders come from the data model.** A surface whose data model declares
   `isLoading: true` is drawn as its component's skeleton while its turn streams
   (`DiscoveredSurface.isLoading`). The session drops a placeholder its turn left behind.
+- **The search box is disabled while a request is in flight,** as in `demo-schema-react`. The
+  server runs one turn at a time, so a search sent before the running turn ends would be refused.
 - **The package keeps no queue,** so `src/session/turn-scheduler.ts` keeps the latest page prompt
   and sends it once `session.request` clears:
 
