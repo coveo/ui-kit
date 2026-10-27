@@ -1,3 +1,11 @@
+## 3.64.1
+
+### Patch Changes
+
+- [#8621](https://github.com/coveo/ui-kit/pull/8621) [`7f23cd5`](https://github.com/coveo/ui-kit/commit/7f23cd57f55cf95690a79b229822b06073932cf5) - While a modal or popover is open, the content its focus trap hides from assistive technologies is now also made `inert`, so it can no longer receive focus.
+
+- [#8402](https://github.com/coveo/ui-kit/pull/8402) [`f44a1be`](https://github.com/coveo/ui-kit/commit/f44a1be8e5c1f48aa035cc1c0dd71bb016be5bfd) - Fix `atomic-facet-manager` not sorting facets wrapped in an `atomic-popover` with the Dynamic Navigation Experience. The popover now moves along with its facet and, because a popover always displays its facet expanded, such a facet is never collapsed. In `atomic-search-layout`, popovers inside a facet manager in the `horizontal-facets` section keep the layout of direct-child popovers: a single row on desktop, hidden on mobile.
+
 ## 3.64.0
 
 ### Minor Changes
