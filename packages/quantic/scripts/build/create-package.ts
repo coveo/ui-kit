@@ -95,7 +95,11 @@ async function authorizePublishingOrg(log: StepLogger, options: Options) {
   log('Authorization successful');
 }
 
-async function ensurePackageNotPublished(log: StepLogger, options: Options) {
+async function skipIfPackageAlreadyPublished(
+  log: StepLogger,
+  options: Options,
+  runner: StepsRunner
+) {
   log(
     `Ensuring package version ${options.packageVersion} is not already published...`
   );
@@ -103,7 +107,8 @@ async function ensurePackageNotPublished(log: StepLogger, options: Options) {
     log(
       `Skipped publishing ${options.packageVersion} since this patch version is already published.`
     );
-    throw new Error('Package already published.');
+    runner.stop();
+    return;
   }
   log('Confirmed.');
 }
@@ -209,7 +214,9 @@ async function createGithubDiscussionPost(
       options.packageVersion = await getPackageVersion(log);
     });
     options.promote &&
-      runner.add(async (log) => await ensurePackageNotPublished(log, options));
+      runner.add(
+        async (log) => await skipIfPackageAlreadyPublished(log, options, runner)
+      );
     options.removeTranslations &&
       runner.add(async (log) => await removeTranslations(log));
     runner.add(async (log) => {
