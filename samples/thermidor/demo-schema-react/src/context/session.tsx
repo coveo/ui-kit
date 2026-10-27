@@ -1,7 +1,26 @@
-import {createContext, useContext, useRef, type PropsWithChildren} from 'react';
-import {createSession, type NavigatorContext, type Session} from '@coveo/thermidor';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type PropsWithChildren,
+} from 'react';
+import {
+  createSession,
+  type NavigatorContext,
+  type SerializedSession,
+  type Session,
+} from '@coveo/thermidor';
 import {ComponentContractsSchema} from '@coveo/thermidor-schema/zod3';
 import {getSampleConfiguration} from '../env.js';
+import {
+  forgetCurrentConversation,
+  keepCurrentConversation,
+  readCurrentConversation,
+} from './current-conversation.js';
 
 /**
  * The concrete contract this sample injects into the runtime. `@coveo/thermidor`
@@ -10,13 +29,76 @@ import {getSampleConfiguration} from '../env.js';
  */
 type DemoSession = Session<typeof ComponentContractsSchema>;
 
+/** Where a session opened in place of the current one comes from. */
+export interface ConversationSource {
+  sessionToRestore?: SerializedSession;
+}
+
+export interface Conversations {
+  /**
+   * Replaces the current session with one opened from `source`, remounting everything below the
+   * provider so no state from the previous conversation lingers. Throws, leaving the current
+   * session in place, when `source` cannot be restored.
+   */
+  open(source: ConversationSource): void;
+  /** Forgets the current conversation and opens an empty one. */
+  startNew(): void;
+}
+
+interface OpenSession {
+  id: number;
+  session: DemoSession;
+}
+
 const SessionContext = createContext<DemoSession | null>(null);
+const ConversationsContext = createContext<Conversations | null>(null);
 
 export function SessionProvider({children}: PropsWithChildren) {
-  const sessionRef = useRef<DemoSession | null>(null);
-  sessionRef.current ??= createThermidorSession();
+  const [current, setCurrent] = useState<OpenSession>(() => ({
+    id: 0,
+    session: restoreCurrentConversation(),
+  }));
+  const {session} = current;
+  // A replaced session still notifies while its cancelled request unwinds; only the open one is kept.
+  const keptSession = useRef(session);
 
-  return <SessionContext.Provider value={sessionRef.current}>{children}</SessionContext.Provider>;
+  useEffect(
+    () =>
+      session.subscribe(() => {
+        if (keptSession.current === session) {
+          keepCurrentConversation(session.serialize());
+        }
+      }),
+    [session]
+  );
+
+  const open = useCallback(
+    (source: ConversationSource) => {
+      const next = createThermidorSession(source.sessionToRestore);
+      keptSession.current = next;
+      session.cancel();
+      setCurrent(({id}) => ({id: id + 1, session: next}));
+    },
+    [session]
+  );
+  const conversations = useMemo<Conversations>(
+    () => ({
+      open,
+      startNew() {
+        forgetCurrentConversation();
+        open({});
+      },
+    }),
+    [open]
+  );
+
+  return (
+    <ConversationsContext.Provider value={conversations}>
+      <SessionContext.Provider key={current.id} value={session}>
+        {children}
+      </SessionContext.Provider>
+    </ConversationsContext.Provider>
+  );
 }
 
 export function useSession(): DemoSession {
@@ -27,7 +109,24 @@ export function useSession(): DemoSession {
   return session;
 }
 
-function createThermidorSession(): DemoSession {
+export function useConversations(): Conversations {
+  const conversations = useContext(ConversationsContext);
+  if (!conversations) {
+    throw new Error('useConversations must be used within a SessionProvider');
+  }
+  return conversations;
+}
+
+function restoreCurrentConversation(): DemoSession {
+  try {
+    return createThermidorSession(readCurrentConversation());
+  } catch {
+    forgetCurrentConversation();
+    return createThermidorSession();
+  }
+}
+
+function createThermidorSession(sessionToRestore?: SerializedSession): DemoSession {
   const {organizationId, accessToken, endpoint, trackingId, language, country, currency} =
     getSampleConfiguration();
 
@@ -41,6 +140,7 @@ function createThermidorSession(): DemoSession {
     country,
     currency,
     navigatorContextProvider: getNavigatorContext,
+    sessionToRestore,
   });
 }
 

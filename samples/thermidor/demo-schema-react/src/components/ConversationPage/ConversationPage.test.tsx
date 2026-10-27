@@ -51,4 +51,15 @@ describe('ConversationPage shell', () => {
       expect(textarea.disabled).toBe(false);
     });
   });
+
+  describe('new conversation', () => {
+    it('starts a new conversation when asked', () => {
+      const onNewConversation = vi.fn();
+      renderPage({onNewConversation});
+
+      fireEvent.click(screen.getByRole('button', {name: 'New conversation'}));
+
+      expect(onNewConversation).toHaveBeenCalledOnce();
+    });
+  });
 });

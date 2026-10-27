@@ -18,6 +18,8 @@ interface ConversationPageProps {
   followUps?: ReadonlyMap<string, readonly FollowUp[]>;
   /** The turn whose follow-up is in flight, if any. */
   pendingTurnId?: string | null;
+  /** Leaves this conversation for an empty one. */
+  onNewConversation?: () => void;
 }
 
 /**
@@ -32,6 +34,7 @@ export function ConversationPage({
   surfacesByTurn,
   followUps,
   pendingTurnId,
+  onNewConversation,
 }: ConversationPageProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const turnRefs = useRef<Map<string, HTMLDivElement>>(new Map());
@@ -40,6 +43,13 @@ export function ConversationPage({
 
   return (
     <section className={styles.page}>
+      {onNewConversation && (
+        <div className={styles.toolbar}>
+          <button type="button" className={styles.newConversation} onClick={onNewConversation}>
+            New conversation
+          </button>
+        </div>
+      )}
       <div
         className={styles.scrollContainer}
         ref={containerRef}

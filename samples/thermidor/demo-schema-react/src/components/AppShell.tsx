@@ -1,6 +1,6 @@
 import {useCallback, useMemo, useRef, useState, useSyncExternalStore} from 'react';
 import {A2UIProvider, type A2UIClientEventMessage} from '@copilotkit/a2ui-renderer';
-import {useSession} from '../context/session.js';
+import {useConversations, useSession} from '../context/session.js';
 import {createThermidorCatalog} from '../a2ui/components.js';
 import {buildSurfaceStream, toServerAction} from '../a2ui/surface-stream.js';
 import {ThermidorA2UIStream} from '../a2ui/surfaces.js';
@@ -25,6 +25,7 @@ const NO_SURFACES: readonly string[] = [];
  */
 export function AppShell() {
   const session = useSession();
+  const conversations = useConversations();
 
   const subscribe = useCallback(
     (onStoreChange: () => void) => session.subscribe(onStoreChange),
@@ -111,6 +112,7 @@ export function AppShell() {
                   surfacesByTurn={stream.surfacesByTurn}
                   followUps={followUps}
                   pendingTurnId={pendingTurnId}
+                  onNewConversation={conversations.startNew}
                 />
               )}
             </div>
