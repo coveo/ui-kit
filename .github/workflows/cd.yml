@@ -130,9 +130,9 @@ jobs:
       - uses: ./.github/actions/setup-sfdx
       - name: Promote SFDX package to production
         run: |
+          trap 'rm -f "${VARS_SFDX_AUTH_JWT_KEY_FILE}"' EXIT
           echo "${{ secrets.SFDX_AUTH_JWT_KEY }}" > ${VARS_SFDX_AUTH_JWT_KEY_FILE}
           pnpm exec turbo run @coveo/quantic#promote:sfdx:ci
-          rm ${VARS_SFDX_AUTH_JWT_KEY_FILE}
         env:
           SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
           SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
