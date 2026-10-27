@@ -8,6 +8,7 @@ import {
 } from 'react';
 import {
   createSession,
+  type A2uiClientMessage,
   type NavigatorContext,
   type Session,
   type SessionSnapshot,
@@ -16,14 +17,31 @@ import {ComponentContractsSchema} from '@coveo/thermidor-schema/zod3';
 import {SessionRequestProvider} from '../../../demo-schema-react/src/a2ui/session-request.js';
 import {buildViewSurfaces, type ViewSurfaces} from '../views/view-surfaces.js';
 import {createCartStore, type CartStore} from './cart-store.js';
-import {createTurnScheduler, type TurnScheduler} from './turn-scheduler.js';
 
 type StorefrontSession = Session<typeof ComponentContractsSchema>;
 
-interface StorefrontValue {
+/**
+ * The view a request comes from. It is sent to the server in `context.custom.surfaceId`, with the
+ * values of the published contract.
+ */
+export type StorefrontView =
+  | 'storefront-preview-home'
+  | 'storefront-preview-assistant'
+  | 'storefront-preview-search';
+
+/** Which view and page visit sent each turn, keyed by turn id. */
+export interface TurnViews {
+  readonly turnViews: ReadonlyMap<string, StorefrontView>;
+  readonly turnVisits: ReadonlyMap<string, number>;
+}
+
+interface StorefrontValue extends TurnViews {
   session: StorefrontSession;
-  scheduler: TurnScheduler;
   cart: CartStore;
+  /** Sends a page's prompt on behalf of its view, and records the turn it opens. */
+  sendPrompt(view: StorefrontView, prompt: string, visitId: number): void;
+  /** Sends a component action on behalf of the view that draws it. */
+  sendAction(view: StorefrontView, message: A2uiClientMessage): void;
 }
 
 const StorefrontContext = createContext<StorefrontValue | null>(null);
@@ -53,7 +71,9 @@ export function StorefrontSessionProvider({children}: PropsWithChildren) {
 
 function createStorefront(): StorefrontValue {
   const cart = createCartStore();
-  let scheduler: TurnScheduler | undefined;
+  let currentView: StorefrontView = 'storefront-preview-home';
+  const turnViews = new Map<string, StorefrontView>();
+  const turnVisits = new Map<string, number>();
 
   const session = createSession({
     contracts: ComponentContractsSchema,
@@ -70,12 +90,32 @@ function createStorefront(): StorefrontValue {
     // The cart is app state: every request carries it, whichever view sends it.
     commerceContextProvider: () => ({
       cart: cart.getItems().map((item) => ({...item})),
-      custom: {surfaceId: scheduler?.currentContext},
+      custom: {surfaceId: currentView},
     }),
   });
-  scheduler = createTurnScheduler(session);
 
-  return {session, scheduler, cart};
+  return {
+    session,
+    cart,
+    turnViews,
+    turnVisits,
+    sendPrompt(view, prompt, visitId) {
+      const inFlight = session.request;
+      currentView = view;
+      // The session opens the turn and publishes its request before its first `await`, and
+      // withholds a dispatch made while another request is in flight.
+      void session.dispatchAction({name: 'submitPrompt', payload: {prompt}});
+      const {request} = session;
+      if (request?.kind === 'prompt' && request !== inFlight) {
+        turnViews.set(request.turnId, view);
+        turnVisits.set(request.turnId, visitId);
+      }
+    },
+    sendAction(view, message) {
+      currentView = view;
+      void session.dispatchAction(message);
+    },
+  };
 }
 
 function useStorefront(): StorefrontValue {
@@ -90,8 +130,12 @@ export function useSession(): StorefrontSession {
   return useStorefront().session;
 }
 
-export function useScheduler(): TurnScheduler {
-  return useStorefront().scheduler;
+export function useStorefrontSend(): Pick<StorefrontValue, 'sendPrompt' | 'sendAction'> {
+  return useStorefront();
+}
+
+export function useTurnViews(): TurnViews {
+  return useStorefront();
 }
 
 export function useSessionSnapshot(): SessionSnapshot {
@@ -101,11 +145,11 @@ export function useSessionSnapshot(): SessionSnapshot {
 
 /** Every surface of the session, and the view that draws it. */
 export function useViewSurfaces(): ViewSurfaces {
-  const {scheduler} = useStorefront();
+  const turnViews = useTurnViews();
   const {turns} = useSessionSnapshot();
-  // The scheduler tags a turn right after the session opens it, and every stream event that
-  // follows re-renders, so a turn goes untagged for its first render at most.
-  return useMemo(() => buildViewSurfaces(turns, scheduler), [turns, scheduler]);
+  // A turn is recorded right after the session opens it, and every stream event that follows
+  // re-renders, so a turn goes unrecorded for its first render at most.
+  return useMemo(() => buildViewSurfaces(turns, turnViews), [turns, turnViews]);
 }
 
 export function useCart() {

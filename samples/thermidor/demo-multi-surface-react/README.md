@@ -98,16 +98,12 @@ rather than tracking requests itself:
   (`DiscoveredSurface.isLoading`). The session drops a placeholder its turn left behind.
 - **The search box is disabled while a request is in flight,** as in `demo-schema-react`. The
   server runs one turn at a time, so a search sent before the running turn ends would be refused.
-- **The package keeps no queue,** so `src/session/turn-scheduler.ts` keeps the latest page prompt
-  and sends it once `session.request` clears:
-
-| A new…           | while a request is in flight                   |
-| ---------------- | ---------------------------------------------- |
-| page prompt      | cancels it, then is sent (the page is leaving) |
-| component action | withheld (the surface is locked)               |
-
-A cancelled request unwinds a few microtasks after `session.cancel()`, so the next prompt waits for
-`session.request` to clear instead of being withheld.
+- **Nothing else can send while a request is in flight:** follow-up chips sit on locked surfaces,
+  and the home and listing pages send nothing. So the pages call `session.dispatchAction` directly,
+  as `demo-schema-react` does. Leaving a page mid-answer lets the answer finish.
+- **The app records which view sent each turn.** Just before a send it sets the view that
+  `context.custom.surfaceId` names, and after a prompt it records the turn the session opened with
+  its view and page visit (`src/session/storefront-session.tsx`).
 
 ## Known limits
 
@@ -141,8 +137,7 @@ src/
 ├── StorefrontApp.tsx           The header over the page, actions, page visits
 ├── navigation.ts               Page visits and the listing pages
 ├── session/
-│   ├── storefront-session.tsx  The ONE session, its configuration and context providers
-│   ├── turn-scheduler.ts       The latest prompt of each view, sent once the session is free
+│   ├── storefront-session.tsx  The ONE session, the view of each turn, and context providers
 │   └── cart-store.ts           The app's cart, sent in context.cart
 ├── views/
 │   ├── view-surfaces.ts        View → surfaces: each view draws its own turns' surfaces

@@ -15,22 +15,21 @@ import {AssistantPage} from './pages/AssistantPage.js';
 import {HomePage} from './pages/HomePage.js';
 import {ListingPage} from './pages/ListingPage.js';
 import {SearchPage} from './pages/SearchPage.js';
-import {useCart, useScheduler, useSessionSnapshot} from './session/storefront-session.js';
 import {
-  ASSISTANT_CONTEXT,
-  HOME_CONTEXT,
-  SEARCH_CONTEXT,
-  type StorefrontContext,
-} from './session/turn-scheduler.js';
+  useCart,
+  useSessionSnapshot,
+  useStorefrontSend,
+  type StorefrontView,
+} from './session/storefront-session.js';
 
 const catalog = createStorefrontCatalog();
 
 /** The view a page's actions are sent on behalf of. A listing page draws no surface. */
-const PAGE_CONTEXTS: Record<Visit['page'], StorefrontContext> = {
-  home: HOME_CONTEXT,
-  assistant: ASSISTANT_CONTEXT,
-  search: SEARCH_CONTEXT,
-  listing: HOME_CONTEXT,
+const PAGE_VIEWS: Record<Visit['page'], StorefrontView> = {
+  home: 'storefront-preview-home',
+  assistant: 'storefront-preview-assistant',
+  search: 'storefront-preview-search',
+  listing: 'storefront-preview-home',
 };
 
 /** `NextActionsBar` follow-ups ask for a new answer, so they open a new assistant visit. */
@@ -41,7 +40,7 @@ const FOLLOW_UP_ACTION = 'selectAction';
  * over a page (home, assistant, search or a listing) that changes.
  */
 export function StorefrontApp() {
-  const scheduler = useScheduler();
+  const {sendPrompt, sendAction} = useStorefrontSend();
   const {a2uiMessages, request} = useSessionSnapshot();
   const {cart} = useCart();
   const [visit, setVisit] = useState<Visit>(visitHome);
@@ -59,13 +58,11 @@ export function StorefrontApp() {
     }
     sentVisitRef.current = visit.id;
     if (visit.page === 'assistant') {
-      scheduler.submitPagePrompt(ASSISTANT_CONTEXT, visit.prompt, visit.id);
+      sendPrompt(PAGE_VIEWS.assistant, visit.prompt, visit.id);
     } else if (visit.page === 'search') {
-      scheduler.submitPagePrompt(SEARCH_CONTEXT, visit.query, visit.id);
-    } else {
-      scheduler.leavePage();
+      sendPrompt(PAGE_VIEWS.search, visit.query, visit.id);
     }
-  }, [visit, scheduler]);
+  }, [visit, sendPrompt]);
 
   const openAssistant = useCallback((prompt: string) => setVisit(visitAssistant(prompt)), []);
 
@@ -80,9 +77,9 @@ export function StorefrontApp() {
         openAssistant(text);
         return;
       }
-      scheduler.dispatchAction(PAGE_CONTEXTS[visitRef.current.page], message as A2uiClientMessage);
+      sendAction(PAGE_VIEWS[visitRef.current.page], message as A2uiClientMessage);
     },
-    [scheduler, openAssistant]
+    [sendAction, openAssistant]
   );
 
   const addToCart = useCallback(
