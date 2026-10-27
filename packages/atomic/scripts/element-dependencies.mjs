@@ -178,7 +178,7 @@ function importGraph(entry, modules, resolveImport) {
   return visited;
 }
 
-const IGNORED_FILE = /\.(spec|d|stories|new\.stories|e2e)\.ts$/;
+const IGNORED_FILE = /\.(spec|d|stories|e2e)\.ts$/;
 
 /**
  * Analyzes every source module of the package and returns the dependency gaps, with paths
