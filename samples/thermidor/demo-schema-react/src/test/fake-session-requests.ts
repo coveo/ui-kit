@@ -1,5 +1,10 @@
-import type {SessionRequest} from '@coveo/thermidor';
+import type {SessionRequest, SessionSnapshot} from '@coveo/thermidor';
 import type {SessionRequestSource} from '../a2ui/session-request.js';
+
+/** A session snapshot holding only `request`, the one field the surfaces read. */
+export function requestSnapshot(request: SessionRequest | undefined): SessionSnapshot {
+  return {turns: [], surfaces: [], a2uiMessages: [], state: {}, request, actionError: undefined};
+}
 
 interface UserActionMessage {
   userAction?: {name?: unknown; surfaceId?: unknown; sourceComponentId?: unknown};
@@ -7,23 +12,27 @@ interface UserActionMessage {
 
 /**
  * A stand-in for the session's request handling: sends one message at a time through `send`,
- * withholds a message dispatched while another is in flight, and exposes `request` and
- * `sendAndWait()` like `Session` does.
+ * withholds a message dispatched while another is in flight, and exposes `request` through
+ * `getSnapshot()`, and `sendAndWait()`, like `Session` does. `componentOf` gives the `component`
+ * of a dispatching node, which the session reads from the surface.
  */
-export function createFakeSessionRequests(send: (message: never) => Promise<void> | void) {
+export function createFakeSessionRequests(
+  send: (message: never) => Promise<void> | void,
+  componentOf: (sourceComponentId: string) => string
+) {
   const listeners = new Set<() => void>();
   let request: SessionRequest | undefined;
+  let snapshot = requestSnapshot(undefined);
 
   const notify = () => {
+    snapshot = requestSnapshot(request);
     for (const listener of listeners) {
       listener();
     }
   };
 
   const source: SessionRequestSource = {
-    get request() {
-      return request;
-    },
+    getSnapshot: () => snapshot,
     subscribe(listener) {
       listeners.add(listener);
       return () => listeners.delete(listener);
@@ -53,6 +62,7 @@ export function createFakeSessionRequests(send: (message: never) => Promise<void
         ? {kind: 'prompt', turnId: 'turn'}
         : {
             kind: 'action',
+            component: componentOf(String(userAction?.sourceComponentId)),
             name: String(userAction?.name),
             surfaceId: String(userAction?.surfaceId),
             sourceComponentId: String(userAction?.sourceComponentId),

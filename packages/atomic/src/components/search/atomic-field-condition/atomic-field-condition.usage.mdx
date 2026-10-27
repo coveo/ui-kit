@@ -13,25 +13,27 @@ If you set both `must-match-*` and `must-not-match-*` for the same field with ov
 
 ```html
 <atomic-result-template>
-  <!-- Show only if author field exists -->
-  <atomic-field-condition if-defined="author">
-    <span>Written by: <atomic-result-text field="author"></atomic-result-text></span>
-  </atomic-field-condition>
+  <template>
+    <!-- Show only if author field exists -->
+    <atomic-field-condition if-defined="author">
+      <span>Written by: <atomic-result-text field="author"></atomic-result-text></span>
+    </atomic-field-condition>
 
-  <!-- Show badge for PDF or Word documents -->
-  <atomic-field-condition must-match-filetype="pdf,docx">
-    <span class="document-badge">Document</span>
-  </atomic-field-condition>
+    <!-- Show badge for PDF or Word documents -->
+    <atomic-field-condition must-match-filetype="pdf,docx">
+      <span class="document-badge">Document</span>
+    </atomic-field-condition>
 
-  <!-- Show if author exists AND source is not internal -->
-  <atomic-field-condition if-defined="author" must-not-match-source="internal">
-    <span>External author: <atomic-result-text field="author"></atomic-result-text></span>
-  </atomic-field-condition>
+    <!-- Show if author exists AND source is not internal -->
+    <atomic-field-condition if-defined="author" must-not-match-source="internal">
+      <span>External author: <atomic-result-text field="author"></atomic-result-text></span>
+    </atomic-field-condition>
 
-  <!-- This will never render (conflicting conditions) -->
-  <atomic-field-condition must-match-filetype="pdf" must-not-match-filetype="pdf">
-    <span>Impossible</span>
-  </atomic-field-condition>
+    <!-- This will never render (conflicting conditions) -->
+    <atomic-field-condition must-match-filetype="pdf" must-not-match-filetype="pdf">
+      <span>Impossible</span>
+    </atomic-field-condition>
+  </template>
 </atomic-result-template>
 ```
 

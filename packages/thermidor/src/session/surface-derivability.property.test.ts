@@ -1,7 +1,6 @@
 import fc from 'fast-check';
 import {describe, expect, it} from 'vitest';
 import type {NormalizedStreamEvent} from '@/src/internal/api/protocol/stream-types.js';
-import {deriveA2uiV09Messages} from './a2ui-v09-projection.js';
 import {createTurn, deriveSurfaces, foldActivities} from './fold.js';
 import {restoreSession, serializeSession} from './serialize.js';
 import type {SessionStoreState} from './store.js';
@@ -155,9 +154,6 @@ describe('surfaces are derivable', () => {
           const turn = foldActivities(createTurn(id, {prompt: 'hi'}), activities);
 
           expect(turn.response.surfaces).toEqual(deriveSurfaces(turn.response.activities));
-          expect(turn.response.a2uiMessages).toEqual(
-            deriveA2uiV09Messages(turn.response.activities)
-          );
           expect(foldActivities(createTurn(id, {prompt: 'hi'}), activities)).toEqual(turn);
           // The generators guarantee at least one well-formed surface, so this
           // is not the trivially-empty case.
@@ -197,7 +193,6 @@ describe('surfaces are derivable', () => {
               deriveSurfaces(restoredTurn.response.activities)
             );
             expect(restoredTurn.response.surfaces).toEqual(originalTurn.response.surfaces);
-            expect(restoredTurn.response.a2uiMessages).toEqual(originalTurn.response.a2uiMessages);
           });
         }
       ),

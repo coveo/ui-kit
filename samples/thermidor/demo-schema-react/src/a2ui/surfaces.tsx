@@ -5,14 +5,14 @@
  * page places it.
  *
  * The v1.0 → v0.9 downgrade the renderer needs no longer happens here: it is a derived
- * projection inside `@coveo/thermidor`, read off `response.a2uiMessages`. See that package's
+ * projection inside `@coveo/thermidor`, read off `session.a2uiMessages`. See that package's
  * `session/a2ui-v09-projection.ts` for the conversion and the recorded interim debt.
  */
-import {createContext, useContext, useEffect, useMemo, useRef, type ReactNode} from 'react';
+import {useEffect, useMemo, useRef, type ReactNode} from 'react';
 import {A2UIRenderer, useA2UI} from '@copilotkit/a2ui-renderer';
-import type {A2uiV09Message} from '@coveo/thermidor';
+import type {A2uiV09Message, DiscoveredSurface} from '@coveo/thermidor';
 import {A2UISkeleton} from './Skeleton/Skeleton.js';
-import {useSurfaceLocked} from './session-request.js';
+import {useActionError, useSurfaceLocked} from './session-request.js';
 import styles from './surfaces.module.css';
 
 /** The control a pointer press lands on, through its label when the press is on one. */
@@ -27,93 +27,73 @@ function controlAt(target: EventTarget): HTMLElement | null {
 
 /**
  * The control the shopper last used, on any surface. The page has one focus, so it is shared by
- * every exchange, and only the exchange that holds it gives it back.
+ * every turn, and only the turn that holds it gives it back.
  */
 let lastUsedControl: HTMLElement | null = null;
 
-const NO_LOADING_SURFACES: ReadonlyMap<string, string> = new Map();
-
-/** The `loadingSurfaces` of the enclosing {@link ThermidorA2UIStream}. */
-const LoadingSurfacesContext = createContext(NO_LOADING_SURFACES);
-
 interface ThermidorA2UIStreamProps {
-  messages: A2uiV09Message[];
-  /** The stream's loading placeholders (`SurfaceStream.loadingSurfaces`). */
-  loadingSurfaces: ReadonlyMap<string, string>;
+  /** The session's whole renderer stream (`session.a2uiMessages`). */
+  messages: readonly A2uiV09Message[];
   /** The page whose {@link TurnSurfaces} draw the stream's surfaces. */
   children?: ReactNode;
 }
 
 /**
- * Feeds the whole session's message stream to the renderer, and shares which of its surfaces are
- * loading placeholders with the page it wraps. It draws nothing itself: each surface is drawn by
- * a {@link TurnSurfaces} placed under the turn that created it.
+ * Feeds the whole session's message stream to the renderer. It draws nothing itself: each surface
+ * is drawn by a {@link TurnSurfaces} placed under the turn that created it.
  */
-export function ThermidorA2UIStream({
-  messages,
-  loadingSurfaces,
-  children,
-}: ThermidorA2UIStreamProps) {
+export function ThermidorA2UIStream({messages, children}: ThermidorA2UIStreamProps) {
   const {clearSurfaces, processMessages} = useA2UI();
-  const serializedMessages = useMemo(() => JSON.stringify(messages), [messages]);
   const actionsRef = useRef({clearSurfaces, processMessages});
   actionsRef.current = {clearSurfaces, processMessages};
+  const fedRef = useRef<readonly A2uiV09Message[]>([]);
 
+  // The session's stream only grows, so only its new messages are fed. A stream that does not
+  // extend the one already fed, such as another session's, is fed again from the start.
   useEffect(() => {
     const {clearSurfaces, processMessages} = actionsRef.current;
-    clearSurfaces();
-    if (serializedMessages !== '[]') {
-      processMessages(JSON.parse(serializedMessages) as A2uiV09Message[]);
+    const fed = fedRef.current;
+    const extendsFed = fed.length === 0 || messages[fed.length - 1] === fed[fed.length - 1];
+    const start = extendsFed ? fed.length : 0;
+    if (!extendsFed) {
+      clearSurfaces();
     }
-  }, [serializedMessages]);
+    fedRef.current = messages;
+    if (messages.length > start) {
+      processMessages(messages.slice(start) as A2uiV09Message[]);
+    }
+  }, [messages]);
 
-  return (
-    <LoadingSurfacesContext.Provider value={loadingSurfaces}>
-      {children}
-    </LoadingSurfacesContext.Provider>
-  );
+  return <>{children}</>;
 }
 
 interface TurnSurfacesProps {
-  surfaceIds: readonly string[];
+  /**
+   * The turn's surfaces (`response.surfaces`). `@coveo/thermidor` lists a loading placeholder only
+   * while its turn streams, so one the agent left behind is never drawn.
+   */
+  surfaces: readonly DiscoveredSurface[];
   /**
    * Whether the shopper can act on these surfaces. The session only sends actions for the
    * surfaces of its active turn, so the controls of earlier turns' blocks are disabled while
    * their content stays readable. A disabled `fieldset` disables every control inside it.
    */
   interactive: boolean;
-  /**
-   * Whether the exchange these surfaces belong to is still streaming: its turn is streaming, or
-   * its follow-up is in flight. Loading placeholders are drawn only then; one the agent left
-   * behind once the exchange ended (a cancelled run, an error, a restored session) is abandoned
-   * and drawn as nothing.
-   */
+  /** Whether the turn these surfaces belong to is still streaming. */
   isStreaming: boolean;
 }
 
 /**
  * Draws one turn's surfaces in order. A surface added to an already drawn turn, such as the
  * search block a search option opens, is scrolled into view. A loading placeholder is drawn as
- * the skeleton of its root component type, in the place its content will take, while its
- * exchange streams.
+ * the skeleton of its root component type, in the place its content will take.
  */
-export function TurnSurfaces({
-  surfaceIds: allSurfaceIds,
-  interactive,
-  isStreaming,
-}: TurnSurfacesProps) {
-  const loadingSurfaces = useContext(LoadingSurfacesContext);
-  const surfaceIds = useMemo(
-    () =>
-      isStreaming
-        ? allSurfaceIds
-        : allSurfaceIds.filter((surfaceId) => !loadingSurfaces.has(surfaceId)),
-    [allSurfaceIds, isStreaming, loadingSurfaces]
-  );
+export function TurnSurfaces({surfaces, interactive, isStreaming}: TurnSurfacesProps) {
+  const surfaceIds = useMemo(() => surfaces.map((surface) => surface.surfaceId), [surfaces]);
   const sectionRefs = useRef(new Map<string, HTMLElement>());
   const drawnIdsRef = useRef<ReadonlySet<string> | null>(null);
   const locked = useSurfaceLocked() && interactive;
-  // The exchange that streams is disabled without dimming, so its content arrives at full strength.
+  // The turn that streams is disabled without dimming, so its content arrives at full strength.
   const dimmed = locked && !isStreaming;
   const fieldsetRef = useRef<HTMLFieldSetElement>(null);
 
@@ -175,8 +155,7 @@ export function TurnSurfaces({
           Earlier results. Ask a follow-up or search again to refine.
         </legend>
       )}
-      {surfaceIds.map((surfaceId) => {
-        const loadingComponentType = loadingSurfaces.get(surfaceId);
+      {surfaces.map(({surfaceId, rootComponentType, isLoading}) => {
         return (
           <section
             className="catalog-surface"
@@ -190,14 +169,28 @@ export function TurnSurfaces({
               }
             }}
           >
-            {loadingComponentType !== undefined ? (
-              <A2UISkeleton componentType={loadingComponentType} />
+            {isLoading ? (
+              <A2UISkeleton componentType={rootComponentType} />
             ) : (
               <A2UIRenderer surfaceId={surfaceId} />
             )}
+            <ActionErrorNote surfaceId={surfaceId} />
           </section>
         );
       })}
     </fieldset>
+  );
+}
+
+/** Says that the last action from this block failed, as the session's `actionError` reports it. */
+function ActionErrorNote({surfaceId}: {surfaceId: string}) {
+  const message = useActionError(surfaceId);
+  if (message === undefined) {
+    return null;
+  }
+  return (
+    <p role="alert" className={styles.actionError}>
+      This action could not be completed: {message}
+    </p>
   );
 }

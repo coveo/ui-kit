@@ -20,6 +20,7 @@ export {createSession} from '@/src/session/create-session.js';
 export type {
   Session,
   SessionConfig,
+  SessionSnapshot,
   A2uiClientMessage,
   SubmitPromptAction,
 } from '@/src/session/create-session.js';
@@ -28,6 +29,7 @@ export type {
 export type {
   ContractsSchema,
   ComponentContractSchema,
+  ComponentActionNames,
   ParsableSchema,
   SafeParseResult,
   ParseIssue,
@@ -46,6 +48,7 @@ export type {
 export type {
   Turn,
   TurnInput,
+  TurnAction,
   TurnResponse,
   TurnStatus,
   TurnAgent,
@@ -61,6 +64,7 @@ export type {
   SessionRequest,
   PromptRequest,
   ActionRequest,
+  ActionError,
 } from '@/src/session/types.js';
 
 // ── Serialization ───────────────────────────────────────────────────────────

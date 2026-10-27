@@ -104,7 +104,8 @@
     },
     "test:storybook": {
       "dependsOn": ["^build", "build"],
-      "outputs": ["reports/a11y-report.shard-*.json", "reports/a11y-report.json"]
+      "outputs": ["reports/a11y-report.shard-*.json", "reports/a11y-report.json"],
+      "env": ["TEST_SHARD"]
     },
     "dev": {
       "extends": false,
@@ -130,7 +131,8 @@
     "e2e": {
       "dependsOn": ["build", "build:storybook:e2e"],
       "inputs": ["$TURBO_DEFAULT$"],
-      "outputs": ["playwright-report/**", "blob-report/**", "test-results/**"]
+      "outputs": ["playwright-report/**", "blob-report/**", "test-results/**"],
+      "env": ["TEST_SHARD"]
     },
     "e2e:csp": {
       "dependsOn": ["build"],

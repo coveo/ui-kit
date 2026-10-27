@@ -1,11 +1,30 @@
 import {createContext, startTransition, useContext, useSyncExternalStore} from 'react';
-import type {Session, SessionRequest} from '@coveo/thermidor';
+import type {
+  ActionRequest,
+  ComponentActionNames,
+  Session,
+  SessionRequest,
+  SessionSnapshot,
+} from '@coveo/thermidor';
+import type {ComponentContractsSchema} from '@coveo/thermidor-schema/zod3';
 
-/** What the surfaces read from the session: its request in flight, and when it has answered. */
-export type SessionRequestSource = Pick<Session, 'request' | 'subscribe' | 'sendAndWait'>;
+/**
+ * What the surfaces read from the session: its request in flight, when it has answered, and why the
+ * last action failed.
+ */
+export type SessionRequestSource = Pick<Session, 'subscribe' | 'getSnapshot' | 'sendAndWait'>;
+
+const IDLE_SNAPSHOT: SessionSnapshot = {
+  turns: [],
+  surfaces: [],
+  a2uiMessages: [],
+  state: {},
+  request: undefined,
+  actionError: undefined,
+};
 
 const IDLE: SessionRequestSource = {
-  request: undefined,
+  getSnapshot: () => IDLE_SNAPSHOT,
   subscribe: () => () => {},
   sendAndWait: (send) => {
     send();
@@ -19,26 +38,30 @@ const SessionRequestContext = createContext<SessionRequestSource>(IDLE);
 export const SessionRequestProvider = SessionRequestContext.Provider;
 
 /** Typing in a facet search keeps the surface usable. */
-const NON_BLOCKING_ACTIONS: ReadonlySet<string> = new Set([
-  'search',
-  'clearSearch',
-  'showMoreSearchResults',
-]);
+const NON_BLOCKING_ACTIONS: ComponentActionNames<typeof ComponentContractsSchema> = {
+  CategoryFacet: ['clearSearch', 'search', 'showMoreSearchResults'],
+  RegularFacet: ['clearSearch', 'search', 'showMoreSearchResults'],
+};
+
+function isNonBlocking({component, name}: ActionRequest): boolean {
+  const actions: Partial<Record<string, readonly string[]>> = NON_BLOCKING_ACTIONS;
+  return actions[component]?.includes(name) ?? false;
+}
 
 /** Whether a request locks the active surface: every one but a facet search. */
 export function isBlocking(request: SessionRequest | undefined): boolean {
-  return (
-    request !== undefined && !(request.kind === 'action' && NON_BLOCKING_ACTIONS.has(request.name))
-  );
+  return request !== undefined && !(request.kind === 'action' && isNonBlocking(request));
 }
 
-/** The request the session is sending, from `source` or the enclosing provider. */
-export function useSessionRequest(source?: SessionRequestSource): SessionRequest | undefined {
-  const context = useContext(SessionRequestContext);
-  const session = source ?? context;
+/** Why the last action dispatched from `surfaceId` failed, while the session still reports it. */
+export function useActionError(surfaceId: string): string | undefined {
+  const source = useContext(SessionRequestContext);
   return useSyncExternalStore(
-    session.subscribe,
-    () => session.request,
+    source.subscribe,
+    () => {
+      const {actionError} = source.getSnapshot();
+      return actionError?.surfaceId === surfaceId ? actionError.message : undefined;
+    },
     () => undefined
   );
 }
@@ -46,7 +69,7 @@ export function useSessionRequest(source?: SessionRequestSource): SessionRequest
 /** Whether the session is sending a request: it takes one at a time and withholds the others. */
 export function useSessionBusy(): () => boolean {
   const source = useContext(SessionRequestContext);
-  return () => source.request !== undefined;
+  return () => source.getSnapshot().request !== undefined;
 }
 
 /**
@@ -57,7 +80,7 @@ export function useSessionBusy(): () => boolean {
 export function useGesture(): (optimistic: () => void, send: () => void) => void {
   const source = useContext(SessionRequestContext);
   return (optimistic, send) => {
-    if (source.request !== undefined) {
+    if (source.getSnapshot().request !== undefined) {
       return;
     }
     startTransition(async () => {
@@ -67,7 +90,15 @@ export function useGesture(): (optimistic: () => void, send: () => void) => void
   };
 }
 
-/** Whether the active turn's surface is locked by the request in flight. */
+/**
+ * Whether the active turn's surface is locked by the request in flight: every request but one
+ * listed in `NON_BLOCKING_ACTIONS`, such as a facet search.
+ */
 export function useSurfaceLocked(): boolean {
-  return isBlocking(useSessionRequest());
+  const source = useContext(SessionRequestContext);
+  return useSyncExternalStore(
+    source.subscribe,
+    () => isBlocking(source.getSnapshot().request),
+    () => false
+  );
 }

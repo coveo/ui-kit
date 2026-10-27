@@ -1,15 +1,7 @@
 import type {NormalizedStreamEvent} from '@/src/internal/api/protocol/stream-types.js';
 import {getActivityMetadata} from '@/src/internal/api/protocol/activity-metadata.js';
 import {devWarn} from '@/src/internal/utils/dev-warn.js';
-import {deriveA2uiV09Messages} from './a2ui-v09-projection.js';
-import type {ContractsSchema} from './contracts.js';
-import {
-  deriveNodeIdentityRegistry,
-  readUpdateDataModelOps,
-  validateInboundOp,
-} from './in-transit-validation.js';
 import type {
-  A2uiState,
   Activity,
   DiscoveredSurface,
   ReasoningStep,
@@ -21,15 +13,13 @@ import type {
 } from './types.js';
 
 function emptyResponse(): TurnResponse {
-  return {state: {}, activities: [], surfaces: [], a2uiMessages: []};
+  return {activities: [], surfaces: []};
 }
 
 function cloneResponse(response: TurnResponse): TurnResponse {
   const next: TurnResponse = {
-    state: response.state,
     activities: [...response.activities],
     surfaces: [...response.surfaces],
-    a2uiMessages: [...response.a2uiMessages],
   };
   if (response.agent) {
     next.agent = {
@@ -67,21 +57,12 @@ function ensureAgent(response: TurnResponse): TurnAgent {
  * This is the single place a {@link TurnResponse} is constructed from the
  * stream.
  *
- * The fold is pure: `(previousTurn, activity, contracts) → nextTurn`. The
- * injected `contracts` is a BOUND DEPENDENCY (never part of turn state) that
- * threads to in-transit validation; folding the same activity sequence twice
- * with the same contracts yields deeply-equal turns.
- *
- * `contracts` is optional: when absent (activity sequences that carry no
- * `updateDataModel` state ops), no inbound op is validated or applied, so
- * `response.state` is left as it would be with an empty contract. The session
- * runtime always threads `config.contracts`.
+ * The fold is pure: `(previousTurn, activity) → nextTurn`; folding the same
+ * activity sequence twice yields deeply-equal turns. The session's surfaces, renderer stream and
+ * component state span every turn, so the session derives them from all the turns' activities
+ * (ADR-018), not the fold.
  */
-export function foldActivity(
-  previousTurn: Turn,
-  activity: NormalizedStreamEvent,
-  contracts?: ContractsSchema
-): Turn {
+export function foldActivity(previousTurn: Turn, activity: NormalizedStreamEvent): Turn {
   const turn = cloneTurn(previousTurn);
   const response = turn.response;
 
@@ -174,11 +155,15 @@ export function foldActivity(
     case 'ACTIVITY_SNAPSHOT': {
       const content = (activity as {content: unknown}).content as Record<string, unknown>;
       const metadata = getActivityMetadata(activity);
+      const eventMetadata = (activity as {metadata?: unknown}).metadata;
       const nextActivity: Activity = {
         id: (activity as {messageId?: string}).messageId ?? '',
         kind: (activity as {activityType?: string}).activityType ?? '',
         payload: content,
         replace: metadata.replace ?? false,
+        ...(eventMetadata && typeof eventMetadata === 'object' && !Array.isArray(eventMetadata)
+          ? {metadata: eventMetadata as Record<string, unknown>}
+          : {}),
       };
 
       // A replace snapshot merges onto the same-`messageId` activity in place (see
@@ -197,12 +182,12 @@ export function foldActivity(
       if (existingIndex === -1) {
         response.activities = [...response.activities, nextActivity];
       } else {
+        const previous = response.activities[existingIndex];
+        const metadata = mergeActivityMetadata(previous.metadata, nextActivity.metadata);
         const merged: Activity = {
           ...nextActivity,
-          payload: mergeActivityPayload(
-            response.activities[existingIndex].payload,
-            nextActivity.payload
-          ),
+          payload: mergeActivityPayload(previous.payload, nextActivity.payload),
+          ...(metadata && {metadata}),
         };
         response.activities = response.activities.map((existing, index) =>
           index === existingIndex ? merged : existing
@@ -213,12 +198,6 @@ export function foldActivity(
       // full activity list so `response.surfaces` always agrees with a fresh
       // derivation off `response.activities`.
       response.surfaces = deriveSurfaces(response.activities);
-      // The renderer-facing v0.9 message stream is likewise a derived projection
-      // of `activities`, re-derived from the full list for the same reason.
-      response.a2uiMessages = deriveA2uiV09Messages(response.activities);
-      // Validate the activity's `updateDataModel` ops in transit: conforming ops
-      // are applied into `response.state`, others dropped. Details in applyInboundOps.
-      response.state = applyInboundOps(response.state, response.activities, content, contracts);
       return turn;
     }
 
@@ -247,6 +226,27 @@ export function foldActivity(
     default:
       return foldUnknown(turn, activity);
   }
+}
+
+/**
+ * Merges a superseding snapshot's AG-UI `metadata` onto the one it replaces, as its payload is: an
+ * entry `next` sets wins, one level deep, and the entries it leaves out carry forward. An
+ * incremental snapshot that does not repeat a surface's turn-opening announcement keeps it
+ * (ADR-019).
+ */
+function mergeActivityMetadata(
+  previous: Record<string, unknown> | undefined,
+  next: Record<string, unknown> | undefined
+): Record<string, unknown> | undefined {
+  if (!previous || !next) {
+    return next ?? previous;
+  }
+  const merged: Record<string, unknown> = {...previous};
+  for (const [key, value] of Object.entries(next)) {
+    const prior = merged[key];
+    merged[key] = isRecord(prior) && isRecord(value) ? {...prior, ...value} : value;
+  }
+  return merged;
 }
 
 /**
@@ -389,89 +389,8 @@ export function createTurn(id: string, input: TurnInput): Turn {
  * Folds an entire activity sequence over an initial turn. Convenience wrapper
  * used by determinism checks and the session runtime.
  */
-export function foldActivities(
-  initialTurn: Turn,
-  activities: NormalizedStreamEvent[],
-  contracts?: ContractsSchema
-): Turn {
-  return activities.reduce(
-    (turn, activity) => foldActivity(turn, activity, contracts),
-    initialTurn
-  );
-}
-
-/**
- * Applies the just-arrived activity's `updateDataModel` ops to the turn's
- * `A2uiState` after in-transit validation. The node-identity registry is
- * re-derived from the folded activity list so the fold stays pure. Each op runs
- * through {@link validateInboundOp}: FORWARD writes the validated value at its
- * JSON Pointer within `state[surfaceId]` (shallow copy); DROP leaves state
- * untouched, so the prior rendered value stays. Returns the input reference
- * unchanged when nothing is forwarded.
- */
-function applyInboundOps(
-  state: A2uiState,
-  activities: Activity[],
-  content: Record<string, unknown>,
-  contracts: ContractsSchema | undefined
-): A2uiState {
-  // Without an injected contract there is nothing to validate ops against, so
-  // no op is forwarded and the state is left unchanged.
-  if (!contracts) {
-    return state;
-  }
-  const messages = content['messages'];
-  if (!Array.isArray(messages)) {
-    return state;
-  }
-  const ops = readUpdateDataModelOps(messages);
-  if (ops.length === 0) {
-    return state;
-  }
-
-  const registry = deriveNodeIdentityRegistry(activities);
-  let next = state;
-  for (const op of ops) {
-    const decision = validateInboundOp(op, registry, contracts);
-    if (decision.kind === 'forward') {
-      // Per surface: every surface has a `root` node, so a shared node id would
-      // collide at one top-level pointer without scoping the write by surface.
-      const surfaceState = isRecord(next[op.surfaceId]) ? (next[op.surfaceId] as A2uiState) : {};
-      next = {
-        ...next,
-        [op.surfaceId]: setAtPointer(surfaceState, decision.path, decision.value),
-      };
-    }
-  }
-  return next;
-}
-
-/**
- * Writes `value` at the RFC 6901 JSON Pointer `path` in a structurally shared
- * copy of `state`, creating intermediate objects as needed and leaving sibling
- * values untouched — the same leaf-write, sibling-preserving semantics the
- * frozen renderer's data model applies. Never mutates the input `state`.
- */
-function setAtPointer(state: A2uiState, path: string, value: unknown): A2uiState {
-  const segments = path
-    .split('/')
-    .filter((segment) => segment.length > 0)
-    .map((segment) => segment.replace(/~1/g, '/').replace(/~0/g, '~'));
-  if (segments.length === 0) {
-    return isRecord(value) ? (value as A2uiState) : state;
-  }
-
-  const root: Record<string, unknown> = {...state};
-  let cursor = root;
-  for (let index = 0; index < segments.length - 1; index += 1) {
-    const segment = segments[index];
-    const existing = cursor[segment];
-    const clone: Record<string, unknown> = isRecord(existing) ? {...existing} : {};
-    cursor[segment] = clone;
-    cursor = clone;
-  }
-  cursor[segments[segments.length - 1]] = value;
-  return root;
+export function foldActivities(initialTurn: Turn, activities: NormalizedStreamEvent[]): Turn {
+  return activities.reduce((turn, activity) => foldActivity(turn, activity), initialTurn);
 }
 
 /**
@@ -499,8 +418,8 @@ function setAtPointer(state: A2uiState, path: string, value: unknown): A2uiState
  */
 const ROOT_COMPONENT_ID = 'root';
 
-/** Activity kind carrying A2-UI surface `createSurface` messages. */
-const SURFACE_ACTIVITY_KIND = 'a2ui-surface';
+/** The AG-UI `activityType` of a snapshot that carries A2-UI surface messages. */
+export const SURFACE_ACTIVITY_KIND = 'a2ui-surface';
 
 /** The catalog-declared data-model flag marking a surface as a loading placeholder. */
 const LOADING_FLAG = 'isLoading';

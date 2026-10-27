@@ -12,16 +12,24 @@
  * the entry.
  */
 import {expectTypeOf, test} from 'vitest';
+import {z} from 'zod/v4';
 import {createSession} from '@/src/index.js';
 import type {
+  A2uiState,
+  A2uiV09Message,
+  ActionError,
+  DiscoveredSurface,
   ComponentContractSchema,
+  ComponentActionNames,
   ContractsSchema,
   SessionRequest,
   SerializedSession,
   Session,
   SessionConfig,
+  SessionSnapshot,
   SubmitPromptAction,
   Turn,
+  TurnAction,
   TurnResponse,
 } from '@/src/index.js';
 
@@ -48,6 +56,28 @@ test('exposes the request in flight and its settlement on Session', () => {
   expectTypeOf<Session['sendAndWait']>().toEqualTypeOf<(send: () => unknown) => Promise<void>>();
 });
 
+// ── POSITIVE: the session exposes its surfaces, renderer stream and state ──
+test('exposes session-scoped surfaces, renderer stream and state on Session', () => {
+  expectTypeOf<Session['surfaces']>().toEqualTypeOf<readonly DiscoveredSurface[]>();
+  expectTypeOf<Session['a2uiMessages']>().toEqualTypeOf<readonly A2uiV09Message[]>();
+  expectTypeOf<Session['state']>().toEqualTypeOf<A2uiState>();
+  expectTypeOf<TurnResponse>().not.toHaveProperty('a2uiMessages');
+  expectTypeOf<TurnResponse>().not.toHaveProperty('state');
+});
+
+// ── POSITIVE: the session exposes one snapshot of its state ────────────────
+test('exposes a snapshot of the session state for framework stores', () => {
+  expectTypeOf<Session['getSnapshot']>().toEqualTypeOf<() => SessionSnapshot>();
+  expectTypeOf<SessionSnapshot['turns']>().toEqualTypeOf<readonly Turn[]>();
+  expectTypeOf<SessionSnapshot['surfaces']>().toEqualTypeOf<readonly DiscoveredSurface[]>();
+  expectTypeOf<SessionSnapshot['state']>().toEqualTypeOf<A2uiState>();
+  expectTypeOf<SessionSnapshot['a2uiMessages']>().toEqualTypeOf<readonly A2uiV09Message[]>();
+  expectTypeOf<SessionSnapshot['request']>().toEqualTypeOf<SessionRequest | undefined>();
+  expectTypeOf<SessionSnapshot['actionError']>().toEqualTypeOf<ActionError | undefined>();
+  expectTypeOf<Turn['input']['action']>().toEqualTypeOf<TurnAction | undefined>();
+  expectTypeOf<TurnAction['component']>().toEqualTypeOf<string>();
+});
+
 // ── POSITIVE: the injected-contract seam is exported ────────────────────────
 test('exposes the injected ContractsSchema / ComponentContractSchema seam', () => {
   // The runtime is decoupled from any concrete contract package: the structural
@@ -55,6 +85,30 @@ test('exposes the injected ContractsSchema / ComponentContractSchema seam', () =
   // the public surface so consumers can type their injected contract.
   expectTypeOf<ContractsSchema>().not.toBeAny();
   expectTypeOf<ComponentContractSchema>().not.toBeAny();
+});
+
+// ── POSITIVE: an action request names its component, typed lists key on it ──
+test('names the dispatching component, and types action lists by the contracts', () => {
+  expectTypeOf<Extract<SessionRequest, {kind: 'action'}>['component']>().toEqualTypeOf<string>();
+
+  const contracts = z.discriminatedUnion('component', [
+    z.strictObject({
+      component: z.literal('NextActionsBar'),
+      actions: z
+        .strictObject({selectAction: z.strictObject({payload: z.strictObject({})})})
+        .optional(),
+    }),
+    z.strictObject({
+      component: z.literal('RegularFacet'),
+      actions: z.strictObject({search: z.strictObject({payload: z.strictObject({})})}).optional(),
+    }),
+  ]);
+
+  expectTypeOf<ComponentActionNames<typeof contracts>>().toEqualTypeOf<{
+    readonly NextActionsBar?: readonly 'selectAction'[];
+    readonly RegularFacet?: readonly 'search'[];
+  }>();
+  expectTypeOf<SessionConfig>().not.toHaveProperty('turnOpeningActions');
 });
 
 // ── POSITIVE: `dispatchAction` is the single action-dispatch entry point ─────
@@ -91,8 +145,15 @@ test('accepts a submitPrompt action on Session.dispatchAction', () => {
   });
 });
 
-test('exposes Session.actionError as an optional string', () => {
-  expectTypeOf<Session['actionError']>().toEqualTypeOf<string | undefined>();
+test('exposes Session.actionError as the failed action, or undefined', () => {
+  expectTypeOf<Session['actionError']>().toEqualTypeOf<ActionError | undefined>();
+  expectTypeOf<ActionError>().toEqualTypeOf<{
+    message: string;
+    component: string;
+    name: string;
+    surfaceId: string;
+    sourceComponentId: string;
+  }>();
 });
 
 // ── NEGATIVE: `submitPrompt` replaced `Session.submit` ──────────────────────

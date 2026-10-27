@@ -13,22 +13,22 @@
 export type TurnStatus = 'streaming' | 'complete' | 'error';
 
 /**
- * The server-authoritative UI state for a turn, keyed BY SURFACE: each surface
- * owns its own data model at `state[surfaceId]`, into which inline
- * `updateDataModel` ops are applied at their `/state/<nodeId>` pointer. Always
- * present on a {@link TurnResponse}, defaulting to `{}`. Keying by surface keeps
- * two surfaces that share a node id (every surface has a `root`) from colliding.
- * Present for commerce-routed and agent-routed turns alike (it is NOT
- * agent-specific).
+ * The server-authoritative UI state of the session, keyed BY SURFACE: each live
+ * surface owns its own data model at `state[surfaceId]`, into which validated
+ * `updateDataModel` ops are applied at their `/state/<nodeId>` pointer, whichever
+ * turn carried them (ADR-018). Keying by surface keeps two surfaces that share a
+ * node id (every surface has a `root`) from colliding.
  */
 export type A2uiState = Record<string, unknown>;
 
 /**
  * A discovered renderable region derived from `activities`, exposed as the
- * typed {@link TurnResponse.surfaces} projection (ADR-015 interim). Each entry
- * carries a non-empty `surfaceId` and a non-empty `rootComponentType`. Only
- * surfaces live at the end of the turn's stream are listed: a surface the agent
- * deletes leaves the list.
+ * session's live surfaces and as each turn's {@link TurnResponse.surfaces}
+ * (ADR-015 interim). Each entry carries a non-empty `surfaceId` and a non-empty
+ * `rootComponentType`. A surface lives from its `createSurface` until its
+ * `deleteSurface`, whichever runs carry them (ADR-018); a deleted surface leaves
+ * the lists, and so does a loading placeholder its turn left behind once it
+ * stopped streaming.
  */
 export interface DiscoveredSurface {
   surfaceId: string;
@@ -42,14 +42,17 @@ export interface DiscoveredSurface {
    * `isLoading: true` (the commerce catalog flag). A consumer renders a
    * placeholder for `rootComponentType` while this holds. It ends when the
    * agent deletes the surface (the surface leaves this list) or writes
-   * `isLoading: false` to its data model.
+   * `isLoading: false` to its data model. A placeholder is listed only while the
+   * run that created it streams; one the agent left behind (a cancelled run, an
+   * error, a restored session) leaves the lists, and a later request streaming
+   * into its turn does not bring it back.
    */
   isLoading: boolean;
 }
 
 /**
- * A single A2-UI message in the **v0.9** shape a renderer consumes, exposed as
- * the {@link TurnResponse.a2uiMessages} projection.
+ * A single A2-UI message in the **v0.9** shape a renderer consumes, exposed in
+ * the session's renderer stream (`Session.a2uiMessages`).
  *
  * Agent Gateway emits A2-UI v1.0; every available renderer
  * (`@copilotkit/a2ui-renderer`, via `@a2ui/web_core/v0_9`) consumes v0.9. This
@@ -132,6 +135,11 @@ export interface Activity {
   kind: string;
   replace: boolean;
   payload: Record<string, unknown>;
+  /**
+   * The AG-UI `metadata` of the event that carried the activity, when it had one. A producer
+   * announces the turn-opening actions of a surface under its `turnOpeningActions` key (ADR-019).
+   */
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -159,6 +167,8 @@ export interface PromptRequest {
 /** A component action the session is sending. */
 export interface ActionRequest {
   kind: 'action';
+  /** The `component` discriminant of the dispatching node. */
+  component: string;
   /** The action name declared by the dispatching component's contract. */
   name: string;
   /** The A2-UI surface the action originated on. */
@@ -170,53 +180,77 @@ export interface ActionRequest {
 }
 
 /**
+ * Why a component action failed, and the action it came from, so a consumer can show the failure
+ * next to the block that dispatched it.
+ */
+export interface ActionError {
+  /** Why the action failed. */
+  message: string;
+  /** The PascalCase `component` discriminant of the node that dispatched the action. */
+  component: string;
+  /** The action name declared by the dispatching component's contract. */
+  name: string;
+  /** The A2-UI surface the action originated on. */
+  surfaceId: string;
+  /** The id of the node that dispatched the action. */
+  sourceComponentId: string;
+}
+
+/**
  * The input paired with a turn's streamed response.
  *
- * A dispatched-action turn that carries no prompt omits `prompt`.
+ * A prompt turn carries `prompt`. A turn opened by a component action the producer announces as
+ * opening a turn, such as a follow-up chip, carries `action` instead.
  */
 export interface TurnInput {
+  /** The prompt the turn answers, for a turn a prompt opened. */
   prompt?: string;
+  /** The component action the turn answers, for a turn an action opened. */
+  action?: TurnAction;
+}
+
+/** A component action that opened a turn, as it was dispatched. */
+export interface TurnAction {
+  /** The PascalCase `component` discriminant of the node that dispatched it. */
+  component: string;
+  /** The action name declared by that component's contract. */
+  name: string;
+  /**
+   * The id of the surface it was dispatched from, which an earlier turn or the initialization
+   * created.
+   */
+  surfaceId: string;
+  /** The id of the node that dispatched it. */
+  sourceComponentId: string;
+  /** Its payload, as validated against the action's contract. */
+  context?: unknown;
 }
 
 /**
  * The streamed result of a {@link Turn}.
  *
- * `state` and `activities` are routing-neutral and always present. `surfaces`
- * and `a2uiMessages` are derived projections of `activities` (ADR-015 interim).
- * `agent` is present only when the router invoked an agent.
+ * `activities` is routing-neutral and always present. `surfaces` is a derived
+ * projection of the session's activities (ADR-015 interim). `agent` is present
+ * only when the router invoked an agent. The session's renderer stream and
+ * component state span every turn, so they live on the session (ADR-018).
  */
 export interface TurnResponse {
-  /**
-   * Server-authoritative UI state snapshot. Always present (defaults to `{}`).
-   */
-  state: A2uiState;
-
   /**
    * The turn's snapshot activities in first-seen order. Always present. A
    * `replace` snapshot supersedes the earlier activity with the same
    * `messageId` in place rather than appending a duplicate, so this holds the
-   * latest snapshot per `messageId`.
+   * latest snapshot per `messageId`. Together with the other turns', in order,
+   * they form the session's activity log.
    */
   activities: Activity[];
 
   /**
-   * Typed projection derived from `activities` in the fold (ADR-015 interim).
-   * Consumers read this instead of walking `activities` themselves. Lists the
-   * turn's live surfaces in creation order: a surface the agent deletes is
-   * excluded, and one it re-creates moves to the end.
+   * The live surfaces this turn created, in creation order, so a transcript
+   * knows where to draw them. Consumers read this instead of walking
+   * `activities` themselves. A surface a later run deletes leaves the list, and
+   * one a later turn creates again under the same id belongs to that turn.
    */
   surfaces: DiscoveredSurface[];
-
-  /**
-   * The turn's A2-UI message stream, downgraded to the **v0.9** shape a renderer
-   * consumes. Derived from `activities` in the fold; pass it straight to a
-   * renderer.
-   *
-   * INTERIM (ADR-015 addendum): Gateway emits A2-UI v1.0 and no v1.0-capable
-   * renderer exists, so thermidor performs the downgrade on the consumer's
-   * behalf. Removed in a breaking change once one does.
-   */
-  a2uiMessages: A2uiV09Message[];
 
   /**
    * Agent-specific content. Present ONLY when the router invoked an agent.

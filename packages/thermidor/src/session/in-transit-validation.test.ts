@@ -2,7 +2,8 @@ import {describe, expect, it} from 'vitest';
 import {z} from 'zod/v4';
 import type {NormalizedStreamEvent} from '@/src/internal/api/protocol/stream-types.js';
 import type {ContractsSchema} from './contracts.js';
-import {createTurn, foldActivities} from './fold.js';
+import {createTurn, foldActivity} from './fold.js';
+import {applyInboundOps} from './session-state.js';
 import {
   deriveNodeIdentityRegistry,
   findComponentContract,
@@ -10,7 +11,7 @@ import {
   validateInboundOp,
 } from './in-transit-validation.js';
 import {statePath} from './state-path.js';
-import type {Activity} from './types.js';
+import type {A2uiState, Activity} from './types.js';
 
 /**
  * A locally-built A2-UI contract, INJECTED as test data exactly as a real
@@ -58,6 +59,23 @@ const contracts = z.discriminatedUnion('component', [
   LayoutStackSchema,
   CommerceSearchSchema,
 ]) as unknown as ContractsSchema;
+
+/**
+ * Folds `events` into one turn and applies each snapshot's validated ops to the session state,
+ * as the session runtime does.
+ */
+function foldState(events: NormalizedStreamEvent[]): A2uiState {
+  let turn = createTurn('t1', {});
+  let state: A2uiState = {};
+  for (const event of events) {
+    turn = foldActivity(turn, event);
+    const content = (event as {content?: Record<string, unknown>}).content;
+    if (content) {
+      state = applyInboundOps(state, turn.response.activities, content, contracts);
+    }
+  }
+  return state;
+}
 
 /**
  * Unit tests for the in-transit `updateDataModel` validation on the session
@@ -310,7 +328,7 @@ describe('validateInboundOp', () => {
   });
 });
 
-describe('fold integration', () => {
+describe('session state integration', () => {
   const activity = (event: Record<string, unknown>): NormalizedStreamEvent =>
     event as NormalizedStreamEvent;
 
@@ -329,107 +347,91 @@ describe('fold integration', () => {
   };
 
   it('forwards a conforming whole op into response.state at the op path', () => {
-    const turn = foldActivities(
-      createTurn('t1', {}),
-      [
-        snapshot([createSurfaceMessage]),
-        snapshot([
-          {
-            updateDataModel: {
-              surfaceId: SURFACE_ID,
-              path: statePath('pagination-2'),
-              value: validWholePagination,
-            },
+    const state = foldState([
+      snapshot([createSurfaceMessage]),
+      snapshot([
+        {
+          updateDataModel: {
+            surfaceId: SURFACE_ID,
+            path: statePath('pagination-2'),
+            value: validWholePagination,
           },
-        ]),
-      ],
-      contracts
-    );
+        },
+      ]),
+    ]);
 
-    expect(turn.response.state).toEqual({'ui-1': {state: {'pagination-2': validWholePagination}}});
+    expect(state).toEqual({'ui-1': {state: {'pagination-2': validWholePagination}}});
   });
 
   it('leaves response.state unchanged when an invalid op is dropped', () => {
-    const turn = foldActivities(
-      createTurn('t1', {}),
-      [
-        snapshot([createSurfaceMessage]),
-        snapshot([
-          {
-            updateDataModel: {
-              surfaceId: SURFACE_ID,
-              path: statePath('pagination-2'),
-              value: {page: 0},
-            },
+    const state = foldState([
+      snapshot([createSurfaceMessage]),
+      snapshot([
+        {
+          updateDataModel: {
+            surfaceId: SURFACE_ID,
+            path: statePath('pagination-2'),
+            value: {page: 0},
           },
-        ]),
-      ],
-      contracts
-    );
+        },
+      ]),
+    ]);
 
-    expect(turn.response.state).toEqual({});
+    expect(state).toEqual({});
   });
 
   it('applies a partial op to only the addressed sub-path, preserving siblings', () => {
-    const turn = foldActivities(
-      createTurn('t1', {}),
-      [
-        snapshot([createSurfaceMessage]),
-        snapshot([
-          {
-            updateDataModel: {
-              surfaceId: SURFACE_ID,
-              path: statePath('pagination-2'),
-              value: validWholePagination,
-            },
+    const state = foldState([
+      snapshot([createSurfaceMessage]),
+      snapshot([
+        {
+          updateDataModel: {
+            surfaceId: SURFACE_ID,
+            path: statePath('pagination-2'),
+            value: validWholePagination,
           },
-        ]),
-        snapshot([
-          {
-            updateDataModel: {
-              surfaceId: SURFACE_ID,
-              path: statePath('pagination-2') + '/page',
-              value: 2,
-            },
+        },
+      ]),
+      snapshot([
+        {
+          updateDataModel: {
+            surfaceId: SURFACE_ID,
+            path: statePath('pagination-2') + '/page',
+            value: 2,
           },
-        ]),
-      ],
-      contracts
-    );
+        },
+      ]),
+    ]);
 
-    expect(turn.response.state).toEqual({
+    expect(state).toEqual({
       'ui-1': {state: {'pagination-2': {...validWholePagination, page: 2}}},
     });
   });
 
   it('drops a non-conforming partial op, keeping the prior sub-path value', () => {
-    const turn = foldActivities(
-      createTurn('t1', {}),
-      [
-        snapshot([createSurfaceMessage]),
-        snapshot([
-          {
-            updateDataModel: {
-              surfaceId: SURFACE_ID,
-              path: statePath('pagination-2'),
-              value: validWholePagination,
-            },
+    const state = foldState([
+      snapshot([createSurfaceMessage]),
+      snapshot([
+        {
+          updateDataModel: {
+            surfaceId: SURFACE_ID,
+            path: statePath('pagination-2'),
+            value: validWholePagination,
           },
-        ]),
-        snapshot([
-          {
-            updateDataModel: {
-              surfaceId: SURFACE_ID,
-              path: statePath('pagination-2') + '/page',
-              value: 'bad',
-            },
+        },
+      ]),
+      snapshot([
+        {
+          updateDataModel: {
+            surfaceId: SURFACE_ID,
+            path: statePath('pagination-2') + '/page',
+            value: 'bad',
           },
-        ]),
-      ],
-      contracts
-    );
+        },
+      ]),
+    ]);
 
-    expect(turn.response.state).toEqual({'ui-1': {state: {'pagination-2': validWholePagination}}});
+    expect(state).toEqual({'ui-1': {state: {'pagination-2': validWholePagination}}});
   });
 
   it('keeps two surfaces that share a node id from colliding in response.state', () => {
@@ -447,39 +449,35 @@ describe('fold integration', () => {
     const firstValue = validWholePagination;
     const secondValue = {page: 3, pageSize: 24, totalEntries: 99, totalPages: 5};
 
-    const turn = foldActivities(
-      createTurn('t1', {}),
-      [
-        snapshot([createSurfaceMessage, otherSurfaceMessage], 'surfaces'),
-        snapshot(
-          [
-            {
-              updateDataModel: {
-                surfaceId: SURFACE_ID,
-                path: statePath('pagination-2'),
-                value: firstValue,
-              },
+    const state = foldState([
+      snapshot([createSurfaceMessage, otherSurfaceMessage], 'surfaces'),
+      snapshot(
+        [
+          {
+            updateDataModel: {
+              surfaceId: SURFACE_ID,
+              path: statePath('pagination-2'),
+              value: firstValue,
             },
-          ],
-          'op-1'
-        ),
-        snapshot(
-          [
-            {
-              updateDataModel: {
-                surfaceId: 'ui-2',
-                path: statePath('pagination-2'),
-                value: secondValue,
-              },
+          },
+        ],
+        'op-1'
+      ),
+      snapshot(
+        [
+          {
+            updateDataModel: {
+              surfaceId: 'ui-2',
+              path: statePath('pagination-2'),
+              value: secondValue,
             },
-          ],
-          'op-2'
-        ),
-      ],
-      contracts
-    );
+          },
+        ],
+        'op-2'
+      ),
+    ]);
 
-    expect(turn.response.state).toEqual({
+    expect(state).toEqual({
       'ui-1': {state: {'pagination-2': firstValue}},
       'ui-2': {state: {'pagination-2': secondValue}},
     });

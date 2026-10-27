@@ -2,15 +2,21 @@ import {render, screen} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
 import type {Turn} from '@coveo/thermidor';
 import {ConversationPage} from './ConversationPage.js';
-import {makeTurn} from '../../test/turn-fixtures.js';
+import {makeFollowUpTurn, makeSurfaces, makeTurn} from '../../test/turn-fixtures.js';
 
 // The blocks are drawn by the A2-UI renderer; the page only decides where each turn's blocks go
 // and whether they are interactive.
 vi.mock('../../a2ui/surfaces.js', () => ({
-  TurnSurfaces: ({surfaceIds, interactive}: {surfaceIds: string[]; interactive: boolean}) =>
-    surfaceIds.length === 0 ? null : (
+  TurnSurfaces: ({
+    surfaces,
+    interactive,
+  }: {
+    surfaces: {surfaceId: string}[];
+    interactive: boolean;
+  }) =>
+    surfaces.length === 0 ? null : (
       <div data-testid="turn-surfaces" data-interactive={String(interactive)}>
-        {surfaceIds.join(',')}
+        {surfaces.map((surface) => surface.surfaceId).join(',')}
       </div>
     ),
 }));
@@ -20,7 +26,6 @@ function renderPage(overrides: Partial<Parameters<typeof ConversationPage>[0]> =
     onSubmit: vi.fn(),
     isStreaming: false,
     turns: [] as Turn[],
-    surfacesByTurn: new Map<string, readonly string[]>(),
   };
 
   return {
@@ -46,6 +51,7 @@ describe('ConversationPage integration', () => {
         makeTurn({
           id: 'turn-2',
           prompt: 'Show me results',
+          response: {surfaces: makeSurfaces('ui-search-2')},
         }),
         makeTurn({
           id: 'turn-3',
@@ -55,13 +61,13 @@ describe('ConversationPage integration', () => {
         }),
       ];
 
-      renderPage({turns, surfacesByTurn: new Map([['turn-2', ['turn-2/ui-search']]])});
+      renderPage({turns});
 
       expect(screen.getByText('Find me running shoes')).toBeDefined();
       expect(screen.getByText('Here are some running shoes.')).toBeDefined();
 
       expect(screen.getByText('Show me results')).toBeDefined();
-      expect(screen.getByTestId('turn-surfaces').textContent).toBe('turn-2/ui-search');
+      expect(screen.getByTestId('turn-surfaces').textContent).toBe('ui-search-2');
 
       expect(screen.getByText('What about hiking boots?')).toBeDefined();
       expect(screen.getByText('Service unavailable')).toBeDefined();
@@ -73,6 +79,7 @@ describe('ConversationPage integration', () => {
           id: 'turn-1',
           prompt: 'Recommend waterproof trail shoes',
           response: {
+            surfaces: makeSurfaces('agent-answer-1', 'ui-search-1'),
             agent: {
               messages: [{content: 'Here are a few directions.', role: 'assistant'}],
               reasoningSteps: [],
@@ -81,85 +88,74 @@ describe('ConversationPage integration', () => {
         }),
       ];
 
-      renderPage({
-        turns,
-        surfacesByTurn: new Map([['turn-1', ['turn-1/agent-answer', 'turn-1/ui-search']]]),
-      });
+      renderPage({turns});
 
       expect(screen.getByText('Here are a few directions.')).toBeDefined();
-      expect(screen.getByTestId('turn-surfaces').textContent).toBe(
-        'turn-1/agent-answer,turn-1/ui-search'
-      );
+      expect(screen.getByTestId('turn-surfaces').textContent).toBe('agent-answer-1,ui-search-1');
     });
 
     it('keeps only the latest turn interactive', () => {
       const turns: Turn[] = [
-        makeTurn({id: 'turn-1', prompt: 'kayaks'}),
-        makeTurn({id: 'turn-2', prompt: 'which are best for rivers?'}),
+        makeTurn({
+          id: 'turn-1',
+          prompt: 'kayaks',
+          response: {surfaces: makeSurfaces('ui-search-1')},
+        }),
+        makeTurn({
+          id: 'turn-2',
+          prompt: 'which are best for rivers?',
+          response: {surfaces: makeSurfaces('agent-answer-2')},
+        }),
       ];
 
-      renderPage({
-        turns,
-        surfacesByTurn: new Map([
-          ['turn-1', ['turn-1/ui-search']],
-          ['turn-2', ['turn-2/agent-answer']],
-        ]),
-      });
+      renderPage({turns});
 
       expect(
         screen.getAllByTestId('turn-surfaces').map((block) => block.dataset['interactive'])
       ).toEqual(['false', 'true']);
     });
 
-    it('draws a follow-up as its own exchange after the answer it follows', () => {
+    it('draws a follow-up as its own turn after the answer it follows', () => {
       const turns: Turn[] = [
         makeTurn({
           id: 'turn-1',
           prompt: 'boating safety',
           response: {
+            surfaces: makeSurfaces('agent-a-1'),
             agent: {
-              messages: [
-                {content: 'Here is the safety gear.', role: 'assistant'},
-                {content: 'Here are more Mustang Survival jackets.', role: 'assistant'},
-              ],
+              messages: [{content: 'Here is the safety gear.', role: 'assistant'}],
+              reasoningSteps: [],
+            },
+          },
+        }),
+        makeFollowUpTurn({
+          id: 'turn-2',
+          text: 'Show more Mustang Survival life jackets',
+          response: {
+            surfaces: makeSurfaces('agent-b-2'),
+            agent: {
+              messages: [{content: 'Here are more Mustang Survival jackets.', role: 'assistant'}],
               reasoningSteps: [],
             },
           },
         }),
       ];
 
-      renderPage({
-        turns,
-        surfacesByTurn: new Map([['turn-1', ['turn-1/agent-a', 'turn-1/agent-b']]]),
-        followUps: new Map([
-          [
-            'turn-1',
-            [
-              {
-                prompt: 'Show more Mustang Survival life jackets',
-                activityCount: 0,
-                messageCount: 1,
-                reasoningStepCount: 0,
-                surfaceCount: 1,
-              },
-            ],
-          ],
-        ]),
-      });
+      const {container} = renderPage({turns});
 
-      const article = screen.getByRole('article', {name: 'Turn 1'});
       const order = [
         'Here is the safety gear.',
-        'turn-1/agent-a',
+        'agent-a-1',
         'Show more Mustang Survival life jackets',
         'Here are more Mustang Survival jackets.',
-        'turn-1/agent-b',
-      ].map((text) => article.textContent!.indexOf(text));
+        'agent-b-2',
+      ].map((text) => container.textContent!.indexOf(text));
       expect(order.every((position) => position >= 0)).toBe(true);
       expect([...order].sort((x, y) => x - y)).toEqual(order);
+      expect(container.querySelectorAll('hr')).toHaveLength(0);
     });
 
-    it('shows the reasoning indicator while a follow-up is in flight', () => {
+    it('shows the reasoning indicator while a follow-up streams', () => {
       const turns: Turn[] = [
         makeTurn({
           id: 'turn-1',
@@ -171,26 +167,10 @@ describe('ConversationPage integration', () => {
             },
           },
         }),
+        makeFollowUpTurn({id: 'turn-2', text: 'Show more', status: 'streaming'}),
       ];
 
-      renderPage({
-        turns,
-        followUps: new Map([
-          [
-            'turn-1',
-            [
-              {
-                prompt: 'Show more',
-                activityCount: 0,
-                messageCount: 1,
-                reasoningStepCount: 0,
-                surfaceCount: 0,
-              },
-            ],
-          ],
-        ]),
-        pendingTurnId: 'turn-1',
-      });
+      renderPage({turns, isStreaming: true});
 
       expect(screen.getByText('Working')).toBeDefined();
     });

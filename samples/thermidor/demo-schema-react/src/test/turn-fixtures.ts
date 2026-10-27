@@ -1,4 +1,4 @@
-import type {Turn, TurnResponse} from '@coveo/thermidor';
+import type {DiscoveredSurface, Turn, TurnResponse} from '@coveo/thermidor';
 
 /**
  * Shared builders for the reshaped {@link Turn} model (ADR-010). Tests construct
@@ -17,15 +17,13 @@ interface MakeTurnOptions {
 
 /**
  * Builds a {@link TurnResponse} with the non-optional fields defaulted
- * (`state: {}`, `activities: []`, `surfaces: []`, `a2uiMessages: []`) and any
- * provided overrides merged on top. `agent` is included only when supplied.
+ * (`activities: []`, `surfaces: []`) and any provided overrides merged on top.
+ * `agent` is included only when supplied.
  */
 export function makeResponse(overrides: Partial<TurnResponse> = {}): TurnResponse {
   return {
-    state: {},
     activities: [],
     surfaces: [],
-    a2uiMessages: [],
     ...overrides,
   };
 }
@@ -44,5 +42,36 @@ export function makeTurn(options: MakeTurnOptions = {}): Turn {
     response: makeResponse(response),
     status,
     ...(error !== undefined ? {error} : {}),
+  };
+}
+
+/** Builds the {@link DiscoveredSurface} entries of a turn's `response.surfaces` from their ids. */
+export function makeSurfaces(...surfaceIds: string[]): DiscoveredSurface[] {
+  return surfaceIds.map((surfaceId) => ({
+    surfaceId,
+    rootComponentType: 'CommerceSearch',
+    isLoading: false,
+  }));
+}
+
+/**
+ * Builds a turn opened by a `NextActionsBar` chip with the text `text`: a follow-up, or a search
+ * option when `searchOption` is set.
+ */
+export function makeFollowUpTurn(
+  options: MakeTurnOptions & {text?: string; searchOption?: boolean} = {}
+): Turn {
+  const {text = 'Show more', searchOption = false, ...turnOptions} = options;
+  return {
+    ...makeTurn(turnOptions),
+    input: {
+      action: {
+        component: 'NextActionsBar',
+        name: searchOption ? 'selectSearchOption' : 'selectAction',
+        surfaceId: 'next-actions-surface',
+        sourceComponentId: 'root',
+        context: searchOption ? {optionId: 'option-1', text} : {text, type: 'followup'},
+      },
+    },
   };
 }

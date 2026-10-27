@@ -201,6 +201,74 @@ describe('createMockConverseServer', () => {
     expect(res.headers['access-control-allow-origin']).toBe('*');
   });
 
+  it('mints new surface ids for each prompt, and answers an action on the surface it came from', async () => {
+    await startServer();
+    const post = (body: unknown) =>
+      makeRequest(
+        server,
+        {method: 'POST', path: '/converse-schema', headers: {'Content-Type': 'application/json'}},
+        JSON.stringify(body)
+      );
+    const createdIds = (stream: string) =>
+      [...stream.matchAll(/"createSurface":\{"surfaceId":"([^"]+)"/g)].map((match) => match[1]);
+    const surfaceIds = (stream: string) =>
+      new Set([...stream.matchAll(/"surfaceId":"([^"]+)"/g)].map((match) => match[1]));
+
+    const first = createdIds((await post({message: 'water sports'})).body);
+    const second = createdIds((await post({message: 'water sports'})).body);
+
+    expect(first.length).toBeGreaterThan(0);
+    expect(second.filter((surfaceId) => first.includes(surfaceId))).toEqual([]);
+
+    const searchSurfaceId = first.at(-1)!;
+    const action = await post({
+      message: null,
+      action: {
+        name: 'selectPage',
+        surfaceId: searchSurfaceId,
+        sourceComponentId: 'pagination-1',
+        context: {page: 1},
+      },
+    });
+
+    expect([...surfaceIds(action.body)]).toEqual([searchSurfaceId]);
+  });
+
+  it('announces the turn-opening actions of a next-actions bar in the snapshot metadata', async () => {
+    await startServer();
+    const res = await makeRequest(
+      server,
+      {method: 'POST', path: '/converse-schema', headers: {'Content-Type': 'application/json'}},
+      JSON.stringify({
+        message: 'Build a beginner surfing kit with budget, mid-range, and premium options',
+      })
+    );
+    const snapshots = [...res.body.matchAll(/^data:(.+)$/gm)]
+      .map((match) => JSON.parse(match[1]))
+      .filter((event) => event.type === 'ACTIVITY_SNAPSHOT');
+    const nextActionsSurfaceIds = snapshots.flatMap((event) =>
+      event.content.messages
+        .map(
+          (message: {createSurface?: {surfaceId: string; components: {component: string}[]}}) =>
+            message.createSurface
+        )
+        .filter((create?: {components: {component: string}[]}) =>
+          create?.components.some((node) => node.component === 'NextActionsBar')
+        )
+        .map((create: {surfaceId: string}) => create.surfaceId)
+    );
+    const announced = snapshots
+      .filter((event) => event.metadata)
+      .map((event) => event.metadata.turnOpeningActions);
+
+    expect(nextActionsSurfaceIds.length).toBeGreaterThan(0);
+    expect(announced).toEqual(
+      nextActionsSurfaceIds.map((surfaceId) => ({
+        [surfaceId]: ['selectAction', 'selectSearchOption'],
+      }))
+    );
+  });
+
   it('returns 400 on schema route when both message and action are absent', async () => {
     await startServer();
     const res = await makeRequest(

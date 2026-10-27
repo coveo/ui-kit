@@ -2,10 +2,11 @@ import fc from 'fast-check';
 import {describe, expect, it} from 'vitest';
 import {z} from 'zod/v4';
 import type {ContractsSchema} from './contracts.js';
-import {createTurn, foldActivities} from './fold.js';
+import {createTurn, foldActivity} from './fold.js';
+import {applyInboundOps} from './session-state.js';
 import {deriveNodeIdentityRegistry, validateInboundOp} from './in-transit-validation.js';
 import {statePath} from './state-path.js';
-import type {Activity} from './types.js';
+import type {A2uiState, Activity} from './types.js';
 import type {NormalizedStreamEvent} from '@/src/internal/api/protocol/stream-types.js';
 
 /**
@@ -29,6 +30,23 @@ const PaginationStateSchema = z.strictObject({
 const contracts = z.discriminatedUnion('component', [
   z.strictObject({component: z.literal('Pagination'), state: PaginationStateSchema.optional()}),
 ]) as unknown as ContractsSchema;
+
+/**
+ * Folds `events` into one turn and applies each snapshot's validated ops to the session state,
+ * as the session runtime does.
+ */
+function foldState(events: NormalizedStreamEvent[]): A2uiState {
+  let turn = createTurn('t1', {});
+  let state: A2uiState = {};
+  for (const event of events) {
+    turn = foldActivity(turn, event);
+    const content = (event as {content?: Record<string, unknown>}).content;
+    if (content) {
+      state = applyInboundOps(state, turn.response.activities, content, contracts);
+    }
+  }
+  return state;
+}
 
 /**
  * Property tests for in-transit `updateDataModel` validation on the fold.
@@ -128,13 +146,13 @@ describe('Feature: a2ui-inline-state-data-model, Property 11: Whole-component in
   it('on the fold, a non-conforming whole op is not applied so the prior UI state persists', () => {
     fc.assert(
       fc.property(conformingWhole, nonConformingWhole, (good, bad) => {
-        const turn = foldActivities(
-          createTurn('t1', {}),
-          [surfaceSnapshot(), opSnapshot(STATE_ROOT, good), opSnapshot(STATE_ROOT, bad)],
-          contracts
-        );
+        const state = foldState([
+          surfaceSnapshot(),
+          opSnapshot(STATE_ROOT, good),
+          opSnapshot(STATE_ROOT, bad),
+        ]);
         // The bad op is dropped: state still reflects the last VALID whole op.
-        expect(turn.response.state).toEqual({[SURFACE_ID]: {state: {[NODE_ID]: good}}});
+        expect(state).toEqual({[SURFACE_ID]: {state: {[NODE_ID]: good}}});
       }),
       {numRuns: NUM_RUNS}
     );
@@ -179,29 +197,21 @@ describe("Feature: a2ui-inline-state-data-model, Property 14: Partial-update val
         fc.integer({min: 1}),
         fc.oneof(fc.string(), fc.boolean()),
         (whole, field, goodValue, badValue) => {
-          const conformingTurn = foldActivities(
-            createTurn('t1', {}),
-            [
-              surfaceSnapshot(),
-              opSnapshot(STATE_ROOT, whole),
-              opSnapshot(`${STATE_ROOT}/${field}`, goodValue),
-            ],
-            contracts
-          );
-          expect(conformingTurn.response.state).toEqual({
+          const conformingState = foldState([
+            surfaceSnapshot(),
+            opSnapshot(STATE_ROOT, whole),
+            opSnapshot(`${STATE_ROOT}/${field}`, goodValue),
+          ]);
+          expect(conformingState).toEqual({
             [SURFACE_ID]: {state: {[NODE_ID]: {...whole, [field]: goodValue}}},
           });
 
-          const droppedTurn = foldActivities(
-            createTurn('t1', {}),
-            [
-              surfaceSnapshot(),
-              opSnapshot(STATE_ROOT, whole),
-              opSnapshot(`${STATE_ROOT}/${field}`, badValue),
-            ],
-            contracts
-          );
-          expect(droppedTurn.response.state).toEqual({[SURFACE_ID]: {state: {[NODE_ID]: whole}}});
+          const droppedState = foldState([
+            surfaceSnapshot(),
+            opSnapshot(STATE_ROOT, whole),
+            opSnapshot(`${STATE_ROOT}/${field}`, badValue),
+          ]);
+          expect(droppedState).toEqual({[SURFACE_ID]: {state: {[NODE_ID]: whole}}});
         }
       ),
       {numRuns: NUM_RUNS}

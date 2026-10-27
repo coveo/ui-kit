@@ -2,7 +2,7 @@ import {render, screen, act} from '@testing-library/react';
 import {describe, it, expect, vi, beforeEach} from 'vitest';
 import type {Session, Turn} from '@coveo/thermidor';
 import {AppShell} from './AppShell.js';
-import {makeTurn} from '../test/turn-fixtures.js';
+import {makeSurfaces, makeTurn} from '../test/turn-fixtures.js';
 
 const mockDispatchAction = vi.fn();
 
@@ -15,13 +15,27 @@ vi.mock('../context/session.js', () => ({useSession: () => mockSession}));
 
 async function createMockSession(): Promise<Session> {
   const {createFakeSessionRequests} = await import('../test/fake-session-requests.js');
-  const requests = createFakeSessionRequests((message: never) => mockDispatchAction(message));
+  // Every action of these tests comes from the brand facet.
+  const requests = createFakeSessionRequests(
+    (message: never) => mockDispatchAction(message),
+    () => 'RegularFacet'
+  );
+  let snapshotSource: [Turn[], unknown] | undefined;
+  let snapshot: unknown;
   return {
-    get turns() {
-      return mockTurns;
-    },
-    get request() {
-      return requests.source.request;
+    getSnapshot() {
+      const requestState = requests.source.getSnapshot();
+      if (snapshotSource?.[0] !== mockTurns || snapshotSource[1] !== requestState) {
+        snapshotSource = [mockTurns, requestState];
+        snapshot = {
+          ...requestState,
+          turns: mockTurns,
+          surfaces: [],
+          a2uiMessages: [],
+          state: {},
+        };
+      }
+      return snapshot;
     },
     subscribe: requests.source.subscribe,
     sendAndWait: requests.source.sendAndWait,
@@ -60,18 +74,10 @@ vi.mock('./ConversationPage/index.js', () => ({
     <div data-testid="conversation-page">
       <span data-testid="locked">{String(props.promptDisabled)}</span>
       <span data-testid="turn-surfaces">
-        {props.turns.map((turn: Turn) => props.surfacesByTurn.get(turn.id).join(',')).join('|')}
-      </span>
-      <span data-testid="follow-ups">
         {props.turns
-          .map((turn: Turn) =>
-            (props.followUps.get(turn.id) ?? [])
-              .map((followUp: {prompt?: string}) => followUp.prompt ?? '(option)')
-              .join(',')
-          )
+          .map((turn: Turn) => turn.response.surfaces.map((surface) => surface.surfaceId).join(','))
           .join('|')}
       </span>
-      <span data-testid="pending-turn">{props.pendingTurnId ?? ''}</span>
       <span data-testid="streaming">{String(props.isStreaming)}</span>
       <button data-testid="conversation-submit" onClick={() => props.onSubmit('follow up')} />
     </div>
@@ -84,7 +90,7 @@ function searchTurn(id: string): Turn {
   return makeTurn({
     id,
     response: {
-      a2uiMessages: [{version: 'v0.9', createSurface: {surfaceId: SEARCH_SURFACE_ID}}],
+      surfaces: makeSurfaces(SEARCH_SURFACE_ID),
     },
   });
 }
@@ -129,10 +135,10 @@ describe('AppShell', () => {
     render(<AppShell />);
 
     expect(screen.queryByTestId('landing-page')).toBeNull();
-    expect(screen.getByTestId('turn-surfaces').textContent).toBe(`turn-1/${SEARCH_SURFACE_ID}|`);
+    expect(screen.getByTestId('turn-surfaces').textContent).toBe(`${SEARCH_SURFACE_ID}|`);
   });
 
-  it('sends a renderer action with the server surface id', () => {
+  it('passes a renderer action to the session as it is', () => {
     mockTurns = [searchTurn('turn-1')];
 
     render(<AppShell />);
@@ -141,7 +147,7 @@ describe('AppShell', () => {
         version: 'v0.9',
         userAction: {
           name: 'toggleSelect',
-          surfaceId: `turn-1/${SEARCH_SURFACE_ID}`,
+          surfaceId: SEARCH_SURFACE_ID,
           sourceComponentId: `${SEARCH_SURFACE_ID}-facet-brand`,
           context: {value: 'Nike'},
         },
@@ -165,7 +171,7 @@ describe('AppShell', () => {
         version: 'v0.9',
         userAction: {
           name,
-          surfaceId: `turn-1/${SEARCH_SURFACE_ID}`,
+          surfaceId: SEARCH_SURFACE_ID,
           sourceComponentId: `${SEARCH_SURFACE_ID}-facet-brand`,
           context,
         },
@@ -267,7 +273,6 @@ describe('AppShell', () => {
       });
 
       expect(mockDispatchAction).toHaveBeenCalledTimes(1);
-      expect(screen.getByTestId('follow-ups').textContent).toBe('');
 
       await act(async () => {
         settle();
@@ -307,106 +312,35 @@ describe('AppShell', () => {
     });
   });
 
-  describe('follow-up actions', () => {
-    function agentTurn(id: string): Turn {
-      return makeTurn({
-        id,
-        response: {
-          agent: {messages: [{content: 'Answer', role: 'assistant'}], reasoningSteps: []},
-          a2uiMessages: [{version: 'v0.9', createSurface: {surfaceId: 'agent-answer'}}],
+  describe('streaming', () => {
+    it('streams while a turn streams, a turn opened by a follow-up included', () => {
+      mockTurns = [
+        searchTurn('turn-1'),
+        {
+          ...makeTurn({id: 'turn-2', status: 'streaming'}),
+          input: {
+            action: {
+              component: 'NextActionsBar',
+              name: 'selectAction',
+              surfaceId: SEARCH_SURFACE_ID,
+              sourceComponentId: 'root',
+              context: {text: 'Show more', type: 'followup'},
+            },
+          },
         },
-      });
-    }
-
-    function followUpAction(name: string, context: Record<string, unknown>) {
-      return {
-        version: 'v0.9',
-        userAction: {name, surfaceId: 'turn-1/agent-answer', sourceComponentId: 'root', context},
-      };
-    }
-
-    it('shows a selected follow-up as its own exchange, streaming until its run ends', async () => {
-      mockTurns = [agentTurn('turn-1')];
-      let finishRun: () => void = () => undefined;
-      mockDispatchAction.mockReturnValueOnce(
-        new Promise<void>((resolve) => {
-          finishRun = resolve;
-        })
-      );
+      ];
 
       render(<AppShell />);
-      act(() => {
-        void capturedOnAction?.(
-          followUpAction('selectAction', {text: 'Show more life jackets', type: 'followup'})
-        );
-      });
 
-      expect(screen.getByTestId('follow-ups').textContent).toBe('Show more life jackets');
-      expect(screen.getByTestId('pending-turn').textContent).toBe('turn-1');
       expect(screen.getByTestId('streaming').textContent).toBe('true');
+    });
 
-      await act(async () => {
-        finishRun();
-      });
+    it('does not stream once every turn has ended', () => {
+      mockTurns = [searchTurn('turn-1')];
 
-      expect(screen.getByTestId('pending-turn').textContent).toBe('');
+      render(<AppShell />);
+
       expect(screen.getByTestId('streaming').textContent).toBe('false');
-      expect(screen.getByTestId('follow-ups').textContent).toBe('Show more life jackets');
-    });
-
-    it('ignores actions while a follow-up is in flight', async () => {
-      mockTurns = [agentTurn('turn-1')];
-      let finishRun: () => void = () => undefined;
-      mockDispatchAction.mockReturnValueOnce(
-        new Promise<void>((resolve) => {
-          finishRun = resolve;
-        })
-      );
-
-      render(<AppShell />);
-      act(() => {
-        void capturedOnAction?.(
-          followUpAction('selectAction', {text: 'Show more life jackets', type: 'followup'})
-        );
-      });
-      act(() => {
-        void capturedOnAction?.(followUpAction('selectSearchOption', {optionId: 'opt-1'}));
-        void capturedOnAction?.(followUpAction('selectPage', {page: 1}));
-      });
-
-      expect(mockDispatchAction).toHaveBeenCalledTimes(1);
-      expect(screen.getByTestId('follow-ups').textContent).toBe('Show more life jackets');
-
-      await act(async () => {
-        finishRun();
-      });
-    });
-
-    it('records a search option without a prompt', async () => {
-      mockTurns = [agentTurn('turn-1')];
-      mockDispatchAction.mockResolvedValueOnce(undefined);
-
-      render(<AppShell />);
-      await act(async () => {
-        await capturedOnAction?.(followUpAction('selectSearchOption', {optionId: 'opt-1'}));
-      });
-
-      expect(screen.getByTestId('follow-ups').textContent).toBe('(option)');
-    });
-
-    it('does not record an action that updates a block', async () => {
-      mockTurns = [agentTurn('turn-1')];
-      mockDispatchAction.mockResolvedValueOnce(undefined);
-
-      render(<AppShell />);
-      await act(async () => {
-        await capturedOnAction?.(followUpAction('selectPage', {page: 1}));
-      });
-
-      expect(screen.getByTestId('follow-ups').textContent).toBe('');
-      expect(mockDispatchAction).toHaveBeenCalledWith(
-        expect.objectContaining({userAction: expect.objectContaining({surfaceId: 'agent-answer'})})
-      );
     });
   });
 });

@@ -84,8 +84,8 @@ AppShell (A2-UI provider + the session's renderer stream)
 
 Every turn shows the blocks the server produced for it, in order: the agent's text and display surfaces, and the gateway's search blocks. A search, a facet selection and a question to the agent all stay on the same page.
 
-- `src/a2ui/surface-stream.ts` turns every turn's `response.a2uiMessages` into one renderer stream, so an update lands on its block wherever that block is in the feed. Each surface is drawn under a render id scoped to the turn that created it (servers may reuse a surface id across turns), and actions are sent back with the server surface id.
-- Only the latest turn's blocks are interactive. The session only sends actions for the surfaces of the active turn, which the sample takes to be the latest one (it never calls `retry`, which can make an earlier turn active again), so blocks of earlier turns stay visible, selected facets included, but their controls are disabled.
+- `AppShell` feeds `session.a2uiMessages`, the whole session's renderer stream, to a single renderer, so an update lands on its block wherever that block is in the feed. Surfaces live in the session (`@coveo/thermidor` ADR-018), and each turn's `response.surfaces` tells the page where to draw them. Actions go back to the session as they are.
+- Only the latest turn's blocks are interactive. The session accepts actions on any live surface; keeping earlier blocks read-only is the sample's choice, so blocks of earlier turns stay visible, selected facets included, but their controls are disabled.
 
 ### ConversationPage component tree
 
@@ -93,30 +93,29 @@ Every turn shows the blocks the server produced for it, in order: the agent's te
 ConversationPage
 ├── ConversationThread (renders the list of turns)
 │   └── per Turn:
-│       ├── UserPromptBubble
+│       ├── UserPromptBubble (the prompt, or the text of the follow-up chip that opened the turn)
 │       ├── ErrorTurnBlock (if error)
-│       └── per exchange (the turn's answer, then one per follow-up sent from it):
-│           └── AgentResponseBlock
-│               ├── ThinkingBlock (reasoning steps + spinner)
-│               ├── StreamingMessage (streamed text)
-│               └── TurnSurfaces (the exchange's blocks; disabled unless it is the latest turn)
-│                   ├── A2UISkeleton (in place of a loading surface)
-│                   ├── ProductCarousel (dumb: reads resolved props from {path} bindings)
-│                   ├── BundleDisplay (dumb: reads resolved tiers + slot child ids from props)
-│                   ├── ComparisonTable (dumb: reads resolved products, attributes + related documents from props)
-│                   ├── ProductResearchCard (dumb: reads resolved product, summary, bullets + related documents from props)
-│                   ├── NextActionsBar (dumb: reads resolved action items; sends a follow-up action)
-│                   └── CommerceSearch (a gateway search block, see below)
+│       └── AgentResponseBlock
+│           ├── ThinkingBlock (reasoning steps + spinner)
+│           ├── StreamingMessage (streamed text)
+│           └── TurnSurfaces (the turn's blocks; disabled unless it is the latest turn)
+│               ├── A2UISkeleton (in place of a loading surface)
+│               ├── ProductCarousel (dumb: reads resolved props from {path} bindings)
+│               ├── BundleDisplay (dumb: reads resolved tiers + slot child ids from props)
+│               ├── ComparisonTable (dumb: reads resolved products, attributes + related documents from props)
+│               ├── ProductResearchCard (dumb: reads resolved product, summary, bullets + related documents from props)
+│               ├── NextActionsBar (dumb: reads resolved action items; sends a follow-up action)
+│               └── CommerceSearch (a gateway search block, see below)
 └── PromptInput (pinned below the feed)
 ```
 
-**ConversationThread** iterates over turns and delegates rendering to the appropriate block based on turn status. The key path is through **AgentResponseBlock**, which orchestrates the streaming experience: first showing a thinking indicator, then streaming text, then the turn's blocks: a skeleton in place of each surface whose data model declares `isLoading` while the exchange streams, and finally the resolved A2-UI catalog components once component state arrives via `/state/<id>` `updateDataModel` operations resolved into the renderer's data model.
+**ConversationThread** iterates over turns and delegates rendering to the appropriate block based on turn status. The key path is through **AgentResponseBlock**, which orchestrates the streaming experience: first showing a thinking indicator, then streaming text, then the turn's blocks: a skeleton in place of each surface whose data model declares `isLoading` while the turn streams, and finally the resolved A2-UI catalog components once component state arrives via `/state/<id>` `updateDataModel` operations resolved into the renderer's data model.
 
 The catalog renderers (ProductCarousel, BundleDisplay, ComparisonTable, ProductResearchCard, NextActionsBar) are **dumb**: each reads its resolved values directly from `props` (the renderer resolves each `{ "path": ... }` binding against its A2-UI data model), with no identity join and no controller hydration. A renderer sends an action with `context.dispatchAction`; it reaches `AppShell`'s `onAction` handler, which forwards it to the session.
 
-A `NextActionsBar` item starts a follow-up: its answer streams into the same turn, and the page draws it as a new exchange below the one it follows, with the chip text as the shopper's message.
+A `NextActionsBar` item starts a follow-up: Agent Gateway announces its actions as turn-opening with the bar, so `@coveo/thermidor` answers it in a new turn, which the page draws right below the answer it follows, with the chip text as the shopper's message.
 
-**Search options** (agent-gateway ADR-008) are `NextActionsBar` items of type `searchOption`. The gateway keeps the search behind each one and forwards only `{text, type, optionId}`; tapping one dispatches `selectSearchOption {optionId}`, and the gateway opens a new commerce-search surface on the same turn. It is drawn below the answer and scrolled into view. The mock API emits no search options; they need a local Agent Gateway.
+**Search options** (agent-gateway ADR-008) are `NextActionsBar` items of type `searchOption`. The gateway keeps the search behind each one and forwards only `{text, type, optionId}`; tapping one dispatches `selectSearchOption {optionId, text}`, and the gateway opens a new commerce-search surface in a turn of its own, drawn below the answer it follows, with the option's text as the shopper's message. The mock API emits no search options; they need a local Agent Gateway.
 
 ### Search blocks (decomposed commerce)
 
@@ -145,17 +144,15 @@ These controls dispatch component actions: an interaction (sort, page, page size
 | Module                                                   | Role                                                                                                                                                                                                                                                                                                                                                             |
 | -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `src/context/session.tsx`                                | Creates the `@coveo/thermidor` session and injects the `ComponentContractsSchema` it validates against                                                                                                                                                                                                                                                           |
-| `src/components/AppShell.tsx`                            | Wires the catalog and the `onAction` handler into `A2UIProvider`, builds the session-wide renderer stream, and starts follow-up exchanges                                                                                                                                                                                                                        |
-| `src/a2ui/surface-stream.ts`                             | Builds the session's renderer stream from every turn's `response.a2uiMessages`, places each surface under the turn that created it, marks loading placeholders, and maps renderer actions back to server surface ids                                                                                                                                             |
-| `src/a2ui/surfaces.tsx`                                  | `ThermidorA2UIStream` feeds the stream to the renderer; `TurnSurfaces` draws one exchange's surfaces, or a skeleton for a loading one (thermidor owns the v1.0 → v0.9 downgrade)                                                                                                                                                                                 |
+| `src/components/AppShell.tsx`                            | Reads the session through one `useSyncExternalStore(session.subscribe, session.getSnapshot)`, passes `session.dispatchAction` to `A2UIProvider` as its `onAction`, and feeds the session's renderer stream (`session.a2uiMessages`) to the renderer                                                                                                              |
+| `src/a2ui/surfaces.tsx`                                  | `ThermidorA2UIStream` feeds the stream to the renderer; `TurnSurfaces` draws one turn's surfaces, or a skeleton for a loading one (thermidor owns the v1.0 → v0.9 downgrade)                                                                                                                                                                                     |
 | `src/a2ui/components.tsx`                                | `createThermidorCatalog()`: registers every catalog component (conversational: ProductCarousel, BundleDisplay, ComparisonTable, ProductResearchCard, ProductSummary, NextActionsBar; decomposed commerce: CommerceSearch, LayoutStack, FacetManager, RegularFacet, NumericFacet, CategoryFacet, Breadbox, QuerySummary, Sort, ProductList, Pagination, PageSize) |
 | `src/a2ui/CommerceSearch/`                               | `commerce-search` root — composes the sidebar and main columns and mounts them by id via `buildChild(id)`                                                                                                                                                                                                                                                        |
 | `src/a2ui/LayoutStack/`                                  | Generic layout container — stacks its declared children in a column or row (direction is a presentation node prop); reused for the sidebar, main, and top/bottom rows                                                                                                                                                                                            |
-| `src/a2ui/session-request.tsx`                           | Reads the session's request in flight: the surface lock rule (every request but a facet search) and `useGesture`, which runs a gesture's optimistic update in a transition that lasts until the session has answered it                                                                                                                                          |
+| `src/a2ui/session-request.tsx`                           | Reads the session's request in flight: the surface lock rule (`isBlocking`: every request but the facet search actions it lists in `NON_BLOCKING_ACTIONS`, by component) and `useGesture`, which runs a gesture's optimistic update in a transition that lasts until the session has answered it                                                                 |
 | `src/a2ui/use-optimistic-facet-search.ts`                | Keeps in-progress facet-search input in local React state and dispatches `search` once typing pauses; never writes in-progress input to the shared data model                                                                                                                                                                                                    |
 | `src/a2ui/Skeleton/`                                     | Skeletons drawn in place of loading surfaces                                                                                                                                                                                                                                                                                                                     |
-| `src/components/ConversationPage/turn-segments.ts`       | Splits a turn into exchanges, one per follow-up sent from it                                                                                                                                                                                                                                                                                                     |
-| `src/components/ConversationPage/AgentResponseBlock.tsx` | Orchestrates streaming display: ThinkingBlock → StreamingMessage → the exchange's surfaces                                                                                                                                                                                                                                                                       |
+| `src/components/ConversationPage/AgentResponseBlock.tsx` | Orchestrates streaming display: ThinkingBlock → StreamingMessage → the turn's surfaces                                                                                                                                                                                                                                                                           |
 
 ### Data flow (conversational turn)
 
@@ -164,20 +161,20 @@ Backend (converse stream)
   ↓ SSE events (A2-UI v1.0 messages: createSurface + /state updateDataModel ops)
   ↓
 Session (thermidor, via createSession) — folds each turn's response
-  ↓ turn.response.a2uiMessages (v1.0 → v0.9, {path} bindings byte-for-byte)
+  ↓ session.a2uiMessages (v1.0 → v0.9, {path} bindings byte-for-byte, only grows)
   ↓ turn.response.surfaces (rootComponentType, isLoading)
   ↓
-AppShell — buildSurfaceStream(turns): one stream, turn-scoped render ids, loading placeholders
+AppShell — one renderer stream, loading placeholders from turn.response.surfaces
   ↓
 ThermidorA2UIStream — processMessages (catalog resolution + updateDataModel ops → renderer data model)
   ↓
-TurnSurfaces (per exchange)
-  ├── A2UISkeleton for each loading surface while its exchange streams
+TurnSurfaces (per turn)
+  ├── A2UISkeleton for each loading surface while its turn streams
   └── A2UIRenderer → catalog components (ProductCarousel, BundleDisplay, etc.)
         ↓ read resolved values from props ({ "path": ... } bindings resolved by the renderer)
 
 Action dispatch (consumer → producer):
-  context.dispatchAction → renderer onAction → AppShell (render id → server id)
+  context.dispatchAction → renderer onAction → AppShell → session
     → one request at a time → validate payload (Zod) → HTTP POST (Action_Channel)
   ↓
   producer replies with /state/<id> updateDataModel ops (re-resolved into the renderer)
