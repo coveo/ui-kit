@@ -1,7 +1,6 @@
 import {
   createContext,
   useContext,
-  useMemo,
   useRef,
   useSyncExternalStore,
   type PropsWithChildren,
@@ -14,7 +13,6 @@ import {
 } from '@coveo/thermidor';
 import {ComponentContractsSchema} from '@coveo/thermidor-schema/zod3';
 import {SessionRequestProvider} from '../../../demo-schema-react/src/a2ui/session-request.js';
-import {buildViewSurfaces, type ViewSurfaces} from '../views/view-surfaces.js';
 import {createCartStore, type CartStore} from './cart-store.js';
 import {createTurnScheduler, type TurnScheduler} from './turn-scheduler.js';
 
@@ -70,7 +68,10 @@ function createStorefront(): StorefrontValue {
     // The cart is app state: every request carries it, whichever view sends it.
     commerceContextProvider: () => ({
       cart: cart.getItems().map((item) => ({...item})),
-      custom: {surfaceId: scheduler?.currentContext},
+      custom: {
+        surfaceId: scheduler?.currentContext,
+        restoreSurfaceId: scheduler?.currentRestoreSurfaceId,
+      },
     }),
   });
   scheduler = createTurnScheduler(session);
@@ -97,15 +98,6 @@ export function useScheduler(): TurnScheduler {
 export function useSessionSnapshot(): SessionSnapshot {
   const {session} = useStorefront();
   return useSyncExternalStore(session.subscribe, session.getSnapshot, session.getSnapshot);
-}
-
-/** Every surface of the session, and the view that draws it. */
-export function useViewSurfaces(): ViewSurfaces {
-  const {scheduler} = useStorefront();
-  const {turns} = useSessionSnapshot();
-  // The scheduler tags a turn right after the session opens it, and every stream event that
-  // follows re-renders, so a turn goes untagged for its first render at most.
-  return useMemo(() => buildViewSurfaces(turns, scheduler), [turns, scheduler]);
 }
 
 export function useCart() {

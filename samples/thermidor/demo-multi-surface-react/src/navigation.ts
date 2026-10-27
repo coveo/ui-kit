@@ -1,62 +1,53 @@
-/** One visit to a page. A new visit, even to the same page, gives the page fresh surfaces. */
-export type Visit =
-  | {id: number; page: 'home'}
-  | {id: number; page: 'assistant'; prompt: string}
-  | {id: number; page: 'search'; query: string}
-  | {id: number; page: 'listing'; slug: string};
-
 /**
- * The visits of the tab, oldest first, and the one shown. Going back shows an earlier visit again,
- * with its id, so the page draws the surfaces it already has and sends nothing.
+ * A page of the storefront, as its URL names it. A search or listing page also names the surface
+ * it showed, so the server can send that surface again, with its state, when the page is shown
+ * again.
  */
-export interface History {
-  visits: readonly Visit[];
-  index: number;
+export type Page =
+  | {page: 'home'}
+  | {page: 'assistant'; prompt: string}
+  | {page: 'search'; query: string; surface?: string}
+  | {page: 'listing'; slug: string; surface?: string};
+
+/** The page a URL names: `/`, `/assistant?q=`, `/search?q=` or `/listing/<slug>`, with `surface`. */
+export function pageFromUrl({pathname, search}: {pathname: string; search: string}): Page {
+  const params = new URLSearchParams(search);
+  const surface = params.get('surface') || undefined;
+  const [section, slug] = pathname.split('/').filter(Boolean).map(decodeURIComponent);
+  const query = params.get('q')?.trim();
+  if (section === 'assistant' && query) {
+    return {page: 'assistant', prompt: query};
+  }
+  if (section === 'search' && query) {
+    return {page: 'search', query, ...(surface && {surface})};
+  }
+  if (section === 'listing' && slug) {
+    return {page: 'listing', slug, ...(surface && {surface})};
+  }
+  return {page: 'home'};
 }
 
-let visitCount = 0;
-
-function nextId(): number {
-  visitCount += 1;
-  return visitCount;
-}
-
-export function visitHome(): Visit {
-  return {id: nextId(), page: 'home'};
-}
-
-export function visitAssistant(prompt: string): Visit {
-  return {id: nextId(), page: 'assistant', prompt};
-}
-
-export function visitSearch(query: string): Visit {
-  return {id: nextId(), page: 'search', query};
-}
-
-export function visitListing(slug: string): Visit {
-  return {id: nextId(), page: 'listing', slug};
-}
-
-export function startHistory(): History {
-  return {visits: [visitHome()], index: 0};
-}
-
-/** Shows `visit` after the current one. The visits that were ahead of the current one are dropped. */
-export function pushVisit(history: History, visit: Visit): History {
-  return {visits: [...history.visits.slice(0, history.index + 1), visit], index: history.index + 1};
-}
-
-/** Shows the visit before the current one again. */
-export function goBack(history: History): History {
-  return history.index === 0 ? history : {...history, index: history.index - 1};
-}
-
-export function currentVisit(history: History): Visit {
-  return history.visits[history.index];
-}
-
-export function previousVisit(history: History): Visit | undefined {
-  return history.visits[history.index - 1];
+/** The URL of `page`, which `pageFromUrl` reads back. */
+export function urlOf(page: Page): string {
+  const params = new URLSearchParams();
+  switch (page.page) {
+    case 'home':
+      return '/';
+    case 'assistant':
+      params.set('q', page.prompt);
+      return `/assistant?${params}`;
+    case 'search':
+      params.set('q', page.query);
+      if (page.surface) {
+        params.set('surface', page.surface);
+      }
+      return `/search?${params}`;
+    case 'listing':
+      if (page.surface) {
+        params.set('surface', page.surface);
+      }
+      return `/listing/${encodeURIComponent(page.slug)}${params.size ? `?${params}` : ''}`;
+  }
 }
 
 /** The listing pages of the previewed storefront, as the Merchandising Hub lists them. */
@@ -75,16 +66,16 @@ export function listingName(slug: string): string {
   return LISTINGS.find((listing) => listing.slug === slug)?.name ?? slug;
 }
 
-/** How a Back button names the page of `visit`. */
-export function pageName(visit: Visit): string {
-  switch (visit.page) {
+/** How the browser's history names `page`. */
+export function pageName(page: Page): string {
+  switch (page.page) {
     case 'home':
-      return 'home';
+      return 'Home';
     case 'assistant':
-      return `“${visit.prompt}”`;
+      return `“${page.prompt}”`;
     case 'search':
-      return `results for “${visit.query}”`;
+      return `Results for “${page.query}”`;
     case 'listing':
-      return listingName(visit.slug);
+      return listingName(page.slug);
   }
 }

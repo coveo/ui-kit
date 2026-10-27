@@ -8,8 +8,8 @@ import styles from './pages.module.css';
  * A listing page. The published contract has no view id for listings yet, so it sends its category
  * as a search on `storefront-preview-search` and draws the surfaces its own turn created.
  */
-export function ListingPage({slug, visitId}: {slug: string; visitId: number}) {
-  const {turn, surfaces, ownsTurn} = usePageView(visitId);
+export function ListingPage({slug}: {slug: string}) {
+  const {turn, surfaces, ownsTurn} = usePageView();
   const isWaiting = !turn || turn.status === 'streaming';
   return (
     <main className={styles.page}>

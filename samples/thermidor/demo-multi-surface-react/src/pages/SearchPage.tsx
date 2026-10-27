@@ -7,8 +7,8 @@ import styles from './pages.module.css';
  * Search results (`storefront-preview-search`): the surfaces its own turn created, such as the
  * commerce search layout with its facets, sort and pagination.
  */
-export function SearchPage({query, visitId}: {query: string; visitId: number}) {
-  const {turn, surfaces, ownsTurn} = usePageView(visitId);
+export function SearchPage({query}: {query: string}) {
+  const {turn, surfaces, ownsTurn} = usePageView();
   const isWaiting = !turn || turn.status === 'streaming';
   return (
     <main className={styles.page}>

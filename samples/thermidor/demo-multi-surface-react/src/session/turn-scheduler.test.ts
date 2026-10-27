@@ -18,6 +18,7 @@ function createFakeSession() {
   const turns: Turn[] = [];
   const listeners = new Set<() => void>();
   const contextsAtRequest: Array<string | undefined> = [];
+  const restoresAtRequest: Array<string | undefined> = [];
   let request: SessionRequest | undefined;
   let scheduler: TurnScheduler | undefined;
 
@@ -44,6 +45,7 @@ function createFakeSession() {
         return;
       }
       contextsAtRequest.push(scheduler?.currentContext);
+      restoresAtRequest.push(scheduler?.currentRestoreSurfaceId);
       if ('name' in message) {
         const turnId = `t${turns.length + 1}`;
         turns.push(makeTurn({id: turnId, prompt: message.payload.prompt, status: 'streaming'}));
@@ -72,6 +74,7 @@ function createFakeSession() {
   return {
     session,
     contextsAtRequest,
+    restoresAtRequest,
     bind(next: TurnScheduler) {
       scheduler = next;
     },
@@ -107,40 +110,58 @@ describe('createTurnScheduler', () => {
   });
 
   it('names the view of each request while the session builds it', () => {
-    scheduler.submitPagePrompt(HOME_CONTEXT, '', 7);
+    scheduler.submitPagePrompt(SEARCH_CONTEXT, 'kayak');
 
-    expect(fake.contextsAtRequest).toEqual([HOME_CONTEXT]);
-    expect(scheduler.turnContexts.get('t1')).toBe(HOME_CONTEXT);
-    expect(scheduler.turnVisits.get('t1')).toBe(7);
+    expect(fake.contextsAtRequest).toEqual([SEARCH_CONTEXT]);
+    expect(scheduler.turnContexts.get('t1')).toBe(SEARCH_CONTEXT);
+    expect(scheduler.pageTurnId).toBe('t1');
+  });
+
+  it("names the surface a page asks the server to restore, for that page's prompt only", () => {
+    scheduler.submitPagePrompt(SEARCH_CONTEXT, 'surfing', 'ui-1f');
+    fake.finish();
+    scheduler.dispatchAction(SEARCH_CONTEXT, cartAction);
+
+    expect(fake.restoresAtRequest).toEqual(['ui-1f', undefined]);
+  });
+
+  it('forgets the page turn when another page is shown', () => {
+    scheduler.submitPagePrompt(SEARCH_CONTEXT, 'kayak');
+    fake.finish();
+
+    scheduler.leavePage();
+
+    expect(scheduler.pageTurnId).toBeUndefined();
   });
 
   it('cancels whatever is in flight for a new page, and sends it once the request unwinds', async () => {
-    scheduler.submitPagePrompt(ASSISTANT_CONTEXT, 'boating safety', 1);
-    scheduler.submitPagePrompt(HOME_CONTEXT, '', 2);
+    scheduler.submitPagePrompt(ASSISTANT_CONTEXT, 'boating safety');
+    scheduler.submitPagePrompt(SEARCH_CONTEXT, 'kayak');
 
     expect(fake.session.cancel).toHaveBeenCalledTimes(1);
     expect(fake.prompts()).toEqual(['boating safety']);
+    expect(scheduler.pageTurnId).toBeUndefined();
 
     await unwind();
 
-    expect(fake.prompts()).toEqual(['boating safety', '']);
-    expect(scheduler.turnVisits.get('t2')).toBe(2);
+    expect(fake.prompts()).toEqual(['boating safety', 'kayak']);
+    expect(scheduler.pageTurnId).toBe('t2');
   });
 
   it('sends only the latest of several page prompts made while one is in flight', async () => {
-    scheduler.submitPagePrompt(HOME_CONTEXT, '', 1);
-    scheduler.submitPagePrompt(ASSISTANT_CONTEXT, 'boating safety', 2);
-    scheduler.submitPagePrompt(SEARCH_CONTEXT, 'kayak', 3);
+    scheduler.submitPagePrompt(SEARCH_CONTEXT, 'surfing');
+    scheduler.submitPagePrompt(ASSISTANT_CONTEXT, 'boating safety');
+    scheduler.submitPagePrompt(SEARCH_CONTEXT, 'kayak');
     await unwind();
 
-    expect(fake.prompts()).toEqual(['', 'kayak']);
-    expect(fake.contextsAtRequest).toEqual([HOME_CONTEXT, SEARCH_CONTEXT]);
-    expect(scheduler.turnVisits.get('t2')).toBe(3);
+    expect(fake.prompts()).toEqual(['surfing', 'kayak']);
+    expect(fake.contextsAtRequest).toEqual([SEARCH_CONTEXT, SEARCH_CONTEXT]);
+    expect(scheduler.pageTurnId).toBe('t2');
   });
 
   it('drops the waiting prompt of a page the shopper left for one with no prompt', async () => {
-    scheduler.submitPagePrompt(ASSISTANT_CONTEXT, 'boating safety', 1);
-    scheduler.submitPagePrompt(SEARCH_CONTEXT, 'kayak', 2);
+    scheduler.submitPagePrompt(ASSISTANT_CONTEXT, 'boating safety');
+    scheduler.submitPagePrompt(SEARCH_CONTEXT, 'kayak');
     scheduler.leavePage();
     await unwind();
 
@@ -148,7 +169,7 @@ describe('createTurnScheduler', () => {
   });
 
   it('sends an action when the session is free, on behalf of its view', () => {
-    scheduler.submitPagePrompt(HOME_CONTEXT, '', 1);
+    scheduler.submitPagePrompt(HOME_CONTEXT, '');
     fake.finish();
     scheduler.dispatchAction(ASSISTANT_CONTEXT, cartAction);
 
@@ -157,7 +178,7 @@ describe('createTurnScheduler', () => {
   });
 
   it('withholds an action while a request is in flight, without queueing it', () => {
-    scheduler.submitPagePrompt(HOME_CONTEXT, '', 1);
+    scheduler.submitPagePrompt(HOME_CONTEXT, '');
     scheduler.dispatchAction(HOME_CONTEXT, cartAction);
     fake.finish();
 

@@ -1,17 +1,15 @@
-import {useCallback} from 'react';
-import {useScheduler, useViewSurfaces} from '../session/storefront-session.js';
+import {useCallback, useMemo} from 'react';
+import {useScheduler, useSessionSnapshot} from '../session/storefront-session.js';
+import {buildPageView} from '../views/view-surfaces.js';
 
-/** One page visit: its latest turn, the surfaces its turns created, and which turns are its own. */
-export function usePageView(visitId: number) {
+/** The page being shown: the turn of its prompt, the surfaces it created, and which turn is its own. */
+export function usePageView() {
   const scheduler = useScheduler();
-  const {surfacesOfVisit, turnsOfVisit} = useViewSurfaces();
-  const ownsTurn = useCallback(
-    (turnId: string) => scheduler.turnVisits.get(turnId) === visitId,
-    [scheduler, visitId]
-  );
-  return {
-    turn: turnsOfVisit(visitId).at(-1),
-    surfaces: surfacesOfVisit(visitId),
-    ownsTurn,
-  };
+  const {turns} = useSessionSnapshot();
+  // The scheduler learns the page turn right after the session opens it, and every stream event
+  // that follows re-renders, so the page draws nothing for its first render at most.
+  const {pageTurnId} = scheduler;
+  const view = useMemo(() => buildPageView(turns, pageTurnId), [turns, pageTurnId]);
+  const ownsTurn = useCallback((turnId: string) => turnId === pageTurnId, [pageTurnId]);
+  return {...view, ownsTurn};
 }

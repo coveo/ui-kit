@@ -32,12 +32,3 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
 }
-
-.back {
-  border: 0;
-  background: none;
-  padding: 0;
-  font: inherit;
-  color: var(--color-text-link);
-  cursor: pointer;
-}

@@ -1,49 +1,61 @@
 import {describe, expect, it} from 'vitest';
-import {
-  currentVisit,
-  goBack,
-  pageName,
-  previousVisit,
-  pushVisit,
-  startHistory,
-  visitAssistant,
-  visitListing,
-  visitSearch,
-} from './navigation.js';
+import {pageFromUrl, pageName, urlOf, type Page} from './navigation.js';
 
-describe('navigation history', () => {
-  it('opens on a home visit, with nothing to go back to', () => {
-    const history = startHistory();
+const at = (url: string) => {
+  const {pathname, search} = new URL(url, 'http://localhost');
+  return pageFromUrl({pathname, search});
+};
 
-    expect(currentVisit(history).page).toBe('home');
-    expect(previousVisit(history)).toBeUndefined();
-    expect(goBack(history)).toBe(history);
+describe('pageFromUrl', () => {
+  it('reads each page, and the surface a search or listing page showed', () => {
+    expect(at('/')).toEqual({page: 'home'});
+    expect(at('/assistant?q=which+kayak%3F')).toEqual({page: 'assistant', prompt: 'which kayak?'});
+    expect(at('/search?q=kayak&surface=ui-1f')).toEqual({
+      page: 'search',
+      query: 'kayak',
+      surface: 'ui-1f',
+    });
+    expect(at('/listing/surfing')).toEqual({page: 'listing', slug: 'surfing'});
+    expect(at('/listing/surfing?surface=ui-1f')).toEqual({
+      page: 'listing',
+      slug: 'surfing',
+      surface: 'ui-1f',
+    });
   });
 
-  it('goes back to the earlier visit itself, with its id', () => {
-    const listing = visitListing('surfing');
-    const history = pushVisit(pushVisit(startHistory(), listing), visitAssistant('wetsuits'));
-
-    expect(previousVisit(history)).toBe(listing);
-    expect(currentVisit(goBack(history))).toBe(listing);
+  it('opens the home page for a URL that names no page', () => {
+    expect(at('/search')).toEqual({page: 'home'});
+    expect(at('/assistant?q=%20')).toEqual({page: 'home'});
+    expect(at('/listing')).toEqual({page: 'home'});
+    expect(at('/checkout')).toEqual({page: 'home'});
   });
+});
 
-  it('drops the visits ahead of the current one when a new visit opens', () => {
-    const search = visitSearch('kayak');
-    const back = goBack(pushVisit(pushVisit(startHistory(), visitListing('surfing')), search));
+describe('urlOf', () => {
+  it('builds a URL that reads back as the same page', () => {
+    const pages: Page[] = [
+      {page: 'home'},
+      {page: 'assistant', prompt: 'gift ideas under $50 & more'},
+      {page: 'search', query: 'kayak'},
+      {page: 'search', query: 'kayak', surface: 'ui-1f'},
+      {page: 'listing', slug: 'snorkeling-diving'},
+      {page: 'listing', slug: 'surfing', surface: 'ui-1f'},
+    ];
 
-    const history = pushVisit(back, visitAssistant('wetsuits'));
-
-    expect(history.visits.map(({page}) => page)).toEqual(['home', 'listing', 'assistant']);
-    expect(history.visits).not.toContain(search);
+    for (const page of pages) {
+      expect(at(urlOf(page))).toEqual(page);
+    }
+    expect(urlOf({page: 'listing', slug: 'surfing', surface: 'ui-1f'})).toBe(
+      '/listing/surfing?surface=ui-1f'
+    );
   });
 });
 
 describe('pageName', () => {
-  it('names each page for a Back button', () => {
-    expect(pageName(startHistory().visits[0])).toBe('home');
-    expect(pageName(visitListing('snorkeling-diving'))).toBe('Snorkeling & Diving');
-    expect(pageName(visitSearch('kayak'))).toBe('results for “kayak”');
-    expect(pageName(visitAssistant('which kayak?'))).toBe('“which kayak?”');
+  it('names each page', () => {
+    expect(pageName({page: 'home'})).toBe('Home');
+    expect(pageName({page: 'listing', slug: 'snorkeling-diving'})).toBe('Snorkeling & Diving');
+    expect(pageName({page: 'search', query: 'kayak'})).toBe('Results for “kayak”');
+    expect(pageName({page: 'assistant', prompt: 'which kayak?'})).toBe('“which kayak?”');
   });
 });

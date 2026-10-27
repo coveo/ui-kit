@@ -1,32 +1,29 @@
 import type {DiscoveredSurface, Turn} from '@coveo/thermidor';
 
 /**
- * Where every surface of the session is drawn. The server says nothing about placement: the app
- * remembers which page visit sent each turn, and a page draws the surfaces its own turns created.
+ * What the page being shown draws. The server says nothing about placement: a page draws the
+ * surfaces the turn of its own prompt created. A page shown again from its URL asks the server to
+ * restore the surface it showed, so that turn creates the same surface again, with the state the
+ * server has for it.
  */
-export interface ViewSurfaces {
-  /** The live surfaces the turns of one page visit created, in order. */
-  surfacesOfVisit(visitId: number): readonly DiscoveredSurface[];
-  /** The turns of one page visit, oldest first. */
-  turnsOfVisit(visitId: number): readonly Turn[];
-  /** The turn that created a live surface, which the surface belongs to. */
-  turnOfSurface(surfaceId: string): Turn | undefined;
+export interface PageView {
+  /** The turn of the page's prompt, once the session has opened it. */
+  turn: Turn | undefined;
+  /** The live surfaces that turn created, in order. */
+  surfaces: readonly DiscoveredSurface[];
+  /** The search surface among them, which a search or listing page's URL names. */
+  searchSurfaceId: string | undefined;
 }
 
-interface TurnViews {
-  turnVisits: ReadonlyMap<string, number>;
-}
+const SEARCH_ROOT = 'CommerceSearch';
 
-export function buildViewSurfaces(turns: readonly Turn[], {turnVisits}: TurnViews): ViewSurfaces {
-  const turnsOfVisit = (visitId: number) =>
-    turns.filter((turn) => turnVisits.get(turn.id) === visitId);
-
+export function buildPageView(turns: readonly Turn[], pageTurnId: string | undefined): PageView {
+  const turn = pageTurnId === undefined ? undefined : turns.find(({id}) => id === pageTurnId);
+  const surfaces = turn?.response.surfaces ?? [];
   return {
-    surfacesOfVisit: (visitId) => turnsOfVisit(visitId).flatMap((turn) => turn.response.surfaces),
-    turnsOfVisit,
-    turnOfSurface: (surfaceId) =>
-      turns.find((turn) =>
-        turn.response.surfaces.some((surface) => surface.surfaceId === surfaceId)
-      ),
+    turn,
+    surfaces,
+    searchSurfaceId: surfaces.find(({rootComponentType}) => rootComponentType === SEARCH_ROOT)
+      ?.surfaceId,
   };
 }

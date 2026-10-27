@@ -21,16 +21,17 @@ type SchedulerSession = Pick<
 interface PromptTask {
   context: StorefrontContext;
   prompt: string;
-  /** The page visit the prompt belongs to. */
-  visitId: number;
+  /** The surface the page showed, which the server sends again instead of answering the prompt. */
+  restoreSurfaceId?: string;
 }
 
 export interface TurnScheduler {
   /**
-   * A page's own prompt, for one visit of that page. The page replaces whatever was in flight,
-   * so it cancels it and is sent once the session is free.
+   * The prompt of the page being shown. The page replaces whatever was in flight, so it cancels it
+   * and is sent once the session is free. A page shown again from its URL names the surface it
+   * showed in `restoreSurfaceId`.
    */
-  submitPagePrompt(context: StorefrontContext, prompt: string, visitId: number): void;
+  submitPagePrompt(context: StorefrontContext, prompt: string, restoreSurfaceId?: string): void;
   /** The shopper opened a page with no prompt: the prompt of the page they left is not sent. */
   leavePage(): void;
   /**
@@ -40,10 +41,12 @@ export interface TurnScheduler {
   dispatchAction(context: StorefrontContext, message: A2uiClientMessage): void;
   /** The context the request being sent belongs to, for the session's context provider. */
   readonly currentContext: StorefrontContext;
+  /** The surface the request being sent asks the server to restore, if any. */
+  readonly currentRestoreSurfaceId: string | undefined;
   /** The context of each turn this scheduler opened, keyed by turn id. */
   readonly turnContexts: ReadonlyMap<string, StorefrontContext>;
-  /** The page visit of each turn, keyed by turn id. */
-  readonly turnVisits: ReadonlyMap<string, number>;
+  /** The turn the prompt of the page being shown opened, once the session has sent it. */
+  readonly pageTurnId: string | undefined;
 }
 
 /**
@@ -58,22 +61,32 @@ export function createTurnScheduler(
   initialContext: StorefrontContext = HOME_CONTEXT
 ): TurnScheduler {
   let currentContext = initialContext;
+  let currentRestoreSurfaceId: string | undefined;
   let waitingPage: PromptTask | null = null;
+  let pageTurnId: string | undefined;
   const turnContexts = new Map<string, StorefrontContext>();
-  const turnVisits = new Map<string, number>();
 
-  function send(context: StorefrontContext, message: Parameters<Session['dispatchAction']>[0]) {
+  function send(
+    context: StorefrontContext,
+    message: Parameters<Session['dispatchAction']>[0],
+    restoreSurfaceId?: string
+  ) {
     currentContext = context;
+    currentRestoreSurfaceId = restoreSurfaceId;
     // The session publishes the request, and opens a prompt's turn, before its first `await`.
     void session.dispatchAction(message);
     return session.request;
   }
 
   function sendPrompt(task: PromptTask): void {
-    const request = send(task.context, {name: 'submitPrompt', payload: {prompt: task.prompt}});
+    const request = send(
+      task.context,
+      {name: 'submitPrompt', payload: {prompt: task.prompt}},
+      task.restoreSurfaceId
+    );
     if (request?.kind === 'prompt') {
       turnContexts.set(request.turnId, task.context);
-      turnVisits.set(request.turnId, task.visitId);
+      pageTurnId = request.turnId;
     }
   }
 
@@ -90,8 +103,9 @@ export function createTurnScheduler(
   session.subscribe(flush);
 
   return {
-    submitPagePrompt(context, prompt, visitId) {
-      waitingPage = {context, prompt, visitId};
+    submitPagePrompt(context, prompt, restoreSurfaceId) {
+      waitingPage = {context, prompt, restoreSurfaceId};
+      pageTurnId = undefined;
       if (session.request) {
         session.cancel();
       }
@@ -99,6 +113,7 @@ export function createTurnScheduler(
     },
     leavePage() {
       waitingPage = null;
+      pageTurnId = undefined;
     },
     dispatchAction(context, message) {
       if (!session.request) {
@@ -108,7 +123,12 @@ export function createTurnScheduler(
     get currentContext() {
       return currentContext;
     },
+    get currentRestoreSurfaceId() {
+      return currentRestoreSurfaceId;
+    },
     turnContexts,
-    turnVisits,
+    get pageTurnId() {
+      return pageTurnId;
+    },
   };
 }

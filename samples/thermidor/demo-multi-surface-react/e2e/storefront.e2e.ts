@@ -11,6 +11,23 @@ function trackViews(page: Page): string[] {
   return views;
 }
 
+/** The surface each search-view request asked the server to restore, in order. */
+function trackRestores(page: Page): Array<string | undefined> {
+  const restores: Array<string | undefined> = [];
+  page.on('request', (request: Request) => {
+    if (request.method() === 'POST' && request.url().includes('/converse-schema')) {
+      const {context, message} = request.postDataJSON();
+      if (context.custom.surfaceId === 'storefront-preview-search' && message) {
+        restores.push(context.custom.restoreSurfaceId);
+      }
+    }
+  });
+  return restores;
+}
+
+/** The surface id the page's URL names. */
+const surfaceInUrl = (page: Page) => new URL(page.url()).searchParams.get('surface');
+
 async function search(page: Page, query: string, {ai}: {ai: boolean}) {
   await page.getByRole('checkbox', {name: 'AI'}).setChecked(ai);
   await page.getByRole('searchbox', {name: 'Search'}).fill(query);
@@ -117,32 +134,71 @@ test.describe('Storefront Preview on one session', () => {
     expect(views).toEqual(['storefront-preview-search']);
   });
 
-  test('goes back to a listing as the shopper left it, without sending a request', async ({
-    page,
-  }) => {
-    const views = trackViews(page);
+  test('restores a listing as the server keeps it when the shopper goes back', async ({page}) => {
+    const restores = trackRestores(page);
     await page.goto('/');
     await openListing(page, 'Surfing');
     // A product's badges are a nested list, so the products are counted by their names.
     const products = page.getByRole('list', {name: 'Product list'}).getByRole('heading');
     await page.getByRole('checkbox', {name: /Vissla/}).check({timeout: 30000});
     await expect(products).toHaveCount(2);
+    await expect(page).toHaveURL(/\/listing\/surfing\?surface=ui-/);
+    const listingSurface = surfaceInUrl(page);
+
+    await search(page, 'kayak', {ai: false});
+    await expect(products).toHaveCount(3, {timeout: 30000});
+    await expect(page).toHaveURL(/\/search\?q=kayak&surface=ui-/);
+    const searchSurface = surfaceInUrl(page);
+
+    await page.goBack();
+
+    await expect(page.getByRole('heading', {name: 'Surfing', level: 1})).toBeVisible();
+    await expect(page.getByRole('checkbox', {name: /Vissla/})).toBeChecked({timeout: 30000});
+    await expect(products).toHaveCount(2);
+    expect(surfaceInUrl(page)).toBe(listingSurface);
+    expect(restores.at(-1)).toBe(listingSurface);
+
+    await page.goForward();
+
+    await expect(page.getByRole('heading', {name: 'Results for “kayak”'})).toBeVisible();
+    await expect(products).toHaveCount(3, {timeout: 30000});
+    expect(surfaceInUrl(page)).toBe(searchSurface);
+    expect(restores.at(-1)).toBe(searchSurface);
+
+    await page.goBack();
+
+    await expect(page.getByRole('checkbox', {name: /Vissla/})).toBeChecked({timeout: 30000});
+    await expect(products).toHaveCount(2);
+    expect(surfaceInUrl(page)).toBe(listingSurface);
+  });
+
+  test('runs the listing search again for a surface the server no longer has', async ({page}) => {
+    const restores = trackRestores(page);
+    await page.goto('/listing/surfing?surface=ui-unknown');
+
+    await expect(page.getByRole('checkbox', {name: /Vissla/})).toBeVisible({timeout: 30000});
+    await expect(page).toHaveURL(/\/listing\/surfing\?surface=ui-/);
+    expect(surfaceInUrl(page)).not.toBe('ui-unknown');
+    expect(restores).toEqual(['ui-unknown']);
+  });
+
+  test('sends nothing for an assistant answer the shopper comes back to', async ({page}) => {
+    const views = trackViews(page);
+    await page.goto('/');
     await search(page, 'which kayak should I get?', {ai: true});
     await expect(page.getByRole('button', {name: 'Kayaks under $600'})).toBeEnabled({
       timeout: 30000,
     });
-    const sentBeforeBack = views.length;
+    await search(page, 'kayak', {ai: false});
+    await expect(page.getByRole('heading', {name: 'Results for “kayak”'})).toBeVisible();
+    const sent = views.length;
 
-    await page.getByRole('button', {name: '← Back to Surfing'}).click();
+    await page.goBack();
 
-    await expect(page.getByRole('heading', {name: 'Surfing', level: 1})).toBeVisible();
-    await expect(page.getByRole('checkbox', {name: /Vissla/})).toBeChecked();
-    await expect(products).toHaveCount(2);
-    expect(views).toHaveLength(sentBeforeBack);
-
-    await page.getByRole('checkbox', {name: /Dakine/}).check();
-    await expect(products).toHaveCount(4);
-    expect(views.at(-1)).toBe('storefront-preview-search');
+    await expect(
+      page.getByText(/Going back to an assistant answer isn't supported yet/)
+    ).toBeVisible();
+    expect(views).toHaveLength(sent);
   });
 
   test('opens the search behind a search option', async ({page}) => {

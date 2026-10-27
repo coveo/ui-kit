@@ -22,6 +22,30 @@ function sentPrompts(fetchMock: ReturnType<typeof vi.fn>): unknown[] {
   );
 }
 
+function sentRestores(fetchMock: ReturnType<typeof vi.fn>): unknown[] {
+  return fetchMock.mock.calls.map(
+    ([, init]) => JSON.parse((init as RequestInit).body as string).context.custom.restoreSurfaceId
+  );
+}
+
+function search(query: string) {
+  fireEvent.change(screen.getByRole('searchbox', {name: 'Search'}), {target: {value: query}});
+  fireEvent.submit(screen.getByRole('search'));
+}
+
+/** The browser's Back button: jsdom goes back, then fires `popstate`, on a later task. */
+async function browserBack() {
+  await act(async () => {
+    const popped = new Promise((resolve) =>
+      window.addEventListener('popstate', resolve, {once: true})
+    );
+    window.history.back();
+    await popped;
+  });
+}
+
+const url = () => window.location.pathname + window.location.search;
+
 function openListing(name: string) {
   fireEvent.click(screen.getByRole('button', {name: /Listing pages/}));
   fireEvent.click(
@@ -35,6 +59,7 @@ describe('StorefrontApp', () => {
   let fetchMock: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
+    window.history.replaceState(null, '', '/');
     fetchMock = vi.fn(async () => emptyTurnResponse());
     vi.stubGlobal('fetch', fetchMock);
   });
@@ -65,43 +90,50 @@ describe('StorefrontApp', () => {
     expect(sentPrompts(fetchMock)).toEqual(['Surfing']);
   });
 
-  it('goes back to the listing it left, and sends nothing for it', async () => {
+  it('opens the page its URL names, and asks the server to restore the surface it names', async () => {
+    window.history.replaceState(null, '', '/listing/surfing?surface=ui-1f');
     render(<App />);
-    await act(async () => {});
-    openListing('Surfing');
-    await act(async () => {});
-    fireEvent.change(screen.getByRole('searchbox', {name: 'Search'}), {
-      target: {value: 'which wetsuit?'},
-    });
-    fireEvent.submit(screen.getByRole('search'));
-    await act(async () => {});
-    fetchMock.mockClear();
-
-    fireEvent.click(screen.getByRole('button', {name: '← Back to Surfing'}));
     await act(async () => {});
 
     expect(screen.getByRole('heading', {name: 'Surfing'})).toBeTruthy();
-    expect(fetchMock).not.toHaveBeenCalled();
+    expect(sentViews(fetchMock)).toEqual(['storefront-preview-search']);
+    expect(sentPrompts(fetchMock)).toEqual(['Surfing']);
+    expect(sentRestores(fetchMock)).toEqual(['ui-1f']);
   });
 
-  it('goes back to the earlier answer from a new one', async () => {
+  it('gives each page a URL, and shows the page again with the browser', async () => {
+    window.history.replaceState(null, '', '/listing/surfing?surface=ui-1f');
     render(<App />);
     await act(async () => {});
-    fireEvent.change(screen.getByRole('searchbox', {name: 'Search'}), {
-      target: {value: 'boating safety'},
-    });
-    fireEvent.submit(screen.getByRole('search'));
+    fireEvent.click(screen.getByRole('checkbox', {name: 'AI'}));
+    search('kayak');
     await act(async () => {});
-    fireEvent.change(screen.getByRole('searchbox', {name: 'Search'}), {target: {value: 'kayak'}});
-    fireEvent.submit(screen.getByRole('search'));
+
+    expect(url()).toBe('/search?q=kayak');
+
+    fetchMock.mockClear();
+    await browserBack();
+
+    expect(url()).toBe('/listing/surfing?surface=ui-1f');
+    expect(screen.getByRole('heading', {name: 'Surfing'})).toBeTruthy();
+    expect(sentPrompts(fetchMock)).toEqual(['Surfing']);
+    expect(sentRestores(fetchMock)).toEqual(['ui-1f']);
+  });
+
+  it('sends nothing for an assistant answer the shopper comes back to, and says so', async () => {
+    render(<App />);
+    await act(async () => {});
+    search('boating safety');
+    await act(async () => {});
+    expect(url()).toBe('/assistant?q=boating+safety');
+    search('kayak');
     await act(async () => {});
     fetchMock.mockClear();
 
-    fireEvent.click(screen.getByRole('button', {name: '← Back to “boating safety”'}));
-    await act(async () => {});
+    await browserBack();
 
     expect(screen.getByRole('heading', {name: 'boating safety'})).toBeTruthy();
-    expect(screen.getByRole('button', {name: '← Back to home'})).toBeTruthy();
+    expect(screen.getByText(/Going back to an assistant answer isn't supported yet/)).toBeTruthy();
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
