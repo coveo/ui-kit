@@ -1,8 +1,11 @@
 import type {ReactNode} from 'react';
 import type {TurnResponse} from '@coveo/thermidor';
+import {turnRefIn} from '../../turn-ref/turn-ref.js';
 import {citationsIn, citedDocuments, withInlineCitations} from '../../citations/citations.js';
+import {getAnnotationModuleUrl} from '../../env.js';
 import {followUpQuestionsIn} from '../../follow-up-questions/follow-up-questions.js';
 import {CitedDocuments} from './CitedDocuments.js';
+import {AnnotationControl} from './AnnotationControl.js';
 import {FollowUpQuestions} from './FollowUpQuestions.js';
 import {ThinkingBlock} from './ThinkingBlock.js';
 import {StreamingMessage} from './StreamingMessage.js';
@@ -27,6 +30,8 @@ export function AgentResponseBlock({
   const citations = citationsIn(response.activities);
   const messages = withInlineCitations(agent?.messages ?? [], citations);
   const reasoningSteps = agent?.reasoningSteps ?? [];
+  const turnRef = turnRefIn(response.activities);
+  const annotationModuleUrl = getAnnotationModuleUrl();
 
   const showThinkingBlock = reasoningSteps.length > 0 || isStreaming;
   const showStreamingMessage = messages.some((m) => m.content.length > 0);
@@ -45,6 +50,9 @@ export function AgentResponseBlock({
         />
       )}
       {children}
+      {annotationModuleUrl && turnRef && !isStreaming && (
+        <AnnotationControl moduleUrl={annotationModuleUrl} turnRef={turnRef} />
+      )}
     </div>
   );
 }

@@ -143,3 +143,11 @@ export function getSampleConfiguration() {
     endpoint: getConverseUrl(baseUrl, organization.organizationId),
   };
 }
+
+/**
+ * Where the conversation annotation layer serves the module that puts its control under each
+ * answer, such as `/annotation/ui/annotator.js`. Without it, answers can't be annotated.
+ */
+export function getAnnotationModuleUrl(): string | undefined {
+  return getOptionalEnvValue('VITE_COVEO_ANNOTATION_MODULE_URL');
+}
