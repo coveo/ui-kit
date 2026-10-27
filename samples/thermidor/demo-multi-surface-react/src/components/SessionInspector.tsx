@@ -1,4 +1,4 @@
-import {useScheduler, useSessionSnapshot} from '../session/storefront-session.js';
+import {useSessionSnapshot, useTurnViews} from '../session/storefront-session.js';
 import styles from './SessionInspector.module.css';
 
 /**
@@ -7,7 +7,7 @@ import styles from './SessionInspector.module.css';
  */
 export function SessionInspector() {
   const {turns, surfaces} = useSessionSnapshot();
-  const scheduler = useScheduler();
+  const {turnViews} = useTurnViews();
 
   return (
     <details className={styles.inspector}>
@@ -28,7 +28,7 @@ export function SessionInspector() {
           {turns.map((turn, index) => (
             <tr key={turn.id}>
               <td>{index + 1}</td>
-              <td>{scheduler.turnContexts.get(turn.id) ?? '—'}</td>
+              <td>{turnViews.get(turn.id) ?? '—'}</td>
               <td>{turn.input.prompt || '—'}</td>
               <td>{turn.status === 'error' ? turn.error : turn.status}</td>
               <td>

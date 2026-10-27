@@ -97,6 +97,27 @@ describe('StorefrontApp', () => {
     expect(searchBox.disabled).toBe(false);
   });
 
+  it('records the view that sent each turn', async () => {
+    render(<App />);
+    await act(async () => {});
+
+    fireEvent.change(screen.getByRole('searchbox', {name: 'Search'}), {
+      target: {value: 'boating safety'},
+    });
+    fireEvent.submit(screen.getByRole('search'));
+    await act(async () => {});
+    fireEvent.click(screen.getByRole('checkbox', {name: 'AI'}));
+    fireEvent.change(screen.getByRole('searchbox', {name: 'Search'}), {target: {value: 'kayak'}});
+    fireEvent.submit(screen.getByRole('search'));
+    await act(async () => {});
+
+    const rows = within(screen.getByRole('table')).getAllByRole('row').slice(1);
+    expect(rows.map((row) => within(row).getAllByRole('cell')[1].textContent)).toEqual([
+      'storefront-preview-assistant',
+      'storefront-preview-search',
+    ]);
+  });
+
   it('asks the assistant on its view with the AI toggle on', async () => {
     render(<App />);
     await act(async () => {});
