@@ -1,5 +1,6 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import {type RegularFacetAction, RegularFacetPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {HighlightedText} from '../../components/HighlightedText/HighlightedText.js';
 import {FacetSearchMoreMatches} from '../FacetSearchMoreMatches/FacetSearchMoreMatches.js';
 import {SearchIcon} from '../icons/index.js';
 import {useOptimisticFacetSearch} from '../use-optimistic-facet-search.js';
@@ -37,7 +38,8 @@ export const RegularFacet = createReactComponent(
       value: string,
       numberOfResults: number,
       isSelected: boolean,
-      testId: string
+      testId: string,
+      highlight = ''
     ) => (
       <li key={value} className={styles.valueItem}>
         <label className={styles.checkboxLabel}>
@@ -48,7 +50,9 @@ export const RegularFacet = createReactComponent(
             checked={isSelected}
             onChange={() => optimisticFacet.toggleSelect(value, numberOfResults)}
           />
-          <span className={styles.valueLabel}>{value}</span>
+          <span className={styles.valueLabel}>
+            <HighlightedText text={value} query={highlight} />
+          </span>
           <span className={styles.valueCount}>({numberOfResults})</span>
         </label>
       </li>
@@ -110,7 +114,8 @@ export const RegularFacet = createReactComponent(
                     (candidate) =>
                       candidate.value === result.value && candidate.state === 'selected'
                   ),
-                  `facet-search-result-${result.value}`
+                  `facet-search-result-${result.value}`,
+                  facetSearch.query
                 )
               )}
             </ul>

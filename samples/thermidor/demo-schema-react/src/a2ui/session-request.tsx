@@ -175,10 +175,14 @@ export function useGesture(): (optimistic: () => void, send: () => void) => void
   };
 }
 
-/** Whether the session is sending a request: it takes one at a time and withholds the others. */
-export function useSessionBusy(): () => boolean {
+/** Whether a request is in flight. */
+export function useSessionBusy(): boolean {
   const source = useContext(SessionRequestContext);
-  return () => source.getSnapshot().request !== undefined;
+  return useSyncExternalStore(
+    source.subscribe,
+    () => source.getSnapshot().request !== undefined,
+    () => false
+  );
 }
 
 /**

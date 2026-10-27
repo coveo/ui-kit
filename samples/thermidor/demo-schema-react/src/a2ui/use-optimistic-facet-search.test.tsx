@@ -12,12 +12,16 @@ import {requestSnapshot} from '../test/fake-session-requests.js';
 function mount(initialBackend: string) {
   const dispatch = vi.fn<(action: FacetSearchAction) => void>();
   // A session sending another request, until the test frees it.
+  const listeners = new Set<() => void>();
   const session: {busy: boolean} & SessionRequestSource = {
     busy: false,
     getSnapshot() {
       return requestSnapshot(this.busy ? {kind: 'prompt', turnId: 'turn'} : undefined);
     },
-    subscribe: () => () => {},
+    subscribe: (listener) => {
+      listeners.add(listener);
+      return () => listeners.delete(listener);
+    },
     sendAndWait: () => Promise.resolve(),
   };
 
@@ -52,9 +56,13 @@ function mount(initialBackend: string) {
     type: (next: string) => act(() => current.onQueryChange(next)),
     pause: () => act(() => vi.advanceTimersByTime(SEARCH_DEBOUNCE_MS)),
     reset: () => act(() => current.reset()),
-    setBusy: (busy: boolean) => {
-      session.busy = busy;
-    },
+    setBusy: (busy: boolean) =>
+      act(() => {
+        session.busy = busy;
+        for (const listener of listeners) {
+          listener();
+        }
+      }),
     /** A change of `facetSearch.query` from the producer: an echo or an external change. */
     push: (query: string) => act(() => view.rerender(<Consumer query={query} />)),
     /** A re-render with another dispatch, as when a reply rebuilds the surface. */
@@ -111,6 +119,21 @@ describe('useOptimisticFacetSearch', () => {
     expect(view.sent()).toEqual([]);
 
     view.setBusy(false);
+    expect(view.sent()).toEqual(['nike']);
+    view.pause();
+    expect(view.sent()).toEqual(['nike']);
+  });
+
+  it('drops a search waiting to be sent as soon as typing resumes', () => {
+    const view = mount('');
+    view.setBusy(true);
+    view.type('ni');
+    view.pause();
+
+    view.type('nike');
+    view.setBusy(false);
+    expect(view.sent()).toEqual([]);
+
     view.pause();
     expect(view.sent()).toEqual(['nike']);
   });
