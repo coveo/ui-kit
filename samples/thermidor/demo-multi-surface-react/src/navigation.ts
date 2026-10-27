@@ -28,6 +28,9 @@ export function visitListing(slug: string): Visit {
   return {id: nextId(), page: 'listing', slug};
 }
 
+/** The search the header's **Search** button opens, so a demo needs no typing. */
+export const DEMO_SEARCH_QUERY = 'kayak';
+
 /** The listing pages of the previewed storefront, as the Merchandising Hub lists them. */
 export const LISTINGS: ReadonlyArray<{slug: string; name: string}> = [
   {slug: 'water-sports', name: 'Water Sports'},

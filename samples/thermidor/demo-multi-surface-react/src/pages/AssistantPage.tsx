@@ -15,7 +15,7 @@ interface AssistantPageProps {
  * committed, its reasoning, and the surfaces its own turn created.
  */
 export function AssistantPage({prompt, visitId, onBack}: AssistantPageProps) {
-  const {turn, surfaces, ownsTurn} = usePageView(visitId);
+  const {turn, surfaces, ownsTurn} = usePageView(visitId, 'storefront-preview-assistant');
   const isStreaming = turn?.status === 'streaming';
   return (
     <main className={styles.page}>

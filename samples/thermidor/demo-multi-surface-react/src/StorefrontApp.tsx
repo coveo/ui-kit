@@ -10,7 +10,14 @@ import {AddToCartButton} from './a2ui/AddToCartButton/AddToCartButton.js';
 import {createStorefrontCatalog} from './a2ui/catalog.js';
 import {SessionInspector} from './components/SessionInspector.js';
 import {TopBar} from './components/TopBar.js';
-import {visitAssistant, visitHome, visitListing, visitSearch, type Visit} from './navigation.js';
+import {
+  DEMO_SEARCH_QUERY,
+  visitAssistant,
+  visitHome,
+  visitListing,
+  visitSearch,
+  type Visit,
+} from './navigation.js';
 import {AssistantPage} from './pages/AssistantPage.js';
 import {HomePage} from './pages/HomePage.js';
 import {ListingPage} from './pages/ListingPage.js';
@@ -19,6 +26,7 @@ import {
   useCart,
   useSessionSnapshot,
   useStorefrontSend,
+  useViewSurfaces,
   type StorefrontView,
 } from './session/storefront-session.js';
 
@@ -32,7 +40,10 @@ const PAGE_VIEWS: Record<Visit['page'], StorefrontView> = {
   listing: 'storefront-preview-home',
 };
 
-/** `NextActionsBar` follow-ups ask for a new answer, so they open a new assistant visit. */
+/**
+ * `NextActionsBar` follow-ups ask for a new answer: on a page's own surface they open a new
+ * assistant visit, and in a panel they are sent in that panel, on the page that stays.
+ */
 const FOLLOW_UP_ACTION = 'selectAction';
 
 /**
@@ -43,10 +54,13 @@ export function StorefrontApp() {
   const {sendPrompt, sendAction} = useStorefrontSend();
   const {a2uiMessages, request} = useSessionSnapshot();
   const {cart} = useCart();
+  const viewSurfaces = useViewSurfaces();
   const [visit, setVisit] = useState<Visit>(visitHome);
 
   const visitRef = useRef(visit);
   visitRef.current = visit;
+  const viewSurfacesRef = useRef(viewSurfaces);
+  viewSurfacesRef.current = viewSurfaces;
 
   // The assistant and search pages send their prompt once per visit. StrictMode runs this effect
   // twice; the visit id keeps the second run from sending again. The home page has no prompt to
@@ -72,14 +86,26 @@ export function StorefrontApp() {
       if (!userAction) {
         return;
       }
+      const page = visitRef.current;
+      // An action goes on the view that draws its surface: the search page's results or its chat
+      // panel, which share the visit.
+      const view = viewSurfacesRef.current.viewOfSurface(userAction.surfaceId) ?? {
+        visitId: page.id,
+        view: PAGE_VIEWS[page.page],
+      };
       const text = userAction.context?.['text'];
       if (userAction.name === FOLLOW_UP_ACTION && typeof text === 'string') {
-        openAssistant(text);
+        const inPanel = view.visitId === page.id && view.view !== PAGE_VIEWS[page.page];
+        if (inPanel) {
+          sendPrompt(view.view, text, view.visitId);
+        } else {
+          openAssistant(text);
+        }
         return;
       }
-      sendAction(PAGE_VIEWS[visitRef.current.page], message as A2uiClientMessage);
+      sendAction(view.view, message as A2uiClientMessage);
     },
-    [sendAction, openAssistant]
+    [sendPrompt, sendAction, openAssistant]
   );
 
   const addToCart = useCallback(
@@ -101,6 +127,7 @@ export function StorefrontApp() {
             currentListing={visit.page === 'listing' ? visit.slug : undefined}
             onHome={() => setVisit(visitHome())}
             onListing={(slug) => setVisit(visitListing(slug))}
+            onDemoSearch={() => setVisit(visitSearch(DEMO_SEARCH_QUERY))}
             onSearch={(query, ai) => setVisit(ai ? visitAssistant(query) : visitSearch(query))}
             searchDisabled={request !== undefined}
           />

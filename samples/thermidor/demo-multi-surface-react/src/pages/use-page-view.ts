@@ -1,17 +1,24 @@
-import {useCallback} from 'react';
-import {useTurnViews, useViewSurfaces} from '../session/storefront-session.js';
+import {useCallback, useMemo} from 'react';
+import {useTurnViews, useViewSurfaces, type StorefrontView} from '../session/storefront-session.js';
 
-/** One page visit: its latest turn, the surfaces its turns created, and which turns are its own. */
-export function usePageView(visitId: number) {
-  const {turnVisits} = useTurnViews();
-  const {surfacesOfVisit, turnsOfVisit} = useViewSurfaces();
+/**
+ * One view of a page visit: its turns, the latest of them, the surfaces they created, and which
+ * turns are its own.
+ */
+export function usePageView(visitId: number, view: StorefrontView) {
+  const {turnViews, turnVisits} = useTurnViews();
+  const viewSurfaces = useViewSurfaces();
   const ownsTurn = useCallback(
-    (turnId: string) => turnVisits.get(turnId) === visitId,
-    [turnVisits, visitId]
+    (turnId: string) => turnVisits.get(turnId) === visitId && turnViews.get(turnId) === view,
+    [turnViews, turnVisits, visitId, view]
   );
-  return {
-    turn: turnsOfVisit(visitId).at(-1),
-    surfaces: surfacesOfVisit(visitId),
-    ownsTurn,
-  };
+  return useMemo(() => {
+    const turns = viewSurfaces.turnsOfView({visitId, view});
+    return {
+      turns,
+      turn: turns.at(-1),
+      surfaces: viewSurfaces.surfacesOfView({visitId, view}),
+      ownsTurn,
+    };
+  }, [viewSurfaces, visitId, view, ownsTurn]);
 }

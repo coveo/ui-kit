@@ -41,3 +41,25 @@
   color: var(--color-text-link);
   cursor: pointer;
 }
+
+.wide {
+  max-width: 1440px;
+}
+
+/* The page in the middle, a panel on the right; the panel goes under it on narrow screens. */
+.withPanel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+  align-items: start;
+  gap: var(--space-5);
+}
+
+.results {
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .withPanel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
