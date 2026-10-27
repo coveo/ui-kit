@@ -42,8 +42,8 @@ packages:
 
 catalog:
   '@ag-ui/client': 0.0.59
-  chromatic: 18.9.4
-  '@msw/playwright': 0.6.7
+  chromatic: 18.13.0
+  '@msw/playwright': 0.7.0
   '@mswjs/http-middleware': ^0.10.3
   msw: 2.15.0
   '@angular-devkit/build-angular': 22.2.3
@@ -62,13 +62,13 @@ catalog:
   '@coveo/atomic-component-health-check': 2.2.19
   '@coveo/relay-event-types': 20.7.1
   '@coveo/thermidor-schema': 1.0.0-beta.33
-  '@playwright/mcp': 0.0.82
+  '@playwright/mcp': 0.0.83
   '@playwright/test': 1.62.1
   '@react-router/dev': 8.3.0
   '@react-router/fs-routes': 8.3.0
   '@react-router/node': 8.3.0
   '@react-router/serve': 8.3.0
-  '@reduxjs/toolkit': 2.12.0
+  '@reduxjs/toolkit': 2.13.0
   'react-router': 8.3.0
   '@rollup/plugin-commonjs': 29.0.3
   '@rollup/plugin-json': 6.1.0
@@ -85,37 +85,37 @@ catalog:
   '@types/node': 24.13.6
   '@types/react': 19.2.18
   '@types/react-dom': 19.2.5
-  '@vitejs/plugin-react': 6.1.1
+  '@vitejs/plugin-react': 6.1.2
   '@vitest/browser-playwright': 4.1.12
   abortcontroller-polyfill: 1.7.8
   dayjs: 1.11.23
-  dompurify: 3.4.15
+  dompurify: 3.4.17
   dotenv: 17.4.2
   esbuild: 0.28.2
   esbuild-plugin-umd-wrapper: 3.0.0
   exponential-backoff: 3.1.3
-  express: 5.2.1
-  handlebars: 4.7.9
-  i18next: 26.4.2
+  express: 5.3.0
+  handlebars: 4.7.10
+  i18next: 26.5.3
   jest: 30.3.0
   jest-cli: 30.3.0
-  jsdom: 30.1.1
+  jsdom: 30.1.3
   lit: 3.3.3
   live-server: 1.2.2
-  local-web-server: 5.4.0
+  local-web-server: 5.4.2
   marked: 12.0.2
   natural-orderby: 5.0.0
   next: 16.2.12
   node-fetch: 3.3.2
-  postcss: 8.5.28
-  prettier: 3.9.8
-  publint: 0.3.24
+  postcss: 8.5.31
+  prettier: 3.9.10
+  publint: 0.3.25
   puppeteer: 25.9.0
   playwright: 1.62.1
   rxjs: 7.8.2
   react: 19.2.8
   react-dom: 19.2.8
-  rollup: 4.63.4
+  rollup: 4.64.12
   rollup-plugin-string: 3.0.0
   rollup-plugin-node-polyfills: 0.2.1
   size-limit: 14.1.0
@@ -124,11 +124,11 @@ catalog:
   tslib: 2.8.1
   typedoc: 0.28.20
   typescript: 6.0.3
-  uuid: 14.0.2
-  vite: 8.3.0
+  uuid: 14.0.3
+  vite: 8.3.4
   vitest: 4.1.12
   yaml: 2.9.1
-  zod: 4.6.5
+  zod: 4.6.7
   zone.js: 0.15.1
 
 catalogs:
