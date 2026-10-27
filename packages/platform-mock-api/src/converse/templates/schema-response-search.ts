@@ -1768,6 +1768,12 @@ function describeWaterSportsView(surfaceId: string): string {
   return `the results for "${view.query}"${category ? ` in ${category}` : ''}, sorted by ${view.sortCriteria}, showing ${shown.map((product) => product.ec_name).join(', ')}`;
 }
 
+/** The cheapest product of the search kept for a search surface, across all of its pages. */
+function cheapestWaterSportsProduct(surfaceId: string): WaterSportsProduct | undefined {
+  const view = viewsBySurfaceId.get(surfaceId) ?? DEFAULT_VIEW;
+  return sortProducts(filterProducts(view), 'price_asc')[0];
+}
+
 /** The catalog's products under a category below the root chain, in catalog order. */
 function waterSportsProductsUnder(...relativePath: string[]): WaterSportsProduct[] {
   return products.filter((product) => isUnderCategory(product, relativePath));
@@ -1776,6 +1782,7 @@ function waterSportsProductsUnder(...relativePath: string[]): WaterSportsProduct
 export {
   buildWaterSportsInitialEvents,
   buildWaterSportsActionEvents,
+  cheapestWaterSportsProduct,
   describeWaterSportsView,
   waterSportsProductsUnder,
 };

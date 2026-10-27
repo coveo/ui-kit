@@ -1,9 +1,10 @@
-import {encodeSSEEvent, reasoningMessage, type ConverseEvent} from './events.js';
+import {encodeSSEEvent, reasoningMessage, textMessage, type ConverseEvent} from './events.js';
 import {matchSchemaPrompt} from './generate-schema-response.js';
 import {schemaFallbackEvents} from './templates/schema-response-fallback.js';
 import {
   buildWaterSportsActionEvents,
   buildWaterSportsInitialEvents,
+  cheapestWaterSportsProduct,
   describeWaterSportsView,
 } from './templates/schema-response-search.js';
 import {matchStorefrontConversation} from './templates/storefront-conversations.js';
@@ -19,7 +20,8 @@ import {matchStorefrontConversation} from './templates/storefront-conversations.
  * - one turn at a time: another one while it runs gets a 409.
  *
  * On `storefront-preview-assistant`, a message runs the agent, which is told what the shopper is
- * looking at. On `storefront-preview-search`, a message opens a search surface for that query. On
+ * looking at: the latest search surface. Asked for the cheapest product, it answers from that
+ * surface's kept search. On `storefront-preview-search`, a message opens a search surface for that query. On
  * both, an action is answered by the server. `storefront-preview` and `storefront-preview-home` get
  * an empty run, and any other view is refused with a 400.
  */
@@ -85,6 +87,12 @@ const CONVERSATION_KEYWORDS: [RegExp, string, string][] = [
   ],
 ];
 
+// A question about the search on screen, answered from the search kept for it.
+const CHEAPEST_QUESTION = /cheapest|least expensive|lowest price|lowest-priced/;
+
+const CHEAPEST_REASONING =
+  'The shopper asks for the cheapest product of the search on screen. I will compare the prices of every result of that search, not only the visible page.';
+
 const FALLBACK_REASONING =
   'I could not match this question to the catalog. I will suggest a few searches the shopper can try instead.';
 
@@ -92,6 +100,7 @@ const LIFECYCLE_EVENTS = new Set(['turn_started', 'turn_complete', 'RUN_STARTED'
 const EVENT_DELAY_MS = 25;
 
 let reasoningSequence = 0;
+let answerSequence = 0;
 
 class HttpError extends Error {
   constructor(
@@ -183,11 +192,43 @@ function toSurface(events: ConverseEvent[], surfaceId: string): ConverseEvent[] 
   });
 }
 
+/** The agent's answer naming the cheapest product of the search kept for a search surface. */
+function cheapestAnswerEvents(searchSurfaceId: string): ConverseEvent[] {
+  const product = cheapestWaterSportsProduct(searchSurfaceId);
+  answerSequence += 1;
+  const text = product
+    ? `The cheapest of these results is the ${product.ec_name}, at $${product.ec_price.toFixed(2)}.`
+    : 'There are no results on screen to compare.';
+  return withReasoning(textMessage(`answer-agent-${answerSequence}`, text), CHEAPEST_REASONING);
+}
+
 /**
- * The agent's answer as the server forwards it: each surface under a fresh `ui-<uuid>` id, recorded
- * in the session, and each search option's search kept on the server and removed from the client's.
+ * The agent's answer as the server forwards it, told what the shopper is looking at: the latest
+ * search surface of the session, whichever view drew it.
  */
 function agentTurnEvents(session: Session, prompt: string): ConverseEvent[] {
+  const latestSearch = [...session.surfaces]
+    .filter(([, kind]) => kind === 'search')
+    .map(([surfaceId]) => surfaceId)
+    .at(-1);
+  if (!latestSearch) {
+    return scenarioTurnEvents(session, prompt);
+  }
+  const answer = CHEAPEST_QUESTION.test(prompt.toLowerCase())
+    ? cheapestAnswerEvents(latestSearch)
+    : scenarioTurnEvents(session, prompt);
+  return withReasoning(
+    answer,
+    `The shopper is looking at ${describeWaterSportsView(latestSearch)}.`
+  );
+}
+
+/**
+ * A scenario's answer as the server forwards it: each surface under a fresh `ui-<uuid>` id,
+ * recorded in the session, and each search option's search kept on the server and removed from the
+ * client's.
+ */
+function scenarioTurnEvents(session: Session, prompt: string): ConverseEvent[] {
   const ids = new Map<string, string>();
   const freshId = (surfaceId: string) => {
     if (!ids.has(surfaceId)) {
@@ -215,7 +256,7 @@ function agentTurnEvents(session: Session, prompt: string): ConverseEvent[] {
       !LIFECYCLE_EVENTS.has(String(dataOf(event).type)) &&
       dataOf(event).type !== 'STATE_SNAPSHOT'
   );
-  const events = mapSurfaceMessages(scenario, (message) => {
+  return mapSurfaceMessages(scenario, (message) => {
     const {name, body, surfaceId} = operationOf(message);
     const id = freshId(surfaceId);
     if (name === 'createSurface') {
@@ -229,14 +270,6 @@ function agentTurnEvents(session: Session, prompt: string): ConverseEvent[] {
     }
     return {...message, [name]: forwarded};
   });
-
-  const latestSearch = [...session.surfaces].filter(([, kind]) => kind === 'search').at(-1);
-  return latestSearch
-    ? withReasoning(
-        events,
-        `The shopper is looking at ${describeWaterSportsView(latestSearch[0])}.`
-      )
-    : events;
 }
 
 /** A search surface for `query` under a fresh id, whose search is kept to answer its actions. */
