@@ -2341,7 +2341,7 @@ importers:
         version: link:../../../packages/thermidor
       '@coveo/thermidor-schema':
         specifier: 'catalog:'
-        version: 1.0.0-beta.30(zod@3.25.76)
+        version: 1.0.0-beta.33(zod@4.6.7)
       react:
         specifier: 19.2.8
         version: 19.2.8
@@ -18746,6 +18746,10 @@ snapshots:
   '@coveo/thermidor-schema@1.0.0-beta.33(zod@3.25.76)':
     dependencies:
       zod: 3.25.76
+
+  '@coveo/thermidor-schema@1.0.0-beta.33(zod@4.6.7)':
+    dependencies:
+      zod: 4.6.7
 
   '@cspell/cspell-bundled-dicts@9.8.0':
     dependencies:

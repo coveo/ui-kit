@@ -112,9 +112,7 @@ test.describe('Storefront Preview on one session', () => {
     expect(views).toEqual([]);
   });
 
-  // The base branch's NextActionsBar sends `text` with `selectSearchOption`, which
-  // @coveo/thermidor-schema 1.0.0-beta.30 rejects, so the session withholds the action.
-  test.fixme('opens the search behind a search option', async ({page}) => {
+  test('opens the search behind a search option', async ({page}) => {
     await page.goto('/');
     await search(page, 'which kayak should I get?', {ai: true});
     const option = page.getByRole('button', {name: 'See all kayaks'});

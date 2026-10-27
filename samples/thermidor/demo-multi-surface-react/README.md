@@ -3,8 +3,8 @@
 The Storefront Preview layout on **one** Thermidor session: a header that stays (the search box and
 the cart) over a page that changes (home recommendations, the assistant's answer to a
 search, search results, listing pages). Each view draws its own A2-UI surfaces, all hosted by one
-renderer. It runs on the published contract only, and on `@coveo/thermidor` as of the session-scoped
-surfaces train (coveo/ui-kit#8750, #8751, #8752), which this branch is stacked on.
+renderer. It runs on the published contract only, and on `@coveo/thermidor`'s session-scoped
+surfaces (coveo/ui-kit#8750, #8751, #8752).
 
 ## Running it
 
@@ -43,9 +43,8 @@ pnpm e2e
 ```
 
 Playwright starts the mock on port 3466 and the sample on port 4175, then walks the pages above
-(`e2e/storefront.e2e.ts`). Build the sample's dependencies first (`pnpm dev` does); CI builds them before running the
-sample's `e2e` script. Opening the search behind **See all kayaks** is marked `fixme`: on the
-base branch, `NextActionsBar` sends a `text` that `@coveo/thermidor-schema` 1.0.0-beta.30 rejects.
+(`e2e/storefront.e2e.ts`). Build the sample's dependencies first (`pnpm dev` does); CI builds them
+before running the sample's `e2e` script.
 
 ## What it reproduces
 
