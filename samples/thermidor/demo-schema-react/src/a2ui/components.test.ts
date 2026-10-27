@@ -32,6 +32,9 @@ const EXPECTED_COMPONENTS = [
   'QuerySummary',
   'PageSize',
   'Breadbox',
+  'SessionShell',
+  'SearchBox',
+  'QuerySuggestions',
 ] as const;
 
 describe('createThermidorCatalog (catalog build smoke)', () => {
