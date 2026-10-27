@@ -38,7 +38,6 @@ async function createMockSession(): Promise<Session> {
       return snapshot;
     },
     subscribe: requests.source.subscribe,
-    sendAndWait: requests.source.sendAndWait,
     dispatchAction: requests.dispatch,
   } as unknown as Session;
 }

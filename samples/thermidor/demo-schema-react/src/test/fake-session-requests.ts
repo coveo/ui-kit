@@ -21,8 +21,8 @@ interface UserActionMessage {
 /**
  * A stand-in for the session's request handling: sends one message at a time through `send`,
  * withholds a message dispatched while another is in flight, and exposes `request` through
- * `getSnapshot()`, and `sendAndWait()`, like `Session` does. `componentOf` gives the `component`
- * of a dispatching node, which the session reads from the surface.
+ * `getSnapshot()`, like `Session` does. `componentOf` gives the `component` of a dispatching node,
+ * which the session reads from the surface.
  */
 export function createFakeSessionRequests(
   send: (message: never) => Promise<void> | void,
@@ -44,19 +44,6 @@ export function createFakeSessionRequests(
     subscribe(listener) {
       listeners.add(listener);
       return () => listeners.delete(listener);
-    },
-    sendAndWait(sendGesture) {
-      sendGesture();
-      return new Promise((resolve) => {
-        const listener = () => {
-          if (request === undefined) {
-            listeners.delete(listener);
-            resolve();
-          }
-        };
-        listeners.add(listener);
-        listener();
-      });
     },
   };
 

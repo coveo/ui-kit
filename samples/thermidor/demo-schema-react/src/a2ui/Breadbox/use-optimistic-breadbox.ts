@@ -53,7 +53,7 @@ function isActive(facet: BreadboxFacet): boolean {
 
 export function useOptimisticBreadbox(
   props: BreadboxProps,
-  dispatch: (action: BreadboxAction) => void
+  dispatch: (action: BreadboxAction) => void | Promise<void>
 ): OptimisticBreadbox {
   const [facets, addOptimisticFacets] = useOptimistic(props.facets ?? NO_FACETS);
   const startGesture = useGesture();

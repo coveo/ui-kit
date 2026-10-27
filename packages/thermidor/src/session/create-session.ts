@@ -266,16 +266,6 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    */
   getSnapshot(): SessionSnapshot;
   /**
-   * Calls `send`, which dispatches through the renderer, and resolves once the session has answered
-   * that dispatch, whatever the outcome: answered, failed, cancelled, or withheld without being
-   * sent: it waits for {@link Session.request} to be `undefined`, right away when the dispatch was
-   * withheld, otherwise once its request ends. For example, it ends an optimistic update. A
-   * renderer's own dispatch promise may resolve as soon as it has emitted the action, before the
-   * session has answered it; when the {@link Session.dispatchAction} promise is at hand, await it
-   * instead.
-   */
-  sendAndWait(send: () => unknown): Promise<void>;
-  /**
    * The single consumer-facing action-dispatch entry point, wired directly as
    * the renderer's `onAction` handler (`onAction={session.dispatchAction}`).
    *
@@ -498,21 +488,6 @@ export function createSession<TContracts extends ContractsSchema>(
   /** A dispatch refused before it was sent settles at once. */
   function withhold(): Promise<void> {
     return Promise.resolve();
-  }
-
-  function sendAndWait(send: () => unknown): Promise<void> {
-    // The dispatch publishes its request synchronously, inside `send`.
-    send();
-    return new Promise((resolve) => {
-      const settle = () => {
-        if (store.getState().request === undefined) {
-          unsubscribe();
-          resolve();
-        }
-      };
-      const unsubscribe = store.subscribe(settle);
-      settle();
-    });
   }
 
   function setActionError(actionError: ActionError | undefined): void {
@@ -1229,7 +1204,6 @@ export function createSession<TContracts extends ContractsSchema>(
       return store.subscribe(listener);
     },
     getSnapshot,
-    sendAndWait,
     dispatchAction,
     cancel,
     retry,

@@ -16,10 +16,9 @@ import type {
 import type {ComponentContractsSchema} from '@coveo/thermidor-schema/zod3';
 
 /**
- * What the surfaces read from the session: its request in flight, when it has answered, and why the
- * last action failed.
+ * What the surfaces read from the session: its request in flight, and why the last action failed.
  */
-export type SessionRequestSource = Pick<Session, 'subscribe' | 'getSnapshot' | 'sendAndWait'>;
+export type SessionRequestSource = Pick<Session, 'subscribe' | 'getSnapshot'>;
 
 const IDLE_SNAPSHOT: SessionSnapshot = {
   turns: [],
@@ -34,10 +33,6 @@ const IDLE_SNAPSHOT: SessionSnapshot = {
 const IDLE: SessionRequestSource = {
   getSnapshot: () => IDLE_SNAPSHOT,
   subscribe: () => () => {},
-  sendAndWait: (send) => {
-    send();
-    return Promise.resolve();
-  },
 };
 
 const SessionRequestContext = createContext<SessionRequestSource>(IDLE);
@@ -159,10 +154,12 @@ export async function submitQuery(session: QuerySubmitter, prompt: string): Prom
 
 /**
  * Starts a gesture with React's `useOptimistic`: unless a request is in flight, applies the
- * optimistic update and sends the gesture in a transition that lasts until the session has
- * answered it, so the optimistic value shows until then.
+ * optimistic update and sends the gesture in a transition that lasts until `send`'s promise
+ * settles, so the optimistic value shows until then. The renderer's dispatch returns the
+ * promise of its `onAction`, `session.dispatchAction`, which settles once the session has
+ * answered the gesture.
  */
-export function useGesture(): (optimistic: () => void, send: () => void) => void {
+export function useGesture(): (optimistic: () => void, send: () => void | Promise<void>) => void {
   const source = useContext(SessionRequestContext);
   return (optimistic, send) => {
     if (source.getSnapshot().request !== undefined) {
@@ -170,7 +167,7 @@ export function useGesture(): (optimistic: () => void, send: () => void) => void
     }
     startTransition(async () => {
       optimistic();
-      await source.sendAndWait(send);
+      await send();
     });
   };
 }

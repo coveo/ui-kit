@@ -15,7 +15,23 @@ import {mountSurface} from './mount-surface.harness.js';
  * id via `buildChild`; the tests assert the observable mounted DOM order.
  */
 
-afterEach(() => cleanup());
+/**
+ * Holds each dispatch in flight until the test ends. React entangles pending async transitions,
+ * so one left pending would hold every later test's optimistic value.
+ */
+const held: Array<() => void> = [];
+function holdOpen(): () => Promise<void> {
+  return () => new Promise<void>((resolve) => held.push(resolve));
+}
+
+afterEach(async () => {
+  await act(async () => {
+    for (const release of held.splice(0)) {
+      release();
+    }
+  });
+  cleanup();
+});
 
 const bolded = (element: Element | null) =>
   [...(element?.querySelectorAll('strong') ?? [])].map((node) => node.textContent);
@@ -405,6 +421,25 @@ describe('NumericFacet', () => {
     answer();
   });
 
+  it('keeps the clicked range selected until the backend has answered the click', async () => {
+    const answers: Array<() => void> = [];
+    mountFacet(stateWithRanges, () => new Promise<void>((resolve) => answers.push(resolve)));
+    const pressed = () =>
+      screen.getByText('$100 - $200').closest('button')!.getAttribute('aria-pressed');
+
+    await waitFor(() => expect(screen.getByText('$100 - $200')).toBeDefined());
+    fireEvent.click(screen.getByText('$100 - $200'));
+    await waitFor(() => expect(answers).toHaveLength(1));
+    await waitFor(() => expect(pressed()).toBe('true'));
+
+    await act(async () => {
+      answers[0]!();
+      await Promise.resolve();
+    });
+
+    await waitFor(() => expect(pressed()).toBe('false'));
+  });
+
   it('dispatches applyCustomRange with the entered numeric start/end on submit', async () => {
     const {lastAction} = mountFacet(stateWithRanges);
 
@@ -449,7 +484,7 @@ describe('NumericFacet', () => {
           {start: 100, end: 200, numberOfResults: 4, state: 'idle'},
         ],
       },
-      () => new Promise<void>(() => {})
+      holdOpen()
     );
 
     await waitFor(() => expect(screen.getByLabelText('Min')).toBeDefined());
@@ -476,7 +511,7 @@ describe('NumericFacet', () => {
 
   it('does not dim the custom-range inputs when toggling a listed range', async () => {
     // Held open, so a slot-wide pending signal would wrongly dim here.
-    const {container, lastAction} = mountFacet(stateWithRanges, () => new Promise<void>(() => {}));
+    const {container, lastAction} = mountFacet(stateWithRanges, holdOpen());
 
     await waitFor(() => expect(screen.getByText('$0 - $100')).toBeDefined());
     fireEvent.click(screen.getByText('$0 - $100'));
@@ -611,6 +646,25 @@ describe('CategoryFacet', () => {
       )
     );
     answer();
+  });
+
+  it('keeps the clicked child selected until the backend has answered the click', async () => {
+    const answers: Array<() => void> = [];
+    mountFacet(stateWithChildren, () => new Promise<void>((resolve) => answers.push(resolve)));
+    const selected = () =>
+      screen.getByTestId('facet-category-selected-ec_category').textContent ?? '';
+
+    await waitFor(() => expect(screen.getByText('Water Sports')).toBeDefined());
+    fireEvent.click(screen.getByText('Water Sports'));
+    await waitFor(() => expect(answers).toHaveLength(1));
+    await waitFor(() => expect(selected()).toContain('Water Sports'));
+
+    await act(async () => {
+      answers[0]!();
+      await Promise.resolve();
+    });
+
+    await waitFor(() => expect(selected()).not.toContain('Water Sports'));
   });
 
   it('dispatches clearSelectedPath when the "All Categories" back link is clicked', async () => {
