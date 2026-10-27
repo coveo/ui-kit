@@ -52,8 +52,8 @@ catalogs:
       specifier: 1.0.0-beta.33
       version: 1.0.0-beta.33
     '@msw/playwright':
-      specifier: 0.7.0
-      version: 0.7.0
+      specifier: 0.6.7
+      version: 0.6.7
     '@mswjs/http-middleware':
       specifier: ^0.10.3
       version: 0.10.3
@@ -631,7 +631,7 @@ importers:
         version: link:../platform-mock-api
       '@msw/playwright':
         specifier: 'catalog:'
-        version: 0.7.0(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))(supports-color@8.1.1)
+        version: 0.6.7(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
         version: 1.62.1
@@ -662,7 +662,7 @@ importers:
         version: link:../platform-mock-api
       '@msw/playwright':
         specifier: 'catalog:'
-        version: 0.7.0(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))(supports-color@8.1.1)
+        version: 0.6.7(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
         version: 1.62.1
@@ -790,7 +790,7 @@ importers:
         version: link:../platform-mock-api
       '@msw/playwright':
         specifier: 'catalog:'
-        version: 0.7.0(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))(supports-color@8.1.1)
+        version: 0.6.7(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
         version: 1.62.1
@@ -1607,7 +1607,7 @@ importers:
         version: link:../../../packages/platform-mock-api
       '@msw/playwright':
         specifier: 'catalog:'
-        version: 0.7.0(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))(supports-color@8.1.1)
+        version: 0.6.7(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
         version: 1.62.1
@@ -1645,7 +1645,7 @@ importers:
         version: link:../../../packages/platform-mock-api
       '@msw/playwright':
         specifier: 'catalog:'
-        version: 0.7.0(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))(supports-color@8.1.1)
+        version: 0.6.7(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
         version: 1.62.1
@@ -1686,7 +1686,7 @@ importers:
         version: link:../../../packages/platform-mock-api
       '@msw/playwright':
         specifier: 'catalog:'
-        version: 0.7.0(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))(supports-color@8.1.1)
+        version: 0.6.7(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
         version: 1.62.1
@@ -1847,7 +1847,7 @@ importers:
         version: link:../../../packages/platform-mock-api
       '@msw/playwright':
         specifier: 'catalog:'
-        version: 0.7.0(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))(supports-color@8.1.1)
+        version: 0.6.7(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
         version: 1.62.1
@@ -1888,7 +1888,7 @@ importers:
         version: link:../../../packages/platform-mock-api
       '@msw/playwright':
         specifier: 'catalog:'
-        version: 0.7.0(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))(supports-color@8.1.1)
+        version: 0.6.7(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
         version: 1.62.1
@@ -1939,7 +1939,7 @@ importers:
         version: link:../../../packages/platform-mock-api
       '@msw/playwright':
         specifier: 'catalog:'
-        version: 0.7.0(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))(supports-color@8.1.1)
+        version: 0.6.7(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
         version: 1.62.1
@@ -2141,7 +2141,7 @@ importers:
         version: link:../../../packages/platform-mock-api
       '@msw/playwright':
         specifier: 'catalog:'
-        version: 0.7.0(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))(supports-color@8.1.1)
+        version: 0.6.7(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
         version: 1.62.1
@@ -2173,7 +2173,7 @@ importers:
         version: link:../../../packages/platform-mock-api
       '@msw/playwright':
         specifier: 'catalog:'
-        version: 0.7.0(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))(supports-color@8.1.1)
+        version: 0.6.7(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
         version: 1.62.1
@@ -2316,7 +2316,7 @@ importers:
         version: link:../../../packages/platform-mock-api
       '@msw/playwright':
         specifier: 'catalog:'
-        version: 0.7.0(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))(supports-color@8.1.1)
+        version: 0.6.7(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
         version: 1.62.1
@@ -5323,11 +5323,11 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@msw/playwright@0.7.0':
-    resolution: {integrity: sha512-HovTLoUTrs3oaMBmztaCtYv3roaWXCkoE89Gzwri2Qc0kFPTZ2hYvEU4fUzXuAR3S7t+TnY1QVLIVKY/p+lJzw==}
-    engines: {node: '>=22.0.0'}
+  '@msw/playwright@0.6.7':
+    resolution: {integrity: sha512-q7m2JtnN1Iz25xauqx5lkD+tbbDM3oXZBg67aXr4EbxK7IZKTh6c71bbTCnDi/F2SuHq/jPUfS8NJXPcdroARA==}
+    engines: {node: '>=20.0.0'}
     peerDependencies:
-      msw: '>=3'
+      msw: ^2.12.10
 
   '@mswjs/http-middleware@0.10.3':
     resolution: {integrity: sha512-6CoX9IivDF7hggORdA4vX6uz+pkY1urGQMhmviHmYya/0b4EXwmhaXlGLQG3G29heqb3qdjp61V0+E2xRtyR5A==}
@@ -5339,10 +5339,6 @@ packages:
   '@mswjs/interceptors@0.41.9':
     resolution: {integrity: sha512-VVPPgHyQ6ShqnrmDWuxjmUIsO9gWyOZFmuOfLd9LfBGQJwZfy0gvv9pbHSJuoFNIYC7ZDX9aoFwowjcdSC4E8w==}
     engines: {node: '>=18'}
-
-  '@mswjs/interceptors@0.45.9':
-    resolution: {integrity: sha512-NmEzpWbbiWpudgqKVZtGdSAvQGIYyj7Rf8ea+1hJEo+Dn0YvPHtiz577US7kGg0sCaZtPelrdqV4SfwwGJq1cA==}
-    engines: {node: '>=22'}
 
   '@napi-rs/lzma-linux-x64-gnu@1.5.1':
     resolution: {integrity: sha512-oTXEIha4SsuXdTA4Iyskj0kpdx2yVXdhd75c2v3xGrHFfVMsbhTPZU/nMPL4sWKo4pBHm3aucLaqGlF696dTyQ==}
@@ -5739,9 +5735,6 @@ packages:
 
   '@open-draft/until@2.1.0':
     resolution: {integrity: sha512-U69T3ItWHvLwGg5eJ0n3I62nWuE6ilHlmz7zM0npLBRvPRd7e6NYmg54vvRtP5mZG7kZqZCFVdsTWo7BPtBujg==}
-
-  '@open-draft/until@3.0.1':
-    resolution: {integrity: sha512-s7/9ELP4aP9YZtW7RJaa0Xf3RISaRH9+EFN18FtykJYRHGNrl8f9ymvoNXzjhrjmftFvkQudtuDU9RYhk0xs3A==}
 
   '@open-wc/lit-helpers@0.7.0':
     resolution: {integrity: sha512-4NBlx5ve0EvZplCRJbESm0MdMbRCw16alP2y76KAAAwzmFFXXrUj5hFwhw55+sSg5qaRRx6sY+s7usKgnNo3TQ==}
@@ -20286,13 +20279,11 @@ snapshots:
   '@msgpackr-extract/msgpackr-extract-win32-x64@3.0.4':
     optional: true
 
-  '@msw/playwright@0.7.0(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))(supports-color@8.1.1)':
+  '@msw/playwright@0.6.7(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))':
     dependencies:
-      '@mswjs/interceptors': 0.45.9(supports-color@8.1.1)
+      '@mswjs/interceptors': 0.41.9
       msw: 2.15.0(@types/node@24.13.6)(typescript@6.0.3)
       outvariant: 1.4.3
-    transitivePeerDependencies:
-      - supports-color
 
   '@mswjs/http-middleware@0.10.3(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))(supports-color@8.1.1)':
     dependencies:
@@ -20310,17 +20301,6 @@ snapshots:
       is-node-process: 1.2.0
       outvariant: 1.4.3
       strict-event-emitter: 0.5.1
-
-  '@mswjs/interceptors@0.45.9(supports-color@8.1.1)':
-    dependencies:
-      '@open-draft/until': 3.0.1
-      '@types/debug': 4.1.13
-      debug: 4.4.3(supports-color@8.1.1)
-      is-node-process: 1.2.0
-      outvariant: 1.4.3
-      rettime: 0.11.12
-    transitivePeerDependencies:
-      - supports-color
 
   '@napi-rs/lzma-linux-x64-gnu@1.5.1':
     optional: true
@@ -20722,8 +20702,6 @@ snapshots:
       outvariant: 1.4.3
 
   '@open-draft/until@2.1.0': {}
-
-  '@open-draft/until@3.0.1': {}
 
   '@open-wc/lit-helpers@0.7.0(lit@3.3.3)':
     dependencies:
