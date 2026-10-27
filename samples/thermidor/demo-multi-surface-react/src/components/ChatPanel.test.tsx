@@ -16,10 +16,12 @@ function sentViews(fetchMock: ReturnType<typeof vi.fn>): unknown[] {
   );
 }
 
-async function openDemoSearch() {
+async function openKayakSearch() {
   render(<App />);
   await act(async () => {});
-  fireEvent.click(screen.getByRole('button', {name: 'Search'}));
+  fireEvent.click(screen.getByRole('checkbox', {name: 'AI'}));
+  fireEvent.change(screen.getByRole('searchbox', {name: 'Search'}), {target: {value: 'kayak'}});
+  fireEvent.submit(screen.getByRole('search'));
   await act(async () => {});
 }
 
@@ -47,8 +49,8 @@ describe('ChatPanel', () => {
     vi.unstubAllGlobals();
   });
 
-  it("sits next to the header Search button's results", async () => {
-    await openDemoSearch();
+  it('sits next to the search results', async () => {
+    await openKayakSearch();
 
     expect(screen.getByRole('heading', {name: 'Results for “kayak”'})).toBeTruthy();
     expect(sentViews(fetchMock)).toEqual(['storefront-preview-search']);
@@ -56,7 +58,7 @@ describe('ChatPanel', () => {
   });
 
   it('asks the assistant on its view, and keeps the search page', async () => {
-    await openDemoSearch();
+    await openKayakSearch();
 
     ask('which one is the cheapest?');
     await act(async () => {});
@@ -86,7 +88,7 @@ describe('ChatPanel', () => {
 
   it('disables every input while a request is in flight, so none gets a conflict', async () => {
     let finishAnswer: (() => void) | undefined;
-    await openDemoSearch();
+    await openKayakSearch();
     fetchMock.mockImplementationOnce(
       () =>
         new Promise<Response>((resolve) => {
@@ -98,19 +100,16 @@ describe('ChatPanel', () => {
         name: 'Ask the shopping assistant',
       }) as HTMLInputElement;
     const searchBox = screen.getByRole('searchbox', {name: 'Search'}) as HTMLInputElement;
-    const searchButton = screen.getByRole('button', {name: 'Search'}) as HTMLButtonElement;
 
     ask('which one is the cheapest?');
     await act(async () => {});
 
     expect(input().disabled).toBe(true);
     expect(searchBox.disabled).toBe(true);
-    expect(searchButton.disabled).toBe(true);
 
     await act(async () => finishAnswer?.());
 
     expect(input().disabled).toBe(false);
     expect(searchBox.disabled).toBe(false);
-    expect(searchButton.disabled).toBe(false);
   });
 });
