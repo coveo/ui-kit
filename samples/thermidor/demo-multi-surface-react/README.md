@@ -29,8 +29,9 @@ Try it (the mock is described [below](#the-multi-surface-mock)):
 4. Turn **AI** off and search `kayak`: the search page shows the search surface the server opened
    for it (facets, sort, pagination), answered from the search it keeps.
 5. Open a **Listing pages** entry, such as **Surfing**: it sends its category as a search and shows
-   the search surface the server opens for it. Check a facet, then ask the assistant something and
-   click **Back to Surfing**: the listing is as you left it, facet checked, and nothing is sent (see
+   the search surface the server opens for it; the URL names that surface
+   (`/listing/surfing?surface=ui-…`). Check a facet, search something else, then use the browser's
+   **Back**: the server sends the listing again as it keeps it, facet checked (see
    [Going back](#going-back)).
 6. Open **One session** at the bottom: every turn, the view that sent it, and the surfaces it
    created that are still alive. `GET http://localhost:3456/multi-surface/sessions` shows what the
@@ -63,7 +64,7 @@ views and puts them on one session:
 The behaviour is kept:
 
 - typing in the search box sends nothing: a search is sent when it is committed;
-- the assistant, search and listing pages send their prompt once per visit;
+- every page has a URL, and the browser's Back and Forward show it again;
 - opening a page gives it fresh surfaces, while the header stays;
 - the cart is shared by the header and every page.
 
@@ -73,17 +74,17 @@ The behaviour is kept:
 - **Each request declares its view** in `context.custom.surfaceId`, with the values of the
   published contract above. The value names a view, not an A2-UI surface: the surfaces get
   server-chosen `ui-<uuid>` ids.
-- **The app maps views to surfaces.** It remembers which view sent each turn (and, for a page, which
-  visit of it). A page draws the surfaces of its visit's turns. The server
-  sends no placement hint, and the app never hard-codes a surface id.
-  (`src/views/view-surfaces.ts`, from each turn's `response.surfaces`.)
+- **A page draws the surfaces of its own turn.** A page sends its prompt as it is shown, and draws
+  the surfaces the turn of that prompt created. The server sends no placement hint, and the app
+  never hard-codes a surface id. (`src/views/view-surfaces.ts`, from the turn's
+  `response.surfaces`.)
 - **The cart is app state.** The app draws it in the header and sends it in `context.cart` on every
   request, whichever view sends it. No surface owns it.
 - **Every surface uses the one public Thermidor catalog** (`createSurface.catalogId`). The views
   differ in which of its components they use, not in which catalog.
 - **The server keeps every surface.** Each one gets a fresh `ui-<uuid>` id and stays in the
   session's state until the agent deletes it; a new page does not delete the previous page's
-  surfaces. The app draws only the current visit's.
+  surfaces. The app draws only the current page's.
 - **Every live surface takes actions.** The session sends an action from any surface that is still
   alive, whichever turn created it, so a page stays usable after another view has sent a turn.
 
@@ -95,7 +96,7 @@ rather than tracking requests itself:
 
 - **Surfaces lock from the request in flight.** Each view draws its surfaces with
   `demo-schema-react`'s `TurnSurfaces`, which locks them while `session.request` is set
-  (`src/views/ViewSurfaces.tsx`). A view only sees the requests of its own turns.
+  (`src/views/ViewSurfaces.tsx`). A page only sees the requests of its own turn and surfaces.
 - **Loading placeholders come from the data model.** A surface whose data model declares
   `isLoading: true` is drawn as its component's skeleton while its turn streams
   (`DiscoveredSurface.isLoading`). The session drops a placeholder its turn left behind.
@@ -112,23 +113,35 @@ A cancelled request unwinds a few microtasks after `session.cancel()`, so the ne
 
 ### Going back
 
-The app keeps the tab's visits (`src/navigation.ts`). The assistant page's **Back to <page>**
-button shows the visit before it again, with the same visit id, instead of opening a new one:
+The URL names the page, and the browser keeps the history: the app keeps none
+(`src/navigation.ts`). The server keeps each surface's state, so it is the one that shows a page
+again:
 
-- **Nothing is sent.** A page sends its prompt the first time its visit is shown only. The session
-  keeps every surface and its data model, so the page draws its own turns' surfaces as they were:
-  the facets, sort and products of a listing or a search stay as the shopper left them.
-- **Actions go on the view of the surface's turn.** An action is sent with the view of the turn that
-  created its surface, which is the earlier page's once the shopper has gone back. Its response
-  streams into the session's latest turn, so a view also locks its surfaces while an action from one
-  of them is in flight.
-- **Opening a page after going back drops the visits ahead**, as a browser does.
+| Page      | URL                              |
+| --------- | -------------------------------- |
+| Home      | `/`                              |
+| Assistant | `/assistant?q=<prompt>`          |
+| Search    | `/search?q=<query>&surface=<id>` |
+| Listing   | `/listing/<slug>?surface=<id>`   |
+
+- **The URL names the search surface.** Once a search or listing page's turn creates its search
+  surface, the app writes its id into the URL (`history.replaceState`).
+- **A page shown again asks the server to restore it.** The browser's Back or Forward, or opening
+  the URL, sends the page's prompt as usual, with `context.custom.restoreSurfaceId` set to the id in
+  the URL. When the session still has that surface, the server sends it again, same id, with its
+  current state (facets, sort, page as last acted on), and runs no search. Otherwise it runs the
+  search, and the app puts the new id in the URL. A restore is an ordinary turn, and the page draws
+  only what it sends back.
+- **Assistant answers aren't restored yet.** Coming back to one with the browser sends nothing, and
+  the page says that going back to an answer isn't supported yet.
 
 ## Known limits
 
 - **Requests are serialized.** One request is in flight at a time, for every view. With one
   session per view, several stream at once. ADR-018 keeps this for the EAP.
 - **No query suggestions.** The search box sends nothing while typing; see below.
+- **Assistant answers can't be shown again.** The server has no way to restore an answer yet, so
+  the page says so instead of asking again.
 - **Listing pages are searches.** The published contract has no view id for them, so a listing sends
   its category as a search on `storefront-preview-search`.
 - **The home page sends nothing.** A request needs a message or an action, and the server gives
@@ -153,15 +166,15 @@ button shows the visit before it again, with the same visit id, instead of openi
 e2e/
 └── storefront.e2e.ts           Playwright walk through every page, against the mock
 src/
-├── StorefrontApp.tsx           The header over the page, actions, page visits
-├── navigation.ts               Page visits, their history and the listing pages
+├── StorefrontApp.tsx           The header over the page, actions, the page the URL names
+├── navigation.ts               URL ↔ page, and the listing pages
 ├── session/
 │   ├── storefront-session.tsx  The ONE session, its configuration and context providers
-│   ├── turn-scheduler.ts       The latest prompt of each view, sent once the session is free
+│   ├── turn-scheduler.ts       The page's prompt, sent once the session is free, and its turn
 │   └── cart-store.ts           The app's cart, sent in context.cart
 ├── views/
-│   ├── view-surfaces.ts        View → surfaces: each view draws its own turns' surfaces
-│   └── ViewSurfaces.tsx        Draws them with TurnSurfaces, locked by the view's own request
+│   ├── view-surfaces.ts        Page → surfaces: a page draws its own turn's surfaces
+│   └── ViewSurfaces.tsx        Draws them with TurnSurfaces, locked by the page's own request
 ├── a2ui/
 │   ├── catalog.ts              The renderers for the Storefront components
 │   └── AddToCartButton/        The button added to every product card
@@ -192,11 +205,13 @@ It keeps each session's state between requests:
   client only gets its id. Picking it opens a search surface whose actions are answered from the
   kept search (`templates/schema-response-search.ts`);
 - **each search surface,** under its own `ui-<uuid>` id, with the search it shows, so a second
-  search never replaces the first and its actions answer from its own search;
+  search never replaces the first, its actions answer from its own search, and a page shown again
+  can ask for it back in `context.custom.restoreSurfaceId`;
 - **the cart:** the request's `context.cart` replaces it, then an `updateCart` action applies to it;
 - **one turn at a time:** another assistant or search request while one runs gets a 409.
 
 On `storefront-preview-assistant`, a message runs the agent (the storefront and schema scenarios),
 which is told what the shopper is looking at on the search surface. On `storefront-preview-search`,
-a message opens a search surface for that query. On both, an action is answered by the server.
+a message opens a search surface for that query, or, with a `restoreSurfaceId` the session still
+has, sends that surface again with its current state. On both, an action is answered by the server.
 `storefront-preview` and `storefront-preview-home` get an empty run, and any other view gets a 400.
