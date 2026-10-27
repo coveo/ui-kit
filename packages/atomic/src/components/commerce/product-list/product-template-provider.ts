@@ -5,6 +5,8 @@ import {
   type TemplateProviderProps,
 } from '../../common/template-provider/template-provider';
 import '../atomic-product-template/atomic-product-template.js';
+import '@/src/components/commerce/atomic-product-section-name/atomic-product-section-name.js';
+import '@/src/components/commerce/atomic-product-section-visual/atomic-product-section-visual.js';
 
 export class ProductTemplateProvider extends TemplateProvider<Product> {
   constructor(

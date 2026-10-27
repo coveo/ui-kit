@@ -1,5 +1,5 @@
 import {html, nothing} from 'lit';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {page, userEvent} from 'vitest/browser';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
@@ -326,6 +326,80 @@ describe('atomic-modal', () => {
 
         const focusTrap = element.shadowRoot?.querySelector('atomic-focus-trap');
         expect(focusTrap?.source).toBe(sourceElement);
+      });
+
+      describe('when source is not specified', () => {
+        let opener: HTMLButtonElement;
+
+        beforeEach(() => {
+          opener = document.createElement('button');
+          document.body.appendChild(opener);
+        });
+
+        afterEach(() => {
+          opener.remove();
+        });
+
+        it('should render atomic-focus-trap with the element focused when the modal opened as the source', async () => {
+          const {element} = await renderModal();
+          opener.focus();
+
+          element.isOpen = true;
+          await element.updateComplete;
+
+          const focusTrap = element.shadowRoot?.querySelector('atomic-focus-trap');
+          expect(focusTrap?.source).toBe(opener);
+        });
+
+        it('should keep the specified source over the element focused when the modal opened', async () => {
+          const sourceElement = document.createElement('button');
+          const {element} = await renderModal({source: sourceElement});
+          opener.focus();
+
+          element.isOpen = true;
+          await element.updateComplete;
+
+          const focusTrap = element.shadowRoot?.querySelector('atomic-focus-trap');
+          expect(focusTrap?.source).toBe(sourceElement);
+        });
+
+        it('should not keep the element focused on a previous open as the source', async () => {
+          const {element} = await renderModal();
+          opener.focus();
+          element.isOpen = true;
+          await element.updateComplete;
+          element.isOpen = false;
+          await element.updateComplete;
+          const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          svg.setAttribute('tabindex', '0');
+          document.body.appendChild(svg);
+          svg.focus();
+
+          element.isOpen = true;
+          await element.updateComplete;
+          svg.remove();
+
+          const focusTrap = element.shadowRoot?.querySelector('atomic-focus-trap');
+          expect(focusTrap?.source).toBeUndefined();
+        });
+
+        it('should not use an element focused inside the shadow root of a slotted element as the source', async () => {
+          const {element} = await renderModal({isOpen: true});
+          const slotted = document.createElement('div');
+          slotted.slot = 'body';
+          const innerButton = document.createElement('button');
+          slotted.attachShadow({mode: 'open'}).appendChild(innerButton);
+          element.appendChild(slotted);
+          innerButton.focus();
+
+          element.isOpen = false;
+          await element.updateComplete;
+          element.isOpen = true;
+          await element.updateComplete;
+
+          const focusTrap = element.shadowRoot?.querySelector('atomic-focus-trap');
+          expect(focusTrap?.source).not.toBe(innerButton);
+        });
       });
 
       it('should render atomic-focus-trap with the correct container when specified', async () => {
