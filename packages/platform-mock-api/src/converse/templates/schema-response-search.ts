@@ -696,7 +696,15 @@ interface PriceRange {
   end: number;
 }
 
+// The search ran another query than the shopper's: a correction or a query trigger replaced it.
+interface QueryCorrection {
+  originalQuery: string;
+  cause: 'correction' | 'trigger';
+}
+
 interface SearchViewState {
+  query: string;
+  correction: QueryCorrection | null;
   page: number;
   pageSize: number;
   sortCriteria: string;
@@ -717,7 +725,12 @@ interface SearchViewState {
   categoryFacetDisplayCount: number;
 }
 
+// The only query the catalog answers; any other query has no results.
+const CATALOG_QUERY = 'Water Sports';
+
 const DEFAULT_VIEW: SearchViewState = {
+  query: CATALOG_QUERY,
+  correction: null,
   page: 0,
   pageSize: DEFAULT_PAGE_SIZE,
   sortCriteria: 'relevance',
@@ -753,6 +766,8 @@ const FACET_FIELDS = {
 
 const BREADBOX_ID = 'breadbox-2';
 
+const QUERY_SUMMARY_ID = 'query-summary-2';
+
 function sortProducts(input: WaterSportsProduct[], sortCriteria: string): WaterSportsProduct[] {
   if (sortCriteria === 'price_asc') {
     return [...input].sort((a, b) => a.ec_price - b.ec_price);
@@ -765,6 +780,9 @@ function sortProducts(input: WaterSportsProduct[], sortCriteria: string): WaterS
 }
 
 function filterProducts(view: SearchViewState): WaterSportsProduct[] {
+  if (view.query.toLowerCase() !== CATALOG_QUERY.toLowerCase()) {
+    return [];
+  }
   return products.filter((p) => {
     if (view.excludedBrands.includes(p.ec_brand)) {
       return false;
@@ -1097,16 +1115,16 @@ function computeComponentsState(view: SearchViewState): Record<string, unknown> 
   // The query-summary owns its own backend-computed aggregate (query + result window) so it does
   // not read the search-box, pagination, and product-list state. Indices are 1-based; on an empty
   // result set the window collapses to 0-0 and the renderer shows the no-results/empty state.
-  const query = 'Water Sports';
   const firstIndex = totalEntries === 0 ? 0 : start + 1;
   const lastIndex = totalEntries === 0 ? 0 : start + pageProducts.length;
 
   return {
-    'query-summary-2': {
-      query,
+    [QUERY_SUMMARY_ID]: {
+      query: view.query,
       firstIndex,
       lastIndex,
       totalEntries,
+      ...(view.correction ? {correction: view.correction} : {}),
     },
     'product-list-2': {
       products: pageProducts,
@@ -1139,7 +1157,7 @@ function computeComponentsState(view: SearchViewState): Record<string, unknown> 
 // each entry `computeComponentsState` produces, so a node's `{ path }` bindings resolve to the
 // fields of the whole-component value written at `statePath(id)`.
 const STATE_FIELDS_BY_NODE: Record<string, readonly string[]> = {
-  'query-summary-2': ['query', 'firstIndex', 'lastIndex', 'totalEntries'],
+  [QUERY_SUMMARY_ID]: ['query', 'firstIndex', 'lastIndex', 'totalEntries', 'correction'],
   'product-list-2': ['products'],
   'pagination-2': ['page', 'pageSize', 'totalEntries', 'totalPages'],
   'page-size-2': ['pageSize'],
@@ -1205,7 +1223,7 @@ const ROOT_CHILD_IDS = ['search-sidebar', 'search-main'];
 const MAIN_CHILD_IDS = [BREADBOX_ID, 'search-top', 'product-list-2', 'search-bottom'];
 
 // The top row places the query summary on the left and the sort selector on the right.
-const TOP_ROW_CHILD_IDS = ['query-summary-2', 'sort-2'];
+const TOP_ROW_CHILD_IDS = [QUERY_SUMMARY_ID, 'sort-2'];
 
 // The bottom row places pagination on the left and the page-size selector on the right.
 const BOTTOM_ROW_CHILD_IDS = ['pagination-2', 'page-size-2'];
@@ -1284,9 +1302,9 @@ const SEARCH_SURFACE_NODES: A2uiComponentNode[] = [
     ...bindStateFields(BREADBOX_ID, STATE_FIELDS_BY_NODE[BREADBOX_ID]),
   },
   {
-    id: 'query-summary-2',
+    id: QUERY_SUMMARY_ID,
     component: 'QuerySummary',
-    ...bindStateFields('query-summary-2', STATE_FIELDS_BY_NODE['query-summary-2']),
+    ...bindStateFields(QUERY_SUMMARY_ID, STATE_FIELDS_BY_NODE[QUERY_SUMMARY_ID]),
   },
   {
     id: 'sort-2',
@@ -1336,9 +1354,10 @@ const surfaceActivitySnapshot: ConverseEvent = ActivitySnapshot({
 });
 
 // A new "water sports" search resets the surface, so the initial events are built on demand:
-// each call resets the in-memory view to defaults and recomputes the initial state snapshot.
-function buildWaterSportsInitialEvents(): ConverseEvent[] {
-  currentView = {...DEFAULT_VIEW};
+// each call resets the in-memory view to defaults and recomputes the initial state snapshot. A
+// correction says the shopper typed another query, which a correction or query trigger replaced.
+function buildWaterSportsInitialEvents(correction: QueryCorrection | null = null): ConverseEvent[] {
+  currentView = {...DEFAULT_VIEW, correction};
   // Component_State is transported inline as `/state/<id>` updateDataModel ops on an
   // `a2ui-surface` activity, replacing the removed component STATE_SNAPSHOT.
   const initialStateActivity: ConverseEvent = UpdateDataModelActivity({
@@ -1636,6 +1655,19 @@ function deriveBreadboxViewState(action: {name: string; context: Record<string, 
   }
 }
 
+// Searches the shopper's query as typed: nothing replaces it again.
+function deriveQuerySummaryViewState(action: {
+  name: string;
+  context: Record<string, unknown>;
+}): void {
+  if (action.name === 'overrideCorrection') {
+    currentView = {
+      ...DEFAULT_VIEW,
+      query: String(action.context.originalQuery ?? currentView.query),
+    };
+  }
+}
+
 function deriveNonFacetState(action: {name: string; context: Record<string, unknown>}): void {
   switch (action.name) {
     case 'selectPage':
@@ -1686,6 +1718,9 @@ function deriveViewState(
     case BREADBOX_ID:
       deriveBreadboxViewState(action);
       break;
+    case QUERY_SUMMARY_ID:
+      deriveQuerySummaryViewState(action);
+      break;
     default:
       deriveNonFacetState(action);
       break;
@@ -1725,4 +1760,13 @@ function buildWaterSportsActionEvents(
   });
 }
 
-export {buildWaterSportsInitialEvents, buildWaterSportsActionEvents};
+// A prompt mints the surface id after building its events, so it hands the minted id back here: the
+// surface's first action then starts from the view its prompt built, correction included.
+function keepWaterSportsView(templateSurfaceId: string, surfaceId: string): void {
+  if (templateSurfaceId === SEARCH_SURFACE_ID) {
+    viewsBySurfaceId.set(surfaceId, currentView);
+  }
+}
+
+export {buildWaterSportsInitialEvents, buildWaterSportsActionEvents, keepWaterSportsView};
+export type {QueryCorrection};

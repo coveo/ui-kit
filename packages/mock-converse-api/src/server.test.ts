@@ -125,6 +125,31 @@ describe('createMockConverseServer', () => {
     expect(res.headers['content-type']).toBe('text/event-stream');
   });
 
+  it("keeps a corrected search's correction on the first action of its surface", async () => {
+    await startServer();
+    const post = (body: unknown) =>
+      makeRequest(
+        server,
+        {method: 'POST', path: '/converse-schema', headers: {'Content-Type': 'application/json'}},
+        JSON.stringify(body)
+      );
+
+    const prompt = await post({message: 'water sprots'});
+    const surfaceId = /"surfaceId":"(ui-commerce-water-sports-\d+)"/.exec(prompt.body)![1];
+    const page = await post({
+      action: {
+        name: 'selectPage',
+        context: {page: 1},
+        sourceComponentId: 'pagination-2',
+        surfaceId,
+      },
+    });
+
+    expect(page.body).toContain(
+      '"correction":{"originalQuery":"water sprots","cause":"correction"}'
+    );
+  });
+
   it('returns 400 for invalid JSON payload', async () => {
     await startServer();
     const res = await makeRequest(

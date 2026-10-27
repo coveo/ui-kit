@@ -671,3 +671,56 @@ describe('schema-response-search state per surface', () => {
     expect(new Set(brands(second)).size).toBeGreaterThan(1);
   });
 });
+
+describe('schema-response-search query correction', () => {
+  const summary = (events: ConverseEvent[]) =>
+    collectComponentState(events)['query-summary-2'] as Record<string, unknown>;
+
+  it('declares the correction as a QuerySummary state field', () => {
+    const nodes = findCreateSurface(resetSurface())!.components as Array<Record<string, unknown>>;
+    const querySummary = nodes.find((node) => node.id === 'query-summary-2')!;
+    expect(querySummary.correction).toEqual({path: '/state/query-summary-2/correction'});
+  });
+
+  it('shows no correction for a query searched as typed', () => {
+    expect(Object.keys(summary(resetSurface())).sort()).toEqual(
+      ['firstIndex', 'lastIndex', 'query', 'totalEntries'].sort()
+    );
+  });
+
+  it.each([
+    ['water sprots', 'correction'],
+    ['swim gear', 'trigger'],
+  ])('shows the catalog results for "%s", replaced by a %s', (prompt, cause) => {
+    const state = summary(matchSchemaPrompt(prompt));
+    expect(state).toEqual({
+      query: 'Water Sports',
+      firstIndex: 1,
+      lastIndex: 12,
+      totalEntries: 43,
+      correction: {originalQuery: prompt, cause},
+    });
+  });
+
+  it('keeps the correction when changing page', () => {
+    matchSchemaPrompt('water sprots');
+    const state = summary(buildSearchActionEvents({name: 'selectPage', context: {page: 1}}));
+    expect(state.correction).toEqual({originalQuery: 'water sprots', cause: 'correction'});
+    expect(state.firstIndex).toBe(13);
+  });
+
+  it('searches the original query on overrideCorrection, without a correction', () => {
+    matchSchemaPrompt('water sprots');
+    const events = buildSearchActionEvents({
+      name: 'overrideCorrection',
+      context: {originalQuery: 'water sprots'},
+      sourceComponentId: 'query-summary-2',
+    });
+    expect(summary(events)).toEqual({
+      query: 'water sprots',
+      firstIndex: 0,
+      lastIndex: 0,
+      totalEntries: 0,
+    });
+  });
+});
