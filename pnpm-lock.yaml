@@ -555,8 +555,8 @@ importers:
         specifier: 8.20.0
         version: 8.20.0
       axe-core:
-        specifier: 4.14.0
-        version: 4.14.0
+        specifier: 4.13.0
+        version: 4.13.0
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -9094,10 +9094,6 @@ packages:
 
   axe-core@4.13.0:
     resolution: {integrity: sha512-UzGt8zg7Ny8djbYMhxl2zuEevVa7r2gJjYY5Lwr1xM7+XU2nd6CkIWFTVcCIbAP63vSz71NaVyyuSk9lHKcy0A==}
-    engines: {node: '>=4'}
-
-  axe-core@4.14.0:
-    resolution: {integrity: sha512-9WTZxEjsZ7b13TH8JPmbV2z8CHbl80/2hm3XPEG4JgNdQLK81IBRXmSxHfMAOkSqQeRxT/0dwNDz2GOm3zzpcQ==}
     engines: {node: '>=4'}
 
   axios@1.20.0:
@@ -23535,8 +23531,6 @@ snapshots:
 
   axe-core@4.13.0: {}
 
-  axe-core@4.14.0: {}
-
   axios@1.20.0(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1):
     dependencies:
       follow-redirects: 1.16.1(debug@4.4.3(supports-color@8.1.1))
@@ -31721,7 +31715,7 @@ snapshots:
   storybook@10.2.13(@testing-library/dom@10.4.2)(prettier@3.9.10)(react@19.2.8):
     dependencies:
       '@storybook/global': 5.0.0
-      '@storybook/icons': 2.1.0(react@19.2.8)
+      '@storybook/icons': 2.2.0(react@19.2.8)
       '@testing-library/jest-dom': 6.9.1
       '@testing-library/user-event': 14.6.8(@testing-library/dom@10.4.2)
       '@vitest/expect': 3.2.4
