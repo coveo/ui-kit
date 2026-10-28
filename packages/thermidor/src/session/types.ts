@@ -16,7 +16,7 @@ export type TurnStatus = 'streaming' | 'complete' | 'error';
  * The server-authoritative UI state of the session, keyed BY SURFACE: each live
  * surface owns its own data model at `state[surfaceId]`, into which validated
  * `updateDataModel` ops are applied at their `/state/<nodeId>` pointer, whichever
- * turn carried them (ADR-018). Keying by surface keeps two surfaces that share a
+ * turn carried them. Keying by surface keeps two surfaces that share a
  * node id (every surface has a `root`) from colliding.
  */
 export type A2uiState = Record<string, unknown>;
@@ -24,9 +24,9 @@ export type A2uiState = Record<string, unknown>;
 /**
  * A discovered renderable region derived from `activities`, exposed as the
  * session's live surfaces and as each turn's {@link TurnResponse.surfaces}
- * (ADR-015 interim). Each entry carries a non-empty `surfaceId` and a non-empty
+ * (interim). Each entry carries a non-empty `surfaceId` and a non-empty
  * `rootComponentType`. A surface lives from its `createSurface` until its
- * `deleteSurface`, whichever runs carry them (ADR-018); a deleted surface leaves
+ * `deleteSurface`, whichever runs carry them; a deleted surface leaves
  * the lists, and so does a loading placeholder its turn left behind once it
  * stopped streaming.
  */
@@ -34,7 +34,7 @@ export interface DiscoveredSurface {
   surfaceId: string;
   /**
    * The root node's PascalCase `component` discriminant; interim: compared
-   * against `'CommerceSearch'` by consumers/nav (ADR-015).
+   * against `'CommerceSearch'` by consumers/nav.
    */
   rootComponentType: string;
   /**
@@ -59,7 +59,7 @@ export interface DiscoveredSurface {
  * projection performs that downgrade so a consumer can hand the stream straight
  * to a renderer without writing version-aware code of their own.
  *
- * INTERIM: this is recorded debt (ADR-015 addendum), removed in a breaking change
+ * INTERIM: this is recorded debt, removed in a breaking change
  * once a v1.0-capable renderer exists. Kept deliberately untyped beyond
  * "record" — the per-operation shapes belong to the renderer's protocol, not to
  * thermidor's domain model, and pinning them here would deepen the coupling this
@@ -137,7 +137,7 @@ export interface Activity {
   payload: Record<string, unknown>;
   /**
    * The AG-UI `metadata` of the event that carried the activity, when it had one. A producer
-   * announces the turn-opening actions of a surface under its `turnOpeningActions` key (ADR-019).
+   * announces the turn-opening actions of a surface under its `turnOpeningActions` key.
    */
   metadata?: Record<string, unknown>;
 }
@@ -152,10 +152,15 @@ export interface TurnAgent {
 }
 
 /**
- * A request the session is sending: a prompt that streams a turn, or a component action whose
- * response streams into the active turn (a follow-up included).
+ * A request the session is sending: the `initialize` that opens the session, a prompt that streams
+ * a turn, or a component action (a follow-up included).
  */
-export type SessionRequest = PromptRequest | ActionRequest;
+export type SessionRequest = InitializeRequest | PromptRequest | ActionRequest;
+
+/** The `initialize` action the session sends to open itself, recorded as `Session.initialization`. */
+export interface InitializeRequest {
+  kind: 'initialize';
+}
 
 /** A prompt the session is sending, streaming into a new turn or a retried one. */
 export interface PromptRequest {
@@ -175,8 +180,11 @@ export interface ActionRequest {
   surfaceId: string;
   /** The id of the node that dispatched the action. */
   sourceComponentId: string;
-  /** The turn the action's response streams into. */
-  turnId: string;
+  /**
+   * The turn the action's response streams into: the turn it opens, or the active turn. Absent
+   * before the first turn, when the response is recorded with `Session.initialization`.
+   */
+  turnId?: string;
 }
 
 /**
@@ -230,9 +238,9 @@ export interface TurnAction {
  * The streamed result of a {@link Turn}.
  *
  * `activities` is routing-neutral and always present. `surfaces` is a derived
- * projection of the session's activities (ADR-015 interim). `agent` is present
+ * projection of the session's activities (interim). `agent` is present
  * only when the router invoked an agent. The session's renderer stream and
- * component state span every turn, so they live on the session (ADR-018).
+ * component state span every turn, so they live on the session.
  */
 export interface TurnResponse {
   /**
@@ -256,6 +264,23 @@ export interface TurnResponse {
    * Agent-specific content. Present ONLY when the router invoked an agent.
    */
   agent?: TurnAgent;
+}
+
+/**
+ * The run of the `initialize` action that opens a session, exposed as `Session.initialization`.
+ * Not a turn: it never appears in `Session.turns`.
+ */
+export interface SessionInitialization {
+  /**
+   * The run's snapshot activities in first-seen order, merged by `messageId` as in
+   * {@link TurnResponse.activities}. They come first in the session's activity log. The surface
+   * snapshots of a component action dispatched before the first turn are recorded here too.
+   */
+  activities: Activity[];
+  /** `'streaming'` while `initialize` is in flight, then `'complete'` or `'error'`. */
+  status: TurnStatus;
+  /** Why `initialize` failed. Present when `status === 'error'`, absent otherwise. */
+  error?: string;
 }
 
 /**

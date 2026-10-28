@@ -6,7 +6,7 @@
  */
 
 import type {RendererStream} from './a2ui-v09-projection.js';
-import type {A2uiState, ActionError, SessionRequest} from './types.js';
+import type {A2uiState, ActionError, SessionInitialization, SessionRequest} from './types.js';
 
 /**
  * A function that removes a previously-registered store listener.
@@ -22,6 +22,9 @@ export interface SessionStoreState<TTurn> {
    * The ordered turn history for the session.
    */
   turns: readonly TTurn[];
+
+  /** The run of the `initialize` action that opened the session, when it sent one. Persisted. */
+  initialization?: SessionInitialization;
 
   /**
    * The id of the currently active turn, or `undefined` when no turns exist.

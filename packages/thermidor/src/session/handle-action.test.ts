@@ -140,6 +140,7 @@ const baseConfig: SessionConfig = {
   contracts,
   organizationId: 'org-1',
   accessToken: 'token-1',
+  initialize: false,
 };
 
 /**
