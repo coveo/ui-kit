@@ -6,6 +6,7 @@ import {
   createTestSession,
   findSearchBox,
   renderWithSession,
+  run,
   sseResponse,
   suggestionsRun,
   SHELL_SURFACE_ID,
@@ -62,6 +63,32 @@ describe('QuerySuggestions', () => {
     await waitFor(() => expect(options()).toEqual(['surf boards', 'surf wax']));
   });
 
+  it('bolds the query the completions answer', async () => {
+    const {type} = await renderSearchBox();
+
+    type('surf');
+
+    await waitFor(() => expect(options()).toEqual(['surf boards', 'surf wax']));
+    expect(
+      screen.getAllByRole('option').map((option) => option.querySelector('strong')?.textContent)
+    ).toEqual(['surf', 'surf']);
+  });
+
+  it('bolds the query only where it starts a word', async () => {
+    const {type} = await renderSearchBox((request) =>
+      request.action?.name === 'fetchSuggestions'
+        ? sseResponse(suggestionsRun(SHELL_SURFACE_ID, 'shoe', ['snowshoes', 'shoe rack']))
+        : answerShell(request)
+    );
+
+    type('shoe');
+
+    await waitFor(() => expect(options()).toEqual(['snowshoes', 'shoe rack']));
+    expect(
+      screen.getAllByRole('option').map((option) => option.querySelector('strong')?.textContent)
+    ).toEqual([undefined, 'shoe']);
+  });
+
   it('sends nothing for an empty or blank query', async () => {
     const {type, queriesSent} = await renderSearchBox();
 
@@ -73,15 +100,30 @@ describe('QuerySuggestions', () => {
     expect(queriesSent()).toEqual([]);
   });
 
-  it('hides completions that answer another query than the one in the input', async () => {
+  it('keeps the last completions shown while typing until the next ones arrive', async () => {
     const {type} = await renderSearchBox();
     type('surf');
     await waitFor(() => expect(options()).toHaveLength(2));
 
     type('surfx');
 
-    expect(options()).toEqual([]);
+    expect(options()).toEqual(['surf boards', 'surf wax']);
     await waitFor(() => expect(options()).toEqual(['surfx boards', 'surfx wax']));
+  });
+
+  it('hides the last completions once a newer request fails', async () => {
+    const {type} = await renderSearchBox((request) =>
+      request.action?.name === 'fetchSuggestions' && request.action.context['query'] === 'surfx'
+        ? new Response('', {status: 500})
+        : answerShell(request)
+    );
+    type('surf');
+    await waitFor(() => expect(options()).toHaveLength(2));
+
+    type('surfx');
+    expect(options()).toEqual(['surf boards', 'surf wax']);
+
+    await waitFor(() => expect(options()).toEqual([]));
   });
 
   it('gives each completion an id without whitespace', async () => {
@@ -106,6 +148,26 @@ describe('QuerySuggestions', () => {
     type('w');
     expect(options()).toEqual([]);
     await waitFor(() => expect(options()).toEqual(['w boards', 'w wax']));
+  });
+
+  it('hides completions while an answer streams', async () => {
+    let finish!: () => void;
+    const {type, session} = await renderSearchBox((request) => {
+      if (request.message !== null) {
+        return new Promise<Response>((resolve) => {
+          finish = () => resolve(sseResponse(run([])));
+        });
+      }
+      return answerShell(request);
+    });
+    type('surf');
+    await waitFor(() => expect(options()).toHaveLength(2));
+
+    act(() => void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'paddles'}}));
+
+    await waitFor(() => expect(options()).toEqual([]));
+    await act(async () => finish());
+    await waitFor(() => expect(options()).toEqual(['surf boards', 'surf wax']));
   });
 
   it('submits the expression of a selected completion', async () => {

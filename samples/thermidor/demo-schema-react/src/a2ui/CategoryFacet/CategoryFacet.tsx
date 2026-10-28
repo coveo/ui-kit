@@ -1,6 +1,7 @@
 import {useId} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import {type CategoryFacetAction, CategoryFacetPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {HighlightedText} from '../../components/HighlightedText/HighlightedText.js';
 import {FacetSearchMoreMatches} from '../FacetSearchMoreMatches/FacetSearchMoreMatches.js';
 import {ChevronLeftIcon, SearchIcon} from '../icons/index.js';
 import {useOptimisticFacetSearch} from '../use-optimistic-facet-search.js';
@@ -116,7 +117,9 @@ export const CategoryFacet = createReactComponent(
                       onClick={() => optimisticFacet.descendInto(result)}
                     >
                       <span className={styles.searchResultValue}>
-                        <span className={styles.valueLabel}>{result.value}</span>
+                        <span className={styles.valueLabel}>
+                          <HighlightedText text={result.value} query={searchQuery} />
+                        </span>
                         <span className={styles.count}>({result.numberOfResults})</span>
                       </span>
                       <span

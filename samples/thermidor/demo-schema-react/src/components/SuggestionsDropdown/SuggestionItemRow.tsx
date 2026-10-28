@@ -1,3 +1,4 @@
+import {HighlightedText} from '../HighlightedText/HighlightedText.js';
 import type {SuggestionItem, SuggestionIconType} from './types.js';
 import styles from './SuggestionItemRow.module.css';
 
@@ -78,7 +79,9 @@ export function SuggestionItemRow({item, icon, isActive, onSelect, id}: Suggesti
     >
       <IconComponent />
       <div className={styles.content}>
-        <span className={styles.label}>{item.label}</span>
+        <span className={styles.label}>
+          <HighlightedText text={item.label} query={item.highlight ?? ''} wordStartsOnly />
+        </span>
         {item.subtitle && <span className={styles.subtitle}>{item.subtitle}</span>}
       </div>
     </div>

@@ -125,7 +125,7 @@ The session sends `initialize` as soon as it is created, and the producer answer
 - once it has opened without a shell, or failed to, a plain input without suggestions does;
 - the shell is found in `session.surfaces` by its root component type, and is never drawn among a turn's surfaces.
 
-The `SearchBox` renderer draws the input and gives what is typed to `QuerySuggestions`, which sends it with `fetchSuggestions` once typing pauses and the session is free, and shows the completions of the query in the input in the search box's dropdown. Selecting a completion submits it. A submit cancels a suggestion in flight first (`submitQuery`), so a suggestion never holds a prompt back.
+The `SearchBox` renderer draws the input and gives what is typed to `QuerySuggestions`, which sends it with `fetchSuggestions` once typing pauses and the session is free, and shows its completions in the search box's dropdown. The last completions stay shown while newer ones are on their way, and the typed query is bold where it starts a word; facet search results bold it wherever it appears. Selecting a completion submits it. A submit cancels a suggestion in flight first (`submitQuery`), so a suggestion never holds a prompt back.
 
 ### Search blocks (decomposed commerce)
 

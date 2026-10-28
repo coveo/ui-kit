@@ -17,6 +17,9 @@ import {mountSurface} from './mount-surface.harness.js';
 
 afterEach(() => cleanup());
 
+const bolded = (element: Element | null) =>
+  [...(element?.querySelectorAll('strong') ?? [])].map((node) => node.textContent);
+
 describe('RegularFacet', () => {
   const stateWithValues: RegularFacetProps = {
     field: 'ec_brand',
@@ -183,6 +186,22 @@ describe('RegularFacet', () => {
     await waitFor(() =>
       expect(lastAction()).toMatchObject({name: 'toggleSelect', context: {value: 'Rip Curl'}})
     );
+  });
+
+  it('bolds the search query in search results only, inside words too', async () => {
+    mountFacet({
+      ...stateWithValues,
+      facetSearch: {
+        query: 'ip',
+        canShowMoreResults: false,
+        results: [{value: 'Rip Curl', numberOfResults: 3}],
+      },
+    });
+
+    await waitFor(() => expect(screen.getByTestId('facet-search-result-Rip Curl')).toBeDefined());
+    expect(bolded(screen.getByTestId('facet-search-result-Rip Curl').closest('label'))).toEqual([
+      'ip',
+    ]);
   });
 
   it('checks a facet-search result at once, until the backend answers', async () => {
@@ -742,6 +761,27 @@ describe('CategoryFacet', () => {
         context: {path: ['Sporting Goods', 'Water Sports', 'Wetsuits']},
       })
     );
+  });
+
+  it('bolds the search query in the value of search results, not in their path', async () => {
+    mountFacet({
+      ...stateWithChildren,
+      facetSearch: {
+        query: 'wet',
+        canShowMoreResults: false,
+        results: [
+          {
+            path: ['Sporting Goods', 'Wet Gear', 'Wetsuits'],
+            value: 'Wetsuits',
+            numberOfResults: 4,
+          },
+        ],
+      },
+    });
+
+    const testId = 'facet-search-result-Sporting Goods/Wet Gear/Wetsuits';
+    await waitFor(() => expect(screen.getByTestId(testId)).toBeDefined());
+    expect(bolded(screen.getByTestId(testId))).toEqual(['Wet']);
   });
 
   it('shows the parent path of search results that share a leaf value and selects each one by its own path', async () => {
