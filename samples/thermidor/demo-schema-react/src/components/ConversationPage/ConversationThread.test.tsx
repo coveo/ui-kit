@@ -173,6 +173,12 @@ describe('ConversationThread', () => {
       expect(placeholderRegion('turn-1/second')).toBeNull();
     });
 
+    it("keeps the latest turn's blocks from being used when read-only", () => {
+      renderPlaceholders(createTurn({status: 'streaming'}), {readOnly: true});
+
+      expect(placeholderRegion('turn-1/first')?.closest('fieldset')?.disabled).toBe(true);
+    });
+
     it('draws only the placeholders of the follow-up in flight', () => {
       const turn = createTurn({status: 'complete'});
 

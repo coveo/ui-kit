@@ -40,9 +40,30 @@ function Draft() {
   );
 }
 
+const storedConversation: SerializedSession = {
+  version: 2,
+  sessionId: 'session-2',
+  turns: [
+    {
+      id: 'turn-9',
+      input: {prompt: 'What did I ask last week?'},
+      status: 'complete',
+      response: {activities: []},
+    },
+  ],
+};
+
 function NewConversation() {
-  const {startNew} = useConversations();
-  return <button onClick={startNew}>New conversation</button>;
+  const {startNew, open, readOnly} = useConversations();
+  return (
+    <>
+      <button onClick={startNew}>New conversation</button>
+      <button onClick={() => open({sessionToRestore: storedConversation, readOnly: true})}>
+        Reopen
+      </button>
+      {readOnly && <p>Read-only</p>}
+    </>
+  );
 }
 
 function renderProvider() {
@@ -126,5 +147,31 @@ describe('SessionProvider', () => {
     await act(() => new Promise((resolve) => setTimeout(resolve, 0)));
 
     expect(sessionStorage.getItem(CURRENT_CONVERSATION_KEY)).toBeNull();
+  });
+
+  it('reopens a conversation read-only, keeping the current one for this tab', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')));
+    sessionStorage.setItem(CURRENT_CONVERSATION_KEY, JSON.stringify(keptConversation));
+    renderProvider();
+
+    fireEvent.click(screen.getByRole('button', {name: 'Reopen'}));
+    act(() => screen.getByRole('list', {name: 'Prompts'}).click());
+    await act(() => new Promise((resolve) => setTimeout(resolve, 0)));
+
+    expect(screen.getAllByRole('listitem')[0]?.textContent).toBe('What did I ask last week?');
+    expect(screen.getByText('Read-only')).toBeDefined();
+    expect(JSON.parse(sessionStorage.getItem(CURRENT_CONVERSATION_KEY) ?? 'null')).toEqual(
+      keptConversation
+    );
+  });
+
+  it('leaves a reopened conversation for a new one that can be continued', () => {
+    renderProvider();
+    fireEvent.click(screen.getByRole('button', {name: 'Reopen'}));
+
+    fireEvent.click(screen.getByRole('button', {name: 'New conversation'}));
+
+    expect(screen.queryAllByRole('listitem')).toEqual([]);
+    expect(screen.queryByText('Read-only')).toBeNull();
   });
 });
