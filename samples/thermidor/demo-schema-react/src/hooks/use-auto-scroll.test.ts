@@ -1,112 +1,119 @@
 import {describe, it, expect, vi, beforeEach} from 'vitest';
 import {renderHook} from '@testing-library/react';
 import {useAutoScroll} from './use-auto-scroll.js';
-import {makeTurn} from '../test/turn-fixtures.js';
+
+let resizeCallbacks: Array<() => void>;
 
 beforeEach(() => {
+  resizeCallbacks = [];
   vi.stubGlobal(
     'ResizeObserver',
     class {
+      constructor(callback: () => void) {
+        resizeCallbacks.push(callback);
+      }
       observe() {}
       unobserve() {}
       disconnect() {}
     }
   );
-  vi.stubGlobal('requestAnimationFrame', (cb: () => void) => cb());
+  vi.stubGlobal('requestAnimationFrame', (cb: () => void) => {
+    cb();
+    return 0;
+  });
+  vi.stubGlobal('cancelAnimationFrame', () => {});
 });
 
-function createMockContainer(overrides: Partial<HTMLDivElement> = {}) {
-  return {
-    clientHeight: 800,
-    offsetTop: 0,
-    scrollHeight: 1000,
-    scrollTo: vi.fn(),
-    style: {paddingBottom: ''},
-    ...overrides,
-  } as unknown as HTMLDivElement;
+/** An element whose box starts `top` pixels down the viewport. */
+function createElement(top: number) {
+  const element = document.createElement('div');
+  element.getBoundingClientRect = () => ({top}) as DOMRect;
+  return element;
 }
 
-function createMockTurnElement(overrides: Partial<HTMLDivElement> = {}): HTMLDivElement {
-  return {
-    offsetHeight: 60,
-    offsetTop: 100,
-    ...overrides,
-  } as unknown as HTMLDivElement;
+function createContainer(clientHeight: number) {
+  const container = createElement(0);
+  Object.defineProperty(container, 'clientHeight', {value: clientHeight, configurable: true});
+  container.style.paddingBottom = '16px';
+  container.scrollTo = vi.fn();
+  return container;
+}
+
+function setup({clientHeight = 800, turns = {'turn-1': 100} as Record<string, number>} = {}) {
+  const container = createContainer(clientHeight);
+  const turnRefs = {
+    current: new Map(Object.entries(turns).map(([id, top]) => [id, createElement(top)])),
+  };
+  const containerRef = {current: container};
+  const render = (latestTurnId: string | null) =>
+    renderHook(({latestTurnId}) => useAutoScroll({containerRef, turnRefs, latestTurnId}), {
+      initialProps: {latestTurnId},
+    });
+  const turn = (id: string) => turnRefs.current.get(id)!;
+  return {container, turn, render};
 }
 
 describe('useAutoScroll', () => {
-  it('scrolls to the latest turn when turns array grows', () => {
-    const container = createMockContainer();
-    const turnElement = createMockTurnElement();
-    const containerRef = {current: container};
-    const turnRefs = {current: new Map([['turn-1', turnElement]])};
+  it('scrolls the start of the latest turn to the top', () => {
+    const {container, render} = setup();
 
-    renderHook(() =>
-      useAutoScroll({
-        containerRef,
-        turnRefs,
-        turns: [makeTurn({id: 'turn-1', prompt: 'hello'})],
-        isStreaming: false,
-      })
-    );
+    render('turn-1');
 
-    expect(container.scrollTo).toHaveBeenCalledWith({
-      top: 80,
-      behavior: 'smooth',
-    });
-    expect(container.style.paddingBottom).toBe('720px');
+    expect(container.scrollTo).toHaveBeenCalledWith({top: 80, behavior: 'smooth'});
   });
 
-  it('does not scroll when turns array is empty', () => {
-    const container = createMockContainer();
-    const containerRef = {current: container};
-    const turnRefs = {current: new Map<string, HTMLDivElement>()};
+  it('makes the latest turn tall enough for its start to reach the top', () => {
+    const {turn, render} = setup({clientHeight: 500});
 
-    renderHook(() =>
-      useAutoScroll({
-        containerRef,
-        turnRefs,
-        turns: [],
-        isStreaming: false,
-      })
-    );
+    render('turn-1');
+
+    expect(turn('turn-1').style.minHeight).toBe('464px');
+  });
+
+  it('clamps the height to 0 in a container shorter than the margins', () => {
+    const {turn, render} = setup({clientHeight: 20});
+
+    render('turn-1');
+
+    expect(turn('turn-1').style.minHeight).toBe('0px');
+  });
+
+  it('does not scroll before the first turn', () => {
+    const {container, render} = setup();
+
+    render(null);
 
     expect(container.scrollTo).not.toHaveBeenCalled();
   });
 
-  it('calculates padding as containerHeight - bubbleHeight - MARGIN_TOP', () => {
-    const container = createMockContainer({clientHeight: 500} as Partial<HTMLDivElement>);
-    const turnElement = createMockTurnElement({offsetHeight: 100} as Partial<HTMLDivElement>);
-    const containerRef = {current: container};
-    const turnRefs = {current: new Map([['turn-1', turnElement]])};
+  it('scrolls to a follow-up turn once it starts, and releases the previous one', () => {
+    const {container, turn, render} = setup({turns: {'turn-1': 100, 'turn-2': 600}});
+    const {rerender} = render('turn-1');
 
-    renderHook(() =>
-      useAutoScroll({
-        containerRef,
-        turnRefs,
-        turns: [makeTurn({id: 'turn-1', prompt: 'hello'})],
-        isStreaming: false,
-      })
-    );
+    rerender({latestTurnId: 'turn-2'});
 
-    expect(container.style.paddingBottom).toBe('380px');
+    expect(container.scrollTo).toHaveBeenLastCalledWith({top: 580, behavior: 'smooth'});
+    expect(turn('turn-1').style.minHeight).toBe('');
+    expect(turn('turn-2').style.minHeight).toBe('764px');
   });
 
-  it('clamps padding to 0 when bubble is taller than container', () => {
-    const container = createMockContainer({clientHeight: 50} as Partial<HTMLDivElement>);
-    const turnElement = createMockTurnElement({offsetHeight: 100} as Partial<HTMLDivElement>);
-    const containerRef = {current: container};
-    const turnRefs = {current: new Map([['turn-1', turnElement]])};
+  it('does not follow the answer as it streams', () => {
+    const {container, render} = setup();
+    const {rerender} = render('turn-1');
 
-    renderHook(() =>
-      useAutoScroll({
-        containerRef,
-        turnRefs,
-        turns: [makeTurn({id: 'turn-1', prompt: 'hello'})],
-        isStreaming: false,
-      })
-    );
+    rerender({latestTurnId: 'turn-1'});
 
-    expect(container.style.paddingBottom).toBe('0px');
+    expect(container.scrollTo).toHaveBeenCalledOnce();
+  });
+
+  it('refits the latest turn when the container resizes', () => {
+    const {container, turn, render} = setup();
+    render('turn-1');
+    Object.defineProperty(container, 'clientHeight', {value: 400});
+
+    resizeCallbacks.forEach((callback) => callback());
+
+    expect(turn('turn-1').style.minHeight).toBe('364px');
+    expect(container.scrollTo).toHaveBeenCalledOnce();
   });
 });

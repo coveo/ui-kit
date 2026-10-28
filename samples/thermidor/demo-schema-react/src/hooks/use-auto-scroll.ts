@@ -1,134 +1,65 @@
-import {useCallback, useEffect, useRef} from 'react';
-import type {Turn} from '@coveo/thermidor';
+import {useCallback, useEffect} from 'react';
 
 const MARGIN_TOP = 20;
 
 interface UseAutoScrollOptions {
   containerRef: React.RefObject<HTMLDivElement | null>;
   turnRefs: React.RefObject<Map<string, HTMLDivElement>>;
-  turns: Turn[];
-  isStreaming: boolean;
+  /** The turn the shopper started last, if any. */
+  latestTurnId: string | null;
+}
+
+/** The turn's offset from the top of the container's scrolled content. */
+function turnOffset(container: HTMLElement, turn: HTMLElement): number {
+  return (
+    turn.getBoundingClientRect().top - container.getBoundingClientRect().top + container.scrollTop
+  );
 }
 
 /**
- * Automatically manages scroll position and bottom padding during conversation streaming.
+ * Keeps the turn the shopper started last at the top of the page.
  *
- * - Scrolls to the latest turn when new turns arrive
- * - Clears excess padding when streaming ends
- * - Recalculates padding on container resize
+ * - Scrolls the start of a new turn (a prompt, a follow-up chip, or a search option) to the top
+ *   of the container
+ * - Never follows the answer as it streams: what does not fit stays below the fold
+ * - Makes that turn at least as tall as the container, so its start can reach the top and stays
+ *   there when its answer shrinks, such as when a placeholder is dropped
  */
-export function useAutoScroll({
-  containerRef,
-  turnRefs,
-  turns,
-  isStreaming,
-}: UseAutoScrollOptions): void {
-  const lastScrolledTurnIdRef = useRef<string | null>(null);
-  const prevTurnCountRef = useRef<number>(0);
-  const hasMountedRef = useRef(false);
-  const prevStreamingRef = useRef(isStreaming);
-
-  const recalculatePadding = useCallback(() => {
+export function useAutoScroll({containerRef, turnRefs, latestTurnId}: UseAutoScrollOptions): void {
+  const fitLatestTurn = useCallback(() => {
     const container = containerRef.current;
-    if (!container) return;
+    const turn = latestTurnId === null ? undefined : turnRefs.current.get(latestTurnId);
+    if (!container || !turn) return;
 
-    const lastTurnId = lastScrolledTurnIdRef.current;
-    if (!lastTurnId) return;
+    const paddingBottom = parseFloat(getComputedStyle(container).paddingBottom) || 0;
+    const minHeight = Math.max(0, container.clientHeight - paddingBottom - MARGIN_TOP);
+    turn.style.minHeight = `${minHeight}px`;
+  }, [containerRef, turnRefs, latestTurnId]);
 
-    const targetElement = turnRefs.current.get(lastTurnId);
-    if (!targetElement) return;
+  // Scroll to each new turn as it starts
+  useEffect(() => {
+    if (latestTurnId === null) return;
+    const turn = turnRefs.current.get(latestTurnId);
+    fitLatestTurn();
 
-    const containerHeight = container.clientHeight;
-    const bubbleHeight = targetElement.offsetHeight;
-    const padding = Math.max(0, containerHeight - bubbleHeight - MARGIN_TOP);
-
-    container.style.paddingBottom = `${padding}px`;
-  }, [containerRef, turnRefs]);
-
-  const scrollToPrompt = useCallback(
-    (turnId: string) => {
+    const frame = requestAnimationFrame(() => {
       const container = containerRef.current;
-      if (!container) return;
+      if (!container || !turn) return;
+      container.scrollTo({top: turnOffset(container, turn) - MARGIN_TOP, behavior: 'smooth'});
+    });
+    return () => {
+      cancelAnimationFrame(frame);
+      if (turn) turn.style.minHeight = '';
+    };
+  }, [latestTurnId, containerRef, turnRefs, fitLatestTurn]);
 
-      const targetElement = turnRefs.current.get(turnId);
-      if (!targetElement) return;
-
-      lastScrolledTurnIdRef.current = turnId;
-
-      const containerHeight = container.clientHeight;
-      const bubbleHeight = targetElement.offsetHeight;
-      const padding = Math.max(0, containerHeight - bubbleHeight - MARGIN_TOP);
-
-      container.style.paddingBottom = `${padding}px`;
-
-      const elementOffset = targetElement.offsetTop - container.offsetTop;
-      container.scrollTo({top: elementOffset - MARGIN_TOP, behavior: 'smooth'});
-    },
-    [containerRef, turnRefs]
-  );
-
-  const clearPadding = useCallback(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const lastTurnId = lastScrolledTurnIdRef.current;
-    if (!lastTurnId) {
-      container.style.paddingBottom = '0px';
-      return;
-    }
-
-    const targetElement = turnRefs.current.get(lastTurnId);
-    if (!targetElement) {
-      container.style.paddingBottom = '0px';
-      lastScrolledTurnIdRef.current = null;
-      return;
-    }
-
-    const containerHeight = container.clientHeight;
-    const contentScrollHeight =
-      container.scrollHeight - parseInt(container.style.paddingBottom || '0', 10);
-    const elementOffset = targetElement.offsetTop - container.offsetTop;
-    const contentBelowPrompt = contentScrollHeight - elementOffset;
-    const neededPadding = Math.max(0, containerHeight - contentBelowPrompt);
-
-    container.style.paddingBottom = `${neededPadding}px`;
-  }, [containerRef, turnRefs]);
-
-  // Clear padding when streaming ends
-  useEffect(() => {
-    if (prevStreamingRef.current && !isStreaming) {
-      clearPadding();
-    }
-    prevStreamingRef.current = isStreaming;
-  }, [isStreaming, clearPadding]);
-
-  // Auto-scroll to latest turn when new turns arrive
-  useEffect(() => {
-    if (!hasMountedRef.current) {
-      hasMountedRef.current = true;
-      if (turns.length > 0) {
-        const lastTurn = turns[turns.length - 1];
-        requestAnimationFrame(() => scrollToPrompt(lastTurn.id));
-      }
-      prevTurnCountRef.current = turns.length;
-      return;
-    }
-
-    if (turns.length > prevTurnCountRef.current) {
-      const lastTurn = turns[turns.length - 1];
-      requestAnimationFrame(() => scrollToPrompt(lastTurn.id));
-    }
-
-    prevTurnCountRef.current = turns.length;
-  }, [turns, scrollToPrompt]);
-
-  // Recalculate padding on container resize
+  // Refit the latest turn when the container resizes
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    const observer = new ResizeObserver(() => recalculatePadding());
+    const observer = new ResizeObserver(() => fitLatestTurn());
     observer.observe(container);
     return () => observer.disconnect();
-  }, [containerRef, recalculatePadding]);
+  }, [containerRef, fitLatestTurn]);
 }

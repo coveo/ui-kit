@@ -26,7 +26,7 @@ export function ConversationPage({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const turnRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
-  useAutoScroll({containerRef, turnRefs, turns, isStreaming});
+  useAutoScroll({containerRef, turnRefs, latestTurnId: turns.at(-1)?.id ?? null});
 
   return (
     <section className={styles.page}>
