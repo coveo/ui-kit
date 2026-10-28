@@ -22,7 +22,6 @@ function fakeSession() {
       listeners.add(listener);
       return () => listeners.delete(listener);
     },
-    sendAndWait: () => Promise.resolve(),
     cancel: vi.fn(),
     dispatchAction: vi.fn(async () => {}),
   };
@@ -56,7 +55,6 @@ describe('useActionError', () => {
     const source: SessionRequestSource = {
       getSnapshot: () => ({...requestSnapshot(undefined), actionError}),
       subscribe: () => () => {},
-      sendAndWait: () => Promise.resolve(),
     };
     const wrapper = ({children}: {children: ReactNode}) => (
       <SessionRequestProvider value={source}>{children}</SessionRequestProvider>

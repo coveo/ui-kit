@@ -18,7 +18,7 @@ export interface OptimisticCategoryFacet {
 
 export function useOptimisticCategoryFacet(
   props: CategoryFacetProps,
-  dispatch: (action: CategoryFacetAction) => void
+  dispatch: (action: CategoryFacetAction) => void | Promise<void>
 ): OptimisticCategoryFacet {
   const [values, addOptimisticValues] = useOptimistic(props.values ?? NO_VALUES);
   const startGesture = useGesture();

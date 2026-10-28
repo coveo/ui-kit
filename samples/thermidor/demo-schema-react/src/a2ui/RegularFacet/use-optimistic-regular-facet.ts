@@ -16,7 +16,7 @@ export interface OptimisticRegularFacet {
 /** The show-more/less actions have no client-side projection, so they stay plain dispatches. */
 export function useOptimisticRegularFacet(
   props: RegularFacetProps,
-  dispatch: (action: RegularFacetAction) => void
+  dispatch: (action: RegularFacetAction) => void | Promise<void>
 ): OptimisticRegularFacet {
   const [values, addOptimisticValues] = useOptimistic(props.values ?? NO_VALUES);
   const startGesture = useGesture();

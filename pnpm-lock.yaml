@@ -2334,8 +2334,8 @@ importers:
   samples/thermidor/demo-schema-react:
     dependencies:
       '@copilotkit/a2ui-renderer':
-        specifier: 1.71.1
-        version: 1.71.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: 1.80.0
+        version: 1.80.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@coveo/thermidor':
         specifier: workspace:*
         version: link:../../../packages/thermidor
@@ -3647,8 +3647,8 @@ packages:
   '@colordx/core@5.8.0':
     resolution: {integrity: sha512-cG0QJAO6VkaRUlIb0zOzX9gfJgs1pjoOL9gZ/PK1kfvBs0GCkADu5oQh6gPxXgQnZ3gV575h+lQRC0NlMDTclA==}
 
-  '@copilotkit/a2ui-renderer@1.71.1':
-    resolution: {integrity: sha512-GGIWdY28F5F5vfbk5pGWtQWBs9WOjOFIcWxpaW8Ia7+EHhtBNTbrhQBqHeZZosBbtwKDPWQ1Fk7D2XR7vcOfgw==}
+  '@copilotkit/a2ui-renderer@1.80.0':
+    resolution: {integrity: sha512-B7luPDGQzepau6prJDHySNnZP0vPk3SBQXJTpoVXswi1GXnQylT+zGJ6nCV3kQPHJnbOtTNHxNREZVvVzJIjRg==}
     peerDependencies:
       react: 19.2.8
       react-dom: 19.2.8
@@ -18650,11 +18650,10 @@ snapshots:
 
   '@colordx/core@5.8.0': {}
 
-  '@copilotkit/a2ui-renderer@1.71.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+  '@copilotkit/a2ui-renderer@1.80.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
       '@a2ui/web_core': 0.10.4
       clsx: 2.1.1
-      lit: 3.3.3
       zod: 3.25.76
       zod-to-json-schema: 3.25.2(zod@3.25.76)
     optionalDependencies:

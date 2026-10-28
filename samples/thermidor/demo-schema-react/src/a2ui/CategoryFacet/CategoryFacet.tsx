@@ -43,9 +43,7 @@ export const CategoryFacet = createReactComponent(
     const labelId = useId();
     const searchInputId = useId();
 
-    const dispatch = (action: CategoryFacetAction) => {
-      context.dispatchAction(action);
-    };
+    const dispatch = (action: CategoryFacetAction) => context.dispatchAction(action);
     const search = useOptimisticFacetSearch(props.facetSearch?.query ?? '', dispatch);
     const optimisticFacet = useOptimisticCategoryFacet(props, dispatch);
 

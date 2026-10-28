@@ -30,7 +30,7 @@ export interface OptimisticNumericFacet {
 /** Custom-range input text lives here, though not optimistic, because toggle and clear empty it. */
 export function useOptimisticNumericFacet(
   props: NumericFacetProps,
-  dispatch: (action: NumericFacetAction) => void
+  dispatch: (action: NumericFacetAction) => void | Promise<void>
 ): OptimisticNumericFacet {
   const [customStart, setCustomStart] = useState('');
   const [customEnd, setCustomEnd] = useState('');
