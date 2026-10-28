@@ -42,11 +42,8 @@ function sentViews(fetchMock: ReturnType<typeof vi.fn>): unknown[] {
   );
 }
 
-async function search(query: string, {ai}: {ai: boolean}) {
-  const toggle = screen.getByRole('checkbox', {name: 'AI'}) as HTMLInputElement;
-  if (toggle.checked !== ai) {
-    fireEvent.click(toggle);
-  }
+/** The search box sends to the session shell, which routes the prompt by its intent. */
+async function search(query: string) {
   fireEvent.change(screen.getByRole('searchbox', {name: 'Search'}), {target: {value: query}});
   fireEvent.submit(screen.getByRole('search'));
   await act(async () => {});
@@ -95,7 +92,7 @@ describe('the conversation and the search layout', () => {
   });
 
   it('continues the conversation in the side panel when a turn of it draws a search', async () => {
-    await search('what is a wetsuit?', {ai: true});
+    await search('what is a wetsuit?');
     expect(heading()).toBe('Shopping assistant');
 
     fetchMock.mockImplementationOnce(async () => searchTurnResponse());
@@ -117,14 +114,14 @@ describe('the conversation and the search layout', () => {
     expect(heading()).toBe('Results for “show me wetsuits”');
     expect(panelPrompts()).toHaveLength(3);
     expect(sentViews(fetchMock)).toEqual([
-      'storefront-preview-assistant',
+      'storefront-preview',
       'storefront-preview-assistant',
       'storefront-preview-assistant',
     ]);
   });
 
   it('goes Back from the search layout to the conversation, which stays there', async () => {
-    await search('what is a wetsuit?', {ai: true});
+    await search('what is a wetsuit?');
     fetchMock.mockImplementationOnce(async () => searchTurnResponse());
     await askInChat('show me wetsuits');
     await askInPanel('which one is warmest?');
@@ -148,9 +145,9 @@ describe('the conversation and the search layout', () => {
   });
 
   it('keeps the conversation in the panel of a search from the header', async () => {
-    await search('what is a wetsuit?', {ai: true});
+    await search('what is a wetsuit?');
     fetchMock.mockImplementationOnce(async () => searchTurnResponse());
-    await search('kayaks', {ai: false});
+    await search('kayaks');
 
     expect(heading()).toBe('Results for “kayaks”');
     expect(panelPrompts()).toEqual([expect.stringContaining('what is a wetsuit?')]);
@@ -162,19 +159,18 @@ describe('the conversation and the search layout', () => {
 
   it('opens a plain search with an empty panel', async () => {
     fetchMock.mockImplementationOnce(async () => searchTurnResponse());
-    await search('kayaks', {ai: false});
+    await search('kayaks');
 
     expect(heading()).toBe('Results for “kayaks”');
     expect(within(panel()).getByText('Ask about the results on this page.')).toBeTruthy();
-    expect(sentViews(fetchMock)).toEqual(['storefront-preview-search']);
+    expect(sentViews(fetchMock)).toEqual(['storefront-preview']);
   });
 
-  it('opens the search layout in place of the chat when the question itself draws a search', async () => {
+  it('goes Back from a plain search to the page before it', async () => {
     fetchMock.mockImplementationOnce(async () => searchTurnResponse());
-    await search('show me kayaks', {ai: true});
+    await search('show me kayaks');
 
     expect(heading()).toBe('Results for “show me kayaks”');
-    expect(panelPrompts()).toEqual([expect.stringContaining('show me kayaks')]);
 
     fireEvent.click(screen.getByRole('button', {name: '← Back'}));
     await act(async () => {});

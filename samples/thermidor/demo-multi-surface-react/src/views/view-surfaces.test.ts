@@ -111,4 +111,14 @@ describe('buildViewSurfaces', () => {
     expect(result.resultsOf(3)?.id).toBe('t5');
     expect(result.resultsOf(4)).toBeUndefined();
   });
+
+  it("lists a visit's turns from every view, in turn order", () => {
+    const result = views([turn('t1'), turn('t2'), turn('t3')], {
+      t1: [SEARCH, 1],
+      t2: [ASSISTANT, 2],
+      t3: [ASSISTANT, 1],
+    });
+
+    expect(result.turnsOfVisit(1).map(({id}) => id)).toEqual(['t1', 't3']);
+  });
 });

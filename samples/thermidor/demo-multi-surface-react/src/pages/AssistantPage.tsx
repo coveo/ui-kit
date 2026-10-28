@@ -26,7 +26,7 @@ interface AssistantPageProps {
 }
 
 /**
- * The assistant page (`storefront-preview-assistant`), a chat: every turn of the conversation,
+ * The assistant layout, a chat: every turn of the conversation,
  * including those asked in the chat panel of the search pages it opened, each with the shopper's
  * prompt, the agent's reasoning and answer, and the surfaces that turn created, over an input that
  * continues the conversation. A search a turn drew opens on the search layout, not in the chat.
