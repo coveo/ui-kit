@@ -10,7 +10,7 @@ import styles from './pages.module.css';
  * panel sits on the right, on the same visit, and its answers stay in the panel.
  */
 export function SearchPage({query, visitId}: {query: string; visitId: number}) {
-  const {turn, surfaces, ownsTurn} = usePageView(visitId, 'storefront-preview-search');
+  const {turn, surfaces} = usePageView(visitId, 'storefront-preview-search');
   const isWaiting = !turn || turn.status === 'streaming';
   return (
     <main className={`${styles.page} ${styles.wide}`}>
@@ -23,11 +23,7 @@ export function SearchPage({query, visitId}: {query: string; visitId: number}) {
           ) : surfaces.length === 0 && turn?.status === 'complete' ? (
             <p className={styles.note}>The server sent no results for this search.</p>
           ) : (
-            <ViewSurfaces
-              surfaces={surfaces}
-              ownsTurn={ownsTurn}
-              isStreaming={turn?.status === 'streaming'}
-            />
+            <ViewSurfaces surfaces={surfaces} isStreaming={turn?.status === 'streaming'} />
           )}
         </section>
         <ChatPanel visitId={visitId} />

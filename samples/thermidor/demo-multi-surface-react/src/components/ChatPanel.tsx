@@ -21,26 +21,46 @@ const PANEL_VIEW: StorefrontView = 'storefront-preview-assistant';
 export function ChatPanel({visitId}: {visitId: number}) {
   const {sendPrompt} = useStorefrontSend();
   const {request} = useSessionSnapshot();
-  const {turns, ownsTurn} = usePageView(visitId, PANEL_VIEW);
+  const {turns} = usePageView(visitId, PANEL_VIEW);
   const [value, setValue] = useState('');
   const headingId = useId();
   const thread = useRef<HTMLOListElement>(null);
+  const input = useRef<HTMLInputElement>(null);
+  const followsBottom = useRef(true);
+  const turnCount = useRef(turns.length);
+  const refocus = useRef(false);
   // The server runs one turn at a time per session, so a prompt sent while any view's request is
   // in flight would be refused.
   const disabled = request !== undefined;
 
-  // The latest answer streams at the bottom of the thread; scroll the thread, not the page.
+  // The latest answer streams at the bottom of the thread; scroll the thread, not the page, and
+  // leave a reader who scrolled up where they are until they send again.
   useEffect(() => {
-    if (thread.current) {
+    const sent = turns.length > turnCount.current;
+    turnCount.current = turns.length;
+    if (thread.current && (sent || followsBottom.current)) {
       thread.current.scrollTop = thread.current.scrollHeight;
+      followsBottom.current = true;
     }
   }, [turns]);
 
-  const submit = () => {
+  // Disabling the input drops focus to the body, so it gets it back once the answer ends, unless
+  // the shopper has moved on to another control.
+  useEffect(() => {
+    if (!disabled && refocus.current) {
+      refocus.current = false;
+      if (document.activeElement === document.body) {
+        input.current?.focus({preventScroll: true});
+      }
+    }
+  }, [disabled]);
+
+  const submit = (form: HTMLFormElement) => {
     const prompt = value.trim();
     if (!prompt || disabled) {
       return;
     }
+    refocus.current = form.contains(document.activeElement);
     sendPrompt(PANEL_VIEW, prompt, visitId);
     setValue('');
   };
@@ -53,7 +73,15 @@ export function ChatPanel({visitId}: {visitId: number}) {
       {turns.length === 0 ? (
         <p className={styles.hint}>Ask about the results on this page.</p>
       ) : (
-        <ol ref={thread} className={styles.thread} aria-label="Conversation">
+        <ol
+          ref={thread}
+          className={styles.thread}
+          aria-label="Conversation"
+          onScroll={({currentTarget}) => {
+            const {scrollHeight, scrollTop, clientHeight} = currentTarget;
+            followsBottom.current = scrollHeight - scrollTop - clientHeight < 32;
+          }}
+        >
           {turns.map((turn) => {
             const isStreaming = turn.status === 'streaming';
             return (
@@ -61,11 +89,7 @@ export function ChatPanel({visitId}: {visitId: number}) {
                 {turn.input.prompt && <UserPromptBubble prompt={turn.input.prompt} />}
                 <PageTurnStatus turn={turn} />
                 <AgentResponseBlock response={turn.response} isStreaming={isStreaming}>
-                  <ViewSurfaces
-                    surfaces={turn.response.surfaces}
-                    ownsTurn={ownsTurn}
-                    isStreaming={isStreaming}
-                  />
+                  <ViewSurfaces surfaces={turn.response.surfaces} isStreaming={isStreaming} />
                 </AgentResponseBlock>
               </li>
             );
@@ -76,10 +100,11 @@ export function ChatPanel({visitId}: {visitId: number}) {
         className={styles.form}
         onSubmit={(event) => {
           event.preventDefault();
-          submit();
+          submit(event.currentTarget);
         }}
       >
         <input
+          ref={input}
           className={styles.input}
           type="text"
           value={value}

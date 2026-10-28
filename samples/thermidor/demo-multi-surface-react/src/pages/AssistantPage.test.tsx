@@ -15,7 +15,6 @@ vi.mock('./use-page-view.js', () => ({
     turns: pageView.turns,
     turn: pageView.turns.at(-1),
     surfaces: pageView.turns.flatMap((turn) => turn.response.surfaces),
-    ownsTurn: () => true,
   }),
 }));
 

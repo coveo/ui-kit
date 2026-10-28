@@ -29,6 +29,42 @@ function panel() {
   return screen.getByRole('complementary', {name: 'Shopping assistant'});
 }
 
+/** Holds the next converse request open until the returned function answers it. */
+function holdNextAnswer(fetchMock: ReturnType<typeof vi.fn>): () => void {
+  let finish: (() => void) | undefined;
+  fetchMock.mockImplementationOnce(
+    () =>
+      new Promise<Response>((resolve) => {
+        finish = () => resolve(emptyTurnResponse());
+      })
+  );
+  return () => finish?.();
+}
+
+function panelInput() {
+  return within(panel()).getByRole('textbox', {
+    name: 'Ask the shopping assistant',
+  }) as HTMLInputElement;
+}
+
+/** Gives the thread a layout jsdom lacks, scrolled to `scrollTop`. */
+function layOutThread(scrollTop: number) {
+  const thread = within(panel()).getByRole('list', {name: 'Conversation'});
+  Object.defineProperty(thread, 'scrollHeight', {configurable: true, value: 1000});
+  Object.defineProperty(thread, 'clientHeight', {configurable: true, value: 200});
+  thread.scrollTop = scrollTop;
+  fireEvent.scroll(thread);
+  return thread;
+}
+
+/** A browser drops the focus of a disabled control to the body; jsdom keeps it there. */
+function dropFocusToBody() {
+  const elsewhere = document.createElement('button');
+  document.body.append(elsewhere);
+  elsewhere.focus();
+  elsewhere.remove();
+}
+
 function ask(prompt: string) {
   fireEvent.change(within(panel()).getByRole('textbox', {name: 'Ask the shopping assistant'}), {
     target: {value: prompt},
@@ -111,5 +147,42 @@ describe('ChatPanel', () => {
 
     expect(input().disabled).toBe(false);
     expect(searchBox.disabled).toBe(false);
+  });
+
+  it('gives the input its focus back once the answer ends', async () => {
+    await openKayakSearch();
+    const answer = holdNextAnswer(fetchMock);
+
+    panelInput().focus();
+    fireEvent.change(panelInput(), {target: {value: 'which one is the cheapest?'}});
+    fireEvent.submit(panelInput());
+    await act(async () => {});
+    expect(panelInput().disabled).toBe(true);
+    expect(document.activeElement).toBe(panelInput());
+    dropFocusToBody();
+
+    await act(async () => answer());
+
+    expect(document.activeElement).toBe(panelInput());
+  });
+
+  it('follows the latest answer only while the reader is at the bottom', async () => {
+    await openKayakSearch();
+    ask('which one is the cheapest?');
+    await act(async () => {});
+
+    const answer = holdNextAnswer(fetchMock);
+    ask('and the most expensive?');
+    await act(async () => {});
+    const thread = layOutThread(100);
+
+    await act(async () => answer());
+
+    expect(thread.scrollTop).toBe(100);
+
+    ask('which one floats best?');
+    await act(async () => {});
+
+    expect(thread.scrollTop).toBe(1000);
   });
 });

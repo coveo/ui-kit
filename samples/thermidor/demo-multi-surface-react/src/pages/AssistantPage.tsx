@@ -27,7 +27,7 @@ interface AssistantPageProps {
  * an input that continues the conversation.
  */
 export function AssistantPage({prompt, visitId, busy, onSend, onBack}: AssistantPageProps) {
-  const {turns, ownsTurn} = usePageView(visitId, 'storefront-preview-assistant');
+  const {turns} = usePageView(visitId, 'storefront-preview-assistant');
   const turnRefs = useRef(new Map<string, HTMLElement>());
   const latestTurnId = turns.at(-1)?.id;
 
@@ -59,7 +59,7 @@ export function AssistantPage({prompt, visitId, busy, onSend, onBack}: Assistant
               }}
             >
               <ShopperPrompt turn={turn} />
-              <TurnContent turn={turn} isLatest={turn.id === latestTurnId} ownsTurn={ownsTurn} />
+              <TurnContent turn={turn} isLatest={turn.id === latestTurnId} />
             </article>
           </div>
         ))}
@@ -81,10 +81,9 @@ interface TurnContentProps {
   turn: Turn;
   /** Only the latest turn's surfaces take actions: earlier ones are read-only. */
   isLatest: boolean;
-  ownsTurn(turnId: string): boolean;
 }
 
-function TurnContent({turn, isLatest, ownsTurn}: TurnContentProps) {
+function TurnContent({turn, isLatest}: TurnContentProps) {
   if (turn.status === 'error') {
     return <ErrorTurnBlock error={turn.error} />;
   }
@@ -93,7 +92,6 @@ function TurnContent({turn, isLatest, ownsTurn}: TurnContentProps) {
     <AgentResponseBlock response={turn.response} isStreaming={isStreaming}>
       <ViewSurfaces
         surfaces={turn.response.surfaces}
-        ownsTurn={ownsTurn}
         interactive={isLatest}
         isStreaming={isStreaming}
       />
