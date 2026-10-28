@@ -179,6 +179,33 @@ describe('ConversationThread', () => {
       expect(placeholderRegion('turn-1/first')?.closest('fieldset')?.disabled).toBe(true);
     });
 
+    it("invites a follow-up from an earlier turn's blocks", () => {
+      const earlier = createTurn({status: 'streaming'});
+      render(
+        <A2UIProvider catalog={createThermidorCatalog()} onAction={() => {}}>
+          <ThermidorA2UIStream messages={[]} loadingSurfaces={placeholders}>
+            <ConversationThread
+              turns={[earlier, createTurn({id: 'turn-2'})]}
+              turnRefs={{current: new Map<string, HTMLDivElement>()}}
+              surfacesByTurn={new Map([[earlier.id, ['turn-1/first']]])}
+            />
+          </ThermidorA2UIStream>
+        </A2UIProvider>
+      );
+
+      expect(
+        screen.getByRole('group', {
+          name: 'Earlier results. Ask a follow-up or search again to refine.',
+        })
+      ).toBeDefined();
+    });
+
+    it('does not invite a follow-up when read-only', () => {
+      renderPlaceholders(createTurn({status: 'streaming'}), {readOnly: true});
+
+      expect(screen.queryByText(/follow-up/)).toBeNull();
+    });
+
     it('draws only the placeholders of the follow-up in flight', () => {
       const turn = createTurn({status: 'complete'});
 

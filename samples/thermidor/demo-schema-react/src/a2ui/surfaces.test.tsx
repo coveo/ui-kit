@@ -15,7 +15,7 @@ afterEach(() => {
 
 const CATALOG = createThermidorCatalog();
 const SURFACE_ID = 'turn-surface';
-const NOTE = 'Earlier results. Ask a follow-up or search again to refine.';
+const NOTE = 'Earlier results.';
 
 /** A surface holding a page size select. */
 function surfaceMessages(surfaceId: string) {
@@ -64,6 +64,7 @@ function Turn({
         <TurnSurfaces
           surfaceIds={[SURFACE_ID]}
           interactive={interactive}
+          note={NOTE}
           isStreaming={isStreaming}
         />
       </A2UIProvider>

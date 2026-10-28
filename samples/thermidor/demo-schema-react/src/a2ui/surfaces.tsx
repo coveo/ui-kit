@@ -82,6 +82,8 @@ interface TurnSurfacesProps {
    * their content stays readable. A disabled `fieldset` disables every control inside it.
    */
   interactive: boolean;
+  /** Says why the surfaces can't be used: drawn, as the name of their group, while they can't. */
+  note?: string;
   /**
    * Whether the exchange these surfaces belong to is still streaming: its turn is streaming, or
    * its follow-up is in flight. Loading placeholders are drawn only then; one the agent left
@@ -100,6 +102,7 @@ interface TurnSurfacesProps {
 export function TurnSurfaces({
   surfaceIds: allSurfaceIds,
   interactive,
+  note,
   isStreaming,
 }: TurnSurfacesProps) {
   const loadingSurfaces = useContext(LoadingSurfacesContext);
@@ -170,10 +173,8 @@ export function TurnSurfaces({
       }}
       role={interactive ? 'none' : undefined}
     >
-      {!interactive && (
-        <legend className={styles.readOnlyNote}>
-          Earlier results. Ask a follow-up or search again to refine.
-        </legend>
+      {!interactive && note !== undefined && (
+        <legend className={styles.readOnlyNote}>{note}</legend>
       )}
       {surfaceIds.map((surfaceId) => {
         const loadingComponentType = loadingSurfaces.get(surfaceId);
