@@ -1,12 +1,12 @@
 import {useCallback, useEffect} from 'react';
+import type {Turn} from '@coveo/thermidor';
 
 const MARGIN_TOP = 20;
 
 interface UseAutoScrollOptions {
   containerRef: React.RefObject<HTMLDivElement | null>;
   turnRefs: React.RefObject<Map<string, HTMLDivElement>>;
-  /** The turn the shopper started last, if any. */
-  latestTurnId: string | null;
+  turns: readonly Turn[];
 }
 
 /** The turn's offset from the top of the container's scrolled content. */
@@ -25,7 +25,9 @@ function turnOffset(container: HTMLElement, turn: HTMLElement): number {
  * - Makes that turn at least as tall as the container, so its start can reach the top and stays
  *   there when its answer shrinks, such as when a placeholder is dropped
  */
-export function useAutoScroll({containerRef, turnRefs, latestTurnId}: UseAutoScrollOptions): void {
+export function useAutoScroll({containerRef, turnRefs, turns}: UseAutoScrollOptions): void {
+  const latestTurnId = turns.at(-1)?.id ?? null;
+
   const fitLatestTurn = useCallback(() => {
     const container = containerRef.current;
     const turn = latestTurnId === null ? undefined : turnRefs.current.get(latestTurnId);

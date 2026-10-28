@@ -1,6 +1,7 @@
 import {describe, it, expect, vi, beforeEach} from 'vitest';
 import {renderHook} from '@testing-library/react';
 import {useAutoScroll} from './use-auto-scroll.js';
+import {makeTurn} from '../test/turn-fixtures.js';
 
 let resizeCallbacks: Array<() => void>;
 
@@ -39,6 +40,11 @@ function createContainer(clientHeight: number) {
   return container;
 }
 
+/** The thread whose latest turn is `latestTurnId`, or an empty one. */
+function thread(latestTurnId: string | null) {
+  return latestTurnId === null ? [] : [makeTurn({id: latestTurnId})];
+}
+
 function setup({clientHeight = 800, turns = {'turn-1': 100} as Record<string, number>} = {}) {
   const container = createContainer(clientHeight);
   const turnRefs = {
@@ -46,8 +52,8 @@ function setup({clientHeight = 800, turns = {'turn-1': 100} as Record<string, nu
   };
   const containerRef = {current: container};
   const render = (latestTurnId: string | null) =>
-    renderHook(({latestTurnId}) => useAutoScroll({containerRef, turnRefs, latestTurnId}), {
-      initialProps: {latestTurnId},
+    renderHook(({turns}) => useAutoScroll({containerRef, turnRefs, turns}), {
+      initialProps: {turns: thread(latestTurnId)},
     });
   const turn = (id: string) => turnRefs.current.get(id)!;
   return {container, turn, render};
@@ -90,7 +96,7 @@ describe('useAutoScroll', () => {
     const {container, turn, render} = setup({turns: {'turn-1': 100, 'turn-2': 600}});
     const {rerender} = render('turn-1');
 
-    rerender({latestTurnId: 'turn-2'});
+    rerender({turns: thread('turn-2')});
 
     expect(container.scrollTo).toHaveBeenLastCalledWith({top: 580, behavior: 'smooth'});
     expect(turn('turn-1').style.minHeight).toBe('');
@@ -101,7 +107,7 @@ describe('useAutoScroll', () => {
     const {container, render} = setup();
     const {rerender} = render('turn-1');
 
-    rerender({latestTurnId: 'turn-1'});
+    rerender({turns: thread('turn-1')});
 
     expect(container.scrollTo).toHaveBeenCalledOnce();
   });
