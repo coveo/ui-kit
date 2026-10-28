@@ -1,8 +1,12 @@
-/** One visit to a page. A new visit, even to the same page, gives the page fresh surfaces. */
+import type {StorefrontView} from './session/storefront-session.js';
+
+/**
+ * One visit to a page. A new visit, even to the same page, gives the page fresh surfaces. A prompt
+ * visit sends its prompt once, on its view, and the page follows what the server answers.
+ */
 export type Visit =
   | {id: number; page: 'home'}
-  | {id: number; page: 'assistant'; prompt: string}
-  | {id: number; page: 'search'; query: string}
+  | {id: number; page: 'prompt'; prompt: string; view: StorefrontView}
   | {id: number; page: 'listing'; slug: string};
 
 let visitCount = 0;
@@ -16,12 +20,12 @@ export function visitHome(): Visit {
   return {id: nextId(), page: 'home'};
 }
 
-export function visitAssistant(prompt: string): Visit {
-  return {id: nextId(), page: 'assistant', prompt};
-}
-
-export function visitSearch(query: string): Visit {
-  return {id: nextId(), page: 'search', query};
+/**
+ * A prompt sent on the session shell (`storefront-preview`), where the server routes it by its
+ * intent, or on another view, such as a follow-up the assistant suggested.
+ */
+export function visitPrompt(prompt: string, view: StorefrontView = 'storefront-preview'): Visit {
+  return {id: nextId(), page: 'prompt', prompt, view};
 }
 
 export function visitListing(slug: string): Visit {

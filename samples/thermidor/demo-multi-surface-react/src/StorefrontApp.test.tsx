@@ -10,10 +10,36 @@ function emptyTurnResponse() {
   return new Response(body, {headers: {'Content-Type': 'text/event-stream'}});
 }
 
+/** A converse stream whose turn opens a search surface, as the mock answers a search. */
+function searchTurnResponse() {
+  const createSurface = {
+    surfaceId: 'ui-search',
+    catalogId: 'https://schema.thermidor.coveo.com/a2-ui/catalog.json',
+    components: [{id: 'root', component: 'CommerceSearch'}],
+  };
+  const events = [
+    {type: 'RUN_STARTED'},
+    {
+      type: 'ACTIVITY_SNAPSHOT',
+      messageId: 'search-surface',
+      activityType: 'a2ui-surface',
+      content: {messages: [{version: 'v1.0', createSurface}]},
+    },
+    {type: 'RUN_FINISHED'},
+  ];
+  const body = events.map((event) => `data:${JSON.stringify(event)}\n\n`).join('');
+  return new Response(body, {headers: {'Content-Type': 'text/event-stream'}});
+}
+
 function sentViews(fetchMock: ReturnType<typeof vi.fn>): unknown[] {
   return fetchMock.mock.calls.map(
     ([, init]) => JSON.parse((init as RequestInit).body as string).context.custom.surfaceId
   );
+}
+
+function submitSearch(query: string) {
+  fireEvent.change(screen.getByRole('searchbox', {name: 'Search'}), {target: {value: query}});
+  fireEvent.submit(screen.getByRole('search'));
 }
 
 describe('StorefrontApp', () => {
@@ -54,19 +80,30 @@ describe('StorefrontApp', () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it('searches on the search view with the AI toggle off', async () => {
+  it('sends a prompt on the session shell, and opens the search layout for a search surface', async () => {
+    fetchMock.mockImplementationOnce(async () => searchTurnResponse());
     render(<App />);
     await act(async () => {});
-    fetchMock.mockClear();
 
-    fireEvent.click(screen.getByRole('checkbox', {name: 'AI'}));
-    fireEvent.change(screen.getByRole('searchbox', {name: 'Search'}), {target: {value: 'kayak'}});
-    fireEvent.submit(screen.getByRole('search'));
+    submitSearch('kayak');
     await act(async () => {});
 
+    expect(sentViews(fetchMock)).toEqual(['storefront-preview']);
     expect(screen.getByRole('heading', {name: 'Results for “kayak”'})).toBeTruthy();
-    expect(sentViews(fetchMock)).toEqual(['storefront-preview-search']);
-    expect(screen.getByText('The server sent no results for this search.')).toBeTruthy();
+    expect(screen.getByRole('complementary', {name: 'Shopping assistant'})).toBeTruthy();
+  });
+
+  it('opens the assistant layout for an answer without a search surface', async () => {
+    render(<App />);
+    await act(async () => {});
+
+    submitSearch('which kayak should I get?');
+    await act(async () => {});
+
+    expect(sentViews(fetchMock)).toEqual(['storefront-preview']);
+    expect(screen.getByRole('heading', {name: 'which kayak should I get?', level: 1})).toBeTruthy();
+    expect(screen.getByRole('button', {name: '← Back to home'})).toBeTruthy();
+    expect(screen.queryByRole('complementary', {name: 'Shopping assistant'})).toBeNull();
   });
 
   it('disables the search box while a request is in flight, so no search races it', async () => {
@@ -81,16 +118,14 @@ describe('StorefrontApp', () => {
     await act(async () => {});
     const searchBox = screen.getByRole('searchbox', {name: 'Search'}) as HTMLInputElement;
 
-    fireEvent.change(searchBox, {target: {value: 'kayak'}});
-    fireEvent.submit(screen.getByRole('search'));
+    submitSearch('kayak');
     await act(async () => {});
 
     expect(searchBox.disabled).toBe(true);
-    fireEvent.click(screen.getByRole('checkbox', {name: 'AI'}));
-    fireEvent.change(searchBox, {target: {value: 'boots'}});
-    fireEvent.submit(screen.getByRole('search'));
+    expect(screen.getByText('Working on “kayak”…')).toBeTruthy();
+    submitSearch('boots');
     await act(async () => {});
-    expect(sentViews(fetchMock)).toEqual(['storefront-preview-assistant']);
+    expect(sentViews(fetchMock)).toEqual(['storefront-preview']);
 
     await act(async () => finishAnswer?.());
 
@@ -101,34 +136,15 @@ describe('StorefrontApp', () => {
     render(<App />);
     await act(async () => {});
 
-    fireEvent.change(screen.getByRole('searchbox', {name: 'Search'}), {
-      target: {value: 'boating safety'},
-    });
-    fireEvent.submit(screen.getByRole('search'));
+    submitSearch('boating safety?');
     await act(async () => {});
-    fireEvent.click(screen.getByRole('checkbox', {name: 'AI'}));
-    fireEvent.change(screen.getByRole('searchbox', {name: 'Search'}), {target: {value: 'kayak'}});
-    fireEvent.submit(screen.getByRole('search'));
+    submitSearch('kayak');
     await act(async () => {});
 
     const rows = within(screen.getByRole('table')).getAllByRole('row').slice(1);
     expect(rows.map((row) => within(row).getAllByRole('cell')[1].textContent)).toEqual([
-      'storefront-preview-assistant',
-      'storefront-preview-search',
+      'storefront-preview',
+      'storefront-preview',
     ]);
-  });
-
-  it('asks the assistant on its view with the AI toggle on', async () => {
-    render(<App />);
-    await act(async () => {});
-    fetchMock.mockClear();
-
-    fireEvent.change(screen.getByRole('searchbox', {name: 'Search'}), {
-      target: {value: 'boating safety'},
-    });
-    fireEvent.submit(screen.getByRole('search'));
-    await act(async () => {});
-
-    expect(sentViews(fetchMock)).toEqual(['storefront-preview-assistant']);
   });
 });

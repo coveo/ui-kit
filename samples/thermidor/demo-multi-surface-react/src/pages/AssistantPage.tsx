@@ -1,21 +1,18 @@
+import type {DiscoveredSurface, Turn} from '@coveo/thermidor';
 import {AgentResponseBlock} from '../../../demo-schema-react/src/components/ConversationPage/AgentResponseBlock.js';
 import {ViewSurfaces} from '../views/ViewSurfaces.js';
 import {PageTurnStatus} from './PageTurnStatus.js';
-import {usePageView} from './use-page-view.js';
 import styles from './pages.module.css';
 
 interface AssistantPageProps {
   prompt: string;
-  visitId: number;
+  turn: Turn | undefined;
+  surfaces: readonly DiscoveredSurface[];
   onBack(): void;
 }
 
-/**
- * The assistant page (`storefront-preview-assistant`): the answer to the search the shopper
- * committed, its reasoning, and the surfaces its own turn created.
- */
-export function AssistantPage({prompt, visitId, onBack}: AssistantPageProps) {
-  const {turn, surfaces} = usePageView(visitId, 'storefront-preview-assistant');
+/** The assistant layout: the agent's answer to a prompt, its reasoning, and its surfaces. */
+export function AssistantPage({prompt, turn, surfaces, onBack}: AssistantPageProps) {
   const isStreaming = turn?.status === 'streaming';
   return (
     <main className={styles.page}>

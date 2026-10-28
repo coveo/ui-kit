@@ -9,7 +9,8 @@ export function HomePage() {
     <main className={styles.page}>
       <h1 className={styles.title}>Home</h1>
       <p className={styles.note}>
-        Search the catalog, or turn on AI to ask the assistant. Every page shares one session.
+        Search the catalog, or ask the assistant a question ending with “?”. Every page shares one
+        session.
       </p>
     </main>
   );

@@ -25,6 +25,7 @@ type StorefrontSession = Session<typeof ComponentContractsSchema>;
  * values of the published contract.
  */
 export type StorefrontView =
+  | 'storefront-preview'
   | 'storefront-preview-home'
   | 'storefront-preview-assistant'
   | 'storefront-preview-search';

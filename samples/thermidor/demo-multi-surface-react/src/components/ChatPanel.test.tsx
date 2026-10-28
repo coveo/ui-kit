@@ -10,16 +10,37 @@ function emptyTurnResponse() {
   return new Response(body, {headers: {'Content-Type': 'text/event-stream'}});
 }
 
+/** A converse stream whose turn opens a search surface, as the mock answers a search. */
+function searchTurnResponse() {
+  const createSurface = {
+    surfaceId: 'ui-search',
+    catalogId: 'https://schema.thermidor.coveo.com/a2-ui/catalog.json',
+    components: [{id: 'root', component: 'CommerceSearch'}],
+  };
+  const events = [
+    {type: 'RUN_STARTED'},
+    {
+      type: 'ACTIVITY_SNAPSHOT',
+      messageId: 'search-surface',
+      activityType: 'a2ui-surface',
+      content: {messages: [{version: 'v1.0', createSurface}]},
+    },
+    {type: 'RUN_FINISHED'},
+  ];
+  const body = events.map((event) => `data:${JSON.stringify(event)}\n\n`).join('');
+  return new Response(body, {headers: {'Content-Type': 'text/event-stream'}});
+}
+
 function sentViews(fetchMock: ReturnType<typeof vi.fn>): unknown[] {
   return fetchMock.mock.calls.map(
     ([, init]) => JSON.parse((init as RequestInit).body as string).context.custom.surfaceId
   );
 }
 
-async function openKayakSearch() {
+async function openKayakSearch(fetchMock: ReturnType<typeof vi.fn>) {
+  fetchMock.mockImplementationOnce(async () => searchTurnResponse());
   render(<App />);
   await act(async () => {});
-  fireEvent.click(screen.getByRole('checkbox', {name: 'AI'}));
   fireEvent.change(screen.getByRole('searchbox', {name: 'Search'}), {target: {value: 'kayak'}});
   fireEvent.submit(screen.getByRole('search'));
   await act(async () => {});
@@ -85,38 +106,34 @@ describe('ChatPanel', () => {
     vi.unstubAllGlobals();
   });
 
-  it('sits next to the search results', async () => {
-    await openKayakSearch();
+  it('sits next to the results of a search the server answered with a search surface', async () => {
+    await openKayakSearch(fetchMock);
 
     expect(screen.getByRole('heading', {name: 'Results for “kayak”'})).toBeTruthy();
-    expect(sentViews(fetchMock)).toEqual(['storefront-preview-search']);
+    expect(sentViews(fetchMock)).toEqual(['storefront-preview']);
     expect(within(panel()).getByText('Ask about the results on this page.')).toBeTruthy();
   });
 
   it('asks the assistant on its view, and keeps the search page', async () => {
-    await openKayakSearch();
+    await openKayakSearch(fetchMock);
 
     ask('which one is the cheapest?');
     await act(async () => {});
 
-    expect(sentViews(fetchMock)).toEqual([
-      'storefront-preview-search',
-      'storefront-preview-assistant',
-    ]);
+    expect(sentViews(fetchMock)).toEqual(['storefront-preview', 'storefront-preview-assistant']);
     expect(screen.getByRole('heading', {name: 'Results for “kayak”'})).toBeTruthy();
     expect(within(panel()).getByText('which one is the cheapest?')).toBeTruthy();
-    expect(screen.getByText('The server sent no results for this search.')).toBeTruthy();
   });
 
   it('records the panel turn with the assistant view, on the search page', async () => {
-    await openKayakSearch();
+    await openKayakSearch(fetchMock);
 
     ask('which one is the cheapest?');
     await act(async () => {});
 
     const rows = within(screen.getByRole('table')).getAllByRole('row').slice(1);
     expect(rows.map((row) => within(row).getAllByRole('cell')[1].textContent)).toEqual([
-      'storefront-preview-search',
+      'storefront-preview',
       'storefront-preview-assistant',
     ]);
     expect(within(panel()).getAllByRole('listitem')).toHaveLength(1);
@@ -124,7 +141,7 @@ describe('ChatPanel', () => {
 
   it('disables every input while a request is in flight, so none gets a conflict', async () => {
     let finishAnswer: (() => void) | undefined;
-    await openKayakSearch();
+    await openKayakSearch(fetchMock);
     fetchMock.mockImplementationOnce(
       () =>
         new Promise<Response>((resolve) => {
@@ -150,7 +167,7 @@ describe('ChatPanel', () => {
   });
 
   it('gives the input its focus back once the answer ends', async () => {
-    await openKayakSearch();
+    await openKayakSearch(fetchMock);
     const answer = holdNextAnswer(fetchMock);
 
     panelInput().focus();
@@ -167,7 +184,7 @@ describe('ChatPanel', () => {
   });
 
   it('follows the latest answer only while the reader is at the bottom', async () => {
-    await openKayakSearch();
+    await openKayakSearch(fetchMock);
     ask('which one is the cheapest?');
     await act(async () => {});
 
