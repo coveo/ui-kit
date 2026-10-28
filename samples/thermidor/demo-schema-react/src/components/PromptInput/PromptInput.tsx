@@ -12,37 +12,42 @@ import {
   SUGGESTIONS_LISTBOX_ID,
   type SuggestionSection,
   type SuggestionItem,
+  type SuggestionsPlacement,
 } from '../SuggestionsDropdown/index.js';
 import styles from './PromptInput.module.css';
 
 interface PromptInputProps {
+  /** Called with the trimmed prompt, when it is submitted or a suggestion is selected. */
   onSubmit: (prompt: string) => void;
+  /** Blocks submitting, but keeps the input usable, for example while an answer streams. */
+  busy?: boolean;
+  /** Draws the input unusable, for example until the search box it stands for exists. */
   disabled?: boolean;
   placeholder?: string;
   initialValue?: string;
   clearOnSubmit?: boolean;
   autoFocus?: boolean;
   suggestions?: SuggestionSection[];
-  onSuggestionSelect?: (item: SuggestionItem, sectionId: string) => void;
+  suggestionsPlacement?: SuggestionsPlacement;
+  /** Called with what the shopper types or clears, not with a selected suggestion. */
+  onValueChange?: (value: string) => void;
 }
 
 export function PromptInput({
   onSubmit,
+  busy = false,
   disabled = false,
   placeholder = 'Ask anything...',
   initialValue = '',
   clearOnSubmit = false,
   autoFocus = false,
   suggestions,
-  onSuggestionSelect,
+  suggestionsPlacement,
+  onValueChange,
 }: PromptInputProps) {
   const [value, setValue] = useState(initialValue);
   const [showDropdown, setShowDropdown] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
-  const [pendingSuggestion, setPendingSuggestion] = useState<{
-    item: SuggestionItem;
-    sectionId: string;
-  } | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const blurTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const suppressNextFocusRef = useRef(false);
@@ -62,15 +67,12 @@ export function PromptInput({
 
   useEffect(() => {
     setActiveIndex(-1);
-  }, [suggestions]);
-
-  useEffect(() => {
-    if (pendingSuggestion) {
-      const {item, sectionId} = pendingSuggestion;
-      setPendingSuggestion(null);
-      onSuggestionSelect?.(item, sectionId);
+    if (!suggestions?.length) {
+      setShowDropdown(false);
+    } else if (document.activeElement === textareaRef.current) {
+      setShowDropdown(true);
     }
-  }, [pendingSuggestion, onSuggestionSelect]);
+  }, [suggestions]);
 
   useEffect(() => {
     return () => {
@@ -80,19 +82,22 @@ export function PromptInput({
     };
   }, []);
 
-  const submit = useCallback(() => {
-    const trimmed = value.trim();
-    if (!trimmed || disabled) return;
-    setShowDropdown(false);
-    onSubmit(trimmed);
-    if (clearOnSubmit) {
-      setValue('');
-      if (textareaRef.current) {
-        textareaRef.current.style.height = 'auto';
-        textareaRef.current.style.overflowY = 'hidden';
+  const submit = useCallback(
+    (prompt: string) => {
+      const trimmed = prompt.trim();
+      if (!trimmed || busy || disabled) return;
+      setShowDropdown(false);
+      onSubmit(trimmed);
+      if (clearOnSubmit) {
+        setValue('');
+        if (textareaRef.current) {
+          textareaRef.current.style.height = 'auto';
+          textareaRef.current.style.overflowY = 'hidden';
+        }
       }
-    }
-  }, [value, disabled, onSubmit, clearOnSubmit]);
+    },
+    [busy, disabled, onSubmit, clearOnSubmit]
+  );
 
   function handleFocus() {
     if (disabled) {
@@ -118,22 +123,10 @@ export function PromptInput({
     }, 150);
   }
 
-  function selectItem(index: number) {
-    const item = totalItems[index];
-    if (item && suggestions) {
-      let sectionId = '';
-      let count = 0;
-      for (const section of suggestions) {
-        if (index < count + section.items.length) {
-          sectionId = section.id;
-          break;
-        }
-        count += section.items.length;
-      }
-      setValue(item.label);
-      setShowDropdown(false);
-      setPendingSuggestion({item, sectionId});
-    }
+  function selectItem(item: SuggestionItem) {
+    setValue(item.label);
+    setShowDropdown(false);
+    submit(item.label);
   }
 
   function handleKeyDown(e: KeyboardEvent<HTMLTextAreaElement>) {
@@ -162,10 +155,11 @@ export function PromptInput({
 
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      if (showDropdown && activeIndex >= 0) {
-        selectItem(activeIndex);
+      const activeItem = showDropdown ? totalItems[activeIndex] : undefined;
+      if (activeItem) {
+        selectItem(activeItem);
       } else {
-        submit();
+        submit(value);
       }
       return;
     }
@@ -175,6 +169,7 @@ export function PromptInput({
 
   function handleInput(e: ChangeEvent<HTMLTextAreaElement>) {
     setValue(e.target.value);
+    onValueChange?.(e.target.value);
     const el = e.target;
     const computed = getComputedStyle(el);
     const maxHeight = parseInt(computed.maxHeight, 10);
@@ -190,14 +185,9 @@ export function PromptInput({
     el.style.overflowY = el.scrollHeight > maxHeight ? 'auto' : 'hidden';
   }
 
-  function handleDropdownSelect(item: SuggestionItem, sectionId: string) {
-    setValue(item.label);
-    setShowDropdown(false);
-    setPendingSuggestion({item, sectionId});
-  }
-
+  const expanded = showDropdown && totalItems.length > 0;
   const activeDescendant =
-    showDropdown && activeIndex >= 0 && totalItems[activeIndex]
+    expanded && activeIndex >= 0 && totalItems[activeIndex]
       ? `suggestion-item-${totalItems[activeIndex].id}`
       : undefined;
 
@@ -218,7 +208,7 @@ export function PromptInput({
           rows={1}
           role="combobox"
           aria-label="Prompt"
-          aria-expanded={showDropdown}
+          aria-expanded={expanded}
           aria-haspopup="listbox"
           aria-controls={SUGGESTIONS_LISTBOX_ID}
           aria-activedescendant={activeDescendant}
@@ -228,6 +218,7 @@ export function PromptInput({
           className={`${styles.iconButton} ${styles.clearButton}`}
           onClick={() => {
             setValue('');
+            onValueChange?.('');
             setShowDropdown(false);
             suppressNextFocusRef.current = true;
             if (textareaRef.current) {
@@ -256,12 +247,12 @@ export function PromptInput({
         <button
           type="button"
           className={`${styles.iconButton} ${styles.submitButton}`}
-          onClick={submit}
-          disabled={disabled || !value.trim()}
+          onClick={() => submit(value)}
+          disabled={busy || disabled || !value.trim()}
           aria-label="Submit"
-          tabIndex={!disabled && value.trim() ? 0 : -1}
+          tabIndex={!busy && !disabled && value.trim() ? 0 : -1}
         >
-          {disabled ? (
+          {busy || disabled ? (
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -288,8 +279,9 @@ export function PromptInput({
       {suggestions && (
         <SuggestionsDropdown
           sections={suggestions}
-          onSelect={handleDropdownSelect}
+          onSelect={selectItem}
           visible={showDropdown}
+          placement={suggestionsPlacement}
           activeIndex={activeIndex}
         />
       )}

@@ -25,6 +25,9 @@ import {LayoutStack} from './LayoutStack/LayoutStack.js';
 import {QuerySummary} from './QuerySummary/QuerySummary.js';
 import {PageSize} from './PageSize/PageSize.js';
 import {Breadbox} from './Breadbox/Breadbox.js';
+import {SessionShell} from './SessionShell/SessionShell.js';
+import {SearchBox} from './SearchBox/SearchBox.js';
+import {QuerySuggestions} from './QuerySuggestions/QuerySuggestions.js';
 
 export interface ThermidorCatalogOptions {
   comparisonTable?: ComparisonTableOptions;
@@ -51,5 +54,8 @@ export function createThermidorCatalog(options: ThermidorCatalogOptions = {}) {
     QuerySummary,
     PageSize,
     Breadbox,
+    SessionShell,
+    SearchBox,
+    QuerySuggestions,
   ]);
 }

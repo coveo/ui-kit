@@ -1,12 +1,14 @@
-import {render, screen} from '@testing-library/react';
-import {describe, it, expect, vi} from 'vitest';
+import {fireEvent, screen} from '@testing-library/react';
+import {afterEach, describe, it, expect, vi} from 'vitest';
 import type {Turn} from '@coveo/thermidor';
 import {ConversationPage} from './ConversationPage.js';
 import {makeFollowUpTurn, makeSurfaces, makeTurn} from '../../test/turn-fixtures.js';
+import {findSearchBox, renderWithSession} from '../../test/session.js';
 
 // The blocks are drawn by the A2-UI renderer; the page only decides where each turn's blocks go
 // and whether they are interactive.
-vi.mock('../../a2ui/surfaces.js', () => ({
+vi.mock('../../a2ui/surfaces.js', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('../../a2ui/surfaces.js')>()),
   TurnSurfaces: ({
     surfaces,
     interactive,
@@ -30,9 +32,13 @@ function renderPage(overrides: Partial<Parameters<typeof ConversationPage>[0]> =
 
   return {
     props: {...defaultProps, ...overrides},
-    ...render(<ConversationPage {...defaultProps} {...overrides} />),
+    ...renderWithSession(<ConversationPage {...defaultProps} {...overrides} />),
   };
 }
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 describe('ConversationPage integration', () => {
   describe('multi-turn conversation rendering', () => {
@@ -201,15 +207,15 @@ describe('ConversationPage integration', () => {
   });
 
   describe('streaming state', () => {
-    it('disables prompt input and shows thinking dots when streaming with no response yet', () => {
+    it('holds the prompt and shows thinking dots when streaming with no response yet', async () => {
       const turns: Turn[] = [
         makeTurn({id: 'turn-1', prompt: 'Tell me about shoes', status: 'streaming'}),
       ];
 
       renderPage({turns, isStreaming: true});
 
-      const textarea = screen.getByLabelText('Prompt') as HTMLTextAreaElement;
-      expect(textarea.disabled).toBe(true);
+      fireEvent.change(await findSearchBox(), {target: {value: 'And boots?'}});
+      expect((screen.getByLabelText('Submit') as HTMLButtonElement).disabled).toBe(true);
 
       expect(screen.getByText(/Working/)).toBeDefined();
     });
