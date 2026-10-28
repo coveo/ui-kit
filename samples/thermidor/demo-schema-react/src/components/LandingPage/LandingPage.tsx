@@ -8,7 +8,7 @@ import styles from './LandingPage.module.css';
 interface LandingPageProps {
   onSubmit: (prompt: string) => void;
   isStreaming: boolean;
-  /** Shown under the suggestions. */
+  /** Ways in other than a prompt, such as conversations to come back to, below the suggestions. */
   children?: ReactNode;
 }
 
@@ -38,7 +38,7 @@ export function LandingPage({onSubmit, isStreaming, children}: LandingPageProps)
         <div className={styles.pillsWrapper}>
           <SuggestionPills onSelect={onSubmit} disabled={isStreaming} />
         </div>
-        {children && <div className={styles.below}>{children}</div>}
+        {children && <div className={styles.otherWaysIn}>{children}</div>}
       </div>
     </section>
   );

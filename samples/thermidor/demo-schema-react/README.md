@@ -84,15 +84,15 @@ The app is a single page managed by `AppShell`:
 
 ```
 AppShell (A2-UI provider + the session's renderer stream)
-├── LandingPage        — Prompt input with suggestion pills and the stored conversations, until the first prompt
+├── LandingPage        — Prompt input with suggestion pills and the conversations kept, until the first prompt
 └── ConversationPage   — One feed of every turn, search and conversation alike, with the prompt pinned below
 ```
 
 Every turn shows the blocks the server produced for it, in order: the agent's text and display surfaces, and the gateway's search blocks. A search, a facet selection and a question to the agent all stay on the same page.
 
 - `src/a2ui/surface-stream.ts` turns every turn's `response.a2uiMessages` into one renderer stream, so an update lands on its block wherever that block is in the feed. Each surface is drawn under a render id scoped to the turn that created it (servers may reuse a surface id across turns), and actions are sent back with the server surface id.
-- The tab keeps its current conversation (`session.serialize()`, in `sessionStorage`) and restores it on reload through `createSession({sessionToRestore})`, so it can be continued. **New conversation** forgets it and opens an empty session. Opening another session remounts everything under `SessionProvider`, so no per-conversation state (follow-ups, renderer surfaces) carries over.
-- With `VITE_COVEO_ANNOTATION_MODULE_URL` set, each answer carries the conversation annotation layer's control (`mount`), given a `snapshot` provider: every saved Assessment also keeps the conversation as `{format: "thermidor-session", version, conversation_id, title, content}`, where `content` is `session.serialize()` without its `sessionToken` and `title` is the first question. The landing page lists the kept conversations (`mountConversations`); choosing one reopens it **read-only**: no prompt, follow-up questions or block controls, and a banner offering **New conversation**. A snapshot of another format is refused, and one whose version `createSession` can't restore shows its error in the list. A read-only conversation is never kept for the tab.
+- The tab keeps its current conversation (`session.serialize()`, in `sessionStorage`) and restores it on reload through `createSession({sessionToRestore})`, so it can be continued unless it was reopened read-only. **New conversation** forgets it and opens an empty session. Opening another session remounts everything under `SessionProvider`, so no per-conversation state (follow-ups, renderer surfaces) carries over.
+- With `VITE_COVEO_ANNOTATION_MODULE_URL` set, each answer carries the conversation annotation layer's control (`mount`), given a `snapshot` provider: every saved Assessment also keeps the conversation as `{format: "thermidor-session", version, conversation_id, title, content}`, where `content` is `session.serialize()` without its `sessionToken` and `title` is the first question. The landing page lists the kept conversations (`mountConversations`); choosing one reopens it **read-only**: no prompt, follow-up questions or block controls, and a banner offering **New conversation**. A snapshot of another format, or whose version differs from its session's, is refused, and one whose version `createSession` can't restore shows its error in the list. A reloaded read-only conversation stays read-only.
 - Only the latest turn's blocks are interactive. The session only sends actions for the surfaces of the active turn, which the sample takes to be the latest one (it never calls `retry`, which can make an earlier turn active again), so blocks of earlier turns stay visible, selected facets included, but their controls are disabled.
 
 ### ConversationPage component tree

@@ -44,24 +44,22 @@ export function ConversationPage({
 
   useAutoScroll({containerRef, turnRefs, turns, isStreaming});
 
+  const newConversation = onNewConversation && (
+    <button type="button" className={styles.newConversation} onClick={onNewConversation}>
+      New conversation
+    </button>
+  );
+
   return (
     <section className={styles.page}>
       {readOnly ? (
-        <div className={styles.readOnlyBanner} role="status">
+        <div className={`${styles.row} ${styles.readOnlyBanner}`} role="status">
           <span>This conversation can&apos;t be continued.</span>
-          {onNewConversation && (
-            <button type="button" className={styles.newConversation} onClick={onNewConversation}>
-              New conversation
-            </button>
-          )}
+          {newConversation}
         </div>
       ) : (
-        onNewConversation && (
-          <div className={styles.toolbar}>
-            <button type="button" className={styles.newConversation} onClick={onNewConversation}>
-              New conversation
-            </button>
-          </div>
+        newConversation && (
+          <div className={`${styles.row} ${styles.toolbar}`}>{newConversation}</div>
         )
       )}
       <div
@@ -84,7 +82,7 @@ export function ConversationPage({
         </div>
       </div>
       {!readOnly && (
-        <div className={styles.promptBar}>
+        <div className={`${styles.row} ${styles.promptBar}`}>
           <PromptInput
             onSubmit={onSubmit}
             disabled={promptDisabled}

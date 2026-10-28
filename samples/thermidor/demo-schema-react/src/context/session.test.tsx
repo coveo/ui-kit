@@ -1,10 +1,9 @@
-import {act, fireEvent, render, screen, waitFor} from '@testing-library/react';
+import {act, cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import type {SerializedSession} from '@coveo/thermidor';
 import {useState} from 'react';
 import {SessionProvider, useConversations, useSession} from './session.js';
-
-const CURRENT_CONVERSATION_KEY = 'demo-current-conversation';
+import {keepCurrentConversation, readCurrentConversation} from './current-conversation.js';
 
 const keptConversation: SerializedSession = {
   version: 2,
@@ -40,7 +39,7 @@ function Draft() {
   );
 }
 
-const storedConversation: SerializedSession = {
+const reopenedConversation: SerializedSession = {
   version: 2,
   sessionId: 'session-2',
   turns: [
@@ -58,7 +57,7 @@ function NewConversation() {
   return (
     <>
       <button onClick={startNew}>New conversation</button>
-      <button onClick={() => open({sessionToRestore: storedConversation, readOnly: true})}>
+      <button onClick={() => open({sessionToRestore: reopenedConversation, readOnly: true})}>
         Reopen
       </button>
       {readOnly && <p>Read-only</p>}
@@ -76,6 +75,12 @@ function renderProvider() {
   );
 }
 
+/** Renders the provider afresh, as a page reload does, with what the tab kept. */
+function reload() {
+  cleanup();
+  renderProvider();
+}
+
 describe('SessionProvider', () => {
   beforeEach(() => sessionStorage.clear());
   afterEach(() => {
@@ -84,11 +89,12 @@ describe('SessionProvider', () => {
   });
 
   it('restores the conversation kept for this tab', () => {
-    sessionStorage.setItem(CURRENT_CONVERSATION_KEY, JSON.stringify(keptConversation));
+    keepCurrentConversation({session: keptConversation, readOnly: false});
 
     renderProvider();
 
     expect(screen.getByRole('listitem').textContent).toBe('What is Coveo?');
+    expect(screen.queryByText('Read-only')).toBeNull();
   });
 
   it('keeps the conversation for this tab as it changes', async () => {
@@ -96,29 +102,23 @@ describe('SessionProvider', () => {
     renderProvider();
 
     act(() => screen.getByRole('list', {name: 'Prompts'}).click());
+    await waitFor(() => expect(readCurrentConversation()?.session.turns).toHaveLength(1));
+    reload();
 
-    await waitFor(() => {
-      const kept = JSON.parse(sessionStorage.getItem(CURRENT_CONVERSATION_KEY) ?? 'null');
-      expect(kept?.turns.map((turn: {input: {prompt?: string}}) => turn.input.prompt)).toEqual([
-        'Hi',
-      ]);
-    });
+    expect(screen.getByRole('listitem').textContent).toBe('Hi');
   });
 
   it('starts a new conversation when the kept one cannot be restored', () => {
-    sessionStorage.setItem(
-      CURRENT_CONVERSATION_KEY,
-      JSON.stringify({...keptConversation, version: 999})
-    );
+    keepCurrentConversation({session: {...keptConversation, version: 999}, readOnly: false});
 
     renderProvider();
 
     expect(screen.queryAllByRole('listitem')).toEqual([]);
-    expect(sessionStorage.getItem(CURRENT_CONVERSATION_KEY)).toBeNull();
+    expect(readCurrentConversation()).toBeUndefined();
   });
 
   it('starts a new conversation on request, forgetting the current one', () => {
-    sessionStorage.setItem(CURRENT_CONVERSATION_KEY, JSON.stringify(keptConversation));
+    keepCurrentConversation({session: keptConversation, readOnly: false});
     renderProvider();
     fireEvent.change(screen.getByLabelText('Draft'), {target: {value: 'unsent'}});
 
@@ -126,7 +126,8 @@ describe('SessionProvider', () => {
 
     expect(screen.queryAllByRole('listitem')).toEqual([]);
     expect((screen.getByLabelText('Draft') as HTMLInputElement).value).toBe('');
-    expect(sessionStorage.getItem(CURRENT_CONVERSATION_KEY)).toBeNull();
+    reload();
+    expect(screen.queryAllByRole('listitem')).toEqual([]);
   });
 
   it('does not bring back a conversation left mid-answer for a new one', async () => {
@@ -141,28 +142,33 @@ describe('SessionProvider', () => {
     );
     renderProvider();
     act(() => screen.getByRole('list', {name: 'Prompts'}).click());
-    await waitFor(() => expect(sessionStorage.getItem(CURRENT_CONVERSATION_KEY)).not.toBeNull());
+    await waitFor(() => expect(readCurrentConversation()?.session.turns).toHaveLength(1));
 
     fireEvent.click(screen.getByRole('button', {name: 'New conversation'}));
     await act(() => new Promise((resolve) => setTimeout(resolve, 0)));
+    reload();
 
-    expect(sessionStorage.getItem(CURRENT_CONVERSATION_KEY)).toBeNull();
+    expect(screen.queryAllByRole('listitem')).toEqual([]);
   });
 
-  it('reopens a conversation read-only, keeping the current one for this tab', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')));
-    sessionStorage.setItem(CURRENT_CONVERSATION_KEY, JSON.stringify(keptConversation));
+  it('reopens a conversation read-only', () => {
+    keepCurrentConversation({session: keptConversation, readOnly: false});
     renderProvider();
 
     fireEvent.click(screen.getByRole('button', {name: 'Reopen'}));
-    act(() => screen.getByRole('list', {name: 'Prompts'}).click());
-    await act(() => new Promise((resolve) => setTimeout(resolve, 0)));
 
-    expect(screen.getAllByRole('listitem')[0]?.textContent).toBe('What did I ask last week?');
+    expect(screen.getByRole('listitem').textContent).toBe('What did I ask last week?');
     expect(screen.getByText('Read-only')).toBeDefined();
-    expect(JSON.parse(sessionStorage.getItem(CURRENT_CONVERSATION_KEY) ?? 'null')).toEqual(
-      keptConversation
-    );
+  });
+
+  it('brings a reopened conversation back on reload, still read-only', () => {
+    renderProvider();
+    fireEvent.click(screen.getByRole('button', {name: 'Reopen'}));
+
+    reload();
+
+    expect(screen.getByRole('listitem').textContent).toBe('What did I ask last week?');
+    expect(screen.getByText('Read-only')).toBeDefined();
   });
 
   it('leaves a reopened conversation for a new one that can be continued', () => {

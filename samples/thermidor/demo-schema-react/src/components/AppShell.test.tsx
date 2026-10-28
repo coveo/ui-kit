@@ -23,8 +23,8 @@ vi.mock('../context/session.js', () => ({
 }));
 
 vi.mock('../annotation/annotation-controls.js', () => ({
-  StoredConversations: ({moduleUrl}: {moduleUrl: string}) => (
-    <div data-testid="stored-conversations">{moduleUrl}</div>
+  KeptConversations: ({moduleUrl}: {moduleUrl: string}) => (
+    <div data-testid="kept-conversations">{moduleUrl}</div>
   ),
 }));
 
@@ -117,22 +117,22 @@ describe('AppShell', () => {
     vi.unstubAllEnvs();
   });
 
-  it('lists the stored conversations on the landing page', () => {
+  it('lists the conversations kept on the landing page', () => {
     vi.stubEnv('VITE_COVEO_ANNOTATION_MODULE_URL', '/annotation/ui/annotator.js');
 
     render(<AppShell />);
 
-    expect(screen.getByTestId('stored-conversations').textContent).toBe(
+    expect(screen.getByTestId('kept-conversations').textContent).toBe(
       '/annotation/ui/annotator.js'
     );
   });
 
-  it('lists no stored conversations without the annotation layer', () => {
+  it('lists no conversations kept without the annotation layer', () => {
     vi.stubEnv('VITE_COVEO_ANNOTATION_MODULE_URL', '');
 
     render(<AppShell />);
 
-    expect(screen.queryByTestId('stored-conversations')).toBeNull();
+    expect(screen.queryByTestId('kept-conversations')).toBeNull();
   });
 
   describe('read-only conversation', () => {

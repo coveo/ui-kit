@@ -53,4 +53,12 @@ describe('sessionToReopen', () => {
       sessionToReopen({format: 'other-chat', version: 1, conversation_id: 'c', content: {}})
     ).toThrow('"other-chat" is not a Thermidor session');
   });
+
+  it("refuses a snapshot whose version differs from its session's", () => {
+    const snapshot = conversationSnapshot(serialized, 'conversation-1');
+
+    expect(() => sessionToReopen({...snapshot, version: 3})).toThrow(
+      "version 3 does not match its session's version 2"
+    );
+  });
 });
