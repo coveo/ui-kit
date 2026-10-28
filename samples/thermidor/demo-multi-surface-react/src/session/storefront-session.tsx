@@ -126,10 +126,6 @@ function useStorefront(): StorefrontValue {
   return value;
 }
 
-export function useSession(): StorefrontSession {
-  return useStorefront().session;
-}
-
 export function useStorefrontSend(): Pick<StorefrontValue, 'sendPrompt' | 'sendAction'> {
   return useStorefront();
 }

@@ -180,11 +180,13 @@ test.describe('Storefront Preview on one session', () => {
 
     await expect(input).toBeDisabled();
     await expect(page.getByRole('searchbox', {name: 'Search'})).toBeDisabled();
+    await expect(page.getByRole('checkbox', {name: /Dakine/})).toBeDisabled();
     await expect(panel$(page)).toContainText(
       'The cheapest of these results is the RiverRun Sit-On Kayak, at $549.99.',
       {timeout: 30000}
     );
     await expect(input).toBeEnabled();
+    await expect(page.getByRole('checkbox', {name: /Dakine/})).toBeEnabled();
     await panel$(page).getByText('Done.').click();
     await expect(panel$(page)).toContainText('The shopper is looking at the results for "kayak"');
     await expect(page.getByRole('heading', {name: 'Results for “kayak”'})).toBeVisible();

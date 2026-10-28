@@ -101,7 +101,9 @@ rather than tracking requests itself:
 
 - **Surfaces lock from the request in flight.** Each view draws its surfaces with
   `demo-schema-react`'s `TurnSurfaces`, which locks them while `session.request` is set
-  (`src/views/ViewSurfaces.tsx`). A view only sees the requests of its own turns.
+  (`src/views/ViewSurfaces.tsx`). Every view locks on any view's request: the session withholds
+  an action sent while another request is in flight, so the search results lock while the chat
+  panel's answer streams.
 - **Loading placeholders come from the data model.** A surface whose data model declares
   `isLoading: true` is drawn as its component's skeleton while its turn streams
   (`DiscoveredSurface.isLoading`). The session drops a placeholder its turn left behind.
@@ -127,11 +129,11 @@ The views share the session's server state, as Agent Gateway does today:
 - **Nothing goes the other way.** The agent's answer never changes the search in the middle. A
   search the agent opens from a panel answer (**See all kayaks**) shows in the panel.
 - **A panel prompt does not leave the page.** It is sent on the assistant view and stays on the
-  search page's visit. The panel input and the search box are disabled while any request is in
-  flight, so no prompt gets the server's 409.
+  search page's visit. The panel input, the search box and both views' surfaces are disabled
+  while any request is in flight, so nothing gets the server's 409 or is dropped.
 - **An action that opens no turn streams into the session's latest turn,** which may be the
-  panel's after a facet click in the middle. Its surfaces are told apart by surface rather than by
-  turn, so the middle locks for its own actions.
+  panel's after a facet click in the middle. The surface it updates stays in the view that drew
+  it, so the middle still shows the new results.
 
 ## Known limits
 
@@ -171,7 +173,7 @@ src/
 │   └── cart-store.ts           The app's cart, sent in context.cart
 ├── views/
 │   ├── view-surfaces.ts        View → surfaces: each view draws its own turns' surfaces
-│   └── ViewSurfaces.tsx        Draws them with TurnSurfaces, locked by the view's own request
+│   └── ViewSurfaces.tsx        Draws them with TurnSurfaces, locked by any request in flight
 ├── a2ui/
 │   ├── catalog.ts              The renderers for the Storefront components
 │   └── AddToCartButton/        The button added to every product card
