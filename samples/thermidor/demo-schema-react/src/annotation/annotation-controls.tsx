@@ -81,7 +81,7 @@ export function AnnotationControl({moduleUrl, turnRef}: AnnotationControlProps) 
 }
 
 /** The conversations the annotation layer keeps; choosing one reopens it read-only. */
-export function StoredConversations({moduleUrl}: {moduleUrl: string}) {
+export function KeptConversations({moduleUrl}: {moduleUrl: string}) {
   const {open} = useConversations();
   const container = useAnnotationModule(moduleUrl, '', (module, element) =>
     module.mountConversations(element, {

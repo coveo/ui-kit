@@ -84,7 +84,7 @@ The app is a single page managed by `AppShell`:
 
 ```
 AppShell (A2-UI provider + the session's renderer stream)
-├── LandingPage        — Prompt input with suggestion pills and the stored conversations, until the first prompt
+├── LandingPage        — Prompt input with suggestion pills and the conversations kept, until the first prompt
 └── ConversationPage   — One feed of every turn, search and conversation alike, with the prompt pinned below
 ```
 

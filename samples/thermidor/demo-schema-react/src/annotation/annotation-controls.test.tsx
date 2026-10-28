@@ -1,7 +1,7 @@
 import {render, waitFor} from '@testing-library/react';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import type {SerializedSession} from '@coveo/thermidor';
-import {AnnotationControl, StoredConversations} from './annotation-controls.js';
+import {AnnotationControl, KeptConversations} from './annotation-controls.js';
 import {mount, mountConversations} from '../test/fake-annotation-module.js';
 
 const MODULE_URL = '/src/test/fake-annotation-module.ts';
@@ -48,16 +48,16 @@ describe('AnnotationControl', () => {
   });
 });
 
-describe('StoredConversations', () => {
+describe('KeptConversations', () => {
   beforeEach(() => vi.clearAllMocks());
 
   async function openOf() {
-    render(<StoredConversations moduleUrl={MODULE_URL} />);
+    render(<KeptConversations moduleUrl={MODULE_URL} />);
     await waitFor(() => expect(mountConversations).toHaveBeenCalledOnce());
     return mountConversations.mock.calls[0]![1].open as (snapshot: unknown) => void;
   }
 
-  it('opens a stored conversation read-only', async () => {
+  it('opens a conversation kept read-only', async () => {
     const open = await openOf();
 
     open({format: 'thermidor-session', version: 2, conversation_id: 'c', content: serialized});
@@ -68,7 +68,7 @@ describe('StoredConversations', () => {
     });
   });
 
-  it('refuses a stored conversation of another format', async () => {
+  it('refuses a conversation kept of another format', async () => {
     const open = await openOf();
 
     expect(() =>

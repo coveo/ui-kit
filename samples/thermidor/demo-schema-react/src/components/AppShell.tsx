@@ -7,7 +7,7 @@ import {ThermidorA2UIStream} from '../a2ui/surfaces.js';
 import {isBlocking, SessionRequestProvider, useSessionRequest} from '../a2ui/session-request.js';
 import {LandingPage} from './LandingPage/LandingPage.js';
 import {ConversationPage} from './ConversationPage/index.js';
-import {StoredConversations} from '../annotation/annotation-controls.js';
+import {KeptConversations} from '../annotation/annotation-controls.js';
 import {getAnnotationModuleUrl} from '../env.js';
 import {startFollowUp, type FollowUp} from './ConversationPage/turn-segments.js';
 
@@ -110,7 +110,7 @@ export function AppShell() {
             <div className="view-panel view-panel--active">
               {turns.length === 0 ? (
                 <LandingPage onSubmit={handleSubmit} isStreaming={locked}>
-                  {annotationModuleUrl && <StoredConversations moduleUrl={annotationModuleUrl} />}
+                  {annotationModuleUrl && <KeptConversations moduleUrl={annotationModuleUrl} />}
                 </LandingPage>
               ) : (
                 <ConversationPage

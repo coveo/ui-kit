@@ -39,7 +39,7 @@ function Draft() {
   );
 }
 
-const storedConversation: SerializedSession = {
+const reopenedConversation: SerializedSession = {
   version: 2,
   sessionId: 'session-2',
   turns: [
@@ -57,7 +57,7 @@ function NewConversation() {
   return (
     <>
       <button onClick={startNew}>New conversation</button>
-      <button onClick={() => open({sessionToRestore: storedConversation, readOnly: true})}>
+      <button onClick={() => open({sessionToRestore: reopenedConversation, readOnly: true})}>
         Reopen
       </button>
       {readOnly && <p>Read-only</p>}
