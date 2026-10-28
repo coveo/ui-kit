@@ -30,12 +30,18 @@ export function conversationSnapshot(
 }
 
 /**
- * The session a snapshot keeps. Throws for a snapshot of another format; whether its version can
- * be restored is left to `createSession`.
+ * The session a snapshot keeps. Throws for a snapshot of another format, or one whose version
+ * differs from its session's; whether that version can be restored is left to `createSession`.
  */
 export function sessionToReopen(snapshot: ConversationSnapshot): SerializedSession {
   if (snapshot.format !== THERMIDOR_SESSION_FORMAT) {
     throw new Error(`"${snapshot.format}" is not a Thermidor session`);
   }
-  return snapshot.content as SerializedSession;
+  const session = snapshot.content as SerializedSession;
+  if (snapshot.version !== session.version) {
+    throw new Error(
+      `version ${snapshot.version} does not match its session's version ${session.version}`
+    );
+  }
+  return session;
 }
