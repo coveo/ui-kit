@@ -21,9 +21,11 @@ import {matchStorefrontConversation} from './templates/storefront-conversations.
  *
  * On `storefront-preview-assistant`, a message runs the agent, which is told what the shopper is
  * looking at: the latest search surface. Asked for the cheapest product, it answers from that
- * surface's kept search. On `storefront-preview-search`, a message opens a search surface for that query. On
- * both, an action is answered by the server. `storefront-preview` and `storefront-preview-home` get
- * an empty run, and any other view is refused with a 400.
+ * surface's kept search. On `storefront-preview-search`, a message opens a search surface for that
+ * query. On `storefront-preview`, the session shell, a message is routed by its intent, as the
+ * gateway's public route does: a question (it ends with `?`) runs the agent, anything else opens a
+ * search surface. `storefront-preview-home` gets an empty run for a message. On every view, an
+ * action is answered on the surface it names, and any other view is refused with a 400.
  */
 
 const VIEWS = {
@@ -279,6 +281,11 @@ function searchEvents(session: Session, query: string): ConverseEvent[] {
   return toSurface(buildWaterSportsInitialEvents(query, surfaceId), surfaceId);
 }
 
+/** The mock's intent rule for the session shell: a question runs the agent. */
+function isQuestion(message: string): boolean {
+  return message.trim().endsWith('?');
+}
+
 /** Replaces the kept cart with the one the client sent in `context.cart`, when it sent one. */
 function syncCart(session: Session, cart: unknown): void {
   if (!Array.isArray(cart)) {
@@ -448,7 +455,7 @@ function multiSurfaceResponse(body: unknown, {paced = true}: {paced?: boolean} =
   }
 
   syncCart(session, body.context.cart);
-  if (view === VIEWS.home || view === VIEWS.shell) {
+  if (!action && view === VIEWS.home) {
     return sseResponse(runEvents(sessionId, session, []), paced, () => {});
   }
   if (session.turnInProgress) {
@@ -458,7 +465,7 @@ function multiSurfaceResponse(body: unknown, {paced = true}: {paced?: boolean} =
   try {
     middle = action
       ? actionEvents(session, action)
-      : view === VIEWS.search
+      : view === VIEWS.search || (view === VIEWS.shell && !isQuestion(message))
         ? searchEvents(session, message)
         : agentTurnEvents(session, message);
   } catch (error) {
