@@ -647,10 +647,6 @@ export function createSession<TContracts extends ContractsSchema>(
       name: recovered.name,
       sourceComponentId: recovered.sourceComponentId,
       timestamp: new Date().toISOString(),
-      // `actionId` only correlates an `actionResponse`, which isn't implemented; completion comes
-      // from the response body closing instead.
-      actionId: null,
-      wantResponse: false,
       context: recovered.context,
     };
 

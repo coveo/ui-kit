@@ -294,22 +294,20 @@ describe('Session.dispatchAction', () => {
           surfaceId: string;
           name: string;
           sourceComponentId: string;
-          wantResponse: boolean;
-          actionId: string | null;
           context: unknown;
         } | null;
         message: string | null;
       };
-      // A plain request/response POST: no bidirectional binding, no wantResponse.
+      // A plain request/response POST: no bidirectional binding, so no actionResponse is requested.
       expect(request.message).toBeNull();
       expect(request.action).toMatchObject({
         surfaceId: SURFACE_ID,
         name: 'selectPage',
         sourceComponentId: PAGINATION_ID,
-        wantResponse: false,
-        actionId: null,
         context: {page: 3},
       });
+      expect(request.action).not.toHaveProperty('actionId');
+      expect(request.action).not.toHaveProperty('wantResponse');
     });
   });
 

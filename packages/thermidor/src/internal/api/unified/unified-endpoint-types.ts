@@ -44,7 +44,5 @@ export interface A2uiAction<TContext = unknown> {
   name: string;
   sourceComponentId: string;
   timestamp: string;
-  actionId: string | null;
-  wantResponse: boolean;
   context: TContext;
 }
