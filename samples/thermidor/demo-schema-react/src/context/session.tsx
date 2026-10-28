@@ -32,6 +32,8 @@ type DemoSession = Session<typeof ComponentContractsSchema>;
 /** Where a session opened in place of the current one comes from. */
 export interface ConversationSource {
   sessionToRestore?: SerializedSession;
+  /** A read-only conversation is only shown: it can't be continued and isn't kept for the tab. */
+  readOnly?: boolean;
 }
 
 export interface Conversations {
@@ -43,11 +45,14 @@ export interface Conversations {
   open(source: ConversationSource): void;
   /** Forgets the current conversation and opens an empty one. */
   startNew(): void;
+  /** Whether the open conversation is read-only. */
+  readOnly: boolean;
 }
 
 interface OpenSession {
   id: number;
   session: DemoSession;
+  readOnly: boolean;
 }
 
 const SessionContext = createContext<DemoSession | null>(null);
@@ -57,27 +62,29 @@ export function SessionProvider({children}: PropsWithChildren) {
   const [current, setCurrent] = useState<OpenSession>(() => ({
     id: 0,
     session: restoreCurrentConversation(),
+    readOnly: false,
   }));
-  const {session} = current;
+  const {session, readOnly} = current;
   // A replaced session still notifies while its cancelled request unwinds; only the open one is kept.
   const keptSession = useRef(session);
 
-  useEffect(
-    () =>
-      session.subscribe(() => {
-        if (keptSession.current === session) {
-          keepCurrentConversation(session.serialize());
-        }
-      }),
-    [session]
-  );
+  useEffect(() => {
+    if (readOnly) {
+      return;
+    }
+    return session.subscribe(() => {
+      if (keptSession.current === session) {
+        keepCurrentConversation(session.serialize());
+      }
+    });
+  }, [session, readOnly]);
 
   const open = useCallback(
-    (source: ConversationSource) => {
-      const next = createThermidorSession(source.sessionToRestore);
+    ({sessionToRestore, readOnly = false}: ConversationSource) => {
+      const next = createThermidorSession(sessionToRestore);
       keptSession.current = next;
       session.cancel();
-      setCurrent(({id}) => ({id: id + 1, session: next}));
+      setCurrent(({id}) => ({id: id + 1, session: next, readOnly}));
     },
     [session]
   );
@@ -88,8 +95,9 @@ export function SessionProvider({children}: PropsWithChildren) {
         forgetCurrentConversation();
         open({});
       },
+      readOnly,
     }),
-    [open]
+    [open, readOnly]
   );
 
   return (
