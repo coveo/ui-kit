@@ -6,6 +6,7 @@ import {makeTurn} from '../test/turn-fixtures.js';
 
 const mockDispatchAction = vi.fn();
 const mockStartNewConversation = vi.fn();
+let mockReadOnly = false;
 
 let mockTurns: Turn[] = [];
 let capturedOnAction: ((message: unknown) => unknown) | undefined;
@@ -14,7 +15,17 @@ let capturedOnAction: ((message: unknown) => unknown) | undefined;
 let mockSession: Session;
 vi.mock('../context/session.js', () => ({
   useSession: () => mockSession,
-  useConversations: () => ({open: vi.fn(), startNew: mockStartNewConversation}),
+  useConversations: () => ({
+    open: vi.fn(),
+    startNew: mockStartNewConversation,
+    readOnly: mockReadOnly,
+  }),
+}));
+
+vi.mock('../annotation/annotation-controls.js', () => ({
+  StoredConversations: ({moduleUrl}: {moduleUrl: string}) => (
+    <div data-testid="stored-conversations">{moduleUrl}</div>
+  ),
 }));
 
 async function createMockSession(): Promise<Session> {
@@ -55,6 +66,7 @@ vi.mock('./LandingPage/LandingPage.js', () => ({
   LandingPage: (props: any) => (
     <div data-testid="landing-page">
       <button data-testid="submit-btn" onClick={() => props.onSubmit('kayaks')} />
+      {props.children}
     </div>
   ),
 }));
@@ -77,6 +89,7 @@ vi.mock('./ConversationPage/index.js', () => ({
       </span>
       <span data-testid="pending-turn">{props.pendingTurnId ?? ''}</span>
       <span data-testid="streaming">{String(props.isStreaming)}</span>
+      <span data-testid="read-only">{String(props.readOnly)}</span>
       <button data-testid="conversation-submit" onClick={() => props.onSubmit('follow up')} />
       <button data-testid="new-conversation" onClick={props.onNewConversation} />
     </div>
@@ -99,7 +112,53 @@ describe('AppShell', () => {
     vi.clearAllMocks();
     mockSession = await createMockSession();
     mockTurns = [];
+    mockReadOnly = false;
     capturedOnAction = undefined;
+    vi.unstubAllEnvs();
+  });
+
+  it('lists the stored conversations on the landing page', () => {
+    vi.stubEnv('VITE_COVEO_ANNOTATION_MODULE_URL', '/annotation/ui/annotator.js');
+
+    render(<AppShell />);
+
+    expect(screen.getByTestId('stored-conversations').textContent).toBe(
+      '/annotation/ui/annotator.js'
+    );
+  });
+
+  it('lists no stored conversations without the annotation layer', () => {
+    vi.stubEnv('VITE_COVEO_ANNOTATION_MODULE_URL', '');
+
+    render(<AppShell />);
+
+    expect(screen.queryByTestId('stored-conversations')).toBeNull();
+  });
+
+  describe('read-only conversation', () => {
+    beforeEach(() => {
+      mockReadOnly = true;
+      mockTurns = [searchTurn('turn-1')];
+    });
+
+    it('shows the conversation read-only', () => {
+      render(<AppShell />);
+
+      expect(screen.getByTestId('read-only').textContent).toBe('true');
+    });
+
+    it('sends neither prompts nor renderer actions', () => {
+      render(<AppShell />);
+      act(() => {
+        screen.getByTestId('conversation-submit').click();
+        capturedOnAction?.({
+          version: 'v0.9',
+          userAction: {name: 'toggleSelect', surfaceId: `turn-1/${SEARCH_SURFACE_ID}`, context: {}},
+        });
+      });
+
+      expect(mockDispatchAction).not.toHaveBeenCalled();
+    });
   });
 
   it('renders the landing page before the first prompt', () => {
