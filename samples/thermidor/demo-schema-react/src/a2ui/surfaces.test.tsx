@@ -285,7 +285,7 @@ describe('TurnSurfaces loading placeholders', () => {
     expect(container.querySelector('fieldset')).toBeNull();
   });
 
-  it('does not scroll to the content that replaces a drawn placeholder', () => {
+  it('never scrolls the page as its surfaces are drawn, added or replaced', () => {
     const scrollIntoView = vi.fn();
     Element.prototype.scrollIntoView = scrollIntoView;
     const page = (surfaces: ReturnType<typeof makeSurfaces>) => (
@@ -295,29 +295,14 @@ describe('TurnSurfaces loading placeholders', () => {
         </ThermidorA2UIStream>
       </A2UIProvider>
     );
-    const {rerender} = render(page(loading('placeholder')));
+    const {rerender} = render(page([]));
 
+    rerender(page(loading('placeholder')));
     rerender(page(makeSurfaces(SURFACE_ID)));
+    rerender(page(makeSurfaces(SURFACE_ID, 'added')));
 
     expect(screen.getByRole('region', {name: `A2-UI surface ${SURFACE_ID}`})).toBeDefined();
     expect(scrollIntoView).not.toHaveBeenCalled();
-  });
-
-  it('scrolls to a surface added after the drawn ones', () => {
-    const scrollIntoView = vi.fn();
-    Element.prototype.scrollIntoView = scrollIntoView;
-    const page = (surfaceIds: string[]) => (
-      <A2UIProvider catalog={CATALOG} onAction={() => {}}>
-        <ThermidorA2UIStream messages={MESSAGES}>
-          <TurnSurfaces surfaces={makeSurfaces(...surfaceIds)} interactive isStreaming />
-        </ThermidorA2UIStream>
-      </A2UIProvider>
-    );
-    const {rerender} = render(page([SURFACE_ID]));
-
-    rerender(page([SURFACE_ID, 'added']));
-
-    expect(scrollIntoView).toHaveBeenCalledOnce();
   });
 });
 

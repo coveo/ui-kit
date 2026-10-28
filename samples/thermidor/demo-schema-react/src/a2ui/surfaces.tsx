@@ -84,14 +84,12 @@ interface TurnSurfacesProps {
 }
 
 /**
- * Draws one turn's surfaces in order. A surface added to an already drawn turn, such as the
- * search block a search option opens, is scrolled into view. A loading placeholder is drawn as
- * the skeleton of its root component type, in the place its content will take.
+ * Draws one turn's surfaces in order. A loading placeholder is drawn as the skeleton of its root
+ * component type, in the place its content will take. Surfaces never scroll the page: the
+ * conversation keeps the turn they belong to in view.
  */
 export function TurnSurfaces({surfaces, interactive, isStreaming}: TurnSurfacesProps) {
   const surfaceIds = useMemo(() => surfaces.map((surface) => surface.surfaceId), [surfaces]);
-  const sectionRefs = useRef(new Map<string, HTMLElement>());
-  const drawnIdsRef = useRef<ReadonlySet<string> | null>(null);
   const locked = useSurfaceLocked() && interactive;
   // The turn that streams is disabled without dimming, so its content arrives at full strength.
   const dimmed = locked && !isStreaming;
@@ -110,21 +108,6 @@ export function TurnSurfaces({surfaces, interactive, isStreaming}: TurnSurfacesP
       control.focus({preventScroll: true});
     }
   }, [locked]);
-
-  useEffect(() => {
-    const drawnIds = drawnIdsRef.current;
-    drawnIdsRef.current = new Set(surfaceIds);
-    if (drawnIds === null) {
-      return;
-    }
-    const added = surfaceIds.find((surfaceId) => !drawnIds.has(surfaceId));
-    // Content replacing a drawn placeholder takes its place under a new id; scrolling to it would
-    // pull the page back up while the answer streams.
-    const replaced = [...drawnIds].some((surfaceId) => !surfaceIds.includes(surfaceId));
-    if (added !== undefined && !replaced) {
-      sectionRefs.current.get(added)?.scrollIntoView?.({behavior: 'smooth', block: 'start'});
-    }
-  }, [surfaceIds]);
 
   if (surfaceIds.length === 0) {
     return null;
@@ -161,13 +144,6 @@ export function TurnSurfaces({surfaces, interactive, isStreaming}: TurnSurfacesP
             className="catalog-surface"
             aria-label={`A2-UI surface ${surfaceId}`}
             key={surfaceId}
-            ref={(element) => {
-              if (element) {
-                sectionRefs.current.set(surfaceId, element);
-              } else {
-                sectionRefs.current.delete(surfaceId);
-              }
-            }}
           >
             {isLoading ? (
               <A2UISkeleton componentType={rootComponentType} />
