@@ -32,7 +32,7 @@ type DemoSession = Session<typeof ComponentContractsSchema>;
 /** Where a session opened in place of the current one comes from. */
 export interface ConversationSource {
   sessionToRestore?: SerializedSession;
-  /** A read-only conversation is only shown: it can't be continued and isn't kept for the tab. */
+  /** A read-only conversation is only shown: it can't be continued, even once the page reloads. */
   readOnly?: boolean;
 }
 
@@ -61,28 +61,27 @@ const ConversationsContext = createContext<Conversations | null>(null);
 export function SessionProvider({children}: PropsWithChildren) {
   const [current, setCurrent] = useState<OpenSession>(() => ({
     id: 0,
-    session: restoreCurrentConversation(),
-    readOnly: false,
+    ...restoreCurrentConversation(),
   }));
   const {session, readOnly} = current;
   // A replaced session still notifies while its cancelled request unwinds; only the open one is kept.
   const keptSession = useRef(session);
 
-  useEffect(() => {
-    if (readOnly) {
-      return;
-    }
-    return session.subscribe(() => {
-      if (keptSession.current === session) {
-        keepCurrentConversation(session.serialize());
-      }
-    });
-  }, [session, readOnly]);
+  useEffect(
+    () =>
+      session.subscribe(() => {
+        if (keptSession.current === session) {
+          keepCurrentConversation({session: session.serialize(), readOnly});
+        }
+      }),
+    [session, readOnly]
+  );
 
   const open = useCallback(
     ({sessionToRestore, readOnly = false}: ConversationSource) => {
       const next = createThermidorSession(sessionToRestore);
       keptSession.current = next;
+      keepCurrentConversation({session: next.serialize(), readOnly});
       session.cancel();
       setCurrent(({id}) => ({id: id + 1, session: next, readOnly}));
     },
@@ -125,12 +124,13 @@ export function useConversations(): Conversations {
   return conversations;
 }
 
-function restoreCurrentConversation(): DemoSession {
+function restoreCurrentConversation(): Omit<OpenSession, 'id'> {
+  const kept = readCurrentConversation();
   try {
-    return createThermidorSession(readCurrentConversation());
+    return {session: createThermidorSession(kept?.session), readOnly: kept?.readOnly ?? false};
   } catch {
     forgetCurrentConversation();
-    return createThermidorSession();
+    return {session: createThermidorSession(), readOnly: false};
   }
 }
 
