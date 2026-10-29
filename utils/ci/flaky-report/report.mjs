@@ -39,7 +39,7 @@ function stepCause(jobName, step) {
     return 'Dependency setup';
   }
   if (/playwright-quantic/.test(step)) {
-    return 'Quantic e2e shard stopped without a test failure';
+    return 'Quantic e2e tests failed';
   }
   if (/STEPS_PLAYWRIGHT_OUTCOME/.test(step)) {
     return 'Atomic e2e tests failed';
@@ -91,12 +91,15 @@ export function buildModel({window, runs, records, recoveries, mergeQueueFailure
         flakyRuns: new Set(),
         failedRuns: new Set(),
         lastSeen: run,
+        // Records saved before they held the checked-out commit fall back to the run's head.
+        sha: record.sha ?? run.headSha,
       }));
       (test.outcome === 'flaky' ? entry.flakyRuns : entry.failedRuns).add(run.id);
       // The link points at the commit the last run tested, so it takes that run's line too.
       if (run.createdAt > entry.lastSeen.createdAt) {
         entry.lastSeen = run;
         entry.line = test.line;
+        entry.sha = record.sha ?? run.headSha;
       }
     }
   }
@@ -110,11 +113,8 @@ export function buildModel({window, runs, records, recoveries, mergeQueueFailure
       title: entry.title,
       flakyRuns: entry.flakyRuns.size,
       failedInMergeQueue: entry.failedRuns.size,
-      lastSeen: {
-        runId: entry.lastSeen.id,
-        createdAt: entry.lastSeen.createdAt,
-        headSha: entry.lastSeen.headSha,
-      },
+      lastSeen: {runId: entry.lastSeen.id, createdAt: entry.lastSeen.createdAt},
+      sha: entry.sha,
     }))
     .sort((a, b) => score(b) - score(a) || a.title.localeCompare(b.title));
 
@@ -237,7 +237,7 @@ export function renderReport(model, {ref}) {
         .slice(0, LISTED_TESTS)
         .map((row) =>
           tableRow([
-            `${sourceLink(row.lastSeen.headSha, row.file, row.line, `\`${fileStem(row.file)}\``)} ${escapeCell(shorten(row.title.split(' › ').pop(), TITLE_LENGTH))}`,
+            `${sourceLink(row.sha, row.file, row.line, `\`${fileStem(row.file)}\``)} ${escapeCell(shorten(row.title.split(' › ').pop(), TITLE_LENGTH))}`,
             suiteLabel(row.suite),
             row.flakyRuns,
             row.failedInMergeQueue || '',
