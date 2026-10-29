@@ -1,4 +1,3 @@
-// Reads a week of CI data from GitHub and the checkout for the flaky test report.
 import {execFileSync} from 'node:child_process';
 import {mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
@@ -12,56 +11,34 @@ const CONCURRENCY = 6;
 const JOBS_PER_PAGE = 30;
 // These jobs only fail after another job failed, so they never explain a failure.
 const DOWNSTREAM_JOB = /^Confirm build is valid|Merge Playwright reports$/;
-const SKIP_PATTERN = String.raw`(?<![\w.])(test|it|describe)\.(skip|fixme)\(|(?<![\w.])x(it|describe)\(`;
+const SKIP_PATTERN = String.raw`(?<![\w.])(test|it|describe)\.(skip|fixme)(\(|\.each[(<])|(?<![\w.])x(it|describe)\(`;
 // A Jira key, or a GitHub issue written as "Issue #6691".
 const TICKET = /\b(?:KIT|SFINT)-\d+\b|(?<=\bissue )#\d+\b/i;
 // CONTRIBUTING.md keeps the `style` type for formatting-only commits. Blame skips them, so a
 // reformat doesn't reset how long a test has been skipped.
 const FORMATTING_COMMIT = String.raw`^style(\([^)]*\))?!?:`;
 
-export function isRateLimited(error) {
-  if (error?.status === 429) {
-    return true;
-  }
-  return (
-    error?.status === 403 &&
-    (error.response?.headers?.['x-ratelimit-remaining'] === '0' ||
-      /rate limit/i.test(error.message ?? ''))
-  );
-}
-
-// Runs `collect` for each run, a few at a time. A rate limit that outlasts octokit's own retries
-// stops nothing: that run is left out and the report says its data is partial.
 async function forEachRun(runs, collect) {
   let next = 0;
-  let partial = false;
   const worker = async () => {
     while (next < runs.length) {
-      const run = runs[next++];
-      try {
-        await collect(run);
-      } catch (error) {
-        if (!isRateLimited(error)) {
-          throw error;
-        }
-        partial = true;
-      }
+      await collect(runs[next++]);
     }
   };
   await Promise.all(Array.from({length: Math.min(CONCURRENCY, runs.length)}, worker));
-  return partial;
 }
 
-export function jobFamily(name) {
+function jobFamily(name) {
   return name.replace(/ \(\d+, \d+\)$/, '');
 }
 
-export function toRun(run) {
+function toRun(run) {
   return {
     id: run.id,
     event: run.event,
     conclusion: run.conclusion,
     createdAt: run.created_at,
+    headSha: run.head_sha,
     attempts: run.run_attempt,
   };
 }
@@ -105,21 +82,16 @@ function readRecordArchive(archive) {
   }
 }
 
-/**
- * Lists each run's record artifacts. Most records come from their names alone; only the ones
- * with retries or failures are downloaded for their test details.
- */
+// Most records come from their names alone; only the ones with retries or failures are downloaded.
 export async function collectRecords({octokit, owner, repo}, runs) {
   const records = [];
-  let downloads = 0;
-  const partial = await forEachRun(runs, async (run) => {
+  await forEachRun(runs, async (run) => {
     const artifacts = await octokit.paginate(octokit.rest.actions.listWorkflowRunArtifacts, {
       owner,
       repo,
       run_id: run.id,
       per_page: 100,
     });
-    const runRecords = [];
     for (const artifact of artifacts) {
       const parsed = artifact.expired ? null : parseRecordName(artifact.name);
       if (!parsed) {
@@ -132,7 +104,6 @@ export async function collectRecords({octokit, owner, repo}, runs) {
         failed: parsed.failed,
       };
       if (parsed.flaky > 0 || parsed.failed > 0) {
-        downloads++;
         const {data} = await octokit.rest.actions.downloadArtifact({
           owner,
           repo,
@@ -141,16 +112,13 @@ export async function collectRecords({octokit, owner, repo}, runs) {
         });
         record.tests = readRecordArchive(data)?.tests ?? [];
       }
-      runRecords.push(record);
+      records.push(record);
     }
-    // A run counts whole or not at all, so a rate limit halfway through skews no rate.
-    records.push(...runRecords);
   });
-  return {records, downloads, partial};
+  return records;
 }
 
-/** Returns the jobs that failed in one attempt of a run, then passed in a later attempt. */
-export function recoveredJobs(attempts) {
+function recoveredJobs(attempts) {
   const conclusions = new Map();
   for (const jobs of attempts) {
     for (const {name, conclusion} of jobs) {
@@ -160,17 +128,19 @@ export function recoveredJobs(attempts) {
       conclusions.get(name).push(conclusion);
     }
   }
-  return [...conclusions]
+  const recovered = [...conclusions]
     .filter(
       ([name, list]) =>
         !DOWNSTREAM_JOB.test(name) && list.includes('failure') && list.at(-1) === 'success'
     )
     .map(([name]) => jobFamily(name));
+  // The shards of a matrix job share one family, so a run counts once per job.
+  return [...new Set(recovered)];
 }
 
 export async function collectRecoveries({octokit, owner, repo}, runs) {
   const recoveries = [];
-  const partial = await forEachRun(
+  await forEachRun(
     runs.filter((run) => run.attempts > 1),
     async (run) => {
       const attempts = [];
@@ -190,11 +160,10 @@ export async function collectRecoveries({octokit, owner, repo}, runs) {
       }
     }
   );
-  return {recoveries, partial};
+  return recoveries;
 }
 
-/** Returns a run's failed jobs, without the downstream jobs, each with the step that failed. */
-export function failedJobs(jobs) {
+function failedJobs(jobs) {
   return jobs
     .filter((job) => job.conclusion === 'failure' && !DOWNSTREAM_JOB.test(job.name))
     .map((job) => ({
@@ -205,7 +174,7 @@ export function failedJobs(jobs) {
 
 export async function collectMergeQueueFailures({octokit, owner, repo}, runs) {
   const failures = [];
-  const partial = await forEachRun(
+  await forEachRun(
     runs.filter((run) => run.event === 'merge_group' && run.conclusion === 'failure'),
     async (run) => {
       const jobs = await octokit.paginate(octokit.rest.actions.listJobsForWorkflowRun, {
@@ -218,10 +187,9 @@ export async function collectMergeQueueFailures({octokit, owner, repo}, runs) {
       failures.push({runId: run.id, jobs: failedJobs(jobs)});
     }
   );
-  return {failures, partial};
+  return failures;
 }
 
-/** Parses `git grep -n` output into the file and line of each match. */
 function parseSkipMatches(output) {
   return output
     .split('\n')
@@ -232,20 +200,20 @@ function parseSkipMatches(output) {
     });
 }
 
-export function findTicket(text) {
+function findTicket(text) {
   return TICKET.exec(text)?.[0].toUpperCase() ?? null;
 }
 
-function git(repositoryRoot, args) {
+function git(cwd, args) {
   return execFileSync('git', args, {
-    cwd: repositoryRoot,
+    cwd,
     encoding: 'utf8',
     maxBuffer: 16 * 1024 * 1024,
   });
 }
 
-/** Lists the skipped tests in the checkout, with how long each has been skipped and its ticket. */
-export function collectSkips({repositoryRoot, now}) {
+export function collectSkips() {
+  const repositoryRoot = git('.', ['rev-parse', '--show-toplevel']).trim();
   let output;
   try {
     output = git(repositoryRoot, [
@@ -263,39 +231,32 @@ export function collectSkips({repositoryRoot, now}) {
     }
     throw error;
   }
-  const directory = mkdtempSync(join(tmpdir(), 'flaky-report-'));
-  try {
-    const formattingCommits = join(directory, 'formatting-commits');
-    writeFileSync(
-      formattingCommits,
-      git(repositoryRoot, [
-        'log',
-        '--format=%H',
-        '--extended-regexp',
-        `--grep=${FORMATTING_COMMIT}`,
-      ])
-    );
-    return parseSkipMatches(output).map(({file, line}) => {
-      const source = readFileSync(join(repositoryRoot, file), 'utf8').split('\n');
-      const blame = git(repositoryRoot, [
-        'blame',
-        '--porcelain',
-        '--ignore-revs-file',
-        formattingCommits,
-        '-L',
-        `${line},${line}`,
-        '--',
-        file,
-      ]);
-      const authorTime = Number(/^author-time (\d+)$/m.exec(blame)?.[1] ?? 0);
-      return {
-        file,
-        line,
-        ageDays: Math.floor((now.getTime() - authorTime * 1000) / DAY_IN_MS),
-        ticket: findTicket(source.slice(Math.max(0, line - 4), line).join('\n')),
-      };
-    });
-  } finally {
-    rmSync(directory, {recursive: true, force: true});
-  }
+  const ignoredFormattingCommits = git(repositoryRoot, [
+    'log',
+    '--format=%H',
+    '--extended-regexp',
+    `--grep=${FORMATTING_COMMIT}`,
+  ])
+    .split('\n')
+    .filter(Boolean)
+    .flatMap((sha) => ['--ignore-rev', sha]);
+  return parseSkipMatches(output).map(({file, line}) => {
+    const source = readFileSync(join(repositoryRoot, file), 'utf8').split('\n');
+    const blame = git(repositoryRoot, [
+      'blame',
+      '--porcelain',
+      ...ignoredFormattingCommits,
+      '-L',
+      `${line},${line}`,
+      '--',
+      file,
+    ]);
+    const authorTime = Number(/^author-time (\d+)$/m.exec(blame)?.[1] ?? 0);
+    return {
+      file,
+      line,
+      ageDays: Math.floor((Date.now() - authorTime * 1000) / DAY_IN_MS),
+      ticket: findTicket(source.slice(Math.max(0, line - 4), line).join('\n')),
+    };
+  });
 }
