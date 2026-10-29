@@ -5,7 +5,7 @@ import {citationsIn, citedDocuments, withInlineCitations} from '../../citations/
 import {getAnnotationModuleUrl} from '../../env.js';
 import {followUpQuestionsIn} from '../../follow-up-questions/follow-up-questions.js';
 import {CitedDocuments} from './CitedDocuments.js';
-import {AnnotationControl} from './AnnotationControl.js';
+import {AnnotationControl} from '../../annotation/annotation-controls.js';
 import {FollowUpQuestions} from './FollowUpQuestions.js';
 import {ThinkingBlock} from './ThinkingBlock.js';
 import {StreamingMessage} from './StreamingMessage.js';

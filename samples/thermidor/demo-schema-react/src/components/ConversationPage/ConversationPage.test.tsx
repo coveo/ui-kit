@@ -51,4 +51,51 @@ describe('ConversationPage shell', () => {
       expect(textarea.disabled).toBe(false);
     });
   });
+
+  describe('new conversation', () => {
+    it('starts a new conversation when asked', () => {
+      const onNewConversation = vi.fn();
+      renderPage({onNewConversation});
+
+      fireEvent.click(screen.getByRole('button', {name: 'New conversation'}));
+
+      expect(onNewConversation).toHaveBeenCalledOnce();
+    });
+  });
+
+  describe('read-only conversation', () => {
+    const answered = makeTurn({
+      id: 'turn-1',
+      prompt: 'tell me about shoes',
+      response: {
+        activities: [
+          {
+            id: '',
+            kind: 'FollowUpQuestions',
+            replace: false,
+            payload: {questions: [{text: 'Which shoes for running?'}]},
+          },
+        ],
+      },
+    });
+
+    it('offers no way to continue it', () => {
+      renderPage({readOnly: true, turns: [answered], onNewConversation: vi.fn()});
+
+      expect(screen.queryByLabelText('Prompt')).toBeNull();
+      expect(screen.queryByRole('button', {name: 'Which shoes for running?'})).toBeNull();
+    });
+
+    it("says it can't be continued and offers a new conversation", () => {
+      const onNewConversation = vi.fn();
+      renderPage({readOnly: true, onNewConversation});
+
+      expect(screen.getByRole('status').textContent).toContain(
+        "This conversation can't be continued."
+      );
+      fireEvent.click(screen.getByRole('button', {name: 'New conversation'}));
+
+      expect(onNewConversation).toHaveBeenCalledOnce();
+    });
+  });
 });

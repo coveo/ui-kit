@@ -18,6 +18,10 @@ interface ConversationPageProps {
   followUps?: ReadonlyMap<string, readonly FollowUp[]>;
   /** The turn whose follow-up is in flight, if any. */
   pendingTurnId?: string | null;
+  /** Leaves this conversation for an empty one. */
+  onNewConversation?: () => void;
+  /** The conversation is only shown: it can't be continued. */
+  readOnly?: boolean;
 }
 
 /**
@@ -32,14 +36,32 @@ export function ConversationPage({
   surfacesByTurn,
   followUps,
   pendingTurnId,
+  onNewConversation,
+  readOnly = false,
 }: ConversationPageProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const turnRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
   useAutoScroll({containerRef, turnRefs, turns, isStreaming});
 
+  const newConversation = onNewConversation && (
+    <button type="button" className={styles.newConversation} onClick={onNewConversation}>
+      New conversation
+    </button>
+  );
+
   return (
     <section className={styles.page}>
+      {readOnly ? (
+        <div className={`${styles.row} ${styles.readOnlyBanner}`} role="status">
+          <span>This conversation can&apos;t be continued.</span>
+          {newConversation}
+        </div>
+      ) : (
+        newConversation && (
+          <div className={`${styles.row} ${styles.toolbar}`}>{newConversation}</div>
+        )
+      )}
       <div
         className={styles.scrollContainer}
         ref={containerRef}
@@ -54,18 +76,21 @@ export function ConversationPage({
             surfacesByTurn={surfacesByTurn}
             followUps={followUps}
             pendingTurnId={pendingTurnId}
-            onAskFollowUp={promptDisabled ? undefined : onSubmit}
+            onAskFollowUp={promptDisabled || readOnly ? undefined : onSubmit}
+            readOnly={readOnly}
           />
         </div>
       </div>
-      <div className={styles.promptBar}>
-        <PromptInput
-          onSubmit={onSubmit}
-          disabled={promptDisabled}
-          clearOnSubmit
-          placeholder="Search or ask anything..."
-        />
-      </div>
+      {!readOnly && (
+        <div className={`${styles.row} ${styles.promptBar}`}>
+          <PromptInput
+            onSubmit={onSubmit}
+            disabled={promptDisabled}
+            clearOnSubmit
+            placeholder="Search or ask anything..."
+          />
+        </div>
+      )}
     </section>
   );
 }

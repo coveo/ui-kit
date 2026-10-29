@@ -4,6 +4,55 @@
   height: 100%;
 }
 
+.row {
+  width: 100%;
+  max-width: 1120px;
+  margin-inline: auto;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--space-3) var(--space-6) 0;
+}
+
+.readOnlyBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+}
+
+.newConversation {
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.newConversation:hover {
+  border-color: var(--color-border-hover);
+  background: var(--color-surface-hover);
+}
+
+.newConversation:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
 .scrollContainer {
   flex: 1;
   min-height: 0;
@@ -17,9 +66,6 @@
 }
 
 .promptBar {
-  width: 100%;
-  max-width: 1120px;
-  margin: 0 auto;
   padding: var(--space-3) var(--space-6) var(--space-4);
   border-top: 1px solid var(--color-border);
 }
@@ -27,6 +73,15 @@
 @media (max-width: 639px) {
   .scrollContainer {
     padding: var(--space-3) var(--space-4);
+  }
+
+  .toolbar {
+    padding: var(--space-3) var(--space-4) 0;
+  }
+
+  .readOnlyBanner {
+    margin: var(--space-3) var(--space-4) 0;
+    width: auto;
   }
 
   .promptBar {

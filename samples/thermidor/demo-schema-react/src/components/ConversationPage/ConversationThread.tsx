@@ -10,6 +10,7 @@ import styles from './ConversationThread.module.css';
 
 const NO_SURFACES: readonly string[] = [];
 const NO_FOLLOW_UPS: readonly FollowUp[] = [];
+const EARLIER_RESULTS_NOTE = 'Earlier results. Ask a follow-up or search again to refine.';
 
 interface ConversationThreadProps {
   turns: Turn[];
@@ -22,6 +23,8 @@ interface ConversationThreadProps {
   pendingTurnId?: string | null;
   /** Asks a question as the user's next message, from the latest answer's follow-up questions. */
   onAskFollowUp?: (question: string) => void;
+  /** No turn's blocks can be used, the latest one's included. */
+  readOnly?: boolean;
 }
 
 export function ConversationThread({
@@ -31,6 +34,7 @@ export function ConversationThread({
   followUps,
   pendingTurnId = null,
   onAskFollowUp,
+  readOnly = false,
 }: ConversationThreadProps) {
   return (
     <div className={styles.thread}>
@@ -52,7 +56,8 @@ export function ConversationThread({
                 turn,
                 surfacesByTurn.get(turn.id) ?? NO_SURFACES,
                 followUps?.get(turn.id) ?? NO_FOLLOW_UPS,
-                index === turns.length - 1,
+                !readOnly && index === turns.length - 1,
+                readOnly ? undefined : EARLIER_RESULTS_NOTE,
                 turn.id === pendingTurnId,
                 onAskFollowUp
               )}
@@ -79,6 +84,7 @@ function renderTurnContent(
   surfaceIds: readonly string[],
   followUps: readonly FollowUp[],
   isLatest: boolean,
+  note: string | undefined,
   isPending: boolean,
   onAskFollowUp?: (question: string) => void
 ) {
@@ -103,6 +109,7 @@ function renderTurnContent(
               <TurnSurfaces
                 surfaceIds={segment.surfaceIds}
                 interactive={isLatest}
+                note={note}
                 isStreaming={isStreaming}
               />
             </AgentResponseBlock>
