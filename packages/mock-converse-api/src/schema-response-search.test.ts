@@ -709,7 +709,22 @@ describe('schema-response-search query correction', () => {
     expect(state.firstIndex).toBe(13);
   });
 
-  it('searches the original query on overrideCorrection, without a correction', () => {
+  it('searches the original query on overrideCorrection of a trigger, without a correction', () => {
+    matchSchemaPrompt('swim gear');
+    const events = buildSearchActionEvents({
+      name: 'overrideCorrection',
+      context: {originalQuery: 'swim gear'},
+      sourceComponentId: 'query-summary-2',
+    });
+    expect(summary(events)).toEqual({
+      query: 'swim gear',
+      firstIndex: 0,
+      lastIndex: 0,
+      totalEntries: 0,
+    });
+  });
+
+  it('keeps the corrected results on overrideCorrection of a correction', () => {
     matchSchemaPrompt('water sprots');
     const events = buildSearchActionEvents({
       name: 'overrideCorrection',
@@ -717,10 +732,11 @@ describe('schema-response-search query correction', () => {
       sourceComponentId: 'query-summary-2',
     });
     expect(summary(events)).toEqual({
-      query: 'water sprots',
-      firstIndex: 0,
-      lastIndex: 0,
-      totalEntries: 0,
+      query: 'Water Sports',
+      firstIndex: 1,
+      lastIndex: 12,
+      totalEntries: 43,
+      correction: {originalQuery: 'water sprots', cause: 'correction'},
     });
   });
 });
