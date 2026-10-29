@@ -78,6 +78,11 @@
       matchDatasources: ['npm'],
       matchPackageNames: ['pnpm'],
     },
+    {
+      description: 'Hold @msw/playwright below 0.7: 0.7 imports msw/http, which only msw 3 exports, and the catalog pins msw 2.x. Remove this rule with the msw 3 migration',
+      matchPackageNames: ['@msw/playwright'],
+      allowedVersions: '<0.7.0',
+    },
   ],
   customManagers: [
     {
