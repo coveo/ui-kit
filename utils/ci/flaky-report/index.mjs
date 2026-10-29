@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Builds the flaky test report from the past 30 days of CI runs.
+// Builds the flaky test report from the past 14 days of CI runs.
 // Usage: node utils/ci/flaky-report/index.mjs [--publish]
 // By default it changes nothing on GitHub: it writes the report to the job summary, or to stdout
 // outside GitHub Actions, with a GITHUB_TOKEN that can read actions. Only --publish updates the
@@ -17,7 +17,8 @@ import {
 import {findReportIssue, ISSUE_TITLE, publishReport} from './issue.mjs';
 import {buildModel, renderReport} from './report.mjs';
 
-const WINDOW_DAYS = 30;
+// The records it reads expire after 15 days, the repository's artifact retention.
+const WINDOW_DAYS = 14;
 
 const publish = process.argv.includes('--publish');
 

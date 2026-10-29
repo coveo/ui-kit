@@ -49,8 +49,8 @@ function isoDate(time) {
 
 /**
  * Lists the completed `ci.yml` runs created inside the window, each reduced to the fields the
- * report needs. The runs endpoint returns at most 1,000 runs per date filter, and a month of CI has
- * more, so the window is read a week at a time.
+ * report needs. The runs endpoint returns at most 1,000 runs per date filter, so the window is
+ * read a week at a time.
  */
 export async function listRuns({octokit, owner, repo}, {start, end}) {
   const runs = new Map();
