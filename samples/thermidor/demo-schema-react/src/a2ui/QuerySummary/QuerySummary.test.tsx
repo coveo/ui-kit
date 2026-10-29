@@ -89,21 +89,35 @@ describe('QuerySummary', () => {
     expect(screen.queryByText(/Showing results for/)).toBeNull();
   });
 
-  it.each(['correction', 'trigger'])(
-    "shows the query a %s searched instead of the shopper's",
-    async (cause) => {
-      mountSummary({
-        query: 'Water Sports',
-        firstIndex: 1,
-        lastIndex: 12,
-        totalEntries: 43,
-        correction: {originalQuery: 'water sprots', cause},
-      });
-      await waitFor(() => expect(screen.getByText(/Showing results for/)).toBeDefined());
-      expect(screen.getByText(/Search instead for/)).toBeDefined();
-      expect(screen.getByRole('button', {name: 'water sprots'})).toBeDefined();
-    }
-  );
+  it("shows the query a trigger searched instead of the shopper's, with a link to the shopper's", async () => {
+    mountSummary({
+      query: 'Water Sports',
+      firstIndex: 1,
+      lastIndex: 12,
+      totalEntries: 43,
+      correction: {originalQuery: 'swim gear', cause: 'trigger'},
+    });
+    await waitFor(() => expect(screen.getByText(/Showing results for/)).toBeDefined());
+    expect(screen.getByText(/Search instead for/)).toBeDefined();
+    expect(screen.getByRole('button', {name: 'swim gear'})).toBeDefined();
+  });
+
+  it("shows the query a correction searched instead of the shopper's, without a link", async () => {
+    mountSummary({
+      query: 'Water Sports',
+      firstIndex: 1,
+      lastIndex: 12,
+      totalEntries: 43,
+      correction: {originalQuery: 'water sprots', cause: 'correction'},
+    });
+    await waitFor(() =>
+      expect(screen.getByText(/Showing results for/).textContent).toBe(
+        'Showing results for Water Sports instead of water sprots'
+      )
+    );
+    expect(screen.queryByText(/Search instead for/)).toBeNull();
+    expect(screen.queryByRole('button')).toBeNull();
+  });
 
   it("dispatches overrideCorrection with the shopper's query", async () => {
     const {lastAction} = mountSummary({
@@ -111,14 +125,14 @@ describe('QuerySummary', () => {
       firstIndex: 1,
       lastIndex: 12,
       totalEntries: 43,
-      correction: {originalQuery: 'water sprots', cause: 'correction'},
+      correction: {originalQuery: 'swim gear', cause: 'trigger'},
     });
-    await waitFor(() => expect(screen.getByRole('button', {name: 'water sprots'})).toBeDefined());
-    fireEvent.click(screen.getByRole('button', {name: 'water sprots'}));
+    await waitFor(() => expect(screen.getByRole('button', {name: 'swim gear'})).toBeDefined());
+    fireEvent.click(screen.getByRole('button', {name: 'swim gear'}));
     await waitFor(() =>
       expect(lastAction()).toMatchObject({
         name: 'overrideCorrection',
-        context: {originalQuery: 'water sprots'},
+        context: {originalQuery: 'swim gear'},
       })
     );
   });

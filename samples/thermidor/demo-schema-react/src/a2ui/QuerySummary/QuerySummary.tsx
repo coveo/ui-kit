@@ -17,9 +17,10 @@ import styles from './QuerySummary.module.css';
  * - No results with a query: "No results for {query}".
  * - Otherwise: "Products {firstIndex}-{lastIndex} of {totalEntries}", with the trailing
  *   " for {query}" only when a query is present.
- * - When a correction or a query trigger replaced the shopper's query: "Showing results for
- *   {query}. Search instead for {originalQuery}", which dispatches `overrideCorrection`. A
- *   correction and a trigger read the same.
+ * - When a query trigger replaced the shopper's query: "Showing results for {query}. Search
+ *   instead for {originalQuery}", which dispatches `overrideCorrection`.
+ * - When an automatic correction replaced it: "Showing results for {query} instead of
+ *   {originalQuery}", with no way to search the original: the Commerce API corrects it again.
  */
 export const QuerySummary = createReactComponent(
   {
@@ -48,18 +49,23 @@ export const QuerySummary = createReactComponent(
       );
     };
 
-    const correctionNotice = correction && (
-      <p className={styles.correction}>
-        Showing results for <strong>{query}</strong>. Search instead for{' '}
-        <button
-          type="button"
-          className={styles.originalQuery}
-          onClick={() => searchOriginalQuery(correction.originalQuery)}
-        >
-          {correction.originalQuery}
-        </button>
-      </p>
-    );
+    const correctionNotice =
+      correction?.cause === 'trigger' ? (
+        <p className={styles.correction}>
+          Showing results for <strong>{query}</strong>. Search instead for{' '}
+          <button
+            type="button"
+            className={styles.originalQuery}
+            onClick={() => searchOriginalQuery(correction.originalQuery)}
+          >
+            {correction.originalQuery}
+          </button>
+        </p>
+      ) : correction ? (
+        <p className={styles.correction}>
+          Showing results for <strong>{query}</strong> instead of {correction.originalQuery}
+        </p>
+      ) : null;
 
     if (totalEntries === 0) {
       return query ? (
