@@ -50,7 +50,7 @@ jobs:
         with:
           name: ${{ steps.report.outputs.snapshot }}
           path: ${{ runner.temp }}/flaky-snapshot
-          retention-days: 90
+          retention-days: 15
 
   publish:
     name: 'Flaky test report'
@@ -81,5 +81,5 @@ jobs:
         with:
           name: ${{ steps.report.outputs.snapshot }}
           path: ${{ runner.temp }}/flaky-snapshot
-          # The flaky test dashboard imports the snapshots of the past 90 days.
-          retention-days: 90
+          # The most the repository keeps. The dashboard imports each snapshot two hours later.
+          retention-days: 15
