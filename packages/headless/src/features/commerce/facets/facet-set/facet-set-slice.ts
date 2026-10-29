@@ -42,7 +42,6 @@ import {
   executeCommerceFieldSuggest,
   getFacetIdWithCommerceFieldSuggestionNamespace,
 } from '../facet-search-set/commerce-facet-search-actions.js';
-import {toggleSelectLocationFacetValue} from '../location-facet/location-facet-actions.js';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -65,16 +64,10 @@ import type {
   AnyFacetValueRequest,
   CategoryFacetRequest,
   DateFacetRequest,
-  LocationFacetRequest,
-  LocationFacetValueRequest,
   NumericFacetRequest,
   RegularFacetRequest,
 } from './interfaces/request.js';
-import type {
-  AnyFacetResponse,
-  CategoryFacetValue,
-  LocationFacetValue,
-} from './interfaces/response.js';
+import type {AnyFacetResponse, CategoryFacetValue} from './interfaces/response.js';
 
 export const commerceFacetSetReducer = createReducer(
   getCommerceFacetSetInitialState(),
@@ -119,22 +112,6 @@ export const commerceFacetSetReducer = createReducer(
 
         updateExistingFacetValueState(existingValue, 'select');
         facetRequest.freezeCurrentValues = true;
-      })
-      .addCase(toggleSelectLocationFacetValue, (state, action) => {
-        const {facetId, selection} = action.payload;
-        const facetRequest = state[facetId]?.request;
-
-        if (!facetRequest || !ensureLocationFacetRequest(facetRequest)) {
-          return;
-        }
-
-        const existingValue = facetRequest.values.find((req) => req.value === selection.value);
-        if (!existingValue) {
-          insertNewValue(facetRequest, selection);
-          return;
-        }
-
-        updateExistingFacetValueState(existingValue, 'select');
       })
       .addCase(toggleSelectNumericFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
@@ -424,12 +401,6 @@ function ensureRegularFacetRequest(
   return facetRequest.type === 'regular';
 }
 
-function ensureLocationFacetRequest(
-  facetRequest: AnyFacetRequest
-): facetRequest is LocationFacetRequest {
-  return facetRequest.type === 'location';
-}
-
 function ensureNumericFacetRequest(
   facetRequest: AnyFacetRequest
 ): facetRequest is NumericFacetRequest {
@@ -529,9 +500,7 @@ function ensurePathAndReturnChildren(request: CategoryFacetRequest, path: string
 }
 
 function updateExistingFacetValueState(
-  existingFacetValue: WritableDraft<
-    FacetValueRequest | LocationFacetValueRequest | NumericRangeRequest | DateRangeRequest
-  >,
+  existingFacetValue: WritableDraft<FacetValueRequest | NumericRangeRequest | DateRangeRequest>,
   toggleAction: 'select' | 'exclude'
 ) {
   switch (existingFacetValue.state) {
@@ -600,8 +569,6 @@ function getFacetRequestValuesFromFacetResponse(facetResponse: AnyFacetResponse)
       return facetResponse.values.map(convertCategoryFacetValueToRequest);
     case 'regular':
       return facetResponse.values.map(convertFacetValueToRequest);
-    case 'location':
-      return facetResponse.values.map(convertLocationFacetValueToRequest);
     default:
       return;
   }
@@ -617,14 +584,6 @@ export function convertCategoryFacetValueToRequest(
     state,
     value,
   };
-}
-
-export function convertLocationFacetValueToRequest(
-  facetValue: LocationFacetValue
-): LocationFacetValueRequest {
-  const {value, state} = facetValue;
-
-  return {value, state};
 }
 
 function insertNewValue(facetRequest: AnyFacetRequest, facetValue: AnyFacetValueRequest) {
