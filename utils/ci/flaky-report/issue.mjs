@@ -1,9 +1,9 @@
-// Finds and updates the flaky test report issue, creating and pinning it on the first run.
+export const ISSUE_TITLE = 'Flaky test report';
 const REPORT_LABEL = 'flaky-test-report';
 // Only an issue the workflow itself opened is ever rewritten, whoever else uses the label.
 const REPORT_AUTHOR = 'github-actions[bot]';
 
-export async function findReportIssue({octokit, owner, repo}, title) {
+export async function findReportIssue({octokit, owner, repo}) {
   const issues = await octokit.paginate(octokit.rest.issues.listForRepo, {
     owner,
     repo,
@@ -13,7 +13,8 @@ export async function findReportIssue({octokit, owner, repo}, title) {
   });
   return (
     issues.find(
-      (issue) => !issue.pull_request && issue.title === title && issue.user?.login === REPORT_AUTHOR
+      (issue) =>
+        !issue.pull_request && issue.title === ISSUE_TITLE && issue.user?.login === REPORT_AUTHOR
     ) ?? null
   );
 }
@@ -35,18 +36,24 @@ async function ensureLabel({octokit, owner, repo}) {
   }
 }
 
+// Runs on every publish, so an issue someone unpinned is pinned again.
 async function pin({octokit}, issue) {
   try {
-    await octokit.graphql(
-      'mutation($issueId: ID!) { pinIssue(input: {issueId: $issueId}) { issue { number } } }',
-      {issueId: issue.node_id}
+    const {node} = await octokit.graphql(
+      'query($id: ID!) { node(id: $id) { ... on Issue { isPinned } } }',
+      {id: issue.node_id}
     );
+    if (!node.isPinned) {
+      await octokit.graphql(
+        'mutation($id: ID!) { pinIssue(input: {issueId: $id}) { issue { number } } }',
+        {id: issue.node_id}
+      );
+    }
   } catch (error) {
     console.log(`Could not pin issue #${issue.number}, so pin it by hand: ${error.message}`);
   }
 }
 
-/** Replaces the report issue's description and posts the weekly comment. */
 export async function publishReport(github, {issue, report}) {
   const {octokit, owner, repo} = github;
   let target = issue;
@@ -57,12 +64,12 @@ export async function publishReport(github, {issue, report}) {
     ({data: target} = await octokit.rest.issues.create({
       owner,
       repo,
-      title: report.title,
+      title: ISSUE_TITLE,
       body: report.body,
       labels: [REPORT_LABEL],
     }));
-    await pin(github, target);
   }
+  await pin(github, target);
   await octokit.rest.issues.createComment({
     owner,
     repo,

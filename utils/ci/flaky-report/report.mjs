@@ -1,14 +1,14 @@
-// Turns the CI data of the report's window into the flaky test report. Pure functions only:
-// collect.mjs does the I/O, so everything here can be tested with plain objects.
-export const ISSUE_TITLE = 'Flaky test report';
+import {REPO_NAME, REPO_OWNER} from '../common/constants.mjs';
 
+const REPOSITORY_URL = `https://github.com/${REPO_OWNER}/${REPO_NAME}`;
+const JIRA_URL = 'https://coveord.atlassian.net';
 const GROUPS = {atomic: 'Atomic', quantic: 'Quantic', other: 'Samples and smoke tests'};
 const LISTED_TESTS = 20;
 const LISTED_JOBS = 5;
 const MERGE_QUEUE_FAILURE_WEIGHT = 3;
 const TITLE_LENGTH = 100;
 
-export function suiteGroup(suite) {
+function suiteGroup(suite) {
   return suite === 'atomic' || suite === 'quantic' ? suite : 'other';
 }
 
@@ -47,15 +47,6 @@ function stepCause(jobName, step) {
   return step ? `${jobName}: ${step}` : `${jobName}: no failed step reported`;
 }
 
-/**
- * @param {object} input
- * @param {{start: string, end: string}} input.window ISO timestamps.
- * @param {Array<{id: number, event: string, createdAt: string}>} input.runs
- * @param {Array<{runId: number, suite: string, flaky: number, failed: number, tests?: Array<object>}>} input.records
- * @param {Array<{runId: number, job: string}>} input.recoveries
- * @param {Array<{runId: number, jobs: Array<{name: string, failedStep: string}>}>} input.mergeQueueFailures
- * @param {Array<{file: string, line: number, ageDays: number, ticket: string | null}>} input.skips
- */
 export function buildModel({window, runs, records, recoveries, mergeQueueFailures, skips}) {
   const runsById = new Map(runs.map((run) => [run.id, run]));
   const groups = new Map(
@@ -66,9 +57,6 @@ export function buildModel({window, runs, records, recoveries, mergeQueueFailure
 
   for (const record of records) {
     const run = runsById.get(record.runId);
-    if (!run) {
-      continue;
-    }
     const group = groups.get(suiteGroup(record.suite));
     group.runs.add(run.id);
     if (record.flaky > 0) {
@@ -92,8 +80,10 @@ export function buildModel({window, runs, records, recoveries, mergeQueueFailure
         lastSeen: run,
       }));
       (test.outcome === 'flaky' ? entry.flakyRuns : entry.failedRuns).add(run.id);
+      // The link points at the commit the last run tested, so it takes that run's line too.
       if (run.createdAt > entry.lastSeen.createdAt) {
         entry.lastSeen = run;
+        entry.line = test.line;
       }
     }
   }
@@ -107,16 +97,17 @@ export function buildModel({window, runs, records, recoveries, mergeQueueFailure
       title: entry.title,
       flakyRuns: entry.flakyRuns.size,
       failedInMergeQueue: entry.failedRuns.size,
-      lastSeen: {runId: entry.lastSeen.id, createdAt: entry.lastSeen.createdAt},
+      lastSeen: {
+        runId: entry.lastSeen.id,
+        createdAt: entry.lastSeen.createdAt,
+        headSha: entry.lastSeen.headSha,
+      },
     }))
     .sort((a, b) => score(b) - score(a) || a.title.localeCompare(b.title));
 
   const causes = new Map();
   for (const failure of mergeQueueFailures) {
     const run = runsById.get(failure.runId);
-    if (!run) {
-      continue;
-    }
     const files = failedFilesByMergeQueueRun.get(run.id);
     const cause = files
       ? `Test failed every retry: ${[...files]
@@ -189,23 +180,22 @@ function suiteLabel(suite) {
   return group === 'other' ? suite : GROUPS[group];
 }
 
-function ticketLink(ticket, {repositoryUrl, jiraUrl}) {
+function ticketLink(ticket) {
   const url = ticket.startsWith('#')
-    ? `${repositoryUrl}/issues/${ticket.slice(1)}`
-    : `${jiraUrl}/browse/${ticket}`;
+    ? `${REPOSITORY_URL}/issues/${ticket.slice(1)}`
+    : `${JIRA_URL}/browse/${ticket}`;
   return `[${ticket}](${url})`;
 }
 
-/**
- * @param {ReturnType<typeof buildModel>} model
- * @param {{repositoryUrl: string, ref: string, jiraUrl: string, partial?: boolean}} context
- * @returns {{title: string, body: string, comment: string}}
- */
-export function renderReport(model, {repositoryUrl, ref, jiraUrl, partial}) {
-  const runLink = ({runId, createdAt}) =>
-    `[${formatDate(createdAt)}](${repositoryUrl}/actions/runs/${runId})`;
-  const sourceLink = (file, line, text) =>
-    `[${text}](${repositoryUrl}/blob/${ref}/${file}#L${line})`;
+function runLink({runId, createdAt}) {
+  return `[${formatDate(createdAt)}](${REPOSITORY_URL}/actions/runs/${runId})`;
+}
+
+function sourceLink(ref, file, line, text) {
+  return `[${text}](${REPOSITORY_URL}/blob/${ref}/${file}#L${line})`;
+}
+
+export function renderReport(model, {ref}) {
   const period = `${formatDate(model.window.start)} to ${formatDate(model.window.end)}`;
   const failedRuns = model.mergeQueueCauses.reduce((total, row) => total + row.runs.length, 0);
   const mergeQueue = `${failedRuns} of ${plural(model.runCounts.mergeQueue, 'merge-queue run')} failed.`;
@@ -215,16 +205,10 @@ export function renderReport(model, {repositoryUrl, ref, jiraUrl, partial}) {
 
   const lines = [
     `**${period}**, ${plural(model.runCounts.total, 'CI run')}. Runs with a flaky test, out of the runs that ran each suite: ${suites}.`,
+    '',
+    '## Flaky tests',
+    '',
   ];
-  if (partial) {
-    lines.push(
-      '',
-      '> [!WARNING]',
-      '> The API rate limit stopped the collection early, so some runs are missing from this report.'
-    );
-  }
-
-  lines.push('', '## Flaky tests', '');
   if (model.tests.length === 0) {
     lines.push('No test needed a retry.');
   } else {
@@ -235,7 +219,7 @@ export function renderReport(model, {repositoryUrl, ref, jiraUrl, partial}) {
         .slice(0, LISTED_TESTS)
         .map((row) =>
           tableRow([
-            `${sourceLink(row.file, row.line, `\`${fileStem(row.file)}\``)} ${escapeCell(shorten(row.title.split(' › ').pop(), TITLE_LENGTH))}`,
+            `${sourceLink(row.lastSeen.headSha, row.file, row.line, `\`${fileStem(row.file)}\``)} ${escapeCell(shorten(row.title.split(' › ').pop(), TITLE_LENGTH))}`,
             suiteLabel(row.suite),
             row.flakyRuns,
             row.failedInMergeQueue || '',
@@ -273,7 +257,7 @@ export function renderReport(model, {repositoryUrl, ref, jiraUrl, partial}) {
           tableRow([
             escapeCell(row.job),
             row.count,
-            `[run](${repositoryUrl}/actions/runs/${row.lastRunId})`,
+            `[run](${REPOSITORY_URL}/actions/runs/${row.lastRunId})`,
           ])
         )
     );
@@ -299,8 +283,8 @@ export function renderReport(model, {repositoryUrl, ref, jiraUrl, partial}) {
       ...model.skips.map((skip) =>
         tableRow([
           plural(skip.ageDays, 'day'),
-          sourceLink(skip.file, skip.line, `${skip.file.split('/').pop()}:${skip.line}`),
-          skip.ticket ? ticketLink(skip.ticket, {repositoryUrl, jiraUrl}) : 'none',
+          sourceLink(ref, skip.file, skip.line, `${skip.file.split('/').pop()}:${skip.line}`),
+          skip.ticket ? ticketLink(skip.ticket) : 'none',
         ])
       ),
       '',
@@ -317,5 +301,5 @@ export function renderReport(model, {repositoryUrl, ref, jiraUrl, partial}) {
     mergeQueue,
   ].join(' ');
 
-  return {title: ISSUE_TITLE, body: `${lines.join('\n')}\n`, comment};
+  return {body: `${lines.join('\n')}\n`, comment};
 }
