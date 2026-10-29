@@ -3,6 +3,10 @@ const REPORT_LABEL = 'flaky-test-report';
 // Only an issue the workflow itself opened is ever rewritten, whoever else uses the label.
 const REPORT_AUTHOR = 'github-actions[bot]';
 
+/**
+ * Returns the open report issue, or null before the first publish. Only an issue the workflow
+ * opened, with the report's label and title, counts.
+ */
 export async function findReportIssue({octokit, owner, repo}) {
   const issues = await octokit.paginate(octokit.rest.issues.listForRepo, {
     owner,
@@ -54,6 +58,11 @@ async function pin({octokit}, issue) {
   }
 }
 
+/**
+ * Replaces the issue's description with the report, pins the issue, and posts the weekly comment,
+ * which is what notifies people watching it. The first publish creates the issue and its label.
+ * Returns the issue's URL.
+ */
 export async function publishReport(github, {issue, report}) {
   const {octokit, owner, repo} = github;
   let target = issue;

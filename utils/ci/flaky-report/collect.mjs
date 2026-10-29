@@ -47,8 +47,11 @@ function isoDate(time) {
   return new Date(time).toISOString().slice(0, 10);
 }
 
-// The runs endpoint returns at most 1,000 runs per date filter, and a month of CI has more, so the
-// window is read a week at a time.
+/**
+ * Lists the completed `ci.yml` runs created inside the window, each reduced to the fields the
+ * report needs. The runs endpoint returns at most 1,000 runs per date filter, and a month of CI has
+ * more, so the window is read a week at a time.
+ */
 export async function listRuns({octokit, owner, repo}, {start, end}) {
   const runs = new Map();
   for (let from = Date.parse(isoDate(start)); from <= Date.parse(end); from += 7 * DAY_IN_MS) {
@@ -82,7 +85,12 @@ function readRecordArchive(archive) {
   }
 }
 
-// Most records come from their names alone; only the ones with retries or failures are downloaded.
+/**
+ * Reads the record each Playwright job uploaded, for every run. A record holds one job's counts of
+ * passed, flaky and failed tests (see `playwright-record-reporter.mjs`). The counts come from the
+ * artifact name alone; only records with a retry or a failure are downloaded, to get each of those
+ * tests' file, line and title.
+ */
 export async function collectRecords({octokit, owner, repo}, runs) {
   const records = [];
   await forEachRun(runs, async (run) => {
@@ -138,6 +146,11 @@ function recoveredJobs(attempts) {
   return [...new Set(recovered)];
 }
 
+/**
+ * Finds the jobs that only passed after "Re-run failed jobs". In each run with more than one
+ * attempt, a job counts when it failed in some attempt and succeeded in the last one. Downstream
+ * jobs, which only fail because another job did, are ignored.
+ */
 export async function collectRecoveries({octokit, owner, repo}, runs) {
   const recoveries = [];
   await forEachRun(
@@ -172,6 +185,10 @@ function failedJobs(jobs) {
     }));
 }
 
+/**
+ * Lists, for each failed merge-queue run, the jobs that failed and the step that failed in each.
+ * Downstream jobs are left out, so every entry points at an actual cause.
+ */
 export async function collectMergeQueueFailures({octokit, owner, repo}, runs) {
   const failures = [];
   await forEachRun(
@@ -212,6 +229,11 @@ function git(cwd, args) {
   });
 }
 
+/**
+ * Lists the skipped tests on the checked-out commit. Each one is dated with `git blame` on its skip
+ * line, ignoring formatting-only commits, and gets the first ticket key found on that line or the
+ * three lines above it.
+ */
 export function collectSkips() {
   const repositoryRoot = git('.', ['rev-parse', '--show-toplevel']).trim();
   let output;
