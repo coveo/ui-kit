@@ -118,7 +118,9 @@ export async function collectRecords({octokit, owner, repo}, runs) {
           artifact_id: artifact.id,
           archive_format: 'zip',
         });
-        record.tests = readRecordArchive(data)?.tests ?? [];
+        const content = readRecordArchive(data);
+        record.sha = content?.sha;
+        record.tests = content?.tests ?? [];
       }
       records.push(record);
     }
