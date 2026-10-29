@@ -41,9 +41,16 @@ jobs:
           filter: blob:none
       - uses: ./.github/actions/setup
       # Without --publish, the report goes to this job's summary instead of the issue.
-      - run: pnpm --filter @coveo/ci run flaky-report
+      - id: report
+        run: pnpm --filter @coveo/ci run flaky-report --snapshot "$RUNNER_TEMP/flaky-snapshot"
         env:
           GITHUB_TOKEN: ${{ github.token }}
+      # Lets a pull request check the snapshot. The dashboard only imports those uploaded from main.
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: ${{ steps.report.outputs.snapshot }}
+          path: ${{ runner.temp }}/flaky-snapshot
+          retention-days: 90
 
   publish:
     name: 'Flaky test report'
@@ -66,6 +73,13 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
-      - run: pnpm --filter @coveo/ci run flaky-report --publish
+      - id: report
+        run: pnpm --filter @coveo/ci run flaky-report --publish --snapshot "$RUNNER_TEMP/flaky-snapshot"
         env:
           GITHUB_TOKEN: ${{ github.token }}
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: ${{ steps.report.outputs.snapshot }}
+          path: ${{ runner.temp }}/flaky-snapshot
+          # The flaky test dashboard imports the snapshots of the past 90 days.
+          retention-days: 90

@@ -53,10 +53,10 @@ function stepCause(jobName, step) {
  * - `suites`: for Atomic, Quantic and the other suites, the runs that executed them, and how many
  *   of those had a test that passed only on retry.
  * - `tests`: one row per flaky test with its flaky runs, the merge-queue runs where it failed every
- *   retry, and the last run that saw it. A failure on every retry counts only in the merge queue.
- *   Rows rank by flaky runs plus three per merge-queue failure.
+ *   retry, the IDs of both, and the last run that saw it. A failure on every retry counts only in
+ *   the merge queue. Rows rank by flaky runs plus three per merge-queue failure.
  * - `mergeQueueCauses`: failed merge-queue runs grouped by cause: the test files that failed every
- *   retry when there are some, otherwise the step that failed.
+ *   retry when there are some (kind `test`), otherwise the step that failed (`infrastructure`).
  * - `recoveries`: per job, the runs that only passed after a re-run.
  * - `skips`: the skipped tests, oldest first.
  */
@@ -113,6 +113,7 @@ export function buildModel({window, runs, records, recoveries, mergeQueueFailure
       title: entry.title,
       flakyRuns: entry.flakyRuns.size,
       failedInMergeQueue: entry.failedRuns.size,
+      runIds: [...entry.flakyRuns.union(entry.failedRuns)].sort((a, b) => a - b),
       lastSeen: {runId: entry.lastSeen.id, createdAt: entry.lastSeen.createdAt},
       sha: entry.sha,
     }))
@@ -129,11 +130,15 @@ export function buildModel({window, runs, records, recoveries, mergeQueueFailure
           .join(', ')}`
       : [...new Set(failure.jobs.map((job) => stepCause(job.name, job.failedStep)))].join(', ') ||
         'No failed job reported';
-    getOrCreate(causes, cause, () => []).push({runId: run.id, createdAt: run.createdAt});
+    getOrCreate(causes, cause, () => ({
+      kind: files ? 'test' : 'infrastructure',
+      runs: [],
+    })).runs.push({runId: run.id, createdAt: run.createdAt});
   }
   const mergeQueueCauses = [...causes]
-    .map(([cause, causeRuns]) => ({
+    .map(([cause, {kind, runs: causeRuns}]) => ({
       cause,
+      kind,
       runs: causeRuns.toSorted((a, b) => a.createdAt.localeCompare(b.createdAt)),
     }))
     .sort((a, b) => b.runs.length - a.runs.length || a.cause.localeCompare(b.cause));
@@ -153,6 +158,7 @@ export function buildModel({window, runs, records, recoveries, mergeQueueFailure
       mergeQueue: runs.filter((run) => run.event === 'merge_group').length,
     },
     suites: Object.entries(GROUPS).map(([id, label]) => ({
+      id,
       label,
       runs: groups.get(id).runs.size,
       flakyRuns: groups.get(id).flakyRuns.size,
@@ -161,6 +167,38 @@ export function buildModel({window, runs, records, recoveries, mergeQueueFailure
     mergeQueueCauses,
     recoveries: recoveryRows,
     skips: [...skips].sort((a, b) => b.ageDays - a.ageDays || a.file.localeCompare(b.file)),
+  };
+}
+
+/**
+ * Reduces a one-week model to the snapshot the internal flaky test dashboard stores for that week.
+ * The fields are schema 1 of the contract with that dashboard: a breaking change needs a new number.
+ */
+export function buildSnapshot(model) {
+  return {
+    schema: 1,
+    source: 'report',
+    week: {start: model.window.start, end: model.window.end},
+    runCounts: {total: model.runCounts.total, mergeQueue: model.runCounts.mergeQueue},
+    suites: model.suites.map(({id, runs, flakyRuns}) => ({id, runs, flakyRuns})),
+    tests: model.tests.map(({suite, file, title, flakyRuns, failedInMergeQueue, runIds}) => ({
+      suite,
+      file,
+      title,
+      flakyRuns,
+      failedInMergeQueue,
+      runIds,
+    })),
+    mergeQueueCauses: model.mergeQueueCauses.map(({cause, kind, runs}) => ({
+      cause,
+      kind,
+      runs: runs.length,
+    })),
+    recoveries: model.recoveries.map(({job, count}) => ({job, count})),
+    skips: {
+      total: model.skips.length,
+      withoutTicket: model.skips.filter((skip) => !skip.ticket).length,
+    },
   };
 }
 
