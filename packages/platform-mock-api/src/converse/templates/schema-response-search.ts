@@ -1655,12 +1655,13 @@ function deriveBreadboxViewState(action: {name: string; context: Record<string, 
   }
 }
 
-// Searches the shopper's query as typed: nothing replaces it again.
+// Searches the shopper's query as typed: no query trigger replaces it again. Like the Commerce API,
+// which corrects a misspelled query on every search, the mock ignores the override of a correction.
 function deriveQuerySummaryViewState(action: {
   name: string;
   context: Record<string, unknown>;
 }): void {
-  if (action.name === 'overrideCorrection') {
+  if (action.name === 'overrideCorrection' && currentView.correction?.cause === 'trigger') {
     currentView = {
       ...DEFAULT_VIEW,
       query: String(action.context.originalQuery ?? currentView.query),
