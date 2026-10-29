@@ -8,8 +8,9 @@ function paginationState(page: number) {
   return {path: '/state/pagination', value: {page, pageSize: 12, totalEntries: 43, totalPages: 4}};
 }
 
-function mountSearch() {
+function mountSearch(dispatchGate?: () => Promise<void>) {
   return mountSurface({
+    dispatchGate,
     component: {component: 'CommerceSearch'},
     children: [
       {
@@ -92,5 +93,42 @@ describe('useSearchHistory', () => {
       })
     );
     expect(pushState).toHaveBeenCalledTimes(1);
+  });
+
+  it('drops a queued restore when the browser moves on to another entry', async () => {
+    let release = () => {};
+    const gate = () =>
+      new Promise<void>((resolve) => {
+        release = resolve;
+      });
+    const pushState = vi.spyOn(window.history, 'pushState');
+    const {actions, pushDataModel} = mountSearch(gate);
+    await waitFor(() => expect(pushState).toHaveBeenCalledTimes(1));
+
+    popTo({thermidorSearch: {surfaceId: SURFACE_ID, snapshot: {query: '', page: 1, pageSize: 12}}});
+    await waitFor(() => expect(actions).toHaveLength(1));
+    popTo({thermidorSearch: {surfaceId: SURFACE_ID, snapshot: {query: '', page: 2, pageSize: 12}}});
+    const other = {
+      thermidorSearch: {surfaceId: 'other-surface', snapshot: {query: '', page: 0, pageSize: 12}},
+    };
+    popTo(other);
+    await act(async () => release());
+    pushDataModel([paginationState(1)]);
+
+    await waitFor(() => expect(window.history.state).toEqual(other));
+    expect(actions.map((action) => action.context)).toEqual([{query: '', page: 1, pageSize: 12}]);
+    expect(pushState).toHaveBeenCalledTimes(1);
+  });
+
+  it('adds an entry for the next search after a restore fails', async () => {
+    const pushState = vi.spyOn(window.history, 'pushState');
+    const {lastAction, pushDataModel} = mountSearch(() => Promise.reject(new Error('429')));
+    await waitFor(() => expect(pushState).toHaveBeenCalledTimes(1));
+
+    popTo({thermidorSearch: {surfaceId: SURFACE_ID, snapshot: {query: '', page: 3, pageSize: 12}}});
+    await waitFor(() => expect(lastAction()?.name).toBe('restoreState'));
+    pushDataModel([paginationState(2)]);
+
+    await waitFor(() => expect(pushState).toHaveBeenCalledTimes(2));
   });
 });

@@ -1,6 +1,6 @@
 import {useEffect, useRef, useState} from 'react';
 import type {CommerceSearchAction, RestoreStatePayload} from '@coveo/thermidor-schema';
-import {useLatestWhenFree, useSessionBusy} from '../session-request.js';
+import {useActionError, useLatestWhenFree, useSessionBusy} from '../session-request.js';
 import {buildRestoreSnapshot} from './restore-snapshot.js';
 
 /** The part of a renderer component context that the search history reads. */
@@ -24,6 +24,12 @@ interface SearchHistoryEntry {
   snapshot: RestoreStatePayload;
 }
 
+/**
+ * What to do with the answer of a restore in flight: replace the entry it restored, or leave the
+ * history alone once the shopper has moved to another entry.
+ */
+type RestoreAnswer = 'replace' | 'ignore';
+
 function entryOf(state: unknown): SearchHistoryEntry | undefined {
   return (state as Record<string, SearchHistoryEntry> | null)?.[HISTORY_KEY];
 }
@@ -46,8 +52,15 @@ export function useSearchHistory(context: SearchSurfaceContext): void {
   const recordedVersion = useRef(0);
   // A restore's answer replaces the entry it restored instead of pushing a new one, so the entries
   // ahead of it stay reachable with forward.
-  const restoring = useRef(false);
+  const restoreAnswer = useRef<RestoreAnswer | undefined>(undefined);
   const [pendingRestore, setPendingRestore] = useState<RestoreStatePayload>();
+  const actionError = useActionError(surfaceId);
+
+  useEffect(() => {
+    if (actionError) {
+      restoreAnswer.current = undefined;
+    }
+  }, [actionError]);
 
   useEffect(() => {
     const subscription = context.dataContext.dataModel.subscribe('/state', () =>
@@ -70,31 +83,40 @@ export function useSearchHistory(context: SearchSurfaceContext): void {
       current?.surfaceId === surfaceId &&
       JSON.stringify(current.snapshot) === JSON.stringify(snapshot)
     ) {
-      restoring.current = false;
+      restoreAnswer.current = undefined;
+      return;
+    }
+    if (pendingRestore) {
+      return;
+    }
+    const answer = restoreAnswer.current;
+    restoreAnswer.current = undefined;
+    if (answer === 'ignore') {
       return;
     }
     const entry = {[HISTORY_KEY]: {surfaceId, snapshot}};
-    if (restoring.current) {
-      restoring.current = false;
+    if (answer === 'replace') {
       window.history.replaceState(entry, '');
     } else {
       window.history.pushState(entry, '');
     }
-  }, [busy, stateVersion, context, surfaceId]);
+  }, [busy, stateVersion, context, surfaceId, pendingRestore]);
 
   useEffect(() => {
     const onPopState = (event: PopStateEvent) => {
       const entry = entryOf(event.state);
-      if (entry?.surfaceId === surfaceId) {
-        restoring.current = true;
-        setPendingRestore(entry.snapshot);
+      if (restoreAnswer.current) {
+        restoreAnswer.current = 'ignore';
       }
+      setPendingRestore(entry?.surfaceId === surfaceId ? entry.snapshot : undefined);
     };
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
   }, [surfaceId]);
 
   useLatestWhenFree(pendingRestore, (snapshot) => {
+    restoreAnswer.current = 'replace';
+    setPendingRestore(undefined);
     void context.dispatchAction({event: {name: 'restoreState', context: snapshot}});
   });
 }

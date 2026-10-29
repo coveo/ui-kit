@@ -1,8 +1,11 @@
-import type {SessionRequest, SessionSnapshot} from '@coveo/thermidor';
+import type {ActionError, SessionRequest, SessionSnapshot} from '@coveo/thermidor';
 import type {SessionRequestSource} from '../a2ui/session-request.js';
 
-/** A session snapshot holding only `request`, the one field the surfaces read. */
-export function requestSnapshot(request: SessionRequest | undefined): SessionSnapshot {
+/** A session snapshot holding only `request` and `actionError`, the fields the surfaces read. */
+export function requestSnapshot(
+  request: SessionRequest | undefined,
+  actionError?: ActionError
+): SessionSnapshot {
   return {
     turns: [],
     initialization: undefined,
@@ -10,7 +13,7 @@ export function requestSnapshot(request: SessionRequest | undefined): SessionSna
     a2uiMessages: [],
     state: {},
     request,
-    actionError: undefined,
+    actionError,
   };
 }
 
@@ -30,10 +33,11 @@ export function createFakeSessionRequests(
 ) {
   const listeners = new Set<() => void>();
   let request: SessionRequest | undefined;
+  let actionError: ActionError | undefined;
   let snapshot = requestSnapshot(undefined);
 
   const notify = () => {
-    snapshot = requestSnapshot(request);
+    snapshot = requestSnapshot(request, actionError);
     for (const listener of listeners) {
       listener();
     }
@@ -76,11 +80,15 @@ export function createFakeSessionRequests(
             sourceComponentId: String(userAction?.sourceComponentId),
             turnId: 'turn',
           };
+    actionError = undefined;
     notify();
     try {
       await (send as (message: unknown) => Promise<void> | void)(message);
-    } catch {
-      // Like the session's dispatch, a failed send still ends the request.
+    } catch (error) {
+      // Like the session's dispatch, a failed send still ends the request, and reports it.
+      if (request.kind === 'action') {
+        actionError = {...request, message: String(error)};
+      }
     }
     request = undefined;
     notify();
