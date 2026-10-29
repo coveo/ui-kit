@@ -697,6 +697,7 @@ interface PriceRange {
 }
 
 interface SearchViewState {
+  query: string;
   page: number;
   pageSize: number;
   sortCriteria: string;
@@ -718,6 +719,7 @@ interface SearchViewState {
 }
 
 const DEFAULT_VIEW: SearchViewState = {
+  query: 'Water Sports',
   page: 0,
   pageSize: DEFAULT_PAGE_SIZE,
   sortCriteria: 'relevance',
@@ -1097,7 +1099,7 @@ function computeComponentsState(view: SearchViewState): Record<string, unknown> 
   // The query-summary owns its own backend-computed aggregate (query + result window) so it does
   // not read the search-box, pagination, and product-list state. Indices are 1-based; on an empty
   // result set the window collapses to 0-0 and the renderer shows the no-results/empty state.
-  const query = 'Water Sports';
+  const {query} = view;
   const firstIndex = totalEntries === 0 ? 0 : start + 1;
   const lastIndex = totalEntries === 0 ? 0 : start + pageProducts.length;
 
@@ -1636,8 +1638,35 @@ function deriveBreadboxViewState(action: {name: string; context: Record<string, 
   }
 }
 
+interface FacetRestore {
+  facetId: string;
+  values?: string[];
+  numericRanges?: PriceRange[];
+  path?: string[];
+}
+
+// Like the gateway, a restore replaces the whole view with the snapshot instead of merging into it.
+function restoreView(context: Record<string, unknown>): SearchViewState {
+  const facets = (Array.isArray(context.facets) ? context.facets : []) as FacetRestore[];
+  const restored = (field: string) => facets.find((facet) => facet.facetId === field);
+  const range = restored(FACET_FIELDS.numeric.field)?.numericRanges?.[0];
+  return {
+    ...DEFAULT_VIEW,
+    query: String(context.query ?? DEFAULT_VIEW.query),
+    page: Number(context.page) || 0,
+    pageSize: Number(context.pageSize) || DEFAULT_VIEW.pageSize,
+    sortCriteria: String(context.sortCriteria ?? DEFAULT_VIEW.sortCriteria),
+    selectedBrands: restored(FACET_FIELDS.regular.field)?.values ?? [],
+    selectedPriceRange: range ? {start: Number(range.start), end: Number(range.end)} : null,
+    selectedCategoryPath: restored(FACET_FIELDS.category.field)?.path ?? [],
+  };
+}
+
 function deriveNonFacetState(action: {name: string; context: Record<string, unknown>}): void {
   switch (action.name) {
+    case 'restoreState':
+      currentView = restoreView(action.context);
+      break;
     case 'selectPage':
       currentView = {...currentView, page: Number(action.context.page) || 0};
       break;
