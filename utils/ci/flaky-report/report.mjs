@@ -47,6 +47,19 @@ function stepCause(jobName, step) {
   return step ? `${jobName}: ${step}` : `${jobName}: no failed step reported`;
 }
 
+/**
+ * Folds the collected CI data into the figures the report shows:
+ * - `runCounts`: all runs in the window, and the merge-queue runs among them.
+ * - `suites`: for Atomic, Quantic and the other suites, the runs that executed them, and how many
+ *   of those had a test that passed only on retry.
+ * - `tests`: one row per flaky test with its flaky runs, the merge-queue runs where it failed every
+ *   retry, and the last run that saw it. A failure on every retry counts only in the merge queue.
+ *   Rows rank by flaky runs plus three per merge-queue failure.
+ * - `mergeQueueCauses`: failed merge-queue runs grouped by cause: the test files that failed every
+ *   retry when there are some, otherwise the step that failed.
+ * - `recoveries`: per job, the runs that only passed after a re-run.
+ * - `skips`: the skipped tests, oldest first.
+ */
 export function buildModel({window, runs, records, recoveries, mergeQueueFailures, skips}) {
   const runsById = new Map(runs.map((run) => [run.id, run]));
   const groups = new Map(
@@ -195,6 +208,11 @@ function sourceLink(ref, file, line, text) {
   return `[${text}](${REPOSITORY_URL}/blob/${ref}/${file}#L${line})`;
 }
 
+/**
+ * Renders the model as the issue description, in Markdown, and the one-line weekly comment. Lists
+ * stop at the top 20 tests and the top 5 jobs. Flaky tests link to their line in the commit their
+ * last run tested; skipped tests link to `ref`, the commit the report was built from.
+ */
 export function renderReport(model, {ref}) {
   const period = `${formatDate(model.window.start)} to ${formatDate(model.window.end)}`;
   const failedRuns = model.mergeQueueCauses.reduce((total, row) => total + row.runs.length, 0);
