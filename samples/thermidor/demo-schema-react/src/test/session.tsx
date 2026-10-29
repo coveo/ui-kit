@@ -132,6 +132,8 @@ export function createTestSession(handler: ConverseHandler = answerShell) {
     organizationId: 'test-org',
     accessToken: 'test-token',
     endpoint: 'https://converse.test',
+    agentConfigurationId: 'test-agent-configuration',
+    trackingId: 'test-tracking',
   });
   const actions = (name: string) =>
     requests.filter((request) => request.action?.name === name).map(({action}) => action!);

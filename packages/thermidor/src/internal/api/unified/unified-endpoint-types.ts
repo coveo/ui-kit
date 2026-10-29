@@ -3,10 +3,14 @@ import type {CommerceCartItem} from '@/src/internal/context/commerce-context.js'
 // ─── Commerce agent input ──────────────────────────────────────────────────
 
 export interface CommerceRequestModel {
+  agentConfigurationId: string;
   trackingId: string;
-  language: string;
-  country: string;
-  currency: string;
+  /** Omitted when the session config has none. */
+  language?: string;
+  /** Omitted when the session config has none. */
+  country?: string;
+  /** Omitted when the session config has none. */
+  currency?: string;
   clientId?: string;
   message: string | null;
   action: A2uiAction | InitializeAction | null;

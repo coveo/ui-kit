@@ -68,6 +68,15 @@ test('exposes session-scoped surfaces, renderer stream and state on Session', ()
   expectTypeOf<TurnResponse>().not.toHaveProperty('state');
 });
 
+// ── POSITIVE: a session names its configured agent and tracking id ──
+test('requires the agent configuration and tracking id, not the locale', () => {
+  expectTypeOf<SessionConfig['agentConfigurationId']>().toEqualTypeOf<string>();
+  expectTypeOf<SessionConfig['trackingId']>().toEqualTypeOf<string>();
+  expectTypeOf<SessionConfig['language']>().toEqualTypeOf<string | undefined>();
+  expectTypeOf<SessionConfig['country']>().toEqualTypeOf<string | undefined>();
+  expectTypeOf<SessionConfig['currency']>().toEqualTypeOf<string | undefined>();
+});
+
 // ── POSITIVE: the session opens itself with initialize, recorded as its initialization ──
 test('exposes the initialization of the session', () => {
   expectTypeOf<SessionConfig['initialize']>().toEqualTypeOf<boolean | undefined>();

@@ -1,4 +1,5 @@
 import {describe, expect, it, vi, afterEach} from 'vitest';
+import {PUBLIC_SAMPLE_CONFIGURATION} from './public-sample-configuration.js';
 
 const load = async (env: Record<string, string | undefined>) => {
   vi.resetModules();
@@ -21,6 +22,9 @@ describe('public sample configuration is a bundle', () => {
   it('applies wholesale with no organization', async () => {
     const c = await load({});
     expect(c.organizationId).toBe('searchuisamples');
+    expect(c.agentConfigurationId).toBe(
+      PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_AGENT_CONFIGURATION_ID
+    );
     expect(c.trackingId).toBe('sports-ui-samples');
     expect(c.endpoint).toContain('https://searchuisamples.org.coveo.com');
   });
@@ -34,6 +38,13 @@ describe('public sample configuration is a bundle', () => {
   it('IGNORES a stray tracking id', async () => {
     const c = await load({VITE_COVEO_TRACKING_ID: 'someone-elses'});
     expect(c.trackingId).toBe('sports-ui-samples');
+  });
+
+  it('IGNORES a stray agent configuration id', async () => {
+    const c = await load({VITE_COVEO_AGENT_CONFIGURATION_ID: 'someone-elses'});
+    expect(c.agentConfigurationId).toBe(
+      PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_AGENT_CONFIGURATION_ID
+    );
   });
 
   it('IGNORES a stray access token', async () => {
@@ -51,6 +62,7 @@ describe('public sample configuration is a bundle', () => {
   it('opts out entirely once an organization is set', async () => {
     const c = await load({
       VITE_COVEO_ORGANIZATION_ID: 'myorg',
+      VITE_COVEO_AGENT_CONFIGURATION_ID: 'my-agent',
       VITE_COVEO_TRACKING_ID: 'mine',
       VITE_COVEO_LANGUAGE: 'fr',
       VITE_COVEO_COUNTRY: 'CA',
@@ -58,8 +70,36 @@ describe('public sample configuration is a bundle', () => {
       VITE_COVEO_PLATFORM_ENVIRONMENT: 'dev',
     });
     expect(c.organizationId).toBe('myorg');
+    expect(c.agentConfigurationId).toBe('my-agent');
     expect(c.trackingId).toBe('mine');
     expect(c.accessToken).toBe('');
     expect(c.endpoint).toContain('https://myorg.orgdev.coveo.com');
   });
+});
+
+describe('an organization of your own', () => {
+  it('leaves the locale to the configured agent when none is set', async () => {
+    const c = await load({
+      VITE_COVEO_ORGANIZATION_ID: 'myorg',
+      VITE_COVEO_AGENT_CONFIGURATION_ID: 'my-agent',
+      VITE_COVEO_TRACKING_ID: 'mine',
+    });
+    expect(c.language).toBeUndefined();
+    expect(c.country).toBeUndefined();
+    expect(c.currency).toBeUndefined();
+  });
+
+  it.each(['VITE_COVEO_AGENT_CONFIGURATION_ID', 'VITE_COVEO_TRACKING_ID'])(
+    'requires %s',
+    async (key) => {
+      await expect(
+        load({
+          VITE_COVEO_ORGANIZATION_ID: 'myorg',
+          VITE_COVEO_AGENT_CONFIGURATION_ID: 'my-agent',
+          VITE_COVEO_TRACKING_ID: 'mine',
+          [key]: '',
+        })
+      ).rejects.toThrow(key);
+    }
+  );
 });

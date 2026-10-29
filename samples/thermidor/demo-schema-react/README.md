@@ -56,9 +56,11 @@ set `VITE_COVEO_ORGANIZATION_ID`, and run `pnpm dev:local`. With no
 `searchuisamples` organization — the same org and intentionally-public API key
 the other samples use through `getSampleSearchEngineConfiguration()` — which has
 the commerce agent enabled. Setting an organization opts out of those defaults
-**as a bundle**: the tracking id, locale, and platform environment all belong to
+**as a bundle**: the agent configuration id, tracking id, locale, and platform environment all belong to
 `searchuisamples`, so they are not mixed into another organization's
-configuration. Set the ones you need alongside it.
+configuration. Set the ones you need alongside it: `VITE_COVEO_AGENT_CONFIGURATION_ID`
+and `VITE_COVEO_TRACKING_ID` are required, and the locale variables are used only when
+the configured agent has no locale.
 
 See [`src/public-sample-configuration.ts`](src/public-sample-configuration.ts).
 

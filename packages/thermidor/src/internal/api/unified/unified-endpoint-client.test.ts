@@ -7,6 +7,7 @@ describe('UnifiedEndpointClient', () => {
   let mockedFetch: MockedFunction<typeof fetch>;
 
   const request: CommerceRequestModel = {
+    agentConfigurationId: 'agent-configuration-id',
     trackingId: 'tracking-id',
     language: 'en',
     country: 'US',
