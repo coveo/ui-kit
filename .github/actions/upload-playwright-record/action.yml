@@ -27,8 +27,8 @@ runs:
         name: ${{ steps.record.outputs.name }}
         path: ${{ steps.record.outputs.path }}
         include-hidden-files: true
-        # The weekly report reads the past 30 days.
-        retention-days: 35
+        # The weekly report reads the past 14 days, and the repository keeps artifacts 15 days at most.
+        retention-days: 15
     - name: Clear the uploaded record
       if: steps.record.outputs.path != ''
       continue-on-error: true
