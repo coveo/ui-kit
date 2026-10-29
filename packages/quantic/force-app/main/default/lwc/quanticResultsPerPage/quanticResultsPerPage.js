@@ -109,7 +109,6 @@ export default class QuanticResultsPerPage extends LightningElement {
       this.headless = getHeadlessBundle(this.engineId);
       this.resultsPerPage = this.headless.buildResultsPerPage(engine, {
         initialState: {
-          // TODO: KIT-282 Number() never returns null or undefined, so this never falls back to this.choices[0]. Fix it in a follow-up and remove this exception.
           // eslint-disable-next-line no-constant-binary-expression
           numberOfResults: Number(this.initialChoice) ?? this.choices[0],
         },
