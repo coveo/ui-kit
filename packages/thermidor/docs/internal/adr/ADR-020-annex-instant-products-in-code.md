@@ -94,27 +94,23 @@ export function createActionCache(now: () => number = Date.now): ActionCache {
 ## 3. Routing a dispatch
 
 `issueAction` checks the announcements before the single request. Nothing changes for an action
-the producer announced neither way.
+the producer did not announce as concurrent, even if it announced it as cached.
 
 ```ts
 function issueAction(recovered: RecoveredAction): Promise<void> {
   const activities = sessionActivities(store.getState());
-  const policy = cachePolicy(activities, recovered.surfaceId, recovered.name);
-  const concurrent = concurrentActions(activities, recovered.surfaceId).has(recovered.name);
-  if (!policy && !concurrent) {
+  if (!concurrentActions(activities, recovered.surfaceId).has(recovered.name)) {
     return issueOrdinaryAction(recovered); // today's path: validation, turn opening, sendRequest
   }
   // ...payload validation, as today...
 
+  const policy = cachePolicy(activities, recovered.surfaceId, recovered.name);
   const key = cacheKey(recovered, recovered.context);
   const cached = policy && actionCache.get(key);
   if (cached) {
     lanes.abort(recovered); // a late answer must not replace the cached one
     applyUnrecorded(cached);
     return Promise.resolve();
-  }
-  if (!concurrent) {
-    return issueOrdinaryAction(recovered, {cacheAs: policy && {key, ttlMs: policy.ttlMs}});
   }
   return lanes.send(recovered, async (signal) => {
     const messages = await streamUnrecorded(buildActionRequest(toA2uiAction(recovered)), signal);
@@ -163,28 +159,41 @@ function createLanes() {
 
 ## 5. Applied, not recorded
 
-An unrecorded answer goes where a recorded one goes, except into a run's activities.
+An unrecorded answer only writes the data model of nodes the recorded runs hold. Its writes go to
+the renderer stream and to a layer of their own, never into a run's activities or the recorded
+state.
 
 ```ts
 function applyUnrecorded(messages: readonly unknown[]): void {
+  const writes = messages.filter(isUpdateDataModel);
+  if (writes.length < messages.length) {
+    devWarn(
+      'dispatchAction: an unrecorded answer may only update the data model; the rest is dropped.'
+    );
+  }
   store.setState((current) => ({
     ...current,
-    state: applyInboundOps(
-      current.state ?? {},
+    // Validation resolves nodes from recorded runs, so a write to an unknown node is dropped.
+    unrecordedState: applyInboundOps(
+      current.unrecordedState ?? {},
       sessionActivities(current),
-      {messages},
+      {messages: writes},
       config.contracts
     ),
     rendererStream: appendToRendererStream(
       current.rendererStream ?? EMPTY_RENDERER_STREAM,
-      convertA2uiMessages(messages)
+      convertA2uiMessages(writes)
     ),
   }));
 }
 ```
 
+`session.state` reads the recorded `state` with `unrecordedState` on top. A recorded write removes
+the layer's value at the same path, and `serializeSession` saves `state` alone, so no product slice
+outlives the page.
+
 `streamUnrecorded` reads the response stream as `consumeStream` does, calls `applyUnrecorded` for
-each surface snapshot, and returns the snapshots' messages once the stream ends without error.
+each surface snapshot, and returns the snapshots' writes once the stream ends without error.
 
 ## 6. The search box shares its highlight
 

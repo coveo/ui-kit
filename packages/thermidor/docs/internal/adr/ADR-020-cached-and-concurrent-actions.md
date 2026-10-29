@@ -80,8 +80,8 @@ The session cannot support this today:
 
 - **Summary:** the producer announces, in surface metadata, which actions are cached and for how
   long, and which are sent concurrently. A cached action's answer is reused within that lifetime. A
-  concurrent action is sent in a lane of its own, latest wins per source node, and its answer is
-  applied to the surfaces without being recorded in a run.
+  concurrent action is sent in a lane of its own, latest wins per source node, and its state writes
+  are applied without being recorded in a run.
 - **Pros:** meets every driver. A renderer only dispatches.
 - **Cons:** a second request path in the session, and two metadata keys the producer must keep
   consistent with how it answers.
@@ -111,8 +111,9 @@ under two `metadata` keys keyed by surface id, as `turnOpeningActions` is:
 ```
 
 The latest announcement for a surface wins, an empty entry revokes it, and an announcement with
-another shape is ignored. An action announced as cached but not concurrent is cached, and its
-misses are sent like any action.
+another shape is ignored. Only a concurrent action is cached: a cache announcement for an action
+not announced as concurrent is ignored, so a cached answer never races the session's single
+request.
 
 ### The concurrent lane
 
@@ -123,9 +124,15 @@ A concurrent action is sent at once, whatever request is in flight.
 - **Not a request of the session.** `session.request` does not change, so a renderer waiting for the
   session to be free, and the single request of prompts and other actions, ignore it. A prompt or
   `cancel()` does not abort it.
-- **Applied, not recorded.** Its surface snapshots are applied to `session.state` and the renderer
-  stream, as any answer's are, but folded into no run's activities. A restored session holds the
-  component's state as the last recorded run left it, and the renderer asks again.
+- **State writes on known nodes only.** Its answer may only update the data model of nodes the
+  session's recorded runs already hold. Any other message, such as a new surface or component, is
+  dropped with a development warning, and the answer's metadata is not read: announcements, nodes
+  and the actions a renderer can dispatch come from recorded runs alone.
+- **Applied, not recorded.** Its writes are folded into no run's activities. They reach the
+  renderer stream, and an in-memory layer over the recorded state: `session.state` shows the layer
+  on top, a later recorded write to the same path replaces it, and serialization saves the recorded
+  state alone. A restored session holds the component's state as the last recorded run left it,
+  and the renderer asks again.
 - **Failures are quiet.** A failed request, including a refusal, is a development warning. It sets
   no `actionError` and changes no run.
 - **It needs a session.** Before the session has a token, a concurrent action is withheld.
@@ -139,8 +146,8 @@ A cached action's answer is reused within its announced lifetime.
 - **A hit sends nothing.** The session applies the cached snapshots as it applies a concurrent
   answer, and aborts the action's request in flight from that node, so a late answer cannot replace
   it.
-- **A miss is sent**, in the concurrent lane if the action is announced there. The answer's surface
-  snapshots are cached when the stream completes without error.
+- **A miss is sent** in the concurrent lane. The answer's writes are cached when the stream
+  completes without error.
 - **Bounded:** a fixed number of entries per session, least recently used first out, and entries
   expire with their lifetime. The cache lives in memory, is never serialized, and is dropped with
   the session.
@@ -167,6 +174,8 @@ their `query` is highlighted are the renderer's.
 - The session reads both announcements from the activity log, as `isTurnOpeningAction` does.
 - `dispatchAction` routes an announced action before `sendRequest`; `cancel()`, `submitPrompt` and
   `session.request` are unchanged.
+- The store keeps unrecorded writes apart from the recorded state; `serializeSession` saves the
+  recorded state only.
 - demo-schema-react: `SearchBox` exposes the highlighted query to its children, and an
   `InstantProducts` renderer dispatches it. `QuerySuggestions` keeps `useLatestWhenFree` until the
   producer announces `fetchSuggestions` as concurrent.
