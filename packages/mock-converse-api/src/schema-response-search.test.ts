@@ -671,3 +671,67 @@ describe('schema-response-search state per surface', () => {
     expect(new Set(brands(second)).size).toBeGreaterThan(1);
   });
 });
+
+describe('schema-response-search restoreState', () => {
+  beforeEach(() => {
+    resetSurface();
+  });
+
+  function restore(context: Record<string, unknown>) {
+    return act('restoreState', {query: 'surf', page: 0, pageSize: 12, ...context}, 'root');
+  }
+
+  it('restores the query, page, page size and sort', () => {
+    const components = restore({page: 2, pageSize: 6, sortCriteria: 'price_asc'});
+    expect((components['query-summary-2'] as Record<string, unknown>).query).toBe('surf');
+    expect(components['pagination-2']).toMatchObject({page: 2, pageSize: 6});
+    expect((components['sort-2'] as Record<string, unknown>).appliedSort).toMatchObject({
+      sortCriteria: 'price_asc',
+    });
+  });
+
+  it('restores the selected values of a regular facet', () => {
+    const components = restore({facets: [{facetId: 'ec_brand', values: ['Billabong']}]});
+    expect(brandState(components, 'Billabong')).toBe('selected');
+    const products = (components['product-list-2'] as Record<string, unknown>).products as Array<
+      Record<string, unknown>
+    >;
+    expect(new Set(products.map((product) => product.ec_brand))).toEqual(new Set(['Billabong']));
+  });
+
+  it('restores the selected range of a numeric facet', () => {
+    const components = restore({
+      facets: [{facetId: 'ec_price', numericRanges: [{start: 0, end: 100, endInclusive: true}]}],
+    });
+    const values = (components['facet-price-2'] as Record<string, unknown>).values as Array<
+      Record<string, unknown>
+    >;
+    expect(values.find((value) => value.start === 0 && value.end === 100)?.state).toBe('selected');
+  });
+
+  it('restores the selected path of a category facet', () => {
+    const components = restore({
+      facets: [{facetId: 'ec_category', path: ['Surfing', 'Surfboards']}],
+    });
+    const values = (components['facet-category-2'] as Record<string, unknown>).values as Record<
+      string,
+      Record<string, unknown>
+    >;
+    expect(values.selected.path).toEqual(['Surfing', 'Surfboards']);
+    expect(breadboxFacets(components)).toMatchObject([
+      {field: 'ec_category', path: ['Surfing', 'Surfboards']},
+    ]);
+  });
+
+  it('replaces the current search instead of merging into it', () => {
+    act('toggleSelect', {value: 'Hurley'}, 'facet-brand-2');
+    act('toggleExclude', {value: 'Xcel'}, 'facet-brand-2');
+    act('toggleSelect', {start: 0, end: 100}, 'facet-price-2');
+    act('selectSort', {sortCriteria: 'price_desc'});
+    const components = restore({});
+    expect(breadboxFacets(components)).toEqual([]);
+    expect((components['sort-2'] as Record<string, unknown>).appliedSort).toMatchObject({
+      sortCriteria: 'relevance',
+    });
+  });
+});
