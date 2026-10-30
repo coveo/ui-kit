@@ -1,6 +1,11 @@
 import {useEffect, useRef, useState} from 'react';
 import type {CommerceSearchAction, RestoreStatePayload} from '@coveo/thermidor-schema';
-import {useActionError, useLatestWhenFree, useSessionBusy} from '../session-request.js';
+import {
+  useActionError,
+  useLatestWhenFree,
+  useSessionBusy,
+  useSurfaceActionInFlight,
+} from '../session-request.js';
 import {buildRestoreSnapshot} from './restore-snapshot.js';
 
 /** The part of a renderer component context that the search history reads. */
@@ -25,8 +30,8 @@ interface SearchHistoryEntry {
 }
 
 /**
- * What to do with the answer of a restore in flight: replace the entry it restored, or leave the
- * history alone once the shopper has moved to another entry.
+ * What to do with the answer of this surface's action in flight: replace the entry a restore
+ * restored, or leave the history alone once the shopper has moved to another entry.
  */
 type RestoreAnswer = 'replace' | 'ignore';
 
@@ -55,6 +60,7 @@ export function useSearchHistory(context: SearchSurfaceContext): void {
   const restoreAnswer = useRef<RestoreAnswer | undefined>(undefined);
   const [pendingRestore, setPendingRestore] = useState<RestoreStatePayload>();
   const actionError = useActionError(surfaceId);
+  const actionInFlight = useSurfaceActionInFlight(surfaceId);
 
   useEffect(() => {
     if (actionError) {
@@ -105,14 +111,14 @@ export function useSearchHistory(context: SearchSurfaceContext): void {
   useEffect(() => {
     const onPopState = (event: PopStateEvent) => {
       const entry = entryOf(event.state);
-      if (restoreAnswer.current) {
+      if (actionInFlight) {
         restoreAnswer.current = 'ignore';
       }
       setPendingRestore(entry?.surfaceId === surfaceId ? entry.snapshot : undefined);
     };
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
-  }, [surfaceId]);
+  }, [surfaceId, actionInFlight]);
 
   useLatestWhenFree(pendingRestore, (snapshot) => {
     restoreAnswer.current = 'replace';

@@ -11,7 +11,7 @@ function paginationState(page: number) {
 function mountSearch(dispatchGate?: () => Promise<void>) {
   return mountSurface({
     dispatchGate,
-    component: {component: 'CommerceSearch'},
+    component: {component: 'CommerceSearch', mainChild: 'pagination'},
     children: [
       {
         id: 'pagination',
@@ -117,6 +117,28 @@ describe('useSearchHistory', () => {
 
     await waitFor(() => expect(window.history.state).toEqual(other));
     expect(actions.map((action) => action.context)).toEqual([{query: '', page: 1, pageSize: 12}]);
+    expect(pushState).toHaveBeenCalledTimes(1);
+  });
+
+  it('leaves the history alone when a search answers after the browser moved away', async () => {
+    let release = () => {};
+    const gate = () =>
+      new Promise<void>((resolve) => {
+        release = resolve;
+      });
+    const pushState = vi.spyOn(window.history, 'pushState');
+    const {actions, findByRole, pushDataModel} = mountSearch(gate);
+    await waitFor(() => expect(pushState).toHaveBeenCalledTimes(1));
+
+    const page2 = await findByRole('button', {name: 'Page 2'});
+    act(() => page2.click());
+    await waitFor(() => expect(actions).toHaveLength(1));
+    popTo(null);
+    await act(async () => release());
+    pushDataModel([paginationState(1)]);
+
+    await waitFor(() => expect(actions.map((action) => action.name)).toEqual(['selectPage']));
+    expect(window.history.state).toBeNull();
     expect(pushState).toHaveBeenCalledTimes(1);
   });
 

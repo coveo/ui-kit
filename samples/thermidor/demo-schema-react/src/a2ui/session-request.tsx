@@ -175,6 +175,19 @@ export function useGesture(): (optimistic: () => void, send: () => void) => void
   };
 }
 
+/** Whether an action dispatched from `surfaceId` is in flight. */
+export function useSurfaceActionInFlight(surfaceId: string): boolean {
+  const source = useContext(SessionRequestContext);
+  return useSyncExternalStore(
+    source.subscribe,
+    () => {
+      const {request} = source.getSnapshot();
+      return request?.kind === 'action' && request.surfaceId === surfaceId;
+    },
+    () => false
+  );
+}
+
 /** Whether a request is in flight. */
 export function useSessionBusy(): boolean {
   const source = useContext(SessionRequestContext);
