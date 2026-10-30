@@ -1,4 +1,4 @@
-import {fireEvent, render, screen} from '@testing-library/react';
+import {fireEvent, render, screen, within} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
 import type {Turn} from '@coveo/thermidor';
 import {ConversationPage} from './ConversationPage.js';
@@ -304,6 +304,36 @@ describe('ConversationPage integration', () => {
       renderPage({turns: answered, promptDisabled: true});
 
       expect(screen.queryByRole('button', {name: 'Can I raise it?'})).toBeNull();
+    });
+  });
+  describe('the Scoping block', () => {
+    const turns = [makeTurn({id: 'turn-1'}), makeTurn({id: 'turn-2'})];
+
+    it('draws the Scoping block beside the conversation, out of the turns', () => {
+      renderPage({
+        turns,
+        surfacesByTurn: new Map([['turn-2', ['turn-2/agent-answer']]]),
+        scoping: {surfaceId: 'turn-2/scoping-2', turnId: 'turn-2'},
+      });
+
+      const scope = screen.getByRole('complementary', {name: 'Scope'});
+      expect(within(scope).getByTestId('turn-surfaces').textContent).toBe('turn-2/scoping-2');
+      expect(within(scope).getByTestId('turn-surfaces').dataset['interactive']).toBe('true');
+      const log = screen.getByRole('log', {name: 'Conversation history'});
+      expect(within(log).getByTestId('turn-surfaces').textContent).toBe('turn-2/agent-answer');
+    });
+
+    it("keeps an earlier turn's Scoping block visible, read-only, until the latest turn draws one", () => {
+      renderPage({turns, scoping: {surfaceId: 'turn-1/scoping-1', turnId: 'turn-1'}});
+
+      const scope = screen.getByRole('complementary', {name: 'Scope'});
+      expect(within(scope).getByTestId('turn-surfaces').dataset['interactive']).toBe('false');
+    });
+
+    it('has no Scoping block when no turn drew one', () => {
+      renderPage({turns});
+
+      expect(screen.queryByRole('complementary', {name: 'Scope'})).toBeNull();
     });
   });
 });

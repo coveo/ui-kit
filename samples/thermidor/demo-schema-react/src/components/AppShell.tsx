@@ -111,6 +111,7 @@ export function AppShell() {
                   surfacesByTurn={stream.surfacesByTurn}
                   followUps={followUps}
                   pendingTurnId={pendingTurnId}
+                  scoping={stream.scoping}
                 />
               )}
             </div>

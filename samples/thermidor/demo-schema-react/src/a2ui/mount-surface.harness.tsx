@@ -1,4 +1,4 @@
-import {useEffect, useMemo} from 'react';
+import {useEffect, useMemo, type ComponentType, type ReactNode} from 'react';
 import {vi} from 'vitest';
 import {render, act, type RenderResult} from '@testing-library/react';
 import {
@@ -53,6 +53,8 @@ export interface MountSurfaceConfig {
   dispatchGate?: () => Promise<void> | void;
   /** Options for the thermidor catalog the surface renders with. */
   catalogOptions?: ThermidorCatalogOptions;
+  /** Wraps the mounted surface, as the page that places it would. */
+  wrapper?: ComponentType<{children: ReactNode}>;
 }
 
 export interface MountSurfaceResult extends RenderResult {
@@ -144,7 +146,8 @@ export function mountSurface(config: MountSurfaceConfig): MountSurfaceResult {
       processRef={processRef}
       dispatch={onAction}
       catalogOptions={config.catalogOptions}
-    />
+    />,
+    {wrapper: config.wrapper}
   );
 
   return {

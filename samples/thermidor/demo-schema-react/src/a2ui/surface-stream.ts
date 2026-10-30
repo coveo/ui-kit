@@ -30,7 +30,22 @@ export interface SurfaceStream {
    * that server id, never an earlier turn's block that reuses the id.
    */
   loadingSurfaces: ReadonlyMap<string, string>;
+  /**
+   * The latest Scoping block, where the user sees and changes the Selection that scopes every
+   * question. It is drawn once for the whole thread rather than under its turn, so it is not in
+   * `surfacesByTurn`.
+   */
+  scoping?: ScopingSurface;
 }
+
+/** A Scoping block's render surface id, and the turn that created it. */
+export interface ScopingSurface {
+  surfaceId: string;
+  turnId: string;
+}
+
+/** The question-answering gateway draws its Scoping blocks under this surface id prefix. */
+const SCOPING_SURFACE_ID_PREFIX = 'scoping-';
 
 export function buildSurfaceStream(turns: readonly Turn[]): SurfaceStream {
   const messages: A2uiV09Message[] = [];
@@ -39,6 +54,7 @@ export function buildSurfaceStream(turns: readonly Turn[]): SurfaceStream {
   const renderIdByServerId = new Map<string, string>();
   const ownerTurnByRenderId = new Map<string, string>();
   const loadingSurfaces = new Map<string, string>();
+  let scoping: ScopingSurface | undefined;
 
   for (const turn of turns) {
     const turnSurfaces: string[] = [];
@@ -57,7 +73,9 @@ export function buildSurfaceStream(turns: readonly Turn[]): SurfaceStream {
         renderIdByServerId.set(serverId, renderId);
         serverSurfaceIds.set(renderId, serverId);
         ownerTurnByRenderId.set(renderId, turn.id);
-        if (!turnSurfaces.includes(renderId)) {
+        if (serverId.startsWith(SCOPING_SURFACE_ID_PREFIX)) {
+          scoping = {surfaceId: renderId, turnId: turn.id};
+        } else if (!turnSurfaces.includes(renderId)) {
           turnSurfaces.push(renderId);
         }
       }
@@ -72,8 +90,14 @@ export function buildSurfaceStream(turns: readonly Turn[]): SurfaceStream {
       if (operation === 'deleteSurface') {
         renderIdByServerId.delete(serverId);
         loadingSurfaces.delete(renderId);
+        if (scoping?.surfaceId === renderId) {
+          scoping = undefined;
+        }
         const owner = surfacesByTurn.get(ownerTurnByRenderId.get(renderId)!)!;
-        owner.splice(owner.indexOf(renderId), 1);
+        const index = owner.indexOf(renderId);
+        if (index !== -1) {
+          owner.splice(index, 1);
+        }
       }
     }
 
@@ -85,7 +109,13 @@ export function buildSurfaceStream(turns: readonly Turn[]): SurfaceStream {
     }
   }
 
-  return {messages, surfacesByTurn, serverSurfaceIds, loadingSurfaces};
+  return {
+    messages,
+    surfacesByTurn,
+    serverSurfaceIds,
+    loadingSurfaces,
+    ...(scoping ? {scoping} : {}),
+  };
 }
 
 /**

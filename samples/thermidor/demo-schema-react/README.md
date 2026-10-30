@@ -97,6 +97,7 @@ Every turn shows the blocks the server produced for it, in order: the agent's te
 
 ```
 ConversationPage
+├── ScopingPanel (the latest Scoping block, beside the feed, for a question-answering agent)
 ├── ConversationThread (renders the list of turns)
 │   └── per Turn:
 │       ├── UserPromptBubble
@@ -145,6 +146,12 @@ Each mounted node is a dumb catalog component (`CommerceSearch`, `LayoutStack`, 
 There is no `search-box` on this surface: the query input is the prompt pinned below the feed, so the composition starts at the `query-summary` row.
 
 These controls dispatch component actions: an interaction (sort, page, page size, facet selection or search, breadbox) surfaces through the renderer's `onAction` handler and is sent through the session, one request at a time. The session recovers the dispatching component from the active turn's surfaces, validates the action payload against the component's Zod action schema, and POSTs it over the HTTP Action_Channel; the producer replies with `/state/<id>` `updateDataModel` operations. Each control shows the shopper's choice optimistically until the reply lands, and the results dim meanwhile. In-progress facet-search input is held in local React state and is never written to the shared A2-UI data model.
+
+### The Scoping block (question-answering)
+
+The question-answering gateway route draws a Scoping block in every turn: a `scoping-<uuid>` surface where a `layout-stack` root holds a `breadbox` (the Selection) and a `facet-manager` of `regular-facet`s (the offered Facets' values). Selecting or clearing a value sends a component action to the gateway, which rewrites the block's data model without running the agent.
+
+The Selection scopes every later question, so it must stay in view for the whole thread. `surface-stream.ts` therefore takes Scoping blocks out of their turns and keeps only the latest, which `ScopingPanel` draws beside the feed. Its controls are enabled only while it belongs to the latest turn, the one the session sends actions for; until a new turn draws its own block, the previous one stays readable. The gateway answers no facet search there (HTTP 501), so the panel tells its Facets to draw no search field (`facet-search-offered.tsx`), and the block's Facets offer no show more or less.
 
 ### Key modules
 

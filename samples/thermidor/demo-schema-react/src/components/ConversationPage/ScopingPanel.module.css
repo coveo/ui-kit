@@ -1,0 +1,17 @@
+.panel {
+  flex: 0 0 280px;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--space-4) var(--space-4) var(--space-4) var(--space-6);
+  border-right: 1px solid var(--color-border);
+}
+
+@media (max-width: 899px) {
+  .panel {
+    flex: 0 0 auto;
+    max-height: 35vh;
+    padding: var(--space-3) var(--space-4);
+    border-right: 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+}
