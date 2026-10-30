@@ -725,6 +725,8 @@ describe('schema-response-search restoreState', () => {
 
   it('replaces the current search instead of merging into it', () => {
     act('toggleSelect', {value: 'Hurley'}, 'facet-brand-2');
+    act('toggleExclude', {value: 'Xcel'}, 'facet-brand-2');
+    act('toggleSelect', {start: 0, end: 100}, 'facet-price-2');
     act('selectSort', {sortCriteria: 'price_desc'});
     const components = restore({});
     expect(breadboxFacets(components)).toEqual([]);

@@ -1649,6 +1649,7 @@ interface FacetRestore {
 function restoreView(context: Record<string, unknown>): SearchViewState {
   const facets = (Array.isArray(context.facets) ? context.facets : []) as FacetRestore[];
   const restored = (field: string) => facets.find((facet) => facet.facetId === field);
+  // The mock's price facet holds a single selected range, so later ranges are dropped.
   const range = restored(FACET_FIELDS.numeric.field)?.numericRanges?.[0];
   return {
     ...DEFAULT_VIEW,
@@ -1656,9 +1657,9 @@ function restoreView(context: Record<string, unknown>): SearchViewState {
     page: Number(context.page) || 0,
     pageSize: Number(context.pageSize) || DEFAULT_VIEW.pageSize,
     sortCriteria: String(context.sortCriteria ?? DEFAULT_VIEW.sortCriteria),
-    selectedBrands: restored(FACET_FIELDS.regular.field)?.values ?? [],
+    selectedBrands: (restored(FACET_FIELDS.regular.field)?.values ?? []).map(String),
     selectedPriceRange: range ? {start: Number(range.start), end: Number(range.end)} : null,
-    selectedCategoryPath: restored(FACET_FIELDS.category.field)?.path ?? [],
+    selectedCategoryPath: (restored(FACET_FIELDS.category.field)?.path ?? []).map(String),
   };
 }
 
