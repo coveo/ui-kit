@@ -9,9 +9,6 @@ describe('UnifiedEndpointClient', () => {
   const request: CommerceRequestModel = {
     agentConfigurationId: 'agent-configuration-id',
     trackingId: 'tracking-id',
-    language: 'en',
-    country: 'US',
-    currency: 'USD',
     clientId: 'client-id',
     message: 'Hello',
     action: null,

@@ -152,12 +152,6 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
   agentConfigurationId: string;
   /** The tracking identifier of the experience. Sent with every request. */
   trackingId: string;
-  /** The language sent with every request. Used only when the configured agent has no locale. */
-  language?: string;
-  /** The country sent with every request. Used only when the configured agent has no locale. */
-  country?: string;
-  /** The currency sent with every request. Used only when the configured agent has no locale. */
-  currency?: string;
   /**
    * A previously-serialized session to restore at construction. When provided,
    * the store is seeded from the serialized session, reproducing the persisted
@@ -655,9 +649,6 @@ export function createSession<TContracts extends ContractsSchema>(
     const base: Omit<CommerceRequestModel, 'message' | 'action'> = {
       agentConfigurationId: config.agentConfigurationId,
       trackingId: config.trackingId,
-      language: config.language,
-      country: config.country,
-      currency: config.currency,
       clientId: navigatorContext?.clientId ?? undefined,
       conversationSessionId: sessionId,
       conversationToken: sessionToken,

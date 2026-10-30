@@ -64,9 +64,6 @@ describe('public sample configuration is a bundle', () => {
       VITE_COVEO_ORGANIZATION_ID: 'myorg',
       VITE_COVEO_AGENT_CONFIGURATION_ID: 'my-agent',
       VITE_COVEO_TRACKING_ID: 'mine',
-      VITE_COVEO_LANGUAGE: 'fr',
-      VITE_COVEO_COUNTRY: 'CA',
-      VITE_COVEO_CURRENCY: 'CAD',
       VITE_COVEO_PLATFORM_ENVIRONMENT: 'dev',
     });
     expect(c.organizationId).toBe('myorg');
@@ -78,17 +75,6 @@ describe('public sample configuration is a bundle', () => {
 });
 
 describe('an organization of your own', () => {
-  it('leaves the locale to the configured agent when none is set', async () => {
-    const c = await load({
-      VITE_COVEO_ORGANIZATION_ID: 'myorg',
-      VITE_COVEO_AGENT_CONFIGURATION_ID: 'my-agent',
-      VITE_COVEO_TRACKING_ID: 'mine',
-    });
-    expect(c.language).toBeUndefined();
-    expect(c.country).toBeUndefined();
-    expect(c.currency).toBeUndefined();
-  });
-
   it.each(['VITE_COVEO_AGENT_CONFIGURATION_ID', 'VITE_COVEO_TRACKING_ID'])(
     'requires %s',
     async (key) => {

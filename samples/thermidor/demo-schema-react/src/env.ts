@@ -53,7 +53,7 @@ function resolvePlatformEnvironment(): PlatformEnvironment {
 
 /**
  * The organization and everything bound to it: credentials, agent configuration id,
- * tracking id, locale and platform environment.
+ * tracking id and platform environment.
  *
  * With no `VITE_COVEO_ORGANIZATION_ID`, {@link PUBLIC_SAMPLE_CONFIGURATION} is applied
  * as a bundle and partial overrides of these keys are ignored. They are not
@@ -74,9 +74,6 @@ function resolveOrganizationConfiguration() {
       accessToken: PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_ACCESS_TOKEN,
       agentConfigurationId: PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_AGENT_CONFIGURATION_ID,
       trackingId: PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_TRACKING_ID,
-      language: PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_LANGUAGE,
-      country: PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_COUNTRY,
-      currency: PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_CURRENCY,
       environment: PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_PLATFORM_ENVIRONMENT,
     };
   }
@@ -87,10 +84,6 @@ function resolveOrganizationConfiguration() {
     accessToken: getOptionalEnvValue('VITE_COVEO_ACCESS_TOKEN') ?? '',
     agentConfigurationId: getRequiredEnvValue('VITE_COVEO_AGENT_CONFIGURATION_ID'),
     trackingId: getRequiredEnvValue('VITE_COVEO_TRACKING_ID'),
-    // Optional: the configured agent's own locale applies when it has one.
-    language: getOptionalEnvValue('VITE_COVEO_LANGUAGE'),
-    country: getOptionalEnvValue('VITE_COVEO_COUNTRY'),
-    currency: getOptionalEnvValue('VITE_COVEO_CURRENCY'),
     environment: resolvePlatformEnvironment(),
   };
 }

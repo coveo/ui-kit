@@ -33,16 +33,8 @@ export function useSession(): DemoSession {
 }
 
 function createThermidorSession(): DemoSession {
-  const {
-    organizationId,
-    accessToken,
-    endpoint,
-    agentConfigurationId,
-    trackingId,
-    language,
-    country,
-    currency,
-  } = getSampleConfiguration();
+  const {organizationId, accessToken, endpoint, agentConfigurationId, trackingId} =
+    getSampleConfiguration();
 
   return createSession({
     contracts: ComponentContractsSchema,
@@ -51,9 +43,6 @@ function createThermidorSession(): DemoSession {
     endpoint,
     agentConfigurationId,
     trackingId,
-    language,
-    country,
-    currency,
     navigatorContextProvider: getNavigatorContext,
   });
 }

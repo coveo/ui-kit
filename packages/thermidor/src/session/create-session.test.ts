@@ -250,42 +250,21 @@ describe('createSession lifecycle', () => {
       expect(() => createSession({...baseConfig, [key]: value})).toThrow(key);
     });
 
-    it('sends the agent configuration, tracking id and locale with the request', async () => {
-      const session = createSession({
-        ...baseConfig,
-        language: 'en',
-        country: 'US',
-        currency: 'USD',
-      });
-
-      const stream = queueStream();
-      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
-      await stream.opened;
-
-      expect(callMock.mock.calls[0][0]).toMatchObject({
-        agentConfigurationId: 'agent-configuration-1',
-        trackingId: 'tracking-1',
-        language: 'en',
-        country: 'US',
-        currency: 'USD',
-      });
-
-      stream.emit({type: 'RUN_FINISHED'});
-      stream.close();
-      await turn;
-    });
-
-    it('leaves a locale it was not given out of the request body', async () => {
+    it('sends the agent configuration and tracking id, and no locale, with the request', async () => {
       const session = createSession(baseConfig);
 
       const stream = queueStream();
       const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
       await stream.opened;
 
-      const body = JSON.parse(JSON.stringify(callMock.mock.calls[0][0]));
-      expect(body).not.toHaveProperty('language');
-      expect(body).not.toHaveProperty('country');
-      expect(body).not.toHaveProperty('currency');
+      const request = callMock.mock.calls[0][0];
+      expect(request).toMatchObject({
+        agentConfigurationId: 'agent-configuration-1',
+        trackingId: 'tracking-1',
+      });
+      expect(request).not.toHaveProperty('language');
+      expect(request).not.toHaveProperty('country');
+      expect(request).not.toHaveProperty('currency');
 
       stream.emit({type: 'RUN_FINISHED'});
       stream.close();
