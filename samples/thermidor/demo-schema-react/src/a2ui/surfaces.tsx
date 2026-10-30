@@ -40,14 +40,14 @@ interface ThermidorA2UIStreamProps {
   messages: A2uiV09Message[];
   /** The stream's loading placeholders (`SurfaceStream.loadingSurfaces`). */
   loadingSurfaces: ReadonlyMap<string, string>;
-  /** The page whose {@link TurnSurfaces} draw the stream's surfaces. */
+  /** The page whose {@link SurfaceGroup}s draw the stream's surfaces. */
   children?: ReactNode;
 }
 
 /**
  * Feeds the whole session's message stream to the renderer, and shares which of its surfaces are
  * loading placeholders with the page it wraps. It draws nothing itself: each surface is drawn by
- * a {@link TurnSurfaces} placed under the turn that created it.
+ * a {@link SurfaceGroup} placed where the page shows it.
  */
 export function ThermidorA2UIStream({
   messages,
@@ -74,7 +74,7 @@ export function ThermidorA2UIStream({
   );
 }
 
-interface TurnSurfacesProps {
+interface SurfaceGroupProps {
   surfaceIds: readonly string[];
   /**
    * Whether the shopper can act on these surfaces. The session only sends actions for the
@@ -90,21 +90,21 @@ interface TurnSurfacesProps {
    */
   isStreaming: boolean;
   /** Says why the surfaces are read-only when they are not interactive. */
-  readOnlyNote?: string;
+  readOnlyNote: string;
 }
 
 /**
- * Draws one turn's surfaces in order. A surface added to an already drawn turn, such as the
- * search block a search option opens, is scrolled into view. A loading placeholder is drawn as
- * the skeleton of its root component type, in the place its content will take, while its
- * exchange streams.
+ * Draws a group of surfaces in order, such as one exchange's blocks. A surface added to an already
+ * drawn group, such as the search block a search option opens, is scrolled into view. A loading
+ * placeholder is drawn as the skeleton of its root component type, in the place its content will
+ * take, while its exchange streams.
  */
-export function TurnSurfaces({
+export function SurfaceGroup({
   surfaceIds: allSurfaceIds,
   interactive,
   isStreaming,
-  readOnlyNote = 'Earlier results. Ask a follow-up or search again to refine.',
-}: TurnSurfacesProps) {
+  readOnlyNote,
+}: SurfaceGroupProps) {
   const loadingSurfaces = useContext(LoadingSurfacesContext);
   const surfaceIds = useMemo(
     () =>

@@ -7,9 +7,21 @@ import {makeTurn} from '../../test/turn-fixtures.js';
 // The blocks are drawn by the A2-UI renderer; the page only decides where each turn's blocks go
 // and whether they are interactive.
 vi.mock('../../a2ui/surfaces.js', () => ({
-  TurnSurfaces: ({surfaceIds, interactive}: {surfaceIds: string[]; interactive: boolean}) =>
+  SurfaceGroup: ({
+    surfaceIds,
+    interactive,
+    readOnlyNote,
+  }: {
+    surfaceIds: string[];
+    interactive: boolean;
+    readOnlyNote: string;
+  }) =>
     surfaceIds.length === 0 ? null : (
-      <div data-testid="turn-surfaces" data-interactive={String(interactive)}>
+      <div
+        data-testid="surface-group"
+        data-interactive={String(interactive)}
+        data-read-only-note={readOnlyNote}
+      >
         {surfaceIds.join(',')}
       </div>
     ),
@@ -61,7 +73,7 @@ describe('ConversationPage integration', () => {
       expect(screen.getByText('Here are some running shoes.')).toBeDefined();
 
       expect(screen.getByText('Show me results')).toBeDefined();
-      expect(screen.getByTestId('turn-surfaces').textContent).toBe('turn-2/ui-search');
+      expect(screen.getByTestId('surface-group').textContent).toBe('turn-2/ui-search');
 
       expect(screen.getByText('What about hiking boots?')).toBeDefined();
       expect(screen.getByText('Service unavailable')).toBeDefined();
@@ -87,7 +99,7 @@ describe('ConversationPage integration', () => {
       });
 
       expect(screen.getByText('Here are a few directions.')).toBeDefined();
-      expect(screen.getByTestId('turn-surfaces').textContent).toBe(
+      expect(screen.getByTestId('surface-group').textContent).toBe(
         'turn-1/agent-answer,turn-1/ui-search'
       );
     });
@@ -107,8 +119,11 @@ describe('ConversationPage integration', () => {
       });
 
       expect(
-        screen.getAllByTestId('turn-surfaces').map((block) => block.dataset['interactive'])
+        screen.getAllByTestId('surface-group').map((block) => block.dataset['interactive'])
       ).toEqual(['false', 'true']);
+      expect(screen.getAllByTestId('surface-group')[0].dataset['readOnlyNote']).toBe(
+        'Earlier results. Ask a follow-up or search again to refine.'
+      );
     });
 
     it('draws a follow-up as its own exchange after the answer it follows', () => {
@@ -317,17 +332,20 @@ describe('ConversationPage integration', () => {
       });
 
       const scope = screen.getByRole('complementary', {name: 'Scope'});
-      expect(within(scope).getByTestId('turn-surfaces').textContent).toBe('turn-2/scoping-2');
-      expect(within(scope).getByTestId('turn-surfaces').dataset['interactive']).toBe('true');
+      expect(within(scope).getByTestId('surface-group').textContent).toBe('turn-2/scoping-2');
+      expect(within(scope).getByTestId('surface-group').dataset['interactive']).toBe('true');
       const log = screen.getByRole('log', {name: 'Conversation history'});
-      expect(within(log).getByTestId('turn-surfaces').textContent).toBe('turn-2/agent-answer');
+      expect(within(log).getByTestId('surface-group').textContent).toBe('turn-2/agent-answer');
     });
 
     it("keeps an earlier turn's Scoping block visible, read-only, until the latest turn draws one", () => {
       renderPage({turns, scoping: {surfaceId: 'turn-1/scoping-1', turnId: 'turn-1'}});
 
       const scope = screen.getByRole('complementary', {name: 'Scope'});
-      expect(within(scope).getByTestId('turn-surfaces').dataset['interactive']).toBe('false');
+      expect(within(scope).getByTestId('surface-group').dataset['interactive']).toBe('false');
+      expect(within(scope).getByTestId('surface-group').dataset['readOnlyNote']).toBe(
+        'Still applied to your questions.'
+      );
     });
 
     it('has no Scoping block when no turn drew one', () => {

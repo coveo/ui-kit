@@ -106,7 +106,7 @@ ConversationPage
 │           └── AgentResponseBlock
 │               ├── ThinkingBlock (reasoning steps + spinner)
 │               ├── StreamingMessage (streamed text)
-│               └── TurnSurfaces (the exchange's blocks; disabled unless it is the latest turn)
+│               └── SurfaceGroup (the exchange's blocks; disabled unless it is the latest turn)
 │                   ├── A2UISkeleton (in place of a loading surface)
 │                   ├── ProductCarousel (dumb: reads resolved props from {path} bindings)
 │                   ├── BundleDisplay (dumb: reads resolved tiers + slot child ids from props)
@@ -160,7 +160,7 @@ The Selection scopes every later question, so it must stay in view for the whole
 | `src/context/session.tsx`                                | Creates the `@coveo/thermidor` session and injects the `ComponentContractsSchema` it validates against                                                                                                                                                                                                                                                           |
 | `src/components/AppShell.tsx`                            | Wires the catalog and the `onAction` handler into `A2UIProvider`, builds the session-wide renderer stream, and starts follow-up exchanges                                                                                                                                                                                                                        |
 | `src/a2ui/surface-stream.ts`                             | Builds the session's renderer stream from every turn's `response.a2uiMessages`, places each surface under the turn that created it, marks loading placeholders, and maps renderer actions back to server surface ids                                                                                                                                             |
-| `src/a2ui/surfaces.tsx`                                  | `ThermidorA2UIStream` feeds the stream to the renderer; `TurnSurfaces` draws one exchange's surfaces, or a skeleton for a loading one (thermidor owns the v1.0 → v0.9 downgrade)                                                                                                                                                                                 |
+| `src/a2ui/surfaces.tsx`                                  | `ThermidorA2UIStream` feeds the stream to the renderer; `SurfaceGroup` draws a group of surfaces (an exchange's blocks, or the Scoping block), or a skeleton for a loading one (thermidor owns the v1.0 → v0.9 downgrade)                                                                                                                                        |
 | `src/a2ui/components.tsx`                                | `createThermidorCatalog()`: registers every catalog component (conversational: ProductCarousel, BundleDisplay, ComparisonTable, ProductResearchCard, ProductSummary, NextActionsBar; decomposed commerce: CommerceSearch, LayoutStack, FacetManager, RegularFacet, NumericFacet, CategoryFacet, Breadbox, QuerySummary, Sort, ProductList, Pagination, PageSize) |
 | `src/a2ui/CommerceSearch/`                               | `commerce-search` root — composes the sidebar and main columns and mounts them by id via `buildChild(id)`                                                                                                                                                                                                                                                        |
 | `src/a2ui/LayoutStack/`                                  | Generic layout container — stacks its declared children in a column or row (direction is a presentation node prop); reused for the sidebar, main, and top/bottom rows                                                                                                                                                                                            |
@@ -184,7 +184,7 @@ AppShell — buildSurfaceStream(turns): one stream, turn-scoped render ids, load
   ↓
 ThermidorA2UIStream — processMessages (catalog resolution + updateDataModel ops → renderer data model)
   ↓
-TurnSurfaces (per exchange)
+SurfaceGroup (per exchange)
   ├── A2UISkeleton for each loading surface while its exchange streams
   └── A2UIRenderer → catalog components (ProductCarousel, BundleDisplay, etc.)
         ↓ read resolved values from props ({ "path": ... } bindings resolved by the renderer)

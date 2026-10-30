@@ -3,7 +3,7 @@ import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/reac
 import {A2UIProvider, ROOT_COMPONENT_ID} from '@copilotkit/a2ui-renderer';
 import type {A2uiV09Message} from '@coveo/thermidor';
 import {createThermidorCatalog, THERMIDOR_CATALOG_ID} from './components.js';
-import {ThermidorA2UIStream, TurnSurfaces} from './surfaces.js';
+import {ThermidorA2UIStream, SurfaceGroup} from './surfaces.js';
 import {SessionRequestProvider} from './session-request.js';
 
 const originalScrollIntoView = Element.prototype.scrollIntoView;
@@ -61,17 +61,18 @@ function Turn({
     <SessionRequestProvider value={lockedSource(locked)}>
       <A2UIProvider catalog={CATALOG} onAction={() => {}}>
         <ThermidorA2UIStream messages={MESSAGES} loadingSurfaces={new Map()} />
-        <TurnSurfaces
+        <SurfaceGroup
           surfaceIds={[SURFACE_ID]}
           interactive={interactive}
           isStreaming={isStreaming}
+          readOnlyNote={NOTE}
         />
       </A2UIProvider>
     </SessionRequestProvider>
   );
 }
 
-function renderTurnSurfaces(interactive: boolean) {
+function renderSurfaceGroup(interactive: boolean) {
   return render(<Turn interactive={interactive} />);
 }
 
@@ -84,9 +85,9 @@ function isDisabled(control: Element) {
   return control.matches(':disabled');
 }
 
-describe('TurnSurfaces', () => {
+describe('SurfaceGroup', () => {
   it('leaves the controls of an interactive turn enabled, without the earlier-results note', async () => {
-    renderTurnSurfaces(true);
+    renderSurfaceGroup(true);
 
     await waitFor(() => expect(pageSizeSelect()).toBeDefined());
     expect(isDisabled(pageSizeSelect())).toBe(false);
@@ -95,7 +96,7 @@ describe('TurnSurfaces', () => {
   });
 
   it('disables the controls of an earlier turn and explains why', async () => {
-    renderTurnSurfaces(false);
+    renderSurfaceGroup(false);
 
     await waitFor(() => expect(pageSizeSelect()).toBeDefined());
     expect(isDisabled(pageSizeSelect())).toBe(true);
@@ -103,7 +104,7 @@ describe('TurnSurfaces', () => {
   });
 
   it('keeps an earlier turn readable by assistive technology', async () => {
-    const {container} = renderTurnSurfaces(false);
+    const {container} = renderSurfaceGroup(false);
 
     await waitFor(() => expect(pageSizeSelect()).toBeDefined());
     expect(container.querySelector('[inert]')).toBeNull();
@@ -111,7 +112,7 @@ describe('TurnSurfaces', () => {
   });
 
   it('disables the controls once a newer turn takes over', async () => {
-    const {rerender} = renderTurnSurfaces(true);
+    const {rerender} = renderSurfaceGroup(true);
     await waitFor(() => expect(isDisabled(pageSizeSelect())).toBe(false));
 
     rerender(<Turn interactive={false} />);
@@ -120,9 +121,9 @@ describe('TurnSurfaces', () => {
   });
 });
 
-describe('TurnSurfaces while a request is in flight', () => {
+describe('SurfaceGroup while a request is in flight', () => {
   it('disables the active turn and marks it busy', async () => {
-    const {rerender} = renderTurnSurfaces(true);
+    const {rerender} = renderSurfaceGroup(true);
     await waitFor(() => expect(isDisabled(pageSizeSelect())).toBe(false));
 
     rerender(<Turn interactive locked />);
@@ -165,7 +166,7 @@ describe('TurnSurfaces while a request is in flight', () => {
   });
 
   it('gives focus back to the control the shopper used, without scrolling to it', async () => {
-    const {rerender} = renderTurnSurfaces(true);
+    const {rerender} = renderSurfaceGroup(true);
     await waitFor(() => expect(isDisabled(pageSizeSelect())).toBe(false));
     const select = pageSizeSelect() as HTMLSelectElement;
     select.focus();
@@ -183,7 +184,7 @@ describe('TurnSurfaces while a request is in flight', () => {
   });
 
   it('gives focus back to a control pressed without receiving focus', async () => {
-    const {rerender} = renderTurnSurfaces(true);
+    const {rerender} = renderSurfaceGroup(true);
     await waitFor(() => expect(isDisabled(pageSizeSelect())).toBe(false));
     const select = pageSizeSelect();
     fireEvent.pointerDown(select);
@@ -196,7 +197,7 @@ describe('TurnSurfaces while a request is in flight', () => {
   });
 
   it('leaves the focus where the shopper moved it during the request', async () => {
-    const {rerender} = renderTurnSurfaces(true);
+    const {rerender} = renderSurfaceGroup(true);
     await waitFor(() => expect(isDisabled(pageSizeSelect())).toBe(false));
     const select = pageSizeSelect() as HTMLSelectElement;
     select.focus();
@@ -220,8 +221,18 @@ describe('TurnSurfaces while a request is in flight', () => {
         <SessionRequestProvider value={lockedSource(locked)}>
           <A2UIProvider catalog={CATALOG} onAction={() => {}}>
             <ThermidorA2UIStream messages={messages} loadingSurfaces={new Map()} />
-            <TurnSurfaces surfaceIds={[SURFACE_ID]} interactive isStreaming={false} />
-            <TurnSurfaces surfaceIds={[FOLLOW_UP_ID]} interactive isStreaming={false} />
+            <SurfaceGroup
+              surfaceIds={[SURFACE_ID]}
+              interactive
+              isStreaming={false}
+              readOnlyNote={NOTE}
+            />
+            <SurfaceGroup
+              surfaceIds={[FOLLOW_UP_ID]}
+              interactive
+              isStreaming={false}
+              readOnlyNote={NOTE}
+            />
           </A2UIProvider>
         </SessionRequestProvider>
       );
@@ -243,7 +254,7 @@ describe('TurnSurfaces while a request is in flight', () => {
   });
 });
 
-describe('TurnSurfaces loading placeholders', () => {
+describe('SurfaceGroup loading placeholders', () => {
   function renderPlaceholder(isStreaming: boolean) {
     return render(
       <A2UIProvider catalog={CATALOG} onAction={() => {}}>
@@ -251,7 +262,12 @@ describe('TurnSurfaces loading placeholders', () => {
           messages={MESSAGES}
           loadingSurfaces={new Map([[SURFACE_ID, 'ProductCarousel']])}
         >
-          <TurnSurfaces surfaceIds={[SURFACE_ID]} interactive isStreaming={isStreaming} />
+          <SurfaceGroup
+            surfaceIds={[SURFACE_ID]}
+            interactive
+            isStreaming={isStreaming}
+            readOnlyNote={NOTE}
+          />
         </ThermidorA2UIStream>
       </A2UIProvider>
     );
@@ -279,7 +295,7 @@ describe('TurnSurfaces loading placeholders', () => {
     const page = (surfaceIds: string[]) => (
       <A2UIProvider catalog={CATALOG} onAction={() => {}}>
         <ThermidorA2UIStream messages={MESSAGES} loadingSurfaces={loadingSurfaces}>
-          <TurnSurfaces surfaceIds={surfaceIds} interactive isStreaming />
+          <SurfaceGroup surfaceIds={surfaceIds} interactive isStreaming readOnlyNote={NOTE} />
         </ThermidorA2UIStream>
       </A2UIProvider>
     );
@@ -297,7 +313,7 @@ describe('TurnSurfaces loading placeholders', () => {
     const page = (surfaceIds: string[]) => (
       <A2UIProvider catalog={CATALOG} onAction={() => {}}>
         <ThermidorA2UIStream messages={MESSAGES} loadingSurfaces={new Map()}>
-          <TurnSurfaces surfaceIds={surfaceIds} interactive isStreaming />
+          <SurfaceGroup surfaceIds={surfaceIds} interactive isStreaming readOnlyNote={NOTE} />
         </ThermidorA2UIStream>
       </A2UIProvider>
     );
