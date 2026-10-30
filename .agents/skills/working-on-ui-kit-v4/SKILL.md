@@ -39,6 +39,7 @@ Rules that follow from the track:
 - A v4 removal needs a v3 deprecation that already shipped with a replacement customers can use on v3 (KIT-6373 reworded the v3 notices so that each names one). No deprecation yet: do the v3 story first, as its own PR.
 - A v3 deprecation notice names the v3 replacement and never an experimental entry point.
 - Experimental sub-packages change without aliases or deprecation periods, but every change is still described in a changeset for customers.
+- The experimental SSR sub-packages become the v4 SSR API. When a change there alters what a customer writes, update its upgrade guide entry in the same PR, and remove the entry's `not yet built` marker once the change is built.
 
 ## Step 2: Build the change
 
@@ -53,7 +54,7 @@ Rules that follow from the track:
 
 Run `pnpm changeset` for every public package whose published surface changes. Then edit the file by hand so that it:
 
-1. Names the bump of Step 1 for each package. Packages in a "fixed" group of `.changeset/config.json` (Atomic with its sample packages, Headless with its samples, Headless React with its Next.js sample) move together, so list only the library package.
+1. Names the bump of Step 1 for each library package. Sample packages share a "fixed" group with their library in `.changeset/config.json` and move with it, so leave them out.
 2. Says what changed and what to do instead, in customer words, in two to five sentences. For a `major` bump, end with the anchor of the guide entry: `See the upgrade guide, "<entry title>".`
 3. Never names a customer, and never names an experimental entry point (write "the experimental commerce SSR sub-package").
 
@@ -61,7 +62,7 @@ Run `pnpm changeset` for every public package whose published surface changes. T
 
 Required for every `major` bump; recommended for a v3 deprecation, as a "planned removal" row.
 
-Use [references/upgrade-guide-entry.md](references/upgrade-guide-entry.md) for the entry shape. In short: one sentence on what changed, a "Version 3" block taken from a v3 sample, a "Version 4" block taken from a v4 sample, one sentence on what to do instead, under 15 lines of prose. Add the removed member to the removals table of the file. Put the entry in the file of the package that changed; Atomic entries go to `packages/atomic/docs/upgrade-from-v3-to-v4.md`, which the technical writers turn into the docs.coveo.com page.
+Use [references/upgrade-guide-entry.md](references/upgrade-guide-entry.md) for the entry shape. In short: one sentence on what changed, a version 3 block taken from a v3 sample, a version 4 block taken from a v4 sample, one sentence on what to do instead, under 15 lines of prose. Add each removed member to the removals table of its theme. Put the entry in the file of the package that changed; Atomic entries go to `packages/atomic/docs/upgrade-from-v3-to-v4.md`, which the technical writers turn into the docs.coveo.com page.
 
 ## Step 5: Check, commit, open the pull request
 
