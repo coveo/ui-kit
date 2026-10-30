@@ -13,9 +13,10 @@ import {
   type ConverseHandler,
 } from '../../test/session.js';
 import {SUGGESTIONS_DEBOUNCE_MS} from '../QuerySuggestions/QuerySuggestions.js';
-import {PRODUCTS_PANEL_MEDIA_QUERY} from './InstantProducts.js';
+import {INSTANT_PRODUCTS_TIMEOUT_MS, PRODUCTS_PANEL_MEDIA_QUERY} from './InstantProducts.js';
 
 afterEach(() => {
+  vi.useRealTimers();
   vi.unstubAllGlobals();
 });
 
@@ -56,6 +57,26 @@ async function renderSearchBox({
 const options = () => screen.queryAllByRole('option').map((option) => option.textContent);
 const productsShown = () =>
   screen.queryByRole('region', {name: /^Products for/})?.getAttribute('aria-label');
+const panelShown = () =>
+  screen.queryByRole('region', {name: /products for/i})?.getAttribute('aria-label');
+
+/** Answers like `answerInstantProductsShell`, holding back `fetchInstantProducts` for `query`. */
+function holdingBack(query: string): {handler: ConverseHandler; release: () => void} {
+  let release!: () => void;
+  const held = new Promise<void>((resolve) => (release = resolve));
+  return {
+    release,
+    handler: async (request) => {
+      if (
+        request.action?.name === 'fetchInstantProducts' &&
+        request.action.context['query'] === query
+      ) {
+        await held;
+      }
+      return answerInstantProductsShell(request);
+    },
+  };
+}
 
 describe('InstantProducts', () => {
   it("shows the first completion's products once completions arrive", async () => {
@@ -162,5 +183,64 @@ describe('InstantProducts', () => {
 
     expect(productsShown()).toBeUndefined();
     expect(dispatchedQueries()).toEqual([]);
+  });
+  it('holds its place with a skeleton until the first answer', async () => {
+    const {handler, release} = holdingBack('surf boards');
+    const {type} = await renderSearchBox({handler});
+
+    type('surf');
+
+    await waitFor(() => expect(panelShown()).toBe('Loading products for surf boards'));
+    expect(screen.getByLabelText('Loading products')).toBeDefined();
+    release();
+    await waitFor(() => expect(productsShown()).toBe('Products for surf boards'));
+    expect(screen.queryByLabelText('Loading products')).toBeNull();
+  });
+
+  it('keeps the previous products while the next highlight loads', async () => {
+    const {handler, release} = holdingBack('surf wax');
+    const {type} = await renderSearchBox({handler});
+    type('surf');
+    await waitFor(() => expect(productsShown()).toBe('Products for surf boards'));
+
+    fireEvent.mouseEnter(screen.getByRole('option', {name: 'surf wax'}));
+
+    await waitFor(() => expect(panelShown()).toBe('Loading products for surf wax'));
+    expect(screen.getByText('surf boards product')).toBeDefined();
+    expect(screen.queryByLabelText('Loading products')).toBeNull();
+    release();
+    await waitFor(() => expect(productsShown()).toBe('Products for surf wax'));
+    expect(screen.queryByText('surf boards product')).toBeNull();
+  });
+
+  it('says so when the highlighted query has no products', async () => {
+    const {type} = await renderSearchBox({
+      handler: (request) =>
+        request.action?.name === 'fetchInstantProducts'
+          ? sseResponse(
+              instantProductsRun(SHELL_SURFACE_ID, String(request.action.context['query']), [])
+            )
+          : answerInstantProductsShell(request),
+    });
+
+    type('surf');
+
+    await waitFor(() => expect(panelShown()).toBe('No products for surf boards'));
+  });
+
+  it('says there are no products when the answer never comes', async () => {
+    vi.useFakeTimers({shouldAdvanceTime: true});
+    const {type} = await renderSearchBox({
+      handler: (request) =>
+        request.action?.name === 'fetchInstantProducts'
+          ? new Promise<Response>(() => {})
+          : answerInstantProductsShell(request),
+    });
+    type('surf');
+    await waitFor(() => expect(panelShown()).toBe('Loading products for surf boards'));
+
+    await act(() => vi.advanceTimersByTimeAsync(INSTANT_PRODUCTS_TIMEOUT_MS));
+
+    expect(panelShown()).toBe('No products for surf boards');
   });
 });
