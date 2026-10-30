@@ -1,3 +1,4 @@
+import {HttpResponse} from 'msw';
 import {buildStreamingResponse} from './events.js';
 import {schemaBundleEvents} from './templates/schema-response-bundle.js';
 import {schemaDiscoveryEvents} from './templates/schema-response-discovery.js';
@@ -5,6 +6,8 @@ import {schemaFallbackEvents} from './templates/schema-response-fallback.js';
 import {schemaComparisonEvents} from './templates/schema-response-comparison.js';
 import {schemaProductResearchEvents} from './templates/schema-response-product-research.js';
 import {
+  INSTANT_PRODUCTS_ID,
+  buildInstantProductsEvents,
   buildQuerySuggestionsEvents,
   buildSessionShellEvents,
 } from './templates/schema-response-session-shell.js';
@@ -21,6 +24,10 @@ const ACTION_DELAY_MS = 200;
 
 // Per message (five per suggestions response): ~150ms, about a real querySuggest round trip.
 const SUGGESTIONS_DELAY_MS = 30;
+
+// Per message (five per instant-products response): ~400ms, as productSuggest takes at least twice
+// as long as querySuggest.
+const INSTANT_PRODUCTS_DELAY_MS = 80;
 
 interface SessionKeys {
   conversationSessionId: string;
@@ -140,6 +147,62 @@ function withTurnOpeningAnnouncements(events: ConverseEvent[]): ConverseEvent[] 
   });
 }
 
+// Agent Gateway answers these beside the turn (Thermidor ADR-022): they take no turn slot and save
+// nothing, so it announces them as concurrent, and cached for the given lifetime, on the shell.
+const SHELL_CONCURRENT_ACTIONS = ['fetchInstantProducts'];
+const SHELL_CACHED_ACTIONS = {fetchInstantProducts: {ttlMs: 60_000}};
+
+function withShellAnnouncements(events: ConverseEvent[], shellSurfaceId: string): ConverseEvent[] {
+  return events.map((event) =>
+    event.event === 'ACTIVITY_SNAPSHOT'
+      ? {
+          ...event,
+          data: {
+            ...event.data,
+            metadata: {
+              concurrentActions: {[shellSurfaceId]: SHELL_CONCURRENT_ACTIONS},
+              cachedActions: {[shellSurfaceId]: SHELL_CACHED_ACTIONS},
+            },
+          },
+        }
+      : event
+  );
+}
+
+function isConcurrentAction(action: SchemaAction): boolean {
+  return SHELL_CONCURRENT_ACTIONS.includes(action.name);
+}
+
+// The shell each session's initialize created, by session id.
+const shellSurfaceIdsBySession = new Map<string, string>();
+
+const actionNotApplicableResponse = () =>
+  HttpResponse.json(
+    {
+      errorCode: 'AGENT:ACTION_NOT_APPLICABLE',
+      message: "The action does not apply to this session's surfaces.",
+    },
+    {status: 400}
+  );
+
+function buildInstantProductsResponse(action: SchemaAction, session: SessionKeys) {
+  const shellSurfaceId = shellSurfaceIdsBySession.get(session.conversationSessionId);
+  if (
+    !shellSurfaceId ||
+    action.surfaceId !== shellSurfaceId ||
+    action.sourceComponentId !== INSTANT_PRODUCTS_ID
+  ) {
+    return actionNotApplicableResponse();
+  }
+  return buildStreamingResponse(
+    withSessionKeys(
+      buildInstantProductsEvents({surfaceId: shellSurfaceId, context: action.context}),
+      session
+    ),
+    {delayBetweenMessages: INSTANT_PRODUCTS_DELAY_MS}
+  );
+}
+
 function matchSchemaPrompt(message: string): ConverseEvent[] {
   const normalized = message.trim().toLowerCase();
   const match = SCHEMA_PROMPT_TEMPLATE_MAP.find((entry) => entry.prompt === normalized);
@@ -180,10 +243,18 @@ function buildSearchActionEvents(action: SchemaAction): ConverseEvent[] {
 function buildSchemaActionResponse(action: SchemaAction, session: SessionKeys) {
   if (isInitialize(action)) {
     promptSequence += 1;
+    const shellSurfaceId = `session-shell-${promptSequence}`;
+    shellSurfaceIdsBySession.set(session.conversationSessionId, shellSurfaceId);
     return buildStreamingResponse(
-      withSessionKeys(buildSessionShellEvents(`session-shell-${promptSequence}`), session),
+      withSessionKeys(
+        withShellAnnouncements(buildSessionShellEvents(shellSurfaceId), shellSurfaceId),
+        session
+      ),
       {delayBetweenMessages: DEFAULT_DELAY_MS}
     );
+  }
+  if (action.name === 'fetchInstantProducts') {
+    return buildInstantProductsResponse(action, session);
   }
   if (action.name === 'fetchSuggestions' && action.surfaceId && action.sourceComponentId) {
     return buildStreamingResponse(
@@ -214,6 +285,7 @@ export {
   matchSchemaPrompt,
   buildSchemaActionResponse,
   buildSearchActionEvents,
+  isConcurrentAction,
   isInitialize,
 };
 export type {SchemaAction, SessionKeys};

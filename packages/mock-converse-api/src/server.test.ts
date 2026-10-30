@@ -344,6 +344,7 @@ describe('createMockConverseServer', () => {
           {id: 'root', component: 'SessionShell'},
           {id: 'search-box', component: 'SearchBox'},
           {id: 'query-suggestions', component: 'QuerySuggestions'},
+          {id: 'instant-products', component: 'InstantProducts'},
         ],
       });
       expect(createdSurfaceIds(second)[0]).not.toBe(createdSurfaceIds(first)[0]);
@@ -393,6 +394,75 @@ describe('createMockConverseServer', () => {
       expect(statesByNode(empty)[`${shellId} /state/query-suggestions`]).toEqual({
         query: '',
         completions: [],
+      });
+    });
+
+    const fetchInstantProducts = (
+      keys: Partial<Record<'conversationSessionId' | 'conversationToken', string>>,
+      surfaceId: string,
+      query: string
+    ) =>
+      postSchema({
+        message: null,
+        ...keys,
+        action: {
+          name: 'fetchInstantProducts',
+          surfaceId,
+          sourceComponentId: 'instant-products',
+          context: {query},
+        },
+      });
+
+    it('answers fetchInstantProducts beside a streaming answer, without taking its turn slot', async () => {
+      await startServer();
+      const opened = await initialize();
+      const keys = sessionKeys(opened);
+      const [shellId] = createdSurfaceIds(opened);
+      const prompt = postSchema({message: 'hello', ...keys});
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      const [products, conflict] = await Promise.all([
+        fetchInstantProducts(keys, shellId, 'surfboards'),
+        postSchema({message: 'water sports', ...keys}),
+      ]);
+
+      expect(products.statusCode).toBe(200);
+      expect(products.headers['access-control-allow-origin']).toBe('*');
+      expect(
+        statesByNode(parseEvents(products.body))[`${shellId} /state/instant-products`]
+      ).toMatchObject({query: 'surfboards', products: [{}, {}, {}, {}]});
+      expect(conflict.statusCode).toBe(409);
+      expect((await prompt).statusCode).toBe(200);
+
+      const answered = parseEvents((await postSchema({message: 'water sports', ...keys})).body);
+      const searchSurfaceId = createdSurfaceIds(answered).at(-1)!;
+      const page = await postSchema({
+        message: null,
+        ...keys,
+        action: {
+          name: 'selectPage',
+          surfaceId: searchSurfaceId,
+          sourceComponentId: 'pagination-2',
+          context: {page: 1},
+        },
+      });
+      expect(page.statusCode).toBe(200);
+      expect(
+        statesByNode(parseEvents(page.body))[`${searchSurfaceId} /state/query-summary-2`]
+      ).toMatchObject({query: 'Water Sports'});
+    });
+
+    it('refuses fetchInstantProducts without a session', async () => {
+      await startServer();
+      const [shellId] = createdSurfaceIds(await initialize());
+
+      const res = await fetchInstantProducts({}, shellId, 'surfboards');
+
+      expect(res.statusCode).toBe(400);
+      expect(res.headers['access-control-allow-origin']).toBe('*');
+      expect(JSON.parse(res.body)).toEqual({
+        errorCode: 'AGENT:ACTION_NOT_APPLICABLE',
+        message: expect.any(String),
       });
     });
 

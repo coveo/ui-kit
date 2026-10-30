@@ -677,6 +677,34 @@ const products: WaterSportsProduct[] = PRODUCT_SEEDS.map((seed, index) => {
   };
 });
 
+const MAX_INSTANT_PRODUCTS = 4;
+
+// A plural's trailing "s" is dropped so "wetsuits" and "life jackets" find their products.
+function queryTerms(query: string): string[] {
+  return query
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter((term) => term.length > 0)
+    .map((term) => (term.length > 3 && term.endsWith('s') ? term.slice(0, -1) : term));
+}
+
+// Products whose name, brand or category below the shared root holds every term of the query, in
+// catalog order.
+function instantProductsFor(query: string): WaterSportsProduct[] {
+  const terms = queryTerms(query);
+  if (terms.length === 0) {
+    return [];
+  }
+  const rootPrefix = `${ROOT_CHAIN.join('|')}|`;
+  return products
+    .filter((product) => {
+      const leafPath = (product.ec_category.at(-1) ?? '').replace(rootPrefix, '');
+      const text = `${product.ec_name} ${product.ec_brand} ${leafPath}`.toLowerCase();
+      return terms.every((term) => text.includes(term));
+    })
+    .slice(0, MAX_INSTANT_PRODUCTS);
+}
+
 const sortOptions = {
   relevance: {sortCriteria: 'relevance', fields: [] as {field: string; direction: string}[]},
   price_asc: {
@@ -1755,4 +1783,4 @@ function buildWaterSportsActionEvents(
   });
 }
 
-export {buildWaterSportsInitialEvents, buildWaterSportsActionEvents};
+export {buildWaterSportsInitialEvents, buildWaterSportsActionEvents, instantProductsFor};
