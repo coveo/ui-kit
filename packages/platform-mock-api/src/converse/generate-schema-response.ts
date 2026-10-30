@@ -11,6 +11,7 @@ import {
 import {
   buildWaterSportsInitialEvents,
   buildWaterSportsActionEvents,
+  keepWaterSportsView,
 } from './templates/schema-response-search.js';
 import type {ConverseEvent} from './events.js';
 
@@ -59,6 +60,17 @@ const SCHEMA_PROMPT_TEMPLATE_MAP: ReadonlyArray<SchemaPromptMapping> = [
     buildEvents: () => schemaBundleEvents,
   },
   {prompt: 'water sports', buildEvents: () => buildWaterSportsInitialEvents()},
+  // A misspelled query the search corrects, and a query a query trigger replaces.
+  {
+    prompt: 'water sprots',
+    buildEvents: () =>
+      buildWaterSportsInitialEvents({originalQuery: 'water sprots', cause: 'correction'}),
+  },
+  {
+    prompt: 'swim gear',
+    buildEvents: () =>
+      buildWaterSportsInitialEvents({originalQuery: 'swim gear', cause: 'trigger'}),
+  },
   {
     prompt: 'i like cold-water surfing. compare wetsuits for it',
     buildEvents: () => schemaComparisonEvents,
@@ -158,7 +170,10 @@ const schemaBaseResponse = (body: unknown, session: SessionKeys) => {
   }
   promptSequence += 1;
   const suffix = promptSequence;
-  events = withSurfaceIds(events, (surfaceId) => `${surfaceId}-${suffix}`);
+  events = withSurfaceIds(events, (surfaceId) => {
+    keepWaterSportsView(surfaceId, `${surfaceId}-${suffix}`);
+    return `${surfaceId}-${suffix}`;
+  });
   events = withTurnOpeningAnnouncements(events);
   return buildStreamingResponse(withSessionKeys(events, session), {
     delayBetweenMessages: DEFAULT_DELAY_MS,
