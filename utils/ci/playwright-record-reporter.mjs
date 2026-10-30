@@ -1,8 +1,10 @@
 // Playwright reporter that saves, in CI only, which tests passed only on retry or failed every
-// attempt. Each Playwright job uploads the record with .github/actions/upload-playwright-record,
-// and the weekly flaky test report reads them. It prints nothing, so pull requests stay as they are.
+// attempt, and why their first attempt failed. Each Playwright job uploads the record with
+// .github/actions/upload-playwright-record, and the weekly flaky test report reads them. It prints
+// nothing, so pull requests stay as they are.
 import {existsSync, mkdirSync, readFileSync, writeFileSync} from 'node:fs';
 import {dirname, join, relative} from 'node:path';
+import {stripVTControlCharacters} from 'node:util';
 
 export const RECORD_DIRECTORY = '.playwright-records';
 
@@ -15,6 +17,20 @@ const OUTCOMES = {
   flaky: 'flaky',
   unexpected: 'failed',
 };
+
+// The first matching pattern names a failure, and the record keeps only that name: anyone signed in
+// to GitHub can download this public repository's artifacts. The names come from the admin-ui E2E
+// metrics RFC. Quantic's scratch-org and Salesforce login failures get none: they stop the job
+// before any test runs.
+const FAILURE_CATEGORIES = [
+  {
+    name: 'navigation',
+    pattern:
+      /\bpage\.(goto|reload|goBack|goForward|waitForURL|waitForNavigation):|net::ERR_|NS_ERROR_|NS_BINDING_ABORTED|Navigation failed|frame was detached|context was destroyed/i,
+  },
+  {name: 'assertion', pattern: /\bexpect\(|AssertionError/},
+  {name: 'timeout', pattern: /timeout (of )?\d+ms exceeded|TimeoutError/i},
+];
 
 function findUp(directory, fileName) {
   let current = directory;
@@ -39,6 +55,12 @@ function suiteName(configDirectory, environment) {
   return environment.DEPLOYMENT_ENVIRONMENT === 'CDN' ? `${suite}-cdn` : suite;
 }
 
+function failureCategory(test) {
+  const [error] = test.results.find((result) => result.errors.length > 0)?.errors ?? [];
+  const message = stripVTControlCharacters(error?.message ?? '');
+  return FAILURE_CATEGORIES.find(({pattern}) => pattern.test(message))?.name ?? 'other';
+}
+
 export function buildRecord({tests, suite, shard, sha, repositoryRoot}) {
   const counts = {passed: 0, flaky: 0, failed: 0};
   const retried = [];
@@ -51,6 +73,7 @@ export function buildRecord({tests, suite, shard, sha, repositoryRoot}) {
     if (outcome !== 'passed') {
       retried.push({
         outcome,
+        category: failureCategory(test),
         file: relative(repositoryRoot, test.location.file),
         line: test.location.line,
         // The first three entries are the root suite, the project and the file.

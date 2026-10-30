@@ -23,22 +23,48 @@ function fakeTest({
   file = '/repo/packages/atomic/src/a.e2e.ts',
   line = 10,
   titlePath = ['', 'chromium', 'src/a.e2e.ts', 'atomic-a', 'should render'],
+  results = [],
 }) {
   return {
     outcome: () => outcome,
+    expectedStatus: 'passed',
     location: {file, line},
     titlePath: () => titlePath,
+    results,
   };
+}
+
+function attempt({status = 'passed', retry = 0, error}) {
+  return {status, retry, errors: error ? [{message: error}] : []};
+}
+
+function flakyTest(error) {
+  return fakeTest({
+    outcome: 'flaky',
+    results: [attempt({status: 'failed', error}), attempt({retry: 1})],
+  });
 }
 
 describe('buildRecord', () => {
   it('counts the outcomes and keeps only the tests that needed a retry or failed', () => {
     const record = buildRecord({
       tests: [
-        fakeTest({outcome: 'expected'}),
-        fakeTest({outcome: 'expected'}),
-        fakeTest({outcome: 'flaky', line: 42}),
-        fakeTest({outcome: 'unexpected'}),
+        fakeTest({outcome: 'expected', results: [attempt({})]}),
+        fakeTest({outcome: 'expected', results: [attempt({})]}),
+        fakeTest({
+          outcome: 'flaky',
+          line: 42,
+          results: [
+            attempt({status: 'timedOut', error: 'Test timeout of 30000ms exceeded.'}),
+            attempt({retry: 1}),
+          ],
+        }),
+        fakeTest({
+          outcome: 'unexpected',
+          results: [0, 1, 2].map((retry) =>
+            attempt({status: 'failed', retry, error: 'Error: expect(locator).toBeVisible() failed'})
+          ),
+        }),
         fakeTest({outcome: 'skipped'}),
       ],
       suite: 'atomic',
@@ -55,18 +81,74 @@ describe('buildRecord', () => {
       tests: [
         {
           outcome: 'flaky',
+          category: 'timeout',
           file: 'packages/atomic/src/a.e2e.ts',
           line: 42,
           title: 'atomic-a › should render',
         },
         {
           outcome: 'failed',
+          category: 'assertion',
           file: 'packages/atomic/src/a.e2e.ts',
           line: 10,
           title: 'atomic-a › should render',
         },
       ],
     });
+  });
+
+  for (const [label, error, category] of [
+    ['a test timeout', 'Test timeout of 30000ms exceeded.', 'timeout'],
+    ['an action timeout', 'TimeoutError: locator.waitFor: Timeout 15000ms exceeded.', 'timeout'],
+    [
+      'a colored expect failure',
+      'Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed',
+      'assertion',
+    ],
+    ['a navigation timeout', 'Error: page.goto: Timeout 30000ms exceeded.', 'navigation'],
+    [
+      'a refused connection',
+      'Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:4400/',
+      'navigation',
+    ],
+    ['a detached frame', 'Error: locator.click: Frame was detached', 'navigation'],
+    ['any other error', "TypeError: Cannot read properties of undefined (reading 'id')", 'other'],
+    ['a failure without an error', undefined, 'other'],
+  ]) {
+    it(`files ${label} under ${category}`, () => {
+      const record = buildRecord({
+        tests: [flakyTest(error)],
+        suite: 'atomic',
+        shard: null,
+        repositoryRoot: '/repo',
+      });
+
+      assert.equal(record.tests[0].category, category);
+    });
+  }
+
+  it('names a failure from the first attempt that has an error', () => {
+    const record = buildRecord({
+      tests: [
+        fakeTest({
+          outcome: 'unexpected',
+          results: [
+            attempt({status: 'skipped'}),
+            attempt({
+              status: 'failed',
+              retry: 1,
+              error: 'Error: expect(locator).toBeVisible() failed',
+            }),
+            attempt({status: 'timedOut', retry: 2, error: 'Test timeout of 30000ms exceeded.'}),
+          ],
+        }),
+      ],
+      suite: 'atomic',
+      shard: null,
+      repositoryRoot: '/repo',
+    });
+
+    assert.equal(record.tests[0].category, 'assertion');
   });
 
   it('treats a run without shards as shard 1 of 1', () => {
