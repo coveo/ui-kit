@@ -87,6 +87,14 @@ function sortBy(surfaceId: string, sortCriteria: string): Event {
   return {name: 'selectSort', surfaceId, sourceComponentId: 'sort-2', context: {sortCriteria}};
 }
 
+/** The text of a turn's events of one kind, such as its answer or its reasoning. */
+function textOf(events: Event[], type: string): string {
+  return events
+    .filter((event) => event.type === type)
+    .map((event) => event.delta)
+    .join('');
+}
+
 describe('multi-surface mock', () => {
   beforeEach(() => {
     resetMultiSurfaceSessions();
@@ -274,6 +282,58 @@ describe('multi-surface mock', () => {
         (message) => message.updateDataModel?.surfaceId === alive(kayaks)[0]
       )
     ).toBe(true);
+  });
+
+  describe('asked for the cheapest product', () => {
+    it('names the cheapest product of the search on screen, across its kept filters', async () => {
+      const opened = await eventsOf(converse(SEARCH, {message: 'kayak'}));
+      const session = sessionOf(opened);
+      const [surfaceId] = alive(opened);
+      await eventsOf(
+        converse(
+          SEARCH,
+          {
+            action: {
+              name: 'toggleSelect',
+              surfaceId,
+              sourceComponentId: 'facet-brand-2',
+              context: {value: 'Dakine'},
+            },
+          },
+          session
+        )
+      );
+
+      const answer = await eventsOf(
+        converse(ASSISTANT, {message: 'Which one is the cheapest?'}, session)
+      );
+
+      expect(textOf(answer, 'TEXT_MESSAGE_CONTENT')).toBe(
+        'The cheapest of these results is the RapidFin Whitewater Kayak, at $749.99.'
+      );
+      expect(textOf(answer, 'REASONING_MESSAGE_CONTENT')).toContain(
+        'The shopper is looking at the results for "kayak"'
+      );
+      expect(alive(answer)).toEqual([]);
+    });
+
+    it('answers from the latest search surface', async () => {
+      const first = await eventsOf(converse(SEARCH, {message: 'kayak'}));
+      const session = sessionOf(first);
+      await eventsOf(converse(SEARCH, {message: 'wetsuit'}, session));
+
+      const answer = await eventsOf(converse(ASSISTANT, {message: 'the cheapest?'}, session));
+
+      expect(textOf(answer, 'TEXT_MESSAGE_CONTENT')).not.toContain('Kayak');
+      expect(textOf(answer, 'REASONING_MESSAGE_CONTENT')).toContain('the results for "wetsuit"');
+    });
+
+    it('runs the agent as usual with no search on screen', async () => {
+      const answer = await eventsOf(converse(ASSISTANT, {message: 'which one is the cheapest?'}));
+
+      expect(textOf(answer, 'REASONING_MESSAGE_CONTENT')).not.toContain('looking at');
+      expect(textOf(answer, 'TEXT_MESSAGE_CONTENT')).not.toContain('The cheapest of these');
+    });
   });
 
   it('refuses an action on a surface it does not answer', async () => {

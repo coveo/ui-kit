@@ -2,7 +2,7 @@
 
 The Storefront Preview layout on **one** Thermidor session: a header that stays (the search box and
 the cart) over a page that changes (home recommendations, the assistant's answer to a
-search, search results, listing pages). Each view draws its own A2-UI surfaces, all hosted by one
+search, search results with the assistant's chat panel beside them, listing pages). Each view draws its own A2-UI surfaces, all hosted by one
 renderer. It runs on the published contract only, and on `@coveo/thermidor`'s session-scoped
 surfaces (coveo/ui-kit#8750, #8751, #8752).
 
@@ -28,8 +28,12 @@ Try it (the mock is described [below](#the-multi-surface-mock)):
 3. Click **Add to cart** on a product card: the header's cart counts it. Open the cart to change it.
 4. Turn **AI** off and search `kayak`: the search page shows the search surface the server opened
    for it (facets, sort, pagination), answered from the search it keeps.
-5. Open a **Listing pages** entry: it shows an _In progress_ placeholder and sends no request.
-6. Open **One session** at the bottom: every turn, the view that sent it, and the surfaces it
+5. On that search page, ask `which one is the cheapest?` in the chat panel on the right: the answer
+   names the cheapest kayak, and its reasoning says what the shopper is looking at. The results stay
+   as they are and keep working: pick a brand and ask again. A follow-up chip of a panel answer is
+   sent in the panel too.
+6. Open a **Listing pages** entry: it shows an _In progress_ placeholder and sends no request.
+7. Open **One session** at the bottom: every turn, the view that sent it, and the surfaces it
    created that are still alive. `GET http://localhost:3456/multi-surface/sessions` shows what the
    mock keeps for each session.
 
@@ -56,6 +60,7 @@ views and puts them on one session:
 | Home page: recommendations                       | `storefront-preview-home`      | ProductCarousel                                                                            |
 | Assistant page: the answer to a committed search | `storefront-preview-assistant` | ProductCarousel, NextActionsBar, ComparisonTable, BundleDisplay, ProductResearchCard       |
 | Search page: results for a search with AI off    | `storefront-preview-search`    | CommerceSearch, LayoutStack, QuerySummary, Sort, ProductList, Pagination, PageSize, facets |
+| Search page: the chat panel beside the results   | `storefront-preview-assistant` | The assistant page's components                                                            |
 
 The behaviour is kept:
 
@@ -81,6 +86,10 @@ The behaviour is kept:
 - **The server keeps every surface.** Each one gets a fresh `ui-<uuid>` id and stays in the
   session's state until the agent deletes it; a new page does not delete the previous page's
   surfaces. The app draws only the current visit's.
+- **One page can hold two views.** The search page draws its results in the middle and the chat
+  panel on the right, on the same visit. Each turn is tagged with the view it was sent on, so the
+  middle draws its search turns' surfaces and the panel its assistant turns'. An action goes on the
+  view of the turn that created its surface.
 - **Every live surface takes actions.** The session sends an action from any surface that is still
   alive, whichever turn created it, so a page stays usable after another view has sent a turn.
 
@@ -92,23 +101,46 @@ rather than tracking requests itself:
 
 - **Surfaces lock from the request in flight.** Each view draws its surfaces with
   `demo-schema-react`'s `TurnSurfaces`, which locks them while `session.request` is set
-  (`src/views/ViewSurfaces.tsx`). A view only sees the requests of its own turns.
+  (`src/views/ViewSurfaces.tsx`). Every view locks on any view's request: the session withholds
+  an action sent while another request is in flight, so the search results lock while the chat
+  panel's answer streams.
 - **Loading placeholders come from the data model.** A surface whose data model declares
   `isLoading: true` is drawn as its component's skeleton while its turn streams
   (`DiscoveredSurface.isLoading`). The session drops a placeholder its turn left behind.
 - **The search box is disabled while a request is in flight,** as in `demo-schema-react`. The
   server runs one turn at a time, so a search sent before the running turn ends would be refused.
-- **Nothing else can send while a request is in flight:** follow-up chips sit on locked surfaces,
-  and the home and listing pages send nothing. So the pages call `session.dispatchAction` directly,
-  as `demo-schema-react` does. Leaving a page mid-answer lets the answer finish.
+- **Nothing else can send while a request is in flight:** the chat panel's input is disabled like
+  the search box, follow-up chips sit on locked surfaces, and the home and listing pages send
+  nothing. So the pages and the panel call `session.dispatchAction` directly, as
+  `demo-schema-react` does. Leaving a page mid-answer lets the answer finish.
 - **The app records which view sent each turn.** Just before a send it sets the view that
   `context.custom.surfaceId` names, and after a prompt it records the turn the session opened with
-  its view and page visit (`src/session/storefront-session.tsx`).
+  its view and page visit (`src/session/storefront-session.tsx`). The chat panel records its turns
+  under the search page's visit with the assistant view, so the page and its panel split by view.
+
+### What each view knows of the other
+
+The views share the session's server state, as Agent Gateway does today:
+
+- **The assistant is told about the search on screen.** Every assistant message is given the
+  session's latest search surface (its query, filters, sort and visible products) as what the
+  shopper is looking at. Ask the panel for the cheapest product and the mock answers from that
+  surface's kept search.
+- **Nothing goes the other way.** The agent's answer never changes the search in the middle. A
+  search the agent opens from a panel answer (**See all kayaks**) shows in the panel.
+- **A panel prompt does not leave the page.** It is sent on the assistant view and stays on the
+  search page's visit. The panel input, the search box and both views' surfaces are disabled
+  while any request is in flight, so nothing gets the server's 409 or is dropped.
+- **An action that opens no turn streams into the session's latest turn,** which may be the
+  panel's after a facet click in the middle. The surface it updates stays in the view that drew
+  it, so the middle still shows the new results.
 
 ## Known limits
 
 - **Requests are serialized.** One request is in flight at a time, for every view. With one
   session per view, several stream at once. ADR-018 keeps this for the EAP.
+- **The search follows nothing the agent says.** The middle shows only the search page's own
+  turns; the agent cannot change or replace it.
 - **No query suggestions.** The search box sends nothing while typing; see below.
 - **Listing pages show a placeholder.** The published contract has no view id for them, so they show
   _In progress_ and send nothing.
@@ -141,11 +173,11 @@ src/
 │   └── cart-store.ts           The app's cart, sent in context.cart
 ├── views/
 │   ├── view-surfaces.ts        View → surfaces: each view draws its own turns' surfaces
-│   └── ViewSurfaces.tsx        Draws them with TurnSurfaces, locked by the view's own request
+│   └── ViewSurfaces.tsx        Draws them with TurnSurfaces, locked by any request in flight
 ├── a2ui/
 │   ├── catalog.ts              The renderers for the Storefront components
 │   └── AddToCartButton/        The button added to every product card
-├── components/                 Top bar, search box, listing menu, cart, In progress, inspector
+├── components/                 Top bar, search box, listing menu, cart, chat panel, In progress, inspector
 └── pages/                      Home, assistant, search and listing pages
 ```
 
@@ -177,6 +209,7 @@ It keeps each session's state between requests:
 - **one turn at a time:** another assistant or search request while one runs gets a 409.
 
 On `storefront-preview-assistant`, a message runs the agent (the storefront and schema scenarios),
-which is told what the shopper is looking at on the search surface. On `storefront-preview-search`,
+which is told what the shopper is looking at on the latest search surface. Asked for the cheapest
+product (`which one is the cheapest?`), it names the cheapest product of that surface's kept search. On `storefront-preview-search`,
 a message opens a search surface for that query. On both, an action is answered by the server.
 `storefront-preview` and `storefront-preview-home` get an empty run, and any other view gets a 400.
