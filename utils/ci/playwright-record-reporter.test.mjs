@@ -43,12 +43,14 @@ describe('buildRecord', () => {
       ],
       suite: 'atomic',
       shard: {current: 5, total: 12},
+      sha: 'abc123',
       repositoryRoot: '/repo',
     });
 
     assert.deepEqual(record, {
       suite: 'atomic',
       shard: '5-12',
+      sha: 'abc123',
       counts: {passed: 2, flaky: 1, failed: 1},
       tests: [
         {
@@ -106,10 +108,10 @@ describe('parseRecordName', () => {
 
 describe('PlaywrightRecordReporter', () => {
   let repository;
-  let previousCI;
+  let previousEnvironment;
 
   beforeEach(() => {
-    previousCI = process.env.CI;
+    previousEnvironment = {...process.env};
     repository = mkdtempSync(join(tmpdir(), 'playwright-record-'));
     writeFileSync(join(repository, 'pnpm-workspace.yaml'), '');
     mkdirSync(join(repository, 'samples', 'search-vite'), {recursive: true});
@@ -120,12 +122,12 @@ describe('PlaywrightRecordReporter', () => {
   });
 
   afterEach(() => {
-    delete process.env.DEPLOYMENT_ENVIRONMENT;
-    if (previousCI === undefined) {
-      delete process.env.CI;
-    } else {
-      process.env.CI = previousCI;
+    for (const name of Object.keys(process.env)) {
+      if (!(name in previousEnvironment)) {
+        delete process.env[name];
+      }
     }
+    Object.assign(process.env, previousEnvironment);
     rmSync(repository, {recursive: true, force: true});
   });
 
@@ -144,15 +146,16 @@ describe('PlaywrightRecordReporter', () => {
     return join(repository, RECORD_DIRECTORY);
   }
 
-  it('writes the record at the repository root in CI', () => {
+  it('writes the record at the repository root in CI, with the commit the job checked out', () => {
     process.env.CI = 'true';
 
-    const directory = run();
+    const directory = run({GITHUB_SHA: 'abc123'});
 
     const [file] = readdirSync(directory);
     assert.equal(file, 'playwright-record_headless-search-vite_1-1_1passed_1flaky_0failed.json');
     const record = JSON.parse(readFileSync(join(directory, file), 'utf8'));
     assert.equal(record.suite, 'headless-search-vite');
+    assert.equal(record.sha, 'abc123');
     assert.equal(record.tests[0].file, 'samples/search-vite/tests/search.spec.ts');
   });
 

@@ -39,7 +39,7 @@ function suiteName(configDirectory, environment) {
   return environment.DEPLOYMENT_ENVIRONMENT === 'CDN' ? `${suite}-cdn` : suite;
 }
 
-export function buildRecord({tests, suite, shard, repositoryRoot}) {
+export function buildRecord({tests, suite, shard, sha, repositoryRoot}) {
   const counts = {passed: 0, flaky: 0, failed: 0};
   const retried = [];
   for (const test of tests) {
@@ -61,6 +61,7 @@ export function buildRecord({tests, suite, shard, repositoryRoot}) {
   return {
     suite,
     shard: shard ? `${shard.current}-${shard.total}` : '1-1',
+    sha,
     counts,
     tests: retried,
   };
@@ -104,6 +105,8 @@ export default class PlaywrightRecordReporter {
         tests: this.#suite.allTests(),
         suite: suiteName(configDirectory, process.env),
         shard: this.#config.shard,
+        // The commit the job checked out: on a pull request, GitHub's merge commit, not the PR head.
+        sha: process.env.GITHUB_SHA,
         repositoryRoot,
       });
       const directory = join(repositoryRoot, RECORD_DIRECTORY);
