@@ -44,13 +44,13 @@ Rules:
 
 ## Removals table
 
-Every file ends with one table that the technical writers and the API-surface check read:
+Every file ends with one table that the technical writers read, and that the planned API-surface check (a diff of the published v3 exports against the v4 line, not built yet) will read:
 
 ```markdown
 | Removed in v4                     | Use instead                                  | Deprecated since |
 | --------------------------------- | -------------------------------------------- | ---------------- |
 | `recommendationEngineDefinition`  | `recommendations` option of `fetchStaticState()` | not deprecated, experimental sub-package |
-| `setNavigatorContextProvider()`   | `navigatorContext` passed to `fetchStaticState()` | 3.47.0           |
+| `fromBuildResult()`               | `fetchStaticState()`, which builds and fetches in one call | 3.34.0           |
 ```
 
 One row per removed export, in the order the exports appear in the package entry point. "Deprecated since" is the v3 minor that shipped the notice; experimental members that never had one say so.

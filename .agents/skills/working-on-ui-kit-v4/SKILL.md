@@ -36,7 +36,7 @@ Read the story summary. The prefix decides the track; when there is none, decide
 
 Rules that follow from the track:
 
-- A v4 removal needs a v3 deprecation that already shipped with a replacement customers can use on v3 (KIT-6373 set this rule). No deprecation yet: do the v3 story first, as its own PR.
+- A v4 removal needs a v3 deprecation that already shipped with a replacement customers can use on v3 (KIT-6373 reworded the v3 notices so that each names one). No deprecation yet: do the v3 story first, as its own PR.
 - A v3 deprecation notice names the v3 replacement and never an experimental entry point.
 - Experimental sub-packages change without aliases or deprecation periods, but every change is still described in a changeset for customers.
 
@@ -68,7 +68,7 @@ Use [references/upgrade-guide-entry.md](references/upgrade-guide-entry.md) for t
 1. Run the checks of the packages you changed, then `pnpm -w run lint:fix`.
 2. Run the story check: `node .agents/skills/working-on-ui-kit-v4/scripts/check-v4-change.mjs --track <v3|v4|experimental>`. It fails when a public package changed without a changeset, when a bump does not match the track, when a `major` bump has no guide entry, or when a guide entry names an experimental entry point. Fix what it reports.
 3. Commit with a Conventional Commits title; a breaking change on the v4 track takes the `!` marker: `feat(headless)!: remove the legacy SSR API`. Sign every commit (`git commit -S`); unsigned commits block the merge.
-4. Open the PR with the template of its type from `.github/PULL_REQUEST_TEMPLATE/` (see the `commit-changes` skill), the Jira link filled in, against the base branch of the track. Keep it a draft until CI is green.
+4. Push the branch, then open the PR only when the piece is ready for review, with the template of its type from `.github/PULL_REQUEST_TEMPLATE/` (see the `commit-changes` skill), the Jira link filled in, against the base branch of the track. When early CI feedback is wanted before the review, open it as a draft and say so.
 5. In the PR description, state the track, the bump and the guide entry title, so the reviewer checks all three.
 
 ## Step 6: Close the story

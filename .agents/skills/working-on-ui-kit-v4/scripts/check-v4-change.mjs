@@ -11,7 +11,8 @@
  *   node check-v4-change.mjs [--base origin/main] [--track v3|v4|experimental]
  *
  * Compares the working tree (including untracked files) with the merge base of HEAD and --base.
- * Exits 1 on a failure; warnings do not fail the check.
+ * Exits 1 on a failure; warnings do not fail the check. A branch with no changeset and no public
+ * source change (docs only, tests only) passes on every track, including --track v4.
  */
 
 import {execFileSync} from 'node:child_process';
