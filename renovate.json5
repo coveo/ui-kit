@@ -66,6 +66,17 @@
       ],
     },
     {
+      description: 'Hold ESLint below 10 in Quantic until @salesforce/eslint-config-lwc supports ESLint 10',
+      matchFileNames: ['packages/quantic/package.json'],
+      matchPackageNames: ['eslint'],
+      allowedVersions: '<10',
+    },
+    {
+      description: 'Hold @salesforce/sfdx-lwc-jest below 7.6.0, which adds @lwc/state under a non-OSS license',
+      matchPackageNames: ['@salesforce/sfdx-lwc-jest'],
+      allowedVersions: '<7.6.0',
+    },
+    {
       groupName: 'Playwright',
       groupSlug: 'playwright',
       description: 'Keep the Playwright CI container image (mcr.microsoft.com/playwright) in lockstep with the playwright/@playwright/test packages so browser binaries always match the installed version',
