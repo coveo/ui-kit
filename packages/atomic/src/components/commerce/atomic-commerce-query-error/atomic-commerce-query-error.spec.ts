@@ -72,12 +72,12 @@ describe('atomic-commerce-query-error', () => {
 
   it('should initialize with search controller when interface type is search', async () => {
     await renderQueryError({interfaceElementType: 'search'});
-    expect(buildSearch).toHaveBeenCalledWith(mockedEngine);
+    expect(buildSearch).toHaveBeenCalledWith(mockedEngine, {enableResults: false});
   });
 
   it('should initialize with product listing controller when interface type is product-listing', async () => {
     await renderQueryError({interfaceElementType: 'product-listing'});
-    expect(buildProductListing).toHaveBeenCalledWith(mockedEngine);
+    expect(buildProductListing).toHaveBeenCalledWith(mockedEngine, {enableResults: false});
   });
 
   it('should display nothing when no error exists', async () => {

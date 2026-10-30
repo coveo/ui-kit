@@ -1,6 +1,7 @@
-import {HighlightUtils, type Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
+import {HighlightUtils} from '@coveo/headless/commerce';
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {styleMap} from 'lit/directives/style-map.js';
 import {when} from 'lit/directives/when.js';
 import {createProductContextController} from '@/src/components/commerce/product-template-component-utils/context/product-context-controller';
 import {renderItemTextFallback} from '@/src/components/common/item-text/item-text-fallback';
@@ -13,11 +14,19 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import '../atomic-commerce-text/atomic-commerce-text';
-import {getStringValueFromProductOrNull} from '@/src/components/commerce/product-template-component-utils/product-utils';
+import {
+  type CommerceResult,
+  getResultProperty,
+  getStringValueFromProductOrNull,
+  isSpotlightContent,
+} from '@/src/components/commerce/product-template-component-utils/product-utils';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 
 /**
  * The `atomic-product-text` component renders the value of a string field for a given product.
+ *
+ * Inside an `atomic-spotlight-content-template`, it renders a field of the Spotlight Content, such as `name` or
+ * `description`, using the font color configured for that field (for example, `nameFontColor` for `name`).
  */
 @customElement('atomic-product-text')
 @bindings()
@@ -60,9 +69,9 @@ export class AtomicProductText
    */
   @property({type: String, reflect: true}) public default?: string;
 
-  @state() private product!: Product;
+  @state() private product!: CommerceResult;
 
-  private productController = createProductContextController(this);
+  private productController = createProductContextController<CommerceResult>(this);
 
   @state() public bindings!: CommerceBindings;
 
@@ -99,7 +108,7 @@ export class AtomicProductText
       return null;
     }
 
-    return ProductTemplatesHelpers.getProductProperty(
+    return getResultProperty(
       this.product,
       this.field === 'ec_name' ? 'nameHighlights' : 'excerptHighlights'
     ) as HighlightUtils.HighlightKeyword[];
@@ -118,7 +127,7 @@ export class AtomicProductText
         defaultValue: this.default,
         item: this.product,
         getProperty: (result: unknown, property: string) =>
-          ProductTemplatesHelpers.getProductProperty(result as Product, property),
+          getResultProperty(result as CommerceResult, property),
       },
     })(html`
       <atomic-commerce-text
@@ -155,7 +164,16 @@ export class AtomicProductText
       return this.renderFallback();
     }
 
-    return this.renderProductText(`${productValueAsString}`);
+    const text = this.renderProductText(`${productValueAsString}`);
+    const fontColor = this.spotlightContentFontColor;
+    return fontColor ? html`<span style=${styleMap({color: fontColor})}>${text}</span>` : text;
+  }
+
+  private get spotlightContentFontColor() {
+    if (!isSpotlightContent(this.product)) {
+      return null;
+    }
+    return getStringValueFromProductOrNull(this.product, `${this.field}FontColor`);
   }
 }
 

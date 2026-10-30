@@ -1,8 +1,6 @@
 import {
   type BreadcrumbManager,
   type BreadcrumbManagerState,
-  buildProductListing,
-  buildSearch,
   type FacetGenerator,
   type FacetGeneratorState,
   type ProductListingSummaryState,
@@ -12,6 +10,7 @@ import {
   type SortState,
   type Summary,
 } from '@coveo/headless/commerce';
+import {buildSearchOrListing} from '@/src/components/commerce/atomic-commerce-interface/search-or-listing';
 import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {booleanConverter} from '@/src/converters/boolean-converter';
@@ -124,10 +123,10 @@ export class AtomicCommerceRefineModal
   public breadcrumbManagerState!: BreadcrumbManagerState;
 
   public initialize() {
-    const searchOrListing =
-      this.bindings.interfaceElement.type === 'search'
-        ? buildSearch(this.bindings.engine)
-        : buildProductListing(this.bindings.engine);
+    const searchOrListing = buildSearchOrListing(
+      this.bindings.engine,
+      this.bindings.interfaceElement
+    );
     this.summary = searchOrListing.summary();
     this.sort = searchOrListing.sort();
     this.facetGenerator = searchOrListing.facetGenerator();

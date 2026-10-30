@@ -26,10 +26,12 @@ describe('atomic-commerce-did-you-mean', () => {
 
   const renderDidYouMean = async ({
     interfaceElementType = 'search',
+    enableSpotlightContent = false,
     didYouMeanState = {},
     queryTriggerState = {},
   }: {
     interfaceElementType?: 'product-listing' | 'search';
+    enableSpotlightContent?: boolean;
     didYouMeanState?: Partial<DidYouMeanState>;
     queryTriggerState?: Partial<QueryTriggerState>;
   } = {}) => {
@@ -50,6 +52,7 @@ describe('atomic-commerce-did-you-mean', () => {
       selector: 'atomic-commerce-did-you-mean',
       bindings: (bindings) => {
         bindings.interfaceElement.type = interfaceElementType;
+        bindings.interfaceElement.enableSpotlightContent = enableSpotlightContent;
         bindings.engine = mockedEngine;
 
         return bindings;
@@ -89,6 +92,20 @@ describe('atomic-commerce-did-you-mean', () => {
     await renderDidYouMean();
 
     expect(buildQueryTrigger).toHaveBeenCalled();
+  });
+
+  it('should not enable results when spotlight content is disabled on the interface', async () => {
+    await renderDidYouMean();
+
+    expect(buildSearch).toHaveBeenCalledWith(mockedEngine, {enableResults: false});
+    expect(buildQueryTrigger).toHaveBeenCalledWith(mockedEngine, {enableResults: false});
+  });
+
+  it('should enable results when spotlight content is enabled on the interface', async () => {
+    await renderDidYouMean({enableSpotlightContent: true});
+
+    expect(buildSearch).toHaveBeenCalledWith(mockedEngine, {enableResults: true});
+    expect(buildQueryTrigger).toHaveBeenCalledWith(mockedEngine, {enableResults: true});
   });
 
   it("should set this.didYouMean the search controller's didYouMean", async () => {

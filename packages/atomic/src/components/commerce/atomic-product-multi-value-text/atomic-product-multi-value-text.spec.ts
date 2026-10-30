@@ -115,12 +115,12 @@ describe('atomic-product-multi-value-text', () => {
 
   it('should call buildProductListing when the interfaceElement type is product-listing', async () => {
     await renderProductMultiValueText();
-    expect(buildProductListing).toHaveBeenCalledWith(mockedEngine);
+    expect(buildProductListing).toHaveBeenCalledWith(mockedEngine, {enableResults: false});
   });
 
   it('should call buildSearch when the interfaceElement type is search', async () => {
     await renderProductMultiValueText({interfaceElementType: 'search'});
-    expect(buildSearch).toHaveBeenCalledWith(mockedEngine);
+    expect(buildSearch).toHaveBeenCalledWith(mockedEngine, {enableResults: false});
   });
 
   it('should call breadcrumbManager on this.breadcrumbManager', async () => {
