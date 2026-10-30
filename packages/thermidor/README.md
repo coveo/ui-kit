@@ -91,11 +91,30 @@ It is **fire-and-forget**: the returned Promise always resolves and never reject
 
 ### One request at a time
 
-Thermidor sends one request at a time per session, `initialize`, prompts and component actions alike. A dispatch made while a request is in flight is withheld: nothing is sent, and its promise resolves at once with a dev-only warning. Each `dispatchAction` promise resolves once its own request ends.
+Thermidor sends one request at a time per session, `initialize`, prompts and component actions alike, except the [concurrent actions](#concurrent-and-cached-actions) the producer announces. A dispatch made while a request is in flight is withheld: nothing is sent, and its promise resolves at once with a dev-only warning. Each `dispatchAction` promise resolves once its own request ends.
 
 - `session.request` is the request being sent (`{kind: 'initialize'}`, `{kind: 'prompt', turnId}` or `{kind: 'action', component, name, surfaceId, sourceComponentId, turnId?}`, with no `turnId` before the first turn), or `undefined` when idle. An action's run counts, a follow-up included. Read it synchronously, or through `subscribe`, to lock or dim the interface, and to hold back a dispatch until the session is free. `component` is the dispatching node's discriminant, so a consumer can key its own action lists, such as the actions that keep its surfaces usable, by component and action name, typed by the contracts with `ComponentActionNames`.
 - `session.sendAndWait(send)` calls `send`, which dispatches through the renderer, and resolves once the session has answered that dispatch, whatever its outcome, a withheld one included. A renderer's own dispatch promise may resolve as soon as it has emitted the action; when the `dispatchAction` promise is at hand, await it instead.
 - `cancel()` stops the request in flight, but `session.request` stays set until it has unwound, a few microtasks later, so a dispatch made right after `cancel()` is withheld. Wait for `request` to become `undefined`, through `subscribe`, before sending the next one.
+
+### Concurrent and cached actions
+
+The producer can answer some actions beside the turn, such as instant products for the highlighted suggestion. It announces them with the surface, in the AG-UI `metadata` of its snapshot, by surface id, as it announces turn-opening actions:
+
+```json
+"metadata": {
+  "concurrentActions": {"<surfaceId>": ["fetchInstantProducts"]},
+  "cachedActions": {"<surfaceId>": {"fetchInstantProducts": {"ttlMs": 60000}}}
+}
+```
+
+The latest announcement for a surface wins, and an empty entry revokes it. A cached action must also be concurrent; a cache announcement alone is ignored. A renderer only dispatches: it holds no cache, no retry and no wait for a free session.
+
+- A concurrent action is sent at once, whatever request is in flight, and never sets `session.request`. A prompt or `cancel()` does not stop it, and it is withheld until the session has its token.
+- Only the latest dispatch from a node is applied. An older request in flight is aborted, unless the action is cached: then it runs to the end, so its answer is cached, and a dispatch with the same payload joins it instead of sending another.
+- A cached action dispatched again with the same payload within the announced lifetime is answered from the session's cache, and sends nothing. The cache holds the last 100 answers, lives in memory and is never serialized.
+- Its answer may only update the data model of nodes the session already holds; anything else, such as a new surface or component, is dropped with a dev-only warning, and the answer's `metadata` is not read. Its writes reach `session.a2uiMessages` and `session.state`, but no run records them: a later recorded write to the same path replaces them, `session.serialize()` leaves them out, and a restored session shows the state the last recorded run left, so the renderer asks again.
+- Its failure, including a refused request, is a dev-only warning. It sets no `session.actionError` and changes no run.
 
 ### Optimistic values
 
@@ -150,7 +169,7 @@ Surfaces live in the session, not in the turn that created them. The session der
 
 - `session.surfaces` lists every live surface in creation order; a surface the agent deletes leaves it, and one it re-creates moves to the end. Each turn's `response.surfaces` lists the live surfaces that turn created; find one no turn created, such as the shell, by its `rootComponentType`. A loading placeholder is listed only while the run that created it streams: while its turn or the initialization streams, or while the request in flight streams into that run and had not found it already left behind; one the agent left behind (a cancelled run, an error, a restored session) leaves the lists, so a consumer draws a skeleton for every listed surface whose `isLoading` holds.
 - `session.a2uiMessages` is the whole session's renderer stream, in arrival order. It only grows, so a single renderer is fed each new message once. Before a `createSurface` that replaces a live surface, it carries a `deleteSurface` for it, and it leaves out an operation on a surface that is not live, since a renderer refuses both. It exists because Agent Gateway emits A2-UI v1.0 while every available renderer consumes v0.9: Thermidor downgrades the stream on the consumer's behalf (recorded interim debt, see below).
-- `session.state` is the validated data model of every live surface, keyed by surface id, whichever run wrote it.
+- `session.state` is the validated data model of every live surface, keyed by surface id, whichever run wrote it, with the answers to concurrent actions on top.
 - An action resolves its source component across the session's live surfaces, so the surfaces of earlier runs keep accepting actions. Its run only updates the surfaces: its surface snapshots are recorded with the active turn, or with the initialization before the first turn, and it never changes the status or response of a turn or of the initialization. When it fails, whether the endpoint rejects it, it streams `RUN_ERROR`, its stream ends without a terminal event or its request cannot be built, `session.actionError` identifies the action (`message`, `component`, `name`, `surfaceId`, `sourceComponentId`), so a consumer can show the failure next to the block it came from.
 
 Each `DiscoveredSurface` carries `surfaceId`, `rootComponentType`, and `isLoading`, which is `true` while the surface's data model declares `isLoading: true` (a loading placeholder for `rootComponentType`).
@@ -168,7 +187,7 @@ Each `DiscoveredSurface` carries `surfaceId`, `rootComponentType`, and `isLoadin
 
 ## Serialization
 
-`session.serialize()` produces a versioned `SerializedSession` (integer `version >= 1`), distinct from the runtime `Turn` type. Pass it back as `sessionToRestore` in `createSession` to continue a conversation. The initialization, the turns and the session's `state` are persisted; the surfaces and the renderer stream are never persisted (they are re-derived from the initialization's and the turns' `activities` on restore); a turn or initialization persisted mid-stream is downgraded to `error` with `'Stream was interrupted'`, preserving what it holds.
+`session.serialize()` produces a versioned `SerializedSession` (integer `version >= 1`), distinct from the runtime `Turn` type. Pass it back as `sessionToRestore` in `createSession` to continue a conversation. The initialization, the turns and the session's recorded `state` are persisted, without the answers to concurrent actions; the surfaces and the renderer stream are never persisted (they are re-derived from the initialization's and the turns' `activities` on restore); a turn or initialization persisted mid-stream is downgraded to `error` with `'Stream was interrupted'`, preserving what it holds.
 
 ## Recorded interim debt and out-of-scope items
 
