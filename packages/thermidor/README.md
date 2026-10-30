@@ -21,6 +21,8 @@ import {ComponentContractsSchema} from '@coveo/thermidor-schema';
 const session = createSession({
   organizationId: 'my-org',
   accessToken: 'xx-token',
+  agentConfigurationId: '00000000-0000-0000-0000-000000000000', // the configured agent that answers the session
+  trackingId: 'my-tracking-id',
   contracts: ComponentContractsSchema, // injected Zod discriminated union (Zod 3 or 4)
   navigatorContextProvider: () => getNavigatorContext(),
   commerceContextProvider: () => ({cart: getCart()}),

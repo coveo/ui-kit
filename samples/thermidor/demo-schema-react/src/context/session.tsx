@@ -33,7 +33,7 @@ export function useSession(): DemoSession {
 }
 
 function createThermidorSession(): DemoSession {
-  const {organizationId, accessToken, endpoint, trackingId, language, country, currency} =
+  const {organizationId, accessToken, endpoint, agentConfigurationId, trackingId} =
     getSampleConfiguration();
 
   return createSession({
@@ -41,10 +41,8 @@ function createThermidorSession(): DemoSession {
     organizationId,
     accessToken,
     endpoint,
+    agentConfigurationId,
     trackingId,
-    language,
-    country,
-    currency,
     navigatorContextProvider: getNavigatorContext,
   });
 }

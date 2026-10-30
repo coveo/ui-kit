@@ -148,11 +148,10 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
    * encoding even when the returned cart is empty.
    */
   commerceContextProvider?: CommerceContextProvider;
-  /** Additional per-request commerce request fields (tracking/locale). */
-  trackingId?: string;
-  language?: string;
-  country?: string;
-  currency?: string;
+  /** The identifier of the configured agent that answers the session. Sent with every request. */
+  agentConfigurationId: string;
+  /** The tracking identifier of the experience. Sent with every request. */
+  trackingId: string;
   /**
    * A previously-serialized session to restore at construction. When provided,
    * the store is seeded from the serialized session, reproducing the persisted
@@ -404,6 +403,12 @@ function readSessionKeys(
 export function createSession<TContracts extends ContractsSchema>(
   config: SessionConfig<TContracts>
 ): Session<TContracts> {
+  for (const key of ['agentConfigurationId', 'trackingId'] as const) {
+    if (!config[key]?.trim()) {
+      throw new Error(`createSession requires a non-blank ${key}.`);
+    }
+  }
+
   const initialState: SessionStoreState<Turn> = config.sessionToRestore
     ? restoreSession(config.sessionToRestore)
     : {
@@ -642,10 +647,8 @@ export function createSession<TContracts extends ContractsSchema>(
     const user: Record<string, unknown> = {userAgent: navigatorContext?.userAgent ?? null};
 
     const base: Omit<CommerceRequestModel, 'message' | 'action'> = {
-      trackingId: config.trackingId ?? '',
-      language: config.language ?? '',
-      country: config.country ?? '',
-      currency: config.currency ?? '',
+      agentConfigurationId: config.agentConfigurationId,
+      trackingId: config.trackingId,
       clientId: navigatorContext?.clientId ?? undefined,
       conversationSessionId: sessionId,
       conversationToken: sessionToken,
