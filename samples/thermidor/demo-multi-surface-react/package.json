@@ -1,0 +1,36 @@
+{
+  "name": "@samples/thermidor-demo-multi-surface-react",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "turbo run build --filter=@samples/thermidor-demo-multi-surface-react^... && concurrently --kill-others --names mock,vite \"pnpm --filter @coveo/mock-converse-api start\" \"VITE_COVEO_ENDPOINT=http://localhost:3456/converse-schema vite\"",
+    "dev:vite": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "e2e": "playwright test",
+    "e2e:watch": "playwright test --ui"
+  },
+  "dependencies": {
+    "@copilotkit/a2ui-renderer": "1.71.1",
+    "@coveo/thermidor": "workspace:*",
+    "@coveo/thermidor-schema": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@coveo/mock-converse-api": "workspace:*",
+    "@playwright/test": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "playwright": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  }
+}

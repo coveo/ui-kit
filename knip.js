@@ -73,6 +73,10 @@ export default {
     'packages/atomic-hosted-page': {
       entry: ['src/atomic-hosted-page.esm.ts', 'dev/vite.config.ts'],
     },
+    'samples/thermidor/demo-multi-surface-react': {
+      // Started with `pnpm --filter` by the dev and e2e scripts; listed so turbo builds it first.
+      ignoreDependencies: ['@coveo/mock-converse-api'],
+    },
     'packages/atomic-theming-e2e': {
       entry: ['tests/**/*.spec.ts', 'fixtures/*.js'],
     },
