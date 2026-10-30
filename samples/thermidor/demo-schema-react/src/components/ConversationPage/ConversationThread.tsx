@@ -4,12 +4,13 @@ import {AgentResponseBlock} from './AgentResponseBlock.js';
 import {ErrorTurnBlock} from './ErrorTurnBlock.js';
 import {UserPromptBubble} from './UserPromptBubble.js';
 import {TurnSeparator} from './TurnSeparator.js';
-import {splitTurn, type FollowUp} from './turn-segments.js';
-import {TurnSurfaces} from '../../a2ui/surfaces.js';
+import {isLatestTurn, splitTurn, type FollowUp} from './turn-segments.js';
+import {SurfaceGroup} from '../../a2ui/surfaces.js';
 import styles from './ConversationThread.module.css';
 
 const NO_SURFACES: readonly string[] = [];
 const NO_FOLLOW_UPS: readonly FollowUp[] = [];
+const EARLIER_TURN_NOTE = 'Earlier results. Ask a follow-up or search again to refine.';
 
 interface ConversationThreadProps {
   turns: Turn[];
@@ -52,7 +53,7 @@ export function ConversationThread({
                 turn,
                 surfacesByTurn.get(turn.id) ?? NO_SURFACES,
                 followUps?.get(turn.id) ?? NO_FOLLOW_UPS,
-                index === turns.length - 1,
+                isLatestTurn(turns, turn.id),
                 turn.id === pendingTurnId,
                 onAskFollowUp
               )}
@@ -100,10 +101,11 @@ function renderTurnContent(
               isStreaming={isStreaming}
               onAskFollowUp={isLatest && index === segments.length - 1 ? onAskFollowUp : undefined}
             >
-              <TurnSurfaces
+              <SurfaceGroup
                 surfaceIds={segment.surfaceIds}
                 interactive={isLatest}
                 isStreaming={isStreaming}
+                readOnlyNote={EARLIER_TURN_NOTE}
               />
             </AgentResponseBlock>
           </Fragment>

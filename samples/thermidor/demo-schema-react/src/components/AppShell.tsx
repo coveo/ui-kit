@@ -5,6 +5,7 @@ import {createThermidorCatalog} from '../a2ui/components.js';
 import {buildSurfaceStream, toServerAction} from '../a2ui/surface-stream.js';
 import {ThermidorA2UIStream} from '../a2ui/surfaces.js';
 import {isBlocking, SessionRequestProvider, useSessionRequest} from '../a2ui/session-request.js';
+import {isScopingSurface} from '../scoping/scoping-surface.js';
 import {LandingPage} from './LandingPage/LandingPage.js';
 import {ConversationPage} from './ConversationPage/index.js';
 import {startFollowUp, type FollowUp} from './ConversationPage/turn-segments.js';
@@ -44,7 +45,7 @@ export function AppShell() {
     () => pendingTurnId !== null || turns.some((turn) => turn.status === 'streaming'),
     [turns, pendingTurnId]
   );
-  const stream = useMemo(() => buildSurfaceStream(turns), [turns]);
+  const stream = useMemo(() => buildSurfaceStream(turns, {isScoping: isScopingSurface}), [turns]);
   const locked = isBlocking(useSessionRequest(session));
 
   const latestRef = useRef({turns, stream});

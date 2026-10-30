@@ -1,6 +1,6 @@
 import {FacetSearchOffered} from '../../a2ui/facet-search-offered.js';
 import type {ScopingSurface} from '../../a2ui/surface-stream.js';
-import {TurnSurfaces} from '../../a2ui/surfaces.js';
+import {SurfaceGroup} from '../../a2ui/surfaces.js';
 import styles from './ScopingPanel.module.css';
 
 interface ScopingPanelProps {
@@ -20,7 +20,7 @@ export function ScopingPanel({scoping, interactive, isStreaming}: ScopingPanelPr
   return (
     <aside className={styles.panel} aria-label="Scope">
       <FacetSearchOffered value={false}>
-        <TurnSurfaces
+        <SurfaceGroup
           surfaceIds={[scoping.surfaceId]}
           interactive={interactive}
           isStreaming={isStreaming}

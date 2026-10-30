@@ -44,10 +44,20 @@ export interface ScopingSurface {
   turnId: string;
 }
 
-/** The question-answering gateway draws its Scoping blocks under this surface id prefix. */
-const SCOPING_SURFACE_ID_PREFIX = 'scoping-';
+export interface SurfaceStreamOptions {
+  /**
+   * Whether a server surface id is a Scoping block. The server decides how it marks one, so the
+   * caller says which blocks are; without it, every block stays under its turn.
+   */
+  isScoping?: (serverSurfaceId: string) => boolean;
+}
 
-export function buildSurfaceStream(turns: readonly Turn[]): SurfaceStream {
+const NEVER_SCOPING = () => false;
+
+export function buildSurfaceStream(
+  turns: readonly Turn[],
+  {isScoping = NEVER_SCOPING}: SurfaceStreamOptions = {}
+): SurfaceStream {
   const messages: A2uiV09Message[] = [];
   const surfacesByTurn = new Map<string, string[]>();
   const serverSurfaceIds = new Map<string, string>();
@@ -73,7 +83,7 @@ export function buildSurfaceStream(turns: readonly Turn[]): SurfaceStream {
         renderIdByServerId.set(serverId, renderId);
         serverSurfaceIds.set(renderId, serverId);
         ownerTurnByRenderId.set(renderId, turn.id);
-        if (serverId.startsWith(SCOPING_SURFACE_ID_PREFIX)) {
+        if (isScoping(serverId)) {
           scoping = {surfaceId: renderId, turnId: turn.id};
         } else if (!turnSurfaces.includes(renderId)) {
           turnSurfaces.push(renderId);
@@ -103,7 +113,7 @@ export function buildSurfaceStream(turns: readonly Turn[]): SurfaceStream {
 
     for (const surface of turn.response.surfaces) {
       const renderId = `${turn.id}/${surface.surfaceId}`;
-      if (surface.isLoading && turnSurfaces.includes(renderId)) {
+      if (surface.isLoading && renderIdByServerId.get(surface.surfaceId) === renderId) {
         loadingSurfaces.set(renderId, surface.rootComponentType);
       }
     }
