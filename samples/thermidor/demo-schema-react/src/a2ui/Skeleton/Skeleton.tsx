@@ -21,6 +21,23 @@ export function A2UISkeleton({componentType}: A2UISkeletonProps) {
   }
 }
 
+/** The instant-products grid before its first answer: as many cards as fit beside the suggestions. */
+export function InstantProductsSkeleton() {
+  return (
+    <div className={styles.instantProductsGrid} aria-label="Loading products">
+      {[0, 1, 2, 3].map((i) => (
+        <div key={i} className={styles.carouselCard}>
+          <div className={`${styles.skeleton} ${styles.carouselImage}`} />
+          <div className={styles.carouselCardContent}>
+            <div className={`${styles.skeleton} ${styles.carouselName}`} />
+            <div className={`${styles.skeleton} ${styles.carouselPrice}`} />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function ProductCarouselSkeleton() {
   return (
     <div className={styles.carouselContainer} aria-label="Loading product carousel">
