@@ -1,3 +1,15 @@
+## 3.64.2
+
+### Patch Changes
+
+- [#8600](https://github.com/coveo/ui-kit/pull/8600) [`3a8212f`](https://github.com/coveo/ui-kit/commit/3a8212f171173452b75851690ee0d75e0e86b241) - Make each Atomic element import the elements it renders, so that importing a single element (rather than the whole `@coveo/atomic` barrel or the lazy loader) no longer leaves `atomic-icon`, `atomic-focus-trap`, `atomic-result-link`, `atomic-result`, `atomic-product-section-name`, `atomic-product-section-visual` or `atomic-generated-answer-inline-link` unregistered.
+
+  When a modal is closed and no `source` element was provided, focus now returns to the element that had focus when the modal opened (e.g., in `atomic-generated-answer-feedback-modal`).
+
+- Updated dependencies [[`8a12041`](https://github.com/coveo/ui-kit/commit/8a12041619d0ebbabfc9f017a7e959291d5911a1)]:
+  - @coveo/headless@3.58.1
+  - @coveo/atomic-legacy@0.1.10
+
 ## 3.64.1
 
 ### Patch Changes
