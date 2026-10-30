@@ -169,9 +169,10 @@ describe('Analytics', () => {
     const [path, {headers, body}]: any = fetchMock.lastCall();
     expect(path).toBe(endpointForEventType(EventType.view));
 
+    // fetch-mock 12 normalizes recorded header names to lower case.
     const h = headers as Record<string, string>;
-    expect(h['Authorization']).toBe(`Bearer ${aToken}`);
-    expect(h['Content-Type']).toBe('application/json');
+    expect(h['authorization']).toBe(`Bearer ${aToken}`);
+    expect(h['content-type']).toBe('application/json');
 
     expect(body).not.toBeUndefined();
 
@@ -657,7 +658,18 @@ describe('Analytics', () => {
     const {url: expectedUrl, ...expectedOptions} = processedRequest;
     expect(clientOrigin!).toBe('analyticsFetch');
     expect(url).toBe(expectedUrl);
-    expect(options).toEqual(expectedOptions);
+    // fetch-mock 12 records the method and header names in lower case, so the
+    // expectation is normalized the same way rather than compared verbatim.
+    expect(options).toEqual({
+      ...expectedOptions,
+      method: expectedOptions.method!.toLowerCase(),
+      headers: Object.fromEntries(
+        Object.entries(expectedOptions.headers as Record<string, string>).map(([key, value]) => [
+          key.toLowerCase(),
+          value,
+        ])
+      ),
+    });
   });
 
   const getParsedBodyCalls = (): any[] => {
