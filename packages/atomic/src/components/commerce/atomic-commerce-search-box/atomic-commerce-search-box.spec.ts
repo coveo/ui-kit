@@ -135,6 +135,8 @@ describe('atomic-commerce-search-box', () => {
       wrapper: element.shadowRoot!.querySelector('div[part="wrapper"]')!,
       textArea: element.shadowRoot!.querySelector('textarea[part="textarea"]')!,
       suggestions: () => element.shadowRoot!.querySelectorAll('atomic-suggestion-renderer'),
+      renderedSuggestion: () => element.shadowRoot!.querySelector('[part~="suggestion"]'),
+      activeSuggestion: () => element.shadowRoot!.querySelector('[part~="active-suggestion"]'),
       clearButton: element.shadowRoot!.querySelector('button[part="clear-button"]')!,
       submitButton: element.shadowRoot!.querySelector('button[part="submit-button"]')!,
       suggestionsContainer: element.shadowRoot!.querySelector(
@@ -428,6 +430,21 @@ describe('atomic-commerce-search-box', () => {
 
         await userEvent.keyboard('{ArrowDown}');
         await userEvent.type(textArea, ' ');
+        await userEvent.keyboard('{Enter}');
+
+        expect(submitMock).toHaveBeenCalledTimes(1);
+      });
+
+      it('should call the #submit method on the search box controller when pressing Enter after clearing an active suggestion with Escape', async () => {
+        const {textArea, renderedSuggestion, activeSuggestion} = await renderSearchBox();
+
+        await userEvent.click(textArea);
+        await expect.poll(renderedSuggestion).not.toBeNull();
+
+        await userEvent.keyboard('{ArrowDown}');
+        await expect.poll(activeSuggestion).not.toBeNull();
+
+        await userEvent.keyboard('{Escape}');
         await userEvent.keyboard('{Enter}');
 
         expect(submitMock).toHaveBeenCalledTimes(1);
