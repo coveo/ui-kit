@@ -220,6 +220,25 @@ describe('the Scoping block', () => {
     expect(stream.scoping).toEqual({surfaceId: 't2/selection-2', turnId: 't2'});
   });
 
+  it('marks a loading Scoping block as a placeholder', () => {
+    const stream = buildSurfaceStream(
+      [
+        makeTurn({
+          id: 't1',
+          response: {
+            a2uiMessages: [create('selection-1')],
+            surfaces: [
+              {surfaceId: 'selection-1', rootComponentType: 'LayoutStack', isLoading: true},
+            ],
+          },
+        }),
+      ],
+      {isScoping}
+    );
+
+    expect([...stream.loadingSurfaces]).toEqual([['t1/selection-1', 'LayoutStack']]);
+  });
+
   it('has none when no block is classified as one', () => {
     const stream = buildSurfaceStream([turn('t1', [create('selection-1')])]);
 

@@ -113,7 +113,7 @@ export function buildSurfaceStream(
 
     for (const surface of turn.response.surfaces) {
       const renderId = `${turn.id}/${surface.surfaceId}`;
-      if (surface.isLoading && turnSurfaces.includes(renderId)) {
+      if (surface.isLoading && renderIdByServerId.get(surface.surfaceId) === renderId) {
         loadingSurfaces.set(renderId, surface.rootComponentType);
       }
     }
