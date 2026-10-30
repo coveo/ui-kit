@@ -17,15 +17,17 @@ describe('product-template-controllers', () => {
     vi.mocked(ItemContextController).mockImplementation(function (this: unknown) {
       return this;
     });
-    vi.mocked(MissingParentError).mockImplementation(
-      function (this: unknown, elementName, parentName) {
-        const error = new Error(
-          `The "${elementName}" element must be the child of an "${parentName}" element.`
-        );
-        error.name = 'MissingParentError';
-        return error;
-      }
-    );
+    vi.mocked(MissingParentError).mockImplementation(function (
+      this: unknown,
+      elementName,
+      parentName
+    ) {
+      const error = new Error(
+        `The "${elementName}" element must be the child of an "${parentName}" element.`
+      );
+      error.name = 'MissingParentError';
+      return error;
+    });
     mockHost = {
       addController: vi.fn(),
       requestUpdate: vi.fn(),

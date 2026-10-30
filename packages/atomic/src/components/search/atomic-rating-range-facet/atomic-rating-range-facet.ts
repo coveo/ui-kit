@@ -473,9 +473,11 @@ export class AtomicRatingRangeFacet extends LitElement implements InitializableC
         i18n: this.bindings.i18n,
         label: this.label,
       },
-    })(html`<ul class="mt-3" part="values">
-      ${children}
-    </ul>`);
+    })(
+      html`<ul class="mt-3" part="values">
+        ${children}
+      </ul>`
+    );
   }
 
   private renderValues() {
@@ -509,8 +511,9 @@ export class AtomicRatingRangeFacet extends LitElement implements InitializableC
         return nothing;
       }
 
-      return renderFacetContainer()(html`${this.renderHeader()}
-      ${when(!this.isCollapsed, () => this.renderValues())}`);
+      return renderFacetContainer()(
+        html`${this.renderHeader()} ${when(!this.isCollapsed, () => this.renderValues())}`
+      );
     })}`;
   }
 }

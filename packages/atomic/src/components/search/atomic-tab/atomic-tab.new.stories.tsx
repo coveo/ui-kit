@@ -21,11 +21,12 @@ const meta: Meta = {
   component: 'atomic-tab',
   title: 'Search/Tab',
   id: 'atomic-tab',
-  render: () => html`<atomic-tab-manager>
-    <atomic-tab label="All" name="all"></atomic-tab>
-    <atomic-tab label="Images" name="images"></atomic-tab>
-    <atomic-tab label="Articles" name="articles"></atomic-tab>
-  </atomic-tab-manager>`,
+  render: () =>
+    html`<atomic-tab-manager>
+      <atomic-tab label="All" name="all"></atomic-tab>
+      <atomic-tab label="Images" name="images"></atomic-tab>
+      <atomic-tab label="Articles" name="articles"></atomic-tab>
+    </atomic-tab-manager>`,
   decorators: [decorator],
   parameters: {
     ...parameters,
