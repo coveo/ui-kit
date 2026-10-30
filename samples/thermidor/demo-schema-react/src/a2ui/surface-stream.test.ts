@@ -195,6 +195,31 @@ describe('the Scoping block', () => {
     ).toBeUndefined();
   });
 
+  it('drops a deleted Scoping block and leaves its turn blocks in place', () => {
+    const stream = buildSurfaceStream(
+      [
+        turn('t1', [create('selection-1'), create('agent-answer')]),
+        turn('t2', [remove('selection-1')]),
+      ],
+      {isScoping}
+    );
+
+    expect(stream.scoping).toBeUndefined();
+    expect(stream.surfacesByTurn.get('t1')).toEqual(['t1/agent-answer']);
+  });
+
+  it('keeps the latest Scoping block when an earlier one is deleted', () => {
+    const stream = buildSurfaceStream(
+      [
+        turn('t1', [create('selection-1')]),
+        turn('t2', [create('selection-2'), remove('selection-1')]),
+      ],
+      {isScoping}
+    );
+
+    expect(stream.scoping).toEqual({surfaceId: 't2/selection-2', turnId: 't2'});
+  });
+
   it('has none when no block is classified as one', () => {
     const stream = buildSurfaceStream([turn('t1', [create('selection-1')])]);
 
