@@ -7,8 +7,8 @@ import {parseRecordName} from '../playwright-record-reporter.mjs';
 
 const WORKFLOW = 'ci.yml';
 const CONCURRENCY = 6;
-// The jobs endpoints return HTTP 502 with larger pages on this repository.
-const JOBS_PER_PAGE = 30;
+// The jobs endpoints often return HTTP 502 for pages of 30 jobs on this repository, never for 10.
+const JOBS_PER_PAGE = 10;
 // These jobs only fail after another job failed, so they never explain a failure.
 const DOWNSTREAM_JOB = /^Confirm build is valid|Merge Playwright reports$/;
 const SKIP_PATTERN = String.raw`(?<![\w.])(test|it|describe)\.(skip|fixme)(\(|\.each[(<])|(?<![\w.])x(it|describe)\(`;
