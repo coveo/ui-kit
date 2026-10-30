@@ -167,25 +167,39 @@ describe('buildSurfaceStream', () => {
 });
 
 describe('the Scoping block', () => {
+  const isScoping = (serverSurfaceId: string) => serverSurfaceId.startsWith('selection-');
+
   it('takes the Scoping block out of its turn and keeps the latest one for the whole thread', () => {
-    const stream = buildSurfaceStream([
-      turn('t1', [create('scoping-1'), create('agent-answer')]),
-      turn('t2', [create('scoping-2'), update('scoping-2', {})]),
-      turn('t3', []),
-    ]);
+    const stream = buildSurfaceStream(
+      [
+        turn('t1', [create('selection-1'), create('agent-answer')]),
+        turn('t2', [create('selection-2'), update('selection-2', {})]),
+        turn('t3', []),
+      ],
+      {isScoping}
+    );
 
     expect([...stream.surfacesByTurn]).toEqual([
       ['t1', ['t1/agent-answer']],
       ['t2', []],
       ['t3', []],
     ]);
-    expect(stream.scoping).toEqual({surfaceId: 't2/scoping-2', turnId: 't2'});
-    expect(stream.serverSurfaceIds.get('t2/scoping-2')).toBe('scoping-2');
-    expect(stream.messages.at(-1)).toEqual(update('t2/scoping-2', {}));
+    expect(stream.scoping).toEqual({surfaceId: 't2/selection-2', turnId: 't2'});
+    expect(stream.serverSurfaceIds.get('t2/selection-2')).toBe('selection-2');
+    expect(stream.messages.at(-1)).toEqual(update('t2/selection-2', {}));
   });
 
   it('has none until a turn draws one', () => {
-    expect(buildSurfaceStream([turn('t1', [create('ui-search')])]).scoping).toBeUndefined();
+    expect(
+      buildSurfaceStream([turn('t1', [create('ui-search')])], {isScoping}).scoping
+    ).toBeUndefined();
+  });
+
+  it('has none when no block is classified as one', () => {
+    const stream = buildSurfaceStream([turn('t1', [create('selection-1')])]);
+
+    expect(stream.scoping).toBeUndefined();
+    expect(stream.surfacesByTurn.get('t1')).toEqual(['t1/selection-1']);
   });
 });
 
