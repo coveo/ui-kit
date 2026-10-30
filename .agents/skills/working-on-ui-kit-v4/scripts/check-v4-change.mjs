@@ -2,17 +2,18 @@
 /**
  * Checks a UI-Kit v4 story branch before it becomes a pull request:
  *   - a public package whose source changed has a changeset,
- *   - the changeset bumps match the track (v3: no major, v4: at least one major, experimental: no major),
+ *   - the changeset bumps match the track (v3: no major, v4: at least one major, experimental: no major,
+ *     no-release: no changeset and no published source change),
  *   - a major bump comes with an upgrade guide entry,
  *   - guide entries and changesets do not point customers at an experimental entry point,
  *   - new deprecation notices name a replacement.
  *
  * Usage:
- *   node check-v4-change.mjs [--base origin/main] [--track v3|v4|experimental]
+ *   node check-v4-change.mjs [--base origin/main] [--track v3|v4|experimental|no-release]
  *
  * Compares the working tree (including untracked files) with the merge base of HEAD and --base.
- * Exits 1 on a failure; warnings do not fail the check. A branch with no changeset and no public
- * source change (docs only, tests only) passes on every track, including --track v4.
+ * Exits 1 on a failure; warnings do not fail the check. Without --track, a major changeset means v4
+ * and anything else means v3. A docs-only or tests-only branch passes on every track.
  */
 
 import {execFileSync} from 'node:child_process';
@@ -26,6 +27,7 @@ const GUIDE_FILES = [
   'packages/atomic/docs/upgrade-from-v3-to-v4.md',
 ];
 const EXPERIMENTAL_ENTRY_POINTS = /ssr-next|ssr-commerce-next/;
+const TRACKS = ['v3', 'v4', 'experimental', 'no-release'];
 
 const {values: options} = parseArgs({
   options: {
@@ -64,22 +66,31 @@ for (const file of changed.keys()) {
   if (!pkg.private) publicPackagesChanged.add(pkg.name);
 }
 
-for (const name of publicPackagesChanged) {
-  if (!bumps.some((bump) => bump.name === name || sharesFixedGroup(bump.name, name))) {
-    failures.push(`${name} source changed without a changeset (run pnpm changeset)`);
-  }
-}
-
 const hasMajor = bumps.some((bump) => bump.level === 'major');
 const track = options.track ?? (hasMajor ? 'v4' : 'v3');
-if (!['v3', 'v4', 'experimental'].includes(track)) {
-  failures.push(`unknown track "${track}": use v3, v4 or experimental`);
+if (!TRACKS.includes(track)) {
+  failures.push(`unknown track "${track}": use ${TRACKS.join(', ')}`);
 }
-if (track === 'v4' && !hasMajor && bumps.length > 0) {
-  failures.push('track v4 but no changeset bumps major');
-}
-if (track !== 'v4' && hasMajor) {
-  failures.push(`track ${track} but a changeset bumps major: ${bumps.filter((b) => b.level === 'major').map((b) => b.name).join(', ')}`);
+
+if (track === 'no-release') {
+  if (changesets.length > 0) {
+    failures.push(`track no-release but the branch adds a changeset: ${changesets.join(', ')}`);
+  }
+  if (publicPackagesChanged.size > 0) {
+    failures.push(`track no-release but published source changed in: ${[...publicPackagesChanged].join(', ')}`);
+  }
+} else {
+  for (const name of publicPackagesChanged) {
+    if (!bumps.some((bump) => bump.name === name || sharesFixedGroup(bump.name, name))) {
+      failures.push(`${name} source changed without a changeset (run pnpm changeset)`);
+    }
+  }
+  if (track === 'v4' && !hasMajor && bumps.length > 0) {
+    failures.push('track v4 but no changeset bumps major');
+  }
+  if (track !== 'v4' && hasMajor) {
+    failures.push(`track ${track} but a changeset bumps major: ${bumps.filter((b) => b.level === 'major').map((b) => b.name).join(', ')}`);
+  }
 }
 
 const guideTouched = GUIDE_FILES.filter((file) => changed.has(file));

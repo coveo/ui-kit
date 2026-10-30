@@ -1,6 +1,6 @@
 ---
 name: working-on-ui-kit-v4
-description: Guides the delivery of a UI-Kit v4 story end to end, including which branch to target, the deprecate-in-v3 and remove-in-v4 tracks, the changeset bump, the v3 to v4 upgrade guide entry, sample and test updates, and the pull request. Use when a Jira issue belongs to the UI-KIT v4 epics (KIT-3377, KIT-4387, KIT-4621, KIT-5934) or its summary starts with a "v3:" or "v4:" prefix, when removing or renaming a public API, when adding a deprecation, or when the user mentions v4, a breaking change, a major bump or the upgrade guide.
+description: Guides the delivery of a UI-Kit v4 story end to end, including its track (v3, v4, experimental or no-release), which branch to target, the changeset bump, the v3 to v4 upgrade guide entry, sample and test updates, and the pull request. Use when a Jira issue belongs to the UI-KIT v4 epics (KIT-3377, KIT-4387, KIT-4621, KIT-5934) or its summary starts with a "v3:" or "v4:" prefix, when removing or renaming a public API, when adding a deprecation, or when the user mentions v4, a breaking change, a major bump or the upgrade guide.
 license: Apache-2.0
 metadata:
   author: coveo
@@ -26,17 +26,26 @@ Update this table when a decision lands; the rest of the skill reads from it.
 
 ## Step 1: Pick the track
 
-Read the story summary. The prefix decides the track; when there is none, decide from what the change does to a customer on the latest v3.
+Decide the track from what the change does to a customer on the latest v3 release. Take the first case that applies:
 
-| Track            | Story looks like                                                                            | Base branch                                   | Changeset bump                                   | Removal allowed |
-| ---------------- | ------------------------------------------------------------------------------------------- | --------------------------------------------- | ------------------------------------------------ | --------------- |
-| **v3**           | `[Package] v3: deprecate …`, `warn …`, `add an opposite attribute …`, `opt-in to …`         | `main`                                        | `minor` for a new API or notice, `patch` for a fix | No              |
-| **v4**           | `[Package] v4: remove …`, `replace …`, `rename …`, `drop Node …`, `raise peer floors …`     | the v4 integration branch (see Current state) | `major` on every public package whose API breaks | Yes             |
-| **experimental** | Anything inside an experimental sub-package documented as such (the SSR `-next` entry points) | `main`                                        | `minor` or `patch`, never `major`                | Yes, without a deprecation period |
+1. **no-release:** no published package changes. Spikes, evaluations, Markdown docs, samples, tooling and the upgrade guide itself belong here.
+2. **experimental:** only an experimental sub-package changes, such as the SSR `-next` entry points.
+3. **v4:** something a v3 customer relies on breaks. A member is removed, renamed or made private, a signature or a default changes, or a requirement such as the Node.js version or a peer dependency floor rises.
+4. **v3:** everything else. The change adds an API, an opt-in, a warning or a deprecation notice, and nothing breaks.
+
+Newer story titles start with `[Package] v3:` or `[Package] v4:`. Treat that prefix as a hint and let the order above decide: most stories in the epics have no prefix, and `[Docs] v4: write the v3 to v4 upgrade guide` changes no published package, so it is no-release.
+
+| Track            | Example story                                                                        | Base branch                                   | Changeset bump                                     | Upgrade guide entry               |
+| ---------------- | ------------------------------------------------------------------------------------ | --------------------------------------------- | -------------------------------------------------- | --------------------------------- |
+| **v3**           | KIT-6346 `[Headless] v3: deprecate the legacy commerce facet contract`               | `main`                                        | `minor` for a new API or notice, `patch` for a fix | Optional "planned removal" row    |
+| **v4**           | KIT-6347 `[Headless] v4: sunset the legacy commerce facet contract`                  | the v4 integration branch (see Current state) | `major` on every public package whose API breaks   | Required                          |
+| **experimental** | A change to the SSR `-next` entry points                                             | `main`                                        | `minor` or `patch`, never `major`                  | Kept in sync, see below           |
+| **no-release**   | KIT-4388 `Should we use Zod over Bueno and deprecate Bueno?`                         | `main`, when any file changes                 | None                                               | None, except in the guide's story |
 
 Rules that follow from the track:
 
-- A v4 removal needs a v3 deprecation that already shipped with a replacement customers can use on v3 (KIT-6373 reworded the v3 notices so that each names one). No deprecation yet: do the v3 story first, as its own PR.
+- A v4 removal needs a v3 deprecation that already shipped with a replacement customers can use on v3 (KIT-6373 reworded the v3 notices so that each names one). A breaking story without one is two stories: do the v3 part first, as its own PR, and propose the missing v3 story to the user. For example, KIT-4958 renames `atomic-popover`: v3 adds `atomic-facet-popover` and deprecates the old name, and v4 removes it.
+- A no-release story adds no changeset. A spike ends with its decision in the Jira issue and, when the decision calls for a change, proposes the v3 and v4 stories that carry it out.
 - A v3 deprecation notice names the v3 replacement and never an experimental entry point.
 - Experimental sub-packages change without aliases or deprecation periods, but every change is still described in a changeset for customers.
 - The experimental SSR sub-packages become the v4 SSR API. When a change there alters what a customer writes, update its upgrade guide entry in the same PR, and remove the entry's `not yet built` marker once the change is built.
@@ -52,7 +61,7 @@ Rules that follow from the track:
 
 ## Step 3: Write the changeset
 
-Run `pnpm changeset` for every public package whose published surface changes. Then edit the file by hand so that it:
+Skip this step on the no-release track. Otherwise, run `pnpm changeset` for every public package whose published surface changes, then edit the file by hand so that it:
 
 1. Names the bump of Step 1 for each library package. Sample packages share a "fixed" group with their library in `.changeset/config.json` and move with it, so leave them out.
 2. Says what changed and what to do instead, in customer words, in two to five sentences. For a `major` bump, end with the anchor of the guide entry: `See the upgrade guide, "<entry title>".`
@@ -66,15 +75,17 @@ Use [references/upgrade-guide-entry.md](references/upgrade-guide-entry.md) for t
 
 ## Step 5: Check, commit, open the pull request
 
+A no-release story that changes no file, such as most spikes, goes straight to Step 6.
+
 1. Run the checks of the packages you changed, then `pnpm -w run lint:fix`.
-2. Run the story check: `node .agents/skills/working-on-ui-kit-v4/scripts/check-v4-change.mjs --track <v3|v4|experimental>`. It fails when a public package changed without a changeset, when a bump does not match the track, when a `major` bump has no guide entry, or when a guide entry names an experimental entry point. Fix what it reports.
+2. Run the story check: `node .agents/skills/working-on-ui-kit-v4/scripts/check-v4-change.mjs --track <v3|v4|experimental|no-release>`. It fails when a public package changed without a changeset, when a bump does not match the track, when a `major` bump has no guide entry, when a guide entry names an experimental entry point, or when a no-release branch adds a changeset or changes published source. Fix what it reports.
 3. Commit with a Conventional Commits title; a breaking change on the v4 track takes the `!` marker: `feat(headless)!: remove the legacy SSR API`. Sign every commit (`git commit -S`); unsigned commits block the merge.
 4. Push the branch, then open the PR only when the piece is ready for review, with the template of its type from `.github/PULL_REQUEST_TEMPLATE/` (see the `commit-changes` skill), the Jira link filled in, against the base branch of the track. When early CI feedback is wanted before the review, open it as a draft and say so.
 5. In the PR description, state the track, the bump and the guide entry title, so the reviewer checks all three.
 
 ## Step 6: Close the story
 
-- Comment on the Jira issue with the PR, the bump and the guide entry title.
+- Comment on the Jira issue with the PR, the bump and the guide entry title. For a spike, comment with the decision and the follow-up stories you propose.
 - Set "Requires Public Documentation" to Yes when a docs.coveo.com page other than the guide must change, and open a DOC request for the technical writers.
 - Leave the story in progress until the PR is merged into the base branch of its track.
 
@@ -86,7 +97,7 @@ A v4 removal cannot merge into `main` while `main` ships v3. Until KIT-4387 name
 
 | Script                  | Purpose                                                             | Usage                                                                      |
 | ----------------------- | ------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| `check-v4-change.mjs`   | Verifies changesets, bump versus track, guide entry and naming rules | `node scripts/check-v4-change.mjs [--base origin/main] [--track v3\|v4\|experimental]` |
+| `check-v4-change.mjs`   | Verifies changesets, bump versus track, guide entry and naming rules | `node scripts/check-v4-change.mjs [--base origin/main] [--track v3\|v4\|experimental\|no-release]` |
 
 ## References
 
