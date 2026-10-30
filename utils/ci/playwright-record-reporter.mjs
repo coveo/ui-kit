@@ -1,7 +1,7 @@
 // Playwright reporter that saves, in CI only, which tests passed only on retry or failed every
-// attempt, and why their first attempt failed. Each Playwright job uploads the record with
-// .github/actions/upload-playwright-record, and the weekly flaky test report reads them. It prints
-// nothing, so pull requests stay as they are.
+// attempt, why their first attempt failed, and how much test time went to retries. Each Playwright
+// job uploads the record with .github/actions/upload-playwright-record, and the weekly flaky test
+// report reads them. It prints nothing, so pull requests stay as they are.
 import {existsSync, mkdirSync, readFileSync, writeFileSync} from 'node:fs';
 import {dirname, join, relative} from 'node:path';
 import {stripVTControlCharacters} from 'node:util';
@@ -63,8 +63,16 @@ function failureCategory(test) {
 
 export function buildRecord({tests, suite, shard, sha, repositoryRoot}) {
   const counts = {passed: 0, flaky: 0, failed: 0};
+  let testTime = 0;
+  let retryTime = 0;
   const retried = [];
   for (const test of tests) {
+    for (const result of test.results) {
+      testTime += result.duration;
+      if (result.retry > 0) {
+        retryTime += result.duration;
+      }
+    }
     const outcome = OUTCOMES[test.outcome()];
     if (!outcome) {
       continue;
@@ -86,6 +94,9 @@ export function buildRecord({tests, suite, shard, sha, repositoryRoot}) {
     shard: shard ? `${shard.current}-${shard.total}` : '1-1',
     sha,
     counts,
+    // Both in milliseconds.
+    testTime,
+    retryTime,
     tests: retried,
   };
 }

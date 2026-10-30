@@ -34,8 +34,8 @@ function fakeTest({
   };
 }
 
-function attempt({status = 'passed', retry = 0, error}) {
-  return {status, retry, errors: error ? [{message: error}] : []};
+function attempt({status = 'passed', retry = 0, duration = 1000, error}) {
+  return {status, retry, duration, errors: error ? [{message: error}] : []};
 }
 
 function flakyTest(error) {
@@ -49,20 +49,29 @@ describe('buildRecord', () => {
   it('counts the outcomes and keeps only the tests that needed a retry or failed', () => {
     const record = buildRecord({
       tests: [
-        fakeTest({outcome: 'expected', results: [attempt({})]}),
-        fakeTest({outcome: 'expected', results: [attempt({})]}),
+        fakeTest({outcome: 'expected', results: [attempt({duration: 1000})]}),
+        fakeTest({outcome: 'expected', results: [attempt({duration: 2000})]}),
         fakeTest({
           outcome: 'flaky',
           line: 42,
           results: [
-            attempt({status: 'timedOut', error: 'Test timeout of 30000ms exceeded.'}),
-            attempt({retry: 1}),
+            attempt({
+              status: 'timedOut',
+              duration: 30000,
+              error: 'Test timeout of 30000ms exceeded.',
+            }),
+            attempt({retry: 1, duration: 3000}),
           ],
         }),
         fakeTest({
           outcome: 'unexpected',
           results: [0, 1, 2].map((retry) =>
-            attempt({status: 'failed', retry, error: 'Error: expect(locator).toBeVisible() failed'})
+            attempt({
+              status: 'failed',
+              retry,
+              duration: 500,
+              error: 'Error: expect(locator).toBeVisible() failed',
+            })
           ),
         }),
         fakeTest({outcome: 'skipped'}),
@@ -78,6 +87,8 @@ describe('buildRecord', () => {
       shard: '5-12',
       sha: 'abc123',
       counts: {passed: 2, flaky: 1, failed: 1},
+      testTime: 37500,
+      retryTime: 4000,
       tests: [
         {
           outcome: 'flaky',
