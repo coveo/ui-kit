@@ -450,6 +450,45 @@ describe('atomic-commerce-search-box', () => {
         expect(submitMock).toHaveBeenCalledTimes(1);
       });
 
+      it('should select the suggestion highlighted with ArrowRight instead of calling the #submit method when pressing Enter', async () => {
+        const {textArea, renderedSuggestion, activeSuggestion} = await renderSearchBox({
+          additionalChildren: html`<fake-atomic-commerce-search-box-suggestions
+            panel="right"
+          ></fake-atomic-commerce-search-box-suggestions>`,
+        });
+        const onSuggestionClick = vi.fn();
+
+        await userEvent.click(textArea);
+        await expect.poll(renderedSuggestion).not.toBeNull();
+
+        await userEvent.keyboard('{ArrowRight}');
+        await expect.poll(activeSuggestion).not.toBeNull();
+        activeSuggestion()!.addEventListener('click', onSuggestionClick);
+
+        await userEvent.keyboard('{Enter}');
+
+        expect(onSuggestionClick).toHaveBeenCalledTimes(1);
+        expect(submitMock).not.toHaveBeenCalled();
+      });
+
+      it('should call the #submit method on the search box controller when pressing Enter after pasting text with an active suggestion', async () => {
+        const {textArea, renderedSuggestion, activeSuggestion} = await renderSearchBox();
+
+        await userEvent.click(textArea);
+        await expect.poll(renderedSuggestion).not.toBeNull();
+
+        await userEvent.keyboard('{ArrowDown}');
+        await expect.poll(activeSuggestion).not.toBeNull();
+
+        (textArea as HTMLTextAreaElement).value = 'pasted text';
+        textArea.dispatchEvent(new InputEvent('input', {inputType: 'insertFromPaste'}));
+        await expect.poll(activeSuggestion).toBeNull();
+
+        await userEvent.keyboard('{Enter}');
+
+        expect(submitMock).toHaveBeenCalledTimes(1);
+      });
+
       it('should call the #submit method on the search box controller when Enter is pressed without any active suggestion', async () => {
         const {element, suggestions} = await renderSearchBox();
 
