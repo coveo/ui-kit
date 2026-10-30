@@ -28,6 +28,7 @@ import {Breadbox} from './Breadbox/Breadbox.js';
 import {SessionShell} from './SessionShell/SessionShell.js';
 import {SearchBox} from './SearchBox/SearchBox.js';
 import {QuerySuggestions} from './QuerySuggestions/QuerySuggestions.js';
+import {InstantProducts} from './InstantProducts/InstantProducts.js';
 
 export interface ThermidorCatalogOptions {
   comparisonTable?: ComparisonTableOptions;
@@ -57,5 +58,6 @@ export function createThermidorCatalog(options: ThermidorCatalogOptions = {}) {
     SessionShell,
     SearchBox,
     QuerySuggestions,
+    InstantProducts,
   ]);
 }

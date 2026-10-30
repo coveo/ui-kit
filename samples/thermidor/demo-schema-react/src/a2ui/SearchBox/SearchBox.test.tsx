@@ -83,6 +83,8 @@ describe('SearchBox', () => {
     textarea.focus();
     fireEvent.change(textarea, {target: {value: 'surf'}});
 
-    await waitFor(() => expect(screen.getByRole('listbox').className).toMatch(/above/));
+    await waitFor(() =>
+      expect(screen.getByRole('listbox').parentElement?.className).toMatch(/above/)
+    );
   });
 });

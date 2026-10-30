@@ -40,8 +40,11 @@ export function sseResponse(events: readonly object[]): Response {
   return new Response(encoder.encode(body), {headers: {'Content-Type': 'text/event-stream'}});
 }
 
-/** A run carrying the session's keys and, unless empty, `messages` in one activity. */
-export function run(messages: readonly object[]): object[] {
+/**
+ * A run carrying the session's keys and, unless empty, `messages` in one activity, with the AG-UI
+ * `metadata` given.
+ */
+export function run(messages: readonly object[], metadata?: Record<string, unknown>): object[] {
   return [
     {type: 'RUN_STARTED', threadId: 'session-1', runId: 'run', ...SESSION_KEYS},
     ...(messages.length > 0
@@ -51,6 +54,7 @@ export function run(messages: readonly object[]): object[] {
             messageId: `activity-${++activitySequence}`,
             activityType: 'a2ui-surface',
             content: {messages},
+            ...(metadata && {metadata}),
           },
         ]
       : []),
@@ -77,6 +81,78 @@ export function shellRun(surfaceId = SHELL_SURFACE_ID): object[] {
           },
         ],
         dataModel: {state: {'query-suggestions': {query: '', completions: []}}},
+      },
+    },
+  ]);
+}
+
+export const INSTANT_PRODUCTS_ID = 'instant-products';
+
+/**
+ * The session shell with `InstantProducts` beside `QuerySuggestions`, announcing
+ * `fetchInstantProducts` as concurrent and cached, as the producer does.
+ */
+export function instantProductsShellRun(surfaceId = SHELL_SURFACE_ID): object[] {
+  return run(
+    [
+      {
+        version: 'v1.0',
+        createSurface: {
+          surfaceId,
+          catalogId: 'https://schema.thermidor.coveo.com/a2-ui/catalog.json',
+          components: [
+            {id: 'root', component: 'SessionShell', children: ['search-box']},
+            {
+              id: 'search-box',
+              component: 'SearchBox',
+              suggestionsChild: 'query-suggestions',
+              instantProductsChild: INSTANT_PRODUCTS_ID,
+            },
+            {
+              id: 'query-suggestions',
+              component: 'QuerySuggestions',
+              query: {path: '/state/query-suggestions/query'},
+              completions: {path: '/state/query-suggestions/completions'},
+            },
+            {
+              id: INSTANT_PRODUCTS_ID,
+              component: 'InstantProducts',
+              query: {path: `/state/${INSTANT_PRODUCTS_ID}/query`},
+              products: {path: `/state/${INSTANT_PRODUCTS_ID}/products`},
+            },
+          ],
+          dataModel: {
+            state: {
+              'query-suggestions': {query: '', completions: []},
+              [INSTANT_PRODUCTS_ID]: {query: '', products: []},
+            },
+          },
+        },
+      },
+    ],
+    {
+      concurrentActions: {[surfaceId]: ['fetchInstantProducts']},
+      cachedActions: {[surfaceId]: {fetchInstantProducts: {ttlMs: 60_000}}},
+    }
+  );
+}
+
+/** The run a producer answers `fetchInstantProducts` with: the products named `names`, for `query`. */
+export function instantProductsRun(surfaceId: string, query: string, names: string[]): object[] {
+  return run([
+    {
+      version: 'v1.0',
+      updateDataModel: {
+        surfaceId,
+        path: `/state/${INSTANT_PRODUCTS_ID}`,
+        value: {
+          query,
+          products: names.map((name) => ({
+            permanentid: name,
+            ec_name: name,
+            additionalFields: {},
+          })),
+        },
       },
     },
   ]);
@@ -137,6 +213,21 @@ export function createTestSession(handler: ConverseHandler = answerShell) {
     requests.filter((request) => request.action?.name === name).map(({action}) => action!);
   return {session, requests, actions};
 }
+
+/**
+ * Answers as {@link answerShell}, with the shell holding `InstantProducts`, and
+ * `fetchInstantProducts` with one product named after its query.
+ */
+export const answerInstantProductsShell: ConverseHandler = (request) => {
+  if (request.action?.name === 'initialize') {
+    return sseResponse(instantProductsShellRun());
+  }
+  if (request.action?.name === 'fetchInstantProducts') {
+    const query = String(request.action.context['query']);
+    return sseResponse(instantProductsRun(request.action.surfaceId!, query, [`${query} product`]));
+  }
+  return answerShell(request);
+};
 
 const catalog = createThermidorCatalog();
 
