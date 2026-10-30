@@ -1,6 +1,7 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
-
+import type {QuerySummaryAction} from '@coveo/thermidor-schema';
 import {QuerySummaryPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {useGesture} from '../session-request.js';
 import styles from './QuerySummary.module.css';
 
 /**
@@ -8,22 +9,27 @@ import styles from './QuerySummary.module.css';
  *
  * Renders the current result window (e.g. "Products 1-12 of 43 for Water Sports"). The generic
  * binder resolves the backend-computed aggregate (`query`, `firstIndex`, `lastIndex`,
- * `totalEntries`) directly from `QuerySummaryPropsSchema` (bound to the A2-UI data model) rather
- * than combining the state of the search-box, pagination, and product-list components, so it has
- * no cross-component coupling. Presentational — no actions.
+ * `totalEntries`, `correction`) directly from `QuerySummaryPropsSchema` (bound to the A2-UI data
+ * model) rather than combining the state of the search-box, pagination, and product-list
+ * components, so it has no cross-component coupling.
  *
  * - No results and no query: renders nothing.
  * - No results with a query: "No results for {query}".
  * - Otherwise: "Products {firstIndex}-{lastIndex} of {totalEntries}", with the trailing
  *   " for {query}" only when a query is present.
+ * - When a query trigger replaced the shopper's query: "Showing results for {query}. Search
+ *   instead for {originalQuery}", which dispatches `overrideCorrection`.
+ * - When an automatic correction replaced it: "Showing results for {query} instead of
+ *   {originalQuery}", with no way to search the original: the Commerce API corrects it again.
  */
 export const QuerySummary = createReactComponent(
   {
     name: 'QuerySummary',
     schema: QuerySummaryPropsSchema,
   },
-  ({props}) => {
-    const {query, firstIndex, lastIndex, totalEntries} = props;
+  ({props, context}) => {
+    const {query, firstIndex, lastIndex, totalEntries, correction} = props;
+    const startGesture = useGesture();
 
     // Bindings resolve progressively: any of the four fields may still be
     // undefined on an early render. Treat a partially-resolved summary as
@@ -33,11 +39,42 @@ export const QuerySummary = createReactComponent(
       return null;
     }
 
+    const searchOriginalQuery = (originalQuery: string) => {
+      const overrideCorrectionAction: QuerySummaryAction = {
+        event: {name: 'overrideCorrection', context: {originalQuery}},
+      };
+      startGesture(
+        () => {},
+        () => context.dispatchAction(overrideCorrectionAction)
+      );
+    };
+
+    const correctionNotice =
+      correction?.cause === 'trigger' ? (
+        <p className={styles.correction}>
+          Showing results for <strong>{query}</strong>. Search instead for{' '}
+          <button
+            type="button"
+            className={styles.originalQuery}
+            onClick={() => searchOriginalQuery(correction.originalQuery)}
+          >
+            {correction.originalQuery}
+          </button>
+        </p>
+      ) : correction ? (
+        <p className={styles.correction}>
+          Showing results for <strong>{query}</strong> instead of {correction.originalQuery}
+        </p>
+      ) : null;
+
     if (totalEntries === 0) {
       return query ? (
-        <p className={styles.summary}>
-          No results for <strong>{query}</strong>
-        </p>
+        <div>
+          {correctionNotice}
+          <p className={styles.summary}>
+            No results for <strong>{query}</strong>
+          </p>
+        </div>
       ) : null;
     }
 
@@ -46,16 +83,19 @@ export const QuerySummary = createReactComponent(
     }
 
     return (
-      <p className={styles.summary}>
-        Products <strong>{firstIndex}</strong>-<strong>{lastIndex}</strong> of{' '}
-        <strong>{totalEntries.toLocaleString()}</strong>
-        {query && (
-          <>
-            {' '}
-            for <strong>{query}</strong>
-          </>
-        )}
-      </p>
+      <div>
+        {correctionNotice}
+        <p className={styles.summary}>
+          Products <strong>{firstIndex}</strong>-<strong>{lastIndex}</strong> of{' '}
+          <strong>{totalEntries.toLocaleString()}</strong>
+          {query && (
+            <>
+              {' '}
+              for <strong>{query}</strong>
+            </>
+          )}
+        </p>
+      </div>
     );
   }
 );
