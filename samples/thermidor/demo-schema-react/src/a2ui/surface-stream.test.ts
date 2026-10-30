@@ -166,6 +166,29 @@ describe('buildSurfaceStream', () => {
   });
 });
 
+describe('the Scoping block', () => {
+  it('takes the Scoping block out of its turn and keeps the latest one for the whole thread', () => {
+    const stream = buildSurfaceStream([
+      turn('t1', [create('scoping-1'), create('agent-answer')]),
+      turn('t2', [create('scoping-2'), update('scoping-2', {})]),
+      turn('t3', []),
+    ]);
+
+    expect([...stream.surfacesByTurn]).toEqual([
+      ['t1', ['t1/agent-answer']],
+      ['t2', []],
+      ['t3', []],
+    ]);
+    expect(stream.scoping).toEqual({surfaceId: 't2/scoping-2', turnId: 't2'});
+    expect(stream.serverSurfaceIds.get('t2/scoping-2')).toBe('scoping-2');
+    expect(stream.messages.at(-1)).toEqual(update('t2/scoping-2', {}));
+  });
+
+  it('has none until a turn draws one', () => {
+    expect(buildSurfaceStream([turn('t1', [create('ui-search')])]).scoping).toBeUndefined();
+  });
+});
+
 describe('toServerAction', () => {
   const {serverSurfaceIds} = buildSurfaceStream([turn('t1', [create('ui-search')])]);
 
