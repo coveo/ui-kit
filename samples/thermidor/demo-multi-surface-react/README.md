@@ -18,17 +18,18 @@ Converse API on port 3456 and the sample at http://localhost:5174. If the mock i
 
 Try it (the mock is described [below](#the-multi-surface-mock)):
 
-1. Type a search in the header and press Enter: with the **AI** toggle on (the default), the
-   assistant page opens with the answer, its reasoning steps and its surfaces; the header stays. Try
-   `boating safety`, `which kayak should I get?`, `what do I need to go snorkeling?`,
-   `gift ideas under $50`, or a follow-up from the next actions.
+1. Ask a question in the header and press Enter. The prompt goes to the session shell, and the
+   mock routes it: a question (it ends with `?`) runs the agent, so the assistant layout opens with
+   the answer, its reasoning steps and its surfaces; the header stays. Try
+   `which kayak should I get?`, `what do I need to go snorkeling?`, `any gift ideas under $50?`, or a
+   follow-up from the next actions (a follow-up always goes to the agent).
 2. On the kayak answer, pick **See all kayaks**: the server runs the search the agent saved behind
    that option and opens it as a search surface (facets, sort, pagination). Change the sort or a
    facet: the server answers from the search it keeps.
 3. Click **Add to cart** on a product card: the header's cart counts it. Open the cart to change it.
-4. Turn **AI** off and search `kayak`: the search page shows the search surface the server opened
-   for it (facets, sort, pagination), answered from the search it keeps.
-5. On that search page, ask `which one is the cheapest?` in the chat panel on the right: the answer
+4. Search `kayak` (no `?`): the server opens a search surface for it, so the search layout shows it
+   (facets, sort, pagination) with the chat panel beside it, answered from the search it keeps.
+5. On that search layout, ask `which one is the cheapest?` in the chat panel on the right: the answer
    names the cheapest kayak, and its reasoning says what the shopper is looking at. The results stay
    as they are and keep working: pick a brand and ask again. A follow-up chip of a panel answer is
    sent in the panel too.
@@ -55,18 +56,23 @@ before running the sample's `e2e` script.
 Storefront Preview (admin-ui) uses one Thermidor session per view today. This sample keeps the
 views and puts them on one session:
 
-| View                                             | `context.custom.surfaceId`     | Components                                                                                 |
-| ------------------------------------------------ | ------------------------------ | ------------------------------------------------------------------------------------------ |
-| Home page: recommendations                       | `storefront-preview-home`      | ProductCarousel                                                                            |
-| Assistant page: the answer to a committed search | `storefront-preview-assistant` | ProductCarousel, NextActionsBar, ComparisonTable, BundleDisplay, ProductResearchCard       |
-| Search page: results for a search with AI off    | `storefront-preview-search`    | CommerceSearch, LayoutStack, QuerySummary, Sort, ProductList, Pagination, PageSize, facets |
-| Search page: the chat panel beside the results   | `storefront-preview-assistant` | The assistant page's components                                                            |
+| View                                                 | `context.custom.surfaceId`     | Components                                                                                 |
+| ---------------------------------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------ |
+| Home page: recommendations                           | `storefront-preview-home`      | ProductCarousel                                                                            |
+| Search box: a committed prompt, routed by the server | `storefront-preview`           | The assistant's components for a question, the search's otherwise                          |
+| Assistant layout: a follow-up from the next actions  | `storefront-preview-assistant` | ProductCarousel, NextActionsBar, ComparisonTable, BundleDisplay, ProductResearchCard       |
+| Search layout: results (opened by a search surface)  | `storefront-preview`           | CommerceSearch, LayoutStack, QuerySummary, Sort, ProductList, Pagination, PageSize, facets |
+| Search layout: the chat panel beside the results     | `storefront-preview-assistant` | The assistant's components                                                                 |
+
+The page follows the answer, not the view that sent the prompt: a turn whose surfaces include a
+`CommerceSearch` opens the search layout with the chat panel, any other answer opens the assistant
+layout (`src/pages/PromptPage.tsx`).
 
 The behaviour is kept:
 
 - typing in the search box sends nothing: a search is sent when it is committed;
-- the assistant and search pages send their prompt once per visit;
-- going Home ↔ Assistant gives the page fresh surfaces, while the header stays;
+- a prompt page sends its prompt once per visit;
+- going Home ↔ a prompt page gives the page fresh surfaces, while the header stays;
 - the cart is shared by the header and every page.
 
 ## The model
@@ -116,7 +122,7 @@ rather than tracking requests itself:
 - **The app records which view sent each turn.** Just before a send it sets the view that
   `context.custom.surfaceId` names, and after a prompt it records the turn the session opened with
   its view and page visit (`src/session/storefront-session.tsx`). The chat panel records its turns
-  under the search page's visit with the assistant view, so the page and its panel split by view.
+  under the page's visit with the assistant view, so the page and its panel split by view.
 
 ### What each view knows of the other
 
@@ -129,7 +135,7 @@ The views share the session's server state, as Agent Gateway does today:
 - **Nothing goes the other way.** The agent's answer never changes the search in the middle. A
   search the agent opens from a panel answer (**See all kayaks**) shows in the panel.
 - **A panel prompt does not leave the page.** It is sent on the assistant view and stays on the
-  search page's visit. The panel input, the search box and both views' surfaces are disabled
+  page's visit. The panel input, the search box and both views' surfaces are disabled
   while any request is in flight, so nothing gets the server's 409 or is dropped.
 - **An action that opens no turn streams into the session's latest turn,** which may be the
   panel's after a facet click in the middle. The surface it updates stays in the view that drew
@@ -139,8 +145,12 @@ The views share the session's server state, as Agent Gateway does today:
 
 - **Requests are serialized.** One request is in flight at a time, for every view. With one
   session per view, several stream at once. ADR-018 keeps this for the EAP.
-- **The search follows nothing the agent says.** The middle shows only the search page's own
-  turns; the agent cannot change or replace it.
+- **The search follows nothing the agent says.** The middle shows only the page's own turn; the
+  agent cannot change or replace it.
+- **The intent rule is the mock's.** The mock routes a prompt sent on `storefront-preview` with
+  `prompt.trim().endsWith('?')`. On the real Agent Gateway, the public route routes every message
+  turn with its intent analyzer, and the private route gives the session shell an empty run today;
+  the mock routes the shell's message as the public route would.
 - **No query suggestions.** The search box sends nothing while typing; see below.
 - **Listing pages show a placeholder.** The published contract has no view id for them, so they show
   _In progress_ and send nothing.
@@ -155,8 +165,8 @@ The views share the session's server state, as Agent Gateway does today:
 - **The session shell and query suggestions** (coveo/ui-kit#8757, #8758): the producer answers `initialize` with a long-lived `SessionShell`
   holding a `SearchBox` and its `QuerySuggestions`, and a pause in typing dispatches
   `fetchSuggestions`. The header can then draw that surface as its search box, with suggestions.
-- **The server:** a view id for listing pages, an answer for `storefront-preview-search` (the mock
-  answers it; the real server does not yet), and a
+- **The server:** a view id for listing pages, intent routing for a message on the session shell
+  on the private route (the mock routes it; the real server gives it an empty run), and a
   spike on what a view id should map to (today `custom.surfaceId` names a view, which reads oddly
   next to A2-UI's `surfaceId`).
 
@@ -178,7 +188,7 @@ src/
 │   ├── catalog.ts              The renderers for the Storefront components
 │   └── AddToCartButton/        The button added to every product card
 ├── components/                 Top bar, search box, listing menu, cart, chat panel, In progress, inspector
-└── pages/                      Home, assistant, search and listing pages
+└── pages/                      Home, prompt (assistant or search layout) and listing pages
 ```
 
 The renderers for ProductCarousel, NextActionsBar, ComparisonTable, BundleDisplay,
@@ -206,10 +216,12 @@ It keeps each session's state between requests:
 - **each search surface,** under its own `ui-<uuid>` id, with the search it shows, so a second
   search never replaces the first and its actions answer from its own search;
 - **the cart:** the request's `context.cart` replaces it, then an `updateCart` action applies to it;
-- **one turn at a time:** another assistant or search request while one runs gets a 409.
+- **one turn at a time:** another message or action while one runs gets a 409.
 
 On `storefront-preview-assistant`, a message runs the agent (the storefront and schema scenarios),
 which is told what the shopper is looking at on the latest search surface. Asked for the cheapest
 product (`which one is the cheapest?`), it names the cheapest product of that surface's kept search. On `storefront-preview-search`,
-a message opens a search surface for that query. On both, an action is answered by the server.
-`storefront-preview` and `storefront-preview-home` get an empty run, and any other view gets a 400.
+a message opens a search surface for that query. On `storefront-preview`, the session shell, a
+message is routed by its intent: a question (it ends with `?`) runs the agent, anything else opens a
+search surface. `storefront-preview-home` gets an empty run for a message. On every view, an action
+is answered on the surface it names, and any other view gets a 400.

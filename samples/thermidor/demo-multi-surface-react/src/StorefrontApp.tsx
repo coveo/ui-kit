@@ -10,11 +10,10 @@ import {AddToCartButton} from './a2ui/AddToCartButton/AddToCartButton.js';
 import {createStorefrontCatalog} from './a2ui/catalog.js';
 import {SessionInspector} from './components/SessionInspector.js';
 import {TopBar} from './components/TopBar.js';
-import {visitAssistant, visitHome, visitListing, visitSearch, type Visit} from './navigation.js';
-import {AssistantPage} from './pages/AssistantPage.js';
+import {visitHome, visitListing, visitPrompt, type Visit} from './navigation.js';
 import {HomePage} from './pages/HomePage.js';
 import {ListingPage} from './pages/ListingPage.js';
-import {SearchPage} from './pages/SearchPage.js';
+import {PromptPage} from './pages/PromptPage.js';
 import {
   useCart,
   useSessionSnapshot,
@@ -26,22 +25,20 @@ import {
 const catalog = createStorefrontCatalog();
 
 /** The view a page's actions are sent on behalf of. A listing page draws no surface. */
-const PAGE_VIEWS: Record<Visit['page'], StorefrontView> = {
-  home: 'storefront-preview-home',
-  assistant: 'storefront-preview-assistant',
-  search: 'storefront-preview-search',
-  listing: 'storefront-preview-home',
-};
+function pageView(visit: Visit): StorefrontView {
+  return visit.page === 'prompt' ? visit.view : 'storefront-preview-home';
+}
 
 /**
  * `NextActionsBar` follow-ups ask for a new answer: on a page's own surface they open a new
- * assistant visit, and in a panel they are sent in that panel, on the page that stays.
+ * prompt visit on the assistant's view, and in a panel they are sent in that panel, on the page
+ * that stays.
  */
 const FOLLOW_UP_ACTION = 'selectAction';
 
 /**
  * The Storefront Preview layout on one session: a header (the search box and the cart) that stays,
- * over a page (home, assistant, search or a listing) that changes.
+ * over a page (home, a prompt's answer or a listing) that changes.
  */
 export function StorefrontApp() {
   const {sendPrompt, sendAction} = useStorefrontSend();
@@ -55,23 +52,26 @@ export function StorefrontApp() {
   const viewSurfacesRef = useRef(viewSurfaces);
   viewSurfacesRef.current = viewSurfaces;
 
-  // The assistant and search pages send their prompt once per visit. StrictMode runs this effect
-  // twice; the visit id keeps the second run from sending again. The home page has no prompt to
-  // send, and listing pages have no view id in the published contract, so they send nothing.
+  // A prompt page sends its prompt once per visit. StrictMode runs this effect twice; the visit id
+  // keeps the second run from sending again. The home page has no prompt to send, and listing
+  // pages have no view id in the published contract, so they send nothing.
   const sentVisitRef = useRef<number | null>(null);
   useEffect(() => {
     if (sentVisitRef.current === visit.id) {
       return;
     }
     sentVisitRef.current = visit.id;
-    if (visit.page === 'assistant') {
-      sendPrompt(PAGE_VIEWS.assistant, visit.prompt, visit.id);
-    } else if (visit.page === 'search') {
-      sendPrompt(PAGE_VIEWS.search, visit.query, visit.id);
+    if (visit.page === 'prompt') {
+      sendPrompt(visit.view, visit.prompt, visit.id);
     }
   }, [visit, sendPrompt]);
 
-  const openAssistant = useCallback((prompt: string) => setVisit(visitAssistant(prompt)), []);
+  // A follow-up comes from the agent, not the search box: it goes to the agent, whatever the
+  // server's intent rule would make of its text.
+  const openAssistant = useCallback(
+    (prompt: string) => setVisit(visitPrompt(prompt, 'storefront-preview-assistant')),
+    []
+  );
 
   const handleAction = useCallback(
     (message: A2UIClientEventMessage) => {
@@ -80,15 +80,15 @@ export function StorefrontApp() {
         return;
       }
       const page = visitRef.current;
-      // An action goes on the view that draws its surface: the search page's results or its chat
-      // panel, which share the visit.
+      // An action goes on the view that draws its surface: the page's results or its chat panel,
+      // which share the visit.
       const view = viewSurfacesRef.current.viewOfSurface(userAction.surfaceId) ?? {
         visitId: page.id,
-        view: PAGE_VIEWS[page.page],
+        view: pageView(page),
       };
       const text = userAction.context?.['text'];
       if (userAction.name === FOLLOW_UP_ACTION && typeof text === 'string') {
-        const inPanel = view.visitId === page.id && view.view !== PAGE_VIEWS[page.page];
+        const inPanel = view.visitId === page.id && view.view !== pageView(page);
         if (inPanel) {
           sendPrompt(view.view, text, view.visitId);
         } else {
@@ -120,7 +120,7 @@ export function StorefrontApp() {
             currentListing={visit.page === 'listing' ? visit.slug : undefined}
             onHome={() => setVisit(visitHome())}
             onListing={(slug) => setVisit(visitListing(slug))}
-            onSearch={(query, ai) => setVisit(ai ? visitAssistant(query) : visitSearch(query))}
+            onSearch={(query) => setVisit(visitPrompt(query))}
             searchDisabled={request !== undefined}
           />
           <Page visit={visit} onHome={() => setVisit(visitHome())} />
@@ -135,12 +135,16 @@ function Page({visit, onHome}: {visit: Visit; onHome(): void}) {
   switch (visit.page) {
     case 'home':
       return <HomePage />;
-    case 'assistant':
+    case 'prompt':
       return (
-        <AssistantPage key={visit.id} prompt={visit.prompt} visitId={visit.id} onBack={onHome} />
+        <PromptPage
+          key={visit.id}
+          prompt={visit.prompt}
+          visitId={visit.id}
+          view={visit.view}
+          onBack={onHome}
+        />
       );
-    case 'search':
-      return <SearchPage key={visit.id} query={visit.query} visitId={visit.id} />;
     case 'listing':
       return <ListingPage slug={visit.slug} />;
   }

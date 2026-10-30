@@ -11,8 +11,8 @@ function trackViews(page: Page): string[] {
   return views;
 }
 
-async function search(page: Page, query: string, {ai}: {ai: boolean}) {
-  await page.getByRole('checkbox', {name: 'AI'}).setChecked(ai);
+/** Sends a prompt from the search box; the mock runs the agent when it ends with `?`. */
+async function search(page: Page, query: string) {
   await page.getByRole('searchbox', {name: 'Search'}).fill(query);
   await page.getByRole('searchbox', {name: 'Search'}).press('Enter');
 }
@@ -28,7 +28,7 @@ async function askInPanel(page: Page, prompt: string) {
 
 async function openKayakSearch(page: Page) {
   await page.goto('/');
-  await search(page, 'kayak', {ai: false});
+  await search(page, 'kayak');
   await expect(page.getByRole('heading', {name: 'Results for “kayak”'})).toBeVisible();
   await expect(products(page)).toHaveCount(3, {timeout: 30000});
 }
@@ -49,21 +49,22 @@ test.describe('Storefront Preview on one session', () => {
     expect(views).toEqual([]);
   });
 
-  test('answers a search with AI on the assistant view', async ({page}) => {
+  test('answers a question in the assistant layout', async ({page}) => {
     const views = trackViews(page);
     await page.goto('/');
-    await search(page, 'which kayak should I get?', {ai: true});
+    await search(page, 'which kayak should I get?');
 
     await expect(page.getByRole('heading', {name: 'which kayak should I get?'})).toBeVisible();
     await expect(page.getByRole('button', {name: 'See all kayaks'})).toBeVisible({timeout: 30000});
     await expect(page.getByRole('heading', {name: 'Kayaks', level: 3})).toBeVisible();
     await expect(page.getByText(/stopped early/)).toHaveCount(0);
-    expect(views).toEqual(['storefront-preview-assistant']);
+    await expect(page.getByRole('complementary', {name: 'Shopping assistant'})).toHaveCount(0);
+    expect(views).toEqual(['storefront-preview']);
   });
 
   test('opens a follow-up as a new assistant answer', async ({page}) => {
     await page.goto('/');
-    await search(page, 'which kayak should I get?', {ai: true});
+    await search(page, 'which kayak should I get?');
     const followUp = page.getByRole('button', {name: 'Kayaks under $600'});
     await expect(followUp).toBeEnabled({timeout: 30000});
 
@@ -84,27 +85,26 @@ test.describe('Storefront Preview on one session', () => {
   }) => {
     const views = trackViews(page);
     await page.goto('/');
-    await search(page, 'kayak', {ai: true});
+    await search(page, 'which kayak should I get?');
     const searchBox = page.getByRole('searchbox', {name: 'Search'});
 
     await expect(searchBox).toBeDisabled();
-    await page.getByRole('checkbox', {name: 'AI'}).setChecked(false);
     await page.getByRole('search').evaluate((form: HTMLFormElement) => form.requestSubmit());
 
     await expect(searchBox).toBeEnabled({timeout: 30000});
     await expect(page.getByText(/stopped early/)).toHaveCount(0);
-    expect(views).toEqual(['storefront-preview-assistant']);
+    expect(views).toEqual(['storefront-preview']);
 
-    await search(page, 'boots', {ai: false});
+    await search(page, 'boots');
     await expect(page.getByRole('heading', {name: 'Results for “boots”'})).toBeVisible();
     await expect(page.getByRole('list', {name: 'Product list'})).toBeVisible({timeout: 30000});
     await expect(page.getByText(/stopped early/)).toHaveCount(0);
-    expect(views).toEqual(['storefront-preview-assistant', 'storefront-preview-search']);
+    expect(views).toEqual(['storefront-preview', 'storefront-preview']);
   });
 
   test('adds a product to the cart', async ({page}) => {
     await page.goto('/');
-    await search(page, 'which kayak should I get?', {ai: true});
+    await search(page, 'which kayak should I get?');
     const addToCart = page.getByRole('button', {name: 'Add to cart, RiverRun Sit-On Kayak'});
     await expect(addToCart).toBeVisible({timeout: 30000});
 
@@ -113,21 +113,22 @@ test.describe('Storefront Preview on one session', () => {
     await expect(page.getByRole('button', {name: /Cart/})).toHaveText(/1/);
   });
 
-  test('searches with AI off on the search view', async ({page}) => {
+  test('opens a search in the search layout, with the chat panel', async ({page}) => {
     const views = trackViews(page);
     await page.goto('/');
-    await search(page, 'kayak', {ai: false});
+    await search(page, 'kayak');
 
     await expect(page.getByRole('heading', {name: 'Results for “kayak”'})).toBeVisible();
     const products = page.getByRole('list', {name: 'Product list'}).getByRole('listitem');
     await expect(products).toHaveCount(3, {timeout: 30000});
+    await expect(panel$(page)).toBeVisible();
     await expect(page.getByText(/stopped early/)).toHaveCount(0);
-    expect(views).toEqual(['storefront-preview-search']);
+    expect(views).toEqual(['storefront-preview']);
   });
 
   test('answers the search surface actions from the search the server keeps', async ({page}) => {
     await page.goto('/');
-    await search(page, 'kayak', {ai: false});
+    await search(page, 'kayak');
     const products = page.getByRole('list', {name: 'Product list'}).getByRole('listitem');
     await expect(products).toHaveCount(3, {timeout: 30000});
 
@@ -157,7 +158,7 @@ test.describe('Storefront Preview on one session', () => {
 
   test('opens the search behind a search option', async ({page}) => {
     await page.goto('/');
-    await search(page, 'which kayak should I get?', {ai: true});
+    await search(page, 'which kayak should I get?');
     const option = page.getByRole('button', {name: 'See all kayaks'});
     await expect(option).toBeEnabled({timeout: 30000});
 
@@ -206,9 +207,9 @@ test.describe('Storefront Preview on one session', () => {
     await expect(products(page)).toHaveCount(1);
     await expect(page.getByText(/stopped early/)).toHaveCount(0);
     expect(views).toEqual([
-      'storefront-preview-search',
+      'storefront-preview',
       'storefront-preview-assistant',
-      'storefront-preview-search',
+      'storefront-preview',
       'storefront-preview-assistant',
     ]);
   });

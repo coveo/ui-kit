@@ -108,12 +108,46 @@ describe('multi-surface mock', () => {
     expect(converse(HOME, {message: ''}).status).toBe(400);
   });
 
-  it.each([HOME, SHELL])('answers %s with an empty run that opens the session', async (view) => {
-    const events = await eventsOf(converse(view, {message: 'hello'}));
+  it('answers a message on the home view with an empty run that opens the session', async () => {
+    const events = await eventsOf(converse(HOME, {message: 'hello'}));
 
     expect(events.map((event) => event.type)).toEqual(['RUN_STARTED', 'RUN_FINISHED']);
     expect(sessionOf(events).id).toMatch(/^[0-9a-f-]{36}$/);
     expect(events[0].runId).toBe(events[1].runId);
+  });
+
+  describe('on the session shell', () => {
+    it('runs the agent for a question', async () => {
+      const events = await eventsOf(converse(SHELL, {message: 'which kayak should I get?'}));
+      const session = sessionOf(events);
+
+      expect(events.map((event) => event.type)).toContain('TEXT_MESSAGE_CONTENT');
+      expect(Object.values(inspectSessions()[session.id].surfaces)).toContain('agent');
+      expect(Object.values(inspectSessions()[session.id].surfaces)).not.toContain('search');
+    });
+
+    it('opens a search surface for anything else', async () => {
+      const events = await eventsOf(converse(SHELL, {message: 'kayak'}));
+      const [surfaceId] = alive(events);
+
+      expect(inspectSessions()[sessionOf(events).id].surfaces[surfaceId]).toBe('search');
+      expect(summaryQueryOf(events)).toBe('kayak');
+      expect(events.map((event) => event.type)).not.toContain('TEXT_MESSAGE_CONTENT');
+    });
+
+    it('answers an action on the search surface it names', async () => {
+      const opened = await eventsOf(converse(SHELL, {message: 'kayak'}));
+      const [surfaceId] = alive(opened);
+
+      const sorted = await eventsOf(
+        converse(SHELL, {action: sortBy(surfaceId, 'price_desc')}, sessionOf(opened))
+      );
+
+      expect(surfaceMessages(sorted).length).toBeGreaterThan(0);
+      expect(
+        surfaceMessages(sorted).every((message) => message.updateDataModel?.surfaceId === surfaceId)
+      ).toBe(true);
+    });
   });
 
   it('requires the session token on a follow-up', async () => {
