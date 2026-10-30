@@ -28,6 +28,8 @@ export interface SearchBoxQuery {
   query: string;
   /** Whether the input was submitted since the last keystroke. */
   submitted: boolean;
+  /** The suggestion the shopper highlights, else the first one; empty while none is shown. */
+  highlightedQuery: string;
   /** Shows these suggestions in the search box's dropdown. */
   showSuggestions: (sections: SuggestionSection[]) => void;
 }

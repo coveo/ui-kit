@@ -302,7 +302,7 @@ describe('suggestions integration', () => {
 
     fireEvent.focus(screen.getByLabelText('Prompt'));
 
-    expect(screen.getByRole('listbox').className).toMatch(/above/);
+    expect(screen.getByRole('listbox').parentElement?.className).toMatch(/above/);
   });
 
   it('sets aria-activedescendant when item is highlighted', () => {
@@ -440,5 +440,83 @@ describe('busy + focus interaction', () => {
 
     rerender(<PromptInput onSubmit={vi.fn()} initialValue="surfboards" />);
     expect(textarea.value).toBe('wetsuits');
+  });
+});
+
+describe('highlighted suggestion', () => {
+  function renderWithHighlight(suggestions = testSuggestions) {
+    const onActiveItemChange = vi.fn();
+    const view = render(
+      <PromptInput
+        onSubmit={vi.fn()}
+        suggestions={suggestions}
+        onActiveItemChange={onActiveItemChange}
+        suggestionsAside={<aside aria-label="Beside the suggestions" />}
+      />
+    );
+    const textarea = screen.getByLabelText('Prompt');
+    fireEvent.focus(textarea);
+    const highlighted = () => onActiveItemChange.mock.lastCall?.[0]?.label;
+    return {...view, textarea, highlighted, onActiveItemChange};
+  }
+
+  it('reports the item the arrow keys move to', () => {
+    const {textarea, highlighted} = renderWithHighlight();
+
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    expect(highlighted()).toBe('Surfboards');
+
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    expect(highlighted()).toBe('Wetsuits');
+
+    fireEvent.keyDown(textarea, {key: 'ArrowUp'});
+    expect(highlighted()).toBe('Surfboards');
+  });
+
+  it('reports and highlights the item under the pointer, and keeps it once the pointer leaves', () => {
+    const {textarea, highlighted} = renderWithHighlight();
+
+    const wetsuits = screen.getByRole('option', {name: 'Wetsuits'});
+    fireEvent.mouseEnter(wetsuits);
+    fireEvent.mouseLeave(wetsuits);
+
+    expect(highlighted()).toBe('Wetsuits');
+    expect(textarea.getAttribute('aria-activedescendant')).toBe('suggestion-item-s2');
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    expect(highlighted()).toBe('Build a beginner surfing kit');
+  });
+
+  it('reports no item once the suggestions change', () => {
+    const {textarea, highlighted, rerender, onActiveItemChange} = renderWithHighlight();
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    expect(highlighted()).toBe('Surfboards');
+
+    rerender(
+      <PromptInput
+        onSubmit={vi.fn()}
+        suggestions={[...testSuggestions]}
+        onActiveItemChange={onActiveItemChange}
+      />
+    );
+    expect(highlighted()).toBeUndefined();
+  });
+
+  it('reports no item once the dropdown closes', () => {
+    const {textarea, highlighted} = renderWithHighlight();
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+
+    fireEvent.keyDown(textarea, {key: 'Escape'});
+
+    expect(highlighted()).toBeUndefined();
+  });
+
+  it('draws what goes beside the suggestions outside their listbox, while they are open', () => {
+    const {textarea} = renderWithHighlight();
+
+    const aside = screen.getByRole('complementary', {name: 'Beside the suggestions'});
+    expect(screen.getByRole('listbox').contains(aside)).toBe(false);
+
+    fireEvent.keyDown(textarea, {key: 'Escape'});
+    expect(screen.queryByRole('complementary')).toBeNull();
   });
 });
