@@ -6,6 +6,7 @@ import {
   useEffect,
   type KeyboardEvent,
   type ChangeEvent,
+  type ReactNode,
 } from 'react';
 import {
   SuggestionsDropdown,
@@ -31,6 +32,13 @@ interface PromptInputProps {
   suggestionsPlacement?: SuggestionsPlacement;
   /** Called with what the shopper types or clears, not with a selected suggestion. */
   onValueChange?: (value: string) => void;
+  /**
+   * Called with the suggestion the shopper highlights, by pointer or arrow keys, and with
+   * `undefined` once none is, such as when the suggestions change or close.
+   */
+  onActiveItemChange?: (item: SuggestionItem | undefined) => void;
+  /** Drawn beside the suggestions while they are open. */
+  suggestionsAside?: ReactNode;
 }
 
 export function PromptInput({
@@ -44,6 +52,8 @@ export function PromptInput({
   suggestions,
   suggestionsPlacement,
   onValueChange,
+  onActiveItemChange,
+  suggestionsAside,
 }: PromptInputProps) {
   const [value, setValue] = useState(initialValue);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -186,10 +196,10 @@ export function PromptInput({
   }
 
   const expanded = showDropdown && totalItems.length > 0;
-  const activeDescendant =
-    expanded && activeIndex >= 0 && totalItems[activeIndex]
-      ? `suggestion-item-${totalItems[activeIndex].id}`
-      : undefined;
+  const activeItem = expanded && activeIndex >= 0 ? totalItems[activeIndex] : undefined;
+  const activeDescendant = activeItem ? `suggestion-item-${activeItem.id}` : undefined;
+
+  useEffect(() => onActiveItemChange?.(activeItem), [activeItem, onActiveItemChange]);
 
   return (
     <div className={styles.wrapper}>
@@ -280,9 +290,11 @@ export function PromptInput({
         <SuggestionsDropdown
           sections={suggestions}
           onSelect={selectItem}
+          onHover={(item) => setActiveIndex(totalItems.indexOf(item))}
           visible={showDropdown}
           placement={suggestionsPlacement}
           activeIndex={activeIndex}
+          aside={suggestionsAside}
         />
       )}
     </div>
