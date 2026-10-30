@@ -6,18 +6,31 @@ import {
   type A2uiComponentNode,
 } from './shared.js';
 import {ActivitySnapshot, UpdateDataModelActivity, type ConverseEvent} from '../events.js';
+import {instantProductsFor} from './schema-response-search.js';
 
 const SEARCH_BOX_ID = 'search-box';
 const QUERY_SUGGESTIONS_ID = 'query-suggestions';
+const INSTANT_PRODUCTS_ID = 'instant-products';
 
 const SHELL_NODES: A2uiComponentNode[] = [
   {id: RENDERER_ROOT_ID, component: 'SessionShell', children: [SEARCH_BOX_ID]},
-  {id: SEARCH_BOX_ID, component: 'SearchBox', suggestionsChild: QUERY_SUGGESTIONS_ID},
+  {
+    id: SEARCH_BOX_ID,
+    component: 'SearchBox',
+    suggestionsChild: QUERY_SUGGESTIONS_ID,
+    instantProductsChild: INSTANT_PRODUCTS_ID,
+  },
   {
     id: QUERY_SUGGESTIONS_ID,
     component: 'QuerySuggestions',
     query: {path: `${statePath(QUERY_SUGGESTIONS_ID)}/query`},
     completions: {path: `${statePath(QUERY_SUGGESTIONS_ID)}/completions`},
+  },
+  {
+    id: INSTANT_PRODUCTS_ID,
+    component: 'InstantProducts',
+    query: {path: `${statePath(INSTANT_PRODUCTS_ID)}/query`},
+    products: {path: `${statePath(INSTANT_PRODUCTS_ID)}/products`},
   },
 ];
 
@@ -60,7 +73,12 @@ function nextRunId(kind: string): string {
 function buildSessionShellEvents(surfaceId: string): ConverseEvent[] {
   const createSurface = {
     ...buildValidatedSurface({templateName: 'Mock_Session_Shell', surfaceId, nodes: SHELL_NODES}),
-    dataModel: {state: {[QUERY_SUGGESTIONS_ID]: {query: '', completions: []}}},
+    dataModel: {
+      state: {
+        [QUERY_SUGGESTIONS_ID]: {query: '', completions: []},
+        [INSTANT_PRODUCTS_ID]: {query: '', products: []},
+      },
+    },
   };
   return buildConversationResponse({
     runId: nextRunId('initialize'),
@@ -117,4 +135,35 @@ function buildQuerySuggestionsEvents(action: {
   });
 }
 
-export {buildSessionShellEvents, buildQuerySuggestionsEvents};
+function buildInstantProductsEvents(action: {
+  surfaceId: string;
+  context: Record<string, unknown>;
+}): ConverseEvent[] {
+  const query = typeof action.context.query === 'string' ? action.context.query : '';
+  const runId = nextRunId('instant-products');
+  return buildConversationResponse({
+    runId,
+    middleEvents: [
+      UpdateDataModelActivity({
+        messageId: `activity-${runId}`,
+        replace: true,
+        ops: [
+          {
+            surfaceId: action.surfaceId,
+            path: statePath(INSTANT_PRODUCTS_ID),
+            value: {query, products: instantProductsFor(query)},
+          },
+        ],
+      }),
+    ],
+    includeInitialStateSnapshot: false,
+    includeFinalStateSnapshot: false,
+  });
+}
+
+export {
+  INSTANT_PRODUCTS_ID,
+  buildInstantProductsEvents,
+  buildSessionShellEvents,
+  buildQuerySuggestionsEvents,
+};

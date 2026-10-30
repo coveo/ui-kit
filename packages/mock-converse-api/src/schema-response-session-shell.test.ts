@@ -92,7 +92,7 @@ describe('initialize', () => {
     expect(events.at(-1)!.data).toEqual(session);
   });
 
-  it('creates the session shell with a search box and its query suggestions', async () => {
+  it('creates the session shell with a search box, its query suggestions and instant products', async () => {
     const [message] = surfaceMessages(await initialize());
 
     expect(message).toEqual({
@@ -102,16 +102,42 @@ describe('initialize', () => {
         catalogId: 'https://schema.thermidor.coveo.com/a2-ui/catalog.json',
         components: [
           {id: 'root', component: 'SessionShell', children: ['search-box']},
-          {id: 'search-box', component: 'SearchBox', suggestionsChild: 'query-suggestions'},
+          {
+            id: 'search-box',
+            component: 'SearchBox',
+            suggestionsChild: 'query-suggestions',
+            instantProductsChild: 'instant-products',
+          },
           {
             id: 'query-suggestions',
             component: 'QuerySuggestions',
             query: {path: '/state/query-suggestions/query'},
             completions: {path: '/state/query-suggestions/completions'},
           },
+          {
+            id: 'instant-products',
+            component: 'InstantProducts',
+            query: {path: '/state/instant-products/query'},
+            products: {path: '/state/instant-products/products'},
+          },
         ],
-        dataModel: {state: {'query-suggestions': {query: '', completions: []}}},
+        dataModel: {
+          state: {
+            'query-suggestions': {query: '', completions: []},
+            'instant-products': {query: '', products: []},
+          },
+        },
       },
+    });
+  });
+
+  it('announces fetchInstantProducts on the shell as concurrent and cached for a minute', async () => {
+    const [snapshot] = (await initialize()).filter(({event}) => event === 'ACTIVITY_SNAPSHOT');
+    const shellId = (surfaceMessages([snapshot])[0].createSurface as {surfaceId: string}).surfaceId;
+
+    expect(snapshot.data.metadata).toEqual({
+      concurrentActions: {[shellId]: ['fetchInstantProducts']},
+      cachedActions: {[shellId]: {fetchInstantProducts: {ttlMs: 60000}}},
     });
   });
 
@@ -172,5 +198,157 @@ describe('fetchSuggestions', () => {
     );
 
     expect(events[0]).toEqual({event: 'turn_started', data: session});
+  });
+});
+
+describe('fetchInstantProducts', () => {
+  const PRODUCT_PROPERTIES = new Set([
+    'permanentid',
+    'ec_name',
+    'ec_description',
+    'ec_shortdesc',
+    'ec_brand',
+    'ec_category',
+    'ec_price',
+    'ec_promo_price',
+    'ec_images',
+    'ec_thumbnails',
+    'ec_in_stock',
+    'ec_rating',
+    'ec_color',
+    'ec_item_group_id',
+    'ec_item_group_name',
+    'clickUri',
+    'additionalFields',
+    'children',
+    'badgePlacements',
+  ]);
+
+  async function openShell(keys = session) {
+    const events = await readEvents(
+      converseSchemaResponses.buildSchemaActionResponse({name: 'initialize', context: {}}, keys)
+    );
+    return (surfaceMessages(events)[0].createSurface as {surfaceId: string}).surfaceId;
+  }
+
+  function fetchInstantProducts(
+    action: {surfaceId?: string; sourceComponentId?: string; query: string},
+    keys = session
+  ) {
+    return converseSchemaResponses.buildSchemaActionResponse(
+      {
+        name: 'fetchInstantProducts',
+        surfaceId: action.surfaceId,
+        sourceComponentId: action.sourceComponentId ?? 'instant-products',
+        context: {query: action.query},
+      },
+      keys
+    );
+  }
+
+  async function instantProducts(surfaceId: string, query: string) {
+    const events = await readEvents(fetchInstantProducts({surfaceId, query}));
+    const snapshots = events.filter(({event}) => event === 'ACTIVITY_SNAPSHOT');
+    expect(snapshots).toHaveLength(1);
+    const messages = surfaceMessages(snapshots);
+    expect(messages).toHaveLength(1);
+    return messages[0].updateDataModel as {
+      surfaceId: string;
+      path: string;
+      value: {query: string; products: Array<Record<string, unknown>>};
+    };
+  }
+
+  it("writes the whole instant-products slice of the session's shell", async () => {
+    const shellId = await openShell();
+
+    const write = await instantProducts(shellId, 'wetsuits');
+
+    expect(write).toMatchObject({
+      surfaceId: shellId,
+      path: '/state/instant-products',
+      value: {query: 'wetsuits'},
+    });
+    expect(Object.keys(write.value)).toEqual(['query', 'products']);
+    expect(write.value.products.map(({ec_name}) => ec_name)).toEqual([
+      'HydroLite Sleeveless Wetsuit',
+      'EcoWave Performance Wetsuit',
+      'ArcticShield Full Drysuit',
+      'SunSeeker Spring Wetsuit',
+    ]);
+    for (const product of write.value.products) {
+      expect(Object.keys(product).filter((key) => !PRODUCT_PROPERTIES.has(key))).toEqual([]);
+    }
+  });
+
+  it('matches every term of the query against name, brand and category', async () => {
+    const shellId = await openShell();
+    const names = async (query: string) =>
+      (await instantProducts(shellId, query)).value.products.map(({ec_name}) => ec_name);
+
+    expect(await names('  Kayak paddles ')).toEqual(['CarbonStroke Kayak Paddle']);
+    expect(await names('life jackets')).toEqual([
+      'SafeFloat Adult Life Jacket',
+      'AquaGuard Kids Life Jacket',
+    ]);
+    expect(await names('cressi fins')).toEqual(['PowerKick Dive Fins']);
+  });
+
+  it('writes no products for an empty or unmatched query', async () => {
+    const shellId = await openShell();
+
+    expect((await instantProducts(shellId, 'snowboard')).value).toEqual({
+      query: 'snowboard',
+      products: [],
+    });
+    expect((await instantProducts(shellId, '  ')).value).toEqual({query: '  ', products: []});
+  });
+
+  it("runs on the session's keys and ends with a terminal event", async () => {
+    const shellId = await openShell();
+
+    const events = await readEvents(fetchInstantProducts({surfaceId: shellId, query: 'surf'}));
+
+    expect(events.map(({event}) => event)).toEqual([
+      'turn_started',
+      'RUN_STARTED',
+      'ACTIVITY_SNAPSHOT',
+      'RUN_FINISHED',
+      'turn_complete',
+    ]);
+    expect(events[0].data).toEqual(session);
+  });
+
+  it('refuses a session whose shell holds no instant products', async () => {
+    const shellId = await openShell();
+    const refusal = async (response: Response) => ({
+      status: response.status,
+      body: await response.json(),
+    });
+    const notApplicable = {
+      status: 400,
+      body: {errorCode: 'AGENT:ACTION_NOT_APPLICABLE', message: expect.any(String)},
+    };
+
+    expect(
+      await refusal(
+        fetchInstantProducts(
+          {surfaceId: shellId, query: 'surf'},
+          {conversationSessionId: 'session-without-shell', conversationToken: 'token-2'}
+        )
+      )
+    ).toEqual(notApplicable);
+    expect(
+      await refusal(fetchInstantProducts({surfaceId: 'ui-commerce-water-sports-1', query: 'surf'}))
+    ).toEqual(notApplicable);
+    expect(
+      await refusal(
+        fetchInstantProducts({
+          surfaceId: shellId,
+          sourceComponentId: 'query-suggestions',
+          query: 'surf',
+        })
+      )
+    ).toEqual(notApplicable);
   });
 });

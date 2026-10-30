@@ -93,19 +93,24 @@ interface A2uiComponentNode {
   [key: string]: unknown;
 }
 
+const NAMED_CHILD_SLOTS = [
+  'sidebarChild',
+  'mainChild',
+  'suggestionsChild',
+  'instantProductsChild',
+] as const;
+
 // Reads a node's composition children from its top-level properties, whether declared as a
 // `children` array (homogeneous lists: LayoutStack, FacetManager) or named ComponentId slots
-// (heterogeneous containers: CommerceSearch → sidebarChild/mainChild). Used only by surface
-// validation.
+// (heterogeneous containers: CommerceSearch → sidebarChild/mainChild, SearchBox →
+// suggestionsChild/instantProductsChild). Used only by surface validation.
 function childRefsOf(node: A2uiComponentNode): string[] {
   const refs: string[] = [];
-  const sidebarChild = node['sidebarChild'];
-  if (typeof sidebarChild === 'string') {
-    refs.push(sidebarChild);
-  }
-  const mainChild = node['mainChild'];
-  if (typeof mainChild === 'string') {
-    refs.push(mainChild);
+  for (const slot of NAMED_CHILD_SLOTS) {
+    const child = node[slot];
+    if (typeof child === 'string') {
+      refs.push(child);
+    }
   }
   const children = node['children'];
   if (Array.isArray(children)) {

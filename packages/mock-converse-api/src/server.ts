@@ -187,14 +187,21 @@ const handleSchemaConversePost = async ({request}: {request: Request}) => {
     );
   }
 
-  if (sessionId && sessionsInFlight.has(sessionId)) {
-    return withCors(actionInFlightResponse());
-  }
-
   const session = {
     conversationSessionId: sessionId ?? randomUUID(),
     conversationToken: sessionToken ?? randomUUID(),
   };
+
+  // Agent Gateway answers a concurrent action beside the turn: it neither waits for nor takes the
+  // session's turn slot.
+  if (schemaAction && converseSchemaResponses.isConcurrentAction(schemaAction)) {
+    return withCors(converseSchemaResponses.buildSchemaActionResponse(schemaAction, session));
+  }
+
+  if (sessionId && sessionsInFlight.has(sessionId)) {
+    return withCors(actionInFlightResponse());
+  }
+
   const response = schemaAction
     ? converseSchemaResponses.buildSchemaActionResponse(schemaAction, session)
     : converseSchemaResponses.schemaBaseResponse(body, session);
