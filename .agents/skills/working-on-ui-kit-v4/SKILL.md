@@ -46,7 +46,7 @@ Rules that follow from the track:
 - One root cause per pull request, at most five PRs in a stack. A story that removes six members is six small PRs or one PR per package, not one large PR.
 - **v3 track:** add `@deprecated` with "Use `<replacement>` instead" on every member, where the replacement exists on v3. Keep the old behaviour intact. When a runtime warning helper exists (KIT-6389), emit it once per process, not per call.
 - **v4 track:** delete the member, its tests, its stories, its docs and its sample usage in the same PR. Do not leave a shim unless the story asks for one.
-- **Inferred public types:** when a change touches generics that customers rely on for IntelliSense (engine definitions, hooks, static and hydrated state), add `expectTypeOf` assertions in a `*.test-d.ts` file next to the code so the inference cannot regress silently.
+- **Inferred public types:** when a change touches generics that customers rely on for IntelliSense (engine definitions, hooks, static and hydrated state), add `expectTypeOf` assertions in a `*.test-d.ts` file next to the code so the inference cannot regress silently. Vitest runs these files only when the package's Vitest config has a `typecheck` block, as `packages/thermidor/vitest.config.js` does; add one when the package lacks it.
 - **Samples:** `samples/**` folders without a suffix are the v3 reference and the "before" of the guide; never port them to the new API. A v4 sample lives in a `<sample>-v4` folder until GA, when it replaces the original. Keep samples minimal: the integration point only.
 - **Docs in code:** update the module docs of the entry points you touch so the first example a customer reads matches the API.
 
