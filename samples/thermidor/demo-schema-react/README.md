@@ -153,6 +153,11 @@ The question-answering gateway route draws a Scoping block in every turn: a `sco
 
 The Selection scopes every later question, so it must stay in view for the whole thread. `surface-stream.ts` therefore takes Scoping blocks out of their turns and keeps only the latest, which `ScopingPanel` draws beside the feed. Its controls are enabled only while it belongs to the latest turn, the one the session sends actions for; until a new turn draws its own block, the previous one stays readable. The stream knows no gateway convention: `AppShell` tells it which blocks are Scoping blocks with `src/scoping/scoping-surface.ts`, which holds the gateway's `scoping-` surface id prefix. The gateway answers no facet search there (HTTP 501), so the panel tells its Facets to draw no search field (`facet-search-offered.tsx`), and the block's Facets offer no show more or less.
 
+Known limitations:
+
+- Facet search is hidden by where the block is drawn, not by anything the block says: the panel turns it off for every Facet it holds. A Facet that offered facet search inside a Scoping block would still draw no search field. The follow-up is a `canSearch` flag in the `RegularFacet` state of `@coveo/thermidor-schema`, so the gateway can say which Facets answer a search.
+- The Selection can't be set before the first question: the gateway draws the first Scoping block in the first turn's answer, so the landing page has no Facets to choose from.
+
 ### Key modules
 
 | Module                                                   | Role                                                                                                                                                                                                                                                                                                                                                             |
