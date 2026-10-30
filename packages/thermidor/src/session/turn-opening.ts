@@ -13,22 +13,8 @@
  * is untyped in AG-UI, so an announcement that does not have this shape is ignored.
  */
 
+import {latestAnnouncement, readActionNames} from './announced-actions.js';
 import type {Activity} from './types.js';
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-function announcedActions(activity: Activity, surfaceId: string): readonly string[] | undefined {
-  const turnOpeningActions = activity.metadata?.['turnOpeningActions'];
-  if (!isRecord(turnOpeningActions) || !(surfaceId in turnOpeningActions)) {
-    return undefined;
-  }
-  const actions = turnOpeningActions[surfaceId];
-  return Array.isArray(actions) && actions.every((name) => typeof name === 'string')
-    ? actions
-    : undefined;
-}
 
 /**
  * Whether the producer announced that the action `name`, dispatched from `surfaceId`, opens a turn,
@@ -39,9 +25,9 @@ export function isTurnOpeningAction(
   surfaceId: string,
   name: string
 ): boolean {
-  let announced: readonly string[] | undefined;
-  for (const activity of activities) {
-    announced = announcedActions(activity, surfaceId) ?? announced;
-  }
-  return announced?.includes(name) ?? false;
+  return (
+    latestAnnouncement(activities, 'turnOpeningActions', surfaceId, readActionNames)?.includes(
+      name
+    ) ?? false
+  );
 }

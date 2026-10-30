@@ -29,8 +29,11 @@ import type {
 } from '@/src/internal/context/index.js';
 import {devWarn} from '@/src/internal/utils/dev-warn.js';
 import {generateId} from '@/src/internal/utils/id-generator.js';
+import {actionCacheKey, createActionCache, type ActionOrigin} from './action-cache.js';
 import {validateActionPayload} from './action-payload-validation.js';
+import {cachePolicy, isConcurrentAction, type CachePolicy} from './announced-actions.js';
 import type {ContractsSchema} from './contracts.js';
+import {createConcurrentLanes} from './concurrent-lanes.js';
 import {callWithConflictRetry} from './conflict-retry.js';
 import {
   EMPTY_RENDERER_STREAM,
@@ -41,7 +44,15 @@ import {createTurn, foldActivity, foldInitialization, SURFACE_ACTIVITY_KIND} fro
 import {deriveNodeIdentityRegistry} from './in-transit-validation.js';
 import {restoreSession, serializeSession, type SerializedSession} from './serialize.js';
 import {createSessionStore, type SessionStore, type SessionStoreState} from './store.js';
-import {applyInboundOps} from './session-state.js';
+import {
+  EMPTY_UNRECORDED_STATE,
+  acceptUnrecordedWrites,
+  applyInboundOps,
+  applyUnrecordedWrites,
+  overlayUnrecordedState,
+  releaseUnrecordedState,
+  type UnrecordedState,
+} from './session-state.js';
 import {isTurnOpeningAction} from './turn-opening.js';
 import {
   INITIALIZATION,
@@ -232,7 +243,8 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
   /**
    * The validated data model of every live surface, keyed by surface id, whichever turn wrote it:
    * inbound `updateDataModel` ops are validated against the injected contracts before they apply
-   * here.
+   * here. The answers to concurrent actions are applied on top without being recorded: a later
+   * recorded write to the same path replaces them, and {@link Session.serialize} leaves them out.
    */
   readonly state: A2uiState;
   /**
@@ -248,7 +260,8 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
   /**
    * The request the session is sending, or `undefined` when it is idle. The session sends one
    * request at a time, `initialize`, prompts and actions alike, in the order they were dispatched;
-   * an action's run counts, a follow-up included. Read it synchronously, or through {@link Session.subscribe}.
+   * an action's run counts, a follow-up included. An action the producer announces as concurrent
+   * is sent beside it and never sets it. Read it synchronously, or through {@link Session.subscribe}.
    */
   readonly request: SessionRequest | undefined;
   /**
@@ -298,6 +311,15 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * snapshots are recorded with the active turn, or with {@link Session.initialization} before the
    * first turn, and its failure sets {@link Session.actionError}.
    *
+   * An action the producer announces as concurrent is sent at once, whatever request is in flight,
+   * and resolves once its answer ends; a prompt or {@link Session.cancel} does not stop it. Only the
+   * latest dispatch from a node is applied: an older request in flight is aborted, unless the
+   * producer announces the action as cached. Then a dispatch already answered within the announced
+   * lifetime sends nothing, and the request runs to the end so its answer is cached. Its answer may
+   * only update the data model of nodes the session already holds, and is not recorded in a run.
+   * Its failure is a dev-only warning: it sets no {@link Session.actionError}. It is withheld until
+   * the session has its token.
+   *
    * FIRE-AND-FORGET: the returned Promise ALWAYS resolves and NEVER rejects, so
    * the consumer needs no `.catch`. A message with no `userAction`, no
    * `sourceComponentId`, a node that resolves to no component, and an internal
@@ -306,7 +328,7 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    */
   dispatchAction: (message: A2uiClientMessage | SubmitPromptAction) => Promise<void>;
   /**
-   * Stops the request in flight, `initialize` included. {@link Session.request} stays set until the stopped request has
+   * Stops the request in flight, `initialize` included, but no concurrent action. {@link Session.request} stays set until the stopped request has
    * unwound, a few microtasks later, so a dispatch made right after `cancel()` is withheld: wait for
    * `request` to become `undefined`, through {@link Session.subscribe}, before sending the next one.
    */
@@ -329,6 +351,24 @@ function isSubmitPromptAction(
 
 /** The action a request sends, which its failures are reported against. */
 type ActionSource = Omit<ActionError, 'message'>;
+
+/** A dispatched action, with the discriminant of the node it came from. */
+interface RecoveredAction {
+  discriminant: string;
+  name: string;
+  sourceComponentId: string;
+  surfaceId: string;
+  context: unknown;
+}
+
+/** The messages of an A2-UI surface snapshot, or `undefined` for any other event. */
+function surfaceSnapshotMessages(event: NormalizedStreamEvent): readonly unknown[] | undefined {
+  const snapshot = event as unknown as {activityType?: string; content?: unknown};
+  const messages = (snapshot.content as Record<string, unknown> | undefined)?.['messages'];
+  return snapshot.activityType === SURFACE_ACTIVITY_KIND && Array.isArray(messages)
+    ? messages
+    : undefined;
+}
 
 interface RequestFailure {
   error: string;
@@ -443,23 +483,36 @@ export function createSession<TContracts extends ContractsSchema>(
     return surfaceView;
   }
 
-  // The state of the live surfaces only, recomputed when the state or the surfaces change.
+  // The state of the live surfaces only, with the unrecorded writes on top, recomputed when the
+  // state, those writes or the surfaces change.
   let liveState: A2uiState = {};
-  let liveStateSource: {state?: A2uiState; view?: SessionSurfaceView} = {};
+  let liveStateSource: {
+    state?: A2uiState;
+    unrecordedState?: UnrecordedState;
+    view?: SessionSurfaceView;
+  } = {};
   function readLiveState(): A2uiState {
-    const {state = {}} = store.getState();
+    const {state = {}, unrecordedState = EMPTY_UNRECORDED_STATE} = store.getState();
     const view = readSurfaceView();
-    if (liveStateSource.state !== state || liveStateSource.view !== view) {
+    if (
+      liveStateSource.state !== state ||
+      liveStateSource.unrecordedState !== unrecordedState ||
+      liveStateSource.view !== view
+    ) {
       const live = new Set(view.surfaces.map((surface) => surface.surfaceId));
       liveState = Object.fromEntries(
-        Object.entries(state).filter(([surfaceId]) => live.has(surfaceId))
+        Object.entries(overlayUnrecordedState(state, unrecordedState)).filter(([surfaceId]) =>
+          live.has(surfaceId)
+        )
       );
-      liveStateSource = {state, view};
+      liveStateSource = {state, unrecordedState, view};
     }
     return liveState;
   }
 
   const client = createUnifiedEndpointClient();
+  const actionCache = createActionCache();
+  const lanes = createConcurrentLanes();
 
   // The currently in-flight stream's abort controller, or null when idle. Held
   // per session instance — never module-level — so two sessions never contend.
@@ -571,12 +624,21 @@ export function createSession<TContracts extends ContractsSchema>(
         snapshot.activityType === SURFACE_ACTIVITY_KIND &&
         Array.isArray(messages)
       ) {
+        const activities = sessionActivities(next);
         next.state = applyInboundOps(
           current.state ?? {},
-          sessionActivities(next),
+          activities,
           content as Record<string, unknown>,
           config.contracts
         );
+        if (current.unrecordedState) {
+          next.unrecordedState = releaseUnrecordedState(
+            current.unrecordedState,
+            activities,
+            content as Record<string, unknown>,
+            config.contracts
+          );
+        }
         next.rendererStream = appendToRendererStream(
           current.rendererStream ?? EMPTY_RENDERER_STREAM,
           convertA2uiMessages(messages)
@@ -898,6 +960,25 @@ export function createSession<TContracts extends ContractsSchema>(
   }
 
   /**
+   * Validates the action payload against the component's generated Zod action schema before the
+   * POST. A non-conforming payload is withheld (nothing sent).
+   */
+  function hasValidPayload(recovered: RecoveredAction): boolean {
+    const validation = validateActionPayload(
+      recovered.discriminant,
+      recovered.name,
+      recovered.context,
+      config.contracts
+    );
+    if (!validation.valid) {
+      devWarn(
+        `dispatchAction: dispatch withheld: Invalid payload for action "${recovered.name}" on component "${recovered.discriminant}": ${validation.reason}`
+      );
+    }
+    return validation.valid;
+  }
+
+  /**
    * Private validate-and-send path. Validates the recovered action's payload against the
    * component's generated Zod action schema and withholds on failure; targets the action's own
    * originating surface, any live surface of the session (ADR-018). An action the producer
@@ -905,19 +986,16 @@ export function createSession<TContracts extends ContractsSchema>(
    * recorded with the active turn, or with the initialization before the first turn.
    * Withholds when there is neither to stream the answer into.
    */
-  function issueAction(recovered: {
-    discriminant: string;
-    name: string;
-    sourceComponentId: string;
-    surfaceId: string;
-    context: unknown;
-  }): Promise<void> {
+  function issueAction(recovered: RecoveredAction): Promise<void> {
     const current = store.getState();
-    const opensTurn = isTurnOpeningAction(
-      sessionActivities(current),
-      recovered.surfaceId,
-      recovered.name
-    );
+    const activities = sessionActivities(current);
+    if (isConcurrentAction(activities, recovered.surfaceId, recovered.name)) {
+      return issueConcurrentAction(
+        recovered,
+        cachePolicy(activities, recovered.surfaceId, recovered.name)
+      );
+    }
+    const opensTurn = isTurnOpeningAction(activities, recovered.surfaceId, recovered.name);
     const {activeTurnId, initialization} = current;
     if (!opensTurn && !activeTurnId && !initialization) {
       return withhold();
@@ -930,18 +1008,7 @@ export function createSession<TContracts extends ContractsSchema>(
     // commerce one.
     const surfaceId = recovered.surfaceId;
 
-    // Validate the action payload against the component's generated Zod action
-    // schema BEFORE the POST. A non-conforming payload is withheld (nothing sent).
-    const validation = validateActionPayload(
-      recovered.discriminant,
-      recovered.name,
-      recovered.context,
-      config.contracts
-    );
-    if (!validation.valid) {
-      devWarn(
-        `dispatchAction: dispatch withheld: Invalid payload for action "${recovered.name}" on component "${recovered.discriminant}": ${validation.reason}`
-      );
+    if (!hasValidPayload(recovered)) {
       return withhold();
     }
 
@@ -997,6 +1064,162 @@ export function createSession<TContracts extends ContractsSchema>(
       },
       abandoned
     );
+  }
+
+  /**
+   * Sends an action the producer announced as concurrent beside the session's single request
+   * (ADR-020): it never sets `request`, and a prompt or `cancel()` never aborts it. Only the latest
+   * dispatch from its node is applied. A cached action is answered from the cache when it can, and
+   * its miss runs to the end so its answer is cached. Its answer is applied without being recorded
+   * in a run, and its failure is only a development warning.
+   */
+  function issueConcurrentAction(
+    recovered: RecoveredAction,
+    policy: CachePolicy | undefined
+  ): Promise<void> {
+    if (!store.getState().sessionToken) {
+      devWarn(`dispatchAction: ${recovered.name} withheld: the session has no token yet.`);
+      return withhold();
+    }
+    if (!hasValidPayload(recovered)) {
+      return withhold();
+    }
+
+    const key = actionCacheKey(recovered, recovered.context);
+    lanes.claim(recovered, key);
+    const cached = policy && actionCache.get(key);
+    if (cached) {
+      applyUnrecorded(cached);
+      return Promise.resolve();
+    }
+
+    const action: A2uiAction = {
+      surfaceId: recovered.surfaceId,
+      name: recovered.name,
+      sourceComponentId: recovered.sourceComponentId,
+      timestamp: new Date().toISOString(),
+      context: recovered.context,
+    };
+    if (!policy) {
+      return lanes.sendUncached(recovered, (signal) =>
+        quietly(recovered, streamUnrecorded(action, recovered, key, signal), signal)
+      );
+    }
+    return lanes.sendCachedMiss(key, () =>
+      quietly(
+        recovered,
+        streamUnrecorded(action, recovered, key).then((messages) =>
+          actionCache.set(key, messages, policy.ttlMs)
+        )
+      )
+    );
+  }
+
+  async function quietly(
+    origin: ActionOrigin,
+    work: Promise<unknown>,
+    signal?: AbortSignal
+  ): Promise<void> {
+    try {
+      await work;
+    } catch (error) {
+      if (!signal?.aborted) {
+        devWarn(`dispatchAction: ${origin.name} failed: ${getErrorMessage(error)}`);
+      }
+    }
+  }
+
+  /**
+   * Sends a concurrent action and applies each surface snapshot of its answer while the dispatch is
+   * its node's latest, checked before each write. Its session keys and metadata are not read.
+   * Resolves with the answer's messages once the stream ends with a terminal event; when the
+   * dispatch became the latest again after a snapshot was passed over, the whole answer is applied
+   * then. Rejects when the request fails.
+   */
+  async function streamUnrecorded(
+    action: A2uiAction,
+    origin: ActionOrigin,
+    key: string,
+    signal?: AbortSignal
+  ): Promise<readonly unknown[]> {
+    const result = await client.call(
+      buildActionRequest(action),
+      {
+        organizationId: config.organizationId,
+        accessToken: config.accessToken,
+        endpoint: config.endpoint,
+      },
+      {signal}
+    );
+    if (!result.success) {
+      throw new Error(result.error);
+    }
+
+    const answer: unknown[] = [];
+    let passedOver = false;
+    let finished = false;
+    let runError: string | undefined;
+    await readEventStream({
+      stream: result.data.stream,
+      signal,
+      onEvent: (rawEvent: RawSSEEvent) => {
+        const event = parseSSEEvent(rawEvent);
+        if (event.type === 'RUN_ERROR') {
+          runError =
+            (event as {message?: string}).message || 'An error occurred during the action.';
+        } else if (event.type === 'RUN_FINISHED' || event.type === 'turn_complete') {
+          finished = true;
+        } else if (event.type === 'ACTIVITY_SNAPSHOT') {
+          const messages = surfaceSnapshotMessages(event);
+          if (messages) {
+            answer.push(...messages);
+            if (lanes.isLatest(origin, key)) {
+              applyUnrecorded(messages);
+            } else {
+              passedOver = true;
+            }
+          }
+        }
+      },
+    });
+    if (runError !== undefined) {
+      throw new Error(runError);
+    }
+    if (!finished) {
+      throw new Error('Stream ended without a terminal event.');
+    }
+    if (passedOver && lanes.isLatest(origin, key)) {
+      applyUnrecorded(answer);
+    }
+    return answer;
+  }
+
+  /**
+   * Applies an unrecorded answer: only its writes to the data model of nodes the recorded runs
+   * hold, validated once, reach the renderer stream and the unrecorded layer over the state.
+   */
+  function applyUnrecorded(messages: readonly unknown[]): void {
+    const current = store.getState();
+    const accepted = acceptUnrecordedWrites(messages, sessionActivities(current), config.contracts);
+    if (accepted.messages.length < messages.length) {
+      devWarn(
+        'dispatchAction: a concurrent answer may only update the data model of known nodes; the rest is dropped.'
+      );
+    }
+    if (accepted.writes.length === 0) {
+      return;
+    }
+    store.setState((latest) => ({
+      ...latest,
+      unrecordedState: applyUnrecordedWrites(
+        latest.unrecordedState ?? EMPTY_UNRECORDED_STATE,
+        accepted.writes
+      ),
+      rendererStream: appendToRendererStream(
+        latest.rendererStream ?? EMPTY_RENDERER_STREAM,
+        convertA2uiMessages(accepted.messages)
+      ),
+    }));
   }
 
   /**
@@ -1123,8 +1346,6 @@ export function createSession<TContracts extends ContractsSchema>(
       name: action.name,
       sourceComponentId: action.sourceComponentId,
       timestamp: new Date().toISOString(),
-      actionId: null,
-      wantResponse: false,
       context: action.context,
     };
     const request: SessionRequest = {

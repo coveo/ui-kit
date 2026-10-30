@@ -137,7 +137,8 @@ export interface Activity {
   payload: Record<string, unknown>;
   /**
    * The AG-UI `metadata` of the event that carried the activity, when it had one. A producer
-   * announces the turn-opening actions of a surface under its `turnOpeningActions` key.
+   * announces the turn-opening actions of a surface under its `turnOpeningActions` key, and its
+   * concurrent and cached actions under `concurrentActions` and `cachedActions`.
    */
   metadata?: Record<string, unknown>;
 }
