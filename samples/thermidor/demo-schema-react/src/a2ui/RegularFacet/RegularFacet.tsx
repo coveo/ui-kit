@@ -1,5 +1,6 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import {type RegularFacetAction, RegularFacetPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {useFacetSearchOffered} from '../facet-search-offered.js';
 import {FacetSearchMoreMatches} from '../FacetSearchMoreMatches/FacetSearchMoreMatches.js';
 import {SearchIcon} from '../icons/index.js';
 import {useOptimisticFacetSearch} from '../use-optimistic-facet-search.js';
@@ -27,6 +28,7 @@ export const RegularFacet = createReactComponent(
     };
     const search = useOptimisticFacetSearch(props.facetSearch?.query ?? '', dispatch);
     const optimisticFacet = useOptimisticRegularFacet(props, dispatch);
+    const facetSearchOffered = useFacetSearchOffered();
 
     const {displayName, hasActiveValues, canShowMoreValues, canShowLessValues} = props;
     const facetSearch = props.facetSearch ?? {query: '', results: [], canShowMoreResults: false};
@@ -74,30 +76,32 @@ export const RegularFacet = createReactComponent(
           )}
         </header>
 
-        <div className={styles.search}>
-          <div className={styles.searchField}>
-            <SearchIcon className={styles.searchIcon} />
-            <input
-              type="text"
-              className={styles.searchInput}
-              data-testid={`facet-search-input-${props.field}`}
-              value={search.query}
-              placeholder="Search"
-              aria-label={`Search ${displayName}`}
-              onChange={(event) => search.onQueryChange(event.target.value)}
-            />
-            {showResults && (
-              <button
-                type="button"
-                className={styles.searchClear}
-                onClick={search.reset}
-                aria-label={`Clear ${displayName} search`}
-              >
-                ×
-              </button>
-            )}
+        {facetSearchOffered && (
+          <div className={styles.search}>
+            <div className={styles.searchField}>
+              <SearchIcon className={styles.searchIcon} />
+              <input
+                type="text"
+                className={styles.searchInput}
+                data-testid={`facet-search-input-${props.field}`}
+                value={search.query}
+                placeholder="Search"
+                aria-label={`Search ${displayName}`}
+                onChange={(event) => search.onQueryChange(event.target.value)}
+              />
+              {showResults && (
+                <button
+                  type="button"
+                  className={styles.searchClear}
+                  onClick={search.reset}
+                  aria-label={`Clear ${displayName} search`}
+                >
+                  ×
+                </button>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
         {showResults ? (
           <>
