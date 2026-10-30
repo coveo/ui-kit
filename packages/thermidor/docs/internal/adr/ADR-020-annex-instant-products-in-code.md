@@ -106,16 +106,21 @@ function issueAction(recovered: RecoveredAction): Promise<void> {
 
   const policy = cachePolicy(activities, recovered.surfaceId, recovered.name);
   const key = cacheKey(recovered, recovered.context);
+  lanes.claim(recovered, key);
   const cached = policy && actionCache.get(key);
   if (cached) {
-    lanes.abort(recovered); // a late answer must not replace the cached one
     applyUnrecorded(cached);
     return Promise.resolve();
   }
-  return lanes.send(recovered, async (signal) => {
-    const messages = await streamUnrecorded(buildActionRequest(toA2uiAction(recovered)), signal);
-    if (messages && policy) {
-      actionCache.set(key, messages, policy.ttlMs);
+  return lanes.send(recovered, key, Boolean(policy), async (signal) => {
+    const isLatest = () => lanes.isLatest(recovered, key);
+    const writes = await streamUnrecorded(
+      buildActionRequest(toA2uiAction(recovered)),
+      signal,
+      isLatest
+    );
+    if (writes && policy) {
+      actionCache.set(key, writes, policy.ttlMs);
     }
   });
 }
@@ -123,37 +128,54 @@ function issueAction(recovered: RecoveredAction): Promise<void> {
 
 ## 4. The concurrent lane
 
-One abort controller per `(surfaceId, sourceComponentId, name)`. A newer dispatch aborts the older
-one; `session.request` is never touched.
+Each `(surfaceId, sourceComponentId, name)` remembers the key of its latest dispatch. A newer
+dispatch aborts an uncached request in flight; a cached miss runs to the end, and a dispatch with
+its key joins it. `session.request` is never touched.
 
 ```ts
 function createLanes() {
-  const inFlight = new Map<string, AbortController>();
+  const latest = new Map<string, string>();
+  const uncached = new Map<string, AbortController>();
+  const misses = new Map<string, Promise<void>>();
   const laneKey = (source: ActionSource) =>
     JSON.stringify([source.surfaceId, source.sourceComponentId, source.name]);
 
   return {
-    abort(source: ActionSource) {
-      inFlight.get(laneKey(source))?.abort();
-      inFlight.delete(laneKey(source));
+    claim(source: ActionSource, key: string) {
+      latest.set(laneKey(source), key);
+      uncached.get(laneKey(source))?.abort();
+      uncached.delete(laneKey(source));
     },
-    async send(source: ActionSource, run: (signal: AbortSignal) => Promise<void>) {
-      this.abort(source);
-      const controller = new AbortController();
-      inFlight.set(laneKey(source), controller);
-      try {
-        await run(controller.signal);
-      } catch (error) {
-        if (!controller.signal.aborted) {
-          devWarn(`dispatchAction: ${source.name} failed: ${getErrorMessage(error)}`);
-        }
-      } finally {
-        if (inFlight.get(laneKey(source)) === controller) {
-          inFlight.delete(laneKey(source));
-        }
+    isLatest: (source: ActionSource, key: string) => latest.get(laneKey(source)) === key,
+    send(
+      source: ActionSource,
+      key: string,
+      cached: boolean,
+      run: (signal: AbortSignal) => Promise<void>
+    ) {
+      if (!cached) {
+        const controller = new AbortController();
+        uncached.set(laneKey(source), controller);
+        return quietly(source, run(controller.signal), controller.signal);
       }
+      let miss = misses.get(key);
+      if (!miss) {
+        miss = quietly(source, run(new AbortController().signal)).finally(() => misses.delete(key));
+        misses.set(key, miss);
+      }
+      return miss;
     },
   };
+}
+
+async function quietly(source: ActionSource, work: Promise<void>, signal?: AbortSignal) {
+  try {
+    await work;
+  } catch (error) {
+    if (!signal?.aborted) {
+      devWarn(`dispatchAction: ${source.name} failed: ${getErrorMessage(error)}`);
+    }
+  }
 }
 ```
 
@@ -165,26 +187,29 @@ state.
 
 ```ts
 function applyUnrecorded(messages: readonly unknown[]): void {
-  const writes = messages.filter(isUpdateDataModel);
-  if (writes.length < messages.length) {
-    devWarn(
-      'dispatchAction: an unrecorded answer may only update the data model; the rest is dropped.'
-    );
-  }
-  store.setState((current) => ({
-    ...current,
-    // Validation resolves nodes from recorded runs, so a write to an unknown node is dropped.
-    unrecordedState: applyInboundOps(
-      current.unrecordedState ?? {},
-      sessionActivities(current),
-      {messages: writes},
-      config.contracts
-    ),
-    rendererStream: appendToRendererStream(
-      current.rendererStream ?? EMPTY_RENDERER_STREAM,
-      convertA2uiMessages(writes)
-    ),
-  }));
+  store.setState((current) => {
+    const activities = sessionActivities(current);
+    // Data-model updates whose node the recorded runs hold, validated once for both projections.
+    const writes = acceptedWrites(messages, activities, config.contracts);
+    if (writes.length < messages.length) {
+      devWarn(
+        'dispatchAction: an unrecorded answer may only update known nodes; the rest is dropped.'
+      );
+    }
+    return {
+      ...current,
+      unrecordedState: applyInboundOps(
+        current.unrecordedState ?? {},
+        activities,
+        {messages: writes},
+        config.contracts
+      ),
+      rendererStream: appendToRendererStream(
+        current.rendererStream ?? EMPTY_RENDERER_STREAM,
+        convertA2uiMessages(writes)
+      ),
+    };
+  });
 }
 ```
 
@@ -192,8 +217,10 @@ function applyUnrecorded(messages: readonly unknown[]): void {
 the layer's value at the same path, and `serializeSession` saves `state` alone, so no product slice
 outlives the page.
 
-`streamUnrecorded` reads the response stream as `consumeStream` does, calls `applyUnrecorded` for
-each surface snapshot, and returns the snapshots' writes once the stream ends without error.
+`streamUnrecorded` reads the response stream as `consumeStream` does. For each surface snapshot,
+it calls `applyUnrecorded` only while `isLatest()` holds, checked just before applying, since a
+read can resolve after a newer dispatch. It returns the snapshots' writes once the stream ends
+without error or abort.
 
 ## 6. The search box shares its highlight
 

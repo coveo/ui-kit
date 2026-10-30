@@ -51,8 +51,9 @@ The session cannot support this today:
   long.
 - **Faithful rendering (charter MUST).** A cached answer reaches the renderer exactly as the
   producer sent it.
-- **A newer highlight wins.** An older answer never replaces a newer one's, and a request no one
-  waits for is aborted.
+- **A newer highlight wins.** An older answer never replaces a newer one's.
+- **No paid call twice.** A cached action's request runs to the end, so its answer is cached even
+  when the shopper moved on; an uncached request no one waits for is aborted.
 - **Bounded and ephemeral.** Neither the cache nor the answers it holds outlive the page, grow
   without bound or enter a serialized session.
 - **Prompts and other actions are unaffected.** Their single-request rule, turn recording and
@@ -119,14 +120,16 @@ request.
 
 A concurrent action is sent at once, whatever request is in flight.
 
-- **Latest wins per source node.** A newer dispatch of the same action from the same node aborts the
-  older one in flight.
+- **Latest wins per source node.** Only the latest dispatch of an action from a node is applied,
+  checked before each write. An older request in flight is aborted, unless the action is cached:
+  then it completes and its answer is cached, and a dispatch with the same cache key joins it
+  instead of sending another.
 - **Not a request of the session.** `session.request` does not change, so a renderer waiting for the
   session to be free, and the single request of prompts and other actions, ignore it. A prompt or
   `cancel()` does not abort it.
 - **State writes on known nodes only.** Its answer may only update the data model of nodes the
   session's recorded runs already hold. Any other message, such as a new surface or component, is
-  dropped with a development warning, and the answer's metadata is not read: announcements, nodes
+  dropped with a development warning before it reaches the state or the renderer stream, and the answer's metadata is not read: announcements, nodes
   and the actions a renderer can dispatch come from recorded runs alone.
 - **Applied, not recorded.** Its writes are folded into no run's activities. They reach the
   renderer stream, and an in-memory layer over the recorded state: `session.state` shows the layer
@@ -143,11 +146,13 @@ A cached action's answer is reused within its announced lifetime.
 
 - **Keyed** by surface id, source node, action name and payload, with the payload serialized with
   sorted keys.
-- **A hit sends nothing.** The session applies the cached snapshots as it applies a concurrent
-  answer, and aborts the action's request in flight from that node, so a late answer cannot replace
-  it.
+- **A hit sends nothing.** The hit becomes the node's latest dispatch, and the session applies the
+  cached writes as it applies a concurrent answer. A late answer from that node is no longer the
+  latest, so it is cached but not applied.
 - **A miss is sent** in the concurrent lane. The answer's writes are cached when the stream
   completes without error.
+- **Eventually correct.** The key holds no request context, as in Headless: a change of page URL or
+  custom context reaches a cached query when its entry expires.
 - **Bounded:** a fixed number of entries per session, least recently used first out, and entries
   expire with their lifetime. The cache lives in memory, is never serialized, and is dropped with
   the session.
