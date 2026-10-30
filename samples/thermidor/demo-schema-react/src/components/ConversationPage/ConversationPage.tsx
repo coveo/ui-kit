@@ -5,7 +5,7 @@ import {PromptInput} from '../PromptInput/PromptInput.js';
 import type {ScopingSurface} from '../../a2ui/surface-stream.js';
 import {ConversationThread} from './ConversationThread.js';
 import {ScopingPanel} from './ScopingPanel.js';
-import type {FollowUp} from './turn-segments.js';
+import {isLatestTurn, type FollowUp} from './turn-segments.js';
 import styles from './ConversationPage.module.css';
 
 interface ConversationPageProps {
@@ -49,7 +49,7 @@ export function ConversationPage({
         {scoping && (
           <ScopingPanel
             scoping={scoping}
-            interactive={scoping.turnId === turns.at(-1)?.id}
+            interactive={isLatestTurn(turns, scoping.turnId)}
             isStreaming={isStreaming}
           />
         )}

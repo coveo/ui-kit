@@ -4,7 +4,7 @@ import {AgentResponseBlock} from './AgentResponseBlock.js';
 import {ErrorTurnBlock} from './ErrorTurnBlock.js';
 import {UserPromptBubble} from './UserPromptBubble.js';
 import {TurnSeparator} from './TurnSeparator.js';
-import {splitTurn, type FollowUp} from './turn-segments.js';
+import {isLatestTurn, splitTurn, type FollowUp} from './turn-segments.js';
 import {TurnSurfaces} from '../../a2ui/surfaces.js';
 import styles from './ConversationThread.module.css';
 
@@ -52,7 +52,7 @@ export function ConversationThread({
                 turn,
                 surfacesByTurn.get(turn.id) ?? NO_SURFACES,
                 followUps?.get(turn.id) ?? NO_FOLLOW_UPS,
-                index === turns.length - 1,
+                isLatestTurn(turns, turn.id),
                 turn.id === pendingTurnId,
                 onAskFollowUp
               )}
