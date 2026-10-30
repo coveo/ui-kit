@@ -71,6 +71,7 @@ vi.mock('./ConversationPage/index.js', () => ({
           )
           .join('|')}
       </span>
+      <span data-testid="scoping">{props.scoping?.surfaceId ?? ''}</span>
       <span data-testid="pending-turn">{props.pendingTurnId ?? ''}</span>
       <span data-testid="streaming">{String(props.isStreaming)}</span>
       <button data-testid="conversation-submit" onClick={() => props.onSubmit('follow up')} />
@@ -157,6 +158,39 @@ describe('AppShell', () => {
         surfaceId: SEARCH_SURFACE_ID,
         sourceComponentId: `${SEARCH_SURFACE_ID}-facet-brand`,
         context: {value: 'Nike'},
+      },
+    });
+  });
+
+  it('shows the latest Scoping block and sends its actions with the server surface id', () => {
+    mockTurns = [
+      makeTurn({
+        id: 'turn-1',
+        response: {a2uiMessages: [{version: 'v0.9', createSurface: {surfaceId: 'scoping-1'}}]},
+      }),
+    ];
+
+    render(<AppShell />);
+    expect(screen.getByTestId('scoping').textContent).toBe('turn-1/scoping-1');
+    act(() => {
+      capturedOnAction?.({
+        version: 'v0.9',
+        userAction: {
+          name: 'toggleSelect',
+          surfaceId: 'turn-1/scoping-1',
+          sourceComponentId: 'scoping-1-facet-source',
+          context: {value: 'Docs'},
+        },
+      });
+    });
+
+    expect(mockDispatchAction).toHaveBeenCalledWith({
+      version: 'v0.9',
+      userAction: {
+        name: 'toggleSelect',
+        surfaceId: 'scoping-1',
+        sourceComponentId: 'scoping-1-facet-source',
+        context: {value: 'Docs'},
       },
     });
   });

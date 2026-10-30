@@ -89,6 +89,8 @@ interface TurnSurfacesProps {
    * and drawn as nothing.
    */
   isStreaming: boolean;
+  /** Says why the surfaces are read-only when they are not interactive. */
+  readOnlyNote?: string;
 }
 
 /**
@@ -101,6 +103,7 @@ export function TurnSurfaces({
   surfaceIds: allSurfaceIds,
   interactive,
   isStreaming,
+  readOnlyNote = 'Earlier results. Ask a follow-up or search again to refine.',
 }: TurnSurfacesProps) {
   const loadingSurfaces = useContext(LoadingSurfacesContext);
   const surfaceIds = useMemo(
@@ -170,11 +173,7 @@ export function TurnSurfaces({
       }}
       role={interactive ? 'none' : undefined}
     >
-      {!interactive && (
-        <legend className={styles.readOnlyNote}>
-          Earlier results. Ask a follow-up or search again to refine.
-        </legend>
-      )}
+      {!interactive && <legend className={styles.readOnlyNote}>{readOnlyNote}</legend>}
       {surfaceIds.map((surfaceId) => {
         const loadingComponentType = loadingSurfaces.get(surfaceId);
         return (
