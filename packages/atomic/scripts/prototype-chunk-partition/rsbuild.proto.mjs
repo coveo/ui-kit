@@ -187,16 +187,21 @@ const rsbuild = await rsbuildApi.createRsbuild({
         strategy: 'split-by-module',
         override: {
           cacheGroups: {
-            shared: {
-              test: (module) => {
-                const resource = module.resource ?? '';
-                return resource.startsWith(sourceDir) || litRuntime.test(resource);
-              },
-              minChunks: 10,
-              name: 'atomic-shared',
-              priority: 0,
-              reuseExistingChunk: true,
-            },
+            // PROTOTYPE: PROTO_NO_SHARED rebuilds the pre-ADR state (split-by-module alone, dayjs locales kept apart)
+            ...(process.env.PROTO_NO_SHARED
+              ? {}
+              : {
+                  shared: {
+                    test: (module) => {
+                      const resource = module.resource ?? '';
+                      return resource.startsWith(sourceDir) || litRuntime.test(resource);
+                    },
+                    minChunks: 10,
+                    name: 'atomic-shared',
+                    priority: 0,
+                    reuseExistingChunk: true,
+                  },
+                }),
             dayjsLocales: {
               test: /node_modules[\\/]dayjs[\\/]locale[\\/]/,
               priority: 0,
