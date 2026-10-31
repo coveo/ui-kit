@@ -41,7 +41,7 @@ const proxies = [
   ['Commerce page', 'cdn-smoke/commerce'],
 ];
 
-function dumbbell({key, unit, decimals, highlight}) {
+function dumbbell({key, unit, decimals, highlight, step: tickStep}) {
   const rowH = 17,
     left = 262,
     right = 56,
@@ -49,10 +49,11 @@ function dumbbell({key, unit, decimals, highlight}) {
     width = 820;
   const h = top + ids.length * rowH + 28;
   const max = Math.max(...ids.flatMap((id) => [B[id][key], O[id][key]]));
-  const niceMax = Math.ceil(max / 20) * 20;
+  const step = tickStep ?? (max > 150 ? 50 : 20),
+    niceMax = Math.ceil(max / step) * step;
   const x = (v) => left + (v / niceMax) * (width - left - right);
   const ticks = [];
-  for (let t = 0; t <= niceMax; t += niceMax > 150 ? 50 : 20) ticks.push(t);
+  for (let t = 0; t <= niceMax + 1e-9; t += step) ticks.push(+t.toFixed(2));
   let svg = `<svg class="chart" viewBox="0 0 ${width} ${h}" role="img" aria-label="${key} per page, baseline versus solver">`;
   for (const t of ticks)
     svg += `<line class="grid" x1="${x(t)}" x2="${x(t)}" y1="${top - 6}" y2="${h - 24}"/><text class="tick" x="${x(t)}" y="${h - 8}" text-anchor="middle">${t}</text>`;
@@ -165,7 +166,7 @@ code, .formula { font: 14px var(--mono); background: var(--code-bg); padding: 1p
 .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
 .grid2 > * { min-width: 0; }
 ul { padding-left: 20px; margin: 0; } li { margin-bottom: 6px; max-width: 68ch; }
-.note { font-size: 14px; color: var(--ink-2); }
+.note { font-size: 14px; color: var(--ink-2); } a { color: var(--accent); }
 @media (prefers-reduced-motion: no-preference) { .chart .row .hit { transition: fill .12s; } }
 </style>
 <main>
@@ -227,6 +228,15 @@ ul { padding-left: 20px; margin: 0; } li { margin-bottom: 6px; max-width: 68ch; 
     <div class="legend"><span class="l-before">baseline, minChunks 10</span><span class="l-after">solver, ${solAll.chunks} chunks</span></div>
     <div class="scroll">${dumbbell({key: 'gzKb', unit: 'KB gz', decimals: 1, highlight: proxies.map((p) => p[1])})}</div>
     <figcaption>Same pages, gzip level 9 of the files each one fetches. Merging groups into fewer chunks costs bytes on the pages that need only part of a chunk; the solver pays that price where a request is worth more than the extra bytes.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>Modelled download time per page</h2>
+  <figure>
+    <div class="legend"><span class="l-before">baseline, minChunks 10</span><span class="l-after">solver, ${solAll.chunks} chunks</span></div>
+    <div class="scroll">${dumbbell({key: 'cost_s', unit: 's', decimals: 2, highlight: proxies.map((p) => p[1]), step: 0.5})}</div>
+    <figcaption>The Atomic part of the mobile load time, ${(cost.b_s_per_kb * 1000).toFixed(1)} ms per gzipped KB plus ${(cost.c_s_per_file * 1000).toFixed(1)} ms per file, from the fit on the ADR's measurements. How the fit was made, how it was checked against the ADR's own times and what it leaves out is on the companion page <a href="https://claude.ai/artifact/Cb5RPuYWxPAgrrJ9HrJFPS">Three Atomic CDN chunkings</a>, section "How fast the page loads".</figcaption>
   </figure>
 </section>
 
