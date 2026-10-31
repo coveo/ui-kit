@@ -1,0 +1,133 @@
+{
+  "columns": [
+    {
+      "id": "rspack",
+      "title": "rspack build",
+      "subtitle": "`rsbuild.cdn.mjs`, copied as `rsbuild.proto.mjs`",
+      "color": "blue"
+    },
+    {
+      "id": "scripts",
+      "title": "Prototype scripts",
+      "subtitle": "Node, in `packages/atomic/scripts/prototype-chunk-partition`",
+      "color": "orange",
+      "width": 250
+    },
+    {
+      "id": "solver",
+      "title": "Solver",
+      "subtitle": "OR-Tools CP-SAT, Python",
+      "color": "aqua"
+    }
+  ],
+  "rows": [
+    {
+      "id": "build",
+      "title": "1. Build with stats",
+      "subtitle": "2 s"
+    },
+    {
+      "id": "model",
+      "title": "2. Model the pages",
+      "subtitle": "seconds"
+    },
+    {
+      "id": "solve",
+      "title": "3. Solve",
+      "subtitle": "150 s, 8 workers"
+    },
+    {
+      "id": "verify",
+      "title": "4. Build again, measure",
+      "subtitle": "2 s, then a minute"
+    }
+  ],
+  "boxes": [
+    {
+      "id": "stats",
+      "row": "build",
+      "column": "rspack",
+      "text": "Builds the CDN exactly as today and writes rspack stats: modules, static imports, chunk of each module.",
+      "chip": "433 files, 614 KB gz"
+    },
+    {
+      "id": "pages",
+      "row": "model",
+      "column": "scripts",
+      "text": "Collects the `atomic-*` tags of 42 pages: Storybook, cdn-smoke, samples and the ADR's search box.",
+      "chip": "equal weights"
+    },
+    {
+      "id": "groups",
+      "row": "model",
+      "column": "scripts",
+      "text": "Follows static imports from each tag; modules reached by the same pages form one group.",
+      "chip": "127 groups, 662 modules"
+    },
+    {
+      "id": "fit",
+      "row": "model",
+      "column": "scripts",
+      "text": "Fits the ADR's 28 mobile measurements: 5.0 ms per KB, 4.6 ms per file.",
+      "chip": "R² 0.9996"
+    },
+    {
+      "id": "solve",
+      "row": "solve",
+      "column": "solver",
+      "text": "Chooses which groups share a chunk, minimising bytes plus 0.91 KB per request over all pages.",
+      "chip": "37 chunks"
+    },
+    {
+      "id": "rebuild",
+      "row": "verify",
+      "column": "rspack",
+      "text": "Builds again with one enforced async cache group per chunk; entry files stay as they are.",
+      "chip": "215 files, 522 KB gz"
+    },
+    {
+      "id": "measure",
+      "row": "verify",
+      "column": "scripts",
+      "text": "Reads the compiled tag-to-chunks table, gzips every file, prices each page, and loads all 206 tags in headless Chromium.",
+      "chip": "206 of 206 register"
+    }
+  ],
+  "arrows": [
+    {
+      "from": "stats",
+      "to": "groups",
+      "route": "side"
+    },
+    {
+      "from": "groups",
+      "to": "solve",
+      "route": "side"
+    },
+    {
+      "from": "fit",
+      "to": "solve",
+      "route": "side"
+    },
+    {
+      "from": "solve",
+      "to": "rebuild",
+      "route": "over"
+    },
+    {
+      "from": "rebuild",
+      "to": "measure",
+      "route": "straight"
+    }
+  ],
+  "legend": [
+    {
+      "color": "blue",
+      "text": "Real builds of the same commit of `main`; files and gzipped bytes are measured, not estimated"
+    },
+    {
+      "color": "aqua",
+      "text": "Stops at 150 s with a 3 to 9 % gap to the bound; a longer run can only gain that much in the model's units"
+    }
+  ]
+}

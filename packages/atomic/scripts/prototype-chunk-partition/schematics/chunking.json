@@ -1,0 +1,23 @@
+{
+  "columns": [
+    {"id": "entry", "title": "Entry files", "subtitle": "`atomic.esm.js` and its chunk table, every page", "color": "blue", "width": 190},
+    {"id": "shared", "title": "Shared modules", "subtitle": "utilities, base classes, the Lit runtime", "color": "orange"},
+    {"id": "components", "title": "Component modules", "subtitle": "one lazy import per tag on the page", "color": "aqua"}
+  ],
+  "rows": [
+    {"id": "before", "title": "Before the ADR", "subtitle": "split-by-module alone"},
+    {"id": "adr", "title": "ADR 0001", "subtitle": "`minChunks: 10`, today's main"},
+    {"id": "solver", "title": "Solver", "subtitle": "prototype, 37 chunks"}
+  ],
+  "boxes": [
+    {"id": "b-entry", "row": "before", "column": "entry", "text": "Two files, 14 KB gzipped: the loader and the table of chunk names."},
+    {"id": "b-shared", "row": "before", "column": "shared", "text": "Every module two or more components share becomes its own file: 109 files under 2 KB on a typical page."},
+    {"id": "b-comp", "row": "before", "column": "components", "text": "Each component chunk holds only that component's private code.", "chip": "typical page: 162 files, 198 KB"},
+    {"id": "a-shared", "row": "adr", "column": "shared", "text": "Modules used by 10 chunks or more move into one `atomic-shared` file, 47.6 KB gzipped, loaded by every page; the others stay one file each."},
+    {"id": "a-comp", "row": "adr", "column": "components", "text": "Component chunks unchanged.", "chip": "typical page: 71 files, 172 KB"},
+    {"id": "s-entry", "row": "solver", "column": "entry", "text": "Unchanged by construction: the enforced groups touch async chunks only."},
+    {"id": "s-shared", "row": "solver", "column": "shared", "text": "Modules reached by the same pages form a group; the solver merges groups into a core every page loads, then chunks shaped by which pages combine what."},
+    {"id": "s-comp", "row": "solver", "column": "components", "text": "Components that always load together share one chunk.", "chip": "typical page: 15 files, 164 KB"}
+  ],
+  "arrows": []
+}
