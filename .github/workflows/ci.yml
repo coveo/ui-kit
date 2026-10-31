@@ -505,11 +505,20 @@ jobs:
       # The shard goes through TEST_SHARD, which only the test task hashes. Turbo hashes
       # `turbo run … -- --shard=N/M` into every task of the run, so each shard would rebuild
       # the upstream packages instead of replaying the Build job's cache.
+      # Playwright cuts the test list by count; the weights resize the slices so every shard runs
+      # about the same test time. Regenerate: node packages/atomic/scripts/e2e-shard-weights.mjs <run-id>
+      - name: Read the shard weights
+        id: weights
+        run: node -e "const w = require('./packages/atomic/e2e-shard-weights.json'); if (w.shardTotal === Number(process.env.SHARD_TOTAL)) console.log('weights=' + w.weights.join(':'));" >> "$GITHUB_OUTPUT"
+        shell: bash
+        env:
+          SHARD_TOTAL: ${{ matrix.shardTotal }}
       - name: Run Playwright tests
         id: playwright
         run: pnpm exec turbo run '@coveo/atomic#e2e'
         env:
           TEST_SHARD: ${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+          PWTEST_SHARD_WEIGHTS: ${{ steps.weights.outputs.weights }}
         continue-on-error: true
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         if: ${{ !cancelled() }}

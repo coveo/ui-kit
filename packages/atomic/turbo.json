@@ -132,7 +132,7 @@
       "dependsOn": ["build", "build:storybook:e2e"],
       "inputs": ["$TURBO_DEFAULT$"],
       "outputs": ["playwright-report/**", "blob-report/**", "test-results/**"],
-      "env": ["TEST_SHARD"]
+      "env": ["TEST_SHARD", "PWTEST_SHARD_WEIGHTS"]
     },
     "e2e:csp": {
       "dependsOn": ["build"],

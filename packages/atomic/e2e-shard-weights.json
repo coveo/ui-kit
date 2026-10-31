@@ -1,0 +1,12 @@
+{
+  "shardTotal": 12,
+  "weights": [35, 49, 50, 68, 49, 64, 48, 17, 10, 55, 59, 35],
+  "source": {
+    "run": "https://github.com/coveo/ui-kit/actions/runs/41118268922",
+    "computedAt": "2026-10-31",
+    "tests": 539,
+    "testSeconds": 882,
+    "longestShardSecondsBefore": 173,
+    "longestShardSecondsAfter": 74
+  }
+}
