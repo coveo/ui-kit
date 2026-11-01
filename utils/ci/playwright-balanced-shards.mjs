@@ -6,6 +6,10 @@
 // goes to the shard with the least work so far, and Playwright's own shard filter is turned off.
 // The durations come from a committed timings file (built by utils/ci/e2e-timings), so every shard
 // of a run computes the same partition from the same commit. Without a shard it does nothing.
+//
+// The approach follows the shard balancing of @flakiness/playwright (MIT,
+// https://github.com/flakiness/playwright) and the draft reporter in microsoft/playwright#17969;
+// the grouping of tests below mirrors Playwright's own createTestGroups.
 import {readFileSync} from 'node:fs';
 import {dirname, resolve} from 'node:path';
 
