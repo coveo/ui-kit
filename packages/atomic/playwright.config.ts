@@ -1,6 +1,13 @@
-import {defineConfig, devices} from '@playwright/test';
+import {defineConfig, devices, type ReporterDescription} from '@playwright/test';
 
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
+
+// With TEST_SHARD set, gives every shard the same amount of measured test time instead of the same
+// number of tests. The durations come from e2e-timings.json (see utils/ci/e2e-timings).
+const balancedShards: ReporterDescription = [
+  '../../utils/ci/playwright-balanced-shards.mjs',
+  {timingsFile: './e2e-timings.json'},
+];
 
 const DEFAULT_STORYBOOK_PORT = 4400;
 const storybookPort = process.env.STORYBOOK_PORT
@@ -33,7 +40,9 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   snapshotPathTemplate: '{testDir}/{testFileDir}/__snapshots__/{arg}{ext}',
   workers: process.env.CI ? 1 : undefined,
-  reporter: process.env.CI ? [['html'], ['list'], ['github'], ['blob']] : [['html'], ['list']],
+  reporter: process.env.CI
+    ? [['html'], ['list'], ['github'], ['blob'], balancedShards]
+    : [['html'], ['list'], balancedShards],
   use: {
     trace: 'retain-on-failure',
     baseURL: isCDN

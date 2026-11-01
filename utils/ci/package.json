@@ -8,7 +8,8 @@
     "add-generated-files": "node ./add-generated-files.mjs",
     "if-not-cdn": "node ./if-not-cdn.mjs",
     "if-cdn": "node ./if-cdn.mjs",
-    "if-ci": "node ./if-ci.mjs"
+    "if-ci": "node ./if-ci.mjs",
+    "test": "node --test"
   },
   "dependencies": {
     "@coveo/semantic-monorepo-tools": "2.7.1",

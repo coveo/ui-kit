@@ -130,9 +130,9 @@
     },
     "e2e": {
       "dependsOn": ["build", "build:storybook:e2e"],
-      "inputs": ["$TURBO_DEFAULT$"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/utils/ci/playwright-balanced-shards.mjs"],
       "outputs": ["playwright-report/**", "blob-report/**", "test-results/**"],
-      "env": ["TEST_SHARD", "PWTEST_SHARD_WEIGHTS"]
+      "env": ["TEST_SHARD"]
     },
     "e2e:csp": {
       "dependsOn": ["build"],

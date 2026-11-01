@@ -1,0 +1,828 @@
+{
+  "version": 1,
+  "source": {
+    "runs": [
+      {
+        "id": 41070810687,
+        "url": "https://github.com/coveo/ui-kit/actions/runs/41070810687",
+        "createdAt": "2026-10-30T14:19:08Z"
+      },
+      {
+        "id": 41070809190,
+        "url": "https://github.com/coveo/ui-kit/actions/runs/41070809190",
+        "createdAt": "2026-10-30T14:19:07Z"
+      },
+      {
+        "id": 41068014441,
+        "url": "https://github.com/coveo/ui-kit/actions/runs/41068014441",
+        "createdAt": "2026-10-30T14:00:25Z"
+      }
+    ],
+    "generatedAt": "2026-11-01"
+  },
+  "durations": {
+    "components/commerce/atomic-commerce-breadbox/e2e/atomic-commerce-breadbox.e2e.ts": {
+      "atomic-commerce-breadbox › should hide the breadcrumb while selecting facets and while viewport does not change": 1642,
+      "atomic-commerce-breadbox › when a category facet value is selected › should contain the selected value and the facet name in the breadcrumb button": 1327,
+      "atomic-commerce-breadbox › when a category facet value is selected › should disappear when clicking on the \"Clear all\" button": 1457,
+      "atomic-commerce-breadbox › when a category facet value is selected › should disappear when clicking on the breadcrumb button": 1550,
+      "atomic-commerce-breadbox › when a category facet value is selected › should display the \"Clear all\" button": 1377,
+      "atomic-commerce-breadbox › when a category facet value is selected › when a nested category facet value is selected › should contain the selected value and the facet name in the breadcrumb button": 1416,
+      "atomic-commerce-breadbox › when a category facet value is selected › when a nested category facet value is selected › should disappear when clicking on the \"Clear all\" button": 1495,
+      "atomic-commerce-breadbox › when a category facet value is selected › when a nested category facet value is selected › should disappear when clicking on the breadcrumb button": 1552,
+      "atomic-commerce-breadbox › when a category facet value is selected › when a nested category facet value is selected › should display the \"Clear all\" button": 1540,
+      "atomic-commerce-breadbox › when a date range facet value is selected › should contain the selected value and the facet name in the breadcrumb button": 1417,
+      "atomic-commerce-breadbox › when a date range facet value is selected › should disappear when clicking on the \"Clear all\" button": 1523,
+      "atomic-commerce-breadbox › when a date range facet value is selected › should disappear when clicking on the breadcrumb button": 1482,
+      "atomic-commerce-breadbox › when a date range facet value is selected › should display the \"Clear all\" button": 1462,
+      "atomic-commerce-breadbox › when a manual numerical facet range is applied › should contain the selected value and the facet name in the breadcrumb button": 1381,
+      "atomic-commerce-breadbox › when a manual numerical facet range is applied › should disappear when clicking on the \"Clear all\" button": 1421,
+      "atomic-commerce-breadbox › when a manual numerical facet range is applied › should disappear when clicking on the breadcrumb button": 1419,
+      "atomic-commerce-breadbox › when a manual numerical facet range is applied › should display the \"Clear all\" button": 1351,
+      "atomic-commerce-breadbox › when a numerical facet value is selected › should contain the selected value and the facet name in the breadcrumb button": 1369,
+      "atomic-commerce-breadbox › when a numerical facet value is selected › should disappear when clicking on the \"Clear all\" button": 1501,
+      "atomic-commerce-breadbox › when a numerical facet value is selected › should disappear when clicking on the breadcrumb button": 1493,
+      "atomic-commerce-breadbox › when a numerical facet value is selected › should display the \"Clear all\" button": 1506,
+      "atomic-commerce-breadbox › when a regular facet value is selected › should contain the selected value and the facet name in the breadcrumb button": 1402,
+      "atomic-commerce-breadbox › when a regular facet value is selected › should disappear when clicking on the \"Clear all\" button": 1493,
+      "atomic-commerce-breadbox › when a regular facet value is selected › should disappear when clicking on the breadcrumb button": 1518,
+      "atomic-commerce-breadbox › when a regular facet value is selected › should display the \"Clear all\" button": 1465,
+      "atomic-commerce-breadbox › when restoring a manual numerical range from URL, should show the corresponding breadcrumb": 1723,
+      "atomic-commerce-breadbox › when restoring the state from URL › should show the breadcrumb for category (nested) facet value": 1807,
+      "atomic-commerce-breadbox › when restoring the state from URL › should show the breadcrumb for category facet value": 1752,
+      "atomic-commerce-breadbox › when restoring the state from URL › should show the breadcrumb for date range facet value": 1769,
+      "atomic-commerce-breadbox › when restoring the state from URL › should show the breadcrumb for numerical range facet value": 1782,
+      "atomic-commerce-breadbox › when restoring the state from URL › should show the breadcrumb for regular facet value": 1842,
+      "atomic-commerce-breadbox › when selecting multiple facet values › should display the \"Clear all\" button": 1840,
+      "atomic-commerce-breadbox › when selecting multiple facet values › should group extra facet values in the \"Show More\" button based on the viewport size": 1938,
+      "atomic-commerce-breadbox › when selecting multiple facet values › when clicking on a breadcrumb button › should hide the breadcrumb button": 1923,
+      "atomic-commerce-breadbox › when selecting multiple facet values › when clicking on a breadcrumb button › should uncheck the facet value": 1930,
+      "atomic-commerce-breadbox › when selecting multiple facet values › when clicking on a breadcrumb button › should update the \"Show More\" button count": 2020,
+      "atomic-commerce-breadbox › when selecting multiple facet values › when clicking on the \"Clear all\" button › should hide all breadcrumb buttons": 1876,
+      "atomic-commerce-breadbox › when selecting multiple facet values › when clicking on the \"Clear all\" button › should hide the \"Clear all\" button": 1919,
+      "atomic-commerce-breadbox › when selecting multiple facet values › when clicking on the \"Show More\" button › should display all facet values": 1967,
+      "atomic-commerce-breadbox › when selecting multiple facet values › when clicking on the \"Show More\" button › should display the \"Show Less\" button": 1909,
+      "atomic-commerce-breadbox › when selecting multiple facet values › when clicking on the \"Show More\" button › should show the \"Show More\" button when clicking on the \"Show Less\" button": 1964
+    },
+    "components/commerce/atomic-commerce-category-facet/e2e/atomic-commerce-category-facet.e2e.ts": {
+      "atomic-commerce-category-facet › allow to clear the search input": 1630,
+      "atomic-commerce-category-facet › allow to search for a value": 1920,
+      "atomic-commerce-category-facet › behave correct when searching for a value that does not exist": 1249,
+      "atomic-commerce-category-facet › should allow to deselect a filter with the all category button": 2086,
+      "atomic-commerce-category-facet › should allow to filter by more than one level deep": 1679,
+      "atomic-commerce-category-facet › should allow to filter by selecting a value": 1554,
+      "atomic-commerce-category-facet › should display the selected value in a pill and allow clearing it": 1565,
+      "atomic-commerce-category-facet › should not allow to interact with the selected value": 1333
+    },
+    "components/commerce/atomic-commerce-did-you-mean/e2e/atomic-commerce-did-you-mean.e2e.ts": {
+      "atomic-commerce-did-you-mean › should display the auto correction message": 1032,
+      "atomic-commerce-did-you-mean › should display the no results message": 1050
+    },
+    "components/commerce/atomic-commerce-facet/e2e/atomic-commerce-facet.e2e.ts": {
+      "atomic-commerce-facet › allow to clear the search input": 1728,
+      "atomic-commerce-facet › allow to search for a value": 1862,
+      "atomic-commerce-facet › behave correct when searching for a value that does not exist": 1203,
+      "atomic-commerce-facet › should allow to deselect a filter with the clear button": 1441,
+      "atomic-commerce-facet › should allow to filter by selecting and deselecting a value": 1490,
+      "atomic-commerce-facet › should allow to filter by selecting multiple values": 1458,
+      "atomic-commerce-facet › should allow to show more values and show less values": 1497
+    },
+    "components/commerce/atomic-commerce-facets/e2e/atomic-commerce-facets.e2e.ts": {
+      "atomic-commerce-facets › should display facets": 1246,
+      "loading state › should display placeholder equal to the collapse facet after property": 1003
+    },
+    "components/commerce/atomic-commerce-interface/e2e/atomic-commerce-interface.e2e.ts": {
+      "atomic-commerce-interface (product-listing mode) › should reflect state in URL when facet selected": 2100,
+      "atomic-commerce-interface (product-listing mode) › should render products": 1370,
+      "atomic-commerce-interface (product-listing mode) › should set language when provided": 1371,
+      "atomic-commerce-interface (search mode) › should reflect state in URL when facet selected": 2694,
+      "atomic-commerce-interface (search mode) › should render products": 1598,
+      "atomic-commerce-interface (search mode) › should set language when provided": 1562
+    },
+    "components/commerce/atomic-commerce-load-more-products/e2e/atomic-commerce-load-more-products.e2e.ts": {
+      "atomic-commerce-load-more-products › should load more products when clicking the load more button": 1454
+    },
+    "components/commerce/atomic-commerce-no-products/e2e/atomic-commerce-no-products.e2e.ts": {
+      "atomic-commerce-no-products › should be present in the page": 1128,
+      "atomic-commerce-no-products › should display no products message": 1112,
+      "atomic-commerce-no-products › should display search tips": 1111,
+      "atomic-commerce-no-products › when the query contains HTML characters › should display the query with HTML characters": 1570
+    },
+    "components/commerce/atomic-commerce-numeric-facet/e2e/atomic-commerce-numeric-facet.e2e.ts": {
+      "atomic-commerce-numeric-facet › should allow to deselect a filter with the clear button": 1431,
+      "atomic-commerce-numeric-facet › should allow to filter by entering a valid minimum and maximum value": 1668,
+      "atomic-commerce-numeric-facet › should allow to select and deselect a range": 1422,
+      "atomic-commerce-numeric-facet › should prevent from filtering by entering an invalid minimum and maximum value": 1673
+    },
+    "components/commerce/atomic-commerce-pager/e2e/atomic-commerce-pager.e2e.ts": {
+      "atomic-commerce-pager › should navigate through pages and update URL": 1577,
+      "atomic-commerce-pager › should render pager with navigation elements": 1048
+    },
+    "components/commerce/atomic-commerce-product-list/e2e/atomic-commerce-product-list.e2e.ts": {
+      "atomic-commerce-product-list › when #display is set to \"grid\" › should render placeholders before the query returns": 1053,
+      "atomic-commerce-product-list › when #display is set to \"grid\" › when the query returns products › should render the products when there is a custom template": 7178,
+      "atomic-commerce-product-list › when #display is set to \"grid\" › when the query returns products › should render the products when there is no custom template": 2760,
+      "atomic-commerce-product-list › when #display is set to \"list\" › should render placeholders before the query returns": 1048,
+      "atomic-commerce-product-list › when #display is set to \"list\" › when the query returns products › should render the products when there is a custom template": 6992,
+      "atomic-commerce-product-list › when #display is set to \"list\" › when the query returns products › should render the products when there is no custom template": 2505,
+      "atomic-commerce-product-list › when #display is set to \"table\" › should render placeholders before the query returns": 1047,
+      "atomic-commerce-product-list › when #display is set to \"table\" › when the query returns products › should render the products": 5530,
+      "atomic-commerce-product-list › when there are no products › should not have any placeholders": 909,
+      "atomic-commerce-product-list › when there are no products › should not have any products": 919
+    },
+    "components/commerce/atomic-commerce-products-per-page/e2e/atomic-commerce-products-per-page.e2e.ts": {
+      "atomic-commerce-products-per-page › should display the correct number of choices": 1088,
+      "atomic-commerce-products-per-page › should select the initial choice": 1051,
+      "atomic-commerce-products-per-page › should update the number of products per page when a choice is selected": 1095
+    },
+    "components/commerce/atomic-commerce-query-error/e2e/atomic-commerce-query-error.e2e.ts": {
+      "atomic-commerce-query-error › should display an error description": 1016,
+      "atomic-commerce-query-error › should display an error title": 934,
+      "atomic-commerce-query-error › should display an icon": 998,
+      "atomic-commerce-query-error › should render a show more info button that displays error information on click": 1075,
+      "atomic-commerce-query-error › should update aria-live message": 1049
+    },
+    "components/commerce/atomic-commerce-query-summary/e2e/atomic-commerce-query-summary.e2e.ts": {
+      "atomic-commerce-query-summary › should display message": 1049
+    },
+    "components/commerce/atomic-commerce-recommendation-interface/e2e/atomic-commerce-recommendation-interface.e2e.ts": {
+      "atomic-commerce-recommendation-interface › should attach itself": 973,
+      "atomic-commerce-recommendation-interface › should render its children": 1098,
+      "atomic-commerce-recommendation-interface › should support language localization through the #language property": 1208,
+      "atomic-commerce-recommendation-interface › should support localization through the #updateLocale method": 1590
+    },
+    "components/commerce/atomic-commerce-recommendation-list/e2e/atomic-commerce-recommendation-list.e2e.ts": {
+      "atomic-commerce-recommendation-list › should have recommendations": 1229,
+      "with a carousel › should support going forward and backward": 1921
+    },
+    "components/commerce/atomic-commerce-refine-modal/e2e/atomic-commerce-refine-modal.e2e.ts": {
+      "atomic-commerce-refine-modal › should be able to close the modal": 1975,
+      "atomic-commerce-refine-modal › should be able to select a facet": 2319,
+      "atomic-commerce-refine-modal › should be able to switch sort": 1661
+    },
+    "components/commerce/atomic-commerce-refine-toggle/e2e/atomic-commerce-refine-toggle.e2e.ts": {
+      "atomic-commerce-refine-toggle › should open the modal when the button is clicked": 1511
+    },
+    "components/commerce/atomic-commerce-search-box-instant-products/e2e/atomic-commerce-search-box-instant-products.e2e.ts": {
+      "atomic-commerce-search-box-instant-products › should be clickable anywhere on the instant product component": 2019,
+      "atomic-commerce-search-box-instant-products › should display instant products": 1285,
+      "atomic-commerce-search-box-instant-products › when clicking on \"See All Products\" › should redirect to the specified url after selecting a suggestion": 2684,
+      "atomic-commerce-search-box-instant-products › with a custom aria label generator › should update the instant product aria label": 0,
+      "atomic-commerce-search-box-instant-products › with density set to comfortable › should apply comfortable density class": 2263,
+      "atomic-commerce-search-box-instant-products › with imageSize set to none › should apply no image class": 2088
+    },
+    "components/commerce/atomic-commerce-search-box-query-suggestions/e2e/atomic-commerce-search-box-query-suggestions.e2e.ts": {
+      "atomic-commerce-search-box-query-suggestions › when clicking a suggestion, it should hide the suggestions": 1474,
+      "atomic-commerce-search-box-query-suggestions › when hovering a suggestion › should change the activeDescendant of the search box": 1368,
+      "atomic-commerce-search-box-query-suggestions › when hovering a suggestion › should not change the query in the search box": 1389,
+      "atomic-commerce-search-box-query-suggestions › when using the keyboard › should change the activeDescendant of the search box": 1386,
+      "atomic-commerce-search-box-query-suggestions › when using the keyboard › should change the query in the search box": 1366,
+      "atomic-commerce-search-box-query-suggestions › when using the keyboard › when pressing enter, it should hide the suggestions": 1384
+    },
+    "components/commerce/atomic-commerce-search-box-recent-queries/e2e/atomic-commerce-search-box-recent-queries.e2e.ts": {
+      "atomic-commerce-search-box-recent-queries › when clicking a recent query, it should hide the suggestions": 1559,
+      "atomic-commerce-search-box-recent-queries › when clicking clear recent queries, it should clear the recent queries": 1199
+    },
+    "components/commerce/atomic-commerce-search-box/e2e/atomic-commerce-search-box.e2e.ts": {
+      "atomic-commerce-search-box › default › after clicking the searchbox input › after clicking the submit button › should collapse the suggested queries": 1544,
+      "atomic-commerce-search-box › default › after clicking the searchbox input › after entering text › should clear search-box when clicking the clear button": 1573,
+      "atomic-commerce-search-box › default › after clicking the searchbox input › after entering text › should display clear button when searchbox has text": 1145,
+      "atomic-commerce-search-box › default › after clicking the searchbox input › after entering text › should hide clear button when clearing input manually": 1464,
+      "atomic-commerce-search-box › default › should have an enabled search button": 1049,
+      "atomic-commerce-search-box › default › when no suggestions are available › should not display suggested queries": 1938,
+      "atomic-commerce-search-box › default › when no suggestions are available › should update aria-live message": 1981,
+      "atomic-commerce-search-box › default › when recent queries are available › should clear recent queries when clicking the clear button": 2056,
+      "atomic-commerce-search-box › default › when recent queries are available › should display recent queries": 2051,
+      "atomic-commerce-search-box › default › when recent queries are available › should update aria-live message": 2057,
+      "atomic-commerce-search-box › default › when suggestions are available › after clicking a suggestion › should collapse the suggested queries": 2002,
+      "atomic-commerce-search-box › default › when suggestions are available › after clicking a suggestion › should update the searchbox input": 2076,
+      "atomic-commerce-search-box › default › when suggestions are available › after focusing a suggestion › after pressing Enter › should collapse the suggested queries": 2040,
+      "atomic-commerce-search-box › default › when suggestions are available › after focusing a suggestion › should update the searchbox input": 2047,
+      "atomic-commerce-search-box › default › when suggestions are available › should display suggested queries": 1993,
+      "atomic-commerce-search-box › default › when suggestions are available › should update aria-live message": 2019,
+      "atomic-commerce-search-box › with disable-search=true and minimum-query-length=1 › after clicking the searchbox input › should not perform requests against the query suggest endpoint": 1244,
+      "atomic-commerce-search-box › with disable-search=true and minimum-query-length=1 › after clicking the searchbox input › the submit button is disabled": 1051,
+      "atomic-commerce-search-box › with disable-search=true and minimum-query-length=1 › after clicking the searchbox input › there are no search suggestions": 1089,
+      "atomic-commerce-search-box › with disable-search=true and minimum-query-length=1 › after typing a query above the threshold › should not perform requests against the query suggest endpoint": 1014,
+      "atomic-commerce-search-box › with disable-search=true and minimum-query-length=1 › after typing a query above the threshold › the submit button is disabled": 1078,
+      "atomic-commerce-search-box › with disable-search=true and minimum-query-length=1 › after typing a query above the threshold › there are no search suggestions": 1085,
+      "atomic-commerce-search-box › with disable-search=true and minimum-query-length=1 › should not perform requests against the query suggest endpoint": 649,
+      "atomic-commerce-search-box › with disable-search=true and minimum-query-length=1 › the submit button is disabled": 1038,
+      "atomic-commerce-search-box › with disable-search=true and minimum-query-length=1 › there are no search suggestions": 915,
+      "atomic-commerce-search-box › with instant products & query suggestions › after clicking the searchbox input › after focusing on suggestion with the mouse › should submit what is in the search box regardless of the mouse position": 1605,
+      "atomic-commerce-search-box › with instant products & query suggestions › after clicking the searchbox input › should display in the search box what has been submitted": 1566,
+      "atomic-commerce-search-box › with instant products & query suggestions › after clicking the searchbox input › should display instant results": 1487,
+      "atomic-commerce-search-box › with instant products & query suggestions › after clicking the searchbox input › should display suggested queries": 1459,
+      "atomic-commerce-search-box › with instant products & query suggestions › when hovering a instant result and pressing Enter › should execute the query in the search box": 1628,
+      "atomic-commerce-search-box › with instant products & query suggestions › with recent queries › should clear recent queries when clicking the clear button": 2273,
+      "atomic-commerce-search-box › with instant products & query suggestions › with recent queries › should clear recent queries when pressing enter while the clear button is focused": 2236,
+      "atomic-commerce-search-box › with instant products & query suggestions › with recent queries › should display recent queries": 2190,
+      "atomic-commerce-search-box › with minimum-query-length=4 › after clicking the searchbox input › the submit button is disabled": 1159,
+      "atomic-commerce-search-box › with minimum-query-length=4 › after clicking the searchbox input › there are no search suggestions": 1118,
+      "atomic-commerce-search-box › with minimum-query-length=4 › after typing a query above the threshold › should perform requests against the query suggest endpoint": 1049,
+      "atomic-commerce-search-box › with minimum-query-length=4 › after typing a query above the threshold › the submit button is enabled": 1125,
+      "atomic-commerce-search-box › with minimum-query-length=4 › after typing a query above the threshold › there are search suggestions": 1256,
+      "atomic-commerce-search-box › with minimum-query-length=4 › after typing a query below the threshold › the submit button is disabled": 1172,
+      "atomic-commerce-search-box › with minimum-query-length=4 › after typing a query below the threshold › there are no search suggestions": 1152,
+      "atomic-commerce-search-box › with minimum-query-length=4 › the submit button is disabled": 1112,
+      "atomic-commerce-search-box › with minimum-query-length=4 › there are no search suggestions": 855
+    },
+    "components/commerce/atomic-commerce-sort-dropdown/e2e/atomic-commerce-sort-dropdown.e2e.ts": {
+      "atomic-commerce-sort-dropdown › when selecting a price sort criterion › should reflect price sortCriteria in the URL": 990,
+      "atomic-commerce-sort-dropdown › when selecting a price sort criterion › should update the select state": 1009,
+      "atomic-commerce-sort-dropdown › when selecting a relevance sort criterion › should not reflect sortCriteria in the URL when the default (relevance) sort is active": 983
+    },
+    "components/commerce/atomic-commerce-text/e2e/atomic-commerce-text.e2e.ts": {
+      "atomic-commerce-text › should show text": 939,
+      "atomic-commerce-text › should translate text": 914,
+      "atomic-commerce-text › should translate text with count": 942
+    },
+    "components/commerce/atomic-commerce-timeframe-facet/e2e/atomic-commerce-timeframe-facet.e2e.ts": {
+      "atomic-commerce-timeframe-facet › should complete the full date picker workflow": 1708,
+      "atomic-commerce-timeframe-facet › should complete the full predefined values workflow": 1272,
+      "atomic-commerce-timeframe-facet › should support keyboard navigation for date picker": 1108
+    },
+    "components/commerce/atomic-product-children/e2e/atomic-product-children.e2e.ts": {
+      "atomic-product-children › should render a label": 1186,
+      "atomic-product-children › should render child products": 1088
+    },
+    "components/commerce/atomic-product-description/e2e/atomic-product-description.e2e.ts": {
+      "atomic-product-description › should render description text and the show more button": 1724
+    },
+    "components/commerce/atomic-product-excerpt/e2e/atomic-product-excerpt.e2e.ts": {
+      "atomic-product-excerpt › should render excerpt text and the show more button": 1724
+    },
+    "components/commerce/atomic-product-field-condition/e2e/atomic-product-field-condition.e2e.ts": {
+      "atomic-product-field-condition › should not render its content when if-not-defined condition is not met": 2429,
+      "atomic-product-field-condition › should render its content when if-defined condition is met": 2504,
+      "atomic-product-field-condition › should render its content when must-match condition is met": 2294
+    },
+    "components/commerce/atomic-product-image/e2e/atomic-product-image.e2e.ts": {
+      "atomic-product-image › as a carousel › should render the first image by default": 1090,
+      "atomic-product-image › as a carousel › when clicking the next button › should navigate to the next image": 1575,
+      "atomic-product-image › as a carousel › when clicking the next button › should not open the product": 1476,
+      "atomic-product-image › default › should render the image": 1097
+    },
+    "components/commerce/atomic-product-link/e2e/atomic-product-link.e2e.ts": {
+      "atomic-product-link › should render as links": 1514,
+      "atomic-product-link › should send ec.productClick event when clicking the link": 1403
+    },
+    "components/commerce/atomic-product-multi-value-text/e2e/atomic-product-multi-value-text.e2e.ts": {
+      "atomic-product-multi-value-text › should render 3 values and 3 separators": 1143,
+      "atomic-product-multi-value-text › should render an indicator that 3 more values are available": 1148
+    },
+    "components/commerce/atomic-product-numeric-field-value/e2e/atomic-product-numeric-field-value.e2e.ts": {
+      "atomic-product-numeric-field-value › should apply custom formatter": 1193,
+      "atomic-product-numeric-field-value › should render the value": 1073
+    },
+    "components/commerce/atomic-product-price/e2e/atomic-product-price.e2e.ts": {
+      "atomic-product-price › when there is a promotional price › should render the original price with a line-through": 1162,
+      "atomic-product-price › when there is a promotional price › should render the promotional price with a text-error": 1136,
+      "atomic-product-price › when there is no promotional price › should render the price": 1115
+    },
+    "components/commerce/atomic-product-rating/e2e/atomic-product-rating.e2e.ts": {
+      "atomic-product-rating › default › should have the right number of yellow icons": 1232,
+      "atomic-product-rating › with a different icon › should have the right number of yellow icons": 1160,
+      "atomic-product-rating › with a max value in index of 10 › should have the right number of yellow icons": 1358,
+      "atomic-product-rating › with a rating details field › should show the rating details next to the rating": 1190
+    },
+    "components/commerce/atomic-product-template/e2e/atomic-product-template.e2e.ts": {
+      "atomic-product-template › should display atomic product components when a child of a product list": 1870,
+      "atomic-product-template › should display atomic-product components when a child of a recommendation list": 1177,
+      "atomic-product-template › should display atomic-product components when a child of a search box instant products": 1712
+    },
+    "components/commerce/atomic-product-text/e2e/atomic-product-text.e2e.ts": {
+      "atomic-product-text › default › when field has no value and default is set › should render default text": 1816,
+      "atomic-product-text › when displaying a field that does not support highlights › should not highlight the keywords in the excerpt": 2262,
+      "atomic-product-text › when displaying a field that does not support highlights › should render the field value": 1094,
+      "atomic-product-text › when using a field that supports highlights › should not highlight the keywords in the ec_name when noHighlight is true": 1143,
+      "atomic-product-text › when using a field that supports highlights › should not highlight the keywords in the excerpt when noHighlight is true": 1191,
+      "atomic-product-text › when using a field that supports highlights › when displaying the ec_name › should highlight the keywords in the ec_name": 1145,
+      "atomic-product-text › when using a field that supports highlights › when displaying the excerpt › should highlight the keywords in the excerpt": 1154
+    },
+    "components/common/atomic-icon/e2e/atomic-icon.e2e.ts": {
+      "atomic-icon › atomic-icon loads assets:// files": 980
+    },
+    "components/insight/atomic-insight-edit-toggle/e2e/atomic-insight-edit-toggle.e2e.ts": {
+      "edit toggle › should display the edit toggle button": 939
+    },
+    "components/insight/atomic-insight-facet/e2e/atomic-insight-facet.e2e.ts": {
+      "atomic-insight-facet › should collapse and hide values when clicking the label button": 1380,
+      "atomic-insight-facet › should display selected value with visual indicator": 1093,
+      "atomic-insight-facet › should render all essential parts": 1099
+    },
+    "components/insight/atomic-insight-folded-result-list/e2e/atomic-insight-folded-result-list.e2e.ts": {
+      "atomic-insight-folded-result-list › should display multiple results": 1106,
+      "atomic-insight-folded-result-list › should render results": 1109,
+      "atomic-insight-folded-result-list › should render the result list container": 1103
+    },
+    "components/insight/atomic-insight-full-search-button/e2e/atomic-insight-full-search-button.e2e.ts": {
+      "atomic-insight-full-search-button › should display the full search button": 930
+    },
+    "components/insight/atomic-insight-generated-answer/e2e/atomic-insight-generated-answer.e2e.ts": {
+      "atomic-insight-generated-answer citation › when hovering on a citation and its popover › should hide popover after mouse leaves citation": 4308,
+      "atomic-insight-generated-answer citation › when hovering on a citation and its popover › should show popover when hovering over citation": 4158,
+      "atomic-insight-generated-answer citation › when hovering on a citation and its popover › should still show the popover when moving from citation to popover": 4335,
+      "atomic-insight-generated-answer citation › with citation anchoring disabled › should not have text fragment when citation anchoring is disabled": 3699,
+      "atomic-insight-generated-answer citation › with citation anchoring enabled › should only append text fragment to HTML citations": 3695,
+      "atomic-insight-generated-answer citation › with citation anchoring enabled › should render citation when available": 3751
+    },
+    "components/insight/atomic-insight-interface/e2e/atomic-insight-interface.e2e.ts": {
+      "Atomic Insight Panel › components basics › parts should load correctly": 2454,
+      "Atomic Insight Panel › refine modal › should open and close": 3203,
+      "Atomic Insight Panel › result actions interactions › attach to case": 2467,
+      "Atomic Insight Panel › result actions interactions › copy to clipboard": 2449,
+      "Atomic Insight Panel › result actions interactions › quickview": 2839,
+      "Atomic Insight Panel › should load correctly": 1266
+    },
+    "components/insight/atomic-insight-no-results/e2e/atomic-insight-no-results.e2e.ts": {
+      "atomic-insight-no-results › should be present in the page": 1022,
+      "atomic-insight-no-results › should display no results message": 1053,
+      "atomic-insight-no-results › should display search tips": 972
+    },
+    "components/insight/atomic-insight-numeric-facet/e2e/atomic-insight-numeric-facet.e2e.ts": {
+      "atomic-insight-numeric-facet › should collapse and hide values when clicking the label button": 1643,
+      "atomic-insight-numeric-facet › should display selected value with clear button": 1085,
+      "atomic-insight-numeric-facet › should render all essential parts": 1191,
+      "atomic-insight-numeric-facet › should render input fields": 1129,
+      "atomic-insight-numeric-facet › should render values as links": 1074
+    },
+    "components/insight/atomic-insight-pager/e2e/atomic-insight-pager.e2e.ts": {
+      "atomic-insight-pager › should disable previous button on first page": 999,
+      "atomic-insight-pager › should display page buttons when there are multiple pages": 1022,
+      "atomic-insight-pager › should navigate through pages": 1157
+    },
+    "components/insight/atomic-insight-query-error/e2e/atomic-insight-query-error.e2e.ts": {
+      "atomic-insight-query-error › should display an icon": 1011,
+      "atomic-insight-query-error › should display the component with the correct content": 1019,
+      "atomic-insight-query-error › should render a show more info button that displays error information on click": 1053
+    },
+    "components/insight/atomic-insight-query-summary/e2e/atomic-insight-query-summary.e2e.ts": {
+      "Atomic Insight Query Summary › should display default message when no query": 981,
+      "Atomic Insight Query Summary › should load correctly": 945
+    },
+    "components/insight/atomic-insight-refine-modal/e2e/atomic-insight-refine-modal.e2e.ts": {
+      "atomic-insight-refine-modal › should close the modal properly after the user closes it": 2444,
+      "atomic-insight-refine-modal › should render the modal properly after the user opens it": 1383
+    },
+    "components/insight/atomic-insight-refine-toggle/e2e/atomic-insight-refine-toggle.e2e.ts": {
+      "atomic-insight-refine-toggle › should open the modal when the button is clicked": 1153,
+      "atomic-insight-refine-toggle › should render the component": 1071
+    },
+    "components/insight/atomic-insight-result-action-bar/e2e/atomic-insight-result-action-bar.e2e.ts": {
+      "atomic-insight-result-action-bar › should become visible when hovering over result": 1565,
+      "atomic-insight-result-action-bar › should render action buttons when populated": 1190
+    },
+    "components/insight/atomic-insight-result-action/e2e/atomic-insight-result-action.e2e.ts": {
+      "atomic-insight-result-action › should render all exposed parts": 1234
+    },
+    "components/insight/atomic-insight-result-attach-to-case-action/e2e/atomic-insight-result-attach-to-case-action.e2e.ts": {
+      "atomic-insight-result-attach-to-case-action › should render the action button": 1189
+    },
+    "components/insight/atomic-insight-result-children-template/e2e/atomic-insight-result-children-template.e2e.ts": {
+      "atomic-insight-result-children-template › should display child results": 1052,
+      "atomic-insight-result-children-template › should display child results when conditions are applied": 1104,
+      "atomic-insight-result-children-template › should display nested grandchild results": 1058
+    },
+    "components/insight/atomic-insight-result-children/e2e/atomic-insight-result-children.e2e.ts": {
+      "atomic-insight-result-children › should render child results when available": 1071
+    },
+    "components/insight/atomic-insight-result-list/e2e/atomic-insight-result-list.e2e.ts": {
+      "atomic-insight-result-list › should display multiple results": 1110,
+      "atomic-insight-result-list › should render results": 1156,
+      "atomic-insight-result-list › should render the result list container": 1143
+    },
+    "components/insight/atomic-insight-result-quickview-action/e2e/atomic-insight-result-quickview-action.e2e.ts": {
+      "atomic-insight-result-quickview-action › should render quickview button": 1203
+    },
+    "components/insight/atomic-insight-result-template/e2e/atomic-insight-result-template.e2e.ts": {
+      "atomic-insight-result-template › should display results when a child of a folded result list": 1134,
+      "atomic-insight-result-template › should display results when a child of a result list": 1126,
+      "atomic-insight-result-template › should display results with conditions applied": 1139
+    },
+    "components/insight/atomic-insight-search-box/e2e/atomic-insight-search-box.e2e.ts": {
+      "atomic-insight-search-box › should render suggestions when focused": 1124,
+      "atomic-insight-search-box › should render the search input": 990,
+      "atomic-insight-search-box › should submit search on Enter": 1113
+    },
+    "components/insight/atomic-insight-smart-snippet-suggestions/e2e/atomic-insight-smart-snippet-suggestions.e2e.ts": {
+      "atomic-insight-smart-snippet-suggestions › should render the component": 1064
+    },
+    "components/insight/atomic-insight-smart-snippet/e2e/atomic-insight-smart-snippet.e2e.ts": {
+      "AtomicInsightSmartSnippet › should render correctly": 1081
+    },
+    "components/insight/atomic-insight-timeframe-facet/e2e/atomic-insight-timeframe-facet.e2e.ts": {
+      "atomic-insight-timeframe-facet › should load and display facet with values": 1084
+    },
+    "components/insight/atomic-insight-user-actions-timeline/e2e/atomic-insight-user-actions-timeline.e2e.ts": {
+      "atomic-insight-user-actions-timeline › should render with the active session": 1049
+    },
+    "components/insight/atomic-insight-user-actions-toggle/e2e/atomic-insight-user-actions-toggle.e2e.ts": {
+      "user actions toggle › should display the user actions toggle button": 986,
+      "user actions toggle › when clicking the user actions toggle › should display the user actions timeline": 1053
+    },
+    "components/ipx/atomic-ipx-button/e2e/atomic-ipx-button.e2e.ts": {
+      "atomic-ipx-button › should open the modal when clicked": 784,
+      "atomic-ipx-button › should render the button": 765
+    },
+    "components/ipx/atomic-ipx-embedded/e2e/atomic-ipx-embedded.e2e.ts": {
+      "atomic-ipx-embedded › should render the backdrop and ipx-body container": 763
+    },
+    "components/ipx/atomic-ipx-modal/e2e/atomic-ipx-modal.e2e.ts": {
+      "atomic-ipx-modal › should display the modal backdrop": 783
+    },
+    "components/ipx/atomic-ipx-recs-list/e2e/atomic-ipx-recs-list.e2e.ts": {
+      "atomic-ipx-recs-list › should render recommendations": 904
+    },
+    "components/ipx/atomic-ipx-refine-modal/e2e/atomic-ipx-refine-modal.e2e.ts": {
+      "atomic-ipx-refine-modal › should hide the modal properly when it is closed": 1841,
+      "atomic-ipx-refine-modal › should show the modal when it is opened": 1134
+    },
+    "components/ipx/atomic-ipx-refine-toggle/e2e/atomic-ipx-refine-toggle.e2e.ts": {
+      "atomic-ipx-refine-toggle › should display facets inside the modal when opened": 1244,
+      "atomic-ipx-refine-toggle › should open refine modal when button is clicked": 1134,
+      "atomic-ipx-refine-toggle › should render with button and icon": 1045
+    },
+    "components/ipx/atomic-ipx-result-link/e2e/atomic-ipx-result-link.e2e.ts": {
+      "atomic-ipx-result-link › should have href attribute set to result clickUri": 888,
+      "atomic-ipx-result-link › should render as links and be clickable": 1041,
+      "atomic-ipx-result-link › should render atomic-result-text when no default slot provided": 872
+    },
+    "components/recommendations/atomic-recs-error/e2e/atomic-recs-error.e2e.ts": {
+      "atomic-recs-error › should display an error description": 795,
+      "atomic-recs-error › should display an icon": 773,
+      "atomic-recs-error › should display the component with the correct content": 779,
+      "atomic-recs-error › should render a show more info button that displays error information on click": 1089
+    },
+    "components/recommendations/atomic-recs-interface/e2e/atomic-recs-interface.e2e.ts": {
+      "atomic-recs-interface › when interface has not been initialized › should return error if request is executed": 852,
+      "atomic-recs-interface › when recommendations are loaded › should display recommendation results": 947,
+      "atomic-recs-interface › when recommendations are loaded › should display result links that are clickable": 934,
+      "atomic-recs-interface › when recommendations are loaded › should display the recs interface": 877,
+      "atomic-recs-interface › when recommendations are loaded › should display the recs list": 914
+    },
+    "components/recommendations/atomic-recs-list/e2e/atomic-recs-list.e2e.ts": {
+      "atomic-recs-list › should render recommendations": 883
+    },
+    "components/recommendations/atomic-recs-result-template/e2e/atomic-recs-result-template.e2e.ts": {
+      "atomic-recs-result-template › when used as a child of a recs list › should display recommendation results": 2067,
+      "atomic-recs-result-template › with link slot › should display recommendation results with custom link behavior": 1701,
+      "atomic-recs-result-template › with minimal template › should display recommendation results with minimal content": 1668
+    },
+    "components/search/atomic-automatic-facet-generator/e2e/atomic-automatic-facet-generator.e2e.ts": {
+      "atomic-automatic-facet-generator › should display facet labels": 848,
+      "atomic-automatic-facet-generator › should render automatic facets after first search": 854,
+      "atomic-automatic-facet-generator › should render multiple automatic facets based on desiredCount": 866
+    },
+    "components/search/atomic-automatic-facet/e2e/atomic-automatic-facet.e2e.ts": {
+      "atomic-automatic-facet › should display facet values": 804,
+      "atomic-automatic-facet › should render the automatic facet with label": 846
+    },
+    "components/search/atomic-breadbox/e2e/atomic-breadbox.e2e.ts": {
+      "atomic-breadbox › should clear all breadcrumbs when Clear All is clicked": 1223,
+      "atomic-breadbox › should display breadcrumb when selecting a facet value": 986,
+      "atomic-breadbox › should remove breadcrumb when clicked": 1160,
+      "atomic-breadbox › should restore breadcrumb from URL state": 1582,
+      "atomic-breadbox › should show Clear All button when breadcrumbs exist": 1041,
+      "atomic-breadbox › should show breadcrumb when facet value is selected": 1037,
+      "atomic-breadbox › should show more/less functionality with viewport changes": 1407
+    },
+    "components/search/atomic-category-facet/e2e/atomic-category-facet.e2e.ts": {
+      "atomic-category-facet › should collapse and hide values when clicking the label button": 1072,
+      "atomic-category-facet › should display child values when selecting a root value": 1061,
+      "atomic-category-facet › should display grandchild values when selecting a child value": 847,
+      "atomic-category-facet › should filter values when typing in search input": 859,
+      "atomic-category-facet › should render all essential parts": 820,
+      "atomic-category-facet › should show more values in deep hierarchy and focus first new value": 1136
+    },
+    "components/search/atomic-color-facet/e2e/atomic-color-facet.e2e.ts": {
+      "atomic-color-facet › should collapse and hide values when clicking the label button": 1644,
+      "atomic-color-facet › should display selected value with visual indicator and clear button": 1117,
+      "atomic-color-facet › should filter values when typing in search input": 1583,
+      "atomic-color-facet › should render all essential parts": 878,
+      "atomic-color-facet › should render checkboxes when display-values-as is checkbox": 1084
+    },
+    "components/search/atomic-did-you-mean/e2e/atomic-did-you-mean.e2e.ts": {
+      "atomic-did-you-mean › with a manual query correction › should show did you mean text": 995,
+      "atomic-did-you-mean › with a manual query correction › should show manual correction button": 1008,
+      "atomic-did-you-mean › with an automatic query correction › should display the auto corrected": 1041,
+      "atomic-did-you-mean › with an automatic query correction › should display the original query": 1003
+    },
+    "components/search/atomic-external/e2e/atomic-external.e2e.ts": {
+      "atomic-external › when modifying state of a component (search box) that is a child of an atomic-external component › should affect state of other components inside the linked atomic-search-interface": 3517,
+      "atomic-external › when modifying state of a component (search box) that is a child of an atomic-external component › should affect state of other components inside the same atomic-external": 3489,
+      "atomic-external › when modifying state of a component (search box) that is a child of an atomic-external component › should not affect state of components under a different atomic-search-interface": 3827
+    },
+    "components/search/atomic-facet-manager/e2e/atomic-facet-manager.e2e.ts": {
+      "atomic-facet-manager › should manage facet visibility": 1191,
+      "atomic-facet-manager › should not collapse facets when collapseFacetsAfter is -1": 1109,
+      "atomic-facet-manager › should render with default collapse behavior": 1160,
+      "atomic-facet-manager › should respect collapseFacetsAfter attribute": 1126,
+      "atomic-facet-manager › when facets are nested inside popovers › should hide the popovers on mobile": 1044,
+      "atomic-facet-manager › when facets are nested inside popovers › should keep every facet inside its popover": 1165,
+      "atomic-facet-manager › when facets are nested inside popovers › should lay the popovers out in a single row on desktop": 1172,
+      "atomic-facet-manager › when facets are nested inside popovers › should never collapse the facets of the popovers": 1559,
+      "atomic-facet-manager › when facets are nested inside popovers › should refresh the popovers when the language changes after they are sorted": 1660,
+      "atomic-facet-manager › when facets are nested inside popovers › should sort the popovers again when the order of the facets changes, keeping the open popover usable": 1650,
+      "atomic-facet-manager › when facets are nested inside popovers › should sort the popovers like the facets of the search response": 1120
+    },
+    "components/search/atomic-facet/e2e/atomic-facet.e2e.ts": {
+      "Sort Criteria › when sort criteria is set to \"alphanumeric\" › should have facet values sorted by alphanumeric": 1146,
+      "Sort Criteria › when sort criteria is set to \"alphanumeric\" › when a custom sort order is set › should have facet values sorted by custom order first, and then by ${criteria}": 2132,
+      "Sort Criteria › when sort criteria is set to \"alphanumericDescending\" › should have facet values sorted by alphanumericDescending": 1191,
+      "Sort Criteria › when sort criteria is set to \"alphanumericDescending\" › when a custom sort order is set › should have facet values sorted by custom order first, and then by ${criteria}": 2100,
+      "Sort Criteria › when sort criteria is set to \"alphanumericNatural\" › should have facet values sorted by alphanumericNatural": 1188,
+      "Sort Criteria › when sort criteria is set to \"alphanumericNatural\" › when a custom sort order is set › should have facet values sorted by custom order first, and then by ${criteria}": 2147,
+      "Sort Criteria › when sort criteria is set to \"alphanumericNaturalDescending\" › should have facet values sorted by alphanumericNaturalDescending": 1158,
+      "Sort Criteria › when sort criteria is set to \"alphanumericNaturalDescending\" › when a custom sort order is set › should have facet values sorted by custom order first, and then by ${criteria}": 2177,
+      "Sort Criteria › when sort criteria is set to \"automatic\" › should have facet values sorted by occurrences when not expanded": 1141,
+      "Sort Criteria › when sort criteria is set to \"automatic\" › when expanded › should have facet values sorted alphanumerically when expanded": 1681,
+      "Sort Criteria › when sort criteria is set to \"occurrences\" › should have facet values sorted by occurrences": 1163,
+      "when selecting the facet search \"More matches for\" button › should display an increasing number of matches": 1900,
+      "when the \"Show more\" button has been selected › should have facet values sorted alphabetically": 1245,
+      "when the \"Show more\" button has been selected › when additional facet values are available › should display the \"Show more\" button": 1300,
+      "when the \"Show more\" button has been selected › when additional facet values are available › should have the configured number of facet values * (1 + the number of times the button was selected)": 1697
+    },
+    "components/search/atomic-field-condition/e2e/atomic-field-condition.e2e.ts": {
+      "atomic-field-condition › should not render its content when if-not-defined condition is not met": 1703,
+      "atomic-field-condition › should render its content when if-defined condition is met": 1758,
+      "atomic-field-condition › should render its content when must-match condition is met": 1717
+    },
+    "components/search/atomic-folded-result-list/e2e/atomic-folded-result-list.e2e.ts": {
+      "atomic-folded-result-list › when more results are NOT available & there are NO result children › should NOT show result children": 886,
+      "atomic-folded-result-list › when more results are NOT available & there are NO result children › should NOT show the \"load all results\" button": 883,
+      "atomic-folded-result-list › when more results are NOT available & there are NO result children › should show a \"no results\" label": 1082,
+      "atomic-folded-result-list › when more results are NOT available & there are result children › should NOT show \"load all results\" button": 855,
+      "atomic-folded-result-list › when more results are NOT available & there are result children › should NOT show a \"no results\" label": 892,
+      "atomic-folded-result-list › when more results are NOT available & there are result children › should show result children": 1105,
+      "atomic-folded-result-list › when more results are available & there are NO result children › should NOT show result children": 746,
+      "atomic-folded-result-list › when more results are available & there are NO result children › should NOT show the \"no results\" label": 809,
+      "atomic-folded-result-list › when more results are available & there are NO result children › should show the \"load all results\" button": 942,
+      "atomic-folded-result-list › when more results are available & there are result children › should NOT show the \"no results\" label": 703,
+      "atomic-folded-result-list › when more results are available & there are result children › should show result children": 960,
+      "atomic-folded-result-list › when more results are available & there are result children › should show the \"Collapse results\" button after loading all results": 1280,
+      "atomic-folded-result-list › when more results are available & there are result children › should show the \"load all results\" button": 936
+    },
+    "components/search/atomic-generated-answer/e2e/atomic-generated-answer.e2e.ts": {
+      "atomic-generated-answer › citations › when hovering on a citation and its popover › should hide popover after mouse leaves citation": 4456,
+      "atomic-generated-answer › citations › when hovering on a citation and its popover › should show popover when hovering over citation": 4566,
+      "atomic-generated-answer › citations › when hovering on a citation and its popover › should still show the popover when moving from citation to popover": 4554,
+      "atomic-generated-answer › citations › with citation anchoring disabled › should not have text fragment when citation anchoring is disabled": 4221,
+      "atomic-generated-answer › citations › with citation anchoring enabled › should only append text fragment to HTML citations": 3938,
+      "atomic-generated-answer › citations › with citation anchoring enabled › should render citation when available": 4627,
+      "atomic-generated-answer › generated answer feedback › when clicking the dislike generated answer button › after submitting feedback › should allow reopening the feedback modal after a new query": 9984,
+      "atomic-generated-answer › generated answer feedback › when clicking the dislike generated answer button › after submitting feedback › should not reopen the feedback modal when clicking like/dislike button again": 5687,
+      "atomic-generated-answer › generated answer feedback › when clicking the dislike generated answer button › should close the modal when clicking the skip button": 5283,
+      "atomic-generated-answer › generated answer feedback › when clicking the dislike generated answer button › should open the feedback modal": 4479,
+      "atomic-generated-answer › generated answer feedback › when clicking the dislike generated answer button › when submitting feedback › when selecting all the required options › should submit the feedback request, log an analytics event and display the success message": 5932,
+      "atomic-generated-answer › generated answer feedback › when clicking the dislike generated answer button › when submitting feedback › when submitting without selecting all the required options › should display a validation error message": 5424,
+      "atomic-generated-answer › generated answer feedback › when clicking the like generated answer button › after submitting feedback › should allow reopening the feedback modal after a new query": 9318,
+      "atomic-generated-answer › generated answer feedback › when clicking the like generated answer button › after submitting feedback › should not reopen the feedback modal when clicking like/dislike button again": 5962,
+      "atomic-generated-answer › generated answer feedback › when clicking the like generated answer button › should close the modal when clicking the skip button": 5629,
+      "atomic-generated-answer › generated answer feedback › when clicking the like generated answer button › should open the feedback modal": 4132,
+      "atomic-generated-answer › generated answer feedback › when clicking the like generated answer button › when submitting feedback › when selecting all the required options › should submit the feedback request, log an analytics event and display the success message": 5438,
+      "atomic-generated-answer › generated answer feedback › when clicking the like generated answer button › when submitting feedback › when submitting without selecting all the required options › should display a validation error message": 5103,
+      "atomic-generated-answer › search agent follow-up error handling › displays generic error message on SSE internal error": 5033,
+      "atomic-generated-answer › search agent follow-up error handling › displays generic error message on network failure": 4828,
+      "atomic-generated-answer › search agent follow-up error handling › displays turn limit error message on SSE turn-limit error": 5326,
+      "atomic-generated-answer › search agent follow-up experience › happy path: head answer, follow-up, and second follow-up": 20930,
+      "atomic-generated-answer › with legacy analytics › should log an analytics event with the legacy analytics mode": 1385
+    },
+    "components/search/atomic-load-more-results/e2e/atomic-load-more-results.e2e.ts": {
+      "atomic-load-more-results › should display a load more button when there are more results": 921
+    },
+    "components/search/atomic-no-results/e2e/atomic-no-results.e2e.ts": {
+      "atomic-no-results › should display no results message with search tips": 962
+    },
+    "components/search/atomic-notifications/e2e/atomic-notifications.e2e.ts": {
+      "atomic-notifications › should render notifications": 879
+    },
+    "components/search/atomic-numeric-facet/e2e/atomic-numeric-facet.e2e.ts": {
+      "atomic-numeric-facet › should collapse and hide values when clicking the label button": 1262,
+      "atomic-numeric-facet › should display selected value with clear button": 902,
+      "atomic-numeric-facet › should render all essential parts": 882,
+      "atomic-numeric-facet › should render input fields": 952,
+      "atomic-numeric-facet › should render values as links": 874,
+      "atomic-numeric-facet › should show facet when dependency is met": 955
+    },
+    "components/search/atomic-pager/e2e/atomic-pager.e2e.ts": {
+      "atomic-pager › should exist in DOM with correct attributes": 888,
+      "atomic-pager › should navigate through pages": 1301
+    },
+    "components/search/atomic-popover/e2e/atomic-popover.e2e.ts": {
+      "atomic-popover › should close popover with Escape key": 1298,
+      "atomic-popover › should open and close popover with button": 1348
+    },
+    "components/search/atomic-query-error/e2e/atomic-query-error.e2e.ts": {
+      "atomic-query-error › should display an error description": 1013,
+      "atomic-query-error › should display an icon": 1005,
+      "atomic-query-error › should display the component with the correct content": 889,
+      "atomic-query-error › should render a show more info button that displays error information on click": 1055
+    },
+    "components/search/atomic-query-summary/e2e/atomic-query-summary.e2e.ts": {
+      "atomic-query-summary › should display message with hidden duration count": 1024
+    },
+    "components/search/atomic-quickview-modal/e2e/atomic-quickview-modal.e2e.ts": {
+      "atomic-quickview-modal › should open modal when quickview button is clicked": 1443
+    },
+    "components/search/atomic-quickview/e2e/atomic-quickview.e2e.ts": {
+      "Quickview › should have clickable button": 1126,
+      "Quickview › should open modal when button is clicked": 1550
+    },
+    "components/search/atomic-rating-facet/e2e/atomic-rating-facet.e2e.ts": {
+      "atomic-rating-facet › should match baseline after selecting a value": 0,
+      "atomic-rating-facet › should match baseline in default state": 0,
+      "atomic-rating-facet › should match baseline with display-as-link": 0,
+      "atomic-rating-facet › should select and clear a rating value": 1724,
+      "atomic-rating-facet › should select and clear rating value when displayed as links": 1708
+    },
+    "components/search/atomic-rating-range-facet/e2e/atomic-rating-range-facet.e2e.ts": {
+      "atomic-rating-range-facet › should collapse and hide values when clicking the label button": 1592,
+      "atomic-rating-range-facet › should display selected value with visual indicator": 1623,
+      "atomic-rating-range-facet › should match baseline after selecting a value": 0,
+      "atomic-rating-range-facet › should match baseline in default state": 0,
+      "atomic-rating-range-facet › should render all essential parts": 1409,
+      "atomic-rating-range-facet › should select and clear a rating value": 1761
+    },
+    "components/search/atomic-refine-modal/e2e/atomic-refine-modal.e2e.ts": {
+      "atomic-refine-modal › should expose the dialog with an accessible name of only the title": 1390,
+      "atomic-refine-modal › should render the modal with title and close button": 1390,
+      "atomic-refine-modal › should render the sort section": 1438,
+      "atomic-refine-modal › should render the view results button with count": 1434
+    },
+    "components/search/atomic-refine-toggle/e2e/atomic-refine-toggle.e2e.ts": {
+      "atomic-refine-toggle › when the button is clicked › should display the facets in the right order": 1970,
+      "atomic-refine-toggle › when the button is clicked › should open the refine modal": 1924
+    },
+    "components/search/atomic-result-badge/e2e/atomic-result-badge.e2e.ts": {
+      "atomic-result-badge › when rendering with a field › should render atomic-result-text with the field": 1187,
+      "atomic-result-badge › when rendering with a field › should render the badge element": 1161,
+      "atomic-result-badge › when rendering with a field › should render the badge label": 1125,
+      "atomic-result-badge › when rendering with a label › should not render atomic-result-text": 1033,
+      "atomic-result-badge › when rendering with a label › should render atomic-text with the label": 1120,
+      "atomic-result-badge › when rendering with a label › should render the badge element": 1086,
+      "atomic-result-badge › when rendering with an icon › should render both icon and label": 1039,
+      "atomic-result-badge › when rendering with an icon › should render the badge icon": 1041
+    },
+    "components/search/atomic-result-children-template/e2e/atomic-result-children-template.e2e.ts": {
+      "atomic-result-children-template › should display child result components when a child of a folded result list": 1313,
+      "atomic-result-children-template › should display folded result list with children templates": 1057,
+      "atomic-result-children-template › should not display error when children template is properly configured": 812
+    },
+    "components/search/atomic-result-children/e2e/atomic-result-children.e2e.ts": {
+      "atomic-result-children › should render when used within a folded result list": 1049
+    },
+    "components/search/atomic-result-date/e2e/atomic-result-date.e2e.ts": {
+      "atomic-result-date › should render the date field with custom format": 1074,
+      "atomic-result-date › should render the date field with default format": 1052
+    },
+    "components/search/atomic-result-fields-list/e2e/atomic-result-fields-list.e2e.ts": {
+      "atomic-result-fields-list › should render all fields with their values": 1091
+    },
+    "components/search/atomic-result-html/e2e/atomic-result-html.e2e.ts": {
+      "atomic-result-html › should render HTML content for title field": 1032
+    },
+    "components/search/atomic-result-icon/e2e/atomic-result-icon.e2e.ts": {
+      "AtomicResultIcon › should load and display an icon": 1051
+    },
+    "components/search/atomic-result-image/e2e/atomic-result-image.e2e.ts": {
+      "atomic-result-image › should render default image": 1729
+    },
+    "components/search/atomic-result-link/e2e/atomic-result-link.e2e.ts": {
+      "atomic-result-link › should have href attribute set to result clickUri": 1101,
+      "atomic-result-link › should render as links and be clickable": 1290,
+      "atomic-result-link › should render atomic-result-text when no default slot provided": 1064
+    },
+    "components/search/atomic-result-list/e2e/atomic-result-list.e2e.ts": {
+      "When using a grid layout › when clicking a result › should navigate": 1414,
+      "When using a list layout › when clicking a result › should not navigate": 1077,
+      "When using a table layout › when clicking a result › should not navigate": 932
+    },
+    "components/search/atomic-result-multi-value-text/e2e/atomic-result-multi-value-text.e2e.ts": {
+      "atomic-result-multi-value-text › default › should render list of values": 899,
+      "atomic-result-multi-value-text › default › should render separators between values": 902,
+      "atomic-result-multi-value-text › with max-values-to-display › should display \"more\" label when truncated": 863,
+      "atomic-result-multi-value-text › with max-values-to-display › should limit number of displayed values": 907
+    },
+    "components/search/atomic-result-number/e2e/atomic-result-number.e2e.ts": {
+      "atomic-result-number › default (no formatter) › should render the numeric value with default formatting": 872,
+      "atomic-result-number › with currency formatting › should render the value with currency formatting": 768,
+      "atomic-result-number › with number formatting › should render the value with decimal places": 797,
+      "atomic-result-number › with unit formatting › should render the value with unit": 831
+    },
+    "components/search/atomic-result-printable-uri/e2e/atomic-result-printable-uri.e2e.ts": {
+      "atomic-result-printable-uri › should render printable URI component": 784
+    },
+    "components/search/atomic-result-rating/e2e/atomic-result-rating.e2e.ts": {
+      "atomic-result-rating › should render the rating correctly": 820
+    },
+    "components/search/atomic-result-template/e2e/atomic-result-template.e2e.ts": {
+      "atomic-result-template › should apply to each result the template whose if-defined or if-not-defined condition it meets": 818,
+      "atomic-result-template › should display atomic result components when a child of a folded result list": 1156,
+      "atomic-result-template › should display atomic result components when a child of a result list": 1296,
+      "atomic-result-template › should display atomic result components when a child of a search box instant results": 1438
+    },
+    "components/search/atomic-result-text/e2e/atomic-result-text.e2e.ts": {
+      "atomic-result-text › when using a field that supports highlights › should highlight keywords in the excerpt": 1305
+    },
+    "components/search/atomic-result-timespan/e2e/atomic-result-timespan.e2e.ts": {
+      "atomic-result-timespan › should display time in HH:mm:ss format": 807
+    },
+    "components/search/atomic-search-box-query-suggestions/e2e/atomic-search-box-query-suggestions.e2e.ts": {
+      "atomic-search-box-query-suggestions › should have basic component structure": 1610
+    },
+    "components/search/atomic-search-box/e2e/atomic-search-box.e2e.ts": {
+      "atomic-search-box › default › after clicking the searchbox input › after clicking the submit button › should collapse the suggested queries": 1070,
+      "atomic-search-box › default › after clicking the searchbox input › should display suggested queries": 964,
+      "atomic-search-box › default › should have an enabled search button": 754,
+      "atomic-search-box › should have position:relative and z-index:10": 692,
+      "atomic-search-box › with disable-search=true and minimum-query-length=1 › after clicking the searchbox input › the submit button is disabled": 711,
+      "atomic-search-box › with disable-search=true and minimum-query-length=1 › after clicking the searchbox input › there are no search suggestions": 743,
+      "atomic-search-box › with disable-search=true and minimum-query-length=1 › after typing a query above the threshold › the submit button is disabled": 743,
+      "atomic-search-box › with disable-search=true and minimum-query-length=1 › after typing a query above the threshold › there are no search suggestions": 778,
+      "atomic-search-box › with disable-search=true and minimum-query-length=1 › the submit button is disabled": 714,
+      "atomic-search-box › with disable-search=true and minimum-query-length=1 › there are no search suggestions": 609,
+      "atomic-search-box › with instant results & query suggestions › after clicking the searchbox input › after focusing on suggestion with the mouse › should submit what is in the search box regardless of the mouse position": 1616,
+      "atomic-search-box › with instant results & query suggestions › after clicking the searchbox input › should display in the search box what has been submitted": 1299,
+      "atomic-search-box › with instant results & query suggestions › after clicking the searchbox input › should display instant results": 1236,
+      "atomic-search-box › with instant results & query suggestions › after clicking the searchbox input › should display suggested queries": 1147,
+      "atomic-search-box › with instant results & query suggestions › when hovering a instant result and pressing Enter › should execute the query in the search box": 1512,
+      "atomic-search-box › with instant results & query suggestions › with recent queries › should clear recent queries when clicking the clear button": 2183,
+      "atomic-search-box › with instant results & query suggestions › with recent queries › should clear recent queries when pressing enter while the clear button is focused": 2224,
+      "atomic-search-box › with instant results & query suggestions › with recent queries › should display recent queries": 1939,
+      "atomic-search-box › with minimum-query-length=4 › after clicking the searchbox input › the submit button is disabled": 879,
+      "atomic-search-box › with minimum-query-length=4 › after clicking the searchbox input › there are no search suggestions": 815,
+      "atomic-search-box › with minimum-query-length=4 › after typing a query above the threshold › the submit button is disabled": 787,
+      "atomic-search-box › with minimum-query-length=4 › after typing a query above the threshold › there are no search suggestions": 1046,
+      "atomic-search-box › with minimum-query-length=4 › after typing a query below the threshold › the submit button is disabled": 737,
+      "atomic-search-box › with minimum-query-length=4 › after typing a query below the threshold › there are no search suggestions": 716,
+      "atomic-search-box › with minimum-query-length=4 › the submit button is disabled": 795,
+      "atomic-search-box › with minimum-query-length=4 › there are no search suggestions": 714
+    },
+    "components/search/atomic-search-interface/e2e/atomic-search-interface.e2e.ts": {
+      "AtomicSearchInterface › when a query is performed automatically › when a language is provided › should set the language of the interface": 1876,
+      "AtomicSearchInterface › when a query is performed automatically › when selecting a facet value › when reflectStateInUrl is true › should update the url": 2402
+    },
+    "components/search/atomic-segmented-facet-scrollable/e2e/atomic-segmented-facet-scrollable.e2e.ts": {
+      "atomic-segmented-facet-scrollable › it loads properly": 704,
+      "atomic-segmented-facet-scrollable › should display fade elements and arrow icons in DOM": 873,
+      "atomic-segmented-facet-scrollable › should display scrollable container and scroll elements": 698,
+      "atomic-segmented-facet-scrollable › should hide both arrows when content is not scrollable": 2453,
+      "atomic-segmented-facet-scrollable › should scroll left when left arrow is clicked": 3194,
+      "atomic-segmented-facet-scrollable › should scroll right when right arrow is clicked": 2832,
+      "atomic-segmented-facet-scrollable › should show left arrow after scrolling right": 2867,
+      "atomic-segmented-facet-scrollable › should show right arrow when content overflows at start position": 2517
+    },
+    "components/search/atomic-segmented-facet/e2e/atomic-segmented-facet.e2e.ts": {
+      "atomic-segmented-facet › displays facet values": 712,
+      "atomic-segmented-facet › displays label when provided": 720,
+      "atomic-segmented-facet › it loads properly": 735
+    },
+    "components/search/atomic-smart-snippet-feedback-modal/e2e/atomic-smart-snippet-feedback-modal.e2e.ts": {
+      "atomic-smart-snippet-feedback-modal › should open the modal when open button is clicked": 712
+    },
+    "components/search/atomic-smart-snippet/e2e/atomic-smart-snippet.e2e.ts": {
+      "AtomicSmartSnippet › should render correctly": 765
+    },
+    "components/search/atomic-sort-dropdown/e2e/atomic-sort-dropdown.e2e.ts": {
+      "default › when selecting a composite field sort criterion › should properly reflect the selected sort criteria into the URL": 739,
+      "default › when selecting a date sort criterion › should properly reflect the selected sort criteria into the URL": 784,
+      "default › when selecting a field sort criterion › should properly reflect the selected sort criteria into the URL": 744,
+      "default › when selecting a relevance sort criterion › should not reflect any sortCriteria in the URL": 757
+    },
+    "components/search/atomic-tab-manager/e2e/atomic-tab-manager.e2e.ts": {
+      "atomic-tab-manager › should display tab buttons for each atomic-tab element": 761,
+      "atomic-tab-manager › should display tabs area": 731
+    },
+    "components/search/atomic-text/e2e/atomic-text.e2e.ts": {
+      "atomic-text › should show text": 703,
+      "atomic-text › should translate text": 781,
+      "atomic-text › should translate text with count": 719
+    },
+    "components/search/atomic-timeframe-facet/e2e/atomic-timeframe-facet.e2e.ts": {
+      "atomic-timeframe-facet › should display date picker when enabled": 792,
+      "atomic-timeframe-facet › should display selected value with visual indicator and clear button": 758,
+      "atomic-timeframe-facet › should render all essential parts": 766,
+      "atomic-timeframe-facet › should show facet when dependency is met": 821,
+      "atomic-timeframe-facet › should toggle collapse and expand when clicking the label button": 852
+    },
+    "storybook-docs/e2e/storybook-docs.e2e.ts": {
+      "Storybook MDX Pages - Component doc pages (AtomicDocTemplate) › should render the \"Atomic Commerce Pager\" doc page with expected sections": 2492,
+      "Storybook MDX Pages - Component doc pages (AtomicDocTemplate) › should render the \"Atomic Insight Pager\" doc page with expected sections": 2371,
+      "Storybook MDX Pages - Component doc pages (AtomicDocTemplate) › should render the \"Atomic Layout Section\" doc page with expected sections": 2315,
+      "Storybook MDX Pages - Component doc pages (AtomicDocTemplate) › should render the \"Atomic Recs List\" doc page with expected sections": 3086,
+      "Storybook MDX Pages - Component doc pages (AtomicDocTemplate) › should render the \"Atomic Search Box\" doc page with expected sections": 2833,
+      "Storybook MDX Pages - Introduction pages › should render the \"Atomic Commerce Components\" introduction page": 1829,
+      "Storybook MDX Pages - Introduction pages › should render the \"Atomic Common Components\" introduction page": 1779,
+      "Storybook MDX Pages - Introduction pages › should render the \"Atomic Insight Components\" introduction page": 1843,
+      "Storybook MDX Pages - Introduction pages › should render the \"Atomic Recommendation Components\" introduction page": 1853,
+      "Storybook MDX Pages - Introduction pages › should render the \"Atomic Search Components\" introduction page": 1789,
+      "Storybook MDX Pages - Introduction pages › should render the \"Welcome to the Coveo Atomic Storybook\" introduction page": 1788
+    },
+    "storybook-manager/e2e/storybook-manager.e2e.ts": {
+      "Storybook Manager - Custom toolbar overrides › should have the expected sb-bar child structure": 1757,
+      "Storybook Manager - Custom toolbar overrides › should have the sb-bar toolbar element": 1214,
+      "Storybook Manager - Custom toolbar overrides › should render the Coveo Docs search box in the toolbar": 1424
+    }
+  }
+}
