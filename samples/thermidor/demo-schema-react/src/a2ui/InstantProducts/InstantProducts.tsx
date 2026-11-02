@@ -19,7 +19,7 @@ export const PRODUCTS_PANEL_MEDIA_QUERY = '(min-width: 640px)';
 export const INSTANT_PRODUCTS_TIMEOUT_MS = 5000;
 
 /** Whether the screen is wide enough for the products panel; small screens show suggestions only. */
-export function useShowProductsPanel(): boolean {
+function useShowProductsPanel(): boolean {
   return useMediaQuery(PRODUCTS_PANEL_MEDIA_QUERY);
 }
 

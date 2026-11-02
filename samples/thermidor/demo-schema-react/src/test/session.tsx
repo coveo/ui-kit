@@ -92,7 +92,7 @@ export const INSTANT_PRODUCTS_ID = 'instant-products';
  * The session shell with `InstantProducts` beside `QuerySuggestions`, announcing
  * `fetchInstantProducts` as concurrent and cached, as the producer does.
  */
-export function instantProductsShellRun(surfaceId = SHELL_SURFACE_ID): object[] {
+function instantProductsShellRun(surfaceId = SHELL_SURFACE_ID): object[] {
   return run(
     [
       {
