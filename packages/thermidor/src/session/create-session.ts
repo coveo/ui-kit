@@ -41,7 +41,13 @@ import {createTurn, foldActivity, foldInitialization, SURFACE_ACTIVITY_KIND} fro
 import {deriveNodeIdentityRegistry} from './in-transit-validation.js';
 import {restoreSession, serializeSession, type SerializedSession} from './serialize.js';
 import {createSessionStore, type SessionStore, type SessionStoreState} from './store.js';
-import {applyInboundOps} from './session-state.js';
+import {
+  EMPTY_UNRECORDED_STATE,
+  applyInboundOps,
+  overlayUnrecordedState,
+  releaseUnrecordedState,
+  type UnrecordedState,
+} from './session-state.js';
 import {isTurnOpeningAction} from './turn-opening.js';
 import {
   INITIALIZATION,
@@ -447,18 +453,29 @@ export function createSession<TContracts extends ContractsSchema>(
     return surfaceView;
   }
 
-  // The state of the live surfaces only, recomputed when the state or the surfaces change.
+  // The state of the live surfaces only, with the unrecorded writes on top, recomputed when the
+  // state, those writes or the surfaces change.
   let liveState: A2uiState = {};
-  let liveStateSource: {state?: A2uiState; view?: SessionSurfaceView} = {};
+  let liveStateSource: {
+    state?: A2uiState;
+    unrecordedState?: UnrecordedState;
+    view?: SessionSurfaceView;
+  } = {};
   function readLiveState(): A2uiState {
-    const {state = {}} = store.getState();
+    const {state = {}, unrecordedState = EMPTY_UNRECORDED_STATE} = store.getState();
     const view = readSurfaceView();
-    if (liveStateSource.state !== state || liveStateSource.view !== view) {
+    if (
+      liveStateSource.state !== state ||
+      liveStateSource.unrecordedState !== unrecordedState ||
+      liveStateSource.view !== view
+    ) {
       const live = new Set(view.surfaces.map((surface) => surface.surfaceId));
       liveState = Object.fromEntries(
-        Object.entries(state).filter(([surfaceId]) => live.has(surfaceId))
+        Object.entries(overlayUnrecordedState(state, unrecordedState)).filter(([surfaceId]) =>
+          live.has(surfaceId)
+        )
       );
-      liveStateSource = {state, view};
+      liveStateSource = {state, unrecordedState, view};
     }
     return liveState;
   }
@@ -560,12 +577,21 @@ export function createSession<TContracts extends ContractsSchema>(
         snapshot.activityType === SURFACE_ACTIVITY_KIND &&
         Array.isArray(messages)
       ) {
+        const activities = sessionActivities(next);
         next.state = applyInboundOps(
           current.state ?? {},
-          sessionActivities(next),
+          activities,
           content as Record<string, unknown>,
           config.contracts
         );
+        if (current.unrecordedState) {
+          next.unrecordedState = releaseUnrecordedState(
+            current.unrecordedState,
+            activities,
+            content as Record<string, unknown>,
+            config.contracts
+          );
+        }
         next.rendererStream = appendToRendererStream(
           current.rendererStream ?? EMPTY_RENDERER_STREAM,
           convertA2uiMessages(messages)

@@ -89,6 +89,133 @@ function* inboundWrites(
   }
 }
 
+/**
+ * The writes of answers applied without being recorded in a run (ADR-020): by surface id, the
+ * validated value at each JSON Pointer, in the order written. In memory only: never serialized.
+ */
+export type UnrecordedState = ReadonlyMap<string, ReadonlyMap<string, unknown>>;
+
+export const EMPTY_UNRECORDED_STATE: UnrecordedState = new Map();
+
+/** An unrecorded answer's `updateDataModel` messages that pass validation, and their writes. */
+export interface UnrecordedWrites {
+  messages: readonly unknown[];
+  writes: readonly {surfaceId: string; path: string; value: unknown}[];
+}
+
+/**
+ * Keeps the messages of an unrecorded answer that only update the data model of a node the
+ * recorded runs hold, and whose value its contract accepts, so the state and the renderer stream
+ * receive the same writes. Any other message, such as a new surface or component, is left out.
+ */
+export function acceptUnrecordedWrites(
+  messages: readonly unknown[],
+  activities: readonly Activity[],
+  contracts: ContractsSchema
+): UnrecordedWrites {
+  const accepted: unknown[] = [];
+  const writes: {surfaceId: string; path: string; value: unknown}[] = [];
+  let registry: ReturnType<typeof deriveNodeIdentityRegistry> | undefined;
+  for (const message of messages) {
+    const [op] = isDataModelUpdate(message) ? readUpdateDataModelOps([message]) : [];
+    if (!op) {
+      continue;
+    }
+    registry ??= deriveNodeIdentityRegistry(activities);
+    const decision = validateInboundOp(op, registry, contracts);
+    if (decision.kind === 'forward') {
+      accepted.push(message);
+      writes.push({surfaceId: op.surfaceId, path: decision.path, value: decision.value});
+    }
+  }
+  return {messages: accepted, writes};
+}
+
+function isDataModelUpdate(message: unknown): boolean {
+  return (
+    isRecord(message) &&
+    'updateDataModel' in message &&
+    !('createSurface' in message || 'updateComponents' in message || 'deleteSurface' in message)
+  );
+}
+
+/** Adds `writes` on top of the layer; a write replaces the layer's values at and under its path. */
+export function applyUnrecordedWrites(
+  layer: UnrecordedState,
+  writes: UnrecordedWrites['writes']
+): UnrecordedState {
+  if (writes.length === 0) {
+    return layer;
+  }
+  const next = new Map(layer);
+  for (const {surfaceId, path, value} of writes) {
+    const surfaceWrites = new Map(
+      [...(next.get(surfaceId) ?? [])].filter(([written]) => !isAtOrUnder(written, path))
+    );
+    surfaceWrites.set(path, value);
+    next.set(surfaceId, surfaceWrites);
+  }
+  return next;
+}
+
+/**
+ * Removes from the layer what a recorded activity's messages replace: the surfaces they end, and
+ * the values at, above or under a path they write.
+ */
+export function releaseUnrecordedState(
+  layer: UnrecordedState,
+  activities: readonly Activity[],
+  content: Record<string, unknown>,
+  contracts: ContractsSchema | undefined
+): UnrecordedState {
+  if (layer.size === 0) {
+    return layer;
+  }
+  let next = layer;
+  for (const write of inboundWrites(activities, content, contracts)) {
+    const surfaceWrites = next.get(write.surfaceId);
+    if (!surfaceWrites) {
+      continue;
+    }
+    const kept =
+      write.kind === 'end'
+        ? []
+        : [...surfaceWrites].filter(
+            ([written]) => !isAtOrUnder(written, write.path) && !isAtOrUnder(write.path, written)
+          );
+    if (kept.length === surfaceWrites.size) {
+      continue;
+    }
+    const released = new Map(next);
+    if (kept.length === 0) {
+      released.delete(write.surfaceId);
+    } else {
+      released.set(write.surfaceId, new Map(kept));
+    }
+    next = released;
+  }
+  return next;
+}
+
+export function overlayUnrecordedState(state: A2uiState, layer: UnrecordedState): A2uiState {
+  if (layer.size === 0) {
+    return state;
+  }
+  let next = state;
+  for (const [surfaceId, writes] of layer) {
+    let surfaceState = isRecord(next[surfaceId]) ? (next[surfaceId] as A2uiState) : {};
+    for (const [path, value] of writes) {
+      surfaceState = setAtPointer(surfaceState, path, value);
+    }
+    next = {...next, [surfaceId]: surfaceState};
+  }
+  return next;
+}
+
+function isAtOrUnder(path: string, ancestor: string): boolean {
+  return path === ancestor || path.startsWith(`${ancestor}/`);
+}
+
 /** The surface a `createSurface` or `deleteSurface` message starts or ends, if it is one. */
 function endedSurfaceId(message: unknown): string | undefined {
   if (!isRecord(message)) {
