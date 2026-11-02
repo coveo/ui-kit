@@ -23,9 +23,7 @@ export const NumericFacet = createReactComponent(
     const startId = useId();
     const endId = useId();
 
-    const dispatch = (action: NumericFacetAction) => {
-      context.dispatchAction(action);
-    };
+    const dispatch = (action: NumericFacetAction) => context.dispatchAction(action);
     const optimisticFacet = useOptimisticNumericFacet(props, dispatch);
 
     const {displayName, domain} = props;

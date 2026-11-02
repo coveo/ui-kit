@@ -151,6 +151,24 @@ describe('Breadbox', () => {
     expect(removeButton(/Price: /)).toBeDefined();
   });
 
+  it('keeps a value removed until the backend has answered the removal', async () => {
+    const answers: Array<() => void> = [];
+    mountBreadbox([BRAND, PRICE], () => new Promise<void>((resolve) => answers.push(resolve)));
+    const billabong = () => screen.queryByRole('button', {name: /Brand: Billabong/});
+
+    await waitFor(() => expect(billabong()).not.toBeNull());
+    fireEvent.click(removeButton(/Brand: Billabong/));
+    await waitFor(() => expect(answers).toHaveLength(1));
+    await waitFor(() => expect(billabong()).toBeNull());
+
+    await act(async () => {
+      answers[0]!();
+      await Promise.resolve();
+    });
+
+    await waitFor(() => expect(billabong()).not.toBeNull());
+  });
+
   it('drops a facet once its last value is removed', async () => {
     mountBreadbox([PRICE, CATEGORY], () => new Promise<void>(() => {}));
 
