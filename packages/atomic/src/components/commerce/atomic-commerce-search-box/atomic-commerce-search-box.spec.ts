@@ -71,6 +71,7 @@ describe('atomic-commerce-search-box', () => {
       minimumQueryLength?: number;
       numberOfQueries?: number;
       clearFilters?: boolean;
+      clearRecentButtonPosition?: 'top' | 'bottom';
     };
     suggestionCount?: number;
     noSuggestions?: boolean;
@@ -110,8 +111,14 @@ describe('atomic-commerce-search-box', () => {
       : html`<fake-atomic-commerce-search-box-suggestions
           suggestion-count=${suggestionCount}
         ></fake-atomic-commerce-search-box-suggestions>`;
-    const {redirectionUrl, disableSearch, minimumQueryLength, numberOfQueries, clearFilters} =
-      searchBoxProps || {};
+    const {
+      redirectionUrl,
+      disableSearch,
+      minimumQueryLength,
+      numberOfQueries,
+      clearFilters,
+      clearRecentButtonPosition,
+    } = searchBoxProps || {};
     const {element} = await renderInAtomicCommerceInterface<AtomicCommerceSearchBox>({
       template: html`<atomic-commerce-search-box
         redirection-url=${ifDefined(redirectionUrl)}
@@ -119,6 +126,7 @@ describe('atomic-commerce-search-box', () => {
         minimum-query-length=${ifDefined(minimumQueryLength)}
         number-of-queries=${ifDefined(numberOfQueries)}
         clear-filters=${ifDefined(clearFilters)}
+        clear-recent-button-position=${ifDefined(clearRecentButtonPosition)}
       >
         ${suggestions} ${additionalChildren}
       </atomic-commerce-search-box>`,
@@ -446,6 +454,196 @@ describe('atomic-commerce-search-box', () => {
         expect(submitMock).toHaveBeenCalledTimes(1);
       });
     });
+  });
+
+  describe('when clear-recent-button-position is bottom', () => {
+    const renderWithClearRecentQueriesButton = async () => {
+      const searchBox = await renderSearchBox({
+        noSuggestions: true,
+        searchBoxProps: {clearRecentButtonPosition: 'bottom'},
+      });
+      await userEvent.click(searchBox.element);
+      await expect
+        .poll(() => searchBox.suggestionsContainer.querySelector('[part~="suggestion"]'))
+        .not.toBeNull();
+
+      return {
+        ...searchBox,
+        clearRecentQueriesButton: () =>
+          searchBox.suggestionsContainer.querySelector<HTMLButtonElement>(
+            'button[part="recent-query-clear-button"]'
+          )!,
+        leftPanel: () =>
+          searchBox.suggestionsContainer.querySelector('[part~="suggestions-left"]')!,
+      };
+    };
+
+    it('should render the clear recent queries button at the bottom of the left panel instead of in the list', async () => {
+      const {suggestions, suggestionsContainer, leftPanel, clearRecentQueriesButton} =
+        await renderWithClearRecentQueriesButton();
+
+      expect(clearRecentQueriesButton()).toHaveTextContent('Clear recent searches');
+      expect(leftPanel().lastElementChild).toContainElement(clearRecentQueriesButton());
+      expect(suggestions()[0].parentElement).not.toContainElement(clearRecentQueriesButton());
+      expect(suggestionsContainer.querySelector('[part~="recent-query-title-item"]')).toBeNull();
+    });
+
+    it('should render the recent searches title above the suggestions, outside of their list', async () => {
+      const {suggestions, leftPanel} = await renderWithClearRecentQueriesButton();
+      const title = leftPanel().firstElementChild as HTMLElement;
+
+      expect(title).toHaveAttribute('part', 'recent-query-title');
+      expect(title).toHaveTextContent('Recent searches');
+      expect(suggestions()[0].parentElement).not.toContainElement(title);
+    });
+
+    it('should clear the recent queries and focus the search box when the button is clicked', async () => {
+      const {element, textArea, clearRecentQueriesButton} =
+        await renderWithClearRecentQueriesButton();
+
+      await userEvent.click(clearRecentQueriesButton());
+
+      expect(buildFakeRecentQueriesList().clear).toHaveBeenCalledOnce();
+      expect(element.shadowRoot!.activeElement).toBe(textArea);
+    });
+
+    it('should keep the suggestions open so that the Tab key reaches the button', async () => {
+      const {element, suggestions, clearRecentQueriesButton} =
+        await renderWithClearRecentQueriesButton();
+      const suggestionCount = suggestions().length;
+
+      await userEvent.keyboard('{Tab}{Tab}');
+
+      expect(element.shadowRoot!.activeElement).toBe(clearRecentQueriesButton());
+      expect(suggestions()).toHaveLength(suggestionCount);
+    });
+
+    it('should clear the suggestions when the Tab key is pressed and there are no recent queries', async () => {
+      const {element, suggestions} = await renderSearchBox({
+        searchBoxProps: {clearRecentButtonPosition: 'bottom'},
+      });
+      await userEvent.click(element);
+      expect(suggestions()).toHaveLength(3);
+
+      await userEvent.keyboard('{Tab}');
+
+      expect(suggestions()).toHaveLength(0);
+    });
+
+    it('should close the suggestions and focus the search box when Escape is pressed on the button', async () => {
+      const {element, textArea, suggestions, clearRecentQueriesButton} =
+        await renderWithClearRecentQueriesButton();
+
+      clearRecentQueriesButton().focus();
+      await userEvent.keyboard('{Escape}');
+
+      expect(element.shadowRoot!.activeElement).toBe(textArea);
+      expect(suggestions()).toHaveLength(0);
+    });
+
+    it('should clip the suggestions to the rounded corners of the popup', async () => {
+      const {suggestionsContainer} = await renderWithClearRecentQueriesButton();
+
+      expect(getComputedStyle(suggestionsContainer).overflow).toBe('hidden');
+    });
+
+    it('should deselect the active suggestion when the button is hovered', async () => {
+      const {suggestionsContainer, clearRecentQueriesButton} =
+        await renderWithClearRecentQueriesButton();
+      await userEvent.hover(suggestionsContainer.querySelector('[part~="suggestion"]')!);
+      expect(suggestionsContainer).not.toHaveAttribute('aria-activedescendant', '');
+
+      await userEvent.hover(clearRecentQueriesButton());
+
+      expect(suggestionsContainer).toHaveAttribute('aria-activedescendant', '');
+    });
+
+    it('should drop the keyboard selection when the button gets the focus', async () => {
+      const {element, suggestionsContainer, clearRecentQueriesButton} =
+        await renderWithClearRecentQueriesButton();
+      await userEvent.keyboard('{ArrowDown}');
+      expect(suggestionsContainer).not.toHaveAttribute('aria-activedescendant', '');
+
+      clearRecentQueriesButton().focus();
+      await element.updateComplete;
+      expect(suggestionsContainer).toHaveAttribute('aria-activedescendant', '');
+
+      await userEvent.keyboard('{Escape}');
+      await userEvent.keyboard('{Enter}');
+      expect(submitMock).toHaveBeenCalledOnce();
+    });
+
+    it.each(['recent-query-title', 'recent-query-clear-button'])(
+      'should not take the focus away from the search box when the mouse is pressed on the %s part',
+      async (part) => {
+        const {suggestionsContainer} = await renderWithClearRecentQueriesButton();
+        const mouseDown = new MouseEvent('mousedown', {bubbles: true, cancelable: true});
+
+        suggestionsContainer.querySelector(`[part="${part}"]`)!.dispatchEvent(mouseDown);
+
+        expect(mouseDown.defaultPrevented).toBe(true);
+      }
+    );
+
+    it('should not render the title and the button when there are no recent queries', async () => {
+      const {element, suggestions, suggestionsContainer} = await renderSearchBox({
+        searchBoxProps: {clearRecentButtonPosition: 'bottom'},
+      });
+      await userEvent.click(element);
+
+      expect(suggestions()).toHaveLength(3);
+      expect(
+        suggestionsContainer.querySelector(
+          '[part="recent-query-title"], [part="recent-query-clear-button"]'
+        )
+      ).toBeNull();
+    });
+
+    it('should not render the title when other suggestions come before the recent queries', async () => {
+      const {element, suggestionsContainer} = await renderSearchBox({
+        searchBoxProps: {clearRecentButtonPosition: 'bottom'},
+        additionalChildren: html`<atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>`,
+      });
+      await userEvent.click(element);
+
+      expect(
+        suggestionsContainer.querySelector('[part="recent-query-clear-button"]')
+      ).not.toBeNull();
+      expect(suggestionsContainer.querySelector('[part="recent-query-title"]')).toBeNull();
+    });
+
+    it('should not render the button when no recent query fits in the suggestions', async () => {
+      const {element, suggestionsContainer} = await renderSearchBox({
+        searchBoxProps: {clearRecentButtonPosition: 'bottom', numberOfQueries: 3},
+        additionalChildren: html`<atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>`,
+      });
+      await userEvent.click(element);
+
+      expect(suggestionsContainer.querySelector('[part="recent-query-clear-button"]')).toBeNull();
+    });
+  });
+
+  it('should render the clear recent queries option in the list by default', async () => {
+    const {element, suggestionsContainer} = await renderSearchBox({
+      noSuggestions: true,
+    });
+
+    await userEvent.click(element);
+
+    await expect
+      .poll(() => suggestionsContainer.querySelector('[part~="recent-query-title-item"]'))
+      .not.toBeNull();
+    expect(suggestionsContainer.querySelector('[part="recent-query-clear-button"]')).toBeNull();
+    expect(getComputedStyle(suggestionsContainer).overflow).toBe('visible');
+  });
+
+  it('should set an error when clear-recent-button-position is invalid', async () => {
+    const {element} = await renderSearchBox();
+
+    element.setAttribute('clear-recent-button-position', 'invalid');
+    await element.updateComplete;
+
+    expect(element.error.message).toContain('value should be one of: top, bottom');
   });
 
   describe('when clicking the clear button', () => {
