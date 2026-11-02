@@ -18,21 +18,15 @@ export interface ActionCache {
   set(key: string, messages: readonly unknown[]): void;
 }
 
+/** The payload's request JSON, with object keys sorted. */
 function stableStringify(value: unknown): string {
-  if (Array.isArray(value)) {
-    return `[${value.map((item) => stableStringify(item ?? null)).join(',')}]`;
-  }
-  if (typeof value === 'object' && value !== null) {
-    const entries = Object.keys(value)
-      .sort()
-      .filter((key) => (value as Record<string, unknown>)[key] !== undefined)
-      .map(
-        (key) =>
-          `${JSON.stringify(key)}:${stableStringify((value as Record<string, unknown>)[key])}`
-      );
-    return `{${entries.join(',')}}`;
-  }
-  return JSON.stringify(value) ?? 'null';
+  return (
+    JSON.stringify(value, (_key, item: unknown) =>
+      typeof item === 'object' && item !== null && !Array.isArray(item)
+        ? Object.fromEntries(Object.entries(item).sort(([a], [b]) => (a < b ? -1 : 1)))
+        : item
+    ) ?? 'null'
+  );
 }
 
 export function actionCacheKey(origin: ActionOrigin, payload: unknown): string {

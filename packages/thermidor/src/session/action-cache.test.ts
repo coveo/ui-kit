@@ -10,6 +10,16 @@ describe('actionCacheKey', () => {
     );
   });
 
+  it('tells apart payloads whose request JSON differs', () => {
+    expect(actionCacheKey(origin, {since: new Date(0)})).not.toBe(
+      actionCacheKey(origin, {since: new Date(1)})
+    );
+    // oxlint-disable-next-line no-sparse-arrays
+    expect(actionCacheKey(origin, {ids: [, 'a']})).not.toBe(actionCacheKey(origin, {ids: ['a']}));
+    // oxlint-disable-next-line no-sparse-arrays
+    expect(actionCacheKey(origin, {ids: [,]})).toBe(actionCacheKey(origin, {ids: [null]}));
+  });
+
   it('tells apart the origin, the action and the payload', () => {
     const key = actionCacheKey(origin, {query: 'boots'});
 
