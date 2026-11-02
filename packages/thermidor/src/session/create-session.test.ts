@@ -221,6 +221,8 @@ const baseConfig: SessionConfig = {
   contracts,
   organizationId: 'org-1',
   accessToken: 'token-1',
+  agentConfigurationId: 'agent-configuration-1',
+  trackingId: 'tracking-1',
   initialize: false,
 };
 
@@ -234,6 +236,40 @@ describe('createSession lifecycle', () => {
 
   afterEach(() => {
     vi.clearAllMocks();
+  });
+
+  describe('request scope', () => {
+    it.each([
+      ['agentConfigurationId', undefined],
+      ['agentConfigurationId', ''],
+      ['agentConfigurationId', '  '],
+      ['trackingId', undefined],
+      ['trackingId', ''],
+      ['trackingId', '  '],
+    ])('throws when %s is %j', (key, value) => {
+      expect(() => createSession({...baseConfig, [key]: value})).toThrow(key);
+    });
+
+    it('sends the agent configuration and tracking id, and no locale, with the request', async () => {
+      const session = createSession(baseConfig);
+
+      const stream = queueStream();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+      await stream.opened;
+
+      const request = callMock.mock.calls[0][0];
+      expect(request).toMatchObject({
+        agentConfigurationId: 'agent-configuration-1',
+        trackingId: 'tracking-1',
+      });
+      expect(request).not.toHaveProperty('language');
+      expect(request).not.toHaveProperty('country');
+      expect(request).not.toHaveProperty('currency');
+
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await turn;
+    });
   });
 
   describe('submitPrompt action', () => {

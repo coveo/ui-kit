@@ -11,7 +11,7 @@
  * before `import.meta.env` exists.
  *
  * Applied as a BUNDLE, and only when `VITE_COVEO_ORGANIZATION_ID` is unset: the
- * tracking id, locale and platform environment all belong to this org, so
+ * agent configuration id, tracking id and platform environment all belong to this org, so
  * mixing them with a different organization would produce a subtly broken
  * configuration. Setting an organization therefore opts out of every default
  * here, preserving the previous behaviour for anyone with a `.env.local`.
@@ -19,10 +19,8 @@
 export const PUBLIC_SAMPLE_CONFIGURATION = {
   VITE_COVEO_ORGANIZATION_ID: 'searchuisamples',
   VITE_COVEO_ACCESS_TOKEN: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+  VITE_COVEO_AGENT_CONFIGURATION_ID: '45f853eb-5713-4392-bcd8-9b05ba8e38a5',
   VITE_COVEO_TRACKING_ID: 'sports-ui-samples',
-  VITE_COVEO_LANGUAGE: 'en',
-  VITE_COVEO_COUNTRY: 'US',
-  VITE_COVEO_CURRENCY: 'USD',
   // `searchuisamples` is a production organization; it has no `dev` counterpart.
   VITE_COVEO_PLATFORM_ENVIRONMENT: 'prod',
 } as const;
