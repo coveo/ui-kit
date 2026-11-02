@@ -5,7 +5,8 @@ import type {
   NumericFacetProps,
   CategoryFacetProps,
 } from '@coveo/thermidor-schema/zod3';
-import {mountSurface} from './mount-surface.harness.js';
+import {mountSurface, type MountSurfaceConfig} from './mount-surface.harness.js';
+import {FacetSearchOffered} from './facet-search-offered.js';
 
 /**
  * The facet components are `createReactComponent` implementations driven by the generic binder,
@@ -41,10 +42,15 @@ describe('RegularFacet', () => {
     facetSearch: {path: '/state/root/facetSearch'},
   };
 
-  function mountFacet(state: RegularFacetProps, dispatchGate?: () => Promise<void> | void) {
+  function mountFacet(
+    state: RegularFacetProps,
+    dispatchGate?: () => Promise<void> | void,
+    wrapper?: MountSurfaceConfig['wrapper']
+  ) {
     return mountSurface({
       component: {component: 'RegularFacet', ...BINDINGS},
       dispatchGate,
+      wrapper,
       dataModel: (Object.keys(state) as Array<keyof RegularFacetProps>).map((key) => ({
         path: `/state/root/${key}`,
         value: state[key],
@@ -146,6 +152,15 @@ describe('RegularFacet', () => {
     const checkboxes = screen.getAllByRole('checkbox') as HTMLInputElement[];
     expect(checkboxes[0].getAttribute('data-testid')).toBe('facet-value-Cressi');
     expect(checkboxes[0].checked).toBe(true);
+  });
+
+  it('draws no search field where facet search is not offered', async () => {
+    mountFacet(stateWithValues, undefined, ({children}) => (
+      <FacetSearchOffered value={false}>{children}</FacetSearchOffered>
+    ));
+
+    await waitFor(() => expect(screen.getByTestId('facet-value-Billabong')).toBeDefined());
+    expect(screen.queryByRole('textbox', {name: 'Search Brand'})).toBeNull();
   });
 
   it('keeps the input responsive and dispatches one search once typing pauses', async () => {

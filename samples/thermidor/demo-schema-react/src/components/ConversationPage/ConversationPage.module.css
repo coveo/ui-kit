@@ -53,6 +53,12 @@
   outline-offset: 2px;
 }
 
+.body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
 .scrollContainer {
   flex: 1;
   min-height: 0;
@@ -68,6 +74,12 @@
 .promptBar {
   padding: var(--space-3) var(--space-6) var(--space-4);
   border-top: 1px solid var(--color-border);
+}
+
+@media (max-width: 899px) {
+  .body {
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 639px) {

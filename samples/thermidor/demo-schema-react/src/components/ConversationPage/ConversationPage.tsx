@@ -2,8 +2,10 @@ import type {Turn} from '@coveo/thermidor';
 import {useRef} from 'react';
 import {useAutoScroll} from '../../hooks/use-auto-scroll.js';
 import {PromptInput} from '../PromptInput/PromptInput.js';
+import type {ScopingSurface} from '../../a2ui/surface-stream.js';
 import {ConversationThread} from './ConversationThread.js';
-import type {FollowUp} from './turn-segments.js';
+import {ScopingPanel} from './ScopingPanel.js';
+import {isLatestTurn, type FollowUp} from './turn-segments.js';
 import styles from './ConversationPage.module.css';
 
 interface ConversationPageProps {
@@ -22,11 +24,13 @@ interface ConversationPageProps {
   onNewConversation?: () => void;
   /** The conversation is only shown: it can't be continued. */
   readOnly?: boolean;
+  /** The latest Scoping block, shown for the whole thread. */
+  scoping?: ScopingSurface;
 }
 
 /**
  * The single page of the demo: every turn, search or conversation, in one feed, with the prompt
- * pinned below it.
+ * pinned below it, and the Selection that scopes the questions, when there is one, beside them.
  */
 export function ConversationPage({
   onSubmit,
@@ -38,6 +42,7 @@ export function ConversationPage({
   pendingTurnId,
   onNewConversation,
   readOnly = false,
+  scoping,
 }: ConversationPageProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const turnRefs = useRef<Map<string, HTMLDivElement>>(new Map());
@@ -62,23 +67,32 @@ export function ConversationPage({
           <div className={`${styles.row} ${styles.toolbar}`}>{newConversation}</div>
         )
       )}
-      <div
-        className={styles.scrollContainer}
-        ref={containerRef}
-        aria-busy={isStreaming}
-        role="log"
-        aria-label="Conversation history"
-      >
-        <div className={styles.scrollContent}>
-          <ConversationThread
-            turns={turns}
-            turnRefs={turnRefs}
-            surfacesByTurn={surfacesByTurn}
-            followUps={followUps}
-            pendingTurnId={pendingTurnId}
-            onAskFollowUp={promptDisabled || readOnly ? undefined : onSubmit}
-            readOnly={readOnly}
+      <div className={styles.body}>
+        {scoping && (
+          <ScopingPanel
+            scoping={scoping}
+            interactive={!readOnly && isLatestTurn(turns, scoping.turnId)}
+            isStreaming={isStreaming}
           />
+        )}
+        <div
+          className={styles.scrollContainer}
+          ref={containerRef}
+          aria-busy={isStreaming}
+          role="log"
+          aria-label="Conversation history"
+        >
+          <div className={styles.scrollContent}>
+            <ConversationThread
+              turns={turns}
+              turnRefs={turnRefs}
+              surfacesByTurn={surfacesByTurn}
+              followUps={followUps}
+              pendingTurnId={pendingTurnId}
+              onAskFollowUp={promptDisabled || readOnly ? undefined : onSubmit}
+              readOnly={readOnly}
+            />
+          </div>
         </div>
       </div>
       {!readOnly && (

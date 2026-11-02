@@ -23,6 +23,11 @@ export interface TurnSegment {
   surfaceIds: readonly string[];
 }
 
+/** Whether the turn is the latest one: the only turn whose blocks take actions. */
+export function isLatestTurn(turns: readonly Turn[], turnId: string): boolean {
+  return turns.at(-1)?.id === turnId;
+}
+
 export function startFollowUp(
   turn: Turn,
   surfaceIds: readonly string[],
