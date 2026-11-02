@@ -1,5 +1,31 @@
 # @coveo/thermidor
 
+## 0.7.0
+
+### Minor Changes
+
+- [#8786](https://github.com/coveo/ui-kit/pull/8786) [`f360141`](https://github.com/coveo/ui-kit/commit/f3601417521f733a224225dd0b23e268f4293e06) - Name the configured agent that answers the session.
+
+  - `SessionConfig` takes `agentConfigurationId`, sent with every request, next to `trackingId`. Both are required, and `createSession` throws when either is missing or blank.
+  - The locale comes from the configured agent: `SessionConfig` no longer takes `language`, `country` or `currency`, and requests no longer send them.
+
+  **Breaking:** `agentConfigurationId` and `trackingId` are now required in `SessionConfig`, and `language`, `country` and `currency` are removed from it.
+
+- [#8773](https://github.com/coveo/ui-kit/pull/8773) [`8cc736d`](https://github.com/coveo/ui-kit/commit/8cc736d96857e7b6300fdd15f6576605dfddc417) - **Breaking:** `session.sendAndWait(send)` is removed. Await the `dispatchAction` promise instead: it resolves once the dispatch's own request ends, at once for a dispatch withheld while another request is in flight. A renderer that returns its `onAction` promise hands it back to the component that dispatched, so the component can end an optimistic update when it resolves.
+
+- [#8756](https://github.com/coveo/ui-kit/pull/8756) [`6e70f6f`](https://github.com/coveo/ui-kit/commit/6e70f6f493d76d9a696b4e5290e6220eedda450d) - Open the session with an `initialize` action, so the producer can answer with the session's shell, such as its search box, before the first prompt.
+
+  - `createSession` sends `initialize` a microtask after it returns, through the one-request rule and the conflict retry, and adopts the session keys from its run. While it is in flight, `session.request` is `{kind: 'initialize'}` (`InitializeRequest`). A restored session never sends it, and neither does one created with `initialize: false`.
+  - Its run is recorded as `session.initialization` (`SessionInitialization`: `activities`, `status`, `error`), never as a turn, and `SessionSnapshot` carries it. A failed `initialize` is recorded there and not retried; the first prompt still opens the session. `cancel()` stops it.
+  - The initialization's activities come first in the session's activity log, so the surfaces it creates are listed in `session.surfaces`, accept actions, and can announce turn-opening actions.
+  - Only `initialize` changes the initialization's status. An action before the first turn records its surface snapshots with `session.initialization` and reports its failure in `session.actionError`, as any action that opens no turn does; its `session.request` has no `turnId`. A turn-opening action opens the first turn.
+
+  **Breaking:** a session sends `initialize` by default; pass `initialize: false` to opt out. `SERIALIZED_SESSION_VERSION` is now 4, since a persisted session carries its `initialization` (`SerializedInitialization`; one persisted mid-stream restores as `error`); an earlier session is refused on restore.
+
+### Patch Changes
+
+- [#8779](https://github.com/coveo/ui-kit/pull/8779) [`a393e7e`](https://github.com/coveo/ui-kit/commit/a393e7e353552c38f9ec83f968a4ac89f5e07f57) - Action requests no longer send the unused A2-UI `actionId` and `wantResponse` fields.
+
 ## 0.6.0
 
 ### Minor Changes
