@@ -109,11 +109,8 @@ describe('releaseUnrecordedState', () => {
     return releaseUnrecordedState(before, activities, {messages}, contracts);
   }
 
-  it('drops the values at, above or under a path a recorded write sets', () => {
+  it('drops the values at or under a path a recorded write sets', () => {
     expect(release([update('/state/products', boots)])).toEqual(
-      layer({shell: {'/state/root': {}}})
-    );
-    expect(release([update('/state/products/query', 'jackets')])).toEqual(
       layer({shell: {'/state/root': {}}})
     );
     expect(
@@ -124,6 +121,22 @@ describe('releaseUnrecordedState', () => {
         contracts
       )
     ).toEqual(new Map());
+  });
+
+  it('writes a recorded write under a value into that value, keeping its other fields', () => {
+    expect(release([update('/state/products/query', 'jackets')])).toEqual(
+      layer({shell: {'/state/products': {...boots, query: 'jackets'}, '/state/root': {}}})
+    );
+  });
+
+  it('shows the state the renderer reaches by applying the writes in order', () => {
+    const recorded = {shell: {state: {root: {}, products: {query: 'jackets', products: []}}}};
+
+    const released = release([update('/state/products/query', 'jackets')]);
+
+    expect(overlayUnrecordedState(recorded, released)).toEqual({
+      shell: {state: {root: {}, products: {query: 'jackets', products: ['boots 1']}}},
+    });
   });
 
   it('drops the surfaces a recorded activity creates or deletes', () => {

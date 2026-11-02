@@ -159,8 +159,9 @@ export function applyUnrecordedWrites(
 }
 
 /**
- * Removes from the layer what a recorded activity's messages replace: the surfaces they end, and
- * the values at, above or under a path they write.
+ * Updates the layer for a recorded activity's messages, so that it reads as the renderer applies
+ * them in order: the surfaces they end are dropped, values at or under a path they write are
+ * dropped, and a value above that path takes the recorded write.
  */
 export function releaseUnrecordedState(
   layer: UnrecordedState,
@@ -179,22 +180,41 @@ export function releaseUnrecordedState(
     }
     const kept =
       write.kind === 'end'
-        ? []
-        : [...surfaceWrites].filter(
-            ([written]) => !isAtOrUnder(written, write.path) && !isAtOrUnder(write.path, written)
-          );
-    if (kept.length === surfaceWrites.size) {
+        ? new Map<string, unknown>()
+        : rebaseUnrecordedWrites(surfaceWrites, write.path, write.value);
+    if (kept === surfaceWrites) {
       continue;
     }
     const released = new Map(next);
-    if (kept.length === 0) {
+    if (kept.size === 0) {
       released.delete(write.surfaceId);
     } else {
-      released.set(write.surfaceId, new Map(kept));
+      released.set(write.surfaceId, kept);
     }
     next = released;
   }
   return next;
+}
+
+function rebaseUnrecordedWrites(
+  writes: ReadonlyMap<string, unknown>,
+  path: string,
+  value: unknown
+): ReadonlyMap<string, unknown> {
+  let changed = false;
+  const kept = new Map<string, unknown>();
+  for (const [written, writtenValue] of writes) {
+    if (isAtOrUnder(written, path)) {
+      changed = true;
+    } else if (isAtOrUnder(path, written)) {
+      changed = true;
+      const parent = isRecord(writtenValue) ? (writtenValue as A2uiState) : {};
+      kept.set(written, setAtPointer(parent, path.slice(written.length), value));
+    } else {
+      kept.set(written, writtenValue);
+    }
+  }
+  return changed ? kept : writes;
 }
 
 export function overlayUnrecordedState(state: A2uiState, layer: UnrecordedState): A2uiState {
