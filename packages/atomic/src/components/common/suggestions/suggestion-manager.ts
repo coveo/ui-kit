@@ -172,6 +172,7 @@ export class SuggestionManager<SearchBoxController> {
   public clearSuggestions() {
     this.clearSuggestionElements();
     this.updateActiveDescendant();
+    this.updateKeyboardActiveDescendant();
   }
 
   public async focusNextValue() {
