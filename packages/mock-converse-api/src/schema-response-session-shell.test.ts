@@ -136,8 +136,7 @@ describe('initialize', () => {
     const shellId = (surfaceMessages([snapshot])[0].createSurface as {surfaceId: string}).surfaceId;
 
     expect(snapshot.data.metadata).toEqual({
-      concurrentActions: {[shellId]: ['fetchInstantProducts']},
-      cachedActions: {[shellId]: {fetchInstantProducts: {ttlMs: 60000}}},
+      concurrentActions: {[shellId]: {fetchInstantProducts: {cache: {ttlMs: 60000}}}},
     });
   });
 

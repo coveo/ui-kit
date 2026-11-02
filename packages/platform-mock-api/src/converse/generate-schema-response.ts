@@ -148,9 +148,10 @@ function withTurnOpeningAnnouncements(events: ConverseEvent[]): ConverseEvent[] 
 }
 
 // Agent Gateway answers these beside the turn (Thermidor ADR-022): they take no turn slot and save
-// nothing, so it announces them as concurrent, and cached for the given lifetime, on the shell.
-const SHELL_CONCURRENT_ACTIONS = ['fetchInstantProducts'];
-const SHELL_CACHED_ACTIONS = {fetchInstantProducts: {ttlMs: 60_000}};
+// nothing, so it announces them as concurrent on the shell, with how long their answers are cached.
+const SHELL_CONCURRENT_ACTIONS: Record<string, {cache?: {ttlMs: number}}> = {
+  fetchInstantProducts: {cache: {ttlMs: 60_000}},
+};
 
 function withShellAnnouncements(events: ConverseEvent[], shellSurfaceId: string): ConverseEvent[] {
   return events.map((event) =>
@@ -161,7 +162,6 @@ function withShellAnnouncements(events: ConverseEvent[], shellSurfaceId: string)
             ...event.data,
             metadata: {
               concurrentActions: {[shellSurfaceId]: SHELL_CONCURRENT_ACTIONS},
-              cachedActions: {[shellSurfaceId]: SHELL_CACHED_ACTIONS},
             },
           },
         }
@@ -170,7 +170,7 @@ function withShellAnnouncements(events: ConverseEvent[], shellSurfaceId: string)
 }
 
 function isConcurrentAction(action: SchemaAction): boolean {
-  return SHELL_CONCURRENT_ACTIONS.includes(action.name);
+  return Object.hasOwn(SHELL_CONCURRENT_ACTIONS, action.name);
 }
 
 // The shell each session's initialize created, by session id.
