@@ -1,0 +1,150 @@
+/* The use-case player: a bar above the storefront's header, not part of the storefront. */
+.player {
+  display: grid;
+  gap: 6px;
+  padding: 8px var(--space-5);
+  background: #1e1b4b;
+  color: #e0e7ff;
+  font-size: var(--font-size-sm);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.label {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: var(--font-size-xs);
+  color: #a5b4fc;
+}
+
+.select,
+.button,
+.play {
+  font: inherit;
+  padding: 4px 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid #4338ca;
+  background: #312e81;
+  color: inherit;
+  cursor: pointer;
+}
+
+.play {
+  background: #f59e0b;
+  border-color: #f59e0b;
+  color: #1e1b4b;
+  font-weight: 700;
+}
+
+.select:disabled,
+.button:disabled,
+.play:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.status {
+  margin-left: auto;
+  color: #c7d2fe;
+}
+
+.badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ready {
+  background: #bbf7d0;
+  color: #14532d;
+}
+
+.partly {
+  background: #fde68a;
+  color: #78350f;
+}
+
+.mocked {
+  background: #bfdbfe;
+  color: #1e3a8a;
+}
+
+.notReady {
+  background: #fecaca;
+  color: #7f1d1d;
+}
+
+.steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid #4338ca;
+  color: #a5b4fc;
+  font-size: var(--font-size-xs);
+}
+
+.stepDone {
+  color: #e0e7ff;
+  background: #3730a3;
+}
+
+.stepCurrent {
+  color: #1e1b4b;
+  background: #fcd34d;
+  border-color: #fcd34d;
+  font-weight: 700;
+}
+
+.stepError {
+  background: #fca5a5;
+  border-color: #fca5a5;
+}
+
+.details {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  font-size: var(--font-size-xs);
+  color: #c7d2fe;
+}
+
+.details dt {
+  font-weight: 700;
+  color: #a5b4fc;
+}
+
+.details dd {
+  margin: 0 0 4px;
+}
+
+.checks {
+  margin: 0;
+  padding-left: 1.2em;
+}
+
+.details a {
+  color: inherit;
+}
+
+/* The control a step is about to use. */
+.target {
+  outline: 3px solid #f59e0b !important;
+  outline-offset: 2px;
+  transition: outline-color 0.2s;
+}

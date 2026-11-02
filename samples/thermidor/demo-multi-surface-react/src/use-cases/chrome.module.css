@@ -1,0 +1,6 @@
+/* The use-case player and the header stay at the top together. */
+.chrome {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}

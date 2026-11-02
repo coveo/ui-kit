@@ -31,6 +31,8 @@ import {
   type StorefrontView,
 } from './session/storefront-session.js';
 import {ASSISTANT_VIEW, drawsSearch, shopperText} from './views/view-surfaces.js';
+import {UseCasePlayer} from './use-cases/UseCasePlayer.js';
+import chrome from './use-cases/chrome.module.css';
 
 const catalog = createStorefrontCatalog();
 
@@ -184,14 +186,17 @@ export function StorefrontApp() {
     <A2UIProvider catalog={catalog} onAction={handleAction}>
       <ProductCardActionsContext.Provider value={renderCardActions}>
         <ThermidorA2UIStream messages={a2uiMessages}>
-          <TopBar
-            currentListing={visit.page === 'listing' ? visit.slug : undefined}
-            onHome={() => navigate(visitHome())}
-            onListing={(slug) => navigate(visitListing(slug))}
-            // A search from the conversation's pages keeps the conversation in its panel.
-            onSearch={(query) => navigate(visitPrompt(query, undefined, threadOf(visit)))}
-            searchDisabled={request !== undefined}
-          />
+          <div className={chrome.chrome}>
+            <UseCasePlayer />
+            <TopBar
+              currentListing={visit.page === 'listing' ? visit.slug : undefined}
+              onHome={() => navigate(visitHome())}
+              onListing={(slug) => navigate(visitListing(slug))}
+              // A search from the conversation's pages keeps the conversation in its panel.
+              onSearch={(query) => navigate(visitPrompt(query, undefined, threadOf(visit)))}
+              searchDisabled={request !== undefined}
+            />
+          </div>
           <Page
             visit={visit}
             conversationVisits={visitsOfThread(visitThreads.current, threadOf(visit))}

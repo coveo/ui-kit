@@ -56,6 +56,15 @@ Try it:
 7. Open **One session** at the bottom: every turn, the view that sent it, and the surfaces it
    created that are still alive.
 
+### The use-case player
+
+The bar above the header replays the product's multi-surface use cases (UC-04 to UC-34 of the
+use-case sheet, in its words) through the page's own controls, on a fresh session: pick one and
+press **Play**, or **Step through** it. Each use case shows what the shopper should see, what its
+steps check, and its status on the mock: _Ready_, _Partly working_, _Mocked_ or _Not ready_, with
+what is missing. **Edge checks** are the rules between surfaces that no use case names on its own.
+The scenarios are in `src/use-cases/use-cases.ts`.
+
 ## Pull-request previews
 
 This sample is published as a [pkg.pr.new](https://pkg.pr.new) StackBlitz template next to
@@ -215,6 +224,7 @@ src/
 ├── a2ui/
 │   ├── catalog.ts              The renderers for the Storefront components
 │   └── AddToCartButton/        The button added to every product card
+├── use-cases/                  The use-case player and its scenarios
 ├── components/                 Top bar, search box, listing menu, cart, chat panel, inspector
 └── pages/                      Home, prompt (assistant or search layout) and listing pages
 ```
