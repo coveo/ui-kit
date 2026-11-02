@@ -1,5 +1,13 @@
 # @coveo/ui-kit-sample-atomic-commerce-react
 
+## 3.11.50
+
+### Patch Changes
+
+- Updated dependencies [[`8a12041`](https://github.com/coveo/ui-kit/commit/8a12041619d0ebbabfc9f017a7e959291d5911a1)]:
+  - @coveo/headless@3.58.1
+  - @coveo/atomic-react@3.11.50
+
 ## 3.11.49
 
 ### Patch Changes
