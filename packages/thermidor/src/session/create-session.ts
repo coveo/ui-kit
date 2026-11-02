@@ -860,8 +860,6 @@ export function createSession<TContracts extends ContractsSchema>(
           buildActionRequest({
             name: 'initialize',
             timestamp: new Date().toISOString(),
-            actionId: null,
-            wantResponse: false,
             context: {},
           }),
         abortController
@@ -904,8 +902,8 @@ export function createSession<TContracts extends ContractsSchema>(
   }
 
   /**
-   * Private validate-and-send path. Validates the recovered action's payload against the
-   * component's generated Zod action schema and withholds on failure; targets the action's own
+   * Private validate-and-send path. Withholds an action whose payload fails
+   * {@link hasValidPayload}; targets the action's own
    * originating surface, any live surface of the session (ADR-018). An action the producer
    * announced as opening a turn opens one, even before the first turn (ADR-019); any other is
    * recorded with the active turn, or with the initialization before the first turn.
