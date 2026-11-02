@@ -33,42 +33,60 @@ export function applyInboundOps(
   content: Record<string, unknown>,
   contracts: ContractsSchema | undefined
 ): A2uiState {
+  let next = state;
+  for (const write of inboundWrites(activities, content, contracts)) {
+    if (write.kind === 'end') {
+      if (write.surfaceId in next) {
+        const {[write.surfaceId]: _ended, ...rest} = next;
+        next = rest;
+      }
+      continue;
+    }
+    // Per surface: every surface has a `root` node, so a shared node id would
+    // collide at one top-level pointer without scoping the write by surface.
+    const surfaceState = isRecord(next[write.surfaceId])
+      ? (next[write.surfaceId] as A2uiState)
+      : {};
+    next = {
+      ...next,
+      [write.surfaceId]: setAtPointer(surfaceState, write.path, write.value),
+    };
+  }
+  return next;
+}
+
+type InboundWrite =
+  | {kind: 'end'; surfaceId: string}
+  | {kind: 'write'; surfaceId: string; path: string; value: unknown};
+
+/** The surfaces an activity's messages end and the validated writes they forward, in order. */
+function* inboundWrites(
+  activities: readonly Activity[],
+  content: Record<string, unknown>,
+  contracts: ContractsSchema | undefined
+): Generator<InboundWrite> {
   // Without an injected contract there is nothing to validate ops against, so
   // no op is forwarded and the state is left unchanged.
-  if (!contracts) {
-    return state;
-  }
   const messages = content['messages'];
-  if (!Array.isArray(messages)) {
-    return state;
+  if (!contracts || !Array.isArray(messages)) {
+    return;
   }
 
   let registry: ReturnType<typeof deriveNodeIdentityRegistry> | undefined;
-  let next = state;
   for (const message of messages) {
     const ended = endedSurfaceId(message);
     if (ended !== undefined) {
-      if (ended in next) {
-        const {[ended]: _ended, ...rest} = next;
-        next = rest;
-      }
+      yield {kind: 'end', surfaceId: ended};
       continue;
     }
     for (const op of readUpdateDataModelOps([message])) {
       registry ??= deriveNodeIdentityRegistry(activities);
       const decision = validateInboundOp(op, registry, contracts);
       if (decision.kind === 'forward') {
-        // Per surface: every surface has a `root` node, so a shared node id would
-        // collide at one top-level pointer without scoping the write by surface.
-        const surfaceState = isRecord(next[op.surfaceId]) ? (next[op.surfaceId] as A2uiState) : {};
-        next = {
-          ...next,
-          [op.surfaceId]: setAtPointer(surfaceState, decision.path, decision.value),
-        };
+        yield {kind: 'write', surfaceId: op.surfaceId, path: decision.path, value: decision.value};
       }
     }
   }
-  return next;
 }
 
 /** The surface a `createSurface` or `deleteSurface` message starts or ends, if it is one. */

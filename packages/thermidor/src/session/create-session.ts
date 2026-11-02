@@ -319,6 +319,15 @@ function isSubmitPromptAction(
 /** The action a request sends, which its failures are reported against. */
 type ActionSource = Omit<ActionError, 'message'>;
 
+/** A dispatched action, with the discriminant of the node it came from. */
+interface RecoveredAction {
+  discriminant: string;
+  name: string;
+  sourceComponentId: string;
+  surfaceId: string;
+  context: unknown;
+}
+
 interface RequestFailure {
   error: string;
   /** The endpoint kept rejecting it as concurrent, past the retry budget. */
@@ -876,6 +885,25 @@ export function createSession<TContracts extends ContractsSchema>(
   }
 
   /**
+   * Validates the action payload against the component's generated Zod action schema before the
+   * POST. A non-conforming payload is withheld (nothing sent).
+   */
+  function hasValidPayload(recovered: RecoveredAction): boolean {
+    const validation = validateActionPayload(
+      recovered.discriminant,
+      recovered.name,
+      recovered.context,
+      config.contracts
+    );
+    if (!validation.valid) {
+      devWarn(
+        `dispatchAction: dispatch withheld: Invalid payload for action "${recovered.name}" on component "${recovered.discriminant}": ${validation.reason}`
+      );
+    }
+    return validation.valid;
+  }
+
+  /**
    * Private validate-and-send path. Validates the recovered action's payload against the
    * component's generated Zod action schema and withholds on failure; targets the action's own
    * originating surface, any live surface of the session (ADR-018). An action the producer
@@ -883,13 +911,7 @@ export function createSession<TContracts extends ContractsSchema>(
    * recorded with the active turn, or with the initialization before the first turn.
    * Withholds when there is neither to stream the answer into.
    */
-  function issueAction(recovered: {
-    discriminant: string;
-    name: string;
-    sourceComponentId: string;
-    surfaceId: string;
-    context: unknown;
-  }): Promise<void> {
+  function issueAction(recovered: RecoveredAction): Promise<void> {
     const current = store.getState();
     const opensTurn = isTurnOpeningAction(
       sessionActivities(current),
@@ -908,18 +930,7 @@ export function createSession<TContracts extends ContractsSchema>(
     // commerce one.
     const surfaceId = recovered.surfaceId;
 
-    // Validate the action payload against the component's generated Zod action
-    // schema BEFORE the POST. A non-conforming payload is withheld (nothing sent).
-    const validation = validateActionPayload(
-      recovered.discriminant,
-      recovered.name,
-      recovered.context,
-      config.contracts
-    );
-    if (!validation.valid) {
-      devWarn(
-        `dispatchAction: dispatch withheld: Invalid payload for action "${recovered.name}" on component "${recovered.discriminant}": ${validation.reason}`
-      );
+    if (!hasValidPayload(recovered)) {
       return withhold();
     }
 
@@ -1101,8 +1112,6 @@ export function createSession<TContracts extends ContractsSchema>(
       name: action.name,
       sourceComponentId: action.sourceComponentId,
       timestamp: new Date().toISOString(),
-      actionId: null,
-      wantResponse: false,
       context: action.context,
     };
     const request: SessionRequest = {
