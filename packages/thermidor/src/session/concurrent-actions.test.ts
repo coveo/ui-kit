@@ -422,6 +422,42 @@ describe('concurrent and cached actions (ADR-020)', () => {
     expect(calls).toHaveLength(2);
   });
 
+  it('caches only the accepted messages, so a hit warns no more', async () => {
+    const session = shellSession();
+    const sent = dispatch(session, 'boots');
+    calls[0].emit({
+      type: 'ACTIVITY_SNAPSHOT',
+      messageId: 'mixed',
+      activityType: 'a2ui-surface',
+      content: {
+        messages: [
+          {
+            version: 'v1.0',
+            updateDataModel: {surfaceId: SHELL_ID, path: '/state/ghost', value: {}},
+          },
+          productsWrite('boots'),
+        ],
+      },
+    });
+    calls[0].emit({type: 'RUN_FINISHED'});
+    calls[0].close();
+    await sent;
+    const poles = dispatch(session, 'poles');
+    answer(calls[1], 'poles');
+    await poles;
+    warn.mockClear();
+    const messageCount = session.a2uiMessages.length;
+
+    await dispatch(session, 'boots');
+
+    expect(calls).toHaveLength(2);
+    expect(shownQuery(session)).toBe('boots');
+    expect(session.a2uiMessages.slice(messageCount)).toEqual([
+      {version: 'v0.9', updateDataModel: productsWrite('boots').updateDataModel},
+    ]);
+    expect(warned('known nodes')).toBe(false);
+  });
+
   describe('the unrecorded layer', () => {
     async function shownBoots() {
       const session = shellSession();

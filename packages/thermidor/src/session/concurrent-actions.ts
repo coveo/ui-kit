@@ -151,12 +151,12 @@ export function createConcurrentActions({
   const cache = createActionCache();
   const lanes = createLanes();
 
+  function accept(messages: readonly unknown[]) {
+    return acceptUnrecordedWrites(messages, sessionActivities(store.getState()), config.contracts);
+  }
+
   function apply(messages: readonly unknown[]): void {
-    const accepted = acceptUnrecordedWrites(
-      messages,
-      sessionActivities(store.getState()),
-      config.contracts
-    );
+    const accepted = accept(messages);
     if (accepted.messages.length < messages.length) {
       devWarn(
         'dispatchAction: a concurrent answer may only update the data model of known nodes; the rest is dropped.'
@@ -266,7 +266,9 @@ export function createConcurrentActions({
       return lanes.sendCachedMiss(key, tookLaneBack, (rejoined) =>
         quietly(
           origin,
-          stream(action, origin, key, {rejoined}).then((messages) => cache.set(key, messages))
+          stream(action, origin, key, {rejoined}).then((messages) =>
+            cache.set(key, accept(messages).messages)
+          )
         )
       );
     },
