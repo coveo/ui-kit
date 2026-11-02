@@ -41,7 +41,11 @@ export function SuggestionsDropdown({
   }
 
   return (
-    <div className={`${styles.dropdown} ${placement === 'above' ? styles.above : ''}`}>
+    <div
+      className={`${styles.dropdown} ${placement === 'above' ? styles.above : ''}`}
+      // Keeps the focus in the input, whose blur would close the dropdown before a click lands.
+      onMouseDown={(event) => event.preventDefault()}
+    >
       <div
         id={SUGGESTIONS_LISTBOX_ID}
         role="listbox"

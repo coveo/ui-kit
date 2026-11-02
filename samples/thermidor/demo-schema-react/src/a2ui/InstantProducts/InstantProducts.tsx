@@ -42,6 +42,9 @@ export const InstantProducts = createReactComponent(
     const active = showProducts && !submitted && highlightedQuery !== '';
     const answered = props.query === highlightedQuery;
     const [previous, setPrevious] = useState<InstantProductsState>();
+    if (answered && props.products.length > 0 && previous?.query !== props.query) {
+      setPrevious({query: props.query, products: props.products});
+    }
     const [timedOutQuery, setTimedOutQuery] = useState<string>();
 
     useEffect(() => {
@@ -51,12 +54,6 @@ export const InstantProducts = createReactComponent(
       const payload: FetchInstantProductsPayload = {query: highlightedQuery};
       context.dispatchAction({event: {name: 'fetchInstantProducts', context: payload}});
     }, [active, context, highlightedQuery]);
-
-    useEffect(() => {
-      if (answered && props.products.length > 0 && previous?.query !== props.query) {
-        setPrevious({query: props.query, products: props.products});
-      }
-    }, [answered, previous?.query, props.query, props.products]);
 
     useEffect(() => {
       if (!active || answered) {
