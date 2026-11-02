@@ -131,8 +131,7 @@ export function instantProductsShellRun(surfaceId = SHELL_SURFACE_ID): object[] 
       },
     ],
     {
-      concurrentActions: {[surfaceId]: ['fetchInstantProducts']},
-      cachedActions: {[surfaceId]: {fetchInstantProducts: {ttlMs: 60_000}}},
+      concurrentActions: {[surfaceId]: {fetchInstantProducts: {cache: {ttlMs: 60_000}}}},
     }
   );
 }
