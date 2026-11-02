@@ -79,12 +79,12 @@ The session cannot support this today:
 
 ### Option C: a cache and a concurrent lane, announced by the producer
 
-- **Summary:** the producer announces, in surface metadata, which actions are cached and for how
-  long, and which are sent concurrently. A cached action's answer is reused within that lifetime. A
-  concurrent action is sent in a lane of its own, latest wins per source node, and its state writes
-  are applied without being recorded in a run.
+- **Summary:** the producer announces, in surface metadata, which actions are sent concurrently,
+  and for each, whether and for how long its answer is cached. A concurrent action is sent in a lane
+  of its own, latest wins per source node, and its state writes are applied without being recorded
+  in a run. A cached action's answer is reused within its lifetime.
 - **Pros:** meets every driver. A renderer only dispatches.
-- **Cons:** a second request path in the session, and two metadata keys the producer must keep
+- **Cons:** a second request path in the session, and an announcement the producer must keep
   consistent with how it answers.
 
 ### Option D: a lookup lane declared by the schema
@@ -101,20 +101,26 @@ Option C.
 
 ### Announcements
 
-The producer announces both facts with the `ACTIVITY_SNAPSHOT` that creates or updates a surface,
-under two `metadata` keys keyed by surface id, as `turnOpeningActions` is:
+The producer announces its concurrent actions with the `ACTIVITY_SNAPSHOT` that creates or updates
+a surface, under a `concurrentActions` `metadata` key keyed by surface id, as `turnOpeningActions`
+is. Each action has an optional `cache` policy, the lifetime of its answers:
 
 ```json
 "metadata": {
-  "concurrentActions": {"<surfaceId>": ["fetchInstantProducts"]},
-  "cachedActions": {"<surfaceId>": {"fetchInstantProducts": {"ttlMs": 60000}}}
+  "concurrentActions": {
+    "<surfaceId>": {"fetchInstantProducts": {"cache": {"ttlMs": 60000}}}
+  }
 }
 ```
 
 The latest announcement for a surface wins, an empty entry revokes it, and an announcement with
-another shape is ignored. Only a concurrent action is cached: a cache announcement for an action
-not announced as concurrent is ignored, so a cached answer never races the session's single
-request.
+another shape is ignored. An action announced as both concurrent and turn-opening is sent as
+concurrent, with a development warning.
+
+The cache is a policy of a concurrent action, so a cached answer never races the session's single
+request. A concurrent action without one is sent beside the turn and never reused, as fits an
+action whose answer depends on more than its payload, such as a facet search that reads the
+surface's current filters, or that must reach the producer every time, such as a click log.
 
 ### The concurrent lane
 
@@ -142,7 +148,7 @@ A concurrent action is sent at once, whatever request is in flight.
 
 ### The cache
 
-A cached action's answer is reused within its announced lifetime.
+A cached action's answer is reused while it is younger than the lifetime currently announced.
 
 - **Keyed** by surface id, source node, action name and payload, with the payload serialized with
   sorted keys.
@@ -176,7 +182,7 @@ their `query` is highlighted are the renderer's.
 
 ## Implementation and Follow-up
 
-- The session reads both announcements from the activity log, as `isTurnOpeningAction` does.
+- The session reads the announcement from the activity log, as `isTurnOpeningAction` does.
 - `dispatchAction` routes an announced action before `sendRequest`; `cancel()`, `submitPrompt` and
   `session.request` are unchanged.
 - The store keeps unrecorded writes apart from the recorded state; `serializeSession` saves the
@@ -184,5 +190,5 @@ their `query` is highlighted are the renderer's.
 - demo-schema-react: `SearchBox` exposes the highlighted query to its children, and an
   `InstantProducts` renderer dispatches it. `QuerySuggestions` keeps `useLatestWhenFree` until the
   producer announces `fetchSuggestions` as concurrent.
-- The mock converse service announces both keys on the shell, and answers `fetchInstantProducts`
+- The mock converse service announces `fetchInstantProducts` on the shell, and answers `fetchInstantProducts`
   without taking its turn slot.
