@@ -12,8 +12,8 @@ implementation. Where they and the ADR disagree, the ADR decides.
 
 ## 1. Reading the announcements
 
-Next to `turn-opening.ts`, a module reads the two new keys from the session's activity log. The
-latest announcement for a surface wins.
+Next to `turn-opening.ts`, a module reads the concurrent actions from the session's activity log.
+The latest announcement for a surface wins.
 
 ```ts
 // session/announced-actions.ts
@@ -21,27 +21,20 @@ export interface CachePolicy {
   ttlMs: number;
 }
 
-export function concurrentActions(
-  activities: readonly Activity[],
-  surfaceId: string
-): ReadonlySet<string> {
-  let names: readonly string[] | undefined;
-  for (const activity of activities) {
-    names = readNames(activity.metadata?.['concurrentActions'], surfaceId) ?? names;
-  }
-  return new Set(names);
+export interface ConcurrentAction {
+  cache?: CachePolicy;
 }
 
-export function cachePolicy(
+export function concurrentAction(
   activities: readonly Activity[],
   surfaceId: string,
   name: string
-): CachePolicy | undefined {
-  let policies: Record<string, CachePolicy> | undefined;
+): ConcurrentAction | undefined {
+  let actions: Record<string, ConcurrentAction> | undefined;
   for (const activity of activities) {
-    policies = readPolicies(activity.metadata?.['cachedActions'], surfaceId) ?? policies;
+    actions = readActions(activity.metadata?.['concurrentActions'], surfaceId) ?? actions;
   }
-  return policies?.[name];
+  return actions?.[name];
 }
 ```
 
@@ -93,18 +86,19 @@ export function createActionCache(now: () => number = Date.now): ActionCache {
 
 ## 3. Routing a dispatch
 
-`issueAction` checks the announcements before the single request. Nothing changes for an action
-the producer did not announce as concurrent, even if it announced it as cached.
+`issueAction` checks the announcement before the single request. Nothing changes for an action
+the producer did not announce as concurrent.
 
 ```ts
 function issueAction(recovered: RecoveredAction): Promise<void> {
   const activities = sessionActivities(store.getState());
-  if (!concurrentActions(activities, recovered.surfaceId).has(recovered.name)) {
+  const concurrent = concurrentAction(activities, recovered.surfaceId, recovered.name);
+  if (!concurrent) {
     return issueOrdinaryAction(recovered); // today's path: validation, turn opening, sendRequest
   }
   // ...payload validation, as today...
 
-  const policy = cachePolicy(activities, recovered.surfaceId, recovered.name);
+  const policy = concurrent.cache;
   const key = cacheKey(recovered, recovered.context);
   lanes.claim(recovered, key);
   const cached = policy && actionCache.get(key);

@@ -29,8 +29,11 @@ import type {
 } from '@/src/internal/context/index.js';
 import {devWarn} from '@/src/internal/utils/dev-warn.js';
 import {generateId} from '@/src/internal/utils/id-generator.js';
+import type {ActionOrigin} from './action-cache.js';
 import {validateActionPayload} from './action-payload-validation.js';
+import {concurrentAction, type CachePolicy} from './announced-actions.js';
 import type {ContractsSchema} from './contracts.js';
+import {createConcurrentActions} from './concurrent-actions.js';
 import {callWithConflictRetry} from './conflict-retry.js';
 import {
   EMPTY_RENDERER_STREAM,
@@ -237,7 +240,8 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
   /**
    * The validated data model of every live surface, keyed by surface id, whichever turn wrote it:
    * inbound `updateDataModel` ops are validated against the injected contracts before they apply
-   * here.
+   * here. The answers to concurrent actions are applied on top without being recorded: a later
+   * recorded write to the same path replaces them, and {@link Session.serialize} leaves them out.
    */
   readonly state: A2uiState;
   /**
@@ -253,7 +257,8 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
   /**
    * The request the session is sending, or `undefined` when it is idle. The session sends one
    * request at a time, `initialize`, prompts and actions alike, in the order they were dispatched;
-   * an action's run counts, a follow-up included. Read it synchronously, or through {@link Session.subscribe}.
+   * an action's run counts, a follow-up included. An action the producer announces as concurrent
+   * is sent beside it and never sets it. Read it synchronously, or through {@link Session.subscribe}.
    */
   readonly request: SessionRequest | undefined;
   /**
@@ -293,6 +298,11 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * snapshots are recorded with the active turn, or with {@link Session.initialization} before the
    * first turn, and its failure sets {@link Session.actionError}.
    *
+   * An action the producer announces as concurrent is sent at once, whatever request is in flight,
+   * and never sets {@link Session.request}. Only the latest dispatch from a node is shown, and one
+   * the producer allows to be reused is answered without a request. Its answer is not recorded, and
+   * its failure sets no {@link Session.actionError}.
+   *
    * FIRE-AND-FORGET: the returned Promise ALWAYS resolves and NEVER rejects, so
    * the consumer needs no `.catch`. A message with no `userAction`, no
    * `sourceComponentId`, a node that resolves to no component, and an internal
@@ -301,7 +311,7 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    */
   dispatchAction: (message: A2uiClientMessage | SubmitPromptAction) => Promise<void>;
   /**
-   * Stops the request in flight, `initialize` included. {@link Session.request} stays set until the stopped request has
+   * Stops the request in flight, `initialize` included, but no concurrent action. {@link Session.request} stays set until the stopped request has
    * unwound, a few microtasks later, so a dispatch made right after `cancel()` is withheld: wait for
    * `request` to become `undefined`, through {@link Session.subscribe}, before sending the next one.
    */
@@ -326,11 +336,8 @@ function isSubmitPromptAction(
 type ActionSource = Omit<ActionError, 'message'>;
 
 /** A dispatched action, with the discriminant of the node it came from. */
-interface RecoveredAction {
+interface RecoveredAction extends ActionOrigin {
   discriminant: string;
-  name: string;
-  sourceComponentId: string;
-  surfaceId: string;
   context: unknown;
 }
 
@@ -691,6 +698,8 @@ export function createSession<TContracts extends ContractsSchema>(
     return {...buildBaseRequest(), message: null, action};
   }
 
+  const concurrentActions = createConcurrentActions({store, client, config, buildActionRequest});
+
   /**
    * An `action`'s stream folds only its surface snapshots into `target`, and its failure sets
    * `actionError` (ADR-018, as amended).
@@ -937,11 +946,17 @@ export function createSession<TContracts extends ContractsSchema>(
    */
   function issueAction(recovered: RecoveredAction): Promise<void> {
     const current = store.getState();
-    const opensTurn = isTurnOpeningAction(
-      sessionActivities(current),
-      recovered.surfaceId,
-      recovered.name
-    );
+    const activities = sessionActivities(current);
+    const opensTurn = isTurnOpeningAction(activities, recovered.surfaceId, recovered.name);
+    const concurrent = concurrentAction(activities, recovered.surfaceId, recovered.name);
+    if (concurrent) {
+      if (opensTurn) {
+        devWarn(
+          `dispatchAction: ${recovered.name} is announced as both concurrent and turn-opening; it is sent as concurrent.`
+        );
+      }
+      return issueConcurrentAction(recovered, concurrent.cache);
+    }
     const {activeTurnId, initialization} = current;
     if (!opensTurn && !activeTurnId && !initialization) {
       return withhold();
@@ -1010,6 +1025,20 @@ export function createSession<TContracts extends ContractsSchema>(
       },
       abandoned
     );
+  }
+
+  function issueConcurrentAction(
+    recovered: RecoveredAction,
+    policy: CachePolicy | undefined
+  ): Promise<void> {
+    if (!store.getState().sessionToken) {
+      devWarn(`dispatchAction: ${recovered.name} withheld: the session has no token yet.`);
+      return withhold();
+    }
+    if (!hasValidPayload(recovered)) {
+      return withhold();
+    }
+    return concurrentActions.issue(recovered, policy);
   }
 
   /**
@@ -1098,7 +1127,11 @@ export function createSession<TContracts extends ContractsSchema>(
       return;
     }
 
-    await issue(message);
+    try {
+      await issue(message);
+    } catch (error) {
+      devWarn(`dispatchAction: action withheld: ${getErrorMessage(error)}`);
+    }
   };
 
   function retry(turnId: string): void {
