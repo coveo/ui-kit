@@ -47,4 +47,4 @@ The built CP-SAT partition measures 14.0 files and 0.87 s; the model says 9.6 an
 | ADR N = 10, modelled s | 0.79 | 1.21 | 1.91 | 1.53 |
 | Solver (42 pages), modelled s | 0.66 | 0.89 | 1.28 | 0.95 |
 
-The pre-ADR row reproduces the ADR's option A file counts exactly; the ADR measured 30/76/134/108 files for N = 10 on an earlier commit. Three of the four pages were not in the training set.
+The solver row comes from the 2026-10-31 build, whose map still grouped the externals; `MEASUREMENT.md` has the corrected builds and what the harness measured. The pre-ADR row reproduces the ADR's option A file counts exactly; the ADR measured 30/76/134/108 files for N = 10 on an earlier commit. Three of the four pages were not in the training set.
