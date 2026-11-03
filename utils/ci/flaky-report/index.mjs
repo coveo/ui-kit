@@ -69,7 +69,8 @@ function within({start, end}, collected) {
 }
 
 const github = {
-  octokit: new Octokit({auth: process.env.GITHUB_TOKEN}),
+  // GitHub answers 502 in bursts of a minute or two; the default three retries wait 14 seconds in all.
+  octokit: new Octokit({auth: process.env.GITHUB_TOKEN, retry: {retries: 6}}),
   owner: REPO_OWNER,
   repo: REPO_NAME,
 };
