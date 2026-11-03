@@ -77,15 +77,15 @@ function createStorefront(): StorefrontValue {
 
   const session = createSession({
     contracts: ComponentContractsSchema,
-    // The mock accepts anything; a real Agent Gateway needs an organization, a token and a
-    // tracking ID configured for that locale (see .env.example).
+    // The mock accepts anything; a real Agent Gateway needs an organization, a token, an agent
+    // configuration and a tracking ID (see .env.example).
     organizationId: envValue('VITE_COVEO_ORGANIZATION_ID') ?? 'storefront-preview',
     accessToken: envValue('VITE_COVEO_ACCESS_TOKEN') ?? 'mock-access-token',
     endpoint: envValue('VITE_COVEO_ENDPOINT') ?? MOCK_ENDPOINT,
+    agentConfigurationId: envValue('VITE_COVEO_AGENT_CONFIGURATION_ID') ?? 'storefront-preview',
     trackingId: envValue('VITE_COVEO_TRACKING_ID') ?? 'storefront',
-    language: envValue('VITE_COVEO_LANGUAGE') ?? 'en',
-    country: envValue('VITE_COVEO_COUNTRY') ?? 'US',
-    currency: envValue('VITE_COVEO_CURRENCY') ?? 'USD',
+    // The session opens on the first search: the home page sends nothing (see the README).
+    initialize: false,
     navigatorContextProvider: getNavigatorContext,
     // The cart is app state: every request carries it, whichever view sends it.
     commerceContextProvider: () => ({

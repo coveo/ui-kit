@@ -30,10 +30,12 @@ export function ViewSurfaces({surfaces, ownsTurn, isStreaming}: ViewSurfacesProp
       getSnapshot() {
         const snapshot = session.getSnapshot();
         const {request} = snapshot;
-        return request && !ownsTurn(request.turnId) ? {...snapshot, request: undefined} : snapshot;
+        const turnId = request?.kind === 'initialize' ? undefined : request?.turnId;
+        return request && !(turnId && ownsTurn(turnId))
+          ? {...snapshot, request: undefined}
+          : snapshot;
       },
       subscribe: session.subscribe,
-      sendAndWait: session.sendAndWait,
     }),
     [session, ownsTurn]
   );

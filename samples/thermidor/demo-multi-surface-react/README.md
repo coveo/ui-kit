@@ -118,8 +118,9 @@ rather than tracking requests itself:
 
 ## What changes once the open work lands
 
-- **`initialize`** (ADR-018; coveo/ui-kit#8756): the session opens itself, so the home page can
-  open it and show what the server answers for `storefront-preview-home`.
+- **`initialize`** (ADR-018; coveo/ui-kit#8756): Thermidor can now open the session itself; the
+  sample still passes `initialize: false` until the server answers `initialize` for this route. Then
+  the home page can open the session and show what the server answers for `storefront-preview-home`.
 - **The session shell and query suggestions** (coveo/ui-kit#8757, #8758): the producer answers `initialize` with a long-lived `SessionShell`
   holding a `SearchBox` and its `QuerySuggestions`, and a pause in typing dispatches
   `fetchSuggestions`. The header can then draw that surface as its search box, with suggestions.
