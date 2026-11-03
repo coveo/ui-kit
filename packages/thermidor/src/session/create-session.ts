@@ -1127,7 +1127,11 @@ export function createSession<TContracts extends ContractsSchema>(
       return;
     }
 
-    await issue(message);
+    try {
+      await issue(message);
+    } catch (error) {
+      devWarn(`dispatchAction: action withheld: ${getErrorMessage(error)}`);
+    }
   };
 
   function retry(turnId: string): void {

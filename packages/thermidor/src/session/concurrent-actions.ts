@@ -52,24 +52,16 @@ export interface ConcurrentActions {
 }
 
 interface Lanes {
-  /**
-   * Makes `key` the latest dispatch of its lane, and aborts the lane's uncached request. Returns
-   * whether another key was the latest.
-   */
-  claim(origin: ActionOrigin, key: string): boolean;
+  /** Makes `key` the latest dispatch of its lane, and aborts the lane's uncached request. */
+  claim(origin: ActionOrigin, key: string): void;
   isLatest(origin: ActionOrigin, key: string): boolean;
   /** Sends a request the lane's next claim aborts. */
   sendUncached(origin: ActionOrigin, run: (signal: AbortSignal) => Promise<void>): Promise<void>;
   /**
    * Sends a request that runs to the end, unless one with the same key is in flight: joins it.
-   * `rejoins` is whether this dispatch took the lane back from another key, and `run` reads
-   * whether such a dispatch joined its request.
+   * `run` reads whether another dispatch joined its request.
    */
-  sendCachedMiss(
-    key: string,
-    rejoins: boolean,
-    run: (rejoined: () => boolean) => Promise<void>
-  ): Promise<void>;
+  sendCachedMiss(key: string, run: (joined: () => boolean) => Promise<void>): Promise<void>;
 }
 
 function laneKey(origin: ActionOrigin): string {
@@ -79,16 +71,14 @@ function laneKey(origin: ActionOrigin): string {
 function createLanes(): Lanes {
   const latest = new Map<string, string>();
   const uncached = new Map<string, AbortController>();
-  const misses = new Map<string, {done: Promise<void>; rejoined: boolean}>();
+  const misses = new Map<string, {done: Promise<void>; joined: boolean}>();
 
   return {
     claim(origin, key) {
       const lane = laneKey(origin);
-      const previous = latest.get(lane);
       latest.set(lane, key);
       uncached.get(lane)?.abort();
       uncached.delete(lane);
-      return previous !== undefined && previous !== key;
     },
     isLatest(origin, key) {
       return latest.get(laneKey(origin)) === key;
@@ -105,14 +95,14 @@ function createLanes(): Lanes {
         }
       }
     },
-    sendCachedMiss(key, rejoins, run) {
+    sendCachedMiss(key, run) {
       const inFlight = misses.get(key);
       if (inFlight) {
-        inFlight.rejoined ||= rejoins;
+        inFlight.joined = true;
         return inFlight.done;
       }
-      const miss = {done: Promise.resolve(), rejoined: false};
-      miss.done = run(() => miss.rejoined).finally(() => misses.delete(key));
+      const miss = {done: Promise.resolve(), joined: false};
+      miss.done = run(() => miss.joined).finally(() => misses.delete(key));
       misses.set(key, miss);
       return miss.done;
     },
@@ -179,15 +169,16 @@ export function createConcurrentActions({
   }
 
   /**
-   * Applies each surface snapshot only while the dispatch is its node's latest. When it became the
-   * latest again after another dispatch (A, B, then A), the whole answer is applied once the stream
-   * ends. Its session keys and metadata are not read.
+   * Applies each surface snapshot only while the dispatch is its node's latest. When a snapshot was
+   * passed over, or another dispatch joined the request, the node may show something else since
+   * (A, B, then A, or a recorded write in between), so the whole answer is applied again once the
+   * stream ends, if the dispatch is still the latest. Its session keys and metadata are not read.
    */
   async function stream(
     action: A2uiAction,
     origin: ActionOrigin,
     key: string,
-    {signal, rejoined = () => false}: {signal?: AbortSignal; rejoined?: () => boolean} = {}
+    {signal, joined = () => false}: {signal?: AbortSignal; joined?: () => boolean} = {}
   ): Promise<readonly unknown[]> {
     const result = await client.call(
       buildActionRequest(action),
@@ -210,6 +201,10 @@ export function createConcurrentActions({
       stream: result.data.stream,
       signal,
       onEvent: (rawEvent: RawSSEEvent) => {
+        // A read that resolved before the abort can still deliver the rest of its chunk.
+        if (signal?.aborted) {
+          return;
+        }
         const event = parseSSEEvent(rawEvent);
         if (event.type === 'RUN_ERROR') {
           runError =
@@ -235,7 +230,7 @@ export function createConcurrentActions({
     if (!finished) {
       throw new Error('Stream ended without a terminal event.');
     }
-    if ((passedOver || rejoined()) && lanes.isLatest(origin, key)) {
+    if ((passedOver || joined()) && lanes.isLatest(origin, key)) {
       apply(answer);
     }
     return answer;
@@ -244,7 +239,7 @@ export function createConcurrentActions({
   return {
     issue(origin, policy) {
       const key = actionCacheKey(origin, origin.context);
-      const tookLaneBack = lanes.claim(origin, key);
+      lanes.claim(origin, key);
       const cached = policy && cache.get(key, policy.ttlMs);
       if (cached) {
         apply(cached);
@@ -263,10 +258,10 @@ export function createConcurrentActions({
           quietly(origin, stream(action, origin, key, {signal}), signal)
         );
       }
-      return lanes.sendCachedMiss(key, tookLaneBack, (rejoined) =>
+      return lanes.sendCachedMiss(key, (joined) =>
         quietly(
           origin,
-          stream(action, origin, key, {rejoined}).then((messages) =>
+          stream(action, origin, key, {joined}).then((messages) =>
             cache.set(key, accept(messages).messages)
           )
         )

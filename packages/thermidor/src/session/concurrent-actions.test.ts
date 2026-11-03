@@ -37,6 +37,7 @@ const InstantProductsSchema = z.strictObject({
     .strictObject({
       fetchInstantProducts: z.strictObject({payload: z.strictObject({query: z.string()})}),
       previewInstantProducts: z.strictObject({payload: z.strictObject({query: z.string()})}),
+      trackInstantProducts: z.strictObject({payload: z.strictObject({detail: z.unknown()})}),
     })
     .optional(),
 });
@@ -55,9 +56,12 @@ const SHELL_ID = 'ui-shell';
 const PRODUCTS_ID = 'instant-products';
 const CACHED = 'fetchInstantProducts';
 const UNCACHED = 'previewInstantProducts';
+const TRACKED = 'trackInstantProducts';
 
 const ANNOUNCEMENTS = {
-  concurrentActions: {[SHELL_ID]: {[CACHED]: {cache: {ttlMs: 60_000}}, [UNCACHED]: {}}},
+  concurrentActions: {
+    [SHELL_ID]: {[CACHED]: {cache: {ttlMs: 60_000}}, [UNCACHED]: {}, [TRACKED]: {}},
+  },
 };
 
 function shellActivity(metadata?: Record<string, unknown>): Activity {
@@ -298,7 +302,6 @@ describe('concurrent and cached actions (ADR-020)', () => {
 
   it('joins an in-flight miss with the same key instead of sending another', async () => {
     const session = shellSession();
-    const messageCount = session.a2uiMessages.length;
     const first = dispatch(session, 'boots');
     const second = dispatch(session, 'boots');
 
@@ -307,7 +310,42 @@ describe('concurrent and cached actions (ADR-020)', () => {
     await Promise.all([first, second]);
 
     expect(shownQuery(session)).toBe('boots');
-    expect(session.a2uiMessages).toHaveLength(messageCount + 1);
+  });
+
+  it('shows A again when a recorded write replaced it while A is in flight and A joins', async () => {
+    const session = shellSession();
+    const firstBoots = dispatch(session, 'boots');
+    calls[0].emit(productsUpdate('boots'));
+    await flush();
+    const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'jackets'}});
+    answer(calls[1], 'jackets');
+    await turn;
+
+    expect(shownQuery(session)).toBe('jackets');
+
+    const secondBoots = dispatch(session, 'boots');
+    calls[0].emit({type: 'RUN_FINISHED'});
+    calls[0].close();
+    await Promise.all([firstBoots, secondBoots]);
+
+    expect(calls).toHaveLength(2);
+    expect(shownQuery(session)).toBe('boots');
+  });
+
+  it('applies nothing an aborted request still delivers', async () => {
+    const session = shellSession();
+    const first = dispatch(session, 'boots', UNCACHED);
+    await flush();
+    calls[0].emit(productsUpdate('stale'));
+    const second = dispatch(session, 'boots', UNCACHED);
+    await flush();
+
+    expect(shownQuery(session)).toBeUndefined();
+
+    answer(calls[1], 'boots');
+    await Promise.all([first, second]);
+
+    expect(shownQuery(session)).toBe('boots');
   });
 
   it('shows A after A, B, A while A is in flight, with one request for A', async () => {
@@ -606,6 +644,56 @@ describe('concurrent and cached actions (ADR-020)', () => {
     answer(calls[0], 'boots');
     await sent;
     expect(session.turns).toEqual([]);
+  });
+
+  describe('the dispatch promise', () => {
+    it('resolves once the answer to a concurrent action is applied', async () => {
+      const session = shellSession();
+      let settled = false;
+
+      const sent = dispatch(session, 'boots').then(() => {
+        settled = true;
+      });
+      await flush();
+
+      expect(settled).toBe(false);
+      answer(calls[0], 'boots');
+      await sent;
+      expect(shownQuery(session)).toBe('boots');
+    });
+
+    it('does not wait for a prompt in flight', async () => {
+      const session = shellSession();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'jackets'}});
+
+      const sent = dispatch(session, 'boots');
+      answer(calls[1], 'boots');
+      await sent;
+
+      expect(session.request).toEqual(expect.objectContaining({kind: 'prompt'}));
+      answer(calls[0], 'jackets');
+      await turn;
+    });
+  });
+
+  it('resolves and warns when a dispatch fails before anything is sent', async () => {
+    const session = shellSession();
+    const detail: Record<string, unknown> = {};
+    detail['self'] = detail;
+
+    await expect(
+      session.dispatchAction({
+        userAction: {
+          name: TRACKED,
+          surfaceId: SHELL_ID,
+          sourceComponentId: PRODUCTS_ID,
+          context: {detail},
+        },
+      })
+    ).resolves.toBeUndefined();
+
+    expect(calls).toHaveLength(0);
+    expect(warned('action withheld')).toBe(true);
   });
 
   it('sends an action the producer does not announce through the single request', async () => {
