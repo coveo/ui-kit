@@ -17,13 +17,20 @@ interface ViewSurfacesProps {
   ownsTurn(turnId: string): boolean;
   /** Whether the view's turn is streaming. */
   isStreaming: boolean;
+  /** Whether the surfaces take actions. Earlier turns of a conversation are read-only. */
+  interactive?: boolean;
 }
 
 /**
  * Draws a view's surfaces with `demo-schema-react`'s `TurnSurfaces`: in order, a loading
  * placeholder as its component's skeleton, locked while the view's own request is in flight.
  */
-export function ViewSurfaces({surfaces, ownsTurn, isStreaming}: ViewSurfacesProps) {
+export function ViewSurfaces({
+  surfaces,
+  ownsTurn,
+  isStreaming,
+  interactive = true,
+}: ViewSurfacesProps) {
   const session = useSession();
   const source = useMemo<SessionRequestSource>(
     () => ({
@@ -41,7 +48,7 @@ export function ViewSurfaces({surfaces, ownsTurn, isStreaming}: ViewSurfacesProp
   );
   return (
     <SessionRequestProvider value={source}>
-      <TurnSurfaces surfaces={surfaces} interactive isStreaming={isStreaming} />
+      <TurnSurfaces surfaces={surfaces} interactive={interactive} isStreaming={isStreaming} />
     </SessionRequestProvider>
   );
 }

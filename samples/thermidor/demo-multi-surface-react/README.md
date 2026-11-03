@@ -33,9 +33,10 @@ organization set, the sample falls back to the public demo organization as a bun
 Try it:
 
 1. Type a search in the header and press Enter: with the **AI** toggle on (the default), the
-   assistant page opens with the answer, its reasoning steps and its surfaces; the header stays. Try
-   `boating safety`, `which kayak should I get?`, `what do I need to go snorkeling?`,
-   `gift ideas under $50`, or a follow-up from the next actions.
+   assistant page opens as a chat with the answer, its reasoning steps and its surfaces; the header
+   stays. Try `boating safety`, `which kayak should I get?`, `what do I need to go snorkeling?` or
+   `gift ideas under $50`. Keep chatting from the input at the bottom of the page, or pick a
+   follow-up from the next actions: each answer joins the thread with its own surfaces.
 2. On the kayak answer, pick **See all kayaks**: the server runs the search the agent saved behind
    that option and opens it as a search surface (facets, sort, pagination). Change the sort or a
    facet: the server answers from the search it keeps.
@@ -96,6 +97,9 @@ rather than tracking requests itself:
 - **Loading placeholders come from the data model.** A surface whose data model declares
   `isLoading: true` is drawn as its component's skeleton while its turn streams
   (`DiscoveredSurface.isLoading`). The session drops a placeholder its turn left behind.
+- **The assistant page is a chat,** as in `demo-schema-react`: every turn of the visit, each with
+  its prompt, reasoning, answer and surfaces, over an input that sends the next prompt on the same
+  visit. Only the latest turn's surfaces take actions (`src/pages/AssistantPage.tsx`).
 - **The search box is disabled while a request is in flight,** as in `demo-schema-react`. The
   server runs one turn at a time, so a search sent before the running turn ends would be refused.
 - **Nothing else can send while a request is in flight:** follow-up chips sit on locked surfaces,

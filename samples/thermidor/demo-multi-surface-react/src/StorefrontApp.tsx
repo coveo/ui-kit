@@ -32,7 +32,10 @@ const PAGE_VIEWS: Record<Visit['page'], StorefrontView> = {
   listing: 'storefront-preview-home',
 };
 
-/** `NextActionsBar` follow-ups ask for a new answer, so they open a new assistant visit. */
+/**
+ * `NextActionsBar` follow-ups ask for a new answer: on the assistant page they continue its
+ * conversation, elsewhere they open a new assistant visit.
+ */
 const FOLLOW_UP_ACTION = 'selectAction';
 
 /**
@@ -73,13 +76,18 @@ export function StorefrontApp() {
         return;
       }
       const text = userAction.context?.['text'];
+      const current = visitRef.current;
       if (userAction.name === FOLLOW_UP_ACTION && typeof text === 'string') {
-        openAssistant(text);
+        if (current.page === 'assistant') {
+          sendPrompt(PAGE_VIEWS.assistant, text, current.id);
+        } else {
+          openAssistant(text);
+        }
         return;
       }
-      sendAction(PAGE_VIEWS[visitRef.current.page], message as A2uiClientMessage);
+      sendAction(PAGE_VIEWS[current.page], message as A2uiClientMessage, current.id);
     },
-    [sendAction, openAssistant]
+    [sendAction, sendPrompt, openAssistant]
   );
 
   const addToCart = useCallback(
@@ -104,7 +112,12 @@ export function StorefrontApp() {
             onSearch={(query, ai) => setVisit(ai ? visitAssistant(query) : visitSearch(query))}
             searchDisabled={request !== undefined}
           />
-          <Page visit={visit} onHome={() => setVisit(visitHome())} />
+          <Page
+            visit={visit}
+            busy={request !== undefined}
+            onSend={sendPrompt}
+            onHome={() => setVisit(visitHome())}
+          />
           <SessionInspector />
         </ThermidorA2UIStream>
       </ProductCardActionsContext.Provider>
@@ -112,13 +125,27 @@ export function StorefrontApp() {
   );
 }
 
-function Page({visit, onHome}: {visit: Visit; onHome(): void}) {
+interface PageProps {
+  visit: Visit;
+  busy: boolean;
+  onSend(view: StorefrontView, prompt: string, visitId: number): void;
+  onHome(): void;
+}
+
+function Page({visit, busy, onSend, onHome}: PageProps) {
   switch (visit.page) {
     case 'home':
       return <HomePage />;
     case 'assistant':
       return (
-        <AssistantPage key={visit.id} prompt={visit.prompt} visitId={visit.id} onBack={onHome} />
+        <AssistantPage
+          key={visit.id}
+          prompt={visit.prompt}
+          visitId={visit.id}
+          busy={busy}
+          onSend={(prompt) => onSend(PAGE_VIEWS.assistant, prompt, visit.id)}
+          onBack={onHome}
+        />
       );
     case 'search':
       return <SearchPage key={visit.id} query={visit.query} visitId={visit.id} />;

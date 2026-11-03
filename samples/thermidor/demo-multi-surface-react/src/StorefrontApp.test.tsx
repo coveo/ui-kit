@@ -131,4 +131,30 @@ describe('StorefrontApp', () => {
 
     expect(sentViews(fetchMock)).toEqual(['storefront-preview-assistant']);
   });
+  it('continues the conversation on the assistant page, on the same view and visit', async () => {
+    render(<App />);
+    await act(async () => {});
+    fetchMock.mockClear();
+
+    fireEvent.change(screen.getByRole('searchbox', {name: 'Search'}), {
+      target: {value: 'which kayak should I get?'},
+    });
+    fireEvent.submit(screen.getByRole('search'));
+    await act(async () => {});
+    fireEvent.change(screen.getByRole('combobox', {name: 'Prompt'}), {
+      target: {value: 'and for two people?'},
+    });
+    fireEvent.click(screen.getByRole('button', {name: 'Submit'}));
+    await act(async () => {});
+
+    expect(sentViews(fetchMock)).toEqual([
+      'storefront-preview-assistant',
+      'storefront-preview-assistant',
+    ]);
+    const turns = within(screen.getByRole('log', {name: 'Conversation'})).getAllByRole('article');
+    expect(turns.map((turn) => turn.textContent)).toEqual([
+      expect.stringContaining('which kayak should I get?'),
+      expect.stringContaining('and for two people?'),
+    ]);
+  });
 });

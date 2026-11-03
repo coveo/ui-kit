@@ -2,3 +2,9 @@ body {
   margin: 0;
   background: var(--color-bg-secondary);
 }
+
+/* Pages grow past the viewport, such as a long conversation: the sticky header stays with them. */
+#root {
+  height: auto;
+  min-height: 100%;
+}
