@@ -77,4 +77,38 @@ describe('buildViewSurfaces', () => {
     expect(result.surfacesOfView(search(1))).toEqual([]);
     expect(result.viewOfSurface('ui-a')).toBeUndefined();
   });
+
+  it("tells the conversation from the pages' own searches, across the visits of a conversation", () => {
+    const result = views([turn('t1'), turn('t2', 'ui-results'), turn('t3'), turn('t4')], {
+      t1: [ASSISTANT, 1],
+      t2: [SEARCH, 2],
+      t3: [ASSISTANT, 2],
+      t4: [ASSISTANT, 3],
+    });
+
+    expect(result.conversationOf(new Set([1, 2])).map(({id}) => id)).toEqual(['t1', 't3']);
+  });
+
+  it("shows a search page's latest search, from the turn that opened it on", () => {
+    const result = views(
+      [
+        turn('t1', 'ui-old'),
+        turn('t2'),
+        turn('t3', 'ui-opening'),
+        turn('t4', 'ui-panel'),
+        turn('t5', 'ui-other'),
+      ],
+      {
+        t1: [ASSISTANT, 1],
+        t2: [ASSISTANT, 1],
+        t3: [ASSISTANT, 1],
+        t4: [ASSISTANT, 2],
+        t5: [SEARCH, 3],
+      }
+    );
+
+    expect(result.resultsOf(2, 't3')?.id).toBe('t4');
+    expect(result.resultsOf(3)?.id).toBe('t5');
+    expect(result.resultsOf(4)).toBeUndefined();
+  });
 });

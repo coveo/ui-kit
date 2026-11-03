@@ -1,9 +1,25 @@
-/** One visit to a page. A new visit, even to the same page, gives the page fresh surfaces. */
+/**
+ * One visit to a page. A new visit, even to the same page, gives the page fresh surfaces. The
+ * assistant and search pages belong to a conversation (`thread`, the id of the visit that opened
+ * it): the assistant page and the search pages' chat panels all show and continue it.
+ */
 export type Visit =
   | {id: number; page: 'home'}
-  | {id: number; page: 'assistant'; prompt: string}
-  | {id: number; page: 'search'; query: string}
+  | {id: number; page: 'assistant'; prompt: string; thread: number}
+  | {
+      id: number;
+      page: 'search';
+      query: string;
+      thread: number;
+      /** The conversation turn whose search the page shows; without it, the page sends `query`. */
+      openingTurnId?: string;
+    }
   | {id: number; page: 'listing'; slug: string};
+
+/** The conversation a visit belongs to, if any. */
+export function threadOf(visit: Visit): number | undefined {
+  return visit.page === 'assistant' || visit.page === 'search' ? visit.thread : undefined;
+}
 
 let visitCount = 0;
 
@@ -16,12 +32,19 @@ export function visitHome(): Visit {
   return {id: nextId(), page: 'home'};
 }
 
-export function visitAssistant(prompt: string): Visit {
-  return {id: nextId(), page: 'assistant', prompt};
+/** An assistant page, in the conversation `thread`, or in a new one. */
+export function visitAssistant(prompt: string, thread?: number): Visit {
+  const id = nextId();
+  return {id, page: 'assistant', prompt, thread: thread ?? id};
 }
 
-export function visitSearch(query: string): Visit {
-  return {id: nextId(), page: 'search', query};
+/**
+ * A search page, in the conversation `thread`, or in a new one. It sends `query`, or shows the
+ * search of the conversation turn `openingTurnId`.
+ */
+export function visitSearch(query: string, thread?: number, openingTurnId?: string): Visit {
+  const id = nextId();
+  return {id, page: 'search', query, thread: thread ?? id, openingTurnId};
 }
 
 export function visitListing(slug: string): Visit {

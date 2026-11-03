@@ -3,19 +3,24 @@ import {cleanup, fireEvent, render, screen, within} from '@testing-library/react
 import type {DiscoveredSurface, Turn} from '@coveo/thermidor';
 import {
   makeFollowUpTurn,
-  makeSurfaces,
+  makeResponse,
   makeTurn,
 } from '../../../demo-schema-react/src/test/turn-fixtures.js';
 import {AssistantPage} from './AssistantPage.js';
 
+/** Answer surfaces: a search surface opens the search layout instead. */
+function makeSurfaces(...surfaceIds: string[]): DiscoveredSurface[] {
+  return surfaceIds.map((surfaceId) => ({
+    surfaceId,
+    rootComponentType: 'Answer',
+    isLoading: false,
+  }));
+}
+
 const pageView = vi.hoisted(() => ({turns: [] as Turn[]}));
 
-vi.mock('./use-page-view.js', () => ({
-  usePageView: () => ({
-    turns: pageView.turns,
-    turn: pageView.turns.at(-1),
-    surfaces: pageView.turns.flatMap((turn) => turn.response.surfaces),
-  }),
+vi.mock('../session/storefront-session.js', () => ({
+  useViewSurfaces: () => ({conversationOf: () => pageView.turns}),
 }));
 
 vi.mock('../views/ViewSurfaces.js', () => ({
@@ -39,10 +44,11 @@ function renderPage(overrides: Partial<Parameters<typeof AssistantPage>[0]> = {}
   render(
     <AssistantPage
       prompt="first question"
-      visitId={1}
+      conversationVisits={new Set([1])}
       busy={false}
       onSend={onSend}
       onBack={() => {}}
+      onShowResults={() => {}}
       {...overrides}
     />
   );
@@ -119,5 +125,27 @@ describe('AssistantPage', () => {
     fireEvent.click(screen.getByRole('button', {name: 'Submit'}));
 
     expect(onSend).not.toHaveBeenCalled();
+  });
+
+  it('opens a search a turn drew on the search layout, not in the chat', () => {
+    const onShowResults = vi.fn();
+    pageView.turns = [
+      makeTurn({
+        id: 't1',
+        prompt: 'See all wetsuits',
+        response: makeResponse({
+          surfaces: [
+            {surfaceId: 'ui-search', rootComponentType: 'CommerceSearch', isLoading: false},
+            ...makeSurfaces('ui-next'),
+          ],
+        }),
+      }),
+    ];
+    renderPage({onShowResults});
+
+    expect(screen.getByText('ui-next')).toBeTruthy();
+    expect(screen.queryByText('ui-search')).toBeNull();
+    fireEvent.click(screen.getByRole('button', {name: 'See the results →'}));
+    expect(onShowResults).toHaveBeenCalledWith('t1', 'See all wetsuits');
   });
 });

@@ -1,27 +1,37 @@
 import {useEffect, useId, useRef, useState} from 'react';
 import {AgentResponseBlock} from '../../../demo-schema-react/src/components/ConversationPage/AgentResponseBlock.js';
 import {UserPromptBubble} from '../../../demo-schema-react/src/components/ConversationPage/UserPromptBubble.js';
+import type {Turn} from '@coveo/thermidor';
 import {PageTurnStatus} from '../pages/PageTurnStatus.js';
-import {usePageView} from '../pages/use-page-view.js';
 import {
   useSessionSnapshot,
   useStorefrontSend,
   type StorefrontView,
 } from '../session/storefront-session.js';
+import {ASSISTANT_VIEW, isSearchSurface, shopperText} from '../views/view-surfaces.js';
 import {ViewSurfaces} from '../views/ViewSurfaces.js';
 import styles from './ChatPanel.module.css';
 
-const PANEL_VIEW: StorefrontView = 'storefront-preview-assistant';
+const PANEL_VIEW: StorefrontView = ASSISTANT_VIEW;
+
+interface ChatPanelProps {
+  visitId: number;
+  /** The conversation, oldest first: the turns of earlier pages, then the panel's own. */
+  turns: readonly Turn[];
+  className?: string;
+}
 
 /**
  * The assistant's chat panel next to a page, on the page's visit. It sends on
  * `storefront-preview-assistant`, so the server tells the agent what the shopper is looking at,
- * and draws only the turns it sent: their answers stay in the panel, and the page keeps its own.
+ * and draws the conversation: the turns asked before the page opened, such as on the assistant
+ * page, then the panel's own. Their answers stay in the panel, and the page keeps its own, as do
+ * the searches the conversation drew, shown on the page.
  */
-export function ChatPanel({visitId, className}: {visitId: number; className?: string}) {
+export function ChatPanel({visitId, turns, className}: ChatPanelProps) {
   const {sendPrompt} = useStorefrontSend();
   const {request} = useSessionSnapshot();
-  const {turns} = usePageView(visitId, PANEL_VIEW);
+  const latestTurnId = turns.at(-1)?.id;
   const [value, setValue] = useState('');
   const [isCollapsed, setIsCollapsed] = useState(false);
   const headingId = useId();
@@ -104,12 +114,19 @@ export function ChatPanel({visitId, className}: {visitId: number; className?: st
           >
             {turns.map((turn) => {
               const isStreaming = turn.status === 'streaming';
+              const text = shopperText(turn);
               return (
                 <li key={turn.id} className={styles.turn} aria-busy={isStreaming}>
-                  {turn.input.prompt && <UserPromptBubble prompt={turn.input.prompt} />}
+                  {text !== undefined && <UserPromptBubble prompt={text} />}
                   <PageTurnStatus turn={turn} />
                   <AgentResponseBlock response={turn.response} isStreaming={isStreaming}>
-                    <ViewSurfaces surfaces={turn.response.surfaces} isStreaming={isStreaming} />
+                    <ViewSurfaces
+                      surfaces={turn.response.surfaces.filter(
+                        (surface) => !isSearchSurface(surface)
+                      )}
+                      interactive={turn.id === latestTurnId}
+                      isStreaming={isStreaming}
+                    />
                   </AgentResponseBlock>
                 </li>
               );

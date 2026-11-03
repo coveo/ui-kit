@@ -38,15 +38,18 @@ Try it:
    `gift ideas under $50`. Keep chatting from the input at the bottom of the page, or pick a
    follow-up from the next actions: each answer joins the thread with its own surfaces.
 2. On the kayak answer, pick **See all kayaks**: the server runs the search the agent saved behind
-   that option and opens it as a search surface (facets, sort, pagination). Change the sort or a
-   facet: the server answers from the search it keeps.
+   that option and opens it as a search surface (facets, sort, pagination). The page switches to
+   the search layout: the results on the left, and the conversation so far goes on in the chat
+   panel on the right. Change the sort or a facet: the server answers from the search it keeps.
+   **← Back** returns to the chat, where **See the results →** opens the search again.
 3. Click **Add to cart** on a product card: the header's cart counts it. Open the cart to change it.
 4. Turn **AI** off and search `kayak`: the search page shows the search surface the server opened
    for it (facets, sort, pagination), answered from the search it keeps.
 5. On that search page, ask `which one is the cheapest?` in the chat panel on the right: the answer
    names the cheapest kayak, and its reasoning says what the shopper is looking at. The results stay
    as they are and keep working: pick a brand and ask again. A follow-up chip of a panel answer is
-   sent in the panel too.
+   sent in the panel too. A search from the header on the assistant page also keeps the
+   conversation in the panel of the search page it opens.
 6. Open a **Listing pages** entry: it shows an _In progress_ placeholder and sends no request.
 7. Open **One session** at the bottom: every turn, the view that sent it, and the surfaces it
    created that are still alive.
@@ -124,9 +127,14 @@ rather than tracking requests itself:
 - **Loading placeholders come from the data model.** A surface whose data model declares
   `isLoading: true` is drawn as its component's skeleton while its turn streams
   (`DiscoveredSurface.isLoading`). The session drops a placeholder its turn left behind.
-- **The assistant page is a chat,** as in `demo-schema-react`: every turn of the visit, each with
-  its prompt, reasoning, answer and surfaces, over an input that sends the next prompt on the same
-  visit. Only the latest turn's surfaces take actions (`src/pages/AssistantPage.tsx`).
+- **The assistant page is a chat,** as in `demo-schema-react`: every turn of the conversation,
+  each with its prompt, reasoning, answer and surfaces, over an input that sends the next prompt on
+  the same visit. Only the latest turn's surfaces take actions (`src/pages/AssistantPage.tsx`).
+- **One conversation across pages.** The assistant page and the search pages opened from it share
+  a conversation (`thread` in `src/navigation.ts`): the chat and the chat panel both show its
+  assistant turns, whichever page asked them, and an action of one of them goes on the page that
+  shows it. A turn of the conversation that draws a search opens the search layout with its
+  results; the chat and the panel draw its other surfaces, never the search.
 - **The search box is disabled while a request is in flight,** as in `demo-schema-react`. The
   server runs one turn at a time, so a search sent before the running turn ends would be refused.
 - **Nothing else can send while a request is in flight:** the chat panel's input is disabled like
@@ -146,8 +154,9 @@ The views share the session's server state, as Agent Gateway does today:
   session's latest search surface (its query, filters, sort and visible products) as what the
   shopper is looking at. Ask the panel for the cheapest product and the agent answers from that
   search.
-- **Nothing goes the other way.** The agent's answer never changes the search in the middle. A
-  search the agent opens from a panel answer (**See all kayaks**) shows in the panel.
+- **Nothing goes the other way,** except a new search: an answer that draws a search, such as a
+  panel answer's **See all kayaks**, replaces the results in the middle. Any other answer leaves
+  them as they are.
 - **A panel prompt does not leave the page.** It is sent on the assistant view and stays on the
   search page's visit. The panel input, the search box and both views' surfaces are disabled
   while any request is in flight, so nothing gets the server's 409 or is dropped.

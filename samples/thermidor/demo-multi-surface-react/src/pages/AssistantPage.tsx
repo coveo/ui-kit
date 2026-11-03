@@ -5,29 +5,41 @@ import {ErrorTurnBlock} from '../../../demo-schema-react/src/components/Conversa
 import {TurnSeparator} from '../../../demo-schema-react/src/components/ConversationPage/TurnSeparator.js';
 import {UserPromptBubble} from '../../../demo-schema-react/src/components/ConversationPage/UserPromptBubble.js';
 import {PromptInput} from '../../../demo-schema-react/src/components/PromptInput/PromptInput.js';
+import {useViewSurfaces} from '../session/storefront-session.js';
+import {drawsSearch, isSearchSurface, shopperText} from '../views/view-surfaces.js';
 import {ViewSurfaces} from '../views/ViewSurfaces.js';
-import {usePageView} from './use-page-view.js';
 import styles from './AssistantPage.module.css';
 import pageStyles from './pages.module.css';
 
 interface AssistantPageProps {
   /** The prompt that opened the visit, shown until the session opens its turn. */
   prompt: string;
-  visitId: number;
+  /** The visits of the conversation: the page's own, and those of the search pages it opened. */
+  conversationVisits: ReadonlySet<number>;
   /** Whether a request is in flight: the next prompt waits for it. */
   busy: boolean;
   /** Sends the shopper's next prompt in this conversation, on this visit. */
   onSend(prompt: string): void;
   onBack(): void;
+  /** Opens the search layout on the search a turn drew. */
+  onShowResults(turnId: string, query: string): void;
 }
 
 /**
- * The assistant page (`storefront-preview-assistant`), a chat: every turn of the visit, each with
- * the shopper's prompt, the agent's reasoning and answer, and the surfaces that turn created, over
- * an input that continues the conversation.
+ * The assistant page (`storefront-preview-assistant`), a chat: every turn of the conversation,
+ * including those asked in the chat panel of the search pages it opened, each with the shopper's
+ * prompt, the agent's reasoning and answer, and the surfaces that turn created, over an input that
+ * continues the conversation. A search a turn drew opens on the search layout, not in the chat.
  */
-export function AssistantPage({prompt, visitId, busy, onSend, onBack}: AssistantPageProps) {
-  const {turns} = usePageView(visitId, 'storefront-preview-assistant');
+export function AssistantPage({
+  prompt,
+  conversationVisits,
+  busy,
+  onSend,
+  onBack,
+  onShowResults,
+}: AssistantPageProps) {
+  const turns = useViewSurfaces().conversationOf(conversationVisits);
   const turnRefs = useRef(new Map<string, HTMLElement>());
   const latestTurnId = turns.at(-1)?.id;
 
@@ -59,7 +71,11 @@ export function AssistantPage({prompt, visitId, busy, onSend, onBack}: Assistant
               }}
             >
               <ShopperPrompt turn={turn} />
-              <TurnContent turn={turn} isLatest={turn.id === latestTurnId} />
+              <TurnContent
+                turn={turn}
+                isLatest={turn.id === latestTurnId}
+                onShowResults={onShowResults}
+              />
             </article>
           </div>
         ))}
@@ -72,18 +88,19 @@ export function AssistantPage({prompt, visitId, busy, onSend, onBack}: Assistant
 }
 
 /** What the shopper asked: the prompt, or the text of the chip whose action opened the turn. */
-function ShopperPrompt({turn: {input}}: {turn: Turn}) {
-  const text = input.prompt ?? (input.action?.context as {text?: unknown} | undefined)?.text;
-  return typeof text === 'string' ? <UserPromptBubble prompt={text} /> : null;
+function ShopperPrompt({turn}: {turn: Turn}) {
+  const text = shopperText(turn);
+  return text === undefined ? null : <UserPromptBubble prompt={text} />;
 }
 
 interface TurnContentProps {
   turn: Turn;
   /** Only the latest turn's surfaces take actions: earlier ones are read-only. */
   isLatest: boolean;
+  onShowResults(turnId: string, query: string): void;
 }
 
-function TurnContent({turn, isLatest}: TurnContentProps) {
+function TurnContent({turn, isLatest, onShowResults}: TurnContentProps) {
   if (turn.status === 'error') {
     return <ErrorTurnBlock error={turn.error} />;
   }
@@ -91,10 +108,19 @@ function TurnContent({turn, isLatest}: TurnContentProps) {
   return (
     <AgentResponseBlock response={turn.response} isStreaming={isStreaming}>
       <ViewSurfaces
-        surfaces={turn.response.surfaces}
+        surfaces={turn.response.surfaces.filter((surface) => !isSearchSurface(surface))}
         interactive={isLatest}
         isStreaming={isStreaming}
       />
+      {drawsSearch(turn) && (
+        <button
+          type="button"
+          className={pageStyles.back}
+          onClick={() => onShowResults(turn.id, shopperText(turn) ?? 'your search')}
+        >
+          See the results →
+        </button>
+      )}
     </AgentResponseBlock>
   );
 }
