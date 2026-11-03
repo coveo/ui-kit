@@ -182,40 +182,6 @@ Each `DiscoveredSurface` carries `surfaceId`, `rootComponentType`, and `isLoadin
 - **Endpoint** — when `endpoint` is provided, the client POSTs to it verbatim. When absent, it resolves `https://{orgId}.org.coveo.com` and appends the fixed converse path `/api/preview/organizations/{orgId}/agents/commerce/agui/converse`.
 - **Context providers** — `navigatorContextProvider` and `commerceContextProvider` are synchronous functions read fresh per request. Context is never stored on the session and never serialized.
 
-## Private entry point (for internal Coveo use only)
-
-> **For internal Coveo use only.** `@coveo/thermidor/private` is not supported for customers and may change or disappear without notice, in any release, including a patch. Customers use `createSession` from `@coveo/thermidor`.
-
-`createPrivateSession(config)` opens the same `Session` as `createSession`, but the caller injects the request contract instead of passing `agentConfigurationId` and `trackingId`. Coveo internal applications, such as Storefront Preview, use it to call a private converse endpoint with their own request fields.
-
-```typescript
-import {createPrivateSession} from '@coveo/thermidor/private';
-import {z} from 'zod';
-
-const session = createPrivateSession({
-  organizationId: 'my-org',
-  accessToken: 'xx-token',
-  endpoint: privateConverseUrl,
-  contracts: ComponentContractsSchema,
-  request: {
-    schema: z.object({
-      trackingId: z.string(),
-      language: z.string(),
-      country: z.string(),
-      currency: z.string(),
-    }),
-    fields: () => ({trackingId: 'my-tracking-id', ...getLocale()}),
-  },
-});
-```
-
-- `request.fields` is read on every request (`initialize`, prompts and actions), and its fields are merged into the request.
-- The fields are parsed with `request.schema` before every request, and the parsed value is sent. Invalid fields throw from `createPrivateSession` on the first read, and fail the request after that, like any request error.
-- The fields can't set a key the session builds itself (`clientId`, `message`, `action`, `conversationSessionId`, `conversationToken`, `context`, `pinnedProducts`): such fields are invalid.
-- The entry also re-exports everything `@coveo/thermidor` exports.
-
-See [ADR-021](./docs/internal/adr/ADR-021-private-entry-point-request-contract.md).
-
 ## Serialization
 
 `session.serialize()` produces a versioned `SerializedSession` (integer `version >= 1`), distinct from the runtime `Turn` type. Pass it back as `sessionToRestore` in `createSession` to continue a conversation. The initialization, the turns and the session's recorded `state` are persisted, without the answers to concurrent actions; the surfaces and the renderer stream are never persisted (they are re-derived from the initialization's and the turns' `activities` on restore); a turn or initialization persisted mid-stream is downgraded to `error` with `'Stream was interrupted'`, preserving what it holds.
