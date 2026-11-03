@@ -228,7 +228,7 @@ export function UseCasePlayer() {
     } catch {
       return;
     }
-    window.location.assign(window.location.pathname);
+    window.location.reload();
   };
 
   const stop = () => {
