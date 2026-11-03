@@ -2,18 +2,22 @@
 
 The solver partition measured with ADR 0001's own harness (`atomic-perf-harness/chunk-sweep`, copies with fixed paths in `atomic-perf-harness/partition-check`): the four ADR pages served over HTTP/2 with gzip from a local server that replays recorded API answers, fresh browser context per load, Lighthouse mobile throttling (150 ms, 1.6 Mbps, 4× CPU) and a desktop profile (100 ms, 5 Mbps), builds interleaved on each page, median of 7 mobile and 3 desktop loads. "Ready" is when every Atomic tag is defined and the results or products have rendered. Headless and Bueno come from the local CDN builds; themes, language files and icons are overlaid from `packages/atomic/cdn`.
 
-## Result: fresh map, both builds from the same source
+## Result: three builds of one commit, fresh map
 
-Mobile, ready in ms, versus the ADR N = 10 build (`analyze.py results-v3b.jsonl`):
+Mobile, ready in ms, one interleaved run of the three builds (`analyze.py results-v4.jsonl`, run 5):
 
-| Page | N = 10 | Solver | Measured | Modelled | Files | KB gzipped |
+| Page | Before the ADR | N = 10 | Solver | Solver vs N = 10 | Modelled | Files, N = 10 → solver |
 |---|---|---|---|---|---|---|
-| Search box | 2695 | 2667 | −28 (−1 %) | −30 | 30 → 12 | 134.6 → 144.4 |
-| Typical search | 3702 | 3395 | −307 (−8 %) | −328 | 74 → 16 | 179.9 → 165.1 |
-| Rich search | 4702 | 4192 | −510 (−11 %) | −648 | 132 → 29 | 268.1 → 228.7 |
-| Commerce | 5608 | 5106 | −502 (−9 %) | −586 | 108 → 17 | 214.3 → 176.9 |
+| Search box | 2862 | 2715 | 2676 | −39 (−1 %) | −30 | 30 → 12 |
+| Typical search | 4174 | 3688 | 3388 | −300 (−8 %) | −328 | 74 → 16 |
+| Rich search | 5223 | 4765 | 4160 | −605 (−13 %) | −648 | 132 → 29 |
+| Commerce | 6144 | 5601 | 5148 | −453 (−8 %) | −586 | 108 → 17 |
 
-Desktop: −65, −134, −322 and −192 ms (−5 to −15 %). Mean mobile gain 337 ms measured against 398 ms modelled. All 206 components register, 0 failed requests, no API misses. The pre-ADR build, measured in the first run, matched the model within 25 ms on every page.
+Desktop: −80, −135, −248 and −126 ms. Mean mobile gain 349 ms measured against 398 ms modelled. The two-build run on the same builds (run 4, `results-v3b.jsonl`) gave −28, −307, −510 and −502 ms. The harness reproduces the ADR's published times: the pre-ADR build lands within 54 ms of option A, the N = 10 build within 105 ms of option C. All 206 components register on every build, 0 failed requests, no API misses.
+
+Builds: runs 3 to 5 come from main of 2026-11-03 plus five commits to the custom elements manifest build (the build checkout changed branches between runs 2 and 3). Run 3 (`results-v3.jsonl`) compared a solver build from that commit with an N = 10 build from main of 2026-11-02 and is not used.
+
+`report-measured.mjs <measure dir> <strategies dir> <out.html>` draws the figures of the paper and the Confluence page from these files: measured ready times, measured versus modelled gain per run, and request waterfalls of the typical page (`waterfalls.jsonl`, one throttled load per build; the recorder captures scripts only, not the API calls).
 
 ## What the first two runs taught
 
