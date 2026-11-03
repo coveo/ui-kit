@@ -14,7 +14,7 @@ runs:
         # One brace pattern rather than repeated `--template` flags: pkg-pr-new takes
         # `--template` as a single string and expands it with glob.
         {
-          echo 'PREVIEW_TEMPLATE_PATTERN={packages/pkg-new-template,samples/thermidor/demo-schema-react}'
+          echo 'PREVIEW_TEMPLATE_PATTERN={packages/pkg-new-template,samples/thermidor/demo-schema-react,samples/thermidor/demo-multi-surface-react}'
         } >> "$GITHUB_ENV"
     - name: Resolve preview package paths
       id: resolve
