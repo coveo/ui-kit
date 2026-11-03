@@ -47,7 +47,6 @@ const pendingAtLoad = readPending();
 const BADGE_CLASSES: Record<UseCaseStatus['state'], string> = {
   ready: styles.ready,
   partly: styles.partly,
-  mocked: styles.mocked,
   'not-ready': styles.notReady,
 };
 
@@ -332,7 +331,7 @@ export function UseCasePlayer() {
           </ul>
         </dd>
         <dt>Status: {STATUS_LABELS[useCase.status.state]}</dt>
-        <dd>{useCase.status.note ?? 'Plays as expected on the mock backend.'}</dd>
+        <dd>{useCase.status.note ?? 'Plays as expected on the service.'}</dd>
         {useCase.related && (
           <>
             <dt>Related</dt>

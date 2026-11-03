@@ -1,8 +1,9 @@
 /**
  * The scenarios the use-case player replays, through the page's own controls, as a shopper would.
  * Each PM scenario is one of the product's multi-surface use cases (the "Multi-surface" tab of the
- * use-case sheet), titled and described in its words; its status says how far the sample, on the
- * mock backend, gets today. The edge checks guard the rules between surfaces that no use case
+ * use-case sheet), titled and described in its words; its status says how far the sample gets
+ * today on the real service: Agent Gateway and agent-smith at their main branches, with intent
+ * routing on. The edge checks guard the rules between surfaces that no use case
  * names on its own.
  */
 
@@ -28,10 +29,9 @@ export type Step =
 export type UseCaseStatus =
   | {state: 'ready'; note?: string}
   | {state: 'partly'; note: string}
-  | {state: 'mocked'; note: string}
   | {state: 'not-ready'; note: string};
 
-export interface RelatedUseCase {
+interface RelatedUseCase {
   id: string;
   title: string;
 }
@@ -56,7 +56,7 @@ export const USE_CASE_SHEET_URL =
 const CHEAPEST: Step = {kind: 'panel', text: 'Which is the cheapest?'};
 
 const NEEDS_AGENT_DIRECTIVE =
-  'Nothing in the mock backend lets the agent change the results next to the panel: it needs the agent directive, which only the real gateway has.';
+  'The agent cannot change the results next to the panel: the service has no agent directive yet. The agent answers in the panel and the results stay as they are.';
 
 export const USE_CASES: readonly UseCase[] = [
   {
@@ -67,8 +67,8 @@ export const USE_CASES: readonly UseCase[] = [
       'Instead of a zero-result page, the conversation picks up the query. For broad queries with very few results, the panel can offer help ("Want help narrowing this down?").',
     checks: ['A panel question after the empty search is not about the empty results.'],
     status: {
-      state: 'not-ready',
-      note: 'The mock backend never returns zero results (a query it cannot match opens the whole catalog), and the search box has no hand-over to the conversation.',
+      state: 'partly',
+      note: 'Intent routing sends "snow shovel" to the agent, which says the catalog has none and offers other searches: the conversation picks the query up, but by routing, not as a hand-over from an empty results page, and nothing offers help for a broad query with few results. The panel question is then about snow shovels, not empty results.',
     },
     steps: [{kind: 'omnibox', text: 'snow shovel'}, CHEAPEST],
   },
@@ -83,7 +83,7 @@ export const USE_CASES: readonly UseCase[] = [
     ],
     status: {
       state: 'partly',
-      note: 'Products show inline in the thread next to the results, but a question about "these" is answered from the kayaks next to the panel.',
+      note: 'Products show inline in the panel thread next to the results, but "which of these" is answered from the kayaks next to the panel: the agent is told about the latest search only.',
     },
     steps: [
       {kind: 'omnibox', text: 'kayaks'},
@@ -123,8 +123,8 @@ export const USE_CASES: readonly UseCase[] = [
       'After another header search, the cheapest is from the surfboards.',
     ],
     status: {
-      state: 'ready',
-      note: 'The mock agent answers "which is the cheapest?" from the results next to the panel; other questions get its canned answers.',
+      state: 'partly',
+      note: 'The agent answers from the search on screen (query and products), and a listing page opens a search. The facet step fails: the service returns no facets for this organization today, so "Wilderness Systems" cannot be picked.',
     },
     steps: [
       {kind: 'omnibox', text: 'kayaks'},
@@ -147,7 +147,7 @@ export const USE_CASES: readonly UseCase[] = [
     checks: ['The question asked next to the results is answered about those results.'],
     status: {
       state: 'partly',
-      note: 'The question goes to the panel next to the results, with no switch to a conversational layout; the mock agent only answers "which is the cheapest?" from the results.',
+      note: 'The question goes to the panel next to the results and is answered about them, with no switch to a conversational layout.',
     },
     steps: [
       {kind: 'omnibox', text: 'kayaks'},
@@ -232,7 +232,7 @@ export const USE_CASES: readonly UseCase[] = [
     ],
     status: {
       state: 'not-ready',
-      note: 'The home page sends no request (the mock backend has nothing to answer storefront-preview-home with), so it has no carousel; the panel there answers a recommendation with a carousel in its thread, but not a question about it.',
+      note: 'The home page sends no request (the service has nothing to answer storefront-preview-home with), so it has no carousel; the panel there answers a recommendation with a carousel in its thread.',
     },
     steps: [
       {kind: 'home'},
@@ -248,7 +248,10 @@ export const USE_CASES: readonly UseCase[] = [
     expected:
       'From the chat panel next to the listing, the shopper asks the assistant to add, remove or swap cart items, referring to products on the listing. The cart in the header updates and the agent confirms what changed.',
     checks: ['The header cart gets the first two kayaks of the results.'],
-    status: {state: 'not-ready', note: NEEDS_AGENT_DIRECTIVE},
+    status: {
+      state: 'not-ready',
+      note: 'The agent names the top two kayaks but says it cannot add items to the cart: the service has no agent directive for the cart yet.',
+    },
     steps: [
       {kind: 'omnibox', text: 'kayaks'},
       {kind: 'panel', text: 'Add the top two results to my cart'},
@@ -263,7 +266,7 @@ export const USE_CASES: readonly UseCase[] = [
     checks: ['The next question in the conversation gets no kayaks answer.'],
     status: {
       state: 'not-ready',
-      note: 'The mock backend tells the agent about the latest search wherever the question is asked, so it answers with the cheapest kayak. Which results a question is about is a rule still to land.',
+      note: 'The question opens the assistant layout, but the service tells the agent about the latest search wherever the question is asked, so it answers with the cheapest kayak. Which results a question is about is a rule still to land (there is no ask action yet).',
     },
     steps: [
       {kind: 'omnibox', text: 'kayaks'},
@@ -279,7 +282,10 @@ export const USE_CASES: readonly UseCase[] = [
     expected:
       'Picking the search the agent proposes opens new results, and the next panel question is about them.',
     checks: ["The cheapest is from the chip's search."],
-    status: {state: 'ready'},
+    status: {
+      state: 'not-ready',
+      note: 'The agent proposes follow-ups in its own words, with no "See all kayaks" search chip: the step depends on its wording, which varies between runs.',
+    },
     steps: [
       {kind: 'omnibox', text: 'kayaks'},
       {kind: 'panel', text: 'Which kayak is best for a beginner? Show me the options.'},
@@ -296,7 +302,7 @@ export const USE_CASES: readonly UseCase[] = [
     checks: ['What the panel question is about once the results are gone.'],
     status: {
       state: 'partly',
-      note: 'The mock backend answers about the kayaks (the last results); the rule is not decided yet.',
+      note: 'The service answers about the kayaks (the last results); the rule is not decided yet.',
     },
     steps: [{kind: 'omnibox', text: 'kayaks'}, {kind: 'home'}, CHEAPEST],
   },
@@ -309,7 +315,7 @@ export const USE_CASES: readonly UseCase[] = [
     checks: ['The panel question gets no kayaks answer.'],
     status: {
       state: 'not-ready',
-      note: 'The mock backend tells the agent about the latest search wherever the panel is, so it answers with the cheapest kayak.',
+      note: 'The service tells the agent about the latest search wherever the panel is, so the home page panel answers about the kayaks.',
     },
     steps: [
       {kind: 'omnibox', text: 'kayaks'},
@@ -323,7 +329,6 @@ export const USE_CASES: readonly UseCase[] = [
 export const STATUS_LABELS: Record<UseCaseStatus['state'], string> = {
   ready: 'Ready',
   partly: 'Partly working',
-  mocked: 'Mocked',
   'not-ready': 'Not ready',
 };
 

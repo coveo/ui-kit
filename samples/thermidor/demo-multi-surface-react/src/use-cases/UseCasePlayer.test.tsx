@@ -48,7 +48,7 @@ describe('UseCasePlayer', () => {
     expect(within(select).getByRole('group', {name: 'Edge checks'})).toBeTruthy();
 
     fireEvent.change(select, {target: {value: 'UC-08'}});
-    expect(within(player).getByText('Status: Ready')).toBeTruthy();
+    expect(within(player).getByText('Status: Partly working')).toBeTruthy();
 
     fireEvent.change(select, {target: {value: 'UC-11'}});
     expect(within(player).getByText('Status: Not ready')).toBeTruthy();

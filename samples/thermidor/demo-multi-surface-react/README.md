@@ -52,7 +52,8 @@ Try it:
    sent in the panel too. A search from the header on the assistant layout also keeps the
    conversation in the panel of the search layout it opens.
 6. Open a **Listing pages** entry: it sends its category as a search, and shows the results with
-   the chat panel beside them. The home page has the chat panel too; the assistant layout is itself the chat, so it has none.
+   the chat panel beside them. The home page has the chat panel too; the assistant layout is
+   itself the chat, so it has none.
 7. Open **One session** at the bottom: every turn, the view that sent it, and the surfaces it
    created that are still alive.
 
@@ -61,8 +62,10 @@ Try it:
 The bar above the header replays the product's multi-surface use cases (UC-04 to UC-34 of the
 use-case sheet, in its words) through the page's own controls, on a fresh session: pick one and
 press **Play**, or **Step through** it. Each use case shows what the shopper should see, what its
-steps check, and its status on the mock: _Ready_, _Partly working_, _Mocked_ or _Not ready_, with
-what is missing. **Edge checks** are the rules between surfaces that no use case names on its own.
+steps check, and its status on the real service (Agent Gateway and agent-smith at their main
+branches, through `pnpm dev:agent-gateway`): _Ready_, _Partly working_ or _Not ready_, with what is
+missing. Most of them also play on the public demo organization (`pnpm dev`), whose catalog differs:
+the scripted facet (UC-08) is not in it. **Edge checks** are the rules between surfaces that no use case names on its own.
 The scenarios are in `src/use-cases/use-cases.ts`.
 
 ## Pull-request previews
@@ -90,7 +93,7 @@ views and puts them on one session:
 | ---------------------------------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------ |
 | Home page: recommendations                           | `storefront-preview-home`      | ProductCarousel                                                                            |
 | Search box: a committed prompt, routed by the server | `storefront-preview`           | The assistant's components for a question, the search's otherwise                          |
-| Assistant layout: a follow-up from the next actions  | `storefront-preview-assistant` | ProductCarousel, NextActionsBar, ComparisonTable, BundleDisplay, ProductResearchCard       |
+| Assistant layout: the conversation's next prompts    | `storefront-preview-assistant` | ProductCarousel, NextActionsBar, ComparisonTable, BundleDisplay, ProductResearchCard       |
 | Search layout: results (opened by a search surface)  | `storefront-preview`           | CommerceSearch, LayoutStack, QuerySummary, Sort, ProductList, Pagination, PageSize, facets |
 | Search layout: the chat panel beside the results     | `storefront-preview-assistant` | The assistant's components                                                                 |
 
@@ -191,8 +194,8 @@ The views share the session's server state, as Agent Gateway does today:
   search surface, a question runs the agent. The sample only follows the answer.
 - **No query suggestions.** The search box sends nothing while typing; see below.
 - **A listing page is a search.** The published contract has no view id for listing pages, so a
-  listing page sends its category as a message on `storefront-preview-search`, and the mock opens
-  a search for it.
+  listing page sends its category as a message on `storefront-preview-search`, and the service
+  opens a search for it.
 - **The home page sends nothing.** A request needs a message or an action, and the server gives
   `storefront-preview-home` an empty run anyway, so the home page has nothing to ask until the
   session can open itself. The session opens on the first search.
