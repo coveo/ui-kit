@@ -206,7 +206,7 @@ describe('InstantProducts', () => {
     fireEvent.mouseEnter(screen.getByRole('option', {name: 'surf wax'}));
 
     await waitFor(() => expect(panelShown()).toBe('Loading products for surf wax'));
-    expect(screen.getByText('surf boards product')).toBeDefined();
+    expect(screen.getByText('surf boards product').closest('[inert]')).not.toBeNull();
     expect(screen.queryByLabelText('Loading products')).toBeNull();
     release();
     await waitFor(() => expect(productsShown()).toBe('Products for surf wax'));

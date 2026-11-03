@@ -75,8 +75,14 @@ export function PromptInput({
     [suggestions]
   );
 
-  useEffect(() => {
+  // Reset while rendering, so an item of the new suggestions is never reported at the old index.
+  const [highlightedSuggestions, setHighlightedSuggestions] = useState(suggestions);
+  if (suggestions !== highlightedSuggestions) {
+    setHighlightedSuggestions(suggestions);
     setActiveIndex(-1);
+  }
+
+  useEffect(() => {
     if (!suggestions?.length) {
       setShowDropdown(false);
     } else if (document.activeElement === textareaRef.current) {

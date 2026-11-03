@@ -30,8 +30,8 @@ function useShowProductsPanel(): boolean {
  * and whether it waits for the session, is the session's.
  *
  * The panel holds its place from the first highlight, so the dropdown does not shift when products
- * arrive: a skeleton until the first answer, then the previous products, dimmed, until the
- * highlighted query's answer. Products answering another query than the highlighted one are never
+ * arrive: a skeleton until the first answer, then the previous products, dimmed and inert, until
+ * the highlighted query's answer. Products answering another query than the highlighted one are never
  * shown as current.
  */
 export const InstantProducts = createReactComponent(
@@ -98,7 +98,7 @@ export const InstantProducts = createReactComponent(
       >
         <PanelHeader title={`Products for “${highlightedQuery}”`} />
         {previous ? (
-          <div className={styles.stale}>
+          <div className={styles.stale} inert>
             <ProductGrid products={previous.products} />
           </div>
         ) : (

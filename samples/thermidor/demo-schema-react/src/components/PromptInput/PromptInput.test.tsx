@@ -350,6 +350,44 @@ describe('suggestions integration', () => {
 
     vi.useRealTimers();
   });
+
+  it('never reports an item of new suggestions at the old highlight', () => {
+    const onActiveItemChange = vi.fn();
+    const nextSuggestions: SuggestionSection[] = [
+      {
+        id: 'search',
+        title: 'Search',
+        icon: 'search',
+        items: [
+          {id: 'n1', label: 'Surf wax'},
+          {id: 'n2', label: 'Surf leash'},
+        ],
+      },
+    ];
+    const {rerender} = render(
+      <PromptInput
+        onSubmit={vi.fn()}
+        suggestions={testSuggestions}
+        onActiveItemChange={onActiveItemChange}
+      />
+    );
+    const textarea = screen.getByLabelText('Prompt');
+    fireEvent.focus(textarea);
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    onActiveItemChange.mockClear();
+
+    rerender(
+      <PromptInput
+        onSubmit={vi.fn()}
+        suggestions={nextSuggestions}
+        onActiveItemChange={onActiveItemChange}
+      />
+    );
+
+    expect(onActiveItemChange.mock.calls).toEqual([[undefined]]);
+    expect(textarea.getAttribute('aria-activedescendant')).toBeNull();
+  });
 });
 
 describe('ARIA combobox pattern', () => {
