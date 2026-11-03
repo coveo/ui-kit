@@ -6,6 +6,7 @@ import {PageTurnStatus} from '../pages/PageTurnStatus.js';
 import {
   useSessionSnapshot,
   useStorefrontSend,
+  useViewSurfaces,
   type StorefrontView,
 } from '../session/storefront-session.js';
 import {ASSISTANT_VIEW, isSearchSurface, shopperText} from '../views/view-surfaces.js';
@@ -16,8 +17,11 @@ const PANEL_VIEW: StorefrontView = ASSISTANT_VIEW;
 
 interface ChatPanelProps {
   visitId: number;
-  /** The conversation, oldest first: the turns of earlier pages, then the panel's own. */
-  turns: readonly Turn[];
+  /**
+   * The conversation, oldest first: the turns of earlier pages, then the panel's own. A page that
+   * belongs to no conversation, such as the home page, shows its own visit's.
+   */
+  turns?: readonly Turn[];
   className?: string;
 }
 
@@ -28,7 +32,9 @@ interface ChatPanelProps {
  * page, then the panel's own. Their answers stay in the panel, and the page keeps its own, as do
  * the searches the conversation drew, shown on the page.
  */
-export function ChatPanel({visitId, turns, className}: ChatPanelProps) {
+export function ChatPanel({visitId, turns: conversation, className}: ChatPanelProps) {
+  const visitConversation = useViewSurfaces().conversationOf(new Set([visitId]));
+  const turns = conversation ?? visitConversation;
   const {sendPrompt} = useStorefrontSend();
   const {request} = useSessionSnapshot();
   const latestTurnId = turns.at(-1)?.id;

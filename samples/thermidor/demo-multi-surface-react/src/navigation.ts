@@ -76,3 +76,9 @@ export const LISTINGS: ReadonlyArray<{slug: string; name: string}> = [
   {slug: 'wetsuits-drysuits', name: 'Wetsuits & Drysuits'},
   {slug: 'accessories', name: 'Water Sports Accessories'},
 ];
+
+/**
+ * The view a listing page's own turns are sent on. The published contract has no view for
+ * listings, so it reuses the search view; a turn's visit keeps it apart from a search page.
+ */
+export const LISTING_VIEW: StorefrontView = 'storefront-preview-search';

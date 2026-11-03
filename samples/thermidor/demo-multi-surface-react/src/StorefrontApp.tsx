@@ -11,6 +11,8 @@ import {createStorefrontCatalog} from './a2ui/catalog.js';
 import {SessionInspector} from './components/SessionInspector.js';
 import {TopBar} from './components/TopBar.js';
 import {
+  LISTING_VIEW,
+  LISTINGS,
   threadOf,
   visitHome,
   visitListing,
@@ -32,8 +34,11 @@ import {ASSISTANT_VIEW, drawsSearch, shopperText} from './views/view-surfaces.js
 
 const catalog = createStorefrontCatalog();
 
-/** The view a page's actions are sent on behalf of. A listing page draws no surface. */
+/** The view a page's actions are sent on behalf of. */
 function pageView(visit: Visit): StorefrontView {
+  if (visit.page === 'listing') {
+    return LISTING_VIEW;
+  }
   return visit.page === 'prompt' ? visit.view : 'storefront-preview-home';
 }
 
@@ -82,7 +87,7 @@ export function StorefrontApp() {
   // A prompt page sends its prompt once per visit, and not again when Back returns to it.
   // StrictMode runs this effect twice; the visit id keeps the second run from sending again. A
   // page that shows a conversation turn's search sends nothing, nor does the home page, which has
-  // no prompt, and listing pages have no view id in the published contract.
+  // no prompt.
   const sentVisits = useRef(new Set<number>());
   useEffect(() => {
     if (sentVisits.current.has(visit.id)) {
@@ -91,6 +96,11 @@ export function StorefrontApp() {
     sentVisits.current.add(visit.id);
     if (visit.page === 'prompt' && visit.openingTurnId === undefined) {
       sendPrompt(visit.view, visit.prompt, visit.id);
+    } else if (visit.page === 'listing') {
+      // The contract has no request that opens a listing, so a listing page sends its category as
+      // a search.
+      const name = LISTINGS.find(({slug}) => slug === visit.slug)?.name ?? visit.slug;
+      sendPrompt(LISTING_VIEW, name, visit.id);
     }
   }, [visit, sendPrompt]);
 
@@ -222,7 +232,7 @@ interface PageProps {
 function Page({visit, conversationVisits, busy, onSend, onHome, onBack, onShowResults}: PageProps) {
   switch (visit.page) {
     case 'home':
-      return <HomePage />;
+      return <HomePage visitId={visit.id} />;
     case 'prompt':
       return (
         <PromptPage
@@ -239,6 +249,6 @@ function Page({visit, conversationVisits, busy, onSend, onHome, onBack, onShowRe
         />
       );
     case 'listing':
-      return <ListingPage slug={visit.slug} />;
+      return <ListingPage slug={visit.slug} visitId={visit.id} />;
   }
 }

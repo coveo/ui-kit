@@ -63,7 +63,7 @@ describe('StorefrontApp', () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it('shows a listing page as in progress, and sends nothing for it', async () => {
+  it("sends a listing page's category as a search, with the chat panel next to it", async () => {
     render(<App />);
     await act(async () => {});
     fetchMock.mockClear();
@@ -76,8 +76,10 @@ describe('StorefrontApp', () => {
     );
     await act(async () => {});
 
-    expect(screen.getByRole('status').textContent).toContain('In progress');
-    expect(fetchMock).not.toHaveBeenCalled();
+    expect(screen.getByRole('heading', {name: 'Surfing', level: 1})).toBeTruthy();
+    expect(sentViews(fetchMock)).toEqual(['storefront-preview-search']);
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body).message).toBe('Surfing');
+    expect(screen.getByRole('complementary', {name: 'Shopping assistant'})).toBeTruthy();
   });
 
   it('sends a prompt on the session shell, and opens the search layout for a search surface', async () => {
@@ -93,7 +95,7 @@ describe('StorefrontApp', () => {
     expect(screen.getByRole('complementary', {name: 'Shopping assistant'})).toBeTruthy();
   });
 
-  it('opens the assistant layout for an answer without a search surface', async () => {
+  it('opens the assistant layout, a chat without the panel, for an answer without a search surface', async () => {
     render(<App />);
     await act(async () => {});
 
@@ -105,6 +107,7 @@ describe('StorefrontApp', () => {
       within(screen.getByRole('log', {name: 'Conversation'})).getByText('which kayak should I get?')
     ).toBeTruthy();
     expect(screen.getByRole('button', {name: '← Back to home'})).toBeTruthy();
+    expect(screen.getByRole('combobox', {name: 'Prompt'})).toBeTruthy();
     expect(screen.queryByRole('complementary', {name: 'Shopping assistant'})).toBeNull();
   });
 

@@ -51,7 +51,8 @@ Try it:
    as they are and keep working: pick a brand and ask again. A follow-up chip of a panel answer is
    sent in the panel too. A search from the header on the assistant layout also keeps the
    conversation in the panel of the search layout it opens.
-6. Open a **Listing pages** entry: it shows an _In progress_ placeholder and sends no request.
+6. Open a **Listing pages** entry: it sends its category as a search, and shows the results with
+   the chat panel beside them. The home page has the chat panel too; the assistant layout is itself the chat, so it has none.
 7. Open **One session** at the bottom: every turn, the view that sent it, and the surfaces it
    created that are still alive.
 
@@ -144,8 +145,8 @@ rather than tracking requests itself:
 - **The search box is disabled while a request is in flight,** as in `demo-schema-react`. The
   server runs one turn at a time, so a search sent before the running turn ends would be refused.
 - **Nothing else can send while a request is in flight:** the chat panel's input is disabled like
-  the search box, follow-up chips sit on locked surfaces, and the home and listing pages send
-  nothing. So the pages and the panel call `session.dispatchAction` directly, as
+  the search box, follow-up chips sit on locked surfaces, the home page sends nothing, and a
+  listing page sends its search only when it opens. So the pages and the panel call `session.dispatchAction` directly, as
   `demo-schema-react` does. Leaving a page mid-answer lets the answer finish.
 - **The app records which view sent each turn.** Just before a send it sets the view that
   `context.custom.surfaceId` names, and after a prompt it records the turn the session opened with
@@ -180,8 +181,9 @@ The views share the session's server state, as Agent Gateway does today:
   intent analyzer when intent routing is on (`cpd-intent-routing-enabled`): a search opens a
   search surface, a question runs the agent. The sample only follows the answer.
 - **No query suggestions.** The search box sends nothing while typing; see below.
-- **Listing pages show a placeholder.** The published contract has no view id for them, so they show
-  _In progress_ and send nothing.
+- **A listing page is a search.** The published contract has no view id for listing pages, so a
+  listing page sends its category as a message on `storefront-preview-search`, and the mock opens
+  a search for it.
 - **The home page sends nothing.** A request needs a message or an action, and the server gives
   `storefront-preview-home` an empty run anyway, so the home page has nothing to ask until the
   session can open itself. The session opens on the first search.
@@ -213,7 +215,7 @@ src/
 ├── a2ui/
 │   ├── catalog.ts              The renderers for the Storefront components
 │   └── AddToCartButton/        The button added to every product card
-├── components/                 Top bar, search box, listing menu, cart, chat panel, In progress, inspector
+├── components/                 Top bar, search box, listing menu, cart, chat panel, inspector
 └── pages/                      Home, prompt (assistant or search layout) and listing pages
 ```
 
