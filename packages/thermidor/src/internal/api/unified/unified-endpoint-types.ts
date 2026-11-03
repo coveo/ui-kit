@@ -49,7 +49,5 @@ export interface A2uiAction<TContext = unknown> {
 export interface InitializeAction {
   name: 'initialize';
   timestamp: string;
-  actionId: null;
-  wantResponse: false;
   context: Record<string, never>;
 }
