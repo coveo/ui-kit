@@ -12,7 +12,7 @@
  * The runtime ({@link createSessionRuntime}) receives the fields that scope every
  * request as an input: `createSession` passes its required `agentConfigurationId` and
  * `trackingId`, and the private entry point's `createPrivateSession` passes whichever of
- * its optional ids and locale fields are set (ADR-021).
+ * its optional ids and locale fields are set.
  *
  * There are no singletons and no module-level mutable state: every call to
  * `createSession` builds a fresh store, so two sessions created from identical
