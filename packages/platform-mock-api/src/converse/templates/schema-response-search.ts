@@ -730,7 +730,6 @@ interface SearchViewState {
   pageSize: number;
   sortCriteria: string;
   selectedBrands: string[];
-  excludedBrands: string[];
   // A single active range covers both a listed range selection and a custom range;
   // the two are mutually exclusive.
   selectedPriceRange: PriceRange | null;
@@ -752,7 +751,6 @@ const DEFAULT_VIEW: SearchViewState = {
   pageSize: DEFAULT_PAGE_SIZE,
   sortCriteria: 'relevance',
   selectedBrands: [],
-  excludedBrands: [],
   selectedPriceRange: null,
   selectedCategoryPath: [],
   facetSearchQueries: {},
@@ -796,9 +794,6 @@ function sortProducts(input: WaterSportsProduct[], sortCriteria: string): WaterS
 
 function filterProducts(view: SearchViewState): WaterSportsProduct[] {
   return products.filter((p) => {
-    if (view.excludedBrands.includes(p.ec_brand)) {
-      return false;
-    }
     if (view.selectedBrands.length > 0 && !view.selectedBrands.includes(p.ec_brand)) {
       return false;
     }
@@ -836,7 +831,7 @@ function deriveRegularFacetSearch(view: SearchViewState, componentId: string) {
   const page = view.facetSearchPages[componentId] ?? 0;
   const needle = query.toLowerCase();
   // Count without this facet's own brand selection so search results mirror the value list.
-  const brandCountBase = filterProducts({...view, selectedBrands: [], excludedBrands: []});
+  const brandCountBase = filterProducts({...view, selectedBrands: []});
   const matches = BRAND_CANDIDATES.filter((brand) => brand.toLowerCase().includes(needle))
     .map((brand) => ({
       value: brand,
@@ -851,38 +846,34 @@ function deriveRegularFacetValues(view: SearchViewState, componentId: string) {
   // Facet counts reflect the result set as if this facet's own selections were not applied,
   // so selecting one brand never zeroes out the sibling brand counts. Other facets still
   // constrain the counts.
-  const brandCountBase = filterProducts({...view, selectedBrands: [], excludedBrands: []});
-  const isActive = (brand: string) =>
-    view.selectedBrands.includes(brand) || view.excludedBrands.includes(brand);
+  const brandCountBase = filterProducts({...view, selectedBrands: []});
+  const isSelected = (brand: string) => view.selectedBrands.includes(brand);
   const countFor = (brand: string) => brandCountBase.filter((p) => p.ec_brand === brand).length;
-  // Eligible values are those with results plus any active value (kept so it can be
+  // Eligible values are those with results plus any selected value (kept so it can be
   // deselected). The display window and the show-more/less controls are computed against this
   // set — not the full static candidate list — so a facet never shows fewer than the initial
   // increment of available values, and the controls only appear when they are meaningful.
-  const eligibleBrands = BRAND_CANDIDATES.filter((brand) => countFor(brand) > 0 || isActive(brand));
+  const eligibleBrands = BRAND_CANDIDATES.filter(
+    (brand) => countFor(brand) > 0 || isSelected(brand)
+  );
   const displayCount = Math.min(view.regularFacetDisplayCount, eligibleBrands.length);
   const displayedPage = eligibleBrands.slice(0, displayCount);
-  // Active values that aren't part of the displayed page (selected/excluded through search)
-  // are pinned to the top of the list so the user sees their selection.
+  // Selected values that aren't part of the displayed page (selected through search) are pinned
+  // to the top of the list so the user sees their selection.
   const pinnedBrands = eligibleBrands.filter(
-    (brand) => isActive(brand) && !displayedPage.includes(brand)
+    (brand) => isSelected(brand) && !displayedPage.includes(brand)
   );
   const displayedBrands = [...pinnedBrands, ...displayedPage];
-  const values = displayedBrands.map((brand) => {
-    const numberOfResults = countFor(brand);
-    let state: 'idle' | 'selected' | 'excluded' = 'idle';
-    if (view.selectedBrands.includes(brand)) {
-      state = 'selected';
-    } else if (view.excludedBrands.includes(brand)) {
-      state = 'excluded';
-    }
-    return {value: brand, numberOfResults, state};
-  });
+  const values = displayedBrands.map((brand) => ({
+    value: brand,
+    numberOfResults: countFor(brand),
+    state: isSelected(brand) ? 'selected' : 'idle',
+  }));
 
   return {
     ...FACET_FIELDS.regular,
     values,
-    hasActiveValues: view.selectedBrands.length > 0 || view.excludedBrands.length > 0,
+    hasActiveValues: view.selectedBrands.length > 0,
     canShowMoreValues: displayCount < eligibleBrands.length,
     canShowLessValues: displayCount > REGULAR_FACET_DISPLAY_LIMIT,
     facetSearch: deriveRegularFacetSearch(view, componentId),
@@ -1075,18 +1066,13 @@ function deriveCategoryFacetValues(view: SearchViewState, componentId: string) {
 function deriveBreadboxState(view: SearchViewState) {
   const facets: Record<string, unknown>[] = [];
 
-  const activeBrands = BRAND_CANDIDATES.filter(
-    (brand) => view.selectedBrands.includes(brand) || view.excludedBrands.includes(brand)
-  );
-  if (activeBrands.length > 0) {
+  const selectedBrands = BRAND_CANDIDATES.filter((brand) => view.selectedBrands.includes(brand));
+  if (selectedBrands.length > 0) {
     facets.push({
       facetId: FACET_COMPONENT_IDS.regular,
       ...FACET_FIELDS.regular,
       type: 'regular',
-      values: activeBrands.map((brand) => ({
-        value: brand,
-        state: view.selectedBrands.includes(brand) ? 'selected' : 'excluded',
-      })),
+      values: selectedBrands.map((brand) => ({value: brand, state: 'selected'})),
     });
   }
 
@@ -1448,20 +1434,7 @@ function deriveRegularFacetState(
   switch (action.name) {
     case 'toggleSelect': {
       const selectedBrands = toggleInList(currentView.selectedBrands, value);
-      const excludedBrands = currentView.excludedBrands.filter((brand) => brand !== value);
-      currentView = clearFacetSearch(
-        {...currentView, selectedBrands, excludedBrands, page: 0},
-        sourceComponentId
-      );
-      break;
-    }
-    case 'toggleExclude': {
-      const excludedBrands = toggleInList(currentView.excludedBrands, value);
-      const selectedBrands = currentView.selectedBrands.filter((brand) => brand !== value);
-      currentView = clearFacetSearch(
-        {...currentView, selectedBrands, excludedBrands, page: 0},
-        sourceComponentId
-      );
+      currentView = clearFacetSearch({...currentView, selectedBrands, page: 0}, sourceComponentId);
       break;
     }
     case 'toggleSingleSelect': {
@@ -1471,21 +1444,6 @@ function deriveRegularFacetState(
         {
           ...currentView,
           selectedBrands: isSoleSelected ? [] : [value],
-          excludedBrands: [],
-          page: 0,
-        },
-        sourceComponentId
-      );
-      break;
-    }
-    case 'toggleSingleExclude': {
-      const isSoleExcluded =
-        currentView.excludedBrands.length === 1 && currentView.excludedBrands[0] === value;
-      currentView = clearFacetSearch(
-        {
-          ...currentView,
-          excludedBrands: isSoleExcluded ? [] : [value],
-          selectedBrands: [],
           page: 0,
         },
         sourceComponentId
@@ -1494,7 +1452,7 @@ function deriveRegularFacetState(
     }
     case 'clearAllActiveValues':
       currentView = clearFacetSearch(
-        {...currentView, selectedBrands: [], excludedBrands: [], page: 0},
+        {...currentView, selectedBrands: [], page: 0},
         sourceComponentId
       );
       break;
@@ -1620,7 +1578,6 @@ function deselectBreadboxValue(context: Record<string, unknown>): void {
       currentView = {
         ...currentView,
         selectedBrands: currentView.selectedBrands.filter((brand) => brand !== value),
-        excludedBrands: currentView.excludedBrands.filter((brand) => brand !== value),
         page: 0,
       };
       break;
@@ -1654,7 +1611,6 @@ function deriveBreadboxViewState(action: {name: string; context: Record<string, 
       currentView = {
         ...currentView,
         selectedBrands: [],
-        excludedBrands: [],
         selectedPriceRange: null,
         selectedCategoryPath: [],
         categoryFacetDisplayCount: CATEGORY_FACET_DISPLAY_LIMIT,
