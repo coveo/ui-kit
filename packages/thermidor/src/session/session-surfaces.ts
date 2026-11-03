@@ -9,7 +9,13 @@
  */
 
 import {deriveSurfaces, SURFACE_ACTIVITY_KIND} from './fold.js';
-import type {Activity, DiscoveredSurface, SessionInitialization, Turn} from './types.js';
+import type {
+  Activity,
+  DiscoveredSurface,
+  SessionInitialization,
+  SessionRequest,
+  Turn,
+} from './types.js';
 
 /** The session's runs: its initialization, when it sent one, then its turns. */
 export interface SessionRuns {
@@ -21,6 +27,17 @@ export interface SessionRuns {
 export type RunTarget = {kind: 'turn'; turnId: string} | {kind: 'initialization'};
 
 export const INITIALIZATION: RunTarget = {kind: 'initialization'};
+
+/** The run `request` streams into: its turn, or the initialization. */
+export function requestTarget(request: SessionRequest): RunTarget {
+  return request.kind === 'initialize' || request.turnId === undefined
+    ? INITIALIZATION
+    : {kind: 'turn', turnId: request.turnId};
+}
+
+export function turnTarget(turnId: string): RunTarget {
+  return {kind: 'turn', turnId};
+}
 
 /** The session's surfaces, derived from every run's activities. */
 export interface SessionSurfaceView {

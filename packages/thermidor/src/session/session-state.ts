@@ -15,6 +15,16 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
 }
 
+/** Replaces the slice of `state` that `surfaceId` owns with `update` of it. */
+function updateSurfaceState(
+  state: A2uiState,
+  surfaceId: string,
+  update: (surfaceState: A2uiState) => A2uiState
+): A2uiState {
+  const surfaceState = isRecord(state[surfaceId]) ? (state[surfaceId] as A2uiState) : {};
+  return {...state, [surfaceId]: update(surfaceState)};
+}
+
 /**
  * Applies the just-arrived activity's messages to the session's `A2uiState`, in order. A
  * `createSurface` or `deleteSurface` ends the surface's stored state, as it ends the renderer's data
@@ -44,13 +54,9 @@ export function applyInboundOps(
     }
     // Per surface: every surface has a `root` node, so a shared node id would
     // collide at one top-level pointer without scoping the write by surface.
-    const surfaceState = isRecord(next[write.surfaceId])
-      ? (next[write.surfaceId] as A2uiState)
-      : {};
-    next = {
-      ...next,
-      [write.surfaceId]: setAtPointer(surfaceState, write.path, write.value),
-    };
+    next = updateSurfaceState(next, write.surfaceId, (surfaceState) =>
+      setAtPointer(surfaceState, write.path, write.value)
+    );
   }
   return next;
 }
@@ -223,11 +229,13 @@ export function overlayUnrecordedState(state: A2uiState, layer: UnrecordedState)
   }
   let next = state;
   for (const [surfaceId, writes] of layer) {
-    let surfaceState = isRecord(next[surfaceId]) ? (next[surfaceId] as A2uiState) : {};
-    for (const [path, value] of writes) {
-      surfaceState = setAtPointer(surfaceState, path, value);
-    }
-    next = {...next, [surfaceId]: surfaceState};
+    next = updateSurfaceState(next, surfaceId, (surfaceState) => {
+      let updated = surfaceState;
+      for (const [path, value] of writes) {
+        updated = setAtPointer(updated, path, value);
+      }
+      return updated;
+    });
   }
   return next;
 }
