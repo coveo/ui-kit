@@ -1,22 +1,52 @@
-/* The assistant's panel beside the page: its answers scroll, its input stays at the bottom. */
+/* The assistant's panel docked beside the page: as tall as the viewport under the sticky top bar
+   (64px), its thread scrolls inside it and its input stays at its bottom. */
 .panel {
+  --chat-panel-top: calc(64px + var(--space-5));
   position: sticky;
-  top: 80px;
+  top: var(--chat-panel-top);
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
   box-sizing: border-box;
   min-width: 0;
-  max-height: calc(100vh - 96px);
+  height: calc(100vh - var(--chat-panel-top) - var(--space-5));
+  height: calc(100dvh - var(--chat-panel-top) - var(--space-5));
   padding: var(--space-4);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-bg-primary);
 }
 
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
 .heading {
   margin: 0;
   font-size: var(--font-size-lg);
+}
+
+.toggle {
+  display: none;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-link);
+  background: none;
+  cursor: pointer;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-height: 0;
+  margin-top: var(--space-3);
 }
 
 .hint {
@@ -27,6 +57,7 @@
 
 .thread {
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: var(--space-4);
   min-height: 0;
@@ -45,6 +76,7 @@
 
 .form {
   display: flex;
+  margin-top: auto;
   gap: var(--space-2);
 }
 
@@ -73,9 +105,22 @@
   cursor: not-allowed;
 }
 
+/* Above the results on narrow screens: a shorter panel the shopper can fold away. */
 @media (max-width: 900px) {
   .panel {
     position: static;
-    max-height: none;
+    height: min(60vh, 520px);
+  }
+
+  .toggle {
+    display: inline-block;
+  }
+
+  .collapsed {
+    height: auto;
+  }
+
+  .collapsed .body {
+    display: none;
   }
 }

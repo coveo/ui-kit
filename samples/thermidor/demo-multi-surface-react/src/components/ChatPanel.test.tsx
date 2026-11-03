@@ -93,6 +93,20 @@ describe('ChatPanel', () => {
     expect(within(panel()).getByText('Ask about the results on this page.')).toBeTruthy();
   });
 
+  it('folds its thread and input away behind its toggle, for narrow screens', async () => {
+    await openKayakSearch();
+    const toggle = within(panel()).getByRole('button', {name: 'Hide'});
+    const body = document.getElementById(toggle.getAttribute('aria-controls') ?? '');
+
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+    expect(body?.contains(panelInput())).toBe(true);
+
+    fireEvent.click(toggle);
+
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+    expect(toggle.textContent).toBe('Show');
+  });
+
   it('asks the assistant on its view, and keeps the search page', async () => {
     await openKayakSearch();
 

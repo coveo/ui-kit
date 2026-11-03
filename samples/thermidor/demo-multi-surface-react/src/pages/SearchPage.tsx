@@ -5,17 +5,17 @@ import {usePageView} from './use-page-view.js';
 import styles from './pages.module.css';
 
 /**
- * Search results (`storefront-preview-search`) in the middle: the surfaces its own turns created,
+ * Search results (`storefront-preview-search`) on the left: the surfaces its own turns created,
  * such as the commerce search layout with its facets, sort and pagination. The assistant's chat
- * panel sits on the right, on the same visit, and its answers stay in the panel.
+ * panel is docked on the right, on the same visit, and its answers stay in the panel.
  */
 export function SearchPage({query, visitId}: {query: string; visitId: number}) {
   const {turn, surfaces} = usePageView(visitId, 'storefront-preview-search');
   const isWaiting = !turn || turn.status === 'streaming';
   return (
     <main className={`${styles.page} ${styles.wide}`}>
-      <h1 className={styles.title}>Results for “{query}”</h1>
       <div className={styles.withPanel}>
+        <h1 className={`${styles.title} ${styles.panelTitle}`}>Results for “{query}”</h1>
         <section className={styles.results} aria-label="Search results">
           <PageTurnStatus turn={turn} />
           {surfaces.length === 0 && isWaiting ? (
@@ -26,7 +26,7 @@ export function SearchPage({query, visitId}: {query: string; visitId: number}) {
             <ViewSurfaces surfaces={surfaces} isStreaming={turn?.status === 'streaming'} />
           )}
         </section>
-        <ChatPanel visitId={visitId} />
+        <ChatPanel visitId={visitId} className={styles.panel} />
       </div>
     </main>
   );

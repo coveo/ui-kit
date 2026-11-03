@@ -46,20 +46,45 @@
   max-width: 1440px;
 }
 
-/* The page in the middle, a panel on the right; the panel goes under it on narrow screens. */
+/* The results on the left, the chat panel docked on the right from the top of the page down. On
+   narrow screens the panel goes between the title and the results. */
 .withPanel {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 400px);
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'title panel'
+    'results panel';
   align-items: start;
-  gap: var(--space-5);
+  column-gap: var(--space-5);
+}
+
+.panelTitle {
+  grid-area: title;
+  margin-top: 0;
 }
 
 .results {
+  grid-area: results;
   min-width: 0;
+}
+
+.panel {
+  grid-area: panel;
 }
 
 @media (max-width: 900px) {
   .withPanel {
     grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+    grid-template-areas:
+      'title'
+      'panel'
+      'results';
+    row-gap: var(--space-5);
+  }
+
+  .panelTitle {
+    margin-bottom: 0;
   }
 }

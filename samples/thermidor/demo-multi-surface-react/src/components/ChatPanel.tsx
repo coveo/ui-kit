@@ -18,12 +18,14 @@ const PANEL_VIEW: StorefrontView = 'storefront-preview-assistant';
  * `storefront-preview-assistant`, so the server tells the agent what the shopper is looking at,
  * and draws only the turns it sent: their answers stay in the panel, and the page keeps its own.
  */
-export function ChatPanel({visitId}: {visitId: number}) {
+export function ChatPanel({visitId, className}: {visitId: number; className?: string}) {
   const {sendPrompt} = useStorefrontSend();
   const {request} = useSessionSnapshot();
   const {turns} = usePageView(visitId, PANEL_VIEW);
   const [value, setValue] = useState('');
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const headingId = useId();
+  const bodyId = useId();
   const thread = useRef<HTMLOListElement>(null);
   const input = useRef<HTMLInputElement>(null);
   const followsBottom = useRef(true);
@@ -66,57 +68,76 @@ export function ChatPanel({visitId}: {visitId: number}) {
   };
 
   return (
-    <aside className={styles.panel} aria-labelledby={headingId}>
-      <h2 id={headingId} className={styles.heading}>
-        Shopping assistant
-      </h2>
-      {turns.length === 0 ? (
-        <p className={styles.hint}>Ask about the results on this page.</p>
-      ) : (
-        <ol
-          ref={thread}
-          className={styles.thread}
-          aria-label="Conversation"
-          onScroll={({currentTarget}) => {
-            const {scrollHeight, scrollTop, clientHeight} = currentTarget;
-            followsBottom.current = scrollHeight - scrollTop - clientHeight < 32;
+    <aside
+      className={[styles.panel, isCollapsed && styles.collapsed, className]
+        .filter(Boolean)
+        .join(' ')}
+      aria-labelledby={headingId}
+    >
+      <div className={styles.header}>
+        <h2 id={headingId} className={styles.heading}>
+          Shopping assistant
+        </h2>
+        {/* Only narrow screens, where the panel sits above the results, can fold it away. */}
+        <button
+          type="button"
+          className={styles.toggle}
+          aria-expanded={!isCollapsed}
+          aria-controls={bodyId}
+          onClick={() => setIsCollapsed((collapsed) => !collapsed)}
+        >
+          {isCollapsed ? 'Show' : 'Hide'}
+        </button>
+      </div>
+      <div id={bodyId} className={styles.body}>
+        {turns.length === 0 ? (
+          <p className={styles.hint}>Ask about the results on this page.</p>
+        ) : (
+          <ol
+            ref={thread}
+            className={styles.thread}
+            aria-label="Conversation"
+            onScroll={({currentTarget}) => {
+              const {scrollHeight, scrollTop, clientHeight} = currentTarget;
+              followsBottom.current = scrollHeight - scrollTop - clientHeight < 32;
+            }}
+          >
+            {turns.map((turn) => {
+              const isStreaming = turn.status === 'streaming';
+              return (
+                <li key={turn.id} className={styles.turn} aria-busy={isStreaming}>
+                  {turn.input.prompt && <UserPromptBubble prompt={turn.input.prompt} />}
+                  <PageTurnStatus turn={turn} />
+                  <AgentResponseBlock response={turn.response} isStreaming={isStreaming}>
+                    <ViewSurfaces surfaces={turn.response.surfaces} isStreaming={isStreaming} />
+                  </AgentResponseBlock>
+                </li>
+              );
+            })}
+          </ol>
+        )}
+        <form
+          className={styles.form}
+          onSubmit={(event) => {
+            event.preventDefault();
+            submit(event.currentTarget);
           }}
         >
-          {turns.map((turn) => {
-            const isStreaming = turn.status === 'streaming';
-            return (
-              <li key={turn.id} className={styles.turn} aria-busy={isStreaming}>
-                {turn.input.prompt && <UserPromptBubble prompt={turn.input.prompt} />}
-                <PageTurnStatus turn={turn} />
-                <AgentResponseBlock response={turn.response} isStreaming={isStreaming}>
-                  <ViewSurfaces surfaces={turn.response.surfaces} isStreaming={isStreaming} />
-                </AgentResponseBlock>
-              </li>
-            );
-          })}
-        </ol>
-      )}
-      <form
-        className={styles.form}
-        onSubmit={(event) => {
-          event.preventDefault();
-          submit(event.currentTarget);
-        }}
-      >
-        <input
-          ref={input}
-          className={styles.input}
-          type="text"
-          value={value}
-          placeholder="Ask the shopping assistant"
-          aria-label="Ask the shopping assistant"
-          disabled={disabled}
-          onChange={(event) => setValue(event.currentTarget.value)}
-        />
-        <button type="submit" className={styles.send} disabled={disabled || !value.trim()}>
-          Send
-        </button>
-      </form>
+          <input
+            ref={input}
+            className={styles.input}
+            type="text"
+            value={value}
+            placeholder="Ask the shopping assistant"
+            aria-label="Ask the shopping assistant"
+            disabled={disabled}
+            onChange={(event) => setValue(event.currentTarget.value)}
+          />
+          <button type="submit" className={styles.send} disabled={disabled || !value.trim()}>
+            Send
+          </button>
+        </form>
+      </div>
     </aside>
   );
 }
