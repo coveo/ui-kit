@@ -24,11 +24,14 @@ export function useSearchBoxOptions(): SearchBoxOptions {
 
 /** What the `SearchBox` renderer gives its children. */
 export interface SearchBoxQuery {
-  /** What the input holds, as the shopper typed it. */
+  /** What the shopper typed, not a suggestion the arrow keys show in the input. */
   query: string;
   /** Whether the input was submitted since the last keystroke. */
   submitted: boolean;
-  /** The suggestion the shopper highlights, else the first one; empty while none is shown. */
+  /**
+   * The suggestion the shopper highlights, else the first one; empty while none is shown. It stays
+   * the one the highlight came from while the arrow keys are in the instant products.
+   */
   highlightedQuery: string;
   /** Shows these suggestions in the search box's dropdown. */
   showSuggestions: (sections: SuggestionSection[]) => void;

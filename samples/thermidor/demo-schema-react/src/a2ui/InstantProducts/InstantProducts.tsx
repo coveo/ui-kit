@@ -1,9 +1,15 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {FetchInstantProductsPayload, InstantProductsState} from '@coveo/thermidor-schema';
 import {InstantProductsPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {
+  ASIDE_LISTBOX_ID,
+  optionLabel,
+  useSuggestionsAside,
+  type AsideItem,
+} from '../../components/SuggestionsDropdown/index.js';
 import {useMediaQuery} from '../../hooks/use-media-query.js';
-import {A2UIProductCard} from '../ProductCard/ProductCard.js';
+import {formatPrice} from '../../utils.js';
 import {useSearchBoxQuery} from '../SearchBox/search-box-context.js';
 import {InstantProductsSkeleton} from '../Skeleton/Skeleton.js';
 import styles from './InstantProducts.module.css';
@@ -17,6 +23,15 @@ export const PRODUCTS_PANEL_MEDIA_QUERY = '(min-width: 640px)';
  * a slow one.
  */
 export const INSTANT_PRODUCTS_TIMEOUT_MS = 5000;
+
+type InstantProduct = InstantProductsState['products'][number];
+
+/** Opens the product's page in a new tab, by click or by Enter on its highlight. */
+function openProduct(clickUri: string | undefined) {
+  if (clickUri) {
+    window.open(clickUri, '_blank', 'noopener,noreferrer');
+  }
+}
 
 /** Whether the screen is wide enough for the products panel; small screens show suggestions only. */
 function useShowProductsPanel(): boolean {
@@ -33,6 +48,9 @@ function useShowProductsPanel(): boolean {
  * arrive: a skeleton until the first answer, then the previous products, dimmed and inert, until
  * the highlighted query's answer. Products answering another query than the highlighted one are never
  * shown as current.
+ *
+ * The current products are a list the arrow keys reach from the highlighted suggestion; Enter opens
+ * the highlighted one, as a click does.
  */
 export const InstantProducts = createReactComponent(
   {name: 'InstantProducts', schema: InstantProductsPropsSchema},
@@ -86,7 +104,7 @@ export const InstantProducts = createReactComponent(
       return (
         <section className={styles.panel} aria-label={`Products for ${props.query}`}>
           <PanelHeader title={`Products for “${props.query}”`} />
-          <ProductGrid products={props.products} />
+          <ProductList products={props.products} />
         </section>
       );
     }
@@ -99,7 +117,7 @@ export const InstantProducts = createReactComponent(
         <PanelHeader title={`Products for “${highlightedQuery}”`} />
         {previous ? (
           <div className={styles.stale} inert>
-            <ProductGrid products={previous.products} />
+            <ProductRows products={previous.products} />
           </div>
         ) : (
           <InstantProductsSkeleton />
@@ -117,21 +135,96 @@ function PanelHeader({title}: {title: string}) {
   );
 }
 
-function ProductGrid({products}: {products: InstantProductsState['products']}) {
+/** The current products, which the arrow keys reach from the suggestions. */
+function ProductList({products}: {products: InstantProduct[]}) {
+  const {showItems, activeItemId, hoverItem, selectItem} = useSuggestionsAside();
+  // Every replay of the stream rebuilds `products`, so the items follow their ids and links.
+  const itemsKey = JSON.stringify(
+    products.map(({permanentid, clickUri}) => [permanentid, clickUri])
+  );
+  const items = useMemo<AsideItem[]>(() => {
+    const links = JSON.parse(itemsKey) as [string, string | undefined][];
+    return links.map(([permanentid, clickUri]) => ({
+      id: productOptionId(permanentid),
+      onSelect: () => openProduct(clickUri),
+    }));
+  }, [itemsKey]);
+
+  useEffect(() => showItems(items), [showItems, items]);
+  useEffect(() => () => showItems([]), [showItems]);
+
   return (
-    <div className={styles.grid} role="list">
-      {products.map((product) => (
-        <div key={product.permanentid} role="listitem">
-          <A2UIProductCard
-            ec_name={product.ec_name}
-            ec_brand={product.ec_brand}
-            ec_price={product.ec_promo_price ?? product.ec_price}
-            ec_image={product.ec_images?.[0]}
-            ec_product_id={product.permanentid}
-            clickUri={product.clickUri}
+    <div id={ASIDE_LISTBOX_ID} className={styles.list} role="listbox" aria-label="Instant products">
+      {products.map((product, index) => {
+        const item = items[index];
+        return (
+          <ProductRow
+            key={product.permanentid}
+            product={product}
+            id={item.id}
+            label={optionLabel(
+              `${product.ec_name ?? 'Product'}, instant product`,
+              index + 1,
+              products.length,
+              'Right'
+            )}
+            active={item.id === activeItemId}
+            onHover={() => hoverItem(item)}
+            onSelect={() => selectItem(item)}
           />
-        </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/** The previous products, drawn inert while the highlighted query's answer loads. */
+function ProductRows({products}: {products: InstantProduct[]}) {
+  return (
+    <div className={styles.list}>
+      {products.map((product) => (
+        <ProductRow key={product.permanentid} product={product} />
       ))}
+    </div>
+  );
+}
+
+function productOptionId(permanentid: string): string {
+  return `instant-product-${permanentid}`;
+}
+
+interface ProductRowProps {
+  product: InstantProduct;
+  id?: string;
+  label?: string;
+  active?: boolean;
+  onHover?: () => void;
+  onSelect?: () => void;
+}
+
+function ProductRow({product, id, label, active = false, onHover, onSelect}: ProductRowProps) {
+  const image = product.ec_images?.[0];
+  const price = product.ec_promo_price ?? product.ec_price;
+  return (
+    <div
+      id={id}
+      className={`${styles.row} ${active ? styles.active : ''}`}
+      role={id ? 'option' : undefined}
+      aria-selected={id ? active : undefined}
+      aria-label={label}
+      onMouseEnter={onHover}
+      onClick={onSelect}
+    >
+      {image ? (
+        <img className={styles.image} src={image} alt="" loading="lazy" />
+      ) : (
+        <div className={styles.image} />
+      )}
+      <div className={styles.content}>
+        <span className={styles.name}>{product.ec_name}</span>
+        {product.ec_brand && <span className={styles.brand}>{product.ec_brand}</span>}
+      </div>
+      {price !== undefined && <span className={styles.price}>{formatPrice(price)}</span>}
     </div>
   );
 }

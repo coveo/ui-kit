@@ -9,6 +9,8 @@ interface SuggestionItemRowProps {
   onSelect: () => void;
   onHover?: () => void;
   id: string;
+  /** The option's accessible name. Defaults to its text. */
+  label?: string;
 }
 
 function SearchIcon() {
@@ -74,6 +76,7 @@ export function SuggestionItemRow({
   onSelect,
   onHover,
   id,
+  label,
 }: SuggestionItemRowProps) {
   const IconComponent = ICON_MAP[icon];
 
@@ -82,6 +85,7 @@ export function SuggestionItemRow({
       id={id}
       role="option"
       aria-selected={isActive}
+      aria-label={label}
       className={`${styles.row} ${isActive ? styles.active : ''}`}
       onMouseDown={onSelect}
       onMouseEnter={onHover}

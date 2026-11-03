@@ -1,3 +1,4 @@
+import {optionLabel} from './option-label.js';
 import type {SuggestionSection, SuggestionItem} from './types.js';
 import {SuggestionItemRow} from './SuggestionItemRow.js';
 import styles from './SuggestionSectionGroup.module.css';
@@ -7,6 +8,11 @@ interface SuggestionSectionGroupProps {
   onSelect: (item: SuggestionItem) => void;
   onHover?: (item: SuggestionItem) => void;
   activeItemId?: string;
+  /** The item's position among every suggestion, from 1. */
+  positionOf: (item: SuggestionItem) => number;
+  /** How many suggestions there are, across sections. */
+  count: number;
+  list?: 'Left' | 'Right';
 }
 
 export function SuggestionSectionGroup({
@@ -14,6 +20,9 @@ export function SuggestionSectionGroup({
   onSelect,
   onHover,
   activeItemId,
+  positionOf,
+  count,
+  list,
 }: SuggestionSectionGroupProps) {
   const headerId = `section-${section.id}-header`;
 
@@ -31,6 +40,7 @@ export function SuggestionSectionGroup({
           onSelect={() => onSelect(item)}
           onHover={() => onHover?.(item)}
           id={`suggestion-item-${item.id}`}
+          label={optionLabel(`“${item.label}”, suggested query`, positionOf(item), count, list)}
         />
       ))}
     </div>

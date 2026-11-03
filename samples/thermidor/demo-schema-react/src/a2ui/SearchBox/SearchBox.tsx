@@ -16,9 +16,11 @@ const NO_SUGGESTIONS: SuggestionSection[] = [];
 
 /**
  * A2-UI component for the `SearchBox`: the page's prompt input. What is typed stays here and is
- * given to the `suggestionsChild`, which decides which suggestions the input's dropdown shows. The
- * suggestion the shopper highlights, else the first one, is given to the `instantProductsChild`,
- * drawn beside the suggestions. Submitting is the page's.
+ * given to the `suggestionsChild`, which decides which suggestions the input's dropdown shows. A
+ * suggestion the arrow keys highlight is shown in the input, but is not what was typed, so the
+ * suggestions stay those of the typed text. The suggestion the shopper highlights, by pointer or
+ * arrow keys, else the first one, is given to the `instantProductsChild`, drawn beside the
+ * suggestions, whose products the arrow keys then reach. Submitting is the page's.
  */
 export const SearchBox = createReactComponent(
   {name: 'SearchBox', schema: SearchBoxPropsSchema},

@@ -1,7 +1,8 @@
+import {useEffect, useMemo} from 'react';
 import {render, screen, fireEvent, act} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
 import {PromptInput} from './PromptInput.js';
-import type {SuggestionSection} from '../SuggestionsDropdown/index.js';
+import {useSuggestionsAside, type SuggestionSection} from '../SuggestionsDropdown/index.js';
 
 describe('PromptInput', () => {
   it('renders a textarea with the provided placeholder', () => {
@@ -514,7 +515,7 @@ describe('highlighted suggestion', () => {
   it('reports and highlights the item under the pointer, and keeps it once the pointer leaves', () => {
     const {textarea, highlighted} = renderWithHighlight();
 
-    const wetsuits = screen.getByRole('option', {name: 'Wetsuits'});
+    const wetsuits = screen.getByRole('option', {name: /“Wetsuits”/});
     fireEvent.mouseEnter(wetsuits);
     fireEvent.mouseLeave(wetsuits);
 
@@ -556,5 +557,232 @@ describe('highlighted suggestion', () => {
 
     fireEvent.keyDown(textarea, {key: 'Escape'});
     expect(screen.queryByRole('complementary')).toBeNull();
+  });
+});
+
+/** Products beside the suggestions, reached with the arrow keys as `InstantProducts` are. */
+function TestAside({onSelect}: {onSelect: (id: string) => void}) {
+  const {showItems, activeItemId, hoverItem} = useSuggestionsAside();
+  const items = useMemo(
+    () => ['p1', 'p2'].map((id) => ({id, onSelect: () => onSelect(id)})),
+    [onSelect]
+  );
+  useEffect(() => showItems(items), [showItems, items]);
+  useEffect(() => () => showItems([]), [showItems]);
+  return (
+    <div role="listbox" aria-label="Products">
+      {items.map((item) => (
+        <div
+          key={item.id}
+          id={item.id}
+          role="option"
+          aria-selected={item.id === activeItemId}
+          onMouseEnter={() => hoverItem(item)}
+        >
+          {item.id}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+describe('keyboard navigation, as in Atomic commerce', () => {
+  function renderNavigable({withAside = true} = {}) {
+    const onSubmit = vi.fn();
+    const onValueChange = vi.fn();
+    const onActiveItemChange = vi.fn();
+    const onSelectProduct = vi.fn();
+    render(
+      <PromptInput
+        onSubmit={onSubmit}
+        suggestions={testSuggestions}
+        onValueChange={onValueChange}
+        onActiveItemChange={onActiveItemChange}
+        suggestionsAside={withAside && <TestAside onSelect={onSelectProduct} />}
+      />
+    );
+    const textarea = screen.getByLabelText('Prompt') as HTMLTextAreaElement;
+    fireEvent.change(textarea, {target: {value: 'surf'}});
+    onValueChange.mockClear();
+    fireEvent.focus(textarea);
+    const press = (key: string) => fireEvent.keyDown(textarea, {key});
+    const highlighted = () => onActiveItemChange.mock.lastCall?.[0]?.label;
+    const active = () => textarea.getAttribute('aria-activedescendant');
+    return {textarea, press, highlighted, active, onSubmit, onValueChange, onSelectProduct};
+  }
+
+  it('shows the suggestion the arrow keys highlight in the input, without reporting it as typed', () => {
+    const {textarea, press, onValueChange} = renderNavigable();
+
+    press('ArrowDown');
+    expect(textarea.value).toBe('Surfboards');
+    press('ArrowDown');
+    expect(textarea.value).toBe('Wetsuits');
+
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+
+  it('wraps from the last suggestion to the first, and up from none to the last', () => {
+    const {textarea, press} = renderNavigable();
+
+    press('ArrowUp');
+    expect(textarea.value).toBe('Build a beginner surfing kit');
+    press('ArrowDown');
+    expect(textarea.value).toBe('Surfboards');
+  });
+
+  it('puts the typed text back once the arrow keys move up past the first suggestion', () => {
+    const {textarea, press, active} = renderNavigable();
+
+    press('ArrowDown');
+    press('ArrowUp');
+
+    expect(textarea.value).toBe('surf');
+    expect(active()).toBeNull();
+  });
+
+  it('leaves the input as typed on hover, and Enter then submits what was typed', () => {
+    const {textarea, press, highlighted, onSubmit} = renderNavigable();
+
+    fireEvent.mouseEnter(screen.getByRole('option', {name: /“Wetsuits”/}));
+    expect(highlighted()).toBe('Wetsuits');
+    expect(textarea.value).toBe('surf');
+
+    press('Enter');
+    expect(onSubmit).toHaveBeenCalledWith('surf');
+  });
+
+  it('submits the suggestion the arrow keys show', () => {
+    const {press, onSubmit} = renderNavigable();
+
+    press('ArrowDown');
+    press('Enter');
+
+    expect(onSubmit).toHaveBeenCalledWith('Surfboards');
+  });
+
+  it('keeps the shown suggestion on Escape, and makes it the query once the input is focused again', () => {
+    const {textarea, press, onValueChange} = renderNavigable();
+    press('ArrowDown');
+
+    press('Escape');
+    expect(screen.queryByRole('listbox')).toBeNull();
+    expect(textarea.value).toBe('Surfboards');
+    expect(onValueChange).not.toHaveBeenCalled();
+
+    fireEvent.focus(textarea);
+    expect(onValueChange).toHaveBeenCalledWith('Surfboards');
+  });
+
+  it('closes the dropdown on Tab without holding the focus', () => {
+    const {press} = renderNavigable();
+    press('ArrowDown');
+
+    expect(press('Tab')).toBe(true);
+    expect(screen.queryByRole('listbox')).toBeNull();
+  });
+
+  it('leaves the left and right arrows to the caret without a highlight', () => {
+    const {press} = renderNavigable();
+
+    expect(press('ArrowRight')).toBe(true);
+    expect(press('ArrowLeft')).toBe(true);
+  });
+
+  it('leaves the left and right arrows to the caret without products beside the suggestions', () => {
+    const {press, active} = renderNavigable({withAside: false});
+    press('ArrowDown');
+
+    expect(press('ArrowRight')).toBe(true);
+    expect(active()).toBe('suggestion-item-s1');
+  });
+
+  it('moves into the products with the right arrow, keeping the suggestion they are for', () => {
+    const {textarea, press, highlighted, active} = renderNavigable();
+    press('ArrowDown');
+    press('ArrowDown');
+
+    expect(press('ArrowRight')).toBe(false);
+
+    expect(active()).toBe('p1');
+    expect(screen.getByRole('option', {name: 'p1'}).getAttribute('aria-selected')).toBe('true');
+    expect(highlighted()).toBe('Wetsuits');
+    expect(textarea.value).toBe('Wetsuits');
+    expect(textarea.getAttribute('aria-controls')).toBe(
+      'suggestions-listbox suggestions-aside-listbox'
+    );
+  });
+
+  it('moves between products, and back to the suggestion they came from with the left arrow', () => {
+    const {press, active, highlighted} = renderNavigable();
+    press('ArrowDown');
+    press('ArrowDown');
+    press('ArrowRight');
+
+    press('ArrowDown');
+    expect(active()).toBe('p2');
+    press('ArrowDown');
+    expect(active()).toBe('p1');
+    press('ArrowUp');
+    expect(active()).toBe('p2');
+
+    expect(press('ArrowLeft')).toBe(false);
+    expect(active()).toBe('suggestion-item-s2');
+    expect(highlighted()).toBe('Wetsuits');
+  });
+
+  it('returns to the product highlighted there last', () => {
+    const {press, active} = renderNavigable();
+    press('ArrowDown');
+    press('ArrowRight');
+    press('ArrowDown');
+    press('ArrowLeft');
+
+    press('ArrowRight');
+
+    expect(active()).toBe('p2');
+  });
+
+  it('opens the highlighted product on Enter, and closes the dropdown', () => {
+    const {press, onSubmit, onSelectProduct} = renderNavigable();
+    press('ArrowDown');
+    press('ArrowRight');
+
+    press('Enter');
+
+    expect(onSelectProduct).toHaveBeenCalledWith('p1');
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(screen.queryByRole('listbox')).toBeNull();
+  });
+
+  it('submits the input on Enter when a product is only under the pointer', () => {
+    const {press, onSubmit, onSelectProduct, active} = renderNavigable();
+
+    fireEvent.mouseEnter(screen.getByRole('option', {name: 'p2'}));
+    expect(active()).toBe('p2');
+    press('Enter');
+
+    expect(onSelectProduct).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalledWith('surf');
+  });
+
+  it('labels each suggestion with its position, and the list it is in', () => {
+    renderNavigable();
+
+    expect(
+      screen.getByRole('option', {name: '“Wetsuits”, suggested query. 2 of 3. In Left list.'})
+    ).toBeDefined();
+  });
+
+  it('announces each move of the arrow keys on Apple platforms', () => {
+    vi.spyOn(navigator, 'userAgent', 'get').mockReturnValue('Mozilla/5.0 (Macintosh)');
+    const {press} = renderNavigable({withAside: false});
+
+    press('ArrowDown');
+
+    expect(document.querySelector('[aria-live="assertive"]')?.textContent).toBe(
+      '“Surfboards”, suggested query. 1 of 3.'
+    );
+    vi.restoreAllMocks();
   });
 });
