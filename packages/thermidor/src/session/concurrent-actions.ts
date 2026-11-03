@@ -10,7 +10,7 @@ import type {NormalizedStreamEvent, RawSSEEvent} from '@/src/internal/api/protoc
 import type {UnifiedEndpointClient} from '@/src/internal/api/unified/unified-endpoint-client.js';
 import type {
   A2uiAction,
-  CommerceRequestModel,
+  ConverseRequestModel,
 } from '@/src/internal/api/unified/unified-endpoint-types.js';
 import {devWarn} from '@/src/internal/utils/dev-warn.js';
 import {
@@ -40,7 +40,7 @@ export interface ConcurrentActionsOptions {
     accessToken: string;
     endpoint?: string;
   };
-  buildActionRequest: (action: A2uiAction) => CommerceRequestModel;
+  buildActionRequest: (action: A2uiAction) => ConverseRequestModel;
 }
 
 export interface ConcurrentActions {

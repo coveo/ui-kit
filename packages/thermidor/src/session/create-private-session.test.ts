@@ -133,6 +133,26 @@ describe('createPrivateSession', () => {
     expect(session.actionError).toBeUndefined();
   });
 
+  it('sends its fields with an action the producer announces as concurrent', async () => {
+    const locale = {language: 'fr', country: 'CA', currency: 'CAD'};
+    answerWith(
+      {type: 'RUN_STARTED', conversationSessionId: 'session-1', conversationToken: 'token-1'},
+      {
+        ...PAGINATION_SURFACE,
+        metadata: {concurrentActions: {'commerce-search-surface': {selectPage: {}}}},
+      },
+      {type: 'RUN_FINISHED'}
+    );
+    const session = createPrivateSession(config(() => locale));
+    await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+
+    await session.dispatchAction(SELECT_PAGE);
+
+    expect(requests()).toHaveLength(2);
+    expect(requests()[1]).toMatchObject({...locale, action: {name: 'selectPage'}});
+    expect(requests()[1]).not.toHaveProperty('agentConfigurationId');
+  });
+
   it('reads the fields again on every request', async () => {
     let locale = {language: 'en', country: 'US', currency: 'USD'};
     const session = createPrivateSession(config(() => locale));
