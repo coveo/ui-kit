@@ -47,6 +47,22 @@ Try it:
 6. Open **One session** at the bottom: every turn, the view that sent it, and the surfaces it
    created that are still alive.
 
+## Pull-request previews
+
+This sample is published as a [pkg.pr.new](https://pkg.pr.new) StackBlitz template next to
+`demo-schema-react`, so every PR that affects `@coveo/thermidor` gets a link that boots it against
+that PR's build of the package, on the public demo organization with no configuration.
+
+A template is published on its own, without its sibling sample, so before publishing
+[`prepare-templates.mjs`](../../../.github/actions/publish-preview/prepare-templates.mjs) copies
+`demo-schema-react/src` into the template's `vendor/` folder, points the imports at the copy and
+adds `demo-schema-react`'s runtime dependencies. It also drops the `turbo run build` step from the
+`dev` scripts, since the template installs `@coveo/thermidor` prebuilt. The sample's own source
+is not changed.
+
+The template set lives in
+[`.github/actions/publish-preview/action.yml`](../../../.github/actions/publish-preview/action.yml).
+
 ## What it reproduces
 
 Storefront Preview (admin-ui) uses one Thermidor session per view today. This sample keeps the

@@ -70,6 +70,10 @@ so every PR that affects `@coveo/thermidor` gets a link that boots this app agai
 that PR's build of the package. Because it needs no configuration, the link is
 runnable as-is.
 
+`demo-multi-surface-react` is published the same way and reuses this sample's
+components: its template carries a copy of `src/`, so changes here show up in both
+previews.
+
 The template set lives in
 [`.github/actions/publish-preview/action.yml`](../../../.github/actions/publish-preview/action.yml).
 
