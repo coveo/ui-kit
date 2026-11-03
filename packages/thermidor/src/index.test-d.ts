@@ -76,6 +76,11 @@ test('requires the agent configuration and tracking id, and takes no locale', ()
   expectTypeOf<SessionConfig>().not.toHaveProperty('currency');
 });
 
+// ── NEGATIVE: the private request contract stays out of the root entry ──
+test('keeps the private request contract out of the root entry', () => {
+  expectTypeOf<SessionConfig>().not.toHaveProperty('request');
+});
+
 // ── POSITIVE: the session opens itself with initialize, recorded as its initialization ──
 test('exposes the initialization of the session', () => {
   expectTypeOf<SessionConfig['initialize']>().toEqualTypeOf<boolean | undefined>();
@@ -251,3 +256,9 @@ import {selectGenerativeState} from '@/src/index.js';
 import type {GenerativeThunk} from '@/src/index.js';
 
 /* eslint-enable @typescript-eslint/no-unused-vars */
+
+// The private entry point, for internal Coveo use only (`@coveo/thermidor/private`) stays out of the root entry.
+// @ts-expect-error `createPrivateSession` must not be exported from the root entry.
+import {createPrivateSession} from '@/src/index.js';
+// @ts-expect-error `PrivateSessionConfig` must not be exported from the root entry.
+import type {PrivateSessionConfig} from '@/src/index.js';

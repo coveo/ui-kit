@@ -9,6 +9,11 @@
  * {@link foldActivity} reduction, plus the initialize / dispatchAction / cancel /
  * retry / stream-consume orchestration.
  *
+ * The runtime ({@link createSessionRuntime}) receives its request contract as an
+ * input: `createSession` passes the built-in contract (`agentConfigurationId` and
+ * `trackingId`), and the private entry point's `createPrivateSession` passes an
+ * injected one (ADR-021).
+ *
  * There are no singletons and no module-level mutable state: every call to
  * `createSession` builds a fresh store, so two sessions created from identical
  * configuration share no mutable state.
@@ -20,8 +25,9 @@ import type {NormalizedStreamEvent, RawSSEEvent} from '@/src/internal/api/protoc
 import {createUnifiedEndpointClient} from '@/src/internal/api/unified/unified-endpoint-client.js';
 import type {
   A2uiAction,
+  ClientOwnedRequestFields,
+  ConverseRequestModel,
   InitializeAction,
-  CommerceRequestModel,
 } from '@/src/internal/api/unified/unified-endpoint-types.js';
 import type {
   CommerceContextProvider,
@@ -410,6 +416,21 @@ function readSessionKeys(
 }
 
 /**
+ * The request fields a session sends besides the ones it builds itself. Read on
+ * every request build, so a contract may return fresh values each time; it throws
+ * when its fields are invalid, which fails that request.
+ */
+export interface RequestContract {
+  readFields(): Readonly<Record<string, unknown>>;
+}
+
+/** The session configuration minus the built-in request contract's fields. */
+export type SessionRuntimeConfig<TContracts extends ContractsSchema = ContractsSchema> = Omit<
+  SessionConfig<TContracts>,
+  'agentConfigurationId' | 'trackingId'
+>;
+
+/**
  * Creates a {@link Session} over a fresh observable store + fold.
  */
 export function createSession<TContracts extends ContractsSchema>(
@@ -420,7 +441,20 @@ export function createSession<TContracts extends ContractsSchema>(
       throw new Error(`createSession requires a non-blank ${key}.`);
     }
   }
+  const {agentConfigurationId, trackingId} = config;
+  return createSessionRuntime(config, {
+    readFields: () => ({agentConfigurationId, trackingId}),
+  });
+}
 
+/**
+ * The session runtime both entry points share. `requestContract` supplies every
+ * request field the session does not build itself.
+ */
+export function createSessionRuntime<TContracts extends ContractsSchema>(
+  config: SessionRuntimeConfig<TContracts>,
+  requestContract: RequestContract
+): Session<TContracts> {
   const initialState: SessionStoreState<Turn> = config.sessionToRestore
     ? restoreSession(config.sessionToRestore)
     : {
@@ -652,7 +686,7 @@ export function createSession<TContracts extends ContractsSchema>(
    *     (meaningful even when empty) plus `pinnedProducts`, `source`, and
    *     `custom` carried from what the provider returns.
    */
-  function buildBaseRequest(): Omit<CommerceRequestModel, 'message' | 'action'> {
+  function buildBaseRequest(): Omit<ClientOwnedRequestFields, 'message' | 'action'> {
     const navigatorContext = config.navigatorContextProvider?.();
     const commerceContext = config.commerceContextProvider?.();
     const {sessionId, sessionToken} = store.getState();
@@ -663,9 +697,7 @@ export function createSession<TContracts extends ContractsSchema>(
     };
     const user: Record<string, unknown> = {userAgent: navigatorContext?.userAgent ?? null};
 
-    const base: Omit<CommerceRequestModel, 'message' | 'action'> = {
-      agentConfigurationId: config.agentConfigurationId,
-      trackingId: config.trackingId,
+    const base: Omit<ClientOwnedRequestFields, 'message' | 'action'> = {
       clientId: navigatorContext?.clientId ?? undefined,
       conversationSessionId: sessionId,
       conversationToken: sessionToken,
@@ -690,12 +722,13 @@ export function createSession<TContracts extends ContractsSchema>(
     return base;
   }
 
-  function buildConversationRequest(prompt: string): CommerceRequestModel {
-    return {...buildBaseRequest(), message: prompt, action: null};
+  // The contract's fields come first; the client-owned keys always win.
+  function buildConversationRequest(prompt: string): ConverseRequestModel {
+    return {...requestContract.readFields(), ...buildBaseRequest(), message: prompt, action: null};
   }
 
-  function buildActionRequest(action: A2uiAction | InitializeAction): CommerceRequestModel {
-    return {...buildBaseRequest(), message: null, action};
+  function buildActionRequest(action: A2uiAction | InitializeAction): ConverseRequestModel {
+    return {...requestContract.readFields(), ...buildBaseRequest(), message: null, action};
   }
 
   const concurrentActions = createConcurrentActions({store, client, config, buildActionRequest});
@@ -780,7 +813,7 @@ export function createSession<TContracts extends ContractsSchema>(
    */
   async function executeStream(
     target: RunTarget,
-    buildRequest: () => CommerceRequestModel,
+    buildRequest: () => ConverseRequestModel,
     abortController: AbortController,
     action?: ActionSource
   ): Promise<RequestFailure | undefined> {
