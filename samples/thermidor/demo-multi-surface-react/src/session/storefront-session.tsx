@@ -16,6 +16,7 @@ import {
 import {ComponentContractsSchema} from '@coveo/thermidor-schema/zod3';
 import {SessionRequestProvider} from '../../../demo-schema-react/src/a2ui/session-request.js';
 import {buildViewSurfaces, type ViewSurfaces} from '../views/view-surfaces.js';
+import {getSampleConfiguration} from '../env.js';
 import {createCartStore, type CartStore} from './cart-store.js';
 
 type StorefrontSession = Session<typeof ComponentContractsSchema>;
@@ -46,14 +47,6 @@ interface StorefrontValue extends TurnViews {
 
 const StorefrontContext = createContext<StorefrontValue | null>(null);
 
-/** The mock's route (`pnpm dev`), used when `VITE_COVEO_ENDPOINT` is unset. */
-const MOCK_ENDPOINT = 'http://localhost:3456/converse-schema';
-
-function envValue(name: string): string | undefined {
-  const value = import.meta.env[name] as string | undefined;
-  return value?.trim() ? value.trim() : undefined;
-}
-
 /**
  * Owns the page's ONE session. Every view (the home, assistant and search pages) sends its requests through it, naming itself in `context.custom.surfaceId`, and draws the
  * surfaces its own turns created. The session's request in flight is shared with the surfaces.
@@ -77,13 +70,8 @@ function createStorefront(): StorefrontValue {
 
   const session = createSession({
     contracts: ComponentContractsSchema,
-    // The mock accepts anything; a real Agent Gateway needs an organization, a token, an agent
-    // configuration and a tracking ID (see .env.example).
-    organizationId: envValue('VITE_COVEO_ORGANIZATION_ID') ?? 'storefront-preview',
-    accessToken: envValue('VITE_COVEO_ACCESS_TOKEN') ?? 'mock-access-token',
-    endpoint: envValue('VITE_COVEO_ENDPOINT') ?? MOCK_ENDPOINT,
-    agentConfigurationId: envValue('VITE_COVEO_AGENT_CONFIGURATION_ID') ?? 'storefront-preview',
-    trackingId: envValue('VITE_COVEO_TRACKING_ID') ?? 'storefront',
+    // The organization, its agent configuration and the endpoint (see src/env.ts and the README).
+    ...getSampleConfiguration(),
     // The session opens on the first search: the home page sends nothing (see the README).
     initialize: false,
     navigatorContextProvider: getNavigatorContext,
