@@ -62,10 +62,6 @@ export interface A2uiAction<TContext = unknown> {
   name: string;
   sourceComponentId: string;
   timestamp: string;
-  /** Sent as `null` when the session retries an action that opened a turn. */
-  actionId?: null;
-  /** Sent as `false` when the session retries an action that opened a turn. */
-  wantResponse?: false;
   context: TContext;
 }
 
