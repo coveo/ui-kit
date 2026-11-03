@@ -251,3 +251,9 @@ import {selectGenerativeState} from '@/src/index.js';
 import type {GenerativeThunk} from '@/src/index.js';
 
 /* eslint-enable @typescript-eslint/no-unused-vars */
+
+// The private entry point (`@coveo/thermidor/private`, for internal Coveo use only) stays out of the root entry.
+// @ts-expect-error `createPrivateSession` must not be exported from the root entry.
+import {createPrivateSession} from '@/src/index.js';
+// @ts-expect-error `PrivateSessionConfig` must not be exported from the root entry.
+import type {PrivateSessionConfig} from '@/src/index.js';

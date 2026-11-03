@@ -2,9 +2,8 @@ import type {CommerceCartItem} from '@/src/internal/context/commerce-context.js'
 
 // ─── Commerce agent input ──────────────────────────────────────────────────
 
-export interface CommerceRequestModel {
-  agentConfigurationId: string;
-  trackingId: string;
+/** The request keys the session builds itself on every request. */
+export type ClientOwnedRequestFields = {
   clientId?: string;
   message: string | null;
   action: A2uiAction | InitializeAction | null;
@@ -17,7 +16,28 @@ export interface CommerceRequestModel {
    * "no commerce context" from a present-but-empty context.
    */
   pinnedProducts?: string[];
-}
+};
+
+/**
+ * The fields that scope every request of a session. The public `createSession` sends
+ * both ids; the private `createPrivateSession` sends whichever fields are set.
+ */
+export type RequestScopeFields = {
+  agentConfigurationId?: string;
+  trackingId?: string;
+  language?: string;
+  country?: string;
+  currency?: string;
+};
+
+/** The request of the public `createSession`. */
+export type CommerceRequestModel = ClientOwnedRequestFields & {
+  agentConfigurationId: string;
+  trackingId: string;
+};
+
+/** Any converse request, from the public or the private entry point. */
+export type ConverseRequestModel = ClientOwnedRequestFields & RequestScopeFields;
 
 interface CommerceRequestContext {
   view: {url: string | null; referrer: string | null};
