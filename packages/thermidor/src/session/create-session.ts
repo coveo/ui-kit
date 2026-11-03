@@ -9,10 +9,10 @@
  * {@link foldActivity} reduction, plus the initialize / dispatchAction / cancel /
  * retry / stream-consume orchestration.
  *
- * The runtime ({@link createSessionRuntime}) receives its request contract as an
- * input: `createSession` passes the built-in contract (`agentConfigurationId` and
- * `trackingId`), and the private entry point's `createPrivateSession` passes an
- * injected one (ADR-021).
+ * The runtime ({@link createSessionRuntime}) receives the fields that scope every
+ * request as an input: `createSession` passes its required `agentConfigurationId` and
+ * `trackingId`, and the private entry point's `createPrivateSession` passes whichever of
+ * its optional ids and locale fields are set (ADR-021).
  *
  * There are no singletons and no module-level mutable state: every call to
  * `createSession` builds a fresh store, so two sessions created from identical
@@ -28,6 +28,7 @@ import type {
   ClientOwnedRequestFields,
   ConverseRequestModel,
   InitializeAction,
+  RequestScopeFields,
 } from '@/src/internal/api/unified/unified-endpoint-types.js';
 import type {
   CommerceContextProvider,
@@ -415,16 +416,7 @@ function readSessionKeys(
   return undefined;
 }
 
-/**
- * The request fields a session sends besides the ones it builds itself. Read on
- * every request build, so a contract may return fresh values each time; it throws
- * when its fields are invalid, which fails that request.
- */
-export interface RequestContract {
-  readFields(): Readonly<Record<string, unknown>>;
-}
-
-/** The session configuration minus the built-in request contract's fields. */
+/** The session configuration minus the fields that scope every request. */
 export type SessionRuntimeConfig<TContracts extends ContractsSchema = ContractsSchema> = Omit<
   SessionConfig<TContracts>,
   'agentConfigurationId' | 'trackingId'
@@ -442,18 +434,16 @@ export function createSession<TContracts extends ContractsSchema>(
     }
   }
   const {agentConfigurationId, trackingId} = config;
-  return createSessionRuntime(config, {
-    readFields: () => ({agentConfigurationId, trackingId}),
-  });
+  return createSessionRuntime(config, {agentConfigurationId, trackingId});
 }
 
 /**
- * The session runtime both entry points share. `requestContract` supplies every
- * request field the session does not build itself.
+ * The session runtime both entry points share. `requestScope` holds the fields sent with
+ * every request besides the ones the session builds itself.
  */
 export function createSessionRuntime<TContracts extends ContractsSchema>(
   config: SessionRuntimeConfig<TContracts>,
-  requestContract: RequestContract
+  requestScope: Readonly<RequestScopeFields>
 ): Session<TContracts> {
   const initialState: SessionStoreState<Turn> = config.sessionToRestore
     ? restoreSession(config.sessionToRestore)
@@ -722,13 +712,13 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     return base;
   }
 
-  // The contract's fields come first; the client-owned keys always win.
+  // The scope fields come first, in the order the public request has always sent them.
   function buildConversationRequest(prompt: string): ConverseRequestModel {
-    return {...requestContract.readFields(), ...buildBaseRequest(), message: prompt, action: null};
+    return {...requestScope, ...buildBaseRequest(), message: prompt, action: null};
   }
 
   function buildActionRequest(action: A2uiAction | InitializeAction): ConverseRequestModel {
-    return {...requestContract.readFields(), ...buildBaseRequest(), message: null, action};
+    return {...requestScope, ...buildBaseRequest(), message: null, action};
   }
 
   const concurrentActions = createConcurrentActions({store, client, config, buildActionRequest});

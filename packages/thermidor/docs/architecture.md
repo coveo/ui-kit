@@ -14,7 +14,7 @@ Everything the previous revision described (an `Engine` class, a library-agnosti
 
 The package entry (`src/index.ts`) exports the session-client surface — `createSession`, the `Session` handle, the `Turn` / `TurnResponse` domain model (including `A2uiV09Message` and `DiscoveredSurface`), `SessionConfig`, the injected-contract types (`ContractsSchema`, `ComponentContractSchema`, `ParsableSchema`), the client-owned context types, and the versioned `SerializedSession` shape. It also exports the request types (`SessionRequest`, `InitializeRequest`, `PromptRequest`, `ActionRequest`) and the initialization (`SessionInitialization`, `SerializedInitialization`). It is intentionally free of state-library concepts (no store, slice, selector, thunk, or reducer types) and free of raw transport DTO shapes; `src/index.test-d.ts` fails the typecheck if one leaks into the entry.
 
-A second entry point, `@coveo/thermidor/private` (`src/private.ts`), is **for internal Coveo use only**: not supported for customers, and it may change without notice. It exports `createPrivateSession`, `PrivateSessionConfig` and `PrivateRequestContract`, and re-exports the root entry. The root entry never exports them, and `SessionConfig` has no `request` option; `src/index.test-d.ts` checks both ([ADR-021](./internal/adr/ADR-021-private-entry-point-request-contract.md)).
+A second entry point, `@coveo/thermidor/private` (`src/private.ts`), is **for internal Coveo use only**: not supported for customers, and it may change without notice. It exports `createPrivateSession` and `PrivateSessionConfig`, and re-exports the root entry. The root entry never exports them, and `SessionConfig` keeps its required ids and takes no locale; `src/index.test-d.ts` checks both ([ADR-021](./internal/adr/ADR-021-private-entry-point.md)).
 
 ```mermaid
 graph TB
@@ -60,7 +60,7 @@ src/
 ├── private.ts                     # @coveo/thermidor/private, for internal Coveo use only (ADR-021)
 ├── session/
 │   ├── create-session.ts          # createSession factory + shared runtime (dispatch/cancel/retry)
-│   ├── create-private-session.ts # createPrivateSession: injected request contract (ADR-021)
+│   ├── create-private-session.ts  # createPrivateSession: optional ids, optional locale (ADR-021)
 │   ├── conflict-retry.ts          # Bounded retry of 409 AGENT:ACTION_IN_FLIGHT rejections
 │   ├── types.ts                   # Turn / TurnInput / TurnResponse domain model (ADR-010 model annex)
 │   ├── store.ts                   # Plain observable store + subscribe/notify
@@ -87,7 +87,7 @@ src/
 
 `createSession(config)` (`src/session/create-session.ts`) builds a fresh observable store and returns a `Session`. There are no singletons and no module-level mutable state: two sessions created from identical configuration share nothing mutable ([ADR-009](./internal/adr/ADR-009-architecture-decision-charter-v2.md), charter conformance).
 
-Both entry points share one runtime, `createSessionRuntime(config, requestContract)`. The request contract supplies every request field the session does not build itself, read on every request build; the session's own keys (`clientId`, `message`, `action`, `conversationSessionId`, `conversationToken`, `context`, `pinnedProducts`) are spread after it, so they always win. `createSession` checks `agentConfigurationId` and `trackingId` and passes the built-in contract that sends them. `createPrivateSession` passes a contract that reads `config.request.fields()`, rejects the session's own keys, and parses the fields with `config.request.schema`; it reads it once before creating the runtime, so invalid fields throw from the call, and a later invalid read throws inside the request builder, which fails the request like a throwing context provider ([ADR-021](./internal/adr/ADR-021-private-entry-point-request-contract.md)).
+Both entry points share one runtime, `createSessionRuntime(config, requestScope)`. `requestScope` holds the fields that scope every request, sent ahead of the keys the session builds itself (`clientId`, `message`, `action`, `conversationSessionId`, `conversationToken`, `context`, `pinnedProducts`) with `initialize`, prompts, and actions, concurrent and cached ones included. `createSession` checks `agentConfigurationId` and `trackingId` and passes them. `createPrivateSession` passes whichever of its optional `agentConfigurationId`, `trackingId`, `language`, `country` and `currency` are set, without validating them: the endpoint does ([ADR-021](./internal/adr/ADR-021-private-entry-point.md)).
 
 The runtime owns the initialize / dispatch / cancel / retry orchestration and the SSE-consumption loop that folds each event into the run a request streams into, its run target: a turn, or the initialization:
 

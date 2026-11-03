@@ -2,10 +2,7 @@ import type {CommerceCartItem} from '@/src/internal/context/commerce-context.js'
 
 // ─── Commerce agent input ──────────────────────────────────────────────────
 
-/**
- * The request keys the session builds itself on every request. A request
- * contract supplies every other key, and can't set these.
- */
+/** The request keys the session builds itself on every request. */
 export type ClientOwnedRequestFields = {
   clientId?: string;
   message: string | null;
@@ -21,31 +18,26 @@ export type ClientOwnedRequestFields = {
   pinnedProducts?: string[];
 };
 
-/** Every key of {@link ClientOwnedRequestFields}, checked against the type. */
-export const CLIENT_OWNED_REQUEST_KEYS = [
-  'clientId',
-  'message',
-  'action',
-  'conversationSessionId',
-  'conversationToken',
-  'context',
-  'pinnedProducts',
-] as const satisfies readonly (keyof ClientOwnedRequestFields)[];
+/**
+ * The fields that scope every request of a session. The public `createSession` sends
+ * both ids; the private `createPrivateSession` sends whichever fields are set.
+ */
+export type RequestScopeFields = {
+  agentConfigurationId?: string;
+  trackingId?: string;
+  language?: string;
+  country?: string;
+  currency?: string;
+};
 
-/** The fields the built-in request contract of the public `createSession` sends. */
-export type BuiltInRequestFields = {
+/** The request of the public `createSession`. */
+export type CommerceRequestModel = ClientOwnedRequestFields & {
   agentConfigurationId: string;
   trackingId: string;
 };
 
-/** The request of the public `createSession`: the client-owned keys plus the built-in contract. */
-export type CommerceRequestModel = ClientOwnedRequestFields & BuiltInRequestFields;
-
-/**
- * Any converse request: the client-owned keys plus the fields of the session's
- * request contract, built-in or injected.
- */
-export type ConverseRequestModel = ClientOwnedRequestFields & {[key: string]: unknown};
+/** Any converse request, from the public or the private entry point. */
+export type ConverseRequestModel = ClientOwnedRequestFields & RequestScopeFields;
 
 interface CommerceRequestContext {
   view: {url: string | null; referrer: string | null};
