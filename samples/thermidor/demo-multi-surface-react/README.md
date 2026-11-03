@@ -144,8 +144,8 @@ The views share the session's server state, as Agent Gateway does today:
 
 - **The assistant is told about the search on screen.** Every assistant message is given the
   session's latest search surface (its query, filters, sort and visible products) as what the
-  shopper is looking at. Ask the panel for the cheapest product and the mock answers from that
-  surface's kept search.
+  shopper is looking at. Ask the panel for the cheapest product and the agent answers from that
+  search.
 - **Nothing goes the other way.** The agent's answer never changes the search in the middle. A
   search the agent opens from a panel answer (**See all kayaks**) shows in the panel.
 - **A panel prompt does not leave the page.** It is sent on the assistant view and stays on the
