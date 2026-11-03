@@ -1,7 +1,8 @@
-/* The assistant's panel docked beside the page: as tall as the viewport under the sticky top bar
-   (64px), its thread scrolls inside it and its input stays at its bottom. */
+/* The assistant's panel docked beside the page: as tall as the viewport under the sticky chrome
+   (the top bar, 64px, with the use-case player when it shows), its thread scrolls inside it and its
+   input stays at its bottom. */
 .panel {
-  --chat-panel-top: calc(64px + var(--space-5));
+  --chat-panel-top: calc(var(--chrome-height, 64px) + var(--space-5));
   position: sticky;
   top: var(--chat-panel-top);
   display: flex;

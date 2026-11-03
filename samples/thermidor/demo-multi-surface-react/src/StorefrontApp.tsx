@@ -33,6 +33,7 @@ import {
 import {ASSISTANT_VIEW, drawsSearch, shopperText} from './views/view-surfaces.js';
 import {UseCasePlayer} from './use-cases/UseCasePlayer.js';
 import chrome from './use-cases/chrome.module.css';
+import {useChromeHeight} from './use-cases/use-chrome-height.js';
 
 const catalog = createStorefrontCatalog();
 
@@ -76,6 +77,7 @@ export function StorefrontApp() {
   }, []);
   const goBack = useCallback(() => setHistory((pages) => pages.slice(0, -1)), []);
 
+  const chromeRef = useChromeHeight<HTMLDivElement>();
   const visitRef = useRef(visit);
   visitRef.current = visit;
   const viewSurfacesRef = useRef(viewSurfaces);
@@ -186,7 +188,7 @@ export function StorefrontApp() {
     <A2UIProvider catalog={catalog} onAction={handleAction}>
       <ProductCardActionsContext.Provider value={renderCardActions}>
         <ThermidorA2UIStream messages={a2uiMessages}>
-          <div className={chrome.chrome}>
+          <div ref={chromeRef} className={chrome.chrome}>
             <UseCasePlayer />
             <TopBar
               currentListing={visit.page === 'listing' ? visit.slug : undefined}

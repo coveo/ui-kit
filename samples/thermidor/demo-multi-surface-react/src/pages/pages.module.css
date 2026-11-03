@@ -61,6 +61,10 @@
 
 .panelTitle {
   grid-area: title;
+}
+
+.panelTitle,
+.panelTitle > .title:first-child {
   margin-top: 0;
 }
 

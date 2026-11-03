@@ -14,14 +14,16 @@ export function ListingPage({slug, visitId}: {slug: string; visitId: number}) {
   const {turn, surfaces} = usePageView(visitId, LISTING_VIEW);
   return (
     <main className={`${styles.page} ${styles.wide}`}>
-      <h1 className={styles.title}>{listing?.name ?? slug}</h1>
-      <p className={styles.path}>/{slug}</p>
       <div className={styles.withPanel}>
+        <header className={styles.panelTitle}>
+          <h1 className={styles.title}>{listing?.name ?? slug}</h1>
+          <p className={styles.path}>/{slug}</p>
+        </header>
         <section className={styles.results} aria-label="Listing results">
           <PageTurnStatus turn={turn} />
           <ViewSurfaces surfaces={surfaces} isStreaming={turn?.status === 'streaming'} />
         </section>
-        <ChatPanel visitId={visitId} />
+        <ChatPanel visitId={visitId} className={styles.panel} />
       </div>
     </main>
   );
