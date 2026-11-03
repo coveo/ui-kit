@@ -44,10 +44,10 @@ describe('GeneratedAnswerController', () => {
       },
     };
 
-    mockHost = {
+    mockHost = Object.assign(document.createElement('div'), {
       addController: vi.fn(),
       insertAdjacentElement: vi.fn(),
-    } as unknown as ReactiveControllerHost & HTMLElement;
+    }) as unknown as ReactiveControllerHost & HTMLElement;
   });
 
   const createController = (options: Partial<GeneratedAnswerControllerOptions> = {}) => {
@@ -161,7 +161,27 @@ describe('GeneratedAnswerController', () => {
         }),
       });
 
-      expect(controller.getGeneratedAnswerStatus()).toBe('Generated answer: Test answer');
+      expect(controller.getGeneratedAnswerStatus()).toBe(
+        'Generated answer: Test answer AI-generated content may contain errors. Verify important information.'
+      );
+    });
+
+    it('should announce the custom disclaimer when the disclaimer slot is used', () => {
+      const customDisclaimer = document.createElement('span');
+      customDisclaimer.slot = 'disclaimer';
+      customDisclaimer.textContent = ' Custom AI disclaimer. ';
+      mockHost.appendChild(customDisclaimer);
+      const controller = createController({
+        getGeneratedAnswerState: () => ({
+          isVisible: true,
+          isStreaming: false,
+          answer: 'Test answer',
+        }),
+      });
+
+      expect(controller.getGeneratedAnswerStatus()).toBe(
+        'Generated answer: Test answer Custom AI disclaimer.'
+      );
     });
 
     it('should strip markdown syntax from answer before announcing it', () => {
@@ -174,7 +194,7 @@ describe('GeneratedAnswerController', () => {
       });
 
       expect(controller.getGeneratedAnswerStatus()).toBe(
-        'Generated answer: Bold and italic with code'
+        'Generated answer: Bold and italic with code AI-generated content may contain errors. Verify important information.'
       );
     });
 
@@ -188,7 +208,9 @@ describe('GeneratedAnswerController', () => {
         }),
       });
 
-      expect(controller.getGeneratedAnswerStatus()).toBe('Generated answer: Test answer');
+      expect(controller.getGeneratedAnswerStatus()).toBe(
+        'Generated answer: Test answer AI-generated content may contain errors. Verify important information.'
+      );
     });
 
     it('should return empty string when the answer only contains whitespace', () => {

@@ -383,6 +383,31 @@ describe('atomic-insight-generated-answer', () => {
     expect(disclaimer).toBeInTheDocument();
   });
 
+  it('should describe the answer container with the disclaimer when answer is visible', async () => {
+    const {container} = await renderGeneratedAnswer({
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Test answer',
+        isStreaming: false,
+      },
+    });
+    expect(container).toHaveAttribute('aria-describedby', 'generated-answer-disclaimer');
+    expect(container.getRootNode()).toBeInstanceOf(ShadowRoot);
+    expect(
+      (container.getRootNode() as ShadowRoot).getElementById('generated-answer-disclaimer')
+    ).toHaveAttribute('role', 'note');
+  });
+
+  it('should not describe the answer container with the disclaimer when answer is hidden', async () => {
+    const {container} = await renderGeneratedAnswer({
+      generatedAnswerState: {
+        isVisible: false,
+        answer: 'Test answer',
+      },
+    });
+    expect(container).not.toHaveAttribute('aria-describedby');
+  });
+
   it('should not render disclaimer when answer is hidden', async () => {
     const {disclaimer} = await renderGeneratedAnswer({
       generatedAnswerState: {

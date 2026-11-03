@@ -22,7 +22,8 @@ const SILENT: AnswerAnnouncement = {message: '', assertive: false};
  */
 export const getAnswerAnnouncement = (
   answer: AnnounceableAnswer | undefined,
-  i18n: i18n
+  i18n: i18n,
+  disclaimer = ''
 ): AnswerAnnouncement => {
   if (!answer) {
     return SILENT;
@@ -48,10 +49,12 @@ export const getAnswerAnnouncement = (
   }
 
   if (answer.answer?.trim()) {
+    const answerGenerated = i18n.t('answer-generated', {
+      answer: markdownToPlainText(answer.answer),
+    });
+
     return {
-      message: i18n.t('answer-generated', {
-        answer: markdownToPlainText(answer.answer),
-      }),
+      message: disclaimer ? `${answerGenerated} ${disclaimer}` : answerGenerated,
       assertive: false,
     };
   }

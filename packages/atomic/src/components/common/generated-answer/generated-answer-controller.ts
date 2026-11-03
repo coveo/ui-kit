@@ -10,6 +10,7 @@ import {type GeneratedAnswerData, SafeStorage, StorageItems} from '@/src/utils/l
 import type {AtomicGeneratedAnswerFeedbackModal} from '../atomic-generated-answer-feedback-modal/atomic-generated-answer-feedback-modal';
 import '@/src/components/common/atomic-generated-answer-feedback-modal/atomic-generated-answer-feedback-modal';
 import {markdownToPlainText} from './generated-content/markdown-utils';
+import {getDisclaimerText} from './render-disclaimer';
 
 export interface GeneratedAnswerControllerOptions {
   withToggle?: boolean;
@@ -115,9 +116,10 @@ export class GeneratedAnswerController implements ReactiveController {
     }
 
     if (hasNonEmptyAnswer) {
-      return bindings.i18n.t('answer-generated', {
+      const answerGenerated = bindings.i18n.t('answer-generated', {
         answer: markdownToPlainText(state.answer!),
       });
+      return `${answerGenerated} ${getDisclaimerText(this.host, bindings.i18n)}`;
     }
 
     return '';

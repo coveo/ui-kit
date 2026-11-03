@@ -60,6 +60,12 @@ export class AtomicGeneratedAnswerThread extends LitElement {
   public i18n!: i18n;
 
   /**
+   * The disclaimer text appended to the screen reader announcement of each generated answer.
+   */
+  @property({attribute: false})
+  public disclaimer = '';
+
+  /**
    * A render function responsible for displaying the citations of a single answer.
    */
   @property({attribute: false})
@@ -106,6 +112,7 @@ export class AtomicGeneratedAnswerThread extends LitElement {
         <atomic-generated-answer-content
           .generatedAnswer=${answer}
           .i18n=${this.i18n}
+          .disclaimer=${this.disclaimer}
           .renderCitations=${this.renderCitations}
           .onClickLike=${this.onClickLike}
           .onClickDislike=${this.onClickDislike}
@@ -152,6 +159,7 @@ export class AtomicGeneratedAnswerThread extends LitElement {
               <atomic-generated-answer-content
                 .generatedAnswer=${answer}
                 .i18n=${this.i18n}
+                .disclaimer=${this.disclaimer}
                 .renderCitations=${this.renderCitations}
                 .onClickLike=${this.onClickLike}
                 .onClickDislike=${this.onClickDislike}

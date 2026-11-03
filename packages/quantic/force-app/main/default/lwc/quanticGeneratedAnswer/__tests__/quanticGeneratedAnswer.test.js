@@ -4,6 +4,8 @@ import {createElement} from 'lwc';
 import QuanticGeneratedAnswer from 'c/quanticGeneratedAnswer';
 import FeedbackModalQna from 'c/quanticFeedbackModalQna';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
+import * as mockQuanticUtils from 'c/quanticUtils';
+import rgaDisclaimerLabel from '@salesforce/label/c.quantic_RGADisclaimer';
 
 let mockAnswerHeight = 250;
 let mockedConsoleWarn;
@@ -524,7 +526,7 @@ describe('c-quantic-generated-answer', () => {
         );
       });
 
-      it('should not display the generated answer disclaimer in the footer', async () => {
+      it('should display the generated answer disclaimer as a note', async () => {
         const element = createTestComponent();
         await flushPromises();
 
@@ -532,7 +534,8 @@ describe('c-quantic-generated-answer', () => {
           selectors.generatedAnswerDisclaimer
         );
 
-        expect(generatedAnswerDisclaimer).toBeNull();
+        expect(generatedAnswerDisclaimer).not.toBeNull();
+        expect(generatedAnswerDisclaimer.getAttribute('role')).toBe('note');
       });
     });
 
@@ -568,6 +571,52 @@ describe('c-quantic-generated-answer', () => {
 
         expect(generatedAnswerCard).not.toBeNull();
         expect(generatedAnswerBadge).not.toBeNull();
+      });
+
+      describe('the screen reader announcement', () => {
+        const exampleAnswerGeneratedMessage = `Generated answer: ${exampleAnswer}`;
+
+        beforeEach(() => {
+          mockQuanticUtils.I18nUtils.format.mockReturnValue(
+            exampleAnswerGeneratedMessage
+          );
+        });
+
+        afterEach(() => {
+          mockQuanticUtils.I18nUtils.format.mockReset();
+        });
+
+        const getDispatchedMessages = () =>
+          mockQuanticUtils.AriaLiveRegion.mock.results.flatMap(({value}) =>
+            value.dispatchMessage.mock.calls.map(([message]) => message)
+          );
+
+        it('should announce the generated answer followed by the default disclaimer', async () => {
+          createTestComponent();
+          await flushPromises();
+
+          expect(getDispatchedMessages()).toContain(
+            `${exampleAnswerGeneratedMessage} ${rgaDisclaimerLabel}`
+          );
+        });
+
+        describe('when a custom disclaimer slot is provided', () => {
+          it('should announce the generated answer followed by the custom disclaimer', async () => {
+            const customDisclaimer = 'Custom AI disclaimer.';
+            const disclaimerSlotContent = document.createElement('span');
+            disclaimerSlotContent.textContent = customDisclaimer;
+            createTestComponent(defaultOptions, [disclaimerSlotContent]);
+            await flushPromises();
+
+            const [[onGeneratedAnswerStateChange]] =
+              functionsMocks.generatedAnswerStateSubscriber.mock.calls;
+            onGeneratedAnswerStateChange();
+
+            expect(getDispatchedMessages()).toContain(
+              `${exampleAnswerGeneratedMessage} ${customDisclaimer}`
+            );
+          });
+        });
       });
 
       describe('when the property withToggle is set to true', () => {

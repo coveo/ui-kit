@@ -60,6 +60,21 @@ describe('answer-announcement', () => {
       expect(announcement.message).not.toContain('##');
     });
 
+    it('should append the disclaimer to the announcement once generation completes', () => {
+      expect(
+        getAnswerAnnouncement(buildAnswer({answer: 'Some text.'}), i18n, 'AI disclaimer.')
+      ).toEqual({
+        message: 'Generated answer: Some text. AI disclaimer.',
+        assertive: false,
+      });
+    });
+
+    it('should not append the disclaimer while streaming', () => {
+      expect(
+        getAnswerAnnouncement(buildAnswer({isStreaming: true}), i18n, 'AI disclaimer.').message
+      ).toBe('Generating answer');
+    });
+
     it('should announce the generic error assertively', () => {
       expect(getAnswerAnnouncement(buildAnswer({error: {message: 'boom'}}), i18n)).toEqual({
         message: 'Something went wrong while generating the answer. Please try again later.',

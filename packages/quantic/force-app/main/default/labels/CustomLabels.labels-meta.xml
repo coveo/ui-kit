@@ -1402,7 +1402,7 @@
   </labels>
   <labels>
     <fullName>quantic_RGADisclaimer</fullName>
-    <value>Generated content may contain errors. Verify important information.</value>
+    <value>AI-generated content may contain errors. Verify important information.</value>
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>Generated answer disclaimer</shortDescription>

@@ -48,6 +48,7 @@ const DEFAULT_CITATION_FIELDS = ['sfid', 'sfkbid', 'sfkavid', 'filetype'];
  * This component includes a slot, "no-answer-message", which allows for rendering a custom message when no answer is generated.
  * @category Search
  * @slot no-answer-message - Slot that allows the rendering of a custom message when no answer is generated.
+ * @slot disclaimer - Slot that allows the rendering of a custom disclaimer below the generated answer. The disclaimer informs users that the content is AI-generated, and is also announced to screen reader users along with the answer.
  * @example
  * <c-quantic-generated-answer engine-id={engineId} with-toggle collapsible>
  *  <div slot="no-answer-message">No answer was generated.</div>
@@ -275,8 +276,21 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
     const hasAnswer = !!this.state.answer;
     return hasAnswer
-      ? I18nUtils.format(this.labels.answerGenerated, this.answer)
+      ? `${I18nUtils.format(this.labels.answerGenerated, this.answer)} ${this.disclaimerText}`
       : '';
+  }
+
+  /**
+   * Returns the disclaimer text displayed by the component, whether it comes from the "disclaimer" slot or from the default label.
+   * @returns {string}
+   */
+  get disclaimerText() {
+    const slot = this.template.querySelector('slot[name="disclaimer"]');
+    const slottedText = (slot?.assignedNodes() ?? [])
+      .map((node) => node.textContent?.trim())
+      .filter(Boolean)
+      .join(' ');
+    return slottedText || this.labels.rgaDisclaimer;
   }
 
   updateSearchStatusState() {
@@ -520,10 +534,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       ...userCitationFields,
     ];
     return [...new Set(combinedCitationFields)];
-  }
-
-  get shouldShowDisclaimer() {
-    return this.isVisible && !this.isStreaming;
   }
 
   get toggleCollapseAnswerIcon() {
