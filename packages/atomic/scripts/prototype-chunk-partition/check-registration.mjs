@@ -3,7 +3,8 @@
 // Requests to the production CDN path are served from the build directory instead.
 // usage: node check-registration.mjs <buildDir> <pages.json>
 import {existsSync, readFileSync, writeFileSync} from 'node:fs';
-import {join} from 'node:path';
+import {dirname, join} from 'node:path';
+import {fileURLToPath} from 'node:url';
 import {chromium} from '@playwright/test';
 
 const [buildDir, pagesPath, outPath] = process.argv.slice(2);
@@ -19,8 +20,21 @@ page.on('console', (m) => {
   if (m.type() === 'error') errors.push(m.text().slice(0, 160));
 });
 page.on('requestfailed', (r) => failed.push(r.url()));
-await page.route(`${CDN}**`, (route) => {
-  const file = join(buildDir, route.request().url().slice(CDN.length).split('?')[0]);
+// Headless and Bueno are externals imported by version path; serve the local CDN builds so an unreleased version
+// does not turn into a 403 from the real CDN.
+const PACKAGES =
+  process.env.PACKAGES_DIR ?? join(dirname(fileURLToPath(import.meta.url)), '../../..');
+const LOCAL = {
+  '/headless/': join(PACKAGES, 'headless/cdn'),
+  '/bueno/': join(PACKAGES, 'bueno/cdn'),
+};
+await page.route('https://static.cloud.coveo.com/**', (route) => {
+  const url = new URL(route.request().url());
+  const ext = Object.keys(LOCAL).find((k) => url.pathname.startsWith(k));
+  if (!url.href.startsWith(CDN) && !ext) return route.continue();
+  const file = ext
+    ? join(LOCAL[ext], url.pathname.replace(/^\/(headless|bueno)\/[^/]+\//, ''))
+    : join(buildDir, url.pathname.slice(new URL(CDN).pathname.length).split('?')[0]);
   if (!existsSync(file)) return route.fulfill({status: 404, body: 'missing: ' + file});
   served++;
   return route.fulfill({

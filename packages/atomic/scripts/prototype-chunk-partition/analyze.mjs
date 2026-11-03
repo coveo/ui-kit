@@ -22,7 +22,10 @@ const key = (m) => m.nameForCondition ?? m.identifier;
 const initialChunks = new Set(stats.chunks.filter((c) => c.initial).map((c) => c.id));
 const entryChunks = new Set(stats.entrypoints['atomic.esm'].chunks);
 const isInitial = (m) => m.chunks.some((id) => entryChunks.has(id));
-const isMovable = (m) => m.chunks.some((id) => !initialChunks.has(id)); // an async copy exists
+// Externals (Headless, Bueno) stay in their own chunks: grouping one delays its download until the whole chunk
+// arrives and makes every page loading that chunk fetch the bundle, which the ADR harness measured.
+const isMovable = (m) =>
+  !m.identifier.startsWith('external') && m.chunks.some((id) => !initialChunks.has(id)); // an async copy exists
 
 const out = new Map(modules.map((m) => [m.identifier, new Set()]));
 let unresolved = 0;
