@@ -1,5 +1,24 @@
 # @coveo/thermidor
 
+## 0.8.0
+
+### Minor Changes
+
+- [#8795](https://github.com/coveo/ui-kit/pull/8795) [`def7fa9`](https://github.com/coveo/ui-kit/commit/def7fa9d96df823ed5470d6a3404f4c835b38ec9) - Send the actions a producer announces as concurrent beside the session's single request, and reuse the answers of those it announces as cached.
+
+  - A producer announces them with a surface, in the AG-UI `metadata` of its snapshot, by surface id, under `concurrentActions`: `{"<surfaceId>": {"fetchInstantProducts": {"cache": {"ttlMs": 60000}}}}`. An action's optional `cache` policy is how long its answers are reused. The latest announcement for a surface wins, and an empty entry revokes it.
+  - A concurrent action is sent at once, whatever request is in flight, and never sets `session.request`; a prompt or `cancel()` does not stop it. Only the latest dispatch from a node is applied: an older uncached request is aborted, while a cached one runs to the end so its answer is cached, and a dispatch with the same payload joins it.
+  - A cached action dispatched again with the same payload within its lifetime sends nothing. The session keeps the last 100 answers in memory and never serializes them.
+  - Its answer may only update the data model of nodes the session holds, and is not recorded in a run: `session.state` shows it on top of the recorded state until a recorded write to the same path replaces it, and `session.serialize()` leaves it out. Its failure is a dev-only warning and sets no `session.actionError`.
+
+  A producer that announces nothing gets today's behavior.
+
+- [#8816](https://github.com/coveo/ui-kit/pull/8816) [`9f6072d`](https://github.com/coveo/ui-kit/commit/9f6072d4f48ff71bd59317ef81d778ee712fdfe5) - Add `@coveo/thermidor/private`, an entry point **for internal Coveo use only**. It is not supported for customers and may change without notice. Its `createPrivateSession` takes the `createSession` configuration with `agentConfigurationId` and `trackingId` optional, plus optional `language`, `country` and `currency`, and sends each one that is set with every request. The public `createSession` and `SessionConfig` are unchanged.
+
+### Patch Changes
+
+- [#8805](https://github.com/coveo/ui-kit/pull/8805) [`2a7286e`](https://github.com/coveo/ui-kit/commit/2a7286ebdca2317710567d3fdce4b6cb10db3614) - `initialize` and retried actions no longer send the unused A2-UI `actionId` and `wantResponse` fields either; 0.7.0 only stopped sending them with first-sent actions.
+
 ## 0.7.0
 
 ### Minor Changes
