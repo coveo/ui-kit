@@ -5,7 +5,7 @@ import QuanticGeneratedAnswer from 'c/quanticGeneratedAnswer';
 import FeedbackModalQna from 'c/quanticFeedbackModalQna';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 import * as mockQuanticUtils from 'c/quanticUtils';
-import rgaDisclaimerLabel from '@salesforce/label/c.quantic_RGADisclaimer';
+import rgaDisclaimerAnnouncementLabel from '@salesforce/label/c.quantic_RGADisclaimerAnnouncement';
 
 let mockAnswerHeight = 250;
 let mockedConsoleWarn;
@@ -591,27 +591,13 @@ describe('c-quantic-generated-answer', () => {
             value.dispatchMessage.mock.calls.map(([message]) => message)
           );
 
-        it('should announce the generated answer followed by the default disclaimer', async () => {
+        it('should announce the generated answer followed by the disclaimer announcement label', async () => {
           createTestComponent();
           await flushPromises();
 
           expect(getDispatchedMessages()).toContain(
-            `${exampleAnswerGeneratedMessage} ${rgaDisclaimerLabel}`
+            `${exampleAnswerGeneratedMessage} ${rgaDisclaimerAnnouncementLabel}`
           );
-        });
-
-        describe('when a custom disclaimer slot is provided', () => {
-          it('should announce the generated answer followed by the custom disclaimer', async () => {
-            const customDisclaimer = 'Custom AI disclaimer.';
-            const disclaimerSlotContent = document.createElement('span');
-            disclaimerSlotContent.textContent = customDisclaimer;
-            createTestComponent(defaultOptions, [disclaimerSlotContent]);
-            await flushPromises();
-
-            expect(getDispatchedMessages()).toEqual([
-              `${exampleAnswerGeneratedMessage} ${customDisclaimer}`,
-            ]);
-          });
         });
       });
 

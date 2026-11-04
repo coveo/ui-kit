@@ -777,6 +777,10 @@
     <name>quantic_RGADisclaimer</name>
   </customLabels>
   <customLabels>
+    <label>Le contenu généré par l'IA peut contenir des erreurs. Vérifiez les informations importantes.</label>
+    <name>quantic_RGADisclaimerAnnouncement</name>
+  </customLabels>
+  <customLabels>
     <label>Voir plus</label>
     <name>quantic_GeneratedAnswerShowMore</name>
   </customLabels>

@@ -44,10 +44,10 @@ describe('GeneratedAnswerController', () => {
       },
     };
 
-    mockHost = Object.assign(document.createElement('div'), {
+    mockHost = {
       addController: vi.fn(),
       insertAdjacentElement: vi.fn(),
-    }) as unknown as ReactiveControllerHost & HTMLElement;
+    } as unknown as ReactiveControllerHost & HTMLElement;
   });
 
   const createController = (options: Partial<GeneratedAnswerControllerOptions> = {}) => {
@@ -163,24 +163,6 @@ describe('GeneratedAnswerController', () => {
 
       expect(controller.getGeneratedAnswerStatus()).toBe(
         'AI-generated answer: Test answer AI-generated content may contain errors. Verify important information.'
-      );
-    });
-
-    it('should announce the custom disclaimer when the disclaimer slot is used', () => {
-      const customDisclaimer = document.createElement('span');
-      customDisclaimer.slot = 'disclaimer';
-      customDisclaimer.textContent = ' Custom AI disclaimer. ';
-      mockHost.appendChild(customDisclaimer);
-      const controller = createController({
-        getGeneratedAnswerState: () => ({
-          isVisible: true,
-          isStreaming: false,
-          answer: 'Test answer',
-        }),
-      });
-
-      expect(controller.getGeneratedAnswerStatus()).toBe(
-        'AI-generated answer: Test answer Custom AI disclaimer.'
       );
     });
 

@@ -22,8 +22,7 @@ const SILENT: AnswerAnnouncement = {message: '', assertive: false};
  */
 export const getAnswerAnnouncement = (
   answer: AnnounceableAnswer | undefined,
-  i18n: i18n,
-  disclaimer = ''
+  i18n: i18n
 ): AnswerAnnouncement => {
   if (!answer) {
     return SILENT;
@@ -54,7 +53,7 @@ export const getAnswerAnnouncement = (
     });
 
     return {
-      message: disclaimer ? `${answerGenerated} ${disclaimer}` : answerGenerated,
+      message: `${answerGenerated} ${i18n.t('generated-answer-disclaimer-announcement')}`,
       assertive: false,
     };
   }

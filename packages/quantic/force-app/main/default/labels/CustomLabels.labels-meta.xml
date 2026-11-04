@@ -1408,6 +1408,13 @@
     <shortDescription>Generated answer disclaimer</shortDescription>
   </labels>
   <labels>
+    <fullName>quantic_RGADisclaimerAnnouncement</fullName>
+    <value>AI-generated content may contain errors. Verify important information.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Generated answer disclaimer announced to screen readers</shortDescription>
+  </labels>
+  <labels>
     <fullName>quantic_GeneratedAnswerShowMore</fullName>
     <value>Show more</value>
     <language>en_US</language>

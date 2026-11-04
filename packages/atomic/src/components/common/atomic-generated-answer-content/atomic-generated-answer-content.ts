@@ -49,12 +49,6 @@ export class AtomicGeneratedAnswerContent extends LitElement {
   public i18n!: i18n;
 
   /**
-   * The disclaimer text appended to the screen reader announcement of the generated answer.
-   */
-  @property({attribute: false})
-  public disclaimer = '';
-
-  /**
    * A render function responsible for displaying the answer citations.
    */
   @property({attribute: false})
@@ -164,11 +158,7 @@ export class AtomicGeneratedAnswerContent extends LitElement {
       return;
     }
 
-    const {message, assertive} = getAnswerAnnouncement(
-      this.generatedAnswer,
-      this.i18n,
-      this.disclaimer
-    );
+    const {message, assertive} = getAnswerAnnouncement(this.generatedAnswer, this.i18n);
 
     if (!this.hasObservedAnswer) {
       this.hasObservedAnswer = true;

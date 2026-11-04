@@ -40,7 +40,6 @@ describe('generated-answer-thread', () => {
     options: {
       generatedAnswers?: GeneratedAnswer[];
       i18nInstance?: i18n;
-      disclaimer?: string;
       renderCitations?: AtomicGeneratedAnswerThread['renderCitations'];
       onClickLike?: AtomicGeneratedAnswerThread['onClickLike'];
       onClickDislike?: AtomicGeneratedAnswerThread['onClickDislike'];
@@ -50,7 +49,6 @@ describe('generated-answer-thread', () => {
     const {
       generatedAnswers = createGeneratedAnswers(1),
       i18nInstance = i18n,
-      disclaimer = '',
       renderCitations,
       onClickLike,
       onClickDislike,
@@ -64,7 +62,6 @@ describe('generated-answer-thread', () => {
       <atomic-generated-answer-thread
         .generatedAnswers=${generatedAnswers}
         .i18n=${i18nInstance}
-        .disclaimer=${disclaimer}
         .renderCitations=${renderCitations ?? defaultRenderCitations}
         .onClickLike=${onClickLike ?? noop}
         .onClickDislike=${onClickDislike ?? noop}
@@ -164,7 +161,6 @@ describe('generated-answer-thread', () => {
     const generatedAnswers = createGeneratedAnswers(2);
     const {locators} = await renderComponent({
       generatedAnswers,
-      disclaimer: 'AI disclaimer.',
       renderCitations,
       onClickLike,
       onClickDislike,
@@ -174,7 +170,6 @@ describe('generated-answer-thread', () => {
     const [answerContent] = locators().answerContents;
     expect(answerContent).toBeDefined();
     expect(answerContent?.i18n).toBe(i18n);
-    expect(answerContent?.disclaimer).toBe('AI disclaimer.');
     expect(answerContent?.renderCitations).toBe(renderCitations);
     expect(answerContent?.onClickLike).toBe(onClickLike);
     expect(answerContent?.onClickDislike).toBe(onClickDislike);

@@ -40,7 +40,6 @@ import atomicInsightGeneratedAnswerStyles from './atomic-insight-generated-answe
  * The `atomic-insight-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
  *
  * @slot no-answer-message - Lets you pass a custom sorry message when no answer is generated.
- * @slot disclaimer - Lets you pass a custom disclaimer to display below the generated answer. The disclaimer informs users that the content is AI-generated, and is also announced to screen reader users along with the answer.
  *
  * @part container - The container displaying the generated answer.
  * @part header-label - The header of the generated answer container.
@@ -50,7 +49,6 @@ import atomicInsightGeneratedAnswerStyles from './atomic-insight-generated-answe
  * @part retry-container - The container for the "retry" section.
  * @part generated-text - The text of the generated answer.
  * @part citations-label - The header of the citations list.
- * @part disclaimer - The container of the disclaimer displayed below the generated answer.
  *
  * @part answer-code-block - The generated answer multi-line code blocks.
  * @part answer-emphasis - The generated answer emphasized text elements.

@@ -59,7 +59,6 @@ describe('atomic-generated-answer-content', () => {
   const renderComponent = async (
     options: {
       generatedAnswer?: Partial<GeneratedAnswer>;
-      disclaimer?: string;
       onClickLike?: (answerId?: string) => void;
       onClickDislike?: (answerId?: string) => void;
       onCopyToClipboard?: (answerId?: string) => void;
@@ -80,7 +79,6 @@ describe('atomic-generated-answer-content', () => {
       template: html`<atomic-generated-answer-content
         .generatedAnswer=${generatedAnswer}
         .i18n=${i18n}
-        .disclaimer=${options.disclaimer ?? ''}
         .onClickLike=${onClickLike}
         .onClickDislike=${onClickDislike}
         .onCopyToClipboard=${onCopyToClipboard}
@@ -439,30 +437,11 @@ describe('atomic-generated-answer-content', () => {
         {region: 'generated-answer', message: 'Generating answer', assertive: false},
         {
           region: 'generated-answer',
-          message: 'AI-generated answer: The final answer.',
+          message:
+            'AI-generated answer: The final answer. AI-generated content may contain errors. Verify important information.',
           assertive: false,
         },
       ]);
-    });
-
-    it('should append the disclaimer to the answer announcement once streaming completes', async () => {
-      const {element} = await renderComponent({
-        generatedAnswer: {answer: '', isStreaming: true},
-        disclaimer: 'AI disclaimer.',
-      });
-
-      element.generatedAnswer = {
-        ...element.generatedAnswer,
-        answer: 'The final answer.',
-        isStreaming: false,
-      };
-      await element.updateComplete;
-
-      expect(announcements().at(-1)).toEqual({
-        region: 'generated-answer',
-        message: 'AI-generated answer: The final answer. AI disclaimer.',
-        assertive: false,
-      });
     });
 
     it('should announce the error assertively when generation fails', async () => {

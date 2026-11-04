@@ -26,7 +26,6 @@ import {renderCitations} from '@/src/components/common/generated-answer/render-c
 import {renderCustomNoAnswerMessage} from '@/src/components/common/generated-answer/render-custom-no-answer-message';
 import {
   DISCLAIMER_ID,
-  getDisclaimerText,
   renderDisclaimer,
 } from '@/src/components/common/generated-answer/render-disclaimer';
 import {renderFeedbackAndCopyButtons} from '@/src/components/common/generated-answer/render-feedback-and-copy-buttons';
@@ -93,7 +92,6 @@ const FOLLOW_UP_INPUT_EXPORT_PARTS = [
  * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
  *
  * @slot no-answer-message - Lets you pass a custom sorry message when no answer is generated.
- * @slot disclaimer - Lets you pass a custom disclaimer to display below the generated answer. The disclaimer informs users that the content is AI-generated, and is also announced to screen reader users along with the answer.
  *
  * @part container - The container displaying the generated answer.
  * @part header -   The header container of the generated answer card.
@@ -108,7 +106,6 @@ const FOLLOW_UP_INPUT_EXPORT_PARTS = [
  * @part retry-container - The container for the "retry" section.
  * @part generated-text - The text of the generated answer.
  * @part citations-label - The header of the citations list.
- * @part disclaimer - The container of the disclaimer displayed below the generated answer.
  *
  * @part answer-code-block - The generated answer multi-line code blocks.
  * @part answer-emphasis - The generated answer emphasized text elements.
@@ -730,7 +727,6 @@ export class AtomicGeneratedAnswer extends LitElement implements InitializableCo
       return html`<atomic-generated-answer-thread
         .generatedAnswers=${allGeneratedAnswers}
         .i18n=${this.bindings.i18n}
-        .disclaimer=${getDisclaimerText(this, this.bindings.i18n)}
         .renderCitations=${this.renderCitationsList.bind(this)}
         .onClickLike=${(answerId: string) => this.generatedAnswerWithFollowUps?.like(answerId)}
         .onClickDislike=${(answerId: string) =>

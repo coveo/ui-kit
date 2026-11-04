@@ -1232,18 +1232,6 @@ describe('atomic-generated-answer', () => {
       expect(threadComponent.generatedAnswers).toHaveLength(2);
     });
 
-    it('should pass the disclaimer to the generated answers thread', async () => {
-      const {generatedAnswersThread} = await renderGeneratedAnswer({
-        props: {agentId: 'agent-id'},
-        generatedAnswerState: createGeneratedAnswerWithFollowUpsState(),
-        generatedAnswerOverrides: {askFollowUp: vi.fn()},
-      });
-
-      expect((generatedAnswersThread as HTMLElement & {disclaimer?: string}).disclaimer).toBe(
-        'AI-generated content may contain errors. Verify important information.'
-      );
-    });
-
     it('should describe the scrollable conversation with the disclaimer when follow ups are enabled', async () => {
       const {element} = await renderGeneratedAnswer({
         props: {agentId: 'agent-id'},
