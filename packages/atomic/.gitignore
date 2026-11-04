@@ -3,6 +3,7 @@ www/
 docs/*
 !docs/adr/
 cdn/
+.cdn-chunk-map/
 
 *~
 *.sw[mnpcod]

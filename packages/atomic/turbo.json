@@ -91,8 +91,27 @@
         "./dist/assets/**",
         "./dist/lang/**",
         "./dist/themes/**",
-        "./rsbuild.cdn.mjs"
+        "./rsbuild.cdn.mjs",
+        "./cdn-chunk-map.json",
+        "./scripts/cdn-chunk-map/chunk-map.mjs"
       ]
+    },
+    "prepare:cdn-chunk-map": {
+      "dependsOn": ["^build", "build:lit", "build:locales"],
+      "inputs": [
+        "./src/**/*.ts",
+        "!./src/**/*.spec.ts",
+        "!./src/**/*.d.ts",
+        "!./src/**/e2e/**",
+        "./rsbuild.cdn.mjs",
+        "./scripts/cdn-chunk-map/**",
+        "./cdn-chunk-map.json",
+        "./storybook-pages/**",
+        "$TURBO_ROOT$/packages/atomic-cdn-smoke/pages/**",
+        "$TURBO_ROOT$/samples/atomic/**/*.{html,tsx,jsx,vue}",
+        "!$TURBO_ROOT$/samples/atomic/**/node_modules/**"
+      ],
+      "cache": false
     },
     "tsc:check": {
       "dependsOn": ["^build", "build:locales"],

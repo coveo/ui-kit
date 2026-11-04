@@ -18,6 +18,7 @@
     "**/.deployment.config/**/*",
     "**/packages/atomic-legacy/**/*.tsx",
     "**/packages/atomic/**/*.d.ts",
+    "**/packages/atomic/cdn-chunk-map.json",
     "**/packages/documentation/**/assets/**/*",
     "**/packages/headless/**/coveo.analytics/**/*",
     "**/samples/headless/rga-angular/**/*.html",
