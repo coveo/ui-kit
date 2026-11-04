@@ -120,15 +120,12 @@ A `NextActionsBar` item starts a follow-up: Agent Gateway announces its actions 
 
 ### Session shell, query suggestions and instant products
 
-The session sends `initialize` as soon as it is created, and the producer answers with the session shell: a surface that lives for the whole session, whose `SessionShell` root holds a `SearchBox`, its `QuerySuggestions` and its `InstantProducts`. `SessionSearchBox` draws it where the page's prompt input goes, on both pages:
+The session sends `initialize` as soon as it is created, and the producer answers with the session shell: a surface that lives for the whole session, whose `SessionShell` root holds a `SearchBox`, its `QuerySuggestions` and its `InstantProducts`. `SessionSearchBox` draws it where the page's prompt input goes; until the shell arrives, or if it never does, a plain input stands in.
 
-- while the session opens, a disabled input of the same shape stands in its place;
-- once it has opened without a shell, or failed to, a plain input without suggestions does;
-- the shell is found in `session.surfaces` by its root component type, and is never drawn among a turn's surfaces.
+- `QuerySuggestions` sends the typed text with `fetchSuggestions` once typing pauses.
+- `InstantProducts` sends the highlighted suggestion with `fetchInstantProducts`. The producer announces it as concurrent and cached, so the session sends it beside the turn and answers a query seen again from its cache.
 
-The `SearchBox` renderer draws the input and gives what is typed to `QuerySuggestions`, which sends it with `fetchSuggestions` once typing pauses and the session is free, and shows its completions in the search box's dropdown. The last completions stay shown while newer ones are on their way, and the typed query is bold where it starts a word; facet search results bold it wherever it appears. Selecting a completion submits it. A submit cancels a suggestion in flight first (`submitQuery`), so a suggestion never holds a prompt back.
-
-The `SearchBox` also gives its children the highlighted query: the completion under the pointer or reached with the arrow keys, else the first one. As in Atomic commerce's search box, a completion the arrow keys reach is shown in the input, as what Enter submits, while the pointer leaves the input as typed; neither sends `fetchSuggestions`, so the completions stay those of the typed text until the shopper types again or focuses the input back. `InstantProducts` sends it with `fetchInstantProducts` on every change, and draws its products beside the completions while they answer the highlighted query. The producer announces `fetchInstantProducts` as concurrent and cached, so the session sends it beside the turn and answers a query seen again without a request; the renderer has no cache, debounce or wait of its own. The products are a list the keyboard reaches as in Atomic commerce: the right arrow moves from the highlighted completion to the product highlighted there last, else the first; the up and down arrows move between products; the left arrow returns to the completion; Enter opens the highlighted product, as a click does. The input's `aria-activedescendant` follows the highlight across both lists. Small screens show the completions only, and send nothing, so the left and right arrows stay with the caret.
+The dropdown follows Atomic commerce's search box, keyboard navigation included.
 
 ### Search blocks (decomposed commerce)
 
