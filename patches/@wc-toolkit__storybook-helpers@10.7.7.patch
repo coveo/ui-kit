@@ -1,5 +1,5 @@
 diff --git a/dist/index.d.ts b/dist/index.d.ts
-index 0d9914d..1c550ae 100644
+index 0d9914d3135028e369c8f1be08e5383346a7e212..1c550aed43dde0e0702607367866ceeec7cfaa36 100644
 --- a/dist/index.d.ts
 +++ b/dist/index.d.ts
 @@ -7,6 +7,8 @@ type StorybookHelpersOptions = {
@@ -21,10 +21,49 @@ index 0d9914d..1c550ae 100644
      setComponentVariable?: boolean;
  };
 diff --git a/dist/index.js b/dist/index.js
-index 468a76a..b660f76 100644
+index 468a76af1d8bf1c70aeb2bcf6d6b19c9d4ad78f7..292b5dea2f7ebe26585a8f2e6053950c4f5d93ea 100644
 --- a/dist/index.js
 +++ b/dist/index.js
-@@ -723,7 +723,7 @@ function transformToScoped(template, tagSelector) {
+@@ -319,29 +319,6 @@ function getAttributesAndProperties(component, enabled = true) {
+       },
+       type: sbType
+     };
+-    if (attribute?.name && attribute.name !== member.name) {
+-      propArgs[member.name] = {
+-        name: member.name,
+-        description: getDescription(
+-          member.summary || member.description,
+-          member.name,
+-          member.deprecated
+-        ),
+-        defaultValue,
+-        control: enabled && !member.readonly && control ? control : false,
+-        options: options2,
+-        table: {
+-          category: "properties",
+-          defaultValue: {
+-            summary: JSON.stringify(defaultValue)
+-          },
+-          type: {
+-            summary: type
+-          }
+-        },
+-        type: sbType
+-      };
+-    }
+   });
+   return { resets, propArgs, attrArgs };
+ }
+@@ -618,7 +595,7 @@ function getControl(type, isAttribute = false) {
+   }
+   const hasMixedObjectUnion = literalOptions.length > 0 && isObject(type);
+   if (!arrayInner && !isEnum(type) && !hasMixedObjectUnion) {
+-    return { control: false };
++    return isAttribute ? { control: "text", type: { name: "string" } } : { control: false };
+   }
+   const enumValues = literalOptions.map((option) => removeQuotes(option));
+   return arrayInner ? {
+@@ -723,7 +700,7 @@ function transformToScoped(template, tagSelector) {
    ${styleContent}
  }`;
  }
@@ -33,7 +72,7 @@ index 468a76a..b660f76 100644
    if (!args) {
      return html`<${unsafeStatic(component.tagName)}></${unsafeStatic(component.tagName)}>`;
    }
-@@ -748,11 +748,23 @@ function getTemplate(component, args, slot, argTypes, excludeCategories, setComp
+@@ -748,11 +725,23 @@ function getTemplate(component, args, slot, argTypes, excludeCategories, setComp
      excludeCategories,
      scopeSelector
    );
@@ -59,7 +98,16 @@ index 468a76a..b660f76 100644
    ) : ""}
  `;
  }
-@@ -810,6 +822,9 @@ function getTemplateOperators(component, args, argTypes) {
+@@ -798,7 +787,7 @@ function getTemplateOperators(component, args, argTypes) {
+     const attr = attrArgs[key];
+     const attrName = attr.name;
+     const attrValue = args[key];
+-    const prop = attr.control.type === "boolean" ? `?${attrName}` : attrName;
++    const prop = attr.control === "boolean" || attr.control?.type === "boolean" ? `?${attrName}` : attrName;
+     if (attrValue !== attrArgs[key].defaultValue || options.renderDefaultValues) {
+       attrOperators[prop] = attrValue === "false" ? false : attrValue;
+     } else {
+@@ -810,6 +799,9 @@ function getTemplateOperators(component, args, argTypes) {
        return;
      }
      const propValue = args[key];
@@ -69,7 +117,7 @@ index 468a76a..b660f76 100644
      propOperators[`.${key}`] = propValue;
    });
    Object.keys(args).filter((x) => !Object.keys(argTypes || {}).includes(x)).forEach((key) => {
-@@ -902,15 +917,27 @@ function getSlotsTemplate(component, args, excludeCategories) {
+@@ -902,15 +894,27 @@ function getSlotsTemplate(component, args, excludeCategories) {
  ${slotTemplates}
  `) : "";
  }
@@ -88,14 +136,14 @@ index 468a76a..b660f76 100644
 +    }
 +    if (containerElement instanceof HTMLTemplateElement) {
 +      containerElement = containerElement.content;
-+    }
+     }
 +    if (containerElement.shadowRoot) {
 +      containerElement = containerElement.shadowRoot;
 +    }
 +    const selectedComponent = containerElement.querySelector(component.tagName);
 +    if (!selectedComponent) {
 +      return;
-     }
++    }
 +    argObserver?.observe(selectedComponent, {
 +      attributes: true,
 +      attributeOldValue: true,
@@ -103,7 +151,7 @@ index 468a76a..b660f76 100644
    });
  }
  function setArgObserver(component) {
-@@ -918,25 +945,31 @@ function setArgObserver(component) {
+@@ -918,25 +922,34 @@ function setArgObserver(component) {
      return;
    }
    let isUpdating = false;
@@ -136,11 +184,14 @@ index 468a76a..b660f76 100644
            [`${mutation.attributeName}`]: mutation.target?.hasAttribute(mutation.attributeName || "")
          });
        } else if (attribute?.control === "number" || attribute?.control?.type === "number") {
++        if (args[`${mutation.attributeName}`] == mutation.target.getAttribute(mutation.attributeName || "")) {
++          return;
++        }
 +        isUpdating = true;
          updateArgs({
            [`${mutation.attributeName}`]: Number(
              mutation.target.getAttribute(
-@@ -945,6 +978,10 @@ function setArgObserver(component) {
+@@ -945,6 +958,10 @@ function setArgObserver(component) {
            )
          });
        } else {
@@ -151,7 +202,7 @@ index 468a76a..b660f76 100644
          updateArgs({
            [`${mutation.attributeName}`]: mutation.target.getAttribute(mutation.attributeName || "")
          });
-@@ -1001,7 +1038,8 @@ function getStorybookHelpers(tagName, options2) {
+@@ -1001,7 +1018,8 @@ function getStorybookHelpers(tagName, options2) {
        slot,
        argTypes,
        options2?.excludeCategories || [],
