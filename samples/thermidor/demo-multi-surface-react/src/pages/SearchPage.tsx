@@ -1,12 +1,9 @@
 import {ChatPanel} from '../components/ChatPanel.js';
-import {useTurnViews, useViewSurfaces} from '../session/storefront-session.js';
+import {useViewSurfaces} from '../session/storefront-session.js';
 import {isSearchSurface, shopperText} from '../views/view-surfaces.js';
 import {ViewSurfaces} from '../views/ViewSurfaces.js';
 import {PageTurnStatus} from './PageTurnStatus.js';
-import {usePageView} from './use-page-view.js';
 import styles from './pages.module.css';
-
-const SEARCH_VIEW = 'storefront-preview-search';
 
 interface SearchPageProps {
   query: string;
@@ -20,8 +17,8 @@ interface SearchPageProps {
 }
 
 /**
- * Search results on the left: the latest search of the page, such as the commerce search layout
- * with its facets, sort and pagination, sent on `storefront-preview-search` or drawn by a turn of
+ * The search layout: the latest search of the page on the left, such as the commerce search
+ * layout with its facets, sort and pagination, answering the page's prompt or drawn by a turn of
  * the conversation. The assistant's chat panel is docked on the right, on the same visit: it shows
  * the conversation so far and continues it.
  */
@@ -33,14 +30,13 @@ export function SearchPage({
   onBack,
 }: SearchPageProps) {
   const viewSurfaces = useViewSurfaces();
-  const {turnViews} = useTurnViews();
-  const {turn: ownTurn} = usePageView(visitId, SEARCH_VIEW);
+  const conversation = viewSurfaces.conversationOf(conversationVisits);
   const results = viewSurfaces.resultsOf(visitId, openingTurnId);
-  const turn = results ?? ownTurn;
+  const turn = results ?? viewSurfaces.turnsOfVisit(visitId)[0];
   // A conversation turn's other surfaces, such as its follow-ups, stay in the chat panel.
   const surfaces =
     results?.response.surfaces.filter(
-      (surface) => turnViews.get(results.id) === SEARCH_VIEW || isSearchSurface(surface)
+      (surface) => !conversation.includes(results) || isSearchSurface(surface)
     ) ?? [];
   const isWaiting = !turn || turn.status === 'streaming';
   // A later search of the page, such as one the chat panel's answer drew, names its own query.
@@ -64,11 +60,7 @@ export function SearchPage({
             <ViewSurfaces surfaces={surfaces} isStreaming={turn?.status === 'streaming'} />
           )}
         </section>
-        <ChatPanel
-          visitId={visitId}
-          turns={viewSurfaces.conversationOf(conversationVisits)}
-          className={styles.panel}
-        />
+        <ChatPanel visitId={visitId} turns={conversation} className={styles.panel} />
       </div>
     </main>
   );
