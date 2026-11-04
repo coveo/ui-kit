@@ -39,6 +39,7 @@ function toRun(run) {
     conclusion: run.conclusion,
     createdAt: run.created_at,
     headSha: run.head_sha,
+    headBranch: run.head_branch,
     attempts: run.run_attempt,
   };
 }
