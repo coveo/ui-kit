@@ -1,20 +1,25 @@
 // Simple ad-hoc script to help development of resolve-tasks.mjs
-import {execFileSync} from 'node:child_process';
+import {execFileSync, spawnSync} from 'node:child_process';
 import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import assert from 'node:assert/strict';
 const directory = dirname(fileURLToPath(import.meta.url));
 const resolver = resolve(directory, 'resolve-tasks.mjs');
 const workspace = resolve(directory, '../../..');
-const run = (name, environment, expected) => {
-  const actual = execFileSync(process.execPath, [resolver], {
+const skippedWarning = /^::warning title=Skipped affected task::(\S+) is not in this checkout/;
+const run = (name, environment, expected, expectedSkipped = []) => {
+  const {status, stdout, stderr} = spawnSync(process.execPath, [resolver], {
     cwd: workspace,
     env: {...process.env, GITHUB_WORKSPACE: workspace, ...environment},
-    stdio: ['ignore', 'pipe', 'ignore'],
-  })
-    .toString()
-    .trim();
-  assert.equal(actual, expected.join('\n'), name);
+    encoding: 'utf8',
+  });
+  assert.equal(status, 0, `${name}: ${stderr}`);
+  assert.equal(stdout.trim(), expected.join('\n'), name);
+  const skipped = stderr
+    .split('\n')
+    .map((line) => line.match(skippedWarning)?.[1])
+    .filter(Boolean);
+  assert.deepEqual(skipped, expectedSkipped, `${name} (skipped)`);
 };
 const runFailure = (name, environment, expectedError) => {
   assert.throws(
@@ -78,13 +83,24 @@ run(
   ['//#generate:catalog-info']
 );
 run(
-  'skips tasks for packages missing from the workspace',
+  'skips tasks for packages missing from the checkout',
   {
-    TASKS: 'build',
+    TASKS: 'build\ngenerate:all',
     PACKAGES: '',
-    AFFECTED_TASKS: '["@coveo/atomic#build", "@samples/does-not-exist#build"]',
+    AFFECTED_TASKS: '["//#generate:all", "@coveo/atomic#build", "@samples/does-not-exist#build"]',
   },
-  ['@coveo/atomic#build']
+  ['//#generate:all', '@coveo/atomic#build'],
+  ['@samples/does-not-exist#build']
+);
+run(
+  'skips tasks missing from an existing package in the checkout',
+  {
+    TASKS: 'build\ngenerate:all',
+    PACKAGES: '',
+    AFFECTED_TASKS: '["@coveo/bueno#build", "@coveo/bueno#generate:all"]',
+  },
+  ['@coveo/bueno#build'],
+  ['@coveo/bueno#generate:all']
 );
 run(
   'does not resolve an explicit empty affected list',
