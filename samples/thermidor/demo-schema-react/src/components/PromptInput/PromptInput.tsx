@@ -10,26 +10,18 @@ import {
 } from 'react';
 import {
   SuggestionsDropdown,
-  SuggestionsAsideContext,
+  ActiveAsideOptionContext,
   SUGGESTIONS_LISTBOX_ID,
   ASIDE_LISTBOX_ID,
-  type AsideItem,
-  type SuggestionsAside,
   type SuggestionSection,
   type SuggestionItem,
   type SuggestionsPlacement,
 } from '../SuggestionsDropdown/index.js';
 import styles from './PromptInput.module.css';
 
-const NO_ASIDE_ITEMS: AsideItem[] = [];
-
-/**
- * Whether the arrow keys' moves are announced in a live region. VoiceOver does not follow
- * `aria-activedescendant` on a textarea, so Atomic announces them on Apple platforms only, where
- * other screen readers would read each move twice.
- */
-function announcesMoves(): boolean {
-  return /Mac|iPhone|iPad/.test(navigator.userAgent);
+/** The options of the listbox drawn beside the suggestions, found in the page as Atomic does. */
+function asideOptions(): HTMLElement[] {
+  return Array.from(document.querySelectorAll(`#${ASIDE_LISTBOX_ID} [role="option"]`));
 }
 
 interface PromptInputProps {
@@ -54,8 +46,8 @@ interface PromptInputProps {
    */
   onActiveItemChange?: (item: SuggestionItem | undefined) => void;
   /**
-   * Drawn beside the suggestions while they are open. The items it shows with
-   * `useSuggestionsAside` are reached with the right arrow from a highlighted suggestion.
+   * Drawn beside the suggestions while they are open. The options of its `ASIDE_LISTBOX_ID` listbox
+   * are reached with the right arrow from a highlighted suggestion, and Enter clicks them.
    */
   suggestionsAside?: ReactNode;
 }
@@ -77,11 +69,9 @@ export function PromptInput({
   const [value, setValue] = useState(initialValue);
   const [showDropdown, setShowDropdown] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
-  const [asideItems, setAsideItems] = useState(NO_ASIDE_ITEMS);
-  const [activeAsideIndex, setActiveAsideIndex] = useState(-1);
+  /** The aside option the arrow keys highlight, or highlighted last while back in the suggestions. */
+  const [asideOptionId, setAsideOptionId] = useState<string>();
   const [inAside, setInAside] = useState(false);
-  const [fromKeyboard, setFromKeyboard] = useState(false);
-  const [announcement, setAnnouncement] = useState('');
   const typedValueRef = useRef(initialValue);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const blurTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -108,19 +98,11 @@ export function PromptInput({
     setHighlightedSuggestions(suggestions);
     resetHighlight();
   }
-  const asideKey = asideItems.map(({id}) => id).join(' ');
-  const [highlightedAsideKey, setHighlightedAsideKey] = useState(asideKey);
-  if (asideKey !== highlightedAsideKey) {
-    setHighlightedAsideKey(asideKey);
-    setActiveAsideIndex(-1);
-    setInAside(false);
-  }
 
   function resetHighlight() {
     setActiveIndex(-1);
-    setActiveAsideIndex(-1);
+    setAsideOptionId(undefined);
     setInAside(false);
-    setFromKeyboard(false);
   }
 
   useEffect(() => {
@@ -193,23 +175,18 @@ export function PromptInput({
     submit(item.label);
   }
 
-  function selectAsideItem(item: AsideItem) {
-    setShowDropdown(false);
-    item.onSelect();
-  }
-
   /** Highlights the suggestion at `index`, or none at -1, and shows it in the input. */
-  function highlightSuggestionWithKeyboard(index: number) {
+  function highlightSuggestion(index: number) {
     setActiveIndex(index);
     setInAside(false);
-    setFromKeyboard(true);
     setValue(index >= 0 ? totalItems[index].label : typedValueRef.current);
   }
 
-  function highlightAsideWithKeyboard(index: number) {
-    setActiveAsideIndex(index);
-    setInAside(true);
-    setFromKeyboard(true);
+  /** Moves the highlight `step` options down the aside, wrapping around. */
+  function moveInAside(step: number) {
+    const options = asideOptions();
+    const index = options.findIndex(({id}) => id === asideOptionId);
+    setAsideOptionId(options[(index + step + options.length) % options.length]?.id);
   }
 
   function handleKeyDown(e: KeyboardEvent<HTMLTextAreaElement>) {
@@ -227,9 +204,9 @@ export function PromptInput({
     if (e.key === 'ArrowDown' && expanded) {
       e.preventDefault();
       if (inAside) {
-        highlightAsideWithKeyboard((activeAsideIndex + 1) % asideItems.length);
+        moveInAside(1);
       } else {
-        highlightSuggestionWithKeyboard((activeIndex + 1) % totalItems.length);
+        highlightSuggestion((activeIndex + 1) % totalItems.length);
       }
       return;
     }
@@ -237,40 +214,40 @@ export function PromptInput({
     if (e.key === 'ArrowUp' && expanded) {
       e.preventDefault();
       if (inAside) {
-        highlightAsideWithKeyboard((activeAsideIndex - 1 + asideItems.length) % asideItems.length);
+        moveInAside(-1);
       } else {
-        highlightSuggestionWithKeyboard(
-          activeIndex === -1 ? totalItems.length - 1 : activeIndex - 1
-        );
+        highlightSuggestion(activeIndex === -1 ? totalItems.length - 1 : activeIndex - 1);
       }
       return;
     }
 
-    if (e.key === 'ArrowRight' && expanded && !inAside && activeIndex >= 0 && asideItems.length) {
-      e.preventDefault();
-      highlightAsideWithKeyboard(Math.max(activeAsideIndex, 0));
+    if (e.key === 'ArrowRight' && expanded && !inAside && activeIndex >= 0) {
+      const options = asideOptions();
+      if (options.length > 0) {
+        e.preventDefault();
+        setAsideOptionId((options.find(({id}) => id === asideOptionId) ?? options[0]).id);
+        setInAside(true);
+      }
       return;
     }
 
     if (e.key === 'ArrowLeft' && expanded && inAside) {
       e.preventDefault();
-      highlightSuggestionWithKeyboard(Math.max(activeIndex, 0));
+      highlightSuggestion(Math.max(activeIndex, 0));
       return;
     }
 
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      const asideItem =
-        expanded && inAside && fromKeyboard ? asideItems[activeAsideIndex] : undefined;
-      if (asideItem) {
-        selectAsideItem(asideItem);
+      const option = expanded && inAside && asideOptionId && document.getElementById(asideOptionId);
+      if (option) {
+        setShowDropdown(false);
+        option.click();
       } else {
         submit(value);
       }
       return;
     }
-
-    setFromKeyboard(false);
   }
 
   const supportsFieldSizing = typeof CSS !== 'undefined' && CSS.supports('field-sizing', 'content');
@@ -295,37 +272,11 @@ export function PromptInput({
   }
 
   const activeItem = expanded && activeIndex >= 0 ? totalItems[activeIndex] : undefined;
-  const activeAsideItem = expanded && inAside ? asideItems[activeAsideIndex] : undefined;
-  const activeDescendant = activeAsideItem
-    ? activeAsideItem.id
-    : activeItem && `suggestion-item-${activeItem.id}`;
+  const activeAsideOptionId = expanded && inAside ? asideOptionId : undefined;
+  const activeDescendant =
+    activeAsideOptionId ?? (activeItem && `suggestion-item-${activeItem.id}`);
 
   useEffect(() => onActiveItemChange?.(activeItem), [activeItem, onActiveItemChange]);
-
-  useEffect(() => {
-    if (!activeDescendant) {
-      return;
-    }
-    const option = document.getElementById(activeDescendant);
-    option?.scrollIntoView?.({block: 'nearest'});
-    if (fromKeyboard && announcesMoves()) {
-      setAnnouncement(option?.getAttribute('aria-label') ?? '');
-    }
-  }, [activeDescendant, fromKeyboard]);
-
-  const aside = useMemo<SuggestionsAside>(
-    () => ({
-      activeItemId: activeAsideItem?.id,
-      showItems: setAsideItems,
-      hoverItem: (item) => {
-        setActiveAsideIndex(asideItems.indexOf(item));
-        setInAside(true);
-        setFromKeyboard(false);
-      },
-      selectItem: selectAsideItem,
-    }),
-    [activeAsideItem, asideItems]
-  );
 
   return (
     <div className={styles.wrapper}>
@@ -346,11 +297,7 @@ export function PromptInput({
           aria-label="Prompt"
           aria-expanded={expanded}
           aria-haspopup="listbox"
-          aria-controls={
-            asideItems.length > 0
-              ? `${SUGGESTIONS_LISTBOX_ID} ${ASIDE_LISTBOX_ID}`
-              : SUGGESTIONS_LISTBOX_ID
-          }
+          aria-controls={SUGGESTIONS_LISTBOX_ID}
           aria-activedescendant={activeDescendant}
         />
         <button
@@ -417,26 +364,21 @@ export function PromptInput({
         </button>
       </div>
       {suggestions && (
-        <SuggestionsAsideContext.Provider value={aside}>
+        <ActiveAsideOptionContext.Provider value={activeAsideOptionId}>
           <SuggestionsDropdown
             sections={suggestions}
             onSelect={selectItem}
             onHover={(item) => {
               setActiveIndex(totalItems.indexOf(item));
               setInAside(false);
-              setFromKeyboard(false);
             }}
             visible={showDropdown}
             placement={suggestionsPlacement}
             activeIndex={inAside ? -1 : activeIndex}
             aside={suggestionsAside}
-            doubleList={asideItems.length > 0}
           />
-        </SuggestionsAsideContext.Provider>
+        </ActiveAsideOptionContext.Provider>
       )}
-      <div className={styles.visuallyHidden} aria-live="assertive">
-        {announcement}
-      </div>
     </div>
   );
 }

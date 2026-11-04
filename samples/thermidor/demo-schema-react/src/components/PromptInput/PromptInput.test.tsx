@@ -1,8 +1,12 @@
-import {useEffect, useMemo} from 'react';
+import {useContext} from 'react';
 import {render, screen, fireEvent, act} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
 import {PromptInput} from './PromptInput.js';
-import {useSuggestionsAside, type SuggestionSection} from '../SuggestionsDropdown/index.js';
+import {
+  ActiveAsideOptionContext,
+  ASIDE_LISTBOX_ID,
+  type SuggestionSection,
+} from '../SuggestionsDropdown/index.js';
 
 describe('PromptInput', () => {
   it('renders a textarea with the provided placeholder', () => {
@@ -515,7 +519,7 @@ describe('highlighted suggestion', () => {
   it('reports and highlights the item under the pointer, and keeps it once the pointer leaves', () => {
     const {textarea, highlighted} = renderWithHighlight();
 
-    const wetsuits = screen.getByRole('option', {name: /“Wetsuits”/});
+    const wetsuits = screen.getByRole('option', {name: 'Wetsuits'});
     fireEvent.mouseEnter(wetsuits);
     fireEvent.mouseLeave(wetsuits);
 
@@ -562,24 +566,18 @@ describe('highlighted suggestion', () => {
 
 /** Products beside the suggestions, reached with the arrow keys as `InstantProducts` are. */
 function TestAside({onSelect}: {onSelect: (id: string) => void}) {
-  const {showItems, activeItemId, hoverItem} = useSuggestionsAside();
-  const items = useMemo(
-    () => ['p1', 'p2'].map((id) => ({id, onSelect: () => onSelect(id)})),
-    [onSelect]
-  );
-  useEffect(() => showItems(items), [showItems, items]);
-  useEffect(() => () => showItems([]), [showItems]);
+  const activeOptionId = useContext(ActiveAsideOptionContext);
   return (
-    <div role="listbox" aria-label="Products">
-      {items.map((item) => (
+    <div id={ASIDE_LISTBOX_ID} role="listbox" aria-label="Products">
+      {['p1', 'p2'].map((id) => (
         <div
-          key={item.id}
-          id={item.id}
+          key={id}
+          id={id}
           role="option"
-          aria-selected={item.id === activeItemId}
-          onMouseEnter={() => hoverItem(item)}
+          aria-selected={id === activeOptionId}
+          onClick={() => onSelect(id)}
         >
-          {item.id}
+          {id}
         </div>
       ))}
     </div>
@@ -644,7 +642,7 @@ describe('keyboard navigation, as in Atomic commerce', () => {
   it('leaves the input as typed on hover, and Enter then submits what was typed', () => {
     const {textarea, press, highlighted, onSubmit} = renderNavigable();
 
-    fireEvent.mouseEnter(screen.getByRole('option', {name: /“Wetsuits”/}));
+    fireEvent.mouseEnter(screen.getByRole('option', {name: 'Wetsuits'}));
     expect(highlighted()).toBe('Wetsuits');
     expect(textarea.value).toBe('surf');
 
@@ -708,9 +706,6 @@ describe('keyboard navigation, as in Atomic commerce', () => {
     expect(screen.getByRole('option', {name: 'p1'}).getAttribute('aria-selected')).toBe('true');
     expect(highlighted()).toBe('Wetsuits');
     expect(textarea.value).toBe('Wetsuits');
-    expect(textarea.getAttribute('aria-controls')).toBe(
-      'suggestions-listbox suggestions-aside-listbox'
-    );
   });
 
   it('moves between products, and back to the suggestion they came from with the left arrow', () => {
@@ -753,36 +748,5 @@ describe('keyboard navigation, as in Atomic commerce', () => {
     expect(onSelectProduct).toHaveBeenCalledWith('p1');
     expect(onSubmit).not.toHaveBeenCalled();
     expect(screen.queryByRole('listbox')).toBeNull();
-  });
-
-  it('submits the input on Enter when a product is only under the pointer', () => {
-    const {press, onSubmit, onSelectProduct, active} = renderNavigable();
-
-    fireEvent.mouseEnter(screen.getByRole('option', {name: 'p2'}));
-    expect(active()).toBe('p2');
-    press('Enter');
-
-    expect(onSelectProduct).not.toHaveBeenCalled();
-    expect(onSubmit).toHaveBeenCalledWith('surf');
-  });
-
-  it('labels each suggestion with its position, and the list it is in', () => {
-    renderNavigable();
-
-    expect(
-      screen.getByRole('option', {name: '“Wetsuits”, suggested query. 2 of 3. In Left list.'})
-    ).toBeDefined();
-  });
-
-  it('announces each move of the arrow keys on Apple platforms', () => {
-    vi.spyOn(navigator, 'userAgent', 'get').mockReturnValue('Mozilla/5.0 (Macintosh)');
-    const {press} = renderNavigable({withAside: false});
-
-    press('ArrowDown');
-
-    expect(document.querySelector('[aria-live="assertive"]')?.textContent).toBe(
-      '“Surfboards”, suggested query. 1 of 3.'
-    );
-    vi.restoreAllMocks();
   });
 });

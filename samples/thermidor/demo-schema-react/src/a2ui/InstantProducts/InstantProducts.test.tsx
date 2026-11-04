@@ -130,9 +130,9 @@ describe('InstantProducts', () => {
     type('surf');
     await waitFor(() => expect(options()).toEqual(['surf boards', 'surf wax']));
 
-    fireEvent.mouseEnter(screen.getByRole('option', {name: /“surf wax”/}));
+    fireEvent.mouseEnter(screen.getByRole('option', {name: 'surf wax'}));
     await waitFor(() => expect(productsShown()).toBe('Products for surf wax'));
-    fireEvent.mouseEnter(screen.getByRole('option', {name: /“surf boards”/}));
+    fireEvent.mouseEnter(screen.getByRole('option', {name: 'surf boards'}));
 
     await waitFor(() => expect(productsShown()).toBe('Products for surf boards'));
     expect(dispatchedQueries()).toEqual(['surf boards', 'surf wax', 'surf boards']);
@@ -207,7 +207,7 @@ describe('InstantProducts', () => {
     type('surf');
     await waitFor(() => expect(productsShown()).toBe('Products for surf boards'));
 
-    fireEvent.mouseEnter(screen.getByRole('option', {name: /“surf wax”/}));
+    fireEvent.mouseEnter(screen.getByRole('option', {name: 'surf wax'}));
 
     await waitFor(() => expect(panelShown()).toBe('Loading products for surf wax'));
     expect(screen.getByText('surf boards product').closest('[inert]')).not.toBeNull();
@@ -264,9 +264,6 @@ describe('InstantProducts keyboard navigation', () => {
     const listbox = screen.getByRole('listbox', {name: 'Instant products'});
     expect(productOptions()).toHaveLength(1);
     expect(listbox.contains(productOptions()[0])).toBe(true);
-    expect(productOptions()[0].getAttribute('aria-label')).toBe(
-      'surf boards product, instant product. 1 of 1. In Right list.'
-    );
   });
 
   it('reaches the products of the highlighted suggestion with the right arrow', async () => {

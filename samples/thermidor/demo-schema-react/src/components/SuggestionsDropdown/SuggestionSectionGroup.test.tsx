@@ -18,8 +18,6 @@ describe('SuggestionSectionGroup', () => {
   const baseProps = {
     section: testSection,
     onSelect: vi.fn(),
-    positionOf: (item: SuggestionSection['items'][number]) => testSection.items.indexOf(item) + 1,
-    count: testSection.items.length,
   };
 
   it('renders the section title', () => {

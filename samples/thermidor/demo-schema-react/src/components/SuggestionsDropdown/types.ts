@@ -16,10 +16,3 @@ export interface SuggestionSection {
 }
 
 export type SuggestionsPlacement = 'below' | 'above';
-
-/** An item drawn beside the suggestions that the arrow keys reach, such as an instant product. */
-export interface AsideItem {
-  /** The id of the item's element, which the input names as its active descendant. */
-  id: string;
-  onSelect: () => void;
-}

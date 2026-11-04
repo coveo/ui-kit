@@ -2,8 +2,6 @@ export {
   SuggestionsDropdown,
   SUGGESTIONS_LISTBOX_ID,
   ASIDE_LISTBOX_ID,
+  ActiveAsideOptionContext,
 } from './SuggestionsDropdown.js';
-export {optionLabel} from './option-label.js';
-export {SuggestionsAsideContext, useSuggestionsAside} from './suggestions-aside-context.js';
-export type {SuggestionsAside} from './suggestions-aside-context.js';
-export type {AsideItem, SuggestionItem, SuggestionSection, SuggestionsPlacement} from './types.js';
+export type {SuggestionItem, SuggestionSection, SuggestionsPlacement} from './types.js';
