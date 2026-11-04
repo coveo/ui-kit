@@ -6,7 +6,9 @@
 // report issue, which also needs write access to issues.
 // --snapshot also saves the last full week to <dir>/flaky-snapshot-<week start>.json. Weeks end on
 // Sunday at 11:00 UTC, when the report is scheduled, so a late run saves the same week. --week-end
-// YYYY-MM-DD saves the week that ended on or before that day instead.
+// YYYY-MM-DD saves the week that ended on or before that day instead, if that week started in the
+// last 15 days, while its records still exist.
+import {execFileSync} from 'node:child_process';
 import {appendFileSync, mkdirSync, writeFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {parseArgs} from 'node:util';
@@ -23,6 +25,7 @@ import {findReportIssue, ISSUE_TITLE, publishReport} from './issue.mjs';
 import {buildModel, buildSnapshot, renderReport} from './report.mjs';
 
 // The records it reads expire after 15 days, the repository's artifact retention.
+const RECORD_DAYS = 15;
 const WINDOW_DAYS = 14;
 const WEEK_IN_MS = 7 * DAY_IN_MS;
 const WEEK_END_HOUR = 11;
@@ -86,6 +89,12 @@ if (Number.isNaN(weekEnd) || weekEnd > end.getTime()) {
   throw new Error('--week-end must be a date like 2026-11-01, in a week that has ended.');
 }
 const week = {start: isoSeconds(weekEnd - WEEK_IN_MS), end: isoSeconds(weekEnd)};
+// Without its expired records, an older week would look like it had no flaky test.
+if (Date.parse(week.start) < end.getTime() - RECORD_DAYS * DAY_IN_MS) {
+  throw new Error(
+    `--week-end must pick a week that started in the last ${RECORD_DAYS} days: older records have expired.`
+  );
+}
 
 const runs = await listRuns(github, {
   start: week.start < window.start ? week.start : window.start,
@@ -121,11 +130,12 @@ if (options.publish) {
 if (options.snapshot) {
   const name = `flaky-snapshot-${week.start.slice(0, 10)}`;
   const file = join(options.snapshot, `${name}.json`);
+  const snapshot = buildSnapshot(buildModel(within(week, collected)), {
+    sha: execFileSync('git', ['rev-parse', 'HEAD'], {encoding: 'utf8'}).trim(),
+    generatedAt: window.end,
+  });
   mkdirSync(options.snapshot, {recursive: true});
-  writeFileSync(
-    file,
-    `${JSON.stringify(buildSnapshot(buildModel(within(week, collected))), null, 2)}\n`
-  );
+  writeFileSync(file, `${JSON.stringify(snapshot, null, 2)}\n`);
   if (process.env.GITHUB_OUTPUT) {
     appendFileSync(process.env.GITHUB_OUTPUT, `snapshot=${name}\n`);
   }
