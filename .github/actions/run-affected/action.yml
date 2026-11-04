@@ -2,7 +2,7 @@ name: 'Run affected Turbo tasks'
 description: 'Select affected Turbo tasks from the current task graph and run them.'
 inputs:
   affected-tasks:
-    description: 'Affected Turbo task identifiers as a JSON array. When the array is empty, run no tasks. Tasks of packages missing from the checked-out workspace are skipped.'
+    description: 'Affected Turbo task identifiers as a JSON array. When the array is empty, run no tasks. Tasks that the checked-out workspace does not define are skipped with a warning.'
     required: true
   tasks:
     description: 'Turbo target task names, one per line.'

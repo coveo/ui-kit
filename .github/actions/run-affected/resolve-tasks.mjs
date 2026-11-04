@@ -73,16 +73,16 @@ const parseJsonInput = (varName) => {
 };
 
 // The affected tasks come from the merge commit, while some jobs check out the
-// pull request branch, which may lack packages added to the base branch since.
-const getWorkspacePackages = () => {
+// pull request branch, which may lack packages or tasks added to the base
+// branch since. Turbo fails on any task ID it can't find in the checkout.
+const getCheckoutTaskIds = (taskNames) => {
   const turbo = createRequire(join(process.cwd(), 'package.json')).resolve('turbo');
   const output = execFileSync(
     process.execPath,
-    [turbo, 'ls', '--output=json', '--no-update-notifier'],
-    {encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe']}
+    [turbo, 'run', ...taskNames, '--dry=json', '--no-update-notifier'],
+    {encoding: 'utf8', maxBuffer: 100 * 1024 * 1024, stdio: ['ignore', 'pipe', 'pipe']}
   );
-  const {packages} = JSON.parse(output);
-  return new Set(['//', ...packages.items.map(({name}) => name)]);
+  return new Set(JSON.parse(output).tasks.map(({taskId}) => taskId));
 };
 
 const parseInputs = () => ({
@@ -93,25 +93,26 @@ const parseInputs = () => ({
 
 const resolveTasks = () => {
   const {requestedTasks, matchesPackage, affectedTasks} = parseInputs();
-  const workspacePackages = getWorkspacePackages();
-  const skipped = [];
-
-  const tasks = affectedTasks.filter((taskId) => {
+  const candidates = affectedTasks.filter((taskId) => {
     const [project, task] = taskId.split('#');
-    if (!requestedTasks.has(task) || !matchesPackage(project)) {
-      return false;
-    }
-    if (!workspacePackages.has(project)) {
-      skipped.push(taskId);
-      return false;
-    }
-    return true;
+    return requestedTasks.has(task) && matchesPackage(project);
   });
 
-  if (skipped.length > 0) {
-    console.error('Skipping tasks for packages not in this checkout:');
-    for (const taskId of skipped) {
-      console.error(taskId);
+  if (candidates.length === 0) {
+    return [];
+  }
+
+  const taskNames = [...new Set(candidates.map((taskId) => taskId.split('#')[1]))];
+  const checkoutTaskIds = getCheckoutTaskIds(taskNames);
+  const tasks = [];
+
+  for (const taskId of candidates) {
+    if (checkoutTaskIds.has(taskId)) {
+      tasks.push(taskId);
+    } else {
+      console.error(
+        `::warning title=Skipped affected task::${taskId} is not in this checkout, so it was not run.`
+      );
     }
   }
 
