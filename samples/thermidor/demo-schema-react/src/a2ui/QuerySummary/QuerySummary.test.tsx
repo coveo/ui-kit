@@ -89,26 +89,26 @@ describe('QuerySummary', () => {
     expect(screen.queryByText(/Showing results for/)).toBeNull();
   });
 
-  it("shows the query a trigger searched instead of the shopper's, with a link to the shopper's", async () => {
+  it("links to the shopper's query when the backend can search it instead", async () => {
     mountSummary({
       query: 'Water Sports',
       firstIndex: 1,
       lastIndex: 12,
       totalEntries: 43,
-      correction: {originalQuery: 'swim gear', cause: 'trigger'},
+      correction: {originalQuery: 'swim gear', cause: 'trigger', canOverride: true},
     });
     await waitFor(() => expect(screen.getByText(/Showing results for/)).toBeDefined());
     expect(screen.getByText(/Search instead for/)).toBeDefined();
     expect(screen.getByRole('button', {name: 'swim gear'})).toBeDefined();
   });
 
-  it("shows the query a correction searched instead of the shopper's, without a link", async () => {
+  it("shows the shopper's query without a link when the backend cannot search it instead", async () => {
     mountSummary({
       query: 'Water Sports',
       firstIndex: 1,
       lastIndex: 12,
       totalEntries: 43,
-      correction: {originalQuery: 'water sprots', cause: 'correction'},
+      correction: {originalQuery: 'water sprots', cause: 'correction', canOverride: false},
     });
     await waitFor(() =>
       expect(screen.getByText(/Showing results for/).textContent).toBe(
@@ -119,20 +119,20 @@ describe('QuerySummary', () => {
     expect(screen.queryByRole('button')).toBeNull();
   });
 
-  it("dispatches overrideCorrection with the shopper's query", async () => {
+  it('dispatches overrideCorrection with an empty context', async () => {
     const {lastAction} = mountSummary({
       query: 'Water Sports',
       firstIndex: 1,
       lastIndex: 12,
       totalEntries: 43,
-      correction: {originalQuery: 'swim gear', cause: 'trigger'},
+      correction: {originalQuery: 'swim gear', cause: 'trigger', canOverride: true},
     });
     await waitFor(() => expect(screen.getByRole('button', {name: 'swim gear'})).toBeDefined());
     fireEvent.click(screen.getByRole('button', {name: 'swim gear'}));
     await waitFor(() =>
       expect(lastAction()).toMatchObject({
         name: 'overrideCorrection',
-        context: {originalQuery: 'swim gear'},
+        context: {},
       })
     );
   });

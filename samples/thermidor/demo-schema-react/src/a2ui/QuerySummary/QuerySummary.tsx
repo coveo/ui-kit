@@ -17,10 +17,10 @@ import styles from './QuerySummary.module.css';
  * - No results with a query: "No results for {query}".
  * - Otherwise: "Products {firstIndex}-{lastIndex} of {totalEntries}", with the trailing
  *   " for {query}" only when a query is present.
- * - When a query trigger replaced the shopper's query: "Showing results for {query}. Search
- *   instead for {originalQuery}", which dispatches `overrideCorrection`.
- * - When an automatic correction replaced it: "Showing results for {query} instead of
- *   {originalQuery}", with no way to search the original: the Commerce API corrects it again.
+ * - When the backend replaced the shopper's query and can search it instead (`canOverride`):
+ *   "Showing results for {query}. Search instead for {originalQuery}", which dispatches
+ *   `overrideCorrection`.
+ * - When it cannot: "Showing results for {query} instead of {originalQuery}".
  */
 export const QuerySummary = createReactComponent(
   {
@@ -39,9 +39,9 @@ export const QuerySummary = createReactComponent(
       return null;
     }
 
-    const searchOriginalQuery = (originalQuery: string) => {
+    const searchOriginalQuery = () => {
       const overrideCorrectionAction: QuerySummaryAction = {
-        event: {name: 'overrideCorrection', context: {originalQuery}},
+        event: {name: 'overrideCorrection', context: {}},
       };
       startGesture(
         () => {},
@@ -49,23 +49,18 @@ export const QuerySummary = createReactComponent(
       );
     };
 
-    const correctionNotice =
-      correction?.cause === 'trigger' ? (
-        <p className={styles.correction}>
-          Showing results for <strong>{query}</strong>. Search instead for{' '}
-          <button
-            type="button"
-            className={styles.originalQuery}
-            onClick={() => searchOriginalQuery(correction.originalQuery)}
-          >
-            {correction.originalQuery}
-          </button>
-        </p>
-      ) : correction ? (
-        <p className={styles.correction}>
-          Showing results for <strong>{query}</strong> instead of {correction.originalQuery}
-        </p>
-      ) : null;
+    const correctionNotice = correction?.canOverride ? (
+      <p className={styles.correction}>
+        Showing results for <strong>{query}</strong>. Search instead for{' '}
+        <button type="button" className={styles.originalQuery} onClick={searchOriginalQuery}>
+          {correction.originalQuery}
+        </button>
+      </p>
+    ) : correction ? (
+      <p className={styles.correction}>
+        Showing results for <strong>{query}</strong> instead of {correction.originalQuery}
+      </p>
+    ) : null;
 
     if (totalEntries === 0) {
       return query ? (
