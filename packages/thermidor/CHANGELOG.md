@@ -1,5 +1,109 @@
 # @coveo/thermidor
 
+## 0.8.0
+
+### Minor Changes
+
+- [#8795](https://github.com/coveo/ui-kit/pull/8795) [`def7fa9`](https://github.com/coveo/ui-kit/commit/def7fa9d96df823ed5470d6a3404f4c835b38ec9) - Send the actions a producer announces as concurrent beside the session's single request, and reuse the answers of those it announces as cached.
+
+  - A producer announces them with a surface, in the AG-UI `metadata` of its snapshot, by surface id, under `concurrentActions`: `{"<surfaceId>": {"fetchInstantProducts": {"cache": {"ttlMs": 60000}}}}`. An action's optional `cache` policy is how long its answers are reused. The latest announcement for a surface wins, and an empty entry revokes it.
+  - A concurrent action is sent at once, whatever request is in flight, and never sets `session.request`; a prompt or `cancel()` does not stop it. Only the latest dispatch from a node is applied: an older uncached request is aborted, while a cached one runs to the end so its answer is cached, and a dispatch with the same payload joins it.
+  - A cached action dispatched again with the same payload within its lifetime sends nothing. The session keeps the last 100 answers in memory and never serializes them.
+  - Its answer may only update the data model of nodes the session holds, and is not recorded in a run: `session.state` shows it on top of the recorded state until a recorded write to the same path replaces it, and `session.serialize()` leaves it out. Its failure is a dev-only warning and sets no `session.actionError`.
+
+  A producer that announces nothing gets today's behavior.
+
+- [#8816](https://github.com/coveo/ui-kit/pull/8816) [`9f6072d`](https://github.com/coveo/ui-kit/commit/9f6072d4f48ff71bd59317ef81d778ee712fdfe5) - Add `@coveo/thermidor/private`, an entry point **for internal Coveo use only**. It is not supported for customers and may change without notice. Its `createPrivateSession` takes the `createSession` configuration with `agentConfigurationId` and `trackingId` optional, plus optional `language`, `country` and `currency`, and sends each one that is set with every request. The public `createSession` and `SessionConfig` are unchanged.
+
+### Patch Changes
+
+- [#8805](https://github.com/coveo/ui-kit/pull/8805) [`2a7286e`](https://github.com/coveo/ui-kit/commit/2a7286ebdca2317710567d3fdce4b6cb10db3614) - `initialize` and retried actions no longer send the unused A2-UI `actionId` and `wantResponse` fields either; 0.7.0 only stopped sending them with first-sent actions.
+
+## 0.7.0
+
+### Minor Changes
+
+- [#8786](https://github.com/coveo/ui-kit/pull/8786) [`f360141`](https://github.com/coveo/ui-kit/commit/f3601417521f733a224225dd0b23e268f4293e06) - Name the configured agent that answers the session.
+
+  - `SessionConfig` takes `agentConfigurationId`, sent with every request, next to `trackingId`. Both are required, and `createSession` throws when either is missing or blank.
+  - The locale comes from the configured agent: `SessionConfig` no longer takes `language`, `country` or `currency`, and requests no longer send them.
+
+  **Breaking:** `agentConfigurationId` and `trackingId` are now required in `SessionConfig`, and `language`, `country` and `currency` are removed from it.
+
+- [#8773](https://github.com/coveo/ui-kit/pull/8773) [`8cc736d`](https://github.com/coveo/ui-kit/commit/8cc736d96857e7b6300fdd15f6576605dfddc417) - **Breaking:** `session.sendAndWait(send)` is removed. Await the `dispatchAction` promise instead: it resolves once the dispatch's own request ends, at once for a dispatch withheld while another request is in flight. A renderer that returns its `onAction` promise hands it back to the component that dispatched, so the component can end an optimistic update when it resolves.
+
+- [#8756](https://github.com/coveo/ui-kit/pull/8756) [`6e70f6f`](https://github.com/coveo/ui-kit/commit/6e70f6f493d76d9a696b4e5290e6220eedda450d) - Open the session with an `initialize` action, so the producer can answer with the session's shell, such as its search box, before the first prompt.
+
+  - `createSession` sends `initialize` a microtask after it returns, through the one-request rule and the conflict retry, and adopts the session keys from its run. While it is in flight, `session.request` is `{kind: 'initialize'}` (`InitializeRequest`). A restored session never sends it, and neither does one created with `initialize: false`.
+  - Its run is recorded as `session.initialization` (`SessionInitialization`: `activities`, `status`, `error`), never as a turn, and `SessionSnapshot` carries it. A failed `initialize` is recorded there and not retried; the first prompt still opens the session. `cancel()` stops it.
+  - The initialization's activities come first in the session's activity log, so the surfaces it creates are listed in `session.surfaces`, accept actions, and can announce turn-opening actions.
+  - Only `initialize` changes the initialization's status. An action before the first turn records its surface snapshots with `session.initialization` and reports its failure in `session.actionError`, as any action that opens no turn does; its `session.request` has no `turnId`. A turn-opening action opens the first turn.
+
+  **Breaking:** a session sends `initialize` by default; pass `initialize: false` to opt out. `SERIALIZED_SESSION_VERSION` is now 4, since a persisted session carries its `initialization` (`SerializedInitialization`; one persisted mid-stream restores as `error`); an earlier session is refused on restore.
+
+### Patch Changes
+
+- [#8779](https://github.com/coveo/ui-kit/pull/8779) [`a393e7e`](https://github.com/coveo/ui-kit/commit/a393e7e353552c38f9ec83f968a4ac89f5e07f57) - Action requests no longer send the unused A2-UI `actionId` and `wantResponse` fields.
+
+## 0.6.0
+
+### Minor Changes
+
+- [#8752](https://github.com/coveo/ui-kit/pull/8752) [`f42fabe`](https://github.com/coveo/ui-kit/commit/f42fabe1f6fd27bb2e5daf078cf2ea2ab83cfcb6) - List a loading placeholder in `response.surfaces` only while the run that created it streams: while its turn streams, or while the request in flight streams into it, unless the turn had already left it behind when that request started. A placeholder the agent left behind once its run ended, after a cancelled run, an error or a restore, leaves the list, so a consumer draws a skeleton for every surface whose `isLoading` holds, with no rule of its own.
+
+- [#8751](https://github.com/coveo/ui-kit/pull/8751) [`8b3e1e4`](https://github.com/coveo/ui-kit/commit/8b3e1e4627e4b5039b4544c5599bb906c0751442) - Name the dispatching component in an action request.
+
+  An action request (`session.request` with `kind: 'action'`) now carries `component`, the discriminant of the dispatching node, next to the action `name`. A consumer that keeps its own action lists, such as the actions that keep its surfaces usable while they run, keys them by component and action name, typed by the contracts with the new `ComponentActionNames` type:
+
+  ```ts
+  const NON_BLOCKING_ACTIONS = {
+    RegularFacet: ["search", "clearSearch", "showMoreSearchResults"],
+  } as const satisfies ComponentActionNames<typeof ComponentContractsSchema>;
+  ```
+
+  `session.actionError` carries the same `component`, so a consumer tells which component's action failed.
+
+- [#8734](https://github.com/coveo/ui-kit/pull/8734) [`b267405`](https://github.com/coveo/ui-kit/commit/b267405456ead7af591d00a816e84b5505990ba2) - The session sends one request at a time, prompts and actions alike, and withholds a dispatch made while a request is in flight. It exposes `session.request` (the request being sent) and `session.sendAndWait(send)` (calls `send` and resolves once the session has answered that dispatch), which can end an optimistic update. A prompt dispatched during a gesture is now withheld instead of cancelling it.
+
+  Breaking: `Session.actions`, `createDispatchCoordinator`, `createSettledDispatch`, `createDispatchTracker`, `createOptimisticValue`, `createStaleScopes` and their types are removed.
+
+- [#8750](https://github.com/coveo/ui-kit/pull/8750) [`52b40b4`](https://github.com/coveo/ui-kit/commit/52b40b42ecd3af9cb7b0696f49d1d368fbeb7cc9) - Scope surfaces to the session, as ADR-018 decides: a surface lives from its `createSurface` until its `deleteSurface`, whichever turn carries them.
+
+  - `session.surfaces` lists every live surface, in creation order. Each turn's `response.surfaces` lists the live surfaces it created.
+  - `session.a2uiMessages` is the whole session's renderer stream, in arrival order. It only grows: feed each new message to a single renderer once. A `deleteSurface` precedes a `createSurface` that replaces a live surface, and an operation on a surface that is not live is left out.
+  - `session.state` is the validated data model of every live surface, keyed by surface id, whichever turn wrote it. A `createSurface` or `deleteSurface` ends a surface's state, so a re-created surface starts empty and a deleted one is not persisted.
+  - An action resolves its source component across every live surface, so an earlier turn's surfaces keep accepting actions. An action only updates the surfaces: its run never changes a turn's status or response. When it fails, whether it is rejected, streams `RUN_ERROR`, ends without a terminal event or its request cannot be built, `session.actionError` reports it and every turn is left as it is.
+  - `retry(turnId)` re-submits only the last turn, when it errored, so its answer never lands before later turns' surfaces.
+
+  **Breaking:** `session.actionError` is now an `ActionError` (`message`, `name`, `surfaceId`, `sourceComponentId`) instead of a string, and a failed action no longer fails the active turn. `TurnResponse.a2uiMessages` and `TurnResponse.state` are removed: read `session.a2uiMessages` and `session.state`. A `createSurface` for a surface id that is still live now replaces that surface, so a producer mints a new id for each new surface. The serialized format moves to version 2: it persists the session's `state` in place of the active turn's, and a version 1 session is refused on restore.
+
+- [#8751](https://github.com/coveo/ui-kit/pull/8751) [`8b3e1e4`](https://github.com/coveo/ui-kit/commit/8b3e1e4627e4b5039b4544c5599bb906c0751442) - Add `session.getSnapshot()`, which returns the session's `turns`, `surfaces`, `a2uiMessages`, `state`, `request` and `actionError` as one frozen `SessionSnapshot`. It returns the same object until one of those changes, and neither it nor `subscribe` relies on `this`, so the pair backs any framework store that compares snapshots by reference:
+
+  ```tsx
+  const { turns, a2uiMessages, request } = useSyncExternalStore(
+    session.subscribe,
+    session.getSnapshot,
+  );
+  ```
+
+- [#8752](https://github.com/coveo/ui-kit/pull/8752) [`f42fabe`](https://github.com/coveo/ui-kit/commit/f42fabe1f6fd27bb2e5daf078cf2ea2ab83cfcb6) - Open a new turn for a component action the producer announces as opening one, such as a follow-up chip or a search option, as a prompt does.
+
+  A producer announces, by surface id, the actions whose answer it gives as a new turn of the conversation, in the AG-UI `metadata` of the surface's snapshot:
+
+  ```json
+  {
+    "metadata": {
+      "turnOpeningActions": {
+        "<surfaceId>": ["selectAction", "selectSearchOption"]
+      }
+    }
+  }
+  ```
+
+  The session opens the turn as soon as the action is dispatched, so a consumer shows the shopper's choice right away and declares nothing. The new turn is `streaming` while its answer streams, records the action in `input.action` (`TurnAction`: component, action name, surface id, source node and payload), and becomes the active turn. The surfaces of the turn the action was sent from keep accepting actions. A failed or cancelled turn-opening action fails only its own turn, and `retry(turnId)` re-sends the action from the surface it was dispatched from. Any other action still streams into the active turn. An activity now keeps the AG-UI `metadata` of its event, and a replacing snapshot merges its `metadata` onto the earlier one by entry.
+
+  **Breaking:** `SERIALIZED_SESSION_VERSION` is now 3, since a persisted turn may carry `input.action`; an earlier session is refused on restore.
+
 ## 0.5.0
 
 ### Minor Changes

@@ -5,12 +5,14 @@ import styles from './SuggestionSectionGroup.module.css';
 interface SuggestionSectionGroupProps {
   section: SuggestionSection;
   onSelect: (item: SuggestionItem) => void;
+  onHover?: (item: SuggestionItem) => void;
   activeItemId?: string;
 }
 
 export function SuggestionSectionGroup({
   section,
   onSelect,
+  onHover,
   activeItemId,
 }: SuggestionSectionGroupProps) {
   const headerId = `section-${section.id}-header`;
@@ -27,6 +29,7 @@ export function SuggestionSectionGroup({
           icon={section.icon}
           isActive={item.id === activeItemId}
           onSelect={() => onSelect(item)}
+          onHover={() => onHover?.(item)}
           id={`suggestion-item-${item.id}`}
         />
       ))}

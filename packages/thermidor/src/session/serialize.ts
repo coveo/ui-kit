@@ -6,42 +6,54 @@
  * runtime domain shape; a persisted blob carries an integer `version` that is
  * bumped whenever the shape changes.
  *
- * Persistence scope — note `response.state` is persisted for the ACTIVE turn
- * only, an invariant coupled to the reserved historical-turn selector (ADR-011
- * + ADR-016, superseding ADR-013):
+ * Persistence scope (ADR-018):
  *
  *   | Field                                       | Persist | Scope            |
  *   | ------------------------------------------- | ------- | ---------------- |
  *   | id, input, status, error                    | yes     | all turns        |
+ *   | initialization (activities, status, error)  | yes     | session-level    |
  *   | sessionId, sessionToken, activeTurnId       | yes     | session-level    |
  *   | response.activities                         | yes     | all turns        |
  *   | response.agent.{messages,reasoningSteps}    | yes     | all turns        |
- *   | response.state                              | yes     | active turn ONLY |
+ *   | state (validated data model)                | yes     | session-level    |
  *   | response.surfaces                           | no      | derived          |
- *   | response.a2uiMessages                       | no      | derived          |
+ *   | renderer stream (`a2uiMessages`)            | no      | derived          |
  *
  * On restore:
- *   - `surfaces` and `a2uiMessages` are re-derived from each turn's persisted
- *     `activities` (never persisted, never an independent source of truth).
- *   - a turn persisted mid-stream (`status: 'streaming'`) is downgraded to
- *     `status: 'error'` (`'Stream was interrupted'`), preserving whatever
- *     partial `response` had streamed in.
- *   - non-active turns yield an empty (`{}`) `response.state` — their state was
- *     never persisted.
+ *   - `surfaces` and the renderer stream are re-derived from the persisted
+ *     `activities` of the initialization, then of each turn, in order (never
+ *     persisted, never an independent source of truth).
+ *   - a turn or initialization persisted mid-stream (`status: 'streaming'`) is
+ *     downgraded to `status: 'error'` (`'Stream was interrupted'`), preserving
+ *     whatever partial `response` had streamed in.
  *   - an unsupported `version` is rejected without partially populating a
  *     session.
  */
 
-import {deriveA2uiV09Messages} from './a2ui-v09-projection.js';
-import {deriveSurfaces} from './fold.js';
+import {
+  EMPTY_RENDERER_STREAM,
+  appendToRendererStream,
+  convertA2uiMessages,
+  type RendererStream,
+} from './a2ui-v09-projection.js';
+import {deriveSurfaces, SURFACE_ACTIVITY_KIND} from './fold.js';
+import {sessionActivities, type SessionRuns} from './session-surfaces.js';
 import type {SessionStoreState} from './store.js';
-import type {Activity, AgentMessage, ReasoningStep, Turn, TurnInput, TurnStatus} from './types.js';
+import type {
+  Activity,
+  AgentMessage,
+  ReasoningStep,
+  SessionInitialization,
+  Turn,
+  TurnInput,
+  TurnStatus,
+} from './types.js';
 
 /**
  * The current serialized-session shape version. Bumped whenever the persisted
  * shape changes. Restoration rejects any `version` that is not this value.
  */
-export const SERIALIZED_SESSION_VERSION = 1;
+export const SERIALIZED_SESSION_VERSION = 4;
 
 /**
  * The error message used when a mid-stream turn is restored.
@@ -58,9 +70,8 @@ export interface SerializedTurnAgent {
 }
 
 /**
- * The persisted response of a {@link SerializedTurn}. `surfaces` and
- * `a2uiMessages` are intentionally absent — both are re-derived from
- * `activities` on restore. `state` is present only for the active turn.
+ * The persisted response of a {@link SerializedTurn}. `surfaces` is
+ * intentionally absent: it is re-derived from `activities` on restore.
  */
 export interface SerializedTurnResponse {
   /** Persisted for ALL turns; the transcript source. */
@@ -68,9 +79,6 @@ export interface SerializedTurnResponse {
 
   /** Persisted for ALL turns that had a runtime `response.agent`. */
   agent?: SerializedTurnAgent;
-
-  /** Persisted for the ACTIVE turn ONLY; omitted for all others. */
-  state?: Record<string, unknown>;
 }
 
 /**
@@ -83,6 +91,15 @@ export interface SerializedTurn {
   status: TurnStatus;
   error?: string;
   response: SerializedTurnResponse;
+}
+
+/** The persisted run of the session's `initialize` action. */
+export interface SerializedInitialization {
+  /** The run's activities, which hold the surfaces it created. */
+  activities: Activity[];
+  status: TurnStatus;
+  /** Present when `status === 'error'`, absent otherwise. */
+  error?: string;
 }
 
 /**
@@ -98,7 +115,11 @@ export interface SerializedSession {
   /** Continuity key for request-authentication continuity. */
   sessionToken?: string;
   activeTurnId?: string;
+  /** The run of the `initialize` action that opened the session, when it sent one. */
+  initialization?: SerializedInitialization;
   turns: SerializedTurn[];
+  /** The session's validated data model, keyed by surface id. */
+  state?: Record<string, unknown>;
 }
 
 /**
@@ -123,12 +144,11 @@ export class UnsupportedSerializedSessionVersionError extends Error {
  *
  * Persists `id`/`input`/`status`/`error` and `response.activities` for every
  * turn, `response.agent.{messages,reasoningSteps}` for turns that have an
- * agent, `response.state` for the active turn only, and session-level
- * `sessionId`/`sessionToken`/`activeTurnId`. Never persists the derived
- * `response.surfaces` / `response.a2uiMessages`.
+ * agent, and session-level `initialization`, `sessionId`/`sessionToken`/`activeTurnId`
+ * and `state`. Never persists the derived `response.surfaces` or renderer stream.
  */
 export function serializeSession(state: SessionStoreState<Turn>): SerializedSession {
-  const {turns, activeTurnId, sessionId, sessionToken} = state;
+  const {turns, initialization, activeTurnId, sessionId, sessionToken, state: sessionState} = state;
 
   const serializedTurns: SerializedTurn[] = turns.map((turn) => {
     const response: SerializedTurnResponse = {
@@ -140,10 +160,6 @@ export function serializeSession(state: SessionStoreState<Turn>): SerializedSess
         messages: [...turn.response.agent.messages],
         reasoningSteps: [...turn.response.agent.reasoningSteps],
       };
-    }
-
-    if (turn.id === activeTurnId) {
-      response.state = {...turn.response.state};
     }
 
     const serialized: SerializedTurn = {
@@ -171,6 +187,16 @@ export function serializeSession(state: SessionStoreState<Turn>): SerializedSess
   if (activeTurnId !== undefined) {
     session.activeTurnId = activeTurnId;
   }
+  if (initialization !== undefined) {
+    session.initialization = {
+      activities: [...initialization.activities],
+      status: initialization.status,
+      ...(initialization.error === undefined ? {} : {error: initialization.error}),
+    };
+  }
+  if (sessionState !== undefined && Object.keys(sessionState).length > 0) {
+    session.state = {...sessionState};
+  }
   return session;
 }
 
@@ -180,10 +206,9 @@ export function serializeSession(state: SessionStoreState<Turn>): SerializedSess
  * Rejects an unsupported `version` (throwing
  * {@link UnsupportedSerializedSessionVersionError}) before building any turns,
  * so no session is partially populated. Otherwise reproduces every persisted
- * turn, re-derives `surfaces` and `a2uiMessages` from persisted `activities`,
- * downgrades any
- * mid-stream turn to `error` while preserving its partial response, and yields
- * an empty `{}` state for every non-active turn.
+ * turn, the initialization and the session's `state`, re-derives `surfaces` and
+ * the renderer stream from the persisted `activities`, and downgrades any
+ * mid-stream turn or initialization to `error` while preserving what it holds.
  */
 export function restoreSession(serialized: SerializedSession): SessionStoreState<Turn> {
   if (serialized.version !== SERIALIZED_SESSION_VERSION) {
@@ -193,14 +218,9 @@ export function restoreSession(serialized: SerializedSession): SessionStoreState
   const {turns, activeTurnId, sessionId, sessionToken} = serialized;
 
   const restoredTurns: Turn[] = turns.map((turn) => {
-    const isActive = turn.id === activeTurnId;
-
     const response: Turn['response'] = {
-      // Non-active turns never persisted `state`; yield an empty snapshot.
-      state: isActive && turn.response.state ? {...turn.response.state} : {},
       activities: [...turn.response.activities],
       surfaces: deriveSurfaces(turn.response.activities),
-      a2uiMessages: deriveA2uiV09Messages(turn.response.activities),
     };
     if (turn.response.agent) {
       response.agent = {
@@ -228,9 +248,17 @@ export function restoreSession(serialized: SerializedSession): SessionStoreState
     return restored;
   });
 
+  const initialization =
+    serialized.initialization && restoreInitialization(serialized.initialization);
+
   const state: SessionStoreState<Turn> = {
     turns: restoredTurns,
+    state: serialized.state ? {...serialized.state} : {},
+    rendererStream: deriveRendererStream({turns: restoredTurns, initialization}),
   };
+  if (initialization !== undefined) {
+    state.initialization = initialization;
+  }
   if (activeTurnId !== undefined) {
     state.activeTurnId = activeTurnId;
   }
@@ -241,4 +269,27 @@ export function restoreSession(serialized: SerializedSession): SessionStoreState
     state.sessionToken = sessionToken;
   }
   return state;
+}
+
+function restoreInitialization(initialization: SerializedInitialization): SessionInitialization {
+  const activities = [...initialization.activities];
+  if (initialization.status === 'streaming') {
+    return {activities, status: 'error', error: STREAM_INTERRUPTED_ERROR};
+  }
+  return {
+    activities,
+    status: initialization.status,
+    ...(initialization.error === undefined ? {} : {error: initialization.error}),
+  };
+}
+
+function deriveRendererStream(runs: SessionRuns): RendererStream {
+  let stream = EMPTY_RENDERER_STREAM;
+  for (const activity of sessionActivities(runs)) {
+    const messages = activity.kind === SURFACE_ACTIVITY_KIND ? activity.payload['messages'] : null;
+    if (Array.isArray(messages)) {
+      stream = appendToRendererStream(stream, convertA2uiMessages(messages));
+    }
+  }
+  return stream;
 }

@@ -28,4 +28,28 @@ export class FacetManagerPageObject extends BasePageObject {
   get expandedFacets() {
     return this.page.locator('atomic-facet:not([is-collapsed])');
   }
+
+  get popovers() {
+    return this.page.locator('atomic-facet-manager > atomic-popover');
+  }
+
+  get visiblePopovers() {
+    return this.popovers.filter({visible: true});
+  }
+
+  get popoverButtons() {
+    return this.popovers.locator('button[part="popover-button"]');
+  }
+
+  get popoverLabels() {
+    return this.popoverButtons.locator('[part="value-label"]');
+  }
+
+  get facetsInPopovers() {
+    return this.page.locator('atomic-facet-manager > atomic-popover > atomic-facet');
+  }
+
+  get facetsOutsidePopovers() {
+    return this.page.locator('atomic-facet-manager > atomic-facet');
+  }
 }

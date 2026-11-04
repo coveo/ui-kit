@@ -28,7 +28,8 @@ const NEXT_ACTIONS_ROOT_ID = RENDERER_ROOT_ID;
 
 // The comparison surface is a single leaf node: the comparison-table owns its heading, AI summary,
 // compared products, and attribute descriptors as Component_State, bound to `{ path }` objects at
-// `/state/root/<field>`.
+// `/state/root/<field>`. Each product carries its own `relatedDocuments`, so they ride on the
+// `products` binding.
 const COMPARISON_SURFACE_NODES: A2uiComponentNode[] = [
   {
     id: COMPARISON_ROOT_ID,
@@ -103,6 +104,44 @@ const comparisonTableState = {
         tradeOff: 'Premium price point at $399.99',
         bestFor: 'Serious cold-water paddleboarders seeking peak thermal performance',
       },
+      relatedDocuments: [
+        {
+          title: 'ThermoFlex Winter Wetsuit Owner Manual',
+          clickUri: 'https://barca-sports.myshopify.com/cdn/shop/files/thermoflex-owner-manual.pdf',
+          filetype: 'pdf',
+          size: 2480000,
+        },
+        {
+          title: 'ThermoFlex Sizing Guide',
+          clickUri: 'https://barca-sports.myshopify.com/cdn/shop/files/thermoflex-sizing-guide.pdf',
+          filetype: 'pdf',
+          size: 812300,
+        },
+        {
+          title: 'Wetsuit Care and Storage',
+          clickUri: 'https://barca-sports.myshopify.com/pages/wetsuit-care',
+          filetype: 'html',
+          size: 18400,
+        },
+        {
+          title: 'ThermoFlex Warranty Terms',
+          clickUri: 'https://barca-sports.myshopify.com/cdn/shop/files/thermoflex-warranty.pdf',
+          filetype: 'pdf',
+          size: 156900,
+        },
+        {
+          title: 'Cold-Water Surfing Safety Checklist',
+          clickUri: 'https://barca-sports.myshopify.com/pages/cold-water-safety',
+          filetype: 'html',
+          size: 24600,
+        },
+        {
+          title: 'ThermoFlex Seam Repair Guide',
+          clickUri: 'https://barca-sports.myshopify.com/cdn/shop/files/thermoflex-seam-repair.pdf',
+          filetype: 'pdf',
+          size: 1048000,
+        },
+      ],
     },
     {
       productId: 'gid://shopify/ProductVariant/50674625773842',
@@ -118,6 +157,20 @@ const comparisonTableState = {
           'Designed primarily for paddleboarders, may have different fit for dedicated surfers',
         bestFor: 'Eco-conscious surfers wanting proven reliability',
       },
+      relatedDocuments: [
+        {
+          title: 'ZenSurf Full Suit Owner Manual',
+          clickUri: 'https://barca-sports.myshopify.com/cdn/shop/files/zensurf-owner-manual.pdf',
+          filetype: 'pdf',
+          size: 1920000,
+        },
+        {
+          title: 'ZenSurf Sizing Guide',
+          clickUri: 'https://barca-sports.myshopify.com/cdn/shop/files/zensurf-sizing-guide.pdf',
+          filetype: 'pdf',
+          size: 640500,
+        },
+      ],
     },
     {
       productId: 'gid://shopify/ProductVariant/50674627838226',

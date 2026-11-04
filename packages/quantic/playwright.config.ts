@@ -3,12 +3,25 @@ import {loadScratchOrgEnvironment} from './playwright/scratch-org-environment';
 
 const {lwsEnabledUrl, lwsDisabledUrl} = loadScratchOrgEnvironment(__dirname);
 
+function shardFromEnv() {
+  const shard = process.env.TEST_SHARD;
+  if (!shard) {
+    return null;
+  }
+  const match = /^(\d+)\/(\d+)$/.exec(shard);
+  if (!match) {
+    throw new Error(`TEST_SHARD must be <current>/<total>, got "${shard}"`);
+  }
+  return {current: Number(match[1]), total: Number(match[2])};
+}
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
   testDir: './force-app',
   testMatch: '*.e2e.ts',
+  shard: shardFromEnv(),
   globalSetup: './playwright/global-setup.ts',
   /* Run tests in files in parallel */
   fullyParallel: true,

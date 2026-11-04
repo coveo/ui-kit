@@ -19,9 +19,7 @@ export const Breadbox = createReactComponent(
     schema: BreadboxPropsSchema,
   },
   ({props, context}) => {
-    const dispatch = (action: BreadboxAction) => {
-      context.dispatchAction(action);
-    };
+    const dispatch = (action: BreadboxAction) => context.dispatchAction(action);
     const {facets, deselect, clearAll} = useOptimisticBreadbox(props, dispatch);
     const section = useRef<HTMLElement>(null);
     const keepFocusAfterRemoving = useRemovalFocus(section, facets);
@@ -44,11 +42,9 @@ export const Breadbox = createReactComponent(
               <li key={`${facet.facetId}/${value.key}`}>
                 <button
                   type="button"
-                  className={
-                    value.excluded ? `${styles.breadcrumb} ${styles.excluded}` : styles.breadcrumb
-                  }
+                  className={styles.breadcrumb}
                   title={title}
-                  aria-label={`Remove ${value.excluded ? 'exclusion' : 'inclusion'} filter on ${title}`}
+                  aria-label={`Remove filter on ${title}`}
                   onClick={() => {
                     keepFocusAfterRemoving(index);
                     deselect(value.payload);

@@ -90,9 +90,6 @@ export const OpenedModal: Story = {
 export const A11yDialog: Story = {
   tags: ['a11y', 'test', '!dev'],
   name: 'A11y Dialog',
-  args: {
-    'is-open': true,
-  },
   play: async (context) => {
     await play(context);
     await testDialogA11y(context, {triggerLabel: 'Open User Actions'});

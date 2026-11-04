@@ -3,6 +3,7 @@ export type StepLogger = (message: string) => void;
 export class StepsRunner {
   private steps: ((log: StepLogger) => Promise<void>)[];
   private currentStep = 0;
+  private stopped = false;
 
   constructor() {
     this.steps = [];
@@ -19,10 +20,17 @@ export class StepsRunner {
       this.log(this.currentStep, this.steps.length, message);
   }
 
+  public stop() {
+    this.stopped = true;
+  }
+
   public async run() {
     for (const step of this.steps) {
       this.currentStep++;
       await step(this.getLogger());
+      if (this.stopped) {
+        return;
+      }
     }
   }
 

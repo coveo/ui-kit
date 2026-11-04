@@ -4,7 +4,10 @@ export {THERMIDOR_CATALOG_ID};
 import {ProductCarousel} from './ProductCarousel/ProductCarousel.js';
 import {NextActionsBar} from './NextActionsBar/NextActionsBar.js';
 import {BundleDisplay} from './BundleDisplay/BundleDisplay.js';
-import {ComparisonTable} from './ComparisonTable/ComparisonTable.js';
+import {
+  createComparisonTable,
+  type ComparisonTableOptions,
+} from './ComparisonTable/ComparisonTable.js';
 import {ProductList} from './ProductList/ProductList.js';
 import {ProductSummary} from './ProductSummary/ProductSummary.js';
 import {
@@ -22,8 +25,13 @@ import {LayoutStack} from './LayoutStack/LayoutStack.js';
 import {QuerySummary} from './QuerySummary/QuerySummary.js';
 import {PageSize} from './PageSize/PageSize.js';
 import {Breadbox} from './Breadbox/Breadbox.js';
+import {SessionShell} from './SessionShell/SessionShell.js';
+import {SearchBox} from './SearchBox/SearchBox.js';
+import {QuerySuggestions} from './QuerySuggestions/QuerySuggestions.js';
+import {InstantProducts} from './InstantProducts/InstantProducts.js';
 
 export interface ThermidorCatalogOptions {
+  comparisonTable?: ComparisonTableOptions;
   productResearchCard?: ProductResearchCardOptions;
 }
 
@@ -32,7 +40,7 @@ export function createThermidorCatalog(options: ThermidorCatalogOptions = {}) {
     ProductCarousel,
     NextActionsBar,
     BundleDisplay,
-    ComparisonTable,
+    createComparisonTable(options.comparisonTable),
     ProductList,
     ProductSummary,
     createProductResearchCard(options.productResearchCard),
@@ -47,5 +55,9 @@ export function createThermidorCatalog(options: ThermidorCatalogOptions = {}) {
     QuerySummary,
     PageSize,
     Breadbox,
+    SessionShell,
+    SearchBox,
+    QuerySuggestions,
+    InstantProducts,
   ]);
 }

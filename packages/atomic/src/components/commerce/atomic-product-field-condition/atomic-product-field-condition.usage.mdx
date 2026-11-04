@@ -8,14 +8,11 @@ It is typically used within `atomic-product-template`.
 
 ```html
 <atomic-product-template>
-  ... 
-
-  <atomic-product-field-condition
-    if-defined="ec_name"
- 
-  >
-  <span>Render me if <strong>ec_name</strong> is defined.</span>
-  </atomic-product-field-condition>
-  
+  <template>
+    ...
+    <atomic-product-field-condition if-defined="ec_name">
+      <span>Render me if <strong>ec_name</strong> is defined.</span>
+    </atomic-product-field-condition>
+  </template>
 </atomic-product-template>
 ```

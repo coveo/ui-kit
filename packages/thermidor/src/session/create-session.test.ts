@@ -178,10 +178,52 @@ function queueConflict(): void {
   }));
 }
 
+/** A completed surface carrying a Pagination node, so `selectPage` resolves a discriminant. */
+const PAGINATION_SURFACE = {
+  type: 'ACTIVITY_SNAPSHOT',
+  messageId: 'surface-activity',
+  activityType: 'a2ui-surface',
+  content: {
+    messages: [
+      {
+        version: 'v1.0',
+        createSurface: {
+          surfaceId: 'commerce-search-surface',
+          components: [
+            {id: 'root', component: 'CommerceSearch'},
+            {id: 'pagination-1', component: 'Pagination'},
+          ],
+        },
+      },
+    ],
+  },
+};
+
+const PAGE_ACTION = {
+  component: 'Pagination',
+  name: 'selectPage',
+  surfaceId: 'commerce-search-surface',
+  sourceComponentId: 'pagination-1',
+};
+
+function selectPageMessage(page: number) {
+  return {
+    userAction: {
+      name: 'selectPage',
+      surfaceId: 'commerce-search-surface',
+      sourceComponentId: 'pagination-1',
+      context: {page},
+    },
+  };
+}
+
 const baseConfig: SessionConfig = {
   contracts,
   organizationId: 'org-1',
   accessToken: 'token-1',
+  agentConfigurationId: 'agent-configuration-1',
+  trackingId: 'tracking-1',
+  initialize: false,
 };
 
 /** Waits for pending microtasks so folded state settles before assertions. */
@@ -194,6 +236,40 @@ describe('createSession lifecycle', () => {
 
   afterEach(() => {
     vi.clearAllMocks();
+  });
+
+  describe('request scope', () => {
+    it.each([
+      ['agentConfigurationId', undefined],
+      ['agentConfigurationId', ''],
+      ['agentConfigurationId', '  '],
+      ['trackingId', undefined],
+      ['trackingId', ''],
+      ['trackingId', '  '],
+    ])('throws when %s is %j', (key, value) => {
+      expect(() => createSession({...baseConfig, [key]: value})).toThrow(key);
+    });
+
+    it('sends the agent configuration and tracking id, and no locale, with the request', async () => {
+      const session = createSession(baseConfig);
+
+      const stream = queueStream();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+      await stream.opened;
+
+      const request = callMock.mock.calls[0][0];
+      expect(request).toMatchObject({
+        agentConfigurationId: 'agent-configuration-1',
+        trackingId: 'tracking-1',
+      });
+      expect(request).not.toHaveProperty('language');
+      expect(request).not.toHaveProperty('country');
+      expect(request).not.toHaveProperty('currency');
+
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await turn;
+    });
   });
 
   describe('submitPrompt action', () => {
@@ -260,96 +336,42 @@ describe('createSession lifecycle', () => {
         ['in red', 'complete'],
       ]);
     });
-
-    it('preempts a streaming prompt turn (a prompt is a prioritizing intention)', async () => {
-      const session = createSession(baseConfig);
-
-      const first = queueStream();
-      void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'first'}});
-      await first.opened;
-      expect(session.turns[0].status).toBe('streaming');
-
-      const second = queueStream();
-      void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'second'}});
-      await second.opened;
-
-      expect(callMock).toHaveBeenCalledTimes(2);
-      expect(session.turns.map((turn) => [turn.input.prompt, turn.status])).toEqual([
-        ['first', 'error'],
-        ['second', 'streaming'],
-      ]);
-      expect(session.turns[0].error).toBe('Cancelled');
-
-      second.emit({type: 'RUN_FINISHED'});
-      second.close();
-      await flush();
-      expect(session.turns[1].status).toBe('complete');
-
-      // Already aborted; closing again is a no-op in the harness.
-      first.close();
-      await flush();
-    });
   });
 
-  describe('dispatchAction guard while streaming', () => {
-    it('ignores dispatchAction while a turn is streaming and leaves turns unchanged', async () => {
-      const session = createSession(baseConfig);
-
-      const first = queueStream();
-      const submitPromise = session.dispatchAction({
-        name: 'submitPrompt',
-        payload: {prompt: 'first'},
-      });
-      await first.opened;
-
-      // Seed the active (still-streaming) turn with a commerce-search surface
-      // carrying a Pagination node so `dispatchAction` can recover the component
-      // discriminant and reach the private execute path — where the streaming
-      // guard must then withhold the POST.
-      first.emit({
-        type: 'ACTIVITY_SNAPSHOT',
-        activityType: 'a2ui-surface',
-        messageId: 'surface-1',
-        content: {
-          messages: [
-            {
-              version: 'v1.0',
-              createSurface: {
-                surfaceId: 'ui-1',
-                rootId: 'root',
-                components: [
-                  {id: 'root', component: 'CommerceSearch'},
-                  {id: 'pagination-1', component: 'Pagination'},
-                ],
-              },
-            },
-          ],
-        },
-      });
+  describe('a dispatch made while a request is in flight', () => {
+    async function streamingPrompt(session: ReturnType<typeof createSession>) {
+      const stream = queueStream();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'first'}});
+      await stream.opened;
+      stream.emit(PAGINATION_SURFACE);
       await flush();
+      return {stream, turn};
+    }
 
-      const turnsBefore = session.turns;
-      expect(turnsBefore).toHaveLength(1);
-      expect(turnsBefore[0].status).toBe('streaming');
+    it('withholds a prompt, sending nothing and settling at once', async () => {
+      const session = createSession(baseConfig);
+      const {stream, turn} = await streamingPrompt(session);
 
-      await session.dispatchAction({
-        userAction: {
-          name: 'selectPage',
-          surfaceId: 'ui-1',
-          sourceComponentId: 'pagination-1',
-          context: {page: 2},
-        },
-      });
+      await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'second'}});
 
-      // Only the original prompt reached the endpoint; the streaming guard
-      // withheld the action dispatch and left the turn list unchanged.
       expect(callMock).toHaveBeenCalledTimes(1);
-      expect(session.turns).toHaveLength(1);
-      expect(session.turns[0]).toBe(turnsBefore[0]);
+      expect(session.turns.map((candidate) => candidate.input.prompt)).toEqual(['first']);
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await turn;
+    });
 
-      first.emit({type: 'RUN_FINISHED'});
-      first.close();
-      await submitPromise;
+    it('withholds an action, sending nothing and settling at once', async () => {
+      const session = createSession(baseConfig);
+      const {stream, turn} = await streamingPrompt(session);
+
+      await session.dispatchAction(selectPageMessage(2));
+
+      expect(callMock).toHaveBeenCalledTimes(1);
+      expect(session.request).toMatchObject({kind: 'prompt'});
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await turn;
     });
   });
 
@@ -571,6 +593,656 @@ describe('createSession lifecycle', () => {
     });
   });
 
+  describe('session-scoped surfaces (ADR-018)', () => {
+    const surfaceSnapshot = (messageId: string, messages: unknown[]) => ({
+      type: 'ACTIVITY_SNAPSHOT',
+      messageId,
+      activityType: 'a2ui-surface',
+      content: {messages},
+    });
+    const searchSurface = surfaceSnapshot('search', [
+      {
+        version: 'v1.0',
+        createSurface: {
+          surfaceId: 'commerce-search-surface',
+          catalogId: 'catalog',
+          components: [
+            {id: 'root', component: 'CommerceSearch'},
+            {id: 'pagination-1', component: 'Pagination'},
+          ],
+        },
+      },
+    ]);
+    const answerSurface = surfaceSnapshot('answer', [
+      {
+        version: 'v1.0',
+        createSurface: {
+          surfaceId: 'answer-surface',
+          catalogId: 'catalog',
+          components: [{id: 'root', component: 'NextActionsBar'}],
+        },
+      },
+    ]);
+    const pagination = {page: 1, pageSize: 24, totalEntries: 100, totalPages: 5};
+
+    async function prompt(session: ReturnType<typeof createSession>, ...events: object[]) {
+      const stream = queueStream();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'go'}});
+      await stream.opened;
+      for (const event of events) {
+        stream.emit(event as Record<string, unknown>);
+      }
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await turn;
+    }
+
+    it('lists every live surface, and narrows each turn to the ones it created', async () => {
+      const session = createSession(baseConfig);
+      await prompt(session, searchSurface);
+      await prompt(session, answerSurface);
+
+      expect(session.surfaces.map((surface) => surface.surfaceId)).toEqual([
+        'commerce-search-surface',
+        'answer-surface',
+      ]);
+      expect(
+        session.turns.map((turn) => turn.response.surfaces.map((surface) => surface.surfaceId))
+      ).toEqual([['commerce-search-surface'], ['answer-surface']]);
+    });
+
+    it('sends an action from a surface an earlier turn created', async () => {
+      const session = createSession(baseConfig);
+      await prompt(session, searchSurface);
+      await prompt(session, answerSurface);
+
+      const stream = queueStream();
+      const action = session.dispatchAction(selectPageMessage(2));
+      await stream.opened;
+
+      expect(callMock.mock.calls[2][0]).toMatchObject({
+        action: {surfaceId: 'commerce-search-surface', name: 'selectPage'},
+      });
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await action;
+    });
+
+    it('applies a later turn validated write to the state of an earlier surface', async () => {
+      const session = createSession(baseConfig);
+      await prompt(session, searchSurface);
+      await prompt(
+        session,
+        surfaceSnapshot('update', [
+          {
+            version: 'v1.0',
+            updateDataModel: {
+              surfaceId: 'commerce-search-surface',
+              path: '/state/pagination-1',
+              value: pagination,
+            },
+          },
+        ])
+      );
+
+      expect(session.state).toEqual({
+        'commerce-search-surface': {state: {'pagination-1': pagination}},
+      });
+    });
+
+    const paginationWrite = surfaceSnapshot('write', [
+      {
+        version: 'v1.0',
+        updateDataModel: {
+          surfaceId: 'commerce-search-surface',
+          path: '/state/pagination-1',
+          value: pagination,
+        },
+      },
+    ]);
+
+    it('keeps a placeholder its turn left behind out while an action streams into that turn', async () => {
+      const session = createSession(baseConfig);
+      await prompt(
+        session,
+        searchSurface,
+        surfaceSnapshot('placeholder', [
+          {
+            version: 'v1.0',
+            createSurface: {
+              surfaceId: 'carousel-placeholder',
+              catalogId: 'catalog',
+              components: [{id: 'root', component: 'ProductCarousel'}],
+              dataModel: {isLoading: true},
+            },
+          },
+        ])
+      );
+
+      const stream = queueStream();
+      const action = session.dispatchAction(selectPageMessage(2));
+      await stream.opened;
+      const during = session.surfaces.map((surface) => surface.surfaceId);
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await action;
+
+      expect(during).toEqual(['commerce-search-surface']);
+      expect(session.surfaces.map((surface) => surface.surfaceId)).toEqual([
+        'commerce-search-surface',
+      ]);
+    });
+
+    it('starts a surface re-created under a live id with an empty state', async () => {
+      const session = createSession(baseConfig);
+      await prompt(session, searchSurface, paginationWrite);
+      await prompt(session, surfaceSnapshot('recreate', searchSurface.content.messages));
+
+      expect(session.state).toEqual({});
+    });
+
+    it('persists no state for a deleted surface', async () => {
+      const session = createSession(baseConfig);
+      await prompt(session, searchSurface, paginationWrite);
+      await prompt(
+        session,
+        surfaceSnapshot('delete', [
+          {version: 'v1.0', deleteSurface: {surfaceId: 'commerce-search-surface'}},
+        ])
+      );
+
+      expect(session.serialize().state?.['commerce-search-surface']).toBeUndefined();
+    });
+
+    it('only grows its renderer stream', async () => {
+      const session = createSession(baseConfig);
+      const streams: (readonly unknown[])[] = [];
+      session.subscribe(() => streams.push(session.a2uiMessages));
+
+      await prompt(session, searchSurface);
+      await prompt(session, answerSurface);
+
+      for (let index = 1; index < streams.length; index++) {
+        expect(streams[index].slice(0, streams[index - 1].length)).toEqual(streams[index - 1]);
+      }
+      expect(
+        session.a2uiMessages
+          .map((message) => (message['createSurface'] as {surfaceId?: string})?.surfaceId)
+          .filter(Boolean)
+      ).toEqual(['commerce-search-surface', 'answer-surface']);
+    });
+
+    it('leaves the active turn as it is when an action on an earlier surface fails', async () => {
+      const session = createSession(baseConfig);
+      await prompt(session, searchSurface);
+      await prompt(session, answerSurface);
+      callMock.mockImplementationOnce(async () => ({success: false, error: 'Bad gateway'}));
+
+      await session.dispatchAction(selectPageMessage(2));
+
+      expect(session.turns.map((turn) => turn.status)).toEqual(['complete', 'complete']);
+      expect(session.actionError).toEqual({message: 'Bad gateway', ...PAGE_ACTION});
+    });
+
+    it('leaves the active turn as it is when an action on an earlier surface streams an error', async () => {
+      const session = createSession(baseConfig);
+      await prompt(session, searchSurface);
+      await prompt(session, answerSurface);
+
+      const stream = queueStream();
+      const action = session.dispatchAction(selectPageMessage(2));
+      await stream.opened;
+      stream.emit({type: 'RUN_ERROR', message: 'Search failed'});
+      stream.close();
+      await action;
+
+      expect(session.turns.map((turn) => turn.status)).toEqual(['complete', 'complete']);
+      expect(session.actionError).toEqual({message: 'Search failed', ...PAGE_ACTION});
+    });
+
+    it('leaves the active turn as it is when an action on an earlier surface ends without a terminal event', async () => {
+      const session = createSession(baseConfig);
+      await prompt(session, searchSurface);
+      await prompt(session, answerSurface);
+
+      const stream = queueStream();
+      const action = session.dispatchAction(selectPageMessage(2));
+      await stream.opened;
+      stream.close();
+      await action;
+
+      expect(session.turns.map((turn) => turn.status)).toEqual(['complete', 'complete']);
+      expect(session.actionError).toEqual({
+        message: 'Stream ended without a terminal event.',
+        ...PAGE_ACTION,
+      });
+    });
+
+    it('leaves the active turn as it is when building an action on an earlier surface throws', async () => {
+      let throwing = false;
+      const session = createSession({
+        ...baseConfig,
+        commerceContextProvider: () => {
+          if (throwing) {
+            throw new Error('No cart');
+          }
+          return {cart: []};
+        },
+      });
+      await prompt(session, searchSurface);
+      await prompt(session, answerSurface);
+      throwing = true;
+
+      await session.dispatchAction(selectPageMessage(2));
+
+      expect(session.turns.map((turn) => turn.status)).toEqual(['complete', 'complete']);
+      expect(session.actionError).toEqual({message: 'No cart', ...PAGE_ACTION});
+    });
+
+    async function cancelledPrompt(session: ReturnType<typeof createSession>) {
+      const stream = queueStream();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'cut'}});
+      await stream.opened;
+      session.cancel();
+      await turn;
+    }
+
+    it('keeps a prompt turn cancelled when cancelled while awaiting data', async () => {
+      const session = createSession(baseConfig);
+      const stream = queueStream();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'cut'}});
+      await stream.opened;
+      stream.emit({type: 'RUN_STARTED'});
+      await flush();
+
+      session.cancel();
+      await turn;
+
+      expect(session.turns[0]).toMatchObject({status: 'error', error: 'Cancelled'});
+    });
+
+    it('leaves a failed active turn failed when an action on an earlier surface finishes', async () => {
+      const session = createSession(baseConfig);
+      await prompt(session, searchSurface);
+      await cancelledPrompt(session);
+      const failedTurnId = session.turns[1].id;
+
+      const stream = queueStream();
+      const action = session.dispatchAction(selectPageMessage(2));
+      await stream.opened;
+      stream.emit({type: 'RUN_STARTED'});
+      stream.emit(
+        surfaceSnapshot('page', [
+          {
+            version: 'v1.0',
+            updateDataModel: {
+              surfaceId: 'commerce-search-surface',
+              path: '/state/pagination-1',
+              value: pagination,
+            },
+          },
+        ])
+      );
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await action;
+
+      expect(session.turns.map((turn) => turn.status)).toEqual(['complete', 'error']);
+      expect(session.turns[1].error).toBe('Cancelled');
+      expect(session.actionError).toBeUndefined();
+      expect(session.state).toEqual({
+        'commerce-search-surface': {state: {'pagination-1': pagination}},
+      });
+
+      const retried = queueStream();
+      session.retry(failedTurnId);
+      await retried.opened;
+      expect(session.turns[1].status).toBe('streaming');
+      retried.emit({type: 'RUN_FINISHED'});
+      retried.close();
+      await flush();
+    });
+
+    it('leaves a failed turn failed when an action on its own block finishes', async () => {
+      const session = createSession(baseConfig);
+      const first = queueStream();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'go'}});
+      await first.opened;
+      first.emit(searchSurface);
+      first.emit({type: 'RUN_ERROR', message: 'Agent crashed'});
+      first.close();
+      await turn;
+
+      const stream = queueStream();
+      const action = session.dispatchAction(selectPageMessage(2));
+      await stream.opened;
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await action;
+
+      expect(session.turns[0]).toMatchObject({status: 'error', error: 'Agent crashed'});
+      const retried = queueStream();
+      session.retry(session.turns[0].id);
+      await retried.opened;
+      expect(session.turns[0].status).toBe('streaming');
+      retried.emit({type: 'RUN_FINISHED'});
+      retried.close();
+      await flush();
+    });
+
+    it('reports a failed action on a block of the active turn without failing the turn', async () => {
+      const session = createSession(baseConfig);
+      await prompt(session, searchSurface);
+      callMock.mockImplementationOnce(async () => ({success: false, error: 'Bad gateway'}));
+
+      await session.dispatchAction(selectPageMessage(2));
+
+      expect(session.turns[0].status).toBe('complete');
+      expect(session.actionError).toEqual({message: 'Bad gateway', ...PAGE_ACTION});
+    });
+
+    it('keeps the text of an action on an earlier surface out of the active turn', async () => {
+      const session = createSession(baseConfig);
+      await prompt(session, searchSurface);
+      await prompt(session, answerSurface);
+
+      const stream = queueStream();
+      const action = session.dispatchAction(selectPageMessage(2));
+      await stream.opened;
+      stream.emit({type: 'TEXT_MESSAGE_START', messageId: 'm1', role: 'assistant'});
+      stream.emit({type: 'TEXT_MESSAGE_CONTENT', messageId: 'm1', delta: 'page two'});
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await action;
+
+      expect(session.turns[1].response.agent).toBeUndefined();
+      expect(session.turns.map((turn) => turn.status)).toEqual(['complete', 'complete']);
+    });
+  });
+
+  describe('snapshot', () => {
+    it('returns the same frozen snapshot until the session state changes', () => {
+      const session = createSession(baseConfig);
+
+      const snapshot = session.getSnapshot();
+
+      expect(session.getSnapshot()).toBe(snapshot);
+      expect(Object.isFrozen(snapshot)).toBe(true);
+      expect(snapshot).toEqual({
+        turns: [],
+        initialization: undefined,
+        surfaces: [],
+        a2uiMessages: [],
+        state: {},
+        request: undefined,
+        actionError: undefined,
+      });
+    });
+
+    it('holds what the session members hold, and is replaced as they change', async () => {
+      const session = createSession(baseConfig);
+      const {getSnapshot, subscribe} = session;
+      const snapshots: ReturnType<typeof getSnapshot>[] = [];
+      const unsubscribe = subscribe(() => {
+        const snapshot = getSnapshot();
+        if (snapshots.at(-1) !== snapshot) {
+          snapshots.push(snapshot);
+        }
+      });
+
+      const stream = queueStream();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'shoes'}});
+      await stream.opened;
+      const streaming = getSnapshot();
+      expect(streaming.turns).toBe(session.turns);
+      expect(streaming.a2uiMessages).toBe(session.a2uiMessages);
+      expect(streaming.request).toBe(session.request);
+
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await turn;
+      unsubscribe();
+
+      expect(getSnapshot().request).toBeUndefined();
+      expect(getSnapshot().turns[0].status).toBe('complete');
+      expect(new Set(snapshots).size).toBe(snapshots.length);
+    });
+  });
+
+  describe('action request', () => {
+    it('names the component that dispatched the action', async () => {
+      const session = createSession(baseConfig);
+      const search = queueStream();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'shoes'}});
+      await search.opened;
+      search.emit(PAGINATION_SURFACE);
+      search.emit({type: 'RUN_FINISHED'});
+      search.close();
+      await turn;
+
+      const stream = queueStream();
+      const action = session.dispatchAction(selectPageMessage(2));
+      await stream.opened;
+
+      expect(session.request).toEqual({
+        kind: 'action',
+        component: 'Pagination',
+        name: 'selectPage',
+        surfaceId: 'commerce-search-surface',
+        sourceComponentId: 'pagination-1',
+        turnId: session.turns[0].id,
+      });
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await action;
+    });
+  });
+
+  describe('actions that open a turn', () => {
+    // The producer announces the turn-opening actions of the bar in the event metadata (ADR-019).
+    const NEXT_ACTIONS_SURFACE = {
+      type: 'ACTIVITY_SNAPSHOT',
+      messageId: 'next-actions',
+      activityType: 'a2ui-surface',
+      metadata: {turnOpeningActions: {'next-actions-surface': ['selectAction']}},
+      content: {
+        messages: [
+          {
+            version: 'v1.0',
+            createSurface: {
+              surfaceId: 'next-actions-surface',
+              components: [{id: 'root', component: 'NextActionsBar'}],
+            },
+          },
+        ],
+      },
+    };
+
+    const followUp = {
+      userAction: {
+        name: 'selectAction',
+        surfaceId: 'next-actions-surface',
+        sourceComponentId: 'root',
+        context: {actionId: 'more-jackets'},
+      },
+    };
+
+    async function answeredPrompt(session: ReturnType<typeof createSession>) {
+      const stream = queueStream();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'jackets'}});
+      await stream.opened;
+      stream.emit(NEXT_ACTIONS_SURFACE);
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await turn;
+    }
+
+    it('keeps an action the producer does not announce in the active turn', async () => {
+      const session = createSession(baseConfig);
+      const prompt = queueStream();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'jackets'}});
+      await prompt.opened;
+      const {metadata: _, ...unannounced} = NEXT_ACTIONS_SURFACE;
+      prompt.emit(unannounced);
+      prompt.emit({type: 'RUN_FINISHED'});
+      prompt.close();
+      await turn;
+
+      const stream = queueStream();
+      const sent = session.dispatchAction(followUp);
+      await stream.opened;
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await sent;
+
+      expect(session.turns).toHaveLength(1);
+    });
+
+    it('opens a new streaming turn that records the action', async () => {
+      const session = createSession(baseConfig);
+      await answeredPrompt(session);
+
+      const stream = queueStream();
+      const sent = session.dispatchAction(followUp);
+      await stream.opened;
+
+      const [first, opened] = session.turns;
+      expect(session.turns).toHaveLength(2);
+      expect(first.status).toBe('complete');
+      expect(opened.status).toBe('streaming');
+      expect(opened.input).toEqual({
+        action: {
+          component: 'NextActionsBar',
+          name: 'selectAction',
+          surfaceId: 'next-actions-surface',
+          sourceComponentId: 'root',
+          context: {actionId: 'more-jackets'},
+        },
+      });
+      expect(session.request).toMatchObject({
+        kind: 'action',
+        component: 'NextActionsBar',
+        turnId: opened.id,
+      });
+      expect(callMock.mock.calls[1][0]).toMatchObject({
+        message: null,
+        action: {surfaceId: 'next-actions-surface', name: 'selectAction'},
+      });
+
+      stream.emit({type: 'TEXT_MESSAGE_START', messageId: 'm', role: 'assistant'});
+      stream.emit({type: 'TEXT_MESSAGE_CONTENT', messageId: 'm', delta: 'More jackets'});
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await sent;
+
+      expect(session.turns[1].status).toBe('complete');
+      expect(session.turns[1].response.agent?.messages[0].content).toBe('More jackets');
+      expect(session.turns[0].response.agent).toBeUndefined();
+    });
+
+    it('still sends an action from the turn the follow-up was sent from', async () => {
+      const session = createSession(baseConfig);
+      await answeredPrompt(session);
+      const stream = queueStream();
+      const sent = session.dispatchAction(followUp);
+      await stream.opened;
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await sent;
+
+      const again = queueStream();
+      const sentAgain = session.dispatchAction(followUp);
+      await again.opened;
+      again.emit({type: 'RUN_FINISHED'});
+      again.close();
+      await sentAgain;
+
+      expect(callMock).toHaveBeenCalledTimes(3);
+      expect(session.turns).toHaveLength(3);
+    });
+
+    it('fails only its own turn when the action fails', async () => {
+      const session = createSession(baseConfig);
+      await answeredPrompt(session);
+      callMock.mockImplementationOnce(async () => ({success: false, error: 'Bad gateway'}));
+
+      await session.dispatchAction(followUp);
+
+      expect(session.turns.map((turn) => [turn.status, turn.error])).toEqual([
+        ['complete', undefined],
+        ['error', 'Bad gateway'],
+      ]);
+    });
+
+    it('marks its own turn as cancelled when cancelled', async () => {
+      const session = createSession(baseConfig);
+      await answeredPrompt(session);
+      const stream = queueStream();
+      const sent = session.dispatchAction(followUp);
+      await stream.opened;
+
+      session.cancel();
+      stream.close();
+      await sent;
+
+      expect(session.turns.map((turn) => [turn.status, turn.error])).toEqual([
+        ['complete', undefined],
+        ['error', 'Cancelled'],
+      ]);
+    });
+
+    it('sends the action again from its surface on retry', async () => {
+      const session = createSession(baseConfig);
+      await answeredPrompt(session);
+      const failed = queueStream();
+      const sent = session.dispatchAction(followUp);
+      await failed.opened;
+      failed.emit({type: 'RUN_ERROR', message: 'agent failed'});
+      failed.close();
+      await sent;
+      const openedId = session.turns[1].id;
+      expect(session.turns[1].status).toBe('error');
+
+      const retried = queueStream();
+      session.retry(openedId);
+      await retried.opened;
+
+      expect(session.turns[1]).toMatchObject({id: openedId, status: 'streaming'});
+      expect(callMock.mock.calls.at(-1)?.[0]).toMatchObject({
+        message: null,
+        action: {
+          surfaceId: 'next-actions-surface',
+          name: 'selectAction',
+          sourceComponentId: 'root',
+          context: {actionId: 'more-jackets'},
+        },
+      });
+      const retriedAction = (callMock.mock.calls.at(-1)?.[0] as {action: Record<string, unknown>})
+        .action;
+      expect(retriedAction).not.toHaveProperty('actionId');
+      expect(retriedAction).not.toHaveProperty('wantResponse');
+      retried.emit({type: 'RUN_FINISHED'});
+      retried.close();
+      await flush();
+      expect(session.turns[1].status).toBe('complete');
+    });
+
+    it('keeps the action that opened a turn through serialization', async () => {
+      const session = createSession(baseConfig);
+      await answeredPrompt(session);
+      const stream = queueStream();
+      const sent = session.dispatchAction(followUp);
+      await stream.opened;
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await sent;
+
+      const restored = createSession({...baseConfig, sessionToRestore: session.serialize()});
+
+      expect(restored.turns[1].input).toEqual(session.turns[1].input);
+    });
+  });
+
   describe('cancel during an in-flight stream', () => {
     it('stops the stream, retains the partial response, and sets the active turn to error', async () => {
       const session = createSession(baseConfig);
@@ -669,6 +1341,36 @@ describe('createSession lifecycle', () => {
       retryStream.close();
       await flush();
     });
+
+    async function erroredTurnId(session: ReturnType<typeof createSession>) {
+      const first = queueStream();
+      const submit = session.dispatchAction({
+        name: 'submitPrompt',
+        payload: {prompt: 'find shoes'},
+      });
+      await first.opened;
+      session.cancel();
+      await submit;
+      return session.turns[0].id;
+    }
+
+    it('sends the turn once when retry() is called twice before it runs', async () => {
+      const session = createSession(baseConfig);
+      const turnId = await erroredTurnId(session);
+
+      const retryStream = queueStream();
+      session.retry(turnId);
+      session.retry(turnId);
+      await retryStream.opened;
+      retryStream.emit({type: 'RUN_FINISHED'});
+      retryStream.close();
+      await flush();
+      await flush();
+
+      expect(callMock).toHaveBeenCalledTimes(2);
+      expect(session.turns[0].status).toBe('complete');
+      expect(session.request).toBeUndefined();
+    });
   });
 
   describe('retry no-op cases', () => {
@@ -700,6 +1402,27 @@ describe('createSession lifecycle', () => {
       expect(callMock).toHaveBeenCalledTimes(1);
       expect(session.turns).toHaveLength(1);
       expect(session.turns[0].status).toBe('complete');
+    });
+
+    it('is a no-op for an errored turn that is no longer the last one', async () => {
+      const session = createSession(baseConfig);
+      const first = queueStream();
+      const failed = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'first'}});
+      await first.opened;
+      session.cancel();
+      await failed;
+      const next = queueStream();
+      const nextTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'second'}});
+      await next.opened;
+      next.emit({type: 'RUN_FINISHED'});
+      next.close();
+      await nextTurn;
+
+      session.retry(session.turns[0].id);
+      await flush();
+
+      expect(callMock).toHaveBeenCalledTimes(2);
+      expect(session.turns.map((turn) => turn.status)).toEqual(['error', 'complete']);
     });
   });
 
@@ -777,7 +1500,7 @@ describe('createSession lifecycle', () => {
       expect(session.turns[0].status).toBe('complete');
     });
 
-    it('fails the active turn when building an action request throws, sending nothing', async () => {
+    it('reports an action whose request throws while it is built, sending nothing', async () => {
       const {session, provider} = createSessionWithFlakyProvider();
       provider.failing = false;
 
@@ -820,88 +1543,95 @@ describe('createSession lifecycle', () => {
       ).resolves.toBeUndefined();
 
       expect(callMock).toHaveBeenCalledTimes(1);
-      expect(session.turns[0].status).toBe('error');
-      expect(session.turns[0].error).toBe('boom');
+      expect(session.turns[0].status).toBe('complete');
+      expect(session.actionError).toEqual({message: 'boom', ...PAGE_ACTION});
     });
   });
 
-  describe('prompt preempts an in-flight gesture (③)', () => {
-    // A gesture reuses a complete turn, so only `isStreaming()` sees it in flight.
-    it('preempts the in-flight gesture (cancelled) and opens the prompt immediately', async () => {
+  describe('request state', () => {
+    async function seededSession() {
       const session = createSession(baseConfig);
-
-      // A Pagination surface so `selectPage` resolves a discriminant.
       const seed = queueStream();
       const seedTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'go'}});
       await seed.opened;
-      seed.emit({
-        type: 'ACTIVITY_SNAPSHOT',
-        messageId: 'surface-activity',
-        activityType: 'a2ui-surface',
-        content: {
-          messages: [
-            {
-              version: 'v1.0',
-              createSurface: {
-                surfaceId: 'commerce-search-surface',
-                components: [
-                  {id: 'root', component: 'CommerceSearch'},
-                  {id: 'pagination-1', component: 'Pagination'},
-                ],
-              },
-            },
-          ],
-        },
-      });
+      seed.emit(PAGINATION_SURFACE);
       seed.emit({type: 'RUN_FINISHED'});
       seed.close();
       await seedTurn;
-      expect(session.turns[0].status).toBe('complete');
-      expect(callMock).toHaveBeenCalledTimes(1);
+      return session;
+    }
 
-      const actionMessage = (page: number) => ({
-        userAction: {
-          name: 'selectPage',
-          surfaceId: 'commerce-search-surface',
-          sourceComponentId: 'pagination-1',
-          context: {page},
-        },
+    it('exposes the request being sent until it ends', async () => {
+      const session = createSession(baseConfig);
+      expect(session.request).toBeUndefined();
+
+      const stream = queueStream();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'go'}});
+      expect(session.request).toEqual({kind: 'prompt', turnId: expect.any(String)});
+
+      await stream.opened;
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await turn;
+
+      expect(session.request).toBeUndefined();
+    });
+
+    it('never shows a withheld dispatch as the request in flight', async () => {
+      const session = await seededSession();
+      const seen: unknown[] = [];
+      session.subscribe(() => seen.push(session.request));
+
+      await session.dispatchAction({
+        userAction: {name: 'selectPage', surfaceId: 'commerce-search-surface', context: {}},
       });
 
-      const actionAStream = queueStream();
-      const issuedA = session.actions.issue(actionMessage(2));
-      const outcomeA: string[] = [];
-      issuedA.onSettled((o) => outcomeA.push(o));
-      await actionAStream.opened;
-      expect(callMock).toHaveBeenCalledTimes(2);
-      expect(session.turns.some((turn) => turn.status === 'streaming')).toBe(false);
-      expect(outcomeA).toEqual([]);
+      expect(seen).toEqual([]);
+    });
 
-      const promptStream = queueStream();
-      void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'next question'}});
-      await promptStream.opened;
+    it('does not send a request cancelled by a listener as it is published', async () => {
+      const session = await seededSession();
+      const unsubscribe = session.subscribe(() => {
+        if (session.request) {
+          session.cancel();
+        }
+      });
 
-      expect(outcomeA).toEqual(['cancelled']);
+      await session.dispatchAction(selectPageMessage(2));
+      unsubscribe();
+
+      expect(callMock).toHaveBeenCalledTimes(1);
+      expect(session.request).toBeUndefined();
+    });
+
+    it('sends a dispatch made by a listener as the session goes idle', async () => {
+      const session = await seededSession();
+      const first = queueStream();
+      const second = queueStream();
+      let followUp: Promise<void> | undefined;
+      const unsubscribe = session.subscribe(() => {
+        if (!session.request && !followUp) {
+          followUp = session.dispatchAction(selectPageMessage(3));
+        }
+      });
+
+      const firstAction = session.dispatchAction(selectPageMessage(2));
+      await first.opened;
+      first.emit({type: 'RUN_FINISHED'});
+      first.close();
+      await firstAction;
+      unsubscribe();
+
+      expect(session.request).toEqual(
+        expect.objectContaining({kind: 'action', name: 'selectPage'})
+      );
+      await second.opened;
+      second.emit({type: 'RUN_FINISHED'});
+      second.close();
+      await followUp;
+
       expect(callMock).toHaveBeenCalledTimes(3);
-      const streamingTurn = session.turns.find((turn) => turn.status === 'streaming');
-      expect(streamingTurn?.input.prompt).toBe('next question');
-
-      // Already aborted; closing again is a no-op in the harness.
-      actionAStream.close();
-      await flush();
-      await flush();
-
-      expect(callMock).toHaveBeenCalledTimes(3);
-      expect(outcomeA).toEqual(['cancelled']);
-      const lastRequest = callMock.mock.calls[callMock.mock.calls.length - 1][0] as {
-        message: string | null;
-        action: unknown;
-      };
-      expect(lastRequest).toMatchObject({message: 'next question', action: null});
-
-      promptStream.emit({type: 'RUN_FINISHED'});
-      promptStream.close();
-      await flush();
+      expect(session.request).toBeUndefined();
     });
   });
 
@@ -968,10 +1698,10 @@ describe('createSession lifecycle', () => {
       queueConflict();
       const stream = queueStream();
 
-      const issued = session.actions.issue(actionMessage(2));
+      const issued = session.dispatchAction(actionMessage(2));
       await vi.advanceTimersByTimeAsync(249);
       expect(callMock).toHaveBeenCalledTimes(2);
-      expect(session.actions.getSnapshot().inFlight).toBe(issued.id);
+      expect(session.request).toMatchObject({kind: 'action', name: 'selectPage'});
 
       await vi.advanceTimersByTimeAsync(1);
       await stream.opened;
@@ -981,7 +1711,7 @@ describe('createSession lifecycle', () => {
       stream.emit({type: 'RUN_FINISHED'});
       stream.close();
 
-      expect(await issued.settled).toBe('answered');
+      await issued;
       expect(session.turns[0].status).toBe('complete');
       expect(session.turns[0].error).toBeUndefined();
       expect(session.actionError).toBeUndefined();
@@ -995,40 +1725,15 @@ describe('createSession lifecycle', () => {
       const listener = vi.fn();
       session.subscribe(listener);
 
-      const issued = session.actions.issue(actionMessage(2));
+      const issued = session.dispatchAction(actionMessage(2));
       await vi.advanceTimersByTimeAsync(30_000);
 
-      expect(await issued.settled).toBe('failed');
+      await issued;
       expect(callMock).toHaveBeenCalledTimes(1 + exhaustingConflicts);
       expect(session.turns[0].status).toBe('complete');
       expect(session.turns[0].error).toBeUndefined();
-      expect(session.actionError).toBe(conflictError);
+      expect(session.actionError).toMatchObject({message: conflictError});
       expect(listener).toHaveBeenCalled();
-    });
-
-    it('keeps queued actions behind the rejected one, in order', async () => {
-      const session = await seedSession();
-      queueConflict();
-      const streamA = queueStream();
-      const streamB = queueStream();
-
-      const issuedA = session.actions.issue(actionMessage(2));
-      const issuedB = session.actions.issue(actionMessage(3));
-      await vi.advanceTimersByTimeAsync(250);
-      await streamA.opened;
-      expect(callMock).toHaveBeenCalledTimes(3);
-      expect(lastAction()).toMatchObject({context: {page: 2}});
-
-      streamA.emit({type: 'RUN_FINISHED'});
-      streamA.close();
-      expect(await issuedA.settled).toBe('answered');
-      await streamB.opened;
-      expect(callMock).toHaveBeenCalledTimes(4);
-      expect(lastAction()).toMatchObject({context: {page: 3}});
-
-      streamB.emit({type: 'RUN_FINISHED'});
-      streamB.close();
-      expect(await issuedB.settled).toBe('answered');
     });
 
     it('clears the action error once the next action is sent', async () => {
@@ -1036,64 +1741,44 @@ describe('createSession lifecycle', () => {
       for (let attempt = 0; attempt < exhaustingConflicts; attempt++) {
         queueConflict();
       }
-      const failed = session.actions.issue(actionMessage(2));
+      const failed = session.dispatchAction(actionMessage(2));
       await vi.advanceTimersByTimeAsync(30_000);
-      expect(await failed.settled).toBe('failed');
-      expect(session.actionError).toBe(conflictError);
+      await failed;
+      expect(session.actionError).toMatchObject({message: conflictError});
 
       const stream = queueStream();
-      const issued = session.actions.issue(actionMessage(3));
+      const issued = session.dispatchAction(actionMessage(3));
       await vi.advanceTimersByTimeAsync(0);
       expect(callMock).toHaveBeenCalledTimes(2 + exhaustingConflicts);
       expect(session.actionError).toBeUndefined();
 
       stream.emit({type: 'RUN_FINISHED'});
       stream.close();
-      expect(await issued.settled).toBe('answered');
+      await issued;
     });
 
     it('does not retry a 409 that is not AGENT:ACTION_IN_FLIGHT', async () => {
       const session = await seedSession();
       callMock.mockImplementationOnce(async () => ({success: false, error: 'HTTP 409: Conflict'}));
 
-      const issued = session.actions.issue(actionMessage(2));
+      const issued = session.dispatchAction(actionMessage(2));
       await vi.advanceTimersByTimeAsync(30_000);
 
-      await issued.settled;
+      await issued;
       expect(callMock).toHaveBeenCalledTimes(2);
-      expect(session.turns[0]).toMatchObject({status: 'error', error: 'HTTP 409: Conflict'});
-    });
-
-    it('stops waiting when a prompt preempts the rejected action', async () => {
-      const session = await seedSession();
-      queueConflict();
-      const issued = session.actions.issue(actionMessage(2));
-      await vi.advanceTimersByTimeAsync(0);
-      expect(callMock).toHaveBeenCalledTimes(2);
-
-      const promptStream = queueStream();
-      void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'next question'}});
-      await promptStream.opened;
-      expect(await issued.settled).toBe('cancelled');
-
-      await vi.advanceTimersByTimeAsync(30_000);
-      expect(callMock).toHaveBeenCalledTimes(3);
-      expect(session.turns[0]).toMatchObject({status: 'complete'});
-      expect(session.turns[0].error).toBeUndefined();
-
-      promptStream.emit({type: 'RUN_FINISHED'});
-      promptStream.close();
+      expect(session.turns[0].status).toBe('complete');
+      expect(session.actionError).toMatchObject({message: 'HTTP 409: Conflict'});
     });
 
     it('cancels the rejected action, leaving its turn complete, when cancel() lands during the wait', async () => {
       const session = await seedSession();
       queueConflict();
-      const issued = session.actions.issue(actionMessage(2));
+      const issued = session.dispatchAction(actionMessage(2));
       await vi.advanceTimersByTimeAsync(100);
 
       session.cancel();
 
-      expect(await issued.settled).toBe('cancelled');
+      await issued;
       await vi.advanceTimersByTimeAsync(30_000);
       expect(callMock).toHaveBeenCalledTimes(2);
       expect(session.turns[0].status).toBe('complete');
@@ -1111,27 +1796,6 @@ describe('createSession lifecycle', () => {
 
       expect(callMock).toHaveBeenCalledTimes(1);
       expect(session.turns[0]).toMatchObject({status: 'error', error: 'Cancelled'});
-    });
-
-    it('leaves the turn complete when a prompt aborts an action while it is being resent', async () => {
-      const session = await seedSession();
-      queueConflict();
-      queueAbortableCall();
-      const issued = session.actions.issue(actionMessage(2));
-      await vi.advanceTimersByTimeAsync(250);
-      expect(callMock).toHaveBeenCalledTimes(3);
-
-      const promptStream = queueStream();
-      void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'next question'}});
-      await promptStream.opened;
-      await vi.advanceTimersByTimeAsync(0);
-
-      expect(await issued.settled).toBe('cancelled');
-      expect(session.turns[0]).toMatchObject({status: 'complete'});
-      expect(session.turns[0].error).toBeUndefined();
-
-      promptStream.emit({type: 'RUN_FINISHED'});
-      promptStream.close();
     });
 
     it('keeps a prompt cancelled when cancel() aborts it while it is being resent', async () => {
@@ -1182,6 +1846,444 @@ describe('createSession lifecycle', () => {
       expect(callMock).toHaveBeenCalledTimes(exhaustingConflicts);
       expect(session.turns[0]).toMatchObject({status: 'error', error: conflictError});
       expect(session.actionError).toBeUndefined();
+    });
+  });
+
+  describe('initialization (ADR-018)', () => {
+    const shellConfig: SessionConfig = {...baseConfig, initialize: true};
+    const SHELL_ID = 'ui-shell';
+    const SHELL_PAGINATION_ID = 'shell-pagination';
+    const SHELL_CHIPS_ID = 'shell-chips';
+
+    const shellSurface = {
+      type: 'ACTIVITY_SNAPSHOT',
+      messageId: 'shell-activity',
+      activityType: 'a2ui-surface',
+      metadata: {turnOpeningActions: {[SHELL_ID]: ['selectAction']}},
+      content: {
+        messages: [
+          {
+            version: 'v1.0',
+            createSurface: {
+              surfaceId: SHELL_ID,
+              catalogId: 'commerce',
+              components: [
+                {id: 'root', component: 'CommerceSearch'},
+                {id: SHELL_PAGINATION_ID, component: 'Pagination'},
+                {id: SHELL_CHIPS_ID, component: 'NextActionsBar'},
+              ],
+            },
+          },
+        ],
+      },
+    };
+
+    const shellPage = {page: 1, pageSize: 24, totalEntries: 48, totalPages: 2};
+
+    function shellPageUpdate(messageId: string) {
+      return {
+        type: 'ACTIVITY_SNAPSHOT',
+        messageId,
+        activityType: 'a2ui-surface',
+        content: {
+          messages: [
+            {
+              version: 'v1.0',
+              updateDataModel: {
+                surfaceId: SHELL_ID,
+                path: `/state/${SHELL_PAGINATION_ID}`,
+                value: shellPage,
+              },
+            },
+          ],
+        },
+      };
+    }
+
+    function shellSelectPage(page: number) {
+      return {
+        userAction: {
+          name: 'selectPage',
+          surfaceId: SHELL_ID,
+          sourceComponentId: SHELL_PAGINATION_ID,
+          context: {page},
+        },
+      };
+    }
+
+    const shellChip = {
+      userAction: {
+        name: 'selectAction',
+        surfaceId: SHELL_ID,
+        sourceComponentId: SHELL_CHIPS_ID,
+        context: {actionId: 'trending'},
+      },
+    };
+
+    /** Creates a session whose `initialize` answers with the shell, and waits for it. */
+    async function initializedSession() {
+      const stream = queueStream();
+      const session = createSession(shellConfig);
+      await stream.opened;
+      stream.emit({
+        type: 'RUN_STARTED',
+        conversationSessionId: 'gateway-session',
+        conversationToken: 'gateway-token',
+      });
+      stream.emit(shellSurface);
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await vi.waitFor(() => expect(session.request).toBeUndefined());
+      return session;
+    }
+
+    async function completePrompt(
+      session: ReturnType<typeof createSession>,
+      prompt: string,
+      events: Record<string, unknown>[] = []
+    ) {
+      const stream = queueStream();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt}});
+      await stream.opened;
+      for (const event of events) {
+        stream.emit(event);
+      }
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await turn;
+    }
+
+    it('sends initialize before any prompt, with no surface or source component', async () => {
+      const stream = queueStream();
+      const session = createSession(shellConfig);
+      const requests: unknown[] = [];
+      session.subscribe(() => requests.push(session.request));
+
+      await stream.opened;
+
+      expect(requests[0]).toEqual({kind: 'initialize'});
+      const sent = callMock.mock.calls[0][0] as {message: unknown; action: Record<string, unknown>};
+      expect(sent.message).toBeNull();
+      expect(sent.action).toMatchObject({name: 'initialize', context: {}});
+      expect('surfaceId' in sent.action).toBe(false);
+      expect('sourceComponentId' in sent.action).toBe(false);
+      expect(sent.action).not.toHaveProperty('actionId');
+      expect(sent.action).not.toHaveProperty('wantResponse');
+      expect(session.initialization).toEqual({activities: [], status: 'streaming'});
+
+      stream.emit(shellSurface);
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await vi.waitFor(() => expect(session.request).toBeUndefined());
+
+      expect(session.turns).toEqual([]);
+      expect(session.initialization?.status).toBe('complete');
+      expect(session.getSnapshot().initialization).toBe(session.initialization);
+      expect(session.surfaces).toEqual([
+        {surfaceId: SHELL_ID, rootComponentType: 'CommerceSearch', isLoading: false},
+      ]);
+      expect(session.a2uiMessages[0]).toEqual({
+        version: 'v0.9',
+        createSurface: {surfaceId: SHELL_ID, catalogId: 'commerce'},
+      });
+    });
+
+    it('opens the next prompt with the session keys the initialization adopted', async () => {
+      const session = await initializedSession();
+
+      await completePrompt(session, 'find shoes');
+
+      expect(callMock.mock.calls[1][0]).toMatchObject({
+        message: 'find shoes',
+        conversationSessionId: 'gateway-session',
+        conversationToken: 'gateway-token',
+      });
+    });
+
+    it('never sends initialize with initialize: false', async () => {
+      const session = createSession(baseConfig);
+      await flush();
+
+      expect(callMock).not.toHaveBeenCalled();
+      expect(session.initialization).toBeUndefined();
+    });
+
+    it('never sends initialize for a session that has a token', async () => {
+      const initialized = await initializedSession();
+      callMock.mockReset();
+
+      const restored = createSession({...shellConfig, sessionToRestore: initialized.serialize()});
+      await flush();
+
+      expect(callMock).not.toHaveBeenCalled();
+      expect(restored.surfaces).toEqual(initialized.surfaces);
+    });
+
+    it('never sends initialize for a restored session, even without a token', async () => {
+      const initialized = await initializedSession();
+      callMock.mockReset();
+
+      const restored = createSession({
+        ...shellConfig,
+        sessionToRestore: {...initialized.serialize(), sessionToken: undefined},
+      });
+      await flush();
+
+      expect(callMock).not.toHaveBeenCalled();
+      expect(restored.surfaces).toEqual(initialized.surfaces);
+    });
+
+    it('does not send initialize after a prompt dispatched in the same task', async () => {
+      const stream = queueStream();
+      const session = createSession(shellConfig);
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'first'}});
+      await stream.opened;
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await turn;
+      await flush();
+
+      expect(callMock).toHaveBeenCalledTimes(1);
+      expect(session.initialization).toBeUndefined();
+    });
+
+    it('records a failed initialize without retrying, and the first prompt still opens the session', async () => {
+      callMock.mockImplementationOnce(async () => ({success: false, error: 'Unknown action'}));
+      const session = createSession(shellConfig);
+      await vi.waitFor(() => expect(session.initialization?.status).toBe('error'));
+
+      expect(session.initialization).toEqual({
+        activities: [],
+        status: 'error',
+        error: 'Unknown action',
+      });
+      expect(session.request).toBeUndefined();
+
+      await completePrompt(session, 'find shoes');
+
+      expect(callMock).toHaveBeenCalledTimes(2);
+      expect(session.turns[0].status).toBe('complete');
+    });
+
+    it('keeps the initialization cancelled when cancelled while awaiting data', async () => {
+      const stream = queueStream();
+      const session = createSession(shellConfig);
+      await stream.opened;
+      stream.emit({type: 'RUN_STARTED', conversationToken: 'gateway-token'});
+      await flush();
+
+      session.cancel();
+      await vi.waitFor(() => expect(session.request).toBeUndefined());
+
+      expect(session.initialization).toMatchObject({status: 'error', error: 'Cancelled'});
+    });
+
+    it('marks the initialization cancelled when cancelled in flight', async () => {
+      const stream = queueStream();
+      const session = createSession(shellConfig);
+      await stream.opened;
+
+      session.cancel();
+      stream.close();
+      await vi.waitFor(() => expect(session.request).toBeUndefined());
+
+      expect(session.initialization).toEqual({activities: [], status: 'error', error: 'Cancelled'});
+      expect(session.turns).toEqual([]);
+      expect(callMock).toHaveBeenCalledTimes(1);
+    });
+
+    it('records an action dispatched before the first turn with the initialization', async () => {
+      const session = await initializedSession();
+
+      const actionStream = queueStream();
+      const action = session.dispatchAction(shellSelectPage(1));
+      await actionStream.opened;
+
+      expect(session.request).toEqual({
+        kind: 'action',
+        component: 'Pagination',
+        name: 'selectPage',
+        surfaceId: SHELL_ID,
+        sourceComponentId: SHELL_PAGINATION_ID,
+      });
+
+      actionStream.emit({type: 'RUN_STARTED'});
+      actionStream.emit(shellPageUpdate('shell-page'));
+      actionStream.emit({type: 'RUN_FINISHED'});
+      actionStream.close();
+      await action;
+
+      expect(session.turns).toEqual([]);
+      expect(session.initialization?.activities.map((activity) => activity.id)).toEqual([
+        'shell-activity',
+        'shell-page',
+      ]);
+      expect(session.initialization?.status).toBe('complete');
+      expect(session.state[SHELL_ID]).toEqual({state: {[SHELL_PAGINATION_ID]: shellPage}});
+    });
+
+    it('leaves the initialization as it is and sets actionError when an action before the first turn fails', async () => {
+      const session = await initializedSession();
+      const actionStream = queueStream();
+      const action = session.dispatchAction(shellSelectPage(1));
+      await actionStream.opened;
+      actionStream.emit({type: 'RUN_ERROR', message: 'Suggestions unavailable'});
+      actionStream.close();
+      await action;
+
+      expect(session.initialization?.status).toBe('complete');
+      expect(session.actionError).toEqual({
+        message: 'Suggestions unavailable',
+        component: 'Pagination',
+        name: 'selectPage',
+        surfaceId: SHELL_ID,
+        sourceComponentId: SHELL_PAGINATION_ID,
+      });
+    });
+
+    it('sends an action on a surface the initialization created, several turns later', async () => {
+      const session = await initializedSession();
+      await completePrompt(session, 'first', [PAGINATION_SURFACE]);
+      await completePrompt(session, 'second');
+
+      const actionStream = queueStream();
+      const action = session.dispatchAction(shellSelectPage(1));
+      await actionStream.opened;
+
+      expect(session.request).toEqual({
+        kind: 'action',
+        component: 'Pagination',
+        name: 'selectPage',
+        surfaceId: SHELL_ID,
+        sourceComponentId: SHELL_PAGINATION_ID,
+        turnId: session.turns[1].id,
+      });
+      expect(callMock.mock.calls[3][0]).toMatchObject({
+        message: null,
+        action: {
+          name: 'selectPage',
+          surfaceId: SHELL_ID,
+          sourceComponentId: SHELL_PAGINATION_ID,
+          context: {page: 1},
+        },
+      });
+
+      actionStream.emit(shellPageUpdate('shell-page'));
+      actionStream.emit({type: 'RUN_FINISHED'});
+      actionStream.close();
+      await action;
+
+      expect(session.state[SHELL_ID]).toEqual({state: {[SHELL_PAGINATION_ID]: shellPage}});
+      expect(session.turns[1].response.activities.map((activity) => activity.id)).toEqual([
+        'shell-page',
+      ]);
+      expect(session.turns.map((turn) => turn.status)).toEqual(['complete', 'complete']);
+    });
+
+    it('validates and applies a later turn update to a surface the initialization created', async () => {
+      const session = await initializedSession();
+      await completePrompt(session, 'first');
+
+      await completePrompt(session, 'second', [shellPageUpdate('shell-page')]);
+
+      expect(session.state[SHELL_ID]).toEqual({state: {[SHELL_PAGINATION_ID]: shellPage}});
+      expect(session.surfaces.map((surface) => surface.surfaceId)).toEqual([SHELL_ID]);
+      expect(session.turns.map((turn) => turn.response.surfaces)).toEqual([[], []]);
+    });
+
+    it('leaves the active turn as it is and sets actionError when an action on the shell fails', async () => {
+      const session = await initializedSession();
+      await completePrompt(session, 'first');
+
+      callMock.mockImplementationOnce(async () => ({success: false, error: 'Bad gateway'}));
+      await session.dispatchAction(shellSelectPage(1));
+
+      expect(session.turns.map((turn) => turn.status)).toEqual(['complete']);
+      expect(session.actionError).toEqual({
+        message: 'Bad gateway',
+        component: 'Pagination',
+        name: 'selectPage',
+        surfaceId: SHELL_ID,
+        sourceComponentId: SHELL_PAGINATION_ID,
+      });
+    });
+
+    it('opens the first turn for an action the shell announces as turn-opening', async () => {
+      const session = await initializedSession();
+
+      const stream = queueStream();
+      const sent = session.dispatchAction(shellChip);
+      await stream.opened;
+
+      expect(session.turns).toHaveLength(1);
+      expect(session.turns[0].input.action).toMatchObject({
+        component: 'NextActionsBar',
+        surfaceId: SHELL_ID,
+      });
+      expect(session.request).toMatchObject({kind: 'action', turnId: session.turns[0].id});
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await sent;
+
+      expect(session.turns[0].status).toBe('complete');
+      expect(session.initialization?.activities).toHaveLength(1);
+    });
+
+    it('opens a new turn for an action the shell announces as turn-opening, several turns later', async () => {
+      const session = await initializedSession();
+      await completePrompt(session, 'first');
+      await completePrompt(session, 'second');
+
+      const stream = queueStream();
+      const sent = session.dispatchAction(shellChip);
+      await stream.opened;
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await sent;
+
+      expect(session.turns.map((turn) => turn.input.prompt ?? turn.input.action?.name)).toEqual([
+        'first',
+        'second',
+        'selectAction',
+      ]);
+    });
+
+    it('round-trips the initialization, the turns and the session state through serialized format 4', async () => {
+      const session = await initializedSession();
+      await completePrompt(session, 'first', [shellPageUpdate('shell-page')]);
+
+      const serialized = session.serialize();
+      const restored = createSession({...shellConfig, sessionToRestore: serialized});
+
+      expect(serialized.version).toBe(4);
+      expect(serialized.initialization).toEqual({
+        activities: session.initialization?.activities,
+        status: 'complete',
+      });
+      expect(restored.initialization).toEqual(session.initialization);
+      expect(restored.turns).toEqual(session.turns);
+      expect(restored.surfaces).toEqual(session.surfaces);
+      expect(restored.state).toEqual(session.state);
+      expect(restored.a2uiMessages).toEqual(session.a2uiMessages);
+    });
+
+    it('restores an initialization persisted mid-stream as interrupted', async () => {
+      const stream = queueStream();
+      const session = createSession(shellConfig);
+      await stream.opened;
+      stream.emit({type: 'RUN_STARTED', conversationToken: 'gateway-token'});
+      stream.emit(shellSurface);
+      await vi.waitFor(() => expect(session.initialization?.activities).toHaveLength(1));
+
+      const restored = createSession({...shellConfig, sessionToRestore: session.serialize()});
+
+      expect(restored.initialization).toMatchObject({
+        status: 'error',
+        error: 'Stream was interrupted',
+      });
+      expect(restored.a2uiMessages).toEqual(session.a2uiMessages);
+      session.cancel();
+      stream.close();
     });
   });
 });

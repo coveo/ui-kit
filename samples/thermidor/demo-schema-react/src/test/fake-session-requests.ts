@@ -1,0 +1,85 @@
+import type {ActionError, SessionRequest, SessionSnapshot} from '@coveo/thermidor';
+import type {SessionRequestSource} from '../a2ui/session-request.js';
+
+/** A session snapshot holding only `request` and `actionError`, the fields the surfaces read. */
+export function requestSnapshot(
+  request: SessionRequest | undefined,
+  actionError?: ActionError
+): SessionSnapshot {
+  return {
+    turns: [],
+    initialization: undefined,
+    surfaces: [],
+    a2uiMessages: [],
+    state: {},
+    request,
+    actionError,
+  };
+}
+
+interface UserActionMessage {
+  userAction?: {name?: unknown; surfaceId?: unknown; sourceComponentId?: unknown};
+}
+
+/**
+ * A stand-in for the session's request handling: sends one message at a time through `send`,
+ * withholds a message dispatched while another is in flight, and exposes `request` through
+ * `getSnapshot()`, like `Session` does. `componentOf` gives the `component` of a dispatching node,
+ * which the session reads from the surface.
+ */
+export function createFakeSessionRequests(
+  send: (message: never) => Promise<void> | void,
+  componentOf: (sourceComponentId: string) => string
+) {
+  const listeners = new Set<() => void>();
+  let request: SessionRequest | undefined;
+  let actionError: ActionError | undefined;
+  let snapshot = requestSnapshot(undefined);
+
+  const notify = () => {
+    snapshot = requestSnapshot(request, actionError);
+    for (const listener of listeners) {
+      listener();
+    }
+  };
+
+  const source: SessionRequestSource = {
+    getSnapshot: () => snapshot,
+    subscribe(listener) {
+      listeners.add(listener);
+      return () => listeners.delete(listener);
+    },
+  };
+
+  const dispatch = async (message: unknown): Promise<void> => {
+    if (request) {
+      return;
+    }
+    const userAction = (message as UserActionMessage).userAction;
+    request =
+      (message as {name?: unknown}).name === 'submitPrompt'
+        ? {kind: 'prompt', turnId: 'turn'}
+        : {
+            kind: 'action',
+            component: componentOf(String(userAction?.sourceComponentId)),
+            name: String(userAction?.name),
+            surfaceId: String(userAction?.surfaceId),
+            sourceComponentId: String(userAction?.sourceComponentId),
+            turnId: 'turn',
+          };
+    actionError = undefined;
+    notify();
+    try {
+      await (send as (message: unknown) => Promise<void> | void)(message);
+    } catch (error) {
+      // Like the session's dispatch, a failed send still ends the request, and reports it.
+      if (request.kind === 'action') {
+        actionError = {...request, message: String(error)};
+      }
+    }
+    request = undefined;
+    notify();
+  };
+
+  return {source, dispatch};
+}

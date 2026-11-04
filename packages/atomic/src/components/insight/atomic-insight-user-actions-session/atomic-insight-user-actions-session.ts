@@ -12,6 +12,7 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import Flag from '../../../images/flag.svg';
 import ThreeDotsIcon from '../../../images/three-dots.svg';
 import {renderUserAction} from './user-action';
+import '@/src/components/common/atomic-icon/atomic-icon.js';
 
 /**
  * Internal component used by the `atomic-insight-user-actions-modal`. Do not use directly.

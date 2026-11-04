@@ -16,6 +16,5 @@
 }
 
 .followUp {
-  display: flex;
-  margin: var(--space-5) 0 var(--space-4);
+  margin-top: var(--space-5);
 }

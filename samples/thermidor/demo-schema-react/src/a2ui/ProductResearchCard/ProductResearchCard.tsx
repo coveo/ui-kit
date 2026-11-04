@@ -3,10 +3,13 @@ import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import {ProductResearchCardPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {A2UIProductCard} from '../ProductCard/ProductCard.js';
 import {A2UISkeleton} from '../Skeleton/Skeleton.js';
-import {FileIcon} from '../icons/index.js';
+import {
+  DEFAULT_MAX_LINKS,
+  RelatedDocumentList,
+  toLinkLimit,
+  visibleDocuments,
+} from '../RelatedDocuments/RelatedDocumentList.js';
 import styles from './ProductResearchCard.module.css';
-
-const DEFAULT_MAX_LINKS = 10;
 
 export interface ProductResearchCardOptions {
   /**
@@ -14,25 +17,6 @@ export interface ProductResearchCardOptions {
    * `0`, a negative number or `NaN` hides the list, and `Infinity` lists every document.
    */
   maxLinks?: number;
-}
-
-const SIZE_UNITS = ['B', 'kB', 'MB', 'GB'] as const;
-
-/**
- * Formats a size in bytes with a decimal unit and one decimal, e.g. `333.2 kB`; `''` when invalid.
- */
-export function formatDocumentSize(bytes: number): string {
-  if (!Number.isFinite(bytes) || bytes < 0) {
-    return '';
-  }
-  let size = bytes;
-  let unit = 0;
-  while (unit < SIZE_UNITS.length - 1 && Number(size.toFixed(1)) >= 1000) {
-    size /= 1000;
-    unit += 1;
-  }
-  const rounded = unit === 0 ? size : Number(size.toFixed(1));
-  return `${rounded} ${SIZE_UNITS[unit]}`;
 }
 
 /**
@@ -49,7 +33,7 @@ export function formatDocumentSize(bytes: number): string {
 export function createProductResearchCard({
   maxLinks = DEFAULT_MAX_LINKS,
 }: ProductResearchCardOptions = {}) {
-  const linkLimit = Number.isNaN(maxLinks) ? 0 : Math.max(0, Math.floor(maxLinks));
+  const linkLimit = toLinkLimit(maxLinks);
 
   return createReactComponent(
     {
@@ -65,10 +49,7 @@ export function createProductResearchCard({
 
       const rating =
         typeof product.ec_rating === 'number' ? Number(product.ec_rating.toFixed(1)) : null;
-      // A document with neither a title nor a link has nothing to show, so it takes no slot.
-      const documents = (relatedDocuments ?? [])
-        .filter((document) => document.title || document.clickUri)
-        .slice(0, linkLimit);
+      const documents = visibleDocuments(relatedDocuments, linkLimit);
 
       return (
         <div className={styles.root}>
@@ -106,37 +87,7 @@ export function createProductResearchCard({
               <h3 id={documentsHeadingId} className={styles.documentsHeading}>
                 Documentation &amp; manuals
               </h3>
-              <ul className={styles.documentRows}>
-                {documents.map((document, index) => {
-                  const label = document.title || document.clickUri;
-                  const meta = [
-                    document.filetype?.toUpperCase(),
-                    document.size === undefined ? '' : formatDocumentSize(document.size),
-                  ]
-                    .filter(Boolean)
-                    .join(' - ');
-                  return (
-                    <li key={index} className={styles.documentRow}>
-                      <FileIcon className={styles.documentIcon} />
-                      <div className={styles.documentText}>
-                        {document.clickUri ? (
-                          <a
-                            className={styles.documentLink}
-                            href={document.clickUri}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {label}
-                          </a>
-                        ) : (
-                          <span className={styles.documentTitle}>{label}</span>
-                        )}
-                        {meta && <span className={styles.documentMeta}>{meta}</span>}
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
+              <RelatedDocumentList documents={documents} />
             </section>
           )}
         </div>

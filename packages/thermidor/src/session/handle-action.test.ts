@@ -140,6 +140,9 @@ const baseConfig: SessionConfig = {
   contracts,
   organizationId: 'org-1',
   accessToken: 'token-1',
+  agentConfigurationId: 'agent-configuration-1',
+  trackingId: 'tracking-1',
+  initialize: false,
 };
 
 /**
@@ -294,22 +297,20 @@ describe('Session.dispatchAction', () => {
           surfaceId: string;
           name: string;
           sourceComponentId: string;
-          wantResponse: boolean;
-          actionId: string | null;
           context: unknown;
         } | null;
         message: string | null;
       };
-      // A plain request/response POST: no bidirectional binding, no wantResponse.
+      // A plain request/response POST: no bidirectional binding, so no actionResponse is requested.
       expect(request.message).toBeNull();
       expect(request.action).toMatchObject({
         surfaceId: SURFACE_ID,
         name: 'selectPage',
         sourceComponentId: PAGINATION_ID,
-        wantResponse: false,
-        actionId: null,
         context: {page: 3},
       });
+      expect(request.action).not.toHaveProperty('actionId');
+      expect(request.action).not.toHaveProperty('wantResponse');
     });
   });
 
@@ -330,7 +331,7 @@ describe('Session.dispatchAction', () => {
   });
 
   describe('concurrent dispatches are serialized', () => {
-    it('sends the second action only after the first action stream has completed', async () => {
+    it('withholds a second action dispatched while the first one streams', async () => {
       const session = await sessionWithPaginationSurface();
 
       // Held open so the second dispatch is issued while the first is in flight.
@@ -350,8 +351,6 @@ describe('Session.dispatchAction', () => {
           }),
         },
       }));
-      queueActionAck();
-
       const first = session.dispatchAction(paginationMessage('selectPage', {page: 1}));
       const second = session.dispatchAction(paginationMessage('selectPage', {page: 2}));
 
@@ -362,11 +361,7 @@ describe('Session.dispatchAction', () => {
       releaseFirstStream?.();
       await Promise.all([first, second]);
 
-      expect(callMock).toHaveBeenCalledTimes(2);
-      const pages = callMock.mock.calls.map(
-        (call) => (call[0] as {action: {context: {page: number}}}).action.context.page
-      );
-      expect(pages).toEqual([1, 2]);
+      expect(callMock).toHaveBeenCalledTimes(1);
     });
   });
 });

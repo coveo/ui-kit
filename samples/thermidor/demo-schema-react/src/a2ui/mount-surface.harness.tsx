@@ -8,13 +8,13 @@ import {
   useA2UI,
   type A2UIClientEventMessage,
 } from '@copilotkit/a2ui-renderer';
-import {createDispatchCoordinator} from '@coveo/thermidor';
 import {
   createThermidorCatalog,
   THERMIDOR_CATALOG_ID,
   type ThermidorCatalogOptions,
 } from './components.js';
-import {DispatchProgressProvider, useTrackedDispatch} from './pending-dispatch.js';
+import {createFakeSessionRequests} from '../test/fake-session-requests.js';
+import {SessionRequestProvider} from './session-request.js';
 
 /**
  * Shared end-to-end mount for a component definition, through the real thermidor catalog and the
@@ -86,26 +86,28 @@ function Surface({
   messages,
   processRef,
   dispatch,
+  componentOf,
   catalogOptions,
 }: {
   messages: Array<Record<string, unknown>>;
   processRef: {current: ProcessMessages | null};
   dispatch: (message: A2UIClientEventMessage) => Promise<void> | void;
+  componentOf: (sourceComponentId: string) => string;
   catalogOptions?: ThermidorCatalogOptions;
 }) {
   const catalog = useMemo(() => createThermidorCatalog(catalogOptions), [catalogOptions]);
-  const actions = useMemo(
-    () => createDispatchCoordinator<A2UIClientEventMessage>(dispatch),
-    [dispatch]
+  const requests = useMemo(
+    () => createFakeSessionRequests(dispatch, componentOf),
+    [dispatch, componentOf]
   );
-  const tracked = useTrackedDispatch(actions);
+  const onAction = (message: A2UIClientEventMessage) => requests.dispatch(message);
   return (
-    <DispatchProgressProvider value={tracked.progress}>
-      <A2UIProvider catalog={catalog} onAction={tracked.onAction}>
+    <SessionRequestProvider value={requests.source}>
+      <A2UIProvider catalog={catalog} onAction={onAction}>
         <MessagePump messages={messages} processRef={processRef} />
         <A2UIRenderer surfaceId={SURFACE_ID} />
       </A2UIProvider>
-    </DispatchProgressProvider>
+    </SessionRequestProvider>
   );
 }
 
@@ -127,6 +129,9 @@ export function mountSurface(config: MountSurfaceConfig): MountSurfaceResult {
 
   const rootNode = {...config.component, id: ROOT_ID};
   const childNodes = config.children ?? [];
+  const nodes: Array<Record<string, unknown>> = [rootNode, ...childNodes];
+  const componentOf = (sourceComponentId: string) =>
+    String(nodes.find((node) => node.id === sourceComponentId)?.['component']);
   const processRef: {current: ProcessMessages | null} = {current: null};
 
   const messages: Array<Record<string, unknown>> = [
@@ -146,6 +151,7 @@ export function mountSurface(config: MountSurfaceConfig): MountSurfaceResult {
       messages={messages}
       processRef={processRef}
       dispatch={onAction}
+      componentOf={componentOf}
       catalogOptions={config.catalogOptions}
     />
   );

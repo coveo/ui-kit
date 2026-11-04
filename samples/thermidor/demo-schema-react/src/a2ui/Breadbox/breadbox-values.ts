@@ -5,7 +5,6 @@ export interface BreadboxValue {
   label: string;
   /** The untruncated value, for the tooltip and the accessible name. */
   fullLabel: string;
-  excluded: boolean;
   payload: BreadboxDeselectPayload;
 }
 
@@ -35,11 +34,10 @@ export function breadboxValues(facet: BreadboxFacet): BreadboxValue[] {
   const {facetId} = facet;
   switch (facet.type) {
     case 'regular':
-      return facet.values.map(({value, state}) => ({
+      return facet.values.map(({value}) => ({
         key: value,
         label: value,
         fullLabel: value,
-        excluded: state === 'excluded',
         payload: {facetId, type: 'regular', value},
       }));
     case 'numericalRange':
@@ -49,7 +47,6 @@ export function breadboxValues(facet: BreadboxFacet): BreadboxValue[] {
           key: `${start}..${end}`,
           label,
           fullLabel: label,
-          excluded: false,
           payload: {facetId, type: 'numericalRange', start, end},
         };
       });
@@ -60,7 +57,6 @@ export function breadboxValues(facet: BreadboxFacet): BreadboxValue[] {
           key: `${start}..${end}`,
           label,
           fullLabel: label,
-          excluded: false,
           payload: {facetId, type: 'dateRange', start, end},
         };
       });
@@ -70,7 +66,6 @@ export function breadboxValues(facet: BreadboxFacet): BreadboxValue[] {
           key: facet.path.join('/'),
           label: limitPath(facet.path),
           fullLabel: facet.path.join(PATH_SEPARATOR),
-          excluded: false,
           payload: {facetId, type: 'hierarchical', path: facet.path},
         },
       ];

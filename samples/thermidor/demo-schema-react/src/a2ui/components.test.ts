@@ -32,6 +32,10 @@ const EXPECTED_COMPONENTS = [
   'QuerySummary',
   'PageSize',
   'Breadbox',
+  'SessionShell',
+  'SearchBox',
+  'QuerySuggestions',
+  'InstantProducts',
 ] as const;
 
 describe('createThermidorCatalog (catalog build smoke)', () => {
@@ -174,7 +178,7 @@ describe('component state contracts', () => {
             field: 'ec_brand',
             displayName: 'Brand',
             type: 'regular',
-            values: [{value: 'Aqua Marina', state: 'excluded'}],
+            values: [{value: 'Aqua Marina', state: 'selected'}],
           },
         ],
       }).success

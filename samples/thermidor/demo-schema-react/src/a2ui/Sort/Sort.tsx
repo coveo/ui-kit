@@ -1,8 +1,8 @@
-import {useId} from 'react';
+import {useId, useOptimistic} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {SortAction} from '@coveo/thermidor-schema';
 import {SortPropsSchema} from '@coveo/thermidor-schema/zod3';
-import {useOptimisticValue} from '../use-optimistic-value.js';
+import {useGesture} from '../session-request.js';
 import styles from './Sort.module.css';
 
 const SORT_LABELS: Record<string, string> = {
@@ -18,12 +18,8 @@ export const Sort = createReactComponent(
     const selectId = useId();
     const availableSorts = props.availableSorts ?? [];
 
-    const {value: appliedSort, dispatchOptimistic} = useOptimisticValue(
-      props.appliedSort,
-      (action: SortAction) => {
-        context.dispatchAction(action);
-      }
-    );
+    const [appliedSort, addOptimisticSort] = useOptimistic(props.appliedSort);
+    const startGesture = useGesture();
 
     const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
       const selectedIndex = Number(event.target.value);
@@ -35,12 +31,10 @@ export const Sort = createReactComponent(
             context: {sortCriteria: selected.sortCriteria, fields: selected.fields},
           },
         };
-        dispatchOptimistic({
-          action: selectSortAction,
-          next: () => ({sortCriteria: selected.sortCriteria, fields: selected.fields}),
-          coalesce: 'absolute',
-          invalidates: ['results'],
-        });
+        startGesture(
+          () => addOptimisticSort({sortCriteria: selected.sortCriteria, fields: selected.fields}),
+          () => context.dispatchAction(selectSortAction)
+        );
       }
     };
 

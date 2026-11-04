@@ -73,16 +73,13 @@
  * 2. `@copilotkit/a2ui-renderer` (or whichever renderer consumers use) imports
  *    it.
  *
- * Then: delete this module, drop `a2uiMessages` from {@link TurnResponse} and
- * from the fold, and let consumers read `response.activities` directly. That is
+ * Then: delete this module, drop `session.a2uiMessages` and the renderer stream, and let
+ * consumers read the turns' activities directly. That is
  * a breaking change to `@coveo/thermidor`, which is intended and acceptable
  * while the package is `0.x`.
  */
 
-import type {A2uiV09Message, Activity} from './types.js';
-
-/** Activity kind carrying A2-UI surface messages. */
-const SURFACE_ACTIVITY_KIND = 'a2ui-surface';
+import type {A2uiV09Message} from './types.js';
 
 /** The A2-UI protocol version Agent Gateway emits. */
 const GATEWAY_PROTOCOL_VERSION = 'v1.0';
@@ -108,42 +105,6 @@ function toDataModelPath(key: string): string | null {
     return key;
   }
   return `/${key.replace(/~/g, '~0').replace(/\//g, '~1')}`;
-}
-
-/**
- * Tracks the surfaces created along the projected stream to decide whether a `deleteSurface` is
- * forwarded. A delete for a surface created earlier in the stream (or by an earlier, superseded
- * version of an activity) that is no longer live is an orphan and is dropped: the consumer that
- * merges turns into one renderer stream would otherwise re-address it to an earlier turn's surface
- * that shares the id. Any other delete is forwarded, since it targets a surface an earlier turn
- * created.
- */
-class OrphanDeleteFilter {
-  private readonly createdSurfaceIds = new Set<string>();
-  private readonly liveSurfaceIds = new Set<string>();
-
-  /** Records surfaces a superseded activity version created at this point of the stream. */
-  recordSuperseded(surfaceIds: Iterable<string>): void {
-    for (const surfaceId of surfaceIds) {
-      this.createdSurfaceIds.add(surfaceId);
-    }
-  }
-
-  /** Whether `message`, the next message of the stream, is forwarded. */
-  keeps(message: A2uiV09Message): boolean {
-    const createdId = createdSurfaceId(message);
-    if (createdId !== null) {
-      this.createdSurfaceIds.add(createdId);
-      this.liveSurfaceIds.add(createdId);
-      return true;
-    }
-    const deleteSurface = message['deleteSurface'];
-    if (!isRecord(deleteSurface)) {
-      return true;
-    }
-    const surfaceId = String(deleteSurface['surfaceId']);
-    return this.liveSurfaceIds.delete(surfaceId) || !this.createdSurfaceIds.has(surfaceId);
-  }
 }
 
 function createdSurfaceId(message: A2uiV09Message): string | null {
@@ -225,73 +186,79 @@ function convertMessage(message: Record<string, unknown>): A2uiV09Message[] {
 }
 
 /**
- * Derives the ordered A2-UI v0.9 message stream borne by a turn's activities.
- *
- * Surface-bearing activities carry their A2-UI sequence under
- * `payload.messages`. Messages are grouped by activity id so a `replace`
- * snapshot supersedes the earlier messages for that id in place rather than
- * appending duplicates, and the result is flattened in order of each activity's
- * first appearance.
- *
- * Each v1.0 `createSurface` is split into `createSurface`, `updateComponents`, and
- * one `updateDataModel` per inline data-model key, a plain key seeding its root
- * JSON Pointer (`isLoading` → `/isLoading`). A `deleteSurface` for a surface the
- * stream already created and deleted, or that a superseded activity version
- * created, is dropped (see {@link OrphanDeleteFilter}).
- *
- * This is a pure derivation of `activities`: dropping the result and recomputing
- * it from the same activity list yields a deeply-equal stream.
+ * Converts the raw A2-UI messages of one surface snapshot into the v0.9 messages a renderer
+ * consumes, in order. See {@link convertMessage}.
  */
-export function deriveA2uiV09Messages(activities: Activity[]): A2uiV09Message[] {
-  const messagesByActivityId = new Map<string, A2uiV09Message[]>();
-  const activityOrder: string[] = [];
-  const supersededSurfaceIds = new Map<string, string[]>();
-
-  for (const activity of activities) {
-    if (activity.kind !== SURFACE_ACTIVITY_KIND || !isRecord(activity.payload)) {
-      continue;
-    }
-
-    const rawMessages = activity.payload['messages'];
-    if (!Array.isArray(rawMessages)) {
-      continue;
-    }
-
-    const converted: A2uiV09Message[] = [];
-    for (const message of rawMessages) {
-      if (isRecord(message)) {
-        converted.push(...convertMessage(message));
-      }
-    }
-    if (activity.replace) {
-      const superseded = (messagesByActivityId.get(activity.id) ?? [])
-        .map(createdSurfaceId)
-        .filter((surfaceId) => surfaceId !== null);
-      supersededSurfaceIds.set(activity.id, [
-        ...(supersededSurfaceIds.get(activity.id) ?? []),
-        ...superseded,
-      ]);
-      messagesByActivityId.set(activity.id, converted);
-    } else {
-      const existing = messagesByActivityId.get(activity.id) ?? [];
-      existing.push(...converted);
-      messagesByActivityId.set(activity.id, existing);
-    }
-
-    if (!activityOrder.includes(activity.id)) {
-      activityOrder.push(activity.id);
+export function convertA2uiMessages(messages: readonly unknown[]): A2uiV09Message[] {
+  const converted: A2uiV09Message[] = [];
+  for (const message of messages) {
+    if (isRecord(message)) {
+      converted.push(...convertMessage(message));
     }
   }
+  return converted;
+}
 
-  const stream: A2uiV09Message[] = [];
-  const deleteFilter = new OrphanDeleteFilter();
-  for (const activityId of activityOrder) {
-    deleteFilter.recordSuperseded(supersededSurfaceIds.get(activityId) ?? []);
-    for (const message of messagesByActivityId.get(activityId) ?? []) {
-      if (deleteFilter.keeps(message)) {
-        stream.push(message);
+/** The session's renderer stream, and the surfaces live at its end. */
+export interface RendererStream {
+  readonly messages: readonly A2uiV09Message[];
+  readonly liveSurfaceIds: ReadonlySet<string>;
+}
+
+/** The stream of a session that has received nothing yet. */
+export const EMPTY_RENDERER_STREAM: RendererStream = {messages: [], liveSurfaceIds: new Set()};
+
+const SURFACE_OPERATIONS = ['updateComponents', 'updateDataModel'] as const;
+
+function operationSurfaceId(message: A2uiV09Message, operation: string): string | null {
+  const body = message[operation];
+  return isRecord(body) && typeof body['surfaceId'] === 'string' ? body['surfaceId'] : null;
+}
+
+/**
+ * Appends v0.9 messages to the session's renderer stream, which only grows: a renderer feeds each
+ * new message once. The stream follows the A2-UI surface lifecycle across every run of the
+ * session, so a renderer can process it in order:
+ *
+ * - a `createSurface` for a surface that is still live replaces it, as A2-UI defines: a
+ *   `deleteSurface` for that surface is appended before it, since a renderer refuses to create a
+ *   surface that exists;
+ * - a `deleteSurface`, `updateComponents` or `updateDataModel` for a surface that is not live is
+ *   dropped, since there is nothing to apply it to.
+ */
+export function appendToRendererStream(
+  stream: RendererStream,
+  messages: readonly A2uiV09Message[]
+): RendererStream {
+  const appended: A2uiV09Message[] = [];
+  const live = new Set(stream.liveSurfaceIds);
+  for (const message of messages) {
+    const createdId = createdSurfaceId(message);
+    if (createdId !== null) {
+      if (live.has(createdId)) {
+        appended.push({version: RENDERER_PROTOCOL_VERSION, deleteSurface: {surfaceId: createdId}});
       }
+      live.add(createdId);
+      appended.push(message);
+      continue;
+    }
+    const deletedId = operationSurfaceId(message, 'deleteSurface');
+    if (deletedId !== null) {
+      if (live.delete(deletedId)) {
+        appended.push(message);
+      }
+      continue;
+    }
+    const targetId =
+      SURFACE_OPERATIONS.map((operation) => operationSurfaceId(message, operation)).find(
+        (surfaceId) => surfaceId !== null
+      ) ?? null;
+    if (targetId === null || live.has(targetId)) {
+      appended.push(message);
     }
   }
-  return stream;
+  if (appended.length === 0) {
+    return stream;
+  }
+  return {messages: [...stream.messages, ...appended], liveSurfaceIds: live};
 }

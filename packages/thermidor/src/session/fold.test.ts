@@ -1,6 +1,18 @@
 import {afterEach, describe, expect, it, vi} from 'vitest';
 import type {NormalizedStreamEvent} from '@/src/internal/api/protocol/stream-types.js';
+import {convertA2uiMessages} from './a2ui-v09-projection.js';
 import {createTurn, deriveSurfaces, foldActivities} from './fold.js';
+import type {A2uiV09Message, Activity} from './types.js';
+
+/** The v0.9 messages a renderer receives for the surface activities of a folded turn. */
+function rendererMessages(activities: readonly Activity[]): A2uiV09Message[] {
+  return activities
+    .filter((activity) => activity.kind === 'a2ui-surface')
+    .flatMap((activity) => {
+      const messages = activity.payload['messages'];
+      return Array.isArray(messages) ? convertA2uiMessages(messages) : [];
+    });
+}
 
 /**
  * Unit tests for the Turn/TurnResponse shape produced by the fold.
@@ -66,23 +78,6 @@ describe('fold Turn/TurnResponse shape', () => {
     });
   });
 
-  describe('response.state default', () => {
-    it('defaults state to {} on a fresh turn', () => {
-      const turn = createTurn('t1', {prompt: 'hi'});
-
-      expect(turn.response.state).toEqual({});
-    });
-
-    it('keeps state at {} for a turn with no data-model ops', () => {
-      const turn = foldActivities(createTurn('t1', {prompt: 'hi'}), [
-        textMessageStart,
-        runFinished,
-      ]);
-
-      expect(turn.response.state).toEqual({});
-    });
-  });
-
   describe('agent facet presence', () => {
     it('populates response.agent with messages and reasoningSteps when the router invoked an agent', () => {
       const turn = foldActivities(createTurn('t1', {prompt: 'hi'}), [
@@ -137,6 +132,58 @@ const surfaceSnapshot = (messages: unknown[]): NormalizedStreamEvent =>
     content: {messages},
     replace: false,
   });
+
+describe('fold event metadata', () => {
+  it('keeps the AG-UI metadata of a snapshot on its activity', () => {
+    const metadata = {turnOpeningActions: {bar: ['selectAction']}};
+    const turn = foldActivities(createTurn('t1', {}), [
+      activity({
+        type: 'ACTIVITY_SNAPSHOT',
+        messageId: 'bar-activity',
+        activityType: 'a2ui-surface',
+        content: {messages: []},
+        metadata,
+      }),
+    ]);
+
+    expect(turn.response.activities[0].metadata).toEqual(metadata);
+  });
+
+  it('adds no metadata to an activity whose event has none', () => {
+    const turn = foldActivities(createTurn('t1', {}), [surfaceSnapshot([])]);
+
+    expect(turn.response.activities[0]).not.toHaveProperty('metadata');
+  });
+
+  const barSnapshot = (metadata?: Record<string, unknown>): NormalizedStreamEvent =>
+    activity({
+      type: 'ACTIVITY_SNAPSHOT',
+      messageId: 'bar-activity',
+      activityType: 'a2ui-surface',
+      content: {messages: []},
+      replace: true,
+      ...(metadata && {metadata}),
+    });
+
+  it('keeps the metadata of a replaced snapshot when the replacing one has none', () => {
+    const metadata = {turnOpeningActions: {bar: ['selectAction']}};
+    const turn = foldActivities(createTurn('t1', {}), [barSnapshot(metadata), barSnapshot()]);
+
+    expect(turn.response.activities).toHaveLength(1);
+    expect(turn.response.activities[0].metadata).toEqual(metadata);
+  });
+
+  it('merges the metadata of a replacing snapshot onto the replaced one, by entry', () => {
+    const turn = foldActivities(createTurn('t1', {}), [
+      barSnapshot({turnOpeningActions: {bar: ['selectAction'], other: ['selectAction']}}),
+      barSnapshot({turnOpeningActions: {bar: []}}),
+    ]);
+
+    expect(turn.response.activities[0].metadata).toEqual({
+      turnOpeningActions: {bar: [], other: ['selectAction']},
+    });
+  });
+});
 
 describe('fold surface derivation', () => {
   it('exposes an empty surfaces list for a turn with no surface-bearing activities', () => {
@@ -653,7 +700,9 @@ describe('fold loading placeholder lifecycle', () => {
     expect(turn.response.surfaces).toEqual([
       {surfaceId: 's', rootComponentType: 'ProductCarousel', isLoading: false},
     ]);
-    expect(turn.response.a2uiMessages.some((message) => 'updateDataModel' in message)).toBe(false);
+    expect(
+      rendererMessages(turn.response.activities).some((message) => 'updateDataModel' in message)
+    ).toBe(false);
   });
 
   it('carries no write for a surface the superseding snapshot deletes', () => {
@@ -672,7 +721,7 @@ describe('fold loading placeholder lifecycle', () => {
       {surfaceId: 'c', rootComponentType: 'ProductCarousel', isLoading: false},
     ]);
     expect(
-      turn.response.a2uiMessages.filter(
+      rendererMessages(turn.response.activities).filter(
         (message) => (message['updateDataModel'] as {surfaceId?: string})?.surfaceId === 's'
       )
     ).toEqual([]);
@@ -684,7 +733,7 @@ describe('fold loading placeholder lifecycle', () => {
     ]);
 
     expect(turn.response.surfaces).toEqual([]);
-    expect(turn.response.a2uiMessages).toEqual([
+    expect(rendererMessages(turn.response.activities)).toEqual([
       {version: 'v0.9', deleteSurface: {surfaceId: 'earlier'}},
     ]);
   });

@@ -30,6 +30,7 @@ import type {Bindings} from '@/src/components/search/atomic-search-interface/int
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
 import {encodeForDomAttribute} from '@/src/utils/string-utils';
+import '@/src/components/search/atomic-result/atomic-result.js';
 
 type AriaLabelGenerator = (bindings: Bindings, result: Result) => string | undefined;
 

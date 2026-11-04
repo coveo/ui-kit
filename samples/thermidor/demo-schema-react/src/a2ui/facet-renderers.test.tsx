@@ -15,7 +15,26 @@ import {mountSurface} from './mount-surface.harness.js';
  * id via `buildChild`; the tests assert the observable mounted DOM order.
  */
 
-afterEach(() => cleanup());
+/**
+ * Holds each dispatch in flight until the test ends. React entangles pending async transitions,
+ * so one left pending would hold every later test's optimistic value.
+ */
+const held: Array<() => void> = [];
+function holdOpen(): () => Promise<void> {
+  return () => new Promise<void>((resolve) => held.push(resolve));
+}
+
+afterEach(async () => {
+  await act(async () => {
+    for (const release of held.splice(0)) {
+      release();
+    }
+  });
+  cleanup();
+});
+
+const bolded = (element: Element | null) =>
+  [...(element?.querySelectorAll('strong') ?? [])].map((node) => node.textContent);
 
 describe('RegularFacet', () => {
   const stateWithValues: RegularFacetProps = {
@@ -76,69 +95,6 @@ describe('RegularFacet', () => {
       expect((screen.getByTestId('facet-value-Billabong') as HTMLInputElement).checked).toBe(true)
     );
     answer();
-  });
-
-  it('keeps a second selection through the snapshot answering the first', async () => {
-    const bothIdle: RegularFacetProps = {
-      ...stateWithValues,
-      hasActiveValues: false,
-      values: [
-        {value: 'Billabong', numberOfResults: 4, state: 'idle'},
-        {value: 'Quiksilver', numberOfResults: 2, state: 'idle'},
-      ],
-    };
-    const answers: Array<() => void> = [];
-    const {pushDataModel} = mountFacet(
-      bothIdle,
-      () => new Promise<void>((resolve) => answers.push(resolve))
-    );
-
-    await waitFor(() => expect(screen.getByTestId('facet-value-Billabong')).toBeDefined());
-    fireEvent.click(screen.getByTestId('facet-value-Billabong'));
-    fireEvent.click(screen.getByTestId('facet-value-Quiksilver'));
-    // The coordinator holds the second click until the first is answered.
-    await waitFor(() => expect(answers).toHaveLength(1));
-    await waitFor(() =>
-      expect((screen.getByTestId('facet-value-Quiksilver') as HTMLInputElement).checked).toBe(true)
-    );
-
-    // The first answer is a whole-node snapshot that never saw the second click.
-    await act(async () => {
-      answers[0]!();
-      await Promise.resolve();
-    });
-    pushDataModel([
-      {
-        path: '/state/root/values',
-        value: [
-          {value: 'Billabong', numberOfResults: 4, state: 'selected'},
-          {value: 'Quiksilver', numberOfResults: 2, state: 'idle'},
-        ],
-      },
-    ]);
-
-    expect((screen.getByTestId('facet-value-Billabong') as HTMLInputElement).checked).toBe(true);
-    expect((screen.getByTestId('facet-value-Quiksilver') as HTMLInputElement).checked).toBe(true);
-
-    await waitFor(() => expect(answers).toHaveLength(2));
-    await act(async () => {
-      answers[1]!();
-      await Promise.resolve();
-    });
-    pushDataModel([
-      {
-        path: '/state/root/values',
-        value: [
-          {value: 'Billabong', numberOfResults: 4, state: 'selected'},
-          {value: 'Quiksilver', numberOfResults: 2, state: 'selected'},
-        ],
-      },
-    ]);
-
-    await waitFor(() => {
-      expect((screen.getByTestId('facet-value-Billabong') as HTMLInputElement).checked).toBe(true);
-      expect((screen.getByTestId('facet-value-Quiksilver') as HTMLInputElement).checked).toBe(true);
-    });
   });
 
   it('lets the backend correct a selection once it has answered the click', async () => {
@@ -211,7 +167,7 @@ describe('RegularFacet', () => {
     expect(checkboxes[0].checked).toBe(true);
   });
 
-  it('dispatches search on each change and keeps the input responsive', async () => {
+  it('keeps the input responsive and dispatches one search once typing pauses', async () => {
     const {actions} = mountFacet(stateWithValues);
 
     await waitFor(() => expect(screen.getByTestId('facet-search-input-ec_brand')).toBeDefined());
@@ -222,7 +178,7 @@ describe('RegularFacet', () => {
     expect(input.value).toBe('rip');
     await waitFor(() => {
       const searches = actions.filter((a) => a.name === 'search');
-      expect(searches.map((a) => a.context)).toEqual([{query: 'ri'}, {query: 'rip'}]);
+      expect(searches.map((a) => a.context)).toEqual([{query: 'rip'}]);
     });
   });
 
@@ -245,6 +201,59 @@ describe('RegularFacet', () => {
     fireEvent.click(screen.getByTestId('facet-search-result-Rip Curl'));
     await waitFor(() =>
       expect(lastAction()).toMatchObject({name: 'toggleSelect', context: {value: 'Rip Curl'}})
+    );
+  });
+
+  it('bolds the search query in search results only, inside words too', async () => {
+    mountFacet({
+      ...stateWithValues,
+      facetSearch: {
+        query: 'ip',
+        canShowMoreResults: false,
+        results: [{value: 'Rip Curl', numberOfResults: 3}],
+      },
+    });
+
+    await waitFor(() => expect(screen.getByTestId('facet-search-result-Rip Curl')).toBeDefined());
+    expect(bolded(screen.getByTestId('facet-search-result-Rip Curl').closest('label'))).toEqual([
+      'ip',
+    ]);
+  });
+
+  it('checks a facet-search result at once, until the backend answers', async () => {
+    let answer!: () => void;
+    const pending = new Promise<void>((resolve) => (answer = resolve));
+    mountFacet(
+      {
+        ...stateWithValues,
+        facetSearch: {
+          query: 'rip',
+          canShowMoreResults: false,
+          results: [{value: 'Rip Curl', numberOfResults: 3}],
+        },
+      },
+      () => pending
+    );
+
+    await waitFor(() => expect(screen.getByTestId('facet-search-result-Rip Curl')).toBeDefined());
+    const result = screen.getByTestId('facet-search-result-Rip Curl') as HTMLInputElement;
+    expect(result.checked).toBe(false);
+
+    fireEvent.click(result);
+    await waitFor(() =>
+      expect((screen.getByTestId('facet-search-result-Rip Curl') as HTMLInputElement).checked).toBe(
+        true
+      )
+    );
+
+    await act(async () => {
+      answer();
+      await Promise.resolve();
+    });
+    await waitFor(() =>
+      expect((screen.getByTestId('facet-search-result-Rip Curl') as HTMLInputElement).checked).toBe(
+        false
+      )
     );
   });
 
@@ -412,122 +421,23 @@ describe('NumericFacet', () => {
     answer();
   });
 
-  describe('replacing queued range selections', () => {
-    const fourRanges: NumericFacetProps = {
-      ...stateWithRanges,
-      values: [
-        {start: 0, end: 100, numberOfResults: 5, state: 'idle'},
-        {start: 100, end: 200, numberOfResults: 4, state: 'idle'},
-        {start: 200, end: 300, numberOfResults: 3, state: 'idle'},
-        {start: 300, end: 400, numberOfResults: 2, state: 'idle'},
-      ],
-    };
+  it('keeps the clicked range selected until the backend has answered the click', async () => {
+    const answers: Array<() => void> = [];
+    mountFacet(stateWithRanges, () => new Promise<void>((resolve) => answers.push(resolve)));
+    const pressed = () =>
+      screen.getByText('$100 - $200').closest('button')!.getAttribute('aria-pressed');
 
-    function mountHeld(state: NumericFacetProps) {
-      const answers: Array<() => void> = [];
-      const view = mountFacet(state, () => new Promise<void>((resolve) => answers.push(resolve)));
-      return {
-        ...view,
-        starts: () => view.actions.map((action) => action.context?.['start']),
-        release: async () => {
-          await act(async () => {
-            answers.shift()?.();
-            await Promise.resolve();
-          });
-        },
-      };
-    }
+    await waitFor(() => expect(screen.getByText('$100 - $200')).toBeDefined());
+    fireEvent.click(screen.getByText('$100 - $200'));
+    await waitFor(() => expect(answers).toHaveLength(1));
+    await waitFor(() => expect(pressed()).toBe('true'));
 
-    const clickRange = (label: string) =>
-      fireEvent.click(screen.getByText(label).closest('button')!);
-
-    it('sends only the last range of a descent, the first being already in flight', async () => {
-      const view = mountHeld(fourRanges);
-      await waitFor(() => expect(screen.getByText('$0 - $100')).toBeDefined());
-
-      clickRange('$0 - $100');
-      clickRange('$100 - $200');
-      clickRange('$200 - $300');
-      clickRange('$300 - $400');
-
-      expect(view.starts()).toEqual([0]);
-      await view.release();
-
-      // Each queued selection is an absolute write of the same slot, so only the last survives.
-      await waitFor(() => expect(view.starts()).toEqual([0, 300]));
+    await act(async () => {
+      answers[0]!();
+      await Promise.resolve();
     });
 
-    it('sends nothing for a gesture the dispatch in flight already satisfies', async () => {
-      const view = mountHeld(fourRanges);
-      await waitFor(() => expect(screen.getByText('$0 - $100')).toBeDefined());
-
-      clickRange('$0 - $100');
-      clickRange('$100 - $200');
-      clickRange('$200 - $300');
-      // The in-flight dispatch already produces this state, so neither queued gesture goes out.
-      clickRange('$0 - $100');
-
-      // Still shown: held until the in-flight dispatch is answered.
-      await waitFor(() =>
-        expect(screen.getByText('$0 - $100').closest('button')!.getAttribute('aria-pressed')).toBe(
-          'true'
-        )
-      );
-      await view.release();
-
-      await waitFor(() => expect(view.starts()).toEqual([0]));
-    });
-
-    it('keeps a queued gesture whose target the in-flight dispatch leaves in another state', async () => {
-      const view = mountHeld(fourRanges);
-      await waitFor(() => expect(screen.getByText('$0 - $100')).toBeDefined());
-
-      clickRange('$0 - $100');
-      clickRange('$100 - $200');
-      // `toggleSingleSelect` flips: selected in the view but idle after the in-flight dispatch.
-      clickRange('$100 - $200');
-
-      await view.release();
-      await view.release();
-      await view.release();
-
-      await waitFor(() => expect(view.starts()).toEqual([0, 100, 100]));
-    });
-
-    it('sends one request for a range clicked three times over', async () => {
-      const view = mountHeld(fourRanges);
-      await waitFor(() => expect(screen.getByText('$0 - $100')).toBeDefined());
-
-      // The third flip matches the in-flight first, so the second and third cancel out.
-      clickRange('$0 - $100');
-      clickRange('$0 - $100');
-      clickRange('$0 - $100');
-
-      await waitFor(() =>
-        expect(screen.getByText('$0 - $100').closest('button')!.getAttribute('aria-pressed')).toBe(
-          'true'
-        )
-      );
-      await view.release();
-
-      await waitFor(() => expect(view.starts()).toEqual([0]));
-    });
-
-    it('lets a later range supersede a queued custom-range apply, like any slot gesture', async () => {
-      // The apply is an absolute write of the slot, like `toggleSingleSelect`.
-      const view = mountHeld(fourRanges);
-      await waitFor(() => expect(screen.getByLabelText('Min')).toBeDefined());
-
-      clickRange('$0 - $100');
-      fireEvent.change(screen.getByLabelText('Min'), {target: {value: '150'}});
-      fireEvent.change(screen.getByLabelText('Max'), {target: {value: '250'}});
-      fireEvent.click(screen.getByText('Apply'));
-      clickRange('$300 - $400');
-
-      await view.release();
-
-      await waitFor(() => expect(view.starts()).toEqual([0, 300]));
-    });
+    await waitFor(() => expect(pressed()).toBe('false'));
   });
 
   it('dispatches applyCustomRange with the entered numeric start/end on submit', async () => {
@@ -574,7 +484,7 @@ describe('NumericFacet', () => {
           {start: 100, end: 200, numberOfResults: 4, state: 'idle'},
         ],
       },
-      () => new Promise<void>(() => {})
+      holdOpen()
     );
 
     await waitFor(() => expect(screen.getByLabelText('Min')).toBeDefined());
@@ -599,24 +509,9 @@ describe('NumericFacet', () => {
     ).toBe(true);
   });
 
-  it('dims the custom-range inputs while the apply is in flight', async () => {
-    const {container} = mountFacet(stateWithRanges, () => new Promise<void>(() => {}));
-
-    await waitFor(() => expect(screen.getByLabelText('Min')).toBeDefined());
-    expect(container.querySelector('fieldset')!.hasAttribute('disabled')).toBe(false);
-
-    fireEvent.change(screen.getByLabelText('Min'), {target: {value: '50'}});
-    fireEvent.change(screen.getByLabelText('Max'), {target: {value: '150'}});
-    fireEvent.click(screen.getByText('Apply'));
-
-    await waitFor(() =>
-      expect(container.querySelector('fieldset')!.hasAttribute('disabled')).toBe(true)
-    );
-  });
-
   it('does not dim the custom-range inputs when toggling a listed range', async () => {
     // Held open, so a slot-wide pending signal would wrongly dim here.
-    const {container, lastAction} = mountFacet(stateWithRanges, () => new Promise<void>(() => {}));
+    const {container, lastAction} = mountFacet(stateWithRanges, holdOpen());
 
     await waitFor(() => expect(screen.getByText('$0 - $100')).toBeDefined());
     fireEvent.click(screen.getByText('$0 - $100'));
@@ -751,6 +646,25 @@ describe('CategoryFacet', () => {
       )
     );
     answer();
+  });
+
+  it('keeps the clicked child selected until the backend has answered the click', async () => {
+    const answers: Array<() => void> = [];
+    mountFacet(stateWithChildren, () => new Promise<void>((resolve) => answers.push(resolve)));
+    const selected = () =>
+      screen.getByTestId('facet-category-selected-ec_category').textContent ?? '';
+
+    await waitFor(() => expect(screen.getByText('Water Sports')).toBeDefined());
+    fireEvent.click(screen.getByText('Water Sports'));
+    await waitFor(() => expect(answers).toHaveLength(1));
+    await waitFor(() => expect(selected()).toContain('Water Sports'));
+
+    await act(async () => {
+      answers[0]!();
+      await Promise.resolve();
+    });
+
+    await waitFor(() => expect(selected()).not.toContain('Water Sports'));
   });
 
   it('dispatches clearSelectedPath when the "All Categories" back link is clicked', async () => {
@@ -901,6 +815,27 @@ describe('CategoryFacet', () => {
         context: {path: ['Sporting Goods', 'Water Sports', 'Wetsuits']},
       })
     );
+  });
+
+  it('bolds the search query in the value of search results, not in their path', async () => {
+    mountFacet({
+      ...stateWithChildren,
+      facetSearch: {
+        query: 'wet',
+        canShowMoreResults: false,
+        results: [
+          {
+            path: ['Sporting Goods', 'Wet Gear', 'Wetsuits'],
+            value: 'Wetsuits',
+            numberOfResults: 4,
+          },
+        ],
+      },
+    });
+
+    const testId = 'facet-search-result-Sporting Goods/Wet Gear/Wetsuits';
+    await waitFor(() => expect(screen.getByTestId(testId)).toBeDefined());
+    expect(bolded(screen.getByTestId(testId))).toEqual(['Wet']);
   });
 
   it('shows the parent path of search results that share a leaf value and selects each one by its own path', async () => {

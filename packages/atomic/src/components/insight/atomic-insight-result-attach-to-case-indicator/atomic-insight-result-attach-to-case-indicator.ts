@@ -14,6 +14,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import AttachIcon from '../../../images/attach.svg';
+import '@/src/components/common/atomic-icon/atomic-icon.js';
 
 /**
  * The `atomic-insight-result-attach-to-case-indicator` component can be included inside a result template to indicate whether a result is attached to the current case.

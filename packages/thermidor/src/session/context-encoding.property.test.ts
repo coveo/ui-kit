@@ -101,6 +101,9 @@ const baseConfig: SessionConfig = {
   contracts,
   organizationId: 'org-1',
   accessToken: 'token-1',
+  agentConfigurationId: 'agent-configuration-1',
+  trackingId: 'tracking-1',
+  initialize: false,
 };
 
 /** The commerce-context shape captured off the wire. */

@@ -5,6 +5,10 @@
  * subscriber exactly once per change.
  */
 
+import type {RendererStream} from './a2ui-v09-projection.js';
+import type {UnrecordedState} from './session-state.js';
+import type {A2uiState, ActionError, SessionInitialization, SessionRequest} from './types.js';
+
 /**
  * A function that removes a previously-registered store listener.
  */
@@ -19,6 +23,9 @@ export interface SessionStoreState<TTurn> {
    * The ordered turn history for the session.
    */
   turns: readonly TTurn[];
+
+  /** The run of the `initialize` action that opened the session, when it sent one. Persisted. */
+  initialization?: SessionInitialization;
 
   /**
    * The id of the currently active turn, or `undefined` when no turns exist.
@@ -36,11 +43,26 @@ export interface SessionStoreState<TTurn> {
    */
   sessionToken?: string;
 
+  /** Why the last component action failed, and which action it was. Runtime only: never serialized. */
+  actionError?: ActionError;
+
+  /** The request the session is sending, or `undefined` when idle. Runtime only: never serialized. */
+  request?: SessionRequest;
+
   /**
-   * Why the last action was dropped after the Gateway kept rejecting it as concurrent. Runtime
-   * only: never serialized.
+   * The validated data model of every surface, keyed by surface id, across every turn
+   * (ADR-018). Persisted.
    */
-  actionError?: string;
+  state?: A2uiState;
+
+  /** The writes of concurrent answers over `state` (ADR-020). Never recorded or serialized. */
+  unrecordedState?: UnrecordedState;
+
+  /**
+   * The session's renderer stream, which only grows. Runtime only: re-derived from the turns'
+   * activities on restore.
+   */
+  rendererStream?: RendererStream;
 }
 
 /**

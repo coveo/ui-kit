@@ -4,7 +4,7 @@ import {contextReducer} from '../../../features/commerce/context/context-slice.j
 import {
   pagePrincipalSelector,
   perPagePrincipalSelector,
-  totalEntriesPrincipalSelector,
+  totalProductsPrincipalSelector,
 } from '../../../features/commerce/pagination/pagination-selectors.js';
 import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema.js';
 import {activeParametersSelector} from '../../../features/commerce/parameters/parameters-selectors.js';
@@ -13,7 +13,7 @@ import * as ProductListingActions from '../../../features/commerce/product-listi
 import {
   errorSelector,
   isLoadingSelector,
-  numberOfProductsSelector,
+  numberOfProductsExcludingSpotlightsSelector,
   requestIdSelector,
   responseIdSelector,
 } from '../../../features/commerce/product-listing/product-listing-selectors.js';
@@ -62,8 +62,8 @@ describe('headless product-listing', () => {
       errorSelector,
       pageSelector: pagePrincipalSelector,
       perPageSelector: perPagePrincipalSelector,
-      totalEntriesSelector: totalEntriesPrincipalSelector,
-      numberOfProductsSelector,
+      totalProductsSelector: totalProductsPrincipalSelector,
+      numberOfProductsSelector: numberOfProductsExcludingSpotlightsSelector,
     });
   });
 

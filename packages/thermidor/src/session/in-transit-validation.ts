@@ -17,12 +17,10 @@
  */
 
 import type {ContractsSchema, ObjectSchema, ParsableSchema} from './contracts.js';
+import {SURFACE_ACTIVITY_KIND} from './fold.js';
 import {resolveOperation} from './resolve-operation.js';
 import {statePath} from './state-path.js';
 import type {Activity} from './types.js';
-
-/** Activity kind carrying A2-UI v1.0 messages (`createSurface`, `updateDataModel`, ...). */
-const A2UI_ACTIVITY_KIND = 'a2ui-surface';
 
 /**
  * A per-surface node-identity registry: for each `surfaceId`, the map from a
@@ -83,7 +81,7 @@ export function deriveNodeIdentityRegistry(activities: readonly Activity[]): Nod
   const registry: NodeIdentityRegistry = new Map();
 
   for (const activity of activities) {
-    if (activity.kind !== A2UI_ACTIVITY_KIND) {
+    if (activity.kind !== SURFACE_ACTIVITY_KIND) {
       continue;
     }
     const messages = activity.payload['messages'];

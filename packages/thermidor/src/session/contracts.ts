@@ -86,3 +86,23 @@ export interface ComponentContractSchema {
 export interface ContractsSchema {
   readonly options: readonly ComponentContractSchema[];
 }
+
+/**
+ * Action names by component, keyed by the `component` discriminant of a member of `TComponents`,
+ * such as the actions a consumer keeps in a list of its own. A member's action names are read from
+ * its `actions` object schema, unwrapped when optional; they are `string` when its type does not
+ * expose them, as for the structural {@link ContractsSchema} default.
+ */
+export type ComponentActionNames<TComponents extends ContractsSchema = ContractsSchema> = {
+  readonly [
+    TMember in TComponents['options'][number] as TMember['shape']['component']['value']
+  ]?: readonly (TMember extends {
+    readonly shape: {readonly actions?: infer TActions};
+  }
+    ? NonNullable<TActions> extends {unwrap(): {readonly shape: infer TShape}}
+      ? keyof TShape & string
+      : NonNullable<TActions> extends {readonly shape: infer TShape}
+        ? keyof TShape & string
+        : string
+    : string)[];
+};

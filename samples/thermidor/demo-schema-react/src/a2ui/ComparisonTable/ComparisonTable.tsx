@@ -1,7 +1,25 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {ComparisonAttribute, ComparisonProduct} from '@coveo/thermidor-schema';
 import {ComparisonTablePropsSchema} from '@coveo/thermidor-schema/zod3';
+import {
+  DEFAULT_MAX_LINKS,
+  RelatedDocumentList,
+  toLinkLimit,
+  visibleDocuments,
+} from '../RelatedDocuments/RelatedDocumentList.js';
 import styles from './ComparisonTable.module.css';
+
+export interface ComparisonTableOptions {
+  /**
+   * Most related documents each Additional information cell lists, in the order the agent sent
+   * them. Fractions round down; `0`, a negative number or `NaN` hides the row, and `Infinity` lists
+   * every document.
+   */
+  maxLinks?: number;
+}
+
+const comparisonTableApi = {name: 'ComparisonTable', schema: ComparisonTablePropsSchema};
+type ComparisonTableRender = Parameters<typeof createReactComponent<typeof comparisonTableApi>>[1];
 
 function formatPrice(price: number): string {
   return `$${price.toFixed(2)}`;
@@ -11,15 +29,13 @@ function formatPrice(price: number): string {
  * A2-UI component for the `comparison-table`. The generic binder resolves the heading, AI summary,
  * compared products, and attribute descriptors directly from `ComparisonTablePropsSchema` (bound to
  * the A2-UI data model) and renders the aligned comparison grid: a header row with each product's
- * image and name, a price row, and one row per attribute (excluding `brand`). Read-only: the
+ * image and name, a price row, one row per attribute (excluding `brand`), and an Additional
+ * information row with each product's related documents, omitted when none has any. Read-only: the
  * framing, products, and attributes are owned by the backend and delivered through the component's
  * `{ path }` bindings.
  */
-export const ComparisonTable = createReactComponent(
-  {
-    name: 'ComparisonTable',
-    schema: ComparisonTablePropsSchema,
-  },
+const renderComparisonTable =
+  (linkLimit: number): ComparisonTableRender =>
   ({props}) => {
     const heading = props.heading ?? '';
     const summary = props.summary ?? '';
@@ -29,6 +45,10 @@ export const ComparisonTable = createReactComponent(
     if (products.length === 0) {
       return null;
     }
+
+    const documentsByProduct = products.map((product: ComparisonProduct) =>
+      visibleDocuments(product.relatedDocuments, linkLimit)
+    );
 
     // Left label column plus one 1fr column per compared product, so the grid stays
     // aligned for any number of columns.
@@ -93,6 +113,26 @@ export const ComparisonTable = createReactComponent(
                     ))}
                   </div>
                 ))}
+              {documentsByProduct.some((documents) => documents.length > 0) && (
+                <div className={styles.row} role="row" style={{gridTemplateColumns}}>
+                  <div className={styles.labelCell} role="rowheader">
+                    Additional information
+                  </div>
+                  {products.map((product: ComparisonProduct, index: number) => (
+                    <div
+                      key={`documents-${product.productId}`}
+                      className={`${styles.valueCell} ${styles.documentsCell}`}
+                      role="cell"
+                    >
+                      {documentsByProduct[index].length > 0 ? (
+                        <RelatedDocumentList documents={documentsByProduct[index]} compact />
+                      ) : (
+                        '—'
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -107,5 +147,8 @@ export const ComparisonTable = createReactComponent(
         </div>
       </>
     );
-  }
-);
+  };
+
+export function createComparisonTable({maxLinks = DEFAULT_MAX_LINKS}: ComparisonTableOptions = {}) {
+  return createReactComponent(comparisonTableApi, renderComparisonTable(toLinkLimit(maxLinks)));
+}

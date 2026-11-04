@@ -18,10 +18,8 @@ function turn(
     input: overrides.input ?? {},
     status: overrides.status ?? 'complete',
     response: {
-      state: {},
       activities: [],
       surfaces: [],
-      a2uiMessages: [],
       ...overrides.response,
     },
     ...(overrides.error !== undefined ? {error: overrides.error} : {}),
@@ -47,7 +45,6 @@ describe('serializeSession', () => {
       status: 'error',
       error: 'boom',
       response: {
-        state: {},
         activities: [{id: 'a1', kind: 'k', replace: false, payload: {}}],
         surfaces: [],
       },
@@ -72,7 +69,6 @@ describe('serializeSession', () => {
     const withAgent = turn({
       id: 't1',
       response: {
-        state: {},
         activities: [],
         surfaces: [],
         agent: {messages: [{content: 'hi', role: 'assistant'}], reasoningSteps: []},
@@ -89,24 +85,19 @@ describe('serializeSession', () => {
     expect(result.turns[1].response.agent).toBeUndefined();
   });
 
-  it('persists response.state for the active turn only', () => {
-    const active = turn({id: 'active', response: {state: {a: 1}, activities: [], surfaces: []}});
-    const historical = turn({
-      id: 'old',
-      response: {state: {b: 2}, activities: [], surfaces: []},
-    });
+  it('persists the session state, keyed by surface', () => {
+    const result = serializeSession(
+      state({turns: [turn({id: 'old'}), turn({id: 'active'})], state: {s1: {a: 1}, s2: {b: 2}}})
+    );
 
-    const result = serializeSession(state({turns: [historical, active], activeTurnId: 'active'}));
-
-    expect(result.turns[0].response.state).toBeUndefined();
-    expect(result.turns[1].response.state).toEqual({a: 1});
+    expect(result.state).toEqual({s1: {a: 1}, s2: {b: 2}});
+    expect('state' in result.turns[0].response).toBe(false);
   });
 
   it('does not persist response.surfaces', () => {
     const t = turn({
       id: 't1',
       response: {
-        state: {},
         activities: [],
         surfaces: [{surfaceId: 's', rootComponentType: 'CommerceSearch', isLoading: false}],
       },
@@ -132,13 +123,13 @@ describe('restoreSession', () => {
     expect(() => restoreSession(bad)).toThrow(UnsupportedSerializedSessionVersionError);
   });
 
-  it('round-trips the active turn state and continuity keys', () => {
-    const active = turn({id: 'active', response: {state: {a: 1}, activities: [], surfaces: []}});
+  it('round-trips the session state and continuity keys', () => {
     const original = state({
-      turns: [active],
+      turns: [turn({id: 'active'})],
       activeTurnId: 'active',
       sessionId: 'sid',
       sessionToken: 'tok',
+      state: {s1: {a: 1}},
     });
 
     const restored = restoreSession(serializeSession(original));
@@ -146,22 +137,47 @@ describe('restoreSession', () => {
     expect(restored.activeTurnId).toBe('active');
     expect(restored.sessionId).toBe('sid');
     expect(restored.sessionToken).toBe('tok');
-    expect(restored.turns[0].response.state).toEqual({a: 1});
+    expect(restored.state).toEqual({s1: {a: 1}});
   });
 
-  it('yields an empty state for non-active turns', () => {
-    const active = turn({id: 'active', response: {state: {a: 1}, activities: [], surfaces: []}});
-    const historical = turn({
-      id: 'old',
-      response: {state: {b: 2}, activities: [], surfaces: []},
+  it('re-derives the renderer stream from every turn, in order', () => {
+    const surfaceActivity = (id: string, messages: unknown[]) => ({
+      id,
+      kind: 'a2ui-surface',
+      replace: false,
+      payload: {messages},
     });
-
     const restored = restoreSession(
-      serializeSession(state({turns: [historical, active], activeTurnId: 'active'}))
+      serializeSession(
+        state({
+          turns: [
+            turn({
+              id: 't1',
+              response: {
+                activities: [
+                  surfaceActivity('a1', [
+                    {version: 'v1.0', createSurface: {surfaceId: 's1', catalogId: 'c'}},
+                  ]),
+                ],
+              },
+            }),
+            turn({
+              id: 't2',
+              response: {
+                activities: [
+                  surfaceActivity('a2', [{version: 'v1.0', deleteSurface: {surfaceId: 's1'}}]),
+                ],
+              },
+            }),
+          ],
+        })
+      )
     );
 
-    expect(restored.turns[0].response.state).toEqual({});
-    expect(restored.turns[1].response.state).toEqual({a: 1});
+    expect(restored.rendererStream?.messages).toEqual([
+      {version: 'v0.9', createSurface: {surfaceId: 's1', catalogId: 'c'}},
+      {version: 'v0.9', deleteSurface: {surfaceId: 's1'}},
+    ]);
   });
 
   it('downgrades a streaming turn to error while preserving its partial response', () => {
@@ -169,7 +185,6 @@ describe('restoreSession', () => {
       id: 't1',
       status: 'streaming',
       response: {
-        state: {a: 1},
         activities: [{id: 'a1', kind: 'k', replace: false, payload: {x: 1}}],
         surfaces: [],
         agent: {messages: [{content: 'partial', role: 'assistant'}], reasoningSteps: []},
@@ -195,7 +210,6 @@ describe('restoreSession', () => {
     const t = turn({
       id: 't1',
       response: {
-        state: {},
         activities: [],
         surfaces: [{surfaceId: 's', rootComponentType: 'CommerceSearch', isLoading: false}],
       },

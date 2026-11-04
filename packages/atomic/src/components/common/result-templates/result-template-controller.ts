@@ -4,6 +4,7 @@ import {
   BaseTemplateController,
   type TemplateContent,
 } from '@/src/components/common/template-controller/base-template-controller';
+import '@/src/components/search/atomic-result-link/atomic-result-link.js';
 
 type ResultTemplateHost = ReactiveControllerHost & HTMLElement & {error?: Error};
 

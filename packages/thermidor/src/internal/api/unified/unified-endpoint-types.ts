@@ -2,14 +2,11 @@ import type {CommerceCartItem} from '@/src/internal/context/commerce-context.js'
 
 // ─── Commerce agent input ──────────────────────────────────────────────────
 
-export interface CommerceRequestModel {
-  trackingId: string;
-  language: string;
-  country: string;
-  currency: string;
+/** The request keys the session builds itself on every request. */
+export type ClientOwnedRequestFields = {
   clientId?: string;
   message: string | null;
-  action: A2uiAction | null;
+  action: A2uiAction | InitializeAction | null;
   conversationSessionId?: string;
   conversationToken?: string;
   context: CommerceRequestContext;
@@ -19,7 +16,28 @@ export interface CommerceRequestModel {
    * "no commerce context" from a present-but-empty context.
    */
   pinnedProducts?: string[];
-}
+};
+
+/**
+ * The fields that scope every request of a session. The public `createSession` sends
+ * both ids; the private `createPrivateSession` sends whichever fields are set.
+ */
+export type RequestScopeFields = {
+  agentConfigurationId?: string;
+  trackingId?: string;
+  language?: string;
+  country?: string;
+  currency?: string;
+};
+
+/** The request of the public `createSession`. */
+export type CommerceRequestModel = ClientOwnedRequestFields & {
+  agentConfigurationId: string;
+  trackingId: string;
+};
+
+/** Any converse request, from the public or the private entry point. */
+export type ConverseRequestModel = ClientOwnedRequestFields & RequestScopeFields;
 
 interface CommerceRequestContext {
   view: {url: string | null; referrer: string | null};
@@ -44,7 +62,12 @@ export interface A2uiAction<TContext = unknown> {
   name: string;
   sourceComponentId: string;
   timestamp: string;
-  actionId: string | null;
-  wantResponse: boolean;
   context: TContext;
+}
+
+/** Opens the session. No component exists yet, so it names no surface or source component. */
+export interface InitializeAction {
+  name: 'initialize';
+  timestamp: string;
+  context: Record<string, never>;
 }
