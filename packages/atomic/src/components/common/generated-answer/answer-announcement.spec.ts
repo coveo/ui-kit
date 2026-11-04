@@ -54,10 +54,18 @@ describe('answer-announcement', () => {
       );
 
       expect(announcement.assertive).toBe(false);
-      expect(announcement.message).toContain('Generated answer:');
+      expect(announcement.message).toContain('AI-generated answer:');
       expect(announcement.message).toContain('Some bold text.');
       expect(announcement.message).not.toContain('**');
       expect(announcement.message).not.toContain('##');
+    });
+
+    it('should append the disclaimer announcement once generation completes', () => {
+      expect(getAnswerAnnouncement(buildAnswer({answer: 'Some text.'}), i18n)).toEqual({
+        message:
+          'AI-generated answer: Some text. AI-generated content may contain errors. Verify important information.',
+        assertive: false,
+      });
     });
 
     it('should announce the generic error assertively', () => {
