@@ -78,6 +78,15 @@ run(
   ['//#generate:catalog-info']
 );
 run(
+  'skips tasks for packages missing from the workspace',
+  {
+    TASKS: 'build',
+    PACKAGES: '',
+    AFFECTED_TASKS: '["@coveo/atomic#build", "@samples/does-not-exist#build"]',
+  },
+  ['@coveo/atomic#build']
+);
+run(
   'does not resolve an explicit empty affected list',
   {
     TASKS: 'build',
