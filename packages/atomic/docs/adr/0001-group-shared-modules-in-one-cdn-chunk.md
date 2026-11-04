@@ -67,7 +67,7 @@ The decision is how to group the shared code so that pages fetch far fewer files
 
 Every option was built from the same commit, with #8681's one-chunk-per-dayjs-locale group, and measured the same way:
 
-- Pages were served over HTTP/2 with gzip from a local server. The same server replayed recorded API answers, so only the Atomic files differed between options.
+- Pages were served over HTTP/2 with gzip from a local server meant to replay recorded API answers, so that only the Atomic files differ between options. The commerce page did replay them. The search-box, typical and rich pages queried the live Search API on every load, because their initialization script set `proxyBaseUrl` at the root of `initialize()`, which is the analytics proxy, instead of `search: {proxyBaseUrl}` (found on 2026-11-03). The live round trip was the same for every option and adds about 90 ms to each mobile load of those pages (typical page with option C, N = 10: 3,742 ms live against 3,648 ms replayed, five loads each), so the comparisons stand; the script is fixed.
 - Every load started with an empty cache.
 - Two network profiles were used. Mobile is Lighthouse's throttling: 150 ms latency, 1.6 Mbps and a 4× slower CPU. Desktop is 100 ms latency and 5 Mbps.
 - Each figure is the median of five mobile loads or three desktop loads, interleaved across options.
