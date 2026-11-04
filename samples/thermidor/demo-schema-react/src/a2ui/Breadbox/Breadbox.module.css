@@ -60,18 +60,6 @@
   margin-left: var(--space-1);
 }
 
-.excluded .label,
-.excluded .value {
-  color: var(--color-error-text);
-  text-decoration: line-through;
-}
-
-.excluded:hover,
-.excluded:focus-visible {
-  border-color: var(--color-error);
-  background: var(--color-surface);
-}
-
 .clearIcon {
   flex-shrink: 0;
   margin-top: 1px;

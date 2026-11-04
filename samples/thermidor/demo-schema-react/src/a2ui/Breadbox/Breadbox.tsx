@@ -42,11 +42,9 @@ export const Breadbox = createReactComponent(
               <li key={`${facet.facetId}/${value.key}`}>
                 <button
                   type="button"
-                  className={
-                    value.excluded ? `${styles.breadcrumb} ${styles.excluded}` : styles.breadcrumb
-                  }
+                  className={styles.breadcrumb}
                   title={title}
-                  aria-label={`Remove ${value.excluded ? 'exclusion' : 'inclusion'} filter on ${title}`}
+                  aria-label={`Remove filter on ${title}`}
                   onClick={() => {
                     keepFocusAfterRemoving(index);
                     deselect(value.payload);
