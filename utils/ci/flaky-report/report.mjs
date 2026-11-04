@@ -35,6 +35,22 @@ function getOrCreate(map, key, create) {
   return map.get(key);
 }
 
+function newEntry({project, run, record, test}) {
+  return {
+    suite: record.suite,
+    project,
+    file: test.file,
+    line: test.line,
+    title: test.title,
+    flakyRuns: new Set(),
+    failedMergeQueueRuns: new Set(),
+    failedPullRequests: new Set(),
+    lastSeen: run,
+    // Records saved before they held the checked-out commit fall back to the run's head.
+    sha: record.sha ?? run.headSha,
+  };
+}
+
 // The link points at the commit the last run tested, so it takes that run's line too.
 function markSeen(entry, {run, record, test}) {
   if (run.createdAt > entry.lastSeen.createdAt) {
@@ -85,8 +101,9 @@ function runKind(jobCauses) {
  * - `runCounts`: all runs in the window, and the merge-queue runs among them.
  * - `suites`: for Atomic, Quantic and the other suites, the runs that executed them, and how many
  *   of those had a test that passed only on retry.
- * - `tests`: one row per flaky test and Playwright project, a test that passed on a retry or failed
- *   every retry in the merge queue. Each row has its flaky runs, the merge-queue runs and, for a
+ * - `tests`: one row per flaky test and Playwright project: a test that passed on a retry, failed
+ *   every retry in the merge queue, or failed every retry in a pull request while it passed on a
+ *   retry in another project or suite. Each row has its flaky runs, the merge-queue runs and, for a
  *   test that passed on a retry, the pull requests where it failed every retry, the IDs of its flaky
  *   and merge-queue runs, and the last run that saw it. Rows rank by flaky runs plus three per
  *   merge-queue run or pull request where the test failed every retry.
@@ -122,25 +139,13 @@ export function buildModel({window, runs, records, recoveries, mergeQueueFailure
       const key = testKey(record.suite, project, test);
       // Its cause depends on what the other runs saw of that test, so it is decided once all are read.
       if (test.outcome === 'failed' && run.event !== 'merge_group') {
-        pullRequestFailures.push({key, run, record, test});
+        pullRequestFailures.push({key, project, run, record, test});
         continue;
       }
       if (test.outcome === 'failed') {
         getOrCreate(failedFilesByMergeQueueRun, run.id, () => new Set()).add(fileStem(test.file));
       }
-      const entry = getOrCreate(tests, key, () => ({
-        suite: record.suite,
-        project,
-        file: test.file,
-        line: test.line,
-        title: test.title,
-        flakyRuns: new Set(),
-        failedMergeQueueRuns: new Set(),
-        failedPullRequests: new Set(),
-        lastSeen: run,
-        // Records saved before they held the checked-out commit fall back to the run's head.
-        sha: record.sha ?? run.headSha,
-      }));
+      const entry = getOrCreate(tests, key, () => newEntry({project, run, record, test}));
       (test.outcome === 'flaky' ? entry.flakyRuns : entry.failedMergeQueueRuns).add(run.id);
       markSeen(entry, {run, record, test});
     }
@@ -169,13 +174,13 @@ export function buildModel({window, runs, records, recoveries, mergeQueueFailure
         ? 'mergeQueue'
         : 'pullRequest';
     const seen = pullRequestsByCause.get(cause);
-    seen.pullRequests.add(run.headBranch);
+    seen.pullRequests.add(run.pullRequest);
     if (!seen.latest || run.createdAt > seen.latest.createdAt) {
       seen.latest = run;
     }
-    const entry = tests.get(failure.key);
-    if (cause === 'flaky' && entry) {
-      entry.failedPullRequests.add(run.headBranch);
+    if (cause === 'flaky') {
+      const entry = getOrCreate(tests, failure.key, () => newEntry(failure));
+      entry.failedPullRequests.add(run.pullRequest);
       markSeen(entry, failure);
     }
   }
@@ -189,7 +194,7 @@ export function buildModel({window, runs, records, recoveries, mergeQueueFailure
 
   const score = (row) =>
     row.flakyRuns + FAILURE_WEIGHT * (row.failedInPullRequests + row.failedInMergeQueue);
-  const testRows = entries
+  const testRows = [...tests.values()]
     .map((entry) => ({
       suite: entry.suite,
       project: entry.project,
@@ -273,8 +278,10 @@ export function buildSnapshot(model, {sha, generatedAt} = {}) {
     week: {start: model.window.start, end: model.window.end},
     runCounts: {total: model.runCounts.total, mergeQueue: model.runCounts.mergeQueue},
     suites: model.suites.map(({id, runs, flakyRuns}) => ({id, runs, flakyRuns})),
-    tests: model.tests.map(
-      ({suite, project, file, title, flakyRuns, failedInMergeQueue, runIds}) => ({
+    // Schema 1 has no pull-request count, so a row known only from pull requests stays out.
+    tests: model.tests
+      .filter(({runIds}) => runIds.length > 0)
+      .map(({suite, project, file, title, flakyRuns, failedInMergeQueue, runIds}) => ({
         suite,
         group: suiteGroup(suite),
         project,
@@ -283,8 +290,7 @@ export function buildSnapshot(model, {sha, generatedAt} = {}) {
         flakyRuns,
         failedInMergeQueue,
         runIds,
-      })
-    ),
+      })),
     mergeQueueCauses: model.mergeQueueCauses.map(({cause, kind, runs}) => ({
       cause,
       kind,

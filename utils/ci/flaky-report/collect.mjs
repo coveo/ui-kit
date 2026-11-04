@@ -39,7 +39,9 @@ function toRun(run) {
     conclusion: run.conclusion,
     createdAt: run.created_at,
     headSha: run.head_sha,
-    headBranch: run.head_branch,
+    // A fork's pull request comes without its number, so its repository and branch stand in.
+    pullRequest:
+      run.pull_requests?.[0]?.number ?? `${run.head_repository?.full_name}:${run.head_branch}`,
     attempts: run.run_attempt,
   };
 }
