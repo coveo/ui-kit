@@ -1225,6 +1225,22 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
       }
       return issueConcurrentAction(recovered, concurrent.cache);
     }
+    // A follow-up clicked while an answer the endpoint takes messages beside streams is added to
+    // that answer in the follow-up's words, like a typed message, instead of being withheld.
+    const answerTurnId =
+      current.request && current.request.kind !== 'initialize' ? current.request.turnId : undefined;
+    const followUpText = (recovered.context as {text?: unknown} | undefined)?.text;
+    if (
+      opensTurn &&
+      config.actionsDuringAnswer &&
+      isAnswerStreaming(current) &&
+      answerTurnId !== undefined &&
+      typeof followUpText === 'string' &&
+      followUpText.trim() &&
+      hasValidPayload(recovered)
+    ) {
+      return addToAnswer(answerTurnId, followUpText);
+    }
     const {activeTurnId, initialization} = current;
     if (!opensTurn && !activeTurnId && !initialization) {
       return withhold();

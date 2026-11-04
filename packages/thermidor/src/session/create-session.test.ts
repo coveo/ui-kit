@@ -75,7 +75,9 @@ const NextActionsBarSchema = z.strictObject({
   component: z.literal('NextActionsBar'),
   actions: z
     .strictObject({
-      selectAction: z.strictObject({payload: z.strictObject({actionId: z.string()})}),
+      selectAction: z.strictObject({
+        payload: z.strictObject({actionId: z.string(), text: z.string().optional()}),
+      }),
     })
     .optional(),
 });
@@ -1408,6 +1410,53 @@ describe('createSession lifecycle', () => {
       await sent;
 
       expect(session.turns).toHaveLength(1);
+    });
+
+    it('adds a follow-up clicked during an answer to that answer, in its words', async () => {
+      const session = createSession({...baseConfig, actionsDuringAnswer: true});
+      await answeredPrompt(session);
+      const answer = queueStream();
+      const answerTurn = session.dispatchAction({
+        name: 'submitPrompt',
+        payload: {prompt: 'kayaks for a family'},
+      });
+      await answer.opened;
+
+      const reply = queueStream();
+      const sent = session.dispatchAction({
+        userAction: {
+          ...followUp.userAction,
+          context: {actionId: 'more-jackets', text: 'Show more life jackets'},
+        },
+      });
+      await reply.opened;
+      const request = callMock.mock.calls[2][0] as {queuedMessageId?: string};
+      reply.emit({
+        type: 'CUSTOM',
+        name: 'message_queued',
+        value: {id: request.queuedMessageId, queued: true},
+      });
+      reply.emit({type: 'RUN_FINISHED'});
+      reply.close();
+      await sent;
+
+      expect(callMock.mock.calls[2][0]).toMatchObject({
+        message: 'Show more life jackets',
+        action: null,
+        queuedMessageId: expect.any(String),
+      });
+      expect(session.turns).toHaveLength(2);
+      expect(session.turns[1].addedMessages).toEqual([
+        {id: request.queuedMessageId, text: 'Show more life jackets', status: 'waiting'},
+      ]);
+      answer.emit({
+        type: 'CUSTOM',
+        name: 'queued_message_applied',
+        value: {id: request.queuedMessageId},
+      });
+      answer.emit({type: 'RUN_FINISHED'});
+      answer.close();
+      await answerTurn;
     });
 
     it('opens a new streaming turn that records the action', async () => {
