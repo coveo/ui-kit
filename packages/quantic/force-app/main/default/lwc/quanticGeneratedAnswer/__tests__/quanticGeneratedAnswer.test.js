@@ -608,13 +608,9 @@ describe('c-quantic-generated-answer', () => {
             createTestComponent(defaultOptions, [disclaimerSlotContent]);
             await flushPromises();
 
-            const [[onGeneratedAnswerStateChange]] =
-              functionsMocks.generatedAnswerStateSubscriber.mock.calls;
-            onGeneratedAnswerStateChange();
-
-            expect(getDispatchedMessages()).toContain(
-              `${exampleAnswerGeneratedMessage} ${customDisclaimer}`
-            );
+            expect(getDispatchedMessages()).toEqual([
+              `${exampleAnswerGeneratedMessage} ${customDisclaimer}`,
+            ]);
           });
         });
       });

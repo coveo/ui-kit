@@ -162,6 +162,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   _maxCollapsedHeight = DEFAULT_COLLAPSED_HEIGHT;
   /** @type {number} */
   generatedAnswerHeight = 0;
+  /** @type {boolean} */
+  isStatusAnnouncementPending = false;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -178,6 +180,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   renderedCallback() {
+    if (this.isStatusAnnouncementPending) {
+      this.isStatusAnnouncementPending = false;
+      this.ariaLiveMessage.dispatchMessage(this.getGeneratedAnswerStatus());
+    }
     initializeWithHeadless(this, this.engineId, this.initialize);
     if (this.isCollapsibleEnabled) {
       this._exceedsMaximumHeight = this.isMaximumHeightExceeded();
@@ -243,7 +249,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   updateState() {
     this.state = this.generatedAnswer.state;
-    this.ariaLiveMessage.dispatchMessage(this.getGeneratedAnswerStatus());
+    this.isStatusAnnouncementPending = true;
 
     if (this.isCollapsibleEnabled) {
       this.updateGeneratedAnswerCSSVariables();
