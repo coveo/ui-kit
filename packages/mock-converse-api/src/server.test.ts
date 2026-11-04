@@ -146,7 +146,7 @@ describe('createMockConverseServer', () => {
     });
 
     expect(page.body).toContain(
-      '"correction":{"originalQuery":"water sprots","cause":"correction"}'
+      '"correction":{"originalQuery":"water sprots","cause":"correction","canOverride":false}'
     );
   });
 

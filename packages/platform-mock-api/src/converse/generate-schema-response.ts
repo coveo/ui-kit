@@ -33,12 +33,20 @@ const SCHEMA_PROMPT_TEMPLATE_MAP: ReadonlyArray<SchemaPromptMapping> = [
   {
     prompt: 'water sprots',
     buildEvents: () =>
-      buildWaterSportsInitialEvents({originalQuery: 'water sprots', cause: 'correction'}),
+      buildWaterSportsInitialEvents({
+        originalQuery: 'water sprots',
+        cause: 'correction',
+        canOverride: false,
+      }),
   },
   {
     prompt: 'swim gear',
     buildEvents: () =>
-      buildWaterSportsInitialEvents({originalQuery: 'swim gear', cause: 'trigger'}),
+      buildWaterSportsInitialEvents({
+        originalQuery: 'swim gear',
+        cause: 'trigger',
+        canOverride: true,
+      }),
   },
   {
     prompt: 'i like cold-water surfing. compare wetsuits for it',

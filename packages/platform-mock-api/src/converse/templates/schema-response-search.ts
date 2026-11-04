@@ -700,6 +700,7 @@ interface PriceRange {
 interface QueryCorrection {
   originalQuery: string;
   cause: 'correction' | 'trigger';
+  canOverride: boolean;
 }
 
 interface SearchViewState {
@@ -1655,17 +1656,14 @@ function deriveBreadboxViewState(action: {name: string; context: Record<string, 
   }
 }
 
-// Searches the shopper's query as typed: no query trigger replaces it again. Like the Commerce API,
-// which corrects a misspelled query on every search, the mock ignores the override of a correction.
+// Searches the shopper's query as typed when the correction allows it, as the gateway does.
 function deriveQuerySummaryViewState(action: {
   name: string;
   context: Record<string, unknown>;
 }): void {
-  if (action.name === 'overrideCorrection' && currentView.correction?.cause === 'trigger') {
-    currentView = {
-      ...DEFAULT_VIEW,
-      query: String(action.context.originalQuery ?? currentView.query),
-    };
+  const correction = currentView.correction;
+  if (action.name === 'overrideCorrection' && correction?.canOverride) {
+    currentView = {...DEFAULT_VIEW, query: correction.originalQuery};
   }
 }
 
