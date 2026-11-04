@@ -10,7 +10,14 @@ import {AddToCartButton} from './a2ui/AddToCartButton/AddToCartButton.js';
 import {createStorefrontCatalog} from './a2ui/catalog.js';
 import {SessionInspector} from './components/SessionInspector.js';
 import {TopBar} from './components/TopBar.js';
-import {visitAssistant, visitHome, visitListing, visitSearch, type Visit} from './navigation.js';
+import {
+  threadOf,
+  visitAssistant,
+  visitHome,
+  visitListing,
+  visitSearch,
+  type Visit,
+} from './navigation.js';
 import {AssistantPage} from './pages/AssistantPage.js';
 import {HomePage} from './pages/HomePage.js';
 import {ListingPage} from './pages/ListingPage.js';
@@ -19,8 +26,10 @@ import {
   useCart,
   useSessionSnapshot,
   useStorefrontSend,
+  useViewSurfaces,
   type StorefrontView,
 } from './session/storefront-session.js';
+import {ASSISTANT_VIEW, drawsSearch, shopperText} from './views/view-surfaces.js';
 
 const catalog = createStorefrontCatalog();
 
@@ -33,8 +42,9 @@ const PAGE_VIEWS: Record<Visit['page'], StorefrontView> = {
 };
 
 /**
- * `NextActionsBar` follow-ups ask for a new answer: on the assistant page they continue its
- * conversation, elsewhere they open a new assistant visit.
+ * `NextActionsBar` follow-ups ask for a new answer: in the assistant's conversation, on the
+ * assistant page or in a panel, they are sent there, on the page that stays; elsewhere they open
+ * a new assistant visit.
  */
 const FOLLOW_UP_ACTION = 'selectAction';
 
@@ -46,28 +56,80 @@ export function StorefrontApp() {
   const {sendPrompt, sendAction} = useStorefrontSend();
   const {a2uiMessages, request} = useSessionSnapshot();
   const {cart} = useCart();
-  const [visit, setVisit] = useState<Visit>(visitHome);
+  const viewSurfaces = useViewSurfaces();
+  // The pages the shopper went through, the current one last: Back returns to the one before.
+  const [history, setHistory] = useState<readonly Visit[]>(() => [visitHome()]);
+  const visit = history[history.length - 1];
+  // The conversation of every assistant and search visit, which outlives the history.
+  const visitThreads = useRef(new Map<number, number>());
+
+  const navigate = useCallback((next: Visit, {replace = false} = {}) => {
+    const thread = threadOf(next);
+    if (thread !== undefined) {
+      visitThreads.current.set(next.id, thread);
+    }
+    setHistory((pages) => [...(replace ? pages.slice(0, -1) : pages), next]);
+  }, []);
+  const goBack = useCallback(() => setHistory((pages) => pages.slice(0, -1)), []);
 
   const visitRef = useRef(visit);
   visitRef.current = visit;
+  const viewSurfacesRef = useRef(viewSurfaces);
+  viewSurfacesRef.current = viewSurfaces;
 
-  // The assistant and search pages send their prompt once per visit. StrictMode runs this effect
-  // twice; the visit id keeps the second run from sending again. The home page has no prompt to
-  // send, and listing pages have no view id in the published contract, so they send nothing.
-  const sentVisitRef = useRef<number | null>(null);
+  // A new page opens at its top, not where the chat before it was scrolled to.
   useEffect(() => {
-    if (sentVisitRef.current === visit.id) {
+    document.documentElement.scrollTop = 0;
+  }, [visit.id]);
+
+  // The assistant and search pages send their prompt once per visit, and not again when Back
+  // returns to them. StrictMode runs this effect twice; the visit id keeps the second run from
+  // sending again. A search page that shows a conversation turn's search sends nothing, nor does
+  // the home page, which has no prompt, and listing pages have no view id in the published
+  // contract.
+  const sentVisits = useRef(new Set<number>());
+  useEffect(() => {
+    if (sentVisits.current.has(visit.id)) {
       return;
     }
-    sentVisitRef.current = visit.id;
+    sentVisits.current.add(visit.id);
     if (visit.page === 'assistant') {
       sendPrompt(PAGE_VIEWS.assistant, visit.prompt, visit.id);
-    } else if (visit.page === 'search') {
+    } else if (visit.page === 'search' && visit.openingTurnId === undefined) {
       sendPrompt(PAGE_VIEWS.search, visit.query, visit.id);
     }
   }, [visit, sendPrompt]);
 
-  const openAssistant = useCallback((prompt: string) => setVisit(visitAssistant(prompt)), []);
+  // A conversation turn that draws a search, such as a search option's, opens the search layout:
+  // its results on the left, the conversation going on in the chat panel. A search answering the
+  // page's own prompt takes the place of the assistant page, and Back skips it. Each turn opens its
+  // search once: Back to the assistant page stays there.
+  const openedSearches = useRef(new Set<string>());
+  useEffect(() => {
+    if (visit.page !== 'assistant') {
+      return;
+    }
+    const turns = viewSurfaces.turnsOfView({visitId: visit.id, view: ASSISTANT_VIEW});
+    const turn = turns.findLast(drawsSearch);
+    if (!turn || openedSearches.current.has(turn.id)) {
+      return;
+    }
+    openedSearches.current.add(turn.id);
+    navigate(visitSearch(shopperText(turn) ?? visit.prompt, visit.thread, turn.id), {
+      replace: turn === turns[0],
+    });
+  }, [visit, viewSurfaces, navigate]);
+
+  const showResults = useCallback(
+    (thread: number, turnId: string, query: string) => navigate(visitSearch(query, thread, turnId)),
+    [navigate]
+  );
+
+  // A follow-up continues the page's conversation on an assistant page.
+  const openAssistant = useCallback(
+    (prompt: string) => navigate(visitAssistant(prompt, threadOf(visitRef.current))),
+    [navigate]
+  );
 
   const handleAction = useCallback(
     (message: A2UIClientEventMessage) => {
@@ -75,19 +137,30 @@ export function StorefrontApp() {
       if (!userAction) {
         return;
       }
+      const page = visitRef.current;
+      // An action goes on the view that draws its surface: the search page's results or its chat
+      // panel, which share the visit. The conversation goes on where it is shown: an action of a
+      // turn asked on an earlier page of the conversation goes on this page.
+      const drawnBy = viewSurfacesRef.current.viewOfSurface(userAction.surfaceId);
+      const inConversation =
+        drawnBy?.view === PAGE_VIEWS.assistant &&
+        visitsOfThread(visitThreads.current, threadOf(page)).has(drawnBy.visitId);
+      const view =
+        drawnBy && !inConversation
+          ? drawnBy
+          : {visitId: page.id, view: drawnBy?.view ?? PAGE_VIEWS[page.page]};
       const text = userAction.context?.['text'];
-      const current = visitRef.current;
       if (userAction.name === FOLLOW_UP_ACTION && typeof text === 'string') {
-        if (current.page === 'assistant') {
-          sendPrompt(PAGE_VIEWS.assistant, text, current.id);
+        if (inConversation) {
+          sendPrompt(view.view, text, view.visitId);
         } else {
           openAssistant(text);
         }
         return;
       }
-      sendAction(PAGE_VIEWS[current.page], message as A2uiClientMessage, current.id);
+      sendAction(view.view, message as A2uiClientMessage, view.visitId);
     },
-    [sendAction, sendPrompt, openAssistant]
+    [sendPrompt, sendAction, openAssistant]
   );
 
   const addToCart = useCallback(
@@ -107,16 +180,23 @@ export function StorefrontApp() {
         <ThermidorA2UIStream messages={a2uiMessages}>
           <TopBar
             currentListing={visit.page === 'listing' ? visit.slug : undefined}
-            onHome={() => setVisit(visitHome())}
-            onListing={(slug) => setVisit(visitListing(slug))}
-            onSearch={(query, ai) => setVisit(ai ? visitAssistant(query) : visitSearch(query))}
+            onHome={() => navigate(visitHome())}
+            onListing={(slug) => navigate(visitListing(slug))}
+            onSearch={(query, ai) => {
+              // A search from the conversation's pages keeps the conversation in its panel.
+              const thread = threadOf(visit);
+              navigate(ai ? visitAssistant(query, thread) : visitSearch(query, thread));
+            }}
             searchDisabled={request !== undefined}
           />
           <Page
             visit={visit}
+            conversationVisits={visitsOfThread(visitThreads.current, threadOf(visit))}
             busy={request !== undefined}
             onSend={sendPrompt}
-            onHome={() => setVisit(visitHome())}
+            onHome={() => navigate(visitHome())}
+            onBack={history.length > 1 ? goBack : undefined}
+            onShowResults={showResults}
           />
           <SessionInspector />
         </ThermidorA2UIStream>
@@ -125,14 +205,28 @@ export function StorefrontApp() {
   );
 }
 
+function visitsOfThread(
+  visitThreads: ReadonlyMap<number, number>,
+  thread: number | undefined
+): ReadonlySet<number> {
+  return new Set(
+    [...visitThreads].filter(([, visitThread]) => visitThread === thread).map(([id]) => id)
+  );
+}
+
 interface PageProps {
   visit: Visit;
+  /** The visits of the page's conversation, whose assistant turns its chat shows. */
+  conversationVisits: ReadonlySet<number>;
   busy: boolean;
   onSend(view: StorefrontView, prompt: string, visitId: number): void;
   onHome(): void;
+  /** Returns to the previous page, if any. */
+  onBack: (() => void) | undefined;
+  onShowResults(thread: number, turnId: string, query: string): void;
 }
 
-function Page({visit, busy, onSend, onHome}: PageProps) {
+function Page({visit, conversationVisits, busy, onSend, onHome, onBack, onShowResults}: PageProps) {
   switch (visit.page) {
     case 'home':
       return <HomePage />;
@@ -141,14 +235,24 @@ function Page({visit, busy, onSend, onHome}: PageProps) {
         <AssistantPage
           key={visit.id}
           prompt={visit.prompt}
-          visitId={visit.id}
+          conversationVisits={conversationVisits}
           busy={busy}
           onSend={(prompt) => onSend(PAGE_VIEWS.assistant, prompt, visit.id)}
           onBack={onHome}
+          onShowResults={(turnId, query) => onShowResults(visit.thread, turnId, query)}
         />
       );
     case 'search':
-      return <SearchPage key={visit.id} query={visit.query} visitId={visit.id} />;
+      return (
+        <SearchPage
+          key={visit.id}
+          query={visit.query}
+          visitId={visit.id}
+          openingTurnId={visit.openingTurnId}
+          conversationVisits={conversationVisits}
+          onBack={onBack}
+        />
+      );
     case 'listing':
       return <ListingPage slug={visit.slug} />;
   }

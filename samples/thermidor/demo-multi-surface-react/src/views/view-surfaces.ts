@@ -1,26 +1,97 @@
 import type {DiscoveredSurface, Turn} from '@coveo/thermidor';
+import type {StorefrontView, TurnViews} from '../session/storefront-session.js';
+
+/** The view of the assistant's conversation: the assistant page and the chat panel send on it. */
+export const ASSISTANT_VIEW: StorefrontView = 'storefront-preview-assistant';
+
+/** The root component of a search surface, drawn as a page's results. */
+const SEARCH_ROOT = 'CommerceSearch';
+
+export function isSearchSurface({rootComponentType}: DiscoveredSurface): boolean {
+  return rootComponentType === SEARCH_ROOT;
+}
+
+/** Whether a turn drew a search surface: its results open the search layout. */
+export function drawsSearch(turn: Turn): boolean {
+  return turn.response.surfaces.some(isSearchSurface);
+}
+
+/** What the shopper asked in a turn: the prompt, or the text of the chip whose action opened it. */
+export function shopperText({input}: Turn): string | undefined {
+  const text = input.prompt ?? (input.action?.context as {text?: unknown} | undefined)?.text;
+  return typeof text === 'string' ? text : undefined;
+}
+
+/** A view drawn on one page visit, such as the search page's results or its chat panel. */
+interface VisitView {
+  visitId: number;
+  view: StorefrontView;
+}
 
 /**
  * Where every surface of the session is drawn. The server says nothing about placement: the app
- * remembers which page visit sent each turn, and a page draws the surfaces its own turns created.
+ * remembers which view, on which page visit, sent each turn, and a view draws the surfaces its own
+ * turns created. One page can hold several views, such as the search page's results and its chat
+ * panel, told apart by the view each turn was sent on.
  */
 export interface ViewSurfaces {
-  /** The live surfaces the turns of one page visit created, in order. */
-  surfacesOfVisit(visitId: number): readonly DiscoveredSurface[];
-  /** The turns of one page visit, oldest first. */
+  /** The live surfaces the turns of one view created, in order. */
+  surfacesOfView(view: VisitView): readonly DiscoveredSurface[];
+  /** The turns of one view, oldest first. */
+  turnsOfView(view: VisitView): readonly Turn[];
+  /** The turns of one page visit, whichever of its views sent them, oldest first. */
   turnsOfVisit(visitId: number): readonly Turn[];
+  /**
+   * The shopper's conversation with the assistant across page visits, such as the assistant page
+   * and the search pages it opened: the assistant view's turns of these visits, oldest first.
+   */
+  conversationOf(visitIds: ReadonlySet<number>): readonly Turn[];
+  /**
+   * The turn whose search a search page shows: the latest that drew a search surface, from the
+   * turn that opened the page (its own search, or the conversation turn whose search it shows)
+   * on, among that turn's visit and the page's own.
+   */
+  resultsOf(visitId: number, openingTurnId?: string): Turn | undefined;
+  /** The view that draws a surface: that of the turn that created it. */
+  viewOfSurface(surfaceId: string): VisitView | undefined;
 }
 
-interface TurnViews {
-  turnVisits: ReadonlyMap<string, number>;
-}
-
-export function buildViewSurfaces(turns: readonly Turn[], {turnVisits}: TurnViews): ViewSurfaces {
-  const turnsOfVisit = (visitId: number) =>
-    turns.filter((turn) => turnVisits.get(turn.id) === visitId);
+export function buildViewSurfaces(
+  turns: readonly Turn[],
+  {turnViews, turnVisits}: TurnViews
+): ViewSurfaces {
+  const turnsOfView = ({visitId, view}: VisitView) =>
+    turns.filter((turn) => turnVisits.get(turn.id) === visitId && turnViews.get(turn.id) === view);
 
   return {
-    surfacesOfVisit: (visitId) => turnsOfVisit(visitId).flatMap((turn) => turn.response.surfaces),
-    turnsOfVisit,
+    surfacesOfView: (view) => turnsOfView(view).flatMap((turn) => turn.response.surfaces),
+    turnsOfView,
+    turnsOfVisit: (visitId) => turns.filter((turn) => turnVisits.get(turn.id) === visitId),
+    conversationOf: (visitIds) =>
+      turns.filter(
+        (turn) =>
+          visitIds.has(turnVisits.get(turn.id) ?? -1) && turnViews.get(turn.id) === ASSISTANT_VIEW
+      ),
+    resultsOf(visitId, openingTurnId) {
+      const start = openingTurnId
+        ? turns.findIndex((turn) => turn.id === openingTurnId)
+        : turns.findIndex((turn) => turnVisits.get(turn.id) === visitId);
+      if (start < 0) {
+        return undefined;
+      }
+      const visits = new Set([visitId, turnVisits.get(turns[start].id)]);
+      return turns
+        .slice(start)
+        .filter((turn) => visits.has(turnVisits.get(turn.id)) && drawsSearch(turn))
+        .at(-1);
+    },
+    viewOfSurface(surfaceId) {
+      const turn = turns.find(({response}) =>
+        response.surfaces.some((surface) => surface.surfaceId === surfaceId)
+      );
+      const visitId = turn && turnVisits.get(turn.id);
+      const view = turn && turnViews.get(turn.id);
+      return visitId === undefined || view === undefined ? undefined : {visitId, view};
+    },
   };
 }

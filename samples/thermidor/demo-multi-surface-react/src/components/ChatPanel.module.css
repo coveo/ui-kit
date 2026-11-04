@@ -1,0 +1,126 @@
+/* The assistant's panel docked beside the page: as tall as the viewport under the sticky top bar
+   (64px), its thread scrolls inside it and its input stays at its bottom. */
+.panel {
+  --chat-panel-top: calc(64px + var(--space-5));
+  position: sticky;
+  top: var(--chat-panel-top);
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-width: 0;
+  height: calc(100vh - var(--chat-panel-top) - var(--space-5));
+  height: calc(100dvh - var(--chat-panel-top) - var(--space-5));
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-primary);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.heading {
+  margin: 0;
+  font-size: var(--font-size-lg);
+}
+
+.toggle {
+  display: none;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-link);
+  background: none;
+  cursor: pointer;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-height: 0;
+  margin-top: var(--space-3);
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.thread {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.turn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.form {
+  display: flex;
+  margin-top: auto;
+  gap: var(--space-2);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font: inherit;
+}
+
+.send {
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-md);
+  font: inherit;
+  font-weight: 600;
+  color: #fff;
+  background: var(--color-primary);
+  cursor: pointer;
+}
+
+.send:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Above the results on narrow screens: a shorter panel the shopper can fold away. */
+@media (max-width: 900px) {
+  .panel {
+    position: static;
+    height: min(60vh, 520px);
+  }
+
+  .toggle {
+    display: inline-block;
+  }
+
+  .collapsed {
+    height: auto;
+  }
+
+  .collapsed .body {
+    display: none;
+  }
+}
