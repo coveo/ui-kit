@@ -574,7 +574,7 @@ describe('c-quantic-generated-answer', () => {
       });
 
       describe('the screen reader announcement', () => {
-        const exampleAnswerGeneratedMessage = `Generated answer: ${exampleAnswer}`;
+        const exampleAnswerGeneratedMessage = `AI-generated answer: ${exampleAnswer}`;
 
         beforeEach(() => {
           mockQuanticUtils.I18nUtils.format.mockReturnValue(

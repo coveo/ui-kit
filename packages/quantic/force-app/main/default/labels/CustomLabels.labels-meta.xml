@@ -1255,10 +1255,10 @@
   </labels>
   <labels>
     <fullName>quantic_GeneratedAnswerForYou</fullName>
-    <value>Generated answer</value>
+    <value>AI-generated answer</value>
     <language>en_US</language>
     <protected>false</protected>
-    <shortDescription>Generated answer</shortDescription>
+    <shortDescription>AI-generated answer</shortDescription>
   </labels>
   <labels>
     <fullName>quantic_ThisAnswerWasNotHelpful</fullName>
@@ -1374,10 +1374,10 @@
   </labels>
   <labels>
     <fullName>quantic_AnswerGenerated</fullName>
-    <value>Answer generated: {{0}}</value>
+    <value>AI-generated answer: {{0}}</value>
     <language>en_US</language>
     <protected>false</protected>
-    <shortDescription>Answer generated: example answer</shortDescription>
+    <shortDescription>AI-generated answer: example answer</shortDescription>
   </labels>
   <labels>
     <fullName>quantic_GeneratingAnswer</fullName>

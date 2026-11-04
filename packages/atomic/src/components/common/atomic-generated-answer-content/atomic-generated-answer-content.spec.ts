@@ -439,7 +439,7 @@ describe('atomic-generated-answer-content', () => {
         {region: 'generated-answer', message: 'Generating answer', assertive: false},
         {
           region: 'generated-answer',
-          message: 'Generated answer: The final answer.',
+          message: 'AI-generated answer: The final answer.',
           assertive: false,
         },
       ]);
@@ -460,7 +460,7 @@ describe('atomic-generated-answer-content', () => {
 
       expect(announcements().at(-1)).toEqual({
         region: 'generated-answer',
-        message: 'Generated answer: The final answer. AI disclaimer.',
+        message: 'AI-generated answer: The final answer. AI disclaimer.',
         assertive: false,
       });
     });

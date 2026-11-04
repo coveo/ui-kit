@@ -162,7 +162,7 @@ describe('GeneratedAnswerController', () => {
       });
 
       expect(controller.getGeneratedAnswerStatus()).toBe(
-        'Generated answer: Test answer AI-generated content may contain errors. Verify important information.'
+        'AI-generated answer: Test answer AI-generated content may contain errors. Verify important information.'
       );
     });
 
@@ -180,7 +180,7 @@ describe('GeneratedAnswerController', () => {
       });
 
       expect(controller.getGeneratedAnswerStatus()).toBe(
-        'Generated answer: Test answer Custom AI disclaimer.'
+        'AI-generated answer: Test answer Custom AI disclaimer.'
       );
     });
 
@@ -194,7 +194,7 @@ describe('GeneratedAnswerController', () => {
       });
 
       expect(controller.getGeneratedAnswerStatus()).toBe(
-        'Generated answer: Bold and italic with code AI-generated content may contain errors. Verify important information.'
+        'AI-generated answer: Bold and italic with code AI-generated content may contain errors. Verify important information.'
       );
     });
 
@@ -209,7 +209,7 @@ describe('GeneratedAnswerController', () => {
       });
 
       expect(controller.getGeneratedAnswerStatus()).toBe(
-        'Generated answer: Test answer AI-generated content may contain errors. Verify important information.'
+        'AI-generated answer: Test answer AI-generated content may contain errors. Verify important information.'
       );
     });
 

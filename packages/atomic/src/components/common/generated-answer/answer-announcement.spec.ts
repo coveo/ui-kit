@@ -54,7 +54,7 @@ describe('answer-announcement', () => {
       );
 
       expect(announcement.assertive).toBe(false);
-      expect(announcement.message).toContain('Generated answer:');
+      expect(announcement.message).toContain('AI-generated answer:');
       expect(announcement.message).toContain('Some bold text.');
       expect(announcement.message).not.toContain('**');
       expect(announcement.message).not.toContain('##');
@@ -64,7 +64,7 @@ describe('answer-announcement', () => {
       expect(
         getAnswerAnnouncement(buildAnswer({answer: 'Some text.'}), i18n, 'AI disclaimer.')
       ).toEqual({
-        message: 'Generated answer: Some text. AI disclaimer.',
+        message: 'AI-generated answer: Some text. AI disclaimer.',
         assertive: false,
       });
     });

@@ -689,7 +689,7 @@
     <name>quantic_Slide</name>
   </customLabels>
   <customLabels>
-    <label>Réponse générée</label>
+    <label>Réponse générée par l'IA</label>
     <name>quantic_GeneratedAnswerForYou</name>
   </customLabels>
   <customLabels>
@@ -757,7 +757,7 @@
     <name>quantic_GeneratedAnswerIsHidden</name>
   </customLabels>
   <customLabels>
-    <label>Réponse générée: {{0}}</label>
+    <label>Réponse générée par l'IA: {{0}}</label>
     <name>quantic_AnswerGenerated</name>
   </customLabels>
   <customLabels>
