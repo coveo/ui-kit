@@ -1,5 +1,5 @@
 diff --git a/dist/index.d.ts b/dist/index.d.ts
-index f22a4c4..626c85e 100644
+index 0d9914d..1c550ae 100644
 --- a/dist/index.d.ts
 +++ b/dist/index.d.ts
 @@ -7,6 +7,8 @@ type StorybookHelpersOptions = {
@@ -11,7 +11,7 @@ index f22a4c4..626c85e 100644
      /** Adds a <script> tag where a `component` variable will reference the story's component */
      setComponentVariable?: boolean;
      /** renders default values for attributes and CSS properties */
-@@ -23,6 +25,8 @@ type Options = StorybookHelpersOptions;
+@@ -25,6 +27,8 @@ type Options = StorybookHelpersOptions;
  type StoryOptions = {
      /** Categories to exclude from these stories */
      excludeCategories?: Array<Categories>;
@@ -21,10 +21,10 @@ index f22a4c4..626c85e 100644
      setComponentVariable?: boolean;
  };
 diff --git a/dist/index.js b/dist/index.js
-index cc73452..854c6df 100644
+index 468a76a..b660f76 100644
 --- a/dist/index.js
 +++ b/dist/index.js
-@@ -629,7 +629,7 @@ function transformToScoped(template, tagSelector) {
+@@ -723,7 +723,7 @@ function transformToScoped(template, tagSelector) {
    ${styleContent}
  }`;
  }
@@ -33,7 +33,7 @@ index cc73452..854c6df 100644
    if (!args) {
      return html`<${unsafeStatic(component.tagName)}></${unsafeStatic(component.tagName)}>`;
    }
-@@ -654,11 +654,23 @@ function getTemplate(component, args, slot, argTypes, excludeCategories, setComp
+@@ -748,11 +748,23 @@ function getTemplate(component, args, slot, argTypes, excludeCategories, setComp
      excludeCategories,
      scopeSelector
    );
@@ -41,7 +41,7 @@ index cc73452..854c6df 100644
 +  syncControls(component, containerSelector);
    return html`${styleTemplate}
  <${unsafeStatic(component.tagName)} ${spread(operators)}>${slotsTemplate}${slot || ""}</${unsafeStatic(component.tagName)}>
- ${options2.setComponentVariable || setComponentVariable ? unsafeHTML(
+ ${options.setComponentVariable || setComponentVariable ? unsafeHTML(
 -    "<script>\n  window.component = document.querySelector('" + component.tagName + "');\n</script>"
 +    `<script>
 +      var containerElement = ${containerSelector ? `document.querySelector('${containerSelector}')` : 'document'};
@@ -59,7 +59,7 @@ index cc73452..854c6df 100644
    ) : ""}
  `;
  }
-@@ -716,6 +728,9 @@ function getTemplateOperators(component, args, argTypes) {
+@@ -810,6 +822,9 @@ function getTemplateOperators(component, args, argTypes) {
        return;
      }
      const propValue = args[key];
@@ -69,7 +69,7 @@ index cc73452..854c6df 100644
      propOperators[`.${key}`] = propValue;
    });
    Object.keys(args).filter((x) => !Object.keys(argTypes || {}).includes(x)).forEach((key) => {
-@@ -806,15 +821,27 @@ function getSlotsTemplate(component, args, excludeCategories) {
+@@ -902,15 +917,27 @@ function getSlotsTemplate(component, args, excludeCategories) {
  ${slotTemplates}
  `) : "";
  }
@@ -103,7 +103,7 @@ index cc73452..854c6df 100644
    });
  }
  function setArgObserver(component) {
-@@ -822,25 +849,34 @@ function setArgObserver(component) {
+@@ -918,25 +945,31 @@ function setArgObserver(component) {
      return;
    }
    let isUpdating = false;
@@ -135,6 +135,14 @@ index cc73452..854c6df 100644
          updateArgs({
            [`${mutation.attributeName}`]: mutation.target?.hasAttribute(mutation.attributeName || "")
          });
+       } else if (attribute?.control === "number" || attribute?.control?.type === "number") {
++        isUpdating = true;
+         updateArgs({
+           [`${mutation.attributeName}`]: Number(
+             mutation.target.getAttribute(
+@@ -945,6 +978,10 @@ function setArgObserver(component) {
+           )
+         });
        } else {
 +        if (args[`${mutation.attributeName}`] == mutation.target.getAttribute(mutation.attributeName || "")) {
 +          return;
@@ -143,13 +151,13 @@ index cc73452..854c6df 100644
          updateArgs({
            [`${mutation.attributeName}`]: mutation.target.getAttribute(mutation.attributeName || "")
          });
-@@ -897,7 +933,8 @@ function getStorybookHelpers(tagName, options3) {
+@@ -1001,7 +1038,8 @@ function getStorybookHelpers(tagName, options2) {
        slot,
        argTypes,
-       options3?.excludeCategories || [],
--      options3?.setComponentVariable
-+      options3?.setComponentVariable,
-+      options3?.containerSelector
+       options2?.excludeCategories || [],
+-      options2?.setComponentVariable
++      options2?.setComponentVariable,
++      options2?.containerSelector
      )
    };
    return helpers;
