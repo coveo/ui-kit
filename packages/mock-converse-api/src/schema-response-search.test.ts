@@ -698,22 +698,26 @@ describe('schema-response-search query correction', () => {
       firstIndex: 1,
       lastIndex: 12,
       totalEntries: 43,
-      correction: {originalQuery: prompt, cause},
+      correction: {originalQuery: prompt, cause, canOverride: cause === 'trigger'},
     });
   });
 
   it('keeps the correction when changing page', () => {
     matchSchemaPrompt('water sprots');
     const state = summary(buildSearchActionEvents({name: 'selectPage', context: {page: 1}}));
-    expect(state.correction).toEqual({originalQuery: 'water sprots', cause: 'correction'});
+    expect(state.correction).toEqual({
+      originalQuery: 'water sprots',
+      cause: 'correction',
+      canOverride: false,
+    });
     expect(state.firstIndex).toBe(13);
   });
 
-  it('searches the original query on overrideCorrection of a trigger, without a correction', () => {
+  it('searches the original query on overrideCorrection when the correction can be overridden', () => {
     matchSchemaPrompt('swim gear');
     const events = buildSearchActionEvents({
       name: 'overrideCorrection',
-      context: {originalQuery: 'swim gear'},
+      context: {},
       sourceComponentId: 'query-summary-2',
     });
     expect(summary(events)).toEqual({
@@ -724,11 +728,11 @@ describe('schema-response-search query correction', () => {
     });
   });
 
-  it('keeps the corrected results on overrideCorrection of a correction', () => {
+  it('keeps the corrected results on overrideCorrection when the correction cannot be overridden', () => {
     matchSchemaPrompt('water sprots');
     const events = buildSearchActionEvents({
       name: 'overrideCorrection',
-      context: {originalQuery: 'water sprots'},
+      context: {},
       sourceComponentId: 'query-summary-2',
     });
     expect(summary(events)).toEqual({
@@ -736,7 +740,7 @@ describe('schema-response-search query correction', () => {
       firstIndex: 1,
       lastIndex: 12,
       totalEntries: 43,
-      correction: {originalQuery: 'water sprots', cause: 'correction'},
+      correction: {originalQuery: 'water sprots', cause: 'correction', canOverride: false},
     });
   });
 });
