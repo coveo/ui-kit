@@ -278,7 +278,7 @@ overrides:
 
 patchedDependencies:
   '@stencil/core@4.20.0': 2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9
-  '@wc-toolkit/storybook-helpers@10.5.1': 619370a0b6eb58da1f55c3a8c43f69bfc57b33a12d4cc833915aa3a01870fb4b
+  '@wc-toolkit/storybook-helpers@10.7.7': 01db586475c6eb9cc465415951bef788e46f55b0f49584886a7168dd317d22a2
   jest-environment-jsdom@29.7.0: b419a992476c3323e67ee6c86f3f9ecf6f4f073127cb572aa9af3b9c6550751d
 
 importers:
@@ -461,8 +461,8 @@ importers:
         specifier: 'catalog:'
         version: 4.1.12(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))(playwright@1.62.1)(vite@8.3.4(@types/node@24.13.6)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)
       '@wc-toolkit/storybook-helpers':
-        specifier: 10.5.1
-        version: 10.5.1(patch_hash=619370a0b6eb58da1f55c3a8c43f69bfc57b33a12d4cc833915aa3a01870fb4b)(lit@3.3.3)(storybook@10.6.3(@types/react@19.3.0)(prettier@3.9.10)(react@19.2.8))
+        specifier: 10.7.7
+        version: 10.7.7(patch_hash=01db586475c6eb9cc465415951bef788e46f55b0f49584886a7168dd317d22a2)(lit@3.3.3)(storybook@10.6.3(@types/react@19.3.0)(prettier@3.9.10)(react@19.2.8))
       chromatic:
         specifier: 'catalog:'
         version: 18.13.0(@chromatic-com/playwright@0.15.0(@playwright/test@1.62.1)(@testing-library/dom@10.4.2)(prettier@3.9.10)(react@19.2.8))
@@ -8666,8 +8666,8 @@ packages:
   '@vue/shared@3.5.42':
     resolution: {integrity: sha512-2rPxex1jQf4jvl9MOHl6YaXCPcrNqz/FstMOEh3QWY+/OME9nQTvl9WYeCwhW7AFjaR0SnngZGlp/wkR6rkI6g==}
 
-  '@wc-toolkit/storybook-helpers@10.5.1':
-    resolution: {integrity: sha512-deS3LagKQVksbrXJZEQK8lgp+vTNUt8qiNFMAyLxzwTRa2sstQ7llNGLfeBTzx8c8GkWmSzYfoMMsc3ROfYiJQ==}
+  '@wc-toolkit/storybook-helpers@10.7.7':
+    resolution: {integrity: sha512-0gxZELLBYUw2o6hoYihOWhyi5U1NUprJrt7hpyx2z91ZHb2NKGOq6pYUsDws+JfHF33CdnLiIVwDZK79+cAiGw==}
     peerDependencies:
       lit: ^2.0.0 || ^3.0.0
       storybook: '>=10.1.11-0 <11.0.0-0'
@@ -23297,7 +23297,7 @@ snapshots:
 
   '@vue/shared@3.5.42': {}
 
-  '@wc-toolkit/storybook-helpers@10.5.1(patch_hash=619370a0b6eb58da1f55c3a8c43f69bfc57b33a12d4cc833915aa3a01870fb4b)(lit@3.3.3)(storybook@10.6.3(@types/react@19.3.0)(prettier@3.9.10)(react@19.2.8))':
+  '@wc-toolkit/storybook-helpers@10.7.7(patch_hash=01db586475c6eb9cc465415951bef788e46f55b0f49584886a7168dd317d22a2)(lit@3.3.3)(storybook@10.6.3(@types/react@19.3.0)(prettier@3.9.10)(react@19.2.8))':
     dependencies:
       lit: 3.3.3
       storybook: 10.6.3(@types/react@19.3.0)(prettier@3.9.10)(react@19.2.8)
