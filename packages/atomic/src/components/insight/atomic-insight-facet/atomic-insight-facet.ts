@@ -301,9 +301,11 @@ export class AtomicInsightFacet
         i18n: this.bindings.i18n,
         label: this.label,
       },
-    })(html`<ul class="mt-3 ${this.displayValuesAs === 'box' ? 'box-container' : ''}" part="values">
-      ${children}
-    </ul>`);
+    })(
+      html`<ul class="mt-3 ${this.displayValuesAs === 'box' ? 'box-container' : ''}" part="values">
+        ${children}
+      </ul>`
+    );
   }
 
   private renderValues() {

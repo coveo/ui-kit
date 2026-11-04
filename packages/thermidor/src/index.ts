@@ -61,7 +61,9 @@ export type {
   ToolCallStep,
   ToolCallStatus,
   DiscoveredSurface,
+  SessionInitialization,
   SessionRequest,
+  InitializeRequest,
   PromptRequest,
   ActionRequest,
   ActionError,
@@ -73,4 +75,5 @@ export type {
   SerializedTurn,
   SerializedTurnResponse,
   SerializedTurnAgent,
+  SerializedInitialization,
 } from '@/src/session/serialize.js';

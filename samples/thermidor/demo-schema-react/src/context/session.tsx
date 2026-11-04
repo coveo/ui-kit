@@ -8,12 +8,17 @@ import {getSampleConfiguration} from '../env.js';
  * is decoupled from any specific contract package; the sample supplies the Coveo
  * `ComponentContractsSchema` so the session validates against it.
  */
-type DemoSession = Session<typeof ComponentContractsSchema>;
+export type DemoSession = Session<typeof ComponentContractsSchema>;
 
 const SessionContext = createContext<DemoSession | null>(null);
 
-export function SessionProvider({children}: PropsWithChildren) {
-  const sessionRef = useRef<DemoSession | null>(null);
+interface SessionProviderProps {
+  /** The session to provide. Defaults to one created from the sample configuration. */
+  session?: DemoSession;
+}
+
+export function SessionProvider({session, children}: PropsWithChildren<SessionProviderProps>) {
+  const sessionRef = useRef<DemoSession | null>(session ?? null);
   sessionRef.current ??= createThermidorSession();
 
   return <SessionContext.Provider value={sessionRef.current}>{children}</SessionContext.Provider>;
@@ -28,7 +33,7 @@ export function useSession(): DemoSession {
 }
 
 function createThermidorSession(): DemoSession {
-  const {organizationId, accessToken, endpoint, trackingId, language, country, currency} =
+  const {organizationId, accessToken, endpoint, agentConfigurationId, trackingId} =
     getSampleConfiguration();
 
   return createSession({
@@ -36,10 +41,8 @@ function createThermidorSession(): DemoSession {
     organizationId,
     accessToken,
     endpoint,
+    agentConfigurationId,
     trackingId,
-    language,
-    country,
-    currency,
     navigatorContextProvider: getNavigatorContext,
   });
 }

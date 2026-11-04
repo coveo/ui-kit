@@ -166,12 +166,14 @@ export class SuggestionManager<SearchBoxController> {
         ? this.previousActiveDescendantElement!
         : (panel.firstElementChild as HTMLElement);
       this.updateDescendants(newValue.id);
+      this.updateKeyboardActiveDescendant(newValue.id);
     }
   }
 
   public clearSuggestions() {
     this.clearSuggestionElements();
     this.updateActiveDescendant();
+    this.updateKeyboardActiveDescendant();
   }
 
   public async focusNextValue() {
@@ -243,6 +245,7 @@ export class SuggestionManager<SearchBoxController> {
 
   private async executeQuerySuggestion() {
     this.updateActiveDescendant();
+    this.updateKeyboardActiveDescendant();
     const settled = await Promise.allSettled(
       this.suggestions.map((suggestion) =>
         promiseTimeout(

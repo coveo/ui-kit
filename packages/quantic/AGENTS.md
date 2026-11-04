@@ -10,7 +10,7 @@
 Quantic does **not** use oxlint or oxfmt like the rest of the monorepo. When working
 anywhere under `packages/quantic`, the following tools apply:
 
-- **Linting**: ESLint (configured in `.eslintrc.json`, using `@salesforce/eslint-config-lwc`)
+- **Linting**: ESLint 9 flat config (configured in `eslint.config.js`, using `@salesforce/eslint-config-lwc`)
 - **Formatting**: Prettier (configured in `.prettierrc.js`, including `prettier-plugin-apex` for `.cls` and `.trigger` files)
 
 **You must NEVER**:

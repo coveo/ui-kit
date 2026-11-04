@@ -2,7 +2,7 @@ import {html} from 'lit';
 import {beforeAll, describe, expect, it} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {type RenderDisclaimerProps, renderDisclaimer} from './render-disclaimer';
+import {DISCLAIMER_ID, type RenderDisclaimerProps, renderDisclaimer} from './render-disclaimer';
 
 describe('#renderDisclaimer', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
@@ -21,7 +21,7 @@ describe('#renderDisclaimer', () => {
 
     return {
       element,
-      container: element.querySelector('div'),
+      container: element.querySelector('small'),
       slot: element.querySelector('slot[name="disclaimer"]'),
     };
   };
@@ -45,7 +45,17 @@ describe('#renderDisclaimer', () => {
 
       await expect
         .element(element)
-        .toHaveTextContent('Generated content may contain errors. Verify important information.');
+        .toHaveTextContent(
+          'AI-generated content may contain errors. Verify important information.'
+        );
+    });
+
+    it('should render the disclaimer as small print referenceable by id', async () => {
+      const {container} = await renderComponent();
+
+      expect(container).toHaveAttribute('id', DISCLAIMER_ID);
+      expect(container?.tagName).toBe('SMALL');
+      expect(container).not.toHaveAttribute('role');
     });
   });
 });

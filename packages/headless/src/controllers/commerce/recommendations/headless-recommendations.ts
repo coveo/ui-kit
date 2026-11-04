@@ -137,7 +137,7 @@ export function buildRecommendations(
     errorSelector: (state) => state.recommendations[slotId]!.error,
     pageSelector: (state) => pageRecommendationSelector(state, slotId),
     perPageSelector: (state) => perPageRecommendationSelector(state, slotId),
-    totalEntriesSelector: (state) => totalEntriesRecommendationSelector(state, slotId),
+    totalProductsSelector: (state) => totalEntriesRecommendationSelector(state, slotId),
     numberOfProductsSelector: (state) => numberOfRecommendationsSelector(state, slotId),
   });
 

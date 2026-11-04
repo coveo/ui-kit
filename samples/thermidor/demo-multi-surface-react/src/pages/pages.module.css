@@ -1,0 +1,90 @@
+.page {
+  box-sizing: border-box;
+  max-width: 1100px;
+  min-width: 0;
+  margin: 0 auto;
+  padding: var(--space-5);
+}
+
+.title {
+  font-size: var(--font-size-xl);
+  margin: var(--space-2) 0 var(--space-5);
+}
+
+.path {
+  margin: calc(-1 * var(--space-4)) 0 var(--space-4);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.loading {
+  color: var(--color-text-muted);
+}
+
+.error {
+  color: var(--color-error);
+}
+
+.note {
+  margin: 0 0 var(--space-4);
+  padding: var(--space-2) var(--space-3);
+  border-left: 3px solid var(--color-border);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.back {
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: var(--color-text-link);
+  cursor: pointer;
+}
+
+.wide {
+  max-width: 1440px;
+}
+
+/* The results on the left, the chat panel docked on the right from the top of the page down. On
+   narrow screens the panel goes between the title and the results. */
+.withPanel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 400px);
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'title panel'
+    'results panel';
+  align-items: start;
+  column-gap: var(--space-5);
+}
+
+.panelTitle {
+  grid-area: title;
+  margin-top: 0;
+}
+
+.results {
+  grid-area: results;
+  min-width: 0;
+}
+
+.panel {
+  grid-area: panel;
+}
+
+@media (max-width: 900px) {
+  .withPanel {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+    grid-template-areas:
+      'title'
+      'panel'
+      'results';
+    row-gap: var(--space-5);
+  }
+
+  .panelTitle {
+    margin-bottom: 0;
+  }
+}

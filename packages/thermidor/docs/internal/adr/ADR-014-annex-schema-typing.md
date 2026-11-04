@@ -18,7 +18,7 @@ DX (intellisense) is a charter MUST. This was prototyped against the real
 
 - **Full intellisense is achievable and confirmed** when the concrete schema is
   pinned at `createSession(...)`. Verified: `createSession({ contracts:
-ComponentContractsSchema })` → `session.remoteController('cmp', 'next-actions-bar')`
+  ComponentContractsSchema })` → `session.remoteController('cmp', 'next-actions-bar')`
   → `.dispatch('selectAction', { text, type: 'search' })` gives autocomplete on the
   component type, autocomplete on the action name (a real literal union, not
   `string`), a type-checked payload (wrong enum value errors), and typed `state`.

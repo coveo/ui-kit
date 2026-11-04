@@ -1,6 +1,6 @@
 import {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import type {CategoryFacetAction, RegularFacetAction} from '@coveo/thermidor-schema/zod3';
-import {useSessionBusy} from './session-request.js';
+import {useLatestWhenFree} from './session-request.js';
 
 /** Derived from the schema so the payload cannot drift from what it accepts. */
 export type FacetSearchAction = Extract<
@@ -27,13 +27,14 @@ export function useOptimisticFacetSearch(
 ): OptimisticFacetSearch {
   const [typed, setTyped] = useState(backendQuery);
   const lastBackend = useRef(backendQuery);
-  const isBusy = useSessionBusy();
+  // The search waiting for the session to be free; a new object for each search, even a repeated one.
+  const [pending, setPending] = useState<{action: FacetSearchAction; query: string}>();
 
   // Queries sent whose echo can still arrive, in send order.
   const sent = useRef<string[]>([]);
   const debounce = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  // The surface is rebuilt whenever a reply lands, which retires the previous render's dispatch,
-  // so a search that fires later must use the latest one.
+  // A surface rebuilt by a reply retires the previous render's dispatch, so a search that fires
+  // later must use the latest one.
   const latestDispatch = useRef(dispatch);
   latestDispatch.current = dispatch;
 
@@ -58,38 +59,30 @@ export function useOptimisticFacetSearch(
       // External change: the producer wins over what is typed or waiting to be sent.
       sent.current = [];
       cancelDebounce();
+      setPending(undefined);
       setTyped(backendQuery);
     }
   }, [backendQuery]);
 
-  const send = (action: FacetSearchAction, query: string) => {
+  useLatestWhenFree(pending, ({action, query}) => {
     sent.current.push(query);
     latestDispatch.current(action);
-  };
-
-  // The session withholds a request made while another is in flight, so the search waits.
-  const sendWhenFree = (action: FacetSearchAction, query: string) => {
-    if (isBusy()) {
-      debounce.current = setTimeout(() => sendWhenFree(action, query), SEARCH_DEBOUNCE_MS);
-      return;
-    }
-    debounce.current = undefined;
-    send(action, query);
-  };
+  });
 
   const onQueryChange = (next: string) => {
     setTyped(next);
     cancelDebounce();
-    debounce.current = setTimeout(
-      () => sendWhenFree({event: {name: 'search', context: {query: next}}}, next),
-      SEARCH_DEBOUNCE_MS
-    );
+    setPending(undefined);
+    debounce.current = setTimeout(() => {
+      debounce.current = undefined;
+      setPending({action: {event: {name: 'search', context: {query: next}}}, query: next});
+    }, SEARCH_DEBOUNCE_MS);
   };
 
   const reset = () => {
     setTyped('');
     cancelDebounce();
-    sendWhenFree({event: {name: 'clearSearch', context: {}}}, '');
+    setPending({action: {event: {name: 'clearSearch', context: {}}}, query: ''});
   };
 
   return {query: typed, onQueryChange, reset};

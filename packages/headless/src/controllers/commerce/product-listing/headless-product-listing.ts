@@ -8,7 +8,7 @@ import {contextReducer as commerceContext} from '../../../features/commerce/cont
 import {
   pagePrincipalSelector,
   perPagePrincipalSelector,
-  totalEntriesPrincipalSelector,
+  totalProductsPrincipalSelector,
 } from '../../../features/commerce/pagination/pagination-selectors.js';
 import type {Parameters} from '../../../features/commerce/parameters/parameters-actions.js';
 import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema.js';
@@ -23,7 +23,7 @@ import {
 import {
   errorSelector,
   isLoadingSelector,
-  numberOfProductsSelector,
+  numberOfProductsExcludingSpotlightsSelector,
   requestIdSelector,
   responseIdSelector,
 } from '../../../features/commerce/product-listing/product-listing-selectors.js';
@@ -142,8 +142,8 @@ export function buildProductListing(
     errorSelector,
     pageSelector: pagePrincipalSelector,
     perPageSelector: perPagePrincipalSelector,
-    totalEntriesSelector: totalEntriesPrincipalSelector,
-    numberOfProductsSelector,
+    totalProductsSelector: totalProductsPrincipalSelector,
+    numberOfProductsSelector: numberOfProductsExcludingSpotlightsSelector,
   });
 
   return {

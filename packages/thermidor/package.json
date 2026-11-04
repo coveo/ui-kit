@@ -1,6 +1,6 @@
 {
   "name": "@coveo/thermidor",
-  "version": "0.6.0",
+  "version": "0.8.0",
   "description": "Experimental package for a unified, framework-agnostic headless engine for search and conversational experiences",
   "license": "Apache-2.0",
   "repository": {
@@ -20,6 +20,11 @@
       "import": "./dist/index.js",
       "default": "./dist/index.js"
     },
+    "./private": {
+      "types": "./dist/private.d.ts",
+      "import": "./dist/private.js",
+      "default": "./dist/private.js"
+    },
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -31,20 +36,20 @@
     "clean": "node ../../utils/ci/rm-rf.mjs dist",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:dts": "api-extractor run --local",
-    "test:dts:ci": "api-extractor run",
+    "test:dts": "api-extractor run --local && api-extractor run --local --config api-extractor.private.json",
+    "test:dts:ci": "api-extractor run && api-extractor run --config api-extractor.private.json",
     "size": "node ../../scripts/size-limit.mjs run"
   },
   "dependencies": {
     "@ag-ui/core": "0.0.59"
   },
   "devDependencies": {
-    "@microsoft/api-extractor": "7.59.1",
+    "@microsoft/api-extractor": "7.59.4",
     "@size-limit/preset-small-lib": "catalog:",
-    "fast-check": "4.9.0",
+    "fast-check": "4.10.2",
     "publint": "catalog:",
     "size-limit": "catalog:",
-    "tsdown": "0.23.0",
+    "tsdown": "0.23.1",
     "typescript": "catalog:",
     "vitest": "catalog:",
     "zod": "catalog:"

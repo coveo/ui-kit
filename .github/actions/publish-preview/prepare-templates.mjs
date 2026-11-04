@@ -1,7 +1,8 @@
 /**
  * Rewrites pkg.pr.new templates in the CI checkout so they install with npm in
  * StackBlitz, not just with pnpm in this workspace: resolves `catalog:` versions,
- * inlines the tsconfig `extends` chain, and drops test tooling.
+ * inlines the tsconfig `extends` chain, drops test tooling, copies in the source
+ * a template imports from a sibling sample, and drops workspace build steps.
  *
  * Takes the same glob `action.yml` hands to `pkg-pr-new --template`.
  */
@@ -139,6 +140,166 @@ function resolveCatalogEntries(configuration, resolved, packageName) {
   return resolvedCount;
 }
 
+const SOURCE_EXTENSIONS = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.css']);
+const SKIPPED_DIRECTORIES = new Set(['node_modules', 'dist']);
+// Any quoted relative path, so `vi.mock('../x.js')` is rewritten along with imports.
+const RELATIVE_SPECIFIER = /(['"])(\.\.?\/[^'"\n]+)\1/g;
+const VENDOR_DIRECTORY = 'vendor';
+// Configs of the test tooling removed above: inert in a template, and they may point
+// into the monorepo (an alias to a workspace package's source).
+const TEST_TOOLING_CONFIG = /^(vitest|playwright)\.|^vite\.config\.test\./;
+
+function listSourceFiles(directory) {
+  return fs.readdirSync(directory, {withFileTypes: true}).flatMap((entry) => {
+    const entryPath = path.join(directory, entry.name);
+    if (entry.isDirectory()) {
+      return SKIPPED_DIRECTORIES.has(entry.name) ? [] : listSourceFiles(entryPath);
+    }
+    return SOURCE_EXTENSIONS.has(path.extname(entry.name)) ? [entryPath] : [];
+  });
+}
+
+function isInside(directory, target) {
+  const relative = path.relative(directory, target);
+  return relative !== '' && !relative.startsWith('..') && !path.isAbsolute(relative);
+}
+
+function findPackageRoot(target) {
+  for (let directory = path.dirname(target); ; directory = path.dirname(directory)) {
+    if (fs.existsSync(path.join(directory, 'package.json'))) {
+      return directory;
+    }
+    if (path.dirname(directory) === directory) {
+      return undefined;
+    }
+  }
+}
+
+function toSpecifier(fromFile, target) {
+  const relative = path.relative(path.dirname(fromFile), target).split(path.sep).join('/');
+  return relative.startsWith('.') ? relative : `./${relative}`;
+}
+
+/**
+ * Copies the sibling-package source a template imports by relative path into
+ * `vendor/<package>/`, points those imports at the copy, and adds the sibling's
+ * runtime dependencies. A template is published alone, so a path out of its
+ * directory (demo-multi-surface-react reuses demo-schema-react's components
+ * this way) resolves to nothing. The sample's own source stays untouched.
+ */
+function vendorSiblingSources(templateDirectory, packageJson, packageName) {
+  const vendored = new Map();
+
+  const files = listSourceFiles(templateDirectory).filter(
+    (file) => !TEST_TOOLING_CONFIG.test(path.basename(file))
+  );
+  for (const file of files) {
+    const source = fs.readFileSync(file, 'utf8');
+    const rewritten = source.replace(RELATIVE_SPECIFIER, (match, quote, specifier) => {
+      const target = path.resolve(path.dirname(file), specifier);
+      if (isInside(templateDirectory, target)) {
+        return match;
+      }
+
+      const packageRoot = findPackageRoot(target);
+      const [topDirectory] = packageRoot ? path.relative(packageRoot, target).split(path.sep) : [];
+      if (!packageRoot || isInside(packageRoot, templateDirectory) || !topDirectory) {
+        throw new Error(
+          `${packageName}: ${path.relative(templateDirectory, file)} imports "${specifier}", ` +
+            'which is outside the template and not inside a sibling package.'
+        );
+      }
+
+      const vendorRoot = path.join(templateDirectory, VENDOR_DIRECTORY, path.basename(packageRoot));
+      const directories = vendored.get(packageRoot) ?? new Set();
+      directories.add(topDirectory);
+      vendored.set(packageRoot, directories);
+
+      const copy = path.join(vendorRoot, path.relative(packageRoot, target));
+      return `${quote}${toSpecifier(file, copy)}${quote}`;
+    });
+
+    if (rewritten !== source) {
+      fs.writeFileSync(file, rewritten);
+    }
+  }
+
+  for (const [packageRoot, directories] of vendored) {
+    const vendorRoot = path.join(templateDirectory, VENDOR_DIRECTORY, path.basename(packageRoot));
+    for (const directory of directories) {
+      fs.cpSync(path.join(packageRoot, directory), path.join(vendorRoot, directory), {
+        recursive: true,
+        filter: (source) => !SKIPPED_DIRECTORIES.has(path.basename(source)),
+      });
+    }
+
+    const copied = [...directories].map((directory) => path.join(vendorRoot, directory));
+    for (const file of copied.flatMap(listSourceFiles)) {
+      for (const [, , specifier] of fs.readFileSync(file, 'utf8').matchAll(RELATIVE_SPECIFIER)) {
+        const target = path.resolve(path.dirname(file), specifier);
+        if (!copied.some((directory) => isInside(directory, target))) {
+          throw new Error(
+            `${packageName}: vendored ${path.relative(templateDirectory, file)} imports ` +
+              `"${specifier}", which was not copied with it.`
+          );
+        }
+      }
+    }
+
+    mergeSiblingDependencies(packageJson, packageRoot, packageName);
+    console.log(
+      `${packageName}: vendored ${path.basename(packageRoot)}/{${[...directories].join(',')}} ` +
+        `into ${VENDOR_DIRECTORY}/ and rewrote the imports`
+    );
+  }
+}
+
+/**
+ * Adds the sibling's runtime dependencies the vendored source needs. Its `catalog:`
+ * entries are resolved against the sibling here, since the template's own catalog
+ * resolution only knows the template's dependency tree.
+ */
+function mergeSiblingDependencies(packageJson, packageRoot, packageName) {
+  const sibling = JSON.parse(fs.readFileSync(path.join(packageRoot, 'package.json'), 'utf8'));
+  const {dependencies: resolved} = listDependencies(packageRoot);
+  packageJson.dependencies ??= {};
+
+  for (const [name, version] of Object.entries(sibling.dependencies ?? {})) {
+    const existing = packageJson.dependencies[name];
+    if (existing !== undefined) {
+      if (existing !== version) {
+        throw new Error(
+          `${packageName}: needs ${name}@"${existing}", but vendored ${sibling.name} needs "${version}".`
+        );
+      }
+      continue;
+    }
+
+    const resolvedVersion = version === 'catalog:' ? resolved[name]?.version : version;
+    if (!resolvedVersion) {
+      throw new Error(`${packageName}: unable to resolve ${sibling.name}'s ${name}@"${version}".`);
+    }
+    packageJson.dependencies[name] = resolvedVersion;
+    console.log(`${packageName}: added ${name}@"${resolvedVersion}" for vendored ${sibling.name}`);
+  }
+}
+
+// A template has no workspace packages to build first; pkg.pr.new installs them prebuilt.
+const WORKSPACE_BUILD_PREFIX = /^turbo run build\b[^&]*&&\s*/;
+
+function removeWorkspaceBuilds(scripts, packageName) {
+  let changed = false;
+  for (const [name, command] of Object.entries(scripts ?? {})) {
+    const stripped = command.replace(WORKSPACE_BUILD_PREFIX, '');
+    if (stripped !== command) {
+      scripts[name] = stripped;
+      changed = true;
+      console.log(`${packageName}: removed the workspace build from "${name}"`);
+    }
+  }
+  return changed;
+}
+
 function flattenTemplate(templateDirectory) {
   const packagePath = path.join(templateDirectory, 'package.json');
   if (!fs.existsSync(packagePath)) {
@@ -148,6 +309,12 @@ function flattenTemplate(templateDirectory) {
   const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
   const packageName = packageJson.name ?? path.basename(templateDirectory);
   const {dependencies, devDependencies} = listDependencies(templateDirectory);
+  const dependenciesBefore = JSON.stringify(packageJson.dependencies);
+
+  // Before catalog resolution, which would make the template's `catalog:` entries
+  // look different from the identical ones of the sibling.
+  vendorSiblingSources(templateDirectory, packageJson, packageName);
+  const vendored = JSON.stringify(packageJson.dependencies) !== dependenciesBefore;
 
   const resolvedCount =
     resolveCatalogEntries(packageJson.dependencies, dependencies, packageName) +
@@ -166,9 +333,11 @@ function flattenTemplate(templateDirectory) {
     delete packageJson.scripts?.[script];
   }
 
+  const scriptsChanged = removeWorkspaceBuilds(packageJson.scripts, packageName);
+
   flattenTsconfig(templateDirectory, removed);
 
-  if (resolvedCount === 0 && removed.length === 0) {
+  if (resolvedCount === 0 && removed.length === 0 && !vendored && !scriptsChanged) {
     console.log(`${packageName}: no manifest changes needed.`);
     return;
   }

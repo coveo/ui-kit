@@ -24,7 +24,7 @@ describe('commerce core summary', () => {
     numberOfProductsSelector: vi.fn(),
     pageSelector: vi.fn(),
     perPageSelector: vi.fn(),
-    totalEntriesSelector: vi.fn(),
+    totalProductsSelector: vi.fn(),
   };
 
   function initSummary<S extends SummaryState = SummaryState>(
@@ -43,7 +43,7 @@ describe('commerce core summary', () => {
       numberOfProductsSelector: vi.fn(),
       pageSelector: vi.fn(),
       perPageSelector: vi.fn(),
-      totalEntriesSelector: vi.fn(),
+      totalProductsSelector: vi.fn(),
     };
 
     state = buildMockCommerceState();
@@ -83,7 +83,7 @@ describe('commerce core summary', () => {
       ...options,
       responseIdSelector: () => 'responseId',
       isLoadingSelector: () => false,
-      totalEntriesSelector: () => 0,
+      totalProductsSelector: () => 0,
       errorSelector: () => null,
       enrichSummary: (_: CommerceEngineState) => ({
         query: 'foo',
@@ -107,7 +107,7 @@ describe('commerce core summary', () => {
       ...options,
       pageSelector: () => 0,
       perPageSelector: () => 20,
-      totalEntriesSelector: () => 100,
+      totalProductsSelector: () => 100,
       responseIdSelector: () => 'responseId',
       isLoadingSelector: () => false,
       errorSelector: () => null,
@@ -133,7 +133,7 @@ describe('commerce core summary', () => {
       ...options,
       pageSelector: () => 3,
       perPageSelector: () => 20,
-      totalEntriesSelector: () => 100,
+      totalProductsSelector: () => 100,
       responseIdSelector: () => 'responseId',
       isLoadingSelector: () => false,
       errorSelector: () => null,
@@ -157,7 +157,7 @@ describe('commerce core summary', () => {
   it('should return correct state when loading', () => {
     options.isLoadingSelector.mockReturnValue(true);
     options.errorSelector.mockReturnValue(null);
-    options.totalEntriesSelector.mockReturnValue(0);
+    options.totalProductsSelector.mockReturnValue(0);
 
     expect(summary.state).toEqual({
       firstProduct: 0,

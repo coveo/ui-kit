@@ -6,6 +6,7 @@ import {
   perPageRecommendationSelector,
   totalEntriesPrincipalSelector,
   totalEntriesRecommendationSelector,
+  totalProductsPrincipalSelector,
 } from './pagination-selectors.js';
 
 describe('commerce pagination selectors', () => {
@@ -64,6 +65,33 @@ describe('commerce pagination selectors', () => {
   it('#totalEntriesPrincipalSelector should return 0 when the totalEntries value is not set', () => {
     const state = buildMockCommerceState();
     expect(totalEntriesPrincipalSelector(state)).toEqual(0);
+  });
+
+  it('#totalProductsPrincipalSelector should return the totalProducts value from the principal section', () => {
+    const state = buildMockCommerceState({
+      commercePagination: {
+        principal: {
+          perPage: 10,
+          page: 1,
+          totalEntries: 100,
+          totalPages: 10,
+          totalProducts: 98,
+          totalSpotlightContent: 2,
+        },
+        recommendations: {},
+      },
+    });
+    expect(totalProductsPrincipalSelector(state)).toEqual(98);
+  });
+
+  it('#totalProductsPrincipalSelector should fall back to the totalEntries value when totalProducts is not set', () => {
+    const state = buildMockCommerceState({
+      commercePagination: {
+        principal: {perPage: 10, page: 1, totalEntries: 100, totalPages: 10},
+        recommendations: {},
+      },
+    });
+    expect(totalProductsPrincipalSelector(state)).toEqual(100);
   });
 
   it('#totalEntriesRecommendationSelector should return the totalEntries value from the recommendation section', () => {

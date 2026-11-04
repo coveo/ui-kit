@@ -1,3 +1,4 @@
+import {HighlightedText} from '../HighlightedText/HighlightedText.js';
 import type {SuggestionItem, SuggestionIconType} from './types.js';
 import styles from './SuggestionItemRow.module.css';
 
@@ -6,6 +7,7 @@ interface SuggestionItemRowProps {
   icon: SuggestionIconType;
   isActive: boolean;
   onSelect: () => void;
+  onHover?: () => void;
   id: string;
 }
 
@@ -65,7 +67,14 @@ const ICON_MAP = {
   settings: SettingsIcon,
 };
 
-export function SuggestionItemRow({item, icon, isActive, onSelect, id}: SuggestionItemRowProps) {
+export function SuggestionItemRow({
+  item,
+  icon,
+  isActive,
+  onSelect,
+  onHover,
+  id,
+}: SuggestionItemRowProps) {
   const IconComponent = ICON_MAP[icon];
 
   return (
@@ -75,10 +84,13 @@ export function SuggestionItemRow({item, icon, isActive, onSelect, id}: Suggesti
       aria-selected={isActive}
       className={`${styles.row} ${isActive ? styles.active : ''}`}
       onMouseDown={onSelect}
+      onMouseEnter={onHover}
     >
       <IconComponent />
       <div className={styles.content}>
-        <span className={styles.label}>{item.label}</span>
+        <span className={styles.label}>
+          <HighlightedText text={item.label} query={item.highlight ?? ''} wordStartsOnly />
+        </span>
         {item.subtitle && <span className={styles.subtitle}>{item.subtitle}</span>}
       </div>
     </div>

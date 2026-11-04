@@ -5,6 +5,7 @@ import type {
   Activity,
   DiscoveredSurface,
   ReasoningStep,
+  SessionInitialization,
   ToolCallStep,
   Turn,
   TurnAgent,
@@ -383,6 +384,35 @@ function foldUnknown(turn: Turn, activity: NormalizedStreamEvent): Turn {
  */
 export function createTurn(id: string, input: TurnInput): Turn {
   return {id, input, response: emptyResponse(), status: 'streaming'};
+}
+
+/**
+ * Folds one streamed event into the session's initialization, as {@link foldActivity} folds it into
+ * a turn. The initialization keeps only its activities and status: agent messages and reasoning
+ * have no transcript to appear in.
+ */
+export function foldInitialization(
+  initialization: SessionInitialization,
+  activity: NormalizedStreamEvent
+): SessionInitialization {
+  const folded = foldActivity(
+    {
+      id: '',
+      input: {},
+      response: {
+        activities: initialization.activities,
+        surfaces: deriveSurfaces(initialization.activities),
+      },
+      status: initialization.status,
+      ...(initialization.error === undefined ? {} : {error: initialization.error}),
+    },
+    activity
+  );
+  return {
+    activities: folded.response.activities,
+    status: folded.status,
+    ...(folded.error === undefined ? {} : {error: folded.error}),
+  };
 }
 
 /**

@@ -677,6 +677,34 @@ const products: WaterSportsProduct[] = PRODUCT_SEEDS.map((seed, index) => {
   };
 });
 
+const MAX_INSTANT_PRODUCTS = 4;
+
+// A plural's trailing "s" is dropped so "wetsuits" and "life jackets" find their products.
+function queryTerms(query: string): string[] {
+  return query
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter((term) => term.length > 0)
+    .map((term) => (term.length > 3 && term.endsWith('s') ? term.slice(0, -1) : term));
+}
+
+// Products whose name, brand or category below the shared root holds every term of the query, in
+// catalog order.
+function instantProductsFor(query: string): WaterSportsProduct[] {
+  const terms = queryTerms(query);
+  if (terms.length === 0) {
+    return [];
+  }
+  const rootPrefix = `${ROOT_CHAIN.join('|')}|`;
+  return products
+    .filter((product) => {
+      const leafPath = (product.ec_category.at(-1) ?? '').replace(rootPrefix, '');
+      const text = `${product.ec_name} ${product.ec_brand} ${leafPath}`.toLowerCase();
+      return terms.every((term) => text.includes(term));
+    })
+    .slice(0, MAX_INSTANT_PRODUCTS);
+}
+
 const sortOptions = {
   relevance: {sortCriteria: 'relevance', fields: [] as {field: string; direction: string}[]},
   price_asc: {
@@ -710,7 +738,6 @@ interface SearchViewState {
   pageSize: number;
   sortCriteria: string;
   selectedBrands: string[];
-  excludedBrands: string[];
   // A single active range covers both a listed range selection and a custom range;
   // the two are mutually exclusive.
   selectedPriceRange: PriceRange | null;
@@ -726,17 +753,13 @@ interface SearchViewState {
   categoryFacetDisplayCount: number;
 }
 
-// The only query the catalog answers; any other query has no results.
-const CATALOG_QUERY = 'Water Sports';
-
 const DEFAULT_VIEW: SearchViewState = {
-  query: CATALOG_QUERY,
+  query: 'Water Sports',
   correction: null,
   page: 0,
   pageSize: DEFAULT_PAGE_SIZE,
   sortCriteria: 'relevance',
   selectedBrands: [],
-  excludedBrands: [],
   selectedPriceRange: null,
   selectedCategoryPath: [],
   facetSearchQueries: {},
@@ -781,13 +804,7 @@ function sortProducts(input: WaterSportsProduct[], sortCriteria: string): WaterS
 }
 
 function filterProducts(view: SearchViewState): WaterSportsProduct[] {
-  if (view.query.toLowerCase() !== CATALOG_QUERY.toLowerCase()) {
-    return [];
-  }
   return products.filter((p) => {
-    if (view.excludedBrands.includes(p.ec_brand)) {
-      return false;
-    }
     if (view.selectedBrands.length > 0 && !view.selectedBrands.includes(p.ec_brand)) {
       return false;
     }
@@ -825,7 +842,7 @@ function deriveRegularFacetSearch(view: SearchViewState, componentId: string) {
   const page = view.facetSearchPages[componentId] ?? 0;
   const needle = query.toLowerCase();
   // Count without this facet's own brand selection so search results mirror the value list.
-  const brandCountBase = filterProducts({...view, selectedBrands: [], excludedBrands: []});
+  const brandCountBase = filterProducts({...view, selectedBrands: []});
   const matches = BRAND_CANDIDATES.filter((brand) => brand.toLowerCase().includes(needle))
     .map((brand) => ({
       value: brand,
@@ -840,38 +857,34 @@ function deriveRegularFacetValues(view: SearchViewState, componentId: string) {
   // Facet counts reflect the result set as if this facet's own selections were not applied,
   // so selecting one brand never zeroes out the sibling brand counts. Other facets still
   // constrain the counts.
-  const brandCountBase = filterProducts({...view, selectedBrands: [], excludedBrands: []});
-  const isActive = (brand: string) =>
-    view.selectedBrands.includes(brand) || view.excludedBrands.includes(brand);
+  const brandCountBase = filterProducts({...view, selectedBrands: []});
+  const isSelected = (brand: string) => view.selectedBrands.includes(brand);
   const countFor = (brand: string) => brandCountBase.filter((p) => p.ec_brand === brand).length;
-  // Eligible values are those with results plus any active value (kept so it can be
+  // Eligible values are those with results plus any selected value (kept so it can be
   // deselected). The display window and the show-more/less controls are computed against this
   // set — not the full static candidate list — so a facet never shows fewer than the initial
   // increment of available values, and the controls only appear when they are meaningful.
-  const eligibleBrands = BRAND_CANDIDATES.filter((brand) => countFor(brand) > 0 || isActive(brand));
+  const eligibleBrands = BRAND_CANDIDATES.filter(
+    (brand) => countFor(brand) > 0 || isSelected(brand)
+  );
   const displayCount = Math.min(view.regularFacetDisplayCount, eligibleBrands.length);
   const displayedPage = eligibleBrands.slice(0, displayCount);
-  // Active values that aren't part of the displayed page (selected/excluded through search)
-  // are pinned to the top of the list so the user sees their selection.
+  // Selected values that aren't part of the displayed page (selected through search) are pinned
+  // to the top of the list so the user sees their selection.
   const pinnedBrands = eligibleBrands.filter(
-    (brand) => isActive(brand) && !displayedPage.includes(brand)
+    (brand) => isSelected(brand) && !displayedPage.includes(brand)
   );
   const displayedBrands = [...pinnedBrands, ...displayedPage];
-  const values = displayedBrands.map((brand) => {
-    const numberOfResults = countFor(brand);
-    let state: 'idle' | 'selected' | 'excluded' = 'idle';
-    if (view.selectedBrands.includes(brand)) {
-      state = 'selected';
-    } else if (view.excludedBrands.includes(brand)) {
-      state = 'excluded';
-    }
-    return {value: brand, numberOfResults, state};
-  });
+  const values = displayedBrands.map((brand) => ({
+    value: brand,
+    numberOfResults: countFor(brand),
+    state: isSelected(brand) ? 'selected' : 'idle',
+  }));
 
   return {
     ...FACET_FIELDS.regular,
     values,
-    hasActiveValues: view.selectedBrands.length > 0 || view.excludedBrands.length > 0,
+    hasActiveValues: view.selectedBrands.length > 0,
     canShowMoreValues: displayCount < eligibleBrands.length,
     canShowLessValues: displayCount > REGULAR_FACET_DISPLAY_LIMIT,
     facetSearch: deriveRegularFacetSearch(view, componentId),
@@ -1064,18 +1077,13 @@ function deriveCategoryFacetValues(view: SearchViewState, componentId: string) {
 function deriveBreadboxState(view: SearchViewState) {
   const facets: Record<string, unknown>[] = [];
 
-  const activeBrands = BRAND_CANDIDATES.filter(
-    (brand) => view.selectedBrands.includes(brand) || view.excludedBrands.includes(brand)
-  );
-  if (activeBrands.length > 0) {
+  const selectedBrands = BRAND_CANDIDATES.filter((brand) => view.selectedBrands.includes(brand));
+  if (selectedBrands.length > 0) {
     facets.push({
       facetId: FACET_COMPONENT_IDS.regular,
       ...FACET_FIELDS.regular,
       type: 'regular',
-      values: activeBrands.map((brand) => ({
-        value: brand,
-        state: view.selectedBrands.includes(brand) ? 'selected' : 'excluded',
-      })),
+      values: selectedBrands.map((brand) => ({value: brand, state: 'selected'})),
     });
   }
 
@@ -1116,12 +1124,13 @@ function computeComponentsState(view: SearchViewState): Record<string, unknown> 
   // The query-summary owns its own backend-computed aggregate (query + result window) so it does
   // not read the search-box, pagination, and product-list state. Indices are 1-based; on an empty
   // result set the window collapses to 0-0 and the renderer shows the no-results/empty state.
+  const {query} = view;
   const firstIndex = totalEntries === 0 ? 0 : start + 1;
   const lastIndex = totalEntries === 0 ? 0 : start + pageProducts.length;
 
   return {
     [QUERY_SUMMARY_ID]: {
-      query: view.query,
+      query,
       firstIndex,
       lastIndex,
       totalEntries,
@@ -1438,20 +1447,7 @@ function deriveRegularFacetState(
   switch (action.name) {
     case 'toggleSelect': {
       const selectedBrands = toggleInList(currentView.selectedBrands, value);
-      const excludedBrands = currentView.excludedBrands.filter((brand) => brand !== value);
-      currentView = clearFacetSearch(
-        {...currentView, selectedBrands, excludedBrands, page: 0},
-        sourceComponentId
-      );
-      break;
-    }
-    case 'toggleExclude': {
-      const excludedBrands = toggleInList(currentView.excludedBrands, value);
-      const selectedBrands = currentView.selectedBrands.filter((brand) => brand !== value);
-      currentView = clearFacetSearch(
-        {...currentView, selectedBrands, excludedBrands, page: 0},
-        sourceComponentId
-      );
+      currentView = clearFacetSearch({...currentView, selectedBrands, page: 0}, sourceComponentId);
       break;
     }
     case 'toggleSingleSelect': {
@@ -1461,21 +1457,6 @@ function deriveRegularFacetState(
         {
           ...currentView,
           selectedBrands: isSoleSelected ? [] : [value],
-          excludedBrands: [],
-          page: 0,
-        },
-        sourceComponentId
-      );
-      break;
-    }
-    case 'toggleSingleExclude': {
-      const isSoleExcluded =
-        currentView.excludedBrands.length === 1 && currentView.excludedBrands[0] === value;
-      currentView = clearFacetSearch(
-        {
-          ...currentView,
-          excludedBrands: isSoleExcluded ? [] : [value],
-          selectedBrands: [],
           page: 0,
         },
         sourceComponentId
@@ -1484,7 +1465,7 @@ function deriveRegularFacetState(
     }
     case 'clearAllActiveValues':
       currentView = clearFacetSearch(
-        {...currentView, selectedBrands: [], excludedBrands: [], page: 0},
+        {...currentView, selectedBrands: [], page: 0},
         sourceComponentId
       );
       break;
@@ -1610,7 +1591,6 @@ function deselectBreadboxValue(context: Record<string, unknown>): void {
       currentView = {
         ...currentView,
         selectedBrands: currentView.selectedBrands.filter((brand) => brand !== value),
-        excludedBrands: currentView.excludedBrands.filter((brand) => brand !== value),
         page: 0,
       };
       break;
@@ -1644,7 +1624,6 @@ function deriveBreadboxViewState(action: {name: string; context: Record<string, 
       currentView = {
         ...currentView,
         selectedBrands: [],
-        excludedBrands: [],
         selectedPriceRange: null,
         selectedCategoryPath: [],
         categoryFacetDisplayCount: CATEGORY_FACET_DISPLAY_LIMIT,
@@ -1667,8 +1646,36 @@ function deriveQuerySummaryViewState(action: {
   }
 }
 
+interface FacetRestore {
+  facetId: string;
+  values?: string[];
+  numericRanges?: PriceRange[];
+  path?: string[];
+}
+
+// Like the gateway, a restore replaces the whole view with the snapshot instead of merging into it.
+function restoreView(context: Record<string, unknown>): SearchViewState {
+  const facets = (Array.isArray(context.facets) ? context.facets : []) as FacetRestore[];
+  const restored = (field: string) => facets.find((facet) => facet.facetId === field);
+  // The mock's price facet holds a single selected range, so later ranges are dropped.
+  const range = restored(FACET_FIELDS.numeric.field)?.numericRanges?.[0];
+  return {
+    ...DEFAULT_VIEW,
+    query: String(context.query ?? DEFAULT_VIEW.query),
+    page: Number(context.page) || 0,
+    pageSize: Number(context.pageSize) || DEFAULT_VIEW.pageSize,
+    sortCriteria: String(context.sortCriteria ?? DEFAULT_VIEW.sortCriteria),
+    selectedBrands: (restored(FACET_FIELDS.regular.field)?.values ?? []).map(String),
+    selectedPriceRange: range ? {start: Number(range.start), end: Number(range.end)} : null,
+    selectedCategoryPath: (restored(FACET_FIELDS.category.field)?.path ?? []).map(String),
+  };
+}
+
 function deriveNonFacetState(action: {name: string; context: Record<string, unknown>}): void {
   switch (action.name) {
+    case 'restoreState':
+      currentView = restoreView(action.context);
+      break;
     case 'selectPage':
       currentView = {...currentView, page: Number(action.context.page) || 0};
       break;
@@ -1767,5 +1774,10 @@ function keepWaterSportsView(templateSurfaceId: string, surfaceId: string): void
   }
 }
 
-export {buildWaterSportsInitialEvents, buildWaterSportsActionEvents, keepWaterSportsView};
+export {
+  buildWaterSportsInitialEvents,
+  buildWaterSportsActionEvents,
+  instantProductsFor,
+  keepWaterSportsView,
+};
 export type {QueryCorrection};

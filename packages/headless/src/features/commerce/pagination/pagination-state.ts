@@ -3,6 +3,8 @@ export interface PaginationSlice {
   perPage: number;
   totalEntries: number;
   totalPages: number;
+  totalProducts?: number;
+  totalSpotlightContent?: number;
 }
 
 export interface CommercePaginationState {
