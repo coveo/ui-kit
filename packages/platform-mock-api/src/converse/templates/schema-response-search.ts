@@ -1366,8 +1366,16 @@ const surfaceActivitySnapshot: ConverseEvent = ActivitySnapshot({
 // A new "water sports" search resets the surface, so the initial events are built on demand:
 // each call resets the in-memory view to defaults and recomputes the initial state snapshot. A
 // correction says the shopper typed another query, which a correction or query trigger replaced.
-function buildWaterSportsInitialEvents(correction: QueryCorrection | null = null): ConverseEvent[] {
+// With the prompt's surface id minter, the minted surface's first action starts from this view,
+// correction included.
+function buildWaterSportsInitialEvents(
+  correction: QueryCorrection | null = null,
+  mintSurfaceId?: (surfaceId: string) => string
+): ConverseEvent[] {
   currentView = {...DEFAULT_VIEW, correction};
+  if (mintSurfaceId) {
+    viewsBySurfaceId.set(mintSurfaceId(SEARCH_SURFACE_ID), currentView);
+  }
   // Component_State is transported inline as `/state/<id>` updateDataModel ops on an
   // `a2ui-surface` activity, replacing the removed component STATE_SNAPSHOT.
   const initialStateActivity: ConverseEvent = UpdateDataModelActivity({
@@ -1636,10 +1644,7 @@ function deriveBreadboxViewState(action: {name: string; context: Record<string, 
 }
 
 // Searches the shopper's query as typed when the correction allows it, as the gateway does.
-function deriveQuerySummaryViewState(action: {
-  name: string;
-  context: Record<string, unknown>;
-}): void {
+function deriveQuerySummaryViewState(action: {name: string}): void {
   const correction = currentView.correction;
   if (action.name === 'overrideCorrection' && correction?.canOverride) {
     currentView = {...DEFAULT_VIEW, query: correction.originalQuery};
@@ -1766,17 +1771,4 @@ function buildWaterSportsActionEvents(
   });
 }
 
-// A prompt mints the surface id after building its events, so it hands the minted id back here: the
-// surface's first action then starts from the view its prompt built, correction included.
-function keepWaterSportsView(templateSurfaceId: string, surfaceId: string): void {
-  if (templateSurfaceId === SEARCH_SURFACE_ID) {
-    viewsBySurfaceId.set(surfaceId, currentView);
-  }
-}
-
-export {
-  buildWaterSportsInitialEvents,
-  buildWaterSportsActionEvents,
-  instantProductsFor,
-  keepWaterSportsView,
-};
+export {buildWaterSportsInitialEvents, buildWaterSportsActionEvents, instantProductsFor};
