@@ -659,6 +659,21 @@ describe('keyboard navigation, as in Atomic commerce', () => {
     expect(onValueChange).toHaveBeenCalledWith('Surfboards');
   });
 
+  it('scrolls the option the arrow keys highlight into view', () => {
+    const scrollIntoView = vi.spyOn(Element.prototype, 'scrollIntoView');
+    const {press} = renderNavigable();
+
+    press('ArrowUp');
+    press('ArrowRight');
+
+    expect(scrollIntoView.mock.contexts.map((option) => (option as Element).id)).toEqual([
+      'suggestion-item-c1',
+      'p1',
+    ]);
+    expect(scrollIntoView).toHaveBeenCalledWith({block: 'nearest'});
+    scrollIntoView.mockRestore();
+  });
+
   it('leaves the left and right arrows to the caret without a highlight', () => {
     const {press} = renderNavigable();
 

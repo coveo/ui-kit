@@ -272,6 +272,12 @@ export function PromptInput({
 
   useEffect(() => onActiveItemChange?.(activeItem), [activeItem, onActiveItemChange]);
 
+  useEffect(() => {
+    if (activeDescendant) {
+      document.getElementById(activeDescendant)?.scrollIntoView({block: 'nearest'});
+    }
+  }, [activeDescendant]);
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.inputContainer}>
