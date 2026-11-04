@@ -757,7 +757,7 @@
     <name>quantic_GeneratedAnswerIsHidden</name>
   </customLabels>
   <customLabels>
-    <label>Réponse générée par l'IA: {{0}}</label>
+    <label>Réponse générée par l'IA : {{0}}</label>
     <name>quantic_AnswerGenerated</name>
   </customLabels>
   <customLabels>
