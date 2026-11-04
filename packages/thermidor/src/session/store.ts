@@ -6,6 +6,7 @@
  */
 
 import type {RendererStream} from './a2ui-v09-projection.js';
+import type {UnrecordedState} from './session-state.js';
 import type {A2uiState, ActionError, SessionInitialization, SessionRequest} from './types.js';
 
 /**
@@ -53,6 +54,9 @@ export interface SessionStoreState<TTurn> {
    * (ADR-018). Persisted.
    */
   state?: A2uiState;
+
+  /** The writes of concurrent answers over `state` (ADR-020). Never recorded or serialized. */
+  unrecordedState?: UnrecordedState;
 
   /**
    * The session's renderer stream, which only grows. Runtime only: re-derived from the turns'

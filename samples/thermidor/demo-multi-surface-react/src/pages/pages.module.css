@@ -1,0 +1,43 @@
+.page {
+  box-sizing: border-box;
+  max-width: 1100px;
+  min-width: 0;
+  margin: 0 auto;
+  padding: var(--space-5);
+}
+
+.title {
+  font-size: var(--font-size-xl);
+  margin: var(--space-2) 0 var(--space-5);
+}
+
+.path {
+  margin: calc(-1 * var(--space-4)) 0 var(--space-4);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.loading {
+  color: var(--color-text-muted);
+}
+
+.error {
+  color: var(--color-error);
+}
+
+.note {
+  margin: 0 0 var(--space-4);
+  padding: var(--space-2) var(--space-3);
+  border-left: 3px solid var(--color-border);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.back {
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: var(--color-text-link);
+  cursor: pointer;
+}

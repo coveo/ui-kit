@@ -9,6 +9,11 @@
  * {@link foldActivity} reduction, plus the initialize / dispatchAction / cancel /
  * retry / stream-consume orchestration.
  *
+ * The runtime ({@link createSessionRuntime}) receives the fields that scope every
+ * request as an input: `createSession` passes its required `agentConfigurationId` and
+ * `trackingId`, and the private entry point's `createPrivateSession` passes whichever of
+ * its optional ids and locale fields are set.
+ *
  * There are no singletons and no module-level mutable state: every call to
  * `createSession` builds a fresh store, so two sessions created from identical
  * configuration share no mutable state.
@@ -20,8 +25,10 @@ import type {NormalizedStreamEvent, RawSSEEvent} from '@/src/internal/api/protoc
 import {createUnifiedEndpointClient} from '@/src/internal/api/unified/unified-endpoint-client.js';
 import type {
   A2uiAction,
+  ClientOwnedRequestFields,
+  ConverseRequestModel,
   InitializeAction,
-  CommerceRequestModel,
+  RequestScopeFields,
 } from '@/src/internal/api/unified/unified-endpoint-types.js';
 import type {
   CommerceContextProvider,
@@ -29,8 +36,11 @@ import type {
 } from '@/src/internal/context/index.js';
 import {devWarn} from '@/src/internal/utils/dev-warn.js';
 import {generateId} from '@/src/internal/utils/id-generator.js';
+import type {ActionOrigin} from './action-cache.js';
 import {validateActionPayload} from './action-payload-validation.js';
+import {concurrentAction, type CachePolicy} from './announced-actions.js';
 import type {ContractsSchema} from './contracts.js';
+import {createConcurrentActions} from './concurrent-actions.js';
 import {callWithConflictRetry} from './conflict-retry.js';
 import {
   EMPTY_RENDERER_STREAM,
@@ -41,7 +51,13 @@ import {createTurn, foldActivity, foldInitialization, SURFACE_ACTIVITY_KIND} fro
 import {deriveNodeIdentityRegistry} from './in-transit-validation.js';
 import {restoreSession, serializeSession, type SerializedSession} from './serialize.js';
 import {createSessionStore, type SessionStore, type SessionStoreState} from './store.js';
-import {applyInboundOps} from './session-state.js';
+import {
+  EMPTY_UNRECORDED_STATE,
+  applyInboundOps,
+  overlayUnrecordedState,
+  releaseUnrecordedState,
+  type UnrecordedState,
+} from './session-state.js';
 import {isTurnOpeningAction} from './turn-opening.js';
 import {
   INITIALIZATION,
@@ -231,7 +247,8 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
   /**
    * The validated data model of every live surface, keyed by surface id, whichever turn wrote it:
    * inbound `updateDataModel` ops are validated against the injected contracts before they apply
-   * here.
+   * here. The answers to concurrent actions are applied on top without being recorded: a later
+   * recorded write to the same path replaces them, and {@link Session.serialize} leaves them out.
    */
   readonly state: A2uiState;
   /**
@@ -247,7 +264,8 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
   /**
    * The request the session is sending, or `undefined` when it is idle. The session sends one
    * request at a time, `initialize`, prompts and actions alike, in the order they were dispatched;
-   * an action's run counts, a follow-up included. Read it synchronously, or through {@link Session.subscribe}.
+   * an action's run counts, a follow-up included. An action the producer announces as concurrent
+   * is sent beside it and never sets it. Read it synchronously, or through {@link Session.subscribe}.
    */
   readonly request: SessionRequest | undefined;
   /**
@@ -287,6 +305,11 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * snapshots are recorded with the active turn, or with {@link Session.initialization} before the
    * first turn, and its failure sets {@link Session.actionError}.
    *
+   * An action the producer announces as concurrent is sent at once, whatever request is in flight,
+   * and never sets {@link Session.request}. Only the latest dispatch from a node is shown, and one
+   * the producer allows to be reused is answered without a request. Its answer is not recorded, and
+   * its failure sets no {@link Session.actionError}.
+   *
    * FIRE-AND-FORGET: the returned Promise ALWAYS resolves and NEVER rejects, so
    * the consumer needs no `.catch`. A message with no `userAction`, no
    * `sourceComponentId`, a node that resolves to no component, and an internal
@@ -295,7 +318,7 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    */
   dispatchAction: (message: A2uiClientMessage | SubmitPromptAction) => Promise<void>;
   /**
-   * Stops the request in flight, `initialize` included. {@link Session.request} stays set until the stopped request has
+   * Stops the request in flight, `initialize` included, but no concurrent action. {@link Session.request} stays set until the stopped request has
    * unwound, a few microtasks later, so a dispatch made right after `cancel()` is withheld: wait for
    * `request` to become `undefined`, through {@link Session.subscribe}, before sending the next one.
    */
@@ -318,6 +341,12 @@ function isSubmitPromptAction(
 
 /** The action a request sends, which its failures are reported against. */
 type ActionSource = Omit<ActionError, 'message'>;
+
+/** A dispatched action, with the discriminant of the node it came from. */
+interface RecoveredAction extends ActionOrigin {
+  discriminant: string;
+  context: unknown;
+}
 
 interface RequestFailure {
   error: string;
@@ -387,6 +416,12 @@ function readSessionKeys(
   return undefined;
 }
 
+/** The session configuration minus the fields that scope every request. */
+export type SessionRuntimeConfig<TContracts extends ContractsSchema = ContractsSchema> = Omit<
+  SessionConfig<TContracts>,
+  'agentConfigurationId' | 'trackingId'
+>;
+
 /**
  * Creates a {@link Session} over a fresh observable store + fold.
  */
@@ -398,7 +433,18 @@ export function createSession<TContracts extends ContractsSchema>(
       throw new Error(`createSession requires a non-blank ${key}.`);
     }
   }
+  const {agentConfigurationId, trackingId} = config;
+  return createSessionRuntime(config, {agentConfigurationId, trackingId});
+}
 
+/**
+ * The session runtime both entry points share. `requestScope` holds the fields sent with
+ * every request besides the ones the session builds itself.
+ */
+export function createSessionRuntime<TContracts extends ContractsSchema>(
+  config: SessionRuntimeConfig<TContracts>,
+  requestScope: Readonly<RequestScopeFields>
+): Session<TContracts> {
   const initialState: SessionStoreState<Turn> = config.sessionToRestore
     ? restoreSession(config.sessionToRestore)
     : {
@@ -438,18 +484,29 @@ export function createSession<TContracts extends ContractsSchema>(
     return surfaceView;
   }
 
-  // The state of the live surfaces only, recomputed when the state or the surfaces change.
+  // The state of the live surfaces only, with the unrecorded writes on top, recomputed when the
+  // state, those writes or the surfaces change.
   let liveState: A2uiState = {};
-  let liveStateSource: {state?: A2uiState; view?: SessionSurfaceView} = {};
+  let liveStateSource: {
+    state?: A2uiState;
+    unrecordedState?: UnrecordedState;
+    view?: SessionSurfaceView;
+  } = {};
   function readLiveState(): A2uiState {
-    const {state = {}} = store.getState();
+    const {state = {}, unrecordedState = EMPTY_UNRECORDED_STATE} = store.getState();
     const view = readSurfaceView();
-    if (liveStateSource.state !== state || liveStateSource.view !== view) {
+    if (
+      liveStateSource.state !== state ||
+      liveStateSource.unrecordedState !== unrecordedState ||
+      liveStateSource.view !== view
+    ) {
       const live = new Set(view.surfaces.map((surface) => surface.surfaceId));
       liveState = Object.fromEntries(
-        Object.entries(state).filter(([surfaceId]) => live.has(surfaceId))
+        Object.entries(overlayUnrecordedState(state, unrecordedState)).filter(([surfaceId]) =>
+          live.has(surfaceId)
+        )
       );
-      liveStateSource = {state, view};
+      liveStateSource = {state, unrecordedState, view};
     }
     return liveState;
   }
@@ -551,12 +608,21 @@ export function createSession<TContracts extends ContractsSchema>(
         snapshot.activityType === SURFACE_ACTIVITY_KIND &&
         Array.isArray(messages)
       ) {
+        const activities = sessionActivities(next);
         next.state = applyInboundOps(
           current.state ?? {},
-          sessionActivities(next),
+          activities,
           content as Record<string, unknown>,
           config.contracts
         );
+        if (current.unrecordedState) {
+          next.unrecordedState = releaseUnrecordedState(
+            current.unrecordedState,
+            activities,
+            content as Record<string, unknown>,
+            config.contracts
+          );
+        }
         next.rendererStream = appendToRendererStream(
           current.rendererStream ?? EMPTY_RENDERER_STREAM,
           convertA2uiMessages(messages)
@@ -610,7 +676,7 @@ export function createSession<TContracts extends ContractsSchema>(
    *     (meaningful even when empty) plus `pinnedProducts`, `source`, and
    *     `custom` carried from what the provider returns.
    */
-  function buildBaseRequest(): Omit<CommerceRequestModel, 'message' | 'action'> {
+  function buildBaseRequest(): Omit<ClientOwnedRequestFields, 'message' | 'action'> {
     const navigatorContext = config.navigatorContextProvider?.();
     const commerceContext = config.commerceContextProvider?.();
     const {sessionId, sessionToken} = store.getState();
@@ -621,9 +687,7 @@ export function createSession<TContracts extends ContractsSchema>(
     };
     const user: Record<string, unknown> = {userAgent: navigatorContext?.userAgent ?? null};
 
-    const base: Omit<CommerceRequestModel, 'message' | 'action'> = {
-      agentConfigurationId: config.agentConfigurationId,
-      trackingId: config.trackingId,
+    const base: Omit<ClientOwnedRequestFields, 'message' | 'action'> = {
       clientId: navigatorContext?.clientId ?? undefined,
       conversationSessionId: sessionId,
       conversationToken: sessionToken,
@@ -648,13 +712,16 @@ export function createSession<TContracts extends ContractsSchema>(
     return base;
   }
 
-  function buildConversationRequest(prompt: string): CommerceRequestModel {
-    return {...buildBaseRequest(), message: prompt, action: null};
+  // The scope fields come first, in the order the public request has always sent them.
+  function buildConversationRequest(prompt: string): ConverseRequestModel {
+    return {...requestScope, ...buildBaseRequest(), message: prompt, action: null};
   }
 
-  function buildActionRequest(action: A2uiAction | InitializeAction): CommerceRequestModel {
-    return {...buildBaseRequest(), message: null, action};
+  function buildActionRequest(action: A2uiAction | InitializeAction): ConverseRequestModel {
+    return {...requestScope, ...buildBaseRequest(), message: null, action};
   }
+
+  const concurrentActions = createConcurrentActions({store, client, config, buildActionRequest});
 
   /**
    * An `action`'s stream folds only its surface snapshots into `target`, and its failure sets
@@ -736,7 +803,7 @@ export function createSession<TContracts extends ContractsSchema>(
    */
   async function executeStream(
     target: RunTarget,
-    buildRequest: () => CommerceRequestModel,
+    buildRequest: () => ConverseRequestModel,
     abortController: AbortController,
     action?: ActionSource
   ): Promise<RequestFailure | undefined> {
@@ -851,8 +918,6 @@ export function createSession<TContracts extends ContractsSchema>(
           buildActionRequest({
             name: 'initialize',
             timestamp: new Date().toISOString(),
-            actionId: null,
-            wantResponse: false,
             context: {},
           }),
         abortController
@@ -876,26 +941,45 @@ export function createSession<TContracts extends ContractsSchema>(
   }
 
   /**
-   * Private validate-and-send path. Validates the recovered action's payload against the
-   * component's generated Zod action schema and withholds on failure; targets the action's own
+   * Validates the action payload against the component's generated Zod action schema before the
+   * POST. A non-conforming payload is withheld (nothing sent).
+   */
+  function hasValidPayload(recovered: RecoveredAction): boolean {
+    const validation = validateActionPayload(
+      recovered.discriminant,
+      recovered.name,
+      recovered.context,
+      config.contracts
+    );
+    if (!validation.valid) {
+      devWarn(
+        `dispatchAction: dispatch withheld: Invalid payload for action "${recovered.name}" on component "${recovered.discriminant}": ${validation.reason}`
+      );
+    }
+    return validation.valid;
+  }
+
+  /**
+   * Private validate-and-send path. Withholds an action whose payload fails
+   * {@link hasValidPayload}; targets the action's own
    * originating surface, any live surface of the session (ADR-018). An action the producer
    * announced as opening a turn opens one, even before the first turn (ADR-019); any other is
    * recorded with the active turn, or with the initialization before the first turn.
    * Withholds when there is neither to stream the answer into.
    */
-  function issueAction(recovered: {
-    discriminant: string;
-    name: string;
-    sourceComponentId: string;
-    surfaceId: string;
-    context: unknown;
-  }): Promise<void> {
+  function issueAction(recovered: RecoveredAction): Promise<void> {
     const current = store.getState();
-    const opensTurn = isTurnOpeningAction(
-      sessionActivities(current),
-      recovered.surfaceId,
-      recovered.name
-    );
+    const activities = sessionActivities(current);
+    const opensTurn = isTurnOpeningAction(activities, recovered.surfaceId, recovered.name);
+    const concurrent = concurrentAction(activities, recovered.surfaceId, recovered.name);
+    if (concurrent) {
+      if (opensTurn) {
+        devWarn(
+          `dispatchAction: ${recovered.name} is announced as both concurrent and turn-opening; it is sent as concurrent.`
+        );
+      }
+      return issueConcurrentAction(recovered, concurrent.cache);
+    }
     const {activeTurnId, initialization} = current;
     if (!opensTurn && !activeTurnId && !initialization) {
       return withhold();
@@ -908,18 +992,7 @@ export function createSession<TContracts extends ContractsSchema>(
     // commerce one.
     const surfaceId = recovered.surfaceId;
 
-    // Validate the action payload against the component's generated Zod action
-    // schema BEFORE the POST. A non-conforming payload is withheld (nothing sent).
-    const validation = validateActionPayload(
-      recovered.discriminant,
-      recovered.name,
-      recovered.context,
-      config.contracts
-    );
-    if (!validation.valid) {
-      devWarn(
-        `dispatchAction: dispatch withheld: Invalid payload for action "${recovered.name}" on component "${recovered.discriminant}": ${validation.reason}`
-      );
+    if (!hasValidPayload(recovered)) {
       return withhold();
     }
 
@@ -975,6 +1048,20 @@ export function createSession<TContracts extends ContractsSchema>(
       },
       abandoned
     );
+  }
+
+  function issueConcurrentAction(
+    recovered: RecoveredAction,
+    policy: CachePolicy | undefined
+  ): Promise<void> {
+    if (!store.getState().sessionToken) {
+      devWarn(`dispatchAction: ${recovered.name} withheld: the session has no token yet.`);
+      return withhold();
+    }
+    if (!hasValidPayload(recovered)) {
+      return withhold();
+    }
+    return concurrentActions.issue(recovered, policy);
   }
 
   /**
@@ -1063,7 +1150,11 @@ export function createSession<TContracts extends ContractsSchema>(
       return;
     }
 
-    await issue(message);
+    try {
+      await issue(message);
+    } catch (error) {
+      devWarn(`dispatchAction: action withheld: ${getErrorMessage(error)}`);
+    }
   };
 
   function retry(turnId: string): void {
@@ -1101,8 +1192,6 @@ export function createSession<TContracts extends ContractsSchema>(
       name: action.name,
       sourceComponentId: action.sourceComponentId,
       timestamp: new Date().toISOString(),
-      actionId: null,
-      wantResponse: false,
       context: action.context,
     };
     const request: SessionRequest = {

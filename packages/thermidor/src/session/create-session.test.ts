@@ -1217,6 +1217,10 @@ describe('createSession lifecycle', () => {
           context: {actionId: 'more-jackets'},
         },
       });
+      const retriedAction = (callMock.mock.calls.at(-1)?.[0] as {action: Record<string, unknown>})
+        .action;
+      expect(retriedAction).not.toHaveProperty('actionId');
+      expect(retriedAction).not.toHaveProperty('wantResponse');
       retried.emit({type: 'RUN_FINISHED'});
       retried.close();
       await flush();
@@ -1963,6 +1967,8 @@ describe('createSession lifecycle', () => {
       expect(sent.action).toMatchObject({name: 'initialize', context: {}});
       expect('surfaceId' in sent.action).toBe(false);
       expect('sourceComponentId' in sent.action).toBe(false);
+      expect(sent.action).not.toHaveProperty('actionId');
+      expect(sent.action).not.toHaveProperty('wantResponse');
       expect(session.initialization).toEqual({activities: [], status: 'streaming'});
 
       stream.emit(shellSurface);
