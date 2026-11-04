@@ -38,7 +38,6 @@ describe('buildRestoreSnapshot', () => {
           values: [
             {value: 'Billabong', state: 'selected', numberOfResults: 4},
             {value: 'Hurley', state: 'idle', numberOfResults: 3},
-            {value: 'Xcel', state: 'excluded', numberOfResults: 2},
           ],
         },
       },

@@ -49,8 +49,8 @@ catalogs:
       specifier: 20.7.1
       version: 20.7.1
     '@coveo/thermidor-schema':
-      specifier: 1.0.0-beta.37
-      version: 1.0.0-beta.37
+      specifier: 1.0.0-beta.39
+      version: 1.0.0-beta.39
     '@msw/playwright':
       specifier: 0.6.7
       version: 0.6.7
@@ -2342,6 +2342,49 @@ importers:
     linkDirectory: false
     publishDirectory: publish
 
+  samples/thermidor/demo-multi-surface-react:
+    dependencies:
+      '@copilotkit/a2ui-renderer':
+        specifier: 1.80.0
+        version: 1.80.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@coveo/thermidor':
+        specifier: workspace:*
+        version: link:../../../packages/thermidor
+      '@coveo/thermidor-schema':
+        specifier: 'catalog:'
+        version: 1.0.0-beta.39(zod@4.6.7)
+      react:
+        specifier: 19.2.8
+        version: 19.2.8
+      react-dom:
+        specifier: 19.2.8
+        version: 19.2.8(react@19.2.8)
+    devDependencies:
+      '@testing-library/react':
+        specifier: 'catalog:'
+        version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.6
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.18
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.2.5(@types/react@19.2.18)
+      '@vitejs/plugin-react':
+        specifier: 'catalog:'
+        version: 6.1.2(vite@8.3.4(@types/node@24.13.6)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(yaml@2.9.1))
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: 'catalog:'
+        version: 8.3.4(@types/node@24.13.6)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(yaml@2.9.1)
+      vitest:
+        specifier: 'catalog:'
+        version: 4.1.12(@opentelemetry/api@1.10.0)(@types/node@24.13.6)(@vitest/browser-playwright@4.1.12)(jsdom@30.1.3(@noble/hashes@1.8.0))(msw@2.15.0(@types/node@24.13.6)(typescript@6.0.3))(vite@8.3.4(@types/node@24.13.6)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(yaml@2.9.1))
+
   samples/thermidor/demo-schema-react:
     dependencies:
       '@copilotkit/a2ui-renderer':
@@ -2352,7 +2395,7 @@ importers:
         version: link:../../../packages/thermidor
       '@coveo/thermidor-schema':
         specifier: 'catalog:'
-        version: 1.0.0-beta.37(zod@3.25.76)
+        version: 1.0.0-beta.39(zod@3.25.76)
       dompurify:
         specifier: 'catalog:'
         version: 3.4.17
@@ -3687,8 +3730,8 @@ packages:
   '@coveo/semantic-monorepo-tools@2.7.1':
     resolution: {integrity: sha512-yPUdpPgoZWxX/lyhQWaskwGXS4ZFLsOK4QVUyD+1BtOk/827vqw93Q7UD4aumuYMVKTDnGjjHOEmHl07nzUvYw==}
 
-  '@coveo/thermidor-schema@1.0.0-beta.37':
-    resolution: {integrity: sha512-DoPRJDtOB+p/Mt2mwNBTAQtXLm4dtyeaERidiV6rOYPbRgxBBk7jg7ZiRIsjrwPs/zWeYTJmAvAu+nSBVQkAeA==}
+  '@coveo/thermidor-schema@1.0.0-beta.39':
+    resolution: {integrity: sha512-3svFBzR4KQuanW/7iAe9u7O4aGo4d9qs5lEV93Jtj0K/yFLuORMtIM91EdayoiXqBAAeIU2lEuMKw3rdwGXbfA==}
     engines: {node: '>=22.14.0'}
     peerDependencies:
       zod: ^3.25 || ^4.4.3
@@ -18646,9 +18689,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@coveo/thermidor-schema@1.0.0-beta.37(zod@3.25.76)':
+  '@coveo/thermidor-schema@1.0.0-beta.39(zod@3.25.76)':
     dependencies:
       zod: 3.25.76
+
+  '@coveo/thermidor-schema@1.0.0-beta.39(zod@4.6.7)':
+    dependencies:
+      zod: 4.6.7
 
   '@cspell/cspell-bundled-dicts@9.8.0':
     dependencies:
