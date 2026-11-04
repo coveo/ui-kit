@@ -6,7 +6,6 @@ import styles from './SuggestionsDropdown.module.css';
 export const SUGGESTIONS_LISTBOX_ID = 'suggestions-listbox';
 /** The listbox drawn beside the suggestions, whose options the left and right arrows reach. */
 export const ASIDE_LISTBOX_ID = 'suggestions-aside-listbox';
-/** The id of the option of the aside listbox that the arrow keys highlight, if any. */
 export const ActiveAsideOptionContext = createContext<string | undefined>(undefined);
 
 interface SuggestionsDropdownProps {

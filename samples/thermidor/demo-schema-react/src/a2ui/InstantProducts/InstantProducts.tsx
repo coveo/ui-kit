@@ -24,7 +24,6 @@ export const INSTANT_PRODUCTS_TIMEOUT_MS = 5000;
 
 type InstantProduct = InstantProductsState['products'][number];
 
-/** Opens the product's page in a new tab. Enter on its highlight clicks it. */
 function openProduct({clickUri}: InstantProduct) {
   if (clickUri) {
     window.open(clickUri, '_blank', 'noopener,noreferrer');
@@ -46,9 +45,6 @@ function useShowProductsPanel(): boolean {
  * arrive: a skeleton until the first answer, then the previous products, dimmed and inert, until
  * the highlighted query's answer. Products answering another query than the highlighted one are never
  * shown as current.
- *
- * The current products are a list the arrow keys reach from the highlighted suggestion; Enter opens
- * the highlighted one, as a click does.
  */
 export const InstantProducts = createReactComponent(
   {name: 'InstantProducts', schema: InstantProductsPropsSchema},
@@ -133,7 +129,6 @@ function PanelHeader({title}: {title: string}) {
   );
 }
 
-/** The products; the arrow keys reach them when `navigable`, as the current ones are. */
 function ProductList({
   products,
   navigable = false,

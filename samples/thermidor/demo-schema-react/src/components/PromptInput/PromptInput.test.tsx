@@ -564,7 +564,6 @@ describe('highlighted suggestion', () => {
   });
 });
 
-/** Products beside the suggestions, reached with the arrow keys as `InstantProducts` are. */
 function TestAside({onSelect}: {onSelect: (id: string) => void}) {
   const activeOptionId = useContext(ActiveAsideOptionContext);
   return (

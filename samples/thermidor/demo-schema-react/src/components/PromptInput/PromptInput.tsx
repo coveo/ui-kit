@@ -19,7 +19,6 @@ import {
 } from '../SuggestionsDropdown/index.js';
 import styles from './PromptInput.module.css';
 
-/** The options of the listbox drawn beside the suggestions, found in the page as Atomic does. */
 function asideOptions(): HTMLElement[] {
   return Array.from(document.querySelectorAll(`#${ASIDE_LISTBOX_ID} [role="option"]`));
 }
@@ -41,14 +40,10 @@ interface PromptInputProps {
   onValueChange?: (value: string) => void;
   /**
    * Called with the suggestion the shopper highlights, by pointer or arrow keys, and with
-   * `undefined` once none is, such as when the suggestions change or close. While the highlight is
-   * beside the suggestions, the suggestion it came from stays the highlighted one.
+   * `undefined` once none is, such as when the suggestions change or close.
    */
   onActiveItemChange?: (item: SuggestionItem | undefined) => void;
-  /**
-   * Drawn beside the suggestions while they are open. The options of its `ASIDE_LISTBOX_ID` listbox
-   * are reached with the right arrow from a highlighted suggestion, and Enter clicks them.
-   */
+  /** Drawn beside the suggestions while they are open. */
   suggestionsAside?: ReactNode;
 }
 
@@ -69,7 +64,7 @@ export function PromptInput({
   const [value, setValue] = useState(initialValue);
   const [showDropdown, setShowDropdown] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
-  /** The aside option the arrow keys highlight, or highlighted last while back in the suggestions. */
+  // Kept when the left arrow goes back to the suggestions, so the right arrow returns to it.
   const [asideOptionId, setAsideOptionId] = useState<string>();
   const [inAside, setInAside] = useState(false);
   const typedValueRef = useRef(initialValue);
@@ -175,14 +170,12 @@ export function PromptInput({
     submit(item.label);
   }
 
-  /** Highlights the suggestion at `index`, or none at -1, and shows it in the input. */
   function highlightSuggestion(index: number) {
     setActiveIndex(index);
     setInAside(false);
     setValue(index >= 0 ? totalItems[index].label : typedValueRef.current);
   }
 
-  /** Moves the highlight `step` options down the aside, wrapping around. */
   function moveInAside(step: number) {
     const options = asideOptions();
     const index = options.findIndex(({id}) => id === asideOptionId);
