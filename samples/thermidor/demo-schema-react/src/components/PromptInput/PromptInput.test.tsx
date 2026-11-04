@@ -676,6 +676,7 @@ describe('keyboard navigation, as in Atomic commerce', () => {
     expect(screen.getByRole('option', {name: 'p1'}).getAttribute('aria-selected')).toBe('true');
     expect(highlighted()).toBe('Wetsuits');
     expect(textarea.value).toBe('Wetsuits');
+    expect(textarea.getAttribute('aria-controls')).toBe(ASIDE_LISTBOX_ID);
 
     press('ArrowDown');
     expect(active()).toBe('p2');
@@ -690,6 +691,19 @@ describe('keyboard navigation, as in Atomic commerce', () => {
 
     press('ArrowRight');
     expect(active()).toBe('p2');
+  });
+
+  it('leaves the products once the shopper types, so Enter submits the typed text', () => {
+    const {textarea, press, active, onSubmit, onSelectProduct} = renderNavigable();
+    press('ArrowDown');
+    press('ArrowRight');
+
+    fireEvent.change(textarea, {target: {value: 'Surfboards x'}});
+    expect(active()).toBe('suggestion-item-s1');
+    press('Enter');
+
+    expect(onSelectProduct).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalledWith('Surfboards x');
   });
 
   it('opens the highlighted product on Enter, and closes the dropdown', () => {

@@ -248,6 +248,7 @@ export function PromptInput({
   function handleInput(e: ChangeEvent<HTMLTextAreaElement>) {
     setValue(e.target.value);
     typedValueRef.current = e.target.value;
+    setInAside(false);
     onValueChange?.(e.target.value);
     const el = e.target;
     const computed = getComputedStyle(el);
@@ -290,7 +291,7 @@ export function PromptInput({
           aria-label="Prompt"
           aria-expanded={expanded}
           aria-haspopup="listbox"
-          aria-controls={SUGGESTIONS_LISTBOX_ID}
+          aria-controls={activeAsideOptionId ? ASIDE_LISTBOX_ID : SUGGESTIONS_LISTBOX_ID}
           aria-activedescendant={activeDescendant}
         />
         <button
