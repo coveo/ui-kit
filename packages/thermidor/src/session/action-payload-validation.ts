@@ -15,7 +15,7 @@
  * up `actions.shape[name].shape.payload` and `safeParse(context)` against it.
  *
  * (Verified against the generated Coveo schema, e.g.
- * `PaginationActionsSchema = z.strictObject({ selectPage: SelectPageSchema, setPageSize: ... })`
+ * `PaginationActionsSchema = z.strictObject({ selectPage: SelectPageSchema, showMore: ShowMoreSchema })`
  * and `SelectPageSchema = z.strictObject({ payload: SelectPagePayloadSchema })`.)
  */
 
