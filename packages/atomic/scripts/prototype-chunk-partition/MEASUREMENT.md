@@ -6,12 +6,12 @@ The solver partition measured with ADR 0001's own harness (`atomic-perf-harness/
 
 Mobile, ready in ms, one interleaved run of the three builds (`analyze.py results-v4.jsonl`, run 5):
 
-| Page | Before the ADR | N = 10 | Solver | Solver vs N = 10 | Modelled | Files, N = 10 → solver |
-|---|---|---|---|---|---|---|
-| Search box | 2862 | 2715 | 2676 | −39 (−1 %) | −30 | 30 → 12 |
-| Typical search | 4174 | 3688 | 3388 | −300 (−8 %) | −328 | 74 → 16 |
-| Rich search | 5223 | 4765 | 4160 | −605 (−13 %) | −648 | 132 → 29 |
-| Commerce | 6144 | 5601 | 5148 | −453 (−8 %) | −586 | 108 → 17 |
+| Page           | Before the ADR | N = 10 | Solver | Solver vs N = 10 | Modelled | Files, N = 10 → solver |
+| -------------- | -------------- | ------ | ------ | ---------------- | -------- | ---------------------- |
+| Search box     | 2862           | 2715   | 2676   | −39 (−1 %)       | −30      | 30 → 12                |
+| Typical search | 4174           | 3688   | 3388   | −300 (−8 %)      | −328     | 74 → 16                |
+| Rich search    | 5223           | 4765   | 4160   | −605 (−13 %)     | −648     | 132 → 29               |
+| Commerce       | 6144           | 5601   | 5148   | −453 (−8 %)      | −586     | 108 → 17               |
 
 Desktop: −80, −135, −248 and −126 ms. Mean mobile gain 349 ms measured against 398 ms modelled. The two-build run on the same builds (run 4, `results-v3b.jsonl`) gave −28, −307, −510 and −502 ms. The harness reproduces the ADR's published times: the pre-ADR build lands within 54 ms of option A, the N = 10 build within 105 ms of option C. All 206 components register on every build, 0 failed requests, no API misses.
 
