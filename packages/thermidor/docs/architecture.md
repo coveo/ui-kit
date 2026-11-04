@@ -12,13 +12,15 @@ Everything the previous revision described (an `Engine` class, a library-agnosti
 
 ## Public surface
 
-The package entry (`src/index.ts`) exports the session-client surface — `createSession`, the `Session` handle, the `Turn` / `TurnResponse` domain model (including `A2uiV09Message` and `DiscoveredSurface`), `SessionConfig`, the injected-contract types (`ContractsSchema`, `ComponentContractSchema`, `ParsableSchema`), the client-owned context types, and the versioned `SerializedSession` shape. It also exports the request types (`SessionRequest`, `PromptRequest`, `ActionRequest`). It is intentionally free of state-library concepts (no store, slice, selector, thunk, or reducer types) and free of raw transport DTO shapes; `src/index.test-d.ts` fails the typecheck if one leaks into the entry.
+The package entry (`src/index.ts`) exports the session-client surface — `createSession`, the `Session` handle, the `Turn` / `TurnResponse` domain model (including `A2uiV09Message` and `DiscoveredSurface`), `SessionConfig`, the injected-contract types (`ContractsSchema`, `ComponentContractSchema`, `ParsableSchema`), the client-owned context types, and the versioned `SerializedSession` shape. It also exports the request types (`SessionRequest`, `InitializeRequest`, `PromptRequest`, `ActionRequest`) and the initialization (`SessionInitialization`, `SerializedInitialization`). It is intentionally free of state-library concepts (no store, slice, selector, thunk, or reducer types) and free of raw transport DTO shapes; `src/index.test-d.ts` fails the typecheck if one leaks into the entry.
+
+A second entry point, `@coveo/thermidor/private` (`src/private.ts`), is **for internal Coveo use only**: not supported for customers, and it may change without notice. It exports `createPrivateSession` and `PrivateSessionConfig`, and re-exports the root entry. The root entry never exports them, and `SessionConfig` keeps its required ids and takes no locale; `src/index.test-d.ts` checks both.
 
 ```mermaid
 graph TB
     subgraph "Public surface (src/index.ts)"
         CS["createSession(config)"]
-        SESSION["Session&lt;TContracts&gt;<br/>contracts · turns · surfaces · a2uiMessages · state · actionError · request<br/>sendAndWait · subscribe · getSnapshot · dispatchAction<br/>cancel · retry · serialize"]
+        SESSION["Session&lt;TContracts&gt;<br/>contracts · turns · initialization · surfaces · a2uiMessages · state · actionError · request<br/>subscribe · getSnapshot · dispatchAction<br/>cancel · retry · serialize"]
     end
 
     subgraph "Internal (not exported)"
@@ -26,6 +28,7 @@ graph TB
         FOLD["Pure fold<br/>foldActivity(turn, activity) → turn"]
         VALID["In-transit validation<br/>action-payload validation"]
         GATE["Request gate<br/>(one request at a time)"]
+        LANE["Concurrent lane<br/>(announced actions · cache)"]
         API["Unified endpoint client<br/>request builder · SSE parser"]
     end
 
@@ -36,6 +39,8 @@ graph TB
     SESSION -->|validates payloads| VALID
     SESSION -->|sends prompts and actions| GATE
     GATE -->|POST + stream| API
+    SESSION -->|sends announced actions| LANE
+    LANE -->|POST + stream| API
 
     style CS fill:#28a745,color:#fff
     style SESSION fill:#28a745,color:#fff
@@ -43,6 +48,7 @@ graph TB
     style FOLD fill:#4a9eff,color:#fff
     style VALID fill:#4a9eff,color:#fff
     style GATE fill:#4a9eff,color:#fff
+    style LANE fill:#4a9eff,color:#fff
     style API fill:#6c757d,color:#fff
 ```
 
@@ -51,13 +57,20 @@ graph TB
 ```
 src/
 ├── index.ts                       # Public surface (ADR-010 / ADR-014 / ADR-016)
+├── private.ts                     # @coveo/thermidor/private, for internal Coveo use only
 ├── session/
-│   ├── create-session.ts          # createSession factory + runtime (dispatch/cancel/retry)
+│   ├── create-session.ts          # createSession factory + shared runtime (dispatch/cancel/retry)
+│   ├── create-private-session.ts  # createPrivateSession: optional ids, optional locale
 │   ├── conflict-retry.ts          # Bounded retry of 409 AGENT:ACTION_IN_FLIGHT rejections
 │   ├── types.ts                   # Turn / TurnInput / TurnResponse domain model (ADR-010 model annex)
 │   ├── store.ts                   # Plain observable store + subscribe/notify
 │   ├── fold.ts                    # Pure fold + surface derivation (ADR-015 interim)
 │   ├── a2ui-v09-projection.ts     # A2-UI v1.0 → v0.9 renderer projection (ADR-015 addendum)
+│   ├── turn-opening.ts            # Reads the turn-opening actions the producer announces (ADR-019)
+│   ├── announced-actions.ts       # Reads the concurrent and cached actions the producer announces (ADR-020)
+│   ├── concurrent-actions.ts      # The concurrent lane: latest dispatch per node, aborts, joined misses, unrecorded answers
+│   ├── action-cache.ts            # Bounded, in-memory cache of answers to cached actions
+│   ├── session-state.ts           # The session's validated state, and the unrecorded layer over it
 │   ├── contracts.ts               # Structural type of the injected contracts schema (ADR-014)
 │   ├── in-transit-validation.ts   # Validates inbound updateDataModel ops against *State schemas
 │   ├── resolve-operation.ts       # Maps an op path to a component's whole state or a field beneath it
@@ -74,19 +87,32 @@ src/
 
 `createSession(config)` (`src/session/create-session.ts`) builds a fresh observable store and returns a `Session`. There are no singletons and no module-level mutable state: two sessions created from identical configuration share nothing mutable ([ADR-009](./internal/adr/ADR-009-architecture-decision-charter-v2.md), charter conformance).
 
-The runtime owns the dispatch / cancel / retry orchestration and the SSE-consumption loop that folds each event into the active turn:
+Both entry points share one runtime, `createSessionRuntime(config, requestScope)`. `requestScope` holds the fields that scope every request, sent ahead of the keys the session builds itself (`clientId`, `message`, `action`, `conversationSessionId`, `conversationToken`, `context`, `pinnedProducts`) with `initialize`, prompts, and actions, concurrent and cached ones included. `createSession` checks `agentConfigurationId` and `trackingId` and passes them. `createPrivateSession` passes whichever of its optional `agentConfigurationId`, `trackingId`, `language`, `country` and `currency` are set, without validating them: the endpoint does.
 
-- **`dispatchAction(message)`** — the single consumer-facing entry point, wired as the renderer's `onAction`. It never rejects: every refusal is a dev-only warning. A dispatch made while a request is in flight is withheld.
+The runtime owns the initialize / dispatch / cancel / retry orchestration and the SSE-consumption loop that folds each event into the run a request streams into, its run target: a turn, or the initialization:
+
+- **`initialize`** — unless the session was restored or created with `initialize: false`, `createSession` queues a microtask that sends the `initialize` action (`{name: 'initialize', context: {}}`, with no `surfaceId` or `sourceComponentId`) through `sendRequest`, unless a prompt dispatched in the same task is already in flight. `request` is `{kind: 'initialize'}` meanwhile. Its run is folded into `session.initialization` (`foldInitialization` in `fold.ts`, which keeps only activities and status), never into a turn; it adopts the session keys like a prompt, and a failure is recorded there without a retry beyond the conflict retry ([ADR-018](./internal/adr/ADR-018-session-scoped-surfaces-and-initialize.md)).
+
+- **`dispatchAction(message)`** — the single consumer-facing entry point, wired as the renderer's `onAction`. It never rejects: every refusal is a dev-only warning. A dispatch made while a request is in flight is withheld, unless the producer announced it as concurrent (see [The concurrent lane](#the-concurrent-lane)).
   - A `submitPrompt` action (`{name: 'submitPrompt', payload: {prompt}}`) needs no active turn. It opens a new `streaming` turn, builds a request (invoking both context providers fresh), POSTs to the endpoint, and folds the streamed response into that turn.
-  - An A2-UI client message is unwrapped to its `userAction`. The runtime recovers the dispatching component's `component` discriminant from the session's node-identity registry (derived from every turn's activities), validates the payload against that component's action schema, and sends the action to its own originating surface. It is withheld when there is no active turn, when the node resolves to no component, or when the payload fails validation. The action's response streams into the active turn, unless the producer announced the action as opening a turn, in the AG-UI `metadata` of the surface's snapshot (`turnOpeningActions`, read by `src/session/turn-opening.ts`; the fold keeps each activity's `metadata`, and merges a replacing snapshot's onto it by entry): then it opens a new `streaming` turn whose `input.action` records it, and that turn becomes the active turn ([ADR-019](./internal/adr/ADR-019-turn-opening-actions.md)). An action that does not open a turn only folds its surface snapshots, whichever turn created its surface: its run, its text and its failure leave the active turn's status and response as they are, and a failure sets `actionError` (ADR-018, as amended).
-- **`cancel()`** — stops consuming the in-flight stream. A streaming turn, opened by a prompt or by an action, keeps the partial `response` already folded and is marked `error` with the message `'Cancelled'`; an action that streams into a complete turn leaves it as it was. `request` stays set until the stopped request has unwound, so a dispatch made right after `cancel()` is withheld. A no-op when nothing is in flight.
+  - An A2-UI client message is unwrapped to its `userAction`. The runtime recovers the dispatching component's `component` discriminant from the session's node-identity registry (derived from the session's activity log), validates the payload against that component's action schema, and sends the action to its own originating surface. It is withheld when the node resolves to no component, when the payload fails validation, or when it opens no turn and there is neither an active turn nor an initialization to stream into. The action's response streams into the active turn, or into the initialization before the first turn, unless the producer announced the action as opening a turn, in the AG-UI `metadata` of the surface's snapshot (`turnOpeningActions`, read by `src/session/turn-opening.ts`; the fold keeps each activity's `metadata`, and merges a replacing snapshot's onto it by entry): then it opens a new `streaming` turn whose `input.action` records it, even before the first turn, and that turn becomes the active turn ([ADR-019](./internal/adr/ADR-019-turn-opening-actions.md)). An action that does not open a turn only folds its surface snapshots, whichever run created its surface: its run, its text and its failure leave the status and response of the active turn, or of the initialization, as they are, and a failure sets `actionError` (ADR-018, as amended).
+- **`cancel()`** — stops consuming the in-flight stream. A streaming initialization, or a streaming turn, opened by a prompt or by an action, keeps the partial `response` already folded and is marked `error` with the message `'Cancelled'`; an action that streams into a complete turn leaves it as it was. `request` stays set until the stopped request has unwound, so a dispatch made right after `cancel()` is withheld. A no-op when nothing is in flight.
 - **`retry(turnId)`** — re-submits the original input of the last turn, only when it is `error`: its prompt, or the action that opened it, re-sent from the surface it was dispatched from without resolving it against the active turn. Withheld like any dispatch while a request is in flight; any other `turnId` (unknown, non-error, or an earlier turn, whose answer would land before later turns' surfaces) is a no-op.
 
-Prompts and actions reach the endpoint one at a time, through `sendRequest` in `create-session.ts`: the Gateway processes a single request per session, and each response is a whole-node snapshot, so overlapping streams would let the last to arrive win over a newer action. A dispatch made while a request is in flight is withheld rather than queued or preempted: the integrator holds it back until the session is free, reading `request`.
+Prompts and actions reach the endpoint one at a time, through `sendRequest` in `create-session.ts`, except the concurrent actions below: the Gateway processes a single request per session, and each response is a whole-node snapshot, so overlapping streams would let the last to arrive win over a newer action. A dispatch made while a request is in flight is withheld rather than queued or preempted: the integrator holds it back until the session is free, reading `request`.
 
-The session publishes its request state in its store: `request` is the request being sent (`{kind: 'prompt', turnId}` or `{kind: 'action', component, name, surfaceId, sourceComponentId, turnId}`), or `undefined` when idle. `sendRequest` publishes it before its first `await`, so it is set as soon as the dispatch returns. `sendAndWait(send)` calls `send`, then resolves once `request` is `undefined`: right away when the dispatch was withheld, otherwise once its request ends, whatever its outcome, which is what an optimistic update needs to end. It takes the dispatch as an argument because a renderer's dispatch promise may resolve once the action is emitted, before the session has answered it.
+The session publishes its request state in its store: `request` is the request being sent (`{kind: 'initialize'}`, `{kind: 'prompt', turnId}` or `{kind: 'action', component, name, surfaceId, sourceComponentId, turnId?}`, with no `turnId` when it streams into the initialization), or `undefined` when idle. `sendRequest` publishes it before its first `await`, so it is set as soon as the dispatch returns. Each `dispatchAction` promise resolves once its own request ends, whatever its outcome, and at once when the dispatch is withheld, which is what an optimistic update needs to end.
 
 Every request, prompt or action, is sent through a bounded retry loop (`src/session/conflict-retry.ts`, called from `executeStream`): while the Gateway answers `409` with the `errorCode` `AGENT:ACTION_IN_FLIGHT` (parsed in `src/internal/api/protocol/error-handling.ts`), the request is rebuilt and resent after a doubling backoff, for up to 30 s in total (the time spent on each rejected request included), each wait capped at 4 s and the last one cut to what is left. The budget covers an aborted agent run winding down on the Gateway, which can't cancel it upstream yet (KIT-6261). A request sent the moment `RUN_FINISHED` arrives can get a 409 too, because the Gateway commits the turn a few milliseconds later; the first retry absorbs it. The retrying request stays the one in flight, so nothing touches the turn. When the budget runs out, a prompt fails its turn; an action sets the session-level `actionError` and its dispatch ends. The wait is abortable, so `cancel()` ends it like a stream; an abort during a resent request is handled the same way, since the client reports it as a failed call rather than throwing it. `executeStream` returns a request rejected before streaming to its caller, so the prompt path fails its turn while the action path sets `actionError` (cleared when the next action or prompt is sent).
+
+### The concurrent lane
+
+An action the producer announces as concurrent, in the AG-UI `metadata` of the surface's snapshot (`concurrentActions`, with an optional `cache` policy for the lifetime of its answers, read by `src/session/announced-actions.ts` as `turnOpeningActions` is), skips `sendRequest` ([ADR-020](./internal/adr/ADR-020-cached-and-concurrent-actions.md)). `issueAction` routes it to `issueConcurrentAction` before anything else (an action also announced as turn-opening included, with a dev-only warning), so it never sets `request`, and `cancel()`, `submitPrompt` and `sendRequest` ignore it. It is withheld until the session has its token, and its payload is validated as any action's, before `src/session/concurrent-actions.ts` sends it.
+
+- **Latest wins per source node.** `src/session/concurrent-actions.ts` keeps one lane per `(surfaceId, sourceComponentId, name)` and the cache key of its latest dispatch. A newer dispatch aborts the lane's uncached request in flight. A cached miss is never aborted: it runs to the end and its answer is cached, and a dispatch with the same key joins it. Each surface snapshot of an answer is applied only while its dispatch is the lane's latest, checked before each write; when a snapshot was passed over or another dispatch joined the request, the node may show something else since (A, B, then A while A is in flight, or a recorded write in between), so the whole answer is applied again once its stream ends, if its dispatch is still the latest. An aborted request applies nothing it still delivers.
+- **The cache.** `src/session/action-cache.ts` keys an answer by surface id, source node, action name and payload, serialized with sorted keys. It holds 100 entries per session, drops the least recently used first, reuses an entry while it is younger than the currently announced `ttlMs`, and is never serialized. A hit sends nothing, becomes the lane's latest dispatch and is applied as an answer is. An answer is cached only when its stream ends with a terminal event and no `RUN_ERROR`, and only its messages that `acceptUnrecordedWrites` keeps.
+- **Applied, not recorded.** An answer is folded into no run, and its session keys and `metadata` are not read. `acceptUnrecordedWrites` (`src/session/session-state.ts`) keeps only its `updateDataModel` messages that validate against a node the recorded runs hold, and the same accepted messages reach the renderer stream and the store's `unrecordedState` layer; anything else is dropped with a dev-only warning. `session.state` shows the recorded `state` with the layer on top. Folding a recorded snapshot drops the layer's values at or under each path it writes and the surfaces it creates or deletes, and writes it into a layer value above its path, so `session.state` matches the renderer, which applies the writes in order. `serializeSession` saves the recorded `state` alone, so a restored session has no layer.
+- **Failures are quiet.** The request is sent once, without the conflict retry. A refusal, a `RUN_ERROR`, a stream that ends without a terminal event or a request that cannot be built is a dev-only warning: it sets no `actionError` and changes no run.
 
 The runtime holds the in-flight stream's `AbortController` per session instance — never module-level — so two sessions never contend, and a stream superseded by a newer one never touches the turn.
 
@@ -94,7 +120,7 @@ Cancellation is modeled as a terminal `error` turn (message `'Cancelled'`), not 
 
 ## The observable store
 
-`src/session/store.ts` holds `{ turns, activeTurnId?, sessionId?, sessionToken? }`, plus the runtime-only `actionError` and `request`, which are never serialized. It exposes `getState`, an internal setter that notifies on change, and `subscribe(listener) → unsubscribe`. Every registered subscriber is notified exactly once per change. `session.getSnapshot()` gathers the session's `turns`, `surfaces`, `a2uiMessages`, `state`, `request` and `actionError` into one frozen `SessionSnapshot`, and returns the same object until one of them changes, so a change to anything else, such as the session keys, keeps it. This plain store replaces the former RTK slice plus state port ([ADR-010](./internal/adr/ADR-010-unified-endpoint-session-client.md) structure annex); there is no Redux state library anywhere in the package.
+`src/session/store.ts` holds `{ turns, initialization?, activeTurnId?, sessionId?, sessionToken?, state? }`, plus the runtime-only `actionError`, `request`, `unrecordedState` and renderer stream, which are never serialized. It exposes `getState`, an internal setter that notifies on change, and `subscribe(listener) → unsubscribe`. Every registered subscriber is notified exactly once per change. `session.getSnapshot()` gathers the session's `turns`, `initialization`, `surfaces`, `a2uiMessages`, `state`, `request` and `actionError` into one frozen `SessionSnapshot`, and returns the same object until one of them changes, so a change to anything else, such as the session keys, keeps it. This plain store replaces the former RTK slice plus state port ([ADR-010](./internal/adr/ADR-010-unified-endpoint-session-client.md) structure annex); there is no Redux state library anywhere in the package.
 
 ## The pure fold
 
@@ -109,12 +135,12 @@ The fold maps each SSE activity into the active turn's `response`:
 
 ## Session-scoped surfaces
 
-Surfaces live in the session, not in the turn that created them ([ADR-018](./internal/adr/ADR-018-session-scoped-surfaces-and-initialize.md)). The session derives them from one ordered activity log, every turn's activities in order; since it sends one request at a time, that is the order in which the operations arrived. A surface lives from its `createSurface` until its `deleteSurface`, whichever runs carry them, and a `createSurface` for a live id replaces that surface.
+Surfaces live in the session, not in the turn that created them ([ADR-018](./internal/adr/ADR-018-session-scoped-surfaces-and-initialize.md)). The session derives them from one ordered activity log (`sessionActivities`), the initialization's activities, then every turn's, in order; since it sends one request at a time, that is the order in which the operations arrived. A surface lives from its `createSurface` until its `deleteSurface`, whichever runs carry them, and a `createSurface` for a live id replaces that surface.
 
-- **Surfaces.** `src/session/session-surfaces.ts` (`deriveSessionSurfaces`) derives `session.surfaces` from the activity log, and narrows each turn's `response.surfaces` to the live surfaces it created. A loading placeholder stays listed only while the turn that created it is `streaming` or the request in flight streams into it, and an action that streams into an earlier run's turn keeps out the placeholders that turn had already left behind when it started (`abandonedPlaceholderIds`), so the view is recomputed when the turns or the request change.
+- **Surfaces.** `src/session/session-surfaces.ts` (`deriveSessionSurfaces`) derives `session.surfaces` from the activity log, and narrows each turn's `response.surfaces` to the live surfaces it created. A surface the initialization created belongs to no turn. A loading placeholder stays listed only while the run that created it is `streaming` or the request in flight streams into it, and an action that streams into an earlier run keeps out the placeholders that run had already left behind when it started (`abandonedPlaceholderIds`), so the view is recomputed when the turns, the initialization or the request change.
 - **State.** In the same store change that folds a surface snapshot, `src/session/session-state.ts` (`applyInboundOps`) validates the snapshot's `updateDataModel` ops against the session's node-identity registry and applies the conforming ones to the session's `state`. `session.state` exposes the entries of the live surfaces.
 - **Renderer stream.** In that same change, the snapshot's messages are converted to v0.9 and appended to the session's renderer stream (`appendToRendererStream`), which only grows: a `deleteSurface` precedes a `createSurface` that replaces a live surface, and an operation on a surface that is not live is left out, since a renderer refuses both.
-- **Dispatch.** An action resolves its source component in the session's registry, so any live surface accepts actions. Its run only folds its surface snapshots into the active turn, never its lifecycle events or text, and its failure sets `actionError` (`ActionError`, which identifies the action) without changing any turn (ADR-018, as amended).
+- **Dispatch.** An action resolves its source component in the session's registry, so any live surface accepts actions. Its run only folds its surface snapshots into the active turn, or into the initialization before the first turn, never its lifecycle events or text, and its failure sets `actionError` (`ActionError`, which identifies the action) without changing any run (ADR-018, as amended).
 
 ## The Turn / TurnResponse domain model
 
@@ -157,17 +183,18 @@ The injected contracts schema is validated against at two boundaries, both insid
 
 `src/session/serialize.ts` ([ADR-011](./internal/adr/ADR-011-session-serialization.md)) defines a versioned `SerializedSession` (integer `version >= 1`), intentionally distinct from the runtime `Turn` type:
 
-| Field                                       | Persisted | Scope            |
-| ------------------------------------------- | --------- | ---------------- |
-| `id`, `input`, `status`, `error`            | yes       | all turns        |
-| `sessionId`, `sessionToken`, `activeTurnId` | yes       | session-level    |
-| `response.activities`                       | yes       | all turns        |
-| `response.agent.{messages,reasoningSteps}`  | yes       | turns with agent |
-| `state` (validated data model)              | yes       | session-level    |
-| `response.surfaces`                         | no        | derived          |
-| renderer stream (`a2uiMessages`)            | no        | derived          |
+| Field                                        | Persisted | Scope            |
+| -------------------------------------------- | --------- | ---------------- |
+| `id`, `input`, `status`, `error`             | yes       | all turns        |
+| `initialization` (activities, status, error) | yes       | session-level    |
+| `sessionId`, `sessionToken`, `activeTurnId`  | yes       | session-level    |
+| `response.activities`                        | yes       | all turns        |
+| `response.agent.{messages,reasoningSteps}`   | yes       | turns with agent |
+| `state` (validated data model)               | yes       | session-level    |
+| `response.surfaces`                          | no        | derived          |
+| renderer stream (`a2uiMessages`)             | no        | derived          |
 
-On restore, the surfaces and the renderer stream are re-derived from the turns' persisted `activities`, in order; a turn persisted mid-stream (`streaming`) is downgraded to `error` (`'Stream was interrupted'`) preserving its partial response; an unsupported `version` is rejected without partially populating a session. `sessionId` / `sessionToken` are used only as continuity keys to continue the same backend conversation.
+On restore, the surfaces and the renderer stream are re-derived from the persisted `activities` of the initialization, then of each turn, in order; a turn or initialization persisted mid-stream (`streaming`) is downgraded to `error` (`'Stream was interrupted'`) preserving its partial response; an unsupported `version` is rejected without partially populating a session. `sessionId` / `sessionToken` are used only as continuity keys to continue the same backend conversation.
 
 ## Surface derivation (ADR-015 — recorded interim debt)
 

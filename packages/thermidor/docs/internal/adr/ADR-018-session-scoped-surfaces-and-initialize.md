@@ -81,10 +81,9 @@ level. Option D below.
 
 - **Sent by `createSession`.** The session sends `initialize` as soon as it is created, deferred by
   a microtask so that a listener subscribed in the same task sees it start. On the wire it is
-  `action: {name: 'initialize', context: {}}`: `A2uiAction.surfaceId` and `sourceComponentId`
-  become optional, and only `initialize` omits them.
-- **Never twice.** The session does not send it when it already has a token: a restored session,
-  or one that is already initialized.
+  `action: {name: 'initialize', context: {}}`: it has an envelope type of its own, without
+  `surfaceId` and `sourceComponentId`, which stay required for every other action.
+- **Never twice.** A restored session does not send it, nor does one that already has a token.
 - **An ordinary request.** It goes through the one-request rule and the conflict retry, and it
   adopts the session id and token from its run, like a prompt. While it is in flight,
   `session.request` is `{kind: 'initialize'}`, so an application can draw its disabled search box

@@ -1,9 +1,20 @@
-import type {SessionRequest, SessionSnapshot} from '@coveo/thermidor';
+import type {ActionError, SessionRequest, SessionSnapshot} from '@coveo/thermidor';
 import type {SessionRequestSource} from '../a2ui/session-request.js';
 
-/** A session snapshot holding only `request`, the one field the surfaces read. */
-export function requestSnapshot(request: SessionRequest | undefined): SessionSnapshot {
-  return {turns: [], surfaces: [], a2uiMessages: [], state: {}, request, actionError: undefined};
+/** A session snapshot holding only `request` and `actionError`, the fields the surfaces read. */
+export function requestSnapshot(
+  request: SessionRequest | undefined,
+  actionError?: ActionError
+): SessionSnapshot {
+  return {
+    turns: [],
+    initialization: undefined,
+    surfaces: [],
+    a2uiMessages: [],
+    state: {},
+    request,
+    actionError,
+  };
 }
 
 interface UserActionMessage {
@@ -13,8 +24,8 @@ interface UserActionMessage {
 /**
  * A stand-in for the session's request handling: sends one message at a time through `send`,
  * withholds a message dispatched while another is in flight, and exposes `request` through
- * `getSnapshot()`, and `sendAndWait()`, like `Session` does. `componentOf` gives the `component`
- * of a dispatching node, which the session reads from the surface.
+ * `getSnapshot()`, like `Session` does. `componentOf` gives the `component` of a dispatching node,
+ * which the session reads from the surface.
  */
 export function createFakeSessionRequests(
   send: (message: never) => Promise<void> | void,
@@ -22,10 +33,11 @@ export function createFakeSessionRequests(
 ) {
   const listeners = new Set<() => void>();
   let request: SessionRequest | undefined;
+  let actionError: ActionError | undefined;
   let snapshot = requestSnapshot(undefined);
 
   const notify = () => {
-    snapshot = requestSnapshot(request);
+    snapshot = requestSnapshot(request, actionError);
     for (const listener of listeners) {
       listener();
     }
@@ -36,19 +48,6 @@ export function createFakeSessionRequests(
     subscribe(listener) {
       listeners.add(listener);
       return () => listeners.delete(listener);
-    },
-    sendAndWait(sendGesture) {
-      sendGesture();
-      return new Promise((resolve) => {
-        const listener = () => {
-          if (request === undefined) {
-            listeners.delete(listener);
-            resolve();
-          }
-        };
-        listeners.add(listener);
-        listener();
-      });
     },
   };
 
@@ -68,11 +67,15 @@ export function createFakeSessionRequests(
             sourceComponentId: String(userAction?.sourceComponentId),
             turnId: 'turn',
           };
+    actionError = undefined;
     notify();
     try {
       await (send as (message: unknown) => Promise<void> | void)(message);
-    } catch {
-      // Like the session's dispatch, a failed send still ends the request.
+    } catch (error) {
+      // Like the session's dispatch, a failed send still ends the request, and reports it.
+      if (request.kind === 'action') {
+        actionError = {...request, message: String(error)};
+      }
     }
     request = undefined;
     notify();

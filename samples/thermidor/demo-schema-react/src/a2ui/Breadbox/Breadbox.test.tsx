@@ -13,7 +13,7 @@ const BRAND: BreadboxFacet = {
   type: 'regular',
   values: [
     {value: 'Billabong', state: 'selected'},
-    {value: 'Aqua Marina', state: 'excluded'},
+    {value: 'Aqua Marina', state: 'selected'},
   ],
 };
 
@@ -65,17 +65,15 @@ describe('Breadbox', () => {
 
     await waitFor(() => expect(screen.getByRole('region', {name: 'Active filters'})).toBeDefined());
     expect(screen.getByText('Filters:')).toBeDefined();
-    expect(removeButton(/inclusion filter on Brand: Billabong/).textContent).toBe(
-      'Brand:Billabong'
-    );
-    expect(removeButton(/inclusion filter on Price: \$0 – \$50/)).toBeDefined();
-    expect(removeButton(/inclusion filter on Release date: 2026-01-01 – 2026-02-01/)).toBeDefined();
+    expect(removeButton(/Remove filter on Brand: Billabong/).textContent).toBe('Brand:Billabong');
+    expect(removeButton(/Remove filter on Price: \$0 – \$50/)).toBeDefined();
+    expect(removeButton(/Remove filter on Release date: 2026-01-01 – 2026-02-01/)).toBeDefined();
   });
 
   it('truncates a long category path but names the full path', async () => {
     mountBreadbox([CATEGORY]);
 
-    const name = /inclusion filter on Category: Water Sports \/ Surfing \/ Boards \/ Shortboards/;
+    const name = /Remove filter on Category: Water Sports \/ Surfing \/ Boards \/ Shortboards/;
     await waitFor(() => expect(removeButton(name)).toBeDefined());
     expect(removeButton(name).textContent).toBe(
       'Category:Water Sports / ... / Boards / Shortboards'
@@ -83,16 +81,6 @@ describe('Breadbox', () => {
     expect(removeButton(name).title).toBe(
       'Category: Water Sports / Surfing / Boards / Shortboards'
     );
-  });
-
-  it('shows an excluded value distinctly', async () => {
-    mountBreadbox([BRAND]);
-
-    await waitFor(() =>
-      expect(removeButton(/exclusion filter on Brand: Aqua Marina/)).toBeDefined()
-    );
-    expect(removeButton(/exclusion filter on Brand: Aqua Marina/).className).toMatch(/excluded/);
-    expect(removeButton(/inclusion filter on Brand: Billabong/).className).not.toMatch(/excluded/);
   });
 
   it.each([
@@ -149,6 +137,24 @@ describe('Breadbox', () => {
       expect(screen.queryByRole('button', {name: /Brand: Billabong/})).toBeNull()
     );
     expect(removeButton(/Price: /)).toBeDefined();
+  });
+
+  it('keeps a value removed until the backend has answered the removal', async () => {
+    const answers: Array<() => void> = [];
+    mountBreadbox([BRAND, PRICE], () => new Promise<void>((resolve) => answers.push(resolve)));
+    const billabong = () => screen.queryByRole('button', {name: /Brand: Billabong/});
+
+    await waitFor(() => expect(billabong()).not.toBeNull());
+    fireEvent.click(removeButton(/Brand: Billabong/));
+    await waitFor(() => expect(answers).toHaveLength(1));
+    await waitFor(() => expect(billabong()).toBeNull());
+
+    await act(async () => {
+      answers[0]!();
+      await Promise.resolve();
+    });
+
+    await waitFor(() => expect(billabong()).not.toBeNull());
   });
 
   it('drops a facet once its last value is removed', async () => {

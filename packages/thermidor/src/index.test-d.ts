@@ -22,7 +22,10 @@ import type {
   ComponentContractSchema,
   ComponentActionNames,
   ContractsSchema,
+  InitializeRequest,
+  SessionInitialization,
   SessionRequest,
+  SerializedInitialization,
   SerializedSession,
   Session,
   SessionConfig,
@@ -50,10 +53,9 @@ test('exposes the createSession session-client surface', () => {
 });
 
 // ── POSITIVE: the session exposes its request state ────────────────────────
-test('exposes the request in flight and its settlement on Session', () => {
+test('exposes the request in flight on Session', () => {
   expectTypeOf<Session['request']>().toEqualTypeOf<SessionRequest | undefined>();
-  expectTypeOf<SessionRequest['kind']>().toEqualTypeOf<'prompt' | 'action'>();
-  expectTypeOf<Session['sendAndWait']>().toEqualTypeOf<(send: () => unknown) => Promise<void>>();
+  expectTypeOf<SessionRequest['kind']>().toEqualTypeOf<'initialize' | 'prompt' | 'action'>();
 });
 
 // ── POSITIVE: the session exposes its surfaces, renderer stream and state ──
@@ -63,6 +65,31 @@ test('exposes session-scoped surfaces, renderer stream and state on Session', ()
   expectTypeOf<Session['state']>().toEqualTypeOf<A2uiState>();
   expectTypeOf<TurnResponse>().not.toHaveProperty('a2uiMessages');
   expectTypeOf<TurnResponse>().not.toHaveProperty('state');
+});
+
+// ── POSITIVE: a session names its configured agent and tracking id ──
+test('requires the agent configuration and tracking id, and takes no locale', () => {
+  expectTypeOf<SessionConfig['agentConfigurationId']>().toEqualTypeOf<string>();
+  expectTypeOf<SessionConfig['trackingId']>().toEqualTypeOf<string>();
+  expectTypeOf<SessionConfig>().not.toHaveProperty('language');
+  expectTypeOf<SessionConfig>().not.toHaveProperty('country');
+  expectTypeOf<SessionConfig>().not.toHaveProperty('currency');
+});
+
+// ── POSITIVE: the session opens itself with initialize, recorded as its initialization ──
+test('exposes the initialization of the session', () => {
+  expectTypeOf<SessionConfig['initialize']>().toEqualTypeOf<boolean | undefined>();
+  expectTypeOf<Session['initialization']>().toEqualTypeOf<SessionInitialization | undefined>();
+  expectTypeOf<SessionSnapshot['initialization']>().toEqualTypeOf<
+    SessionInitialization | undefined
+  >();
+  expectTypeOf<Extract<SessionRequest, {kind: 'initialize'}>>().toEqualTypeOf<InitializeRequest>();
+  expectTypeOf<Extract<SessionRequest, {kind: 'action'}>['turnId']>().toEqualTypeOf<
+    string | undefined
+  >();
+  expectTypeOf<SerializedSession['initialization']>().toEqualTypeOf<
+    SerializedInitialization | undefined
+  >();
 });
 
 // ── POSITIVE: the session exposes one snapshot of its state ────────────────
@@ -224,3 +251,9 @@ import {selectGenerativeState} from '@/src/index.js';
 import type {GenerativeThunk} from '@/src/index.js';
 
 /* eslint-enable @typescript-eslint/no-unused-vars */
+
+// The private entry point (`@coveo/thermidor/private`, for internal Coveo use only) stays out of the root entry.
+// @ts-expect-error `createPrivateSession` must not be exported from the root entry.
+import {createPrivateSession} from '@/src/index.js';
+// @ts-expect-error `PrivateSessionConfig` must not be exported from the root entry.
+import type {PrivateSessionConfig} from '@/src/index.js';

@@ -1,7 +1,7 @@
 import type {Turn} from '@coveo/thermidor';
 import {useRef} from 'react';
 import {useAutoScroll} from '../../hooks/use-auto-scroll.js';
-import {PromptInput} from '../PromptInput/PromptInput.js';
+import {SessionSearchBox} from '../SessionSearchBox/SessionSearchBox.js';
 import {ConversationThread} from './ConversationThread.js';
 import styles from './ConversationPage.module.css';
 
@@ -26,7 +26,7 @@ export function ConversationPage({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const turnRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
-  useAutoScroll({containerRef, turnRefs, turns, isStreaming});
+  useAutoScroll({containerRef, turnRefs, turns});
 
   return (
     <section className={styles.page}>
@@ -42,11 +42,12 @@ export function ConversationPage({
         </div>
       </div>
       <div className={styles.promptBar}>
-        <PromptInput
+        <SessionSearchBox
           onSubmit={onSubmit}
-          disabled={promptDisabled}
+          busy={promptDisabled}
           clearOnSubmit
           placeholder="Search or ask anything..."
+          suggestionsPlacement="above"
         />
       </div>
     </section>

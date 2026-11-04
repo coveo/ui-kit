@@ -115,9 +115,10 @@ export class GeneratedAnswerController implements ReactiveController {
     }
 
     if (hasNonEmptyAnswer) {
-      return bindings.i18n.t('answer-generated', {
+      const answerGenerated = bindings.i18n.t('answer-generated', {
         answer: markdownToPlainText(state.answer!),
       });
+      return `${answerGenerated} ${bindings.i18n.t('generated-answer-disclaimer-announcement')}`;
     }
 
     return '';

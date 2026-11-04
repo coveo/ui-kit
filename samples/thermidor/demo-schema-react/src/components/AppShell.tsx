@@ -3,7 +3,7 @@ import {A2UIProvider} from '@copilotkit/a2ui-renderer';
 import {useSession} from '../context/session.js';
 import {createThermidorCatalog} from '../a2ui/components.js';
 import {ThermidorA2UIStream} from '../a2ui/surfaces.js';
-import {isBlocking, SessionRequestProvider} from '../a2ui/session-request.js';
+import {isBlocking, SessionRequestProvider, submitQuery} from '../a2ui/session-request.js';
 import {LandingPage} from './LandingPage/LandingPage.js';
 import {ConversationPage} from './ConversationPage/index.js';
 
@@ -30,8 +30,8 @@ export function AppShell() {
 
   const handleSubmit = useCallback(
     (prompt: string) => {
-      if (!prompt.trim() || session.getSnapshot().request !== undefined) return;
-      void session.dispatchAction({name: 'submitPrompt', payload: {prompt}});
+      if (!prompt.trim() || isBlocking(session.getSnapshot().request)) return;
+      void submitQuery(session, prompt);
     },
     [session]
   );

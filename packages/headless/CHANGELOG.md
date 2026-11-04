@@ -1,3 +1,9 @@
+## 3.58.1
+
+### Patch Changes
+
+- [#8614](https://github.com/coveo/ui-kit/pull/8614) [`8a12041`](https://github.com/coveo/ui-kit/commit/8a12041619d0ebbabfc9f017a7e959291d5911a1) - Exclude spotlight content from the commerce search and product listing summary product counts (`totalNumberOfProducts` and `lastProduct`).
+
 ## 3.58.0
 
 ### Minor Changes

@@ -164,5 +164,5 @@ prompt's `409` is absorbed by the conflict retry.
 }
 ```
 
-A restored session has a token, so it does not send `initialize`: the shell comes back from the
-persisted activities.
+A restored session does not send `initialize`: the shell comes back from the persisted
+activities.

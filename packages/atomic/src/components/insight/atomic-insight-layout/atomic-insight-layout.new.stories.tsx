@@ -18,10 +18,11 @@ const meta: Meta = {
   component: 'atomic-insight-layout',
   title: 'Insight/Layout',
   id: 'atomic-insight-layout',
-  render: () => html`<atomic-insight-layout>
-    <atomic-layout-section section="search"> search section</atomic-layout-section>
-    <atomic-layout-section section="results"> results section</atomic-layout-section>
-  </atomic-insight-layout>`,
+  render: () =>
+    html`<atomic-insight-layout>
+      <atomic-layout-section section="search"> search section</atomic-layout-section>
+      <atomic-layout-section section="results"> results section</atomic-layout-section>
+    </atomic-insight-layout>`,
   decorators: [decorator],
   parameters: {
     ...parameters,
