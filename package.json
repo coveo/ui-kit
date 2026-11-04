@@ -43,7 +43,7 @@
     "@tsconfig/node22": "22.0.6",
     "@types/jest": "catalog:",
     "@types/node": "catalog:",
-    "concurrently": "10.0.5",
+    "concurrently": "10.0.6",
     "cspell": "10.1.1",
     "esbuild": "catalog:",
     "husky": "9.1.7",
