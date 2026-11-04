@@ -6,11 +6,13 @@ import {ConversationThread} from './ConversationThread.js';
 import styles from './ConversationPage.module.css';
 
 /**
- * What a stopped answer's Continue asks. Repeating the question routes it to the flow that was
- * answering, and the agent picks up from the work it had done.
+ * What a stopped answer's Continue asks. Repeating the question, with what the shopper had added
+ * to it, routes it to the flow that was answering, and the agent picks up from the work it had
+ * done.
  */
-export function continuePrompt(question: string | undefined): string {
-  return question ? `Continue: ${question}` : 'Continue where you left off.';
+export function continuePrompt(question: string | undefined, added: readonly string[]): string {
+  const ask = question ? `Continue: ${question}` : 'Continue where you left off.';
+  return added.length > 0 ? `${ask} (${added.join('; ')})` : ask;
 }
 
 interface ConversationPageProps {
@@ -59,7 +61,7 @@ export function ConversationPage({
           <ConversationThread
             turns={turns}
             turnRefs={turnRefs}
-            onContinue={(question) => onSubmit(continuePrompt(question))}
+            onContinue={(question, added) => onSubmit(continuePrompt(question, added))}
           />
         </div>
       </div>

@@ -188,7 +188,25 @@ describe('ConversationThread', () => {
 
       fireEvent.click(screen.getByRole('button', {name: 'Continue'}));
 
-      expect(onContinue).toHaveBeenCalledExactlyOnceWith('build me a kayak bundle');
+      expect(onContinue).toHaveBeenCalledExactlyOnceWith('build me a kayak bundle', []);
+    });
+
+    it('continues with the messages the answer had taken', () => {
+      const onContinue = vi.fn();
+      const steered: Turn = {
+        ...stopped('t1'),
+        addedMessages: [
+          {id: 'a1', text: 'only inflatable boards', status: 'applied'},
+          {id: 'a2', text: 'and a pump', status: 'notAdded'},
+        ],
+      };
+      renderThread([steered], {onContinue});
+
+      fireEvent.click(screen.getByRole('button', {name: 'Continue'}));
+
+      expect(onContinue).toHaveBeenCalledExactlyOnceWith('build me a kayak bundle', [
+        'only inflatable boards',
+      ]);
     });
 
     it('does not offer to continue an earlier one', () => {
@@ -252,6 +270,21 @@ describe('ConversationThread', () => {
           secondSearch,
           createTurn({id: 't3', prompt: 'which is best for kids?', status: 'streaming'}),
         ]);
+
+        expect(results('masks').disabled).toBe(false);
+        expect(results('wetsuits').disabled).toBe(true);
+      });
+
+      it('keeps the newest results usable after an answer that only suggests follow-ups', () => {
+        const withFollowUps: Turn = {
+          ...createTurn({id: 't3', prompt: 'which is best for kids?', status: 'complete'}),
+          response: {
+            ...createTurn({id: 't3'}).response,
+            surfaces: [{surfaceId: 'chips', rootComponentType: 'NextActionsBar', isLoading: false}],
+          },
+        };
+
+        renderTurns([firstSearch, secondSearch, withFollowUps]);
 
         expect(results('masks').disabled).toBe(false);
         expect(results('wetsuits').disabled).toBe(true);

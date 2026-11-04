@@ -12,10 +12,10 @@ interface ConversationThreadProps {
   turns: Turn[];
   turnRefs: React.RefObject<Map<string, HTMLDivElement>>;
   /**
-   * Picks a stopped answer back up, given what the shopper had asked; offered on the latest turn
-   * once it stopped.
+   * Picks a stopped answer back up, given what the shopper had asked and the messages they added
+   * that the answer had taken; offered on the latest turn once it stopped.
    */
-  onContinue?: (question: string | undefined) => void;
+  onContinue?: (question: string | undefined, added: string[]) => void;
 }
 
 export function ConversationThread({turns, turnRefs, onContinue}: ConversationThreadProps) {
@@ -48,7 +48,9 @@ export function ConversationThread({turns, turnRefs, onContinue}: ConversationTh
                 {renderTurnContent(
                   turn,
                   index === turns.length - 1 || turn.id === newestResults,
-                  index === turns.length - 1 && onContinue ? () => onContinue(prompt) : undefined
+                  index === turns.length - 1 && onContinue
+                    ? () => onContinue(prompt, takenMessages(turn))
+                    : undefined
                 )}
               </div>
             </div>
@@ -60,19 +62,33 @@ export function ConversationThread({turns, turnRefs, onContinue}: ConversationTh
   );
 }
 
+/** Blocks that suggest what to do next rather than show results. */
+const NOT_RESULTS = new Set(['NextActionsBar']);
+
 /**
  * The turn whose results are the newest the shopper sees: the latest turn that has ended and shows
- * blocks. An answer still streaming does not count, since the agent may still rewrite its blocks.
+ * result blocks. An answer still streaming does not count, since the agent may still rewrite its
+ * blocks, and neither does one that only suggests follow-ups.
  */
 function newestResultsTurnId(turns: readonly Turn[]): string | undefined {
   for (let index = turns.length - 1; index >= 0; index--) {
     const turn = turns[index];
     const showsBlocks = turn.status === 'complete' || (turn.status === 'error' && turn.stopped);
-    if (showsBlocks && turn.response.surfaces.length > 0) {
+    const showsResults = turn.response.surfaces.some(
+      (surface) => !NOT_RESULTS.has(surface.rootComponentType)
+    );
+    if (showsBlocks && showsResults) {
       return turn.id;
     }
   }
   return undefined;
+}
+
+/** The messages the shopper added to `turn` that its answer had taken into account. */
+function takenMessages(turn: Turn): string[] {
+  return (turn.addedMessages ?? [])
+    .filter((message) => message.status === 'applied')
+    .map((message) => message.text);
 }
 
 /**
