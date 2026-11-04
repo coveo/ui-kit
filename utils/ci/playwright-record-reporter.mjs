@@ -49,12 +49,15 @@ export function buildRecord({tests, suite, shard, repositoryRoot}) {
     }
     counts[outcome] += 1;
     if (outcome !== 'passed') {
+      // The first three entries are the root suite, the project and the file.
+      const [, project, , ...titles] = test.titlePath();
       retried.push({
         outcome,
+        // A test runs once per project, such as a browser or Quantic's LWS-enabled and LWS-disabled.
+        project,
         file: relative(repositoryRoot, test.location.file),
         line: test.location.line,
-        // The first three entries are the root suite, the project and the file.
-        title: test.titlePath().slice(3).join(' › '),
+        title: titles.join(' › '),
       });
     }
   }

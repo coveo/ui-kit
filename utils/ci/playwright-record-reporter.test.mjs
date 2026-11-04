@@ -53,18 +53,41 @@ describe('buildRecord', () => {
       tests: [
         {
           outcome: 'flaky',
+          project: 'chromium',
           file: 'packages/atomic/src/a.e2e.ts',
           line: 42,
           title: 'atomic-a › should render',
         },
         {
           outcome: 'failed',
+          project: 'chromium',
           file: 'packages/atomic/src/a.e2e.ts',
           line: 10,
           title: 'atomic-a › should render',
         },
       ],
     });
+  });
+
+  it('tells the same test apart in each project', () => {
+    const titlePath = (project) => ['', project, 'a.e2e.ts', 'quantic-a', 'should render'];
+    const record = buildRecord({
+      tests: [
+        fakeTest({outcome: 'flaky', titlePath: titlePath('LWS-enabled')}),
+        fakeTest({outcome: 'flaky', titlePath: titlePath('LWS-disabled')}),
+      ],
+      suite: 'quantic',
+      shard: null,
+      repositoryRoot: '/repo',
+    });
+
+    assert.deepEqual(
+      record.tests.map(({project, title}) => [project, title]),
+      [
+        ['LWS-enabled', 'quantic-a › should render'],
+        ['LWS-disabled', 'quantic-a › should render'],
+      ]
+    );
   });
 
   it('treats a run without shards as shard 1 of 1', () => {
