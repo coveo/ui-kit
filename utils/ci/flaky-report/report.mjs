@@ -12,8 +12,8 @@ function suiteGroup(suite) {
   return suite === 'atomic' || suite === 'quantic' ? suite : 'other';
 }
 
-function testKey(suite, {file, title}) {
-  return JSON.stringify([suite, file, title]);
+function testKey(suite, project, {file, title}) {
+  return JSON.stringify([suite, project, file, title]);
 }
 
 function fileStem(file) {
@@ -52,9 +52,10 @@ function stepCause(jobName, step) {
  * - `runCounts`: all runs in the window, and the merge-queue runs among them.
  * - `suites`: for Atomic, Quantic and the other suites, the runs that executed them, and how many
  *   of those had a test that passed only on retry.
- * - `tests`: one row per flaky test with its flaky runs, the merge-queue runs where it failed every
- *   retry, the IDs of both, and the last run that saw it. A failure on every retry counts only in
- *   the merge queue. Rows rank by flaky runs plus three per merge-queue failure.
+ * - `tests`: one row per flaky test and Playwright project, with its flaky runs, the merge-queue runs
+ *   where it failed every retry, the IDs of both, and the last run that saw it. A failure on every
+ *   retry counts only in the merge queue. Rows rank by flaky runs plus three per merge-queue
+ *   failure.
  * - `mergeQueueCauses`: failed merge-queue runs grouped by cause: the test files that failed every
  *   retry when there are some (kind `test`), otherwise the step that failed (`infrastructure`).
  * - `recoveries`: per job, the runs that only passed after a re-run.
@@ -83,8 +84,11 @@ export function buildModel({window, runs, records, recoveries, mergeQueueFailure
       if (test.outcome === 'failed') {
         getOrCreate(failedFilesByMergeQueueRun, run.id, () => new Set()).add(fileStem(test.file));
       }
-      const entry = getOrCreate(tests, testKey(record.suite, test), () => ({
+      // Records saved before they held the project fall back to an unnamed one.
+      const project = test.project ?? '';
+      const entry = getOrCreate(tests, testKey(record.suite, project, test), () => ({
         suite: record.suite,
+        project,
         file: test.file,
         line: test.line,
         title: test.title,
@@ -108,6 +112,7 @@ export function buildModel({window, runs, records, recoveries, mergeQueueFailure
   const testRows = [...tests.values()]
     .map((entry) => ({
       suite: entry.suite,
+      project: entry.project,
       file: entry.file,
       line: entry.line,
       title: entry.title,
@@ -276,7 +281,7 @@ export function renderReport(model, {ref}) {
         .map((row) =>
           tableRow([
             `${sourceLink(row.sha, row.file, row.line, `\`${fileStem(row.file)}\``)} ${escapeCell(shorten(row.title.split(' › ').pop(), TITLE_LENGTH))}`,
-            suiteLabel(row.suite),
+            [suiteLabel(row.suite), row.project].filter(Boolean).join(', '),
             row.flakyRuns,
             row.failedInMergeQueue || '',
             runLink(row.lastSeen),
