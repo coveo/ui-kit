@@ -526,7 +526,7 @@ describe('c-quantic-generated-answer', () => {
         );
       });
 
-      it('should display the generated answer disclaimer as a note', async () => {
+      it('should display the generated answer disclaimer as small print', async () => {
         const element = createTestComponent();
         await flushPromises();
 
@@ -535,7 +535,7 @@ describe('c-quantic-generated-answer', () => {
         );
 
         expect(generatedAnswerDisclaimer).not.toBeNull();
-        expect(generatedAnswerDisclaimer.getAttribute('role')).toBe('note');
+        expect(generatedAnswerDisclaimer.tagName).toBe('SMALL');
       });
     });
 

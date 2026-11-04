@@ -17,8 +17,8 @@ export const renderDisclaimer: FunctionalComponent<RenderDisclaimerProps> = ({pr
   const {i18n} = props;
 
   return html`
-    <div id=${DISCLAIMER_ID} role="note" class="flex justify-end text-neutral-dark text-xs/[1rem]">
+    <small id=${DISCLAIMER_ID} class="flex justify-end text-neutral-dark text-xs/[1rem]">
       <slot name="disclaimer">${i18n.t('generated-answer-disclaimer')}</slot>
-    </div>
+    </small>
   `;
 };

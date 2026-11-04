@@ -21,7 +21,7 @@ describe('#renderDisclaimer', () => {
 
     return {
       element,
-      container: element.querySelector('div'),
+      container: element.querySelector('small'),
       slot: element.querySelector('slot[name="disclaimer"]'),
     };
   };
@@ -50,11 +50,12 @@ describe('#renderDisclaimer', () => {
         );
     });
 
-    it('should expose the disclaimer as a note referenceable by id', async () => {
+    it('should render the disclaimer as small print referenceable by id', async () => {
       const {container} = await renderComponent();
 
       expect(container).toHaveAttribute('id', DISCLAIMER_ID);
-      expect(container).toHaveAttribute('role', 'note');
+      expect(container?.tagName).toBe('SMALL');
+      expect(container).not.toHaveAttribute('role');
     });
   });
 });

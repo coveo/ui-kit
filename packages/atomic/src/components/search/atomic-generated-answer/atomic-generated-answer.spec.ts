@@ -660,8 +660,8 @@ describe('atomic-generated-answer', () => {
     expect(container).toHaveAttribute('aria-describedby', 'generated-answer-disclaimer');
     expect(container.getRootNode()).toBeInstanceOf(ShadowRoot);
     expect(
-      (container.getRootNode() as ShadowRoot).getElementById('generated-answer-disclaimer')
-    ).toHaveAttribute('role', 'note');
+      (container.getRootNode() as ShadowRoot).getElementById('generated-answer-disclaimer')?.tagName
+    ).toBe('SMALL');
   });
 
   it('should not describe the answer container with the disclaimer when answer is hidden', async () => {
