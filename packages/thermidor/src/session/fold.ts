@@ -41,6 +41,12 @@ function cloneTurn(turn: Turn): Turn {
   if (turn.error !== undefined) {
     next.error = turn.error;
   }
+  if (turn.stopped) {
+    next.stopped = true;
+  }
+  if (turn.addedMessages) {
+    next.addedMessages = turn.addedMessages.map((message) => ({...message}));
+  }
   return next;
 }
 

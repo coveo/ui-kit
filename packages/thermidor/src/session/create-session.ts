@@ -62,6 +62,7 @@ import {isTurnOpeningAction} from './turn-opening.js';
 import {
   INITIALIZATION,
   abandonedPlaceholderIds,
+  deriveOwnerTurnIds,
   deriveSessionSurfaces,
   sessionActivities,
   targetStatus,
@@ -72,6 +73,7 @@ import type {
   A2uiState,
   A2uiV09Message,
   ActionError,
+  AddedMessageStatus,
   DiscoveredSurface,
   SessionInitialization,
   SessionRequest,
@@ -182,6 +184,13 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
    * `false` for tests, or for a server that creates a session while rendering.
    */
   initialize?: boolean;
+  /**
+   * Whether a component action is sent while an answer streams instead of withheld. Set it only
+   * when the endpoint takes actions beside an answer. Such actions are still sent one at a time,
+   * and each is recorded with the turn whose surface it acts on, not with the streaming turn.
+   * Defaults to `false`.
+   */
+  actionsDuringAnswer?: boolean;
 }
 
 /**
@@ -324,6 +333,13 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    */
   cancel(): void;
   /**
+   * Stops the answer in progress: it asks the endpoint to stop the agent, and the answer's own
+   * stream then ends, keeping what it streamed and marking its turn `stopped`. When the endpoint has
+   * no answer to stop upstream, or the request in flight opens no turn, it falls back to
+   * {@link Session.cancel}. Resolves once the endpoint has answered; never rejects.
+   */
+  stop(): Promise<void>;
+  /**
    * Re-submits the input of the last turn when it errored: its prompt, or the action that opened
    * it, sent again from the surface it was dispatched from. Withheld like any dispatch while a
    * request is in flight. An earlier turn is not retried: its answer would land before later turns.
@@ -357,6 +373,39 @@ interface RequestFailure {
 function isAbortError(error: unknown): boolean {
   return error instanceof Error && error.name === 'AbortError';
 }
+
+/** The CUSTOM event an answer's stream carries when a stop cut the answer off. */
+const RUN_CANCELLED_EVENT = 'run_cancelled';
+/** The CUSTOM event that answers a stop request: `{stopped}`, false when nothing was stopped. */
+const STOP_REQUESTED_EVENT = 'stop_requested';
+/** The CUSTOM event that answers a message added to an answer: `{id, queued}`. */
+const MESSAGE_QUEUED_EVENT = 'message_queued';
+/** The CUSTOM event an answer's stream carries once the agent took an added message: `{id}`. */
+const QUEUED_MESSAGE_APPLIED_EVENT = 'queued_message_applied';
+
+/** A CUSTOM event's value as an object: the agent sends some as a JSON string. */
+function customValue(value: unknown): Record<string, unknown> | undefined {
+  let parsed = value;
+  if (typeof value === 'string') {
+    try {
+      parsed = JSON.parse(value);
+    } catch {
+      return undefined;
+    }
+  }
+  return typeof parsed === 'object' && parsed !== null
+    ? (parsed as Record<string, unknown>)
+    : undefined;
+}
+
+/** An added message only moves forward: a late `message_queued` never undoes `applied`. */
+const ADDED_MESSAGE_PROGRESS: Record<AddedMessageStatus, number> = {
+  sending: 0,
+  waiting: 1,
+  applied: 2,
+  askedNext: 3,
+  notAdded: 3,
+};
 
 /**
  * True when a stream has been superseded by a newer one: a different stream is
@@ -550,6 +599,57 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
   /** A dispatch refused before it was sent settles at once. */
   function withhold(): Promise<void> {
     return Promise.resolve();
+  }
+
+  // Actions sent beside a streaming answer go one at a time, in the order the shopper made them:
+  // none is dropped, and since each answer is a whole-node snapshot taken after every earlier
+  // action, the last one shown reflects them all. They never set `request`, which stays the
+  // answer's, and each has its own abort controller so stopping the answer never stops them.
+  let besideAnswerQueue: Promise<void> = Promise.resolve();
+  let besideAnswerPending = 0;
+  // Their streams are never superseded by the answer's, so their failures still reach `actionError`.
+  const besideAnswerControllers = new WeakSet<AbortController>();
+  function superseded(abortController: AbortController): boolean {
+    return (
+      !besideAnswerControllers.has(abortController) &&
+      isSuperseded(activeAbortController, abortController)
+    );
+  }
+  function sendBesideAnswer(
+    send: (abortController: AbortController) => Promise<void>
+  ): Promise<void> {
+    besideAnswerPending += 1;
+    const sent = besideAnswerQueue
+      .then(() => {
+        const abortController = new AbortController();
+        besideAnswerControllers.add(abortController);
+        return send(abortController);
+      })
+      .catch((error: unknown) => {
+        devWarn(`dispatchAction: request failed: ${getErrorMessage(error)}`);
+      })
+      .finally(() => {
+        besideAnswerPending -= 1;
+      });
+    besideAnswerQueue = sent;
+    return sent;
+  }
+
+  /** Whether the request in flight is an answer still streaming into its turn. */
+  function isAnswerStreaming(state: SessionStoreState<Turn>): boolean {
+    const {request} = state;
+    if (!request || request.kind === 'initialize' || request.turnId === undefined) {
+      return false;
+    }
+    return state.turns.find((turn) => turn.id === request.turnId)?.status === 'streaming';
+  }
+
+  /** The turn that created the live surface `surfaceId`, if a turn did. */
+  function surfaceOwnerTurnId(
+    state: SessionStoreState<Turn>,
+    surfaceId: string
+  ): string | undefined {
+    return deriveOwnerTurnIds(state).get(surfaceId);
   }
 
   function setActionError(actionError: ActionError | undefined): void {
@@ -765,6 +865,17 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
           return;
         }
 
+        if (target.kind === 'turn' && event.type === 'CUSTOM') {
+          const {name, value} = event as {name?: string; value?: unknown};
+          if (name === RUN_CANCELLED_EVENT) {
+            replaceTurn(target.turnId, (turn) => ({...turn, stopped: true}));
+          } else if (name === QUEUED_MESSAGE_APPLIED_EVENT) {
+            const id = customValue(value)?.['id'];
+            if (typeof id === 'string') {
+              updateAddedMessage(target.turnId, id, 'applied');
+            }
+          }
+        }
         foldEvent(target, event);
 
         const foldedStatus = targetStatus(store.getState(), target);
@@ -777,13 +888,13 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
         if (
           !terminalEventReceived &&
           !abortController.signal.aborted &&
-          !isSuperseded(activeAbortController, abortController)
+          !superseded(abortController)
         ) {
           fail('Stream ended without a terminal event.');
         }
       },
       onError: (error) => {
-        if (terminalEventReceived || isSuperseded(activeAbortController, abortController)) {
+        if (terminalEventReceived || superseded(abortController)) {
           return;
         }
         if (isAbortError(error)) {
@@ -826,7 +937,7 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
       if (!result.success) {
         // The client reports an abort as a failed call rather than throwing it.
         if (abortController.signal.aborted) {
-          if (!isSuperseded(activeAbortController, abortController)) {
+          if (!superseded(abortController)) {
             cancelRun(target);
           }
           return undefined;
@@ -839,7 +950,7 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
       // A stream aborted because a NEWER stream superseded it must not touch the
       // turn: the newer stream owns the outcome. A plain cancel (controller reset
       // to null) still reports the failure.
-      if (isSuperseded(activeAbortController, abortController)) {
+      if (superseded(abortController)) {
         return;
       }
       if (isAbortError(error)) {
@@ -905,6 +1016,36 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     }
   }
 
+  async function stop(): Promise<void> {
+    const {request, sessionId, sessionToken} = store.getState();
+    const target = request && requestTarget(request);
+    if (!target || target.kind !== 'turn') {
+      cancel();
+      return;
+    }
+    // The turn is marked stopped only once the answer really stopped: its stream reports
+    // `run_cancelled`, or it is cancelled here. A stop that races the answer's end leaves it whole.
+    const reply =
+      sessionId && sessionToken
+        ? await sendControlRequest(
+            {...requestScope, ...buildBaseRequest(), message: null, action: null, stop: true},
+            STOP_REQUESTED_EVENT
+          )
+        : undefined;
+    const stopped = reply?.['stopped'] === true;
+    if (!stopped) {
+      devWarn(`stop: falling back to cancel: ${reply ? 'nothing to stop' : 'no stop reply'}`);
+    }
+    // Nothing upstream stopped it (an answer the endpoint gives itself, or no session keys yet):
+    // stop reading here instead, if that answer is still the one in flight.
+    if (!stopped) {
+      if (store.getState().request === request) {
+        replaceTurn(target.turnId, (turn) => ({...turn, stopped: true}));
+        cancel();
+      }
+    }
+  }
+
   /** Its run is recorded as the initialization, never as a turn. */
   function initialize(): Promise<void> {
     return sendRequest({kind: 'initialize'}, async (abortController) => {
@@ -937,7 +1078,111 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     return sendRequest({kind: 'prompt', turnId}, async (abortController) => {
       openTurn(turnId, {prompt});
       await streamPrompt(turnId, prompt ?? '', abortController);
+    }).then(() => settleAddedMessages(turnId));
+  }
+
+  function updateAddedMessage(turnId: string, id: string, status: AddedMessageStatus): void {
+    replaceTurn(turnId, (turn) => {
+      const messages = turn.addedMessages;
+      const moves = messages?.some(
+        (message) =>
+          message.id === id &&
+          ADDED_MESSAGE_PROGRESS[status] > ADDED_MESSAGE_PROGRESS[message.status]
+      );
+      if (!messages || !moves) {
+        return turn;
+      }
+      return {
+        ...turn,
+        addedMessages: messages.map((message) =>
+          message.id === id ? {...message, status} : message
+        ),
+      };
     });
+  }
+
+  /**
+   * Adds `prompt` to the answer streaming into `turnId` instead of opening a turn: the endpoint
+   * hands it to that answer, which takes it before its next step. It never sets `request`, which
+   * stays the answer's.
+   */
+  async function addToAnswer(turnId: string, prompt: string): Promise<void> {
+    const id = generateId();
+    replaceTurn(turnId, (turn) => ({
+      ...turn,
+      addedMessages: [...(turn.addedMessages ?? []), {id, text: prompt, status: 'sending'}],
+    }));
+    const reply = await sendControlRequest(
+      {...buildConversationRequest(prompt), queuedMessageId: id},
+      MESSAGE_QUEUED_EVENT
+    );
+    if (reply?.['queued'] === true) {
+      updateAddedMessage(turnId, id, 'waiting');
+    }
+  }
+
+  /**
+   * Sends a request that never opens a turn (a stop, or a message added to the answer in
+   * progress) and returns the value of the CUSTOM event named `replyEvent` that answers it, or
+   * `undefined` when the request failed or got no such answer.
+   */
+  async function sendControlRequest(
+    request: ConverseRequestModel,
+    replyEvent: string
+  ): Promise<Record<string, unknown> | undefined> {
+    const abortController = new AbortController();
+    let reply: Record<string, unknown> | undefined;
+    try {
+      const result = await client.call(
+        request,
+        {
+          organizationId: config.organizationId,
+          accessToken: config.accessToken,
+          endpoint: config.endpoint,
+        },
+        {signal: abortController.signal}
+      );
+      if (!result.success) {
+        devWarn(`${replyEvent}: ${result.error}`);
+        return undefined;
+      }
+      await readEventStream({
+        stream: result.data.stream,
+        signal: abortController.signal,
+        onEvent: (rawEvent: RawSSEEvent) => {
+          const event = parseSSEEvent(rawEvent);
+          const {name, value} = event as {name?: string; value?: unknown};
+          if (event.type === 'CUSTOM' && name === replyEvent) {
+            reply = customValue(value);
+          }
+        },
+        onDone: () => {},
+        onError: (error) => devWarn(`${replyEvent}: ${getErrorMessage(error)}`),
+      });
+    } catch (error) {
+      devWarn(`${replyEvent}: ${getErrorMessage(error)}`);
+    }
+    return reply;
+  }
+
+  /**
+   * Once the answer of `turnId` has ended, every message added to it that the agent did not take is
+   * asked as the next question, together, unless the shopper stopped that answer.
+   */
+  function settleAddedMessages(turnId: string): void {
+    const turn = store.getState().turns.find((candidate) => candidate.id === turnId);
+    const left = turn?.addedMessages?.filter((message) => message.status !== 'applied') ?? [];
+    if (!turn || left.length === 0) {
+      return;
+    }
+    const status: AddedMessageStatus = turn.stopped ? 'notAdded' : 'askedNext';
+    for (const message of left) {
+      updateAddedMessage(turnId, message.id, status);
+    }
+    if (!turn.stopped) {
+      // Not awaited: whoever waited for the answer does not also wait for the next one.
+      void startPromptTurn(left.map((message) => message.text).join('\n'));
+    }
   }
 
   /**
@@ -1004,11 +1249,18 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
       context: recovered.context,
     };
 
+    // When the endpoint takes actions during an answer, the shopper may act on an earlier turn's
+    // results, during an answer or after one: the action is recorded with the turn that owns the
+    // surface, so its snapshot never lands in a later answer.
+    const owner =
+      !opensTurn && config.actionsDuringAnswer ? surfaceOwnerTurnId(current, surfaceId) : undefined;
     const target: RunTarget = opensTurn
       ? turnTarget(generateId())
-      : activeTurnId
-        ? turnTarget(activeTurnId)
-        : INITIALIZATION;
+      : owner
+        ? turnTarget(owner)
+        : activeTurnId
+          ? turnTarget(activeTurnId)
+          : INITIALIZATION;
     const request: SessionRequest = {
       kind: 'action',
       component: recovered.discriminant,
@@ -1017,6 +1269,23 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
       sourceComponentId: recovered.sourceComponentId,
       ...(target.kind === 'turn' ? {turnId: target.turnId} : {}),
     };
+    const source: ActionSource = {
+      component: recovered.discriminant,
+      name: recovered.name,
+      surfaceId,
+      sourceComponentId: recovered.sourceComponentId,
+    };
+    // Once actions queue beside an answer, later ones join that queue even after the answer ends,
+    // so they still reach the endpoint in the order the shopper made them.
+    if (
+      !opensTurn &&
+      config.actionsDuringAnswer &&
+      (isAnswerStreaming(current) || besideAnswerPending > 0)
+    ) {
+      return sendBesideAnswer((abortController) =>
+        streamAction(target, a2uiAction, source, false, abortController, false)
+      );
+    }
     // An answer streamed into an earlier run must not bring back what that run left behind.
     const abandoned = opensTurn ? undefined : abandonedPlaceholderIds(current, target);
     return sendRequest(
@@ -1033,18 +1302,7 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
             },
           });
         }
-        await streamAction(
-          target,
-          a2uiAction,
-          {
-            component: recovered.discriminant,
-            name: recovered.name,
-            surfaceId,
-            sourceComponentId: recovered.sourceComponentId,
-          },
-          opensTurn,
-          abortController
-        );
+        await streamAction(target, a2uiAction, source, opensTurn, abortController);
       },
       abandoned
     );
@@ -1075,9 +1333,13 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     action: A2uiAction,
     source: ActionSource,
     ownsTurn: boolean,
-    abortController: AbortController
+    abortController: AbortController,
+    // A queued action keeps an earlier queued action's failure on show instead of clearing it.
+    clearsActionError = true
   ): Promise<void> {
-    setActionError(undefined);
+    if (clearsActionError) {
+      setActionError(undefined);
+    }
     const failure = await executeStream(
       target,
       () => buildActionRequest(action),
@@ -1142,8 +1404,20 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
    */
   const dispatchAction = async (message: A2uiClientMessage | SubmitPromptAction): Promise<void> => {
     if (isSubmitPromptAction(message)) {
+      const {request} = store.getState();
+      const {prompt} = message.payload;
+      // A question asked while an answer the endpoint takes messages beside streams is added to it.
+      if (
+        config.actionsDuringAnswer &&
+        isAnswerStreaming(store.getState()) &&
+        request?.kind !== 'initialize' &&
+        request?.turnId !== undefined &&
+        prompt?.trim()
+      ) {
+        return addToAnswer(request.turnId, prompt);
+      }
       try {
-        await startPromptTurn(message.payload.prompt);
+        await startPromptTurn(prompt);
       } catch (error) {
         devWarn(`dispatchAction: submitPrompt withheld: ${getErrorMessage(error)}`);
       }
@@ -1294,6 +1568,7 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     getSnapshot,
     dispatchAction,
     cancel,
+    stop,
     retry,
     serialize,
   };

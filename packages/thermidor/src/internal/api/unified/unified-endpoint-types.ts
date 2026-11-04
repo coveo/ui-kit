@@ -16,6 +16,13 @@ export type ClientOwnedRequestFields = {
    * "no commerce context" from a present-but-empty context.
    */
   pinnedProducts?: string[];
+  /**
+   * Present only on a message added to the answer in progress: the endpoint hands `message` to that
+   * answer, under this id, instead of opening a turn.
+   */
+  queuedMessageId?: string;
+  /** Present only on a stop: the endpoint stops the answer in progress instead of opening a turn. */
+  stop?: true;
 };
 
 /**

@@ -294,4 +294,32 @@ export interface Turn {
   status: TurnStatus;
   /** Present when `status === 'error'`, absent otherwise. */
   error?: string;
+  /**
+   * Present once {@link Session.stop} stopped this turn's answer: the endpoint reported it cut off,
+   * or the session stopped reading it. A stop that arrived as the answer finished leaves it absent.
+   * The answer keeps what it streamed before it stopped; `status` says how its stream ended.
+   */
+  stopped?: true;
+  /**
+   * The messages the shopper added to this answer while it streamed, in the order they were sent.
+   * Present only once one was added.
+   */
+  addedMessages?: AddedMessage[];
+}
+
+/**
+ * Where a message the shopper added to an answer in progress stands:
+ * - `'sending'`: on its way to the answer;
+ * - `'waiting'`: the answer has it, and takes it before its next step;
+ * - `'applied'`: the agent took it into account in this answer;
+ * - `'askedNext'`: the answer ended before taking it, so it was asked as the next question;
+ * - `'notAdded'`: the answer was stopped before taking it.
+ */
+export type AddedMessageStatus = 'sending' | 'waiting' | 'applied' | 'askedNext' | 'notAdded';
+
+/** A message the shopper added to an answer in progress, as {@link Turn.addedMessages} lists it. */
+export interface AddedMessage {
+  id: string;
+  text: string;
+  status: AddedMessageStatus;
 }

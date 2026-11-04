@@ -47,6 +47,8 @@ export type {
 // ── Domain / view types ─────────────────────────────────────────────────────
 export type {
   Turn,
+  AddedMessage,
+  AddedMessageStatus,
   TurnInput,
   TurnAction,
   TurnResponse,

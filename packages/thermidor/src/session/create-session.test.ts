@@ -373,6 +373,318 @@ describe('createSession lifecycle', () => {
       stream.close();
       await turn;
     });
+
+    it('sends an action beside the answer when the endpoint takes actions during an answer', async () => {
+      const session = createSession({...baseConfig, actionsDuringAnswer: true});
+      const first = queueStream();
+      const firstTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'shoes'}});
+      await first.opened;
+      first.emit(PAGINATION_SURFACE);
+      first.emit({type: 'RUN_FINISHED'});
+      first.close();
+      await firstTurn;
+      const answer = queueStream();
+      const answerTurn = session.dispatchAction({
+        name: 'submitPrompt',
+        payload: {prompt: 'which is best for running?'},
+      });
+      await answer.opened;
+
+      const action = queueStream();
+      const sent = session.dispatchAction(selectPageMessage(2));
+      await action.opened;
+      action.emit({...PAGINATION_SURFACE, messageId: 'page-2'});
+      action.emit({type: 'RUN_FINISHED'});
+      action.close();
+      await sent;
+
+      expect(callMock).toHaveBeenCalledTimes(3);
+      expect(callMock.mock.calls[2][0]).toMatchObject({action: {name: 'selectPage'}});
+      const [searchTurn, answeringTurn] = session.turns;
+      expect(answeringTurn.status).toBe('streaming');
+      // The action's snapshot is recorded with the turn that owns the surface, not the answer.
+      expect(answeringTurn.response.activities).toEqual([]);
+      expect(searchTurn.response.activities).toHaveLength(2);
+      expect(session.request).toMatchObject({kind: 'prompt'});
+      answer.emit({type: 'RUN_FINISHED'});
+      answer.close();
+      await answerTurn;
+    });
+
+    describe('a question asked while the answer streams', () => {
+      async function answering() {
+        const session = createSession({...baseConfig, actionsDuringAnswer: true});
+        const answer = queueStream();
+        const answerTurn = session.dispatchAction({
+          name: 'submitPrompt',
+          payload: {prompt: 'build me a kayak bundle'},
+        });
+        await answer.opened;
+        return {session, answer, answerTurn};
+      }
+
+      async function addToAnswer(
+        session: ReturnType<typeof createSession>,
+        prompt: string,
+        queued: boolean
+      ) {
+        const reply = queueStream();
+        const sent = session.dispatchAction({name: 'submitPrompt', payload: {prompt}});
+        await reply.opened;
+        const request = callMock.mock.calls.at(-1)?.[0] as {queuedMessageId?: string};
+        reply.emit({type: 'RUN_STARTED'});
+        reply.emit({
+          type: 'CUSTOM',
+          name: 'message_queued',
+          value: {id: request.queuedMessageId, queued},
+        });
+        reply.emit({type: 'RUN_FINISHED'});
+        reply.close();
+        await sent;
+        return request.queuedMessageId;
+      }
+
+      it('is added to that answer instead of opening a turn', async () => {
+        const {session, answer, answerTurn} = await answering();
+
+        const id = await addToAnswer(session, 'make it under $1000', true);
+
+        expect(callMock.mock.calls[1][0]).toMatchObject({
+          message: 'make it under $1000',
+          queuedMessageId: expect.any(String),
+          action: null,
+        });
+        expect(session.turns).toHaveLength(1);
+        expect(session.turns[0].addedMessages).toEqual([
+          {id, text: 'make it under $1000', status: 'waiting'},
+        ]);
+
+        // The agent sends this value as a JSON string.
+        answer.emit({
+          type: 'CUSTOM',
+          name: 'queued_message_applied',
+          value: JSON.stringify({id, text: 'make it under $1000'}),
+        });
+        answer.emit({type: 'RUN_FINISHED'});
+        answer.close();
+        await answerTurn;
+        await flush();
+
+        expect(session.turns[0].addedMessages?.[0].status).toBe('applied');
+        expect(callMock).toHaveBeenCalledTimes(2);
+        expect(session.turns).toHaveLength(1);
+      });
+
+      it('is asked as the next question when the answer ends without taking it', async () => {
+        const {session, answer, answerTurn} = await answering();
+        await addToAnswer(session, 'make it under $1000', true);
+
+        const next = queueStream();
+        answer.emit({type: 'RUN_FINISHED'});
+        answer.close();
+        await answerTurn;
+        await next.opened;
+
+        expect(session.turns[0].addedMessages?.[0].status).toBe('askedNext');
+        expect(callMock.mock.calls[2][0]).toMatchObject({message: 'make it under $1000'});
+        expect(callMock.mock.calls[2][0]).not.toHaveProperty('queuedMessageId');
+        expect(session.turns.map((turn) => turn.input.prompt)).toEqual([
+          'build me a kayak bundle',
+          'make it under $1000',
+        ]);
+        next.emit({type: 'RUN_FINISHED'});
+        next.close();
+      });
+
+      it('is asked next when the answer had already stopped taking messages', async () => {
+        const {session, answer, answerTurn} = await answering();
+        await addToAnswer(session, 'make it under $1000', false);
+
+        const next = queueStream();
+        answer.emit({type: 'RUN_FINISHED'});
+        answer.close();
+        await answerTurn;
+        await next.opened;
+
+        expect(session.turns[1].input.prompt).toBe('make it under $1000');
+        next.emit({type: 'RUN_FINISHED'});
+        next.close();
+      });
+
+      it('is not asked when the shopper stopped the answer before it was taken', async () => {
+        const {session, answer, answerTurn} = await answering();
+        await addToAnswer(session, 'make it under $1000', true);
+
+        answer.emit({type: 'CUSTOM', name: 'run_cancelled', value: {}});
+        answer.emit({type: 'RUN_FINISHED'});
+        answer.close();
+        await answerTurn;
+        await flush();
+
+        expect(session.turns[0].addedMessages?.[0].status).toBe('notAdded');
+        expect(session.turns).toHaveLength(1);
+        expect(callMock).toHaveBeenCalledTimes(2);
+      });
+
+      it('is withheld when the endpoint does not take messages during an answer', async () => {
+        const session = createSession(baseConfig);
+        const answer = queueStream();
+        const answerTurn = session.dispatchAction({
+          name: 'submitPrompt',
+          payload: {prompt: 'build me a kayak bundle'},
+        });
+        await answer.opened;
+
+        await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'under $1000'}});
+
+        expect(callMock).toHaveBeenCalledTimes(1);
+        expect(session.turns[0].addedMessages).toBeUndefined();
+        answer.emit({type: 'RUN_FINISHED'});
+        answer.close();
+        await answerTurn;
+      });
+    });
+
+    it('records an action on earlier results with their turn once an answer that showed none has ended', async () => {
+      const session = createSession({...baseConfig, actionsDuringAnswer: true});
+      const first = queueStream();
+      const firstTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'shoes'}});
+      await first.opened;
+      first.emit(PAGINATION_SURFACE);
+      first.emit({type: 'RUN_FINISHED'});
+      first.close();
+      await firstTurn;
+      const answer = queueStream();
+      const answerTurn = session.dispatchAction({
+        name: 'submitPrompt',
+        payload: {prompt: 'which is best for running?'},
+      });
+      await answer.opened;
+      answer.emit({type: 'RUN_FINISHED'});
+      answer.close();
+      await answerTurn;
+
+      const action = queueStream();
+      const sent = session.dispatchAction(selectPageMessage(2));
+      await action.opened;
+      action.emit({...PAGINATION_SURFACE, messageId: 'page-2'});
+      action.emit({type: 'RUN_FINISHED'});
+      action.close();
+      await sent;
+
+      expect(callMock.mock.calls[2][0]).toMatchObject({action: {name: 'selectPage'}});
+      const [searchTurn, answeredTurn] = session.turns;
+      expect(answeredTurn.response.activities).toEqual([]);
+      expect(answeredTurn.response.surfaces).toEqual([]);
+      expect(searchTurn.response.activities).toHaveLength(2);
+    });
+
+    it('reports an action that fails during an answer', async () => {
+      const session = createSession({...baseConfig, actionsDuringAnswer: true});
+      const first = queueStream();
+      const firstTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'shoes'}});
+      await first.opened;
+      first.emit(PAGINATION_SURFACE);
+      first.emit({type: 'RUN_FINISHED'});
+      first.close();
+      await firstTurn;
+      const answer = queueStream();
+      const answerTurn = session.dispatchAction({
+        name: 'submitPrompt',
+        payload: {prompt: 'which is best for running?'},
+      });
+      await answer.opened;
+
+      const action = queueStream();
+      const sent = session.dispatchAction(selectPageMessage(2));
+      await action.opened;
+      action.close();
+      await sent;
+
+      expect(session.actionError).toMatchObject({
+        name: 'selectPage',
+        surfaceId: 'commerce-search-surface',
+      });
+      expect(session.turns[1].status).toBe('streaming');
+      answer.emit({type: 'RUN_FINISHED'});
+      answer.close();
+      await answerTurn;
+    });
+
+    it('keeps a queued action failure on show while the next queued action succeeds', async () => {
+      const session = createSession({...baseConfig, actionsDuringAnswer: true});
+      const first = queueStream();
+      const firstTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'shoes'}});
+      await first.opened;
+      first.emit(PAGINATION_SURFACE);
+      first.emit({type: 'RUN_FINISHED'});
+      first.close();
+      await firstTurn;
+      const answer = queueStream();
+      const answerTurn = session.dispatchAction({
+        name: 'submitPrompt',
+        payload: {prompt: 'which is best for running?'},
+      });
+      await answer.opened;
+
+      callMock.mockImplementationOnce(async () => ({success: false, error: 'Commerce API failed'}));
+      const pageThree = queueStream();
+      const failed = session.dispatchAction(selectPageMessage(2));
+      const succeeded = session.dispatchAction(selectPageMessage(3));
+      await pageThree.opened;
+      pageThree.emit({type: 'RUN_FINISHED'});
+      pageThree.close();
+      await Promise.all([failed, succeeded]);
+
+      expect(session.actionError).toMatchObject({
+        message: 'Commerce API failed',
+        name: 'selectPage',
+      });
+      answer.emit({type: 'RUN_FINISHED'});
+      answer.close();
+      await answerTurn;
+    });
+
+    it('sends every action made during an answer, one at a time and in order', async () => {
+      const session = createSession({...baseConfig, actionsDuringAnswer: true});
+      const first = queueStream();
+      const firstTurn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'shoes'}});
+      await first.opened;
+      first.emit(PAGINATION_SURFACE);
+      first.emit({type: 'RUN_FINISHED'});
+      first.close();
+      await firstTurn;
+      const answer = queueStream();
+      const answerTurn = session.dispatchAction({
+        name: 'submitPrompt',
+        payload: {prompt: 'which is best for running?'},
+      });
+      await answer.opened;
+
+      const pageTwo = queueStream();
+      const pageThree = queueStream();
+      const sentTwo = session.dispatchAction(selectPageMessage(2));
+      const sentThree = session.dispatchAction(selectPageMessage(3));
+      await pageTwo.opened;
+      // The second click waits for the first one's answer instead of being dropped.
+      expect(callMock).toHaveBeenCalledTimes(3);
+      pageTwo.emit({type: 'RUN_FINISHED'});
+      pageTwo.close();
+      await pageThree.opened;
+      pageThree.emit({type: 'RUN_FINISHED'});
+      pageThree.close();
+      await Promise.all([sentTwo, sentThree]);
+
+      expect(callMock).toHaveBeenCalledTimes(4);
+      expect(
+        callMock.mock.calls
+          .slice(2)
+          .map(([request]) => (request as {action: {context: {page: number}}}).action.context)
+      ).toEqual([{page: 2}, {page: 3}]);
+      answer.emit({type: 'RUN_FINISHED'});
+      answer.close();
+      await answerTurn;
+    });
   });
 
   describe('Gateway session continuity', () => {
@@ -1272,6 +1584,96 @@ describe('createSession lifecycle', () => {
       expect(turn.error).toBeDefined();
       // Partial response already folded is retained.
       expect(turn.response.agent?.messages).toEqual([{content: 'partial', role: 'assistant'}]);
+    });
+  });
+
+  describe('stop during an answer', () => {
+    async function startAnswer(session: ReturnType<typeof createSession>) {
+      const answer = queueStream();
+      const submitPromise = session.dispatchAction({
+        name: 'submitPrompt',
+        payload: {prompt: 'compare wetsuits'},
+      });
+      await answer.opened;
+      answer.emit({
+        type: 'RUN_STARTED',
+        conversationSessionId: 'session-1',
+        conversationToken: 'conversation-token-1',
+      });
+      answer.emit({type: 'TEXT_MESSAGE_START', messageId: 'm1', role: 'assistant'});
+      answer.emit({type: 'TEXT_MESSAGE_CONTENT', messageId: 'm1', delta: 'partial'});
+      await flush();
+      return {answer, submitPromise};
+    }
+
+    /** Queues the endpoint's answer to the next stop request. */
+    function queueStopReply(stopped: boolean): void {
+      const reply = queueStream();
+      reply.emit({type: 'RUN_STARTED'});
+      reply.emit({type: 'CUSTOM', name: 'stop_requested', value: {stopped}});
+      reply.emit({type: 'RUN_FINISHED'});
+      reply.close();
+    }
+
+    it('asks the endpoint to stop the answer, which then ends on its own stream', async () => {
+      const session = createSession(baseConfig);
+      const {answer, submitPromise} = await startAnswer(session);
+      queueStopReply(true);
+
+      await session.stop();
+      answer.emit({type: 'CUSTOM', name: 'run_cancelled', value: ''});
+      answer.emit({type: 'RUN_FINISHED'});
+      answer.close();
+      await submitPromise;
+
+      // The stop goes through the same converse request, and never opens a turn.
+      expect(callMock.mock.calls[1][0]).toMatchObject({
+        conversationSessionId: 'session-1',
+        conversationToken: 'conversation-token-1',
+        message: null,
+        action: null,
+        stop: true,
+      });
+      expect(session.turns).toHaveLength(1);
+      const turn = session.turns[0];
+      expect(turn.stopped).toBe(true);
+      expect(turn.status).toBe('complete');
+      expect(turn.response.agent?.messages).toEqual([{content: 'partial', role: 'assistant'}]);
+      expect(session.request).toBeUndefined();
+    });
+
+    it('leaves an answer whole when it finishes as the stop arrives', async () => {
+      const session = createSession(baseConfig);
+      const {answer, submitPromise} = await startAnswer(session);
+      queueStopReply(true);
+
+      await session.stop();
+      answer.emit({type: 'TEXT_MESSAGE_CONTENT', messageId: 'm1', delta: ' and the rest'});
+      answer.emit({type: 'RUN_FINISHED'});
+      answer.close();
+      await submitPromise;
+
+      const turn = session.turns[0];
+      expect(turn.stopped).toBeUndefined();
+      expect(turn.status).toBe('complete');
+      expect(turn.response.agent?.messages).toEqual([
+        {content: 'partial and the rest', role: 'assistant'},
+      ]);
+    });
+
+    it('stops reading the answer itself when the endpoint has nothing to stop', async () => {
+      const session = createSession(baseConfig);
+      const {submitPromise} = await startAnswer(session);
+      queueStopReply(false);
+
+      await session.stop();
+      await submitPromise;
+
+      const turn = session.turns[0];
+      expect(turn.stopped).toBe(true);
+      expect(turn.status).toBe('error');
+      expect(turn.response.agent?.messages).toEqual([{content: 'partial', role: 'assistant'}]);
+      expect(session.request).toBeUndefined();
     });
   });
 

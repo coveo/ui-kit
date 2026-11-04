@@ -67,7 +67,7 @@ function surfaceLifecycle(message: unknown): {created?: string; deleted?: string
  * the node registry does, so a surface the projection leaves out (no catalog, no root) still has
  * the turn that created it.
  */
-function deriveOwnerTurnIds({turns, initialization}: SessionRuns): Map<string, string> {
+export function deriveOwnerTurnIds({turns, initialization}: SessionRuns): Map<string, string> {
   const ownerTurnIds = new Map<string, string>();
   const runs = [
     {turnId: undefined, activities: initialization?.activities ?? []},
