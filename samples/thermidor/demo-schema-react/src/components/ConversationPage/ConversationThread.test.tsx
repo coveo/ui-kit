@@ -48,6 +48,28 @@ describe('ConversationThread', () => {
     });
   });
 
+  describe('products the agent found while it answers', () => {
+    beforeEach(() => {
+      vi.stubEnv('VITE_COVEO_ACTIONS_DURING_ANSWER', 'true');
+    });
+    afterEach(() => {
+      vi.unstubAllEnvs();
+    });
+
+    it('let the shopper steer the answer in progress', () => {
+      const onReact = vi.fn();
+      const answering: Turn = {
+        ...createTurn({id: 't1', prompt: 'build me a kayak bundle', status: 'streaming'}),
+        foundProducts: [{id: 'k1', name: 'Pelican Sprint', price: 499}],
+      };
+      renderThread([answering], {onReact});
+
+      fireEvent.click(screen.getByRole('button', {name: 'Leave out'}));
+
+      expect(onReact).toHaveBeenCalledWith('Show me options without the Pelican Sprint');
+    });
+  });
+
   describe('TurnSeparator rendering', () => {
     it('renders a separator between consecutive turns', () => {
       const turns = [

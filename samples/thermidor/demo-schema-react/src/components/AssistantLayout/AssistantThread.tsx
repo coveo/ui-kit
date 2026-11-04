@@ -3,6 +3,7 @@ import {TurnSurfaces} from '../../a2ui/surfaces.js';
 import {continuePrompt} from '../ConversationPage/ConversationPage.js';
 import {shopperPrompt} from '../ConversationPage/ConversationThread.js';
 import {ErrorTurnBlock} from '../ConversationPage/ErrorTurnBlock.js';
+import {FoundProducts, showsFoundProducts} from '../FoundProducts/FoundProducts.js';
 import {StreamingMessage} from '../ConversationPage/StreamingMessage.js';
 import {UserPromptBubble} from '../ConversationPage/UserPromptBubble.js';
 import {SuggestionPills} from '../SuggestionPills/SuggestionPills.js';
@@ -99,6 +100,14 @@ export function AssistantThread({turns, panelSearches, onAsk}: AssistantThreadPr
                   isStreaming={streaming}
                 />
               </>
+            )}
+            {/* Last, so the thread kept at its bottom shows them while the answer works. */}
+            {showsFoundProducts(turn) && turn.foundProducts && (
+              <FoundProducts
+                products={turn.foundProducts}
+                addedMessages={turn.addedMessages}
+                onReact={onAsk}
+              />
             )}
           </article>
         );

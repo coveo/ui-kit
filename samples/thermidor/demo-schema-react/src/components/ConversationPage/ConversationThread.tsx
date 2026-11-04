@@ -6,6 +6,7 @@ import {UserPromptBubble} from './UserPromptBubble.js';
 import {TurnSeparator} from './TurnSeparator.js';
 import {TurnSurfaces} from '../../a2ui/surfaces.js';
 import {actionsDuringAnswerEnabled} from '../../env.js';
+import {FoundProducts, showsFoundProducts} from '../FoundProducts/FoundProducts.js';
 import styles from './ConversationThread.module.css';
 
 interface ConversationThreadProps {
@@ -16,9 +17,16 @@ interface ConversationThreadProps {
    * that the answer had taken; offered on the latest turn once it stopped.
    */
   onContinue?: (question: string | undefined, added: string[]) => void;
+  /** Sends the shopper's reaction to a product the agent found while answering. */
+  onReact?: (message: string) => void;
 }
 
-export function ConversationThread({turns, turnRefs, onContinue}: ConversationThreadProps) {
+export function ConversationThread({
+  turns,
+  turnRefs,
+  onContinue,
+  onReact,
+}: ConversationThreadProps) {
   // The shopper keeps refining the newest results during an answer, and after one that showed none.
   const newestResults = actionsDuringAnswerEnabled() ? newestResultsTurnId(turns) : undefined;
   return (
@@ -53,6 +61,14 @@ export function ConversationThread({turns, turnRefs, onContinue}: ConversationTh
                     : undefined
                 )}
               </div>
+              {/* Last, next to the prompt bar, while the answer above them works. */}
+              {onReact && showsFoundProducts(turn) && turn.foundProducts && (
+                <FoundProducts
+                  products={turn.foundProducts}
+                  addedMessages={turn.addedMessages}
+                  onReact={onReact}
+                />
+              )}
             </div>
             {next !== undefined && !next.input.action && <TurnSeparator />}
           </div>

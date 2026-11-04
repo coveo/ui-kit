@@ -1,5 +1,5 @@
 import {render, screen} from '@testing-library/react';
-import {describe, expect, it, vi} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import type {Turn} from '@coveo/thermidor';
 import {A2UIProvider} from '@copilotkit/a2ui-renderer';
 import {createThermidorCatalog} from '../../a2ui/components.js';
@@ -99,6 +99,32 @@ describe('AssistantThread', () => {
     expect(screen.getByText('Stopped after 1 step')).toBeTruthy();
     screen.getByRole('button', {name: 'Continue'}).click();
     expect(onAsk).toHaveBeenCalledWith('Continue: build me a kayak bundle (under $1000)');
+  });
+
+  describe('products the agent found while it answers', () => {
+    const foundProducts = [{id: 'k1', name: 'Pelican Sprint', price: 499}];
+    beforeEach(() => {
+      vi.stubEnv('VITE_COVEO_ACTIONS_DURING_ANSWER', 'true');
+    });
+    afterEach(() => {
+      vi.unstubAllEnvs();
+    });
+
+    it('let the shopper steer the answer in progress', () => {
+      const onAsk = renderThread([
+        answerTurn('t1', 'build me a kayak bundle', {status: 'streaming', foundProducts}),
+      ]);
+
+      screen.getByRole('button', {name: 'More like this'}).click();
+
+      expect(onAsk).toHaveBeenCalledWith('Show me more like the Pelican Sprint');
+    });
+
+    it('give way to the answer’s own products once it is done', () => {
+      renderThread([answerTurn('t1', 'build me a kayak bundle', {foundProducts})]);
+
+      expect(screen.queryByRole('region', {name: 'Found so far'})).toBeNull();
+    });
   });
 });
 
