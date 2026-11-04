@@ -95,7 +95,7 @@ function takenMessages(turn: Turn): string[] {
  * What the shopper asked: the prompt, or the text of the `NextActionsBar` chip, a follow-up or a
  * search option, whose action opened the turn.
  */
-function shopperPrompt({input}: Turn): string | undefined {
+export function shopperPrompt({input}: Turn): string | undefined {
   if (input.prompt !== undefined) {
     return input.prompt;
   }

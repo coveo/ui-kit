@@ -180,6 +180,27 @@ export async function submitQuery(session: QuerySubmitter, prompt: string): Prom
 }
 
 /**
+ * PROTOTYPE (HACK-408): sends `query` from a results panel's search box once the session is free.
+ * Unlike {@link submitQuery}, it never joins an answer in progress: a search is not something to
+ * steer the agent with, so it waits for the answer to end. A suggestion in flight is cancelled.
+ */
+export async function searchWhenFree(session: QuerySubmitter, query: string): Promise<void> {
+  const ticket = (latestQuestion.get(session) ?? 0) + 1;
+  latestQuestion.set(session, ticket);
+  const {request} = session.getSnapshot();
+  if (request) {
+    if (isFetchSuggestions(request)) {
+      session.cancel();
+    }
+    await whenFree(session);
+  }
+  if (latestQuestion.get(session) !== ticket) {
+    return;
+  }
+  return session.dispatchAction({name: 'submitPrompt', payload: {prompt: query}});
+}
+
+/**
  * Starts a gesture with React's `useOptimistic`: unless a request is in flight, applies the
  * optimistic update and sends the gesture in a transition that lasts until `send`'s promise
  * settles, so the optimistic value shows until then. The renderer's dispatch returns the

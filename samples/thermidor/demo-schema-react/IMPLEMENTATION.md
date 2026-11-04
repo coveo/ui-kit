@@ -67,6 +67,14 @@ The conversation is a single feed: every turn keeps its blocks on the page, and 
 - **Only the latest turn is interactive.** The session resolves an action's component across every live surface, so earlier blocks could take actions. The sample still keeps them read-only: `TurnSurfaces` wraps every turn but the latest in a disabled `fieldset`, so earlier blocks stay readable, selected facets included, but cannot be used.
 - **Follow-ups are turns.** Agent Gateway announces the `NextActionsBar` actions (`selectAction`, `selectSearchOption`) as turn-opening with the bar, so `@coveo/thermidor` answers each one in a new turn whose `input.action` records it, and the sample declares nothing. A turn here is a gesture of the shopper in the conversation, whoever answers it: the gateway answers a search option itself, without the agent, and does not count it as a turn. `ConversationThread` draws the chip's text as the shopper's message, and no separator before such a turn, so it reads as a continuation of the answer it follows. The follow-up's turn becomes the latest one, so the blocks it was sent from become read-only, as after a prompt.
 
+## Assistant layouts (prototype)
+
+`?layout=floating` and `?layout=docked` (or the Feed / Floating / Docked switch) draw the same session in two lanes instead of one feed. They prototype answering while the shopper keeps shopping, after the earlier floating chat spike.
+
+- **Results panel.** The newest search surface (root `CommerceSearch`) fills the shopper's panel, with the session's search box. It is never locked by an answer: with actions during an answer, filters, sort and paging go beside it. A search typed there waits for an answer in progress (`searchWhenFree`) instead of being added to it, and does not show in the chat.
+- **Assistant window.** Every other block, the agent's text and its follow-ups, show in a window that floats over the results (minimize, maximize) or docks beside them. Its prompt adds to an answer in progress, and its header holds Stop. A question the gateway answers with a search leaves a one-line trace.
+- **Activity rail.** Each answer lists the agent's tool calls in the shopper's words (`activity.ts`), routing hidden, with each added message placed after the step the agent had reached when it took it. A stopped answer says how far it got and offers Continue.
+
 ## Loading placeholders (✅ data-model driven)
 
 While a turn streams, a skeleton marks each block that is still loading. A2-UI defines no skeleton: a loading placeholder is an ordinary surface whose **data model** declares `isLoading: true`, and it follows the A2-UI surface lifecycle. The sample infers nothing from `surfaceId`s, which the spec treats as opaque, nor from reasoning steps.

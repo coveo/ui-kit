@@ -1,6 +1,7 @@
 .grid {
   display: grid;
-  grid-template-columns: 1fr;
+  /* As many columns as the grid's own width fits, so it also works beside the assistant. */
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr));
   gap: var(--space-4);
 }
 
@@ -8,24 +9,6 @@
   outline: 2px solid var(--color-focus);
   outline-offset: 4px;
   border-radius: var(--radius-lg);
-}
-
-@media (min-width: 640px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 768px) {
-  .grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (min-width: 1280px) {
-  .grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
 }
 
 .empty {

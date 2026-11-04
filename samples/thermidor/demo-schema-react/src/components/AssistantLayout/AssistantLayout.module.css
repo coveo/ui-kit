@@ -1,0 +1,11 @@
+.page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+  background: var(--color-bg-secondary);
+}
+
+.page[data-layout='docked'] {
+  grid-template-columns: minmax(0, 1fr) clamp(380px, 36vw, 560px);
+}
