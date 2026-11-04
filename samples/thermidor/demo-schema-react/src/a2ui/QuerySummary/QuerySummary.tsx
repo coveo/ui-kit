@@ -17,10 +17,15 @@ import styles from './QuerySummary.module.css';
  * - No results with a query: "No results for {query}".
  * - Otherwise: "Products {firstIndex}-{lastIndex} of {totalEntries}", with the trailing
  *   " for {query}" only when a query is present.
- * - When the backend replaced the shopper's query and can search it instead (`canOverride`):
- *   "Showing results for {query}. Search instead for {originalQuery}", which dispatches
- *   `overrideCorrection`.
- * - When it cannot: "Showing results for {query} instead of {originalQuery}".
+ *
+ * When the backend replaced the shopper's query, the notice names both queries. If it can search
+ * the shopper's query instead (`canOverride`), the notice ends with "Search instead for
+ * {originalQuery}", which dispatches `overrideCorrection`:
+ * - with results, above the result window: "Showing results for {query}. Search instead for
+ *   {originalQuery}", or "Showing results for {query} instead of {originalQuery}";
+ * - without results, in place of "No results for {query}": "No results for {query}. Search
+ *   instead for {originalQuery}", or "No results for {query}, searched instead of
+ *   {originalQuery}".
  */
 export const QuerySummary = createReactComponent(
   {
@@ -31,10 +36,9 @@ export const QuerySummary = createReactComponent(
     const {query, firstIndex, lastIndex, totalEntries, correction} = props;
     const startGesture = useGesture();
 
-    // Bindings resolve progressively: any of the four fields may still be
-    // undefined on an early render. Treat a partially-resolved summary as
-    // not-yet-loaded (render nothing) rather than showing "undefined-undefined"
-    // or a premature "No results".
+    // Bindings resolve progressively: any field may still be undefined on an
+    // early render. Treat a partially-resolved summary as not-yet-loaded (render
+    // nothing) rather than showing "undefined-undefined" or a premature "No results".
     if (totalEntries === undefined) {
       return null;
     }
@@ -49,29 +53,32 @@ export const QuerySummary = createReactComponent(
       );
     };
 
-    const correctionNotice = correction?.canOverride ? (
-      <p className={styles.correction}>
-        Showing results for <strong>{query}</strong>. Search instead for{' '}
+    const replacedQuery = query && correction;
+    const originalQueryLink = replacedQuery && correction.canOverride && (
+      <>
+        . Search instead for{' '}
         <button type="button" className={styles.originalQuery} onClick={searchOriginalQuery}>
           {correction.originalQuery}
         </button>
-      </p>
-    ) : correction ? (
-      <p className={styles.correction}>
-        Showing results for <strong>{query}</strong> instead of {correction.originalQuery}
-      </p>
-    ) : null;
+      </>
+    );
 
     if (totalEntries === 0) {
       return query ? (
-        <div>
-          {correctionNotice}
-          <p className={styles.summary}>
-            No results for <strong>{query}</strong>
-          </p>
-        </div>
+        <p className={styles.summary}>
+          No results for <strong>{query}</strong>
+          {replacedQuery &&
+            (originalQueryLink || <>, searched instead of {correction.originalQuery}</>)}
+        </p>
       ) : null;
     }
+
+    const correctionNotice = replacedQuery && (
+      <p className={styles.correction}>
+        Showing results for <strong>{query}</strong>
+        {originalQueryLink || <> instead of {correction.originalQuery}</>}
+      </p>
+    );
 
     if (firstIndex === undefined || lastIndex === undefined) {
       return null;
