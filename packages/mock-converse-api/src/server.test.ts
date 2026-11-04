@@ -150,6 +150,30 @@ describe('createMockConverseServer', () => {
     );
   });
 
+  it("searches a triggered search's original query on overrideCorrection to its surface", async () => {
+    await startServer();
+    const post = (body: unknown) =>
+      makeRequest(
+        server,
+        {method: 'POST', path: '/converse-schema', headers: {'Content-Type': 'application/json'}},
+        JSON.stringify(body)
+      );
+
+    const prompt = await post({message: 'swim gear'});
+    const surfaceId = /"surfaceId":"(ui-commerce-water-sports-\d+)"/.exec(prompt.body)![1];
+    const override = await post({
+      action: {
+        name: 'overrideCorrection',
+        context: {},
+        sourceComponentId: 'query-summary-2',
+        surfaceId,
+      },
+    });
+
+    expect(override.body).toContain('"query":"swim gear"');
+    expect(override.body).not.toContain('"correction"');
+  });
+
   it('returns 400 for invalid JSON payload', async () => {
     await startServer();
     const res = await makeRequest(

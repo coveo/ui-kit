@@ -14,7 +14,6 @@ import {
 import {
   buildWaterSportsInitialEvents,
   buildWaterSportsActionEvents,
-  keepWaterSportsView,
 } from './templates/schema-response-search.js';
 import type {ConverseEvent} from './events.js';
 
@@ -58,7 +57,7 @@ interface SchemaPromptMapping {
   prompt: string;
   // A factory so the stateful "water sports" search surface can reset and rebuild its events
   // on every prompt response; static templates simply return their constant.
-  buildEvents: () => ConverseEvent[];
+  buildEvents: (mintSurfaceId?: (surfaceId: string) => string) => ConverseEvent[];
 }
 
 const SCHEMA_PROMPT_TEMPLATE_MAP: ReadonlyArray<SchemaPromptMapping> = [
@@ -66,25 +65,26 @@ const SCHEMA_PROMPT_TEMPLATE_MAP: ReadonlyArray<SchemaPromptMapping> = [
     prompt: 'build a beginner surfing kit with budget, mid-range, and premium options',
     buildEvents: () => schemaBundleEvents,
   },
-  {prompt: 'water sports', buildEvents: () => buildWaterSportsInitialEvents()},
+  {
+    prompt: 'water sports',
+    buildEvents: (mintSurfaceId) => buildWaterSportsInitialEvents(null, mintSurfaceId),
+  },
   // A misspelled query the search corrects, and a query a query trigger replaces.
   {
     prompt: 'water sprots',
-    buildEvents: () =>
-      buildWaterSportsInitialEvents({
-        originalQuery: 'water sprots',
-        cause: 'correction',
-        canOverride: false,
-      }),
+    buildEvents: (mintSurfaceId) =>
+      buildWaterSportsInitialEvents(
+        {originalQuery: 'water sprots', cause: 'correction', canOverride: false},
+        mintSurfaceId
+      ),
   },
   {
     prompt: 'swim gear',
-    buildEvents: () =>
-      buildWaterSportsInitialEvents({
-        originalQuery: 'swim gear',
-        cause: 'trigger',
-        canOverride: true,
-      }),
+    buildEvents: (mintSurfaceId) =>
+      buildWaterSportsInitialEvents(
+        {originalQuery: 'swim gear', cause: 'trigger', canOverride: true},
+        mintSurfaceId
+      ),
   },
   {
     prompt: 'i like cold-water surfing. compare wetsuits for it',
@@ -223,13 +223,19 @@ function buildInstantProductsResponse(action: SchemaAction, session: SessionKeys
   );
 }
 
-function matchSchemaPrompt(message: string): ConverseEvent[] {
+function matchSchemaPrompt(
+  message: string,
+  mintSurfaceId?: (surfaceId: string) => string
+): ConverseEvent[] {
   const normalized = message.trim().toLowerCase();
   const match = SCHEMA_PROMPT_TEMPLATE_MAP.find((entry) => entry.prompt === normalized);
-  return match ? match.buildEvents() : schemaFallbackEvents;
+  return match ? match.buildEvents(mintSurfaceId) : schemaFallbackEvents;
 }
 
 const schemaBaseResponse = (body: unknown, session: SessionKeys) => {
+  promptSequence += 1;
+  const suffix = promptSequence;
+  const mintSurfaceId = (surfaceId: string) => `${surfaceId}-${suffix}`;
   let events = schemaFallbackEvents;
   if (
     body &&
@@ -237,14 +243,9 @@ const schemaBaseResponse = (body: unknown, session: SessionKeys) => {
     'message' in body &&
     typeof (body as Record<string, unknown>).message === 'string'
   ) {
-    events = matchSchemaPrompt((body as Record<string, unknown>).message as string);
+    events = matchSchemaPrompt((body as Record<string, unknown>).message as string, mintSurfaceId);
   }
-  promptSequence += 1;
-  const suffix = promptSequence;
-  events = withSurfaceIds(events, (surfaceId) => {
-    keepWaterSportsView(surfaceId, `${surfaceId}-${suffix}`);
-    return `${surfaceId}-${suffix}`;
-  });
+  events = withSurfaceIds(events, mintSurfaceId);
   events = withTurnOpeningAnnouncements(events);
   return buildStreamingResponse(withSessionKeys(events, session), {
     delayBetweenMessages: DEFAULT_DELAY_MS,
