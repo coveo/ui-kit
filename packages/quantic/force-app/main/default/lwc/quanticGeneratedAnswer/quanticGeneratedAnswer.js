@@ -286,7 +286,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   get disclaimerText() {
     /** @type {HTMLSlotElement} */
-    const slot =this.template.querySelector('slot[name="disclaimer"]');
+    const slot = this.template.querySelector('slot[name="disclaimer"]');
     const slottedText = (slot?.assignedNodes() ?? [])
       .map((node) => node.textContent?.trim())
       .filter(Boolean)
