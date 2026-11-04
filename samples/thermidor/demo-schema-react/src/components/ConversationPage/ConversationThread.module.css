@@ -18,3 +18,25 @@
 .followUp {
   margin-top: var(--space-5);
 }
+
+.stoppedNote {
+  margin: var(--space-2) 0 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.continueButton {
+  margin-left: var(--space-3);
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+}
+
+.continueButton:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-active);
+}

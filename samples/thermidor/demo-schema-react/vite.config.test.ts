@@ -1,5 +1,9 @@
 import {describe, expect, it} from 'vitest';
-import {resolveAgentRuntimeHeaders, resolveProxyTargets} from './vite.config.js';
+import {
+  resolveAgentRuntimeHeaders,
+  resolveFeatureFlagOverrideHeaders,
+  resolveProxyTargets,
+} from './vite.config.js';
 
 describe('resolveProxyTargets', () => {
   it('does not configure a proxy without an organization ID', () => {
@@ -44,6 +48,19 @@ describe('resolveAgentRuntimeHeaders', () => {
     expect(resolveAgentRuntimeHeaders(' commerce_pr_676_Agent ', ' stable ')).toEqual({
       'x-coveo-agent-runtime-name': 'commerce_pr_676_Agent',
       'x-coveo-agent-runtime-qualifier': 'stable',
+    });
+  });
+});
+
+describe('resolveFeatureFlagOverrideHeaders', () => {
+  it('does not override flags when nothing is configured', () => {
+    expect(resolveFeatureFlagOverrideHeaders(undefined)).toBeUndefined();
+    expect(resolveFeatureFlagOverrideHeaders('  ')).toBeUndefined();
+  });
+
+  it('forwards the configured overrides', () => {
+    expect(resolveFeatureFlagOverrideHeaders(' {"cpd-stateful-commerce-enabled":true} ')).toEqual({
+      'x-coveo-feature-flags-overrides': '{"cpd-stateful-commerce-enabled":true}',
     });
   });
 });

@@ -1,7 +1,7 @@
 import {createContext, useContext, useRef, type PropsWithChildren} from 'react';
 import {createSession, type NavigatorContext, type Session} from '@coveo/thermidor';
 import {ComponentContractsSchema} from '@coveo/thermidor-schema/zod3';
-import {getSampleConfiguration} from '../env.js';
+import {actionsDuringAnswerEnabled, getSampleConfiguration} from '../env.js';
 
 /**
  * The concrete contract this sample injects into the runtime. `@coveo/thermidor`
@@ -44,6 +44,7 @@ function createThermidorSession(): DemoSession {
     agentConfigurationId,
     trackingId,
     navigatorContextProvider: getNavigatorContext,
+    actionsDuringAnswer: actionsDuringAnswerEnabled(),
   });
 }
 

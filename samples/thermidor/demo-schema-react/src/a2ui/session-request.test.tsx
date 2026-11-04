@@ -1,7 +1,7 @@
 import {act, render, renderHook} from '@testing-library/react';
 import type {ReactNode} from 'react';
 import {describe, expect, it, vi} from 'vitest';
-import type {ActionError, SessionRequest} from '@coveo/thermidor';
+import type {ActionError, SessionRequest, SessionSnapshot, Turn} from '@coveo/thermidor';
 import {
   isBlocking,
   SessionRequestProvider,
@@ -25,14 +25,21 @@ function fakeSession() {
     cancel: vi.fn(),
     dispatchAction: vi.fn(async () => {}),
   };
-  const setRequest = (next: SessionRequest | undefined) => {
-    snapshot = requestSnapshot(next);
+  const setRequest = (next: SessionRequest | undefined, turns: SessionSnapshot['turns'] = []) => {
+    snapshot = {...requestSnapshot(next), turns};
     for (const listener of [...listeners]) {
       listener();
     }
   };
   return {session: session as SessionRequestSource & QuerySubmitter, setRequest};
 }
+
+const STREAMING_ANSWER = {
+  id: 'turn-2',
+  input: {prompt: 'which is best for running?'},
+  response: {activities: [], surfaces: []},
+  status: 'streaming',
+} as unknown as Turn;
 
 const SUGGESTION: SessionRequest = {
   kind: 'action',
@@ -199,6 +206,52 @@ describe('submitQuery', () => {
       name: 'submitPrompt',
       payload: {prompt: 'kayaks'},
     });
+  });
+
+  it('adds a question asked during an answer to that answer at once', async () => {
+    vi.stubEnv('VITE_COVEO_ACTIONS_DURING_ANSWER', 'true');
+    const {session, setRequest} = fakeSession();
+    setRequest({kind: 'prompt', turnId: STREAMING_ANSWER.id}, [STREAMING_ANSWER]);
+
+    await submitQuery(session, 'make it under $1000');
+
+    expect(session.cancel).not.toHaveBeenCalled();
+    expect(session.dispatchAction).toHaveBeenCalledWith({
+      name: 'submitPrompt',
+      payload: {prompt: 'make it under $1000'},
+    });
+    vi.unstubAllEnvs();
+  });
+
+  it('adds every question asked during an answer, in order', async () => {
+    vi.stubEnv('VITE_COVEO_ACTIONS_DURING_ANSWER', 'true');
+    const {session, setRequest} = fakeSession();
+    setRequest({kind: 'prompt', turnId: STREAMING_ANSWER.id}, [STREAMING_ANSWER]);
+
+    await submitQuery(session, 'for a beginner');
+    await submitQuery(session, 'under $1000');
+
+    expect(vi.mocked(session.dispatchAction).mock.calls.map(([action]) => action)).toEqual([
+      {name: 'submitPrompt', payload: {prompt: 'for a beginner'}},
+      {name: 'submitPrompt', payload: {prompt: 'under $1000'}},
+    ]);
+    vi.unstubAllEnvs();
+  });
+
+  it('waits for the answer in progress when actions during an answer are off', async () => {
+    vi.stubEnv('VITE_COVEO_ACTIONS_DURING_ANSWER', 'false');
+    const {session, setRequest} = fakeSession();
+    setRequest({kind: 'prompt', turnId: STREAMING_ANSWER.id}, [STREAMING_ANSWER]);
+
+    const submitted = submitQuery(session, 'show me trail shoes instead');
+    await Promise.resolve();
+
+    expect(session.dispatchAction).not.toHaveBeenCalled();
+    setRequest(undefined, [{...STREAMING_ANSWER, status: 'complete'}]);
+    await submitted;
+
+    expect(session.dispatchAction).toHaveBeenCalledOnce();
+    vi.unstubAllEnvs();
   });
 
   it('waits for a facet search in flight without cancelling it', async () => {

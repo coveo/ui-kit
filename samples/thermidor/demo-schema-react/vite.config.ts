@@ -72,6 +72,20 @@ export function resolveAgentRuntimeHeaders(
 }
 
 /**
+ * Forwards Agent Gateway feature flag overrides (a JSON object of flag keys to
+ * values). The gateway honors the header in local, dev and staging only.
+ */
+export function resolveFeatureFlagOverrideHeaders(overrides: string | undefined) {
+  const value = overrides?.trim();
+
+  if (!value) {
+    return undefined;
+  }
+
+  return {'x-coveo-feature-flags-overrides': value};
+}
+
+/**
  * Resolves the organization the dev server should proxy to, falling back to the
  * public sample organization when nothing is configured. Applied here rather
  * than inside {@link resolveProxyTargets} so that function keeps its pure
@@ -112,6 +126,13 @@ export default defineConfig(({mode}) => {
     env.VITE_COVEO_AGENT_RUNTIME_NAME,
     env.VITE_COVEO_AGENT_RUNTIME_QUALIFIER
   );
+  const featureFlagOverrideHeaders = resolveFeatureFlagOverrideHeaders(
+    env.VITE_COVEO_FEATURE_FLAG_OVERRIDES
+  );
+  const agentGatewayHeaders =
+    agentRuntimeHeaders || featureFlagOverrideHeaders
+      ? {...agentRuntimeHeaders, ...featureFlagOverrideHeaders}
+      : undefined;
 
   return {
     plugins: [react()],
@@ -124,7 +145,7 @@ export default defineConfig(({mode}) => {
                 target: targets.agentGateway,
                 changeOrigin: true,
                 secure: true,
-                ...(agentRuntimeHeaders ? {headers: agentRuntimeHeaders} : {}),
+                ...(agentGatewayHeaders ? {headers: agentGatewayHeaders} : {}),
               },
               '/rest': {
                 target: targets.platform,

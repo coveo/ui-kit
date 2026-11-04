@@ -107,6 +107,14 @@ function getConverseUrl(baseUrl: string, organizationId: string): string {
   return `${normalizedBase}/api/preview/organizations/${organizationId}/agents/commerce/agui/converse`;
 }
 
+/**
+ * Whether the shopper may act on results while an answer streams. Turn it on only against a
+ * gateway that takes actions during an answer (`cpd-actions-during-answer-enabled`).
+ */
+export function actionsDuringAnswerEnabled(): boolean {
+  return parseBoolean(getOptionalEnvValue('VITE_COVEO_ACTIONS_DURING_ANSWER')) ?? false;
+}
+
 function shouldUseViteProxy() {
   const configured = parseBoolean(getOptionalEnvValue('VITE_COVEO_USE_VITE_PROXY'));
 

@@ -1,5 +1,5 @@
-import {render, screen} from '@testing-library/react';
-import {describe, it, expect, vi} from 'vitest';
+import {fireEvent, render, screen, within} from '@testing-library/react';
+import {afterEach, beforeEach, describe, it, expect, vi} from 'vitest';
 import type {Turn} from '@coveo/thermidor';
 import {A2UIProvider} from '@copilotkit/a2ui-renderer';
 import {ConversationThread} from './ConversationThread.js';
@@ -152,6 +152,131 @@ describe('ConversationThread', () => {
 
       const option = screen.getByRole('article', {name: 'Turn 2'});
       expect(option.textContent).toContain('Tandem kayaks');
+    });
+  });
+
+  describe('messages added to an answer', () => {
+    it('shows each one under the question, with where it stands', () => {
+      const answer: Turn = {
+        ...createTurn({id: 't1', prompt: 'build me a kayak bundle', status: 'complete'}),
+        addedMessages: [
+          {id: 'a1', text: 'for a beginner', status: 'applied'},
+          {id: 'a2', text: 'under $1000', status: 'askedNext'},
+        ],
+      };
+
+      renderThread([answer]);
+
+      const added = screen.getByRole('list', {name: 'Added to this answer'});
+      expect(
+        within(added)
+          .getAllByRole('listitem')
+          .map((item) => item.textContent)
+      ).toEqual(['for a beginnerAdded to this answer', 'under $1000Asked next, after this answer']);
+    });
+  });
+
+  describe('a stopped answer', () => {
+    const stopped = (id: string): Turn => ({
+      ...createTurn({id, prompt: 'build me a kayak bundle', status: 'complete'}),
+      stopped: true,
+    });
+
+    it('offers to continue the latest one', () => {
+      const onContinue = vi.fn();
+      renderThread([stopped('t1')], {onContinue});
+
+      fireEvent.click(screen.getByRole('button', {name: 'Continue'}));
+
+      expect(onContinue).toHaveBeenCalledExactlyOnceWith('build me a kayak bundle');
+    });
+
+    it('does not offer to continue an earlier one', () => {
+      renderThread([stopped('t1'), createTurn({id: 't2', prompt: 'kayaks'})], {
+        onContinue: vi.fn(),
+      });
+
+      expect(screen.getByText('Stopped')).toBeTruthy();
+      expect(screen.queryByRole('button', {name: 'Continue'})).toBeNull();
+    });
+  });
+
+  describe('which results the shopper can use', () => {
+    function withResults(turn: Turn, surfaceId: string): Turn {
+      return {...turn, response: {...turn.response, surfaces: makeSurfaces(surfaceId)}};
+    }
+
+    function results(surfaceId: string): HTMLFieldSetElement {
+      const region = screen.getByRole('region', {name: `A2-UI surface ${surfaceId}`});
+      return region.closest('fieldset') as HTMLFieldSetElement;
+    }
+
+    function renderTurns(turns: Turn[]) {
+      return render(
+        <A2UIProvider catalog={createThermidorCatalog()} onAction={() => {}}>
+          <ThermidorA2UIStream messages={[]}>
+            <ConversationThread
+              turns={turns}
+              turnRefs={{current: new Map<string, HTMLDivElement>()}}
+            />
+          </ThermidorA2UIStream>
+        </A2UIProvider>
+      );
+    }
+
+    const firstSearch = withResults(createTurn({id: 't1', prompt: 'wetsuit'}), 'wetsuits');
+    const secondSearch = withResults(createTurn({id: 't2', prompt: 'snorkel masks'}), 'masks');
+
+    describe('when actions during an answer are on', () => {
+      beforeEach(() => {
+        vi.stubEnv('VITE_COVEO_ACTIONS_DURING_ANSWER', 'true');
+      });
+      afterEach(() => {
+        vi.unstubAllEnvs();
+      });
+
+      it('keeps the newest results usable after an answer that showed none', () => {
+        renderTurns([
+          firstSearch,
+          secondSearch,
+          createTurn({id: 't3', prompt: 'which is best for kids?', status: 'complete'}),
+        ]);
+
+        expect(results('masks').disabled).toBe(false);
+        expect(results('wetsuits').disabled).toBe(true);
+      });
+
+      it('keeps the newest results usable while an answer streams, and only those', () => {
+        renderTurns([
+          firstSearch,
+          secondSearch,
+          createTurn({id: 't3', prompt: 'which is best for kids?', status: 'streaming'}),
+        ]);
+
+        expect(results('masks').disabled).toBe(false);
+        expect(results('wetsuits').disabled).toBe(true);
+      });
+
+      it('makes earlier results read-only once an answer shows newer ones', () => {
+        renderTurns([
+          secondSearch,
+          withResults(createTurn({id: 't3', prompt: 'masks for kids', status: 'complete'}), 'kids'),
+        ]);
+
+        expect(results('kids').disabled).toBe(false);
+        expect(results('masks').disabled).toBe(true);
+      });
+    });
+
+    it('keeps only the latest turn usable when actions during an answer are off', () => {
+      vi.stubEnv('VITE_COVEO_ACTIONS_DURING_ANSWER', 'false');
+      renderTurns([
+        secondSearch,
+        createTurn({id: 't3', prompt: 'which is best for kids?', status: 'complete'}),
+      ]);
+
+      expect(results('masks').disabled).toBe(true);
+      vi.unstubAllEnvs();
     });
   });
 

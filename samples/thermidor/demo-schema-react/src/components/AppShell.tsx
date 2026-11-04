@@ -3,7 +3,12 @@ import {A2UIProvider} from '@copilotkit/a2ui-renderer';
 import {useSession} from '../context/session.js';
 import {createThermidorCatalog} from '../a2ui/components.js';
 import {ThermidorA2UIStream} from '../a2ui/surfaces.js';
-import {isBlocking, SessionRequestProvider, submitQuery} from '../a2ui/session-request.js';
+import {
+  isAnswerTakingActions,
+  isBlocking,
+  SessionRequestProvider,
+  submitQuery,
+} from '../a2ui/session-request.js';
 import {LandingPage} from './LandingPage/LandingPage.js';
 import {ConversationPage} from './ConversationPage/index.js';
 
@@ -19,22 +24,32 @@ const catalog = createThermidorCatalog({
 export function AppShell() {
   const session = useSession();
 
-  const {turns, a2uiMessages, request} = useSyncExternalStore(
+  const snapshot = useSyncExternalStore(
     session.subscribe,
     session.getSnapshot,
     session.getSnapshot
   );
-  const locked = isBlocking(request);
+  const {turns, a2uiMessages, request} = snapshot;
+  // A new question may change direction during an answer the shopper can act beside.
+  const canAddToAnswer = isAnswerTakingActions(snapshot);
+  const locked = isBlocking(request) && !canAddToAnswer;
 
   const isStreaming = useMemo(() => turns.some((turn) => turn.status === 'streaming'), [turns]);
 
   const handleSubmit = useCallback(
     (prompt: string) => {
-      if (!prompt.trim() || isBlocking(session.getSnapshot().request)) return;
+      const current = session.getSnapshot();
+      if (!prompt.trim() || (isBlocking(current.request) && !isAnswerTakingActions(current))) {
+        return;
+      }
       void submitQuery(session, prompt);
     },
     [session]
   );
+
+  const handleStop = useCallback(() => {
+    void session.stop();
+  }, [session]);
 
   return (
     <SessionRequestProvider value={session}>
@@ -49,6 +64,8 @@ export function AppShell() {
                   onSubmit={handleSubmit}
                   isStreaming={isStreaming}
                   promptDisabled={locked}
+                  canAddToAnswer={canAddToAnswer}
+                  onStop={handleStop}
                   turns={[...turns]}
                 />
               )}

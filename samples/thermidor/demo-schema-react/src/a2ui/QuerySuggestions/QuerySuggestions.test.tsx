@@ -150,24 +150,51 @@ describe('QuerySuggestions', () => {
     await waitFor(() => expect(options()).toEqual(['w boards', 'w wax']));
   });
 
-  it('hides completions while an answer streams', async () => {
-    let finish!: () => void;
-    const {type, session} = await renderSearchBox((request) => {
+  function renderWithSlowAnswer() {
+    const answer = {finish: () => {}};
+    const rendered = renderSearchBox((request) => {
       if (request.message !== null) {
         return new Promise<Response>((resolve) => {
-          finish = () => resolve(sseResponse(run([])));
+          answer.finish = () => resolve(sseResponse(run([])));
         });
       }
       return answerShell(request);
     });
+    return {answer, rendered};
+  }
+
+  it('hides completions while an answer streams', async () => {
+    vi.stubEnv('VITE_COVEO_ACTIONS_DURING_ANSWER', 'false');
+    const {answer, rendered} = renderWithSlowAnswer();
+    const {type, session} = await rendered;
     type('surf');
     await waitFor(() => expect(options()).toHaveLength(2));
 
     act(() => void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'paddles'}}));
 
     await waitFor(() => expect(options()).toEqual([]));
-    await act(async () => finish());
+    await act(async () => answer.finish());
     await waitFor(() => expect(options()).toEqual(['surf boards', 'surf wax']));
+    vi.unstubAllEnvs();
+  });
+
+  it('never shows the completions of an older query while an answer the shopper acts beside streams', async () => {
+    vi.stubEnv('VITE_COVEO_ACTIONS_DURING_ANSWER', 'true');
+    const {answer, rendered} = renderWithSlowAnswer();
+    const {type, session} = await rendered;
+    type('surf');
+    await waitFor(() => expect(options()).toHaveLength(2));
+    act(() => void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'paddles'}}));
+
+    // The search box stays usable: the completions of the query in it stay on show.
+    expect(options()).toEqual(['surf boards', 'surf wax']);
+    type('kayak');
+    await pause();
+    expect(options()).toEqual([]);
+
+    await act(async () => answer.finish());
+    await waitFor(() => expect(options()).toEqual(['kayak boards', 'kayak wax']));
+    vi.unstubAllEnvs();
   });
 
   it('submits the expression of a selected completion', async () => {

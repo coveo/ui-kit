@@ -14,6 +14,7 @@ import type {
   SessionSnapshot,
 } from '@coveo/thermidor';
 import type {ComponentContractsSchema} from '@coveo/thermidor-schema/zod3';
+import {actionsDuringAnswerEnabled} from '../env.js';
 
 /**
  * What the surfaces read from the session: its request in flight, and why the last action failed.
@@ -65,6 +66,17 @@ export function isBlocking(request: SessionRequest | undefined): boolean {
   return (
     request !== undefined && !(request.kind === 'action' && lists(NON_BLOCKING_ACTIONS, request))
   );
+}
+
+/**
+ * Whether the request in flight is an answer still streaming that the shopper may act beside:
+ * only when actions during an answer are on.
+ */
+export function isAnswerTakingActions({request, turns}: SessionSnapshot): boolean {
+  if (!actionsDuringAnswerEnabled() || !request || request.kind === 'initialize') {
+    return false;
+  }
+  return turns.some((turn) => turn.id === request.turnId && turn.status === 'streaming');
 }
 
 /**
@@ -136,18 +148,33 @@ function whenFree(session: QuerySubmitter): Promise<void> {
   });
 }
 
+// The latest question waiting to be sent, per session: a newer one replaces it.
+const latestQuestion = new WeakMap<QuerySubmitter, number>();
+
 /**
  * Sends `prompt` once the session is free, first cancelling a suggestion in flight so that it never
- * holds the submit back. The cancelled request may still hold the producer's turn slot; the
- * session's conflict retry absorbs the prompt's `409`.
+ * holds the submit back. A question asked during an answer the shopper may act beside is added to
+ * that answer at once: the agent takes it into account before its next step, or it is asked next
+ * if the answer ends first. When the shopper sends several questions while waiting for another
+ * request, only the latest is asked. A cancelled request may still hold the producer's turn slot;
+ * the session's conflict retry absorbs the prompt's `409`.
  */
 export async function submitQuery(session: QuerySubmitter, prompt: string): Promise<void> {
-  const {request} = session.getSnapshot();
+  const ticket = (latestQuestion.get(session) ?? 0) + 1;
+  latestQuestion.set(session, ticket);
+  const snapshot = session.getSnapshot();
+  const {request} = snapshot;
+  if (isAnswerTakingActions(snapshot)) {
+    return session.dispatchAction({name: 'submitPrompt', payload: {prompt}});
+  }
   if (request) {
     if (isFetchSuggestions(request)) {
       session.cancel();
     }
     await whenFree(session);
+  }
+  if (latestQuestion.get(session) !== ticket) {
+    return;
   }
   return session.dispatchAction({name: 'submitPrompt', payload: {prompt}});
 }
@@ -162,7 +189,8 @@ export async function submitQuery(session: QuerySubmitter, prompt: string): Prom
 export function useGesture(): (optimistic: () => void, send: () => void | Promise<void>) => void {
   const source = useContext(SessionRequestContext);
   return (optimistic, send) => {
-    if (source.getSnapshot().request !== undefined) {
+    const snapshot = source.getSnapshot();
+    if (snapshot.request !== undefined && !isAnswerTakingActions(snapshot)) {
       return;
     }
     startTransition(async () => {
@@ -185,6 +213,16 @@ export function useSurfaceActionInFlight(surfaceId: string): boolean {
   );
 }
 
+/** Whether an answer the shopper may act beside is streaming, as {@link isAnswerTakingActions}. */
+export function useAnswerTakingActions(): boolean {
+  const source = useContext(SessionRequestContext);
+  return useSyncExternalStore(
+    source.subscribe,
+    () => isAnswerTakingActions(source.getSnapshot()),
+    () => false
+  );
+}
+
 /** Whether a request is in flight. */
 export function useSessionBusy(): boolean {
   const source = useContext(SessionRequestContext);
@@ -197,13 +235,16 @@ export function useSessionBusy(): boolean {
 
 /**
  * Whether the active turn's surface is locked by the request in flight: every request but one
- * listed in `NON_BLOCKING_ACTIONS`, such as a facet search.
+ * listed in `NON_BLOCKING_ACTIONS`, such as a facet search, or an answer the shopper may act beside.
  */
 export function useSurfaceLocked(): boolean {
   const source = useContext(SessionRequestContext);
   return useSyncExternalStore(
     source.subscribe,
-    () => isBlocking(source.getSnapshot().request),
+    () => {
+      const snapshot = source.getSnapshot();
+      return isBlocking(snapshot.request) && !isAnswerTakingActions(snapshot);
+    },
     () => false
   );
 }

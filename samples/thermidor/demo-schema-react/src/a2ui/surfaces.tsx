@@ -90,7 +90,9 @@ interface TurnSurfacesProps {
  */
 export function TurnSurfaces({surfaces, interactive, isStreaming}: TurnSurfacesProps) {
   const surfaceIds = useMemo(() => surfaces.map((surface) => surface.surfaceId), [surfaces]);
-  const locked = useSurfaceLocked() && interactive;
+  // A streaming turn's own surfaces stay locked even when the shopper may act beside the answer:
+  // the agent may still rewrite them, which would undo the shopper's click.
+  const locked = (useSurfaceLocked() || isStreaming) && interactive;
   // The turn that streams is disabled without dimming, so its content arrives at full strength.
   const dimmed = locked && !isStreaming;
   const fieldsetRef = useRef<HTMLFieldSetElement>(null);
