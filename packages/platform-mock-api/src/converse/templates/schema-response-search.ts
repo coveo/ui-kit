@@ -1780,4 +1780,3 @@ export {
   instantProductsFor,
   keepWaterSportsView,
 };
-export type {QueryCorrection};
