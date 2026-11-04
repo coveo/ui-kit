@@ -365,8 +365,8 @@ export function renderReport(model, {ref}) {
     lines.push('No test needed a retry.');
   } else {
     lines.push(
-      '| Test | Suite | Flaky runs | Failed in pull requests | Failed in merge queue | Last seen |',
-      '|---|---|---:|---:|---:|---|',
+      '| Test | Suite | Flaky runs | Failed every retry | Last seen |',
+      '|---|---|---:|---:|---|',
       ...model.tests
         .slice(0, LISTED_TESTS)
         .map((row) =>
@@ -374,8 +374,7 @@ export function renderReport(model, {ref}) {
             `${sourceLink(row.sha, row.file, row.line, `\`${fileStem(row.file)}\``)} ${escapeCell(shorten(row.title.split(' › ').pop(), TITLE_LENGTH))}`,
             [suiteLabel(row.suite), row.project].filter(Boolean).join(', '),
             row.flakyRuns,
-            row.failedInPullRequests || '',
-            row.failedInMergeQueue || '',
+            row.failedInPullRequests + row.failedInMergeQueue || '',
             runLink(row.lastSeen),
           ])
         )
