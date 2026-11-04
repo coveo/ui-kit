@@ -24,7 +24,7 @@ export function useSearchBoxOptions(): SearchBoxOptions {
 
 /** What the `SearchBox` renderer gives its children. */
 export interface SearchBoxQuery {
-  /** What the input holds, as the shopper typed it. */
+  /** What the shopper typed, not a suggestion the arrow keys show in the input. */
   query: string;
   /** Whether the input was submitted since the last keystroke. */
   submitted: boolean;

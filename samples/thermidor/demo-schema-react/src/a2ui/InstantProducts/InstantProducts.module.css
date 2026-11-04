@@ -22,10 +22,60 @@
   text-overflow: ellipsis;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: var(--space-2);
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.row:hover,
+.active {
+  background: var(--color-bg-secondary);
+}
+
+.image {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  background: var(--color-bg-secondary);
+}
+
+.content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.name {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.brand {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.price {
+  flex-shrink: 0;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
 }
 
 .stale {

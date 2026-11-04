@@ -149,6 +149,7 @@ export function instantProductsRun(surfaceId: string, query: string, names: stri
           products: names.map((name) => ({
             permanentid: name,
             ec_name: name,
+            clickUri: `https://example.com/${encodeURIComponent(name)}`,
             additionalFields: {},
           })),
         },

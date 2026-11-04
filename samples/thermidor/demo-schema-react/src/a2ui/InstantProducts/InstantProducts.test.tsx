@@ -54,7 +54,11 @@ async function renderSearchBox({
   return {...test, onSubmit, textarea, type, dispatchedQueries, queriesSent};
 }
 
-const options = () => screen.queryAllByRole('option').map((option) => option.textContent);
+const options = () =>
+  screen
+    .queryAllByRole('option')
+    .filter((option) => option.closest('#suggestions-listbox'))
+    .map((option) => option.textContent);
 const productsShown = () =>
   screen.queryByRole('region', {name: /^Products for/})?.getAttribute('aria-label');
 const panelShown = () =>
@@ -242,5 +246,65 @@ describe('InstantProducts', () => {
     await act(() => vi.advanceTimersByTimeAsync(INSTANT_PRODUCTS_TIMEOUT_MS));
 
     expect(panelShown()).toBe('No products for surf boards');
+  });
+});
+
+describe('InstantProducts keyboard navigation', () => {
+  const productOptions = () =>
+    screen
+      .queryAllByRole('option')
+      .filter((option) => option.closest('#suggestions-aside-listbox'));
+
+  it('lists the products of the highlighted suggestion, which the right arrow reaches', async () => {
+    const {type, textarea, dispatchedQueries} = await renderSearchBox();
+    type('surf');
+    await waitFor(() => expect(productsShown()).toBe('Products for surf boards'));
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    await waitFor(() => expect(productsShown()).toBe('Products for surf wax'));
+
+    fireEvent.keyDown(textarea, {key: 'ArrowRight'});
+
+    expect(
+      screen.getByRole('listbox', {name: 'Instant products'}).contains(productOptions()[0])
+    ).toBe(true);
+    expect(textarea.getAttribute('aria-activedescendant')).toBe('instant-product-surf wax product');
+    expect(productOptions()[0].getAttribute('aria-selected')).toBe('true');
+    expect(productsShown()).toBe('Products for surf wax');
+    expect(dispatchedQueries()).toEqual(['surf boards', 'surf wax']);
+  });
+
+  it('opens the highlighted product on Enter, as a click does', async () => {
+    const open = vi.fn();
+    vi.stubGlobal('open', open);
+    const {type, textarea, onSubmit} = await renderSearchBox();
+    type('surf');
+    await waitFor(() => expect(productsShown()).toBe('Products for surf boards'));
+
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    fireEvent.keyDown(textarea, {key: 'ArrowRight'});
+    fireEvent.keyDown(textarea, {key: 'Enter'});
+
+    expect(open).toHaveBeenCalledWith(
+      'https://example.com/surf%20boards%20product',
+      '_blank',
+      'noopener,noreferrer'
+    );
+    expect(onSubmit).not.toHaveBeenCalled();
+
+    fireEvent.focus(textarea);
+    await waitFor(() => expect(productsShown()).toBe('Products for surf boards'));
+    fireEvent.click(productOptions()[0]);
+    expect(open).toHaveBeenCalledTimes(2);
+  });
+
+  it('leaves the right arrow to the caret on small screens', async () => {
+    const {type, textarea} = await renderSearchBox({wide: false});
+    type('surf');
+    await waitFor(() => expect(options()).toEqual(['surf boards', 'surf wax']));
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+
+    expect(fireEvent.keyDown(textarea, {key: 'ArrowRight'})).toBe(true);
+    expect(textarea.getAttribute('aria-activedescendant')).toBe('suggestion-item-completion-0');
   });
 });
