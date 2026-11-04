@@ -1,3 +1,7 @@
+import {execFileSync} from 'node:child_process';
+import {createRequire} from 'node:module';
+import {join} from 'node:path';
+
 const splitLines = (value = '') =>
   value
     .split('\n')
@@ -68,6 +72,19 @@ const parseJsonInput = (varName) => {
   return value;
 };
 
+// The affected tasks come from the merge commit, while some jobs check out the
+// pull request branch, which may lack packages added to the base branch since.
+const getWorkspacePackages = () => {
+  const turbo = createRequire(join(process.cwd(), 'package.json')).resolve('turbo');
+  const output = execFileSync(
+    process.execPath,
+    [turbo, 'ls', '--output=json', '--no-update-notifier'],
+    {encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe']}
+  );
+  const {packages} = JSON.parse(output);
+  return new Set(['//', ...packages.items.map(({name}) => name)]);
+};
+
 const parseInputs = () => ({
   requestedTasks: new Set(splitLines(process.env.TASKS || 'build')),
   matchesPackage: parsePackages(process.env.PACKAGES),
@@ -76,11 +93,29 @@ const parseInputs = () => ({
 
 const resolveTasks = () => {
   const {requestedTasks, matchesPackage, affectedTasks} = parseInputs();
+  const workspacePackages = getWorkspacePackages();
+  const skipped = [];
 
-  return affectedTasks.filter((taskId) => {
+  const tasks = affectedTasks.filter((taskId) => {
     const [project, task] = taskId.split('#');
-    return requestedTasks.has(task) && matchesPackage(project);
+    if (!requestedTasks.has(task) || !matchesPackage(project)) {
+      return false;
+    }
+    if (!workspacePackages.has(project)) {
+      skipped.push(taskId);
+      return false;
+    }
+    return true;
   });
+
+  if (skipped.length > 0) {
+    console.error('Skipping tasks for packages not in this checkout:');
+    for (const taskId of skipped) {
+      console.error(taskId);
+    }
+  }
+
+  return tasks;
 };
 
 const tasks = resolveTasks();
