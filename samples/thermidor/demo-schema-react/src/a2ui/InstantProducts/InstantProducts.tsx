@@ -98,7 +98,7 @@ export const InstantProducts = createReactComponent(
       return (
         <section className={styles.panel} aria-label={`Products for ${props.query}`}>
           <PanelHeader title={`Products for “${props.query}”`} />
-          <ProductList products={props.products} navigable />
+          <ProductList products={props.products} id={ASIDE_LISTBOX_ID} />
         </section>
       );
     }
@@ -129,32 +129,22 @@ function PanelHeader({title}: {title: string}) {
   );
 }
 
-function ProductList({
-  products,
-  navigable = false,
-}: {
-  products: InstantProduct[];
-  navigable?: boolean;
-}) {
+function ProductList({products, id}: {products: InstantProduct[]; id?: string}) {
   const activeOptionId = useContext(ActiveAsideOptionContext);
   return (
-    <div
-      id={navigable ? ASIDE_LISTBOX_ID : undefined}
-      className={styles.list}
-      role={navigable ? 'listbox' : undefined}
-      aria-label={navigable ? 'Instant products' : undefined}
-    >
+    <div id={id} className={styles.list} role="listbox" aria-label="Instant products">
       {products.map((product) => {
-        const id = `instant-product-${product.permanentid}`;
+        const optionId = `instant-product-${product.permanentid}`;
+        const active = optionId === activeOptionId;
         const image = product.ec_images?.[0];
         const price = product.ec_promo_price ?? product.ec_price;
         return (
           <div
             key={product.permanentid}
-            id={navigable ? id : undefined}
-            className={`${styles.row} ${navigable && id === activeOptionId ? styles.active : ''}`}
-            role={navigable ? 'option' : undefined}
-            aria-selected={navigable ? id === activeOptionId : undefined}
+            id={optionId}
+            className={`${styles.row} ${active ? styles.active : ''}`}
+            role="option"
+            aria-selected={active}
             onClick={() => openProduct(product)}
           >
             {image ? (

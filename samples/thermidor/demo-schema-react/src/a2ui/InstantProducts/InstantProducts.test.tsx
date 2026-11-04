@@ -255,18 +255,7 @@ describe('InstantProducts keyboard navigation', () => {
       .queryAllByRole('option')
       .filter((option) => option.closest('#suggestions-aside-listbox'));
 
-  it('lists the products as options of their own listbox', async () => {
-    const {type} = await renderSearchBox();
-
-    type('surf');
-
-    await waitFor(() => expect(productsShown()).toBe('Products for surf boards'));
-    const listbox = screen.getByRole('listbox', {name: 'Instant products'});
-    expect(productOptions()).toHaveLength(1);
-    expect(listbox.contains(productOptions()[0])).toBe(true);
-  });
-
-  it('reaches the products of the highlighted suggestion with the right arrow', async () => {
+  it('lists the products of the highlighted suggestion, which the right arrow reaches', async () => {
     const {type, textarea, dispatchedQueries} = await renderSearchBox();
     type('surf');
     await waitFor(() => expect(productsShown()).toBe('Products for surf boards'));
@@ -276,6 +265,9 @@ describe('InstantProducts keyboard navigation', () => {
 
     fireEvent.keyDown(textarea, {key: 'ArrowRight'});
 
+    expect(
+      screen.getByRole('listbox', {name: 'Instant products'}).contains(productOptions()[0])
+    ).toBe(true);
     expect(textarea.getAttribute('aria-activedescendant')).toBe('instant-product-surf wax product');
     expect(productOptions()[0].getAttribute('aria-selected')).toBe('true');
     expect(productsShown()).toBe('Products for surf wax');

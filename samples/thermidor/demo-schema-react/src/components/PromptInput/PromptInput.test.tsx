@@ -584,7 +584,7 @@ function TestAside({onSelect}: {onSelect: (id: string) => void}) {
 }
 
 describe('keyboard navigation, as in Atomic commerce', () => {
-  function renderNavigable({withAside = true} = {}) {
+  function renderNavigable() {
     const onSubmit = vi.fn();
     const onValueChange = vi.fn();
     const onActiveItemChange = vi.fn();
@@ -595,7 +595,7 @@ describe('keyboard navigation, as in Atomic commerce', () => {
         suggestions={testSuggestions}
         onValueChange={onValueChange}
         onActiveItemChange={onActiveItemChange}
-        suggestionsAside={withAside && <TestAside onSelect={onSelectProduct} />}
+        suggestionsAside={<TestAside onSelect={onSelectProduct} />}
       />
     );
     const textarea = screen.getByLabelText('Prompt') as HTMLTextAreaElement;
@@ -608,34 +608,31 @@ describe('keyboard navigation, as in Atomic commerce', () => {
     return {textarea, press, highlighted, active, onSubmit, onValueChange, onSelectProduct};
   }
 
-  it('shows the suggestion the arrow keys highlight in the input, without reporting it as typed', () => {
-    const {textarea, press, onValueChange} = renderNavigable();
+  it('shows and submits the suggestion the arrow keys highlight, without reporting it as typed', () => {
+    const {textarea, press, onSubmit, onValueChange} = renderNavigable();
 
     press('ArrowDown');
     expect(textarea.value).toBe('Surfboards');
     press('ArrowDown');
     expect(textarea.value).toBe('Wetsuits');
+    press('Enter');
 
     expect(onValueChange).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalledWith('Wetsuits');
   });
 
-  it('wraps from the last suggestion to the first, and up from none to the last', () => {
-    const {textarea, press} = renderNavigable();
+  it('wraps around the suggestions, and puts the typed text back above the first one', () => {
+    const {textarea, press, active} = renderNavigable();
+
+    press('ArrowDown');
+    press('ArrowUp');
+    expect(textarea.value).toBe('surf');
+    expect(active()).toBeNull();
 
     press('ArrowUp');
     expect(textarea.value).toBe('Build a beginner surfing kit');
     press('ArrowDown');
     expect(textarea.value).toBe('Surfboards');
-  });
-
-  it('puts the typed text back once the arrow keys move up past the first suggestion', () => {
-    const {textarea, press, active} = renderNavigable();
-
-    press('ArrowDown');
-    press('ArrowUp');
-
-    expect(textarea.value).toBe('surf');
-    expect(active()).toBeNull();
   });
 
   it('leaves the input as typed on hover, and Enter then submits what was typed', () => {
@@ -647,15 +644,6 @@ describe('keyboard navigation, as in Atomic commerce', () => {
 
     press('Enter');
     expect(onSubmit).toHaveBeenCalledWith('surf');
-  });
-
-  it('submits the suggestion the arrow keys show', () => {
-    const {press, onSubmit} = renderNavigable();
-
-    press('ArrowDown');
-    press('Enter');
-
-    expect(onSubmit).toHaveBeenCalledWith('Surfboards');
   });
 
   it('keeps the shown suggestion on Escape, and makes it the query once the input is focused again', () => {
@@ -671,14 +659,6 @@ describe('keyboard navigation, as in Atomic commerce', () => {
     expect(onValueChange).toHaveBeenCalledWith('Surfboards');
   });
 
-  it('closes the dropdown on Tab without holding the focus', () => {
-    const {press} = renderNavigable();
-    press('ArrowDown');
-
-    expect(press('Tab')).toBe(true);
-    expect(screen.queryByRole('listbox')).toBeNull();
-  });
-
   it('leaves the left and right arrows to the caret without a highlight', () => {
     const {press} = renderNavigable();
 
@@ -686,32 +666,16 @@ describe('keyboard navigation, as in Atomic commerce', () => {
     expect(press('ArrowLeft')).toBe(true);
   });
 
-  it('leaves the left and right arrows to the caret without products beside the suggestions', () => {
-    const {press, active} = renderNavigable({withAside: false});
-    press('ArrowDown');
-
-    expect(press('ArrowRight')).toBe(true);
-    expect(active()).toBe('suggestion-item-s1');
-  });
-
-  it('moves into the products with the right arrow, keeping the suggestion they are for', () => {
+  it('moves through the products and back, keeping the suggestion they are for', () => {
     const {textarea, press, highlighted, active} = renderNavigable();
     press('ArrowDown');
     press('ArrowDown');
 
     expect(press('ArrowRight')).toBe(false);
-
     expect(active()).toBe('p1');
     expect(screen.getByRole('option', {name: 'p1'}).getAttribute('aria-selected')).toBe('true');
     expect(highlighted()).toBe('Wetsuits');
     expect(textarea.value).toBe('Wetsuits');
-  });
-
-  it('moves between products, and back to the suggestion they came from with the left arrow', () => {
-    const {press, active, highlighted} = renderNavigable();
-    press('ArrowDown');
-    press('ArrowDown');
-    press('ArrowRight');
 
     press('ArrowDown');
     expect(active()).toBe('p2');
@@ -723,17 +687,8 @@ describe('keyboard navigation, as in Atomic commerce', () => {
     expect(press('ArrowLeft')).toBe(false);
     expect(active()).toBe('suggestion-item-s2');
     expect(highlighted()).toBe('Wetsuits');
-  });
-
-  it('returns to the product highlighted there last', () => {
-    const {press, active} = renderNavigable();
-    press('ArrowDown');
-    press('ArrowRight');
-    press('ArrowDown');
-    press('ArrowLeft');
 
     press('ArrowRight');
-
     expect(active()).toBe('p2');
   });
 

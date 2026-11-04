@@ -62,7 +62,6 @@
 .name {
   font-size: var(--font-size-sm);
   font-weight: 500;
-  color: var(--color-text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -77,7 +76,6 @@
   flex-shrink: 0;
   font-size: var(--font-size-sm);
   font-weight: 600;
-  color: var(--color-text-primary);
 }
 
 .stale {
