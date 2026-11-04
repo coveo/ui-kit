@@ -47,7 +47,7 @@ export interface ViewSurfaces {
   /**
    * The shopper's conversation with the assistant across page visits, such as the assistant layout
    * and the search layouts it opened, oldest first: the assistant view's turns of these visits,
-   * and the search box's prompts the agent answered without a search.
+   * and the turns on the session shell, but for a search the search box opened its page with.
    */
   conversationOf(visitIds: ReadonlySet<number>): readonly Turn[];
   /**
@@ -71,13 +71,24 @@ export function buildViewSurfaces(
     surfacesOfView: (view) => turnsOfView(view).flatMap((turn) => turn.response.surfaces),
     turnsOfView,
     turnsOfVisit: (visitId) => turns.filter((turn) => turnVisits.get(turn.id) === visitId),
-    conversationOf: (visitIds) =>
-      turns.filter(
-        (turn) =>
+    conversationOf(visitIds) {
+      const opening = new Set<string>();
+      const opened = new Set<number | undefined>();
+      for (const turn of turns) {
+        if (!opened.has(turnVisits.get(turn.id))) {
+          opened.add(turnVisits.get(turn.id));
+          opening.add(turn.id);
+        }
+      }
+      return turns.filter((turn) => {
+        const view = turnViews.get(turn.id);
+        const pageSearch = opening.has(turn.id) && drawsSearch(turn);
+        return (
           visitIds.has(turnVisits.get(turn.id) ?? -1) &&
-          (turnViews.get(turn.id) === ASSISTANT_VIEW ||
-            (turnViews.get(turn.id) === SHELL_VIEW && !drawsSearch(turn)))
-      ),
+          (view === ASSISTANT_VIEW || (view === SHELL_VIEW && !pageSearch))
+        );
+      });
+    },
     resultsOf(visitId, openingTurnId) {
       const start = openingTurnId
         ? turns.findIndex((turn) => turn.id === openingTurnId)

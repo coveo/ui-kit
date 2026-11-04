@@ -121,4 +121,14 @@ describe('buildViewSurfaces', () => {
 
     expect(result.turnsOfVisit(1).map(({id}) => id)).toEqual(['t1', 't3']);
   });
+
+  it("keeps the session shell's turns in the conversation, but for a page's opening search", () => {
+    const shell = 'storefront-preview' as StorefrontView;
+    const result = views(
+      [turn('t1'), turn('t2', 'ui-option'), turn('t3', 'ui-results'), turn('t4')],
+      {t1: [shell, 1], t2: [shell, 1], t3: [shell, 2], t4: [ASSISTANT, 2]}
+    );
+
+    expect(result.conversationOf(new Set([1, 2])).map(({id}) => id)).toEqual(['t1', 't2', 't4']);
+  });
 });
