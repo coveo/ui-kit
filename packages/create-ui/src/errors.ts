@@ -1,3 +1,4 @@
+// KIT-6507 repro, do not merge.
 // Marks an expected, already-handled failure so the crash funnel skips it —
 // avoids brittle message matching on a bare Error.
 export class ExpectedError extends Error {
