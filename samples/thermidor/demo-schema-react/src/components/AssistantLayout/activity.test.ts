@@ -12,24 +12,16 @@ function toolCall(
 }
 
 describe('describeToolCall', () => {
-  it('says what a search looked for, while it runs and once it is done', () => {
+  it('names the tool, with the words it searched for', () => {
     expect(
       describeToolCall(toolCall('1', 'coveo_commerce_search', {query: 'kayak'}, 'calling'))
-    ).toBe('Searching “kayak”');
-    expect(describeToolCall(toolCall('1', 'discover_price_range', {query: 'kayak paddle'}))).toBe(
-      'Checked prices for “kayak paddle”'
-    );
+    ).toBe('coveo_commerce_search “kayak”');
+    expect(describeToolCall(toolCall('2', 'store_render_plan'))).toBe('store_render_plan');
   });
 
   it('hides routing and memory bookkeeping', () => {
     expect(describeToolCall(toolCall('1', 'route_bundle'))).toBeUndefined();
     expect(describeToolCall(toolCall('2', 'store_reference_context'))).toBeUndefined();
-  });
-
-  it('still describes a tool it has no words for, without its raw name', () => {
-    expect(
-      describeToolCall(toolCall('1', 'coveo_commerce_inventory_check', {query: 'wetsuit'}))
-    ).toBe('Done: inventory check “wetsuit”');
   });
 });
 
@@ -52,10 +44,10 @@ describe('activityOf', () => {
     );
 
     expect(entries.map((entry) => entry.text)).toEqual([
-      'Searched “kayak”',
+      'coveo_commerce_search “kayak”',
       'under $1000',
-      'Checked prices for “kayak”',
-      'Putting the answer together',
+      'discover_price_range “kayak”',
+      'store_render_plan',
       'with a dry bag',
     ]);
     expect(entries.at(-2)).toMatchObject({kind: 'step', done: false});

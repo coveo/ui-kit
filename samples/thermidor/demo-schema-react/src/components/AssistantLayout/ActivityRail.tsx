@@ -20,8 +20,8 @@ interface ActivityRailProps {
 }
 
 /**
- * PROTOTYPE (HACK-408): the answer's progress in the shopper's words instead of tool names, with
- * the messages the shopper added placed at the step where the agent took them. A stopped answer
+ * PROTOTYPE (HACK-408): the answer's progress as the tool calls it makes, with the messages the
+ * shopper added placed at the step where the agent took them. A stopped answer
  * says how far it got, and that the work is kept for Continue.
  */
 export function ActivityRail({turn, isLatest, onContinue}: ActivityRailProps) {

@@ -69,13 +69,13 @@ describe('AssistantThread', () => {
     expect(screen.getByText('Showing “kayaks” in the results')).toBeTruthy();
   });
 
-  it('shows an answer with its activity in the shopper’s words, not tool names', () => {
+  it('shows an answer with its tool calls, routing hidden', () => {
     renderThread([answerTurn('t1', 'build me a kayak bundle')]);
 
     expect(screen.getByText('build me a kayak bundle')).toBeTruthy();
     expect(screen.getByText('Done in 1 step')).toBeTruthy();
-    expect(screen.getByText('Searched “kayak”')).toBeTruthy();
-    expect(screen.queryByText(/route_bundle|coveo_commerce_search/)).toBeNull();
+    expect(screen.getByText('coveo_commerce_search “kayak”')).toBeTruthy();
+    expect(screen.queryByText(/route_bundle/)).toBeNull();
   });
 
   it('still confirms what a finished answer took from the shopper', () => {

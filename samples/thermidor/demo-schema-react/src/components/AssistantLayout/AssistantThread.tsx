@@ -25,7 +25,7 @@ interface AssistantThreadProps {
 
 /**
  * PROTOTYPE (HACK-408): the assistant's side of the session. Each answer shows the question, the
- * agent's activity in the shopper's words, its text and its blocks; search results go to the
+ * agent's activity, its text and its blocks; search results go to the
  * results panel, so a question the gateway answered with a search leaves a one-line trace.
  */
 export function AssistantThread({turns, panelSearches, onAsk}: AssistantThreadProps) {
