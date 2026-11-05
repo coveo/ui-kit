@@ -13,7 +13,11 @@ import {
   type ConverseHandler,
 } from '../../test/session.js';
 import {SUGGESTIONS_DEBOUNCE_MS} from '../QuerySuggestions/QuerySuggestions.js';
-import {INSTANT_PRODUCTS_TIMEOUT_MS, PRODUCTS_PANEL_MEDIA_QUERY} from './InstantProducts.js';
+import {
+  INSTANT_PRODUCTS_SETTLE_MS,
+  INSTANT_PRODUCTS_TIMEOUT_MS,
+  PRODUCTS_PANEL_MEDIA_QUERY,
+} from './InstantProducts.js';
 
 afterEach(() => {
   vi.useRealTimers();
@@ -114,7 +118,7 @@ describe('InstantProducts', () => {
   it('returns to the first completion once new completions arrive', async () => {
     const {type, textarea, queriesSent} = await renderSearchBox();
     type('surf');
-    await waitFor(() => expect(options()).toEqual(['surf boards', 'surf wax']));
+    await waitFor(() => expect(productsShown()).toBe('Products for surf boards'));
     fireEvent.keyDown(textarea, {key: 'ArrowDown'});
     fireEvent.keyDown(textarea, {key: 'ArrowDown'});
     await waitFor(() => expect(productsShown()).toBe('Products for surf wax'));
@@ -128,7 +132,7 @@ describe('InstantProducts', () => {
   it('follows the pointer, and answers a query seen again from the cache', async () => {
     const {type, queriesSent, dispatchedQueries} = await renderSearchBox();
     type('surf');
-    await waitFor(() => expect(options()).toEqual(['surf boards', 'surf wax']));
+    await waitFor(() => expect(productsShown()).toBe('Products for surf boards'));
 
     fireEvent.mouseEnter(screen.getByRole('option', {name: 'surf wax'}));
     await waitFor(() => expect(productsShown()).toBe('Products for surf wax'));
@@ -137,6 +141,20 @@ describe('InstantProducts', () => {
     await waitFor(() => expect(productsShown()).toBe('Products for surf boards'));
     expect(dispatchedQueries()).toEqual(['surf boards', 'surf wax', 'surf boards']);
     expect(queriesSent()).toEqual(['surf boards', 'surf wax']);
+  });
+
+  it('sends only the highlight it settles on', async () => {
+    const {type, dispatchedQueries, queriesSent} = await renderSearchBox();
+    type('surf');
+    await waitFor(() => expect(productsShown()).toBe('Products for surf boards'));
+
+    fireEvent.mouseEnter(screen.getByRole('option', {name: 'surf wax'}));
+    await act(() => new Promise((resolve) => setTimeout(resolve, INSTANT_PRODUCTS_SETTLE_MS / 2)));
+    fireEvent.mouseEnter(screen.getByRole('option', {name: 'surf boards'}));
+    await pause();
+
+    expect(dispatchedQueries()).not.toContain('surf wax');
+    expect(queriesSent()).toEqual(['surf boards']);
   });
 
   it('draws no products answering another query than the highlighted one', async () => {

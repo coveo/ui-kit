@@ -127,7 +127,7 @@ A `NextActionsBar` item starts a follow-up: Agent Gateway announces its actions 
 The session sends `initialize` as soon as it is created, and the producer answers with the session shell: a surface that lives for the whole session, whose `SessionShell` root holds a `SearchBox`, its `QuerySuggestions` and its `InstantProducts`. `SessionSearchBox` draws it where the page's prompt input goes; until the shell arrives, or if it never does, a plain input stands in.
 
 - `QuerySuggestions` sends the typed text with `fetchSuggestions` once typing pauses.
-- `InstantProducts` sends the highlighted suggestion with `fetchInstantProducts`. The producer announces it as concurrent and cached, so the session sends it beside the turn and answers a query seen again from its cache.
+- `InstantProducts` sends the highlighted suggestion with `fetchInstantProducts` once the highlight holds for 150 ms, so moving quickly through the suggestions sends one request. The producer announces it as concurrent and cached, so the session sends it beside the turn and answers a query seen again from its cache.
 
 The dropdown follows Atomic commerce's search box, keyboard navigation included.
 
